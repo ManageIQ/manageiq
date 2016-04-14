@@ -1,9 +1,9 @@
-miqHttpInject(angular.module('topologyApp', ['kubernetesUI', 'ui.bootstrap', 'ManageIQ']))
-.controller('containerTopologyController', ContainerTopologyCtrl);
+miqHttpInject(angular.module('netTopologyApp', ['kubernetesUI', 'ui.bootstrap', 'ManageIQ']))
+.controller('networkTopologyController', NetworkTopologyCtrl);
 
-ContainerTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location', 'topologyService'];
+NetworkTopologyCtrl.$inject = ['$scope', '$http', '$interval', '$location', 'topologyService'];
 
-function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyService) {
+function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyService) {
   var self = this;
   $scope.vs = null;
   var icons = null;
@@ -14,11 +14,11 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
       id = '';
     } else {
-      id = '/'+ (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
+      id = '/'+ (/network_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
     }
 
     var currentSelectedKinds = $scope.kinds;
-    var url = '/container_topology/data'+id;
+    var url = '/network_topology/data'+id;
 
     $http.get(url).success(function(data) {
       $scope.items = data.data.items;
@@ -133,9 +133,9 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr('class' , function(d) {
         return topologyService.getItemStatusClass(d);
       })
-    .on("contextmenu", function(d){
-          self.contextMenu(this, d);
-     });
+      .on("contextmenu", function(d){
+        self.contextMenu(this, d);
+      });
 
     added.append("title");
 
@@ -154,11 +154,11 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
         }
       })
       .attr("height", function(d) {
-          var iconInfo = self.getIcon(d);
-          if (iconInfo.type != 'image') {
-            return 0;
-          }
-          return 40;
+        var iconInfo = self.getIcon(d);
+        if (iconInfo.type != 'image') {
+          return 0;
+        }
+        return 40;
       })
       .attr("width", function(d) {
         var iconInfo = self.getIcon(d);
@@ -184,8 +184,8 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
           return;
 
         $(this).text(iconInfo.icon)
-          .attr("class","glyph")
-          .attr('font-family', iconInfo.fontfamily);
+            .attr("class","glyph")
+            .attr('font-family', iconInfo.fontfamily);
       })
 
       .attr("y", function(d) {
@@ -197,7 +197,6 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .on("contextmenu", function(d){
         self.contextMenu(this, d);
       });
-
 
     added.append("text")
       .attr("x", 26)
@@ -231,7 +230,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
 
   this.getIcon = function getIcon(d) {
     switch(d.item.kind) {
-      case 'ContainerManager':
+      case 'NetworkManager':
         return icons[d.item.display_kind];
       default:
         return icons[d.item.kind];
@@ -241,19 +240,15 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
   this.getDimensions = function getDimensions(d) {
     var defaultDimensions = topologyService.defaultElementDimensions();
     switch (d.item.kind) {
-      case "ContainerManager":
+      case "NetworkManager":
         return { x: -20, y: -20, r: 28 };
-      case "Container":
-        return { x: 1, y: 5, r: 13 };
-      case "ContainerGroup":
-        return { x: 1, y: 6, r: defaultDimensions.r };
-      case "ContainerService":
-        return { x: -2, y: defaultDimensions.y, r: defaultDimensions.r };
-      case "ContainerReplicator":
-        return { x: -1, y: 8, r: defaultDimensions.r };
-      case "ContainerNode":
+      case "FloatingIp":
+        return { x: defaultDimensions.x, y: defaultDimensions.y, r: 13 };
+      case "NetworkRouter":
+        return { x: defaultDimensions.x, y: defaultDimensions.y, r: defaultDimensions.r };
+      case "CloudSubnet":
+        return { x: defaultDimensions.x, y: defaultDimensions.y, r: 19 };
       case "Vm":
-      case "Host":
         return { x: defaultDimensions.x, y: defaultDimensions.y, r: 21 };
       default:
         return defaultDimensions;

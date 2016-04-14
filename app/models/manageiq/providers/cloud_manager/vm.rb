@@ -6,6 +6,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   # delete the foreign keys and model these as methods returning cloud_networks.first, cloud_subnets.first
   belongs_to :cloud_network
   belongs_to :cloud_subnet
+  belongs_to :cloud_tenant
 
   has_many :network_ports, :as => :device
   has_many :cloud_subnets, :through => :network_ports
@@ -14,11 +15,12 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   # ec2, it allows to associate floating ips without network ports
   has_one  :floating_ip, :foreign_key => :vm_id
   has_many :floating_ips
+  has_many :security_groups, :through => :network_ports
 
-  # TODO(lsmola) NetworkProvider replace by by has_many :security_groups, :through => :network_ports, will need to be
-  # implemented in all providers
-  has_and_belongs_to_many :security_groups, :join_table => :security_groups_vms, :foreign_key => :vm_id
-  has_and_belongs_to_many :key_pairs,       :join_table => :key_pairs_vms,       :foreign_key => :vm_id, :association_foreign_key => :authentication_id, :class_name => "ManageIQ::Providers::CloudManager::AuthKeyPair"
+  has_and_belongs_to_many :key_pairs, :join_table              => :key_pairs_vms,
+                                      :foreign_key             => :vm_id,
+                                      :association_foreign_key => :authentication_id,
+                                      :class_name              => "ManageIQ::Providers::CloudManager::AuthKeyPair"
 
   default_value_for :cloud, true
 

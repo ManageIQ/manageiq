@@ -795,6 +795,12 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :network_topology         => {
+      :get => %w(
+        show
+        data
+      )
+    },
     :container_dashboard      => {
       :get => %w(
         show

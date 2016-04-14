@@ -20,6 +20,11 @@ module EmsNetworkHelper::TextualSummary
     %i(zone tags)
   end
 
+  def textual_group_topology
+    items = %w(topology)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
+  end
+
   #
   # Items
   #
@@ -114,6 +119,13 @@ module EmsNetworkHelper::TextualSummary
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
     }
+  end
+
+  def textual_topology
+    {:label => N_('Topology'),
+     :image => 'topology',
+     :link  => url_for(:controller => 'network_topology', :action => 'show', :id => @ems.id),
+     :title => N_("Show topology")}
   end
 
   def textual_zone

@@ -40,7 +40,7 @@ class TopologyService
      :icons     => icons
     }
   end
-  
+
   def build_recursive_topology(entity, entity_relationships_mapping, topo_items, links)
     unless entity.nil?
       topo_items[entity_id(entity)] = build_entity_data(entity)

@@ -18,8 +18,14 @@
 }
 
 .kube-topology g.EntityLegend.Containers.Pod text,
+.kube-topology g.EntityLegend.Network.FloatingIp text,
 .kube-topology g.EntityLegend.Containers.Container text {
     font-family: FontAwesome;
+    font-size: 19px;
+}
+
+.kube-topology g.EntityLegend.Network.CloudNetwork text {
+    font-family: IcoMoon;
     font-size: 19px;
 }
 
