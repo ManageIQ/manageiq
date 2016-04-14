@@ -36,7 +36,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
   def x_get_tree_cmf_kids(object, count_only)
     assigned_configuration_profile_objs =
       count_only_or_objects(count_only,
-                            rbac_filtered_objects(ConfigurationProfile.where(:configuration_manager_id => object[:id]),
+                            rbac_filtered_objects(ConfigurationProfile.where(:manager_id => object[:id]),
                                                   :match_via_descendants => ConfiguredSystem),
                             "name")
     unassigned_configuration_profile_objs =
@@ -47,14 +47,14 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def fetch_unassigned_configuration_profile_objects(count_only, configuration_manager_id)
     unprovisioned_configured_systems = ConfiguredSystem.where(:configuration_profile_id => nil,
-                                                              :configuration_manager_id => configuration_manager_id)
+                                                              :manager_id               => configuration_manager_id)
     unprovisioned_configured_systems_filtered = rbac_filtered_objects(unprovisioned_configured_systems,
                                                                       :match_via_descendants => ConfiguredSystem)
     if unprovisioned_configured_systems_filtered.count > 0
       unassigned_id = "#{configuration_manager_id}-unassigned"
       unassigned_configuration_profile =
-        [ConfigurationProfile.new(:name                     => "Unassigned Profiles Group|#{unassigned_id}",
-                                  :configuration_manager_id => configuration_manager_id)]
+        [ConfigurationProfile.new(:name       => "Unassigned Profiles Group|#{unassigned_id}",
+                                  :manager_id => configuration_manager_id)]
       unassigned_configuration_profile_objs = count_only_or_objects(count_only,
                                                                     unassigned_configuration_profile,
                                                                     nil)
