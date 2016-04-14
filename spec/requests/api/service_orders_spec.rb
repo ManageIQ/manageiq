@@ -181,6 +181,108 @@ RSpec.describe "service orders API" do
         expect(response).to have_http_status(:ok)
         expect(response_hash).to include("id" => service_request.id, "href" => a_string_matching(url))
       end
+
+      it "can add a service request to a shopping cart" do
+        dialog = FactoryGirl.create(
+          :dialog,
+          :dialog_tabs => [
+            FactoryGirl.create(
+              :dialog_tab,
+              :dialog_groups => [
+                FactoryGirl.create(
+                  :dialog_group,
+                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
+                )
+              ]
+            )
+          ]
+        )
+        service_template = FactoryGirl.create(:service_template)
+        service_template.resource_actions << FactoryGirl.create(:resource_action,
+                                                                :action => "Provision",
+                                                                :dialog => dialog)
+        shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user)
+        api_basic_authorize action_identifier(:service_requests, :add, :subcollection_actions)
+
+        expect do
+          run_post("#{service_orders_url("cart")}/service_requests",
+                   :action    => :add,
+                   :resources => [{:service_template_href => service_templates_url(service_template.id)}])
+        end.to change { shopping_cart.reload.miq_requests.count }.by(1)
+
+        actual_requests = shopping_cart.reload.miq_requests
+        expected = {
+          "results" => [
+            a_hash_including(
+              "success"              => true,
+              "message"              => /Adding service_request/,
+              "service_request_id"   => actual_requests.first.id,
+              "service_request_href" => a_string_matching(service_requests_url(actual_requests.first.id))
+            )
+          ]
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include(expected)
+      end
+
+      it "can add muliple service requests to a shopping cart by href" do
+        dialog = FactoryGirl.create(
+          :dialog,
+          :dialog_tabs => [
+            FactoryGirl.create(
+              :dialog_tab,
+              :dialog_groups => [
+                FactoryGirl.create(
+                  :dialog_group,
+                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
+                )
+              ]
+            )
+          ]
+        )
+
+        service_template_1, service_template_2 = FactoryGirl.create_list(:service_template, 2)
+        service_template_1.resource_actions << FactoryGirl.create(:resource_action,
+                                                                  :action => "Provision",
+                                                                  :dialog => dialog)
+        service_template_2.resource_actions << FactoryGirl.create(:resource_action,
+                                                                  :action => "Provision",
+                                                                  :dialog => dialog)
+
+        shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user)
+        api_basic_authorize action_identifier(:service_requests, :add, :subcollection_actions)
+
+        expect do
+          run_post(
+            "#{service_orders_url("cart")}/service_requests",
+            :action    => :add,
+            :resources => [
+              {:service_template_href => service_templates_url(service_template_1.id)},
+              {:service_template_href => service_templates_url(service_template_2.id)}
+            ]
+          )
+        end.to change { shopping_cart.reload.miq_requests.count }.by(2)
+
+        actual_requests = shopping_cart.reload.miq_requests
+        expected = {
+          "results" => a_collection_containing_exactly(
+            a_hash_including(
+              "success"              => true,
+              "message"              => /Adding service_request/,
+              "service_request_id"   => actual_requests.first.id,
+              "service_request_href" => a_string_matching(service_requests_url(actual_requests.first.id))
+            ),
+            a_hash_including(
+              "success"              => true,
+              "message"              => /Adding service_request/,
+              "service_request_id"   => actual_requests.second.id,
+              "service_request_href" => a_string_matching(service_requests_url(actual_requests.second.id))
+            )
+          )
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include(expected)
+      end
     end
 
     context "without an appropriate role" do
@@ -200,6 +302,75 @@ RSpec.describe "service orders API" do
         api_basic_authorize
 
         run_get "#{service_orders_url("cart")}/service_requests/#{service_request.id}"
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "will not add a service request to a shopping cart" do
+        dialog = FactoryGirl.create(
+          :dialog,
+          :dialog_tabs => [
+            FactoryGirl.create(
+              :dialog_tab,
+              :dialog_groups => [
+                FactoryGirl.create(
+                  :dialog_group,
+                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
+                )
+              ]
+            )
+          ]
+        )
+        service_template = FactoryGirl.create(:service_template)
+        service_template.resource_actions << FactoryGirl.create(:resource_action,
+                                                                :action => "Provision",
+                                                                :dialog => dialog)
+        shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user)
+        api_basic_authorize
+
+        run_post "#{service_orders_url("cart")}/service_requests",
+                 :action    => :add,
+                 :resources => [{:service_template_href => service_templates_url(service_template.id)}]
+
+        expect(response).to have_http_status(:forbidden)
+        expect(shopping_cart.reload.miq_requests).to be_empty
+      end
+
+      it "will not add multiple service requests to a shopping cart" do
+        dialog = FactoryGirl.create(
+          :dialog,
+          :dialog_tabs => [
+            FactoryGirl.create(
+              :dialog_tab,
+              :dialog_groups => [
+                FactoryGirl.create(
+                  :dialog_group,
+                  :dialog_fields => [FactoryGirl.create(:dialog_field_text_box)]
+                )
+              ]
+            )
+          ]
+        )
+        service_template_1, service_template_2 = FactoryGirl.create_list(:service_template, 2)
+        service_template_1.resource_actions << FactoryGirl.create(:resource_action,
+                                                                  :action => "Provision",
+                                                                  :dialog => dialog)
+        service_template_2.resource_actions << FactoryGirl.create(:resource_action,
+                                                                  :action => "Provision",
+                                                                  :dialog => dialog)
+        shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user)
+        api_basic_authorize
+
+        expect do
+          run_post(
+            "#{service_orders_url("cart")}/service_requests",
+            :action    => :add,
+            :resources => [
+              {:service_template_href => service_templates_url(service_template_1.id)},
+              {:service_template_href => service_templates_url(service_template_2.id)}
+            ]
+          )
+        end.not_to change { shopping_cart.reload.miq_requests.count }
 
         expect(response).to have_http_status(:forbidden)
       end
