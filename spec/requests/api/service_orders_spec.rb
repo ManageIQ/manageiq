@@ -417,6 +417,25 @@ RSpec.describe "service orders API" do
         expect(response).to have_http_status(:bad_request)
         expect(response_hash).to include(expected)
       end
+
+      it "can checkout a shopping cart" do
+        service_request_1, service_request_2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                       2,
+                                                                       :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart,
+                                           :user         => @user,
+                                           :miq_requests => [service_request_1, service_request_2])
+        api_basic_authorize action_identifier(:service_orders, :order)
+
+        run_post service_orders_url("cart"), :action => :order
+
+        expected = {
+          "state" => ServiceOrder::STATE_ORDERED
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include(expected)
+        expect(shopping_cart.reload.state).to eq(ServiceOrder::STATE_ORDERED)
+      end
     end
 
     context "without an appropriate role" do
@@ -555,6 +574,21 @@ RSpec.describe "service orders API" do
 
         expect(response).to have_http_status(:forbidden)
         expect(shopping_cart.reload.miq_requests).to include(service_request_1, service_request_2)
+      end
+
+      it "will not checkout a shopping cart" do
+        service_request_1, service_request_2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                       2,
+                                                                       :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart,
+                                           :user         => @user,
+                                           :miq_requests => [service_request_1, service_request_2])
+        api_basic_authorize
+
+        run_post service_orders_url("cart"), :action => :order
+
+        expect(response).to have_http_status(:forbidden)
+        expect(shopping_cart.reload.state).to eq(ServiceOrder::STATE_CART)
       end
     end
   end
