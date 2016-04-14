@@ -37,7 +37,7 @@ class MiqExpression::Field
     klass = model
     associations.collect do |association|
       klass.reflect_on_association(association).tap do |reflection|
-        return unless reflection
+        raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
         klass = reflection.klass
       end
     end
