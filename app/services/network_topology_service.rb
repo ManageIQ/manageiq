@@ -16,33 +16,26 @@ class NetworkTopologyService < TopologyService
     topo_items = {}
     links = []
 
-    entity_relationships = {
-      :NetworkManager => {
-        :CloudSubnets => {
-          :CloudNetwork  => nil,
-          :Vms => {
-            :FloatingIps    => nil,
-            :CloudTenant    => nil,
-            :SecurityGroups => nil
-          },
-          :NetworkRouter => {
-            :CloudNetwork => {
-              :FloatingIps => nil}
-          },
-        }
-      },
-    }
+    included_relations = {
+      :cloud_subnets => [
+        :tags,
+        :cloud_network => :tags,
+        :vms => [
+          :tags,
+          :floating_ips    => :tags,
+          :cloud_tenant    => :tags,
+          :security_groups => :tags],
+        :network_router => [
+          :tags,
+          :cloud_network => [
+            :floating_ips => :tags
+          ]
+        ]]}
 
-    preloaded = @providers.includes(:cloud_subnets => [:cloud_network,
-                                                       :vms => [
-                                                         :floating_ips,
-                                                         :cloud_tenant,
-                                                         :security_groups],
-                                                       :network_router => [
-                                                         :cloud_network => [
-                                                           :floating_ips
-                                                         ]
-                                                       ]])
+    entity_relationships = {:NetworkManager => build_entity_relationships(included_relations)}
+
+    preloaded = @providers.includes(included_relations)
+
     preloaded.each do |entity|
       topo_items, links = build_recursive_topology(entity, entity_relationships[:NetworkManager], topo_items, links)
     end
@@ -54,6 +47,7 @@ class NetworkTopologyService < TopologyService
              :CloudNetwork  => {:type => "glyph", :icon => "\uE62c", :fontfamily => "IcoMoon"},
              :CloudTenant   => {:type => "glyph", :icon => "\uE904", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cloud-tenant
              :Vm            => {:type => "glyph", :icon => "\uE90f", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-virtual-machine
+             :Tag           => {:type => "glyph", :icon => "\uF02b", :fontfamily => "FontAwesome"},
              :Openstack     => {:type => "image", :icon => provider_icon(:Openstack)},
              :Amazon        => {:type => "image", :icon => provider_icon(:Amazon)},
              :Azure         => {:type => "image", :icon => provider_icon(:Azure)},
@@ -112,7 +106,7 @@ class NetworkTopologyService < TopologyService
 
   def build_kinds
     kinds = [:NetworkRouter, :CloudSubnet, :Vm, :NetworkManager, :FloatingIp, :CloudNetwork, :NetworkPort, :CloudTenant,
-             :SecurityGroup]
+             :SecurityGroup, :Tag]
     build_legend_kinds(kinds)
   end
 end
