@@ -24,7 +24,6 @@ class MiqGroup < ApplicationRecord
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
-  serialize :filters
   serialize :settings
 
   default_value_for :group_type, USER_GROUP
