@@ -74,9 +74,11 @@ class TreeNodeBuilder
     when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
     when GuestDevice          then generic_node(object.device_name,
                                                 "sa_#{object.controller_type.downcase}.png",
-                                                _("%{type} Storage Adapter: %{name}") % {:type => object.controller_type,
-                                                                                         :name => object.device_name})
-    when Host                 then generic_node(object.name, "host.png",    "#{ui_lookup(:table => "host")}: #{object.name}")
+                                                _("%{type} Storage Adapter: %{name}") %
+                                                  {:type => object.controller_type, :name => object.device_name})
+    when Host                 then generic_node(object.name,
+                                                "host.png",
+                                                "#{ui_lookup(:table => "host")}: #{object.name}")
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
@@ -92,7 +94,9 @@ class TreeNodeBuilder
     when MiqReportResult      then miq_report_node(format_timezone(object.last_run_on, Time.zone, 'gtl'),
                                                    get_rr_status_image(object), object.name, object.status.downcase)
     when MiqSchedule          then generic_node(object.name, "miq_schedule.png")
-    when MiqScsiLun           then generic_node("Karel", "Karel")
+    when MiqScsiLun           then generic_node(object.canonical_name,
+                                                "lun.png",
+                                                _("LUN: %{name}") % {:name => object.canonical_name})
     when MiqScsiTarget        then miq_scsi_target(object.iscsi_name, object.target)
     when MiqServer            then miq_server_node
     when MiqTemplate          then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
@@ -274,8 +278,7 @@ class TreeNodeBuilder
            else
              _("SCSI Target %{target} (%{name})") % {:target => target, :name => iscsi_name}
            end
-    target_text = name.blank? ? "[empty]" : name
-    generic_node(name, "target_scsi.png", _("Target: %{text}") % {:text => target_text})
+    generic_node(name, "target_scsi.png", _("Target: %{text}") % {:text => name})
   end
 
   def miq_server_node

@@ -60,6 +60,7 @@ module Sandbox
     iso_datastores_tree
     old_dialogs_tree
     ot_tree
+    network_tree
     policy_profile_tree
     policy_tree
     pxe_image_types_tree

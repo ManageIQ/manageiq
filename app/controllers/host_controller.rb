@@ -53,6 +53,7 @@ class HostController < ApplicationController
       drop_breadcrumb(:name => _("%{name} (Network)") % {:name => @host.name},
                       :url  => "/host/show/#{@host.id}?display=network")
       build_network_tree
+      self.x_active_tree = :network_tree
 
     when "performance"
       @showtype = "performance"
@@ -85,13 +86,9 @@ class HostController < ApplicationController
       @showtype = @display
 
     when "storage_adapters"
-      drop_breadcrumb(:name => _("%{name} (Storage Adapters)")% {:name => @host.name},
+      drop_breadcrumb(:name => _("%{name} (Storage Adapters)") % {:name => @host.name},
                       :url  => "/host/show/#{@host.id}?display=storage_adapters")
-      #TODO remove
-      #build_sa_tree
-
-      host = @host
-      @sa_tree = TreeBuilderStorageAdapters.new(:sa_tree, :sa, @sb, true, host)
+      @sa_tree = TreeBuilderStorageAdapters.new(:sa_tree, :sa, @sb, true, @host)
       self.x_active_tree = :sa_tree
 
     when "miq_templates", "vms"
@@ -714,71 +711,6 @@ class HostController < ApplicationController
           _("VM: %{name} (Click to view)") % {:name => v.name}
         )
       end
-    end
-  end
-
-  # Build the tree object to display the host storage adapter info
-  def build_sa_tree
-    host_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@host.id}",
-      @host.name,
-      "host.png",
-      _("Host: %{name}") % {:name => @host.name},
-      :expand      => true,
-      :style_class => "cfme-no-cursor-node"
-    )
-    host_node[:children] = storage_adapters_node if !@host.hardware.nil? &&
-                                                    @host.hardware.storage_adapters.length > 0
-    @sa_tree = [host_node].to_json
-    session[:tree] = "sa"
-    session[:tree_name] = "sa_tree"
-  end
-
-  def storage_adapters_node
-    @host.hardware.storage_adapters.collect do |storage_adapter|
-      storage_adapter_node = TreeNodeBuilder.generic_tree_node(
-        "sa_#{storage_adapter.id}",
-        storage_adapter.device_name,
-        "sa_#{storage_adapter.controller_type.downcase}.png",
-        _("%{type} Storage Adapter: %{name}") % {:type => storage_adapter.controller_type,
-                                                 :name => storage_adapter.device_name},
-        :style_class => "cfme-no-cursor-node"
-      )
-      storage_adapter_node[:children] =
-          add_miq_scsi_targets_nodes(storage_adapter) if storage_adapter.miq_scsi_targets.length > 0
-      storage_adapter_node
-    end
-  end
-
-  def add_miq_scsi_targets_nodes(storage_adapter)
-    storage_adapter.miq_scsi_targets.collect do |scsi_target|
-      name = if scsi_target.iscsi_name.blank?
-               _("SCSI Target %{target}") % {:target => scsi_target.target}
-             else
-               _("SCSI Target %{target} (%{name})") % {:target => scsi_target.target, :name => scsi_target.iscsi_name}
-             end
-      target_text = name.blank? ? "[empty]" : name
-      target_node = TreeNodeBuilder.generic_tree_node(
-        "t_#{scsi_target.id}",
-        target_text,
-        "target_scsi.png",
-        _("Target: %{text}") % {:text => target_text},
-        :style_class => "cfme-no-cursor-node"
-      )
-      target_node[:children] = add_miq_scsi_luns_nodes(scsi_target) if scsi_target.miq_scsi_luns.length > 0
-      target_node
-    end
-  end
-
-  def add_miq_scsi_luns_nodes(target)
-    target.miq_scsi_luns.collect do |l|
-      TreeNodeBuilder.generic_tree_node(
-        "l_#{l.id}",
-        l.canonical_name,
-        "lun.png",
-        _("LUN: %{name}") % {:name => l.canonical_name},
-        :style_class => "cfme-no-cursor-node"
-      )
     end
   end
 
