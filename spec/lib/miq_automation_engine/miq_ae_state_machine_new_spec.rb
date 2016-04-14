@@ -76,9 +76,7 @@ describe "MiqAeStateMachine" do
       it "should not raise error" do
         Timecop.freeze do
           obj = test_class
-          Timecop.travel(5) do
-            expect { obj.enforce_max_time('max_time' => '6.seconds') }.to_not raise_error
-          end
+          expect { obj.enforce_max_time('max_time' => '6.seconds') }.to_not raise_error
         end
       end
     end
