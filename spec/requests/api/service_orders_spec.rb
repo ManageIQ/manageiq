@@ -283,6 +283,102 @@ RSpec.describe "service orders API" do
         expect(response).to have_http_status(:ok)
         expect(response_hash).to include(expected)
       end
+
+      it "can remove a service request from a shopping cart" do
+        service_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user, :miq_requests => [service_request])
+        api_basic_authorize action_identifier(:service_requests, :remove, :subresource_actions)
+
+        run_post "#{service_orders_url("cart")}/service_requests/#{service_request.id}", :action => :remove
+
+        expected = {
+          "success"              => true,
+          "message"              => a_string_starting_with("Removing Service Request id:#{service_request.id}"),
+          "service_request_href" => a_string_matching(service_requests_url(service_request.id)),
+          "service_request_id"   => service_request.id
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include(expected)
+        expect(shopping_cart.reload.miq_requests).not_to include(service_request)
+      end
+
+      it "can remove multiple service requests from a shopping cart by href" do
+        service_request_1, service_request_2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                       2,
+                                                                       :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart,
+                                           :user         => @user,
+                                           :miq_requests => [service_request_1, service_request_2])
+        api_basic_authorize action_identifier(:service_requests, :remove, :subcollection_actions)
+
+        run_post(
+          "#{service_orders_url("cart")}/service_requests",
+          :action    => :remove,
+          :resources => [
+            {:href => service_requests_url(service_request_1.id)},
+            {:href => service_requests_url(service_request_2.id)}
+          ]
+        )
+
+        expected = {
+          "results" => a_collection_containing_exactly(
+            a_hash_including(
+              "success"              => true,
+              "message"              => a_string_starting_with("Removing Service Request id:#{service_request_1.id}"),
+              "service_request_href" => a_string_matching(service_requests_url(service_request_1.id)),
+              "service_request_id"   => service_request_1.id
+            ),
+            a_hash_including(
+              "success"              => true,
+              "message"              => a_string_starting_with("Removing Service Request id:#{service_request_2.id}"),
+              "service_request_href" => a_string_matching(service_requests_url(service_request_2.id)),
+              "service_request_id"   => service_request_2.id
+            )
+          )
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include(expected)
+        expect(shopping_cart.reload.miq_requests).not_to include(service_request_1, service_request_2)
+      end
+
+      it "can remove multiple service requests from a shopping cart by id" do
+        service_request_1, service_request_2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                       2,
+                                                                       :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart,
+                                           :user         => @user,
+                                           :miq_requests => [service_request_1, service_request_2])
+        api_basic_authorize action_identifier(:service_requests, :remove, :subcollection_actions)
+
+        run_post(
+          "#{service_orders_url("cart")}/service_requests",
+          :action    => :remove,
+          :resources => [
+            {:id => service_request_1.id},
+            {:id => service_request_2.id}
+          ]
+        )
+
+        expected = {
+          "results" => a_collection_containing_exactly(
+            a_hash_including(
+              "success"              => true,
+              "message"              => a_string_starting_with("Removing Service Request id:#{service_request_1.id}"),
+              "service_request_href" => a_string_matching(service_requests_url(service_request_1.id)),
+              "service_request_id"   => service_request_1.id
+            ),
+            a_hash_including(
+              "success"              => true,
+              "message"              => a_string_starting_with("Removing Service Request id:#{service_request_2.id}"),
+              "service_request_href" => a_string_matching(service_requests_url(service_request_2.id)),
+              "service_request_id"   => service_request_2.id
+            )
+          )
+        }
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include(expected)
+        expect(shopping_cart.reload.miq_requests).not_to include(service_request_1, service_request_2)
+      end
     end
 
     context "without an appropriate role" do
@@ -373,6 +469,39 @@ RSpec.describe "service orders API" do
         end.not_to change { shopping_cart.reload.miq_requests.count }
 
         expect(response).to have_http_status(:forbidden)
+      end
+
+      it "will not remove a service request from a shopping cart" do
+        service_request = FactoryGirl.create(:service_template_provision_request, :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user, :miq_requests => [service_request])
+        api_basic_authorize
+
+        run_post "#{service_orders_url("cart")}/service_requests/#{service_request.id}", :action => :remove
+
+        expect(response).to have_http_status(:forbidden)
+        expect(shopping_cart.reload.miq_requests).to include(service_request)
+      end
+
+      it "will not remove multiple service requests from a shopping cart" do
+        service_request_1, service_request_2 = FactoryGirl.create_list(:service_template_provision_request,
+                                                                       2,
+                                                                       :requester => @user)
+        shopping_cart = FactoryGirl.create(:shopping_cart,
+                                           :user         => @user,
+                                           :miq_requests => [service_request_1, service_request_2])
+        api_basic_authorize
+
+        run_post(
+          "#{service_orders_url("cart")}/service_requests",
+          :action    => :remove,
+          :resources => [
+            {:href => service_requests_url(service_request_1.id)},
+            {:href => service_requests_url(service_request_2.id)}
+          ]
+        )
+
+        expect(response).to have_http_status(:forbidden)
+        expect(shopping_cart.reload.miq_requests).to include(service_request_1, service_request_2)
       end
     end
   end

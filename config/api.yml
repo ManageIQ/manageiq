@@ -971,10 +971,15 @@
       :post:
       - :name: add
         :identifier: svc_catalog_provision
+      - :name: remove
+        :identifier: svc_catalog_provision
     :subresource_actions:
       :get:
       - :name: read
         :identifier: miq_request_view
+      :post:
+      - :name: remove
+        :identifier: svc_catalog_provision
   :service_templates:
     :description: Service Templates
     :identifier: catalog_items_accord

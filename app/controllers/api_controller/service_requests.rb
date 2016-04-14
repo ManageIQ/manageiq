@@ -22,6 +22,13 @@ class ApiController
       result
     end
 
+    def service_requests_remove_resource(target, type, id, _data)
+      service_request_subcollection_action(type, id) do |service_request|
+        api_log_info("Removing #{service_request_ident(service_request)}")
+        remove_service_request(target, service_request)
+      end
+    end
+
     private
 
     def service_request_ident(service_request)
@@ -58,6 +65,13 @@ class ApiController
         add_subcollection_resource_to_result(result, :service_requests, validation[:request])
         result
       end
+    rescue => e
+      action_result(false, e.to_s)
+    end
+
+    def remove_service_request(target, service_request)
+      target.class.remove_from_cart(service_request, @auth_user_obj)
+      action_result(true, "Removing #{service_request_ident(service_request)}")
     rescue => e
       action_result(false, e.to_s)
     end
