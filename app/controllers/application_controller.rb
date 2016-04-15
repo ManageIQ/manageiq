@@ -2311,7 +2311,7 @@ class ApplicationController < ActionController::Base
     bfilters = user ? user.get_belongsto_filters : []
 
     if db.respond_to?(:find_filtered) && !mfilters.empty?
-      result = db.find_tags_by_grouping(mfilters, :conditions => options[:conditions], :ns => "*")
+      result = db.where(options[:conditions]).find_tags_by_grouping(mfilters, :ns => "*")
     else
       result = db.apply_legacy_finder_options(options)
     end
