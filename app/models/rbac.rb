@@ -123,7 +123,7 @@ module Rbac
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
-    m_filtered_ids = get_managed_filter_object_ids(scope, user_filters['managed'])
+    m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, user_filters['managed']))
     d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                        :user => user, :miq_group => miq_group))
 
@@ -233,7 +233,7 @@ module Rbac
   def self.get_managed_filter_object_ids(scope, filter)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
-    scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
+    scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
   end
 
   def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
@@ -293,11 +293,6 @@ module Rbac
     return targets, total_count, total_count
   end
 
-  def self.minimum_columns_for(klass)
-    # STI classes will instantiate calling class without type column
-    klass.column_names.include?('type') ? %w(id type) : %w(id)
-  end
-
   def self.get_user_info(user, userid, miq_group, miq_group_id)
     user      ||= User.find_by_userid(userid) || User.current_user
     miq_group ||= MiqGroup.find_by_id(miq_group_id)
@@ -323,21 +318,13 @@ module Rbac
   end
 
   # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
-  def self.find_via_descendants(descendants, method_name, klass)
-    MiqPreloader.preload(descendants, method_name)
-    descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
-  end
-
   # @option options :user [User]
   # @option options :miq_group [MiqGroup]
-  def self.find_descendants(scope, options)
-    filtered(scope, options)
-  end
-
   def self.matches_via_descendants(klass, descendant_klass, options)
     if descendant_klass && (method_name = lookup_method_for_descendant_class(klass, descendant_klass))
-      descendants = find_descendants(descendant_klass, options)
-      find_via_descendants(descendants, method_name, klass)
+      descendants = filtered(descendant_klass, options)
+      MiqPreloader.preload(descendants, method_name)
+      descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
     end
   end
 
