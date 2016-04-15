@@ -176,20 +176,28 @@ describe MiqAeDomain do
     it "import a domain" do
       domain_name = dom1.name
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
-      expect(repo).to receive(:branch_info).with(branch_name).and_return(info)
+      expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
       allow(git_import).to receive(:import) { MiqAeDomain.create(:name => domain_name) }
+      dom1 = MiqAeDomain.import_git_repo(domain_name, repo.id, @user.current_tenant.id, branch_name)
+      expect(dom1.attributes).to have_attributes(commit_hash)
+    end
 
-      MiqAeDomain.import_git_repo(domain_name, repo, branch_name)
-      dom1 = MiqAeDomain.find_by(:name => domain_name)
+    it "import domain embedded in git repository" do
+      domain_name = "ASTERIX"
+      expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
+      expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
+      allow(git_import).to receive(:import) { [MiqAeDomain.create(:name => domain_name)] }
+      dom1 = MiqAeDomain.import_git_repo(nil, repo.id, @user.current_tenant.id, branch_name)
+
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
 
     it "import a domain fails" do
       domain_name = dom1.name
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
-      allow(git_import).to receive(:import) { MiqAeDomain.create(:name => "nada") }
+      allow(git_import).to receive(:import) { nil }
       expect do
-        MiqAeDomain.import_git_repo(domain_name, repo, branch_name)
+        MiqAeDomain.import_git_repo(domain_name, repo.id, @user.current_tenant.id, branch_name)
       end.to raise_error(MiqAeException::DomainNotFound)
     end
 
@@ -198,7 +206,7 @@ describe MiqAeDomain do
     end
 
     it "git repo branch changed" do
-      expect(repo).to receive(:branch_info).with(branch_name).twice.and_return(new_info)
+      expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).twice.and_return(new_info)
       dom1.update_attributes(:ref => branch_name, :git_repository => repo,
                              :ref_type => MiqAeDomain::BRANCH, :commit_sha => commit_sha)
       expect(dom1.git_repo_changed?).to be_truthy

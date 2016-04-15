@@ -38,7 +38,7 @@ class MiqAeYamlImportGitfs < MiqAeYamlImport
   end
 
   def domain_files(domain)
-    glob_str = File.join(domain, DOMAIN_YAML_FILENAME)
+    glob_str = (domain == '*') ? File.join('**', DOMAIN_YAML_FILENAME) : File.join('**', domain, DOMAIN_YAML_FILENAME)
     @files.select { |entry| File.fnmatch(glob_str, entry, @fn_flags) }
   end
 

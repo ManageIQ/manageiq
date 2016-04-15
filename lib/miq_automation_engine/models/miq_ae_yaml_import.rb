@@ -28,8 +28,9 @@ class MiqAeYamlImport
     _log.info("Importing domain:    <#{domain_name}>")
     reset_stats
     @single_domain = true
-    domain_name == ALL_DOMAINS ? import_all_domains : import_domain(domain_folder(domain_name), domain_name)
+    result = domain_name == ALL_DOMAINS ? import_all_domains : import_domain(domain_folder(domain_name), domain_name)
     log_stats
+    result
   end
 
   def log_stats
@@ -49,12 +50,13 @@ class MiqAeYamlImport
 
   def import_all_domains
     @single_domain = false
-    sorted_domain_files.each do |file|
+    domains = sorted_domain_files.collect do |file|
       directory = File.dirname(file)
       @domain_name = directory.split("/").last
       import_domain(directory, @domain_name)
     end
     MiqAeDatastore.reset_default_namespace if @restore && !@preview
+    domains
   end
 
   def sorted_domain_files
@@ -80,6 +82,7 @@ class MiqAeYamlImport
       import_all_namespaces(domain_folder, domain_obj, domain_name)
     end
     update_attributes(domain_obj) if @single_domain && domain_obj
+    domain_obj
   end
 
   def domain_properties(domain_folder, name)
