@@ -35,8 +35,8 @@ module FilterableMixin
     end
   end
 
-  def find_filtered_children(table, options = {})
-    MiqFilter.find_children_of(self, table, options)
+  def find_filtered_children(table)
+    MiqFilter.find_children_of(self, table)
   end
 
   def authorized_for_user?(userid)
