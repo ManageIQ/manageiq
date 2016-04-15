@@ -233,7 +233,7 @@ module Rbac
   def self.get_managed_filter_object_ids(scope, filter)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
-    scope.find_tags_by_grouping(filter, :ns => '*', :select => minimum_columns_for(klass)).reorder(nil).collect(&:id)
+    scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil).collect(&:id)
   end
 
   def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
@@ -291,11 +291,6 @@ module Rbac
     total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
 
     return targets, total_count, total_count
-  end
-
-  def self.minimum_columns_for(klass)
-    # STI classes will instantiate calling class without type column
-    klass.column_names.include?('type') ? %w(id type) : %w(id)
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
