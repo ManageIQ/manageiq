@@ -140,8 +140,8 @@
               - if layout_uses_tabs?
                 .col-md-12
                   = render :partial => 'layouts/tabs'
-                .col-md-12
-                  = yield
+              .col-md-12
+                = yield
             - if layout_uses_paging? && !@in_a_form
               .col-md-12.no-padding
                 .row.toolbar-pf#paging_div
