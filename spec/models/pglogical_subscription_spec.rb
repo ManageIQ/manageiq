@@ -161,9 +161,33 @@ describe PglogicalSubscription do
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
       allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
 
-      # node created
+      # node created if we are not already a node
+      expect(MiqPglogical).to receive(:new).and_return(double(:node? => false))
       expect(pglogical).to receive(:enable)
       expect(pglogical).to receive(:node_create).and_return(double(:check => nil))
+
+      # subscription is created
+      expect(pglogical).to receive(:subscription_create) do |name, dsn, replication_sets, sync_structure|
+        expect(name).to eq("region_2_subscription")
+        expect(dsn).to include("host='test-2.example.com'")
+        expect(dsn).to include("user='root'")
+        expect(replication_sets).to eq(['miq'])
+        expect(sync_structure).to be false
+      end.and_return(double(:check => nil))
+
+      described_class.new(:host => "test-2.example.com", :user => "root").save!
+    end
+
+    it "doesnt create the node when we are already a node" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2)
+
+      # node not created if we are already a node
+      expect(MiqPglogical).to receive(:new).and_return(double(:node? => true))
+      expect(pglogical).not_to receive(:enable)
+      expect(pglogical).not_to receive(:node_create)
 
       # subscription is created
       expect(pglogical).to receive(:subscription_create) do |name, dsn, replication_sets, sync_structure|
