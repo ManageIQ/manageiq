@@ -56,7 +56,7 @@
           $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
 
           var host = window.location.hostname;
-          var encrypt = window.location.protocol == 'https';
+          var encrypt = window.location.protocol == 'https:';
           var port = encrypt ? 443 : 80;
           if (window.location.port) port = window.location.port;
 
