@@ -220,7 +220,8 @@ describe MiqReport do
       user  = FactoryGirl.create(:user_with_group)
       group = user.current_group
       allow(User).to receive_messages(:server_timezone => "UTC")
-      group.update_attributes(:filters => {"managed" => [["/managed/environment/prod"]], "belongsto" => []})
+      group.set_managed_filters([["/managed/environment/prod"]])
+      group.save!
 
       report = MiqReport.new(:db => "Vm")
       results, attrs = report.paged_view_search(
@@ -243,7 +244,8 @@ describe MiqReport do
       vm1 = FactoryGirl.create(:vm_vmware, :name => "VA", :storage => FactoryGirl.create(:storage, :name => "SA"))
       vm2 = FactoryGirl.create(:vm_vmware, :name => "VB", :storage => FactoryGirl.create(:storage, :name => "SB"))
       tag = "/managed/environment/prod"
-      group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+      group.set_managed_filters([[tag]])
+      group.save!
       vm1.tag_with(tag, :ns => "*")
       vm2.tag_with(tag, :ns => "*")
 
@@ -310,7 +312,8 @@ describe MiqReport do
       vm2 =  FactoryGirl.create(:vm_vmware, :name => "VB",  :host => FactoryGirl.create(:host, :name => "HB"))
       vm3 =  FactoryGirl.create(:vm_vmware, :name => "VAA", :host => FactoryGirl.create(:host, :name => "HAA"))
       tag =  "/managed/environment/prod"
-      group.update_attributes(:filters => {"managed" => [[tag]], "belongsto" => []})
+      group.set_managed_filters([[tag]])
+      group.save!
 
       # vm1's host.name starts with HA but isn't tagged
       vm2.tag_with(tag, :ns => "*")

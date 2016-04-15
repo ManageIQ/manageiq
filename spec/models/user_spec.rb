@@ -46,8 +46,8 @@ describe User do
 
   context "filter methods" do
     let(:user) { FactoryGirl.create(:user, :miq_groups => [miq_group]) }
-    let(:mfilters) { {"managed"   => "m"} }
-    let(:bfilters) { {"belongsto" => "b"} }
+    let(:mfilters) { ["m"] }
+    let(:bfilters) { ["b"] }
     let(:miq_group) { FactoryGirl.create(:miq_group) }
 
     before do

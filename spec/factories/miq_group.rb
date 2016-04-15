@@ -16,12 +16,14 @@ FactoryGirl.define do
     description { |g| g.role ? "EvmGroup-#{g.role}" : generate(:miq_group_description) }
 
     after :build do |g, e|
-      if e.role || e.features || e.miq_user_role_id || e.miq_user_role
-        g.entitlement = FactoryGirl.create(:entitlement,
-                                           :features => e.features,
-                                           :role => e.role,
-                                           :miq_user_role_id => e.miq_user_role_id,
-                                           :miq_user_role => e.miq_user_role)
+      unless g.entitlement
+        if e.role || e.features || e.miq_user_role_id || e.miq_user_role
+          g.entitlement = FactoryGirl.create(:entitlement,
+                                             :features => e.features,
+                                             :role => e.role,
+                                             :miq_user_role_id => e.miq_user_role_id,
+                                             :miq_user_role => e.miq_user_role)
+        end
       end
     end
 

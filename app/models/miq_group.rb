@@ -4,7 +4,7 @@ class MiqGroup < ApplicationRecord
   TENANT_GROUP = "tenant"
 
   belongs_to :tenant
-  has_one    :entitlement
+  has_one    :entitlement,   :autosave => true
   has_one    :miq_user_role, :through => :entitlement
   has_and_belongs_to_many :users
   has_many   :vms,         :dependent => :nullify
@@ -24,7 +24,6 @@ class MiqGroup < ApplicationRecord
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
-  serialize :filters
   serialize :settings
 
   default_value_for :group_type, USER_GROUP
@@ -66,9 +65,11 @@ class MiqGroup < ApplicationRecord
       end
       group.miq_user_role = user_role
       group.sequence      = index + 1
-      group.filters       = ldap_to_filters[group_name]
       group.group_type    = SYSTEM_GROUP
       group.tenant        = root_tenant
+
+      group.set_managed_filters(ldap_to_filters.fetch_path(group_name, "managed"))
+      group.set_belongsto_filters(ldap_to_filters.fetch_path(group_name, "belongsto"))
 
       if group.changed?
         mode = group.new_record? ? "Created" : "Updated"
@@ -122,57 +123,44 @@ class MiqGroup < ApplicationRecord
     user_groups.first
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def get_filters(type = nil)
-    if type
-      (filters.respond_to?(:key?) && filters[type.to_s]) || []
-    else
-      filters || {"managed" => [], "belongsto" => []}
-    end
+    filters = case type
+              when "managed"
+                entitlement.try(:tag_filters)
+              when "belongsto"
+                entitlement.try(:resource_filters)
+              when nil # Awkward backwards compatibility
+                {"managed" => entitlement.try(:tag_filters) || [], "belongsto" => entitlement.try(:resource_filters) || []}
+              end
+    filters || []
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def has_filters?
     get_managed_filters.present? || get_belongsto_filters.present?
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def get_managed_filters
     get_filters("managed")
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def get_belongsto_filters
     get_filters("belongsto")
   end
 
-  def set_filters(type, filter)
-    self.filters ||= {}
-    self.filters[type.to_s] = filter
-  end
-
-  def self.remove_tag_from_all_managed_filters(tag)
-    all.each do |miq_group|
-      miq_group.remove_tag_from_managed_filter(tag)
-      miq_group.save if miq_group.filters_changed?
-    end
-  end
-
-  def remove_tag_from_managed_filter(filter_to_remove)
-    if get_managed_filters.present?
-      *category, _tag = filter_to_remove.split("/")
-      category = category.join("/")
-      self.filters["managed"].each do |filter|
-        next unless filter.first.starts_with?(category)
-        next unless filter.include?(filter_to_remove)
-        filter.delete(filter_to_remove)
-      end
-      self.filters["managed"].reject!(&:empty?)
-    end
-  end
-
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def set_managed_filters(filter)
-    set_filters("managed", filter)
+    self.entitlement ||= Entitlement.new
+    entitlement.tag_filters = filter
   end
 
+  # TODO: Mark for deprecation or remove (pending multiple entitlements)
   def set_belongsto_filters(filter)
-    set_filters("belongsto", filter)
+    self.entitlement ||= Entitlement.new
+    entitlement.resource_filters = filter
   end
 
   def miq_user_role_name
