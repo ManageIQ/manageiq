@@ -141,6 +141,7 @@ module OpsController::Settings::RHN
       end
     else
       add_flash(_("Customer Information successfully saved"))
+      @in_a_form = false
       @changed = false
       @edit    = nil
       @sb[:active_tab] = 'settings_rhn'
