@@ -500,7 +500,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       unless tag_conditions.blank?
         _log.info "Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>"
-        vms = MiqTemplate.find_tags_by_grouping(tag_conditions, :ns => "/managed", :conditions => condition)
+        vms = MiqTemplate.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
       end
     end
 
