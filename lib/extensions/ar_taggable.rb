@@ -46,15 +46,29 @@ module ActsAsTaggable
     end
 
     def with_any_tags(tag_ids)
-      distinct.joins(:taggings).where(:taggings => {:tag_id => tag_ids})
+      taggings = reflect_on_association(:taggings).klass.arel_table
+      if tag_ids.length > 1
+        where(Tagging.where(arel_taggings_include(taggings, tag_ids)).exists)
+      else
+        taggings = taggings.alias("taggings#{tag_ids.first%1000}")
+        joins(arel_table.join(taggings, Arel::Nodes::InnerJoin)
+                        .on(arel_taggings_include(taggings, tag_ids)).join_sources)
+      end
     end
 
     def with_all_tags(tag_ids)
-      taggings = Tagging.arel_table
-      self_arel = arel_table
-      grouping_cols = [taggings[:taggable_id]] + column_names.collect { |c| self_arel[c] }
-      with_any_tags(tag_ids)
-        .group(*grouping_cols).having(taggings[:id].count.gteq tag_ids.length)
+      taggings = reflect_on_association(:taggings).klass.arel_table
+      if tag_ids.count == 1
+        with_any_tags(tag_ids)
+      else
+        nodes = Arel::Nodes::Equality.new(
+          taggings.project(Arel.star.count).where(arel_taggings_include(taggings, tag_ids)),
+          Arel::Nodes.build_quoted(tag_ids.size))
+
+        # a) even though the with_any_tags is not necessary, quicker to include it along with the count
+        # b) arel does not support subqueries (here, it is a SqlManager as a node).
+        with_any_tags(tag_ids).where(Arel.sql("(#{nodes.to_sql})"))
+      end
     end
 
     # @param list [Array<Array<String>>] list of tags
@@ -101,6 +115,14 @@ module ActsAsTaggable
       options[:ns] = Tag.get_namespace(options)
       Tag.tags(options)
     end
+
+    def arel_taggings_include(taggings, tag_ids)
+      taggings[:taggable_id].eq(arel_table[:id])
+                            .and(taggings[:taggable_type].eq(base_class.name))
+                            .and(taggings[:tag_id].in(tag_ids))
+    end
+
+
   end # module SingletonMethods
 
   def tag_with(list, options = {})
