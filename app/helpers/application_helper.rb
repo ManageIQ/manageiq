@@ -1015,30 +1015,15 @@ module ApplicationHelper
     test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
     test_layout = 'cloud_object_store_container' if @layout == 'cloud_object_store_object'
 
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "active" : "dropdown"
+    Menu::Manager.item_in_section?(test_layout, nav_id) ? 'active' : nil
   end
 
-  def primary_nav_class2(nav_id)
-    test_layout = @layout
-    # FIXME: exception behavior to remove
-    test_layout = 'my_tasks' if %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout)
-    test_layout = 'cloud_volume' if @layout == 'cloud_volume_snapshot'
-    test_layout = 'cloud_object_store_container' if @layout == 'cloud_object_store_object'
-
-    return "dropdown-menu" if big_iframe
-
-    Menu::Manager.item_in_section?(test_layout, nav_id) ? "nav navbar-nav navbar-persistent" : "dropdown-menu"
+  def secondary_nav_class(item)
+    item.items.collect(&:id).include?(@layout) ? 'active' : nil
   end
 
-  def secondary_nav_class(nav_layout)
-    if nav_layout == 'my_tasks' # FIXME: exceptional behavior to remove
-      nav_layout = %w(my_tasks my_ui_tasks all_tasks all_ui_tasks).include?(@layout) ? @layout : "my_tasks"
-    elsif nav_layout == 'cloud_volume' && @layout == 'cloud_volume_snapshot'
-      nav_layout = 'cloud_volume_snapshot'
-    elsif nav_layout == 'cloud_object_store_container' && @layout == 'cloud_object_store_object'
-      nav_layout = 'cloud_object_store_object'
-    end
-    nav_layout == @layout ? "active" : ""
+  def tertiary_nav_class(item)
+    item.id == @layout ? 'active' : nil
   end
 
   def render_flash_msg?

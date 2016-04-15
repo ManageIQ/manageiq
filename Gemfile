@@ -26,7 +26,8 @@ gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/matthewd/jquery-rjs.git", :branch => "rails5" # https://github.com/amatsuda/jquery-rjs/pull/4
 gem "lodash-rails",                   "~>3.10.0"
-gem "patternfly-sass",                "3.3.4"
+# gem "patternfly-sass",                "~>3.3.4"
+gem 'patternfly-sass', :github => 'skateman/patternfly-sass', :branch => 'tertiary-nav'
 gem "sass-rails"
 gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 

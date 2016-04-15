@@ -1,8 +1,25 @@
 module Menu
   class DefaultMenu
     class << self
+      def compute_menu_section
+        Menu::Section.new(:compute, N_("Compute"), 'fa product-memory fa-2x', [
+          services_menu_section,
+          clouds_menu_section,
+          infrastructure_menu_section,
+          container_menu_section,
+          middleware_menu_section
+        ])
+      end
+
+      def configuration_menu_section
+        Menu::Section.new(:conf, N_("Configuration"), 'fa fa-cog  fa-2x', [
+          Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer',
+                         {:feature => 'provider_foreman_explorer', :any => true}, '/provider_foreman/explorer')
+        ])
+      end
+
       def cloud_inteligence_menu_section
-        Menu::Section.new(:vi, N_("Cloud Intelligence"), 'fa fa-dashboard fa-2x', [
+        Menu::Section.new(:vi, N_("Cloud Intel"), 'fa fa-dashboard fa-2x', [
           Menu::Item.new('dashboard',  N_('Dashboard'),  'dashboard',  {:feature => 'dashboard_view'},           '/dashboard/'),
           Menu::Item.new('report',     N_('Reports'),    'miq_report', {:feature => 'miq_report', :any => true}, '/report/explorer'),
           # Menu::Item.new('usage',    N_('Usage'),      'usage',      {:feature => 'usage'},                    '/report/usage/'), #  / Hiding usage for now - release 5.2
@@ -55,8 +72,6 @@ module Menu
                          'storage',       {:feature => 'storage_show_list'},       '/storage'),
           Menu::Item.new('pxe',              N_('PXE'),              'pxe',           {:feature => 'pxe', :any => true},       '/pxe/explorer'),
           Menu::Item.new('miq_request_host', N_('Requests'),         nil,             {:feature => 'miq_request_show_list'},   '/miq_request?typ=host'),
-          Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer',
-                         {:feature => 'provider_foreman_explorer', :any => true}, '/provider_foreman/explorer')
         ])
       end
 
@@ -125,7 +140,7 @@ module Menu
       end
 
       def network_menu_section
-        Menu::Section.new(:net, N_("Networks"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:net, N_("Networks"), 'fa pficon-network fa-2x', [
           Menu::Item.new('ems_network',      N_('Providers'),       'ems_network',      {:feature => 'ems_network_show_list'},    '/ems_network'),
           Menu::Item.new('cloud_network',    N_('Networks'),        'cloud_network',    {:feature => 'cloud_network_show_list'},  '/cloud_network'),
           Menu::Item.new('cloud_subnet',     N_('Subnets'),         'cloud_subnet',     {:feature => 'cloud_subnet_show_list'},   '/cloud_subnet'),
@@ -148,7 +163,7 @@ module Menu
       end
 
       def control_menu_section
-        Menu::Section.new(:con, N_("Control"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:con, N_("Control"), 'fa fa-shield fa-2x', [
           Menu::Item.new('miq_policy',        N_('Explorer'),        'control_explorer',     {:feature => 'control_explorer_view'}, '/miq_policy/explorer'),
           Menu::Item.new('miq_policy_rsop',   N_('Simulation'),      'policy_simulation',    {:feature => 'policy_simulation'},     '/miq_policy/rsop'),
           Menu::Item.new('miq_policy_export', N_('Import / Export'), 'policy_import_export', {:feature => 'policy_import_export'},  '/miq_policy/export'),
@@ -157,7 +172,7 @@ module Menu
       end
 
       def automate_menu_section
-        Menu::Section.new(:aut, N_("Automate"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:aut, N_("Automate"), 'fa fa-recycle fa-2x', [
           Menu::Item.new('miq_ae_class',         N_('Explorer'),        'miq_ae_class_explorer',         {:feature => 'miq_ae_domain_view'},            '/miq_ae_class/explorer'),
           Menu::Item.new('miq_ae_tools',         N_('Simulation'),      'miq_ae_class_simulation',       {:feature => 'miq_ae_class_simulation'},       '/miq_ae_tools/resolve'),
           Menu::Item.new('miq_ae_customization', N_('Customization'),   'miq_ae_customization_explorer', {:feature => 'miq_ae_customization_explorer'}, '/miq_ae_customization/explorer'),
@@ -168,15 +183,15 @@ module Menu
       end
 
       def optimize_menu_section
-        Menu::Section.new(:opt, N_("Optimize"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:opt, N_("Optimize"), 'fa fa-lightbulb-o fa-2x', [
           Menu::Item.new('miq_capacity_utilization', N_('Utilization'), 'utilization', {:feature => 'utilization'}, '/miq_capacity'),
           Menu::Item.new('miq_capacity_planning',    N_('Planning'),    'planning',    {:feature => 'planning'},    '/miq_capacity/planning'),
           Menu::Item.new('miq_capacity_bottlenecks', N_('Bottlenecks'), 'bottlenecks', {:feature => 'bottlenecks'}, '/miq_capacity/bottlenecks')
         ])
       end
 
-      def configuration_menu_section
-        Menu::Section.new(:set, N_("Configure"), 'fa fa-plus fa-2x', [
+      def settings_menu_section
+        Menu::Section.new(:set, N_("Settings"), 'pficon pficon-settings fa-2x', [
           Menu::Item.new('configuration', N_('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
           Menu::Item.new('my_tasks',      N_('Tasks'),         'tasks',        {:feature => 'tasks', :any => true},        '/miq_task/index?jobs_tab=tasks'),
           Menu::Item.new('ops',           N_('Configuration'), 'ops_explorer', {:feature => 'ops_explorer', :any => true}, '/ops/explorer'),
@@ -186,10 +201,9 @@ module Menu
 
       def default_menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
-
-        [cloud_inteligence_menu_section, services_menu_section, clouds_menu_section, infrastructure_menu_section,
-         container_menu_section, middleware_menu_section, network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
-         automate_menu_section, optimize_menu_section, configuration_menu_section].compact
+        [cloud_inteligence_menu_section, compute_menu_section, configuration_menu_section,
+         network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
+         automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
     end
   end

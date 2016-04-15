@@ -5,9 +5,7 @@ module Menu
     class << self
       extend Forwardable
 
-      delegate [:menu, :tab_features_by_id, :tab_features_by_name, :tab_name,
-                :each_feature_title_with_subitems, :item_in_section?, :item,
-                :section, :section_id_string_to_symbol] => :instance
+      delegate %i(menu item_in_section? item section section_id_string_to_symbol each) => :instance
     end
 
     private
@@ -29,9 +27,8 @@ module Menu
     end
 
     def section(section_id)
-      if section_id.kind_of?(String) # prevent .to_sym call on section_id
-        section_id = @id_to_section.keys.detect { |k| k.to_s == section_id }
-      end
+      # prevent .to_sym call on section_id
+      section_id = section_id_string_to_symbol(section_id) if section_id.kind_of?(String)
       @id_to_section[section_id]
     end
 
@@ -39,20 +36,8 @@ module Menu
       @id_to_section[section_id].contains_item_id?(item_id)
     end
 
-    def tab_features_by_id(tab_id)
-      @id_to_section[tab_id].features
-    end
-
-    def tab_features_by_name(tab_name)
-      @name_to_section[tab_name].features
-    end
-
-    def each_feature_title_with_subitems
-      @menu.each { |section| yield section.name, section.features }
-    end
-
-    def tab_name(tab_id)
-      @id_to_section[tab_id].name
+    def each
+      @menu.each { |section| yield section }
     end
 
     def initialize
@@ -91,8 +76,11 @@ module Menu
     end
 
     def preprocess_sections
-      @id_to_section   = @menu.index_by(&:id)
-      @name_to_section = @menu.index_by(&:name)
+      @id_to_section = @menu.index_by(&:id)
+      # recursively add subsections to the @id_to_section hash
+      @menu.each do |section|
+        section.preprocess_sections(@id_to_section)
+      end
     end
 
     #
@@ -106,7 +94,7 @@ module Menu
 
     def valid_sections
       # format is {"vi" => :vi, "svc" => :svc . . }
-      @valid_sections ||= @menu.each_with_object({}) { |section, acc| acc[section.id.to_s] = section.id }
+      @valid_sections ||= @id_to_section.keys.index_by(&:to_s)
     end
   end
 end

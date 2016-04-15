@@ -27,7 +27,7 @@ describe Menu::DefaultMenu do
       FactoryGirl.create(:host_openstack_infra, :ems_id => @ems_openstack.id)
       menu = Menu::DefaultMenu.infrastructure_menu_section.items.map(&:name)
       result = ["Providers", "Clusters", "Nodes", "Virtual Machines", "Resource Pools",
-                "Datastores", "PXE", "Requests", "Configuration Management"]
+                "Datastores", "PXE", "Requests"]
       expect(menu).to eq(result)
     end
 
@@ -35,7 +35,7 @@ describe Menu::DefaultMenu do
       FactoryGirl.create(:host_vmware, :ems_id => @ems_vmware.id)
       menu = Menu::DefaultMenu.infrastructure_menu_section.items.map(&:name)
       result = ["Providers", "Clusters", "Hosts", "Virtual Machines", "Resource Pools",
-                "Datastores", "PXE", "Requests", "Configuration Management"]
+                "Datastores", "PXE", "Requests"]
       expect(menu).to eq(result)
     end
 
@@ -45,7 +45,7 @@ describe Menu::DefaultMenu do
 
       menu = Menu::DefaultMenu.infrastructure_menu_section.items.map(&:name)
       result = ["Providers", "Clusters", "Hosts / Nodes", "Virtual Machines", "Resource Pools",
-                "Datastores", "PXE", "Requests", "Configuration Management"]
+                "Datastores", "PXE", "Requests"]
       expect(menu).to eq(result)
     end
 
@@ -54,7 +54,7 @@ describe Menu::DefaultMenu do
 
       menu = Menu::DefaultMenu.infrastructure_menu_section.items.map(&:name)
       result = ["Providers", "Deployment Roles", "Hosts", "Virtual Machines", "Resource Pools",
-                "Datastores", "PXE", "Requests", "Configuration Management"]
+                "Datastores", "PXE", "Requests"]
       expect(menu).to eq(result)
     end
 
@@ -63,7 +63,7 @@ describe Menu::DefaultMenu do
 
       menu = Menu::DefaultMenu.infrastructure_menu_section.items.map(&:name)
       result = ["Providers", "Clusters", "Hosts", "Virtual Machines", "Resource Pools",
-                "Datastores", "PXE", "Requests", "Configuration Management"]
+                "Datastores", "PXE", "Requests"]
       expect(menu).to eq(result)
     end
 
@@ -73,7 +73,7 @@ describe Menu::DefaultMenu do
 
       menu = Menu::DefaultMenu.infrastructure_menu_section.items.map(&:name)
       result = ["Providers", "Clusters / Deployment Roles", "Hosts", "Virtual Machines", "Resource Pools",
-                "Datastores", "PXE", "Requests", "Configuration Management"]
+                "Datastores", "PXE", "Requests"]
       expect(menu).to eq(result)
     end
   end

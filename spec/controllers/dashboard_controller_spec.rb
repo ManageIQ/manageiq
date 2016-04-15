@@ -214,7 +214,7 @@ describe DashboardController do
         login_as FactoryGirl.create(:user, :features => feature)
         session[:tab_url] = {}
         post :maintab, :params => { :tab => tab }
-        url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
+        url_controller = Menu::Manager.section(:set).features_recursive.find { |f| f.ends_with?("_explorer") }
         expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
     end
@@ -232,7 +232,7 @@ describe DashboardController do
     it "for Configure maintab" do
       session[:tab_url] = {}
       post :maintab, :params => { :tab => "set" }
-      url_controller = Menu::Manager.tab_features_by_id(:set).find { |f| f.ends_with?("_explorer") }
+      url_controller = Menu::Manager.section(:set).features_recursive.find { |f| f.ends_with?("_explorer") }
       expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
     end
   end
