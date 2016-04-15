@@ -39,8 +39,8 @@ module ApplicationController::Performance
     when :performance
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
       unless @no_util_data
-        perf_gen_data(refresh = "n")      # Go generate the task
-        return unless @charts    # Return if no charts got created (first time thru async rpt gen)
+        perf_gen_data # Go generate the task
+        return unless @charts # Return if no charts got created (first time thru async rpt gen)
       end
     end
 
@@ -412,7 +412,7 @@ module ApplicationController::Performance
       @perf_options[:hourly_date] = [ts.month, ts.day, ts.year].join("/")
 
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
-      perf_gen_data(refresh = "n")
+      perf_gen_data
 
       return unless @charts      # Return if no charts got created (first time thru async rpt gen)
 
@@ -447,7 +447,7 @@ module ApplicationController::Performance
       @perf_options[:typ] = "Daily"
 
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
-      perf_gen_data(refresh = "n")
+      perf_gen_data
       return unless @charts        # Return if no charts got created (first time thru async rpt gen)
 
       render :update do |page|
@@ -645,7 +645,7 @@ module ApplicationController::Performance
   end
 
   # Generate performance data for a model's charts
-  def perf_gen_data(_refresh = nil)
+  def perf_gen_data
     if @perf_options[:cat]
       drop_breadcrumb(:name => _("%{name} Capacity & Utilization (by %{option}:%{model})") %
         {:name   => @perf_record.name,
@@ -937,9 +937,10 @@ module ApplicationController::Performance
     chart_layout = perf_get_chart_layout(layout_name, @perf_options[:model])
 
     if @perf_options[:index]
-      chart_index = @perf_options[:index]
+      chart_index = @perf_options[:index].to_i
+      chart = chart_layout[chart_index]
       prepare_perf_tag_chart(chart, rpt, cat_desc)
-      chart_data.push(gen_perf_chart(chart_layout[chart_index], rpt, nil, 'perf_chart_chooser'))
+      chart_data.push(gen_perf_chart(chart, rpt, nil, 'perf_chart_chooser'))
       charts.push(chart)
     else
       chart_layout.each_with_index do |chart, idx|
@@ -1064,7 +1065,7 @@ module ApplicationController::Performance
     chart_layouts = perf_get_chart_layout(layout_name, cont_plus_model)
 
     if @perf_options[:index]
-      chart_index = @perf_options[:index]
+      chart_index = @perf_options[:index].to_i
       chart = chart_layouts[chart_index]
       @chart_data.push(gen_perf_chart(chart, rpt, nil, 'perf_top_chart'))
       @chart_reports.push(rpt)
