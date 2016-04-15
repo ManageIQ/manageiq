@@ -76,7 +76,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
       end
 
       it 'detects job not exist' do
-        expect(connection.api.jobs).to receive(:find).twice.and_raise(AnsibleTowerClient::ResourceNotFound.new(nil))
+        expect(connection.api.jobs).to receive(:find).twice.and_raise(Faraday::ResourceNotFound.new(nil))
         expect { subject.raw_status }.to raise_error(MiqException::MiqOrchestrationStackNotExistError)
 
         expect(subject.raw_exists?).to be_falsey

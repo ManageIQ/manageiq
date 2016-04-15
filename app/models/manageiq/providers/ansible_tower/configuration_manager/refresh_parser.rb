@@ -92,9 +92,9 @@ module ManageIQ::Providers
           :inventory_root_group => inventory_root_group,
           :manager_ref          => job_template.id.to_s,
           :name                 => job_template.name,
-          :survey_spec          => job_template.survey_spec,
+          :survey_spec          => job_template.survey_spec_hash,
           :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
-          :variables            => job_template.extra_vars,
+          :variables            => job_template.extra_vars_hash
         }
 
         return uid, new_result
