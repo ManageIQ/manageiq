@@ -29,5 +29,13 @@ class MiqTemplate < VmOrTemplate
     where(arel_table[:ems_id].not_eq(nil))
   end
 
-  def active?; false; end
+  def active?
+    false
+  end
+
+  def has_compliance_policies?
+    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "miqtemplate_compliance_check")
+    !plist.blank?
+  end
+
 end

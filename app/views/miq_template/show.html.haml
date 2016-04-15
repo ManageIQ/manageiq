@@ -25,5 +25,7 @@
       = render :partial => "layouts/tl_show"
     - when "download_pdf"
       = render :partial => "layouts/show_pdf"
+    - when "compliance_history"
+      = render(:partial => "shared/views/#{@showtype}")
     - else
       = render :partial => "vm_common/#{@showtype}", :locals => {:controller => "miq_template"}

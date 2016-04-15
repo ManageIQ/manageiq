@@ -36,7 +36,7 @@ class MiqPolicy < ApplicationRecord
 
   @@built_in_policies = nil
 
-  UI_FOLDERS = [Host, Vm, ContainerImage].freeze
+  UI_FOLDERS = [Host, Vm, ContainerImage, MiqTemplate].freeze
 
   def self.built_in_policies
     return @@built_in_policies.dup unless @@built_in_policies.nil?
@@ -283,7 +283,6 @@ class MiqPolicy < ApplicationRecord
     conditions =
       policy.conditions.collect do |c|
         rec_model = rec.class.base_model.name
-        rec_model = "Vm" if rec_model.downcase.match("template")
         next unless rec_model == c["towhat"]
 
         resolve_condition(c, rec).tap do |cond_hash|
@@ -317,7 +316,6 @@ class MiqPolicy < ApplicationRecord
 
   def applies_to?(rec, inputs = {})
     rec_model = rec.class.base_model.name
-    rec_model = "Vm" if rec_model.downcase.match("template")
 
     return false if towhat && rec_model != towhat
     return true  if expression.nil?
@@ -377,7 +375,6 @@ class MiqPolicy < ApplicationRecord
     plist = built_in_policies.concat(plist).uniq
 
     towhat = target.class.base_model.name
-    towhat = "Vm" if towhat.downcase.match("template")
     plist.keep_if do |p|
       p.mode == mode &&
       p.towhat == towhat &&
