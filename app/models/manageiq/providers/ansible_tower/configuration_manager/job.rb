@@ -51,7 +51,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
       raw_job = connection.api.jobs.find(ems_ref)
       Status.new(raw_job.status, nil)
     end
-  rescue AnsibleTowerClient::ResourceNotFound
+  rescue Faraday::ResourceNotFound
     msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"
     raise MiqException::MiqOrchestrationStackNotExistError, msg
   rescue => err

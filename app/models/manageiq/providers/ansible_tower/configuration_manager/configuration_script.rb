@@ -8,7 +8,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScri
   end
 
   def merge_extra_vars(external)
-    internal = variables.empty? ? {} : JSON.parse(variables)
+    internal = variables.empty? ? {} : variables
     merged_vars = internal.merge(external || {})
     {:extra_vars => merged_vars.to_json}
   end
