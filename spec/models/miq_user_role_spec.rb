@@ -234,4 +234,31 @@ describe MiqUserRole do
       expect(FactoryGirl.build(:miq_user_role)).not_to be_admin_user
     end
   end
+
+  describe "#destroy" do
+    subject { miq_group.entitlement.miq_user_role }
+    let!(:miq_group) { FactoryGirl.create(:miq_group, :role => "EvmRole-administrator") }
+
+    context "when the role has any entitlements" do
+      it "does not allow the role to be deleted" do
+        expect { subject.destroy! }.to raise_error(ActiveRecord::DeleteRestrictionError)
+      end
+    end
+
+    context "with the entitlement removed" do
+      before { miq_group.entitlement.destroy! }
+
+      it "allows the role to be deleted" do
+        expect { subject.destroy! }.not_to raise_error
+      end
+    end
+
+    context "temporary backwards compatibility - groups destroy entitlements, allowing the role to be destroyed" do
+      before { miq_group.destroy! }
+
+      it "allows the role to be deleted" do
+        expect { subject.destroy! }.not_to raise_error
+      end
+    end
+  end
 end
