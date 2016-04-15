@@ -1,9 +1,12 @@
 require 'openstack/openstack_event_monitor'
-require 'openstack/amqp/openstack_amqp_event'
+require 'openstack/events/openstack_event'
 require 'bunny'
 require 'thread'
 
 class OpenstackRabbitEventMonitor < OpenstackEventMonitor
+  DEFAULT_AMQP_PORT = 5672
+  DEFAULT_AMQP_HEARTBEAT = 30
+
   # The rabbit event monitor is available if a connection can be established.
   # This ensures that the amqp server is indeed rabbit (and not another amqp
   # implementation).
@@ -12,7 +15,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   end
 
   def self.plugin_priority
-    1
+    2
   end
 
   # Why not inline this?
@@ -36,7 +39,8 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       return true
     rescue => e
       log_prefix = "MIQ(#{name}.#{__method__}) Failed testing rabbit amqp connection for #{options[:hostname]}. "
-      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider.  Enable debug logging to see connection exception.") if $log
+      $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider."\
+                " Enable debug logging to see connection exception.") if $log
       $log.debug("#{log_prefix} Exception: #{e}") if $log
       return false
     ensure
@@ -71,7 +75,8 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
     subscribe_queues
     while @collecting_events
       @events_array_mutex.synchronize do
-        $log.debug("MIQ(#{self.class.name}) Yielding #{@events.size} events to event_catcher: #{@events.map { |e| e.payload["event_type"] }}") if $log
+        $log.debug("MIQ(#{self.class.name}) Yielding #{@events.size} events to"\
+                   " event_catcher: #{@events.map { |e| e.payload["event_type"] }}") if $log
         yield @events
         $log.debug("MIQ(#{self.class.name}) Clearing events") if $log
         @events.clear
@@ -86,14 +91,6 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
     @connection ||= OpenstackRabbitEventMonitor.connect(@options)
   end
 
-  def amqp_event(_delivery_info, metadata, payload)
-    OpenstackAmqpEvent.new(payload,
-                           :user_id      => payload["user_id"],
-                           :priority     => metadata["priority"],
-                           :content_type => metadata["content_type"],
-                          )
-  end
-
   def initialize_queues(channel)
     remove_legacy_queues
     @queues = {}
@@ -101,7 +98,8 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       @options[:topics].each do |exchange, topic|
         amqp_exchange = channel.topic(exchange)
         queue_name = "miq-#{@client_ip}-#{exchange}"
-        @queues[exchange] = channel.queue(queue_name, :auto_delete => true, :exclusive => true).bind(amqp_exchange, :routing_key => topic)
+        @queues[exchange] = channel.queue(queue_name, :auto_delete => true, :exclusive => true)
+                                   .bind(amqp_exchange, :routing_key => topic)
       end
     end
   end
@@ -130,13 +128,15 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       queue.subscribe do |delivery_info, metadata, payload|
         begin
           payload = JSON.parse(payload)
-          event = amqp_event(delivery_info, metadata, payload)
+          event = openstack_event(delivery_info, metadata, payload)
           @events_array_mutex.synchronize do
             @events << event
-            $log.debug("MIQ(#{self.class.name}##{__method__}) Received Rabbit (amqp) event on #{exchange} from #{@options[:hostname]}: #{payload["event_type"]}") if $log
+            $log.debug("MIQ(#{self.class.name}##{__method__}) Received Rabbit (amqp) event"\
+                       " on #{exchange} from #{@options[:hostname]}: #{payload["event_type"]}") if $log
           end
         rescue e
-          $log.error("MIQ(#{self.class.name}##{__method__}) Exception receiving Rabbit (amqp) event on #{exchange} from #{@options[:hostname]}: #{e}") if $log
+          $log.error("MIQ(#{self.class.name}##{__method__}) Exception receiving Rabbit (amqp)"\
+                     " event on #{exchange} from #{@options[:hostname]}: #{e}") if $log
         end
       end
     end

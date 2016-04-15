@@ -1,4 +1,4 @@
-class OpenstackAmqpEvent
+class OpenstackEvent
   attr_accessor :payload, :metadata
 
   def initialize(payload, metadata)

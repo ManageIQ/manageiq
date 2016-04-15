@@ -11,8 +11,8 @@ class OpenstackNullEventMonitor < OpenstackEventMonitor
   end
 
   def initialize(options = {})
-    $log.warn("MIQ(#{self.class.name}##{__method__}) There was an problem establishing a connection to the AMQP service on #{options[:hostname]}.
-               Check the evm.log for more details.")
+    $log.warn("MIQ(#{self.class.name}##{__method__}) There was an problem establishing a connection to the AMQP"\
+              " service on #{options[:hostname]}. Check the evm.log for more details.")
     @options = options
   end
 

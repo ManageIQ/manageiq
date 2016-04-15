@@ -65,6 +65,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     @event_monitor_options ||= begin
       opts = {:hostname => hostname}
       opts[:port] = event_monitor_class.worker_settings[:amqp_port]
+      opts[:ems] = self
       if self.has_authentication_type? :amqp
         # authentication_userid/password will happily return the "default"
         # userid/password if this ems has no amqp auth configured
