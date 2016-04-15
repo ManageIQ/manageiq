@@ -39,8 +39,8 @@ module ApplicationController::Performance
     when :performance
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
       unless @no_util_data
-        perf_gen_data(refresh = "n")      # Go generate the task
-        return unless @charts    # Return if no charts got created (first time thru async rpt gen)
+        perf_gen_data # Go generate the task
+        return unless @charts # Return if no charts got created (first time thru async rpt gen)
       end
     end
 
@@ -412,7 +412,7 @@ module ApplicationController::Performance
       @perf_options[:hourly_date] = [ts.month, ts.day, ts.year].join("/")
 
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
-      perf_gen_data(refresh = "n")
+      perf_gen_data
 
       return unless @charts      # Return if no charts got created (first time thru async rpt gen)
 
@@ -447,7 +447,7 @@ module ApplicationController::Performance
       @perf_options[:typ] = "Daily"
 
       perf_set_or_fix_dates(@perf_options)  unless params[:task_id] # Set dates if first time thru
-      perf_gen_data(refresh = "n")
+      perf_gen_data
       return unless @charts        # Return if no charts got created (first time thru async rpt gen)
 
       render :update do |page|
@@ -645,7 +645,7 @@ module ApplicationController::Performance
   end
 
   # Generate performance data for a model's charts
-  def perf_gen_data(_refresh = nil)
+  def perf_gen_data
     if @perf_options[:cat]
       drop_breadcrumb(:name => _("%{name} Capacity & Utilization (by %{option}:%{model})") %
         {:name   => @perf_record.name,
