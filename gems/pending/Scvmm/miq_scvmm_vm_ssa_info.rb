@@ -13,6 +13,7 @@ class MiqScvmmVmSSAInfo
     @winrm       = MiqWinRM.new
     winrmport    = port.nil? ? 5985 : port
     options      = {:port => winrmport, :user => user, :pass => pass, :hostname => provider}
+    @elevated    = nil
 
     @winrm.connect(options)
     @parser = MiqScvmmParsePowershell.new
@@ -43,7 +44,11 @@ Get-VMSnapShot -ComputerName localhost -VMName "#{vm_name}" -Name "#{snapshot}"|
 GETCHECKPOINT_EOL
 
     checkpoint, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(get_checkpoint_script))
-    return nil if stderr =~ /Unable to find a snapshot/
+    if stderr =~ /Unable to find a snapshot/
+      return nil
+    else
+      raise "Error finding Snapshot for #{vm_name}: #{stderr}" unless stderr.empty?
+    end
     checkpoint
   end
 
@@ -55,19 +60,27 @@ GETCHECKPOINT_EOL
 Checkpoint-VM -ComputerName localhost -Name "#{vm_name}" -SnapshotName "#{snapshot}"
 CHECKPOINT_EOL
 
-    _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_elevated_powershell_script(checkpoint_script))
-    raise "Unable to create Snapshot for #{vm_name}" if stderr =~ /At line:/
+    _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(checkpoint_script))
+    unless stderr.empty?
+      @elevated = true
+      _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_elevated_powershell_script(checkpoint_script))
+    end
+    raise "Unable to create Snapshot for #{vm_name}: #{stderr}" unless stderr.empty?
     snapshot
   end
 
   def vm_remove_evm_checkpoint(vm_name, snapshot = nil)
     snapshot = vm_name + "__EVM_SNAPSHOT" if snapshot.nil?
-    rm_checkpoint_script = <<-RM_CHECKPOINT_EOL
+    rm_checkpt_script = <<-RM_CHECKPOINT_EOL
 Remove-VMSnapshot -ComputerName localhost -VMName "#{vm_name}" -Name "#{snapshot}"
 RM_CHECKPOINT_EOL
 
-    _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_elevated_powershell_script(rm_checkpoint_script))
-    raise "Unable to remove Snapshot for #{vm_name}" if stderr =~ /At line:/
+    if @elevated
+      _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_elevated_powershell_script(rm_checkpt_script))
+    else
+      _stdout, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(rm_checkpt_script))
+    end
+    raise "Unable to remove Snapshot for #{vm_name}: #{stderr}" unless stderr.empty?
   end
 
   def get_drivetype(vhd_path)
@@ -79,7 +92,7 @@ RM_CHECKPOINT_EOL
 ([System.IO.DriveInfo]("#{drive_letter}")).DriveType
 DRIVETYPE_EOL
     drive_type, stderr = @parser.parse_single_powershell_value(@winrm.run_powershell_script(drivetype_script))
-    raise "Unable to get drive letter for disk #{vhd_path}" if stderr =~ /At line:/
+    raise "Unable to get drive letter for disk #{vhd_path}: #{stderr}" unless stderr.empty? || drive_type.nil?
     drive_type
   end
 
@@ -92,7 +105,7 @@ Get-VMHardDiskDrive -VMName "#{vm_name}" | \
 PROPERTIES_EOL
 
     properties, stderr = @parser.parse_multiple_attribute_values(@winrm.run_powershell_script(properties_script))
-    raise "Error getting VHD(s) and Attributes for #{vm_name}" if stderr =~ /At line:/
+    raise "Error getting VHD(s) and Attributes for #{vm_name}: #{stderr}" unless stderr.empty?
     properties
   end
 
@@ -112,7 +125,7 @@ SNAP_EOL
     end
 
     vhds, stderr = @parser.parse_single_attribute_values(@winrm.run_powershell_script(vhd_script))
-    raise "Unable to obtain VHD Name(s) for #{vm_name}" if stderr =~ /At line:/
+    raise "Unable to obtain VHD Name(s) for #{vm_name}: #{stderr}" unless stderr.empty?
     vhds
   end
 end
