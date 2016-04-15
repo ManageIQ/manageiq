@@ -98,6 +98,16 @@
         %span.help-block{"ng-show" => "angularForm.azure_tenant_id.$error.required"}
           = _("Required")
 
+    .form-group{"ng-class" => "{'has-error': angularForm.subscription.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
+      %label.col-md-2.control-label{"for" => "textInput-markup"}
+        = _('Subscription ID')
+      .col-md-8
+        %input.form-control{"type"        => "text",
+                            "id"          => "textInput-markup",
+                            "name"        => "subscription",
+                            "ng-model"    => "emsCommonModel.subscription",
+                            "checkchange" => ""}
+
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _("API Version")

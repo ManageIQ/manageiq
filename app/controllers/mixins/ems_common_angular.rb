@@ -159,6 +159,7 @@ module Mixins
 
       if @ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
         azure_tenant_id = @ems.azure_tenant_id
+        subscription    = @ems.subscription
         client_id       = @ems.authentication_userid ? @ems.authentication_userid : ""
         client_key      = @ems.authentication_password ? @ems.authentication_password : ""
       end
@@ -186,6 +187,7 @@ module Mixins
                        :amqp_userid                     => amqp_userid,
                        :service_account                 => service_account ? service_account : "",
                        :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
+                       :subscription                    => subscription ? subscription : "",
                        :client_id                       => client_id ? client_id : "",
                        :client_key                      => client_key ? client_key : "",
                        :project                         => project ? project : "",
@@ -241,7 +243,10 @@ module Mixins
         ems.host_default_vnc_port_end = params[:host_default_vnc_port_end].blank? ? nil : params[:host_default_vnc_port_end].to_i
       end
 
-      ems.azure_tenant_id = params[:azure_tenant_id] if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
+      if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
+        ems.azure_tenant_id = params[:azure_tenant_id]
+        ems.subscription    = params[:subscription] unless params[:subscription].blank?
+      end
 
       build_connection(ems, default_endpoint, amqp_endpoint)
     end
@@ -293,6 +298,7 @@ module Mixins
                          :provider_region   => ems.provider_region,
                          :hostname          => ems.hostname,
                          :azure_tenant_id   => azure_tenant_id,
+                         :subscription      => ems.subscription,
                          :port              => ems.port,
                          :api_version       => ems.api_version,
                          :security_protocol => ems.security_protocol,

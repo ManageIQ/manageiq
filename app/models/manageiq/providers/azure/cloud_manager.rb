@@ -43,14 +43,15 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     ManageIQ::Providers::Azure::Regions.find_by_name(provider_region)[:description]
   end
 
-  def self.raw_connect(client_id, client_key, azure_tenant_id, proxy_uri = nil)
+  def self.raw_connect(client_id, client_key, azure_tenant_id, subscription = nil, proxy_uri = nil)
     proxy_uri ||= VMDB::Util.http_proxy_uri
 
     ::Azure::Armrest::ArmrestService.configure(
-      :client_id  => client_id,
-      :client_key => client_key,
-      :tenant_id  => azure_tenant_id,
-      :proxy      => proxy_uri.to_s
+      :client_id       => client_id,
+      :client_key      => client_key,
+      :tenant_id       => azure_tenant_id,
+      :subscription_id => subscription,
+      :proxy           => proxy_uri.to_s
     )
   end
 
@@ -59,7 +60,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
     client_id  = options[:user] || authentication_userid(options[:auth_type])
     client_key = options[:pass] || authentication_password(options[:auth_type])
-    self.class.raw_connect(client_id, client_key, azure_tenant_id, options[:proxy_uri])
+    self.class.raw_connect(client_id, client_key, azure_tenant_id, subscription, options[:proxy_uri])
   end
 
   def verify_credentials(_auth_type = nil, options = {})
@@ -103,10 +104,10 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   # Discovery
 
   # Create EmsAzure instances for all regions with instances
-  # or images for the given authentication.  Created EmsAzure instances
+  # or images for the given authentication. Created EmsAzure instances
   # will automatically have EmsRefreshes queued up.  If this is a greenfield
   # discovery, we will at least add an EmsAzure for eastus
-  def self.discover(clientid, clientkey, azure_tenant_id)
+  def self.discover(clientid, clientkey, azure_tenant_id, subscription)
     new_emses = []
 
     all_emses = includes(:authentications)
@@ -115,7 +116,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     known_emses = all_emses.select { |e| e.authentication_userid == clientid }
     known_ems_regions = known_emses.index_by(&:provider_region)
 
-    config     = raw_connect(clientid, clientkey, azure_tenant_id)
+    config     = raw_connect(clientid, clientkey, azure_tenant_id, subscription)
     azure_vmm  = ::Azure::Armrest::VirtualMachineService.new(config)
 
     azure_vmm.locations.each do |region|
@@ -123,12 +124,12 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
       next if known_ems_regions.include?(region)
       next if vms_in_region(azure_vmm, region).count == 0 # instances
       # TODO: Check if images are == 0 and if so then skip
-      new_emses << create_discovered_region(region, clientid, clientkey, azure_tenant_id, all_ems_names)
+      new_emses << create_discovered_region(region, clientid, clientkey, azure_tenant_id, subscription, all_ems_names)
     end
 
     # at least create the Azure-eastus region.
     if new_emses.blank? && known_emses.blank?
-      new_emses << create_discovered_region("Azure-eastus", clientid, clientkey, azure_tenant_id, all_ems_names)
+      new_emses << create_discovered_region("Azure-eastus", clientid, clientkey, azure_tenant_id, subscription, all_ems_names)
     end
 
     EmsRefresh.queue_refresh(new_emses) unless new_emses.blank?
@@ -136,11 +137,11 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     new_emses
   end
 
-  def self.discover_queue(clientid, clientkey, azure_tenant_id)
+  def self.discover_queue(clientid, clientkey, azure_tenant_id, subscription)
     MiqQueue.put(
       :class_name  => name,
       :method_name => "discover_from_queue",
-      :args        => [clientid, MiqPassword.encrypt(clientkey), azure_tenant_id]
+      :args        => [clientid, MiqPassword.encrypt(clientkey), azure_tenant_id, subscription]
     )
   end
 
@@ -148,11 +149,11 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     azure_vmm.list_all.select { |vm| vm['location'] == region }
   end
 
-  def self.discover_from_queue(clientid, clientkey, azure_tenant_id)
-    discover(clientid, MiqPassword.decrypt(clientkey), azure_tenant_id)
+  def self.discover_from_queue(clientid, clientkey, azure_tenant_id, subscription)
+    discover(clientid, MiqPassword.decrypt(clientkey), azure_tenant_id, subscription)
   end
 
-  def self.create_discovered_region(region_name, clientid, clientkey, azure_tenant_id, all_ems_names)
+  def self.create_discovered_region(region_name, clientid, clientkey, azure_tenant_id, subscription, all_ems_names)
     name = "Azure-#{region_name}"
     name = "Azure-#{region_name} #{clientid}" if all_ems_names.key?(name)
 
@@ -165,7 +166,8 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
       :name            => name,
       :provider_region => region_name,
       :zone            => Zone.default_zone,
-      :uid_ems         => azure_tenant_id
+      :uid_ems         => azure_tenant_id,
+      :subscription    => subscription
     )
     new_ems.update_authentication(
       :default => {

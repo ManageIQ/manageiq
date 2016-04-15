@@ -16,10 +16,24 @@ describe ManageIQ::Providers::Azure::CloudManager do
 
     context "#connect " do
       it "defaults" do
-        expect(described_class).to receive(:raw_connect) do |clientid, clientkey|
+        expect(described_class).to receive(:raw_connect) do |clientid, clientkey, azure_tenant_id, subscription|
           expect(clientid).to eq("klmnopqrst")
           expect(clientkey).to eq("1234567890")
+          expect(azure_tenant_id).to eq("abcdefghij")
+          expect(subscription).to eq("fghij67890")
         end
+        @e.subscription = "fghij67890"
+        @e.connect
+      end
+
+      it "without subscription id" do
+        expect(described_class).to receive(:raw_connect) do |clientid, clientkey, azure_tenant_id, subscription|
+          expect(clientid).to eq("klmnopqrst")
+          expect(clientkey).to eq("1234567890")
+          expect(azure_tenant_id).to eq("abcdefghij")
+          expect(subscription).to eq(nil)
+        end
+        @e.subscription = nil
         @e.connect
       end
 
@@ -55,11 +69,12 @@ describe ManageIQ::Providers::Azure::CloudManager do
       @client_id  = Rails.application.secrets.azure.try(:[], 'client_id') || 'AZURE_CLIENT_ID'
       @client_key = Rails.application.secrets.azure.try(:[], 'client_secret') || 'AZURE_CLIENT_SECRET'
       @tenant_id  = Rails.application.secrets.azure.try(:[], 'tenant_id') || 'AZURE_TENANT_ID'
-      @subscription_id = Rails.application.secrets.azure.try(:[], 'subscription_id') || 'AZURE_SUBSCRIPTION_ID'
+      @subscription = Rails.application.secrets.azure.try(:[], 'subscription_id') || 'AZURE_SUBSCRIPTION_ID'
 
-      @alt_client_id  = 'testuser'
-      @alt_client_key = 'secret'
-      @alt_tenant_id  = 'ABCDEFGHIJABCDEFGHIJ0123456789AB'
+      @alt_client_id       = 'testuser'
+      @alt_client_key      = 'secret'
+      @alt_tenant_id       = 'ABCDEFGHIJABCDEFGHIJ0123456789AB'
+      @alt_subscription = '0123456789ABCDEFGHIJABCDEFGHIJKL'
 
       # A true thread may fail the test with VCR
       allow(Thread).to receive(:new) do |*args, &block|
@@ -79,7 +94,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       cassette_name = example.description.tr(" ", "_").delete(",").underscore
       name = "#{described_class.name.underscore}/discover/#{cassette_name}"
       VCR.use_cassette(name, :allow_unused_http_interactions => true, :decode_compressed_response => true) do
-        ManageIQ::Providers::Azure::CloudManager.discover(@client_id, @client_key, @tenant_id)
+        ManageIQ::Providers::Azure::CloudManager.discover(@client_id, @client_key, @tenant_id, @subscription)
       end
     end
 
@@ -88,6 +103,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       expect(ems.provider_region).to eq(name[AZURE_PREFIX, 1])
       expect(ems.auth_user_pwd).to eq([@client_id, @client_key])
       expect(ems.azure_tenant_id).to eq(@tenant_id)
+      expect(ems.subscription).to eq(@subscription)
     end
 
     def assert_region_on_another_account(ems, name)
@@ -95,6 +111,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
       expect(ems.provider_region).to eq(name[AZURE_PREFIX, 1])
       expect(ems.auth_user_pwd).to eq([@alt_client_id, @alt_client_key])
       expect(ems.azure_tenant_id).to eq(@alt_tenant_id)
+      expect(ems.subscription).to eq(@alt_subscription)
     end
 
     def create_factory_ems(name, region)
@@ -104,6 +121,7 @@ describe ManageIQ::Providers::Azure::CloudManager do
         :password => @client_key,
       }
       ems.update_attributes(:azure_tenant_id => @tenant_id)
+      ems.update_attributes(:subscription => @subscription)
       ems.authentications << FactoryGirl.create(:authentication, cred)
     end
 
