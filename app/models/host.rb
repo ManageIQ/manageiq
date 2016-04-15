@@ -87,6 +87,8 @@ class Host < ApplicationRecord
 
   has_many                  :host_service_groups, :dependent => :destroy
 
+  has_many                  :cloud_services, :dependent => :nullify
+
   serialize :settings, Hash
 
   # TODO: Remove all callers of address

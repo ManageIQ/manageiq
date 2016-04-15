@@ -4,6 +4,7 @@ class SystemService < ApplicationRecord
   belongs_to :miq_template, :foreign_key => :vm_or_template_id
   belongs_to :host
   belongs_to :host_service_group
+  has_one    :cloud_service, :dependent => :nullify
 
   serialize :dependencies, Hash
 
