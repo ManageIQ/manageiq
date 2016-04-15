@@ -292,6 +292,24 @@ module VirtualReflections
       association_names.inject(self) { |klass, name| klass.try!(:reflection_with_virtual, name).try!(:klass) }
     end
 
+    def collect_reflections(association_names)
+      klass = self
+      association_names.collect do |name|
+        reflection = klass.reflect_on_association(name) || break
+        klass = reflection.klass
+        reflection
+      end
+    end
+
+    def collect_reflections_with_virtual(association_names)
+      klass = self
+      association_names.collect do |name|
+        reflection = klass.reflection_with_virtual(name) || break
+        klass = reflection.klass
+        reflection
+      end
+    end
+
     private
 
     def add_virtual_reflection(reflection, name, uses, _options)

@@ -458,6 +458,88 @@ describe VirtualFields do
     end
   end
 
+  describe "#follow_associations" do
+    it "returns base class" do
+      expect(ExtManagementSystem.follow_associations([])).to eq(ExtManagementSystem)
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    it "follows reflections" do
+      expect(ExtManagementSystem.follow_associations(%w(vms host))).to eq(Host)
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    # Vms.virtual_has_many :processes
+    it "stops at virtual reflections" do
+      expect(ExtManagementSystem.follow_associations(%w(vms processes))).to be_nil
+    end
+  end
+
+  describe "#follow_associations_with_virtual" do
+    it "returns base class" do
+      expect(ExtManagementSystem.follow_associations_with_virtual([])).to eq(ExtManagementSystem)
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    it "follows reflections" do
+      expect(ExtManagementSystem.follow_associations_with_virtual(%w(vms host))).to eq(Host)
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    # Vms.virtual_has_many :processes
+    it "follows virtual reflections" do
+      expect(ExtManagementSystem.follow_associations_with_virtual(%w(vms processes))).to eq(OsProcess)
+    end
+  end
+
+  describe "collect_reflections" do
+    it "returns base class" do
+      expect(ExtManagementSystem.collect_reflections([])).to eq([])
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    it "follows reflections" do
+      expect(ExtManagementSystem.collect_reflections(%w(vms host))).to eq([
+        ExtManagementSystem.reflect_on_association(:vms), Vm.reflect_on_association(:host)
+      ])
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    # Vms.virtual_has_many :processes
+    it "stops at virtual reflections" do
+      expect(ExtManagementSystem.collect_reflections(%w(vms processes))).to be_nil
+    end
+  end
+
+  describe "collect_reflections_with_virtual" do
+    it "returns base class" do
+      expect(ExtManagementSystem.collect_reflections_with_virtual([])).to eq([])
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    it "follows reflections" do
+      expect(ExtManagementSystem.collect_reflections_with_virtual(%w(vms host))).to eq([
+        ExtManagementSystem.reflect_on_association(:vms), Vm.reflect_on_association(:host)
+      ])
+    end
+
+    # Ems.has_many :vms
+    # Vms.belongs_to :host
+    # Vms.virtual_has_many :processes
+    it "stops at virtual reflections" do
+      expect(ExtManagementSystem.collect_reflections_with_virtual(%w(vms processes))).to eq([
+        ExtManagementSystem.reflect_on_association(:vms), Vm.reflection_with_virtual(:processes)
+      ])
+    end
+  end
+
   context "preloading" do
     before(:each) do
       FactoryGirl.create(:vm_vmware,
