@@ -44,8 +44,15 @@ module FloatingIpHelper::TextualSummary
   end
 
   def textual_instance
-    # TODO(lsmola) Textual link is messed up here, it infers feature as vm_or_template_show, we need to fix that
-    @record.vm
+    label    = ui_lookup(:table => "vm_cloud")
+    instance = @record.vm
+    h        = {:label => label, :image => "vm"}
+    if instance && role_allows(:feature => "vm_show")
+      h[:value] = instance.name
+      h[:link]  = url_for(:controller => 'vm_cloud', :action => 'show', :id => instance.id)
+      h[:title] = _("Show %{label}") % {:label => label}
+    end
+    h
   end
 
   def textual_cloud_tenant
