@@ -554,7 +554,8 @@ module ManageIQ::Providers
       end
 
       def build_image_name(image)
-        "#{image.uri.split(%r{Microsoft.Compute\/}i)[1].split('.').first}"
+        # Strip the .vhd and Azure GUID extension, but retain path and base name.
+        File.join(File.dirname(image.name), File.basename(File.basename(image.name, '.*'), '.*'))
       end
 
       def build_image_description(image)
