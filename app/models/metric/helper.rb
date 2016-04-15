@@ -14,51 +14,55 @@ module Metric::Helper
   end
 
   def self.nearest_realtime_timestamp(ts)
-    ts = ts.kind_of?(String) ? ts.dup : ts.utc.iso8601
-    sec = ts[17, 2]
-    return ts if ['00', '20', '40'].include?(sec)
-
-    sec = sec.to_i
-    case
-    when sec < 20 then ts[17, 2] = '20'
-    when sec < 40 then ts[17, 2] = '40'
-    else               ts = (Time.parse(ts) + (60 - sec)).iso8601
-    end
-    ts
+    nearest_realtime(ts).iso8601
   end
 
   def self.next_realtime_timestamp(ts)
+    nearest_realtime(ts, 20.seconds)
+  end
+
+  def self.nearest_realtime(ts = Time.now.utc, offset = 0)
     ts = ts.kind_of?(Time) ? ts.utc : Time.parse(ts).utc
-    nearest_realtime_timestamp(ts + 20.seconds)
+    update = case ts.sec
+             when 00, 20, 40 then {}
+             when 01..19     then {:sec => 20}
+             when 21..39     then {:sec => 40}
+             else                 {:sec =>  0, :min => ts.min + 1}
+             end
+    ts.change(update) + offset
+  end
+
+  # for determining the timestamp, go to the beginning of the current hour
+  def self.nearest_hourly(ts = Time.now.utc, offset = 0)
+    # note, if offset = 0, we could use pure strings
+    # ts.kind_of?(Time) ? ts.utc.change(:min => 0).iso8601 : ts.dup.tap { |ts| ts[14..-1] = "00:00Z" }
+
+    ts = Time.parse(ts).utc unless ts.kind_of?(Time)
+    ts.utc.change(:min => 0) + offset
   end
 
   def self.nearest_hourly_timestamp(ts = Time.now.utc)
-    ts = ts.kind_of?(Time) ? ts.utc.iso8601 : ts.dup
-    ts[14..-1] = "00:00Z"
-    ts
+    ts = nearest_hourly(ts)
+    ts.kind_of?(Time) ? ts.iso8601 : ts
   end
 
   def self.next_hourly_timestamp(ts)
-    ts = ts.kind_of?(Time) ? ts.utc : Time.parse(ts).utc
-    nearest_hourly_timestamp(ts + 1.hour)
+    nearest_hourly(ts, 1.hour).iso8601
   end
 
   def self.realtime_timestamps_from_range(start_time, end_time = nil)
-    start_time = nearest_realtime_timestamp(start_time)
-    return [start_time] if end_time.nil?
+    start_time = nearest_realtime(start_time)
+    return [start_time.iso8601] if end_time.nil?
 
-    start_time = Time.parse(start_time)
-    end_time = Time.parse(nearest_realtime_timestamp(end_time))
-
+    end_time = nearest_realtime(end_time)
     (start_time..end_time).step_value(20.seconds).collect!(&:iso8601)
   end
 
   def self.hours_from_range(start_time, end_time = nil)
-    start_time = nearest_hourly_timestamp(start_time)
-    return [start_time] if end_time.nil?
+    start_time = nearest_hourly(start_time)
+    return [start_time.iso8601] if end_time.nil?
 
-    start_time = Time.parse(start_time)
-    end_time = Time.parse(nearest_hourly_timestamp(end_time))
+    end_time = nearest_hourly(end_time)
 
     (start_time..end_time).step_value(1.hour).collect!(&:iso8601)
   end
