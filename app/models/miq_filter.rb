@@ -88,13 +88,13 @@ module MiqFilter
     return result, total_count
   end
 
-  def self.find_children_of(obj, assoc, options = {})
+  def self.find_children_of(obj, assoc)
     reflection = obj.class.reflect_on_association(assoc.to_sym)
     mode       = determine_mode_for_find_children_of(reflection, obj, assoc)
 
     case mode
-    when :by_reflection  then find_children_of_via_reflection(obj, reflection, options)
-    when :by_method      then find_children_of_via_method(obj, assoc, options)
+    when :by_reflection  then find_children_of_via_reflection(obj, reflection)
+    when :by_method      then find_children_of_via_method(obj, assoc)
     else                      raise _("Unknown mode: <%{mode}>") % {:mode => mode.inspect}
     end
   end
