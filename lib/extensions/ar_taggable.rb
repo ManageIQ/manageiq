@@ -74,8 +74,6 @@ module ActsAsTaggable
 
       return find_tagged_with(options.merge(:all => fixed_conditions)) if inner_lists.empty?
 
-      offset = options.delete(:offset) || 0
-      limit = options.delete(:limit)
       results = nil
       list.each do |inner_list|
         ret = find_tagged_with(options.merge(:any => inner_list))
@@ -87,7 +85,7 @@ module ActsAsTaggable
         results = results.select { |obj| ret.include?(obj) }
         break if results.empty?
       end
-      limit ? results[offset...(offset + limit)] : results
+      results
     end
 
     def tags(options = {})
