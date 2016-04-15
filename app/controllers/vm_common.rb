@@ -1,5 +1,6 @@
 module VmCommon
   extend ActiveSupport::Concern
+  include ActionView::Helpers::JavaScriptHelper
 
   # handle buttons pressed on the button bar
   def button
