@@ -2315,13 +2315,13 @@ class ApplicationController < ActionController::Base
     mfilters = user ? user.get_managed_filters : []
     bfilters = user ? user.get_belongsto_filters : []
 
-    if db.respond_to?(:find_filtered) && !mfilters.empty?
+    if db.respond_to?(:find_tags_by_grouping) && !mfilters.empty?
       result = db.where(options[:conditions]).find_tags_by_grouping(mfilters, :ns => "*")
     else
       result = db.apply_legacy_finder_options(options)
     end
 
-    result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:find_filtered) && result
+    result = MiqFilter.apply_belongsto_filters(result, bfilters) if db.respond_to?(:apply_belongsto_filters) && result
 
     result
   end
