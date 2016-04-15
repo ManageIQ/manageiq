@@ -69,4 +69,22 @@ class TopologyService
     end
     build_recursive_topology(relation, entity_relationships[key], topo_items, links)
   end
+
+  def build_entity_relationships(included_relations)
+    hash = {}
+    case included_relations
+      when Hash
+        included_relations.each_pair do |key, hash_value|
+          hash_value = build_entity_relationships(hash_value)
+          hash[key.to_s.camelize.to_sym] = hash_value
+        end
+      when Array
+        included_relations.each do |array_value|
+          hash.merge!(build_entity_relationships(array_value))
+        end
+      when Symbol
+        hash[included_relations.to_s.camelize.to_sym] = nil
+    end
+    hash
+  end
 end
