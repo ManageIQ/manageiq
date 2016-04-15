@@ -8,7 +8,7 @@ module CloudSubnetHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network instances cloud_tenant availability_zone network_router)
+    %i(parent_ems_cloud ems_network cloud_tenant availability_zone instances cloud_network network_router)
   end
 
   def textual_group_tags
@@ -56,11 +56,11 @@ module CloudSubnetHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    textual_link(@record.ext_management_system.try(:parent_manager))
+    @record.ext_management_system.try(:parent_manager)
   end
 
   def textual_ems_network
-    textual_link(@record.ext_management_system)
+    @record.ext_management_system
   end
 
   def textual_instances
@@ -74,15 +74,19 @@ module CloudSubnetHelper::TextualSummary
     h
   end
 
+  def textual_cloud_network
+    @record.cloud_network
+  end
+
   def textual_cloud_tenant
-    textual_link(@record.cloud_tenant)
+    @record.cloud_tenant
   end
 
   def textual_network_router
-    textual_link(@record.network_router)
+    @record.network_router
   end
 
   def textual_availability_zone
-    textual_link(@record.availability_zone)
+    @record.availability_zone
   end
 end
