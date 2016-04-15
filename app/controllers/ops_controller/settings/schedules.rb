@@ -567,7 +567,7 @@ module OpsController::Settings::Schedules
       [_("%{model} Analysis") % {:model => ui_lookup(:model => 'EmsCluster')}, "emscluster"],
       [_("%{model} Analysis") % {:model => ui_lookup(:model => 'Storage')}, "storage"]
     ]
-    if role_allows(:feature => "vm_check_compliance")
+    if role_allows(:feature => "vm_check_compliance") || role_allows(:feature => "miq_template_check_compliance")
       @action_type_options_for_select.push([_("VM Compliance Check"), "vm_check_compliance"])
     end
     if role_allows(:feature => "host_check_compliance")
