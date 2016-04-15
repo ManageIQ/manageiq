@@ -325,12 +325,6 @@ class VmCloudController < ApplicationController
       :name => _("Evacuate Instance '%{name}'") % {:name => @record.name},
       :url  => "/vm_cloud/evacuate"
     ) unless @explorer
-
-    @edit = {}
-    @edit[:key] = "vm_evacuate__#{@record.id}"
-    @edit[:vm_id] = @record.id
-    @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
-    session[:edit] = @edit
     @in_a_form = true
     @refresh_partial = "vm_common/evacuate"
   end
@@ -341,8 +335,10 @@ class VmCloudController < ApplicationController
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
     clusters = []
     hosts = []
-    @record.ext_management_system.ems_clusters.each { |c| clusters << {:id => c.id, :name => c.name} }
-    @record.ext_management_system.hosts.each do |h|
+    @record.ext_management_system.find_filtered_children("ems_clusters").each do |c|
+      clusters << {:id => c.id, :name => c.name}
+    end
+    @record.ext_management_system.find_filtered_children("hosts").each do |h|
       hosts << {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
     end
     clusters.sort
