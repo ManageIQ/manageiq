@@ -8,7 +8,7 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network cloud_tenant instances orchestration_stack)
+    %i(parent_ems_cloud ems_network cloud_tenant instances orchestration_stack network_ports)
   end
 
   def textual_group_firewall
@@ -42,11 +42,11 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    textual_link(@record.ext_management_system.try(:parent_manager))
+    @record.ext_management_system.try(:parent_manager)
   end
 
   def textual_ems_network
-    textual_link(@record.ext_management_system)
+    @record.ext_management_system
   end
 
   def textual_instances
@@ -65,6 +65,10 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_cloud_tenant
-    textual_link(@record.cloud_tenant)
+    @record.cloud_tenant
+  end
+
+  def textual_network_ports
+    @record.network_ports
   end
 end
