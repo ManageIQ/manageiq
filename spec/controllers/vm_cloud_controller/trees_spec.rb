@@ -26,17 +26,24 @@ describe VmCloudController do
       end
     end
 
-    it "renders Instance details for Instance node" do
-      instance = FactoryGirl.create(:vm_openstack)
+    [
+      %w(vm_openstack Openstack),
+      %w(vm_azure Azure),
+      %w(vm_google Google),
+      %w(vm_amazon Amazon)
+    ].each do |instance, name|
+      it "renders Instance details for #{name} node" do
+        instance = FactoryGirl.create(instance.to_sym)
 
-      session[:settings] = {}
-      seed_session_trees('vm_cloud', 'instances_tree')
+        session[:settings] = {}
+        seed_session_trees('vm_cloud', 'instances_tree')
 
-      post :tree_select, :params => { :id => "v-#{instance.compressed_id}", :format => :js }
+        post :tree_select, :params => { :id => "v-#{instance.compressed_id}", :format => :js }
 
-      expect(response).to render_template('vm_cloud/_main')
-      expect(response).to render_template('shared/summary/_textual_tags')
-      expect(response.status).to eq(200)
+        expect(response).to render_template('vm_cloud/_main')
+        expect(response).to render_template('shared/summary/_textual_tags')
+        expect(response.status).to eq(200)
+      end
     end
   end
 end
