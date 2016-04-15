@@ -2,7 +2,7 @@ module ManageIQ::Providers
   class Azure::NetworkManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
-    def parse_inventory(ems, _targets)
+    def parse_legacy_inventory(ems)
       ManageIQ::Providers::Azure::NetworkManager::RefreshParser.ems_inv_to_hashes(ems, refresher_options)
     end
 
