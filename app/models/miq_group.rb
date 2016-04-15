@@ -4,7 +4,7 @@ class MiqGroup < ApplicationRecord
   TENANT_GROUP = "tenant"
 
   belongs_to :tenant
-  has_one    :entitlement
+  has_one    :entitlement, :dependent => :destroy
   has_one    :miq_user_role, :through => :entitlement
   has_and_belongs_to_many :users
   has_many   :vms,         :dependent => :nullify
