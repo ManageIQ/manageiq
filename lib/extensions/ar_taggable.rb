@@ -47,12 +47,13 @@ module ActsAsTaggable
 
     def with_any_tags(tag_ids)
       taggings = reflect_on_association(:taggings).klass.arel_table
-      if tag_ids.length > 1
-        where(Tagging.where(arel_taggings_include(taggings, tag_ids)).exists)
-      else
-        taggings = taggings.alias("taggings#{tag_ids.first%1000}")
+      if tag_ids.length == 1
+        # alias to a unique table name
+        taggings = taggings.alias("taggings#{tag_ids.first%1_000_000_000}")
         joins(arel_table.join(taggings, Arel::Nodes::InnerJoin)
                         .on(arel_taggings_include(taggings, tag_ids)).join_sources)
+      else
+        where(Tagging.where(arel_taggings_include(taggings, tag_ids)).exists)
       end
     end
 
