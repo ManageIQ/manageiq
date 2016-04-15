@@ -937,9 +937,10 @@ module ApplicationController::Performance
     chart_layout = perf_get_chart_layout(layout_name, @perf_options[:model])
 
     if @perf_options[:index]
-      chart_index = @perf_options[:index]
+      chart_index = @perf_options[:index].to_i
+      chart = chart_layout[chart_index]
       prepare_perf_tag_chart(chart, rpt, cat_desc)
-      chart_data.push(gen_perf_chart(chart_layout[chart_index], rpt, nil, 'perf_chart_chooser'))
+      chart_data.push(gen_perf_chart(chart, rpt, nil, 'perf_chart_chooser'))
       charts.push(chart)
     else
       chart_layout.each_with_index do |chart, idx|
@@ -1064,7 +1065,7 @@ module ApplicationController::Performance
     chart_layouts = perf_get_chart_layout(layout_name, cont_plus_model)
 
     if @perf_options[:index]
-      chart_index = @perf_options[:index]
+      chart_index = @perf_options[:index].to_i
       chart = chart_layouts[chart_index]
       @chart_data.push(gen_perf_chart(chart, rpt, nil, 'perf_top_chart'))
       @chart_reports.push(rpt)
