@@ -11,6 +11,7 @@
                         "name"        => "#{prefix}_hostname",
                         "ng-model"    => "#{ng_model}.#{prefix}_hostname",
                         "maxlength"   => "#{MAX_NAME_LEN}",
+                        "required"    => defined?(hostname_not_required) ? false : true,
                         "checkchange" => ""}
     %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
       = _("Required")
@@ -25,7 +26,7 @@
                         "name"        => "#{prefix}_api_port",
                         "ng-model"    => "#{ng_model}.#{prefix}_api_port",
                         "maxlength"   => 15,
-                        "required"    => "",
+                        "required"    => defined?(apiport_not_required) ? false : true,
                         "checkchange" => ""}
     %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.required"}
       = _("Required")
@@ -39,7 +40,7 @@
                      options_for_select([["<#{_('Choose>')}", nil]] + @openstack_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
                      "checkchange"                 => "",
-                     "required"                    => "",
+                     "required"                    => defined?(security_protocol_not_required) ? false : true,
                      "selectpicker-for-select-tag" => "")
   .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
     = select_tag("#{prefix}_security_protocol",
