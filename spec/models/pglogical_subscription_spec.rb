@@ -188,6 +188,72 @@ describe PglogicalSubscription do
     end
   end
 
+  describe ".save_all!" do
+    it "saves each of the objects" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 3, 4)
+
+      # node created
+      allow(pglogical).to receive(:enable)
+      allow(pglogical).to receive(:node_create).and_return(double(:check => nil))
+
+      # subscription is created
+      expect(pglogical).to receive(:subscription_create) do |name, dsn, replication_sets, sync_structure|
+        expect(name).to eq("region_2_subscription")
+        expect(dsn).to include("host='test-2.example.com'")
+        expect(dsn).to include("user='root'")
+        expect(replication_sets).to eq(['miq'])
+        expect(sync_structure).to be false
+      end.and_return(double(:check => nil))
+
+      expect(pglogical).to receive(:subscription_create) do |name, dsn, replication_sets, sync_structure|
+        expect(name).to eq("region_3_subscription")
+        expect(dsn).to include("host='test-3.example.com'")
+        expect(dsn).to include("user='miq'")
+        expect(replication_sets).to eq(['miq'])
+        expect(sync_structure).to be false
+      end.and_return(double(:check => nil))
+
+      to_save = []
+      to_save << described_class.new(:host => "test-2.example.com", :user => "root")
+      to_save << described_class.new(:host => "test-3.example.com", :user => "miq")
+
+      described_class.save_all!(to_save)
+    end
+
+    it "raises a combined error when some saves fail" do
+      allow(pglogical).to receive(:subscriptions).and_return([])
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
+      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 3, 4)
+
+      # node created
+      allow(pglogical).to receive(:enable)
+      allow(pglogical).to receive(:node_create).and_return(double(:check => nil))
+
+      # subscription is created
+      expect(pglogical).to receive(:subscription_create).ordered.and_raise("Error one")
+      expect(pglogical).to receive(:subscription_create) do |name, dsn, replication_sets, sync_structure|
+        expect(name).to eq("region_3_subscription")
+        expect(dsn).to include("host='test-3.example.com'")
+        expect(dsn).to include("user='miq'")
+        expect(replication_sets).to eq(['miq'])
+        expect(sync_structure).to be false
+      end.ordered.and_return(double(:check => nil))
+      expect(pglogical).to receive(:subscription_create).ordered.and_raise("Error two")
+
+      to_save = []
+      to_save << described_class.new(:host => "test-2.example.com", :user => "root")
+      to_save << described_class.new(:host => "test-3.example.com", :user => "miq")
+      to_save << described_class.new(:host => "test-4.example.com", :user => "miq")
+
+      expect { described_class.save_all!(to_save) }.to raise_error("Failed to save subscription " \
+        "to test-2.example.com: Error one\nFailed to save subscription to test-4.example.com: Error two")
+    end
+  end
+
   describe "#delete" do
     it "drops the node when this is the last subscription" do
       allow(pglogical).to receive(:enabled?).and_return(true)

@@ -42,6 +42,22 @@ class PglogicalSubscription < ActsAsArModel
     false
   end
 
+  def self.save_all!(subscription_list)
+    errors = []
+    subscription_list.each do |s|
+      begin
+        s.save!
+      rescue RuntimeError => e
+        errors << "Failed to save subscription to #{s.host}: #{e.message}"
+      end
+    end
+
+    unless errors.empty?
+      raise errors.join("\n")
+    end
+    subscription_list
+  end
+
   def delete
     pglogical.subscription_drop(id, true)
     MiqRegion.destroy_region(connection, provider_region)
