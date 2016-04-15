@@ -318,17 +318,13 @@ module Rbac
   end
 
   # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
-  def self.find_via_descendants(descendants, method_name, klass)
-    MiqPreloader.preload(descendants, method_name)
-    descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
-  end
-
   # @option options :user [User]
   # @option options :miq_group [MiqGroup]
   def self.matches_via_descendants(klass, descendant_klass, options)
     if descendant_klass && (method_name = lookup_method_for_descendant_class(klass, descendant_klass))
       descendants = filtered(descendant_klass, options)
-      find_via_descendants(descendants, method_name, klass)
+      MiqPreloader.preload(descendants, method_name)
+      descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
     end
   end
 
