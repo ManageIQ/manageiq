@@ -140,7 +140,7 @@ module MSCommon
           if parent.nil?
             buf << MemoryBuffer.create(thisLen)
           else
-            buf << parent.d_read(pos + buf.length, thisLen, mark_dirty)
+            buf << parent.d_read(pos + buf.length, thisLen)
           end
         else
           @file.seek(getAbsSectorLoc(blockNum, secNum) + byteOffset, IO::SEEK_SET)
