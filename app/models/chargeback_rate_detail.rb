@@ -6,6 +6,8 @@ class ChargebackRateDetail < ApplicationRecord
   validates :group, :source, :presence => true
   validate :contiguous_tiers?
 
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source).freeze
+
   # Set the rates according to the tiers
   def find_rate(value)
     fixed_rate = 0.0
@@ -202,5 +204,28 @@ class ChargebackRateDetail < ApplicationRecord
 
   def consecutive_tiers?(tier, previous_tier)
     tier.start == previous_tier.finish
+  end
+
+  def self.default_rate_details_for(rate_type)
+    rate_details = []
+
+    fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
+    fixture = File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
+    fixture.each do |chargeback_rate|
+      next unless chargeback_rate[:rate_type] == rate_type
+
+      chargeback_rate[:rates].each do |detail|
+        detail_new = ChargebackRateDetail.new(detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES))
+        detail_new.detail_measure = ChargebackRateDetailMeasure.find_by(:name => detail[:measure])
+        detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency])
+        detail[:tiers].each do |tier|
+          detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
+        end
+
+        rate_details.push(detail_new)
+      end
+    end
+
+    rate_details
   end
 end
