@@ -46,30 +46,14 @@ module ActsAsTaggable
     end
 
     def with_any_tags(tag_ids)
-      taggings = reflect_on_association(:taggings).klass.arel_table
-      if tag_ids.length == 1
-        # alias to a unique table name
-        taggings = taggings.alias("taggings#{tag_ids.first%1_000_000_000}")
-        joins(arel_table.join(taggings, Arel::Nodes::InnerJoin)
-                        .on(arel_taggings_include(taggings, tag_ids)).join_sources)
-      else
-        where(Tagging.where(arel_taggings_include(taggings, tag_ids)).exists)
-      end
+      taggings = Tagging.arel_table
+      where(Tagging.where(taggings[:taggable_id].eq(arel_table[:id])
+                                                .and(taggings[:taggable_type].eq(base_class.name))
+                                                .and(taggings[:tag_id].in(tag_ids))).exists)
     end
 
     def with_all_tags(tag_ids)
-      taggings = reflect_on_association(:taggings).klass.arel_table
-      if tag_ids.count == 1
-        with_any_tags(tag_ids)
-      else
-        nodes = Arel::Nodes::Equality.new(
-          taggings.project(Arel.star.count).where(arel_taggings_include(taggings, tag_ids)),
-          Arel::Nodes.build_quoted(tag_ids.size))
-
-        # a) even though the with_any_tags is not necessary, quicker to include it along with the count
-        # b) arel does not support subqueries (here, it is a SqlManager as a node).
-        with_any_tags(tag_ids).where(Arel.sql("(#{nodes.to_sql})"))
-      end
+      tag_ids.inject(self) { |rel, tag_id| rel.with_any_tags([tag_id]) }
     end
 
     # @param list [Array<Array<String>>] list of tags
@@ -116,14 +100,6 @@ module ActsAsTaggable
       options[:ns] = Tag.get_namespace(options)
       Tag.tags(options)
     end
-
-    def arel_taggings_include(taggings, tag_ids)
-      taggings[:taggable_id].eq(arel_table[:id])
-                            .and(taggings[:taggable_type].eq(base_class.name))
-                            .and(taggings[:tag_id].in(tag_ids))
-    end
-
-
   end # module SingletonMethods
 
   def tag_with(list, options = {})
