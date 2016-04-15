@@ -75,6 +75,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
     raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(options[:auth_type])
 
     auth_token = authentication_token(options[:auth_type])
+    # TODO: determine where the project var came from, how to use it (who's the caller)
     self.class.raw_connect(project, auth_token)
   end
 
