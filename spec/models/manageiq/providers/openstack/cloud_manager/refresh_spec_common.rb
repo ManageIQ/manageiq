@@ -53,6 +53,7 @@ module Openstack
       assert_specific_stacks
       assert_specific_vms
       assert_relationship_tree
+      assert_cloud_services
 
       # Assert table counts as last, just for sure. First we compare Hashes of data, so we see the diffs
       assert_table_counts
@@ -192,6 +193,7 @@ module Openstack
       expect(Relationship.count).to        be > 0
       # Just check that queue is not empty
       expect(MiqQueue.count).to            be > 0
+      expect(CloudService.count).to        be > 0
     end
 
     def assert_table_counts_orchestration
@@ -730,6 +732,26 @@ module Openstack
 
     def assert_relationship_tree
       expect(@ems.descendants_arranged).to match_relationship_tree({})
+    end
+
+    def assert_cloud_services
+      sources_count = {
+        'compute' => 5,
+      }
+      sources_count.map do |source, count|
+        expect(CloudService.where(:source => source).count).to eq count
+      end
+
+      executable_names_count = {
+        'nova-compute'     => 1,
+        'nova-consoleauth' => 1,
+        'nova-cert'        => 1,
+        'nova-conductor'   => 1,
+        'nova-scheduler'   => 1,
+      }
+      executable_names_count.map do |executable_name, count|
+        expect(CloudService.where(:executable_name => executable_name).count).to eq count
+      end
     end
   end
 end
