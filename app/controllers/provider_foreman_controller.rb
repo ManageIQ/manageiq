@@ -522,7 +522,7 @@ class ProviderForemanController < ApplicationController
       case @record.type
       when "ManageIQ::Providers::Foreman::ConfigurationManager"
         options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem}
-        options[:where_clause] = ["configuration_manager_id IN (?)", provider.id]
+        options[:where_clause] = ["manager_id IN (?)", provider.id]
         @no_checkboxes = true
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
@@ -559,7 +559,7 @@ class ProviderForemanController < ApplicationController
       options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
       options[:where_clause] =
-        ["configuration_manager_id IN (?) AND \
+        ["manager_id IN (?) AND \
           configuration_profile_id IS NULL", id] if empty_configuration_profile_record?(@configuration_profile_record)
       process_show_list(options)
       record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
@@ -916,7 +916,7 @@ class ProviderForemanController < ApplicationController
 
   def list_row_id(row)
     if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
-      "-#{row['configuration_manager_id']}-unassigned"
+      "-#{row['manager_id']}-unassigned"
     else
       to_cid(row['id'])
     end
@@ -947,13 +947,13 @@ class ProviderForemanController < ApplicationController
 
   def add_unassigned_configuration_profile_record(provider_id)
     unprovisioned_configured_systems =
-      ConfiguredSystem.where(:configuration_manager_id => provider_id, :configuration_profile_id => nil).count
+      ConfiguredSystem.where(:manager_id => provider_id, :configuration_profile_id => nil).count
 
     return if unprovisioned_configured_systems == 0
 
     unassigned_configuration_profile_desc = unassigned_configuration_profile_name = _("Unassigned Profiles Group")
     unassigned_configuration_profile = ConfigurationProfile.new
-    unassigned_configuration_profile.configuration_manager_id = provider_id
+    unassigned_configuration_profile.manager_id = provider_id
     unassigned_configuration_profile.name = unassigned_configuration_profile_name
     unassigned_configuration_profile.description = unassigned_configuration_profile_desc
 
@@ -964,7 +964,7 @@ class ProviderForemanController < ApplicationController
        'my_zone'                        => unassigned_configuration_profile.my_zone,
        'region_description'             => unassigned_configuration_profile.region_description,
        'name'                           => unassigned_configuration_profile_name,
-       'configuration_manager_id'       => provider_id
+       'manager_id'                     => provider_id
       }
 
     add_unassigned_configuration_profile_record_to_view(unassigned_profile_row, unassigned_configuration_profile)

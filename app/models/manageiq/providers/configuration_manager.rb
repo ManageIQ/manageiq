@@ -2,9 +2,9 @@ class ManageIQ::Providers::ConfigurationManager < ::ExtManagementSystem
   require_nested :InventoryGroup
   require_nested :InventoryRootGroup
 
-  has_many :configured_systems,     :dependent => :destroy
-  has_many :configuration_profiles, :dependent => :destroy
-  has_many :configuration_scripts,  :dependent => :destroy
+  has_many :configured_systems,     :dependent => :destroy, :foreign_key => "manager_id"
+  has_many :configuration_profiles, :dependent => :destroy, :foreign_key => "manager_id"
+  has_many :configuration_scripts,  :dependent => :destroy, :foreign_key => "manager_id"
   has_many :inventory_groups,       :dependent => :destroy, :foreign_key => "ems_id", :inverse_of => :manager
 
   virtual_column  :total_configuration_profiles, :type => :integer

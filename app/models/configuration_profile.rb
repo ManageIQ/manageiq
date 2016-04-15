@@ -3,7 +3,7 @@ class ConfigurationProfile < ApplicationRecord
   include ReportableMixin
 
   acts_as_miq_taggable
-  belongs_to :configuration_manager, :class_name => 'ManageIQ::Providers::ConfigurationManager'
+  belongs_to :manager, :class_name => 'ExtManagementSystem'
   belongs_to :parent, :class_name => 'ConfigurationProfile'
   belongs_to :customization_script_ptable
   belongs_to :customization_script_medium
@@ -67,7 +67,7 @@ class ConfigurationProfile < ApplicationRecord
     @tag_hash ||= configuration_tags.index_by(&:class)
   end
 
-  alias_method :manager, :configuration_manager
+  alias_method :configuration_manager, :manager
 
   def total_configured_systems
     Rbac.filtered(configured_systems, :match_via_descendants => ConfiguredSystem).count

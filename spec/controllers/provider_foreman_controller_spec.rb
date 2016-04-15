@@ -6,32 +6,32 @@ describe ProviderForemanController do
 
     @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "testForeman", :url => "10.8.96.102", :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
-    @config_profile = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name                     => "testprofile",
-                                                                                                      :description              => "testprofile",
-                                                                                                      :configuration_manager_id => @config_mgr.id)
-    @config_profile2 = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name                     => "testprofile2",
-                                                                                                       :description              => "testprofile2",
-                                                                                                       :configuration_manager_id => @config_mgr.id)
+    @config_profile = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name        => "testprofile",
+                                                                                                      :description => "testprofile",
+                                                                                                      :manager_id  => @config_mgr.id)
+    @config_profile2 = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name        => "testprofile2",
+                                                                                                       :description => "testprofile2",
+                                                                                                       :manager_id  => @config_mgr.id)
     @configured_system = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test_configured_system",
                                                                                                      :configuration_profile_id => @config_profile.id,
-                                                                                                     :configuration_manager_id => @config_mgr.id)
+                                                                                                     :manager_id               => @config_mgr.id)
     @configured_system2a = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test2a_configured_system",
                                                                                                        :configuration_profile_id => @config_profile2.id,
-                                                                                                       :configuration_manager_id => @config_mgr.id)
+                                                                                                       :manager_id               => @config_mgr.id)
     @configured_system2b = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test2b_configured_system",
                                                                                                        :configuration_profile_id => @config_profile2.id,
-                                                                                                       :configuration_manager_id => @config_mgr.id)
+                                                                                                       :manager_id               => @config_mgr.id)
     @configured_system_unprovisioned =
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned",
                                                                                   :configuration_profile_id => nil,
-                                                                                  :configuration_manager_id => @config_mgr.id)
+                                                                                  :manager_id               => @config_mgr.id)
 
     @provider2 = ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman", :url => "10.8.96.103", :zone => @zone)
     @config_mgr2 = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider2.id)
     @configured_system_unprovisioned2 =
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned2",
                                                                                   :configuration_profile_id => nil,
-                                                                                  :configuration_manager_id => @config_mgr2.id)
+                                                                                  :manager_id               => @config_mgr2.id)
     controller.instance_variable_set(:@sb, :active_tree => :configuration_manager_providers_tree)
 
     [@configured_system, @configured_system2a, @configured_system2b, @configured_system_unprovisioned2].each do |cs|
