@@ -214,10 +214,11 @@ module Mixins
                        :emstype                     => @ems.emstype,
                        :zone                        => zone,
                        :provider_id                 => @ems.provider_id ? @ems.provider_id : "",
-                       :hostname                    => @ems.hostname,
-                       :api_port                    => @ems.port,
+                       :default_hostname            => @ems.connection_configurations.default.endpoint.hostname,
+                       :default_api_port            => @ems.connection_configurations.default.endpoint.port,
+                       :default_security_protocol   => default_security_protocol,
                        :api_version                 => @ems.api_version,
-                       :security_protocol           => security_protocol,
+
                        :provider_region             => @ems.provider_region,
                        :default_userid              => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :amqp_userid                 => amqp_userid,
@@ -265,11 +266,8 @@ module Mixins
       end
 
       if ems.kind_of?(ManageIQ::Providers::Microsoft::InfraManager)
-        ems.security_protocol = params[:default_security_protocol]
+        default_endpoint = {:role => :default, :hostname => hostname, :security_protocol => ems.security_protocol}
         ems.realm = params[:realm]
-      elsif ems.supports_security_protocol?
-        # TODO the behavior should be probably rewritten to support methods
-        ems.security_protocol = params[:default_security_protocol].strip if params[:default_security_protocol]
       end
 
       if ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
