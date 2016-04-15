@@ -831,6 +831,7 @@ class CatalogController < ApplicationController
     x_tree[:open_nodes].push("xx-#{ot_type}") unless x_tree[:open_nodes].include?("xx-#{ot_type}")
     self.x_node = "ot-#{to_cid(ot.id)}"
     x_tree[:open_nodes].push(x_node)
+    add_flash(params[:flash_message]) if params.key?(:flash_message)
     explorer
   end
 
@@ -1692,13 +1693,18 @@ class CatalogController < ApplicationController
             condition = ["display=? and service_template_catalog_id IS NOT NULL", true]
             service_template_list(condition, :no_checkboxes => true)
           else
-            process_show_list(:model => typ.constantize)
+            options = {:model => typ.constantize}
+            options[:where_clause] = ["orderable=?", true] if x_active_tree == :ot_tree
+            process_show_list(options)
           end
           @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
         elsif ["xx-otcfn", "xx-othot", "xx-otazu"].include?(x_node)
           typ = node_name_to_template_name(x_node)
           @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
-          process_show_list(:model => typ.constantize, :gtl_dbname => :orchestrationtemplate)
+          options = {:model        => typ.constantize,
+                     :gtl_dbname   => :orchestrationtemplate,
+                     :where_clause => ["orderable=?", true]}
+          process_show_list(options)
         else
           if x_active_tree == :stcat_tree
             @record = ServiceTemplateCatalog.find_by_id(from_cid(id))

@@ -7,5 +7,7 @@
   - else
     - if %w(instances security_groups).include?(@display)
       = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@orchestration_stack.id}"}
+    - elsif @display == 'stack_orchestration_template'
+      = render :partial => "stack_orchestration_template"
     - elsif @showtype == 'main'
       = render :partial => 'main'

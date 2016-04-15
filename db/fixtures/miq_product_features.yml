@@ -256,6 +256,11 @@
         :description: Edit Orchestration Templates Tags
         :feature_type: control
         :identifier: orchestration_template_tag
+      - :name: Make Template Orderable
+        :description: Make Orchestration Template orderable
+        :feature_type: control
+        :identifier: make_ot_orderable
+
     - :name: Create Service Dialog from Orchestration Template
       :description: Create Service Dialog from Orchestration Template
       :identifier: service_dialog_from_ot

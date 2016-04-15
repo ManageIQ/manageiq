@@ -43,6 +43,9 @@ class OrchestrationStackController < ApplicationController
       @view, @pages = get_view(kls, :parent => @orchestration_stack)  # Get the records (into a view) and the paginator
       @showtype = @display
       notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
+    when "stack_orchestration_template"
+      drop_breadcrumb(:name => "%{name} (Orchestration Template)" % {:name => @orchestration_stack.name},
+                      :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
     end
 
     # Came in from outside show_list partial
@@ -95,6 +98,15 @@ class OrchestrationStackController < ApplicationController
         @refresh_partial = "layouts/gtl"
         show                                                        # Handle VMs buttons
       end
+    elsif params[:pressed] == "make_ot_orderable"
+      make_ot_orderable
+      return
+    elsif params[:pressed] == "orchestration_template_copy"
+      orchestration_template_copy
+      return
+    elsif params[:pressed] == "orchestration_templates_view"
+      orchestration_templates_view
+      return
     else
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
       @refresh_div = "main_div" # Default div for button.rjs to refresh
@@ -139,7 +151,125 @@ class OrchestrationStackController < ApplicationController
     end
   end
 
+  def stacks_ot_info
+    ot = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
+    render :json => {
+      :template_id          => ot.id,
+      :template_name        => ot.name,
+      :template_description => ot.description,
+      :template_draft       => ot.draft,
+      :template_content     => ot.content
+    }
+  end
+
+  def stacks_ot_copy
+    case params[:button]
+    when "cancel"
+      stacks_ot_copy_cancel
+    when "add"
+      stacks_ot_copy_submit
+    end
+  end
+
   private ############################
+
+  def make_ot_orderable
+    stack = find_by_id_filtered(OrchestrationStack, params[:id])
+    template = stack.orchestration_template
+    if template.orderable?
+      add_flash(_("Orchestration template \"%{name}\" is already orderable") % {:name => template.name}, :error)
+      render_flash
+    else
+      begin
+        template.save_as_orderable!
+      rescue StandardError => bang
+        add_flash(_("An error occured when changing orchestration template \"%{name}\" to orderable: %{err_msg}") %
+          {:name => template.name, :err_msg => bang.message}, :error)
+        render_flash
+      else
+        @record = stack
+        add_flash(_("Orchestration template \"%{name}\" is now orderable") % {:name => template.name})
+        render :update do |page|
+          page << javascript_prologue
+          page.replace(:form_div, :partial => "stack_orchestration_template")
+          page << javascript_pf_toolbar_reload('center_tb', build_toolbar(center_toolbar_filename))
+          page << javascript_show_if_exists(:toolbar)
+        end
+      end
+    end
+  end
+
+  def orchestration_template_copy
+    @record = find_by_id_filtered(OrchestrationStack, params[:id])
+    if @record.orchestration_template.orderable?
+      add_flash(_("Orchestration template \"%{name}\" is already orderable") %
+        {:name => @record.orchestration_template.name}, :error)
+      render_flash
+    else
+      render :update do |page|
+        page << javascript_prologue
+        page.replace(:form_div, :partial => "copy_orchestration_template")
+        page << javascript_hide_if_exists(:toolbar)
+      end
+    end
+  end
+
+  def stacks_ot_copy_cancel
+    @record = find_by_id_filtered(OrchestrationStack, params[:id])
+    add_flash(_("Copy of Orchestration Template was cancelled by the user"))
+    render :update do |page|
+      page << javascript_prologue
+      page.replace(:form_div, :partial => "stack_orchestration_template")
+      page << javascript_show_if_exists(:toolbar)
+    end
+  end
+
+  def stacks_ot_copy_submit
+    assert_privileges('orchestration_template_copy')
+    original_template = find_by_id_filtered(OrchestrationTemplate, params[:templateId])
+    if params[:templateContent] == original_template.content
+      add_flash(_("Unable to create a new template copy \"%{name}\": old and new template content have to differ.") %
+        {:name => params[:templateName]})
+      render_flash
+    elsif params[:templateContent].nil? || params[:templateContent] == ""
+      add_flash(_("Unable to create a new template copy \"%{name}\": new template content cannot be empty.") %
+        {:name => params[:templateName]})
+      render_flash
+    else
+      ot = OrchestrationTemplate.new(
+        :name        => params[:templateName],
+        :description => params[:templateDescription],
+        :type        => original_template.type,
+        :content     => params[:templateContent],
+        :draft       => params[:templateDraft] == "true",
+      )
+      begin
+        ot.save_as_orderable!
+      rescue StandardError => bang
+        add_flash(_("Error during 'Orchestration Template Copy': %{error_message}") %
+          {:error_message => bang.message}, :error)
+        render_flash
+      else
+        flash_message = _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => 'OrchestrationTemplate'),
+                                                               :name  => ot.name}
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to(:controller    => 'catalog',
+                           :action        => 'ot_show',
+                           :id            => ot.id,
+                           :flash_message => flash_message)
+        end
+      end
+    end
+  end
+
+  def orchestration_templates_view
+    template = find_by_id_filtered(OrchestrationStack, params[:id]).orchestration_template
+    render :update do |page|
+      page << javascript_prologue
+      page.redirect_to(:controller => 'catalog', :action => 'ot_show', :id => template.id)
+    end
+  end
 
   def get_session_data
     @title      = _("Stack")
