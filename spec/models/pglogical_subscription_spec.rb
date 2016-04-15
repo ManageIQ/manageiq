@@ -258,7 +258,7 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:node_create).and_return(double(:check => nil))
 
       # subscription is created
-      expect(pglogical).to receive(:subscription_create).ordered.and_raise("Error one")
+      expect(pglogical).to receive(:subscription_create).ordered.and_raise(PG::Error.new("Error one"))
       expect(pglogical).to receive(:subscription_create) do |name, dsn, replication_sets, sync_structure|
         expect(name).to eq("region_3_subscription")
         expect(dsn).to include("host='test-3.example.com'")
