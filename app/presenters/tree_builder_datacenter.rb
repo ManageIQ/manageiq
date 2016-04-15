@@ -4,8 +4,12 @@ class TreeBuilderDatacenter < TreeBuilder
   end
 
   def initialize(name, type, sandbox, build = true, root = nil)
-    sandbox[:datacenter_root] = root if root
-    @root = sandbox[:datacenter_root]
+    sandbox[:datacenter_root] = TreeBuilder.build_node_id(root) if root
+    @root = root
+    unless @root
+      model, id = TreeBuilder.extract_node_model_and_id(sandbox[:datacenter_root])
+      @root = model.constantize.find_by(:id => id)
+    end
     @user_id = User.current_userid
     super(name, type, sandbox, build)
   end
