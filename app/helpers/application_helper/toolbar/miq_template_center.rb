@@ -148,6 +148,22 @@ class ApplicationHelper::Toolbar::MiqTemplateCenter < ApplicationHelper::Toolbar
       :confirm => N_("This Template will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?"),
       :onwhen  => "1"),
   ])
+  button_group('miq_template_policy', [
+    select(
+      :miq_template_policy_choice,
+      'fa fa-shield fa-lg',
+      t = N_('Policy'),
+      t,
+      :items => [
+        button(
+          :miq_template_check_compliance,
+          'fa fa-search fa-lg',
+          N_('Check Compliance of the last known configuration for this Template'),
+          N_('Check Compliance of Last Known Configuration'),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this Template?")),
+      ]
+    ),
+  ])
   button_group('vmtree_tasks', [
     button(
       :miq_template_tag,
