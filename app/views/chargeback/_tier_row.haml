@@ -5,7 +5,7 @@
 
 %tr.rdetail.new_tier{:id => "rate_detail_row_#{i}_#{n - 1}"}
   %td
-    - tier_val = (@edit[:new][:tiers][i.to_i][n - 1][:start].to_s.eql? "Infinity")  ? "" : @edit[:new][:tiers][i.to_i][n - 1][:start]
+    - tier_val = (@edit[:new][:tiers][i.to_i][n - 1][:start].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][i.to_i][n - 1][:start]
     = text_field_tag("start_#{i}_#{n - 1}", tier_val,
       :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %td
