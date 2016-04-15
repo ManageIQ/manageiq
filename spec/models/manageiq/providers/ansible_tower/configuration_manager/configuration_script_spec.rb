@@ -56,7 +56,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationS
 
     it "merges an empty internal hash and a hash to send out to the tower gem" do
       external = {:some_key => :some_value}
-      internal = ""
+      internal = {}
       config_script = manager.configuration_scripts.first
       config_script.variables = internal
       expect(config_script.merge_extra_vars(external)).to eq(:extra_vars => "{\"some_key\":\"some_value\"}")
@@ -64,7 +64,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationS
 
     it "merges all empty arguments to send out to the tower gem" do
       external = nil
-      internal = ""
+      internal = {}
       config_script = manager.configuration_scripts.first
       config_script.variables = internal
       expect(config_script.merge_extra_vars(external)).to eq(:extra_vars => "{}")
