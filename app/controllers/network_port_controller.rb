@@ -11,6 +11,6 @@ class NetworkPortController < ApplicationController
   include Mixins::GenericShowMixin
 
   def self.display_methods
-    %w(cloud_subnets)
+    %w(cloud_subnets floating_ips)
   end
 end

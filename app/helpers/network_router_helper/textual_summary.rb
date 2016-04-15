@@ -8,7 +8,7 @@ module NetworkRouterHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network cloud_tenant instances cloud_subnets)
+    %i(parent_ems_cloud ems_network cloud_tenant instances cloud_subnets external_gateway)
   end
 
   def textual_group_tags
@@ -32,11 +32,11 @@ module NetworkRouterHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    textual_link(@record.ext_management_system.try(:parent_manager))
+    @record.ext_management_system.try(:parent_manager)
   end
 
   def textual_ems_network
-    textual_link(@record.ext_management_system)
+    @record.ext_management_system
   end
 
   def textual_instances
@@ -51,10 +51,14 @@ module NetworkRouterHelper::TextualSummary
   end
 
   def textual_cloud_tenant
-    textual_link(@record.cloud_tenant)
+    @record.cloud_tenant
   end
 
   def textual_cloud_subnets
-    textual_link(@record.cloud_subnets)
+    @record.cloud_subnets
+  end
+
+  def textual_external_gateway
+    @record.cloud_network
   end
 end

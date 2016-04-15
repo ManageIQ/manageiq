@@ -8,7 +8,7 @@ module NetworkPortHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network instance cloud_tenant cloud_subnets)
+    %i(parent_ems_cloud ems_network cloud_tenant instance cloud_subnets floating_ips)
   end
 
   def textual_group_tags
@@ -35,23 +35,34 @@ module NetworkPortHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    textual_link(@record.ext_management_system.try(:parent_manager))
+    @record.ext_management_system.try(:parent_manager)
   end
 
   def textual_ems_network
-    textual_link(@record.ext_management_system)
+    @record.ext_management_system
   end
 
   def textual_instance
-    # TODO(lsmola) Textual link is messed up here, it infers feature as vm_or_template_show, we need to fix that
-    textual_link(@record.device)
+    label    = ui_lookup(:table => "vm_cloud")
+    instance = @record.device
+    h        = {:label => label, :image => "vm"}
+    if instance && role_allows(:feature => "vm_show")
+      h[:value] = instance.name
+      h[:link]  = url_for(:controller => 'vm_cloud', :action => 'show', :id => instance.id)
+      h[:title] = _("Show %{label}") % {:label => label}
+    end
+    h
   end
 
   def textual_cloud_tenant
-    textual_link(@record.cloud_tenant)
+    @record.cloud_tenant
   end
 
   def textual_cloud_subnets
-    textual_link(@record.cloud_subnets)
+    @record.cloud_subnets
+  end
+
+  def textual_floating_ips
+    @record.floating_ips
   end
 end

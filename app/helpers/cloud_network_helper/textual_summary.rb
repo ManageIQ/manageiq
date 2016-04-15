@@ -8,7 +8,7 @@ module CloudNetworkHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network instances cloud_subnets cloud_tenant network_routers)
+    %i(parent_ems_cloud ems_network cloud_tenant instances cloud_subnets network_routers)
   end
 
   def textual_group_tags
@@ -32,11 +32,11 @@ module CloudNetworkHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    textual_link(@record.ext_management_system.try(:parent_manager))
+    @record.ext_management_system.try(:parent_manager)
   end
 
   def textual_ems_network
-    textual_link(@record.ext_management_system)
+    @record.ext_management_system
   end
 
   def textual_instances
@@ -51,14 +51,14 @@ module CloudNetworkHelper::TextualSummary
   end
 
   def textual_cloud_tenant
-    textual_link(@record.cloud_tenant)
+    @record.cloud_tenant
   end
 
   def textual_network_routers
-    textual_link(@record.network_routers)
+    @record.network_routers
   end
 
   def textual_cloud_subnets
-    textual_link(@record.cloud_subnets)
+    @record.cloud_subnets
   end
 end
