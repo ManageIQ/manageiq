@@ -24,7 +24,7 @@ gem "angular-ui-bootstrap-rails",     "~>0.13.0"
 gem "codemirror-rails",               "=4.2"
 gem "jquery-hotkeys-rails"
 gem "jquery-rails",                   "~>4.0.4"
-gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/matthewd/jquery-rjs.git", :branch => "rails5" # https://github.com/amatsuda/jquery-rjs/pull/4
+gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/ManageIQ/jquery-rjs.git", :branch => "master"
 gem "lodash-rails",                   "~>3.10.0"
 # gem "patternfly-sass",                "~>3.3.4"
 gem 'patternfly-sass', :github => 'skateman/patternfly-sass', :branch => 'tertiary-nav'
@@ -37,7 +37,7 @@ gem "ruport",                         "=1.7.0",                       :git => "g
 
 # Vendored but not required
 gem "net-ldap",                       "~>0.7.0",   :require => false
-gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/matthewd/rubyrep.git", :branch => "rails5"
+gem "rubyrep",                        "=1.2.0",    :require => false, :git => "git://github.com/ManageIQ/rubyrep.git", :tag => "v1.2.0-8"
 gem "simple-rss",                     "~>1.3.1",   :require => false
 gem "ziya",                           "=2.3.0",    :require => false, :git => "git://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-2"
 
