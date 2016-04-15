@@ -178,7 +178,9 @@ describe MiqAeDomain do
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
       expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
       allow(git_import).to receive(:import) { MiqAeDomain.create(:name => domain_name) }
-      dom1 = MiqAeDomain.import_git_repo(domain_name, repo.id, @user.current_tenant.id, branch_name)
+      options = {'domain' => domain_name, 'git_repo_id' => repo.id,
+                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name}
+      dom1 = MiqAeDomain.import_git_repo(options)
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
 
@@ -187,7 +189,9 @@ describe MiqAeDomain do
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
       expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
       allow(git_import).to receive(:import) { [MiqAeDomain.create(:name => domain_name)] }
-      dom1 = MiqAeDomain.import_git_repo(nil, repo.id, @user.current_tenant.id, branch_name)
+      options = {'git_repo_id' => repo.id,
+                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name}
+      dom1 = MiqAeDomain.import_git_repo(options)
 
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
@@ -197,7 +201,9 @@ describe MiqAeDomain do
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
       allow(git_import).to receive(:import) { nil }
       expect do
-        MiqAeDomain.import_git_repo(domain_name, repo.id, @user.current_tenant.id, branch_name)
+        options = {'git_repo_id' => repo.id,
+                   'tenant_id' => @user.current_tenant.id, 'ref' => branch_name}
+        MiqAeDomain.import_git_repo(options)
       end.to raise_error(MiqAeException::DomainNotFound)
     end
 

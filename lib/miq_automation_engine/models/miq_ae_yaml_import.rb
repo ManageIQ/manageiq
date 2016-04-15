@@ -75,6 +75,10 @@ class MiqAeYamlImport
     domain_name = domain_yaml.fetch_path('object', 'attributes', 'name')
     domain_obj = MiqAeDomain.find_by_fqname(domain_name, false)
     track_stats('domain', domain_obj)
+    if domain_obj && !@preview && @options['overwrite']
+      domain_obj.destroy
+      domain_obj = nil
+    end
     domain_obj ||= add_domain(domain_yaml, @tenant) unless @preview
     if @options['namespace']
       import_namespace(File.join(domain_folder, @options['namespace']), domain_obj, domain_name)

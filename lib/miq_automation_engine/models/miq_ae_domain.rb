@@ -53,14 +53,18 @@ class MiqAeDomain < MiqAeNamespace
     version_field.try(:fetch_path, 'field', 'default_value')
   end
 
-  def self.import_git_repo(domain_name, git_repo_id, tenant_id, ref = DEFAULT_BRANCH, ref_type = BRANCH)
-    git_repo = GitRepository.find(git_repo_id)
-    raise "Git repository with id #{git_repo_id} not found" unless git_repo
-    MiqAeDomain.find_by(:name => domain_name).try(:destroy) if domain_name
-    options = import_options(git_repo, ref, ref_type, tenant_id)
-    domain = Array.wrap(MiqAeImport.new(domain_name || '*', options).import).first
+  def self.import_git_repo(options)
+    options['ref'] ||= DEFAULT_BRANCH
+    options['ref_type'] ||= BRANCH
+
+    git_repo = GitRepository.find(options['git_repo_id'])
+    raise "Git repository with id #{options['git_repo_id']} not found" unless git_repo
+
+    MiqAeDomain.find_by(:name => options['domain']).try(:destroy) if options['domain']
+    import_options(git_repo, options)
+    domain = Array.wrap(MiqAeImport.new(options['domain'] || '*', options).import).first
     raise MiqAeException::DomainNotFound, "Import of domain failed" unless domain
-    domain.update_git_info(git_repo, ref, ref_type)
+    domain.update_git_info(git_repo, options['ref'], options['ref_type'])
     domain
   end
 
@@ -120,15 +124,15 @@ class MiqAeDomain < MiqAeNamespace
     File.join(MiqAeDatastore::DATASTORE_DIRECTORY, "#{about.fqname}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME) if about
   end
 
-  def self.import_options(git_repo, ref, ref_type, tenant_id)
-    options = {'git_dir' => git_repo.directory_name, 'preview' => false, 'tenant_id' => tenant_id}
-    case ref_type
+  def self.import_options(git_repo, options)
+    options['git_dir'] = git_repo.directory_name
+    options['preview'] ||= false
+    case options['ref_type'].downcase
     when BRANCH
-      options['branch'] = ref
+      options['branch'] = options['ref']
     when TAG
-      options['tag'] = ref
+      options['tag'] = options['ref']
     end
-    options
   end
 
   private_class_method :import_options
