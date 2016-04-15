@@ -52,8 +52,8 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
       :description => "Ansible-JobTemplate-Description",
       :manager_ref => "149",
       :name        => "Ansible-JobTemplate",
-      :survey_spec => nil,
-      :variables   => "abc: 123\n",
+      :survey_spec => {},
+      :variables   => {'abc' => 123},
     )
     expect(expected_configuration_script.inventory_root_group).to have_attributes(:ems_ref => "2")
   end
@@ -64,9 +64,9 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
       :name        => "Ansible-JobTemplate-Survey",
       :description => "Ansible-JobTemplate-Description",
       :manager_ref => "155",
-      :variables   => "{\n \"abc\": 123\n}"
+      :variables   => {'abc' => 123}
     )
-    survey = JSON.parse(system.survey_spec)
+    survey = system.survey_spec
     expect(survey).to be_a Hash
     expect(survey['spec'].first['index']).to eq 0
   end
