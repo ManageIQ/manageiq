@@ -33,18 +33,9 @@ module FilterableMixin
 
       return result, total_count
     end
-
-    def count_filtered(options = {})
-      result = find_filtered(options).first
-      result ? result.length : 0
-    end
   end
 
   def find_filtered_children(table, options = {})
-    MiqFilter.find_children_of(self, table, options)
-  end
-
-  def count_filtered_children(table, options = {})
     MiqFilter.find_children_of(self, table, options)
   end
 

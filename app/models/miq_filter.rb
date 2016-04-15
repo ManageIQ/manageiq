@@ -99,11 +99,6 @@ module MiqFilter
     end
   end
 
-  def self.count_children_of(obj, assoc, options = {})
-    result = find_children_of(obj, assoc, options).first
-    result ? result.length : 0
-  end
-
   def self.belongsto2object(tag)
     belongsto2object_list(tag).last
   end
