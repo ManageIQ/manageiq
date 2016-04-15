@@ -123,7 +123,7 @@ module Rbac
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     u_filtered_ids = pluck_ids(get_self_service_objects(user, miq_group, klass))
     b_filtered_ids = get_belongsto_filter_object_ids(klass, user_filters['belongsto'])
-    m_filtered_ids = get_managed_filter_object_ids(scope, user_filters['managed'])
+    m_filtered_ids = pluck_ids(get_managed_filter_object_ids(scope, user_filters['managed']))
     d_filtered_ids = pluck_ids(matches_via_descendants(rbac_class(klass), user_filters['match_via_descendants'],
                                                        :user => user, :miq_group => miq_group))
 
@@ -233,7 +233,7 @@ module Rbac
   def self.get_managed_filter_object_ids(scope, filter)
     klass = scope.respond_to?(:klass) ? scope.klass : scope
     return nil if !TAGGABLE_FILTER_CLASSES.include?(safe_base_class(klass).name) || filter.blank?
-    scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil).collect(&:id)
+    scope.find_tags_by_grouping(filter, :ns => '*').reorder(nil)
   end
 
   def self.find_targets_with_direct_rbac(scope, rbac_filters, find_options, user, miq_group)
