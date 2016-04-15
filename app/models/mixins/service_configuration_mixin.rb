@@ -14,5 +14,7 @@ module ServiceConfigurationMixin
     self.configuration_scripts = [script].compact
   end
 
-  delegate :configuration_manager, :to => :configuration_script, :allow_nil => true
+  def configuration_manager
+    configuration_script.try(:manager)
+  end
 end

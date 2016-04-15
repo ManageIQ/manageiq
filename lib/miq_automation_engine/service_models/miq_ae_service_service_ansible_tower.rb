@@ -5,5 +5,7 @@ module MiqAeMethodService
 
     expose :launch_job
     expose :job
+    expose :job_options
+    expose :job_options=
   end
 end
