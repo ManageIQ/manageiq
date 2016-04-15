@@ -325,13 +325,9 @@ module Rbac
 
   # @option options :user [User]
   # @option options :miq_group [MiqGroup]
-  def self.find_descendants(scope, options)
-    filtered(scope, options)
-  end
-
   def self.matches_via_descendants(klass, descendant_klass, options)
     if descendant_klass && (method_name = lookup_method_for_descendant_class(klass, descendant_klass))
-      descendants = find_descendants(descendant_klass, options)
+      descendants = filtered(descendant_klass, options)
       find_via_descendants(descendants, method_name, klass)
     end
   end
