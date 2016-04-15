@@ -26,7 +26,9 @@
       %table{:width => "100%", :align => "bottom"}
         %tr
           %td#buttons_on{:align => "right"}
-            %button.btn.btn-primary.btn-sm{:type => "button", "ng-disabled" => "addInProgress()",  "ng-click" => "enableSubscriptionAdd()",  :align => "left"}= _('Add Subscription')
+            %button.btn.btn-primary{:type => "button", "ng-disabled" => "addInProgress()",  "ng-click" => "enableSubscriptionAdd()",  :align => "left"}= _('Add Subscription')
+            %br
+            %br
       %table.table.table-striped.table-hover.table-condensed.table-bordered
         %thead
           %th= _('Database')
@@ -34,7 +36,7 @@
           %th= _('Username')
           %th= _('Password')
           %th= _('Port')
-          %th=_('Actions')
+          %th{:colspan => 2}=_('Actions')
         %tbody
           %tr{"ng-show" => "pglogicalReplicationModel.addEnabled"}
             %td
@@ -67,20 +69,24 @@
                                   "id"          => "port",
                                   "name"        => "port",
                                   "ng-model"    => "pglogicalReplicationModel.port"}
-            %td.action-cell
-              %button.btn.btn-default.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()",  "ng-click" => "addSubscription()"}= _('Accept')
+            %td{:class => "action-cell"}
+              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()",  "ng-click" => "addSubscription()"}= _('Accept')
+
+            %td{:class => "action-cell", :style => "width: 5px"}
               %a{:class => "dropdown-toggle", "data-toggle" => "dropdown", :style => "cursor: pointer; cursor: hand;"}
-                %i.fa.fa-ellipsis-v.pull-right
-              %ul.dropdown-menu.pull-right
-                %li
-                  %a{:class => "disabled", "ng-show" => "!subscriptionValid()"}
-                    = _('Validate')
-                %li
-                  %a{"ng-show" => "subscriptionValid()", "ng-click" => "validateSubscription()"}
-                    = _('Validate')
-                %li
-                  %a{"ng-click" => "discardSubscription()"}
-                    = _('Discard')
+                .dropdown.pull-right.dropdown-kebab-pf
+                  .btn.btn-link.btn-block.dropdown-toggle
+                    %span.fa.fa-ellipsis-v
+                  %ul.dropdown-menu.dropdown-menu-right.3
+                    %li
+                      %a{:class => "disabled", "ng-show" => "!subscriptionValid()"}
+                        = _('Validate')
+                    %li
+                      %a{"ng-show" => "subscriptionValid()", "ng-click" => "validateSubscription()"}
+                        = _('Validate')
+                    %li
+                      %a{"ng-click" => "discardSubscription()"}
+                        = _('Discard')
 
           %tr{"ng-repeat" => "subscription in pglogicalReplicationModel.subscriptions", "ng-form" => "rowForm", "ng-class" => "{'danger': showCancelDelete($index)}"}
             %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
@@ -141,31 +147,39 @@
             %td{:class => "action-cell", "ng-show" => "showCancelDelete($index)"}
               %button.btn.btn-default.btn-sm{:type => "button", "ng-click" => "cancelDelete($index)"}= _('Cancel Delete')
 
-            %td{:class => "action-cell", "ng-show" => "!showCancelDelete($index) && !pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)"}
-              %button.btn.btn-default.btn-sm{:type => "button", "ng-disabled" => "addInProgress()",  "ng-click" => "enableSubscriptionUpdate($index)"}= _('Update')
+            %td{:class => "action-cell","ng-show" => "!showCancelDelete($index) && !pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)"}
+              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-disabled" => "addInProgress()",  "ng-click" => "enableSubscriptionUpdate($index)"}= _('Update')
+
+            %td{:class => "action-cell", :style => "width: 5px", "ng-show" => "!showCancelDelete($index) && !pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)"}
               %a{:class => "dropdown-toggle", "data-toggle" => "dropdown", :style => "cursor: pointer; cursor: hand;"}
-                %i.fa.fa-ellipsis-v.pull-right
-              %ul.dropdown-menu.pull-right
-                %li
-                  %a{"ng-click" => "removeSubscription($index)"}
-                    = _('Delete')
-                %li
-                  %a{"ng-click" => "validateSubscription($index)"}
-                    = _('Validate')
+                .dropdown.pull-right.dropdown-kebab-pf
+                  .btn.btn-link.btn-block.dropdown-toggle
+                    %span.fa.fa-ellipsis-v
+                  %ul.dropdown-menu.dropdown-menu-right.3
+                    %li
+                      %a{"ng-click" => "removeSubscription($index)"}
+                        = _('Delete')
+                    %li
+                      %a{"ng-click" => "validateSubscription($index)"}
+                        = _('Validate')
             %td{:class => "action-cell", "ng-show" => "!showCancelDelete($index) && pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index"}
-              %button.btn.btn-default.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()", "ng-click" => "addSubscription($index)"}= _('Accept')
+              %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()", "ng-click" => "addSubscription($index)"}= _('Accept')
+
+            %td{:class => "action-cell", :style => "width: 5px", "ng-show" => "!showCancelDelete($index) && pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index"}
               %a{:class => "dropdown-toggle", "data-toggle" => "dropdown", :style => "cursor: pointer; cursor: hand;"}
-                %i.fa.fa-ellipsis-v.pull-right
-              %ul.dropdown-menu.pull-right
-                %li
-                  %a{:class => "disabled", "ng-show" => "!subscriptionValid()"}
-                    = _('Validate')
-                %li
-                  %a{"ng-show" => "subscriptionValid()", "ng-click" => "validateSubscription($index)"}
-                    = _('Validate')
-                %li
-                  %a{"ng-click" => "discardSubscription($index)"}
-                    = _('Discard')
+                .dropdown.pull-right.dropdown-kebab-pf
+                  .btn.btn-link.btn-block.dropdown-toggle
+                    %span.fa.fa-ellipsis-v
+                  %ul.dropdown-menu.dropdown-menu-right.3
+                    %li
+                      %a{:class => "disabled", "ng-show" => "!subscriptionValid()"}
+                        = _('Validate')
+                    %li
+                      %a{"ng-show" => "subscriptionValid()", "ng-click" => "validateSubscription($index)"}
+                        = _('Validate')
+                    %li
+                      %a{"ng-click" => "discardSubscription($index)"}
+                        = _('Discard')
 
     .button-group{:align => "right"}
       = button_tag(_("Save"),
