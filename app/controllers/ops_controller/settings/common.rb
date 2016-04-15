@@ -187,6 +187,7 @@ module OpsController::Settings::Common
     replication_type = valid_replication_type
     if replication_type == :global
       MiqRegion.replication_type = replication_type
+      subscriptions_to_save = []
       params[:subscriptions].each do |_, subscription|
         sub = subscription['id'] ? PglogicalSubscription.find(subscription['id']) : PglogicalSubscription.new
         sub.dbname   = subscription['database']
@@ -194,9 +195,16 @@ module OpsController::Settings::Common
         sub.user     = subscription['username']
         sub.password = subscription['password']
         sub.port     = subscription['port']
-        sub.save!
+        subscriptions_to_save.push(sub)
       end
-      add_flash(_("Subscriptions saved successfully"))
+      begin
+        PglogicalSubscription.save_all!(subscriptions_to_save)
+      rescue  StandardError => bang
+        add_flash(_("Error during replication configuration save: %{message}") %
+                    {:message => bang}, :error)
+      else
+        add_flash(_("Replication configuration save was successful"))
+      end
     else
       begin
         MiqRegion.replication_type = replication_type
@@ -204,8 +212,7 @@ module OpsController::Settings::Common
         add_flash(_("Error during replication configuration save: ") %
                     {:message => bang.message}, :error)
       else
-        add_flash(_("Replication configuration save was successful") %
-                    {:email => @sb[:new_to]})
+        add_flash(_("Replication configuration save was successful"))
       end
     end
 
