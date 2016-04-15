@@ -609,7 +609,7 @@ module VmCommon
   end
 
   def network_ports
-    show_association('network_ports', 'Ports', 'network_ports', :network_ports, NetworkPort)
+    show_association('network_ports', 'Ports', 'network_port', :network_ports, NetworkPort)
   end
 
   def snap
