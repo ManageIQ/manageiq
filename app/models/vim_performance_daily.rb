@@ -28,7 +28,7 @@ class VimPerformanceDaily < MetricRollup
     ext_options ||= {}
     # TODO: remove changing ext_options once this side effect is no longer needed:
     time_profile = ext_options[:time_profile] ||= TimeProfile.default_time_profile(ext_options[:tz])
-    klass = Metric::Helper::class_for_interval_name("daily", ext_options[:class])
+    klass = Metric::Helper.class_for_interval_name("daily", ext_options[:class])
 
     klass.with_time_profile_or_tz(time_profile || ext_options[:tz]).where(:capture_interval_name => 'daily')
   end

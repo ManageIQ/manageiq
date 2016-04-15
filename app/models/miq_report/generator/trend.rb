@@ -24,32 +24,24 @@ module MiqReport::Generator::Trend
     #   :trend_filter   => MiqExpression#object
     #   :trend_db       => VmPerformance
     # }
+    trend_klass = db_options[:trend_db]
+    trend_klass = Object.const_get(trend_klass) unless trend_klass.kind_of?(Class)
     if db_options[:interval] == "daily"
-      results = []
-
       includes = include.blank? ? [] : include.keys
 
       time_range = Metric::Helper.time_range_from_offset("daily", db_options[:start_offset], db_options[:end_offset], tz)
-      trend_klass = db_options[:trend_db].kind_of?(Class) ? db_options[:trend_db] : Object.const_get(db_options[:trend_db])
-
-      recs = VimPerformanceDaily.find_entries(:class => trend_klass, :tz => tz, :time_profile => time_profile)
-                                .where(where_clause).where(:timestamp => time_range).includes(includes)
-      results = Rbac.filtered(recs, :class        => db_options[:trend_db],
-                                    :filter       => db_options[:trend_filter],
-                                    :userid       => options[:userid],
-                                    :miq_group_id => options[:miq_group_id])
+      recs = Metric::Helper.find_for_interval_name("daily", time_profile || tz, trend_klass)
+                           .where(where_clause).where(:timestamp => time_range).includes(includes)
     else
       time_range = Metric::Helper.time_range_from_offset('hourly', db_options[:start_offset], db_options[:end_offset])
 
       # Search and filter performance data
-      trend_klass = db_options[:trend_db].kind_of?(Class) ? db_options[:trend_db] : Object.const_get(db_options[:trend_db])
       recs = trend_klass.with_interval_and_time_range('hourly', time_range).where(where_clause)
-      results = Rbac.filtered(recs, :class        => db_options[:trend_db],
-                                    :filter       => db_options[:trend_filter],
-                                    :userid       => options[:userid],
-                                    :miq_group_id => options[:miq_group_id])
     end
-
+    results = Rbac.filtered(recs, :class        => db_options[:trend_db],
+                                  :filter       => db_options[:trend_filter],
+                                  :userid       => options[:userid],
+                                  :miq_group_id => options[:miq_group_id])
     klass = db.kind_of?(Class) ? db : Object.const_get(db)
     self.title = klass.report_title(db_options)
     self.cols, self.headers = klass.report_cols(db_options)

@@ -164,7 +164,7 @@ class ContainerDashboardService
       total_mem[date] += metric.derived_memory_available
     end
 
-    if daily_provider_metrics.any?
+    if used_cpu.any?
       {
         :cpu => {
           :used  => used_cpu.values.last.round,
@@ -210,7 +210,7 @@ class ContainerDashboardService
       daily_network_metrics[day] += m.net_usage_rate_average
     end
 
-    if daily_provider_metrics.any?
+    if daily_network_metrics.any?
       {
         :xData => daily_network_metrics.keys,
         :yData => daily_network_metrics.values.map(&:round)
@@ -219,11 +219,8 @@ class ContainerDashboardService
   end
 
   def daily_provider_metrics
-    if @daily_metrics.blank?
-      @daily_metrics = VimPerformanceDaily.find_entries(:tz => @controller.current_user.get_timezone)
-                                          .where(:resource => (@ems || ManageIQ::Providers::ContainerManager.all))
-                                          .where('timestamp > ?', 30.days.ago.utc).order("timestamp")
-    end
-    @daily_metrics
+    @daily_metrics ||= Metric::Helper.find_for_interval_name('daily', @controller.current_user.get_timezone)
+                                     .where(:resource => (@ems || ManageIQ::Providers::ContainerManager.all))
+                                     .where('timestamp > ?', 30.days.ago.utc).order('timestamp')
   end
 end

@@ -236,13 +236,10 @@ module MiqReport::Generator
 
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
-      results = VimPerformanceDaily
-                .find_entries(ext_options.merge(:class => klass))
-                .where(where_clause)
-                .where(:timestamp => time_range)
-                .includes(includes)
-                .references(includes)
-                .limit(options[:limit])
+      results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, klass)
+                              .where(where_clause).where(:timestamp => time_range)
+                              .includes(includes).references(includes)
+                              .limit(options[:limit])
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
                                        :userid       => options[:userid],
