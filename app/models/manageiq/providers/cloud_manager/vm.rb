@@ -10,6 +10,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   has_many :network_ports, :as => :device
   has_many :cloud_subnets, :through => :network_ports
+  has_many :cloud_networks, :through => :cloud_subnets
   has_many :network_routers, :through => :cloud_subnets
   # Keeping floating_ip for backwards compatibility. Keeping association through vm_id foreign key, because of Amazon
   # ec2, it allows to associate floating ips without network ports
