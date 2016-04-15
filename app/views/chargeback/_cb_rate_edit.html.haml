@@ -75,7 +75,7 @@
             %td{:rowspan => num_tiers}
               = select_tag("per_unit_#{detail_index}", options_for_select(measure[:measures], detail[:per_unit]), "data-miq_observe" => {:url => url}.to_json)
           %td
-            - tier_val = (@edit[:new][:tiers][detail_index][0][:start].to_s.eql? "Infinity")   ? "" : @edit[:new][:tiers][detail_index][0][:start]
+            - tier_val = (@edit[:new][:tiers][detail_index][0][:start].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][detail_index][0][:start]
             = text_field_tag("start_#{detail_index}_0", tier_val,
               :maxlength => MAX_NAME_LEN,
               :placeholder => _("Infinity"),
@@ -109,7 +109,7 @@
               = text_field_tag("start_#{detail_index}_#{tier_index}", tier_val,
                 :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             %td
-              - tier_val = (tier[:finish].to_s.eql? "Infinity")  ? "" : tier[:finish]
+              - tier_val = (tier[:finish].to_s.eql? "Infinity") ? "" : tier[:finish]
               = text_field_tag("finish_#{detail_index}_#{tier_index}", tier_val,
                 :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
             %td{:align => "right"}
