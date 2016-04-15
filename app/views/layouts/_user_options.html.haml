@@ -2,8 +2,8 @@
   %li.dropdown
     %a{:href => "#", :class => "dropdown-toggle nav-item-iconic", :id => "dropdownMenu2", "data-toggle" => "dropdown", "aria-haspopup" => "true"}
       %span.fa.pficon-user
-        %p.pull-right{:style => "padding-left: 5px; font: bold 80% OpenSansRegular,Arial,Helvetica,sans-serif;"}
-          = "#{current_user.name} | #{appliance_name}"
+      %p.navbar__user-name
+        = "#{current_user.name} | #{appliance_name}"
       %span.caret
     %ul.dropdown-menu
       %li.disabled
