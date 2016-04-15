@@ -5,4 +5,7 @@ FactoryGirl.define do
 
   factory :service_orchestration, :class => :ServiceOrchestration, :parent => :service do
   end
+
+  factory :service_ansible_tower, :class => :ServiceAnsibleTower, :parent => :service do
+  end
 end
