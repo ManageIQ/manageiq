@@ -39,7 +39,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       emstype_vm: false,
       ems_common: true,
       azure_tenant_id: '',
-      subscription: ''
+      subscription: '',
       host_default_vnc_port_start: '',
       host_default_vnc_port_end: '',
       ems_controller: ''
