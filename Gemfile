@@ -80,6 +80,7 @@ gem "dalli",                          "~>2.7.4",   :require => false
 gem "elif",                           "=0.1.0",    :require => false
 gem "google-api-client",              "~>0.8.6",   :require => false
 gem "fog-google",                     "~>0.3.0",   :require => false
+gem "fog-softlayer",                  "~>1.1.0",   :require => false
 gem "hamlit",                         "~>2.0.0",   :require => false
 gem "inifile",                        "~>3.0",     :require => false
 gem "logging",                        "~>1.8",     :require => false  # Ziya depends on this
