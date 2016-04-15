@@ -655,7 +655,9 @@ class ChargebackController < ApplicationController
       rate_tiers = []
       @edit[:new][:tiers][detail_index].each do |tier|
         rate_tier = tier[:id] ? ChargebackTier.find(tier[:id]) : ChargebackTier.new
+        tier[:start] = Float::INFINITY if tier[:start].blank?
         rate_tier.start  = tier[:start]
+        tier[:finish] = Float::INFINITY if tier[:finish].blank?
         rate_tier.finish = tier[:finish]
         rate_tier.chargeback_rate_detail_id = rate_detail.id
         rate_tier.fixed_rate  = tier[:fixed_rate]
