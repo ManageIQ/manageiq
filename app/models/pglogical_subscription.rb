@@ -105,9 +105,11 @@ class PglogicalSubscription < ActsAsArModel
 
   def self.dsn_attributes(dsn)
     attrs = connection.class.parse_dsn(dsn)
-    attrs.select! { |k, _v| [:dbname, :host, :user, :port].include?(k) }
+    attrs.select! { |k, _v| [:dbname, :host, :user, :password, :port].include?(k) }
     port = attrs.delete(:port)
     attrs[:port] = port.to_i unless port.blank?
+    pass = attrs.delete(:password)
+    attrs[:password] = MiqPassword.encrypt(pass) unless pass.blank?
     attrs
   end
   private_class_method :dsn_attributes
