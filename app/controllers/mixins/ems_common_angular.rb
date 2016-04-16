@@ -151,6 +151,9 @@ module Mixins
       ssh_keypair_hostname = ""
       ssh_keypair_port = ""
       ssh_keypair_security_protocol = ""
+      metrics_userid = ""
+      metrics_hostname = ""
+      metrics_port = ""
 
       if @ems.connection_configurations.amqp.try(:endpoint)
         amqp_hostname = @ems.connection_configurations.amqp.endpoint.hostname
@@ -168,6 +171,14 @@ module Mixins
       end
       if @ems.has_authentication_type?(:ssh_keypair)
         ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
+      end
+
+      if @ems.connection_configurations.metrics.try(:endpoint)
+        metrics_hostname = @ems.connection_configurations.metrics.endpoint.hostname
+        metrics_port = @ems.connection_configurations.metrics.endpoint.port
+      end
+      if @ems.has_authentication_type?(:metrics)
+        metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
       end
 
       @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
@@ -222,9 +233,11 @@ module Mixins
                        :default_hostname              => @ems.connection_configurations.default.endpoint.hostname,
                        :amqp_hostname                 => amqp_hostname,
                        :ssh_keypair_hostname          => ssh_keypair_hostname,
+                       :metrics_hostname              => metrics_hostname,
                        :default_api_port              => @ems.connection_configurations.default.endpoint.port,
                        :amqp_api_port                 => amqp_port,
                        :ssh_keypair_api_port          => ssh_keypair_port,
+                       :metrics_api_port              => metrics_port,
                        :default_security_protocol     => default_security_protocol,
                        :amqp_security_protocol        => amqp_security_protocol,
                        :ssh_keypair_security_protocol => ssh_keypair_security_protocol,
@@ -234,6 +247,7 @@ module Mixins
                        :default_userid                => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :amqp_userid                   => amqp_userid,
                        :ssh_keypair_userid            => ssh_keypair_userid,
+                       :metrics_userid                => metrics_userid,
                        :emstype_vm                    => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
                        :host_default_vnc_port_start   => host_default_vnc_port_start ? host_default_vnc_port_start : "",
                        :host_default_vnc_port_end     => host_default_vnc_port_end ? host_default_vnc_port_end : "",
@@ -267,9 +281,12 @@ module Mixins
       ssh_keypair_hostname = params[:ssh_keypair_hostname].strip if params[:ssh_keypair_hostname]
       ssh_keypair_port = params[:ssh_keypair_api_port].strip if params[:ssh_keypair_api_port]
       ssh_keypair_security_protocol = params[:ssh_keypair_security_protocol].strip if params[:ssh_keypair_security_protocol]
+      metrics_hostname = params[:metrics_hostname].strip if params[:metrics_hostname]
+      metrics_port = params[:metrics_api_port].strip if params[:metrics_api_port]
       default_endpoint = {}
       amqp_endpoint = {}
       ssh_keypair_endpoint = {}
+      metrics_endpoint = {}
 
       if ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
@@ -281,6 +298,12 @@ module Mixins
         amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
         ssh_keypair_endpoint = {:role => :ssh_keypair, :hostname => ssh_keypair_hostname, :port => ssh_keypair_port, :security_protocol => ssh_keypair_security_protocol}
       end
+
+      if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager)
+        default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
+        metrics_endpoint = {:role => :metrics, :hostname => metrics_hostname, :port => metrics_port}
+      end
+
 
       if ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
         ems.project = params[:project]
@@ -301,15 +324,16 @@ module Mixins
         ems.subscription    = params[:subscription] unless params[:subscription].blank?
       end
 
-      build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint)
+      build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint)
     end
 
-    def build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint)
+    def build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint)
       authentications = build_credentials(ems)
       default_authentication = authentications.delete(:default)
       default_authentication[:role] = :default
       amqp_authentication = {}
       ssh_keypair_authentication = {}
+      metrics_authentication = {}
 
       if authentications[:amqp]
         amqp_authentication = authentications.delete(:amqp)
@@ -321,9 +345,15 @@ module Mixins
         ssh_keypair_authentication[:role] = :ssh_keypair
       end
 
+      if authentications[:metrics]
+        metrics_authentication = authentications.delete(:metrics)
+        metrics_authentication[:role] = :metrics
+      end
+
       ems.connection_configurations=([{:endpoint => default_endpoint, :authentication => default_authentication},
                                       {:endpoint => amqp_endpoint, :authentication => amqp_authentication},
-                                      {:endpoint => ssh_keypair_endpoint, :authentication => ssh_keypair_authentication}])
+                                      {:endpoint => ssh_keypair_endpoint, :authentication => ssh_keypair_authentication},
+                                      {:endpoint => metrics_endpoint, :authentication => metrics_authentication}])
     end
 
     def build_credentials(ems)
@@ -340,6 +370,11 @@ module Mixins
          ems.supports_authentication?(:ssh_keypair) && params[:ssh_keypair_userid]
         ssh_keypair_password = params[:ssh_keypair_password] ? params[:ssh_keypair_password] : ems.authentication_key(:ssh_keypair)
         creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => ssh_keypair_password}
+      end
+      if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager) &&
+          ems.supports_authentication?(:metrics) && params[:metrics_userid]
+        metrics_password = params[:metrics_password] ? params[:metrics_password] : @ems.authentication_password(:metrics)
+        creds[:metrics] = {:userid => params[:metrics_userid], :password => metrics_password}
       end
       if ems.supports_authentication?(:auth_key) && params[:service_account]
         creds[:default] = {:auth_key => params[:service_account], :userid => "_"}
