@@ -315,6 +315,7 @@ module Mixins
       end
 
       if ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
+        default_endpoint = {:role => :default, :hostname => hostname}
         ems.host_default_vnc_port_start = params[:host_default_vnc_port_start].blank? ? nil : params[:host_default_vnc_port_start].to_i
         ems.host_default_vnc_port_end = params[:host_default_vnc_port_end].blank? ? nil : params[:host_default_vnc_port_end].to_i
       end
