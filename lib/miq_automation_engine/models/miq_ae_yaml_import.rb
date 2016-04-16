@@ -85,7 +85,7 @@ class MiqAeYamlImport
     else
       import_all_namespaces(domain_folder, domain_obj, domain_name)
     end
-    update_attributes(domain_obj) if @single_domain && domain_obj
+    update_attributes(domain_obj) if domain_obj
     domain_obj
   end
 
