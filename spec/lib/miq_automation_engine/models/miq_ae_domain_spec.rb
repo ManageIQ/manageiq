@@ -153,7 +153,7 @@ describe MiqAeDomain do
     let(:new_info) { {'commit_time' => commit_time_new, 'commit_message' => "BB-8", 'commit_sha' => "def"} }
     let(:commit_hash) do
       {'commit_message' => commit_message, 'commit_time' => commit_time,
-       'commit_sha' => commit_sha, 'ref' => branch_name}
+       'commit_sha' => commit_sha, 'ref' => branch_name, 'ref_type' => MiqAeDomain::BRANCH}
     end
 
     it "check if a git domain is locked" do
@@ -178,8 +178,9 @@ describe MiqAeDomain do
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
       expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
       allow(git_import).to receive(:import) { MiqAeDomain.create(:name => domain_name) }
-      options = {'domain' => domain_name, 'git_repo_id' => repo.id,
-                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name}
+      options = {'domain' => domain_name, 'git_repository_id' => repo.id,
+                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name,
+                 'ref_type' => 'BrancH'}
       dom1 = MiqAeDomain.import_git_repo(options)
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
@@ -189,23 +190,28 @@ describe MiqAeDomain do
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
       expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
       allow(git_import).to receive(:import) { [MiqAeDomain.create(:name => domain_name)] }
-      options = {'git_repo_id' => repo.id,
-                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name}
+      options = {'git_repository_id' => repo.id,
+                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name,
+                 'ref_type' => "BRANCH" }
       dom1 = MiqAeDomain.import_git_repo(options)
 
       expect(dom1.attributes).to have_attributes(commit_hash)
     end
 
     it "import a domain fails" do
-      domain_name = dom1.name
       expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
       allow(git_import).to receive(:import) { nil }
       expect do
-        options = {'git_repo_id' => repo.id,
+        options = {'git_repository_id' => repo.id,
                    'tenant_id' => @user.current_tenant.id, 'ref' => branch_name}
         MiqAeDomain.import_git_repo(options)
       end.to raise_error(MiqAeException::DomainNotFound)
     end
+
+    it "import without git_repository_id" do
+      expect { MiqAeDomain.import_git_repo({}) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
 
     it "git repo changed for non git domain" do
       expect { dom2.git_repo_changed? }.to raise_error(MiqAeException::InvalidDomain)

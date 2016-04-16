@@ -54,11 +54,8 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def self.import_git_repo(options)
-    options['ref'] ||= DEFAULT_BRANCH
-    options['ref_type'] ||= BRANCH
-
-    git_repo = GitRepository.find(options['git_repo_id'])
-    raise "Git repository with id #{options['git_repo_id']} not found" unless git_repo
+    git_repo = GitRepository.find(options['git_repository_id'])
+    raise "Git repository with id #{options['git_repository_id']} not found" unless git_repo
 
     MiqAeDomain.find_by(:name => options['domain']).try(:destroy) if options['domain']
     import_options(git_repo, options)
@@ -127,7 +124,11 @@ class MiqAeDomain < MiqAeNamespace
   def self.import_options(git_repo, options)
     options['git_dir'] = git_repo.directory_name
     options['preview'] ||= false
-    case options['ref_type'].downcase
+    options['ref'] ||= DEFAULT_BRANCH
+    options['ref_type'] ||= BRANCH
+    options['ref_type'] = options['ref_type'].downcase
+
+    case options['ref_type']
     when BRANCH
       options['branch'] = options['ref']
     when TAG
