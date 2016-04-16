@@ -1,4 +1,6 @@
 describe EmsInfraController do
+  let!(:server) { EvmSpecHelper.local_miq_server(:zone => zone) }
+  let(:zone)   { FactoryGirl.build(:zone) }
   context "#button" do
     before(:each) do
       set_user_privileges
@@ -349,6 +351,326 @@ describe EmsInfraController do
                                                                 :amqp        => amqp_creds,
                                                                 :ssh_keypair => ssh_keypair_creds)
       end
+    end
+  end
+
+  describe "SCVMM - create, update, validate, cancel" do
+    before do
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      login_as FactoryGirl.create(:user, :features => "ems_infra_new")
+    end
+
+    render_views
+
+    it 'creates on post' do
+      expect do
+        post :create, :params => {
+            "button"                    => "add",
+            "name"                      => "foo",
+            "emstype"                   => "scvmm",
+            "zone"                      => zone.name,
+            "cred_type"                 => "default",
+            "default_hostname"          => "foo.com",
+            "default_security_protocol" => "ssl",
+            "default_userid"            => "foo",
+            "default_password"          => "[FILTERED]",
+            "default_verify"            => "[FILTERED]"
+        }
+      end.to change { ManageIQ::Providers::Microsoft::InfraManager.count }.by(1)
+    end
+
+    it 'creates and updates an authentication record on post' do
+      expect do
+        post :create, :params => {
+            "button"                    => "add",
+            "name"                      => "foo_scvmm",
+            "emstype"                   => "scvmm",
+            "zone"                      => zone.name,
+            "cred_type"                 => "default",
+            "default_hostname"          => "foo.com",
+            "default_security_protocol" => "ssl",
+            "default_userid"            => "foo",
+            "default_password"          => "[FILTERED]",
+            "default_verify"            => "[FILTERED]"
+        }
+      end.to change { Authentication.count }.by(1)
+
+      expect(response.status).to eq(200)
+      scvmm = ManageIQ::Providers::Microsoft::InfraManager.where(:name => "foo_scvmm").first
+      expect(scvmm.authentications.size).to eq(1)
+
+      expect do
+        post :update, :params => {
+            "id"               => scvmm.id,
+            "button"           => "save",
+            "default_hostname" => "host_scvmm_updated",
+            "name"             => "foo_scvmm",
+            "emstype"          => "scvmm",
+            "default_userid"   => "bar",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]"
+        }
+      end.not_to change { Authentication.count }
+
+      expect(response.status).to eq(200)
+      expect(scvmm.authentications.first).to have_attributes(:userid => "bar", :password => "[FILTERED]")
+    end
+
+    it "validates credentials for a new record" do
+      post :create, :params => {
+          "button"           => "validate",
+          "cred_type"        => "default",
+          "name"             => "foo_scvmm",
+          "emstype"          => "scvmm",
+          "zone"             => zone.name,
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
+      }
+
+      expect(response.status).to eq(200)
+    end
+
+    it "cancels a new record" do
+      post :create, :params => {
+          "button"           => "cancel",
+          "cred_type"        => "default",
+          "name"             => "foo_scvmm",
+          "emstype"          => "scvmm",
+          "zone"             => zone.name,
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
+      }
+
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe "Openstack - create, update" do
+    before do
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      login_as FactoryGirl.create(:user, :features => "ems_infra_new")
+    end
+
+    render_views
+
+    it 'creates on post' do
+      expect do
+        post :create, :params => {
+            "button"                        => "add",
+            "name"                          => "foo",
+            "emstype"                       => "openstack_infra",
+            "zone"                          => zone.name,
+            "cred_type"                     => "default",
+            "default_hostname"              => "foo.com",
+            "default_api_port"              => "5000",
+            "default_security_protocol"     => "ssl",
+            "default_userid"                => "foo",
+            "default_password"              => "[FILTERED]",
+            "default_verify"                => "[FILTERED]",
+            "amqp_hostname"                 => "foo_amqp.com",
+            "amqp_api_port"                 => "5672",
+            "amqp_security_protocol"        => "ssl",
+            "amqp_userid"                   => "amqp_foo",
+            "amqp_password"                 => "[FILTERED]",
+            "amqp_verify"                   => "[FILTERED]",
+            "ssh_keypair_hostname"          => "foo_ssh.com",
+            "ssh_keypair_port"              => "5372",
+            "ssh_keypair_security_protocol" => "ssl",
+            "ssh_keypair_userid"            => "ssh_foo",
+            "ssh_keypair_password"          => "[FILTERED]",
+            "ssh_keypair_verify"            => "[FILTERED]"
+        }
+      end.to change { ManageIQ::Providers::Openstack::InfraManager.count }.by(1)
+    end
+
+    it 'creates and updates an authentication record on post' do
+      expect do
+        post :create, :params => {
+            "button"                        => "add",
+            "name"                          => "foo_openstack",
+            "emstype"                       => "openstack_infra",
+            "zone"                          => zone.name,
+            "cred_type"                     => "default",
+            "default_hostname"              => "foo.com",
+            "default_api_port"              => "5000",
+            "default_security_protocol"     => "ssl",
+            "default_userid"                => "foo",
+            "default_password"              => "[FILTERED]",
+            "default_verify"                => "[FILTERED]",
+            "amqp_hostname"                 => "foo_amqp.com",
+            "amqp_api_port"                 => "5672",
+            "amqp_security_protocol"        => "ssl",
+            "amqp_userid"                   => "amqp_foo",
+            "amqp_password"                 => "[FILTERED]",
+            "amqp_verify"                   => "[FILTERED]",
+            "ssh_keypair_hostname"          => "foo_ssh.com",
+            "ssh_keypair_port"              => "5372",
+            "ssh_keypair_security_protocol" => "ssl",
+            "ssh_keypair_userid"            => "ssh_foo",
+            "ssh_keypair_password"          => "[FILTERED]",
+            "ssh_keypair_verify"            => "[FILTERED]"
+        }
+      end.to change { Authentication.count }.by(3)
+
+      expect(response.status).to eq(200)
+      openstack = ManageIQ::Providers::Openstack::InfraManager.where(:name => "foo_openstack").first
+      expect(openstack.authentications.size).to eq(3)
+
+      expect do
+        post :update, :params => {
+            "id"               => openstack.id,
+            "button"           => "save",
+            "default_hostname" => "host_openstack_updated",
+            "name"             => "foo_openstack",
+            "emstype"          => "openstack_infra",
+            "default_userid"   => "bar",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]"
+        }
+      end.not_to change { Authentication.count }
+
+      expect(response.status).to eq(200)
+      expect(openstack.authentications.first).to have_attributes(:userid => "bar", :password => "[FILTERED]")
+    end
+  end
+
+  describe "Redhat - create, update" do
+    before do
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      login_as FactoryGirl.create(:user, :features => "ems_infra_new")
+    end
+
+    render_views
+
+    it 'creates on post' do
+      expect do
+        post :create, :params => {
+            "button"           => "add",
+            "name"             => "foo",
+            "emstype"          => "rhevm",
+            "zone"             => zone.name,
+            "cred_type"        => "default",
+            "default_hostname" => "foo.com",
+            "default_api_port" => "5000",
+            "default_userid"   => "foo",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]",
+            "metrics_hostname" => "foo_metrics.com",
+            "metrics_api_port" => "5672",
+            "metrics_userid"   => "metrics_foo",
+            "metrics_password" => "[FILTERED]",
+            "metrics_verify"   => "[FILTERED]"
+        }
+      end.to change { ManageIQ::Providers::Redhat::InfraManager.count }.by(1)
+    end
+
+    it 'creates and updates an authentication record on post' do
+      expect do
+        post :create, :params => {
+            "button"           => "add",
+            "name"             => "foo_rhevm",
+            "emstype"          => "rhevm",
+            "zone"             => zone.name,
+            "cred_type"        => "default",
+            "default_hostname" => "foo.com",
+            "default_api_port" => "5000",
+            "default_userid"   => "foo",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]",
+            "metrics_hostname" => "foo_metrics.com",
+            "metrics_api_port" => "5672",
+            "metrics_userid"   => "metrics_foo",
+            "metrics_password" => "[FILTERED]",
+            "metrics_verify"   => "[FILTERED]"
+        }
+      end.to change { Authentication.count }.by(2)
+
+      expect(response.status).to eq(200)
+      rhevm = ManageIQ::Providers::Redhat::InfraManager.where(:name => "foo_rhevm").first
+      expect(rhevm.authentications.size).to eq(2)
+
+      expect do
+        post :update, :params => {
+            "id"               => rhevm.id,
+            "button"           => "save",
+            "default_hostname" => "host_rhevm_updated",
+            "name"             => "foo_rhevm",
+            "emstype"          => "rhevm",
+            "default_userid"   => "bar",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]"
+        }
+      end.not_to change { Authentication.count }
+
+      expect(response.status).to eq(200)
+      expect(rhevm.authentications.first).to have_attributes(:userid => "bar", :password => "[FILTERED]")
+    end
+  end
+
+  describe "VMWare - create, update" do
+    before do
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      login_as FactoryGirl.create(:user, :features => "ems_infra_new")
+    end
+
+    render_views
+
+    it 'creates on post' do
+      expect do
+        post :create, :params => {
+            "button"           => "add",
+            "name"             => "foo",
+            "emstype"          => "vmwarews",
+            "zone"             => zone.name,
+            "cred_type"        => "default",
+            "default_hostname" => "foo.com",
+            "default_userid"   => "foo",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]"
+        }
+      end.to change { ManageIQ::Providers::Vmware::InfraManager.count }.by(1)
+    end
+
+    it 'creates and updates an authentication record on post' do
+      expect do
+        post :create, :params => {
+            "button"           => "add",
+            "name"             => "foo_vmware",
+            "emstype"          => "vmwarews",
+            "zone"             => zone.name,
+            "cred_type"        => "default",
+            "default_hostname" => "foo.com",
+            "default_userid"   => "foo",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]"
+        }
+      end.to change { Authentication.count }.by(1)
+
+      expect(response.status).to eq(200)
+      vmware = ManageIQ::Providers::Vmware::InfraManager.where(:name => "foo_vmware").first
+      expect(vmware.authentications.size).to eq(1)
+
+      expect do
+        post :update, :params => {
+            "id"               => vmware.id,
+            "button"           => "save",
+            "default_hostname" => "host_vmware_updated",
+            "name"             => "foo_vmware",
+            "emstype"          => "vmwarews",
+            "default_userid"   => "bar",
+            "default_password" => "[FILTERED]",
+            "default_verify"   => "[FILTERED]"
+        }
+      end.not_to change { Authentication.count }
+
+      expect(response.status).to eq(200)
+      expect(vmware.authentications.first).to have_attributes(:userid => "bar", :password => "[FILTERED]")
     end
   end
 end
