@@ -147,11 +147,9 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
   virtual_column :mem_cpu,                              :type => :integer,    :uses => :hardware
   virtual_column :ems_cluster_name,                     :type => :string,     :uses => :ems_cluster
-  virtual_column :host_name,                            :type => :string,     :uses => :host
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
-  virtual_column :storage_name,                         :type => :string,     :uses => :storage
   virtual_column :memory_exceeds_current_host_headroom, :type => :string,     :uses => [:mem_cpu, {:host => [:hardware, :ext_management_system]}]
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
   virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
@@ -1404,13 +1402,8 @@ class VmOrTemplate < ApplicationRecord
     ems_cluster.nil? ? nil : ems_cluster.name
   end
 
-  def host_name
-    host.nil? ? nil : host.name
-  end
-
-  def storage_name
-    storage.nil? ? nil : storage.name
-  end
+  virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
+  virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
 
   def has_compliance_policies?
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "vm_compliance_check")
@@ -1514,9 +1507,7 @@ class VmOrTemplate < ApplicationRecord
     Arel::Nodes::NamedFunction.new('COALESCE', [t[:template], Arel::Nodes.build_quoted("false")])
   end)
 
-  delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
-  virtual_attribute :v_pct_free_disk_space, :float, :uses => :hardware
-  virtual_attribute :v_pct_used_disk_space, :float, :uses => :hardware
+  virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
 
   def v_datastore_path
     s = storage

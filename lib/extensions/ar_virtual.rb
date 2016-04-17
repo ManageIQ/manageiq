@@ -185,6 +185,31 @@ module VirtualReflections
     end
 
     #
+    # Virtual Alias
+    #
+
+    def virtual_delegate(*methods)
+      options = methods.pop
+      unless options.kind_of?(Hash) && (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
+        raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
+      end
+      delegate(*methods, options)
+
+      prefix = options[:prefix]
+      method_prefix = "#{prefix == true ? to : prefix}_" if prefix
+
+      to_model = to_ref.klass
+      methods.each do |col|
+        col = col.to_s
+        type = to_model.type_for_attribute(col)
+        raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
+        # no way to propogate sql over a virtual association
+        arel = ->(_t) { to_model.arel_attribute(col) } if to_model.arel_attribute(col)
+        virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
+      end
+    end
+
+    #
     # Introspection
     #
 

@@ -89,6 +89,13 @@ describe MiqReport do
       expect(order).to be_truthy
       expect(stringify_arel(order).join(",")).to match(/"vms"."ems_id"/)
     end
+
+    it "is sortable for a virtual column that is in another table" do
+      @miq_report.sortby = ["hardware.v_pct_used_disk_space"]
+      order = @miq_report.get_order_info
+      expect(order).to be_truthy
+      expect(stringify_arel(order).join(",")).to match(/disk_free_space/)
+    end
   end
 
   context "paged_view_search" do

@@ -1,4 +1,6 @@
 describe VmOrTemplate do
+  include ArelSpecHelper
+
   context ".event_by_property" do
     context "should add an EMS event" do
       before(:each) do
@@ -561,6 +563,41 @@ describe VmOrTemplate do
     it "calculates in ruby" do
       expect(vm.v_pct_free_disk_space).to eq(20.0)
       expect(vm.v_pct_used_disk_space).to eq(80.0)
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "v_pct_free_disk_space")).to eq(20.0)
+      expect(virtual_column_sql_value(VmOrTemplate, "v_pct_used_disk_space")).to eq(80.0)
+    end
+
+    context "with null disk capacity" do
+      let(:hardware) { FactoryGirl.build(:hardware, :disk_free_space => 20, :disk_capacity => nil) }
+
+      it "calculates in ruby" do
+        expect(vm.v_pct_free_disk_space).to be_nil
+        expect(vm.v_pct_used_disk_space).to be_nil
+      end
+
+      it "calculates in the database" do
+        vm.save
+        expect(virtual_column_sql_value(VmOrTemplate, "v_pct_free_disk_space")).to be_nil
+        expect(virtual_column_sql_value(VmOrTemplate, "v_pct_used_disk_space")).to be_nil
+      end
+    end
+  end
+
+  describe ".host_name" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :host => host) }
+    let(:host) { FactoryGirl.create(:host_vmware, :name => "our host") }
+
+    it "calculates in ruby" do
+      expect(vm.host_name).to eq("our host")
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "host_name")).to eq("our host")
     end
   end
 end
