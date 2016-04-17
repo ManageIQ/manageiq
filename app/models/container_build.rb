@@ -1,4 +1,4 @@
-class ContainerBuild < ActiveRecord::Base
+class ContainerBuild < ApplicationRecord
   include CustomAttributeMixin
   include ReportableMixin
 
