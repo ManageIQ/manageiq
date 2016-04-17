@@ -20,4 +20,13 @@ describe EvmDatabase do
       described_class.seed_primordial
     end
   end
+
+  describe ".find_seedable_model_class_names" do
+    it "returns ordered classes first" do
+      stub_const("EvmDatabase::ORDERED_CLASSES", %w(a z))
+      stub_const("EvmDatabase::RAILS_ENGINE_MODEL_CLASS_NAMES", [])
+      expect(described_class).to receive(:find_seedable_model_class_names).and_return(%w(a c z))
+      expect(described_class.seedable_model_class_names).to eq(%w(a z c))
+    end
+  end
 end

@@ -14,9 +14,12 @@ class EvmDatabase
     MiqGroup
     User
     MiqReport
+    VmdbDatabase
+  )
+
+  ORDERED_CLASSES = %w(
     RssFeed
     MiqWidget
-    VmdbDatabase
   )
 
   RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
@@ -28,7 +31,7 @@ class EvmDatabase
   end
 
   def self.seedable_model_class_names
-    find_seedable_model_class_names + RAILS_ENGINE_MODEL_CLASS_NAMES
+    ORDERED_CLASSES + (find_seedable_model_class_names - ORDERED_CLASSES) + RAILS_ENGINE_MODEL_CLASS_NAMES
   end
 
   def self.seed_primordial
