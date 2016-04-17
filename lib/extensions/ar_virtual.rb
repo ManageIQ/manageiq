@@ -188,6 +188,8 @@ module VirtualReflections
     # Virtual Alias
     #
 
+    # @option :methods :to
+    # @option :methods :prefix
     def virtual_delegate(*methods)
       options = methods.pop
       unless options.kind_of?(Hash) && (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
@@ -203,8 +205,7 @@ module VirtualReflections
         col = col.to_s
         type = to_model.type_for_attribute(col)
         raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
-        # no way to propogate sql over a virtual association
-        arel = ->(_t) { to_model.arel_attribute(col) } if to_model.arel_attribute(col)
+        arel = virtual_delegate_arel(col, to, to_model, to_ref)
         virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
       end
     end
@@ -240,6 +241,26 @@ module VirtualReflections
       reset_virtual_reflection_information
       _virtual_reflections[name.to_sym] = reflection
       define_virtual_include(name.to_s, uses)
+    end
+
+    def virtual_delegate_arel(col, to, to_model, to_ref)
+      # column has sql and the association is reachable via sql
+      # no way to propagate sql over a virtual association
+      if to_model.arel_attribute(col) && reflect_on_association(to)
+        if to_ref.macro == :has_one
+          lambda do |t|
+            src_model_id = arel_attribute(to_ref.association_primary_key, t)
+            to_model_id = to_model.arel_attribute(to_ref.foreign_key)
+            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+          end
+        elsif to_ref.macro == :belongs_to
+          lambda do |t|
+            src_model_id = arel_attribute(to_ref.association_foreign_key, t)
+            to_model_id = to_model.arel_attribute(to_ref.active_record_primary_key)
+            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+          end
+        end
+      end
     end
 
     def reset_virtual_reflection_information
