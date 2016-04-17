@@ -38,32 +38,36 @@
           %th= _('Port')
           %th{:colspan => 2}=_('Actions')
         %tbody
-          %tr{"ng-show" => "pglogicalReplicationModel.addEnabled"}
+          %tr{"ng-if" => "pglogicalReplicationModel.addEnabled"}
             %td
               %input.form-control{"type"        => "text",
                                   "id"          => "host",
                                   "name"        => "host",
-                                  "ng-model"    => "pglogicalReplicationModel.database",
-                                  "ng-required" => true}
+                                  "ng-model"    => "pglogicalReplicationModel.dbname",
+                                  "miqrequired" => "",
+                                  "checkchange" => ""}
             %td
               %input.form-control{"type"        => "text",
                                   "id"          => "host",
                                   "name"        => "host",
                                   "ng-model"    => "pglogicalReplicationModel.host",
-                                  "ng-required" => true}
+                                  "miqrequired" => "",
+                                  "checkchange" => ""}
             %td
               %input.form-control{"type"        => "text",
                                   "id"          => "userid",
                                   "name"        => "userid",
-                                  "ng-model"    => "pglogicalReplicationModel.username",
-                                  "ng-required" => true}
+                                  "ng-model"    => "pglogicalReplicationModel.user",
+                                  "miqrequired" => "",
+                                  "checkchange" => ""}
             %td
               %input.form-control{"type"        => "password",
                                   "id"          => "password",
                                   "name"        => "password",
                                   "ng-model"    => "pglogicalReplicationModel.password",
                                   "placeholder" => placeholder_if_present("pglogicalReplicationModel.password"),
-                                  "ng-required" => true}
+                                  "miqrequired" => "",
+                                  "checkchange" => ""}
             %td
               %input.form-control{"type"        => "text",
                                   "id"          => "port",
@@ -88,59 +92,54 @@
                       %a{"ng-click" => "discardSubscription()"}
                         = _('Discard')
 
-          %tr{"ng-repeat" => "subscription in pglogicalReplicationModel.subscriptions", "ng-form" => "rowForm", "ng-class" => "{'danger': showCancelDelete($index)}"}
-            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
-                "ng-class"=>"{'active': showChanged($index, 'database')}"}
-              {{subscription.database}}
-            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
-                "ng-class"=>"{'active': showChanged($index, 'database')}"}
+          %tr{"ng-repeat" => "subscription in pglogicalReplicationModel.subscriptions track by $index", "ng-form" => "rowForm", "ng-class" => "{'danger': showCancelDelete($index)}"}
+            %td{"ng-if" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+                "ng-class"=>"{'active': showChanged($index, 'dbname')}"}
+              {{subscription.dbname}}
+            %td{"ng-if" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+                "ng-class"=>"{'active': showChanged($index, 'dbname')}"}
               %input.form-control{"type"        => "text",
-                                  "id"          => "database",
-                                  "name"        => "database",
-                                  "ng-model"    => "pglogicalReplicationModel.database",
-                                  "ng-change"   => "showChanged($index, 'database')",
-                                  "ng-required" => true}
+                                  "name"        => "dbname",
+                                  "ng-model"    => "pglogicalReplicationModel.dbname",
+                                  "ng-change"   => "showChanged($index, 'dbname')",
+                                  "miqrequired" => ""}
 
-            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+            %td{"ng-if" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
                 "ng-class"=>"{'active': showChanged($index, 'host')}"}
               {{subscription.host}}
-            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+            %td{"ng-if" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
                 "ng-class"=>"{'active': showChanged($index, 'host')}"}
               %input.form-control{"type"        => "text",
-                                  "id"          => "host",
                                   "name"        => "host",
                                   "ng-model"    => "pglogicalReplicationModel.host",
-                                  "ng-required" => true}
+                                  "miqrequired" => ""}
 
-            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
-                "ng-class"=>"{'active': showChanged($index, 'username')}"}
-              {{subscription.username}}
-            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
-                "ng-class"=>"{'active': showChanged($index, 'username')}"}
+            %td{"ng-if" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+                "ng-class"=>"{'active': showChanged($index, 'user')}"}
+              {{subscription.user}}
+            %td{"ng-if" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+                "ng-class"=>"{'active': showChanged($index, 'user')}"}
               %input.form-control{"type"        => "text",
-                                  "id"          => "username",
-                                  "name"        => "username",
-                                  "ng-model"    => "pglogicalReplicationModel.username",
-                                  "ng-required" => true}
+                                  "name"        => "user",
+                                  "ng-model"    => "pglogicalReplicationModel.user",
+                                  "miqrequired" => ""}
 
-            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+            %td{"ng-if" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
                 "ng-class"=>"{'active': showChanged($index, 'password')}"}
               ●●●●●●●●
-            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+            %td{"ng-if" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
                 "ng-class"=>"{'active': showChanged($index, 'password')}"}
               %input.form-control{"type"        => "password",
-                                  "id"          => "password",
                                   "name"        => "password",
                                   "ng-model"    => "pglogicalReplicationModel.password",
-                                  "ng-required" => true}
+                                  "miqrequired" => ""}
 
-            %td{"ng-show" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
+            %td{"ng-if" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
                 "ng-class"=>"{'active': showChanged($index, 'port')}"}
               {{subscription.port}}
-            %td{"ng-show" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
+            %td{"ng-if" => "pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index",
                 "ng-class"=>"{'active': showChanged($index, 'port')}"}
               %input.form-control{"type"        => "text",
-                                  "id"          => "port",
                                   "name"        => "port",
                                   "ng-model"    => "pglogicalReplicationModel.port"}
 
@@ -187,21 +186,23 @@
                    :alt       => _("Save"),
                    :style     => "cursor:not-allowed",
                    "ng-click" => "disabledClick($event)",
-                   "ng-show"  => "!saveEnabled()")
+                   "ng-show"  => "!saveEnabled(angularForm)")
       = button_tag(_("Save"),
                    :class     => "btn btn-primary",
                    :alt       => _("Save"),
                    "ng-click" => "saveClicked()",
-                   "ng-show"  => "saveEnabled()")
-      = button_tag("Reset",
-           :class        => "btn btn-default btn-disabled",
-           :alt          => "Reset changes",
-           :title        => "Reset changes",
-           "ng-class"    => "{'btn-disabled': angularForm.$pristine}",
-           "ng-click"    => "resetClicked()",
-           "ng-disabled" => "angularForm.$pristine",
-           "ng-hide"     => "newRecord")
-
+                   "ng-show"  => "saveEnabled(angularForm)")
+      = button_tag(_("Reset"),
+                   :class     => "btn btn-default btn-disabled",
+                   :alt       => _("Reset changes"),
+                   :style     => "cursor:not-allowed",
+                   "ng-click" => "disabledClick($event)",
+                   "ng-show"  => "!saveEnabled(angularForm)")
+      = button_tag(_("Reset"),
+                   :class     => "btn btn-default",
+                   :alt       => _("Reset changes"),
+                   "ng-click" => "resetClicked()",
+                   "ng-show"  => "saveEnabled(angularForm)")
   :javascript
     ManageIQ.angular.app.value('pglogicalReplicationFormId', 'new');
     miq_bootstrap('#form_div');

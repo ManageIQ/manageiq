@@ -190,12 +190,16 @@ module OpsController::Settings::Common
       subscriptions_to_save = []
       params[:subscriptions].each do |_, subscription|
         sub = subscription['id'] ? PglogicalSubscription.find(subscription['id']) : PglogicalSubscription.new
-        sub.dbname   = subscription['database']
+        sub.dbname   = subscription['dbname']
         sub.host     = subscription['host']
-        sub.user     = subscription['username']
+        sub.user     = subscription['user']
         sub.password = subscription['password']
         sub.port     = subscription['port']
-        subscriptions_to_save.push(sub)
+        if sub.id && sub.remove == "true"
+          sub.delete
+        else
+          subscriptions_to_save.push(sub)
+        end
       end
       begin
         PglogicalSubscription.save_all!(subscriptions_to_save)
@@ -226,9 +230,9 @@ module OpsController::Settings::Common
   def pglogical_validate_subscription
     valid = MiqRegionRemote.validate_connection_settings(params[:host],
                                                          params[:port],
-                                                         params[:username],
+                                                         params[:user],
                                                          params[:password],
-                                                         params[:database])
+                                                         params[:dbname])
     if valid.nil?
       add_flash(_("Subscription Credentials validated successfully"))
     else
@@ -246,10 +250,10 @@ module OpsController::Settings::Common
 
   def get_subscriptions_array(subscriptions)
     subscriptions.collect { |sub|
-      {:database => sub.dbname,
+      {:dbname => sub.dbname,
        :host     => sub.host,
        :id       => sub.id,
-       :username => sub.user,
+       :user     => sub.user,
        :password => sub.password,
        :port     => sub.port
       }
