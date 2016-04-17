@@ -1065,6 +1065,7 @@ module ApplicationHelper
                         container_replicator container_image container_image_registry
                         container_topology container_dashboard middleware_topology persistent_volume container_build
                         container_node container_service ems_cloud ems_cluster ems_container ems_infra event
+                        ems_middleware middleware_server middleware_deployment
                         ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
