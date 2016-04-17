@@ -11,6 +11,7 @@ class ApplicationHelper::Toolbar::MiqActionCenter < ApplicationHelper::Toolbar::
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Action'),
           t,
+          :klass     => ApplicationHelper::Button::MiqActionModify,
           :url_parms => "?type=basic"),
         button(
           :action_delete,

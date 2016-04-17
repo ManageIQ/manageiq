@@ -11,7 +11,8 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           'pficon pficon-edit fa-lg',
           t = N_('Edit Basic Info, Scope, and Notes'),
           t,
-          :url_parms => "?typ=basic"),
+          :url_parms => "?typ=basic",
+          :klass     => ApplicationHelper::Button::ReadOnly),
         button(
           :policy_copy,
           'fa fa-files-o fa-lg',
@@ -25,25 +26,29 @@ class ApplicationHelper::Toolbar::MiqPolicyCenter < ApplicationHelper::Toolbar::
           t = N_('Delete this #{ui_lookup(:model=>@policy.towhat)} Policy'),
           t,
           :url_parms => "main_div",
+          :klass     => ApplicationHelper::Button::ReadOnly,
           :confirm   => N_("Are you sure you want to delete this \#{ui_lookup(:model=>@policy.towhat)} Policy?")),
         button(
           :condition_edit,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Create a new Condition assigned to this Policy'),
           t,
-          :url_parms => "?typ=new"),
+          :url_parms => "?typ=new",
+          :klass     => ApplicationHelper::Button::ReadOnly),
         button(
           :policy_edit_conditions,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Policy\'s Condition assignments'),
           t,
-          :url_parms => "?typ=conditions"),
+          :url_parms => "?typ=conditions",
+          :klass     => ApplicationHelper::Button::ReadOnly),
         button(
           :policy_edit_events,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Policy\'s Event assignments'),
           t,
-          :url_parms => "?typ=events"),
+          :url_parms => "?typ=events",
+          :klass     => ApplicationHelper::Button::ReadOnly),
       ]
     ),
   ])
