@@ -66,13 +66,6 @@ function miqPrepRightCellForm(tree) {
   miqDimDiv(tree + '_div', true);
 }
 
-// Things to be done on page resize
-function miqOnResize() {
-  $(window).resize(miqInitAccordions);
-  $(window).resize(miqInitMainContent);
-  miqBrowserSizeTimeout();
-}
-
 // Initialize the widget pulldown on the dashboard
 function miqInitWidgetPulldown() {
   $("#dashboard_dropdown button:not(.dropdown-toggle), #toolbar ul.dropdown-menu > li > a").off('click');
@@ -1581,6 +1574,10 @@ function chartData(type, data, data2) {
 }
 
 $(function () {
+  $(window).on('resize', miqInitAccordions);
+  $(window).on('resize', miqInitMainContent);
+  $(window).on('resize', miqBrowserSizeTimeout);
+
   check_for_ellipsis();
   $().setupVerticalTertiaryNavigation(true);
 });
