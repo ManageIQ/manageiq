@@ -71,6 +71,7 @@ function miqOnResize() {
   $(window).resize(miqInitAccordions);
   $(window).resize(miqInitMainContent);
   miqBrowserSizeTimeout();
+  return true;
 }
 
 // Initialize the widget pulldown on the dashboard
@@ -1577,6 +1578,8 @@ function chartData(type, data, data2) {
 }
 
 $(function () {
+  window.onresize.add(function() { miqOnResize(); });
+
   check_for_ellipsis();
   $().setupVerticalTertiaryNavigation(true);
 });
