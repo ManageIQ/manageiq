@@ -250,5 +250,34 @@ describe OpsController do
         expect(assigns(:edit)[:new].config.fetch_path(path)).to eq "pa$$w0rd"
       end
     end
+
+    context "#settings_update" do
+      before do
+        MiqDatabase.seed
+        MiqRegion.seed
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it "won't render form buttons after rhn settings submission" do
+        session[:edit] = {
+          :key => "settings_rhn_edit__rhn_edit",
+          :new => {
+            :register_to          => "sm_hosted",
+            :customer_userid      => "username",
+            :customer_password    => "password",
+            :server_url           => "example.com",
+            :repo_name            => "example_repo_name",
+            :use_proxy            => 0}}
+        controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
+        controller.instance_variable_set(:@sb, {:trees =>
+          {:settings_tree => {:active_node => 'root'}},
+           :active_tree   => :settings_tree,
+           :active_tab    => 'settings_rhn_edit'})
+        controller.instance_variable_set(:@_params, :id => 'rhn_edit', :button => "save")
+        controller.send(:settings_update)
+        expect(response).to render_template('ops/_settings_rhn_tab')
+        expect(response).not_to render_template(:partial => "layouts/_x_edit_buttons")
+      end
+    end
   end
 end
