@@ -26,6 +26,7 @@ module ManageIQ::Providers
 
         _log.info("#{log_header}...")
         get_flavors
+        get_availability_zones
         get_images
         get_instances
         get_cloud_networks
@@ -38,6 +39,12 @@ module ManageIQ::Providers
       end
 
       private
+
+      def get_availability_zones
+        # cannot get availability zones from provider; create a default one
+        a_zones = [::Fog::Model.new(:name => @ems.name, :id => 'default')]
+        process_collection(a_zones, :availability_zones) { |az| parse_az(az) }
+      end
 
       def get_flavors
         flavors = @compute.flavors.all
@@ -79,6 +86,18 @@ module ManageIQ::Providers
           @data[key] << new_result
           @data_index.store_path(key, uid, new_result)
         end
+      end
+
+      def parse_az(az)
+        id = az.id.downcase
+
+        type = ManageIQ::Providers::SoftLayer::CloudManager::AvailabilityZone
+        new_result = {
+          :type    => type,
+          :ems_ref => id,
+          :name    => az.name,
+        }
+        return id, new_result
       end
 
       def parse_flavor(flavor)
@@ -126,15 +145,13 @@ module ManageIQ::Providers
       def parse_instance(instance)
         # TODO: mapping is not complete and valid
         uid    = instance.id
-        name   = instance.name
-        name ||= uid
 
         type = ManageIQ::Providers::SoftLayer::CloudManager::Vm
         new_result = {
           :type             => type,
-          :uid_ems          => uid,
-          :ems_ref          => uid,
-          :name             => name,
+          :uid_ems          => instance.id,
+          :ems_ref          => instance.id,
+          :name             => instance.name,
           :description      => instance.description,
           :vendor           => "softlayer",
           :raw_power_state  => instance.state,
@@ -162,7 +179,7 @@ module ManageIQ::Providers
         cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
           @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
 
-        uid = nil
+        uid = cloud_network.id
 
         new_result = {
           :ems_ref             => cloud_network.id,
@@ -182,7 +199,7 @@ module ManageIQ::Providers
           :ems_ref           => uid,
           :name              => subnet.name,
           :cidr              => subnet.address_space,
-          :availability_zone => nil,
+          :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
         }
         return uid, new_result
       end
