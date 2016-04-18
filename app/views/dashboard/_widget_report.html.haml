@@ -1,7 +1,7 @@
 -#
   Parameters:
     widget -- MiqWidget object
-.panel-body.report_widget{:style => "padding: 0"}
+.card-pf-body.report_widget
   .mc{:id => "dd_w#{widget.id}_box",
     :style => @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display: none;' : ''}
     - if widget.contents_for_user(current_user).contents.blank?

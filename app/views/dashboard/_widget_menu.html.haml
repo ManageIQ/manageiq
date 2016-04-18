@@ -1,10 +1,10 @@
 -#
   Parameters:
     widget      MiqWidget object
-.panel-body.menu_widget{:style => "padding: 0"}
+.card-pf-body.menu_widget{:style => "padding: 0"}
   .mc{:id => "dd_w#{widget.id}_box",
     :style => @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display: none;' : ''}
-    %table.table.table-bordered.table-hover
+    %table.table.table-hover
       %tbody
         - has_items = false
         - widget.miq_widget_shortcuts.order("sequence").each do |ws|
