@@ -81,7 +81,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def get_namespaces(inventory)
-      process_collection(inventory["namespace"], :container_projects) { |n| parse_namespaces(n) }
+      process_collection(inventory["namespace"], :container_projects) { |n| parse_namespace(n) }
 
       @data[:container_projects].each do |ns|
         @data_index.store_path(:container_projects, :by_name, ns[:name], ns)
@@ -335,8 +335,10 @@ module ManageIQ::Providers::Kubernetes
       new_result
     end
 
-    def parse_namespaces(container_projects)
-      parse_base_item(container_projects).except(:namespace)
+    def parse_namespace(namespace)
+      new_result = parse_base_item(namespace).except(:namespace)
+      new_result[:labels] = parse_labels(namespace)
+      new_result
     end
 
     def parse_persistent_volume(persistent_volume)
