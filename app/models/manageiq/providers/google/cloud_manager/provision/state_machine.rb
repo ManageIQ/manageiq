@@ -11,12 +11,12 @@ module ManageIQ::Providers::Google::CloudManager::Provision::StateMachine
     resource = ManageIQ::Providers::Google::Resource.new(source.location)
 
     phase_context[:boot_disk_attrs] = {
-      :name         => dest_name,
-      :size_gb      => boot_disk_size,
-      :zone_name    => dest_availability_zone.ems_ref,
+      :name      => dest_name,
+      :size_gb   => boot_disk_size,
+      :zone_name => dest_availability_zone.ems_ref,
     }
 
-    source_key = (resource.snapshot?) ? :source_snapshot : :source_image
+    source_key = resource.snapshot? ? :source_snapshot : :source_image
     phase_context[:boot_disk_attrs][source_key] = source.name
 
     phase_context[:boot_disk] = create_disk(
