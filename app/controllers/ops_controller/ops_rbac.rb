@@ -1095,7 +1095,10 @@ module OpsController::OpsRbac
 
     @edit[:projects_tenants] = []
     all_tenants, all_projects = Tenant.tenant_and_project_names
-    @edit[:projects_tenants].push(["", [["<Choose a Project/Tentant>", :selected => "<Choose a Project/Tentant>", :disabled => "<Choose a Project/Tentant>", :style => 'display:none']]])
+    @edit[:projects_tenants].push(["", [[_("<Choose a Project/Tenant>"),
+                                         :selected => _("<Choose a Project/Tenant>"),
+                                         :disabled => _("<Choose a Project/Tenant>"),
+                                         :style    => 'display:none']]])
     @edit[:projects_tenants].push(["Projects", all_projects]) unless all_projects.blank?
     @edit[:projects_tenants].push(["Tenants", all_tenants]) unless all_tenants.blank?
     @edit[:new][:group_tenant] = @group.tenant_id
@@ -1115,7 +1118,7 @@ module OpsController::OpsRbac
       cat_node = {}
       cat_node[:key] = category.name
       cat_node[:title] = category.description
-      cat_node[:tooltip] =  "Category: " + category.description
+      cat_node[:tooltip] =  _("Category: %{description}") % {:description => category.description}
       cat_node[:addClass] = "cfme-no-cursor-node"      # No cursor pointer
       cat_node[:icon] = ActionController::Base.helpers.image_path('100/folder.png')
       cat_node[:hideCheckbox] = true
@@ -1124,7 +1127,7 @@ module OpsController::OpsRbac
         tag_node = {}
         tag_node[:key] = [category.name, tag.name].join("-")
         tag_node[:title] = tag.description
-        tag_node[:tooltip] =  "Tag: " + tag.description
+        tag_node[:tooltip] =  _("Tag: %{description}") % {:description => tag.description}
         if (@edit && @edit[:new][:filters][tag_node[:key]] == @edit[:current][:filters][tag_node[:key]]) || ![tag_node[:key]].include?(@filters) # Check new vs current
           tag_node[:addClass] = "cfme-no-cursor-node"       # No cursor pointer
         else
