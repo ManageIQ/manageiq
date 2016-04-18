@@ -13,11 +13,6 @@ module MiqReport::Search
     end
   end
 
-  ORDER_OPS = {"ascending" => "asc", "descending" => "desc"}.freeze
-  def order_op
-    MiqReport::Search::ORDER_OPS[order.downcase] if order
-  end
-
   # @param assoc [String] associations and a column name
   # @raise if an association is not valid
   # @return nil if there is a virtual association in the path
@@ -49,11 +44,11 @@ module MiqReport::Search
     order = Array.wrap(sortby).collect do |c|
       sql_col, sql_type = association_column(c)
       return nil if sql_col.nil?
-      [:string, :text].include?(sql_type) ? sql_col.lower : sql_col
+      [:string, :text].include?(sql_type) ? Arel::Nodes::NamedFunction.new('LOWER', [sql_col]) : sql_col
     end
 
-    if (order_op = self.order_op)
-      order = order.map { |col| col.send(order_op) }
+    if (self.order.downcase == "descending")
+      order = order.map { |col| Arel::Nodes::Descending.new col }
     end
 
     order
