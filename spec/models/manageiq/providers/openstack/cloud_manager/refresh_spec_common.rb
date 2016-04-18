@@ -595,6 +595,7 @@ module Openstack
       assert_specific_vm("EmsRefreshSpec-PoweredOn", :power_state => "on",)
       assert_specific_vm("EmsRefreshSpec-Paused",    :power_state => "paused",)
       assert_specific_vm("EmsRefreshSpec-Suspended", :power_state => "suspended",)
+      assert_specific_vm("EmsRefreshSpec-Shelved",   :power_state => "shelved_offloaded",)
 
       assert_specific_template_created_from_vm
       assert_specific_vm_created_from_snapshot_template
