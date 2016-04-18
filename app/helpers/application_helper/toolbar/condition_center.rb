@@ -11,7 +11,8 @@ class ApplicationHelper::Toolbar::ConditionCenter < ApplicationHelper::Toolbar::
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Condition'),
           t,
-          :url_parms => "?type=basic"),
+          :url_parms => "?type=basic",
+          :klass     => ApplicationHelper::Button::ReadOnly),
         button(
           :condition_copy,
           'fa fa-files-o fa-lg',
@@ -30,6 +31,7 @@ class ApplicationHelper::Toolbar::ConditionCenter < ApplicationHelper::Toolbar::
           t = N_('Delete this #{ui_lookup(:model=>@condition.towhat)} Condition'),
           t,
           :url_parms => "main_div",
+          :klass     => ApplicationHelper::Button::ReadOnly,
           :confirm   => N_("Are you sure you want to delete this \#{ui_lookup(:model=>@condition.towhat)} Condition?")),
         button(
           :condition_remove,
@@ -37,6 +39,7 @@ class ApplicationHelper::Toolbar::ConditionCenter < ApplicationHelper::Toolbar::
           t = N_('Remove this Condition from Policy [#{@condition_policy.description}]'),
           t,
           :url_parms => "?policy_id=\#{@condition_policy.id}",
+          :klass     => ApplicationHelper::Button::ReadOnly,
           :confirm   => N_("Are you sure you want to remove this Condition from Policy [\#{@condition_policy.description}]?")),
       ]
     ),
