@@ -25,6 +25,14 @@ describe TenantQuota do
     it "accepts string name" do
       expect(described_class.new(:tenant => tenant, :name => "cpu_allocated", :unit => "fixnum", :value => 16)).to be_valid
     end
+
+    it "accepts only one quota name per tenant" do
+      first  = described_class.create(:tenant => tenant, :name => :cpu_allocated, :unit => "fixnum", :value => 1)
+      second = described_class.create(:tenant => tenant, :name => :cpu_allocated, :unit => "fixnum", :value => 1)
+      expect(first).to be_valid
+      expect(second).not_to be_valid
+      expect(second.errors.messages).to eq(:name=>["should be unique per tenant"])
+    end
   end
 
   describe ".check_for_over_allocation" do

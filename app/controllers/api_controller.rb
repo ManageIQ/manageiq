@@ -82,6 +82,7 @@ class ApiController < ApplicationController
   include_concern 'Software'
   include_concern 'Tags'
   include_concern 'Tenants'
+  include_concern 'TenantQuotas'
   include_concern 'Users'
   include_concern 'Vms'
 
