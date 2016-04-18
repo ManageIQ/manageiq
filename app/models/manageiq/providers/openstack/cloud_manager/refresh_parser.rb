@@ -416,7 +416,7 @@ module ManageIQ::Providers
         :host                => parent_host,
         :ems_cluster         => parent_cluster,
         :flavor              => flavor,
-        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone || "null_az"),
+        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone.blank? ? "null_az" : server.availability_zone),
         :key_pairs           => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
         # TODO(lsmola) moving this under has_many :security_groups, :through => :network_port will require changing
         # saving code and refresh of all providers
