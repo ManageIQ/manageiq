@@ -1,7 +1,7 @@
 class MiddlewareTopologyService < TopologyService
   def initialize(provider_id)
     @provider_id = provider_id
-    @providers = retrieve_providers(@provider_id, ManageIQ::Providers::MiddlewareManager)
+    @providers = retrieve_providers(ManageIQ::Providers::MiddlewareManager, @provider_id)
   end
 
   def build_topology
