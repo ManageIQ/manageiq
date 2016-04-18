@@ -936,7 +936,7 @@ class ChargebackController < ApplicationController
   end
 
   def display_detail_errors(detail, errors)
-    errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.capitalize} #{msg}", :error) }
+    errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.humanize.downcase} #{msg}", :error) }
   end
 
   def add_row(i, pos, code_currency)
