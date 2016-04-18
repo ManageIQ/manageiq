@@ -62,6 +62,8 @@
             = _("Import")
           = miq_tab_header("settings_rhn", @sb[:active_tab]) do
             = _("Red Hat Updates")
+          = miq_tab_header("settings_replication", @sb[:active_tab]) do
+            = _("Replication")
         .tab-content
           = miq_tab_content("settings_details", @sb[:active_tab]) do
             = render :partial => "settings_details_tab"
@@ -77,6 +79,8 @@
             = render :partial => "settings_import_tab"
           = miq_tab_content("settings_rhn", @sb[:active_tab]) do
             = render :partial => "settings_rhn_tab"
+          = miq_tab_content("settings_replication", @sb[:active_tab]) do
+            = render :partial => "settings_replication_tab"
     -# Diagnostics
   - when :diagnostics_tree
     - if x_node.split("-")[0] == "z"

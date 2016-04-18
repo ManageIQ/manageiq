@@ -1791,6 +1791,7 @@ Vmdb::Application.routes.draw do
         fetch_production_log
         log_collection_form_fields
         log_protocol_changed
+        pglogical_subscriptions_form_fields
         schedule_form_fields
         show_product_update
         tenant_quotas_form_fields
@@ -1839,6 +1840,8 @@ Vmdb::Application.routes.draw do
         log_depot_validate
         orphaned_records_delete
         perf_chart_chooser
+        pglogical_save_subscriptions
+        pglogical_validate_subscription
         product_updates_list
         rbac_group_edit
         rbac_group_field_changed

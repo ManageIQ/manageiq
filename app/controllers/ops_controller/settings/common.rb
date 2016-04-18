@@ -173,7 +173,96 @@ module OpsController::Settings::Common
     end
   end
 
+  def pglogical_subscriptions_form_fields
+    replication_type = MiqRegion.replication_type
+    subscriptions = replication_type == :global ? PglogicalSubscription.all : []
+    subscriptions = get_subscriptions_array(subscriptions) unless subscriptions.empty?
+    render :json => {
+      :replication_type => replication_type,
+      :subscriptions    => subscriptions
+    }
+  end
+
+  def pglogical_save_subscriptions
+    replication_type = valid_replication_type
+    if replication_type == :global
+      MiqRegion.replication_type = replication_type
+      subscriptions_to_save = []
+      params[:subscriptions].each do |_, subscription|
+        sub = subscription['id'] ? PglogicalSubscription.find(subscription['id']) : PglogicalSubscription.new
+        sub.dbname   = subscription['dbname']
+        sub.host     = subscription['host']
+        sub.user     = subscription['user']
+        sub.password = subscription['password'] == '●●●●●●●●' ? nil : subscription['password']
+        sub.port     = subscription['port']
+        if sub.id && subscription['remove'] == "true"
+          sub.delete
+        else
+          subscriptions_to_save.push(sub)
+        end
+      end
+      begin
+        PglogicalSubscription.save_all!(subscriptions_to_save)
+      rescue  StandardError => bang
+        add_flash(_("Error during replication configuration save: %{message}") %
+                    {:message => bang}, :error)
+      else
+        add_flash(_("Replication configuration save was successful"))
+      end
+    else
+      begin
+        MiqRegion.replication_type = replication_type
+      rescue StandardError => bang
+        add_flash(_("Error during replication configuration save: ") %
+                    {:message => bang.message}, :error)
+      else
+        add_flash(_("Replication configuration save was successful"))
+      end
+    end
+
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      page << "miqSparkle(false);"
+    end
+  end
+
+  def pglogical_validate_subscription
+    valid = MiqRegionRemote.validate_connection_settings(params[:host],
+                                                         params[:port],
+                                                         params[:user],
+                                                         params[:password],
+                                                         params[:dbname])
+    if valid.nil?
+      add_flash(_("Subscription Credentials validated successfully"))
+    else
+      valid.each do |v|
+        add_flash(v, :error)
+      end
+    end
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
+
   private
+
+  def get_subscriptions_array(subscriptions)
+    subscriptions.collect { |sub|
+      {:dbname => sub.dbname,
+       :host     => sub.host,
+       :id       => sub.id,
+       :user     => sub.user,
+       :password => '●●●●●●●●',
+       :port     => sub.port
+      }
+    }
+  end
+
+  def valid_replication_type
+    return params[:replication_type].to_sym if %w(global none remote).include?(params[:replication_type])
+  end
 
   def settings_update_ldap_verify
     settings_get_form_vars
