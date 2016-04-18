@@ -148,9 +148,6 @@ module Mixins
       amqp_port = ""
       amqp_security_protocol = ""
       ssh_keypair_userid = ""
-      ssh_keypair_hostname = ""
-      ssh_keypair_port = ""
-      ssh_keypair_security_protocol = ""
       metrics_userid = ""
       metrics_hostname = ""
       metrics_port = ""
@@ -164,11 +161,6 @@ module Mixins
         amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
       end
 
-      if @ems.connection_configurations.ssh_keypair.try(:endpoint)
-        ssh_keypair_hostname = @ems.connection_configurations.ssh_keypair.endpoint.hostname
-        ssh_keypair_port = @ems.connection_configurations.ssh_keypair.endpoint.port
-        ssh_keypair_security_protocol = @ems.connection_configurations.ssh_keypair.endpoint.security_protocol ? @ems.connection_configurations.ssh_keypair.endpoint.security_protocol : 'ssl'
-      end
       if @ems.has_authentication_type?(:ssh_keypair)
         ssh_keypair_userid = @ems.has_authentication_type?(:ssh_keypair) ? @ems.authentication_userid(:ssh_keypair).to_s : ""
       end
@@ -226,32 +218,28 @@ module Mixins
                        :ems_controller                  => controller_name
       } if controller_name == "ems_cloud"
 
-      render :json => {:name                          => @ems.name,
-                       :emstype                       => @ems.emstype,
-                       :zone                          => zone,
-                       :provider_id                   => @ems.provider_id ? @ems.provider_id : "",
-                       :default_hostname              => @ems.connection_configurations.default.endpoint.hostname,
-                       :amqp_hostname                 => amqp_hostname,
-                       :ssh_keypair_hostname          => ssh_keypair_hostname,
-                       :metrics_hostname              => metrics_hostname,
-                       :default_api_port              => @ems.connection_configurations.default.endpoint.port,
-                       :amqp_api_port                 => amqp_port,
-                       :ssh_keypair_api_port          => ssh_keypair_port,
-                       :metrics_api_port              => metrics_port,
-                       :default_security_protocol     => default_security_protocol,
-                       :amqp_security_protocol        => amqp_security_protocol,
-                       :ssh_keypair_security_protocol => ssh_keypair_security_protocol,
-                       :api_version                   => @ems.api_version,
-
-                       :provider_region               => @ems.provider_region,
-                       :default_userid                => @ems.authentication_userid ? @ems.authentication_userid : "",
-                       :amqp_userid                   => amqp_userid,
-                       :ssh_keypair_userid            => ssh_keypair_userid,
-                       :metrics_userid                => metrics_userid,
-                       :emstype_vm                    => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
-                       :host_default_vnc_port_start   => host_default_vnc_port_start ? host_default_vnc_port_start : "",
-                       :host_default_vnc_port_end     => host_default_vnc_port_end ? host_default_vnc_port_end : "",
-                       :ems_controller                => controller_name
+      render :json => {:name                        => @ems.name,
+                       :emstype                     => @ems.emstype,
+                       :zone                        => zone,
+                       :provider_id                 => @ems.provider_id ? @ems.provider_id : "",
+                       :default_hostname            => @ems.connection_configurations.default.endpoint.hostname,
+                       :amqp_hostname               => amqp_hostname,
+                       :metrics_hostname            => metrics_hostname,
+                       :default_api_port            => @ems.connection_configurations.default.endpoint.port,
+                       :amqp_api_port               => amqp_port,
+                       :metrics_api_port            => metrics_port,
+                       :default_security_protocol   => default_security_protocol,
+                       :amqp_security_protocol      => amqp_security_protocol,
+                       :api_version                 => @ems.api_version,
+                       :provider_region             => @ems.provider_region,
+                       :default_userid              => @ems.authentication_userid ? @ems.authentication_userid : "",
+                       :amqp_userid                 => amqp_userid,
+                       :ssh_keypair_userid          => ssh_keypair_userid,
+                       :metrics_userid              => metrics_userid,
+                       :emstype_vm                  => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
+                       :host_default_vnc_port_start => host_default_vnc_port_start ? host_default_vnc_port_start : "",
+                       :host_default_vnc_port_end   => host_default_vnc_port_end ? host_default_vnc_port_end : "",
+                       :ems_controller              => controller_name
       } if controller_name == "ems_infra"
     end
 
@@ -278,9 +266,6 @@ module Mixins
       amqp_hostname = params[:amqp_hostname].strip if params[:amqp_hostname]
       amqp_port = params[:amqp_api_port].strip if params[:amqp_api_port]
       amqp_security_protocol = params[:amqp_security_protocol].strip if params[:amqp_security_protocol]
-      ssh_keypair_hostname = params[:ssh_keypair_hostname].strip if params[:ssh_keypair_hostname]
-      ssh_keypair_port = params[:ssh_keypair_api_port].strip if params[:ssh_keypair_api_port]
-      ssh_keypair_security_protocol = params[:ssh_keypair_security_protocol].strip if params[:ssh_keypair_security_protocol]
       metrics_hostname = params[:metrics_hostname].strip if params[:metrics_hostname]
       metrics_port = params[:metrics_api_port].strip if params[:metrics_api_port]
       default_endpoint = {}
@@ -296,7 +281,7 @@ module Mixins
       if ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
         amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
-        ssh_keypair_endpoint = {:role => :ssh_keypair, :hostname => ssh_keypair_hostname, :port => ssh_keypair_port, :security_protocol => ssh_keypair_security_protocol}
+        ssh_keypair_endpoint = {:role => :ssh_keypair}
       end
 
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager)

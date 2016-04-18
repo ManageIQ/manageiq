@@ -9,19 +9,16 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       hostname: '',
       default_hostname: '',
       amqp_hostname: '',
-      ssh_keypair_hostname: '',
       metrics_hostname: '',
       project: '',
       default_api_port: '',
       amqp_api_port: '',
-      ssh_keypair_port: '',
       metrics_port: '',
       api_version: '',
       default_security_protocol: '',
       realm: '',
       security_protocol: '',
       amqp_security_protocol: '',
-      ssh_keypair_security_protocol: '',
       provider_region: '',
       default_userid: '',
       default_password: '',
@@ -84,7 +81,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.hostname                        = data.hostname;
         $scope.emsCommonModel.default_hostname                = data.default_hostname;
         $scope.emsCommonModel.amqp_hostname                   = data.amqp_hostname;
-        $scope.emsCommonModel.ssh_keypair_hostname            = data.ssh_keypair_hostname;
         $scope.emsCommonModel.metrics_hostname                = data.metrics_hostname;
         $scope.emsCommonModel.project                         = data.project;
 
@@ -94,14 +90,12 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port : '5000';
         $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port : '5672';
-        $scope.emsCommonModel.ssh_keypair_api_port            = angular.isDefined(data.ssh_keypair_api_port) && data.ssh_keypair_api_port != '' ? data.ssh_keypair_api_port : '';
         $scope.emsCommonModel.metrics_api_port                = angular.isDefined(data.metrics_api_port) && data.metrics_api_port != '' ? data.metrics_api_port : '';
         $scope.emsCommonModel.api_version                     = data.api_version;
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
         $scope.emsCommonModel.security_protocol               = data.security_protocol;
         $scope.emsCommonModel.amqp_security_protocol          = data.amqp_security_protocol;
-        $scope.emsCommonModel.ssh_keypair_security_protocol   = data.ssh_keypair_security_protocol;
         $scope.emsCommonModel.provider_region                 = data.provider_region;
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
@@ -178,7 +172,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
        $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "ssh_keypair" && $scope.emsCommonModel.emstype == "openstack_infra") &&
-      ($scope.emsCommonModel.ssh_keypair_hostname != '' && $scope.angularForm.ssh_keypair_hostname.$valid && $scope.emsCommonModel.ssh_keypair_api_port != '') &&
       ($scope.emsCommonModel.ssh_keypair_userid != '' && $scope.angularForm.ssh_keypair_userid.$valid &&
       $scope.emsCommonModel.ssh_keypair_password != '' && $scope.angularForm.ssh_keypair_password.$valid &&
       $scope.emsCommonModel.ssh_keypair_verify != '' && $scope.angularForm.ssh_keypair_verify.$valid)) {
@@ -264,7 +257,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.note = "";
     if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
       $scope.emsCommonModel.default_api_port = "5000";
-      $scope.emsCommonModel.ssh_keypair_security_protocol = "ssl";
     } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
     } else if ($scope.emsCommonModel.emstype === 'rhevm'){
