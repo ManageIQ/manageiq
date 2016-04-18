@@ -13,8 +13,8 @@ class MiqUiWorker < MiqWorker
     end
   end
 
-  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/cfme-balancer-ui.conf'
-  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ui'
+  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/manageiq-balancer-ui.conf'
+  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/manageiq-redirects-ui'
   STARTING_PORT              = 3000
   PROTOCOL                   = 'http'
   LB_METHOD                  = :busy

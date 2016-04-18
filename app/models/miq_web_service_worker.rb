@@ -3,8 +3,8 @@ class MiqWebServiceWorker < MiqWorker
 
   self.required_roles = ['web_services']
 
-  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/cfme-balancer-ws.conf'
-  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/cfme-redirects-ws'
+  BALANCE_MEMBER_CONFIG_FILE = '/etc/httpd/conf.d/manageiq-balancer-ws.conf'
+  REDIRECTS_CONFIG_FILE      = '/etc/httpd/conf.d/manageiq-redirects-ws'
   STARTING_PORT              = 4000
   PROTOCOL                   = 'http'
   LB_METHOD                  = :busy
