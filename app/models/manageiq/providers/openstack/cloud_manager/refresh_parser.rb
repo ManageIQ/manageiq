@@ -378,7 +378,6 @@ module ManageIQ::Providers
       # for connections, delete when not needed.
       private_network = {:ipaddress => server.private_ip_address}.delete_nils
       public_network  = {:ipaddress => server.public_ip_address}.delete_nils
-
       if parent_hosts
         # Find associated host from OpenstackInfra
         filtered_hosts = parent_hosts.select do |x|
@@ -406,6 +405,7 @@ module ManageIQ::Providers
           :cpu_sockets          => flavor[:cpus],
           :cpu_cores_per_socket => 1,
           :cpu_total_cores      => flavor[:cpus],
+          :cpu_speed            => parent_host.try(:hardware).try(:cpu_speed),
           :memory_mb            => flavor[:memory] / 1.megabyte,
           :disk_capacity        => flavor[:root_disk_size] + flavor[:ephemeral_disk_size] + flavor[:swap_disk_size],
           :disks                => [], # Filled in later conditionally on flavor
