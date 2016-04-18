@@ -2,7 +2,11 @@ module ManageIQ::Providers::Google
   class CloudManager::Refresher < ManageIQ::Providers::BaseManager::Refresher
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
-    def parse_legacy_inventory(ems)
+    def collect_inventory_for_targets(ems, targets)
+      [[ems, nil]]
+    end
+
+    def parse_targeted_inventory(ems, target, inventory)
       ManageIQ::Providers::Google::CloudManager::RefreshParser.ems_inv_to_hashes(ems, refresher_options)
     end
 
