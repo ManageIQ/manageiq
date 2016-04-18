@@ -1,4 +1,4 @@
-describe Chargeback do
+describe ChargebackVm do
   before do
     MiqRegion.seed
     ChargebackRate.seed
