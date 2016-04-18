@@ -424,7 +424,7 @@ module ReportFormatter
         tooltip = key
         tooltip = _('no value') if key.blank?
         a.push(:value   => data[aggreg][raw_column_name],
-               :tooltip => key)
+               :tooltip => tooltip)
         categories.push([tooltip, data[aggreg][raw_column_name]])
       end
 

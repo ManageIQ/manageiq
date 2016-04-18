@@ -1571,6 +1571,9 @@ function chartData(type, data, data2) {
   if (_.isObject(data.axis) && _.isObject(data.axis.y) && _.isObject(data.axis.y.tick) && _.isObject(data.axis.y.tick.format)) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
+    if(type == 'Donut' || type == 'Pie'){
+      data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
+    }
   }
   var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
   return _.defaultsDeep({}, config, data, data2);
