@@ -31,7 +31,7 @@ class OpsController
 
       section.items.each do |item|
         if item.kind_of?(Menu::Section) # recurse for sections
-          feature = build_section(item, true) # FIXME: parent_checked
+          feature = build_section(item, parent_checked)
           kids.push(feature)
         else # kind_of?(Menu::Item) # add item features
           next if item.feature.nil?
