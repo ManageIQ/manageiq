@@ -4,6 +4,8 @@ class Tag < ApplicationRecord
   virtual_has_one :category,       :class_name => "Classification"
   virtual_has_one :categorization, :class_name => "Hash"
 
+  has_many :container_label_tag_mappings
+
   before_destroy :remove_from_managed_filters
 
   def self.to_tag(name, options = {})
