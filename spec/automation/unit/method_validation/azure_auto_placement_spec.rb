@@ -1,6 +1,6 @@
 describe "azure best fit" do
-  let(:cloud_network)     { FactoryGirl.create(:cloud_network, :ems_id => ems.id, :enabled => true) }
-  let(:cloud_subnet)      { FactoryGirl.create(:cloud_subnet, :cloud_network_id => cloud_network.id) }
+  let(:cloud_network)     { FactoryGirl.create(:cloud_network, :ems_id => ems.network_manager.id, :enabled => true) }
+  let(:cloud_subnet)      { FactoryGirl.create(:cloud_subnet, :ems_id => ems.network_manager.id, :cloud_network_id => cloud_network.id) }
   let(:ems)               { FactoryGirl.create(:ems_azure_with_authentication) }
   let(:m2_small_flavor)   { FactoryGirl.create(:flavor_azure, :ems_id => ems.id, :cloud_subnet_required => false) }
   let(:miq_provision)     do

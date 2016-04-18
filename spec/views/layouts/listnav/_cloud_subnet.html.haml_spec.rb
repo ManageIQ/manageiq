@@ -8,7 +8,7 @@ describe "layouts/listnav/_cloud_subnet.html.haml" do
     allow(view).to receive(:role_allows).and_return(true)
   end
 
-  ["openstack"].each do |t|
+  %w(openstack amazon azure).each do |t|
     before :each do
       allow_any_instance_of(User).to receive(:get_timezone).and_return(Time.zone)
       provider       = FactoryGirl.create("ems_#{t}".to_sym)

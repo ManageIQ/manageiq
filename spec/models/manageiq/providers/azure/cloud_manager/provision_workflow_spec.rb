@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
     context "security_groups" do
       context "non cloud network" do
         it "#get_targets_for_ems" do
-          sg = FactoryGirl.create(:security_group, :ext_management_system => ems)
+          sg = FactoryGirl.create(:security_group, :ext_management_system => ems.network_manager)
           ems.security_groups << sg
           filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup,
                                    'security_groups.non_cloud_network')
@@ -46,8 +46,8 @@ describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
 
       context "cloud network" do
         it "#get_targets_for_ems" do
-          cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems)
-          sg_cn = FactoryGirl.create(:security_group, :ext_management_system => ems, :cloud_network => cn1)
+          cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => ems.network_manager)
+          sg_cn = FactoryGirl.create(:security_group, :ext_management_system => ems.network_manager, :cloud_network => cn1)
           ems.security_groups << sg_cn
           filtered = workflow.send(:get_targets_for_ems, ems, :cloud_filter, SecurityGroup, 'security_groups')
           expect(filtered.size).to eq(1)
@@ -70,7 +70,7 @@ describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
       tagged_flavor = ems.flavors.first
       Classification.classify(tagged_flavor, 'cc', '001')
 
-      2.times { FactoryGirl.create(:security_group, :ext_management_system => ems) }
+      2.times { FactoryGirl.create(:security_group, :ext_management_system => ems.network_manager) }
       tagged_sec = ems.security_groups.first
       Classification.classify(tagged_sec, 'cc', '001')
     end

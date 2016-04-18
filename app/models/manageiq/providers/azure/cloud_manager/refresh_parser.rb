@@ -1,6 +1,7 @@
 module ManageIQ::Providers
   module Azure
     class CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+      include ManageIQ::Providers::Azure::RefreshHelperMethods
       include Vmdb::Logging
 
       VALID_LOCATION = /\w+/
@@ -10,28 +11,22 @@ module ManageIQ::Providers
         new(ems, options).ems_inv_to_hashes
       end
 
-      def self.security_group_type
-        ManageIQ::Providers::Azure::CloudManager::SecurityGroup.name
-      end
-
       def initialize(ems, options = nil)
-        @ems                = ems
-        @config             = ems.connect
-        @subscription_id    = @config.subscription_id
-        @vmm                = ::Azure::Armrest::VirtualMachineService.new(@config)
-        @asm                = ::Azure::Armrest::AvailabilitySetService.new(@config)
-        @tds                = ::Azure::Armrest::TemplateDeploymentService.new(@config)
-        @vns                = ::Azure::Armrest::Network::VirtualNetworkService.new(@config)
-        @ips                = ::Azure::Armrest::Network::IpAddressService.new(@config)
-        @nis                = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
-        @nsg                = ::Azure::Armrest::Network::NetworkSecurityGroupService.new(@config)
-        @rgs                = ::Azure::Armrest::ResourceGroupService.new(@config)
-        @sas                = ::Azure::Armrest::StorageAccountService.new(@config)
-        @options            = options || {}
-        @data               = {}
-        @data_index         = {}
-        @resource_to_stack  = {}
-        @network_interfaces = []
+        @ems               = ems
+        @config            = ems.connect
+        @subscription_id   = @config.subscription_id
+        # TODO(lsmola) NetworkManager, remove network endpoints once this is entirely moved under NetworkManager
+        @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
+        @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
+        @vmm               = ::Azure::Armrest::VirtualMachineService.new(@config)
+        @asm               = ::Azure::Armrest::AvailabilitySetService.new(@config)
+        @tds               = ::Azure::Armrest::TemplateDeploymentService.new(@config)
+        @rgs               = ::Azure::Armrest::ResourceGroupService.new(@config)
+        @sas               = ::Azure::Armrest::StorageAccountService.new(@config)
+        @options           = options || {}
+        @data              = {}
+        @data_index        = {}
+        @resource_to_stack = {}
       end
 
       def ems_inv_to_hashes
@@ -39,12 +34,9 @@ module ManageIQ::Providers
 
         _log.info("#{log_header}...")
         get_resource_groups
-        get_network_interfaces
-        get_security_groups
         get_series
         get_availability_zones
         get_stacks
-        get_cloud_networks
         get_instances
         get_images
         _log.info("#{log_header}...Complete")
@@ -54,14 +46,7 @@ module ManageIQ::Providers
 
       private
 
-      def get_network_interfaces
-        @network_interfaces = gather_data_for_this_region(@nis)
-      end
-
       def get_resource_groups
-        resource_groups = @rgs.list.select do |resource_group|
-          resource_group.location == @ems.provider_region
-        end
         process_collection(resource_groups, :resource_groups) do |resource_group|
           parse_resource_group(resource_group)
         end
@@ -121,16 +106,6 @@ module ManageIQ::Providers
         process_collection([stack], :orchestration_templates) { |the_stack| parse_stack_template(the_stack, content) }
       end
 
-      def get_cloud_networks
-        cloud_networks = gather_data_for_this_region(@vns)
-        process_collection(cloud_networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
-      end
-
-      def get_cloud_subnets(cloud_network)
-        subnets = cloud_network.properties.subnets
-        process_collection(subnets, :cloud_subnets) { |subnet| parse_cloud_subnet(subnet) }
-      end
-
       def get_instances
         instances = gather_data_for_this_region(@vmm)
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
@@ -139,41 +114,6 @@ module ManageIQ::Providers
       def get_images
         images = gather_data_for_this_region(@sas, "list_private_images")
         process_collection(images, :vms) { |image| parse_image(image) }
-      end
-
-      def get_security_groups
-        security_groups = gather_data_for_this_region(@nsg)
-        process_collection(security_groups, :security_groups) { |sg| parse_security_group(sg) }
-      end
-
-      def get_vm_security_groups(instance)
-        get_vm_nics(instance).collect do |nic|
-          sec_id = nic.properties.try(:network_security_group).try(:id)
-          @data_index.fetch_path(:security_groups, sec_id) if sec_id
-        end.compact
-      end
-
-      def get_vm_nics(instance)
-        nic_ids = instance.properties.network_profile.network_interfaces.collect(&:id)
-        @network_interfaces.find_all { |nic| nic_ids.include?(nic.id) }
-      end
-
-      def process_collection(collection, key)
-        @data[key] ||= []
-
-        return if collection.nil?
-
-        collection.each do |item|
-          uid, new_result = yield(item)
-          @data[key] << new_result
-          @data_index.store_path(key, uid, new_result)
-        end
-      end
-
-      def gather_data_for_this_region(arm_service, method = "list")
-        @data[:resource_groups].collect do |resource_group|
-          arm_service.send(method, resource_group[:name])
-        end.flatten
       end
 
       def parse_resource_group(resource_group)
@@ -212,38 +152,6 @@ module ManageIQ::Providers
         return id, new_result
       end
 
-      def parse_cloud_network(cloud_network)
-        cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
-          @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
-        end
-
-        uid = resource_uid(@subscription_id,
-                           cloud_network.resource_group.downcase,
-                           cloud_network.type.downcase,
-                           cloud_network.name)
-
-        new_result = {
-          :ems_ref             => cloud_network.id,
-          :name                => cloud_network.name,
-          :cidr                => cloud_network.properties.address_space.address_prefixes.join(", "),
-          :enabled             => true,
-          :cloud_subnets       => cloud_subnets,
-          :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
-        }
-        return uid, new_result
-      end
-
-      def parse_cloud_subnet(subnet)
-        uid = subnet.id
-        new_result = {
-          :ems_ref           => uid,
-          :name              => subnet.name,
-          :cidr              => subnet.properties.address_prefix,
-          :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
-        }
-        return uid, new_result
-      end
-
       def parse_instance(instance)
         uid = resource_uid(@subscription_id,
                            instance.resource_group.downcase,
@@ -252,8 +160,9 @@ module ManageIQ::Providers
         series_name = instance.properties.hardware_profile.vm_size
         series      = @data_index.fetch_path(:flavors, series_name)
 
+        # TODO(lsmola) NetworkManager, storing IP addresses under hardware/network will go away, once all providers are
+        # unified under the NetworkManager
         hardware_network_info = get_hardware_network_info(instance)
-        security_groups = get_vm_security_groups(instance)
 
         new_result = {
           :type                => 'ManageIQ::Providers::Azure::CloudManager::Vm',
@@ -265,7 +174,6 @@ module ManageIQ::Providers
           :operating_system    => process_os(instance),
           :flavor              => series,
           :location            => uid,
-          :security_groups     => security_groups,
           :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid]),
           :availability_zone   => @data_index.fetch_path(:availability_zones, 'default'),
           :hardware            => {
@@ -278,39 +186,6 @@ module ManageIQ::Providers
         populate_hardware_hash_with_series_attributes(new_result[:hardware], instance, series)
 
         return uid, new_result
-      end
-
-      def parse_security_group(security_group)
-        uid = security_group.id
-
-        description = [
-          security_group.resource_group,
-          security_group.location
-        ].join('-')
-
-        new_result = {
-          :type           => self.class.security_group_type,
-          :ems_ref        => uid,
-          :name           => security_group.name,
-          :description    => description,
-          :firewall_rules => parse_firewall_rules(security_group)
-        }
-
-        return uid, new_result
-      end
-
-      def parse_firewall_rules(security_group)
-        security_group.properties.security_rules.map do |rule|
-          {
-            :name                  => rule.name,
-            :host_protocol         => rule.properties.protocol.upcase,
-            :port                  => rule.properties.destination_port_range.split('-').first,
-            :end_port              => rule.properties.destination_port_range.split('-').last,
-            :direction             => rule.properties.direction,
-            :source_ip_range       => rule.properties.source_address_prefix,
-            :source_security_group => @data_index.fetch_path(:security_groups, security_group.id)
-          }
-        end
       end
 
       def power_status(instance)
@@ -347,6 +222,8 @@ module ManageIQ::Providers
         super(disks, size, location, name, "azure")
       end
 
+      # TODO(lsmola) NetworkManager, storing IP addresses under hardware/network will go away, once all providers are
+      # unified under the NetworkManager
       def get_hardware_network_info(instance)
         networks_array = []
 
@@ -421,6 +298,8 @@ module ManageIQ::Providers
 
       def template_from_vmdb(deployment)
         find_by = {:name => deployment.name, :ems_ref => deployment.id, :ext_management_system => @ems}
+        # TODO(lsmola) this is generating a huge amount of sql queries? Do we need it? Why do we touch DB here?
+        # Can be at least written more effectively
         stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.find_by(find_by)
         stack.try(:orchestration_template).try(:content)
       end
@@ -546,11 +425,6 @@ module ManageIQ::Providers
           }
         }
         return uid, new_result
-      end
-
-      # Compose an id string combining some existing keys
-      def resource_uid(*keys)
-        keys.join('\\')
       end
 
       def build_image_name(image)

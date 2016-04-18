@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Azure_NetworkManager_CloudNetwork < MiqAeServiceCloudNetwork
+  end
+end

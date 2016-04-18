@@ -7,7 +7,7 @@ describe NetworkRouterController do
     setup_zone
   end
 
-  %w(openstack amazon).each do |t|
+  %w(openstack amazon azure).each do |t|
     context "for #{t}" do
       before :each do
         @network_router = FactoryGirl.create("network_router_#{t}".to_sym, :name => "Network Router")

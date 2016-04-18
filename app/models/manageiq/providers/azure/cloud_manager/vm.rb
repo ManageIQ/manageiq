@@ -2,6 +2,21 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
   include_concern 'Operations'
   include_concern 'ManageIQ::Providers::Azure::CloudManager::VmOrTemplateShared'
 
+  has_many :cloud_networks, :through => :cloud_subnets
+  has_many :security_groups, :through => :network_ports
+
+  def cloud_network
+    # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
+    # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
+    cloud_networks.first
+  end
+
+  def cloud_subnet
+    # TODO(lsmola) NetworkProvider Backwards compatibility layer with simplified architecture where VM has only one
+    # network. Put this into ManageIQ::Providers::CloudManager::Vm when NetworkProvider is done in all providers
+    cloud_subnets.first
+  end
+
   def provider_service(connection = nil)
     connection ||= ext_management_system.connect
     ::Azure::Armrest::VirtualMachineService.new(connection)
