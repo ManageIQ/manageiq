@@ -1,6 +1,6 @@
 describe EmsInfraController do
   let!(:server) { EvmSpecHelper.local_miq_server(:zone => zone) }
-  let(:zone)   { FactoryGirl.build(:zone) }
+  let(:zone) { FactoryGirl.build(:zone) }
   context "#button" do
     before(:each) do
       set_user_privileges
@@ -316,7 +316,7 @@ describe EmsInfraController do
     context "#build_credentials only contains credentials that it supports and has a username for in params" do
       let(:default_creds) { {:userid => "default_userid", :password => "default_password"} }
       let(:amqp_creds)    { {:userid => "amqp_userid",    :password => "amqp_password"} }
-      let(:ssh_keypair_creds)  { {:userid => "ssh_keypair_userid", :auth_key => "ssh_keypair_password"} }
+      let(:ssh_keypair_creds) { {:userid => "ssh_keypair_userid", :auth_key => "ssh_keypair_password"} }
 
       it "uses the passwords from params for validation if they exist" do
         controller.instance_variable_set(:@_params,
@@ -366,16 +366,16 @@ describe EmsInfraController do
     it 'creates on post' do
       expect do
         post :create, :params => {
-            "button"                    => "add",
-            "name"                      => "foo",
-            "emstype"                   => "scvmm",
-            "zone"                      => zone.name,
-            "cred_type"                 => "default",
-            "default_hostname"          => "foo.com",
-            "default_security_protocol" => "ssl",
-            "default_userid"            => "foo",
-            "default_password"          => "[FILTERED]",
-            "default_verify"            => "[FILTERED]"
+          "button"                    => "add",
+          "name"                      => "foo",
+          "emstype"                   => "scvmm",
+          "zone"                      => zone.name,
+          "cred_type"                 => "default",
+          "default_hostname"          => "foo.com",
+          "default_security_protocol" => "ssl",
+          "default_userid"            => "foo",
+          "default_password"          => "[FILTERED]",
+          "default_verify"            => "[FILTERED]"
         }
       end.to change { ManageIQ::Providers::Microsoft::InfraManager.count }.by(1)
     end
@@ -383,16 +383,16 @@ describe EmsInfraController do
     it 'creates and updates an authentication record on post' do
       expect do
         post :create, :params => {
-            "button"                    => "add",
-            "name"                      => "foo_scvmm",
-            "emstype"                   => "scvmm",
-            "zone"                      => zone.name,
-            "cred_type"                 => "default",
-            "default_hostname"          => "foo.com",
-            "default_security_protocol" => "ssl",
-            "default_userid"            => "foo",
-            "default_password"          => "[FILTERED]",
-            "default_verify"            => "[FILTERED]"
+          "button"                    => "add",
+          "name"                      => "foo_scvmm",
+          "emstype"                   => "scvmm",
+          "zone"                      => zone.name,
+          "cred_type"                 => "default",
+          "default_hostname"          => "foo.com",
+          "default_security_protocol" => "ssl",
+          "default_userid"            => "foo",
+          "default_password"          => "[FILTERED]",
+          "default_verify"            => "[FILTERED]"
         }
       end.to change { Authentication.count }.by(1)
 
@@ -402,14 +402,14 @@ describe EmsInfraController do
 
       expect do
         post :update, :params => {
-            "id"               => scvmm.id,
-            "button"           => "save",
-            "default_hostname" => "host_scvmm_updated",
-            "name"             => "foo_scvmm",
-            "emstype"          => "scvmm",
-            "default_userid"   => "bar",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "id"               => scvmm.id,
+          "button"           => "save",
+          "default_hostname" => "host_scvmm_updated",
+          "name"             => "foo_scvmm",
+          "emstype"          => "scvmm",
+          "default_userid"   => "bar",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.not_to change { Authentication.count }
 
@@ -419,14 +419,14 @@ describe EmsInfraController do
 
     it "validates credentials for a new record" do
       post :create, :params => {
-          "button"           => "validate",
-          "cred_type"        => "default",
-          "name"             => "foo_scvmm",
-          "emstype"          => "scvmm",
-          "zone"             => zone.name,
-          "default_userid"   => "foo",
-          "default_password" => "[FILTERED]",
-          "default_verify"   => "[FILTERED]"
+        "button"           => "validate",
+        "cred_type"        => "default",
+        "name"             => "foo_scvmm",
+        "emstype"          => "scvmm",
+        "zone"             => zone.name,
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
       }
 
       expect(response.status).to eq(200)
@@ -434,14 +434,14 @@ describe EmsInfraController do
 
     it "cancels a new record" do
       post :create, :params => {
-          "button"           => "cancel",
-          "cred_type"        => "default",
-          "name"             => "foo_scvmm",
-          "emstype"          => "scvmm",
-          "zone"             => zone.name,
-          "default_userid"   => "foo",
-          "default_password" => "[FILTERED]",
-          "default_verify"   => "[FILTERED]"
+        "button"           => "cancel",
+        "cred_type"        => "default",
+        "name"             => "foo_scvmm",
+        "emstype"          => "scvmm",
+        "zone"             => zone.name,
+        "default_userid"   => "foo",
+        "default_password" => "[FILTERED]",
+        "default_verify"   => "[FILTERED]"
       }
 
       expect(response.status).to eq(200)
@@ -460,29 +460,29 @@ describe EmsInfraController do
     it 'creates on post' do
       expect do
         post :create, :params => {
-            "button"                        => "add",
-            "name"                          => "foo",
-            "emstype"                       => "openstack_infra",
-            "zone"                          => zone.name,
-            "cred_type"                     => "default",
-            "default_hostname"              => "foo.com",
-            "default_api_port"              => "5000",
-            "default_security_protocol"     => "ssl",
-            "default_userid"                => "foo",
-            "default_password"              => "[FILTERED]",
-            "default_verify"                => "[FILTERED]",
-            "amqp_hostname"                 => "foo_amqp.com",
-            "amqp_api_port"                 => "5672",
-            "amqp_security_protocol"        => "ssl",
-            "amqp_userid"                   => "amqp_foo",
-            "amqp_password"                 => "[FILTERED]",
-            "amqp_verify"                   => "[FILTERED]",
-            "ssh_keypair_hostname"          => "foo_ssh.com",
-            "ssh_keypair_port"              => "5372",
-            "ssh_keypair_security_protocol" => "ssl",
-            "ssh_keypair_userid"            => "ssh_foo",
-            "ssh_keypair_password"          => "[FILTERED]",
-            "ssh_keypair_verify"            => "[FILTERED]"
+          "button"                        => "add",
+          "name"                          => "foo",
+          "emstype"                       => "openstack_infra",
+          "zone"                          => zone.name,
+          "cred_type"                     => "default",
+          "default_hostname"              => "foo.com",
+          "default_api_port"              => "5000",
+          "default_security_protocol"     => "ssl",
+          "default_userid"                => "foo",
+          "default_password"              => "[FILTERED]",
+          "default_verify"                => "[FILTERED]",
+          "amqp_hostname"                 => "foo_amqp.com",
+          "amqp_api_port"                 => "5672",
+          "amqp_security_protocol"        => "ssl",
+          "amqp_userid"                   => "amqp_foo",
+          "amqp_password"                 => "[FILTERED]",
+          "amqp_verify"                   => "[FILTERED]",
+          "ssh_keypair_hostname"          => "foo_ssh.com",
+          "ssh_keypair_port"              => "5372",
+          "ssh_keypair_security_protocol" => "ssl",
+          "ssh_keypair_userid"            => "ssh_foo",
+          "ssh_keypair_password"          => "[FILTERED]",
+          "ssh_keypair_verify"            => "[FILTERED]"
         }
       end.to change { ManageIQ::Providers::Openstack::InfraManager.count }.by(1)
     end
@@ -490,29 +490,29 @@ describe EmsInfraController do
     it 'creates and updates an authentication record on post' do
       expect do
         post :create, :params => {
-            "button"                        => "add",
-            "name"                          => "foo_openstack",
-            "emstype"                       => "openstack_infra",
-            "zone"                          => zone.name,
-            "cred_type"                     => "default",
-            "default_hostname"              => "foo.com",
-            "default_api_port"              => "5000",
-            "default_security_protocol"     => "ssl",
-            "default_userid"                => "foo",
-            "default_password"              => "[FILTERED]",
-            "default_verify"                => "[FILTERED]",
-            "amqp_hostname"                 => "foo_amqp.com",
-            "amqp_api_port"                 => "5672",
-            "amqp_security_protocol"        => "ssl",
-            "amqp_userid"                   => "amqp_foo",
-            "amqp_password"                 => "[FILTERED]",
-            "amqp_verify"                   => "[FILTERED]",
-            "ssh_keypair_hostname"          => "foo_ssh.com",
-            "ssh_keypair_port"              => "5372",
-            "ssh_keypair_security_protocol" => "ssl",
-            "ssh_keypair_userid"            => "ssh_foo",
-            "ssh_keypair_password"          => "[FILTERED]",
-            "ssh_keypair_verify"            => "[FILTERED]"
+          "button"                        => "add",
+          "name"                          => "foo_openstack",
+          "emstype"                       => "openstack_infra",
+          "zone"                          => zone.name,
+          "cred_type"                     => "default",
+          "default_hostname"              => "foo.com",
+          "default_api_port"              => "5000",
+          "default_security_protocol"     => "ssl",
+          "default_userid"                => "foo",
+          "default_password"              => "[FILTERED]",
+          "default_verify"                => "[FILTERED]",
+          "amqp_hostname"                 => "foo_amqp.com",
+          "amqp_api_port"                 => "5672",
+          "amqp_security_protocol"        => "ssl",
+          "amqp_userid"                   => "amqp_foo",
+          "amqp_password"                 => "[FILTERED]",
+          "amqp_verify"                   => "[FILTERED]",
+          "ssh_keypair_hostname"          => "foo_ssh.com",
+          "ssh_keypair_port"              => "5372",
+          "ssh_keypair_security_protocol" => "ssl",
+          "ssh_keypair_userid"            => "ssh_foo",
+          "ssh_keypair_password"          => "[FILTERED]",
+          "ssh_keypair_verify"            => "[FILTERED]"
         }
       end.to change { Authentication.count }.by(3)
 
@@ -522,14 +522,14 @@ describe EmsInfraController do
 
       expect do
         post :update, :params => {
-            "id"               => openstack.id,
-            "button"           => "save",
-            "default_hostname" => "host_openstack_updated",
-            "name"             => "foo_openstack",
-            "emstype"          => "openstack_infra",
-            "default_userid"   => "bar",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "id"               => openstack.id,
+          "button"           => "save",
+          "default_hostname" => "host_openstack_updated",
+          "name"             => "foo_openstack",
+          "emstype"          => "openstack_infra",
+          "default_userid"   => "bar",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.not_to change { Authentication.count }
 
@@ -550,21 +550,21 @@ describe EmsInfraController do
     it 'creates on post' do
       expect do
         post :create, :params => {
-            "button"           => "add",
-            "name"             => "foo",
-            "emstype"          => "rhevm",
-            "zone"             => zone.name,
-            "cred_type"        => "default",
-            "default_hostname" => "foo.com",
-            "default_api_port" => "5000",
-            "default_userid"   => "foo",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]",
-            "metrics_hostname" => "foo_metrics.com",
-            "metrics_api_port" => "5672",
-            "metrics_userid"   => "metrics_foo",
-            "metrics_password" => "[FILTERED]",
-            "metrics_verify"   => "[FILTERED]"
+          "button"           => "add",
+          "name"             => "foo",
+          "emstype"          => "rhevm",
+          "zone"             => zone.name,
+          "cred_type"        => "default",
+          "default_hostname" => "foo.com",
+          "default_api_port" => "5000",
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]",
+          "metrics_hostname" => "foo_metrics.com",
+          "metrics_api_port" => "5672",
+          "metrics_userid"   => "metrics_foo",
+          "metrics_password" => "[FILTERED]",
+          "metrics_verify"   => "[FILTERED]"
         }
       end.to change { ManageIQ::Providers::Redhat::InfraManager.count }.by(1)
     end
@@ -572,21 +572,21 @@ describe EmsInfraController do
     it 'creates and updates an authentication record on post' do
       expect do
         post :create, :params => {
-            "button"           => "add",
-            "name"             => "foo_rhevm",
-            "emstype"          => "rhevm",
-            "zone"             => zone.name,
-            "cred_type"        => "default",
-            "default_hostname" => "foo.com",
-            "default_api_port" => "5000",
-            "default_userid"   => "foo",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]",
-            "metrics_hostname" => "foo_metrics.com",
-            "metrics_api_port" => "5672",
-            "metrics_userid"   => "metrics_foo",
-            "metrics_password" => "[FILTERED]",
-            "metrics_verify"   => "[FILTERED]"
+          "button"           => "add",
+          "name"             => "foo_rhevm",
+          "emstype"          => "rhevm",
+          "zone"             => zone.name,
+          "cred_type"        => "default",
+          "default_hostname" => "foo.com",
+          "default_api_port" => "5000",
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]",
+          "metrics_hostname" => "foo_metrics.com",
+          "metrics_api_port" => "5672",
+          "metrics_userid"   => "metrics_foo",
+          "metrics_password" => "[FILTERED]",
+          "metrics_verify"   => "[FILTERED]"
         }
       end.to change { Authentication.count }.by(2)
 
@@ -596,14 +596,14 @@ describe EmsInfraController do
 
       expect do
         post :update, :params => {
-            "id"               => rhevm.id,
-            "button"           => "save",
-            "default_hostname" => "host_rhevm_updated",
-            "name"             => "foo_rhevm",
-            "emstype"          => "rhevm",
-            "default_userid"   => "bar",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "id"               => rhevm.id,
+          "button"           => "save",
+          "default_hostname" => "host_rhevm_updated",
+          "name"             => "foo_rhevm",
+          "emstype"          => "rhevm",
+          "default_userid"   => "bar",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.not_to change { Authentication.count }
 
@@ -624,15 +624,15 @@ describe EmsInfraController do
     it 'creates on post' do
       expect do
         post :create, :params => {
-            "button"           => "add",
-            "name"             => "foo",
-            "emstype"          => "vmwarews",
-            "zone"             => zone.name,
-            "cred_type"        => "default",
-            "default_hostname" => "foo.com",
-            "default_userid"   => "foo",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "button"           => "add",
+          "name"             => "foo",
+          "emstype"          => "vmwarews",
+          "zone"             => zone.name,
+          "cred_type"        => "default",
+          "default_hostname" => "foo.com",
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.to change { ManageIQ::Providers::Vmware::InfraManager.count }.by(1)
     end
@@ -640,15 +640,15 @@ describe EmsInfraController do
     it 'creates and updates an authentication record on post' do
       expect do
         post :create, :params => {
-            "button"           => "add",
-            "name"             => "foo_vmware",
-            "emstype"          => "vmwarews",
-            "zone"             => zone.name,
-            "cred_type"        => "default",
-            "default_hostname" => "foo.com",
-            "default_userid"   => "foo",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "button"           => "add",
+          "name"             => "foo_vmware",
+          "emstype"          => "vmwarews",
+          "zone"             => zone.name,
+          "cred_type"        => "default",
+          "default_hostname" => "foo.com",
+          "default_userid"   => "foo",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.to change { Authentication.count }.by(1)
 
@@ -658,14 +658,14 @@ describe EmsInfraController do
 
       expect do
         post :update, :params => {
-            "id"               => vmware.id,
-            "button"           => "save",
-            "default_hostname" => "host_vmware_updated",
-            "name"             => "foo_vmware",
-            "emstype"          => "vmwarews",
-            "default_userid"   => "bar",
-            "default_password" => "[FILTERED]",
-            "default_verify"   => "[FILTERED]"
+          "id"               => vmware.id,
+          "button"           => "save",
+          "default_hostname" => "host_vmware_updated",
+          "name"             => "foo_vmware",
+          "emstype"          => "vmwarews",
+          "default_userid"   => "bar",
+          "default_password" => "[FILTERED]",
+          "default_verify"   => "[FILTERED]"
         }
       end.not_to change { Authentication.count }
 

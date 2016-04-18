@@ -113,7 +113,7 @@ class EmsInfraController < ApplicationController
   def ems_infra_form_fields
     ems_form_fields
   end
-  
+
   private
 
   ############################
@@ -126,7 +126,7 @@ class EmsInfraController < ApplicationController
     add_flash(message, :error)
     $log.error(message)
   end
-  
+
   def update_stack(stack, stack_parameters, provider_id, return_message)
     begin
       # Check if stack is ready to be updated

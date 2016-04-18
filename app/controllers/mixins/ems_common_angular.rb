@@ -304,7 +304,6 @@ module Mixins
         metrics_endpoint = {:role => :metrics, :hostname => metrics_hostname, :port => metrics_port}
       end
 
-
       if ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
         ems.project = params[:project]
       end
@@ -373,7 +372,7 @@ module Mixins
         creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => ssh_keypair_password}
       end
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager) &&
-          ems.supports_authentication?(:metrics) && params[:metrics_userid]
+         ems.supports_authentication?(:metrics) && params[:metrics_userid]
         metrics_password = params[:metrics_password] ? params[:metrics_password] : @ems.authentication_password(:metrics)
         creds[:metrics] = {:userid => params[:metrics_userid], :password => metrics_password}
       end
