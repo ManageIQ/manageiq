@@ -1,4 +1,86 @@
 //= require import
+// ^^ TODO: still needed?
+
+var MAGIC = {};
+
+(function() {
+  "use strict";
+
+  ManageIQ.angular.app
+    .directive('miqAeToolsImportExport', MiqAeToolsImportExport);
+
+
+  MiqAeToolsImportExport.$inject = [];
+
+  function MiqAeToolsImportExport() {
+    return {
+      restrict: 'E',
+      scope: {},
+      controller: ImportExportCtrl,
+      controllerAs: 'vm',
+      bindToController: true,
+      link: function(scope, elem, attrs, ctrl) {
+        ctrl.init();
+      },
+      // template
+    };
+  }
+
+
+  ImportExportCtrl.$inject = ['$http', 'miqService'];
+
+  function ImportExportCtrl($http, miqService) {
+    var vm = this;
+
+    vm.import_uploaded = false;
+    vm.init = function() {
+      AutomateImportSetup.listenForPostMessages(Automate.getAndRenderAutomateJson);
+      Automate.setUpAutomateImportClickHandlers();
+    };
+
+    vm.submit = function() {
+      // TODO
+    };
+
+    MAGIC.vm = vm;
+  }
+
+})();
+
+
+// TODO - now missing authenticity_token - sending via $http should fix it
+// also, response is a 302 to
+// http://localhost:3000/miq_ae_tools/review_import?import_file_upload_id=10000000000015&message=%7B%22message%22%3A%22Import+file+was+uploaded+successfully%22%2C%22level%22%3A%22success%22%7D
+
+
+
+var AutomateImportSetup = {
+  listenForPostMessages: function(getAndRenderJsonCallback) {
+    window.addEventListener('message', function(event) {
+      AutomateImportSetup.respondToPostMessages(event, getAndRenderJsonCallback);
+    });
+  },
+
+  respondToPostMessages: function(event, getAndRenderJsonCallback) {
+    miqSparkleOff();
+    clearMessages();
+
+    var importFileUploadId = event.data.import_file_upload_id;
+
+    if (importFileUploadId) {
+      getAndRenderJsonCallback(importFileUploadId, event.data.message);
+    } else {
+      var unencodedMessage = event.data.message.replace(/&quot;/g, '"');
+      var messageData = JSON.parse(unencodedMessage);
+
+      if (messageData.level == 'warning') {
+        showWarningMessage(messageData.message);
+      } else {
+        showErrorMessage(messageData.message);
+      }
+    }
+  }
+};
 
 var Automate = {
   getAndRenderAutomateJson: function(importFileUploadId, message) {
@@ -14,8 +96,8 @@ var Automate = {
       });
 
       $('#import_file_upload_id').val(importFileUploadId);
-      $('.import-data').show();
-      $('.import-or-export').hide();
+      MAGIC.vm.import_uploaded = true;
+
       showSuccessMessage(JSON.parse(message).message);
     })
     .fail(function(failedMessage) {
@@ -101,8 +183,7 @@ var Automate = {
         var flashMessage = JSON.parse(data)[0];
         showSuccessMessage(flashMessage.message);
 
-        $('.import-or-export').show();
-        $('.import-data').hide();
+        MAGIC.vm.import_uploaded = false;
         miqSparkleOff();
       });
     });

@@ -8,86 +8,89 @@
       %span.pficon
     %strong.message
 
-.import-or-export
-  %h3
-    = _('Import Datastore classes (*.zip)')
-  = form_tag({:action => "upload_import_file"},
-             :target    => "upload_target",
-             :multipart => true,
-             :method    => :post) do
-    .form-horizontal
-      .form-group
-        .col-md-4
-          = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
-          :javascript
-            $(":file").filestyle({icon: false, placeholder: "No file chosen"});
-        .col-md-6
-          = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload btn btn-default")
-  %hr
-  %h3
-    = _('Export')
-  = form_tag({:action => "export_datastore"},
-             :method => :get) do
-    = image_submit_tag(image_path('toolbars/export.png'),
-                       :alt   => t = _("Export all classes and instances"),
-                       :title => t)
-    = _('Export all classes and instances to a file')
+%miq-ae-tools-import-export
+  // screen 1
+  .import-or-export{'ng-hide' => 'vm.import_uploaded'}
+    %div.--import
+      %h3
+        = _('Import Datastore classes (*.zip)')
+      %form.form-horizontal{:action     => url_for(:action => "upload_import_file"),
+                            :target     => "upload_target",
+                            :enctype    => "multipart/form-data",
+                            :method     => :post,
+                            'ng-submit' => "vm.submit()"}
+        .form-group
+          .col-md-4
+            = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
+            :javascript
+              $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+          .col-md-6
+            %input.upload.btn.btn-default#upload-datastore-import{:type  => 'submit',
+                                                                  :value => _("Upload"),
+                                                                  'data-miq_sparkle_on' => true}
+    %hr
 
-  %hr
-  %h3
-    = (t = _('Reset all Datastore custom classes and instances to default'))
-  = link_to(image_tag(image_path('toolbars/reset.png'),
-                      :alt => t),
-            {:action              => 'reset_datastore'},
-            "data-miq_sparkle_on" => true,
-            :confirm              => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
-            :remote               => true,
-            "data-method"         => :post,
-            :title                => t)
-.import-data
-  %form#import-form
-    %h3
-      = _('Import Datastore classes')
-    .form-horizontal
-      .form-group
-        %label.col-md-2.control-label
-          = _('Select existing domain to import into:')
-        .col-md-8
-          = select_tag("selected_domain_to_import_to",
-                       options_for_select(@importable_domain_options),
-                       :class => "existing-domains selectpicker")
-          :javascript
-            miqInitSelectPicker();
+    %div.--export
+      %h3
+        = (t = _('Export all classes and instances to a file'))
+      %a.btn.btn-primary{:href   => url_for(:action => "export_datastore"),
+                        :target => '_blank',
+                        :title  => t}
+        = _('Export')
 
-      .form-group
-        %label.col-md-2.control-label
-          = _('Select domain you wish to import from:')
-        .col-md-8
-          %select.selectpicker.importing-domains{:name => "selected_domain_to_import_from"}
-          :javascript
-            miqInitSelectPicker();
-      .form-group
-        %label.col-md-2.control-label
-          = _('Select namespaces you wish to import:')
-        .col-md-8
-          %input#toggle-all{:type => "checkbox"}
-          %label{:for => "toggle-all"}= _('Toggle All/None')
-          .domain-tree{:name => "selected_namespaces[]"}
+    %hr
 
-    %table{:width => "100%"}
-      %tr
-        %td{:align => "right"}
-          = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
-          = button_tag(_("Commit"), :class => "import-commit btn btn-primary")
+    %div.--reset
+      %h3
+        = (t = _('Reset all Datastore custom classes and instances to default'))
+      %a.btn.btn-danger{:href                 => url_for(:action => 'reset_datastore'),
+                        "data-confirm"        => _("All Datastore customizations will be lost. Are you sure you want to reset all classes and instances to default?"),
+                        "data-miq_sparkle_on" => true,
+                        "data-remote"         => true,
+                        "data-method"         => :post,
+                        :title                => t}
+        = _('Reset')
 
-          = button_tag(_("Back"), :class => "import-back btn btn-default")
+  // screen 2
+  .import-data{'ng-show' => 'vm.import_uploaded'}
+    %form#import-form
+      %h3
+        = _('Import Datastore classes')
+      .form-horizontal
+        .form-group
+          %label.col-md-2.control-label
+            = _('Select existing domain to import into:')
+          .col-md-8
+            = select_tag("selected_domain_to_import_to",
+                        options_for_select(@importable_domain_options),
+                        :class => "existing-domains selectpicker")
+            :javascript
+              miqInitSelectPicker();
+
+        .form-group
+          %label.col-md-2.control-label
+            = _('Select domain you wish to import from:')
+          .col-md-8
+            %select.selectpicker.importing-domains{:name => "selected_domain_to_import_from"}
+            :javascript
+              miqInitSelectPicker();
+        .form-group
+          %label.col-md-2.control-label
+            = _('Select namespaces you wish to import:')
+          .col-md-8
+            %input#toggle-all{:type => "checkbox"}
+            %label{:for => "toggle-all"}= _('Toggle All/None')
+            .domain-tree{:name => "selected_namespaces[]"}
+
+      %table{:width => "100%"}
+        %tr
+          %td{:align => "right"}
+            = hidden_field_tag(:import_file_upload_id, '', :class => "hidden-import-file-upload-id")
+            = button_tag(_("Commit"), :class => "import-commit btn btn-primary")
+
+            = button_tag(_("Back"), :class => "import-back btn btn-default")
 
 :javascript
   $(function() {
-    $('#upload-datastore-import').click(function() {
-      miqSparkleOn();
-    });
-
-    ImportSetup.listenForPostMessages(Automate.getAndRenderAutomateJson);
-    Automate.setUpAutomateImportClickHandlers();
+    miq_bootstrap('miq-ae-tools-import-export');
   });

@@ -6,7 +6,6 @@
  *= require c3
  *= require main
  *= require jquery.jqplot
- *= require automate_import_export
  *= require dialog_import_export
  *= require dialog_fields
  *= require angular

@@ -29,7 +29,6 @@
 //= require miq_change_stored_password
 //= require miq_dynatree_replacement
 //= require dialog_import_export
-//= require automate_import_export
 //= require dialog_field_refresh
 //= require excanvas
 //= require jquery.jqplot
