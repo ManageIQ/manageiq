@@ -3,11 +3,41 @@ module ManageIQ::Providers::Google
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
     def collect_inventory_for_targets(ems, targets)
-      [[ems, nil]]
+      targets.collect do |target|
+        data = Hash.new { |h, k| h[k] = {} }
+
+        case target
+        when ExtManagementSystem, VmOrTemplate
+          get_gce_data(ems, target, data)
+        end
+
+        [target, data]
+      end
     end
 
-    def parse_targeted_inventory(ems, target, inventory)
-      ManageIQ::Providers::Google::CloudManager::RefreshParser.ems_inv_to_hashes(ems, refresher_options)
+    GCE_INVENTORY_TYPES = [
+      :zones,
+      :flavors,
+      :networks,
+      :firewalls,
+      :disks,
+      :snapshots,
+      :images,
+      :servers
+    ].freeze
+
+    def get_gce_data(ems, _target, data)
+      ems.with_provider_connection do |google|
+        data[:project] = google.projects.get(google.project)
+
+        GCE_INVENTORY_TYPES.each do |type|
+          data[type] = google.send(type).all
+        end
+      end
+    end
+
+    def parse_targeted_inventory(_ems, _target, inventory)
+      ManageIQ::Providers::Google::CloudManager::RefreshParser.ems_inv_to_hashes(inventory, refresher_options)
     end
 
     def save_inventory(ems, _targets, hashes)

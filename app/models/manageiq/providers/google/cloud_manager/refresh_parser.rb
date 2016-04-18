@@ -6,9 +6,8 @@ module ManageIQ::Providers
       include Vmdb::Logging
       include ManageIQ::Providers::Google::RefreshHelperMethods
 
-      def initialize(ems, options = nil)
-        @ems               = ems
-        @connection        = ems.connect
+      def initialize(inventory, options = nil)
+        @inventory         = inventory
         @options           = options || {}
         @data              = {}
         @data_index        = {}
@@ -19,16 +18,12 @@ module ManageIQ::Providers
       end
 
       def ems_inv_to_hashes
-        log_header = "Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
-
-        _log.info("#{log_header}...")
         get_zones
         get_flavors
         get_volumes
         get_snapshots
         get_images
         get_instances # Must occur after get_volumes is called
-        _log.info("#{log_header}...Complete")
 
         link_volumes_to_base_snapshots
 
@@ -38,31 +33,31 @@ module ManageIQ::Providers
       private
 
       def get_zones
-        zones = @connection.zones.all
+        zones = @inventory[:zones]
         process_collection(zones, :availability_zones) { |zone| parse_zone(zone) }
       end
 
       def get_flavors
         # connection.flavors returns a duplicate flavor for every zone
         # so build a unique list of flavors using the flavor id
-        flavors = @connection.flavors.to_a.uniq(&:id)
+        flavors = @inventory[:flavors].to_a.uniq(&:id)
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
       end
 
       def get_volumes
-        disks = @connection.disks.all
+        disks = @inventory[:disks]
         process_collection(disks, :cloud_volumes) { |volume| parse_volume(volume) }
       end
 
       def get_snapshots
-        snapshots = @connection.snapshots.all
+        snapshots = @inventory[:snapshots]
         process_collection(snapshots, :cloud_volume_snapshots) { |snapshot| parse_snapshot(snapshot) }
         # Also pass the snapshots as templates
         process_collection(snapshots, :vms) { |snapshot| parse_storage_as_template(snapshot) }
       end
 
       def get_images
-        images = @connection.images.all
+        images = @inventory[:images]
         process_collection(images, :vms) { |image| parse_storage_as_template(image) }
       end
 
@@ -75,7 +70,7 @@ module ManageIQ::Providers
         end
 
         # Add ssh keys that are common to all instances in the project
-        project_common_metadata = @connection.projects.get(@ems.project).common_instance_metadata
+        project_common_metadata = @inventory[:project].common_instance_metadata
         @project_key_pairs      = parse_compute_metadata_ssh_keys(project_common_metadata)
 
         ssh_keys |= @project_key_pairs
@@ -84,7 +79,7 @@ module ManageIQ::Providers
       end
 
       def get_instances
-        instances = @connection.servers.all
+        instances = @inventory[:servers]
 
         # Since SSH keys are stored with the instances this is
         # the only place we can get a complete and unique list
