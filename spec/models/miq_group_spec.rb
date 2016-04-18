@@ -1,100 +1,98 @@
 describe MiqGroup do
-  context "set as Super Administrator" do
-    before(:each) do
-      @miq_group = FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator")
-    end
+  context "as a Super Administrator" do
+    subject { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
 
-    context "#get_filters" do
+    describe "#get_filters" do
       it "normal" do
         expected = {:test => "test filter"}
-        @miq_group.filters = expected
-        expect(@miq_group.get_filters).to eq(expected)
+        subject.filters = expected
+        expect(subject.get_filters).to eq(expected)
       end
 
       it "when nil" do
-        @miq_group.filters = nil
-        expect(@miq_group.get_filters).to eq("managed" => [], "belongsto" => [])
+        subject.filters = nil
+        expect(subject.get_filters).to eq("managed" => [], "belongsto" => [])
       end
 
       it "when {}" do
-        @miq_group.filters = {}
-        expect(@miq_group.get_filters).to eq({})
+        subject.filters = {}
+        expect(subject.get_filters).to eq({})
       end
     end
 
-    context "#has_filters?" do
+    describe "#has_filters?" do
       it "normal" do
-        @miq_group.filters = {"managed" => %w(a)}
-        expect(@miq_group).to be_has_filter
+        subject.filters = {"managed" => %w(a)}
+        expect(subject).to be_has_filter
       end
 
       it "when other" do
-        @miq_group.filters = {"other" => %(x)}
-        expect(@miq_group).not_to be_has_filter
+        subject.filters = {"other" => %(x)}
+        expect(subject).not_to be_has_filter
       end
 
       it "when nil" do
-        @miq_group.filters = nil
-        expect(@miq_group).not_to be_has_filter
+        subject.filters = nil
+        expect(subject).not_to be_has_filter
       end
 
       it "when {}" do
-        @miq_group.filters = {}
-        expect(@miq_group).not_to be_has_filter
+        subject.filters = {}
+        expect(subject).not_to be_has_filter
       end
     end
 
     %w(managed belongsto).each do |type|
-      context "#get_#{type}_filters" do
+      describe "#get_#{type}_filters" do
         let(:method) { "get_#{type}_filters" }
 
         it "normal" do
           expected = {type => "test filter"}
-          @miq_group.filters = expected
-          expect(@miq_group.public_send(method)).to eq(expected[type])
+          subject.filters = expected
+          expect(subject.public_send(method)).to eq(expected[type])
         end
 
         it "when nil" do
-          @miq_group.filters = nil
-          expect(@miq_group.public_send(method)).to eq([])
+          subject.filters = nil
+          expect(subject.public_send(method)).to eq([])
         end
 
         it "when []" do
-          @miq_group.filters = []
-          expect(@miq_group.public_send(method)).to eq([])
+          subject.filters = []
+          expect(subject.public_send(method)).to eq([])
         end
 
         it "missing the #{type} key" do
           expected = {"something" => "test filter"}
-          @miq_group.filters = expected
-          expect(@miq_group.public_send(method)).to eq([])
+          subject.filters = expected
+          expect(subject.public_send(method)).to eq([])
         end
       end
 
       it "#set_#{type}_filters" do
         filters = {type => "test"}
-        @miq_group.public_send("set_#{type}_filters", filters[type])
-        expect(@miq_group.public_send("get_#{type}_filters")).to eq(filters[type])
-        expect(@miq_group.get_filters).to eq(filters)
+        subject.public_send("set_#{type}_filters", filters[type])
+        expect(subject.public_send("get_#{type}_filters")).to eq(filters[type])
+        expect(subject.get_filters).to eq(filters)
       end
     end
 
     it "should return user role name" do
-      expect(@miq_group.miq_user_role_name).to eq("EvmRole-super_administrator")
+      expect(subject.miq_user_role_name).to eq("EvmRole-super_administrator")
     end
 
     it "should set group type to 'system' " do
-      expect(@miq_group.group_type).to eq("system")
+      expect(subject.group_type).to eq("system")
     end
 
     it "should return user count" do
       # TODO: - add more users to check for proper user count...
-      expect(@miq_group.user_count).to eq(0)
+      expect(subject.user_count).to eq(0)
     end
 
     it "should strip group description of leading and trailing spaces" do
-      @miq_group.description = "      leading and trailing white spaces     "
-      expect(@miq_group.description).to eq("leading and trailing white spaces")
+      subject.description = "      leading and trailing white spaces     "
+      expect(subject.description).to eq("leading and trailing white spaces")
     end
   end
 
