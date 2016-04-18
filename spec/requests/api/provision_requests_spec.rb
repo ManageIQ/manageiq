@@ -96,8 +96,11 @@ describe ApiController do
   end
 
   context "AWS advanced provision requests" do
-    let(:aws_dialog) do
-      dialog = FactoryGirl.create(:miq_dialog_aws_provision)
+    let!(:aws_dialog) do
+      path = Rails.root.join("product", "dialogs", "miq_dialogs", "miq_provision_amazon_dialogs_template.yaml")
+      content = YAML.load_file(path)[:content]
+      dialog = FactoryGirl.create(:miq_dialog, :name => "miq_provision_amazon_dialogs_template",
+                                  :dialog_type => "MiqProvisionWorkflow", :content => content)
       allow_any_instance_of(MiqRequestWorkflow).to receive(:dialog_name_from_automate).and_return(dialog.name)
     end
     let(:ems) { FactoryGirl.create(:ems_amazon_with_authentication) }
@@ -162,7 +165,6 @@ describe ApiController do
         }
       )
 
-      aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, body)
 
       expect_request_success
@@ -195,7 +197,6 @@ describe ApiController do
         }
       )
 
-      aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, body)
 
       expect_request_success
@@ -225,7 +226,6 @@ describe ApiController do
         }
       )
 
-      aws_dialog # Create the AWS Provisioning dialog
       run_post(provision_requests_url, body)
 
       expect_request_success

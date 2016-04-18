@@ -37,14 +37,4 @@ FactoryGirl.define do
     name        "miq_provision_configured_system_foreman_dialogs"
     dialog_type "MiqProvisionConfiguredSystemWorkflow"
   end
-
-  factory :miq_dialog_aws_provision, :parent => :miq_dialog do
-    name        "miq_provision_amazon_dialogs_template"
-    dialog_type "MiqProvisionWorkflow"
-
-    content do
-      path = Rails.root.join("product", "dialogs", "miq_dialogs", "miq_provision_amazon_dialogs_template.yaml")
-      YAML.load_file(path)[:content]
-    end
-  end
 end
