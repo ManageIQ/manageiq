@@ -23,17 +23,17 @@ class MiqPglogical
 
   # Returns whether or not this server is a pglogical node
   def node?
-    pglogical.enabled? && pglogical.nodes.field_values("name").include?(local_node_name)
+    pglogical.enabled? && pglogical.nodes.field_values("name").include?(self.class.local_node_name)
   end
 
   # Creates a pglogical node using the rails connection
   def create_node
-    pglogical.node_create(local_node_name, connection_dsn)
+    pglogical.node_create(self.class.local_node_name, connection_dsn)
   end
 
   # Drops the pglogical node associated with this connection
   def drop_node
-    pglogical.node_drop(local_node_name, true)
+    pglogical.node_drop(self.class.local_node_name, true)
   end
 
   # Configures the database as a pglogical replication source
@@ -85,6 +85,18 @@ class MiqPglogical
     end
   end
 
+  def self.local_node_name
+    region_to_node_name(MiqRegion.my_region_number)
+  end
+
+  def self.region_to_node_name(region_id)
+    "#{NODE_PREFIX}#{region_id}"
+  end
+
+  def self.node_name_to_region(name)
+    name.sub(NODE_PREFIX, "").to_i
+  end
+
   private
 
   def pglogical(refresh = false)
@@ -95,14 +107,6 @@ class MiqPglogical
   def connection_dsn
     config = @connection.raw_connection.conninfo_hash.delete_blanks
     PG::Connection.parse_connect_args(config)
-  end
-
-  def local_node_name
-    NODE_PREFIX + MiqRegion.my_region_number.to_s
-  end
-
-  def node_name_to_region(name)
-    name.sub(NODE_PREFIX, "").to_i
   end
 
   # tables that are currently included, but we want them excluded
