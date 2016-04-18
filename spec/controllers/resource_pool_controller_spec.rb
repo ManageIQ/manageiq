@@ -55,4 +55,23 @@ describe ResourcePoolController do
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
   end
+
+  describe "#show" do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      @user = FactoryGirl.create(:user)
+      login_as @user
+      @resource_pool = FactoryGirl.create(:resource_pool)
+    end
+
+    subject { get :show, :id => @resource_pool.id }
+
+    context "render" do
+      render_views
+      it "listnav" do
+        is_expected.to have_http_status 200
+        is_expected.to render_template(:partial => "layouts/listnav/_resource_pool")
+      end
+    end
+  end
 end
