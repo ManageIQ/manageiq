@@ -22,8 +22,7 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           :ems_infra_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this #{ui_lookup(:table=>"ems_infra")}'),
-          t,
-          :url => "/edit"),
+          t),
         button(
           :ems_infra_scale,
           'pficon pficon-edit fa-lg',

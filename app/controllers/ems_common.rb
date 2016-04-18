@@ -665,8 +665,9 @@ module EmsCommon
       get_regions(provider_name)
     end
     @openstack_infra_providers = retrieve_openstack_infra_providers
-    @openstack_api_versions = retrieve_openstack_api_versions
     @openstack_security_protocols = retrieve_openstack_security_protocols
+    @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
+    @openstack_api_versions = retrieve_openstack_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
@@ -687,7 +688,7 @@ module EmsCommon
   end
 
   def retrieve_openstack_security_protocols
-    [['SSL without validation', 'ssl'], ['SSL', 'ssl-with-validation'], ['Non-SSL', 'non-ssl']]
+    [[_('SSL without validation'), 'ssl'], ['SSL', 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
   end
 
   # Get variables from edit form
@@ -722,7 +723,7 @@ module EmsCommon
       if ["openstack", "openstack_infra"].include?(params[:server_emstype])
         @edit[:protocols] = retrieve_openstack_security_protocols
       else
-        @edit[:protocols] = [['Basic (SSL)', 'ssl'], ['Kerberos', 'kerberos']]
+        @edit[:protocols] = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
       end
     end
     @edit[:new][:port] = params[:port] if params[:port]

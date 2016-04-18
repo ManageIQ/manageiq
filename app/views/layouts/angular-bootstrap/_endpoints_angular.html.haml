@@ -1,38 +1,70 @@
-- return if controller_name != "ems_cloud"
+- return if !%w(ems_cloud ems_infra).include?(controller_name)
 
-.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'openstack'"}
+- prefix ||= "default"
+
+%div{"ng-if" => defined?(hostname_hide) ? false : true}
+  .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}"}
+    %label.col-md-2.control-label{"for" => "textInput-markup"}
+      = _('Hostname (or IPv4 or IPv6 address)')
+    .col-md-8
+      %input.form-control{"type"        => "text",
+                          "id"          => "textInput-markup",
+                          "name"        => "#{prefix}_hostname",
+                          "ng-model"    => "#{ng_model}.#{prefix}_hostname",
+                          "maxlength"   => "#{MAX_NAME_LEN}",
+                          "required"    => defined?(hostname_not_required) ? false : true,
+                          "checkchange" => ""}
+      %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
+        = _("Required")
+
+%div{"ng-if" => defined?(apiport_hide) ? false : true}
+  .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}",
+              "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'rhevm'"}
+    %label.col-md-2.control-label{"for" => "textInput-markup"}
+      = _('API Port')
+    .col-md-8
+      %input.form-control{"type"        => "text",
+                          "id"          => "textInput-markup",
+                          "name"        => "#{prefix}_api_port",
+                          "ng-model"    => "#{ng_model}.#{prefix}_api_port",
+                          "maxlength"   => 15,
+                          "required"    => defined?(apiport_not_required) ? false : true,
+                          "checkchange" => ""}
+      %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.required"}
+        = _("Required")
+
+%div{"ng-if" => defined?(security_protocol_hide) ? false : true}
+  .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_security_protocol.$invalid}",
+              "ng-if"    => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'scvmm'"}
+    %label.col-md-2.control-label{"for" => "textInput-markup"}
+      = _('Security Protocol')
+    .col-md-8{"ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
+      = select_tag("#{prefix}_security_protocol",
+                       options_for_select([["<#{_('Choose>')}", nil]] + @openstack_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
+                       "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
+                       "checkchange"                 => "",
+                       "required"                    => defined?(security_protocol_not_required) ? false : true,
+                       "selectpicker-for-select-tag" => "")
+    .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
+      = select_tag("#{prefix}_security_protocol",
+                       options_for_select([["<#{_('Choose>')}", nil]] + @scvmm_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
+                       "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
+                       "checkchange"                 => "",
+                       "required"                    => "",
+                       "ng-change"                   => "scvmmSecurityProtocolChanged()",
+                       "selectpicker-for-select-tag" => "")
+.form-group{"ng-class" => "{'has-error': angularForm.realm.$invalid}",
+            "ng-if" => "emsCommonModel.emstype == 'scvmm' && emsCommonModel.security_protocol == 'kerberos'"}
   %label.col-md-2.control-label{"for" => "textInput-markup"}
-    = _('Hostname (or IPv4 or IPv6 address)')
+    = _('Realm')
   .col-md-8
-    %input.form-control{"type"        => "text",
-                        "id"          => "textInput-markup",
-                        "name"        => "#{prefix}_hostname",
-                        "ng-model"    => "#{ng_model}.#{prefix}_hostname",
-                        "maxlength"   => "#{MAX_NAME_LEN}",
-                        "checkchange" => ""}
-    %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
+    %input.form-control{"type"           => "text",
+                        "id"             => "textInput-markup",
+                        "name"           => "realm",
+                        "ng-model"       => "emsCommonModel.realm",
+                        "maxlength"      => "#{MAX_NAME_LEN}",
+                        "required"       => "",
+                        "checkchange"    => "",
+                        "auto-focus"     => ""}
+    %span.help-block{"ng-show" => "angularForm.realm.$error.required"}
       = _("Required")
-
-.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'rhevm'"}
-  %label.col-md-2.control-label{"for" => "textInput-markup"}
-    = _('API Port')
-  .col-md-8
-    %input.form-control{"type"        => "text",
-                        "id"          => "textInput-markup",
-                        "name"        => "#{prefix}_api_port",
-                        "ng-model"    => "#{ng_model}.#{prefix}_api_port",
-                        "maxlength"   => 15,
-                        "required"    => "",
-                        "checkchange" => ""}
-    %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.required"}
-      = _("Required")
-
-.form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_security_protocol.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
-  %label.col-md-2.control-label{"for" => "textInput-markup"}
-    = _('Security Protocol')
-  .col-md-8
-    = select_tag("#{prefix}_security_protocol",
-                  options_for_select(@openstack_security_protocols),
-                  "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
-                  "checkchange"                 => "",
-                  "selectpicker-for-select-tag" => "")

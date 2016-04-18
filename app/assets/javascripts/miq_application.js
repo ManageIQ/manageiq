@@ -1108,7 +1108,11 @@ function miq_tabs_init(id, url) {
     }
   });
   // If no active tab is present, set the first tab as active
-  if ($(id + ' > ul.nav-tabs li.active:not(.hidden)').length != 1) {
+  var active_tabs = $(id + ' > ul.nav-tabs li.active:not(.hidden)').length;
+  if ( active_tabs > 1) {
+    var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().removeClass('active');
+    $(tab.find('a').attr('href')).removeClass('active');
+  } else if( active_tabs != 1) {
     var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().addClass('active');
     $(tab.find('a').attr('href')).addClass('active');
   }

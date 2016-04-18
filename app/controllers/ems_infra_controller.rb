@@ -1,5 +1,6 @@
 class EmsInfraController < ApplicationController
   include EmsCommon        # common methods for EmsInfra/Cloud controllers
+  include Mixins::EmsCommonAngular
 
   before_action :check_privileges
   before_action :get_session_data
@@ -12,6 +13,14 @@ class EmsInfraController < ApplicationController
 
   def self.table_name
     @table_name ||= "ems_infra"
+  end
+
+  def ems_path(*args)
+    ems_infra_path(*args)
+  end
+
+  def new_ems_path
+    new_ems_infra_path
   end
 
   def index
@@ -101,9 +110,18 @@ class EmsInfraController < ApplicationController
     end
   end
 
+  def ems_infra_form_fields
+    ems_form_fields
+  end
+
   private
 
   ############################
+  # Special EmsCloud link builder for restful routes
+  def show_link(ems, options = {})
+    ems_path(ems.id, options)
+  end
+
   def log_and_flash_message(message)
     add_flash(message, :error)
     $log.error(message)
@@ -181,4 +199,9 @@ class EmsInfraController < ApplicationController
     stack_parameters['ComputeRemovalPolicies'] = [{:resource_list => parent_resource_names}]
     return stack_parameters
   end
+
+  def restful?
+    true
+  end
+  public :restful?
 end

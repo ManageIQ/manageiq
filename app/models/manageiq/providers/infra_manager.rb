@@ -4,6 +4,11 @@ module ManageIQ::Providers
     require_nested :ProvisionWorkflow
     require_nested :Vm
 
+    class << model_name
+      define_method(:route_key) { "ems_infras" }
+      define_method(:singular_route_key) { "ems_infra" }
+    end
+
     #
     # ems_timeouts is a general purpose proc for obtaining
     # read and open timeouts for any ems type and optional service.
