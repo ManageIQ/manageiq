@@ -18,6 +18,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
   let(:all_job_templates) { (1..2).collect { |i| AnsibleTowerClient::JobTemplate.new(mock_api, "id" => i, "name" => "template#{i}", "description" => "description#{i}", "extra_vars" => "some_json_payload", "inventory" => i, "related" => {"inventory" => "blah/#{i}"}) } }
 
   it "#configuration_manager_inv_to_hashes" do
+    vm = FactoryGirl.create(:vm_vmware, :uid_ems => "vmwareVm-2")
     allow_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:survey_spec).and_return('some_hash_payload')
     expect(manager.provider).to receive(:connect).and_return(connection)
 
@@ -25,11 +26,16 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshParser 
 
     expect(parser.instance_variable_get(:@data)[:configured_systems].count).to eq(2)
     expect(parser.instance_variable_get(:@data)[:configured_systems].first).to eq(
-      :manager_ref          => "1",
+      :counterpart          => nil,
       :hostname             => "host1",
       :inventory_root_group => {:ems_ref => "1", :name => "inventory1", :type => "ManageIQ::Providers::ConfigurationManager::InventoryRootGroup"},
+      :manager_ref          => "1",
       :type                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
-      :virtual_instance_ref => "vmwareVm-1"
+      :virtual_instance_ref => "vmwareVm-1",
+    )
+    expect(parser.instance_variable_get(:@data)[:configured_systems].last).to have_attributes(
+      :counterpart          => vm,
+      :virtual_instance_ref => "vmwareVm-2"
     )
 
     expect(parser.instance_variable_get(:@data)[:configuration_scripts].count).to eq(2)

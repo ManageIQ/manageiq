@@ -6,6 +6,7 @@ class ConfiguredSystem < ApplicationRecord
   belongs_to :configuration_location
   belongs_to :configuration_organization
   belongs_to :configuration_profile
+  belongs_to :counterpart, :polymorphic => true
   belongs_to :customization_script_medium
   belongs_to :customization_script_ptable
   belongs_to :inventory_root_group, :class_name => "EmsFolder"
@@ -60,6 +61,11 @@ class ConfiguredSystem < ApplicationRecord
 
   def configuration_realm
     tag_hash[ConfigurationRealm]
+  end
+
+  def counterparts
+    return [] unless counterpart
+    [counterpart] + counterpart.counterparts.where.not(:id => id)
   end
 
   def tag_hash

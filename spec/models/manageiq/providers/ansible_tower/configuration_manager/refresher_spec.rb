@@ -1,6 +1,7 @@
 describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
-  let(:auth)                  { FactoryGirl.create(:authentication) }
-  let(:configuration_manager) { provider.configuration_manager }
+  let(:auth)                    { FactoryGirl.create(:authentication) }
+  let(:configuration_manager)   { provider.configuration_manager }
+  let(:expected_counterpart_vm) { FactoryGirl.create(:vm, :uid_ems => "4233080d-7467-de61-76c9-c8307b6e4830") }
   let(:provider) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     FactoryGirl.create(:provider_ansible_tower,
@@ -15,6 +16,8 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
   end
 
   it "will perform a full refresh" do
+    expected_counterpart_vm
+
     2.times do
       VCR.use_cassette(described_class.name.underscore) do
         EmsRefresh.refresh(configuration_manager)
@@ -44,6 +47,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
       :manager_ref          => "145",
       :virtual_instance_ref => "4233080d-7467-de61-76c9-c8307b6e4830",
     )
+    expect(expected_configured_system.counterpart).to          eq(expected_counterpart_vm)
     expect(expected_configured_system.inventory_root_group).to eq(expected_inventory_root_group)
   end
 
