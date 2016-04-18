@@ -89,6 +89,8 @@ class TreeBuilder
 
     when :datacenter              then TreeBuilderDatacenter
     when :vat                     then TreeBuilderVat
+
+    when :network                 then TreeBuilderNetwork
     end
   end
 
@@ -335,7 +337,11 @@ class TreeBuilder
   end
 
   def x_get_tree_objects(parent, options, count_only, parents)
-    children_or_count = parent.nil? ? x_get_tree_roots(count_only, options) : x_get_tree_kids(parent, count_only, options, parents)
+    if parent.nil?
+      children_or_count = x_get_tree_roots(count_only, options)
+    else
+      x_get_tree_kids(parent, count_only, options, parents)
+    end
     children_or_count || (count_only ? 0 : [])
   end
 
@@ -474,6 +480,7 @@ class TreeBuilder
     "hot" => "OrchestrationTemplateHot",
     "isd" => "IsoDatastore",
     "isi" => "IsoImage",
+    "l"   => "Lan",
     "ld"  => "LdapDomain",
     "lr"  => "LdapRegion",
     "me"  => "MiqEnterprise",
@@ -500,6 +507,7 @@ class TreeBuilder
     "st"  => "ServiceTemplate",
     "stc" => "ServiceTemplateCatalog",
     "sr"  => "ServiceResource",
+    "sw"  => "Switch",
     "t"   => "MiqTemplate",
     "tb"  => "VmdbTable",
     "ti"  => "VmdbIndex",

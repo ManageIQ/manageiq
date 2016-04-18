@@ -52,7 +52,9 @@ class HostController < ApplicationController
     when "network"
       drop_breadcrumb(:name => _("%{name} (Network)") % {:name => @host.name},
                       :url  => "/host/show/#{@host.id}?display=network")
-      build_network_tree
+
+      @tree_vms = []
+      @network_tree = TreeBuilderNetwork.new(:network_tree, :network, @sb, true, @host, @tree_vms)
       self.x_active_tree = :network_tree
 
     when "performance"
