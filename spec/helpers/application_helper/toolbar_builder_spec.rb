@@ -199,6 +199,24 @@ describe ApplicationHelper do
       end
     end
 
+    %w(
+      history_1
+      history_2
+      history_3
+      history_4
+      history_5
+      history_6
+      history_7
+      history_8
+      history_9
+      history_10
+    ).each do |item|
+      it "when with history item #{item}" do
+        @id = item
+        expect(subject).to be_falsey
+      end
+    end
+
     it "when with show_summary and not explorer" do
       @id = "show_summary"
       @explorer = false
