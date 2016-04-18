@@ -2186,6 +2186,7 @@ Vmdb::Application.routes.draw do
         tree_autoload_dynatree
         tree_select
         wait_for_task
+        x_search_by_name
         x_show
       ) +
                adv_search_post +

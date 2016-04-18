@@ -261,6 +261,7 @@ class StorageController < ApplicationController
 
   def accordion_select
     @lastaction = "explorer"
+    @explorer = true
 
     @sb[:storage_search_text] ||= {}
     @sb[:storage_search_text]["#{x_active_accord}_search_text"] = @search_text
@@ -285,7 +286,7 @@ class StorageController < ApplicationController
     else
       @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
 
-      if x_tree[:type] == :storage
+      if x_tree[:type] == :storage && (@nodetype == "root" || @nodetype == "ms")
         search_id = @nodetype == "root" ? 0 : from_cid(id)
         listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
         if @edit[:adv_search_applied] &&
@@ -301,7 +302,7 @@ class StorageController < ApplicationController
 
   def x_show
     @explorer = true
-    @vm = @record = identify_record(params[:id], Storage)
+    @storage = @record = identify_record(params[:id], Storage)
     respond_to do |format|
       format.js do                  # AJAX, select the node
         unless @record
@@ -447,9 +448,9 @@ class StorageController < ApplicationController
   def get_node_info(node)
     node = valid_active_node(node)
     case x_active_tree
-      when :storage_tree     then storage_get_node_info(node)
-      when :storage_pod_tree then storage_pod_get_node_info(node)
-     end
+    when :storage_tree     then storage_get_node_info(node)
+    when :storage_pod_tree then storage_pod_get_node_info(node)
+    end
     @right_cell_text += @edit[:adv_search_applied][:text] if x_tree && x_tree[:type] == :storage && @edit && @edit[:adv_search_applied]
 
     if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) # If qs is active, save it in history
@@ -477,7 +478,7 @@ class StorageController < ApplicationController
     record.try(:id)
   end
 
-  def replace_right_cell(nodetype = "root", replace_trees = [])
+  def replace_right_cell(_nodetype = "root", replace_trees = [])
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     # FIXME
     @explorer = true
@@ -532,7 +533,7 @@ class StorageController < ApplicationController
     end
 
     presenter[:record_id] = determine_record_id_for_presenter
-
+    presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
 
     # Save open nodes, if any were added
