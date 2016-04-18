@@ -12,9 +12,17 @@ module ManageIQ::Providers
       end
 
       def initialize(ems, options = nil)
-        @ems               = ems
-        @config            = ems.connect
-        @subscription_id   = @config.subscription_id
+        @ems    = ems
+        @config = ems.connect
+
+        # Save the default subscription ID to the database if one wasn't provided.
+        unless ems.subscription
+          ems.subscription = @config.subscription_id
+          ems.save
+        end
+
+        @subscription_id = ems.subscription
+
         # TODO(lsmola) NetworkManager, remove network endpoints once this is entirely moved under NetworkManager
         @nis               = ::Azure::Armrest::Network::NetworkInterfaceService.new(@config)
         @ips               = ::Azure::Armrest::Network::IpAddressService.new(@config)
