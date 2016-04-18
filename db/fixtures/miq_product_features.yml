@@ -879,6 +879,10 @@
       :description: Reset a Host / Node
       :feature_type: control
       :identifier: host_reset
+    - :name: Toggle Maintenance Mode
+      :description: Toggle a Host / Node into Maintenance Mode
+      :feature_type: control
+      :identifier: host_toggle_maintenance
     - :name: Enter Maintenance Mode
       :description: Put a Host / Node into Maintenance Mode
       :feature_type: control

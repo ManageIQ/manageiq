@@ -178,4 +178,12 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     hashes = add_unique_names(file, hashes)
     EmsRefresh.save_custom_attributes_inventory(file, hashes, :scan) if hashes
   end
+
+  def validate_set_node_maintenance
+    {:available => true,   :message => nil}
+  end
+
+  def validate_unset_node_maintenance
+    {:available => true,   :message => nil}
+  end
 end

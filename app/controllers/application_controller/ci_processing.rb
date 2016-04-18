@@ -1760,6 +1760,26 @@ module ApplicationController::CiProcessing
           add_flash(_("\"%{task}\": not supported for %{hostname}") % {:hostname => host.name, :task => (task_name || task)}, :error)
         end
       end
+    when "maintenance"
+      each_host(hosts, task_name) do |host|
+        if host.maintenance
+          if host.respond_to?(:unset_node_maintenance)
+            host.send(:unset_node_maintenance)
+            add_flash(_("\"%{record}\": %{task} successfully initiated") %
+                      {:record => host.name, :task => (display_name || task)})
+          else
+            add_flash(_("\"%{task}\": not supported for %{hostname}") %
+                      {:hostname => host.name, :task => (task_name || task)}, :error)
+          end
+        elsif host.respond_to?(:set_node_maintenance)
+          host.send(:set_node_maintenance)
+          add_flash(_("\"%{record}\": %{task} successfully initiated") %
+                    {:record => host.name, :task => (display_name || task)})
+        else
+          add_flash(_("\"%{task}\": not supported for %{hostname}") %
+                    {:hostname => host.name, :task => (task_name || task)}, :error)
+        end
+      end
     else
       each_host(hosts, task_name) do |host|
         if host.respond_to?(task) && host.is_available?(task)
@@ -1802,6 +1822,12 @@ module ApplicationController::CiProcessing
   def scanhosts
     assert_privileges("host_scan")
     host_button_operation('scan', _('Analysis'))
+  end
+
+  # Toggle maintenance mode on all selected or single displayed host(s)
+  def maintenancehosts
+    assert_privileges("host_toggle_maintenance")
+    host_button_operation('maintenance', _('Toggle Maintenance'))
   end
 
   def check_compliance_hosts

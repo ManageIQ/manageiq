@@ -7,8 +7,8 @@ module HostHelper::TextualSummary
 
   def textual_group_properties
     %i(hostname ipaddress ipmi_ipaddress custom_1 vmm_vendor_display model asset_tag service_tag osinfo
-       power_state lockdown_mode devices network storage_adapters num_cpu num_cpu_cores cpu_cores_per_socket memory
-       guid)
+       power_state lockdown_mode maintenance_mode devices network storage_adapters num_cpu num_cpu_cores
+       cpu_cores_per_socket memory guid)
   end
 
   def textual_group_relationships
@@ -186,6 +186,10 @@ module HostHelper::TextualSummary
 
   def textual_lockdown_mode
     {:label => _("Lockdown Mode"), :value => @record.admin_disabled ? _("Enabled") : _("Disabled")}
+  end
+
+  def textual_maintenance_mode
+    {:label => _("Maintenance Mode"), :value => @record.maintenance ? _("Enabled") : _("Disabled")}
   end
 
   def textual_storage_adapters
