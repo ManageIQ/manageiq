@@ -89,11 +89,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       end
       process_mem_gauges_data(compute_summation(mem_gauges))
 
-      net_counters = @target.containers.collect do |c|
-        net_resid = "#{c.name}/#{group_id}/network"
-        compute_summation([fetch_counters_rate("#{net_resid}/tx"),
-                           fetch_counters_rate("#{net_resid}/rx")])
-      end
+      net_resid = "pod/#{group_id}/network"
+      net_counters = [fetch_counters_rate("#{net_resid}/tx"),
+                      fetch_counters_rate("#{net_resid}/rx")]
       process_net_counters_rate(compute_summation(net_counters))
     end
 
