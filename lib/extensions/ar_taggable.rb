@@ -65,34 +65,7 @@ module ActsAsTaggable
     # find_tagged_with(:all) is used for multiple inner lists
     def find_tags_by_grouping(list, options = {})
       options[:ns] = Tag.get_namespace(options)
-
-      # any inner arrays with only 1 element doesn't need an 'IN' clause.
-      # These can all be handled together in a single 'AND' query
-      #
-      # the inner_lists need to be added as separate queries.
-      inner_lists, fixed_conditions = list.partition { |item| item.kind_of?(Array) && item.length > 1 }
-
-      return find_tagged_with(options.merge(:all => fixed_conditions)) if inner_lists.empty?
-
-      offset = options.delete(:offset)
-      limit = options.delete(:limit)
-      count = options.delete(:count)
-      results = nil
-      list.each do |inner_list|
-        ret = find_tagged_with(options.merge(:any => inner_list))
-        if results.nil?
-          results = ret
-          next
-        end
-
-        results = results.select { |obj| ret.include?(obj) }
-        break if results.empty?
-      end
-      if limit
-        offset ||= 0
-        results = results[offset..offset + limit - 1]
-      end
-      count ? results.length : results
+      list.inject(self) { |results, tags| results.find_tagged_with(options.merge(:any => tags)) }
     end
 
     def tags(options = {})
