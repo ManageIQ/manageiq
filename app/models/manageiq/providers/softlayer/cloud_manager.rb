@@ -12,7 +12,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
   end
 
   def self.description
-    @description ||= "IBM SoftLayer".freeze
+    @description ||= "SoftLayer".freeze
   end
 
   def self.hostname_required?
