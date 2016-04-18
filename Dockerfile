@@ -83,12 +83,12 @@ RUN echo "export BASEDIR=/manageiq" > /etc/default/evm && \
 RUN mkdir -p /manageiq
 ADD . /manageiq
 
-## Change WORKDIR to clone dir, copy docker_setup, start all, docker_setup, shutdown all, clean all
+## Change WORKDIR to clone dir, start all, setup, shutdown all, clean all
 WORKDIR /manageiq
-COPY docker-assets/docker_setup bin/docker_setup
 RUN /bin/bash -l -c "/usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d && \
     source /etc/default/evm && \
-    bin/docker_setup --no-db --no-tests && \
+    npm install -g bower    && \
+    bin/setup --no-db --no-tests && \
     pkill memcached && \
     rm -rvf /opt/rubies/ruby-2.2.4/lib/ruby/gems/2.2.0/cache/*"
 

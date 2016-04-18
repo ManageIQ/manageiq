@@ -1,5 +1,23 @@
 #!/usr/bin/env ruby
 require 'pathname'
+require 'optparse'
+
+
+options = {:do_tests => true, :do_db => true}
+OptionParser.new do |opts|
+  opts.banner = "Usage: setup [options]"
+  opts.on("-d", "--no-db", "Do not prepare db") do
+    options[:do_db] = false
+  end
+  opts.on("-t", "--no-tests", "Do not perform tests") do
+    options[:do_tests] = false
+  end
+  opts.on("-h", "--help", "Displays this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
 
 # path to your application root.
 APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
@@ -18,14 +36,18 @@ Dir.chdir APP_ROOT do
     system "cp certs/v2_key.dev certs/v2_key"
   end
 
-  puts "\n== Preparing database =="
-  system "bin/rake db:create"
-  system "bin/rake db:migrate db:seed"
+  if options[:do_db]
+    puts "\n== Preparing database =="
+    system "bin/rake db:create"
+    system "bin/rake db:migrate db:seed"
+  end
 
   puts "\n== Removing old logs and tempfiles =="
   system "rm -f log/*"
   system "rm -rf tmp/cache"
-
-  puts "\n== Preparing tests =="
-  system "bin/rake test:vmdb:setup"
+  
+  if options[:do_tests]
+    puts "\n== Preparing tests =="
+    system "bin/rake test:vmdb:setup"
+  end
 end
