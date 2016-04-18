@@ -7,8 +7,6 @@ describe MiqAeCustomizationController do
   %w(
     explorer
     export_service_dialogs
-    review_import
-    service_dialog_json
   ).each do |path|
     describe "##{path}" do
       it "routes with GET" do

@@ -45,15 +45,14 @@ class MiqAeCustomizationController < ApplicationController
   end
 
   def upload_import_file
-    redirect_options = {:action => :review_import}
-
     if params[:upload].nil? || params[:upload][:file].blank?
       add_flash(_("Use the browse button to locate an import file"), :warning)
     else
       begin
-        import_file_upload_id = dialog_import_service.store_for_import(params[:upload][:file].read)
+        import_file = dialog_import_service.store_for_import(params[:upload][:file].read)
+        @import_file_upload_id = import_file.id
+        @import = import_file.service_dialog_list
         add_flash(_("Import file was uploaded successfully"), :success)
-        redirect_options[:import_file_upload_id] = import_file_upload_id
       rescue DialogImportValidator::ImportNonYamlError
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
       rescue DialogImportValidator::ParsedNonDialogYamlError
@@ -63,54 +62,25 @@ class MiqAeCustomizationController < ApplicationController
       end
     end
 
-    redirect_options[:message] = @flash_array.first.to_json
-
-    redirect_to redirect_options
+    replace_right_cell(x_node)
   end
 
   def import_service_dialogs
-    import_file_upload = ImportFileUpload.find_by(:id => params[:import_file_upload_id])
+    if params[:commit] == _('Commit')
+      import_file_upload = ImportFileUpload.find_by(:id => params[:import_file_upload_id])
 
-    if import_file_upload
-      dialog_import_service.import_service_dialogs(import_file_upload, params[:dialogs_to_import])
-      add_flash(_("Service dialogs imported successfully"), :success)
+      if import_file_upload
+        dialog_import_service.import_service_dialogs(import_file_upload, params[:dialogs_to_import])
+        add_flash(_("Service dialogs imported successfully"), :success)
+      else
+        add_flash(_("Error: ImportFileUpload expired"), :error)
+      end
     else
-      add_flash(_("Error: ImportFileUpload expired"), :error)
+      dialog_import_service.cancel_import(params[:import_file_upload_id])
+      add_flash(_("Service dialog import cancelled"), :success)
     end
 
-    respond_to do |format|
-      format.js { render :json => @flash_array.to_json, :status => 200 }
-    end
-  end
-
-  def dialog_accordion_json
-    accordion_json = {:locals_for_render => dialog_build_tree.locals_for_render}.to_json
-
-    respond_to do |format|
-      format.json { render :json => accordion_json, :status => 200 }
-    end
-  end
-
-  def review_import
-    @import_file_upload_id = params[:import_file_upload_id]
-    @message = params[:message]
-  end
-
-  def cancel_import
-    dialog_import_service.cancel_import(params[:import_file_upload_id])
-    add_flash(_("Service dialog import cancelled"), :success)
-
-    respond_to do |format|
-      format.js { render :json => @flash_array.to_json, :status => 200 }
-    end
-  end
-
-  def service_dialog_json
-    import_file_upload_json = ImportFileUpload.find(params[:import_file_upload_id]).service_dialog_json
-
-    respond_to do |format|
-      format.json { render :json => import_file_upload_json }
-    end
+    replace_right_cell(x_node)
   end
 
   def export_service_dialogs
@@ -248,6 +218,7 @@ class MiqAeCustomizationController < ApplicationController
       presenter[:clear_tree_cookies] = "edit_treeOpenStatex"
     end
     rebuild_toolbars(presenter)
+    get_node_info
     setup_presenter_based_on_active_tree(nodetype, presenter)
     set_right_cell_text(presenter)
     handle_bottom_cell(presenter)

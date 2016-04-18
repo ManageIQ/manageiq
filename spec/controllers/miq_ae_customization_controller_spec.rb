@@ -242,39 +242,41 @@ describe MiqAeCustomizationController do
 
     before do
       bypass_rescue
+      allow(controller).to receive(:get_node_info)
+      controller.instance_variable_set(:@sb,
+                                       :trees       => {:dialog_import_export_tree => {:active_node => "root"}},
+                                       :active_tree => :dialog_import_export_tree)
     end
 
     shared_examples_for "MiqAeCustomizationController#upload_import_file that does not upload a file" do
       it "redirects with a warning message" do
         post :upload_import_file, :params => params, :xhr => true
-        expect(response).to redirect_to(
-          :action  => :review_import,
-          :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
-        )
+        expect(controller.instance_variable_get(:@flash_array))
+          .to include(:message => "Use the browse button to locate an import file", :level => :warning)
       end
     end
 
     context "when an upload file is given" do
+      let(:import_file_upload) { double("ImportFileUpload") }
       let(:filename) { "filename" }
       let(:file) { fixture_file_upload("files/dummy_file.yml", "text/yml") }
       let(:params) { {:upload => {:file => file}} }
 
       before do
         allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
+        allow(import_file_upload).to receive(:id).and_return(123)
+        allow(import_file_upload).to receive(:service_dialog_list)
       end
 
       context "when the dialog importer does not raise an error" do
         before do
-          allow(dialog_import_service).to receive(:store_for_import).with("the yaml data\n").and_return(123)
+          allow(dialog_import_service).to receive(:store_for_import).with("the yaml data\n").and_return(import_file_upload)
         end
 
         it "redirects to review_import with an import file upload id" do
           post :upload_import_file, :params => params, :xhr => true
-          expect(response).to redirect_to(
-            :action                => :review_import,
-            :import_file_upload_id => 123,
-            :message               => {:message => "Import file was uploaded successfully", :level => :success}.to_json
-          )
+          expect(controller.instance_variable_get(:@flash_array))
+            .to include(:message => "Import file was uploaded successfully", :level => :success)
         end
 
         it "imports the dialogs" do
@@ -291,13 +293,8 @@ describe MiqAeCustomizationController do
 
         it "redirects with an error message" do
           post :upload_import_file, :params => params, :xhr => true
-          expect(response).to redirect_to(
-            :action  => :review_import,
-            :message => {
-              :message => "Error: the file uploaded is not of the supported format",
-              :level   => :error
-            }.to_json
-          )
+          expect(controller.instance_variable_get(:@flash_array))
+            .to include(:message => "Error: the file uploaded is not of the supported format", :level => :error)
         end
       end
 
@@ -309,13 +306,9 @@ describe MiqAeCustomizationController do
 
         it "redirects with an error message" do
           post :upload_import_file, :params => params, :xhr => true
-          expect(response).to redirect_to(
-            :action  => :review_import,
-            :message => {
-              :message => "Error during upload: incorrect Dialog format, only service dialogs can be imported",
-              :level   => :error
-            }.to_json
-          )
+          expect(controller.instance_variable_get(:@flash_array))
+            .to include(:message => "Error during upload: incorrect Dialog format, only service dialogs can be imported",
+                        :level   => :error)
         end
       end
 
@@ -327,13 +320,9 @@ describe MiqAeCustomizationController do
 
         it "redirects with an error message" do
           post :upload_import_file, :params => params, :xhr => true
-          expect(response).to redirect_to(
-            :action  => :review_import,
-            :message => {
-              :message => "Error during upload: one of the DialogField types is not supported",
-              :level   => :error
-            }.to_json
-          )
+          expect(controller.instance_variable_get(:@flash_array))
+            .to include(:message => "Error during upload: one of the DialogField types is not supported",
+                        :level   => :error)
         end
       end
     end
@@ -355,12 +344,14 @@ describe MiqAeCustomizationController do
     include_context "valid session"
 
     let(:dialog_import_service) { double("DialogImportService") }
-    let(:params) { {:import_file_upload_id => "123", :dialogs_to_import => ["potato"]} }
+    let(:params) { {:import_file_upload_id => "123", :dialogs_to_import => ["potato"], :commit => 'Commit'} }
+    let(:import_file_upload) { double("ImportFileUpload") }
 
     before do
       bypass_rescue
       allow(ImportFileUpload).to receive(:find_by).with(:id => "123").and_return(import_file_upload)
       allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
+      allow(controller).to receive(:get_node_info)
     end
 
     shared_examples_for "MiqAeCustomizationController#import_service_dialogs" do
@@ -371,7 +362,6 @@ describe MiqAeCustomizationController do
     end
 
     context "when the import file upload exists" do
-      let(:import_file_upload) { double("ImportFileUpload") }
 
       before do
         allow(dialog_import_service).to receive(:import_service_dialogs)
@@ -386,7 +376,8 @@ describe MiqAeCustomizationController do
 
       it "returns the flash message" do
         post :import_service_dialogs, :params => params, :xhr => true
-        expect(response.body).to eq([{:message => "Service dialogs imported successfully", :level => :success}].to_json)
+        expect(controller.instance_variable_get(:@flash_array))
+          .to include(:message => "Service dialogs imported successfully", :level => :success)
       end
     end
 
@@ -397,74 +388,31 @@ describe MiqAeCustomizationController do
 
       it "returns the flash message" do
         post :import_service_dialogs, :params => params, :xhr => true
-        expect(response.body).to eq([{:message => "Error: ImportFileUpload expired", :level => :error}].to_json)
+        expect(controller.instance_variable_get(:@flash_array))
+          .to include(:message => "Error: ImportFileUpload expired", :level => :error)
       end
     end
-  end
 
-  describe "#review_import" do
-    include_context "valid session"
+    context 'cancel import' do
+      let(:params) { {:import_file_upload_id => "123", :dialogs_to_import => ["potato"]} }
 
-    let(:params) { {:import_file_upload_id => "123", :message => "the message"} }
+      it "cancels the import" do
+        expect(dialog_import_service).to receive(:cancel_import).with("123")
+        post :import_service_dialogs, :params => params, :xhr => true
+      end
 
-    before do
-      bypass_rescue
-    end
+      it "returns a 200" do
+        expect(dialog_import_service).to receive(:cancel_import).with("123")
+        post :import_service_dialogs, :params => params, :xhr => true
+        expect(response.status).to eq(200)
+      end
 
-    it "assigns the import file upload id" do
-      get :review_import, :params => params
-      expect(assigns(:import_file_upload_id)).to eq("123")
-    end
-
-    it "assigns the message" do
-      get :review_import, :params => params
-      expect(assigns(:message)).to eq("the message")
-    end
-  end
-
-  describe "#cancel_import" do
-    include_context "valid session"
-
-    let(:params) { {:import_file_upload_id => "123"} }
-    let(:dialog_import_service) { double("DialogImportService") }
-
-    before do
-      bypass_rescue
-      allow(DialogImportService).to receive(:new).and_return(dialog_import_service)
-      allow(dialog_import_service).to receive(:cancel_import)
-    end
-
-    it "cancels the import" do
-      expect(dialog_import_service).to receive(:cancel_import).with("123")
-      post :cancel_import, :params => params, :xhr => true
-    end
-
-    it "returns a 200" do
-      post :cancel_import, :params => params, :xhr => true
-      expect(response.status).to eq(200)
-    end
-
-    it "returns the flash messages" do
-      post :cancel_import, :params => params, :xhr => true
-      expect(response.body).to eq([{:message => "Service dialog import cancelled", :level => :success}].to_json)
-    end
-  end
-
-  describe "#service_dialog_json" do
-    include_context "valid session"
-
-    let(:params) { {:import_file_upload_id => "123"} }
-    let(:import_file_upload) { double("ImportFileUpload") }
-
-    before do
-      bypass_rescue
-      allow(ImportFileUpload).to receive(:find).with("123").and_return(import_file_upload)
-      allow(import_file_upload).to receive(:service_dialog_json).and_return("the service dialog json")
-    end
-
-    it "returns the json" do
-      get :service_dialog_json, :params => params, :xhr => true
-      expect(response.body).to eq("the service dialog json")
+      it "returns the flash messages" do
+        expect(dialog_import_service).to receive(:cancel_import).with("123")
+        post :import_service_dialogs, :params => params, :xhr => true
+        expect(controller.instance_variable_get(:@flash_array))
+          .to include(:message => "Service dialog import cancelled", :level => :success)
+      end
     end
   end
 
