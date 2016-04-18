@@ -37,11 +37,11 @@ module Openstack
         end
 
         def volume_snapshot_name_2
-          "EmsRefreshSpec-VolumeSnapshot"
+          "EmsRefreshSpec-VolumeSnapshot_0_2"
         end
 
         def volume_snapshot_name_3
-          "EmsRefreshSpec-VolumeSnapshot"
+          "EmsRefreshSpec-VolumeSnapshot_0_3"
         end
 
         def volume_types
@@ -80,7 +80,7 @@ module Openstack
 
         def volume_snapshots(volume_name = nil)
           volume_snapshots = {
-            volume_name_1  => [
+            volume_name_1 => [
               {
                 :name        => volume_snapshot_name_1,
                 :description => "EmsRefreshSpec-VolumeSnapshot description"

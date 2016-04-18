@@ -60,41 +60,18 @@ module Openstack
       assert_table_counts_storage
     end
 
-    def snapshots_with_volumes
-      # We create snapshots from all servers in the enviroment builder, take the ones that had volume associated and
-      # compute how many servers was created using that snapshots. Volumes attached there, will be also snapshoted and
-      # then created and attached to each server, created by such snapshot.
-      servers_with_volumes_names = compute_data.servers.select do |x|
-        !x[:__block_device_name].blank?
-      end
-      servers_with_volumes_names = servers_with_volumes_names.map { |x| x[:name] }
-
-      snapshots_with_volumes_names = servers_with_volumes_names.map do |x|
-        image_data.servers_snapshots(x)
-      end
-      snapshots_with_volumes_names.compact.flatten
-    end
-
     def volumes_count
-      snapshots_with_volumes_names = snapshots_with_volumes.map { |x| x[:name] }
-
-      servers_created_by_snapshots_with_volumes = []
-      # TODO(lsmola) add server booted from volume to the env builder
-      # servers_created_by_snapshots_with_volumes = compute_data.servers_from_snapshot.select do |x|
-      #   snapshots_with_volumes_names.include?(x[:__image_name])
-      # end
+      server_volumes_count = compute_data.servers.map do |x|
+        x[:__block_devices] ? x[:__block_devices].select { |d| d[:destination_type] == 'volume' && %w(image blank).include?(d[:source_type]) }.count : 0
+      end.sum
 
       # Volumes count + volumes created from snapshots + volumes created by snapshoting and recreating vm that was
       # booted from volume
-      (volume_data.volumes.count + volume_data.volumes_from_snapshots.count +
-       servers_created_by_snapshots_with_volumes.count)
+      volume_data.volumes.count + volume_data.volumes_from_snapshots.count + server_volumes_count
     end
 
     def volume_snapshots_count
-      # Snapshosts created manually + snapshosts of servers that were booted from volume
-      # TODO(lsmola) add servers booted from volume that will be snapshoted
-      snapshots_with_volumes = []
-      volume_data.volume_snapshots.count + snapshots_with_volumes.count
+      volume_data.volume_snapshots.count
     end
 
     def firewall_rules_count
@@ -120,8 +97,8 @@ module Openstack
     end
 
     def images_count
-      # Images + snaphosts
-      image_data.images.count + image_data.servers_snapshots.count
+      # Images + snaphosts + Number of shelved instances
+      image_data.images.count + image_data.servers_snapshots.count + 1
     end
 
     def expected_stack_parameters_count
@@ -171,9 +148,9 @@ module Openstack
       # Count only disks that have size bigger that 0
       disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
 
-      if with_volumes
-        # Count also volumes attached to the VM
-        disks_count += 1 unless vm_or_stack[:__block_device_name].blank?
+      if with_volumes && vm_or_stack[:__block_devices]
+        disks_count +=
+          vm_or_stack[:__block_devices].select { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }.count
       end
 
       disks_count
@@ -195,7 +172,7 @@ module Openstack
       expect(CloudSubnet.count).to         eq network_data.subnets.count
       expect(NetworkRouter.count).to       eq network_data.routers.count
       expect(CloudVolume.count).to         eq volumes_count
-      expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count
+      expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count unless volume_snapshot_pagination_bug
       expect(VmOrTemplate.count).to        eq vms_count + images_count
       expect(Vm.count).to                  eq vms_count
       expect(MiqTemplate.count).to         eq images_count
@@ -510,15 +487,9 @@ module Openstack
     end
 
     def assert_specific_volume_snapshots
+      return if volume_snapshot_pagination_bug
       volume_snapshots = CloudVolumeSnapshot.all
       defined_volume_snapshots = volume_data.volume_snapshots
-      # TODO(lsmola) add server booted from volume to the env builder
-      # if snapshots_with_volumes
-      #   # Volume snapshots created by snapshoting VM with volume have changed name and description
-      #   # of original volume, let's just compare changed name in all snapshots, otherwise we would
-      #   # have to obtain link to the original volume, for the description
-      #   defined_volume_snapshots += snapshots_with_volumes.map { |x| {:name => "snapshot for #{x[:name]}"} }
-      # end
 
       assert_objects_with_hashes(volume_snapshots, defined_volume_snapshots, {}, {}, [:description])
     end
@@ -542,7 +513,8 @@ module Openstack
     end
 
     def assert_templates
-      templates = ManageIQ::Providers::Openstack::CloudManager::Template.all
+      # Ignoring shelved VMs, which are generating Image of the same name with suffix ''-shelved'
+      templates = ManageIQ::Providers::Openstack::CloudManager::Template.all.reject { |x| x.name.include?("-shelved") }
 
       assert_objects_with_hashes(templates,
                                  image_data.images + image_data.servers_snapshots,

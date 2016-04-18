@@ -36,8 +36,8 @@ module Openstack
             :vcpus     => 1,
             :ram       => 2_048, # MB
             :disk      => 20, # GB
-            :ephemeral => 2, # GB
-            :swap      => 3096, # MB
+            :ephemeral => 0, # GB
+            :swap      => 0, # MB
           }, {
             :name      => "m1.medium",
             :is_public => true,
