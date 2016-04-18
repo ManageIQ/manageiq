@@ -17,7 +17,7 @@ class ChargebackRate < ApplicationRecord
 
   include AssignmentMixin
 
-  has_many :chargeback_rate_details, :dependent => :destroy
+  has_many :chargeback_rate_details, :dependent => :destroy, :autosave => true
 
   validates_presence_of     :description, :guid
   validates_uniqueness_of   :guid
