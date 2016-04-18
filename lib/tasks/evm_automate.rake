@@ -38,10 +38,11 @@ module EvmAutomate
     # TODO: One url per tenant or user
     gr = GitRepository.find_or_create_by(:url => options['url'])
     if options['userid'] && options['password']
-      if gr.authentications.first
-        gr.authentications.first.update_attributes(options.slice(*AUTH_KEYS))
+      auth = gr.authentications.detect { |item| item.authtype == 'default'}
+      if auth
+        auth.update_attributes(options.slice(*AUTH_KEYS))
       else
-        gr.authentications << Authentication.create(options.slice(*AUTH_KEYS))
+        gr.authentications.create(options.slice(*AUTH_KEYS).merge(:authtype => 'default'))
       end
     end
 
