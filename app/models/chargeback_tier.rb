@@ -1,6 +1,6 @@
 class ChargebackTier < ApplicationRecord
   belongs_to :chargeback_rate_detail
-  validates :fixed_rate, :variable_rate, :start, :finish, :numericality => true
+  validates :fixed_rate, :variable_rate, :numericality => true
   validates :start,  :numericality => {:greater_than_or_equal_to => 0, :less_than => Float::INFINITY}
   validates :finish, :numericality => {:greater_than_or_equal_to => 0}
 
