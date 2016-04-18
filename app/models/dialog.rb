@@ -27,17 +27,16 @@ class Dialog < ApplicationRecord
     end
   end
 
-  def each_dialog_field
-    dialog_tabs.each { |dt| dt.each_dialog_field { |df| yield(df) } }
+  def each_dialog_field(&block)
+    dialog_fields.each(&block)
   end
 
   def dialog_fields
-    dialog_tabs.collect(&:dialog_fields).flatten!
+    dialog_tabs.flat_map(&:dialog_fields)
   end
 
   def field_name_exist?(name)
-    each_dialog_field { |df| return true if df.name == name }
-    false
+    dialog_fields.any? { |df| df.name == name }
   end
 
   def dialog_resources
@@ -45,9 +44,7 @@ class Dialog < ApplicationRecord
   end
 
   def automate_values_hash
-    result = {}
-    each_dialog_field { |df| result[df.automate_key_name] = df.automate_output_value }
-    result
+    dialog_fields.each_with_object({}) { |df, result| result[df.automate_key_name] = df.automate_output_value }
   end
 
   def validate_children
@@ -104,11 +101,7 @@ class Dialog < ApplicationRecord
   private
 
   def dialog_field_hash
-    @dialog_field_hash ||= begin
-      hash = {}
-      each_dialog_field { |df| hash[df.name] = df }
-      hash
-    end
+    @dialog_field_hash ||= dialog_fields.each_with_object({}) { |df, hash| hash[df.name] = df }
   end
 
   def reject_if_has_resource_actions

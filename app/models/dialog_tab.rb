@@ -6,22 +6,12 @@ class DialogTab < ApplicationRecord
 
   alias_attribute :order, :position
 
-  def to_h
-    [name.to_sym, values_to_h]
-  end
-
-  def values_to_h
-    result = {}
-    ordered_dialog_resources
-    result
-  end
-
-  def each_dialog_field
-    dialog_groups.each { |dg| dg.each_dialog_field { |df| yield(df) } }
+  def each_dialog_field(&block)
+    dialog_fields.each(&block)
   end
 
   def dialog_fields
-    dialog_groups.collect(&:dialog_fields).flatten!
+    dialog_groups.flat_map(&:dialog_fields)
   end
 
   def dialog_resources

@@ -6,8 +6,8 @@ class DialogGroup < ApplicationRecord
 
   alias_attribute :order, :position
 
-  def each_dialog_field
-    dialog_fields.each { |df| yield(df) }
+  def each_dialog_field(&block)
+    dialog_fields.each(&block)
   end
 
   def dialog_resources

@@ -262,7 +262,9 @@ describe Dialog do
       @dialog_field2 = FactoryGirl.create(:dialog_field, :label => 'field 2', :name => "field_2")
 
       @dialog.dialog_tabs << @dialog_tab
+      @dialog.dialog_tabs << FactoryGirl.create(:dialog_tab, :label => 'tab2')
       @dialog_tab.dialog_groups << @dialog_group
+      @dialog_tab.dialog_groups << FactoryGirl.create(:dialog_group, :label => 'group2')
       @dialog_group.dialog_fields << @dialog_field
       @dialog_group.dialog_fields << @dialog_field2
 
