@@ -5,7 +5,9 @@
     - case @showtype
     - when "details"
       = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
-    - when "compare", "drift_history", "drift", "item"
+    - when "compare", "drift"
+      = render(:partial => "layouts/compare")
+    - when "drift_history", "item"
       = render(:partial => "layouts/#{@showtype}")
     - when "performance"
       = render(:partial => "layouts/performance")
