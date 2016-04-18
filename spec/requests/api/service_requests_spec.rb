@@ -79,4 +79,54 @@ describe ApiController do
       expect_result_to_have_user_email(@user.email)
     end
   end
+
+  context "as a subcollection of service orders" do
+    context "with an appropriate role" do
+      it "can list a service request's service orders" do
+        service_order = FactoryGirl.create(:service_order, :miq_requests => [service_request])
+        api_basic_authorize action_identifier(:service_requests, :read, :subcollection_actions, :get)
+
+        url = "#{service_orders_url(service_order.id)}/service_requests"
+        run_get url
+
+        expected_href = a_string_matching("#{url}/#{service_request.id}")
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include("count"     => 1,
+                                         "name"      => "service_requests",
+                                         "resources" => [a_hash_including("href" => expected_href)],
+                                         "subcount"  => 1)
+      end
+
+      it "can show a service requests's service order" do
+        service_order = FactoryGirl.create(:service_order, :miq_requests => [service_request])
+        api_basic_authorize action_identifier(:service_requests, :read, :subresource_actions, :get)
+
+        url = "#{service_orders_url(service_order.id)}/service_requests/#{service_request.id}"
+        run_get url
+
+        expect(response).to have_http_status(:ok)
+        expect(response_hash).to include("id" => service_request.id, "href" => a_string_matching(url))
+      end
+    end
+
+    context "without an appropriate role" do
+      it "will not list a service request's service orders" do
+        service_order = FactoryGirl.create(:service_order, :miq_requests => [service_request])
+        api_basic_authorize
+
+        run_get "#{service_orders_url(service_order.id)}/service_requests"
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "will not show a service request's service order" do
+        service_order = FactoryGirl.create(:service_order, :miq_requests => [service_request])
+        api_basic_authorize
+
+        run_get "#{service_orders_url(service_order.id)}/service_requests/#{service_request.id}"
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
 end
