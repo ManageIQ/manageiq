@@ -93,6 +93,12 @@ class ProviderForemanController < ApplicationController
     provisioning_ids = find_checked_items
     provisioning_ids.push(params[:id]) if provisioning_ids.empty?
 
+    unless ConfiguredSystem.provisionable?(provisioning_ids)
+      add_flash(_("Provisioning is not supported for at least one of the selected systems"), :error)
+      replace_right_cell
+      return
+    end
+
     if ConfiguredSystem.common_configuration_profiles_for_selected_configured_systems(provisioning_ids)
       render :update do |page|
         page << javascript_prologue

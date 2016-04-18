@@ -24,6 +24,10 @@ class ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem < ::C
     manager
   end
 
+  def provisionable?
+    true
+  end
+
   private
 
   def connection_source(options = {})
