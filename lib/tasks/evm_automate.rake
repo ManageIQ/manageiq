@@ -1,6 +1,8 @@
 module EvmAutomate
   $:.push File.expand_path(File.join(Rails.root, %w{.. lib util xml}))
 
+  AUTH_KEYS = %w(userid password).freeze
+
   def self.log(level, msg)
     $log.send(level, msg)
   end
@@ -30,6 +32,49 @@ module EvmAutomate
       class_list = MiqAeNamespace.find_by_fqname(ns).ae_classes.collect(&:fqname).join(", ")
       puts class_list
     end
+  end
+
+  def self.import_git_repo(options)
+    # TODO: One url per tenant or user
+    gr = GitRepository.find_or_create_by(:url => options['url'])
+    if options['userid'] && options['password']
+      if gr.authentications.first
+        gr.authentications.first.update_attributes(options.slice(*AUTH_KEYS))
+      else
+        gr.authentications << Authentication.create(options.slice(*AUTH_KEYS))
+      end
+    end
+
+    gr.refresh
+    gr.reload
+    options['git_repository_id'] = gr.id
+
+    validate_refs(gr, options)
+
+    dom = MiqAeDomain.import_git_repo(options)
+    if dom
+      puts "Imported automate domain => #{dom.name} from url => #{options['url']}"
+      puts "Used #{options['ref_type'].titleize} => #{options['ref']}"
+    else
+      puts "Error importing automate domain from url #{options['url']}"
+    end
+  end
+
+  def self.validate_refs(repo, options)
+    match = nil
+    case options['ref_type']
+    when MiqAeDomain::BRANCH
+      other_name = "origin/#{options['ref']}"
+      match = repo.git_branches.detect { |branch| branch.name.casecmp(options['ref']) == 0 }
+      match ||= repo.git_branches.detect { |branch| branch.name.casecmp(other_name) == 0 }
+    when MiqAeDomain::TAG
+      match = repo.git_tags.detect { |tag| tag.name.casecmp(options['ref']) == 0 }
+    end
+    unless match
+      puts "#{options['ref_type'].titleize} #{options['ref']} doesn't exist in repository"
+      exit(1)
+    end
+    options['ref'] = match.name
   end
 
   def self.extract_methods(method_folder)
@@ -68,7 +113,7 @@ namespace :evm do
     task :usage => :environment do
       puts "The following automate tasks are available"
       puts " Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name " \
-                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename " \
+                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename|GIT_URL=url " \
                                 "SYSTEM=true|false ENABLED=true|false"
       puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name "  \
                                "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
@@ -126,9 +171,9 @@ namespace :evm do
     desc 'Import automate model information from an export folder or zip file. '
     task :import => :environment do
       begin
-        raise "Must specify domain for import:" if ENV['DOMAIN'].blank?
-        if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank?
-          raise 'Must specify either a directory with exported automate model or a zip file'
+        raise "Must specify domain for import:" if ENV['DOMAIN'].blank? && ENV['GIT_URL'].blank?
+        if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank? && ENV['GIT_URL'].blank?
+          raise 'Must specify either a directory with exported automate model or a zip file or a http based git url'
         end
         preview        = ENV['PREVIEW'] ||= 'true'
         raise 'Preview must be true or false' unless %w{true false}.include?(preview)
@@ -148,6 +193,14 @@ namespace :evm do
         elsif ENV['YAML_FILE'].present?
           puts "Importing automate domain: #{ENV['DOMAIN']} from file #{ENV['YAML_FILE']}"
           import_options['yaml_file']   = ENV['YAML_FILE']
+        elsif ENV['GIT_URL'].present?
+          puts "Importing automate domain from url #{ENV['GIT_URL']}"
+          import_options['url'] = ENV['GIT_URL']
+          import_options['overwrite'] = true
+          import_options['userid'] = ENV['USERID']
+          import_options['password'] = ENV['PASSWORD']
+          import_options['ref'] = ENV['REF'] || MiqAeDomain::DEFAULT_BRANCH
+          import_options['ref_type'] = ENV['REF_TYPE'] || MiqAeDomain::BRANCH
         end
         %w(SYSTEM ENABLED).each do |name|
           if ENV[name].present?
@@ -155,9 +208,19 @@ namespace :evm do
             import_options[name.downcase] = ENV[name]
           end
         end
-        MiqAeImport.new(ENV['DOMAIN'], import_options).import
+
+        if import_options['preview']
+          puts "Preview has been enabled, domain will not be created"
+          puts "Use PREVIEW=false to import contents"
+        end
+        if ENV['GIT_URL'].present?
+          # Will always be locked
+          import_options['system'] = true
+          EvmAutomate.import_git_repo(import_options)
+        else
+          MiqAeImport.new(ENV['DOMAIN'], import_options).import
+        end
       rescue => err
-        STDERR.puts err.backtrace
         STDERR.puts err.message
         exit(1)
       end
