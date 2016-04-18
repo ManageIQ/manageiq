@@ -48,7 +48,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
   $scope.saveClicked = function() {
     // remove existing subscriptions that have not changed before sending them up for save
     $scope.pglogicalReplicationModel.subscriptions.forEach(function(subscription, index, object) {
-      if (typeof subscription.id !== 'undefined' && !subscriptionChanged(subscription, $scope.modelCopy.subscriptions[index])) {
+      if (typeof subscription.id !== 'undefined' && subscription["remove"] !== true &&  !subscriptionChanged(subscription, $scope.modelCopy.subscriptions[index])) {
         object.splice(index, 1);
       }
     });
@@ -121,7 +121,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
       $scope.pglogicalReplicationModel.dbname        = subscription.dbname;
       $scope.pglogicalReplicationModel.host          = subscription.host;
       $scope.pglogicalReplicationModel.user          = subscription.user;
-      $scope.pglogicalReplicationModel.password      = subscription.password;
+      $scope.pglogicalReplicationModel.password      = miqService.storedPasswordPlaceholder;
       $scope.pglogicalReplicationModel.port          = subscription.port;
     }
   };
@@ -142,7 +142,6 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
       subscription.dbname   = $scope.pglogicalReplicationModel.dbname;
       subscription.host     = $scope.pglogicalReplicationModel.host;
       subscription.user     = $scope.pglogicalReplicationModel.user;
-      subscription.password = $scope.pglogicalReplicationModel.password;
       subscription.port     = $scope.pglogicalReplicationModel.port;
     }
     $scope.pglogicalReplicationModel.addEnabled = false;
@@ -259,9 +258,9 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '
     // if updating a record use form fields to compare
     if ($scope.pglogicalReplicationModel.updateEnabled) {
       var subscription = {};
-      subscription["dbname"] = $scope.pglogicalReplicationModel.dbname;
+      subscription["dbname"]  = $scope.pglogicalReplicationModel.dbname;
       subscription["host"]     = $scope.pglogicalReplicationModel.host;
-      subscription["user"] = $scope.pglogicalReplicationModel.user;
+      subscription["user"]     = $scope.pglogicalReplicationModel.user;
       subscription["password"] = $scope.pglogicalReplicationModel.password;
       subscription["port"]     = $scope.pglogicalReplicationModel.port;
     } else

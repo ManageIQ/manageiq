@@ -193,9 +193,9 @@ module OpsController::Settings::Common
         sub.dbname   = subscription['dbname']
         sub.host     = subscription['host']
         sub.user     = subscription['user']
-        sub.password = subscription['password']
+        sub.password = subscription['password'] == '●●●●●●●●' ? nil : subscription['password']
         sub.port     = subscription['port']
-        if sub.id && sub.remove == "true"
+        if sub.id && subscription['remove'] == "true"
           sub.delete
         else
           subscriptions_to_save.push(sub)
@@ -254,7 +254,7 @@ module OpsController::Settings::Common
        :host     => sub.host,
        :id       => sub.id,
        :user     => sub.user,
-       :password => sub.password,
+       :password => '●●●●●●●●',
        :port     => sub.port
       }
     }

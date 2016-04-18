@@ -132,7 +132,7 @@
               %input.form-control{"type"        => "password",
                                   "name"        => "password",
                                   "ng-model"    => "pglogicalReplicationModel.password",
-                                  "miqrequired" => ""}
+                                  "ng-disabled" => "!subscription.newRecord"}
 
             %td{"ng-if" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
                 "ng-class"=>"{'active': showChanged($index, 'port')}"}
