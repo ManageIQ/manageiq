@@ -18,7 +18,7 @@ module MiqFilter
     mode
   end
 
-  def self.find_children_of_via_reflection(obj, reflection, options = {})
+  def self.find_children_of_via_reflection(obj, reflection)
     db = reflection.class_name.constantize
     if db.respond_to?(:find_filtered)
       if reflection.macro == :belongs_to
@@ -30,19 +30,12 @@ module MiqFilter
         conditions = "#{reflection.foreign_key} = #{obj.id}"
       end
       conditions += " AND (#{reflection.options[:conditions]})" if reflection.options[:conditions]
-      options.delete(:include)
-      options.delete(:includes)
-      result, total_count = db.find_filtered(options.merge(:conditions => conditions))
+      result, total_count = db.find_filtered(:conditions => conditions)
     else
-      options.delete(:tag_filters)
       if reflection.macro == :has_one
         result = [obj.send(reflection.name)]
       else
         result = obj.send(reflection.name)
-                 .where(options[:conditions])
-                 .order(options[:order])
-                 .offset(options[:offset])
-                 .limit(options[:limit])
       end
       total_count = result.length
     end
