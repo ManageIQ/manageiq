@@ -1,10 +1,14 @@
 class ChargebackController < ApplicationController
-  @@fixture_dir = File.join(Rails.root, "db/fixtures")
-
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
   after_action :set_session_data
+
+  PER_TIME_TYPES = %w(hourly daily weekly monthly).freeze
+
+  def per_time_types_from
+    PER_TIME_TYPES.map { |time_type| {time_type => time_type.capitalize} }.reduce(:merge)
+  end
 
   # FIXME: -- is INDEX needed ?
   def index
@@ -14,8 +18,8 @@ class ChargebackController < ApplicationController
   def x_button
     @sb[:action] = params[:pressed]
     @_params[:typ] = params[:pressed].split('_').last
-    cb_rate_edit if ["chargeback_rates_copy", "chargeback_rates_edit", "chargeback_rates_new"].include?(params[:pressed])
-    cb_rates_delete if params[:pressed] == "chargeback_rates_delete"
+    cb_rate_edit if %w(copy edit new).include?(params[:typ])
+    cb_rates_delete if params[:typ] == "delete"
   end
 
   def x_show
@@ -172,21 +176,17 @@ class ChargebackController < ApplicationController
         end
       end
 
-    when "reset", nil  # Reset or first time in
-      obj = find_checked_items                              # editing from list view
-      obj[0] = params[:id] if obj.blank? && params[:id]      # editing from show screen
-      if params[:typ] == "copy" # if tab was not changed
-        session[:changed] = true
-        @rate = ChargebackRate.find(obj[0]).clone
-      else
-        session[:changed] = false
-        @rate = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(obj[0])
-      end
-      cb_rate_set_form_vars
+    when "reset", nil # displaying edit from for actions: new, edit or copy
       @in_a_form = true
-      if params[:button] == "reset"
-        add_flash(_("All changes have been reset"), :warning)
-      end
+      @_params[:id] ||= find_checked_items[0]
+      session[:changed] = params[:typ] == "copy" ? true : false
+
+      @rate = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(params[:id])
+
+      cb_rate_set_form_vars
+
+      add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
+
       replace_right_cell
     end
   end
@@ -556,60 +556,62 @@ class ChargebackController < ApplicationController
   # Set form variables for edit
   def cb_rate_set_form_vars
     @edit = {}
-    @edit[:new]     = HashWithIndifferentAccess.new
+    @edit[:new] = HashWithIndifferentAccess.new
     @edit[:current] = HashWithIndifferentAccess.new
-    @in_a_form = true
-    @edit[:new][:tiers]     = []
+    @edit[:new][:tiers] = []
     @edit[:new][:num_tiers] = []
-    rate_details = @rate.chargeback_rate_details.to_a.sort_by { |rd| [rd[:group].downcase, rd[:description].downcase] }
-    tiers = []
-
     @edit[:new][:description] = @rate.description
     @edit[:new][:rate_type] = @rate.rate_type || x_node.split('-').last
     @edit[:new][:details] = []
 
+    tiers = []
+    rate_details = @rate.chargeback_rate_details
+    rate_details = ChargebackRateDetail.default_rate_details_for(@edit[:new][:rate_type]) if params[:typ] == "new"
+
     # Select the currency of the first chargeback_rate_detail. All the chargeback_rate_details have the same currency
-    @edit[:new][:currency] = rate_details[0].chargeback_rate_detail_currency_id
+    @edit[:new][:currency] = rate_details[0].detail_currency.id
     @edit[:new][:code_currency] = rate_details[0].detail_currency.code
 
     rate_details.each_with_index do |detail, detail_index|
-      temp = detail.slice(:per_time, :per_unit, :detail_measure, :group, :source)
+      temp = detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES)
+      temp[:per_time] ||= "hourly"
 
-      if temp[:detail_measure].present?
-        detail_measure = temp.delete(:detail_measure)
+      temp[:currency] = detail.detail_currency.id
+      temp[:detail_measure] = detail.detail_measure
+
+      if detail.detail_measure.present?
         temp[:detail_measure] = {}
-        temp[:detail_measure][:measures] = detail_measure.measures
+        temp[:detail_measure][:measures] = detail.detail_measure.measures
+        temp[:chargeback_rate_detail_measure_id] = detail.detail_measure.id
       end
 
-      temp[:id]               = params[:typ] == "copy" ? nil : detail.id
-      temp[:per_time]         ||= "hourly"
-      temp[:group]            = detail.group
-      temp[:description]      = detail.description
-      temp[:per_unit_display] = detail.per_unit_display
-      temp[:currency]         = detail.detail_currency.id
+      temp[:id] = params[:typ] == "copy" ? nil : detail.id
 
-      tiers[detail_index] = []
-      detail.chargeback_tiers.order(:start).each do |tier|
-        temp2 = tier.slice(:fixed_rate, :variable_rate, :start, :finish)
-        temp2[:id] = params[:typ] == "copy" ? nil : tier.id
-        temp2[:chargeback_rate_detail_id] = params[:typ] == "copy" ? nil : detail.id
-        tiers[detail_index].push(temp2)
+      tiers[detail_index] ||= []
+
+      detail.chargeback_tiers.to_a.sort_by { |ct| [ct[:start]] }.each do |tier|
+        new_tier = tier.slice(*ChargebackTier::FORM_ATTRIBUTES)
+        new_tier[:id] = params[:typ] == "copy" ? nil : tier.id
+        new_tier[:chargeback_rate_detail_id] = params[:typ] == "copy" ? nil : detail.id
+        new_tier[:start] = new_tier[:start].to_f
+        new_tier[:finish] = ChargebackTier.to_float(new_tier[:finish])
+        tiers[detail_index].push(new_tier)
       end
+
       @edit[:new][:tiers][detail_index] = tiers[detail_index]
       @edit[:new][:num_tiers][detail_index] = tiers[detail_index].size
       @edit[:new][:details].push(temp)
     end
 
-    @edit[:new][:per_time_types] = {
-      "hourly"  => "Hourly",
-      "daily"   => "Daily",
-      "weekly"  => "Weekly",
-      "monthly" => "Monthly"
-    }
+    @edit[:new][:details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
+
+    @edit[:new][:per_time_types] = per_time_types_from
+
     if params[:typ] == "copy"
       @rate.id = nil
       @edit[:new][:description] = "copy of #{@rate.description}"
     end
+
     @edit[:rec_id] = @rate.id || nil
     @edit[:key] = "cbrate_edit__#{@rate.id || "new"}"
     @edit[:current] = copy_hash(@edit[:new])
@@ -648,8 +650,10 @@ class ChargebackController < ApplicationController
       rate_detail.source      = detail[:source]
       rate_detail.group       = detail[:group]
       rate_detail.description = detail[:description]
+      rate_detail_edit = @edit[:new][:details][detail_index]
       # C: Record the currency selected in the edit view, in my chargeback_rate_details table
-      rate_detail.chargeback_rate_detail_currency_id = @edit[:new][:details][detail_index][:currency]
+      rate_detail.chargeback_rate_detail_currency_id = rate_detail_edit[:currency]
+      rate_detail.chargeback_rate_detail_measure_id = rate_detail_edit[:chargeback_rate_detail_measure_id]
       rate_detail.chargeback_rate_id = @rate.id
       # Save tiers into @sb
       rate_tiers = []
