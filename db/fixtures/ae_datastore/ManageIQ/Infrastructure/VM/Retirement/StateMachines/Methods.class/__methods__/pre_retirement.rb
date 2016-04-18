@@ -1,10 +1,20 @@
 #
-# Description: This method powers-off the VM on the provider
+# Description: This method stops the Virtual Machine
 #
 
 vm = $evm.root['vm']
-unless vm.nil? || vm.attributes['power_state'] == 'off'
-  ems = vm.ext_management_system
-  $evm.log('info', "Powering Off VM <#{vm.name}> in provider <#{ems.try(:name)}>")
+if vm.nil?
+  $evm.log('info', "VM not found, cannot retire.")
+  $evm.root['ae_result'] = 'error'
+  exit MIQ_ABORT
+end
+ems = vm.ext_management_system
+if ems.nil?
+  $evm.log('info', "VM:<#{vm.name}> has no provider.")
+  $evm.root['ae_result'] = 'ok'
+  exit MIQ_OK
+end
+if vm.power_state == 'on'
+  $evm.log('info', "Stopping Virtual Machine <#{vm.name}> in EMS <#{ems.try(:name)}>")
   vm.stop
 end
