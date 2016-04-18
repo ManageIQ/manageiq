@@ -1615,14 +1615,20 @@ class ApplicationController < ActionController::Base
   def get_view_where_clause(default_where_clause)
     # If doing charts, limit the records to ones showing in the chart
     if session[:menu_click] && session[:sandboxes][params[:sb_controller]][:chart_reports]
-      menu_click_parts = session[:menu_click].split('_')
-      menu_click_last  = menu_click_parts.last.split('-')
+      click_parts = session[:menu_click].split('_')
+      click_last  = click_parts.last.split('-')
 
       chart_reports = session[:sandboxes][params[:sb_controller]][:chart_reports]
-      legend_idx    = menu_click_last.first.to_i - 1
-      data_idx      = menu_click_last[-2].to_i - 1
-      chart_idx     = menu_click_last.last.to_i
-      _, model, typ = menu_click_parts.first.split('-')
+      legend_idx    = click_last.first.to_i
+      data_idx      = click_last[-2].to_i
+      chart_idx     = click_last.last.to_i
+
+      if Charting.backend == :ziya
+        legend_idx -= 1
+        data_idx   -= 1
+      end
+
+      _, model, typ = click_parts.first.split('-')
       report        = chart_reports.kind_of?(Array) ? chart_reports[chart_idx] : chart_reports
       data_row      = report.table.data[data_idx]
 
