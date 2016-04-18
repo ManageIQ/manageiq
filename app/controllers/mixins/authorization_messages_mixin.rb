@@ -3,7 +3,7 @@ module AuthorizationMessagesMixin
 
   def notify_about_unauthorized_items(item, table)
     if unauthorized_count > 0
-      @bottom_msg = _('* You are not authorized to view other %{items} on this %{:table}') %
+      @bottom_msg = _('* You are not authorized to view other %{items} on this %{table}') %
         {:items => pluralize(unauthorized_count, item.singularize), :table => table}
     end
   end
