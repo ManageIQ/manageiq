@@ -484,6 +484,7 @@ class ApplicationHelper::ToolbarBuilder
 
   # Determine if a button should be hidden
   def build_toolbar_hide_button(id)
+    return false if id.start_with?('history_')
     return true if id == "blank_button" # Always hide the blank button placeholder
 
     # Hide configuration buttons for specific Container* entities
