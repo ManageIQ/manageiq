@@ -125,15 +125,11 @@ class VmOrTemplate < ApplicationRecord
   acts_as_miq_taggable
   include ReportableMixin
 
-  virtual_column :active,                               :type => :boolean
-  virtual_column :orphaned,                             :type => :boolean
-  virtual_column :disconnected,                         :type => :boolean
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]
   virtual_column :platform,                             :type => :string,     :uses => [:operating_system, :hardware]
   virtual_column :vendor_display,                       :type => :string
   virtual_column :v_host_vmm_product,                   :type => :string,     :uses => :host
-  virtual_column :v_is_a_template,                      :type => :string
   virtual_column :v_owning_cluster,                     :type => :string,     :uses => :ems_cluster
   virtual_column :v_owning_resource_pool,               :type => :string,     :uses => :all_relationships
   virtual_column :v_owning_datacenter,                  :type => :string,     :uses => {:ems_cluster => :all_relationships}
@@ -1382,15 +1378,20 @@ class VmOrTemplate < ApplicationRecord
     ems_id.nil? && !storage_id.nil?
   end
   alias_method :orphaned, :orphaned?
+  virtual_attribute :orphaned, :boolean, :arel => ->(t) { t[:ems_id].eq(nil).and(t[:storage_id].not_eq(nil)) }
 
   def active?
-    !(archived? || orphaned? || self.retired? || self.template?)
+    !archived? && !orphaned? && !retired? && !template?
   end
   alias_method :active, :active?
+  virtual_attribute :active, :boolean, :arel => (lambda do (t)
+    t[:ems_id].not_eq(nil).and(t[:retired].not_eq(true)).and(t[:template].not_eq(true))
+  end)
 
   def disconnected?
     connection_state != "connected"
   end
+  virtual_attribute :disconnected, :boolean, :arel => ->(t) { t[:connected_state].not_eq("connected") }
   alias_method :disconnected, :disconnected?
 
   def normalized_state
@@ -1509,6 +1510,11 @@ class VmOrTemplate < ApplicationRecord
   def v_is_a_template
     self.template?.to_s.capitalize
   end
+  # technically it is capitalized, but for sorting, not a concern
+  # but we do need nil to become false
+  virtual_attribute :v_is_a_template, :string, :arel => (lambda do |t|
+    Arel::Nodes::NamedFunction.new('COALESCE', [t[:template], Arel::Nodes.build_quoted("false")])
+  end)
 
   def v_pct_free_disk_space
     # Verify we have the required data to calculate
