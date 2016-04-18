@@ -4,48 +4,31 @@
 [ -f /etc/default/evm ] &&  . /etc/default/evm
 
 # Check postgres server DB init status, if necessary, initdb, start/enable service and inject MIQ role
-# postgresql-check-db-dir needs PGDATA set
-export PGDATA=${APPLIANCE_PG_DATA}
-if [ -x ${APPLIANCE_PG_CHECKDB} ]; then
 
-        echo "== Checking MIQ database status =="
-        ${APPLIANCE_PG_CHECKDB} {APPLIANCE_PG_DATA}
-                if [ $? -eq 0 ]; then
-			pg_isready -q
-                        if [ $? -ne 0 ]; then
-                                echo "** Postgresql is inactive, starting service"
-				su postgres -c "pg_ctl -D ${APPLIANCE_PG_DATA} start"
-                                test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
-                                echo "** Postgresql is now online"
-				sleep 5
-                        fi
-                        psql --list | grep -q vmdb
-                        test $? -ne 0 && echo "!! MIQ database could not be found, re-run ${BASEDIR}/bin/setup?" && exit 1
-                        echo "** MIQ vmdb was found"
-                        exit 0
-                else
-                        echo "** DB has not been initialized"
-                        echo "** Launching initdb"
-                        su postgres -c "initdb -D ${APPLIANCE_PG_DATA}"
-                        test $? -ne 0 && echo "!! Failed to initdb" && exit 1
-                        echo "** Starting postgresql"
-			su postgres -c "pg_ctl -D ${APPLIANCE_PG_DATA} start"
-                        test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
-			sleep 5
-                        echo "** Creating MIQ role"
-                        su postgres -c "psql -c \"CREATE ROLE root SUPERUSER LOGIN PASSWORD 'smartvm'\""
-                        test $? -ne 0 && echo "!! Failed to inject MIQ root Role" && exit 1
-			# Check if memcached is running, if not start it
-			pidof memcached
-			test $? -ne 0 && /usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d
-                        echo "** Starting DB setup"
-                        ${BASEDIR}/bin/setup
-                        test $? -ne 0 && echo "!! ${BASEDIR}/bin/setup failed to run" && exit 1
-                        echo "** MIQ database has been initialized"
-                        systemctl enable -q ${APPLIANCE_PG_SERVICE}
-                        exit 0
-                fi
-else
-        echo "Failed to find ${APPLIANCE_PG_CHECKDB}, is postgresql server installed?"
-        exit 1
-fi
+echo "== Checking MIQ database status =="
+
+[[ -d /var/opt/rh/rh-postgresql94/lib/pgsql/data/base ]]
+	if [ $? -eq 0 ]; then
+		echo "** DB already initialized"
+		exit 0
+	else
+		echo "** DB has not been initialized"
+		echo "** Launching initdb"
+		su postgres -c "initdb -D ${APPLIANCE_PG_DATA}"
+		test $? -ne 0 && echo "!! Failed to initdb" && exit 1
+		echo "** Starting postgresql"
+		su postgres -c "pg_ctl -D ${APPLIANCE_PG_DATA} start"
+		test $? -ne 0 && echo "!! Failed to start postgresql service" && exit 1
+		sleep 5
+		echo "** Creating MIQ role"
+		su postgres -c "psql -c \"CREATE ROLE root SUPERUSER LOGIN PASSWORD 'smartvm'\""
+		test $? -ne 0 && echo "!! Failed to inject MIQ root Role" && exit 1
+		# Check if memcached is running, if not start it
+		pidof memcached
+		test $? -ne 0 && /usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d
+		echo "** Starting DB setup"
+		${APP_ROOT}/bin/setup --no-tests
+		test $? -ne 0 && echo "!! ${APP_ROOT}/docker-assets/docker_setup failed to run" && exit 1
+		echo "** MIQ database has been initialized"
+		exit 0
+	fi
