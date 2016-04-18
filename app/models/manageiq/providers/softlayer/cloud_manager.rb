@@ -45,6 +45,12 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
       ::Fog::Compute.new(config)
     when 'network'
       ::Fog::Network.new(config)
+    when 'dns'
+      ::Fog::DNS.new(config)
+    when 'storage'
+      ::Fog::Storage.new(config)
+    when 'account'
+      ::Fog::Account.new(config)
     else
       raise ArgumentError, "Unknown service: #{options[:service]}"
     end

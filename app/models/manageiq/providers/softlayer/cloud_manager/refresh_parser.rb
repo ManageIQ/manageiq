@@ -10,12 +10,12 @@ module ManageIQ::Providers
       end
 
       def initialize(ems, options = nil)
-        network_opts = options || {}
-        network_opts[:service] = "network"
-
         @ems               = ems
         @compute           = ems.connect
-        @network           = ems.connect(network_opts)
+        @account           = ems.connect(options.merge({:service => "account"}))
+        @network           = ems.connect(options.merge({:service => "network"}))
+        @dns               = ems.connect(options.merge({:service => "dns"}))
+        @storage           = ems.connect(options.merge({:service => "storage"}))
         @options           = options || {}
         @data              = {}
         @data_index        = {}
