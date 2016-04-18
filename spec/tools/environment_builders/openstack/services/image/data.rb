@@ -10,8 +10,10 @@ module Openstack
           [{
             :name => IMAGE_NAME
           }, {
-            :name      => "EmsRefreshSpec-Image-Private",
-            :is_public => false
+            :name => "fedora 23"
+          }, {
+            :name       => "EmsRefreshSpec-Image-Private",
+            :visibility => 'private'
           }]
         end
 

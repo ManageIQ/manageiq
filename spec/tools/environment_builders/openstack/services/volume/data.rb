@@ -27,9 +27,10 @@ module Openstack
         def volumes(volume_type_name = nil)
           volumes = {
             volume_type_name_2 => [{
-              :name        => volume_name_1,
-              :description => "EmsRefreshSpec-Volume description",
-              :size                => 1}]}
+              :name         => volume_name_1,
+              :__image_name => "EmsRefreshSpec-Image",
+              :description  => "EmsRefreshSpec-Volume description",
+              :size         => 1}]}
 
           indexed_collection_return(volumes, volume_type_name)
         end

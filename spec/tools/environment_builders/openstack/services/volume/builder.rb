@@ -4,18 +4,19 @@ module Openstack
   module Services
     module Volume
       class Builder
-        attr_reader :service, :volumes
+        attr_reader :service, :volumes, :volume_snapshots
 
-        def self.build_all(ems, project, environment)
-          new(ems, project, environment).build_all
+        def self.build_all(ems, project, environment, image)
+          new(ems, project, environment, image).build_all
         end
 
-        def initialize(ems, project, environment)
+        def initialize(ems, project, environment, image)
           @service         = ems.connect(:tenant_name => project.name, :service => "Volume")
           @compute_service = ems.connect(:tenant_name => project.name)
           @data            = Data.new
           @project         = project
           @environment     = environment
+          @images          = image.images
 
           # Collected data
           @volume_types           = []
@@ -47,6 +48,8 @@ module Openstack
           return if volume_type_data.blank?
 
           volume_type_data.each do |volume|
+            image_name = volume.delete(:__image_name)
+            image_id   = @images.detect { |x| x.name == image_name }
             @volumes << volume = find_or_create(
               @service.volumes, volume.merge(:volume_type => volume_type_name))
 
