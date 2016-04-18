@@ -45,13 +45,15 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     supported_auth_types.include?(authtype.to_s)
   end
 
-  def self.raw_connect(server, port, username, password, service = "Service")
+  def self.raw_connect(server, port, path, username, password, service = "Service")
     require 'ovirt'
+
     Ovirt.logger = $rhevm_log
 
     params = {
       :server     => server,
       :port       => port.presence && port.to_i,
+      :path       => path,
       :username   => username,
       :password   => password,
       :verify_ssl => false
@@ -67,13 +69,22 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
 
+    # If there is API path stored in the endpoints table and use it:
+    path = default_endpoint.path
+    _log.info("Using stored API path '#{path}'.") unless path.blank?
+
     server   = options[:ip] || address
     port     = options[:port] || self.port
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || "Service"
 
-    self.class.raw_connect(server, port, username, password, service)
+    result = self.class.raw_connect(server, port, path, username, password, service)
+
+    # Copy the API path to the endpoints table:
+    default_endpoint.path = result.api_path
+
+    result
   end
 
   def rhevm_service

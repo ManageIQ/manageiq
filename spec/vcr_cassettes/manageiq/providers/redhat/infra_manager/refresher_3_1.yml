@@ -2,6 +2,17 @@
 http_interactions:
 - request:
     method: get
+    uri: https://192.168.252.230/api
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      WWW-Authenticate:
+      - Basic realm="RESTAPI"
+  recorded_at: Tue, 26 Apr 2016 11:15:00 GMT
+- request:
+    method: get
     uri: https://evm%40manageiq.com:password@192.168.252.230/api
     body:
       encoding: US-ASCII
