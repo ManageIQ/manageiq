@@ -987,12 +987,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ws_network_fields(values, fields, data)
     ws_customize_fields(values, fields, data)
     ws_schedule_fields(values, fields, data)
-    ws_environment_fields(values, fields, data)
+    ws_environment_fields(values, data)
 
     data.each { |k, v| _log.warn "Unprocessed key <#{k}> with value <#{v.inspect}>" }
   end
 
-  def ws_environment_fields(values, _fields, data)
+  def ws_environment_fields(values, data)
     # do not parse environment data unless :placement_auto is false
     if data[:placement_auto].to_s != "false"
       values[:placement_auto] = [true, 1]
