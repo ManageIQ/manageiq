@@ -50,12 +50,16 @@ module MiqPolicyController::Alerts
     assert_privileges("alert_delete")
     alerts = []
     # showing 1 alert, delete it
+
     if params[:id].nil? || MiqAlert.find_by_id(params[:id]).nil?
       add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqAlert")},
                 :error)
+    elsif MiqAlert.find_by_id(params[:id]).read_only
+      add_flash(_("%{models} can not be deleted") % {:models => ui_lookup(:model => "MiqAlert")}, :error)
     else
       alerts.push(params[:id])
     end
+
     process_alerts(alerts, "destroy") unless alerts.empty?
     @new_alert_node = self.x_node = "root"
     get_node_info(x_node)
