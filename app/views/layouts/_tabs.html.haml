@@ -1,5 +1,5 @@
 - if @tabs
-  %ul{:class => "nav nav-tabs"}
+  %ul{:class => "nav nav-tabs #{@layout == 'dashboard' ? 'nav-tabs-pf' : nil}"}
     - @tabs[1..-1].each do |tab|
       - if tab[0] == @tabs[0][0]
         %li.active

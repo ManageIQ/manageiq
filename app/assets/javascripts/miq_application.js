@@ -966,17 +966,17 @@ function miqEnableLoginFields(enabled) {
 // Initialize dashboard column jQuery sortables
 function miqInitDashboardCols() {
   if ($('#col1').length) {
-    $('#col1').sortable({connectWith: '#col2, #col3', handle: "h3"});
+    $('#col1').sortable({connectWith: '#col2, #col3', handle: "h2"});
     $('#col1').off('sortupdate');
     $('#col1').on('sortupdate', miqDropComplete);
   }
   if ($('#col2').length) {
-    $('#col2').sortable({connectWith: '#col1, #col3', handle: "h3"});
+    $('#col2').sortable({connectWith: '#col1, #col3', handle: "h2"});
     $('#col2').off('sortupdate');
     $('#col2').on('sortupdate', miqDropComplete);
   }
   if ($('#col3').length) {
-    $('#col3').sortable({connectWith: '#col1, #col2', handle: "h3"});
+    $('#col3').sortable({connectWith: '#col1, #col2', handle: "h2"});
     $('#col3').off('sortupdate');
     $('#col3').on('sortupdate', miqDropComplete);
   }

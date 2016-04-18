@@ -58,7 +58,7 @@
   margin-bottom: 1px;
 }
 
-/* styling for  report menu editor accordion */
+/* styling for report menu editor accordion */
 
 .panel-heading.active {
   background: #ddd !important
@@ -79,6 +79,39 @@ li.brand-white-label.whitelabeled {
 .navbar__user-name {
   display: inline-block;
   color: #FFFFFF; margin-left: 1ex;
+}
+
+/* Dashboard overrides */
+
+body#dashboard .container-cards-pf {
+  margin-top: 0;
+}
+
+body#dashboard table {
+  border: 0;
+}
+
+body#dashboard table thead {
+  background: none;
+}
+
+body#dashboard table thead th {
+  border: none;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+body#dashboard table td {
+  border: none;
+}
+
+body#dashboard .dropdown-kebab-pf .dropdown-menu {
+  left: -136px;
+  margin-top: 11px;
+}
+
+body#dashboard .dropdown-kebab-pf .dropdown-menu:after,
+body#dashboard .dropdown-kebab-pf .dropdown-menu:before {
+  left: 127px;
 }
 
 /* Login overrides */
@@ -437,4 +470,14 @@ tr.rdetail > td {
 }
 td.action > .btn.btn-default {
     width: 50px;
+}
+
+body#dashboard {
+ background: #f5f5f5;
+}
+
+.cards-pf .nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  background-color: #f5f5f5 !important;
 }

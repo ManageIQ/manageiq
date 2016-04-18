@@ -3,7 +3,7 @@
     widget -- MiqWidget instance
 - width  ||= 350
 - height ||= 250
-.panel-body.chart_widget{:style => "text-align: center; padding: 0"}
+.card-pf-body.chart_widget
   .mc{:id => "dd_w#{widget.id}_box",
     :style => @sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display:none' : ''}
 

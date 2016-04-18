@@ -1,7 +1,7 @@
 -#
   Parameters:
     widget -- MiqWidget object
-.panel-body{:style => "text-align: center;"}
+.card-pf-body{:style => "text-align: center;"}
   .mc{:id => "dd_w#{widget.id}_box",
     :style => "#{@sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display: none;' : ''}"}
     %h3= _('No data found.')
