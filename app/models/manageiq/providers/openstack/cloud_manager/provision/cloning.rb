@@ -19,6 +19,8 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::Cloning
     clone_options[:security_groups]   = security_groups.collect(&:ems_ref)
     clone_options[:nics]              = configure_network_adapters unless configure_network_adapters.blank?
 
+    clone_options[:block_device_mapping_v2] = configure_volumes unless configure_volumes.blank?
+
     clone_options
   end
 
