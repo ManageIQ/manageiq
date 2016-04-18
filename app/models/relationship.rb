@@ -33,7 +33,7 @@ class Relationship < ApplicationRecord
 
   def self.resources(relationships)
     MiqPreloader.preload(relationships, :resource)
-    relationships.collect(&:resource)
+    relationships.collect(&:resource).compact
   end
 
   def self.resource_pair(relationship)
