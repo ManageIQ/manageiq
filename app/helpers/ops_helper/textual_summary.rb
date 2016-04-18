@@ -147,7 +147,7 @@ module OpsHelper::TextualSummary
                   when "general_number_precision_0"
                     value.to_i
                   when "gigabytes_human"
-                    value.to_f / GIGABYTE
+                    value.to_f / 1.0.gigabyte
                   else
                     value.to_f
                 end
