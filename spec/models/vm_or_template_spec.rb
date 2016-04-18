@@ -553,4 +553,14 @@ describe VmOrTemplate do
 
     expect(template.miq_provision_vms.collect(&:id)).to eq([vm.id])
   end
+
+  describe ".v_pct_free_disk_space" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :disk_free_space => 20, :disk_capacity => 100) }
+
+    it "calculates in ruby" do
+      expect(vm.v_pct_free_disk_space).to eq(20.0)
+      expect(vm.v_pct_used_disk_space).to eq(80.0)
+    end
+  end
 end
