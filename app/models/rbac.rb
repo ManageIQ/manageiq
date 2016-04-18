@@ -384,30 +384,29 @@ module Rbac
                                             caller(0)) unless Rails.env.production?
       options[:targets] = nil
     end
-    options = options.dup
     # => empty inputs - normal find with optional where_clause
     # => list if ids - :class is required for this format.
     # => list of objects
     # results are returned in the same format as the targets. for empty targets, the default result format is a list of ids.
-    targets           = options.delete(:targets)
+    targets           = options[:targets]
 
     # Support for using named_scopes in search. Supports scopes with or without args:
     # Example without args: :named_scope => :in_my_region
     # Example with args:    :named_scope => [in_region, 1]
-    scope             = options.delete(:named_scope)
+    scope             = options[:named_scope]
 
-    klass             = to_class(options.delete(:class) { Object })
-    conditions        = options.delete(:conditions)
-    where_clause      = options.delete(:where_clause)
-    sub_filter        = options.delete(:sub_filter)
-    include_for_find  = options.delete(:include_for_find)
-    search_filter     = options.delete(:filter)
-    results_format    = options.delete(:results_format)
+    klass             = to_class(options[:class]) || Object
+    conditions        = options[:conditions]
+    where_clause      = options[:where_clause]
+    sub_filter        = options[:sub_filter]
+    include_for_find  = options[:include_for_find]
+    search_filter     = options[:filter]
+    results_format    = options[:results_format]
 
-    user, miq_group, user_filters = get_user_info(options.delete(:user),
-                                                  options.delete(:userid),
-                                                  options.delete(:miq_group),
-                                                  options.delete(:miq_group_id))
+    user, miq_group, user_filters = get_user_info(options[:user],
+                                                  options[:userid],
+                                                  options[:miq_group],
+                                                  options[:miq_group_id])
     tz                     = user.try(:get_timezone)
     attrs                  = {:user_filters => copy_hash(user_filters)}
     ids_clause             = nil
@@ -441,7 +440,7 @@ module Rbac
       end
     end
 
-    user_filters['match_via_descendants'] = to_class(options.delete(:match_via_descendants))
+    user_filters['match_via_descendants'] = to_class(options[:match_via_descendants])
 
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.respond_to?(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
