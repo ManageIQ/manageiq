@@ -9,7 +9,6 @@
                         "name"        => "#{prefix}_hostname",
                         "ng-model"    => "#{ng_model}.#{prefix}_hostname",
                         "maxlength"   => "#{MAX_NAME_LEN}",
-                        "required"    => "",
                         "checkchange" => ""}
     %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
       = _("Required")
