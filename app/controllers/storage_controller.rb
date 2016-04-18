@@ -285,7 +285,7 @@ class StorageController < ApplicationController
     else
       @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
 
-      if x_tree[:type] == :storage && (@nodetype == "ms")
+      if x_tree[:type] == :storage
         search_id = @nodetype == "root" ? 0 : from_cid(id)
         listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
         if @edit[:adv_search_applied] &&

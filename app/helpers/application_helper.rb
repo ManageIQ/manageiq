@@ -1110,7 +1110,7 @@ module ApplicationHelper
          ems_infra host miq_template offline orchestration_stack persistent_volume ems_middleware
          middleware_server middleware_deployment
          ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-         resource_pool retired service storage templates vm).include?(@layout) && !@in_a_form
+         resource_pool retired service templates vm).include?(@layout) && !@in_a_form
       "show_list"
     elsif @compare
       "compare_sections"
@@ -1126,8 +1126,7 @@ module ApplicationHelper
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
              host miq_schedule miq_template policy ontap_file_share ontap_logical_disk
              ontap_storage_system ontap_storage_volume orchestration_stack resource_pool
-             scan_profile service snia_local_file_system storage
-             storage_manager timeline).include?(@layout)
+             scan_profile service snia_local_file_system storage_manager timeline).include?(@layout)
       @layout
     end
   end
@@ -1140,7 +1139,7 @@ module ApplicationHelper
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
                      orchestration_stack resource_pool retired service
-                     snia_local_file_system storage storage_manager templates vm)
+                     snia_local_file_system storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && tree_with_advanced_search? && !@record)
   end
