@@ -53,14 +53,13 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
 
   def resource_id_for_instance_id(id)
     # TODO(lsmola) we really need to get rid of the building our own emf_ref, it makes crosslinking impossible, parsing
-    # the id string like this is bad
-    # "/subscriptions/{guid}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/vm1"
+    # the id string like this is suboptimal
     return nil unless id
-    parts = id.split("/")
-    resource_uid(parts[2],
-                 parts[4].downcase,
-                 parts[6].downcase + "/" + parts[7].downcase,
-                 parts[8])
+    _, _, guid, _, resource_group, _, type, sub_type, name = id.split("/")
+    resource_uid(guid,
+                 resource_group.downcase,
+                 "#{type.downcase}/#{sub_type.downcase}",
+                 name)
   end
 
   def floating_ips
