@@ -2,84 +2,48 @@ describe MiqGroup do
   context "as a Super Administrator" do
     subject { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
 
+    before do
+      subject.entitlement.filters = { 'managed'   => [['some managed filter']],
+                                      'belongsto' => [['some belongsto filter']] }
+      subject.entitlement.save!
+    end
+
     describe "#get_filters" do
-      it "normal" do
-        expected = {:test => "test filter"}
-        subject.filters = expected
-        expect(subject.get_filters).to eq(expected)
+      it "takes the filters from the group's entitlement" do
+        expect(subject.get_filters).to eq(subject.entitlement.filters)
       end
+    end
 
-      it "when nil" do
-        subject.filters = nil
-        expect(subject.get_filters).to eq("managed" => [], "belongsto" => [])
+    describe "#get_managed_filters" do
+      it "takes managed filters from the group's entitlement" do
+        expect(subject.get_managed_filters).to eq([['some managed filter']])
       end
+    end
 
-      it "when {}" do
-        subject.filters = {}
-        expect(subject.get_filters).to eq({})
+    describe "#get_belongsto_filters" do
+      it "takes belongsto filters from the group's entitlement" do
+        expect(subject.get_belongsto_filters).to eq([['some belongsto filter']])
       end
     end
 
     describe "#has_filters?" do
-      it "normal" do
-        subject.filters = {"managed" => %w(a)}
-        expect(subject).to be_has_filter
+      it "is true when the entitlement has filters" do
+        expect(subject.has_filters?).to be_truthy
       end
 
-      it "when other" do
-        subject.filters = {"other" => %(x)}
-        expect(subject).not_to be_has_filter
-      end
-
-      it "when nil" do
-        subject.filters = nil
-        expect(subject).not_to be_has_filter
-      end
-
-      it "when {}" do
-        subject.filters = {}
-        expect(subject).not_to be_has_filter
+      it "is false when the entitlement has no filters" do
+        subject.entitlement.filters = nil
+        subject.entitlement.save!
+        expect(subject.has_filters?).to be_falsey
       end
     end
 
-    %w(managed belongsto).each do |type|
-      describe "#get_#{type}_filters" do
-        let(:method) { "get_#{type}_filters" }
-
-        it "normal" do
-          expected = {type => "test filter"}
-          subject.filters = expected
-          expect(subject.public_send(method)).to eq(expected[type])
-        end
-
-        it "when nil" do
-          subject.filters = nil
-          expect(subject.public_send(method)).to eq([])
-        end
-
-        it "when []" do
-          subject.filters = []
-          expect(subject.public_send(method)).to eq([])
-        end
-
-        it "missing the #{type} key" do
-          expected = {"something" => "test filter"}
-          subject.filters = expected
-          expect(subject.public_send(method)).to eq([])
-        end
-      end
-
-      it "#set_#{type}_filters" do
-        filters = {type => "test"}
-        subject.public_send("set_#{type}_filters", filters[type])
-        expect(subject.public_send("get_#{type}_filters")).to eq(filters[type])
-        expect(subject.get_filters).to eq(filters)
+    describe "#miq_user_role_name" do
+      it "should return user role name" do
+        expect(subject.miq_user_role_name).to eq("EvmRole-super_administrator")
       end
     end
 
-    it "should return user role name" do
-      expect(subject.miq_user_role_name).to eq("EvmRole-super_administrator")
-    end
 
     it "should set group type to 'system' " do
       expect(subject.group_type).to eq("system")
