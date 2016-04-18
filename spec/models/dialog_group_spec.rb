@@ -1,6 +1,6 @@
 describe DialogGroup do
+  let(:dialog_group) { FactoryGirl.build(:dialog_group, :label => 'group') }
   context "#validate_children" do
-    let(:dialog_group) { FactoryGirl.build(:dialog_group, :label => 'group') }
 
     it "fails without element" do
       expect { dialog_group.save! }
@@ -12,6 +12,13 @@ describe DialogGroup do
       expect_any_instance_of(DialogField).to receive(:valid?)
       expect(dialog_group.errors.full_messages).to be_empty
       dialog_group.validate_children
+    end
+  end
+
+  context "#dialog_fields" do
+    # other tests are in dialog_spec.rb
+    it "returns [] even when no dialog_tab" do
+      expect(dialog_group.dialog_fields).to be_empty
     end
   end
 end
