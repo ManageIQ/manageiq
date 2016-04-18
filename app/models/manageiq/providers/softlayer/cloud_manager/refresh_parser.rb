@@ -10,8 +10,12 @@ module ManageIQ::Providers
       end
 
       def initialize(ems, options = nil)
+        network_opts = options || {}
+        network_opts[:service] = "network"
+
         @ems               = ems
-        @connection        = ems.connect
+        @compute           = ems.connect
+        @network           = ems.connect(network_opts)
         @options           = options || {}
         @data              = {}
         @data_index        = {}
@@ -24,6 +28,7 @@ module ManageIQ::Providers
         get_flavors
         get_images
         get_instances
+        get_cloud_networks
         get_tags
         _log.info("#{log_header}...Complete")
 
@@ -35,22 +40,32 @@ module ManageIQ::Providers
       private
 
       def get_flavors
-        flavors = @connection.flavors.all
+        flavors = @compute.flavors.all
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
       end
 
       def get_images
-        images = @connection.images.all
+        images = @compute.images.all
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 
       def get_instances
-        instances = @connection.servers.all
+        instances = @compute.servers.all
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
       end
 
+      def get_cloud_networks
+        networks = @network.networks.all
+        process_collection(networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
+      end
+
+      def get_cloud_subnets(cloud_network)
+        subnets = cloud_network.subnets
+        process_collection(subnets, :cloud_subnets) { |subnet| parse_cloud_subnet(subnet) }
+      end
+
       def get_tags
-        tags = @connection.tags.all
+        tags = @compute.tags.all
         process_collection(tags, :tags) { |tags| parse_tags(tags) }
       end
 
@@ -69,22 +84,27 @@ module ManageIQ::Providers
       def parse_flavor(flavor)
         uid = flavor.id
 
+        disk_size = flavor.disks.inject(0) do |sum, disk|
+          sum + disk["diskImage"]["capacity"]
+        end
+
         type = ManageIQ::Providers::SoftLayer::CloudManager::Flavor
         new_result = {
-          :type        => type,
-          :ems_ref     => flavor.id,
-          :name        => flavor.id,
-          :description => flavor.name,
-          :enabled     => true,
-          :cpus        => flavor.cpu,
-          :cpu_cores   => flavor.cpu,
-          :memory      => flavor.ram,
+          :type           => type,
+          :ems_ref        => flavor.id,
+          :name           => flavor.id,
+          :description    => flavor.name,
+          :cpus           => flavor.cpu,
+          :cpu_cores      => flavor.cpu,
+          :memory         => flavor.ram,
+          :root_disk_size => disk_size
         }
 
         return uid, new_result
       end
 
       def parse_image(image)
+        # TODO: finish mapping for power state and os
         uid    = image.id
         type   = ManageIQ::Providers::SoftLayer::CloudManager::Template
 
@@ -94,16 +114,17 @@ module ManageIQ::Providers
           :ems_ref            => image.id,
           :name               => image.name,
           :vendor             => "softlayer",
-          :raw_power_state    => "never",
-          :operating_system   => image,
+          :raw_power_state    => nil,
+          :operating_system   => nil,
           :template           => true,
-          :publicly_available => true,
+          :publicly_available => image.public?,
         }
 
         return uid, new_result
       end
 
       def parse_instance(instance)
+        # TODO: mapping is not complete and valid
         uid    = instance.id
         name   = instance.name
         name ||= uid
@@ -133,6 +154,36 @@ module ManageIQ::Providers
           }
         }
 
+        return uid, new_result
+      end
+
+      def parse_cloud_network(cloud_network)
+        # TODO: implement the orchestration stack
+        cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
+          @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
+
+        uid = nil
+
+        new_result = {
+          :ems_ref             => cloud_network.id,
+          :name                => cloud_network.name,
+          :cidr                => cloud_network.address_space,
+          :enabled             => true,
+          :cloud_subnets       => cloud_subnets,
+          :orchestration_stack => nil,
+        }
+        return uid, new_result
+      end
+
+      def parse_cloud_subnet(subnet)
+        # TODO: what is cidr?
+        uid = subnet.id
+        new_result = {
+          :ems_ref           => uid,
+          :name              => subnet.name,
+          :cidr              => subnet.address_space,
+          :availability_zone => nil,
+        }
         return uid, new_result
       end
     end
