@@ -30,17 +30,15 @@ module MiqFilter
         conditions = "#{reflection.foreign_key} = #{obj.id}"
       end
       conditions += " AND (#{reflection.options[:conditions]})" if reflection.options[:conditions]
-      result, total_count = db.find_filtered(:conditions => conditions)
+      db.find_filtered(:conditions => conditions)
     else
+      result = obj.send(reflection.name)
       if reflection.macro == :has_one
-        result = [obj.send(reflection.name)]
+        [[result], 1]
       else
-        result = obj.send(reflection.name)
+        [result, result.length]
       end
-      total_count = result.length
     end
-
-    return result, total_count
   end
 
   def self.find_children_of_via_method(obj, assoc, options = {})
