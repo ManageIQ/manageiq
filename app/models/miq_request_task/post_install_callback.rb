@@ -3,7 +3,7 @@ module MiqRequestTask::PostInstallCallback
 
   module ClassMethods
     def post_install_callback(id)
-      p = find_by_id(id.to_i)
+      p = find_by(:id => id.to_i)
       if p
         p.provision_completed_queue
       else
