@@ -132,42 +132,6 @@ describe ApiController do
       }
     end
 
-    let(:provreq1_body) do
-      provreq_body.merge(
-        "vm_fields" => {
-          "vm_name"                     => "api_test_aws",
-          "instance_type"               => flavor.id,
-          "placement_auto"              => false,
-          "placement_availability_zone" => az.id,
-          "cloud_network"               => cloud_network1.id,
-          "cloud_subnet"                => cloud_subnet1.id,
-          "security_groups"             => security_group1.id,
-          "floating_ip_address"         => floating_ip1.id
-        }
-      )
-    end
-
-    let(:provreq2_body) do
-      provreq_body.merge(
-        "vm_fields" => {
-          "vm_name"                     => "api_test_aws",
-          "instance_type"               => flavor.id,
-          "placement_availability_zone" => az.id
-        }
-      )
-    end
-
-    let(:provreq3_body) do
-      provreq_body.merge(
-        "vm_fields" => {
-          "vm_name"                     => "api_test_aws",
-          "instance_type"               => flavor.id,
-          "placement_auto"              => true,
-          "placement_availability_zone" => az.id
-        }
-      )
-    end
-
     let(:expected_provreq_attributes) { %w(id options) }
 
     let(:expected_provreq_hash) do
@@ -185,8 +149,21 @@ describe ApiController do
     it "supports manual placement" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
+      body = provreq_body.merge(
+        "vm_fields" => {
+          "vm_name"                     => "api_test_aws",
+          "instance_type"               => flavor.id,
+          "placement_auto"              => false,
+          "placement_availability_zone" => az.id,
+          "cloud_network"               => cloud_network1.id,
+          "cloud_subnet"                => cloud_subnet1.id,
+          "security_groups"             => security_group1.id,
+          "floating_ip_address"         => floating_ip1.id
+        }
+      )
+
       aws_dialog # Create the AWS Provisioning dialog
-      run_post(provision_requests_url, provreq1_body)
+      run_post(provision_requests_url, body)
 
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
@@ -210,8 +187,16 @@ describe ApiController do
     it "does not process manual placement data if placement_auto is not set" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
+      body = provreq_body.merge(
+        "vm_fields" => {
+          "vm_name"                     => "api_test_aws",
+          "instance_type"               => flavor.id,
+          "placement_availability_zone" => az.id
+        }
+      )
+
       aws_dialog # Create the AWS Provisioning dialog
-      run_post(provision_requests_url, provreq2_body)
+      run_post(provision_requests_url, body)
 
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
@@ -231,8 +216,17 @@ describe ApiController do
     it "does not process manual placement data if placement_auto is set to true" do
       api_basic_authorize collection_action_identifier(:provision_requests, :create)
 
+      body = provreq_body.merge(
+        "vm_fields" => {
+          "vm_name"                     => "api_test_aws",
+          "instance_type"               => flavor.id,
+          "placement_auto"              => true,
+          "placement_availability_zone" => az.id
+        }
+      )
+
       aws_dialog # Create the AWS Provisioning dialog
-      run_post(provision_requests_url, provreq3_body)
+      run_post(provision_requests_url, body)
 
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
