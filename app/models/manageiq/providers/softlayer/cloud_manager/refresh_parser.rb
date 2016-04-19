@@ -9,14 +9,14 @@ module ManageIQ::Providers
         new(ems, options).ems_inv_to_hashes
       end
 
-      def initialize(ems, options = nil)
+      def initialize(ems, options = {})
         @ems               = ems
         @compute           = ems.connect
         @account           = ems.connect(options.merge({:service => "account"}))
         @network           = ems.connect(options.merge({:service => "network"}))
         @dns               = ems.connect(options.merge({:service => "dns"}))
         @storage           = ems.connect(options.merge({:service => "storage"}))
-        @options           = options || {}
+        @options           = options
         @data              = {}
         @data_index        = {}
       end
@@ -156,11 +156,9 @@ module ManageIQ::Providers
           :vendor           => "softlayer",
           :raw_power_state  => instance.state,
           :flavor           => instance.flavor_id,
-          :parent_vm        => nil,
           :operating_system => instance.os_code,
-          :key_pairs        => [],
-          :cloud_network    => nil,
           :security_groups  => nil,
+          :availability_zone   => @data_index.fetch_path(:availability_zones, 'default'),
           :hardware         => {
             :cpu_sockets          => instance.cpu,
             :cpu_total_cores      => instance.cpu,
