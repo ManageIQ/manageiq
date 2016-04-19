@@ -342,6 +342,10 @@ iframe, .iframe {
 
 /* toolbar styling */
 
+.toolbar-pf .form-group {
+  padding-left: 0;
+}
+
 .toolbar-pf-actions .btn-group.dropdown > button > img {
   padding-right: 3px;
 }
