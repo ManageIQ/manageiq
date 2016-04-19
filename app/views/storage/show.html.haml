@@ -2,11 +2,11 @@
   - if @dialog_prov
     = render :partial => "shared/dialogs/dialog_provision"
   - elsif %w(all_vms hosts miq_proxies all_miq_templates storage_extents storage_systems ontap_storage_volumes).include?(@display) && @showtype != "compare"
-    = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@storage.id}"}
+    = render :partial => "layouts/x_gtl", :locals => {:action_url => "show/#{@storage.id}"}
   - else
     - case @showtype
     - when "details"
-      = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
+      = render(:partial => "layouts/x_gtl", :locals => {:action_url => @lastaction})
     - when "compare", "item"
       = render(:partial => "layouts/#{@showtype}")
     - when "performance"

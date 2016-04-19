@@ -26,6 +26,7 @@
   - dashboard
   - datacenter
   - storage
+  - storage_pod
   - ems_cloud
   - ems_network
   - ems_cluster
@@ -150,6 +151,8 @@
   - snia_local_file_system_tag
   - storage_show
   - storage_show_list
+  - storage_pod_show
+  - storage_pod_show_list
   - storage_perf
   - storage_tag
   - timeline
@@ -256,6 +259,8 @@
   - storage_show_list
   - storage_perf
   - storage_tag
+  - storage_pod_show
+  - storage_pod_show_list
   - timeline
   - usage
   - utilization

@@ -1058,7 +1058,7 @@ module ApplicationController::CiProcessing
       bc_name = breadcrumb_name(model)
       bc_name += " - " + session["#{self.class.session_key_prefix}_type".to_sym].titleize if session["#{self.class.session_key_prefix}_type".to_sym]
       bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
-      action = %w(container service vm_cloud vm_infra vm_or_template).include?(self.class.table_name) ? "explorer" : "show_list"
+      action = %w(container service vm_cloud vm_infra vm_or_template storage).include?(self.class.table_name) ? "explorer" : "show_list"
       @breadcrumbs.clear
       drop_breadcrumb(:name => bc_name, :url => "/#{self.class.table_name}/#{action}")
     end
@@ -1941,7 +1941,7 @@ module ApplicationController::CiProcessing
     storages = []
 
     # Either a list or coming from a different controller (eg from host screen, go to its storages)
-    if @lastaction == "show_list" || @layout != "storage"
+    if @lastaction == "show_list" || @lastaction == 'storage_list'|| @layout != "storage"
       storages = find_checked_items
 
       if method == 'scan' && !Storage.batch_operation_supported?('smartstate_analysis', storages)
@@ -1954,7 +1954,7 @@ module ApplicationController::CiProcessing
         process_storage(storages, method)
       end
 
-      if @lastaction == "show_list" # In storage controller, refresh show_list, else let the other controller handle it
+      if @lastaction == "show_list" || @lastaction == "explorer" # In storage controller, refresh show_list, else let the other controller handle it
         show_list
         @refresh_partial = "layouts/gtl"
       end
@@ -2007,7 +2007,7 @@ module ApplicationController::CiProcessing
   def deletestorages
     assert_privileges("storage_delete")
     datastores = []
-    if @lastaction == "show_list" || (@lastaction == "show" && @layout != "storage")  # showing a list, scan all selected hosts
+    if @lastaction == "show_list" || @lastaction == "storage_list" || (@lastaction == "show" && @layout != "storage")  # showing a list, scan all selected hosts
       datastores = find_checked_items
       if datastores.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "storage"), :task => display_name}, :error)

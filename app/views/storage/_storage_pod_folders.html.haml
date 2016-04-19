@@ -1,0 +1,12 @@
+#storage_pod_folders_div
+  - if @folders
+    = render(:partial => "layouts/flash_msg")
+    %table.table.table-bordered.table-striped.table-hover
+      %tbody
+        - @folders.each do |f|
+          %tr{:title => _("View '%s' Cluster") % f.name,
+            :onclick => "miqDynatreeActivateNode('storage_pod_tree', 'dsc-xx-#{to_cid(f.id)}');"}
+            %td.icon
+              %img{:src => image_path('100/folder.png')}
+            %td
+              = h(f.name)

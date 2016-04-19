@@ -218,7 +218,7 @@ module VmCloudHelper::TextualSummary
       storage = storages.first
       h[:value] = storage.name
       h[:title] = _("Show this %{label}") % {:label => label}
-      h[:link]  = url_for(:controller => 'storage', :action => 'show', :id => storage)
+      h[:link]  = url_for(:controller => 'storage', :action => 'x_show', :id => storage)
     else
       h.delete(:image) # Image will be part of each line item, instead
       main = @record.storage
@@ -226,7 +226,7 @@ module VmCloudHelper::TextualSummary
         {:image => "storage",
          :value => "#{s.name}#{" (main)" if s == main}",
          :title => _("Show this %{label}") % {:label => label},
-         :link  => url_for(:controller => 'storage', :action => 'show', :id => s)}
+         :link  => url_for(:controller => 'storage', :action => 'x_show', :id => s)}
       end
     end
     h

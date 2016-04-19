@@ -1,4 +1,9 @@
 describe StorageController do
+
+  let(:storage) { FactoryGirl.create(:storage, :name => 'test_storage1') }
+  let(:storage_cluster) { FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1') }
+  before { set_user_privileges }
+
   context "#button" do
     it "when VM Right Size Recommendations is pressed" do
       controller.instance_variable_set(:@_params, :pressed => "vm_right_size")
@@ -82,6 +87,64 @@ describe StorageController do
         flash_messages = assigns(:flash_array)
         expect(flash_messages.first[:message]).to include("successfully initiated")
         expect(flash_messages.first[:level]).to eq(:success)
+      end
+    end
+  end
+
+  context 'render_views' do
+    render_views
+
+    context '#explorer' do
+      before do
+        session[:settings] = {:views => {}, :perpage => {:list => 10}}
+        EvmSpecHelper.create_guid_miq_server_zone
+      end
+
+      it 'can render the explorer' do
+        storage
+        session[:sb] = {:active_accord => :storage_accord}
+        seed_session_trees('storage', :storage_tree, 'root')
+        get :explorer
+        expect(response.status).to eq(200)
+        expect(response.body).to_not be_empty
+      end
+
+      it 'shows a datastore in the datastore list' do
+        storage
+        session[:sb] = {:active_accord => :storage_accord}
+        seed_session_trees('storage', :storage_tree, 'root')
+
+        get :explorer
+        expect(response.body).to match(%r({"text":\s*"test_storage1"}))
+      end
+
+      it 'show a datastore cluster in the datastore clusters list' do
+        allow(controller).to receive(:x_node).and_return("root")
+        storage
+        storage_cluster
+        session[:sb] = {:active_accord => :storage_pod_accord}
+        seed_session_trees('storage', :storage_pod_tree, 'root')
+        get :explorer
+        expect(response.body).to include('test_storage_cluster1')
+      end
+    end
+
+    context "#tree_select" do
+      before do
+        storage
+        storage_cluster
+      end
+
+      [
+        ['All Datastore Clusters', 'storage_pod_tree'],
+      ].each do |elements, tree|
+        it "renders list of #{elements} for #{tree} root node" do
+          session[:settings] = {}
+          seed_session_trees('storage', tree.to_sym)
+
+          post :tree_select, :params => { :id => 'root', :format => :js }
+          expect(response.status).to eq(200)
+        end
       end
     end
   end

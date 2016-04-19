@@ -77,6 +77,10 @@ class TreeBuilder
     # Services explorer tree
     when :svcs                    then TreeBuilderServices
 
+    # Datastores explorer trees
+    when :storage     then TreeBuilderStorage
+    when :storage_pod then TreeBuilderStoragePod
+
     end
   end
 
@@ -148,6 +152,8 @@ class TreeBuilder
     when :stcat_tree                    then [_("All Catalogs"),                 _("All Catalogs")]
     when :svccat_tree                   then [_("All Services"),                 _("All Services")]
     when :svcs_tree                     then [_("All Services"),                 _("All Services")]
+    when :storage_tree                  then [_("All Datastores"),               _("All Datastores")]
+    when :storage_pod_tree              then [_("All Datastore Clusters"),       _("All Datastore Clusters")]
     when :vandt_tree                    then [_("All VMs & Templates"),          _("All VMs & Templates that I can see")]
     when :vms_filter_tree               then [_("All VMs"),                      _("All of the VMs that I can see")]
     when :templates_filter_tree         then [_("All Templates"),                _("All of the Templates that I can see")]
@@ -511,6 +517,7 @@ class TreeBuilder
     "d"   => "Datacenter",
     "dg"  => "Dialog",
     "ds"  => "Storage",
+    "dsc" => "StorageCluster",
     "e"   => "ExtManagementSystem",
     "ev"  => "MiqEventDefinition",
     "c"   => "EmsCluster",
