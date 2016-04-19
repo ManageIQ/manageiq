@@ -77,11 +77,13 @@ module ManageIQ::Providers
       def get_snapshots
         snapshots = @connection.snapshots.all
         process_collection(snapshots, :cloud_volume_snapshots) { |snapshot| parse_snapshot(snapshot) }
+        # Also pass the snapshots as templates
+        process_collection(snapshots, :vms) { |snapshot| parse_storage_as_template(snapshot) }
       end
 
       def get_images
         images = @connection.images.all
-        process_collection(images, :vms) { |image| parse_image(image) }
+        process_collection(images, :vms) { |image| parse_storage_as_template(image) }
       end
 
       def get_key_pairs(instances)
@@ -259,32 +261,35 @@ module ManageIQ::Providers
         return snapshot.self_link, new_result
       end
 
-      def parse_image(image)
-        uid    = image.id
-        name   = image.name
+      def parse_storage_as_template(storage)
+        uid    = storage.id
+        name   = storage.name
         name ||= uid
         type   = ManageIQ::Providers::Google::CloudManager::Template.name
+
+        deprecated = (storage.kind == "compute#image") ? !storage.deprecated.nil? : false
 
         new_result = {
           :type               => type,
           :uid_ems            => uid,
           :ems_ref            => uid,
-          :location           => image.self_link,
+          :location           => storage.self_link,
           :name               => name,
           :vendor             => "google",
           :raw_power_state    => "never",
-          :operating_system   => process_os(image),
+          :operating_system   => process_os(storage),
           :template           => true,
           :publicly_available => true,
-          :deprecated         => !image.deprecated.nil?
+          :deprecated         => deprecated,
         }
 
         return uid, new_result
       end
 
-      def process_os(image)
+      def process_os(storage)
+        product_name = (storage.kind == 'compute#image' ? OperatingSystem.normalize_os_name(storage.name) : 'unknown')
         {
-          :product_name => OperatingSystem.normalize_os_name(image.name)
+          :product_name => product_name
         }
       end
 

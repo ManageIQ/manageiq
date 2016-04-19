@@ -8,25 +8,15 @@ module ManageIQ::Providers::Google::CloudManager::Provision::Cloning
     end
   end
 
-  def initial_disk
-    {
-      :boot             => true,
-      :autoDelete       => true,
-      :initializeParams => {
-        :name        => dest_name,
-        :diskSizeGb  => get_option(:boot_disk_size).to_i,
-        :sourceImage => source.location,
-      },
-    }
-  end
-
   def prepare_for_clone_task
     clone_options = super
 
-    clone_options[:name] = dest_name
-    clone_options[:disks] = [initial_disk]
+    boot_disk = phase_context[:boot_disk]
+
+    clone_options[:name]         = dest_name
+    clone_options[:disks]        = [boot_disk]
     clone_options[:machine_type] = instance_type.ems_ref
-    clone_options[:zone_name] = dest_availability_zone.ems_ref
+    clone_options[:zone_name]    = dest_availability_zone.ems_ref
 
     clone_options
   end
