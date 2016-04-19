@@ -47,10 +47,71 @@ module VirtualArel
   end
 end
 
+module VirtualDelegates
+  extend ActiveSupport::Concern
+
+  module ClassMethods
+
+    #
+    # Definition
+    #
+
+    def virtual_delegate(*methods)
+      # TODO: don't add, put into a TODO list
+      define_virtual_delegate(*methods)
+    end
+
+    private
+
+    # @option :methods :to
+    # @option :methods :prefix
+    def define_virtual_delegate(*methods)
+      options = methods.pop
+      unless options.kind_of?(Hash) && (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
+        raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
+      end
+      delegate(*methods, options)
+
+      prefix = options[:prefix]
+      method_prefix = "#{prefix == true ? to : prefix}_" if prefix
+
+      to_model = to_ref.klass
+      methods.each do |col|
+        col = col.to_s
+        type = to_model.type_for_attribute(col)
+        raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
+        arel = virtual_delegate_arel(col, to, to_model, to_ref)
+        virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
+      end
+    end
+
+    def virtual_delegate_arel(col, to, to_model, to_ref)
+      # column has sql and the association is reachable via sql
+      # no way to propagate sql over a virtual association
+      if to_model.arel_attribute(col) && reflect_on_association(to)
+        if to_ref.macro == :has_one
+          lambda do |t|
+            src_model_id = arel_attribute(to_ref.association_primary_key, t)
+            to_model_id = to_model.arel_attribute(to_ref.foreign_key)
+            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+          end
+        elsif to_ref.macro == :belongs_to
+          lambda do |t|
+            src_model_id = arel_attribute(to_ref.association_foreign_key, t)
+            to_model_id = to_model.arel_attribute(to_ref.active_record_primary_key)
+            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+          end
+        end
+      end
+    end
+  end
+end
+
 module VirtualAttributes
   extend ActiveSupport::Concern
   include VirtualIncludes
   include VirtualArel
+  include VirtualDelegates
 
   module Type
     # TODO: do we actually need symbol types?
@@ -185,32 +246,6 @@ module VirtualReflections
     end
 
     #
-    # Virtual Alias
-    #
-
-    # @option :methods :to
-    # @option :methods :prefix
-    def virtual_delegate(*methods)
-      options = methods.pop
-      unless options.kind_of?(Hash) && (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
-        raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
-      end
-      delegate(*methods, options)
-
-      prefix = options[:prefix]
-      method_prefix = "#{prefix == true ? to : prefix}_" if prefix
-
-      to_model = to_ref.klass
-      methods.each do |col|
-        col = col.to_s
-        type = to_model.type_for_attribute(col)
-        raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
-        arel = virtual_delegate_arel(col, to, to_model, to_ref)
-        virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
-      end
-    end
-
-    #
     # Introspection
     #
 
@@ -241,26 +276,6 @@ module VirtualReflections
       reset_virtual_reflection_information
       _virtual_reflections[name.to_sym] = reflection
       define_virtual_include(name.to_s, uses)
-    end
-
-    def virtual_delegate_arel(col, to, to_model, to_ref)
-      # column has sql and the association is reachable via sql
-      # no way to propagate sql over a virtual association
-      if to_model.arel_attribute(col) && reflect_on_association(to)
-        if to_ref.macro == :has_one
-          lambda do |t|
-            src_model_id = arel_attribute(to_ref.association_primary_key, t)
-            to_model_id = to_model.arel_attribute(to_ref.foreign_key)
-            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
-          end
-        elsif to_ref.macro == :belongs_to
-          lambda do |t|
-            src_model_id = arel_attribute(to_ref.association_foreign_key, t)
-            to_model_id = to_model.arel_attribute(to_ref.active_record_primary_key)
-            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
-          end
-        end
-      end
     end
 
     def reset_virtual_reflection_information
