@@ -50,6 +50,11 @@ end
 module VirtualDelegates
   extend ActiveSupport::Concern
 
+  included do
+    class_attribute :virtual_delegates_to_define, :instance_accessor => false
+    self.virtual_delegates_to_define = {}
+  end
+
   module ClassMethods
 
     #
@@ -57,23 +62,34 @@ module VirtualDelegates
     #
 
     def virtual_delegate(*methods)
-      # TODO: don't add, put into a TODO list
-      define_virtual_delegate(*methods)
+      options = methods.pop
+      unless options.kind_of?(Hash) && options[:to]
+        raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
+      end
+      delegate(*methods, options)
+
+      # put method entry per method name.
+      # This better supports reloading of the class and changing the definitions
+      methods.each do |method|
+        method_prefix = virtual_delegate_name_prefix(options[:prefix], options[:to])
+        method_name = "#{method_prefix}#{method}"
+
+        self.virtual_delegates_to_define =
+          virtual_delegates_to_define.merge(method_name => [method, options])
+      end
     end
 
     private
 
     # @option :methods :to
     # @option :methods :prefix
-    def define_virtual_delegate(*methods)
-      options = methods.pop
-      unless options.kind_of?(Hash) && (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
+    def define_virtual_delegate(methods, options)
+      unless (to = options[:to]) && (to_ref = reflection_with_virtual(to.to_s))
         raise ArgumentError, 'Delegation needs an association. Supply an options hash with a :to key as the last argument (e.g. delegate :hello, to: :greeter).'
       end
-      delegate(*methods, options)
 
       prefix = options[:prefix]
-      method_prefix = "#{prefix == true ? to : prefix}_" if prefix
+      method_prefix = virtual_delegate_name_prefix(prefix, to)
 
       to_model = to_ref.klass
       methods.each do |col|
@@ -81,8 +97,12 @@ module VirtualDelegates
         type = to_model.type_for_attribute(col)
         raise "unknown attribute #{to_model.name}##{col} referenced in #{name}" unless type
         arel = virtual_delegate_arel(col, to, to_model, to_ref)
-        virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
+        define_virtual_attribute "#{method_prefix}#{col}", type, :uses => to, :arel => arel
       end
+    end
+
+    def virtual_delegate_name_prefix(prefix, to)
+      "#{prefix == true ? to : prefix}_" if prefix
     end
 
     def virtual_delegate_arel(col, to, to_model, to_ref)
@@ -194,6 +214,10 @@ module VirtualAttributes
         end
 
         define_virtual_attribute(name, type, **options.slice(:uses, :arel))
+      end
+
+      virtual_delegates_to_define.each do |method_name, (method, options)|
+        define_virtual_delegate([method], options)
       end
     end
 
