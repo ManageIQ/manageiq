@@ -34,8 +34,8 @@ module MiqFilter
       [result, result.length]
     else
       result = obj.send(reflection.name)
-      if reflection.macro == :has_one
-        [[result], 1]
+      if reflection.macro == :has_one || reflection.macro == :belongs_to
+        result ? [[result], 1] : [[], 0]
       else
         [result, result.length]
       end
