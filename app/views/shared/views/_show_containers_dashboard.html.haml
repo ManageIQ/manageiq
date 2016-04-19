@@ -2,16 +2,15 @@
                                                                             "ng-controller" => "containerDashboardController as dashboard"}
   .row.row-tile-pf
     .col-xs-12.col-sm-12.col-md-2
-      .col-xs-12.provider-card{"pf-card"         => "",
-                               "show-top-border" => "true",
-                               "ng-if"           => "providerTypeIconClass"}
-        %span.provider-icon-large{"ng-class" => "providerTypeIconClass"}
-      %div{:layout                    => "tall",
-           "pf-aggregate-status-card" => "",
-           "show-top-border"          => "true",
-           :status                    => "objectStatus.providers",
-           "ng-if"                    => "!providerTypeIconClass"}
-
+      .provider-card{"pf-card"         => "",
+                     "show-top-border" => "true",
+                     "ng-if"           => "isSingleProvider"}
+        %img.provider-icon-large{"src" =>"{{providerTypeIconImage}}"}
+      %div{:layout                     => "tall",
+           "pf-aggregate-status-card"  => "",
+           "show-top-border"           => "true",
+           :status                     => "objectStatus.providers",
+           "ng-if"                     => "!isSingleProvider"}
     .col-xs-12.col-sm-12.col-md-10
       .row
         .col-xs-6.col-sm-6.col-md-3

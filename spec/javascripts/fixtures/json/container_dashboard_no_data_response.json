@@ -49,11 +49,11 @@
     "providers": [
       {
         "count": 2,
-        "providerType": "openshift"
+        "iconImage": "/assets/svg/vendor-openshift-1d8ff43788707.svg"
       },
       {
         "count": 1,
-        "providerType": "kubernetes"
+        "iconImage": "/assets/svg/vendor-kubernetes-1d8ff43788707.svg"
       }
     ],
     "ems_utilization": {

@@ -74,14 +74,16 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
           var providers = data.providers;
           if (providers) {
             if (id) {
-              $scope.providerTypeIconClass = dashboardUtilsFactory.iconClassForProvider(data.providers[0].providerType);
+              $scope.providerTypeIconImage = data.providers[0].iconImage
+              $scope.isSingleProvider = true
             } else {
+              $scope.isSingleProvider = false
               $scope.objectStatus.providers.count = 0;
               $scope.objectStatus.providers.notifications = [];
               providers.forEach(function (item) {
                 $scope.objectStatus.providers.count += item.count;
                 $scope.objectStatus.providers.notifications.push({
-                  iconClass: dashboardUtilsFactory.iconClassForProvider(item.providerType),
+                  iconImage: item.iconImage,
                   count: item.count
                 })
               });
