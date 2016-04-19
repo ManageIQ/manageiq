@@ -42,41 +42,10 @@ module MiqFilter
     end
   end
 
-  def self.find_children_of_via_method(obj, assoc, options = {})
-    db = obj.class
+  def self.find_children_of_via_method(obj, assoc)
     unfiltered = obj.send(assoc)
-    if db.respond_to?(:find_filtered)
-      if options[:tag_filters]
-        mfilters = options[:tag_filters]["managed"]
-        bfilters = options[:tag_filters]["belongsto"]
-      end
-      mfilters ||= []
-      bfilters ||= []
-      result = unfiltered.collect do |r|
-        next unless r.is_tagged_with_grouping?(mfilters, :ns => "*")
-        next unless apply_belongsto_filters([r], bfilters) == [r]
-        r
-      end.compact
-    else
       result = unfiltered
-    end
-
     total_count = unfiltered.length
-
-    # Need to honor order
-    if options[:order]
-      col, direction = options[:order].split
-      direction ||= "ASC"
-      result.sort! { |x, y| x.send(col) <=> y.send(col) }
-      result.reverse! if direction == "DESC"
-    end
-
-    # Need to honor limit and offset
-    if options[:limit]
-      options[:offset] ||= 0
-      result = result[options[:offset]..options[:offset] + options[:limit] - 1]
-    end
-
     return result, total_count
   end
 
