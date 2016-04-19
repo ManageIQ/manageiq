@@ -2,6 +2,7 @@ require 'shellwords'
 
 module ManageIQ::Providers::Kubernetes
   class ContainerManager::RefreshParser
+    include Vmdb::Logging
     def self.ems_inv_to_hashes(inventory)
       new.ems_inv_to_hashes(inventory)
     end
@@ -185,7 +186,8 @@ module ManageIQ::Providers::Kubernetes
       end
 
       node_memory = node.status.try(:capacity).try(:memory)
-      node_memory &&= parse_iec_number(node_memory) / 1.megabyte
+      node_memory = parse_capacity_field("Node-Memory", node_memory)
+      node_memory &&= node_memory / 1.megabyte
 
       new_result[:computer_system] = {
         :hardware         => {
@@ -199,7 +201,7 @@ module ManageIQ::Providers::Kubernetes
       }
 
       max_container_groups = node.status.try(:capacity).try(:pods)
-      new_result[:max_container_groups] = max_container_groups && parse_iec_number(max_container_groups)
+      new_result[:max_container_groups] = parse_capacity_field("Pods", max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)
       cross_link_node(new_result)
@@ -347,7 +349,7 @@ module ManageIQ::Providers::Kubernetes
       new_result.merge!(
         :type           => 'PersistentVolume',
         :parent_type    => 'ManageIQ::Providers::ContainerManager',
-        :capacity       => persistent_volume.spec.capacity.to_h.map { |k, v| "#{k}=#{v}" }.join(','),
+        :capacity       => parse_resource_list(persistent_volume.spec.capacity.to_h),
         :access_modes   => persistent_volume.spec.accessModes.join(','),
         :reclaim_policy => persistent_volume.spec.persistentVolumeReclaimPolicy,
         :status_phase   => persistent_volume.status.phase,
@@ -355,6 +357,23 @@ module ManageIQ::Providers::Kubernetes
         :status_reason  => persistent_volume.status.reason
       )
       new_result
+    end
+
+    def parse_resource_list(hash)
+      hash.each_with_object({}) do |(key, val), result|
+        res = parse_capacity_field(key, val)
+        result[key] = res if res
+      end
+    end
+
+    def parse_capacity_field(key, val)
+      return nil unless val
+      begin
+        val.to_iec_integer
+      rescue ArgumentError
+        _log.warn("Capacity attribute - #{key} was in bad format - #{val}")
+        nil
+      end
     end
 
     def parse_quota(resource_quota)
@@ -737,16 +756,6 @@ module ManageIQ::Providers::Kubernetes
         :common_partition        => [volume.gcePersistentDisk.try(:partition),
                                      volume.awsElasticBlockStore.try(:partition)].compact.first
       }
-    end
-
-    IEC_SIZE_SUFFIXES = %w(Ki Mi Gi Ti)
-    def parse_iec_number(value)
-      exp_index = IEC_SIZE_SUFFIXES.index(value[-2..-1])
-      if exp_index.nil?
-        return Integer(value)
-      else
-        return Integer(value[0..-3]) * 1024**(exp_index + 1)
-      end
     end
   end
 end
