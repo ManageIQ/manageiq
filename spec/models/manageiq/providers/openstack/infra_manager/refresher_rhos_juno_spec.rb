@@ -1,72 +1,128 @@
 describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
-    _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
+    _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    @ems = FactoryGirl.create(:ems_openstack_infra, :zone => @zone, :hostname => "192.0.2.1",
                               :ipaddress => "192.0.2.1", :port => 5000, :api_version => 'v2',
                               :security_protocol => 'no-ssl')
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "c51a4689e1df2153987f8a42f04185430d462186"})
+      :default => {:userid => "admin", :password => "2fc1310c997dfeafaf3920115306a086943c63db"})
   end
 
-  it "will perform a full refresh" do
-    2.times do  # Run twice to verify that a second run with existing data does not change anything
-      @ems.reload
-      # Caching OpenStack info between runs causes the tests to fail with:
-      #   VCR::Errors::UnusedHTTPInteractionError
-      # Reset the cache so HTTP interactions are the same between runs.
-      @ems.reset_openstack_handle
+  context "without overcloud" do
+    it "will perform a full refresh" do
+      2.times do # Run twice to verify that a second run with existing data does not change anything
+        @ems.reload
+        # Caching OpenStack info between runs causes the tests to fail with:
+        #   VCR::Errors::UnusedHTTPInteractionError
+        # Reset the cache so HTTP interactions are the same between runs.
+        @ems.reset_openstack_handle
 
+        # We need VCR to match requests differently here because fog adds a dynamic
+        #   query param to avoid HTTP caching - ignore_awful_caching##########
+        #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
+        VCR.use_cassette("#{described_class.name.underscore}_rhos_juno",
+                         :match_requests_on => [:method, :host, :path]) do
+          EmsRefresh.refresh(@ems)
+          EmsRefresh.refresh(@ems.network_manager)
+        end
+        @ems.reload
+
+        assert_table_counts_without_overcloud
+        assert_ems
+        assert_specific_host
+        assert_specific_public_template
+      end
+    end
+
+    it "will verify maintenance mode" do
       # We need VCR to match requests differently here because fog adds a dynamic
       #   query param to avoid HTTP caching - ignore_awful_caching##########
       #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
-      VCR.use_cassette("#{described_class.name.underscore}_rhos_juno", :match_requests_on => [:method, :host, :path]) do
+      VCR.use_cassette("#{described_class.name.underscore}_rhos_juno_maintenance",
+                       :match_requests_on => [:method, :host, :path]) do
+        @ems.reload
+        @ems.reset_openstack_handle
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
-      end
-      @ems.reload
+        @ems.reload
 
-      assert_table_counts
-      assert_ems
-      assert_specific_host
-      assert_specific_public_template
+        @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.detect { |x| x.name.include?('(NovaCompute)') }
+
+        expect(@host.maintenance).to eq(false)
+        expect(@host.maintenance_reason).to eq(nil)
+
+        @host.set_node_maintenance
+        EmsRefresh.refresh(@ems)
+        @ems.reload
+        @host.reload
+        expect(@host.maintenance).to eq(true)
+        expect(@host.maintenance_reason).to eq("CFscaledown")
+
+        @host.unset_node_maintenance
+        EmsRefresh.refresh(@ems)
+        @ems.reload
+        @host.reload
+        expect(@host.maintenance).to eq(false)
+        expect(@host.maintenance_reason).to eq(nil)
+      end
     end
   end
 
-  it "will verify maintenance mode" do
-    # We need VCR to match requests differently here because fog adds a dynamic
-    #   query param to avoid HTTP caching - ignore_awful_caching##########
-    #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
-    VCR.use_cassette("#{described_class.name.underscore}_rhos_juno_maintenance",
-                     :match_requests_on => [:method, :host, :path]) do
-      @ems.reload
-      @ems.reset_openstack_handle
-      EmsRefresh.refresh(@ems)
-      EmsRefresh.refresh(@ems.network_manager)
-      @ems.reload
-
-      @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.detect { |x| x.name.include?('(NovaCompute)') }
-
-      expect(@host.maintenance).to eq(false)
-      expect(@host.maintenance_reason).to eq(nil)
-
-      @host.set_node_maintenance
-      EmsRefresh.refresh(@ems)
-      @ems.reload
-      @host.reload
-      expect(@host.maintenance).to eq(true)
-      expect(@host.maintenance_reason).to eq("CFscaledown")
-
-      @host.unset_node_maintenance
-      EmsRefresh.refresh(@ems)
-      @ems.reload
-      @host.reload
-      expect(@host.maintenance).to eq(false)
-      expect(@host.maintenance_reason).to eq(nil)
+  context "with overcloud" do
+    before(:each) do
+      @provider = FactoryGirl.create(:provider_openstack, :name => "undercloud")
+      @cloud = FactoryGirl.create(:ems_openstack, :zone => @zone, :hostname => "172.16.23.10",
+                                  :ipaddress => "172.16.23.10", :port => 5000, :api_version => 'v2',
+                                  :security_protocol => 'no-ssl', :provider => @provider)
+      @ems.provider = @provider
+      @cloud.update_authentication(
+        :default => {:userid => "admin", :password => "6220ebad3efea28fc31da81911ffa99e077bc437"})
     end
+
+    it "will perform a full refresh" do
+      2.times do # Run twice to verify that a second run with existing data does not change anything
+        @ems.reload
+        @cloud.reload
+        # Caching OpenStack info between runs causes the tests to fail with:
+        #   VCR::Errors::UnusedHTTPInteractionError
+        # Reset the cache so HTTP interactions are the same between runs.
+        @ems.reset_openstack_handle
+        @cloud.reset_openstack_handle
+
+        # We need VCR to match requests differently here because fog adds a dynamic
+        #   query param to avoid HTTP caching - ignore_awful_caching##########
+        #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
+        VCR.use_cassette("#{described_class.name.underscore}_rhos_juno_tripleo",
+                         :match_requests_on => [:method, :host, :path]) do
+          EmsRefresh.refresh(@ems)
+          EmsRefresh.refresh(@ems.network_manager)
+          EmsRefresh.refresh(@cloud)
+        end
+        @ems.reload
+        @cloud.reload
+
+        assert_table_counts_with_overcloud
+        assert_ems
+        # assert_specific_host
+        assert_specific_public_template
+      end
+    end
+  end
+
+
+  def assert_table_counts_without_overcloud
+    expect(ExtManagementSystem.count).to         eq 2
+    expect(Vm.count).to                          eq 0
+    assert_table_counts
+  end
+
+  def assert_table_counts_with_overcloud
+    expect(ExtManagementSystem.count).to         eq 4
+    expect(Vm.count).to                          eq 7
+    assert_table_counts
   end
 
   def assert_table_counts
-    expect(ExtManagementSystem.count).to         eq 2
     expect(EmsCluster.count).to                  be > 0
     expect(Host.count).to                        be > 0
     expect(OrchestrationStack.count).to          be > 0
@@ -82,7 +138,6 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(Hardware.count).to                    be > 0
     expect(Disk.count).to                        be > 0
     expect(ResourcePool.count).to                eq 0
-    expect(Vm.count).to                          eq 0
     expect(CustomAttribute.count).to             eq 0
     expect(CustomizationSpec.count).to           eq 0
     # expect(GuestDevice.count).to                 eq > 0
@@ -143,7 +198,8 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     )
 
     expect(@host.private_networks.count).to be > 0
-    expect(@host.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private)
+    expect(@host.private_networks.first).to be_kind_of(
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private)
     expect(@host.network_ports.count).to    be > 0
     expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::NetworkPort)
 

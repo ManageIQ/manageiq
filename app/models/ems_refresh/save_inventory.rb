@@ -246,12 +246,39 @@ module EmsRefresh::SaveInventory
   def save_system_services_inventory(parent, hashes, mode = :refresh)
     return if hashes.nil?
 
-    deletes = case mode
-              when :refresh then nil
-              when :scan    then :use_association
-              end
+    #######
+    # tripleo specific
+    #######
 
-    save_inventory_multi(parent.system_services, hashes, deletes, [:typename, :name])
+    # if parent is OpenStack Cloud
+    # and if parent have Infra provider
+    if parent.kind_of?(ManageIQ::Providers::Openstack::CloudManager)
+      infra_ems = parent.provider \
+        && parent.provider.kind_of?(ManageIQ::Providers::Openstack::Provider) \
+        && parent.provider.infra_ems
+      if infra_ems
+        # for each host
+        infra_ems.hosts.map do |host|
+          # select hashes with that hostname
+          hashes_for_host = hashes.select do |hash|
+            hash[:host] == host.hypervisor_hostname
+            # and put host instead of hostname there
+          end.map do |hash|
+            hash[:host] = host
+            hash
+          end
+          # save system_services for one host
+          save_inventory_multi(host.system_services, hashes_for_host, [], [:name])
+        end
+      end
+    else
+      deletes = case mode
+                when :refresh then nil
+                when :scan    then :use_association
+                end
+
+      save_inventory_multi(parent.system_services, hashes, deletes, [:typename, :name])
+    end
   end
 
   def save_guest_applications_inventory(parent, hashes)
