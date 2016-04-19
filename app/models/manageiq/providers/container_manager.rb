@@ -15,6 +15,7 @@ module ManageIQ::Providers
     has_many :container_component_statuses, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_builds, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_build_pods, :foreign_key => :ems_id, :dependent => :destroy
+    has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
 
     # required by aggregate_hardware
     def all_computer_system_ids
