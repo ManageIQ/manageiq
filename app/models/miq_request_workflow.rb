@@ -1281,6 +1281,8 @@ class MiqRequestWorkflow
 
     result = nil
     if dlg_field.key?(:values)
+      get_source_and_targets(true)
+      get_field(key, dialog_name)
       field_values = dlg_field[:values]
       _log.info "processing key <#{dialog_name}:#{key}(#{data_type})> with values <#{field_values.inspect}>"
       if field_values.present?
