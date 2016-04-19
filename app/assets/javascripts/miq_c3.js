@@ -3,11 +3,14 @@ function load_c3_charts() {
     for (var i = 0; i < ManageIQ.charts.chartData[set].length; i++) {
       var chart_id = "miq_chart_candu_" + i.toString();
       var data = ManageIQ.charts.chartData[set][i];
-      load_c3_chart(data.xml, chart_id);
+      if(data != null){
+        load_c3_chart(data.xml, chart_id);
 
-      chart_id += "_2";
-      if (typeof (data.xml2) !== "undefined") {
-        load_c3_chart(data.xml2, chart_id, 100);
+
+        chart_id += "_2";
+        if (typeof (data.xml2) !== "undefined") {
+          load_c3_chart(data.xml2, chart_id, 100);
+        }
       }
     }
   }
