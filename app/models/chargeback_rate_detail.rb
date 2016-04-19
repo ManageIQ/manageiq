@@ -6,7 +6,7 @@ class ChargebackRateDetail < ApplicationRecord
   validates :group, :source, :presence => true
   validate :contiguous_tiers?
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source).freeze
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
 
   # Set the rates according to the tiers
   def find_rate(value)
@@ -211,6 +211,8 @@ class ChargebackRateDetail < ApplicationRecord
         detail_new = ChargebackRateDetail.new(detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES))
         detail_new.detail_measure = ChargebackRateDetailMeasure.find_by(:name => detail[:measure])
         detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency])
+        detail_new.metric = detail[:metric]
+
         detail[:tiers].each do |tier|
           detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
         end
