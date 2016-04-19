@@ -1,6 +1,7 @@
 module ManageIQ::Providers
   module SoftLayer
     class CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+      include ManageIQ::Providers::SoftLayer::RefreshHelperMethods
       include Vmdb::Logging
 
       def self.ems_inv_to_hashes(ems, options = nil)
@@ -57,18 +58,6 @@ module ManageIQ::Providers
       def get_tags
         tags = @compute.tags.all
         # process_collection(tags, :tags) { |tags| parse_tags(tags) }
-      end
-
-      def process_collection(collection, key)
-        @data[key] ||= []
-
-        collection.each do |item|
-          uid, new_result = yield(item)
-          next if uid.nil?
-
-          @data[key] << new_result
-          @data_index.store_path(key, uid, new_result)
-        end
       end
 
       def parse_az(az)
