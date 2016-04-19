@@ -5,6 +5,10 @@
 }
 
 /* begin icon class customizations */
+
+.fa-1xplus { //custom resize for fa-tachometer on dashboard summary toggle
+  font-size: 1.18em;
+}
 .fa-bar-chart-o:before, .fa-chart:before {
   content: "\f080";
 }
