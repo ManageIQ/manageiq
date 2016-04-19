@@ -20,11 +20,7 @@ module MiqFilter
 
   def self.find_children_of_via_reflection(obj, reflection)
     result = obj.send(reflection.name)
-    if reflection.macro == :has_one || reflection.macro == :belongs_to
-      result ? [result] : []
-    else
-      result
-    end
+    result ? Array.wrap(result) : []
   end
 
   def self.find_children_of_via_method(obj, assoc)
