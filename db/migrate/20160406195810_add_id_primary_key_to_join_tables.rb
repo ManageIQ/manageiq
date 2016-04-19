@@ -37,9 +37,7 @@ class AddIdPrimaryKeyToJoinTables < ActiveRecord::Migration[5.0]
     "storages_vms_and_templates"                         => "storage_id, vm_or_template_id"
   }.freeze
 
-  class MiqRegion < ApplicationRecord
-    self.inheritance_column = :_type_disabled
-  end
+  class MiqRegion < ActiveRecord::Base; end
 
   def up
     say_with_time("Removing composite primary keys from join tables") do

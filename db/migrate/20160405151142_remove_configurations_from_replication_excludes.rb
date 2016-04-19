@@ -1,6 +1,5 @@
 class RemoveConfigurationsFromReplicationExcludes < ActiveRecord::Migration[5.0]
   class SettingsChange < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled
     serialize :value
   end
 
