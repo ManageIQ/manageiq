@@ -136,7 +136,8 @@
                   .toolbar-pf-actions
                     = render_toolbars(calculate_toolbars)
             .row#main-content
-              = render :partial => "layouts/breadcrumbs"
+              .col-md-12
+                = render :partial => "layouts/breadcrumbs"
               - if layout_uses_tabs?
                 .col-md-12
                   = render :partial => 'layouts/tabs'
