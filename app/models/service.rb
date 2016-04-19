@@ -52,10 +52,15 @@ class Service < ApplicationRecord
     end
     super
   end
-  alias :<< add_resource
 
   alias parent_service parent
   alias_attribute :service, :parent
+  virtual_belongs_to :service
+
+  def service_id
+    parent_id
+  end
+  virtual_attribute :service_id, :integer
 
   def has_parent?
     !root?
@@ -73,6 +78,7 @@ class Service < ApplicationRecord
   alias root_service root
   alias services children
   alias direct_service_children children
+  virtual_has_many :services
 
   def indirect_service_children
     descendants(:from_depth => 2)

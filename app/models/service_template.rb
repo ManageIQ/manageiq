@@ -33,23 +33,16 @@ class ServiceTemplate < ApplicationRecord
   virtual_has_one :custom_actions, :class_name => "Hash"
   virtual_has_one :custom_action_buttons, :class_name => "Array"
 
-  # almost feels like service_templates
   def children
-    klass = self.class
-    service_resources.flat_map do |s|
-      s.resource.kind_of?(klass) ? s.resource : []
-    end
+    service_templates
   end
 
   def descendants
-    klass = self.class
-    service_resources.flat_map do |s|
-      if s.resource.kind_of?(klass)
-        s.resource.descendants + [s.resource]
-      else
-        []
-      end
-    end
+    children.flat_map { |child| [child] + child.descendants }
+  end
+
+  def subtree
+    [self] + descendants
   end
 
   def custom_actions
