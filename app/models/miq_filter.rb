@@ -43,10 +43,8 @@ module MiqFilter
   end
 
   def self.find_children_of_via_method(obj, assoc)
-    unfiltered = obj.send(assoc)
-      result = unfiltered
-    total_count = unfiltered.length
-    return result, total_count
+    result = obj.send(assoc)
+    [result, result.length]
   end
 
   def self.find_children_of(obj, assoc)
