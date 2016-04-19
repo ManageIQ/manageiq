@@ -19,12 +19,10 @@ describe ContainerDashboardService do
       providers_data = ContainerDashboardService.new(nil, nil).providers
 
       # Kubernetes should not appear
-      expect(providers_data).to include(
-        {:providerType => :openshift_enterprise, :count => 1},
-        {:providerType => :openshift, :count => 1},
-        {:providerType => :atomic, :count => 1},
-        {:providerType => :atomic_enterprise, :count => 1}
-      )
+      providers_data.each do |p|
+        expect(p[:iconImage]).not_to be_nil
+        expect(p[:count]).to eq(1)
+      end
     end
   end
 
