@@ -1637,47 +1637,47 @@ describe MiqExpression do
 
     it "returns array of available operations if parameter is :count" do
       @field = :count
-      expect(subject).to eq(["=", "!=", "<", "<=", ">=", ">"])
+      expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">")
     end
 
     it "returns list of available operations if parameter is :regkey" do
       @field = :regkey
-      expect(subject).to eq(["=",
-                             "STARTS WITH",
-                             "ENDS WITH",
-                             "INCLUDES",
-                             "IS NULL",
-                             "IS NOT NULL",
-                             "IS EMPTY",
-                             "IS NOT EMPTY",
-                             "REGULAR EXPRESSION MATCHES",
-                             "REGULAR EXPRESSION DOES NOT MATCH",
-                             "KEY EXISTS",
-                             "VALUE EXISTS"])
+      expect(subject).to contain_exactly("=",
+                                         "STARTS WITH",
+                                         "ENDS WITH",
+                                         "INCLUDES",
+                                         "IS NULL",
+                                         "IS NOT NULL",
+                                         "IS EMPTY",
+                                         "IS NOT EMPTY",
+                                         "REGULAR EXPRESSION MATCHES",
+                                         "REGULAR EXPRESSION DOES NOT MATCH",
+                                         "KEY EXISTS",
+                                         "VALUE EXISTS")
     end
 
     it "returns list of available operations for field type 'string'" do
       @field = "ManageIQ::Providers::InfraManager::Vm.advanced_settings-name"
-      expect(subject).to eq(["=",
-                             "STARTS WITH",
-                             "ENDS WITH",
-                             "INCLUDES",
-                             "IS NULL",
-                             "IS NOT NULL",
-                             "IS EMPTY",
-                             "IS NOT EMPTY",
-                             "REGULAR EXPRESSION MATCHES",
-                             "REGULAR EXPRESSION DOES NOT MATCH"])
+      expect(subject).to contain_exactly("=",
+                                         "STARTS WITH",
+                                         "ENDS WITH",
+                                         "INCLUDES",
+                                         "IS NULL",
+                                         "IS NOT NULL",
+                                         "IS EMPTY",
+                                         "IS NOT EMPTY",
+                                         "REGULAR EXPRESSION MATCHES",
+                                         "REGULAR EXPRESSION DOES NOT MATCH")
     end
 
     it "returns list of available operations for field type 'integer'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-cpu_limit"
-      expect(subject).to eq(["=", "!=", "<", "<=", ">=", ">", "RUBY"])
+      expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">", "RUBY")
     end
 
     it "returns list of available operations for field type 'float'" do
       @field = "Storage-v_provisioned_percent_of_total"
-      expect(subject).to eq(["=", "!=", "<", "<=", ">=", ">", "RUBY"])
+      expect(subject).to contain_exactly("=", "!=", "<", "<=", ">=", ">", "RUBY")
     end
 
 =begin
@@ -1690,41 +1690,41 @@ describe MiqExpression do
 
     it "returns list of available operations for field type 'string_set'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-hostnames"
-      expect(subject).to eq(["INCLUDES ALL", "INCLUDES ANY", "LIMITED TO"])
+      expect(subject).to contain_exactly("INCLUDES ALL", "INCLUDES ANY", "LIMITED TO")
     end
 
     it "returns list of available operations for field type 'numeric_set'" do
       @field = "Host-all_enabled_ports"
-      expect(subject).to eq(["INCLUDES ALL", "INCLUDES ANY", "LIMITED TO"])
+      expect(subject).to contain_exactly("INCLUDES ALL", "INCLUDES ANY", "LIMITED TO")
     end
 
     it "returns list of available operations for field type 'boolean'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-active"
-      expect(subject).to eq(["=", "IS NULL", "IS NOT NULL"])
+      expect(subject).to contain_exactly("=", "IS NULL", "IS NOT NULL")
     end
 
     it "returns list of available operations for field type 'date'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-retires_on"
-      expect(subject).to eq(["IS", "BEFORE", "AFTER", "FROM", "IS EMPTY", "IS NOT EMPTY"])
+      expect(subject).to contain_exactly("IS", "BEFORE", "AFTER", "FROM", "IS EMPTY", "IS NOT EMPTY")
     end
 
     it "returns list of available operations for field type 'datetime'" do
       @field = "ManageIQ::Providers::InfraManager::Vm-ems_created_on"
-      expect(subject).to eq(["IS", "BEFORE", "AFTER", "FROM", "IS EMPTY", "IS NOT EMPTY"])
+      expect(subject).to contain_exactly("IS", "BEFORE", "AFTER", "FROM", "IS EMPTY", "IS NOT EMPTY")
     end
 
     it "returns list of available operations for field with not recognized type" do
       @field = "Hello-world"
-      expect(subject).to eq(["=",
-                             "STARTS WITH",
-                             "ENDS WITH",
-                             "INCLUDES",
-                             "IS NULL",
-                             "IS NOT NULL",
-                             "IS EMPTY",
-                             "IS NOT EMPTY",
-                             "REGULAR EXPRESSION MATCHES",
-                             "REGULAR EXPRESSION DOES NOT MATCH"])
+      expect(subject).to contain_exactly("=",
+                                         "STARTS WITH",
+                                         "ENDS WITH",
+                                         "INCLUDES",
+                                         "IS NULL",
+                                         "IS NOT NULL",
+                                         "IS EMPTY",
+                                         "IS NOT EMPTY",
+                                         "REGULAR EXPRESSION MATCHES",
+                                         "REGULAR EXPRESSION DOES NOT MATCH")
     end
   end
 end
