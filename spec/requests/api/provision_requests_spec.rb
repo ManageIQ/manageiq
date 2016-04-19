@@ -171,14 +171,14 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
-      expect(response_hash["results"].first).to include(
-        "options" => include(
-          "placement_auto"              => include(false),
-          "placement_availability_zone" => include(az.id),
-          "cloud_network"               => include(cloud_network1.id),
-          "cloud_subnet"                => include(cloud_subnet1.id),
-          "security_groups"             => include(security_group1.id),
-          "floating_ip_address"         => include(floating_ip1.id)
+      expect(response_hash["results"].first).to a_hash_including(
+        "options" => a_hash_including(
+          "placement_auto"              => [false, 0],
+          "placement_availability_zone" => [az.id, az.name],
+          "cloud_network"               => [cloud_network1.id, cloud_network1.name],
+          "cloud_subnet"                => [cloud_subnet1.id, anything],
+          "security_groups"             => [security_group1.id, security_group1.name],
+          "floating_ip_address"         => [floating_ip1.id, floating_ip1.name]
         )
       )
 
@@ -203,10 +203,10 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
-      expect(response_hash["results"].first).to include(
-        "options" => include(
-          "placement_auto"              => include(true),
-          "placement_availability_zone" => include(nil)
+      expect(response_hash["results"].first).to a_hash_including(
+        "options" => a_hash_including(
+          "placement_auto"              => [true, 1],
+          "placement_availability_zone" => [nil, nil]
         )
       )
 
@@ -232,10 +232,10 @@ describe ApiController do
       expect_result_resources_to_include_keys("results", expected_provreq_attributes)
       expect_results_to_match_hash("results", [expected_provreq_hash])
 
-      expect(response_hash["results"].first).to include(
-        "options" => include(
-          "placement_auto"              => include(true),
-          "placement_availability_zone" => include(nil)
+      expect(response_hash["results"].first).to a_hash_including(
+        "options" => a_hash_including(
+          "placement_auto"              => [true, 1],
+          "placement_availability_zone" => [nil, nil]
         )
       )
 
