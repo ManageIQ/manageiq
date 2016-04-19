@@ -210,7 +210,7 @@ module StorageHelper::TextualSummary
                     {:number     => number_to_human_size(@record.v_total_memory_size, :precision => 2),
                      :percentage => @record.v_memory_percent_of_used.to_s + "%",
                      :files      => pluralize(@record.number_of(:vm_ram_files), 'files')}
-    h     = {:label => "VM Memory Files", :image => "storage_memory_files", :value => value}
+    h     = {:label => _("VM Memory Files"), :image => "storage_memory_files", :value => value}
     if num > 0
       h[:title] = _("Show VM Memory Files installed on this %{storage}") % {:storage => ui_lookup(:table => "storages")}
       h[:link]  = url_for(:action => 'vm_ram_files', :id => @record)
