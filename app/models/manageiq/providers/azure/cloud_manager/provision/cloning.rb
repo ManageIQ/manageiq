@@ -103,9 +103,6 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
       network_options = {
         :location   => region,
         :properties => {
-          :networkSecurityGroup => {
-            :id => security_group.ems_ref
-          },
           :ipConfigurations     => [
             :name       => dest_name,
             :properties => {
@@ -119,6 +116,7 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
           ],
         }
       }
+      network_options[:properties][:networkSecurityGroup] = {:id => security_group.ems_ref} if security_group
 
       return nis.create(dest_name, resource_group.name, network_options).id
     end
