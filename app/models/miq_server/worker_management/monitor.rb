@@ -13,6 +13,9 @@ module MiqServer::WorkerManagement::Monitor
   include_concern 'Validation'
 
   def monitor_workers
+    # Clear the my_server cache so we can detect role and possibly other changes faster
+    self.class.my_server_clear_cache
+
     resync_needed, sync_message = sync_needed?
 
     # Sync the workers after sync'ing the child worker settings
