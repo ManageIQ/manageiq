@@ -182,6 +182,13 @@ class ChargebackController < ApplicationController
       session[:changed] = params[:typ] == "copy" ? true : false
 
       @rate = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(params[:id])
+      @record = @rate
+
+      if params[:typ] == "edit" && @rate.default?
+        add_flash(_("Default Chargeback Rate \"%{name}\" cannot be edited.") % {:name => @rate.description}, :error)
+        render_flash
+        return
+      end
 
       cb_rate_set_form_vars
 

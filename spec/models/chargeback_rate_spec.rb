@@ -47,5 +47,20 @@ describe ChargebackRate do
       expect(cbr.errors.count).to be(1)
       expect(cbr.errors.first).to include("rate is assigned and cannot be deleted")
     end
+
+    it "when default" do
+      cbr = FactoryGirl.create(:chargeback_rate, :description => "Default", :default => true)
+      cbr.destroy
+      expect(cbr).to_not be_destroyed
+      expect(cbr.errors.count).to be(1)
+      expect(cbr.errors.first).to include("default rate cannot be deleted")
+    end
+
+    it "when non-default" do
+      cbr = FactoryGirl.create(:chargeback_rate, :description => "Non-default", :default => false)
+      cbr.destroy
+      expect(cbr).to be_destroyed
+      expect(cbr.errors.count).to be(0)
+    end
   end
 end
