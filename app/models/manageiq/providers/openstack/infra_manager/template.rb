@@ -15,6 +15,6 @@ class ManageIQ::Providers::Openstack::InfraManager::Template < ManageIQ::Provide
   end
 
   def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
+    validate_supported_check("Smartstate Analysis")
   end
 end
