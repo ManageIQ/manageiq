@@ -21,16 +21,17 @@ module ReportFormatter
     def add_series(label, data)
       @counter ||= 0
       @counter += 1
+      series_id = @counter.to_s
 
       if chart_is_2d?
-        mri.chart[:data][:columns] << [@counter, *data.map { |a| a[:value] }]
-        mri.chart[:data][:names][@counter] = label
+        mri.chart[:data][:columns] << [series_id, *data.map { |a| a[:value] }]
+        mri.chart[:data][:names][series_id] = label
       else
         mri.chart[:data][:columns] = data.collect { |a| [a[:tooltip], a[:value]] }
       end
 
       if chart_is_stacked?
-        mri.chart[:data][:groups][0] << @counter
+        mri.chart[:data][:groups][0] << series_id
       end
     end
 
@@ -83,7 +84,7 @@ module ReportFormatter
     end
 
     def chart_is_stacked?
-      %w(StackedBar StackedColumn).include?(mri.graph[:type])
+      %w(StackedBar StackedColumn StackedArea).include?(mri.graph[:type])
     end
 
     def no_records_found_chart(*)
