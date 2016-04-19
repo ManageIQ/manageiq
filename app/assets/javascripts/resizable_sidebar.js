@@ -128,7 +128,6 @@ $.fn.resizableSidebar = function() {
       maindiv.attr('class', right_class.join(' '));
       // send the new width of the sidebar to the backend for future use
       miqJqueryRequest(miqPassFields('/dashboard/resize_layout', {sidebar: ajax, context: $('body').data('controller')}));
-      miqOnResize();
     });
   }
 };
