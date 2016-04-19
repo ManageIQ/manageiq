@@ -12,7 +12,6 @@ if (typeof(ManageIQ) === 'undefined') {
     clickUrl: null,
     dynatreeReplacement: null, //
     editor: null, // instance of CodeMirror editor
-    sizeTimer: null, // timer for routines to get size of the window
     timelineFilter: null, //
     toolbars: null, // toolbars
     oneTransition: {
