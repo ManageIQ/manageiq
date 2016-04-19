@@ -33,6 +33,7 @@ module EmsRefresh::SaveInventory
       :flavor,
       :availability_zone,
       :cloud_tenant,
+      :cloud_tenants,
       :cloud_network,
       :cloud_subnet,
       :security_groups,
@@ -61,6 +62,7 @@ module EmsRefresh::SaveInventory
       h[:cloud_network_id]       = key_backup.fetch_path(:cloud_network, :id)
       h[:cloud_subnet_id]        = key_backup.fetch_path(:cloud_subnet, :id)
       h[:cloud_tenant_id]        = key_backup.fetch_path(:cloud_tenant, :id)
+      h[:cloud_tenants]          = key_backup.fetch_path(:cloud_tenants).map { |x| x[:_object] } if key_backup.fetch_path(:cloud_tenants, 0, :_object)
       h[:orchestration_stack_id] = key_backup.fetch_path(:orchestration_stack, :id)
 
       begin

@@ -187,7 +187,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_specific_public_template
-    assert_specific_template("overcloud-full-vmlinuz", false)
+    assert_specific_template("overcloud-full-vmlinuz", true)
   end
 
   def assert_specific_template(name, is_public = false)
