@@ -276,7 +276,7 @@ module Openstack
                 }],
               'non_existent_network' => [
                 {
-                  :name      => "DisconnectedRouter"
+                  :name => "DisconnectedRouter"
                 }]
             }
 

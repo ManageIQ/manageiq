@@ -94,7 +94,7 @@ openstack_environments.each do |env|
   #
   compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Paused" }, :pause)
   compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Suspended" }, :suspend)
-  compute.do_action(compute.servers.detect{|x| x.name == "EmsRefreshSpec-Shelved"}, :shelve)
+  compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Shelved" }, :shelve)
 
   puts "Finished"
 end

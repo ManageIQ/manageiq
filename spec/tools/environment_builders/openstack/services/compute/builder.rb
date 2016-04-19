@@ -33,9 +33,19 @@ module Openstack
         # Servers are separated from build_all, since it requires sources from several services
         #
         def build_servers(volume, network, image, networking)
-          find_or_create_servers(volume.volumes, volume.volume_snapshots, network.networks, network.security_groups, image.images, networking)
+          find_or_create_servers(volume.volumes,
+                                 volume.volume_snapshots,
+                                 network.networks,
+                                 network.security_groups,
+                                 image.images,
+                                 networking)
           image.build_snapshots_from_servers(servers)
-          find_or_create_servers(volume.volumes, volume.volume_snapshots, network.networks, network.security_groups, image.images, networking,
+          find_or_create_servers(volume.volumes,
+                                 volume.volume_snapshots,
+                                 network.networks,
+                                 network.security_groups,
+                                 image.images,
+                                 networking,
                                  :servers_from_snapshot)
           associate_ips(servers, network)
         end

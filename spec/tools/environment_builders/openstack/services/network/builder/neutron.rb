@@ -73,13 +73,13 @@ module Openstack
                 @routers << router = (find(@service.routers, router_data.slice(:name)) ||
                                       create(@service.routers, router_data))
                 @subnets.each do |subnet|
-                  if subnet_interfaces.detect { |x| x[:name] == subnet.name }
-                    begin
-                      @service.add_router_interface(router.id, subnet.id)
-                      puts "Adding subnet interface: #{subnet.name} to router: #{router.name}"
-                    rescue
-                      puts "Existing subnet interface: #{subnet.name} in router: #{router.name}"
-                    end
+                  next unless subnet_interfaces.detect { |x| x[:name] == subnet.name }
+
+                  begin
+                    @service.add_router_interface(router.id, subnet.id)
+                    puts "Adding subnet interface: #{subnet.name} to router: #{router.name}"
+                  rescue
+                    puts "Existing subnet interface: #{subnet.name} in router: #{router.name}"
                   end
                 end
               end

@@ -79,10 +79,13 @@ module Openstack
 
         def servers
           [{
-            :name                 => "EmsRefreshSpec-PoweredOn",
-            :__flavor_name        => "m1.ems_refresh_spec",
-            :__image_name         => "EmsRefreshSpec-Image",
-            :__block_devices      => [{
+            :name            => "EmsRefreshSpec-PoweredOn",
+            :__flavor_name   => "m1.ems_refresh_spec",
+            :__image_name    => "EmsRefreshSpec-Image",
+            :__network_names => ["EmsRefreshSpec-NetworkPrivate"],
+            :key_name        => "EmsRefreshSpec-KeyPair",
+            :security_groups => ["EmsRefreshSpec-SecurityGroup", "EmsRefreshSpec-SecurityGroup2"],
+            :__block_devices => [{
                 :source_type           => 'image',
                 :destination_type      => "local",
                 :boot_index            => 0,
@@ -100,22 +103,19 @@ module Openstack
                 :destination_type      => 'volume',
                 :delete_on_termination => false,
               }],
-            :__network_names      => ["EmsRefreshSpec-NetworkPrivate"],
-            :key_name             => "EmsRefreshSpec-KeyPair",
-            :security_groups      => ["EmsRefreshSpec-SecurityGroup", "EmsRefreshSpec-SecurityGroup2"]
           }, {
-            :name                 => "EmsRefreshSpec-PoweredOn-WithRootVolume",
-            :__flavor_name        => "m1.ems_refresh_spec",
-            :__block_devices      => [{
+            :name            => "EmsRefreshSpec-PoweredOn-WithRootVolume",
+            :__flavor_name   => "m1.ems_refresh_spec",
+            :__network_names => ["EmsRefreshSpec-NetworkPrivate_3"],
+            :key_name        => "EmsRefreshSpec-KeyPair",
+            :security_groups => ["EmsRefreshSpec-SecurityGroup", "EmsRefreshSpec-SecurityGroup2"],
+            :__block_devices => [{
               :source_type           => 'volume',
               :destination_type      => 'volume',
               :boot_index            => 0,
               :delete_on_termination => false,
               :__name                => 'EmsRefreshSpec-Volume-3'
             }],
-            :__network_names      => ["EmsRefreshSpec-NetworkPrivate_3"],
-            :key_name             => "EmsRefreshSpec-KeyPair",
-            :security_groups      => ["EmsRefreshSpec-SecurityGroup", "EmsRefreshSpec-SecurityGroup2"]
           }, {
             :name            => "EmsRefreshSpec-Paused",
             :__flavor_name   => "m1.ems_refresh_spec",

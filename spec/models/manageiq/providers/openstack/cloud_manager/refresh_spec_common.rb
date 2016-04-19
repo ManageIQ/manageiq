@@ -62,7 +62,7 @@ module Openstack
 
     def volumes_count
       server_volumes_count = compute_data.servers.map do |x|
-        x[:__block_devices] ? x[:__block_devices].select { |d| d[:destination_type] == 'volume' && %w(image blank).include?(d[:source_type]) }.count : 0
+        x[:__block_devices] ? x[:__block_devices].count { |d| d[:destination_type] == 'volume' && %w(image blank).include?(d[:source_type]) } : 0
       end.sum
 
       # Volumes count + volumes created from snapshots + volumes created by snapshoting and recreating vm that was
@@ -150,7 +150,7 @@ module Openstack
 
       if with_volumes && vm_or_stack[:__block_devices]
         disks_count +=
-          vm_or_stack[:__block_devices].select { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }.count
+          vm_or_stack[:__block_devices].count { |d| d[:destination_type] == 'volume' && d[:boot_index] != 0 }
       end
 
       disks_count
