@@ -230,7 +230,7 @@ module Mixins
                        :metrics_api_port            => metrics_port,
                        :default_security_protocol   => default_security_protocol,
                        :amqp_security_protocol      => amqp_security_protocol,
-                       :api_version                 => @ems.api_version,
+                       :api_version                 => @ems.api_version ? @ems.api_version : "v2",
                        :provider_region             => @ems.provider_region,
                        :default_userid              => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :amqp_userid                 => amqp_userid,
