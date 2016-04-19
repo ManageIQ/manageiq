@@ -510,18 +510,7 @@ function DoNav(theUrl) {
 }
 
 // Routines to get the size of the window
-ManageIQ.sizeTimer = false;
-
-function miqBrowserSizeTimeout() {
-  if (ManageIQ.sizeTimer) {
-    return;
-  }
-  ManageIQ.sizeTimer = true;
-  setTimeout(miqResetSizeTimer, 1000);
-}
-
 function miqResetSizeTimer() {
-  ManageIQ.sizeTimer = false;
   var sizes = miqGetSize();
   var offset = 427;
   var h = sizes[1] - offset;
@@ -1579,7 +1568,7 @@ function chartData(type, data, data2) {
 $(function () {
   $(window).on('resize', miqInitAccordions);
   $(window).on('resize', miqInitMainContent);
-  $(window).on('resize', miqBrowserSizeTimeout);
+  $(window).on('resize', _.debounce(miqResetSizeTimer, 1000));
 
   check_for_ellipsis();
   $().setupVerticalTertiaryNavigation(true);
