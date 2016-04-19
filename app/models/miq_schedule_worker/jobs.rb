@@ -52,6 +52,10 @@ class MiqScheduleWorker::Jobs
     queue_work_on_each_zone(:class_name  => "ExtManagementSystem", :method_name => "authentication_check_schedule")
   end
 
+  def ems_container_check_cves
+    queue_work(:class_name  => "ManageIQ::Providers::ContainerManager", :method_name => "cve_check", :task_id => "cve_check", :server_guid => MiqServer.my_guid)
+  end
+
   def storage_authentication_check_schedule
     queue_work_on_each_zone(:class_name  => "StorageManager",      :method_name => "authentication_check_schedule")
   end

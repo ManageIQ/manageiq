@@ -37,5 +37,13 @@ module ManageIQ::Providers
     def chart_layout_path
       "ManageIQ_Providers_ContainerManager"
     end
+
+    def self.cve_check
+      # TODO: optimize by keeping last hashes of cve streams raising only upon update
+      MiqServer.my_server.zone.ext_management_systems.each do |ems|
+        first_image = ems.container_images.first
+        MiqEvent.raise_evm_event(first_image, 'containerimage_new_cve_content', {}) if first_image
+      end
+    end
   end
 end
