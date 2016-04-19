@@ -26,7 +26,7 @@ describe ContainerDashboardService do
     end
   end
 
-  context "node_utilization" do
+  context "ems_utilization" do
     it "shows aggregated metrics from last 30 days only" do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
@@ -61,10 +61,17 @@ describe ContainerDashboardService do
         :cpu_usage_rate_average   => 100,
         :time_profile             => time_profile)
 
+      nil_fielded_metric = FactoryGirl.create(
+        :metric_rollup_cm_daily,
+        :timestamp    => old_date,
+        :time_profile => time_profile)
+
       ems_openshift.metric_rollups << current_metric_openshift
       ems_openshift.metric_rollups << old_metric
+      ems_openshift.metric_rollups << nil_fielded_metric
       ems_kubernetes.metric_rollups << current_metric_kubernetes
       ems_kubernetes.metric_rollups << old_metric.dup
+      ems_kubernetes.metric_rollups << nil_fielded_metric.dup
 
       node_utilization_all_providers = described_class.new(nil, controller).ems_utilization
       node_utilization_single_provider = described_class.new(ems_openshift.id, controller).ems_utilization
@@ -110,6 +117,131 @@ describe ContainerDashboardService do
   end
 
   context "heatmaps" do
+    it "shows aggregated metrics from last 30 days only" do
+      ems_openshift = FactoryGirl.create(:ems_openshift, :name => 'openshift', :zone => @zone)
+      ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :name => 'kubernetes', :zone => @zone)
+
+      @node1 = FactoryGirl.create(:container_node, :name => 'node1')
+      @node2 = FactoryGirl.create(:container_node, :name => 'node2')
+      @node3 = FactoryGirl.create(:container_node, :name => 'node3')
+      @node4 = FactoryGirl.create(:container_node, :name => 'node4')
+      ems_openshift.container_nodes << @node1 << @node2
+      ems_kubernetes.container_nodes << @node3 << @node4
+
+      [ems_kubernetes, ems_openshift].each do |p|
+        p.container_nodes.each do |node|
+          node.metric_rollups << FactoryGirl.create(
+            :metric_rollup_cm_hr,
+            :timestamp                  => 1.hour.ago.utc,
+            :cpu_usage_rate_average     => 90,
+            :mem_usage_absolute_average => 90,
+            :derived_vm_numvcpus        => 4,
+            :net_usage_rate_average     => 90,
+            :derived_memory_available   => 8192,
+            :derived_memory_used        => 4096)
+        end
+      end
+
+      heatmaps_all_providers = described_class.new(nil, controller).heatmaps
+      heatmaps_single_provider = described_class.new(ems_openshift, controller).heatmaps
+
+      expect(heatmaps_all_providers).to eq(
+        :nodeCpuUsage    => [
+          {
+            :id       => @node1.id,
+            :node     => "node1",
+            :provider => "openshift",
+            :total    => 4,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node2.id,
+            :node     => "node2",
+            :provider => "openshift",
+            :total    => 4,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node3.id,
+            :node     => "node3",
+            :provider => "kubernetes",
+            :total    => 4,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node4.id,
+            :node     => "node4",
+            :provider => "kubernetes",
+            :total    => 4,
+            :percent  => 0.9
+          }],
+        :nodeMemoryUsage => [
+          {
+            :id       => @node1.id,
+            :node     => "node1",
+            :provider => "openshift",
+            :total    => 8192,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node2.id,
+            :node     => "node2",
+            :provider => "openshift",
+            :total    => 8192,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node3.id,
+            :node     => "node3",
+            :provider => "kubernetes",
+            :total    => 8192,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node4.id,
+            :node     => "node4",
+            :provider => "kubernetes",
+            :total    => 8192,
+            :percent  => 0.9
+          }]
+      )
+
+      expect(heatmaps_single_provider).to eq(
+        :nodeCpuUsage    => [
+          {
+            :id       => @node1.id,
+            :node     => "node1",
+            :provider => "openshift",
+            :total    => 4,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node2.id,
+            :node     => "node2",
+            :provider => "openshift",
+            :total    => 4,
+            :percent  => 0.9
+          }
+        ],
+        :nodeMemoryUsage => [
+          {
+            :id       => @node1.id,
+            :node     => "node1",
+            :provider => "openshift",
+            :total    => 8192,
+            :percent  => 0.9
+          },
+          {
+            :id       => @node2.id,
+            :node     => "node2",
+            :provider => "openshift",
+            :total    => 8192,
+            :percent  => 0.9
+          }
+        ]
+      )
+    end
+
     it "returns hash with nil values when no metrics available" do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       heatmaps_all_providers = described_class.new(nil, controller).heatmaps
@@ -189,10 +321,17 @@ describe ContainerDashboardService do
         :net_usage_rate_average => 1500,
         :time_profile           => time_profile)
 
+      nil_fields_metric = FactoryGirl.create(
+        :metric_rollup_cm_hr,
+        :timestamp    => old_date,
+        :time_profile => time_profile)
+
       ems_openshift.metric_rollups << current_metric_openshift
       ems_openshift.metric_rollups << old_metric
+      ems_openshift.metric_rollups << nil_fields_metric
       ems_kubernetes.metric_rollups << current_metric_kubernetes
       ems_kubernetes.metric_rollups << old_metric.dup
+      ems_kubernetes.metric_rollups << nil_fields_metric.dup
 
       hourly_network_trends = described_class.new(nil, controller).hourly_network_metrics
       hourly_network_trends_single_provider = described_class.new(ems_openshift.id, controller).hourly_network_metrics

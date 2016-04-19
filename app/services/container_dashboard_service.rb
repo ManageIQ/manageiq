@@ -160,10 +160,10 @@ class ContainerDashboardService
 
     daily_provider_metrics.each do |metric|
       date = metric.timestamp.strftime("%Y-%m-%d")
-      used_cpu[date] += metric.v_derived_cpu_total_cores_used
-      used_mem[date] += metric.derived_memory_used
-      total_cpu[date] += metric.derived_vm_numvcpus
-      total_mem[date] += metric.derived_memory_available
+      used_cpu[date] += metric.v_derived_cpu_total_cores_used if metric.v_derived_cpu_total_cores_used.present?
+      used_mem[date] += metric.derived_memory_used if metric.derived_memory_used.present?
+      total_cpu[date] += metric.derived_vm_numvcpus if metric.derived_vm_numvcpus.present?
+      total_mem[date] += metric.derived_memory_available if metric.derived_memory_available.present?
     end
 
     if used_cpu.any?
@@ -194,7 +194,7 @@ class ContainerDashboardService
     MetricRollup.with_interval_and_time_range("hourly", (1.day.ago.beginning_of_hour.utc)..(Time.now.utc))
                 .where(:resource => (@ems || ManageIQ::Providers::ContainerManager.all)).each do |m|
       hour = m.timestamp.beginning_of_hour.utc
-      hourly_network_trend[hour] += m.net_usage_rate_average
+      hourly_network_trend[hour] += m.net_usage_rate_average if m.net_usage_rate_average.present?
     end
 
     if hourly_network_trend.any?
@@ -209,7 +209,7 @@ class ContainerDashboardService
     daily_network_metrics = Hash.new(0)
     daily_provider_metrics.each do |m|
       day = m.timestamp.strftime("%Y-%m-%d")
-      daily_network_metrics[day] += m.net_usage_rate_average
+      daily_network_metrics[day] += m.net_usage_rate_average if m.net_usage_rate_average.present?
     end
 
     if daily_network_metrics.any?
