@@ -3,19 +3,14 @@
 class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
   include ManageIQ::Providers::Amazon::RefreshHelperMethods
 
-  def initialize(ems, options = nil)
+  def initialize(ems, options = Config::Options.new)
     @ems                 = ems
     @aws_ec2             = ems.connect
     @aws_cloud_formation = ems.connect(:service => :CloudFormation)
     @data                = {}
     @data_index          = {}
     @known_flavors       = Set.new
-
-    @options    = options || {}
-    # Default the collection of images unless explicitly declined
-    @options["get_private_images"] = true  unless @options.key?("get_private_images")
-    @options["get_shared_images"]  = true  unless @options.key?("get_shared_images")
-    @options["get_public_images"]  = false unless @options.key?("get_public_images")
+    @options             = options
   end
 
   def ems_inv_to_hashes
@@ -27,9 +22,9 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     get_availability_zones
     get_key_pairs
     get_stacks
-    get_private_images if @options["get_private_images"]
-    get_shared_images  if @options["get_shared_images"]
-    get_public_images  if @options["get_public_images"]
+    get_private_images if @options.get_private_images
+    get_shared_images  if @options.get_shared_images
+    get_public_images  if @options.get_public_images
     get_instances
     $aws_log.info("#{log_header}...Complete")
 
@@ -203,7 +198,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
 
   def parse_instance(instance)
     status = instance.state.name
-    return if @options["ignore_terminated_instances"] && status.to_sym == :terminated
+    return if @options.ignore_terminated_instances && status.to_sym == :terminated
 
     uid    = instance.id
     name   = get_from_tags(instance, :name)

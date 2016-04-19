@@ -16,7 +16,7 @@ module ManageIQ
 
       def options
         return @options if defined?(@options)
-        @options = VMDB::Config.new("vmdb").config[:ems_refresh]
+        @options = Settings.ems_refresh
       end
 
       def refresher_options
