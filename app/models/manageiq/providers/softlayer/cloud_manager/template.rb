@@ -3,8 +3,4 @@ class ManageIQ::Providers::SoftLayer::CloudManager::Template < ManageIQ::Provide
     connection ||= ext_management_system.connect
     connection.images[ems_ref]
   end
-
-  def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
-  end
 end

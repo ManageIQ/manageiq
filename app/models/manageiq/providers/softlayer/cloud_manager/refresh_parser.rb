@@ -12,10 +12,10 @@ module ManageIQ::Providers
       def initialize(ems, options = {})
         @ems               = ems
         @compute           = ems.connect
-        @account           = ems.connect(options.merge({:service => "account"}))
-        @network           = ems.connect(options.merge({:service => "network"}))
-        @dns               = ems.connect(options.merge({:service => "dns"}))
-        @storage           = ems.connect(options.merge({:service => "storage"}))
+        @account           = ems.connect(options.merge(:service => "account"))
+        @network           = ems.connect(options.merge(:service => "network"))
+        @dns               = ems.connect(options.merge(:service => "dns"))
+        @storage           = ems.connect(options.merge(:service => "storage"))
         @options           = options
         @data              = {}
         @data_index        = {}
@@ -144,22 +144,22 @@ module ManageIQ::Providers
 
       def parse_instance(instance)
         # TODO: mapping is not complete and valid
-        uid    = instance.id
+        uid = instance.id
 
         type = ManageIQ::Providers::SoftLayer::CloudManager::Vm
         new_result = {
-          :type             => type,
-          :uid_ems          => instance.id,
-          :ems_ref          => instance.id,
-          :name             => instance.name,
-          :description      => instance.description,
-          :vendor           => "softlayer",
-          :raw_power_state  => instance.state,
-          :flavor           => instance.flavor_id,
-          :operating_system => instance.os_code,
-          :security_groups  => nil,
-          :availability_zone   => @data_index.fetch_path(:availability_zones, 'default'),
-          :hardware         => {
+          :type              => type,
+          :uid_ems           => instance.id,
+          :ems_ref           => instance.id,
+          :name              => instance.name,
+          :description       => instance.description,
+          :vendor            => "softlayer",
+          :raw_power_state   => instance.state,
+          :flavor            => instance.flavor_id,
+          :operating_system  => instance.os_code,
+          :security_groups   => nil,
+          :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
+          :hardware          => {
             :cpu_sockets          => instance.cpu,
             :cpu_total_cores      => instance.cpu,
             :cpu_cores_per_socket => 1,
@@ -176,6 +176,7 @@ module ManageIQ::Providers
         # TODO: implement the orchestration stack
         cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
           @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
+        end
 
         uid = cloud_network.id
 
@@ -191,7 +192,6 @@ module ManageIQ::Providers
       end
 
       def parse_cloud_subnet(subnet)
-        # TODO: what is cidr?
         uid = subnet.id
         new_result = {
           :ems_ref           => uid,
