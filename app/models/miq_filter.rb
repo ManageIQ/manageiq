@@ -3,41 +3,6 @@ module MiqFilter
     MiqReportable.records2table(records, only_columns)
   end
 
-  def self.determine_mode_for_find_children_of(reflection, obj, assoc)
-    mode = nil
-    if reflection.nil? || reflection.macro == :has_and_belongs_to_many
-      if obj.respond_to?(assoc)
-        mode = :by_method
-      else
-        raise "no relationship found for \"#{assoc}\"" if reflection.nil?
-      end
-    else
-      mode = :by_reflection
-    end
-
-    mode
-  end
-
-  def self.find_children_of_via_reflection(obj, reflection)
-    result = obj.send(reflection.name)
-    result ? Array.wrap(result) : []
-  end
-
-  def self.find_children_of_via_method(obj, assoc)
-    obj.send(assoc)
-  end
-
-  def self.find_children_of(obj, assoc)
-    reflection = obj.class.reflect_on_association(assoc.to_sym)
-    mode       = determine_mode_for_find_children_of(reflection, obj, assoc)
-
-    case mode
-    when :by_reflection  then find_children_of_via_reflection(obj, reflection)
-    when :by_method      then find_children_of_via_method(obj, assoc)
-    else                      raise _("Unknown mode: <%{mode}>") % {:mode => mode.inspect}
-    end
-  end
-
   def self.belongsto2object(tag)
     belongsto2object_list(tag).last
   end
