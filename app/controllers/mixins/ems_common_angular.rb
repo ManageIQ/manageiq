@@ -358,7 +358,7 @@ module Mixins
       end
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager) &&
          ems.supports_authentication?(:metrics) && params[:metrics_userid]
-        metrics_password = params[:metrics_password] ? params[:metrics_password] : @ems.authentication_password(:metrics)
+        metrics_password = params[:metrics_password] ? params[:metrics_password] : ems.authentication_password(:metrics)
         creds[:metrics] = {:userid => params[:metrics_userid], :password => metrics_password}
       end
       if ems.supports_authentication?(:auth_key) && params[:service_account]
