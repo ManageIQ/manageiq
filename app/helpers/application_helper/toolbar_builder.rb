@@ -866,6 +866,11 @@ class ApplicationHelper::ToolbarBuilder
       end
     when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
       return true unless role_allows(:feature => id)
+    when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
+      case id
+      when "configured_system_provision"
+        return true unless @record.provisionable?
+      end
     when "NilClass"
       case id
       when "ab_group_new", "ab_button_new", "ab_group_reorder"

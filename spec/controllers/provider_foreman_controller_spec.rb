@@ -115,6 +115,30 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
+  context "Verify the provisionable flag for CSs" do
+    it "Provision action should be allowed for a Configured System marked as provisionable" do
+      allow(controller).to receive(:x_node).and_return("root")
+      allow(controller).to receive(:x_tree).and_return(:type => :filter)
+      controller.instance_variable_set(:@_params, :id => "cs_filter")
+      allow(controller).to receive(:replace_right_cell)
+      controller.instance_variable_set(:@_params, :id => @config_ans2.id)
+      controller.send(:provision)
+      expect(controller.send(:flash_errors?)).to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("Provisioning is not supported for at least one of the selected systems")
+    end
+
+    it "Provision action should not be allowed only for a Configured System marked as not provisionable" do
+      allow(controller).to receive(:x_node).and_return("root")
+      allow(controller).to receive(:x_tree).and_return(:type => :filter)
+      controller.instance_variable_set(:@_params, :id => "cs_filter")
+      allow(controller).to receive(:replace_right_cell)
+      allow(controller).to receive(:render)
+      controller.instance_variable_set(:@_params, :id => @configured_system2a.id)
+      controller.send(:provision)
+      expect(controller.send(:flash_errors?)).to_not be_truthy
+    end
+  end
+
   context "#save_provider_foreman" do
     it "will not save with a duplicate name" do
       ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman",

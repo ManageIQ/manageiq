@@ -72,6 +72,16 @@ class ConfiguredSystem < ApplicationRecord
     @tag_hash ||= configuration_tags.index_by(&:class)
   end
 
+  def provisionable?
+    false
+  end
+
+  def self.provisionable?(ids)
+    cs = ConfiguredSystem.where(:id => ids)
+    return false if cs.blank?
+    cs.all?(&:provisionable?)
+  end
+
   def self.common_configuration_profiles_for_selected_configured_systems(ids)
     hosts = includes(:configuration_location, :configuration_organization).where(:id => ids)
     hosts.collect(&:available_configuration_profiles).inject(:&).presence
