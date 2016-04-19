@@ -137,8 +137,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_owning_folder_path,                 :type => :string,     :uses => {:ems_cluster => :all_relationships}
   virtual_column :v_owning_blue_folder,                 :type => :string,     :uses => :all_relationships
   virtual_column :v_owning_blue_folder_path,            :type => :string,     :uses => :all_relationships
-  virtual_column :v_pct_free_disk_space,                :type => :float,      :uses => :hardware
-  virtual_column :v_pct_used_disk_space,                :type => :float,      :uses => :v_pct_free_disk_space
   virtual_column :v_datastore_path,                     :type => :string,     :uses => :storage
   virtual_column :thin_provisioned,                     :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :used_disk_storage,                    :type => :integer,    :uses => {:hardware => :disks}
@@ -149,11 +147,9 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
   virtual_column :mem_cpu,                              :type => :integer,    :uses => :hardware
   virtual_column :ems_cluster_name,                     :type => :string,     :uses => :ems_cluster
-  virtual_column :host_name,                            :type => :string,     :uses => :host
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
-  virtual_column :storage_name,                         :type => :string,     :uses => :storage
   virtual_column :memory_exceeds_current_host_headroom, :type => :string,     :uses => [:mem_cpu, {:host => [:hardware, :ext_management_system]}]
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
   virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
@@ -1406,13 +1402,8 @@ class VmOrTemplate < ApplicationRecord
     ems_cluster.nil? ? nil : ems_cluster.name
   end
 
-  def host_name
-    host.nil? ? nil : host.name
-  end
-
-  def storage_name
-    storage.nil? ? nil : storage.name
-  end
+  virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
+  virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
 
   def has_compliance_policies?
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "vm_compliance_check")
@@ -1516,21 +1507,7 @@ class VmOrTemplate < ApplicationRecord
     Arel::Nodes::NamedFunction.new('COALESCE', [t[:template], Arel::Nodes.build_quoted("false")])
   end)
 
-  def v_pct_free_disk_space
-    # Verify we have the required data to calculate
-    return nil unless hardware
-    return nil if hardware.disk_free_space.nil? || hardware.disk_capacity.nil? || hardware.disk_free_space.zero? || hardware.disk_capacity.zero?
-
-    # Calculate the percentage of free space
-    # Call sprintf to ensure xxx.xx formating other decimal length can be too long
-    sprintf("%.2f", hardware.disk_free_space.to_f / hardware.disk_capacity.to_f * 100).to_f
-  end
-
-  def v_pct_used_disk_space
-    percent_free = v_pct_free_disk_space
-    return nil unless percent_free
-    100 - percent_free
-  end
+  virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
 
   def v_datastore_path
     s = storage
