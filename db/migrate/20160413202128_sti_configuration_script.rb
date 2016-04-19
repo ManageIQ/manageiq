@@ -1,5 +1,5 @@
 class StiConfigurationScript < ActiveRecord::Migration[5.0]
-  class ConfigurationScript < ApplicationRecord
+  class ConfigurationScript < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
   end
 
