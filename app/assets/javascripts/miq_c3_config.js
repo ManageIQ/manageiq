@@ -139,36 +139,22 @@
       $().c3ChartDefaults().getDefaultGroupedBarConfig()
     ),
 
-    Pie: _.defaultsDeep({
-      data: {
-        type: 'pie'
-      },
-      pie: {
-        label: {
-          format: percentLabelFormat
-        },
-        expand: false
-      }
-    },
-      c3mixins.pfColorPattern,
-      c3mixins.legendOnRightSide,
-      c3mixins.noTooltip
+    Pie: _.defaultsDeep(
+      {
+        data: {type: 'pie'},
+        tooltip: {show: true},
+        legend: { show: true, position: 'right'}
+      },c3mixins.pfColorPattern,
+      $().c3ChartDefaults().getDefaultDonutConfig()
     ),
 
-    Donut: _.defaultsDeep({
-      data: {
-        type: 'donut'
-      },
-      donut: {
-        label: {
-          format: percentLabelFormat
-        },
-        expand: false
-      }
-    },
-      c3mixins.pfColorPattern,
-      c3mixins.legendOnRightSide,
-      c3mixins.noTooltip
+  Donut: _.defaultsDeep(
+      {
+        data: {type: 'donut'},
+        tooltip: {show: true},
+        legend: { show: true, position: 'right'}
+      },c3mixins.pfColorPattern,
+      $().c3ChartDefaults().getDefaultDonutConfig()
     ),
 
     Line: _.defaultsDeep(
