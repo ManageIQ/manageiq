@@ -18,16 +18,18 @@ module ServiceMixin
     rsc_type = rsc.class.base_class.name.tableize
     raise _("Cannot connect service with nil ID.") if rsc.id.nil? && rsc_type == "service_templates"
 
+    # fetch the corresponding service resource
+    # may want to use a query for this
     sr = service_resources.detect { |sr| sr.resource_type == rsc.class.base_class.name && sr.resource_id == rsc.id }
     if sr.nil?
       if options.kind_of?(ServiceResource)
         nh = options.attributes.dup
-        %w(id created_at updated_at service_template_id service_id).each { |key| nh.delete(key) }
+        %w(id created_at updated_at service_template_id ancestry).each { |key| nh.delete(key) }
       else
         nh = options
       end
 
-      if self.is_circular_reference?(rsc)
+      if circular_reference?(rsc)
         raise MiqException::MiqServiceCircularReferenceError,
               _("Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference") %
                 {:resource_name => rsc.name, :name => name}
@@ -35,12 +37,15 @@ module ServiceMixin
         sr = service_resources.new(nh.merge(:resource => rsc))
         set_service_type if self.respond_to?(:set_service_type)
         # Create link between services
-        services << rsc if self.class == Service && rsc.class == Service
+        rsc.update_attributes(:parent => self) if self.class == Service && rsc.class == Service
       end
     end
     sr
   end
-  alias_method :<<, :add_resource
+
+  def <<(*args)
+    add_resource(*args)
+  end
 
   def add_resource!(rsc, options = {})
     sr = add_resource(rsc, options)
@@ -104,23 +109,18 @@ module ServiceMixin
     nil
   end
 
-  def compact_group_indexes
-    # Remove empty group
-    last_idx = last_group_index
-    return if last_idx == 0
-
-    last_idx.downto(0) do |idx|
-      each_group_resource { |r| r.group_idx -= 1 if r.group_idx >= idx } unless self.group_has_resources?(idx)
+  def circular_reference?(child_svc)
+    return true if child_svc == self
+    if child_svc.kind_of?(Service)
+      ancestor_ids.include?(child_svc.id)
+    elsif child_svc.kind_of?(ServiceTemplate)
+      !!circular_reference_check(child_svc)
     end
-  end
-
-  def is_circular_reference?(child_svc)
-    circular_reference_check(child_svc).nil? ? false : true
   end
 
   def circular_reference_check(child_svc, parent_svc = self)
     return child_svc if child_svc == parent_svc
-    return nil unless child_svc.kind_of?(Service) || child_svc.kind_of?(ServiceTemplate)
+    return nil unless child_svc.kind_of?(ServiceTemplate)
     parent_services(parent_svc).each do |service|
       return(service) if service.id == child_svc.id
       result = circular_reference_check(child_svc, service)
@@ -130,23 +130,8 @@ module ServiceMixin
   end
 
   def parent_services(svc = self)
+    return svc.ancestors if svc.kind_of?(Service)
     srs = ServiceResource.where(:resource => svc)
     srs.collect { |sr| sr.public_send(sr.resource_type.underscore) }.compact
-  end
-
-  def sub_services(options = {})
-    klass = self.class
-    result = service_resources.collect do |s|
-      svcs = []
-      if s.resource.kind_of?(klass)
-        svcs << s.resource
-        if options[:recursive] == true
-          svcs << s.resource.sub_services(options)
-        end
-      end
-      svcs
-    end
-
-    result.compact.flatten
   end
 end

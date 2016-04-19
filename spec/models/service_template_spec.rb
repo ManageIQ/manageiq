@@ -126,7 +126,7 @@ describe ServiceTemplate do
       add_and_save_service(@svc_a, @svc_c)
       add_and_save_service(@svc_c, @svc_d)
 
-      sub_svc = @svc_a.sub_services
+      sub_svc = @svc_a.children
       expect(sub_svc).not_to include(@svc_a)
       expect(sub_svc.size).to eq(2)
       expect(sub_svc).to include(@svc_b)
@@ -140,7 +140,7 @@ describe ServiceTemplate do
       add_and_save_service(@svc_a, @svc_c)
       add_and_save_service(@svc_c, @svc_d)
 
-      sub_svc = @svc_a.sub_services({:recursive => true})
+      sub_svc = @svc_a.descendants
       expect(sub_svc.size).to eq(5)
       expect(sub_svc).not_to include(@svc_a)
       expect(sub_svc).to include(@svc_b)

@@ -10,7 +10,7 @@ module Service::RetirementManagement
   end
 
   def before_retirement
-    services.each(&:retire_now)
+    children.each(&:retire_now)
   end
 
   def retire_service_resources

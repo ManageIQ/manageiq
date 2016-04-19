@@ -239,7 +239,7 @@ class ServiceController < ApplicationController
     else      # Get list of child Catalog Items/Services of this node
       if x_node == "root"
         typ = x_active_tree == :svcs_tree ? "Service" : "ServiceTemplate"
-        process_show_list(:where_clause => "service_id is null")
+        process_show_list(:where_clause => "ancestry is null")
         @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
       else
         show_record(from_cid(id))
