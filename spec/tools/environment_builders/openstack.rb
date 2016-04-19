@@ -74,8 +74,8 @@ openstack_environments.each do |env|
 
   network = Openstack::Services::Network::Builder.build_all(@ems, project, networking_service)
   compute = Openstack::Services::Compute::Builder.build_all(@ems, project)
-  volume = Openstack::Services::Volume::Builder.build_all(@ems, project, @environment)
-  image = Openstack::Services::Image::Builder.build_all(@ems, project)
+  image   = Openstack::Services::Image::Builder.build_all(@ems, project)
+  volume  = Openstack::Services::Volume::Builder.build_all(@ems, project, @environment, image)
 
   if storage_supported?
     Openstack::Services::Storage::Builder.build_all(@ems, project)
@@ -94,8 +94,7 @@ openstack_environments.each do |env|
   #
   compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Paused" }, :pause)
   compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Suspended" }, :suspend)
-  # TODO(lsmola) do shelve action once we use new fog
-  # compute.do_action(compute.servers.detect{|x| x.name == "EmsRefreshSpec-Shelved"}, :shelve)
+  compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Shelved" }, :shelve)
 
   puts "Finished"
 end

@@ -33,9 +33,19 @@ module Openstack
         # Servers are separated from build_all, since it requires sources from several services
         #
         def build_servers(volume, network, image, networking)
-          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking)
+          find_or_create_servers(volume.volumes,
+                                 volume.volume_snapshots,
+                                 network.networks,
+                                 network.security_groups,
+                                 image.images,
+                                 networking)
           image.build_snapshots_from_servers(servers)
-          find_or_create_servers(volume.volumes, network.networks, network.security_groups, image.images, networking,
+          find_or_create_servers(volume.volumes,
+                                 volume.volume_snapshots,
+                                 network.networks,
+                                 network.security_groups,
+                                 image.images,
+                                 networking,
                                  :servers_from_snapshot)
           associate_ips(servers, network)
         end
@@ -53,30 +63,26 @@ module Openstack
 
         private
 
-        def find_or_create_servers(volumes, networks, security_groups, images, networking, data_method = :servers)
+        def find_or_create_servers(volumes, _volume_snapshots, networks, security_groups, images, networking, data_method = :servers)
           servers = []
           @data.send(data_method).each do |server|
-            image = nil
             if (image_name = server.delete(:__image_name))
               image = images.detect { |x| x.name == image_name }
               server.merge!(:image_ref => image.id) if image
             end
 
-            if (volume_name = server.delete(:__block_device_name))
-              volume = volumes.detect { |x| x.name == volume_name }
-              server.merge!(
-                :block_device_mapping_v2 => [{
-                  :source_type           => "image",
-                  :destination_type      => "local",
-                  :boot_index            => 0,
-                  :delete_on_termination => true,
-                  :uuid                  => image.id
-                }, {
-                  :source_type           => "volume",
-                  :uuid                  => volume.id,
-                  :destination_type      => 'volume',
-                  :delete_on_termination => "preserve",
-                }]) if volume
+            if (server_volumes = server.delete(:__block_devices))
+              server[:block_device_mapping_v2] = []
+              server_volumes.each do |server_volume|
+                name = server_volume.delete(:__name)
+                server_volume[:uuid] = case server_volume[:source_type]
+                                       when "image"
+                                         images.detect { |x| x.name == name }.id
+                                       when "volume"
+                                         volumes.detect { |x| x.name == name }.id
+                                       end
+                server[:block_device_mapping_v2] << server_volume
+              end
             end
 
             if (network_names = server.delete(:__network_names))

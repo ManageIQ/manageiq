@@ -70,21 +70,27 @@ module Openstack
                 router_data       = router_data.merge(:external_gateway_info => network, :tenant_id => @project.id)
                 subnet_interfaces = router_data.delete(:__subnets)
 
-                @routers << (find(@service.routers, router_data.slice(:name)) ||
-                             create_router(@service.routers, router_data, subnet_interfaces))
+                @routers << router = (find(@service.routers, router_data.slice(:name)) ||
+                                      create(@service.routers, router_data))
+                @subnets.each do |subnet|
+                  next unless subnet_interfaces.detect { |x| x[:name] == subnet.name }
+
+                  begin
+                    @service.add_router_interface(router.id, subnet.id)
+                    puts "Adding subnet interface: #{subnet.name} to router: #{router.name}"
+                  rescue
+                    puts "Existing subnet interface: #{subnet.name} in router: #{router.name}"
+                  end
+                end
               end
             end
-          end
 
-          def create_router(collection, data, subnet_interfaces)
-            router = create(collection, data)
+            # Create also disconnected router, to see it's not breaking anything
+            @data.routers('non_existent_network').each do |router_data|
+              router_data = router_data.merge(:tenant_id => @project.id)
 
-            # Add private subnets as interface to network
-            @subnets.each do |subnet|
-              if subnet_interfaces.detect { |x| x[:name] == subnet.name }
-                puts "Adding subnet interface: #{subnet.name} to router: #{router.name}"
-                @service.add_router_interface(router.id, subnet.id)
-              end
+              @routers << (find(@service.routers, router_data.slice(:name)) ||
+                           create(@service.routers, router_data))
             end
           end
 

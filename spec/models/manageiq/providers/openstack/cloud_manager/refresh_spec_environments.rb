@@ -56,5 +56,10 @@ module Openstack
       # We support orchestration from Havana
       environment_release_number >= 4
     end
+
+    def volume_snapshot_pagination_bug
+      # Seems like volume snapshot pagination in Liberty and below doesn't work
+      environment_release_number <= 8
+    end
   end
 end
