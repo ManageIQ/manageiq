@@ -115,14 +115,14 @@ describe Tag do
   end
 
   describe "#destroy" do
-    let(:miq_group)       { FactoryGirl.create(:miq_group) }
-    let(:other_miq_group) { FactoryGirl.create(:miq_group) }
+    let(:miq_group)       { FactoryGirl.create(:miq_group, :entitlement => Entitlement.create!) }
+    let(:other_miq_group) { FactoryGirl.create(:miq_group, :entitlement => Entitlement.create!) }
     let(:filters)         { [["/managed/prov_max_memory/test"], ["/managed/my_name/test"]] }
     let(:tag)             { FactoryGirl.create(:tag, :name => "/managed/my_name/test") }
 
     before :each do
-      miq_group.set_managed_filters(filters)
-      other_miq_group.set_managed_filters(filters)
+      miq_group.entitlement.set_managed_filters(filters)
+      other_miq_group.entitlement.set_managed_filters(filters)
       [miq_group, other_miq_group].each(&:save)
     end
 

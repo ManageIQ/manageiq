@@ -40,7 +40,8 @@ describe VmInfraController do
         ems = FactoryGirl.create(:ems_vmware, :ems_folders => [ems_folder])
 
         user = FactoryGirl.create(:user_admin)
-        user.current_group.set_managed_filters([["/managed/service_level/gold"]])
+        user.current_group.entitlement = Entitlement.create!(:filters => {'managed'   => [["/managed/service_level/gold"]],
+                                                                          'belongsto' => []})
         login_as user
         expect(controller.send(:rbac_filtered_objects, [ems_folder], :match_via_descendants => "VmOrTemplate")).to(
           eq([ems_folder]))
