@@ -110,9 +110,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::ProvisionWorkflow do
   context "with applied tags" do
     before do
       FactoryGirl.create(:classification_cost_center_with_tags)
-      admin.current_group.set_managed_filters([['/managed/cc/001']])
-      admin.current_group.set_belongsto_filters([])
-      admin.current_group.save
+      admin.current_group.entitlement = Entitlement.create!(:filters => {'managed'   => [['/managed/cc/001']],
+                                                                         'belongsto' => []})
 
       2.times { FactoryGirl.create(:availability_zone_amazon, :ems_id => ems.id) }
       2.times do
