@@ -652,11 +652,7 @@ class ChargebackController < ApplicationController
     @rate_tiers = []
     @edit[:new][:details].each_with_index do |detail, detail_index|
       rate_detail = detail[:id] ? ChargebackRateDetail.find(detail[:id]) : ChargebackRateDetail.new
-      rate_detail.per_time    = detail[:per_time]
-      rate_detail.per_unit    = detail[:per_unit]
-      rate_detail.source      = detail[:source]
-      rate_detail.group       = detail[:group]
-      rate_detail.description = detail[:description]
+      rate_detail.attributes = detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES)
       rate_detail_edit = @edit[:new][:details][detail_index]
       # C: Record the currency selected in the edit view, in my chargeback_rate_details table
       rate_detail.chargeback_rate_detail_currency_id = rate_detail_edit[:currency]
@@ -667,12 +663,9 @@ class ChargebackController < ApplicationController
       @edit[:new][:tiers][detail_index].each do |tier|
         rate_tier = tier[:id] ? ChargebackTier.find(tier[:id]) : ChargebackTier.new
         tier[:start] = Float::INFINITY if tier[:start].blank?
-        rate_tier.start  = tier[:start]
         tier[:finish] = Float::INFINITY if tier[:finish].blank?
-        rate_tier.finish = tier[:finish]
+        rate_tier.attributes = tier.slice(*ChargebackTier::FORM_ATTRIBUTES)
         rate_tier.chargeback_rate_detail_id = rate_detail.id
-        rate_tier.fixed_rate  = tier[:fixed_rate]
-        rate_tier.variable_rate = tier[:variable_rate]
         rate_tiers.push(rate_tier)
       end
       @rate_tiers[detail_index] = rate_tiers
