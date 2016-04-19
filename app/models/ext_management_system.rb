@@ -152,7 +152,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def self.create_discovered_ems(ost)
     ip = ost.ipaddr
-    unless with_ipaddress(ip).exist?
+    unless with_ipaddress(ip).exists?
       hostname = Socket.getaddrinfo(ip, nil)[0][2]
 
       ems_klass, ems_name = if ost.hypervisor.include?(:scvmm)

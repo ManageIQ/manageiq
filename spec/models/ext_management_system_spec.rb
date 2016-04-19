@@ -6,6 +6,16 @@ describe ExtManagementSystem do
     expect(described_class.model_name_from_emstype('foo')).to be_nil
   end
 
+  it ".create_discovered_ems" do
+    ost = OpenStruct.new(:ipaddr => "0.0.0.0", :hypervisor => [:virtualcenter])
+
+    allow(MiqServer).to receive(:my_server).and_return(
+      double("MiqServer", :zone => double("Zone", :name => "foo", :id => 1)))
+    expect(AuditEvent).to receive(:success)
+
+    described_class.create_discovered_ems(ost)
+  end
+
   let(:all_types_and_descriptions) do
     {
       "ansible_tower_configuration" => "Ansible Tower Configuration",
