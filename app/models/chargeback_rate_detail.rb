@@ -2,7 +2,7 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
-  has_many :chargeback_tiers, :dependent => :destroy
+  has_many :chargeback_tiers, :dependent => :destroy, :autosave => true
   validates :group, :source, :presence => true
   validate :contiguous_tiers?
 
@@ -145,13 +145,6 @@ class ChargebackRateDetail < ApplicationRecord
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
     if temp.contiguous_tiers?
-      tiers.each do |tier|
-        unless tier.valid?
-          errors.add(:tier, tier.errors.full_messages.first)
-          return
-        end
-        tier.save
-      end
       self.chargeback_tiers.replace(tiers)
     else
       temp.errors.each {|a, e| errors.add(a, e)}
