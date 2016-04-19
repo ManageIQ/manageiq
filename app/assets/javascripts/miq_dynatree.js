@@ -261,8 +261,13 @@ function miqOnMouseOutHostNet(id, node_id) {
 function hoverNodeId(id) {
   var ids = id.split('_'); // Break apart the node ids
   var nid = ids[ids.length - 1]; // Get the last part of the node id
-  return ((nid.split('-')[0] == 'v' || // Check for VM node
-           nid.split('-')[0] == 'h') && // or Host node
+  var leftNid = nid.split('-')[0];
+  var rightNid = nid.split('-')[1];
+  if (rightNid.match(/r/)) {
+    nid = sprintf("%s-%s%012d", leftNid, rightNid.split('r')[0], rightNid.split('r')[1]);
+  }
+  return ((leftNid == 'v' || // Check for VM node
+           leftNid == 'h') && // or Host node
           miqDomElementExists(nid)) ? nid : false;
 }
 
