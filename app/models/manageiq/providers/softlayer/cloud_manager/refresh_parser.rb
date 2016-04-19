@@ -157,7 +157,6 @@ module ManageIQ::Providers
           :raw_power_state   => instance.state,
           :flavor            => instance.flavor_id,
           :operating_system  => instance.os_code,
-          :security_groups   => nil,
           :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
           :hardware          => {
             :cpu_sockets          => instance.cpu,
@@ -173,7 +172,6 @@ module ManageIQ::Providers
       end
 
       def parse_cloud_network(cloud_network)
-        # TODO: implement the orchestration stack
         cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
           @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
         end
@@ -181,12 +179,11 @@ module ManageIQ::Providers
         uid = cloud_network.id
 
         new_result = {
-          :ems_ref             => cloud_network.id,
-          :name                => cloud_network.name,
-          :cidr                => cloud_network.address_space,
-          :enabled             => true,
-          :cloud_subnets       => cloud_subnets,
-          :orchestration_stack => nil,
+          :ems_ref       => cloud_network.id,
+          :name          => cloud_network.name,
+          :cidr          => cloud_network.address_space,
+          :enabled       => true,
+          :cloud_subnets => cloud_subnets,
         }
         return uid, new_result
       end
