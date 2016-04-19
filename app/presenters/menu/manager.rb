@@ -47,8 +47,12 @@ module Menu
 
     def merge_sections(sections)
       sections.each do |section|
+        position = nil
         if section.before
           position = @menu.index { |existing_section| existing_section.id == section.before }
+        end
+
+        if position
           @menu.insert(position, section)
         else
           @menu << section
