@@ -230,7 +230,7 @@ module Mixins
                        :metrics_api_port            => metrics_port,
                        :default_security_protocol   => default_security_protocol,
                        :amqp_security_protocol      => amqp_security_protocol,
-                       :api_version                 => @ems.api_version,
+                       :api_version                 => @ems.api_version ? @ems.api_version : "v2",
                        :provider_region             => @ems.provider_region,
                        :default_userid              => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :amqp_userid                 => amqp_userid,
@@ -358,7 +358,7 @@ module Mixins
       end
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager) &&
          ems.supports_authentication?(:metrics) && params[:metrics_userid]
-        metrics_password = params[:metrics_password] ? params[:metrics_password] : @ems.authentication_password(:metrics)
+        metrics_password = params[:metrics_password] ? params[:metrics_password] : ems.authentication_password(:metrics)
         creds[:metrics] = {:userid => params[:metrics_userid], :password => metrics_password}
       end
       if ems.supports_authentication?(:auth_key) && params[:service_account]
