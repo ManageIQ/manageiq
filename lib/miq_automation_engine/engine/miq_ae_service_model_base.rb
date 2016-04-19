@@ -6,6 +6,8 @@ module MiqAeMethodService
   end
 
   class MiqAeServiceModelBase
+    SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/service_models")
+    SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join("miq_ae_service_*.rb")
     EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/]
     class << self
       include DRbUndumped  # Ensure that Automate Method can get at the class itself over DRb
@@ -82,9 +84,30 @@ module MiqAeMethodService
 
     def self.model
       # Set a class-instance variable to get the appropriate model
-      @model ||= Object.const_get(/MiqAeService(.+)$/.match(name)[1].gsub(/_/, '::'))
+      @model ||= /MiqAeService(.+)$/.match(name)[1].gsub(/_/, '::').constantize
     end
     private_class_method :model
+
+    def self.model_name_from_file(filename)
+      File.basename(filename, '.*').split('-').map(&:camelize).join('_')
+    end
+
+    def self.model_name_from_active_record_model(ar_model)
+      "MiqAeMethodService::MiqAeService#{ar_model.name.gsub(/::/, '_')}"
+    end
+
+    def self.service_models
+      Dir.glob(MiqAeMethodService::MiqAeServiceModelBase::SERVICE_MODEL_GLOB).collect do |f|
+        model_name = MiqAeMethodService::MiqAeServiceModelBase.model_name_from_file(f)
+        next if model_name == "MiqAeServiceMethods"
+
+        "MiqAeMethodService::#{model_name}".constantize
+      end.compact!
+    end
+
+    def self.ar_base_model
+      send(:model).base_model
+    end
 
     def self.expose(*args)
       raise ArgumentError, "must pass at least one method name" if args.empty? || args.first.kind_of?(Hash)
@@ -271,9 +294,7 @@ module MiqAeMethodService
   end
 end
 
-# Register all of the service models for autoload on first use
-Dir.glob("#{File.dirname(__FILE__)}/../service_models/miq_ae_service_*.rb").each do |f|
+Dir.glob(MiqAeMethodService::MiqAeServiceModelBase::SERVICE_MODEL_GLOB).each do |f|
   f = File.basename(f, '.*')
-  const = f.split('-').map(&:camelize).join('_')
-  MiqAeMethodService.autoload(const, "service_models/#{f}")
+  MiqAeMethodService.autoload(MiqAeMethodService::MiqAeServiceModelBase.model_name_from_file(f), "service_models/#{f}")
 end

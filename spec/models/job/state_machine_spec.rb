@@ -14,16 +14,13 @@ describe Job::StateMachine do
       end
     end
 
-    class TestJob < Job
+    @obj = Class.new(Job) do
       include TestStateMachine
-    end
-
-    @obj = TestJob.new
+    end.new
   end
 
   after do
     Object.send(:remove_const, :TestStateMachine)
-    Object.send(:remove_const, :TestJob)
   end
 
   it "should transition from one state to another by a signal" do
