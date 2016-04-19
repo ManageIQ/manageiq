@@ -28,7 +28,7 @@ class TreeBuilderNetwork < TreeBuilder
   end
 
   def root_options
-    [@root.name, _("Host: %{name}") % {:name => @root_name}, 'host']
+    [@root.name, _("Host: %{name}") % {:name => @root.name}, 'host']
   end
 
   def x_get_tree_roots(count_only = false, _options)
