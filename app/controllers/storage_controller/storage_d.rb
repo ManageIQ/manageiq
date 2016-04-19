@@ -61,11 +61,7 @@ module StorageController::StorageD
         @right_cell_text = _("%{model} \"%{name}\"") % {:name => @storage.name, :model => ui_lookup(:model => "Storage")}
       else
         miq_search_node
-        #storage_list
-        #store_type = x_node.split('-').last
-        #@right_cell_text = _("%{model} for %{group} \"%{name}\"") % {:name => store_type, :model => ui_lookup(:models => "Storage"), :group => ui_lookup(:model => "StorageType")}
-        #@right_cell_div  = "storage_list"
-      end
+       end
     end
   end
 end

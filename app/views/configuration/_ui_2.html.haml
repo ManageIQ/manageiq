@@ -184,13 +184,6 @@
                   = ui_lookup(:tables => "storage_pods")
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:storage_pod, @edit[:new][:views][:storage_pod])
-
-            - if role_allows(:feature => "repository_show_list")
-              .form-group
-                %label.col-md-3.control-label
-                  = _('Repositories')
-                .col-md-8
-                  %ul.list-inline= render_view_buttons(:repository, @edit[:new][:views][:repository])
             - if role_allows(:feature => "providers_accord")
               .form-group
                 %label.col-md-3.control-label
