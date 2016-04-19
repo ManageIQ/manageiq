@@ -37,6 +37,18 @@ class MiqExpression::Field
     end
   end
 
+  def matches(other)
+    escape = nil
+    case_sensitive = true
+    arel_attribute.matches(other, escape, case_sensitive)
+  end
+
+  def does_not_match(other)
+    escape = nil
+    case_sensitive = true
+    arel_attribute.does_not_match(other, escape, case_sensitive)
+  end
+
   private
 
   def arel_attribute
