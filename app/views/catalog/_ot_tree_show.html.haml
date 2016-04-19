@@ -20,7 +20,7 @@
       %label.col-md-2.control-label
         = _('Read Only')
       .col-md-8
-        = @record.stacks.length > 0 ? _("True") : _("False")
+        = @record.in_use? ? _("True") : _("False")
     .form-group
       %label.col-md-2.control-label
         = _('Created On')

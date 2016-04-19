@@ -1153,7 +1153,7 @@ class ApplicationHelper::ToolbarBuilder
     when "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
       case id
       when "orchestration_template_remove"
-        return "Read-only Orchestration Template cannot be deleted" if @record.stacks.length > 0
+        return "Read-only Orchestration Template cannot be deleted" if @record.in_use?
       end
     when "Service"
       case id

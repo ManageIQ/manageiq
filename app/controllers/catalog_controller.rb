@@ -739,7 +739,7 @@ class CatalogController < ApplicationController
     checked[0] = params[:id] if checked.blank? && params[:id]
     elements = OrchestrationTemplate.where(:id => checked)
     elements.each do |ot|
-      if ot.stacks.length > 0
+      if ot.in_use?
         add_flash(_("Orchestration template \"%{name}\" is read-only and cannot be deleted.") %
           {:name => ot.name}, :error)
       else
@@ -1007,7 +1007,7 @@ class CatalogController < ApplicationController
       ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
       ot.name = @edit[:new][:name]
       ot.description = @edit[:new][:description]
-      if ot.stacks.length == 0
+      unless ot.in_use?
         ot.content = params[:template_content]
         ot.draft = @edit[:new][:draft]
       end
