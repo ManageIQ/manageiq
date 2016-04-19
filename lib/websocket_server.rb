@@ -35,6 +35,9 @@ class WebsocketServer
       return proxy.cleanup if proxy.error
       proxy.start
 
+      # Release the connection because one SPICE console can open multiple TCP connections
+      ActiveRecord::Base.connection_pool.release_connection
+
       ws, sock = proxy.descriptors
       @pairing.merge!(ws => Pairing.new(true, proxy), sock => Pairing.new(false, proxy))
       @sockets.push(ws, sock)
