@@ -38,7 +38,10 @@ describe('containerDashboardController gets data and', function() {
 
     it('in network metrics', function() {
       expect($scope.dailyNetworkUtilization).toBeDefined();
-      expect($scope.hourlyNetworkUtilization).toBeDefined();
+    });
+
+    it('in pod metrics', function() {
+      expect($scope.dailyPodEntityTrend).toBeDefined();
     });
   });
 });
@@ -83,7 +86,10 @@ describe('containerDashboardController gets no data and', function() {
 
     it('in network metrics', function() {
       expect($scope.dailyNetworkUtilization.dataAvailable).toBeDefined();
-      expect($scope.hourlyNetworkUtilization.dataAvailable).toBeDefined();
+    });
+
+    it('in pod metrics', function() {
+      expect($scope.dailyPodEntityTrend.dataAvailable).toBeDefined();
     });
   });
 });

@@ -15,7 +15,9 @@ class ContainerDashboardService
       :heatmaps               => heatmaps,
       :ems_utilization        => ems_utilization,
       :hourly_network_metrics => hourly_network_metrics,
-      :daily_network_metrics  => daily_network_metrics
+      :daily_network_metrics  => daily_network_metrics,
+      :daily_pod_metrics      => daily_pod_metrics,
+      :daily_image_metrics    => daily_image_metrics
     }.compact
   end
 
@@ -214,6 +216,46 @@ class ContainerDashboardService
       {
         :xData => daily_network_metrics.keys,
         :yData => daily_network_metrics.values.map(&:round)
+      }
+    end
+  end
+
+  def fill_daily_pod_metrics(metrics, pod_create_trend, pod_delete_trend)
+    metrics.each do |m|
+      timestamp = m.timestamp.strftime("%Y-%m-%d")
+
+      pod_create_trend[timestamp] += m.stat_container_group_create_rate.to_i
+      pod_delete_trend[timestamp] += m.stat_container_group_delete_rate.to_i
+    end
+  end
+
+  def daily_pod_metrics
+    daily_pod_create_trend = Hash.new(0)
+    daily_pod_delete_trend = Hash.new(0)
+
+    fill_daily_pod_metrics(daily_provider_metrics,
+                           daily_pod_create_trend, daily_pod_delete_trend)
+
+    if daily_pod_create_trend.any?
+      {
+        :xData    => daily_pod_create_trend.keys,
+        :yCreated => daily_pod_create_trend.values.map(&:round),
+        :yDeleted => daily_pod_delete_trend.values.map(&:round)
+      }
+    end
+  end
+
+  def daily_image_metrics
+    daily_image_metrics = Hash.new(0)
+    daily_provider_metrics.each do |m|
+      day = m.timestamp.strftime("%Y-%m-%d")
+      daily_image_metrics[day] += m.stat_container_image_registration_rate.to_i
+    end
+
+    if daily_image_metrics.any?
+      {
+        :xData => daily_image_metrics.keys,
+        :yData => daily_image_metrics.values.map(&:round)
       }
     end
   end

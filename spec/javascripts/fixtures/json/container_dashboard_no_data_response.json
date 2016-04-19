@@ -61,6 +61,7 @@
       "mem": null
     },
     "daily_network_metrics" : null,
-    "hourly_network_metrics" : null
+    "daily_pod_metrics" : null,
+    "daily_image_metrics" : null
   }
 }
