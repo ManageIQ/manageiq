@@ -696,15 +696,16 @@ class MiqExpression
     when "is not null"
       field = Field.parse(exp[operator]["field"])
       clause = field.not_eq(nil).to_sql
-    when "is empty", "is not empty"
-      col      = exp[operator]["field"]
-      col_type = col_details[col].nil? ? :string : col_details[col][:data_type]
-      operands = self.class.operands2sqlvalue(operator, exp[operator])
-      clause   = "(#{operands[0]} #{operator.sub(/empty/i, "NULL")})"
-      if col_type == :string
-        conjunction = (operator.downcase == 'is empty') ? 'OR' : 'AND'
-        clause = "(#{clause} #{conjunction} (#{operands[0]} #{self.class.normalize_sql_operator(operator)} ''))"
-      end
+    when "is empty"
+      field = Field.parse(exp[operator]["field"])
+      arel = field.eq(nil)
+      arel = arel.or(field.eq("")) if field.string?
+      clause = arel.to_sql
+    when "is not empty"
+      field = Field.parse(exp[operator]["field"])
+      arel = field.not_eq(nil)
+      arel = arel.and(field.not_eq("")) if field.string?
+      clause = arel.to_sql
     when "contains"
       # Only support for tags of the main model
       if exp[operator].key?("tag")

@@ -131,12 +131,12 @@ describe MiqExpression do
 
     it "generates the SQL for an IS EMPTY expression" do
       sql, * = MiqExpression.new("IS EMPTY" => {"field" => "Vm-name"}).to_sql
-      expect(sql).to eq("((vms.name IS NULL) OR (vms.name = ''))")
+      expect(sql).to eq("(\"vms\".\"name\" IS NULL OR \"vms\".\"name\" = '')")
     end
 
     it "generates the SQL for an IS NOT EMPTY expression" do
       sql, * = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-name"}).to_sql
-      expect(sql).to eq("((vms.name IS NOT NULL) AND (vms.name != ''))")
+      expect(sql).to eq("\"vms\".\"name\" IS NOT NULL AND \"vms\".\"name\" != ''")
     end
 
     it "generates the SQL for a CONTAINS expression with field" do
