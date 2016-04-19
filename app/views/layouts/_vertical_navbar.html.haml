@@ -17,10 +17,16 @@
 
               %ul.list-group
                 - menu_section.items.each do |menu_item|
-                  - if menu_item.visible?
+                  - if menu_item.visible? && menu_item.leaf?
+                    %li.list-group-item{:class => tertiary_nav_class(menu_item)}
+                      %a{:href => menu_item.url, :onclick => 'return miqCheckForChanges()'}
+                        %span.list-group-item-value
+                          = _(menu_item.name)
+
+                  - elsif menu_item.visible?
                     %li.list-group-item.tertiary-nav-item-pf{"data-target" => "#menu-#{menu_item.id}", :class => secondary_nav_class(menu_item)}
                       %a{:href => menu_item.url, :onclick => 'return miqCheckForChanges()'}
-                        %span
+                        %span.list-group-item-value
                           = _(menu_item.name)
                       .nav-pf-tertiary-nav
                         .nav-item-pf-header
