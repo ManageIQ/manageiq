@@ -7,8 +7,13 @@ module PersistentVolumeHelper::TextualSummary
     %i(name creation_timestamp resource_version capacity access_modes reclaim_policy status_phase
        storage_medium_type gce_pd_resource git_repository git_revision nfs_server
        iscsi_target_portal iscsi_target_qualified_name iscsi_target_lun_number glusterfs_endpoint_name
-       persistent_volume_claim_name rados_ceph_monitors rados_image_name rados_pool_name rados_user_name rados_keyring
+       rados_ceph_monitors rados_image_name rados_pool_name rados_user_name rados_keyring
        volume_path fs_type read_only volume_id partition secret_name)
+  end
+
+  def textual_group_claim_properties
+    @claim = @record.persistent_volume_claim
+    %i(claim_name claim_creation_timestamp desired_access_modes) if @claim
   end
 
   def textual_group_relationships
@@ -102,12 +107,6 @@ module PersistentVolumeHelper::TextualSummary
      :value => name} if name
   end
 
-  def textual_persistent_volume_claim_name
-    claim_name = @record.claim_name
-    {:label => _("Persistent Volume Claim Name"),
-     :value => claim_name} if claim_name
-  end
-
   def textual_rados_ceph_monitors
     ceph_monitors = @record.rbd_ceph_monitors
     {:label => _("Rados Ceph Monitors"),
@@ -166,5 +165,19 @@ module PersistentVolumeHelper::TextualSummary
 
   def textual_secret_name
     @record.common_secret
+  end
+
+  def textual_claim_name
+    {:label => _("Name"),
+     :value => @claim.name}
+  end
+
+  def textual_claim_creation_timestamp
+    {:label => _("Creation timestamp"),
+     :value => format_timezone(@claim.ems_created_on)}
+  end
+
+  def textual_desired_access_modes
+    @claim.desired_access_modes.join(',')
   end
 end
