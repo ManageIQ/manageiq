@@ -9,7 +9,6 @@ class MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets < ActiveRecord::Mig
 
   class CloudSubnetNetworkPort < ActiveRecord::Base
     self.table_name = "cloud_subnets_network_ports"
-    self.inheritance_column = :_type_disabled
   end
 
   def up
