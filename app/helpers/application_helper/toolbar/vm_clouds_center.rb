@@ -147,6 +147,14 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :confirm   => N_("Retire the selected items?"),
           :enabled   => false,
           :onwhen    => "1+"),
+        button(
+          :instance_live_migrate,
+          'product product-migrate fa-lg',
+          t = N_('Migrate selected Instance'),
+          t,
+          :url_parms => 'main_div',
+          :enabled   => false,
+          :onwhen    => '1')
       ]
     ),
   ])
