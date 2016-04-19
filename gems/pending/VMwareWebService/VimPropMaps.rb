@@ -364,6 +364,8 @@ module VimPropMaps
       :props    => [
         'summary.name',
         'config.key',
+        'config.distributedVirtualSwitch',
+        'config.name',
         'parent',
         'host',
         'tag'
@@ -374,6 +376,7 @@ module VimPropMaps
       :keyPath  => ['summary', 'name'],
       :props    => [
         'config.uplinkPortgroup',
+        'config.defaultPortConfig',
         'summary.name',
         'summary.uuid',
         'summary.host',
@@ -511,6 +514,8 @@ module VimPropMaps
       :props    => [
         'summary.name',
         'config.key',
+        'config.distributedVirtualSwitch',
+        'config.name',
         'parent',
         'host',
         'tag'
@@ -521,6 +526,7 @@ module VimPropMaps
       :keyPath  => ['summary', 'name'],
       :props    => [
         'config.uplinkPortgroup',
+        'config.defaultPortConfig',
         'summary.name',
         'summary.uuid',
         'summary.host',
