@@ -26,7 +26,8 @@ describe TreeBuilderContainers do
     end
 
     it "returns tagged containers, logged user with tag filter" do
-      user.current_group.set_managed_filters([tag.name])
+      user.current_group.entitlement = Entitlement.create!
+      user.current_group.entitlement.set_managed_filters([tag.name])
       @tree = TreeBuilderContainers.new("containers_tree", "containers", {}, true)
       results = get_tree_results(@tree)
       expect(results).to match_array(["Tagged Container"])
