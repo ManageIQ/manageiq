@@ -1,12 +1,6 @@
 module FilterableMixin
   extend ActiveSupport::Concern
 
-  def find_filtered_children(assoc)
-    raise "no relationship found for \"#{assoc}\"" unless self.respond_to?(assoc)
-    result = self.send(assoc)
-    result ? Array.wrap(result) : []
-  end
-
   def authorized_for_user?(userid)
     user     = User.find_by_userid(userid)
     mfilters = user ? user.get_managed_filters : []

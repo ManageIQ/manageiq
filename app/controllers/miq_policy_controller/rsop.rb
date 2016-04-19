@@ -10,11 +10,11 @@ module MiqPolicyController::Rsop
         when "vm"
           vms = [Vm.find(@sb[:rsop][:filter_value])]
         when "ems"
-          vms = ExtManagementSystem.find(@sb[:rsop][:filter_value]).find_filtered_children("vms")
+          vms = ExtManagementSystem.find(@sb[:rsop][:filter_value]).vms
         when "cluster"
-          vms = EmsCluster.find(@sb[:rsop][:filter_value]).find_filtered_children("all_vms")
+          vms = EmsCluster.find(@sb[:rsop][:filter_value]).all_vms
         when "host"
-          vms = Host.find(@sb[:rsop][:filter_value]).find_filtered_children("vms")
+          vms = Host.find(@sb[:rsop][:filter_value]).vms
         end
         if vms.length > 0
           @sb[:rsop][:out_of_scope] = true
