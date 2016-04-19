@@ -168,6 +168,8 @@ module EmsRefresh::VcUpdates
       "MOR",
       "host",
       "config.key",
+      "config.distributedVirtualSwitch",
+      "config.name",
       "summary.name",
       "parent",
       "tag"
@@ -176,6 +178,7 @@ module EmsRefresh::VcUpdates
     :ems_refresh_dvswitch    => [
       "MOR",
       "config.uplinkPortgroup",
+      "config.defaultPortConfig",
       "summary.name",
       "summary.uuid",
       "summary.host",
