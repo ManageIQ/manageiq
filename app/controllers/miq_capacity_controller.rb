@@ -162,11 +162,11 @@ class MiqCapacityController < ApplicationController
     if filter_value && filter_value != "<Choose>"
       case params[:filter_typ]
       when "host"
-        vms, = Host.find(filter_value).find_filtered_children("vms")
+        vms = Host.find(filter_value).vms
       when "ems"
-        vms, = ExtManagementSystem.find(filter_value).find_filtered_children("vms")
+        vms = ExtManagementSystem.find(filter_value).vms
       when "cluster"
-        vms, = EmsCluster.find(filter_value).find_filtered_children("all_vms")
+        vms = EmsCluster.find(filter_value).all_vms
       when "filter"
         vms = MiqSearch.find(filter_value).results(:userid => current_userid)
       else

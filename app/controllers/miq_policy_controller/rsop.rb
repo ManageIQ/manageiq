@@ -9,15 +9,14 @@ module MiqPolicyController::Rsop
         case @sb[:rsop][:filter]
         when "vm"
           vms = [Vm.find(@sb[:rsop][:filter_value])]
-          count = 1
         when "ems"
-          vms, count = ExtManagementSystem.find(@sb[:rsop][:filter_value]).find_filtered_children("vms")
+          vms = ExtManagementSystem.find(@sb[:rsop][:filter_value]).vms
         when "cluster"
-          vms, count = EmsCluster.find(@sb[:rsop][:filter_value]).find_filtered_children("all_vms")
+          vms = EmsCluster.find(@sb[:rsop][:filter_value]).all_vms
         when "host"
-          vms, count = Host.find(@sb[:rsop][:filter_value]).find_filtered_children("vms")
+          vms = Host.find(@sb[:rsop][:filter_value]).vms
         end
-        if count > 0
+        if vms.length > 0
           @sb[:rsop][:out_of_scope] = true
           @sb[:rsop][:passed] = true
           @sb[:rsop][:failed] = true
