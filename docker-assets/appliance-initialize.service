@@ -1,0 +1,13 @@
+[Unit]
+Description=Initialize Appliance Database
+ConditionPathExists=!/var/opt/rh/rh-postgresql94/lib/pgsql/data/base
+After=evminit.service memcached.service
+Before=evmserverd.service
+Requires=memcached.service
+[Service]
+TimeoutStartSec=10m
+Type=oneshot
+ExecStart=/bin/appliance-initialize.sh
+ExecStartPost=/usr/bin/systemctl disable appliance-initialize
+[Install]
+WantedBy=multi-user.target

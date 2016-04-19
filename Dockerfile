@@ -5,6 +5,8 @@ MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq-appliance-build
 # Set ENV, LANG only needed if building with docker-1.8
 ENV LANG en_US.UTF-8
 ENV TERM xterm
+ENV APP_ROOT /var/www/miq/vmdb
+ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 
 # Fetch postgresql 9.4 COPR and pglogical repos
 RUN curl -sSLko /etc/yum.repos.d/rhscl-rh-postgresql94-epel-7.repo \
@@ -68,41 +70,45 @@ RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz
     echo "chruby ruby-2.2.4" >> ~/.bash_profile && \
     rm -rf /chruby-* && rm -rf /usr/local/src/* && yum clean all
 
-## Environment for scripts
-RUN echo "export BASEDIR=/manageiq" > /etc/default/evm && \
-    echo "export PATH=$PATH:/opt/rubies/ruby-2.2.4/bin:/opt/rh/rh-postgresql94/root/bin:/opt/rh/rh-postgresql94/root/usr/libexec" >> /etc/default/evm && \
-    echo "[[ -s /etc/default/evm_postgres ]] && source /etc/default/evm_postgres" >> /etc/default/evm && \
-    echo "export APPLIANCE_PG_SCL_NAME=rh-postgresql94" > /etc/default/evm_postgres && \
-    echo "export APPLIANCE_PG_SERVICE=rh-postgresql94-postgresql" >> /etc/default/evm_postgres && \
-    echo "export APPLIANCE_PG_DATA=/var/opt/rh/rh-postgresql94/lib/pgsql/data" >> /etc/default/evm_postgres && \
-    echo "export APPLIANCE_PG_CHECKDB=/opt/rh/rh-postgresql94/root/usr/libexec/postgresql-check-db-dir" >> /etc/default/evm_postgres && \
-    echo "[[ -s /opt/rh/\${APPLIANCE_PG_SCL_NAME}/enable ]] && source /opt/rh/\${APPLIANCE_PG_SCL_NAME}/enable" >> /etc/default/evm_postgres
+## GIT clone manageiq-appliance repo
+RUN git clone --depth 1 https://github.com/ManageIQ/manageiq-appliance.git ${APPLIANCE_ROOT}
 
-## Create basedir, GIT clone miq (shallow)
-#RUN mkdir -p /manageiq && git clone --depth 1 https://github.com/ManageIQ/manageiq /manageiq
-RUN mkdir -p /manageiq
-ADD . /manageiq
+## Create approot, ADD miq
+RUN mkdir -p ${APP_ROOT}
+ADD . ${APP_ROOT}
 
-## Change WORKDIR to clone dir, start all, setup, shutdown all, clean all
-WORKDIR /manageiq
-RUN /bin/bash -l -c "/usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d && \
-    source /etc/default/evm && \
-    npm install -g bower    && \
-    bin/setup --no-db --no-tests && \
-    pkill memcached && \
-    rm -rvf /opt/rubies/ruby-2.2.4/lib/ruby/gems/2.2.0/cache/*"
+## Setup environment
 
-## Copy db init script, evmserver startup script and systemd evmserverd unit file
-COPY docker-assets/docker_initdb bin/docker_initdb
-COPY docker-assets/evmserver.sh bin/evmserver.sh
-COPY docker-assets/evmserverd.service /usr/lib/systemd/system/evmserverd.service
+RUN ${APPLIANCE_ROOT}/setup && \
+echo "export PATH=\$PATH:/opt/rubies/ruby-2.2.4/bin" >> /etc/default/evm && \
+mkdir ${APP_ROOT}/log/apache && \
+mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
+echo "# This file intentionally left blank. CFME maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
+echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm && \
+cp /etc/motd.manageiq /etc/motd
+
+## Change workdir to application root, build/install gems
+WORKDIR ${APP_ROOT}
+RUN source /etc/default/evm && \
+/usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d && \
+npm install -g bower && \
+gem install bundler -v ">=1.8.4" && \
+bin/setup --no-db --no-tests && \
+rake evm:compile_assets && \
+rake evm:compile_sti_loader && \
+rm -rvf /opt/rubies/ruby-2.2.4/lib/ruby/gems/2.2.0/cache/* && \
+bower cache clean && \
+npm cache clean
+
+## Copy appliance-initialize script and service unit file
+COPY docker-assets/appliance-initialize.service /usr/lib/systemd/system
+COPY docker-assets/appliance-initialize.sh /bin
 
 ## Scripts symblinks
-RUN ln -s /manageiq/bin/evmserver.sh /usr/bin && \
-    ln -s /manageiq/bin/docker_initdb /usr/bin
+RUN ln -s /var/www/miq/vmdb/docker-assets/docker_initdb /usr/bin
 
 ## Enable services on systemd
-RUN systemctl enable evmserverd memcached
+RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop
 
 ## Expose required container ports
 EXPOSE 80 443 3000 4000 5900-5999
