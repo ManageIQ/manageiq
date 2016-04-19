@@ -154,7 +154,9 @@ module ToolbarHelper
     hidden = props[:hidden]
     cls = props[:enabled] ? '' : 'disabled '
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
-      content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
+      content_tag(:a, prepare_tag_keys(props)
+                  .update(:href => '#')
+                  .update(Hash(props[:html_attributes]))) do
         (toolbar_image(props) + _(props[:text].to_s).html_safe)
       end
     end
@@ -170,7 +172,9 @@ module ToolbarHelper
             props[:enabled] ? '' : 'disabled '
           end
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
-      content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
+      content_tag(:a, prepare_tag_keys(props)
+                      .update(:href => '#')
+                      .update(Hash(props[:html_attributes]))) do
         (toolbar_image(props) + _(props[:text].to_s).html_safe)
       end
     end
