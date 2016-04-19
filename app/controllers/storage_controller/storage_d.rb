@@ -50,9 +50,9 @@ module StorageController::StorageD
 
   def storage_get_node_info(treenodeid)
     if treenodeid == "root"
-      storage_list
+      options = {:model => "Storage"}
+      process_show_list(options)
       @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "Storage")}
-      @right_cell_div  = "storage_list"
     else
       nodes = treenodeid.split("-")
       if nodes[0] == "ds"

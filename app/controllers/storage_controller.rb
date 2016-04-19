@@ -402,10 +402,14 @@ class StorageController < ApplicationController
     @breadcrumbs = []
     @explorer = true
     @lastaction = "explorer"
+
+    # if AJAX request, replace right cell, and return
+    if request.xml_http_request?
+      replace_right_cell
+      return
+    end
     @sb[:open_tree_nodes] ||= []
-
     build_accordions_and_trees
-
     @right_cell_div ||= "storage_list"
     @right_cell_text ||= _("All Datastores")
 
