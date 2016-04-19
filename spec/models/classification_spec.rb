@@ -157,6 +157,18 @@ describe Classification do
       end
     end
 
+    it "should be able to produce valid names" do
+      ['<My_Name>',
+       'My Name',
+       'My_Name_is...',
+       '123456789_123456789_123456789_123456789_123456789_1'
+      ].each do |name|
+        good_name = Classification.sanitize_name(name)
+        cat = Classification.new(:name => good_name, :description => name, :parent_id => 0)
+        expect(cat).to be_valid
+      end
+    end
+
     it "should test assign single entry to" do
       cat = Classification.find_by_name "test_single_value_category"
       ent1 = cat.entries[0]
