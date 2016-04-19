@@ -7,7 +7,6 @@ class Classification < ApplicationRecord
 
   before_save    :save_tag
   before_destroy :delete_tags_and_entries
-  validate       :validate_uniqueness_on_tag_name
 
   validates :description, :presence => true, :length => {:maximum => 255}
   validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
@@ -19,8 +18,11 @@ class Classification < ApplicationRecord
     c.class.in_region(region_id).exists?(cond)
   }
 
-  validates :name, :presence => true, :length => {:maximum => 50}
+  NAME_MAX_LENGTH = 50
+  validates :name, :presence => true, :length => {:maximum => NAME_MAX_LENGTH}
   validate :validate_format_of_name
+
+  validate :validate_uniqueness_on_tag_name
 
   validates :syntax, :inclusion => {:in      => %w( string integer boolean ),
                                     :message => "should be one of 'string', 'integer' or 'boolean'"}
@@ -442,6 +444,10 @@ class Classification < ApplicationRecord
 
     # Fix categories that have a nill parent_id
     where(:parent_id => nil).update_all(:parent_id => 0)
+  end
+
+  def self.sanitize_name(name)
+    name.downcase.tr('^a-z0-9_:', '_')[0, NAME_MAX_LENGTH]
   end
 
   private

@@ -187,11 +187,11 @@ module ManageIQ::Providers::Kubernetes
       new_result = parse_base_item(node)
 
       new_result.merge!(
-        :type           => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
-        :identity_infra => node.spec.providerID,
-        :labels         => parse_labels(node),
-        :lives_on_id    => nil,
-        :lives_on_type  => nil
+        :type            => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+        :identity_infra  => node.spec.providerID,
+        :labels_and_tags => parse_labels(node),
+        :lives_on_id     => nil,
+        :lives_on_type   => nil
       )
 
       node_info = node.status.try(:nodeInfo)
@@ -255,7 +255,7 @@ module ManageIQ::Providers::Kubernetes
         :session_affinity => service.spec.sessionAffinity,
         :service_type     => service.spec.type,
 
-        :labels           => parse_labels(service),
+        :labels_and_tags  => parse_labels(service),
         :selector_parts   => parse_selector_parts(service),
         :container_groups => container_groups
       )
@@ -332,7 +332,7 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:container_conditions] = parse_conditions(pod)
 
-      new_result[:labels] = parse_labels(pod)
+      new_result[:labels_and_tags] = parse_labels(pod)
       new_result[:node_selector_parts] = parse_node_selector_parts(pod)
       new_result[:container_volumes] = parse_volumes(pod)
       new_result
@@ -359,7 +359,7 @@ module ManageIQ::Providers::Kubernetes
 
     def parse_namespace(namespace)
       new_result = parse_base_item(namespace).except(:namespace)
-      new_result[:labels] = parse_labels(namespace)
+      new_result[:labels_and_tags] = parse_labels(namespace)
       new_result
     end
 
@@ -514,7 +514,7 @@ module ManageIQ::Providers::Kubernetes
       new_result.merge!(
         :replicas         => container_replicator.spec.replicas,
         :current_replicas => container_replicator.status.replicas,
-        :labels           => parse_labels(container_replicator),
+        :labels_and_tags  => parse_labels(container_replicator),
         :selector_parts   => parse_selector_parts(container_replicator)
       )
 
