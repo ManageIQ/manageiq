@@ -1,5 +1,3 @@
-require 'fog/softlayer'
-
 module ManageIQ::Providers
   module SoftLayer
     class CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
@@ -12,10 +10,6 @@ module ManageIQ::Providers
       def initialize(ems, options = {})
         @ems               = ems
         @compute           = ems.connect
-        @account           = ems.connect(options.merge(:service => "account"))
-        @network           = ems.connect(options.merge(:service => "network"))
-        @dns               = ems.connect(options.merge(:service => "dns"))
-        @storage           = ems.connect(options.merge(:service => "storage"))
         @options           = options
         @data              = {}
         @data_index        = {}
@@ -29,7 +23,6 @@ module ManageIQ::Providers
         get_availability_zones
         get_images
         get_instances
-        get_cloud_networks
         get_tags
         _log.info("#{log_header}...Complete")
 
@@ -61,19 +54,9 @@ module ManageIQ::Providers
         process_collection(instances, :vms) { |instance| parse_instance(instance) }
       end
 
-      def get_cloud_networks
-        networks = @network.networks.all
-        process_collection(networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
-      end
-
-      def get_cloud_subnets(cloud_network)
-        subnets = cloud_network.subnets
-        process_collection(subnets, :cloud_subnets) { |subnet| parse_cloud_subnet(subnet) }
-      end
-
       def get_tags
         tags = @compute.tags.all
-        process_collection(tags, :tags) { |tags| parse_tags(tags) }
+        # process_collection(tags, :tags) { |tags| parse_tags(tags) }
       end
 
       def process_collection(collection, key)
@@ -168,34 +151,6 @@ module ManageIQ::Providers
           }
         }
 
-        return uid, new_result
-      end
-
-      def parse_cloud_network(cloud_network)
-        cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
-          @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
-        end
-
-        uid = cloud_network.id
-
-        new_result = {
-          :ems_ref       => cloud_network.id,
-          :name          => cloud_network.name,
-          :cidr          => cloud_network.address_space,
-          :enabled       => true,
-          :cloud_subnets => cloud_subnets,
-        }
-        return uid, new_result
-      end
-
-      def parse_cloud_subnet(subnet)
-        uid = subnet.id
-        new_result = {
-          :ems_ref           => uid,
-          :name              => subnet.name,
-          :cidr              => subnet.address_space,
-          :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
-        }
         return uid, new_result
       end
     end

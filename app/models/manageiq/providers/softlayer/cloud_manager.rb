@@ -1,17 +1,43 @@
 class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :AvailabilityZone
-  require_nested :EventParser
   require_nested :Flavor
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
-  require_nested :Template
   require_nested :Vm
+  require_nested :Template
   require_nested :Provision
   require_nested :ProvisionWorkflow
-  require_nested :OrchestrationStack
-  require_nested :OrchestrationServiceOptionConverter
-  require_nested :SecurityGroup
+
+  include ManageIQ::Providers::SoftLayer::ManagerMixin
+
+  has_one :network_manager,
+          :foreign_key => :parent_ems_id,
+          :class_name  => "ManageIQ::Providers::SoftLayer::NetworkManager",
+          :autosave    => true,
+          :dependent   => :destroy
+
+  delegate :floating_ips, # not sure
+           :cloud_networks,
+           :cloud_subnets,
+           :network_ports,
+           :network_routers,
+           :public_networks,
+           :private_networks,
+           :all_cloud_networks,
+           :to        => :network_manager,
+           :allow_nil => true
+
+  before_validation :ensure_managers
+
+  def ensure_managers
+    build_network_manager unless network_manager
+    network_manager.name            = "#{name} Network Manager"
+    network_manager.zone_id         = zone_id
+    network_manager.provider_region = provider_region
+  end
+
+  ExtManagementSystem.register_cloud_discovery_type('softlayer' => 'softlayer')
 
   def self.ems_type
     @ems_type ||= "softlayer".freeze
@@ -27,56 +53,6 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
 
   def description
     ManageIQ::Providers::SoftLayer::Regions.find_by_name(provider_region)[:description]
-  end
-
-  # Connection
-
-  def self.raw_connect(softlayer_username, soflayer_api_key, options)
-    require 'fog/softlayer'
-
-    config = {
-      :provider           => "softlayer",
-      :softlayer_username => softlayer_username,
-      :softlayer_api_key  => soflayer_api_key
-    }
-
-    case options[:service]
-    when 'compute', nil
-      ::Fog::Compute.new(config)
-    when 'network'
-      ::Fog::Network.new(config)
-    when 'dns'
-      ::Fog::DNS.new(config)
-    when 'storage'
-      ::Fog::Storage.new(config)
-    when 'account'
-      ::Fog::Account.new(config)
-    else
-      raise ArgumentError, "Unknown service: #{options[:service]}"
-    end
-  end
-
-  def connect(options = {})
-    require 'fog/softlayer'
-
-    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(options[:auth_type])
-
-    client_id = options[:user] || authentication_userid(options[:auth_type])
-    client_key = options[:api_key] || authentication_key(options[:auth_type])
-
-    self.class.raw_connect(client_id, client_key, options)
-  end
-
-  def verify_credentials(_auth_type = nil, options = {})
-    connect(options)
-
-    # Hit the SoftLayer servers to make sure authentication has
-    # been procced
-    connection.regions.all
-  rescue Excon::Errors::Unauthorized => err
-    raise MiqException::MiqInvalidCredentialsError, err.message
-
-    true
   end
 
   # Operations
