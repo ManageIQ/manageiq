@@ -14,6 +14,7 @@ class ChargebackRate < ApplicationRecord
   # and is brought in by the call to acts_as_miq_taggable in the AssignmentMixin #
   ################################################################################
   before_destroy :ensure_unassigned
+  before_destroy :ensure_nondefault
 
   include AssignmentMixin
 
@@ -169,6 +170,13 @@ class ChargebackRate < ApplicationRecord
   def ensure_unassigned
     if assigned?
       errors.add(:rate, "rate is assigned and cannot be deleted")
+      throw :abort
+    end
+  end
+
+  def ensure_nondefault
+    if default?
+      errors.add(:rate, "default rate cannot be deleted")
       throw :abort
     end
   end
