@@ -19,26 +19,11 @@ module MiqFilter
   end
 
   def self.find_children_of_via_reflection(obj, reflection)
-    db = reflection.class_name.constantize
-    if db.respond_to?(:find_filtered)
-      if reflection.macro == :belongs_to
-        objid = obj.send(reflection.foreign_key)
-        return [[], 0] if objid.nil?
-
-        conditions = "id = #{objid}"
-      else
-        conditions = "#{reflection.foreign_key} = #{obj.id}"
-      end
-      conditions += " AND (#{reflection.options[:conditions]})" if reflection.options[:conditions]
-      result = where(conditions)
-      [result, result.length]
+    result = obj.send(reflection.name)
+    if reflection.macro == :has_one || reflection.macro == :belongs_to
+      result ? [[result], 1] : [[], 0]
     else
-      result = obj.send(reflection.name)
-      if reflection.macro == :has_one || reflection.macro == :belongs_to
-        result ? [[result], 1] : [[], 0]
-      else
-        [result, result.length]
-      end
+      [result, result.length]
     end
   end
 
