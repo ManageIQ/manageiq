@@ -3,7 +3,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager::Vm < ManageIQ::Providers::Cl
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
-    connection.servers.get(name, availability_zone.name)
+    connection.servers.get(name)
   end
 
   #
