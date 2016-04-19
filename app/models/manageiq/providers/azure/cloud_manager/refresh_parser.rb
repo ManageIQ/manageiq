@@ -99,14 +99,43 @@ module ManageIQ::Providers
 
       def get_stack_resources(name, group)
         resources = @tds.list_deployment_operations(name, group)
-        # exclude empty resources and resources with an action
-        resources.reject! do |r|
-          r.try(:properties).try(:target_resource).try(:id).nil? ||
-            r.properties.target_resource.try(:action_name)
+        # relying on deployment operations to collect resources; but each resource may appear multiple times
+        # consolidate multiple appearances into only one
+        pos = -1
+        resources.reject! do |resource|
+          pos += 1
+          resource.properties.try(:target_resource).nil? || resource_already_collected?(resources, resource, pos)
         end
 
         process_collection(resources, :orchestration_stack_resources) do |resource|
           parse_stack_resource(resource, group)
+        end
+      end
+
+      def resource_already_collected?(all, resource, position)
+        all.each_with_index do |old_resource, index|
+          return false if index == position
+          old_id = old_resource.properties.target_resource.id
+          search_id = resource.properties.target_resource.id
+          if old_id == search_id
+            transfer_selected_resource_properties(old_resource, resource)
+            return true
+          end
+        end
+      end
+
+      # new_resource is to be excluded.
+      # copy any failed state to the old resource; concatenate all status messages
+      def transfer_selected_resource_properties(old_resource, new_resource)
+        if new_resource.properties.provisioning_state != 'Succeeded'
+          old_resource.properties.provisioning_state = resource.properties.provisioning_state
+        end
+        if new_resource.properties.try(:status_message)
+          if old_resource.properties.try(:status_message)
+            old_resource.properties.status_message += "\n#{new_resource.properties.status_message}"
+          else
+            old_resource.properties['status_message'] = new_resource.properties.status_message
+          end
         end
       end
 

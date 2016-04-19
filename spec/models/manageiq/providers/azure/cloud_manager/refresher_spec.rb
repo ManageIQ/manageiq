@@ -83,9 +83,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :orchestration_stack           => 8,
       :orchestration_stack_parameter => 128,
       :orchestration_stack_output    => 7,
-      # TODO(lsmola) investigate this, seems like number of resources changes between 53 and 50, seems like it could
-      # be dependent on networks collected? In 3 collections it goes like 53, 50, 50
-      # :orchestration_stack_resource  => 53,
+      :orchestration_stack_resource  => 38,
       :security_group                => 6,
       :network_port                  => 8,
       :cloud_network                 => 4,
@@ -114,7 +112,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :orchestration_stack           => OrchestrationStack.count,
       :orchestration_stack_parameter => OrchestrationStackParameter.count,
       :orchestration_stack_output    => OrchestrationStackOutput.count,
-      # :orchestration_stack_resource  => OrchestrationStackResource.count,
+      :orchestration_stack_resource  => OrchestrationStackResource.count,
       :security_group                => SecurityGroup.count,
       :network_port                  => NetworkPort.count,
       :cloud_network                 => CloudNetwork.count,
