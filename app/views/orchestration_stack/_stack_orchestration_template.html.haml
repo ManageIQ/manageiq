@@ -21,7 +21,7 @@
             - when :draft, :orderable?
               = @record.orchestration_template.send(sym) ? _("True") : _("False")
             - when :read_only
-              = @record.orchestration_template.stacks.empty? ? _("False") : _("True")
+              = @record.orchestration_template.in_use? ? _("True") : _("False")
             - else
               = @record.orchestration_template.send(sym)
 

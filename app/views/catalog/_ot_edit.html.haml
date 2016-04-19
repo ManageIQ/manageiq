@@ -27,7 +27,7 @@
                           :class => "form-control",
                           "data-miq_observe" => {:interval => '.5',
                                                  :url      => url}.to_json)
-      - if @record.stacks.length == 0
+      - unless @record.in_use?
         .form-group
           %label.col-md-2.control-label
             = _('Draft')
@@ -37,7 +37,7 @@
 
   %hr
     = text_area_tag("template_content", @edit[:current][:content], :style => "display:none;")
-    - if params[:action] != "explorer" && @record.stacks.length == 0
+    - if params[:action] != "explorer" && !@record.in_use?
       = render :partial => "/layouts/my_code_mirror",
         :locals => {:text_area_id => "template_content",
                     :mode         => "yaml",
