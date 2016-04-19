@@ -30,7 +30,8 @@ module MiqFilter
         conditions = "#{reflection.foreign_key} = #{obj.id}"
       end
       conditions += " AND (#{reflection.options[:conditions]})" if reflection.options[:conditions]
-      db.find_filtered(:conditions => conditions)
+      result = where(conditions)
+      [result, result.length]
     else
       result = obj.send(reflection.name)
       if reflection.macro == :has_one
