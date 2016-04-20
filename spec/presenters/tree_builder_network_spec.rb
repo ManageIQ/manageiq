@@ -8,7 +8,6 @@ describe TreeBuilderNetwork do
       hardware = FactoryGirl.create(:hardware, :vm_or_template => vm)
       guest_device_with_vm = FactoryGirl.create(:guest_device, :hardware => hardware)
       guest_device = FactoryGirl.create(:guest_device)
-      #binding.pry
       lan = FactoryGirl.create(:lan, :guest_devices => [guest_device_with_vm])
       switch = FactoryGirl.create(:switch, :guest_devices => [guest_device], :lans => [lan])
       network = FactoryGirl.create(:host, :switches => [switch])

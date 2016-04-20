@@ -139,7 +139,9 @@ class TreeNodeBuilder
     when ServiceTemplate      then service_template_node
     when ServiceTemplateCatalog then service_template_catalog_node
     when Storage              then generic_node(object.name, "storage.png")
-    when Switch               then generic_node(object.name, "switch.png", _("Switch: %{name}") % {:name => object.name})
+    when Switch               then generic_node(object.name,
+                                                "switch.png",
+                                                _("Switch: %{name}") % {:name => object.name})
     when User                 then generic_node(object.name, "user.png")
     when MiqSearch            then generic_node(object.description,
                                                 "filter.png",
@@ -202,7 +204,10 @@ class TreeNodeBuilder
     if object.device_type == "ethernet"
       generic_node(object.device_name, "pnic.png", _("Physical NIC: %{name}") % {:name => object.device_name})
     else
-      generic_node(object.device_name, "sa_#{object.controller_type.downcase}.png", _("%{type} Storage Adapter: %{name}") % {:type => object.controller_type, :name => object.device_name})
+      generic_node(object.device_name,
+                   "sa_#{object.controller_type.downcase}.png",
+                   _("%{type} Storage Adapter: %{name}") % {:type => object.controller_type,
+                                                            :name => object.device_name})
     end
   end
 

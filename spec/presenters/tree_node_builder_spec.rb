@@ -127,6 +127,12 @@ describe TreeNodeBuilder do
       expect(node[:title]).to eq('foo / bar')
     end
 
+    it 'Vm node with tooltip' do
+      vm = FactoryGirl.create(:vm_amazon, :name => 'name')
+      node = TreeNodeBuilder.build(vm, nil, {})
+      expect(node[:tooltip]).to eq(_("VM: %{name} (Click to view)") % {:name => vm.name})
+    end
+
     it 'EmsFolder tooltip with %2f' do
       ems_folder = FactoryGirl.create(:ems_folder, :name => 'foo %2f bar')
       node = TreeNodeBuilder.build(ems_folder, nil, {})

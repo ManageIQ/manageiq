@@ -33,30 +33,24 @@ class TreeBuilderNetwork < TreeBuilder
 
   def x_get_tree_roots(count_only = false, _options)
     kids = count_only ? 0 : []
-    unless @root.switches.empty?
-      kids = count_only_or_objects(count_only, @root.switches)
-    end
+    kids = count_only_or_objects(count_only, @root.switches) unless @root.switches.empty?
     kids
   end
 
   def x_get_tree_switch_kids(parent, count_only)
     objects = []
-    unless parent.guest_devices.empty?
-      objects.concat(parent.guest_devices)
-    end
-    unless parent.lans.empty?
-      objects.concat(parent.lans)
-    end
-      count_only_or_objects(count_only, objects)
+    objects.concat(parent.guest_devices) unless parent.guest_devices.empty?
+    objects.concat(parent.lans) unless parent.lans.empty?
+    count_only_or_objects(count_only, objects)
   end
 
-  def x_get_tree_guest_device_kids(parent, count_only)
+  def x_get_tree_guest_device_kids(_parent, count_only)
     count_only ? 0 : []
   end
 
   def x_get_tree_lan_kids(parent, count_only)
     kids = count_only ? 0 : []
-    if parent.respond_to?("vms_and_templates") && parent.vms_and_templates.length > 0
+    if parent.respond_to?("vms_and_templates") && parent.vms_and_templates.present?
       kids = count_only_or_objects(count_only, parent.vms_and_templates.sort_by { |l| l.name.downcase })
     end
     @tree_vms.concat(kids) unless count_only
