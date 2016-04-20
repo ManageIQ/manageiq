@@ -45,7 +45,7 @@ module ToolbarHelper
   def view_mode_buttons(buttons)
     content_tag(:ul, :class => 'list-inline') do
       buttons.collect do |button|
-        toolbar_button_normal(button, true)
+        toolbar_button_view(button)
       end.join('').html_safe
     end
   end
@@ -157,10 +157,22 @@ module ToolbarHelper
 
   # Render normal push child button
   #
-  def toolbar_button_normal(props, view_button = false)
+  def toolbar_button_normal(props)
     hidden = props[:hidden]
-    cls = if view_button
-            props[:enabled] ? '' : 'active '
+    cls = props[:enabled] ? '' : 'disabled '
+    content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
+      content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
+        (toolbar_image(props) + _(props[:text].to_s).html_safe)
+      end
+    end
+  end
+
+  # Render normal/twostate view button
+  #
+  def toolbar_button_view(props)
+    hidden = props[:hidden]
+    cls = if props[:type] == 'buttonTwoState'
+            props[:selected] ? 'active' : ''
           else
             props[:enabled] ? '' : 'disabled '
           end
