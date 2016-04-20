@@ -1,5 +1,8 @@
 - if big_iframe
-  = yield
+  = render :partial => "layouts/vertical_navbar"
+  .container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.resizable-sidebar.max-height{:style => "overflow: hidden !important"}
+    .row.max-height
+      = yield
 - elsif inner_layout_present?
   - rsop = controller.controller_name == 'miq_policy' && controller.action_name == 'rsop'
   - resolve = controller.controller_name == 'miq_ae_tools' && controller.action_name == 'resolve'
