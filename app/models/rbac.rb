@@ -310,6 +310,7 @@ module Rbac
     user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
     user_filters = user_filters.dup
     user_filters["managed"] ||= []
+    user_filters["belongsto"] ||= []
 
     [user, miq_group, user_filters]
   end
