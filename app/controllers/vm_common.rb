@@ -606,6 +606,10 @@ module VmCommon
     show_association('cloud_subnets', _('Networks'), 'cloud_subnet', :cloud_subnets, CloudNetwork)
   end
 
+  def cloud_volumes
+    show_association('cloud_volumes', _('Cloud Volumes'), 'cloud_volume', :cloud_volumes, CloudVolume)
+  end
+
   def network_routers
     show_association('network_routers', _('Routers'), 'network_router', :network_routers, NetworkRouter)
   end
