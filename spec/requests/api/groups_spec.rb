@@ -122,11 +122,12 @@ describe ApiController do
       expect_request_success
       expect_result_resources_to_include_keys("results", expected_attributes)
 
-      res = response_hash["results"].first
-      group_id = res["id"]
-      expect(MiqGroup.exists?(group_id)).to be_truthy
-
-      expect_result_to_match_hash(res, sample_group)
+      group_id = response_hash["results"][0]["id"]
+      expected_group = MiqGroup.find_by(:id => group_id)
+      expect(expected_group).to be_present
+      expect(expected_group.description).to eq(sample_group["description"])
+      expect(expected_group.entitlement).to be_present
+      expect(expected_group.entitlement.filters).to eq(sample_group["filters"])
     end
 
     it "supports multiple group creation" do
