@@ -65,6 +65,15 @@ RSpec.describe VimPerformanceAnalysis do
   #   end
   # end
 
+  describe ".get_daily_perf" do
+    it "should not raise an error" do
+      range       = {:days => 7, :end_date => "2016-04-19T23:00:00Z".to_time}
+      ext_options = {:tz => "UTC", :time_profile => time_profile}
+      perf_cols   = [:max_cpu_usagemhz_rate_average, :derived_cpu_available, :total_vcpus, :max_derived_memory_used, :derived_memory_available, :used_space, :total_space]
+      expect { described_class.get_daily_perf(host1, range, ext_options, perf_cols).all.inspect }.not_to raise_error
+    end
+  end
+
   private
 
   def add_rollup(vm, timestamp, tag = tag_text)
