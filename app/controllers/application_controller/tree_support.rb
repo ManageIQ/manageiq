@@ -79,7 +79,7 @@ module ApplicationController::TreeSupport
             d.miq_policy_desc,
             "#{d.miq_policy_result ? "check" : "x"}.png",
             nil,
-            :style_class => "cfme-no-cursor-node"
+            #:style_class => "cfme-no-cursor-node"
           )
           p_node[:title] = "<b>" + _("Policy:") + "</b>" + " #{p_node[:title]}"
           p_kids = []
@@ -89,7 +89,7 @@ module ApplicationController::TreeSupport
           d.condition_desc,
           "#{d.condition_result ? "check" : "x"}.png",
           nil,
-          :style_class => "cfme-no-cursor-node"
+          #:style_class => "cfme-no-cursor-node"
         )
         cn_node[:title] = "<b>" + _("Condition:") + "</b>" + " #{cn_node[:title]}"
         p_kids.push(cn_node)
@@ -103,7 +103,7 @@ module ApplicationController::TreeSupport
           _("No Compliance Policies Found"),
           "#{c_node[:key]}-nopol",
           nil,
-          :style_class => "cfme-no-cursor-node"
+          #:style_class => "cfme-no-cursor-node"
         )
         c_node[:children] = [np_node]
       end
