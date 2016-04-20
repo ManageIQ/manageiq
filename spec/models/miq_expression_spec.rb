@@ -1829,7 +1829,7 @@ describe MiqExpression do
       )
     end
   end
-  
+
   describe "#sql_supports_atom?" do
     context "expression key is 'CONTAINS'" do
       context "operations with 'tag'" do
