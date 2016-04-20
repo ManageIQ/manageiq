@@ -54,6 +54,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def trigger_automate_value_updates
+    @raw_values = @default_value = nil
     raw_values
   end
 
