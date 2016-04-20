@@ -29,8 +29,16 @@ class TreeBuilderConfigurationManager < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_cmat_kids(_object, count_only)
-    count_only_or_objects(count_only, [], nil)
+  def x_get_tree_cmat_kids(object, count_only)
+    assigned_inventory_group_objs =
+      count_only_or_objects(count_only,
+                            rbac_filtered_objects(ManageIQ::Providers::ConfigurationManager::InventoryGroup.where(:ems_id => object[:id]),
+                                                  :match_via_descendants => ConfiguredSystem),
+                            "name")
+    unassigned_inventory_group_objs =
+      fetch_unassigned_inventory_group_objects(count_only, object[:id])
+
+    assigned_inventory_group_objs + unassigned_inventory_group_objs
   end
 
   def x_get_tree_cmf_kids(object, count_only)
@@ -64,6 +72,27 @@ class TreeBuilderConfigurationManager < TreeBuilder
       count_only ? unassigned_configuration_profile_objs = 0 : unassigned_configuration_profile_objs = []
     end
     unassigned_configuration_profile_objs
+  end
+
+  def fetch_unassigned_inventory_group_objects(count_only, configuration_manager_id)
+    no_inventory_configured_systems = ConfiguredSystem.where(:inventory_root_group_id => nil,
+                                                              :manager_id        => configuration_manager_id)
+    no_inventory_configured_systems_filtered = rbac_filtered_objects(no_inventory_configured_systems,
+                                                                      :match_via_descendants => ConfiguredSystem)
+    if no_inventory_configured_systems_filtered.count > 0
+      unassigned_id = "#{configuration_manager_id}-unassigned"
+      unassigned_inventory_group =
+        [ConfigurationProfile.new(:name       => "Unassigned Inventory Group|#{unassigned_id}",
+                                  :manager_id => configuration_manager_id)]
+      unassigned_inventory_group_objs = count_only_or_objects(count_only,
+                                                              unassigned_inventory_group,
+                                                              nil)
+    end
+
+    if unassigned_inventory_group_objs.nil?
+      count_only ? unassigned_inventory_group_objs = 0 : unassigned_inventory_group_objs = []
+    end
+    unassigned_inventory_group_objs
   end
 
   def x_get_tree_cpf_kids(object, count_only)

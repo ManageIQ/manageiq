@@ -302,7 +302,7 @@ class ProviderForemanController < ApplicationController
 
   def x_show
     @explorer = true
-    tree_record unless unassigned_configuration_profile?(params[:id])
+    tree_record unless unassigned_configuration_profile?(params[:id]) || unassigned_inventory_folder?(params[:id])
 
     respond_to do |format|
       format.js do
@@ -522,8 +522,14 @@ class ProviderForemanController < ApplicationController
         @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
                                                         :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
-        @right_cell_text =
-          _("%{model} \"%{name}\"") % {:name => provider.name, :model => "#{record_model}"}
+        options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem}
+        options[:where_clause] = ["ems_id IN (?)", provider.id]
+        @no_checkboxes = true
+        process_show_list(options)
+        add_unassigned_inventory_group_record(provider.id)
+        record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
+                                                        :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model}"}
       end
     end
   end
@@ -909,6 +915,8 @@ class ProviderForemanController < ApplicationController
   def list_row_id(row)
     if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
       "-#{row['manager_id']}-unassigned"
+    elsif row['name'] == _("Unassigned Inventory Group") && row['id'].nil?
+      "-#{row['manager_id']}-unassigned"
     else
       to_cid(row['id'])
     end
@@ -917,7 +925,7 @@ class ProviderForemanController < ApplicationController
   def list_row_image(_image, item = nil)
     # Unassigned Profiles Group
     if item.kind_of?(ConfigurationProfile) && empty_configuration_profile_record?(item)
-      'folder'
+      '100/folder.png'
     else
       super
     end
@@ -965,6 +973,59 @@ class ProviderForemanController < ApplicationController
   def add_unassigned_configuration_profile_record_to_view(unassigned_profile_row, unassigned_configuration_profile)
     @view.table.data.push(unassigned_profile_row)
     @targets_hash[unassigned_profile_row['id']] = unassigned_configuration_profile
+    @grid_hash = view_to_hash(@view)
+  end
+
+  def unassigned_inventory_group(node)
+    _type, _pid, nodeinfo = node.split("_").last.split("-")
+    nodeinfo == "unassigned"
+  end
+
+  def empty_inventory_group_record?(inventory_group_record)
+    inventory_group_record.try(:id).nil?
+  end
+
+  def valid_inventory_group_record?(inventory_group_record)
+    inventory_group_record.try(:id)
+  end
+
+  def inventory_group_right_cell_text(model)
+    record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+    return if @sb[:active_tab] != 'configured_systems'
+    if valid_inventory_group_record?(@inventory_group_record)
+      @right_cell_text = _("%{model} under %{record_model} \"%{name}\"") %
+        {:model        => ui_lookup(:tables => "configured_system"),
+         :record_model => record_model,
+         :name         => @inventory_group.name}
+    else
+      @right_cell_text = _("%{model} under Unassigned Inventory Group") %
+        {:model => ui_lookup(:tables => "configured_system")}
+    end
+  end
+
+  def add_unassigned_inventory_group_record(provider_id)
+    no_inventory_configured_systems =
+      ConfiguredSystem.where(:manager_id => provider_id, :inventory_root_group_id => nil).count
+
+    return if no_inventory_configured_systems == 0
+
+    unassigned_inventory_group_name = _("Unassigned Inventory Group")
+    unassigned_inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryGroup.new
+    unassigned_inventory_group.ems_id = provider_id
+    unassigned_inventory_group.name = unassigned_inventory_group_name
+
+    unassigned_inventory_group_row =
+      {'name'                     => unassigned_inventory_group_name,
+       'total_configured_systems' => no_inventory_configured_systems,
+       'ems_id'                   => provider_id
+      }
+
+    add_unassigned_inventory_group_record_to_view(unassigned_inventory_group_row, unassigned_inventory_group)
+  end
+
+  def add_unassigned_inventory_group_record_to_view(unassigned_inventory_group_row, unassigned_inventory_group)
+    @view.table.data.push(unassigned_inventory_group_row)
+    @targets_hash[unassigned_inventory_group_row['id']] = unassigned_inventory_group
     @grid_hash = view_to_hash(@view)
   end
 
