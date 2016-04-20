@@ -1732,4 +1732,101 @@ describe MiqExpression do
                                          "REGULAR EXPRESSION DOES NOT MATCH")
     end
   end
+
+  describe ".get_col_info" do
+    it "return column info for model-virtual field" do
+      field = "VmInfra-archived"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => :boolean,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => :boolean,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => true,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for managed-field" do
+      tag = "managed-location"
+      col_info = described_class.get_col_info(tag)
+      expect(col_info).to match(
+        :data_type                      => :string,
+        :excluded_by_preprocess_options => false,
+        :include                        => {},
+        :tag                            => true,
+        :virtual_column                 => false,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for model.managed-field" do
+      tag = "VmInfra.managed-operations"
+      col_info = described_class.get_col_info(tag)
+      expect(col_info).to match(
+        :data_type                      => :string,
+        :excluded_by_preprocess_options => false,
+        :include                        => {},
+        :tag                            => true,
+        :virtual_column                 => false,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for model.association.managed-field" do
+      tag = "Vm.host.managed-environment"
+      col_info = described_class.get_col_info(tag)
+      expect(col_info).to match(
+        :data_type                      => :string,
+        :excluded_by_preprocess_options => false,
+        :include                        => {},
+        :tag                            => true,
+        :virtual_column                 => false,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for model-field" do
+      field = "ManageIQ::Providers::InfraManager::Vm-cpu_limit"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => :integer,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => :integer,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => false,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for model.association-field" do
+      field = "ManageIQ::Providers::InfraManager::Vm.guest_applications-vendor"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => :string,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => :string,
+        :include                        => {:guest_applications => {}},
+        :tag                            => false,
+        :virtual_column                 => false,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for model.virtualassociation..virtualassociation-field" do
+      field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-active"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => :boolean,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => :boolean,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => true,
+        :virtual_reflection             => true,
+      )
+    end
+  end
 end
