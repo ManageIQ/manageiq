@@ -838,6 +838,15 @@ module ApplicationController::CiProcessing
           render :action => 'discover'
           return
         end
+      elsif request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['soft_layer']
+        @client_id = params[:client_id] if params[:client_id]
+        @client_key = params[:client_key] if params[:client_key]
+
+        if @client_id == "" || @client_key == ""
+          add_flash(_("Client ID and Client API Key required"), :error)
+          render :action => 'discover'
+          return
+        end
       elsif request.parameters[:controller] == "ems_cloud" || params[:discover_type_ipmi].to_s == "1"
         @userid = params[:userid] if  params[:userid]
         @password = params[:password] if params[:password]
@@ -874,6 +883,8 @@ module ApplicationController::CiProcessing
           else
             if params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
               ManageIQ::Providers::Azure::CloudManager.discover_queue(@client_id, @client_key, @azure_tenant_id)
+            elsif params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['soft_layer']
+              ManageIQ::Providers::SoftLayer::CloudManager.discover_queue(@client_id, @client_key)
             else
               ManageIQ::Providers::Amazon::CloudManager.discover_queue(@userid, @password)
             end
@@ -949,10 +960,16 @@ module ApplicationController::CiProcessing
       if (request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected]) || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
         if params[:discover_type_selected] && params[:discover_type_selected] == 'azure'
           page << javascript_hide("discover_credentials")
+          page << javascript_hide("discover_soft_layer_credentials")
           page << javascript_show("discover_azure_credentials")
         elsif params[:discover_type_selected] && params[:discover_type_selected] == 'amazon'
           page << javascript_hide("discover_azure_credentials")
+          page << javascript_hide("discover_soft_layer_credentials")
           page << javascript_show("discover_credentials")
+        elsif params[:discover_type_selected] && params[:discover_type_selected] == 'soft_layer'
+          page << javascript_hide("discover_azure_credentials")
+          page << javascript_hide("discover_credentials")
+          page << javascript_show("discover_soft_layer_credentials")
         else
           @ipmi = true
           page << javascript_show("discover_credentials")

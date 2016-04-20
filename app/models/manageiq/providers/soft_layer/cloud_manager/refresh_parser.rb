@@ -95,7 +95,6 @@ module ManageIQ::Providers
       end
 
       def parse_image(image)
-        # TODO: finish mapping for power state and os
         uid    = image.id
         type   = ManageIQ::Providers::SoftLayer::CloudManager::Template
 
@@ -105,8 +104,6 @@ module ManageIQ::Providers
           :ems_ref            => image.id,
           :name               => image.name,
           :vendor             => "softlayer",
-          :raw_power_state    => nil,
-          :operating_system   => nil,
           :template           => true,
           :publicly_available => image.public?,
         }
