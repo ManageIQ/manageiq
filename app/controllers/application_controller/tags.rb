@@ -314,9 +314,9 @@ module ApplicationController::Tags
     end
 
     if @entries.length == 0                             # No entries left to choose from
-      @entries["<All values are assigned>"] = "select"
+      @entries[_("<All values are assigned>")] = "select"
     else
-      @entries["<Select a value to assign>"] = "select"
+      @entries[_("<Select a value to assign>")] = "select"
     end
   end
 
@@ -379,9 +379,9 @@ module ApplicationController::Tags
     end
 
     if @entries.length == 0                             # No entries left to choose from
-      @entries["<All values are assigned>"] = "select"
+      @entries[_("<All values are assigned>")] = "select"
     else
-      @entries["<Select a value to assign>"] = "select"
+      @entries[_("<Select a value to assign>")] = "select"
     end
   end
 
