@@ -50,7 +50,8 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Chargeback Rate'),
           t,
-          :url_parms => "main_div"),
+          :url_parms => "main_div",
+          :klass     => ApplicationHelper::Button::ChargebackRateEdit),
         button(
           :chargeback_rates_copy,
           'fa fa-files-o fa-lg',
@@ -63,7 +64,8 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
           N_('Remove this Chargeback Rate from the VMDB'),
           N_('Remove from the VMDB'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: This Chargeback Rate will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Chargeback Rate?")),
+          :confirm   => N_("Warning: This Chargeback Rate will be permanently removed from the Virtual Management Database. Are you sure you want to remove this Chargeback Rate?"),
+          :klass     => ApplicationHelper::Button::ChargebackRateRemove),
       ]
     ),
   ])
