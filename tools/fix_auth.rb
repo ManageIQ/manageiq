@@ -11,6 +11,8 @@ if __FILE__ == $PROGRAM_NAME
   $LOAD_PATH.push(File.expand_path(File.join(__dir__, %w(.. gems pending))))
 end
 
+require File.expand_path('../../config/environment', __FILE__)
+
 require 'active_support/all'
 require 'active_support/concern'
 require 'fix_auth/auth_model'
