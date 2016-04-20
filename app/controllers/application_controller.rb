@@ -1784,7 +1784,8 @@ class ApplicationController < ActionController::Base
                    "show_list"
                  end
 
-    ajax_url = ! %w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume OntapFileShare SecurityGroup).include?(view.db)
+    ajax_url = ! %w(OntapStorageSystem OntapLogicalDisk OntapStorageVolume
+                    OntapFileShare SecurityGroup CloudVolume).include?(view.db)
     ajax_url = false if request.parameters[:controller] == "service" && view.db == "Vm"
     ajax_url = false unless @explorer
 
