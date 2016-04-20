@@ -589,7 +589,7 @@ module VimPerformanceAnalysis
 
     ext_options ||= {}
     Metric::Helper.find_for_interval_name("daily", ext_options[:time_profile] || ext_options[:tz], ext_options[:class])
-                  .order("timestamp").select(perf_cols)
+                  .order("timestamp") #.select(perf_cols) - Currently passing perf_cols to select is broken because it includes virtual cols. This is actively being worked on.
                   .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
   end
 
