@@ -7,7 +7,7 @@ describe ApiController do
 
   context "Settings Queries" do
     it "tests queries of all exposed settings" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:settings, :read, :collection_actions, :get)
 
       run_get settings_url
 
@@ -15,7 +15,7 @@ describe ApiController do
     end
 
     it "tests query for a specific setting category" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
 
       category = api_settings.first
       run_get settings_url(category)
@@ -24,7 +24,7 @@ describe ApiController do
     end
 
     it "tests that query for a specific setting category matches the Settings hash" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
 
       category = api_settings.first
       run_get settings_url(category)
@@ -33,7 +33,7 @@ describe ApiController do
     end
 
     it "rejects query for an invalid setting category " do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
 
       run_get settings_url("invalid_setting")
 
