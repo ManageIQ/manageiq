@@ -673,29 +673,6 @@ module ApplicationHelper
     end
   end
 
-  # Truncate text to fit below a quad icon
-  TRUNC_AT = 13
-  TRUNC_TO = 10
-  def truncate_for_quad(value)
-    return value if value.to_s.length < TRUNC_AT
-    case @settings.fetch_path(:display, :quad_truncate)
-    when "b"  # Old version, used first x chars followed by ...
-      value.first(TRUNC_TO) + "..."
-    when "f"  # Chop off front
-      "..." + value.last(TRUNC_TO)
-    else      # Chop out the middle
-      numchars = TRUNC_TO / 2
-      value.first(numchars) + "..." + value.last(numchars)
-    end
-  end
-
-  def url_for_item_quad_text(record, id, action)
-    url_for(:controller => controller_for_model(record.class),
-            :action     => action,
-            :id         => record.id.to_s,
-            :show       => id.to_s)
-  end
-
   CUSTOM_TOOLBAR_CONTROLLERS = [
     "service",
     "vm_cloud",
