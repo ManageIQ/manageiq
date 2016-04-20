@@ -16,10 +16,13 @@ class MiqExpression
     Container
     ContainerGroup
     ContainerImage
+    ContainerImageRegistry
     ContainerNode
     ContainerProject
     ContainerService
     ContainerReplicator
+    ContainerRoute
+    ContainerService
     ManageIQ::Providers::CloudManager
     EmsCluster
     EmsClusterPerformance
