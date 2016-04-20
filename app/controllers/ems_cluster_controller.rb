@@ -24,7 +24,7 @@ class EmsClusterController < ApplicationController
     @ems_cluster = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@ems_cluster)
 
-    @gtl_url = "/ems_cluster"
+    @gtl_url = "/show"
 
     case @display
     when "download_pdf", "main", "summary_only"
