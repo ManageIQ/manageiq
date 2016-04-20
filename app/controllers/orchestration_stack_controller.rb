@@ -35,8 +35,7 @@ class OrchestrationStackController < ApplicationController
       @showtype = @display
       notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
     when "security_groups"
-      table = "security_groups"
-      title = ui_lookup(:tables => table)
+      title = ui_lookup(:tables => "security_group")
       kls   = SecurityGroup
       drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @orchestration_stack.name, :title => title},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
