@@ -1387,6 +1387,7 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tagging_edit
         tl_chooser
+        tree_autoload_dynatree
         update
         users
         wait_for_task
