@@ -268,7 +268,9 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
   };
 
   $scope.isRegionSupported = function() {
-    if ($scope.emsCommonModel.emstype === 'ec2' || $scope.emsCommonModel.emstype === 'azure') {
+    if ($scope.emsCommonModel.emstype === 'ec2' ||
+        $scope.emsCommonModel.emstype === 'azure' ||
+        $scope.emsCommonModel.emstype === 'soft_layer') {
       return true;
     }
 

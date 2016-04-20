@@ -37,10 +37,10 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
     network_manager.provider_region = provider_region
   end
 
-  ExtManagementSystem.register_cloud_discovery_type('softlayer' => 'softlayer')
+  ExtManagementSystem.register_cloud_discovery_type('soft_layer' => 'soft_layer')
 
   def self.ems_type
-    @ems_type ||= "softlayer".freeze
+    @ems_type ||= "soft_layer".freeze
   end
 
   def self.description

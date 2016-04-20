@@ -25,7 +25,6 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
            :authentication_status_ok?,
            :authentications,
            :authentication_for_summary,
-           :zone,
            :connect,
            :verify_credentials,
            :with_provider_connection,
@@ -38,8 +37,7 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
            :allow_nil => true
 
   # Relationships delegated to parent manager
-  delegate :availability_zones,
-           :flavors,
+  delegate :flavors,
            :cloud_resource_quotas,
            :cloud_volumes,
            :cloud_volume_snapshots,
@@ -50,11 +48,11 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
            :allow_nil => true
 
   def self.ems_type
-    @ems_type ||= "azure_network".freeze
+    @ems_type ||= "soft_layer_network".freeze
   end
 
   def self.description
-    @description ||= "Azure Network".freeze
+    @description ||= "SoftLayer Network".freeze
   end
 
   def self.hostname_required?
@@ -62,6 +60,6 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
   end
 
   def description
-    ManageIQ::Providers::Azure::Regions.find_by_name(provider_region)[:description]
+    ManageIQ::Providers::SoftLayer::Regions.find_by_name(provider_region)[:description]
   end
 end

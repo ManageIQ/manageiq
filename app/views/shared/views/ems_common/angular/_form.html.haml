@@ -59,6 +59,13 @@
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
+        = select_tag('provider_region',
+                     options_for_select([["<#{_('Choose')}>", nil]] + Array(@softlayer_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
+                     "ng-model"                    => "emsCommonModel.provider_region",
+                     "ng-switch-when"              => "soft_layer",
+                     "required"                    => "",
+                     "checkchange"                 => "",
+                     "selectpicker-for-select-tag" => "")
 
     .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "emsCommonModel.emstype == 'gce'"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}

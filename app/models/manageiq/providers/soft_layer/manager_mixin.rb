@@ -1,4 +1,4 @@
-module ManageIQ.ems::SoftLayer::ManagerMixin
+module ManageIQ::Providers::SoftLayer::ManagerMixin
   extend ActiveSupport::Concern
 
   def connect(options = {})
