@@ -542,7 +542,7 @@ describe MiqExpression do
         expect(filter.to_ruby).to eq("<value ref=vm, type=text>/virtual/registry_items/data</value> =~ /\\$foo/")
 
         data = {"registry_items.data" => "C:\\Documents and Users\\O'Neill, April\\", "/virtual/registry_items/data" => "C:\\Documents and Users\\O'Neill, April\\"}
-        expect(Condition.subst(filter.to_ruby, data, {})).to eq("\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/")
+        expect(Condition.subst(filter.to_ruby, data)).to eq("\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/")
       end
 
       it "should test context hash" do
@@ -556,7 +556,7 @@ describe MiqExpression do
         context_type: hash
         '
         expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
-        expect(Condition.subst(filter.to_ruby, data, {})).to eq("\"VMware Tools\" == \"VMware Tools\"")
+        expect(Condition.subst(filter.to_ruby, data)).to eq("\"VMware Tools\" == \"VMware Tools\"")
 
         filter = YAML.load '--- !ruby/object:MiqExpression
         exp:
@@ -566,7 +566,7 @@ describe MiqExpression do
         context_type: hash
         '
         expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
-        expect(Condition.subst(filter.to_ruby, data, {})).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
+        expect(Condition.subst(filter.to_ruby, data)).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
       end
     end
 
