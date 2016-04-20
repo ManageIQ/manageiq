@@ -936,7 +936,7 @@ module ApplicationHelper
       link_params = {
         :action  => args[:action].present? ? args[:action] : 'show',
         :display => args[:display],
-        :id      => args[:record_id].to_s
+        :id      => args[:record].present? ? args[:record].id : args[:record_id].to_s
       }
       link_params[:controller] = args[:controller] if args.key?(:controller)
 

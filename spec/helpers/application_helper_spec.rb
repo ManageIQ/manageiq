@@ -1627,6 +1627,46 @@ describe ApplicationHelper do
         expect(subject).to have_selector('li.disabled')
       end
     end
+
+    context 'with :record passed in as an argument' do
+      let(:args) do
+        {:if         => true,
+         :controller => 'availability_zone',
+         :record     => FactoryGirl.create(:availability_zone),
+         :action     => 'show_list',
+         :display    => 'something'}
+      end
+
+      subject { li_link(args) }
+
+      it 'renders url correctly' do
+        expect(subject).to have_xpath("//a", :text => %r{\/availability_zone\/show_list\/\d+\?display=something})
+      end
+
+      it 'renders onclick correctly' do
+        expect(subject).to have_xpath("//a[@onclick = 'return miqCheckForChanges()']")
+      end
+    end
+
+    context 'with :record_id passed in as an argument' do
+      let(:args) do
+        {:if         => true,
+         :controller => 'availability_zone',
+         :record_id  => FactoryGirl.create(:availability_zone).id,
+         :action     => 'show_list',
+         :display    => 'something'}
+      end
+
+      subject { li_link(args) }
+
+      it 'renders url correctly' do
+        expect(subject).to have_xpath("//a", :text => %r{\/availability_zone\/show_list\/\d+\?display=something})
+      end
+
+      it 'renders onclick correctly' do
+        expect(subject).to have_xpath("//a[@onclick = 'return miqCheckForChanges()']")
+      end
+    end
   end
 
   describe '#view_to_association' do
