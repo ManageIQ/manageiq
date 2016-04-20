@@ -21,7 +21,7 @@ module ConfigurationHelper
 
     def active_icon(image, text)
       content_tag(:li, :class => "active") do
-        content_tag(:i, nil, :class => image)
+        content_tag(:i, nil, :class => image, :title => text)
       end
     end
 
