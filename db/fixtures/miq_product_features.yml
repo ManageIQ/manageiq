@@ -3314,23 +3314,6 @@
         :description: Show Capacity & Utilization data of Middleware Servers
         :feature_type: view
         :identifier: middleware_server_perf
-    - :name: Modify
-      :description: Modify Middleware Servers
-      :feature_type: admin
-      :identifier: middleware_server_admin
-      :children:
-      - :name: Remove
-        :description: Remove Middleware Servers from the VMDB
-        :feature_type: admin
-        :identifier: middleware_server_delete
-      - :name: Edit
-        :description: Edit a Middleware Server
-        :feature_type: admin
-        :identifier: middleware_server_edit
-      - :name: Add
-        :description: Add a Middleware Server
-        :feature_type: admin
-        :identifier: middleware_server_new
     - :name: Operate
       :description: Perform Operations on Middleware Servers
       :feature_type: control

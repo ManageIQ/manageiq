@@ -13,15 +13,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Show Capacity & Utilization data for this Server'),
           N_('Utilization'),
           :url       => "/show",
-          :url_parms => "?display=performance"),
-        button(
-          :middleware_server_timeline,
-          'product product-timeline fa-lg',
-          N_('Show Timelines for this Server'),
-          N_('Timelines'),
-          :enabled   => "false",
-          :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=performance")
       ]
     ),
   ])
