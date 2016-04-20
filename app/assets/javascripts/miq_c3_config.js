@@ -180,21 +180,12 @@
       c3mixins.legendOnRightSide,
       c3mixins.noTooltip
     ),
-    StackedArea: _.defaultsDeep({
-        data: {
-          type: 'area'
-        },
-        area: {
-          label: {
-            format: percentLabelFormat
-          },
-          expand: false
-        }
-      },
-      c3mixins.xAxisCategory,
-      c3mixins.pfColorPattern,
-      c3mixins.legendOnRightSide,
-      c3mixins.noTooltip
-    )
+    StackedArea: _.defaultsDeep(
+     {
+       axis : {x:{type: 'category'}},
+       data : {type: 'area'},
+     },c3mixins.pfColorPattern,
+     $().c3ChartDefaults().getDefaultAreaConfig()
+   ),
   };
 })(ManageIQ);
