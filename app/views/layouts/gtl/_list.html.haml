@@ -57,7 +57,7 @@
           - else
             -# Disable column sorting when embedded, for now
             %th
-              = h(h)
+              = h(_(h))
       - if get_vmdb_config[:product][:vmdb_connections_filter] && view.db == "VmdbDatabaseConnection"
         %tr
           - unless @embedded || @no_checkboxes
