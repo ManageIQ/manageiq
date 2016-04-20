@@ -1001,8 +1001,7 @@ class CatalogController < ApplicationController
     id = params[:id]
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
     if params.key?(:template_content) && params[:template_content] == ""
-      add_flash(_("New template content cannot be empty"), :error)
-      ot_action_submit_flash
+      render_flash(_("New template content cannot be empty"), :error)
     else
       ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
       ot.name = @edit[:new][:name]
@@ -1014,9 +1013,8 @@ class CatalogController < ApplicationController
       begin
         ot.save_as_orderable!
       rescue StandardError => bang
-        add_flash(_("Error during 'Orchestration Template Edit': %{error_message}") %
+        render_flash(_("Error during 'Orchestration Template Edit': %{error_message}") %
           {:error_message => bang.message}, :error)
-        ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
                   {:model => ui_lookup(:model => 'OrchestrationTemplate'),
@@ -1050,14 +1048,12 @@ class CatalogController < ApplicationController
     return unless load_edit("ot_edit__#{id}", "replace_cell__explorer")
     old_ot = OrchestrationTemplate.find_by_id(id)
     if params[:template_content] == old_ot.content
-      add_flash(
+      render_flash(
         _("Unable to create a new template copy \"%{name}\": old and new template content have to differ.") %
           {:name => @edit[:new][:name]}, :error)
-      ot_action_submit_flash
     elsif params[:template_content].nil? || params[:template_content] == ""
-      add_flash(_("Unable to create a new template copy \"%{name}\": new template content cannot be empty.") %
+      render_flash(_("Unable to create a new template copy \"%{name}\": new template content cannot be empty.") %
         {:name => @edit[:new][:name]}, :error)
-      ot_action_submit_flash
     else
       ot = OrchestrationTemplate.new(
         :name        => @edit[:new][:name],
@@ -1068,9 +1064,8 @@ class CatalogController < ApplicationController
       begin
         ot.save_as_orderable!
       rescue StandardError => bang
-        add_flash(_("Error during 'Orchestration Template Copy': %{error_message}") %
+        render_flash(_("Error during 'Orchestration Template Copy': %{error_message}") %
           {:error_message => bang.message}, :error)
-        ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
@@ -1100,11 +1095,9 @@ class CatalogController < ApplicationController
     assert_privileges("orchestration_template_add")
     load_edit("ot_add__new", "replace_cell__explorer")
     if !%w(OrchestrationTemplateHot OrchestrationTemplateCfn OrchestrationTemplateAzure).include?(@edit[:new][:type])
-      add_flash(_("\"%{type}\" is not a valid Orchestration Template type") % {:type => @edit[:new][:type]}, :error)
-      ot_action_submit_flash
+      render_flash(_("\"%{type}\" is not a valid Orchestration Template type") % {:type => @edit[:new][:type]}, :error)
     elsif params[:content].nil? || params[:content].strip == ""
-      add_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
-      ot_action_submit_flash
+      render_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
     else
       ot = OrchestrationTemplate.new(
         :name        => @edit[:new][:name],
@@ -1115,9 +1108,8 @@ class CatalogController < ApplicationController
       begin
         ot.save_as_orderable!
       rescue StandardError => bang
-        add_flash(_("Error during 'Orchestration Template creation': %{error_message}") %
+        render_flash(_("Error during 'Orchestration Template creation': %{error_message}") %
           {:error_message => bang.message}, :error)
-        ot_action_submit_flash
       else
         add_flash(_("%{model} \"%{name}\" was saved") %
                     {:model => ui_lookup(:model => 'OrchestrationTemplate'),
@@ -1133,13 +1125,6 @@ class CatalogController < ApplicationController
         @edit = session[:edit] = nil
         replace_right_cell(nil, trees_to_replace([:ot]))
       end
-    end
-  end
-
-  def ot_action_submit_flash
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
     end
   end
 
