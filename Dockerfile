@@ -54,6 +54,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    psmisc                  \
                    lvm2                    \
                    openldap-clients        \
+                   gdbm-devel              \
                    &&                      \
     yum clean all
 
@@ -83,9 +84,8 @@ RUN ${APPLIANCE_ROOT}/setup && \
 echo "export PATH=\$PATH:/opt/rubies/ruby-2.2.4/bin" >> /etc/default/evm && \
 mkdir ${APP_ROOT}/log/apache && \
 mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
-echo "# This file intentionally left blank. CFME maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
-echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm && \
-cp /etc/motd.manageiq /etc/motd
+echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
+echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm
 
 ## Change workdir to application root, build/install gems
 WORKDIR ${APP_ROOT}
@@ -111,7 +111,7 @@ RUN ln -s /var/www/miq/vmdb/docker-assets/docker_initdb /usr/bin
 RUN systemctl enable memcached appliance-initialize evmserverd evminit evm-watchdog miqvmstat miqtop
 
 ## Expose required container ports
-EXPOSE 80 443 3000 4000 5900-5999
+EXPOSE 80 443
 
 # Atomic Labels
 # The UNINSTALL label by DEFAULT will attempt to delete a container (rm) and image (rmi) if the container NAME is the same as the actual IMAGE
@@ -123,7 +123,7 @@ LABEL name="manageiq" \
           release="latest" \
           architecture="x86_64" \
           url="http://manageiq.org/" \
-          summary="ManageIQ development image" \
+          summary="ManageIQ appliance image" \
           description="ManageIQ is a management and automation platform for virtual, private, and hybrid cloud infrastructures." \
           INSTALL='docker run -ti --privileged \
                     --name ${NAME}_volume \
@@ -135,9 +135,6 @@ LABEL name="manageiq" \
                     --volumes-from ${NAME}_volume \
                     -p 80:80 \
                     -p 443:443 \
-                    -p 3000:3000 \
-                    -p 4000:4000 \
-                    -p 5900-5999:5900-5999 \
                     $IMAGE' \
           STOP='docker stop ${NAME}_run && \
           echo "Container ${NAME}_run has been stopped"' \
