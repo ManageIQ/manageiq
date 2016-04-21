@@ -276,7 +276,8 @@ class TreeBuilder
         :klass_name => self.class.name,
         :leaf       => @options[:leaf],
         :add_root   => true,
-        :open_nodes => []
+        :open_nodes => [],
+        :lazy       => true
       )
     )
   end
@@ -310,6 +311,7 @@ class TreeBuilder
   # :open_nodes             # Tree node ids of currently open nodes
   # :add_root               # If true, put a root node at the top
   # :full_ids               # stack parent id on top of each node id
+  # :lazy                   # set if tree is lazy
   def x_build_dynatree(options)
     children = x_get_tree_objects(nil, options, false, [])
 
@@ -416,7 +418,8 @@ class TreeBuilder
     if Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) ||
        options[:open_all] ||
        object[:load_children] ||
-       node[:expand]
+       node[:expand] ||
+       @options[:lazy] == false
       node[:expand] = true if options[:type] == :automate &&
                               Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
       kids = x_get_tree_objects(object, options, false, parents).map do |o|
