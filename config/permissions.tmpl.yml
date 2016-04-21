@@ -1,5 +1,7 @@
 ---
 - :vi
+- :compute
+- :conf
 - :svc
 - :clo
 - :inf
