@@ -1825,8 +1825,151 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => false,
         :virtual_column                 => true,
-        :virtual_reflection             => true,
+        :virtual_reflection             => true
       )
+    end
+  end
+  
+  describe "#sql_supports_atom?" do
+    context "expression key is 'CONTAINS'" do
+      context "operations with 'tag'" do
+        it "returns true for tag of the main model" do
+          expression = {"CONTAINS" => {"tag" => "VmInfra.managed-operations", "value" => "analysis_failed"}}
+          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(true)
+        end
+
+        it "returns false for tag of associated model" do
+          field = "Vm.ext_management_system.managed-openshiftroles"
+          expression = {"CONTAINS" => {"tag" => field, "value" => "node"}}
+          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
+        end
+      end
+
+      context "operation with 'field'" do
+        it "returns false if format of field is model.association..association-field" do
+          field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-active"
+          expression = {"CONTAINS" => {"field" => field, "value" => "true"}}
+          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
+        end
+
+        it "returns false if field belongs to virtual_has_many association" do
+          field = "ManageIQ::Providers::InfraManager::Vm.file_shares-type"
+          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
+          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
+        end
+
+        it "returns false if field belongs to 'has_and_belongs_to_many' association" do
+          field = "ManageIQ::Providers::InfraManager::Vm.storages-name"
+          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
+          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
+        end
+
+        it "returns false if field belongs to 'has_many' polymorhic/polymorhic association" do
+          field = "ManageIQ::Providers::InfraManager::Vm.advanced_settings-region_number"
+          expression = {"CONTAINS" => {"field" => field, "value" => "1"}}
+          expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
+        end
+
+        it "returns true if field belongs to 'has_many' association" do
+          field = "ManageIQ::Providers::InfraManager::Vm.registry_items-name"
+          expression = {"CONTAINS" => {"field" => field, "value" => "abc"}}
+          expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
+        end
+      end
+    end
+
+    context "expression key is 'INCLUDE'" do
+      it "returns false for model-virtualfield" do
+        field = "ManageIQ::Providers::InfraManager::Vm-v_datastore_path"
+        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
+      end
+
+      it "returns true for model-field" do
+        field = "ManageIQ::Providers::InfraManager::Vm-location"
+        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
+      end
+
+      it "returns false for model.association.virtualfield" do
+        field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-hostname"
+        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
+      end
+
+      it "returns true for model.accociation.field" do
+        field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-name"
+        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
+      end
+
+      it "returns false if format of field is model.association..association-field" do
+        field = "ManageIQ::Providers::InfraManager::Vm.service.miq_request-v_approved_by"
+        expression = {"INCLUDES" => {"field" => field, "value" => "abc"}}
+        expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
+      end
+    end
+
+    it "returns false if expression key is 'FIND'" do
+      expect(described_class.new(nil).sql_supports_atom?("FIND" => {})).to eq(false)
+    end
+
+    it "returns false if expression key is 'REGULAR EXPRESSION MATCHES'" do
+      field = "ManageIQ::Providers::InfraManager::Vm-name"
+      expression = {"REGULAR EXPRESSION MATCHES" => {"filed" => field, "value" => "\w+"}}
+      expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
+    end
+
+    it "returns false if expression key is 'REGULAR EXPRESSION DOES NOT MATCH'" do
+      field = "ManageIQ::Providers::InfraManager::Vm-name"
+      expression = {"REGULAR EXPRESSION DOES NOT MATCH" => {"filed" => field, "value" => "\w+"}}
+      expect(described_class.new(nil).sql_supports_atom?(expression)).to eq(false)
+    end
+
+    it "returns false if expression key is not 'CONTAINS' and operand is 'TAG'" do
+      # UI does not allow to create this kind of expression:
+      expression = {"=" => {"tag" => "Vm-vendor"}}
+      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
+    end
+
+    it "returns false if operand is'COUNT' on model.association" do
+      association = "ManageIQ::Providers::InfraManager::Vm.users"
+      expression = {">" => {"count" => association, "value" => "10"}}
+      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
+    end
+
+    it "returns false for model.association-virtualfield" do
+      field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space_percent_of_total"
+      expression = {">=" => {"field" => field, "value" => "50"}}
+      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(false)
+    end
+
+    it "returns true for model-field" do
+      field = "ManageIQ::Providers::InfraManager::Vm-vendor"
+      expression = {"=" => {"field" => field, "value" => "redhat"}}
+      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
+    end
+
+    it "returns true for model.assoctiation-field" do
+      field = "ManageIQ::Providers::InfraManager::Vm.ext_management_system-name"
+      expression = {"STARTS WITH" => {"field" => field, "value" => "abc"}}
+      expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
+    end
+
+    it "returns false if column excluded by preprocessing" do
+      field = "EmsClusterPerformance-cpu_usagemhz_rate_average"
+      expression = {">=" => {"field" => field, "value" => "0"}}
+      obj = described_class.new(expression)
+      obj.preprocess_options = {:vim_performance_daily_adhoc => true}
+      expect(obj.sql_supports_atom?(expression)).to eq(false)
+    end
+
+    it "returns true if column is not excluded by preprocessing" do
+      field = "EmsClusterPerformance-derived_cpu_available"
+      expression = {">=" => {"field" => field, "value" => "0"}}
+      obj = described_class.new(expression)
+      obj.preprocess_options = {:vim_performance_daily_adhoc => true}
+      expect(obj.sql_supports_atom?(expression)).to eq(true)
     end
   end
 end
