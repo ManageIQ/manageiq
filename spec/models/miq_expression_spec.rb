@@ -1971,5 +1971,13 @@ describe MiqExpression do
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
       expect(obj.sql_supports_atom?(expression)).to eq(true)
     end
+
+    it "returns true if column is not excluded by preprocessing" do
+      field = "EmsClusterPerformance-derived_cpu_available"
+      expression = {">=" => {"field" => field, "value" => "0"}}
+      obj = described_class.new(expression)
+      obj.preprocess_options = {:vim_performance_daily_adhoc => true}
+      expect(obj.field_in_sql?(field)).to eq(true)
+    end
   end
 end
