@@ -1,1 +1,6 @@
-= render :partial => @showtype
+- if @showtype == "performance"
+  = render(:partial => "layouts/performance")
+  :javascript
+    var miq_after_onload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
+- else
+  = render :partial => @showtype

@@ -1,25 +1,27 @@
 # noinspection RubyArgCount
 class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::Toolbar::Basic
-  button_group('middleware_server_vmdb', [
+  button_group('middleware_server_monitoring', [
     select(
-      :middleware_server_vmdb_choice,
-      'fa fa-cog fa-lg',
-      t = N_('Configuration'),
+      :middleware_server_monitoring_choice,
+      'product product-monitoring fa-lg',
+      t = N_('Monitoring'),
       t,
       :items => [
         button(
-          :middleware_server_edit,
-          'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"middleware_server")}'),
-          t,
-          :url => "/edit"),
+          :middleware_server_perf,
+          'product product-monitoring fa-lg',
+          N_('Show Capacity & Utilization data for this Server'),
+          N_('Utilization'),
+          :url       => "/show",
+          :url_parms => "?display=performance"),
         button(
-          :middleware_server_delete,
-          'pficon pficon-delete fa-lg',
-          t = N_('Remove this #{ui_lookup(:table=>"middleware_server")} from the VMDB'),
-          t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"middleware_server\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"middleware_server\")}?")),
+          :middleware_server_timeline,
+          'product product-timeline fa-lg',
+          N_('Show Timelines for this Server'),
+          N_('Timelines'),
+          :enabled   => "false",
+          :url       => "/show",
+          :url_parms => "?display=timeline"),
       ]
     ),
   ])
@@ -29,6 +31,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
+      :enabled => "false",
       :items => [
         button(
           :middleware_server_tag,

@@ -1,0 +1,1774 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/cda13e2a-e206-4e87-8bca-8cfdd5aea484/resources/Local~~/metrics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+      X-Total-Count:
+      - '14'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '10779'
+      Link:
+      - <http://localhost:8080/hawkular/inventory/feeds/cda13e2a-e206-4e87-8bca-8cfdd5aea484/resources/Local~~/metrics>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Memory%20Metrics~Heap%20Used",
+            "name" : "WildFly Memory Metrics~Heap Used",
+            "unit" : "BYTES",
+            "type" : "GAUGE",
+            "collectionInterval" : 30,
+            "id" : "WildFly Memory Metrics~Heap Used"
+          },
+          "name" : "WildFly Memory Metrics~Heap Used",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Memory Metrics~Heap Used"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
+          },
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
+          },
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Memory%20Metrics~Heap%20Max",
+            "name" : "WildFly Memory Metrics~Heap Max",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 60,
+            "id" : "WildFly Memory Metrics~Heap Max"
+          },
+          "name" : "WildFly Memory Metrics~Heap Max",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Memory Metrics~Heap Max"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
+          },
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Memory%20Metrics~Heap%20Committed",
+            "name" : "WildFly Memory Metrics~Heap Committed",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 60,
+            "id" : "WildFly Memory Metrics~Heap Committed"
+          },
+          "name" : "WildFly Memory Metrics~Heap Committed",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Memory Metrics~Heap Committed"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
+          },
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Memory%20Metrics~NonHeap%20Committed",
+            "name" : "WildFly Memory Metrics~NonHeap Committed",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 60,
+            "id" : "WildFly Memory Metrics~NonHeap Committed"
+          },
+          "name" : "WildFly Memory Metrics~NonHeap Committed",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Memory Metrics~NonHeap Committed"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Memory%20Metrics~NonHeap%20Used",
+            "name" : "WildFly Memory Metrics~NonHeap Used",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 30,
+            "id" : "WildFly Memory Metrics~NonHeap Used"
+          },
+          "name" : "WildFly Memory Metrics~NonHeap Used",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Memory Metrics~NonHeap Used"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
+          },
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+            "name" : "WildFly Memory Metrics~Accumulated GC Duration",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Memory Metrics~Accumulated GC Duration"
+          },
+          "name" : "WildFly Memory Metrics~Accumulated GC Duration",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Memory Metrics~Accumulated GC Duration"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
+          },
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;WildFly%20Threading%20Metrics~Thread%20Count",
+            "name" : "WildFly Threading Metrics~Thread Count",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 120,
+            "id" : "WildFly Threading Metrics~Thread Count"
+          },
+          "name" : "WildFly Threading Metrics~Thread Count",
+          "id" : "MI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~MT~WildFly Threading Metrics~Thread Count"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/m;AI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~AT~Server%20Availability~App%20Server",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/mt;Server%20Availability~App%20Server",
+            "name" : "Server Availability~App Server",
+            "unit" : "NONE",
+            "type" : "AVAILABILITY",
+            "collectionInterval" : 30,
+            "id" : "Server Availability~App Server"
+          },
+          "name" : "Server Availability~App Server",
+          "id" : "AI~R~[cda13e2a-e206-4e87-8bca-8cfdd5aea484/Local~~]~AT~Server Availability~App Server"
+        } ]
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '8179'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":7.81464368E8,"avg":1.1371675712000003E9,"median":1.145404413792679E9,"max":1.49592776E9,"samples":120,"empty":false},{"start":1459807200000,"end":1459810800000,"min":9.11312384E8,"avg":1.254464201949581E9,"median":1.2612431584833221E9,"max":1.582437696E9,"samples":119,"empty":false},{"start":1459810800000,"end":1459814400000,"min":9.8287532E8,"avg":1.3505536857815123E9,"median":1.3632240424385424E9,"max":1.722297632E9,"samples":119,"empty":false},{"start":1459814400000,"end":1459818000000,"min":5.08848816E8,"avg":1.4059225287333329E9,"median":1.452148700359214E9,"max":1.816350864E9,"samples":120,"empty":false},{"start":1459818000000,"end":1459821600000,"min":5.1023452E8,"avg":8.790178649411764E8,"median":8.687899875539075E8,"max":1.222095776E9,"samples":119,"empty":false},{"start":1459821600000,"end":1459825200000,"min":6.57168128E8,"avg":1.0345231890420166E9,"median":1.0342603258666235E9,"max":1.379638688E9,"samples":119,"empty":false},{"start":1459825200000,"end":1459828800000,"min":8.02287192E8,"avg":1.1621075405042012E9,"median":1.1611236485801508E9,"max":1.522576272E9,"samples":119,"empty":false},{"start":1459828800000,"end":1459832400000,"min":9.6402276E8,"avg":1.2954866800000002E9,"median":1.29541393282449E9,"max":1.653477728E9,"samples":119,"empty":false},{"start":1459832400000,"end":1459836000000,"min":1.101799648E9,"avg":1.4336394370420177E9,"median":1.4332414178305893E9,"max":1.776787368E9,"samples":119,"empty":false},{"start":1459836000000,"end":1459839600000,"min":1.20392496E9,"avg":1.5814418078000002E9,"median":1.577926742701936E9,"max":1.93932592E9,"samples":120,"empty":false},{"start":1459839600000,"end":1459843200000,"min":5.92576816E8,"avg":1.0448177044033611E9,"median":9.931495964875041E8,"max":1.966868048E9,"samples":119,"empty":false},{"start":1459843200000,"end":1459846800000,"min":6.8653972E8,"avg":1.0321013433277309E9,"median":1.0205157939213183E9,"max":1.383438856E9,"samples":119,"empty":false},{"start":1459846800000,"end":1459850400000,"min":8.08607624E8,"avg":1.176105095266667E9,"median":1.171393320504073E9,"max":1.505289408E9,"samples":120,"empty":false},{"start":1459850400000,"end":1459854000000,"min":9.45691624E8,"avg":1.2809100499495792E9,"median":1.282622940885982E9,"max":1.63325092E9,"samples":119,"empty":false},{"start":1459854000000,"end":1459857600000,"min":1.02135156E9,"avg":1.3926542790588245E9,"median":1.3860282621507297E9,"max":1.72399492E9,"samples":119,"empty":false},{"start":1459857600000,"end":1459861200000,"min":1.150144448E9,"avg":1.4964681128E9,"median":1.4759986303323405E9,"max":1.860742856E9,"samples":120,"empty":false},{"start":1459861200000,"end":1459864800000,"min":1.259801624E9,"avg":1.610577085983194E9,"median":1.6414460709824915E9,"max":1.967750128E9,"samples":119,"empty":false},{"start":1459864800000,"end":1459868400000,"min":5.74963264E8,"avg":1.6096268117333324E9,"median":1.6740824500630863E9,"max":2.058424656E9,"samples":120,"empty":false},{"start":1459868400000,"end":1459872000000,"min":5.51718024E8,"avg":9.313156501512604E8,"median":9.508277565162486E8,"max":1.285985632E9,"samples":119,"empty":false},{"start":1459872000000,"end":1459875600000,"min":6.85636912E8,"avg":1.0272829345882356E9,"median":1.0031290840449136E9,"max":1.386204224E9,"samples":119,"empty":false},{"start":1459875600000,"end":1459879200000,"min":8.19299184E8,"avg":1.172678656666667E9,"median":1.1789527297040393E9,"max":1.513541944E9,"samples":120,"empty":false},{"start":1459879200000,"end":1459882800000,"min":8.96761296E8,"avg":1.286706152E9,"median":1.2891341389681509E9,"max":1.639135328E9,"samples":119,"empty":false},{"start":1459882800000,"end":1459886400000,"min":1.017950416E9,"avg":1.3939993328403363E9,"median":1.3985358576436849E9,"max":1.726486192E9,"samples":119,"empty":false},{"start":1459886400000,"end":1459890000000,"min":1.150051424E9,"avg":1.525654652466667E9,"median":1.5436392216291783E9,"max":1.866694888E9,"samples":120,"empty":false},{"start":1459890000000,"end":1459893600000,"min":1.262606448E9,"avg":1.6282765548235288E9,"median":1.6358946222206519E9,"max":1.984050784E9,"samples":119,"empty":false},{"start":1459893600000,"end":1459897200000,"min":5.22079264E8,"avg":1.524469358184874E9,"median":1.6351942574901571E9,"max":2.092295384E9,"samples":119,"empty":false},{"start":1459897200000,"end":1459900800000,"min":5.54791336E8,"avg":9.166388459999999E8,"median":9.077658889802587E8,"max":1.268840624E9,"samples":120,"empty":false},{"start":1459900800000,"end":1459904400000,"min":6.9381308E8,"avg":1.0641656705882355E9,"median":1.0394945319896125E9,"max":1.438181696E9,"samples":119,"empty":false},{"start":1459904400000,"end":1459908000000,"min":8.79850616E8,"avg":1.2447047790252104E9,"median":1.24492161737281E9,"max":1.621949792E9,"samples":119,"empty":false},{"start":1459908000000,"end":1459911600000,"min":1.007328856E9,"avg":1.3966346878655462E9,"median":1.3946858300868077E9,"max":1.76931656E9,"samples":119,"empty":false},{"start":1459911600000,"end":1459915200000,"min":1.177552576E9,"avg":1.5674712339333339E9,"median":1.5789723819216309E9,"max":1.89086088E9,"samples":120,"empty":false},{"start":1459915200000,"end":1459918800000,"min":6.83352216E8,"avg":1.682276930084034E9,"median":1.7119231724295957E9,"max":2.078927776E9,"samples":119,"empty":false},{"start":1459918800000,"end":1459922400000,"min":5.11781384E8,"avg":9.118845698666666E8,"median":9.028020336613488E8,"max":1.288541952E9,"samples":120,"empty":false},{"start":1459922400000,"end":1459926000000,"min":7.26767552E8,"avg":1.0539078545882347E9,"median":1.0352341595146337E9,"max":1.480476424E9,"samples":119,"empty":false},{"start":1459926000000,"end":1459929600000,"min":9.41578152E8,"avg":1.279567377277311E9,"median":1.274194269361376E9,"max":1.599122384E9,"samples":119,"empty":false},{"start":1459929600000,"end":1459933200000,"min":1.172883608E9,"avg":1.5351041318666668E9,"median":1.5189763787269049E9,"max":1.922643928E9,"samples":120,"empty":false},{"start":1459933200000,"end":1459936800000,"min":6.15380176E8,"avg":1.1970382180168061E9,"median":1.1188174622790353E9,"max":2.071547296E9,"samples":119,"empty":false},{"start":1459936800000,"end":1459940400000,"min":7.50821584E8,"avg":1.0914970605333328E9,"median":1.1221022690839436E9,"max":1.473457192E9,"samples":120,"empty":false},{"start":1459940400000,"end":1459944000000,"min":1.050162208E9,"avg":1.3625658265546227E9,"median":1.3621522520856647E9,"max":1.768483376E9,"samples":119,"empty":false},{"start":1459944000000,"end":1459947600000,"min":6.95323728E8,"avg":1.2900438542E9,"median":1.334780599676694E9,"max":1.782800904E9,"samples":120,"empty":false},{"start":1459947600000,"end":1459951200000,"min":8.00924312E8,"avg":1.0652949870924373E9,"median":1.0493667398665967E9,"max":1.361878368E9,"samples":119,"empty":false},{"start":1459951200000,"end":1459954800000,"min":9.8444144E8,"avg":1.2946913660504198E9,"median":1.2829185853482654E9,"max":1.57135384E9,"samples":119,"empty":false},{"start":1459954800000,"end":1459958400000,"min":1.23105844E9,"avg":1.5564147609999998E9,"median":1.5588606084750555E9,"max":1.870244576E9,"samples":120,"empty":false},{"start":1459958400000,"end":1459962000000,"min":5.86238424E8,"avg":9.012628735462186E8,"median":8.523078746590749E8,"max":1.778946072E9,"samples":119,"empty":false},{"start":1459962000000,"end":1459965600000,"min":7.85471384E8,"avg":1.089351234733333E9,"median":1.084119117179382E9,"max":1.380087448E9,"samples":120,"empty":false},{"start":1459965600000,"end":1459969200000,"min":1.069875152E9,"avg":1.323453910453781E9,"median":1.3079776876814501E9,"max":1.687417848E9,"samples":119,"empty":false},{"start":1459969200000,"end":1459972800000,"min":7.18921872E8,"avg":1.4018948720666668E9,"median":1.4521416517682848E9,"max":1.871775144E9,"samples":120,"empty":false},{"start":1459972800000,"end":1459976400000,"min":7.44213656E8,"avg":1.0183843602016809E9,"median":1.0146207279838009E9,"max":1.30841464E9,"samples":119,"empty":false},{"start":1459976400000,"end":1459980000000,"min":1.008573568E9,"avg":1.2972239942184875E9,"median":1.2767240710680518E9,"max":1.623462528E9,"samples":119,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/rate?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '5587'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459807200000,"end":1459810800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/rate?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '5619'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459807200000,"end":1459810800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":0.0,"avg":0.06666583337499793,"median":0.00276265669903104,"max":3.0,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '8135'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1459807200000,"end":1459810800000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":1.908932608E9,"avg":1.9167270229333332E9,"median":1.9089878461865044E9,"max":1.9922944E9,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":1.974992896E9,"avg":1.9910858717288134E9,"median":1.9915361889571762E9,"max":1.994391552E9,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":1.975517184E9,"avg":1.9900399615999994E9,"median":1.989891889889841E9,"max":1.996488704E9,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":1.974468608E9,"avg":1.9912458239999998E9,"median":1.992063158945678E9,"max":1.995964416E9,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":1.98443008E9,"avg":1.9919885653333333E9,"median":1.9921384872373798E9,"max":1.99491584E9,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":1.980235776E9,"avg":1.9950381738666666E9,"median":1.9958853151690557E9,"max":1.999634432E9,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":1.983381504E9,"avg":1.9971353258666666E9,"median":1.99741173838342E9,"max":2.001207296E9,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":1.993342976E9,"avg":2.0911715623050852E9,"median":2.1075246671676736E9,"max":2.116026368E9,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":2.105540608E9,"avg":2.1123650901333337E9,"median":2.1125334759690824E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":2.108162048E9,"avg":2.1136408576000001E9,"median":2.1138665595910137E9,"max":2.11550208E9,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":2.104492032E9,"avg":2.1142874794666665E9,"median":2.1147994231933782E9,"max":2.117599232E9,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":2.108686336E9,"avg":2.1144447658666668E9,"median":2.1144341621590805E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":2.105540608E9,"avg":2.1135709525333333E9,"median":2.1138435935619483E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":2.101870592E9,"avg":2.1138225811525424E9,"median":2.114388580144205E9,"max":2.116550656E9,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":2.074607616E9,"avg":2.1105038677333329E9,"median":2.1107416714734652E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":2.098724864E9,"avg":2.1125748053333333E9,"median":2.113656126744339E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":2.107113472E9,"avg":2.1135185237333336E9,"median":2.1139106422510254E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":2.108686336E9,"avg":2.1142787413333333E9,"median":2.1144176652181907E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":2.095054848E9,"avg":2.113099093333333E9,"median":2.1138212049682665E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":2.103967744E9,"avg":2.1127845205333333E9,"median":2.1130767822832558E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":2.097676288E9,"avg":2.113361237333333E9,"median":2.113061744841212E9,"max":2.117074944E9,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":2.103967744E9,"avg":2.1130939096949153E9,"median":2.11342246290317E9,"max":2.116550656E9,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":2.082996224E9,"avg":2.1117446826666665E9,"median":2.1123961572831628E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":2.037907456E9,"avg":2.0963306154666672E9,"median":2.10519595805015E9,"max":2.114977792E9,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":1.999634432E9,"avg":2.074677521066667E9,"median":2.0861516212924578E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":2.032664576E9,"avg":2.0933683882666662E9,"median":2.104454236173976E9,"max":2.11812352E9,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":2.01588736E9,"avg":2.0867710976000004E9,"median":2.0888743099765608E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":2.06045184E9,"avg":2.0984190293333328E9,"median":2.1042320626568804E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":2.088239104E9,"avg":2.1115087530666664E9,"median":2.1128034695437157E9,"max":2.11550208E9,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":1.908932608E9,"avg":2.0256977659661012E9,"median":2.0311833283703067E9,"max":2.119172096E9,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":1.908932608E9,"avg":1.9731841023999999E9,"median":1.972595385267863E9,"max":2.117599232E9,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":1.908932608E9,"avg":1.9926614016000001E9,"median":1.9899516662553136E9,"max":2.11288064E9,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":1.908932608E9,"avg":2.026207095466667E9,"median":2.0319387158840961E9,"max":2.119172096E9,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":1.908932608E9,"avg":1.979195938133334E9,"median":1.9785655443415024E9,"max":2.11550208E9,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":1.908932608E9,"avg":1.9179940522666667E9,"median":1.9107489059412038E9,"max":1.97656576E9,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":1.908932608E9,"avg":1.9162988543999996E9,"median":1.909008073423154E9,"max":2.008547328E9,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":1.908932608E9,"avg":1.910654020266667E9,"median":1.9089836559591768E9,"max":1.956642816E9,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":1.908932608E9,"avg":1.9116073654237294E9,"median":1.908934828479685E9,"max":1.974468608E9,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":1.908932608E9,"avg":1.9105316863999996E9,"median":1.9089339303213582E9,"max":1.949302784E9,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":1.908932608E9,"avg":1.9301400576000004E9,"median":1.9131649238670185E9,"max":2.041577472E9,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":1.908932608E9,"avg":1.9094306816E9,"median":1.908962584651852E9,"max":1.938817024E9,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":1.908932608E9,"avg":1.9097976832000003E9,"median":1.908938453098193E9,"max":1.945632768E9,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":1.908932608E9,"avg":1.9101472085333335E9,"median":1.9089336991830773E9,"max":1.94248704E9,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":1.908932608E9,"avg":1.9109685930666666E9,"median":1.9089389789649956E9,"max":1.976041472E9,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":1.908932608E9,"avg":1.9093502611525426E9,"median":1.9089361725122094E9,"max":1.928331264E9,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/rate?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '8200'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":13433.33497270447,"avg":29805.560421472142,"median":19134.092915832007,"max":83211.22629245692,"samples":59,"empty":false},{"start":1459807200000,"end":1459810800000,"min":10737.536876843842,"avg":30647.261660923305,"median":17932.678096609106,"max":87997.60011999401,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":13908.76818719688,"avg":30477.006801754153,"median":18304.151243102307,"max":88172.46954115902,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":14865.247754129236,"avg":30538.141767594,"median":18661.846218287737,"max":85646.2823141157,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":14465.758904018267,"avg":30779.97143675348,"median":18539.79144643117,"max":88841.51930801153,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":14175.737704918032,"avg":30685.983088680143,"median":19027.406146006146,"max":83439.87468337554,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":15115.251920865348,"avg":30920.362816422745,"median":19192.21294863211,"max":87460.45767429456,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":13251.0,"avg":30761.67162854863,"median":18716.958337054424,"max":83208.77362578752,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":14763.177309615543,"avg":30805.151398136146,"median":18801.91045645025,"max":55612.78063903195,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":14098.234970582844,"avg":30669.058797202084,"median":18624.003782009604,"max":67925.0,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":15291.235438228088,"avg":31333.881274880223,"median":21536.92456441809,"max":81042.0,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":13371.585953637825,"avg":31001.996724668064,"median":17936.53937292223,"max":89174.0,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":13609.226820447007,"avg":31034.56546428817,"median":18929.999755986853,"max":86457.25059431102,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":16011.733137781037,"avg":32197.861286813284,"median":19031.36700215273,"max":86632.0,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":15107.963208892823,"avg":30852.1001016254,"median":19816.013764803964,"max":79098.6366212207,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":15065.901639344262,"avg":32068.208493735463,"median":20502.87719716814,"max":65345.910901484975,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":13817.751242453554,"avg":31184.55552168879,"median":19428.233406945175,"max":55115.0,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":15729.01030721505,"avg":31617.612607284915,"median":22623.921373402656,"max":72220.8147209814,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":14345.0,"avg":31188.327449497403,"median":20105.149406687855,"max":85147.0,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":14361.874784832538,"avg":31018.008565780114,"median":19029.373606701785,"max":89974.50127493625,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":14787.0,"avg":30897.011958738254,"median":18597.817482270217,"max":86002.91817630375,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":15012.49791701383,"avg":31240.067926412492,"median":19315.237984021795,"max":88279.0,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":15001.0,"avg":30742.50453221011,"median":19422.888487030556,"max":84751.41252354207,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":15784.263071051184,"avg":30954.119938003027,"median":19476.65773303945,"max":81591.3598559976,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":14180.472682422747,"avg":31152.440598872432,"median":19164.567498252592,"max":79586.67355544075,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":13105.781570307161,"avg":30673.71181550514,"median":19243.651059293225,"max":72704.54090818163,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":14871.752137464375,"avg":30462.924065775464,"median":19519.615992655163,"max":66691.22304076803,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":14027.766203896601,"avg":30161.21290925337,"median":19602.74393313248,"max":57208.0,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":14766.246104101736,"avg":31732.08035311626,"median":21801.170410926883,"max":71085.18475307921,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":15396.141046868084,"avg":31238.298109215888,"median":19127.398919053678,"max":89132.0,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":14628.731436571828,"avg":31612.953089847902,"median":19307.725906551605,"max":85365.42275704595,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":15630.0,"avg":31309.153680464286,"median":19063.93878061549,"max":85460.0,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":15324.744587590207,"avg":31356.14273462221,"median":19927.829217693023,"max":83689.39482324706,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":13115.437181239375,"avg":31161.759441584025,"median":19644.153455704076,"max":80980.67181429204,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":14629.0,"avg":31034.2978079934,"median":19711.22770657407,"max":79258.0370981451,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":15746.0,"avg":32005.058032254045,"median":20635.898875417795,"max":78063.0,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":14089.469648988299,"avg":31061.980561812787,"median":19748.259820509047,"max":73570.77382043633,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":15505.516850561686,"avg":31931.482264943992,"median":22332.94173344978,"max":69731.0,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":14845.0,"avg":32938.77367122077,"median":22424.188057425148,"max":65436.0,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":15576.259604326739,"avg":32696.719474072106,"median":21854.005301517038,"max":64607.07318293232,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":17820.425177157147,"avg":33949.4248751745,"median":22151.80517264353,"max":71484.04299641696,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":15245.524552455245,"avg":33039.22258464754,"median":23013.500830291465,"max":68987.60737000853,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":16534.724421259645,"avg":34721.63405931958,"median":24051.7266558544,"max":80138.02373614845,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":17997.400086663776,"avg":34530.23527044442,"median":23328.221488604948,"max":86782.0,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":16082.95081967213,"avg":32291.86755477834,"median":20362.845869259872,"max":82526.92667092904,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":15281.812518443228,"avg":31078.871951544716,"median":19500.354464290558,"max":77368.15787719181,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":13749.770837152713,"avg":30623.02273143035,"median":19498.22003681478,"max":75481.48395053498,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":14690.755154080765,"avg":31156.46075134447,"median":20791.855872644992,"max":71998.80001999966,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":14936.253187340633,"avg":31604.437826231548,"median":21036.280750073845,"max":72500.66702241196,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '8180'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":1.847066624E9,"avg":1.8534454613333337E9,"median":1.8541658636953235E9,"max":1.85597952E9,"samples":60,"empty":false},{"start":1459807200000,"end":1459810800000,"min":1.84549376E9,"avg":1.8537687722666664E9,"median":1.8540931130373278E9,"max":1.857028096E9,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":1.843396608E9,"avg":1.8533056511999998E9,"median":1.853937522935244E9,"max":1.85597952E9,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":1.84287232E9,"avg":1.8665788757333336E9,"median":1.8526694081128862E9,"max":1.9922944E9,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":1.974992896E9,"avg":1.9910858717288134E9,"median":1.9915361889571762E9,"max":1.994391552E9,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":1.975517184E9,"avg":1.9900399615999994E9,"median":1.989891889889841E9,"max":1.996488704E9,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":1.974468608E9,"avg":1.9912458239999998E9,"median":1.992063158945678E9,"max":1.995964416E9,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":1.98443008E9,"avg":1.9919885653333333E9,"median":1.9921384872373798E9,"max":1.99491584E9,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":1.980235776E9,"avg":1.9950381738666666E9,"median":1.9958853151690557E9,"max":1.999634432E9,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":1.983381504E9,"avg":1.9971353258666666E9,"median":1.99741173838342E9,"max":2.001207296E9,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":1.993342976E9,"avg":2.0911715623050852E9,"median":2.1075246671676736E9,"max":2.116026368E9,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":2.105540608E9,"avg":2.1123650901333337E9,"median":2.1125334759690824E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":2.108162048E9,"avg":2.1136408576000001E9,"median":2.1138665595910137E9,"max":2.11550208E9,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":2.104492032E9,"avg":2.1143049557333333E9,"median":2.1148399682273457E9,"max":2.117599232E9,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":2.108686336E9,"avg":2.1144447658666668E9,"median":2.1144341621590805E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":2.105540608E9,"avg":2.1135709525333333E9,"median":2.1138435935619483E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":2.101870592E9,"avg":2.1138225811525424E9,"median":2.114388580144205E9,"max":2.116550656E9,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":2.074607616E9,"avg":2.1105038677333329E9,"median":2.1107416714734652E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":2.098724864E9,"avg":2.1125748053333333E9,"median":2.113656126744339E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":2.107113472E9,"avg":2.1135185237333336E9,"median":2.1139106422510254E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":2.108686336E9,"avg":2.1142787413333333E9,"median":2.1144176652181907E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":2.095054848E9,"avg":2.113099093333333E9,"median":2.1138212049682665E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":2.103967744E9,"avg":2.1127845205333333E9,"median":2.1130767822832558E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":2.097676288E9,"avg":2.113361237333333E9,"median":2.113061744841212E9,"max":2.117074944E9,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":2.103967744E9,"avg":2.1130939096949153E9,"median":2.11342246290317E9,"max":2.116550656E9,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":2.082996224E9,"avg":2.1117446826666665E9,"median":2.1123961572831628E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":2.037907456E9,"avg":2.0963306154666672E9,"median":2.10519595805015E9,"max":2.114977792E9,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":1.999634432E9,"avg":2.074677521066667E9,"median":2.0861516212924578E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":2.032664576E9,"avg":2.0933683882666662E9,"median":2.104454236173976E9,"max":2.11812352E9,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":2.01588736E9,"avg":2.0867710976000004E9,"median":2.0888743099765608E9,"max":2.116550656E9,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":2.06045184E9,"avg":2.0984190293333328E9,"median":2.1042320626568804E9,"max":2.116026368E9,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":2.088239104E9,"avg":2.1115087530666664E9,"median":2.1128034695437157E9,"max":2.11550208E9,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":1.904738304E9,"avg":2.0256089035932207E9,"median":2.030812521976845E9,"max":2.119172096E9,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":1.835008E9,"avg":1.9662198101333332E9,"median":1.9714721762729452E9,"max":2.117599232E9,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":1.821376512E9,"avg":1.9846397952000003E9,"median":1.9937800277623158E9,"max":2.11288064E9,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":1.886912512E9,"avg":2.0255255210666666E9,"median":2.0316415089740498E9,"max":2.119172096E9,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":1.843396608E9,"avg":1.9726073855999994E9,"median":1.9804973862482255E9,"max":2.11550208E9,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":1.789394944E9,"avg":1.8833298773333333E9,"median":1.8857949044528573E9,"max":1.97656576E9,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":1.794637824E9,"avg":1.8837230933333333E9,"median":1.8807806747144434E9,"max":2.008547328E9,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":1.762131968E9,"avg":1.8417975296E9,"median":1.839854922881225E9,"max":1.956642816E9,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":1.70655744E9,"avg":1.8368563373559322E9,"median":1.8361505364254668E9,"max":1.974468608E9,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":1.749549056E9,"avg":1.8412295509333332E9,"median":1.838570454933857E9,"max":1.949302784E9,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":1.739587584E9,"avg":1.9052800682666662E9,"median":1.9077975820954356E9,"max":2.025324544E9,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":1.701838848E9,"avg":1.7985000789333332E9,"median":1.7928714133991134E9,"max":1.956642816E9,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":1.692925952E9,"avg":1.8009380181333337E9,"median":1.7941224709926574E9,"max":1.945632768E9,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":1.734868992E9,"avg":1.8297651199999998E9,"median":1.8249853363142521E9,"max":1.94248704E9,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":1.72228608E9,"avg":1.8393421141333332E9,"median":1.83611352108685E9,"max":1.976041472E9,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":1.6777216E9,"avg":1.759396932266667E9,"median":1.7491370012299554E9,"max":1.873805312E9,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":1.760034816E9,"avg":1.832590943457627E9,"median":1.8257953405521681E9,"max":1.928331264E9,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '5979'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459807200000,"end":1459810800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '7679'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":4.83590144E8,"avg":4.837649066666667E8,"median":4.8377175975894004E8,"max":4.84048896E8,"samples":60,"empty":false},{"start":1459807200000,"end":1459810800000,"min":4.84048896E8,"avg":4.842018133333332E8,"median":4.841807631779324E8,"max":4.84376576E8,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":4.84376576E8,"avg":4.845065557333333E8,"median":4.845280347764608E8,"max":4.8463872E8,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":4.8463872E8,"avg":4.8465619626666677E8,"median":4.846531041323814E8,"max":4.84704256E8,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":4.84769792E8,"avg":4.84769792E8,"median":4.84769792E8,"max":4.84769792E8,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":4.84769792E8,"avg":4.851335168000001E8,"median":4.8520535468078506E8,"max":4.85228544E8,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":4.85228544E8,"avg":4.853323093333333E8,"median":4.853496889446404E8,"max":4.85359616E8,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":4.85359616E8,"avg":4.854513664E8,"median":4.8545770088728446E8,"max":4.85556224E8,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":4.85556224E8,"avg":4.856785578666667E8,"median":4.856871547586207E8,"max":4.85687296E8,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":4.85687296E8,"avg":4.858150912E8,"median":4.8581380762038517E8,"max":4.85883904E8,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":4.85883904E8,"avg":4.85953883118644E8,"median":4.8592976012845993E8,"max":4.86080512E8,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":4.86080512E8,"avg":4.8628148906666666E8,"median":4.8628914497165126E8,"max":4.86473728E8,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":4.866048E8,"avg":4.868702207999999E8,"median":4.869316331629169E8,"max":4.87063552E8,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":4.87063552E8,"avg":4.87063552E8,"median":4.87063552E8,"max":4.87063552E8,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":4.87063552E8,"avg":4.87063552E8,"median":4.87063552E8,"max":4.87063552E8,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":4.87063552E8,"avg":4.87063552E8,"median":4.87063552E8,"max":4.87063552E8,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":4.87063552E8,"avg":4.87063552E8,"median":4.87063552E8,"max":4.87063552E8,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":4.87063552E8,"avg":4.8709850453333336E8,"median":4.870656063040807E8,"max":4.87325696E8,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":4.87325696E8,"avg":4.8743383040000004E8,"median":4.874555908058579E8,"max":4.8758784E8,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":4.8758784E8,"avg":4.877036202666667E8,"median":4.877406390140625E8,"max":4.87784448E8,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":4.87784448E8,"avg":4.8780192426666677E8,"median":4.877988321323814E8,"max":4.87849984E8,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":4.87849984E8,"avg":4.878761984E8,"median":4.8785380286193126E8,"max":4.882432E8,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":4.882432E8,"avg":4.8831092053333336E8,"median":4.8833990133201677E8,"max":4.88374272E8,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":4.88374272E8,"avg":4.88374272E8,"median":4.88374272E8,"max":4.88374272E8,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":4.88374272E8,"avg":4.88374272E8,"median":4.88374272E8,"max":4.88374272E8,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":4.88374272E8,"avg":4.88374272E8,"median":4.88374272E8,"max":4.88374272E8,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":4.88374272E8,"avg":4.88374272E8,"median":4.88374272E8,"max":4.88374272E8,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":4.88505344E8,"avg":4.88505344E8,"median":4.88505344E8,"max":4.88505344E8,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":4.88505344E8,"avg":4.88505344E8,"median":4.88505344E8,"max":4.88505344E8,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":4.88505344E8,"avg":4.88505344E8,"median":4.88505344E8,"max":4.88505344E8,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":4.88505344E8,"avg":4.88505344E8,"median":4.88505344E8,"max":4.88505344E8,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":4.88505344E8,"avg":4.88505344E8,"median":4.88505344E8,"max":4.88505344E8,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":4.88505344E8,"avg":4.8855755064406776E8,"median":4.8856920071712655E8,"max":4.88636416E8,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":4.88701952E8,"avg":4.88701952E8,"median":4.88701952E8,"max":4.88701952E8,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":4.88701952E8,"avg":4.88701952E8,"median":4.88701952E8,"max":4.88701952E8,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":4.88701952E8,"avg":4.9176903679999995E8,"median":4.928447077412826E8,"max":4.96369664E8,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":4.96369664E8,"avg":4.96369664E8,"median":4.96369664E8,"max":4.96369664E8,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":4.96369664E8,"avg":4.96369664E8,"median":4.96369664E8,"max":4.96369664E8,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":4.96369664E8,"avg":4.9705669973333335E8,"median":4.9656661544470644E8,"max":4.99515392E8,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":4.99515392E8,"avg":4.99515392E8,"median":4.99515392E8,"max":4.99515392E8,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":4.99515392E8,"avg":4.995509369491526E8,"median":4.995174463040807E8,"max":4.99777536E8,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":4.99777536E8,"avg":4.9982341120000005E8,"median":4.9977839050932115E8,"max":5.00236288E8,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":5.00236288E8,"avg":5.0042306559999996E8,"median":5.0043268413793105E8,"max":5.00432896E8,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":5.00432896E8,"avg":5.00432896E8,"median":5.00432896E8,"max":5.00432896E8,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":5.00432896E8,"avg":5.0054212266666675E8,"median":5.005745286749155E8,"max":5.0069504E8,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":5.0069504E8,"avg":5.0069504E8,"median":5.0069504E8,"max":5.0069504E8,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":5.0069504E8,"avg":5.0069504E8,"median":5.0069504E8,"max":5.0069504E8,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":5.0069504E8,"avg":5.0069504E8,"median":5.0069504E8,"max":5.0069504E8,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":5.0069504E8,"avg":5.0069504E8,"median":5.0069504E8,"max":5.0069504E8,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '8098'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":4.60674952E8,"avg":4.6081480953333336E8,"median":4.6078603647699666E8,"max":4.61128224E8,"samples":120,"empty":false},{"start":1459807200000,"end":1459810800000,"min":4.61165216E8,"avg":4.6133133331092423E8,"median":4.613250301993698E8,"max":4.61518952E8,"samples":119,"empty":false},{"start":1459810800000,"end":1459814400000,"min":4.61516136E8,"avg":4.616392187563025E8,"median":4.6159391257537866E8,"max":4.6181656E8,"samples":119,"empty":false},{"start":1459814400000,"end":1459818000000,"min":4.61778704E8,"avg":4.618713808666667E8,"median":4.618503469056896E8,"max":4.6197384E8,"samples":120,"empty":false},{"start":1459818000000,"end":1459821600000,"min":4.61910184E8,"avg":4.6193401189915967E8,"median":4.619324216613923E8,"max":4.61954664E8,"samples":119,"empty":false},{"start":1459821600000,"end":1459825200000,"min":4.61954664E8,"avg":4.6208663724369746E8,"median":4.6210967998461276E8,"max":4.621492E8,"samples":119,"empty":false},{"start":1459825200000,"end":1459828800000,"min":4.62147944E8,"avg":4.6219598628571415E8,"median":4.622007023192746E8,"max":4.62218024E8,"samples":119,"empty":false},{"start":1459828800000,"end":1459832400000,"min":4.62201504E8,"avg":4.623206537142856E8,"median":4.623245346582432E8,"max":4.6246092E8,"samples":119,"empty":false},{"start":1459832400000,"end":1459836000000,"min":4.6246092E8,"avg":4.6255809277310926E8,"median":4.62536177517986E8,"max":4.62694272E8,"samples":119,"empty":false},{"start":1459836000000,"end":1459839600000,"min":4.62672832E8,"avg":4.6276078559999996E8,"median":4.627564009683987E8,"max":4.62840288E8,"samples":120,"empty":false},{"start":1459839600000,"end":1459843200000,"min":4.62819568E8,"avg":4.629281572436974E8,"median":4.628649036120927E8,"max":4.63123648E8,"samples":119,"empty":false},{"start":1459843200000,"end":1459846800000,"min":4.63114816E8,"avg":4.63315013512605E8,"median":4.633432320835302E8,"max":4.63671736E8,"samples":119,"empty":false},{"start":1459846800000,"end":1459850400000,"min":4.63665784E8,"avg":4.637880634666667E8,"median":4.6380021886540014E8,"max":4.63908776E8,"samples":120,"empty":false},{"start":1459850400000,"end":1459854000000,"min":4.63675568E8,"avg":4.637504884033614E8,"median":4.637516198219675E8,"max":4.6391396E8,"samples":119,"empty":false},{"start":1459854000000,"end":1459857600000,"min":4.63704976E8,"avg":4.6375725445378166E8,"median":4.637571289247825E8,"max":4.63797344E8,"samples":119,"empty":false},{"start":1459857600000,"end":1459861200000,"min":4.63598904E8,"avg":4.636537248E8,"median":4.636510257591366E8,"max":4.63722232E8,"samples":120,"empty":false},{"start":1459861200000,"end":1459864800000,"min":4.63611192E8,"avg":4.6369645008403355E8,"median":4.636941655615717E8,"max":4.63742056E8,"samples":119,"empty":false},{"start":1459864800000,"end":1459868400000,"min":4.6365132E8,"avg":4.6385198393333346E8,"median":4.637001575777847E8,"max":4.6443332E8,"samples":120,"empty":false},{"start":1459868400000,"end":1459872000000,"min":4.6443332E8,"avg":4.6471023569747907E8,"median":4.647389543195897E8,"max":4.65013776E8,"samples":119,"empty":false},{"start":1459872000000,"end":1459875600000,"min":4.64768232E8,"avg":4.6502069270588225E8,"median":4.6502955579516506E8,"max":4.65182864E8,"samples":119,"empty":false},{"start":1459875600000,"end":1459879200000,"min":4.65182864E8,"avg":4.652484724666667E8,"median":4.652623640991184E8,"max":4.65323728E8,"samples":120,"empty":false},{"start":1459879200000,"end":1459882800000,"min":4.65323728E8,"avg":4.653371571764705E8,"median":4.6532610634605604E8,"max":4.65506288E8,"samples":119,"empty":false},{"start":1459882800000,"end":1459886400000,"min":4.65506288E8,"avg":4.6555495663865554E8,"median":4.6556962854103935E8,"max":4.65599568E8,"samples":119,"empty":false},{"start":1459886400000,"end":1459890000000,"min":4.65461952E8,"avg":4.6553217246666664E8,"median":4.655384696884182E8,"max":4.65601824E8,"samples":120,"empty":false},{"start":1459890000000,"end":1459893600000,"min":4.65598376E8,"avg":4.6560206016806734E8,"median":4.6560157634270716E8,"max":4.65610584E8,"samples":119,"empty":false},{"start":1459893600000,"end":1459897200000,"min":4.6554128E8,"avg":4.6559024605042005E8,"median":4.656007058139241E8,"max":4.65610584E8,"samples":119,"empty":false},{"start":1459897200000,"end":1459900800000,"min":4.65559008E8,"avg":4.655736037333333E8,"median":4.655761284796761E8,"max":4.6562836E8,"samples":120,"empty":false},{"start":1459900800000,"end":1459904400000,"min":4.65565704E8,"avg":4.6561057337815154E8,"median":4.656112395403296E8,"max":4.6562836E8,"samples":119,"empty":false},{"start":1459904400000,"end":1459908000000,"min":4.65450664E8,"avg":4.655035496470589E8,"median":4.6548585556368583E8,"max":4.65565704E8,"samples":119,"empty":false},{"start":1459908000000,"end":1459911600000,"min":4.65328368E8,"avg":4.653855669243697E8,"median":4.653624171986555E8,"max":4.65457488E8,"samples":119,"empty":false},{"start":1459911600000,"end":1459915200000,"min":4.65334768E8,"avg":4.653669697333332E8,"median":4.6537456226859164E8,"max":4.65464312E8,"samples":120,"empty":false},{"start":1459915200000,"end":1459918800000,"min":4.65455032E8,"avg":4.6549054715966403E8,"median":4.6549106658846503E8,"max":4.65528184E8,"samples":119,"empty":false},{"start":1459918800000,"end":1459922400000,"min":4.65528184E8,"avg":4.6566456566666657E8,"median":4.656873499123575E8,"max":4.65820304E8,"samples":120,"empty":false},{"start":1459922400000,"end":1459926000000,"min":4.65769696E8,"avg":4.658271234957984E8,"median":4.6581979093868554E8,"max":4.65873456E8,"samples":119,"empty":false},{"start":1459926000000,"end":1459929600000,"min":4.65873456E8,"avg":4.659142177478992E8,"median":4.659208110192892E8,"max":4.65943552E8,"samples":119,"empty":false},{"start":1459929600000,"end":1459933200000,"min":4.65943552E8,"avg":4.685581696000002E8,"median":4.690518891415026E8,"max":4.72717648E8,"samples":120,"empty":false},{"start":1459933200000,"end":1459936800000,"min":4.71618544E8,"avg":4.7205919213445383E8,"median":4.721460306282394E8,"max":4.72257952E8,"samples":119,"empty":false},{"start":1459936800000,"end":1459940400000,"min":4.71505648E8,"avg":4.716610504666667E8,"median":4.716181251612909E8,"max":4.71888336E8,"samples":120,"empty":false},{"start":1459940400000,"end":1459944000000,"min":4.7184008E8,"avg":4.72607024537815E8,"median":4.7238179193139094E8,"max":4.76554904E8,"samples":119,"empty":false},{"start":1459944000000,"end":1459947600000,"min":4.74481792E8,"avg":4.7481192313333315E8,"median":4.7482215881895447E8,"max":4.75128952E8,"samples":120,"empty":false},{"start":1459947600000,"end":1459951200000,"min":4.74809184E8,"avg":4.7509747442016804E8,"median":4.748957439150148E8,"max":4.76229968E8,"samples":119,"empty":false},{"start":1459951200000,"end":1459954800000,"min":4.75568328E8,"avg":4.762110330756303E8,"median":4.7625441239338833E8,"max":4.76455872E8,"samples":119,"empty":false},{"start":1459954800000,"end":1459958400000,"min":4.76374792E8,"avg":4.766106496666667E8,"median":4.766466370076832E8,"max":4.7681364E8,"samples":120,"empty":false},{"start":1459958400000,"end":1459962000000,"min":4.76765432E8,"avg":4.76910010420168E8,"median":4.768979664587078E8,"max":4.77104152E8,"samples":119,"empty":false},{"start":1459962000000,"end":1459965600000,"min":4.77102864E8,"avg":4.7720383893333334E8,"median":4.7721946551643103E8,"max":4.77247288E8,"samples":120,"empty":false},{"start":1459965600000,"end":1459969200000,"min":4.77236472E8,"avg":4.772437657142856E8,"median":4.77244127167289E8,"max":4.77247288E8,"samples":119,"empty":false},{"start":1459969200000,"end":1459972800000,"min":4.7724544E8,"avg":4.773375668666666E8,"median":4.773477731321869E8,"max":4.77383704E8,"samples":120,"empty":false},{"start":1459972800000,"end":1459976400000,"min":4.77383704E8,"avg":4.7764575610084033E8,"median":4.77666431690298E8,"max":4.77721416E8,"samples":119,"empty":false},{"start":1459976400000,"end":1459980000000,"min":4.77707824E8,"avg":4.777383406386555E8,"median":4.777404837504469E8,"max":4.77769536E8,"samples":119,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '5635'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459807200000,"end":1459810800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":0.0,"avg":0.8000000000000002,"median":0.13383425684628092,"max":4.0,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":0.0,"avg":1.15,"median":0.31049634315177005,"max":4.0,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/rate?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '7806'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":0.0,"avg":41.29943360025911,"median":26.36804766979461,"max":123.98760123987601,"samples":59,"empty":false},{"start":1459807200000,"end":1459810800000,"min":0.0,"avg":43.70622695396972,"median":29.95342655195571,"max":139.672131147541,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":0.0,"avg":44.164080217824115,"median":28.478442557281504,"max":121.00605030251512,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":0.0,"avg":51.36885118908322,"median":28.61542859097582,"max":523.9825339155361,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":0.0,"avg":43.064417406876714,"median":27.459636403196523,"max":128.99785003583273,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":0.0,"avg":43.65077821473652,"median":29.060447170082387,"max":114.00950079173265,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":0.0,"avg":44.357938470516686,"median":28.815451487146955,"max":121.0242048409682,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":0.0,"avg":43.91254261783785,"median":28.25196910731856,"max":121.9268438936638,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":0.0,"avg":44.562615109113395,"median":35.298348254910096,"max":93.98433594400933,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":0.0,"avg":45.030821201937,"median":51.163764750492874,"max":95.99680010666312,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":0.0,"avg":52.67110811308015,"median":31.19568837207128,"max":554.6268069623366,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":0.0,"avg":42.30427136250056,"median":29.12846575215699,"max":123.99793336777721,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":0.0,"avg":45.073903164969856,"median":27.973878004443186,"max":142.63464218378556,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":0.0,"avg":47.772688174645154,"median":31.641114404379504,"max":135.7332546473886,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":0.0,"avg":44.02788789325097,"median":29.183745659193217,"max":116.93373754872239,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":0.0,"avg":48.62505597230517,"median":44.871226486742664,"max":102.27663863893396,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":0.0,"avg":46.43259131229539,"median":44.11110664212159,"max":94.43087364952375,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":0.0,"avg":57.52787186138525,"median":41.91689902143063,"max":573.0,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":0.0,"avg":44.253729360162026,"median":28.269092499570455,"max":106.0,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":0.0,"avg":43.59544065490641,"median":28.37121012500975,"max":133.77268479811144,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":0.0,"avg":43.25469147378286,"median":28.832745139561638,"max":124.9979167013883,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":0.0,"avg":45.35213069344112,"median":27.766462720377515,"max":161.02683780630105,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":0.0,"avg":45.85725568270189,"median":34.267823357028334,"max":126.88940621003967,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":0.0,"avg":45.581330761508845,"median":30.386208320092223,"max":124.912561207155,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":0.0,"avg":46.51536557011075,"median":32.391258540510805,"max":106.99286714219052,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":0.0,"avg":53.47286617607365,"median":39.37986064187214,"max":581.106536198303,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":0.0,"avg":43.959912917323045,"median":35.69998554118371,"max":101.98640181309159,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":0.0,"avg":44.77575303640696,"median":37.20659206233783,"max":101.00336677889263,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":0.0,"avg":47.03542673896018,"median":36.05395171726462,"max":107.98200299950008,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":0.0,"avg":46.47651853042918,"median":31.137349475177516,"max":127.99786670222163,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":0.0,"avg":46.76042311900626,"median":28.52911247227526,"max":137.70040326546672,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":0.0,"avg":56.32723675603634,"median":33.28839127518008,"max":513.4510401809865,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":0.0,"avg":45.94978057371388,"median":27.26797161313006,"max":127.01270127012701,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":20.99755028579999,"avg":51.094369493303795,"median":40.00847148888446,"max":146.55977966851916,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":22.0,"avg":50.35485881348478,"median":33.342720372326355,"max":133.0,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":21.0,"avg":52.316019936197506,"median":40.718761340772055,"max":146.0,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":17.70433756270286,"avg":61.099260811238715,"median":42.139128347859824,"max":749.3976298578898,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":18.999683338611025,"avg":56.19878253503197,"median":51.25734767639688,"max":128.0256051210242,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":17.0,"avg":60.2429870371174,"median":67.04806870759646,"max":124.99166722218519,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":19.0,"avg":76.49785015086967,"median":62.56292567611987,"max":930.844859190135,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":19.00063335444515,"avg":65.7152672933897,"median":63.897254003785655,"max":137.00913394226282,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":18.995884225084566,"avg":63.693789642914616,"median":51.605276695743555,"max":128.00426680889362,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":21.0,"avg":74.66437765105776,"median":62.271477289551136,"max":168.01680168016802,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":33.00055000916682,"avg":83.35194338679341,"median":58.29301862892546,"max":716.0655737704918,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":17.704918032786885,"avg":66.23546297153453,"median":51.776455878933064,"max":191.80642305611568,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":18.689137348765534,"avg":55.117957161072844,"median":43.66032250121069,"max":138.99073395106993,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":17.000283338055635,"avg":67.49185439266759,"median":43.066836294471166,"max":947.9526023698816,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":19.002216925307952,"avg":69.76058449536787,"median":55.05768218191113,"max":188.0282042306346,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":18.68699286943693,"avg":54.28312750637949,"median":44.93091522446584,"max":140.0,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/rate?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '8206'
+      Date:
+      - Thu, 07 Apr 2016 13:23:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":619.672131147541,"avg":1357.8909285422965,"median":861.4773929826135,"max":3767.937201046649,"samples":59,"empty":false},{"start":1459807200000,"end":1459810800000,"min":495.92561115832626,"avg":1364.9520869299074,"median":804.1466587006115,"max":3921.8039098045097,"samples":60,"empty":false},{"start":1459810800000,"end":1459814400000,"min":622.0311015550777,"avg":1362.84099312939,"median":829.0787502102091,"max":3966.396639663966,"samples":60,"empty":false},{"start":1459814400000,"end":1459818000000,"min":679.9773340888637,"avg":1388.738475220819,"median":853.3830669848966,"max":3930.065501091685,"samples":60,"empty":false},{"start":1459818000000,"end":1459821600000,"min":655.923475594514,"avg":1394.179605090869,"median":839.7360605732915,"max":3972.066201103352,"samples":59,"empty":false},{"start":1459821600000,"end":1459825200000,"min":594.0099001650027,"avg":1388.7226674989688,"median":855.1727445139946,"max":3824.3186932244353,"samples":60,"empty":false},{"start":1459825200000,"end":1459828800000,"min":629.9685015749212,"avg":1355.6331000288894,"median":868.924726463866,"max":3750.750150030006,"samples":60,"empty":false},{"start":1459828800000,"end":1459832400000,"min":611.8878205662295,"avg":1389.9657121706618,"median":842.0023311111283,"max":3678.3678367836783,"samples":60,"empty":false},{"start":1459832400000,"end":1459836000000,"min":686.512359845256,"avg":1396.115262458442,"median":856.8380720864675,"max":2587.6118582212666,"samples":60,"empty":false},{"start":1459836000000,"end":1459839600000,"min":648.021600720024,"avg":1388.8379007418557,"median":834.6379809073876,"max":3118.0519675327923,"samples":60,"empty":false},{"start":1459839600000,"end":1459843200000,"min":670.0,"avg":1373.4463472072923,"median":928.6752402443119,"max":3235.588191906112,"samples":59,"empty":false},{"start":1459843200000,"end":1459846800000,"min":606.0202006733558,"avg":1363.3672533773374,"median":810.5052953552156,"max":3838.032786885246,"samples":60,"empty":false},{"start":1459846800000,"end":1459850400000,"min":593.9901001649972,"avg":1371.818760812427,"median":808.159679116004,"max":3858.0211492745307,"samples":60,"empty":false},{"start":1459850400000,"end":1459854000000,"min":688.011466857781,"avg":1373.5078086054943,"median":820.4664437137973,"max":3732.0622010366837,"samples":60,"empty":false},{"start":1459854000000,"end":1459857600000,"min":599.9200106652446,"avg":1402.4966136205649,"median":880.2645938566075,"max":3639.9393343444276,"samples":60,"empty":false},{"start":1459857600000,"end":1459861200000,"min":605.9798006733109,"avg":1343.4386191123458,"median":828.7587609439012,"max":2886.432964944742,"samples":60,"empty":false},{"start":1459861200000,"end":1459864800000,"min":617.9382061793821,"avg":1399.7286854376832,"median":872.6119892845489,"max":2479.7933505541205,"samples":59,"empty":false},{"start":1459864800000,"end":1459868400000,"min":676.0,"avg":1362.1377585169685,"median":936.1131382911976,"max":3007.8688524590166,"samples":60,"empty":false},{"start":1459868400000,"end":1459872000000,"min":606.0101001683362,"avg":1381.8610088864186,"median":890.5760787194474,"max":3868.064467741129,"samples":60,"empty":false},{"start":1459872000000,"end":1459875600000,"min":653.1147540983607,"avg":1376.3367386603675,"median":853.894482465932,"max":3928.2618841256085,"samples":60,"empty":false},{"start":1459875600000,"end":1459879200000,"min":648.0,"avg":1408.838953620036,"median":850.4822973167533,"max":3927.008017313462,"samples":60,"empty":false},{"start":1459879200000,"end":1459882800000,"min":664.0,"avg":1386.89816259726,"median":858.2071068045644,"max":3839.9360010666487,"samples":60,"empty":false},{"start":1459882800000,"end":1459886400000,"min":674.0112335205587,"avg":1367.9837019114852,"median":866.1525548310782,"max":3776.188809440472,"samples":60,"empty":false},{"start":1459886400000,"end":1459890000000,"min":653.9891001816636,"avg":1381.8160626021272,"median":889.0767363085117,"max":3755.874804173194,"samples":60,"empty":false},{"start":1459890000000,"end":1459893600000,"min":637.356152257303,"avg":1384.2980758112,"median":871.4562760963794,"max":3600.3600360036003,"samples":59,"empty":false},{"start":1459893600000,"end":1459897200000,"min":610.0,"avg":1387.6112977989153,"median":894.8517078103376,"max":3179.377730349818,"samples":60,"empty":false},{"start":1459897200000,"end":1459900800000,"min":667.9777340755309,"avg":1362.6341945326478,"median":884.6362368343458,"max":2856.380850780104,"samples":60,"empty":false},{"start":1459900800000,"end":1459904400000,"min":583.970801459927,"avg":1348.1343879025778,"median":854.188965291037,"max":2600.0,"samples":60,"empty":false},{"start":1459904400000,"end":1459908000000,"min":677.9887001883302,"avg":1388.1908486348361,"median":939.762272654212,"max":3072.333590126047,"samples":60,"empty":false},{"start":1459908000000,"end":1459911600000,"min":700.0,"avg":1396.277196460862,"median":871.5183334683591,"max":3749.9375010416493,"samples":60,"empty":false},{"start":1459911600000,"end":1459915200000,"min":653.9128116251167,"avg":1387.3542089564874,"median":866.6430895671808,"max":3826.127537584586,"samples":60,"empty":false},{"start":1459915200000,"end":1459918800000,"min":675.988733521108,"avg":1383.773382596322,"median":866.0281002167524,"max":3741.812909354532,"samples":60,"empty":false},{"start":1459918800000,"end":1459922400000,"min":679.9773340888637,"avg":1415.6663316365682,"median":876.7121015286948,"max":3816.1272042401415,"samples":59,"empty":false},{"start":1459922400000,"end":1459926000000,"min":600.0100001666694,"avg":1408.359929310633,"median":896.2330336931839,"max":3724.4345173603588,"samples":60,"empty":false},{"start":1459926000000,"end":1459929600000,"min":624.260108378491,"avg":1374.0869305029478,"median":915.2918950140892,"max":3512.0,"samples":60,"empty":false},{"start":1459929600000,"end":1459933200000,"min":672.0112001866697,"avg":1388.8764864035008,"median":890.1071686050539,"max":3452.575429238206,"samples":60,"empty":false},{"start":1459933200000,"end":1459936800000,"min":651.9348065193481,"avg":1389.2890620796775,"median":912.506569014572,"max":3251.6206442581697,"samples":60,"empty":false},{"start":1459936800000,"end":1459940400000,"min":665.9334066593341,"avg":1401.755142259071,"median":941.9863992695746,"max":3062.0,"samples":60,"empty":false},{"start":1459940400000,"end":1459944000000,"min":695.9884001933301,"avg":1438.3565832628624,"median":946.8104569015619,"max":2901.9032698910037,"samples":60,"empty":false},{"start":1459944000000,"end":1459947600000,"min":705.9882335294412,"avg":1437.0251135548901,"median":944.9585534225057,"max":2882.441220610305,"samples":60,"empty":false},{"start":1459947600000,"end":1459951200000,"min":755.3147144643601,"avg":1440.5557740240715,"median":924.0926873264644,"max":2950.0,"samples":59,"empty":false},{"start":1459951200000,"end":1459954800000,"min":660.9008648702695,"avg":1447.9927599165703,"median":1015.5161769033417,"max":2961.092620222656,"samples":60,"empty":false},{"start":1459954800000,"end":1459958400000,"min":477.0715607341101,"avg":1224.7060966249526,"median":945.5016098554722,"max":3494.639520015737,"samples":60,"empty":false},{"start":1459958400000,"end":1459962000000,"min":771.0,"avg":1444.0217561143918,"median":976.094696761753,"max":3816.554735280884,"samples":60,"empty":false},{"start":1459962000000,"end":1459965600000,"min":720.0,"avg":1422.7110585305365,"median":858.9820896141694,"max":3568.940517658039,"samples":60,"empty":false},{"start":1459965600000,"end":1459969200000,"min":680.7673389080177,"avg":1364.952073763717,"median":863.2244506652286,"max":3479.9420009666505,"samples":60,"empty":false},{"start":1459969200000,"end":1459972800000,"min":578.0,"avg":1361.9517003144942,"median":845.0682317060331,"max":3392.0565342755713,"samples":60,"empty":false},{"start":1459972800000,"end":1459976400000,"min":578.8649315159796,"avg":1353.7120778469473,"median":897.358703005909,"max":2992.2992299229923,"samples":60,"empty":false},{"start":1459976400000,"end":1459980000000,"min":694.0,"avg":1384.9922519699767,"median":901.8334049215401,"max":3070.0511675194584,"samples":59,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:22 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '7249'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"min":2132.0,"avg":2133.5666666666666,"median":2133.274223337239,"max":2137.0,"samples":30,"empty":false},{"start":1459807200000,"end":1459810800000,"min":2130.0,"avg":2132.833333333333,"median":2132.412199584821,"max":2136.0,"samples":30,"empty":false},{"start":1459810800000,"end":1459814400000,"min":2131.0,"avg":2133.1,"median":2132.923532013312,"max":2136.0,"samples":30,"empty":false},{"start":1459814400000,"end":1459818000000,"min":2131.0,"avg":2133.4333333333334,"median":2133.0352882165844,"max":2139.0,"samples":30,"empty":false},{"start":1459818000000,"end":1459821600000,"min":2132.0,"avg":2134.0,"median":2133.654163865006,"max":2138.0,"samples":30,"empty":false},{"start":1459821600000,"end":1459825200000,"min":2131.0,"avg":2132.9655172413795,"median":2132.984832827046,"max":2135.0,"samples":29,"empty":false},{"start":1459825200000,"end":1459828800000,"min":2131.0,"avg":2133.4999999999995,"median":2132.8934341526087,"max":2137.0,"samples":30,"empty":false},{"start":1459828800000,"end":1459832400000,"min":2131.0,"avg":2133.7000000000007,"median":2133.4073703703702,"max":2136.0,"samples":30,"empty":false},{"start":1459832400000,"end":1459836000000,"min":2131.0,"avg":2133.633333333333,"median":2132.8423133757865,"max":2141.0,"samples":30,"empty":false},{"start":1459836000000,"end":1459839600000,"min":2131.0,"avg":2133.4,"median":2133.154186955539,"max":2138.0,"samples":30,"empty":false},{"start":1459839600000,"end":1459843200000,"min":2131.0,"avg":2133.2333333333327,"median":2133.0104801948414,"max":2137.0,"samples":30,"empty":false},{"start":1459843200000,"end":1459846800000,"min":2131.0,"avg":2133.8999999999996,"median":2133.6986907565865,"max":2140.0,"samples":30,"empty":false},{"start":1459846800000,"end":1459850400000,"min":2132.0,"avg":2133.9000000000005,"median":2133.156267294973,"max":2137.0,"samples":30,"empty":false},{"start":1459850400000,"end":1459854000000,"min":2131.0,"avg":2133.733333333333,"median":2133.3058869999004,"max":2139.0,"samples":30,"empty":false},{"start":1459854000000,"end":1459857600000,"min":2131.0,"avg":2133.8000000000006,"median":2134.163974024259,"max":2137.0,"samples":30,"empty":false},{"start":1459857600000,"end":1459861200000,"min":2131.0,"avg":2133.7000000000007,"median":2133.855696046647,"max":2138.0,"samples":30,"empty":false},{"start":1459861200000,"end":1459864800000,"min":2131.0,"avg":2133.366666666667,"median":2132.9727848560005,"max":2138.0,"samples":30,"empty":false},{"start":1459864800000,"end":1459868400000,"min":2131.0,"avg":2133.766666666667,"median":2133.6751967390237,"max":2136.0,"samples":30,"empty":false},{"start":1459868400000,"end":1459872000000,"min":2131.0,"avg":2133.2000000000003,"median":2132.9532983738736,"max":2136.0,"samples":30,"empty":false},{"start":1459872000000,"end":1459875600000,"min":2131.0,"avg":2133.4333333333334,"median":2132.9475354217543,"max":2137.0,"samples":30,"empty":false},{"start":1459875600000,"end":1459879200000,"min":2131.0,"avg":2133.5333333333333,"median":2133.869189322063,"max":2136.0,"samples":30,"empty":false},{"start":1459879200000,"end":1459882800000,"min":2131.0,"avg":2133.5666666666666,"median":2133.2263792910067,"max":2138.0,"samples":30,"empty":false},{"start":1459882800000,"end":1459886400000,"min":2131.0,"avg":2134.033333333333,"median":2133.9695978443833,"max":2137.0,"samples":30,"empty":false},{"start":1459886400000,"end":1459890000000,"min":2130.0,"avg":2133.266666666666,"median":2133.1761619023623,"max":2136.0,"samples":30,"empty":false},{"start":1459890000000,"end":1459893600000,"min":2131.0,"avg":2133.4999999999995,"median":2133.0769387762557,"max":2138.0,"samples":30,"empty":false},{"start":1459893600000,"end":1459897200000,"min":2132.0,"avg":2133.933333333333,"median":2133.7546135545267,"max":2139.0,"samples":30,"empty":false},{"start":1459897200000,"end":1459900800000,"min":2131.0,"avg":2133.2,"median":2132.956036550518,"max":2136.0,"samples":30,"empty":false},{"start":1459900800000,"end":1459904400000,"min":2131.0,"avg":2133.8666666666663,"median":2133.6671794112203,"max":2139.0,"samples":30,"empty":false},{"start":1459904400000,"end":1459908000000,"min":2131.0,"avg":2133.533333333333,"median":2133.484902886022,"max":2136.0,"samples":30,"empty":false},{"start":1459908000000,"end":1459911600000,"min":2130.0,"avg":2133.633333333333,"median":2133.541296296296,"max":2139.0,"samples":30,"empty":false},{"start":1459911600000,"end":1459915200000,"min":2132.0,"avg":2134.166666666667,"median":2134.035119047619,"max":2138.0,"samples":30,"empty":false},{"start":1459915200000,"end":1459918800000,"min":2132.0,"avg":2134.0666666666666,"median":2134.0044132243224,"max":2140.0,"samples":30,"empty":false},{"start":1459918800000,"end":1459922400000,"min":2131.0,"avg":2133.633333333333,"median":2133.858038173414,"max":2139.0,"samples":30,"empty":false},{"start":1459922400000,"end":1459926000000,"min":2132.0,"avg":2133.5333333333333,"median":2133.214662963779,"max":2136.0,"samples":30,"empty":false},{"start":1459926000000,"end":1459929600000,"min":2131.0,"avg":2133.4,"median":2133.522924297925,"max":2137.0,"samples":30,"empty":false},{"start":1459929600000,"end":1459933200000,"min":2131.0,"avg":2133.6551724137935,"median":2133.345196617536,"max":2144.0,"samples":29,"empty":false},{"start":1459933200000,"end":1459936800000,"min":2131.0,"avg":2133.633333333333,"median":2133.5287106245128,"max":2139.0,"samples":30,"empty":false},{"start":1459936800000,"end":1459940400000,"min":2131.0,"avg":2133.733333333333,"median":2133.6817964298434,"max":2139.0,"samples":30,"empty":false},{"start":1459940400000,"end":1459944000000,"min":2132.0,"avg":2133.9333333333334,"median":2133.4315462971103,"max":2141.0,"samples":30,"empty":false},{"start":1459944000000,"end":1459947600000,"min":2132.0,"avg":2133.799999999999,"median":2134.1097308120397,"max":2136.0,"samples":30,"empty":false},{"start":1459947600000,"end":1459951200000,"min":2132.0,"avg":2133.7333333333336,"median":2133.6513484018265,"max":2138.0,"samples":30,"empty":false},{"start":1459951200000,"end":1459954800000,"min":2131.0,"avg":2133.3000000000006,"median":2132.933411222217,"max":2137.0,"samples":30,"empty":false},{"start":1459954800000,"end":1459958400000,"min":2132.0,"avg":2134.2666666666673,"median":2134.0337637263,"max":2139.0,"samples":30,"empty":false},{"start":1459958400000,"end":1459962000000,"min":2131.0,"avg":2133.566666666666,"median":2133.707658274372,"max":2137.0,"samples":30,"empty":false},{"start":1459962000000,"end":1459965600000,"min":2131.0,"avg":2134.1000000000004,"median":2133.929615375187,"max":2138.0,"samples":30,"empty":false},{"start":1459965600000,"end":1459969200000,"min":2131.0,"avg":2133.3333333333335,"median":2133.3370792186006,"max":2137.0,"samples":30,"empty":false},{"start":1459969200000,"end":1459972800000,"min":2131.0,"avg":2133.466666666667,"median":2133.5900209041956,"max":2137.0,"samples":30,"empty":false},{"start":1459972800000,"end":1459976400000,"min":2131.0,"avg":2133.9333333333334,"median":2133.9968039649107,"max":2138.0,"samples":30,"empty":false},{"start":1459976400000,"end":1459980000000,"min":2131.0,"avg":2133.2999999999997,"median":2132.995655529262,"max":2136.0,"samples":30,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?bucketDuration=3600s&end=1459980000000&start=1459803600000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '6469'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"start":1459803600000,"end":1459807200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459807200000,"end":1459810800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459810800000,"end":1459814400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459814400000,"end":1459818000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459818000000,"end":1459821600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459821600000,"end":1459825200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459825200000,"end":1459828800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459828800000,"end":1459832400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459832400000,"end":1459836000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459836000000,"end":1459839600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459839600000,"end":1459843200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459843200000,"end":1459846800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459846800000,"end":1459850400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459850400000,"end":1459854000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459854000000,"end":1459857600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459857600000,"end":1459861200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459861200000,"end":1459864800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459864800000,"end":1459868400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459868400000,"end":1459872000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459872000000,"end":1459875600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459875600000,"end":1459879200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459879200000,"end":1459882800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459882800000,"end":1459886400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459886400000,"end":1459890000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459890000000,"end":1459893600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459893600000,"end":1459897200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459897200000,"end":1459900800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459900800000,"end":1459904400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459904400000,"end":1459908000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459908000000,"end":1459911600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459911600000,"end":1459915200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459915200000,"end":1459918800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459918800000,"end":1459922400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459922400000,"end":1459926000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459926000000,"end":1459929600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459929600000,"end":1459933200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459933200000,"end":1459936800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459936800000,"end":1459940400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459940400000,"end":1459944000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459944000000,"end":1459947600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459947600000,"end":1459951200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459951200000,"end":1459954800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459954800000,"end":1459958400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459958400000,"end":1459962000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459962000000,"end":1459965600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459965600000,"end":1459969200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459969200000,"end":1459972800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459972800000,"end":1459976400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1459976400000,"end":1459980000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '49'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755906055,"value":6.8371672E8}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '51'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035395005,"value":1.441676224E9}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936007,"value":0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394007,"value":0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936008,"value":0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394002,"value":4}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '51'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936010,"value":1.908932608E9}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '51'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394007,"value":1.908932608E9}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '43'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936010,"value":70746}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '47'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394004,"value":145221745}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '51'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936010,"value":1.007681536E9}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '51'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394004,"value":1.717567488E9}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '43'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936012,"value":-15.0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '43'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394009,"value":-15.0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '49'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936012,"value":4.3876352E8}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394009,"value":5.00891648E8}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755906057,"value":4.05467872E8}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035395006,"value":4.78611368E8}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936003,"value":0.0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035379003,"value":0.0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936006,"value":4378}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '44'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394012,"value":251574}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+      Date:
+      - Thu, 07 Apr 2016 13:23:23 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755936005,"value":222}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:23 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '45'
+      Date:
+      - Thu, 07 Apr 2016 13:23:24 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035394011,"value":6414238}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:24 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '44'
+      Date:
+      - Thu, 07 Apr 2016 13:23:24 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755996014,"value":2124.0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:24 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '44'
+      Date:
+      - Thu, 07 Apr 2016 13:23:24 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035305001,"value":2133.0}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:24 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+      Date:
+      - Thu, 07 Apr 2016 13:23:24 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1459755906003,"value":"up"}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:24 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5Bcda13e2a-e206-4e87-8bca-8cfdd5aea484%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+      Date:
+      - Thu, 07 Apr 2016 13:23:24 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"timestamp":1460035399000,"value":"up"}]'
+    http_version: 
+  recorded_at: Thu, 07 Apr 2016 13:23:24 GMT
+recorded_with: VCR 2.9.3
