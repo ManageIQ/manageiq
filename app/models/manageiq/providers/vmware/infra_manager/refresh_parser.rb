@@ -843,7 +843,7 @@ module ManageIQ::Providers
           result[:cpu_sockets]          = result[:cpu_total_cores] / result[:cpu_cores_per_socket]
         end
 
-        result[:annotation] = inv["annotation"] unless inv["annotation"].blank?
+        result[:annotation] = inv["annotation"].present? ? inv["annotation"] : nil
         result[:memory_mb] = inv["memorySizeMB"] unless inv["memorySizeMB"].blank?
         result[:virtual_hw_version] = config['version'].to_s.split('-').last if config && config['version']
 

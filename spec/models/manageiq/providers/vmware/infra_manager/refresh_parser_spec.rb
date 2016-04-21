@@ -24,5 +24,19 @@ describe ManageIQ::Providers::Vmware::InfraManager::RefreshParser do
         expect(result[:cpu_total_cores]).to      eq(total)
       end
     end
+
+    context "properly set annotation field" do
+      let(:inv) do
+        {"summary" => {"config" => {"name" => "a"}},
+         "config"  => {"annotation" => {}}}
+      end
+
+      it "with empty annotation" do
+        result = described_class.vm_inv_to_hardware_hash(inv)
+
+        expect(result.keys).to include(:annotation)
+        expect(result[:annotation]).to be nil
+      end
+    end
   end
 end
