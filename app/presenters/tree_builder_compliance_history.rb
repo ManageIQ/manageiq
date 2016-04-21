@@ -13,7 +13,8 @@ class TreeBuilderComplianceHistory < TreeBuilder
 
   def tree_init_options(_tree_name)
     {:full_ids => true,
-     :add_root => false}
+     :add_root => false,
+     :lazy     => false}
   end
 
   def set_locals_for_render
@@ -32,21 +33,41 @@ class TreeBuilderComplianceHistory < TreeBuilder
   end
 
   def x_get_compliance_kids(parent, count_only)
-    kids = count_only ? 0 : []
-   # parent = @root.compliances.order("timestamp DESC").limit(10).find_index {|a| a.id == parent.id}
+    kids = []
     if parent.compliance_details.empty?
-      kids = {:id    => "#{parent[:key]}-nopol",
+      node = {:id    => "#{parent.id}-nopol",
               :text  => _("No Compliance Policies Found"),
-              :image => "#{parent[:key]}-nopol",
-              :tip   => nil}
+              :image => "#{parent.id}-nopol",
+              :tip   => nil,}
+      kids.push(node)
     else
-      kids = parent.compliance_details.order("miq_policy_desc, condition_desc")
+      # node must be unique
+      parent.compliance_details.order("miq_policy_desc, condition_desc").each do |node|
+        kids.push(node) unless kids.find {|s| s.miq_policy_id == node.miq_policy_id }
+      end
     end
     count_only_or_objects(count_only, kids)
   end
 
-  def x_get_compliance_detail_kids(parent, count_only)
+  def x_get_compliance_detail_kids(parent, count_only, parents)
+    kids = []
+    model, id = TreeBuilder.extract_node_model_and_id(parents.first)
+    grandpa = model.constantize.find_by(:id => from_cid(id))
+    grandpa.compliance_details.order("miq_policy_desc, condition_desc").each do |node|
+       if node.miq_policy_id == parent.miq_policy_id
+         text =  "<b>" + _("Condition: ") + "</b>" + parent.condition_desc
+         #text.html_safe
+         n = {:id    => "1234",
+              :text  => text,
+              :image => "#{parent.condition_result ? "check" : "x"}",
+              :tip   => nil}
+         kids.push(n)
+       end
+     end
+    count_only_or_objects(count_only, kids)
+  end
+
+  def x_get_tree_custom_kids(parent, count_only, options)
     count_only ? 0 : []
-    #TODO hash nodes
   end
 end

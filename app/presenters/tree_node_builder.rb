@@ -57,11 +57,13 @@ class TreeNodeBuilder
         end
 
       generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
-      when ChargebackRate       then generic_node(object.description, "chargeback_rate.png")
-      when Compliance           then
-        name = "<b>" + _("Compliance Check on: ") + "</b>" + format_timezone(object.timestamp, Time.zone, 'gtl')
-        generic_node(name.html_safe, "#{object.compliant ? "check" : "x"}.png")
-      when ComplianceDetail     then generic_node(object.miq_policy_desc, "#{object.miq_policy_result ? "check" : "x"}.png")
+    when ChargebackRate       then generic_node(object.description, "chargeback_rate.png")
+    when Compliance
+      name = "<b>" + _("Compliance Check on: ") + "</b>" + format_timezone(object.timestamp, Time.zone, 'gtl')
+      generic_node(name.html_safe, "#{object.compliant ? "check" : "x"}.png")
+    when ComplianceDetail
+      name = "<b>" + _("Policy: ") + "</b>" + object.miq_policy_desc
+      generic_node(name.html_safe, "#{object.miq_policy_result ? "check" : "x"}.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
     when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
     when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
@@ -174,7 +176,6 @@ class TreeNodeBuilder
   def hash_node
     text = object[:text]
     text = text.kind_of?(Proc) ? text.call : _(text)
-
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
