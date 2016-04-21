@@ -19,7 +19,7 @@ module Vmdb
     # Development helper method for Rails console for simulating queue workers.
     def simulate_queue_worker(break_on_complete = false)
       raise NotImplementedError, "not implemented in production mode" if Rails.env.production?
-      Rails.logger.level = Logger::DEBUG
+      Rails.logger.level = 0
       loop do
         q = MiqQueue.where(MiqQueue.arel_table[:queue_name].not_eq("miq_server")).order(:id).first
         if q
