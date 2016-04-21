@@ -72,9 +72,9 @@
       - elsif @edit[:new][:cb_show_typ] == "entity"
         .form-group
           %label.control-label.col-md-2
-            = _(@edit[:new][:cb_model].to_s)
+            = ui_lookup(:model => @edit[:new][:cb_model])
           .col-md-8
-            - opts = [["<#{_('Choose %{entity}')}>" % {:entity => ui_lookup(:table => @edit[:new][:cb_model].to_s)}, nil], [_("All #{ui_lookup(:tables => @edit[:new][:cb_model].to_s)}"), :all]]
+            - opts = [["<#{_('Choose %{entity}')}>" % {:entity => ui_lookup(:model => @edit[:new][:cb_model])}, nil], [_("All #{ui_lookup(:tables => @edit[:new][:cb_model].to_s)}"), :all]]
             - opts += Array(@edit[:cb_all_entities_of_type][@edit[:new][:cb_model].to_sym].invert).sort_by { |a| a.first.downcase } if @edit[:cb_all_entities_of_type][@edit[:new][:cb_model].to_sym].present?
             = select_tag('cb_entity_id',
               options_for_select(opts, @edit[:new][:cb_entity_id]),
