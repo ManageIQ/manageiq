@@ -224,7 +224,7 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def create_custom_button_hash(input, record, options = {})
-    options[:enabled]  = "true" unless options.key?(:enabled)
+    options[:enabled]  = true unless options.key?(:enabled)
     button             = {}
     button_id          = input[:id]
     button_name        = input[:name].to_s
@@ -259,7 +259,7 @@ class ApplicationHelper::ToolbarBuilder
       props[:icon]    = "product product-custom-#{group[:image]} fa-lg"
       props[:title]   = group[:description]
       props[:text]    = group[:text] if group[:text_display]
-      props[:enabled] = "true"
+      props[:enabled] = true
       props[:items]   = group[:buttons].collect { |b| create_custom_button_hash(b, record) }
 
       {:name => "custom_buttons_#{group[:text]}", :items => [props]}
