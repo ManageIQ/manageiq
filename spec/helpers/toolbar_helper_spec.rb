@@ -149,7 +149,7 @@ describe ToolbarHelper do
       }
       b2 = {
           :id        => "view_tile",
-          :type      => "buttonTwoState",
+          :type      => :buttonTwoState,
           :img       => "view_tile.png",
           :imgdis    => "view_tile.png",
           :icon      => "fa fa-th-large",
