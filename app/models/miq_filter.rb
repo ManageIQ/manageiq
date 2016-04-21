@@ -12,8 +12,8 @@ module MiqFilter
     raise _("invalid tag: %{tag}") % {:tag => tag} unless tag.starts_with?("/belongsto/ExtManagementSystem")
     parts = tag.split("/")[2..-1]
 
-    r = parts.shift
-    klass, name = r.split("|")
+    # root object
+    klass, name = parts.shift.split("|")
     klass = klass.constantize
     obj = klass.find_by_name(name)
 
@@ -22,6 +22,7 @@ module MiqFilter
       return []
     end
 
+    # traverse the tree
     parts.each_with_object([obj]) do |p, result|
       tag_part_klass, name = p.split("|")
       tag_part_klass = tag_part_klass.constantize
