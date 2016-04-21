@@ -62,7 +62,7 @@ module ToolbarHelper
   #
   def split_to_groups(buttons)
     buttons.slice_before do |props|
-      props[:type] == 'separator' ||
+      props[:type] == :separator ||
         props[:name] == 'download_choice' # exceptional behavior for view toolbar download drop down
     end.to_a
   end

@@ -62,21 +62,23 @@ describe ApplicationHelper do
       it "#custom_buttons_hash" do
         escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
         button1 = {
-          :button    => "custom__custom_#{@button1.id}",
+          :id    => "custom__custom_#{@button1.id}",
+          :type      => :button,
           :icon      => "product product-custom-#{@button1.options[:button_image]} fa-lg",
           :title     => CGI.escapeHTML(@button1.description.to_s),
           :text      => escaped_button1_text,
-          :enabled   => "true",
+          :enabled   => true,
           :url       => "button",
           :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
         }
         button_set_item1_items = [button1]
         button_set_item1 = {
-          :buttonSelect => "custom_#{@button_set.id}",
+          :id           => "custom_#{@button_set.id}",
+          :type         => :buttonSelect,
           :icon         => "product product-custom-#{@button_set.set_data[:button_image]} fa-lg",
           :title        => @button_set.description,
           :text         => @button_set.name,
-          :enabled      => "true",
+          :enabled      => true,
           :items        => button_set_item1_items
         }
         items = [button_set_item1]
@@ -87,21 +89,23 @@ describe ApplicationHelper do
       it "#build_custom_buttons_toolbar" do
         escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
         button1 = {
-          :button    => "custom__custom_#{@button1.id}",
+          :id        => "custom__custom_#{@button1.id}",
+          :type      => :button,
           :icon      => "product product-custom-#{@button1.options[:button_image]} fa-lg",
           :title     => CGI.escapeHTML(@button1.description.to_s),
           :text      => escaped_button1_text,
-          :enabled   => "true",
+          :enabled   => true,
           :url       => "button",
           :url_parms => "?id=#{subject.id}&button_id=#{@button1.id}&cls=#{subject.class.name}&pressed=custom_button&desc=#{escaped_button1_text}"
         }
         button_set_item1_items = [button1]
         button_set_item1 = {
-          :buttonSelect => "custom_#{@button_set.id}",
+          :id           => "custom_#{@button_set.id}",
+          :type         => :buttonSelect,
           :icon         => "product product-custom-#{@button_set.set_data[:button_image]} fa-lg",
           :title        => @button_set.description,
           :text         => @button_set.name,
-          :enabled      => "true",
+          :enabled      => true,
           :items        => button_set_item1_items
         }
         group_name = "custom_buttons_#{@button_set.name}"
@@ -2859,7 +2863,7 @@ describe ApplicationHelper do
       it "Ensures that build_toolbar_disable_button method is called with correct parameters" do
         button = {:child_id => "vm_scan",
                   :id       => "vm_vmdb_choice__vm_scan",
-                  :type     => "button"}
+                  :type     => :button}
         input = {:button    => "vm_scan",
                  :url_parms => "main_div"}
         b = _toolbar_builder
@@ -3017,9 +3021,8 @@ describe ApplicationHelper do
     before do
       controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
       @pdf_button = {:id        => "download_choice__download_pdf",
-                     :klass     => ApplicationHelper::Button::Pdf,
                      :child_id  => "download_pdf",
-                     :type      => "button",
+                     :type      => :button,
                      :img       => "download_pdf.png",
                      :imgdis    => "download_pdf.png",
                      :icon      => "fa fa-file-pdf-o fa-lg",
