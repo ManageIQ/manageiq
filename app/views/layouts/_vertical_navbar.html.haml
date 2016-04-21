@@ -11,7 +11,7 @@
           - if menu_section.subsection?
             .nav-pf-secondary-nav{:id => "#menu-#{menu_section.id}"}
               .nav-item-pf-header
-                %a.secondary-collapse-toggle-pf{:href => "#", "data-toggle" => "collapse-secondary-nav"}
+                %a.secondary-collapse-toggle-pf{"data-toggle" => "collapse-secondary-nav"}
                 %span
                   = h(_(menu_section.name))
 
@@ -30,7 +30,7 @@
                           = _(menu_item.name)
                       .nav-pf-tertiary-nav
                         .nav-item-pf-header
-                          %a.tertiary-collapse-toggle-pf{:href => "#", "data-toggle" => "collapse-tertiary-nav"}
+                          %a.tertiary-collapse-toggle-pf{"data-toggle" => "collapse-tertiary-nav"}
                           %span
                             = h(_(menu_item.name))
 
@@ -45,7 +45,7 @@
           - else
             .nav-pf-secondary-nav{:id => "#menu-#{menu_section.id}"}
               .nav-item-pf-header
-                %a.secondary-collapse-toggle-pf.fa.fa-arrow-circle-o-left{:href => "#", "data-toggle" => "collapse-secondary-nav"}
+                %a.secondary-collapse-toggle-pf.fa.fa-arrow-circle-o-left{"data-toggle" => "collapse-secondary-nav"}
                 %span
                   = h(_(menu_section.name))
               %ul.list-group
