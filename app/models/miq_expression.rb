@@ -1019,7 +1019,7 @@ class MiqExpression
   def self.evaluate(expression, obj, inputs = {}, tz = nil)
     ruby_exp = expression.kind_of?(Hash) ? new(expression).to_ruby(tz) : expression.to_ruby(tz)
     _log.debug("Expression before substitution: #{ruby_exp}")
-    subst_expr = subst(ruby_exp, obj, inputs)
+    subst_expr = Condition.subst(ruby_exp, obj, inputs)
     _log.debug("Expression after substitution: #{subst_expr}")
     result = eval(subst_expr) ? true : false
     _log.debug("Expression evaluation result: [#{result}]")
@@ -1047,10 +1047,6 @@ class MiqExpression
       end
     end
     exp
-  end
-
-  def self.subst(ruby_exp, obj, inputs)
-    Condition.subst(ruby_exp, obj, inputs)
   end
 
   def self.operands2humanvalue(ops, options = {})
