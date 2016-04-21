@@ -2,6 +2,10 @@ module EmsCommon
   extend ActiveSupport::Concern
   include AuthorizationMessagesMixin
 
+  def gtl_url
+    restful? ? '/' : '/show'
+  end
+
   def show
     @display = params[:display] || "main" unless control_selected?
 
@@ -10,7 +14,7 @@ module EmsCommon
     @ems = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@ems)
 
-    @gtl_url = "/show"
+    @gtl_url = gtl_url
     @showtype = "config"
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 
