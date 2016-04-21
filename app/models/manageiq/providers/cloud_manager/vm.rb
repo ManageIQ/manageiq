@@ -18,6 +18,9 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   has_many :floating_ips
   has_many :security_groups, :through => :network_ports
 
+  has_many :disks, :through => :hardware
+  has_many :cloud_volumes, :through => :disks, :source => :backing, source_type: "CloudVolume"
+
   has_and_belongs_to_many :key_pairs, :join_table              => :key_pairs_vms,
                                       :foreign_key             => :vm_id,
                                       :association_foreign_key => :authentication_id,
