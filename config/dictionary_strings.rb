@@ -1259,10 +1259,10 @@ _("EVM Audit Events")
 _("Availability Zone")
 # TRANSLATORS: en.yml key: dictionary.model.AvailabilityZone (plural form)
 _("Availability Zones")
-# TRANSLATORS: en.yml key: dictionary.model.Chargeback
-_("Chargeback")
-# TRANSLATORS: en.yml key: dictionary.model.Chargeback (plural form)
-_("Chargebacks")
+# TRANSLATORS: en.yml key: dictionary.model.ChargebackVm
+_("Chargeback for Vms")
+# TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerProject
+_("Chargeback for Projects")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackRate
 _("Chargeback Rate")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackRate (plural form)
@@ -1450,9 +1450,9 @@ _("Template")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::InfraManager::Template (plural form)
 _("Templates")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::MiddlewareManager
-_("Middleware Manager")
+_("Middleware Provider")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::MiddlewareManager (plural form)
-_("Middleware Managers")
+_("Middleware Providers")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::NetworkManager
 _("Network Manager")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::NetworkManager (plural form)
@@ -1509,6 +1509,54 @@ _("Container Providers (Openshift)")
 _("Container Provider (Openshift Enterprise)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::OpenshiftEnterprise::ContainerManager (plural form)
 _("Container Providers (Openshift Enterprise)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::SecurityGroup
+_("Security Group (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::SecurityGroup (plural form)
+_("Security Groups (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::CloudManager::SecurityGroup
+_("Security Group (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::CloudManager::SecurityGroup (plural form)
+_("Security Groups (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup
+_("Security Group (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup (plural form)
+_("Security Groups (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::SecurityGroup
+_("Security Group (Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::SecurityGroup (plural form)
+_("Security Groups (Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::FloatingIp
+_("Floating IP (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::FloatingIp (plural form)
+_("Floating IPs (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::FloatingIp
+_("Floating IP (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::FloatingIp (plural form)
+_("Floating IPs (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet
+_("Cloud Subnet (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet (plural form)
+_("Cloud Subnets (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter
+_("Network Router (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter (plural form)
+_("Network Routers (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack
+_("Orchestration Stack (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack (plural form)
+_("Orchestration Stacks (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack
+_("Orchestration Stack (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack (plural form)
+_("Orchestration Stacks (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::OrchestrationStack
+_("Orchestration Stack (Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager::OrchestrationStack (plural form)
+_("Orchestration Stacks (Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack
+_("Orchestration Stack (Amazon)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack (plural form)
+_("Orchestration Stacks (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDeployment
 _("Middleware Deployment")
 # TRANSLATORS: en.yml key: dictionary.model.MiddlewareDeployment (plural form)
