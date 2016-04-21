@@ -26,12 +26,11 @@ module MiqFilter
       tag_part_klass, name = p.split("|")
       tag_part_klass = tag_part_klass.constantize
 
-      match = obj.with_relationship_type('ems_metadata') do
-        obj.children.detect { |c| c.kind_of?(tag_part_klass) && c.name == name }
+      obj = obj.with_relationship_type('ems_metadata') do
+        obj.children.grep(tag_part_klass).detect { |c| c.name == name }
       end
 
-      return result unless match
-      obj = match
+      return result unless obj
       result.push(obj)
     end
   end
