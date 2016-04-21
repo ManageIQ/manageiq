@@ -41,22 +41,21 @@ class ApplicationHelper::ToolbarBuilder
     build(toolbar)
   end
 
-  def toolbar_button(props)
-    button_class = props[:klass] || ApplicationHelper::Button::Basic
-    button_class.new(@view_context, @view_binding, @instance_data, props)
+  def toolbar_button(inputs, props)
+    button_class = inputs[:klass] || ApplicationHelper::Button::Basic
+    button = button_class.new(@view_context, @view_binding, @instance_data, props)
+    apply_common_props(button, inputs)
   end
 
   def build_select_button(bgi, index)
     bs_children = false
     props = toolbar_button(
-      :klass  => bgi[:klass],
+      bgi,
       :id     => bgi[:id],
       :type   => :buttonSelect,
       :img    => img = img_value(bgi),
       :imgdis => img,
-      :icon   => bgi[:icon]
     )
-    apply_common_props(props, bgi)
 
     current_item = props
     current_item[:items] ||= []
@@ -68,15 +67,13 @@ class ApplicationHelper::ToolbarBuilder
         next if build_toolbar_hide_button(bsi[:pressed] || bsi[:id]) # Use pressed, else button id
         bs_children = true
         props = toolbar_button(
-          :klass    => bsi[:klass],
+          bsi,
           :child_id => bsi[:id],
           :id       => bgi[:id] + "__" + bsi[:id],
           :type     => :button,
           :img      => img = img_value(bsi),
           :imgdis   => img,
-          :icon     => bsi[:icon]
         )
-        apply_common_props(props, bsi)
         props.calculate_properties
       end
       build_toolbar_save_button(bsi, props) unless bsi.key?(:separator)
@@ -99,6 +96,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def apply_common_props(button, input)
     button.update(
+      :icon    => input[:icon],
       :name    => button[:id],
       :hidden  => button[:hidden] || !!input[:hidden],
       :pressed => input[:pressed],
@@ -134,14 +132,12 @@ class ApplicationHelper::ToolbarBuilder
 
     @sep_needed = true unless button_hide
     props = toolbar_button(
-      :klass  => bgi[:klass],
+      bgi,
       :id     => bgi[:id],
       :type   => :button,
       :img    => "#{get_image(bgi[:image], bgi[:id]) ? get_image(bgi[:image], bgi[:id]) : bgi[:id]}.png",
       :imgdis => "#{bgi[:image] || bgi[:id]}.png",
-      :icon   => bgi[:icon]
     )
-    apply_common_props(props, bgi)
 
     # set pdf button to be hidden if graphical summary screen is set by default
     props[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:id]) && button_hide
@@ -169,14 +165,12 @@ class ApplicationHelper::ToolbarBuilder
     return nil if build_toolbar_hide_button(bgi[:id])
 
     props = toolbar_button(
-      :klass  => bgi[:klass],
+      bgi,
       :id     => bgi[:id],
       :type   => :buttonTwoState,
       :img    => img = img_value(bgi),
       :imgdis => img,
-      :icon   => bgi[:icon]
     )
-    apply_common_props(props, bgi)
 
     props[:selected] = true if build_toolbar_select_button(bgi[:id])
 
