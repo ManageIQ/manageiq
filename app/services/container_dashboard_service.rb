@@ -1,4 +1,5 @@
 class ContainerDashboardService
+  include UiServiceMixin
   CPU_USAGE_PRECISION = 2 # 2 decimal points
 
   def initialize(provider_id, controller)
@@ -83,23 +84,22 @@ class ContainerDashboardService
   def providers
     provider_classes_to_ui_types = ManageIQ::Providers::ContainerManager.subclasses.each_with_object({}) { |subclass, h|
       name = subclass.name.split('::')[2]
-      h[subclass.name] = name.underscore.downcase.to_sym }
-
+      h[subclass.name] = name.to_sym
+    }
     providers = @ems.present? ? {@ems.type => 1} : ManageIQ::Providers::ContainerManager.group(:type).count
 
     result = {}
-    providers.each do |type, count|
-      ui_type = provider_classes_to_ui_types[type]
+    providers.each do |provider, count|
+      ui_type = provider_classes_to_ui_types[provider]
       (result[ui_type] ||= build_provider_status(ui_type))[:count] += count
     end
-
     result.values
   end
 
-  def build_provider_status(ui_type)
+  def build_provider_status(provider_type)
     {
-      :providerType => ui_type,
-      :count        => 0
+      :count     => 0,
+      :iconImage => icons[provider_type][:icon]
     }
   end
 
