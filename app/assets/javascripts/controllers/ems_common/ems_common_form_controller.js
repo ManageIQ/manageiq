@@ -178,7 +178,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.ssh_keypair_verify != '' && $scope.angularForm.ssh_keypair_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "metrics" && $scope.emsCommonModel.emstype == "rhevm") &&
-      ($scope.emsCommonModel.metrics_hostname != '' && $scope.angularForm.metrics_hostname.$valid && $scope.emsCommonModel.metrics_api_port != '') &&
+      ($scope.emsCommonModel.metrics_hostname != '' && $scope.angularForm.metrics_hostname.$valid) &&
       ($scope.emsCommonModel.metrics_userid != '' && $scope.angularForm.metrics_userid.$valid &&
       $scope.emsCommonModel.metrics_password != '' && $scope.angularForm.metrics_password.$valid &&
       $scope.emsCommonModel.metrics_verify != '' && $scope.angularForm.metrics_verify.$valid)) {
