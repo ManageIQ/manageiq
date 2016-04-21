@@ -224,43 +224,45 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def create_custom_button_hash(input, record, options = {})
-    options[:enabled]  = true unless options.key?(:enabled)
-    button             = {}
-    button_id          = input[:id]
-    button_name        = input[:name].to_s
-    button[:id]        = "custom__custom_#{button_id}"
-    button[:type]      = :button,
-    button[:icon]      = "product product-custom-#{input[:image]} fa-lg"
-    button[:text]      = button_name if input[:text_display]
-    button[:title]     = input[:description].to_s
-    button[:enabled]   = options[:enabled]
-    button[:url]       = "button"
-    button[:url_parms] = "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
+    options[:enabled] = true unless options.key?(:enabled)
+    button_id = input[:id]
+    button_name = input[:name].to_s
+    button = {
+      :id        => "custom__custom_#{button_id}",
+      :type      => :button,
+      :icon      => "product product-custom-#{input[:image]} fa-lg",
+      :title     => input[:description].to_s,
+      :enabled   => options[:enabled],
+      :url       => "button",
+      :url_parms => "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
+    }
+    button[:text] = button_name if input[:text_display]
     button
   end
 
   def create_raw_custom_button_hash(cb, record)
-    obj = {}
-    obj[:id]            = cb.id
-    obj[:class]         = cb.applies_to_class
-    obj[:description]   = cb.description
-    obj[:name]          = cb.name
-    obj[:image]         = cb.options[:button_image]
-    obj[:text_display]  = cb.options.key?(:display) ? cb.options[:display] : true
-    obj[:target_object] = record.id.to_i
-    obj
+    {
+      :id            => cb.id,
+      :class         => cb.applies_to_class,
+      :description   => cb.description,
+      :name          => cb.name,
+      :image         => cb.options[:button_image],
+      :text_display  => cb.options.key?(:display) ? cb.options[:display] : true,
+      :target_object => record.id.to_i
+    }
   end
 
   def custom_buttons_hash(record)
     get_custom_buttons(record).collect do |group|
-      props = {}
-      props[:id]      = "custom_#{group[:id]}"
-      props[:type]    = :buttonSelect
-      props[:icon]    = "product product-custom-#{group[:image]} fa-lg"
-      props[:title]   = group[:description]
-      props[:text]    = group[:text] if group[:text_display]
-      props[:enabled] = true
-      props[:items]   = group[:buttons].collect { |b| create_custom_button_hash(b, record) }
+      props = {
+        :id      => "custom_#{group[:id]}",
+        :type    => :buttonSelect,
+        :icon    => "product product-custom-#{group[:image]} fa-lg",
+        :title   => group[:description],
+        :enabled => true,
+        :items   => group[:buttons].collect { |b| create_custom_button_hash(b, record) }
+      }
+      props[:text] = group[:text] if group[:text_display]
 
       {:name => "custom_buttons_#{group[:text]}", :items => [props]}
     end
@@ -306,12 +308,13 @@ class ApplicationHelper::ToolbarBuilder
   def get_custom_buttons(record)
     cbses = CustomButtonSet.find_all_by_class_name(button_class_name(record), service_template_id(record))
     cbses.sort_by { |cbs| cbs[:set_data][:group_index] }.collect do |cbs|
-      group = {}
-      group[:id]           = cbs.id
-      group[:text]         = cbs.name.split("|").first
-      group[:description]  = cbs.description
-      group[:image]        = cbs.set_data[:button_image]
-      group[:text_display] = cbs.set_data.key?(:display) ? cbs.set_data[:display] : true
+      group = {
+        :id           => cbs.id,
+        :text         => cbs.name.split("|").first,
+        :description  => cbs.description,
+        :image        => cbs.set_data[:button_image],
+        :text_display => cbs.set_data.key?(:display) ? cbs.set_data[:display] : true
+      }
 
       available = CustomButton.available_for_user(current_user, cbs.name) # get all uri records for this user for specified uri set
       available = available.select { |b| cbs.members.include?(b) }            # making sure available_for_user uri is one of the members
