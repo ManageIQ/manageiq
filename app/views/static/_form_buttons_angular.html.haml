@@ -1,0 +1,8 @@
+= button_tag("{{buttonGroup.label}}",
+             :title       => "{{buttonGroup.disabled ? buttonGroup.titleOff : buttonGroup.titleOn}}",
+             :alt         => "{{buttonGroup.disabled ? buttonGroup.titleOff : buttonGroup.titleOn}}",
+             :class       => "btn {{buttonGroup.btnClass}}",
+             "ng-show"    => "buttonGroup.visible",
+             "ng-class"   => "{'btn-disabled': buttonGroup.disabled}",
+             "ng-style"   => "{'cursor:not-allowed': buttonGroup.disabled}",
+             "ng-click"   => "buttonGroup.disabled ? miqService.disabledClick($event) : buttonGroup.submit()")
