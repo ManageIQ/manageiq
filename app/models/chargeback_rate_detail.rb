@@ -3,6 +3,9 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
   has_many :chargeback_tiers, :dependent => :destroy, :autosave => true
+
+  default_scope { order(:group => :asc, :description => :asc) }
+
   validates :group, :source, :presence => true
   validate :contiguous_tiers?
 
@@ -213,7 +216,7 @@ class ChargebackRateDetail < ApplicationRecord
         detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency])
         detail_new.metric = detail[:metric]
 
-        detail[:tiers].each do |tier|
+        detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
           detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
         end
 
@@ -221,6 +224,6 @@ class ChargebackRateDetail < ApplicationRecord
       end
     end
 
-    rate_details
+    rate_details.sort_by { |rd| [rd[:group], rd[:description]] }
   end
 end
