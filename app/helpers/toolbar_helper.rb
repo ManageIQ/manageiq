@@ -71,15 +71,11 @@ module ToolbarHelper
   #
   def toolbar_top_button(props)
     case props[:type]
-    when 'buttonSelect'
-      toolbar_top_button_select(props)
-    when 'button'
-      toolbar_top_button_normal(props)
-    when 'buttonTwoState'
-      toolbar_top_button_normal(props)
-    when 'separator'
-    else
-      raise 'Invalid top button type.'
+    when :buttonSelect   then toolbar_top_button_select(props)
+    when :button         then toolbar_top_button_normal(props)
+    when :buttonTwoState then toolbar_top_button_normal(props)
+    when :separator
+    else                      raise 'Invalid top button type.'
     end
   end
 
@@ -139,12 +135,9 @@ module ToolbarHelper
   #
   def toolbar_button(props)
     case props[:type]
-    when 'button'
-      toolbar_button_normal(props)
-    when 'separator'
-      toolbar_button_separator(props)
-    else
-      raise 'Invalid button type.'
+    when :button    then toolbar_button_normal(props)
+    when :separator then toolbar_button_separator(props)
+    else                 raise 'Invalid button type.'
     end
   end
 
@@ -171,7 +164,7 @@ module ToolbarHelper
   #
   def toolbar_button_view(props)
     hidden = props[:hidden]
-    cls = if props[:type] == 'buttonTwoState'
+    cls = if props[:type] == :buttonTwoState
             props[:selected] ? 'active' : ''
           else
             props[:enabled] ? '' : 'disabled '

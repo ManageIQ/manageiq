@@ -32,7 +32,8 @@ class ApplicationHelper::Toolbar::Basic
 
   def generic_button(type, id, icon, title, text, keys)
     {
-      type   => id.to_s,
+      :type  => type,
+      :id    => id.to_s,
       :icon  => icon,
       :title => title,
       :text  => text
