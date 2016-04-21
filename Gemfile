@@ -27,7 +27,7 @@ gem "jquery-rails",                   "~>4.0.4"
 gem "jquery-rjs",                     "=0.1.1",                       :git => "git://github.com/ManageIQ/jquery-rjs.git", :branch => "master"
 gem "lodash-rails",                   "~>3.10.0"
 # gem "patternfly-sass",                "~>3.3.4"
-gem 'patternfly-sass', :github => 'skateman/patternfly-sass', :branch => 'tertiary-nav'
+gem 'patternfly-sass', :github => 'skateman/patternfly-sass', :branch => 'tertiary-nav-new'
 gem "sass-rails"
 gem "sprockets-es6",                  "~>0.9.0",  :require => "sprockets/es6"
 
