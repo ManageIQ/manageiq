@@ -247,7 +247,7 @@ module ManageIQ::Providers
       def populate_hardware_hash_with_disks(hardware_disks_array, instance)
         data_disks = instance.properties.storage_profile.data_disks
         data_disks.each do |disk|
-          disk_size      = disk.disk_size_gb * 1.gigabyte
+          disk_size      = disk.respond_to?(:disk_size_gb) ? disk.disk_size_gb * 1.gigabyte : 0
           disk_name      = disk.name
           disk_location  = disk.vhd.uri
 
