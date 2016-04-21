@@ -9,5 +9,4 @@
     :id           => 'squash')
   %br
   %div{:id => "#{session[:tree_name]}box", :class => "cfme-no-cursor-node"}
-  -#%div{:class => "cfme-no-cursor-node"}
   = render(:partial => 'shared/tree', :locals => {:tree => @ch_tree, :name => @ch_tree.name.to_s})
