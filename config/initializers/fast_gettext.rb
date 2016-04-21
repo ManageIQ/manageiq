@@ -6,7 +6,7 @@ begin
   # temporarily force it off while we load stuff.
   Vmdb::FastGettextHelper.register_locales
   gettext_options = %w(--sort-by-msgid --location --no-wrap)
-  Rails.application.config.gettext_i18n_rails.msgmerge = gettext_options
+  Rails.application.config.gettext_i18n_rails.msgmerge = gettext_options + ["--no-fuzzy-matching"]
   Rails.application.config.gettext_i18n_rails.xgettext = gettext_options + ["--add-comments=TRANSLATORS"]
 
   if !Rails.env.test? && Settings.ui.mark_translated_strings
