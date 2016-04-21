@@ -1,5 +1,5 @@
 class ManageIQ::Providers::SoftLayer::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
-  #include_concern 'Operations'
+  include_concern 'Operations'
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect

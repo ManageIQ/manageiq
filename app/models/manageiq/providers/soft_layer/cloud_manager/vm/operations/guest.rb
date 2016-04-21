@@ -1,4 +1,4 @@
-module ManageIQ::Providers::Google::CloudManager::Vm::Operations::Guest
+module ManageIQ::Providers::SoftLayer::CloudManager::Vm::Operations::Guest
   def validate_reboot_guest
     validate_vm_control_powered_on
   end
