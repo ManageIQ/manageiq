@@ -11,12 +11,10 @@ class CloudVolume < ApplicationRecord
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
   has_many   :cloud_volume_snapshots
   has_many   :attachments, :class_name => 'Disk', :as => :backing
+  has_many   :hardwares, :through => :attachments
+  has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
 
   acts_as_miq_taggable
-
-  def vms
-    attachments.map { |disk| disk.hardware.vm }
-  end
 
   def self.available
     joins("LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id")

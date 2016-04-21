@@ -57,6 +57,7 @@ class VmOrTemplate < ApplicationRecord
 
   has_one                   :operating_system, :dependent => :destroy
   has_one                   :hardware, :dependent => :destroy
+  has_many                  :disks, :through => :hardware
   belongs_to                :host
   belongs_to                :ems_cluster
 
