@@ -4,8 +4,8 @@ module ManageIQ::Providers::SoftLayer::ManagerMixin
   def connect(options = {})
     raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(options[:auth_type])
 
-    client_id = options[:user] || authentication_userid(options[:auth_type])
-    client_key = options[:api_key] || authentication_key(options[:auth_type])
+    client_id = options[:client_id] || authentication_userid(options[:auth_type])
+    client_key = options[:client_key] || authentication_key(options[:auth_type])
 
     self.class.raw_connect(client_id, client_key, options)
   end
@@ -75,7 +75,7 @@ module ManageIQ::Providers::SoftLayer::ManagerMixin
       new_ems
     end
 
-    def discover_queue(_client_id, _client_key)
+    def discover_queue(client_id, client_key)
       MiqQueue.put(
         :class_name  => name,
         :method_name => "discover_from_queue",

@@ -7,8 +7,8 @@
   .col-md-8
     %input.form-control{:type         => "text",
                         'ng-required' => true,
-                        'ng-model'    => "#{ng_model}.#{prefix}_userid",
-                        :name         => "#{prefix}_userid",
+                        'ng-model'    => "#{ng_model}.#{prefix}_client_id",
+                        :name         => "#{prefix}_client_id",
                         :maxlength    => 50,
                         :checkchange  => true}
 .form-group{'ng-show' => ng_show}
@@ -17,8 +17,8 @@
   .col-md-8
     %input.form-control{:type         => "text",
                         'ng-required' => true,
-                        'ng-model'    => "#{ng_model}.#{prefix}_apikey",
-                        :name         => "#{prefix}_apikey",
+                        'ng-model'    => "#{ng_model}.#{prefix}_api_key",
+                        :name         => "#{prefix}_api_key",
                         :maxlength    => 50,
                         :checkchange  => true}
 

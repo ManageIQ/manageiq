@@ -839,9 +839,8 @@ module ApplicationController::CiProcessing
           return
         end
       elsif request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['soft_layer']
-        @client_id = params[:client_id] if params[:client_id]
-        @client_key = params[:client_key] if params[:client_key]
-
+        @client_id = params[:softlayer_client_id] if params[:softlayer_client_id]
+        @client_key = params[:api_key] if params[:api_key]
         if @client_id == "" || @client_key == ""
           add_flash(_("Client ID and Client API Key required"), :error)
           render :action => 'discover'

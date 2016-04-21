@@ -10,7 +10,7 @@
     .col-md-8
       - @discover_type_selected = @discover_type.first.last if @discover_type_selected.nil?
       = select_tag("discover_type_selected",
-                     options_for_select(@discover_type, @discover_type_selected),
+                     options_for_select(@discover_type.sort_by { |desc, _name| desc }, @discover_type_selected),
                      "data-miq_sparkle_on" => true,
                      "data-miq_sparkle_off" => true,
                      :class => "selectpicker")
