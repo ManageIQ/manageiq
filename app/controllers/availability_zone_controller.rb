@@ -51,9 +51,9 @@ class AvailabilityZoneController < ApplicationController
       notify_about_unauthorized_items(title, ui_lookup(:tables => "availability_zone"))
 
     when "cloud_volumes"
-      title = ui_lookup(:tables => "cloud_volumes")
+      title = ui_lookup(:tables => "cloud_volume")
       drop_breadcrumb(
-        :name => "%{name} (All %{title})" % {:name => @availability_zone.name, :title => title},
+        :name => _("%{name} (All %{title})") % {:name => @availability_zone.name, :title => title},
         :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}"
       )
       # Get the records (into a view) and the paginator
