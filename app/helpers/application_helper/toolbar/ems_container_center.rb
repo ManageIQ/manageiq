@@ -16,6 +16,7 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           'fa fa-refresh fa-lg',
           N_('Refresh items and relationships related to this #{ui_lookup(:table=>"ems_container")}'),
           N_('Refresh items and relationships'),
+          :html_attributes => {'ng-click' => 'some_value_zeari_wants_here'},
           :confirm => N_("Refresh items and relationships related to this \#{ui_lookup(:table=>\"ems_container\")}?")),
         separator,
         button(
