@@ -174,7 +174,7 @@ class ApplicationHelper::ToolbarBuilder
     )
     apply_common_props(props, bgi)
 
-    props[:selected] = "true" if build_toolbar_select_button(bgi[:buttonTwoState])
+    props[:selected] = true if build_toolbar_select_button(bgi[:buttonTwoState])
 
     _add_separator(index)
     props
