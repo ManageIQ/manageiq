@@ -85,6 +85,12 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
+  def vm_suspend(vm, _options = {})
+    vm.suspend
+  rescue => err
+    _log.error "vm=[#{vm.name}], error: #{err}"
+  end
+
   def vm_destroy(vm, _options = {})
     vm.vm_destroy
   rescue => err

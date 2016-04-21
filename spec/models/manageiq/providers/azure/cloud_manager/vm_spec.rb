@@ -5,7 +5,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Vm do
     let(:vm) { FactoryGirl.create(:vm_azure, :ext_management_system => ems, :host => host) }
 
     let(:power_state_on)  { "VM running" }
-    let(:power_state_off) { "VM stopped" }
+    let(:power_state_off) { "VM deallocated" }
     let(:power_state_suspended) { "VM stopping" }
 
     it "defines a resource_group method that returns the expected value based on uid_ems" do

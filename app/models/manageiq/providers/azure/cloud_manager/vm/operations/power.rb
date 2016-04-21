@@ -1,6 +1,7 @@
 module ManageIQ::Providers::Azure::CloudManager::Vm::Operations::Power
-  def validate_suspend
-    validate_unsupported(_("Suspend Operation"))
+  def raw_suspend
+    provider_service.stop(name, resource_group)
+    update_attributes!(:raw_power_state => "VM stopping")
   end
 
   def validate_pause
@@ -13,8 +14,8 @@ module ManageIQ::Providers::Azure::CloudManager::Vm::Operations::Power
   end
 
   def raw_stop
-    provider_service.stop(name, resource_group)
-    update_attributes!(:raw_power_state => "VM stopping")
+    provider_service.deallocate(name, resource_group)
+    update_attributes!(:raw_power_state => "VM deallocating")
   end
 
   def raw_restart
