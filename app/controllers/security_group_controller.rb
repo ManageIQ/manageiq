@@ -11,6 +11,6 @@ class SecurityGroupController < ApplicationController
   include Mixins::GenericShowMixin
 
   def self.display_methods
-    %w(instances)
+    %w(instances network_ports)
   end
 end
