@@ -752,22 +752,16 @@ class MiqExpression
         clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
       end
     when "from"
-      col_name = exp[operator]["field"]
-      col_sql, dummy = self.class.operands2sqlvalue(operator, "field" => col_name)
-      col_type = self.class.get_col_type(col_name)
-
+      field = Field.parse(exp[operator]["field"])
       start_val, end_val = exp[operator]["value"]
-      if col_type == :date
-        start_val = self.class.quote(self.class.normalize_date_time(start_val, "UTC", "beginning").to_date, :date, :sql)
-        end_val   = self.class.quote(self.class.normalize_date_time(end_val, "UTC", "end").to_date, :date, :sql)
-
-        clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
+      if field.date?
+        start_val = self.class.normalize_date_time(start_val, "UTC", "beginning").to_date
+        end_val   = self.class.normalize_date_time(end_val, "UTC", "end").to_date
       else
-        start_val = self.class.quote(self.class.normalize_date_time(start_val, tz, "beginning").utc, :datetime, :sql)
-        end_val   = self.class.quote(self.class.normalize_date_time(end_val, tz, "end").utc, :datetime, :sql)
-
-        clause = "#{col_sql} BETWEEN #{start_val} AND #{end_val}"
+        start_val = self.class.normalize_date_time(start_val, tz, "beginning").utc
+        end_val   = self.class.normalize_date_time(end_val, tz, "end").utc
       end
+      clause = field.between(start_val..end_val).to_sql
     when "date_time_with_logical_operator"
       exp = exp[operator]
       operator = exp.keys.first
