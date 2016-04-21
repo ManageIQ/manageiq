@@ -503,15 +503,16 @@ class StorageController < ApplicationController
     replace_search_box(presenter, r)
     c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
     h_tb = build_toolbar('x_history_tb')
+    v_tb = build_toolbar('x_gtl_view_tb') unless record_showing
 
     replace_trees_by_presenter(presenter, trees)
 
     # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
     presenter[:reload_toolbars][:center] = c_tb if c_tb.present?
-    presenter.set_visibility(c_tb.present?, :toolbar)
+    presenter.set_visibility(c_tb.present? || v_tb.present?, :toolbar)
 
     # Rebuild the toolbars
-    presenter.reload_toolbars(:history => h_tb)
+    presenter.reload_toolbars(:history => h_tb, :view => v_tb)
     case x_active_tree
       when :storage_tree
         presenter.update(:main_div, r[:partial => "storage_list"])
