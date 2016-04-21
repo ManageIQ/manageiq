@@ -52,7 +52,7 @@ class ApplicationHelper::ToolbarBuilder
       :klass  => bgi[:klass],
       :id     => bgi[:id],
       :type   => :buttonSelect,
-      :img    => img = "#{bgi[:image] ? bgi[:image] : bgi[:id]}.png",
+      :img    => img = img_value(bgi),
       :imgdis => img,
       :icon   => bgi[:icon]
     )
@@ -72,7 +72,7 @@ class ApplicationHelper::ToolbarBuilder
           :child_id => bsi[:id],
           :id       => bgi[:id] + "__" + bsi[:id],
           :type     => :button,
-          :img      => img = "#{bsi[:image] || bsi[:id]}.png",
+          :img      => img = img_value(bsi),
           :imgdis   => img,
           :icon     => bsi[:icon]
         )
@@ -161,6 +161,10 @@ class ApplicationHelper::ToolbarBuilder
     @sep_needed = true # Button was added, need separators from now on
   end
 
+  def img_value(button)
+    "#{button[:image] || button[:id]}.png"
+  end
+
   def build_twostate_button(bgi, index)
     return nil if build_toolbar_hide_button(bgi[:id])
 
@@ -168,7 +172,7 @@ class ApplicationHelper::ToolbarBuilder
       :klass  => bgi[:klass],
       :id     => bgi[:id],
       :type   => :buttonTwoState,
-      :img    => img = "#{bgi[:image] ? bgi[:image] : bgi[:id]}.png",
+      :img    => img = img_value(bgi),
       :imgdis => img,
       :icon   => bgi[:icon]
     )
