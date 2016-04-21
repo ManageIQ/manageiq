@@ -64,11 +64,11 @@ class MiqRhevmVm < MiqVm
   def file_path_for_storage_type(storage_obj, disk)
     storage_type = storage_obj && storage_obj.attributes[:storage][:type]
 
-    # TODO: account for Gluster and other storage types here.
+    # TODO: account for other storage types here.
     case storage_type
-    when "nfs"
-      add_nfs_mount(storage_obj)
-      nfs_file_path(storage_obj, disk)
+    when "nfs", "glusterfs"
+      add_fs_mount(storage_obj)
+      fs_file_path(storage_obj, disk)
     else
       lun_file_path(storage_obj, disk)
     end
@@ -78,7 +78,7 @@ class MiqRhevmVm < MiqVm
     @nfs_mount_root ||= @ost.nfs_mount_root || "/mnt/#{@rhevmVm.attributes[:id]}"
   end
 
-  def nfs_file_path(storage_obj, disk)
+  def fs_file_path(storage_obj, disk)
     storage_id  = storage_obj.attributes[:id]
     disk_id     = disk.attributes[:id]
     image_id    = disk.attributes[:image_id]
@@ -101,12 +101,18 @@ class MiqRhevmVm < MiqVm
   #
   # Returns uri and mount points, hashed by storage ID.
   #
-  def add_nfs_mount(storage_obj)
+  def add_fs_mount(storage_obj)
     storage_id = storage_obj.attributes[:id]
     return if nfs_mounts[storage_id]
 
     mount_point = ::File.join(nfs_mount_root, nfs_mount_dir(storage_obj))
-    nfs_mounts[storage_id] = {:uri => "nfs://#{nfs_uri(storage_obj)}", :mount_point => mount_point, :read_only => true}
+    type = storage_obj.attributes[:storage][:type]
+    nfs_mounts[storage_id] = {
+      :uri         => "#{type}://#{nfs_uri(storage_obj)}",
+      :mount_point => mount_point,
+      :read_only   => true,
+      :type        => type
+    }
   end
 
   def nfs_uri(storage_obj)
@@ -124,6 +130,7 @@ class MiqRhevmVm < MiqVm
 
   def mount_storage
     require 'util/mount/miq_nfs_session'
+    require 'util/mount/miq_glusterfs_session'
     log_header = "MIQ(MiqRhevmVm.mount_storage)"
     $log.info "#{log_header} called"
 
@@ -138,7 +145,14 @@ class MiqRhevmVm < MiqVm
       FileUtils.mkdir_p(nfs_mount_root) unless File.directory?(nfs_mount_root)
       nfs_mounts.each do |storage_id, mount_info|
         $log.info "#{log_header} Mounting #{mount_info[:uri]} on #{mount_info[:mount_point]} for #{storage_id}"
-        MiqNfsSession.new(mount_info).connect
+
+        case mount_info[:type]
+        when "nfs"
+          MiqNfsSession.new(mount_info).connect
+        when "glusterfs"
+          MiqGlusterfsSession.new(mount_info).connect
+        end
+
         @ost.nfs_storage_mounted = true
       end
       $log.info "#{log_header} - mount:\n#{`mount`}"
