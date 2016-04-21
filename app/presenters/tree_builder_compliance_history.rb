@@ -26,8 +26,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
     locals.merge!(:id_prefix                   => 'h_',
                   :cfme_no_click               => true,
                   :open_close_all_on_dbl_click => true,
-                  :onclick                     => false
-    )
+                  :onclick                     => false)
   end
 
   def root_options
@@ -63,11 +62,11 @@ class TreeBuilderComplianceHistory < TreeBuilder
        if node.miq_policy_id == parent.miq_policy_id
          n = {:id    => "1234",
               :text  => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
-              :image => "#{node.condition_result ? "check" : "x"}",
+              :image => node.condition_result ? "check" : "x",
               :tip   => nil}
          kids.push(n)
        end
-     end
+    end
     count_only_or_objects(count_only, kids)
   end
 

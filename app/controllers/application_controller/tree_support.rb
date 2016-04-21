@@ -51,67 +51,6 @@ module ApplicationController::TreeSupport
 
   private ############################
 
-  # Build a compliance history tree
-  def compliance_history_tree(rec, count)
-    t_kids = []                          # Array to hold node children
-    rec.compliances.order("timestamp DESC").limit(count).each do |c|
-      c_node = TreeNodeBuilder.generic_tree_node(
-        "c_#{c.id}",
-        format_timezone(c.timestamp, Time.zone, 'gtl'),
-        "#{c.compliant ? "check" : "x"}.png",
-        nil,
-        :style_class => "cfme-no-cursor-node"
-      )
-      c_node[:title] = "<b>" + _("Compliance Check on:") + "</b>" + c_node[:title].to_s
-      c_kids = []
-      temp_pol_id = nil
-      p_node = {}
-      p_kids = []
-      c.compliance_details.order("miq_policy_desc, condition_desc").each do |d|
-        if d.miq_policy_id != temp_pol_id
-          unless p_node.empty?
-            p_node[:children] = p_kids unless p_kids.empty?
-            c_kids.push(p_node) if p_node[:children]   # Add policy node to compliance node, if any conditions in policy
-          end
-          temp_pol_id = d.miq_policy_id
-          p_node = TreeNodeBuilder.generic_tree_node(
-            "#{c_node[:key]}-p_#{d.miq_policy_id}",
-            d.miq_policy_desc,
-            "#{d.miq_policy_result ? "check" : "x"}.png",
-            nil,
-            #:style_class => "cfme-no-cursor-node"
-          )
-          p_node[:title] = "<b>" + _("Policy:") + "</b>" + " #{p_node[:title]}"
-          p_kids = []
-        end
-        cn_node = TreeNodeBuilder.generic_tree_node(
-          "#{p_node[:key]}-cn_#{d.condition_id}",
-          d.condition_desc,
-          "#{d.condition_result ? "check" : "x"}.png",
-          nil,
-          #:style_class => "cfme-no-cursor-node"
-        )
-        cn_node[:title] = "<b>" + _("Condition:") + "</b>" + " #{cn_node[:title]}"
-        p_kids.push(cn_node)
-      end
-      p_node[:children] = p_kids unless p_kids.empty?            # Gather up last policy kids
-      c_kids.push(p_node) if p_node[:children]                   # Add last policy node to compliance node
-      c_node[:children] = c_kids unless c_kids.empty?
-      if c_kids.empty?
-        np_node = generic_tree_node(
-          "#{c_node[:key]}-nopol",
-          _("No Compliance Policies Found"),
-          "#{c_node[:key]}-nopol",
-          nil,
-          #:style_class => "cfme-no-cursor-node"
-        )
-        c_node[:children] = [np_node]
-      end
-      t_kids.push(c_node)                                     # Add compliance node to tree kids
-    end
-    t_kids
-  end
-
   # Build the manage policies tree
   def protect_build_tree
     @sb[:no_policy_profiles] = false

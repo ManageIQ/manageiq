@@ -71,11 +71,9 @@ class HostController < ApplicationController
 
     when "compliance_history"
       count = params[:count] ? params[:count].to_i : 10
-      #TODO replace
       @ch_tree = TreeBuilderComplianceHistory.new(:ch_tree, :ch, @sb, true, @host)
       session[:ch_tree] = @ch_tree.tree_nodes
 
-      #session[:ch_tree] = compliance_history_tree(@host, count).to_json
       session[:tree_name] = "ch_tree"
       session[:squash_open] = (count == 1)
       drop_breadcrumb({:name => @host.name, :url => "/host/show/#{@host.id}"}, true)
