@@ -227,7 +227,7 @@ class ChargebackController < ApplicationController
 
   def cb_rate_show
     @display = "main"
-    @record.chargeback_rate_details.to_a.sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
+    @record.chargeback_rate_details
     if @record.nil?
       redirect_to :action => "cb_rates_list", :flash_msg => _("Error: Record no longer exists in the database"), :flash_error => true
       return
@@ -596,7 +596,7 @@ class ChargebackController < ApplicationController
 
       tiers[detail_index] ||= []
 
-      detail.chargeback_tiers.to_a.sort_by { |ct| [ct[:start]] }.each do |tier|
+      detail.chargeback_tiers.each do |tier|
         new_tier = tier.slice(*ChargebackTier::FORM_ATTRIBUTES)
         new_tier[:id] = params[:typ] == "copy" ? nil : tier.id
         new_tier[:chargeback_rate_detail_id] = params[:typ] == "copy" ? nil : detail.id
@@ -609,8 +609,6 @@ class ChargebackController < ApplicationController
       @edit[:new][:num_tiers][detail_index] = tiers[detail_index].size
       @edit[:new][:details].push(temp)
     end
-
-    @edit[:new][:details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
 
     @edit[:new][:per_time_types] = per_time_types_from
 
