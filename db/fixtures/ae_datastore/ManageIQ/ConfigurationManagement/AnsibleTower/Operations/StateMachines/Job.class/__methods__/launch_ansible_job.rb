@@ -6,7 +6,7 @@
 
 class LaunchAnsibleJob
   ANSIBLE_VAR_REGEX = Regexp.new(/(.*)=(.*$)/)
-  SCRIPT_CLASS = 'ConfigurationScript'.freeze
+  SCRIPT_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript'.freeze
   JOB_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job'.freeze
 
   def initialize(handle)
