@@ -1,4 +1,8 @@
 class TreeBuilderComplianceHistory < TreeBuilder
+  def node_builder
+    TreeNodeBuilderComplianceHistory
+  end
+
   def initialize(name, type, sandbox, build = true, root = nil)
     sandbox[:ch_root] = TreeBuilder.build_node_id(root) if root
     @root = root
@@ -20,7 +24,9 @@ class TreeBuilderComplianceHistory < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(:id_prefix                   => 'h_',
+                  :cfme_no_click               => true,
                   :open_close_all_on_dbl_click => true,
+                  :onclick                     => false
     )
   end
 
@@ -35,7 +41,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
   def x_get_compliance_kids(parent, count_only)
     kids = []
     if parent.compliance_details.empty?
-      node = {:id    => "#{parent.id}-nopol",
+      node = {:id    => "1234",
               :text  => _("No Compliance Policies Found"),
               :image => "#{parent.id}-nopol",
               :tip   => nil,}
@@ -55,11 +61,9 @@ class TreeBuilderComplianceHistory < TreeBuilder
     grandpa = model.constantize.find_by(:id => from_cid(id))
     grandpa.compliance_details.order("miq_policy_desc, condition_desc").each do |node|
        if node.miq_policy_id == parent.miq_policy_id
-         text =  "<b>" + _("Condition: ") + "</b>" + parent.condition_desc
-         #text.html_safe
          n = {:id    => "1234",
-              :text  => text,
-              :image => "#{parent.condition_result ? "check" : "x"}",
+              :text  => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
+              :image => "#{node.condition_result ? "check" : "x"}",
               :tip   => nil}
          kids.push(n)
        end
