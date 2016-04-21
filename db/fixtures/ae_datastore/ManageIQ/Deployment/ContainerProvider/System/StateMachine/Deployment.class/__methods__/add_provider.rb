@@ -38,7 +38,7 @@ def add_provider
 
     $evm.log(:info, "result: #{result}")
     if result[0]
-      provider = deployment.deployed_ext_management_system
+      provider = deployment.deployed_ems
       provider.refresh
       $evm.root['ae_result'] = "ok"
       $evm.root['automation_task'].message = "successfully added #{$evm.root['provider_name']} as a container provider"
