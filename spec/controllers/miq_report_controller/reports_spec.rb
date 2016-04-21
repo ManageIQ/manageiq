@@ -77,4 +77,21 @@ describe ReportController, "::Reports" do
     #   FactoryGirl.create(:miq_widget, :resource => report)
     # end
   end
+
+  describe "#verify is_valid? flash messages" do
+    it "show flash message when show cost by entity is selected but no entity_id chosen" do
+      model = "ChargebackContainerProject"
+      controller.instance_variable_set(:@edit, :new => {:model       => model,
+                                                        :fields      => [["Date Created"]],
+                                                        :cb_show_typ => "entity",
+                                                        :cb_model    => "ContainerProject"})
+      controller.instance_variable_set(:@sb, {})
+      rpt = FactoryGirl.create(:miq_report_chargeback)
+      controller.send(:valid_report?, rpt)
+      flash_messages = assigns(:flash_array)
+      flash_str = "A specific Project or all must be selected"
+      expect(flash_messages.first[:message]).to eq(flash_str)
+      expect(flash_messages.first[:level]).to eq(:error)
+    end
+  end
 end
