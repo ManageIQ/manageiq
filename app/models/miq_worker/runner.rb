@@ -343,6 +343,7 @@ class MiqWorker::Runner
       end
 
       do_gc
+      log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
       send(poll_method)
     end
   end
@@ -354,7 +355,6 @@ class MiqWorker::Runner
     @worker_monitor_drb ||= worker_monitor_drb
     messages = @worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
     @last_hb = now
-    log_ruby_object_usage(worker_settings[:log_top_ruby_objects_on_heartbeat].to_i)
     messages.each { |msg, *args| process_message(msg, *args) }
     do_heartbeat_work
   rescue DRb::DRbError => err
