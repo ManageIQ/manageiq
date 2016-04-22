@@ -3,7 +3,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager::Vm < ManageIQ::Providers::Cl
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
-    connection.servers.get(name)
+    connection.servers.get(uid_ems)
   end
 
   #
@@ -27,13 +27,11 @@ class ManageIQ::Providers::SoftLayer::CloudManager::Vm < ManageIQ::Providers::Cl
   end
 
   def self.calculate_power_state(raw_power_state)
-    case raw_power_state.downcase
-    when /on/, /starting/
-      "on"
-    when /halted/, /stopping/
-      "off"
-    else
-      "unknown"
+    case raw_power_state
+    when "Running", "Starting", "on" then "on"
+    when "Halted", "Stopping"        then "off"
+    when "Rebooting"                 then "reboot_in_progress"
+    else                                  "unknown"
     end
   end
 

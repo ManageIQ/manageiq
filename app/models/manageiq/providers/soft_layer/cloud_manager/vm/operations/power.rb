@@ -9,16 +9,16 @@ module ManageIQ::Providers::SoftLayer::CloudManager::Vm::Operations::Power
 
   def raw_start
     with_provider_object(&:start)
-    update_attributes!(:raw_power_state => "starting")
+    update_attributes!(:raw_power_state => "Starting")
   end
 
   def raw_stop
     with_provider_object(&:stop)
-    update_attributes!(:raw_power_state => "stopping")
+    update_attributes!(:raw_power_state => "Stopping")
   end
 
   def raw_restart
     with_provider_object(&:reboot)
-    update_attributes!(:raw_power_state => "starting")
+    update_attributes!(:raw_power_state => "Rebooting")
   end
 end

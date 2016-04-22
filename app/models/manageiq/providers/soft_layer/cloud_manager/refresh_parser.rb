@@ -96,7 +96,7 @@ module ManageIQ::Providers
       end
 
       def parse_image(image)
-        uid    = image.id.to_s
+        uid    = image.id
 
         new_result = {
           :type               => "ManageIQ::Providers::SoftLayer::CloudManager::Template",
@@ -123,7 +123,7 @@ module ManageIQ::Providers
           :vendor            => "soft_layer",
           :raw_power_state   => instance.state,
           :flavor            => instance.flavor_id,
-          :operating_system  => instance.os_code,
+          :operating_system  => { :product_name => instance.os_code },
           :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
           :hardware          => {
             :cpu_sockets          => instance.cpu,
