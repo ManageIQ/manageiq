@@ -1082,7 +1082,7 @@
     :defaults:
       :count: 1
       :gc_interval: 15.minutes
-      :heartbeat_freq: 60.seconds
+      :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes
       :memory_threshold: 200.megabytes
       :nice_delta: 10
@@ -1396,7 +1396,6 @@
       :nice_delta: 1
       :poll: 60.seconds
     :vim_broker_worker:
-      :heartbeat_freq: 15.seconds
       :memory_threshold: 2.gigabytes
       :nice_delta: 3
       :poll: 1.seconds
