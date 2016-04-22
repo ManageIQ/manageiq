@@ -1,5 +1,5 @@
 - if !session[:host_items].nil?
-  - verify_title_on ||= "Validate the credentials by logging into the selected %s" % title_for_host
+  - verify_title_on ||= _("Validate the credentials by logging into the selected %{title_for_host}") % {:title_for_host => title_for_host}
   - verify_title_off ||= _("%s to validate against, Username and matching password fields are needed to perform verification of credentials") % title_for_host
 - else
   - verify_title_on = "Validate the credentials by logging into the Server"
@@ -10,14 +10,14 @@
   - validate = "validateClicked('#{url_for(:action => validate_url, :id => id, :type => valtype, :button => "validate")}')"
 
 %div{"ng-show" => ng_show, "ng-controller" => "buttonGroupController"}
-  = button_tag("Validate",
+  = button_tag(_("Validate"),
                  :class     => "btn btn-primary btn-xs btn-disabled",
                  :alt       => verify_title_off,
                  :title     => verify_title_off,
                  :style     => "cursor:not-allowed",
                  "ng-show"  => basic_info_needed ? "!canValidateBasicInfo()" : "!canValidate()",
                  "ng-click" => "disabledClick($event)")
-  = button_tag("Validate",
+  = button_tag(_("Validate"),
                  :class     => "btn btn-primary btn-xs",
                  :alt       => verify_title_on,
                  :title     => verify_title_on,

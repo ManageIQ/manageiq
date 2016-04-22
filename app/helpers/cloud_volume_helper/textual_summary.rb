@@ -20,7 +20,7 @@ module CloudVolumeHelper::TextualSummary
   end
 
   def textual_size
-    {:label => "Size", :value => number_to_human_size(@record.size, :precision => 2)}
+    {:label => _("Size"), :value => number_to_human_size(@record.size, :precision => 2)}
   end
 
   def textual_bootable
@@ -52,7 +52,7 @@ module CloudVolumeHelper::TextualSummary
     h = {
       :label => label,
       :image => "cloud_volume_snapshot",
-      :value => (base_snapshot.nil? ? "None" : base_snapshot.name)
+      :value => (base_snapshot.nil? ? _("None") : base_snapshot.name)
     }
     if base_snapshot && role_allows(:feature => "cloud_volume_snapshot_show")
       h[:title] = _("Show this Volume's %{parent}") % {:parent => label}

@@ -105,7 +105,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_osinfo
-    h = {:label => "Operating System"}
+    h = {:label => _("Operating System")}
     os = @record.operating_system.nil? ? nil : @record.operating_system.product_name
     if os.blank?
       h[:value] = _("Unknown")

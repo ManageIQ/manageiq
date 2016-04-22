@@ -16,7 +16,7 @@ module CloudObjectStoreObjectHelper::TextualSummary
   end
 
   def textual_content_length
-    {:label => "Content Length", :value => number_to_human_size(@record.content_length, :precision => 2)}
+    {:label => _("Content Length"), :value => number_to_human_size(@record.content_length, :precision => 2)}
   end
 
   def textual_last_modified
@@ -44,7 +44,7 @@ module CloudObjectStoreObjectHelper::TextualSummary
 
   def textual_cloud_object_store_container
     object_store_container = @record.cloud_object_store_container if @record.respond_to?(:cloud_object_store_container)
-    label = ui_lookup(:table => "cloud_object_store")
+    label = ui_lookup(:table => "cloud_object_store_container")
     h = {
       :label => label,
       :image => "cloud_object_store_container",
