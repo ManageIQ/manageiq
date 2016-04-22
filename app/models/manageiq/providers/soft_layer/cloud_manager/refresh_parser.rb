@@ -8,7 +8,7 @@ module ManageIQ::Providers
         new(ems, options).ems_inv_to_hashes
       end
 
-      def initialize(ems, options = {})
+      def initialize(ems, options = nil)
         @ems               = ems
         @compute           = ems.connect
         @options           = options

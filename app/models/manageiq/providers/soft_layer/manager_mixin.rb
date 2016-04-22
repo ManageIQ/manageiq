@@ -5,17 +5,17 @@ module ManageIQ::Providers::SoftLayer::ManagerMixin
     raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(options[:auth_type])
 
     client_id = options[:client_id] || authentication_userid(options[:auth_type])
-    client_key = options[:client_key] || authentication_key(options[:auth_type])
+    client_key = options[:client_key] || authentication_password(options[:auth_type])
 
     self.class.raw_connect(client_id, client_key, options)
   end
 
   def verify_credentials(_auth_type = nil, options = {})
-    connect(options)
+    compute = connect(options)
 
     # Hit the SoftLayer servers to make sure authentication has
     # been proceed
-    connection.regions.all
+    compute.servers.all
   rescue Excon::Errors::Unauthorized => err
     raise MiqException::MiqInvalidCredentialsError, err.message
 
@@ -23,7 +23,7 @@ module ManageIQ::Providers::SoftLayer::ManagerMixin
   end
 
   module ClassMethods
-    def raw_connect(softlayer_username, soflayer_api_key, options)
+    def raw_connect(softlayer_username, soflayer_api_key, options = {})
       require 'fog/softlayer'
 
       config = {
@@ -92,7 +92,6 @@ module ManageIQ::Providers::SoftLayer::ManagerMixin
     end
 
     def create_discovered_region(region_name, client_id, client_key, all_ems_names)
-      # TODO: Why is there all this sting gymnastics? Is it really needed?
       name = "SoftLayer-#{region_name}"
       name = "SoftLayer-#{region_name} #{clientid}" if all_ems_names.key?(name)
 
@@ -101,7 +100,6 @@ module ManageIQ::Providers::SoftLayer::ManagerMixin
         name = "SoftLayer-#{region_name} #{name_counter}"
       end
 
-      # TODO: Is the uid_ems really needed here?
       new_ems = create!(
         :name            => name,
         :provider_region => region_name,

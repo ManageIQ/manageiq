@@ -210,6 +210,11 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       ($scope.currentTab == "default" ||
       ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
+    } else if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype == "soft_layer") &&
+        ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
+       $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
+       $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
+      return true;
     }
 
     else
