@@ -15,9 +15,10 @@ module ManageIQ::Providers
     end
 
     def metrics_available
-      resource = Struct.new(:id, :feed).new
+      resource = Struct.new(:id, :feed, :path).new
       resource.id = @target.nativeid
       resource.feed = @target.feed
+      resource.path = @target.ems_ref
       @ems.metrics_resource(resource).collect do |metric|
         {
           :id   => metric.id,
