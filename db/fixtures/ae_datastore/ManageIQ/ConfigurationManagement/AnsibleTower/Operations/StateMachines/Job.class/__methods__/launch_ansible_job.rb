@@ -50,8 +50,7 @@ class LaunchAnsibleJob
     job_template = var_search(@handle.object, 'job_template') || job_template_by_name || job_template_by_id
 
     if job_template.nil?
-      @handle.log(:error, "Job Template not specified")
-      exit(MIQ_ERROR)
+      raise "Job Template not specified"
     end
     job_template
   end
