@@ -455,10 +455,17 @@ class MiqWorker::Runner
     types
   end
 
+  LOG_RUBY_OBJECT_USAGE_INTERVAL = 60
   def log_ruby_object_usage(top = 20)
-    if top > 0
+    return unless top > 0
+
+    t = Time.now.utc
+    @last_ruby_object_usage ||= t
+
+    if (@last_ruby_object_usage + LOG_RUBY_OBJECT_USAGE_INTERVAL) < t
       types = ruby_object_usage
       $log.info("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
+      @last_ruby_object_usage = t
     end
   end
 
