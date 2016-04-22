@@ -4,7 +4,7 @@ module EvmWatchdog
   PID_LOCATION = '/var/www/miq/vmdb/tmp/pids/evm.pid'.freeze
   def self.check_evm
     pid_file = read_pid_file(PID_LOCATION)
-    pid_ps = get_ps_pids('evm_server.rb')
+    pid_ps = get_ps_pids('MIQ Server')
     if pid_file.nil?
       # EVM exited gracefully - no pid file, nothing to do.
       # Future TODO - Check database to see if EVM should be started?
