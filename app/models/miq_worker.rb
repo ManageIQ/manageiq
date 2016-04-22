@@ -438,7 +438,7 @@ class MiqWorker < ApplicationRecord
       _log.warn("Unexpected error: #{err.message}, while requesting process info for [#{friendly_name}] with PID=[#{pid}]")
     else
       # Ensure the hash only contains the values we want to store in the table
-      pinfo.keep_if { |k, _v| self.class::PROCESS_INFO_FIELDS.include?(k) }
+      pinfo.slice!(*PROCESS_INFO_FIELDS)
       pinfo[:os_priority] = pinfo.delete(:priority)
       update_attributes!(pinfo)
     end
