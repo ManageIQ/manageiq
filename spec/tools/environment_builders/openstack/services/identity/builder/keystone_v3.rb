@@ -16,6 +16,10 @@ module Openstack
             @domains  = []
           end
 
+          def domain_id
+            'default'
+          end
+
           def build_all
             find_or_create_domains
             find_or_create_projects
@@ -28,22 +32,20 @@ module Openstack
 
           def find_or_create_projects
             @data.projects.each do |project|
-              if (domain_name = project.delete(:__domain_name))
-                project[:domain_id] = @domains.detect { |x| x.name == domain_name }.id
-              end
-              @projects << find_or_create(@service.projects, project)
+              @projects << (find(@service.projects.all(:domain_id => domain_id), project.slice(:name)) ||
+                            create(@service.projects, project.merge(:domain_id => domain_id)))
             end
           end
 
           def find_or_create_domains
             # TODO(lsmola) implement mutidomain support, just load domains for now
-            @domains = @service.domains
+            # @domains = @service.domains
           end
 
           def find_or_create_roles
             @data.roles.each do |role|
-              admin_user = @service.users.detect { |x| x.name == 'cloud_admin' }
-              admin_role = @service.roles.detect { |x| x.name == role }
+              admin_user = @service.users.all(:domain_id => domain_id).detect { |x| x.name == 'admin' }
+              admin_role = @service.roles.all(:domain_id => domain_id).detect { |x| x.name == role }
               @projects.each do |p|
                 puts "Creating role {:name => '#{role}', :tenant_id => '#{p.name}'} role in "\
                      "Fog::Identity::OpenStack:Roles"
