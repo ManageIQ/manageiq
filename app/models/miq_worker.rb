@@ -431,17 +431,17 @@ class MiqWorker < ApplicationRecord
   def status_update
     begin
       pinfo = MiqProcess.processInfo(pid)
+    rescue Errno::ESRCH
+      update(:status => STATUS_ABORTED)
+      _log.warn("No such process [#{friendly_name}] with PID=[#{pid}], aborting worker.")
     rescue => err
-      # Calling ps on Linux with a pid that does not exist fails with a RuntimeError containing an empty message.
-      # We will ignore this since we may be asking for the status of a worker who has exited.
-      _log.warn("#{self.class.name}: #{err.message}, while requesting process info for [#{friendly_name}] with PID=[#{pid}]") unless err.message.blank?
-      return
+      _log.warn("Unexpected error: #{err.message}, while requesting process info for [#{friendly_name}] with PID=[#{pid}]")
+    else
+      # Ensure the hash only contains the values we want to store in the table
+      pinfo.slice!(*PROCESS_INFO_FIELDS)
+      pinfo[:os_priority] = pinfo.delete(:priority)
+      update_attributes!(pinfo)
     end
-
-    # Ensure the hash only contains the values we want to store in the table
-    pinfo.keep_if { |k, _v| self.class::PROCESS_INFO_FIELDS.include?(k) }
-    pinfo[:os_priority] = pinfo.delete(:priority)
-    update_attributes!(pinfo)
   end
 
   def log_status(level = :info)
