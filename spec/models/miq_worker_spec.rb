@@ -341,6 +341,19 @@ describe MiqWorker do
         require 'miq-process'
       end
 
+      it "no such process" do
+        allow(MiqProcess).to receive(:processInfo).with(123).and_raise(Errno::ESRCH)
+        described_class.status_update
+        @worker.reload
+        expect(@worker.status).to eq MiqWorker::STATUS_ABORTED
+      end
+
+      it "a StandardError" do
+        allow(MiqProcess).to receive(:processInfo).with(123).and_raise(StandardError.new("LOLRUBY"))
+        expect($log).to receive(:warn).with(/LOLRUBY/)
+        described_class.status_update
+      end
+
       it "updates expected values" do
         values = {
           :pid                   => 123,
