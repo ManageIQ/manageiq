@@ -23,7 +23,7 @@ class WidgetPresenter
 
   def button_fullscreen
     if @widget.content_type == "chart"
-      @view.link_to(@view.content_tag(:span, " Full Screen", :class => 'fa fa-arrows-alt fa-fw'),
+      @view.link_to(@view.content_tag(:span, _(" Full Screen"), :class => 'fa fa-arrows-alt fa-fw'),
                     {:action => "report_only",
                      :type   => "hybrid",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
@@ -33,7 +33,7 @@ class WidgetPresenter
                                             "(all rows) in your browser. Do you want to proceed?"),
                     :onclick           => "return miqClickAndPop(this);")
     else
-      @view.link_to(@view.content_tag(:span, " Full Screen", :class => 'fa fa-arrows-alt fa-fw'),
+      @view.link_to(@view.content_tag(:span, _(" Full Screen"), :class => 'fa fa-arrows-alt fa-fw'),
                     {:action => "report_only",
                      :type   => "tabular",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
@@ -47,7 +47,7 @@ class WidgetPresenter
 
   def button_close
     unless @sb[:dashboards][@sb[:active_db]][:locked]
-      @view.link_to(@view.content_tag(:span, " Remove Widget", :class => 'fa fa-times fa-fw'),
+      @view.link_to(@view.content_tag(:span, _(" Remove Widget"), :class => 'fa fa-times fa-fw'),
                     {:controller => "dashboard",
                      :action     => "widget_close",
                      :widget     => @widget.id},
@@ -63,7 +63,7 @@ class WidgetPresenter
 
   def button_minmax
     minimized = @sb[:dashboards][@sb[:active_db]][:minimized].include?(@widget.id)
-    @view.link_to(@view.content_tag(:span, minimized ? " Maximize" : " Minimize",
+    @view.link_to(@view.content_tag(:span, minimized ? _(" Maximize") : _(" Minimize"),
                                     :class  => "fa fa-caret-square-o-#{minimized ? 'down' : 'up'} fa-fw"),
                   {:controller => "dashboard",
                    :action     => "widget_toggle_minmax",
@@ -77,7 +77,7 @@ class WidgetPresenter
 
   def button_pdf
     if PdfGenerator.available? && %w(report chart).include?(@widget.content_type)
-      @view.link_to(@view.content_tag(:span, " Download PDF", :class => 'fa fa-file-pdf-o fa-fw'),
+      @view.link_to(@view.content_tag(:span, _(" Download PDF"), :class => 'fa fa-file-pdf-o fa-fw'),
                     {:action => "widget_to_pdf",
                      :rr_id  => @widget.contents_for_user(current_user).miq_report_result_id},
                     :id    => "w_#{@widget.id}_pdf",
@@ -86,7 +86,7 @@ class WidgetPresenter
   end
 
   def button_zoom
-    @view.link_to(@view.content_tag(:span, " Zoom in", :class => "fa fa-plus fa-fw"),
+    @view.link_to(@view.content_tag(:span, _(" Zoom in"), :class => "fa fa-plus fa-fw"),
                   {:controller => "dashboard",
                    :action     => "widget_zoom",
                    :widget     => @widget.id},
