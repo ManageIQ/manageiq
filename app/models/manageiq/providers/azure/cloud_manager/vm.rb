@@ -51,7 +51,9 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
     case raw_power_state.downcase
     when /running/, /starting/
       "on"
-    when /stopped/, /stopping/, /dealloc/
+    when /stopped/, /stopping/
+      "suspended"
+    when /dealloc/
       "off"
     else
       "unknown"
