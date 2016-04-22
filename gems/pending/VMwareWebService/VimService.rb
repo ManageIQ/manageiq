@@ -177,6 +177,16 @@ class VimService < Handsoap::Service
     (parse_response(response, 'CloneVM_TaskResponse')['returnval'])
   end
 
+  def continueRetrievePropertiesEx(propCol, token)
+    response = invoke("n1:ContinueRetrievePropertiesEx") do |message|
+      message.add "n1:_this", propCol do |i|
+        i.set_attr "type", propCol.vimType
+      end
+      message.add "n1:token", token
+    end
+    (parse_response(response, 'ContinueRetrievePropertiesExResponse')['returnval'])
+  end
+
   def createAlarm(alarmManager, mor, aSpec)
     response = invoke("n1:CreateAlarm") do |message|
       message.add "n1:_this", alarmManager do |i|
@@ -892,8 +902,19 @@ class VimService < Handsoap::Service
   end
 
   def retrievePropertiesCompat(propCol, specSet, max_objects = nil)
+    oc = VimArray.new('ArrayOfObjectContent')
+
     rv = retrievePropertiesEx(propCol, specSet, max_objects)
-    rv ? rv['objects'] : []
+    if rv
+      oc.concat(rv['objects'])
+
+      while rv && rv['token']
+        rv = continueRetrievePropertiesEx(propCol, rv['token'])
+        oc.concat(rv['objects']) unless rv.nil?
+      end
+    end
+
+    oc
   end
 
   def retrieveServiceContent
