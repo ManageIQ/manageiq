@@ -47,7 +47,7 @@ module OpsController::Settings::RHN
   def rhn_address_string
     product_key = @edit[:new][:register_to]
     product_key = "sm_hosted" unless rhn_subscription_map.key?(product_key)
-    rhn_subscription_map[product_key] + ' Address'
+    rhn_subscription_map[product_key] + _(' Address')
   end
 
   def rhn_account_info_string

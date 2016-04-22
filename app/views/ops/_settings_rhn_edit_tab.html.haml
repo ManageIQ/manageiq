@@ -5,8 +5,8 @@
 #rhn_form_div
   = render :partial => 'layouts/flash_msg'
   %h3
-    Red Hat Software Updates
-  The Subscription Management Service you register with will provide your systems with updates and allow additional management.
+    = _("Red Hat Software Updates")
+  = _("The Subscription Management Service you register with will provide your systems with updates and allow additional management.")
   %br
   %br
   .form-horizontal
@@ -32,7 +32,7 @@
                         :class             => "form-control",
                         'data-miq_observe' => url_int_jsh, :id => 'server_url')
         - if rhn_default_enabled
-          = button_tag('Default',
+          = button_tag(_('Default'),
                     :id      => 'rhn_default_button',
                     :class   => 'btn btn-default',
                     :onclick => "miqAjaxButton('#{url_for(:action => 'rhn_default_server', :id => 'rhn_edit')}');")
@@ -101,6 +101,6 @@
                           'data-miq_sparkle_off' => true,
                           'data-miq_observe'     => url_jsh)
 
-  Forgot your login or password? Look it up at
+  = _("Forgot your login or password? Look it up at")
   %a{:target => 'rh_lost_passwd', :href => 'http://redhat.com/forgot_password'}
     http://redhat.com/forgot_password
