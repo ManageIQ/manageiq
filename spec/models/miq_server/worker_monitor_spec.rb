@@ -233,18 +233,6 @@ describe "MiqWorker Monitor" do
               MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
               expect(MiqWorker.count).to eq(0)
             end
-
-            context "but is waiting for restart" do
-              before(:each) do
-                allow(@miq_server).to receive(:worker_get_monitor_status).with(@worker1.pid).and_return(:pending_restart)
-              end
-
-              it "should not delete worker row after clean_worker_records" do
-                expect(MiqWorker.count).to eq(1)
-                MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
-                expect(MiqWorker.count).to eq(1)
-              end
-            end
           end
 
           context "because it aborted" do
