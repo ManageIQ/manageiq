@@ -14,6 +14,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
                        :feed                  => 'cda13e2a-e206-4e87-8bca-8cfdd5aea484',
+                       :ems_ref               => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
+                                                 '/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/r;Local~~',
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
