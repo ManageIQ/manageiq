@@ -64,7 +64,6 @@ module MiqServer::WorkerManagement::Monitor
     miq_workers.each do |w|
       next unless class_name.nil? || (w.type == class_name)
       next unless w.is_stopped?
-      next if worker_get_monitor_status(w.pid) == :pending_restart
       _log.info("SQL Record for #{w.format_full_log_msg}, Status: [#{w.status}] is being deleted")
       processed_workers << w
       worker_delete(w.pid)
