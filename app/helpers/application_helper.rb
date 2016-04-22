@@ -642,7 +642,6 @@ module ApplicationHelper
       @inner_layout_present = false
       if @explorer || params[:action] == "explorer" ||
          (params[:controller] == "chargeback" && params[:action] == "chargeback") ||
-         (params[:controller] == "miq_ae_tools" && (params[:action] == "resolve" || params[:action] == "show")) ||
          (params[:controller] == "miq_policy" && params[:action] == "rsop") ||
          (params[:controller] == "miq_capacity")
         @inner_layout_present = true
