@@ -451,14 +451,6 @@ class MiqWorker::Runner
     types = Hash.new { |h, k| h[k] = Hash.new(0) }
     ObjectSpace.each_object do |obj|
       types[obj.class][:count] += 1
-      next if obj.kind_of?(DRbObject) || obj.kind_of?(WeakRef)
-      if obj.respond_to?(:length)
-        len = obj.length
-        if len.kind_of?(Numeric)
-          types[obj.class][:max]    = len if len > types[obj.class][:max]
-          types[obj.class][:total] += len
-        end
-      end
     end
     types
   end
