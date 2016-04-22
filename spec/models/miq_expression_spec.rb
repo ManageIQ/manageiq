@@ -1829,7 +1829,7 @@ describe MiqExpression do
       )
     end
   end
-  
+
   describe "#sql_supports_atom?" do
     context "expression key is 'CONTAINS'" do
       context "operations with 'tag'" do
@@ -1956,7 +1956,7 @@ describe MiqExpression do
       expect(described_class.new(expression).sql_supports_atom?(expression)).to eq(true)
     end
 
-    it "returns false if column excluded by preprocessing" do
+    it "returns false if column excluded from processing for adhoc performance metrics" do
       field = "EmsClusterPerformance-cpu_usagemhz_rate_average"
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
@@ -1964,12 +1964,54 @@ describe MiqExpression do
       expect(obj.sql_supports_atom?(expression)).to eq(false)
     end
 
-    it "returns true if column is not excluded by preprocessing" do
+    it "returns true if column is not excluded from processing for adhoc performance metrics" do
       field = "EmsClusterPerformance-derived_cpu_available"
       expression = {">=" => {"field" => field, "value" => "0"}}
       obj = described_class.new(expression)
       obj.preprocess_options = {:vim_performance_daily_adhoc => true}
       expect(obj.sql_supports_atom?(expression)).to eq(true)
+    end
+  end
+
+  describe "#field_in_sql?" do
+    it "returns false for model.virtualfield" do
+      field = "ManageIQ::Providers::InfraManager::Vm-archived"
+      expression = {"=" => {"field" => field, "value" => "true"}}
+      expect(described_class.new(expression).field_in_sql?(field)).to eq(false)
+    end
+
+    it "returns false for model.association-virtualfield" do
+      field = "ManageIQ::Providers::InfraManager::Vm.storage-v_used_space_percent_of_total"
+      expression = {">=" => {"field" => field, "value" => "50"}}
+      expect(described_class.new(expression).field_in_sql?(field)).to eq(false)
+    end
+
+    it "returns true for model-field" do
+      field = "ManageIQ::Providers::InfraManager::Vm-vendor"
+      expression = {"=" => {"field" => field, "value" => "redhat"}}
+      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+    end
+
+    it "returns true for model.association-field" do
+      field = "ManageIQ::Providers::InfraManager::Vm.guest_applications-vendor"
+      expression = {"CONTAINS" => {"field" => field, "value" => "redhat"}}
+      expect(described_class.new(expression).field_in_sql?(field)).to eq(true)
+    end
+
+    it "returns false if column excluded from processing for adhoc performance metrics" do
+      field = "EmsClusterPerformance-cpu_usagemhz_rate_average"
+      expression = {">=" => {"field" => field, "value" => "0"}}
+      obj = described_class.new(expression)
+      obj.preprocess_options = {:vim_performance_daily_adhoc => true}
+      expect(obj.field_in_sql?(field)).to eq(false)
+    end
+
+    it "returns true if column not excluded from processing for adhoc performance metrics" do
+      field = "EmsClusterPerformance-derived_cpu_available"
+      expression = {">=" => {"field" => field, "value" => "0"}}
+      obj = described_class.new(expression)
+      obj.preprocess_options = {:vim_performance_daily_adhoc => true}
+      expect(obj.field_in_sql?(field)).to eq(true)
     end
   end
 end
