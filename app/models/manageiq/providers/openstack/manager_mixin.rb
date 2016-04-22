@@ -1,6 +1,7 @@
 module ManageIQ::Providers::Openstack::ManagerMixin
   extend ActiveSupport::Concern
 
+  alias_attribute :keystone_v3_domain_id, :uid_ems
   #
   # OpenStack interactions
   #
@@ -38,6 +39,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
         :ssl_ca_path    => vmdb_config.fetch_path(:ssl, :ssl_ca_path),
         :ssl_cert_store => OpenSSL::X509::Store.new
       }
+      extra_options[:domain_id] = keystone_v3_domain_id
 
       osh = OpenstackHandle::Handle.new(username, password, address, port, api_version, security_protocol, extra_options)
       osh.connection_options = {:instrumentor => $fog_log}
