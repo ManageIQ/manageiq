@@ -5,7 +5,7 @@
   - if File.exist?(@logo_file)
     = image_tag("/upload/custom_logo.png?#{rand(99_999_999)}")
   - else
-    = render :partial => 'layouts/info_msg', :locals => {:message => "No custom logo image has been uploaded yet."}
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("No custom logo image has been uploaded yet.")}
   = form_tag({:action    => "upload_logo"},
              :class     => "form-horizontal",
              :multipart => true,
@@ -20,7 +20,7 @@
           $(":file").filestyle({icon: false,placeholder: "No file chosen"});
 
       .col-md-6
-        = submit_tag("Upload",
+        = submit_tag(_("Upload"),
                     :id    => "upload",
                     :class => "btn btn-default")
         = _("* Requirements: File-type - PNG; Dimensions - 350x70.")
@@ -46,7 +46,7 @@
     %br/
     %br/
   - else
-    = render :partial => 'layouts/info_msg', :locals => {:message => "No custom login image has been uploaded yet."}
+    = render :partial => 'layouts/info_msg', :locals => {:message => _("No custom login image has been uploaded yet.")}
   = form_tag({:action    => "upload_login_logo"},
              :class     => "form-horizontal",
              :multipart => true,
@@ -60,7 +60,7 @@
         :javascript
           $(":file").filestyle({icon: false,placeholder: "No file chosen"});
       .col-md-6
-        = submit_tag("Upload",
+        = submit_tag(_("Upload"),
                     :id    => "login_logo",
                     :class => "btn btn-default")
         = _("* Requirements: File-type - PNG; Dimensions - 1280x1000.")

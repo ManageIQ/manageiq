@@ -1,7 +1,7 @@
 - record               = @selected_server
 - log_depot_uri        = "#{record.log_file_depot.try(:uri) || "N/A"}"
 - last_time            = record.last_log_sync_on
-- last_collection_time = last_time.blank? ? "Never" : format_timezone(last_time.to_time, Time.zone, "gtl")
+- last_collection_time = last_time.blank? ? _("Never") : format_timezone(last_time.to_time, Time.zone, "gtl")
 
 #selected_div
   %h3= _("Basic Info")
