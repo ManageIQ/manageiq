@@ -40,6 +40,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       subscription: '',
       host_default_vnc_port_start: '',
       host_default_vnc_port_end: '',
+      event_stream_selection: '',
       ems_controller: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
@@ -254,6 +255,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.note = "";
     if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
       $scope.emsCommonModel.default_api_port = "5000";
+      $scope.emsCommonModel.event_stream_selection = "ceilometer";
     } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
     } else if ($scope.emsCommonModel.emstype === 'rhevm'){
