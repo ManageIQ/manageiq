@@ -23,5 +23,6 @@ class RemoveMiqUserRoleFromMiqGroups < ActiveRecord::Migration[5.0]
       group.miq_user_role_id = group.entitlement.miq_user_role_id
       group.save!
     end
+    MiqGroup.reset_column_information
   end
 end
