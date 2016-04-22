@@ -330,20 +330,19 @@ class ChargebackController < ApplicationController
     @edit = session[:edit]
     index = params[:index]
     detail_index, tier_to_remove_index = index.split("-")
-    detail = @edit[:new][:details][detail_index.to_i]
-    params[:detail_index] = detail_index
-    code_currency = ChargebackRateDetailCurrency.find_by(:id => detail[:currency]).code
     detail_index = detail_index.to_i
-    tier_to_remove_index = tier_to_remove_index.to_i
     @edit[:new][:num_tiers][detail_index] = @edit[:new][:num_tiers][detail_index] - 1
-    tiers = @edit[:new][:tiers][detail_index]
-    @edit[:new][:tiers][detail_index].each_with_index do |_tier, tier_index|
-      next if tier_index <= tier_to_remove_index
-      @edit[:new][:tiers][detail_index][tier_index - 1] = @edit[:new][:tiers][detail_index][tier_index]
+
+    # Delete tier record
+    @edit[:new][:tiers][detail_index].delete_at(tier_to_remove_index.to_i)
+
+    @changed = session[:changed] = true
+
+    render :update do |page|
+      page << javascript_prologue
+      page.replace_html("chargeback_rate_edit_form", :partial => "cb_rate_edit_table")
+      page << javascript_for_miq_button_visibility(@changed)
     end
-    # Delete tier records
-    @edit[:new][:tiers][detail_index].delete_at(@edit[:new][:num_tiers][detail_index])
-    replace_rows(detail_index, tiers, tier_to_remove_index, code_currency) # Replace tiers in the view
   end
 
   def cb_assign_update
@@ -955,26 +954,6 @@ class ChargebackController < ApplicationController
                        :partial => "tier_row",
                        :locals  => locals)
       page << javascript_for_miq_button_visibility(true)
-    end
-  end
-
-  def replace_rows(detail_index, tiers, tier_to_remove_index, code_currency)
-    @changed = session[:changed] = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("rate_detail_row_#{detail_index}_0", :partial => "tier_first_row", :locals => {:code_currency => code_currency})
-      tiers.each_with_index do |_tier, tier_index|
-        next if tier_index <= tier_to_remove_index
-        # Move up tiers not to have blank rows
-        # @edit[:new][:tiers][detail_index][tier_index - 1] = @edit[:new][:tiers][detail_index][tier_index]
-        params[:tier_row] = tier_index
-        page.replace("rate_detail_row_#{detail_index}_#{tier_index - 1}", :partial => "tier_row")
-        params[:tier_row] = nil
-      end
-      # Delete the last row
-      # delete_row(detail_index, @edit[:new][:num_tiers][detail_index])
-      page.replace("rate_detail_row_#{detail_index}_#{@edit[:new][:num_tiers][detail_index]}", '')
-      page << javascript_for_miq_button_visibility(@changed)
     end
   end
 end
