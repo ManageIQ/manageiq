@@ -55,7 +55,7 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_name  => "admin_domain",
+                                            :openstack_domain_id    => nil,
                                             :connection_options     => {:ssl_verify_peer => false}})
                                            .once do |_, _, address|
         expect(address).to eq(auth_url)
@@ -76,7 +76,7 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_name  => "admin_domain",
+                                            :openstack_domain_id    => nil,
                                             :connection_options     => {}})
                                            .once do |_, _, address|
         expect(address).to eq(auth_url)
@@ -97,7 +97,7 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_name  => "admin_domain",
+                                            :openstack_domain_id    => nil,
                                             :connection_options     => {:ssl_verify_peer => false}}) do |_, _, address|
         expect(address).to eq(auth_url_ssl)
         fog
@@ -118,7 +118,7 @@ describe OpenstackHandle::Handle do
                                            "Compute",
                                            {:openstack_tenant       => "admin",
                                             :openstack_project_name => "admin",
-                                            :openstack_domain_name  => "admin_domain",
+                                            :openstack_domain_id    => nil,
                                             :connection_options     => {:ssl_verify_peer => true}}) do |_, _, address|
         expect(address).to eq(auth_url_ssl)
         fog
@@ -137,7 +137,7 @@ describe OpenstackHandle::Handle do
 
       expected_options = {:openstack_tenant       => "admin",
                           :openstack_project_name => "admin",
-                          :openstack_domain_name  => "admin_domain",
+                          :openstack_domain_id    => nil,
                           :connection_options     => {:ssl_verify_peer => true,
                                                       :ssl_ca_file     => "file",
                                                       :ssl_ca_path     => "path",
