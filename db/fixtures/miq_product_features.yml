@@ -1331,6 +1331,14 @@
     :description: Assignments Accordion
     :feature_type: node
     :identifier: chargeback_assignments
+  - :name: Currencies
+    :description: Chargeback Rate currencies Accordion
+    :feature_type: node
+    :identifier: currency
+  - :name: Measures
+    :description: Chargeback Rate measures Accordion
+    :feature_type: node
+    :identifier: measure
 
 # Timelines
 - :name: Timelines
