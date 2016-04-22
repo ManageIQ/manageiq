@@ -149,7 +149,6 @@
     :identifier: currency
     :options:
     - :collection
-    - :subcollection
     :methods: *70174834086080
     :klass: ChargebackRateDetailCurrency
   :measures:
@@ -157,7 +156,6 @@
     :identifier: measure
     :options:
     - :collection
-    - :subcollection
     :methods: *70174834086080
     :klass: ChargebackRateDetailMeasure
   :clusters:

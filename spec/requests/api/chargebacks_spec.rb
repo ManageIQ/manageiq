@@ -147,12 +147,11 @@ RSpec.describe "chargebacks API" do
         run_post chargebacks_url,
                  :rate_type   => "Storage"
       end.not_to change(ChargebackRate, :count)
-      # expect_bad_request(/description can't be blank/i)
+      expect_bad_request(/description can't be blank/i)
     end
 
     it "can edit a chargeback rate through POST" do
-      chargeback_rate = FactoryGirl.build(:chargeback_rate, :description => "chargeback_0")
-      chargeback_rate.save
+      chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
 
       api_basic_authorize action_identifier(:chargebacks, :edit)
       run_post chargebacks_url(chargeback_rate.id), gen_request(:edit, :description => "chargeback_1")
@@ -163,8 +162,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can edit a chargeback rate through PATCH" do
-      chargeback_rate = FactoryGirl.build(:chargeback_rate, :description => "chargeback_0")
-      chargeback_rate.save
+      chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
 
       api_basic_authorize action_identifier(:chargebacks, :edit)
       run_patch chargebacks_url(chargeback_rate.id), [{:action => "edit",
@@ -177,8 +175,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can delete a chargeback rate" do
-      chargeback_rate = FactoryGirl.build(:chargeback_rate)
-      chargeback_rate.save
+      chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
       api_basic_authorize action_identifier(:chargebacks, :delete)
 
@@ -189,8 +186,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can delete a chargeback rate through POST" do
-      chargeback_rate = FactoryGirl.build(:chargeback_rate)
-      chargeback_rate.save
+      chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
       api_basic_authorize action_identifier(:chargebacks, :delete)
 
@@ -303,8 +299,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "cannot edit a chargeback rate" do
-      chargeback_rate = FactoryGirl.build(:chargeback_rate, :description => "chargeback_0")
-      chargeback_rate.save
+      chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
 
       api_basic_authorize
 
@@ -315,8 +310,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "cannot delete a chargeback rate" do
-      chargeback_rate = FactoryGirl.build(:chargeback_rate)
-      chargeback_rate.save
+      chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
       api_basic_authorize
 
