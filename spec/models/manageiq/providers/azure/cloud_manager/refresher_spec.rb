@@ -147,7 +147,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
   def assert_specific_security_group
     name = 'miq-test-rhel1'
-    @sg = ManageIQ::Providers::Azure::CloudManager::SecurityGroup.where(:name => name).first
+    @sg = SecurityGroup.where(:name => name).first
 
     expect(@sg).to have_attributes(
       :name        => name,
