@@ -39,8 +39,9 @@ class TreeBuilderComplianceHistory < TreeBuilder
 
   def x_get_compliance_kids(parent, count_only)
     kids = []
+    #binding.pry
     if parent.compliance_details.empty?
-      node = {:id    => "1234",
+      node = {:id    => "#{parent.id}-nopol",
               :text  => _("No Compliance Policies Found"),
               :image => "#{parent.id}-nopol",
               :tip   => nil,}
@@ -60,7 +61,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
     grandpa = model.constantize.find_by(:id => from_cid(id))
     grandpa.compliance_details.order("miq_policy_desc, condition_desc").each do |node|
        if node.miq_policy_id == parent.miq_policy_id
-         n = {:id    => "1234",
+         n = {:id    => "#{parent.id}-p_#{node.miq_policy_id}",
               :text  => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
               :image => node.condition_result ? "check" : "x",
               :tip   => nil}
@@ -70,7 +71,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
     count_only_or_objects(count_only, kids)
   end
 
-  def x_get_tree_custom_kids(parent, count_only, options)
+  def x_get_tree_custom_kids(parent, count_only, _options)
     count_only ? 0 : []
   end
 end
