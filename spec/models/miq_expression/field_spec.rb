@@ -58,6 +58,39 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#reflections" do
+    it "returns an empty array if there are no associations" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.reflections).to be_empty
+    end
+
+    it "returns the reflections of fields with one association" do
+      field = described_class.new(Vm, ["host"], "name")
+      expect(field.reflections).to match([an_object_having_attributes(:klass => Host)])
+    end
+
+    it "returns the reflections of fields with multiple associations" do
+      field = described_class.new(Vm, %w(host hardware), "guest_os")
+      expect(field.reflections).to match([an_object_having_attributes(:klass => Host),
+                                          an_object_having_attributes(:klass => Hardware)])
+    end
+
+    it "can handle associations which override the class name" do
+      field = described_class.new(Vm, ["users"], "name")
+      expect(field.reflections).to match([an_object_having_attributes(:klass => Account)])
+    end
+
+    it "raises an error if the field has virtual associations" do
+      field = described_class.new(Vm, ["processes"], "name")
+      expect { field.reflections }.to raise_error(/One or more associations are invalid: processes/)
+    end
+
+    it "raises an error if the field has invalid associations" do
+      field = described_class.new(Vm, %w(foo bar), "name")
+      expect { field.reflections }.to raise_error(/One or more associations are invalid: foo, bar/)
+    end
+  end
+
   describe "#date?" do
     it "returns true for fields of column type :date" do
       field = described_class.new(Vm, [], "retires_on")

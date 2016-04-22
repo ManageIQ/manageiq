@@ -33,11 +33,21 @@ class MiqExpression::Field
     column_type == :string
   end
 
+  def reflections
+    klass = model
+    associations.collect do |association|
+      klass.reflect_on_association(association).tap do |reflection|
+        raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
+        klass = reflection.klass
+      end
+    end
+  end
+
   def target
     if associations.none?
       model
     else
-      associations.last.classify.constantize
+      reflections.last.klass
     end
   end
 
