@@ -27,8 +27,6 @@ module ManageIQ::Providers
         get_tags
         _log.info("#{log_header}...Complete")
 
-        link_volumes_to_base_snapshots
-
         @data
       end
 
@@ -36,7 +34,12 @@ module ManageIQ::Providers
 
       def get_availability_zones
         # cannot get availability zones from provider; create a default one
-        a_zones = [::Fog::Model.new(:name => @ems.name, :id => 'default')]
+        default_zone = ::Fog::Model.new()
+        {:name => @ems.name, :id => 'default'}.each do |method, value|
+          default_zone.define_singleton_method(method) { value }
+        end
+
+        a_zones = [default_zone]
         process_collection(a_zones, :availability_zones) { |az| parse_az(az) }
       end
 
@@ -63,9 +66,8 @@ module ManageIQ::Providers
       def parse_az(az)
         id = az.id.downcase
 
-        type = ManageIQ::Providers::SoftLayer::CloudManager::AvailabilityZone
         new_result = {
-          :type    => type,
+          :type    => "ManageIQ::Providers::SoftLayer::CloudManager::AvailabilityZone",
           :ems_ref => id,
           :name    => az.name,
         }
@@ -75,19 +77,18 @@ module ManageIQ::Providers
       def parse_flavor(flavor)
         uid = flavor.id
 
-        disk_size = flavor.disks.inject(0) do |sum, disk|
+        disk_size = flavor.disk.inject(0) do |sum, disk|
           sum + disk["diskImage"]["capacity"]
         end
 
-        type = ManageIQ::Providers::SoftLayer::CloudManager::Flavor
         new_result = {
-          :type           => type,
+          :type           => "ManageIQ::Providers::SoftLayer::CloudManager::Flavor",
           :ems_ref        => flavor.id,
           :name           => flavor.id,
           :description    => flavor.name,
           :cpus           => flavor.cpu,
           :cpu_cores      => flavor.cpu,
-          :memory         => flavor.ram,
+          :memory         => flavor.ram * 1.megabyte,
           :root_disk_size => disk_size
         }
 
@@ -95,15 +96,14 @@ module ManageIQ::Providers
       end
 
       def parse_image(image)
-        uid    = image.id
-        type   = ManageIQ::Providers::SoftLayer::CloudManager::Template
+        uid    = image.id.to_s
 
         new_result = {
-          :type               => type,
+          :type               => "ManageIQ::Providers::SoftLayer::CloudManager::Template",
           :uid_ems            => image.id,
           :ems_ref            => image.id,
           :name               => image.name,
-          :vendor             => "softlayer",
+          :vendor             => "soft_layer",
           :template           => true,
           :publicly_available => image.public?,
         }
@@ -113,16 +113,14 @@ module ManageIQ::Providers
 
       def parse_instance(instance)
         # TODO: mapping is not complete and valid
-        uid = instance.id
+        uid = instance.id.to_s
 
-        type = ManageIQ::Providers::SoftLayer::CloudManager::Vm
         new_result = {
-          :type              => type,
-          :uid_ems           => instance.id,
-          :ems_ref           => instance.id,
+          :type              => "ManageIQ::Providers::SoftLayer::CloudManager::Vm",
+          :uid_ems           => uid,
+          :ems_ref           => uid,
           :name              => instance.name,
-          :description       => instance.description,
-          :vendor            => "softlayer",
+          :vendor            => "soft_layer",
           :raw_power_state   => instance.state,
           :flavor            => instance.flavor_id,
           :operating_system  => instance.os_code,
