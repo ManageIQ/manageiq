@@ -1,4 +1,4 @@
-# ManageIQ Devel Docker Build
+# ManageIQ Docker Appliance
 
 This image provides ManageIQ using the official Centos7 dockerhub build as a base along with PostgreSQL.
 
@@ -11,7 +11,7 @@ It needs to be initiated from the root directory of the manageiq git repository
 docker build -t manageiq .
 ```
 
-It has been tested and validated under docker-1.10 (Fedora23) and 1.8.2 (Centos7)
+The image has been tested and validated under docker-1.10 (Fedora23) and 1.8.2 (Centos7)
 
 
 ## Run
@@ -20,9 +20,9 @@ It has been tested and validated under docker-1.10 (Fedora23) and 1.8.2 (Centos7
 
 The first time you run the container, it will initialize the database, **please allow 2-4 mins** for MIQ to respond.
 ```
-docker run --privileged -di -p 3000:3000 -p 4000:4000 -p 5900-5999:5900-5999 manageiq
+docker run --privileged -di -p 80:80 -p 443:443 manageiq
 ```
-please note you can ommit some ports from the run command if you don't need to use them
+Please note you can ommit some ports from the run command if you don't need to use them
 
 
 ### On Atomic host
@@ -39,7 +39,7 @@ atomic uninstall -n <name> manageiq
 
 ### On standard distribution
 ```
-docker run --privileged -di -p 3000:3000 -p 4000:4000 -p 5900-5999:5900-5999 docker.io/manageiq/manageiq
+docker run --privileged -di -p 80:80 -p 443:443 docker.io/manageiq/manageiq
 ```
 
 ### On Atomic host
@@ -51,12 +51,12 @@ atomic run docker.io/manageiq/manageiq
 Note due to resource limitations you can not run more than a single container of manageiq on the same Atomic host
 
 ## Access
-The web interface is exposed at port 3000. Default login credentials.
+The web interface is exposed at port 443. Default login credentials.
 
 Point your web browser to :
 
 ```
-http://<your-ip-address>:3000
+https://<your-ip-address>
 ```
 
 For console access, please use docker exec from docker host :
