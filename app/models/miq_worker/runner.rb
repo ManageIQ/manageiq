@@ -448,9 +448,9 @@ class MiqWorker::Runner
   end
 
   def ruby_object_usage
-    types = Hash.new { |h, k| h[k] = Hash.new(0) }
+    types = Hash.new { |h, k| h[k] = 0 }
     ObjectSpace.each_object do |obj|
-      types[obj.class][:count] += 1
+      types[obj.class.name] += 1
     end
     types
   end
@@ -464,7 +464,7 @@ class MiqWorker::Runner
 
     if (@last_ruby_object_usage + LOG_RUBY_OBJECT_USAGE_INTERVAL) < t
       types = ruby_object_usage
-      $log.info("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
+      _log.info("Ruby Object Usage: #{types.sort_by { |_k, v| -v }.take(top).inspect}")
       @last_ruby_object_usage = t
     end
   end
