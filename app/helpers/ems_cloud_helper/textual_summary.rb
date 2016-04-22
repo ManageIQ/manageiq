@@ -4,7 +4,7 @@ module EmsCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(provider_region hostname ipaddress type port guid)
+    %i(provider_region hostname ipaddress type port guid keystone_v3_domain_id)
   end
 
   def textual_group_relationships
@@ -30,6 +30,12 @@ module EmsCloudHelper::TextualSummary
     return nil if @ems.provider_region.nil?
     label_val = (@ems.type.include? "Google") ? _("Preferred Region") : _("Region")
     {:label => label_val, :value => @ems.description}
+  end
+
+  def textual_keystone_v3_domain_id
+    return nil if !@ems.respond_to?(:keystone_v3_domain_id) || @ems.keystone_v3_domain_id.nil?
+    label_val = _("Keystone V3 Domain ID")
+    {:label => label_val, :value => @ems.keystone_v3_domain_id}
   end
 
   def textual_hostname

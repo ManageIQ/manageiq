@@ -151,6 +151,7 @@ module Mixins
       metrics_userid = ""
       metrics_hostname = ""
       metrics_port = ""
+      keystone_v3_domain_id = ""
 
       if @ems.connection_configurations.amqp.try(:endpoint)
         amqp_hostname = @ems.connection_configurations.amqp.endpoint.hostname
@@ -171,6 +172,10 @@ module Mixins
       end
       if @ems.has_authentication_type?(:metrics)
         metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
+      end
+
+      if @ems.respond_to?(:keystone_v3_domain_id)
+        keystone_v3_domain_id = @ems.keystone_v3_domain_id
       end
 
       @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
@@ -210,6 +215,7 @@ module Mixins
                        :amqp_userid                     => amqp_userid,
                        :service_account                 => service_account ? service_account : "",
                        :azure_tenant_id                 => azure_tenant_id ? azure_tenant_id : "",
+                       :keystone_v3_domain_id           => keystone_v3_domain_id,
                        :subscription                    => subscription ? subscription : "",
                        :client_id                       => client_id ? client_id : "",
                        :client_key                      => client_key ? client_key : "",
@@ -236,6 +242,7 @@ module Mixins
                        :amqp_userid                 => amqp_userid,
                        :ssh_keypair_userid          => ssh_keypair_userid,
                        :metrics_userid              => metrics_userid,
+                       :keystone_v3_domain_id       => keystone_v3_domain_id,
                        :emstype_vm                  => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
                        :host_default_vnc_port_start => host_default_vnc_port_start ? host_default_vnc_port_start : "",
                        :host_default_vnc_port_end   => host_default_vnc_port_end ? host_default_vnc_port_end : "",
@@ -276,12 +283,14 @@ module Mixins
       if ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
         amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
+        ems.keystone_v3_domain_id = params[:keystone_v3_domain_id]
       end
 
       if ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
         amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
         ssh_keypair_endpoint = {:role => :ssh_keypair}
+        ems.keystone_v3_domain_id = params[:keystone_v3_domain_id]
       end
 
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager)
@@ -379,26 +388,29 @@ module Mixins
     def construct_edit_for_audit(ems)
       @edit ||= {}
       ems.kind_of?(ManageIQ::Providers::Azure::CloudManager) ? azure_tenant_id = ems.azure_tenant_id : azure_tenant_id = nil
-      @edit[:current] = {:name              => ems.name,
-                         :provider_region   => ems.provider_region,
-                         :hostname          => ems.hostname,
-                         :azure_tenant_id   => azure_tenant_id,
-                         :subscription      => ems.subscription,
-                         :port              => ems.port,
-                         :api_version       => ems.api_version,
-                         :security_protocol => ems.security_protocol,
-                         :provider_id       => ems.provider_id,
-                         :zone              => ems.zone
+      @edit[:current] = {
+        :name                  => ems.name,
+        :provider_region       => ems.provider_region,
+        :hostname              => ems.hostname,
+        :azure_tenant_id       => azure_tenant_id,
+        :keystone_v3_domain_id => ems.respond_to?(:keystone_v3_domain_id) ? ems.keystone_v3_domain_id : nil,
+        :subscription          => ems.subscription,
+        :port                  => ems.port,
+        :api_version           => ems.api_version,
+        :security_protocol     => ems.security_protocol,
+        :provider_id           => ems.provider_id,
+        :zone                  => ems.zone
       }
-      @edit[:new] = {:name              => params[:name],
-                     :provider_region   => params[:provider_region],
-                     :hostname          => params[:hostname],
-                     :azure_tenant_id   => params[:azure_tenant_id],
-                     :port              => params[:port],
-                     :api_version       => params[:api_version],
-                     :security_protocol => params[:default_security_protocol],
-                     :provider_id       => params[:provider_id],
-                     :zone              => params[:zone]
+      @edit[:new] = {:name                  => params[:name],
+                     :provider_region       => params[:provider_region],
+                     :hostname              => params[:hostname],
+                     :azure_tenant_id       => params[:azure_tenant_id],
+                     :keystone_v3_domain_id => params[:keystone_v3_domain_id],
+                     :port                  => params[:port],
+                     :api_version           => params[:api_version],
+                     :security_protocol     => params[:default_security_protocol],
+                     :provider_id           => params[:provider_id],
+                     :zone                  => params[:zone]
       }
     end
   end

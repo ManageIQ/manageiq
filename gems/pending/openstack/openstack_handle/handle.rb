@@ -127,6 +127,10 @@ module OpenstackHandle
       @ssl_options
     end
 
+    def domain_id
+      @extra_options[:domain_id]
+    end
+
     def browser_url
       "http://#{address}/dashboard"
     end
@@ -135,8 +139,7 @@ module OpenstackHandle
       opts     = options.dup
       service  = (opts.delete(:service) || "Compute").to_s.camelize
       tenant   = opts.delete(:tenant_name)
-      # TODO(lsmola) figure out from where to take the project name and domain name
-      domain   = opts.delete(:domain_name) || 'admin_domain'
+      domain   = domain_id
 
       # Do not send auth_type to fog, it throws warning
       opts.delete(:auth_type)
@@ -151,7 +154,8 @@ module OpenstackHandle
         # For identity ,there is only domain scope, with project_name nil
         opts[:openstack_project_name] = @project_name = tenant
       end
-      opts[:openstack_domain_name]  = domain
+      
+      opts[:openstack_domain_id] = domain
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin

@@ -118,6 +118,17 @@
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
 
+    .form-group{"ng-class" => "{'has-error': angularForm.keystone_v3_domain_id.$invalid}", "ng-if" => "emsCommonModel.api_version == 'v3' && (emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra')"}
+      %label.col-md-2.control-label{"for" => "textInput-markup"}
+        = _('Keystone V3 Domain ID')
+      .col-md-8
+        %input.form-control{"type"        => "text",
+                            "id"          => "textInput-markup",
+                            "name"        => "keystone_v3_domain_id",
+                            "ng-model"    => "emsCommonModel.keystone_v3_domain_id",
+                            "required"    => true,
+                            "checkchange" => ""}
+
     .form-group{"ng-class" => "{'has-error': angularForm.provider_id.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' && emsCommonModel.openstack_infra_providers_exist"}
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = _("Openstack Infra Provider")
