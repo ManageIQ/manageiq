@@ -80,7 +80,7 @@ module CloudTenantHelper::TextualSummary
   end
 
   def textual_cloud_object_store_containers
-    label = ui_lookup(:tables => "cloud_object_store")
+    label = ui_lookup(:tables => "cloud_object_store_container")
     num   = @record.number_of(:cloud_object_store_containers)
     h     = {:label => label, :image => "cloud_object_store_container", :value => num}
     if num > 0 && role_allows(:feature => "cloud_object_store_container_show_list")

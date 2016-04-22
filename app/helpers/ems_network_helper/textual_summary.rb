@@ -30,7 +30,7 @@ module EmsNetworkHelper::TextualSummary
   #
   def textual_provider_region
     return nil if @ems.provider_region.nil?
-    {:label => "Region", :value => @ems.description}
+    {:label => _("Region"), :value => @ems.description}
   end
 
   def textual_hostname
@@ -39,7 +39,7 @@ module EmsNetworkHelper::TextualSummary
 
   def textual_ipaddress
     return nil if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
-    {:label => "Discovered IP Address", :value => @ems.ipaddress}
+    {:label => _("Discovered IP Address"), :value => @ems.ipaddress}
   end
 
   def textual_type
@@ -47,11 +47,11 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_port
-    @ems.supports_port? ? {:label => "API Port", :value => @ems.port} : nil
+    @ems.supports_port? ? {:label => _("API Port"), :value => @ems.port} : nil
   end
 
   def textual_guid
-    {:label => "Management Engine GUID", :value => @ems.guid}
+    {:label => _("Management Engine GUID"), :value => @ems.guid}
   end
 
   def textual_parent_ems_cloud
@@ -91,7 +91,7 @@ module EmsNetworkHelper::TextualSummary
 
   def textual_authentications
     authentications = @ems.authentication_for_summary
-    return [{:label => "Default Authentication", :title => "None", :value => "None"}] if authentications.blank?
+    return [{:label => _("Default Authentication"), :title => _("None"), :value => _("None")}] if authentications.blank?
 
     authentications.collect do |auth|
       label =
@@ -100,10 +100,12 @@ module EmsNetworkHelper::TextualSummary
         when "metrics" then "C & U Database"
         when "amqp"    then "AMQP"
         else
-          "<Unknown>"
+          _("<Unknown>")
         end
 
-      {:label => "#{label} Credentials", :value => auth[:status] || "None", :title => auth[:status_details]}
+      {:label => _("%{auth_type} Credentials") % {:auth_type => label},
+       :value => auth[:status] || _("None"),
+       :title => auth[:status_details]}
     end
   end
 
@@ -111,10 +113,10 @@ module EmsNetworkHelper::TextualSummary
     last_refresh_status = @ems.last_refresh_status.titleize
     if @ems.last_refresh_date
       last_refresh_date = time_ago_in_words(@ems.last_refresh_date.in_time_zone(Time.zone)).titleize
-      last_refresh_status << " - #{last_refresh_date} Ago"
+      last_refresh_status << _(" -%{last_refresh_date} Ago") % {:last_refresh_date => last_refresh_date}
     end
     {
-      :label => "Last Refresh",
+      :label => _("Last Refresh"),
       :value => [{:value => last_refresh_status},
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
@@ -122,13 +124,13 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_topology
-    {:label => N_('Topology'),
+    {:label => _('Topology'),
      :image => 'topology',
      :link  => url_for(:controller => 'network_topology', :action => 'show', :id => @ems.id),
-     :title => N_("Show topology")}
+     :title => _("Show topology")}
   end
 
   def textual_zone
-    {:label => "Managed by Zone", :image => "zone", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
   end
 end

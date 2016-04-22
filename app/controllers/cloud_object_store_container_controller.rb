@@ -6,7 +6,7 @@ class CloudObjectStoreContainerController < ApplicationController
   after_action :set_session_data
 
   def breadcrumb_name(_model)
-    ui_lookup(:tables => "cloud_object_stores")
+    ui_lookup(:tables => "cloud_object_store_container")
   end
 
   def index

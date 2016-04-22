@@ -143,7 +143,7 @@
     - keys = [:instance_type, :number_of_cpus, :number_of_sockets, :cores_per_socket,
               :vm_memory, :network_adapters, :disk_format, :guest_access_key_pair, :monitoring,
               :vm_dynamic_memory, :vm_minimum_memory, :vm_maximum_memory, :boot_disk_size]
-    - label = wf.kind_of?(ManageIQ::Providers::CloudManager::ProvisionWorkflow) ? "Properties" : "Hardware"
+    - label = wf.kind_of?(ManageIQ::Providers::CloudManager::ProvisionWorkflow) ? _("Properties") : _("Hardware")
     = render(:partial => "/miq_request/prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,
