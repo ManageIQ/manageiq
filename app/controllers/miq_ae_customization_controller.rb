@@ -61,7 +61,7 @@ class MiqAeCustomizationController < ApplicationController
         add_flash(_("Error during upload: one of the DialogField types is not supported"), :error)
       end
     end
-
+    get_node_info
     replace_right_cell(x_node)
   end
 
@@ -79,7 +79,7 @@ class MiqAeCustomizationController < ApplicationController
       dialog_import_service.cancel_import(params[:import_file_upload_id])
       add_flash(_("Service dialog import cancelled"), :success)
     end
-
+    get_node_info
     replace_right_cell(x_node)
   end
 
@@ -218,7 +218,7 @@ class MiqAeCustomizationController < ApplicationController
       presenter[:clear_tree_cookies] = "edit_treeOpenStatex"
     end
     rebuild_toolbars(presenter)
-    get_node_info
+
     setup_presenter_based_on_active_tree(nodetype, presenter)
     set_right_cell_text(presenter)
     handle_bottom_cell(presenter)
