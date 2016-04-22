@@ -55,15 +55,16 @@ module Openstack
       ems.reload
     end
 
-    def setup_ems(hostname, password, port = 5000, userid = "admin", version = "v2")
+    def setup_ems(hostname, password, port = 5000, userid = "admin", version = "v2", keystone_v3_domain_id = nil)
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_openstack,
-                                :zone              => zone,
-                                :hostname          => hostname,
-                                :ipaddress         => hostname,
-                                :port              => port,
-                                :api_version       => version,
-                                :security_protocol => 'no_ssl')
+                                :zone                  => zone,
+                                :hostname              => hostname,
+                                :ipaddress             => hostname,
+                                :port                  => port,
+                                :api_version           => version,
+                                :security_protocol     => 'no_ssl',
+                                :keystone_v3_domain_id => keystone_v3_domain_id)
       @ems.update_authentication(:default => {:userid => userid, :password => password})
     end
   end
