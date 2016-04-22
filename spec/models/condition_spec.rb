@@ -20,42 +20,42 @@ describe Condition do
 
       it "valid expression" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to be_truthy
+        expect(Condition.subst(expr, @cluster)).to be_truthy
       end
 
       it "has_one support" do
         expr = "<find><search><value ref=vm, type=string>/virtual/host/name</value> == 'XXX'</search><check mode=count><count> == 1</check></find>"
-        expect(Condition.subst(expr, @vm1, nil)).to be_truthy
+        expect(Condition.subst(expr, @vm1)).to be_truthy
       end
 
       it "invalid expression should not raise security error because it is now parsed and not evaluated" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 2; system('ls /etc')</check></find>"
-        expect { Condition.subst(expr, @cluster, nil) }.not_to raise_error
+        expect { Condition.subst(expr, @cluster) }.not_to raise_error
       end
 
       it "tests all allowed operators in find/check expression clause" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> == 0</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to eq('false')
+        expect(Condition.subst(expr, @cluster)).to eq('false')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> > 0</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to eq('true')
+        expect(Condition.subst(expr, @cluster)).to eq('true')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> >= 0</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to eq('true')
+        expect(Condition.subst(expr, @cluster)).to eq('true')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'true'</search><check mode=count><count> < 0</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to eq('false')
+        expect(Condition.subst(expr, @cluster)).to eq('false')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> <= 0</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to eq('false')
+        expect(Condition.subst(expr, @cluster)).to eq('false')
 
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> != 0</check></find>"
-        expect(Condition.subst(expr, @cluster, nil)).to eq('true')
+        expect(Condition.subst(expr, @cluster)).to eq('true')
       end
 
       it "rejects and expression with an illegal operator" do
         expr = "<find><search><value ref=emscluster, type=boolean>/virtual/vms/active</value> == 'false'</search><check mode=count><count> !! 0</check></find>"
-        expect { expect(Condition.subst(expr, @cluster, nil)).to eq('false') }.to raise_error(RuntimeError, "Illegal operator, '!!'")
+        expect { expect(Condition.subst(expr, @cluster)).to eq('false') }.to raise_error(RuntimeError, "Illegal operator, '!!'")
       end
     end
 
@@ -68,12 +68,12 @@ describe Condition do
 
       it "string type registry key data is single quoted" do
         expr = "<registry>#{@reg_string.name}</registry>"
-        expect(Condition.subst(expr, @vm, nil)).to eq('"y"')
+        expect(Condition.subst(expr, @vm)).to eq('"y"')
       end
 
       it "numerical type registry key data is single quoted" do
         expr = "<registry>#{@reg_num.name}</registry>"
-        expect(Condition.subst(expr, @vm, nil)).to eq('"0"')
+        expect(Condition.subst(expr, @vm)).to eq('"0"')
       end
     end
   end
