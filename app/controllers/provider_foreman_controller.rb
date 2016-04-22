@@ -231,8 +231,14 @@ class ProviderForemanController < ApplicationController
     @display = params[:display] || "main"
     @lastaction = "show"
     @showtype = "config"
-    @record =
-      find_record(configuration_profile_record? ? ConfigurationProfile : ConfiguredSystem, id || params[:id])
+    if configuration_profile_record?
+    @record = find_record(ConfigurationProfile, id || params[:id])
+    elsif inventory_group_record?
+      find_record(InventoryRootGroup, id || params[:id])
+    else
+      find_record(ConfiguredSystem, id || params[:id])
+    end
+
     return if record_no_longer_exists?(@record)
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
@@ -302,12 +308,12 @@ class ProviderForemanController < ApplicationController
 
   def x_show
     @explorer = true
-    tree_record unless unassigned_configuration_profile?(params[:id]) || unassigned_inventory_folder?(params[:id])
+    tree_record unless unassigned_configuration_profile?(params[:id]) || unassigned_inventory_group?(params[:id])
 
     respond_to do |format|
       format.js do
         unless @record
-          check_for_unassigned_configuration_profile
+          check_for_unassigned_configuration_profile_or_inventory_group
           return
         end
         params[:id] = x_build_node_id(@record)  # Get the tree node id
@@ -330,9 +336,9 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def check_for_unassigned_configuration_profile
+  def check_for_unassigned_configuration_profile_or_inventory_group
     if action_name == "x_show"
-      unassigned_configuration_profile?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
+      unassigned_configuration_profile?(params[:id])|| unassigned_inventory_group?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
     elsif action_name == "tree_select"
       tree_select_unprovisioned_configured_system
     else
@@ -352,13 +358,16 @@ class ProviderForemanController < ApplicationController
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
-    when "e"    then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-    when "cp"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+    when "root"    then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "e"       then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when "f"       then find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
+    when "cp"      then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     when "xx" then
       case nodes.second
       when "at", "fr"   then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
       when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
+      when "at_e"       then find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
+      when "fr_e"       then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
       end
     end
   end
@@ -482,6 +491,8 @@ class ProviderForemanController < ApplicationController
       provider_list(id, model)
     when "ConfigurationProfile"
       configuration_profile_node(id, model)
+    when "EmsFolder"
+      inventory_group_node(id, model)
     when "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ConfiguredSystem"
       configured_system_list(id, model)
     when "MiqSearch"
@@ -489,6 +500,8 @@ class ProviderForemanController < ApplicationController
     else
       if unassigned_configuration_profile?(treenodeid)
         configuration_profile_node(id, model)
+      elsif unassigned_inventory_group?(treenodeid)
+        inventory_group_node(id, model)
       else
         default_node
       end
@@ -571,6 +584,38 @@ class ProviderForemanController < ApplicationController
           {:name  => @configuration_profile_record.name,
            :model => record_model
           }
+      end
+    end
+  end
+
+  def inventory_group_node(id, model)
+    if model
+      @record = @inventory_group_record = find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id)
+    else
+      @record = @inventory_group_record = ManageIQ::Providers::ConfigurationManager::InventoryGroup.new
+    end
+    if @inventory_group_record.nil?
+      self.x_node = "root"
+      get_node_info("root")
+      return
+    else
+      options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
+      options[:where_clause] = ["inventory_root_group_id IN (?)", from_cid(@inventory_group_record.id)]
+      options[:where_clause] =
+        ["manager_id IN (?) AND \
+          inventory_root_group_id IS NULL", from_cid(id)] if empty_inventory_group_record?(@inventory_group_record)
+      process_show_list(options)
+      record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+      if @sb[:active_tab] == 'configured_systems'
+        inventory_group_right_cell_text(model)
+      else
+        @showtype = 'main'
+        @pages = nil
+        @right_cell_text =
+          _("%{model} \"%{name}\"") %
+            {:name  => @inventory_group_record.name,
+             :model => record_model
+            }
       end
     end
   end
@@ -713,6 +758,11 @@ class ProviderForemanController < ApplicationController
     type && ["ConfigurationProfile"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
+  def inventory_group_record?(node = x_node)
+    type, _id = node.split("_").last.split("-")
+    type && ["EmsFolder"].include?(TreeBuilder.get_model_for_prefix(type))
+  end
+
   def foreman_provider_record?(node = x_node)
     node = node.split("-").last if node.split("-").first == 'xx'
     type, _id = node.split("-")
@@ -773,6 +823,10 @@ class ProviderForemanController < ApplicationController
       presenter.hide(:form_buttons_div)
       presenter.update(:main_div, r[:partial => "configuration_profile",
                                     :locals  => {:controller => 'provider_foreman'}])
+    elsif valid_inventory_group_record?(@inventory_group_record)
+      presenter.hide(:form_buttons_div)
+      presenter.update(:main_div, r[:partial => "inventory_group",
+                                    :locals  => {:controller => 'provider_foreman'}])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
     end
@@ -811,7 +865,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def rebuild_toolbars(record_showing, presenter)
-    if configuration_profile_summary_tab_selected?
+    if configuration_profile_summary_tab_selected? || inventory_group_summary_tab_selected?
       center_tb = "blank_view_tb"
       record_showing = true
     end
@@ -856,6 +910,10 @@ class ProviderForemanController < ApplicationController
     @configuration_profile_record && @sb[:active_tab] == 'summary'
   end
 
+  def inventory_group_summary_tab_selected?
+    @inventory_record && @sb[:active_tab] == 'summary'
+  end
+
   def construct_edit
     @edit ||= {}
     @edit[:current] = {:name       => @provider_cfgmgmt.name,
@@ -895,8 +953,8 @@ class ProviderForemanController < ApplicationController
   end
 
   def active_tab_configured_systems?
-    (%w(x_show x_search_by_name).include?(action_name) && configuration_profile_record?) ||
-      unassigned_configuration_profile?(x_node)
+    (%w(x_show x_search_by_name).include?(action_name) && (configuration_profile_record? || inventory_group_record?)) ||
+      (unassigned_configuration_profile?(x_node) || unassigned_inventory_group?(x_node))
   end
 
   def unassigned_configuration_profile?(node)
@@ -925,7 +983,7 @@ class ProviderForemanController < ApplicationController
   def list_row_image(_image, item = nil)
     # Unassigned Profiles Group
     if item.kind_of?(ConfigurationProfile) && empty_configuration_profile_record?(item)
-      '100/folder.png'
+      'folder'
     else
       super
     end
@@ -976,7 +1034,7 @@ class ProviderForemanController < ApplicationController
     @grid_hash = view_to_hash(@view)
   end
 
-  def unassigned_inventory_group(node)
+  def unassigned_inventory_group?(node)
     _type, _pid, nodeinfo = node.split("_").last.split("-")
     nodeinfo == "unassigned"
   end
@@ -996,7 +1054,7 @@ class ProviderForemanController < ApplicationController
       @right_cell_text = _("%{model} under %{record_model} \"%{name}\"") %
         {:model        => ui_lookup(:tables => "configured_system"),
          :record_model => record_model,
-         :name         => @inventory_group.name}
+         :name         => @inventory_group_record.name}
     else
       @right_cell_text = _("%{model} under Unassigned Inventory Group") %
         {:model => ui_lookup(:tables => "configured_system")}

@@ -197,4 +197,33 @@ module ProviderForemanHelper
      :value => @record.configuration_organizations.collect(&:name).join(", ")
     }
   end
+
+  def textual_inventory_group_properties
+    %i(inventory_group_name
+       inventory_group_region)
+  end
+
+  def textual_inventory_group_name
+    {:label => _("Name"), :value => @record.name}
+  end
+
+  def textual_inventory_group_region
+    {:label => _("Region"), :value => @record.region_description}
+  end
+
+  def textual_inventory_group_architecture
+    {:label => _("Architecture"), :value => @record.configuration_architecture_name}
+  end
+
+  def textual__inventory_group_oos
+    {:label => _("OS"), :value => @record.operating_system_flavor_name}
+  end
+
+  def textual_inventory_group_medium
+    {:label => _("Medium"), :value => @record.customization_script_medium_name}
+  end
+
+  def textual_inventory_group_partition_table
+    {:label => _("Partition Table"), :value => @record.customization_script_ptable_name}
+  end
 end

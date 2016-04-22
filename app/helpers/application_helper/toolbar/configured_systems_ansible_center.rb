@@ -1,4 +1,4 @@
-class ApplicationHelper::Toolbar::ConfiguredSystemAnsibletowerCenter < ApplicationHelper::Toolbar::Basic
+class ApplicationHelper::Toolbar::ConfiguredSystemsAnsibleCenter < ApplicationHelper::Toolbar::Basic
   button_group('provider_foreman_policy', [
     select(
       :provider_foreman_policy_choice,
