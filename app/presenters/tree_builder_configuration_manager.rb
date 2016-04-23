@@ -115,7 +115,7 @@ class TreeBuilderConfigurationManager < TreeBuilder
       when "fr" then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"),
                                            :match_via_descendants => ConfiguredSystem)
       when "at" then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"),
-                                             :match_via_descendants => ConfiguredSystem)
+                                           :match_via_descendants => ConfiguredSystem)
       end
     count_only_or_objects(count_only, objects, "name")
   end
