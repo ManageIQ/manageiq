@@ -130,7 +130,6 @@ module ManageIQ::Providers
       end
 
       def parse_instance(instance)
-        # TODO: mapping is not complete and valid
         uid = instance.id.to_s
 
         new_result = {
@@ -149,12 +148,13 @@ module ManageIQ::Providers
             :cpu_total_cores      => instance.cpu,
             :cpu_cores_per_socket => 1,
             :memory_mb            => instance.ram,
-            :disks                => [], # TODO: populate
+            :disks                => [], # NOTE: Populated below
             :networks             => [], # TODO: populate
           }
         }
 
         populate_key_pairs_with_ssh_keys(new_result[:key_pairs], instance)
+        populate_hardware_hash_with_disks(new_result[:hardware][:disks], instance)
 
         return uid, new_result
       end
@@ -166,6 +166,23 @@ module ManageIQ::Providers
         end
       end
 
+      def populate_hardware_hash_with_disks(hardware_disks_array, instance)
+        # TODO: Prepared to discover instance disks once fog-softlayer allows to discover their size
+        instance.disk.each do |attached_disk|
+          d = @data_index.fetch_path(:cloud_volumes, attached_disk["diskImageId"])
+          next if d.nil?
+
+          disk_size     = d[:size]
+          disk_name     = [attached_disk["deviceName"], attached_disk["device"]].join(" ")
+          disk_location = attached_disk["device"]
+
+          disk = add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
+        end
+      end
+
+      def add_instance_disk(disks, size, location, name)
+        super(disks, size, location, name, "soft_layer")
+      end
     end
   end
 end
