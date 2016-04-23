@@ -357,17 +357,28 @@ class ProviderForemanController < ApplicationController
 
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
+    type, id = x_node.split("_").last.split("-")
     case nodes.first
     when "root"    then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
     when "e"       then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-    when "f"       then find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
+    when "f"       then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
     when "cp"      then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     when "xx" then
       case nodes.second
       when "at", "fr"   then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
       when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
-      when "at_e"       then find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
-      when "fr_e"       then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+      when "at_e" then
+        if type == "f"
+          find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
+        else
+          find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
+        end
+        when "fr_e" then
+          if type == "cp"
+            find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+          else
+            find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+          end
       end
     end
   end
@@ -1051,7 +1062,7 @@ class ProviderForemanController < ApplicationController
     record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
     return if @sb[:active_tab] != 'configured_systems'
     if valid_inventory_group_record?(@inventory_group_record)
-      @right_cell_text = _("%{model} under %{record_model} \"%{name}\"") %
+      @right_cell_text = _("%{model} under Inventory Group \"%{name}\"") %
         {:model        => ui_lookup(:tables => "configured_system"),
          :record_model => record_model,
          :name         => @inventory_group_record.name}
