@@ -21,6 +21,7 @@ module ManageIQ::Providers
 
         _log.info("#{log_header}...")
         get_flavors
+        get_key_pairs
         get_availability_zones
         get_images
         get_instances
@@ -46,6 +47,11 @@ module ManageIQ::Providers
       def get_flavors
         flavors = @compute.flavors.all
         process_collection(flavors, :flavors) { |flavor| parse_flavor(flavor) }
+      end
+
+      def get_key_pairs
+        kps = @compute.key_pairs.all
+        process_collection(kps, :key_pairs) { |kp| parse_key_pair(kp) }
       end
 
       def get_images
@@ -95,6 +101,18 @@ module ManageIQ::Providers
         return uid, new_result
       end
 
+      def parse_key_pair(kp)
+        uid = kp.id
+
+        new_result = {
+          :type        => "ManageIQ::Providers::SoftLayer::CloudManager::AuthKeyPair",
+          :name        => kp.label,
+          :fingerprint => kp.key
+        }
+
+        return uid, new_result
+      end
+
       def parse_image(image)
         uid    = image.id
 
@@ -125,6 +143,7 @@ module ManageIQ::Providers
           :flavor            => instance.flavor_id,
           :operating_system  => { :product_name => instance.os_code },
           :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
+          :key_pairs         => [], # NOTE: Populated below
           :hardware          => {
             :cpu_sockets          => instance.cpu,
             :cpu_total_cores      => instance.cpu,
@@ -135,8 +154,18 @@ module ManageIQ::Providers
           }
         }
 
+        populate_key_pairs_with_ssh_keys(new_result[:key_pairs], instance)
+
         return uid, new_result
       end
+
+      def populate_key_pairs_with_ssh_keys(result_key_pairs, instance)
+        instance.key_pairs.each do |instance_key|
+          kp = @data_index.fetch_path(:key_pairs, instance_key.id)
+          result_key_pairs << kp unless kp.nil?
+        end
+      end
+
     end
   end
 end
