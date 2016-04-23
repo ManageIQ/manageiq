@@ -1116,49 +1116,6 @@ describe MiqExpression do
   end
 
   context "Date/Time Support" do
-    context "Testing expression conversion human with static dates and times" do
-      it "should generate the correct human expression with an expression having static dates and times with no time zone" do
-        exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        expect(exp.to_human).to eq('VM and Instance : Retires On AFTER "2011-01-10"')
-
-        exp = MiqExpression.new(">" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        expect(exp.to_human).to eq('VM and Instance : Retires On > "2011-01-10"')
-
-        exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        expect(exp.to_human).to eq('VM and Instance : Retires On BEFORE "2011-01-10"')
-
-        exp = MiqExpression.new("<" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        expect(exp.to_human).to eq('VM and Instance : Retires On < "2011-01-10"')
-
-        exp = MiqExpression.new(">=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        expect(exp.to_human).to eq('VM and Instance : Retires On >= "2011-01-10"')
-
-        exp = MiqExpression.new("<=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        expect(exp.to_human).to eq('VM and Instance : Retires On <= "2011-01-10"')
-
-        exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time AFTER "2011-01-10 9:00"')
-
-        exp = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time > "2011-01-10 9:00"')
-
-        exp = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-        expect(exp.to_human).to eq('VM and Instance : Retires On IS "2011-01-10"')
-
-        exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]})
-        expect(exp.to_human).to eq('VM and Instance : Retires On FROM "2011-01-09" THROUGH "2011-01-10"')
-
-        exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["01/09/2011", "01/10/2011"]})
-        expect(exp.to_human).to eq('VM and Instance : Retires On FROM "01/09/2011" THROUGH "01/10/2011"')
-
-        exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 8:00", "2011-01-10 17:00"]})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time FROM "2011-01-10 8:00" THROUGH "2011-01-10 17:00"')
-
-        exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time FROM "2011-01-10 00:00" THROUGH "2011-01-10 00:00"')
-      end
-    end
-
     context "Testing expression conversion to ruby with relative dates and times" do
       before(:each) do
         Timecop.freeze("2011-01-11 17:30 UTC")
@@ -1244,7 +1201,7 @@ describe MiqExpression do
   end
 
   describe ".to_human" do
-    context "expression atoms that do/don't have alias keys" do
+    context "generates string representation of expression atoms that do/don't have alias keys" do
       it "FIELD type" do
         exp = MiqExpression.new(">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes"})
         expect(exp.to_human).to eq('VM and Instance : Allocated Disk Storage > 5 MB')
@@ -1255,16 +1212,18 @@ describe MiqExpression do
       end
 
       it "FIND/CHECK type" do
-        exp = MiqExpression.new({"FIND" => {
-          "search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name", "value" => "X"}},
-          "checkall" => {"="           => {"field" => "Vm.advanced_settings-read_only", "value" => "true"}}}})
+        exp = MiqExpression.new("FIND" => {"search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name",
+                                                                            "value" => "X"}},
+                                           "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
+                                                                  "value" => "true"}}})
         expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : '\
           'Name STARTS WITH "X" CHECK ALL Read Only = "true"')
 
-        exp = MiqExpression.new({"FIND" => {
-          "search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name", "value" => "X",
-                                           "alias" => "Settings Name"}},
-          "checkall" => {"="           => {"field" => "Vm.advanced_settings-read_only", "value" => "true"}}}})
+        exp = MiqExpression.new("FIND" => {"search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name",
+                                                                            "value" => "X",
+                                                                            "alias" => "Settings Name"}},
+                                           "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
+                                                                  "value" => "true"}}})
         expect(exp.to_human).to eq('FIND Settings Name STARTS WITH "X" CHECK ALL Read Only = "true"')
       end
 
@@ -1292,7 +1251,7 @@ describe MiqExpression do
       end
     end
 
-    context "expression having relative dates with no time zone" do
+    context "generates string representation of expression having relative dates with no time zone" do
       it "using 'AFTER'" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2 Days Ago"})
         expect(exp.to_human).to eq('VM and Instance : Retires On AFTER "2 Days Ago"')
@@ -1330,6 +1289,75 @@ describe MiqExpression do
       it "using 'IS 3 Hours Ago'" do
         exp = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time IS "3 Hours Ago"')
+      end
+    end
+
+    context "generates string representation of expression with static dates and times with no time zone" do
+      it "using 'AFTER' with date and without time" do
+        exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        expect(exp.to_human).to eq('VM and Instance : Retires On AFTER "2011-01-10"')
+      end
+
+      it "using 'AFTER' with date and time" do
+        exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
+        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time AFTER "2011-01-10 9:00"')
+      end
+
+      it "using 'BEFORE' with date without time" do
+        exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        expect(exp.to_human).to eq('VM and Instance : Retires On BEFORE "2011-01-10"')
+      end
+
+      it "using '>' with date without time" do
+        exp = MiqExpression.new(">" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        expect(exp.to_human).to eq('VM and Instance : Retires On > "2011-01-10"')
+      end
+
+      it "using '>' with date and time" do
+        exp = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
+        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time > "2011-01-10 9:00"')
+      end
+
+      it "using '<' with date without time" do
+        exp = MiqExpression.new("<" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        expect(exp.to_human).to eq('VM and Instance : Retires On < "2011-01-10"')
+      end
+
+      it "using '>=' with date and time" do
+        exp = MiqExpression.new(">=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        expect(exp.to_human).to eq('VM and Instance : Retires On >= "2011-01-10"')
+      end
+
+      it "using '<=' with date without time" do
+        exp = MiqExpression.new("<=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        expect(exp.to_human).to eq('VM and Instance : Retires On <= "2011-01-10"')
+      end
+
+      it "using 'IS' with date without time" do
+        exp = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        expect(exp.to_human).to eq('VM and Instance : Retires On IS "2011-01-10"')
+      end
+
+      it "using 'FROM' 'THROUGH' with date without time, date format: 'yyyy-mm-dd'" do
+        exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]})
+        expect(exp.to_human).to eq('VM and Instance : Retires On FROM "2011-01-09" THROUGH "2011-01-10"')
+      end
+
+      it "using 'FROM' 'THROUGH' with date without time, date format: 'mm/dd/yyyy'" do
+        exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["01/09/2011", "01/10/2011"]})
+        expect(exp.to_human).to eq('VM and Instance : Retires On FROM "01/09/2011" THROUGH "01/10/2011"')
+      end
+
+      it "using 'FROM' 'THROUGH' with date and time" do
+        exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
+                                           "value" => ["2011-01-10 8:00", "2011-01-10 17:00"]})
+        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time ' \
+          'FROM "2011-01-10 8:00" THROUGH "2011-01-10 17:00"')
+
+        exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
+                                           "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]})
+        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time '\
+          'FROM "2011-01-10 00:00" THROUGH "2011-01-10 00:00"')
       end
     end
   end
