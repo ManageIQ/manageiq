@@ -7,4 +7,8 @@ class AuthenticationAllowAll < Authentication
   def ansible_config_format
     ansible_config
   end
+
+  def assign_values(options)
+    super
+  end
 end
