@@ -7,10 +7,8 @@ class ContainerDeployment < ApplicationRecord
   has_many :custom_attributes, :as => :resource, :dependent => :destroy
   has_many :authentications, :as => :resource, :dependent => :destroy
   serialize :customize, Hash
-
-  def self.supported_types
-    DEPLOYMENT_TYPES
-  end
+  AUTHENTICATIONS_TYPES = {:AllowAllPasswordIdentityProvider => AuthenticationAllowAll, :HTPasswdPasswordIdentityProvider => AuthenticationHtpasswd ,:LDAPPasswordIdentityProvider => AuthenticationLdap,:RequestHeaderIdentityProvider => AuthenticationRequestHeader,:OpenIDIdentityProvider => AuthenticationOpenId, :GoogleIdentityProvider=> AuthenticationGoogle, :GitHubIdentityProvider=> AuthenticationGithub, :ssh => AuthPrivateKey, :rhsm => AuthenticationRhsm}
+  AUTHENTICATIONS_NAMES = {:AllowAllPasswordIdentityProvider => "all", :HTPasswdPasswordIdentityProvider => "htPassword" ,:LDAPPasswordIdentityProvider => "ldap",:RequestHeaderIdentityProvider => "requestHeader", :OpenIDIdentityProvider => "openId", :GoogleIdentityProvider=> "google", :GitHubIdentityProvider=> "github",:ssh => "ssh", :rhsm => "rhsm"}
 
   def ssh_auth
     authentications.where(:type => "AuthPrivateKey").first
@@ -296,12 +294,10 @@ eos
   end
 
   def create_deployment_authentication(options)
-    auth = options[:type].constantize.new
-    auth.authtype = options[:kind]
-    options.each do |key, value|
-      if Authentication.column_names.include?(key) && value
-        auth[key] = (!value.kind_of?(Array) && value.to_json.is_json?) ? value.to_json : value
-      end
+    auth = AUTHENTICATIONS_TYPES[AUTHENTICATIONS_NAMES.key(options[:mode]).to_sym].new
+    auth.authtype = options[:mode]
+    unless options[options[:mode]].nil? || options[options[:mode]].empty?
+      auth.assign_values options[options[:mode]]
     end
     authentications << auth
     save!
@@ -310,17 +306,17 @@ eos
   def create_deployment_nodes(vm_groups, labels, tags, vm_id = nil, address = nil)
     vm_groups.each_with_index do |vms, index|
       vms.each do |vm_attr|
-        container_deployment_node = ContainerDeploymentNode.where((address ? :address : :vm_id) => vm_attr)
+        container_deployment_node = ContainerDeploymentNode.where((address ? :address : :vm_id) => vm_attr[:vmName])
                                                            .where(:container_deployment_id => id)
         if container_deployment_node.empty?
           container_deployment_node = ContainerDeploymentNode.new
-          container_deployment_node.address = vm_attr if address
-          container_deployment_node.vm = Vm.find(vm_attr) if vm_id
+          container_deployment_node.address = vm_attr[:vmName] if address
+          container_deployment_node.vm = Vm.find(vm_attr[:vmName]) if vm_id
           container_deployment_nodes << container_deployment_node
         else
           container_deployment_node = container_deployment_node.first
         end
-        container_deployment_node.labels = JSON.parse(labels[vm_attr].to_json).to_h if labels && labels[vm_attr]
+        container_deployment_node.labels = JSON.parse(labels[vm_attr[:vmName]].to_json).to_h if labels && labels[vm_attr[:vmName]]
         container_deployment_node.tag_add tags[index]
         container_deployment_node.save!
       end
