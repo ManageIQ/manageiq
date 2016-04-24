@@ -25,4 +25,15 @@ class AuthenticationOpenId < Authentication
     options["challenge"] = "false"
     ansible_config options
   end
+
+  def assign_values(options)
+    hash = {}
+    hash["password"] = options["clientSecret"]
+    hash["certificate_authority"] = options["clientCA"]
+    hash["userid"] = options["clientId"]
+    hash["open_id_sub_claim"] = options["subClaim"]
+    hash["open_id_authorization_endpoint"] = options["authEndpoint"]
+    hash["open_id_token_endpoint"] = options["tokenEndpoint"]
+    super hash
+  end
 end
