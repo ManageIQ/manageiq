@@ -9,7 +9,7 @@
           = link_to_with_icon(_('Summary'), polymorphic_path(@record, :display => 'main'), :title => _("Show Summary"))
           = li_link(:if => (@record.has_events? || @record.has_events?(:policy_events)),
             :text       => _('Timelines'),
-            :record_i   => @record.id,
+            :record     => @record,
             :display    => 'timeline',
             :title      => _("Show Timelines"))
 
