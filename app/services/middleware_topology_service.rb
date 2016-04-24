@@ -11,12 +11,12 @@ class MiddlewareTopologyService < TopologyService
 
     @providers.each do |provider|
       topo_items[provider.id.to_s] = build_entity_data(provider)
-      provider.middleware_servers.each do |n|
-        topo_items[n.ems_ref] = build_entity_data(n)
-        links << build_link(provider.id.to_s, n.ems_ref)
-        n.middleware_deployments.each do |cg|
-          topo_items[cg.ems_ref] = build_entity_data(cg)
-          links << build_link(n.ems_ref, cg.ems_ref)
+      provider.middleware_servers.each do |server|
+        topo_items[server.ems_ref] = build_entity_data(server)
+        links << build_link(provider.id.to_s, server.ems_ref)
+        server.middleware_deployments.each do |deployment|
+          topo_items[deployment.ems_ref] = build_entity_data(deployment)
+          links << build_link(server.ems_ref, deployment.ems_ref)
         end
       end
     end
