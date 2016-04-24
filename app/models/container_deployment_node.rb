@@ -5,7 +5,7 @@ class ContainerDeploymentNode < ApplicationRecord
   serialize :customizations, Hash
   acts_as_miq_taggable
 
-  def address
+  def node_address
     if vm
       vm.hardware.ipaddresses.last
     elsif address

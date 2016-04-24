@@ -14,7 +14,14 @@ class AuthenticationGithub < Authentication
     options["clientID"] = userid
     options["clientSecret"] = password_encrypted
     options["challenge"] = "false"
-    options["github_organizations"] = github_organizations
+    options["github_organizations"] = github_organizations if github_organizations
     ansible_format options
+  end
+
+  def assign_values(options)
+    hash = {}
+    hash["password"] = options["clientSecret"]
+    hash["userid"] = options["clientId"]
+    super hash
   end
 end

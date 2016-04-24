@@ -43,21 +43,21 @@ class ContainerDeploymentController < ApplicationController
 
   def create_new_deployment(params)
     deployment = ContainerDeployment.new
-    deployment.version = params["version"]
-    deployment.kind = params["deployment_type"]
-    deployment.method_type = params["deployment_method"]
+    deployment.version = "v3"
+    deployment.kind = params["providerType"].include?("openshiftOrigin") ? "origin" : "openshift-enterprise"
+    deployment.method_type = params["provisionOn"]
     tags = create_needed_tags(params)
     labels = params[:labels]
-    if deployment.method_type.include? "managed_existing"
+    if deployment.method_type.include? "existingVms"
       managed_existing(deployment, params, tags, labels)
-    elsif deployment.method_type.include? "managed_provision"
+    elsif deployment.method_type.include? "newVms"
       managed_provision(deployment, params, tags, labels)
     else
       unmanaged(deployment, params, tags, labels)
     end
     deployment.create_deployment_authentication(params[:authentication])
-    deployment.create_deployment_authentication(params[:rhsm_authentication]) if params[:rhsm_authentication]
-    deployment.create_deployment_authentication(params[:ssh_authentication])
+    deployment.create_deployment_authentication({"ssh" => {"userid" => params[:deploymentUsername], "auth_key" => params[:deploymentKey], "public_key" => params[:public_key]}, :mode => "ssh"})
+    deployment.create_deployment_authentication({"rhsm" => {"userid" => params[:rhnUsername], "password" => params[:rhnPassword], "rhsm_sku" => params[:rhnSKU]}, :mode => "rhsm"})
     deployment.save!
     create_automation_request(deployment.generate_automation_params(params))
   end
@@ -78,7 +78,8 @@ class ContainerDeploymentController < ApplicationController
   end
 
   def unmanaged(deployment, params, tags, labels)
-    deployment.create_deployment_nodes([params["nodes_addresses"], params["masters_addresses"], [params["deployment_master_address"]]] + add_additional_roles(params), labels, tags, nil, true)
+    deployment_master = params["masters"].shift
+    deployment.create_deployment_nodes([params["nodes"], params["masters"], [deployment_master]] + add_additional_roles(params), labels, tags, nil, true)
   end
 
   def create_needed_tags(params)
