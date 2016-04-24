@@ -28,11 +28,22 @@ describe EmsInfraController do
     create
     form_field_changed
     listnav_search_selected
-    save_default_search
+    panel_control
+    protect
+    quick_search
+    sections_field_changed
+    show
     show_list
+    tag_edit_form_field_changed
+    tagging_edit
+    tl_chooser
     tree_autoload_dynatree
     tree_autoload_quads
     update
+    wait_for_task
+    scaling
+    scaledown
+    x_show
   ).each do |task|
     describe "##{task}" do
       it 'routes with POST' do
