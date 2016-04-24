@@ -23,4 +23,13 @@ class AuthenticationRequestHeader < Authentication
     options["request_header_email_headers"] = request_header_email_headers
     ansible_config options
   end
+
+  def assign_values(options)
+    hash = {}
+    hash["certificate_authority"] = options["clientCA"]
+    hash["request_header_challenge_url"] = options["challengeUrl"]
+    hash["request_header_login_url"] = options["loginUrl"]
+    hash["request_header_headers"] = options["headers"]
+    super hash
+  end
 end
