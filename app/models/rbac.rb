@@ -526,12 +526,8 @@ module Rbac
       next if vcmeta_list.empty?
 
       if klass == Storage
-        vcmeta_list.reverse_each do |vcmeta|
-          if vcmeta.respond_to?(:storages)
-            results.concat(vcmeta.storages)
-            break
-          end
-        end
+        vcmeta = vcmeta_list.reverse.detect { |vcm| vcm.respond_to?(:storages) }
+        results.concat(vcmeta.storages) if vcmeta
       elsif klass == Host
         results.concat(get_belongsto_matches_for_host(vcmeta_list.last))
       elsif vcmeta_list.last.kind_of?(Host) && klass <= VmOrTemplate
