@@ -2,11 +2,14 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
-  has_many :chargeback_tiers, :dependent => :destroy
+  has_many :chargeback_tiers, :dependent => :destroy, :autosave => true
+
+  default_scope { order(:group => :asc, :description => :asc) }
+
   validates :group, :source, :presence => true
   validate :contiguous_tiers?
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source).freeze
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
 
   # Set the rates according to the tiers
   def find_rate(value)
@@ -145,13 +148,6 @@ class ChargebackRateDetail < ApplicationRecord
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
     if temp.contiguous_tiers?
-      tiers.each do |tier|
-        unless tier.valid?
-          errors.add(:tier, tier.errors.full_messages.first)
-          return
-        end
-        tier.save
-      end
       self.chargeback_tiers.replace(tiers)
     else
       temp.errors.each {|a, e| errors.add(a, e)}
@@ -218,7 +214,9 @@ class ChargebackRateDetail < ApplicationRecord
         detail_new = ChargebackRateDetail.new(detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES))
         detail_new.detail_measure = ChargebackRateDetailMeasure.find_by(:name => detail[:measure])
         detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency])
-        detail[:tiers].each do |tier|
+        detail_new.metric = detail[:metric]
+
+        detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
           detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
         end
 
@@ -226,6 +224,6 @@ class ChargebackRateDetail < ApplicationRecord
       end
     end
 
-    rate_details
+    rate_details.sort_by { |rd| [rd[:group], rd[:description]] }
   end
 end
