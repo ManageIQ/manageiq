@@ -269,6 +269,15 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
       expect(cbd.contiguous_tiers?).to be false
     end
 
+    it "returns validation error when tiers are ambiguous" do
+      cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 5)
+      cbt2 = FactoryGirl.build(:chargeback_tier, :start => 5, :finish => 5)
+      cbt3 = FactoryGirl.build(:chargeback_tier, :start => 5, :finish => Float::INFINITY)
+      cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt1, cbt2, cbt3])
+
+      expect(cbd.contiguous_tiers?).to be_falsey
+    end
+
     it "must contain one start" do
       cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 1)
       cbt2 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
