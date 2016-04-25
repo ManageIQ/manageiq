@@ -232,7 +232,7 @@ class ProviderForemanController < ApplicationController
     @lastaction = "show"
     @showtype = "config"
     if configuration_profile_record?
-    @record = find_record(ConfigurationProfile, id || params[:id])
+      @record = find_record(ConfigurationProfile, id || params[:id])
     elsif inventory_group_record?
       find_record(InventoryRootGroup, id || params[:id])
     else
@@ -338,7 +338,7 @@ class ProviderForemanController < ApplicationController
 
   def check_for_unassigned_configuration_profile_or_inventory_group
     if action_name == "x_show"
-      unassigned_configuration_profile?(params[:id])|| unassigned_inventory_group?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
+      unassigned_configuration_profile?(params[:id]) || unassigned_inventory_group?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
     elsif action_name == "tree_select"
       tree_select_unprovisioned_configured_system
     else
@@ -357,7 +357,7 @@ class ProviderForemanController < ApplicationController
 
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
-    type, id = x_node.split("_").last.split("-")
+    type, _id = x_node.split("_").last.split("-")
     case nodes.first
     when "root"    then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
     when "e"       then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
@@ -373,12 +373,12 @@ class ProviderForemanController < ApplicationController
         else
           find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
         end
-        when "fr_e" then
-          if type == "cp"
-            find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
-          else
-            find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-          end
+      when "fr_e" then
+        if type == "cp"
+          find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+        else
+          find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+        end
       end
     end
   end
@@ -600,11 +600,11 @@ class ProviderForemanController < ApplicationController
   end
 
   def inventory_group_node(id, model)
-    if model
-      @record = @inventory_group_record = find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id)
-    else
-      @record = @inventory_group_record = ManageIQ::Providers::ConfigurationManager::InventoryGroup.new
-    end
+    @record = @inventory_group_record = if model
+                                          find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id)
+                                        else
+                                          ManageIQ::Providers::ConfigurationManager::InventoryGroup.new
+                                        end
     if @inventory_group_record.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -622,11 +622,7 @@ class ProviderForemanController < ApplicationController
       else
         @showtype = 'main'
         @pages = nil
-        @right_cell_text =
-          _("%{model} \"%{name}\"") %
-            {:name  => @inventory_group_record.name,
-             :model => record_model
-            }
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name  => @inventory_group_record.name, :model => record_model}
       end
     end
   end
