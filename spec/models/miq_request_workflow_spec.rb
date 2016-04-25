@@ -60,6 +60,24 @@ describe MiqRequestWorkflow do
     end
   end
 
+  context "#get_field" do
+    let(:dialog) { workflow.instance_variable_get(:@dialogs) }
+    before do
+      values = {:values_from => {:method => :allowed_clusters}}
+      dialog.store_path(:dialogs, :environment, :fields, :placement_cluster_name, values)
+    end
+
+    it "refreshes value by default" do
+      expect(workflow).to receive(:allowed_clusters).once
+      workflow.get_field(:placement_cluster_name, :environment)
+    end
+
+    it "not refresh value when specified" do
+      expect(workflow).not_to receive(:allowed_clusters)
+      workflow.get_field(:placement_cluster_name, :environment, false)
+    end
+  end
+
   describe "#init_from_dialog" do
     let(:dialogs) { workflow.instance_variable_get(:@dialogs) }
     let(:init_values) { {} }
