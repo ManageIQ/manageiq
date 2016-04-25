@@ -32,7 +32,7 @@ class Dialog < ApplicationRecord
   end
 
   def dialog_fields
-    dialog_tabs.collect(&:dialog_fields).flatten!
+    dialog_tabs.collect(&:dialog_fields).compact.flatten!
   end
 
   def field_name_exist?(name)
