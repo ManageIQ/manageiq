@@ -11,7 +11,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
         log_header = "MIQ(#{self.class.name}.#{__method__})"
         File.open(script, "r") do |file|
           begin
-            results = connection.run_powershell_script(file)
+            results = connection.create_executor { |exec| exec.run_powershell_script(file) }
             log_dos_error_results(results)
             results
           rescue Errno::ECONNREFUSED => err
@@ -74,7 +74,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
-          results = connection.run_powershell_script(script)
+          results = connection.create_executor { |exec| exec.run_powershell_script(script) }
           self.class.log_dos_error_results(results)
         end
       end
