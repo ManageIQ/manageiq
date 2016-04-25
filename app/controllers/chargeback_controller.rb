@@ -227,7 +227,7 @@ class ChargebackController < ApplicationController
 
   def cb_rate_show
     @display = "main"
-    @record.chargeback_rate_details.to_a.sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
+    @record.chargeback_rate_details
     if @record.nil?
       redirect_to :action => "cb_rates_list", :flash_msg => _("Error: Record no longer exists in the database"), :flash_error => true
       return
@@ -330,20 +330,19 @@ class ChargebackController < ApplicationController
     @edit = session[:edit]
     index = params[:index]
     detail_index, tier_to_remove_index = index.split("-")
-    detail = @edit[:new][:details][detail_index.to_i]
-    params[:detail_index] = detail_index
-    code_currency = ChargebackRateDetailCurrency.find_by(:id => detail[:currency]).code
     detail_index = detail_index.to_i
-    tier_to_remove_index = tier_to_remove_index.to_i
     @edit[:new][:num_tiers][detail_index] = @edit[:new][:num_tiers][detail_index] - 1
-    tiers = @edit[:new][:tiers][detail_index]
-    @edit[:new][:tiers][detail_index].each_with_index do |_tier, tier_index|
-      next if tier_index <= tier_to_remove_index
-      @edit[:new][:tiers][detail_index][tier_index - 1] = @edit[:new][:tiers][detail_index][tier_index]
+
+    # Delete tier record
+    @edit[:new][:tiers][detail_index].delete_at(tier_to_remove_index.to_i)
+
+    @changed = session[:changed] = true
+
+    render :update do |page|
+      page << javascript_prologue
+      page.replace_html("chargeback_rate_edit_form", :partial => "cb_rate_edit_table")
+      page << javascript_for_miq_button_visibility(@changed)
     end
-    # Delete tier records
-    @edit[:new][:tiers][detail_index].delete_at(@edit[:new][:num_tiers][detail_index])
-    replace_rows(detail_index, tiers, tier_to_remove_index, code_currency) # Replace tiers in the view
   end
 
   def cb_assign_update
@@ -596,7 +595,7 @@ class ChargebackController < ApplicationController
 
       tiers[detail_index] ||= []
 
-      detail.chargeback_tiers.to_a.sort_by { |ct| [ct[:start]] }.each do |tier|
+      detail.chargeback_tiers.each do |tier|
         new_tier = tier.slice(*ChargebackTier::FORM_ATTRIBUTES)
         new_tier[:id] = params[:typ] == "copy" ? nil : tier.id
         new_tier[:chargeback_rate_detail_id] = params[:typ] == "copy" ? nil : detail.id
@@ -609,8 +608,6 @@ class ChargebackController < ApplicationController
       @edit[:new][:num_tiers][detail_index] = tiers[detail_index].size
       @edit[:new][:details].push(temp)
     end
-
-    @edit[:new][:details].sort_by! { |rd| [rd[:group].downcase, rd[:description].downcase] }
 
     @edit[:new][:per_time_types] = per_time_types_from
 
@@ -652,11 +649,7 @@ class ChargebackController < ApplicationController
     @rate_tiers = []
     @edit[:new][:details].each_with_index do |detail, detail_index|
       rate_detail = detail[:id] ? ChargebackRateDetail.find(detail[:id]) : ChargebackRateDetail.new
-      rate_detail.per_time    = detail[:per_time]
-      rate_detail.per_unit    = detail[:per_unit]
-      rate_detail.source      = detail[:source]
-      rate_detail.group       = detail[:group]
-      rate_detail.description = detail[:description]
+      rate_detail.attributes = detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES)
       rate_detail_edit = @edit[:new][:details][detail_index]
       # C: Record the currency selected in the edit view, in my chargeback_rate_details table
       rate_detail.chargeback_rate_detail_currency_id = rate_detail_edit[:currency]
@@ -667,12 +660,9 @@ class ChargebackController < ApplicationController
       @edit[:new][:tiers][detail_index].each do |tier|
         rate_tier = tier[:id] ? ChargebackTier.find(tier[:id]) : ChargebackTier.new
         tier[:start] = Float::INFINITY if tier[:start].blank?
-        rate_tier.start  = tier[:start]
         tier[:finish] = Float::INFINITY if tier[:finish].blank?
-        rate_tier.finish = tier[:finish]
+        rate_tier.attributes = tier.slice(*ChargebackTier::FORM_ATTRIBUTES)
         rate_tier.chargeback_rate_detail_id = rate_detail.id
-        rate_tier.fixed_rate  = tier[:fixed_rate]
-        rate_tier.variable_rate = tier[:variable_rate]
         rate_tiers.push(rate_tier)
       end
       @rate_tiers[detail_index] = rate_tiers
@@ -964,26 +954,6 @@ class ChargebackController < ApplicationController
                        :partial => "tier_row",
                        :locals  => locals)
       page << javascript_for_miq_button_visibility(true)
-    end
-  end
-
-  def replace_rows(detail_index, tiers, tier_to_remove_index, code_currency)
-    @changed = session[:changed] = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("rate_detail_row_#{detail_index}_0", :partial => "tier_first_row", :locals => {:code_currency => code_currency})
-      tiers.each_with_index do |_tier, tier_index|
-        next if tier_index <= tier_to_remove_index
-        # Move up tiers not to have blank rows
-        # @edit[:new][:tiers][detail_index][tier_index - 1] = @edit[:new][:tiers][detail_index][tier_index]
-        params[:tier_row] = tier_index
-        page.replace("rate_detail_row_#{detail_index}_#{tier_index - 1}", :partial => "tier_row")
-        params[:tier_row] = nil
-      end
-      # Delete the last row
-      # delete_row(detail_index, @edit[:new][:num_tiers][detail_index])
-      page.replace("rate_detail_row_#{detail_index}_#{@edit[:new][:num_tiers][detail_index]}", '')
-      page << javascript_for_miq_button_visibility(@changed)
     end
   end
 end
