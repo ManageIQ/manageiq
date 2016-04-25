@@ -26,6 +26,8 @@ class ApiController
         :role        => options[:role] || nil,
       }
 
+      queue_options[:zone] = object.my_zone if %w(ems_operations smartstate).include?(options[:role])
+
       MiqTask.generic_action_with_callback(task_options, queue_options)
     end
   end
