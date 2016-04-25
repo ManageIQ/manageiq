@@ -178,7 +178,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :enabled                  => true,
       :cpus                     => 1,
       :cpu_cores                => 1,
-      :memory                   => 768,
+      :memory                   => 768.megabytes,
       :supports_32_bit          => nil,
       :supports_64_bit          => nil,
       :supports_hvm             => nil,
