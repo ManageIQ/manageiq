@@ -171,7 +171,7 @@ module ManageIQ::Providers
           :name           => name,
           :cpus           => s.number_of_cores, # where are the virtual CPUs??
           :cpu_cores      => s.number_of_cores,
-          :memory         => s.memory_in_mb.to_f,
+          :memory         => s.memory_in_mb.megabytes,
           :root_disk_size => s.os_disk_size_in_mb * 1024,
           :swap_disk_size => s.resource_disk_size_in_mb * 1024
         }
@@ -288,7 +288,7 @@ module ManageIQ::Providers
       def populate_hardware_hash_with_series_attributes(hardware_hash, instance, series)
         return if series.nil?
         hardware_hash[:cpu_total_cores] = series[:cpus]
-        hardware_hash[:memory_mb]       = series[:memory]
+        hardware_hash[:memory_mb]       = series[:memory] / 1.megabyte
         hardware_hash[:disk_capacity]   = series[:root_disk_size] + series[:swap_disk_size]
 
         os_disk = instance.properties.storage_profile.os_disk
