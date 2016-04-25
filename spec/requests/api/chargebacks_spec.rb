@@ -2,7 +2,7 @@ RSpec.describe "chargebacks API" do
   it "can fetch the list of all chargeback rates" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
-    api_basic_authorize
+    api_basic_authorize collection_action_identifier(:chargebacks, :read, :get)
     run_get chargebacks_url
 
     expect_result_resources_to_include_hrefs(
@@ -15,7 +15,7 @@ RSpec.describe "chargebacks API" do
   it "can show an individual chargeback rate" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
-    api_basic_authorize
+    api_basic_authorize action_identifier(:chargebacks, :read, :resource_actions, :get)
     run_get chargebacks_url(chargeback_rate.id)
 
     expect_result_to_match_hash(

@@ -18,7 +18,7 @@ describe ApiController do
 
   context "Policy Action collection" do
     it "query invalid action" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policy_actions, :read, :resource_actions, :get)
 
       run_get policy_actions_url(999_999)
 
@@ -26,7 +26,7 @@ describe ApiController do
     end
 
     it "query policy actions with no actions defined" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
 
       run_get policy_actions_url
 
@@ -34,7 +34,7 @@ describe ApiController do
     end
 
     it "query policy actions" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
       create_actions(4)
 
       run_get policy_actions_url
@@ -45,7 +45,7 @@ describe ApiController do
     end
 
     it "query policy actions in expanded form" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
       create_actions(4)
 
       run_get policy_actions_url, :expand => "resources"
@@ -67,7 +67,7 @@ describe ApiController do
     end
 
     it "query policy actions with no actions defined" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
 
       run_get policy_actions_url
 
@@ -75,7 +75,7 @@ describe ApiController do
     end
 
     it "query policy actions" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
       create_actions(4)
       relate_actions_to(policy)
 
@@ -86,7 +86,7 @@ describe ApiController do
     end
 
     it "query policy with expanded policy actions" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_actions(4)
       relate_actions_to(policy)
 

@@ -9,7 +9,11 @@ describe ApiController do
   end
 
   def test_collection_query(collection, collection_url, klass, attr = :id)
-    api_basic_authorize
+    if collection_config.fetch_path(collection, :collection_actions, :get)
+      api_basic_authorize collection_action_identifier(collection, :read, :get)
+    else
+      api_basic_authorize
+    end
 
     run_get collection_url, :expand => "resources"
 

@@ -17,7 +17,7 @@ RSpec.describe "Instances API" do
 
   context "Instance index" do
     it "lists only the cloud instances (no infrastructure vms)" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:instances, :read, :get)
       instance = FactoryGirl.create(:vm_openstack)
       _vm = FactoryGirl.create(:vm_vmware)
 

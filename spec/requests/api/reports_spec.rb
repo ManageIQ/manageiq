@@ -3,7 +3,7 @@ RSpec.describe "reports API" do
     report_1 = FactoryGirl.create(:miq_report_with_results)
     report_2 = FactoryGirl.create(:miq_report_with_results)
 
-    api_basic_authorize
+    api_basic_authorize collection_action_identifier(:reports, :read, :get)
     run_get reports_url
 
     expect_result_resources_to_include_hrefs(
@@ -20,7 +20,7 @@ RSpec.describe "reports API" do
   it "can fetch a report" do
     report = FactoryGirl.create(:miq_report_with_results)
 
-    api_basic_authorize
+    api_basic_authorize action_identifier(:reports, :read, :resource_actions, :get)
     run_get reports_url(report.id)
 
     expect_result_to_match_hash(
@@ -71,7 +71,7 @@ RSpec.describe "reports API" do
     report = FactoryGirl.create(:miq_report_with_results)
     result = report.miq_report_results.first
 
-    api_basic_authorize
+    api_basic_authorize collection_action_identifier(:results, :read, :get)
     run_get results_url
 
     expect_result_resources_to_include_hrefs(
@@ -93,7 +93,7 @@ RSpec.describe "reports API" do
     allow(report).to receive(:table).and_return(table)
     allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
 
-    api_basic_authorize
+    api_basic_authorize action_identifier(:results, :read, :resource_actions, :get)
     run_get results_url(report_result.id)
 
     expect_result_to_match_hash(response_hash, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])

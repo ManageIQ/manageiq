@@ -101,7 +101,7 @@ describe ApiController do
 
   context "Policy collection" do
     it "query invalid policy" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
 
       run_get policies_url(999_999)
 
@@ -109,7 +109,7 @@ describe ApiController do
     end
 
     it "query policies" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policies, :read, :get)
 
       run_get policies_url
 
@@ -119,7 +119,7 @@ describe ApiController do
     end
 
     it "query policies in expanded form" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policies, :read, :get)
 
       run_get policies_url, :expand => "resources"
 
@@ -133,7 +133,7 @@ describe ApiController do
     let(:policy_profile_url) { policy_profiles_url(policy_profile.id) }
 
     it "query invalid policy profile" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policy_profiles, :read, :resource_actions, :get)
 
       run_get policy_profiles_url(999_999)
 
@@ -141,7 +141,7 @@ describe ApiController do
     end
 
     it "query Policy Profiles" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:policy_profiles, :read, :get)
 
       run_get policy_profiles_url
 
@@ -151,7 +151,7 @@ describe ApiController do
     end
 
     it "query individual Policy Profile" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policy_profiles, :read, :resource_actions, :get)
 
       run_get policy_profile_url
 
@@ -170,7 +170,7 @@ describe ApiController do
     end
 
     it "query Policy Profile with expanded policies subcollection" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policy_profiles, :read, :resource_actions, :get)
 
       run_get policy_profile_url, :expand => "policies"
 

@@ -16,7 +16,7 @@ describe ApiController do
 
   context "Event collection" do
     it "query invalid event" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:events, :read, :resource_actions, :get)
 
       run_get events_url(999_999)
 
@@ -24,7 +24,7 @@ describe ApiController do
     end
 
     it "query events with no events defined" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:events, :read, :get)
 
       run_get events_url
 
@@ -32,7 +32,7 @@ describe ApiController do
     end
 
     it "query events" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:events, :read, :get)
       create_events(3)
 
       run_get events_url
@@ -43,7 +43,7 @@ describe ApiController do
     end
 
     it "query events in expanded form" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:events, :read, :get)
       create_events(3)
 
       run_get events_url, :expand => "resources"
@@ -84,7 +84,7 @@ describe ApiController do
     end
 
     it "query policy with expanded events" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_events(3)
       relate_events_to(policy)
 

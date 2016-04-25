@@ -20,7 +20,7 @@ describe ApiController do
 
   context "Condition collection" do
     it "query invalid collection" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
 
       run_get conditions_url(999_999)
 
@@ -28,7 +28,7 @@ describe ApiController do
     end
 
     it "query conditions with no conditions defined" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
 
       run_get conditions_url
 
@@ -36,7 +36,7 @@ describe ApiController do
     end
 
     it "query conditions" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
       create_conditions(3)
 
       run_get conditions_url
@@ -47,7 +47,7 @@ describe ApiController do
     end
 
     it "query conditions in expanded form" do
-      api_basic_authorize
+      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
       create_conditions(3)
 
       run_get conditions_url, :expand => "resources"
@@ -82,7 +82,7 @@ describe ApiController do
     end
 
     it "query policy with expanded conditions" do
-      api_basic_authorize
+      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_conditions(3)
       assign_conditions_to(policy)
 
