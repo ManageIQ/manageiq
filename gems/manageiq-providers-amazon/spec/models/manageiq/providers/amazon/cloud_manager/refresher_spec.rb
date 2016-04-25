@@ -122,7 +122,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_floating_ip
-    @ip = ManageIQ::Providers::Amazon::CloudManager::FloatingIp.where(:address => "54.221.202.53").first
+    @ip = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "54.221.202.53").first
     expect(@ip).to have_attributes(
       :address            => "54.221.202.53",
       :ems_ref            => "54.221.202.53",
@@ -131,7 +131,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_floating_ip_for_cloud_network
-    ip = ManageIQ::Providers::Amazon::CloudManager::FloatingIp.where(:address => "54.208.119.197").first
+    ip = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "54.208.119.197").first
     expect(ip).to have_attributes(
       :address            => "54.208.119.197",
       :ems_ref            => "54.208.119.197",
@@ -178,7 +178,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_security_group
-    @sg = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup1").first
+    @sg = ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup1").first
     expect(@sg).to have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup1",
       :description => "EmsRefreshSpec-SecurityGroup1",
@@ -210,7 +210,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_security_group_on_cloud_network
-    @sg_on_cn = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup-VPC").first
+    @sg_on_cn = ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup-VPC").first
     expect(@sg_on_cn).to have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup-VPC",
       :description => "EmsRefreshSpec-SecurityGroup-VPC",
@@ -313,7 +313,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.key_pairs).to eq([@kp])
     expect(v.cloud_network).to     be_nil
     expect(v.cloud_subnet).to      be_nil
-    sg_2 = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup
+    sg_2 = ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup
            .where(:name => "EmsRefreshSpec-SecurityGroup2").first
     expect(v.security_groups)
       .to match_array [sg_2, @sg]

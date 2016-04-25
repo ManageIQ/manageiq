@@ -5,6 +5,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :CloudVolumeSnapshot
   require_nested :EventCatcher
   require_nested :EventParser
+  require_nested :Flavor
   require_nested :MetricsCapture
   require_nested :MetricsCollectorWorker
   require_nested :OrchestrationServiceOptionConverter
