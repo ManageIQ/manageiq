@@ -2,6 +2,28 @@ FactoryGirl.define do
   factory :chargeback_rate_detail do
     group   "unknown"
     source  "unknown"
+
+    trait :euro do
+      detail_currency { FactoryGirl.create(:chargeback_rate_detail_currency_EUR) }
+    end
+
+    trait :bytes do
+      detail_measure { FactoryGirl.create(:chargeback_rate_detail_measure_bytes) }
+    end
+
+    trait :tiers do
+      chargeback_tiers { [FactoryGirl.create(:chargeback_tier)] }
+    end
+
+    trait :tiers_with_three_intervals do
+      chargeback_tiers do
+        [
+          FactoryGirl.create(:chargeback_tier_first_of_three),
+          FactoryGirl.create(:chargeback_tier_second_of_three),
+          FactoryGirl.create(:chargeback_tier_third_of_three)
+        ]
+      end
+    end
   end
 
   factory :chargeback_rate_detail_cpu_used, :parent => :chargeback_rate_detail do
@@ -84,4 +106,10 @@ FactoryGirl.define do
     source      "compute_1"
     per_time    "daily"
   end
+
+  factory :chargeback_rate_detail_memory_allocated_with_tiers, :parent => :chargeback_rate_detail_memory_allocated,
+                                                               :traits => [:euro, :bytes, :tiers_with_three_intervals]
+
+  factory :chargeback_rate_detail_memory_used_with_tiers, :parent => :chargeback_rate_detail_memory_used,
+                                                          :traits => [:euro, :bytes, :tiers]
 end
