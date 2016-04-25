@@ -155,9 +155,15 @@ module EmsRefresh::SaveInventoryInfra
           #   Keep the previous hostname unless it's nil or it's an ip address
           h[:hostname] = found.hostname unless found.hostname.nil? || (found.hostname =~ ip_whole)
 
-          #   Update the name to the hostname if the new name has an ip address,
-          #   and the new hostname is not an ip address
-          h[:name] = h[:hostname] if h[:name] =~ ip_part && !(h[:hostname] =~ ip_whole)
+          if found.name =~ /#{h[:name]} - \d+$/
+            # Update the name to be found.name if it has the same ems_ref and the name
+            # already has a '- int' suffix to work around duplicate hostnames
+            h[:name] = found.name
+          elsif h[:name] =~ ip_part && h[:hostname] !~ ip_whole
+            # Update the name to the hostname if the new name has an ip address,
+            # and the new hostname is not an ip address
+            h[:name] = h[:hostname]
+          end
 
           h.delete(:type)
 
