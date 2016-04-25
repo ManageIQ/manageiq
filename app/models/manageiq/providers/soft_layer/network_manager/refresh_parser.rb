@@ -86,7 +86,7 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
     new_result = {
       :type           => self.class.cloud_network_type + type_suffix,
       :ems_ref        => uid,
-      :name           => cloud_network.name,
+      :name           => cloud_network_name(cloud_network),
       :status         => "active",
       :cidr           => nil,
       :enabled        => true,
@@ -99,11 +99,14 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
   def parse_cloud_subnet(subnet)
     uid = subnet.id.to_s
 
+    cidr = "#{subnet.network_id}/#{subnet.cidr}"
+    name = subnet.name.blank? ? cidr : subnet.name
+
     new_result = {
       :type              => self.class.cloud_subnet_type,
       :ems_ref           => uid,
-      :name              => subnet.name,
-      :cidr              => "#{subnet.network_id}/#{subnet.cidr}",
+      :name              => name,
+      :cidr              => cidr,
       :ip_version        => subnet.ip_version,
       :network_protocol  => "ipv#{subnet.ip_version}",
       :gateway           => subnet.gateway_ip,
@@ -142,6 +145,12 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
       :ems_ref => uid
     }
     return uid, new_result
+  end
+
+  def cloud_network_name(cloud_network)
+    return cloud_network.name if cloud_network.name.present?
+
+    "#{cloud_network.network_space.capitalize} VLAN on #{cloud_network.router['hostname']}"
   end
 
   class << self
