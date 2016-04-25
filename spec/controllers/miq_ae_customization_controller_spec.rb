@@ -476,4 +476,27 @@ describe MiqAeCustomizationController do
       end
     end
   end
+
+  context "#x_button" do
+    before :each do
+      controller.instance_variable_set(:@sb, :applies_to_class => "EmsCluster")
+      allow(controller).to receive(:role_allows).and_return(true)
+      session[:sandboxes] = {
+        "miq_ae_customization" => {
+          :applies_to_class => "EmsCluster",
+          :trees            => {
+            :ab_tree => {:active_node => "-ub-EmsCluster"}
+          },
+          :active_tree      => :ab_tree
+        }
+      }
+    end
+
+    it "it should not call get_node_info when building new group add screen" do
+      expect(controller).to_not receive(:get_node_info)
+      post :x_button, :params => {:pressed => "ab_group_new"}
+      expect(response.status).to eq(200)
+      expect(response.body).to include("main_div")
+    end
+  end
 end
