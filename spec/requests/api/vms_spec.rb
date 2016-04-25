@@ -177,6 +177,19 @@ describe ApiController do
       expect_single_action_result(:success => true, :message => "starting", :href => :vm_url, :task => true)
     end
 
+    it "starting a vm queues it properly" do
+      api_basic_authorize action_identifier(:vms, :start)
+      update_raw_power_state("poweredOff", vm)
+
+      run_post(vm_url, gen_request(:start))
+
+      expect_single_action_result(:success => true, :message => "starting", :href => :vm_url, :task => true)
+      expect(MiqQueue.where(:class_name  => vm.class.name,
+                            :instance_id => vm.id,
+                            :method_name => "start",
+                            :zone        => zone.name).count).to eq(1)
+    end
+
     it "starts multiple vms" do
       api_basic_authorize action_identifier(:vms, :start)
       update_raw_power_state("poweredOff", vm1, vm2)
