@@ -46,6 +46,14 @@ describe EmsNetworkController do
         end
       end
 
+      describe "#ems_network_form_fields" do
+        it "renders ems_network_form_fields json" do
+          get :ems_network_form_fields, :params => {:id => @ems.id}
+          expect(response.status).to eq(200)
+          expect(response.body).to_not be_empty
+        end
+      end
+
       describe "#create" do
         it "adds a new provider" do
           controller.instance_variable_set(:@breadcrumbs, [])

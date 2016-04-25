@@ -222,7 +222,7 @@ module Mixins
                        :project                         => project ? project : "",
                        :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
                        :ems_controller                  => controller_name
-      } if controller_name == "ems_cloud"
+      } if controller_name == "ems_cloud" || controller_name == "ems_network"
 
       render :json => {:name                        => @ems.name,
                        :emstype                     => @ems.emstype,
