@@ -1514,14 +1514,12 @@ class MiqRequestWorkflow
     data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
   end
 
-  def validate_values(values)
-    if validate(values) == false
-      errors = []
-      fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
-      err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
-      _log.error "<#{err_text}>"
-      raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
-    end
+  def raise_validate_errors
+    errors = []
+    fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
+    err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
+    _log.error "<#{err_text}>"
+    raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
   end
 
   private
