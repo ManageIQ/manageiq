@@ -3,6 +3,10 @@ class ManageIQ::Providers::Microsoft::InfraManager
     extend ActiveSupport::Concern
 
     module ClassMethods
+      def execute_powershell_json(connection, script)
+        parse_json_results(run_powershell_script(connection, script))
+      end
+
       def execute_powershell(connection, script)
         powershell_results_to_hash(run_powershell_script(connection, script))
       end
