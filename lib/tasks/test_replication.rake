@@ -10,9 +10,15 @@ namespace :test do
   end
 
   desc "Run all replication specs"
-  RSpec::Core::RakeTask.new(:replication => :initialize) do |t|
+  RSpec::Core::RakeTask.new(:replication => [:initialize, :replication_util]) do |t|
     EvmTestHelper.init_rspec_task(t)
     t.pattern = EvmTestHelper::REPLICATION_SPECS
+  end
+
+  desc "Run replication specs that do not require an external database"
+  RSpec::Core::RakeTask.new(:replication_util => :initialize) do |t|
+    EvmTestHelper.init_rspec_task(t)
+    t.pattern = EvmTestHelper::REPLICATION_UTIL_SPECS
   end
 end
 end # ifdef
