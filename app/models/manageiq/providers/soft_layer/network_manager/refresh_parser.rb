@@ -7,6 +7,7 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
   end
 
   def initialize(ems, options = nil)
+    options ||= {}
     @ems               = ems
     @compute           = ems.connect
     @network           = ems.connect(options.merge(:service => "network"))
@@ -17,7 +18,7 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
   end
 
   def ems_inv_to_hashes
-    log_header = "Collecting data for EMS : [#{@ems.name}] id: [#{@ems.id}]"
+    log_header = "Collecting data for EMS HERE!!!: [#{@ems.name}] id: [#{@ems.id}]"
 
     _log.info("#{log_header}...")
     get_cloud_networks
@@ -40,7 +41,7 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
   end
 
   def get_cloud_networks
-    networks = @network.networks.all
+    networks = @network.networks.all.select {|n| n.datacenter.name == @ems.provider_region}
     process_collection(networks, :cloud_networks) { |cloud_network| parse_cloud_network(cloud_network) }
   end
 
@@ -49,17 +50,25 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
     process_collection(subnets, :cloud_subnets) { |subnet| parse_cloud_subnet(subnet) }
   end
 
+  def get_network_ports
+
+  end
+
   def parse_cloud_network(cloud_network)
+    uid = cloud_network.id
+
+    type_suffix = "::#{cloud_network.network_space.capitalize}"
+
     cloud_subnets = get_cloud_subnets(cloud_network).collect do |raw_subnet|
       @data_index.fetch_path(:cloud_subnets, raw_subnet.id)
     end
 
-    uid = cloud_network.id
-
     new_result = {
+      :type          => self.class.cloud_network_type + type_suffix,
       :ems_ref       => cloud_network.id,
       :name          => cloud_network.name,
-      :cidr          => cloud_network.address_space,
+      :status        => "active",
+      :cidr          => nil,
       :enabled       => true,
       :cloud_subnets => cloud_subnets,
     }
@@ -68,10 +77,15 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
 
   def parse_cloud_subnet(subnet)
     uid = subnet.id
+
     new_result = {
+      :type              => self.class.cloud_subnet_type,
       :ems_ref           => uid,
       :name              => subnet.name,
-      :cidr              => subnet.address_space,
+      :cidr              => "#{subnet.network_id}/#{subnet.cidr}",
+      :ip_version        => subnet.ip_version,
+      :network_protocol  => "ipv#{subnet.ip_version}",
+      :gateway           => subnet.gateway_ip,
       :availability_zone => @data_index.fetch_path(:availability_zones, 'default'),
     }
     return uid, new_result
@@ -84,6 +98,14 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
 
     def cloud_subnet_type
       ManageIQ::Providers::SoftLayer::NetworkManager::CloudSubnet.name
+    end
+
+    def network_port_type
+      ManageIQ::Providers::SoftLayer::NetworkManager::NetworkPort.name
+    end
+
+    def network_router_type
+      ManageIQ::Providers::SoftLayer::NetworkManager::NetworkRouter.name
     end
   end
 end

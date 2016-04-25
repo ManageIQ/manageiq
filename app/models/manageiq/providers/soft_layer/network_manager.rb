@@ -10,8 +10,6 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
 
   include ManageIQ::Providers::SoftLayer::ManagerMixin
 
-  alias_attribute :azure_tenant_id, :uid_ems
-
   has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
 
   belongs_to :parent_manager,
@@ -37,11 +35,18 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
            :allow_nil => true
 
   # Relationships delegated to parent manager
-  delegate :flavors,
+  delegate :availability_zones,
+           :cloud_tenants,
+           :flavors,
            :cloud_resource_quotas,
            :cloud_volumes,
            :cloud_volume_snapshots,
+           :cloud_object_store_containers,
+           :cloud_object_store_objects,
            :key_pairs,
+           :orchestration_stacks,
+           :orchestration_stacks_resources,
+           :direct_orchestration_stacks,
            :vms,
            :hosts,
            :to        => :parent_manager,

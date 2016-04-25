@@ -22,6 +22,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::NetworkManager::RefreshWorker
     ManageIQ::Providers::Google::CloudManager::RefreshWorker
     ManageIQ::Providers::SoftLayer::CloudManager::RefreshWorker
+    ManageIQ::Providers::SoftLayer::NetworkManager::RefreshWorker
     ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
@@ -97,6 +98,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::NetworkManager::RefreshWorker
     ManageIQ::Providers::Google::CloudManager::RefreshWorker
     ManageIQ::Providers::SoftLayer::CloudManager::RefreshWorker
+    ManageIQ::Providers::SoftLayer::NetworkManager::RefreshWorker
     ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
