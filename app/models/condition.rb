@@ -77,7 +77,7 @@ class Condition < ApplicationRecord
 
       MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression before substitution: [#{expr.gsub(/\n/, " ")}]")
 
-      subst(expr, rec, inputs)
+      subst(expr, rec)
 
       MiqPolicy.logger.debug("MIQ(condition-eval): Name: #{name}, Expression after substitution: [#{expr.gsub(/\n/, " ")}]")
       result = do_eval(expr)
@@ -90,7 +90,7 @@ class Condition < ApplicationRecord
     eval(expr) ? true : false
   end
 
-  def self.subst(expr, rec, _inputs = nil)
+  def self.subst(expr, rec)
     findexp = /<find>(.+?)<\/find>/im
     if expr =~ findexp
       expr = expr.gsub!(findexp) { |_s| _subst_find(rec, $1.strip) }
