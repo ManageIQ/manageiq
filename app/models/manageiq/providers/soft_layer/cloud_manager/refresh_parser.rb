@@ -23,7 +23,6 @@ class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Pr
     get_availability_zones
     get_images
     get_instances
-    get_tags
     _log.info("#{log_header}...Complete")
 
     @data
@@ -58,13 +57,8 @@ class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Pr
   end
 
   def get_instances
-    instances = @compute.servers.all
+    instances = @compute.servers.all.select {|s| s.datacenter == @ems.provider_region}
     process_collection(instances, :vms) { |instance| parse_instance(instance) }
-  end
-
-  def get_tags
-    tags = @compute.tags.all
-    # process_collection(tags, :tags) { |tags| parse_tags(tags) }
   end
 
   def parse_az(az)
@@ -147,7 +141,6 @@ class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Pr
         :cpu_cores_per_socket => 1,
         :memory_mb            => instance.ram,
         :disks                => [], # NOTE: Populated below
-        :networks             => [], # TODO: populate
       }
     }
 
