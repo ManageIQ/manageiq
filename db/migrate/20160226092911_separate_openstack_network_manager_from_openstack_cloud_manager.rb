@@ -33,6 +33,8 @@ class SeparateOpenstackNetworkManagerFromOpenstackCloudManager < ActiveRecord::M
 
   def up
     # Separate NetworkManager from CloudManager and move network models under NetworkManager
+    ExtManagementSystem.connection.schema_cache.clear!
+    ExtManagementSystem.reset_column_information
     ExtManagementSystem
       .joins('left join ext_management_systems as network_manager on network_manager.parent_ems_id = ext_management_systems.id')
       .where(:ext_management_systems => {:type          => ['ManageIQ::Providers::Openstack::CloudManager',
