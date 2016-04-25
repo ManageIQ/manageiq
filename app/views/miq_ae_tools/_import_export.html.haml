@@ -1,4 +1,4 @@
-%iframe.import-hidden-iframe{:name => "upload_target"}
+%iframe.import-hidden-iframe{:name => "upload_target", :style => "display: none;"}
 
 = render :partial => "layouts/flash_msg"
 .import-flash-message
@@ -44,7 +44,7 @@
             :remote               => true,
             "data-method"         => :post,
             :title                => t)
-.import-data
+.import-data{:style => "display: none;"}
   %form#import-form
     %h3
       = _('Import Datastore classes')
