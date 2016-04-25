@@ -291,8 +291,7 @@ class MiqRequestController < ApplicationController
       @edit[:wf].init_from_dialog(@edit[:new])    # Create a new provision workflow for this edit session
       @edit[:buttons] = @edit[:wf].get_buttons
       @edit[:wf].get_dialog_order.each do |d|                           # Go thru all dialogs, in order that they are displayed
-        @edit[:wf].get_all_fields(d).keys.each do |f|                 # Go thru all field
-          field = @edit[:wf].get_field(f, d)
+        @edit[:wf].get_all_fields(d).each do |f, field|                 # Go thru all field
           unless field[:error].blank?
             @error_div ||= "#{d}_div"
             add_flash(field[:error], :error)
