@@ -4,11 +4,12 @@ require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
 describe LaunchAnsibleJob do
   let(:job_class) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_AnsibleTower_ConfigurationManager_Job }
+  let(:jt_class) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript }
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:vm) { FactoryGirl.create(:vm) }
   let(:svc_vm) { MiqAeMethodService::MiqAeServiceVm.find(vm.id) }
-  let(:job_template) { FactoryGirl.create(:configuration_script) }
-  let(:svc_job_template) { MiqAeMethodService::MiqAeServiceConfigurationScript.find(job_template.id) }
+  let(:job_template) { FactoryGirl.create(:ansible_configuration_script) }
+  let(:svc_job_template) { jt_class.find(job_template.id) }
   let(:ip_addr) { '1.1.1.1' }
   let(:job) { FactoryGirl.create(:ansible_tower_job) }
   let(:svc_job) { job_class.find(job.id) }
