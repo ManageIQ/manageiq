@@ -1016,10 +1016,10 @@ class MiqExpression
     Metric::Rollup.excluded_col_for_expression?(col.to_sym)
   end
 
-  def self.evaluate(expression, obj, inputs = {}, tz = nil)
+  def self.evaluate(expression, obj, _inputs = {}, tz = nil)
     ruby_exp = expression.kind_of?(Hash) ? new(expression).to_ruby(tz) : expression.to_ruby(tz)
     _log.debug("Expression before substitution: #{ruby_exp}")
-    subst_expr = Condition.subst(ruby_exp, obj, inputs)
+    subst_expr = Condition.subst(ruby_exp, obj)
     _log.debug("Expression after substitution: #{subst_expr}")
     result = eval(subst_expr) ? true : false
     _log.debug("Expression evaluation result: [#{result}]")

@@ -559,7 +559,7 @@ module Rbac
     return true if filter.nil?
     expression = filter.to_ruby(tz)
     return true if expression.nil?
-    substituted_expression = Condition.subst(expression, obj, {})
+    substituted_expression = Condition.subst(expression, obj)
     return true if Condition.do_eval(substituted_expression)
     false
   end
