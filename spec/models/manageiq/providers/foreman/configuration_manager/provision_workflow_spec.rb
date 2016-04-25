@@ -6,16 +6,14 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
   let(:system)  { FactoryGirl.create(:configured_system_foreman, :manager => manager) }
 
   it "#allowed_configuration_profiles" do
-    cp       = FactoryGirl.build(:configuration_profile, :name => "test profile")
+    cp       = FactoryGirl.build(:configuration_profile, :name => "test", :description => "a/b/c/test")
     cs       = FactoryGirl.build(:configured_system_foreman)
     workflow = FactoryGirl.build(:miq_provision_configured_system_foreman_workflow)
 
     workflow.instance_variable_set(:@values, :src_configured_system_ids => [cs.id])
-    expect(ConfiguredSystem).to receive(:common_configuration_profiles_for_selected_configured_systems)
-      .with([cs.id])
-      .and_return([cp])
+    expect(ConfiguredSystem).to receive(:common_configuration_profiles_for_selected_configured_systems).with([cs.id]).and_return([cp])
 
-    expect(workflow.allowed_configuration_profiles).to eq(cp.id => cp.name)
+    expect(workflow.allowed_configuration_profiles).to eq(cp.id => cp.description)
   end
 
   describe "#make_request" do

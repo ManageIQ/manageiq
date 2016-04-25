@@ -23,7 +23,7 @@ class ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow < Mi
     @allowed_configuration_profiles ||= begin
       profiles = ::ConfiguredSystem.common_configuration_profiles_for_selected_configured_systems(@values[:src_configured_system_ids])
       profiles.each_with_object({}) do |cp, hash|
-        hash[cp.id] = cp.name
+        hash[cp.id] = cp.description
       end
     end
   end
