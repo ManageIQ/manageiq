@@ -25,22 +25,19 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
   end
 
   context "#perf_collect_metrics" do
-    it "raises an error when no ems is defined" do
+    it "fails quietly when no ems is defined" do
       @node.ext_management_system = nil
-      expect { @node.perf_collect_metrics('interval_name') }.to raise_error(
-        described_class::TargetValidationError)
+      expect(@node.perf_collect_metrics('interval_name')).to eq([{}, {}])
     end
 
-    it "raises an error when no cpu cores are defined" do
+    it "fails quietly when no cpu cores are defined" do
       @node.hardware.cpu_total_cores = nil
-      expect { @node.perf_collect_metrics('interval_name') }.to raise_error(
-        described_class::TargetValidationError)
+      expect(@node.perf_collect_metrics('interval_name')).to eq([{}, {}])
     end
 
-    it "raises an error when memory is not defined" do
+    it "fails quietly when memory is not defined" do
       @node.hardware.memory_mb = nil
-      expect { @node.perf_collect_metrics('interval_name') }.to raise_error(
-        described_class::TargetValidationError)
+      expect(@node.perf_collect_metrics('interval_name')).to eq([{}, {}])
     end
 
     # TODO: include also sort_and_normalize in the tests
