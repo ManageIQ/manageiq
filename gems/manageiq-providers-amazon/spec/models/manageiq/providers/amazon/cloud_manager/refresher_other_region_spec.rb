@@ -100,7 +100,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_floating_ip
-    ip = ManageIQ::Providers::Amazon::CloudManager::FloatingIp.where(:address => "54.215.0.230").first
+    ip = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "54.215.0.230").first
     expect(ip).to have_attributes(
       :address            => "54.215.0.230",
       :ems_ref            => "54.215.0.230",
@@ -117,7 +117,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_security_group
-    @sg = ManageIQ::Providers::Amazon::CloudManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup-OtherRegion").first
+    @sg = ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup-OtherRegion").first
     expect(@sg).to have_attributes(
       :name        => "EmsRefreshSpec-SecurityGroup-OtherRegion",
       :description => "EmsRefreshSpec-SecurityGroup-OtherRegion",
