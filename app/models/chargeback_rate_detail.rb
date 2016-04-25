@@ -160,7 +160,7 @@ class ChargebackRateDetail < ApplicationRecord
 
     # Note, we use sort_by vs. order since we need to call this method against
     # the in memory chargeback_tiers association and NOT hit the database.
-    tiers = chargeback_tiers.sort_by(&:start)
+    tiers = chargeback_tiers
 
     tiers.each_with_index do |tier, index|
       if single_tier?(tier,tiers)
