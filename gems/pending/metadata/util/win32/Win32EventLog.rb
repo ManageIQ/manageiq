@@ -525,7 +525,7 @@ class Win32EventLog
     # Put the needed fields in the node_rec, and collect them for md5 hashing to
     #   verify that this record is unique
     md5 = NODE_REC_KEYS.collect { |k| node_rec[k] = rec[k] }.join(' ')
-    md5 = Digest::MD5.hexdigest(md5)
+    md5 = Rails.application.config.digest_class.hexdigest(md5)
     return false if @dup_check.key?(md5)
     @dup_check[md5] = nil
 

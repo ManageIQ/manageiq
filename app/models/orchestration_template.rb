@@ -153,7 +153,7 @@ class OrchestrationTemplate < ApplicationRecord
   end
 
   def self.calc_md5(text)
-    Digest::MD5.hexdigest(text) if text
+    Rails.application.config.digest_class.hexdigest(text) if text
   end
 
   def calc_md5(text)

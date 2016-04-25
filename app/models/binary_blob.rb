@@ -15,7 +15,7 @@ class BinaryBlob < ApplicationRecord
     unless size.nil? || size == data.bytesize
       raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
     end
-    unless md5.nil? || md5 == Digest::MD5.hexdigest(data)
+    unless md5.nil? || md5 == Rails.application.config.digest_class.hexdigest(data)
       raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
     end
     data
@@ -28,7 +28,7 @@ class BinaryBlob < ApplicationRecord
     return self if data.bytesize == 0
 
     self.part_size ||= BinaryBlobPart.default_part_size
-    self.md5 = Digest::MD5.hexdigest(data)
+    self.md5 = Rails.application.config.digest_class.hexdigest(data)
     self.size = data.bytesize
 
     until data.bytesize == 0
@@ -43,7 +43,7 @@ class BinaryBlob < ApplicationRecord
   # Write binary file from the database into a file
   def dump_binary(path_or_io)
     dump_size = 0
-    hasher = Digest::MD5.new
+    hasher = Rails.application.config.digest_class.new
 
     begin
       fd = path_or_io.respond_to?(:write) ? path_or_io : File.open(path_or_io, "wb")
@@ -76,7 +76,7 @@ class BinaryBlob < ApplicationRecord
     self.md5 = nil
     self.size = 0
 
-    hasher = Digest::MD5.new
+    hasher = Rails.application.config.digest_class.new
 
     File.open(path, "rb") do |f|
       until f.eof?

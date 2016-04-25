@@ -83,7 +83,7 @@ module MiqXmlDiff
 
     # Add items to delta xml file
     path = srcPath.get_path
-    path_md5 = Digest::MD5.hexdigest(action.to_s + (path.nil? ? "root=>true" : path.to_s))
+    path_md5 = Rails.application.config.digest_class.hexdigest(action.to_s + (path.nil? ? "root=>true" : path.to_s))
 
     # Check if we have already added an item node for this action and path, if so
     # just add the data node(s) to it.  Otherwise create a new item node.

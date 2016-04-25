@@ -209,7 +209,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   "Id": "#{queue_arn}/SQSDefaultPolicy",
   "Statement": [
     {
-      "Sid": "#{Digest::MD5.hexdigest(queue_arn)}",
+      "Sid": "#{Rails.application.config.digest_class.hexdigest(queue_arn)}",
       "Effect": "Allow",
       "Principal": {
         "AWS": "*"

@@ -72,7 +72,7 @@ module HostScanItemNteventlog
         :level     => level,
         :source    => source,
         :message   => message,
-        :uid       => Digest::MD5.hexdigest("#{generated} #{name} #{level} #{source} #{message}")
+        :uid       => Rails.application.config.digest_class.hexdigest("#{generated} #{name} #{level} #{source} #{message}")
       }
 
       rec_count += 1

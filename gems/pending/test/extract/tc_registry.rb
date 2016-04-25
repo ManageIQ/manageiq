@@ -123,7 +123,7 @@ module Extract
     end
 
     def generateMD5(xml)
-      md5Sig = Digest::MD5.new
+      md5Sig = Rails.application.config.digest_class.new
       xmlFormatted = ""
       xml.write(xmlFormatted, 0)
       md5Sig << xmlFormatted
