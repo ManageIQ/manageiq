@@ -61,24 +61,26 @@ describe "pglogical replication" do
     # Test that rows are replicated initially on subscription create
     tables = insert_records(insert_start)
     @master_connection.pglogical.subscription_create(sub_name, slave_dsn, [replication_set_name], false)
-    sleep(5)
-    assert_records_replicated(tables)
-    insert_start += 2
-
-    # Test subscription info methods
-    sub_info = @master_connection.pglogical.subscription_show_status(sub_name)
-    expect(sub_info["subscription_name"]).to eq(sub_name)
-    expect(sub_info["status"]).to eq("replicating")
-    expect(sub_info["provider_dsn"]).to eq(slave_dsn)
-    expect(sub_info["replication_sets"]).to eq([replication_set_name])
-
-    sub_list = @master_connection.pglogical.subscriptions
-    expect(sub_list.first).to eq(sub_info)
 
     # add a block so that we can be sure we try to clean up the subscription
     # otherwise existing replication connections will prevent us from removing
     # the test master database
     begin
+
+      sleep(5)
+      assert_records_replicated(tables)
+      insert_start += 2
+
+      # Test subscription info methods
+      sub_info = @master_connection.pglogical.subscription_show_status(sub_name)
+      expect(sub_info["subscription_name"]).to eq(sub_name)
+      expect(sub_info["status"]).to eq("replicating")
+      expect(sub_info["provider_dsn"]).to eq(slave_dsn)
+      expect(sub_info["replication_sets"]).to eq([replication_set_name])
+
+      sub_list = @master_connection.pglogical.subscriptions
+      expect(sub_list.first).to eq(sub_info)
+
       # Test that rows are replicated as they are inserted when there is an active subscription
       tables = insert_records(insert_start)
       sleep(5)
