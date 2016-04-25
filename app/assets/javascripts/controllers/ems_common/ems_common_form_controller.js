@@ -63,6 +63,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.emstype_vm                      = data.emstype_vm;
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
         $scope.emsCommonModel.default_api_port                = 5000;
+        $scope.emsCommonModel.amqp_security_protocol          = 'ssl';
         $scope.emsCommonModel.amqp_api_port                   = 5672;
         $scope.emsCommonModel.api_version                     = 'v2';
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
@@ -179,7 +180,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.ssh_keypair_verify != '' && $scope.angularForm.ssh_keypair_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "metrics" && $scope.emsCommonModel.emstype == "rhevm") &&
-      ($scope.emsCommonModel.metrics_hostname != '' && $scope.angularForm.metrics_hostname.$valid && $scope.emsCommonModel.metrics_api_port != '') &&
+      ($scope.emsCommonModel.metrics_hostname != '' && $scope.angularForm.metrics_hostname.$valid) &&
       ($scope.emsCommonModel.metrics_userid != '' && $scope.angularForm.metrics_userid.$valid &&
       $scope.emsCommonModel.metrics_password != '' && $scope.angularForm.metrics_password.$valid &&
       $scope.emsCommonModel.metrics_verify != '' && $scope.angularForm.metrics_verify.$valid)) {
