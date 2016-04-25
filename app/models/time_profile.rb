@@ -3,7 +3,7 @@ class TimeProfile < ApplicationRecord
   ALL_HOURS = (0...24).to_a.freeze
   DEFAULT_TZ = "UTC"
 
-  validates_uniqueness_of :description
+  validates_uniqueness_of :description, :conditions => -> { where(region_to_conditions(my_region_number)) }
 
   serialize :profile
   default_value_for :days,  ALL_DAYS
@@ -26,7 +26,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def self.seed
-    default_time_profile || create!(
+    in_my_region.rollup_daily_metrics.find_all_with_entire_tz.detect { |tp| tp.tz_or_default == DEFAULT_TZ } || create!(
       :description          => DEFAULT_TZ,
       :tz                   => DEFAULT_TZ,
       :profile_type         => "global",
