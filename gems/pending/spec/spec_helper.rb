@@ -1,4 +1,5 @@
 require_relative '../bundler_setup'
+require 'active_support/all'
 require 'azure-armrest'
 require 'vcr'
 
