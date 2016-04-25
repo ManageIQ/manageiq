@@ -100,7 +100,7 @@ module EmsRefresh::SaveInventoryNetwork
   def save_cloud_subnets_inventory(network, hashes)
     # TODO(lsmola) can be removed when refresh of all providers is moved under network provider
     hashes.each do |h|
-      %i(availability_zone).each do |relation|
+      %i(availability_zone parent_cloud_subnet).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
 
