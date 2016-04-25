@@ -76,9 +76,9 @@ class TreeBuilderConfigurationManager < TreeBuilder
 
   def fetch_unassigned_inventory_group_objects(count_only, configuration_manager_id)
     no_inventory_configured_systems = ConfiguredSystem.where(:inventory_root_group_id => nil,
-                                                              :manager_id        => configuration_manager_id)
+                                                             :manager_id             => configuration_manager_id)
     no_inventory_configured_systems_filtered = rbac_filtered_objects(no_inventory_configured_systems,
-                                                                      :match_via_descendants => ConfiguredSystem)
+                                                                     :match_via_descendants => ConfiguredSystem)
     if no_inventory_configured_systems_filtered.count > 0
       unassigned_id = "#{configuration_manager_id}-unassigned"
       unassigned_inventory_group =
