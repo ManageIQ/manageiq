@@ -113,6 +113,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.host_default_vnc_port_start     = data.host_default_vnc_port_start;
         $scope.emsCommonModel.host_default_vnc_port_end       = data.host_default_vnc_port_end;
 
+        $scope.emsCommonModel.event_stream_selection          = data.event_stream_selection;
+
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
 
         if($scope.emsCommonModel.default_userid != '') {
@@ -127,12 +129,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         if($scope.emsCommonModel.ssh_keypair_userid != '') {
           $scope.emsCommonModel.ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_verify = miqService.storedPasswordPlaceholder;
         }
-        if($scope.emsCommonModel.amqp_hostname != '') {
-          $scope.emsCommonModel.event_stream_selection = 'amqp';
-        } else {
-          $scope.emsCommonModel.event_stream_selection = 'ceilometer';
-        }
-
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
 
