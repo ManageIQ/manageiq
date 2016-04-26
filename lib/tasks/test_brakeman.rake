@@ -1,6 +1,8 @@
 namespace :test do
   namespace :brakeman do
     task :setup # NOOP - Stub for consistent CI testing
+
+    task :teardown # NOOP - Stub for consistent CI testing
   end
 
   desc "Run Brakeman"
