@@ -1720,10 +1720,16 @@ class MiqVimInventory < MiqVimClientBase
     return(@dvSwithces) if @dvSwitches
 
     $vim_log.info "MiqVimInventory.dvSwitches_locked: loading DV Switch cache for #{@connId}"
+
+    base_class    = 'DistributedVirtualSwitch'.freeze
+    child_classes = VimType.child_classes(base_class)
+
     begin
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      ra = getMoPropMulti(inventoryHash_locked['DistributedVirtualSwitch'], @propMap[:DistributedVirtualSwitch][:props])
+      moref_array = child_classes.collect { |klass| inventoryHash_locked[klass] }.flatten.compact
+
+      ra = getMoPropMulti(moref_array, @propMap[base_class.to_sym][:props])
 
       @dvSwitches      = {}
       @dvSwitchesByMor = {}
