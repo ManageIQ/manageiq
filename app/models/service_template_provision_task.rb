@@ -111,7 +111,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def deliver_to_automate(req_type = request_type, _zone = nil)
-    task_check_on_execute
+    task_check_on_delivery
 
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
