@@ -548,7 +548,7 @@ class MiqVimInventory < MiqVimClientBase
   #
   def addObjByMor(objMor)
     raise "addObjByMor: exclusive cache lock not held"      unless @cacheLock.sync_exclusive?
-    objType = objMor.vimType.to_sym
+    objType = objMor.vimBaseType.to_sym
     raise "addObjByMor: Unknown VIM object type: #{objType}"  unless (pmap = @propMap[objType])
 
     objHash = getMoProp_local(objMor, pmap[:props])
@@ -560,7 +560,7 @@ class MiqVimInventory < MiqVimClientBase
 
   def removeObjByMor(objMor)
     raise "removeObjByMor: exclusive cache lock not held"   unless @cacheLock.sync_exclusive?
-    objType = objMor.vimType.to_sym
+    objType = objMor.vimBaseType.to_sym
     raise "removeObjByMor: Unknown VIM object type: #{objType}" unless (pmap = @propMap[objType])
 
     baseName  = pmap[:baseName]
