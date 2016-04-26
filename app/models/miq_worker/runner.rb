@@ -343,7 +343,7 @@ class MiqWorker::Runner
       end
 
       do_gc
-      log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
+      self.class.log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
       send(poll_method)
     end
   end
@@ -427,6 +427,28 @@ class MiqWorker::Runner
     sleep(seconds % SAFE_SLEEP_SECONDS)
   end
 
+  def self.ruby_object_usage
+    types = Hash.new { |h, k| h[k] = 0 }
+    ObjectSpace.each_object do |obj|
+      types[obj.class.name] += 1
+    end
+    types
+  end
+
+  LOG_RUBY_OBJECT_USAGE_INTERVAL = 60
+  def self.log_ruby_object_usage(top = 20)
+    return unless top > 0
+
+    t = Time.now.utc
+    @last_ruby_object_usage ||= t
+
+    if (@last_ruby_object_usage + LOG_RUBY_OBJECT_USAGE_INTERVAL) < t
+      types = ruby_object_usage
+      _log.info("Ruby Object Usage: #{types.sort_by { |_k, v| -v }.take(top).inspect}")
+      @last_ruby_object_usage = t
+    end
+  end
+
   protected
 
   def process_message(message, *args)
@@ -445,28 +467,6 @@ class MiqWorker::Runner
     end
   rescue => err
     _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
-  end
-
-  def ruby_object_usage
-    types = Hash.new { |h, k| h[k] = 0 }
-    ObjectSpace.each_object do |obj|
-      types[obj.class.name] += 1
-    end
-    types
-  end
-
-  LOG_RUBY_OBJECT_USAGE_INTERVAL = 60
-  def log_ruby_object_usage(top = 20)
-    return unless top > 0
-
-    t = Time.now.utc
-    @last_ruby_object_usage ||= t
-
-    if (@last_ruby_object_usage + LOG_RUBY_OBJECT_USAGE_INTERVAL) < t
-      types = ruby_object_usage
-      _log.info("Ruby Object Usage: #{types.sort_by { |_k, v| -v }.take(top).inspect}")
-      @last_ruby_object_usage = t
-    end
   end
 
   def set_process_title
