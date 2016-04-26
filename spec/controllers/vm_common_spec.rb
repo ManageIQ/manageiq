@@ -78,4 +78,34 @@ describe VmOrTemplateController do
       expect(assigns(:flash_array).first[:message]).to include("is not authorized to access")
     end
   end
+
+  describe '#console_after_task' do
+    let(:vm) { FactoryGirl.create(:vm_vmware) }
+    let(:task) { FactoryGirl.create(:miq_task, :task_results => task_results) }
+    subject { controller.send(:console_after_task, 'html5') }
+
+    before(:each) do
+      controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
+    end
+
+    context 'console with websocket URL' do
+      let(:url) { '/ws/console/123456' }
+      let(:task_results) { {:url => url} }
+
+      it 'renders javascript to open a popup' do
+        allow(controller).to receive(:params).and_return(:task_id => task.id)
+        expect(subject).to include("window.open('/vm_or_template/launch_html5_console?#{task_results.to_query}');")
+      end
+    end
+
+    context 'console with remote URL' do
+      let(:url) { 'http://www.manageiq.org' }
+      let(:task_results) { {:remote_url => url} }
+
+      it 'renders javascript to open a popup' do
+        expect(controller).to receive(:params).and_return(:task_id => task.id)
+        expect(subject).to include("window.open('#{url}');")
+      end
+    end
+  end
 end
