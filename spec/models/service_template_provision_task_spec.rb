@@ -59,28 +59,64 @@ describe ServiceTemplateProvisionTask do
       end
     end
 
-    it "deliver_to_automate" do
-      automate_args = {
-        :object_type      => 'ServiceTemplateProvisionTask',
-        :object_id        => @task_0.id,
-        :namespace        => 'Service/Provisioning/StateMachines',
-        :class_name       => 'ServiceProvision_Template',
-        :instance_name    => 'clone_to_service',
-        :automate_message => 'create',
-        :attrs            => {'request' => 'clone_to_service'},
-        :user_id          => @admin.id,
-        :miq_group_id     => @admin.current_group_id,
-        :tenant_id        => @admin.current_tenant.id,
-      }
-      allow(@task_0).to receive(:task_check_on_execute)
-      expect(MiqQueue).to receive(:put).with(
-        :class_name  => 'MiqAeEngine',
-        :method_name => 'deliver',
-        :args        => [automate_args],
-        :role        => 'automate',
-        :zone        => nil,
-        :task_id     => "service_template_provision_task_#{@task_0.id}")
-      @task_0.deliver_to_automate
+    describe "#deliver_to_automate" do
+      it "delivers to the queue when the state is not active" do
+        @task_0.state = 'pending'
+        automate_args = {
+          :object_type      => 'ServiceTemplateProvisionTask',
+          :object_id        => @task_0.id,
+          :namespace        => 'Service/Provisioning/StateMachines',
+          :class_name       => 'ServiceProvision_Template',
+          :instance_name    => 'clone_to_service',
+          :automate_message => 'create',
+          :attrs            => {'request' => 'clone_to_service'},
+          :user_id          => @admin.id,
+          :miq_group_id     => @admin.current_group_id,
+          :tenant_id        => @admin.current_tenant.id,
+        }
+        allow(@request).to receive(:approved?).and_return(true)
+        expect(MiqQueue).to receive(:put).with(
+          :class_name  => 'MiqAeEngine',
+          :method_name => 'deliver',
+          :args        => [automate_args],
+          :role        => 'automate',
+          :zone        => nil,
+          :task_id     => "service_template_provision_task_#{@task_0.id}")
+        @task_0.deliver_to_automate
+      end
+
+      it "raises an error when the state is already active" do
+        @task_0.state = 'active'
+        expect { @task_0.deliver_to_automate }.to raise_error('Service_Template_Provisioning request is already being processed')
+      end
+    end
+
+    describe "#execute_queue" do
+      it 'delivers to the queue when the state is active' do
+        @task_0.state = 'active'
+        miq_callback = {
+          :class_name  => 'ServiceTemplateProvisionTask',
+          :instance_id => @task_0.id,
+          :method_name => :execute_callback
+        }
+        allow(@request).to receive(:approved?).and_return(true)
+        allow(MiqServer).to receive(:my_zone).and_return(nil)
+        expect(MiqQueue).to receive(:put).with(
+          :class_name   => 'ServiceTemplateProvisionTask',
+          :instance_id  => @task_0.id,
+          :method_name  => 'execute',
+          :role         => 'ems_operations',
+          :zone         => nil,
+          :task_id      => "service_template_provision_task_#{@task_0.id}",
+          :deliver_on   => nil,
+          :miq_callback => miq_callback)
+        @task_0.execute_queue
+      end
+
+      it 'raises an error when the state is already finished' do
+        @task_0.state = 'finished'
+        expect { @task_0.execute_queue }.to raise_error('Service_Template_Provisioning request has already been processed')
+      end
     end
 
     it "service 1 child provision priority" do
