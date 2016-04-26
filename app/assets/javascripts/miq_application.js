@@ -884,7 +884,7 @@ function miqAjaxAuth(url) {
     // TODO API.autorenew is called on (non-login) page load - when?
   })
   .then(null, function() {
-    add_flash(__("API Authentication failed"), 'error');
+    add_flash(__("Incorrect username or password"), 'error');
 
     miqEnableLoginFields(true);
     miqSparkleOff();
