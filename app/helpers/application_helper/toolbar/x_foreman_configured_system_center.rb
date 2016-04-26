@@ -1,4 +1,4 @@
-class ApplicationHelper::Toolbar::XConfiguredSystemCenter < ApplicationHelper::Toolbar::Basic
+class ApplicationHelper::Toolbar::XForemanConfiguredSystemCenter < ApplicationHelper::Toolbar::Basic
   button_group('record_summary', [
     select(
       :provider_foreman_lifecycle_choice,
@@ -8,7 +8,7 @@ class ApplicationHelper::Toolbar::XConfiguredSystemCenter < ApplicationHelper::T
       :enabled => true,
       :items   => [
         button(
-          :configured_system_provision,
+          :provider_foreman_configured_system_provision,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Provision Configured System'),
           t,
@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::XConfiguredSystemCenter < ApplicationHelper::T
       :enabled => true,
       :items   => [
         button(
-          :configured_system_tag,
+          :provider_foreman_configured_system_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Configured System'),
           N_('Edit Tags'),
