@@ -28,15 +28,15 @@
     %tbody
       /Currency code is the same for all the chargeback_rate_details
       - code_currency = @record.chargeback_rate_details.first.detail_currency.code
-      - @record.chargeback_rate_details.to_a.sort_by { |rd| [rd[:group].downcase, rd[:description].downcase] }.each do |detail|
+      - @record.chargeback_rate_details.to_a.sort_by { |rd| [rd[:group].downcase, rd[:description].downcase] }.each_with_index do |detail, detail_index|
       - tiers = detail.chargeback_tiers.order(:start)
         - @cur_group = detail[:group] if @cur_group.nil?
         - if @cur_group != detail[:group]
           - @cur_group = detail[:group]
           %tr
-            %td.active{:colspan => "9"} &nbsp;
+            %td.active{:colspan => "9", :style => "background-color: #f5f5f5;"} &nbsp;
         - num_tiers = detail.chargeback_tiers.to_a.blank? ? "1" : tiers.to_a.length.to_s
-        %tr
+        %tr.rdetail{:id => "rate_detail_row_#{detail_index}"}
           %td{:rowspan => num_tiers}
             = h(rate_detail_group(detail[:group]))
           %td{:rowspan => num_tiers}
@@ -54,7 +54,7 @@
             = detail.show_rates(code_currency)
         - (1..num_tiers.to_i - 1).each do |tier_index|
           - tier = tiers.to_a[tier_index]
-          %tr
+          %tr.rdetail{:id => "rate_detail_row_#{detail_index}"}
             %td
               = tier.start
             %td
@@ -65,3 +65,12 @@
               = tier.variable_rate
         %tr
           %td{:colspan => "9"}
+
+    :javascript
+      $('tbody tr.rdetail').hover(
+        function () {
+          $("tr[id$='"+this.id+"']").addClass("active");
+        }, function() {
+          $("tr[id$='"+this.id+"']").removeClass("active");
+        }
+      );
