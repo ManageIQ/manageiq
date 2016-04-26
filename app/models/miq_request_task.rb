@@ -107,10 +107,14 @@ class MiqRequestTask < ApplicationRecord
     self.class.get_description(self)
   end
 
-  def task_check_on_execute
+  def task_check_on_delivery
     if request_class::ACTIVE_STATES.include?(state)
       raise _("%{task} request is already being processed") % {:task => request_class::TASK_DESCRIPTION}
     end
+    task_check_on_execute
+  end
+
+  def task_check_on_execute
     if state == "finished"
       raise _("%{task} request has already been processed") % {:task => request_class::TASK_DESCRIPTION}
     end
@@ -118,7 +122,7 @@ class MiqRequestTask < ApplicationRecord
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)
-    task_check_on_execute
+    task_check_on_delivery
 
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
