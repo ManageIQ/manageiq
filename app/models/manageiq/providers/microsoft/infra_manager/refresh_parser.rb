@@ -331,6 +331,12 @@ module ManageIQ::Providers::Microsoft
 
     def process_snapshots(p)
       result = []
+
+      if p[:VMCheckpoints].nil?
+        $scvmm_log.info("No snapshot information available for #{p[:Name]}")
+        return result
+      end
+
       p[:VMCheckpoints].each do |snapshot_hash|
         s = snapshot_hash[:Props]
         new_result = {
