@@ -917,7 +917,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def inventory_group_summary_tab_selected?
-    @inventory_record && @sb[:active_tab] == 'summary'
+    @inventory_group_record && @sb[:active_tab] == 'summary'
   end
 
   def construct_edit

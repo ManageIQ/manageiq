@@ -1,4 +1,4 @@
-class ApplicationHelper::Toolbar::ConfiguredSystemForemanCenter < ApplicationHelper::Toolbar::Basic
+class ApplicationHelper::Toolbar::ConfiguredSystemsForemanCenter < ApplicationHelper::Toolbar::Basic
   button_group('provider_foreman_lifecycle', [
     select(
       :provider_foreman_lifecycle_choice,
