@@ -60,8 +60,9 @@ describe ManageIQ::Providers::Azure::CloudManager::ProvisionWorkflow do
   context "with applied tags" do
     before do
       FactoryGirl.create(:classification_cost_center_with_tags)
-      admin.current_group.entitlement = Entitlement.create!(:filters => {'managed'   => [['/managed/cc/001']],
-                                                                         'belongsto' => []})
+      admin.current_group.entitlement = Entitlement.create!
+      admin.current_group.entitlement.set_managed_filters([['/managed/cc/001']])
+      admin.current_group.save!
       ems.flavors << FactoryGirl.create(:flavor, :name => "Standard_A0", :supports_32_bit => false,
                                         :supports_64_bit => true)
       ems.flavors << FactoryGirl.create(:flavor, :name => "Standard_A1", :supports_32_bit => false,

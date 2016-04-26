@@ -50,9 +50,11 @@ describe User do
     let(:bfilters) { {"belongsto" => "b"} }
     let(:miq_group) { FactoryGirl.create(:miq_group, :entitlement => entitlement) }
     let(:entitlement) do
-      FactoryGirl.create(:entitlement,
-                         :filters => {'managed' => mfilters,
-                                      'belongsto' => bfilters})
+      entitlement = FactoryGirl.create(:entitlement)
+      entitlement.set_managed_filters(mfilters)
+      entitlement.set_belongsto_filters(bfilters)
+      entitlement.save!
+      entitlement
     end
 
     it "should check for and get Managed and Belongs-to filters from the group" do

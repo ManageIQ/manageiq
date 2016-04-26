@@ -74,8 +74,9 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
     before do
       FactoryGirl.create(:classification_cost_center_with_tags)
-      admin.current_group.entitlement = Entitlement.create!(:filters => {'managed'   => [['/managed/cc/001']],
-                                                                         'belongsto' => []})
+      admin.current_group.entitlement = Entitlement.create!
+      admin.current_group.entitlement.set_managed_filters([['/managed/cc/001']])
+      admin.current_group.save!
 
       2.times { FactoryGirl.create(:availability_zone_amazon, :ems_id => provider.id) }
       2.times { FactoryGirl.create(:security_group_openstack, :ext_management_system => provider.network_manager) }

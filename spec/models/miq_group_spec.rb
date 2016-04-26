@@ -3,8 +3,8 @@ describe MiqGroup do
     subject { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
 
     before do
-      subject.entitlement.filters = { 'managed'   => [['some managed filter']],
-                                      'belongsto' => [['some belongsto filter']] }
+      subject.entitlement.set_managed_filters([['some managed filter']])
+      subject.entitlement.set_belongsto_filters([['some belongsto filter']])
       subject.entitlement.save!
     end
 
