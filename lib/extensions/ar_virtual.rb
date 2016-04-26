@@ -209,9 +209,8 @@ module VirtualAttributes
       super
 
       virtual_attributes_to_define.each do |name, (type, options)|
-        if type.is_a?(Symbol)
-          type = ActiveRecord::Type.lookup(type, **options.except(:uses, :arel))
-        end
+        type = type.call if type.respond_to?(:call)
+        type = ActiveRecord::Type.lookup(type, **options.except(:uses, :arel)) if type.is_a?(Symbol)
 
         define_virtual_attribute(name, type, **options.slice(:uses, :arel))
       end
