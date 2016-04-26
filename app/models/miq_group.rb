@@ -4,7 +4,7 @@ class MiqGroup < ApplicationRecord
   TENANT_GROUP = "tenant"
 
   belongs_to :tenant
-  has_one    :entitlement, :dependent => :destroy
+  has_one    :entitlement, :dependent => :destroy, :autosave => true
   has_one    :miq_user_role, :through => :entitlement
   has_and_belongs_to_many :users
   has_many   :vms,         :dependent => :nullify
@@ -24,7 +24,9 @@ class MiqGroup < ApplicationRecord
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
-  serialize :filters
+  # For REST API compatibility only; Don't use otherwise!
+  accepts_nested_attributes_for :entitlement
+
   serialize :settings
 
   default_value_for :group_type, USER_GROUP
@@ -64,11 +66,11 @@ class MiqGroup < ApplicationRecord
               _("Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'") %
                 {:role_name => role_name, :group_name => group_name}
       end
-      group.miq_user_role = user_role
-      group.sequence      = index + 1
-      group.filters       = ldap_to_filters[group_name]
-      group.group_type    = SYSTEM_GROUP
-      group.tenant        = root_tenant
+      group.miq_user_role       = user_role
+      group.sequence            = index + 1
+      group.entitlement.filters = ldap_to_filters[group_name]
+      group.group_type          = SYSTEM_GROUP
+      group.tenant              = root_tenant
 
       if group.changed?
         mode = group.new_record? ? "Created" : "Updated"
@@ -123,56 +125,19 @@ class MiqGroup < ApplicationRecord
   end
 
   def get_filters(type = nil)
-    if type
-      (filters.respond_to?(:key?) && filters[type.to_s]) || []
-    else
-      filters || {"managed" => [], "belongsto" => []}
-    end
+    entitlement.try(:get_filters, type)
   end
 
   def has_filters?
-    get_managed_filters.present? || get_belongsto_filters.present?
+    entitlement.try(:has_filters?) || false
   end
 
   def get_managed_filters
-    get_filters("managed")
+    entitlement.try(:get_managed_filters) || []
   end
 
   def get_belongsto_filters
-    get_filters("belongsto")
-  end
-
-  def set_filters(type, filter)
-    self.filters ||= {}
-    self.filters[type.to_s] = filter
-  end
-
-  def self.remove_tag_from_all_managed_filters(tag)
-    all.each do |miq_group|
-      miq_group.remove_tag_from_managed_filter(tag)
-      miq_group.save if miq_group.filters_changed?
-    end
-  end
-
-  def remove_tag_from_managed_filter(filter_to_remove)
-    if get_managed_filters.present?
-      *category, _tag = filter_to_remove.split("/")
-      category = category.join("/")
-      self.filters["managed"].each do |filter|
-        next unless filter.first.starts_with?(category)
-        next unless filter.include?(filter_to_remove)
-        filter.delete(filter_to_remove)
-      end
-      self.filters["managed"].reject!(&:empty?)
-    end
-  end
-
-  def set_managed_filters(filter)
-    set_filters("managed", filter)
-  end
-
-  def set_belongsto_filters(filter)
-    set_filters("belongsto", filter)
+    entitlement.try(:get_belongsto_filters) || []
   end
 
   def miq_user_role_name
@@ -244,13 +209,6 @@ class MiqGroup < ApplicationRecord
   def self.with_current_user_groups
     current_user = User.current_user
     current_user.admin_user? ? all : where(:id => current_user.miq_group_ids)
-  end
-
-  def self.valid_filters?(filters_hash)
-    return true  unless filters_hash                  # nil ok
-    return false unless filters_hash.kind_of?(Hash)   # must be Hash
-    return true  if filters_hash.blank?               # {} ok
-    filters_hash["managed"].present? || filters_hash["belongsto"].present?
   end
 
   private
