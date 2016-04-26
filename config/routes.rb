@@ -939,6 +939,7 @@ Vmdb::Application.routes.draw do
         download_data
         ems_infra_form_fields
         protect
+        show
         show_list
         tagging_edit
         scaling
