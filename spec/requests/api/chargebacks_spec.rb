@@ -72,13 +72,15 @@ RSpec.describe "chargebacks API" do
   context "with an appropriate role" do
     it "can create a new chargeback rate detail" do
       api_basic_authorize action_identifier(:rates, :create, :collection_actions)
+      chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
       expect do
         run_post rates_url,
-                 :description => "rate_0",
-                 :group       => "fixed",
-                 :source      => "used",
-                 :enabled     => true
+                 :description        => "rate_0",
+                 :group              => "fixed",
+                 :chargeback_rate_id => chargeback_rate.id,
+                 :source             => "used",
+                 :enabled            => true
       end.to change(ChargebackRateDetail, :count).by(1)
       expect_result_to_match_hash(response_hash["results"].first, "description" => "rate_0", "enabled" => true)
       expect_request_success

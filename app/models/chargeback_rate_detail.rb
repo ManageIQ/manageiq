@@ -6,7 +6,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   default_scope { order(:group => :asc, :description => :asc) }
 
-  validates :group, :source, :presence => true
+  validates :group, :source, :chargeback_rate, :presence => true
   validate :contiguous_tiers?
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze

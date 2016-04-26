@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :chargeback_rate do
-    guid        { MiqUUID.new_guid }
-    description 'foo'
-    rate_type 'Compute'
+    guid                   { MiqUUID.new_guid }
+    sequence(:description) { |n| "Chargeback Rate ##{n}" }
+    rate_type              'Compute'
   end
 
   factory :chargeback_rate_with_details, :parent => :chargeback_rate do
