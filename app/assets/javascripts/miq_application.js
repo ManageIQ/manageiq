@@ -884,7 +884,7 @@ function miqAjaxAuth(url) {
     // TODO API.autorenew is called on (non-login) page load - when?
   })
   .then(null, function() {
-    add_flash(__("Incorrect username or password"), 'error');
+    add_flash(__("Incorrect username or password"), 'error', { id: 'auth_failed' });
 
     miqEnableLoginFields(true);
     miqSparkleOff();
@@ -893,8 +893,9 @@ function miqAjaxAuth(url) {
 
 // add a flash message to an existing #flash_msg_div
 // levels are error, warning, info, success
-function add_flash(msg, level) {
+function add_flash(msg, level, options) {
   level = level || 'success';
+  options = options || {};
   var cls = { alert: '', icon: '' };
 
   switch (level) {
@@ -930,6 +931,12 @@ function add_flash(msg, level) {
     text_div.remove();
   });
   text_div.append(alert_div);
+
+  // if options.id is provided, only one flash message with that id may exist
+  if (options.id) {
+    $('#' + options.id).filter('#flash_msg_div > *').remove();
+    text_div.attr('id', options.id);
+  }
 
   $('#flash_msg_div').append(text_div).show();
 }
