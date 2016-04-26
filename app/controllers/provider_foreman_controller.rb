@@ -405,7 +405,7 @@ class ProviderForemanController < ApplicationController
     end
 
     if @record.class.base_model.to_s == "ConfiguredSystem"
-      rec_cls = @record.class.base_model.to_s.underscore
+      rec_cls = "#{model_to_name(@record.class.to_s).downcase.tr(' ', '_')}_configured_system"
     end
     return unless %w(download_pdf main).include?(@display)
     @showtype = "main"

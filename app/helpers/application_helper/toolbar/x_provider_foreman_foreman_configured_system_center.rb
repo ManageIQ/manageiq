@@ -1,5 +1,5 @@
-class ApplicationHelper::Toolbar::ConfiguredSystemsCenter < ApplicationHelper::Toolbar::Basic
-  button_group('provider_foreman_lifecycle', [
+class ApplicationHelper::Toolbar::XProviderForemanForemanConfiguredSystemCenter < ApplicationHelper::Toolbar::Basic
+  button_group('record_summary', [
     select(
       :provider_foreman_lifecycle_choice,
       'fa fa-recycle fa-lg',
@@ -10,24 +10,20 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsCenter < ApplicationHelper::T
         button(
           :provider_foreman_configured_system_provision,
           'pficon pficon-add-circle-o fa-lg',
-          t = N_('Provision Configured Systems'),
+          t = N_('Provision Configured System'),
           t,
           :url       => "provision",
           :url_parms => "main_div",
-          :enabled   => false,
-          :onwhen    => "1+"),
+          :enabled   => true),
       ]
     ),
-  ])
-  button_group('provider_foreman_policy', [
     select(
       :provider_foreman_policy_choice,
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => false,
-      :onwhen  => "1+",
-      :items => [
+      :enabled => true,
+      :items   => [
         button(
           :provider_foreman_configured_system_tag,
           'pficon pficon-edit fa-lg',
@@ -35,8 +31,7 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsCenter < ApplicationHelper::T
           N_('Edit Tags'),
           :url       => "tagging",
           :url_parms => "main_div",
-          :enabled   => false,
-          :onwhen    => "1+"),
+          :enabled   => true),
       ]
     ),
   ])
