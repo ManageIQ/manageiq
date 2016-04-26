@@ -1,4 +1,5 @@
 describe MiqExpression do
+
   describe "#to_sql" do
     it "generates the SQL for an EQUAL expression" do
       sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
@@ -1200,164 +1201,160 @@ describe MiqExpression do
     end
   end
 
-  describe ".to_human" do
-    context "generates string representation of expression atoms that do/don't have alias keys" do
-      it "FIELD type" do
-        exp = MiqExpression.new(">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes"})
-        expect(exp.to_human).to eq('VM and Instance : Allocated Disk Storage > 5 MB')
+  describe "#to_human" do
+    it "generates a human readable string for a 'FIELD' expression" do
+      exp = MiqExpression.new(">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes"})
+      expect(exp.to_human).to eq('VM and Instance : Allocated Disk Storage > 5 MB')
+    end
 
-        exp = MiqExpression.new(">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes",
-                                        "alias" => "Disk"})
-        expect(exp.to_human).to eq('Disk > 5 MB')
-      end
+    it "generates a human readable string for a FIELD expression with alias" do
+      exp = MiqExpression.new(">" => {"field" => "Vm-allocated_disk_storage", "value" => "5.megabytes",
+                                    "alias" => "Disk"})
+      expect(exp.to_human).to eq('Disk > 5 MB')
+    end
 
-      it "FIND/CHECK type" do
-        exp = MiqExpression.new("FIND" => {"search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name",
-                                                                            "value" => "X"}},
-                                           "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
-                                                                  "value" => "true"}}})
-        expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : '\
-          'Name STARTS WITH "X" CHECK ALL Read Only = "true"')
+    it "generates a human readable string for a FIND/CHECK expression" do
+      exp = MiqExpression.new("FIND" => {"search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name",
+                                                                          "value" => "X"}},
+                                         "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
+                                                                "value" => "true"}}})
+      expect(exp.to_human).to eq('FIND VM and Instance.Advanced Settings : '\
+        'Name STARTS WITH "X" CHECK ALL Read Only = "true"')
+    end
 
-        exp = MiqExpression.new("FIND" => {"search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name",
-                                                                            "value" => "X",
-                                                                            "alias" => "Settings Name"}},
-                                           "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
-                                                                  "value" => "true"}}})
-        expect(exp.to_human).to eq('FIND Settings Name STARTS WITH "X" CHECK ALL Read Only = "true"')
-      end
+    it "generates a human readable string for a FIND/CHECK expression with alias" do
+      exp = MiqExpression.new("FIND" => {"search"   => {"STARTS WITH" => {"field" => "Vm.advanced_settings-name",
+                                                                          "value" => "X",
+                                                                          "alias" => "Settings Name"}},
+                                         "checkall" => {"=" => {"field" => "Vm.advanced_settings-read_only",
+                                                                "value" => "true"}}})
+      expect(exp.to_human).to eq('FIND Settings Name STARTS WITH "X" CHECK ALL Read Only = "true"')
+    end
 
-      it "COUNT type without alias" do
-        exp = MiqExpression.new({">" => {"count" => "Vm.snapshots", "value" => "1"}})
-        expect(exp.to_human).to eq("COUNT OF VM and Instance.Snapshots > 1")
+    it "generates a human readable string for a COUNT expression" do
+      exp = MiqExpression.new({">" => {"count" => "Vm.snapshots", "value" => "1"}})
+      expect(exp.to_human).to eq("COUNT OF VM and Instance.Snapshots > 1")
+    end
 
-        exp = MiqExpression.new(">" => {"count" => "Vm.snapshots", "value" => "1", "alias" => "Snaps"})
-        expect(exp.to_human).to eq("COUNT OF Snaps > 1")
-      end
+    it "generates a human readable string for a COUNT expression with alias" do
+      exp = MiqExpression.new(">" => {"count" => "Vm.snapshots", "value" => "1", "alias" => "Snaps"})
+      expect(exp.to_human).to eq("COUNT OF Snaps > 1")
+    end
 
-      it "TAG type" do
+    context "TAG type expression" do
+      before do
         # tags contain the root tenant's name
         Tenant.seed
 
         category = FactoryGirl.create(:classification, :name => 'environment', :description => 'Environment')
         FactoryGirl.create(:classification, :parent_id => category.id, :name => 'prod', :description => 'Production')
+      end
 
+      it "generates a human readable string for a TAG expression" do
         exp = MiqExpression.new("CONTAINS" => {"tag" => "Host.managed-environment", "value" => "prod"})
         expect(exp.to_human).to eq("Host / Node.My Company Tags : Environment CONTAINS 'Production'")
+      end
 
+      it "generates a human readable string for a TAG expression with alias" do
         exp = MiqExpression.new("CONTAINS" => {"tag" => "Host.managed-environment", "value" => "prod",
                                                "alias" => "Env"})
         expect(exp.to_human).to eq("Env CONTAINS 'Production'")
       end
     end
 
-    context "generates string representation of expression having relative dates with no time zone" do
-      it "using 'AFTER'" do
+    context "when given values with relative dates" do
+      it "generates a human readable string for a AFTER '2 Days Ago' expression" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2 Days Ago"})
         expect(exp.to_human).to eq('VM and Instance : Retires On AFTER "2 Days Ago"')
-
-        exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2 Days Ago"})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time AFTER "2 Days Ago"')
       end
 
-      it "using 'BEFORE 2 Days ago'" do
+      it "generates a human readable string for a BEFORE '2 Days ago' expression" do
         exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2 Days Ago"})
         expect(exp.to_human).to eq('VM and Instance : Retires On BEFORE "2 Days Ago"')
-
-        exp = MiqExpression.new("BEFORE" => {"field" => "Vm-last_scan_on", "value" => "2 Days Ago"})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time BEFORE "2 Days Ago"')
       end
 
-      it "using 'FROM Last Hour' 'THROUGH This Hour'" do
+      it "generates a human readable string for a FROM 'Last Hour' THROUGH 'This Hour' expression" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Hour", "This Hour"]})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time FROM "Last Hour" THROUGH "This Hour"')
       end
 
-      it "using 'FROM Last Week' 'THROUGH Last Week'" do
+      it "generates a human readable string for a FROM 'Last Week' THROUGH 'Last Week' expression" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})
         expect(exp.to_human).to eq('VM and Instance : Retires On FROM "Last Week" THROUGH "Last Week"')
-
-        exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time FROM "Last Week" THROUGH "Last Week"')
       end
 
-      it "using 'FROM 2 Months ago' 'THROUGH Last Month'" do
+      it "generates a human readable string for a FROM '2 Months ago' THROUGH 'Last Month' expression" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "Last Month"]})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time FROM "2 Months Ago" THROUGH "Last Month"')
       end
 
-      it "using 'IS 3 Hours Ago'" do
+      it "generates a human readable string for a IS '3 Hours Ago' expression" do
         exp = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time IS "3 Hours Ago"')
       end
     end
 
-    context "generates string representation of expression with static dates and times with no time zone" do
-      it "using 'AFTER' with date and without time" do
+    context "when giving value with static dates and times" do
+      it "generates a human readable string for a AFTER expression with date without time" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         expect(exp.to_human).to eq('VM and Instance : Retires On AFTER "2011-01-10"')
       end
 
-      it "using 'AFTER' with date and time" do
+      it "generates a human readable string for a AFTER expression with date and time" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time AFTER "2011-01-10 9:00"')
       end
 
-      it "using 'BEFORE' with date without time" do
+      it "generates a human readable string for a BEFORE expression with date without time" do
         exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         expect(exp.to_human).to eq('VM and Instance : Retires On BEFORE "2011-01-10"')
       end
 
-      it "using '>' with date without time" do
+      it "generates a human readable string for a '>' expression with date without time" do
         exp = MiqExpression.new(">" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         expect(exp.to_human).to eq('VM and Instance : Retires On > "2011-01-10"')
       end
 
-      it "using '>' with date and time" do
+      it "generates a human readable string for a '>' expression with date and time" do
         exp = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time > "2011-01-10 9:00"')
       end
 
-      it "using '<' with date without time" do
+      it "generates a human readable string for a '<' expression with date without time" do
         exp = MiqExpression.new("<" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         expect(exp.to_human).to eq('VM and Instance : Retires On < "2011-01-10"')
       end
 
-      it "using '>=' with date and time" do
+      it "generates a human readable string for a '>=' expression with date and time" do
         exp = MiqExpression.new(">=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         expect(exp.to_human).to eq('VM and Instance : Retires On >= "2011-01-10"')
       end
 
-      it "using '<=' with date without time" do
+      it "generates a human readable string for a '<=' expression with date without time" do
         exp = MiqExpression.new("<=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         expect(exp.to_human).to eq('VM and Instance : Retires On <= "2011-01-10"')
       end
 
-      it "using 'IS' with date without time" do
+      it "generates a human readable string for a 'IS' with date without time" do
         exp = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         expect(exp.to_human).to eq('VM and Instance : Retires On IS "2011-01-10"')
       end
 
-      it "using 'FROM' 'THROUGH' with date without time, date format: 'yyyy-mm-dd'" do
+      it "generates a human readable string for a FROM THROUGH expression with date format: 'yyyy-mm-dd'" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2011-01-09", "2011-01-10"]})
         expect(exp.to_human).to eq('VM and Instance : Retires On FROM "2011-01-09" THROUGH "2011-01-10"')
       end
 
-      it "using 'FROM' 'THROUGH' with date without time, date format: 'mm/dd/yyyy'" do
+      it "generates a human readable string for a FROM THROUGH expression with date format: 'mm/dd/yyyy'" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["01/09/2011", "01/10/2011"]})
         expect(exp.to_human).to eq('VM and Instance : Retires On FROM "01/09/2011" THROUGH "01/10/2011"')
       end
 
-      it "using 'FROM' 'THROUGH' with date and time" do
+      it "generates a human readable string for a FROM THROUGH expression with date and time" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
                                            "value" => ["2011-01-10 8:00", "2011-01-10 17:00"]})
         expect(exp.to_human).to eq('VM and Instance : Last Analysis Time ' \
           'FROM "2011-01-10 8:00" THROUGH "2011-01-10 17:00"')
-
-        exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
-                                           "value" => ["2011-01-10 00:00", "2011-01-10 00:00"]})
-        expect(exp.to_human).to eq('VM and Instance : Last Analysis Time '\
-          'FROM "2011-01-10 00:00" THROUGH "2011-01-10 00:00"')
       end
     end
   end
