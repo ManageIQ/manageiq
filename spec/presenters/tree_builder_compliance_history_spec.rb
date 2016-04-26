@@ -4,12 +4,16 @@ describe TreeBuilderComplianceHistory do
       role = MiqUserRole.find_by_name("EvmRole-operator")
       @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Compliance History Group")
       login_as FactoryGirl.create(:user, :userid => 'comliance_history__wilma', :miq_groups => [@group])
-      compliance_detail_one = FactoryGirl.create(:compliance_detail, :miq_policy_id => 1234, :condition_desc => "I am first condition")
-      compliance_detail_two = FactoryGirl.create(:compliance_detail, :miq_policy_id => 1234, :condition_desc => "I am second condition")
+      compliance_detail_one = FactoryGirl.create(:compliance_detail,
+                                                 :miq_policy_id  => 1234,
+                                                 :condition_desc => "I am first condition")
+      compliance_detail_two = FactoryGirl.create(:compliance_detail,
+                                                 :miq_policy_id  => 1234,
+                                                 :condition_desc => "I am second condition")
       compliance_detail_negative = FactoryGirl.create(:compliance_detail,
-                                                      :miq_policy_id => 1111,
+                                                      :miq_policy_id     => 1111,
                                                       :miq_policy_result => false,
-                                                      :condition_result => false)
+                                                      :condition_result  => false)
       compliance_details = [compliance_detail_one, compliance_detail_two, compliance_detail_negative]
       empty_compliance = FactoryGirl.create(:compliance)
       compliance = FactoryGirl.create(:compliance, :compliance_details => compliance_details)
@@ -32,8 +36,8 @@ describe TreeBuilderComplianceHistory do
         expect(kid).to be_a_kind_of(Compliance)
       end
     end
-    it 'returns correctly ComplianceDetail nodes TODO not first' do
-      parent = @ch_tree.send(:x_get_tree_roots, false).find { |x| x.compliance_details.present?}
+    it 'returns correctly ComplianceDetail nodes' do
+      parent = @ch_tree.send(:x_get_tree_roots, false).find { |x| x.compliance_details.present? }
       kids = @ch_tree.send(:x_get_compliance_kids, parent, false)
       expect(@ch_tree.send(:x_get_compliance_kids, parent, true)).to eq(2)
       kids.each do |kid|
@@ -44,19 +48,21 @@ describe TreeBuilderComplianceHistory do
       parents = @ch_tree.send(:x_get_tree_roots, false)
       parent = parents.find { |x| x.compliance_details == [] }
       kid = @ch_tree.send(:x_get_compliance_kids, parent, false).first
-      expect(kid).to eq({:id=> "#{parent.id}-nopol", :text=>"No Compliance Policies Found", :image=>"#{parent.id}-nopol", :tip=>nil})
+      expect(kid).to eq(:id    => "#{parent.id}-nopol",
+                        :text  => "No Compliance Policies Found",
+                        :image => "#{parent.id}-nopol",
+                        :tip   => nil)
       expect(kid).to be_a_kind_of(Hash)
       expect(@ch_tree.send(:x_get_tree_custom_kids, kid, true, {})).to eq(0)
     end
     it 'returns Policy with multiple Conditions' do
       grandparents = @ch_tree.send(:x_get_tree_roots, false)
-      binding.pry
       grandparent = grandparents.find { |x| x.compliance_details.present? }
+      grandparent_id = "cm-" + ApplicationRecord.compress_id(grandparent.id)
       parents = @ch_tree.send(:x_get_compliance_kids, grandparent, false)
-    #   binding.pry
-      parent = parents.find { |x| x.miq_policy_id == 1234}
-      kids = @ch_tree.send(:x_get_compliance_detail_kids, parent, false, grandparents)
-      expect(@ch_tree.send(:x_get_compliance_detail_kids, parent, false, grandparents)).to eq(2)
+      parent = parents.find { |x| x.miq_policy_id == 1234 }
+      kids = @ch_tree.send(:x_get_compliance_detail_kids, parent, false, [grandparent_id])
+      expect(@ch_tree.send(:x_get_compliance_detail_kids, parent, true, [grandparent_id])).to eq(2)
       kids.each do |kid|
         expect(kid).to be_a_kind_of(Hash)
       end
