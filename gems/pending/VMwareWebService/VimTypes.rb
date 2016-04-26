@@ -31,6 +31,10 @@ class VimHash < Hash
     @vimType = val.nil? ? nil : val.to_sym
   end
 
+  def vimBaseType
+    VimType.base_class(vimType)
+  end
+
   def xsiType
     @xsiType.nil? ? nil : @xsiType.to_s
   end
@@ -65,6 +69,10 @@ class VimArray < Array
     @vimType = val.nil? ? nil : val.to_sym
   end
 
+  def vimBaseType
+    VimType.base_class(vimType)
+  end
+
   def xsiType
     @xsiType.nil? ? nil : @xsiType.to_s
   end
@@ -95,6 +103,10 @@ class VimString < String
     @vimType = val.nil? ? nil : val.to_sym
   end
 
+  def vimBaseType
+    VimType.base_class(vimType)
+  end
+
   def xsiType
     @xsiType.nil? ? nil : @xsiType.to_s
   end
@@ -110,5 +122,23 @@ class VimFault < RuntimeError
   def initialize(vimObj)
     @vimFaultInfo = vimObj
     super(@vimFaultInfo.localizedMessage)
+  end
+end
+
+class VimType
+  # Default to a sparse 1:1 mapping
+  @class_hierarchy = Hash.new { |hash, key| hash[key] = Set[key] }
+  @base_class      = Hash.new { |hash, key| hash[key] = key }
+
+  # Add VmwareDistributedVirtualSwitch as a child class of DistributedVirtualSwitch
+  @class_hierarchy["DistributedVirtualSwitch"]  << "VmwareDistributedVirtualSwitch"
+  @base_class["VmwareDistributedVirtualSwitch"] =  "DistributedVirtualSwitch"
+
+  def self.child_classes(vim_type)
+    @class_hierarchy[vim_type]
+  end
+
+  def self.base_class(vim_type)
+    @base_class[vim_type]
   end
 end
