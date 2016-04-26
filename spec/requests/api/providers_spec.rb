@@ -254,8 +254,8 @@ describe ApiController do
     it "supports multiple resource edits" do
       api_basic_authorize collection_action_identifier(:providers, :edit)
 
-      p1 = FactoryGirl.create(:ext_management_system, :name => "name1")
-      p2 = FactoryGirl.create(:ext_management_system, :name => "name2")
+      p1 = FactoryGirl.create(:ems_redhat, :name => "name1")
+      p2 = FactoryGirl.create(:ems_redhat, :name => "name2")
 
       run_post(providers_url, gen_request(:edit,
                                           [{"href" => providers_url(p1.id), "name" => "updated name1"},
