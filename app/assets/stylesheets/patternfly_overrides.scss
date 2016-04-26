@@ -485,3 +485,11 @@ body#dashboard {
 .nav-tabs > li.active > a:focus {
   background-color: #f5f5f5 !important;
 }
+
+/* custom modal class for adv search */
+@media (min-width: $screen-sm) {
+  .modal-xl {
+    width: 90%;
+    max-width:1200px;
+  }
+}
