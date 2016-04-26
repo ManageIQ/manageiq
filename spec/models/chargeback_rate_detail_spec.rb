@@ -1,4 +1,14 @@
 describe ChargebackRateDetail do
+  describe "#chargeback_rate" do
+    it "is invalid without a valid chargeback_rate" do
+      invalid_chargeback_rate_id = (ChargebackRate.maximum(:id) || -1) + 1
+      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail,
+                                                 :chargeback_rate_id => invalid_chargeback_rate_id)
+      expect(chargeback_rate_detail).to be_invalid
+      expect(chargeback_rate_detail.errors.messages).to include(:chargeback_rate => [/can't be blank/])
+    end
+  end
+
   it "#cost" do
     cvalue   = 42.0
     fixed_rate = 5.0
@@ -133,12 +143,9 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   end
 
   it "#rate_type" do
-    cbd = FactoryGirl.build(:chargeback_rate_detail)
-    expect(cbd.rate_type).to be_nil
-
     rate_type = 'ad-hoc'
     cb = FactoryGirl.create(:chargeback_rate, :rate_type => rate_type)
-    cbd.chargeback_rate = cb
+    cbd = FactoryGirl.build(:chargeback_rate_detail, :chargeback_rate => cb)
     expect(cbd.rate_type).to eq(rate_type)
   end
 
