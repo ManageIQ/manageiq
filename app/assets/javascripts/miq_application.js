@@ -1272,10 +1272,15 @@ function miqSelectPickerEvent(element, url, options) {
   $('#' + element).on('change', function() {
     var selected = $(this).val();
     var finalUrl = url + (firstarg ? '?' : '&') + element + '=' + escape(selected);
-
+    if($(this).attr('data-miq_sparkle_on') == 'true') {
+      miqSparkleOn();
+    }
     miqJqueryRequest(finalUrl, options).done(function() {
       if (options.callback) {
         options.callback();
+      }
+      if($(this).attr('data-miq_sparkle_off') == 'true') {
+        miqSparkleOff();
       }
     });
 

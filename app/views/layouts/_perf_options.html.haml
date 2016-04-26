@@ -17,12 +17,18 @@
           = select_tag("perf_typ",
                         options_for_select(["Hourly", "Daily", ["Most Recent Hour", "realtime"]], @perf_options[:typ]),
                         "data-miq_sparkle_on" => true,
-                        "data-miq_observe"    => {:url => url}.to_json)
+                        :class    => "selectpicker")
+          :javascript
+             miqInitSelectPicker();
+             miqSelectPickerEvent("perf_typ", "#{url}")
         - else
           = select_tag("perf_typ",
                         options_for_select(%w(Hourly Daily), @perf_options[:typ]),
                         "data-miq_sparkle_on" => true,
-                        "data-miq_observe"    => {:url => url}.to_json)
+                        :class    => "selectpicker")
+          :javascript
+             miqSelectPickerEvent("perf_typ", "#{url}")
+
       - if @perf_options[:typ] == "realtime"
         %dt
           = _("Show")
@@ -31,7 +37,9 @@
                        options_for_select(REALTIME_CHOICES.invert.sort_by { |_name, value| value },
                        @perf_options[:rt_minutes]),
                        "data-miq_sparkle_on" => true,
-                       "data-miq_observe"    => {:url => url}.to_json)
+                       :class    => "selectpicker")
+          :javascript
+             miqSelectPickerEvent("perf_minutes", "#{url}")
           = _("back")
         %dt
           = _("Range")
@@ -45,7 +53,9 @@
               h(@perf_options[:typ] == "Hourly" ? @perf_options[:hourly_date] : @perf_options[:daily_date]),
               :readonly               => "true",
               "data-miq_sparkle_on"   => true,
-              "data-miq_observe_date" => {:url => url}.to_json)
+              :class    => "selectpicker")
+          :javascript
+             miqSelectPickerEvent("miq_date_1", "#{url}")
 
         - unless @perf_options[:typ] == "Hourly"
           %dt
@@ -55,7 +65,9 @@
                           options_for_select(WEEK_CHOICES.invert.sort_by { |_name, value| value },
                             @perf_options[:days].to_i),
                           "data-miq_sparkle_on" => true,
-                          "data-miq_observe"    => {:url => url}.to_json)
+                          :class    => "selectpicker")
+            :javascript
+               miqSelectPickerEvent("perf_days", "#{url}")
             = _("back")
       - unless @perf_options[:typ] == "realtime"
         - unless @perf_options[:typ] == "Hourly" && request.parameters["controller"] == "storage"
@@ -67,7 +79,9 @@
                            options_for_select(Array(@perf_options[:cats].invert).sort_by { |name, _value| name },
                                               "#{@perf_options[:cat_model]}:#{@perf_options[:cat]}"),
                            "data-miq_sparkle_on" => true,
-                           "data-miq_observe"    => {:url => url}.to_json)
+                           :class    => "selectpicker")
+              :javascript
+                miqSelectPickerEvent("perf_cat", "#{url}")
         - unless @perf_options[:cat]
           - if @perf_options[:vmtypes] && (@perf_options[:index].nil? || @charts.first[:title].include?("by Type"))
             %dt
@@ -77,7 +91,9 @@
                            options_for_select(@perf_options[:vmtypes],
                            @perf_options[:vmtype]),
                            "data-miq_sparkle_on" => true,
-                           "data-miq_observe"    => {:url => url}.to_json)
+                           :class    => "selectpicker")
+              :javascript
+                miqSelectPickerEvent("perf_vmtype", "#{url}")
 
       - unless @perf_options[:typ] == "realtime"
         %dt
@@ -92,7 +108,9 @@
                          options_for_select(Array(session[:time_profiles].invert).sort_by(&:first),
                          @perf_options[:time_profile]),
                          "data-miq_sparkle_on" => true,
-                         "data-miq_observe"    => {:url => url}.to_json)
+                         :class    => "selectpicker")
+            :javascript
+              miqSelectPickerEvent("time_profile", "#{url}")
 
       - if @perf_options[:model] == "VmOrTemplate" && @perf_options[:typ] != "realtime"
         - compare_choices = []
@@ -107,7 +125,9 @@
                            options_for_select([["<Nothing>", nil]] + compare_choices,
                            @perf_options[:parent]),
                            "data-miq_sparkle_on" => true,
-                           "data-miq_observe"    => {:url => url}.to_json)
+                           :class    => "selectpicker")
+            :javascript
+              miqSelectPickerEvent("compare_to", "#{url}")
 
       - elsif @perf_options[:model] == "OntapLogicalDisk" && @perf_options[:typ] != "realtime"
         - compare_choices = @perf_record.vms.sort_by(&:name).collect { |v| [v.name, v.id] }
@@ -119,7 +139,9 @@
                          options_for_select([["<None>", nil]] + compare_choices,
                          @perf_options[:compare_vm]),
                          "data-miq_sparkle_on" => true,
-                         "data-miq_observe"    => {:url => url}.to_json)
+                         :class    => "selectpicker")
+          :javascript
+            miqSelectPickerEvent("compare_vm", "#{url}")
       - if @perf_options[:typ] == "Daily"
         %dt
         %dd= _("* Daily charts only include days for which all 24 hours of data has been collected.")
