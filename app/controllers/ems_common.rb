@@ -399,7 +399,7 @@ module EmsCommon
       tag(model) if params[:pressed] == "#{@table_name}_tag"
       assign_policies(model) if params[:pressed] == "#{@table_name}_protect"
       edit_record if params[:pressed] == "#{@table_name}_edit"
-      if params[:pressed] == "ems_cloud_timeline"
+      if params[:pressed] == "ems_cloud_timeline" || params[:pressed] == "ems_infra_timeline"
         @showtype = "timeline"
         @record = find_by_id_filtered(model, params[:id])
         @timeline = @timeline_filter = true

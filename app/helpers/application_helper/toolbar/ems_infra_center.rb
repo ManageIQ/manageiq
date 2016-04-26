@@ -77,7 +77,7 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           'product product-timeline fa-lg',
           N_('Show Timelines for this #{ui_lookup(:table=>"ems_infra")}'),
           N_('Timelines'),
-          :url       => "/show",
+          :klass     => ApplicationHelper::Button::EmsInfraTimeline,
           :url_parms => "?display=timeline"),
       ]
     ),
