@@ -124,11 +124,7 @@ class ChargebackController < ApplicationController
       return unless load_edit("cbrate_edit__#{id}", "replace_cell__chargeback")
       @rate = params[:button] == "add" ? ChargebackRate.new : ChargebackRate.find(params[:id])
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
-        add_flash(_("Description is required"), :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        render_flash(_("Description is required"), :error)
         return
       end
       @rate.description = @edit[:new][:description]
@@ -185,8 +181,7 @@ class ChargebackController < ApplicationController
       @record = @rate
 
       if params[:typ] == "edit" && @rate.default?
-        add_flash(_("Default Chargeback Rate \"%{name}\" cannot be edited.") % {:name => @rate.description}, :error)
-        render_flash
+        render_flash(_("Default Chargeback Rate \"%{name}\" cannot be edited.") % {:name => @rate.description}, :error)
         return
       end
 
@@ -241,12 +236,8 @@ class ChargebackController < ApplicationController
     if !params[:id] # showing a list
       rates = find_checked_items
       if rates.empty?
-        add_flash(_("No %{records} were selected for deletion") %
+        render_flash(_("No %{records} were selected for deletion") %
           {:records => ui_lookup(:models => "ChargebackRate")}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
       if flash_errors? && @flash_array.count == 1
@@ -262,11 +253,7 @@ class ChargebackController < ApplicationController
       end
     else # showing 1 rate, delete it
       if params[:id].nil? || ChargebackRate.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        render_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
       else
         rates.push(params[:id])
       end
@@ -357,11 +344,7 @@ class ChargebackController < ApplicationController
       begin
         ChargebackRate.set_assignments(rate_type, @edit[:set_assignments])
       rescue StandardError => bang
-        add_flash(_("Error during 'Rate assignments': %{error_message}") % {:error_message => bang.message}, :error)
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
+        render_flash(_("Error during 'Rate assignments': %{error_message}") % {:error_message => bang.message}, :error)
       else
         add_flash(_("Rate Assignments saved"))
         get_node_info(x_node)
