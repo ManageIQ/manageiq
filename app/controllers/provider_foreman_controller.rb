@@ -231,14 +231,13 @@ class ProviderForemanController < ApplicationController
     @display = params[:display] || "main"
     @lastaction = "show"
     @showtype = "config"
-    if configuration_profile_record?
-      @record = find_record(ConfigurationProfile, id || params[:id])
-    elsif inventory_group_record?
-      find_record(InventoryRootGroup, id || params[:id])
-    else
-      find_record(ConfiguredSystem, id || params[:id])
-    end
-
+    @record = if configuration_profile_record?
+                find_record(ConfigurationProfile, id || params[:id])
+              elsif inventory_group_record?
+                find_record(InventoryRootGroup, id || params[:id])
+              else
+                find_record(ConfiguredSystem, id || params[:id])
+              end
     return if record_no_longer_exists?(@record)
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
@@ -622,7 +621,7 @@ class ProviderForemanController < ApplicationController
       else
         @showtype = 'main'
         @pages = nil
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name  => @inventory_group_record.name, :model => record_model}
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @inventory_group_record.name, :model => record_model}
       end
     end
   end
@@ -1059,12 +1058,12 @@ class ProviderForemanController < ApplicationController
     return if @sb[:active_tab] != 'configured_systems'
     if valid_inventory_group_record?(@inventory_group_record)
       @right_cell_text = _("%{model} under Inventory Group \"%{name}\"") %
-        {:model        => ui_lookup(:tables => "configured_system"),
-         :record_model => record_model,
-         :name         => @inventory_group_record.name}
+                           {:model        => ui_lookup(:tables => "configured_system"),
+                            :record_model => record_model,
+                            :name         => @inventory_group_record.name}
     else
       @right_cell_text = _("%{model} under Unassigned Inventory Group") %
-        {:model => ui_lookup(:tables => "configured_system")}
+                           {:model => ui_lookup(:tables => "configured_system")}
     end
   end
 
