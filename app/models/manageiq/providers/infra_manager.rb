@@ -4,6 +4,8 @@ module ManageIQ::Providers
     require_nested :ProvisionWorkflow
     require_nested :Vm
 
+    include AvailabilityMixin
+
     class << model_name
       define_method(:route_key) { "ems_infras" }
       define_method(:singular_route_key) { "ems_infra" }
@@ -39,6 +41,10 @@ module ManageIQ::Providers
       read_timeout = read_timeout.to_i_with_method if read_timeout
       open_timeout = open_timeout.to_i_with_method if open_timeout
       [read_timeout, open_timeout]
+    end
+
+    def validate_timeline
+      {:available => true, :message => nil}
     end
   end
 end

@@ -965,6 +965,7 @@ Vmdb::Application.routes.draw do
         wait_for_task
         scaling
         scaledown
+        x_show
       ) +
                adv_search_post +
                compare_post +
