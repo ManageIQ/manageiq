@@ -35,6 +35,7 @@ class CloudVolumeController < ApplicationController
     elsif params[:pressed] == "cloud_volume_attach"
       checked_volume_id = get_checked_volume_id(params)
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "attach", :id => checked_volume_id
       end
     elsif params[:pressed] == "cloud_volume_detach"
@@ -48,16 +49,19 @@ class CloudVolumeController < ApplicationController
         render_flash
       else
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => "detach", :id => checked_volume_id
         end
       end
     elsif params[:pressed] == "cloud_volume_edit"
       checked_volume_id = get_checked_volume_id(params)
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "edit", :id => checked_volume_id
       end
     elsif params[:pressed] == "cloud_volume_new"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "new"
       end
     elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
@@ -165,6 +169,7 @@ class CloudVolumeController < ApplicationController
     session[:edit] = nil
     @breadcrumbs.pop if @breadcrumbs
     render :update do |page|
+      page << javascript_prologue
       page.redirect_to :action    => @lastaction,
                        :id        => @volume.id,
                        :display   => session[:cloud_volume_display],
@@ -207,6 +212,7 @@ class CloudVolumeController < ApplicationController
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "show", :id => @volume.id.to_s
       end
 
@@ -221,6 +227,7 @@ class CloudVolumeController < ApplicationController
         add_flash(_(attach_details), :error) unless details.nil?
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -262,6 +269,7 @@ class CloudVolumeController < ApplicationController
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "show", :id => @volume.id.to_s
       end
 
@@ -276,6 +284,7 @@ class CloudVolumeController < ApplicationController
         add_flash(_(detach_details), :error) unless details.nil?
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -298,6 +307,7 @@ class CloudVolumeController < ApplicationController
     case params[:button]
     when "cancel"
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to(:action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") % {
           :model => ui_lookup(:table => 'cloud_volume')
         })
@@ -323,6 +333,7 @@ class CloudVolumeController < ApplicationController
         @breadcrumbs.pop if @breadcrumbs
         session[:flash_msgs] = @flash_array.dup if @flash_array
         render :update do |page|
+          page << javascript_prologue
           page.redirect_to :action => "show_list"
         end
       else
@@ -333,6 +344,7 @@ class CloudVolumeController < ApplicationController
           :url  => "/cloud_volume/new"
         )
         render :update do |page|
+          page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       end
@@ -348,6 +360,7 @@ class CloudVolumeController < ApplicationController
         add_flash(_(action_details), :error) unless details.nil?
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
@@ -398,6 +411,7 @@ class CloudVolumeController < ApplicationController
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
       render :update do |page|
+        page << javascript_prologue
         page.redirect_to :action => "show", :id => @volume.id
       end
 
@@ -412,6 +426,7 @@ class CloudVolumeController < ApplicationController
         add_flash(_(action_details), :error) unless details.nil?
       end
       render :update do |page|
+        page << javascript_prologue
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
