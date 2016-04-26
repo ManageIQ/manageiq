@@ -94,7 +94,7 @@ class NetworkTopologyService < TopologyService
     when Vm
       entity.power_state.capitalize
     when ManageIQ::Providers::NetworkManager
-      entity.authentications.empty? ? 'Unknown' : entity.authentications.first.status.capitalize
+      entity.authentications.blank? ? 'Unknown' : entity.authentications.first.status.try(:capitalize)
     when NetworkRouter, CloudSubnet, CloudNetwork, FloatingIp
       entity.status ? entity.status.downcase.capitalize : 'Unknown'
     when CloudTenant

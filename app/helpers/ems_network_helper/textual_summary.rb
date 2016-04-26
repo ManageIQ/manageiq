@@ -131,6 +131,6 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.try(:name)}
   end
 end
