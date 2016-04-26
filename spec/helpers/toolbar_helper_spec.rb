@@ -6,7 +6,7 @@ describe ToolbarHelper do
       [
         {
           :id       => "history_choice",
-          :type     => "buttonSelect",
+          :type     => :buttonSelect,
           :img      => "history.png",
           :imgdis   => "history.png",
           :icon     => nil,
@@ -15,7 +15,7 @@ describe ToolbarHelper do
           :items    => [
             {
               :id      => "history_choice__history_1",
-              :type    => "button",
+              :type    => :button,
               :img     => "history.png",
               :imgdis  => "history.png",
               :icon    => nil,
@@ -36,7 +36,7 @@ describe ToolbarHelper do
         },
         {
           :id      => "summary_reload",
-          :type    => "button",
+          :type    => :button,
           :img     => "reload.png",
           :imgdis  => "reload.png",
           :icon    => nil,
@@ -71,18 +71,18 @@ describe ToolbarHelper do
         [
           {
             :id    => "view_grid",
-            :type  => "buttonTwoState",
+            :type  => :buttonTwoState,
             :img   => "view_grid.png",
             :icon  => "fa fa-th",
             :title => "Grid View",
             :name  => "view_grid",
           },
           {
-            :type => "separator"
+            :type => :separator
           },
           {
             :id    => "view_tile",
-            :type  => "buttonTwoState",
+            :type  => :buttonTwoState,
             :img   => "view_tile.png",
             :icon  => "fa fa-th-large",
             :title => "Tile View",
@@ -100,7 +100,7 @@ describe ToolbarHelper do
         [
           {
             :id    => "view_grid",
-            :type  => "buttonTwoState",
+            :type  => :buttonTwoState,
             :img   => "view_grid.png",
             :icon  => "fa fa-th",
             :title => "Grid View",
@@ -108,7 +108,7 @@ describe ToolbarHelper do
           },
           {
             :id    => "view_tile",
-            :type  => "buttonTwoState",
+            :type  => :buttonTwoState,
             :img   => "view_tile.png",
             :icon  => "fa fa-th-large",
             :title => "Tile View",
@@ -131,7 +131,7 @@ describe ToolbarHelper do
       [
         {
           :id        => "view_grid",
-          :type      => "buttonTwoState",
+          :type      => :buttonTwoState,
           :img       => "view_grid.png",
           :imgdis    => "view_grid.png",
           :icon      => "fa fa-th",
@@ -147,7 +147,7 @@ describe ToolbarHelper do
         },
         {
           :id        => "view_tile",
-          :type      => "buttonTwoState",
+          :type      => :buttonTwoState,
           :img       => "view_tile.png",
           :imgdis    => "view_tile.png",
           :icon      => "fa fa-th-large",

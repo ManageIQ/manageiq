@@ -41,22 +41,21 @@ class ApplicationHelper::ToolbarBuilder
     build(toolbar)
   end
 
-  def toolbar_button(props)
-    button_class = props[:klass] || ApplicationHelper::Button::Basic
-    button_class.new(@view_context, @view_binding, @instance_data, props)
+  def toolbar_button(inputs, props)
+    button_class = inputs[:klass] || ApplicationHelper::Button::Basic
+    button = button_class.new(@view_context, @view_binding, @instance_data, props)
+    apply_common_props(button, inputs)
   end
 
   def build_select_button(bgi, index)
     bs_children = false
     props = toolbar_button(
-      :klass  => bgi[:klass],
-      :id     => bgi[:buttonSelect],
-      :type   => "buttonSelect",
-      :img    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonSelect]}.png",
+      bgi,
+      :id     => bgi[:id],
+      :type   => :buttonSelect,
+      :img    => img = img_value(bgi),
       :imgdis => img,
-      :icon   => bgi[:icon]
     )
-    apply_common_props(props, bgi)
 
     current_item = props
     current_item[:items] ||= []
@@ -65,28 +64,26 @@ class ApplicationHelper::ToolbarBuilder
       if bsi.key?(:separator)
         props = ApplicationHelper::Button::Separator.new(:id => "sep_#{index}_#{bsi_idx}", :hidden => !any_visible)
       else
-        next if build_toolbar_hide_button(bsi[:pressed] || bsi[:button]) # Use pressed, else button name
+        next if build_toolbar_hide_button(bsi[:pressed] || bsi[:id]) # Use pressed, else button id
         bs_children = true
         props = toolbar_button(
-          :klass    => bsi[:klass],
-          :child_id => bsi[:button],
-          :id       => bgi[:buttonSelect] + "__" + bsi[:button],
-          :type     => "button",
-          :img      => img = "#{bsi[:image] || bsi[:button]}.png",
+          bsi,
+          :child_id => bsi[:id],
+          :id       => bgi[:id] + "__" + bsi[:id],
+          :type     => :button,
+          :img      => img = img_value(bsi),
           :imgdis   => img,
-          :icon     => bsi[:icon]
         )
-        apply_common_props(props, bsi)
         props.calculate_properties
       end
       build_toolbar_save_button(bsi, props) unless bsi.key?(:separator)
       current_item[:items] << props unless props.skip?
 
-      any_visible ||= !props[:hidden] && props[:type] != 'separator'
+      any_visible ||= !props[:hidden] && props[:type] != :separator
     end
     current_item[:items].reverse_each do |item|
-      break if !item[:hidden] && item[:type] != 'separator'
-      item[:hidden] = true if item[:type] == 'separator'
+      break if !item[:hidden] && item[:type] != :separator
+      item[:hidden] = true if item[:type] == :separator
     end
     current_item[:hidden] = !any_visible
 
@@ -99,6 +96,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def apply_common_props(button, input)
     button.update(
+      :icon    => input[:icon],
       :name    => button[:id],
       :hidden  => button[:hidden] || !!input[:hidden],
       :pressed => input[:pressed],
@@ -125,26 +123,24 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def build_normal_button(bgi, index)
-    button_hide = build_toolbar_hide_button(bgi[:button])
+    button_hide = build_toolbar_hide_button(bgi[:id])
     if button_hide
       # These buttons need to be present even if hidden as we show/hide them dynamically
       return nil unless %w(perf_refresh perf_reload vm_perf_refresh vm_perf_reload
-                           timeline_txt timeline_csv timeline_pdf).include?(bgi[:button])
+                           timeline_txt timeline_csv timeline_pdf).include?(bgi[:id])
     end
 
     @sep_needed = true unless button_hide
     props = toolbar_button(
-      :klass  => bgi[:klass],
-      :id     => bgi[:button],
-      :type   => "button",
-      :img    => "#{get_image(bgi[:image], bgi[:button]) ? get_image(bgi[:image], bgi[:button]) : bgi[:button]}.png",
-      :imgdis => "#{bgi[:image] || bgi[:button]}.png",
-      :icon   => bgi[:icon]
+      bgi,
+      :id     => bgi[:id],
+      :type   => :button,
+      :img    => "#{get_image(bgi[:image], bgi[:id]) ? get_image(bgi[:image], bgi[:id]) : bgi[:id]}.png",
+      :imgdis => "#{bgi[:image] || bgi[:id]}.png",
     )
-    apply_common_props(props, bgi)
 
     # set pdf button to be hidden if graphical summary screen is set by default
-    props[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:button]) && button_hide
+    props[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:id]) && button_hide
 
     _add_separator(index)
     props
@@ -161,32 +157,32 @@ class ApplicationHelper::ToolbarBuilder
     @sep_needed = true # Button was added, need separators from now on
   end
 
+  def img_value(button)
+    "#{button[:image] || button[:id]}.png"
+  end
+
   def build_twostate_button(bgi, index)
-    return nil if build_toolbar_hide_button(bgi[:buttonTwoState])
+    return nil if build_toolbar_hide_button(bgi[:id])
 
     props = toolbar_button(
-      :klass  => bgi[:klass],
-      :id     => bgi[:buttonTwoState],
-      :type   => "buttonTwoState",
-      :img    => img = "#{bgi[:image] ? bgi[:image] : bgi[:buttonTwoState]}.png",
+      bgi,
+      :id     => bgi[:id],
+      :type   => :buttonTwoState,
+      :img    => img = img_value(bgi),
       :imgdis => img,
-      :icon   => bgi[:icon]
     )
-    apply_common_props(props, bgi)
 
-    props[:selected] = true if build_toolbar_select_button(bgi[:buttonTwoState])
+    props[:selected] = true if build_toolbar_select_button(bgi[:id])
 
     _add_separator(index)
     props
   end
 
   def build_button(bgi, index)
-    props = if bgi.key?(:buttonSelect)
-              build_select_button(bgi, index)
-            elsif bgi.key?(:button)
-              build_normal_button(bgi, index)
-            elsif bgi.key?(:buttonTwoState)
-              build_twostate_button(bgi, index)
+    props = case bgi[:type]
+            when :buttonSelect   then build_select_button(bgi, index)
+            when :button         then build_normal_button(bgi, index)
+            when :buttonTwoState then build_twostate_button(bgi, index)
             end
 
     unless props.nil?
@@ -228,41 +224,45 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def create_custom_button_hash(input, record, options = {})
-    options[:enabled]  = "true" unless options.key?(:enabled)
-    button             = {}
-    button_id          = input[:id]
-    button_name        = input[:name].to_s
-    button[:button]    = "custom__custom_#{button_id}"
-    button[:icon]      = "product product-custom-#{input[:image]} fa-lg"
-    button[:text]      = button_name if input[:text_display]
-    button[:title]     = input[:description].to_s
-    button[:enabled]   = options[:enabled]
-    button[:url]       = "button"
-    button[:url_parms] = "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
+    options[:enabled] = true unless options.key?(:enabled)
+    button_id = input[:id]
+    button_name = input[:name].to_s
+    button = {
+      :id        => "custom__custom_#{button_id}",
+      :type      => :button,
+      :icon      => "product product-custom-#{input[:image]} fa-lg",
+      :title     => input[:description].to_s,
+      :enabled   => options[:enabled],
+      :url       => "button",
+      :url_parms => "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
+    }
+    button[:text] = button_name if input[:text_display]
     button
   end
 
   def create_raw_custom_button_hash(cb, record)
-    obj = {}
-    obj[:id]            = cb.id
-    obj[:class]         = cb.applies_to_class
-    obj[:description]   = cb.description
-    obj[:name]          = cb.name
-    obj[:image]         = cb.options[:button_image]
-    obj[:text_display]  = cb.options.key?(:display) ? cb.options[:display] : true
-    obj[:target_object] = record.id.to_i
-    obj
+    {
+      :id            => cb.id,
+      :class         => cb.applies_to_class,
+      :description   => cb.description,
+      :name          => cb.name,
+      :image         => cb.options[:button_image],
+      :text_display  => cb.options.key?(:display) ? cb.options[:display] : true,
+      :target_object => record.id.to_i
+    }
   end
 
   def custom_buttons_hash(record)
     get_custom_buttons(record).collect do |group|
-      props = {}
-      props[:buttonSelect] = "custom_#{group[:id]}"
-      props[:icon]         = "product product-custom-#{group[:image]} fa-lg"
-      props[:title]        = group[:description]
-      props[:text]         = group[:text] if group[:text_display]
-      props[:enabled]      = "true"
-      props[:items]        = group[:buttons].collect { |b| create_custom_button_hash(b, record) }
+      props = {
+        :id      => "custom_#{group[:id]}",
+        :type    => :buttonSelect,
+        :icon    => "product product-custom-#{group[:image]} fa-lg",
+        :title   => group[:description],
+        :enabled => true,
+        :items   => group[:buttons].collect { |b| create_custom_button_hash(b, record) }
+      }
+      props[:text] = group[:text] if group[:text_display]
 
       {:name => "custom_buttons_#{group[:text]}", :items => [props]}
     end
@@ -308,12 +308,13 @@ class ApplicationHelper::ToolbarBuilder
   def get_custom_buttons(record)
     cbses = CustomButtonSet.find_all_by_class_name(button_class_name(record), service_template_id(record))
     cbses.sort_by { |cbs| cbs[:set_data][:group_index] }.collect do |cbs|
-      group = {}
-      group[:id]           = cbs.id
-      group[:text]         = cbs.name.split("|").first
-      group[:description]  = cbs.description
-      group[:image]        = cbs.set_data[:button_image]
-      group[:text_display] = cbs.set_data.key?(:display) ? cbs.set_data[:display] : true
+      group = {
+        :id           => cbs.id,
+        :text         => cbs.name.split("|").first,
+        :description  => cbs.description,
+        :image        => cbs.set_data[:button_image],
+        :text_display => cbs.set_data.key?(:display) ? cbs.set_data[:display] : true
+      }
 
       available = CustomButton.available_for_user(current_user, cbs.name) # get all uri records for this user for specified uri set
       available = available.select { |b| cbs.members.include?(b) }            # making sure available_for_user uri is one of the members
