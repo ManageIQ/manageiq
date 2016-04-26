@@ -528,3 +528,17 @@ function miqSetAETreeNodeSelectionClass(id, prevId, bValidNode) {
     miqDynatreeNodeAddClass("automate_tree", id, "ae-valid-node");
   }
 }
+
+function miqSquashToggle(treeName){
+  if(ManageIQ.tree.expandAll){
+      $('#squash_button i').attr('class','fa fa-minus-square-o fa-lg')
+      $('#squash_button').prop('title', __('Collapse All'))
+      miqDynatreeToggleExpand(treeName, true)
+      ManageIQ.tree.expandAll = false
+  } else{
+      $('#squash_button i').attr('class','fa fa-plus-square-o fa-lg')
+      $('#squash_button').prop('title', __('Expand All'))
+      miqDynatreeToggleExpand(treeName, false)
+      ManageIQ.tree.expandAll = true
+  }
+}

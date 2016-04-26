@@ -7,8 +7,8 @@ class TreeBuilderComplianceHistory < TreeBuilder
     sandbox[:ch_root] = TreeBuilder.build_node_id(root) if root
     @root = root
     unless @root
-       model, id = TreeBuilder.extract_node_model_and_id(sandbox[:ch_root])
-       @root = model.constantize.find_by(:id => id)
+      model, id = TreeBuilder.extract_node_model_and_id(sandbox[:ch_root])
+      @root = model.constantize.find_by(:id => id)
     end
     super(name, type, sandbox, build)
   end
@@ -39,17 +39,16 @@ class TreeBuilderComplianceHistory < TreeBuilder
 
   def x_get_compliance_kids(parent, count_only)
     kids = []
-    #binding.pry
     if parent.compliance_details.empty?
-      node = {:id    => "#{parent.id}-nopol",
-              :text  => _("No Compliance Policies Found"),
-              :image => "#{parent.id}-nopol",
-              :tip   => nil,}
-      kids.push(node)
+      kid = {:id    => "#{parent.id}-nopol",
+             :text  => _("No Compliance Policies Found"),
+             :image => "#{parent.id}-nopol",
+             :tip   => nil}
+      kids.push(kid)
     else
       # node must be unique
       parent.compliance_details.order("miq_policy_desc, condition_desc").each do |node|
-        kids.push(node) unless kids.find {|s| s.miq_policy_id == node.miq_policy_id }
+        kids.push(node) unless kids.find { |s| s.miq_policy_id == node.miq_policy_id }
       end
     end
     count_only_or_objects(count_only, kids)
@@ -60,18 +59,17 @@ class TreeBuilderComplianceHistory < TreeBuilder
     model, id = TreeBuilder.extract_node_model_and_id(parents.first)
     grandpa = model.constantize.find_by(:id => from_cid(id))
     grandpa.compliance_details.order("miq_policy_desc, condition_desc").each do |node|
-       if node.miq_policy_id == parent.miq_policy_id
-         n = {:id    => "#{parent.id}-p_#{node.miq_policy_id}",
-              :text  => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
-              :image => node.condition_result ? "check" : "x",
-              :tip   => nil}
-         kids.push(n)
-       end
+      next unless node.miq_policy_id == parent.miq_policy_id
+      n = {:id    => "#{parent.id}-p_#{node.miq_policy_id}",
+           :text  => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
+           :image => node.condition_result ? "check" : "x",
+           :tip   => nil}
+      kids.push(n)
     end
     count_only_or_objects(count_only, kids)
   end
 
-  def x_get_tree_custom_kids(parent, count_only, _options)
+  def x_get_tree_custom_kids(_parent, count_only, _options)
     count_only ? 0 : []
   end
 end

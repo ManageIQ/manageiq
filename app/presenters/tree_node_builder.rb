@@ -176,6 +176,7 @@ class TreeNodeBuilder
   def hash_node
     text = object[:text]
     text = text.kind_of?(Proc) ? text.call : _(text)
+
     # FIXME: expansion
     @node = {
       :key   => build_hash_id,
