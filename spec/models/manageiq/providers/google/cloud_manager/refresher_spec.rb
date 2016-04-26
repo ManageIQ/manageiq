@@ -315,18 +315,17 @@ describe ManageIQ::Providers::Google::CloudManager::Refresher do
 
     assert_specific_vm_powered_off_attributes(v)
 
-    expect(v.ext_management_system).to  eql(@ems)
-    expect(v.availability_zone).to      eql(zone1)
-    expect(v.floating_ip).to            be_nil
-    expect(v.cloud_network).to          eql(@cn)
-    expect(v.cloud_subnet).to           be_nil
-    #TODO parse instance OS v.operating_system.product_name.should eql("Debian")
-
+    expect(v.ext_management_system).to         eql(@ems)
+    expect(v.availability_zone).to             eql(zone1)
+    expect(v.floating_ip).to                   be_nil
+    expect(v.cloud_network).to                 eql(@cn)
+    expect(v.cloud_subnet).to                  be_nil
+    expect(v.operating_system.product_name).to eql("linux_debian")
     # This should have keys added on just this vm (@kp) as well as
     # on the whole project (@project_kp)
-    expect(v.key_pairs.to_a).to         eql([@kp, @project_kp])
-    expect(v.custom_attributes.size).to eql(0)
-    expect(v.snapshots.size).to         eql(0)
+    expect(v.key_pairs.to_a).to                eql([@kp, @project_kp])
+    expect(v.custom_attributes.size).to        eql(0)
+    expect(v.snapshots.size).to                eql(0)
 
     assert_specific_vm_powered_off_hardware(v)
   end
