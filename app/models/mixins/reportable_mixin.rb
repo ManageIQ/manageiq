@@ -10,7 +10,7 @@ module ReportableMixin
       find(count, :conditions => conditions, :include => get_include_for_find(options[:include])).each do|obj|
         if filter
           expression = self.filter.to_ruby
-          expr = Condition.subst(expression, obj, inputs)
+          expr = Condition.subst(expression, obj)
           next unless eval(expr)
         end
 
