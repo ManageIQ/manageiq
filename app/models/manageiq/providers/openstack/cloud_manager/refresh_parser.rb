@@ -2,6 +2,7 @@
 
 module ManageIQ::Providers
   class Openstack::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+    include Vmdb::Logging
     include ManageIQ::Providers::Openstack::RefreshParserCommon::HelperMethods
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Images
     include ManageIQ::Providers::Openstack::RefreshParserCommon::Objects
