@@ -46,9 +46,9 @@ describe ProviderForemanController do
 
     @inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryGroup.create(:name => "testinvgroup", :ems_id => @config_ans.id)
     @inventory_group2 = ManageIQ::Providers::ConfigurationManager::InventoryGroup.create(:name => "testinvgroup2", :ems_id => @config_ans2.id)
-    @ans_configured_system =  ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "ans_test_configured_system",
-                                                                                                               :configuration_profile_id => @inventory_group.id,
-                                                                                                               :manager_id               => @config_mgr.id)
+    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "ans_test_configured_system",
+                                                                                                              :configuration_profile_id => @inventory_group.id,
+                                                                                                              :manager_id               => @config_mgr.id)
 
     @ans_configured_system2a = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2a_ans_configured_system",
                                                                                                                 :inventory_root_group_id => @inventory_group.id,
@@ -56,7 +56,6 @@ describe ProviderForemanController do
     @ans_configured_system2b = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2b_ans_configured_system",
                                                                                                                 :inventory_root_group_id => @inventory_group2.id,
                                                                                                                 :manager_id              => @config_ans2.id)
-
   end
 
   it "renders index" do
