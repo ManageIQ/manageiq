@@ -16,8 +16,8 @@
       <input id="create-master-base-name" ng-model="data.createMasterBaseName" type="text" ng-change="validateForm()" required/>
     </div>
     <div pf-form-group pf-label="Template" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
-      <select pf-select ng-model="data.masterCreationTemplateId" id="masterCreationTemplate" ng-change="updateNodesLikeMaster()">
-        <option ng-repeat="template in data.nodeCreationTemplates" value="{{template.id}}">{{template.name}}</option>
+      <select ng-model="data.masterCreationTemplateId" id="masterCreationTemplate" ng-change="updateNodesLikeMaster(template)">
+        <option ng-repeat="template in data.nodeCreationTemplates" ng-show="{{template.ems_id}} == {{data.newVmProviderId}}" value="{{template.id}}">{{template.name}}</option>
       </select>
     </div>
     <div pf-form-group pf-label="Memory" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
