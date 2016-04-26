@@ -136,6 +136,44 @@ describe('miq_application.js', function() {
     });
   });
 
+  describe('add_flash', function () {
+    beforeEach(function () {
+      var html = '<div id="flash_msg_div"></div>';
+      setFixtures(html);
+    });
+
+    it('creates a flash message', function () {
+      add_flash("foo", 'error');
+
+      var text = $('#flash_msg_div strong').text();
+      var klass = $('#flash_msg_div .alert').is('.alert-danger');
+      var count = $('#flash_msg_div > *').length;
+      expect(text).toEqual('foo');
+      expect(klass).toEqual(true);
+      expect(count).toEqual(1);
+    });
+
+    it('creates two flash messages', function () {
+      add_flash("bar", 'info');
+      add_flash("baz", 'success');
+
+      var count = $('#flash_msg_div > *').length;
+      expect(count).toEqual(2);
+    });
+
+    it('creates a unique flash message with id', function () {
+      add_flash("bar", 'info', { id: "unique" });
+      add_flash("baz", 'success', { id: "unique" });
+
+      var text = $('#flash_msg_div strong').text();
+      var klass = $('#flash_msg_div .alert').is('.alert-success');
+      var count = $('#flash_msg_div > *').length;
+      expect(text).toEqual('baz');
+      expect(klass).toEqual(true);
+      expect(count).toEqual(1);
+    });
+  });
+
   describe('miqUpdateElementsId', function () {
     beforeEach(function () {
       var html = '<div class="col-md-4 ui-sortable" id="col1"><div id="t_0|10000000000764" title="Drag this Tab to a new location"></div><div id="t_3|" title="Drag this Tab to a new location" class=""></div><div id="t_1|10000000000765" title="Drag this Tab to a new location"></div><div id="t_2|10000000000766" title="Drag this Tab to a new location"></div></div>'
