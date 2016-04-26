@@ -1,5 +1,5 @@
 class ApiController
-  INVALID_GROUP_ATTRS = %w(id href group_type)
+  INVALID_GROUP_ATTRS = %w(id href group_type).freeze
 
   module Groups
     def create_resource_groups(_type, _id, data)
