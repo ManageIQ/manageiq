@@ -21,7 +21,7 @@
       - if @cur_group != detail[:group]
         - @cur_group = detail[:group]
         %tr
-          %td.active{:colspan => "10"} &nbsp;
+          %td{:colspan => "10", :style => "background-color: #f5f5f5;"} &nbsp;
       - num_tiers = @edit[:new][:tiers][detail_index].blank? ? "1" : @edit[:new][:tiers][detail_index].length.to_s
 
       %tr.rdetail{:id => "rate_detail_row_#{detail_index}_0"}
@@ -88,3 +88,12 @@
                                       :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_remove",
                                                                             :index => "#{detail_index}-#{tier_index}",
                                                                             :button => "remove")}');")
+
+    :javascript
+      $('tbody tr.rdetail').hover(
+        function () {
+          $("tr[id^='"+this.id.slice(0,-2)+"']").addClass("active");
+        }, function() {
+          $("tr[id^='"+this.id.slice(0,-2)+"']").removeClass("active");
+        }
+      );
