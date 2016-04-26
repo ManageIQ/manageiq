@@ -10,7 +10,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm
         return nil if response.body.fetch_path('console', 'type') != 'novnc'
         response.body.fetch_path('console', 'url')
       end
-      return nil, url, nil, nil, nil, 'novnc_url', nil
+      {:remote_url => url, :proto => 'vnc'}
     end
 
     def remote_console_acquire_ticket_queue(protocol, userid)
@@ -26,7 +26,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => 'ems_operations',
         :zone        => my_zone,
-        :args        => [protocol, proxy_miq_server]
+        :args        => [protocol]
       }
 
       MiqTask.generic_action_with_callback(task_opts, queue_opts)

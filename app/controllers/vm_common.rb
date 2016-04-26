@@ -1367,8 +1367,6 @@ module VmCommon
     miq_task = MiqTask.find(params[:task_id])
     if miq_task.status == "Error" || miq_task.task_results.blank?
       add_flash(_("Console access failed: %{message}") % {:message => miq_task.message}, :error)
-    else
-      @vm = @record = identify_record(params[:id], VmOrTemplate)
     end
     render :update do |page|
       page << javascript_prologue
@@ -1378,7 +1376,11 @@ module VmCommon
       else # open a window to show a VNC or VMWare console
         console_action = console_type == 'html5' ? 'launch_html5_console' : 'launch_vmware_console'
         page << "miqSparkle(false);"
-        page << "window.open('#{url_for(miq_task.task_results.merge(:controller => controller_name, :action => console_action, :id => @record.id))}');"
+        if miq_task.task_results[:remote_url]
+          page << "window.open('#{miq_task.task_results[:remote_url]}');"
+        else
+          page << "window.open('#{url_for(miq_task.task_results.merge(:controller => controller_name, :action => console_action, :id => j(params[:id])))}');"
+        end
       end
     end
   end
