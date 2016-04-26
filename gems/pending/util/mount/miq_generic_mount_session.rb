@@ -10,6 +10,7 @@ require 'util/miq-uuid'
 class MiqGenericMountSession
   require 'util/mount/miq_nfs_session'
   require 'util/mount/miq_smb_session'
+  require 'util/mount/miq_glusterfs_session'
 
   attr_accessor :settings, :mnt_point, :logger
 
@@ -63,6 +64,8 @@ class MiqGenericMountSession
       MiqSmbSession
     when 'nfs'
       MiqNfsSession
+    when 'glusterfs'
+      MiqGlusterfsSession
     else
       raise "unsupported scheme #{scheme} from uri: #{uri}"
     end
