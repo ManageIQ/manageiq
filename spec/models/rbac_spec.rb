@@ -313,7 +313,10 @@ describe Rbac do
 
         context "with only managed filters" do
           before(:each) do
-            group.entitlement = Entitlement.create!(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([["/managed/environment/prod"], ["/managed/service_level/silver"]])
+            group.entitlement.set_belongsto_filters([])
+            group.save!
 
             @tags = ["/managed/environment/prod"]
             @host2.tag_with(@tags.join(' '), :ns => '*')
@@ -355,7 +358,10 @@ describe Rbac do
 
         context "with only belongsto filters" do
           before(:each) do
-            group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => ["/belongsto/ExtManagementSystem|ems1"]})
+            group.entitlement = Entitlement.new
+            group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|ems1"])
+            group.entitlement.set_managed_filters([])
+            group.save!
 
             ems1 = FactoryGirl.create(:ems_vmware, :name => 'ems1')
             @host1.update_attributes(:ext_management_system => ems1)
@@ -446,7 +452,10 @@ describe Rbac do
           end
 
           it "finds one EMS with belongsto filters" do
-            group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
+            group.entitlement = Entitlement.new
+            group.entitlement.set_belongsto_filters([@vm_folder_path])
+            group.entitlement.set_managed_filters([])
+            group.save!
             results = Rbac.search(:class => "ExtManagementSystem", :results_format => :objects, :user => user)
             objects = results.first
             expect(objects).to eq([@ems])
@@ -468,7 +477,10 @@ describe Rbac do
           expect(objects.length).to eq(2)
           expect(objects).to match_array([@vm, @template])
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@vm_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(0)
@@ -478,7 +490,10 @@ describe Rbac do
             v.save
           end
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@vm_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results = Rbac.search(:class => "VmOrTemplate", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(2)
@@ -491,7 +506,10 @@ describe Rbac do
           expect(objects.length).to eq(1)
           expect(objects).to match_array([@vm])
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@vm_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
 
           results = Rbac.search(:class => "Vm", :results_format => :objects, :user => user)
           objects = results.first
@@ -502,7 +520,10 @@ describe Rbac do
             v.save
           end
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@vm_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results = Rbac.search(:class => "Vm", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(1)
@@ -515,7 +536,10 @@ describe Rbac do
           expect(objects.length).to eq(1)
           expect(objects).to match_array([@template])
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@vm_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
 
           results = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :user => user)
           objects = results.first
@@ -526,7 +550,10 @@ describe Rbac do
             v.save
           end
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@vm_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@vm_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results = Rbac.search(:class => "MiqTemplate", :results_format => :objects, :user => user)
           objects = results.first
           expect(objects.length).to eq(1)
@@ -567,7 +594,10 @@ describe Rbac do
         it "returns all host's VMs and templates when host filter is set up" do
           @host_1.parent = @hfolder # add host to folder's hierarchy
           mtc_folder_path_with_host = "#{@mtc_folder_path}/EmsFolder|host/Host|#{@host_1.name}"
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [mtc_folder_path_with_host]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([mtc_folder_path_with_host])
+          group.entitlement.set_managed_filters([])
+          group.save!
 
           ["ManageIQ::Providers::Vmware::InfraManager::Vm", "Vm"].each do |klass|
             results2 = Rbac.search(:class => klass, :user => user, :results_format => :objects).first
@@ -598,7 +628,10 @@ describe Rbac do
         end
 
         it "get all the vm or templates with belongsto filter" do
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@cluster_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@cluster_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results, attrs = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects)
           expect(results.length).to eq(0)
           expect(attrs[:total_count]).to eq(4)
@@ -608,7 +641,10 @@ describe Rbac do
             v.with_relationship_type("ems_metadata") { v.parent = @rp }
             v.save
           end
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@cluster_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@cluster_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
 
           results2, attrs = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@cluster_folder_path]})
@@ -618,21 +654,30 @@ describe Rbac do
         end
 
         it "get all the hosts with belongsto filter" do
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@cluster_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@cluster_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@cluster_folder_path]})
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
           expect(results.length).to eq(1)
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@mtc_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@mtc_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results2, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@mtc_folder_path]})
           expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
           expect(results2.length).to eq(1)
 
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [], "belongsto" => [@ems_folder_path]})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_belongsto_filters([@ems_folder_path])
+          group.entitlement.set_managed_filters([])
+          group.save!
           results3, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@ems_folder_path]})
           expect(attrs[:total_count]).to eq(4)
@@ -841,7 +886,9 @@ describe Rbac do
 
       context "with only managed filters (FB9153, FB11442)" do
         before(:each) do
-          group.entitlement = Entitlement.create!(:filters => {"managed" => [["/managed/environment/prod"], ["/managed/service_level/silver"]], "belongsto" => []})
+          group.entitlement = Entitlement.new
+          group.entitlement.set_managed_filters([["/managed/environment/prod"], ["/managed/service_level/silver"]])
+          group.save!
         end
 
         context ".search" do
