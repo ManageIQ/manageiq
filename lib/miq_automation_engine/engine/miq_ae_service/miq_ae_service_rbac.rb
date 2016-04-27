@@ -16,7 +16,7 @@ module MiqAeMethodService
 
       def count
         rbac = Thread.current.thread_variable_get(:miq_rbac)
-        rbac ? Rbac.search(:class => model).first.count :  model.send(:count)
+        rbac ? Rbac.search(:class => model).first.count : model.send(:count)
       end
 
       def first
