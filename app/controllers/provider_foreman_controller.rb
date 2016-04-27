@@ -532,17 +532,15 @@ class ProviderForemanController < ApplicationController
     else
       case @record.type
       when "ManageIQ::Providers::Foreman::ConfigurationManager"
-        options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem}
-        options[:where_clause] = ["manager_id IN (?)", provider.id]
+        options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem,:where_clause => ["manager_id IN (?)", provider.id]}
         @no_checkboxes = true
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
-        record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+        record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
         @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
                                                         :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
-        options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem}
-        options[:where_clause] = ["ems_id IN (?)", provider.id]
+        options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
         @no_checkboxes = true
         process_show_list(options)
         add_unassigned_inventory_group_record(provider.id)
@@ -579,7 +577,7 @@ class ProviderForemanController < ApplicationController
         ["manager_id IN (?) AND \
           configuration_profile_id IS NULL", id] if empty_configuration_profile_record?(@configuration_profile_record)
       process_show_list(options)
-      record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+      record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
         configuration_profile_right_cell_text(model)
       else
@@ -595,15 +593,11 @@ class ProviderForemanController < ApplicationController
   end
 
   def inventory_group_node(id, model)
-    @record = @inventory_group_record = if model
-                                          find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id)
-                                        else
-                                          ManageIQ::Providers::ConfigurationManager::InventoryGroup.new
-                                        end
+    @record = @inventory_group_record = find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id) if model
+
     if @inventory_group_record.nil?
       self.x_node = "root"
       get_node_info("root")
-      return
     else
       options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["inventory_root_group_id IN (?)", from_cid(@inventory_group_record.id)]
@@ -611,7 +605,7 @@ class ProviderForemanController < ApplicationController
         ["manager_id IN (?) AND \
           inventory_root_group_id IS NULL", from_cid(id)] if empty_inventory_group_record?(@inventory_group_record)
       process_show_list(options)
-      record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+      record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
         inventory_group_right_cell_text(model)
       else
@@ -643,7 +637,7 @@ class ProviderForemanController < ApplicationController
       @right_cell_text =
           _("%{model} \"%{name}\"") %
           {:name  => @record.name,
-           :model => "#{ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))}"}
+           :model => "#{ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))}"}
     end
   end
 
@@ -992,7 +986,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def configuration_profile_right_cell_text(model)
-    record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+    record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
     return if @sb[:active_tab] != 'configured_systems'
     if valid_configuration_profile_record?(@configuration_profile_record)
       @right_cell_text = _("%{model} under %{record_model} \"%{name}\"") %
@@ -1050,7 +1044,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def inventory_group_right_cell_text(model)
-    record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+    record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
     return if @sb[:active_tab] != 'configured_systems'
     if valid_inventory_group_record?(@inventory_group_record)
       @right_cell_text = _("%{model} under Inventory Group \"%{name}\"") %
