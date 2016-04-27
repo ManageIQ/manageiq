@@ -70,7 +70,9 @@ class AuthKeyPairCloudController < ApplicationController
     @edit[:new] = {}
 
     @edit[:ems_choices] = {}
-    ManageIQ::Providers::CloudManager.all.each { |ems| @edit[:ems_choices][ems.name] = ems.id }
+    ManageIQ::Providers::CloudManager.all.each do |ems|
+      @edit[:ems_choices][ems.name] = ems.id if ems.class::AuthKeyPair.is_available?(:create_key_pair, ems)
+    end
     @edit[:new][:ems_id] = @edit[:ems_choices].values[0] unless @edit[:ems_choices].empty?
 
     @edit[:new][:name] = @key_pair.name
@@ -120,8 +122,8 @@ class AuthKeyPairCloudController < ApplicationController
 
       options = @edit[:new]
       ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
-      valid_action, action_details = kls.validate_create_key_pair(ext_management_system, options)
-      if valid_action
+      kls = kls.class_by_ems(ext_management_system)
+      if kls.is_available?(:create_key_pair, ext_management_system, options)
         begin
           kls.create_key_pair(ext_management_system, options)
           add_flash(_("Creating %{model} %{name}") % {
@@ -142,7 +144,7 @@ class AuthKeyPairCloudController < ApplicationController
         end
       else
         @in_a_form = true
-        add_flash(_(action_details), :error) unless action_details.nil?
+        add_flash(kls.is_available_now_error_message(:create_key_pair, ext_management_system, options))
         drop_breadcrumb(
           :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'auth_key_pair_cloud')},
           :url  => "/auth_key_pair_cloud/new"
@@ -156,12 +158,12 @@ class AuthKeyPairCloudController < ApplicationController
     when "validate"
       @in_a_form = true
       options = @edit[:new]
-      ext_management_system = find_by_id_filtered(options[:ems_id])
-      valid_action, action_details = kls.validate_create_key_pair(ext_management_system, options)
-      if valid_action
+      ext_management_system = find_by_id_filtered(ManageIQ::Providers::CloudManager, options[:ems_id])
+      kls = kls.class_by_ems(ext_management_system)
+      if kls.is_available?(:create_key_pair, ext_management_system, options)
         add_flash(_("Validation successful"))
       else
-        add_flash(_(action_details), :error) unless details.nil?
+        add_flash(kls.is_available_now_error_message(:create_key_pair, ext_management_system, options))
       end
       render :update do |page|
         page << javascript_prologue
@@ -236,14 +238,13 @@ class AuthKeyPairCloudController < ApplicationController
       if key_pair.nil?
         add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "auth_key_pair_cloud")}, :error)
       else
-        valid_delete, delete_details = key_pair.validate_delete_key_pair
-        if valid_delete
+        if key_pair.is_available?(:delete_key_pair)
           key_pairs_to_delete.push(k)
         else
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
             :model   => ui_lookup(:table => 'auth_key_pair_cloud'),
             :name    => key_pair.name,
-            :details => delete_details
+            :details => key_pair.is_available_now_error_message(:delete_key_pair)
           }, :error)
         end
       end
