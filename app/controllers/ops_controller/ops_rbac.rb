@@ -1185,7 +1185,7 @@ module OpsController::OpsRbac
     @edit[:new][:name] = @record.name
     vmr = @record.settings.fetch_path(:restrictions, :vms) if @record.settings
     @edit[:new][:vm_restriction] = vmr || :none
-    @edit[:new][:features] = rbac_expand_features(@record.feature_identifiers, MiqProductFeature.feature_root).sort
+    @edit[:new][:features] = rbac_expand_features(@record.feature_identifiers).sort
 
     @edit[:current] = copy_hash(@edit[:new])
 
@@ -1194,19 +1194,21 @@ module OpsController::OpsRbac
   end
 
   # Get array of total set of features from the children of selected features
-  def rbac_expand_features(ids, node) # Selected IDS and node to check
-    if ids.include?(node)   # This node is selected, return all children
-      return [node] + MiqProductFeature.feature_all_children(node)
-    else                    # Node is not selected, check this nodes direct children
-      MiqProductFeature.feature_children(node).flat_map { |n| rbac_expand_features(ids, n) }
+  def rbac_expand_features(selected, node = nil)
+    node ||= MiqProductFeature.feature_root
+    if selected.include?(node)
+      [node] + MiqProductFeature.feature_all_children(node)
+    else
+      MiqProductFeature.feature_children(node).flat_map { |n| rbac_expand_features(selected, n) }
     end
   end
 
   # Get array of all fully selected parent or leaf node features
-  def rbac_compact_features(ids, node)  # Selected IDS and node to check
-    return [node] if ids.include?(node) # This feature is selected, return this node
+  def rbac_compact_features(selected, node = nil)
+    node ||= MiqProductFeature.feature_root
+    return [node] if selected.include?(node)
     MiqProductFeature.feature_children(node, false).flat_map do |n|
-      rbac_compact_features(ids, n)
+      rbac_compact_features(selected, n)
     end
   end
 
@@ -1278,9 +1280,8 @@ module OpsController::OpsRbac
 
   def set_role_features(role)
     role.miq_product_features =
-      MiqProductFeature.find_all_by_identifier(rbac_compact_features(@edit[:new][:features], MiqProductFeature.feature_root))
+      MiqProductFeature.find_all_by_identifier(rbac_compact_features(@edit[:new][:features]))
   end
-
 
   # Validate some of the role fields
   def rbac_role_validate?
