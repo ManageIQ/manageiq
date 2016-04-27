@@ -20,6 +20,7 @@ module MiqAeEngine
 
   def self.instantiate(uri, user)
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}")
+    User.current_user = user
     workspace, t = Benchmark.realtime_block(:total_time) { MiqAeWorkspaceRuntime.instantiate(uri, user) }
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}...Complete - Counts: #{format_benchmark_counts(t)}, Timings: #{format_benchmark_times(t)}")
     workspace
@@ -319,6 +320,7 @@ module MiqAeEngine
     raise "User object not passed in" unless user_obj.kind_of?(User)
     uri = create_automation_object(uri, attr, options) if attr
     options[:uri] = uri
+    User.current_user = user_obj
     MiqAeWorkspaceRuntime.instantiate(uri, user_obj, :readonly => readonly).tap do
       $miq_ae_logger.debug { ws.to_expanded_xml }
     end

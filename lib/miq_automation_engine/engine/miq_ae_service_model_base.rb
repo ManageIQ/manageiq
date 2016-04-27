@@ -1,3 +1,4 @@
+require_relative 'miq_ae_service/miq_ae_service_rbac'
 module MiqAeMethodService
   class MiqAeServiceConverter
     def self.svc2obj(svc)
@@ -16,9 +17,10 @@ module MiqAeMethodService
     include DRbUndumped    # Ensure that Automate Method can get at instances over DRb
     include MiqAeServiceObjectCommon
     include Vmdb::Logging
+    include MiqAeMethodService::MiqAeServiceRbac
 
     def self.method_missing(m, *args)
-      return wrap_results(model.send(m, *args)) if class_method_exposed?(m)
+      return wrap_results(filter_objects(model.send(m, *args))) if class_method_exposed?(m)
       super
     rescue ActiveRecord::RecordNotFound
       raise MiqAeException::ServiceNotFound, "Service Model not found"
@@ -35,7 +37,7 @@ module MiqAeMethodService
 
     # Expose the ActiveRecord find, all, count, and first
     def self.class_method_exposed?(m)
-      allowed_find_method?(m.to_s) || [:where, :find, :all, :count, :first].include?(m)
+      allowed_find_method?(m.to_s) || [:where, :find].include?(m)
     end
 
     private_class_method :class_method_exposed?
@@ -123,9 +125,9 @@ module MiqAeMethodService
           return options[:override_return] if options.key?(:override_return)
           reflection = @object.class.reflection_with_virtual(method)
           if reflection && reflection.collection?
-            wrap_results(ret.to_a)
+            options[:association] ? wrap_results(self.class.filter_objects(ret.to_a)) : wrap_results(ret.to_a)
           else
-            wrap_results(ret)
+            options[:association] ? wrap_results(self.class.filter_objects(ret)) : wrap_results(ret)
           end
         end
       end
@@ -208,7 +210,7 @@ module MiqAeMethodService
       if obj.kind_of?(ActiveRecord::Base) && !obj.kind_of?(ar_klass)
         raise ArgumentError.new("#{ar_klass.name} Object expected, but received #{obj.class.name}")
       end
-      @object = obj.kind_of?(ar_klass) ? obj : ar_method { ar_klass.find_by_id(obj.to_i) }
+      @object = obj.kind_of?(ar_klass) ? obj : ar_method { self.class.find_ar_object_by_id(obj.to_i) }
       raise MiqAeException::ServiceNotFound, "#{ar_klass.name} Object [#{obj}] not found" if @object.nil?
     end
 

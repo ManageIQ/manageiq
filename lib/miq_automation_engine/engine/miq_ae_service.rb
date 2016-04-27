@@ -10,7 +10,14 @@ module MiqAeMethodService
 
   class MiqAeServiceFront
     include DRbUndumped
+    def initialize(user)
+      @user = user
+      Thread.current.thread_variable_set(:miq_rbac, false)
+    end
+
     def find(id)
+      Thread.current.thread_variable_set(:miq_rbac, false)
+      User.current_user = @user
       MiqAeService.find(id)
     end
   end
@@ -62,6 +69,14 @@ module MiqAeMethodService
 
     def stderr
       @stderr ||= Vmdb::Loggers::IoLogger.new(logger, :error, "Method STDERR:")
+    end
+
+    def enable_rbac
+      Thread.current.thread_variable_set(:miq_rbac, true)
+    end
+
+    def disable_rbac
+      Thread.current.thread_variable_set(:miq_rbac, false)
     end
 
     def destroy
