@@ -346,12 +346,8 @@ class ProviderForemanController < ApplicationController
   end
 
   def tree_select_unprovisioned_configured_system
-    if unassigned_configuration_profile?(x_node)
-      params[:id] = "cs-#{params[:id]}"
-      tree_select
-    else
-      redirect_to :action => "explorer"
-    end
+    params[:id] = "cs-#{params[:id]}"
+    tree_select
   end
 
   def configuration_manager_providers_tree_rec
@@ -1081,7 +1077,7 @@ class ProviderForemanController < ApplicationController
     unassigned_inventory_group_row =
       {'name'                     => unassigned_inventory_group_name,
        'total_configured_systems' => no_inventory_configured_systems,
-       'ems_id'                   => provider_id
+       'id'                   => provider_id
       }
 
     add_unassigned_inventory_group_record_to_view(unassigned_inventory_group_row, unassigned_inventory_group)
