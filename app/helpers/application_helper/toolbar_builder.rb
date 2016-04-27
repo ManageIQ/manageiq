@@ -102,7 +102,8 @@ class ApplicationHelper::ToolbarBuilder
       :name    => button[:id],
       :hidden  => button[:hidden] || !!input[:hidden],
       :pressed => input[:pressed],
-      :onwhen  => input[:onwhen]
+      :onwhen  => input[:onwhen],
+      :form    => input[:form]
     )
 
     button[:enabled]   = input[:enabled]

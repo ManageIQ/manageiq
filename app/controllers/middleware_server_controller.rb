@@ -116,7 +116,8 @@ class MiddlewareServerController < ApplicationController
         if operation_info.key? :param
           # Fetch param from UI - > see #8079
           name = operation_info.fetch(:param)
-          val = 0 # Default until we can really get it from the UI ( #8079)
+          param_from_ui = params['x-form-data']
+          val = param_from_ui.to_i
           trigger_mw_operation operation_info.fetch(:op), mw_server, { name => val }
         else
           trigger_mw_operation operation_info.fetch(:op), mw_server

@@ -188,6 +188,11 @@ module ToolbarHelper
              'data-click' => props[:id])
     h['name'] = props[:name] if props.key?(:name)
     h['data-confirm-tb'] = _(props[:confirm]) if props.key?(:confirm)
+    h['data-form-tb'] = create_form(props[:form]) if props.key?(:form) && !props[:form].nil?
     h
+  end
+
+  def create_form(fdef)
+    "miqf=(#{JSON.generate(fdef)})"
   end
 end

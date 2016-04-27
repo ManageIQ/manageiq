@@ -73,7 +73,11 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Suspend this #{ui_lookup(:table=>"middleware_server")}'),
           N_('Suspend Server'),
           :image   => "suspend",
-          :confirm => N_("Do you want to suspend this server?")),
+          :confirm => N_("Do you want to suspend this server?"),
+          :form => {:id => :timeout,
+                    :label => N_("Timeout"),
+                    :default_value => 0}
+        ),
         button(
           :middleware_server_resume,
           nil,
