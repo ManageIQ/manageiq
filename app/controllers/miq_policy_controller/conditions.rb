@@ -223,7 +223,7 @@ module MiqPolicyController::Conditions
   end
 
   def condition_get_all_folders
-    @folders = ["Host", "Vm"]
+    @folders = MiqPolicy::UI_FOLDERS.collect(&:name)
     @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "Condition")}
     @right_cell_div = "condition_folders"
   end

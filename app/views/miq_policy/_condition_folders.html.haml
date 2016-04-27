@@ -5,8 +5,8 @@
       %tbody
         - @folders.each do |f|
           %tr{:title => _("View Condition"),
-            :onclick => "miqDynatreeActivateNode('condition_tree', 'xx-#{f.downcase}');"}
+            :onclick => "miqDynatreeActivateNode('condition_tree', 'xx-#{f.camelize(:lower)}');"}
             %td.narrow
-              %img{:src => image_path("100/#{f.downcase}.png")}
+              %img{:src => image_path("100/#{f.underscore}.png")}
             %td
               = _("%s Conditions") % ui_lookup(:model => f)
