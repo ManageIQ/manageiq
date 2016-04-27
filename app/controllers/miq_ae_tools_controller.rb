@@ -343,7 +343,7 @@ Methods updated/added: %{method_stats}") % stat_options)
       e_node[:icon] = ActionController::Base.helpers.image_path("100/#{el.name.underscore}.png")
     else
       e_node[:title] = el.name
-      e_node[:icon] = ActionController::Base.helpers.image_path("100/#{e_node[:title].underscore}.png")
+      e_node[:icon] = ActionController::Base.helpers.image_path("100/#{e_node[:title].underscore.sub(/^miq_ae_service_/, '')}.png")
       el.attributes.each_pair do |k, v|
         a_node = {}
         a_node[:key] = "a_#{@idx}"
