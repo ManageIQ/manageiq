@@ -33,6 +33,19 @@ class MiqRequestWorkflow
     descendants.flat_map(&:encrypted_options_fields).uniq
   end
 
+  def self.update_requester_from_parameters(data, user)
+    return user if data[:user_name].blank?
+    new_user = User.lookup_by_identity(data[:user_name])
+
+    unless new_user
+      _log.error "requested not changed to <#{data[:user_name]}> due to a lookup failure"
+      raise ActiveRecord::RecordNotFound
+    end
+
+    _log.warn "requested changed to <#{new_user.userid}>"
+    new_user
+  end
+
   def initialize(values, requester, options = {})
     instance_var_init(values, requester, options)
 

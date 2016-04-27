@@ -17,10 +17,8 @@ class AutomationRequest < MiqRequest
     options = {}
     requester_options = MiqRequestWorkflow.parse_ws_string(requester)
     auto_approve = (requester_options[:auto_approve] == 'true' || requester_options[:auto_approve] == true)
-    unless requester_options[:user_name].blank?
-      user = User.find_by_userid!(requester_options[:user_name])
-      _log.warn "Web-service requester changed to <#{user.userid}>"
-    end
+
+    user = MiqRequestWorkflow.update_requester_from_parameters(requester_options, user)
 
     uri_options = MiqRequestWorkflow.parse_ws_string(uri_parts)
     [:namespace, :class, :instance, :message].each { |key| options[key] = uri_options.delete(key) if uri_options.key?(key) }
