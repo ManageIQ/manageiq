@@ -521,6 +521,7 @@ module Rbac
 
   def self.get_belongsto_matches(blist, klass)
     return get_belongsto_matches_for_host(blist, klass) if klass == Host
+    return get_belongsto_matches_for_storage(blist, klass) if klass == Storage
     association_name = klass.base_model.to_s.tableize
 
     blist.flat_map do |bfilter|
@@ -529,10 +530,7 @@ module Rbac
       # typically, this is the only one we want:
       vcmeta = vcmeta_list.last
 
-      if klass == Storage
-        vcmeta = vcmeta_list.reverse.detect { |vcm| vcm.respond_to?(:storages) }
-        vcmeta ? vcmeta.storages : []
-      elsif vcmeta.kind_of?(Host) && klass <= VmOrTemplate
+      if vcmeta.kind_of?(Host) && klass <= VmOrTemplate
         vcmeta.send(association_name).to_a
       else
         vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
@@ -551,6 +549,16 @@ module Rbac
 
       MiqPreloader.preload(clusters, :hosts)
       clusters.collect(&:hosts).flatten + hosts
+    end
+  end
+
+  def self.get_belongsto_matches_for_storage(blist, klass)
+    blist.flat_map do |bfilter|
+      vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
+      next if vcmeta_list.empty?
+
+      vcmeta = vcmeta_list.reverse.detect { |v| v.respond_to?(:storages) }
+      vcmeta ? vcmeta.storages : []
     end
   end
 
