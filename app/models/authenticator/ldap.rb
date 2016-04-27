@@ -27,7 +27,7 @@ module Authenticator
 
     def find_or_create_by_ldap(username)
       username = miq_ldap.fqusername(username)
-      user = User.find_by_userid(username)
+      user = userprincipal_for(username)
       return user unless user.nil?
 
       raise _("Unable to auto-create user because LDAP bind credentials are not configured") unless authorize?
@@ -84,6 +84,11 @@ module Authenticator
       _log.debug("User obj from LDAP: #{lobj.inspect}")
 
       lobj
+    end
+
+    def userprincipal_for(username)
+      lobj = find_external_identity(username)
+      User.find_by_userid(userid_for(lobj, username))
     end
 
     def userid_for(lobj, username)
