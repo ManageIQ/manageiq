@@ -520,7 +520,9 @@ module Rbac
   end
 
   def self.get_belongsto_matches(blist, klass)
+    return get_belongsto_matches_for_host(blist, klass) if klass == Host
     association_name = klass.base_model.to_s.tableize
+
     blist.flat_map do |bfilter|
       vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
       next [] if vcmeta_list.empty?
@@ -530,8 +532,6 @@ module Rbac
       if klass == Storage
         vcmeta = vcmeta_list.reverse.detect { |vcm| vcm.respond_to?(:storages) }
         vcmeta ? vcmeta.storages : []
-      elsif klass == Host
-        get_belongsto_matches_for_host(vcmeta)
       elsif vcmeta.kind_of?(Host) && klass <= VmOrTemplate
         vcmeta.send(association_name).to_a
       else
@@ -540,13 +540,18 @@ module Rbac
     end.uniq
   end
 
-  def self.get_belongsto_matches_for_host(vcmeta)
-    subtree  = vcmeta.subtree
-    clusters = subtree.grep(EmsCluster)
-    hosts    = subtree.grep(Host)
+  def self.get_belongsto_matches_for_host(blist, klass)
+    blist.flat_map do |bfilter|
+      vcmeta = MiqFilter.belongsto2object(bfilter)
+      next unless vcmeta
 
-    MiqPreloader.preload(clusters, :hosts)
-    clusters.collect(&:hosts).flatten + hosts
+      subtree  = vcmeta.subtree
+      clusters = subtree.grep(EmsCluster)
+      hosts    = subtree.grep(Host)
+
+      MiqPreloader.preload(clusters, :hosts)
+      clusters.collect(&:hosts).flatten + hosts
+    end
   end
 
   def self.matches_search_filters?(obj, filter, tz)
