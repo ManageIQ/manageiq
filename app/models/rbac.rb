@@ -520,6 +520,7 @@ module Rbac
   end
 
   def self.get_belongsto_matches(blist, klass)
+    association_name = klass.base_model.to_s.tableize
     blist.flat_map do |bfilter|
       vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
       next [] if vcmeta_list.empty?
@@ -531,7 +532,7 @@ module Rbac
         get_belongsto_matches_for_host(vcmeta_list.last)
       elsif vcmeta_list.last.kind_of?(Host) && klass <= VmOrTemplate
         host = vcmeta_list.last
-        host.send(klass.base_model.to_s.tableize).to_a
+        host.send(association_name).to_a
       else
         vcmeta_list.grep(klass) + vcmeta_list.last.descendants.grep(klass)
       end
