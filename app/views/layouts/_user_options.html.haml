@@ -11,9 +11,9 @@
           = _('Server: %s') % appliance_name
 
       - if current_user.miq_groups.length > 1
-        %li.dropdown-submenu
+        %li.dropdown-submenu.pull-left
           %a{:href => "#"}
-            = _('Change Group:')
+            = _('Change Group')
             %ul.dropdown-menu.scrollable-menu
               - current_user.miq_groups.sort_by_desc.each do |group|
                 - if group == current_group
