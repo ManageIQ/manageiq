@@ -113,6 +113,7 @@ describe Authenticator::Ldap do
       end
 
       it "refuses users that don't exist in LDAP" do
+        expect(subject).to receive(:userprincipal_for)
         expect(-> { subject.lookup_by_identity('carol') }).to raise_error(/credentials are not configured/)
       end
     end
@@ -147,6 +148,7 @@ describe Authenticator::Ldap do
       end
 
       it "refuses users that don't exist in LDAP" do
+        expect(subject).to receive(:userprincipal_for)
         expect(-> { subject.lookup_by_identity('carol') }).to raise_error(/no data for user/)
       end
     end
@@ -159,6 +161,10 @@ describe Authenticator::Ldap do
 
     let(:username) { 'alice' }
     let(:password) { 'secret' }
+
+    before do
+      allow(subject).to receive(:find_or_create_by_ldap)
+    end
 
     context "when using LDAP" do
       let(:config) { super().merge(:ldap_role => true) }
@@ -340,6 +346,11 @@ describe Authenticator::Ldap do
 
           it "succeeds" do
             expect(authenticate).to be_a(User)
+          end
+
+          it "looks in ldap" do
+            expect(subject).to receive(:find_or_create_by_ldap)
+            authenticate
           end
 
           it "records two successful audit entries" do
