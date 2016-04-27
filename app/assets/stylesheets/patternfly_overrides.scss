@@ -14,6 +14,11 @@
   .max-height {
     height: 100%;
   }
+  #miq_ae_tools .scrollable { /* inserts height calculation for scrollable area */
+    height: calc(100% - 50px);
+    overflow: auto;
+  }
+
   .no-padding { /* removings left-right padding from column */
     padding: 0 !important;
     margin: 0 !important;
