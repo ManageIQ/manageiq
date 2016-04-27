@@ -96,7 +96,7 @@ class OpenstackEventMonitor
   private
 
   def self.event_monitor_key(options)
-    options.values_at(:hostname, :username, :password)
+    options.values_at(:hostname, :port, :security_protocol, :username, :password)
   end
   private_class_method :event_monitor_key
 
