@@ -122,6 +122,12 @@ class ApiController
       end
     end
 
+    def attribute_selection_for(collection)
+      Array(attribute_selection).collect do |attr|
+        /\A#{collection}\.(?<name>.*)\z/.match(attr) { |m| m[:name] }
+      end.compact
+    end
+
     def render_attr(attr)
       as = attribute_selection
       as == "all" || as.include?(attr)
