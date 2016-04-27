@@ -15,13 +15,19 @@ module AvailabilityMixin
   # or greyed-out.  However, if the VM is a type that we cannot scan or we cannot get
   # to the storage to scan it then this method would be expected to return false.
 
-  def is_available?(request_type)
-    send("validate_#{request_type}")[:available]
+  class_methods do
+    def is_available?(request_type, *args)
+      send("validate_#{request_type}", *args)[:available]
+    end
+
+    # Returns an error message string if there is an error.
+    # Otherwise nil to indicate no errors.
+    def is_available_now_error_message(request_type, *args)
+      send("validate_#{request_type}", *args)[:message]
+    end
   end
 
-  # Returns an error message string if there is an error.
-  # Otherwise nil to indicate no errors.
-  def is_available_now_error_message(request_type)
-    send("validate_#{request_type}")[:message]
+  included do
+    include ClassMethods
   end
 end
