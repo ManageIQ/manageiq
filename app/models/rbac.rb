@@ -547,8 +547,7 @@ module Rbac
       clusters = subtree.grep(EmsCluster)
       hosts    = subtree.grep(Host)
 
-      MiqPreloader.preload(clusters, :hosts)
-      clusters.collect(&:hosts).flatten + hosts
+      MiqPreloader.preload_and_map(clusters, :hosts) + hosts
     end
   end
 
