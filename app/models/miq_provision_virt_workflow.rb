@@ -1111,10 +1111,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     init_options = {:use_pre_dialog => false, :request_type => request_type(parse_ws_string(template_fields)[:request_type])}
     data = parse_ws_string(requester)
-    unless data[:user_name].blank?
-      user = User.find_by_userid!(data[:user_name])
-      _log.warn "Web-service requester changed to <#{user.userid}>"
-    end
+
+    user = update_requester_from_parameters(data, user)
 
     p = new(values = {}, user, init_options)
     src = p.ws_template_fields(values, template_fields, options.values)
