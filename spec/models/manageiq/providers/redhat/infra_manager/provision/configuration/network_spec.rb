@@ -12,6 +12,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
   let(:ems_cluster)   { FactoryGirl.create(:ems_cluster, :ext_management_system => ems) }
   let(:template)      { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
   let(:rhevm_vm)      { FactoryGirl.create(:vm_redhat) }
+  let(:ovirt_service) { double("Ovirt::Service", :api_path => "/api") }
 
   before do
     @task = FactoryGirl.create(:miq_provision_redhat,
@@ -25,6 +26,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
       :dest_cluster             => ems_cluster,
       :get_provider_destination => rhevm_vm
     )
+
+    allow(Ovirt::Service).to receive_messages(:new => ovirt_service)
 
     allow(rhevm_vm).to receive_messages(:nics => [rhevm_nic1, rhevm_nic2])
     allow(Ovirt::Cluster).to receive_messages(:find_by_href => rhevm_cluster)
