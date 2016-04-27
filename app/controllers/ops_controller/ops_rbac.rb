@@ -1212,6 +1212,34 @@ module OpsController::OpsRbac
     end
   end
 
+  # Yield all features for given tree node a section or feature
+  #
+  # a. special case _tab_all_vm_rules
+  # b. section node /^_tab_/
+  #   return all features below this section and
+  #   recursively below any nested sections
+  #   and nested features recursively
+  # c. feature node
+  #   return nested features recursively
+  #
+  def recurse_sections_and_features(node)
+    if node =~ /_tab_all_vm_rules$/
+      MiqProductFeature.feature_children('all_vm_rules').each do |feature|
+        kids = MiqProductFeature.feature_all_children(feature)
+        yield feature, [feature] + kids
+      end
+    elsif node =~ /^_tab_/
+      section_id = node.split('_tab_').last.to_sym
+      Menu::Manager.section(section_id).features_recursive.each do |f|
+        kids = MiqProductFeature.feature_all_children(f)
+        yield f, [f] + kids
+      end
+    else
+      kids = MiqProductFeature.feature_all_children(node)
+      yield node, [node] + kids
+    end
+  end
+
   def rbac_role_get_form_vars
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:vm_restriction] = params[:vm_restriction].to_sym if params[:vm_restriction]
@@ -1220,34 +1248,19 @@ module OpsController::OpsRbac
     if params[:check]
       node = params[:id].split("__").last # Get the feature of the checked node
       if params[:check] == "0"  # Unchecked
-        if node.starts_with?("_tab_") # Remove all features under this tab
-          tab_features_for_node(node).each do |f|
-            @edit[:new][:features] -= ([f] + MiqProductFeature.feature_all_children(f)) # Remove the feature + children
-            rbac_role_remove_parent(f)  # Remove all parents above the unchecked tab feature
-          end
-        else  # Remove the unchecked feature
-          @edit[:new][:features] -= ([node] + MiqProductFeature.feature_all_children(node))
-          rbac_role_remove_parent(node) # Remove all parents above the unchecked node
+        recurse_sections_and_features(node) do |feature, all|
+          @edit[:new][:features] -= all # remove the feature + children
+          rbac_role_remove_parent(feature) # remove all parents above the unchecked tab feature
         end
       else                      # Checked
-        if node.starts_with?("_tab_") # Add all features under this tab
-          tab_features_for_node(node).each do |f|
-            @edit[:new][:features] += ([f] + MiqProductFeature.feature_all_children(f))
-            rbac_role_add_parent(f) # Add any parents above the checked tab feature that have all children checked
-          end
-        else  # Add the checked feature
-          @edit[:new][:features] += ([node] + MiqProductFeature.feature_all_children(node))
-          rbac_role_add_parent(node)  # Add any parents above the checked node that have all children checked
+        recurse_sections_and_features(node) do |feature, all|
+          @edit[:new][:features] += all # remove the feature + children
+          rbac_role_add_parent(feature) # remove all parents above the unchecked tab feature
         end
       end
     end
     @edit[:new][:features].uniq!
     @edit[:new][:features].sort!
-  end
-
-  def tab_features_for_node(node)
-    feature_id = node.split('_tab_')
-    node =~ /_tab_all_vm_rules$/ ? MiqProductFeature.feature_children(feature_id) : Menu::Manager.section(feature_id)
   end
 
   # Walk the features tree, removing features up to the top
