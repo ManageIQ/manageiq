@@ -1,30 +1,27 @@
 class MiddlewareTopologyService < TopologyService
+  include UiServiceMixin
+
   def initialize(provider_id)
     @provider_id = provider_id
     @providers = retrieve_providers(ManageIQ::Providers::MiddlewareManager, @provider_id)
   end
 
   def build_topology
-    topology = {}
     topo_items = {}
     links = []
 
-    @providers.each do |provider|
-      topo_items[provider.id.to_s] = build_entity_data(provider)
-      provider.middleware_servers.each do |server|
-        topo_items[server.ems_ref] = build_entity_data(server)
-        links << build_link(provider.id.to_s, server.ems_ref)
-        server.middleware_deployments.each do |deployment|
-          topo_items[deployment.ems_ref] = build_entity_data(deployment)
-          links << build_link(server.ems_ref, deployment.ems_ref)
-        end
-      end
+    entity_relationships = {:MiddlewareManager =>
+                                {:MiddlewareServers =>
+                                     {:MiddlewareDeployments => nil
+                           }}}
+
+    preloaded = @providers.includes(:middleware_server => [:middleware_deployment])
+
+    preloaded.each do |entity|
+      topo_items, links = build_recursive_topology(entity, entity_relationships[:MiddlewareManager], topo_items, links)
     end
 
-    topology[:items] = topo_items
-    topology[:relations] = links
-    topology[:kinds] = build_kinds
-    topology
+    populate_topology(topo_items, links, build_kinds, icons)
   end
 
   def entity_display_type(entity)
@@ -40,19 +37,7 @@ class MiddlewareTopologyService < TopologyService
     data.merge!(:status => 'Unknown',
                 :display_kind => entity_display_type(entity))
     data[:icon] = entity.decorate.try(:listicon_image)
-    data.merge!(:id => entity_id(entity)) # temporarily overriding id set in build_base_entity_data
     data
-  end
-
-  def entity_id(entity) #temporarily overriding entity_id method in base topology service class
-    if entity.kind_of?(ManageIQ::Providers::BaseManager) # any type of provider
-      id = entity.id.to_s
-    elsif entity.kind_of?(MiddlewareDeployment) || entity.kind_of?(MiddlewareServer)
-      id = entity.nativeid
-    else
-      id = entity.ems_ref
-    end
-    id
   end
 
   def build_kinds
