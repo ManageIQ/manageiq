@@ -99,6 +99,28 @@ RSpec.describe "tenants API" do
       expect(tenant.description).to eq("New Tenant description")
     end
 
+    context "query root tenant that uses configuration settings" do
+      let(:config_attributes) { VMDB::Config.new("vmdb").config.fetch_path(:server) }
+
+      before do
+        root_tenant.use_config_for_attributes = true
+        root_tenant.name = 'Some other name'
+        root_tenant.save
+      end
+
+      it "shows properties from configuration settings" do
+        api_basic_authorize action_identifier(:tenants, :read, :resource_actions, :get)
+        run_get tenants_url(root_tenant.id)
+
+        expect_result_to_match_hash(response_hash,
+                                    "href" => tenants_url(root_tenant.id),
+                                    "id"   => root_tenant.id,
+                                    "name" => config_attributes[:company],
+                                   )
+        expect_request_success
+      end
+    end
+
     it "can update multiple tenants with POST" do
       api_basic_authorize action_identifier(:tenants, :edit)
       tenant_1 = FactoryGirl.create(
