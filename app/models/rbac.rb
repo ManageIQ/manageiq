@@ -524,17 +524,18 @@ module Rbac
     blist.flat_map do |bfilter|
       vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
       next [] if vcmeta_list.empty?
+      # typically, this is the only one we want:
+      vcmeta = vcmeta_list.last
 
       if klass == Storage
         vcmeta = vcmeta_list.reverse.detect { |vcm| vcm.respond_to?(:storages) }
         vcmeta ? vcmeta.storages : []
       elsif klass == Host
-        get_belongsto_matches_for_host(vcmeta_list.last)
-      elsif vcmeta_list.last.kind_of?(Host) && klass <= VmOrTemplate
-        host = vcmeta_list.last
-        host.send(association_name).to_a
+        get_belongsto_matches_for_host(vcmeta)
+      elsif vcmeta.kind_of?(Host) && klass <= VmOrTemplate
+        vcmeta.send(association_name).to_a
       else
-        vcmeta_list.grep(klass) + vcmeta_list.last.descendants.grep(klass)
+        vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
       end
     end.uniq
   end
