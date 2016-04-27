@@ -35,5 +35,5 @@ class WaitForIP
 end
 
 if __FILE__ == $PROGRAM_NAME
-  WaitForIP.new().main
+  WaitForIP.new.main
 end
