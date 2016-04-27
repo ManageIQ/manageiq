@@ -554,8 +554,7 @@ module Rbac
 
   def self.get_belongsto_matches_for_storage(blist, klass)
     blist.flat_map do |bfilter|
-      vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
-      vcmeta = vcmeta_list.reverse.detect { |v| v.respond_to?(:storages) }
+      vcmeta = MiqFilter.belongsto2object_list(bfilter).reverse.detect { |v| v.respond_to?(:storages) }
       vcmeta ? vcmeta.storages : []
     end
   end
