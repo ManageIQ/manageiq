@@ -19,17 +19,11 @@
         - @ae_class.ae_fields.each do |field|
           - ae_value = field.ae_values.find_or_initialize_by(:instance_id => @record.id, :field_id => field.id)
           %tr
-            %td
-              %ul.icons.list-unstyled.pull-left
-                %li
-                  %span.product{:class => "product-ae_#{field.aetype}", :title => _("Type: %s") % field.aetype}
+            %td.text-nowrap
+              %i.product.fa-lg{:class => "product-ae_#{field.aetype}", :title => _("Type: %s") % field.aetype}
               - unless field.datatype.blank? || field.datatype == 'string'
-                %ul.icons.list-unstyled.pull-left
-                  %li
-                    %span.product{:class => "product-#{field.datatype}", :title => _("Data type: %s") % field.datatype}
-              %ul.icons.list-unstyled.pull-left
-                %li
-                  %span.pficon{:class => "pficon-ok#{field.substitute ? '' : '-closed'}", :title => _("Substitute: %s") % field.substitute}
+                %i.product.fa-lg{:class => "product-#{field.datatype}", :title => _("Data type: %s") % field.datatype}
+              %i.pficon.fa-lg{:class => "pficon-ok#{field.substitute ? '' : '-closed'}", :title => _("Substitute: %s") % field.substitute}
               &nbsp;
               = record_name(field)
             %td
