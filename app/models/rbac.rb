@@ -520,27 +520,22 @@ module Rbac
   end
 
   def self.get_belongsto_matches(blist, klass)
-    results = []
-    blist.each do |bfilter|
+    blist.flat_map do |bfilter|
       vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
-      next if vcmeta_list.empty?
+      next [] if vcmeta_list.empty?
 
       if klass == Storage
         vcmeta = vcmeta_list.reverse.detect { |vcm| vcm.respond_to?(:storages) }
-        results.concat(vcmeta.storages) if vcmeta
+        vcmeta ? vcmeta.storages : []
       elsif klass == Host
-        results.concat(get_belongsto_matches_for_host(vcmeta_list.last))
+        get_belongsto_matches_for_host(vcmeta_list.last)
       elsif vcmeta_list.last.kind_of?(Host) && klass <= VmOrTemplate
         host = vcmeta_list.last
-        vms_and_templates = host.send(klass.base_model.to_s.tableize).to_a
-        results.concat(vms_and_templates)
+        host.send(klass.base_model.to_s.tableize).to_a
       else
-        results.push(vcmeta_list.grep(klass))
-        results.concat(vcmeta_list.last.descendants.grep(klass))
+        vcmeta_list.grep(klass) + vcmeta_list.last.descendants.grep(klass)
       end
-    end
-
-    results.uniq
+    end.uniq
   end
 
   def self.get_belongsto_matches_for_host(vcmeta)
