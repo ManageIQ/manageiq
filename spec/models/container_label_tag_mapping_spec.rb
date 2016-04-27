@@ -1,5 +1,6 @@
 describe ContainerLabelTagMapping do
   let(:node) { FactoryGirl.create(:container_node, :name => 'node') }
+  let(:project) { FactoryGirl.create(:container_project, :name => 'project') }
 
   def label(node, name, value)
     FactoryGirl.create(:kubernetes_label, :resource => node, :name => name, :value => value)
@@ -10,6 +11,16 @@ describe ContainerLabelTagMapping do
   let(:cat_classification) { FactoryGirl.create(:classification) }
   let(:cat_tag) { cat_classification.tag }
   let(:tag_under_cat) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
+
+  # Each test here may populate the table differently.
+  after :each do
+    ContainerLabelTagMapping.drop_cache
+  end
+  # If the mapping was called from *elsewhere* the might already be a stale cache.
+  # TODO: This assumes all other tests only use an empty mapping.
+  before :all do
+    ContainerLabelTagMapping.drop_cache
+  end
 
   context "with empty mapping" do
     it "does nothing" do
@@ -76,6 +87,11 @@ describe ContainerLabelTagMapping do
     it "applies both independently" do
       label(node, 'name', 'value')
       expect(ContainerLabelTagMapping.all_tags_for_entity(node)).to contain_exactly(tag1, tag2)
+    end
+
+    it "skips specific-type when type doesn't match" do
+      label(project, 'name', 'value')
+      expect(ContainerLabelTagMapping.all_tags_for_entity(project)).to contain_exactly(tag2)
     end
   end
 
