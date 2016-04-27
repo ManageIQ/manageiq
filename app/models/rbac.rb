@@ -553,10 +553,10 @@ module Rbac
   end
 
   def self.get_belongsto_matches_for_storage(blist, klass)
-    blist.flat_map do |bfilter|
-      vcmeta = MiqFilter.belongsto2object_list(bfilter).reverse.detect { |v| v.respond_to?(:storages) }
-      vcmeta ? vcmeta.storages : []
-    end
+    sources = blist.map do |bfilter|
+      MiqFilter.belongsto2object_list(bfilter).reverse.detect { |v| v.respond_to?(:storages) }
+    end.select(&:present?)
+    MiqPreloader.preload_and_map(sources, :storages)
   end
 
   def self.matches_search_filters?(obj, filter, tz)
