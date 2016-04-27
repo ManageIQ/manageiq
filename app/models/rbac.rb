@@ -539,16 +539,17 @@ module Rbac
   end
 
   def self.get_belongsto_matches_for_host(blist, klass)
-    blist.flat_map do |bfilter|
+    clusters = []
+    hosts = []
+    blist.each do |bfilter|
       vcmeta = MiqFilter.belongsto2object(bfilter)
       next unless vcmeta
 
       subtree  = vcmeta.subtree
-      clusters = subtree.grep(EmsCluster)
-      hosts    = subtree.grep(Host)
-
-      MiqPreloader.preload_and_map(clusters, :hosts) + hosts
+      clusters += subtree.grep(EmsCluster)
+      hosts    += subtree.grep(Host)
     end
+    MiqPreloader.preload_and_map(clusters, :hosts) + hosts
   end
 
   def self.get_belongsto_matches_for_storage(blist, klass)
