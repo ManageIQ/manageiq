@@ -221,6 +221,9 @@ class ApiController
       scs.each do |sc|
         target = "#{sc}_query_resource"
         next unless expand_subcollection?(sc, target)
+        if Array(attribute_selection).include?(sc.to_s)
+          raise BadRequestError, "Cannot expand subcollection #{sc} by name and virtual attribute"
+        end
         expand_subcollection(json, sc, "#{type}/#{resource.id}/#{sc}", send(target, resource))
       end
     end
