@@ -542,8 +542,8 @@ module Rbac
 
   def self.get_belongsto_matches_for_host(vcmeta)
     subtree  = vcmeta.subtree
-    clusters = subtree.select { |obj| obj.kind_of?(EmsCluster) }
-    hosts    = subtree.select { |obj| obj.kind_of?(Host) }
+    clusters = subtree.grep(EmsCluster)
+    hosts    = subtree.grep(Host)
 
     MiqPreloader.preload(clusters, :hosts)
     clusters.collect(&:hosts).flatten + hosts
