@@ -319,7 +319,7 @@ object:
       datatype: string
       priority: 16
       owner: 
-      default_value: "/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
+      default_value: "#/Infrastructure/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
       substitute: true
       message: create
       visibility: 

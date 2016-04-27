@@ -13,4 +13,4 @@ object:
   - CheckRemovedFromProvider:
       value: "/Cloud/VM/Retirement/StateMachines/Methods/CheckRemovedFromProvider"
   - DeleteFromVMDB:
-      value: "/Cloud/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
+      value: "#/Cloud/VM/Retirement/StateMachines/Methods/DeleteFromVMDB"
