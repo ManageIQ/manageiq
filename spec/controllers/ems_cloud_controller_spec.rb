@@ -381,4 +381,56 @@ describe EmsCloudController do
       controller.send(:dialog_form_button_pressed)
     end
   end
+
+  describe "Ceilometer/AMQP Events" do
+    before do
+      @openstack = FactoryGirl.create(:ems_openstack)
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+    end
+
+    it "creates ceilometer endpoint and on update to AMQP deletes ceilometer endpoint" do
+      post :create, :params => {
+        "button"                    => "add",
+        "default_hostname"          => "default_hostname",
+        "default_userid"            => "",
+        "default_password"          => "",
+        "name"                      => "openstack_cloud",
+        "emstype"                   => "openstack",
+        "api_version"               => "v2",
+        "provider_region"           => "",
+        "zone"                      => zone.name,
+        "default_api_port"          => "5000",
+        "default_security_protocol" => "ssl-with-validation",
+        "event_stream_selection"    => "ceilometer"
+      }
+      ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
+      ceilometer = Endpoint.where(:role => "ceilometer", :resource_id => ems_openstack.id).first
+      expect(ceilometer).not_to be_nil
+
+      post :update, :params => {
+        "id"                        => ems_openstack.id,
+        "button"                    => "save",
+        "default_hostname"          => "default_hostname",
+        "default_userid"            => "",
+        "default_password"          => "",
+        "name"                      => "openstack_cloud",
+        "emstype"                   => "openstack",
+        "provider_region"           => "",
+        "zone"                      => zone.name,
+        "default_api_port"          => "5000",
+        "default_security_protocol" => "ssl-with-validation",
+        "event_stream_selection"    => "amqp",
+        "amqp_hostname"             => "amqp_hostname",
+        "amqp_api_port"             => "5672",
+        "amqp_security_protocol"    => "ssl",
+        "amqp_userid"               => "",
+        "amqp_password"             => ""
+      }
+      amqp = Endpoint.where(:role => "amqp", :resource_id => ems_openstack.id).first
+      ceilometer = Endpoint.where(:role => "ceilometer", :resource_id => ems_openstack.id).first
+      expect(amqp).not_to be_nil
+      expect(ceilometer).to be_nil
+    end
+  end
 end
