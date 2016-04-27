@@ -550,7 +550,7 @@ module ApplicationController::MiqRequestMethods
 
   def validate_fields # This doesn't run validations, it creates flash messages for errors found in MiqRequestWorkflow#validate
     @edit[:wf].get_dialog_order.each do |d|
-      @edit[:wf].get_all_fields(d, false).each do |f, field|
+      @edit[:wf].get_all_fields(d, false).each do |_f, field|
         unless field[:error].blank?
           @error_div ||= "#{d}"
           add_flash(field[:error], :error)
@@ -561,7 +561,7 @@ module ApplicationController::MiqRequestMethods
 
   def validate_preprov
     @edit[:wf].get_dialog_order.each do |d|
-      @edit[:wf].get_all_fields(d, false).each do |f, field|
+      @edit[:wf].get_all_fields(d, false).each do |_f, field|
         @edit[:wf].validate(@edit[:new])
         unless field[:error].nil?
           @error_div ||= "#{d}"
