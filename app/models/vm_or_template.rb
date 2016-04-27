@@ -159,6 +159,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :v_annotation,                         :type => :string,     :uses => :hardware
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
+  virtual_column :supports_console,                     :type => :boolean
 
   virtual_has_many   :processes,              :class_name => "OsProcess",    :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                            :uses => {:operating_system => :event_logs}
@@ -1921,6 +1922,10 @@ class VmOrTemplate < ApplicationRecord
     user = evm_owner
     user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
     user
+  end
+
+  def supports_console
+    console_supported?('spice') || console_supported?('vnc')
   end
 
   private
