@@ -3,27 +3,27 @@ class Classification < ApplicationRecord
 
   belongs_to :tag
 
+  virtual_column :name, :type => :string
+
   before_save    :save_tag
   before_destroy :delete_tags_and_entries
-  validate       :validate_format_of_name, :validate_uniqueness_on_tag_name
+  validate       :validate_uniqueness_on_tag_name
 
-  validates_uniqueness_of :description, :scope => [:parent_id],
-                                        :if    => proc { |c|
-                                          cond = ["parent_id = ? AND description = ?", c.parent_id, c.description]
-                                          unless c.new_record?
-                                            cond.first << " AND id != ?"
-                                            cond << c.id
-                                          end
-                                          c.class.in_region(region_id).exists?(cond)
-                                        }
-  validates_presence_of :name, :description
-  validates_length_of :name, :maximum => 50, :message => "must not exceed 50 characters"
-  validates_length_of :description, :maximum => 255, :message => "must not exceed 255 characters"
-  validates_inclusion_of :syntax,
-                         :in      => %w( string integer boolean ),
-                         :message => "should be one of 'string', 'integer' or 'boolean'"
+  validates :description, :presence => true, :length => {:maximum => 255}
+  validates :description, :uniqueness => {:scope => [:parent_id]}, :if => proc { |c|
+    cond = ["parent_id = ? AND description = ?", c.parent_id, c.description]
+    unless c.new_record?
+      cond.first << " AND id != ?"
+      cond << c.id
+    end
+    c.class.in_region(region_id).exists?(cond)
+  }
 
-  virtual_column :name, :type => :string
+  validates :name, :presence => true, :length => {:maximum => 50}
+  validate :validate_format_of_name
+
+  validates :syntax, :inclusion => {:in      => %w( string integer boolean ),
+                                    :message => "should be one of 'string', 'integer' or 'boolean'"}
 
   DEFAULT_NAMESPACE = "/managed"
 
@@ -465,7 +465,9 @@ class Classification < ApplicationRecord
   end
 
   def validate_format_of_name
-    errors.add("name", "must be lowercase alphanumeric characters and underscores without spaces") unless (name =~ /[^a-z0-9_:]/).nil?
+    unless (name =~ /[^a-z0-9_:]/).nil?
+      errors.add("name", "must be lowercase alphanumeric characters, colons and underscores without spaces")
+    end
   end
 
   def self.name2tag(name, parent_id = 0, ns = DEFAULT_NAMESPACE)
