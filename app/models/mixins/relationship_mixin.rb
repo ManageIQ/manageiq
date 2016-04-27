@@ -28,7 +28,7 @@ module RelationshipMixin
 
     has_many :all_relationships, :class_name => "Relationship", :dependent => :destroy, :as => :resource
 
-    memoize *MEMOIZED_METHODS
+    memoize(*MEMOIZED_METHODS)
   end
 
   module ClassMethods
@@ -44,10 +44,11 @@ module RelationshipMixin
     super
   end
 
+  # only used from specs
   def clear_relationships_cache(*args)
     options = args.extract_options!
-    to_clear = options[:only] ? options[:only].to_miq_a : (RelationshipMixin::MEMOIZED_METHODS - options[:except].to_miq_a)
-    flush_cache *to_clear
+    to_clear = RelationshipMixin::MEMOIZED_METHODS - Array.wrap(options[:except])
+    flush_cache(*to_clear)
 
     @association_cache.delete(:all_relationships)
   end
