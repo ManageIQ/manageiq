@@ -25,7 +25,7 @@ module ManageIQ::Providers
         # we verify the credentials via an actual operation
         connect(options).list_feeds
       rescue => err
-        raise MiqException::MiqInvalidCredentialsError, err.message
+        raise MiqException::MiqInvalidCredentialsError, 'Invalid credentials'
       end
 
       true
