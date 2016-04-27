@@ -6,7 +6,7 @@
 
 class LaunchAnsibleJob
   ANSIBLE_VAR_REGEX = Regexp.new(/(.*)=(.*$)/)
-  SCRIPT_CLASS = 'ConfigurationScript'.freeze
+  SCRIPT_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript'.freeze
   JOB_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job'.freeze
 
   def initialize(handle)
@@ -50,8 +50,7 @@ class LaunchAnsibleJob
     job_template = var_search(@handle.object, 'job_template') || job_template_by_name || job_template_by_id
 
     if job_template.nil?
-      @handle.log(:error, "Job Template not specified")
-      exit(MIQ_ERROR)
+      raise "Job Template not specified"
     end
     job_template
   end
