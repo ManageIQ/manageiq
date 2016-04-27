@@ -5,7 +5,7 @@
 %div{:id => "t_#{curr_pos}|#{obj[:id]}", :title => _('Drag this Tab to a new location')}
   .panel.panel-default
     .panel-heading
-      %h3.panel-title{:style => "cursor: move;"}
+      %h3.panel-title.sortable-handle{:style => "cursor: move;"}
         %a{:class => "#{parent_id}_#{obj[:id]}box"}
         = render :partial => 'dialog_res_remove',
           :locals => {:obj => obj,

@@ -18,8 +18,8 @@
       -# :shortcuts is a hash of s.id => s.miq_widget_shortcut.description
       %div{:id => "s_#{s_id}", :title => _("Drag this Shortcut to a new location")}
         .panel.panel-default
-          .panel-header
-            %h3.panel-title{:style => @edit ? "cursor: move;" : ""}
+          .panel-heading
+            %h3.panel-title.sortable-handle{:style => @edit ? "cursor: move;" : ""}
               %a{:class => "#{@widget.content_type}box"}
               = link_to("",
                 {:controller => "report", :action => "widget_shortcut_remove", :id => @widget.id || "new", :shortcut => s_id},
