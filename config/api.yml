@@ -1042,6 +1042,7 @@
     :subcollections:
     - :tags
     - :service_dialogs
+    - :vms
     :collection_actions:
       :get:
       - :name: read
