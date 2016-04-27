@@ -1,4 +1,4 @@
-module ManageIQ::Providers::SoftLayer::RefreshHelperMethods
+module ManageIQ::Providers::Softlayer::RefreshHelperMethods
   extend ActiveSupport::Concern
 
   def process_collection(collection, key)

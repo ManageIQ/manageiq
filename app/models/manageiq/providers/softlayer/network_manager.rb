@@ -1,14 +1,13 @@
-class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::NetworkManager
+class ManageIQ::Providers::Softlayer::NetworkManager < ManageIQ::Providers::NetworkManager
   require_nested :CloudNetwork
   require_nested :CloudSubnet
-  # require_nested :FloatingIp
-  # require_nested :NetworkPort
-  # require_nested :NetworkRouter
+  require_nested :NetworkPort
+  require_nested :NetworkRouter
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
 
-  include ManageIQ::Providers::SoftLayer::ManagerMixin
+  include ManageIQ::Providers::Softlayer::ManagerMixin
 
   has_many :resource_groups, :foreign_key => :ems_id, :dependent => :destroy
 
@@ -53,7 +52,7 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
            :allow_nil => true
 
   def self.ems_type
-    @ems_type ||= "soft_layer_network".freeze
+    @ems_type ||= "softlayer_network".freeze
   end
 
   def self.description
@@ -65,6 +64,6 @@ class ManageIQ::Providers::SoftLayer::NetworkManager < ManageIQ::Providers::Netw
   end
 
   def description
-    ManageIQ::Providers::SoftLayer::Regions.find_by_name(provider_region)[:description]
+    ManageIQ::Providers::Softlayer::Regions.find_by_name(provider_region)[:description]
   end
 end

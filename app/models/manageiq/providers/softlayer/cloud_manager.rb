@@ -1,4 +1,4 @@
-class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudManager
+class ManageIQ::Providers::Softlayer::CloudManager < ManageIQ::Providers::CloudManager
   require_nested :AvailabilityZone
   require_nested :Flavor
   require_nested :RefreshParser
@@ -9,11 +9,11 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
   require_nested :Provision
   require_nested :ProvisionWorkflow
 
-  include ManageIQ::Providers::SoftLayer::ManagerMixin
+  include ManageIQ::Providers::Softlayer::ManagerMixin
 
   has_one :network_manager,
           :foreign_key => :parent_ems_id,
-          :class_name  => "ManageIQ::Providers::SoftLayer::NetworkManager",
+          :class_name  => "ManageIQ::Providers::Softlayer::NetworkManager",
           :autosave    => true,
           :dependent   => :destroy
 
@@ -37,10 +37,10 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
     network_manager.provider_region = provider_region
   end
 
-  ExtManagementSystem.register_cloud_discovery_type('soft_layer' => 'soft_layer')
+  ExtManagementSystem.register_cloud_discovery_type('softlayer' => 'softlayer')
 
   def self.ems_type
-    @ems_type ||= "soft_layer".freeze
+    @ems_type ||= "softlayer".freeze
   end
 
   def self.description
@@ -52,7 +52,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager < ManageIQ::Providers::CloudM
   end
 
   def description
-    ManageIQ::Providers::SoftLayer::Regions.find_by_name(provider_region)[:description]
+    ManageIQ::Providers::Softlayer::Regions.find_by_name(provider_region)[:description]
   end
 
   # Operations

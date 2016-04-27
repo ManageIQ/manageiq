@@ -1,4 +1,4 @@
-module ManageIQ::Providers::SoftLayer::CloudManager::Vm::Operations
+module ManageIQ::Providers::Softlayer::CloudManager::Vm::Operations
   include_concern 'Guest'
   include_concern 'Power'
 

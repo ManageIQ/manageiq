@@ -62,7 +62,7 @@
         = select_tag('provider_region',
                      options_for_select([["<#{_('Choose')}>", nil]] + Array(@softlayer_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-model"                    => "emsCommonModel.provider_region",
-                     "ng-switch-when"              => "soft_layer",
+                     "ng-switch-when"              => "softlayer",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")

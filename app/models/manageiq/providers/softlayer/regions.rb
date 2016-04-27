@@ -1,5 +1,5 @@
 module ManageIQ
-  module Providers::SoftLayer
+  module Providers::Softlayer
     module Regions
       # From http://www.softlayer.com/data-centers
       # TODO: determine if these should be treated as Regions or some should be

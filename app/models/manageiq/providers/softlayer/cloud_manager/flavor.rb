@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::CloudManager::Flavor < ::Flavor
+class ManageIQ::Providers::Softlayer::CloudManager::Flavor < ::Flavor
 end

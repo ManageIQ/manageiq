@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::NetworkManager::CloudSubnet < ::CloudSubnet
+class ManageIQ::Providers::Softlayer::NetworkManager::CloudSubnet < ::CloudSubnet
 end

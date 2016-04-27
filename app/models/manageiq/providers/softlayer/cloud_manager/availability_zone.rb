@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::CloudManager::AvailabilityZone < ::AvailabilityZone
+class ManageIQ::Providers::Softlayer::CloudManager::AvailabilityZone < ::AvailabilityZone
 end

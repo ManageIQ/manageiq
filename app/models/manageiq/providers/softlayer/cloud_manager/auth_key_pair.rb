@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::CloudManager::AuthKeyPair < ManageIQ::Providers::CloudManager::AuthKeyPair
+class ManageIQ::Providers::Softlayer::CloudManager::AuthKeyPair < ManageIQ::Providers::CloudManager::AuthKeyPair
 end

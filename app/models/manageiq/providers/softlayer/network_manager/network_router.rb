@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::NetworkManager::NetworkRouter < ::NetworkRouter
+class ManageIQ::Providers::Softlayer::NetworkManager::NetworkRouter < ::NetworkRouter
 end

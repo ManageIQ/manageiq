@@ -557,12 +557,6 @@ module EmsCommon
     @edit[:new][:provider_region] = @ems.provider_region
     @edit[:new][:hostname] = @ems.hostname
     @edit[:new][:emstype] = @ems.emstype
-<<<<<<< f1532e758a276a05ae5d18db71ed5c43ab36070c
-=======
-    @edit[:amazon_regions] = get_regions('Amazon') if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
-    @edit[:google_regions] = get_regions('Google') if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
-    @edit[:softlayer_regions] = get_regions('SoftLayer') if @ems.kind_of?(ManageIQ::Providers::SoftLayer::CloudManager)
->>>>>>> Enable SoftLayer in Add Cloud Porvider View
     @edit[:new][:port] = @ems.port
     @edit[:new][:api_version] = @ems.api_version
     @edit[:new][:provider_id] = @ems.provider_id
@@ -643,7 +637,7 @@ module EmsCommon
       @server_zones.push([zone.description, zone.name])
     end
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
-    @amazon_regions, @azure_regions, @google_regions, @softlayer_regions = %w(Amazon Azure Google SoftLayer).map do |provider_name|
+    @amazon_regions, @azure_regions, @google_regions, @softlayer_regions = %w(Amazon Azure Google Softlayer).map do |provider_name|
       get_regions(provider_name)
     end
     @openstack_infra_providers = retrieve_openstack_infra_providers
@@ -739,12 +733,6 @@ module EmsCommon
 
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
-<<<<<<< f1532e758a276a05ae5d18db71ed5c43ab36070c
-=======
-    @edit[:amazon_regions] = get_regions('Amazon') if @edit[:new][:emstype] == "ec2"
-    @edit[:google_regions] = get_regions('Google') if @edit[:new][:emstype] == "gce"
-    @edit[:softlayer_regions] = get_regions('SoftLayer') if @edit[:new][:emstype] == "soft_layer"
->>>>>>> Enable SoftLayer in Add Cloud Porvider View
     @edit[:new][:default_security_protocol] = params[:default_security_protocol] if params[:default_security_protocol]
     # TODO: (julian) Silly hack until we move Infra over to Angular to be consistant with Cloud
     @edit[:new][:default_security_protocol] = params[:security_protocol] if params[:security_protocol]

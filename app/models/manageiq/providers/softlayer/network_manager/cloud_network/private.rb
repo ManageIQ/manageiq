@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::NetworkManager::CloudNetwork::Private < ManageIQ::Providers::SoftLayer::NetworkManager::CloudNetwork
+class ManageIQ::Providers::Softlayer::NetworkManager::CloudNetwork::Private < ManageIQ::Providers::Softlayer::NetworkManager::CloudNetwork
 end

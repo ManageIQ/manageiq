@@ -37,7 +37,7 @@ class MiqProvision < MiqProvisionTask
                               ManageIQ::Providers::Openstack::CloudManager
                               ManageIQ::Providers::Microsoft::InfraManager
                               ManageIQ::Providers::Google::CloudManager
-                              ManageIQ::Providers::SoftLayer::CloudManager
+                              ManageIQ::Providers::Softlayer::CloudManager
                               ManageIQ::Providers::Azure::CloudManager)
 
   def self.base_model

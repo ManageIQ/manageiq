@@ -45,7 +45,7 @@ class VmOrTemplate < ApplicationRecord
     "redhat"     => "RedHat",
     "openstack"  => "OpenStack",
     "google"     => "Google",
-    "soft_layer" => "SoftLayer",
+    "softlayer"  => "Softlayer",
     "unknown"    => "Unknown"
   }
 

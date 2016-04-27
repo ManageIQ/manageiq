@@ -1,4 +1,4 @@
-module ManageIQ::Providers::SoftLayer::CloudManager::Vm::Operations::Power
+module ManageIQ::Providers::Softlayer::CloudManager::Vm::Operations::Power
   def validate_suspend
     validate_unsupported(_("Suspend Operation"))
   end

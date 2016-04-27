@@ -1,8 +1,8 @@
-class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshWorker < ::MiqEmsRefreshWorker
+class ManageIQ::Providers::Softlayer::NetworkManager::RefreshWorker < ::MiqEmsRefreshWorker
   require_nested :Runner
 
   def self.ems_class
-    ManageIQ::Providers::SoftLayer::NetworkManager
+    ManageIQ::Providers::Softlayer::NetworkManager
   end
 
   def self.settings_name

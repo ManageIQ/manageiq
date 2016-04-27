@@ -6,7 +6,7 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
                             ManageIQ::Providers::Openstack::CloudManager::Template
                             ManageIQ::Providers::Azure::CloudManager::Template
                             ManageIQ::Providers::Google::CloudManager::Template
-                            ManageIQ::Providers::SoftLayer::CloudManager::Template))
+                            ManageIQ::Providers::Softlayer::CloudManager::Template))
   end
 
   private

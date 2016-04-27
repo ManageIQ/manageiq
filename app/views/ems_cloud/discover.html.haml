@@ -21,8 +21,8 @@
   #discover_azure_credentials{:style => display}
     = render :partial => "layouts/discover_azure_credentials",
           :locals  => {:label => _("Credentials")}
-  - display = (@discover_type_selected && @discover_type_selected == 'soft_layer') ? "" : "display:none;"
-  #discover_soft_layer_credentials{:style => display}
+  - display = (@discover_type_selected && @discover_type_selected == 'softlayer') ? "" : "display:none;"
+  #discover_softlayer_credentials{:style => display}
     = render :partial => "layouts/discover_credentials",
           :locals  => {:label => _("Credentials"), :userid_label => _("Client ID"), :password_label => _("API Key")}
   - display = (@discover_type_selected && @discover_type_selected == 'amazon') ? "" : "display:none;"

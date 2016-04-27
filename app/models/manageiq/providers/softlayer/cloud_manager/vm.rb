@@ -1,4 +1,4 @@
-class ManageIQ::Providers::SoftLayer::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
+class ManageIQ::Providers::Softlayer::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
 
   def provider_object(connection = nil)

@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::NetworkManager::NetworkPort < ::NetworkPort
+class ManageIQ::Providers::Softlayer::NetworkManager::NetworkPort < ::NetworkPort
 end

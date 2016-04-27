@@ -1,5 +1,5 @@
-class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
-  include ManageIQ::Providers::SoftLayer::RefreshHelperMethods
+class ManageIQ::Providers::Softlayer::CloudManager::RefreshParser < ManageIQ::Providers::CloudManager::RefreshParser
+  include ManageIQ::Providers::Softlayer::RefreshHelperMethods
   include Vmdb::Logging
 
   def self.ems_inv_to_hashes(ems, options = nil)
@@ -113,7 +113,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Pr
       :uid_ems            => image.id,
       :ems_ref            => image.id,
       :name               => image.name,
-      :vendor             => "soft_layer",
+      :vendor             => "softlayer",
       :template           => true,
       :publicly_available => image.public?,
     }
@@ -129,7 +129,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Pr
       :uid_ems           => uid,
       :ems_ref           => uid,
       :name              => instance.name,
-      :vendor            => "soft_layer",
+      :vendor            => "softlayer",
       :raw_power_state   => instance.state,
       :flavor            => instance.flavor_id,
       :operating_system  => {:product_name => instance.os_code},
@@ -158,7 +158,7 @@ class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Pr
   end
 
   def populate_hardware_hash_with_disks(hardware_disks_array, instance)
-    # TODO: Prepared to discover instance disks once fog-softlayer allows to discover their size
+    # TODO: Prepared to discover instance disks once fog-Softlayer allows to discover their size
     instance.disk.each do |attached_disk|
       d = @data_index.fetch_path(:cloud_volumes, attached_disk["diskImageId"])
       next if d.nil?
@@ -172,28 +172,28 @@ class ManageIQ::Providers::SoftLayer::CloudManager::RefreshParser < ManageIQ::Pr
   end
 
   def add_instance_disk(disks, size, location, name)
-    super(disks, size, location, name, "soft_layer")
+    super(disks, size, location, name, "softlayer")
   end
 
   class << self
     def auth_key_pair_type
-      ManageIQ::Providers::SoftLayer::CloudManager::AuthKeyPair.name
+      ManageIQ::Providers::Softlayer::CloudManager::AuthKeyPair.name
     end
 
     def az_type
-      ManageIQ::Providers::SoftLayer::CloudManager::AvailabilityZone.name
+      ManageIQ::Providers::Softlayer::CloudManager::AvailabilityZone.name
     end
 
     def flavor_type
-      ManageIQ::Providers::SoftLayer::CloudManager::Flavor.name
+      ManageIQ::Providers::Softlayer::CloudManager::Flavor.name
     end
 
     def template_type
-      ManageIQ::Providers::SoftLayer::CloudManager::Template.name
+      ManageIQ::Providers::Softlayer::CloudManager::Template.name
     end
 
     def vm_type
-      ManageIQ::Providers::SoftLayer::CloudManager::Vm.name
+      ManageIQ::Providers::Softlayer::CloudManager::Vm.name
     end
   end
 end

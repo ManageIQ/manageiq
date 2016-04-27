@@ -1,5 +1,5 @@
-class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
-  include ManageIQ::Providers::SoftLayer::RefreshHelperMethods
+class ManageIQ::Providers::Softlayer::NetworkManager::RefreshParser
+  include ManageIQ::Providers::Softlayer::RefreshHelperMethods
   include Vmdb::Logging
 
   def self.ems_inv_to_hashes(ems, options = nil)
@@ -155,19 +155,19 @@ class ManageIQ::Providers::SoftLayer::NetworkManager::RefreshParser
 
   class << self
     def cloud_network_type
-      ManageIQ::Providers::SoftLayer::NetworkManager::CloudNetwork.name
+      ManageIQ::Providers::Softlayer::NetworkManager::CloudNetwork.name
     end
 
     def cloud_subnet_type
-      ManageIQ::Providers::SoftLayer::NetworkManager::CloudSubnet.name
+      ManageIQ::Providers::Softlayer::NetworkManager::CloudSubnet.name
     end
 
     def network_port_type
-      ManageIQ::Providers::SoftLayer::NetworkManager::NetworkPort.name
+      ManageIQ::Providers::Softlayer::NetworkManager::NetworkPort.name
     end
 
     def network_router_type
-      ManageIQ::Providers::SoftLayer::NetworkManager::NetworkRouter.name
+      ManageIQ::Providers::Softlayer::NetworkManager::NetworkRouter.name
     end
   end
 end

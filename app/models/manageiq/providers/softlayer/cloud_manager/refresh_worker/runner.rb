@@ -1,2 +1,2 @@
-class ManageIQ::Providers::SoftLayer::CloudManager::RefreshWorker::Runner < ManageIQ::Providers::BaseManager::RefreshWorker::Runner
+class ManageIQ::Providers::Softlayer::CloudManager::RefreshWorker::Runner < ManageIQ::Providers::BaseManager::RefreshWorker::Runner
 end
