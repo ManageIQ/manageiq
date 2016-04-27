@@ -30,17 +30,7 @@ class WebsocketServer
       exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])
       return not_found if exp.nil?
 
-      console = SystemConsole.find_by!(:url_secret => exp[1])
-      proxy = WebsocketProxy.new(env, console)
-      return proxy.cleanup if proxy.error
-      proxy.start
-
-      # Release the connection because one SPICE console can open multiple TCP connections
-      ActiveRecord::Base.connection_pool.release_connection
-
-      ws, sock = proxy.descriptors
-      @pairing.merge!(ws => Pairing.new(true, proxy), sock => Pairing.new(false, proxy))
-      @sockets.push(ws, sock)
+      init_proxy(env, exp[1])
 
       [-1, {}, []]
     else
@@ -49,6 +39,21 @@ class WebsocketServer
   end
 
   private
+
+  def init_proxy(env, url)
+    console = SystemConsole.find_by!(:url_secret => url)
+    proxy = WebsocketProxy.new(env, console)
+    return proxy.cleanup if proxy.error
+    proxy.start
+
+    # Release the connection because one SPICE console can open multiple TCP connections
+    ActiveRecord::Base.connection_pool.release_connection
+
+    # Get the descriptors and pass them to the worker thread
+    ws, sock = proxy.descriptors
+    @pairing.merge!(ws => Pairing.new(true, proxy), sock => Pairing.new(false, proxy))
+    @sockets.push(ws, sock)
+  end
 
   def cleanup(errors)
     (@sockets.select(&:closed?) + errors).uniq.each do |socket|
