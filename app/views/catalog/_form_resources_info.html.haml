@@ -6,7 +6,7 @@
     %h3
       = _('Resources')
     .form-horizontal
-      .form.group
+      .form-group
         %label.col-md-2.control-label
           = _('Add a Resource')
         .col-md-8
@@ -20,6 +20,7 @@
               miqInitSelectPicker();
               miqSelectPickerEvent('resource_id', '#{url}')
     - unless @edit[:new][:selected_resources].empty?
+      %hr
       %h3
         = _('Selected Resources')
       %table.table.table-bordered.table-striped
