@@ -31,6 +31,10 @@
         = _('Updated On')
       .col-md-8
         =  @record.updated_at
+    .form-group
+      .col-md-10
+        = render :partial => "shared/summary/textual_tags", :locals => {:title => _("Smart Management"), :items => textual_group_smart_management}
+
   %hr
   #form_div
     = text_area_tag("template_content", @record.content, :style => "display:none;")
