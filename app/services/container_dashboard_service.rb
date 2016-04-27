@@ -224,8 +224,8 @@ class ContainerDashboardService
     metrics.each do |m|
       timestamp = m.timestamp.strftime("%Y-%m-%d")
 
-      pod_create_trend[timestamp] += m.stat_container_group_create_rate.to_i
-      pod_delete_trend[timestamp] += m.stat_container_group_delete_rate.to_i
+      pod_create_trend[timestamp] += m.stat_container_group_create_rate if m.stat_container_group_create_rate.present?
+      pod_delete_trend[timestamp] += m.stat_container_group_delete_rate if m.stat_container_group_delete_rate.present?
     end
   end
 
@@ -249,7 +249,8 @@ class ContainerDashboardService
     daily_image_metrics = Hash.new(0)
     daily_provider_metrics.each do |m|
       day = m.timestamp.strftime("%Y-%m-%d")
-      daily_image_metrics[day] += m.stat_container_image_registration_rate.to_i
+      daily_image_metrics[day] +=
+        m.stat_container_image_registration_rate if m.stat_container_image_registration_rate.present?
     end
 
     if daily_image_metrics.any?
