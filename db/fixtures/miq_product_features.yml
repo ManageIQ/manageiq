@@ -643,80 +643,75 @@
       :feature_type: control
       :identifier: flavor_tag
 
-# Compute top level
-- :name: Compute
-  :description: Compute menu
+# EmsInfra
+- :name: Infrastructure Providers
+  :description: Everything under Infrastructure Providers
   :feature_type: node
-  :identifier: compute
+  :identifier: ems_infra
   :children:
-  - :name: Infrastructure Providers
-    :description: Everything under Infrastructure Providers
-    :feature_type: node
-    :identifier: ems_infra
+  - :name: View
+    :description: View Infrastructure Providers
+    :feature_type: view
+    :identifier: ems_infra_view
     :children:
-    - :name: View
-      :description: View Infrastructure Providers
+    - :name: List
+      :description: Display Lists of Infrastructure Providers
       :feature_type: view
-      :identifier: ems_infra_view
-      :children:
-      - :name: List
-        :description: Display Lists of Infrastructure Providers
-        :feature_type: view
-        :identifier: ems_infra_show_list
-      - :name: Show
-        :description: Display Individual Infrastructure Providers
-        :feature_type: view
-        :identifier: ems_infra_show
-      - :name: Timeline
-        :description: Display Timelines for Infrastructure Providers
-        :feature_type: view
-        :identifier: ems_infra_timeline
-    - :name: Operate
-      :description: Perform Operations on Infrastructure Providers
+      :identifier: ems_infra_show_list
+    - :name: Show
+      :description: Display Individual Infrastructure Providers
+      :feature_type: view
+      :identifier: ems_infra_show
+    - :name: Timeline
+      :description: Display Timelines for Infrastructure Providers
+      :feature_type: view
+      :identifier: ems_infra_timeline
+  - :name: Operate
+    :description: Perform Operations on Infrastructure Providers
+    :feature_type: control
+    :identifier: ems_infra_control
+    :children:
+    - :name: Discover
+      :description: Discover Infrastructure Providers
       :feature_type: control
-      :identifier: ems_infra_control
-      :children:
-      - :name: Discover
-        :description: Discover Infrastructure Providers
-        :feature_type: control
-        :identifier: ems_infra_discover
-      - :name: Edit Tags
-        :description: Edit Tags of Infrastructure Providers
-        :feature_type: control
-        :identifier: ems_infra_tag
-      - :name: Manage Policies
-        :description: Manage Policies of Infrastructure Providers
-        :feature_type: control
-        :identifier: ems_infra_protect
-      - :name: Refresh
-        :description: Refresh Infrastructure Providers
-        :feature_type: control
-        :identifier: ems_infra_refresh
-    - :name: Modify
-      :description: Modify Infrastructure Providers
+      :identifier: ems_infra_discover
+    - :name: Edit Tags
+      :description: Edit Tags of Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_infra_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_infra_protect
+    - :name: Refresh
+      :description: Refresh Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_infra_refresh
+  - :name: Modify
+    :description: Modify Infrastructure Providers
+    :feature_type: admin
+    :identifier: ems_infra_admin
+    :children:
+    - :name: Remove
+      :description: Remove Infrastructure Providers from the VMDB
       :feature_type: admin
-      :identifier: ems_infra_admin
-      :children:
-      - :name: Remove
-        :description: Remove Infrastructure Providers from the VMDB
-        :feature_type: admin
-        :identifier: ems_infra_delete
-      - :name: Edit
-        :description: Edit an Infrastructure Provider
-        :feature_type: admin
-        :identifier: ems_infra_edit
-      - :name: Add
-        :description: Add an Infrastructure Provider
-        :feature_type: admin
-        :identifier: ems_infra_new
-      - :name: Scale
-        :description: Scale an Infrastructure Provider
-        :feature_type: admin
-        :identifier: ems_infra_scale
-      - :name: Scale Down
-        :description: Scale an Infrastructure Provider down
-        :feature_type: admin
-        :identifier: ems_infra_scaledown
+      :identifier: ems_infra_delete
+    - :name: Edit
+      :description: Edit an Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_edit
+    - :name: Add
+      :description: Add an Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_new
+    - :name: Scale
+      :description: Scale an Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_scale
+    - :name: Scale Down
+      :description: Scale an Infrastructure Provider down
+      :feature_type: admin
+      :identifier: ems_infra_scaledown
 
 # Datacenters
 - :name: Datacenters
@@ -3141,7 +3136,7 @@
       :identifier: orchestration_stack_retire
 
 # EmsContainer
-- :name: Providers
+- :name: Container Providers
   :description: Everything under Containers Providers
   :feature_type: node
   :identifier: ems_container
@@ -3256,8 +3251,19 @@
         :feature_type: admin
         :identifier: ems_middleware_new
 
+  # Middleware Topology
+  - :name: Middleware Topology
+    :description: Middleware Topology
+    :feature_type: node
+    :identifier: middleware_topology
+    :children:
+      - :name: View
+        :description: View Middleware Topology
+        :feature_type: view
+        :identifier: middleware_topology_view
+
   # MiddlewareServer
-  - :name: MiddlewareServer
+  - :name: Middleware Server
     :description: Everything under Middleware Servers
     :feature_type: node
     :identifier: middleware_server
@@ -3319,7 +3325,7 @@
         :identifier: middleware_server_stop
 
   # MiddlewareDeployment
-  - :name: MiddlewareDeployment
+  - :name: Middleware Deployment
     :description: Everything under Middleware Deployments
     :feature_type: node
     :identifier: middleware_deployment
@@ -3541,6 +3547,17 @@
       :description: Edit Tags of Network Port
       :feature_type: control
       :identifier: network_port_tag
+
+# Network Topology
+- :name: Network Topology
+  :description: Network Topology
+  :feature_type: node
+  :identifier: network_topology
+  :children:
+    - :name: View
+      :description: View Network Topology
+      :feature_type: view
+      :identifier: network_topology_view
 
 # Cloud Subnet
 - :name: Cloud Subnets
@@ -4133,27 +4150,16 @@
         :feature_type: view
         :identifier: container_topology_view
 
-  # Middleware Topology
-  - :name: Middleware Topology
-    :description: Middleware Topology
+  # Container Dashboard
+  - :name: Containers Dashboard
+    :description: Containers Dashboard
     :feature_type: node
-    :identifier: middleware_topology
+    :identifier: container_dashboard
     :children:
-      - :name: View
-        :description: View Middleware Topology
-        :feature_type: view
-        :identifier: middleware_topology_view
-
-  # Network Topology
-  - :name: Network Topology
-    :description: Network Topology
-    :feature_type: node
-    :identifier: network_topology
-    :children:
-      - :name: View
-        :description: View Network Topology
-        :feature_type: view
-        :identifier: network_topology_view
+    - :name: View
+      :description: View Containers Dashboard
+      :feature_type: view
+      :identifier: container_dashboard_view
 
 # Foreman
 - :name: Configuration Management
@@ -4790,14 +4796,3 @@
           :description: Revert to selected snapshot on Templates
           :feature_type: control
           :identifier: miq_template_snapshot_revert
-
-# Container Dashboard
-- :name: Containers Dashboard
-  :description: Containers Dashboard
-  :feature_type: node
-  :identifier: container_dashboard
-  :children:
-  - :name: View
-    :description: View Containers Dashboard
-    :feature_type: view
-    :identifier: container_dashboard_view
