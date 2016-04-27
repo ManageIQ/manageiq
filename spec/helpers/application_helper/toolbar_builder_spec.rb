@@ -1799,13 +1799,6 @@ describe ApplicationHelper do
       end
     end
 
-    it "when with 'history_1' and x_tree_history.length < 2" do
-      # setup for x_tree_history
-      @sb = {:history     => {:testing => %w(something)},
-             :active_tree => :testing}
-      expect(build_toolbar_disable_button('history_1')).to be_truthy
-    end
-
     ['button_add', 'button_save', 'button_reset'].each do |b|
       it "when with #{b} and not changed" do
         @changed = false
