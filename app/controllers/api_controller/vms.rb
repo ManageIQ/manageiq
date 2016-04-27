@@ -4,7 +4,7 @@ class ApiController
       vm_attrs = attribute_selection_for("vms")
       vm_attrs.blank? ? object.try(:vms) : Array(object.try(:vms)).collect do |vm|
         add_hash = vm_attrs.each_with_object({}) do |attr, hash|
-          hash[attr] = vm.try(attr.to_sym) if vm.respond_to?(attr.to_sym)
+          hash[attr] = vm.public_send(attr.to_sym) if vm.respond_to?(attr.to_sym)
         end.compact
         vm.as_json.merge(add_hash)
       end
