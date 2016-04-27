@@ -307,12 +307,12 @@ class ProviderForemanController < ApplicationController
 
   def x_show
     @explorer = true
-    tree_record unless unassigned_configuration_profile?(params[:id]) || unassigned_inventory_group?(params[:id])
+    tree_record unless unassigned_configuration_profile?(params[:id])
 
     respond_to do |format|
       format.js do
         unless @record
-          check_for_unassigned_configuration_profile_or_inventory_group
+          check_for_unassigned_configuration_profile
           return
         end
         params[:id] = x_build_node_id(@record)  # Get the tree node id
@@ -335,9 +335,9 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def check_for_unassigned_configuration_profile_or_inventory_group
+  def check_for_unassigned_configuration_profile
     if action_name == "x_show"
-      unassigned_configuration_profile?(params[:id]) || unassigned_inventory_group?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
+      unassigned_configuration_profile?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
     elsif action_name == "tree_select"
       tree_select_unprovisioned_configured_system
     else
@@ -506,8 +506,6 @@ class ProviderForemanController < ApplicationController
     else
       if unassigned_configuration_profile?(treenodeid)
         configuration_profile_node(id, model)
-      elsif unassigned_inventory_group?(treenodeid)
-        inventory_group_node(id, model)
       else
         default_node
       end
@@ -543,7 +541,6 @@ class ProviderForemanController < ApplicationController
         options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
         @no_checkboxes = true
         process_show_list(options)
-        add_unassigned_inventory_group_record(provider.id)
         record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
         @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
                                                         :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model}"}
@@ -950,7 +947,7 @@ class ProviderForemanController < ApplicationController
 
   def active_tab_configured_systems?
     (%w(x_show x_search_by_name).include?(action_name) && (configuration_profile_record? || inventory_group_record?)) ||
-      (unassigned_configuration_profile?(x_node) || unassigned_inventory_group?(x_node))
+      unassigned_configuration_profile?(x_node)
   end
 
   def unassigned_configuration_profile?(node)
@@ -968,8 +965,6 @@ class ProviderForemanController < ApplicationController
 
   def list_row_id(row)
     if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
-      "-#{row['manager_id']}-unassigned"
-    elsif row['name'] == _("Unassigned Inventory Group") && row['id'].nil?
       "-#{row['manager_id']}-unassigned"
     else
       to_cid(row['id'])
@@ -1030,11 +1025,6 @@ class ProviderForemanController < ApplicationController
     @grid_hash = view_to_hash(@view)
   end
 
-  def unassigned_inventory_group?(node)
-    _type, _pid, nodeinfo = node.split("_").last.split("-")
-    nodeinfo == "unassigned"
-  end
-
   def empty_inventory_group_record?(inventory_group_record)
     inventory_group_record.try(:id).nil?
   end
@@ -1051,36 +1041,7 @@ class ProviderForemanController < ApplicationController
                            {:model        => ui_lookup(:tables => "configured_system"),
                             :record_model => record_model,
                             :name         => @inventory_group_record.name}
-    else
-      @right_cell_text = _("%{model} under Unassigned Inventory Group") %
-                           {:model => ui_lookup(:tables => "configured_system")}
     end
-  end
-
-  def add_unassigned_inventory_group_record(provider_id)
-    no_inventory_configured_systems =
-      ConfiguredSystem.where(:manager_id => provider_id, :inventory_root_group_id => nil).count
-
-    return if no_inventory_configured_systems == 0
-
-    unassigned_inventory_group_name = _("Unassigned Inventory Group")
-    unassigned_inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryGroup.new
-    unassigned_inventory_group.ems_id = provider_id
-    unassigned_inventory_group.name = unassigned_inventory_group_name
-
-    unassigned_inventory_group_row =
-      {'name'                     => unassigned_inventory_group_name,
-       'total_configured_systems' => no_inventory_configured_systems,
-       'id'                   => provider_id
-      }
-
-    add_unassigned_inventory_group_record_to_view(unassigned_inventory_group_row, unassigned_inventory_group)
-  end
-
-  def add_unassigned_inventory_group_record_to_view(unassigned_inventory_group_row, unassigned_inventory_group)
-    @view.table.data.push(unassigned_inventory_group_row)
-    @targets_hash[unassigned_inventory_group_row['id']] = unassigned_inventory_group
-    @grid_hash = view_to_hash(@view)
   end
 
   def process_show_list(options = {})
