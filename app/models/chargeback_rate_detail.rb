@@ -157,10 +157,11 @@ class ChargebackRateDetail < ApplicationRecord
   # Check that tiers are complete and disjoint
   def contiguous_tiers?
     error = false
+    ambiguous_error = false
 
     # Note, we use sort_by vs. order since we need to call this method against
     # the in memory chargeback_tiers association and NOT hit the database.
-    tiers = chargeback_tiers.sort_by(&:start)
+    tiers = chargeback_tiers
 
     tiers.each_with_index do |tier, index|
       if single_tier?(tier,tiers)
@@ -175,11 +176,15 @@ class ChargebackRateDetail < ApplicationRecord
         error = true if tier.ends_with_infinity?
       end
 
-      break if error
-    end
-    errors.add(:chargeback_tiers, _("must start at zero and not contain any gaps between start and prior end value.")) if error
+      ambiguous_error = ambiguous_tier?(tier)
 
-    !error
+      break if error || ambiguous_error
+    end
+
+    errors.add(:chargeback_tiers, _("must start at zero and not contain any gaps between start and prior end value.")) if error
+    errors.add(:chargeback_tiers, _("contains ambiguous intervals.")) if ambiguous_error
+
+    !(error || ambiguous_error)
   end
 
   def first_tier?(tier,tiers)
@@ -200,6 +205,10 @@ class ChargebackRateDetail < ApplicationRecord
 
   def consecutive_tiers?(tier, previous_tier)
     tier.start == previous_tier.finish
+  end
+
+  def ambiguous_tier?(tier)
+    tier.start == tier.finish
   end
 
   def self.default_rate_details_for(rate_type)
