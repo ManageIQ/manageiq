@@ -80,6 +80,15 @@ li.brand-white-label.whitelabeled {
   display: inline-block;
   color: #FFFFFF; margin-left: 1ex;
 }
+/* group switcher styling */
+
+.navbar-right .dropdown-submenu > a {
+  padding-left: 20px !important
+}
+.navbar-right .dropdown-submenu > a:after {
+  content: "\f104";
+  left: 10px;
+}
 
 /* Dashboard overrides */
 
