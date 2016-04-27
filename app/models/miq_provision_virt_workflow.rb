@@ -994,11 +994,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_environment_fields(values, data)
     # do not parse environment data unless :placement_auto is false
-    if data[:placement_auto].to_s != "false"
-      values[:placement_auto] = [true, 1]
-      return
-    end
+    return unless data[:placement_auto].to_s == "false"
 
+    values[:placement_auto] = [false, 0]
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :environment)).nil?
 
     data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
@@ -1119,6 +1117,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     raise _("Source template [%{name}] was not found") % {:name => src_name} if src.nil?
     # Allow new workflow class to determine dialog name instead of using the stored value from the first call.
     values.delete(:miq_request_dialog_name)
+    values[:placement_auto] = [true, 1]
     p = class_for_source(src.id).new(values, user, init_options)
 
     # Populate required fields
@@ -1133,9 +1132,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     values[:ws_ems_custom_attributes] = p.ws_values(options.ems_custom_attributes, :parse_ws_string, :modify_key_name => false)
     values[:ws_miq_custom_attributes] = p.ws_values(options.miq_custom_attributes, :parse_ws_string, :modify_key_name => false)
 
-    p.validate_values(values)
-
-    p.create_request(values, nil, values[:auto_approve])
+    p.create_request(values, nil, values[:auto_approve]).tap do |request|
+      p.raise_validate_errors if request == false
+    end
   rescue => err
     _log.error "<#{err}>"
     raise err

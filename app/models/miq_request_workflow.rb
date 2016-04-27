@@ -181,11 +181,11 @@ class MiqRequestWorkflow
     # Update @dialogs adding error keys to fields that don't validate
     valid = true
 
-    get_all_dialogs.each do |d, dlg|
+    get_all_dialogs(false).each do |d, dlg|
       # Check if the entire dialog is ignored or disabled and check while processing the fields
       dialog_disabled = !dialog_active?(d, dlg, values)
 
-      get_all_fields(d).each do |f, fld|
+      get_all_fields(d, false).each do |f, fld|
         fld[:error] = nil
 
         # Check the disabled flag here so we reset the "error" value on each field
@@ -284,34 +284,34 @@ class MiqRequestWorkflow
     tab_list
   end
 
-  def get_all_dialogs
-    @dialogs[:dialogs].each_key { |d| get_dialog(d) }
+  def get_all_dialogs(refresh_values = true)
+    @dialogs[:dialogs].each_key { |d| get_dialog(d, refresh_values) }
     @dialogs[:dialogs]
   end
 
-  def get_dialog(dialog_name)
+  def get_dialog(dialog_name, refresh_values = true)
     dialog = @dialogs.fetch_path(:dialogs, dialog_name.to_sym)
     return {} unless dialog
 
-    get_all_fields(dialog_name)
+    get_all_fields(dialog_name, refresh_values)
     dialog
   end
 
-  def get_all_fields(dialog_name)
+  def get_all_fields(dialog_name, refresh_values = true)
     dialog = @dialogs.fetch_path(:dialogs, dialog_name.to_sym)
     return {} unless dialog
 
-    dialog[:fields].each_key { |f| get_field(f, dialog_name) }
+    dialog[:fields].each_key { |f| get_field(f, dialog_name, refresh_values) }
     dialog[:fields]
   end
 
-  def get_field(field_name, dialog_name = nil)
+  def get_field(field_name, dialog_name = nil, refresh_values = true)
     field_name = field_name.to_sym
     dialog_name = find_dialog_from_field_name(field_name) if dialog_name.nil?
     field = @dialogs.fetch_path(:dialogs, dialog_name.to_sym, :fields, field_name)
     return {} unless field
 
-    if field.key?(:values_from)
+    if field.key?(:values_from) && refresh_values
       options = field[:values_from][:options] || {}
       options[:prov_field_name] = field_name
       field[:values] = send(field[:values_from][:method], options)
@@ -1514,14 +1514,12 @@ class MiqRequestWorkflow
     data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_keys.include?(key) }
   end
 
-  def validate_values(values)
-    if validate(values) == false
-      errors = []
-      fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
-      err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
-      _log.error "<#{err_text}>"
-      raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
-    end
+  def raise_validate_errors
+    errors = []
+    fields { |_fn, f, _dn, _d| errors << f[:error] unless f[:error].nil? }
+    err_text = "Provision failed for the following reasons:\n#{errors.join("\n")}"
+    _log.error "<#{err_text}>"
+    raise _("Provision failed for the following reasons:\n%{errors}") % {:errors => errors.join("\n")}
   end
 
   private
