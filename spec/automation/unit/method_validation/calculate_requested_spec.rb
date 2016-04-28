@@ -9,17 +9,25 @@ describe "Quota Validation" do
                             "class=QuotaMethods&instance=requested&#{attrs.join('&')}", @user)
   end
 
-  before do
-    setup_model
-  end
-
-  it "calculate_requested" do
+  it "vmware calculate_requested" do
+    setup_model("vmware")
     ws = run_automate_method(@miq_provision_request)
     root = ws.root
     expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceTenant)
-    expect(root['quota_requested'][:storage]).to eq(536_870_912)
+    expect(root['quota_requested'][:storage]).to eq(512.megabytes)
     expect(root['quota_requested'][:cpu]).to eq(4)
     expect(root['quota_requested'][:vms]).to eq(1)
-    expect(root['quota_requested'][:memory]).to eq(1_073_741_824)
+    expect(root['quota_requested'][:memory]).to eq(1.gigabytes)
+  end
+
+  it "google calculate_requested" do
+    setup_model("google")
+    ws = run_automate_method(@miq_provision_request)
+    root = ws.root
+    expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceTenant)
+    expect(root['quota_requested'][:storage]).to eq(10.gigabytes)
+    expect(root['quota_requested'][:cpu]).to eq(4)
+    expect(root['quota_requested'][:vms]).to eq(1)
+    expect(root['quota_requested'][:memory]).to eq(1.gigabytes)
   end
 end

@@ -53,40 +53,44 @@ module QuotaHelper
     @tenant.tenant_quotas.create(:name => :templates_allocated, :value => 4)
   end
 
-  def create_vms
+  def create_vmware_vms
     @active_vm = FactoryGirl.create(:vm_vmware,
-                                    :name         => "Active VM",
                                     :miq_group_id => @miq_group.id,
                                     :ems_id       => @ems.id,
                                     :storage_id   => @storage.id,
                                     :hardware     => @hw1,
                                     :tenant       => @tenant)
     @archived_vm = FactoryGirl.create(:vm_vmware,
-                                      :name         => "Archived VM",
                                       :miq_group_id => @miq_group.id,
                                       :hardware     => @hw2)
     @orphaned_vm = FactoryGirl.create(:vm_vmware,
-                                      :name         => "Orphaned VM",
                                       :miq_group_id => @miq_group.id,
                                       :storage_id   => @storage.id,
                                       :hardware     => @hw3)
     @retired_vm = FactoryGirl.create(:vm_vmware,
-                                     :name         => "Retired VM",
                                      :miq_group_id => @miq_group.id,
                                      :retired      => true,
                                      :hardware     => @hw4)
   end
 
-  def create_storage
-    @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
-    @storage = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
+  def create_google_vms
+    @active_vm = FactoryGirl.create(:vm_google,
+                                    :miq_group_id          => @miq_group.id,
+                                    :ext_management_system => @ems,
+                                    :tenant                => @tenant)
+    @archived_vm = FactoryGirl.create(:vm_google,
+                                      :miq_group_id => @miq_group.id,
+                                      :tenant       => @tenant)
+    @orphaned_vm = FactoryGirl.create(:vm_google,
+                                      :miq_group_id => @miq_group.id,
+                                      :tenant       => @tenant)
+    @retired_vm = FactoryGirl.create(:vm_google,
+                                     :miq_group_id => @miq_group.id,
+                                     :retired      => true,
+                                     :tenant       => @tenant)
   end
 
-  def create_request
-    prov_options = {:number_of_vms => 1, :owner_email       => 'tester@miq.com',
-                                         :vm_memory         => [1024, '1024'],
-                                         :number_of_sockets => [2, '2'],
-                                         :cores_per_socket  => [2, '2']}
+  def create_request(prov_options)
     @miq_provision_request = FactoryGirl.create(:miq_provision_request,
                                                 :requester => @user,
                                                 :src_vm_id => @vm_template.id,
@@ -94,19 +98,38 @@ module QuotaHelper
     @miq_request = @miq_provision_request
   end
 
-  def setup_model
+  def vmware_model
+    @ems = FactoryGirl.create(:ems_vmware)
+    @vm_template = FactoryGirl.create(:template_vmware,
+                                      :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
+    @storage = FactoryGirl.create(:storage_nfs)
+    create_request(:number_of_vms => 1, :owner_email => 'tester@miq.com',
+                                     :vm_memory         => [1024, '1024'],
+                                     :number_of_sockets => [2, '2'],
+                                     :cores_per_socket  => [2, '2'])
+    create_hardware
+    create_vmware_vms
+  end
+
+  def google_model
+    ems = FactoryGirl.create(:ems_google_with_authentication,
+                             :availability_zones => [FactoryGirl.create(:availability_zone_google)])
+    @vm_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
+    m2_small_flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id, :cloud_subnet_required => false,
+                                         :cpus => 4, :cpu_cores => 1, :memory => 1024)
+    create_request(:number_of_vms => 1, :owner_email => 'tester@miq.com',
+                                         :src_vm_id      => @vm_template.id,
+                                         :boot_disk_size => ["10.GB", "10 GB"],
+                                         :placement_auto => [true, 1],
+                                         :instance_type  => [m2_small_flavor.id, m2_small_flavor.name])
+    create_google_vms
+  end
+
+  def setup_model(vendor = "vmware")
     @user = FactoryGirl.create(:user_with_group)
     @miq_group = @user.current_group
     @tenant = @miq_group.tenant
-
-    @vm_template = FactoryGirl.create(:template_vmware,
-                                      :name     => "template1",
-                                      :hardware => FactoryGirl.create(:hardware, :cpu_sockets => 1, :memory_mb => 512))
-
     create_tenant_quota
-    create_request
-    create_storage
-    create_hardware
-    create_vms
+    send("#{vendor}_model")
   end
 end
