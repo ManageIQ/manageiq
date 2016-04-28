@@ -1,27 +1,6 @@
 class ServiceOrchestration < Service
   include ServiceOrchestrationMixin
-
-  # options to create the stack: read from DB or build from dialog
-  def stack_options
-    @stack_options ||= get_option(:create_options) || build_stack_create_options
-  end
-
-  # override existing stack options (most likely from dialog)
-  def stack_options=(opts)
-    @stack_options = opts
-    save_option(:create_options, opts)
-  end
-
-  # options to update the stack: read from DB. Cannot directly read from dialog
-  def update_options
-    @update_options ||= get_option(:update_options)
-  end
-
-  # must explicitly call this to set the options for update since they cannot be directly read from dialog
-  def update_options=(opts)
-    @update_options = opts
-    save_option(:update_options, opts)
-  end
+  include ServiceOrchestrationOptionsMixin
 
   # read from DB or parse from dialog
   def stack_name
@@ -113,26 +92,6 @@ class ServiceOrchestration < Service
   def save_create_options
     options.merge!(:stack_name     => stack_name,
                    :create_options => dup_and_process_password(stack_options))
-    save!
-  end
-
-  def dup_and_process_password(opts, encrypt = :encrypt)
-    return opts unless opts.kind_of?(Hash)
-
-    opts_dump = opts.deep_dup
-    parameters = opts_dump[:parameters] || {}
-    proc = MiqPassword.method(encrypt)
-    parameters.each { |key, val| parameters[key] = proc.call(val) if key.downcase =~ /password/ }
-
-    opts_dump
-  end
-
-  def get_option(option_name)
-    dup_and_process_password(options[option_name], :decrypt) if options[option_name]
-  end
-
-  def save_option(option_name, val)
-    options.merge!(option_name => dup_and_process_password(val, :encrypt))
     save!
   end
 end
