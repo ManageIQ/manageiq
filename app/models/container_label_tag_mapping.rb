@@ -29,7 +29,7 @@ class ContainerLabelTagMapping < ApplicationRecord
   def self.hash_all_by_name_type_value
     unless @cached_hash
       @cached_hash = {}
-      find_each { |m| load_mapping_into_hash(m, @cached_hash) }
+      includes(:tag).find_each { |m| load_mapping_into_hash(m, @cached_hash) }
     end
     @cached_hash
   end
