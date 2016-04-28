@@ -29,7 +29,7 @@
     %img{:src => image_path("#{size}/reflection.png"), :width => size, :height => size}
 - else
   .flobj
-    -if @explorer
+    - if @explorer
       - if !@embedded || @showlinks
         = link_to(image_tag(image_path("#{size}/reflection.png"), :width => size, :height => size, :title => h(item.name)),
         {:action => 'x_show', :id => to_cid(item.id)},
@@ -40,7 +40,7 @@
       - else
         %a{:title => _("Name: %s | %s Type: %s") % [h(item.name), ui_lookup(:table => "storages"), h(item.store_type)]}
           %img{:src => image_path("#{size}/reflection.png"), :width => size, :height => size}
-    -else
+    - else
       - if !@embedded || @showlinks
         %a{:href => url_for_record(item), :title => _("Name: %s | %s Type: %s") % [h(item.name), ui_lookup(:table => "storages"), h(item.store_type)]}
           %img{:src => image_path("#{size}/reflection.png"), :width => size, :height => size}
