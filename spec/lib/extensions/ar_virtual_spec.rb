@@ -600,28 +600,28 @@ describe VirtualFields do
 end
 
 describe "ApplicationRecord class" do
-  context "class immediately under ApplicationRecord" do
-    it ".virtual_attribute_names" do
+  describe ".virtual_attribute_names" do
+    it "class immediately under ApplicationRecord" do
       result = Host.virtual_attribute_names
       expect(result).to include("region_number")
       expect(result.count("region_number")).to eq(1)
     end
 
-    it ".attribute_names" do
-      result = ExtManagementSystem.attribute_names
+    it "class not immediately under ApplicationRecord" do
+      result = MiqTemplate.virtual_attribute_names
       expect(result).to include("region_number")
       expect(result.count("region_number")).to eq(1)
     end
   end
 
-  context "class not immediately under ApplicationRecord" do
-    it ".virtual_attribute_names" do
-      result = MiqTemplate.virtual_attribute_names
+  describe ".attribute_names" do
+    it "class immediately under ApplicationRecord" do
+      result = ExtManagementSystem.attribute_names
       expect(result).to include("region_number")
       expect(result.count("region_number")).to eq(1)
     end
 
-    it ".attribute_names" do
+    it "class not immediately under ApplicationRecord" do
       result = EmsCloud.attribute_names
       expect(result).to include("region_number")
       expect(result.count("region_number")).to eq(1)
