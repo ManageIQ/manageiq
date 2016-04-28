@@ -40,6 +40,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       subscription: '',
       host_default_vnc_port_start: '',
       host_default_vnc_port_end: '',
+      event_stream_selection: '',
       ems_controller: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
@@ -96,7 +97,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
         $scope.emsCommonModel.security_protocol               = data.security_protocol;
-        $scope.emsCommonModel.amqp_security_protocol          = data.amqp_security_protocol;
+        $scope.emsCommonModel.amqp_security_protocol          = data.amqp_security_protocol != '' ? data.amqp_security_protocol : 'ssl';
         $scope.emsCommonModel.provider_region                 = data.provider_region;
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
@@ -112,6 +113,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.host_default_vnc_port_start     = data.host_default_vnc_port_start;
         $scope.emsCommonModel.host_default_vnc_port_end       = data.host_default_vnc_port_end;
 
+        $scope.emsCommonModel.event_stream_selection          = data.event_stream_selection;
+
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
 
         if($scope.emsCommonModel.default_userid != '') {
@@ -126,7 +129,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         if($scope.emsCommonModel.ssh_keypair_userid != '') {
           $scope.emsCommonModel.ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_verify = miqService.storedPasswordPlaceholder;
         }
-
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
 
@@ -259,6 +261,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.note = "";
     if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
       $scope.emsCommonModel.default_api_port = "5000";
+      $scope.emsCommonModel.event_stream_selection = "ceilometer";
+      $scope.emsCommonModel.amqp_security_protocol = 'ssl';
     } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
     } else if ($scope.emsCommonModel.emstype === 'rhevm'){

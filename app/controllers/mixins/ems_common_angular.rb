@@ -205,7 +205,7 @@ module Mixins
                        :default_hostname                => @ems.connection_configurations.default.endpoint.hostname,
                        :amqp_hostname                   => amqp_hostname,
                        :default_api_port                => @ems.connection_configurations.default.endpoint.port,
-                       :amqp_api_port                   => amqp_port,
+                       :amqp_api_port                   => amqp_port ? amqp_port : "",
                        :api_version                     => @ems.api_version ? @ems.api_version : "v2",
                        :default_security_protocol       => default_security_protocol,
                        :amqp_security_protocol          => amqp_security_protocol,
@@ -221,6 +221,7 @@ module Mixins
                        :client_key                      => client_key ? client_key : "",
                        :project                         => project ? project : "",
                        :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
+                       :event_stream_selection          => retrieve_event_stream_selection,
                        :ems_controller                  => controller_name
       } if controller_name == "ems_cloud" || controller_name == "ems_network"
 
@@ -232,8 +233,8 @@ module Mixins
                        :amqp_hostname               => amqp_hostname,
                        :metrics_hostname            => metrics_hostname,
                        :default_api_port            => @ems.connection_configurations.default.endpoint.port,
-                       :amqp_api_port               => amqp_port,
-                       :metrics_api_port            => metrics_port,
+                       :amqp_api_port               => amqp_port ? amqp_port : "",
+                       :metrics_api_port            => metrics_port ? metrics_port : "",
                        :default_security_protocol   => default_security_protocol,
                        :amqp_security_protocol      => amqp_security_protocol,
                        :api_version                 => @ems.api_version ? @ems.api_version : "v2",
@@ -246,6 +247,7 @@ module Mixins
                        :emstype_vm                  => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
                        :host_default_vnc_port_start => host_default_vnc_port_start ? host_default_vnc_port_start : "",
                        :host_default_vnc_port_end   => host_default_vnc_port_end ? host_default_vnc_port_end : "",
+                       :event_stream_selection      => retrieve_event_stream_selection,
                        :ems_controller              => controller_name
       } if controller_name == "ems_infra"
     end
@@ -277,21 +279,21 @@ module Mixins
       metrics_port = params[:metrics_api_port].strip if params[:metrics_api_port]
       default_endpoint = {}
       amqp_endpoint = {}
+      ceilometer_endpoint = {}
       ssh_keypair_endpoint = {}
       metrics_endpoint = {}
 
-      if ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager)
+      if ems.kind_of?(ManageIQ::Providers::Openstack::CloudManager) || ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
-        amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
         ems.keystone_v3_domain_id = params[:keystone_v3_domain_id]
+        if params[:event_stream_selection] == "amqp"
+          amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
+        else
+          ceilometer_endpoint = {:role => :ceilometer}
+        end
       end
 
-      if ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
-        default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
-        amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
-        ssh_keypair_endpoint = {:role => :ssh_keypair}
-        ems.keystone_v3_domain_id = params[:keystone_v3_domain_id]
-      end
+      ssh_keypair_endpoint = {:role => :ssh_keypair} if ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
 
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
@@ -318,20 +320,26 @@ module Mixins
         ems.subscription    = params[:subscription] unless params[:subscription].blank?
       end
 
-      build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint)
+      build_connection(ems, default_endpoint, amqp_endpoint, ceilometer_endpoint, ssh_keypair_endpoint, metrics_endpoint)
     end
 
-    def build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint)
+    def build_connection(ems, default_endpoint, amqp_endpoint, ceilometer_endpoint, ssh_keypair_endpoint, metrics_endpoint)
       authentications = build_credentials(ems)
       default_authentication = authentications.delete(:default)
       default_authentication[:role] = :default
       amqp_authentication = {}
+      ceilometer_authentication = {}
       ssh_keypair_authentication = {}
       metrics_authentication = {}
 
       if authentications[:amqp]
         amqp_authentication = authentications.delete(:amqp)
         amqp_authentication[:role] = :amqp
+      end
+
+      if authentications[:ceilometer]
+        ceilometer_authentication = authentications.delete(:ceilometer)
+        ceilometer_authentication[:role] = :ceilometer
       end
 
       if authentications[:ssh_keypair]
@@ -346,6 +354,7 @@ module Mixins
 
       ems.connection_configurations=([{:endpoint => default_endpoint, :authentication => default_authentication},
                                       {:endpoint => amqp_endpoint, :authentication => amqp_authentication},
+                                      {:endpoint => ceilometer_endpoint, :authentication => ceilometer_authentication},
                                       {:endpoint => ssh_keypair_endpoint, :authentication => ssh_keypair_authentication},
                                       {:endpoint => metrics_endpoint, :authentication => metrics_authentication}])
     end
@@ -359,6 +368,12 @@ module Mixins
       if ems.supports_authentication?(:amqp) && params[:amqp_userid]
         amqp_password = params[:amqp_password] ? params[:amqp_password] : ems.authentication_password(:amqp)
         creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password}
+      end
+      # TODO params[:ceilometer_userid] will be nil until we add ceilometer authentication in the UI
+      # TODO if ems.supports_authentication?(:ceilometer) && params[:ceilometer_userid]
+      if params[:event_stream_selection] == "ceilometer"
+        # TODO ceilometer_password = params[:ceilometer_password] ? params[:ceilometer_password] : ems.authentication_password(:ceilometer)
+        creds[:ceilometer] = {:userid => "", :password => ""}
       end
       if ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager) &&
          ems.supports_authentication?(:ssh_keypair) && params[:ssh_keypair_userid]
@@ -383,6 +398,11 @@ module Mixins
         session[:oauth_response] = nil
       end
       creds
+    end
+
+    def retrieve_event_stream_selection
+      return "amqp" if @ems.connection_configurations.ceilometer.try(:endpoint).nil? && @ems.connection_configurations.amqp.try(:endpoint)
+      "ceilometer"
     end
 
     def construct_edit_for_audit(ems)
