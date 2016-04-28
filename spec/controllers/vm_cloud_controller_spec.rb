@@ -74,6 +74,7 @@ describe VmCloudController do
 
     it 'can resize an instance' do
       flavor = FactoryGirl.create(:flavor_openstack)
+      allow(controller).to receive(:load_edit).and_return(true)
       controller.instance_variable_set(:@edit,
                                        :new      => {:flavor => flavor.id},
                                        :explorer => true)
