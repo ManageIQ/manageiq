@@ -63,28 +63,53 @@ class OpenstackEventMonitor
     end
   end
 
+  cache_with_timeout(:event_monitor_class_cache) { Hash.new }
+  cache_with_timeout(:event_monitor_cache) { Hash.new }
+
   def self.event_monitor_class(options)
-    case options[:events_monitor]
-    when :ceilometer
-      OpenstackCeilometerEventMonitor
-    when :amqp
-      OpenstackRabbitEventMonitor
-    else
-      OpenstackNullEventMonitor
+    event_monitor_class = case options[:events_monitor]
+                          when :ceilometer
+                            OpenstackCeilometerEventMonitor
+                          when :amqp
+                            OpenstackRabbitEventMonitor
+                          else
+                            OpenstackNullEventMonitor
+                          end
+
+    key = event_monitor_key(options)
+    event_monitor_class_cache[key] ||= available_event_monitor(event_monitor_class, options)
+  end
+
+  def self.available_event_monitor(event_monitor_class, options)
+    monitor_available = begin
+      event_monitor_class.available?(options)
+    rescue => e
+      $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor}
+                 for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
+      false
     end
+
+    event_monitor_class = OpenstackNullEventMonitor unless monitor_available
+    event_monitor_class
   end
 
   # Select the best-fit plugin, or OpenstackNullEventMonitor if no plugin will
   # work Return the plugin instance
   # Caches plugin instances by openstack provider
   def self.event_monitor(options)
-    event_monitor_class(options).new(options)
+    key = event_monitor_key(options)
+    event_monitor_cache[key] ||= event_monitor_class(options).new(options)
   end
 
   # this private marker is really here for looks
   # private_class_methods are marked below
 
   private
+
+  def self.event_monitor_key(options)
+    options.values_at(:events_monitor, :hostname, :port, :username, :password)
+  end
+  private_class_method :event_monitor_key
 
   def openstack_event(_delivery_info, metadata, payload)
     OpenstackEvent.new(payload,
