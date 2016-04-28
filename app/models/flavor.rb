@@ -17,15 +17,23 @@ class Flavor < ApplicationRecord
 
   def name_with_details
     details = if cpus == 1
-                _("%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
+                if root_disk_size.nil?
+                  _("%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)")
+                else
+                  _("%{name} (%{num_cpus} CPU, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
+                end
               else
-                _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
+                if root_disk_size.nil?
+                  _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, Unknown Size Root Disk)")
+                else
+                  _("%{name} (%{num_cpus} CPUs, %{memory_gigabytes} GB RAM, %{root_disk_gigabytes} GB Root Disk)")
+                end
               end
     details % {
       :name                => name,
       :num_cpus            => cpus,
       :memory_gigabytes    => memory.bytes / 1.0.gigabytes,
-      :root_disk_gigabytes => root_disk_size.bytes / 1.0.gigabytes
+      :root_disk_gigabytes => root_disk_size.nil? ? nil : root_disk_size.bytes / 1.0.gigabytes
     }
   end
 end
