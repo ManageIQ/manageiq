@@ -2,6 +2,9 @@ class TreeBuilder
   include CompressedIds
   attr_reader :name, :type, :tree_nodes
 
+  def node_builder
+    TreeNodeBuilder
+  end
   def self.class_for_type(type)
     case type
     when :filter           then raise('Obsolete tree type.')
@@ -76,11 +79,13 @@ class TreeBuilder
 
     # Services explorer tree
     when :svcs                    then TreeBuilderServices
-
+        
     # Datastores explorer trees
     when :storage     then TreeBuilderStorage
     when :storage_pod then TreeBuilderStoragePod
 
+    when :datacenter              then TreeBuilderDatacenter
+    when :vat                     then TreeBuilderVat
     end
   end
 
@@ -368,6 +373,7 @@ class TreeBuilder
                           # TreeBuilderReportDashboards - :type
                           # TreeBuilderVmsFilter - :leaf
                           x_get_tree_custom_kids(parent, count_only, options)
+                        when Host                then x_get_tree_host_kids(parent, count_only)
                         when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
                         when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
                         when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
@@ -377,6 +383,7 @@ class TreeBuilder
                         when MiqRegion           then x_get_tree_region_kids(parent, count_only)
                         when MiqReport           then x_get_tree_r_kids(parent, count_only)
                         when PxeServer           then x_get_tree_pxe_server_kids(parent, count_only)
+                        when ResourcePool        then x_get_resource_pool_kids(parent, count_only)
                         when Service             then x_get_tree_service_kids(parent, count_only)
                         when ServiceTemplateCatalog
                                                  then x_get_tree_stc_kids(parent, count_only)
@@ -433,7 +440,7 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
-    TreeNodeBuilder.build(object, pid, options)
+    node_builder.build(object, pid, options)
   end
 
   # Called with object, tree node parent id, tree options
@@ -514,7 +521,7 @@ class TreeBuilder
     "cr"  => "ChargebackRate",
     "cs"  => "ConfiguredSystem",
     "ct"  => "CustomizationTemplate",
-    "d"   => "Datacenter",
+    "dc"  => "Datacenter",
     "dg"  => "Dialog",
     "ds"  => "Storage",
     "dsc" => "StorageCluster",

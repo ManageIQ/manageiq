@@ -34,7 +34,11 @@ module EmsCommon
                         :url  => show_link(@ems, :display => "ems_folders"))
       end
       @showtype = "config"
-      build_dc_tree
+
+      cluster = @record
+      @datacenter_tree = TreeBuilderVat.new(:vat_tree, :vat, @sb, true, cluster, !!params[:vat])
+      self.x_active_tree = :vat_tree
+
     elsif @display == "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]
@@ -486,49 +490,6 @@ module EmsCommon
     else
       @edit[:amqp_verify_status] = (edit_new[:amqp_password] == edit_new[:amqp_verify])
     end
-  end
-
-  # Build the tree object to display the ems datacenter info
-  def build_dc_tree
-    # Build the datacenter JSON object
-    @sb[:vat] = false if params[:action] != "treesize"        # need to set this, to remember vat, treesize doesnt pass in param[:vat]
-    vat = params[:vat] ? true : (@sb[:vat] ? true : false)    # use @sb[:vat] when coming from treesize
-    @sb[:tree_hosts_hash] = {} # Capture all Host ids in the tree
-    @sb[:tree_vms_hash]   = {} # Capture all VM ids in the tree
-    # do not want to store ems object in session hash,
-    # need to get record incase coming from treesize to rebuild refreshed tree
-    @sb[:ems_id] = @ems.id if @ems
-    @ems = model.find(@sb[:ems_id]) unless @ems
-    # Build the ems node
-    ems_node = TreeNodeBuilder.generic_tree_node(
-      "ems-#{to_cid(@ems.id)}",
-      @ems.name,
-      "vendor-#{@ems.image_name}.png",
-      "#{ui_lookup(:table => @table_name)}: #{@ems.name}",
-      :cfme_no_click => true,
-      :expand        => true,
-      :style_class   => "cfme-no-cursor-node"
-    )
-    ems_kids = []
-    @sb[:open_tree_nodes] = [] if params[:action] != "treesize"
-    @ems.children.each do |c|
-      ems_kids += get_dc_node(c, ems_node[:key], vat)  # Add child node(s) to tree
-    end
-    ems_node[:children] = ems_kids unless ems_kids.empty?
-
-    session[:dc_tree] = [ems_node].to_json
-    session[:tree] = "dc"
-    if vat
-      session[:tree_name] = "vt_tree"
-    else
-      session[:tree_name] = "dc_tree"
-    end
-    build_vm_host_array if %w(show treesize).include?(params[:action])
-  end
-
-  # Add the children of a node that is being expanded (autoloaded)
-  def tree_add_child_nodes(id)
-    get_dc_child_nodes(id)
   end
 
   # Validate the ems record fields

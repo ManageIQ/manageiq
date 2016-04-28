@@ -2,5 +2,6 @@
   %table{:style => 'height:100px;'}
     %tr
       %td{:width => '55%', :valign => 'top'}
-        = render :partial => '/layouts/dc_tree_quads'
-        = render :partial => '/layouts/dc_tree'
+        = render(:partial => 'shared/tree',
+                 :locals  => {:tree => @datacenter_tree,
+                              :name => @datacenter_tree.name.to_s})

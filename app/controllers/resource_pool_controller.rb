@@ -41,7 +41,10 @@ class ResourcePoolController < ApplicationController
       drop_breadcrumb(:name => _("%{name} (All VMs - Tree View)") % {:name => @record.name},
                       :url  => "/resource_pool/show/#{@record.id}?display=descendant_vms&treestate=true")
       @showtype = "config"
-      build_dc_tree
+
+      self.x_active_tree = :datacenter_tree
+      cluster = @record
+      @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, cluster)
 
     when "all_vms"
       drop_breadcrumb(:name => "%{name} (All VMs)" % {:name => @record.name},
@@ -173,45 +176,6 @@ class ResourcePoolController < ApplicationController
   end
 
   private ############################
-
-  # Build the tree object to display the resource_pool datacenter info
-  def build_dc_tree
-    @sb[:tree_hosts_hash] = {} # Capture all Host ids in the tree
-    @sb[:tree_vms_hash]   = {} # Capture all VM ids in the tree
-    @sb[:rp_id] = @record.id if @record # do not want to store ems object in session hash, need to get record incase coming from treesize to rebuild refreshed tree
-    unless @record
-      @record = ResourcePool.find(@sb[:rp_id])
-    end
-    rp_node = TreeNodeBuilder.generic_tree_node(
-      "resource_pool-#{to_cid(@record.id)}",
-      @record.name,
-      @record.vapp ? "vapp.png" : "resource_pool.png",
-      _("Resource Pool: %{name}") % {:name => @record.name},
-      :cfme_no_click => true,
-      :expand        => true,
-      :style_class   => "cfme-no-cursor-node"
-    )
-    rp_kids = []
-    @sb[:vat] = false if params[:action] != "treesize"        # need to set this, to remember vat, treesize doesnt pass in param[:vat]
-    vat = params[:vat] ? true : (@sb[:vat] ? true : false)    # use @sb[:vat] when coming from treesize
-    @sb[:open_tree_nodes] = [] if params[:action] != "treesize"
-    @record.resource_pools.each do |rp|   # Get the resource pool nodes
-      rp_kids += get_dc_node(rp, rp_node[:key], vat)
-    end
-    @record.vms.each do |v|               # Get VMs
-      rp_kids += get_dc_node(v, rp_node[:key], vat)
-    end
-    rp_node[:children] = rp_kids unless rp_kids.empty?
-
-    session[:dc_tree]    = [rp_node].to_json
-    session[:tree]       = "dc"
-    session[:tree_name]  = "rp_dc_tree"
-  end
-
-  # Add the children of a node that is being expanded (autoloaded)
-  def tree_add_child_nodes(id)
-    t_node = get_dc_child_nodes(id)
-  end
 
   def get_session_data
     @title        = _("Resource Pools")
