@@ -75,13 +75,12 @@
         :prefix                     => "/miq_request/",
         :keys                       => keys})
   - when :volumes
-    - keys = [:volume_name, :volume_size]
     = render(:partial => "/miq_request/prov_dialog_volume_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,
         :label                      => _("Volumes"),
         :prefix                     => "/miq_request/",
-        :keys                       => keys})
+        :keys                       => []})
   - when :environment
     - keys = [:placement_auto]
     = render(:partial => "/miq_request/prov_dialog_fieldset",

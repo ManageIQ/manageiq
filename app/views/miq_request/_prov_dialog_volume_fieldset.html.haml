@@ -1,10 +1,10 @@
 - url = url_for(:action => 'prov_field_changed', :id => "#{@edit[:req_id] || 'new'}") if @edit
 - options = @options ? @options : @edit[:new]
-- if keys.any? { |key| workflow.get_field(key, dialog)[:display] && workflow.get_field(key, dialog)[:display].to_s != "hide" }
-  %h3
-    = label
 - draw_fields = true
 - counter = 1
+
+%h3
+  = label
 .form-horizontal#add-volumes-form
   - while (draw_fields)
     #add-volume-fieldset
@@ -38,34 +38,31 @@
       %button#add-additional-volume-button
         Add Another Volume
 
-
 :javascript
   (function(){
-      var button = document.getElementById("add-additional-volume-button");
+      var button = $("#add-additional-volume-button");
 
-      button.addEventListener("click", function() {
-        var sourceNode = document.getElementById("add-volume-fieldset");
+      button.click(function() {
+        var sourceNode = $("#add-volume-fieldset");
         var node = duplicateNode(sourceNode, ["id", "name"]);
 
-        sourceNode.parentNode.appendChild(node);
-      }, false);
+        sourceNode.parent().append(node);
+      });
 
       var counter = #{counter};
       function duplicateNode(sourceNode, attributesToBump) {
-        var out = sourceNode.cloneNode(true);
-        var nodes = out.getElementsByTagName("*");
+        var out = sourceNode.clone(true);
+        var nodes = out.find('*');
 
-        for (var i = 0, len1 = nodes.length; i < len1; i++) {
-          var node = nodes[i];
-          for (var j = 0, len2 = attributesToBump.length; j < len2; j++) {
-            var attribute = attributesToBump[j];
-            if (node.hasAttribute(attribute)) {
-              node[attribute] = increment_attr(node[attribute]);
+        $.each(nodes, function (ix, node) {
+          $.each(attributesToBump, function (ix, attr) {
+            if (node.hasAttribute(attr)) {
+              $(node).prop(attr, increment_attr($(node).prop(attr)));
             }
-          }
+          });
           node.value = '';
           node.checked = false;
-        }
+        });
 
         function increment_attr(str) {
           str_pieces = str.split("_")
@@ -75,5 +72,4 @@
         counter++;
         return out;
       }
-
   })();

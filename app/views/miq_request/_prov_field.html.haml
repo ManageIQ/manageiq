@@ -72,7 +72,7 @@
             :sysprep_full_name, :sysprep_organization,
             :sysprep_product_id, :sysprep_computer_name,
             :sysprep_per_server_max_connections, :vm_description,
-            :vm_name, :volume_name, :volume_size, :wins_servers].include?(field)
+            :vm_name, :wins_servers].include?(field)
         .col-md-8
           - if @edit && field_hash[:display] == :edit && !@edit[:stamp_typ]
             -# Allow editing of the text field
