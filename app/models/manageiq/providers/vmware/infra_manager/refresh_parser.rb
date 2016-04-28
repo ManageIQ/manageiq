@@ -956,7 +956,15 @@ module ManageIQ::Providers
           uid = address = data['macAddress']
           name = data.fetch_path('deviceInfo', 'label')
 
-          lan = lan_uids[data.fetch_path('backing', 'deviceName')] unless lan_uids.nil?
+          backing = data['backing']
+          lan_uid = case backing.xsiType
+                    when "VirtualEthernetCardDistributedVirtualPortBackingInfo"
+                      backing.fetch_path('port', 'portgroupKey')
+                    else
+                      backing['deviceName']
+                    end unless backing.nil?
+
+          lan = lan_uids[lan_uid] unless lan_uid.nil? || lan_uids.nil?
 
           new_result = {
             :uid_ems         => uid,
