@@ -1319,9 +1319,10 @@ class CatalogController < ApplicationController
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
     @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
-    @edit[:new][:available_catalogs] = ServiceTemplateCatalog.all
-                                       .collect { |stc| [stc.name, stc.id] }
-                                       .sort
+    @edit[:new][:available_catalogs] = rbac_filtered_objects(ServiceTemplateCatalog.all).collect do |stc|
+      [stc.tenant.present? && stc.tenant.ancestors.present? ? stc.name + " (#{stc.tenant.name})" : stc.name, stc.id]
+    end
+    @edit[:new][:available_catalogs] = @edit[:new][:available_catalogs].sort
     available_orchestration_templates if @record.kind_of?(ServiceTemplateOrchestration)
     available_ansible_tower_managers if @record.kind_of?(ServiceTemplateAnsibleTower)
 
