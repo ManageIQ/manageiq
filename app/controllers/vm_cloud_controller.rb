@@ -142,8 +142,7 @@ class VmCloudController < ApplicationController
         page.redirect_to(previous_breadcrumb_url)
       end
     when "submit"
-      valid, details = @record.validate_live_migrate
-      if valid
+      if @record.is_available?(:live_migrate)
         if params['auto_select_host'] == '1'
           hostname = nil
         else
@@ -170,7 +169,7 @@ class VmCloudController < ApplicationController
         add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => details}, :error)
+          :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
