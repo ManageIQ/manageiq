@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::Openstack::InfraManager do
+ describe ManageIQ::Providers::Openstack::InfraManager do
   it ".ems_type" do
     expect(described_class.ems_type).to eq('openstack_infra')
   end
@@ -25,6 +25,7 @@ describe ManageIQ::Providers::Openstack::InfraManager do
 
       creds = {}
       creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
+      @ems.endpoints << Endpoint.create(:role => 'amqp', :hostname => 'amqp_hostname', :port => '5672')
       @ems.update_authentication(creds, :save => false)
       expect(@ems.verify_credentials(:amqp)).to be_truthy
     end
