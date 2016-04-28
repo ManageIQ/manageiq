@@ -1393,7 +1393,7 @@
       :stats_update_period: 10.minutes
       :status_update_period: 5.minutes
     :ui_worker:
-      :connection_pool_size: 5
+      :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
       :poll: 60.seconds
@@ -1408,12 +1408,12 @@
       :vim_broker_max_wait: 60
       :vim_broker_max_objects: 250
     :web_service_worker:
-      :connection_pool_size: 5
+      :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
       :poll: 60.seconds
     :websocket_worker:
-       :connection_pool_size: 5
+       :connection_pool_size: 8
        :memory_threshold: 1.gigabytes
        :nice_delta: 1
        :poll: 60.seconds
