@@ -274,6 +274,16 @@ class ExtManagementSystem < ApplicationRecord
     options.each do |option|
       add_connection_configuration_by_role(option)
     end
+
+    drop_unused_connections(options)
+  end
+
+  def drop_unused_connections(options)
+    chosen_endpoints   = options.map { |x| x.fetch_path(:endpoint, :role).try(:to_sym)}.compact.uniq
+    existing_endpoints = endpoints.pluck(:role).map(&:to_sym)
+    # Delete endpoint that were not picked
+    endpoints_for_deletion = existing_endpoints - chosen_endpoints
+    endpoints.select { |x| endpoints_for_deletion.include?(x.role.to_sym) }.each(&:mark_for_destruction)
   end
 
   def connection_configurations
@@ -304,6 +314,7 @@ class ExtManagementSystem < ApplicationRecord
         options[:authentication][:role] ||= "default"
       end
     end
+
     build_connection(options)
   end
 
