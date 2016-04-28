@@ -85,7 +85,7 @@
 
               %li
                 %span
-                  - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
+                  - start_number = pages[:items] > 0 ? (pages[:perpage] * pages[:current]) - pages[:perpage] + 1 : 0
                   - end_number = pages[:perpage] * pages[:current]
                   - if start_number == pages[:items]
                     = _("(Item %{start_number} of %{total_items})") % {:start_number => start_number, :total_items => pages[:items]}
