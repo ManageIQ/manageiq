@@ -39,6 +39,30 @@ class StorageController < ApplicationController
     # @storage = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@storage)
 
+    if !@explorer && @display == "main"
+      tree_node_id = TreeBuilder.build_node_id(@record)
+      session[:exp_parms] = {:display => @display, :refresh => params[:refresh], :id => tree_node_id}
+
+      # redirect user back to where they came from if they dont have access to any of vm explorers
+      # or redirect them to the one they have access to
+      redirect_controller = role_allows(:feature => "storage") ? "storage" : nil
+
+      if redirect_controller
+        action = "explorer"
+      else
+        url = request.env['HTTP_REFERER'].split('/')
+        add_flash(_("User '%{username}' is not authorized to access '%{controller_name}'") %
+                    {:username => current_userid, :controller_name => ui_lookup(:table => controller_name)}, :warning)
+        session[:flash_msgs] = @flash_array.dup
+        redirect_controller  = url[3]
+        action               = url[4]
+      end
+
+      redirect_to :controller => redirect_controller,
+                  :action     => action
+      return
+    end
+
     @gtl_url = "/show"
     #   drop_breadcrumb({:name=>ui_lookup(:tables=>"storages"), :url=>"/storage/show_list?page=#{@current_page}&refresh=y"}, true)
 
@@ -410,8 +434,8 @@ class StorageController < ApplicationController
     end
     @sb[:open_tree_nodes] ||= []
     build_accordions_and_trees
-    @right_cell_div ||= "storage_list"
-    @right_cell_text ||= _("All Datastores")
+    #@right_cell_div ||= "storage_list"
+    #@right_cell_text ||= _("All Datastores")
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -482,11 +506,39 @@ class StorageController < ApplicationController
     record.try(:id)
   end
 
+  def open_parent_nodes
+    existing_node = nil                     # Init var
+    nodes = params[:id].split('_')
+    nodes.pop
+    parents = []
+    nodes.each do |node|
+      parents.push(:id => node.split('xx-').last)
+    end
+
+    # Go up thru the parents and find the highest level unopened, mark all as opened along the way
+    unless parents.empty? || # Skip if no parents or parent already open
+      x_tree[:open_nodes].include?(x_build_node_id(parents.last))
+      parents.reverse_each do |p|
+        p_node = x_build_node_id(p)
+        # some of the folder nodes are not autoloaded
+        # that's why they already exist in open_nodes
+        x_tree[:open_nodes].push(p_node) unless x_tree[:open_nodes].include?(p_node)
+        existing_node = p_node
+      end
+    end
+
+    add_nodes = {:key      => existing_node,
+                 :children => tree_add_child_nodes(existing_node)} if existing_node
+    self.x_node = params[:id]
+    add_nodes
+  end
+
   def replace_right_cell(_nodetype = "root", replace_trees = [])
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     # FIXME
     @explorer = true
     record_showing = leaf_record
+    add_nodes = open_parent_nodes if params[:action] == "x_show" && @record && !@in_a_form
 
     trees = {}
     if replace_trees
@@ -496,6 +548,7 @@ class StorageController < ApplicationController
 
    presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
+      :add_nodes => add_nodes,
       :delete_node => @delete_node      # Remove a new node from the tree
    )
     r = proc { |opts| render_to_string(opts) }
