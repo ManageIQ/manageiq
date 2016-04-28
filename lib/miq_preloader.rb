@@ -11,6 +11,6 @@ module MiqPreloader
   # use instead:
   #   preload_and_map(orchestration_stack.subtree, :direct_vms)
   def self.preload_and_map(records, association)
-    records.to_a.tap { |recs| MiqPreloader.preload(recs, association) }.flat_map(&association)
+    Array.wrap(records).tap { |recs| MiqPreloader.preload(recs, association) }.flat_map(&association)
   end
 end
