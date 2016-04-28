@@ -113,7 +113,7 @@ module VmCommon
                   :host        => @record.ext_management_system.ipaddress ||
                                   @record.ext_management_system.hostname,
                   :vmid        => @record.ems_ref,
-                  :ticket      => @sb[:vmrc],
+                  :ticket      => j(params[:ticket]),
                   :api_version => @record.ext_management_system.api_version.to_s,
                   :os          => browser_info(:os),
                   :name        => @record.name

@@ -75,7 +75,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       ticket = VCR.use_cassette(described_class.name.underscore) do
         vm.remote_console_vmrc_acquire_ticket
       end
-      expect(ticket).to match(/^[0-9\-A-Z]{40}$/)
+      expect(ticket).to have_key(:ticket)
+      expect(ticket[:ticket]).to match(/^[0-9\-A-Z]{40}$/)
     end
 
     it 'with vm off' do
