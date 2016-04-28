@@ -249,10 +249,10 @@ class DashboardController < ApplicationController
       @available_widgets.push(w.id)  # Keep track of widgets available to this user
       if !col_widgets.include?(w.id) && w.enabled
         image, tip = case w.content_type
-                     when "menu"   then ["menu",     _("Add this Menu Widget")]
-                     when "rss"    then ["rssfeed",  _("Add this RSS Feed Widget")]
-                     when "chart"  then ["piechart", _("Add this Chart Widget")]
-                     when "report" then ["report",   _("Add this Report Widget")]
+                     when "menu"   then ["fa fa-share-square-o fa-lg",     _("Add this Menu Widget")]
+                     when "rss"    then ["fa fa-rss fa-lg",  _("Add this RSS Feed Widget")]
+                     when "chart"  then ["product product-chart fa-lg", _("Add this Chart Widget")]
+                     when "report" then ["product product-report fa-lg",   _("Add this Report Widget")]
                      end
         if prev_type && prev_type != w.content_type
           widget_list << {:id => w.content_type, :type => :separator}
@@ -262,7 +262,7 @@ class DashboardController < ApplicationController
           :id    => w.id,
           :type  => :button,
           :text  => w.title,
-          :image => "button_#{image}.png",
+          :image => "#{image}",
           :title => tip
         }
       end

@@ -17,14 +17,14 @@
           %i.fa.fa-plus.fa-lg
           %span.caret
 
-        %ul.dropdown-menu
+        %ul.dropdown-menu.scrollable-menu
           - @widgets_menu[:items].each do |item|
             %li
               - if item[:type] == :separator
                 .divider{:role => 'presentation'}
               - else
                 %a{:href => '#', :title => item[:title], 'data-click' => item[:id]}
-                  %img{:src => image_path("24/#{item[:image]}")}
+                  %i{:class => item[:image]}
                   = item[:text]
 
   - if @widgets_menu[:allow_reset]
