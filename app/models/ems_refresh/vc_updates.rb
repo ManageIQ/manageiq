@@ -80,6 +80,8 @@ module EmsRefresh::VcUpdates
       "config.hardware.device[*].backing.compatibilityMode",
       "config.hardware.device[*].backing.datastore",
       "config.hardware.device[*].backing.deviceName",
+      "config.hardware.device[*].backing.port.switchUuid",
+      "config.hardware.device[*].backing.port.portgroupKey",
       "config.hardware.device[*].backing.diskMode",
       "config.hardware.device[*].backing.fileName",
       "config.hardware.device[*].backing.thinProvisioned",
