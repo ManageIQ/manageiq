@@ -69,8 +69,8 @@
     :javascript
       $('tbody tr.rdetail').hover(
         function () {
-          $("tr[id$='"+this.id+"']").addClass("active");
+          $("tr[id = '"+this.id+"']").addClass("active");
         }, function() {
-          $("tr[id$='"+this.id+"']").removeClass("active");
+          $("tr[id = '"+this.id+"']").removeClass("active");
         }
       );

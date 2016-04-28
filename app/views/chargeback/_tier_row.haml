@@ -31,10 +31,4 @@
         $('.new_tier').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();
         $('.new_tier').addClass('new_tier_off').removeClass('new_tier');
     });
-    $('tbody tr.rdetail').hover(
-      function () {
-        $("tr[id^='"+this.id.slice(0,-2)+"']").addClass("active");
-      }, function() {
-        $("tr[id^='"+this.id.slice(0,-2)+"']").removeClass("active");
-      }
-    );
+    $('tbody tr.rdetail').hover( function(){hoverRowIn(this)}, function(row){hoverRowOut(this)});
