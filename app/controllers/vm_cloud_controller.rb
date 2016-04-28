@@ -38,6 +38,7 @@ class VmCloudController < ApplicationController
 
   def resize_vm
     assert_privileges("instance_resize")
+    load_edit("vm_resize__#{params[:id]}")
     flavor_id = @edit[:new][:flavor]
     flavor = find_by_id_filtered(Flavor, flavor_id)
     @record = VmOrTemplate.find_by_id(params[:id])
@@ -82,7 +83,7 @@ class VmCloudController < ApplicationController
     return unless load_edit("vm_resize__#{params[:id]}")
     @edit ||= {}
     @edit[:new] ||= {}
-    @edit[:new][:flavor] = params[:id]
+    @edit[:new][:flavor] = params[:flavor]
     render :update do |page|
       page << javascript_prologue
       page.replace_html("main_div",
