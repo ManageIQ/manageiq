@@ -93,7 +93,7 @@ class Service < ApplicationRecord
   Vmdb::Deprecation.deprecate_methods(self, :indirect_vms)
 
   def direct_vms
-    service_resources.where(:resource_type => 'VmOrTemplate').includes(:resource).collect(&:resource)
+    service_resources.where(:resource_type => 'VmOrTemplate').includes(:resource).collect(&:resource).compact
   end
 
   def all_vms
