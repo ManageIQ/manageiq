@@ -1256,7 +1256,6 @@
         :poll_method: :normal
         :queue_timeout: 120.minutes
     :replication_worker:
-      :connection_pool_size: 5
       :poll: 1.seconds
       :replication:
         :destination:
@@ -1385,7 +1384,6 @@
       :storage_file_collection_time_utc: 21600
       :vm_retired_interval: 10.minutes
     :smis_refresh_worker:
-      :connection_pool_size: 5
       :memory_threshold: 1.gigabytes
       :nice_delta: 3
       :poll: 15.seconds
