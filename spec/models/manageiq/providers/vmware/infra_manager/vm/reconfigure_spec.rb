@@ -183,4 +183,26 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
       expect(subject).to eq('independent_nonpersistent')
     end
   end
+
+  context '#add_disks' do
+    let(:vim)  { double("vim object") }
+    let(:vmcs) { double("VirtualMachineConfigSpec").as_null_object }
+    let(:disk) { {:disk_size_in_mb => 1024} }
+
+    it 'with valid controller key' do
+      allow(vim).to receive(:getScsiCandU).and_return([200, 1])
+
+      expect(vm).not_to receive(:add_scsi_controller)
+      expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
+      vm.add_disks(vim, vmcs, [disk])
+    end
+
+    it 'with no controller key' do
+      allow(vim).to receive(:getScsiCandU).and_return({})
+
+      expect(vm).to receive(:add_scsi_controller).with(vmcs, 0, -99).once
+      expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
+      vm.add_disks(vim, vmcs, [disk])
+    end
+  end
 end

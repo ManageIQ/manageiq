@@ -79,7 +79,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
     controller_key, unit_number = vim_obj.send(:getScsiCandU)
 
     # if there is no scsi controller
-    if controller_key.nil?
+    if controller_key.blank?
       controller_key, unit_number = [-99, 0]
       add_scsi_controller(vmcs, 0, controller_key)
     end
