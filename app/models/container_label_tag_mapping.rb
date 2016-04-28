@@ -44,28 +44,29 @@ class ContainerLabelTagMapping < ApplicationRecord
   private_class_method :load_mapping_into_hash
 
   # Main entry point
-  def self.all_tags_for_entity(entity)
-    hash = hash_all_by_name_type_value
+  def self.tags_for_entity(entity)
+    entity.labels.collect_concat { |label| tags_for_label(label) }
+  end
 
+  def self.tags_for_label(label)
     tags = []
-    # Group by label, handle each separately.
-    entity.labels.each do |label|
-      by_name = hash[label.name] || {}
-      # Apply both specific-type and any-type, independently.
-      [label.resource_type, nil].each do |type|
-        by_name_type = by_name[type] || {}
-        specific = by_name_type[label.value] || []
-        if !specific.empty?
-          tags.concat(specific)
-        else
-          any_value = by_name_type[nil] || []
-          any_value.each do |category_tag|
-            # Create a specific-value mapping under same (type-or-nil, name).
-            tags << create_specific_value_mapping(type, label.name, label.value, category_tag).tag
-          end
+
+    by_type_value = hash_all_by_name_type_value[label.name] || {}
+    # Apply both specific-type and any-type, independently.
+    [label.resource_type, nil].each do |type|
+      by_value = by_type_value[type] || {}
+      specific = by_value[label.value] || []
+      if !specific.empty?
+        tags.concat(specific)
+      else
+        any_value = by_value[nil] || []
+        any_value.each do |category_tag|
+          # Create a specific-value mapping under same (type-or-nil, name).
+          tags << create_specific_value_mapping(type, label.name, label.value, category_tag).tag
         end
       end
     end
+
     tags
   end
 

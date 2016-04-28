@@ -393,7 +393,7 @@ module EmsRefresh::SaveInventoryContainer
   # TODO: Drop the order requirement by using the :labels hash instead of entity.labels?
   #   Would still need still save_labels_and_tags_inventory() to get that hash.
   def save_tags_generated_from_labels(entity, _hashes, _target = nil)
-    current_tags = ContainerLabelTagMapping.all_tags_for_entity(entity)
+    current_tags = ContainerLabelTagMapping.tags_for_entity(entity)
     possible_old_tags = ContainerLabelTagMapping.all_mapped_tags
 
     # TODO: Don't clear existing tags if partial refresh?
