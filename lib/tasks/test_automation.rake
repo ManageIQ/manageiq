@@ -5,6 +5,8 @@ namespace :test do
   namespace :automation do
     desc "Setup environment for automation specs"
     task :setup => :setup_db
+
+    task :teardown
   end
 
   desc "Run all automation specs"
