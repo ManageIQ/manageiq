@@ -8,7 +8,7 @@ describe OpenstackEventMonitor do
     @receiver_options = {:capacity => 1, :duration => 1}
     @options = @receiver_options.merge(:topics => @topics)
     @rabbit_host = {:hostname => "rabbit_host", :username => "rabbit_user", :password => "rabbit_pass",
-                    :events_monitor => :amqp}
+                    :events_monitor => :amqp, :port => 5672}
     @bad_host = {:hostname => "bad_host", :username => "bad_user", :password => "bad_pass"}
   end
 
@@ -17,6 +17,18 @@ describe OpenstackEventMonitor do
     allow(OpenstackRabbitEventMonitor).to receive(:test_connection).with(opts).and_return(false)
 
     expect(OpenstackEventMonitor.new(opts).class).to eq OpenstackNullEventMonitor
+  end
+
+  it "caches multiple event monitors for different keys" do
+    rabbit_options = @options.merge(@rabbit_host)
+    allow(OpenstackRabbitEventMonitor).to receive(:test_connection).with(rabbit_options).and_return(true)
+    rabbit_instance = OpenstackEventMonitor.new(rabbit_options)
+    expect(rabbit_instance.class).to eq OpenstackRabbitEventMonitor
+
+    # additionally, we should be able to access the event_monitor instance
+    # directly from the parent event_monitor
+    instance = OpenstackEventMonitor.new(rabbit_options)
+    expect(instance).to eq rabbit_instance
   end
 
   it "orders the event monitor plugins correctly" do
