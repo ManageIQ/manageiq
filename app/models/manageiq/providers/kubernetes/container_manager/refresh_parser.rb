@@ -131,22 +131,33 @@ module ManageIQ::Providers::Kubernetes
 
     def find_host_by_provider_id(provider_id)
       scheme, instance_uri = provider_id.split("://", 2)
-      prov, name_field = {
-        "gce" => [ManageIQ::Providers::Google::CloudManager, :name],
-        "aws" => [ManageIQ::Providers::Amazon::CloudManager, :uid_ems],
-      }[scheme]
+      prov, name_field = scheme_to_provider_mapping[scheme]
       instance_id = instance_uri.split('/').last
 
       prov::Vm.find_by(name_field => instance_id) if !prov.nil? && !instance_id.blank?
     end
 
+    def scheme_to_provider_mapping
+      @scheme_to_provider_mapping ||= begin
+        {
+          'gce' => ['ManageIQ::Providers::Google::CloudManager'.safe_constantize, :name],
+          'aws' => ['ManageIQ::Providers::Amazon::CloudManager'.safe_constantize, :uid_ems],
+        }.reject { |_key, (provider, _name)| provider.nil? }
+      end
+    end
+
     def find_host_by_bios_uuid(new_result)
-      uuid_provider_types = [ManageIQ::Providers::Redhat::InfraManager::Vm.name,
-                             ManageIQ::Providers::Openstack::CloudManager::Vm.name,
-                             ManageIQ::Providers::Vmware::InfraManager::Vm.name]
       identity_system = new_result[:identity_system].try(:downcase)
       Vm.find_by(:uid_ems => identity_system,
                  :type    => uuid_provider_types) if identity_system
+    end
+
+    def uuid_provider_types
+      @uuid_provider_types ||= begin
+        ['ManageIQ::Providers::Redhat::InfraManager::Vm',
+         'ManageIQ::Providers::Openstack::CloudManager::Vm',
+         'ManageIQ::Providers::Vmware::InfraManager::Vm'].map(&:safe_constantize).compact.map(&:name)
+      end
     end
 
     def cross_link_node(new_result)
