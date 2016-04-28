@@ -13,7 +13,7 @@
         :owner_phone: 
           :description: Phone
           :required: false
-          :display: :show
+          :display: :hide
           :data_type: :string
         :owner_country: 
           :description: Country/Region
