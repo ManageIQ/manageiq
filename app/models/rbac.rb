@@ -520,40 +520,43 @@ module Rbac
   end
 
   def self.get_belongsto_matches(blist, klass)
-    results = []
-    blist.each do |bfilter|
+    return get_belongsto_matches_for_host(blist, klass) if klass == Host
+    return get_belongsto_matches_for_storage(blist, klass) if klass == Storage
+    association_name = klass.base_model.to_s.tableize
+
+    blist.flat_map do |bfilter|
       vcmeta_list = MiqFilter.belongsto2object_list(bfilter)
-      next if vcmeta_list.empty?
+      next [] if vcmeta_list.empty?
+      # typically, this is the only one we want:
+      vcmeta = vcmeta_list.last
 
-      if klass == Storage
-        vcmeta_list.reverse_each do |vcmeta|
-          if vcmeta.respond_to?(:storages)
-            results.concat(vcmeta.storages)
-            break
-          end
-        end
-      elsif klass == Host
-        results.concat(get_belongsto_matches_for_host(vcmeta_list.last))
-      elsif vcmeta_list.last.kind_of?(Host) && klass <= VmOrTemplate
-        host = vcmeta_list.last
-        vms_and_templates = host.send(klass.base_model.to_s.tableize).to_a
-        results.concat(vms_and_templates)
+      if vcmeta.kind_of?(Host) && klass <= VmOrTemplate
+        vcmeta.send(association_name).to_a
       else
-        vcmeta_list.each { |vcmeta| results.push(vcmeta) if vcmeta.kind_of?(klass) }
-        results.concat(vcmeta_list.last.descendants.select { |obj| obj.kind_of?(klass) })
+        vcmeta_list.grep(klass) + vcmeta.descendants.grep(klass)
       end
-    end
-
-    results.uniq
+    end.uniq
   end
 
-  def self.get_belongsto_matches_for_host(vcmeta)
-    subtree  = vcmeta.subtree
-    clusters = subtree.select { |obj| obj.kind_of?(EmsCluster) }
-    hosts    = subtree.select { |obj| obj.kind_of?(Host) }
+  def self.get_belongsto_matches_for_host(blist, klass)
+    clusters = []
+    hosts = []
+    blist.each do |bfilter|
+      vcmeta = MiqFilter.belongsto2object(bfilter)
+      next unless vcmeta
 
-    MiqPreloader.preload(clusters, :hosts)
-    clusters.collect(&:hosts).flatten + hosts
+      subtree  = vcmeta.subtree
+      clusters += subtree.grep(EmsCluster)
+      hosts    += subtree.grep(Host)
+    end
+    MiqPreloader.preload_and_map(clusters, :hosts) + hosts
+  end
+
+  def self.get_belongsto_matches_for_storage(blist, klass)
+    sources = blist.map do |bfilter|
+      MiqFilter.belongsto2object_list(bfilter).reverse.detect { |v| v.respond_to?(:storages) }
+    end.select(&:present?)
+    MiqPreloader.preload_and_map(sources, :storages)
   end
 
   def self.matches_search_filters?(obj, filter, tz)
