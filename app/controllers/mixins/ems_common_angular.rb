@@ -369,12 +369,6 @@ module Mixins
         amqp_password = params[:amqp_password] ? params[:amqp_password] : ems.authentication_password(:amqp)
         creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password, :save => (mode != :validate)}
       end
-      # TODO params[:ceilometer_userid] will be nil until we add ceilometer authentication in the UI
-      # TODO if ems.supports_authentication?(:ceilometer) && params[:ceilometer_userid]
-      if params[:event_stream_selection] == "ceilometer"
-        # TODO ceilometer_password = params[:ceilometer_password] ? params[:ceilometer_password] : ems.authentication_password(:ceilometer)
-        creds[:ceilometer] = {:userid => "", :password => ""}
-      end
       if ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager) &&
          ems.supports_authentication?(:ssh_keypair) && params[:ssh_keypair_userid]
         ssh_keypair_password = params[:ssh_keypair_password] ? params[:ssh_keypair_password] : ems.authentication_key(:ssh_keypair)
