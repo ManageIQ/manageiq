@@ -35,45 +35,41 @@ describe MiddlewareTopologyService do
                                                            :name                  => "hawkular-command-gateway-war.war",
                                                            :nativeid              => "Local~/deployment=hawkular-command-gateway-war.war")
       expect(subject[:items]).to eq(
-                                     ems_hawkular.id.to_s           => {:name         => ems_hawkular.name,
-                                                                        :status       => "Unknown",
-                                                                        :kind         => "MiddlewareManager",
-                                                                        :display_kind => "Hawkular",
-                                                                        :miq_id       => ems_hawkular.id,
-                                                                        :icon         => "vendor-hawkular",
-                                                                        :id           => ems_hawkular.id.to_s},
+        "MiddlewareManager" + ems_hawkular.compressed_id.to_s              => {:name         => ems_hawkular.name,
+                                                                               :status       => "Unknown",
+                                                                               :kind         => "MiddlewareManager",
+                                                                               :display_kind => "Hawkular",
+                                                                               :miq_id       => ems_hawkular.id,
+                                                                               :icon         => "vendor-hawkular"},
 
-                                     middleware_server.ems_ref      => {:name         => middleware_server.name,
-                                                                        :status       => "Unknown",
-                                                                        :kind         => "MiddlewareServer",
-                                                                        :display_kind => "MiddlewareServer",
-                                                                        :miq_id       => middleware_server.id,
-                                                                        :icon         => "vendor-wildfly",
-                                                                        :id           => middleware_server.nativeid},
+        "MiddlewareServer" + middleware_server.compressed_id.to_s          => {:name         => middleware_server.name,
+                                                                               :status       => "Unknown",
+                                                                               :kind         => "MiddlewareServer",
+                                                                               :display_kind => "MiddlewareServer",
+                                                                               :miq_id       => middleware_server.id,
+                                                                               :icon         => "vendor-wildfly"},
 
-                                     middleware_deployment1.ems_ref => {:name         => middleware_deployment1.name,
-                                                                        :status       => "Unknown",
-                                                                        :kind         => "MiddlewareDeployment",
-                                                                        :display_kind => "MiddlewareDeployment",
-                                                                        :miq_id       => middleware_deployment1.id,
-                                                                        :icon         => "middleware_deployment_war",
-                                                                        :id           => middleware_deployment1.nativeid},
+        "MiddlewareDeployment" + middleware_deployment1.compressed_id.to_s => {:name         => middleware_deployment1.name,
+                                                                               :status       => "Unknown",
+                                                                               :kind         => "MiddlewareDeployment",
+                                                                               :display_kind => "MiddlewareDeployment",
+                                                                               :miq_id       => middleware_deployment1.id,
+                                                                               :icon         => "middleware_deployment_war"},
 
-                                     middleware_deployment2.ems_ref => {:name         => middleware_deployment2.name,
-                                                                        :status       => "Unknown",
-                                                                        :kind         => "MiddlewareDeployment",
-                                                                        :display_kind => "MiddlewareDeployment",
-                                                                        :miq_id       => middleware_deployment2.id,
-                                                                        :icon         => "middleware_deployment_war",
-                                                                        :id           => middleware_deployment2.nativeid},
+        "MiddlewareDeployment" + middleware_deployment2.compressed_id.to_s => {:name         => middleware_deployment2.name,
+                                                                               :status       => "Unknown",
+                                                                               :kind         => "MiddlewareDeployment",
+                                                                               :display_kind => "MiddlewareDeployment",
+                                                                               :miq_id       => middleware_deployment2.id,
+                                                                               :icon         => "middleware_deployment_war"},
 
       )
 
       expect(subject[:relations].size).to eq(3)
       expect(subject[:relations]).to include(
-                                              {:source => ems_hawkular.id.to_s, :target      => middleware_server.ems_ref},
-                                              {:source => middleware_server.ems_ref, :target => middleware_deployment1.ems_ref},
-                                              {:source => middleware_server.ems_ref, :target => middleware_deployment2.ems_ref}
+        {:source => "MiddlewareManager" + ems_hawkular.compressed_id.to_s,     :target => "MiddlewareServer" + middleware_server.compressed_id.to_s},
+        {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s, :target => "MiddlewareDeployment" + middleware_deployment1.compressed_id.to_s},
+        {:source => "MiddlewareServer" + middleware_server.compressed_id.to_s, :target => "MiddlewareDeployment" + middleware_deployment2.compressed_id.to_s}
       )
     end
   end
