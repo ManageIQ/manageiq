@@ -67,7 +67,7 @@ module ManageIQ::Providers::Softlayer::ManagerMixin
         next if known_ems_regions.include?(region.name)
         next if servers_in_region(compute, region.name).empty?
 
-        new_ems << create_discovered_region(region, client_id, client_key, all_ems_names)
+        new_ems << create_discovered_region(region.name, client_id, client_key, all_ems_names)
       end
 
       EmsRefresh.queue_refresh(new_ems) unless new_ems.blank?
