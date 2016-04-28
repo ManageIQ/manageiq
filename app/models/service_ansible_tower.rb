@@ -38,7 +38,7 @@ class ServiceAnsibleTower < Service
 
     raise _("job template was not set") if job_template.nil?
 
-    build_stack_options_from_dialog(options[:dialog])
+    build_stack_options_from_dialog(dialog_options)
   end
 
   def save_launch_options
