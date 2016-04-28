@@ -25,7 +25,7 @@ class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
   end
 
   def x_get_tree_stc_kids(object, count_only)
-    objects = rbac_filtered_objects(object.service_templates.sort_by { |o| o.name.downcase })
+    objects = rbac_filtered_objects(object.service_templates.select(&:display))
     count_only_or_objects(count_only, objects, 'name')
   end
 
