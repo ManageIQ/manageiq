@@ -360,8 +360,8 @@ class Storage < ApplicationRecord
     hosts = active_hosts_with_authentication_status_ok
     if hosts.empty?
       raise(MiqException::MiqStorageError,
-            _("Check that a Host is running and has valid credentials for %{table} [%{name}] with id: [%{id}]")) %
-              {:table => ui_lookup(:table => "storages"), :name => name, :id => id}
+            _("Check that a Host is running and has valid credentials for %{table} [%{name}] with id: [%{id}]") %
+              {:table => ui_lookup(:tables => "storage"), :name => name, :id => id})
     end
     task_name = "SmartState Analysis for [#{name}]"
     self.class.create_scan_task(task_name, userid, [self])
