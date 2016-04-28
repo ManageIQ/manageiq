@@ -24,7 +24,7 @@ describe ContainerLabelTagMapping do
 
   context "with empty mapping" do
     it "does nothing" do
-      expect(ContainerLabelTagMapping.all_tags_for_entity(node)).to be_empty
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to be_empty
       expect(ContainerLabelTagMapping.all_mapped_tags).to be_empty
     end
   end
@@ -37,7 +37,7 @@ describe ContainerLabelTagMapping do
 
     it "returns 2 tags" do
       label(node, 'name', 'value-1')
-      expect(ContainerLabelTagMapping.all_tags_for_entity(node)).to contain_exactly(tag1, tag2)
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
     end
   end
 
@@ -52,14 +52,14 @@ describe ContainerLabelTagMapping do
 
     it "prefers specific-value" do
       label(node, 'name', 'value-1')
-      expect(ContainerLabelTagMapping.all_tags_for_entity(node)).to contain_exactly(tag1, tag_under_cat)
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag_under_cat)
     end
 
     it "creates tag for new value" do
       expect(ContainerLabelTagMapping.all_mapped_tags).to contain_exactly(tag1, tag_under_cat)
 
       label(node, 'name', 'value-2')
-      tags = ContainerLabelTagMapping.all_tags_for_entity(node)
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
       expect(tags.size).to eq(1)
       expect(tags[0].name).to eq(cat_tag.name + '/value_2')
       expect(tags[0].classification.description).to eq('value-2')
@@ -68,7 +68,7 @@ describe ContainerLabelTagMapping do
 
       # But nothing changes when called again, the previously created tag is re-used.
 
-      expect(ContainerLabelTagMapping.all_tags_for_entity(node)).to contain_exactly(tags[0])
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.all_mapped_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
     end
@@ -86,12 +86,12 @@ describe ContainerLabelTagMapping do
 
     it "applies both independently" do
       label(node, 'name', 'value')
-      expect(ContainerLabelTagMapping.all_tags_for_entity(node)).to contain_exactly(tag1, tag2)
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
     end
 
     it "skips specific-type when type doesn't match" do
       label(project, 'name', 'value')
-      expect(ContainerLabelTagMapping.all_tags_for_entity(project)).to contain_exactly(tag2)
+      expect(ContainerLabelTagMapping.tags_for_entity(project)).to contain_exactly(tag2)
     end
   end
 
@@ -103,7 +103,7 @@ describe ContainerLabelTagMapping do
 
     it "resolves them independently" do
       label(node, 'name', 'value')
-      tags = ContainerLabelTagMapping.all_tags_for_entity(node)
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
       expect(tags.size).to eq(2)
       expect(tags).to include(tag2)
     end
