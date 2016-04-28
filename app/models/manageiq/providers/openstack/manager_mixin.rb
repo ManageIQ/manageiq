@@ -67,16 +67,22 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     @event_monitor_options ||= begin
       opts = {:ems => self}
 
-      amqp = connection_configuration_by_role("amqp")
-      if (endpoint = amqp.try(:endpoint))
-        opts[:hostname]          = endpoint.hostname
-        opts[:port]              = endpoint.port
-        opts[:security_protocol] = endpoint.security_protocol
-      end
+      ceilometer = connection_configuration_by_role("ceilometer")
 
-      if (authentication = amqp.try(:authentication))
-        opts[:username] = authentication.userid
-        opts[:password] = authentication.password
+      if ceilometer.try(:endpoint) && !ceilometer.try(:endpoint).try(:marked_for_destruction?)
+        opts[:events_monitor] = :ceilometer
+      elsif (amqp = connection_configuration_by_role("amqp"))
+        opts[:events_monitor] = :amqp
+        if (endpoint = amqp.try(:endpoint))
+          opts[:hostname]          = endpoint.hostname
+          opts[:port]              = endpoint.port
+          opts[:security_protocol] = endpoint.security_protocol
+        end
+
+        if (authentication = amqp.try(:authentication))
+          opts[:username] = authentication.userid
+          opts[:password] = authentication.password
+        end
       end
       opts
     end

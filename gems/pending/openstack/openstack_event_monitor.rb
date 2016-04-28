@@ -12,7 +12,7 @@ class OpenstackEventMonitor
   end
 
   def self.available?(options)
-    event_monitor_class(options) != OpenstackNullEventMonitor
+    event_monitor_class(options).available?(options)
   end
 
   DEFAULT_PLUGIN_PRIORITY = 0
@@ -63,22 +63,14 @@ class OpenstackEventMonitor
     end
   end
 
-  cache_with_timeout(:event_monitor_class_cache) { Hash.new }
-  cache_with_timeout(:event_monitor_cache) { Hash.new }
-
   def self.event_monitor_class(options)
-    key = event_monitor_key(options)
-    event_monitor_class_cache[key] ||= begin
-      detected_event_monitor = subclasses.detect do |event_monitor|
-        begin
-          event_monitor.available?(options)
-        rescue => e
-          $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor}
-                     for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
-          false
-        end
-      end
-      detected_event_monitor || OpenstackNullEventMonitor
+    case options[:events_monitor]
+    when :ceilometer
+      OpenstackCeilometerEventMonitor
+    when :amqp
+      OpenstackRabbitEventMonitor
+    else
+      OpenstackNullEventMonitor
     end
   end
 
@@ -86,19 +78,13 @@ class OpenstackEventMonitor
   # work Return the plugin instance
   # Caches plugin instances by openstack provider
   def self.event_monitor(options)
-    key = event_monitor_key(options)
-    event_monitor_cache[key] ||= event_monitor_class(options).new(options)
+    event_monitor_class(options).new(options)
   end
 
   # this private marker is really here for looks
   # private_class_methods are marked below
 
   private
-
-  def self.event_monitor_key(options)
-    options.values_at(:hostname, :port, :security_protocol, :username, :password)
-  end
-  private_class_method :event_monitor_key
 
   def openstack_event(_delivery_info, metadata, payload)
     OpenstackEvent.new(payload,
