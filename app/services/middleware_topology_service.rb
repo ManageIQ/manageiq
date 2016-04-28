@@ -1,6 +1,4 @@
 class MiddlewareTopologyService < TopologyService
-  include UiServiceMixin
-
   def initialize(provider_id)
     @provider_id = provider_id
     @providers = retrieve_providers(ManageIQ::Providers::MiddlewareManager, @provider_id)
@@ -10,10 +8,11 @@ class MiddlewareTopologyService < TopologyService
     topo_items = {}
     links = []
 
-    entity_relationships = {:MiddlewareManager =>
-                                {:MiddlewareServers =>
-                                     {:MiddlewareDeployments => nil
-                           }}}
+    entity_relationships = {
+      :MiddlewareManager => {
+        :MiddlewareServers => {
+          :MiddlewareDeployments => nil
+        }}}
 
     preloaded = @providers.includes(:middleware_server => [:middleware_deployment])
 
@@ -21,7 +20,7 @@ class MiddlewareTopologyService < TopologyService
       topo_items, links = build_recursive_topology(entity, entity_relationships[:MiddlewareManager], topo_items, links)
     end
 
-    populate_topology(topo_items, links, build_kinds, icons)
+    populate_topology(topo_items, links, build_kinds, {})
   end
 
   def entity_display_type(entity)
