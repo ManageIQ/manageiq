@@ -67,7 +67,7 @@
         :label                      => label,
         :prefix                     => "/miq_request/",
         :keys                       => keys})
-    - keys = [:vm_name, :vm_description, :vm_prefix]
+    - keys = [:vm_name, :vm_domain, :vm_description, :vm_prefix]
     = render(:partial => "/miq_request/prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,

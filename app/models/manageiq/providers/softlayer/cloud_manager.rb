@@ -17,8 +17,7 @@ class ManageIQ::Providers::Softlayer::CloudManager < ManageIQ::Providers::CloudM
           :autosave    => true,
           :dependent   => :destroy
 
-  delegate :floating_ips, # not sure
-           :cloud_networks,
+  delegate :cloud_networks,
            :cloud_subnets,
            :network_ports,
            :network_routers,

@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Softlayer_CloudManager_AvailabilityZone < MiqAeServiceAvailabilityZone
+  end
+end

@@ -128,7 +128,7 @@ class ManageIQ::Providers::Softlayer::CloudManager::RefreshParser < ManageIQ::Pr
       :type              => self.class.vm_type,
       :uid_ems           => uid,
       :ems_ref           => uid,
-      :name              => instance.name,
+      :name              => "#{instance.name}.#{instance.domain}",
       :vendor            => "softlayer",
       :raw_power_state   => instance.state,
       :flavor            => instance.flavor_id,
@@ -158,7 +158,7 @@ class ManageIQ::Providers::Softlayer::CloudManager::RefreshParser < ManageIQ::Pr
   end
 
   def populate_hardware_hash_with_disks(hardware_disks_array, instance)
-    # TODO: Prepared to discover instance disks once fog-Softlayer allows to discover their size
+    # TODO: Prepared to discover instance disks once fog/softlayer allows to discover their size
     instance.disk.each do |attached_disk|
       d = @data_index.fetch_path(:cloud_volumes, attached_disk["diskImageId"])
       next if d.nil?
