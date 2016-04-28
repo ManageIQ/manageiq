@@ -109,7 +109,7 @@ class TreeNodeBuilder
     when Service              then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service.png")
     when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
     when ServiceTemplate      then service_template_node
-    when ServiceTemplateCatalog then generic_node(object.name, "service_template_catalog.png")
+    when ServiceTemplateCatalog then service_template_catalog_node
     when Storage              then generic_node(object.name, "storage.png")
     when User                 then generic_node(object.name, "user.png")
     when MiqSearch            then generic_node(object.description, "filter.png", "Filter: #{object.description}")
@@ -300,6 +300,11 @@ class TreeNodeBuilder
   def service_template_node
     generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service_template.png")
     @node[:title] += " (%s)" % object.tenant.name unless object.tenant.ancestors.empty?
+  end
+
+  def service_template_catalog_node
+    generic_node(object.name, "service_template_catalog.png")
+    @node[:title] += " (%s)" % object.tenant.name if object.tenant.present? && object.tenant.ancestors.present?
   end
 
   def zone_node
