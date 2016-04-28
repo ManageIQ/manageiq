@@ -215,6 +215,8 @@ describe HostController do
       EvmSpecHelper.create_guid_miq_server_zone
       @host = FactoryGirl.create(:host)
       @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)
+      @datastore = FactoryGirl.create(:storage, :name => 'storage_name')
+      @datastore.parent = @host
     end
 
     it "renders show_item" do
@@ -228,6 +230,15 @@ describe HostController do
                                            {:name => "foo",
                                             :url  => "/host/guest_applications/#{@host.id}?show=#{@guest_application.id}"}
                                           ])
+    end
+
+    it "renders show_item datastore" do
+      controller.instance_variable_set(:@breadcrumbs, [])
+      get :show, :params => { :id => @host.id, :display => 'storages' }
+      expect(response.status).to eq(200)
+      expect(response).to render_template('host/show')
+      expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (All Datastores)",
+                                            :url => "/host/show/#{@host.id}?display=storages"}])
     end
 
     it "renders show_details" do

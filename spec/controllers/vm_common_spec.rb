@@ -77,6 +77,17 @@ describe VmOrTemplateController do
       expect(response).to redirect_to(:controller => "dashboard", :action => 'show')
       expect(assigns(:flash_array).first[:message]).to include("is not authorized to access")
     end
+
+    it "renders show_item datastore" do
+      set_user_privileges
+      feature = MiqProductFeature.find_all_by_identifier(["vandt_accord", "vms_filter_accord", "storages"])
+      login_as FactoryGirl.create(:user, :features => feature)
+      datastore = FactoryGirl.create(:storage, :name => 'storage_name')
+      @vm.storage_id = datastore.id
+      controller.instance_variable_set(:@breadcrumbs, [])
+      get :show, :params => { :id => @vm.id, :display => 'storages' }
+      expect(response).to redirect_to(:controller => "vm_infra", :action => 'explorer')
+    end
   end
 
   describe '#console_after_task' do
