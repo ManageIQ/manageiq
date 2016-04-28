@@ -2,7 +2,7 @@ module AuthenticationMixin
   extend ActiveSupport::Concern
 
   included do
-    has_many  :authentications, :as => :resource, :dependent => :destroy, :autosave => true
+    has_many :authentications, :as => :resource, :dependent => :destroy, :autosave => true
 
     virtual_column :authentication_status,  :type => :string
 

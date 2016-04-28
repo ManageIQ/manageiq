@@ -279,7 +279,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def drop_unused_connections(options)
-    chosen_endpoints   = options.map { |x| x.fetch_path(:endpoint, :role).try(:to_sym)}.compact.uniq
+    chosen_endpoints   = options.map { |x| x.fetch_path(:endpoint, :role).try(:to_sym) }.compact.uniq
     existing_endpoints = endpoints.pluck(:role).map(&:to_sym)
     # Delete endpoint that were not picked
     roles_for_deletion = existing_endpoints - chosen_endpoints
