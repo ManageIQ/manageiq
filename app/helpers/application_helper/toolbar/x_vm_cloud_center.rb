@@ -29,6 +29,18 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-user fa-lg',
           N_('Set Ownership for this Instance'),
           N_('Set Ownership')),
+        separator,
+        button(
+          :instance_attach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Attach a Cloud Volume to this Instance'),
+          t),
+        button(
+          :instance_detach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Detach a Cloud Volume from this Instance'),
+          t),
+        separator,
         button(
           :instance_delete,
           'pficon pficon-delete fa-lg',

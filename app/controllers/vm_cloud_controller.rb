@@ -180,6 +180,142 @@ class VmCloudController < ApplicationController
     end
   end
 
+  def attach
+    assert_privileges("instance_attach")
+    @volume_choices = {}
+    @record = @vm = find_by_id_filtered(VmCloud, params[:id])
+    @vm.cloud_tenant.cloud_volumes.each { |volume| @volume_choices[volume.name] = volume.id }
+
+    @in_a_form = true
+    drop_breadcrumb(
+      :name => _("Attach %{volume} to %{instance_model} \"%{instance_name}\"") % {
+        :volume         => ui_lookup(:table => 'cloud_volume'),
+        :instance_model => ui_lookup(:table => 'vm_cloud'),
+        :instance_name  => @vm.name
+      },
+      :url  => "/vm_cloud/attach")
+    @in_a_form = true
+    @refresh_partial = "vm_common/attach"
+  end
+  alias instance_attach attach
+
+  def detach
+    assert_privileges("instance_detach")
+    @volume_choices = {}
+    @record = @vm = find_by_id_filtered(VmCloud, params[:id])
+    attached_volumes = @vm.hardware.disks.select(&:backing).map(&:backing)
+    attached_volumes.each { |volume| @volume_choices[volume.name] = volume.id }
+    if attached_volumes.empty?
+      add_flash(_("%{instance_model} \"%{instance_name}\" has no attached %{volumes}") % {
+        :volumes        => ui_lookup(:tables => 'cloud_volumes'),
+        :instance_model => ui_lookup(:table => 'vm_cloud'),
+        :instance_name  => @vm.name})
+      render :update do |page|
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
+    end
+
+    @in_a_form = true
+    drop_breadcrumb(
+      :name => _("Detach %{volume} from %{instance_model} \"%{instance_name}\"") % {
+        :volume         => ui_lookup(:table => 'cloud_volume'),
+        :instance_model => ui_lookup(:table => 'vm_cloud'),
+        :instance_name  => @vm.name
+      },
+      :url  => "/vm_cloud/detach")
+    @in_a_form = true
+    @refresh_partial = "vm_common/detach"
+  end
+  alias instance_detach detach
+
+  def attach_volume
+    assert_privileges("instance_attach")
+
+    @vm = find_by_id_filtered(VmCloud, params[:id])
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Attaching %{volume_model} to %{instance_model} \"%{instance_name}\" was cancelled by the user") % {
+        :volume_model   => ui_lookup(:table => 'cloud_volume'),
+        :instance_model => ui_lookup(:table => 'vm_cloud'),
+        :instance_name  => @vm.name
+      })
+    when "attach"
+      volume = find_by_id_filtered(CloudVolume, params[:volume_id])
+      valid_attach, attach_details = volume.validate_attach_volume
+      if valid_attach
+        begin
+          @volume.raw_attach_volume(@vm.ems_ref, params[:device_path])
+          add_flash(_("Attaching %{volume} \"%{volume_name}\" to %{vm_name}") % {
+            :volume      => ui_lookup(:table => 'cloud_volume'),
+            :volume_name => volume.name,
+            :vm_name     => @vm.name})
+        rescue => ex
+          add_flash(_("Unable to attach %{volume} \"%{volume_name}\" to %{vm_name}: %{details}") % {
+            :volume      => ui_lookup(:table => 'cloud_volume'),
+            :volume_name => volume.name,
+            :vm_name     => @vm.name,
+            :details     => ex}, :error)
+        end
+      else
+        add_flash(_(attach_details), :error)
+      end
+      @breadcrumbs.pop if @breadcrumbs
+      session[:edit] = nil
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      render :update do |page|
+        page.redirect_to :action => "show", :id => @vm.id.to_s
+      end
+    end
+  end
+
+  def detach_volume
+    assert_privileges("instance_detach")
+
+    @vm = find_by_id_filtered(VmCloud, params[:id])
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Detaching a %{volume} from %{instance_model} \"%{instance_name}\" was cancelled by the user") % {
+        :volume         => ui_lookup(:table => 'cloud_volume'),
+        :instance_model => ui_lookup(:table => 'vm_cloud'),
+        :instance_name  => @vm.name
+      })
+
+    when "detach"
+      volume = find_by_id_filtered(CloudVolume, params[:volume_id])
+      valid_detach, detach_details = volume.validate_detach_volume
+      if valid_detach
+        begin
+          volume.raw_detach_volume(@vm.ems_ref)
+          add_flash(_("Detaching %{volume} \"%{volume_name}\" from %{vm_name}") % {
+            :volume      => ui_lookup(:table => 'cloud_volume'),
+            :volume_name => volume.name,
+            :vm_name     => @vm.name})
+        rescue => ex
+          add_flash(_("Unable to detach %{volume} \"%{volume_name}\" from %{vm_name}: %{details}") % {
+            :volume      => ui_lookup(:table => 'cloud_volume'),
+            :volume_name => volume.name,
+            :vm_name     => @vm.name,
+            :details     => ex}, :error)
+        end
+      else
+        add_flash(_(detach_details), :error)
+      end
+      @breadcrumbs.pop if @breadcrumbs
+      session[:edit] = nil
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      render :update do |page|
+        page.redirect_to :action => "show", :id => @vm.id.to_s
+      end
+    end
+  end
+
+  def cancel_action(message)
+    session[:edit] = nil
+    add_flash(message)
+    @record = @sb[:action] = nil
+    replace_right_cell
+  end
+
   private
 
   def features

@@ -348,7 +348,11 @@ Vmdb::Application.routes.draw do
     :cloud_volume             => {
       :get  => %w(
         download_data
+        attach
+        detach
         edit
+        cloud_volume_form_fields
+        cloud_volume_tenants
         index
         new
         show
@@ -357,6 +361,8 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
       ) + compare_get,
       :post => %w(
+        attach_volume
+        detach_volume
         button
         create
         dynamic_checkbox_refresh
@@ -2278,6 +2284,8 @@ Vmdb::Application.routes.draw do
         resize
         migrate
         live_migrate_form_fields
+        attach
+        detach
       ) +
                compare_get,
       :post => %w(
@@ -2333,6 +2341,8 @@ Vmdb::Application.routes.draw do
         wait_for_task
         win32_services
         live_migrate_vm
+        attach_volume
+        detach_volume
       ) +
                adv_search_post +
                compare_post +

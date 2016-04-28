@@ -1614,13 +1614,11 @@ module VmCommon
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
-      if %w(clone migrate miq_request_new pre_prov publish reconfigure resize live_migrate).include?(@sb[:action])
-        # don't render a reset button on the screen
-        locals[:no_reset]        = true
-        # render a submit button instead of a save button
-        locals[:submit_button]   = %(clone migrate publish reconfigure pre_prov resize live_migrate).include?(@sb[:action])
-        # render continue button on the screen
-        locals[:continue_button] = ['miq_request_new'].include?(@sb[:action])
+      if %w(clone migrate miq_request_new pre_prov publish
+            reconfigure resize live_migrate attach detach).include?(@sb[:action])
+        locals[:no_reset]        = true                              # don't need reset button on the screen
+        locals[:submit_button]   = @sb[:action] != 'miq_request_new' # need submit button on the screen
+        locals[:continue_button] = @sb[:action] == 'miq_request_new' # need continue button on the screen
         update_buttons(locals) if @edit && @edit[:buttons].present?
         presenter[:clear_tree_cookies] = "prov_trees"
       end
@@ -1717,7 +1715,9 @@ module VmCommon
               :record_id  => @edit[:rec_id],
             }
           ])
-        elsif @sb[:action] == 'live_migrate'
+        # these subviews use angular, so they need to use a special partial
+        # so the form buttons on the outer frame can be updated.
+        elsif %(attach detach live_migrate).include?(@sb[:action])
           presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
         elsif action != "retire" && action != "reconfigure_update"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
@@ -1849,6 +1849,17 @@ module VmCommon
     name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
     table = request.parameters["controller"]
     case @sb[:action]
+    when "attach"
+      partial = "vm_common/attach"
+      header = _("Attach Cloud Volume to %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
+      action = "attach_volume"
+    when "detach"
+      partial = "vm_common/detach"
+      header = _("Detach Cloud Volume from %{model} \"%{name}\"") % {
+        :name  => name,
+        :model => ui_lookup(:table => table)
+      }
+      action = "detach_volume"
     when "compare", "drift"
       partial = "layouts/compare"
       if @sb[:action] == "compare"
