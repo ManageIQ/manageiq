@@ -692,7 +692,7 @@ module EmsCommon
   end
 
   def retrieve_openstack_security_protocols
-    [[_('SSL without validation'), 'ssl'], ['SSL', 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
+    [[_('SSL without validation'), 'ssl'], [_('SSL'), 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
   end
 
   # Get variables from edit form
