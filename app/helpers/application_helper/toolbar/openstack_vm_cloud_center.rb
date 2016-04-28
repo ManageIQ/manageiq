@@ -46,7 +46,8 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           :instance_resize,
           'pficon pficon-edit fa-lg',
           t = N_('Reconfigure this Instance'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::InstanceReconfigure),
         button(
           :vm_right_size,
           'product product-custom-6 fa-lg',

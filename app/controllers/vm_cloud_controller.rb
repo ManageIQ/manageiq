@@ -50,8 +50,8 @@ class VmCloudController < ApplicationController
       @record = @sb[:action] = nil
       replace_right_cell
     when "submit"
-      valid, details = @record.validate_resize
-      if valid
+      validation = @record.validate_resize
+      if validation[:available]
         begin
           old_flavor = @record.flavor
           @record.resize(flavor)
@@ -70,7 +70,7 @@ class VmCloudController < ApplicationController
         add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => details}, :error)
+          :details  => validation[:message]}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
