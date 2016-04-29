@@ -2,6 +2,11 @@ module ReportFormatter
   class TimelineMessage
     include CompressedIds
 
+    def initialize(row, event, flags, db)
+      @row, @event, @flags, @db = row, event, flags, db
+      @ems_cloud, @ems_container = flags[:ems_cloud], flags[:ems_container]
+    end
+
     def vm_name
       "<a href=\"/vm/show/#{to_cid(@event.vm_or_template_id)}\">#{text}</a>" if @event.vm_or_template_id
     end
@@ -77,17 +82,8 @@ module ReportFormatter
       end
     end
 
-    def set_parameters(column, row, event, flags, db)
-      @event, @ems_cloud, @ems_container = event, flags[:ems_cloud], flags[:ems_container]
-      @db   = db
+    def message_html(column)
       @column = column
-      @row = row
-      @flags = flags
-    end
-
-    def message_html(column, row, event, flags, db)
-      set_parameters(column, row, event, flags, db)
-
       field = column.tr('.', '_').to_sym
       respond_to?(field) ? send(field).to_s : text
     end
