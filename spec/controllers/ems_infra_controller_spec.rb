@@ -343,9 +343,9 @@ describe EmsInfraController do
         expect(@ems).to receive(:supports_authentication?).with(:ssh_keypair).and_return(true)
         expect(@ems).to receive(:supports_authentication?).with(:oauth)
         expect(@ems).to receive(:supports_authentication?).with(:auth_key)
-        expect(controller.send(:build_credentials, @ems)).to eq(:default     => default_creds,
-                                                                :amqp        => amqp_creds,
-                                                                :ssh_keypair => ssh_keypair_creds)
+        expect(controller.send(:build_credentials, @ems, :validate)).to eq(:default     => default_creds.merge!(:save => false),
+                                                                           :amqp        => amqp_creds.merge!(:save => false),
+                                                                           :ssh_keypair => ssh_keypair_creds.merge!(:save => false))
       end
 
       it "uses the stored passwords for validation if passwords dont exist in params" do
@@ -360,9 +360,9 @@ describe EmsInfraController do
         expect(@ems).to receive(:supports_authentication?).with(:ssh_keypair).and_return(true)
         expect(@ems).to receive(:supports_authentication?).with(:oauth)
         expect(@ems).to receive(:supports_authentication?).with(:auth_key)
-        expect(controller.send(:build_credentials, @ems)).to eq(:default     => default_creds,
-                                                                :amqp        => amqp_creds,
-                                                                :ssh_keypair => ssh_keypair_creds)
+        expect(controller.send(:build_credentials, @ems, :validate)).to eq(:default     => default_creds.merge!(:save => false),
+                                                                           :amqp        => amqp_creds.merge!(:save => false),
+                                                                           :ssh_keypair => ssh_keypair_creds.merge!(:save => false))
       end
     end
   end

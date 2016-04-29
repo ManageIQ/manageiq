@@ -240,7 +240,7 @@ describe EmsCloudController do
       expect(mocked_ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
       expect(mocked_ems).to receive(:supports_authentication?).with(:oauth)
       expect(mocked_ems).to receive(:supports_authentication?).with(:auth_key)
-      expect(controller.send(:build_credentials, mocked_ems)).to eq(:default => default_creds, :amqp => amqp_creds)
+      expect(controller.send(:build_credentials, mocked_ems, :validate)).to eq(:default => default_creds.merge!(:save => false), :amqp => amqp_creds.merge!(:save => false))
     end
 
     it "uses the stored passwords for validation if passwords dont exist in params" do
@@ -252,20 +252,20 @@ describe EmsCloudController do
       expect(mocked_ems).to receive(:supports_authentication?).with(:amqp).and_return(true)
       expect(mocked_ems).to receive(:supports_authentication?).with(:oauth)
       expect(mocked_ems).to receive(:supports_authentication?).with(:auth_key)
-      expect(controller.send(:build_credentials, mocked_ems)).to eq(:default => default_creds, :amqp => amqp_creds)
+      expect(controller.send(:build_credentials, mocked_ems, :validate)).to eq(:default => default_creds.merge!(:save => false), :amqp => amqp_creds.merge!(:save => false))
     end
   end
 
   context "#update_ems_button_validate" do
     let(:mocked_ems) { double(ManageIQ::Providers::Openstack::CloudManager, :id => 1) }
-    it "calls authentication_check with save = true if validation is done for an existing record" do
+    it "calls authentication_check with save = false if validation is done for an existing record" do
       allow(controller).to receive(:set_ems_record_vars)
       allow(controller).to receive(:render)
       controller.instance_variable_set(:@_params,
                                        :button    => "validate",
                                        :id        => mocked_ems.id,
                                        :cred_type => "default")
-      expect(mocked_ems).to receive(:authentication_check).with("default", :save => true)
+      expect(mocked_ems).to receive(:authentication_check).with("default", :save => false)
       controller.send(:update_ems_button_validate, mocked_ems)
     end
 
