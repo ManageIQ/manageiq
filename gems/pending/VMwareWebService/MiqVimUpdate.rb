@@ -185,7 +185,7 @@ module MiqVimUpdate
     # Look up root hash of object in the <objType>ByMor hash and pass it
     # to the prop update routines: add, remove, assign.
     #
-    objType = objUpdate.obj.vimType.to_sym
+    objType = objUpdate.obj.vimBaseType.to_sym
     unless (pm = @propMap[objType])
       # We don't cache this type of object
       return
@@ -264,10 +264,12 @@ module MiqVimUpdate
   end
 
   def addObject(objUpdate, initialUpdate)
-    objType = objUpdate.obj.vimType
+    objType     = objUpdate.obj.vimType
+    objBaseType = objUpdate.obj.vimBaseType
+
     # always log additions to the inventory.
     $vim_log.info "MiqVimUpdate.addObject (#{@connId}): #{objType}: #{objUpdate.obj}"
-    return unless (pm = @propMap[objType.to_sym])  # not an object type we cache
+    return unless (pm = @propMap[objBaseType.to_sym])  # not an object type we cache
     $vim_log.info "MiqVimUpdate.addObject (#{@connId}): Adding object #{objType}: #{objUpdate.obj}"
 
     #
@@ -292,7 +294,7 @@ module MiqVimUpdate
       obj['MOR'] = objUpdate.obj
       propUpdate(obj, objUpdate.changeSet)
 
-      addObjHash(objType.to_sym, obj)
+      addObjHash(objBaseType.to_sym, obj)
 
       #
       # Call the notify callback if enabled, defined and we are past the initial update
@@ -321,10 +323,12 @@ module MiqVimUpdate
   end
 
   def deleteObject(objUpdate, initialUpdate = false)
-    objType = objUpdate.obj.vimType
+    objType     = objUpdate.obj.vimType
+    objBaseType = objUpdate.obj.vimBaseType
+
     # always log deletions from the inventory.
     $vim_log.info "MiqVimUpdate.deleteObject (#{@connId}): #{objType}: #{objUpdate.obj}"
-    return unless (pm = @propMap[objType.to_sym])      # not an object type we cache
+    return unless (pm = @propMap[objBaseType.to_sym])      # not an object type we cache
     $vim_log.info "MiqVimUpdate.deleteObject (#{@connId}): Deleting object: #{objType}: #{objUpdate.obj}"
 
     ia = @inventoryHash[objType]
