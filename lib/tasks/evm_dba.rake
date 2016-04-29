@@ -189,6 +189,19 @@ namespace :evm do
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
 
+    desc 'Check the current schema against the schema.yml file for inconsistencies'
+    task :check_schema => :environment do
+      message = EvmDatabase.check_schema
+      raise message if message
+      puts "The local schema is consistent with schema.yml"
+    end
+
+    desc 'Write the current schema to the schema.yml file'
+    task :write_schema => :environment do
+      EvmDatabase.write_expected_schema
+      puts "Wrote configured schema to schema.yml"
+    end
+
     # Example usage:
     #   bin/rake evm:db:backup:local -- --local-file /tmp/db_backup_test --dbname vmdb_production
     #   bin/rake evm:db:backup:remote -- --uri smb://dev005.manageiq.com/share1 --uri-username samba_one --uri-password "abc" --remote-file-name region1
