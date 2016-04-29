@@ -3,7 +3,7 @@
 %div{:id => "w_#{presenter.widget.id}"}
   .card-pf
     .card-pf-heading
-      %h2.card-pf-title{:style => "cursor:move"}
+      %h2.card-pf-title.sortable-handle{:style => "cursor:move"}
         = h(presenter.widget.title)
         .dropdown.dropdown-kebab-pf.pull-right
           %button.btn.btn-link.dropdown-toggle{:type => "button", :id => "dropdownKebab", "data-toggle" => "dropdown"}
