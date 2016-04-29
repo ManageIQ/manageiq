@@ -10,6 +10,7 @@ describe TreeBuilderAeCustomization  do
         :leaf        => nil,
         :add_root    => true,
         :open_nodes  => [],
+        :lazy        => true,
         :open_all    => true,
         :active_node => "root"
       }
