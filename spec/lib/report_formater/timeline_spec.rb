@@ -54,7 +54,7 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'test timeline'
-        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags, 'EmsEvent')
+        val = ReportFormatter::TimelineMessage.new(row, event, flags, 'EmsEvent').message_html(column)
         expect(val).to eq(href)
       end
     end
@@ -79,7 +79,7 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'test timeline'
-        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags, 'EmsEvent')
+        val = ReportFormatter::TimelineMessage.new(row, event, flags, 'EmsEvent').message_html(column)
         expect(val).to eq(href)
       end
     end
@@ -102,7 +102,7 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'MemoryUsage'
-        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, {}, 'BottleneckEvent')
+        val = ReportFormatter::TimelineMessage.new(row, event, {}, 'BottleneckEvent').message_html(column)
         expect(val).to eq(href)
       end
     end
