@@ -55,4 +55,18 @@ describe AuthKeyPairCloudController do
       expect(assigns(:edit)).to be_nil
     end
   end
+
+  context "#parse error messages" do
+    it "simplifies fog error message" do
+      raw_msg = "Expected(200) <=> Actual(400 Bad Request)\nexcon.error.response\n  :body          => "\
+                "\"{\\\"badRequest\\\": {\\\"message\\\": \\\"Keypair data is invalid: failed to generate "\
+                "fingerprint\\\", \\\"code\\\": 400}}\"\n  :cookies       => [\n  ]\n  :headers       => {\n "\
+                "\"Content-Length\"       => \"99\"\n    \"Content-Type\"         => \"application/json; "\
+                "charset=UTF-8\"\n    \"Date\"                 => \"Mon, 02 May 2016 08:15:51 GMT\"\n ..."\
+                ":reason_phrase => \"Bad Request\"\n  :remote_ip     => \"10....\"\n  :status        => 400\n  "\
+                ":status_line   => \"HTTP/1.1 400 Bad Request\\r\\n\"\n"
+      expect(subject.send(:get_error_message_from_fog, raw_msg)).to eq "Keypair data is invalid: failed to generate "\
+                                                                       "fingerprint"
+    end
+  end
 end
