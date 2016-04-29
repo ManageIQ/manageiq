@@ -1565,6 +1565,9 @@ function add_expanding_icon(element){
 }
 
 function chartData(type, data, data2) {
+  if(_.isObject(data.axis) && _.isObject(data.axis.x) && data.axis.x.categories.length > 10 ){
+    data.axis.x.tick = {centered: true, count: 10};
+  }
   if (_.isObject(data.axis) && _.isObject(data.axis.y) && _.isObject(data.axis.y.tick) && _.isObject(data.axis.y.tick.format)) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
