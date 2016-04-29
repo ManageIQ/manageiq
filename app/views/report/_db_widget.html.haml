@@ -9,7 +9,7 @@
 / .pointer{params}
 .panel.panel-default{params}
   .panel-heading
-    %h3.panel-title{:style => @edit && @edit[:current] ? "cursor: move;" : ""}
+    %h3.panel-title.sortable-handle{:style => @edit && @edit[:current] ? "cursor: move;" : ""}
       - case widget.content_type
       - when "chart"
         - glyphicon = "product product-chart"
