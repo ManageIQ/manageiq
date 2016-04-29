@@ -702,6 +702,7 @@ class VmOrTemplate < ApplicationRecord
       _log.info "Disconnecting Vm [#{name}] id [#{id}]#{log_text}"
 
       self.ext_management_system = nil
+      self.ems_cluster = nil
       self.raw_power_state = "unknown"
       save
     end

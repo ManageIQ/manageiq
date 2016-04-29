@@ -654,6 +654,7 @@ class Host < ApplicationRecord
       _log.info "Disconnecting Host [#{name}] id [#{id}]#{log_text}"
 
       self.ext_management_system = nil
+      self.ems_cluster = nil
       self.state = "unknown"
       save
     end
