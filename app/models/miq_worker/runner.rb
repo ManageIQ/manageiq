@@ -343,6 +343,7 @@ class MiqWorker::Runner
       end
 
       do_gc
+      self.class.log_ruby_object_usage(worker_settings[:top_ruby_object_classes_to_log].to_i)
       send(poll_method)
     end
   end
@@ -354,7 +355,6 @@ class MiqWorker::Runner
     @worker_monitor_drb ||= worker_monitor_drb
     messages = @worker_monitor_drb.worker_heartbeat(@worker.pid, @worker.class.name, @worker.queue_name)
     @last_hb = now
-    log_ruby_object_usage(worker_settings[:log_top_ruby_objects_on_heartbeat].to_i)
     messages.each { |msg, *args| process_message(msg, *args) }
     do_heartbeat_work
   rescue DRb::DRbError => err
@@ -427,6 +427,28 @@ class MiqWorker::Runner
     sleep(seconds % SAFE_SLEEP_SECONDS)
   end
 
+  def self.ruby_object_usage
+    types = Hash.new { |h, k| h[k] = 0 }
+    ObjectSpace.each_object do |obj|
+      types[obj.class.name] += 1
+    end
+    types
+  end
+
+  LOG_RUBY_OBJECT_USAGE_INTERVAL = 60
+  def self.log_ruby_object_usage(top = 20)
+    return unless top > 0
+
+    t = Time.now.utc
+    @last_ruby_object_usage ||= t
+
+    if (@last_ruby_object_usage + LOG_RUBY_OBJECT_USAGE_INTERVAL) < t
+      types = ruby_object_usage
+      _log.info("Ruby Object Usage: #{types.sort_by { |_k, v| -v }.take(top).inspect}")
+      @last_ruby_object_usage = t
+    end
+  end
+
   protected
 
   def process_message(message, *args)
@@ -445,29 +467,6 @@ class MiqWorker::Runner
     end
   rescue => err
     _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
-  end
-
-  def ruby_object_usage
-    types = Hash.new { |h, k| h[k] = Hash.new(0) }
-    ObjectSpace.each_object do |obj|
-      types[obj.class][:count] += 1
-      next if obj.kind_of?(DRbObject) || obj.kind_of?(WeakRef)
-      if obj.respond_to?(:length)
-        len = obj.length
-        if len.kind_of?(Numeric)
-          types[obj.class][:max]    = len if len > types[obj.class][:max]
-          types[obj.class][:total] += len
-        end
-      end
-    end
-    types
-  end
-
-  def log_ruby_object_usage(top = 20)
-    if top > 0
-      types = ruby_object_usage
-      $log.info("Ruby Object Usage: #{types.sort_by { |_klass, h| h[:count] }.reverse[0, top].inspect}")
-    end
   end
 
   def set_process_title
