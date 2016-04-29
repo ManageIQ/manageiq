@@ -36,17 +36,17 @@ class VmOrTemplate < ApplicationRecord
 
   VENDOR_TYPES = {
     # DB            Displayed
-    "azure"      => "Azure",
-    "vmware"     => "VMware",
-    "microsoft"  => "Microsoft",
-    "xen"        => "XenSource",
-    "parallels"  => "Parallels",
-    "amazon"     => "Amazon",
-    "redhat"     => "RedHat",
-    "openstack"  => "OpenStack",
-    "google"     => "Google",
-    "softlayer"  => "Softlayer",
-    "unknown"    => "Unknown"
+    "azure"     => "Azure",
+    "vmware"    => "VMware",
+    "microsoft" => "Microsoft",
+    "xen"       => "XenSource",
+    "parallels" => "Parallels",
+    "amazon"    => "Amazon",
+    "redhat"    => "RedHat",
+    "openstack" => "OpenStack",
+    "google"    => "Google",
+    "softlayer" => "Softlayer",
+    "unknown"   => "Unknown"
   }
 
   POWER_OPS = %w(start stop suspend reset shutdown_guest standby_guest reboot_guest)
