@@ -7,6 +7,7 @@ ENV LANG en_US.UTF-8
 ENV TERM xterm
 ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
+ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
 
 # Fetch postgresql 9.4 COPR and pglogical repos
 RUN curl -sSLko /etc/yum.repos.d/rhscl-rh-postgresql94-epel-7.repo \
@@ -71,8 +72,10 @@ RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz
     echo "chruby ruby-2.2.4" >> ~/.bash_profile && \
     rm -rf /chruby-* && rm -rf /usr/local/src/* && yum clean all
 
-## GIT clone manageiq-appliance repo
-RUN git clone --depth 1 https://github.com/ManageIQ/manageiq-appliance.git ${APPLIANCE_ROOT}
+## GIT clone manageiq-appliance and self-service UI repo (SSUI)
+RUN git clone --depth 1 https://github.com/ManageIQ/manageiq-appliance.git ${APPLIANCE_ROOT} && \
+git clone --depth 1 https://github.com/ManageIQ/manageiq-ui-self_service.git ${SSUI_ROOT} && \
+ln -vs ${APP_ROOT} /opt/manageiq/manageiq
 
 ## Create approot, ADD miq
 RUN mkdir -p ${APP_ROOT}
@@ -91,12 +94,22 @@ echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm
 WORKDIR ${APP_ROOT}
 RUN source /etc/default/evm && \
 /usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d && \
-npm install -g bower && \
+npm install npm -g && \
+npm install gulp bower -g && \
 gem install bundler -v ">=1.8.4" && \
 bin/setup --no-db --no-tests && \
 rake evm:compile_assets && \
 rake evm:compile_sti_loader && \
 rm -rvf /opt/rubies/ruby-2.2.4/lib/ruby/gems/2.2.0/cache/* && \
+bower cache clean && \
+npm cache clean
+
+## Build SSUI
+RUN source /etc/default/evm && \
+cd ${SSUI_ROOT} && \
+npm install && \
+bower -F --allow-root install && \
+gulp build && \
 bower cache clean && \
 npm cache clean
 
