@@ -8,7 +8,7 @@ FactoryGirl.define do
     raw_power_state "running"
   end
 
-  factory :template, :class => "Template", :parent => :vm_or_template do
+  factory :template, :class => "MiqTemplate", :parent => :vm_or_template do
     sequence(:name) { |n| "template_#{seq_padded_for_sorting(n)}" }
     template        true
     raw_power_state "never"
