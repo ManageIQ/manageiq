@@ -432,10 +432,6 @@ class StorageController < ApplicationController
       replace_right_cell
       return
     end
-    @sb[:open_tree_nodes] ||= []
-    build_accordions_and_trees
-    #@right_cell_div ||= "storage_list"
-    #@right_cell_text ||= _("All Datastores")
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -446,6 +442,10 @@ class StorageController < ApplicationController
       # need to set this here to force & activate node when link is clicked outside of explorer.
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
+
+    @sb[:open_tree_nodes] ||= []
+    build_accordions_and_trees
+
     render :layout => "application"
   end
 
@@ -506,39 +506,11 @@ class StorageController < ApplicationController
     record.try(:id)
   end
 
-  def open_parent_nodes
-    existing_node = nil                     # Init var
-    nodes = params[:id].split('_')
-    nodes.pop
-    parents = []
-    nodes.each do |node|
-      parents.push(:id => node.split('xx-').last)
-    end
-
-    # Go up thru the parents and find the highest level unopened, mark all as opened along the way
-    unless parents.empty? || # Skip if no parents or parent already open
-      x_tree[:open_nodes].include?(x_build_node_id(parents.last))
-      parents.reverse_each do |p|
-        p_node = x_build_node_id(p)
-        # some of the folder nodes are not autoloaded
-        # that's why they already exist in open_nodes
-        x_tree[:open_nodes].push(p_node) unless x_tree[:open_nodes].include?(p_node)
-        existing_node = p_node
-      end
-    end
-
-    add_nodes = {:key      => existing_node,
-                 :children => tree_add_child_nodes(existing_node)} if existing_node
-    self.x_node = params[:id]
-    add_nodes
-  end
-
   def replace_right_cell(_nodetype = "root", replace_trees = [])
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     # FIXME
     @explorer = true
     record_showing = leaf_record
-    add_nodes = open_parent_nodes if params[:action] == "x_show" && @record && !@in_a_form
 
     trees = {}
     if replace_trees
@@ -548,7 +520,6 @@ class StorageController < ApplicationController
 
    presenter = ExplorerPresenter.new(
       :active_tree => x_active_tree,
-      :add_nodes => add_nodes,
       :delete_node => @delete_node      # Remove a new node from the tree
    )
     r = proc { |opts| render_to_string(opts) }

@@ -158,9 +158,9 @@ describe HostController do
       expect(assigns(:devices)).to be_kind_of(Array)
     end
 
-    it "renders show delete for datastore" do
+    it "shows associated datastores" do
       controller.instance_variable_set(:@breadcrumbs, [])
-      get :show, :params => { :id => @host.id, :display => 'storages' }
+      get :show, :params => {:id => @host.id, :display => 'storages'}
       expect(response.status).to eq(200)
       expect(response).to render_template('host/show')
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (All Datastores)",
