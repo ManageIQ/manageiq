@@ -81,11 +81,12 @@ class AuthKeyPairCloudController < ApplicationController
   def form_field_changed
     return unless load_edit("auth_key_pair_cloud_edit__#{params[:id] || 'new'}")
     get_form_vars
-    @changed = (@edit[:new] != @edit[:current])
+    enable_buttons = (!@edit[:new][:name].blank? && !@edit[:new][:ems_id].blank?)
+
     render :update do |page|
       page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
-      page << javascript_for_miq_button_visibility(true)
+      page << javascript_for_miq_button_visibility(enable_buttons)
     end
   end
 
