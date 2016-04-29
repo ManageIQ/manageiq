@@ -80,4 +80,20 @@ describe MiqCapacityController do
       expect(sb[:planning][:vms]).to eq(@vm1.id.to_s => @vm1.name, @vm3.id.to_s => @vm3.name, @vm4.id.to_s => @vm4.name)
     end
   end
+  context '#bottlenecks' do
+    before do
+      EvmSpecHelper.create_guid_miq_server_zone
+      set_user_privileges
+      FactoryGirl.create(:miq_enterprise)
+    end
+    it 'it always sets breadcrumb' do
+      controller.instance_variable_set(:@sb, :planning => {:vms => {}, :options => {}}, :util => {:summary => {}})
+      controller.x_active_tree = 'bottlenecks_tree'
+      controller.x_node = 'I am not empty'
+      expect(controller).to receive(:bottleneck_get_node_info)
+      # render fails but it's not needed for this test
+      expect(controller).to receive(:render)
+      controller.bottlenecks
+    end
+  end
 end
