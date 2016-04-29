@@ -21,7 +21,7 @@
       - if @cur_group != detail[:group]
         - @cur_group = detail[:group]
         %tr
-          %td.active{:colspan => "10"} &nbsp;
+          %td{:colspan => "10", :style => "background-color: #f5f5f5;"} &nbsp;
       - num_tiers = @edit[:new][:tiers][detail_index].blank? ? "1" : @edit[:new][:tiers][detail_index].length.to_s
 
       %tr.rdetail{:id => "rate_detail_row_#{detail_index}_0"}
@@ -68,7 +68,7 @@
           = @edit[:new][:code_currency]
       - (1..num_tiers.to_i - 1).each do |tier_index|
         - tier = @edit[:new][:tiers][detail_index][tier_index]
-        %tr{:id => "rate_detail_row_#{detail_index}_#{tier_index}"}
+        %tr.rdetail{:id => "rate_detail_row_#{detail_index}_#{tier_index}"}
           %td
             - tier_val = (tier[:start].to_s.eql? "Infinity") ? "" : tier[:start]
             = text_field_tag("start_#{detail_index}_#{tier_index}", tier_val,
@@ -88,3 +88,12 @@
                                       :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_remove",
                                                                             :index => "#{detail_index}-#{tier_index}",
                                                                             :button => "remove")}');")
+
+    :javascript
+      $('tbody tr.rdetail').hover( function(){hoverRowIn(this)}, function(row){hoverRowOut(this)});
+      function hoverRowIn(row) {
+        $("tr[id ^= '"+row.id.substr(0, row.id.lastIndexOf("_"))+"']").addClass("active");
+      }
+      function hoverRowOut(row) {
+        $("tr[id ^= '"+row.id.substr(0, row.id.lastIndexOf("_"))+"']").removeClass("active");
+      }
