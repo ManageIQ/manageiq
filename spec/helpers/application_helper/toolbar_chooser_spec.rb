@@ -58,5 +58,41 @@ describe ApplicationHelper, "ToolbarChooser" do
         expect(_toolbar_chooser.send(:center_toolbar_filename_automate)).to eq("miq_ae_instances_center_tb")
       end
     end
+
+    context "#center_toolbar for storage" do
+      before { @sb = {:active_tree => :storage_tree, :trees => {:storage_tree => {:tree => :storage_tree}}} }
+
+      it "should return storages toolbar on root node" do
+        x_node_set('root', :storage_tree)
+        expect(_toolbar_chooser.send(:center_toolbar_filename_storage)).to eq("storages_center_tb")
+      end
+
+      it "should return storage toolbar on root node" do
+        c1 = FactoryGirl.create(:storage, :name => "foo")
+        x_node_set("ds-#{c1.id}", :storage_tree)
+        expect(_toolbar_chooser.send(:center_toolbar_filename_storage)).to eq("storage_center_tb")
+      end
+    end
+
+    context "#center_toolbar for storage pod" do
+      before { @sb = {:active_tree => :storage_pod_tree, :trees => {:storage_pod_tree => {:tree => :storage_pod_tree}}} }
+
+      it "should return blank_view toolbar on root node" do
+        x_node_set('root', :storage_pod_tree)
+        expect(_toolbar_chooser.send(:center_toolbar_filename_storage)).to eq("blank_view_tb")
+      end
+
+      it "should return storages_center toolbar on a datastore cluster node" do
+        d1 = FactoryGirl.create(:storage_cluster, :name => "foo")
+        x_node_set("dsc-#{d1.id}", :storage_pod_tree)
+        expect(_toolbar_chooser.send(:center_toolbar_filename_storage)).to eq("storages_center_tb")
+      end
+
+      it "should return storage toolbar on datastore node" do
+        c1 = FactoryGirl.create(:storage, :name => "foo")
+        x_node_set("ds-#{c1.id}", :storage_pod_tree)
+        expect(_toolbar_chooser.send(:center_toolbar_filename_storage)).to eq("storage_center_tb")
+      end
+    end
   end
 end

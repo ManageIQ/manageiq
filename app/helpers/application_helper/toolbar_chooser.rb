@@ -412,17 +412,17 @@ class ApplicationHelper::ToolbarChooser
 
   def center_toolbar_filename_storage
     if x_active_tree == :storage_tree
-      if x_node == "root"
-        return "storages_center_tb"
-      else
+      if x_node.split('-').first == 'ds'
         return "storage_center_tb"
+      else
+        return "storages_center_tb"
       end
     elsif x_active_tree == :storage_pod_tree
-      if x_node.split('-').length == 3
-        # folder node selected
-        return "storages_center_tb"
-      else
+      nodetype =  x_node.split('-').first
+      if nodetype == 'ds'
         return "storage_center_tb"
+      elsif nodetype != 'root'
+        return "storages_center_tb"
       end
     end
     "blank_view_tb"

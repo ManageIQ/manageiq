@@ -531,12 +531,9 @@ class StorageController < ApplicationController
 
     replace_trees_by_presenter(presenter, trees)
 
-    # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
-    presenter[:reload_toolbars][:center] = c_tb if c_tb.present?
-    presenter.set_visibility(c_tb.present? || v_tb.present?, :toolbar)
+    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
+    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
-    # Rebuild the toolbars
-    presenter.reload_toolbars(:history => h_tb, :view => v_tb)
     case x_active_tree
       when :storage_tree
         presenter.update(:main_div, r[:partial => "storage_list"])
