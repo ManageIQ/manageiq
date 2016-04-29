@@ -6,6 +6,14 @@ module ReportFormatter
       @row, @event, @flags, @db = row, event, flags, db
     end
 
+    def message_html(column)
+      @column = column
+      field = column.tr('.', '_').to_sym
+      respond_to?(field, true) ? send(field).to_s : text
+    end
+
+    private
+
     def vm_name
       "<a href=\"/vm/show/#{to_cid(@event.vm_or_template_id)}\">#{text}</a>" if @event.vm_or_template_id
     end
@@ -80,14 +88,6 @@ module ReportFormatter
         "<a href=\"/#{db}/#{to_cid(@event.resource_id)}\">#{@event.resource_name}</a>"
       end
     end
-
-    def message_html(column)
-      @column = column
-      field = column.tr('.', '_').to_sym
-      respond_to?(field) ? send(field).to_s : text
-    end
-
-    private
 
     def text
       if @row[@column].kind_of?(Time) || TIMELINE_TIME_COLUMNS.include?(@column)
