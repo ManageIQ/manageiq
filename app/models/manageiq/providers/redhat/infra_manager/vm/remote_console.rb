@@ -10,7 +10,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
 
     def validate_remote_console_acquire_ticket(protocol, options = {})
       raise(MiqException::RemoteConsoleNotSupportedError,
-            "#{protocol} protocol not enabled for this vm") unless protocol == :html5
+            "#{protocol} protocol not enabled for this vm") unless protocol.to_sym == :html5
 
       raise(MiqException::RemoteConsoleNotSupportedError,
             "#{protocol} remote console requires the vm to be registered with a management system.") if ext_management_system.nil?
