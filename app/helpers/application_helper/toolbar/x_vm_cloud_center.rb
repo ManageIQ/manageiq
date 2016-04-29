@@ -116,6 +116,7 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           'product product-migrate fa-lg',
           t = N_('Migrate Instance'),
           t,
+          :klass     => ApplicationHelper::Button::InstanceMigrate,
           :url_parms => 'main_div')
       ]
     ),

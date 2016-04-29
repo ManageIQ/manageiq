@@ -114,16 +114,12 @@ class VmCloudController < ApplicationController
   def live_migrate_form_fields
     assert_privileges("instance_live_migrate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
-    clusters = []
-    hosts = []
-    @record.ext_management_system.find_filtered_children("ems_clusters").each do |c|
-      clusters << {:id => c.id, :name => c.name}
+    clusters = @record.ext_management_system.ems_clusters.map do |c|
+      {:id => c.id, :name => c.name}
     end
-    @record.ext_management_system.find_filtered_children("hosts").each do |h|
-      hosts << {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
+    hosts = @record.ext_management_system.hosts.map do |h|
+      {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
     end
-    clusters.sort
-    hosts.sort
     render :json => {
       :clusters => clusters,
       :hosts    => hosts
@@ -143,8 +139,7 @@ class VmCloudController < ApplicationController
         page.redirect_to(previous_breadcrumb_url)
       end
     when "submit"
-      valid, details = @record.validate_live_migrate
-      if valid
+      if @record.is_available?(:live_migrate)
         if params['auto_select_host'] == '1'
           hostname = nil
         else
@@ -171,7 +166,7 @@ class VmCloudController < ApplicationController
         add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => details}, :error)
+          :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
