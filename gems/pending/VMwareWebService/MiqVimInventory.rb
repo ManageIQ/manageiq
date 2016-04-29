@@ -1722,7 +1722,7 @@ class MiqVimInventory < MiqVimClientBase
     $vim_log.info "MiqVimInventory.dvSwitches_locked: loading DV Switch cache for #{@connId}"
 
     base_class    = 'DistributedVirtualSwitch'.freeze
-    child_classes = VimType.child_classes(base_class)
+    child_classes = VimClass.child_classes(base_class)
 
     begin
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
