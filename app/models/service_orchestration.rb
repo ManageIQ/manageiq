@@ -86,7 +86,7 @@ class ServiceOrchestration < Service
     template_from_dialog = OptionConverter.get_template(dialog_options)
     self.orchestration_template = template_from_dialog if template_from_dialog
 
-    build_stack_options_from_dialog(options[:dialog])
+    build_stack_options_from_dialog(dialog_options)
   end
 
   def save_create_options
