@@ -68,7 +68,7 @@ headers:
 col_formats:
 -
 -
--
+- :model_name
 -
 -
 -
