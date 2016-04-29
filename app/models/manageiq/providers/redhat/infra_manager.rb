@@ -110,8 +110,9 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     connect(options).api
   rescue URI::InvalidURIError
     raise "Invalid URI specified for RHEV server."
+  rescue SocketError => err
+    raise "Error occurred attempted to connect to RHEV server.", err
   rescue => err
-    err = err.to_s.split('<html>').first.strip.chomp(':')
     raise MiqException::MiqEVMLoginError, err
   end
 
