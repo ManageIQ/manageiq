@@ -15,7 +15,10 @@ class WebsocketServer
         end
 
         # Skip this loop if we can't do anything
-        next if Array(reads).empty? || writes.empty? || errors.any?
+        if Array(reads).empty? || writes.empty? || errors.any?
+          sleep(1) if @sockets.empty?
+          next
+        end
 
         # Do the data transfers
         reads.each do |read|
