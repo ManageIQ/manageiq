@@ -50,11 +50,13 @@
   * @param $location location service.
   * @param MiQFormValidatorService form validator service.
   * @param MiQNotificationService notification service.
+  * @param $timeout service for setTimeout over angular.
   */
-  var NewProviderController = function($location, MiQFormValidatorService, MiQNotificationService) {
+  var NewProviderController = function($location, MiQFormValidatorService, MiQNotificationService, $timeout) {
     this.$location = $location;
     this.MiQFormValidatorService = MiQFormValidatorService;
     this.MiQNotificationService = MiQNotificationService;
+    this.$timeout = $timeout;
 
     this.formActions = defaultActions.bind(this)();
     this.credentialsTabs = setCredentialsTab.bind(this)();
@@ -107,6 +109,11 @@
     );
     if(formResponseData.isValid) {
       this.onBackToListClick();
+      this.$timeout(function() {
+        this.MiQNotificationService.sendSuccess(
+          this.MiQNotificationService.dismissibleMessage(__('Save of new provider Successfull'))
+        );
+      }.bind(this));
     } else {
       this.showErrorMsgs(formResponseData, loadingItem);
     }
@@ -161,12 +168,9 @@
   */
   NewProviderController.prototype.onBackToListClick = function() {
     this.$location.path('/ems_middleware/show_list/list');
-    this.MiQNotificationService.sendSuccess(
-      this.MiQNotificationService.dismissibleMessage(__('Validation Successfull'))
-    );
   };
 
-  NewProviderController.$inject = ['$location', 'MiQFormValidatorService', 'MiQNotificationService'];
+  NewProviderController.$inject = ['$location', 'MiQFormValidatorService', 'MiQNotificationService', '$timeout'];
   miqHttpInject(angular.module('middleware.provider'))
   .controller('miqNewProviderController', NewProviderController);
 })()
