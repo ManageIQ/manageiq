@@ -1,17 +1,36 @@
 #
 # Description: This method examines the AnsibleTower job provisioned
 #
-$evm.log("info", "Starting Ansible Tower Post-Provisioning")
+class AnsibleTowerPostProvision
+  def initialize(handle)
+    @handle = handle
+  end
 
-task = $evm.root["service_template_provision_task"]
-raise "service_template_provision_task not found" unless task
+  def main
+    @handle.log("info", "Starting Ansible Tower Post-Provisioning")
+    # job = service.job
 
-service = task.destination
-raise "service is not of type AnsibleTower" unless service.respond_to?(:job)
+    # You can add logic to process the job object in VMDB
+    # For example, dump all outputs from the job
+    #
+    # dump_job_outputs(job)
+  end
 
-#job = service.job
+  private
 
-# You can add logic to process the job object in VMDB
-# For example, dump all outputs from the job
-#
-# dump_job_outputs(job)
+  def task
+    @handle.root["service_template_provision_task"].tap do |task|
+      raise "service_template_provision_task not found" unless task
+    end
+  end
+
+  def service
+    task.destination.tap do |service|
+      raise "service is not of type AnsibleTower" unless service.respond_to?(:job_template)
+    end
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  AnsibleTowerPostProvision.new($evm).main
+end

@@ -1,22 +1,41 @@
 #
-# Description: This method launches an Ansible job template
+# Description: This method launches an Ansible Tower job template
 #
+class AnsibleTowerProvision
+  def initialize(handle)
+    @handle = handle
+  end
 
-$evm.log("info", "Starting Ansible Tower Provisioning")
+  def main
+    @handle.log("info", "Starting Ansible Tower Provisioning")
+    run(task, service)
+  end
 
-task = $evm.root["service_template_provision_task"]
-raise "service_template_provision_task not found" unless task
+  private
 
-service = task.destination
-raise "service is not of type AnsibleTower" unless service.respond_to?(:job_template)
-template = service.job_template
+  def task
+    @handle.root["service_template_provision_task"].tap do |task|
+      raise "service_template_provision_task not found" unless task
+    end
+  end
 
-begin
-  job = service.launch_job
-  $evm.log("info", "Ansible Tower Job (#{job.name}) with reference id (#{job.ems_ref}) started.")
-rescue => err
-  $evm.root['ae_result'] = 'error'
-  $evm.root['ae_reason'] = err.message
-  task.miq_request.user_message = err.message.truncate(255)
-  $evm.log("error", "Template #{template.name} launching failed. Reason: #{err.message}")
+  def service
+    task.destination.tap do |service|
+      raise "service is not of type AnsibleTower" unless service.respond_to?(:job_template)
+    end
+  end
+
+  def run(task, service)
+    job = service.launch_job
+    @handle.log("info", "Ansible Tower Job (#{job.name}) with reference id (#{job.ems_ref}) started.")
+  rescue => err
+    @handle.root['ae_result'] = 'error'
+    @handle.root['ae_reason'] = err.message
+    task.miq_request.user_message = err.message.truncate(255)
+    @handle.log("error", "Template #{service.job_template.name} launching failed. Reason: #{err.message}")
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  AnsibleTowerProvision.new($evm).main
 end
