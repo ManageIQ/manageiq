@@ -42,6 +42,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   before_validation :ensure_managers
 
   supports :discovery
+  supports :provisioning
 
   def ensure_managers
     build_network_manager unless network_manager
