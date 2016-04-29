@@ -141,11 +141,13 @@ describe HostController do
   context "#show_association" do
     before(:each) do
       set_user_privileges
-      @host = FactoryGirl.create(:host)
+      @host = FactoryGirl.create(:host, :name =>'hostname1')
       @guest_application = FactoryGirl.create(:guest_application, :name => "foo", :host_id => @host.id)
+      @datastore = FactoryGirl.create(:storage, :name => 'storage_name')
+      @datastore.parent = @host
     end
 
-    it "renders show_details" do
+    it "renders show_details for guest applications" do
       controller.instance_variable_set(:@breadcrumbs, [])
       allow(controller).to receive(:get_view)
       get :guest_applications, :params => { :id => @host.id }
@@ -154,6 +156,15 @@ describe HostController do
       expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (Packages)",
                                             :url  => "/host/guest_applications/#{@host.id}"}])
       expect(assigns(:devices)).to be_kind_of(Array)
+    end
+
+    it "shows associated datastores" do
+      controller.instance_variable_set(:@breadcrumbs, [])
+      get :show, :params => {:id => @host.id, :display => 'storages'}
+      expect(response.status).to eq(200)
+      expect(response).to render_template('host/show')
+      expect(assigns(:breadcrumbs)).to eq([{:name => "#{@host.name} (All Datastores)",
+                                            :url => "/host/show/#{@host.id}?display=storages"}])
     end
   end
 

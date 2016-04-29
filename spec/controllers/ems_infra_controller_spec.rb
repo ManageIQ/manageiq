@@ -252,6 +252,19 @@ describe EmsInfraController do
         is_expected.to render_template(:partial => "layouts/listnav/_ems_infra")
       end
     end
+
+    it "shows associated datastores" do
+      @datastore = FactoryGirl.create(:storage, :name => 'storage_name')
+      @datastore.parent = @ems
+      controller.instance_variable_set(:@breadcrumbs, [])
+      get :show, :params => {:id => @ems.id, :display => 'storages'}
+      expect(response.status).to eq(200)
+      expect(response).to render_template('ems_infra/show')
+      expect(assigns(:breadcrumbs)).to eq([{:name=>"Infrastructure Providers",
+                                            :url=>"/ems_infra/show_list?page=&refresh=y"},
+                                           {:name=>"#{@ems.name} (All Managed Datastores)",
+                                            :url=>"/ems_infra/#{@ems.id}?display=storages"}])
+    end
   end
 
   describe "#show_list" do
