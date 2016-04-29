@@ -137,6 +137,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       expect(vm.validate_resize).to be true
       expect(vm.validate_resize_confirm).to be false
       expect(service).to receive(:resize_server).with(vm.ems_ref, flavor.ems_ref)
+      expect(MiqQueue).to receive(:put)
       vm.resize(flavor)
     end
 
