@@ -268,7 +268,7 @@ describe ApiController do
     let(:vm2) { FactoryGirl.create(:vm_vmware, :hardware => hw2) }
 
     before do
-      api_basic_authorize(action_identifier(:services, :read, :resource_actions, :get))
+      api_basic_authorize
 
       svc1 << vm1
       svc1 << vm2
