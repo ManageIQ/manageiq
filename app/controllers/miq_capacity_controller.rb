@@ -64,12 +64,10 @@ class MiqCapacityController < ApplicationController
     self.x_node ||= ""
     @sb[:bottlenecks] ||= {}  # Leave existing values
     @timeline = true
-
-    if @sb[:bottlenecks] && @sb[:bottlenecks][:report]
+    if @sb[:bottlenecks][:report]
       bottleneck_tl_to_xml      # Use existing report to generate timeline
-    else
-      bottleneck_get_node_info(x_node)  if x_node != "" # Get the bottleneck info for the tree node
     end
+    bottleneck_get_node_info(x_node)  if x_node != "" # Get the bottleneck info for the tree node
     render :layout => "application"
   end
 
