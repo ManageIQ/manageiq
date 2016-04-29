@@ -1256,7 +1256,6 @@
         :poll_method: :normal
         :queue_timeout: 120.minutes
     :replication_worker:
-      :connection_pool_size: 5
       :poll: 1.seconds
       :replication:
         :destination:
@@ -1385,7 +1384,6 @@
       :storage_file_collection_time_utc: 21600
       :vm_retired_interval: 10.minutes
     :smis_refresh_worker:
-      :connection_pool_size: 5
       :memory_threshold: 1.gigabytes
       :nice_delta: 3
       :poll: 15.seconds
@@ -1393,7 +1391,7 @@
       :stats_update_period: 10.minutes
       :status_update_period: 5.minutes
     :ui_worker:
-      :connection_pool_size: 5
+      :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
       :poll: 60.seconds
@@ -1408,12 +1406,12 @@
       :vim_broker_max_wait: 60
       :vim_broker_max_objects: 250
     :web_service_worker:
-      :connection_pool_size: 5
+      :connection_pool_size: 8
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
       :poll: 60.seconds
     :websocket_worker:
-       :connection_pool_size: 5
+       :connection_pool_size: 8
        :memory_threshold: 1.gigabytes
        :nice_delta: 1
        :poll: 60.seconds
