@@ -425,7 +425,7 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def hashObj(type, props)
-    objType = objType.to_sym if objType.kind_of?(String)
+    type = type.to_sym if type.kind_of?(String)
     raise "hashObj: exclusive cache lock not held" unless @cacheLock.sync_exclusive?
     raise "Unknown VIM object type: #{type}" unless (pmap = @propMap[type])
 
