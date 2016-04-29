@@ -236,8 +236,7 @@ class VmCloudController < ApplicationController
       })
     when "attach"
       volume = find_by_id_filtered(CloudVolume, params[:volume_id])
-      valid_attach, attach_details = volume.validate_attach_volume
-      if valid_attach
+      if @record.is_available?(:attach_volume)
         begin
           @volume.raw_attach_volume(@vm.ems_ref, params[:device_path])
           add_flash(_("Attaching %{volume} \"%{volume_name}\" to %{vm_name}") % {
@@ -252,7 +251,7 @@ class VmCloudController < ApplicationController
             :details     => ex}, :error)
         end
       else
-        add_flash(_(attach_details), :error)
+        add_flash(_(@record.is_available_now_error_message(:attach_volume)), :error)
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
@@ -277,8 +276,7 @@ class VmCloudController < ApplicationController
 
     when "detach"
       volume = find_by_id_filtered(CloudVolume, params[:volume_id])
-      valid_detach, detach_details = volume.validate_detach_volume
-      if valid_detach
+      if @record.is_available?(:detach_volume)
         begin
           volume.raw_detach_volume(@vm.ems_ref)
           add_flash(_("Detaching %{volume} \"%{volume_name}\" from %{vm_name}") % {
@@ -293,7 +291,7 @@ class VmCloudController < ApplicationController
             :details     => ex}, :error)
         end
       else
-        add_flash(_(detach_details), :error)
+        add_flash(_(@record.is_available_now_error_message(:detach_volume)), :error)
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
