@@ -17,23 +17,17 @@
             - image = ae_field.substitute ? "pficon pficon-ok" : "pficon pficon-close"
             %tr
               - %w(name description default_value collect message on_entry on_exit on_error max_retries max_time).each do |fname|
-                %td
+                %td.text-nowrap
                   / Name is special processed
                   - if fname == 'name'
-                    %ul.icons.list-unstyled.pull-left
-                      %li
-                        %span.product{:class => "product-ae_#{ae_field.aetype}",
+                    %i.product.fa-lg{:class => "product-ae_#{ae_field.aetype}",
                                       :alt   => (t = "#{_('Type:')} #{ae_field.aetype}"),
                                       :title => t}
                     - if !ae_field.datatype.blank? && ae_field.datatype != "string"
-                      %ul.icons.list-unstyled.pull-left
-                        %li
-                          %span.product{:class => "product-#{ae_field.datatype}",
+                      %i.product.fa-lg{:class => "product-#{ae_field.datatype}",
                                         :alt   => (t = "#{_('Data Type:')} #{ae_field.datatype}"), :title => t}
 
-                    %ul.icons.list-unstyled.pull-left
-                      %li
-                        %span{:class => "#{image}",
+                    %i.fa-lg{:class => "#{image}",
                               :alt   => (t = "#{_('Substitution:')} #{ae_field.substitute}"),
                               :title => t}
 

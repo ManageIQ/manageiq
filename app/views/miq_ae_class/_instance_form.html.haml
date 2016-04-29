@@ -51,22 +51,16 @@
     - @edit[:new][:ae_values].each_with_index do |flds, i|
       %tr
         - glyphicon = @edit[:new][:ae_fields][i]["substitute"] ? "pficon pficon-ok" : "pficon pficon-close"
-        %td
-          %ul.icons.list-unstyled.pull-left
-            %li
-              %span{:class => "product product-ae_#{@edit[:new][:ae_fields][i]["aetype"]}",
+        %td.text-nowrap
+          %i.fa-lg{:class => "product product-ae_#{@edit[:new][:ae_fields][i]["aetype"]}",
                 :alt => (t = "#{_('Type:')} #{@edit[:new][:ae_fields][i]["aetype"]}"),
                 :title => t}
           - if !@edit[:new][:ae_fields][i]["datatype"].blank? && @edit[:new][:ae_fields][i]["datatype"] != "string"
-            %ul.icons.list-unstyled.pull-left
-              %li
-                %span{:class => "product product-#{@edit[:new][:ae_fields][i]["datatype"]}",
+            %i.fa-lg{:class => "product product-#{@edit[:new][:ae_fields][i]["datatype"]}",
                 :alt => (t = "#{_('Data Type:')} #{@edit[:new][:ae_fields][i]["datatype"]}"),
                 :title => t}
 
-          %ul.icons.list-unstyled.pull-left
-            %li
-              %span{:class => "#{glyphicon}",
+          %i.fa-lg{:class => "#{glyphicon}",
             :alt => (t = "#{_('Substitution:')} #{@edit[:new][:ae_fields][i]["substitute"]}"),
             :title => t}
           &nbsp;
