@@ -19,15 +19,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   end
 
   def self.raw_connect(auth_url, security_protocol, connect_params)
-    # HACK: WinRM depends on the gssapi gem for encryption purposes.
-    # The gssapi code outputs the following warning:
-    #   WARNING: Could not load IOV methods. Check your GSSAPI C library for an update
-    #   WARNING: Could not load AEAD methods. Check your GSSAPI C library for an update
-    # This warning is considered benign and can be ignored.
-    # Please note - the webmock gem depends on gssapi too and prints out the
-    # above warning when rspec tests are run.
-
-    silence_warnings { require 'winrm' }
+    require 'winrm'
 
     winrm = WinRM::WinRMWebService.new(auth_url, security_protocol.to_sym, connect_params)
     winrm.set_timeout(1800)
@@ -49,8 +41,8 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   end
 
   def verify_credentials(_auth_type = nil, options = {})
-    silence_warnings { require 'winrm' }
-    silence_warnings { require 'gssapi' } # Version 1.0.0 of the gssapi gem emits warnings
+    require 'winrm'
+    require 'gssapi' # A winrm dependency
 
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
 
