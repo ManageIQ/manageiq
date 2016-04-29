@@ -62,6 +62,7 @@ FactoryGirl.define do
 
   factory :chargeback_rate_detail_memory_used, :parent => :chargeback_rate_detail do
     per_unit    "megabytes"
+    per_time    "hourly"
     description "Used Memory in MB"
     group       "memory"
     source      "used"
