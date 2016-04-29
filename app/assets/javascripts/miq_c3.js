@@ -50,4 +50,9 @@ function load_c3_chart(data, chart_id, height) {
   var chart = c3.generate(generate_args);
 
   ManageIQ.charts.c3[chart_id] = chart;
-}
+};
+
+ c3.chart.internal.fn.categoryName = function (i) {
+    var config = this.config, categoryIndex = Math.ceil(i);
+    return i < config.axis_x_categories.length ? config.axis_x_categories[categoryIndex] : i;
+};
