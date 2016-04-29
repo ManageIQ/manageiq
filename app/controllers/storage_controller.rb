@@ -39,6 +39,30 @@ class StorageController < ApplicationController
     # @storage = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@storage)
 
+    if !@explorer && @display == "main"
+      tree_node_id = TreeBuilder.build_node_id(@record)
+      session[:exp_parms] = {:display => @display, :refresh => params[:refresh], :id => tree_node_id}
+
+      # redirect user back to where they came from if they dont have access to any of vm explorers
+      # or redirect them to the one they have access to
+      redirect_controller = role_allows(:feature => "storage") ? "storage" : nil
+
+      if redirect_controller
+        action = "explorer"
+      else
+        url = request.env['HTTP_REFERER'].split('/')
+        add_flash(_("User '%{username}' is not authorized to access '%{controller_name}'") %
+                    {:username => current_userid, :controller_name => ui_lookup(:table => controller_name)}, :warning)
+        session[:flash_msgs] = @flash_array.dup
+        redirect_controller  = url[3]
+        action               = url[4]
+      end
+
+      redirect_to :controller => redirect_controller,
+                  :action     => action
+      return
+    end
+
     @gtl_url = "/show"
     #   drop_breadcrumb({:name=>ui_lookup(:tables=>"storages"), :url=>"/storage/show_list?page=#{@current_page}&refresh=y"}, true)
 
@@ -408,10 +432,6 @@ class StorageController < ApplicationController
       replace_right_cell
       return
     end
-    @sb[:open_tree_nodes] ||= []
-    build_accordions_and_trees
-    @right_cell_div ||= "storage_list"
-    @right_cell_text ||= _("All Datastores")
 
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
@@ -422,6 +442,10 @@ class StorageController < ApplicationController
       # need to set this here to force & activate node when link is clicked outside of explorer.
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
+
+    @sb[:open_tree_nodes] ||= []
+    build_accordions_and_trees
+
     render :layout => "application"
   end
 
