@@ -2,6 +2,7 @@ class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ManageIQ::
   require_nested :Status
 
   def self.raw_create_stack(orchestration_manager, stack_name, template, options = {})
+    options = format_v2_options(options)
     orchestration_manager.with_provider_connection(:service => :CloudFormation) do |service|
       stack_options = options.merge(:stack_name => stack_name, :template_body => template.content)
       service.create_stack(stack_options).stack_id
@@ -12,6 +13,7 @@ class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ManageIQ::
   end
 
   def raw_update_stack(template, options)
+    options = self.class.format_v2_options(options)
     update_options = {:template_body => template.content}.merge(options.except(:disable_rollback, :timeout))
     ext_management_system.with_provider_connection(:service => :CloudFormation) do |service|
       service.stack(name).update(update_options)
@@ -19,6 +21,14 @@ class ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack < ManageIQ::
   rescue => err
     _log.error "stack=[#{name}], error: #{err}"
     raise MiqException::MiqOrchestrationUpdateError, err.to_s, err.backtrace
+  end
+
+  def self.format_v2_options(options)
+    # The old code was designed for aws sdk v1. Now v2 requires an Array of Hash
+    return options if !options.key?(:parameters) || options[:parameters].kind_of?(Array)
+
+    parameter_arr = options[:parameters].collect { |k, v| {:parameter_key => k, :parameter_value => v} }
+    options.merge(:parameters => parameter_arr)
   end
 
   def raw_delete_stack

@@ -28,7 +28,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
           }
         }
         with_aws_stubbed(stubbed_responses) do
-          stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, "mystack", template)
+          stack = described_class.create_stack(ems, "mystack", template)
           expect(stack.class).to eq(described_class)
           expect(stack.name).to eq("mystack")
           expect(stack.ems_ref).to eq("stack_id")
@@ -97,6 +97,29 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
           expect do
             orchestration_stack.delete_stack
           end.to raise_error(MiqException::MiqOrchestrationDeleteError)
+        end
+      end
+    end
+
+    describe '.format_v2_options' do
+      let(:expected_options) do
+        {:stack_name => 'mystack', :parameters => [{:parameter_key => 'user', :parameter_value => 'smith'}]}
+      end
+
+      context 'options are sdk v2 ready' do
+        it 'fixes nothing' do
+          v2_options = expected_options
+          expect(described_class.format_v2_options(v2_options)).to eq(expected_options)
+        end
+      end
+
+      context 'options are for sdk v1' do
+        it 'converts options to sdk v2 format' do
+          v1_options = {:stack_name => 'mystack', :parameters => {'user' => 'smith'}}
+          expect(described_class.format_v2_options(v1_options)).to have_attributes(
+            :stack_name => expected_options[:stack_name],
+            :parameters => expected_options[:parameters]
+          )
         end
       end
     end
