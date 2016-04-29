@@ -333,16 +333,12 @@ class VmCloudController < ApplicationController
   def evacuate_form_fields
     assert_privileges("instance_evacuate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
-    clusters = []
-    hosts = []
-    @record.ext_management_system.find_filtered_children("ems_clusters").each do |c|
-      clusters << {:id => c.id, :name => c.name}
+    clusters = @record.ext_management_system.ems_clusters.map do |c|
+      {:id => c.id, :name => c.name}
     end
-    @record.ext_management_system.find_filtered_children("hosts").each do |h|
-      hosts << {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
+    hosts = @record.ext_management_system.hosts.map do |h|
+      {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
     end
-    clusters.sort
-    hosts.sort
     render :json => {
       :clusters => clusters,
       :hosts    => hosts
@@ -360,12 +356,11 @@ class VmCloudController < ApplicationController
         :name  => @record.name
       })
     when "submit"
-      valid, details = @record.validate_live_migrate
-      if valid
+      if @record.is_available(:evacuate)
         hostname = find_by_filtered_id(Host, params[:destination_host_id]).hostname
         on_shared_storage = @params[:on_shared_storage]
         begin
-          @record.live_migrate(
+          @record.evacuate(
             :hostname          => hostname,
             :on_shared_storage => on_shared_storage == '1'
           )
@@ -382,7 +377,7 @@ class VmCloudController < ApplicationController
         add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => details}, :error)
+          :details  => @record.is_available_now_error_message(:evacuate)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
