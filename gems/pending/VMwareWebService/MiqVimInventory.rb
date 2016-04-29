@@ -548,7 +548,7 @@ class MiqVimInventory < MiqVimClientBase
   #
   def addObjByMor(objMor)
     raise "addObjByMor: exclusive cache lock not held"      unless @cacheLock.sync_exclusive?
-    objType = objMor.vimType.to_sym
+    objType = objMor.vimBaseType.to_sym
     raise "addObjByMor: Unknown VIM object type: #{objType}"  unless (pmap = @propMap[objType])
 
     objHash = getMoProp_local(objMor, pmap[:props])
@@ -560,7 +560,7 @@ class MiqVimInventory < MiqVimClientBase
 
   def removeObjByMor(objMor)
     raise "removeObjByMor: exclusive cache lock not held"   unless @cacheLock.sync_exclusive?
-    objType = objMor.vimType.to_sym
+    objType = objMor.vimBaseType.to_sym
     raise "removeObjByMor: Unknown VIM object type: #{objType}" unless (pmap = @propMap[objType])
 
     baseName  = pmap[:baseName]
@@ -1720,10 +1720,16 @@ class MiqVimInventory < MiqVimClientBase
     return(@dvSwithces) if @dvSwitches
 
     $vim_log.info "MiqVimInventory.dvSwitches_locked: loading DV Switch cache for #{@connId}"
+
+    base_class    = 'DistributedVirtualSwitch'.freeze
+    child_classes = VimClass.child_classes(base_class)
+
     begin
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      ra = getMoPropMulti(inventoryHash_locked['DistributedVirtualSwitch'], @propMap[:DistributedVirtualSwitch][:props])
+      moref_array = child_classes.collect { |klass| inventoryHash_locked[klass] }.flatten.compact
+
+      ra = getMoPropMulti(moref_array, @propMap[base_class.to_sym][:props])
 
       @dvSwitches      = {}
       @dvSwitchesByMor = {}
