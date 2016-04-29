@@ -40,9 +40,9 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     keys = %w(volume_name volume_size volume_delete_on_terminate)
     while prepare_volumes
       new_volume = {}
-      keys.each do |k|
-        key = :"#{k}_#{volumes.length + 1}"
-        new_volume[key] = values[key] unless values[key].blank?
+      keys.each do |key|
+        indexed_key = :"#{key}_#{volumes.length + 1}"
+        new_volume[key.to_sym] = values[indexed_key] if values.key?(indexed_key)
       end
       if new_volume.blank?
         prepare_volumes = false
