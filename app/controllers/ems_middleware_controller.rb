@@ -15,8 +15,7 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def index
-    @angular_app_name = 'mwProviders'
-    @directive = 'miq-list-providers'
+    @angular_app_name = 'middleware.provider'
   end
 
   def list_providers
@@ -59,8 +58,8 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def generate_providers
-    get_view(ManageIQ::Providers::MiddlewareManager)
-    @grid_hash
+    view = get_view(ManageIQ::Providers::MiddlewareManager)[0]
+    view_to_hash(view)
   end
 
   def provider_validator

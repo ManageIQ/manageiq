@@ -1,9 +1,22 @@
-<miq-sort-items items="vm.data"
-                headers="vm.columnsToShow">
+<label for="sort-items">
+  Sort by:
+</label>
+<miq-sort-items id="sort-items" items="vm.data"
+                on-sort="vm.MiQDataTableService.sortItemsBy(sortId, isAscending)"
+                headers="vm.columnsToShow" style="display: inline-block; margin-right: 10px">
 </miq-sort-items>
-<miq-small-tile-view  items="vm.data"
+<label for="per-page">
+  Per page:
+</label>
+<miq-toolbar-list id="per-page" toolbar-list="vm.perPage"
+                  on-item-click="vm.onPerPage(item)">
+</miq-toolbar-list>
+<miq-small-tile-view  items="vm.MiQDataTableService.dataTableService.visibleItems"
                       on-tile-click="vm.onRowClick($event, rowData)"
                       on-tile-select="vm.onRowSelected()"
-                       headers="vm.columnsToShow"
-                       class="max-height">
+                      headers="vm.columnsToShow"
+                      per-page="vm.MiQDataTableService.dataTableService.perPage"
+                      load-more-items="vm.MiQDataTableService.loadMore()"
+                      has-loader="vm.MiQDataTableService.dataTableService.visibleItems.length < vm.MiQDataTableService.dataTableService.rows.length"
+                      class="max-height">
 </miq-small-tile-view>

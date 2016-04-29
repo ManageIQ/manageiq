@@ -1,4 +1,4 @@
-miqHttpInject(angular.module('mwProviders', ['miQStaticAssets', 'ui.bootstrap', 'ui.router', 'patternfly.select', 'ui.bootstrap.tabs', 'mwProviders.controllers', 'patternfly.views', 'ngAnimate']))
+miqHttpInject(angular.module('middleware.provider', ['miQStaticAssets', 'ui.bootstrap', 'ui.router', 'patternfly.select', 'ui.bootstrap.tabs', 'patternfly.views', 'ngAnimate']))
 .config(function($stateProvider, $locationProvider, $urlRouterProvider) {
   $stateProvider.state('list_providers', {
     url: '/ems_middleware/show_list',
@@ -37,4 +37,14 @@ miqHttpInject(angular.module('mwProviders', ['miQStaticAssets', 'ui.bootstrap', 
       return '/ems_middleware/show_list/list';
     }
   });
+})
+.config(function(MiQDataAccessServiceProvider, MiQFormValidatorServiceProvider, MiQDataTableServiceProvider) {
+  MiQDataAccessServiceProvider.setUrlPrefix('/ems_middleware');
+  MiQDataTableServiceProvider.endpoints = {
+    list: '/list_providers'
+  };
+  MiQFormValidatorServiceProvider.endpoints = {
+    validate: '/validate_provider',
+    create: '/new_provider'
+  }
 });
