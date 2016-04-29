@@ -48,7 +48,7 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def save_container_quotas_inventory(ems, hashes, target = nil)
-    return if hash.nil?
+    return if hashes.nil?
     target = ems if target.nil?
 
     ems.container_quotas.reset
