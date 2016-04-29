@@ -349,4 +349,24 @@ describe Host do
       expect(subject.current_tenant).to eq(Tenant.root_tenant)
     end
   end
+
+  describe "#disconnect_ems" do
+    let(:ems) { FactoryGirl.build(:ext_management_system) }
+    let(:host) do
+      FactoryGirl.build(:host,
+                        :ext_management_system => ems,
+                        :ems_cluster           => FactoryGirl.build(:ems_cluster))
+    end
+    it "clears ems and cluster" do
+      host.disconnect_ems(ems)
+      expect(host.ext_management_system).to be_nil
+      expect(host.ems_cluster).to be_nil
+    end
+
+    it "doesnt clear the wrong ems" do
+      host.disconnect_ems(FactoryGirl.build(:ext_management_system))
+      expect(host.ext_management_system).not_to be_nil
+      expect(host.ems_cluster).not_to be_nil
+    end
+  end
 end
