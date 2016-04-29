@@ -17,6 +17,11 @@
       .col-md-8
         = select_tag('flavor',
             options_for_select(@flavors.sort),
+            :class             => "selectpicker",
+            "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
             :multiple          => false,
             :id                => "flavor",
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+      :javascript
+        miqInitSelectPicker();
+        miqSelectPickerEvent("flavor", "#{url}");
