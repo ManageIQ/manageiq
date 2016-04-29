@@ -10,11 +10,10 @@ module MiqFilter
   def self.belongsto2object_list(tag)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
     raise _("invalid tag: %{tag}") % {:tag => tag} unless tag.starts_with?("/belongsto/ExtManagementSystem")
-    parts = tag.split("/")
-    2.times { parts.shift }
+    parts = tag.split("/")[2..-1]
 
-    r = parts.shift
-    klass, name = r.split("|")
+    # root object
+    klass, name = parts.shift.split("|")
     klass = klass.constantize
     obj = klass.find_by_name(name)
 
@@ -23,27 +22,18 @@ module MiqFilter
       return []
     end
 
-    result = [obj]
-    parts.each do |p|
+    # traverse the tree
+    parts.each_with_object([obj]) do |p, result|
       tag_part_klass, name = p.split("|")
       tag_part_klass = tag_part_klass.constantize
 
-      match = nil
-
-      obj.with_relationship_type('ems_metadata') do
-        obj.children.each do |c|
-          if c.kind_of?(tag_part_klass) && c.name == name
-            match = c
-            break
-          end
-        end
+      obj = obj.with_relationship_type('ems_metadata') do
+        obj.children.grep(tag_part_klass).detect { |c| c.name == name }
       end
 
-      return result unless match
-      obj = match
+      return result unless obj
       result.push(obj)
     end
-    result
   end
 
   def self.object2belongsto(obj)
