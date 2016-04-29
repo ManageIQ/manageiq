@@ -1,5 +1,15 @@
 class ApiController
   module Vms
+    def vms_query_resource(object)
+      vm_attrs = attribute_selection_for("vms")
+      vm_attrs.blank? ? object.try(:vms) : Array(object.try(:vms)).collect do |vm|
+        add_hash = vm_attrs.each_with_object({}) do |attr, hash|
+          hash[attr] = vm.public_send(attr.to_sym) if vm.respond_to?(attr.to_sym)
+        end.compact
+        vm.as_json.merge(add_hash)
+      end
+    end
+
     def start_resource_vms(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for starting a #{type} resource" unless id
 

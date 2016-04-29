@@ -15,6 +15,11 @@
 #
 # - Reconfigure service         /api/services/:id     action "reconfigure"
 #
+# - Query vms subcollection     /api/services/:id/vms
+#                               /api/services/:id?expand=vms
+#   with subcollection
+#   virtual attribute:          /api/services/:id?expand=vms&attributes=vms.cpu_total_cores
+#
 describe ApiController do
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
@@ -252,6 +257,56 @@ describe ApiController do
       run_post(services_url(svc1.id), gen_request(:reconfigure, "text1" => "updated_text"))
 
       expect_single_action_result(:success => true, :message => /reconfiguring/i, :href => services_url(svc1.id))
+    end
+  end
+
+  describe "Services" do
+    let(:hw1) { FactoryGirl.build(:hardware, :cpu_total_cores => 2) }
+    let(:vm1) { FactoryGirl.create(:vm_vmware, :hardware => hw1) }
+
+    let(:hw2) { FactoryGirl.build(:hardware, :cpu_total_cores => 4) }
+    let(:vm2) { FactoryGirl.create(:vm_vmware, :hardware => hw2) }
+
+    before do
+      api_basic_authorize(action_identifier(:services, :read, :resource_actions, :get))
+
+      svc1 << vm1
+      svc1 << vm2
+      svc1.save
+
+      @svc1_vm_list = ["#{services_url(svc1.id)}/vms/#{vm1.id}", "#{services_url(svc1.id)}/vms/#{vm2.id}"]
+    end
+
+    def expect_svc_with_vms
+      expect_single_resource_query("href" => services_url(svc1.id))
+      expect_result_resources_to_include_hrefs("vms", @svc1_vm_list)
+    end
+
+    it "can query vms as subcollection" do
+      run_get "#{services_url(svc1.id)}/vms"
+
+      expect_query_result(:vms, 2, 2)
+      expect_result_resources_to_include_hrefs("resources", @svc1_vm_list)
+    end
+
+    it "can query vms as subcollection via expand" do
+      run_get services_url(svc1.id), :expand => "vms"
+
+      expect_svc_with_vms
+    end
+
+    it "can query vms as subcollection via expand with additional virtual attributes" do
+      run_get services_url(svc1.id), :expand => "vms", :attributes => "vms.cpu_total_cores"
+
+      expect_svc_with_vms
+      expect_results_to_match_hash("vms", [{"id" => vm1.id, "cpu_total_cores" => 2},
+                                           {"id" => vm2.id, "cpu_total_cores" => 4}])
+    end
+
+    it "cannot query vms via both virtual attribute and subcollection" do
+      run_get services_url(svc1.id), :expand => "vms", :attributes => "vms"
+
+      expect_bad_request("Cannot expand subcollection vms by name and virtual attribute")
     end
   end
 end
