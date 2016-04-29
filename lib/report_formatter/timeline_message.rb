@@ -4,7 +4,6 @@ module ReportFormatter
 
     def initialize(row, event, flags, db)
       @row, @event, @flags, @db = row, event, flags, db
-      @ems_cloud, @ems_container = flags[:ems_cloud], flags[:ems_container]
     end
 
     def vm_name
@@ -58,10 +57,10 @@ module ReportFormatter
     def ext_management_system_name
       if @event.ext_management_system && @event.ext_management_system.id
         provider_id = @event.ext_management_system.id
-        if @ems_cloud
+        if ems_cloud
           # restful route is used for cloud provider unlike infrastructure provider
           "<a href=\"/ems_cloud/#{provider_id}\">#{text}</a>"
-        elsif @ems_container
+        elsif ems_container
           "<a href=\"/ems_container/#{to_cid(provider_id)}\">#{text}</a>"
         else
           "<a href=\"/ems_infra/#{to_cid(provider_id)}\">#{text}</a>"
@@ -71,7 +70,7 @@ module ReportFormatter
 
     def resource_name
       if @db == 'BottleneckEvent'
-        db = if @ems_cloud && @event.resource_type == 'ExtManagementSystem'
+        db = if ems_cloud && @event.resource_type == 'ExtManagementSystem'
                'ems_cloud'
              elsif @event.resource_type == 'ExtManagementSystem'
                'ems_infra'
@@ -96,6 +95,14 @@ module ReportFormatter
       else
         @row[@column].to_s
       end
+    end
+
+    def ems_cloud
+      @flags[:ems_cloud]
+    end
+
+    def ems_container
+      @flags[:ems_container]
     end
   end
 end
