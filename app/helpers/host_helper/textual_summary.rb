@@ -513,7 +513,7 @@ module HostHelper::TextualSummary
         when "ipmi" then        _("IPMI")
         when "remote" then      _("Remote Login")
         when "ws" then          _("Web Services")
-        when "ssh_keypair" then _("SSH keypair")
+        when "ssh_keypair" then _("SSH Key Pair")
         else;                   _("<Unknown>")
         end
 
