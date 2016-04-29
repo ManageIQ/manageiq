@@ -26,12 +26,12 @@ module ManageIQ::Providers::Softlayer::CloudManager::Provision::Cloning
     # NOTE: Cloning might fail for some images due to missing base OS (in the image).
     # This information is not available via API, it's safe to use own images though.
     additional_options = {
-      :flavor_id  => instance_type.name,
-      :image_id   => source.uid_ems,
-      :name       => dest_name,
-      :domain     => get_option(:vm_domain),
-      :datacenter => ems.provider_region,
-      :vlan => find_cloud_network_in_vmdb(vlan_id),
+      :flavor_id    => instance_type.name,
+      :image_id     => source.uid_ems,
+      :name         => dest_name,
+      :domain       => get_option(:vm_domain),
+      :datacenter   => ems.provider_region,
+      :vlan         => find_cloud_network_in_vmdb(vlan_id),
       :private_vlan => find_cloud_network_in_vmdb(private_vlan_id),
     }
 

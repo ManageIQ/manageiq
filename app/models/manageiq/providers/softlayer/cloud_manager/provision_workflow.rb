@@ -5,13 +5,13 @@ class ManageIQ::Providers::Softlayer::CloudManager::ProvisionWorkflow < ::MiqPro
     ems.each_with_object({}) { |f, h| h[f.id] = display_name_for_name_description(f) }
   end
 
+  def self.provider_model
+    ManageIQ::Providers::Softlayer::CloudManager
+  end
+
   private
 
   def dialog_name_from_automate(message = 'get_dialog_name')
     super(message, {'platform' => 'softlayer'})
-  end
-
-  def self.provider_model
-    ManageIQ::Providers::Softlayer::CloudManager
   end
 end

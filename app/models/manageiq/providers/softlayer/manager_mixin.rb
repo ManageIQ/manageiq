@@ -18,8 +18,6 @@ module ManageIQ::Providers::Softlayer::ManagerMixin
     compute.servers.all
   rescue Excon::Errors::Unauthorized => err
     raise MiqException::MiqInvalidCredentialsError, err.message
-
-    true
   end
 
   module ClassMethods

@@ -57,7 +57,7 @@ class ManageIQ::Providers::Softlayer::CloudManager::RefreshParser < ManageIQ::Pr
   end
 
   def get_instances
-    instances = @compute.servers.all.select {|s| s.datacenter == @ems.provider_region}
+    instances = @compute.servers.all.select { |s| s.datacenter == @ems.provider_region }
     process_collection(instances, :vms) { |instance| parse_instance(instance) }
   end
 
@@ -167,7 +167,7 @@ class ManageIQ::Providers::Softlayer::CloudManager::RefreshParser < ManageIQ::Pr
       disk_name     = [attached_disk["deviceName"], attached_disk["device"]].join(" ")
       disk_location = attached_disk["device"]
 
-      disk = add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
+      add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
     end
   end
 
