@@ -12,10 +12,8 @@ module Metric::CiMixin::Capture
             ext_management_systems.first
           elsif self.respond_to?(:ext_management_system)
             ext_management_system
-          else
-            raise _("Unsupported type %{name} (id: %{number})") % {:name => self.class.name, :number => id}
           end
-
+    raise _("Unsupported type %{name} (id: %{number})") % {:name => self.class.name, :number => id} if ems.nil?
     ems.metrics_collector_queue_name
   end
 
