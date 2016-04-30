@@ -130,7 +130,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]
   virtual_column :platform,                             :type => :string,     :uses => [:operating_system, :hardware]
   virtual_column :vendor_display,                       :type => :string
-  virtual_column :v_host_vmm_product,                   :type => :string,     :uses => :host
   virtual_column :v_owning_cluster,                     :type => :string,     :uses => :ems_cluster
   virtual_column :v_owning_resource_pool,               :type => :string,     :uses => :all_relationships
   virtual_column :v_owning_datacenter,                  :type => :string,     :uses => {:ems_cluster => :all_relationships}
@@ -147,7 +146,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
   virtual_column :mem_cpu,                              :type => :integer,    :uses => :hardware
-  virtual_column :ems_cluster_name,                     :type => :string,     :uses => :ems_cluster
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
@@ -175,6 +173,12 @@ class VmOrTemplate < ApplicationRecord
 
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
+
+  virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
+  virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
+  virtual_delegate :name, :to => :ems_cluster, :prefix => true, :allow_nil => true
+  virtual_delegate :vmm_product, :to => :host, :prefix => :v_host, :allow_nil => true
+  virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
 
   before_validation :set_tenant_from_group
 
@@ -285,9 +289,8 @@ class VmOrTemplate < ApplicationRecord
   # Determines if the VM is on an EMS or Host
   def registered?
     # TODO: Vmware specific
-    return false if self.template? && ext_management_system.nil?
-    return false if host.nil?
-    true
+    return false if self.template? && ext_management_system_id.nil?
+    host_id.present?
   end
 
   # TODO: Vmware specific, and is this even being used anywhere?
@@ -1127,7 +1130,7 @@ class VmOrTemplate < ApplicationRecord
 
   # TODO: Vmware specfic
   def runnable?
-    !host.nil? && current_state != "never"
+    host_id.present? && current_state != "never"
   end
 
   # TODO: Vmware specfic
@@ -1399,13 +1402,6 @@ class VmOrTemplate < ApplicationRecord
     "unknown"
   end
 
-  def ems_cluster_name
-    ems_cluster.nil? ? nil : ems_cluster.name
-  end
-
-  virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
-  virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
-
   def has_compliance_policies?
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "vm_compliance_check")
     !plist.blank?
@@ -1508,17 +1504,11 @@ class VmOrTemplate < ApplicationRecord
     Arel::Nodes::NamedFunction.new('COALESCE', [t[:template], Arel::Nodes.build_quoted("false")])
   end)
 
-  virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
-
   def v_datastore_path
     s = storage
     datastorepath = location || ""
     datastorepath = "#{s.name}/#{datastorepath}"  unless s.nil?
     datastorepath
-  end
-
-  def v_host_vmm_product
-    host ? host.vmm_product : nil
   end
 
   def miq_provision_template
