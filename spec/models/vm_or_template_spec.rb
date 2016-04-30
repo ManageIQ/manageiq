@@ -600,4 +600,13 @@ describe VmOrTemplate do
       expect(virtual_column_sql_value(VmOrTemplate, "host_name")).to eq("our host")
     end
   end
+
+  describe ".v_host_vmm_product" do
+    it "delegates to host" do
+      host = FactoryGirl.build(:host, :vmm_product => "Hyper-V")
+      vm = FactoryGirl.build(:vm_vmware, :host => host)
+
+      expect(vm.v_host_vmm_product).to eq("Hyper-V")
+    end
+  end
 end
