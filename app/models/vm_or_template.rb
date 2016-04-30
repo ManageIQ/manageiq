@@ -1130,7 +1130,7 @@ class VmOrTemplate < ApplicationRecord
 
   # TODO: Vmware specfic
   def runnable?
-    !host.nil? && current_state != "never"
+    host_id.present? && current_state != "never"
   end
 
   # TODO: Vmware specfic
