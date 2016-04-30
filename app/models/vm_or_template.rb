@@ -176,6 +176,10 @@ class VmOrTemplate < ApplicationRecord
   virtual_has_one   :direct_service,       :class_name => 'Service'
   virtual_has_one   :service,              :class_name => 'Service'
 
+  virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
+  virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
+  virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
+
   before_validation :set_tenant_from_group
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
@@ -1403,9 +1407,6 @@ class VmOrTemplate < ApplicationRecord
     ems_cluster.nil? ? nil : ems_cluster.name
   end
 
-  virtual_delegate :name, :to => :host, :prefix => true, :allow_nil => true
-  virtual_delegate :name, :to => :storage, :prefix => true, :allow_nil => true
-
   def has_compliance_policies?
     _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "vm_compliance_check")
     !plist.blank?
@@ -1507,8 +1508,6 @@ class VmOrTemplate < ApplicationRecord
   virtual_attribute :v_is_a_template, :string, :arel => (lambda do |t|
     Arel::Nodes::NamedFunction.new('COALESCE', [t[:template], Arel::Nodes.build_quoted("false")])
   end)
-
-  virtual_delegate :v_pct_free_disk_space, :v_pct_used_disk_space, :to => :hardware, :allow_nil => true
 
   def v_datastore_path
     s = storage
