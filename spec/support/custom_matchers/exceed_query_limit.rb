@@ -12,4 +12,6 @@ RSpec::Matchers.define :exceed_query_limit do |expected|
   failure_message_when_negated do |_actual|
     "Expected maximum #{expected} queries, got #{@query_count}"
   end
+
+  supports_block_expectations
 end
