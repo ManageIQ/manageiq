@@ -13,7 +13,21 @@ class DeploymentService
       m.instance_of?(ManageIQ::Providers::Amazon::CloudManager) || m.instance_of?(ManageIQ::Providers::Redhat::InfraManager)
     end
     providers.each do |provider|
-      result << {:provider => provider, :templates => provider.miq_templates}
+      result << {:provider => provider, :templates => templates(provider.miq_templates)}
+    end
+    result
+  end
+
+  def templates(templates)
+    result = []
+    templates.each do |template|
+      result << {
+        :ui_cpu => template.cpu_total_cores,
+        :ui_memo =>  template.mem_cpu,
+        :name => template.name,
+        :ems_id =>  template.ems_id,
+        :id => template.id
+      }
     end
     result
   end
