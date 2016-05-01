@@ -27,5 +27,12 @@ module MiqAeMethodService
         @object.save!
       end
     end
+
+    def customize(data)
+      ar_method do
+        wrap_results(@object.customizations = data)
+        @object.save!
+      end
+    end
   end
 end

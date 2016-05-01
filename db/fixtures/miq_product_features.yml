@@ -5,6 +5,16 @@
 :identifier: everything
 :children:
 
+# Container Deployment Start
+- :name: Container Deployment
+  :description: Container Deployment
+  :feature_type: node
+  :identifier: start
+  :children:
+  - :name: Container Deployment Data
+    :description:  Container Deployment Data
+    :feature_type: node
+    :identifier: collect_data
 # Workloads Explorer
 - :name: Workloads
   :description: Workloads Views
