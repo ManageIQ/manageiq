@@ -25,6 +25,12 @@
       :feature_type: node
       :identifier: templates_images_filter_accord
 
+# Container Deployment Start
+- :name: Container Deployment
+  :description: Container Deployment
+  :feature_type: node
+  :identifier: start
+
 # VM Explorer
 - :name: Virtual Machines
   :description: Virtual Machine Views

@@ -123,6 +123,8 @@ class ApiController
       if is_subcollection
         send(target, parent_resource, type, id, resource)
       else
+        byebug
+
         send(target, type, id, resource)
       end
     end

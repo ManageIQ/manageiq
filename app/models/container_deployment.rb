@@ -330,4 +330,60 @@ eos
 eos
     template
   end
+
+  def create_deployment
+    version = "v3"
+    kind = params["providerType"].include?("openshiftOrigin") ? "origin" : "openshift-enterprise"
+    method_type = params["provisionOn"]
+    tags = create_needed_tags(params)
+    labels = params[:labels]
+    if method_type.include? "existingVms"
+      managed_existing(params, tags, labels)
+    elsif method_type.include? "newVms"
+      managed_provision(params, tags, labels)
+    else
+      unmanaged(params, tags, labels)
+    end
+    create_deployment_authentication(params[:authentication])
+    create_deployment_authentication({"ssh" => {"userid" => params[:deploymentUsername], "auth_key" => params[:deploymentKey], "public_key" => params[:public_key]}, :mode => "ssh"})
+    create_deployment_authentication({"rhsm" => {"userid" => params[:rhnUsername], "password" => params[:rhnPassword], "rhsm_sku" => params[:rhnSKU]}, :mode => "rhsm"})
+    save!
+    create_automation_request(generate_automation_params(params))
+  end
+
+  def managed_existing( params, tags, labels)
+    deployed_on_ems = ExtManagementSystem.find params["deployed_on_ext_management_system_id"]
+    create_deployment_nodes([params["nodes_addresses"], params["masters_addresses"], [params["deployment_master_address"]]] + add_additional_roles(params), labels, tags, true)
+  end
+
+  def managed_provision( params, tags, labels)
+    ContainerDeployment.add_basic_root_template
+    deployed_on_ems = ExtManagementSystem.find params["deployed_on_ext_management_system_id"]
+    public_key, private_key = generate_ssh_keys
+    params[:ssh_authentication][:auth_key] = private_key
+    params[:ssh_authentication][:public_key] = public_key
+    params[:ssh_authentication][:userid] = "root"
+    create_deployment_nodes([params["nodes_addresses"], params["masters_addresses"], [params["deployment_master_address"]]] + add_additional_roles(params), labels, tags, nil, true)
+  end
+
+  def unmanaged( params, tags, labels)
+    deployment_master = params["masters"].shift
+    create_deployment_nodes([params["nodes"], params["masters"], [deployment_master]] + add_additional_roles(params), labels, tags, nil, true)
+  end
+
+  def create_needed_tags(params)
+    node_tag = create_or_get_tag("node").name
+    master_tag = create_or_get_tag("master").name
+    deployment_master_tag = create_or_get_tag("deployment_master").name
+    tags = [node_tag, master_tag, deployment_master_tag]
+    nfs_tag = create_or_get_tag("nfs").name if params["nfs_id_or_ip"]
+    tags += [nfs_tag] if nfs_tag
+    tags
+  end
+
+  def add_additional_roles(params)
+    additional_roles_vms = []
+    additional_roles_vms = [params["nfs_id_or_ip"]] if params["nfs_id_or_ip"]
+    additional_roles_vms
+  end
 end
