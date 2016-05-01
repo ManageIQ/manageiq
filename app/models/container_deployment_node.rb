@@ -7,7 +7,7 @@ class ContainerDeploymentNode < ApplicationRecord
 
   def node_address
     if vm
-      vm.hardware.ipaddresses.last
+      vm.hostnames.first || vm.hardware.ipaddresses.last
     elsif address
       address
     end
@@ -15,7 +15,7 @@ class ContainerDeploymentNode < ApplicationRecord
 
   def labels_hash
     labels = {}
-    labels.each do |key,val|
+    labels.each do |key, val|
       labels[key] = val
     end
     labels
@@ -23,18 +23,25 @@ class ContainerDeploymentNode < ApplicationRecord
 
   def roles
     roles = []
-    self.tags.each do |tag|
-      roles = tag.name.split("/").last
+    self.tags.reset if tags.empty?
+    tags.each do |tag|
+      tag_entry = tag.name.split("/").last
+      roles << tag_entry
     end
     roles
   end
 
+  def node_main_role
+    return "node" if roles.include? "node"
+    "master"
+  end
+
   def ansible_config_format
     hash = {}
-    hash[:connect_to] = address
-    hash[:hostname] = vm.hostnames.last unless  vm.hostnames.empty?
+    hash[:connect_to] = node_address
+    hash[:hostname] = vm.hostnames.last if vm && !vm.hostnames.empty?
     hash[:node_labels] = labels_hash if roles.include?("node") && !labels_hash.empty?
-    hash[:roles] = roles
+    hash[:roles] = node_main_role
     hash
   end
 end

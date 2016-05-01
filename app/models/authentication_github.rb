@@ -1,5 +1,6 @@
 class AuthenticationGithub < Authentication
 
+  #will be removed once moving to yaml format
   def generate_ansible_entry
     options = {}
     options["clientID"] = userid

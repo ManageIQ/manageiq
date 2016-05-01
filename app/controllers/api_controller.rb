@@ -86,6 +86,7 @@ class ApiController < ApplicationController
   include_concern 'Tenants'
   include_concern 'Users'
   include_concern 'Vms'
+  include_concern 'ContainerDeployments'
 
   #
   # Api Controller Hooks

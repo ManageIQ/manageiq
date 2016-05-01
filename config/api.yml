@@ -1600,3 +1600,16 @@
       :delete:
       - :name: delete
         :identifier: zone_delete
+  :container_deployments:
+    :description: Container Provider Deployment
+    :identifier: container_deployment
+    :klass: ContainerDeployment
+    :methods: *70174834085860
+    :options:
+    - :collection
+    :collection_actions:
+      :post:
+      - :name: start
+        :identifier: start
+      - :name: collect_data
+        :identifier: collect_data
