@@ -1135,8 +1135,7 @@ class VmOrTemplate < ApplicationRecord
 
   # TODO: Vmware specfic
   def is_controllable?
-    return false if !self.runnable? || self.template? || !host.control_supported?
-    true
+    runnable? && !template? && host && host.control_supported?
   end
 
   def self.refresh_ems(vm_ids)
