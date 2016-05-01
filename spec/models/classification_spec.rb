@@ -215,28 +215,20 @@ describe Classification do
       expect(all_tagged_with(Host, [[full_tag_name(ent12)], [full_tag_name(ent21)]])).not_to eq([host2])
     end
 
-    it "find with multiple tags" do
+    it "finds tagged items with order clause" do
       cat1 = Classification.find_by_name "test_single_value_category"
       ent11 = cat1.entries[0]
-      ent12 = cat1.entries[1]
 
-      cat2 = Classification.find_by_name "test_multi_value_category"
-      ent21 = cat2.entries[0]
-      ent22 = cat2.entries[1]
+      ent11.assign_entry_to(host1)
 
-      ent11.assign_entry_to(host2)
-      ent21.assign_entry_to(host2)
+      expect(all_tagged_with(Host.order('name'), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host.order('name'), ent11.name, ent11.parent.name)).to eq([host1])
 
-      # success
-      expect(any_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])
-            ).to eq([host2])
-      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent11)]])).to eq([host2])
+      expect(all_tagged_with(Host.order('lower(name)'), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host.order('lower(name)'), ent11.name, ent11.parent.name)).to eq([host1])
 
-      # failure
-      expect(all_tagged_with(Host, [[full_tag_name(ent12), full_tag_name(ent11)], [full_tag_name(ent21)]])
-            ).not_to eq([host2])
-      expect(all_tagged_with(Host, [[full_tag_name(ent11)], [full_tag_name(ent22)]])).not_to eq([host2])
-      expect(all_tagged_with(Host, [[full_tag_name(ent12)], [full_tag_name(ent21)]])).not_to eq([host2])
+      expect(all_tagged_with(Host.order(Host.arel_table[:name].lower), ent11.name, ent11.parent.name)).to eq([host1])
+      expect(any_tagged_with(Host.order(Host.arel_table[:name].lower), ent11.name, ent11.parent.name)).to eq([host1])
     end
 
     it "should test find by entry" do
