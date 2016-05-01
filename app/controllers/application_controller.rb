@@ -525,7 +525,7 @@ class ApplicationController < ActionController::Base
     }
   end
 
-  PASSWORD_FIELDS = [:password, :_pwd, :amazon_secret]
+  PASSWORD_FIELDS = [:password, :_pwd, :amazon_secret, :token].freeze
 
   def filter_config(data)
     @parameter_filter ||=
