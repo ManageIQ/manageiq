@@ -742,6 +742,7 @@ class MiqAlert < ApplicationRecord
         guid = alert_hash["guid"] || alert_hash[:guid]
         rec = find_by_guid(guid)
         if rec.nil?
+          alert_hash[:read_only] = true
           alert = create(alert_hash)
           _log.info("Added sample Alert: #{alert.description}")
           if action
