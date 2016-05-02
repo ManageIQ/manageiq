@@ -1,4 +1,9 @@
 class TreeBuilderUtilization < TreeBuilderRegion
+  has_kids_for ExtManagementSystem, [:x_get_tree_ems_kids]
+  has_kids_for Datacenter, [:x_get_tree_datacenter_kids, :type]
+  has_kids_for EmsFolder, [:x_get_tree_folder_kids, :type]
+  has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
+
   private
 
   def x_get_tree_ems_kids(object, count_only)
