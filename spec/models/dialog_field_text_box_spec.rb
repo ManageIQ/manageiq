@@ -137,7 +137,7 @@ describe DialogFieldTextBox do
   end
 
   describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value, :data_type => data_type) }
 
     context "when the dialog field is dynamic" do
       let(:dynamic) { true }
@@ -145,8 +145,20 @@ describe DialogFieldTextBox do
       context "when the dialog field has a value already" do
         let(:value) { "test" }
 
-        it "returns the current value" do
-          expect(dialog_field.value).to eq("test")
+        context "when the data type is integer" do
+          let(:data_type) { "integer" }
+
+          it "converts the data into an integer" do
+            expect(dialog_field.value).to eq(0)
+          end
+        end
+
+        context "when the data type is string" do
+          let(:data_type) { "string" }
+
+          it "returns the current value" do
+            expect(dialog_field.value).to eq("test")
+          end
         end
       end
 
@@ -157,18 +169,43 @@ describe DialogFieldTextBox do
           allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
         end
 
-        it "returns the values from the value processor" do
-          expect(dialog_field.value).to eq("processor")
+        context "when the data type is an integer" do
+          let(:data_type) { "integer" }
+
+          it "converts the data into an integer" do
+            expect(dialog_field.value).to eq(0)
+          end
+        end
+
+        context "when the data type is a string" do
+          let(:data_type) { "string" }
+
+          it "returns the values from the value processor" do
+            expect(dialog_field.value).to eq("processor")
+          end
         end
       end
     end
 
     context "when the dialog field is not dynamic" do
       let(:dynamic) { false }
-      let(:value) { "test" }
 
-      it "returns the current value" do
-        expect(dialog_field.value).to eq("test")
+      context "when the data type is integer" do
+        let(:data_type) { "integer" }
+        let(:value) { "test" }
+
+        it "converts the data into an integer" do
+          expect(dialog_field.value).to eq(0)
+        end
+      end
+
+      context "when the data type is string" do
+        let(:data_type) { "string" }
+        let(:value) { "test" }
+
+        it "returns the current value" do
+          expect(dialog_field.value).to eq("test")
+        end
       end
     end
   end
