@@ -12,8 +12,4 @@ class TreeBuilderCatalogs < TreeBuilderCatalogsClass
       :autoload  => 'true',
     )
   end
-
-  def x_get_tree_stc_kids(_object, count_only)
-    count_only_or_objects(count_only, [], nil)
-  end
 end
