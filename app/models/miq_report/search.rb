@@ -47,9 +47,9 @@ module MiqReport::Search
       [:string, :text].include?(sql_type) ? Arel::Nodes::NamedFunction.new('LOWER', [sql_col]) : sql_col
     end
 
-    if (self.order && self.order.downcase == "descending")
+    if (self.order && !ascending?)
       order = order.map { |col| Arel::Nodes::Descending.new col }
-    elsif (self.order && self.order.downcase == "ascending")
+    elsif (self.order && ascending?)
       order = order.map { |col| Arel::Nodes::Ascending.new col }
     end
 
