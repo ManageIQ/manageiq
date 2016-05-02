@@ -1034,23 +1034,6 @@ describe ApplicationHelper do
                                                    :add_root   => true,
                                                    :open_nodes => [])
       end
-
-      it "can override default values" do
-        helper.x_tree_init(:vm_filter_tree, :vm_filter, "Vm",
-                           :add_root   => false,
-                           :open_nodes => [:a],
-                           :open_all   => true,
-                           :full_ids   => true
-                          )
-
-        expect(@sb[:trees][:vm_filter_tree]).to eq(:tree       => :vm_filter_tree,
-                                                   :type       => :vm_filter,
-                                                   :leaf       => "Vm",
-                                                   :add_root   => false,
-                                                   :open_nodes => [:a],
-                                                   :open_all   => true,
-                                                   :full_ids   => true)
-      end
     end
 
     it "#x_tree_history" do
