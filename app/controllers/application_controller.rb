@@ -1686,11 +1686,11 @@ class ApplicationController < ActionController::Base
   end
 
   def get_db_view_yaml(filename)
-    @db_view_yaml ||= {}
-    @db_view_yaml.delete(filename) if Rails.env.development?
-    @db_view_yaml[filename] ||= begin
-      YAML.load_file(filename)
-    end
+    db_view_yaml_cache[filename] ||= YAML.load_file(filename)
+  end
+
+  def db_view_yaml_cache
+    Rails.env.development? ? {} : @db_view_yaml ||= {}
   end
 
   def render_or_redirect_partial(pfx)
