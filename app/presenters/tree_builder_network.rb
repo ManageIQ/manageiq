@@ -1,4 +1,7 @@
 class TreeBuilderNetwork < TreeBuilder
+  has_kids_for Lan, [:x_get_tree_lan_kids]
+  has_kids_for Switch, [:x_get_tree_switch_kids]
+
   def initialize(name, type, sandbox, build = true, root = nil, vm_kids = [])
     sandbox[:network_root] = TreeBuilder.build_node_id(root) if root
     @tree_vms = vm_kids
@@ -42,10 +45,6 @@ class TreeBuilderNetwork < TreeBuilder
     objects.concat(parent.guest_devices) unless parent.guest_devices.empty?
     objects.concat(parent.lans) unless parent.lans.empty?
     count_only_or_objects(count_only, objects)
-  end
-
-  def x_get_tree_guest_device_kids(_parent, count_only)
-    count_only ? 0 : []
   end
 
   def x_get_tree_lan_kids(parent, count_only)

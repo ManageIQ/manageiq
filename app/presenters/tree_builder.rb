@@ -337,11 +337,7 @@ class TreeBuilder
   end
 
   def x_get_tree_objects(parent, options, count_only, parents)
-    if parent.nil?
-      children_or_count = x_get_tree_roots(count_only, options)
-    else
-      x_get_tree_kids(parent, count_only, options, parents)
-    end
+    children_or_count = parent.nil? ? x_get_tree_roots(count_only, options) : x_get_tree_kids(parent, count_only, options, parents)
     children_or_count || (count_only ? 0 : [])
   end
 

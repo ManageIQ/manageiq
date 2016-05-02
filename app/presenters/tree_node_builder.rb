@@ -91,7 +91,6 @@ class TreeNodeBuilder
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
-    when Vm                   then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
 
     when Vm                   then vm_node(object)
     when Lan                  then generic_node(object.name,
