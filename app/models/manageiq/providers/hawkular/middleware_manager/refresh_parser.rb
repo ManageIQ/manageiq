@@ -14,7 +14,7 @@ module ManageIQ::Providers
 
       def ems_inv_to_hashes
         @data[:middleware_servers] = get_middleware_servers
-        get_deployments
+        fetch_server_entities
         @data
       end
 
@@ -30,14 +30,28 @@ module ManageIQ::Providers
         end.flatten
       end
 
-      def get_deployments
+      def fetch_server_entities
         @data[:middleware_deployments] = []
+        @data[:middleware_datasources] = []
         @eaps.map do |eap|
           @ems.child_resources(eap).map do |child|
-            next unless child.type_path.end_with? 'Deployment'
+            next unless child.type_path.end_with?('Deployment', 'Datasource')
             server = @data_index.fetch_path(:middleware_servers, :by_nativeid, eap.id)
-            @data[:middleware_deployments] << parse_deployment(server, child)
+            process_server_entity(server, child)
           end
+        end
+      end
+
+      def process_datasource(server, datasource)
+        config = @ems.get_config_data_for_resource([server[:nativeid], datasource.id], server[:feed])
+        parse_datasource(server, datasource, config)
+      end
+
+      def process_server_entity(server, entity)
+        if entity.type_path.end_with?('Deployment')
+          @data[:middleware_deployments] << parse_deployment(server, entity)
+        else
+          @data[:middleware_datasources] << process_datasource(server, entity)
         end
       end
 
@@ -48,6 +62,19 @@ module ManageIQ::Providers
           :nativeid          => deployment.id,
           :ems_ref           => deployment.path
         }
+      end
+
+      def parse_datasource(server, datasource, config)
+        data = {
+          :name              => datasource.name,
+          :middleware_server => server,
+          :nativeid          => datasource.id,
+          :ems_ref           => datasource.path
+        }
+        unless config.empty? || config['value'].empty?
+          data[:properties] = config['value'].select { |k, _| k != 'Username' && k != 'Password' }
+        end
+        data
       end
 
       def parse_deployment_name(name)
