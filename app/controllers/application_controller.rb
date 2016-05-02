@@ -1678,15 +1678,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_db_view(db, options = {})
-    view_yaml = MiqReport.view_yaml_filename(db, current_user, options)
-    view      = MiqReport.new(get_db_view_yaml(view_yaml))
-    view.db   = db if view_yaml.ends_with?("Vm__restricted.yaml")
-    view.extras ||= {}                        # Always add in the extras hash
-    view
-  end
-
-  def get_db_view_yaml(filename)
-    db_view_yaml_cache[filename] ||= YAML.load_file(filename)
+    MiqReport.load_from_view_options(db, current_user, options, db_view_yaml_cache)
   end
 
   def db_view_yaml_cache
