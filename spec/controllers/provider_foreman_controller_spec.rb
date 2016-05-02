@@ -238,7 +238,7 @@ describe ProviderForemanController do
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("Configuration Profiles under Provider \"testForeman Configuration Manager\"")
+      expect(right_cell_text).to eq("Configuration Profiles under Foreman Provider \"testForeman Configuration Manager\"")
     end
   end
 
@@ -539,12 +539,12 @@ describe ProviderForemanController do
 
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "xx-fr_e-" + ApplicationRecord.compress_id(ems.id)
+    "xx-fr_fr-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def ems_key_for_ans_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "xx-at_e-" + ApplicationRecord.compress_id(ems.id)
+    "xx-at_at-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def config_profile_key(config_profile)

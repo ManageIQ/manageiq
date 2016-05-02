@@ -192,7 +192,7 @@ module ApplicationHelper
       return url_for(:controller => @record.class.to_s.underscore, :action => "snia_local_file_systems", :id => @record, :show => @id)
     elsif db == "MiqCimInstance" && @db && @db == "cim_base_storage_extent"
       return url_for(:controller => @record.class.to_s.underscore, :action => "cim_base_storage_extents", :id => @record, :show => @id)
-    elsif %w(ConfiguredSystem ConfigurationProfile).include?(db)
+    elsif %w(ConfiguredSystem ConfigurationProfile EmsFolder).include?(db)
       return url_for(:controller => "provider_foreman", :action => @lastaction, :id => @record, :show => @id)
     else
       controller, action = db_to_controller(db, action)
@@ -230,7 +230,7 @@ module ApplicationHelper
           elsif ["Vm"].include?(view.db) && parent && request.parameters[:controller] != "vm"
             # this is to handle link to a vm in vm explorer from service explorer
             return url_for(:controller => "vm_or_template", :action => "show") + "/"
-          elsif %w(ConfigurationProfile).include?(view.db) &&
+          elsif %w(ConfigurationProfile EmsFolder).include?(view.db) &&
                 request.parameters[:controller] == "provider_foreman"
             return url_for(:action => action, :id => nil) + "/"
           elsif %w(ConfiguredSystem).include?(view.db) && request.parameters[:controller] == "provider_foreman"
