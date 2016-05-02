@@ -10,16 +10,16 @@ module Sandbox
     @sb[:history][x_active_tree]
   end
 
-  def x_tree_init(name, type, leaf, values = {})
+  def x_tree_init(name, type, leaf)
     return if @sb.has_key_path?(:trees, name)
 
-    values = values.reverse_merge(
+    values = {
       :tree       => name,
       :type       => type,
       :leaf       => leaf,
       :add_root   => true,
       :open_nodes => []
-    )
+    }
 
     @sb.store_path(:trees, name, values)
   end
