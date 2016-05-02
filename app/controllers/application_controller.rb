@@ -1552,11 +1552,7 @@ class ApplicationController < ActionController::Base
     end
 
     # Get the current sort info, else get defaults from the view
-    @sortcol = if session[sortcol_sym].nil?
-                 view.sort_col
-               else
-                 session[sortcol_sym].to_i
-               end
+    @sortcol = session[sortcol_sym].try(:to_i) || view.sort_col
     @sortdir = session[sortdir_sym] || (view.order == "Descending" ? "DESC" : "ASC")
     # Set/reset the sortby column and order
     get_sort_col                                  # set the sort column and direction
