@@ -126,7 +126,7 @@ module Metric::Capture
     default_task_start_time = 1.hour.ago.utc.iso8601
 
     # Create a new task for each rollup parent
-    tasks_by_rollup_parent = targets_by_rollup_parent.keys.inject({}) do |h, pkey|
+    targets_by_rollup_parent.keys.each_with_object({}) do |pkey, h|
       name = "Performance rollup for #{pkey}"
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
@@ -148,10 +148,7 @@ module Metric::Capture
       )
       _log.info "Created task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
       h[pkey] = task
-      h
     end
-
-    tasks_by_rollup_parent
   end
 
   def self.queue_captures(zone, targets, targets_by_rollup_parent, tasks_by_rollup_parent)
