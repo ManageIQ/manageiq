@@ -31,7 +31,12 @@ class MiddlewareServerController < ApplicationController
     @lastaction = "show"
     @showtype = "main"
     @record = identify_record(params[:id], ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer)
-    show_container(@record, controller_name, display_name)
+
+    if @display == 'middleware_datasources'
+      show_container_display(@record, 'middleware_datasource', MiddlewareDatasource)
+    else
+      show_container(@record, controller_name, display_name)
+    end
   end
 
   def listicon_image(item, _view)

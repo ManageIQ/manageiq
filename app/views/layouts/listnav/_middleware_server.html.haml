@@ -11,5 +11,5 @@
     = miq_accordion_panel(_("Relationships"), false, "middleware_server_rel") do
       %ul.nav.nav-pills.nav-stacked
         = single_relationship_link(@record, :ems_middleware, "ext_management_system")
-        - %i(middleware_deployment).each do |ent|
+        - %i(middleware_deployment middleware_datasource).each do |ent|
           = multiple_relationship_link(@record, ent)

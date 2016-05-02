@@ -761,6 +761,7 @@ en:
       ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
       ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Azure)
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
+      MiddlewareDatasource:     Middleware Datasource
       MiddlewareDeployment:     Middleware Deployment
       MiddlewareServer:         Middleware Server
       MiqAction:                Action
@@ -898,6 +899,8 @@ en:
       ems_network:                 Network Provider
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
+      middleware_datasource:       Middleware Datasource
+      middleware_datasources:      Middleware Datasources
       middleware_deployment:       Middleware Deployment
       middleware_deployments:      Middleware Deployments
       evm_owner:                   EVM Owner

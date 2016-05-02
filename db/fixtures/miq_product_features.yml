@@ -3378,6 +3378,43 @@
         :feature_type: control
         :identifier: middleware_deployment_tag
 
+  # MiddlewareDatasource
+  - :name: MiddlewareDatasource
+    :description: Everything under Middleware Datasources
+    :feature_type: node
+    :identifier: middleware_datasource
+    :children:
+    - :name: View
+      :description: View Middleware Datasources
+      :feature_type: view
+      :identifier: middleware_datasource_view
+      :children:
+      - :name: List
+        :description: Display Lists of Middleware Datasources
+        :feature_type: view
+        :identifier: middleware_datasource_show_list
+      - :name: Show
+        :description: Display Individual Middleware Datasources
+        :feature_type: view
+        :identifier: middleware_datasource_show
+    - :name: Modify
+      :description: Modify Middleware Datasources
+      :feature_type: admin
+      :identifier: middleware_datasource_admin
+      :children:
+      - :name: Remove
+        :description: Remove Middleware Datasource from the VMDB
+        :feature_type: admin
+        :identifier: middleware_datasource_delete
+      - :name: Edit
+        :description: Edit a Middleware Datasource
+        :feature_type: admin
+        :identifier: middleware_datasource_edit
+      - :name: Add
+        :description: Add a Middleware Datasource
+        :feature_type: admin
+        :identifier: middleware_datasource_new
+
 # EmsNetwork
 - :name: Network Providers
   :description: Everything under Network Providers

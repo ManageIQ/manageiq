@@ -14,4 +14,8 @@ module MiddlewareSummaryHelper
   def textual_middleware_deployments
     textual_link(@record.middleware_deployments)
   end
+
+  def textual_middleware_datasources
+    textual_link(@record.middleware_datasources)
+  end
 end
