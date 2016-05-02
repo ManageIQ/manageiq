@@ -64,7 +64,7 @@
                 .btn.btn-default.resize-right{:class => sidewidth == 5 ? 'btn-disabled' : ''}
                   %span.fa.fa-angle-right
 
-      #left_div.resizable.sidebar-pf.sidebar-pf-left.max-height{:class => sidebar}
+      #left_div.resizable.sidebar-pf.sidebar-pf-left.max-height.scrollable{:class => sidebar}
         #default_left_cell
           - if @accords && @trees
             = render :partial => "layouts/listnav"
