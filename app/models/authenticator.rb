@@ -54,7 +54,7 @@ module Authenticator
           else
             # If role_mode == database we will only use the external system for authentication. Also, the user must exist in our database
             # otherwise we will fail authentication
-            user_or_taskid = User.find_by_userid(username)
+            user_or_taskid = lookup_by_identity(username)
             user_or_taskid ||= autocreate_user(username)
 
             unless user_or_taskid
