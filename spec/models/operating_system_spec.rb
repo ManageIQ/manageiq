@@ -8,7 +8,8 @@ describe OperatingSystem do
       "sles-12"                    => "linux_suse",
       "rhel-7"                     => "linux_redhat",
       "ubuntu-15-10"               => "linux_ubuntu",
-      "windows-2012-r2"            => "windows_generic"
+      "windows-2012-r2"            => "windows_generic",
+      "coreos-cloud"               => "linux_coreos",
     }.each do |image, expected|
       it "normalizes #{image}" do
         expect(described_class.normalize_os_name(image)).to eq(expected)

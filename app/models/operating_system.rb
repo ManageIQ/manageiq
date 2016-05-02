@@ -26,6 +26,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_gentoo",    %w(gentoo)],
     ["linux_centos",    %w(centos)],
     ["linux_debian",    %w(debian)],
+    ["linux_coreos",    %w(coreos)],
     ["linux_esx",       %w(vmnixx86 vmnix-x86 vmwareesxserver esxserver)],
     ["linux_solaris",   %w(solaris)],
     ["linux_generic",   %w(linux)]
