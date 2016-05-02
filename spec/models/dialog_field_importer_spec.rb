@@ -76,47 +76,59 @@ describe DialogFieldImporter do
 
     context "when the type of the dialog field is a tag control" do
       let(:type) { "DialogFieldTagControl" }
-      let(:options) do
-        {
-          :category_id          => "123",
-          :category_name        => "best_category",
-          :category_description => category_description
-        }
-      end
-      let(:category_description) { "best_category" }
 
-      context "when the category exists by name and description" do
-        before do
-          @existing_category = Category.create!(:name => "best_category", :description => "best_category")
+      context "when the import file contains a category name" do
+        let(:options) do
+          {
+            :category_id          => "123",
+            :category_name        => "best_category",
+            :category_description => category_description
+          }
+        end
+        let(:category_description) { "best_category" }
+
+        context "when the category exists by name and description" do
+          before do
+            @existing_category = Category.create!(:name => "best_category", :description => "best_category")
+          end
+
+          context "when the category description does not match" do
+            let(:category_description) { "worst_category" }
+
+            it "does not assign a category" do
+              dialog_field_importer.import_field(dialog_field)
+              expect(DialogFieldTagControl.first.category).to eq(nil)
+            end
+          end
+
+          context "when the category description matches" do
+            it "uses the correct category, ignoring id" do
+              dialog_field_importer.import_field(dialog_field)
+              expect(DialogFieldTagControl.first.category).to eq(@existing_category.id.to_s)
+            end
+          end
         end
 
-        context "when the category description does not match" do
-          let(:category_description) { "worst_category" }
-
+        context "when the category does not exist by name and description" do
           it "does not assign a category" do
             dialog_field_importer.import_field(dialog_field)
             expect(DialogFieldTagControl.first.category).to eq(nil)
           end
         end
 
-        context "when the category description matches" do
-          it "uses the correct category, ignoring id" do
-            dialog_field_importer.import_field(dialog_field)
-            expect(DialogFieldTagControl.first.category).to eq(@existing_category.id.to_s)
-          end
-        end
-      end
-
-      context "when the category does not exist by name and description" do
-        it "does not assign a category" do
+        it "creates a DialogFieldTagControl with the correct name" do
           dialog_field_importer.import_field(dialog_field)
-          expect(DialogFieldTagControl.first.category).to eq(nil)
+          expect(DialogFieldTagControl.first.name).to eq("Something")
         end
       end
 
-      it "creates a DialogFieldTagControl with the correct name" do
-        dialog_field_importer.import_field(dialog_field)
-        expect(DialogFieldTagControl.first.name).to eq("Something")
+      context "when the import file only contains a category id" do
+        let(:options) { {:category_id => "123"} }
+
+        it "uses the category id provided" do
+          dialog_field_importer.import_field(dialog_field)
+          expect(DialogFieldTagControl.first.category).to eq("123")
+        end
       end
     end
 
