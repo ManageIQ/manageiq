@@ -23,7 +23,6 @@ module UiConstants
   MAX_DASHBOARD_COUNT = 10  # Default maximum count of Dashboard per group
 
   REPORTS_FOLDER = File.join(Rails.root, "product/reports")
-  VIEWS_FOLDER = File.join(Rails.root, "product/views")
   OPS_REPORTS_FOLDER = File.join(Rails.root, "product/ops/miq_reports")
   CHARTS_REPORTS_FOLDER = File.join(Rails.root, "product/charts/miq_reports")
   CHARTS_LAYOUTS_FOLDER = File.join(Rails.root, "product/charts/layouts")
