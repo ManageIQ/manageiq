@@ -12,23 +12,23 @@ class OperatingSystem < ApplicationRecord
   include ReportableMixin
 
   @@os_map = [
-    ["windows_generic", ["winnetenterprise", "w2k3", "win2k3", "server2003", "winnetstandard", "servernt"]],
-    ["windows_generic", ["winxppro", "winxp", "xp"]],
-    ["windows_generic", ["vista", "longhorn"]],
-    ["windows_generic", ["win2k", "win2000"]],
-    ["windows_generic", ["microsoft", "windows", "winnt"]],          # windows generics
-    ["linux_ubuntu",    ["ubuntu"]],
-    ["linux_chrome",    ["chromeos"]],
-    ["linux_chromium",  ["chromiumos"]],
-    ["linux_suse",      ["suse"]],
-    ["linux_redhat",    ["redhat", "rhel"]],
-    ["linux_fedora",    ["fedora"]],
-    ["linux_gentoo",    ["gentoo"]],
-    ["linux_centos",    ["centos"]],
-    ["linux_debian",    ["debian"]],
-    ["linux_esx",       ["vmnixx86", "vmnix-x86", "vmwareesxserver", "esxserver"]],
-    ["linux_solaris",   ["solaris"]],
-    ["linux_generic",   ["linux", "sles"]]                  # linux generics
+    ["windows_generic", %w(winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt)],
+    ["windows_generic", %w(winxppro winxp xp)],
+    ["windows_generic", %w(vista longhorn)],
+    ["windows_generic", %w(win2k win2000)],
+    ["windows_generic", %w(microsoft windows winnt)],
+    ["linux_ubuntu",    %w(ubuntu)],
+    ["linux_chrome",    %w(chromeos)],
+    ["linux_chromium",  %w(chromiumos)],
+    ["linux_suse",      %w(suse)],
+    ["linux_redhat",    %w(redhat rhel)],
+    ["linux_fedora",    %w(fedora)],
+    ["linux_gentoo",    %w(gentoo)],
+    ["linux_centos",    %w(centos)],
+    ["linux_debian",    %w(debian)],
+    ["linux_esx",       %w(vmnixx86 vmnix-x86 vmwareesxserver esxserver)],
+    ["linux_solaris",   %w(solaris)],
+    ["linux_generic",   %w(linux sles)]
   ]
 
   def self.add_elements(vm, xmlNode)
