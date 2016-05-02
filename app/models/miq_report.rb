@@ -158,6 +158,10 @@ class MiqReport < ApplicationRecord
     keys.each_with_object(attributes.to_hash) { |k, h| h[k] = send(k) }
   end
 
+  def sort_col
+    sortby ? col_order.index(sortby.first) : 0
+  end
+
   def self.from_hash(h)
     new(h)
   end

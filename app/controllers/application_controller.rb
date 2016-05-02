@@ -1553,7 +1553,7 @@ class ApplicationController < ActionController::Base
 
     # Get the current sort info, else get defaults from the view
     @sortcol = if session[sortcol_sym].nil?
-                 view.sortby.nil? ? view.col_order.index(view.col_order.first) : view.col_order.index(view.sortby.first)
+                 view.sort_col
                else
                  session[sortcol_sym].to_i
                end

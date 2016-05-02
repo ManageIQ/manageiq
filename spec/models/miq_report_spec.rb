@@ -595,4 +595,24 @@ describe MiqReport do
       end
     end
   end
+  describe ".sort_col" do
+    it "uses sort_by if available" do
+      report = MiqReport.new(
+        :db        => "Host",
+        :cols      => %w(name hostname smart),
+        :col_order => %w(name hostname smart),
+        :sortby    => ["hostname"]
+      )
+      expect(report.sort_col).to eq(1)
+    end
+
+    it "falls back to first column" do
+      report = MiqReport.new(
+        :db        => "Host",
+        :cols      => %w(name hostname smart),
+        :col_order => %w(name hostname smart),
+      )
+      expect(report.sort_col).to eq(0)
+    end
+  end
 end
