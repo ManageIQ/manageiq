@@ -268,6 +268,19 @@ describe HostController do
     end
   end
 
+  context "#process_hosts" do
+    it "initiates host destroy" do
+      host = FactoryGirl.create(:host)
+      allow(controller).to receive(:filter_ids_in_region).and_return([[host], nil])
+      allow(MiqServer).to receive(:my_zone).and_return("default")
+      controller.send(:process_hosts, [host], 'destroy')
+      audit_event = AuditEvent.all.first
+      task = MiqQueue.find_by_class_name("Host")
+      expect(audit_event['message']).to include "Record delete initiated"
+      expect(task.method_name).to eq 'destroy'
+    end
+  end
+
   context "#vm_button_operation" do
     it "when the vm_or_template supports scan,  returns true" do
       vm1 =  FactoryGirl.create(:vm_microsoft)
