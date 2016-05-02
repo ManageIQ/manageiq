@@ -1324,6 +1324,7 @@
         :ems_refresh_worker_openstack: {}
         :ems_refresh_worker_openstack_infra: {}
         :ems_refresh_worker_openstack_network: {}
+        :ems_refresh_worker_nuage_network: {}
         :ems_refresh_worker_redhat: {}
         :ems_refresh_worker_vmware: {}
         :ems_refresh_worker_vmware_cloud: {}
