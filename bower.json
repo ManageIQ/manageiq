@@ -37,6 +37,7 @@
     "numeral": "^1.5.3",
     "spin.js": "^2.3.2",
     "sprintf": "^1.0.3",
+    "tota11y": "^0.1.3",
     "xml_display": "^0.1.1",
     "spice-html5-bower": "himdel/spice-html5-bower#^0.1.5"
   }
