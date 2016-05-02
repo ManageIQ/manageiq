@@ -1055,9 +1055,9 @@ class MiqRequestWorkflow
   end
 
   def storage_to_hash_struct(ci)
-    storage_cluster = ci.storage_clusters.detect { |cluster| cluster.ems_id == get_source_and_targets[:ems].try(:id) }
+    storage_clusters = ci.storage_clusters.blank? ? nil : ci.storage_clusters.collect(&:name).join(', ')
     build_ci_hash_struct(ci, [:name, :free_space, :total_space, :storage_domain_type]).tap do |hs|
-      hs.storage_cluster = storage_cluster.try(:name)
+      hs.storage_clusters = storage_clusters
     end
   end
 
