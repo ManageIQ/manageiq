@@ -30,6 +30,7 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     $scope.formFieldsUrl = $attrs.formFieldsUrl;
     $scope.createUrl = $attrs.createUrl;
     $scope.updateUrl = $attrs.updateUrl;
+    $scope.model = "hostModel";
     ManageIQ.angular.scope = $scope;
 
     if (hostFormId == 'new') {
@@ -95,11 +96,6 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     }
 
      $scope.currentTab = "default";
-
-    $scope.$watch("hostModel.name", function() {
-      $scope.form = $scope.angularForm;
-      $scope.model = "hostModel";
-    });
   };
 
   $scope.changeAuthTab = function(id) {
