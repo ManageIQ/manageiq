@@ -62,6 +62,9 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   #
   # VNC
   #
+  def remote_console_html5_acquire_ticket(userid)
+    remote_console_vnc_acquire_ticket(userid)
+  end
 
   def remote_console_vnc_acquire_ticket(userid)
     validate_remote_console_acquire_ticket("vnc")
