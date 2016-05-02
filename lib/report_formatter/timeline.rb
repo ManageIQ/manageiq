@@ -214,7 +214,7 @@ module ReportFormatter
         flags = {:ems_cloud     => ems_cloud,
                  :ems_container => ems_container,
                  :time_zone     => tz}
-        val = tl_message.message_html(co, row, rec, flags)
+        val = tl_message.message_html(co, row, rec, flags, mri.db)
         e_text += "<b>#{headers[co_idx]}:</b> #{val}<br/>" unless val.to_s.empty? || co == "id"
       end
       e_text = e_text.chomp('<br/>')

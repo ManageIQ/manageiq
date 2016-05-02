@@ -65,20 +65,21 @@ module ReportFormatter
     end
 
     def resource_name
-      if mri.db == 'BottleneckEvent'
+      if @db == 'BottleneckEvent'
         db = if @ems_cloud && @event.resource_type == 'ExtManagementSystem'
                'ems_cloud'
              elsif @event.resource_type == 'ExtManagementSystem'
                'ems_infra'
              else
-               @event.resource_type.underscore
+               "#{@event.resource_type.underscore}/show"
              end
         "<a href=\"/#{db}/#{to_cid(@event.resource_id)}\">#{@event.resource_name}</a>"
       end
     end
 
-    def set_parameters(column, row, event, flags)
+    def set_parameters(column, row, event, flags, db)
       @event, @ems_cloud, @ems_container = event, flags[:ems_cloud], flags[:ems_container]
+      @db   = db
       @text = if row[column].kind_of?(Time) || TIMELINE_TIME_COLUMNS.include?(column)
                 format_timezone(Time.parse(row[column].to_s).utc, flags[:time_zone], "gtl")
               else
@@ -86,8 +87,8 @@ module ReportFormatter
               end
     end
 
-    def message_html(column, row, event, flags)
-      set_parameters(column, row, event, flags)
+    def message_html(column, row, event, flags, db)
+      set_parameters(column, row, event, flags, db)
 
       field = column.tr('.', '_').to_sym
       respond_to?(field) ? send(field).to_s : @text
