@@ -1,4 +1,6 @@
 Vmdb::Application.routes.draw do
+  # rubocop:disable AlignHash
+  # rubocop:disable MultilineOperationIndentation
   # grouped routes
   adv_search_post = %w(
     adv_search_button
@@ -1125,6 +1127,41 @@ Vmdb::Application.routes.draw do
                compare_post +
                exp_post +
                save_post
+    },
+
+    :middleware_datasource => {
+      :get  => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+      compare_get,
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        panel_control
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        tl_chooser
+        update
+        wait_for_task
+        tagging_edit
+        tag_edit_form_field_changed
+      ) +
+      adv_search_post +
+      compare_post +
+      exp_post +
+      save_post
     },
 
     :ems_network              => {
@@ -2602,4 +2639,6 @@ Vmdb::Application.routes.draw do
   if Rails.env.development?
     mount WebsocketServer.new => '/ws'
   end
+  # rubocop:enable MultilineOperationIndentation
+  # rubocop:enable AlignHash
 end
