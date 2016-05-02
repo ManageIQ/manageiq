@@ -1,6 +1,7 @@
 class CloudTenant < ApplicationRecord
   include ReportableMixin
   include NewWithTypeStiMixin
+  include VirtualTotalMixin
 
   belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "ManageIQ::Providers::CloudManager"
   has_many   :security_groups
@@ -23,13 +24,9 @@ class CloudTenant < ApplicationRecord
 
   acts_as_miq_taggable
 
-  virtual_column :total_vms, :type => :integer, :uses => :vms
+  virtual_total :total_vms, :vms
 
   def all_cloud_networks
     direct_cloud_networks + shared_cloud_networks
-  end
-
-  def total_vms
-    vms.size
   end
 end
