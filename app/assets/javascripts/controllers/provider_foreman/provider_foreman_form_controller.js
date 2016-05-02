@@ -52,10 +52,6 @@ ManageIQ.angular.app.controller('providerForemanFormController', ['$http', '$sco
           miqService.sparkleOff();
         });
       }
-
-      $scope.$watch("providerForemanModel.name", function() {
-        $scope.form = $scope.angularForm;
-      });
     };
 
     $scope.canValidateBasicInfo = function () {
