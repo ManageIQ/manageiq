@@ -13,3 +13,5 @@
 - if is_browser_ie?
   %script{:defer => "defer", :type => "text/javascript"}
     miqOnLoad();
+- if Rails.env.development?
+  = javascript_include_tag 'tota11y'

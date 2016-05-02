@@ -36,6 +36,9 @@ Vmdb::Application.configure do
 
   # Include miq_debug in the list of assets here because it is only used in development
   config.assets.precompile << 'miq_debug.js'
+  # Include totally (https://khan.github.io/tota11y/) here for dev-mode only to help working
+  # on accessibility issues.
+  config.assets.precompile << 'tota11y.js'
 
   # Raise exceptions in transactional callbacks
   config.active_record.raise_in_transactional_callbacks = true
