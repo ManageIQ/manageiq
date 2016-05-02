@@ -4,6 +4,7 @@ class AvailabilityZone < ApplicationRecord
   include Metric::CiMixin
   include EventMixin
   include ProviderObjectMixin
+  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
@@ -17,9 +18,7 @@ class AvailabilityZone < ApplicationRecord
   has_many   :vim_performance_states, :as => :resource
   has_many   :ems_events
 
-  acts_as_miq_taggable
-
-  virtual_column :total_vms, :type => :integer, :uses => :vms
+  virtual_total :total_vms, :vms
 
   def self.available
     where(arel_table[:type].not_eq("ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull"))
@@ -29,10 +28,6 @@ class AvailabilityZone < ApplicationRecord
 
   def perf_rollup_parents(interval_name = nil)
     [ext_management_system].compact unless interval_name == 'realtime'
-  end
-
-  def total_vms
-    vms.size
   end
 
   def my_zone

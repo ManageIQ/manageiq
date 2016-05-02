@@ -1,5 +1,7 @@
 class ResourcePool < ApplicationRecord
   include ReportableMixin
+  include VirtualTotalMixin
+
   acts_as_miq_taggable
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -19,6 +21,10 @@ class ResourcePool < ApplicationRecord
   include MiqPolicyMixin
   include AsyncDeleteMixin
 
+  virtual_has_many :vms_and_templates, :uses => :all_relationships
+  virtual_has_many :vms,               :uses => :all_relationships
+  virtual_has_many :miq_templates,     :uses => :all_relationships
+
   virtual_column :v_parent_cluster,        :type => :string,  :uses => :all_relationships
   virtual_column :v_parent_host,           :type => :string,  :uses => :all_relationships
   virtual_column :v_parent_resource_pool,  :type => :string,  :uses => :all_relationships
@@ -26,12 +32,8 @@ class ResourcePool < ApplicationRecord
   virtual_column :v_parent_folder,         :type => :string,  :uses => :all_relationships
   virtual_column :v_direct_miq_templates,  :type => :integer, :uses => :all_relationships
   virtual_column :v_direct_vms,            :type => :integer, :uses => :all_relationships
-  virtual_column :v_total_vms,             :type => :integer, :uses => :all_relationships
-  virtual_column :v_total_miq_templates,   :type => :integer, :uses => :all_relationships
-
-  virtual_has_many :vms_and_templates, :uses => :all_relationships
-  virtual_has_many :vms,               :uses => :all_relationships
-  virtual_has_many :miq_templates,     :uses => :all_relationships
+  virtual_total  :v_total_vms,             :all_vms,          :uses => :all_relationships
+  virtual_total  :v_total_miq_templates,   :all_miq_templates, :uses => :all_relationships
 
   def tenant_identity
     if ext_management_system
@@ -114,14 +116,6 @@ class ResourcePool < ApplicationRecord
     descendant_count(:of_type => 'VmOrTemplate')
   end
 
-  def total_miq_templates
-    all_miq_templates.size
-  end
-
-  def total_vms
-    all_vms.size
-  end
-
   alias_method :add_vm, :set_child
   alias_method :remove_vm, :remove_child
 
@@ -200,8 +194,8 @@ class ResourcePool < ApplicationRecord
   alias_method :v_direct_vms,           :total_direct_vms
   alias_method :v_direct_miq_templates, :total_direct_miq_templates
 
-  alias_method :v_total_vms,           :total_vms
-  alias_method :v_total_miq_templates, :total_miq_templates
+  alias total_vms v_total_vms
+  alias total_miq_templates v_total_miq_templates
 
   # TODO: Move this into a more "global" module for anything in the ems_metadata tree.
   def absolute_path_objs(*args)
