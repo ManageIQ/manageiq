@@ -1176,6 +1176,7 @@
           :count: 2
           :nice_delta: 3
           :poll_method: :escalate
+        :ems_metrics_collector_worker_azure: {}
         :ems_metrics_collector_worker_amazon: {}
         :ems_metrics_collector_worker_atomic: {}
         :ems_metrics_collector_worker_atomic_enterprise: {}
