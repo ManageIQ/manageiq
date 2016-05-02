@@ -1678,46 +1678,11 @@ class ApplicationController < ActionController::Base
   end
 
   def get_db_view(db, options = {})
-    view_yaml = view_yaml_filename(db, options)
+    view_yaml = MiqReport.view_yaml_filename(db, current_user, options)
     view      = MiqReport.new(get_db_view_yaml(view_yaml))
     view.db   = db if view_yaml.ends_with?("Vm__restricted.yaml")
     view.extras ||= {}                        # Always add in the extras hash
     view
-  end
-
-  def view_yaml_filename(db, options)
-    suffix = options[:association] || options[:view_suffix]
-    db = db.to_s
-
-    # Special code to build the view file name for users of VM restricted roles
-    if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
-      role = current_user.miq_user_role
-      if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
-        viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
-      end
-    end
-
-    db = db.gsub(/::/, '_')
-
-    current_role = current_user.try(:miq_user_role)
-    current_role = current_role.name.split("-").last if current_role.try(:read_only?)
-
-    # Build the view file name
-    if suffix
-      viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{current_role}.yaml"
-    else
-      viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
-      viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{current_role}.yaml"
-    end
-
-    if viewfilerestricted && File.exist?(viewfilerestricted)
-      viewfilerestricted
-    elsif File.exist?(viewfilebyrole)
-      viewfilebyrole
-    else
-      viewfile
-    end
   end
 
   def get_db_view_yaml(filename)

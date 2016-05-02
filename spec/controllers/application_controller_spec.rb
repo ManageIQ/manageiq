@@ -74,26 +74,6 @@ describe ApplicationController do
     end
   end
 
-  context "#view_yaml_filename" do
-    let(:feature) { MiqProductFeature.find_all_by_identifier("vm_infra_explorer") }
-    let(:user)    { FactoryGirl.create(:user, :features => feature) }
-
-    before do
-      EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
-      login_as user
-    end
-
-    it "should return restricted view yaml for restricted user" do
-      user.current_group.miq_user_role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
-      expect(controller.send(:view_yaml_filename, VmCloud.name, {})).to include("Vm__restricted.yaml")
-    end
-
-    it "should return VmCloud view yaml for non-restricted user" do
-      user.current_group.miq_user_role.update_attributes(:settings => {})
-      expect(controller.send(:view_yaml_filename, VmCloud.name, {})).to include("ManageIQ_Providers_CloudManager_Vm.yaml")
-    end
-  end
-
   context "#previous_breadcrumb_url" do
     it "should return url when 2 entries" do
       controller.instance_variable_set(:@breadcrumbs, [{:url => "test_url"}, 'placeholder'])
