@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 
 
+## Unreleased - as of Sprint 39 end 2016-04-19
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+39+Ending+Apr+19%2C+2016%22+label%3Aenhancement)
+
+- User Interface
+  - Vertical navigation menus
+  - VM Reconfigure - add/remove disks support
+  - Orderable Orchestration Templates - create and copy 
+  - Explorer for Datastore Clusters for VMware vSphere 5+ 
+  - Template/Image compliance policy checking (previously only allowed for VMs/Instances)
+  - New UI for replication configuration
+- Providers
+  - VMware: Clustered Datastores in Provisioning
+  - Azure: Subscriptions and Events
+  - OpenStack: Ceilometer Events
+  - Hawkular: Event Catcher and power operations to reload and stop Middleware servers
+  - Containers
+     - Chargeback
+     - SmartState extended with OpenSCAP support
+     - Policies
+     - Cloud Cross Linking
+     - Pod Network Metrics
+  - Generic Targeted refresh process
+  - RHEV: Targeted refresh process
+  - Multiple Endpoints
+  - Ansible Tower
+     - Model updates
+         - Link JobTemplate instances to Inventory
+         - Link Ansible hosts to VMs (when possible)
+     - New Automate namespace: /ManageIQ/ConfigurationManagement/AnsibleTower
+- Platform
+  - Replication
+     - Global and Remote regions
+     - Enable replication on remote regions
+     - Subscribe to remote regions on global
+  - Chargeback: Rate tiers
+- Appliance Console
+  - Added alias `ap` as shortcut for appliance_console
+  - Updates for external authentication settings
+- REST API
+  - CRUD for Tenant quotas
+  - Version increased to 2.2.0
+  - Support for /api/settings
+- SmartState
+  - LVM thin volume support
+  - SmartState Analysis for Azure
+- Automate
+  - Modeling changes
+     - `quota_source_type` moved into instance
+     - Added Auto-Approval/Email to VM Reconfigure
+     - New models for Generic Object
+  - Beginning of git support for automate models
+- Appliance: Ability to deliver ManageIQ docker appliance, first revision.
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+39+Ending+Apr+19%2C+2016%22+label%3Aenhancement)
+
+- User Interface
+  - SVG replacement of PNGs
+  - SlickGrid replaced with Patternfly TreeGrid
+  - Patternfly style updates to the Dashboard and other areas
+  - Updates to support multiple provider endpoints
+- VM Provisoning: Support disabling Auto-Placement logic for create_provision_request and Rest API calls
+- Performance
+  - Support for sorting Virtual Columns in the database
+  - Service Tree improvement
+  - RBAC: Ongoing effort to reduce the number SQL queries and quantity of data being transferred
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+39+Ending+Apr+19%2C+2016%22+label%3Abug)
+
+Notable fixes include:
+
+-Performance: Metrics Rollups bug fix
+
 ## Unreleased - as of Sprint 38 end 2016-03-28
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+38+Ending+Mar+28%2C+2016%22+label%3Aenhancement)
