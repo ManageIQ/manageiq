@@ -87,6 +87,12 @@ module ReportFormatter
       %w(StackedBar StackedColumn StackedArea).include?(mri.graph[:type])
     end
 
+    # change structure of chart JSON to performance chart with timeseries data
+    def build_performance_chart_area(maxcols, divider)
+      super
+      change_structure_to_timeseries
+    end
+
     def no_records_found_chart(*)
       mri.chart = {
         :data => {
@@ -97,6 +103,34 @@ module ReportFormatter
 
     def finalize_document
       mri.chart
+    end
+
+    private
+
+    # change structure of hash from standard chart to timeseries chart
+    def change_structure_to_timeseries
+      # add 'x' as first element and move mri.chart[:axis][:x][:categories] to mri.chart[:data][:columns] as first column
+      x = mri.chart[:axis][:x][:categories]
+      x.unshift('x')
+      mri.chart[:data][:columns].unshift(x)
+      mri.chart[:data][:x] = 'x'
+      # set x axis type to timeseries and remove categories
+      mri.chart[:axis][:x] = {:type => 'timeseries', :tick => {}}
+      # set flag for performance chart
+      mri.chart[:miq] = {:performance => true}
+      # this conditions are taken from build_performance_chart_area method from chart_commons.rb
+      if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
+        # set format for parsing
+        mri.chart[:data][:xFormat] = '%m/%d'
+        # set format for labels
+        mri.chart[:axis][:x][:tick][:format] = '%m/%d'
+      elsif mri.extras[:realtime] == true
+        mri.chart[:data][:xFormat] = '%H:%M:%S'
+        mri.chart[:axis][:x][:tick][:format] = '%H:%M:%S'
+      else
+        mri.chart[:data][:xFormat] = '%H:%M'
+        mri.chart[:axis][:x][:tick][:format] = '%H:%M'
+      end
     end
   end
 end
