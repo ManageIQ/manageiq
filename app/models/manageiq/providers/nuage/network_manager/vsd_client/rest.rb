@@ -1,7 +1,5 @@
-require 'rest-client'
-require 'rubygems'
-require 'json'
 class ManageIQ::Providers::Nuage::NetworkManager::VsdClient::Rest
+  include Vmdb::Logging
   def initialize(server, user, password)
     @server = server
     @user = user
@@ -38,7 +36,7 @@ class ManageIQ::Providers::Nuage::NetworkManager::VsdClient::Rest
     if @api_key == ''
       login
     end
-    $log.debug("GET for Nuage VSD url #{url}")
+    _log.debug("GET for Nuage VSD url #{url}")
     RestClient::Request.execute(:method => :get, :url => url, :user => @user, :password => @api_key,
      :headers => @headers, :verify_ssl => false) do |response|
       return response

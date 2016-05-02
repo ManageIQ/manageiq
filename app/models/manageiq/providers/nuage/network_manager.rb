@@ -4,6 +4,8 @@ class ManageIQ::Providers::Nuage::NetworkManager < ManageIQ::Providers::NetworkM
   require_nested :Refresher
   require_nested :VsdClient
 
+  include Vmdb::Logging
+
   def self.ems_type
     @ems_type ||= "nuage_network".freeze
   end
@@ -27,7 +29,7 @@ class ManageIQ::Providers::Nuage::NetworkManager < ManageIQ::Providers::NetworkM
     version  = options[:version] || api_version
 
     url = auth_url(protocol, server, port, version)
-    $log.info("Connecting to Nuage VSD with url #{url}")
+    _log.info("Connecting to Nuage VSD with url #{url}")
     self.class.raw_connect(url, username, password)
   end
 
