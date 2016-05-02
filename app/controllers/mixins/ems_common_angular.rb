@@ -403,6 +403,10 @@ module Mixins
         default_endpoint = {:role => :default, :hostname => hostname, :port => port}
       end
 
+      if ems.kind_of?(ManageIQ::Providers::Nuage::NetworkManager)
+        default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
+      end
+
       endpoints = {:default     => default_endpoint,
                    :ceilometer  => ceilometer_endpoint,
                    :amqp        => amqp_endpoint,

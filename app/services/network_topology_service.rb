@@ -18,6 +18,7 @@ class NetworkTopologyService < TopologyService
     included_relations = [
       :tags,
       :cloud_subnets => [
+        :parent_cloud_subnet,
         :tags,
         :cloud_network => :tags,
         :vms => [
