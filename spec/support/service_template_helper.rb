@@ -7,11 +7,13 @@ module ServiceTemplateHelper
   def build_all_atomics(hash)
     hash.each do |name, value|
       next unless value[:type] == "atomic"
-      item = FactoryGirl.create(:service_template, :name         => name,
-                                                   :service_type => 'atomic')
+      item  = FactoryGirl.create(:service_template, :name         => name,
+                                                    :options      => {:dialog => {}},
+                                                    :service_type => 'atomic')
       item.update_attributes(:prov_type => value[:prov_type]) if value[:prov_type].present?
-
       options = value[:request]
+      options ||= {}
+      options[:dialog] = {}
       mprt = FactoryGirl.create(:miq_provision_request_template,
                                 :requester => options[:requester],
                                 :src_vm_id => options[:src_vm_id],
@@ -30,6 +32,7 @@ module ServiceTemplateHelper
 
   def build_a_composite(name, hash)
     item = FactoryGirl.create(:service_template, :name         => name,
+                                                 :options      => {:dialog => {}},
                                                  :service_type => 'composite')
     properties = hash[name]
     link_all_children(item, properties, hash) unless properties[:children].empty?

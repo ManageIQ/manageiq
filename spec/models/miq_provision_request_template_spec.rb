@@ -4,13 +4,52 @@ describe MiqProvisionRequestTemplate do
     FactoryGirl.create(:template_vmware,
                        :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
   end
-  let(:parent_svc)       { FactoryGirl.create(:service, :guid => MiqUUID.new_guid) }
-  let(:service_resource) { FactoryGirl.create(:service_resource) }
+  let(:parent_svc)       { FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}}) }
+  let(:bundle_parent_svc) do
+    FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}})
+  end
+  let(:service_resource) do
+    FactoryGirl.create(:service_resource,
+                       :resource_type => 'MiqRequest',
+                       :resource_id   => service_template_request.id)
+  end
+  let(:service_template) do
+    FactoryGirl.create(:service_template)
+  end
+  let(:bundle_service_template) do
+    FactoryGirl.create(:service_template)
+  end
+  let(:service_template_resource) do
+    FactoryGirl.create(:service_resource,
+                       :resource_type => 'ServiceTemplate',
+                       :resource_id   => service_template.id)
+  end
+  let(:bundle_service_template_resource) do
+    FactoryGirl.create(:service_resource,
+                       :resource_type => 'ServiceTemplate',
+                       :resource_id   => bundle_service_template.id)
+  end
   let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :requester => user) }
   let(:service_task) do
     FactoryGirl.create(:service_template_provision_task,
                        :miq_request  => service_template_request,
                        :options      => {:service_resource_id => service_resource.id})
+  end
+  let(:parent_service_task) do
+    FactoryGirl.create(:service_template_provision_task,
+                       :status       => 'Ok',
+                       :state        => 'pending',
+                       :request_type => 'clone_to_service',
+                       :miq_request  => service_template_request,
+                       :options      => {:service_resource_id => service_template_resource.id})
+  end
+  let(:bundle_service_task) do
+    FactoryGirl.create(:service_template_provision_task,
+                       :status       => 'Ok',
+                       :state        => 'pending',
+                       :request_type => 'clone_to_service',
+                       :miq_request  => service_template_request,
+                       :options      => {:service_resource_id => bundle_service_template_resource.id})
   end
   let(:provision_request_template) do
     FactoryGirl.create(:miq_provision_request_template,
@@ -62,6 +101,37 @@ describe MiqProvisionRequestTemplate do
       it "runs twice with scaling min 2" do
         service_resource.update_attributes(:scaling_min => 2)
         expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(2)
+      end
+
+      it "use number_of_vms from request" do
+        service_template_request.options[:number_of_vms] = 3
+        service_template_request.save!
+        expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(3)
+      end
+
+      it "use number of vms from dialogs" do
+        parent_svc.options[:dialog] = {"dialog_option_number_of_vms" => 5}
+        service_task.options[:parent_task_id] = parent_service_task.id
+        expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(5)
+      end
+
+      it "use number of vms from bundle dialogs" do
+        bundle_parent_svc.options[:dialog] = {"dialog_option_1_number_of_vms" => 7}
+        parent_svc.parent = bundle_parent_svc
+        bundle_parent_svc.save!
+        parent_service_task.options[:parent_task_id] = bundle_service_task.id
+        service_task.options[:parent_task_id] = parent_service_task.id
+        expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(7)
+      end
+
+      it "use number of vms from bundle dialogs override" do
+        bundle_parent_svc.options[:dialog] = {"dialog_option_1_number_of_vms" => 7,
+                                              "dialog_option_0_number_of_vms" => 8}
+        parent_svc.parent = bundle_parent_svc
+        bundle_parent_svc.save!
+        parent_service_task.options[:parent_task_id] = bundle_service_task.id
+        service_task.options[:parent_task_id] = parent_service_task.id
+        expect(provision_request_template.create_tasks_for_service(service_task, parent_svc).count).to eq(8)
       end
     end
 
