@@ -25,6 +25,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_fedora",    ["fedora"]],
     ["linux_gentoo",    ["gentoo"]],
     ["linux_centos",    ["centos"]],
+    ["linux_debian",    ["debian"]],
     ["linux_esx",       ["vmnixx86", "vmnix-x86", "vmwareesxserver", "esxserver"]],
     ["linux_solaris",   ["solaris"]],
     ["linux_generic",   ["linux", "sles"]]                  # linux generics
