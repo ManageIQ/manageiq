@@ -10,6 +10,7 @@ class SecurityGroup < ApplicationRecord
   belongs_to :cloud_network
   belongs_to :cloud_tenant
   belongs_to :orchestration_stack
+  belongs_to :network_group
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
 
   has_and_belongs_to_many :vms
