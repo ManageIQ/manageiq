@@ -76,12 +76,15 @@ module Metric::CiMixin::Capture
       queue_item_options = queue_item.merge(:method_name => "perf_capture_#{item_interval}")
       queue_item_options[:args] = start_and_end_time if start_and_end_time.present?
       MiqQueue.put_or_update(queue_item_options) do |msg, qi|
+        # does not yet exist
+        existing_tasks = (((msg && msg.miq_callback || {})[:args] || []).first) || []
         if msg.nil?
           qi[:priority] = priority
           qi.delete(:state)
           qi[:miq_callback] = cb if cb
           qi
-        elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
+        elsif msg.state == "ready" &&
+                ((task_id && !existing_tasks.include?(task_id)) || MiqQueue.higher_priority?(priority, msg.priority))
           qi[:priority] = priority
           # rerun the job (either with new task or higher priority)
           qi.delete(:state)
