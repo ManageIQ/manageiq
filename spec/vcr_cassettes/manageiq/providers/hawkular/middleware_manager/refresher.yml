@@ -20,8 +20,6 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Content-Encoding:
-      - gzip
       Expires:
       - '0'
       Cache-Control:
@@ -33,7 +31,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Tue, 15 Mar 2016 15:51:35 GMT
+      - Wed, 27 Apr 2016 14:06:26 GMT
       X-Total-Count:
       - '1'
       Connection:
@@ -41,20 +39,21 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '120'
+      - '148'
       Link:
       - <http://localhost:8080/hawkular/inventory/feeds>; rel="current"
     body:
       encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAI3MPQ7CMAxA4b2nsDJjNfVfDD1KxZA2sWBj6IZ69wInYH/v
-        W+A9AKRX3R8JbpDGfSbPZCsbenRBYSZ02RyVpE+Fq/kaY8zuVJtTRtMWKF4U
-        r58ONUuZuIdp3dLliz/bj/5rGA64n5yIJFaUAAAA
+      string: |-
+        [ {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97",
+          "id" : "f99c8893-9e94-423d-b222-1a1febfbde97"
+        } ]
     http_version: 
-  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
+  recorded_at: Wed, 27 Apr 2016 14:06:26 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resourceTypes/WildFly%20Server/resources
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f99c8893-9e94-423d-b222-1a1febfbde97/resourceTypes/WildFly%20Server/resources
     body:
       encoding: US-ASCII
       string: ''
@@ -72,8 +71,6 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Content-Encoding:
-      - gzip
       Expires:
       - '0'
       Cache-Control:
@@ -85,7 +82,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Tue, 15 Mar 2016 15:51:35 GMT
+      - Wed, 27 Apr 2016 14:06:26 GMT
       X-Total-Count:
       - '1'
       Connection:
@@ -93,23 +90,28 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '193'
+      - '357'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resourceTypes/WildFly%20Server/resources>;
+      - <http://localhost:8080/hawkular/inventory/feeds/f99c8893-9e94-423d-b222-1a1febfbde97/resourceTypes/WildFly%20Server/resources>;
         rel="current"
     body:
       encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAALWPvQrCMBhF9z5FCLgZ0uavn2Z3cnNwEIe0SbBQaylBKNI+
-        u22sguDqfO/l3HNCjwQh3JpwwWiLMA2aQcpUwRUB7wQRnDMCogQimXBZzo2C
-        wlOvAZixwFKipPVEQC7JZuoRmYo8484raUra6f2tNPU44vWMCX3rZszM/Cc1
-        6GNV213dr1h6cN3ddZE/IRtzjQ/wUkDfcWV/hVM2xP+ftQmhqk1Do93LbZm+
-        fZMBnZ8R/vCGXQEAAA==
+      string: |-
+        [ {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;WildFly%20Server",
+            "name" : "WildFly Server",
+            "id" : "WildFly Server"
+          },
+          "name" : "dhcp-10-40-1-43/Local",
+          "id" : "Local~~"
+        } ]
     http_version: 
-  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
+  recorded_at: Wed, 27 Apr 2016 14:06:26 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resources/Local~~/data?dataType=configuration
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f99c8893-9e94-423d-b222-1a1febfbde97/resources/Local~~/data?dataType=configuration
     body:
       encoding: US-ASCII
       string: ''
@@ -127,8 +129,6 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Content-Encoding:
-      - gzip
       Expires:
       - '0'
       Cache-Control:
@@ -140,27 +140,32 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Tue, 15 Mar 2016 15:51:35 GMT
+      - Wed, 27 Apr 2016 14:06:26 GMT
       Connection:
       - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '252'
+      - '360'
     body:
       encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAFWPMW/DIBSE9/wKxFxqg7FN68mZPFRpJFfdXwwkVh2IMKRD
-        lPz2YipXqt50+u50924bhPAF/AmjV4Qz3zCRs+pQVERoxQkvCkYEHwQpGVe0
-        LqASB53pRggGUrCcVKXUhIu6JC/RR8qc17RQuiphyFzzZgeYHo9MNoM1ejwG
-        B360Bj8ttVeYglp6b1FFvbXBSNRK6dQ8pz2U1c95PJoC0fKp3LzkE0yonS4n
-        oJT0u3bfd+8fq7NX7qoc6j341IFdMGY0x5XvnZVh8GgH51/ewfdXmMCths7O
-        3qwQvB8nMDiie9r+R/7/tbn/AM9KS1dRAQAA
+      string: |-
+        {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/d;configuration",
+          "value" : {
+            "Bound Address" : "127.0.0.1",
+            "Version" : "1.0.0.Alpha13-SNAPSHOT",
+            "Server State" : "running",
+            "Product Name" : "Hawkular",
+            "Hostname" : "dhcp-10-40-1-43.brq.redhat.com"
+          },
+          "name" : "configuration"
+        }
     http_version: 
-  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
+  recorded_at: Wed, 27 Apr 2016 14:06:26 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resources/Local~~/children
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f99c8893-9e94-423d-b222-1a1febfbde97/resources/Local~~/children
     body:
       encoding: US-ASCII
       string: ''
@@ -178,8 +183,6 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Content-Encoding:
-      - gzip
       Expires:
       - '0'
       Cache-Control:
@@ -191,7 +194,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Tue, 15 Mar 2016 15:51:35 GMT
+      - Wed, 27 Apr 2016 14:06:26 GMT
       X-Total-Count:
       - '22'
       Connection:
@@ -199,32 +202,322 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '824'
+      - '9615'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/882ad820-65df-4875-984c-504713ef65ac/resources/Local~~/children>;
+      - <http://localhost:8080/hawkular/inventory/feeds/f99c8893-9e94-423d-b222-1a1febfbde97/resources/Local~~/children>;
         rel="current"
     body:
       encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAN2ZTW+bQBCG7/kVyFJu2djBH6G1fGjrRlXbnFKphyiHgR07
-        1Hx1d20XVclv70IwsVkw5FCD9mDJMDO7887DwMLeG3/PDKMXgXjsGe+NXl9M
-        TWtgTuzhhFgLHJHRcGgSa+RYZGyO8Op6CBPLXvQXU8sygVrmgEzGdEFG1vWY
-        vJN+ZDwYXV8NcTEZg9Nn0++hA97zc/7v3Lzha5vHXKA/oyCAh2vmIJfnkyPy
-        cjj7/Af8yMP5Xe8iyU/EESb5Jcn+z3TFdJ6nlM4sJwvAT+fuqSaXFg3y/FOa
-        cR5VUJKFvBSjX1qKfnkhzp4uOgrrG8aOF8JKA1pFKW/FtRffLV6/qO0QytwN
-        stmjeWpOX+cfP52bg3k6v4IqsRqHtqzu+xYV1k5HE0gF/e3AoRh5YexjIGaP
-        sF2tPWDECX0fAkqWIHALMdkCu5S/k3dSnpraSYpp10mvhhI4jQQeontLfbpD
-        EDxkghNwhBsGnKAPrqcXwuMK6xlWxncH4tb16MKLCSzlaULDbSBv41QvjHUa
-        60EeGaE7KGEjLy/iMAQRanYvrZDWoAOVwNZ5cZTpCMJlQqgFpXJBlWwU99aJ
-        5FeLG2zkcchiQl0utIBTq62+h0oiu4Mse8Qy1I1XqbDGS448rEOkHCdcBzI3
-        TC4nTmxwVhhottSoFdmA4JEhukMzcoMlarbKKGqqZ7UX0R00Se8TiFy94Kiq
-        6vEcxHQHkI+CuQ5PXvGjMJAmvUgdkVePrDy4O+ySzzIv7/I2UoqUOMA5BJQB
-        QWCXqBPIplqbfcyqGak7iHcPYL26UlXVfCnSsR60hU84so1u648yXfWQClGt
-        Y1plW0E6IarUVImnLKJ1NHv344CHnh6fn6pFNXkuvYa0vW8pGAQ82yo4NZQf
-        r3Ofm4NbCGBZsl+552UUfLJSl3moxKrGqdzQPChN25x8lEuXpXzxS/d1Nuj/
-        Tsxpl88oLmDtiVPju92lJOHdpZko7HIX49AhK7liVqkVXYz7TO3DcXhqvfqF
-        arVNtHyb59QQv2RZSIY/ZR43Xiz/fViW3Sh3rkbmaBy4ZSAqnFSwR0arhFpR
-        srMn4+Ef+blgtVslAAA=
+      string: |-
+        [ {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Datasource",
+            "name" : "Datasource",
+            "id" : "Datasource"
+          },
+          "name" : "ExampleDS",
+          "id" : "Local~/subsystem=datasources/data-source=ExampleDS"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DKeycloakDS",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Datasource",
+            "name" : "Datasource",
+            "id" : "Datasource"
+          },
+          "name" : "KeycloakDS",
+          "id" : "Local~/subsystem=datasources/data-source=KeycloakDS"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fjdbc-driver%3Dh2",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;JDBC%20Driver",
+            "name" : "JDBC Driver",
+            "id" : "JDBC Driver"
+          },
+          "name" : "h2",
+          "id" : "Local~/subsystem=datasources/jdbc-driver=h2"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-command-gateway-war.war",
+          "id" : "Local~/deployment=hawkular-command-gateway-war.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-alerts-actions-email.war",
+          "id" : "Local~/deployment=hawkular-alerts-actions-email.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-wildfly-agent-download.war",
+          "id" : "Local~/deployment=hawkular-wildfly-agent-download.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-avail-creator.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-avail-creator.war",
+          "id" : "Local~/deployment=hawkular-avail-creator.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dsecret-store.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "secret-store.war",
+          "id" : "Local~/deployment=secret-store.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-inventory-dist.war",
+          "id" : "Local~/deployment=hawkular-inventory-dist.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-alerts-rest.war",
+          "id" : "Local~/deployment=hawkular-alerts-rest.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts-events-backend.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-accounts-events-backend.war",
+          "id" : "Local~/deployment=hawkular-accounts-events-backend.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-pinger.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-pinger.war",
+          "id" : "Local~/deployment=hawkular-pinger.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-rest-api.war",
+          "id" : "Local~/deployment=hawkular-rest-api.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-metrics-component.war",
+          "id" : "Local~/deployment=hawkular-metrics-component.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-commons-embedded-cassandra-ear.ear",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-commons-embedded-cassandra-ear.ear",
+          "id" : "Local~/deployment=hawkular-commons-embedded-cassandra-ear.ear"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-accounts.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-accounts.war",
+          "id" : "Local~/deployment=hawkular-accounts.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-btm-server.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-btm-server.war",
+          "id" : "Local~/deployment=hawkular-btm-server.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dkeycloak-server.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "keycloak-server.war",
+          "id" : "Local~/deployment=keycloak-server.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-console.war",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Deployment",
+            "name" : "Deployment",
+            "id" : "Deployment"
+          },
+          "name" : "hawkular-console.war",
+          "id" : "Local~/deployment=hawkular-console.war"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Transaction%20Manager",
+            "name" : "Transaction Manager",
+            "id" : "Transaction Manager"
+          },
+          "name" : "Transaction Manager",
+          "id" : "Local~/subsystem=transactions"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Messaging%20Server",
+            "name" : "Messaging Server",
+            "id" : "Messaging Server"
+          },
+          "name" : "Messaging Server [default]",
+          "id" : "Local~/subsystem=messaging-activemq/server=default"
+        }, {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Dhawkular-wildfly-agent",
+          "type" : {
+            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/rt;Hawkular%20WildFly%20Agent",
+            "name" : "Hawkular WildFly Agent",
+            "id" : "Hawkular WildFly Agent"
+          },
+          "name" : "Hawkular WildFly Agent",
+          "id" : "Local~/subsystem=hawkular-wildfly-agent"
+        } ]
     http_version: 
-  recorded_at: Tue, 15 Mar 2016 15:51:35 GMT
+  recorded_at: Wed, 27 Apr 2016 14:06:26 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f99c8893-9e94-423d-b222-1a1febfbde97/resources/Local~~/Local~%2Fsubsystem=datasources%2Fdata-source=ExampleDS/data?dataType=configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Wed, 27 Apr 2016 14:06:26 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '462'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/d;configuration",
+          "value" : {
+            "Username" : "sa",
+            "Driver Name" : "h2",
+            "JNDI Name" : "java:jboss/datasources/ExampleDS",
+            "Connection URL" : "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+            "Enabled" : "true",
+            "Password" : "sa"
+          },
+          "name" : "configuration"
+        }
+    http_version: 
+  recorded_at: Wed, 27 Apr 2016 14:06:26 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/f99c8893-9e94-423d-b222-1a1febfbde97/resources/Local~~/Local~%2Fsubsystem=datasources%2Fdata-source=KeycloakDS/data?dataType=configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Wed, 27 Apr 2016 14:06:26 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '543'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;f99c8893-9e94-423d-b222-1a1febfbde97/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DKeycloakDS/d;configuration",
+          "value" : {
+            "Username" : "sa",
+            "Driver Name" : "h2",
+            "JNDI Name" : "java:jboss/datasources/KeycloakDS",
+            "Connection URL" : "jdbc:h2:/home/jkremser/workspace/hawkular/hawkular/dist/target/hawkular-1.0.0.Alpha13-SNAPSHOT/standalone/data/keycloak;AUTO_SERVER=TRUE",
+            "Enabled" : "true",
+            "Password" : "sa"
+          },
+          "name" : "configuration"
+        }
+    http_version: 
+  recorded_at: Wed, 27 Apr 2016 14:06:26 GMT
 recorded_with: VCR 2.9.3

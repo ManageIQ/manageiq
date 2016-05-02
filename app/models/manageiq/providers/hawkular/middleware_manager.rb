@@ -5,6 +5,7 @@ module ManageIQ::Providers
     require_nested :EventCatcher
     require_nested :LiveMetricsCapture
     require_nested :MiddlewareDeployment
+    require_nested :MiddlewareDatasource
     require_nested :MiddlewareServer
     require_nested :RefreshParser
     require_nested :RefreshWorker
@@ -17,6 +18,7 @@ module ManageIQ::Providers
 
     has_many :middleware_servers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :middleware_deployments, :foreign_key => :ems_id, :dependent => :destroy
+    has_many :middleware_datasources, :foreign_key => :ems_id, :dependent => :destroy
 
     def verify_credentials(_auth_type = nil, options = {})
       begin
@@ -65,6 +67,12 @@ module ManageIQ::Providers
     def metrics_resource(resource)
       with_provider_connection do |connection|
         connection.list_metrics_for_resource(resource)
+      end
+    end
+
+    def get_config_data_for_resource(res_ids, feed_id)
+      with_provider_connection do |connection|
+        connection.get_config_data_for_resource(res_ids, feed_id)
       end
     end
 
