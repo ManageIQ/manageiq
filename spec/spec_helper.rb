@@ -100,6 +100,8 @@ RSpec.configure do |config|
     EvmSpecHelper.clear_caches
   end
 
+  config.filter_run_excluding :lint
+
   if ENV["TRAVIS"] && ENV["TEST_SUITE"] == "vmdb"
     config.after(:suite) do
       require Rails.root.join("spec/coverage_helper.rb")
