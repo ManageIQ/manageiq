@@ -61,10 +61,6 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
 
         miqService.sparkleOff();
       });
-
-      $scope.$watch("reconfigureModel.memory", function() {
-        $scope.form = $scope.angularForm;
-      });
     };
 
     $scope.canValidateBasicInfo = function () {
