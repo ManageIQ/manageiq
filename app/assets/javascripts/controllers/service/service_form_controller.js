@@ -21,11 +21,6 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
         $scope.modelCopy = angular.copy( $scope.serviceModel );
         miqService.sparkleOff();
       });
-
-      // need this in order to get Abandon Changes? prompt when leaving form without saving
-      $scope.$watch("serviceModel.name", function() {
-        $scope.form  = $scope.angularForm;
-     });
     };
 
     var serviceEditButtonClicked = function(buttonName, serializeFields) {
