@@ -1,3 +1,6 @@
+require 'rest-client'
+require 'rubygems'
+require 'json'
 class ManageIQ::Providers::Nuage::NetworkManager::VsdClient::Rest
   def initialize(server, user, password)
     @server = server

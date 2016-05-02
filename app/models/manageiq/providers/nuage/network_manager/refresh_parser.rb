@@ -21,8 +21,8 @@ module ManageIQ::Providers
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
       $log.info("#{log_header}...")
-      get_enterprises
-      $log.info(@data)
+      get_subnets
+
       @data
     end
 
@@ -54,17 +54,8 @@ module ManageIQ::Providers
     end
 
     def get_subnets
-      @data[:cloud_subnets] = []
-      @data[:network_groups].each do |net|
-      #filtering out subnets based on the enterprise they are mapped to
-       net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }.select { |filter| filter[:extra_attributes][:enterprise_name] == net[:name] }
-
-       # Lets store also subnets into indexed data, so we can reference them elsewhere
-       net[:cloud_subnets].each do |x|
-         @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
-         @data[:cloud_subnets] << x
-       end
-      end
+      subnets = @vsd_client.get_subnets
+      process_collection(subnets, :cloud_subnets) { |s| parse_subnets(s) }
     end
 
     def to_cidr(netmask)
@@ -84,10 +75,10 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    def parse_subnet(subnet)
+    def parse_subnets(subnet)
       uid = subnet['ID']
 
-      {
+      new_result = {
         :type             => self.class.cloud_subnet_type,
         :name             => subnet['name'],
         :ems_ref          => uid,
@@ -96,7 +87,6 @@ module ManageIQ::Providers
         :gateway          => subnet['gateway'],
         :dhcp_enabled     => false,
         :ip_version       => 4,
-        :extra_attributes => map_extra_attributes(subnet['parentID'])
       }
     end
 
@@ -114,10 +104,6 @@ module ManageIQ::Providers
     class << self
       def cloud_subnet_type
         "ManageIQ::Providers::Nuage::NetworkManager::CloudSubnet"
-      end
-
-      def network_group_type
-        "ManageIQ::Providers::Nuage::NetworkManager::NetworkGroup"
       end
     end
   end
