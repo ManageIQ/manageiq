@@ -68,7 +68,7 @@ module EmsRefresh::SaveInventoryHelper
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [], disconnect = false)
     child = parent.send(type)
     if hash.blank?
-      disconnect ? child.disconnect_inv : child.try(:destroy)
+      disconnect ? child.try(:disconnect_inv) : child.try(:destroy)
       return
     end
 
