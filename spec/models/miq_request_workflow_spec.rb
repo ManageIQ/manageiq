@@ -427,11 +427,12 @@ describe MiqRequestWorkflow do
       storage_cluster2 = FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster2', :ems_id => ems.id + 1)
       storage_cluster1.add_child(storage)
       storage_cluster2.add_child(storage)
-      expect(workflow.storage_to_hash_struct(storage).storage_cluster).to eq(storage_cluster1.name)
+      clusters = workflow.storage_to_hash_struct(storage).storage_clusters.split(', ')
+      expect(clusters).to match_array([storage_cluster1.name, storage_cluster2.name])
     end
 
     it 'says nil if not a storage_cluster' do
-      expect(workflow.storage_to_hash_struct(storage).storage_cluster).to be_nil
+      expect(workflow.storage_to_hash_struct(storage).storage_clusters).to be_nil
     end
   end
 end
