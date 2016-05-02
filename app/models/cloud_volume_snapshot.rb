@@ -1,6 +1,7 @@
 class CloudVolumeSnapshot < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
+  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
@@ -9,9 +10,5 @@ class CloudVolumeSnapshot < ApplicationRecord
   belongs_to :cloud_volume
   has_many   :based_volumes, :class_name => 'CloudVolume'
 
-  virtual_column :total_based_volumes, :type => :integer, :uses => :based_volumes
-
-  def total_based_volumes
-    based_volumes.size
-  end
+  virtual_total :total_based_volumes, :based_volumes
 end

@@ -3,6 +3,7 @@ class EmsCluster < ApplicationRecord
   include_concern 'CapacityPlanning'
   include ReportableMixin
   include EventMixin
+  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
@@ -25,9 +26,10 @@ class EmsCluster < ApplicationRecord
   virtual_column :v_parent_datacenter, :type => :string,  :uses => :all_relationships
   virtual_column :v_qualified_desc,    :type => :string,  :uses => :all_relationships
   virtual_column :last_scan_on,        :type => :time,    :uses => :last_drift_state_timestamp
-  virtual_column :total_vms,           :type => :integer, :uses => :all_relationships
-  virtual_column :total_miq_templates, :type => :integer, :uses => :all_relationships
-  virtual_column :total_hosts,         :type => :integer, :uses => :all_relationships
+  virtual_total  :total_vms,           :vms,              :uses => :all_relationships
+  virtual_total  :total_miq_templates, :miq_templates,    :uses => :all_relationships
+  virtual_total  :total_vms_and_templates, :vms_and_templates, :uses => :all_relationships
+  virtual_total  :total_hosts,         :hosts,            :uses => :all_relationships
 
   virtual_has_many :storages,       :uses => {:hosts => :storages}
   virtual_has_many :resource_pools, :uses => :all_relationships
@@ -177,19 +179,6 @@ class EmsCluster < ApplicationRecord
 
   def total_direct_vms_and_templates
     total_direct_vms + total_direct_miq_templates
-  end
-
-  # All VMs under this Cluster
-  def total_vms
-    vms.size
-  end
-
-  def total_miq_templates
-    miq_templates.size
-  end
-
-  def total_vms_and_templates
-    vms_and_templates.size
   end
 
   # Resource Pool relationship methods

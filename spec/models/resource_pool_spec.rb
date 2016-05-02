@@ -46,6 +46,7 @@ describe ResourcePool do
     it "should return the correct values for v_direct_vms and v_total_vms" do
       expect(@rp1.v_direct_vms).to eq(5)
       expect(@rp1.v_total_vms).to eq(15)
+      expect(@rp1.total_vms).to eq(15)
 
       expect(@rp2.v_direct_vms).to eq(10)
       expect(@rp2.v_total_vms).to eq(10)

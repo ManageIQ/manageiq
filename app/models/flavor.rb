@@ -1,19 +1,16 @@
 class Flavor < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
+  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   has_many   :vms
 
-  virtual_column :total_vms, :type => :integer, :uses => :vms
+  virtual_total :total_vms, :vms
 
   default_value_for :enabled, true
-
-  def total_vms
-    vms.size
-  end
 
   def name_with_details
     details = if cpus == 1

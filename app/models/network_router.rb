@@ -1,6 +1,7 @@
 class NetworkRouter < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
+  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
@@ -34,10 +35,7 @@ class NetworkRouter < ApplicationRecord
     end
   end
 
-  def total_vms
-    vms.size
-  end
-  virtual_column :total_vms, :type => :integer, :uses => :vms
+  virtual_total :total_vms, :vms
 
   private
 
