@@ -23,6 +23,38 @@ class PgLogicalRaw
     connection.enable_extension("pglogical_origin")
   end
 
+  # Monitoring
+  #
+
+  # Reports on replication lag from provider to subscriber nodes
+  # This method must be run on the provider node
+  #
+  # @return [Array<Hash<String,String>>] List of returned lag and application names,
+  #   one for each replication process
+  def lag_bytes
+    typed_exec(<<-SQL).to_a
+      SELECT
+        pg_xlog_location_diff(pg_current_xlog_insert_location(), flush_location) AS lag_bytes,
+        application_name
+      FROM pg_stat_replication
+    SQL
+  end
+
+  # Reports on replication bytes of WAL being retained for each replication slot
+  # This method must be run on the provider node
+  #
+  # @return [Array<Hash<String,String>>] List of returned WAL bytes and replication slot names,
+  #   one for each replication process
+  def wal_retained_bytes
+    typed_exec(<<-SQL).to_a
+      SELECT
+        pg_xlog_location_diff(pg_current_xlog_insert_location(), restart_lsn) AS retained_bytes,
+        slot_name
+      FROM pg_replication_slots
+      WHERE plugin = 'pglogical_output'
+    SQL
+  end
+
   # Node Management
   #
 
