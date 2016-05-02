@@ -57,15 +57,12 @@ module MiqReport::ImportExport
     # @option options :view_suffix [String] used for a view suffix
     # @param cache [Hash] cache that holds yaml for the views
     def load_from_view_options(db, current_user = nil, options = {}, cache = {})
-      view_yaml = MiqReport.view_yaml_filename(db, current_user, options)
-      view      = MiqReport.new(get_db_view_yaml(view_yaml, cache))
-      view.db   = db if view_yaml.ends_with?("Vm__restricted.yaml")
+      filename = MiqReport.view_yaml_filename(db, current_user, options)
+      yaml     = cache[filename] ||= YAML.load_file(filename)
+      view     = MiqReport.new(yaml)
+      view.db  = db if filename.ends_with?("Vm__restricted.yaml")
       view.extras ||= {}                        # Always add in the extras hash
       view
-    end
-
-    def get_db_view_yaml(filename, db_view_yaml_cache)
-      db_view_yaml_cache[filename] ||= YAML.load_file(filename)
     end
 
     def view_yaml_filename(db, current_user, options)
