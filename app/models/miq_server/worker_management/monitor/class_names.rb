@@ -2,6 +2,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
   extend ActiveSupport::Concern
 
   MONITOR_CLASS_NAMES = %w(
+    ManageIQ::Providers::Azure::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
@@ -68,6 +69,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
 
   MONITOR_CLASS_NAMES_IN_KILL_ORDER = %w(
     MiqEmsMetricsProcessorWorker
+    ManageIQ::Providers::Azure::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Amazon::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
