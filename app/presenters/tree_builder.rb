@@ -414,6 +414,29 @@ class TreeBuilder
     children_or_count || (count_only ? 0 : [])
   end
 
+  def x_get_tree_guest_device_kids(_parent, count_only)
+    count_only ? 0 : []
+  end
+
+  def x_get_tree_lun_kids(_parent, count_only)
+    count_only ? 0 : []
+  end
+
+  def x_get_tree_host_kids(_parent, count_only)
+    count_only ? 0 : []
+  end
+
+  def x_get_resource_pool_kids(_parent, count_only)
+    count_only ? 0 : []
+  end
+
+  def x_get_compliance_kids(_parent, count_only)
+    count_only ? 0 : []
+  end
+
+  def x_get_compliance_detail_kids(_parent, count_only, _parents)
+    count_only ? 0 : []
+  end
   # Return a tree node for the passed in object
   def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
     parents = pid.to_s.split('_')
