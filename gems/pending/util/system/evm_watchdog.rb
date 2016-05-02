@@ -51,7 +51,7 @@ module EvmWatchdog
   end
 
   def self.ps_for_process(process_name)
-    `ps -ef --no-heading | grep #{process_name} | awk '{print $2}'`
+    `ps -ef --no-heading | grep "#{process_name}" | awk '{print $2}'`
   end
 
   def self.get_db_state
