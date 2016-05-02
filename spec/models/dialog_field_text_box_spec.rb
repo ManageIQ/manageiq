@@ -129,7 +129,7 @@ describe DialogFieldTextBox do
 
           it "returns an error when the value is not a number" do
             df.value = 'a12'
-            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
+            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
           end
         end
       end
