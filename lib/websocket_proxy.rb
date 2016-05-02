@@ -49,8 +49,8 @@ class WebsocketProxy
 
   def cleanup
     @console.destroy unless @console.destroyed?
-    @sock.close unless @sock.closed?
-    @ws.close unless @ws.closed?
+    @sock.close if @sock && !@sock.closed?
+    @ws.close if @ws && !@ws.closed?
   end
 
   def descriptors
