@@ -410,7 +410,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       rails_logger('allowed_vlans', 0)
       # TODO: Use Active Record to preload this data?
       MiqPreloader.preload(hosts, :switches => :lans)
-      hosts.each { |h| h.lans.each { |l| vlans[l.name] = l.name } }
+      hosts.each do |h|
+        h.lans.each { |l| vlans[l.name] = l.name if @vlan_options[:dvs] || !l.switch.shared? }
+      end
       rails_logger('allowed_vlans', 1)
     end
 
