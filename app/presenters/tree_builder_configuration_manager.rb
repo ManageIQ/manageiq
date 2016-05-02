@@ -1,4 +1,8 @@
 class TreeBuilderConfigurationManager < TreeBuilder
+  has_kids_for ManageIQ::Providers::Foreman::ConfigurationManager, [:x_get_tree_cmf_kids]
+  has_kids_for ManageIQ::Providers::AnsibleTower::ConfigurationManager, [:x_get_tree_cmat_kids]
+  has_kids_for ConfigurationProfile, [:x_get_tree_cpf_kids]
+
   private
 
   def tree_init_options(_tree_name)

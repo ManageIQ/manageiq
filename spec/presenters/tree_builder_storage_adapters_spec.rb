@@ -33,13 +33,5 @@ describe TreeBuilderStorageAdapters do
       expect(kids.first).to be_a_kind_of(MiqScsiLun)
       expect(number_of_kids).to eq(3)
     end
-    it 'returns nothing as MiqScsiLun children' do
-      root = @sa_tree.send(:x_get_tree_roots, false).first
-      parent = @sa_tree.send(:x_get_tree_target_kids, root, false).first
-      number_of_kids = @sa_tree.send(:x_get_tree_lun_kids, parent, true)
-      kids = @sa_tree.send(:x_get_tree_lun_kids, parent, false)
-      expect(number_of_kids).to eq(0)
-      expect(kids).to eq([])
-    end
   end
 end

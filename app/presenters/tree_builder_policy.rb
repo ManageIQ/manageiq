@@ -1,4 +1,7 @@
 class TreeBuilderPolicy < TreeBuilder
+  has_kids_for MiqPolicy, [:x_get_tree_po_kids]
+  has_kids_for MiqEventDefinition, [:x_get_tree_ev_kids, :parents]
+
   private
 
   def tree_init_options(_tree_name)
@@ -95,15 +98,5 @@ class TreeBuilderPolicy < TreeBuilder
     success = count_only_or_objects(count_only, pol_rec ? pol_rec.actions_for_event(parent, :success) : [])
     failure = count_only_or_objects(count_only, pol_rec ? pol_rec.actions_for_event(parent, :failure) : [])
     success + failure
-  end
-
-  # level 5 - nothing under conditions
-  def x_get_tree_co_kids(_parent, count_only)
-    count_only_or_objects(count_only, [])
-  end
-
-  # level 6 - nothing under actions
-  def x_get_tree_ac_kids(_parent, count_only)
-    count_only_or_objects(count_only, [])
   end
 end
