@@ -54,7 +54,7 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'test timeline'
-        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags)
+        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags, 'EmsEvent')
         expect(val).to eq(href)
       end
     end
@@ -79,7 +79,30 @@ describe ReportFormatter::TimelineMessage do
     tests.each do |column, href|
       it "Evaluate column #{column} content" do
         row[column] = 'test timeline'
-        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags)
+        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, flags, 'EmsEvent')
+        expect(val).to eq(href)
+      end
+    end
+  end
+
+  describe '#message_html on bottleneck event' do
+    row = {}
+    let(:ems_cluster) { FactoryGirl.create(:ems_cluster, :id => 42, :name => 'Test Cluster') }
+    let(:event) do
+      FactoryGirl.create(:bottleneck_event,
+                         :event_type    => 'MemoryUsage',
+                         :resource_id   => 42,
+                         :resource_name => ems_cluster.name,
+                         :resource_type => 'EmsCluster')
+    end
+
+    tests = {'event_type'    => 'MemoryUsage',
+             'resource_name' => '<a href="/ems_cluster/show/42">Test Cluster</a>'}
+
+    tests.each do |column, href|
+      it "Evaluate column #{column} content" do
+        row[column] = 'MemoryUsage'
+        val = ReportFormatter::TimelineMessage.new.message_html(column, row, event, {}, 'BottleneckEvent')
         expect(val).to eq(href)
       end
     end
