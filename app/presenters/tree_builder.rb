@@ -352,7 +352,7 @@ class TreeBuilder
                           # * TreeBuilderReportReports         - options[:tree]
                           # * TreeBuilderVandt - the whole options hash is passed to TreeBuilderVmsAndTemplates constructor
                           # * All the rest 30+ ancestors ignore options hash.
-                          x_get_tree_roots(count_only, options.dup)
+                          x_get_tree_roots(count_only, options)
                         when AvailabilityZone    then x_get_tree_az_kids(parent, count_only)
                         when Compliance          then x_get_compliance_kids(parent, count_only)
                         when ComplianceDetail    then x_get_compliance_detail_kids(parent, count_only, parents)
