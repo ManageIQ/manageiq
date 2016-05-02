@@ -118,8 +118,8 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :emstype,                 :type => :string
   virtual_column :emstype_description,     :type => :string
   virtual_column :last_refresh_status,     :type => :string
-  virtual_column :total_vms_and_templates, :type => :integer
-  virtual_column :total_vms,               :type => :integer
+  virtual_total  :total_vms_and_templates, :vms_and_templates
+  virtual_total  :total_vms,               :vms
   virtual_column :total_miq_templates,     :type => :integer
   virtual_column :total_hosts,             :type => :integer
   virtual_column :total_storages,          :type => :integer
@@ -465,14 +465,6 @@ class ExtManagementSystem < ApplicationRecord
 
   def event_where_clause(assoc = :ems_events)
     ["#{events_table_name(assoc)}.ems_id = ?", id]
-  end
-
-  def total_vms_and_templates
-    vms_and_templates.size
-  end
-
-  def total_vms
-    vms.size
   end
 
   def total_miq_templates
