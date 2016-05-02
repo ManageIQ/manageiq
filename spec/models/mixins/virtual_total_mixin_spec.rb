@@ -40,4 +40,5 @@ describe VirtualTotalMixin do
       end
     end
   end
+
 end
