@@ -50,6 +50,24 @@ module MiqReport::ImportExport
       return rep, result
     end
 
+    # @param db [Class] name of report (typically class name)
+    # @param current_user [User] User for restricted access to reports
+    # @param options [Hash]
+    # @option options :association [String] used for a view suffix
+    # @option options :view_suffix [String] used for a view suffix
+    # @param cache [Hash] cache that holds yaml for the views
+    def load_from_view_options(db, current_user = nil, options = {}, cache = {})
+      view_yaml = MiqReport.view_yaml_filename(db, current_user, options)
+      view      = MiqReport.new(get_db_view_yaml(view_yaml, cache))
+      view.db   = db if view_yaml.ends_with?("Vm__restricted.yaml")
+      view.extras ||= {}                        # Always add in the extras hash
+      view
+    end
+
+    def get_db_view_yaml(filename, db_view_yaml_cache)
+      db_view_yaml_cache[filename] ||= YAML.load_file(filename)
+    end
+
     def view_yaml_filename(db, current_user, options)
       suffix = options[:association] || options[:view_suffix]
       db = db.to_s
