@@ -20,7 +20,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_ubuntu",    %w(ubuntu)],
     ["linux_chrome",    %w(chromeos)],
     ["linux_chromium",  %w(chromiumos)],
-    ["linux_suse",      %w(suse)],
+    ["linux_suse",      %w(suse sles)],
     ["linux_redhat",    %w(redhat rhel)],
     ["linux_fedora",    %w(fedora)],
     ["linux_gentoo",    %w(gentoo)],
@@ -28,7 +28,7 @@ class OperatingSystem < ApplicationRecord
     ["linux_debian",    %w(debian)],
     ["linux_esx",       %w(vmnixx86 vmnix-x86 vmwareesxserver esxserver)],
     ["linux_solaris",   %w(solaris)],
-    ["linux_generic",   %w(linux sles)]
+    ["linux_generic",   %w(linux)]
   ]
 
   def self.add_elements(vm, xmlNode)
