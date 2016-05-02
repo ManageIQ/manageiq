@@ -19,7 +19,6 @@
         $scope.modelCopy[args.userIdName] = args.userIdValue;
       }
     });
-
   };
 
   EmsKeypairController.prototype.initialize = function(model, formId) {
@@ -66,4 +65,4 @@
 
   EmsKeypairController.$inject = ["$scope"];
   ManageIQ.angular.app.controller('emsKeypairController', EmsKeypairController);
-})()
+})();
