@@ -2,7 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-
 ## Unreleased - as of Sprint 39 end 2016-04-19
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+39+Ending+Apr+19%2C+2016%22+label%3Aenhancement)
@@ -74,7 +73,7 @@ All notable changes to this project will be documented in this file.
 
 Notable fixes include:
 
--Performance: Metrics Rollups bug fix
+- Performance: Metrics Rollups bug fix
 
 ## Unreleased - as of Sprint 38 end 2016-03-28
 
