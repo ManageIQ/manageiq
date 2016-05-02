@@ -208,6 +208,9 @@ module ApplicationHelper
       if controller == "ems_cloud" && action == "show"
         return ems_clouds_path
       end
+      if controller == "ems_infra" && action == "show"
+        return ems_infras_path
+      end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent", "SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller => controller, :action => action, :id => parent.id) + "?show="
       else
