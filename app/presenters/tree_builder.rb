@@ -380,7 +380,7 @@ class TreeBuilder
                           # TreeBuilderReportDashboards - :type
                           # TreeBuilderVmsFilter - :leaf
                           x_get_tree_custom_kids(parent, count_only, options)
-                        when Host                then x_get_tree_host_kids(parent, count_only)
+                        when Host                then try(:x_get_tree_host_kids, parent, count_only)
                         when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
                         when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
                         when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
