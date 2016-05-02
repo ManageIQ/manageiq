@@ -131,6 +131,12 @@ module Metric::Capture
       prev_task = MiqTask.where(:identifier => pkey).order("id DESC").first
       task_start_time = prev_task ? prev_task.context_data[:end] : default_task_start_time
 
+      if prev_task && prev_task.state == MiqTask::STATE_QUEUED && prev_task.context_data[:targets] == targets_by_rollup_parent[pkey]
+        task = prev_task
+        _log.info "Reuse task id: [#{task.id}] for: [#{pkey}] with targets: #{targets_by_rollup_parent[pkey].inspect} for time range: [#{task_start_time} - #{task_end_time}]"
+        h[pkey] = task
+        next
+      end
       task = MiqTask.create(
         :name         => name,
         :identifier   => pkey,
@@ -159,8 +165,8 @@ module Metric::Capture
 
       options = {:zone => zone}
       target.perf_rollup_parents(interval_name).to_a.compact.each do |parent|
-        if tasks_by_rollup_parent.key?("#{parent.class}:#{parent.id}")
-          pkey = "#{parent.class}:#{parent.id}"
+        pkey = "#{parent.class}:#{parent.id}"
+        if tasks_by_rollup_parent.key?(pkey)
           tkey = "#{target.class}:#{target.id}"
           if targets_by_rollup_parent[pkey].include?(tkey)
             # FIXME: check that this is still correct

@@ -105,14 +105,14 @@ describe Metric do
             end
           end
 
-          it "calling perf_capture_timer when existing capture messages are on the queue should merge messages and append new task id to cb args" do
+          it "calling perf_capture_timer when existing capture messages are on the queue should merge messages and merge task id to cb args" do
             Metric::Capture.perf_capture_timer
             @vmware_clusters.each do |cluster|
               expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
               next if expected_hosts.empty?
 
               tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id DESC")
-              expect(tasks.length).to eq(2)
+              expect(tasks.length).to eq(1)
               tasks.each do |task|
                 expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
               end
@@ -152,21 +152,6 @@ describe Metric do
 
             messages = MiqQueue.where(:class_name => "Host", :method_name => 'capture_metrics_realtime')
             messages.each { |m| expect(m.lock_version).to eq(1) }
-          end
-
-          it "calling perf_capture_timer a second time should create another task with the correct time window" do
-            Metric::Capture.perf_capture_timer
-
-            @vmware_clusters.each do |cluster|
-              expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
-              next if expected_hosts.empty?
-
-              tasks = MiqTask.where(:name => "Performance rollup for EmsCluster:#{cluster.id}").order("id")
-              expect(tasks.length).to eq(2)
-
-              t1, t2 = tasks
-              expect(t2.context_data[:start]).to eq(t1.context_data[:end])
-            end
           end
         end
       end
