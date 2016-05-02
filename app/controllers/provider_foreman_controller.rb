@@ -346,29 +346,35 @@ class ProviderForemanController < ApplicationController
   end
 
   def tree_select_unprovisioned_configured_system
-    params[:id] = "cs-#{params[:id]}"
-    tree_select
+    if unassigned_configuration_profile?(params[:id])
+      params[:id] = "cs-#{params[:id]}"
+      tree_select
+    else
+      redirect_to :action => "explorer"
+    end
   end
 
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
     type, _id = x_node.split("_").last.split("-")
     case nodes.first
-    when "root"    then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
-    when "e"       then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-    when "f"       then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
-    when "cp"      then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+    when "root" then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when "fr"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when "at"   then find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
+    when "f"    then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
+    when "cp"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     when "xx" then
-      case nodes.second
-      when "at", "fr"   then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    case nodes.second
+      when "at" then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
+      when "fr" then find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
       when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
-      when "at_e" then
+      when "at_at" then
         if type == "f"
           find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
         else
           find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
         end
-      when "fr_e" then
+      when "fr_fr" then
         if type == "cp"
           find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
         else
@@ -425,19 +431,20 @@ class ProviderForemanController < ApplicationController
     if params[:button]
       @miq_after_onload = "miqAjax('/#{controller_name}/x_button?pressed=#{params[:button]}');"
     end
-
-    build_accordions_and_trees
-
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
-
-    if params[:id]
-      # if you click on a link to VM on a dashboard widget that will redirect you
-      # to explorer with params[:id] and you get into the true branch
-      redirected = set_elements_and_redirect_unauthorized_user
+    @in_a_form = false
+    if params[:id]  # If a tree node id came in, show in one of the trees
+      nodetype, id = params[:id].split("-")
+      # treebuilder initializes x_node to root first time in locals_for_render,
+      # need to set this here to force & activate node when link is clicked outside of explorer.
+      @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
 
-    render :layout => "application" unless redirected
+    @sb[:open_tree_nodes] ||= []
+    build_accordions_and_trees
+
+    render :layout => "application"
   end
 
   def tree_autoload_dynatree
@@ -493,7 +500,7 @@ class ProviderForemanController < ApplicationController
     end
 
     case model
-    when "ManageIQ::Providers::Foreman::ConfigurationManager", "ManageIQ::Providers::AnsibleTower::ConfigurationManager", "ExtManagementSystem"
+    when "ManageIQ::Providers::Foreman::ConfigurationManager", "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
       provider_list(id, model)
     when "ConfigurationProfile"
       configuration_profile_node(id, model)
@@ -534,16 +541,16 @@ class ProviderForemanController < ApplicationController
         @no_checkboxes = true
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
-        record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
+        record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
         @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
-                                                        :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model}"}
+                                                        :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model} Provider"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
         options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
         @no_checkboxes = true
         process_show_list(options)
-        record_model = ui_lookup(:model => model ? model : TreeBuilder.get_model_for_prefix(@nodetype))
+        record_model = ui_lookup(:model => model_to_name(model ? model : model_to_name(TreeBuilder.get_model_for_prefix(@nodetype))))
         @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
-                                                        :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model}"}
+                                                        :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
       end
     end
   end
@@ -598,9 +605,6 @@ class ProviderForemanController < ApplicationController
     else
       options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["inventory_root_group_id IN (?)", from_cid(@inventory_group_record.id)]
-      options[:where_clause] =
-        ["manager_id IN (?) AND \
-          inventory_root_group_id IS NULL", from_cid(id)] if empty_inventory_group_record?(@inventory_group_record)
       process_show_list(options)
       record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
@@ -763,7 +767,8 @@ class ProviderForemanController < ApplicationController
   end
 
   def ansible_tower_provider_record?(node = x_node)
-    node = node.split("-").last if node.split("-").first == 'xx'
+    return  @record.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager) if @record
+
     type, _id = node.split("-")
     type && ["ManageIQ::Providers::AnsibleTower::ConfigurationManager"].include?(TreeBuilder.get_model_for_prefix(type))
   end
@@ -775,6 +780,7 @@ class ProviderForemanController < ApplicationController
   def search_text_type(node)
     return "provider" if provider_record?(node)
     return "configuration_profile" if configuration_profile_record?(node)
+    return "inventory_group" if inventory_group_record?(node)
     node
   end
 
@@ -966,6 +972,8 @@ class ProviderForemanController < ApplicationController
   def list_row_id(row)
     if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
       "-#{row['manager_id']}-unassigned"
+    elsif row[:type]
+      "#{TreeBuilder.get_prefix_for_model(row[:type])}"%to_cid(row['id'])
     else
       to_cid(row['id'])
     end
