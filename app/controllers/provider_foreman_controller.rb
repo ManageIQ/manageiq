@@ -122,27 +122,15 @@ class ProviderForemanController < ApplicationController
   end
 
   def add_provider_foreman
-    if params[:id] == "new"
-      if params[:provtype] == 'Ansible Tower'
-        @provider_cfgmgmt = ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
-                                                                            :url        => params[:url],
-                                                                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                            :verify_ssl => params[:verify_ssl].eql?("on"))
-      else
-        @provider_cfgmgmt = ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
-                                                                       :url        => params[:url],
-                                                                       :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                                       :verify_ssl => params[:verify_ssl].eql?("on"))
+    @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == "new"
+    @provider_cfgmgmt ||= find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider # TODO: Why is params[:id] an ExtManagementSystem ID instead of Provider ID?
 
-      end
-    else
-      @provider_cfgmgmt = find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
-      @provider_cfgmgmt.update_attributes(
-        :name       => params[:name],
-        :url        => params[:url],
-        :verify_ssl => params[:verify_ssl].eql?("on")
-      )
-    end
+    @provider_cfgmgmt.update_attributes(
+      :name       => params[:name],
+      :url        => params[:url],
+      :verify_ssl => params[:verify_ssl].eql?("on"),
+      :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+    )
     update_authentication_provider(:save)
   end
 
@@ -214,18 +202,12 @@ class ProviderForemanController < ApplicationController
 
   def authentication_validate
     @provider_cfgmgmt = if params[:log_password]
-      if params[:provtype] == 'Ansible Tower'
-        ManageIQ::Providers::AnsibleTower::Provider.new(:name       => params[:name],
-                                                        :url        => params[:url],
-                                                        :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                        :verify_ssl => params[:verify_ssl].eql?("on"))
-
-      else
-        ManageIQ::Providers::Foreman::Provider.new(:name       => params[:name],
-                                                   :url        => params[:url],
-                                                   :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                                                   :verify_ssl => params[:verify_ssl].eql?("on"))
-      end
+      provider_class_from_provtype.new(
+        :name       => params[:name],
+        :url        => params[:url],
+        :verify_ssl => params[:verify_ssl].eql?("on"),
+        :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
+      )
     else
       find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
     end
@@ -454,6 +436,10 @@ class ProviderForemanController < ApplicationController
   end
 
   private ###########
+
+  def provider_class_from_provtype
+    params[:provtype] == 'Ansible Tower' ? ManageIQ::Providers::AnsibleTower::Provider : ManageIQ::Providers::Foreman::Provider
+  end
 
   def features
     [{:role     => "providers_accord",
