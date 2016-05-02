@@ -55,6 +55,7 @@ class ExtManagementSystem < ApplicationRecord
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
   has_many :miq_events,             :as => :target, :dependent => :destroy
+  has_many :cloud_subnets, :foreign_key => :ems_id, :dependent => :destroy
 
   validates :name,     :presence => true, :uniqueness => {:scope => [:tenant_id]}
   validates :hostname, :presence => true, :if => :hostname_required?
@@ -97,6 +98,7 @@ class ExtManagementSystem < ApplicationRecord
   include AuthenticationMixin
   include Metric::CiMixin
   include AsyncDeleteMixin
+  include VirtualTotalMixin
 
   delegate :ipaddress,
            :ipaddress=,
@@ -130,6 +132,7 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_unknown,       :type => :integer
   virtual_column :total_vms_never,         :type => :integer
   virtual_column :total_vms_suspended,     :type => :integer
+  virtual_total  :total_subnets,           :cloud_subnets
 
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name

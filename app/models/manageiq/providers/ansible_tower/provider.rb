@@ -7,10 +7,6 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
 
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
-  delegate :url, :to => :default_endpoint
-
-  virtual_column :url, :type => :string, :uses => :endpoints
-
   before_validation :ensure_managers
 
   validates :name, :presence => true, :uniqueness => true
