@@ -280,28 +280,32 @@ class ChargebackController < ApplicationController
 
   # Add a new tier at the end
   def cb_tier_add
-    detail_index = params[:detail_index]
+    index = params[:index]
+    detail_index, tier_index = index.split("-")
+    tier_index = tier_index.to_i
     ii = detail_index.to_i
 
     @edit  = session[:edit]
     detail = @edit[:new][:details][ii]
-
     @edit[:new][:num_tiers][ii] = detail[:chargeback_tiers].to_a.length if detail[:chargeback_tiers]
     @edit[:new][:num_tiers][ii] = 1 unless @edit[:new][:num_tiers][ii] || @edit[:new][:num_tiers][ii] == 0
     @edit[:new][:num_tiers][ii] += 1
 
-    tier_index = @edit[:new][:num_tiers][ii] - 1
     tier_list = @edit[:new][:tiers][ii]
-    tier_list[tier_index] = {}
 
-    tier                 = tier_list[tier_index]
-    tier[:start]         = tier_list[tier_index - 1][:finish]
-    tier[:finish]        = Float::INFINITY
+    tier                 = {}
+    tier[:start]         = tier_list[tier_index][:finish]
+    tier[:finish] = if tier_list[tier_index + 1].nil?
+                      Float::INFINITY
+                    else
+                      tier_list[tier_index + 1][:start]
+                    end
     tier[:fixed_rate]    = 0.0
     tier[:variable_rate] = 0.0
+    tier[:new_tier]      = true
+    tier_list.insert(tier_index + 1, tier)
 
-    code_currency = ChargebackRateDetailCurrency.find_by(:id => detail[:currency]).code
-    add_row(detail_index, tier_index - 1, code_currency)
+    refresh_rate_edit_view
   end
 
   # Remove the selected tier
@@ -317,11 +321,7 @@ class ChargebackController < ApplicationController
 
     @changed = session[:changed] = true
 
-    render :update do |page|
-      page << javascript_prologue
-      page.replace_html("chargeback_rate_edit_form", :partial => "cb_rate_edit_table")
-      page << javascript_for_miq_button_visibility(@changed)
-    end
+    refresh_rate_edit_view
   end
 
   def cb_assign_update
@@ -905,20 +905,11 @@ class ChargebackController < ApplicationController
     errors.each { |field, msg| add_flash("'#{detail.description}' #{field.to_s.humanize.downcase} #{msg}", :error) }
   end
 
-  def add_row(i, pos, code_currency)
-    locals = {:code_currency => code_currency}
+  def refresh_rate_edit_view
     render :update do |page|
       page << javascript_prologue
-      # Update the first row to change the colspan
-      page.replace("rate_detail_row_#{i}_0",
-                   :partial => "tier_first_row",
-                   :locals  => locals)
-      # Insert the new tier after the last one
-      page.insert_html(:after,
-                       "rate_detail_row_#{i}_#{pos}",
-                       :partial => "tier_row",
-                       :locals  => locals)
-      page << javascript_for_miq_button_visibility(true)
+      page.replace_html("chargeback_rate_edit_form", :partial => "cb_rate_edit_table")
+      page << javascript_for_miq_button_visibility(@changed)
     end
   end
 end

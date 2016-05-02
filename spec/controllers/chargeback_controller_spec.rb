@@ -249,8 +249,8 @@ describe ChargebackController do
       count_of_tiers = chargeback_rate.chargeback_rate_details[index_to_rate_type.to_i].chargeback_tiers.count
       post :x_button, :params => {:pressed => "chargeback_rates_edit", :id => chargeback_rate.id}
       post :cb_tier_remove, :params => {:button => "remove", :index => "#{index_to_rate_type}-1"}
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-1"}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-1"}
 
       response_body = response.body.delete('\\').gsub('u003e', ">").gsub('u003c', "<")
 
@@ -267,10 +267,10 @@ describe ChargebackController do
       post :cb_tier_remove, :params => {:button => "remove", :index => "#{index_to_rate_type}-1"}
 
       # add new tier, new position is index_to_rate_type-1
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-1"}
 
       # add new tier at, new position is index_to_rate_type-2
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-1"}
 
       # after these actions we have for rate detail values:
       # 0-0 :start => 0.0, :finish => 20.0
@@ -399,10 +399,10 @@ describe ChargebackController do
       post :x_button, :params => {:id => "new", :pressed => "chargeback_rates_new"}
       post :cb_rate_form_field_changed, :params => {:id => "new", :description => "chargeback rate 1"}
 
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-0"}
       post :cb_tier_remove, :params => {:button => "remove", :index => "#{index_to_rate_type}-1"}
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-0"}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-0"}
 
       # add values to newly added tiers to be valid
       change_form_value(:finish_0_0, "20.0", "new")
@@ -420,7 +420,6 @@ describe ChargebackController do
       compute_rates[:tiers].push(:start => 50.0, :finish => Float::INFINITY)
 
       new_chargeback_rate = ChargebackRate.last
-
       expect_chargeback_rate_to_eq_hash(new_chargeback_rate, compute_chargeback_rate_hash_from_yaml)
     end
 
@@ -489,10 +488,10 @@ describe ChargebackController do
       post :x_button, :params => {:pressed => "chargeback_rates_copy", :id => chargeback_rate.id}
 
       # remove and add some tier
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-1"}
       post :cb_tier_remove, :params => {:button => "remove", :index => "#{index_to_rate_type}-1"}
       post :cb_tier_remove, :params => {:button => "remove", :index => "#{index_to_rate_type}-1"}
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-1"}
 
       # back set values back to origin values
       change_form_value(:start_0_1, "20.0", "new")

@@ -59,16 +59,32 @@
           = text_field_tag("variable_rate_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:variable_rate],
             :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
         %td.action
-          = button_tag(_("Add"), :class => "btn btn-default", :alt => t = _("Add a new tier"), :title => t,
-                                 :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_add",
-                                                                       :detail_index => detail_index,
-                                                                       :button => "add")}');")
+          .dropdown.dropdown-kebab-pf
+            %button.btn.btn-link.dropdown-toggle{:type => "button",
+                                                 :id => "dropdownKebab",
+                                                 "data-toggle" => "dropdown",
+                                                 "aria-haspopup" => "true",
+                                                 "aria-expanded" => "true"}
+              %span.fa.fa-ellipsis-v
+            %ul.dropdown-menu{:"aria-labelledby" => "dropdownKebab"}
+              %li
+                = link_to(_("Add a new tier below"), {:controller => "chargeback",
+                                                      :action => "cb_tier_add",
+                                                      :index => "#{detail_index}-0",
+                                                      :button => "add"},
+                                                      :remote => true,
+                                                      "data-method" => :post)
+
+
         /Show the code of the currency selected by the user
         %td{:id => "column_currency_#{detail_index}", :rowspan => num_tiers}
           = @edit[:new][:code_currency]
       - (1..num_tiers.to_i - 1).each do |tier_index|
         - tier = @edit[:new][:tiers][detail_index][tier_index]
-        %tr.rdetail{:id => "rate_detail_row_#{detail_index}_#{tier_index}"}
+        - if tier[:new_tier]
+          - new_tier_class  = "new_tier"
+          - tier[:new_tier] = false
+        %tr.rdetail{:id => "rate_detail_row_#{detail_index}_#{tier_index}", :class => new_tier_class}
           %td
             - tier_val = (tier[:start].to_s.eql? "Infinity") ? "" : tier[:start]
             = text_field_tag("start_#{detail_index}_#{tier_index}", tier_val,
@@ -84,10 +100,29 @@
             = text_field_tag("variable_rate_#{detail_index}_#{tier_index}", tier[:variable_rate],
               :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
           %td.action
-            = button_tag(_("Delete"), :class => "btn btn-default", :alt => t = _("Remove the tier"), :title => t,
-                                      :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_remove",
-                                                                            :index => "#{detail_index}-#{tier_index}",
-                                                                            :button => "remove")}');")
+            .dropdown.dropdown-kebab-pf
+              %button.btn.btn-link.dropdown-toggle{:type => "button",
+                                                   :id => "dropdownKebab",
+                                                   "data-toggle" => "dropdown",
+                                                   "aria-haspopup" => "true",
+                                                   "aria-expanded" => "true"}
+                %span.fa.fa-ellipsis-v
+              %ul.dropdown-menu{:"aria-labelledby" => "dropdownKebab"}
+                %li
+                  = link_to(_("Add a new tier below"), {:controller => "chargeback",
+                                                        :action => "cb_tier_add",
+                                                        :index => "#{detail_index}-#{tier_index}",
+                                                        :button => "add"},
+                                                        :remote => true,
+                                                        "data-method" => :post)
+                %li.divider{:role => "separator"}
+                %li
+                  = link_to(_("Delete tier"), {:controller => "chargeback",
+                                                :action => "cb_tier_remove",
+                                                :index => "#{detail_index}-#{tier_index}",
+                                                :button => "remove"},
+                                                :remote => true,
+                                                "data-method" => :post)
 
     :javascript
       $('tbody tr.rdetail').hover( function(){hoverRowIn(this)}, function(row){hoverRowOut(this)});
@@ -97,3 +132,7 @@
       function hoverRowOut(row) {
         $("tr[id ^= '"+row.id.substr(0, row.id.lastIndexOf("_"))+"']").removeClass("active");
       }
+      $(document).ready(function () {
+          $('.new_tier').fadeIn().fadeOut().fadeIn().fadeOut().fadeIn().fadeOut().fadeIn();
+          $('.new_tier').addClass('new_tier_off').removeClass('new_tier');
+      });
