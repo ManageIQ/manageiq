@@ -151,10 +151,8 @@ class CloudVolumeController < ApplicationController
 
   def detach
     assert_privileges("cloud_volume_detach")
-    @vm_choice = {}
     @volume = find_by_id_filtered(CloudVolume, params[:id])
-    attached_vms = @volume.attachments.map { |disk| disk.hardware.vm }
-    attached_vms.each { |vm| @vm_choices[vm.name] = vm.id }
+    @vm_choices = @volume.vms.each_with_object({}) { |vm, hash| hash[vm.name] = vm.id }
 
     @in_a_form = true
     drop_breadcrumb(
