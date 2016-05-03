@@ -89,7 +89,7 @@ gem "net-ssh",                        "~>2.9.2",   :require => false
 gem "omniauth",                       "~>1.3.1",   :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",   :require => false
-gem "ovirt_metrics",                  :git => "git://github.com/matthewd/ovirt_metrics.git", :branch => "rails5", :require => false # https://github.com/ManageIQ/ovirt_metrics/pull/8
+gem "ovirt_metrics",                  "~>1.2.0",   :require => false
 gem "ruby_parser",                    "~>3.7",     :require => false
 gem "ruby-progressbar",               "~>1.7.0",   :require => false
 gem "rufus-scheduler",                "~>3.1.3",   :require => false
