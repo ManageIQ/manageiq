@@ -127,11 +127,6 @@ class StorageController < ApplicationController
       @showtype = "ontap_file_shares"
     end
     @lastaction = "show"
-
-    # Came in from outside show_list partial
-    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    end
   end
 
 
@@ -351,16 +346,14 @@ class StorageController < ApplicationController
 
     load_or_clear_adv_search
     apply_node_search_text if x_active_tree == :storage_tree
-
-    get_node_info(x_node)
     replace_right_cell(x_node)
   end
 
   def tree_record
     if x_active_tree == :storage_tree
-      @record = storage_tree_rec
+      storage_tree_rec
     elsif x_active_tree == :storage_pod_tree
-      @record = storage_pod_tree_rec
+      storage_pod_tree_rec
     end
   end
 
@@ -379,8 +372,8 @@ class StorageController < ApplicationController
   def storage_pod_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-      when "xx"  then find_record(Storage, params[:id])
-      when "dsc" then find_record(EmsFolder, from_cid(params[:id]))
+      when "xx"  then @record = find_record(Storage, params[:id])
+      when "dsc" then @storage_record = find_record(EmsFolder, from_cid(params[:id]))
     end
   end
 
@@ -514,57 +507,25 @@ class StorageController < ApplicationController
 
     trees = {}
     if replace_trees
-      trees[:storage]             = storage_build_tree     if replace_trees.include?(:storage)
-      trees[:storage_pod]         = storage_pod_build_tree if replace_trees.include?(:storage_pod)
+      trees[:storage]     = storage_build_tree     if replace_trees.include?(:storage)
+      trees[:storage_pod] = storage_pod_build_tree if replace_trees.include?(:storage_pod)
     end
-
-   presenter = ExplorerPresenter.new(
-      :active_tree => x_active_tree,
-      :delete_node => @delete_node      # Remove a new node from the tree
-   )
-    r = proc { |opts| render_to_string(opts) }
+    presenter, r = rendering_objects
     update_partials(record_showing, presenter, r)
     replace_search_box(presenter, r)
-    c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
-    h_tb = build_toolbar('x_history_tb')
-    v_tb = build_toolbar('x_gtl_view_tb') unless record_showing
-
+    handle_bottom_cell(presenter, r)
     replace_trees_by_presenter(presenter, trees)
-
-    presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
-    presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
-
+    rebuild_toolbars(record_showing, presenter)
     case x_active_tree
       when :storage_tree
         presenter.update(:main_div, r[:partial => "storage_list"])
       when :storage_pod_tree
         presenter.update(:main_div, r[:partial => "storage_pod_list"])
     end
-
-    # FIXME: check where @right_cell_text is set and replace that with loca variable
     presenter[:right_cell_text] = @right_cell_text
-
-    if !@view || @in_a_form ||
-      (@pages && (@items_per_page == ONE_MILLION || @pages[:items] == 0))
-      if @in_a_form
-        presenter.hide(:toolbar)
-        # in case it was hidden for summary screen, and incase there were no records on show_list
-        presenter.show(:paging_div, :form_buttons_div)
-      else
-        presenter.hide(:form_buttons_div)
-      end
-      presenter.hide(:pc_div_1)
-    else
-      presenter.hide(:form_buttons_div).show(:pc_div_1)
-    end
-
-    presenter[:record_id] = determine_record_id_for_presenter
-    presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
+    presenter[:osf_node] = x_node  # Open, select, and focus on this node
 
-    # Save open nodes, if any were added
-    presenter[:osf_node] = x_node
-    presenter[:lock_unlock_trees][x_active_tree] = @in_a_form && @edit
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
   end
@@ -689,26 +650,14 @@ class StorageController < ApplicationController
   end
 
   def rebuild_toolbars(record_showing, presenter)
-    center_tb = "blank_view_tb"
-    record_showing = true
+    c_tb = "blank_view_tb"
 
-    if !@in_a_form && !@sb[:action]
-      center_tb ||= center_toolbar_filename
-      c_tb = build_toolbar(center_tb)
-
-      if record_showing
-        v_tb  = build_toolbar("x_summary_view_tb")
-      else
-        v_tb  = build_toolbar("x_gtl_view_tb")
-      end
-    end
-
-    h_tb = build_toolbar("x_history_tb") unless @in_a_form
+    c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
+    h_tb = build_toolbar('x_history_tb')
+    v_tb = build_toolbar('x_gtl_view_tb') unless record_showing || (x_active_tree == :storage_pod_tree && x_node == 'root')
 
     presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
-
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
-
     presenter[:record_id] = @record ? @record.id : nil
 
     # Hide/show searchbox depending on if a list is showing
@@ -723,7 +672,7 @@ class StorageController < ApplicationController
   end
 
   def display_adv_searchbox
-    !(@record || @in_a_form )
+    !(@in_a_form || (x_active_tree == :storage_tree && @record) || (x_active_tree == :storage_pod_tree && x_node == 'root'))
   end
 
   def clear_flash_msg
