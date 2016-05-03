@@ -105,6 +105,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     if authentications.detect{ |x| x.previous_changes.present? } || endpoints.detect{ |x| x.previous_changes.present? }
       _log.info("EMS: [#{name}], Credentials or endpoints have changed, stopping Event Monitor. It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
+      network_manager.stop_event_monitor_queue if respond_to?(:network_manager) && network_manager
     end
   end
 
