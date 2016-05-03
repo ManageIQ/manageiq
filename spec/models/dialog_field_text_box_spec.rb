@@ -192,10 +192,21 @@ describe DialogFieldTextBox do
 
       context "when the data type is integer" do
         let(:data_type) { "integer" }
-        let(:value) { "test" }
 
-        it "converts the data into an integer" do
-          expect(dialog_field.value).to eq(0)
+        context "when the value is nil" do
+          let(:value) { nil }
+
+          it "returns nil" do
+            expect(dialog_field.value).to eq(nil)
+          end
+        end
+
+        context "when the value is not nil" do
+          let(:value) { "test" }
+
+          it "converts the data into an integer" do
+            expect(dialog_field.value).to eq(0)
+          end
         end
       end
 
