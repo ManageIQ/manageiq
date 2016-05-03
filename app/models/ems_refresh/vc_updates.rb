@@ -80,6 +80,8 @@ module EmsRefresh::VcUpdates
       "config.hardware.device[*].backing.compatibilityMode",
       "config.hardware.device[*].backing.datastore",
       "config.hardware.device[*].backing.deviceName",
+      "config.hardware.device[*].backing.port.switchUuid",
+      "config.hardware.device[*].backing.port.portgroupKey",
       "config.hardware.device[*].backing.diskMode",
       "config.hardware.device[*].backing.fileName",
       "config.hardware.device[*].backing.thinProvisioned",
@@ -168,6 +170,8 @@ module EmsRefresh::VcUpdates
       "MOR",
       "host",
       "config.key",
+      "config.distributedVirtualSwitch",
+      "config.name",
       "summary.name",
       "parent",
       "tag"
@@ -176,6 +180,7 @@ module EmsRefresh::VcUpdates
     :ems_refresh_dvswitch    => [
       "MOR",
       "config.uplinkPortgroup",
+      "config.defaultPortConfig",
       "summary.name",
       "summary.uuid",
       "summary.host",
