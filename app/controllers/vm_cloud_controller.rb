@@ -356,13 +356,13 @@ class VmCloudController < ApplicationController
         :name  => @record.name
       })
     when "submit"
-      if @record.is_available(:evacuate)
-        hostname = find_by_filtered_id(Host, params[:destination_host_id]).hostname
+      if @record.is_available?(:evacuate)
+        hostname = find_by_id_filtered(Host, params[:destination_host_id]).hostname
         on_shared_storage = @params[:on_shared_storage]
         begin
           @record.evacuate(
             :hostname          => hostname,
-            :on_shared_storage => on_shared_storage == '1'
+            :on_shared_storage => on_shared_storage == 'on'
           )
           add_flash(_("Evacuating %{instance} \"%{name}\"") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
