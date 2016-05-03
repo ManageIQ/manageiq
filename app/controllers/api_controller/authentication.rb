@@ -6,9 +6,7 @@ class ApiController
 
     def show_auth
       requester_type = fetch_and_validate_requester_type
-      auth_token = @api_token_mgr.gen_token(@module,
-                                            :userid           => @auth_user,
-                                            :token_ttl_config => REQUESTER_TTL_CONFIG[requester_type])
+      auth_token = generate_user_token(@auth_user, requester_type)
       res = {
         :auth_token => auth_token,
         :token_ttl  => @api_token_mgr.token_get_info(@module, auth_token, :token_ttl),
@@ -21,6 +19,16 @@ class ApiController
       @api_token_mgr.invalidate_token(@module, @auth_token)
 
       render_normal_destroy
+    end
+
+    # Used from outside the API, needs to raise errors for invalid userid or requester_type
+    def generate_user_token(userid, requester_type)
+      api_log_info("Generating Authentication Token for user id: #{userid} requester_type: #{requester_type}")
+      User.find_by_userid!(userid)
+      REQUESTER_TTL_CONFIG.fetch(requester_type) if requester_type
+      @api_token_mgr.gen_token(@module,
+                               :userid           => userid,
+                               :token_ttl_config => REQUESTER_TTL_CONFIG[requester_type])
     end
 
     #
