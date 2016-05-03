@@ -364,7 +364,7 @@ class ProviderForemanController < ApplicationController
     when "f"    then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
     when "cp"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
     when "xx" then
-    case nodes.second
+      case nodes.second
       when "at" then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
       when "fr" then find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
       when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
@@ -434,7 +434,7 @@ class ProviderForemanController < ApplicationController
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
     @in_a_form = false
-    if params[:id]  # If a tree node id came in, show in one of the trees
+    if params[:id] # If a tree node id came in, show in one of the trees
       nodetype, id = params[:id].split("-")
       # treebuilder initializes x_node to root first time in locals_for_render,
       # need to set this here to force & activate node when link is clicked outside of explorer.
@@ -537,7 +537,7 @@ class ProviderForemanController < ApplicationController
     else
       case @record.type
       when "ManageIQ::Providers::Foreman::ConfigurationManager"
-        options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem,:where_clause => ["manager_id IN (?)", provider.id]}
+        options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem, :where_clause => ["manager_id IN (?)", provider.id]}
         @no_checkboxes = true
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
@@ -973,7 +973,7 @@ class ProviderForemanController < ApplicationController
     if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
       "-#{row['manager_id']}-unassigned"
     elsif row[:type]
-      "#{TreeBuilder.get_prefix_for_model(row[:type])}"%to_cid(row['id'])
+      "#{TreeBuilder.get_prefix_for_model(row[:type])}" % to_cid(row['id'])
     else
       to_cid(row['id'])
     end
