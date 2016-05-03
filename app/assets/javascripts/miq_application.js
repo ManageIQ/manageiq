@@ -797,7 +797,7 @@ function miqAsyncAjax(url) {
 ManageIQ.oneTransition.oneTrans = 0;
 
 // Function to generate an Ajax request, but only once for a drawn screen
-function miqSendOneTrans(url) {
+function miqSendOneTrans(url, observe) {
   if (typeof ManageIQ.oneTransition.IEButtonPressed != "undefined") {
     // page replace after clicking save/reset was making observe_field on
     // text_area in IE send up a trascation to form_field_changed method
@@ -809,7 +809,12 @@ function miqSendOneTrans(url) {
   }
 
   ManageIQ.oneTransition.oneTrans = 1;
-  miqJqueryRequest(url);
+
+  if (observe && observe.observe) {
+    miqObserveRequest(url, { done: observe.done });
+  } else {
+    return miqJqueryRequest(url);
+  }
 }
 
 // this deletes the remembered treestate when called
@@ -1040,11 +1045,13 @@ function miqSendDateRequest(el) {
     }
   };
 
-  if (el.attr('data-miq_sparkle_on')) {
-    $.when(miqJqueryRequest(urlstring, {beforeSend: true})).done(attemptAutoRefreshTrigger);
-  } else {
-    $.when(miqJqueryRequest(urlstring)).done(attemptAutoRefreshTrigger);
-  }
+  var options = {
+    beforeSend: !! el.attr('data-miq_sparkle_on'),
+    complete: !! el.attr('data-miq_sparkle_off'),
+    done: attemptAutoRefreshTrigger,
+  };
+
+  miqObserveRequest(urlstring, options);
 }
 
 // common function to pass ajax request to server
@@ -1209,7 +1216,48 @@ $(document).ajaxSend(function (event, request, settings) {
   }
 });
 
+function miqProcessObserveQueue() {
+  if (! ManageIQ.observe.queue.length) {
+    return;
+  }
+
+  if (ManageIQ.observe.processing) {
+    setTimeout(miqProcessObserveQueue, 700);
+    return;
+  }
+
+  ManageIQ.observe.processing = true;
+
+  var request = ManageIQ.observe.queue.shift();
+
+  miqJqueryRequest(request.url, request.options).done(function() {
+    ManageIQ.observe.processing = false;
+  });
+}
+
+function miqObserveRequest(url, options) {
+  options = _.cloneDeep(options || {});
+  options.observe = true;
+
+  ManageIQ.observe.queue.push({
+    url: url,
+    options: options,
+  });
+
+  miqProcessObserveQueue();
+}
+
 function miqJqueryRequest(url, options) {
+  if ((ManageIQ.observe.processing || ManageIQ.observe.queue.length) && ! options.observe) {
+    console.debug('Postponing miqJqueryRequest - waiting for the observe queue to empty first');
+
+    setTimeout(function() {
+      miqJqueryRequest(url, options);
+    }, 700);
+
+    return;
+  }
+
   options = options || {};
   var ajax_options = {
     type: 'POST',
@@ -1225,7 +1273,7 @@ function miqJqueryRequest(url, options) {
     'data',
     'contentType',
     'processData',
-    'cache'
+    'cache',
   ]));
 
   if (options.beforeSend) {
@@ -1234,10 +1282,19 @@ function miqJqueryRequest(url, options) {
     };
   }
 
+  var complete = [];
   if (options.complete) {
-    ajax_options.complete = function (request) {
+    complete.push(function (request) {
       miqSparkle(false);
-    };
+    });
+  }
+
+  if (options.done) {
+    complete.push(options.done);
+  }
+
+  if (complete.length) {
+    ajax_options.complete = complete;
   }
 
   return $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
@@ -1269,28 +1326,26 @@ function miqSelectPickerEvent(element, url, options) {
   options.no_encoding = true;
   var firstarg = ! _.contains(url, '?');
 
-  $('#' + element).on('change', function() {
+  $('#' + element).off('change');
+  $('#' + element).on('change', _.debounce(function() {
     var selected = $(this).val();
     var finalUrl = url + (firstarg ? '?' : '&') + element + '=' + escape(selected);
     var is_sparkle_on = $(this).attr('data-miq_sparkle_on') == 'true'
     var is_sparkle_off = $(this).attr('data-miq_sparkle_off') == 'true'
 
-    if (is_sparkle_on) {
-      miqSparkleOn();
+    options.beforeSend = is_sparkle_on;
+    options.complete = is_sparkle_off;
+
+    if (options.callback) {
+      options.done = function() {
+        options.callback();
+      };
     }
 
-    miqJqueryRequest(finalUrl, options).done(function() {
-      if (options.callback) {
-        options.callback();
-      }
-
-      if (is_sparkle_off) {
-        miqSparkleOff();
-      }
-    });
+    miqObserveRequest(finalUrl, options);
 
     return true;
-  });
+  }, 700, { leading: false, trailing: true }));
 }
 
 function miqAccordSelect(e) {
@@ -1306,7 +1361,7 @@ function miqAccordSelect(e) {
   }
 }
 
-function miqInitBootstrapSwitch(element, url, options){
+function miqInitBootstrapSwitch(element, url, options) {
   $("[name="+element+"]").bootstrapSwitch();
 
   $('#' + element).on('switchChange.bootstrapSwitch', function(event, state){
@@ -1314,10 +1369,12 @@ function miqInitBootstrapSwitch(element, url, options){
     options['no_encoding'] = true;
 
     var firstarg = ! _.contains(url, '?');
-    miqJqueryRequest(url + (firstarg ? '?' : '&') + element + '=' + state, options);
+    miqObserveRequest(url + (firstarg ? '?' : '&') + element + '=' + state, options);
+
     return true;
   });
 }
+
 // Function to expand/collapse a pair of accordions
 function miqAccordionSwap(collapse, expand) {
   /*

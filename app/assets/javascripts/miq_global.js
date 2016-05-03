@@ -68,5 +68,9 @@ if (typeof(ManageIQ) === 'undefined') {
       expandAll: true,
     },
     gridChecks: [], // list of checked checkboxes in current list grid
+    observe: { // keeping track of data-miq_observe requests
+      processing: false, // is a request currently being processed?
+      queue: [], // a queue of pending requests
+    },
   }
 };

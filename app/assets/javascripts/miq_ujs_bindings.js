@@ -62,50 +62,50 @@ $(document).ready(function () {
   };
 
   $(document).on('focus', '[data-miq_observe]', function () {
-    var parms = $.parseJSON(this.getAttribute('data-miq_observe'));
+    var el = $(this);
+    var parms = $.parseJSON(el.attr('data-miq_observe'));
+
     var interval = parms.interval;
     var url = parms.url;
     var submit = parms.submit;
 
     if (typeof interval == "undefined") {
       // No interval passed, use event observer
-      var el = $(this);
-      el.unbind('change')
-      el.change(function() {
-        var data = el.attr('id') + '=';
-        if (el.prop('multiple')) {
-          data += el.val();
-        } else {
-          data += encodeURIComponent(el.prop('value'));
-        }
+      el.off('change')
+      el.on('change', _.debounce(function() {
+        var id = el.attr('id');
+        var value = el.prop('multiple') ? el.val() : encodeURIComponent(el.prop('value'));
 
-        var options = {
+        miqObserveRequest(url, {
           no_encoding: true,
-          data: data
-        };
-        if (el.attr('data-miq_sparkle_on')) {
-          options.beforeSend = true;
-        }
-        if (el.attr('data-miq_sparkle_off')) {
-          options.complete = true;
-        }
-
-        $.when(miqJqueryRequest(url, options)).done(attemptAutoRefreshTrigger(parms));
-      });
+          data: id + '=' + value,
+          beforeSend: !! el.attr('data-miq_sparkle_on'),
+          complete: !! el.attr('data-miq_sparkle_off'),
+          done: attemptAutoRefreshTrigger(parms),
+        });
+      }, 700, { leading: false, trailing: true }));
     } else {
-      $(this).off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
-      var el = $(this);
+      el.off(); // Use jQuery to turn off observe_field, prevents multi ajax transactions
       el.observe_field(interval, function () {
         var oneTrans = this.getAttribute('data-miq_send_one_trans'); // Grab one trans URL, if present
         if (typeof submit != "undefined") {
           // If submit element passed in
-          $.when(miqJqueryRequest(url, {data: miqSerializeForm(submit)})).done(attemptAutoRefreshTrigger(parms));
+          miqObserveRequest(url, {
+            data: miqSerializeForm(submit),
+            done: attemptAutoRefreshTrigger(parms),
+          });
         } else if (oneTrans) {
-          $.when(miqSendOneTrans(url)).done(attemptAutoRefreshTrigger(parms));
+          miqSendOneTrans(url, {
+            observe: true,
+            done: attemptAutoRefreshTrigger(parms),
+          });
         } else {
           // tack on the id and value to the URL
           var urlstring = url + "?" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));
-          $.when(miqJqueryRequest(urlstring, {no_encoding: true})).done(attemptAutoRefreshTrigger(parms));
+          miqObserveRequest(urlstring, {
+            no_encoding: true,
+            done: attemptAutoRefreshTrigger(parms),
+          });
         }
       });
     }
@@ -115,18 +115,17 @@ $(document).ready(function () {
     var el = $(this);
     var parms = $.parseJSON(el.attr('data-miq_observe_checkbox'));
     var url = parms.url;
-    var options = {
-      data: el.attr('id') + '=' + encodeURIComponent(el.prop('checked') ? el.val() : 'null')
-    };
 
-    if (el.attr('data-miq_sparkle_on')) {
-      options.beforeSend = true;
-    }
-    if (el.attr('data-miq_sparkle_off')) {
-      options.complete = true;
-    }
+    var id = el.attr('id');
+    var value = encodeURIComponent(el.prop('checked') ? el.val() : 'null');
 
-    $.when(miqJqueryRequest(url, options)).done(attemptAutoRefreshTrigger(parms));
+    miqObserveRequest(url, {
+      no_encoding: true,
+      data: id + '=' + value,
+      beforeSend: !! el.attr('data-miq_sparkle_on'),
+      complete: !! el.attr('data-miq_sparkle_off'),
+      done: attemptAutoRefreshTrigger(parms),
+    });
 
     event.stopPropagation();
   });
