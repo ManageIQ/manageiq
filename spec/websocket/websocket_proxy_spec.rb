@@ -27,18 +27,6 @@ describe WebsocketProxy do
     end
   end
 
-  describe '#descriptors' do
-    let(:ws) { 0 }
-    let(:sock) { 1 }
-
-    it 'returns the socket descriptors' do
-      subject.instance_variable_set(:@ws, ws)
-      subject.instance_variable_set(:@sock, sock)
-
-      expect(subject.descriptors).to eq [ws, sock]
-    end
-  end
-
   describe '#transmit' do
     let(:driver) { double }
     let(:ws) { double }
