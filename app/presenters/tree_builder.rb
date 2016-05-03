@@ -1,5 +1,7 @@
 class TreeBuilder
   include CompressedIds
+  include TreeKids
+
   attr_reader :name, :type, :tree_nodes
 
   def node_builder
@@ -333,110 +335,11 @@ class TreeBuilder
     [{:key => 'root', :children => child_nodes, :expand => true}]
   end
 
-  # Get objects (or count) to put into a tree under a parent node.
-  # TODO: Perhaps push the object sorting down to SQL, if possible -- no point where there are few items.
-  # parent  --- Parent object for which we need child tree nodes returned
-  # options --- Options:
-  #   :count_only           # Return only the count if true -- remove this
-  #   :leaf                 # Model name of leaf nodes, i.e. "Vm"
-  #   :open_all             # if true open all node (no autoload)
-  #   :load_children
-  # parents --- an Array of parent object ids, starting from tree root + 1, ending with parent's parent; only available when full_ids and not lazy
   def x_get_tree_objects(parent, options, count_only, parents)
-    children_or_count = case parent
-                        when nil                 then
-                          # options are only required for the following TreeBuilder ancestors:
-                          # * TreeBuilderCatalogsClass         - options[:type]
-                          # * TreeBuilderChargebackAssignments - options[:type]
-                          # * TreeBuilderChargebackRates       - options[:type]
-                          # * TreeBuilderReportReports         - options[:tree]
-                          # * TreeBuilderVandt - the whole options hash is passed to TreeBuilderVmsAndTemplates constructor
-                          # * All the rest 30+ ancestors ignore options hash.
-                          x_get_tree_roots(count_only, options.dup)
-                        when AvailabilityZone    then x_get_tree_az_kids(parent, count_only)
-                        when Compliance          then x_get_compliance_kids(parent, count_only)
-                        when ComplianceDetail    then x_get_compliance_detail_kids(parent, count_only, parents)
-                        when ManageIQ::Providers::Foreman::ConfigurationManager then
-                          x_get_tree_cmf_kids(parent, count_only)
-                        when ManageIQ::Providers::AnsibleTower::ConfigurationManager then
-                          x_get_tree_cmat_kids(parent, count_only)
-                        when ConfigurationProfile then x_get_tree_cpf_kids(parent, count_only)
-                        when CustomButtonSet     then x_get_tree_aset_kids(parent, count_only)
-                        when Dialog              then x_get_tree_dialog_kids(parent, count_only, options[:type])
-                        when DialogGroup         then x_get_tree_dialog_group_kids(parent, count_only, options[:type])
-                        when DialogTab           then x_get_tree_dialog_tab_kids(parent, count_only, options[:type])
-                        when ExtManagementSystem then x_get_tree_ems_kids(parent, count_only)
-                        when Datacenter          then x_get_tree_datacenter_kids(parent, count_only, options[:type])
-                        when EmsFolder           then x_get_tree_folder_kids(parent, count_only, options[:type])
-                        when EmsCluster          then x_get_tree_cluster_kids(parent, count_only)
-                        when GuestDevice         then x_get_tree_guest_device_kids(parent, count_only)
-                        when Hash                then
-                          # TreeBuilderAlertProfile - :type
-                          # TreeBuilderArchived - :leaf
-                          # TreeBuilderCondition - :type
-                          # TreeBuilderContainersFilter - :leaf
-                          # TreeBuilderForemanConfiguredSystems - :leaf
-                          # TreeBuilderPolicy - :type
-                          # TreeBuilderReportDashboards - :type
-                          # TreeBuilderVmsFilter - :leaf
-                          x_get_tree_custom_kids(parent, count_only, options)
-                        when Host                then x_get_tree_host_kids(parent, count_only)
-                        when IsoDatastore        then x_get_tree_iso_datastore_kids(parent, count_only)
-                        when LdapRegion          then x_get_tree_lr_kids(parent, count_only)
-                        when MiqAeClass          then x_get_tree_class_kids(parent, count_only, options[:type])
-                        when MiqAeNamespace      then x_get_tree_ns_kids(parent, count_only, options[:type])
-                        when MiqGroup            then options[:tree] == :db_tree ?
-                                                    x_get_tree_g_kids(parent, count_only) : nil
-                        when MiqRegion           then x_get_tree_region_kids(parent, count_only)
-                        when MiqReport           then x_get_tree_r_kids(parent, count_only)
-                        when PxeServer           then x_get_tree_pxe_server_kids(parent, count_only)
-                        when ResourcePool        then x_get_resource_pool_kids(parent, count_only)
-                        when Service             then x_get_tree_service_kids(parent, count_only)
-                        when ServiceTemplateCatalog
-                                                 then x_get_tree_stc_kids(parent, count_only)
-                        when ServiceTemplate     then x_get_tree_st_kids(parent, count_only, options[:type])
-                        when Tenant              then x_get_tree_tenant_kids(parent, count_only)
-                        when VmdbTableEvm        then x_get_tree_vmdb_table_kids(parent, count_only)
-                        when Zone                then x_get_tree_zone_kids(parent, count_only)
-
-                        when MiqPolicySet        then x_get_tree_pp_kids(parent, count_only)
-                        when MiqAction           then x_get_tree_ac_kids(parent, count_only)
-                        when MiqAlert            then x_get_tree_al_kids(parent, count_only)
-                        when MiqAlertSet         then x_get_tree_ap_kids(parent, count_only)
-                        when Condition           then x_get_tree_co_kids(parent, count_only)
-                        when MiqEventDefinition  then x_get_tree_ev_kids(parent, count_only, parents)
-                        when MiqPolicy           then x_get_tree_po_kids(parent, count_only)
-                        when MiqScsiLun          then x_get_tree_lun_kids(parent, count_only)
-                        when MiqScsiTarget       then x_get_tree_target_kids(parent, count_only)
-                        when MiqSearch           then nil
-                        when ManageIQ::Providers::Openstack::CloudManager::Vm         then nil
-                        end
+    children_or_count = parent.nil? ? x_get_tree_roots(count_only, options) : x_get_tree_kids(parent, count_only, options, parents)
     children_or_count || (count_only ? 0 : [])
   end
 
-  def x_get_tree_guest_device_kids(_parent, count_only)
-    count_only ? 0 : []
-  end
-
-  def x_get_tree_lun_kids(_parent, count_only)
-    count_only ? 0 : []
-  end
-
-  def x_get_tree_host_kids(_parent, count_only)
-    count_only ? 0 : []
-  end
-
-  def x_get_resource_pool_kids(_parent, count_only)
-    count_only ? 0 : []
-  end
-
-  def x_get_compliance_kids(_parent, count_only)
-    count_only ? 0 : []
-  end
-
-  def x_get_compliance_detail_kids(_parent, count_only, _parents)
-    count_only ? 0 : []
-  end
   # Return a tree node for the passed in object
   def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
     parents = pid.to_s.split('_')

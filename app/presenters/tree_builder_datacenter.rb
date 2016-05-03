@@ -1,4 +1,10 @@
 class TreeBuilderDatacenter < TreeBuilder
+  has_kids_for Host, [:x_get_tree_host_kids]
+  has_kids_for Datacenter, [:x_get_tree_datacenter_kids, :type]
+  has_kids_for EmsFolder, [:x_get_tree_folder_kids, :type]
+  has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
+  has_kids_for ResourcePool, [:x_get_resource_pool_kids]
+
   def node_builder
     TreeNodeBuilderDatacenter
   end

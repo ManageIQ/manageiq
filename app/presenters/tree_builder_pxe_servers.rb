@@ -1,4 +1,6 @@
 class TreeBuilderPxeServers < TreeBuilder
+  has_kids_for PxeServer, [:x_get_tree_pxe_server_kids]
+
   private
 
   def tree_init_options(_tree_name)

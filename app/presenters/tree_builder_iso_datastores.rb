@@ -1,4 +1,6 @@
 class TreeBuilderIsoDatastores < TreeBuilder
+  has_kids_for IsoDatastore, [:x_get_tree_iso_datastore_kids]
+
   private
 
   def tree_init_options(_tree_name)
