@@ -1339,19 +1339,7 @@ class ApplicationHelper::ToolbarBuilder
           MiqReportResult.find(@report_result_id).try(:miq_report_result_details).try(:length).to_i > 0 ? false : "No records found for this report"
       end
     end
-    return check_for_utilization_download_buttons if %w(miq_capacity_download_csv
-                                                        miq_capacity_download_pdf
-                                                        miq_capacity_download_text).include?(id)
     false
-  end
-
-  def check_for_utilization_download_buttons
-    return false if x_active_tree.nil? &&
-                    @sb.fetch_path(:planning, :rpt) &&
-                    !@sb[:planning][:rpt].table.data.empty?
-    return false if @sb.fetch_path(:util, :trend_rpt) &&
-                    @sb.fetch_path(:util, :summary)
-    "No records found for this report"
   end
 
   def get_record_cls(record)

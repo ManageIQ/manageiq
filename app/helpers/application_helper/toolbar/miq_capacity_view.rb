@@ -5,6 +5,7 @@ class ApplicationHelper::Toolbar::MiqCapacityView < ApplicationHelper::Toolbar::
       'fa fa-download fa-lg',
       N_('Download'),
       nil,
+      :klass => ApplicationHelper::Button::UtilizationDownload,
       :items => [
         button(
           :miq_capacity_download_text,
