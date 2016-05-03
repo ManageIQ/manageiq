@@ -241,7 +241,7 @@ module ReportController::Reports
       end
     end
 
-    if @edit[:new][:model] == "Chargeback"
+    if @edit[:new][:model].to_s.starts_with?("Chargeback")
       unless @edit[:new][:cb_show_typ]
         add_flash(_("Show Costs by must be selected"), :error)
         active_tab = "edit_3"
@@ -263,6 +263,11 @@ module ReportController::Reports
               add_flash(_("A Tag must be selected"), :error)
               active_tab = "edit_3"
             end
+          end
+        elsif @edit[:new][:cb_show_typ] == "entity"
+          unless @edit[:new][:cb_entity_id]
+            add_flash(_("A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected"), :error)
+            active_tab = "edit_3"
           end
         end
       end
@@ -316,6 +321,7 @@ module ReportController::Reports
                  when "owner" then @edit[:new][:cb_owner_id]
                  when "tenant" then @edit[:new][:cb_tenant_id]
                  when "tag" then @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
+                 when "entity" then @edit[:new][:cb_entity_id]
                  end
     end
     is_valid
