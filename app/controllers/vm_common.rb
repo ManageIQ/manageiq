@@ -173,7 +173,7 @@ module VmCommon
   end
 
   def show(id = nil)
-    @flash_array = [] if params[:display]
+    @flash_array = [] if params[:display] && params[:display] != "snapshot_info"
     @sb[:action] = params[:display]
 
     return if perfmenu_click?
