@@ -142,13 +142,13 @@ describe MiqExpression do
 
     it "generates the SQL for a CONTAINS expression with field" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.guest_applications-name", "value" => "foo"}).to_sql
-      expect(sql).to eq("vms.id IN (SELECT DISTINCT vm_or_template_id FROM guest_applications WHERE name = 'foo')")
+      expect(sql).to eq("\"vms\".\"id\" IN (SELECT DISTINCT \"guest_applications\".\"vm_or_template_id\" FROM \"guest_applications\" WHERE \"guest_applications\".\"name\" = 'foo')")
     end
 
     it "generates the SQL for a CONTAINS expression with field containing a scope" do
       sql, * = MiqExpression.new("CONTAINS" => {"field" => "Vm.users-name", "value" => "foo"}).to_sql
-      expected = "vms.id IN (SELECT DISTINCT vm_or_template_id FROM accounts WHERE (name = 'foo') "\
-                 "AND (\"accounts\".\"accttype\" = 'user'))"
+      expected = "\"vms\".\"id\" IN (SELECT DISTINCT \"accounts\".\"vm_or_template_id\" FROM \"accounts\" "\
+                 "WHERE \"accounts\".\"name\" = 'foo' AND \"accounts\".\"accttype\" = 'user')"
       expect(sql).to eq(expected)
     end
 
