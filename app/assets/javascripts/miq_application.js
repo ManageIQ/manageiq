@@ -1346,6 +1346,7 @@ function miqInitToolbars() {
 function miqToolbarOnClick(e) {
   var tb_url;
   var button = $(this);
+  var form_data = null;  
 
   // If it's a dropdown, collapse the parent container
   var parent = button.parents('div.btn-group.dropdown.open');
@@ -1358,6 +1359,11 @@ function miqToolbarOnClick(e) {
 
   if (button.parents('#dashboard_dropdown').length > 0) {
     return;
+  }
+
+  // The user is asked to add additional data for the action  
+  if (button.data("form-tb")) {
+      form_data = miqShowForm(button.data("form-tb"))
   }
 
   if (button.data("confirm-tb") && !button.data("popup")) {
@@ -1420,6 +1426,8 @@ function miqToolbarOnClick(e) {
     } else {
       tb_url += button.data('pressed');
     }
+    if (form_data != null)
+      tb_url += "&x-form-data=" + form_data  
   }
 
   var collect_log_buttons = [
@@ -1481,6 +1489,16 @@ function miqSupportCasePrompt(tb_url) {
   } else {
     tb_url = tb_url + '&support_case=' + encodeURIComponent(support_case);
     return tb_url;
+  }
+}
+function miqShowForm(form_def) {
+  var the_form = eval(form_def)
+    
+  var res = prompt(the_form.label, the_form.default_value);
+  if (res === null || res.trim() == '') {
+    return the_form.default_value != null ? the_form.default_value : 0;
+  } else {
+    return res;
   }
 }
 

@@ -109,6 +109,28 @@ module ManageIQ::Providers
       run_generic_operation(:Shutdown, ems_ref)
     end
 
+    def restart_middleware_server(ems_ref)
+      run_generic_operation(:Shutdown, ems_ref, :restart => true)
+    end
+
+    def shutdown_middleware_server(ems_ref, params)
+      timeout = params.fetch ':timeout'
+      run_generic_operation(:Shutdown, ems_ref, { :restart => false, :timeout => timeout} )
+    end
+
+    def suspend_middleware_server(ems_ref, params)
+      timeout = params.fetch ':timeout'
+      run_generic_operation(:Suspend, ems_ref, { :timeout => timeout  })
+    end
+
+    def resume_middleware_server(ems_ref)
+      run_generic_operation(:Resume, ems_ref)
+    end
+
+    def create_jdr_report(ems_ref)
+      run_generic_operation(:JDR, ems_ref)
+    end
+
     def self.raw_alerts_connect(hostname, port, username, password)
       require 'hawkular_all'
       url         = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
@@ -155,12 +177,13 @@ module ManageIQ::Providers
     # selected target server. This server is identified
     # by ems_ref, which in Hawkular terms is the
     # fully qualified resource path from Hawkular inventory
-    def run_generic_operation(operation, ems_ref)
+    def run_generic_operation(operation, ems_ref, parameters = {})
       client = operations_connect
 
       the_operation = {
         :operationName => operation,
-        :resourcePath  => ems_ref.to_s
+        :resourcePath  => ems_ref.to_s,
+        :parameters => parameters
       }
 
       actual_data = {}

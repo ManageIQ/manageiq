@@ -8,13 +8,42 @@ class MiddlewareServerController < ApplicationController
   after_action :set_session_data
 
   OPERATIONS = {
-    :middleware_server_reload => {:op   => :reload_middleware_server,
-                                  :hawk => N_('Not reloading Hawkular server'),
-                                  :msg  => N_('Reload initiated for selected server(s)')
+    :middleware_server_reload  => {:op    => :reload_middleware_server,
+                                   :skip  => true,
+                                   :hawk  => N_('reloading'),
+                                   :msg   => N_('Reload')
     },
-    :middleware_server_stop   => {:op   => :stop_middleware_server,
-                                  :hawk => N_('Not stopping Hawkular server'),
-                                  :msg  => N_('Stop initiated for selected server(s)')
+    :middleware_server_stop    => {:op    => :stop_middleware_server,
+                                   :skip  => true,
+                                   :hawk  => N_('stopping'),
+                                   :msg   => N_('Stop')
+    },
+    :middleware_server_restart => {:op    => :restart_middleware_server,
+                                   :skip  => true,
+                                   :hawk  => N_('restarting'),
+                                   :msg   => N_('Restart')
+    },
+    :middleware_server_shutdown => {:op   => :shutdown_middleware_server,
+                                   :skip  => true,
+                                   :hawk  => N_('shutting down'),
+                                   :msg   => N_('Shutdown'),
+                                   :param => ':timeout'
+    },
+    :middleware_server_suspend => {:op    => :suspend_middleware_server,
+                                   :skip  => true,
+                                   :hawk  => N_('suspending'),
+                                   :msg   => N_('Suspend'),
+                                   :param => ':timeout'
+    },
+    :middleware_server_resume  => {:op    => :resume_middleware_server,
+                                   :skip  => true,
+                                   :hawk  => N_('resuming'),
+                                   :msg   => N_('Resume')
+    },
+    :middleware_server_jdr     => {:op    => :create_jdr_report,
+                                   :skip  => false,
+                                   :hawk  => nil, # not needed as skip is false
+                                   :msg   => N_('JDR report creation initiated')
     }
   }.freeze
 
@@ -81,20 +110,32 @@ class MiddlewareServerController < ApplicationController
     operation_triggered = false
     items.split(/,/).each do |item|
       mw_server = identify_record item
-      if mw_server.product == 'Hawkular'
-        add_flash(operation_info.fetch(:hawk))
+      if mw_server.product == 'Hawkular' && operation_info.fetch(:skip)
+        add_flash(_("Not #{operation_info.fetch(:hawk)} the provider"))
       else
-        trigger_mw_operation operation_info.fetch(:op), mw_server
+        if operation_info.key? :param
+          # Fetch param from UI - > see #8079
+          name = operation_info.fetch(:param)
+          param_from_ui = params['x-form-data']
+          val = param_from_ui.to_i
+          trigger_mw_operation operation_info.fetch(:op), mw_server, { name => val }
+        else
+          trigger_mw_operation operation_info.fetch(:op), mw_server
+        end
         operation_triggered = true
       end
     end
-    add_flash(operation_info.fetch(:msg)) if operation_triggered
+    add_flash(_("#{operation_info.fetch(:msg)} initiated for selected server(s)")) if operation_triggered
   end
 
-  def trigger_mw_operation(operation, mw_server)
+  def trigger_mw_operation(operation, mw_server, params = nil)
     mw_manager = mw_server.ext_management_system
 
     op = mw_manager.public_method operation
-    op.call mw_server.ems_ref
+    if params
+      op.call(mw_server.ems_ref,params)
+    else
+      op.call mw_server.ems_ref
+    end
   end
 end

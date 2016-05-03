@@ -3348,6 +3348,26 @@
         :description: Stop Middleware Server
         :feature_type: admin
         :identifier: middleware_server_stop
+      - :name: Shut down middleware server
+        :description: Shut Middleware Server down
+        :feature_type: admin
+        :identifier: middleware_server_shutdown
+      - :name: Suspend middleware server
+        :description: Suspend Middleware Server
+        :feature_type: admin
+        :identifier: middleware_server_suspend
+      - :name: Resume middleware server
+        :description: Resume a suspended Middleware Server
+        :feature_type: admin
+        :identifier: middleware_server_resume
+      - :name: Restart middleware server
+        :description: Restart a Middleware Server
+        :feature_type: admin
+        :identifier: middleware_server_restart
+      - :name: Generate JDR report
+        :description: Generate a JDR report for the server
+        :feature_type: admin
+        :identifier: middleware_server_jdr
 
   # MiddlewareDeployment
   - :name: Middleware Deployment
