@@ -31,13 +31,5 @@ module MiqAeServiceCloudNetworkSpec
     it "#network_routers" do
       expect(described_class.instance_methods).to include(:network_routers)
     end
-
-    it "#public_networks" do
-      expect(described_class.instance_methods).to include(:public_networks)
-    end
-
-    it "#private_networks" do
-      expect(described_class.instance_methods).to include(:private_networks)
-    end
   end
 end
