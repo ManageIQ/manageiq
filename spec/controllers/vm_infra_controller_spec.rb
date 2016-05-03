@@ -428,4 +428,13 @@ describe VmInfraController do
     get :explorer
     expect(response.status).to eq(200)
   end
+
+  it "render creation snapshot flash message" do
+    session[:edit] = {:explorer => true}
+    post :snap_vm, :params => {:name        => "test",
+                               :description => "test",
+                               :button      => "create",
+                               :id          => vm_vmware.id}
+    expect(assigns(:flash_array).first[:message]).to include("Create Snapshot")
+  end
 end
