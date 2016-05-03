@@ -2059,4 +2059,39 @@ describe MiqExpression do
       expect(obj.field_in_sql?(field)).to eq(true)
     end
   end
+
+  describe "#evaluate" do
+    before do
+      @data_hash = {"guest_applications.name"   => "VMware Tools",
+                    "guest_applications.vendor" => "VMware, Inc."}
+    end
+
+    it "returns true if expression evaluated to value equal to value in supplied hash" do
+      expression = {"=" => {"field" => "Vm.guest_applications-name",
+                            "value" => "VMware Tools"}}
+      obj = described_class.new(expression, "hash")
+      expect(obj.evaluate(@data_hash)).to eq(true)
+    end
+
+    it "returns false if expression evaluated to value not equal to value in supplied hash" do
+      expression = {"=" => {"field" => "Vm.guest_applications-name",
+                            "value" => "Hello"}}
+      obj = described_class.new(expression, "hash")
+      expect(obj.evaluate(@data_hash)).to eq(false)
+    end
+
+    it "returns true if expression is regex and there is match in supplied hash" do
+      expression = {"REGULAR EXPRESSION MATCHES" => {"field" => "Vm.guest_applications-vendor",
+                                                     "value" => "/^[^.]*ware.*$/"}}
+      obj = described_class.new(expression, "hash")
+      expect(obj.evaluate(@data_hash)).to eq(true)
+    end
+
+    it "returns false if expression is regex and there is no match in supplied hash" do
+      expression = {"REGULAR EXPRESSION MATCHES" => {"field" => "Vm.guest_applications-vendor",
+                                                     "value" => "/^[^.]*hello.*$/"}}
+      obj = described_class.new(expression, "hash")
+      expect(obj.evaluate(@data_hash)).to eq(false)
+    end
+  end
 end
