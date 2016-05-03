@@ -44,7 +44,12 @@ module ManageIQ::Providers
       _log.info("Collecting metrics for #{target_name} [#{interval_name}] " \
                 "[#{start_time}] [#{end_time}]")
 
-      context = CaptureContext.new(target, start_time, end_time, INTERVAL)
+      begin
+        context = CaptureContext.new(target, start_time, end_time, INTERVAL)
+      rescue TargetValidationError => e
+        _log.error("#{target_name} is not valid: #{e.message}")
+        return [{}, {}]
+      end
 
       Benchmark.realtime_block(:collect_data) do
         begin
