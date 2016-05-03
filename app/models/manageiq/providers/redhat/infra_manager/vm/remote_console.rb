@@ -21,10 +21,13 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
     end
 
     def remote_console_acquire_ticket(userid, console_type)
+      # FIXME: a temporary work-around for #8151 (provider_object being an Array)
+      provider = provider_object.kind_of?(Array) ? provider_object.first : provider_object
+
       validate_remote_console_acquire_ticket(console_type)
 
-      parsed_ticket = Nokogiri::XML(provider_object.ticket)
-      display = provider_object.attributes[:display]
+      parsed_ticket = Nokogiri::XML(provider.ticket)
+      display = provider.attributes[:display]
 
       SystemConsole.where(:vm_id => id).each(&:destroy)
       # TODO: non-blocking SSL support in the proxy

@@ -114,6 +114,16 @@ class ApiController
       expand_param ? expand_param.include?(what.to_s) : false
     end
 
+    def decorator_selection
+      params['decorators'].to_s.split(",")
+    end
+
+    def decorator_selection_for(collection)
+      decorator_selection.collect do |attr|
+        /\A#{collection}\.(?<name>.*)\z/.match(attr) { |m| m[:name] }
+      end.compact
+    end
+
     def attribute_selection
       if params['attributes'] || @req[:additional_attributes]
         params['attributes'].to_s.split(",") | Array(@req[:additional_attributes]) | ID_ATTRS
