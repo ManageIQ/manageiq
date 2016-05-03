@@ -262,7 +262,7 @@ module MiqReport::Generator::Html
       return atom[:class] if atom[:operator].downcase == "default"
 
       exp = expression_for_style_class(field, atom)
-      return atom[:class] if exp.evaluate(nh, {}, tz)
+      return atom[:class] if exp.evaluate(nh, tz)
     end
     nil
   end
