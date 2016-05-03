@@ -1,7 +1,5 @@
 class TreeBuilderOps < TreeBuilder
   # common methods for OPS subclasses
-  has_kids_for LdapRegion, [:x_get_tree_lr_kids]
-  has_kids_for Zone, [:x_get_tree_zone_kids]
 
   private
 

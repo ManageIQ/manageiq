@@ -1,6 +1,4 @@
 class TreeBuilderServices < TreeBuilder
-  has_kids_for Service, [:x_get_tree_service_kids]
-
   private
 
   def tree_init_options(_tree_name)

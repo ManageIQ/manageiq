@@ -1,6 +1,4 @@
 class TreeBuilderReportDashboards < TreeBuilder
-  has_kids_for MiqGroup, [:x_get_tree_g_kids]
-
   private
 
   def tree_init_options(tree_name)

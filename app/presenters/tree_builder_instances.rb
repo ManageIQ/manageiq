@@ -1,7 +1,4 @@
 class TreeBuilderInstances < TreeBuilder
-  has_kids_for AvailabilityZone, [:x_get_tree_az_kids]
-  has_kids_for ExtManagementSystem, [:x_get_tree_ems_kids]
-
   def tree_init_options(_tree_name)
     {
       :leaf => 'VmCloud'

@@ -1,7 +1,4 @@
 class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
-  has_kids_for ServiceTemplateCatalog, [:x_get_tree_stc_kids]
-  has_kids_for ServiceTemplate, [:x_get_tree_st_kids, :type]
-
   private
 
   def tree_init_options(_tree_name)

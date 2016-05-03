@@ -1,7 +1,4 @@
 class TreeBuilderServiceDialogs < TreeBuilderAeCustomization
-  has_kids_for DialogGroup, [:x_get_tree_dialog_group_kids, :type]
-  has_kids_for DialogTab, [:x_get_tree_dialog_tab_kids, :type]
-
   private
 
   def tree_init_options(_tree_name)
