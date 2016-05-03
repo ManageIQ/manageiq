@@ -357,7 +357,11 @@ class VmCloudController < ApplicationController
       })
     when "submit"
       if @record.is_available?(:evacuate)
-        hostname = find_by_id_filtered(Host, params[:destination_host_id]).hostname
+        if params['auto_select_host'] == 'on'
+          hostname = nil
+        else
+          hostname = find_by_id_filtered(Host, params[:destination_host_id]).hostname
+        end
         on_shared_storage = @params[:on_shared_storage]
         begin
           @record.evacuate(
