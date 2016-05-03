@@ -362,11 +362,13 @@ class VmCloudController < ApplicationController
         else
           hostname = find_by_id_filtered(Host, params[:destination_host_id]).hostname
         end
-        on_shared_storage = @params[:on_shared_storage]
+        on_shared_storage = @params[:on_shared_storage] == 'on'
+        admin_password = on_shared_storage ? nil : @params[:admin_password]
         begin
           @record.evacuate(
             :hostname          => hostname,
-            :on_shared_storage => on_shared_storage == 'on'
+            :on_shared_storage => on_shared_storage,
+            :admin_password    => admin_password
           )
           add_flash(_("Evacuating %{instance} \"%{name}\"") % {
             :instance => ui_lookup(:table => 'vm_cloud'),

@@ -20,9 +20,9 @@
         %input{:type         => "checkbox",
                :name         => "on_shared_storage",
                'ng-model'    => "vmCloudModel.on_shared_storage"}
-    .form-group
+    .form-group{'ng-hide' => 'vmCloudModel.on_shared_storage'}
       %label.col-md-2.control-label
-        = _('Admin Password (optional)')
+        = _('Admin Password')
       .col-md-8
         %input.form-control{:type         => "password",
                             :name         => "admin_password",
