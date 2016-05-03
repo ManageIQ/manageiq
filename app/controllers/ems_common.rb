@@ -658,7 +658,7 @@ module EmsCommon
   end
 
   def retrieve_openstack_amqp_security_protocols
-    [[_('SSL without validation'), 'ssl'], [_('Non-SSL'), 'non-ssl']]
+    [[_('Non-SSL'), 'non-ssl']]
   end
 
   # Get variables from edit form
