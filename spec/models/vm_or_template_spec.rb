@@ -609,4 +609,25 @@ describe VmOrTemplate do
       expect(vm.v_host_vmm_product).to eq("Hyper-V")
     end
   end
+
+  describe "#disconnect_ems" do
+    let(:ems) { FactoryGirl.build(:ext_management_system) }
+    let(:vm) do
+      FactoryGirl.build(:vm_or_template,
+                        :ext_management_system => ems,
+                        :ems_cluster           => FactoryGirl.build(:ems_cluster))
+    end
+
+    it "clears ems and cluster" do
+      vm.disconnect_ems(ems)
+      expect(vm.ext_management_system).to be_nil
+      expect(vm.ems_cluster).to be_nil
+    end
+
+    it "doesnt clear the wrong ems" do
+      vm.disconnect_ems(FactoryGirl.build(:ext_management_system))
+      expect(vm.ext_management_system).not_to be_nil
+      expect(vm.ems_cluster).not_to be_nil
+    end
+  end
 end
