@@ -71,11 +71,11 @@ describe ServiceAnsibleTower do
     end
 
     it 'always saves options even when the manager fails to create a stack' do
-      ProvisionError = MiqException::MiqOrchestrationProvisionError
-      allow_any_instance_of(ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job).to receive(:stack_create).and_raise(ProvisionError, 'test failure')
+      provision_error = MiqException::MiqOrchestrationProvisionError
+      allow_any_instance_of(ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job).to receive(:stack_create).and_raise(provision_error, 'test failure')
 
       expect(service_mix_dialog_setter).to receive(:save_launch_options)
-      expect { service_mix_dialog_setter.launch_job }.to raise_error(ProvisionError)
+      expect { service_mix_dialog_setter.launch_job }.to raise_error(provision_error)
     end
   end
 end
