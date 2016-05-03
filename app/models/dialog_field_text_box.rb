@@ -3,6 +3,7 @@ class DialogFieldTextBox < DialogField
 
   def value
     @value = values_from_automate if dynamic && @value.blank?
+    return @value if @value.nil?
     data_type == "integer" ? @value.to_i : @value
   end
 
