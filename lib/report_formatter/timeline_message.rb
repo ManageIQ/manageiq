@@ -62,6 +62,16 @@ module ReportFormatter
       end
     end
 
+    def middleware_name
+      mw_id_cols = EmsEvent.column_names.select { |n| n.match('middleware_.+_id') }
+      mw_id_col  = mw_id_cols.find { |c| @event[c] }
+      unless mw_id_col.nil?
+        mw_type     = mw_id_col.slice(0, mw_id_col.rindex('_id'))
+        mw_name_col = mw_type + '_name'
+        "<a href='/#{mw_type}/show/#{to_cid(@event[mw_id_col])}'>#{@event[mw_name_col]}</a>"
+      end
+    end
+
     def ext_management_system_name
       if @event.ext_management_system && @event.ext_management_system.id
         provider_id = @event.ext_management_system.id
@@ -70,6 +80,8 @@ module ReportFormatter
           "<a href=\"/ems_cloud/#{provider_id}\">#{text}</a>"
         elsif ems_container
           "<a href=\"/ems_container/#{to_cid(provider_id)}\">#{text}</a>"
+        elsif ems_mw
+          "<a href=\"/ems_middleware/show/#{to_cid(provider_id)}\">#{text}</a>"
         else
           "<a href=\"/ems_infra/#{to_cid(provider_id)}\">#{text}</a>"
         end
@@ -97,12 +109,26 @@ module ReportFormatter
       end
     end
 
+    def set_parameters(column, row, event, flags, db)
+      @event, @ems_cloud, @ems_container, @ems_mw = event, flags[:ems_cloud], flags[:ems_container], flags[:ems_mw]
+      @db   = db
+      @text = if row[column].kind_of?(Time) || TIMELINE_TIME_COLUMNS.include?(column)
+                format_timezone(Time.parse(row[column].to_s).utc, flags[:time_zone], "gtl")
+              else
+                row[column].to_s
+              end
+    end
+
     def ems_cloud
       @flags[:ems_cloud]
     end
 
     def ems_container
       @flags[:ems_container]
+    end
+
+    def ems_mw
+      @flags[:ems_mw]
     end
   end
 end
