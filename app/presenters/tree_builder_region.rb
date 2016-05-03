@@ -1,6 +1,4 @@
 class TreeBuilderRegion < TreeBuilder
-  has_kids_for MiqRegion, [:x_get_tree_region_kids]
-
   private
 
   def tree_init_options(_tree_name)

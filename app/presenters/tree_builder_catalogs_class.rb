@@ -1,6 +1,4 @@
 class TreeBuilderCatalogsClass < TreeBuilder
-  has_kids_for CustomButtonSet, [:x_get_tree_aset_kids]
-
   private
 
   def x_get_tree_roots(count_only, options)

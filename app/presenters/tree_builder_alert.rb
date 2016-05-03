@@ -21,4 +21,9 @@ class TreeBuilderAlert < TreeBuilder
   def x_get_tree_roots(count_only, _options)
     count_only_or_objects(count_only, MiqAlert.all, :description)
   end
+
+  # level 2 - nothing
+  def x_get_tree_al_kids(_parent, count_only)
+    count_only_or_objects(count_only, [])
+  end
 end

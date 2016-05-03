@@ -37,4 +37,9 @@ class TreeBuilderCondition < TreeBuilder
 
     count_only_or_objects(count_only, objects, :description)
   end
+
+  # level 3 - nothing
+  def x_get_tree_co_kids(_parent, count_only)
+    count_only_or_objects(count_only, [])
+  end
 end
