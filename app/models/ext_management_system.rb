@@ -598,6 +598,7 @@ class ExtManagementSystem < ApplicationRecord
     if event_monitor_class && !self.new_record? && self.credentials_changed?
       _log.info("EMS: [#{name}], Credentials have changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
+      network_manager.stop_event_monitor_queue if respond_to?(:network_manager) && network_manager
     end
   end
 
