@@ -3,13 +3,7 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
   def event_monitor_handle
     require 'openstack/openstack_event_monitor'
     unless @event_monitor_handle
-      options = {}
-      options[:hostname] = @ems.hostname
-      options[:port]     = worker_settings[:amqp_port]
-      if @ems.has_authentication_type? :amqp
-        options[:username] = @ems.authentication_userid(:amqp)
-        options[:password] = @ems.authentication_password(:amqp)
-      end
+      options = @ems.event_monitor_options
       options[:topics]     = worker_settings[:topics]
       options[:duration]   = worker_settings[:duration]
       options[:capacity]   = worker_settings[:capacity]
