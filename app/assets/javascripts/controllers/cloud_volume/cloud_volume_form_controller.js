@@ -3,6 +3,7 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
   $scope.formId = cloudVolumeFormId;
   $scope.afterGet = false;
   $scope.modelCopy = angular.copy( $scope.cloudVolumeModel );
+  $scope.model = "cloudVolumeModel";
 
   ManageIQ.angular.scope = $scope;
 
@@ -19,10 +20,6 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
         miqService.sparkleOff();
       });
    }
-
-  $scope.$watch("cloudVolumeModel.name", function() {
-    $scope.form = $scope.angularForm;
-  });
 
   $scope.addClicked = function() {
     miqService.sparkleOn();
