@@ -1,3 +1,3 @@
 class ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup < ::SecurityGroup
-  has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
+  has_many :vms, -> { distinct }, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
 end
