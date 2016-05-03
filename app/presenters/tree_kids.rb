@@ -6,7 +6,7 @@ module TreeKids
     end
 
     def kids_generators
-      @kids_generators ||= {
+      @kids_generators ||= superclass.try(:kids_generators).try(:dup) || {
         Hash => [:x_get_tree_custom_kids, :options],
       }
     end
