@@ -9,14 +9,14 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   belongs_to :cloud_tenant
 
   has_many :network_ports, :as => :device
-  has_many :cloud_subnets, :through => :network_ports
-  has_many :cloud_networks, :through => :cloud_subnets
-  has_many :network_routers, :through => :cloud_subnets
+  has_many :cloud_subnets, -> { distinct }, :through => :network_ports
+  has_many :cloud_networks, -> { distinct }, :through => :cloud_subnets
+  has_many :network_routers, -> { distinct }, :through => :cloud_subnets
   # Keeping floating_ip for backwards compatibility. Keeping association through vm_id foreign key, because of Amazon
   # ec2, it allows to associate floating ips without network ports
   has_one  :floating_ip, :foreign_key => :vm_id
   has_many :floating_ips
-  has_many :security_groups, :through => :network_ports
+  has_many :security_groups, -> { distinct }, :through => :network_ports
   has_many :cloud_volumes, :through => :disks, :source => :backing, :source_type => "CloudVolume"
 
   has_and_belongs_to_many :key_pairs, :join_table              => :key_pairs_vms,
