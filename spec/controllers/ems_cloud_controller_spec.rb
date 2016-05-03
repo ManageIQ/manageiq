@@ -405,8 +405,14 @@ describe EmsCloudController do
         "event_stream_selection"    => "ceilometer"
       }
       ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
+      amqp = Endpoint.where(:role => "amqp", :resource_id => ems_openstack.id).first
+      amqp_auth = Authentication.where(:authtype => "amqp", :resource_id => ems_openstack.id).first
       ceilometer = Endpoint.where(:role => "ceilometer", :resource_id => ems_openstack.id).first
+      ceilometer_auth = Authentication.where(:authtype => "ceilometer", :resource_id => ems_openstack.id).first
+      expect(amqp).to be_nil
+      expect(amqp_auth).to be_nil
       expect(ceilometer).not_to be_nil
+      expect(ceilometer_auth).to be_nil
 
       post :update, :params => {
         "id"                        => ems_openstack.id,
@@ -431,6 +437,95 @@ describe EmsCloudController do
       ceilometer = Endpoint.where(:role => "ceilometer", :resource_id => ems_openstack.id).first
       expect(amqp).not_to be_nil
       expect(ceilometer).to be_nil
+    end
+
+    it "restarts event monitor worker on endpoints or credentials change" do
+      post :create, :params => {
+        "button"                    => "add",
+        "default_hostname"          => "default_hostname",
+        "default_userid"            => "",
+        "default_password"          => "",
+        "name"                      => "openstack_cloud",
+        "emstype"                   => "openstack",
+        "api_version"               => "v2",
+        "provider_region"           => "",
+        "zone"                      => zone.name,
+        "default_api_port"          => "5000",
+        "default_security_protocol" => "ssl-with-validation",
+        "event_stream_selection"    => "ceilometer"
+      }
+
+      # Change from ceilometer to amqp
+      ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
+      allow(controller).to receive(:find_by_id_filtered).and_return(ems_openstack)
+      expect(ems_openstack).to receive(:stop_event_monitor_queue).once
+
+      post :update, :params => {
+        "id"                        => ems_openstack.id,
+        "button"                    => "save",
+        "default_hostname"          => "default_hostname",
+        "default_userid"            => "",
+        "default_password"          => "",
+        "name"                      => "openstack_cloud",
+        "emstype"                   => "openstack",
+        "provider_region"           => "",
+        "zone"                      => zone.name,
+        "default_api_port"          => "5000",
+        "default_security_protocol" => "ssl-with-validation",
+        "event_stream_selection"    => "amqp",
+        "amqp_hostname"             => "amqp_hostname",
+        "amqp_api_port"             => "5672",
+        "amqp_security_protocol"    => "ssl",
+        "amqp_userid"               => "",
+        "amqp_password"             => ""
+      }
+
+      # Change of all endpoints and credentials
+      ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
+      allow(controller).to receive(:find_by_id_filtered).and_return(ems_openstack)
+      # This is a bug in ems saving mechanism, there are 3 saves now, 2 for each auth and one for ems. We need to fix
+      # that, then stop_event_monitor_queue should be called once
+      expect(ems_openstack).to receive(:stop_event_monitor_queue).exactly(3).times
+
+      post :update, :params => {
+        "id"                        => ems_openstack.id,
+        "button"                    => "save",
+        "default_hostname"          => "default_hostname_changed",
+        "default_userid"            => "changed",
+        "default_password"          => "changed",
+        "name"                      => "openstack_cloud",
+        "emstype"                   => "openstack",
+        "provider_region"           => "",
+        "zone"                      => zone.name,
+        "default_api_port"          => "5000",
+        "default_security_protocol" => "ssl-with-validation",
+        "event_stream_selection"    => "amqp",
+        "amqp_hostname"             => "amqp_hostname_changed",
+        "amqp_api_port"             => "5672",
+        "amqp_security_protocol"    => "ssl",
+        "amqp_userid"               => "changed",
+        "amqp_password"             => "changed"
+      }
+
+      # Change from amqp to ceilometer
+      ems_openstack = EmsCloud.where(:name => "openstack_cloud").first
+      allow(controller).to receive(:find_by_id_filtered).and_return(ems_openstack)
+      expect(ems_openstack).to receive(:stop_event_monitor_queue).once
+
+      post :update, :params => {
+        "id"                        => ems_openstack.id,
+        "button"                    => "save",
+        "default_hostname"          => "default_hostname_changed",
+        "default_userid"            => "changed",
+        "default_password"          => "changed",
+        "name"                      => "openstack_cloud",
+        "emstype"                   => "openstack",
+        "provider_region"           => "",
+        "zone"                      => zone.name,
+        "default_api_port"          => "5000",
+        "default_security_protocol" => "ssl-with-validation",
+        "event_stream_selection"    => "ceilometer"
+      }
     end
   end
 end
