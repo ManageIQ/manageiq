@@ -19,6 +19,7 @@ FactoryGirl.define do
   end
 
   factory :authentication_ssh_keypair, :parent => :authentication, :class => 'ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair' do
+    type        "ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair"
     authtype    "ssh_keypair"
     userid      "testuser"
     password    nil

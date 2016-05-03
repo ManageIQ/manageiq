@@ -327,6 +327,7 @@ openstack-keystone:                     active
 
         expected_ret = auth.userid, nil, nil, nil, {:key_data => auth.auth_key, :passwordless_sudo => false}
 
+        host.reload
         expect(host.ssh_users_and_passwords).to eq expected_ret
       end
     end
