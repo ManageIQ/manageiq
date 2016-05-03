@@ -75,8 +75,7 @@ module Metric::Targets
         t.respond_to?(:vms)
     end
     MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
-    vms = targets.flat_map { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }
-    vms
+    enabled_parents.flat_map { |t| t.vms.select { |v| v.state == 'on' } }
   end
 
   # If a Cluster, standalone Host, or Storage is not enabled, skip it.
