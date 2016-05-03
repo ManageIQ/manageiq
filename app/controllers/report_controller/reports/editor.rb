@@ -180,26 +180,23 @@ module ReportController::Reports::Editor
       # Build record filter expression
       if @edit[:miq_exp] || # Is this stored as an MiqExp object
          ["new", "copy", "create"].include?(request.parameters["action"])        # or it's a new condition
-        @expkey = :record_filter
-        @edit[@expkey][:exp_idx] ||= 0                                            # Start at first exp
-        @edit[@expkey][:expression] = copy_hash(@edit[:new][:record_filter]) unless @edit[:new][:record_filter].blank?
-        exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
-        @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
+        @edit[:record_filter][:exp_idx] ||= 0                                            # Start at first exp
+        @edit[:record_filter][:expression] = copy_hash(@edit[:new][:record_filter]) unless @edit[:new][:record_filter].blank?
+        exp_array(:init, @edit[:record_filter][:expression]) if @edit[:record_filter][:exp_array].nil?  # Initialize the exp array
+        @edit[:record_filter][:exp_table] = exp_build_table(@edit[:record_filter][:expression])
         exp_get_prefill_types                                                   # Build prefill lists
-        @edit[@expkey][:exp_model] = @edit[:new][:model]                        # Set the model for the expression editor
+        @edit[:record_filter][:exp_model] = @edit[:new][:model]                        # Set the model for the expression editor
       end
 
       # Build display filter expression
-      @expkey = :display_filter
-      @edit[@expkey][:exp_idx] ||= 0                                            # Start at first exp
-      @edit[@expkey][:expression] = copy_hash(@edit[:new][:display_filter]) unless @edit[:new][:display_filter].blank?
-      exp_array(:init, @edit[@expkey][:expression]) if @edit[@expkey][:exp_array].nil?  # Initialize the exp array
-      @edit[@expkey][:exp_table]            = exp_build_table(@edit[@expkey][:expression])
-      @edit[@expkey][:exp_available_fields] = MiqReport.display_filter_details(@edit[:new][:field_order], :field)
-      @edit[@expkey][:exp_available_tags]   = MiqReport.display_filter_details(@edit[:new][:fields], :tag)
-      @edit[@expkey][:exp_model]            = "_display_filter_"                            # Set model for display filter
+      @edit[:display_filter][:exp_idx] ||= 0                                            # Start at first exp
+      @edit[:display_filter][:expression] = copy_hash(@edit[:new][:display_filter]) unless @edit[:new][:display_filter].blank?
+      exp_array(:init, @edit[:display_filter][:expression]) if @edit[:display_filter][:exp_array].nil?  # Initialize the exp array
+      @edit[:display_filter][:exp_table]            = exp_build_table(@edit[:display_filter][:expression])
+      @edit[:display_filter][:exp_available_fields] = MiqReport.display_filter_details(@edit[:new][:field_order], :field)
+      @edit[:display_filter][:exp_available_tags]   = MiqReport.display_filter_details(@edit[:new][:fields], :tag)
+      @edit[:display_filter][:exp_model]            = "_display_filter_"                            # Set model for display filter
 
-      @expkey = :record_filter                                                  # Start with Record Filter showing
       if @edit[:new][:perf_interval] && !@edit[:new][:time_profile]
         set_time_profile_vars(selected_time_profile_for_pull_down, @edit[:new])
       end
