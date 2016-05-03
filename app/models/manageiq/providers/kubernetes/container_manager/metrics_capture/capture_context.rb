@@ -128,7 +128,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
           resource,
           :starts         => (@start_time - @interval).to_i.in_milliseconds,
           :bucketDuration => "#{@interval}s"))
-    rescue SystemCallError => e
+    rescue SystemCallError, SocketError, OpenSSL::SSL::SSLError => e
       raise CollectionFailure, e.message
     end
 
@@ -138,7 +138,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
           resource,
           :starts         => @start_time.to_i.in_milliseconds,
           :bucketDuration => "#{@interval}s"))
-    rescue SystemCallError => e
+    rescue SystemCallError, SocketError, OpenSSL::SSL::SSLError => e
       raise CollectionFailure, e.message
     end
 
