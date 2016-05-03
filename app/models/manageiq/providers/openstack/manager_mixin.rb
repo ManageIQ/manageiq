@@ -1,6 +1,11 @@
 module ManageIQ::Providers::Openstack::ManagerMixin
   extend ActiveSupport::Concern
 
+  included do
+    after_save :stop_event_monitor_queue_on_change
+    before_destroy :stop_event_monitor
+  end
+
   alias_attribute :keystone_v3_domain_id, :uid_ems
   #
   # OpenStack interactions
@@ -94,6 +99,20 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   rescue => e
     _log.error("Exeption trying to find openstack event monitor for #{name}(#{hostname}). #{e.message}")
     false
+  end
+
+  def stop_event_monitor_queue_on_change
+    if authentications.detect{ |x| x.previous_changes.present? } || endpoints.detect{ |x| x.previous_changes.present? }
+      _log.info("EMS: [#{name}], Credentials or endpoints have changed, stopping Event Monitor. It will be restarted by the WorkerMonitor.")
+      stop_event_monitor_queue
+    end
+  end
+
+  def stop_event_monitor_queue_on_credential_change
+    # TODO(lsmola) this check should not be needed. Right now we are saving each individual authentication and
+    # it is breaking the check for changes. We should have it all saved by autosave when saving EMS, so the code
+    # for authentications needs to be rewritten.
+    stop_event_monitor_queue_on_change
   end
 
   def translate_exception(err)
