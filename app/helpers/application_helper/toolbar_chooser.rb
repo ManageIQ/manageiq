@@ -514,7 +514,7 @@ class ApplicationHelper::ToolbarChooser
     when "cp"       then  configuration_profile_center_tb
     when "f"        then  inventory_group_center_tb
     when "xx"       then
-      case @nodetype
+      case nodes.last
       when "f"  then "configured_systems_ansible_center_tb"
       when "cp" then "configured_systems_foreman_center_tb"
       else "provider_foreman_center_tb"
