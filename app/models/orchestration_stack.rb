@@ -7,6 +7,7 @@ class OrchestrationStack < ApplicationRecord
   include AsyncDeleteMixin
   include ProcessTasksMixin
   include_concern 'RetirementManagement'
+  include VirtualTotalMixin
 
   acts_as_miq_taggable
 
@@ -18,6 +19,18 @@ class OrchestrationStack < ApplicationRecord
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
 
+  has_many   :direct_vms,             :class_name => "ManageIQ::Providers::CloudManager::Vm"
+  has_many   :direct_security_groups, :class_name => "SecurityGroup"
+  has_many   :direct_cloud_networks,  :class_name => "CloudNetwork"
+
+  virtual_has_many :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
+  virtual_has_many :security_groups
+  virtual_has_many :cloud_networks
+
+  virtual_total :total_vms, :vms
+  virtual_total :total_security_groups, :security_groups
+  virtual_total :total_cloud_networks, :cloud_networks
+
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
@@ -28,6 +41,22 @@ class OrchestrationStack < ApplicationRecord
     else
       User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
     end
+  end
+
+  def indirect_vms
+    MiqPreloader.preload_and_map(children, :direct_vms)
+  end
+
+  def vms
+    directs_and_indirects(:direct_vms)
+  end
+
+  def security_groups
+    directs_and_indirects(:direct_security_groups)
+  end
+
+  def cloud_networks
+    directs_and_indirects(:direct_cloud_networks)
   end
 
   def directs_and_indirects(direct_attrs)
