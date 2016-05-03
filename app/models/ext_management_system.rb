@@ -283,8 +283,8 @@ class ExtManagementSystem < ApplicationRecord
     existing_endpoints = endpoints.pluck(:role).map(&:to_sym)
     # Delete endpoint that were not picked
     roles_for_deletion = existing_endpoints - chosen_endpoints
-    endpoints.select { |x| roles_for_deletion.include?(x.role.to_sym) }.each(&:mark_for_destruction)
-    authentications.select { |x| roles_for_deletion.include?(x.authtype.to_sym) }.each(&:mark_for_destruction)
+    endpoints.select { |x| x.role && roles_for_deletion.include?(x.role.to_sym) }.each(&:mark_for_destruction)
+    authentications.select { |x| x.authtype && roles_for_deletion.include?(x.authtype.to_sym) }.each(&:mark_for_destruction)
   end
 
   def connection_configurations
