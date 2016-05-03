@@ -238,7 +238,7 @@ RUBY
       DRb.stop_service
       # Set the ID conv to nil so that the cache can be GC'ed
       DRb.install_id_conv(nil)
-      # This hack was done to prevent ruby from leaking the 
+      # This hack was done to prevent ruby from leaking the
       # TimerIdConv thread.
       # https://bugs.ruby-lang.org/issues/12342
       thread = @global_id_conv
