@@ -15,6 +15,7 @@ class Provider < ApplicationRecord
   delegate :verify_ssl,
            :verify_ssl=,
            :verify_ssl?,
+           :url,
            :to => :default_endpoint
 
   virtual_column :verify_ssl,        :type => :integer
