@@ -1,6 +1,16 @@
 module MiqAeMethodSpec
   include MiqAeEngine
   describe MiqAeMethod do
+    it "setup/teardown drb_for_ruby_method clears DRb threads" do
+      threads_before = Thread.list.select(&:alive?)
+
+      described_class.setup_drb_for_ruby_method
+      expect(Thread.list.select(&:alive?) - threads_before).not_to be_empty
+
+      described_class.teardown_drb_for_ruby_method
+      expect(Thread.list.select(&:alive?)).to eq threads_before
+    end
+
     context "needing datatore" do
       before(:each) do
         MiqAeDatastore.reset
