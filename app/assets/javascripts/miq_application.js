@@ -1361,12 +1361,12 @@ function miqToolbarOnClick(e) {
   }
 
   if (button.data("confirm-tb") && !button.data("popup")) {
-    if (!confirm(button.data('confirm-tb'))) {
+    if (!confirm(__(button.data('confirm-tb')))) {
       return;
     }
   } else if (button.data("confirm-tb") && button.data("popup")) {
     // to open console in a new window
-    if (confirm(button.data('confirm-tb'))) {
+    if (confirm(__(button.data('confirm-tb')))) {
       if (button.data("window_url")) {
         window.open(button.data('window_url'));
       }
