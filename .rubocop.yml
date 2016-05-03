@@ -16,6 +16,7 @@ GlobalVars:
   - $rails_log
   - $rhevm_log
   - $kube_log
+  - $mw_log
   - $scvmm_log
   - $vim_log
   - $websocket_log

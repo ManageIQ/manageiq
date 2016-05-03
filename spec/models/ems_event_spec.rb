@@ -157,6 +157,41 @@ describe EmsEvent do
     end
   end
 
+  context ".process_middleware_entities_in_event!" do
+    let(:middleware_ref) { "hawkular-test-path" }
+    let(:ems) { FactoryGirl.create(:ems_hawkular) }
+    let(:middleware_server) do
+      FactoryGirl.create(:middleware_server,
+                         :ems_ref               => middleware_ref,
+                         :name                  => 'test-server',
+                         :ext_management_system => ems)
+    end
+
+    let(:event_hash) { {:middleware_type => MiddlewareServer.name, :ems_id => ems.id} }
+
+    before :each do
+      middleware_server
+    end
+
+    context "process server_in events" do
+      it "should link server id to event" do
+        event_hash[:middleware_ref] = middleware_ref
+        EmsEvent.process_middleware_entities_in_event!(event_hash)
+        expect(event_hash[:middleware_server_id]).to eq middleware_server.id
+        expect(event_hash[:middleware_server_name]).to eq middleware_server.name
+      end
+    end
+
+    context "process unknown_server_in events" do
+      it "should not link server id to event" do
+        event_hash[:middleware_ref] = 'unknown_id'
+        EmsEvent.process_middleware_entities_in_event!(event_hash)
+        expect(event_hash[:middleware_server_id]).to be_nil
+        expect(event_hash[:middleware_server_name]).to be_nil
+      end
+    end
+  end
+
   context "with availability zones" do
     before :each do
       @zone = FactoryGirl.create(:small_environment)
