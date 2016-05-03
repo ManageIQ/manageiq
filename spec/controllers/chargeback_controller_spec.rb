@@ -171,7 +171,7 @@ describe ChargebackController do
 
     render_views
 
-    let(:chargeback_rate) { FactoryGirl.create(:chargeback_rate_with_details) }
+    let(:chargeback_rate) { FactoryGirl.create(:chargeback_rate_with_details, :description => "foo") }
 
     # this index represent first rate detail( "Allocated Memory in MB") chargeback_rate
     let(:index_to_rate_type) { "0" }
