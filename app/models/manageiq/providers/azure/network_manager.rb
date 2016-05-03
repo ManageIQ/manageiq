@@ -27,7 +27,6 @@ class ManageIQ::Providers::Azure::NetworkManager < ManageIQ::Providers::NetworkM
            :authentications,
            :authentication_for_summary,
            :zone,
-           :Amazon_handle,
            :connect,
            :verify_credentials,
            :with_provider_connection,
