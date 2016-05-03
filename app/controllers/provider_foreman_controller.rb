@@ -548,7 +548,7 @@ class ProviderForemanController < ApplicationController
         options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
         @no_checkboxes = true
         process_show_list(options)
-        record_model = ui_lookup(:model => model_to_name(model ? model : model_to_name(TreeBuilder.get_model_for_prefix(@nodetype))))
+        record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
         @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
                                                         :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
       end
@@ -766,7 +766,7 @@ class ProviderForemanController < ApplicationController
     type && ["ManageIQ::Providers::Foreman::ConfigurationManager"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
-  def ansible_tower_provider_record?(node = x_node)
+  def ansible_tower_cfgmgr_record?(node = x_node)
     return  @record.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager) if @record
 
     type, _id = node.split("-")
@@ -774,7 +774,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_record?(node = x_node)
-    foreman_provider_record?(node) || ansible_tower_provider_record?(node)
+    foreman_provider_record?(node) || ansible_tower_cfgmgr_record?(node)
   end
 
   def search_text_type(node)
@@ -1042,9 +1042,9 @@ class ProviderForemanController < ApplicationController
   end
 
   def inventory_group_right_cell_text(model)
-    record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
     return if @sb[:active_tab] != 'configured_systems'
     if valid_inventory_group_record?(@inventory_group_record)
+      record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       @right_cell_text = _("%{model} under Inventory Group \"%{name}\"") %
                            {:model        => ui_lookup(:tables => "configured_system"),
                             :record_model => record_model,
