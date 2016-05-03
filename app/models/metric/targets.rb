@@ -67,17 +67,15 @@ module Metric::Targets
   end
 
   def self.capture_vm_targets(targets, parent_class, options)
-    vms = []
-    unless options[:exclude_vms]
-      enabled_parents = targets.select do |t|
-        t.kind_of?(parent_class) &&
+    return Vm.none if options[:exclude_vms]
+    enabled_parents = targets.select do |t|
+      t.kind_of?(parent_class) &&
         t.kind_of?(Metric::CiMixin) &&
         t.perf_capture_enabled? &&
         t.respond_to?(:vms)
-      end
-      MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
-      vms = targets.flat_map { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }
     end
+    MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
+    vms = targets.flat_map { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }
     vms
   end
 
