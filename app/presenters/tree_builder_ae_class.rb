@@ -1,7 +1,4 @@
 class TreeBuilderAeClass < TreeBuilder
-  has_kids_for MiqAeClass, [:x_get_tree_class_kids, :type]
-  has_kids_for MiqAeNamespace, [:x_get_tree_ns_kids, :type]
-
   private
 
   def tree_init_options(_tree_name)

@@ -10,7 +10,7 @@ class TreeBuilderVandt < TreeBuilder
       objects.length + 2
     else
       objects = objects.to_a
-      objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options.dup).tree }
+      objects.collect! { |o| TreeBuilderVmsAndTemplates.new(o, options).tree }
       objects + [
         {:id => "arch", :text => _("<Archived>"), :image => "currentstate-archived", :tip => _("Archived VMs and Templates")},
         {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned VMs and Templates")}

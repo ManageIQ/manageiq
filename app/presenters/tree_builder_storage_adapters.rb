@@ -1,7 +1,4 @@
 class TreeBuilderStorageAdapters < TreeBuilder
-  has_kids_for GuestDevice, [:x_get_tree_guest_device_kids]
-  has_kids_for MiqScsiTarget, [:x_get_tree_target_kids]
-
   def initialize(name, type, sandbox, build = true, root = nil)
     sandbox[:sa_root] = root if root
     @root = sandbox[:sa_root]
@@ -42,5 +39,9 @@ class TreeBuilderStorageAdapters < TreeBuilder
 
   def x_get_tree_target_kids(parent, count_only)
     count_only_or_objects(count_only, parent.miq_scsi_luns)
+  end
+
+  def x_get_tree_lun_kids(_parent, count_only)
+    count_only ? 0 : []
   end
 end

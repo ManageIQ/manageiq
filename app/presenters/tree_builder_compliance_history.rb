@@ -1,7 +1,4 @@
 class TreeBuilderComplianceHistory < TreeBuilder
-  has_kids_for Compliance, [:x_get_compliance_kids]
-  has_kids_for ComplianceDetail, [:x_get_compliance_detail_kids, :parents]
-
   def node_builder
     TreeNodeBuilderComplianceHistory
   end

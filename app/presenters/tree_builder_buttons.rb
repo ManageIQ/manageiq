@@ -1,6 +1,4 @@
 class TreeBuilderButtons < TreeBuilderAeCustomization
-  has_kids_for CustomButtonSet, [:x_get_tree_aset_kids]
-
   private
 
   def tree_init_options(_tree_name)

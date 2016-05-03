@@ -1,6 +1,4 @@
 class TreeBuilderOpsVmdb < TreeBuilderOps
-  has_kids_for VmdbTableEvm, [:x_get_tree_vmdb_table_kids]
-
   private
 
   def tree_init_options(_tree_name)

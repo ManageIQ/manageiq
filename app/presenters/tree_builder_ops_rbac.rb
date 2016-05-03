@@ -1,6 +1,4 @@
 class TreeBuilderOpsRbac < TreeBuilder
-  has_kids_for Tenant, [:x_get_tree_tenant_kids]
-
   private
 
   def tree_init_options(_tree_name)
