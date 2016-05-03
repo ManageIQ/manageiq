@@ -23,6 +23,17 @@ class MockKubeClient
     )
   end
 
+  def get_service_account(*_args)
+    RecursiveOpenStruct.new(
+      :metadata         => {
+        :name => 'inspector-admin'
+      },
+      :imagePullSecrets => [
+        OpenStruct.new(:name => 'inspector-admin-dockercfg-blabla')
+      ]
+    )
+  end
+
   def ssl_options(*_args)
     {}
   end
@@ -129,6 +140,24 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         expect(@image.openscap_result.binary_blob.md5).to eq('d1f1857281573cd777b31d76e8529dc9')
         expect(@image.openscap_result.openscap_rule_results.count).to eq(213)
       end
+    end
+
+    it 'should send correct dockercfg secrets' do
+      allow_any_instance_of(described_class).to receive_messages(:kubernetes_client => MockKubeClient.new)
+      kc = @job.kubernetes_client
+      secret_name = kc.get_service_account[:imagePullSecrets][0][:name]
+      pod = @job.send(:pod_definition)
+      expect(pod[:spec][:containers][0][:command]).to include(
+        "--dockercfg=" + described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name + "/.dockercfg")
+      expect(pod[:spec][:containers][0][:volumeMounts]).to include(
+        Kubeclient::Pod.new(
+          :name      => "inspector-admin-secret",
+          :mountPath => described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name,
+          :readOnly  => true))
+      expect(pod[:spec][:volumes]).to include(
+        Kubeclient::Pod.new(
+          :name   => "inspector-admin-secret",
+          :secret => {:secretName => secret_name}))
     end
 
     context 'when the job is called with a non existing image' do
