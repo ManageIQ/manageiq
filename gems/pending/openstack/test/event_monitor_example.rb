@@ -36,15 +36,16 @@ OPENSTACK_RDU_DEV_PORT   = ""
 OPENSTACK_RDU_USERNAME   = ""
 OPENSTACK_RDU_PASSWORD   = ""
 
-os_monitor = OpenstackEventMonitor.new(:hostname => OPENSTACK_RDU_DEV_SERVER,
-                                       :username => OPENSTACK_RDU_USERNAME,
-                                       :password => OPENSTACK_RDU_PASSWORD,
-                                       :topics   => {"nova"    => "notifications.*",
-                                                     "glance"  => "notifications.*",
-                                                     "cinder"  => "notifications.*",
-                                                     "heat"    => "notifications.*",
-                                                     "quantum" => "notifications.*",
-                                                     "neutron" => "notifications.*"})
+os_monitor = OpenstackEventMonitor.new(:events_monitor => :amqp,
+                                       :hostname       => OPENSTACK_RDU_DEV_SERVER,
+                                       :username       => OPENSTACK_RDU_USERNAME,
+                                       :password       => OPENSTACK_RDU_PASSWORD,
+                                       :topics         => {"nova"    => "notifications.*",
+                                                           "glance"  => "notifications.*",
+                                                           "cinder"  => "notifications.*",
+                                                           "heat"    => "notifications.*",
+                                                           "quantum" => "notifications.*",
+                                                           "neutron" => "notifications.*"})
 
 Signal.trap("INT") { os_monitor.stop }
 
