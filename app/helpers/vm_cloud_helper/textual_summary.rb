@@ -6,7 +6,7 @@ module VmCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description ipaddress custom_1 container tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
+    %i(name region server description ipaddress mac_address custom_1 container tools_status osinfo architecture advanced_settings resources guid virtualization_type root_device_type)
   end
 
   def textual_group_vm_cloud_relationships
@@ -93,6 +93,12 @@ module VmCloudHelper::TextualSummary
     return nil if @record.template?
     ips = @record.ipaddresses
     {:label => n_("IP Address", "IP Addresses", ips.size), :value => ips.join(", ")}
+  end
+
+  def textual_mac_address
+    return nil if @record.template?
+    macs = @record.mac_addresses
+    {:label => n_("MAC Address", "MAC Addresses", macs.size), :value => macs.join(", ")}
   end
 
   def textual_custom_1
