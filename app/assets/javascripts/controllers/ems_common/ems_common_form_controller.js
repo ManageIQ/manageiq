@@ -97,7 +97,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
         $scope.emsCommonModel.security_protocol               = data.security_protocol;
-        $scope.emsCommonModel.amqp_security_protocol          = data.amqp_security_protocol != '' ? data.amqp_security_protocol : 'ssl';
+        $scope.emsCommonModel.amqp_security_protocol          = data.amqp_security_protocol != '' ? data.amqp_security_protocol : 'non-ssl';
         $scope.emsCommonModel.provider_region                 = data.provider_region;
         $scope.emsCommonModel.default_userid                  = data.default_userid;
         $scope.emsCommonModel.amqp_userid                     = data.amqp_userid;
@@ -257,7 +257,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     if ($scope.emsCommonModel.emstype === 'openstack' || $scope.emsCommonModel.emstype === 'openstack_infra') {
       $scope.emsCommonModel.default_api_port = "5000";
       $scope.emsCommonModel.event_stream_selection = "ceilometer";
-      $scope.emsCommonModel.amqp_security_protocol = 'ssl';
+      $scope.emsCommonModel.amqp_security_protocol = 'non-ssl';
     } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
       $scope.note = $scope.realmNote;
     } else if ($scope.emsCommonModel.emstype === 'rhevm'){
