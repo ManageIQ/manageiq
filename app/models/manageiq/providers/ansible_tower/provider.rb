@@ -86,7 +86,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     new_url  = "https://#{new_url}" unless new_url =~ %r{\Ahttps?:\/\/} # HACK: URI can't properly parse a URL with no scheme
     uri      = URI(new_url)
     uri.path = default_api_path if uri.path.blank?
-    default_endpoint.url = uri.to_s
+    default_endpoint.update_attributes(:url => uri.to_s)
   end
 
   private
