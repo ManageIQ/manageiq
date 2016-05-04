@@ -21,6 +21,7 @@ db: NetworkPort
 cols:
 - name
 - mac_address
+- ipaddresses
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -40,13 +41,15 @@ include_for_find:
 col_order:
 - name
 - mac_address
+- ipaddresses
 #- device.name
 - ext_management_system.name
 
 # Column titles, in order
 headers:
 - Name
-- Mac Adress
+- Mac Address
+- IP Addresses
 #- Instance name
 - Network Provider
 
