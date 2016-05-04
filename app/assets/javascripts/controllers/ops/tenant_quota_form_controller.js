@@ -7,6 +7,7 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
     $scope.formId = tenantQuotaFormId;
     $scope.afterGet = false;
     $scope.modelCopy = angular.copy( $scope.tenantQuotaModel );
+    $scope.model = "tenantQuotaModel";
 
     ManageIQ.angular.scope = $scope;
     $scope.newRecord = false;
@@ -34,11 +35,6 @@ ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 
       $scope.afterGet = true;
       $scope.modelCopy = angular.copy( $scope.tenantQuotaModel );
       miqService.sparkleOff();
-    });
-
-    $scope.$watch("tenantQuotaModel", function() {
-      $scope.form = $scope.angularForm;
-      $scope.model = "tenantQuotaModel";
     });
   };
 
