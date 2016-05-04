@@ -725,7 +725,8 @@ en:
       ManageIQ::Providers::AnsibleTower::ConfigurationManager:              Configuration Manager (Ansible)
       ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
-      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Foreman Configured System
+      ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem: Configured System (Ansible)
+      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Configured System (Foreman)
       ManageIQ::Providers::CloudManager:                                    Cloud Provider
       ManageIQ::Providers::CloudManager::Vm:                                Instance
       ManageIQ::Providers::CloudManager::Template:                          Image
