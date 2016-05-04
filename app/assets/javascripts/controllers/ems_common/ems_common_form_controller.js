@@ -128,6 +128,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         if($scope.emsCommonModel.ssh_keypair_userid != '') {
           $scope.emsCommonModel.ssh_keypair_password = miqService.storedPasswordPlaceholder;
         }
+
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
 

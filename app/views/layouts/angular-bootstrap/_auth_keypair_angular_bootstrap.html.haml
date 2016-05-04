@@ -18,13 +18,13 @@
       %label.col-md-2.control-label{"for" => "textInput-markup"}
         = userid_label
       .col-md-4
-        %input.form-control{"type"                => "text",
-                            "id"                  => "textInput-markup",
-                            "ng-required"         => "#{ng_reqd_userid}",
-                            "ng-disabled"         => userid_disabled,
-                            "name"                => "#{prefix}_userid",
-                            "ng-model"            => "#{ng_model}.#{prefix}_userid",
-                            "checkchange"         => ""}
+        %input.form-control{"type"        => "text",
+                            "id"          => "textInput-markup",
+                            "ng-required" => "#{ng_reqd_userid}",
+                            "ng-disabled" => userid_disabled,
+                            "name"        => "#{prefix}_userid",
+                            "ng-model"    => "#{ng_model}.#{prefix}_userid",
+                            "checkchange" => ""}
         %span.help-block{"ng-show" => "angularForm.#{prefix}_userid.$error.required"}
           = _("Required")
         .note
@@ -38,16 +38,30 @@
         %div{"ng-show" => "vm.changeKey"}
           = new_private_key_label
       .col-md-4
-        %input.form-control{"type"                  => "file",
-                            "id"                    => "textInput-markup",
-                            "ng-required"           => "#{ng_reqd_private_key}",
-                            "ng-disabled"           => "!vm.showVerifyPrivateKey('#{prefix}_userid')" || private_key_disabled,
-                            "name"                  => "#{prefix}_password_dummy",
-                            "ng-model"              => "#{ng_model}.#{prefix}_password",
-                            "prefix"                => "#{prefix}",
-                            "checkchange"           => "",
-                            "require-file"          => ""}
-        %input{:type => 'text', :id => "textInput-markup", :name => "#{prefix}_password", "ng-model" => "#{ng_model}.#{prefix}_password", :style => "display: none"}
+        %div{"ng-if" => "vm.inEditMode('#{prefix}_userid')"}
+          %input.form-control{"type"         => "file",
+                              "id"           => "textInput-markup",
+                              "ng-required"  => "#{ng_reqd_private_key}",
+                              "ng-disabled"  => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
+                              "ng-model"     => "#{ng_model}.#{prefix}_password",
+                              "prefix"       => "#{prefix}",
+                              "checkchange"  => "",
+                              "require-file" => ""}
+        %div{"ng-if" => "!vm.inEditMode('#{prefix}_userid')"}
+          %input.form-control{"type"         => "text",
+                              "id"           => "textInput-markup",
+                              "ng-required"  => "#{ng_reqd_private_key}",
+                              "ng-disabled"  => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
+                              "ng-model"     => "#{ng_model}.#{prefix}_password",
+                              "prefix"       => "#{prefix}",
+                              "checkchange"  => "",
+                              "require-file" => ""}
+        %input{"type"        => "text",
+               "id"          => "textInput-markup",
+               "name"        => "#{prefix}_password",
+               "style"       => "display: none !important",
+               "ng-model"    => "#{ng_model}.#{prefix}_password",
+               "ng-disabled" => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled}
         %span.help-block{"ng-show" => "angularForm.#{prefix}_password.$error.required"}
           = _("Required")
       %div{"ng-if" => "vm.showChangePrivateKeyLinks('#{prefix}_userid')"}
@@ -61,11 +75,11 @@
         %label.col-md-2
         .col-md-4
           = render :partial => "layouts/angular/form_buttons_verify_angular",
-                                       :locals  => {:ng_show          => "#{ng_show}",
-                                                    :validate_url     => validate_url,
-                                                    :id               => id,
-                                                    :valtype          => "#{prefix}",
-                                                    :verify_title_off => verify_title_off,
+                                       :locals  => {:ng_show           => ng_show,
+                                                    :validate_url      => validate_url,
+                                                    :id                => id,
+                                                    :valtype           => prefix,
+                                                    :verify_title_off  => verify_title_off,
                                                     :basic_info_needed => defined?(basic_info_needed) ? basic_info_needed : nil}
 
     %div{"ng-show" => "vm.showVerifyPrivateKey('#{prefix}_userid')"}
@@ -73,9 +87,9 @@
         %label.col-md-2
         .col-md-4
           = render :partial => "layouts/angular/form_buttons_verify_angular",
-                                       :locals  => {:ng_show          => "#{ng_show}",
-                                                    :validate_url     => validate_url,
-                                                    :id               => id,
-                                                    :valtype          => "#{prefix}",
-                                                    :verify_title_off => verify_title_off,
+                                       :locals  => {:ng_show           => ng_show,
+                                                    :validate_url      => validate_url,
+                                                    :id                => id,
+                                                    :valtype           => prefix,
+                                                    :verify_title_off  => verify_title_off,
                                                     :basic_info_needed => defined?(basic_info_needed) ? basic_info_needed : nil}
