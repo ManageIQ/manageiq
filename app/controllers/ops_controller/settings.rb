@@ -36,7 +36,7 @@ module OpsController::Settings
   def forest_get_form_vars
     @edit = session[:edit]
     @ldap_info = {}
-    @ldap_info[:mode] = params[:user_proxies][:mode] if params[:user_proxies] && params[:user_proxies][:mode]
+    @ldap_info[:mode] = params[:user_proxies_mode] if params[:user_proxies] && params[:user_proxies_mode]
     @ldap_info[:ldaphost] = params[:user_proxies][:ldaphost] if params[:user_proxies] && params[:user_proxies][:ldaphost]
     @ldap_info[:ldapport] = params[:user_proxies][:ldapport] if params[:user_proxies] && params[:user_proxies][:ldapport]
     @ldap_info[:basedn] = params[:user_proxies][:basedn] if params[:user_proxies] && params[:user_proxies][:basedn]
