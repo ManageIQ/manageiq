@@ -41,6 +41,17 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           'pficon pficon-edit fa-lg',
           t = N_('Edit Management Engine Relationship'),
           t),
+        button(
+          :instance_attach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Attach a Cloud Volume to this Instance'),
+          t),
+        button(
+          :instance_detach,
+          'pficon pficon-volume fa-lg',
+          t = N_('Detach a Cloud Volume from this Instance'),
+          t,
+          :klass => ApplicationHelper::Button::InstanceDetach),
         separator,
         button(
           :instance_resize,
