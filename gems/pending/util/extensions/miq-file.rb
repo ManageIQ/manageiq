@@ -52,7 +52,7 @@ class File
 
   def self.path_to_uri(file, hostname = nil)
     hostname ||= MiqSockUtil.getFullyQualifiedDomainName
-    URI.join("file://#{hostname}", "/#{URI.encode(file.tr('\\', '/'))}").to_s
+    URI.join("file://#{hostname}", URI.encode(file.tr('\\', '/'), '[ ]-')).to_s
   end
 
   def self.uri_to_local_path(uri_path)
