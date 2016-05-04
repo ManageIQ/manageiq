@@ -320,8 +320,8 @@ module ApplicationController::Performance
       new_opts[:daily_date] = @perf_options[:daily_date] if typ == "Daily"
       new_opts[:hourly_date] = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
       new_opts[:tl_show_options] = []
-      new_opts[:tl_show_options].push(["Management Events", "timeline"])
-      new_opts[:tl_show_options].push(["Policy Events", "policy_timeline"])
+      new_opts[:tl_show_options].push([_("Management Events"), "timeline"])
+      new_opts[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       new_opts[:tl_show] = "timeline"
       session[(request.parameters["controller"] + "_tl").to_sym] ||= {}
       session[(request.parameters["controller"] + "_tl").to_sym].merge!(new_opts)
@@ -363,8 +363,8 @@ module ApplicationController::Performance
       new_opts[:daily_date] = @perf_options[:daily_date] if typ == "Daily"
       new_opts[:hourly_date] = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
       new_opts[:tl_show_options] = []
-      new_opts[:tl_show_options].push(["Management Events", "timeline"])
-      new_opts[:tl_show_options].push(["Policy Events", "policy_timeline"])
+      new_opts[:tl_show_options].push([_("Management Events"), "timeline"])
+      new_opts[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       new_opts[:tl_show] = "timeline"
       controller = new_opts[:model].underscore
       session[(controller + "_tl").to_sym] ||= {}
