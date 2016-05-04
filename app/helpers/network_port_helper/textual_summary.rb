@@ -4,7 +4,7 @@ module NetworkPortHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name mac_address type floating_ip_addresses fixed_ip_addresses)
+    %i(name mac_address type device_owner floating_ip_addresses fixed_ip_addresses)
   end
 
   def textual_group_relationships
@@ -28,6 +28,10 @@ module NetworkPortHelper::TextualSummary
 
   def textual_type
     ui_lookup(:model => @record.type)
+  end
+
+  def textual_device_owner
+    @record.device_owner
   end
 
   def textual_fixed_ip_addresses
