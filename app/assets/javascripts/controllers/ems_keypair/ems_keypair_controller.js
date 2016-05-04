@@ -44,11 +44,11 @@
   EmsKeypairController.prototype.cancelPrivateKeyChange = function() {
     if (this.changeKey) {
       this.changeKey = false;
-      this.model.ssh_keypair_password = '';
+      this.model.ssh_keypair_password = '●●●●●●●●';
     }
   };
 
-  EmsKeypairController.prototype.showVerifyPrivateKey = function(userid) {
+  EmsKeypairController.prototype.inEditMode = function(userid) {
     return (this.newRecord
             || !this.showChangePrivateKeyLinks(userid)
             || this.changeKey);
