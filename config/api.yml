@@ -762,6 +762,8 @@
       :post:
       - :name: run
         :identifier: miq_report_run
+      - :name: schedule
+        :identifier: miq_report_run
     :subcollections:
     - :results
     :collection_actions:

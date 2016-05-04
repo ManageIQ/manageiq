@@ -83,6 +83,19 @@ class MiqReport < ApplicationRecord
     q
   end
 
+  def add_schedule(data)
+    data['name'] ||= name
+    data['description'] ||= title
+
+    exp = {}
+    exp["="] = {"field" => "MiqReport.id", "value" => id}
+    data['filter'] = MiqExpression.new(exp)
+    data['towhat'] = "MiqReport"
+    data['prod_default'] = "system"
+
+    MiqSchedule.create! data
+  end
+
   def view_filter_columns
     col_order.collect { |c| [headers[col_order.index(c)], c] }
   end

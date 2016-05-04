@@ -126,6 +126,23 @@ RSpec.describe "reports API" do
       )
     end
 
+    it "can schedule a run" do
+      report = FactoryGirl.create(:miq_report)
+
+      expect do
+        api_basic_authorize action_identifier(:reports, :schedule)
+        run_post "#{reports_url(report.id)}",
+          :action => 'schedule',
+          name: 'schedule_name',
+          enabled: true,
+          description: 'unit test',
+          start_date: '05/05/2016',
+          interval: {unit: 'daily', value: '110'},
+          time_zone: 'UTC'
+      end.to change(MiqSchedule, :count).by(1)
+      expect_request_success
+    end
+
     it "can import a report" do
       serialized_report = {
         :menu_name => "Test Report",
