@@ -67,7 +67,7 @@ module Mixins
       set_ems_record_vars(verify_ems, :validate)
       @in_a_form = true
 
-      result, details = verify_ems.authentication_check(params[:cred_type], :save => !params[:id].nil?)
+      result, details = verify_ems.authentication_check(params[:cred_type], :save => false)
 
       if result
         add_flash(_("Credential validation was successful"))
@@ -318,11 +318,11 @@ module Mixins
         ems.subscription    = params[:subscription] unless params[:subscription].blank?
       end
 
-      build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint)
+      build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint, mode)
     end
 
-    def build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint)
-      authentications = build_credentials(ems)
+    def build_connection(ems, default_endpoint, amqp_endpoint, ssh_keypair_endpoint, metrics_endpoint, mode)
+      authentications = build_credentials(ems, mode)
       default_authentication = authentications.delete(:default)
       default_authentication[:role] = :default
       amqp_authentication = {}
@@ -350,28 +350,28 @@ module Mixins
                                       {:endpoint => metrics_endpoint, :authentication => metrics_authentication}])
     end
 
-    def build_credentials(ems)
+    def build_credentials(ems, mode)
       creds = {}
       if params[:default_userid]
         default_password = params[:default_password] ? params[:default_password] : ems.authentication_password
-        creds[:default] = {:userid => params[:default_userid], :password => default_password}
+        creds[:default] = {:userid => params[:default_userid], :password => default_password, :save => (mode != :validate)}
       end
       if ems.supports_authentication?(:amqp) && params[:amqp_userid]
         amqp_password = params[:amqp_password] ? params[:amqp_password] : ems.authentication_password(:amqp)
-        creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password}
+        creds[:amqp] = {:userid => params[:amqp_userid], :password => amqp_password, :save => (mode != :validate)}
       end
       if ems.kind_of?(ManageIQ::Providers::Openstack::InfraManager) &&
          ems.supports_authentication?(:ssh_keypair) && params[:ssh_keypair_userid]
         ssh_keypair_password = params[:ssh_keypair_password] ? params[:ssh_keypair_password] : ems.authentication_key(:ssh_keypair)
-        creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => ssh_keypair_password}
+        creds[:ssh_keypair] = {:userid => params[:ssh_keypair_userid], :auth_key => ssh_keypair_password, :save => (mode != :validate)}
       end
       if ems.kind_of?(ManageIQ::Providers::Redhat::InfraManager) &&
          ems.supports_authentication?(:metrics) && params[:metrics_userid]
         metrics_password = params[:metrics_password] ? params[:metrics_password] : ems.authentication_password(:metrics)
-        creds[:metrics] = {:userid => params[:metrics_userid], :password => metrics_password}
+        creds[:metrics] = {:userid => params[:metrics_userid], :password => metrics_password, :save => (mode != :validate)}
       end
       if ems.supports_authentication?(:auth_key) && params[:service_account]
-        creds[:default] = {:auth_key => params[:service_account], :userid => "_"}
+        creds[:default] = {:auth_key => params[:service_account], :userid => "_", :save => (mode != :validate)}
       end
       if ems.supports_authentication?(:oauth) && !session[:oauth_response].blank?
         auth = session[:oauth_response]
@@ -379,7 +379,8 @@ module Mixins
         creds[:oauth] = {:refresh_token => credentials["refresh_token"],
                          :access_token  => credentials["access_token"],
                          :expires       => credentials["expires"],
-                         :userid        => auth["info"]["name"]}
+                         :userid        => auth["info"]["name"],
+                         :save          => (mode != :validate)}
         session[:oauth_response] = nil
       end
       creds
