@@ -143,7 +143,7 @@ class VmCloudController < ApplicationController
         if params['auto_select_host'] == '1'
           hostname = nil
         else
-          hostname = find_by_filtered_id(Host, params[:destination_host_id]).hostname
+          hostname = find_by_id_filtered(Host, params[:destination_host_id]).hostname
           block_migration = @params[:block_migration]
           disk_over_commit = @params[:disk_over_commit]
         end
