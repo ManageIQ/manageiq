@@ -1,4 +1,6 @@
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
+  include_concern "DialogFieldValidation"
+
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
   end
@@ -200,20 +202,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return nil unless get_value(values[:sysprep_enabled]) == 'fields'
     return nil unless get_value(values[field]).blank?
     _("%{description} is required") % {:description => required_description(dlg, fld)}
-  end
-
-  def default_require_sysprep_enabled(_field, _values, dlg, fld, value)
-    # This method is available as a dialog field validation. Do not erase.
-    if value.blank? || value == "disabled"
-      _("%{description} is required") % {:description => required_description(dlg, fld)}
-    end
-  end
-
-  def default_require_sysprep_custom_spec(_field, _values, dlg, fld, value)
-    # This method is available as a dialog field validation. Do not erase.
-    if value.blank? || value == "__VC__NONE__"
-      _("%{description} is required") % {:description => required_description(dlg, fld)}
-    end
   end
 
   def update_field_visibility(options = {})
