@@ -47,6 +47,7 @@ include_for_find:
 col_order:
 - name
 - provider.url
+- type
 - zone.name
 - last_refresh_date
 - region_description
@@ -57,6 +58,7 @@ col_order:
 headers:
 - Provider Name
 - URL
+- Type
 - Zone
 - Last Refresh Date
 - Region Description
@@ -66,7 +68,7 @@ headers:
 col_formats:
 -
 -
--
+- :model_name
 -
 -
 
