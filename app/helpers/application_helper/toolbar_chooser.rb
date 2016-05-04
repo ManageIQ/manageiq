@@ -340,9 +340,11 @@ class ApplicationHelper::ToolbarChooser
         return "miq_widget_set_center_tb"
       end
     elsif x_active_tree == :savedreports_tree
-      node = x_node
-      return  node == "root" || node.split('-').first != "rr" ?
-          "saved_reports_center_tb" : "saved_report_center_tb"
+      if x_node == "root" || x_node.split('_').last.split('-').first != "rr"
+        return "saved_reports_center_tb"
+      else
+        return "saved_report_center_tb"
+      end
     elsif x_active_tree == :reports_tree
       nodes = x_node.split('-')
       if nodes.length == 5
