@@ -1071,7 +1071,7 @@ function miqClickAndPop(el) {
 }
 
 function miq_tabs_init(id, url) {
-  $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+  $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('show.bs.tab', _.debounce(function (e) {
     if ($(e.target).parent().hasClass('disabled')) {
       e.preventDefault();
       return false;
@@ -1082,7 +1082,7 @@ function miq_tabs_init(id, url) {
         miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
       }
     }
-  });
+  }, 700));
   $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Refresh CodeMirror when its tab is toggled
     if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(ManageIQ.editor) != 'undefined') {
@@ -1240,7 +1240,13 @@ function miqJqueryRequest(url, options) {
     };
   }
 
-  return $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+  if ($.active) {
+    setTimeout(function () {
+      $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+    }, 700);
+  } else {
+    $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+  }
 }
 
 function miqDomElementExists(element) {
