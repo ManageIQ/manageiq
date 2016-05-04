@@ -30,6 +30,22 @@ class NetworkPort < ApplicationRecord
   virtual_column :allowed_address_pairs,             :type => :string # :array
   virtual_column :fixed_ips,                         :type => :string # :array
 
+  virtual_column :ipaddresses, :type => :string_set, :uses => [:cloud_subnet_network_ports, :floating_ips]
+  virtual_column :fixed_ip_addresses, :type => :string_set, :uses => :cloud_subnet_network_ports
+  virtual_column :floating_ip_addresses, :type => :string_set, :uses => :floating_ips
+
+  def floating_ip_addresses
+    @floating_ip_addresses ||= floating_ips.collect(&:address).compact.uniq
+  end
+
+  def fixed_ip_addresses
+    @fixed_ip_addresses ||= cloud_subnet_network_ports.collect(&:address).compact.uniq
+  end
+
+  def ipaddresses
+    @ipaddresses ||= (fixed_ip_addresses || []) + (floating_ip_addresses || [])
+  end
+
   # Define all getters and setters for extra_attributes related virtual columns
   %i(binding_virtual_interface_details binding_virtual_nic_type binding_profile extra_dhcp_opts
      allowed_address_pairs fixed_ips).each do |action|
