@@ -18,12 +18,17 @@ describe 'MIQFile' do
     end
 
     it 'accepts an optional hostname and returns the expected result' do
-      hostname = 'dell-r410-01.cloudformswin.lab.redhat.com'
+      hostname = 'dell-r410-01.manageiqwin.lab.example.com'
       expect(File.path_to_uri('foo', hostname)).to eql("file://#{hostname}/foo")
       expect(File.path_to_uri('foo/bar', hostname)).to eql("file://#{hostname}/foo/bar")
       expect(File.path_to_uri('foo/bar-stuff', hostname)).to eql("file://#{hostname}/foo/bar-stuff")
       expect(File.path_to_uri('foo/C:/bar', hostname)).to eql("file://#{hostname}/foo/C:/bar")
       expect(File.path_to_uri('foo/[bar]', hostname)).to eql("file://#{hostname}/foo/%5Bbar%5D")
+    end
+
+    it 'handles an IPv6 hostname as expected' do
+      hostname = '::1'
+      expect(File.path_to_uri('foo', hostname)).to eql("file://[#{hostname}]/foo")
     end
 
     it 'requires at least one argument' do
