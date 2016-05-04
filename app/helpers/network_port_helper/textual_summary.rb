@@ -4,7 +4,7 @@ module NetworkPortHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name mac_address type fixed_ips)
+    %i(name mac_address type floating_ip_addresses fixed_ip_addresses)
   end
 
   def textual_group_relationships
@@ -30,8 +30,12 @@ module NetworkPortHelper::TextualSummary
     ui_lookup(:model => @record.type)
   end
 
-  def textual_fixed_ips
-    @record.cloud_subnet_network_ports.collect(&:address).join(", ") unless @record.cloud_subnet_network_ports.blank?
+  def textual_fixed_ip_addresses
+    @record.fixed_ip_addresses.join(", ") if @record.fixed_ip_addresses
+  end
+
+  def textual_floating_ip_addresses
+    @record.floating_ip_addresses.join(", ") if @record.floating_ip_addresses
   end
 
   def textual_parent_ems_cloud
