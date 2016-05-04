@@ -139,12 +139,13 @@ class ProviderForemanController < ApplicationController
   end
 
   def build_credentials
-    creds = {}
-    if params[:log_userid]
-      default_password = params[:log_password] ? params[:log_password] : @provider_cfgmgmt.authentication_password
-      creds[:default] = {:userid => params[:log_userid], :password => default_password}
-    end
-    creds
+    return {} unless params[:log_userid]
+    {
+      :default => {
+        :userid   => params[:log_userid],
+        :password => params[:log_password] || @provider_cfgmgmt.authentication_password
+      }
+    }
   end
 
   def save_provider_foreman
