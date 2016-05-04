@@ -15,9 +15,9 @@ class ProviderForemanController < ApplicationController
 
   def self.model_to_name(provmodel)
     if provmodel.include?("ManageIQ::Providers::AnsibleTower")
-      return ui_lookup(:ui_title => 'ansible_tower')
+      ui_lookup(:ui_title => 'ansible_tower')
     elsif provmodel.include?("ManageIQ::Providers::Foreman")
-      return ui_lookup(:ui_title => 'foreman')
+      ui_lookup(:ui_title => 'foreman')
     end
   end
 
@@ -296,7 +296,6 @@ class ProviderForemanController < ApplicationController
            %w(reload tree_select).include?(params[:action])
           self.x_node = params[:id]
           quick_search_show
-          return
         end
       end
     end
@@ -530,7 +529,6 @@ class ProviderForemanController < ApplicationController
     if provider.nil?
       self.x_node = "root"
       get_node_info("root")
-      return
     else
       @no_checkboxes = true
       case @record.type
@@ -565,7 +563,6 @@ class ProviderForemanController < ApplicationController
     if @configuration_profile_record.nil?
       self.x_node = "root"
       get_node_info("root")
-      return
     else
       options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
       if empty_configuration_profile_record?(@configuration_profile_record)
@@ -621,7 +618,6 @@ class ProviderForemanController < ApplicationController
     if @record.nil?
       self.x_node = "root"
       get_node_info("root")
-      return
     else
       show_record(from_cid(id))
       @right_cell_text = _("%{model} \"%{name}\"") %
