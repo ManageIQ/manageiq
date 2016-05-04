@@ -572,10 +572,11 @@ class ProviderForemanController < ApplicationController
       return
     else
       options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
-      options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
-      options[:where_clause] =
-        ["manager_id IN (?) AND \
-          configuration_profile_id IS NULL", id] if empty_configuration_profile_record?(@configuration_profile_record)
+      if empty_configuration_profile_record?(@configuration_profile_record)
+        options[:where_clause] = ["manager_id IN (?) AND configuration_profile_id IS NULL", id]
+      else
+        options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
+      end
       process_show_list(options)
       record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
