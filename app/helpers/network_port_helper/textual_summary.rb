@@ -49,8 +49,9 @@ module NetworkPortHelper::TextualSummary
   def textual_instance
     label    = ui_lookup(:table => "vm_cloud")
     instance = @record.device
-    h        = {:label => label, :image => "vm"}
+    h        = nil
     if instance && role_allows(:feature => "vm_show")
+      h = {:label => label, :image => "vm"}
       h[:value] = instance.name
       h[:link]  = url_for(:controller => 'vm_cloud', :action => 'show', :id => instance.id)
       h[:title] = _("Show %{label}") % {:label => label}
