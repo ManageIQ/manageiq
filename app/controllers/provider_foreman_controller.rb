@@ -50,8 +50,8 @@ class ProviderForemanController < ApplicationController
       save_provider_foreman
     else
       assert_privileges("provider_foreman_edit_provider")
-      @provider_cfgmgmt = find_record(ManageIQ::Providers::ConfigurationManager,
-                                      from_cid(params[:miq_grid_checks] || params[:id] || find_checked_items[0]))
+      manager_id            = from_cid(params[:miq_grid_checks] || params[:id] || find_checked_items[0])
+      @provider_cfgmgmt     = find_record(ManageIQ::Providers::ConfigurationManager, manager_id)
       @providerdisplay_type = model_to_name(@provider_cfgmgmt.type)
       render_form
     end
