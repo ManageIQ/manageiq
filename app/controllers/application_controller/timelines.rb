@@ -280,8 +280,8 @@ module ApplicationController::Timelines
       @tl_options[:days] = "7"
       @tl_options[:model] = @tl_record.class.base_class.to_s
       @tl_options[:tl_show_options] = []
-      @tl_options[:tl_show_options].push(["Management Events", "timeline"])
-      @tl_options[:tl_show_options].push(["Policy Events", "policy_timeline"])
+      @tl_options[:tl_show_options].push([_("Management Events"), "timeline"])
+      @tl_options[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       @tl_options[:tl_show] = "timeline"
     end
     evt_type = @tl_options[:tl_show] == "timeline" ? "event_streams" : "policy_events"
@@ -298,9 +298,9 @@ module ApplicationController::Timelines
 
     if @tl_options[:tl_show] == "policy_timeline"
       @tl_options[:all_results] = {}
-      @tl_options[:all_results]["Both"] = "both"
-      @tl_options[:all_results]["True"] = "success"
-      @tl_options[:all_results]["False"] = "failure"
+      @tl_options[:all_results][_("Both")] = "both"
+      @tl_options[:all_results][_("True")] = "success"
+      @tl_options[:all_results][_("False")] = "failure"
       @tl_options[:tl_result] ||= "both"
 
       @tl_options[:events] = {}
