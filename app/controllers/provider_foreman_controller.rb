@@ -611,7 +611,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def configured_system_list(id, model)
-    return configured_system_node(id, model) unless id.nil?
+    return configured_system_node(id, model) if id
     @listicon = "configured_system"
     if x_active_tree == :cs_filter_tree
       options = {:model => model.to_s}
