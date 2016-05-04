@@ -43,6 +43,19 @@ describe ProviderForemanController do
 
     @provider_ans2 = ManageIQ::Providers::AnsibleTower::Provider.create(:name => "ansibletest2", :url => "10.8.96.109", :zone => @zone)
     @config_ans2 = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find_by_provider_id(@provider_ans2.id)
+
+    @inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryGroup.create(:name => "testinvgroup", :ems_id => @config_ans.id)
+    @inventory_group2 = ManageIQ::Providers::ConfigurationManager::InventoryGroup.create(:name => "testinvgroup2", :ems_id => @config_ans2.id)
+    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "ans_test_configured_system",
+                                                                                                              :configuration_profile_id => @inventory_group.id,
+                                                                                                              :manager_id               => @config_mgr.id)
+
+    @ans_configured_system2a = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2a_ans_configured_system",
+                                                                                                                :inventory_root_group_id => @inventory_group.id,
+                                                                                                                :manager_id              => @config_ans.id)
+    @ans_configured_system2b = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2b_ans_configured_system",
+                                                                                                                :inventory_root_group_id => @inventory_group2.id,
+                                                                                                                :manager_id              => @config_ans2.id)
   end
 
   it "renders index" do
@@ -225,7 +238,7 @@ describe ProviderForemanController do
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("Configuration Profiles under Provider \"testForeman Configuration Manager\"")
+      expect(right_cell_text).to eq("Configuration Profiles under Foreman Provider \"testForeman Configuration Manager\"")
     end
   end
 
@@ -277,12 +290,6 @@ describe ProviderForemanController do
       view = controller.instance_variable_get(:@view)
       expect(view.table.data.size).to eq(2)
 
-      controller.instance_variable_set(:@_params, :id => "xx-at")
-      controller.instance_variable_set(:@search_text, "manager")
-      controller.send(:tree_select)
-      view = controller.instance_variable_get(:@view)
-      expect(view.table.data.size).to eq(2)
-
       ems_id = ems_key_for_provider(@provider)
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
@@ -303,6 +310,35 @@ describe ProviderForemanController do
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
       expect(view.table.data[0].hostname).to eq("test2b_configured_system")
+
+      controller.instance_variable_set(:@_params, :id => "xx-at")
+      controller.instance_variable_set(:@search_text, "manager")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data.size).to eq(2)
+
+      ems_id = ems_key_for_ans_provider(@provider_ans)
+      controller.instance_variable_set(:@_params, :id => ems_id)
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].name).to eq("testinvgroup")
+
+      controller.instance_variable_set(:@_params, :id => "xx-at")
+      controller.instance_variable_set(:@search_text, "2")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].name).to eq("ansibletest2 Configuration Manager")
+
+      invgroup_id2 = inventory_group_key(@inventory_group2)
+      controller.instance_variable_set(:@_params, :id => invgroup_id2)
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].hostname).to eq("test2b_ans_configured_system")
+
+      controller.instance_variable_set(:@search_text, "2b")
+      controller.send(:tree_select)
+      view = controller.instance_variable_get(:@view)
+      expect(view.table.data[0].hostname).to eq("test2b_ans_configured_system")
 
       allow(controller).to receive(:x_node).and_return("root")
       allow(controller).to receive(:x_tree).and_return(:type => :filter)
@@ -503,12 +539,22 @@ describe ProviderForemanController do
 
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "xx-fr_e-" + ApplicationRecord.compress_id(ems.id)
+    "xx-fr_fr-" + ApplicationRecord.compress_id(ems.id)
+  end
+
+  def ems_key_for_ans_provider(provider)
+    ems = ExtManagementSystem.where(:provider_id => provider.id).first
+    "xx-at_at-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def config_profile_key(config_profile)
     cp = ConfigurationProfile.where(:id => config_profile.id).first
     "cp-" + ApplicationRecord.compress_id(cp.id)
+  end
+
+  def inventory_group_key(inv_group)
+    ig =  ManageIQ::Providers::ConfigurationManager::InventoryGroup.where(:id => inv_group.id).first
+    "f-" + ApplicationRecord.compress_id(ig.id)
   end
 
   def ems_id_for_provider(provider)

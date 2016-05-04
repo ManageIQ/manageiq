@@ -7,6 +7,11 @@
   #main_div
     - @pages = nil if @sb[:active_tab] == 'summary'
     = render(:partial => 'provider_foreman/configuration_profile')
+- elsif @inventory_group_record
+  #main_div
+    - @pages = nil if @sb[:active_tab] == 'summary'
+    = render(:partial => 'provider_foreman/inventory_group')
+
 - elsif @configured_system_record
   #main_div
     = render(:partial => 'provider_foreman/main', :locals => {:controller => "provider_foreman"})

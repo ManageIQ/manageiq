@@ -511,10 +511,16 @@ class ApplicationHelper::ToolbarChooser
 
   def configuration_manager_providers_tree_center_tb(nodes)
     case nodes.first
-    when "root"   then  "provider_foreman_center_tb"
-    when "xx"     then  "provider_foreman_center_tb"
-    when "e"    then  "configuration_profile_foreman_center_tb"
-    when "cp"   then  configuration_profile_center_tb
+    when "root"     then  "provider_foreman_center_tb"
+    when "fr", "at" then  "configuration_profile_foreman_center_tb"
+    when "cp"       then  configuration_profile_center_tb
+    when "f"        then  inventory_group_center_tb
+    when "xx"       then
+      case nodes.last
+      when "f"  then "configured_systems_ansible_center_tb"
+      when "cp" then "configured_systems_foreman_center_tb"
+      else "provider_foreman_center_tb"
+      end
     else unassigned_configuration_profile_node(nodes)
     end
   end
@@ -528,6 +534,14 @@ class ApplicationHelper::ToolbarChooser
   def configuration_profile_center_tb
     if @sb[:active_tab] == "configured_systems"
       "configured_systems_foreman_center_tb"
+    else
+      "blank_view_tb"
+    end
+  end
+
+  def inventory_group_center_tb
+    if @sb[:active_tab] == "configured_systems"
+      "configured_systems_ansible_center_tb"
     else
       "blank_view_tb"
     end

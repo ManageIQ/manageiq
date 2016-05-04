@@ -29,8 +29,10 @@ class TreeBuilderConfigurationManager < TreeBuilder
     count_only_or_objects(count_only, objects, nil)
   end
 
-  def x_get_tree_cmat_kids(_object, count_only)
-    count_only_or_objects(count_only, [], nil)
+  def x_get_tree_cmat_kids(object, count_only)
+    count_only_or_objects(count_only,
+                          rbac_filtered_objects(ManageIQ::Providers::ConfigurationManager::InventoryGroup.where(:ems_id => object[:id]),
+                                                :match_via_descendants => ConfiguredSystem),"name")
   end
 
   def x_get_tree_cmf_kids(object, count_only)
@@ -73,12 +75,20 @@ class TreeBuilderConfigurationManager < TreeBuilder
                           "hostname")
   end
 
+  def x_get_tree_igf_kids(object, count_only)
+    count_only_or_objects(count_only,
+                          rbac_filtered_objects(ConfiguredSystem.where(:inventory_root_group_id=> object[:id]),
+                                                :match_via_descendants => ConfiguredSystem),
+                          "hostname")
+  end
+
   def x_get_tree_custom_kids(object_hash, count_only, _options)
     objects =
       case object_hash[:id]
       when "fr" then rbac_filtered_objects(ManageIQ::Providers::Foreman::ConfigurationManager.order("lower(name)"),
                                            :match_via_descendants => ConfiguredSystem)
-      when "at" then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"))
+      when "at" then rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager.order("lower(name)"),
+                                           :match_via_descendants => ConfiguredSystem)
       end
     count_only_or_objects(count_only, objects, "name")
   end

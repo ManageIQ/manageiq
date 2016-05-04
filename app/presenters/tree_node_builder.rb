@@ -376,6 +376,8 @@ class TreeNodeBuilder
     else
       base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
       base_class = "Datacenter" if base_class == "EmsFolder" && object.kind_of?(Datacenter)
+      base_class = "ManageIQ::Providers::Foreman::ConfigurationManager" if object.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager)
+      base_class = "ManageIQ::Providers::AnsibleTower::ConfigurationManager" if object.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
       prefix = TreeBuilder.get_prefix_for_model(base_class)
       cid = ApplicationRecord.compress_id(object.id)
       "#{format_parent_id}#{prefix}-#{cid}"
