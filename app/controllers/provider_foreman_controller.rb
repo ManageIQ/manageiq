@@ -711,13 +711,7 @@ class ProviderForemanController < ApplicationController
     trees = {}
     trees[:configuration_manager_providers] = build_configuration_manager_tree(:configuration_manager_providers, :configuration_manager_providers_tree) if replace_trees
 
-    # Build presenter to render the JS command for the tree update
-    presenter = ExplorerPresenter.new(
-      :active_tree => x_active_tree,
-      :delete_node => @delete_node,      # Remove a new node from the tree
-    )
-    r = proc { |opts| render_to_string(opts) }
-
+    presenter, r = rendering_objects
     update_partials(record_showing, presenter, r)
     replace_search_box(presenter, r)
     handle_bottom_cell(presenter, r)
