@@ -13,6 +13,11 @@
                :miqrequired  => true,
                :checkchange  => true,
                'ng-disabled' => "hosts.length == 0"}
+
+        %input{:type         => "hidden",
+               :name         => "auto_select_host",
+               :value        => "on",
+               'ng-if'       => "hosts.length == 0"}
     .form-group
       %label.col-md-2.control-label
         = _('On Shared Storage')
