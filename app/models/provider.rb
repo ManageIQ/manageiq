@@ -13,7 +13,6 @@ class Provider < ApplicationRecord
   has_many :endpoints, :through => :managers
 
   delegate :verify_ssl,
-           :verify_ssl=,
            :verify_ssl?,
            :url,
            :to => :default_endpoint
@@ -63,5 +62,9 @@ class Provider < ApplicationRecord
       raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "provider")}
     end
     managers.each { |manager| EmsRefresh.queue_refresh(manager) }
+  end
+
+  def verify_ssl=(new_value)
+    default_endpoint.update_attributes(:verify_ssl => new_value)
   end
 end
