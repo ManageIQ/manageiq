@@ -109,16 +109,6 @@ module ReportFormatter
       end
     end
 
-    def set_parameters(column, row, event, flags, db)
-      @event, @ems_cloud, @ems_container, @ems_mw = event, flags[:ems_cloud], flags[:ems_container], flags[:ems_mw]
-      @db   = db
-      @text = if row[column].kind_of?(Time) || TIMELINE_TIME_COLUMNS.include?(column)
-                format_timezone(Time.parse(row[column].to_s).utc, flags[:time_zone], "gtl")
-              else
-                row[column].to_s
-              end
-    end
-
     def ems_cloud
       @flags[:ems_cloud]
     end
