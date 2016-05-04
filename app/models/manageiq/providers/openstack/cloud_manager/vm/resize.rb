@@ -1,6 +1,9 @@
 module ManageIQ::Providers::Openstack::CloudManager::Vm::Resize
   def validate_resize
-    %w(ACTIVE SHUTOFF).include? raw_power_state
+    msg = validate_vm_control
+    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    return {:available => true, :message => nil} if %w(ACTIVE SHUTOFF).include?(raw_power_state)
+    {:available => false, :message => _("The Instance cannot be resized, current state has to be active or shutoff.")}
   end
 
   def raw_resize(new_flavor)

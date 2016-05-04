@@ -59,6 +59,10 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     {:available => true, :message => nil}
   end
 
+  def validate_resize
+    validate_unsupported(_("Resize"))
+  end
+
   private
 
   def raise_created_event
