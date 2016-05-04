@@ -6,6 +6,22 @@ describe MiqReport, "::Formatting" do
       expect(subject.format_currency_with_delimiter(1234567890.50, :prefix => "Front ", :suffix => " Back"))
         .to eq("Front $1,234,567,890.50 Back")
     end
+    it "puts Dollars as the unit to NumberHelper#number_to_currency" do
+      expect(subject.format_currency_with_delimiter(1234567890.50, :unit => "$"))
+        .to eq("$1,234,567,890.50")
+    end
+    it "puts Euro as the unit to NumberHelper#number_to_currency" do
+      expect(subject.format_currency_with_delimiter(1234567890.50, :unit => "€"))
+        .to eq("€1,234,567,890.50")
+    end
+    it "puts Pounds as the unit to NumberHelper#number_to_currency" do
+      expect(subject.format_currency_with_delimiter(1234567890.50, :unit => "£"))
+        .to eq("£1,234,567,890.50")
+    end
+    it "puts Yen as the unit to NumberHelper#number_to_currency" do
+      expect(subject.format_currency_with_delimiter(1234567890.50, :unit => "¥"))
+        .to eq("¥1,234,567,890.50")
+    end
   end
 
   describe "#format_number_with_delimiter" do
