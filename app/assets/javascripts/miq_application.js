@@ -294,7 +294,7 @@ function miqCheckForChanges() {
     if (angular.isDefined(ManageIQ.angular.scope.angularForm) && ManageIQ.angular.scope.angularForm.$dirty) {
       var answer = confirm(__("Abandon changes?"));
       if (answer) {
-        ManageIQ.angular.scope.form.$setPristine(true);
+        ManageIQ.angular.scope.angularForm.$setPristine(true);
       }
       return answer;
     }
