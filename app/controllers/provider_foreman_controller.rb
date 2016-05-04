@@ -539,14 +539,14 @@ class ProviderForemanController < ApplicationController
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
-                                                        :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model} Provider"}
+        @right_cell_text = _("%{model} \"%{name}\"") %
+          {:name => provider.name, :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model} Provider"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
         options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
         process_show_list(options)
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name  => provider.name,
-                                                        :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
+        @right_cell_text = _("%{model} \"%{name}\"") %
+          {:name => provider.name, :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
       end
     end
   end
