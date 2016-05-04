@@ -29,6 +29,7 @@ module ManageIQ
         @orchestration_service      = @os_handle.detect_orchestration_service
         @image_service              = @os_handle.detect_image_service
         @storage_service            = @os_handle.detect_storage_service
+        @introspection_service      = @os_handle.detect_introspection_service
 
         validate_required_services
       end
@@ -150,12 +151,14 @@ module ManageIQ
         end
       end
 
-      def get_extra_host_attributes(host)
-        extra_attrs = @data_index.fetch_path(:cloud_object_store_objects, 'extra_hardware-' + host.uuid, :content)
-        return {} if extra_attrs.blank?
-        # Convert list of tuples from Ironic extra to hash. E.g. [[a1, a2, a3, a4], [a1, a2, b3, b4], ..] converts to
-        # {a1 => {a2 => {a3 => a4, b3 => b4}}}, so we get constant access to sub indexes.
-        JSON.parse(extra_attrs).each_with_object({}) { |attr, obj| ((obj[attr[0]] ||= {})[attr[1]] ||= {})[attr[2]] = attr[3] if attr.count >= 4 }
+      def get_introspection_details(host)
+        return {} unless @introspection_service
+        @introspection_service.get_introspection_details(host.uuid).body
+      end
+
+      def get_extra_attributes(introspection_details)
+        return {} if introspection_details.blank? || introspection_details["extra"].nil?
+        introspection_details["extra"]
       end
 
       def parse_host(host, indexed_servers, indexed_resources, cloud_hosts_attributes)
@@ -165,7 +168,8 @@ module ManageIQ
         ip_address          = identify_primary_ip_address(host, indexed_servers)
         hostname            = ip_address
 
-        extra_attributes = get_extra_host_attributes(host)
+        introspection_details = get_introspection_details(host)
+        extra_attributes = get_extra_attributes(introspection_details)
 
         # Get the cloud_host_attributes by hypervisor hostname, only compute hosts can get this
         cloud_host_attributes = cloud_hosts_attributes.select do |x|
@@ -192,7 +196,7 @@ module ManageIQ
           :connection_state     => lookup_connection_state(host.power_state),
           :maintenance          => host.maintenance,
           :maintenance_reason   => host.maintenance_reason,
-          :hardware             => process_host_hardware(host, extra_attributes),
+          :hardware             => process_host_hardware(host, introspection_details),
           :hypervisor_hostname  => hypervisor_hostname,
           :service_tag          => extra_attributes.fetch_path('system', 'product', 'serial'),
           # TODO(lsmola) need to add column for connection to SecurityGroup
@@ -204,12 +208,12 @@ module ManageIQ
         return uid, new_result
       end
 
-      def process_host_hardware(host, extra_attributes)
+      def process_host_hardware(host, introspection_details)
+        extra_attributes     = get_extra_attributes(introspection_details)
         cpu_sockets          = extra_attributes.fetch_path('cpu', 'physical', 'number').to_i
         cpu_total_cores      = extra_attributes.fetch_path('cpu', 'logical', 'number').to_i
         cpu_cores_per_socket = cpu_sockets > 0 ? cpu_total_cores / cpu_sockets : 0
-        # Get Cpu speed in Mhz
-        cpu_speed        = extra_attributes.fetch_path('cpu', 'physical_0', 'frequency').to_i / 10**6
+        cpu_speed            = introspection_details.fetch_path('inventory', 'cpu', 'frequency').to_i
 
         {
           :memory_mb            => host.properties['memory_mb'],
