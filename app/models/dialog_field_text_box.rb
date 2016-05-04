@@ -3,8 +3,8 @@ class DialogFieldTextBox < DialogField
 
   def value
     @value = values_from_automate if dynamic && @value.blank?
-    return @value if @value.nil?
-    data_type == "integer" ? @value.to_i : @value
+    return nil if @value.nil?
+    convert_value_to_type
   end
 
   def initial_values
@@ -26,7 +26,7 @@ class DialogFieldTextBox < DialogField
 
   def automate_output_value
     return MiqPassword.encrypt(@value) if self.protected?
-    @value
+    convert_value_to_type
   end
 
   def automate_key_name
@@ -73,5 +73,11 @@ class DialogFieldTextBox < DialogField
 
   def trigger_automate_value_updates
     values_from_automate
+  end
+
+  private
+
+  def convert_value_to_type
+    data_type == "integer" ? @value.to_i : @value
   end
 end
