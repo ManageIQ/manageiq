@@ -9,9 +9,6 @@ describe MiqProvisionRequestTemplate do
   let(:service_template_request) { FactoryGirl.create(:service_template_provision_request, :requester => user) }
   let(:service_task) do
     FactoryGirl.create(:service_template_provision_task,
-                       :status       => 'Ok',
-                       :state        => 'pending',
-                       :request_type => 'clone_to_service',
                        :miq_request  => service_template_request,
                        :options      => {:service_resource_id => service_resource.id})
   end
