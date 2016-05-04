@@ -111,6 +111,23 @@ class Hardware < ApplicationRecord
       t[:disk_capacity]) * -100 + 100)
   end)
 
+  def disk_storage(col)
+    return nil if disks.blank?
+    disks.inject(0) do |t, d|
+      val = d.send(col)
+      t + (val.nil? ? d.size.to_i : val.to_i)
+    end
+  end
+  protected :disk_storage
+
+  def allocated_disk_storage
+    disk_storage(:size)
+  end
+
+  def used_disk_storage
+    disk_storage(:size_on_disk)
+  end
+
   def m_controller(_parent, xmlNode, deletes)
     # $log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
     xmlNode.each_element do |e|
