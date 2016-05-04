@@ -110,6 +110,7 @@ module MiqException
   class MiqOpenstackNetworkServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackGlanceServiceMissing < MiqOpenstackRequiredServiceMissing; end
   class MiqOpenstackIronicServiceMissing < MiqOpenstackRequiredServiceMissing; end
+  class MiqOpenstackIntrospectionServiceMissing < MiqOpenstackRequiredServiceMissing; end
 
   class MiqOpenstackApiRequestError < Error; end
 end

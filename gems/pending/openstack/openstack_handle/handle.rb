@@ -24,7 +24,8 @@ module OpenstackHandle
       "Metering"      => :ceilometer,
       "Baremetal"     => :baremetal,
       "Orchestration" => :orchestration,
-      "Planning"      => :planning
+      "Planning"      => :planning,
+      "Introspection" => :introspection
     }
 
     def self.try_connection(security_protocol, ssl_options = {})
@@ -252,6 +253,15 @@ module OpenstackHandle
 
     def detect_metering_service(tenant_name = nil)
       detect_service("Metering", tenant_name)
+    end
+
+    def introspection_service(tenant_name = nil)
+      connect(:service => "Introspection", :tenant_name => tenant_name)
+    end
+    alias_method :connect_introspection, :metering_service
+
+    def detect_introspection_service(tenant_name = nil)
+      detect_service("Introspection", tenant_name)
     end
 
     def detect_service(service, tenant_name = nil)
