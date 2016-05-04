@@ -12,7 +12,7 @@ module VmCloudHelper::TextualSummary
   def textual_group_vm_cloud_relationships
     %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history service
        cloud_network cloud_subnet orchestration_stack cloud_networks cloud_subnets network_routers security_groups
-       floating_ips network_ports)
+       floating_ips network_ports cloud_volumes)
   end
 
   def textual_group_template_cloud_relationships
@@ -616,6 +616,18 @@ module VmCloudHelper::TextualSummary
     if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
       h[:title] = _("Show this VM's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
+    end
+    h
+  end
+
+  def textual_cloud_volumes
+    label = ui_lookup(:tables => "cloud_volumes")
+    num = @record.number_of(:cloud_volumes)
+    h = {:label => label, :image => "cloud_volume", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_volume_show_list")
+      h[:title]    = _("Show all Cloud Volumes attached to this VM.")
+      h[:explorer] = true
+      h[:link]     = url_for(:action => 'cloud_volumes', :id => @record, :display => "cloud_volumes")
     end
     h
   end

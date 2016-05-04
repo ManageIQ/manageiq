@@ -225,7 +225,9 @@ module ApplicationHelper
                 NetworkRouter
                 NetworkPort
                 CloudNetwork
-                CloudSubnet).include?(view.db)
+                CloudSubnet
+                CloudVolume
+                ).include?(view.db)
             return url_for(:controller => controller, :action => "show") + "/"
           elsif ["Vm"].include?(view.db) && parent && request.parameters[:controller] != "vm"
             # this is to handle link to a vm in vm explorer from service explorer
