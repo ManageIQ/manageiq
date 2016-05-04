@@ -552,7 +552,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def provider_list(id, model)
-    return provider_node(id, model) unless id.nil?
+    return provider_node(id, model) if id
     if x_active_tree == :configuration_manager_providers_tree
       options = {:model => model.to_s}
       @right_cell_text = _("All %{title} Providers") % {:title => model_to_name(model)}
