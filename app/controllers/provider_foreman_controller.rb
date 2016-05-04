@@ -177,10 +177,10 @@ class ProviderForemanController < ApplicationController
     @sb[:action] = nil
     if params[:id] == "new"
       add_flash(_("Add of Configuration Manager %{provider} was cancelled by the user") %
-        {:provider  => ui_lookup(:model => 'ExtManagementSystem')})
+        {:provider => ui_lookup(:model => 'ExtManagementSystem')})
     else
       add_flash(_("Edit of Configuration Manager %{provider} was cancelled by the user") %
-        {:provider  => ui_lookup(:model => 'ExtManagementSystem')})
+        {:provider => ui_lookup(:model => 'ExtManagementSystem')})
     end
     replace_right_cell
   end
@@ -389,14 +389,14 @@ class ProviderForemanController < ApplicationController
   end
 
   def show_record(_id = nil)
-    @display = params[:display] || "main" unless control_selected?
+    @display    = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype   = "config"
 
     if @record.nil?
       add_flash(_("Error: Record no longer exists in the database"), :error)
       if request.xml_http_request? && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
-        @delete_node = params[:id]                  # Set node to be removed from the tree
+        @delete_node = params[:id]                 # Set node to be removed from the tree
       end
       return
     end
@@ -405,7 +405,7 @@ class ProviderForemanController < ApplicationController
       rec_cls = "#{model_to_name(@record.class.to_s).downcase.tr(' ', '_')}_configured_system"
     end
     return unless %w(download_pdf main).include?(@display)
-    @showtype = "main"
+    @showtype     = "main"
     @button_group = rec_cls.to_s if x_active_accord == :cs_filter
     @button_group = "provider_foreman_#{rec_cls}" if x_active_accord == :configuration_manager_providers
   end
@@ -575,8 +575,8 @@ class ProviderForemanController < ApplicationController
       if @sb[:active_tab] == 'configured_systems'
         configuration_profile_right_cell_text(model)
       else
-        @showtype = 'main'
-        @pages = nil
+        @showtype        = 'main'
+        @pages           = nil
         @right_cell_text = _("%{model} \"%{name}\"") % {:name => @configuration_profile_record.name, :model => record_model}
       end
     end
@@ -596,8 +596,8 @@ class ProviderForemanController < ApplicationController
       if @sb[:active_tab] == 'configured_systems'
         inventory_group_right_cell_text(model)
       else
-        @showtype = 'main'
-        @pages = nil
+        @showtype        = 'main'
+        @pages           = nil
         @right_cell_text = _("%{model} \"%{name}\"") % {:name => @inventory_group_record.name, :model => record_model}
       end
     end
@@ -744,7 +744,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def ansible_tower_cfgmgr_record?(node = x_node)
-    return  @record.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager) if @record
+    return @record.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager) if @record
 
     type, _id = node.split("-")
     type && ["ManageIQ::Providers::AnsibleTower::ConfigurationManager"].include?(TreeBuilder.get_model_for_prefix(type))
@@ -764,7 +764,7 @@ class ProviderForemanController < ApplicationController
   def apply_node_search_text
     setup_search_text_for_node
     previous_nodetype = search_text_type(@sb[:foreman_search_text][:previous_node])
-    current_nodetype = search_text_type(@sb[:foreman_search_text][:current_node])
+    current_nodetype  = search_text_type(@sb[:foreman_search_text][:current_node])
 
     @sb[:foreman_search_text]["#{previous_nodetype}_search_text"] = @search_text
     @search_text = @sb[:foreman_search_text]["#{current_nodetype}_search_text"]
