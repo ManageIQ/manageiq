@@ -15,10 +15,6 @@ class CloudVolume < ApplicationRecord
   has_many   :hardwares, :through => :attachments
   has_many   :vms, :through => :hardwares, :foreign_key => :vm_or_template_id
 
-  def vms
-    attachments.map { |disk| disk.hardware.vm }
-  end
-
   acts_as_miq_taggable
 
   def self.available
