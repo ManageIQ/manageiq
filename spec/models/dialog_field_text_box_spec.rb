@@ -353,4 +353,58 @@ describe DialogFieldTextBox do
       expect(dialog_field.trigger_automate_value_updates).to eq("processed values")
     end
   end
+
+  describe "#automate_output_value" do
+    let(:dialog_field) do
+      described_class.new(:value => "12test", :data_type => data_type, :protected => protected_attr)
+    end
+
+    context "when the data type is a string" do
+      let(:data_type) { "string" }
+
+      context "when it is protected" do
+        let(:protected_attr) { true }
+
+        before do
+          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+        end
+
+        it "returns the encrypted value" do
+          expect(dialog_field.automate_output_value).to eq("lol")
+        end
+      end
+
+      context "when it is not protected" do
+        let(:protected_attr) { false }
+
+        it "returns the un-encrypted value" do
+          expect(dialog_field.automate_output_value).to eq("12test")
+        end
+      end
+    end
+
+    context "when the data type is an integer" do
+      let(:data_type) { "integer" }
+
+      context "when it is protected" do
+        let(:protected_attr) { true }
+
+        before do
+          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+        end
+
+        it "returns the encrypted value" do
+          expect(dialog_field.automate_output_value).to eq("lol")
+        end
+      end
+
+      context "when it is not protected" do
+        let(:protected_attr) { false }
+
+        it "converts the value to an integer" do
+          expect(dialog_field.automate_output_value).to eq(12)
+        end
+      end
+    end
+  end
 end
