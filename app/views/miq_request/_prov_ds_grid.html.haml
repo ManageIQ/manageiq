@@ -24,6 +24,7 @@
           = "<#{_('None')}>"
         %td
         %td
+        %td
       - @datastores.each do |row|
         - @id = row.id
         - if %w(miq_template service_template vm).include?(@edit[:org_controller])
