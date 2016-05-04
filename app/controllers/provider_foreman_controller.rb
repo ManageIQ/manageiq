@@ -584,11 +584,7 @@ class ProviderForemanController < ApplicationController
       else
         @showtype = 'main'
         @pages = nil
-        @right_cell_text =
-          _("%{model} \"%{name}\"") %
-          {:name  => @configuration_profile_record.name,
-           :model => record_model
-          }
+        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @configuration_profile_record.name, :model => record_model}
       end
     end
   end
