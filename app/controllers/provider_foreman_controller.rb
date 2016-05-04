@@ -561,11 +561,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def configuration_profile_node(id, model)
-    @record = @configuration_profile_record = if model
-                                                find_record(ConfigurationProfile, id)
-                                              else
-                                                ConfigurationProfile.new
-                                              end
+    @record = @configuration_profile_record = model ? find_record(ConfigurationProfile, id) : ConfigurationProfile.new
     if @configuration_profile_record.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -697,11 +693,11 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_title(presenter)
-    if action_name == "new"
-      @right_cell_text = _("Add a new Configuration Management Provider")
-    elsif action_name == "edit"
-      @right_cell_text = _("Edit Configuration Manager Provider")
-    end
+    @right_cell_text =
+      case action_name
+      when "new"  then _("Add a new Configuration Management Provider")
+      when "edit" then _("Edit Configuration Manager Provider")
+      end
     presenter[:right_cell_text] = @right_cell_text
   end
 
@@ -801,12 +797,13 @@ class ProviderForemanController < ApplicationController
                                     :locals  => {:controller => 'provider_foreman'}])
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
-      if @sb[:action] == "provider_foreman_add_provider"
-        @right_cell_text = _("Add a new Configuration Manager Provider")
-      elsif @sb[:action] == "provider_foreman_edit_provider"
-        # set the title based on the configuration manager provider type
-        @right_cell_text = _("Edit Configuration Manager Provider")
-      end
+      @right_cell_text =
+        if @sb[:action] == "provider_foreman_add_provider"
+          _("Add a new Configuration Manager Provider")
+        elsif @sb[:action] == "provider_foreman_edit_provider"
+          # set the title based on the configuration manager provider type
+          _("Edit Configuration Manager Provider")
+        end
       partial = 'form'
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif valid_configuration_profile_record?(@configuration_profile_record)
