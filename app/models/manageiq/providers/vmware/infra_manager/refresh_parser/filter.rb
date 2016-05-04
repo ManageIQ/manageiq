@@ -33,6 +33,7 @@ class ManageIQ::Providers::Vmware::InfraManager
           filtered_data[:vm] = vm_data
           filtered_data[:storage] = storage_inv_by_vm_inv(vm_data)
           filtered_data[:host] = host_inv_by_vm_inv(vm_data)
+          filtered_data[:dvswitch], filtered_data[:dvportgroup] = dvswitch_and_dvportgroup_inv_by_vm_inv(vm_data)
           filtered_data[:folder], filtered_data[:dc], filtered_data[:cluster], filtered_data[:host_res] =
             ems_metadata_inv_by_vm_inv(vm_data)
           filtered_data[:rp] = rp_metadata_inv_by_vm_inv(vm_data)
@@ -145,6 +146,36 @@ class ManageIQ::Providers::Vmware::InfraManager
         host_inv[host_mor] = host unless host.nil?
       end
       host_inv
+    end
+
+    def dvswitch_and_dvportgroup_inv_by_vm_inv(vm_inv)
+      dvswitch_inv    = {}
+      dvportgroup_inv = {}
+
+      dvswitches   = @vc_data[:dvswitch] || {}
+      dvportgroups = @vc_data[:dvportgroup] || {}
+
+      vm_inv.each_value do |vm_data|
+        next if vm_data.nil?
+
+        device_array = vm_data.fetch_path("config", "hardware", "device")
+
+        device_array.to_miq_a.find_all { |d| d.key?("macAddress") }.each do |dev|
+          backing = dev["backing"]
+          next if backing.nil? || backing.xsiType != "VirtualEthernetCardDistributedVirtualPortBackingInfo"
+
+          switch_uuid   = backing.fetch_path("port", "switchUuid")
+          portgroup_key = backing.fetch_path("port", "portgroupKey")
+
+          dvs_mor, dvs_data   = dvswitches.detect { |_mor, data| data.fetch_path("summary", "uuid") == switch_uuid }
+          dvpg_mor, dvpg_data = dvportgroups.detect { |mor, _data| mor == portgroup_key }
+
+          dvswitch_inv[dvs_mor]     = dvs_data unless dvs_data.nil?
+          dvportgroup_inv[dvpg_mor] = dvpg_data unless dvpg_data.nil?
+        end
+      end
+
+      return dvswitch_inv, dvportgroup_inv
     end
 
     def ems_metadata_inv_by_vm_inv(vm_inv)
