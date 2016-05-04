@@ -325,11 +325,11 @@ class ProviderForemanController < ApplicationController
   end
 
   def tree_record
-    if x_active_tree == :configuration_manager_providers_tree
-      @record = configuration_manager_providers_tree_rec
-    elsif x_active_tree == :cs_filter_tree
-      @record = cs_filter_tree_rec
-    end
+    @record =
+      case x_active_tree
+      when :configuration_manager_providers_tree then configuration_manager_providers_tree_rec
+      when :cs_filter_tree                       then cs_filter_tree_rec
+      end
   end
 
   def check_for_unassigned_configuration_profile
