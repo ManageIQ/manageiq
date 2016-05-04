@@ -34,12 +34,14 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           :instance_attach,
           'pficon pficon-volume fa-lg',
           t = N_('Attach a Cloud Volume to this Instance'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::InstanceAttach),
         button(
           :instance_detach,
           'pficon pficon-volume fa-lg',
           t = N_('Detach a Cloud Volume from this Instance'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::InstanceDetach),
         separator,
         button(
           :instance_delete,
