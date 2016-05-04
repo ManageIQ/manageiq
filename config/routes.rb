@@ -2329,6 +2329,7 @@ Vmdb::Application.routes.draw do
         network_ports
         cloud_subnets
         cloud_networks
+        cloud_volumes
         show
         squash_toggle
         tagging_edit
