@@ -36,6 +36,7 @@ cols:
 - container_namespace
 - container_name
 - container_replicator_name
+- middleware_name
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -67,6 +68,7 @@ col_order:
 - container_namespace
 - container_name
 - container_replicator_name
+- middleware_name
 
 # Column titles, in order
 headers:
@@ -89,6 +91,7 @@ headers:
 - Container Project
 - Container
 - Container Replicator
+- Middleware Resource
 
 # Condition(s) string for the SQL query
 conditions:
