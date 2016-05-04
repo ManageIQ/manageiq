@@ -50,6 +50,38 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     volumes
   end
 
+  def allowed_cloud_networks(_options = {})
+    # We want only non external networks to be connectable directly to the Vm
+    return {} unless (src_obj = provider_or_tenant_object)
+
+    src_obj.private_networks.each_with_object({}) do |cn, hash|
+      hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})"
+    end
+  end
+
+  def allowed_floating_ip_addresses(_options = {})
+    # We want to show only floating IPs connected to the cloud_network via router, respecting the owner tenant of the
+    # floating ip
+    return {} unless (src_obj = load_ar_obj(resources_for_ui[:cloud_network]))
+
+    return {} unless (public_networks = src_obj.public_networks)
+
+    public_networks.collect do |x|
+      floating_ips = x.floating_ips.available
+      if (cloud_tenant = load_ar_obj(resources_for_ui[:cloud_tenant]))
+        floating_ips = floating_ips.where(:cloud_tenant => cloud_tenant)
+      end
+      floating_ips
+    end.flatten.compact.each_with_object({}) do |ip, h|
+      h[ip.id] = ip.address
+    end
+  end
+
+  def validate_cloud_network(field, values, dlg, fld, value)
+    return nil if allowed_cloud_networks.length <= 1
+    validate_placement(field, values, dlg, fld, value)
+  end
+
   private
 
   def dialog_name_from_automate(message = 'get_dialog_name')
