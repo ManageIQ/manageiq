@@ -16,29 +16,29 @@ describe WaitForCompletion do
   let(:service) { MiqAeMockService.new(MiqAeMockObject.new({}), persist_state_hash) }
 
   it "job status successful" do
-    expect_any_instance_of(MiqAeMethodService::MiqAeServiceOrchestrationStack).to receive(:normalized_live_status).with(no_args).and_return(%w(create_complete ok))
+    expect_any_instance_of(job_class).to receive(:normalized_live_status).with(no_args).and_return(%w(create_complete ok))
     expect_any_instance_of(job_class).to receive(:refresh_ems).with(no_args).and_return(nil)
-    WaitForCompletion.new(service).main
+    described_class.new(service).main
     expect(service.root['ae_result']).to eq('ok')
   end
 
   it "job status running" do
-    expect_any_instance_of(MiqAeMethodService::MiqAeServiceOrchestrationStack).to receive(:normalized_live_status).with(no_args).and_return(%w(transient ok))
-    WaitForCompletion.new(service).main
+    expect_any_instance_of(job_class).to receive(:normalized_live_status).with(no_args).and_return(%w(transient ok))
+    described_class.new(service).main
     expect(service.root['ae_result']).to eq('retry')
   end
 
   it "job status failed" do
-    expect_any_instance_of(MiqAeMethodService::MiqAeServiceOrchestrationStack).to receive(:normalized_live_status).with(no_args).and_return(%w(failed ok))
+    expect_any_instance_of(job_class).to receive(:normalized_live_status).with(no_args).and_return(%w(failed ok))
     expect_any_instance_of(job_class).to receive(:refresh_ems).with(no_args).and_return(nil)
-    WaitForCompletion.new(service).main
+    described_class.new(service).main
     expect(service.root['ae_result']).to eq('error')
   end
 
   it "job status canceled" do
-    expect_any_instance_of(MiqAeMethodService::MiqAeServiceOrchestrationStack).to receive(:normalized_live_status).with(no_args).and_return(%w(create_canceled ok))
+    expect_any_instance_of(job_class).to receive(:normalized_live_status).with(no_args).and_return(%w(create_canceled ok))
     expect_any_instance_of(job_class).to receive(:refresh_ems).with(no_args).and_return(nil)
-    WaitForCompletion.new(service).main
+    described_class.new(service).main
     expect(service.root['ae_result']).to eq('error')
   end
 end

@@ -34,10 +34,8 @@ describe ServiceTemplateProvisionTask do
       FactoryGirl.create(:service_template_provision_task,
                          :description    => description,
                          :userid         => @admin.userid,
-                         :status         => "Ok",
                          :state          => state,
                          :miq_request_id => @request.id,
-                         :request_type   => "clone_to_service",
                          :options        => options)
     end
 
