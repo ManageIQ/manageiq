@@ -30,7 +30,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def show_list
-    redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
+    redirect_to :action => 'explorer', :flash_msg => @flash_array.try(:fetch_path, 0, :message)
   end
 
   def new
