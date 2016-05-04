@@ -63,7 +63,7 @@ class GenericObject < ApplicationRecord
   end
 
   def custom_attribute_setter(name, value)
-    ca = custom_attributes.find_by(:name => name)
+    ca = custom_attributes.detect { |ca| ca.name == name }
     ca ? ca.write_attribute(:value, value.to_s) : custom_attributes.new(:name => name, :value => value.to_s)
   end
 
