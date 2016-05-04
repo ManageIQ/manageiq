@@ -155,14 +155,10 @@ class ProviderForemanController < ApplicationController
       @sb[:action] = nil
       model = "#{model_to_name(@provider_cfgmgmt.type)} #{ui_lookup(:model => 'ExtManagementSystem')}"
       if params[:id] == "new"
-        add_flash(_("%{model} \"%{name}\" was added") % {:model => model,
-                                                         :name  => @provider_cfgmgmt.name})
-      else
-        add_flash(_("%{model} \"%{name}\" was updated") % {:model => model,
-                                                           :name  => @provider_cfgmgmt.name})
-      end
-      if params[:id] == "new"
+        add_flash(_("%{model} \"%{name}\" was added") % {:model => model, :name => @provider_cfgmgmt.name})
         process_cfgmgr([@provider_cfgmgmt.configuration_manager.id], "refresh_ems")
+      else
+        add_flash(_("%{model} \"%{name}\" was updated") % {:model => model, :name => @provider_cfgmgmt.name})
       end
       replace_right_cell([:configuration_manager_providers])
     else
