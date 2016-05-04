@@ -1,10 +1,12 @@
 require "spec_helper"
 
 describe ManageIQ::Providers::Azure::CloudManager::Provision do
-  let(:provider) { FactoryGirl.create(:ems_azure_with_authentication) }
-  let(:template) { FactoryGirl.create(:template_azure, :ext_management_system => provider) }
-  let(:flavor)   { FactoryGirl.create(:flavor_azure) }
-  let(:vm)       { FactoryGirl.create(:vm_azure, :ext_management_system => provider) }
+  let(:provider)  { FactoryGirl.create(:ems_azure_with_authentication) }
+  let(:template)  { FactoryGirl.create(:template_azure, :ext_management_system => provider) }
+  let(:flavor)    { FactoryGirl.create(:flavor_azure) }
+  let(:vm)        { FactoryGirl.create(:vm_azure, :ext_management_system => provider) }
+  let(:sec_group) { FactoryGirl.create(:security_group_azure) }
+  let(:subnet)    { FactoryGirl.create(:cloud_subnet_azure) }
 
   context "#create vm" do
     subscription_id = "01234567890"
@@ -74,12 +76,25 @@ describe ManageIQ::Providers::Azure::CloudManager::Provision do
       before do
         allow(subject).to receive(:instance_type).and_return(flavor)
         allow(subject).to receive(:dest_name).and_return(vm.name)
+        allow(subject).to receive(:cloud_subnet).and_return(subnet)
       end
 
       context "nic settings" do
         it "with nic" do
           subject.options[:vm_target_name] = name
           expect(subject.prepare_for_clone_task[:properties][:networkProfile][:networkInterfaces][0][:id]).to eq(nic_id)
+        end
+      end
+
+      context "security group" do
+        it "with security group" do
+          allow(subject).to receive(:security_group).and_return(sec_group)
+          expect(subject.build_nic_options("ip")[:properties][:networkSecurityGroup][:id]).to eq(sec_group.ems_ref)
+        end
+
+        it "without security group" do
+          allow(subject).to receive(:security_group).and_return(nil)
+          expect(subject.build_nic_options("ip")[:properties]).not_to have_key(:networkSecurityGroup)
         end
       end
     end
