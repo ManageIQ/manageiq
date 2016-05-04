@@ -17,6 +17,7 @@ class ManageIQ::Providers::Vmware::InfraManager
           filtered_data[:host] = host_data
           filtered_data[:storage] = storage_inv_by_host_inv(host_data)
           filtered_data[:vm] = vm_data = vm_inv_by_host_inv(host_data)
+          filtered_data[:dvswitch], filtered_data[:dvportgroup] = dvswitch_and_dvportgroup_inv_by_host_inv(host_data)
           filtered_data[:folder], filtered_data[:dc], filtered_data[:cluster], filtered_data[:host_res] =
             ems_metadata_inv_by_host_inv(host_data, vm_data)
           filtered_data[:rp] = rp_inv_by_host_inv(host_data)
@@ -91,6 +92,36 @@ class ManageIQ::Providers::Vmware::InfraManager
         found.each { |f| vm_inv[f[0]] = f[1] }
       end
       vm_inv
+    end
+
+    def dvswitch_and_dvportgroup_inv_by_host_inv(host_inv)
+      dvswitch_inv    = {}
+      dvportgroup_inv = {}
+
+      dvswitches   = @vc_data[:dvswitch] || {}
+      dvportgroups = @vc_data[:dvportgroup] || {}
+
+      host_inv.each_key do |host_mor|
+        dvswitches.each do |dvs_mor, dvs_data|
+          summary = dvs_data["summary"]
+          next if summary.nil?
+
+          dvs_hosts =  summary["host"].to_a
+          dvs_hosts += summary["hostMember"].to_a
+
+          if dvs_hosts.include?(host_mor)
+            dvswitch_inv[dvs_mor] = dvs_data
+          end
+
+          dvportgroups.each do |dvpg_mor, dvpg_data|
+            if dvpg_data.fetch_path("config", "distributedVirtualSwitch") == dvs_mor
+              dvportgroup_inv[dvpg_mor] = dvpg_data
+            end
+          end
+        end
+      end
+
+      return dvswitch_inv, dvportgroup_inv
     end
 
     def ems_metadata_inv_by_host_inv(host_inv, vm_inv)
