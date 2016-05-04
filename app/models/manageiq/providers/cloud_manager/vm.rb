@@ -26,6 +26,17 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   default_value_for :cloud, true
 
+  virtual_column :ipaddresses,   :type => :string_set, :uses => {:network_ports => :ipaddresses}
+  virtual_column :mac_addresses, :type => :string_set, :uses => :network_ports
+
+  def ipaddresses
+    @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.uniq
+  end
+
+  def mac_addresses
+    @mac_addresses ||= network_ports.collect(&:mac_address).compact.uniq
+  end
+
   def perf_rollup_parents(interval_name = nil)
     [availability_zone].compact unless interval_name == 'realtime'
   end
