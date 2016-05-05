@@ -27,26 +27,19 @@ module Metric::Targets
     targets
   end
 
+  # @return vms under all availability zones
+  #         and vms under no availability zone
+  # NOTE: some stacks (e.g. nova) default to no availability zone
   def self.capture_cloud_targets(zone, options = {})
-    # things to worry about
-    # 1) need to find all the VMs under all the availability zones
-    # 2) need to find all the VMs that may not be in an availability zone
-    # 3) cloudy clusters?
-    targets = []
     return [] if options[:exclude_vms]
 
     includes = {:availability_zones => :tags}
     MiqPreloader.preload(zone.ems_clouds, includes)
 
-    targets += capture_vm_targets(zone.availability_zones, AvailabilityZone, options)
+    vms_with_availability_zone = capture_vm_targets(zone.availability_zones, AvailabilityZone, options)
+    vms_without_availability_zone = zone.vms_without_availability_zone
 
-    # Unlike in the infra world--where every VM must be on a Host--in the cloud
-    #   world (at least in OpenStack) some VMs might not be in an availability
-    #   zone ... in fact, the out-of-the-box setting in nova for the default
-    #   availability zone applied to new VMs is <NONE>.
-    # Track down those cloudy VMs that have no availability zone
-    targets += zone.vms_without_availability_zone unless options[:exclude_vms]
-    targets
+    vms_with_availability_zone + vms_without_availability_zone
   end
 
   def self.capture_container_targets(zone, _options)
