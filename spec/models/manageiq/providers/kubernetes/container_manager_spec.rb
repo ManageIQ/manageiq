@@ -47,4 +47,19 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
       expect(job.zone).to eq("default")
     end
   end
+
+  context "kubeclient" do
+    let(:hostname) { "hostname" }
+    let(:port) { "1234" }
+    let(:options) { { :ssl_options => { :bearer_token => "4321" } } }
+    it ". raw_connect" do
+      allow(VMDB::Util).to receive(:http_proxy_uri).and_return(URI::HTTP.build(:host => "some"))
+      require 'kubeclient'
+      expect(Kubeclient::Client).to receive(:new).with(
+        instance_of(URI::HTTPS), 'v1',
+        hash_including(:http_proxy_uri => VMDB::Util.http_proxy_uri)
+      )
+      described_class.raw_connect(hostname, port, options)
+    end
+  end
 end

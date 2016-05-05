@@ -241,8 +241,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     ImageInspectorClient::Client.new(
       pod_proxy_url(kubeclient, ''),
       'v1',
-      :ssl_options  => kubeclient.ssl_options,
-      :auth_options => kubeclient.auth_options
+      :ssl_options    => kubeclient.ssl_options,
+      :auth_options   => kubeclient.auth_options,
+      :http_proxy_uri => kubeclient.http_proxy_uri
     )
   end
 
