@@ -246,20 +246,23 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
       context "tenant filtering" do
         before do
-          @ct1 = FactoryGirl.create(:cloud_tenant)
-          @ct2 = FactoryGirl.create(:cloud_tenant)
+          @ct1 = FactoryGirl.create(:cloud_tenant_openstack)
+          @ct2 = FactoryGirl.create(:cloud_tenant_openstack)
           provider.cloud_tenants << @ct1
           provider.cloud_tenants << @ct2
         end
 
         context "cloud networks" do
           before do
-            @cn1 = FactoryGirl.create(:cloud_network)
-            @cn2 = FactoryGirl.create(:cloud_network)
-            provider.network_manager.cloud_networks << @cn1
-            provider.network_manager.cloud_networks << @cn2
-            @ct1.cloud_networks << @cn1
-            @ct2.cloud_networks << @cn2
+            @cn1 = FactoryGirl.create(:cloud_network_private_openstack,
+                                      :cloud_tenant          => @ct1,
+                                      :ext_management_system => provider.network_manager)
+            @cn2 = FactoryGirl.create(:cloud_network_private_openstack,
+                                      :cloud_tenant          => @ct2,
+                                      :ext_management_system => provider.network_manager)
+            @cn3 = FactoryGirl.create(:cloud_network_public_openstack,
+                                      :cloud_tenant          => @ct2,
+                                      :ext_management_system => provider.network_manager)
           end
 
           it "#allowed_cloud_networks with tenant selected" do
@@ -298,23 +301,50 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
         context "floating ip" do
           before do
-            @ip1 = FactoryGirl.create(:floating_ip, :address => "1.1.1.1")
-            @ip2 = FactoryGirl.create(:floating_ip, :address => "2.2.2.2")
-            provider.network_manager.floating_ips << @ip1
-            provider.network_manager.floating_ips << @ip2
-            @ct1.floating_ips << @ip1
-            @ct2.floating_ips << @ip2
+            cloud_network_public   = FactoryGirl.create(:cloud_network_public_openstack)
+            cloud_network_public_2 = FactoryGirl.create(:cloud_network_public_openstack)
+            router                 = FactoryGirl.create(:network_router_openstack,
+                                                        :cloud_network => cloud_network_public)
+            @cloud_network         = FactoryGirl.create(:cloud_network_private_openstack,
+                                                        :cloud_tenant => @ct2)
+            @cloud_network_2       = FactoryGirl.create(:cloud_network_private_openstack,
+                                                        :cloud_tenant => @ct2)
+            _subnet                = FactoryGirl.create(:cloud_subnet_openstack,
+                                                        :network_router        => router,
+                                                        :cloud_network         => @cloud_network,
+                                                        :ext_management_system => provider.network_manager)
+
+            @ip1 = FactoryGirl.create(:floating_ip,
+                                      :address       => "1.1.1.1",
+                                      :cloud_tenant  => @ct1,
+                                      :cloud_network => cloud_network_public)
+            @ip2 = FactoryGirl.create(:floating_ip,
+                                      :address       => "2.2.2.2",
+                                      :cloud_tenant  => @ct2,
+                                      :cloud_network => cloud_network_public)
+            @ip3 = FactoryGirl.create(:floating_ip,
+                                      :address       => "2.2.2.3",
+                                      :cloud_tenant  => @ct2,
+                                      :cloud_network => cloud_network_public_2)
           end
 
           it "#allowed_floating_ip_addresses with tenant selected" do
-            workflow.values.merge!(:cloud_tenant => @ct2.id)
+            workflow.values.merge!(:cloud_tenant  => @ct2.id)
+            workflow.values.merge!(:cloud_network => @cloud_network.id)
             ips = workflow.allowed_floating_ip_addresses
             expect(ips.keys).to match_array [@ip2.id]
           end
 
           it "#allowed_floating_ip_addresses with tenant not selected" do
+            workflow.values.merge!(:cloud_network => @cloud_network.id)
             ips = workflow.allowed_floating_ip_addresses
             expect(ips.keys).to match_array [@ip2.id, @ip1.id]
+          end
+
+          it "#allowed_floating_ip_addresses with network not connected to the router" do
+            workflow.values.merge!(:cloud_network => @cloud_network_2.id)
+            ips = workflow.allowed_floating_ip_addresses
+            expect(ips.keys).to match_array []
           end
         end
       end
