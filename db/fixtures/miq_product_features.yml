@@ -1296,6 +1296,12 @@
     :feature_type: node
     :identifier: miq_report_export
 
+# Consumption
+- :name: Consumption
+  :description: Everything under Consumption
+  :feature_type: node
+  :identifier: consumption
+
 # Chargeback
 - :name: Chargeback
   :description: Everything under Chargeback

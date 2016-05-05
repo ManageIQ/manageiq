@@ -40,6 +40,8 @@ module ApplicationHelper::PageLayouts
 
     return false if @showtype == "dashboard"
 
+    return false if @showtype == "consumption"
+
     return false if controller.action_name.end_with?("tagging_edit")
 
     true
