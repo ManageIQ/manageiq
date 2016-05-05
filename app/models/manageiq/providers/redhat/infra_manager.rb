@@ -116,9 +116,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def rhevm_metrics_connect_options(options = {})
-    server   = options[:hostname] || connection_configuration_by_role('metrics')
-                                       .try(:endpoint)
-                                       .try(:hostname)
+    metrics_hostname = connection_configuration_by_role('metrics')
+      .try(:endpoint)
+      .try(:hostname)
+    server   = options[:hostname] || metrics_hostname || hostname
     username = options[:user] || authentication_userid(:metrics)
     password = options[:pass] || authentication_password(:metrics)
     database = options[:database]
