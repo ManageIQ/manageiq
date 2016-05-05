@@ -4,6 +4,7 @@ require 'disk/modules/MiqLargeFile'
 require 'util/runcmd'
 require 'uri'
 require 'util/MiqSockUtil'
+require 'addressable'
 
 class File
   def self.paths_equal?(f1, f2)
@@ -52,7 +53,12 @@ class File
 
   def self.path_to_uri(file, hostname = nil)
     hostname ||= MiqSockUtil.getFullyQualifiedDomainName
-    URI.join("file://#{hostname}", "/#{URI.encode(file.tr('\\', '/'))}").to_s
+
+    URI::Generic.build(
+      :scheme => 'file',
+      :host   => hostname,
+      :path   => "/#{Addressable::URI.encode(file.tr('\\', '/'))}"
+    ).to_s
   end
 
   def self.uri_to_local_path(uri_path)
