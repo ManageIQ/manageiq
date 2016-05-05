@@ -52,15 +52,12 @@ class ServiceAnsibleTower < Service
   PASSWORD_PREFIX_LEN = PASSWORD_PREFIX.size
 
   def extra_vars_from_dialog(dialog_options)
-    params = {}
-
-    dialog_options.each do |attr, val|
+    dialog_options.each_with_object({}) do |(attr, val), params|
       if attr.start_with?(PARAM_PREFIX)
         params[attr[PARAM_PREFIX_LEN..-1]] = val
       elsif attr.start_with?(PASSWORD_PREFIX)
         params[attr[PASSWORD_PREFIX_LEN..-1]] = MiqPassword.decrypt(val)
       end
     end
-    params
   end
 end
