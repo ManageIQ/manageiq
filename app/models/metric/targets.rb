@@ -37,11 +37,11 @@ module Metric::Targets
 
     vms_with_availability_zone = zone.ems_clouds.flat_map(&:vms)
                                      .select { |vm| vm.availability_zone && vm.availability_zone.perf_capture_enabled? }
-                                     .select { |v| v.state == 'on' }
 
     vms_without_availability_zone = zone.ems_clouds.flat_map(&:vms).select { |vm| vm.availability_zone.nil? }
 
-    vms_with_availability_zone + vms_without_availability_zone
+    (vms_with_availability_zone + vms_without_availability_zone)
+      .select { |vm| vm.ext_management_system && vm.state == 'on' }
   end
 
   def self.capture_container_targets(zone, _options)
