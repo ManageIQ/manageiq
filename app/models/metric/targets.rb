@@ -43,7 +43,7 @@ module Metric::Targets
         t.perf_capture_enabled?
       end
       MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
-      vms = targets.flat_map { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }
+      vms = enabled_parents.flat_map { |t| t.vms.select { |v| v.state == 'on' } }
     vms_with_availability_zone = vms
 
     vms_without_availability_zone = zone.ems_clouds.flat_map { |e| e.vms.select { |vm| vm.availability_zone.nil? } }
