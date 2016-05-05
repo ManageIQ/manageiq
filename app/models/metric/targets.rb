@@ -38,9 +38,9 @@ module Metric::Targets
 
     vms_with_availability_zone = zone.ems_clouds.flat_map(&:availability_zones)
                                      .select { |t| t.perf_capture_enabled? }
-                                     .flat_map { |t| t.vms.select { |v| v.state == 'on' } }
+                                     .flat_map(&:vms).select { |v| v.state == 'on' }
 
-    vms_without_availability_zone = zone.ems_clouds.flat_map { |e| e.vms.select { |vm| vm.availability_zone.nil? } }
+    vms_without_availability_zone = zone.ems_clouds.flat_map(&:vms).select { |vm| vm.availability_zone.nil? }
 
     vms_with_availability_zone + vms_without_availability_zone
   end
