@@ -1,4 +1,5 @@
 //= require miq_global
+//= require es6-shim
 //= require jquery
 //= require jquery_overrides
 //= require i18n
