@@ -20,7 +20,7 @@
       .col-md-8
         - if @edit[:ems_id].nil?
           = select_tag("server_emstype",
-                        options_for_select([["<#{_('Choose>')}", nil]] + Array(@edit[:ems_types].invert).sort_by(&:first), @edit[:new][:emstype]),
+                        options_for_select([["<#{_('Choose')}>", nil]] + Array(@edit[:ems_types].invert).sort_by(&:first), @edit[:new][:emstype]),
                         "class"            => "selectpicker")
           :javascript
             miqInitSelectPicker();

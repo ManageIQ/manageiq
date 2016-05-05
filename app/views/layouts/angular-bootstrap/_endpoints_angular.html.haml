@@ -40,14 +40,14 @@
       = _('Security Protocol')
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
       = select_tag("#{prefix}_security_protocol",
-                       options_for_select([["<#{_('Choose>')}", nil]] + @openstack_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
+                       options_for_select([["<#{_('Choose')}>", nil]] + @openstack_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
                        "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
                        "checkchange"                 => "",
                        "required"                    => defined?(security_protocol_not_required) ? false : true,
                        "selectpicker-for-select-tag" => "")
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
       = select_tag("#{prefix}_security_protocol",
-                       options_for_select([["<#{_('Choose>')}", nil]] + @scvmm_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
+                       options_for_select([["<#{_('Choose')}>", nil]] + @scvmm_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
                        "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
                        "checkchange"                 => "",
                        "required"                    => "",
