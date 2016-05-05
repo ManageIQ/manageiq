@@ -329,20 +329,20 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
           end
 
           it "#allowed_floating_ip_addresses with tenant selected" do
-            workflow.values.merge!(:cloud_tenant  => @ct2.id)
-            workflow.values.merge!(:cloud_network => @cloud_network.id)
+            workflow.values[:cloud_tenant]  = @ct2.id
+            workflow.values[:cloud_network] = @cloud_network.id
             ips = workflow.allowed_floating_ip_addresses
             expect(ips.keys).to match_array [@ip2.id]
           end
 
           it "#allowed_floating_ip_addresses with tenant not selected" do
-            workflow.values.merge!(:cloud_network => @cloud_network.id)
+            workflow.values[:cloud_network] = @cloud_network.id
             ips = workflow.allowed_floating_ip_addresses
             expect(ips.keys).to match_array [@ip2.id, @ip1.id]
           end
 
           it "#allowed_floating_ip_addresses with network not connected to the router" do
-            workflow.values.merge!(:cloud_network => @cloud_network_2.id)
+            workflow.values[:cloud_network] = @cloud_network_2.id
             ips = workflow.allowed_floating_ip_addresses
             expect(ips.keys).to match_array []
           end
