@@ -35,12 +35,8 @@ module Metric::Targets
 
     MiqPreloader.preload(zone.ems_clouds, :vms => [{:availability_zone => :tags}, :ext_management_system])
 
-    vms_with_availability_zone = zone.ems_clouds.flat_map(&:vms)
-                                     .select { |vm| vm.availability_zone && vm.availability_zone.perf_capture_enabled? }
-
-    vms_without_availability_zone = zone.ems_clouds.flat_map(&:vms).select { |vm| vm.availability_zone.nil? }
-
-    (vms_with_availability_zone + vms_without_availability_zone)
+    zone.ems_clouds.flat_map(&:vms)
+        .select { |vm| vm.availability_zone.nil? || vm.availability_zone && vm.availability_zone.perf_capture_enabled? }
       .select { |vm| vm.ext_management_system && vm.state == 'on' }
   end
 
