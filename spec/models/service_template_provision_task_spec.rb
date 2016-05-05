@@ -48,12 +48,28 @@ describe ServiceTemplateProvisionTask do
     end
 
     describe "#before_ae_starts" do
-      it "updates the task state to active when task starts" do
-        @task_0.before_ae_starts({})
-        expect(@task_0).to have_attributes(
-          :state   => 'active',
-          :status  => 'Ok',
-          :message => 'In Process')
+      context 'task is pending' do
+        it "updates the task state to active" do
+          @task_0.update_attribute(:state, 'pending')
+          @task_0.before_ae_starts({})
+          expect(@task_0).to have_attributes(:state => 'active', :status => 'Ok', :message => 'In Process')
+        end
+      end
+
+      context 'task is queued' do
+        it "updates the task state to active" do
+          @task_0.update_attribute(:state, 'queued')
+          @task_0.before_ae_starts({})
+          expect(@task_0).to have_attributes(:state => 'active', :status => 'Ok', :message => 'In Process')
+        end
+      end
+
+      context 'task is provisioned' do
+        it "does not update task state" do
+          @task_0.update_attribute(:state, 'provisioned')
+          @task_0.before_ae_starts({})
+          expect(@task_0).to have_attributes(:state => 'provisioned', :status => 'Ok')
+        end
       end
     end
 
