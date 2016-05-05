@@ -27,7 +27,7 @@
         = _('Type')
       .col-md-8
         = select_tag('provtype',
-                     options_for_select([["<#{_('Choose>')}", nil]] + @provider_types, disabled: ["<#{_('Choose')}>", nil]),
+                     options_for_select([["<#{_('Choose')}>", nil]] + @provider_types, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-if"                       => "newRecord",
                      "ng-model"                    => "providerForemanModel.provtype",
                      "ng-change"                   => "providerTypeChanged()",
