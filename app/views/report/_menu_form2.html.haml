@@ -8,22 +8,36 @@
         %table
           %tr
             %td{:align => "left"}
-              = _('Selected Reports:')
-            %td
-            %td{:align => "left"}
               = _('Available Reports:')
             %td
+            %td{:align => "left"}
+              = _('Selected Reports:')
+            %td
           %tr
-            %td{:align => "right"}
-              = select_tag('selected_reports[]',
-                options_for_select(@edit[:selected_reports], @selected_reps),
+            %td{:align => "left"}
+              = select_tag('available_reports[]',
+                options_for_select(@edit[:available_reports].sort),
                 :multiple => true,
                 :style    => "width: 280px; height: 310px;",
-                :id       => "selected_reports")
+                :id       => "available_reports")
 
             %td.text-center{:width => "40"}
               .btn-group-vertical
-                - if @edit[:available_reports].length == 0
+
+                - if @edit[:available_reports].empty?
+                  %button.btn.btn-default.disabled
+                    %i.fa.fa-angle-right.fa-lg
+                - else
+                  - t = _("Move selected reports right")
+                  %button.btn.btn-default{:title => t,
+                    "data-submit"         => 'column_lists',
+                    "data-miq_sparkle_on" => true,
+                    :remote               => true,
+                    "data-method"         => :post,
+                    'data-click_url'      => {:url => "#{url}?button=left"}.to_json}
+                    %i.fa.fa-angle-right.fa-lg
+
+                - if @edit[:selected_reports].empty?
                   %button.btn.btn-default.disabled
                     %i.fa.fa-angle-left.fa-lg
                 - else
@@ -33,19 +47,8 @@
                     "data-miq_sparkle_on" => true,
                     :remote               => true,
                     "data-method"         => :post,
-                    'data-click_url'      => {:url => "#{url}?button=left"}.to_json}
-                    %i.fa.fa-angle-left.fa-lg
-
-                - if @edit[:selected_reports].length == 0
-                - else
-                  - t = _("Move selected reports right")
-                  %button.btn.btn-default{:title => t,
-                    "data-submit"         => 'column_lists',
-                    "data-miq_sparkle_on" => true,
-                    :remote               => true,
-                    "data-method"         => :post,
                     'data-click_url'      => {:url => "#{url}?button=right"}.to_json}
-                    %i.fa.fa-angle-right.fa-lg
+                    %i.fa.fa-angle-left.fa-lg
 
                 - if @edit[:selected_reports].length < 2
                   %button.btn.btn-default
@@ -99,12 +102,12 @@
                     'data-click_url'      => {:url => "#{url}?button=bottom"}.to_json}
                     %i.fa.fa-angle-double-down.fa-lg
 
-            %td{:align => "left"}
-              = select_tag('available_reports[]',
-                options_for_select(@edit[:available_reports].sort),
+            %td{:align => "right"}
+              = select_tag('selected_reports[]',
+                options_for_select(@edit[:selected_reports], @selected_reps),
                 :multiple => true,
                 :style    => "width: 280px; height: 310px;",
-                :id       => "available_reports")
+                :id       => "selected_reports")
           %tr
             %td{:colspan => "3", :align => "right"}
               .form-group.pull-right
