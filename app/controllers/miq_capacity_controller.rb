@@ -154,29 +154,40 @@ class MiqCapacityController < ApplicationController
     end
   end
 
+  def planning_wizard_get_vms_records(filter_type, filter_value)
+     case filter_type
+     when "all"     then find_filtered(Vm).sort_by { |v| v.name.downcase }
+     when "host"    then Host.find(filter_value).vms
+     when "ems"     then ExtManagementSystem.find(filter_value).vms
+     when "cluster" then EmsCluster.find(filter_value).all_vms
+     when "filter"  then MiqSearch.find(filter_value).results(:userid => current_userid)
+     else []
+     end
+  end
+  private :planning_wizard_get_vms_records
+
+  def planning_wizard_get_vms(filter_type, filter_value)
+    vms = planning_wizard_get_vms_records(filter_type, filter_value)
+    vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name }
+  end
+  private :planning_wizard_get_vms
+
   def planning_option_changed
-    vms = nil
-    filter_value = params[:filter_value]
-    if filter_value && filter_value != "<Choose>"
-      case params[:filter_typ]
-      when "host"
-        vms = Host.find(filter_value).vms
-      when "ems"
-        vms = ExtManagementSystem.find(filter_value).vms
-      when "cluster"
-        vms = EmsCluster.find(filter_value).all_vms
-      when "filter"
-        vms = MiqSearch.find(filter_value).results(:userid => current_userid)
-      else
-        vms = []
-      end
-    elsif params[:filter_typ] == "all"
-      vms = find_filtered(Vm).sort_by { |v| v.name.downcase }
+    if params[:filter_typ].present?
+      filter_typ = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
+
+      @sb[:planning][:options][:filter_typ] = filter_typ
+      @sb[:planning][:vms] = planning_wizard_get_vms('all', nil) if filter_typ == 'all'
     end
-    @sb[:planning][:vms] = vms ? vms.each_with_object({}) { |v, h| h[v.id.to_s] = v.name } : nil
-    @sb[:planning][:options][:filter_typ] = params[:filter_typ] == "<Choose>" ? nil : params[:filter_typ]
-    @sb[:planning][:options][:filter_value] = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
-    @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm]
+
+    if params[:filter_value].present?
+      filter_value = params[:filter_value] == "<Choose>" ? nil : params[:filter_value]
+
+      @sb[:planning][:options][:filter_value] = filter_value
+      @sb[:planning][:vms] = planning_wizard_get_vms(@sb[:planning][:options][:filter_typ], filter_value)
+    end
+
+    @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm] if params[:chosen_vm]
     @sb[:planning][:options][:days] = params[:trend_days].to_i if params[:trend_days]
     @sb[:planning][:options][:vm_mode] = VALID_PLANNING_VM_MODES[params[:vm_mode]] if params[:vm_mode]
     @sb[:planning][:options][:trend_cpu] = (params[:trend_cpu] == "1") if params[:trend_cpu]
