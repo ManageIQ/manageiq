@@ -186,4 +186,9 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   def validate_unset_node_maintenance
     {:available => true,   :message => nil}
   end
+
+  def disconnect_ems(e = nil)
+    self.availability_zone = nil if e.nil? || ext_management_system == e
+    super
+  end
 end
