@@ -7,9 +7,13 @@ class ManageIQ::Providers::Redhat::InfraManager::MetricsCapture < ManageIQ::Prov
     raise "no metrics credentials defined" unless target.ext_management_system.has_authentication_type?(:metrics)
 
     username, password = target.ext_management_system.auth_user_pwd(:metrics)
+    metrics_hostname = target.ext_management_system.connection_configuration_by_role('metrics')
+      .try(:endpoint)
+      .try(:hostname)
+    host = metrics_hostname || target.ext_management_system.hostname
 
     conn_info = {
-      :host     => target.ext_management_system.connection_configuration_by_role('metrics').endpoint.hostname,
+      :host     => host,
       :database => target.ext_management_system.history_database_name,
       :username => username,
       :password => password
