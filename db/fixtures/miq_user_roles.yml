@@ -909,6 +909,7 @@
   :miq_product_feature_identifiers:
   - about
   - availability_zone
+  - all_vm_rules
   - compute
   - flavor
   - bottlenecks
@@ -971,6 +972,7 @@
   :miq_product_feature_identifiers:
   - about
   - availability_zone
+  - all_vm_rules
   - flavor
   - bottlenecks
   - compute
