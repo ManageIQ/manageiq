@@ -1,7 +1,11 @@
 class AddFiltersToEntitlements < ActiveRecord::Migration[5.0]
+  include MigrationHelper
+
   class Entitlement < ActiveRecord::Base; end
 
   def change
+    return if previously_migrated_as?("20160414123914")
+
     add_column :entitlements, :filters, :text
 
     # HACK, this shouldn't be required, figure out why. :cry:
