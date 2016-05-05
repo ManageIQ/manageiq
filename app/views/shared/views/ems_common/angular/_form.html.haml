@@ -24,7 +24,7 @@
         = _('Type')
       .col-md-8
         = select_tag('emstype',
-                     options_for_select([["<#{_('Choose>')}", nil]] + @ems_types, disabled: ["<#{_('Choose')}>", nil]),
+                     options_for_select([["<#{_('Choose')}>", nil]] + @ems_types, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-if"                       => "newRecord",
                      "ng-model"                    => "emsCommonModel.emstype",
                      "ng-change"                   => "providerTypeChanged()",
