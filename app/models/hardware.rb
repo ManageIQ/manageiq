@@ -111,21 +111,20 @@ class Hardware < ApplicationRecord
       t[:disk_capacity]) * -100 + 100)
   end)
 
-  def disk_storage(col)
-    return nil if disks.blank?
-    disks.inject(0) do |t, d|
-      val = d.send(col)
-      t + (val.nil? ? d.size.to_i : val.to_i)
-    end
-  end
-  protected :disk_storage
-
   def allocated_disk_storage
-    disk_storage(:size)
+    if disks.loaded?
+      disks.blank? ? nil : disks.inject(0) { |t, d| t + d.size.to_i }
+    else
+      disks.sum('coalesce(size, 0)')
+    end
   end
 
   def used_disk_storage
-    disk_storage(:size_on_disk)
+    if disks.loaded?
+      disks.blank? ? nil : disks.inject(0) { |t, d| t + (d.size_on_disk || d.size).to_i }
+    else
+      disks.sum('coalesce(size_on_disk, size, 0)')
+    end
   end
 
   def m_controller(_parent, xmlNode, deletes)
