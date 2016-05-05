@@ -12,7 +12,7 @@ class OpenstackEventMonitor
   end
 
   def self.available?(options)
-    event_monitor_class(options) != OpenstackNullEventMonitor
+    event_monitor_class(options).available?(options)
   end
 
   DEFAULT_PLUGIN_PRIORITY = 0
@@ -67,19 +67,31 @@ class OpenstackEventMonitor
   cache_with_timeout(:event_monitor_cache) { Hash.new }
 
   def self.event_monitor_class(options)
+    event_monitor_class = case options[:events_monitor]
+                          when :ceilometer
+                            OpenstackCeilometerEventMonitor
+                          when :amqp
+                            OpenstackRabbitEventMonitor
+                          else
+                            OpenstackNullEventMonitor
+                          end
+
     key = event_monitor_key(options)
-    event_monitor_class_cache[key] ||= begin
-      detected_event_monitor = subclasses.detect do |event_monitor|
-        begin
-          event_monitor.available?(options)
-        rescue => e
-          $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor}
-                     for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
-          false
-        end
-      end
-      detected_event_monitor || OpenstackNullEventMonitor
+    event_monitor_class_cache[key] ||= available_event_monitor(event_monitor_class, options)
+  end
+
+  def self.available_event_monitor(event_monitor_class, options)
+    monitor_available = begin
+      event_monitor_class.available?(options)
+    rescue => e
+      $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor}
+                 for #{options[:hostname]}. Event collection will be disabled for
+                 #{options[:hostname]}. #{e.message}")
+      false
     end
+
+    event_monitor_class = OpenstackNullEventMonitor unless monitor_available
+    event_monitor_class
   end
 
   # Select the best-fit plugin, or OpenstackNullEventMonitor if no plugin will
@@ -96,7 +108,7 @@ class OpenstackEventMonitor
   private
 
   def self.event_monitor_key(options)
-    options.values_at(:hostname, :username, :password)
+    options.values_at(:events_monitor, :hostname, :port, :username, :password)
   end
   private_class_method :event_monitor_key
 

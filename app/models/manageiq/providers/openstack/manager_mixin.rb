@@ -1,6 +1,11 @@
 module ManageIQ::Providers::Openstack::ManagerMixin
   extend ActiveSupport::Concern
 
+  included do
+    after_save :stop_event_monitor_queue_on_change
+    before_destroy :stop_event_monitor
+  end
+
   alias_attribute :keystone_v3_domain_id, :uid_ems
   #
   # OpenStack interactions
@@ -65,14 +70,24 @@ module ManageIQ::Providers::Openstack::ManagerMixin
 
   def event_monitor_options
     @event_monitor_options ||= begin
-      opts = {:hostname => hostname}
-      opts[:port] = event_monitor_class.worker_settings[:amqp_port]
-      opts[:ems] = self
-      if self.has_authentication_type? :amqp
-        # authentication_userid/password will happily return the "default"
-        # userid/password if this ems has no amqp auth configured
-        opts[:username] = authentication_userid(:amqp)
-        opts[:password] = authentication_password(:amqp)
+      opts = {:ems => self}
+
+      ceilometer = connection_configuration_by_role("ceilometer")
+
+      if ceilometer.try(:endpoint) && !ceilometer.try(:endpoint).try(:marked_for_destruction?)
+        opts[:events_monitor] = :ceilometer
+      elsif (amqp = connection_configuration_by_role("amqp"))
+        opts[:events_monitor] = :amqp
+        if (endpoint = amqp.try(:endpoint))
+          opts[:hostname]          = endpoint.hostname
+          opts[:port]              = endpoint.port
+          opts[:security_protocol] = endpoint.security_protocol
+        end
+
+        if (authentication = amqp.try(:authentication))
+          opts[:username] = authentication.userid
+          opts[:password] = authentication.password
+        end
       end
       opts
     end
@@ -84,6 +99,21 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   rescue => e
     _log.error("Exeption trying to find openstack event monitor for #{name}(#{hostname}). #{e.message}")
     false
+  end
+
+  def stop_event_monitor_queue_on_change
+    if authentications.detect{ |x| x.previous_changes.present? } || endpoints.detect{ |x| x.previous_changes.present? }
+      _log.info("EMS: [#{name}], Credentials or endpoints have changed, stopping Event Monitor. It will be restarted by the WorkerMonitor.")
+      stop_event_monitor_queue
+      network_manager.stop_event_monitor_queue if respond_to?(:network_manager) && network_manager
+    end
+  end
+
+  def stop_event_monitor_queue_on_credential_change
+    # TODO(lsmola) this check should not be needed. Right now we are saving each individual authentication and
+    # it is breaking the check for changes. We should have it all saved by autosave when saving EMS, so the code
+    # for authentications needs to be rewritten.
+    stop_event_monitor_queue_on_change
   end
 
   def translate_exception(err)

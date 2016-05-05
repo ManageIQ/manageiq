@@ -7,7 +7,8 @@ describe OpenstackEventMonitor do
     @topics = {"nova" => "nova_topic", "glance" => "glance_topic"}
     @receiver_options = {:capacity => 1, :duration => 1}
     @options = @receiver_options.merge(:topics => @topics)
-    @rabbit_host = {:hostname => "rabbit_host", :username => "rabbit_user", :password => "rabbit_pass"}
+    @rabbit_host = {:hostname => "rabbit_host", :username => "rabbit_user", :password => "rabbit_pass",
+                    :events_monitor => :amqp, :port => 5672}
     @bad_host = {:hostname => "bad_host", :username => "bad_user", :password => "bad_pass"}
   end
 
