@@ -33,11 +33,12 @@ module Metric::Targets
   def self.capture_cloud_targets(zone, options = {})
     return [] if options[:exclude_vms]
 
-    includes = {:availability_zones => :tags}
+    includes = {:availability_zones => :tags, :vms => :availability_zone }
     MiqPreloader.preload(zone.ems_clouds, includes)
 
-    vms_with_availability_zone = capture_vm_targets(zone.availability_zones, AvailabilityZone, options)
-    vms_without_availability_zone = zone.vms_without_availability_zone
+    availability_zones = zone.ems_clouds.flat_map(&:availability_zones)
+    vms_with_availability_zone = capture_vm_targets(availability_zones, AvailabilityZone, options)
+    vms_without_availability_zone = zone.ems_clouds.flat_map { |e| e.vms.select { |vm| vm.availability_zone.nil? } }
 
     vms_with_availability_zone + vms_without_availability_zone
   end
