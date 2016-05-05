@@ -39,7 +39,7 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   def each_batch
     while @monitor_events
       begin
-        $log.info("Quering Openstack Ceilometer for events newer than #{latest_event_timestamp}...") if $log
+        $log.info("Querying Openstack Ceilometer for events newer than #{latest_event_timestamp}...") if $log
         events = list_events(query_options).sort_by(&:generated)
         @since = events.last.generated unless events.empty?
 

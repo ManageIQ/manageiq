@@ -29,6 +29,7 @@ describe ManageIQ::Providers::Openstack::CloudManager do
 
       creds = {}
       creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
+      @ems.endpoints << Endpoint.create(:role => 'amqp', :hostname => 'amqp_hostname', :port => '5672')
       @ems.update_authentication(creds, :save => false)
       expect(@ems.verify_credentials(:amqp)).to be_truthy
     end
@@ -53,10 +54,11 @@ describe ManageIQ::Providers::Openstack::CloudManager do
   it "event_monitor_options" do
     allow(ManageIQ::Providers::Openstack::CloudManager::EventCatcher).to receive_messages(:worker_settings => {:amqp_port => 1234})
     @ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
+    @ems.endpoints << Endpoint.create(:role => 'amqp', :hostname => 'amqp_hostname', :port => '5672')
     require 'openstack/openstack_event_monitor'
 
-    expect(@ems.event_monitor_options[:hostname]).to eq("host")
-    expect(@ems.event_monitor_options[:port]).to eq(1234)
+    expect(@ems.event_monitor_options[:hostname]).to eq("amqp_hostname")
+    expect(@ems.event_monitor_options[:port]).to eq(5672)
   end
 
   context "translate_exception" do

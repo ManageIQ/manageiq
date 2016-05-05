@@ -25,6 +25,7 @@ describe ManageIQ::Providers::Openstack::InfraManager do
 
       creds = {}
       creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
+      @ems.endpoints << Endpoint.create(:role => 'amqp', :hostname => 'amqp_hostname', :port => '5672')
       @ems.update_authentication(creds, :save => false)
       expect(@ems.verify_credentials(:amqp)).to be_truthy
     end
