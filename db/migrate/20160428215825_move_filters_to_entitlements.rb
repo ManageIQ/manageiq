@@ -1,4 +1,6 @@
 class MoveFiltersToEntitlements < ActiveRecord::Migration[5.0]
+  include MigrationHelper
+
   class MiqGroup < ActiveRecord::Base
     has_one :entitlement, :class_name => 'MoveFiltersToEntitlements::Entitlement'
     serialize :filters
@@ -10,6 +12,7 @@ class MoveFiltersToEntitlements < ActiveRecord::Migration[5.0]
   end
 
   def up
+    return if previously_migrated_as?("20160414124134")
     say_with_time 'Moving MiqGroup filters to Entitlements' do
       MiqGroup.find_each do |group|
         if group.filters && group.entitlement
