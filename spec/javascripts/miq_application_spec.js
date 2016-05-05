@@ -197,16 +197,19 @@ describe('miq_application.js', function() {
     });
 
     it("doesn't die on null callback", function() {
-      spyOn(window, 'miqJqueryRequest').and.returnValue({
-        done: function(fn) { fn(); },
+      spyOn(window, 'miqObserveRequest');
+      spyOn(_, 'debounce').and.callFake(function(fn, opts) {
+        return fn;
       });
 
       miqSelectPickerEvent('miq-select-picker-1', '/foo/');
 
       $('#miq-select-picker-1').val('quux').trigger('change');
 
-      expect(miqJqueryRequest).toHaveBeenCalledWith('/foo/?miq-select-picker-1=quux', {
+      expect(miqObserveRequest).toHaveBeenCalledWith('/foo/?miq-select-picker-1=quux', {
         no_encoding: true,
+        beforeSend: undefined,
+        complete: undefined,
       });
     });
   });
