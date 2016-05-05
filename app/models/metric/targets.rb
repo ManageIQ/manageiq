@@ -38,18 +38,12 @@ module Metric::Targets
 
     availability_zones = zone.ems_clouds.flat_map(&:availability_zones)
     # vms_with_availability_zone = capture_vm_targets(availability_zones, AvailabilityZone, options)
-    targets, parent_class = availability_zones, AvailabilityZone
-    vms = []
-    unless options[:exclude_vms]
+    targets = availability_zones
       enabled_parents = targets.select do |t|
-        t.kind_of?(parent_class) &&
-        t.kind_of?(Metric::CiMixin) &&
-        t.perf_capture_enabled? &&
-        t.respond_to?(:vms)
+        t.perf_capture_enabled?
       end
       MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
       vms = targets.flat_map { |t| enabled_parents.include?(t) ? t.vms.select { |v| v.state == 'on' } : [] }
-    end
     vms_with_availability_zone = vms
 
     vms_without_availability_zone = zone.ems_clouds.flat_map { |e| e.vms.select { |vm| vm.availability_zone.nil? } }
