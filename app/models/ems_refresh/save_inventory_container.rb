@@ -234,7 +234,8 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(container_group.container_definitions, hashes, deletes, [:ems_ref],
-                         [:container_port_configs, :container_env_vars, :security_context, :container], true)
+                         [:container_port_configs, :container_env_vars, :security_context, :container],
+                         [], true)
     store_ids_for_new_records(container_group.container_definitions, hashes, :ems_ref)
   end
 
