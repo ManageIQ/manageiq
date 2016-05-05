@@ -811,7 +811,7 @@ function miqSendOneTrans(url, observe) {
   ManageIQ.oneTransition.oneTrans = 1;
 
   if (observe && observe.observe) {
-    miqObserveRequest(url, { done: observe.done });
+    return miqObserveRequest(url, { done: observe.done });
   } else {
     return miqJqueryRequest(url);
   }
@@ -1051,7 +1051,7 @@ function miqSendDateRequest(el) {
     done: attemptAutoRefreshTrigger,
   };
 
-  miqObserveRequest(urlstring, options);
+  return miqObserveRequest(urlstring, options);
 }
 
 // common function to pass ajax request to server
@@ -1230,8 +1230,13 @@ function miqProcessObserveQueue() {
 
   var request = ManageIQ.observe.queue.shift();
 
-  miqJqueryRequest(request.url, request.options).done(function() {
+  miqJqueryRequest(request.url, request.options)
+  .then(function(arg) {
     ManageIQ.observe.processing = false;
+    request.deferred.resolve(arg);
+  }, function(err) {
+    ManageIQ.observe.processing = false;
+    request.deferred.reject(err);
   });
 }
 
@@ -1239,23 +1244,33 @@ function miqObserveRequest(url, options) {
   options = _.cloneDeep(options || {});
   options.observe = true;
 
+  var deferred = {};
+  deferred.promise = new Promise(function(resolve, reject) {
+    deferred.resolve = resolve;
+    deferred.reject = reject;
+  });
+
   ManageIQ.observe.queue.push({
     url: url,
     options: options,
+    deferred: deferred,
   });
 
   miqProcessObserveQueue();
+
+  return deferred.promise;
 }
 
 function miqJqueryRequest(url, options) {
   if ((ManageIQ.observe.processing || ManageIQ.observe.queue.length) && ! options.observe) {
     console.debug('Postponing miqJqueryRequest - waiting for the observe queue to empty first');
 
-    setTimeout(function() {
-      miqJqueryRequest(url, options);
-    }, 700);
-
-    return;
+    return new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        miqJqueryRequest(url, options)
+        .then(resolve, reject);
+      }, 700);
+    });
   }
 
   options = options || {};
@@ -1297,7 +1312,10 @@ function miqJqueryRequest(url, options) {
     ajax_options.complete = complete;
   }
 
-  return $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options);
+  return new Promise(function(resolve, reject) {
+    $.ajax(options.no_encoding ? url : encodeURI(url), ajax_options)
+    .then(resolve, reject);
+  });
 }
 
 function miqDomElementExists(element) {
