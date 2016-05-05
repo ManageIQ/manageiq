@@ -85,6 +85,14 @@ class MiqPglogical
     end
   end
 
+  def replication_lag
+    pglogical.lag_bytes
+  end
+
+  def replication_wal_retained
+    pglogical.wal_retained_bytes
+  end
+
   def self.local_node_name
     region_to_node_name(MiqRegion.my_region_number)
   end
