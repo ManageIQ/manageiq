@@ -33,6 +33,7 @@ module Metric::Targets
     # 2) need to find all the VMs that may not be in an availability zone
     # 3) cloudy clusters?
     targets = []
+    return [] if options[:exclude_vms]
 
     includes = {:availability_zones => :tags}
     MiqPreloader.preload(zone.ems_clouds, includes)
