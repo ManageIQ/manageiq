@@ -658,6 +658,7 @@ module EmsCommon
   end
 
   def retrieve_openstack_amqp_security_protocols
+    # OSP8 doesn't support SSL for AMQP
     [[_('Non-SSL'), 'non-ssl']]
   end
 

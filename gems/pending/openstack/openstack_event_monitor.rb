@@ -85,7 +85,8 @@ class OpenstackEventMonitor
       event_monitor_class.available?(options)
     rescue => e
       $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor}
-                 for #{options[:hostname]}. Trying other AMQP clients.  #{e.message}")
+                 for #{options[:hostname]}. Event collection will be disabled for
+                 #{options[:hostname]}. #{e.message}")
       false
     end
 
