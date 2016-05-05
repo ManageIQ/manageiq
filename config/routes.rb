@@ -272,6 +272,12 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :consumption                  => {
+      :get => %w(
+        show
+      )
+    },
+
     :cloud_object_store_container => {
       :get => %w(
         download_data
