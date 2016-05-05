@@ -67,8 +67,8 @@ RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz
     echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc && \
     echo "source /usr/local/share/chruby/chruby.sh" >> ~/.bashrc && \ 
     curl -sL https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz | tar xz && \
-    cd ruby-install-0.6.0 && make install && ruby-install ruby 2.2.4 -- --disable-install-doc && \
-    echo "chruby ruby-2.2.4" >> ~/.bash_profile && \
+    cd ruby-install-0.6.0 && make install && ruby-install ruby 2.2.5 -- --disable-install-doc && \
+    echo "chruby ruby-2.2.5" >> ~/.bash_profile && \
     rm -rf /chruby-* && rm -rf /usr/local/src/* && yum clean all
 
 ## GIT clone manageiq-appliance repo
@@ -81,7 +81,7 @@ ADD . ${APP_ROOT}
 ## Setup environment
 
 RUN ${APPLIANCE_ROOT}/setup && \
-echo "export PATH=\$PATH:/opt/rubies/ruby-2.2.4/bin" >> /etc/default/evm && \
+echo "export PATH=\$PATH:/opt/rubies/ruby-2.2.5/bin" >> /etc/default/evm && \
 mkdir ${APP_ROOT}/log/apache && \
 mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
 echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
@@ -96,7 +96,7 @@ gem install bundler -v ">=1.8.4" && \
 bin/setup --no-db --no-tests && \
 rake evm:compile_assets && \
 rake evm:compile_sti_loader && \
-rm -rvf /opt/rubies/ruby-2.2.4/lib/ruby/gems/2.2.0/cache/* && \
+rm -rvf /opt/rubies/ruby-2.2.5/lib/ruby/gems/2.2.0/cache/* && \
 bower cache clean && \
 npm cache clean
 
