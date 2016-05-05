@@ -94,31 +94,41 @@ class ManageIQ::Providers::Vmware::InfraManager
       vm_inv
     end
 
-    def dvswitch_and_dvportgroup_inv_by_host_inv(host_inv)
+    def dvswitch_and_dvportgroup_inv_by_host_mor(host_mor)
       dvswitch_inv    = {}
       dvportgroup_inv = {}
 
       dvswitches   = @vc_data[:dvswitch] || {}
       dvportgroups = @vc_data[:dvportgroup] || {}
 
-      host_inv.each_key do |host_mor|
-        dvswitches.each do |dvs_mor, dvs_data|
-          summary = dvs_data["summary"]
-          next if summary.nil?
+      dvswitches.each do |dvs_mor, dvs_data|
+        summary = dvs_data["summary"]
+        next if summary.nil?
 
-          dvs_hosts =  summary["host"].to_a
-          dvs_hosts += summary["hostMember"].to_a
+        dvs_hosts = RefreshParser.get_dvswitch_hosts(dvswitches, dvs_mor)
+        next unless dvs_hosts.include?(host_mor)
 
-          if dvs_hosts.include?(host_mor)
-            dvswitch_inv[dvs_mor] = dvs_data
-          end
+        dvswitch_inv[dvs_mor] = dvs_data
 
-          dvportgroups.each do |dvpg_mor, dvpg_data|
-            if dvpg_data.fetch_path("config", "distributedVirtualSwitch") == dvs_mor
-              dvportgroup_inv[dvpg_mor] = dvpg_data
-            end
+        dvportgroups.each do |dvpg_mor, dvpg_data|
+          if dvpg_data.fetch_path("config", "distributedVirtualSwitch") == dvs_mor
+            dvportgroup_inv[dvpg_mor] = dvpg_data
           end
         end
+      end
+
+      return dvswitch_inv, dvportgroup_inv
+    end
+
+    def dvswitch_and_dvportgroup_inv_by_host_inv(host_inv)
+      dvswitch_inv    = {}
+      dvportgroup_inv = {}
+
+      host_inv.each_key do |host_mor|
+        dvs, dvp = dvswitch_and_dvportgroup_inv_by_host_mor(host_mor)
+
+        dvswitch_inv.merge!(dvs) unless dvs.nil?
+        dvportgroup_inv.merge!(dvp) unless dvp.nil?
       end
 
       return dvswitch_inv, dvportgroup_inv
@@ -183,27 +193,16 @@ class ManageIQ::Providers::Vmware::InfraManager
       dvswitch_inv    = {}
       dvportgroup_inv = {}
 
-      dvswitches   = @vc_data[:dvswitch] || {}
-      dvportgroups = @vc_data[:dvportgroup] || {}
-
       vm_inv.each_value do |vm_data|
         next if vm_data.nil?
 
-        device_array = vm_data.fetch_path("config", "hardware", "device")
+        host_mor = vm_data.fetch_path('summary', 'runtime', 'host')
+        next if host_mor.nil?
 
-        device_array.to_miq_a.find_all { |d| d.key?("macAddress") }.each do |dev|
-          backing = dev["backing"]
-          next if backing.nil? || backing.xsiType != "VirtualEthernetCardDistributedVirtualPortBackingInfo"
+        dvs, dvp = dvswitch_and_dvportgroup_inv_by_host_mor(host_mor)
 
-          switch_uuid   = backing.fetch_path("port", "switchUuid")
-          portgroup_key = backing.fetch_path("port", "portgroupKey")
-
-          dvs_mor, dvs_data   = dvswitches.detect { |_mor, data| data.fetch_path("summary", "uuid") == switch_uuid }
-          dvpg_mor, dvpg_data = dvportgroups.detect { |mor, _data| mor == portgroup_key }
-
-          dvswitch_inv[dvs_mor]     = dvs_data unless dvs_data.nil?
-          dvportgroup_inv[dvpg_mor] = dvpg_data unless dvpg_data.nil?
-        end
+        dvswitch_inv.merge!(dvs) unless dvs.nil?
+        dvportgroup_inv.merge!(dvp) unless dvp.nil?
       end
 
       return dvswitch_inv, dvportgroup_inv
