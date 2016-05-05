@@ -166,23 +166,35 @@ describe EmsContainerController do
     end
 
     context "#update" do
-      it "updates provider with new token" do
-        allow(MiqServer).to receive(:my_zone).and_return("default")
-        set_user_privileges
-        @ems = ManageIQ::Providers::Kubernetes::ContainerManager.create(:name => "k8s", :hostname => "10.10.10.1", :port => 5000)
-        controller.instance_variable_set(:@edit,
-                                         :new    => {:name         => @ems.name,
-                                                     :emstype      => @ems.type,
-                                                     :hostname     => @ems.hostname,
-                                                     :port         => @ems.port,
-                                                     :bearer_token => 'valid-token'},
-                                         :key    => "ems_edit__#{@ems.id}",
-                                         :ems_id => @ems.id)
-        session[:edit] = assigns(:edit)
-        post :update, :params => { :button => "save", :id => @ems.id, :type => @ems.type }
-        expect(response.status).to eq(200)
-        expect(ManageIQ::Providers::Kubernetes::ContainerManager.last.authentication_token("bearer"))
-          .to eq("valid-token")
+      context "updates provider with new token" do
+        after :each do
+          set_user_privileges
+          controller.instance_variable_set(:@_params, :name              => 'EMS 2',
+                                                      :default_hostname  => '10.10.10.11',
+                                                      :default_api_port  => '5000',
+                                                      :hawkular_hostname => '10.10.10.10',
+                                                      :hawkular_api_port => '8443',
+                                                      :bearer_token      => 'valid-token',
+                                                      :emstype           => @type)
+          session[:edit] = assigns(:edit)
+          controller.send(:set_ems_record_vars, @ems)
+          expect(@ems.connection_configurations.default.endpoint.hostname).to eq('10.10.10.11')
+          expect(@ems.connection_configurations.default.endpoint.port).to eq(5000)
+          expect(@ems.connection_configurations.hawkular.endpoint.hostname).to eq('10.10.10.10')
+          expect(@ems.connection_configurations.hawkular.endpoint.port).to eq(8443)
+          expect(@ems.authentication_token("bearer")).to eq('valid-token')
+          expect(@ems.hostname).to eq('10.10.10.11')
+        end
+
+        it "when adding kubernetes EMS" do
+          @type = 'kubernetes'
+          @ems  = ManageIQ::Providers::Kubernetes::ContainerManager.new
+        end
+
+        it "when adding openshift EMS" do
+          @type = 'openshift'
+          @ems  = ManageIQ::Providers::Openshift::ContainerManager.new
+        end
       end
     end
 

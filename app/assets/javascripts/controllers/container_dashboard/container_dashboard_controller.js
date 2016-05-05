@@ -61,7 +61,7 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
           id = '';
         }
         else {
-          id = '/'+ (/ems_container\/show\/(\d+)/.exec($location.absUrl())[1]);
+          id = '/'+ (/\/(\d+)/.exec($location.absUrl())[1]);
         }
 
         var url = '/container_dashboard/data'+id;

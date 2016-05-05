@@ -1,5 +1,6 @@
-- return if !%w(ems_cloud ems_infra).include?(controller_name)
-
+- return unless %w(ems_cloud ems_infra ems_container).include?(controller_name)
+- type = "emsCommonModel.emstype"
+- controller = "emsCommonModel.ems_controller"
 - prefix ||= "default"
 
 %div{"ng-if" => defined?(hostname_hide) ? false : true}
@@ -19,7 +20,7 @@
 
 %div{"ng-if" => defined?(apiport_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}",
-              "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'rhevm'"}
+              "ng-if" => "#{type} == 'openstack' || #{type} == 'openstack_infra' || #{type} == 'rhevm' || #{controller} == 'ems_container'"}
     %label.col-md-2.control-label{"for" => "textInput-markup"}
       = _('API Port')
     .col-md-8

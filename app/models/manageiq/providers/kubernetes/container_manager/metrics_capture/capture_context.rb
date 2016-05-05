@@ -102,10 +102,12 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
     end
 
     def hawkular_entrypoint
+      hawkular_endpoint = @ext_management_system.connection_configurations.hawkular.try(:endpoint)
       worker_class = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
+
       URI::HTTPS.build(
-        :host => @ext_management_system.hostname,
-        :port => worker_class.worker_settings[:metrics_port],
+        :host => hawkular_endpoint ? hawkular_endpoint.hostname : @ext_management_system.hostname,
+        :port => hawkular_endpoint ? hawkular_endpoint.port : worker_class.worker_settings[:metrics_port],
         :path => worker_class.worker_settings[:metrics_path])
     end
 

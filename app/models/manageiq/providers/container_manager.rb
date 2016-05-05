@@ -33,6 +33,11 @@ module ManageIQ::Providers
       aggregate_hardware(:computer_systems, :memory_mb, targets)
     end
 
+    class << model_name
+      define_method(:route_key) { "ems_containers" }
+      define_method(:singular_route_key) { "ems_container" }
+    end
+
     def self.supported_subclasses
       [ManageIQ::Providers::Kubernetes::ContainerManager,
        ManageIQ::Providers::OpenshiftEnterprise::ContainerManager,

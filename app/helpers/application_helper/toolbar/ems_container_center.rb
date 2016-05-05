@@ -22,8 +22,7 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           :ems_container_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this #{ui_lookup(:table=>"ems_container")}'),
-          t,
-          :url => "/edit"),
+          t,),
         button(
           :ems_container_delete,
           'pficon pficon-delete fa-lg',
@@ -45,16 +44,12 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           :ems_container_perf,
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Provider'),
-          N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          N_('Utilization')),
         button(
           :ems_container_timeline,
           'product product-timeline fa-lg',
           N_('Show Timelines for this #{ui_lookup(:table=>"ems_container")}'),
-          N_('Timelines'),
-          :url       => "/show",
-          :url_parms => "?display=timeline"),
+          N_('Timelines')),
       ]
     ),
   ])
