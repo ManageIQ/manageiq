@@ -49,6 +49,8 @@ module MiqReport::Search
 
     if (self.order && self.order.downcase == "descending")
       order = order.map { |col| Arel::Nodes::Descending.new col }
+    elsif (self.order && self.order.downcase == "ascending")
+      order = order.map { |col| Arel::Nodes::Ascending.new col }
     end
 
     order
