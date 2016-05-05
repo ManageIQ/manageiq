@@ -311,7 +311,7 @@
       :fields:
         :volume_name:
           :description: Volume Name
-          :required: false
+          :required: true
           :display: :edit
           :data_type: :string
           :min_length:
@@ -324,7 +324,7 @@
           :min_length:
           :max_length: 10
         :volume_delete_on_terminate:
-          :description: Size (gigabytes)
+          :description: Delete on Instance Terminate
           :required: false
           :display: :edit
           :data_type: :boolean
