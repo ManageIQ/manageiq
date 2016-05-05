@@ -37,14 +37,9 @@ module Metric::Targets
     MiqPreloader.preload(zone.ems_clouds, includes)
 
     availability_zones = zone.ems_clouds.flat_map(&:availability_zones)
-    # vms_with_availability_zone = capture_vm_targets(availability_zones, AvailabilityZone, options)
-    targets = availability_zones
-      enabled_parents = targets.select do |t|
-        t.perf_capture_enabled?
-      end
+    enabled_parents = availability_zones.select { |t| t.perf_capture_enabled? }
       MiqPreloader.preload(enabled_parents, :vms => :ext_management_system)
-      vms = enabled_parents.flat_map { |t| t.vms.select { |v| v.state == 'on' } }
-    vms_with_availability_zone = vms
+    vms_with_availability_zone = enabled_parents.flat_map { |t| t.vms.select { |v| v.state == 'on' } }
 
     vms_without_availability_zone = zone.ems_clouds.flat_map { |e| e.vms.select { |vm| vm.availability_zone.nil? } }
 
