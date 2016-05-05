@@ -19,7 +19,7 @@ require 'faraday'
 require 'faraday_middleware'
 
 api_cmd   = File.basename($PROGRAM_NAME)
-api_ver   = "2.1.0"
+api_ver   = "2.3.0-pre"
 cmd_title = "ManageIQ REST API Access Script"
 
 sep       = "_" * 60
@@ -72,7 +72,7 @@ actions              = methods.keys
 methods_needing_data = %w(put post patch)
 scriptdir_actions    = %w(ls run)
 sub_commands         = actions + %w(edit vi) + scriptdir_actions
-api_parameters       = %w(expand attributes limit offset
+api_parameters       = %w(expand attributes decorators limit offset
                           sort_by sort_order sort_options
                           filter by_tag provider_class requester_type)
 
@@ -159,11 +159,11 @@ end
 
 if action == "vi" || action == "edit"
   api_script = ARGV.shift
-  if api_script.nil? || api_script == ""
-    api_script_file = File.expand_path($PROGRAM_NAME)
-  else
-    api_script_file = File.join(opts[:scriptdir], "api_#{api_script}.rb")
-  end
+  api_script_file = if api_script.nil? || api_script == ""
+                      File.expand_path($PROGRAM_NAME)
+                    else
+                      File.join(opts[:scriptdir], "api_#{api_script}.rb")
+                    end
   ed_cmd = "vi"
   ed_cmd = ENV["EDITOR"] if action == "edit" && ENV["EDITOR"]
   cmd = "#{ed_cmd} #{api_script_file}"
@@ -226,7 +226,7 @@ collection = ""
 item = ""
 unless resource.nil?
   path << resource
-  rscan = resource.scan(/[^\/]+/)
+  rscan = resource.scan(%r{[^/]+})
   collection, item = rscan[0..1]
 end
 
