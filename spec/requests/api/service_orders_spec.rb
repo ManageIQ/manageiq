@@ -46,6 +46,14 @@ RSpec.describe "service orders API" do
     expect_request_success
   end
 
+  specify "the default state for a service order is 'cart'" do
+    api_basic_authorize collection_action_identifier(:service_orders, :create)
+
+    run_post(service_orders_url, :name => "shopping cart")
+
+    expect(response_hash).to include("results" => [a_hash_including("state" => ServiceOrder::STATE_CART)])
+  end
+
   specify "a service order cannot be created in the 'ordered' state" do
     api_basic_authorize collection_action_identifier(:service_orders, :create)
 
