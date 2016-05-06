@@ -10,6 +10,8 @@
 [![Chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ManageIQ/manageiq?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Translate](https://img.shields.io/badge/translate-zanata-blue.svg)](https://translate.zanata.org/zanata/project/view/manageiq)
 
+[![Build history for master branch](https://buildstats.info/travisci/chart/ManageIQ/manageiq?branch=master&buildCount=50)](https://travis-ci.org/ManageIQ/manageiq/branches)
+
 ManageIQ is a Cloud Management Platform that delivers the insight, control, and
 automation that enterprises need to address the challenges of managing hybrid
 cloud environments.  It has the following feature sets:
