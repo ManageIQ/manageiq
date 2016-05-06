@@ -7,6 +7,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker
+    ManageIQ::Providers::Google::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Atomic::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::AtomicEnterprise::ContainerManager::MetricsCollectorWorker
@@ -75,6 +76,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Redhat::InfraManager::MetricsCollectorWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::Openshift::ContainerManager::MetricsCollectorWorker
+    ManageIQ::Providers::Google::CloudManager::MetricsCollectorWorker
     ManageIQ::Providers::Atomic::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::MetricsCollectorWorker
     ManageIQ::Providers::AtomicEnterprise::ContainerManager::MetricsCollectorWorker
