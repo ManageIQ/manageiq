@@ -1107,6 +1107,7 @@ describe Metric do
         @vms_in_az = []
         2.times { @vms_in_az << FactoryGirl.create(:vm_openstack, :ems_id => @ems_openstack.id) }
         @availability_zone.vms = @vms_in_az
+        @availability_zone.vms.push(FactoryGirl.create(:vm_openstack, :ems_id => nil))
 
         @vms_not_in_az = []
         3.times { @vms_not_in_az << FactoryGirl.create(:vm_openstack, :ems_id => @ems_openstack.id) }

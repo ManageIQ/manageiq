@@ -167,12 +167,6 @@ class Zone < ApplicationRecord
     ems_clouds.flat_map(&:availability_zones)
   end
 
-  def vms_without_availability_zone
-    clouds = ext_management_systems.select { |e| e.kind_of?(EmsCloud) }
-    MiqPreloader.preload(clouds, :vms => :availability_zone)
-    clouds.flat_map { |e| e.vms.select { |vm| vm.availability_zone.nil? } }
-  end
-
   def vms_and_templates
     MiqPreloader.preload(self, :ext_management_systems => :vms_and_templates)
     ext_management_systems.flat_map(&:vms_and_templates)

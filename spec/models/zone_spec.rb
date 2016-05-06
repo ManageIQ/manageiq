@@ -60,29 +60,6 @@ describe Zone do
 
       expect(@zone.availability_zones).to match_array(azs)
     end
-
-    it "returns the set of vms_without_availability_zones" do
-      openstacks = [FactoryGirl.create(:ems_openstack, :zone => @zone),
-                    FactoryGirl.create(:ems_openstack, :zone => @zone)]
-      azs        = [FactoryGirl.create(:availability_zone, :ems_id => openstacks[0].id),
-                    FactoryGirl.create(:availability_zone, :ems_id => openstacks[1].id)]
-      vms_in_az = []
-      vms_not_in_az = []
-      2.times do
-        vm = FactoryGirl.create(:vm_openstack)
-        azs[0].vms << vm
-        vms_in_az << vm
-      end
-      2.times do
-        vm = FactoryGirl.create(:vm_openstack)
-        azs[1].vms << vm
-        vms_in_az << vm
-      end
-      3.times { vms_not_in_az << FactoryGirl.create(:vm_openstack, :ems_id => openstacks[0].id) }
-      3.times { vms_not_in_az << FactoryGirl.create(:vm_openstack, :ems_id => openstacks[1].id) }
-
-      expect(@zone.vms_without_availability_zone).to match_array(vms_not_in_az)
-    end
   end
 
   context ".determine_queue_zone" do
