@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :dialog do
+    sequence(:label) { |n| "Dialog #{n}" }
+
     # HACK: This is required because we were previously depending on rspec-mocks'
     # .stub monkeypatch here; the monkeypatch has since been removed and rspec-mocks
     # should NOT be used within factories anyway.

@@ -1,5 +1,6 @@
 FactoryGirl.define do
   factory :dialog_field do
+    name "Dialog Field"
   end
 
   factory :dialog_field_text_box, :parent => :dialog_field, :class => "DialogFieldTextBox" do
