@@ -321,12 +321,19 @@ class VmCloudController < ApplicationController
   def evacuate
     assert_privileges("instance_evacuate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
-    drop_breadcrumb(
-      :name => _("Evacuate Instance '%{name}'") % {:name => @record.name},
-      :url  => "/vm_cloud/evacuate"
-    ) unless @explorer
-    @in_a_form = true
-    @refresh_partial = "vm_common/evacuate"
+    if @record.is_available?(:evacuate)
+      drop_breadcrumb(
+        :name => _("Evacuate Instance '%{name}'") % {:name => @record.name},
+        :url  => "/vm_cloud/evacuate"
+      ) unless @explorer
+      @in_a_form = true
+      @refresh_partial = "vm_common/evacuate"
+    else
+      add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
+        :instance => ui_lookup(:table => 'vm_cloud'),
+        :name     => @record.name,
+        :details  => @record.is_available_now_error_message(:evacuate)}, :error)
+    end
   end
   alias_method :instance_evacuate, :evacuate
 
