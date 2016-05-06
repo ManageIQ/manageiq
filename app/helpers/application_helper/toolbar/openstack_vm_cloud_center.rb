@@ -111,6 +111,13 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           t = N_('Migrate Instance'),
           t,
           :klass     => ApplicationHelper::Button::InstanceMigrate,
+          :url_parms => 'main_div'),
+        button(
+          :instance_evacuate,
+          'product product-evacuate fa-lg',
+          t = N_('Evacuate Instance'),
+          t,
+          :klass     => ApplicationHelper::Button::InstanceEvacuate,
           :url_parms => 'main_div')
       ]
     ),
