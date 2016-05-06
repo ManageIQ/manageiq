@@ -52,7 +52,7 @@ var dialogFieldRefresh = {
     .done(function(data) {
       dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
       $('#' + fieldName).selectpicker('refresh');
-      $('#' + fieldName).selectpicker('val', selectedValue);
+      $('#' + fieldName).selectpicker('val', data.values.checked_value);
     });
   },
 
