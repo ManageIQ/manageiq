@@ -24,7 +24,11 @@ describe('resizable-sidebar.js', function () {
 
     setFixtures(html);
     $('div.container-fluid.resizable-sidebar').resizableSidebar();
-    spyOn($, 'ajax'); // we're not testing the backend
+
+    // we're not testing the backend
+    spyOn($, 'ajax').and.callFake(function() {
+      return Promise.resolve({});
+    });
   });
 
   it('hide sidebar', function () {
