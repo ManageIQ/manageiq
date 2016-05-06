@@ -920,6 +920,8 @@
     - :collection
     :methods: *70174834084700
     :klass: ServiceOrder
+    :subcollections:
+    - :service_requests
     :collection_actions:
       :get:
       - :name: read
@@ -940,6 +942,10 @@
         :identifier: svc_catalog_provision
       - :name: delete
         :identifier: svc_catalog_provision
+      - :name: clear
+        :identifier: svc_catalog_provision
+      - :name: order
+        :identifier: svc_catalog_provision
       :delete:
       - :name: delete
         :identifier: svc_catalog_provision
@@ -949,7 +955,7 @@
     :options:
     - :collection
     - :subcollection
-    :methods: *70174834086080
+    :methods: *70174834085860
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
@@ -962,6 +968,22 @@
       :get:
       - :name: read
         :identifier: miq_request_view
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
+      :post:
+      - :name: add
+        :identifier: svc_catalog_provision
+      - :name: remove
+        :identifier: svc_catalog_provision
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_request_view
+      :post:
+      - :name: remove
+        :identifier: svc_catalog_provision
   :service_templates:
     :description: Service Templates
     :identifier: catalog_items_accord
