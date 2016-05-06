@@ -7,10 +7,10 @@ gem "bundler",       ">= 1.8.4"
 gem "rake",          "~>10.1"
 gem "iniparse"
 
-gem "activesupport",           "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "master"
+gem "activesupport",           "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "5-0-stable"
 
 # ActiveRecord is used by appliance_console
-gem "activerecord",            "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "master"
+gem "activerecord",            "~> 5.0.x", :git => "git://github.com/rails/rails.git", :branch => "5-0-stable"
 
 # Not locally modified and not required
 gem "addressable",             "~> 2.4",            :require => false
