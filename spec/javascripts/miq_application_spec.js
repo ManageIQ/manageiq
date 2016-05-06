@@ -300,6 +300,39 @@ describe('miq_application.js', function() {
     });
   });
 
+  describe('miqObserveRequest', function() {
+    beforeEach(function() {
+      spyOn(window, 'miqProcessObserveQueue');
+
+      ManageIQ.observe.processing = false;
+      ManageIQ.observe.queue = [];
+    });
+
+    it('sets observe: true on options', function() {
+      miqObserveRequest('/foo', {});
+      expect(ManageIQ.observe.queue[0].options.observe).toBe(true);
+    });
+
+    it('sets observe: true on options even without options', function() {
+      miqObserveRequest('/foo');
+      expect(ManageIQ.observe.queue[0].options.observe).toBe(true);
+    });
+
+    it('adds to queue', function() {
+      miqObserveRequest('/foo');
+      expect(ManageIQ.observe.queue[0].url).toBe('/foo');
+    });
+
+    it('calls miqProcessObserveQueue', function() {
+      miqObserveRequest('/foo');
+      expect(miqProcessObserveQueue).toHaveBeenCalled();
+    });
+
+    it('returns a Promise', function() {
+      expect(miqObserveRequest('/foo')).toEqual(jasmine.any(Promise));
+    });
+  });
+
   describe('miqSelectPickerEvent', function () {
     beforeEach(function () {
       var html = '<input id="miq-select-picker-1" value="bar">';
