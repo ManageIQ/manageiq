@@ -242,6 +242,7 @@ describe VmInfraController do
     expect(response.status).to eq(200)
 
     post :x_button, :params => { :pressed => 'vm_migrate', :id => vm_vmware.id }
+    expect(response).to render_template('layouts/_x_edit_buttons')
     expect(response.status).to eq(200)
   end
 
