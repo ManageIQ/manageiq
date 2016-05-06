@@ -360,20 +360,20 @@ class StorageController < ApplicationController
   def storage_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-      when "root" then find_record(Storage, params[:id])
+    when "root" then find_record(Storage, params[:id])
+    when "ds"   then find_record(Storage, params[:id])
+    when "xx" then
+      case nodes.second
       when "ds"   then find_record(Storage, params[:id])
-      when "xx" then
-        case nodes.second
-          when "ds"   then find_record(Storage, params[:id])
-        end
+      end
     end
   end
 
   def storage_pod_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-      when "xx"  then @record = find_record(Storage, params[:id])
-      when "dsc" then @storage_record = find_record(EmsFolder, from_cid(params[:id]))
+    when "xx"  then @record = find_record(Storage, params[:id])
+    when "dsc" then @storage_record = find_record(EmsFolder, from_cid(params[:id]))
     end
   end
 
@@ -524,7 +524,7 @@ class StorageController < ApplicationController
     end
     presenter[:right_cell_text] = @right_cell_text
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
-    presenter[:osf_node] = x_node  # Open, select, and focus on this node
+    presenter[:osf_node] = x_node # Open, select, and focus on this node
 
     # Render the JS responses to update the explorer screen
     render :js => presenter.to_html
@@ -652,7 +652,7 @@ class StorageController < ApplicationController
   def rebuild_toolbars(record_showing, presenter)
     c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
     h_tb = build_toolbar('x_history_tb')
-    v_tb = build_toolbar('x_gtl_view_tb') unless record_showing || (x_active_tree == :storage_pod_tree && x_node == 'root')
+    v_tb = build_toolbar('x_gtl_view_tb') unless record_showing || (x_active_tree == :storage_pod_tree && x_node == 'root') || @in_a_form
 
     presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
@@ -670,7 +670,7 @@ class StorageController < ApplicationController
   end
 
   def display_adv_searchbox
-    !(@in_a_form || (x_active_tree == :storage_tree && @record) || (x_active_tree == :storage_pod_tree && x_node == 'root'))
+    !(@in_a_form || (x_active_tree == :storage_tree && @record) || (x_active_tree == :storage_pod_tree && (x_node == 'root' || @storage)))
   end
 
   def clear_flash_msg
