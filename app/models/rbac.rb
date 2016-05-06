@@ -65,6 +65,7 @@ module Rbac
   TENANT_ACCESS_STRATEGY = {
     'ExtManagementSystem'    => :ancestor_ids,
     'MiqAeNamespace'         => :ancestor_ids,
+    'MiqGroup'               => :descendant_ids,
     'MiqRequest'             => :descendant_ids,
     'MiqRequestTask'         => nil, # tenant only
     'MiqTemplate'            => :ancestor_ids,
@@ -73,6 +74,7 @@ module Rbac
     'ServiceTemplate'        => :ancestor_ids,
     'Service'                => :descendant_ids,
     'Tenant'                 => :descendant_ids,
+    'User'                   => :descendant_ids,
     'Vm'                     => :descendant_ids
   }
 
