@@ -45,6 +45,7 @@
                               "ng-disabled"  => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
                               "ng-model"     => "#{ng_model}.#{prefix}_password",
                               "prefix"       => "#{prefix}",
+                              "name"         => "#{prefix}_password",
                               "checkchange"  => "",
                               "require-file" => ""}
         %div{"ng-if" => "!vm.inEditMode('#{prefix}_userid')"}
@@ -54,6 +55,7 @@
                               "ng-disabled"  => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
                               "ng-model"     => "#{ng_model}.#{prefix}_password",
                               "prefix"       => "#{prefix}",
+                              "name"         => "#{prefix}_password",
                               "checkchange"  => "",
                               "require-file" => ""}
         %input{"type"        => "text",
@@ -61,7 +63,8 @@
                "name"        => "#{prefix}_password",
                "style"       => "display: none !important",
                "ng-model"    => "#{ng_model}.#{prefix}_password",
-               "ng-disabled" => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled}
+               "ng-disabled" => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
+               "checkchange" => ""}
         %span.help-block{"ng-show" => "angularForm.#{prefix}_password.$error.required"}
           = _("Required")
       %div{"ng-if" => "vm.showChangePrivateKeyLinks('#{prefix}_userid')"}
