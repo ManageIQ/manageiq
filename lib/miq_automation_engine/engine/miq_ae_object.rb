@@ -38,6 +38,7 @@ module MiqAeEngine
       'request'                => 'MiqRequest',
       'server'                 => 'MiqServer'
     )
+    NULL_COALESCING_OPERATOR = '||'
     attr_accessor :attributes, :namespace, :klass, :instance, :object_name, :instance_methods, :workspace, :current_field, :current_message
     attr_accessor :node_parent
     attr_reader :node_children
@@ -469,6 +470,16 @@ module MiqAeEngine
       value
     end
 
+    def get_null_coalesced_value(f, type = nil)
+      result = nil
+      f['value'].split(NULL_COALESCING_OPERATOR).each do |value|
+        next unless result.blank?
+        result = substitute_value(value.strip, type)
+      end
+      result = f['default_value'] if result.blank?
+      result
+    end
+
     def self.convert_boolean_value(value)
       return true   if value.to_s.downcase == 'true' || value == '1'
       return false  if value.to_s.downcase == 'false' || value == '0'
@@ -541,7 +552,13 @@ module MiqAeEngine
     def process_attribute(f, _message, _args, value = nil)
       Benchmark.current_realtime[:attribute_count] += 1
       Benchmark.realtime_block(:attribute_time) do
-        value = get_value(f) if value.nil?
+        if value.nil?
+          value = if f['datatype'] == MiqAeField::NULL_COALESCING_DATATYPE
+                    get_null_coalesced_value(f)
+                  else
+                    get_value(f)
+                  end
+        end
         value = MiqAeObject.convert_value_based_on_datatype(value, f['datatype'])
         @attributes[f['name'].downcase] = value unless value.nil?
         process_collect(f['collect'], nil) unless f['collect'].blank?
