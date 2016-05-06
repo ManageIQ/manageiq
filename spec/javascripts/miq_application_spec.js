@@ -333,6 +333,48 @@ describe('miq_application.js', function() {
     });
   });
 
+  describe('miqJqueryRequest', function() {
+    beforeEach(function() {
+      spyOn($, 'ajax').and.callFake(function() {
+        return { then: function(ok, err) { /* nope */ } };
+      });
+    });
+
+    it('queues itself when processing observe queue', function() {
+      ManageIQ.observe.processing = true;
+      ManageIQ.observe.queue = [];
+
+      spyOn(window, 'setTimeout');
+      miqJqueryRequest('/foo');
+
+      expect(setTimeout).toHaveBeenCalled();
+    });
+
+    it('queues itself when observe queue nonempty', function() {
+      ManageIQ.observe.processing = false;
+      ManageIQ.observe.queue = [{}];
+
+      spyOn(window, 'setTimeout');
+      miqJqueryRequest('/foo');
+
+      expect(setTimeout).toHaveBeenCalled();
+    });
+
+    it('doesn\'t try to queue when passed options.observe', function() {
+      ManageIQ.observe.processing = true;
+      ManageIQ.observe.queue = [{}];
+
+      spyOn(window, 'setTimeout');
+      miqJqueryRequest('/foo', { observe: true });
+
+      expect(setTimeout).not.toHaveBeenCalled();
+    });
+
+    it('returns a Promise', function() {
+      expect(miqJqueryRequest('/foo')).toEqual(jasmine.any(Promise));
+    });
+  });
+
   describe('miqSelectPickerEvent', function () {
     beforeEach(function () {
       var html = '<input id="miq-select-picker-1" value="bar">';
