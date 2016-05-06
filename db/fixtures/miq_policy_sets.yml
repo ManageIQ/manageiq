@@ -1,0 +1,92 @@
+---
+- MiqPolicySet:
+    name: openscap profile
+    description: OpenSCAP profile
+    set_type: MiqPolicySet
+    guid: 0bf2e43a-1211-11e6-aa9c-02424d459b45
+    read_only: true
+    set_data:
+    mode: control
+    owner_type:
+    owner_id:
+    userid:
+    group_id:
+    MiqPolicy:
+    - name: openscap policy
+      description: OpenSCAP
+      expression:
+      towhat: ContainerImage
+      guid: 14c7b8ee-120f-11e6-aa9c-02424d459b45
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: compliance
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: failure
+        failure_sequence: 1
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_compliance_check
+          description: Container Image Compliance Check
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: compliance_failed
+          description: Mark as Non-Compliant
+          action_type: default
+          options: {}
+      Condition:
+      - name:  if container image has high severity openscap rule results
+        description: Has high severity OpenSCAP rule results
+        modifier: allow
+        expression: !ruby/object:MiqExpression
+          exp:
+            FIND:
+              search:
+                "=":
+                  field: ContainerImage.openscap_rule_results-result
+                  value: fail
+              checkany:
+                "=":
+                  field: ContainerImage.openscap_rule_results-severity
+                  value: High
+          context_type:
+        towhat: ContainerImage
+        file_mtime:
+        guid: 92b1949a-1210-11e6-aa9c-02424d459b45
+        filename:
+        applies_to_exp:
+        miq_policy_id:
+        notes:
+        read_only: true
+    - name: analyse incoming container images
+      description: Analyse incoming container images
+      expression:
+      towhat: ContainerImage
+      guid: e7a270bc-109b-11e6-86ba-02424d459b45
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: failure
+        failure_sequence: 1
+        MiqEventDefinition:
+          name: containerimage_created
+          description: Container Image Discovered
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: container_image_analyze
+          description: Initiate SmartState Analysis for Container Image
+          action_type: default
+          options: {}
+      Condition: []
