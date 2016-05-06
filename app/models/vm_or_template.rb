@@ -1588,22 +1588,7 @@ class VmOrTemplate < ApplicationRecord
   # Hardware Disks/Memory storage methods
   #
 
-  def disk_storage(col)
-    return nil if hardware.nil? || hardware.disks.blank?
-    hardware.disks.inject(0) do |t, d|
-      val = d.send(col)
-      t + (val.nil? ? d.size.to_i : val.to_i)
-    end
-  end
-  protected :disk_storage
-
-  def allocated_disk_storage
-    disk_storage(:size)
-  end
-
-  def used_disk_storage
-    disk_storage(:size_on_disk)
-  end
+  delegate :allocated_disk_storage, :used_disk_storage, :to => :hardware, :allow_nil => true
 
   def provisioned_storage
     allocated_disk_storage.to_i + ram_size_in_bytes
