@@ -1552,7 +1552,7 @@ module VmCommon
   end
 
   # Replace the right cell of the explorer
-  def replace_right_cell(action = nil)
+  def replace_right_cell(action = nil, presenter = nil)
     @explorer = true
     @sb[:action] = action unless action.nil?
     if @sb[:action] || params[:display]
@@ -1597,7 +1597,7 @@ module VmCommon
     end
 
     # Build presenter to render the JS command for the tree update
-    presenter = ExplorerPresenter.new(
+    presenter ||= ExplorerPresenter.new(
       :active_tree => x_active_tree,
       :add_nodes   => add_nodes,         # Update the tree with any new nodes
       :delete_node => @delete_node,      # Remove a new node from the tree
@@ -1721,7 +1721,7 @@ module VmCommon
           ])
         # these subviews use angular, so they need to use a special partial
         # so the form buttons on the outer frame can be updated.
-        elsif %(attach detach live_migrate).include?(@sb[:action])
+        elsif %w(attach detach live_migrate).include?(@sb[:action])
           presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
         elsif action != "retire" && action != "reconfigure_update"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
