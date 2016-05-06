@@ -12,6 +12,7 @@
 #
 src_files:
   - __spec__/helpers/i18n-test.js
+  - assets/phantomjs-polyfill/bind-polyfill
   - assets/application
   - assets/jasmine-jquery
   - assets/angular-mocks

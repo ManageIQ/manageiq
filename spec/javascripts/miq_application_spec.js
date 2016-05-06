@@ -208,8 +208,8 @@ describe('miq_application.js', function() {
 
       expect(miqObserveRequest).toHaveBeenCalledWith('/foo/?miq-select-picker-1=quux', {
         no_encoding: true,
-        beforeSend: undefined,
-        complete: undefined,
+        beforeSend: false,
+        complete: false,
       });
     });
   });
