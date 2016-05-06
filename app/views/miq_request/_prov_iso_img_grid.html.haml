@@ -25,3 +25,5 @@
         %tr{:class => cls, :onclick => "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"}
           %td
             = h(row.name)
+:javascript
+  miqScrollToSelected('prov_iso_img_div')
