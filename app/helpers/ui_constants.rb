@@ -24,7 +24,6 @@ module UiConstants
 
   REPORTS_FOLDER = File.join(Rails.root, "product/reports")
   VIEWS_FOLDER = File.join(Rails.root, "product/views")
-  CHARGEBACK_REPORTS_FOLDER = File.join(Rails.root, "product/chargeback/miq_reports")
   OPS_REPORTS_FOLDER = File.join(Rails.root, "product/ops/miq_reports")
   CHARTS_REPORTS_FOLDER = File.join(Rails.root, "product/charts/miq_reports")
   CHARTS_LAYOUTS_FOLDER = File.join(Rails.root, "product/charts/layouts")
