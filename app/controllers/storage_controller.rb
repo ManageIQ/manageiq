@@ -650,8 +650,6 @@ class StorageController < ApplicationController
   end
 
   def rebuild_toolbars(record_showing, presenter)
-    c_tb = "blank_view_tb"
-
     c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
     h_tb = build_toolbar('x_history_tb')
     v_tb = build_toolbar('x_gtl_view_tb') unless record_showing || (x_active_tree == :storage_pod_tree && x_node == 'root')
