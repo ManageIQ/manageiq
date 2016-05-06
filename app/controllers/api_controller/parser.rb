@@ -112,10 +112,14 @@ class ApiController
     def parse_id(resource, collection)
       return nil if resource.blank?
 
-      href = resource["href"]
-      return href.match(%r{^.*/#{collection}/([0-9]+)$}) && Regexp.last_match(1) if href.present?
+      href_id = href_id(resource["href"], collection)
+      return href_id if href_id.present?
 
       resource["id"].kind_of?(Integer) ? resource["id"] : nil
+    end
+
+    def href_id(href, collection)
+      href.match(%r{^.*/#{collection}/([0-9]+)$}) && Regexp.last_match(1) if href.present?
     end
 
     def resource_can_have_custom_actions(type, cspec = nil)
