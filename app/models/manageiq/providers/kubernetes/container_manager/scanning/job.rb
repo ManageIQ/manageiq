@@ -3,7 +3,7 @@ require 'kubeclient'
 
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   PROVIDER_CLASS = ManageIQ::Providers::Kubernetes::ContainerManager
-  INSPECTOR_NAMESPACE = 'management-infra'
+  INSPECTOR_NAMESPACE_FALLBACK = 'management-infra'
   INSPECTOR_PORT = 8080
   DOCKER_SOCKET = '/var/run/docker.sock'
   SCAN_CATEGORIES = %w(system software)
@@ -42,7 +42,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     ems_configs = VMDB::Config.new('vmdb').config[:ems]
 
     namespace = ems_configs.fetch_path(:ems_kubernetes, :miq_namespace)
-    namespace = INSPECTOR_NAMESPACE if namespace.blank?
+    namespace = INSPECTOR_NAMESPACE_FALLBACK if namespace.blank?
 
     update!(:options => options.merge(
       :ems_id          => image.ext_management_system.id,
@@ -274,7 +274,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   def inspector_admin_secret
     kubeclient = kubernetes_client
     begin
-      inspector_sa = kubeclient.get_service_account(IMAGE_INSPECTOR_SA, INSPECTOR_NAMESPACE)
+      inspector_sa = kubeclient.get_service_account(IMAGE_INSPECTOR_SA, options[:pod_namespace])
       # TODO: support multiple imagePullSecrets. This depends on image-inspector support
       return inspector_sa.try(:imagePullSecrets).to_a[0].try(:name)
     rescue KubeException => e
