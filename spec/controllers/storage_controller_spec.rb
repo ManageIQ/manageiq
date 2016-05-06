@@ -96,12 +96,11 @@ describe StorageController do
 
     context '#explorer' do
       before do
-        session[:settings] = {:views => {}, :perpage => {:list => 10}}
+        session[:settings] = {:views => {}, :perpage => {:list => 5}}
         EvmSpecHelper.create_guid_miq_server_zone
       end
 
       it 'can render the explorer' do
-        storage
         session[:sb] = {:active_accord => :storage_accord}
         seed_session_trees('storage', :storage_tree, 'root')
         get :explorer
@@ -126,6 +125,18 @@ describe StorageController do
         seed_session_trees('storage', :storage_pod_tree, 'root')
         get :explorer
         expect(response.body).to include('test_storage_cluster1')
+      end
+
+      it 'can render the second page of datastores' do
+        7.times do |i|
+          FactoryGirl.create(:storage, :name => 'test_storage' % i)
+        end
+        session[:sb] = {:active_accord => :storage_accord}
+        seed_session_trees('storage', :storage_tree, 'root')
+        allow(controller).to receive(:current_page).and_return(2)
+        get :explorer, :params => {:page => '2'}
+        expect(response.status).to eq(200)
+        expect(response.body).to include("<li>\n<span>\nShowing 6-7 of 7 items\n<input name='limitstart' type='hidden' value='0'>\n</span>\n</li>")
       end
     end
 
