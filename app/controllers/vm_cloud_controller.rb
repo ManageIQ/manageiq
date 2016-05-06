@@ -96,18 +96,24 @@ class VmCloudController < ApplicationController
   def live_migrate
     assert_privileges("instance_live_migrate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
-    drop_breadcrumb(
-      :name => _("Live Migrate Instance '%{name}'") % {:name => @record.name},
-      :url  => "/vm_cloud/live_migrate"
-    ) unless @explorer
-
-    @edit = {}
-    @edit[:key] = "vm_migrate__#{@record.id}"
-    @edit[:vm_id] = @record.id
-    @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
-    session[:edit] = @edit
-    @in_a_form = true
-    @refresh_partial = "vm_common/live_migrate"
+    if @record.is_available(:live_migrate)
+      drop_breadcrumb(
+        :name => _("Live Migrate Instance '%{name}'") % {:name => @record.name},
+        :url  => "/vm_cloud/live_migrate"
+      ) unless @explorer
+      @edit = {}
+      @edit[:key] = "vm_migrate__#{@record.id}"
+      @edit[:vm_id] = @record.id
+      @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
+      session[:edit] = @edit
+      @in_a_form = true
+      @refresh_partial = "vm_common/live_migrate"
+    else
+      add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
+        :instance => ui_lookup(:table => 'vm_cloud'),
+        :name     => @record.name,
+        :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
+    end
   end
   alias_method :instance_live_migrate, :live_migrate
 
