@@ -81,94 +81,96 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
     before do
       @ems    = FactoryGirl.create(:ems_vmware)
       @host1  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
+      @host2  = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
       @src_vm = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
-      allow(Rbac).to receive(:search) do |hash|
-        [Array.wrap(hash[:targets])]
-      end
-      allow_any_instance_of(VmOrTemplate).to receive(:archived?).with(no_args).and_return(false)
-      allow_any_instance_of(VmOrTemplate).to receive(:orphaned?).with(no_args).and_return(false)
       stub_dialog(:get_dialogs)
       workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id)
       workflow.instance_variable_set(:@target_resource, nil)
     end
 
     context 'vlans' do
+      let(:s11) { FactoryGirl.create(:switch, :name => "A") }
+      let(:s12) { FactoryGirl.create(:switch, :name => "B") }
+      let(:s13) { FactoryGirl.create(:switch, :name => "C") }
+      let(:s14) { FactoryGirl.create(:switch, :name => "DVS14", :shared => true) }
+      let(:s15) { FactoryGirl.create(:switch, :name => "DVS15", :shared => true) }
+      let(:s21) { FactoryGirl.create(:switch, :name => "DVS21", :shared => true) }
+
       before do
-        s11 = FactoryGirl.create(:switch, :name => "A")
-        s12 = FactoryGirl.create(:switch, :name => "B")
-        s13 = FactoryGirl.create(:switch, :name => "C")
-        @src_vm.host.switches = [s11, s12, s13]
-        @lan11 = FactoryGirl.create(:lan, :name => "lan_A", :switch_id => s11.id)
-        @lan12 = FactoryGirl.create(:lan, :name => "lan_B", :switch_id => s12.id)
-        @lan13 = FactoryGirl.create(:lan, :name => "lan_C", :switch_id => s13.id)
+        @lan11 = FactoryGirl.create(:lan, :name => "lan_A",   :switch_id => s11.id)
+        @lan12 = FactoryGirl.create(:lan, :name => "lan_B",   :switch_id => s12.id)
+        @lan13 = FactoryGirl.create(:lan, :name => "lan_C",   :switch_id => s13.id)
+        @lan14 = FactoryGirl.create(:lan, :name => "lan_DVS", :switch_id => s14.id)
+        @lan15 = FactoryGirl.create(:lan, :name => "lan_DVS", :switch_id => s15.id)
+        @lan21 = FactoryGirl.create(:lan, :name => "lan_DVS", :switch_id => s21.id)
       end
 
       it '#allowed_vlans' do
+        @host1.switches = [s11, s12, s13]
         allow(workflow).to receive(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(@host1)])
+        vlans, _hosts = workflow.allowed_vlans(:vlans => true, :dvs => true)
+        lan_keys   = [@lan11.name, @lan13.name, @lan12.name]
+        lan_values = [@lan11.name, @lan13.name, @lan12.name]
+        expect(vlans.keys).to match_array(lan_keys)
+        expect(vlans.values).to match_array(lan_values)
+      end
+
+      it 'concatenates dvswitches of the same portgroup name' do
+        @host1.switches = [s11, s12, s13, s14, s15]
+        allow(workflow).to receive(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(@host1)])
+        vlans, _hosts = workflow.allowed_vlans(:vlans => true, :dvs => true)
+        lan_keys = [@lan11.name, @lan13.name, @lan12.name, "dvs_#{@lan14.name}"]
+        switches = [s14.name, s15.name].sort.join('/')
+        lan_values = [@lan11.name, @lan13.name, @lan12.name, "#{@lan14.name} (#{switches})"]
+        expect(vlans.keys).to match_array(lan_keys)
+        expect(vlans.values).to match_array(lan_values)
+      end
+
+      it 'concatenates dvswitches of the same portgroup name from different hosts' do
+        @host1.switches = [s11, s12, s13, s14, s15]
+        @host2.switches = [s15, s21]
+        allow(workflow).to receive(:allowed_hosts).with(no_args).and_return(
+          [workflow.host_to_hash_struct(@host1), workflow.host_to_hash_struct(@host2)]
+        )
+        vlans, _hosts = workflow.allowed_vlans(:vlans => true, :dvs => true)
+        lan_keys = [@lan11.name, @lan13.name, @lan12.name, "dvs_#{@lan14.name}"]
+        switches = [s14.name, s15.name, s21.name].sort.join('/')
+        lan_values = [@lan11.name, @lan13.name, @lan12.name, "#{@lan14.name} (#{switches})"]
+        expect(vlans.keys).to match_array(lan_keys)
+        expect(vlans.values).to match_array(lan_values)
+      end
+
+      it 'excludes dvs if told so' do
+        @host1.switches = [s11, s12, s13, s14, s15]
+        @host2.switches = [s15, s21]
+        allow(workflow).to receive(:allowed_hosts).with(no_args).and_return(
+          [workflow.host_to_hash_struct(@host1), workflow.host_to_hash_struct(@host2)]
+        )
         vlans, _hosts = workflow.allowed_vlans(:vlans => true, :dvs => false)
         lan_keys = [@lan11.name, @lan13.name, @lan12.name]
         expect(vlans.keys).to match_array(lan_keys)
         expect(vlans.values).to match_array(lan_keys)
       end
-    end
 
-    context 'dvs' do
-      before do
-        @host1_dvs = {'pg1' => ['switch1'], 'pg2' => ['switch2']}
-        @host1_dvs_hash = {'dvs_pg1' => 'pg1 (switch1)',
-                           'dvs_pg2' => 'pg2 (switch2)'}
-        allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:connect)
-        allow(workflow).to receive(:get_host_dvs).with(@host1, nil).and_return(@host1_dvs)
+      it 'concatenates dvswitches of the same portgroup name from different hosts when autoplacement is on' do
+        @host1.switches = [s11, s12, s13, s14, s15]
+        @host2.switches = [s21]
+        workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id, :placement_auto => true)
+        vlans, _hosts = workflow.allowed_vlans(:vlans => true, :dvs => true)
+        lan_keys = [@lan11.name, @lan13.name, @lan12.name, "dvs_#{@lan14.name}"]
+        switches = [s14.name, s15.name, s21.name].sort.join('/')
+        lan_values = [@lan11.name, @lan13.name, @lan12.name, "#{@lan14.name} (#{switches})"]
+        expect(vlans.keys).to match_array(lan_keys)
+        expect(vlans.values).to match_array(lan_values)
       end
 
-      it '#allowed_dvs single host' do
-        workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
-                                      :host_id => @host1.id)
-        workflow.instance_variable_set(:@target_resource,
-                                       :host    => workflow.host_to_hash_struct(@host1),
-                                       :ems     => workflow.ci_to_hash_struct(@ems),
-                                       :host_id => @host1.id)
-        dvs = workflow.allowed_dvs({}, nil)
-        expect(dvs).to eql(@host1_dvs_hash)
-      end
-
-      context "#allowed_dvs" do
-        before do
-          @host2 = FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
-          @host2_dvs = {'pg1' => ['switch21'], 'pg2' => ['switch2'], 'pg3' => ['switch23']}
-          allow(workflow).to receive(:get_host_dvs).with(@host2, nil).and_return(@host2_dvs)
-          workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
-                                        :placement_auto => true)
-
-          @combined_dvs_hash = {'dvs_pg1' => 'pg1 (switch1/switch21)',
-                                'dvs_pg2' => 'pg2 (switch2)',
-                                'dvs_pg3' => 'pg3 (switch23)'}
-        end
-
-        it 'multiple hosts auto placement' do
-          dvs = workflow.allowed_dvs({}, nil)
-          expect(dvs).to eql(@combined_dvs_hash)
-        end
-
-        it 'cached filtering' do
-          # Cache the dvs for 2 hosts
-          workflow.allowed_dvs({}, nil)
-
-          workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id,
-                                        :placement_auto => false)
-          workflow.instance_variable_set(:@target_resource,
-                                         :host    => workflow.host_to_hash_struct(@host1),
-                                         :ems     => workflow.ci_to_hash_struct(@ems),
-                                         :host_id => @host1.id)
-          dvs = workflow.allowed_dvs({}, nil)
-          expect(dvs).to eql(@host1_dvs_hash)
-        end
-
-        it 'called by available_vlans_and_hosts' do
-          allow(workflow).to receive(:allowed_dvs).and_return(@combined_dvs_hash)
-          expect(workflow).to receive(:allowed_dvs).with(anything, match_array([@host1, @host2]))
-          workflow.available_vlans_and_hosts
-        end
+      it 'returns no vlans when autoplacement is off and no allowed_hosts' do
+        @host1.switches = [s11, s12, s13, s14, s15]
+        @host2.switches = [s21]
+        workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => @src_vm.id, :placement_auto => false)
+        vlans, _hosts = workflow.allowed_vlans(:vlans => true, :dvs => true)
+        expect(vlans.keys).to match_array([])
+        expect(vlans.values).to match_array([])
       end
     end
   end
