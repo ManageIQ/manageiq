@@ -13,20 +13,23 @@
           %label.col-md-2.control-label{:valign => "top"}
             = _(workflow.get_field(key, dialog)[:description])
           .col-md-8
-            - if workflow.get_field(key, dialog)[:data_type] == :string
-              %input.form-control{:type              => "text",
-                                  :required          => workflow.get_field(key, dialog)[:required],
-                                  :value             => options[:"#{key}_#{counter}"],
-                                  :id                => "volumes__#{key}_#{counter}",
-                                  :name              => "volumes__#{key}_#{counter}",
-                                  "data-miq_observe" => {:interval => ".5", :url => url}.to_json}
-            - elsif workflow.get_field(key, dialog)[:data_type] == :boolean
-              %input{:checked           => options[:"volume_#{key}_#{counter}"],
-                     :type              => "checkbox",
-                     :id                => "volumes__#{key}_#{counter}",
-                     :required          => workflow.get_field(key, dialog)[:required],
-                     :name              => "volumes__#{key}_#{counter}",
-                     "data-miq_observe" => {:interval => ".5", :url => url}.to_json}
+            - if workflow.get_field(key, dialog)[:display] == :edit
+              - if workflow.get_field(key, dialog)[:data_type] == :string
+                %input.form-control{:type              => "text",
+                                    :required          => workflow.get_field(key, dialog)[:required],
+                                    :value             => options[:"#{key}_#{counter}"],
+                                    :id                => "volumes__#{key}_#{counter}",
+                                    :name              => "volumes__#{key}_#{counter}",
+                                    "data-miq_observe" => {:interval => ".5", :url => url}.to_json}
+              - elsif workflow.get_field(key, dialog)[:data_type] == :boolean
+                %input{:checked           => options[:"volume_#{key}_#{counter}"],
+                       :type              => "checkbox",
+                       :id                => "volumes__#{key}_#{counter}",
+                       :required          => workflow.get_field(key, dialog)[:required],
+                       :name              => "volumes__#{key}_#{counter}",
+                       "data-miq_observe" => {:interval => ".5", :url => url}.to_json}
+            - else
+              = options[:"volume_#{key}_#{counter}"]
           .col-md-2
       %hr
       %div
