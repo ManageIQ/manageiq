@@ -17,6 +17,8 @@ module ManageIQ::Providers
     has_many :container_build_pods, :foreign_key => :ems_id, :dependent => :destroy
     has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
 
+    after_create :add_default_policies
+
     # required by aggregate_hardware
     def all_computer_system_ids
       MiqPreloader.preload(container_nodes, :computer_system)
@@ -36,6 +38,11 @@ module ManageIQ::Providers
     # enables overide of ChartsLayoutService#find_chart_path
     def chart_layout_path
       "ManageIQ_Providers_ContainerManager"
+    end
+
+    def add_default_policies
+      miq_policy_set = MiqPolicySet.find_by(:name => "openscap profile")
+      add_policy(miq_policy_set) unless miq_policy_set.nil?
     end
   end
 end
