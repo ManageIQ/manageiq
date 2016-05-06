@@ -31,6 +31,24 @@
   - ems_network
   - ems_cluster
   - ems_infra
+  - container_dashboard
+  - ems_container
+  - container_project
+  - container_route
+  - container_service
+  - container_replicator
+  - container_group
+  - containers
+  - container_node
+  - persistent_volume
+  - container_build
+  - container_image_registry
+  - container_image
+  - container_topology
+  - ems_middleware
+  - middleware_server
+  - middleware_deployment
+  - middleware_topology
   - host
   - job_all_smartproxy
   - job_my_smartproxy
