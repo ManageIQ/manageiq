@@ -95,6 +95,15 @@ module MiqReport::Formatting
     end
 
     options[:column] = col
+
+    # Chargeback Reports: Add the selected currency in the assigned rate to options
+    if db.to_s == "ChargebackVm" || db.to_s == "ChargebackContainerProject"
+      compute_selected_rate = ChargebackRate.get_assignments(:compute)[0]
+      storage_selected_rate = ChargebackRate.get_assignments(:storage)[0]
+      selected_rate = compute_selected_rate.nil? ? storage_selected_rate : compute_selected_rate
+      options[:unit] = selected_rate[:cb_rate].chargeback_rate_details[0].detail_currency.symbol unless selected_rate.nil?
+    end
+
     format.merge!(options) if format # Merge additional options that were passed in as overrides
     value = apply_format_function(value, format) if format && !format[:function].nil?
 
@@ -134,6 +143,7 @@ module MiqReport::Formatting
     helper_options = {}
     helper_options[:delimiter] = options[:delimiter] if options.key?(:delimiter)
     helper_options[:separator] = options[:separator] if options.key?(:separator)
+    helper_options[:unit] = options [:unit] if options.key?(:unit)
     val = apply_format_precision(val, options[:precision])
     val = ApplicationController.helpers.number_to_currency(val, helper_options)
     apply_prefix_and_suffix(val, options)
