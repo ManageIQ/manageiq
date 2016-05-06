@@ -1,12 +1,28 @@
 RSpec.describe "service orders API" do
   it "can list all service orders" do
-    service_order = FactoryGirl.create(:service_order)
+    service_order = FactoryGirl.create(:shopping_cart, :user => @user)
     api_basic_authorize collection_action_identifier(:service_orders, :read, :get)
 
     run_get service_orders_url
 
     expect_request_success
     expect_result_resources_to_include_hrefs("resources", [service_orders_url(service_order.id)])
+  end
+
+  it "won't show another user's service orders" do
+    shopping_cart_for_user = FactoryGirl.create(:shopping_cart, :user => @user)
+    _shopping_cart_for_some_other_user = FactoryGirl.create(:shopping_cart)
+    api_basic_authorize collection_action_identifier(:service_orders, :read, :get)
+
+    run_get service_orders_url
+
+    expected = {
+      "count"     => 2,
+      "subcount"  => 1,
+      "resources" => [{"href" => a_string_matching(service_orders_url(shopping_cart_for_user.id))}]
+    }
+    expect(response).to have_http_status(:ok)
+    expect(response_hash).to include(expected)
   end
 
   it "can create a service order" do
@@ -31,7 +47,7 @@ RSpec.describe "service orders API" do
   end
 
   it "can read a service order" do
-    service_order = FactoryGirl.create(:service_order)
+    service_order = FactoryGirl.create(:service_order, :user => @user)
     api_basic_authorize action_identifier(:service_orders, :read, :resource_actions, :get)
 
     run_get service_orders_url(service_order.id)
@@ -41,7 +57,7 @@ RSpec.describe "service orders API" do
   end
 
   it "can update a service order" do
-    service_order = FactoryGirl.create(:service_order, :name => "old name")
+    service_order = FactoryGirl.create(:service_order, :name => "old name", :user => @user)
     api_basic_authorize action_identifier(:service_orders, :edit)
 
     run_post service_orders_url(service_order.id), :action => "edit", :resource => {:name => "new name"}
@@ -51,8 +67,8 @@ RSpec.describe "service orders API" do
   end
 
   it "can update multiple service orders" do
-    service_order_1 = FactoryGirl.create(:service_order, :name => "old name 1")
-    service_order_2 = FactoryGirl.create(:service_order, :name => "old name 2")
+    service_order_1 = FactoryGirl.create(:service_order, :user => @user, :name => "old name 1")
+    service_order_2 = FactoryGirl.create(:service_order, :user => @user, :name => "old name 2")
     api_basic_authorize collection_action_identifier(:service_orders, :edit)
 
     run_post(service_orders_url,
@@ -64,7 +80,7 @@ RSpec.describe "service orders API" do
   end
 
   it "can delete a service order" do
-    service_order = FactoryGirl.create(:service_order)
+    service_order = FactoryGirl.create(:service_order, :user => @user)
     api_basic_authorize action_identifier(:service_orders, :delete, :resource_actions, :delete)
 
     expect do
@@ -74,7 +90,7 @@ RSpec.describe "service orders API" do
   end
 
   it "can delete a service order through POST" do
-    service_order = FactoryGirl.create(:service_order)
+    service_order = FactoryGirl.create(:service_order, :user => @user)
     api_basic_authorize action_identifier(:service_orders, :delete)
 
     expect do
@@ -84,8 +100,8 @@ RSpec.describe "service orders API" do
   end
 
   it "can delete multiple service orders" do
-    service_order_1 = FactoryGirl.create(:service_order, :name => "old name")
-    service_order_2 = FactoryGirl.create(:service_order, :name => "old name")
+    service_order_1 = FactoryGirl.create(:service_order, :user => @user, :name => "old name")
+    service_order_2 = FactoryGirl.create(:service_order, :user => @user, :name => "old name")
     api_basic_authorize collection_action_identifier(:service_orders, :delete)
 
     expect do
