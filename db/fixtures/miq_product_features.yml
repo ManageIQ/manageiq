@@ -3276,124 +3276,107 @@
       :feature_type: admin
       :identifier: ems_middleware_new
 
-  # Middleware Topology
-  - :name: Middleware Topology
-    :description: Middleware Topology
-    :feature_type: node
-    :identifier: middleware_topology
-    :children:
-      - :name: View
-        :description: View Middleware Topology
-        :feature_type: view
-        :identifier: middleware_topology_view
-
-  # MiddlewareServer
-  - :name: Middleware Server
-    :description: Everything under Middleware Servers
-    :feature_type: node
-    :identifier: middleware_server
-    :children:
+# Middleware Topology
+- :name: Middleware Topology
+  :description: Middleware Topology
+  :feature_type: node
+  :identifier: middleware_topology
+  :children:
     - :name: View
-      :description: View Middleware Servers
+      :description: View Middleware Topology
       :feature_type: view
-      :identifier: middleware_server_view
-      :children:
-      - :name: List
-        :description: Display Lists of Middleware Servers
-        :feature_type: view
-        :identifier: middleware_server_show_list
-      - :name: Show
-        :description: Display Individual Middleware Servers
-        :feature_type: view
-        :identifier: middleware_server_show
-      - :name: Timeline
-        :description: Display Timelines for Middleware Servers
-        :feature_type: view
-        :identifier: middleware_server_timeline
-      - :name: Utilization
-        :description: Show Capacity & Utilization data of Middleware Servers
-        :feature_type: view
-        :identifier: middleware_server_perf
-    - :name: Modify
-      :description: Modify Middleware Servers
-      :feature_type: admin
-      :identifier: middleware_server_admin
-      :children:
-      - :name: Remove
-        :description: Remove Middleware Servers from the VMDB
-        :feature_type: admin
-        :identifier: middleware_server_delete
-      - :name: Edit
-        :description: Edit a Middleware Server
-        :feature_type: admin
-        :identifier: middleware_server_edit
-      - :name: Add
-        :description: Add a Middleware Server
-        :feature_type: admin
-        :identifier: middleware_server_new
-    - :name: Operate
-      :description: Perform Operations on Middleware Servers
-      :feature_type: control
-      :identifier: middleware_server_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Middleware Servers
-        :feature_type: control
-        :identifier: middleware_server_tag
-      - :name: Reload middleware server
-        :description: Trigger reload operation for Middleware Server
-        :feature_type: admin
-        :identifier: middleware_server_reload
-      - :name: Stop middleware server
-        :description: Stop Middleware Server
-        :feature_type: admin
-        :identifier: middleware_server_stop
+      :identifier: middleware_topology_view
 
-  # MiddlewareDeployment
-  - :name: Middleware Deployment
-    :description: Everything under Middleware Deployments
-    :feature_type: node
-    :identifier: middleware_deployment
+# MiddlewareServer
+- :name: Middleware Server
+  :description: Everything under Middleware Servers
+  :feature_type: node
+  :identifier: middleware_server
+  :children:
+  - :name: View
+    :description: View Middleware Servers
+    :feature_type: view
+    :identifier: middleware_server_view
     :children:
-    - :name: View
-      :description: View Middleware Deployments
+    - :name: List
+      :description: Display Lists of Middleware Servers
       :feature_type: view
-      :identifier: middleware_deployment_view
-      :children:
-      - :name: List
-        :description: Display Lists of Middleware Deployments
-        :feature_type: view
-        :identifier: middleware_deployment_show_list
-      - :name: Show
-        :description: Display Individual Middleware Deployments
-        :feature_type: view
-        :identifier: middleware_deployment_show
-    - :name: Modify
-      :description: Modify Middleware Deployments
-      :feature_type: admin
-      :identifier: middleware_deployment_admin
-      :children:
-      - :name: Remove
-        :description: Remove Middleware Deployments from the VMDB
-        :feature_type: admin
-        :identifier: middleware_deployment_delete
-      - :name: Edit
-        :description: Edit a Middleware Deployment
-        :feature_type: admin
-        :identifier: middleware_deployment_edit
-      - :name: Add
-        :description: Add a Middleware Deployment
-        :feature_type: admin
-        :identifier: middleware_deployment_new
-    - :name: Operate
-      :description: Perform Operations on Middleware Deployments
+      :identifier: middleware_server_show_list
+    - :name: Show
+      :description: Display Individual Middleware Servers
+      :feature_type: view
+      :identifier: middleware_server_show
+    - :name: Timeline
+      :description: Display Timelines for Middleware Servers
+      :feature_type: view
+      :identifier: middleware_server_timeline
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Middleware Servers
+      :feature_type: view
+      :identifier: middleware_server_perf
+  - :name: Operate
+    :description: Perform Operations on Middleware Servers
+    :feature_type: control
+    :identifier: middleware_server_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Servers
       :feature_type: control
-      :identifier: middleware_deployment_control
-      :children:
-      - :name: Edit Tags
-        :description: Edit Tags of Middleware Deployments
-        :feature_type: control
-        :identifier: middleware_deployment_tag
+      :identifier: middleware_server_tag
+    - :name: Reload middleware server
+      :description: Trigger reload operation for Middleware Server
+      :feature_type: admin
+      :identifier: middleware_server_reload
+    - :name: Stop middleware server
+      :description: Stop Middleware Server
+      :feature_type: admin
+      :identifier: middleware_server_stop
+
+# MiddlewareDeployment
+- :name: Middleware Deployment
+  :description: Everything under Middleware Deployments
+  :feature_type: node
+  :identifier: middleware_deployment
+  :children:
+  - :name: View
+    :description: View Middleware Deployments
+    :feature_type: view
+    :identifier: middleware_deployment_view
+    :children:
+    - :name: List
+      :description: Display Lists of Middleware Deployments
+      :feature_type: view
+      :identifier: middleware_deployment_show_list
+    - :name: Show
+      :description: Display Individual Middleware Deployments
+      :feature_type: view
+      :identifier: middleware_deployment_show
+  - :name: Modify
+    :description: Modify Middleware Deployments
+    :feature_type: admin
+    :identifier: middleware_deployment_admin
+    :children:
+    - :name: Remove
+      :description: Remove Middleware Deployments from the VMDB
+      :feature_type: admin
+      :identifier: middleware_deployment_delete
+    - :name: Edit
+      :description: Edit a Middleware Deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_edit
+    - :name: Add
+      :description: Add a Middleware Deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_new
+  - :name: Operate
+    :description: Perform Operations on Middleware Deployments
+    :feature_type: control
+    :identifier: middleware_deployment_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Deployments
+      :feature_type: control
+      :identifier: middleware_deployment_tag
 
 # EmsNetwork
 - :name: Network Providers
@@ -4164,27 +4147,27 @@
       :feature_type: control
       :identifier: container_tag
 
-  # Container Topology
-  - :name: Containers Topology
-    :description: Containers Topology
-    :feature_type: node
-    :identifier: container_topology
-    :children:
-      - :name: View
-        :description: View Containers Topology
-        :feature_type: view
-        :identifier: container_topology_view
-
-  # Container Dashboard
-  - :name: Containers Dashboard
-    :description: Containers Dashboard
-    :feature_type: node
-    :identifier: container_dashboard
-    :children:
+# Container Topology
+- :name: Containers Topology
+  :description: Containers Topology
+  :feature_type: node
+  :identifier: container_topology
+  :children:
     - :name: View
-      :description: View Containers Dashboard
+      :description: View Containers Topology
       :feature_type: view
-      :identifier: container_dashboard_view
+      :identifier: container_topology_view
+
+# Container Dashboard
+- :name: Containers Dashboard
+  :description: Containers Dashboard
+  :feature_type: node
+  :identifier: container_dashboard
+  :children:
+  - :name: View
+    :description: View Containers Dashboard
+    :feature_type: view
+    :identifier: container_dashboard_view
 
 # Foreman
 - :name: Configuration Management
