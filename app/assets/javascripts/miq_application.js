@@ -1262,7 +1262,7 @@ function miqObserveRequest(url, options) {
 }
 
 function miqJqueryRequest(url, options) {
-  if ((ManageIQ.observe.processing || ManageIQ.observe.queue.length) && ! options.observe) {
+  if ((ManageIQ.observe.processing || ManageIQ.observe.queue.length) && (!options || !options.observe)) {
     console.debug('Postponing miqJqueryRequest - waiting for the observe queue to empty first');
 
     return new Promise(function(resolve, reject) {
