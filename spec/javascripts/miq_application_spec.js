@@ -212,6 +212,94 @@ describe('miq_application.js', function() {
     });
   });
 
+  describe('miqProcessObserveQueue', function() {
+    it('queues itself when already processing', function() {
+      spyOn(window, 'setTimeout');
+
+      ManageIQ.observe.processing = true;
+      ManageIQ.observe.queue = [{}];
+
+      miqProcessObserveQueue();
+
+      expect(setTimeout).toHaveBeenCalled();
+    });
+
+    context('with nonempty queue', function() {
+      var obj = {};
+
+      beforeEach(function() {
+        spyOn(window, 'miqJqueryRequest').and.callFake(function() {
+          return { then: function(a, b) { /* nope */ } };
+        });
+
+        ManageIQ.observe.processing = false;
+
+        ManageIQ.observe.queue = [{
+          url: '/foo',
+          options: obj,
+        }];
+      });
+
+      it('sets processing', function() {
+        miqProcessObserveQueue();
+        expect(ManageIQ.observe.processing).toBe(true);
+      });
+
+      it('calls miqJqueryRequest', function() {
+        miqProcessObserveQueue();
+        expect(miqJqueryRequest).toHaveBeenCalledWith('/foo', obj);
+      });
+    });
+
+    var deferred = { resolve: function() {} , reject: function() {} };
+
+    context('on success', function() {
+      beforeEach(function() {
+        ManageIQ.observe.processing = false;
+        ManageIQ.observe.queue = [{ deferred: deferred }];
+
+        spyOn(window, 'miqJqueryRequest').and.callFake(function() {
+          return { then: function(ok, err) { ok() } };
+        });
+      });
+
+      it('unsets processing', function() {
+        miqProcessObserveQueue();
+        expect(ManageIQ.observe.processing).toBe(false);
+      });
+
+      it('resolves the promise', function() {
+        spyOn(deferred, 'resolve');
+
+        miqProcessObserveQueue();
+        expect(deferred.resolve).toHaveBeenCalled();
+      });
+    });
+
+    context('on failure', function() {
+      beforeEach(function() {
+        ManageIQ.observe.processing = false;
+        ManageIQ.observe.queue = [{ deferred: deferred }];
+
+        spyOn(window, 'miqJqueryRequest').and.callFake(function() {
+          return { then: function(ok, err) { err() } };
+        });
+      });
+
+      it('unsets processing', function() {
+        miqProcessObserveQueue();
+        expect(ManageIQ.observe.processing).toBe(false);
+      });
+
+      it('rejects the promise', function() {
+        spyOn(deferred, 'reject');
+
+        miqProcessObserveQueue();
+        expect(deferred.reject).toHaveBeenCalled();
+      });
+    });
+  });
+
   describe('miqSelectPickerEvent', function () {
     beforeEach(function () {
       var html = '<input id="miq-select-picker-1" value="bar">';
