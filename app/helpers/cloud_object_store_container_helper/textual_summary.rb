@@ -20,7 +20,7 @@ module CloudObjectStoreContainerHelper::TextualSummary
   end
 
   def textual_size
-    {:label => "Size", :value => number_to_human_size(@record.bytes, :precision => 2)}
+    {:label => _("Size"), :value => number_to_human_size(@record.bytes, :precision => 2)}
   end
 
   def textual_ems
@@ -39,7 +39,7 @@ module CloudObjectStoreContainerHelper::TextualSummary
   end
 
   def textual_cloud_object_store_objects
-    label = ui_lookup(:tables => "cloud_objects")
+    label = ui_lookup(:tables => "cloud_object_store_object")
     num = @record.number_of(:cloud_object_store_objects)
     h = {:label => label, :image => "cloud_object_store_object", :value => num}
     if num > 0 && role_allows(:feature => "cloud_object_store_object_show_list")

@@ -49,12 +49,12 @@
           = li_link(:count => @record.number_of(:vms),
             :record        => @record,
             :display       => 'instances',
-            :tables        => 'instances')
+            :tables        => 'vm_cloud')
         - if role_allows(:feature => "miq_template_show_list")
           = li_link(:count => @record.number_of(:miq_templates),
             :record        => @record,
             :display       => 'images',
-            :tables        => 'images')
+            :tables        => 'template_cloud')
         - if role_allows(:feature => "orchestration_stack_show_list")
           = li_link(:count => @record.number_of(:orchestration_stacks),
             :record        => @record,
@@ -64,4 +64,4 @@
           = li_link(:count => @record.number_of(:cloud_object_store_containers),
             :record        => @record,
             :display       => 'cloud_object_store_containers',
-            :tables        => 'cloud_object_stores')
+            :tables        => 'cloud_object_store_container')

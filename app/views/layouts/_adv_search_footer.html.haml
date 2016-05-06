@@ -60,7 +60,7 @@
                 "data-method" => :post,
                 :title        => t)
     - if @edit[@expkey][:exp_table].flatten.first == "???"
-      = button_tag("Reset", :class => "btn btn-default btn-disabled")
+      = button_tag(_("Reset"), :class => "btn btn-default btn-disabled")
     - else
       = link_to(_("Reset"),
                 {:action => "adv_search_button",
