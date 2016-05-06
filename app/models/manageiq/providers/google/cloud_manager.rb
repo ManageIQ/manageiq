@@ -5,6 +5,8 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :Flavor
   require_nested :Provision
   require_nested :ProvisionWorkflow
+  require_nested :MetricsCapture
+  require_nested :MetricsCollectorWorker
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
