@@ -56,6 +56,27 @@ RSpec.describe "service orders API" do
     expect_request_success
   end
 
+  it "can show the shopping cart" do
+    shopping_cart = FactoryGirl.create(:shopping_cart, :user => @user)
+    api_basic_authorize action_identifier(:service_orders, :read, :resource_actions, :get)
+
+    run_get service_orders_url("cart")
+
+    expect(response).to have_http_status(:ok)
+    expect(response_hash).to include("id"   => shopping_cart.id,
+                                     "href" => a_string_matching(service_orders_url(shopping_cart.id)))
+  end
+
+  it "returns an empty response when there is no shopping cart" do
+    api_basic_authorize action_identifier(:service_orders, :read, :resource_actions, :get)
+
+    run_get service_orders_url("cart")
+
+    expect(response).to have_http_status(:not_found)
+    expect(response_hash).to include("error" => a_hash_including("kind"    => "not_found",
+                                                                 "message" => /Couldn't find ServiceOrder/))
+  end
+
   it "can update a service order" do
     service_order = FactoryGirl.create(:service_order, :name => "old name", :user => @user)
     api_basic_authorize action_identifier(:service_orders, :edit)
