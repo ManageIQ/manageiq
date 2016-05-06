@@ -46,6 +46,17 @@ RSpec.describe "service orders API" do
     expect_request_success
   end
 
+  specify "a service order cannot be created in the 'ordered' state" do
+    api_basic_authorize collection_action_identifier(:service_orders, :create)
+
+    expect do
+      run_post(service_orders_url, :name => "service order", :state => ServiceOrder::STATE_ORDERED)
+    end.not_to change(ServiceOrder, :count)
+
+    expect(response).to have_http_status(:bad_request)
+    expect(response_hash).to include("error" => a_hash_including("message" => /can't create an ordered service order/i))
+  end
+
   it "can read a service order" do
     service_order = FactoryGirl.create(:service_order, :user => @user)
     api_basic_authorize action_identifier(:service_orders, :read, :resource_actions, :get)
