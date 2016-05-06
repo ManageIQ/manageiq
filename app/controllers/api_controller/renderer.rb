@@ -195,6 +195,8 @@ class ApiController
           klass.all
         end
 
+      res = res.where(public_send("#{type}_search_conditions")) if respond_to?("#{type}_search_conditions")
+
       miq_expression = filter_param(klass)
 
       if miq_expression
