@@ -85,15 +85,20 @@ def set_vm_name(dialog_options_hash, prov)
   log_and_update_message(:info, "Processing set_vm_name", true)
   new_vm_name = dialog_options_hash.fetch(:vm_name, nil) || dialog_options_hash.fetch(:vm_target_name, nil)
   if new_vm_name.blank?
+    set_all_vm_name_attrs(prov, prov.get_option(:vm_target_name))
     log_and_update_message(:info, "Using default vm name: #{prov.get_option(:vm_target_name)}", true)
   else
+    set_all_vm_name_attrs(prov, new_vm_name)
+    log_and_update_message(:info, "Setting vm name to: #{prov.get_option(:vm_target_name)}", true)
+  end
+  log_and_update_message(:info, "Processing set_vm_name...Complete", true)
+end
+
+def set_all_vm_name_attrs(prov, new_vm_name)
     prov.set_option(:vm_target_name, new_vm_name)
     prov.set_option(:vm_target_hostname, new_vm_name)
     prov.set_option(:vm_name, new_vm_name)
     prov.set_option(:linux_host_name, new_vm_name)
-    log_and_update_message(:info, "Setting vm name to: #{prov.get_option(:vm_target_name)}", true)
-  end
-  log_and_update_message(:info, "Processing set_vm_name...Complete", true)
 end
 
 def service_item_dialog_values(dialogs_options_hash)

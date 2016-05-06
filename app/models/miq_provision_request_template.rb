@@ -56,7 +56,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
     resource = template_service_resource.resource
     root_svc = parent_svc
     root_svc = parent_svc.parent if parent_svc && parent_svc.parent
-
+    vm_count = nil
     if template_service_resource
       value = number_of_vms_from_dialog(root_svc, parent_task) if root_svc && parent_task
       vm_count = value.to_i unless value.blank?
