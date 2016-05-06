@@ -85,4 +85,23 @@ describe MiqReport::ImportExport do
       end
     end
   end
+
+  context ".view_yaml_filename" do
+    let(:feature) { MiqProductFeature.find_all_by_identifier("vm_infra_explorer") }
+    let(:user)    { FactoryGirl.create(:user, :features => feature) }
+
+    before do
+      EvmSpecHelper.seed_specific_product_features("vm_infra_explorer", "host_edit")
+    end
+
+    it "should return restricted view yaml for restricted user" do
+      user.current_group.miq_user_role.update_attributes(:settings => {:restrictions => {:vms => :user_or_group}})
+      expect(MiqReport.view_yaml_filename(VmCloud.name, user, {})).to include("Vm__restricted.yaml")
+    end
+
+    it "should return VmCloud view yaml for non-restricted user" do
+      user.current_group.miq_user_role.update_attributes(:settings => {})
+      expect(MiqReport.view_yaml_filename(VmCloud.name, user, {})).to include("ManageIQ_Providers_CloudManager_Vm.yaml")
+    end
+  end
 end

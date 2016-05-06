@@ -2,6 +2,7 @@ module MiqReport::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
+    VIEWS_FOLDER = File.join(Rails.root, "product/views")
     def import_from_hash(report, options = nil)
       raise _("No Report to Import") if report.nil?
 
@@ -47,6 +48,56 @@ module MiqReport::ImportExport
       end
 
       return rep, result
+    end
+
+    # @param db [Class] name of report (typically class name)
+    # @param current_user [User] User for restricted access to reports
+    # @param options [Hash]
+    # @option options :association [String] used for a view suffix
+    # @option options :view_suffix [String] used for a view suffix
+    # @param cache [Hash] cache that holds yaml for the views
+    def load_from_view_options(db, current_user = nil, options = {}, cache = {})
+      filename = MiqReport.view_yaml_filename(db, current_user, options)
+      yaml     = cache[filename] ||= YAML.load_file(filename)
+      view     = MiqReport.new(yaml)
+      view.db  = db if filename.ends_with?("Vm__restricted.yaml")
+      view.extras ||= {}                        # Always add in the extras hash
+      view
+    end
+
+    def view_yaml_filename(db, current_user, options)
+      suffix = options[:association] || options[:view_suffix]
+      db = db.to_s
+
+      role = current_user.try(:miq_user_role)
+      # Special code to build the view file name for users of VM restricted roles
+      if %w(ManageIQ::Providers::CloudManager::Template ManageIQ::Providers::InfraManager::Template
+            ManageIQ::Providers::CloudManager::Vm ManageIQ::Providers::InfraManager::Vm VmOrTemplate).include?(db)
+        if role && role.settings && role.settings.fetch_path(:restrictions, :vms)
+          viewfilerestricted = "#{VIEWS_FOLDER}/Vm__restricted.yaml"
+        end
+      end
+
+      db = db.gsub(/::/, '_')
+
+      role = role.name.split("-").last if role.try(:read_only?)
+
+      # Build the view file name
+      if suffix
+        viewfile = "#{VIEWS_FOLDER}/#{db}-#{suffix}.yaml"
+        viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{suffix}-#{role}.yaml"
+      else
+        viewfile = "#{VIEWS_FOLDER}/#{db}.yaml"
+        viewfilebyrole = "#{VIEWS_FOLDER}/#{db}-#{role}.yaml"
+      end
+
+      if viewfilerestricted && File.exist?(viewfilerestricted)
+        viewfilerestricted
+      elsif File.exist?(viewfilebyrole)
+        viewfilebyrole
+      else
+        viewfile
+      end
     end
   end
 
