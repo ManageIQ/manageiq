@@ -78,7 +78,7 @@ describe ResourceActionWorkflow do
             :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
           )
           response = subject.submit_request
-          expect(response).to eq(:errors => [])
+          expect(response).to include(:errors => [])
         end
       end
 
