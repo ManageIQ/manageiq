@@ -2,6 +2,11 @@ module Vmdb
   module FastGettextHelper
     def self.human_locale(locale)
       # TRANSLATORS: Provide locale name in native language (e.g. English, Deutsch or Português)
+
+      # We lazy load the message catalogs on first use so we need to find another
+      # way to get a human friendly locale besides loading all of the catalogs
+      # to get this "human friendly locale" value.
+      return locale
       human_locale = _("locale_name")
       human_locale = locale if human_locale == "locale_name"
       human_locale
