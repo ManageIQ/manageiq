@@ -2465,6 +2465,10 @@
           :feature_type: admin
           :hidden: false
           :identifier: rbac_tenant_tags_edit
+  - :name: Analytics
+    :description: Analytics Accordion
+    :feature_type: node
+    :identifier: ops_analytics
   - :name: Diagnostics
     :description: Diagnostics Accordion
     :feature_type: node
