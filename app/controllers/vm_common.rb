@@ -1552,7 +1552,7 @@ module VmCommon
   end
 
   # Replace the right cell of the explorer
-  def replace_right_cell(action = nil)
+  def replace_right_cell(action = nil, presenter = nil)
     @explorer = true
     @sb[:action] = action unless action.nil?
     if @sb[:action] || params[:display]
@@ -1597,7 +1597,7 @@ module VmCommon
     end
 
     # Build presenter to render the JS command for the tree update
-    presenter = ExplorerPresenter.new(
+    presenter ||= ExplorerPresenter.new(
       :active_tree => x_active_tree,
       :add_nodes   => add_nodes,         # Update the tree with any new nodes
       :delete_node => @delete_node,      # Remove a new node from the tree
