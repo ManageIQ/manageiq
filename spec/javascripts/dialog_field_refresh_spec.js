@@ -48,14 +48,17 @@ describe('dialogFieldRefresh', function() {
       spyOn($.fn, 'selectpicker');
       spyOn($, 'post').and.callFake(function() {
         var d = $.Deferred();
-        d.resolve("the data");
+        d.resolve({values: {checked_value: 'selectedTest'}});
         return d.promise();
       });
     });
 
     it('calls addOptionsToDropDownList', function() {
       dialogFieldRefresh.refreshDropDownList('abc', 123, 'test');
-      expect(dialogFieldRefresh.addOptionsToDropDownList).toHaveBeenCalledWith("the data", 123);
+      expect(dialogFieldRefresh.addOptionsToDropDownList).toHaveBeenCalledWith(
+        {values: {checked_value: 'selectedTest'}},
+        123
+      );
     });
 
     it('ensures the select picker is refreshed', function() {
@@ -65,7 +68,7 @@ describe('dialogFieldRefresh', function() {
 
     it('sets the value in the select picker', function() {
       dialogFieldRefresh.refreshDropDownList('abc', 123, 'test');
-      expect($.fn.selectpicker).toHaveBeenCalledWith('val', 'test');
+      expect($.fn.selectpicker).toHaveBeenCalledWith('val', 'selectedTest');
     });
 
     it('uses the correct selector', function() {
@@ -73,7 +76,7 @@ describe('dialogFieldRefresh', function() {
       expect($.fn.selectpicker.calls.mostRecent().object.selector).toEqual('#abc');
     });
   });
-  
+
   describe('#initializeDialogSelectPicker', function() {
     var fieldName, selectedValue, url;
 
