@@ -1952,7 +1952,7 @@ module VmCommon
     when "right_size"
       partial = "vm_common/right_size"
       header = _("Right Size Recommendation for %{vm_or_template} \"%{name}\"") %
-        {:vm_or_template => name, :model => ui_lookup(:table => table)}
+        {:vm_or_template => ui_lookup(:table => table), :name => name}
       action = nil
     when "tag"
       partial = "layouts/tagging"
