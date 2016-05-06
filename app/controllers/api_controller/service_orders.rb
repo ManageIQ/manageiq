@@ -2,6 +2,7 @@ class ApiController
   module ServiceOrders
     def create_resource_service_orders(type, id, data)
       raise BadRequestError, "Can't create an ordered service order" if data["state"] == ServiceOrder::STATE_ORDERED
+      data["state"] ||= ServiceOrder::STATE_CART
       create_resource(type, id, data)
     end
 
