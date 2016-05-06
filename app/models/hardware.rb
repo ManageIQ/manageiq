@@ -111,6 +111,22 @@ class Hardware < ApplicationRecord
       t[:disk_capacity]) * -100 + 100)
   end)
 
+  def allocated_disk_storage
+    if disks.loaded?
+      disks.blank? ? nil : disks.inject(0) { |t, d| t + d.size.to_i }
+    else
+      disks.sum('coalesce(size, 0)')
+    end
+  end
+
+  def used_disk_storage
+    if disks.loaded?
+      disks.blank? ? nil : disks.inject(0) { |t, d| t + (d.size_on_disk || d.size).to_i }
+    else
+      disks.sum('coalesce(size_on_disk, size, 0)')
+    end
+  end
+
   def m_controller(_parent, xmlNode, deletes)
     # $log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
     xmlNode.each_element do |e|
