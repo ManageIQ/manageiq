@@ -503,6 +503,11 @@ class StorageController < ApplicationController
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     # FIXME
     @explorer = true
+
+    if params[:action] == 'x_button'&& params[:pressed] == 'storage_tag'
+      tagging
+      return
+    end
     record_showing = leaf_record
 
     trees = {}

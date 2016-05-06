@@ -83,7 +83,12 @@ module ApplicationController::Explorer
         @_params[:id] = (params[:id] ? [params[:id]] : find_checked_items)[0]
       end
       if ['protect', 'tag'].include?(action)
-        send(method, VmOrTemplate)
+        case model
+        when 'storage'
+          send(method, Storage)
+        else
+          send(method, VmOrTemplate)
+        end
       else
         send(method)
       end
