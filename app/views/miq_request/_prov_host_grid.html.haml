@@ -43,3 +43,5 @@
             - options[:host_columns].each do |col|
               %td
                 = h(row.send(col))
+:javascript
+  miqScrollToSelected('prov_host_div')
