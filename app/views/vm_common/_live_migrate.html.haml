@@ -14,6 +14,9 @@
                         :miqrequired   => true,
                         :checkchange   => true,
                         'ng-disabled'  => "hosts.length == 0")
+        = hidden_field_tag("auto_select_host",
+                           '1',
+                           'ng-disabled'  => "hosts.length > 0")
     .form-group
       %label.col-md-2.control-label
         = _('Block Migration')
