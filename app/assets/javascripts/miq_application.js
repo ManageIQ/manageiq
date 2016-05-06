@@ -1604,3 +1604,8 @@ $(function () {
   check_for_ellipsis();
   $().setupVerticalTertiaryNavigation(true);
 });
+
+function miqScrollToSelected(div_name) {
+  var rowpos = $('tr.selected').position();
+  $('#' + div_name).scrollTop(rowpos.top);
+}
