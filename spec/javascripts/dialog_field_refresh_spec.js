@@ -80,7 +80,9 @@ describe('dialogFieldRefresh', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'triggerAutoRefresh');
       spyOn(window, 'miqInitSelectPicker');
-      spyOn(window, 'miqSelectPickerEvent');
+      spyOn(window, 'miqSelectPickerEvent').and.callFake(function(fieldName, url, options) {
+        options.callback();
+      });
       spyOn($.fn, 'selectpicker');
       fieldName = 'fieldName';
       fieldId = 'fieldId';
