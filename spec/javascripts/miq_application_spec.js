@@ -190,6 +190,28 @@ describe('miq_application.js', function() {
     });
   });
 
+  describe('miqSendOneTrans', function () {
+    beforeEach(function() {
+      ManageIQ.oneTransition.oneTrans = undefined;
+      ManageIQ.oneTransition.IEButtonPressed = undefined;
+
+      spyOn(window, 'miqObserveRequest');
+      spyOn(window, 'miqJqueryRequest');
+    });
+
+    it('calls miqJqueryRequest when given only url', function() {
+      miqSendOneTrans('/foo');
+      expect(miqJqueryRequest).toHaveBeenCalled();
+      expect(miqObserveRequest).not.toHaveBeenCalled();
+    });
+
+    it('calls miqObserveRequest when given observe: true', function() {
+      miqSendOneTrans('/foo', { observe: true });
+      expect(miqJqueryRequest).not.toHaveBeenCalled();
+      expect(miqObserveRequest).toHaveBeenCalled();
+    });
+  });
+
   describe('miqSelectPickerEvent', function () {
     beforeEach(function () {
       var html = '<input id="miq-select-picker-1" value="bar">';
