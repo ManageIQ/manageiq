@@ -939,7 +939,8 @@ class ApplicationHelper::ToolbarBuilder
 
     # need to add this here, since this button is on list view screen
     if @layout == "pxe" && id == "iso_datastore_new" && ManageIQ::Providers::Redhat::InfraManager.datastore?
-      return "No #{ui_lookup(:tables => "ext_management_system")} are available to create an ISO Datastore on"
+      return N_("No %{providers} are available to create an ISO Datastore on") %
+        {:providers => ui_lookup(:tables => "ext_management_system")}
     end
 
     case get_record_cls(@record)
@@ -947,29 +948,32 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "role_start"
         if x_node != "root" && @record.server_role.regional_role?
-          return "This role can only be managed at the Region level"
+          return N_("This role can only be managed at the Region level")
         elsif @record.active
-          return "This Role is already active on this Server"
+          return N_("This Role is already active on this Server")
         elsif !@record.miq_server.started? && !@record.active
-          return "Only available Roles on active Servers can be started"
+          return N_("Only available Roles on active Servers can be started")
         end
       when "role_suspend"
         if x_node != "root" && @record.server_role.regional_role?
-          return "This role can only be managed at the Region level"
+          return N_("This role can only be managed at the Region level")
         else
           if @record.active
             unless @record.server_role.max_concurrent != 1
-              return "Activate the #{@record.server_role.description} Role on another Server to suspend it on #{@record.miq_server.name} [#{@record.miq_server.id}]"
+              return N_("Activate the %{server_role_description} Role on another Server to suspend it on %{server_name} [%{server_id}]") %
+                {:server_role_description => @record.server_role.description,
+                 :server_name             => @record.miq_server.name,
+                 :server_id               => @record.miq_server.id}
             end
           else
-            return "Only active Roles on active Servers can be suspended"
+            return N_("Only active Roles on active Servers can be suspended")
           end
         end
       when "demote_server"
         if @record.master_supported?
           if @record.priority == 1 || @record.priority == 2
             if x_node != "root" && @record.server_role.regional_role?
-              return "This role can only be managed at the Region level"
+              return N_("This role can only be managed at the Region level")
             end
           end
         end
@@ -977,7 +981,7 @@ class ApplicationHelper::ToolbarBuilder
         if @record.master_supported?
           if (@record.priority != 1 && @record.priority != 2) || @record.priority == 2
             if x_node != "root" && @record.server_role.regional_role?
-              return "This role can only be managed at the Region level"
+              return N_("This role can only be managed at the Region level")
             end
           end
         end
@@ -985,70 +989,80 @@ class ApplicationHelper::ToolbarBuilder
     when "AvailabilityZone"
       case id
       when "availability_zone_perf"
-        return "No Capacity & Utilization data has been collected for this Availability Zone" unless @record.has_perf_data?
+        unless @record.has_perf_data?
+          return N_("No Capacity & Utilization data has been collected for this Availability Zone")
+        end
       when "availability_zone_timeline"
-        return "No Timeline data has been collected for this Availability Zone" unless @record.has_events? # || @record.has_events?(:policy_events), may add this check back in later
+        unless @record.has_events? # || @record.has_events?(:policy_events), may add this check back in later
+          return N_("No Timeline data has been collected for this Availability Zone")
+        end
       end
     when "OntapStorageSystem"
       case id
       when "ontap_storage_system_statistics"
-        return "No Statistics Collected" unless @record.latest_derived_metrics
+        return N_("No Statistics Collected") unless @record.latest_derived_metrics
       end
     when "OntapLogicalDisk"
       case id
       when "ontap_logical_disk_perf"
-        return "No Capacity & Utilization data has been collected for this Logical Disk" unless @record.has_perf_data?
+        unless @record.has_perf_data?
+          return N_("No Capacity & Utilization data has been collected for this Logical Disk")
+        end
       when "ontap_logical_disk_statistics"
-        return "No Statistics collected for this Logical Disk" unless @record.latest_derived_metrics
+        return N_("No Statistics collected for this Logical Disk") unless @record.latest_derived_metrics
       end
     when "CimBaseStorageExtent"
       case id
       when "cim_base_storage_extent_statistics"
-        return "No Statistics Collected" unless @record.latest_derived_metrics
+        return N_("No Statistics Collected") unless @record.latest_derived_metrics
       end
     when "Condition"
       case id
       when "condition_delete"
-        return "Conditions assigned to Policies can not be deleted" if @condition.miq_policies.length > 0
+        return N_("Conditions assigned to Policies can not be deleted") unless @condition.miq_policies.empty?
       end
     when "OntapStorageVolume"
       case id
       when "ontap_storage_volume_statistics"
-        return "No Statistics Collected" unless @record.latest_derived_metrics
+        return N_("No Statistics Collected") unless @record.latest_derived_metrics
       end
     when "OntapFileShare"
       case id
       when "ontap_file_share_statistics"
-        return "No Statistics Collected" unless @record.latest_derived_metrics
+        return N_("No Statistics Collected") unless @record.latest_derived_metrics
       end
     when "SniaLocalFileSystem"
       case id
       when "snia_local_file_system_statistics"
-        return "No Statistics Collected" unless @record.latest_derived_metrics
+        return N_("No Statistics Collected") unless @record.latest_derived_metrics
       end
     when "EmsCluster"
       case id
       when "ems_cluster_perf"
-        return "No Capacity & Utilization data has been collected for this Cluster" unless @record.has_perf_data?
+        return N_("No Capacity & Utilization data has been collected for this Cluster") unless @record.has_perf_data?
       when "ems_cluster_timeline"
-        return "No Timeline data has been collected for this Cluster" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Cluster")
+        end
       end
     when "Host"
       case id
       when "host_analyze_check_compliance", "host_check_compliance"
-        return "No Compliance Policies assigned to this Host" unless @record.has_compliance_policies?
+        return N_("No Compliance Policies assigned to this Host") unless @record.has_compliance_policies?
       when "host_perf"
-        return "No Capacity & Utilization data has been collected for this Host" unless @record.has_perf_data?
+        return N_("No Capacity & Utilization data has been collected for this Host") unless @record.has_perf_data?
       when "host_miq_request_new"
-        return "This Host can not be provisioned because the MAC address is not known" unless @record.mac_address
+        return N_("This Host can not be provisioned because the MAC address is not known") unless @record.mac_address
         count = PxeServer.all.size
-        return "No PXE Servers are available for Host provisioning" if count <= 0
+        return N_("No PXE Servers are available for Host provisioning") if count <= 0
       when "host_refresh"
         return @record.is_refreshable_now_error_message unless @record.is_refreshable_now?
       when "host_scan"
         return @record.is_scannable_now_error_message unless @record.is_scannable_now?
       when "host_timeline"
-        return "No Timeline data has been collected for this Host" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Host")
+        end
       when "host_shutdown"
         return @record.is_available_now_error_message(:shutdown) if @record.is_available_now_error_message(:shutdown)
       when "host_restart"
@@ -1057,120 +1071,141 @@ class ApplicationHelper::ToolbarBuilder
     when "Container"
       case id
       when "container_timeline"
-        return "No Timeline data has been collected for this Container" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Container")
+        end
       end
     when "ContainerNode"
       case id
       when "container_node_timeline"
-        return "No Timeline data has been collected for this Node" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Node")
+        end
       end
     when "ContainerGroup"
       case id
       when "container_group_timeline"
-        return "No Timeline data has been collected for this Pod" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Pod")
+        end
       end
     when "ContainerReplicator"
       case id
       when "container_replicator_timeline"
-        return "No Timeline data has been collected for this Replicator" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Replicator")
+        end
       end
     when "ContainerProject"
       case id
       when "container_project_timeline"
-        return "No Timeline data has been collected for this Project" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Project")
+        end
       end
     when "MiqAction"
       case id
       when "action_edit"
-        return "Default actions can not be changed." if @record.action_type == "default"
+        return N_("Default actions can not be changed.") if @record.action_type == "default"
       when "action_delete"
-        return "Default actions can not be deleted." if @record.action_type == "default"
-        return "Actions assigned to Policies can not be deleted" if @record.miq_policies.length > 0
+        return N_("Default actions can not be deleted.") if @record.action_type == "default"
+        return N_("Actions assigned to Policies can not be deleted") unless @record.miq_policies.empty?
       end
     when "MiqAeDomain", "MiqAeNamespace"
       editable_domain = editable_domain?(@record)
       case id
       when "miq_ae_domain_delete"
-        return "Read Only Domain cannot be deleted." unless editable_domain
+        return N_("Read Only Domain cannot be deleted.") unless editable_domain
       when "miq_ae_domain_edit"
-        return "Read Only Domain cannot be edited" unless editable_domain
+        return N_("Read Only Domain cannot be edited") unless editable_domain
       when "miq_ae_domain_lock"
-        return "Domain is Locked." unless editable_domain
+        return N_("Domain is Locked.") unless editable_domain
       when "miq_ae_domain_unlock"
-        return "Domain is Unlocked." if editable_domain
+        return N_("Domain is Unlocked.") if editable_domain
       end
     when "MiqAlert"
       case id
       when "alert_delete"
-        return "Alerts that belong to Alert Profiles can not be deleted" if @record.memberof.length > 0
-        return "Alerts referenced by Actions can not be deleted" if @record.owning_miq_actions.length > 0
+        return N_("Alerts that belong to Alert Profiles can not be deleted") unless @record.memberof.empty?
+        return N_("Alerts referenced by Actions can not be deleted") unless @record.owning_miq_actions.empty?
       end
     when "MiqPolicy"
       case id
       when "policy_delete"
-        return "Policies that belong to Profiles can not be deleted" if @policy.memberof.length > 0
+        return N_("Policies that belong to Profiles can not be deleted") unless @policy.memberof.empty?
       end
     when "MiqRequest"
       case id
       when "miq_request_delete"
         requester = current_user
         return false if requester.admin_user?
-        return _("Users are only allowed to delete their own requests") if requester.name != @record.requester_name
+        return N_("Users are only allowed to delete their own requests") if requester.name != @record.requester_name
         if %w(approved denied).include?(@record.approval_state)
-          return _("%{approval_states} requests cannot be deleted") %
+          return N_("%{approval_states} requests cannot be deleted") %
             {:approval_states => @record.approval_state.titleize}
         end
       end
     when "MiqGroup"
       case id
       when "rbac_group_delete"
-        return "This Group is Read Only and can not be deleted" if @record.read_only
+        return N_("This Group is Read Only and can not be deleted") if @record.read_only
       when "rbac_group_edit"
-        return "This Group is Read Only and can not be edited" if @record.read_only
+        return N_("This Group is Read Only and can not be edited") if @record.read_only
       end
     when "MiqServer"
       case id
       when "collect_logs", "collect_current_logs"
-        return "Cannot collect current logs unless the #{ui_lookup(:table => "miq_server")} is started" unless @record.started?
-        return "Log collection is already in progress for this #{ui_lookup(:table => "miq_server")}" if @record.log_collection_active_recently?
-        return "Log collection requires the Log Depot settings to be configured" unless @record.log_file_depot
+        unless @record.started?
+          return N_("Cannot collect current logs unless the %{server} is started") %
+            {:server => ui_lookup(:table => "miq_server")}
+        end
+        if @record.log_collection_active_recently?
+          return N_("Log collection is already in progress for this %{server}") %
+            {:server => ui_lookup(:table => "miq_server")}
+        end
+        unless @record.log_file_depot
+          return N_("Log collection requires the Log Depot settings to be configured")
+        end
       when "delete_server"
-        return "Server #{@record.name} [#{@record.id}] can only be deleted if it is stopped or has not responded for a while" unless @record.is_deleteable?
+        unless @record.is_deleteable?
+          return N_("Server %{server_name} [%{server_id}] can only be deleted if it is stopped or has not responded for a while") %
+            {:server_name => @record.name, :server_id => @record.id}
+        end
       when "restart_workers"
-        return "Select a worker to restart" if @sb[:selected_worker_id].nil?
+        return N_("Select a worker to restart") if @sb[:selected_worker_id].nil?
       end
     when "MiqWidget"
       case id
       when "widget_generate_content"
-        return "Widget has to be assigned to a dashboard to generate content" if @record.memberof.count <= 0
-        return "This Widget content generation is already running or queued up" if @widget_running
+        return N_("Widget has to be assigned to a dashboard to generate content") if @record.memberof.count <= 0
+        return N_("This Widget content generation is already running or queued up") if @widget_running
       end
     when "MiqWidgetSet"
       case id
       when "db_delete"
-        return "Default Dashboard cannot be deleted" if @db.read_only
+        return N_("Default Dashboard cannot be deleted") if @db.read_only
       end
     when "OrchestrationStack"
       case id
       when "orchestration_stack_retire_now"
-        return "Orchestration Stack is already retired" if @record.retired == true
+        return N_("Orchestration Stack is already retired") if @record.retired == true
       end
     when "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
       case id
       when "orchestration_template_remove"
-        return "Read-only Orchestration Template cannot be deleted" if @record.in_use?
+        return N_("Read-only Orchestration Template cannot be deleted") if @record.in_use?
       end
     when "Service"
       case id
       when "service_retire_now"
-        return "Service is already retired" if @record.retired == true
+        return N_("Service is already retired") if @record.retired == true
       end
     when "ScanItemSet"
       case id
       when "ap_delete"
-        return "Sample Analysis Profile cannot be deleted" if @record.read_only
+        return N_("Sample Analysis Profile cannot be deleted") if @record.read_only
       when "ap_edit"
-        return "Sample Analysis Profile cannot be edited" if @record.read_only
+        return N_("Sample Analysis Profile cannot be edited") if @record.read_only
       end
     when "ServiceTemplate"
       case id
@@ -1179,60 +1214,72 @@ class ApplicationHelper::ToolbarBuilder
         @record.resource_actions.each do |ra|
           d = Dialog.find_by_id(ra.dialog_id.to_i) if ra.action.downcase == "provision"
         end
-        return "No Ordering Dialog is available" if d.nil?
+        return N_("No Ordering Dialog is available") if d.nil?
       end
     when "Storage"
       case id
       when "storage_perf"
-        return "No Capacity & Utilization data has been collected for this #{ui_lookup(:table => "storage")}" unless @record.has_perf_data?
+        unless @record.has_perf_data?
+          return N_("No Capacity & Utilization data has been collected for this %{storage}") %
+            {:storage => ui_lookup(:table => "storage")}
+        end
       when "storage_delete"
-        return "Only #{ui_lookup(:table => "storage")} without VMs and Hosts can be removed" if @record.vms_and_templates.length > 0 || @record.hosts.length > 0
+        unless @record.vms_and_templates.empty? && @record.hosts.empty?
+          return N_("Only %{storage} without VMs and Hosts can be removed") %
+            {:storage => ui_lookup(:table => "storage")}
+        end
       when "storage_scan"
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
       end
     when "Tenant"
-      return "Default Tenant can not be deleted" if @record.parent.nil? && id == "rbac_tenant_delete"
+      return N_("Default Tenant can not be deleted") if @record.parent.nil? && id == "rbac_tenant_delete"
     when "User"
       case id
       when "rbac_user_copy"
-        return "User [Administrator] can not be copied" if @record.userid == "admin"
+        return N_("User [Administrator] can not be copied") if @record.userid == "admin"
       when "rbac_user_delete"
-        return "User [Administrator] can not be deleted" if @record.userid == "admin"
+        return N_("User [Administrator] can not be deleted") if @record.userid == "admin"
       end
     when "UserRole"
       case id
       when "rbac_role_delete"
-        return "This Role is Read Only and can not be deleted" if @record.read_only
-        return "This Role is in use by one or more Groups and can not be deleted" if @record.group_count > 0
+        return N_("This Role is Read Only and can not be deleted") if @record.read_only
+        return N_("This Role is in use by one or more Groups and can not be deleted") if @record.group_count > 0
       when "rbac_role_edit"
-        return "This Role is Read Only and can not be edited" if @record.read_only
+        return N_("This Role is Read Only and can not be edited") if @record.read_only
       end
     when "Vm"
       case id
       when "instance_perf", "vm_perf", "container_perf"
-        return "No Capacity & Utilization data has been collected for this VM" unless @record.has_perf_data?
+        return N_("No Capacity & Utilization data has been collected for this VM") unless @record.has_perf_data?
       when "instance_check_compliance", "vm_check_compliance"
         model = model_for_vm(@record).to_s
-        return "No Compliance Policies assigned to this #{model == "ManageIQ::Providers::InfraManager::Vm" ? "VM" : ui_lookup(:model => model)}" unless @record.has_compliance_policies?
+        unless @record.has_compliance_policies?
+          return N_("No Compliance Policies assigned to this virtual machine")
+        end
       when "vm_collect_running_processes"
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
       when "vm_console", "vm_vmrc_console"
         if !is_browser?(%w(explorer firefox mozilla chrome)) ||
            !is_browser_os?(%w(windows linux))
-          return "The web-based console is only available on IE, Firefox or Chrome (Windows/Linux)"
+          return N_("The web-based console is only available on IE, Firefox or Chrome (Windows/Linux)")
         end
 
         if id.in?(["vm_vmrc_console"])
           begin
             @record.validate_remote_console_vmrc_support
           rescue MiqException::RemoteConsoleNotSupportedError => err
-            return "VM VMRC Console error: #{err}"
+            return N_("VM VMRC Console error: %{error}") % {:error => err}
           end
         end
 
-        return "The web-based console is not available because the VM is not powered on" if @record.current_state != "on"
+        if @record.current_state != "on"
+          return N_("The web-based console is not available because the VM is not powered on")
+        end
       when "vm_vnc_console"
-        return "The web-based VNC console is not available because the VM is not powered on" if @record.current_state != "on"
+        if @record.current_state != "on"
+          return N_("The web-based VNC console is not available because the VM is not powered on")
+        end
       when "vm_guest_startup", "vm_start"
         return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)
       when "vm_guest_standby"
@@ -1249,12 +1296,20 @@ class ApplicationHelper::ToolbarBuilder
         return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
       when "instance_retire", "instance_retire_now",
               "vm_retire", "vm_retire_now"
-        return "#{@record.kind_of?(ManageIQ::Providers::CloudManager::Vm) ? "Instance" : "VM"} is already retired" if @record.retired == true
+        if @record.retired == true
+          if @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
+            return N_("Instance is already retired")
+          else
+            return N_("VM is already retired")
+          end
+        end
       when "vm_scan", "instance_scan"
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "vm_timeline"
-        return "No Timeline data has been collected for this VM" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this VM")
+        end
       when "vm_snapshot_add"
         if @record.number_of(:snapshots) <= 0
           return @record.is_available_now_error_message(:create_snapshot) unless @record.is_available?(:create_snapshot)
@@ -1262,7 +1317,7 @@ class ApplicationHelper::ToolbarBuilder
           unless @record.is_available?(:create_snapshot)
             return @record.is_available_now_error_message(:create_snapshot)
           else
-            return "Select the Active snapshot to create a new snapshot for this VM" unless @active
+            return N_("Select the Active snapshot to create a new snapshot for this VM") unless @active
           end
         end
       when "vm_snapshot_delete"
@@ -1275,67 +1330,89 @@ class ApplicationHelper::ToolbarBuilder
     when "MiqTemplate"
       case id
       when "image_check_compliance", "miq_template_check_compliance"
-        return "No Compliance Policies assigned to this #{ui_lookup(:model => model_for_vm(@record).to_s)}" unless @record.has_compliance_policies?
+        unless @record.has_compliance_policies?
+          return N_("No Compliance Policies assigned to this %{vm}") %
+            {:vm => ui_lookup(:model => model_for_vm(@record).to_s)}
+        end
       when "miq_template_perf"
-        return "No Capacity & Utilization data has been collected for this Template" unless @record.has_perf_data?
+        return N_("No Capacity & Utilization data has been collected for this Template") unless @record.has_perf_data?
       when "miq_template_scan", "image_scan"
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message unless @record.has_active_proxy?
       when "miq_template_timeline"
-        return "No Timeline data has been collected for this Template" unless @record.has_events? || @record.has_events?(:policy_events)
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for this Template")
+        end
       end
     when "Zone"
       case id
       when "zone_collect_logs", "zone_collect_current_logs"
-        return "Cannot collect current logs unless there are started #{ui_lookup(:tables => "miq_servers")} in the Zone" unless @record.any_started_miq_servers?
-        return "This Zone do not have Log Depot settings configured, collection not allowed" unless @record.log_file_depot
-        return "Log collection is already in progress for one or more #{ui_lookup(:tables => "miq_servers")} in this Zone" if @record.log_collection_active_recently?
+        unless @record.any_started_miq_servers?
+          return N_("Cannot collect current logs unless there are started %{servers} in the Zone") %
+            {:servers => ui_lookup(:tables => "miq_servers")}
+        end
+        unless @record.log_file_depot
+          return N_("This Zone do not have Log Depot settings configured, collection not allowed")
+        end
+        if @record.log_collection_active_recently?
+          return N_("Log collection is already in progress for one or more %{servers} in this Zone") %
+            {:servers => ui_lookup(:tables => "miq_servers")}
+        end
       when "zone_delete"
         if @selected_zone.name.downcase == "default"
-          return "'Default' zone cannot be deleted"
+          return N_("'Default' zone cannot be deleted")
         elsif @selected_zone.ext_management_systems.count > 0 ||
               @selected_zone.storage_managers.count > 0 ||
               @selected_zone.miq_schedules.count > 0 ||
               @selected_zone.miq_servers.count > 0
-          return "Cannot delete a Zone that has Relationships"
+          return N_("Cannot delete a Zone that has Relationships")
         end
       end
     when nil, "NilClass"
       case id
       when "ab_group_edit"
-        return "Selected Custom Button Group cannot be edited" if x_node.split('-')[1] == "ub"
+        return N_("Selected Custom Button Group cannot be edited") if x_node.split('-')[1] == "ub"
       when "ab_group_delete"
-        return "Selected Custom Button Group cannot be deleted" if x_node.split('-')[1] == "ub"
+        return N_("Selected Custom Button Group cannot be deleted") if x_node.split('-')[1] == "ub"
       when "ab_group_reorder"
         if x_active_tree == :ab_tree
-          return "Only more than 1 Custom Button Groups can be reordered" if CustomButtonSet.find_all_by_class_name(x_node.split('_').last).count <= 1
+          if CustomButtonSet.find_all_by_class_name(x_node.split('_').last).count <= 1
+            return N_("Only more than 1 Custom Button Groups can be reordered")
+          end
         else
           rec_id = x_node.split('_').last.split('-').last
           st = ServiceTemplate.find_by_id(rec_id)
           count = st.custom_button_sets.count + st.custom_buttons.count
-          return "Only more than 1 Custom Button Groups can be reordered" if count <= 1
+          return N_("Only more than 1 Custom Button Groups can be reordered") if count <= 1
         end
       when "ae_copy_simulate"
-        return "Object attribute must be specified to copy object details for use in a Button" if @resolve[:button_class].blank?
+        if @resolve[:button_class].blank?
+          return N_("Object attribute must be specified to copy object details for use in a Button")
+        end
       when "customization_template_new"
-        return "No System Image Types available, Customization Template cannot be added" if @pxe_image_types_count <= 0
+        if @pxe_image_types_count <= 0
+          return N_("No System Image Types available, Customization Template cannot be added")
+        end
       # following 2 are checks for buttons in Reports/Dashboard accordion
       when "db_new"
-        return "Only #{MAX_DASHBOARD_COUNT} Dashboards are allowed for a group" if @widgetsets.length >= MAX_DASHBOARD_COUNT
+        if @widgetsets.length >= MAX_DASHBOARD_COUNT
+          return N_("Only %{dashboard_count} Dashboards are allowed for a group") %
+            {:dashboard_count => MAX_DASHBOARD_COUNT}
+        end
       when "db_seq_edit"
-        return "There should be atleast 2 Dashboards to Edit Sequence" if @widgetsets.length <= 1
+        return N_("There should be atleast 2 Dashboards to Edit Sequence") if @widgetsets.length <= 1
       when "render_report_csv", "render_report_pdf",
           "render_report_txt", "report_only"
         if (@html || @zgraph) && (!@report.extras[:grouping] || (@report.extras[:grouping] && @report.extras[:grouping][:_total_][:count] > 0))
           return false
         else
-          return "No records found for this report"
+          return N_("No records found for this report")
         end
       end
     when 'MiqReportResult'
       if id == 'report_only'
         return @report.present? && @report_result_id.present? &&
-          MiqReportResult.find(@report_result_id).try(:miq_report_result_details).try(:length).to_i > 0 ? false : "No records found for this report"
+          MiqReportResult.find(@report_result_id).try(:miq_report_result_details).try(:length).to_i > 0 ? false : N_("No records found for this report")
       end
     end
     return check_for_utilization_download_buttons if %w(miq_capacity_download_csv
