@@ -796,7 +796,7 @@ module MiqAeEngineSpec
   describe MiqAeEngine do
     before do
       @user = FactoryGirl.create(:user_with_group)
-      nco_value = '${/#var1} || ${/#var2} || Pebbles'
+      nco_value = '${/#var1} || ${XY/ABC#var2} || Pebbles'
       instance_name = 'FRED'
       ae_instances = {instance_name => {'field1' => {:value => nco_value},
                                         'field2' => {:value => 'Bamm Bamm Rubble'}}}
@@ -817,7 +817,7 @@ module MiqAeEngineSpec
       end
 
       it "first non nil value" do
-        workspace = MiqAeEngine.instantiate("/A/C/BARNEY/FRED?var2=wilma", @user)
+        workspace = MiqAeEngine.instantiate("/A/C/BARNEY/FRED?var1=wilma", @user)
 
         expect(workspace.root['field1']).to eq('wilma')
         expect(workspace.root['field2']).to eq('Bamm Bamm Rubble')

@@ -472,9 +472,15 @@ module MiqAeEngine
 
     def get_null_coalesced_value(f, type = nil)
       result = nil
+      current_value = nil
       f['value'].split(NULL_COALESCING_OPERATOR).each do |value|
         next unless result.blank?
-        result = substitute_value(value.strip, type)
+        begin
+          current_value = value.strip
+          result = substitute_value(current_value, type)
+        rescue => err
+          $miq_ae_logger.warn("#{err.message}, while evaluating :#{current_value} null coalecing attribute")
+        end
       end
       result = f['default_value'] if result.blank?
       result
