@@ -3222,59 +3222,59 @@
       :feature_type: admin
       :identifier: ems_container_new
 
-  # EmsMiddleware
-  - :name: Providers
-    :description: Everything under Middleware Providers
-    :feature_type: node
-    :identifier: ems_middleware
+# EmsMiddleware
+- :name: Providers
+  :description: Everything under Middleware Providers
+  :feature_type: node
+  :identifier: ems_middleware
+  :children:
+  - :name: View
+    :description: View Middleware Providers
+    :feature_type: view
+    :identifier: ems_middleware_view
     :children:
-    - :name: View
-      :description: View Middleware Providers
+    - :name: List
+      :description: Display Lists of Middleware Providers
       :feature_type: view
-      :identifier: ems_middleware_view
-      :children:
-      - :name: List
-        :description: Display Lists of Middleware Providers
-        :feature_type: view
-        :identifier: ems_middleware_show_list
-      - :name: Show
-        :description: Display Individual Middleware Providers
-        :feature_type: view
-        :identifier: ems_middleware_show
-      - :name: Timeline
-        :description: Display Timelines for Middleware Providers
-        :feature_type: view
-        :identifier: ems_middleware_timeline
-    - :name: Operate
-      :description: Perform Operations on Middleware Providers
+      :identifier: ems_middleware_show_list
+    - :name: Show
+      :description: Display Individual Middleware Providers
+      :feature_type: view
+      :identifier: ems_middleware_show
+    - :name: Timeline
+      :description: Display Timelines for Middleware Providers
+      :feature_type: view
+      :identifier: ems_middleware_timeline
+  - :name: Operate
+    :description: Perform Operations on Middleware Providers
+    :feature_type: control
+    :identifier: ems_middleware_control
+    :children:
+    - :name: Refresh
+      :description: Refresh Middleware Providers
       :feature_type: control
-      :identifier: ems_middleware_control
-      :children:
-      - :name: Refresh
-        :description: Refresh Middleware Providers
-        :feature_type: control
-        :identifier: ems_middleware_refresh
-      - :name: Edit Tags
-        :description: Edit Tags of Middleware Providers
-        :feature_type: control
-        :identifier: ems_middleware_tag
-    - :name: Modify
-      :description: Modify Middleware Providers
+      :identifier: ems_middleware_refresh
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Providers
+      :feature_type: control
+      :identifier: ems_middleware_tag
+  - :name: Modify
+    :description: Modify Middleware Providers
+    :feature_type: admin
+    :identifier: ems_middleware_admin
+    :children:
+    - :name: Remove
+      :description: Remove Middleware Providers from the VMDB
       :feature_type: admin
-      :identifier: ems_middleware_admin
-      :children:
-      - :name: Remove
-        :description: Remove Middleware Providers from the VMDB
-        :feature_type: admin
-        :identifier: ems_middleware_delete
-      - :name: Edit
-        :description: Edit a Middleware Provider
-        :feature_type: admin
-        :identifier: ems_middleware_edit
-      - :name: Add
-        :description: Add a Middleware Provider
-        :feature_type: admin
-        :identifier: ems_middleware_new
+      :identifier: ems_middleware_delete
+    - :name: Edit
+      :description: Edit a Middleware Provider
+      :feature_type: admin
+      :identifier: ems_middleware_edit
+    - :name: Add
+      :description: Add a Middleware Provider
+      :feature_type: admin
+      :identifier: ems_middleware_new
 
   # Middleware Topology
   - :name: Middleware Topology
