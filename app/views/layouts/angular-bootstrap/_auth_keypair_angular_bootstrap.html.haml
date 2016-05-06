@@ -72,19 +72,7 @@
         %a{:href => "", "ng-show" => "vm.changeKey", "ng-click" => "vm.cancelPrivateKeyChange()"}
           = cancel_private_key_change
 
-    %div{"ng-show" => "!vm.showVerifyPrivateKey('#{prefix}_userid')"}
-      .form-group
-        %label.col-md-2
-        .col-md-4
-          = render :partial => "layouts/angular/form_buttons_verify_angular",
-                                       :locals  => {:ng_show           => ng_show,
-                                                    :validate_url      => validate_url,
-                                                    :id                => id,
-                                                    :valtype           => prefix,
-                                                    :verify_title_off  => verify_title_off,
-                                                    :basic_info_needed => defined?(basic_info_needed) ? basic_info_needed : nil}
-
-    %div{"ng-show" => "vm.showVerifyPrivateKey('#{prefix}_userid')"}
+    %div{"ng-show" => "true"}
       .form-group
         %label.col-md-2
         .col-md-4
