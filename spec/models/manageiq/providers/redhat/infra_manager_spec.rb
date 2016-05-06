@@ -14,14 +14,14 @@ describe ManageIQ::Providers::Redhat::InfraManager do
     end
   end
 
-  it "rhevm_metrics_connect_options" do
-    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    expect(h.rhevm_metrics_connect_options[:host]).to eq("h")
-  end
+  describe "rhevm_metrics_connect_options" do
+    let(:ems) { FactoryGirl.create(:ems_redhat, :hostname => "some.thing.tld") }
 
-  it "rhevm_metrics_connect_options overrides" do
-    h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    expect(h.rhevm_metrics_connect_options(:hostname => "i")[:host]).to eq("i")
+    it "rhevm_metrics_connect_options fetches configuration and allows overrides" do
+      expect(ems.rhevm_metrics_connect_options[:host]).to eq("some.thing.tld")
+      expect(ems.rhevm_metrics_connect_options({:hostname => "different.tld"})[:host])
+        .to eq("different.tld")
+    end
   end
 
   context "#vm_reconfigure" do
