@@ -316,7 +316,7 @@ module Rbac
   end
 
   def self.filtered(objects, options = {})
-    Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
+    Rbac.search(options.reverse_merge(:targets => objects, :results_format => :objects)).first
   end
 
   # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
@@ -355,7 +355,7 @@ module Rbac
   # @option options :sub_filter
   # @option options :include_for_find [Array<Symbol>]
   # @option options :filter
-  # @option options :results_format [:id, :objects] (default: for object targets, :object, otherwise :id)
+  # @option options :results_format [:ids, :objects] (default: for object targets, :object, otherwise :ids)
 
   # @option options :user         [User]     (default: current_user)
   # @option options :userid       [String]   User#userid (not user_id)
