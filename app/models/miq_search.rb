@@ -30,14 +30,6 @@ class MiqSearch < ApplicationRecord
     filtered(db, opts)
   end
 
-  def self.search(filter_id, klass, opts = {})
-    if filter_id.nil? || filter_id.zero?
-      Rbac.search(opts.merge(:class => klass))
-    else
-      find(filter_id).search(opts)
-    end
-  end
-
   def self.filtered(filter_id, klass, targets, opts = {})
     if filter_id.nil? || filter_id.zero?
       Rbac.filtered(targets, opts.merge(:class => klass))

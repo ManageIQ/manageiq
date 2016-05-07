@@ -81,20 +81,6 @@ describe MiqSearch do
     end
   end
 
-  describe ".search" do
-    it "uses an existing search" do
-      all_vms
-      results = MiqSearch.search(vm_location_search.id, "Vm", :results_format => :objects).first
-      expect(results).to match_array(matched_vms)
-    end
-
-    it "calls Rbac directly if there is no search" do
-      all_vms
-      results = MiqSearch.search(0, "Vm", :results_format => :objects).first
-      expect(results).to match_array(all_vms)
-    end
-  end
-
   describe ".filtered" do
     it "uses an existing search" do
       all_vms
