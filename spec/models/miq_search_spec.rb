@@ -39,6 +39,21 @@ describe MiqSearch do
   let(:partial_matched_vms) { [matched_vms.first] }
   let(:partial_vms) { partial_matched_vms + other_vms }
 
+  describe "#quick_search?" do
+    let(:qs) { MiqExpression.new("=" => {"field" => "Vm-name", "value" => :user_input}) }
+    it "supports no filter" do
+      expect(FactoryGirl.build(:miq_search, :filter => nil)).not_to be_quick_search
+    end
+
+    it "supports a filter" do
+      expect(vm_location_search).not_to be_quick_search
+    end
+
+    it "supports a quick search" do
+      expect(FactoryGirl.build(:miq_search, :filter => qs)).to be_quick_search
+    end
+  end
+
   # general use cases around rbac
   describe "#search" do
     it "brings back filtered targets" do
