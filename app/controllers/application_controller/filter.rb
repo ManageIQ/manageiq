@@ -535,7 +535,7 @@ module ApplicationController::Filter
     @edit[:new] = {}
     s = MiqSearch.find(id.to_s)
     @edit[:new][@expkey] = s.filter.exp
-    if s.filter.quick_search?
+    if s.quick_search?
       @quick_search_active = true
       @edit[:qs_prev_x_node] = x_node if @edit[:in_explorer] # Remember current tree node
       @edit[@expkey][:pre_qs_selected] = @edit[@expkey][:selected]            # Save previous selected search
@@ -902,7 +902,7 @@ module ApplicationController::Filter
         s = MiqSearch.find_by(:id => params[:id])
         if s.nil?
           add_flash(_("The selected Filter record was not found"), :error)
-        elsif MiqExpression.quick_search?(s.filter)
+        elsif s.quick_search?
           add_flash(_("The selected Filter can not be set as Default because it requires user input"), :error)
         end
       end
