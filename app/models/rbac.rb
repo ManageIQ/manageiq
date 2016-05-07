@@ -316,11 +316,6 @@ module Rbac
   end
 
   def self.filtered(objects, options = {})
-    if objects.nil?
-      Vmdb::Deprecation.deprecation_warning("objects = nil",
-                                            "use [] to get an empty result back. nil will return all records",
-                                            caller(0)) unless Rails.env.production?
-    end
     Rbac.search(options.merge(:targets => objects, :results_format => :objects)).first
   end
 
