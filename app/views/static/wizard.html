@@ -1,0 +1,31 @@
+<div class="wizard-miq-body">
+  <div class="wizard-miq-content">
+    <ul class="wizard-miq-steps-indicator wizard-miq-steps-{{getEnabledSteps().length}}" ng-if="!hideIndicators" ng-class="{'invisible': !wizardReady}">
+      <li ng-class="{default: !step.completed && !step.selected, current: step.selected && !step.completed, done: step.completed && !step.selected, editing: step.selected && step.completed}" ng-repeat="step in getEnabledSteps()">
+        <a ng-click="goTo(step, true)">{{step.title}}</a>
+      </li>
+    </ul>
+    <div ng-if="!wizardReady" class="wizard-miq-step-content" ng-style="contentStyle">
+      <div class="blank-slate-pf">
+        <div class="spinner spinner-lg"></div>
+        <h1>Initialization in progress...</h1>
+      </div>
+    </div>
+    <div class="wizard-miq-steps" ng-transclude></div>
+  </div>
+  <div class="wizard-miq-btn-container modal-footer">
+    <button miq-wiz-cancel class="btn btn-default" ng-disabled="wizardDone">{{cancelTitle}}</button>
+    <div class="tooltip-wrapper" tooltip="{{prevTooltip}}" tooltip-placement="left">
+      <button miq-wiz-previous class="btn btn-default" ng-disabled="!wizardReady || wizardDone || !prevEnabled || firstStep"
+              callback="backCallback">
+        {{backTitle}}
+      </button>
+    </div>
+    <div class="tooltip-wrapper" tooltip="{{nextTooltip}}" tooltip-placement="left">
+      <button miq-wiz-next class="btn btn-primary" ng-disabled="!wizardReady || !nextEnabled"
+              callback="nextCallback">
+        {{nextTitle}}
+      </button>
+      </div>
+  </div>
+</div>
