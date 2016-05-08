@@ -4,7 +4,7 @@ module PersistentVolumeHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name creation_timestamp resource_version capacity access_modes reclaim_policy status_phase
+    %i(name creation_timestamp resource_version access_modes reclaim_policy status_phase
        storage_medium_type gce_pd_resource git_repository git_revision nfs_server
        iscsi_target_portal iscsi_target_qualified_name iscsi_target_lun_number glusterfs_endpoint_name
        rados_ceph_monitors rados_image_name rados_pool_name rados_user_name rados_keyring
@@ -25,6 +25,11 @@ module PersistentVolumeHelper::TextualSummary
     items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
+  def textual_group_capacity
+    labels = [_("Resource"), _("Quantity")]
+    {:labels => labels, :values => @record.capacity}
+  end
+
   #
   # Items
   #
@@ -35,10 +40,6 @@ module PersistentVolumeHelper::TextualSummary
 
   def textual_resource_version
     @record.resource_version
-  end
-
-  def textual_capacity
-    @record.capacity
   end
 
   def textual_access_modes
