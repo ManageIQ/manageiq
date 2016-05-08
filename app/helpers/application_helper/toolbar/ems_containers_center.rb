@@ -19,9 +19,15 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
         button(
           :ems_container_new,
           'pficon pficon-add-circle-o fa-lg',
-          t = N_('Add a New #{ui_lookup(:table=>"ems_container")}'),
+          t = N_('Add Existing #{ui_lookup(:table=>"ems_container")}'),
           t,
           :url => "/new"),
+        button(
+          :ems_container_deployment,
+          'pficon pficon-add-circle-o fa-lg',
+          t = N_('Create #{ui_lookup(:table=>"ems_container")}'),
+          t,
+          :data => {'function' => 'miqCallAngular', 'function-data' => '{ "name": "showListener", "args": [] }'}),
         button(
           :ems_container_edit,
           'pficon pficon-edit fa-lg',
