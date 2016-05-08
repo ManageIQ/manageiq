@@ -63,7 +63,7 @@ $wz-substep-nav-width: 250px;
         font-weight: 700;
         height: 50px;
         outline: 0;
-        padding-top: 14px;
+        padding-top: 11px;
         padding-left: 20px;
         position: relative;
         white-space: nowrap;
@@ -451,6 +451,9 @@ $wz-substep-nav-width: 250px;
   }
   .wizard-miq-review-item {
     padding: 5px 0;
+    &.sub-item {
+      margin-left: 10px;
+    }
     .wizard-miq-review-item-label {
       font-weight: 700;
       padding-right: 10px;
@@ -460,10 +463,19 @@ $wz-substep-nav-width: 250px;
     .wizard-miq-review-item-subvalue {
       padding-left: 20px;
     }
-    .wizard-miq-review-table {
-      padding-top: 10px;
-      padding-right: 20px;
-      width: 250px;
+    .wizard-miq-review-item-field {
+      font-weight: 700;
+      padding-right: 10px;
+      margin: 5px 0;
+      &:first-of-type {
+        margin-top: 0
+      }
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+      &.sub-field {
+        margin-left: 10px;
+      }
     }
   }
   .wizard-miq-review-subform {
@@ -521,6 +533,10 @@ $wz-substep-nav-width: 250px;
     padding-bottom: 10px;
   }
 
+  .miq-page-text {
+    padding-bottom: 10px;
+  }
+
   .miq-form-heading {
     font-weight: 700;
     padding-bottom: 10px;
@@ -531,11 +547,34 @@ $wz-substep-nav-width: 250px;
     padding-left: 10px;
   }
 
+  .miq-wizard-add-user-button {
+    cursor: pointer;
+    font-weight: 700;
+    margin-left: 85px;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .miq-wizard-remove-user-button {
+    background-color: #fff;
+    color: #BABABA;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: -15px;
+    padding: 4px;
+    &:hover {
+      color: #00618a;
+      text-decoration: none;
+    }
+  }
+
   .miq-input-label-class {
     width: 95px;
     padding-right: 10px;
     padding-left: 20px;
     float: left;
+    text-align: right;
 
     &.miq-input-label-class-lg {
       width: 150px;
@@ -543,6 +582,26 @@ $wz-substep-nav-width: 250px;
 
     &.miq-input-label-class-xlg {
       width: 175px;
+    }
+  }
+
+  .miq-clear-input-button {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    background-color: #fff;
+    border: 1px solid #BABABA;
+    border-left: none;
+    border-radius: 1px;
+    box-shadow: inset 0 1px 1px 0 rgba(0,0,0,.075);
+    color: #BABABA;
+    cursor: pointer;
+    margin-left: -36px;
+    margin-right: 10px;
+    padding: 3px 0px 5px 3px;
+    width: 100%;
+    z-index: 10;
+    &:hover {
+      color: #00618a;
+      text-decoration: none;
     }
   }
 
@@ -576,6 +635,21 @@ $wz-substep-nav-width: 250px;
       padding-top: 3px;
       text-align: left;
       vertical-align: middle;
+    }
+    .miq-checkbox-input {
+      border: 1px solid #BABABA;
+      border-radius: 1px;
+      background-image: none;
+      width: 300px;
+      &[disabled] {
+        -webkit-box-shadow: none;
+        background-color: #F8F8F8;
+        border-color: #d4d4d4 !important;
+        box-shadow: none;
+        color: #969696;
+        cursor: not-allowed;
+        opacity: 1;
+      }
     }
   }
   .miq-input-class {
@@ -628,7 +702,7 @@ $wz-substep-nav-width: 250px;
       }
       .toolbar-pf-actions {
         .add-nodes-table & {
-          padding-bottom: 10px;
+          padding-bottom: 0;
         }
         > .form-group {
           border-right: none;
@@ -649,6 +723,27 @@ $wz-substep-nav-width: 250px;
         padding-left: 10px;
         padding-right: 10px;
       }
+      .include-actions {
+        .dropdown {
+          float: left;
+          margin-left: 0;
+        }
+        .btn.btn-default {
+          float: right;
+          margin-left: 5px;
+          &.btn-left {
+            float:left;
+          }
+        }
+        .dropdown-container {
+          padding-left: 30px;
+          padding-right: 20px;
+
+          .btn-primary {
+            margin-left: 20px;
+          }
+        }
+      }
     }
     &.add-nodes-table {
       .checkbox-col {
@@ -657,7 +752,57 @@ $wz-substep-nav-width: 250px;
         width: 20px;
       }
       .toolbar-pf-actions {
-        padding-bottom: 10px;
+        padding-bottom: 0;
+      }
+      .select-all-roles.btn-link {
+        color: #0099d3;
+        font-size: 12px;
+        margin-left: -20px;
+        marging-top: 10px;
+        padding: 0;
+      }
+      .role-column {
+        .label {
+          border: none;
+          border-radius: 5px;
+          cursor: default;
+          display: inline-block;
+          margin-right: 5px;
+          min-width: auto;
+          padding-top: 4px;
+          width: auto !important;
+
+          &:focus {
+            outline: none;
+          }
+          .fa-close {
+            margin-left: 5px;
+          }
+          &.label-default {
+            cursor: pointer;
+          }
+        }
+        a {
+          cursor: pointer;
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        .add-roles-list {
+          .label.add-role-item {
+            cursor: pointer;
+            display: block;
+            margin-top: 5px;
+            min-width: auto;
+            text-align: left;
+            width: auto !important;
+            &[disabled] {
+              background-color: #d1d1d1;
+              color: #72767b;
+            }
+          }
+        }
       }
     }
 
@@ -708,6 +853,26 @@ $wz-substep-nav-width: 250px;
     width: 100%;
     > input {
       width: 100%;
+    }
+  }
+
+  .wizard-miq-review-inline {
+    padding: 5px 0;
+    .wizard-miq-review-item  {
+      display: inline;
+      span {
+        display: inline-block;
+        margin-left: 10px;
+        &:first-of-type {
+          margin-left: 0px;
+        }
+      }
+      .wizard-miq-review-item-label {
+        width: 85px;
+      }
+      .wizard-miq-review-item-value {
+        width: 100px;
+      }
     }
   }
 
@@ -764,4 +929,13 @@ $wz-substep-nav-width: 250px;
     text-align: center;
     width: 100%;
   }
+}
+
+.miq-add-host-dialog {
+  .modal-dialog {
+    width: 400px;
+  }
+}
+.miq-add-dialog-content {
+  padding: 20px 20px 0 20px;
 }

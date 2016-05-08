@@ -1,0 +1,92 @@
+<div ng-controller="containers.deployProviderConfigSettingsController">
+  <div miq-wizard-substep step-title="Settings" step-id="config-storage"  step-priority="3" on-show="onShow"
+       next-enabled="configStorageComplete" wz-disabled="false" review-template="{{reviewTemplate}}">
+    <div class="miq-form-heading">Select items to configure</div>
+    <form role="form-horizontal">
+      <div class="miq-radio-form">
+        <label class="radio">
+          <input type="radio" ng-model="data.serverConfigType" value="standardNFS" ng-change="validateForm()">Standard NFS Server
+        </label>
+        <div class="form-group  sub-group" ng-if="data.serverConfigType == 'standardNFS'">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="data.configureRouter" ng-disabled="!validateInfraNode()" ng-change="validateForm()">Router
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="data.configureRegistry" ng-change="validateForm()">Registry
+            </label>
+          </div>
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="miq-input-label-class">Server</label>
+              <div class="miq-input-class">
+                <input class="form-control" ng-model="data.nfsRegistryServer" type="text" ng-change="validateForm()" required ng-disabled="!data.configureRegistry"/>
+              </div>
+            </div>
+          </div>
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="miq-input-label-class">Path</label>
+              <div class="miq-input-class">
+                <input class="form-control" ng-model="data.nfsRegistryPath" type="text" ng-change="validateForm()" required ng-disabled="!data.configureRegistry"/>
+              </div>
+            </div>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="data.configureMetrics" ng-change="validateForm()">Metrics
+            </label>
+          </div>
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="miq-input-label-class">Server</label>
+              <div class="miq-input-class">
+                <input class="form-control" ng-model="data.nfsMetricsServer" type="text" ng-change="validateForm()" required ng-disabled="!data.configureMetrics"/>
+              </div>
+            </div>
+          </div>
+          <div class="form-horizontal">
+            <div class="form-group">
+              <label class="miq-input-label-class">Path</label>
+              <div class="miq-input-class">
+                <input class="form-control" ng-model="data.nfsMetricsPath" type="text" ng-change="validateForm()" required ng-disabled="!data.configureMetrics"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label ng-if="validateStorageNode()" class="radio">
+          <input type="radio" ng-model="data.serverConfigType" value="integratedNFS" ng-change="validateForm()">Integrated NFS Server (POC only)
+        </label>
+        <div class="form-group  sub-group" ng-if="data.serverConfigType == 'integratedNFS'">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="data.configureRouter" ng-disabled="!validateInfraNode()" ng-change="validateForm()">Router
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="data.configureRegistry" ng-change="validateForm()">Registry
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="data.configureMetrics" ng-change="validateForm()">Metrics
+            </label>
+          </div>
+        </div>
+        <label class="radio">
+          <input type="radio" ng-model="data.serverConfigType" value="none" ng-change="validateForm()">None
+        </label>
+        <div class="form-group  sub-group" ng-if="data.serverConfigType =='none'">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" ng-model="data.configureRouter" ng-disabled="!validateInfraNode()" ng-change="validateForm()">Router
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

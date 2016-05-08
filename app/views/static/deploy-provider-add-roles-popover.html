@@ -1,0 +1,30 @@
+<div class="add-roles-list">
+    <div class="label label-primary add-role-item" ng-disabled="node.master" ng-click="addMaster(node)">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        Master
+    </div>
+    <div class="label label-primary add-role-item" ng-disabled="node.node" ng-click="addNode(node)">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        Node
+    </div>
+    <div class="label label-primary add-role-item" ng-disabled="node.storage" ng-click="addStorage(node)">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        Storage
+    </div>
+    <div class="label label-primary add-role-item" ng-disabled="node.loadBalancer" ng-click="addLoadBalancer(node)">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        Load Balancer
+    </div>
+    <div class="label label-primary add-role-item" ng-disabled="node.dns" ng-click="addDns(node)">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        DNS
+    </div>
+    <div class="label label-primary add-role-item" ng-disabled="node.etcd" ng-click="addEtcd(node)">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        Etcd
+    </div>
+    <div class="label label-primary add-role-item" ng-disabled="node.infrastructure" ng-click="addInfrastructure(node)">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+        Infrastructure
+    </div>
+</div>
