@@ -166,11 +166,7 @@ angular.module('miq.wizard').directive('miqWizard', function () {
       };
 
       $scope.goTo = function (step, resetStepNav) {
-        if ($scope.wizardDone) {
-          return;
-        }
-
-        if (!step.okToNavAway) {
+        if ($scope.wizardDone || ($scope.selectedStep && !$scope.selectedStep.okToNavAway) || step === $scope.selectedStep) {
           return;
         }
 
@@ -211,6 +207,12 @@ angular.module('miq.wizard').directive('miqWizard', function () {
         }
       };
 
+      $scope.stepClick = function (step) {
+        if (step.allowClickNav) {
+          $scope.goTo(step, true);
+        }
+      };
+
       var stepByTitle = function (titleToFind) {
         var foundStep = null;
         angular.forEach($scope.getEnabledSteps(), function (step) {
@@ -235,6 +237,10 @@ angular.module('miq.wizard').directive('miqWizard', function () {
         if ($scope.wizardReady && ($scope.getEnabledSteps().length > 0) && (step == $scope.getEnabledSteps()[0])) {
           $scope.goTo($scope.getEnabledSteps()[0]);
         }
+      };
+
+      this.isWizardDone = function() {
+        return $scope.wizardDone;
       };
 
       this.updateSubStepNumber = function (value) {

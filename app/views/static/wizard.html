@@ -2,7 +2,7 @@
   <div class="wizard-miq-content">
     <ul class="wizard-miq-steps-indicator wizard-miq-steps-{{getEnabledSteps().length}}" ng-if="!hideIndicators" ng-class="{'invisible': !wizardReady}">
       <li ng-class="{default: !step.completed && !step.selected, current: step.selected && !step.completed, done: step.completed && !step.selected, editing: step.selected && step.completed}" ng-repeat="step in getEnabledSteps()">
-        <a ng-click="goTo(step, true)">{{step.title}}</a>
+        <a ng-click="stepClick(step)">{{step.title}}</a>
       </li>
     </ul>
     <div ng-if="!wizardReady" class="wizard-miq-step-content" ng-style="contentStyle">

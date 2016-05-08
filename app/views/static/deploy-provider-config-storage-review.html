@@ -1,0 +1,18 @@
+<div ng-controller="containers.deployProviderReviewController">
+  <form class="form">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Storage Type:</span>
+      <span class="wizard-miq-review-item-value">{{getStorageType()}}</span>
+    </div>
+    <div ng-if="data.storageType == 'nfs'">
+      <div class="wizard-miq-review-item">
+        <span class="wizard-miq-review-item-label">Server:</span>
+        <span class="wizard-miq-review-item-value">{{data.nfsStorageServer}}</span>
+      </div>
+      <div class="wizard-miq-review-item">
+        <span class="wizard-miq-review-item-label">Path:</span>
+        <span class="wizard-miq-review-item-value">{{data.nfsStoragePath}}</span>
+      </div>
+    </div>
+  </form>
+</div>

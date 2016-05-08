@@ -1,0 +1,45 @@
+<div ng-controller="containers.deployProviderDetailsGeneralController">
+  <div miq-wizard-substep step-title="General"  next-enabled="deploymentDetailsGeneralComplete"
+       step-id="details-general" step-priority="0" on-show="onShow" review-template="{{reviewTemplate}}" show-review-details="true">
+    <form class="form-horizontal">
+      <div pf-form-group pf-label="Name" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+        <input id="new-provider-name" name="name" ng-model="data.providerName" type="text" ng-change="updateProviderName()" required/>
+      </div>
+      <div pf-form-group pf-label="Type" required pf-label-class="miq-input-label-class" pf-input-class="miq-radio-input-class">
+        <label class="radio">
+          <input type="radio" ng-model="data.providerType" value="openshiftOrigin">OpenShift Origin
+        </label>
+        <label class="radio">
+          <input type="radio" ng-model="data.providerType" value="openshiftEnterprise">OpenShift Enterprise
+        </label>
+      </div>
+    </form>
+    <div class="miq-form-heading">Provider to provision on</div>
+    <form class="form-horizontal">
+      <div class="miq-form-no-label">
+        <label class="radio">
+          <input type="radio" ng-model="data.provisionOn" value="existingVms">Use existing VMs from an existing provider
+        </label>
+        <div class="form-group  sub-group">
+          <select pf-select ng-model="data.existingProviderId" id="exitingProviderType"
+                  ng-disabled="data.provisionOn != 'existingVms'"
+                  ng-options="provider.id as provider.name for provider in existingProviders">
+          </select>
+        </div>
+        <label class="radio">
+          <input type="radio" ng-model="data.provisionOn" value="newVms">Create new VMs on provider
+        </label>
+        <div class="form-group sub-group">
+          <select pf-select ng-model="data.newVmProviderId" id="newVmProviders"
+                  ng-disabled="data.provisionOn != 'newVms'"
+                  ng-options="provider.id as provider.name for provider in newVmProviders">
+
+          </select>
+        </div>
+        <label class="radio">
+          <input type="radio" ng-model="data.provisionOn" value="noProvider">Specify a list of machines to deploy on (No existing provider)
+        </label>
+      </div>
+    </form>
+  </div>
+</div>

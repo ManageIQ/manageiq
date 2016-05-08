@@ -12,6 +12,7 @@ angular.module('miq.wizard').directive('miqWizardSubstep', function() {
       nextTooltip: '=?',
       prevTooltip: '=?',
       okToNavAway: '=?',
+      allowClickNav: '=?',
       disabled: '@?wzDisabled',
       description: '@',
       wizardData: '=',
@@ -44,6 +45,9 @@ angular.module('miq.wizard').directive('miqWizardSubstep', function() {
       }
       if (angular.isUndefined($scope.okToNavAway)) {
         $scope.okToNavAway = true;
+      }
+      if (angular.isUndefined($scope.allowClickNav)) {
+        $scope.allowClickNav = true;
       }
 
       $scope.isPrevEnabled = function () {
