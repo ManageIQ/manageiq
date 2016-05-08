@@ -1,0 +1,30 @@
+<div ng-controller="containers.deployProviderConfigStorageController">
+  <div miq-wizard-substep step-title="Storage" step-id="config-storage"  step-priority="2" next-enabled="configStorageComplete"
+       on-show="onShow" wz-disabled="false" review-template="{{reviewTemplate}}">
+    <div class="miq-form-heading">Select persistent storage</div>
+    <form class="form-horizontal">
+      <div class="miq-radio-form">
+        <label class="radio">
+          <input type="radio" ng-model="data.storageType" ng-change="validateForm()" value="nfs">NFS</input>
+        </label>
+        <div class="form-group sub-group">
+          <div pf-form-group pf-label="Server" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+            <input id="nfs-storage-server" name="server" ng-model="data.nfsStorageServer" type="text" ng-change="validateForm()" required ng-disabled="data.storageType != 'nfs'"/>
+          </div>
+          <div pf-form-group pf-label="Path" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+            <input name="path" ng-model="data.nfsStoragePath" type="text" ng-change="validateForm()" required ng-disabled="data.storageType != 'nfs'"/>
+          </div>
+        </div>
+        <label class="radio">
+          <input type="radio" ng-model="data.storageType" ng-change="validateForm()" value="gluster">Red Hat Gluster Storage</input>
+        </label>
+        <label class="radio">
+          <input type="radio" ng-model="data.storageType" ng-change="validateForm()" value="integratedNfs">Integrated NFS (POCs only)</input>
+        </label>
+        <label class="radio">
+          <input type="radio" ng-model="data.storageType" ng-change="validateForm()" value="none">None</input>
+        </label>
+      </div>
+    </form>
+  </div>
+</div>

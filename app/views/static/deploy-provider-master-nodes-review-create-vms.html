@@ -1,0 +1,61 @@
+<div class="miq-form-heading">Master configuration</div>
+<form class="wizard-miq-review-subform">
+</form>
+<form class="wizard-miq-review-subform">
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">Number of Masters:</span>
+    <span class="wizard-miq-review-item-value">{{data.createMastersCount}}</span>
+  </div>
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">Base Name:</span>
+    <span class="wizard-miq-review-item-value">{{data.createMasterBaseName}}</span>
+  </div>
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">Template:</span>
+    <span class="wizard-miq-review-item-value">{{getMasterCreationTemplate()}}</span>
+  </div>
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">Memory:</span>
+    <span class="wizard-miq-review-item-value">{{data.createMastersMemory}}</span>
+  </div>
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">CPU:</span>
+    <span class="wizard-miq-review-item-value">{{data.createMastersCpu}}</span>
+  </div>
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">Logical Network:</span>
+    <span class="wizard-miq-review-item-value">{{data.createMastersNetwork}}</span>
+  </div>
+</form>
+<div class="miq-form-heading">Node configuration</div>
+<form class="wizard-miq-review-subform">
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">Number of Nodes:</span>
+    <span class="wizard-miq-review-item-value">{{data.createNodesCount}}</span>
+  </div>
+  <div class="wizard-miq-review-item">
+    <span class="wizard-miq-review-item-label">Base Name:</span>
+    <span class="wizard-miq-review-item-value">{{data.createNodesBaseName}}</span>
+  </div>
+  <div class="checkbox" ng-if="data.createNodesLikeMasters">
+    <label class="miq-checkbox-input-label miq-checkbox-input-label-lg">
+      <input type="checkbox" ng-model="data.createNodesLikeMasters">Same as Master configuration
+    </label>
+  </div>
+  <div class="wizard-miq-review-item" ng-if="!data.createNodesLikeMasters">
+    <span class="wizard-miq-review-item-label">Template:</span>
+    <span class="wizard-miq-review-item-value">{{getNodeCreationTemplate()}}</span>
+  </div>
+  <div class="wizard-miq-review-item" ng-if="!data.createNodesLikeMasters">
+    <span class="wizard-miq-review-item-label">Memory:</span>
+    <span class="wizard-miq-review-item-value">{{data.createNodesMemory}}</span>
+  </div>
+  <div class="wizard-miq-review-item" ng-if="!data.createNodesLikeMasters">
+    <span class="wizard-miq-review-item-label">CPU:</span>
+    <span class="wizard-miq-review-item-value">{{data.createNodesCpu}}</span>
+  </div>
+  <div class="wizard-miq-review-item" ng-if="!data.createNodesLikeMasters">
+    <span class="wizard-miq-review-item-label">Logical Network:</span>
+    <span class="wizard-miq-review-item-value">{{data.createNodesNetwork}}</span>
+  </div>
+</form>

@@ -1,0 +1,74 @@
+<div ng-controller="containers.deployProviderDetailsCreateVMsController">
+  <div class="miq-form-heading">Master configuration</div>
+  <form class="form-horizontal">
+    <div pf-form-group pf-label="Number of Masters" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-touchspin-input-class">
+      <div class="input-group bootstrap-touchspin">
+        <span class="input-group-btn">
+          <button class="btn btn-default bootstrap-touchspin-down" type="button" ng-click="masterCountDecrement()">-</button>
+        </span>
+        <input class="bootstrap-touchspin form-control" id="create-masters-count" type="text" ng-model="data.createMastersCount" >
+        <span class="input-group-btn">
+          <button class="btn btn-default bootstrap-touchspin-up" type="button" ng-click="masterCountIncrement()">+</button>
+        </span>
+      </div>
+    </div>
+    <div pf-form-group pf-label="Base Name" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input id="create-master-base-name" ng-model="data.createMasterBaseName" type="text" ng-change="validateForm()" required/>
+    </div>
+    <div pf-form-group pf-label="Template" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <select pf-select ng-model="data.masterCreationTemplateId" id="masterCreationTemplate" ng-change="updateNodesLikeMaster()">
+        <option ng-repeat="template in data.nodeCreationTemplates" value="{{template.id}}">{{template.name}}</option>
+      </select>
+    </div>
+    <div pf-form-group pf-label="Memory" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input ng-model="data.createMastersMemory" type="text" ng-change="validateForm()"
+             ng-blur="updateNodesLikeMaster()" ng-enter="updateNodesLikeMaster()" required/>
+    </div>
+    <div pf-form-group pf-label="CPU" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input ng-model="data.createMastersCpu" type="text" ng-change="validateForm()"
+             ng-blur="updateNodesLikeMaster()" ng-enter="updateNodesLikeMaster()" required/>
+    </div>
+    <div pf-form-group pf-label="Logical Network" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input ng-model="data.createMastersNetwork" type="text" ng-change="validateForm()"
+             ng-blur="updateNodesLikeMaster()" ng-enter="updateNodesLikeMaster()" required/>
+    </div>
+  </form>
+  <div class="miq-form-heading">Node configuration</div>
+  <form class="form-horizontal">
+    <div pf-form-group pf-label="Number of Nodes" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-touchspin-input-class">
+      <div class="input-group bootstrap-touchspin">
+        <span class="input-group-btn">
+          <button class="btn btn-default bootstrap-touchspin-down" type="button" ng-click="nodeCountDecrement()">-</button>
+        </span>
+        <input class="bootstrap-touchspin form-control" id="create-nodes-count" type="text" ng-model="data.createNodesCount" ng-change="validateForm()">
+        <span class="input-group-btn">
+          <button class="btn btn-default bootstrap-touchspin-up" type="button" ng-click="nodeCountIncrement()">+</button>
+        </span>
+      </div>
+    </div>
+    <div pf-form-group pf-label="Base Name" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input ng-model="data.createNodesBaseName" type="text" ng-change="validateForm()" required/>
+    </div>
+    <div class="miq-input-checkbox-form">
+      <div class="checkbox-inline">
+        <label class="miq-checkbox-input-label miq-checkbox-input-label-lg">
+          <input type="checkbox" ng-model="data.createNodesLikeMasters" ng-change="updateNodesLikeMaster()">Same as Master configuration
+        </label>
+      </div>
+    </div>
+    <div pf-form-group pf-label="Template" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <select pf-select ng-model="data.nodeCreationTemplateId" id="nodeCreationTemplate" ng-disabled="data.createNodesLikeMasters">
+        <option ng-repeat="template in data.nodeCreationTemplates" value="{{template.id}}">{{template.name}}</option>
+      </select>
+    </div>
+    <div pf-form-group pf-label="Memory" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input ng-model="data.createNodesMemory" type="text" ng-change="validateForm()" required ng-disabled="data.createNodesLikeMasters"/>
+    </div>
+    <div pf-form-group pf-label="CPU" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input ng-model="data.createNodesCpu" type="text" ng-change="validateForm()" required ng-disabled="data.createNodesLikeMasters"/>
+    </div>
+    <div pf-form-group pf-label="Logical Network" required pf-label-class="miq-input-label-class miq-input-label-class-lg" pf-input-class="miq-input-class">
+      <input ng-model="data.createNodesNetwork" type="text" ng-change="validateForm()" required ng-disabled="data.createNodesLikeMasters"/>
+    </div>
+  </form>
+</div>
