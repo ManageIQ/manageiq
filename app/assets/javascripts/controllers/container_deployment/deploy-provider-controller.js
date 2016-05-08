@@ -3,6 +3,8 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
   function($rootScope, $scope, $timeout, $http) {
     'use strict';
 
+    $scope.showDeploymentWizard = false;
+    ManageIQ.angular.scope = $scope;
     $scope.data = {};
     $scope.nodeData = {
       allNodes: [],
@@ -99,24 +101,19 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
       }
     });
 
-
     $scope.showDeploymentWizard = false;
-    var showListener =  function() {
+    $scope.showListener = function() {
       if (!$scope.showDeploymentWizard) {
         initializeDeploymentWizard();
         $scope.showDeploymentWizard = true;
       }
     };
-    $rootScope.$on('deployProvider.show', showListener);
 
     $scope.cancelDeploymentWizard = function () {
       if (!$scope.deployInProgress) {
         $scope.showDeploymentWizard = false;
       }
     };
-
-    $scope.$on('$destroy', showListener);
-
 
     $scope.cancelWizard = function () {
       $scope.showDeploymentWizard = false;
