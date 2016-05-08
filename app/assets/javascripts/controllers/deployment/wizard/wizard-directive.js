@@ -21,7 +21,7 @@ angular.module('miq.wizard').directive('miqWizard', function () {
       wizardReady: '=?',
       wizardDone: '=?'
     },
-    templateUrl: '/static/wizard.html',
+    templateUrl: '/static/wizard.html.haml',
     controller: function ($scope, $timeout) {
       var firstRun = true;
       $scope.steps = [];

@@ -14,7 +14,7 @@ angular.module('miq.dialogs').directive('miqModal', function () {
       onHide: '&',
       onCancel: '&'
     },
-    templateUrl: '/static/modal-dialog.html',
+    templateUrl: '/static/modal-dialog.html.haml',
     controller: function ($scope) {
       $scope.settings = {};
 

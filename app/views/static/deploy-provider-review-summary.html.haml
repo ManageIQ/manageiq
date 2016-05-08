@@ -1,0 +1,18 @@
+%div{"ng-controller" => "containers.deployProviderReviewSummaryController"}
+  %div{"miq-wizard-substep" => "", "next-enabled" => "!playbookChanged", "next-tooltip" => "navTooltip", "ok-to-nav-away" => "!playbookChanged", "on-show" => "onShow", "prev-enabled" => "!playbookChanged", "prev-tooltip" => "navTooltip", "step-id" => "review-summary", "step-priority" => "0", "step-title" => "Summary", "wz-disabled" => "false"}
+    %div{"miq-wizard-review-page" => "", :shown => "pageShown", "wizard-data" => "data"}
+    .wizard-miq-review-steps
+      %ul.list-group
+        %li.list-group-item
+          %a.miq-form-collapse{"ng-class" => "{'collapsed': !showAdvancedSettings}", "ng-click" => "toggleAdvancedSettings()"}
+            Advanced Settings
+          .wizard-miq-review-content{"ng-class" => "{'collapse': !showAdvancedSettings}"}
+            %form
+              %textarea.miq-review-edit-text{"ng-change" => "onPlaybookTextChange()", "ng-model" => "data.editedPlaybookText", :rows => "10", :type => "text"}
+              .modal-footer.miq-review-button-panel
+                %button.btn.btn-default{"ng-click" => "cancelPlaybookChanges()", "ng-disabled" => "!playbookChanged"} Cancel
+                %button.btn.btn-primary{"ng-click" => "savePlaybookChanges()", "ng-disabled" => "!playbookChanged"} Save
+    .miq-wizard-page-wait-dialog{"miq-modal" => "", "modal-size" => "small", "show-close" => "false", "show-header" => "false", :visible => "showWaitDialog"}
+      .miq-wait-dialog-content
+        .spinner.spinner-lg
+        .miq-wait-dialog-text Loading summary...

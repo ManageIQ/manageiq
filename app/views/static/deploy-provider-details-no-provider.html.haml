@@ -1,0 +1,45 @@
+%div{"ng-controller" => "containers.deployProviderDetailsNoProviderController"}
+  %form.form-horizontal
+    %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => "Key", "pf-label-class" => "miq-input-label-class", :required => ""}
+      %input#deploy-key{:name => "name", "ng-change" => "validateForm()", "ng-model" => "data.deploymentKey", :required => "", :type => "text"}/
+    %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => "Username", "pf-label-class" => "miq-input-label-class", :required => ""}
+      %input#deploy-username{:name => "name", "ng-change" => "validateForm()", "ng-model" => "data.deploymentUsername", :required => "", :type => "text"}/
+    %div{"pf-form-group" => "", "pf-input-class" => "miq-input-class", "pf-label" => "Password", "pf-label-class" => "miq-input-label-class", :required => ""}
+      %input#deploy-password{:name => "name", "ng-change" => "validateForm()", "ng-model" => "data.deploymentPassword", :required => "", :type => "password"}/
+  .miq-form-heading Add Masters and Nodes
+  .nodes-table-container.add-nodes-table
+    %div{:config => "toolbarConfig", "pf-toolbar" => ""}
+    .table-responsive
+      %table#DataTables_Table_0.datatable.table.table-striped.table-bordered.dataTable.no-footer{"aria-describedby" => "DataTables_Table_0_info", :role => "grid"}
+        %thead
+          %tr{:role => "row"}
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
+              %input{"ng-checked" => "allNodesSelected", "ng-click" => "toggleAllNodesSelected()", :type => "checkbox"}/
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} Host Name
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} State
+        %tbody
+          %tr{"ng-class" => "{odd: ($index / 2 == 0), even: ($index / 2 != 0)}", "ng-repeat" => "node in allNodes"}
+            %td
+              %input{"ng-checked" => "node.selected", "ng-click" => "toggleNodeSelected(node)", :type => "checkbox"}/
+            %td {{node.vmName}}
+            %td {{node.state}}
+    .table-footer
+      .badge{:tooltip => "{{mastersWarning}}", "tooltip-placement" => "right"}
+        %span.pficon.pficon-warning-triangle-o{"ng-if" => "mastersWarning && mastersWarning != ''"}
+        %span{"ng-if" => "mastersCount == 1"} {{mastersCount}} Master
+        %span{"ng-if" => "mastersCount != 1"} {{mastersCount}} Masters
+      .badge{:tooltip => "{{nodesWarning}}", "tooltip-placement" => "right"}
+        %span.pficon.pficon-warning-triangle-o{"ng-if" => "nodesWarning && nodesWarning != ''"}
+        %span{"ng-if" => "nodesCount == 1"} {{nodesCount}} Node
+        %span{"ng-if" => "nodesCount != 1"} {{nodesCount}} Nodes
+      .badge{:tooltip => "{{infraNodesWarning}}", "tooltip-placement" => "right"}
+        %span.pficon.pficon-warning-triangle-o{"ng-if" => "infraNodesWarning && infraNodesWarning != ''"}
+        %span{"ng-if" => "infraNodesCount == 1"} {{infraNodesCount}} Infra Node
+        %span{"ng-if" => "infraNodesCount != 1"} {{infraNodesCount}} Infra Nodes
+  .wizard-miq{"miq-modal" => "", "modal-size" => "medium", "modal-title" => "{{addDialogTitle}}", "on-cancel" => "cancelAddDialog()", :visible => "showAddDialog"}
+    .miq-add-dialog-text {{addDialogText}}
+    .miq-add-dialog-input
+      %input#addname{"auto-focus" => "showAddDialog", :name => "addname", "ng-enter" => "saveAddDialog()", "ng-model" => "newItem.vmName", :required => "", :type => "text"}/
+    .modal-footer
+      %button.btn.btn-default{"ng-click" => "cancelAddDialog()", :type => "button"} Cancel
+      %button.btn.btn-primary{"ng-class" => "{disabled: !newItem.vmName || newItem.vmName.length === 0} ", "ng-click" => "saveAddDialog()", :type => "button"} Add

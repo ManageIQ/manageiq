@@ -1,0 +1,16 @@
+%div{"ng-controller" => "containers.deployProviderReviewController"}
+  %form.form{"ng-if" => "data.provisionOn == 'existingVms'"}
+    %div{"ng-include" => "'/static/deploy-provider-master-nodes-review-tables.html.haml'"}
+  %form.form{"ng-if" => "data.provisionOn == 'newVms'"}
+    %div{"ng-include" => "'/static/deploy-provider-master-nodes-review-create-vms.html.haml'"}
+  %form.form{"ng-if" => "data.provisionOn == 'noProvider'"}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Key:
+      %span.wizard-miq-review-item-value {{data.deploymentKey}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Username:
+      %span.wizard-miq-review-item-value {{data.deploymentUsername}}
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Password:
+      %span.wizard-miq-review-item-value {{data.deploymentPassword}}
+    %div{"ng-include" => "'/static/deploy-provider-master-nodes-review-tables.html.haml'"}

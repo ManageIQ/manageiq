@@ -1,0 +1,14 @@
+.wizard-miq-review-page
+  .wizard-miq-review-steps
+    %ul.list-group
+      %li.list-group-item{"ng-repeat" => "reviewStep in reviewSteps track by $index"}
+        %a.miq-form-collapse{"ng-class" => "{'collapsed': !reviewStep.showReviewDetails}", "ng-click" => "toggleShowReviewDetails(reviewStep)"}
+          {{reviewStep.stepTitle}}
+        .wizard-miq-review-substeps{"ng-class" => "{'collapse': !reviewStep.showReviewDetails}"}
+          %ul.list-group
+            %li.list-group-item{"ng-repeat" => "substep in reviewStep.getReviewSteps()"}
+              %a.miq-form-collapse{"ng-class" => "{'collapsed': !substep.showReviewDetails}", "ng-click" => "toggleShowReviewDetails(substep)"}
+                %span.wizard-miq-substep-number {{getSubStepNumber(reviewStep, substep)}}
+                %span.wizard-miq-substep-title {{substep.stepTitle}}
+              .wizard-miq-review-content{"ng-class" => "{'collapse': !substep.showReviewDetails}"}
+                %div{"ng-include" => "substep.reviewTemplate"}

@@ -1,0 +1,18 @@
+.wizard-miq-body
+  .wizard-miq-content
+    %ul.wizard-miq-steps-indicator{:class => "wizard-miq-steps-{{getEnabledSteps().length}}", "ng-class" => "{'invisible': !wizardReady}", "ng-if" => "!hideIndicators"}
+      %li{"ng-class" => "{default: !step.completed && !step.selected, current: step.selected && !step.completed, done: step.completed && !step.selected, editing: step.selected && step.completed}", "ng-repeat" => "step in getEnabledSteps()"}
+        %a{"ng-click" => "goTo(step, true)"} {{step.title}}
+    .wizard-miq-step-content{"ng-if" => "!wizardReady", "ng-style" => "contentStyle"}
+      .blank-slate-pf
+        .spinner.spinner-lg
+        %h1 Initialization in progress...
+    .wizard-miq-steps{"ng-transclude" => ""}
+  .wizard-miq-btn-container.modal-footer
+    %button.btn.btn-default{"miq-wiz-cancel" => "", "ng-disabled" => "wizardDone"} {{cancelTitle}}
+    .tooltip-wrapper{:tooltip => "{{prevTooltip}}", "tooltip-placement" => "left"}
+      %button.btn.btn-default{:callback => "backCallback", "miq-wiz-previous" => "", "ng-disabled" => "!wizardReady || wizardDone || !prevEnabled || firstStep"}
+        {{backTitle}}
+    .tooltip-wrapper{:tooltip => "{{nextTooltip}}", "tooltip-placement" => "left"}
+      %button.btn.btn-primary{:callback => "nextCallback", "miq-wiz-next" => "", "ng-disabled" => "!wizardReady || !nextEnabled"}
+        {{nextTitle}}

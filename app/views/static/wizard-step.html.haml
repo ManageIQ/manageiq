@@ -1,0 +1,12 @@
+%section.step{"ng-class" => "{current: selected, done: completed}", "ng-show" => "selected"}
+  .wizard-miq-step-substeps{"ng-if" => "substeps === true"}
+    .wizard-miq-step
+      .wizard-miq-substep-nav{"ng-style" => "substepsListStyle"}
+        %ul.list-group
+          %li.list-group-item{"ng-class" => "{active: step.selected}", "ng-repeat" => "step in getEnabledSteps()"}
+            %a{"ng-click" => "goTo(step)"}
+              %span.wizard-miq-substep-number {{getStepDisplayNumber(step)}}
+              %span.wizard-miq-substep-title {{step.title}}
+      .wizard-miq-step-content{"ng-style" => "contentStyle", "ng-transclude" => ""}
+  .wizard-miq-step{"ng-if" => "substeps !== true"}
+    .wizard-miq-step-content{"ng-style" => "contentStyle", "ng-transclude" => ""}

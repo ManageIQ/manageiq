@@ -1,0 +1,30 @@
+.wizard-miq-review-item
+  %span.wizard-miq-review-item-label {{data.masters.length}} {{data.masters.length === 1 ? 'Master' : 'Masters'}}
+  .table-responsive.wizard-miq-review-table
+    %table.datatable.table.table-striped.table-bordered.dataTable.no-footer{:role => "grid"}
+      %thead
+        %tr{:role => "row"}
+          %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} VM/Instance Name
+      %tbody
+        %tr{"ng-class" => "{odd: ($index / 2 == 0), even: ($index / 2 != 0)}", "ng-repeat" => "node in data.masters"}
+          %td {{node.vmName}}
+.wizard-miq-review-item
+  %span.wizard-miq-review-item-label {{data.nodes.length}} {{data.nodes.length === 1 ? 'Node' : 'Nodes'}}
+  .table-responsive.wizard-miq-review-table
+    %table.datatable.table.table-striped.table-bordered.dataTable.no-footer{:role => "grid"}
+      %thead
+        %tr{:role => "row"}
+          %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} VM/Instance Name
+      %tbody
+        %tr{"ng-class" => "{odd: ($index / 2 == 0), even: ($index / 2 != 0)}", "ng-repeat" => "node in data.nodes"}
+          %td {{node.vmName}}
+.wizard-miq-review-item{"ng-if" => "data.infraNodes.length > 0"}
+  %span.wizard-miq-review-item-label {{data.infraNodes.length}} {{data.infraNodes.length === 1 ? 'Infra Node' : 'Infra Nodes'}}
+  .table-responsive.wizard-miq-review-table
+    %table.datatable.table.table-striped.table-bordered.dataTable.no-footer{:role => "grid"}
+      %thead
+        %tr{:role => "row"}
+          %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} VM/Instance Name
+      %tbody
+        %tr{"ng-class" => "{odd: ($index / 2 == 0), even: ($index / 2 != 0)}", "ng-repeat" => "node in data.infraNodes"}
+          %td {{node.vmName}}

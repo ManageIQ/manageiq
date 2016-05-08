@@ -20,7 +20,7 @@ angular.module('miq.wizard').directive('miqWizardSubstep', function() {
       reviewTemplate: '@?'
     },
     require: '^miq-wizard-step',
-    templateUrl: '/static/wizard-substep.html',
+    templateUrl: '/static/wizard-substep.html.haml',
     controller: function($scope) {
       if (angular.isUndefined($scope.nextEnabled)) {
         $scope.nextEnabled = true;

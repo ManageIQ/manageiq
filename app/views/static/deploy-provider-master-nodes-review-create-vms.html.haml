@@ -1,0 +1,45 @@
+.miq-form-heading Master configuration
+%form.wizard-miq-review-subform
+%form.wizard-miq-review-subform
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label Number of Masters:
+    %span.wizard-miq-review-item-value {{data.createMastersCount}}
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label Base Name:
+    %span.wizard-miq-review-item-value {{data.createMasterBaseName}}
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label Template:
+    %span.wizard-miq-review-item-value {{getMasterCreationTemplate()}}
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label Memory:
+    %span.wizard-miq-review-item-value {{data.createMastersMemory}}
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label CPU:
+    %span.wizard-miq-review-item-value {{data.createMastersCpu}}
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label Logical Network:
+    %span.wizard-miq-review-item-value {{data.createMastersNetwork}}
+.miq-form-heading Node configuration
+%form.wizard-miq-review-subform
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label Number of Nodes:
+    %span.wizard-miq-review-item-value {{data.createNodesCount}}
+  .wizard-miq-review-item
+    %span.wizard-miq-review-item-label Base Name:
+    %span.wizard-miq-review-item-value {{data.createNodesBaseName}}
+  .checkbox{"ng-if" => "data.createNodesLikeMasters"}
+    %label.miq-checkbox-input-label.miq-checkbox-input-label-lg
+      %input{"ng-model" => "data.createNodesLikeMasters", :type => "checkbox"}
+        Same as Master configuration
+  .wizard-miq-review-item{"ng-if" => "!data.createNodesLikeMasters"}
+    %span.wizard-miq-review-item-label Template:
+    %span.wizard-miq-review-item-value {{getNodeCreationTemplate()}}
+  .wizard-miq-review-item{"ng-if" => "!data.createNodesLikeMasters"}
+    %span.wizard-miq-review-item-label Memory:
+    %span.wizard-miq-review-item-value {{data.createNodesMemory}}
+  .wizard-miq-review-item{"ng-if" => "!data.createNodesLikeMasters"}
+    %span.wizard-miq-review-item-label CPU:
+    %span.wizard-miq-review-item-value {{data.createNodesCpu}}
+  .wizard-miq-review-item{"ng-if" => "!data.createNodesLikeMasters"}
+    %span.wizard-miq-review-item-label Logical Network:
+    %span.wizard-miq-review-item-value {{data.createNodesNetwork}}

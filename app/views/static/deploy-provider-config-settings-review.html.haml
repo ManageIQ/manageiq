@@ -1,0 +1,14 @@
+%div{"ng-controller" => "containers.deployProviderReviewController"}
+  %form.form-horizontal
+    .wizard-miq-review-item
+      %span.wizard-miq-review-item-label Configure:
+  %form{:role => "form"}
+    %ul.miq-wizard-review-list
+      %li{"ng-if" => "data.configureRouter"} Router
+      %li{"ng-if" => "data.configureRegistry"} Registry
+      %ul
+        %li{"ng-if" => "data.useDefaultRegistry"} Use default registry
+        %li{"ng-if" => "data.useS3Registry"} Use S3
+        %li{"ng-if" => "data.useSwift"} Use Swift
+      %li{"ng-if" => "data.configureMetrics"} Metrics
+      %li{"ng-if" => "!data.configureRouter && !configureRegistry && !data.configureMetrics"} There are not items selected to configure

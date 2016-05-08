@@ -1,0 +1,9 @@
+.miq-modal.modal.fade{"data-backdrop" => "static", "data-keyboard" => "false"}>
+  .modal-dialog{"ng-class" => "{'modal-lg': modalSize === 'large', 'modal-sm': modalSize === 'small'}"}
+    .modal-content
+      .modal-header{"ng-if" => "settings.showHeader"}
+        %button.close{"aria-hidden" => "true", "ng-click" => "onCancel()", "ng-if" => "settings.showClose", :type => "button"}
+          %span.pficon.pficon-close
+        %h4.modal-title {{modalTitle}}
+      .modal-body{"ng-transclude" => ""}
+'

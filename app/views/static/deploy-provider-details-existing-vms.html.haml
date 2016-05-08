@@ -1,0 +1,37 @@
+%div{"ng-controller" => "containers.deployProviderDetailsExistingVMsController"}
+  .miq-page-heading Set Masters and Nodes
+  .nodes-table-container
+    %div{:config => "toolbarConfig", "pf-toolbar" => ""}
+    .table-responsive
+      %table#DataTables_Table_0.datatable.table.table-striped.table-bordered.dataTable.no-footer{"aria-describedby" => "DataTables_Table_0_info", :role => "grid"}
+        %thead
+          %tr{:role => "row"}
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"}
+              %input{"ng-checked" => "allNodesSelected", "ng-click" => "toggleAllNodesSelected()", :type => "checkbox"}/
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} VM/Instance Name
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} State
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} # CPUS
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} Memory
+            %th{:colspan => "1", :rowspan => "1", :tabindex => "0"} Disk Size
+        %tbody
+          %tr{"ng-class" => "{odd: ($index / 2 == 0), even: ($index / 2 != 0)}", "ng-repeat" => "node in filteredNodes"}
+            %td
+              %input{"ng-checked" => "node.selected", "ng-click" => "toggleNodeSelected(node)", :type => "checkbox"}/
+            %td {{node.vmName}}
+            %td {{node.state}}
+            %td {{node.cpus}}
+            %td {{node.memory}}
+            %td {{node.diskSize}}
+    .table-footer
+      .badge{:tooltip => "{{mastersWarning}}", "tooltip-placement" => "right"}
+        %span.pficon.pficon-warning-triangle-o{"ng-if" => "mastersWarning && mastersWarning != ''"}
+        %span{"ng-if" => "mastersCount == 1"} {{mastersCount}} Master
+        %span{"ng-if" => "mastersCount != 1"} {{mastersCount}} Masters
+      .badge{:tooltip => "{{nodesWarning}}", "tooltip-placement" => "right"}
+        %span.pficon.pficon-warning-triangle-o{"ng-if" => "nodesWarning && nodesWarning != ''"}
+        %span{"ng-if" => "nodesCount == 1"} {{nodesCount}} Node
+        %span{"ng-if" => "nodesCount != 1"} {{nodesCount}} Nodes
+      .badge{:tooltip => "{{infraNodesWarning}}", "tooltip-placement" => "right"}
+        %span.pficon.pficon-warning-triangle-o{"ng-if" => "infraNodesWarning && infraNodesWarning != ''"}
+        %span{"ng-if" => "infraNodesCount == 1"} {{infraNodesCount}} Infra Node
+        %span{"ng-if" => "infraNodesCount != 1"} {{infraNodesCount}} Infra Nodes
