@@ -41,7 +41,7 @@ class ContainerLabelTagMapping < ApplicationRecord
     end
   end
 
-  # Main entry point
+  # Main entry point.
   def self.tags_for_entity(entity)
     entity.labels.collect_concat { |label| tags_for_label(label) }
   end
@@ -80,8 +80,8 @@ class ContainerLabelTagMapping < ApplicationRecord
     category = category_tag.classification
     unless category
       category = Classification.create_category!(:description => "Kubernetes label '#{name}'",
-                                                 :read_only => true,
-                                                 :tag => category_tag)
+                                                 :read_only   => true,
+                                                 :tag         => category_tag)
     end
     entry = category.add_entry(:name => entry_name, :description => value)
     entry.save!
