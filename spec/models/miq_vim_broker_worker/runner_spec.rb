@@ -3,6 +3,7 @@ require 'MiqVimBroker'
 
 describe MiqVimBrokerWorker::Runner do
   before(:each) do
+    _guid_2, _server_2, @zone_2 = EvmSpecHelper.create_guid_miq_server_zone
     guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
     other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
@@ -317,6 +318,36 @@ describe MiqVimBrokerWorker::Runner do
           expect(q.class_name).to eq("EmsRefresh")
           expect(q.method_name).to eq("vc_update")
           expect(q.args).to eq([ems2.id, event])
+        end
+
+        it "will reconnect to an EMS" do
+          event = {
+            :server   => @ems.address,
+            :username => @ems.authentication_userid,
+            :op       => "MiqVimRemoved",
+            :error    => "Connection timed out",
+          }
+
+          @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
+
+          expect(@vim_broker_worker).to receive(:reconnect_ems).with(@ems)
+          @vim_broker_worker.drain_event
+        end
+
+        it "will not reconnect to an EMS in another zone" do
+          ems_2 = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone_2)
+
+          event = {
+            :server   => ems_2.address,
+            :username => ems_2.authentication_userid,
+            :op       => "MiqVimRemoved",
+          }
+
+          @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
+
+          expect(@vim_broker_worker).not_to receive(:reconnect_ems)
+
+          @vim_broker_worker.drain_event
         end
       end
     end
