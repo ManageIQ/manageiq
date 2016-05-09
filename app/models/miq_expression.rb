@@ -681,7 +681,15 @@ class MiqExpression
     when "not like"
       field = Field.parse(exp[operator]["field"])
       clause = field.does_not_match("%#{exp[operator]["value"]}%").to_sql
-    when "and", "or"
+    when "and"
+      operands = exp[operator].each_with_object([]) do |operand, result|
+        next if operand.blank?
+        sql = _to_sql(operand, tz)
+        next if sql.blank?
+        result << sql
+      end
+      clause = Arel::Nodes::And.new(operands.collect { |o| Arel::Nodes::SqlLiteral.new(o) }).to_sql
+    when "or"
       operands = exp[operator].collect do|operand|
         o = _to_sql(operand, tz) if operand.present?
         o.blank? ? nil : o

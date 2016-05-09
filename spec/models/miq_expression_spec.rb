@@ -72,14 +72,14 @@ describe MiqExpression do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%' AND \"vms\".\"name\" LIKE '%bar')")
+      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%' AND \"vms\".\"name\" LIKE '%bar'")
     end
 
     it "generates the SQL for an AND expression where only one is supported by SQL" do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-platform", "value" => "bar"}}
       sql, * = MiqExpression.new("AND" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%')")
+      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%'")
     end
 
     it "returns nil for an AND expression where none is supported by SQL" do
