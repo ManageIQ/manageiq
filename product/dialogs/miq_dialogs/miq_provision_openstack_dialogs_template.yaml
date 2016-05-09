@@ -311,7 +311,7 @@
       :fields:
         :volume_name:
           :description: Volume Name
-          :required: true
+          :required: false
           :display: :edit
           :data_type: :string
           :min_length:

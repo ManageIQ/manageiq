@@ -5,6 +5,15 @@
 
 %h3
   = label
+
+- if @edit && !options[:readonly]
+  .form-horizontal
+    .form-group
+      .col-md-10
+      .col-md-2
+        %button#add-additional-volume-button
+          Add Volume
+
 .form-horizontal#add-volumes-form
   - while (draw_fields)
     #add-volume-fieldset
@@ -13,35 +22,29 @@
           %label.col-md-2.control-label{:valign => "top"}
             = _(workflow.get_field(key, dialog)[:description])
           .col-md-8
-            - if workflow.get_field(key, dialog)[:display] == :edit
-              - if workflow.get_field(key, dialog)[:data_type] == :string
+            - if workflow.get_field(key, dialog)[:data_type] == :string
+              - if @edit && workflow.get_field(key, dialog)[:display] == :edit && !@edit[:stamp_typ]
                 %input.form-control{:type              => "text",
                                     :required          => workflow.get_field(key, dialog)[:required],
                                     :value             => options[:"#{key}_#{counter}"],
                                     :id                => "volumes__#{key}_#{counter}",
                                     :name              => "volumes__#{key}_#{counter}",
                                     "data-miq_observe" => {:interval => ".5", :url => url}.to_json}
-              - elsif workflow.get_field(key, dialog)[:data_type] == :boolean
-                %input{:checked           => options[:"volume_#{key}_#{counter}"],
-                       :type              => "checkbox",
-                       :id                => "volumes__#{key}_#{counter}",
-                       :required          => workflow.get_field(key, dialog)[:required],
-                       :name              => "volumes__#{key}_#{counter}",
-                       "data-miq_observe" => {:interval => ".5", :url => url}.to_json}
-            - else
-              = options[:"volume_#{key}_#{counter}"]
+              - else
+                = options[:"#{key}_#{counter}"]
+            - elsif workflow.get_field(key, dialog)[:data_type] == :boolean
+              %input{:checked           => options[:"#{key}_#{counter}"],
+                     :type              => "checkbox",
+                     :id                => "volumes__#{key}_#{counter}",
+                     :required          => workflow.get_field(key, dialog)[:required],
+                     :name              => "volumes__#{key}_#{counter}",
+                     :disabled          => !(@edit && workflow.get_field(key, dialog)[:display] == :edit && !@edit[:stamp_typ]),
+                     "data-miq_observe" => {:interval => ".5", :url => url}.to_json}
           .col-md-2
       %hr
       %div
     - counter += 1
     - draw_fields = !options[:"volume_name_#{counter}"].blank? && !options[:"volume_size_#{counter}"].blank?
-
-.form-horizontal
-  .form-group
-    .col-md-10
-    .col-md-2
-      %button#add-additional-volume-button
-        Add Another Volume
 
 :javascript
   (function(){
