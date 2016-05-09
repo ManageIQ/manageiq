@@ -157,7 +157,7 @@ describe MiqExpression do
       vm = FactoryGirl.create(:vm_vmware, :tags => [tag])
       exp = {"CONTAINS" => {"tag" => "VmInfra.managed-operations", "value" => "analysis_failed"}}
       sql, * = MiqExpression.new(exp).to_sql
-      expect(sql).to eq("vms.id IN (#{vm.id})")
+      expect(sql).to eq("\"vms\".\"id\" IN (#{vm.id})")
     end
 
     it "raises an error for an expression with unknown operator" do

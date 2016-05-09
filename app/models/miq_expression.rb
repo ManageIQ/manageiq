@@ -718,7 +718,7 @@ class MiqExpression
         tag = exp[operator]["value"]
         klass = klass.constantize
         ids = klass.find_tagged_with(:any => tag, :ns => ns).pluck(:id)
-        clause = klass.send(:sanitize_sql_for_conditions, ["#{klass.table_name}.id IN (?)", ids])
+        clause = klass.arel_attribute(:id).in(ids).to_sql
       else
         field = Field.parse(exp[operator]["field"])
         clause = field.contains(exp[operator]["value"]).to_sql
