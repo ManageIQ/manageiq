@@ -1,0 +1,46 @@
+<div ng-controller="containers.deployProviderDetailsExistingVMsController">
+  <div class="miq-page-heading">Set Masters and Nodes</div>
+  <div class="nodes-table-container">
+    <div pf-toolbar config="toolbarConfig"></div>
+    <div class="table-responsive">
+      <table class="datatable table table-striped table-bordered dataTable no-footer" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info" role="grid">
+        <thead>
+        <tr role="row">
+          <th tabindex="0" rowspan="1" colspan="1"><input type="checkbox" ng-checked="allNodesSelected" ng-click="toggleAllNodesSelected()"></th>
+          <th tabindex="0" rowspan="1" colspan="1">VM/Instance Name</th>
+          <th tabindex="0" rowspan="1" colspan="1">State</th>
+          <th tabindex="0" rowspan="1" colspan="1"># CPUS</th>
+          <th tabindex="0" rowspan="1" colspan="1">Memory</th>
+          <th tabindex="0" rowspan="1" colspan="1">Disk Size</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="node in filteredNodes" ng-class="{odd: ($index / 2 == 0), even: ($index / 2 != 0)}">
+          <td><input type="checkbox" ng-checked="node.selected" ng-click="toggleNodeSelected(node)"></td>
+          <td>{{node.vmName}}</td>
+          <td>{{node.state}}</td>
+          <td>{{node.cpus}}</td>
+          <td>{{node.memory}}</td>
+          <td>{{node.diskSize}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <div class="badge" tooltip="{{mastersWarning}}" tooltip-placement="right">
+        <span class="pficon pficon-warning-triangle-o" ng-if="mastersWarning && mastersWarning != ''"></span>
+        <span ng-if="mastersCount == 1">{{mastersCount}} Master</span>
+        <span ng-if="mastersCount != 1">{{mastersCount}} Masters</span>
+      </div>
+      <div class="badge" tooltip="{{nodesWarning}}" tooltip-placement="right">
+        <span class="pficon pficon-warning-triangle-o" ng-if="nodesWarning && nodesWarning != ''"></span>
+        <span ng-if="nodesCount == 1">{{nodesCount}} Node</span>
+        <span ng-if="nodesCount != 1">{{nodesCount}} Nodes</span>
+      </div>
+      <div class="badge" tooltip="{{infraNodesWarning}}" tooltip-placement="right">
+        <span class="pficon pficon-warning-triangle-o" ng-if="infraNodesWarning && infraNodesWarning != ''"></span>
+        <span ng-if="infraNodesCount == 1">{{infraNodesCount}} Infra Node</span>
+        <span ng-if="infraNodesCount != 1">{{infraNodesCount}} Infra Nodes</span>
+      </div>
+    </div>
+  </div>
+</div>

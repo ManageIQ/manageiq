@@ -1,0 +1,48 @@
+<div class="wizard-miq-review-item">
+  <span class="wizard-miq-review-item-label">{{data.masters.length}} {{data.masters.length === 1 ? 'Master' : 'Masters'}}</span>
+  <div class="table-responsive wizard-miq-review-table">
+    <table class="datatable table table-striped table-bordered dataTable no-footer" role="grid">
+      <thead>
+      <tr role="row">
+        <th tabindex="0" rowspan="1" colspan="1">VM/Instance Name</th>
+      </thead>
+      <tbody>
+      <tr ng-repeat="node in data.masters" ng-class="{odd: ($index / 2 == 0), even: ($index / 2 != 0)}">
+        <td>{{node.vmName}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="wizard-miq-review-item">
+  <span class="wizard-miq-review-item-label">{{data.nodes.length}} {{data.nodes.length === 1 ? 'Node' : 'Nodes'}}</span>
+  <div class="table-responsive wizard-miq-review-table">
+    <table class="datatable table table-striped table-bordered dataTable no-footer" role="grid">
+      <thead>
+      <tr role="row">
+        <th tabindex="0" rowspan="1" colspan="1">VM/Instance Name</th>
+      </thead>
+      <tbody>
+      <tr ng-repeat="node in data.nodes" ng-class="{odd: ($index / 2 == 0), even: ($index / 2 != 0)}">
+        <td>{{node.vmName}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="wizard-miq-review-item" ng-if="data.infraNodes.length > 0">
+  <span class="wizard-miq-review-item-label">{{data.infraNodes.length}} {{data.infraNodes.length === 1 ? 'Infra Node' : 'Infra Nodes'}}</span>
+  <div class="table-responsive wizard-miq-review-table">
+    <table class="datatable table table-striped table-bordered dataTable no-footer" role="grid">
+      <thead>
+      <tr role="row">
+        <th tabindex="0" rowspan="1" colspan="1">VM/Instance Name</th>
+      </thead>
+      <tbody>
+      <tr ng-repeat="node in data.infraNodes" ng-class="{odd: ($index / 2 == 0), even: ($index / 2 != 0)}">
+        <td>{{node.vmName}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

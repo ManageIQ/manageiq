@@ -1,0 +1,16 @@
+<div ng-controller="containers.deployProviderReviewController">
+    <form class="form">
+      <div class="wizard-miq-review-item">
+        <span class="wizard-miq-review-item-label">Name:</span>
+        <span class="wizard-miq-review-item-value">{{data.providerName}}</span>
+      </div>
+      <div class="wizard-miq-review-item">
+        <span class="wizard-miq-review-item-label">Type:</span>
+        <span class="wizard-miq-review-item-value">{{getProviderType()}}</span>
+      </div>
+      <div class="wizard-miq-review-item">
+        <span class="wizard-miq-review-item-label">Provider:</span>
+        <span class="wizard-miq-review-item-value">{{getProviderDescription()}}</span>
+      </div>
+    </form>
+</div>

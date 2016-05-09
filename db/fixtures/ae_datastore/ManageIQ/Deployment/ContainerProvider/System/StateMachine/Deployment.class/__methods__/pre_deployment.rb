@@ -52,8 +52,10 @@ def pre_deployment
               "sudo mv ~/inventory.yaml /usr/share/ansible/openshift-ansible/"
               ]
   $evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
+  agent_socket = "/tmp/ssh_manageiq/ssh_manageiq_#{$evm.root['automation_task'].automation_request.options[:attrs][:deployment_id]}"
+
   begin
-    Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true,
+    Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true, :agent_socket_factory => ->{ UNIXSocket.open(agent_socket) },
                    :key_data => $evm.root['private_key']) do |ssh|
       $evm.log(:info, "Connected to deployment master, ip address: #{$evm.root['deployment_master']}")
       system "scp -o 'StrictHostKeyChecking no' inventory.yaml #{$evm.root['user']}@#{$evm.root['deployment_master']}:~/"
