@@ -272,6 +272,7 @@ module Mixins
                        :provider_region           => @ems.provider_region,
                        :default_userid            => @ems.authentication_userid ? @ems.authentication_userid : "",
                        :service_account           => service_account ? service_account : "",
+                       :bearer_token_exists       => @ems.authentication_token(:bearer).nil? ? false : true,
                        :ems_controller            => controller_name
       } if controller_name == "ems_container"
     end
@@ -416,9 +417,9 @@ module Mixins
         session[:oauth_response] = nil
       end
       if ems.kind_of?(ManageIQ::Providers::ContainerManager) &&
-         ems.supports_authentication?(:bearer) && params[:bearer_token]
-        creds[:hawkular] = {:auth_key => params[:bearer_token], :userid => "_", :save => (mode != :validate)}
-        creds[:bearer] = {:auth_key => params[:bearer_token]}
+         ems.supports_authentication?(:bearer) && params[:bearer_password]
+        creds[:hawkular] = {:auth_key => params[:bearer_password], :userid => "_"}
+        creds[:bearer] = {:auth_key => params[:bearer_password]}
       end
 
       ems.update_authentication(creds, :save => (mode != :validate))

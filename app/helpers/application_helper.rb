@@ -72,7 +72,7 @@ module ApplicationHelper
       else
         out = content_tag(:li) do
           link_to("#{plural} (#{count})",
-                  {:action => 'show', :id => @record, :display => table_name.to_s.pluralize},
+                  polymorphic_path(@record, :display => table_name.to_s.pluralize),
                   :title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural})
         end
       end

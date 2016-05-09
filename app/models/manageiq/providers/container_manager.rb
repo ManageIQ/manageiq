@@ -1,3 +1,5 @@
+include AvailabilityMixin
+
 module ManageIQ::Providers
   class ContainerManager < BaseManager
     has_many :container_nodes, :foreign_key => :ems_id, :dependent => :destroy
@@ -47,6 +49,10 @@ module ManageIQ::Providers
     # enables overide of ChartsLayoutService#find_chart_path
     def chart_layout_path
       "ManageIQ_Providers_ContainerManager"
+    end
+
+    def validate_timeline
+      {:available => true, :message => nil}
     end
   end
 end
