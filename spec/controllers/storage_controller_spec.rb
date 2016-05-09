@@ -1,3 +1,5 @@
+include CompressedIds
+
 describe StorageController do
 
   let(:storage) { FactoryGirl.create(:storage, :name => 'test_storage1') }
@@ -137,6 +139,26 @@ describe StorageController do
         get :explorer, :params => {:page => '2'}
         expect(response.status).to eq(200)
         expect(response.body).to include("<li>\n<span>\nShowing 6-7 of 7 items\n<input name='limitstart' type='hidden' value='0'>\n</span>\n</li>")
+      end
+
+      it "it handles x_button tagging" do
+        ems = FactoryGirl.create(:ems_vmware)
+        datastore = FactoryGirl.create(:storage, :name => 'storage_name')
+        datastore.parent = ems
+        classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
+        @tag1 = FactoryGirl.create(:classification_tag,
+                                   :name   => "tag1",
+                                   :parent => classification
+        )
+        @tag2 = FactoryGirl.create(:classification_tag,
+                                   :name   => "tag2",
+                                   :parent => classification
+        )
+        allow(Classification).to receive(:find_assigned_entries).and_return([@tag1, @tag2])
+        post :x_button, :params => {:miq_grid_checks => to_cid(datastore.id), :pressed => "storage_tag", :format => :js}
+        expect(response.status).to eq(200)
+        expect(response.body).to include('<h3>\n1 Datastore Being Tagged\n<\/h3>')
+        expect(response.body).to include("Name: #{datastore.name} | Datastores Type: ")
       end
     end
 
