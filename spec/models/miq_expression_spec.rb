@@ -112,12 +112,12 @@ describe MiqExpression do
 
     it "generates the SQL for a NOT expression" do
       sql, * = MiqExpression.new("NOT" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_sql
-      expect(sql).to eq("NOT \"vms\".\"name\" = 'foo'")
+      expect(sql).to eq("NOT (\"vms\".\"name\" = 'foo')")
     end
 
     it "generates the SQL for a ! expression" do
       sql, * = MiqExpression.new("!" => {"=" => {"field" => "Vm-name", "value" => "foo"}}).to_sql
-      expect(sql).to eq("NOT \"vms\".\"name\" = 'foo'")
+      expect(sql).to eq("NOT (\"vms\".\"name\" = 'foo')")
     end
 
     it "generates the SQL for an IS NULL expression" do
