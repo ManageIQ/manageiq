@@ -72,7 +72,7 @@
         %a{:href => "", "ng-show" => "vm.changeKey", "ng-click" => "vm.cancelPrivateKeyChange()"}
           = cancel_private_key_change
 
-    %div{"ng-show" => "true"}
+    %div{"ng-show" => "vm.showValidate('#{prefix}')"}
       .form-group
         %label.col-md-2
         .col-md-4
