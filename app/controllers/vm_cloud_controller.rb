@@ -96,7 +96,7 @@ class VmCloudController < ApplicationController
   def live_migrate
     assert_privileges("instance_live_migrate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
-    if @record.is_available(:live_migrate)
+    if @record.is_available?(:live_migrate)
       drop_breadcrumb(
         :name => _("Live Migrate Instance '%{name}'") % {:name => @record.name},
         :url  => "/vm_cloud/live_migrate"
