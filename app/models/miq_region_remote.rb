@@ -99,19 +99,34 @@ class MiqRegionRemote < ApplicationRecord
       end
     end
 
-    pool = establish_connection({
-      :adapter  => adapter,
-      :host     => host,
-      :port     => port,
-      :username => username,
-      :password => password,
-      :database => database
-    }.delete_blanks)
+    old_pool_name=self.current_pool
+    self.current_pool="remote_#{host}_#{port}"
     begin
+      # think this is the current problem
+      pool = establish_connection({
+        :adapter  => adapter,
+        :host     => host,
+        :port     => port,
+        :username => username,
+        :password => password,
+        :database => database
+      }.delete_blanks)
       conn = pool.connection
       yield conn
     ensure
-      remove_connection
+      #remove_connection(current_pool)
+      self.current_pool=old_pool_name
     end
+  end
+
+  def self.connection_specification_name
+    current_pool || "primary"
+  end
+
+  def self.current_pool=(name)
+    Thread.current[:region_pool_name] = name
+  end
+  def self.current_pool
+    Thread.current[:region_pool_name]
   end
 end
