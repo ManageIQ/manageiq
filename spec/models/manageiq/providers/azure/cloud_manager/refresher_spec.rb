@@ -67,7 +67,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def expected_table_counts
     {
       :ext_management_system         => 2,
-      :flavor                        => 43,
+      :flavor                        => 53,
       :availability_zone             => 1,
       :vm_or_template                => 8,
       :vm                            => 7,
@@ -80,14 +80,14 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :relationship                  => 0,
       :miq_queue                     => 9,
       :orchestration_template        => 2,
-      :orchestration_stack           => 8,
-      :orchestration_stack_parameter => 128,
+      :orchestration_stack           => 9,
+      :orchestration_stack_parameter => 134,
       :orchestration_stack_output    => 7,
-      :orchestration_stack_resource  => 38,
+      :orchestration_stack_resource  => 41,
       :security_group                => 6,
       :network_port                  => 8,
       :cloud_network                 => 4,
-      :floating_ip                   => 7,
+      :floating_ip                   => 8,
       :network_router                => 0,
       :cloud_subnet                  => 4,
     }
@@ -142,15 +142,14 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@ems.miq_templates.size).to eq(expected_table_counts[:miq_template])
 
     expect(@ems.orchestration_stacks.size).to eql(expected_table_counts[:orchestration_stack])
-    expect(@ems.direct_orchestration_stacks.size).to eql(7)
+    expect(@ems.direct_orchestration_stacks.size).to eql(8)
   end
 
   def assert_specific_security_group
-    name = 'miq-test-rhel1'
-    @sg = ManageIQ::Providers::Azure::NetworkManager::SecurityGroup.where(:name => name).first
+    @sg = ManageIQ::Providers::Azure::NetworkManager::SecurityGroup.where(:name => @device_name).first
 
     expect(@sg).to have_attributes(
-      :name        => name,
+      :name        => @device_name,
       :description => 'miq-azure-test1-eastus'
     )
 
@@ -216,7 +215,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@cn.vms.size).to be >= 1
     expect(@cn.network_ports.size).to be >= 1
 
-    vm = @cn.vms.where(:name => "miq-test-rhel1").first
+    vm = @cn.vms.where(:name => @device_name).first
     expect(vm.cloud_networks.size).to be >= 1
 
     expect(@cn.cloud_subnets.size).to eq(1)
@@ -228,7 +227,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :availability_zone => @avail_zone
     )
 
-    vm_subnet = @subnet.vms.where(:name => "miq-test-rhel1").first
+    vm_subnet = @subnet.vms.where(:name => @device_name).first
     expect(vm_subnet.cloud_subnets.size).to be >= 1
     expect(vm_subnet.network_ports.size).to be >= 1
     expect(vm_subnet.security_groups.size).to be >= 1
@@ -236,10 +235,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    vm_name = 'miq-test-rhel1'
-    vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => vm_name, :raw_power_state => "VM running").first
-
-    vm_resource_id = "#{@subscription_id}\\#{@resource_group}\\microsoft.compute/virtualmachines\\#{vm_name}"
+    vm = ManageIQ::Providers::Azure::CloudManager::Vm.where(:name => @device_name, :raw_power_state => "VM running").first
+    vm_resource_id = "#{@subscription_id}\\#{@resource_group}\\microsoft.compute/virtualmachines\\#{@device_name}"
 
     expect(vm).to have_attributes(
       :template              => false,
@@ -291,7 +288,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to eql(0)
-    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:address => "13.92.188.218").first
+    floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:address => "13.92.253.245").first
     cloud_network = ManageIQ::Providers::Azure::NetworkManager::CloudNetwork.where(:name => "miq-azure-test1").first
     cloud_subnet  = cloud_network.cloud_subnets.first
     expect(v.floating_ip).to eql(floating_ip)
@@ -306,7 +303,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "13.92.188.218",
+      :ipaddress   => "13.92.253.245",
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
@@ -473,7 +470,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :description    => "spec-nested-deployment-dont-delete",
       :resource_group => "miq-azure-test1",
       :ems_ref        => "/subscriptions/#{@subscription_id}/resourceGroups"\
-                         "/miq-azure-test1/deployments/spec-nested-deployment-dont-delete",
+                         "/miq-azure-test1/providers/Microsoft.Resources"\
+                         "/deployments/spec-nested-deployment-dont-delete",
     )
 
     assert_specific_orchestration_stack_parameters
@@ -490,7 +488,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(parameters.find { |p| p.name == 'adminUsername' }).to have_attributes(
       :value   => "deploy1admin",
       :ems_ref => "/subscriptions/#{@subscription_id}/resourceGroups"\
-                  "/miq-azure-test1/deployments/spec-nested-deployment-dont-delete\\adminUsername"
+                  "/miq-azure-test1/providers/Microsoft.Resources"\
+                  "/deployments/spec-nested-deployment-dont-delete\\adminUsername"
     )
   end
 
@@ -519,7 +518,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :value       => "hard-coded output for test",
       :description => "siteUri",
       :ems_ref     => "/subscriptions/#{@subscription_id}/resourceGroups"\
-                      "/miq-azure-test1/deployments/spec-deployment-dont-delete\\siteUri"
+                      "/miq-azure-test1/providers/Microsoft.Resources"\
+                      "/deployments/spec-deployment-dont-delete\\siteUri"
     )
   end
 
