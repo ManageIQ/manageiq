@@ -16,6 +16,7 @@ class AvailabilityZone < ApplicationRecord
   has_many   :metric_rollups,         :as => :resource
   has_many   :vim_performance_states, :as => :resource
   has_many   :ems_events
+  has_many   :cloud_services, :dependent => :nullify
 
   acts_as_miq_taggable
 
