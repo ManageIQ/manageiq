@@ -315,12 +315,7 @@ module Rbac
   end
 
   def self.filtered(objects, options = {})
-    if objects.nil?
-      Vmdb::Deprecation.deprecation_warning("objects = nil",
-                                            "use [] to get an empty result back. nil will return all records",
-                                            caller(0)) unless Rails.env.production?
-    end
-    Rbac.search(options.merge(:targets => objects, :results_format => :objects, :empty_means_empty => true)).first
+    Rbac.search(options.reverse_merge(:targets => objects, :results_format => :objects)).first
   end
 
   # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
@@ -359,7 +354,7 @@ module Rbac
   # @option options :sub_filter
   # @option options :include_for_find [Array<Symbol>]
   # @option options :filter
-  # @option options :results_format [:id, :objects] (default: for object targets, :object, otherwise :id)
+  # @option options :results_format [:ids, :objects] (default: for object targets, :object, otherwise :ids)
 
   # @option options :user         [User]     (default: current_user)
   # @option options :userid       [String]   User#userid (not user_id)
@@ -380,15 +375,8 @@ module Rbac
   # @option attrs target_ids_for_paging
 
   def self.search(options = {})
-    # now:   search(:targets => [],  :class => Vm) searches Vms
-    # later: search(:targets => [],  :class => Vm) returns []
-    #        search(:targets => nil, :class => Vm) will always search Vms
     if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
-      return [], {:total_count => 0} if options[:empty_means_empty]
-
-      Vmdb::Deprecation.deprecation_warning(":targets => []", "use :targets => nil to search all records",
-                                            caller(0)) unless Rails.env.production?
-      options[:targets] = nil
+      return [], {:total_count => 0}
     end
     # => empty inputs - normal find with optional where_clause
     # => list if ids - :class is required for this format.
