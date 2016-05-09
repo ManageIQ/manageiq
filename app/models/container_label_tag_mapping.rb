@@ -25,7 +25,7 @@ class ContainerLabelTagMapping < ApplicationRecord
     ).to_a
   end
 
-  # Returns {name => {type => {value => [tag, ...]}}} hash.
+  # Returns {[name, type, value] => [tag, ...]}}} hash.
   def self.hash_all_by_name_type_value
     unless @hash_all_by_name_type_value
       @hash_all_by_name_type_value = {}
@@ -35,11 +35,9 @@ class ContainerLabelTagMapping < ApplicationRecord
   end
 
   def self.load_mapping_into_hash(mapping, hash)
-    name, type, value = mapping.label_name, mapping.labeled_resource_type, mapping.label_value
-    hash[name] ||= {}
-    hash[name][type] ||= {}
-    hash[name][type][value] ||= []
-    hash[name][type][value] << mapping.tag
+    key = [mapping.label_name, mapping.labeled_resource_type, mapping.label_value].freeze
+    hash[key] ||= []
+    hash[key] << mapping.tag
   end
   private_class_method :load_mapping_into_hash
 
@@ -51,15 +49,14 @@ class ContainerLabelTagMapping < ApplicationRecord
   def self.tags_for_label(label)
     tags = []
 
-    by_type_value = hash_all_by_name_type_value[label.name] || {}
+    hash = hash_all_by_name_type_value
     # Apply both specific-type and any-type, independently.
     [label.resource_type, nil].each do |type|
-      by_value = by_type_value[type] || {}
-      specific = by_value[label.value] || []
-      if !specific.empty?
-        tags.concat(specific)
+      specific_value = hash[[label.name, type, label.value]] || []
+      any_value      = hash[[label.name, type, nil]]         || []
+      if !specific_value.empty?
+        tags.concat(specific_value)
       else
-        any_value = by_value[nil] || []
         any_value.each do |category_tag|
           # Create a specific-value mapping under same (type-or-nil, name).
           tags << create_specific_value_mapping(type, label.name, label.value, category_tag).tag
