@@ -8,6 +8,8 @@ describe ContainerLabelTagMapping do
 
   let(:tag1) { FactoryGirl.create(:tag, :name => '/ns1/category1/tag1') }
   let(:tag2) { FactoryGirl.create(:tag, :name => '/ns2/category2/tag2') }
+  let(:cat_tag_without_classification) { FactoryGirl.create(:tag, :name => '/ns3/category3') }
+
   let(:cat_classification) { FactoryGirl.create(:classification) }
   let(:cat_tag) { cat_classification.tag }
   let(:tag_under_cat) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
@@ -71,6 +73,20 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+    end
+  end
+
+  context "with any-value mapping whose tag has no classification" do
+    before do
+      FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag_without_classification)
+    end
+
+    it "creates specific-value tag and the 2 needed classifications" do
+      label(node, 'name', 'value-3')
+      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      expect(tags.size).to eq(1)
+      expect(tags[0].category.description).to eq("Kubernetes label 'name'")
+      expect(tags[0].classification.description).to eq('value-3')
     end
   end
 

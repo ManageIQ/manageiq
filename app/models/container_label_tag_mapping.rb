@@ -67,7 +67,7 @@ class ContainerLabelTagMapping < ApplicationRecord
   # If this is an open ended any-value mapping, finds or creates a
   # specific-value mapping to a specific tag.
   def self.create_specific_value_mapping(name, type, value, category_tag)
-    new_tag = create_tag(category_tag, value)
+    new_tag = create_tag(name, value, category_tag)
     new_mapping = create!(:labeled_resource_type => type, :label_name => name, :label_value => value,
                           :tag => new_tag)
     load_mapping_into_hash(new_mapping, @hash_all_by_name_type_value) if @hash_all_by_name_type_value
@@ -76,17 +76,17 @@ class ContainerLabelTagMapping < ApplicationRecord
   end
   private_class_method :create_specific_value_mapping
 
-  def self.create_tag(category_tag, value)
+  def self.create_tag(name, value, category_tag)
     entry_name = Classification.sanitize_name(value)
     category = category_tag.classification
-    if category
-      entry = category.add_entry(:name => entry_name, :description => value)
-      entry.save!
-      entry.tag
-    else
-      # Suboptimal: original (unsanitized) value is not recorded.
-      Tag.create!(:name => File.join(category_tag.name, entry_name))
+    unless category
+      category = Classification.create_category!(:description => "Kubernetes label '#{name}'",
+                                                 :read_only => true,
+                                                 :tag => category_tag)
     end
+    entry = category.add_entry(:name => entry_name, :description => value)
+    entry.save!
+    entry.tag
   end
   private_class_method :create_tag
 end
