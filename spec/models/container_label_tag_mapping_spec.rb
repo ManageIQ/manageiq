@@ -33,8 +33,8 @@ describe ContainerLabelTagMapping do
 
   context "with 2 mappings for same label" do
     before do
-      FactoryGirl.create(:container_label_tag_mapping, :node, :label_value => 'value-1', :tag => tag1)
-      FactoryGirl.create(:container_label_tag_mapping, :node, :label_value => 'value-1', :tag => tag2)
+      FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
+      FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
     end
 
     it "returns 2 tags" do
@@ -96,7 +96,7 @@ describe ContainerLabelTagMapping do
 
   context "with any-type and specific-type mappings" do
     before do
-      FactoryGirl.create(:container_label_tag_mapping, :node, :label_value => 'value', :tag => tag1)
+      FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
@@ -113,7 +113,7 @@ describe ContainerLabelTagMapping do
 
   context "any-type specific-value vs specific-type any-value" do
     before do
-      FactoryGirl.create(:container_label_tag_mapping, :node, :tag => cat_tag)
+      FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
