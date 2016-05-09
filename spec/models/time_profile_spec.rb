@@ -13,12 +13,8 @@ describe TimeProfile do
   end
 
   context "will seed the database" do
-    before(:each) do
-      TimeProfile.seed
-    end
-
     it do
-      t = TimeProfile.first
+      t = TimeProfile.seed
       expect(t.days).to eq(TimeProfile::ALL_DAYS)
       expect(t.hours).to eq(TimeProfile::ALL_HOURS)
       expect(t.tz).to eq(TimeProfile::DEFAULT_TZ)
@@ -27,12 +23,31 @@ describe TimeProfile do
 
     it "but not reseed when called twice" do
       TimeProfile.seed
+      t = TimeProfile.seed
       expect(TimeProfile.count).to eq(1)
-      t = TimeProfile.first
       expect(t.days).to eq(TimeProfile::ALL_DAYS)
       expect(t.hours).to eq(TimeProfile::ALL_HOURS)
       expect(t.tz).to eq(TimeProfile::DEFAULT_TZ)
       expect(t).to be_entire_tz
+    end
+
+    context "with a record in another region" do
+      let(:my_region_number) { TimeProfile.my_region_number }
+      let(:other_region)     { TimeProfile.my_region_number + 1 }
+      let(:other_region_id)  { other_region * TimeProfile.rails_sequence_factor + 1 }
+
+      before do
+        tp = TimeProfile.seed
+        tp.update_attributes(:id => other_region_id)
+      end
+
+      it "seeds with replication working" do
+        expect(TimeProfile.count).to eq(1)
+        expect(TimeProfile.in_my_region.count).to eq(0)
+        TimeProfile.seed
+        expect(TimeProfile.count).to eq(2)
+        expect(TimeProfile.in_my_region.count).to eq(1)
+      end
     end
   end
 
