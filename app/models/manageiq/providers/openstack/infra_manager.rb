@@ -83,4 +83,33 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   def self.event_monitor_class
     ManageIQ::Providers::Openstack::InfraManager::EventCatcher
   end
+
+  def verify_credentials(auth_type = nil, options = {})
+    auth_type ||= 'default'
+
+    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
+
+    options[:auth_type] = auth_type
+    case auth_type.to_s
+    when 'default'     then verify_api_credentials(options)
+    when 'amqp'        then verify_amqp_credentials(options)
+    when 'ssh_keypair' then verify_ssh_keypair_credentials(options)
+    else               raise "Invalid OpenStack Authentication Type: #{auth_type.inspect}"
+    end
+  end
+
+  def required_credential_fields(type)
+    case type.to_s
+    when 'ssh_keypair' then [:userid, :auth_key]
+    else                    [:userid, :password]
+    end
+  end
+
+  def verify_ssh_keypair_credentials(_options)
+    hosts.sort_by(&:ems_cluster_id)
+         .slice_when { |i, j| i.ems_cluster_id != j.ems_cluster_id }
+         .map { |c| c.find { |h| h.power_state == 'on' } }
+         .all? { |h| h.verify_credentials('ssh_keypair') }
+  end
+  private :verify_ssh_keypair_credentials
 end
