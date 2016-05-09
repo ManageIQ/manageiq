@@ -10,6 +10,7 @@ evm_event,Show EVM Event on Timeline
 script,Execute an external script
 prevent,Prevent current event from proceeding
 container_image_analyze,Initiate SmartState Analysis for Container Image
+container_image_scan_all,Sequentially scan all container provider images
 vm_start,Start Virtual Machine
 vm_stop,Stop Virtual Machine
 vm_suspend,Suspend Virtual Machine

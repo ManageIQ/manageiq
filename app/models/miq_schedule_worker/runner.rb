@@ -188,6 +188,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue [:job_check_for_evm_snapshots, job_not_found_delay]
     end
 
+    # Schedule - Daily check for new CVE content for container images
+    every = worker_setting_or_default(:container_cve_check_interval, 1.day)
+    @schedules[:all] << system_schedule_every(every, :first_in => every) do
+      enqueue :ems_container_check_cves
+    end
+
     # Queue a JobProxyDispatcher dispatch task at high priority unless there's already one on the queue
     # This dispatch method goes through all pending jobs to see if there's a free proxy available to work on one of them
     # It is very expensive to constantly do this, hence the need to ensure only one is on the queue at one time

@@ -168,3 +168,4 @@ containerimage_created,Container Image Discovered,Default,container_operations
 containerimage_compliance_check,Container Image Compliance Check,Default,compliance
 containerimage_compliance_passed,Container Image Compliance Passed,Default,compliance
 containerimage_compliance_failed,Container Image Compliance Failed,Default,compliance
+containerimage_new_cve_content,Container Image New CVE Content,Default,compliance

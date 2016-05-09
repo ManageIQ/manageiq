@@ -848,6 +848,31 @@ class MiqAction < ApplicationRecord
     rec.scan
   end
 
+  def action_container_image_scan_all(action, rec, _inputs)
+    unless rec.kind_of?(ContainerImage)
+      MiqPolicy.logger.error("MIQ(#{__method__}): Unable to perform action [#{action.description}],"\
+                             " object [#{rec.inspect}] is not a Container Image")
+      return
+    end
+    ems = rec.ext_management_system
+
+    unless ems
+      MiqPolicy.logger.error("MIQ(#{__method__}): Unable to perform action [#{action.description}],"\
+                             " object [#{rec.inspect}] does not belong to an ems")
+      return
+    end
+    ems.container_images.each do |container_image|
+      MiqQueue.put(
+        :class_name  => container_image.class.name,
+        :instance_id => container_image.id,
+        :method_name => 'scan',
+        :args        => [],
+        :task_id     => "container-provider-image-scanning-#{ems.name}",
+        :role        => "smartstate",
+        :zone        => container_image.my_zone)
+    end
+  end
+
   def action_host_analyze(action, rec, inputs)
     action_method = "action_host_analyze"
     if inputs[:event].name == "request_host_scan"
