@@ -119,4 +119,15 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
                           client.headers.stringify_keys,
                           scan_data[:guest_os])
   end
+
+  def annotate(provider_entity_name, ems_indentifier, annotations, container_project_name = nil)
+    with_provider_connection do |conn|
+      conn.send(
+        "patch_#{provider_entity_name}".to_sym,
+        ems_indentifier,
+        {"metadata" => {"annotations" => annotations}},
+        container_project_name # nil is ok for non namespaced entities (e.g images)
+      )
+    end
+  end
 end
