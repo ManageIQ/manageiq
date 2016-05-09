@@ -1,4 +1,8 @@
 class Chargeback < ActsAsArModel
+  VIRTUAL_COL_USES = {
+    "v_derived_cpu_total_cores_used" => "cpu_usage_rate_average"
+  }
+
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
 
@@ -21,6 +25,7 @@ class Chargeback < ActsAsArModel
     rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
       rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
     end
+    rate_cols.map! { |x| VIRTUAL_COL_USES.include?(x) ? VIRTUAL_COL_USES[x] : x }.flatten!
     base_rollup = base_rollup.select(*rate_cols)
 
     timerange = get_report_time_range(options, interval, tz)
@@ -92,8 +97,10 @@ class Chargeback < ActsAsArModel
         cost   = r.cost(metric)
 
         col_hash = {}
-        [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
-        [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost   }
+        unless (report_col_options.keys & [metric_key, cost_key]).empty?
+          [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
+          [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
+        end
 
         col_hash.each do |k, val|
           next unless attribute_names.include?(k)

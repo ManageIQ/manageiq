@@ -87,10 +87,7 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
       expect(subject.cpu_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_metric).to eq(subject.cpu_used_metric)
-
       expect(subject.cpu_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
-      expect(subject.cpu_cost).to eq(subject.cpu_used_cost)
     end
 
     it "memory" do
@@ -107,10 +104,7 @@ describe ChargebackContainerProject do
       cbrd.save
 
       expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
-      expect(subject.memory_metric).to eq(subject.memory_used_metric)
-
       expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
-      expect(subject.memory_cost).to eq(subject.memory_used_cost)
     end
 
     it "net io" do
@@ -127,10 +121,7 @@ describe ChargebackContainerProject do
       cbrd.save
 
       expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
-      expect(subject.net_io_metric).to eq(subject.net_io_metric)
-
       expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
-      expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
   end
 
@@ -185,10 +176,7 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
       expect(subject.cpu_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_metric).to eq(subject.cpu_used_metric)
-
       expect(subject.cpu_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
-      expect(subject.cpu_cost).to eq(subject.cpu_used_cost)
     end
 
     it "memory" do
@@ -204,10 +192,7 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
       expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
-      expect(subject.memory_metric).to eq(subject.memory_used_metric)
-
       expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
-      expect(subject.memory_cost).to eq(subject.memory_used_cost)
     end
 
     it "net io" do
@@ -223,10 +208,7 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
       expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
-      expect(subject.net_io_metric).to eq(subject.net_io_metric)
-
       expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
-      expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
   end
 end
