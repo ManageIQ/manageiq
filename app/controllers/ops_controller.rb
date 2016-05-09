@@ -1,6 +1,5 @@
 class OpsController < ApplicationController
   # Methods for accordions
-  include_concern 'Analytics'
   include_concern 'Db'
   include_concern 'Diagnostics'
   include_concern 'OpsRbac'
@@ -218,10 +217,6 @@ class OpsController < ApplicationController
       :name     => :diagnostics,
       :title    => _("Diagnostics")},
 
-     {:role     => "ops_analytics",
-      :name     => :analytics,
-      :title    => _("Analytics")},
-
      {:role     => "ops_db",
       :name     => :vmdb,
       :title    => _("Database")},
@@ -252,10 +247,6 @@ class OpsController < ApplicationController
     if x_active_tree == :diagnostics_tree
       x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
       @sb[:active_tab] ||= "diagnostics_summary"
-    end
-
-    if x_active_tree == :analytics_tree
-      x_node_set("svr-#{to_cid(my_server_id)}", :analytics_tree) unless x_node(:analytics_tree)
     end
 
     if x_active_tree == :vmdb_tree
@@ -338,8 +329,6 @@ class OpsController < ApplicationController
         @sb[:active_tab] = "diagnostics_summary"
         svr = MiqServer.find(from_cid(node[1]))
       end
-    when :analytics_tree
-      @sb[:active_tab] = "analytics_details"
     when :vmdb_tree
       nodes = x_node.split('-')
       @sb[:active_tab] = %w(ti xx).include?(nodes[0]) ? "db_indexes" : "db_summary"
@@ -448,7 +437,6 @@ class OpsController < ApplicationController
     @explorer = true
     @nodetype = x_node.split("-").first
     case x_active_tree
-    when :analytics_tree   then analytics_get_info
     when :diagnostics_tree then diagnostics_get_info
     when :rbac_tree        then rbac_get_info
     when :settings_tree    then settings_get_info
@@ -461,7 +449,6 @@ class OpsController < ApplicationController
                          when :diagnostics_tree then _("Diagnostics %{text}") % {:text => region_text}
                          when :settings_tree    then _("Settings %{text}") % {:text => region_text}
                          when :rbac_tree        then _("Access Control %{text}") % {:text => region_text}
-                         when :analytics_tree   then _("Analytics %{text}") % {:text => region_text}
                          when :vmdb_tree        then _("Database []")
                          end
   end
@@ -525,8 +512,6 @@ class OpsController < ApplicationController
     when :vmdb_tree # "root","tb", "ti","xx" # Check if vmdb root or table is selected
       # Need to replace all_tabs to show table name as tab label
       presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
-    when :analytics_tree
-      analytics_replace_right_cell(presenter, r)
     end
   end
 
@@ -544,19 +529,6 @@ class OpsController < ApplicationController
     end
     # zone level
     presenter[:build_calendar] = {} if x_node.split("-").first == "z"
-  end
-
-  def analytics_replace_right_cell(presenter, r)
-    if params[:action] == "accordion_select"
-      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
-    else
-      presenter.update(:analytics_details, r[:partial => "analytics_details_tab"])
-    end
-    if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
-      # setting changed here to enable/disable Apply button
-      @changed = @sb[:good] && @sb[:good] > 0 ? true : false
-    end
-    presenter.set_visibility(@changed, :buttons_on) if @in_a_form
   end
 
   def settings_replace_right_cell(nodetype, presenter, r)
@@ -765,8 +737,6 @@ class OpsController < ApplicationController
       trees[:rbac]        = rbac_build_tree         if replace_trees.include?(:rbac)
       trees[:diagnostics] = diagnostics_build_tree  if replace_trees.include?(:diagnostics)
       trees[:vmdb]        = db_build_tree           if replace_trees.include?(:vmdb)
-      trees[:analytics]   = analytics_build_tree    if get_vmdb_config[:product][:analytics] &&
-                                                       replace_trees.include?(:analytics)
     end
     replace_trees_by_presenter(presenter, trees)
   end

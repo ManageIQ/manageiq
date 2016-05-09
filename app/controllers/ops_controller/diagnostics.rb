@@ -799,7 +799,6 @@ module OpsController::Diagnostics
       @sb[:diag_selected_id] = nil
       settings_build_tree
       diagnostics_build_tree
-      analytics_build_tree
     end
     if x_node == "root"
       parent = MiqRegion.my_region
@@ -817,9 +816,6 @@ module OpsController::Diagnostics
       if params[:pressed] == "delete_server"
         page.replace("settings_tree_div", :partial => "tree", :locals => {:name => "settings_tree"})
         page.replace("diagnostics_tree_div", :partial => "tree", :locals => {:name => "diagnostics_tree"})
-        if get_vmdb_config[:product][:analytics]
-          page.replace("analytics_tree_div", :partial => "tree", :locals => {:name => "analytics_tree"})
-        end
         nodes = x_node.split("-")
         nodes.pop
         page << "miqDynatreeActivateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
