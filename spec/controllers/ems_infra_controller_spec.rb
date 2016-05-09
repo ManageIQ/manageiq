@@ -1,3 +1,5 @@
+include CompressedIds
+
 describe EmsInfraController do
   let!(:server) { EvmSpecHelper.local_miq_server(:zone => zone) }
   let(:zone) { FactoryGirl.build(:zone) }
@@ -229,6 +231,7 @@ describe EmsInfraController do
   end
 
   describe "#show" do
+    render_views
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       login_as FactoryGirl.create(:user)
@@ -264,6 +267,23 @@ describe EmsInfraController do
                                             :url=>"/ems_infra/show_list?page=&refresh=y"},
                                            {:name=>"#{@ems.name} (All Managed Datastores)",
                                             :url=>"/ems_infra/#{@ems.id}?display=storages"}])
+    end
+
+    it " can tag associated datastores" do
+      set_user_privileges
+      datastore = FactoryGirl.create(:storage, :name => 'storage_name')
+      datastore.parent = @ems
+      controller.instance_variable_set(:@_orig_action, "x_history")
+      get :show, :params => {:id => @ems.id, :display => 'storages'}
+      post :button, :params => {:id => @ems.id, :display => 'storages', :miq_grid_checks => to_cid(datastore.id), :pressed => "storage_tag", :format => :js}
+      expect(response.status).to eq(200)
+      breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
+      expect(assigns(:breadcrumbs)).to eq([{:name=>"Infrastructure Providers",
+                                            :url=>"/ems_infra/show_list?page=&refresh=y"},
+                                           {:name=>"#{@ems.name} (All Managed Datastores)",
+                                            :url=>"/ems_infra/#{@ems.id}?display=storages"},
+                                           {:name=>"Tag Assignment", :url=>"//tagging_edit"}])
+
     end
   end
 
