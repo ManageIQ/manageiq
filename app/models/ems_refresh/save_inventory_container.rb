@@ -394,13 +394,9 @@ module EmsRefresh::SaveInventoryContainer
   #   Would still need still save_labels_and_tags_inventory() to get that hash.
   def save_tags_generated_from_labels(entity, _hashes, _target = nil)
     current_tags = ContainerLabelTagMapping.tags_for_entity(entity)
-    possible_old_tags = ContainerLabelTagMapping.all_mapped_tags
+    mappable_tags = ContainerLabelTagMapping.mappable_tags
 
-    # TODO: Don't clear existing tags if partial refresh?
-    #       Check `target` like all other methods do.
-    entity.tags = entity.tags - possible_old_tags + current_tags
-
-    # TODO: store_ids_for_new_records back into `hashes`?
+    entity.tags = entity.tags - mappable_tags + current_tags
   end
 
   def save_selector_parts_inventory(entity, hashes, target = nil)

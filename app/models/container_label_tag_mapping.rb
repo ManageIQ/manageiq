@@ -14,24 +14,24 @@ class ContainerLabelTagMapping < ApplicationRecord
   belongs_to :tag
 
   def self.drop_cache
-    @cached_hash = nil
-    @cached_mapped_tags = nil
+    @hash_all_by_name_type_value = nil
+    @mappable_tags = nil
   end
 
-  # Finds all existing specific-value tags we're pointing to.
-  def self.all_mapped_tags
-    @cached_mapped_tags ||= Tag.joins(:container_label_tag_mappings).where.not(
+  # All tags that can be assigned by this mapping.
+  def self.mappable_tags
+    @mappable_tags ||= Tag.joins(:container_label_tag_mappings).where.not(
       :container_label_tag_mappings => {:label_value => nil}
     ).to_a
   end
 
   # Returns {name => {type => {value => [tag, ...]}}} hash.
   def self.hash_all_by_name_type_value
-    unless @cached_hash
-      @cached_hash = {}
-      includes(:tag).find_each { |m| load_mapping_into_hash(m, @cached_hash) }
+    unless @hash_all_by_name_type_value
+      @hash_all_by_name_type_value = {}
+      includes(:tag).find_each { |m| load_mapping_into_hash(m, @hash_all_by_name_type_value) }
     end
-    @cached_hash
+    @hash_all_by_name_type_value
   end
 
   def self.load_mapping_into_hash(mapping, hash)
@@ -76,8 +76,8 @@ class ContainerLabelTagMapping < ApplicationRecord
     new_tag = create_tag(category_tag, value)
     new_mapping = create!(:labeled_resource_type => type, :label_name => name, :label_value => value,
                           :tag => new_tag)
-    load_mapping_into_hash(new_mapping, @cached_hash) if @cached_hash
-    @cached_mapped_tags << new_tag if @cached_mapped_tags
+    load_mapping_into_hash(new_mapping, @hash_all_by_name_type_value) if @hash_all_by_name_type_value
+    @mappable_tags << new_tag if @mappable_tags
     new_mapping
   end
   private_class_method :create_specific_value_mapping
