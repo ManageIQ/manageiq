@@ -83,7 +83,9 @@ describe('dialogFieldRefresh', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'triggerAutoRefresh');
       spyOn(window, 'miqInitSelectPicker');
-      spyOn(window, 'miqSelectPickerEvent');
+      spyOn(window, 'miqSelectPickerEvent').and.callFake(function(fieldName, url, options) {
+        options.callback();
+      });
       spyOn($.fn, 'selectpicker');
       fieldName = 'fieldName';
       fieldId = 'fieldId';
@@ -119,15 +121,13 @@ describe('dialogFieldRefresh', function() {
       expect(window.miqSelectPickerEvent).toHaveBeenCalledWith('fieldName', 'url', {callback: jasmine.any(Function)});
     });
 
-    it('triggers the auto refresh when the drop down changes', function(done) {
+    it('triggers the auto refresh when the drop down changes', function() {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
-      done();
       expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'true');
     });
 
-    it('triggers autorefresh with "false" when triggerAutoRefresh arg is false', function(done) {
+    it('triggers autorefresh with "false" when triggerAutoRefresh arg is false', function() {
       dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url, 'false');
-      done();
       expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'false');
     });
   });
