@@ -91,8 +91,7 @@ class MiqRegionRemote < ApplicationRecord
   def self.with_remote_connection(host, port, username, password, database, adapter)
     # Don't allow accidental connections to localhost.  A blank host will
     # connect to localhost, so don't allow that at all.
-    host = host.to_s.strip
-    raise ArgumentError, _("host cannot be blank") if host.blank?
+    host = host && host.to_s.strip
     if [nil, "", "localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(host)
       local_database = Rails.configuration.database_configuration.fetch_path(Rails.env, "database").to_s.strip
       if database == local_database

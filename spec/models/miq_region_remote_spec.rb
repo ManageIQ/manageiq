@@ -18,7 +18,6 @@ RSpec.describe MiqRegionRemote do
 
       config = Rails.configuration.database_configuration[Rails.env]
       params = config.values_at("host", "port", "username", "password", "database", "adapter")
-      params[0] ||= "localhost"
       params[4]   = "template1"
 
       described_class.with_remote_connection(*params) do |c|
