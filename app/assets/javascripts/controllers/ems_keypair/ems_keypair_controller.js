@@ -63,6 +63,10 @@
     this.cancelPrivateKeyChange();
   };
 
+  EmsKeypairController.prototype.showValidate = function(tab) {
+    return !(this.model.emstype == 'openstack_infra' && this.newRecord && tab == 'ssh_keypair')
+  };
+
   EmsKeypairController.$inject = ["$scope"];
   ManageIQ.angular.app.controller('emsKeypairController', EmsKeypairController);
 })();

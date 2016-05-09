@@ -48,6 +48,10 @@ ManageIQ.angular.app.controller('credentialsController', ['$http', '$scope', 'mi
     return $scope.newRecord || (!$scope.showChangePasswordLinks(userid)) || $scope.bChangeStoredPassword;
   };
 
+  $scope.showValidate = function(tab) {
+    return !($scope.emsCommonModel.emstype == 'openstack_infra' && $scope.newRecord && tab == 'ssh_keypair')
+  };
+
   $scope.showChangePasswordLinks = function(userid) {
     return !$scope.newRecord && $scope.modelCopy[userid] != '';
   };

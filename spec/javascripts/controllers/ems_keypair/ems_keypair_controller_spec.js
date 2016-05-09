@@ -69,4 +69,42 @@ describe('emsKeypairController', function() {
     $controller.resetClicked();
     expect($controller.changeKey).toBeFalsy();
   });
+
+  describe('#showValidate', function() {
+    context('with emsCommonModel be openstack_infra', function() {
+      beforeEach(inject(function($rootScope, _$controller_) {
+        $controller = _$controller_('emsKeypairController', {$scope: $scope});
+        $controller.initialize({'emstype': 'openstack_infra'}, "12345")
+      }));
+      context('with newRecord', function() {
+        context('on ssh_keypair tab', function() {
+          it('test', function() {
+            $controller.newRecord = true;
+            expect($controller.showValidate('ssh_keypair')).toBeFalsy();
+          });
+        });
+        context('on other tabs', function() {
+          it('test', function() {
+            $controller.newRecord = true;
+            expect($controller.showValidate('other_tab')).toBeTruthy();
+          });
+        });
+      });
+      context('with not newRecord', function() {
+        it('test', function() {
+            $controller.newRecord = false;
+          expect($controller.showValidate('tab')).toBeTruthy();
+        });
+      });
+    });
+    context('with emsCommonModel not be openstack_infra', function() {
+      beforeEach(inject(function($rootScope, _$controller_) {
+        $controller = _$controller_('emsKeypairController', {$scope: $scope});
+        $controller.initialize({'emstype': 'other_emstype'}, "12345")
+      }));
+      it('test', function() {
+        expect($controller.showValidate('tab')).toBeTruthy();
+      });
+    });
+  });
 });
