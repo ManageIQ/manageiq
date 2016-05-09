@@ -1483,7 +1483,7 @@ function miqToolbarOnClick(e) {
         }
       }
     }
-  } else if (button.data('function') {
+  } else if (button.data('function')) {
     // hack to support data-function and data-function-data
     var fn = new Function("return " + button.data('function')); // eval - returns a function returning the right function
     fn().call(button, button.data('functionData'));
