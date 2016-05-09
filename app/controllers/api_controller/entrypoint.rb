@@ -11,6 +11,7 @@ class ApiController
         :version     => @version,
         :versions    => entrypoint_versions,
         :settings    => user_settings,
+        :product_settings  => product_settings,
         :identity    => auth_identity
       }
       res[:authorization] = auth_authorization if attribute_selection.include?("authorization")
