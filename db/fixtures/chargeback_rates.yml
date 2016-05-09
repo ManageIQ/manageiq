@@ -4,7 +4,7 @@
   :rate_type: Compute
   :default: true
   :rates:
-    - :description: Used CPU
+    - :description: Used CPU by Hz
       :group: cpu
       :source: used
       :metric: cpu_usagemhz_rate_average
