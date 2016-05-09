@@ -83,7 +83,7 @@ end
 #
 unless ENV['APPLIANCE']
   group :test do
-    gem "coveralls",                    :require => false
+    gem "coveralls",                    :require => false, :git => "git://github.com/lemurheavy/coveralls-ruby.git"
     gem "test-unit",                    :require => false
     gem "camcorder",                    :require => false
     gem "jasmine",       "~>2.4.0",     :require => false
