@@ -21,6 +21,7 @@ module MiqAeException
   class MethodNotFound < MiqAeEngineError; end
   class MethodParmMissing < MiqAeEngineError; end
   class WorkspaceNotFound < MiqAeEngineError; end
+  class LockAcquisitionFailed < MiqAeEngineError; end
 
   class MiqAeDatastoreError < Error; end
   class DomainNotFound < MiqAeDatastoreError; end
