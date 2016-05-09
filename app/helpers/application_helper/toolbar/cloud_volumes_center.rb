@@ -39,7 +39,7 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
                        t = N_('Attach selected Cloud Volume to an Instance'),
                        t,
                        :url_parms => 'main_div',
-                       :enabled   => 'false',
+                       :enabled   => false,
                        :onwhen    => '1'
                      ),
                      button(
@@ -48,7 +48,7 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
                        t = N_('Detach selected Cloud Volume from an Instance'),
                        t,
                        :url_parms => 'main_div',
-                       :enabled   => 'false',
+                       :enabled   => false,
                        :onwhen    => '1'
                      ),
                      button(
@@ -57,7 +57,7 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
                        t = N_('Edit selected Cloud Volume'),
                        t,
                        :url_parms => 'main_div',
-                       :enabled   => 'false',
+                       :enabled   => false,
                        :onwhen    => '1'
                      ),
                      button(
@@ -67,7 +67,7 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
                        t,
                        :url_parms => '&refresh=y',
                        :confirm   => 'Warning: The selected Cloud Volume and ALL of their components will be removed. Are you sure you want to remove these Cloud Volumes?',
-                       :enabled   => 'false',
+                       :enabled   => false,
                        :onwhen    => '1+'
                      ),
                    ]
