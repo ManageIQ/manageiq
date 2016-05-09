@@ -321,7 +321,7 @@ class VmCloudController < ApplicationController
   def evacuate
     assert_privileges("instance_evacuate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
-    if @record.is_available?(:evacuate)
+    if @record.is_available?(:evacuate) && !@record.ext_management_system.nil?
       drop_breadcrumb(
         :name => _("Evacuate Instance '%{name}'") % {:name => @record.name},
         :url  => "/vm_cloud/evacuate"
@@ -348,7 +348,7 @@ class VmCloudController < ApplicationController
         {:id => c.id, :name => c.name}
       end
       hosts = host_ems.hosts.map do |h|
-        {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
+        {:id => h.id, :name => h.name, :cluster_id => h.ems_cluster.id}
       end
     end
     render :json => {
