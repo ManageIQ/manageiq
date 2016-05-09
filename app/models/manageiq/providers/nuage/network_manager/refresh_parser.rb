@@ -21,8 +21,8 @@ module ManageIQ::Providers
       log_header = "MIQ(#{self.class.name}.#{__method__}) Collecting data for EMS name: [#{@ems.name}] id: [#{@ems.id}]"
 
       $log.info("#{log_header}...")
-      get_subnets
-
+      get_enterprises
+      #$log.info(@data)
       @data
     end
 
@@ -87,6 +87,7 @@ module ManageIQ::Providers
         :gateway          => subnet['gateway'],
         :dhcp_enabled     => false,
         :ip_version       => 4,
+        :extra_attributes => map_extra_attributes(subnet['parentID'])
       }
     end
 
@@ -100,7 +101,18 @@ module ManageIQ::Providers
        'zone_name'       => zone[0],
        'zone_id'         => zone_id}
     end
-
+    
+    def map_extra_attributes(subnet_parent_id)
+      zone_id              = subnet_parent_id
+      zone_name            = @zones[subnet_parent_id][0]
+      domain_id            = @zones[subnet_parent_id][1]
+      domain_name          = @zones[subnet_parent_id][2]
+      enterprise_id        = @zones[subnet_parent_id][3]
+      enterprise_name      = @zones[subnet_parent_id][4]
+      return {'enterprise_name' => enterprise_name, 'enterprise_id' => enterprise_id, 
+        'domain_name' => domain_name, 'domain_id' => domain_id, 'zone_name' => zone_name, 'zone_id' => zone_id}
+    end
+   
     class << self
       def cloud_subnet_type
         "ManageIQ::Providers::Nuage::NetworkManager::CloudSubnet"

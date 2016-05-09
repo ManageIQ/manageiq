@@ -255,7 +255,7 @@ module EmsRefresh::SaveInventoryNetwork
   def link_cloud_subnets_to_network_routers(hashes)
     hashes.each do |hash|
       network_router = hash.fetch_path(:network_router, :_object)
-      hash[:_object].update_attributes(:network_router => network_router)
+      hash[:_object].update_attributes(:network_router => network_router) if hash[:_object]
     end
   end
 end
