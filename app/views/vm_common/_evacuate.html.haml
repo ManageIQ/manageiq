@@ -38,15 +38,9 @@
     .form-horizontal
       .form-group
         %label.col-md-2.control-label
-          = _('Cluster')
-        .col-md-8
-          %select{:name => 'cluster_id', 'ng-model' => 'vmCloudModel.cluster', 'ng-options' => 'cluster as cluster.name for cluster in clusters'}
-    .form-horizontal
-      .form-group
-        %label.col-md-2.control-label
           = _('Destination Host')
         .col-md-8
-          %select{:name => 'destination_host_id', 'ng-model' => 'vmCloudModel.host', 'ng-options' => 'host.id as host.name for host in hosts | filter : {cluster_id: vmCloudModel.cluster.id}'}
+          %select{:name => 'destination_host_id', 'ng-model' => 'vmCloudModel.host', 'ng-options' => 'host.id as host.name for host in hosts'}
 
   %div_for_paging{'ng-controller'                    => "pagingDivButtonGroupController",
                   'paging_div_buttons_state_enabled' => true,
