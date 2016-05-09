@@ -5,7 +5,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
                               :ipaddress => "192.0.2.1", :port => 5000, :api_version => 'v2',
                               :security_protocol => 'no-ssl')
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "c51a4689e1df2153987f8a42f04185430d462186"})
+      :default => {:userid => "admin", :password => "5eba8beb33ec6754780b10e96c3821c6c16e455c"})
   end
 
   it "will perform a full refresh" do
@@ -152,15 +152,15 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     )
 
     expect(@host.hardware).to have_attributes(
-      :cpu_speed            => 2000,
+      :cpu_speed            => 3392,
       :cpu_type             => "RHEL 7.2.0 PC (i440FX + PIIX, 1996)",
       :manufacturer         => "Red Hat",
       :model                => "KVM",
-      :memory_mb            => 8192,
+      :memory_mb            => 6144,
       :memory_console       => nil,
-      :disk_capacity        => 40,
-      :cpu_sockets          => 4,
-      :cpu_total_cores      => 4,
+      :disk_capacity        => 50,
+      :cpu_sockets          => 1,
+      :cpu_total_cores      => 1,
       :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
@@ -181,7 +181,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :present         => true,
       :filename        => 'ata-QEMU_HARDDISK_QM00005',
       :location        => nil,
-      :size            => 47_244_640_256,
+      :size            => 57_982_058_496,
       :disk_type       => nil,
       :mode            => 'persistent')
   end
