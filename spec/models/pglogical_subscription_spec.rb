@@ -30,6 +30,7 @@ describe PglogicalSubscription do
         "dbname"               => "vmdb's_test",
         "host"                 => "example.com",
         "user"                 => "root",
+        "password"             => "v2:{S6ucMa3S0q7q2l2Lcqb6AQ==}",
         "provider_region"      => 0,
         "provider_region_name" => "The region"
       },

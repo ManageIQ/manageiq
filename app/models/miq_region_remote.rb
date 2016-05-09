@@ -18,6 +18,7 @@ class MiqRegionRemote < ApplicationRecord
 
   def self.validate_connection_settings(host, port, username, password, database = nil, adapter = nil)
     database, adapter = prepare_default_fields(database, adapter)
+    password = MiqPassword.try_decrypt(password)
 
     log_details = "Host: [#{host}]}, Database: [#{database}], Adapter: [#{adapter}], User: [#{username}]"
 
