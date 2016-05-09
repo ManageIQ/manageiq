@@ -272,4 +272,46 @@ class PostgresAdmin
   ensure
     File.delete(PGPASS_FILE) if opts[:password]
   end
+
+  def self.parse_dsn(dsn)
+    scanner = StringScanner.new(dsn)
+
+    dsn_hash = {}
+
+    until scanner.eos?
+      # get the key by matching up to and including the (optionally) white space bordered '='
+      key = scanner.scan_until(/\s?=\s?/)
+      key = key[0..-(scanner.matched_size + 1)]
+
+      dsn_hash[key.to_sym] = get_dsn_value(scanner)
+    end
+
+    dsn_hash
+  end
+
+  def self.get_dsn_value(scanner)
+    # if we are a quoted value
+    if scanner.peek(1) == "'"
+      # get the first quote and the string that ends with a quote not preceded by a backslash
+      value = scanner.getch + scanner.scan_until(/(?<!\\)'\s*/).strip
+    # if there is more whitespace
+    elsif scanner.exist?(/\s+/)
+      value = scanner.scan_until(/\s+/).strip
+    else
+      value = scanner.rest
+      scanner.terminate
+    end
+
+    # strip the leading and trailing quotes if they exist
+    #   we only strip the trailing space if we strip a leading
+    #   space because the trailing space could be escaped with a \,
+    #   but a trailing space must exist if we stripped a leading space
+    value.gsub!(/'\z/, "") if value.gsub!(/\A'/, "")
+
+    # un-escape any single quotes in the remaining value
+    value.gsub!(/\\'/, "'")
+
+    value
+  end
+  private_class_method :get_dsn_value
 end
