@@ -93,7 +93,7 @@ describe MiqExpression do
       exp1 = {"STARTS WITH" => {"field" => "Vm-name", "value" => "foo"}}
       exp2 = {"ENDS WITH" => {"field" => "Vm-name", "value" => "bar"}}
       sql, * = MiqExpression.new("OR" => [exp1, exp2]).to_sql
-      expect(sql).to eq("(\"vms\".\"name\" LIKE 'foo%' OR \"vms\".\"name\" LIKE '%bar')")
+      expect(sql).to eq("\"vms\".\"name\" LIKE 'foo%' OR \"vms\".\"name\" LIKE '%bar'")
     end
 
     it "returns nil for an OR expression where one is not supported by SQL" do
