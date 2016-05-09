@@ -264,22 +264,11 @@ describe OpsController do
     end
   end
 
-  context "#explorer" do
-    it "sets analytics active accordion value" do
-      controller.instance_variable_set(:@sb, {})
-      login_as FactoryGirl.create(:user, :features => "ops_analytics")
-      expect(controller).to receive(:render)
-      controller.send(:explorer)
-      expect(response.status).to eq(200)
-      expect(assigns(:sb)[:active_accord]).to eq(:analytics)
-    end
-  end
-
   context "#replace_explorer_trees" do
     it "build trees that are passed in and met other conditions" do
       controller.instance_variable_set(:@sb, {})
       allow(controller).to receive(:x_build_dyna_tree)
-      replace_trees = [:settings, :diagnostics, :analytics]
+      replace_trees = [:settings, :diagnostics]
       presenter = ExplorerPresenter.new
       controller.send(:replace_explorer_trees, replace_trees, presenter)
       expect(response.status).to eq(200)

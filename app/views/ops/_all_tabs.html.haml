@@ -232,13 +232,5 @@
         = miq_tab_content("db_utilization", @sb[:active_tab]) do
           - if @sb[:active_tab] == "db_utilization"
             = render(:partial => "layouts/performance")
-  - when :analytics_tree
-    - if get_vmdb_config[:product][:analytics]
-      %ul.nav.nav-tabs
-        = miq_tab_header("analytics_details", @sb[:active_tab]) do
-          = _("Analytics Report")
-      .tab-content
-        = miq_tab_content("analytics_details", @sb[:active_tab]) do
-          = render :partial => "analytics_details_tab"
 :javascript
   miq_tabs_init("#ops_tabs", "/ops/change_tab");

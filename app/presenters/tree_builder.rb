@@ -65,7 +65,6 @@ class TreeBuilder
     when :old_dialogs           then TreeBuilderProvisioningDialogs
 
     # OPS explorer trees
-    when :analytics             then TreeBuilderOpsAnalytics
     when :diagnostics           then TreeBuilderOpsDiagnostics
     when :rbac                  then TreeBuilderOpsRbac
     when :settings              then TreeBuilderOpsSettings
