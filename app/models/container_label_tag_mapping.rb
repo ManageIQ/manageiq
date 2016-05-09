@@ -63,6 +63,7 @@ class ContainerLabelTagMapping < ApplicationRecord
       end
     end
   end
+  private_class_method :tags_for_name_type_value
 
   # If this is an open ended any-value mapping, finds or creates a
   # specific-value mapping to a specific tag.

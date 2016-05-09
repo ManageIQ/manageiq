@@ -388,12 +388,13 @@ module EmsRefresh::SaveInventoryContainer
     save_tags_generated_from_labels(entity, hashes, target)
   end
 
-  # Must be called after object already got its labels.
-  # This is achieved by :labels_and_tags going through save_labels_and_tags_inventory().
-  # TODO: Drop the order requirement by using the :labels hash instead of entity.labels?
-  #   Would still need still save_labels_and_tags_inventory() to get that hash.
-  def save_tags_generated_from_labels(entity, _hashes, _target = nil)
-    current_tags = ContainerLabelTagMapping.tags_for_entity(entity)
+  def save_tags_generated_from_labels(entity, hashes, _target = nil)
+    labels = hashes.collect do |label_hash|
+      OpenStruct.new(:resource_type => entity.class.base_class.name,
+                     :name          => label_hash[:name],
+                     :value         => label_hash[:value])
+    end
+    current_tags = labels.collect_concat { |label| ContainerLabelTagMapping.tags_for_label(label) }
     mappable_tags = ContainerLabelTagMapping.mappable_tags
 
     entity.tags = entity.tags - mappable_tags + current_tags

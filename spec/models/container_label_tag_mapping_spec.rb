@@ -37,9 +37,16 @@ describe ContainerLabelTagMapping do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
     end
 
-    it "returns 2 tags" do
+    it "tags_for_entity returns 2 tags" do
       label(node, 'name', 'value-1')
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
+    end
+
+    it "tags_for_label returns same tags" do
+      label_obj = OpenStruct.new(:resource_type => 'ContainerNode',
+                                 :name          => 'name',
+                                 :value         => 'value-1')
+      expect(ContainerLabelTagMapping.tags_for_label(label_obj)).to contain_exactly(tag1, tag2)
     end
   end
 
