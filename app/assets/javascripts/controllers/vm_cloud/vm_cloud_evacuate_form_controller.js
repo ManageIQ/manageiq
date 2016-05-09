@@ -5,16 +5,13 @@ ManageIQ.angular.app.controller('vmCloudEvacuateFormController', ['$http', '$sco
     on_shared_storage:   true,
     admin_password:      null
   };
-  $scope.clusters = [];
   $scope.hosts = [];
-  $scope.filtered_hosts = [];
   $scope.formId = vmCloudEvacuateFormId;
   $scope.modelCopy = angular.copy( $scope.vmCloudModel );
 
   ManageIQ.angular.scope = $scope;
 
   $http.get('/vm_cloud/evacuate_form_fields/' + vmCloudEvacuateFormId).success(function(data) {
-    $scope.clusters = data.clusters;
     $scope.hosts = data.hosts;
     $scope.modelCopy = angular.copy( $scope.vmCloudModel );
     miqService.sparkleOff();
