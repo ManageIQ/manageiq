@@ -7,7 +7,7 @@ module ReportFormatter
       mri = options.mri
       # allow override
       #     return if max_col_width
-      tz = mri.get_time_zone(Time.zone.name)
+      tz = mri.default_time_zone(Time.zone.name)
 
       @max_col_width = []
       unless mri.headers.empty?
@@ -89,7 +89,7 @@ module ReportFormatter
     # Uses fit_to_width to truncate table if necessary
     def build_document_body
       mri = options.mri
-      tz = mri.get_time_zone(Time.zone.name)
+      tz = mri.default_time_zone(Time.zone.name)
       s = @hr
 
       save_val = nil
@@ -165,7 +165,7 @@ module ReportFormatter
 
     def build_document_footer
       mri = options.mri
-      tz = mri.get_time_zone(Time.zone.name)
+      tz = mri.default_time_zone(Time.zone.name)
       if !mri.user_categories.blank? || !mri.categories.blank? || !mri.conditions.nil? || !mri.display_filter.nil?
         output << @hr
         unless mri.user_categories.blank?

@@ -8,9 +8,9 @@ module MiqReport::Formatters::Csv
     csv_table.data.each do |key|
       key.data.each do |k|
         if k[0] == "v_date"
-          key.data[k[0]] = k[1].in_time_zone(get_time_zone("UTC")).strftime("%m/%d/%Y %Z")
+          key.data[k[0]] = k[1].in_time_zone(default_time_zone).strftime("%m/%d/%Y %Z")
         elsif k[0] == "v_time"
-          key.data[k[0]] = k[1].in_time_zone(get_time_zone("UTC")).strftime("%H:%M %Z")
+          key.data[k[0]] = k[1].in_time_zone(default_time_zone).strftime("%H:%M %Z")
         elsif k[1].kind_of?(Time)
           key.data[k[0]] = format_timezone(k[1], Time.zone, "gtl")
         end
