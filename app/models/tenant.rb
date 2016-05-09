@@ -323,7 +323,7 @@ class Tenant < ApplicationRecord
   # @return the attribute value
   def tenant_attribute(attr_name, setting_name)
     if use_config_for_attributes?
-      ret = get_vmdb_config.fetch_path(:server, setting_name)
+      ret = self.class.get_vmdb_config.fetch_path(:server, setting_name)
       block_given? ? yield(ret) : ret
     else
       self[attr_name]
@@ -337,7 +337,7 @@ class Tenant < ApplicationRecord
     self.name = nil unless name.present?
   end
 
-  def get_vmdb_config
+  def self.get_vmdb_config
     @vmdb_config ||= VMDB::Config.new("vmdb").config
   end
 
