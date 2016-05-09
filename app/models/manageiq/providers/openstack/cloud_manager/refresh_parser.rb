@@ -65,6 +65,7 @@ module ManageIQ::Providers
       get_volumes
       get_snapshots
       get_object_store
+      get_cloud_services
 
       $fog_log.info("#{log_header}...Complete")
 
@@ -456,6 +457,40 @@ module ManageIQ::Providers
 
     def add_instance_disk(disks, size, location, name)
       super(disks, size, location, name, "openstack")
+    end
+
+    def get_cloud_services
+      # TODO(pblaho): repeat for each posible service (compute, identity, ...)
+      source = 'compute'
+      services = @compute_service.handled_list(:services)
+      process_collection(services, :cloud_services) { |service| parse_cloud_service(service, source) }
+    end
+
+    def parse_cloud_service(service, source)
+      uid = service.id
+
+      infra_ems = @ems.provider && @ems.provider.try(:infra_ems)
+      hosts = infra_ems.try(:hosts)
+
+      host = hosts.try(:find) { |h| h.hypervisor_hostname == service.host.split('.').first }
+      system_services = host.try(:system_services)
+      system_service = system_services.try(:find) { |ss| ss.name =~ /#{service.binary}/ }
+      availability_zone = @ems.availability_zones.find { |zone| zone.ems_ref == service.zone }
+
+      new_result = {
+        :ems_ref                    => uid,
+        :source                     => source,
+        :executable_name            => service.binary,
+        :hostname                   => service.host,
+        :status                     => service.state,
+        :scheduling_disabled        => service.status == 'disabled' ? true : false,
+        :scheduling_disabled_reason => service.disabled_reason,
+        :host                       => host,
+        :system_service             => system_service,
+        :availability_zone          => availability_zone,
+      }
+
+      return uid, new_result
     end
   end
 end

@@ -22,6 +22,7 @@
 #     - snapshots
 #   - cloud_object_store_containers
 #     - cloud_object_store_objects
+#   - cloud_services
 #
 
 module EmsRefresh::SaveInventoryCloud
@@ -59,7 +60,8 @@ module EmsRefresh::SaveInventoryCloud
       :cloud_resource_quotas,
       :cloud_object_store_containers,
       :cloud_object_store_objects,
-      :resource_groups
+      :resource_groups,
+      :cloud_services,
     ]
 
     # Save and link other subsections
@@ -252,5 +254,19 @@ module EmsRefresh::SaveInventoryCloud
 
     save_inventory_multi(ems.resource_groups, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.resource_groups, hashes, :ems_ref)
+  end
+
+  def save_cloud_services_inventory(ems, hashes, target = nil)
+    target = ems if target.nil?
+
+    ems.cloud_services.reset
+    deletes = if target == ems
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(ems.cloud_services, hashes, deletes, [:ems_ref])
+    store_ids_for_new_records(ems.cloud_services, hashes, :ems_ref)
   end
 end
