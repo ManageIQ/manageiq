@@ -1344,7 +1344,6 @@ function miqSelectPickerEvent(element, url, options) {
   options.no_encoding = true;
   var firstarg = ! _.contains(url, '?');
 
-  $('#' + element).off('change');
   $('#' + element).on('change', _.debounce(function() {
     var selected = $(this).val();
     var finalUrl = url + (firstarg ? '?' : '&') + element + '=' + escape(selected);
