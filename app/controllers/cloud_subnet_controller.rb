@@ -10,6 +10,6 @@ class CloudSubnetController < ApplicationController
   include Mixins::GenericShowMixin
 
   def self.display_methods
-    %w(instances)
+    %w(instances cloud_subnets)
   end
 end

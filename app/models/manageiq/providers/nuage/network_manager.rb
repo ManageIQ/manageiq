@@ -33,6 +33,6 @@ class ManageIQ::Providers::Nuage::NetworkManager < ManageIQ::Providers::NetworkM
 
   def auth_url(protocol, server, port, version)
     scheme = protocol == "no_ssl" ? "http" : "https"
-    scheme + '://' + server + ':' + port.to_s + '/' + 'nuage/api/' + version
+    "#{scheme}://#{server}:#{port}/nuage/api/#{version}"
   end
 end
