@@ -30,7 +30,7 @@ module ApplicationController::Automate
       else
         page.replace("left_cell_bottom", :partial => "resolve_form_buttons")
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page.replace_html("main_div", :partial => "results_tabs")
+        page.replace_html("simulate_result", :partial => "results_tabs")
         page << javascript_pf_toolbar_reload('center_tb', c_tb)
         page << "miqSparkle(false);"
       end
@@ -126,7 +126,7 @@ module ApplicationController::Automate
   def resolve
     custom_button_redirect = params[:button] == 'simulate' || params[:simulate] == 'simulate'
     assert_privileges(custom_button_redirect ? 'ab_button_simulate' : 'miq_ae_class_simulation')
-    @explorer = true
+    @explorer = !(params[:controller] == "miq_ae_tools" && (params[:action] == "resolve" || params[:action] == "show"))
     @collapse_c_cell = true
     @breadcrumbs = []
     drop_breadcrumb(:name => _("Resolve"), :url => "/miq_ae_tools/resolve")

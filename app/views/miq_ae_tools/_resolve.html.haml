@@ -1,6 +1,8 @@
-- content_for :left do
-  = render :partial => "resolve_form"
-  = render :partial => "resolve_form_buttons"
-
 #main_div
-  = render :partial => "results_tabs"
+  = render :partial => "layouts/flash_msg"
+  .row
+    .col-md-4
+      = render :partial => "resolve_form"
+      = render :partial => "resolve_form_buttons"
+    .col-md-8#simulate_result
+      = render :partial => "results_tabs"
