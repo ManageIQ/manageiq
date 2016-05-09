@@ -162,26 +162,6 @@ module ContainerSummaryHelper
     textual_link(@record.parent)
   end
 
-  def textual_tags
-    label = _("%{name} Tags") % {:name => session[:customer_name]}
-    h = {:label => label}
-    tags = session[:assigned_filters]
-    if tags.present?
-      h[:value] = tags.sort_by { |category, _assigned| category.downcase }.collect do |category, assigned|
-        {
-          :image => "smarttag",
-          :label => category,
-          :value => assigned
-        }
-      end
-    else
-      h[:image] = "smarttag"
-      h[:value] = _("No %{label} have been assigned") % {:label => label}
-    end
-
-    h
-  end
-
   private
 
   def textual_key_value_group(items)
