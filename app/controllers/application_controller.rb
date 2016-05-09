@@ -2208,9 +2208,11 @@ class ApplicationController < ActionController::Base
       @view ||= session[:view]                              #   Remember the previous @view
     end
 
-    session[:edit] = @edit ? @edit : nil                    # Set or clear session edit hash
+    unless controller_name == "api"
+      session[:edit] = @edit ? @edit : nil     # Set or clear session edit hash
+      session[:view] = @view ? @view : nil     # Set or clear view in session hash
+    end
 
-    session[:view] = @view ? @view : nil                    # Set or clear view in session hash
     unless params[:controller] == "miq_task"                # Proxy needs data for delete all
       session[:view].table = nil if session[:view]          # Don't need to carry table data around
     end
