@@ -13,7 +13,7 @@ RSpec.describe MiqRegionRemote do
   end
 
   describe ".with_remote_connection" do
-    it "removes the temporary connection pool", :skip => "need to fix" do
+    it "removes the temporary connection pool" do
       original = described_class.connection.raw_connection.conninfo_hash[:dbname]
 
       config = Rails.configuration.database_configuration[Rails.env]
