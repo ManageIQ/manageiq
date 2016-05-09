@@ -1,4 +1,4 @@
-- url = "form_field_changed"
+- url = url_for(:action => "form_field_changed")
 - url_json = {:url => url_for(:action => "form_field_changed")}.to_json
 = render :partial => "layouts/flash_msg"
 
