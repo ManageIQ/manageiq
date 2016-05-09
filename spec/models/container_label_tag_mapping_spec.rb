@@ -25,7 +25,7 @@ describe ContainerLabelTagMapping do
   context "with empty mapping" do
     it "does nothing" do
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to be_empty
-      expect(ContainerLabelTagMapping.all_mapped_tags).to be_empty
+      expect(ContainerLabelTagMapping.mappable_tags).to be_empty
     end
   end
 
@@ -56,7 +56,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "creates tag for new value" do
-      expect(ContainerLabelTagMapping.all_mapped_tags).to contain_exactly(tag1, tag_under_cat)
+      expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat)
 
       label(node, 'name', 'value-2')
       tags = ContainerLabelTagMapping.tags_for_entity(node)
@@ -64,13 +64,13 @@ describe ContainerLabelTagMapping do
       expect(tags[0].name).to eq(cat_tag.name + '/value_2')
       expect(tags[0].classification.description).to eq('value-2')
 
-      expect(ContainerLabelTagMapping.all_mapped_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+      expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
 
       # But nothing changes when called again, the previously created tag is re-used.
 
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
 
-      expect(ContainerLabelTagMapping.all_mapped_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+      expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
     end
   end
 
