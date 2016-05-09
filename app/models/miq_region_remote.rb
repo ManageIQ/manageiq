@@ -100,19 +100,21 @@ class MiqRegionRemote < ApplicationRecord
       end
     end
 
-    pool = establish_connection({
-      :adapter  => adapter,
-      :host     => host,
-      :port     => port,
-      :username => username,
-      :password => password,
-      :database => database
-    }.delete_blanks)
     begin
+      old_spec_name = connection_specification_name
+      pool = establish_connection({
+        :adapter  => adapter,
+        :host     => host,
+        :port     => port,
+        :username => username,
+        :password => password,
+        :database => database
+      }.delete_blanks)
       conn = pool.connection
       yield conn
     ensure
       remove_connection
+      self.connection_specification_name = old_spec_name
     end
   end
 end
