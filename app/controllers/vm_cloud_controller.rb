@@ -340,11 +340,16 @@ class VmCloudController < ApplicationController
   def evacuate_form_fields
     assert_privileges("instance_evacuate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
-    clusters = @record.ext_management_system.ems_clusters.map do |c|
-      {:id => c.id, :name => c.name}
-    end
-    hosts = @record.ext_management_system.hosts.map do |h|
-      {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
+    host_ems = @record.try!(:host).try!(:ext_management_system)
+    clusters = []
+    hosts = []
+    if host_ems
+      clusters = host_ems.ems_clusters.map do |c|
+        {:id => c.id, :name => c.name}
+      end
+      hosts = host_ems.hosts.map do |h|
+        {:id => h.id, :name => h.name, :cluster_id => h.emd_cluster.id}
+      end
     end
     render :json => {
       :clusters => clusters,
