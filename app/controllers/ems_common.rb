@@ -106,7 +106,7 @@ module EmsCommon
     [Container, ContainerReplicator, ContainerNode, ContainerGroup,
      ContainerService, ContainerImage, ContainerRoute, ContainerBuild,
      ContainerProject, ContainerImageRegistry, AvailabilityZone,
-     MiddlewareServer, MiddlewareDeployment,
+     MiddlewareServer, MiddlewareDeployment, MiddlewareDatasource,
      CloudTenant, CloudVolume, Flavor,
      SecurityGroup, FloatingIp, NetworkRouter, NetworkPort, CloudSubnet, CloudNetwork].detect do |klass|
       name = klass.name.underscore.pluralize

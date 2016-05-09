@@ -62,13 +62,14 @@
                 .col-md-8
                   %ul.list-inline= render_view_buttons(resource, @edit[:new][:views][resource])
       .col-md-12.col-lg-6
-        - if has_any_role?(%w(ems_middleware_show_list middleware_server_show_list middleware_deployment_show_list))
+        - if has_any_role?(%w(ems_middleware_show_list middleware_server_show_list middleware_deployment_show_list middleware_datasource_show_list))
           %fieldset
             %h3
               = _('Middleware')
             - keys = {:manageiq_providers_middlewaremanager => ["ems_middleware_show_list",        _('Middleware Providers')],
                       :middlewareserver                     => ["middleware_server_show_list",     _('Middleware Servers')],
-                      :middlewaredeployment                 => ["middleware_deployment_show_list", _('Middleware Deployments')]}
+                      :middlewaredeployment                 => ["middleware_deployment_show_list", _('Middleware Deployments')],
+                      :middlewaredatasource                 => ["middleware_datasource_show_list", _('Middleware Datasources')]}
             - keys.each do |resource, (feature, view_name)|
               - if role_allows(:feature => feature)
                 .form-group
