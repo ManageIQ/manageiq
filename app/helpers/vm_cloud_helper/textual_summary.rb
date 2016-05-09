@@ -16,7 +16,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_group_template_cloud_relationships
-    %i(ems parent_vm drift scan_history)
+    %i(ems parent_vm drift scan_history cloud_tenant)
   end
 
   def textual_group_security
