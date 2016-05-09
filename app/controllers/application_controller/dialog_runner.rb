@@ -239,7 +239,6 @@ module ApplicationController::DialogRunner
 
       else
         if @record.field_name_exist?(parameter_key)
-          parameter_value = parameter_value.to_i if @edit[:wf].dialog_field(parameter_key).data_type == "integer"
           @edit[:wf].set_value(parameter_key, parameter_value)
         end
       end

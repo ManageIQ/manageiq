@@ -129,7 +129,7 @@ describe DialogFieldTextBox do
 
           it "returns an error when the value is not a number" do
             df.value = 'a12'
-            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field is invalid')
+            expect(df.validate_field_data(dt, dg)).to eq('tab/group/test field must be an integer')
           end
         end
       end
@@ -137,7 +137,7 @@ describe DialogFieldTextBox do
   end
 
   describe "#value" do
-    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value) }
+    let(:dialog_field) { described_class.new(:dynamic => dynamic, :value => value, :data_type => data_type) }
 
     context "when the dialog field is dynamic" do
       let(:dynamic) { true }
@@ -145,8 +145,20 @@ describe DialogFieldTextBox do
       context "when the dialog field has a value already" do
         let(:value) { "test" }
 
-        it "returns the current value" do
-          expect(dialog_field.value).to eq("test")
+        context "when the data type is integer" do
+          let(:data_type) { "integer" }
+
+          it "converts the data into an integer" do
+            expect(dialog_field.value).to eq(0)
+          end
+        end
+
+        context "when the data type is string" do
+          let(:data_type) { "string" }
+
+          it "returns the current value" do
+            expect(dialog_field.value).to eq("test")
+          end
         end
       end
 
@@ -157,18 +169,54 @@ describe DialogFieldTextBox do
           allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("processor")
         end
 
-        it "returns the values from the value processor" do
-          expect(dialog_field.value).to eq("processor")
+        context "when the data type is an integer" do
+          let(:data_type) { "integer" }
+
+          it "converts the data into an integer" do
+            expect(dialog_field.value).to eq(0)
+          end
+        end
+
+        context "when the data type is a string" do
+          let(:data_type) { "string" }
+
+          it "returns the values from the value processor" do
+            expect(dialog_field.value).to eq("processor")
+          end
         end
       end
     end
 
     context "when the dialog field is not dynamic" do
       let(:dynamic) { false }
-      let(:value) { "test" }
 
-      it "returns the current value" do
-        expect(dialog_field.value).to eq("test")
+      context "when the data type is integer" do
+        let(:data_type) { "integer" }
+
+        context "when the value is nil" do
+          let(:value) { nil }
+
+          it "returns nil" do
+            expect(dialog_field.value).to eq(nil)
+          end
+        end
+
+        context "when the value is not nil" do
+          let(:value) { "test" }
+
+          it "converts the data into an integer" do
+            expect(dialog_field.value).to eq(0)
+          end
+        end
+      end
+
+      context "when the data type is string" do
+        let(:data_type) { "string" }
+        let(:value) { "test" }
+
+        it "returns the current value" do
+          expect(dialog_field.value).to eq("test")
+        end
       end
     end
   end
@@ -303,6 +351,60 @@ describe DialogFieldTextBox do
 
     it "returns the values from automate" do
       expect(dialog_field.trigger_automate_value_updates).to eq("processed values")
+    end
+  end
+
+  describe "#automate_output_value" do
+    let(:dialog_field) do
+      described_class.new(:value => "12test", :data_type => data_type, :protected => protected_attr)
+    end
+
+    context "when the data type is a string" do
+      let(:data_type) { "string" }
+
+      context "when it is protected" do
+        let(:protected_attr) { true }
+
+        before do
+          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+        end
+
+        it "returns the encrypted value" do
+          expect(dialog_field.automate_output_value).to eq("lol")
+        end
+      end
+
+      context "when it is not protected" do
+        let(:protected_attr) { false }
+
+        it "returns the un-encrypted value" do
+          expect(dialog_field.automate_output_value).to eq("12test")
+        end
+      end
+    end
+
+    context "when the data type is an integer" do
+      let(:data_type) { "integer" }
+
+      context "when it is protected" do
+        let(:protected_attr) { true }
+
+        before do
+          allow(MiqPassword).to receive(:encrypt).with("12test").and_return("lol")
+        end
+
+        it "returns the encrypted value" do
+          expect(dialog_field.automate_output_value).to eq("lol")
+        end
+      end
+
+      context "when it is not protected" do
+        let(:protected_attr) { false }
+
+        it "converts the value to an integer" do
+          expect(dialog_field.automate_output_value).to eq(12)
+        end
+      end
     end
   end
 end
