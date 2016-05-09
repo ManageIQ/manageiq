@@ -122,10 +122,10 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :last_refresh_status,     :type => :string
   virtual_total  :total_vms_and_templates, :vms_and_templates
   virtual_total  :total_vms,               :vms
-  virtual_column :total_miq_templates,     :type => :integer
-  virtual_column :total_hosts,             :type => :integer
+  virtual_total  :total_miq_templates,     :miq_templates
+  virtual_total  :total_hosts,             :hosts
   virtual_column :total_storages,          :type => :integer
-  virtual_column :total_clusters,          :type => :integer
+  virtual_total  :total_clusters,          :clusters
   virtual_column :zone_name,               :type => :string, :uses => :zone
   virtual_column :total_vms_on,            :type => :integer
   virtual_column :total_vms_off,           :type => :integer
