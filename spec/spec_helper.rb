@@ -107,7 +107,7 @@ RSpec.configure do |config|
   end
 
   if ENV["TRAVIS"] && ENV["TEST_SUITE"] == "vmdb"
-    config.after(:suite) do
+    config.before(:suite) do
       require Rails.root.join("spec/coverage_helper.rb")
     end
   end
