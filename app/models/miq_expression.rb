@@ -1092,29 +1092,6 @@ class MiqExpression
     ret
   end
 
-  def self.operands2sqlvalue(operator, ops)
-    # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
-    operator = operator.downcase
-
-    ret = []
-    if  ops["field"]
-      ret << get_sqltable(ops["field"].split("-").first) + "." + ops["field"].split("-").last
-      col_type = get_col_type(ops["field"]) || "string"
-      if ["like", "not like", "starts with", "ends with", "includes"].include?(operator)
-        ret.push(ops["value"])
-      else
-        ret.push(quote(ops["value"], col_type.to_s, :sql))
-      end
-    elsif ops["count"]
-      val = get_sqltable(ops["count"].split("-").first) + "." + ops["count"].split("-").last
-      ret << "count(#{val})" # TODO
-      ret.push(ops["value"])
-    else
-      return nil
-    end
-    ret
-  end
-
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
     operator = operator.downcase
@@ -1295,30 +1272,6 @@ class MiqExpression
     end
   end
 
-  def self.normalize_sql_operator(str)
-    str = str.upcase
-    case str
-    when "EQUAL"
-      "="
-    when "!"
-      "NOT"
-    when "EXIST"
-      "CONTAINS"
-    when "LIKE", "NOT LIKE", "STARTS WITH", "ENDS WITH", "INCLUDES"
-      "LIKE"
-    when "IS EMPTY"
-      "="
-    when "IS NOT EMPTY"
-      "!="
-    when "BEFORE"
-      "<"
-    when "AFTER"
-      ">"
-    else
-      str
-    end
-  end
-
   def self.normalize_operator(str)
     str = str.upcase
     case str
@@ -1331,23 +1284,6 @@ class MiqExpression
     else
       str
     end
-  end
-
-  def self.get_sqltable(path)
-    # puts "Enter: get_sqltable: path: #{path}"
-    parts = path.split(".")
-    name  = parts.last
-    klass = parts.shift.constantize
-    parts.reverse_each do |assoc|
-      ref = klass.reflect_on_association(assoc.to_sym)
-      if ref.nil?
-        klass = nil
-        break
-      end
-      klass = ref.class_name.constantize
-    end
-
-    klass ? klass.table_name : name.pluralize.underscore
   end
 
   def self.base_tables
