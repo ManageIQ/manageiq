@@ -217,7 +217,7 @@ describe MiqExpression do
       it "generates the SQL for a >= expression" do
         exp = MiqExpression.new(">=" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on >= '2011-01-10'")
+        expect(sql).to eq("\"vms\".\"retires_on\" >= '2011-01-10 00:00:00'")
       end
 
       it "generates the SQL for a <= expression" do

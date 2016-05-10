@@ -607,8 +607,15 @@ class MiqExpression
       clause = field.gt(value).to_sql
     when ">="
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.gteq(exp[operator]["value"]).to_sql
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+              else
+                exp[operator]["value"]
+              end
+      clause = field.gteq(value).to_sql
     when "<"
       field = Field.parse(exp[operator]["field"])
       return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
