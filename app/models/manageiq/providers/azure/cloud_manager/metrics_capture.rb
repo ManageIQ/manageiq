@@ -3,7 +3,11 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
 
   COUNTER_INFO = [
     {
-      :native_counters       => ["\\Processor(_Total)\\% Processor Time"], # CPU percentage guest OS
+      :native_counters => [
+        # CPU percentage guest OS
+        "\\Processor(_Total)\\% Processor Time", # Windows
+        "\\Processor\\PercentProcessorTime"      # Linux
+      ],
       :vim_style_counter_key => "cpu_usage_rate_average"
     },
   ].freeze
@@ -108,17 +112,19 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
     availability = counter.metric_availabilities.detect { |ma| ma.time_grain == INTERVAL_1_MINUTE }
     return [] if availability.nil?
 
-    table = availability.location.table_info.last
-    endpoint = availability.location.table_endpoint
-    storage_acct_name = URI.parse(endpoint).host.split('.').first
-    storage_account = storage_conn.get(storage_acct_name, target.resource_group)
-    storage_key = storage_conn.list_account_keys(storage_acct_name, target.resource_group).fetch('key1')
+    endpoint      = availability.location.table_endpoint
+    partition_key = availability.location.partition_key
+    table_name    = availability.location.table_info.last.table_name
 
-    filter = "CounterName eq '#{counter.name.value}' and Timestamp ge datetime'#{start_time.iso8601}' and Timestamp le datetime'#{end_time.iso8601}'"
+    storage_acct_name = URI.parse(endpoint).host.split('.').first
+    storage_account   = storage_conn.get(storage_acct_name, target.resource_group)
+    storage_key       = storage_conn.list_account_keys(storage_acct_name, target.resource_group).fetch('key1')
+
+    filter = "PartitionKey eq '#{partition_key}' and CounterName eq '#{counter.name.value}' and Timestamp ge datetime'#{start_time.iso8601}' and Timestamp le datetime'#{end_time.iso8601}'"
     # TODO: The following needs to pass :all => true for proper paging in case
     #       the time range is > 1000 metrics, but there seems to be a bug in
     #       continuation tokens when doing this.
-    storage_account.table_data(table.table_name, storage_key, :filter => filter)
+    storage_account.table_data(table_name, storage_key, :filter => filter)
   end
 
   def get_counters(metrics_conn)
