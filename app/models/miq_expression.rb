@@ -762,29 +762,6 @@ class MiqExpression
         end_val   = RelativeDatetime.normalize(end_val, tz, "end").utc
       end
       clause = field.between(start_val..end_val).to_sql
-    when "date_time_with_logical_operator"
-      exp = exp[operator]
-      operator = exp.keys.first
-
-      col_name = exp[operator]["field"]
-      col_type = self.class.get_col_type(col_name)
-      col_sql, dummy = self.class.operands2sqlvalue(operator, "field" => col_name)
-
-      normalized_operator = self.class.normalize_sql_operator(operator)
-      mode = case normalized_operator
-             when ">", "<="  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
-             when "<", ">="  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
-             end
-
-      if col_type == :date
-        val = RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode)
-
-        clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.to_date, :date, :sql)}"
-      else
-        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
-
-        clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.utc, :datetime, :sql)}"
-      end
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
