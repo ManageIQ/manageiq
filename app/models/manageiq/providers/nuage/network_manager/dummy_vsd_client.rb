@@ -7,8 +7,9 @@ module ManageIQ::Providers
       @user = user
       @password = password
       _is_conn = true
-      File.open("vsd_login.txt" ).each do |line|
-       data += line
+      data = ""
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_login.txt" ).each do |line|
+       data = data.to_s + line.to_s
       end
       if _is_conn
         @enterprise_id = data
@@ -18,88 +19,51 @@ module ManageIQ::Providers
     end
 
     def get_enterprises
-      File.open("vsd_enterprises.txt" ).each do |line|
-       response += line
+      response = ""
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_enterprises.txt" ).each do |line|
+       response = response + line.to_s
       end
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No enterprises present')
-          return
-        end
-        return JSON.parse(response.body)
-      end
-      $log.error('Error in connection ' + response.code.to_s)
+      return JSON.parse(response)
     end
    
-    def get_domains 
-      File.open("vsd_domains.txt" ).each do |line|
-       response += line
+    def get_domains
+      response = "" 
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_domains.txt" ).each do |line|
+       response = response + line.to_s
       end
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No domains present')
-          return
-        end
-        return JSON.parse(response.body)
-      end
-      $log.error('Error in connection ' + response.code.to_s)
+      return JSON.parse(response)
     end
 
     def get_zones
-      File.open("vsd_zones.txt" ).each do |line|
-       response += line
+      response = ""
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_zones.txt" ).each do |line|
+       response = response + line.to_s
       end
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No zones present')
-          return
-        end
-        return JSON.parse(response.body)
-      end
-      $log.error('Error in connection ' + response.code.to_s)
+      return JSON.parse(response)
     end
     
     def get_subnets
-      File.open("vsd_subnets.txt" ).each do |line|
-       response += line
+      response = ""
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_subnets.txt" ).each do |line|
+       response = response + line.to_s
       end
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No subnets present')
-          return
-        end
-        subnets = JSON.parse(response.body)
-        return subnets
-      end
-      $log.error('Error in connection ' + response.code.to_s)
+       return JSON.parse(response)
     end
 
     def get_vports
-      File.open("vsd_vports.txt" ).each do |line|
-       response += line
+      response = ""
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_vports.txt" ).each do |line|
+       response = response + line.to_s
       end
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No vports present')
-          return
-        end
-        return JSON.parse(response.body)
-      end
-      $log.error('Error in connection ' + response.code.to_s)
+      return JSON.parse(response)
     end
 
     def get_vms
-      File.open("vsd_vms.txt" ).each do |line|
-       response += line
+      response = ""
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_vms.txt" ).each do |line|
+       response = response + line.to_s
       end
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No VM present')
-          return
-        end
-        return JSON.parse(response.body)
-      end
-      $log.error('Error in connection ' + response.code.to_s)
+      return JSON.parse(response)
     end
 
 
