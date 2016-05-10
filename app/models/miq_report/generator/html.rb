@@ -15,8 +15,6 @@ module MiqReport::Generator::Html
       # Following line commented for now - for not showing repeating column values
       #       prev_data = String.new                # Initialize the prev_data variable
 
-      tot_cpu = tot_ram = tot_space = tot_disk = tot_net = 0.0 if db == "VimUsage"  # Create usage total cols
-
       cfg = VMDB::Config.new("vmdb").config[:reporting]       # Read in the reporting column precisions
       default_precision = cfg[:precision][:default]           # Set the default
       precision_by_column = cfg[:precision_by_column]         # get the column overrides
@@ -72,38 +70,6 @@ module MiqReport::Generator::Html
           elsif db == "Tenant" && TenantQuota.can_format_field?(c, d.data["tenant_quotas.name"])
             output << "<td#{style_class} " + 'style="text-align:right">'
             output << CGI.escapeHTML(TenantQuota.format_quota_value(c, d.data[c], d.data["tenant_quotas.name"]))
-          elsif db == "VimUsage"                 # Format usage columns
-            case c
-            when "cpu_usagemhz_rate_average"
-              output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(format(c, d.data[c].to_f, :format => :general_number_precision_1))
-              tot_cpu += d.data[c].to_f
-            when "derived_memory_used"
-              output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(format(c, d.data[c].to_f, :format => :megabytes_human))
-              tot_ram += d.data[c].to_f
-            when "derived_vm_used_disk_storage"
-              output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(format(c, d.data[c], :format => :bytes_human))
-              tot_space += d.data[c].to_f
-            when "derived_storage_used_managed"
-              output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(format(c, d.data[c], :format => :bytes_human))
-              tot_space += d.data[c].to_f
-            when "disk_usage_rate_average"
-              output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
-                " (#{CGI.escapeHTML(format(c, d.data[c].to_f * 1.kilobyte * extras[:interval], :format => :bytes_human))})"
-              tot_disk += d.data[c].to_f
-            when "net_usage_rate_average"
-              output << "<td#{style_class} " + 'style="text-align:right">'
-              output << CGI.escapeHTML(format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
-                " (#{CGI.escapeHTML(format(c, d.data[c].to_f * 1.kilobyte * extras[:interval], :format => :bytes_human))})"
-              tot_net += d.data[c].to_f
-            else
-              output << "<td#{style_class}>"
-              output << d.data[c].to_s
-            end
           elsif ["<compare>", "<drift>"].include?(db.to_s)
             output << "<td#{style_class}>"
             output << CGI.escapeHTML(d.data[c].to_s)
@@ -128,46 +94,6 @@ module MiqReport::Generator::Html
         html_rows << output unless hide_detail_rows
       end
 
-      if db == "VimUsage"                    # Output usage totals
-        output = ""
-        if row == 0
-          output << '<tr class="row0">'
-          row = 1
-        else
-          output << '<tr class="row1">'
-          row = 0
-        end
-        output << "<td><strong>Totals:</strong></td>"
-        col_order.each do |c|
-          case c
-          when "cpu_usagemhz_rate_average"
-            output << '<td style="text-align:right"><strong>' <<
-              CGI.escapeHTML(format(c, tot_cpu, :format => :general_number_precision_1)) <<
-              "</strong></td>"
-          when "derived_memory_used"
-            output << '<td style="text-align:right"><strong>' <<
-              CGI.escapeHTML(format(c, tot_ram, :format => :megabytes_human)) <<
-              "</strong></td>"
-          when "derived_storage_used_managed"
-            output << '<td style="text-align:right"><strong>' <<
-              CGI.escapeHTML(format(c, tot_space, :format => :bytes_human)) <<
-              "</strong></td>"
-          when "derived_vm_used_disk_storage"
-            output << '<td style="text-align:right"><strong>' <<
-              CGI.escapeHTML(format(c, tot_space, :format => :bytes_human)) <<
-              "</strong></td>"
-          when "disk_usage_rate_average"
-            output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(format(c, tot_disk, :format => :general_number_precision_1)) <<
-              " (#{CGI.escapeHTML(format(c, tot_disk * 1.kilobyte * extras[:interval], :format => :bytes_human))})" << "</strong></td>"
-          when "net_usage_rate_average"
-            output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(format(c, tot_net, :format => :general_number_precision_1)) <<
-              " (#{CGI.escapeHTML(format(c, tot_net * 1.kilobyte * extras[:interval], :format => :bytes_human))})" << "</strong></td>"
-          end
-        end
-        output << "</tr>"
-
-        html_rows << output
-      end
       if ["y", "c"].include?(group) && !sortby.nil?
         unless group_limit && group_counter >= group_limit
           html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
