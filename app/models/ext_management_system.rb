@@ -108,7 +108,8 @@ class ExtManagementSystem < ApplicationRecord
            :port=,
            :security_protocol,
            :security_protocol=,
-           :to => :default_endpoint
+           :to => :default_endpoint,
+           :allow_nil => true
 
   alias_method :address, :hostname # TODO: Remove all callers of address
 
