@@ -32,7 +32,7 @@
         %input.form-control{:type         => "password",
                             :name         => "admin_password",
                             'ng-model'    => "vmCloudModel.admin_password"}
-  #evacuate-select-destination-host{'ng-hide' => 'vmCloudModel.auto_select_host'}
+  #evacuate-select-destination-host{'ng-hide' => '!vmCloudModel.auto_select_host'}
     %h3
       = _('Select Destination Host')
     .form-horizontal
@@ -40,7 +40,9 @@
         %label.col-md-2.control-label
           = _('Destination Host')
         .col-md-8
-          %select{:name => 'destination_host', 'ng-model' => 'vmCloudModel.host', 'ng-options' => 'host.name for host in hosts'}
+          %select{:name        => 'destination_host',
+                  'ng-model'   => 'vmCloudModel.host',
+                  'ng-options' => 'host.name as host.name for host in hosts track by host.id'}
 
   %div_for_paging{'ng-controller'                    => "pagingDivButtonGroupController",
                   'paging_div_buttons_state_enabled' => true,
