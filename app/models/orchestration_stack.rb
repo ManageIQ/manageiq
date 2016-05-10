@@ -22,6 +22,11 @@ class OrchestrationStack < ApplicationRecord
   has_many   :direct_vms,             :class_name => "ManageIQ::Providers::CloudManager::Vm"
   has_many   :direct_security_groups, :class_name => "SecurityGroup"
   has_many   :direct_cloud_networks,  :class_name => "CloudNetwork"
+  has_many   :service_resources, :as => :resource
+  has_many   :direct_services, :through => :service_resources, :source => :service
+
+  virtual_has_one  :direct_service,       :class_name => 'Service'
+  virtual_has_one  :service,              :class_name => 'Service'
 
   virtual_has_many :vms, :class_name => "ManageIQ::Providers::CloudManager::Vm"
   virtual_has_many :security_groups
@@ -34,6 +39,14 @@ class OrchestrationStack < ApplicationRecord
   alias_method :orchestration_stack_parameters, :parameters
   alias_method :orchestration_stack_outputs,    :outputs
   alias_method :orchestration_stack_resources,  :resources
+
+  def direct_service
+    direct_services.first
+  end
+
+  def service
+    direct_service.try(:root_service)
+  end
 
   def tenant_identity
     if ext_management_system
