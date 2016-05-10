@@ -1054,7 +1054,6 @@ entitlements:
 - miq_user_role_id
 - created_at
 - updated_at
-- filters
 event_logs:
 - id
 - name
@@ -4681,6 +4680,7 @@ miq_groups:
 - description
 - group_type
 - sequence
+- filters
 - created_on
 - updated_on
 - settings
