@@ -28,7 +28,6 @@ module UiConstants
   CHARTS_LAYOUTS_FOLDER = File.join(Rails.root, "product/charts/layouts")
   TIMELINES_FOLDER = File.join(Rails.root, "product/timelines")
   TOOLBARS_FOLDER = File.join(Rails.root, "product/toolbars")
-  USAGE_REPORTS_FOLDER = File.join(Rails.root, "product/usage/miq_reports")
 
   TOP_TABLES_BY_ROWS_COUNT = 5
   TOP_TABLES_BY_SIZE_COUNT = 5
