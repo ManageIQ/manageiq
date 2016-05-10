@@ -28,6 +28,6 @@ describe "Quota Validation" do
     expect(root['quota_requested'][:storage]).to eq(10.gigabytes)
     expect(root['quota_requested'][:cpu]).to eq(4)
     expect(root['quota_requested'][:vms]).to eq(1)
-    expect(root['quota_requested'][:memory]).to eq(1.gigabytes)
+    expect(root['quota_requested'][:memory]).to eq(1024)
   end
 end
