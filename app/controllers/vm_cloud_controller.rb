@@ -347,7 +347,7 @@ class VmCloudController < ApplicationController
         s.name == @record.name
       end.os_ext_srv_attr_hypervisor_hostname
       hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
-        {:name => h.host_name}
+        {:name => h.host_name, :id => h.id}
       end
     end
     render :json => {
