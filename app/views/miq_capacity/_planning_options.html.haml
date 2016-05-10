@@ -163,6 +163,8 @@
           - else
             = @sb[:planning][:options][:values][:storage]
           = _('GB')
+          %br{:clear => "all"}
+          = _('* Disk space not supported for OpenStack providers')
   %hr/
   %h3
     = _('Target Options / Limits')
