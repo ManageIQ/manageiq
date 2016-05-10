@@ -8,6 +8,9 @@ class MiqSockUtil
   # Return the cannonical name for host in DNS
   def self.getFullyQualifiedDomainName
     Socket.gethostbyname(Socket.gethostname).first
+  rescue
+    $log.error "The appliance hostname could not be resolved. Please make sure to set a valid fully qualified hostname."
+    raise
   end
 
   def self.getIpAddr
