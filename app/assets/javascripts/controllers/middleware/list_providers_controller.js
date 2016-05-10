@@ -70,14 +70,28 @@
     }
   }
 
+  getDefaultView = function() {
+    var lastIndex = window.location.pathname.lastIndexOf('/');
+    if (lastIndex !== -1) {
+      var defaultView = window.location.pathname.substring(lastIndex + 1);
+      return (defaultView !== '')? defaultView : 'list';
+    } else {
+      return 'list';
+    }
+  }
+
   /**
   * ListProvidersController constructor.
   * @param  MiQDataTableService service with dataTable loading and sorting.
-  * @param $location service for angular redirect.
+  * @param $state service for angular redirect.
+  * @param $http provider for gets and posts.
+  * @param MiQNotificationService service for accessing alerts messages.
   */
-  var ListProvidersController = function(MiQDataTableService, $location) {
-    this.$location = $location;
-    this.activeView = 'list';
+  var ListProvidersController = function(MiQDataTableService, $state, $http, MiQNotificationService) {
+    this.MiQNotificationService = MiQNotificationService;
+    this.$state = $state;
+    this.$http = $http;
+    this.activeView = getDefaultView();
     this.MiQDataTableService = MiQDataTableService;
     this.isSelectable = true;
     this.hasFooter = true;
@@ -93,14 +107,17 @@
   * Edit Tags method, it will redirect user to specific URL.
   */
   ListProvidersController.prototype.editTags = function() {
-    // /ems_middleware/button?pressed=ems_middleware_tag form with selected ids
-    window.location = '/ems_middleware/tagging_edit?db=ManageIQ%3A%3AProviders%3A%3AMiddlewareManager&escape=false';
+    var selectedIds = this.filterSelectedIds();
+    this.$http.post('/ems_middleware/edit_tags', {miq_grid_checks: selectedIds})
+    .then(function(responseData) {
+      window.location = '/ems_middleware/tagging_edit?db=' + responseData.data.db;
+    });
   }
   /**
   * Default action function which is used when default action is triggered.
   */
   ListProvidersController.prototype.defaultActionFunction = function() {
-    this.$location.path('/ems_middleware/new');
+    this.$state.go('new_provider');
   };
 
   /**
@@ -115,17 +132,56 @@
     }
   };
 
+  ListProvidersController.prototype.filterSelectedIds = function() {
+    return _.chain(this.data)
+                        .filter({selected: true})
+                        .map('id')
+                        .value();
+  }
+
   /**
   * Method which removes selected item from VMDB.
   * TODO: Call delete function.
   */
   ListProvidersController.prototype.removeSelected = function() {
-    var selectedItems = this.data.filter(function(item) {return item.selected});
-    if (selectedItems) {
-      _.each(selectedItems, function(oneItem) {
-        console.log('You wanted to remove provider with ID: ' + oneItem.id);
-      });
+    var selectedIds = this.filterSelectedIds();
+    if (selectedIds) {
+      var shouldRemove = confirm(__('Are you sure you want to remove providers with IDs: ' + selectedIds.join(', ')));
+      var lodaingItem = this.MiQNotificationService.sendInfo(
+        this.MiQNotificationService.dismissibleMessage(
+          __('Remove of providers with IDs ' + dataResponse.data.removedIds.join(', ') +' initiated')
+        )
+      );
+      if (shouldRemove) {
+        this.deleteItems(selectedIds, lodaingItem);
+      }
     }
+  };
+
+  ListProvidersController.prototype.deleteItems = function(items, loadingItem) {
+    this.$http({
+      url: '/ems_middleware/delete_provider',
+      method: 'POST',
+      data: {miq_grid_checks: selectedIds.join(',')},
+    }).then(function(dataResponse){
+      this.MiQNotificationService.sendSuccess(
+        this.MiQNotificationService.dismissibleMessage(
+          __('Remove of providers with IDs ' + dataResponse.data.removedIds.join(', ') +' was successful', null, lodaingItem)
+        )
+      );
+      this.loadData();
+    }.bind(this));
+  }
+
+  /**
+  * Method for showing detail of middleware provider.
+  * TODO: angularize provider detail.
+  * @param $event jquery event data object.
+  * @param rowData which row was clicked.
+  */
+  ListProvidersController.prototype.onRowClick = function($event, rowData) {
+    miqRowClick(rowData.id, '/ems_middleware/show/', false);
+    return false;
   };
 
   /**
@@ -148,17 +204,6 @@
         }
       })
     });
-  };
-
-  /**
-  * Method for showing detail of middleware provider.
-  * TODO: angularize provider detail.
-  * @param $event jquery event data object.
-  * @param rowData which row was clicked.
-  */
-  ListProvidersController.prototype.onRowClick = function($event, rowData) {
-    miqRowClick(rowData.id, '/ems_middleware/show/', false);
-    return false;
   };
 
   /**
@@ -186,10 +231,9 @@
   * It uses promises and calls #assignData(rowsCols) for handeling recieved data.
   */
   ListProvidersController.prototype.loadData = function() {
-    this.MiQDataTableService.retrieveRowsAndColumnsFromUrl(
-      '/list_providers'
-    ).then(function(rowsCols){
+    return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl().then(function(rowsCols){
       this.assignData(rowsCols);
+      return rowsCols;
     }.bind(this));
   };
 
@@ -202,7 +246,7 @@
     this.columnsToShow = rowsCols.cols;
   };
 
-  ListProvidersController.$inject = ['MiQDataTableService', '$location'];
+  ListProvidersController.$inject = ['MiQDataTableService', '$state', '$http', 'MiQNotificationService'];
   miqHttpInject(angular.module('middleware.provider'))
   .controller('miqListProvidersController', ListProvidersController);
 })();

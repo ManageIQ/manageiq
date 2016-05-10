@@ -1,16 +1,19 @@
 %label{:for => "sort-items"}
   Sort by:
-%miq-sort-items#sort-items{ :headers => "vm.columnsToShow",
-                            :items => "vm.data", "on-sort" => "vm.MiQDataTableService.sortItemsBy(sortId, isAscending)",
-                            :style => "display: inline-block; margin-right: 10px"}
+%miq-sort-items#sort-items{"ng-if" => "vm.data.length > 0",
+:headers => "vm.columnsToShow",
+:items => "vm.data", "on-sort" => "vm.MiQDataTableService.sortItemsBy(sortId, isAscending)",
+:style => "display: inline-block; margin-right: 10px"}
 %label{:for => "per-page"}
   Per page:
-%miq-toolbar-list#per-page{ "on-item-click" => "vm.onPerPage(item)",
-                            "toolbar-list" => "vm.perPage"}
-%miq-small-tile-view.max-height{"has-loader" => "vm.MiQDataTableService.dataTableService.visibleItems.length < vm.MiQDataTableService.dataTableService.rows.length",
-                                :headers => "vm.columnsToShow",
-                                :items => "vm.MiQDataTableService.dataTableService.visibleItems",
-                                "load-more-items" => "vm.MiQDataTableService.loadMore()",
-                                "on-tile-click" => "vm.onRowClick($event, rowData)",
-                                "on-tile-select" => "vm.onRowSelected()",
-                                "per-page" => "vm.MiQDataTableService.dataTableService.perPage"}
+%miq-toolbar-list#per-page{"ng-if" => "vm.data",
+"on-item-click" => "vm.onPerPage(item)",
+"toolbar-list" => "vm.perPage"}
+%miq-small-tile-view.max-height{"ng-if" => "vm.data",
+"has-loader" => "vm.MiQDataTableService.dataTableService.visibleItems.length < vm.MiQDataTableService.dataTableService.rows.length",
+:headers => "vm.columnsToShow",
+:items => "vm.MiQDataTableService.dataTableService.visibleItems",
+"load-more-items" => "vm.MiQDataTableService.loadMore()",
+"on-tile-click" => "vm.onRowClick($event, rowData)",
+"on-tile-select" => "vm.onRowSelected()",
+"per-page" => "vm.MiQDataTableService.dataTableService.perPage"}

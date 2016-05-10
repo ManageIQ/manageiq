@@ -1,0 +1,45 @@
+.row.scrollable-sm{:style => "height: 100%"}
+  .col-md-2.sidebar-pf.sidebar-pf-left{:style => "height: 100%"}
+    %div
+  .col-md-10{:style => "height: 100%; overflow-y: auto; overflow-x: hidden"}
+    .row
+      %miq-notification-section.col-md-12{:limit => "2", "show-info" => "{{true}}"}
+      .col-md-12
+        %form#form_div{:name => "form"}
+          %h3
+            Basic Information
+          .form-horizontal
+            .form-group
+              .form-group
+                %label.control-label.col-md-2{"for" => "name"}
+                  Name
+                .col-md-8
+                  %input#name.form-control{:checkchange => "",
+                  :maxlength => "255",
+                  :name => "name",
+                  "ng-model" => "mwNew.newProvider.name",
+                  "ng-required" => "true",
+                  :type => "text"}/
+              .form-group
+                %label.control-label.col-md-2
+                  Type
+                .col-md-8
+                  %select{:name => "server_emstype",
+                  "ng-model" => "mwNew.newProvider.server_emstype",
+                  "ng-required" => "true",
+                  "pf-select" => "",
+                  "ng-change" => "mwNew.typeSelected()"}
+                    %option{:value => ""} No Type selected
+                    %option{:value => "{{type.value}}",
+                    "ng-repeat" => "type in mwNew.types"} {{type.title}}
+              %div{"ng-if" => "mwNew.newProvider.server_emstype", "ng-switch" => "mwNew.newProvider.server_emstype"}
+                %div{"ui-view" => "basic_information"}
+              .form-group
+                %label.control-label.col-md-2
+                  Zone
+                .col-md-8
+                  %select{"ng-model" => "mwNew.newProvider.zone", "ng-options" => "o as o for o in mwNew.zones", "pf-select" => ""}
+                    %option{:value => ""} No Zone selected
+            %hr/
+            %div{"ui-view" => "detail_info"}
+          %miq-action-buttons.form-actions.pull-right{:actions => "mwNew.formActions", "is-valid" => "form.$valid"}

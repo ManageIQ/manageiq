@@ -19,8 +19,18 @@ miqHttpInject(angular.module('middleware.provider', ['miQStaticAssets', 'ui.boot
   })
   .state('new_provider', {
       url: '/ems_middleware/new',
-      templateUrl: '/static/middleware/new_provider.html',
+      templateUrl: '/static/middleware/new_provider/new.html',
       controller: 'miqNewProviderController as mwNew'
+  })
+  .state('new_provider.hawkular', {
+    views: {
+      'basic_information': {
+        templateUrl: '/static/middleware/new_provider/hawkular_basic.html'
+      },
+      'detail_info': {
+        templateUrl: '/static/middleware/new_provider/hawkular.html'
+      }
+    }
   });
 
   $locationProvider.html5Mode({
@@ -28,10 +38,10 @@ miqHttpInject(angular.module('middleware.provider', ['miQStaticAssets', 'ui.boot
     requireBase: false
   });
   $urlRouterProvider.otherwise('/ems_middleware/show_list/list');
-  // $urlRouterProvider.otherwise('/ems_middleware/show_list');
   $urlRouterProvider.otherwise(function ($injector, $location) {
     if ($location.hash().length != 0) {
-      return $location.path() +
+      var rootUrl = $location.path().substring(0, $location.path().lastIndexOf('/'));
+      return rootUrl +
         ($location.hash().indexOf('/') !== 0 ? '/' + $location.hash() : $location.hash());
     } else {
       return '/ems_middleware/show_list/list';

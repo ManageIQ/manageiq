@@ -1039,6 +1039,8 @@ Vmdb::Application.routes.draw do
       ) +
                compare_get,
       :post => %w(
+        edit_tags
+        delete_provider
         new_provider
         validate_provider
         button

@@ -27,7 +27,7 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def show_list
-    redirect_to :action => :index, :anchor => "show_list"
+    redirect_to :action => :index, :anchor => "show_list/" + session[:settings][:views][:manageiq_providers_middlewaremanager]
   end
 
   def new_provider
@@ -41,6 +41,18 @@ class EmsMiddlewareController < ApplicationController
   def validate_provider
     status = provider_validator
     render :json => status
+  end
+
+  def edit_tags
+    session[:tag_items] = params[:miq_grid_checks]
+    render :json => {'db': model}
+  end
+
+  def delete_provider
+    params[:pressed] = "ems_middleware_delete"
+    emss = find_checked_items
+    process_emss(emss, "destroy") unless emss.empty?
+    render :json => {'removedIds': emss}
   end
 
   private

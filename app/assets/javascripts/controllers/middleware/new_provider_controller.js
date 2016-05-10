@@ -30,18 +30,6 @@
       title: __('Default'),
       description: __('Required. Should have privileged access, such as root or administrator.'),
       modelKey: 'default'
-    }, {
-      title: __('Remote login'),
-      description: __('Required if SSH login is disabled for the Default account.'),
-      modelKey: 'remoteLogin'
-    }, {
-      title: __('Web services'),
-      description: __('Used for access to Web Services.'),
-      modelKey: 'webServices'
-    }, {
-      title: __('IPMI'),
-      description: __('Used for access to IPMI.'),
-      modelKey: 'impi'
     }];
   }
 
@@ -52,8 +40,8 @@
   * @param MiQNotificationService notification service.
   * @param $timeout service for setTimeout over angular.
   */
-  var NewProviderController = function($location, MiQFormValidatorService, MiQNotificationService, $timeout) {
-    this.$location = $location;
+  var NewProviderController = function(MiQFormValidatorService, MiQNotificationService, $timeout, $state) {
+    this.$state = $state;
     this.MiQFormValidatorService = MiQFormValidatorService;
     this.MiQNotificationService = MiQNotificationService;
     this.$timeout = $timeout;
@@ -61,18 +49,28 @@
     this.formActions = defaultActions.bind(this)();
     this.credentialsTabs = setCredentialsTab.bind(this)();
 
-    this.types = [__('Hawkular')];
+    this.types = [{title: __('Hawkular'), value: 'Hawkular', view: 'new_provider.hawkular'}];
 
     this.zones = [__('Dan'), __('Dan 2 Zone'), __('Default Zone'), __('RHEV 1 for fleecing')];
 
     this.newProvider = {
       type: 'default',
       zone: __('Default Zone'),
-      remoteLogin: {},
-      webServices: {},
-      impi: {}
+      remoteLogin: {}
     };
   };
+
+  /**
+  * Method which loads affitional view based on selected server ems type.
+  */
+  NewProviderController.prototype.typeSelected = function() {
+    if (this.newProvider.server_emstype) {
+      var selectedType = _.find(this.types, {value: this.newProvider.server_emstype});
+      this.$state.go(selectedType.view);
+    } else {
+      this.$state.go('new_provider');
+    }
+  }
 
   /**
   * Action which is called after saving item.
@@ -128,8 +126,9 @@
       this.MiQNotificationService.dismissibleMessage(__('Validation in progress'))
     );
     this.stripProtocol(this.newProvider);
-    this.MiQFormValidatorService.validateObject(this.newProvider).then(function(formResponseData){
+    return this.MiQFormValidatorService.validateObject(this.newProvider).then(function(formResponseData){
       this.validateFunction(formResponseData, loadingItem);
+      return formResponseData;
     }.bind(this));
   };
 
@@ -167,10 +166,11 @@
   * Method for redirecting back to showing list of data.
   */
   NewProviderController.prototype.onBackToListClick = function() {
-    this.$location.path('/ems_middleware/show_list/list');
+    this.$state.go('list_providers.list');
+    // this.$location.path('/ems_middleware/show_list/list');
   };
 
-  NewProviderController.$inject = ['$location', 'MiQFormValidatorService', 'MiQNotificationService', '$timeout'];
+  NewProviderController.$inject = ['MiQFormValidatorService', 'MiQNotificationService', '$timeout', '$state'];
   miqHttpInject(angular.module('middleware.provider'))
   .controller('miqNewProviderController', NewProviderController);
 })()
