@@ -71,19 +71,32 @@
     - elsif @edit[:new][:cb_show_typ] == "entity"
       .form-group
         %label.control-label.col-md-2
-          = ui_lookup(:model => @edit[:new][:cb_model])
+          = _("Provider")
         .col-md-8
-          - opts = [["<#{_('Choose %{entity}')}>" % {:entity => ui_lookup(:model => @edit[:new][:cb_model])},
-                                                                          nil],
-                    [_("All #{ui_lookup(:tables => @edit[:new][:cb_model].to_s)}"), :all]]
-          - if @edit[:cb_all_entities_of_type][@edit[:new][:cb_model].to_sym].present?
-            - opts += Array(@edit[:cb_all_entities_of_type][@edit[:new][:cb_model].to_sym].invert).sort_by { |a| a.first.downcase }
-          = select_tag('cb_entity_id',
-            options_for_select(opts, @edit[:new][:cb_entity_id]),
-            :class                 => "selectpicker")
+          - opts = [["<#{_('Choose %{provider}')}>" % { :provider => _("Provider") }, nil]]
+          - if @edit[:cb_providers][@edit[:new][:cb_model].underscore.to_sym].present?
+            - opts += Array(@edit[:cb_providers][@edit[:new][:cb_model].underscore.to_sym]).sort_by { |a| a.first.downcase }
+          = select_tag('cb_provider_id',
+                options_for_select(opts, @edit[:new][:cb_provider_id]),
+                :class                 => "selectpicker")
           :javascript
-            miqInitSelectPicker();
-            miqSelectPickerEvent('cb_entity_id', '#{url}', {beforeSend: true, complete: true});
+                miqInitSelectPicker();
+                miqSelectPickerEvent('cb_provider_id', '#{url}', {beforeSend: true, complete: true});
+      - if @edit[:new][:cb_provider_id].present?
+        .form-group
+          %label.control-label.col-md-2
+            = ui_lookup(:model => @edit[:new][:cb_model])
+          .col-md-8
+            - opts = [["<#{_('Choose %{entity}')}>" % {:entity => ui_lookup(:model => @edit[:new][:cb_model])}, nil],
+                      [_("All #{ui_lookup(:tables => @edit[:new][:cb_model].to_s)}"), :all]]
+            - if @edit[:cb_entities_by_provider_id][@edit[:new][:cb_provider_id].to_i].present?
+              - opts += Array(@edit[:cb_entities_by_provider_id][@edit[:new][:cb_provider_id].to_i].invert).sort_by { |a| a.first.downcase }
+            = select_tag('cb_entity_id',
+              options_for_select(opts, @edit[:new][:cb_entity_id]),
+              :class                 => "selectpicker")
+            :javascript
+              miqInitSelectPicker();
+              miqSelectPickerEvent('cb_entity_id', '#{url}', {beforeSend: true, complete: true});
   - else
     .form-group
       %label.control-label.col-md-2

@@ -657,6 +657,12 @@ module ReportController::Reports::Editor
       @refresh_partial = "form"
     elsif params.key?(:cb_entity_id)
       @edit[:new][:cb_entity_id] = params[:cb_entity_id].blank? ? nil : params[:cb_entity_id]
+    elsif params.key?(:cb_provider_id)
+      @edit[:new][:cb_provider_id] = params[:cb_provider_id].blank? ? nil : params[:cb_provider_id]
+      @edit[:new][:cb_entity_id] = nil
+      build_edit_screen
+      @refresh_div = "form_div"
+      @refresh_partial = "form"
     elsif params.key?(:cb_groupby)
       @edit[:new][:cb_groupby] = params[:cb_groupby]
     elsif params[:cb_interval]
@@ -1208,6 +1214,7 @@ module ReportController::Reports::Editor
           options[:tag] = "/managed/#{@edit[:new][:cb_tag_cat]}/#{@edit[:new][:cb_tag_value]}"
         end
       elsif @edit[:new][:cb_show_typ] == "entity"
+        options[:provider_id] = @edit[:new][:cb_provider_id]
         options[:entity_id] = @edit[:new][:cb_entity_id]
       end
 
@@ -1505,6 +1512,7 @@ module ReportController::Reports::Editor
       @edit[:new][:cb_show_typ] = "entity"
       @edit[:new][:cb_model] = options[:cb_model]
       @edit[:new][:cb_entity_id] = options[:entity_id]
+      @edit[:new][:cb_provider_id] = options[:provider_id]
       @edit[:new][:cb_interval] = options[:interval]
       @edit[:new][:cb_interval_size] = options[:interval_size]
       @edit[:new][:cb_end_interval_offset] = options[:end_interval_offset]
@@ -1529,12 +1537,15 @@ module ReportController::Reports::Editor
     @edit[:cb_cats] = {}
     cats.each { |c| @edit[:cb_cats][c.name] = c.description }
 
-    @edit[:cb_all_entities_of_type] = {}
-
-    [Vm, ContainerProject].each do |ent| # get all records of these entities
-      @edit[:cb_all_entities_of_type][ent.name.to_sym] = {}
-      ent.all.each do |rec|
-        @edit[:cb_all_entities_of_type][ent.name.to_sym][rec.id] = rec.name
+    @edit[:cb_providers] = {}
+    @edit[:cb_providers][:container_project] = {}
+    @edit[:cb_providers][:vm] = {} # Fill this in if entity show type it ever becomes relevent for VMs
+    @edit[:cb_entities_by_provider_id] = {}
+    ManageIQ::Providers::ContainerManager.all.each do |provider|
+      @edit[:cb_providers][:container_project][provider.name] = provider.id
+      @edit[:cb_entities_by_provider_id][provider.id] = {}
+      provider.container_projects.all.each do |project|
+        @edit[:cb_entities_by_provider_id][provider.id][project.id] = project.name
       end
     end
 
