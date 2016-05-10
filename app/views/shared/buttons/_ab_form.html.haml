@@ -50,7 +50,7 @@
       .col-md-8
         #form-group
           = select_tag('button_image',
-                        options_for_select([["No Image", nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
+                        options_for_select([[_("No Image"), nil]] + @edit[:new][:button_images], @edit[:new][:button_image].to_s),
                         :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -60,7 +60,7 @@
         = _('Dialog')
       .col-md-8
         = select_tag('dialog_id',
-                      options_for_select(([["<None>", nil]]) + Array(@edit[:new][:available_dialogs].invert).sort_by { |a| a.first.downcase }, @edit[:new][:dialog_id]),
+                      options_for_select(([[_("<None>"), nil]]) + Array(@edit[:new][:available_dialogs].invert).sort_by { |a| a.first.downcase }, @edit[:new][:dialog_id]),
                       "data-miq_sparkle_on" => true,
                       :class => "selectpicker")
         :javascript
