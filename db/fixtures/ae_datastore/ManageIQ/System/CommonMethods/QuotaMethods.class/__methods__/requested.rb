@@ -13,9 +13,14 @@ def cloud?(prov_type)
 end
 
 def calculate_requested(options_hash = {})
-  {:memory  => get_total_requested(options_hash, :vm_memory) * 1024**2,
+  storage = if @miq_request.source.vendor == 'google'
+              get_option_value(@miq_request, :boot_disk_size).gigabytes
+            else
+              get_total_requested(options_hash, :storage)
+            end
+  {:storage => storage,
+   :memory  => get_total_requested(options_hash, :vm_memory) * 1024**2,
    :cpu     => get_total_requested(options_hash, :number_of_cpus),
-   :storage => get_total_requested(options_hash, :storage),
    :vms     => get_total_requested(options_hash, :number_of_vms)}
 end
 
@@ -239,5 +244,4 @@ request_info
 error("request") if @miq_request.nil?
 
 options_hash = service_options if @service
-
 $evm.root['quota_requested'] = calculate_requested(options_hash)
