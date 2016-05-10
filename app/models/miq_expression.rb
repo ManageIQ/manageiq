@@ -640,8 +640,15 @@ class MiqExpression
       clause = field.lteq(value).to_sql
     when "!="
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.not_eq(exp[operator]["value"]).to_sql
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+              else
+                exp[operator]["value"]
+              end
+      clause = field.not_eq(value).to_sql
     when "before", "after"
       return _to_sql({"date_time_with_logical_operator" => exp}, tz)
     when "like", "includes"
