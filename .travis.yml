@@ -2,7 +2,11 @@ language: ruby
 rvm:
 - '2.2.5'
 sudo: false
-cache: bundler
+cache:
+  bundler: true
+  directories:
+  - spa_ui/self_service/bower_components
+  - spa_ui/self_service/node_modules
 env:
   global:
   - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000
