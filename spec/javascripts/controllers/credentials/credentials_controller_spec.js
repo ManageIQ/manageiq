@@ -110,4 +110,10 @@ describe('credentialsController', function() {
     expect($scope.bCancelPasswordChange).toBeFalsy();
     expect($scope.bChangeStoredPassword).toBeFalsy();
   });
+
+  describe('strange failure', function() {
+    it('test', function() {
+      expect(true).toBeTruthy();
+    });
+  });
 });
