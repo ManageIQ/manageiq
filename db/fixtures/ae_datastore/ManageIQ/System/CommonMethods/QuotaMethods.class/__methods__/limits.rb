@@ -2,7 +2,7 @@
 # Description: Get quota values.
 #
 
-QUOTA_ATTRIBUTES = %w(storage vms cpu memory)
+QUOTA_ATTRIBUTES = %w(storage vms cpu memory).freeze
 
 def quota_values(model_attribute, tag_name)
   $evm.log(:info, "Getting Quota Values for Model: #{model_attribute} Tag Name: #{tag_name}")
@@ -42,12 +42,20 @@ end
 def parent_model_value(attr)
   value = $evm.parent[attr].to_i
   $evm.log(:info, "Quota Model #{attr}: #{value}") unless value.zero?
+  if attr.ends_with?("storage") || attr.ends_with?("memory")
+    value = value.megabytes
+  end
   value
 end
 
 def tag_value(tag, tag_value)
   value = tag_value.to_i
   $evm.log(:info, "Quota Tag #{tag}: #{value}") unless value.zero?
+  if tag == :quota_max_storage
+    value = value.gigabytes
+  elsif tag == :quota_max_memory
+    value = value.megabytes
+  end
   value
 end
 
@@ -77,6 +85,7 @@ def set_root_limit_values(quota_max, quota_warn)
 end
 
 def model_and_tag_quota_values
+  $evm.log(:info, "Getting Group and Tag Quota Values.")
   quota_max = {}
   quota_warn = {}
   QUOTA_ATTRIBUTES.each do |name|
