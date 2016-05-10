@@ -649,7 +649,18 @@ class MiqExpression
                 exp[operator]["value"]
               end
       clause = field.not_eq(value).to_sql
-    when "before", "after"
+    when "before"
+      field = Field.parse(exp[operator]["field"])
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+              else
+                exp[operator]["value"]
+              end
+      clause = field.lt(value).to_sql
+    when "after"
       return _to_sql({"date_time_with_logical_operator" => exp}, tz)
     when "like", "includes"
       field = Field.parse(exp[operator]["field"])

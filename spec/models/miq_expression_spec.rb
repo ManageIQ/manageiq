@@ -205,7 +205,7 @@ describe MiqExpression do
       it "generates the SQL for a BEFORE expression" do
         exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on < '2011-01-10'")
+        expect(sql).to eq("\"vms\".\"retires_on\" < '2011-01-10 00:00:00'")
       end
 
       it "generates the SQL for a < expression" do
@@ -291,13 +291,13 @@ describe MiqExpression do
       it "generates the SQL for a BEFORE expression with an 'n Days Ago' value for a date field" do
         exp = MiqExpression.new("BEFORE" => {"field" => "Vm-retires_on", "value" => "2 Days Ago"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on < '2011-01-09'")
+        expect(sql).to eq("\"vms\".\"retires_on\" < '2011-01-09 00:00:00'")
       end
 
       it "generates the SQL for a BEFORE expression with an 'n Days Ago' value for a datetime field" do
         exp = MiqExpression.new("BEFORE" => {"field" => "Vm-last_scan_on", "value" => "2 Days Ago"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on < '2011-01-09T00:00:00Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" < '2011-01-09 00:00:00'")
       end
 
       it "generates the SQL for a FROM expression with a 'Last Hour'/'This Hour' value for a datetime field" do
