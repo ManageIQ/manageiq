@@ -40,7 +40,7 @@ class MiqAeToolsController < ApplicationController
     @layout = "miq_ae_logs"
     @msg_title = "AE"
     @download_action = "fetch_log"
-    drop_breadcrumb(:name => "Log", :url => "/miq_ae_tools/log")
+    drop_breadcrumb(:name => _("Log"), :url => "/miq_ae_tools/log")
     render :action => "show"
   end
 
@@ -105,7 +105,7 @@ class MiqAeToolsController < ApplicationController
       editable_domains.include?(importable_domain[0])
     end
 
-    @importable_domain_options.unshift(["<Same as import from>", nil])
+    @importable_domain_options.unshift([_("<Same as import from>"), nil])
     render :action => "show"
   end
 
