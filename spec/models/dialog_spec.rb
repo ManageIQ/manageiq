@@ -60,13 +60,19 @@ describe Dialog do
 
   context "#create" do
     it "validates_presence_of name" do
-      expect { FactoryGirl.create(:dialog) }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
+      expect do
+        FactoryGirl.create(:dialog, :label => nil)
+      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
       expect { FactoryGirl.create(:dialog, :label => 'dialog') }.not_to raise_error
 
-      expect { FactoryGirl.create(:dialog_tab) }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
+      expect do
+        FactoryGirl.create(:dialog_tab, :label => nil)
+      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
       expect { FactoryGirl.create(:dialog_tab, :label => 'tab') }.not_to raise_error
 
-      expect { FactoryGirl.create(:dialog_group) }.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
+      expect do
+        FactoryGirl.create(:dialog_group, :label => nil)
+      end.to raise_error(ActiveRecord::RecordInvalid, /Label can't be blank/)
       expect { FactoryGirl.create(:dialog_group, :label => 'group') }.not_to raise_error
     end
   end

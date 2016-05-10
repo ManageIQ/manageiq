@@ -76,6 +76,7 @@ class ApiController < ApplicationController
   include_concern 'Roles'
   include_concern 'Services'
   include_concern 'ServiceDialogs'
+  include_concern 'ServiceOrders'
   include_concern 'ServiceRequests'
   include_concern 'ServiceTemplates'
   include_concern 'Settings'

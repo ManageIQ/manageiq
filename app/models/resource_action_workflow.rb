@@ -31,19 +31,23 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def process_request(state)
-    validate_dialog.tap do |result|
-      generate_request(state) if result[:errors].blank?
-    end
-  end
+    result = {:errors => validate_dialog}
+    return result unless result[:errors].blank?
 
-  def generate_request(state)
     values = create_values
     if create_request?(values)
-      request = create_request(values)
-      process_service_order(request, state) if request
+      result[:request] = generate_request(state, values)
     else
       ra = load_resource_action(values)
       ra.deliver_to_automate_from_dialog(values, @target, @requester)
+    end
+
+    result
+  end
+
+  def generate_request(state, values)
+    create_request(values).tap do |request|
+      process_service_order(request, state) if request
     end
   end
 
@@ -57,7 +61,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def validate_dialog
-    {:errors => @dialog.validate_field_data}
+    @dialog.validate_field_data
   end
 
   def create_values

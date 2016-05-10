@@ -170,6 +170,7 @@ describe ApiController do
 
     it "query Service Requests" do
       FactoryGirl.create(:service_template_provision_request, :requester => @user)
+      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
       test_collection_query(:service_requests, service_requests_url, ServiceTemplateProvisionRequest)
     end
 

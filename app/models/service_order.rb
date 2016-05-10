@@ -15,6 +15,14 @@ class ServiceOrder < ActiveRecord::Base
   before_create :assign_user
   after_create  :create_order_name
 
+  def self.find_for_user(requester, id)
+    find_by!(:user => requester, :tenant => requester.current_tenant, :id => id)
+  end
+
+  def self.cart_for(requester)
+    find_by!(:state => STATE_CART, :user => requester, :tenant => requester.current_tenant)
+  end
+
   def assign_user
     self.user      ||= User.current_user
     self.tenant    ||= user.try(:current_tenant)
