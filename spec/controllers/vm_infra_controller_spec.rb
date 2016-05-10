@@ -45,6 +45,16 @@ describe VmInfraController do
     expect(response.status).to eq(200)
   end
 
+  it 'can render the snapshot info' do
+    ApplicationController.handle_exceptions = true
+    seed_session_trees('vm_infra', 'vms_instances_filter_tree')
+    post :show, :params => { :id => vm_vmware.id, :display => 'snapshot_info' }, :xhr => true
+    expect(response.status).to eq(200)
+    expect(response).to render_template('vm_common/_snapshots_desc')
+    expect(response).to render_template('vm_common/_snapshots_tree')
+    expect(assigns(:snaps)).to be_present
+  end
+
   it 'can open the right size tab' do
     get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')

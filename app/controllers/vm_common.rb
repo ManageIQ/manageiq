@@ -249,11 +249,11 @@ module VmCommon
     elsif @display == "snapshot_info"
       drop_breadcrumb(:name => @record.name + _(" (Snapshots)"),
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      build_snapshot_tree
+      @button_group = "snapshot"
     elsif @display == "devices"
       drop_breadcrumb(:name => @record.name + _(" (Devices)"),
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
-      build_snapshot_tree
-      @button_group = "snapshot"
     elsif @display == "vmtree_info"
       @tree_vms = []                     # Capture all VM ids in the tree
       drop_breadcrumb({:name => @record.name, :url => "/#{rec_cls}/show/#{@record.id}"}, true)
