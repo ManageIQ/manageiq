@@ -182,12 +182,12 @@ describe MiqExpression do
     context "date/time support" do
       it "generates the SQL for an EQUAL expression" do
         sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq("vms.boot_time = '2016-01-01T00:00:00Z'")
+        expect(sql).to eq("\"vms\".\"boot_time\" = '2016-01-01 00:00:00'")
       end
 
       it "generates the SQL for a = expression" do
         sql, * = MiqExpression.new("=" => {"field" => "Vm-boot_time", "value" => "2016-01-01"}).to_sql
-        expect(sql).to eq("vms.boot_time = '2016-01-01T00:00:00Z'")
+        expect(sql).to eq("\"vms\".\"boot_time\" = '2016-01-01 00:00:00'")
       end
 
       it "generates the SQL for an AFTER expression" do
