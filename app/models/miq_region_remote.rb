@@ -91,8 +91,7 @@ class MiqRegionRemote < ApplicationRecord
   def self.with_remote_connection(host, port, username, password, database, adapter)
     # Don't allow accidental connections to localhost.  A blank host will
     # connect to localhost, so don't allow that at all.
-    host = host.to_s.strip
-    raise ArgumentError, _("host cannot be blank") if host.blank?
+    host = host && host.to_s.strip
     if [nil, "", "localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(host)
       local_database = Rails.configuration.database_configuration.fetch_path(Rails.env, "database").to_s.strip
       if database == local_database
@@ -100,19 +99,34 @@ class MiqRegionRemote < ApplicationRecord
       end
     end
 
-    pool = establish_connection({
-      :adapter  => adapter,
-      :host     => host,
-      :port     => port,
-      :username => username,
-      :password => password,
-      :database => database
-    }.delete_blanks)
+    old_pool_name=self.current_pool
+    self.current_pool="remote_#{host}_#{port}"
     begin
+      # think this is the current problem
+      pool = establish_connection({
+        :adapter  => adapter,
+        :host     => host,
+        :port     => port,
+        :username => username,
+        :password => password,
+        :database => database
+      }.delete_blanks)
       conn = pool.connection
       yield conn
     ensure
-      remove_connection
+      #remove_connection(current_pool)
+      self.current_pool=old_pool_name
     end
+  end
+
+  def self.connection_specification_name
+    current_pool || "primary"
+  end
+
+  def self.current_pool=(name)
+    Thread.current[:region_pool_name] = name
+  end
+  def self.current_pool
+    Thread.current[:region_pool_name]
   end
 end
