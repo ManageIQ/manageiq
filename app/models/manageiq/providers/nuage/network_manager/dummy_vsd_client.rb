@@ -8,7 +8,7 @@ module ManageIQ::Providers
       @password = password
       _is_conn = true
       data = ""
-      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_login.txt" ).each do |line|
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_files/vsd_login.txt" ).each do |line|
        data = data.to_s + line.to_s
       end
       if _is_conn
@@ -20,7 +20,7 @@ module ManageIQ::Providers
 
     def get_enterprises
       response = ""
-      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_enterprises.txt" ).each do |line|
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_files/vsd_enterprises.txt" ).each do |line|
        response = response + line.to_s
       end
       return JSON.parse(response)
@@ -28,7 +28,7 @@ module ManageIQ::Providers
    
     def get_domains
       response = "" 
-      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_domains.txt" ).each do |line|
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_files/vsd_domains.txt" ).each do |line|
        response = response + line.to_s
       end
       return JSON.parse(response)
@@ -36,7 +36,7 @@ module ManageIQ::Providers
 
     def get_zones
       response = ""
-      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_zones.txt" ).each do |line|
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_files/vsd_zones.txt" ).each do |line|
        response = response + line.to_s
       end
       return JSON.parse(response)
@@ -44,7 +44,7 @@ module ManageIQ::Providers
     
     def get_subnets
       response = ""
-      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_subnets.txt" ).each do |line|
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_files/vsd_subnets.txt" ).each do |line|
        response = response + line.to_s
       end
        return JSON.parse(response)
@@ -52,7 +52,7 @@ module ManageIQ::Providers
 
     def get_vports
       response = ""
-      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_vports.txt" ).each do |line|
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_files/vsd_vports.txt" ).each do |line|
        response = response + line.to_s
       end
       return JSON.parse(response)
@@ -60,7 +60,7 @@ module ManageIQ::Providers
 
     def get_vms
       response = ""
-      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_vms.txt" ).each do |line|
+      File.open("app/models/manageiq/providers/nuage/network_manager/vsd_files/vsd_vms.txt" ).each do |line|
        response = response + line.to_s
       end
       return JSON.parse(response)
