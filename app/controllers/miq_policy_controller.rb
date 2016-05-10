@@ -183,7 +183,7 @@ class MiqPolicyController < ApplicationController
     @breadcrumbs = []
     @layout = "miq_policy_export"
     @import_file_upload_id = params[:import_file_upload_id]
-    drop_breadcrumb(:name => "Import / Export", :url => "miq_policy/export")
+    drop_breadcrumb(:name => _("Import / Export"), :url => "miq_policy/export")
 
     if params[:commit] == "import"
       begin
@@ -339,7 +339,7 @@ class MiqPolicyController < ApplicationController
     @server_options ||= {}
     @server_options[:server_id] ||= MiqServer.my_server.id
     @server = MiqServer.my_server
-    drop_breadcrumb(:name => "Log", :url => "/miq_ae_policy/log")
+    drop_breadcrumb(:name => _("Log"), :url => "/miq_ae_policy/log")
     render :action => "show"
   end
 
@@ -972,15 +972,13 @@ class MiqPolicyController < ApplicationController
       @conditions = Condition.where(:towhat => @sb[:folder].titleize).sort_by { |c| c.description.downcase }
       set_search_text
       @conditions = apply_search_filter(@search_text, @conditions) unless @search_text.blank?
-      @right_cell_text = "All #{ui_lookup(:model => @sb[:folder])} Conditions"
-      @right_cell_text = _("All %{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:folder]), :model => ui_lookup(:models => "Condition")}
+      @right_cell_text = _("All %{typ} Conditions") % {:typ => ui_lookup(:model => @sb[:folder])}
       @right_cell_div = "condition_list"
     elsif x_active_tree == :alert_profile_tree
       @alert_profiles = MiqAlertSet.where(:mode => @sb[:folder]).sort_by { |as| as.description.downcase }
       set_search_text
       @alert_profiles = apply_search_filter(@search_text, @alert_profiles) unless @search_text.blank?
-      @right_cell_text = "All #{ui_lookup(:model => @sb[:folder])} Alert Profiles"
-      @right_cell_text = _("All %{typ} %{model}") % {:typ => ui_lookup(:model => @sb[:folder]), :model => ui_lookup(:models => "MiqAlertSet")}
+      @right_cell_text = _("All %{typ} Alert Profiles") % {:typ => ui_lookup(:model => @sb[:folder])}
       @right_cell_div = "alert_profile_list"
     end
   end
