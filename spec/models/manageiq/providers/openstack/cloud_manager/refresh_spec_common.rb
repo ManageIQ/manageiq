@@ -216,7 +216,7 @@ module Openstack
     def assert_ems
       expect(@ems).to have_attributes(
         :api_version => identity_service.to_s,
-        :uid_ems     => nil
+        :uid_ems     => identity_service == :v3 ? 'default' : nil
       )
 
       expect(@ems.flavors.size).to            eq compute_data.flavors.count
