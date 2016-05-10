@@ -340,11 +340,14 @@ class VmCloudController < ApplicationController
   def evacuate_form_fields
     assert_privileges("instance_evacuate")
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
-    host_cluster = @record.try!(:host).try!(:ems_cluster)
     hosts = []
-    if host_cluster
-      hosts = host_cluster.hosts.reject { |h| h == @record.host }.map do |h|
-        {:id => h.id, :name => h.name}
+    unless @record.ext_management_system.nil?
+      connection = @record.ext_management_system.connect
+      current_hostname = connection.handled_list(:servers).find do |s|
+        s.name == @record.name
+      end.os_ext_srv_attr_hypervisor_hostname
+      hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
+        {:name => h.host_name}
       end
     end
     render :json => {
@@ -367,7 +370,7 @@ class VmCloudController < ApplicationController
         if params['auto_select_host'] == 'on'
           hostname = nil
         else
-          hostname = find_by_id_filtered(Host, params[:destination_host_id]).hostname
+          hostname = params[:destination_host]
         end
         on_shared_storage = params[:on_shared_storage] == 'on'
         admin_password = on_shared_storage ? nil : params[:admin_password]

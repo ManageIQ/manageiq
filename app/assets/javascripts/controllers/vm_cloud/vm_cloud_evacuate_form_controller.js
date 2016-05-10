@@ -1,7 +1,7 @@
 ManageIQ.angular.app.controller('vmCloudEvacuateFormController', ['$http', '$scope', 'vmCloudEvacuateFormId', 'miqService', function($http, $scope, vmCloudEvacuateFormId, miqService) {
   $scope.vmCloudModel = {
     auto_select_host:    true,
-    destination_host_id: null,
+    destination_host:    null,
     on_shared_storage:   true,
     admin_password:      null
   };
