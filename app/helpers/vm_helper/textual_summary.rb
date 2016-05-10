@@ -18,11 +18,13 @@ module VmHelper::TextualSummary
   end
 
   def textual_group_vm_cloud_relationships
-    %i(ems availability_zone flavor drift scan_history)
+    %i(ems ems_infra cluster host availability_zone cloud_tenant flavor vm_template drift scan_history service
+       cloud_network cloud_subnet orchestration_stack cloud_networks cloud_subnets network_routers security_groups
+       floating_ips network_ports cloud_volumes)
   end
 
   def textual_group_template_cloud_relationships
-    %i(ems drift scan_history)
+    %i(ems parent_vm drift scan_history cloud_tenant)
   end
 
   def textual_group_security
@@ -248,12 +250,9 @@ module VmHelper::TextualSummary
     @record.miq_group.try(:description)
   end
 
-  def textual_ems
-    textual_link(@record.ext_management_system)
-  end
-
   def textual_cluster
-    cluster = @record.ems_cluster
+    cluster = @record.host.try(:ems_cluster)
+    return nil if cluster.nil?
     h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? _("None") : cluster.name)}
     if cluster && role_allows(:feature => "ems_cluster_show")
       h[:title] = _("Show this VM's %{title}") % {:title => title_for_cluster}
@@ -264,6 +263,7 @@ module VmHelper::TextualSummary
 
   def textual_host
     host = @record.host
+    return nil if host.nil?
     h = {:label => title_for_host, :image => "host", :value => (host.nil? ? _("None") : host.name)}
     if host && role_allows(:feature => "host_show")
       h[:title] = _("Show this VM's %{title}") % {:title => title_for_host}
@@ -307,6 +307,14 @@ module VmHelper::TextualSummary
     h
   end
 
+  def textual_ems
+    textual_link(@record.ext_management_system)
+  end
+
+  def textual_ems_infra
+    textual_link(@record.ext_management_system.try(:provider).try(:infra_ems))
+  end
+
   def textual_availability_zone
     availability_zone = @record.availability_zone
     label = ui_lookup(:table => "availability_zone")
@@ -323,10 +331,48 @@ module VmHelper::TextualSummary
   def textual_flavor
     flavor = @record.flavor
     label = ui_lookup(:table => "flavor")
-    h = {:label => label, :image => "flavor", :value => (flavor.nil? ? "None" : flavor.name)}
+    h = {:label => label, :image => "flavor", :value => (flavor.nil? ? _("None") : flavor.name)}
     if flavor && role_allows(:feature => "flavor_show")
       h[:title] = _("Show this VM's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'flavor', :action => 'show', :id => flavor)
+    end
+    h
+  end
+
+  def textual_vm_template
+    vm_template = @record.genealogy_parent
+    label = ui_lookup(:table => "miq_template")
+    h = {:label => label, :image => "template", :value => (vm_template.nil? ? _("None") : vm_template.name)}
+    if vm_template && role_allows(:feature => "miq_template_show")
+      h[:title] = _("Show this VM's %{label}") % {:label => label}
+      h[:link]  = url_for(:controller => 'miq_template', :action => 'show', :id => vm_template)
+    end
+    h
+  end
+
+  def textual_parent_vm
+    return nil unless @record.template?
+    h = {:label => _("Parent VM"), :image => "vm"}
+    parent_vm = @record.with_relationship_type("genealogy", &:parent)
+    if parent_vm.nil?
+      h[:value] = _("None")
+    else
+      h[:value] = parent_vm.name
+      h[:title] = _("Show this Image's parent")
+      h[:explorer] = true
+      url, action = set_controller_action
+      h[:link]  = url_for(:controller => url, :action => action, :id => parent_vm)
+    end
+    h
+  end
+
+  def textual_orchestration_stack
+    stack = @record.orchestration_stack
+    label = ui_lookup(:table => "orchestration_stack")
+    h = {:label => label, :image => "orchestration_stack", :value => (stack.nil? ? _("None") : stack.name)}
+    if stack && role_allows(:feature => "orchestration_stack_show")
+      h[:title] = _("Show this VM's %{label} '%{name}'") % {:label => label, :name => stack.name}
+      h[:link]  = url_for(:controller => 'orchestration_stack', :action => 'show', :id => stack)
     end
     h
   end
@@ -344,17 +390,97 @@ module VmHelper::TextualSummary
     h
   end
 
-  def textual_parent_vm
-    h = {:label => _("Parent VM"), :image => "vm"}
-    parent_vm = @record.with_relationship_type("genealogy", &:parent)
-    if parent_vm.nil?
-      h[:value] = _("None")
-    else
-      h[:value] = parent_vm.name
-      h[:title] = _("Show this VM's parent")
+  def textual_security_groups
+    label = ui_lookup(:tables => "security_group")
+    num   = @record.number_of(:security_groups)
+    h     = {:label => label, :image => "security_group", :value => num}
+    if num > 0 && role_allows(:feature => "security_group_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
-      url, action = set_controller_action
-      h[:link]  = url_for(:controller => url, :action => action, :id => parent_vm)
+      h[:link]  = url_for(:action => 'security_groups', :id => @record, :display => "security_groups")
+    end
+    h
+  end
+
+  def textual_floating_ips
+    label = ui_lookup(:tables => "floating_ip")
+    num   = @record.number_of(:floating_ips)
+    h     = {:label => label, :image => "floating_ip", :value => num}
+    if num > 0 && role_allows(:feature => "floating_ip_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'floating_ips', :id => @record, :display => "floating_ips")
+    end
+    h
+  end
+
+  def textual_network_routers
+    label = ui_lookup(:tables => "network_router")
+    num   = @record.number_of(:network_routers)
+    h     = {:label => label, :image => "network_router", :value => num}
+    if num > 0 && role_allows(:feature => "network_router_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'network_routers', :id => @record, :display => "network_routers")
+    end
+    h
+  end
+
+  def textual_cloud_subnets
+    label = ui_lookup(:tables => "cloud_subnet")
+    num   = @record.number_of(:cloud_subnets)
+    h     = {:label => label, :image => "cloud_subnet", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_subnet_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'cloud_subnets', :id => @record, :display => "cloud_subnets")
+    end
+    h
+  end
+
+  def textual_network_ports
+    label = ui_lookup(:tables => "network_port")
+    num   = @record.number_of(:network_ports)
+    h     = {:label => label, :image => "network_port", :value => num}
+    if num > 0 && role_allows(:feature => "network_port_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'network_ports', :id => @record, :display => "network_ports")
+    end
+    h
+  end
+
+  def textual_cloud_networks
+    label = ui_lookup(:tables => "cloud_network")
+    num   = @record.number_of(:cloud_networks)
+    h     = {:label => label, :image => "cloud_network", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_network_show_list")
+      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:explorer] = true
+      h[:link]  = url_for(:action => 'cloud_networks', :id => @record, :display => "cloud_networks")
+    end
+    h
+  end
+
+  def textual_cloud_tenant
+    cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
+    label = ui_lookup(:table => "cloud_tenants")
+    h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? _("None") : cloud_tenant.name)}
+    if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
+      h[:title] = _("Show this VM's %{label}") % {:label => label}
+      h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
+    end
+    h
+  end
+
+  def textual_cloud_volumes
+    label = ui_lookup(:tables => "cloud_volumes")
+    num = @record.number_of(:cloud_volumes)
+    h = {:label => label, :image => "cloud_volume", :value => num}
+    if num > 0 && role_allows(:feature => "cloud_volume_show_list")
+      h[:title]    = _("Show all Cloud Volumes attached to this VM.")
+      h[:explorer] = true
+      h[:link]     = url_for(:action => 'cloud_volumes', :id => @record, :display => "cloud_volumes")
     end
     h
   end

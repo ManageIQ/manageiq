@@ -2548,6 +2548,13 @@ Vmdb::Application.routes.draw do
         retire
         scan_histories
         sections_field_changed
+        security_groups
+        floating_ips
+        network_routers
+        network_ports
+        cloud_subnets
+        cloud_networks
+        cloud_volumes
         show
         sort_ds_grid
         sort_host_grid
