@@ -586,9 +586,5 @@ describe('emsCommonFormController in the context of ems infra provider', functio
     it('sets the ssh_keypair_password', function () {
       expect($scope.emsCommonModel.ssh_keypair_password).toEqual(miqService.storedPasswordPlaceholder);
     });
-
-    it('sets the ssh_keypair_verify', function () {
-      expect($scope.emsCommonModel.ssh_keypair_verify).toEqual(miqService.storedPasswordPlaceholder);
-    });
   });
 });

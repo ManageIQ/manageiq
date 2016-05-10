@@ -271,7 +271,6 @@ module AuthenticationMixin
   def authentication_check_no_validation(type, options)
     header  = "type: [#{type.inspect}] for [#{id}] [#{name}]"
     verify_args = self.kind_of?(Host) ? [type, options] : type
-
     status, details =
       if self.missing_credentials?(type)
         [:incomplete, "Missing credentials"]
