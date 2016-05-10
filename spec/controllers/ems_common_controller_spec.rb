@@ -174,7 +174,7 @@ describe EmsContainerController do
                                                       :default_api_port  => '5000',
                                                       :hawkular_hostname => '10.10.10.10',
                                                       :hawkular_api_port => '8443',
-                                                      :bearer_token      => 'valid-token',
+                                                      :bearer_password   => 'valid-token',
                                                       :emstype           => @type)
           session[:edit] = assigns(:edit)
           controller.send(:set_ems_record_vars, @ems)

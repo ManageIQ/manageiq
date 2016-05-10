@@ -153,7 +153,7 @@ module Mixins
       metrics_port = ""
       keystone_v3_domain_id = ""
       hawkular_hostname = ""
-      hawkular_port = ""
+      hawkular_api_port = ""
 
       if @ems.connection_configurations.amqp.try(:endpoint)
         amqp_hostname = @ems.connection_configurations.amqp.endpoint.hostname
@@ -182,7 +182,15 @@ module Mixins
 
       if @ems.connection_configurations.hawkular.try(:endpoint)
         hawkular_hostname = @ems.connection_configurations.hawkular.endpoint.hostname
-        hawkular_port = @ems.connection_configurations.hawkular.endpoint.port
+        hawkular_api_port = @ems.connection_configurations.hawkular.endpoint.port
+      end
+
+      if @ems.connection_configurations.default.try(:endpoint)
+        default_hostname = @ems.connection_configurations.default.endpoint.hostname
+        default_api_port = @ems.connection_configurations.default.endpoint.port
+      else
+        default_hostname = @ems.hostname
+        default_api_port = @ems.port
       end
 
       @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
@@ -209,9 +217,9 @@ module Mixins
                        :zone                            => zone,
                        :provider_id                     => @ems.provider_id ? @ems.provider_id : "",
                        :hostname                        => @ems.hostname,
-                       :default_hostname                => @ems.connection_configurations.default.endpoint.hostname,
+                       :default_hostname                => default_hostname,
                        :amqp_hostname                   => amqp_hostname,
-                       :default_api_port                => @ems.connection_configurations.default.endpoint.port,
+                       :default_api_port                => default_api_port,
                        :amqp_api_port                   => amqp_port ? amqp_port : "",
                        :api_version                     => @ems.api_version ? @ems.api_version : "v2",
                        :default_security_protocol       => default_security_protocol,
@@ -266,7 +274,7 @@ module Mixins
                        :default_hostname          => @ems.connection_configurations.default.endpoint.hostname,
                        :hawkular_hostname         => hawkular_hostname,
                        :default_api_port          => @ems.connection_configurations.default.endpoint.port,
-                       :hawkular_api_port         => hawkular_port,
+                       :hawkular_api_port         => hawkular_api_port,
                        :api_version               => @ems.api_version ? @ems.api_version : "v2",
                        :default_security_protocol => default_security_protocol,
                        :provider_region           => @ems.provider_region,
@@ -303,7 +311,7 @@ module Mixins
       metrics_hostname = params[:metrics_hostname].strip if params[:metrics_hostname]
       metrics_port = params[:metrics_api_port].strip if params[:metrics_api_port]
       hawkular_hostname = params[:hawkular_hostname].strip if params[:hawkular_hostname]
-      hawkular_port = params[:hawkular_api_port].strip if params[:hawkular_api_port]
+      hawkular_api_port = params[:hawkular_api_port].strip if params[:hawkular_api_port]
       default_endpoint = {}
       amqp_endpoint = {}
       ceilometer_endpoint = {}
@@ -351,7 +359,7 @@ module Mixins
       if ems.kind_of?(ManageIQ::Providers::ContainerManager)
         ems.hostname = hostname
         default_endpoint = {:role => :default, :hostname => hostname, :port => port}
-        hawkular_endpoint = {:role => :hawkular, :hostname => hawkular_hostname, :port => hawkular_port}
+        hawkular_endpoint = {:role => :hawkular, :hostname => hawkular_hostname, :port => hawkular_api_port}
       end
 
       endpoints = {:default     => default_endpoint,
@@ -420,9 +428,8 @@ module Mixins
          ems.supports_authentication?(:bearer) && params[:bearer_password]
         creds[:hawkular] = {:auth_key => params[:bearer_password], :userid => "_"}
         creds[:bearer] = {:auth_key => params[:bearer_password]}
+        ems.update_authentication(creds, :save => (mode != :validate))
       end
-
-      ems.update_authentication(creds, :save => (mode != :validate))
       creds
     end
 

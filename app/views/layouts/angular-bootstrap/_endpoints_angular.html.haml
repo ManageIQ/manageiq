@@ -18,7 +18,10 @@
 
 %div{"ng-if" => defined?(apiport_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}",
-              "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'rhevm' || emsCommonModel.ems_controller == 'ems_container'"}
+              "ng-if" => "emsCommonModel.emstype == 'openstack' || " +       |
+                         "emsCommonModel.emstype == 'openstack_infra' || " + |
+                         "emsCommonModel.emstype == 'rhevm' || " +           |
+                         "emsCommonModel.ems_controller == 'ems_container'"} |
     %label.col-md-2.control-label{"for" => "textInput-markup"}
       = _('API Port')
     .col-md-8

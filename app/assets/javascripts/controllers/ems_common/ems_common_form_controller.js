@@ -197,11 +197,16 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.metrics_verify != '' && $scope.angularForm.metrics_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "default" && $scope.emsCommonModel.ems_controller == "ems_container") &&
+      ($scope.emsCommonModel.emstype) &&
       ($scope.emsCommonModel.default_hostname != '' && $scope.emsCommonModel.default_api_port) &&
       ($scope.emsCommonModel.bearer_password != '' && $scope.angularForm.bearer_password.$valid) &&
       ($scope.emsCommonModel.bearer_verify != '' && $scope.angularForm.bearer_verify.$valid)) {
       return true;
-    } else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
+    } else if(($scope.currentTab == "hawkular" && $scope.emsCommonModel.ems_controller == "ems_container") &&
+      ($scope.emsCommonModel.emstype) &&
+      ($scope.emsCommonModel.hawkular_hostname != '' && $scope.emsCommonModel.hawkular_api_port)) {
+      return true;
+    }else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
       ($scope.currentTab == "default" ||
       ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
