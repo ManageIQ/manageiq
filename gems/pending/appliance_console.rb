@@ -107,7 +107,7 @@ module ApplianceConsole
     begin
       dns = LinuxAdmin::Dns.new
       eth0.reload
-      eth0.parse_conf
+      eth0.parse_conf if eth0.respond_to?(:parse_conf)
 
       host       = LinuxAdmin::Hosts.new.hostname
       ip         = eth0.address
