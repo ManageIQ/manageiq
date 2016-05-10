@@ -7,6 +7,10 @@ FactoryGirl.define do
     store_type "VMFS"
   end
 
+  factory :storage_nfs, :parent => :storage do
+    store_type "NFS"
+  end
+
   # Factories for perf_capture_timer and perf_capture_gap testing
   factory :storage_target_vmware, :parent => :storage_vmware do
     after(:create) do |x|
