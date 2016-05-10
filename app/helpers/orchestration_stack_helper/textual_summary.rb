@@ -12,7 +12,7 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems_cloud orchestration_template instances security_groups cloud_networks parameters outputs resources)
+    %i(ems_cloud service orchestration_template instances security_groups cloud_networks parameters outputs resources)
   end
 
   def textual_group_tags
@@ -51,6 +51,19 @@ module OrchestrationStackHelper::TextualSummary
 
   def textual_ems_cloud
     textual_link(@record.ext_management_system)
+  end
+
+  def textual_service
+    h = {:label => _("Service"), :image => "service"}
+    service = @record.service
+    if service.nil?
+      h[:value] = _("None")
+    else
+      h[:value] = service.name
+      h[:title] = _("Show this Service")
+      h[:link]  = url_for(:controller => 'service', :action => 'show', :id => service)
+    end
+    h
   end
 
   def textual_orchestration_template
