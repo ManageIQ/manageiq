@@ -4387,6 +4387,16 @@ metrics_23:
 - derived_host_sockets
 - derived_host_count_total
 - derived_vm_count_total
+middleware_datasources:
+- id
+- name
+- ems_ref
+- nativeid
+- server_id
+- properties
+- ems_id
+- created_at
+- updated_at
 middleware_deployments:
 - id
 - name
