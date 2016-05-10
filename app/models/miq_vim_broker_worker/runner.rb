@@ -192,6 +192,11 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
       return
     end
 
+    unless self.class.emses_and_hosts_to_monitor.include?(ems)
+      _log.info "#{log_prefix} Not reconnecting inactive connection to #{event[:server]}"
+      return
+    end
+
     reconnect_ems(ems)
   end
 
