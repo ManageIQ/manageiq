@@ -5,10 +5,10 @@ class MiqDialog < ApplicationRecord
   DIALOG_DIR = Rails.root.join("product/dialogs/miq_dialogs")
 
   DIALOG_TYPES = [
-    ["VM Provision",                "MiqProvisionWorkflow"],
-    ["Configured System Provision", "MiqProvisionConfiguredSystemWorkflow"],
-    ["Host Provision",              "MiqHostProvisionWorkflow"],
-    ["VM Migrate",                  "VmMigrateWorkflow"],
+    [_("VM Provision"),                "MiqProvisionWorkflow"],
+    [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
+    [_("Host Provision"),              "MiqHostProvisionWorkflow"],
+    [_("VM Migrate"),                  "VmMigrateWorkflow"],
   ]
 
   serialize :content
