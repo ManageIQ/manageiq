@@ -16,7 +16,7 @@ module VirtualTotalMixin
     #
     def virtual_total(name, relation, options = {})
       define_method(name) do
-        send(relation).count
+        send(relation).try(:size) || 0
       end
 
       # allow this attribute to be sorted in the database
