@@ -519,7 +519,7 @@ describe MiqReport do
         FactoryGirl.create(:miq_report, :title => "Tenant Quotas", :order => 'Ascending', :rpt_group => "Custom",
                            :priority => 231, :rpt_type => 'Custom', :db => 'Tenant', :include => include, :cols => cols,
                            :col_order => cols, :template_type => "report", :headers => headers,
-                           :conditions => skip_condition)
+                           :conditions => skip_condition, :sortby => ["tenant_quotas.name"])
       end
 
       let(:user_admin) { FactoryGirl.create(:user, :role => "super_administrator") }
@@ -552,8 +552,8 @@ describe MiqReport do
         @tenant.tenant_quotas.create :name => :cpu_allocated, :value => 2
         @tenant.tenant_quotas.create :name => :mem_allocated, :value => 4_294_967_296
         @tenant.tenant_quotas.create :name => :storage_allocated, :value => 4_294_967_296
-        @tenant.tenant_quotas.create :name => :vms_allocated, :value => 4
         @tenant.tenant_quotas.create :name => :templates_allocated, :value => 4
+        @tenant.tenant_quotas.create :name => :vms_allocated, :value => 4
 
         @expected_html_rows = []
 
@@ -570,11 +570,11 @@ describe MiqReport do
                             :available => "#{(4.gigabytes - 1_000_000.0) / 1.gigabyte} GB"}
         @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
 
-        formatted_values = {:name => "Allocated Number of Virtual Machines", :total => "4 Count", :used => "1 Count",
+        formatted_values = {:name => "Allocated Number of Templates", :total => "4 Count", :used => "1 Count",
                             :allocated => "0 Count", :available => "3 Count"}
         @expected_html_rows.push(generate_html_row(false, @tenant.name, formatted_values))
 
-        formatted_values = {:name => "Allocated Number of Templates", :total => "4 Count", :used => "1 Count",
+        formatted_values = {:name => "Allocated Number of Virtual Machines", :total => "4 Count", :used => "1 Count",
                             :allocated => "0 Count", :available => "3 Count"}
         @expected_html_rows.push(generate_html_row(true, @tenant.name, formatted_values))
 
