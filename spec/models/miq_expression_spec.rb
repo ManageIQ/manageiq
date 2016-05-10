@@ -193,7 +193,7 @@ describe MiqExpression do
       it "generates the SQL for an AFTER expression" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on > '2011-01-10'")
+        expect(sql).to eq("\"vms\".\"retires_on\" > '2011-01-10 23:59:59.999999'")
       end
 
       it "generates the SQL for a > expression" do
@@ -229,7 +229,7 @@ describe MiqExpression do
       it "generates the SQL for an AFTER expression with date/time" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-10 9:00"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on > '2011-01-10T09:00:00Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" > '2011-01-10 09:00:00'")
       end
 
       it "generates the SQL for a > expression with date/time" do
@@ -279,13 +279,13 @@ describe MiqExpression do
       it "generates the SQL for an AFTER expression with an 'n Days Ago' value for a date field" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-retires_on", "value" => "2 Days Ago"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.retires_on > '2011-01-09'")
+        expect(sql).to eq("\"vms\".\"retires_on\" > '2011-01-09 23:59:59.999999'")
       end
 
       it "generates the SQL for an AFTER expression with an 'n Days Ago' value for a datetime field" do
         exp = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2 Days Ago"})
         sql, * = exp.to_sql
-        expect(sql).to eq("vms.last_scan_on > '2011-01-09T23:59:59Z'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" > '2011-01-09 23:59:59.999999'")
       end
 
       it "generates the SQL for a BEFORE expression with an 'n Days Ago' value for a date field" do
