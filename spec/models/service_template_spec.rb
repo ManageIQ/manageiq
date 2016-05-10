@@ -320,6 +320,10 @@ describe ServiceTemplate do
       expect(@st1.template_valid_error_message).to be_nil
     end
 
+    it 'cloud?' do
+      expect(@st1.cloud?).to be_false
+    end
+
     context 'atomic' do
       before { @st1.add_resource(@ptr) }
 
@@ -384,6 +388,20 @@ describe ServiceTemplate do
       end
     end
   end
+  context "#cloud?" do
+    it "vmware should be false" do
+      st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1', :prov_type => 'vmware')
+      expect(st1.cloud?).to be_false
+    end
+
+    it "amazon or openstack should be true" do
+      st2 = FactoryGirl.create(:service_template, :name => 'Service Template 2', :prov_type => 'amazon')
+      st3 = FactoryGirl.create(:service_template, :name => 'Service Template 3', :prov_type => 'openstack')
+      expect(st2.cloud?).to be_true
+      expect(st3.cloud?).to be_true
+    end
+  end
+
 end
 
 def add_and_save_service(p, c)

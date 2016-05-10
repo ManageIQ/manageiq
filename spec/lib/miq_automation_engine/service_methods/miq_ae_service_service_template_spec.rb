@@ -77,5 +77,22 @@ module MiqAeServiceServiceTemplateSpec
         end
       end
     end
+
+    context "cloud?" do
+      it "vmware should be false" do
+        st1   = FactoryGirl.create(:service_template, :prov_type => 'vmware')
+        sst1 = MiqAeMethodService::MiqAeServiceServiceTemplate.find(st1.id)
+        expect(sst1.cloud?).to be_false
+      end
+
+      it "amazon/openstack should be true" do
+        st2   = FactoryGirl.create(:service_template, :prov_type => 'openstack')
+        sst2 = MiqAeMethodService::MiqAeServiceServiceTemplate.find(st2.id)
+        st3   = FactoryGirl.create(:service_template, :prov_type => 'amazon')
+        sst3 = MiqAeMethodService::MiqAeServiceServiceTemplate.find(st3.id)
+        expect(sst2.cloud?).to be_true
+        expect(sst3.cloud?).to be_true
+      end
+    end
   end
 end
