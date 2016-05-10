@@ -22,7 +22,7 @@ module ManageIQ::Providers
 
       $log.info("#{log_header}...")
       get_enterprises
-      #$log.info(@data)
+      $log.info(@data)
       @data
     end
 
@@ -104,11 +104,12 @@ module ManageIQ::Providers
     
     def map_extra_attributes(subnet_parent_id)
       zone_id              = subnet_parent_id
-      zone_name            = @zones[subnet_parent_id][0]
-      domain_id            = @zones[subnet_parent_id][1]
-      domain_name          = @zones[subnet_parent_id][2]
-      enterprise_id        = @zones[subnet_parent_id][3]
-      enterprise_name      = @zones[subnet_parent_id][4]
+      zone                 = @zones[subnet_parent_id]
+      zone_name            = zone[0]
+      domain_id            = zone[1]
+      domain_name          = zone[2]
+      enterprise_id        = zone[3]
+      enterprise_name      = zone[4]
       return {'enterprise_name' => enterprise_name, 'enterprise_id' => enterprise_id, 
         'domain_name' => domain_name, 'domain_id' => domain_id, 'zone_name' => zone_name, 'zone_id' => zone_id}
     end
