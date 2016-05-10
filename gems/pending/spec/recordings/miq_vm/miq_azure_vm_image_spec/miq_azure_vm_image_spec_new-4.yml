@@ -12,9 +12,9 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
       Content-Length:
-      - '186'
+      - '188'
       Content-Type:
       - application/x-www-form-urlencoded
   response:
@@ -33,11 +33,11 @@ http_interactions:
       Server:
       - Microsoft-IIS/8.5
       X-Ms-Request-Id:
-      - 1c9aa75e-8811-450a-89d7-3873abf3b411
+      - 7ff73d29-0e30-47ae-b302-442d960ca5e1
       Client-Request-Id:
-      - 068c2713-a0f5-47db-8bc4-9016021dd5a2
+      - 0ec32327-71f3-4787-999e-8d4d34dfcc85
       X-Ms-Gateway-Service-Instanceid:
-      - ESTSFE_IN_113
+      - ESTSFE_IN_231
       X-Content-Type-Options:
       - nosniff
       Strict-Transport-Security:
@@ -45,20 +45,22 @@ http_interactions:
       P3p:
       - CP="DSP CUR OTPi IND OTRi ONL FIN"
       Set-Cookie:
+      - esctx=AAABAAAAiL9Kn2Z27UubvWFPbm0gLWPDpefRofVbUPvmeugRW1JOKgq7O3JKrti9QQWfzFOSniblBUqYfwGZ6yUgra7kBqE7ENj6ha0v0E-aWiZvbRBQ59pKNM-zi_CpOSKq1COQNcTdnMri_Bv4Ea_4E2U5QXXuzA9COeKklPGRLykLzHVNhiViIZpMfNnIjcRht_3dIAA;
+        domain=.login.windows.net; path=/; secure; HttpOnly
       - flight-uxoptin=true; path=/; secure; HttpOnly
       - stsservicecookie=ests; path=/; secure; HttpOnly
       - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
       X-Powered-By:
       - ASP.NET
       Date:
-      - Wed, 23 Mar 2016 15:27:01 GMT
+      - Mon, 09 May 2016 23:32:37 GMT
       Content-Length:
       - '1247'
     body:
       encoding: UTF-8
-      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3599","expires_on":"1458750422","not_before":"1458746522","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg3NDY1MjIsIm5iZiI6MTQ1ODc0NjUyMiwiZXhwIjoxNDU4NzUwNDIyLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.d0wY4OlzDCh4f71qH7xON6zyP4EeKgb04IuX7kH-KJYf89ySQr3y8v8NwOtT0hKJkpsc0jSnEgj8RbCMLCQ5HkMoMmAYPH5PhAexb4OQe1bHU9GLOmunBiYEJThXPgJistMOHIraQksDQXLgHdCN-7Hu6oB-C4n0-iOI0ihTgh4r1aT3JxZ7Sdm1FbHEMgSTu4YP2GY6UWMwekTmSiEngRYNtkpSnxyuUlLGcRRWa32hPYdWQEDH7vpp7ZNh3zdBv3nu7QjQ-e6B1LHaOYxKbRwd5qBAMruEc3JfbfxsiqNC9Hc0j2NvidBfw97s8lCXoga-7BOZ1UZXEyh3JI6VPg"}'
+      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3599","expires_on":"1462840357","not_before":"1462836457","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4MzY0NTcsIm5iZiI6MTQ2MjgzNjQ1NywiZXhwIjoxNDYyODQwMzU3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.ZmPBDLXmR2oZnrtANn4zPjbphMntHtnF-0GBicCTW0kBUeawmlICB59LrwwP30DoN8lKTa0ei7M-mKy8vHNYw45Td7BLr-GQtfq95o3BETjbD8-nqNaKzIs5-QDfWcbE2MX_fUvkF6yLKzGyRuBvPccpYv2wGaP97A7EHo3rxh1Nb0I2AU6YHxb9KFWsIiHWjPskkqcTtO9sPjvbIAD0ducmaxX6jDEUCBKJohF9jH5tGOf-DI9Vd59ez5PPwVmZtjaXsSJ7KV6niK6zCzpmdu5SjlV1AHJvendOGtY4dKocHX4y8Q1Wt8yd-8OKHpFu7YYaFcFznJqyzaX4NngvIg"}'
     http_version: 
-  recorded_at: Wed, 23 Mar 2016 15:27:01 GMT
+  recorded_at: Mon, 09 May 2016 23:32:37 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions?api-version=2015-01-01
@@ -71,11 +73,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NTg3NDY1MjIsIm5iZiI6MTQ1ODc0NjUyMiwiZXhwIjoxNDU4NzUwNDIyLCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.d0wY4OlzDCh4f71qH7xON6zyP4EeKgb04IuX7kH-KJYf89ySQr3y8v8NwOtT0hKJkpsc0jSnEgj8RbCMLCQ5HkMoMmAYPH5PhAexb4OQe1bHU9GLOmunBiYEJThXPgJistMOHIraQksDQXLgHdCN-7Hu6oB-C4n0-iOI0ihTgh4r1aT3JxZ7Sdm1FbHEMgSTu4YP2GY6UWMwekTmSiEngRYNtkpSnxyuUlLGcRRWa32hPYdWQEDH7vpp7ZNh3zdBv3nu7QjQ-e6B1LHaOYxKbRwd5qBAMruEc3JfbfxsiqNC9Hc0j2NvidBfw97s8lCXoga-7BOZ1UZXEyh3JI6VPg
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4MzY0NTcsIm5iZiI6MTQ2MjgzNjQ1NywiZXhwIjoxNDYyODQwMzU3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.ZmPBDLXmR2oZnrtANn4zPjbphMntHtnF-0GBicCTW0kBUeawmlICB59LrwwP30DoN8lKTa0ei7M-mKy8vHNYw45Td7BLr-GQtfq95o3BETjbD8-nqNaKzIs5-QDfWcbE2MX_fUvkF6yLKzGyRuBvPccpYv2wGaP97A7EHo3rxh1Nb0I2AU6YHxb9KFWsIiHWjPskkqcTtO9sPjvbIAD0ducmaxX6jDEUCBKJohF9jH5tGOf-DI9Vd59ez5PPwVmZtjaXsSJ7KV6niK6zCzpmdu5SjlV1AHJvendOGtY4dKocHX4y8Q1Wt8yd-8OKHpFu7YYaFcFznJqyzaX4NngvIg
   response:
     status:
       code: 200
@@ -96,19 +98,71 @@ http_interactions:
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
       - '14998'
       X-Ms-Request-Id:
-      - ee441658-37b1-4616-9c9c-b9437f0a13e4
+      - 8703da13-3126-4ef2-a11b-dd91c051a870
       X-Ms-Correlation-Request-Id:
-      - ee441658-37b1-4616-9c9c-b9437f0a13e4
+      - 8703da13-3126-4ef2-a11b-dd91c051a870
       X-Ms-Routing-Request-Id:
-      - EASTUS:20160323T152702Z:ee441658-37b1-4616-9c9c-b9437f0a13e4
+      - WESTUS:20160509T233237Z:8703da13-3126-4ef2-a11b-dd91c051a870
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Wed, 23 Mar 2016 15:27:01 GMT
+      - Mon, 09 May 2016 23:32:36 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c","subscriptionId":"2586c64b-38b4-4527-a140-012d49dfc02c","displayName":"Microsoft
-        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}}]}'
+        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}},{"id":"/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485","subscriptionId":"462f2af8-e67e-40c6-9fbf-02824d1dd485","displayName":"Visual
+        Studio Ultimate with MSDN","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"MSDN_2014-09-01"}}]}'
     http_version: 
-  recorded_at: Wed, 23 Mar 2016 15:27:02 GMT
+  recorded_at: Mon, 09 May 2016 23:32:37 GMT
+- request:
+    method: get
+    uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames?api-version=2015-01-01
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4MzY0NTcsIm5iZiI6MTQ2MjgzNjQ1NywiZXhwIjoxNDYyODQwMzU3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.ZmPBDLXmR2oZnrtANn4zPjbphMntHtnF-0GBicCTW0kBUeawmlICB59LrwwP30DoN8lKTa0ei7M-mKy8vHNYw45Td7BLr-GQtfq95o3BETjbD8-nqNaKzIs5-QDfWcbE2MX_fUvkF6yLKzGyRuBvPccpYv2wGaP97A7EHo3rxh1Nb0I2AU6YHxb9KFWsIiHWjPskkqcTtO9sPjvbIAD0ducmaxX6jDEUCBKJohF9jH5tGOf-DI9Vd59ez5PPwVmZtjaXsSJ7KV6niK6zCzpmdu5SjlV1AHJvendOGtY4dKocHX4y8Q1Wt8yd-8OKHpFu7YYaFcFznJqyzaX4NngvIg
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Vary:
+      - Accept-Encoding
+      X-Ms-Ratelimit-Remaining-Subscription-Reads:
+      - '14801'
+      X-Ms-Request-Id:
+      - c845d66e-225b-4007-a6b0-6554b2b821d0
+      X-Ms-Correlation-Request-Id:
+      - c845d66e-225b-4007-a6b0-6554b2b821d0
+      X-Ms-Routing-Request-Id:
+      - WESTUS:20160509T233238Z:c845d66e-225b-4007-a6b0-6554b2b821d0
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Date:
+      - Mon, 09 May 2016 23:32:38 GMT
+      Content-Length:
+      - '2903'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName","tagName":"displayName","count":{"type":"Total","value":19},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterVirtualMachine","tagValue":"OpenShiftMasterVirtualMachine","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/DeployOpenShift","tagValue":"DeployOpenShift","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodes","tagValue":"OpenShiftNodes","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/PrepNodes","tagValue":"PrepNodes","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/KeyVault","tagValue":"KeyVault","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeLB","tagValue":"OpenShiftNodeLB","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterNetworkInterface","tagValue":"OpenShiftMasterNetworkInterface","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeNetworkInterfaces","tagValue":"OpenShiftNodeNetworkInterfaces","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeLBPublicIP","tagValue":"OpenShiftNodeLBPublicIP","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterPublicIP","tagValue":"OpenShiftMasterPublicIP","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/VirtualNetwork","tagValue":"VirtualNetwork","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/StorageAccounts","tagValue":"StorageAccounts","count":{"type":"Total","value":2}}]},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/on-demand","tagName":"on-demand","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/on-demand/tagValues/true","tagValue":"true","count":{"type":"Total","value":1}}]},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/rlt_test","tagName":"rlt_test","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/rlt_test/tagValues/b","tagValue":"b","count":{"type":"Total","value":1}}]}]}'
+    http_version: 
+  recorded_at: Mon, 09 May 2016 23:32:38 GMT
 recorded_with: VCR 2.9.3
