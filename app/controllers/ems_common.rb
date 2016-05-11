@@ -19,7 +19,6 @@ module EmsCommon
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 
     if ["download_pdf", "main", "summary_only"].include?(@display)
-      get_tagdata(@ems)
       drop_breadcrumb(:name => @ems.name + _(" (Summary)"), :url => show_link(@ems))
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)

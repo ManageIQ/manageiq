@@ -87,7 +87,6 @@ class CloudVolumeController < ApplicationController
 
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@volume)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @volume.name.to_s},
         :url  => "/cloud_volume/show/#{@volume.id}"

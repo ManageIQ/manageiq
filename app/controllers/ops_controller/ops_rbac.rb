@@ -915,18 +915,15 @@ module OpsController::OpsRbac
   def rbac_user_get_details(id)
     @edit = nil
     @record = @user = User.find_by_id(from_cid(id))
-    get_tagdata(@user)
   end
 
   def rbac_tenant_get_details(id)
     @record = @tenant = Tenant.find_by_id(from_cid(id))
-    get_tagdata(@tenant)
   end
 
   def rbac_group_get_details(id)
     @edit = nil
     @record = @group = MiqGroup.find_by_id(from_cid(id))
-    get_tagdata(@group)
     # Build the belongsto filters hash
     @belongsto = {}
     @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags

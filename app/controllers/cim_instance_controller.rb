@@ -116,7 +116,6 @@ class CimInstanceController < ApplicationController
 
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@record)
       drop_breadcrumb({:name => ui_lookup(:tables => self.class.table_name), :url => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record.evm_display_name},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}")

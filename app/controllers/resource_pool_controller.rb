@@ -23,7 +23,6 @@ class ResourcePoolController < ApplicationController
 
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@record)
       txt = @record.vapp ? _("(vApp)") : ""
       drop_breadcrumb(:name => _("%{name} %{text} (Summary)") % {:name => @record.name, :text => txt},
                       :url  => "/resource_pool/show/#{@record.id}")

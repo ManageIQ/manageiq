@@ -189,7 +189,6 @@ class AuthKeyPairCloudController < ApplicationController
 
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@auth_key_pair_cloud)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @auth_key_pair_cloud.name},
         :url  => "/auth_key_pair_cloud/show/#{@auth_key_pair_cloud.id}"

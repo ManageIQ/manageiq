@@ -402,17 +402,4 @@ module ApplicationController::Tags
                        :escape => false
     end
   end
-
-  # Getting my company tags and my tags to display on summary screen
-  def get_tagdata(rec)
-    session[:assigned_filters] = {}
-    filters = Classification.find_assigned_entries(rec)
-    filters.each do |a|
-      path    = [:assigned_filters, a.parent.description]
-      array   = session.fetch_path(path)
-      array ||= session.store_path(path, [])
-      array << a.description
-    end
-    session[:mytags] = rec.tagged_with(:cat => session[:userid])    # Start with the first items tags
-  end
 end

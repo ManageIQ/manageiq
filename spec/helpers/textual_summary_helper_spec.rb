@@ -39,4 +39,7 @@ describe TextualSummaryHelper do
       end
     end
   end
+  context 'textual_tags' do
+
+  end
 end

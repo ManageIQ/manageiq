@@ -35,7 +35,6 @@ class CloudObjectStoreObjectController < ApplicationController
     )
     case @display
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@object_store_object)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @object_store_object.key.to_s},
         :url  => "/cloud_object_store_object/show/#{@object_store_object.id}"

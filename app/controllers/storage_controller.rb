@@ -83,7 +83,6 @@ class StorageController < ApplicationController
       notify_about_unauthorized_items(_('Hosts'), ui_lookup(:table => "storages"))
 
     when "download_pdf", "main", "summary_only"
-      get_tagdata(@storage)
       session[:vm_summary_cool] = (@settings[:views][:vm_summary_cool] == "summary")
       @summary_view = session[:vm_summary_cool]
       drop_breadcrumb({:name => ui_lookup(:tables => "storages"), :url => "/storage/show_list?page=#{@current_page}&refresh=y"}, true)
@@ -561,7 +560,6 @@ class StorageController < ApplicationController
 
   def update_partials(record_showing, presenter, r)
     if record_showing
-      get_tagdata(@record)
       presenter.hide(:form_buttons_div)
       path_dir = "storage"
       presenter.update(:main_div, r[:partial => "#{path_dir}/main",
