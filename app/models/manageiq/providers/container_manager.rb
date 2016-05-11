@@ -33,6 +33,12 @@ module ManageIQ::Providers
       aggregate_hardware(:computer_systems, :memory_mb, targets)
     end
 
+    def self.supported_types_and_descriptions_hash
+      {"kubernetes"           => "Kubernetes",
+       "openshift_enterprise" => "OpenShift Enterprise",
+       "openshift"            => "OpenShift Origin"}
+    end
+
     # enables overide of ChartsLayoutService#find_chart_path
     def chart_layout_path
       "ManageIQ_Providers_ContainerManager"
