@@ -683,6 +683,8 @@ en:
       ChargebackRate:           Chargeback Rate
       CimStorageExtent:         Storage - Extent
       Classification:           Category
+      CloudNetwork:             Cloud Network
+      CloudSubnet:              Cloud Subnet
       CloudTenant:              Cloud Tenant
       CloudVolume:              Cloud Volume
       Compliance:               Compliance History
@@ -714,6 +716,7 @@ en:
       FileDepotSmb:             Samba
       Filesystem:               File
       Flavor:                   Flavor
+      FloatingIp:               Floating IP
       Host:                     Host / Node
       HostPerformance:          Performance - Host
       IsoDatastore:             ISO Datastore
@@ -751,14 +754,16 @@ en:
       ManageIQ::Providers::Redhat::InfraManager::Vm:                        Virtual Machine (Red Hat)
       ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (Openstack)
       ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (Openstack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
       ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
+      ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Azure)
       ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
       ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (Openshift)
       ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (Openshift Enterprise)
-      ManageIQ::Providers::Amazon::CloudManager::SecurityGroup:             Security Group (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup:           Security Group (Amazon)
       ManageIQ::Providers::Google::CloudManager::SecurityGroup:             Security Group (Google)
       ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:        Security Group (OpenStack)
       ManageIQ::Providers::Azure::CloudManager::SecurityGroup:              Security Group (Azure)
@@ -770,6 +775,10 @@ en:
       ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
       ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Azure)
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
+      ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
+      ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Azure)
+      ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
+      MiddlewareDatasource:     Middleware Datasource
       MiddlewareDeployment:     Middleware Deployment
       MiddlewareServer:         Middleware Server
       MiqAction:                Action
@@ -801,6 +810,8 @@ en:
       MiqWidget:                Widget
       MiqWorker:                EVM Worker
       NetappRemoteService:      NetApp Remote Service
+      NetworkPort:              Network Port
+      NetworkRouter:            Network Router
       OntapConcreteExtent:      Storage - Aggregate
       OntapFileShare:           Storage - File Share
       OntapLogicalDisk:         Storage - Volume
@@ -822,6 +833,7 @@ en:
       PxeServer:                PXE Server
       Repository:               Repository
       ResourcePool:             Resource Pool
+      SecurityGroup:            Security Group
       ScanItem:                 Scan Item
       ScanItemSet:              Analysis Profile
       Service:                  Service
