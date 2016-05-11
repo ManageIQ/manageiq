@@ -110,16 +110,22 @@
         axis : {x:{type: 'category'},
                        rotated: true},
         data : {type: 'bar'},
+        tooltip: {grouped: false},
+        legend: { show: true, position: 'right'}
       },
       c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultBarConfig()
     ),
 
-    Column: _.defaultsDeep({
-      axis : {x:{type: 'category'}},
-      data : {type: 'bar'},
-    },c3mixins.pfColorPattern,
+    Column: _.defaultsDeep(
+      {
+        axis : {x:{type: 'category'}},
+        data : {type: 'bar'},
+        tooltip: {grouped: false},
+        legend: { show: true, position: 'right'}
+      },c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultBarConfig()
+
     ),
 
     StackedBar: _.defaultsDeep(
