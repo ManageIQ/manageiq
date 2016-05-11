@@ -195,7 +195,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :power_state           => "on",
       :location              => "ec2-204-236-137-154.us-west-1.compute.amazonaws.com",
       :tools_status          => nil,
-      :boot_time             => nil,
+      :boot_time             => "2013-08-31T00:12:43.000",
       :standby_action        => nil,
       :connection_state      => nil,
       :cpu_affinity          => nil,
