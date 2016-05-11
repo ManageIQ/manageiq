@@ -720,17 +720,8 @@ class MiqExpression
         ids = klass.find_tagged_with(:any => tag, :ns => ns).pluck(:id)
         clause = klass.send(:sanitize_sql_for_conditions, ["#{klass.table_name}.id IN (?)", ids])
       else
-        db, field = exp[operator]["field"].split(".")
-        model = db.constantize
-        assoc, field = field.split("-")
-        ref = model.reflect_on_association(assoc.to_sym)
-
-        inner_where = "#{field} = '#{exp[operator]["value"]}'"
-        if cond = ref.scope          # Include ref.options[:conditions] in inner select if exists
-          cond = extract_where_values(ref.klass, cond)
-          inner_where = "(#{inner_where}) AND (#{cond})"
-        end
-        clause = "#{model.table_name}.id IN (SELECT DISTINCT #{ref.foreign_key} FROM #{ref.table_name} WHERE #{inner_where})"
+        field = Field.parse(exp[operator]["field"])
+        clause = field.contains(exp[operator]["value"]).to_sql
       end
     when "is"
       field = Field.parse(exp[operator]["field"])
@@ -1873,46 +1864,6 @@ class MiqExpression
   end
 
   private
-
-  class WhereExtractionVisitor < Arel::Visitors::PostgreSQL
-    def visit_Arel_Nodes_SelectStatement(o, collector)
-      collector = o.cores.inject(collector) do |c, x|
-        visit_Arel_Nodes_SelectCore(x, c)
-      end
-    end
-
-    def visit_Arel_Nodes_SelectCore(o, collector)
-      unless o.wheres.empty?
-        len = o.wheres.length - 1
-        o.wheres.each_with_index do |x, i|
-          collector = visit(x, collector)
-          collector << AND unless len == i
-        end
-      end
-
-      collector
-    end
-  end
-
-  def extract_where_values(klass, scope)
-    relation = ActiveRecord::Relation.new klass, klass.arel_table, klass.predicate_builder
-    relation = relation.instance_eval(&scope)
-
-    begin
-      # This is basically ActiveRecord::Relation#to_sql, only using our
-      # custom visitor instance
-
-      connection = klass.connection
-      visitor    = WhereExtractionVisitor.new connection
-
-      arel  = relation.arel
-      binds = relation.bound_attributes
-      binds = connection.prepare_binds_for_database(binds)
-      binds.map! { |value| connection.quote(value) }
-      collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
-      collect.substitute_binds(binds).join
-    end
-  end
 
   def self.determine_model(model, parts)
     model = model_class(model)
