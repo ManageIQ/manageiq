@@ -387,7 +387,7 @@ class VmCloudController < ApplicationController
           add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
             :name     => @record.name,
-            :details  => ex}, :error)
+            :details  => get_error_message_from_fog(ex.to_s)}, :error)
         end
       else
         add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
