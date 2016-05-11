@@ -734,6 +734,10 @@ en:
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Configured System (Foreman)
       ManageIQ::Providers::CloudManager:                                    Cloud Provider
       ManageIQ::Providers::CloudManager::Vm:                                Instance
+      ManageIQ::Providers::Google::CloudManager::Vm:                        Instance (Google)
+      ManageIQ::Providers::Openstack::CloudManager::Vm:                     Instance (OpenStack)
+      ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Azure)
+      ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
       ManageIQ::Providers::CloudManager::Template:                          Image
       ManageIQ::Providers::ContainerManager:                                Containers Provider
       ManageIQ::Providers::InfraManager:                                    Infrastructure Provider
@@ -745,6 +749,9 @@ en:
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
       ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Redhat)
       ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (Vmware)
+      ManageIQ::Providers::Vmware::InfraManager::Vm:                        Virtual Machine (VMware)
+      ManageIQ::Providers::Microsoft::InfraManager::Vm:                     Virtual Machine (Microsoft)
+      ManageIQ::Providers::Redhat::InfraManager::Vm:                        Virtual Machine (Red Hat)
       ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (Openstack)
       ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (Openstack)
       ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
