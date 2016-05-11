@@ -101,7 +101,6 @@ class MiqRegionRemote < ApplicationRecord
     end
 
     begin
-      old_spec_name = connection_specification_name
       pool = establish_connection({
         :adapter  => adapter,
         :host     => host,
@@ -114,7 +113,6 @@ class MiqRegionRemote < ApplicationRecord
       yield conn
     ensure
       remove_connection
-      self.connection_specification_name = old_spec_name
     end
   end
 end
