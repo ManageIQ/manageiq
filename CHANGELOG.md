@@ -2,6 +2,69 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 40 end 2016-05-09
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+9%2C+2016%22+label%3Aenhancement)
+
+- Providers
+  - Ansible Tower: New `wait_for_ip` method added to state-machine
+  - OpenStack
+      - Enable / Disable cloud services
+      - Make Keystone V3 Domain ID Configurable
+  - Containers
+     - Persistent Volume Claims
+     - Seed for policies, policy sets, policy contents and conditions 
+     - Auto-tagging from kubernetes labels (backend only)
+     - MiqAction to annotate container images as non-secure at OpenShift
+  - Google Compute Engine
+     - Events
+     - Better OS identification for VMs
+  - Hawkular
+     - Capacity and Utilization collected live on demand without need for Cap and U workers
+     - Links to provider and entity in event popups on Timelines
+     - Ability to configure default views
+     - New Datasource entity (UI and Backend only)
+- User Interface
+  - OpenStack - Cloud Volumes Add/Delete/Update/Attach/Detach
+  - Ansible Inventories/Configured Systems
+  - SSUI Navigation bar restyled to match Operations UI
+  - SSUI HTML5 Console support for Service VMs (using new console-proxy implementation)
+  - SSUI Shopping Cart
+- REST API
+  - Post Darga versioning updated to v2.3.0-pre
+  - Added GET role identifiers
+  - Added support for Shopping Carts
+- Automate: New service model Account
+- Provisioning: VMware Distributed Switches now referenced from database during provisioning workflow
+- Services
+  - Added support for generating Service Dialogs from Ansible Tower JobTemplate
+  - Support setting Ansible Tower JobTemplate variables through dialog options and automate methods
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+9%2C+2016%22+label%3Aenhancement)
+
+- Platform
+  - Replication Database Schema
+     - Column order is important for pglogical
+     - Regional and Global DBs MUST have identical schemas
+     - Migrations must have timestamp later than the last migration of previous version for correct column order
+     - Specs added to validate schema
+     - See [New Schema Specs for New Replication](http://talk.manageiq.org/t/new-schema-specs-for-new-replication/1404)
+  - Tenancy: Splitting MiqGroup, Part 2
+     - Filters moved to to Entitlement model
+     - Enabler for sharing entitlements   
+   - MiqExpression Refactoring
+- Automate: Default Retirement state-machine behavior changed to retain record (historical data)
+- Performance: MiqRequestWorkflow improvements to load and validation times
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+9%2C+2016%22+label%3Abug)
+
+Notable fixes include:
+
+- Middleware: removed unimplemented and irrelevant features from UI
+- Platform: oVirt-metrics gem fixed for Rails 5
+- Performance capture failure on cloud platforms caused by orphan VMs
+- Performance: Eliminated thread leak in Automate
+
 ## Unreleased - as of Sprint 39 end 2016-04-19
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+39+Ending+Apr+19%2C+2016%22+label%3Aenhancement)
