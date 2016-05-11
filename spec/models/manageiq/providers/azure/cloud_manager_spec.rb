@@ -86,7 +86,6 @@ describe ManageIQ::Providers::Azure::CloudManager do
     end
 
     after do
-      # Necessary since we're dealing with multiple cassettes
       ::Azure::Armrest::ArmrestService.clear_caches
     end
 
