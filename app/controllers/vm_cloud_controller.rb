@@ -245,9 +245,9 @@ class VmCloudController < ApplicationController
       })
     when "attach"
       volume = find_by_id_filtered(CloudVolume, params[:volume_id])
-      if @record.is_available?(:attach_volume)
+      if volume.is_available?(:attach_volume)
         begin
-          @volume.raw_attach_volume(@vm.ems_ref, params[:device_path])
+          volume.raw_attach_volume(@vm.ems_ref, params[:device_path])
           add_flash(_("Attaching %{volume} \"%{volume_name}\" to %{vm_name}") % {
             :volume      => ui_lookup(:table => 'cloud_volume'),
             :volume_name => volume.name,
@@ -257,10 +257,10 @@ class VmCloudController < ApplicationController
             :volume      => ui_lookup(:table => 'cloud_volume'),
             :volume_name => volume.name,
             :vm_name     => @vm.name,
-            :details     => ex}, :error)
+            :details     => get_error_message_from_fog(ex)}, :error)
         end
       else
-        add_flash(_(@record.is_available_now_error_message(:attach_volume)), :error)
+        add_flash(_(volume.is_available_now_error_message(:attach_volume)), :error)
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
@@ -285,7 +285,7 @@ class VmCloudController < ApplicationController
 
     when "detach"
       volume = find_by_id_filtered(CloudVolume, params[:volume_id])
-      if @record.is_available?(:detach_volume)
+      if volume.is_available?(:detach_volume)
         begin
           volume.raw_detach_volume(@vm.ems_ref)
           add_flash(_("Detaching %{volume} \"%{volume_name}\" from %{vm_name}") % {
@@ -297,10 +297,10 @@ class VmCloudController < ApplicationController
             :volume      => ui_lookup(:table => 'cloud_volume'),
             :volume_name => volume.name,
             :vm_name     => @vm.name,
-            :details     => ex}, :error)
+            :details     => get_error_message_from_fog(ex)}, :error)
         end
       else
-        add_flash(_(@record.is_available_now_error_message(:detach_volume)), :error)
+        add_flash(_(volume.is_available_now_error_message(:detach_volume)), :error)
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
