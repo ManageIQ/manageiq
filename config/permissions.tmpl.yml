@@ -14,8 +14,6 @@
 - :svc
 - :vi
 - ems-type:ansible_tower_configuration
-- ems-type:atomic
-- ems-type:atomic_enterprise
 - ems-type:azure
 - ems-type:azure_network
 - ems-type:ec2

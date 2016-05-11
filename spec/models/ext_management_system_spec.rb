@@ -19,8 +19,6 @@ describe ExtManagementSystem do
   let(:all_types_and_descriptions) do
     {
       "ansible_tower_configuration" => "Ansible Tower Configuration",
-      "atomic"                      => "Atomic",
-      "atomic_enterprise"           => "Atomic Enterprise",
       "azure"                       => "Azure",
       "azure_network"               => "Azure Network",
       "ec2"                         => "Amazon EC2",
@@ -42,7 +40,8 @@ describe ExtManagementSystem do
   end
 
   it ".types" do
-    expect(described_class.types).to match_array(all_types_and_descriptions.keys)
+    # ['atomic', 'atomic_enterprise'] is a hack until atomic providers will be migrated to openshift
+    expect(described_class.types).to match_array(all_types_and_descriptions.keys + ['atomic', 'atomic_enterprise'])
   end
 
   it ".supported_types" do
