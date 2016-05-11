@@ -1,7 +1,7 @@
 require 'azure-armrest'
 
 describe ManageIQ::Providers::Azure::CloudManager::Refresher do
-  before(:each) do
+  before do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => 'eastus')
 
@@ -30,6 +30,10 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
         def join; end
       end.new
     end
+  end
+
+  after do
+    ::Azure::Armrest::ArmrestService.clear_caches
   end
 
   it ".ems_type" do
