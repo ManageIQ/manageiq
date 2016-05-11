@@ -4,8 +4,9 @@
     = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"),
                                                                :items => textual_group_properties}
     = render :partial => "shared/summary/textual", :locals => {:title => _("Status"), :items => textual_group_status}
-    = render :partial => "shared/summary/textual_multilabel", :locals => {:title => _("Component Statuses"),
-                                                               :items => textual_group_component_statuses}
+    -# commented out to hide Component Statuses table since the information is currently broken (see Issue #8572)
+    -# = render :partial => "shared/summary/textual_multilabel", :locals => {:title => _("Component Statuses"),
+    -#                                                           :items => textual_group_component_statuses}
   .col-sm-12.col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Relationships"),
                                                                :items => textual_group_relationships}
