@@ -69,7 +69,133 @@ RSpec.describe "chargebacks API" do
     expect_request_success
   end
 
+  it "can list of all currencies" do
+    currency = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+
+    api_basic_authorize
+    run_get '/api/currencies'
+
+    expect_result_resources_to_include_hrefs(
+      "resources", ["/api/currencies/#{currency.id}"]
+    )
+    expect_result_to_match_hash(response_hash, "count" => 1)
+    expect_request_success
+  end
+
+  it "can show an individual currency" do
+    currency = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+
+    api_basic_authorize
+    run_get "/api/currencies/#{currency.id}"
+
+    expect_result_to_match_hash(
+      response_hash,
+      "name" => currency.name,
+      "id"   => currency.id,
+      "href" => "/api/currencies/#{currency.id}"
+    )
+    expect_request_success
+  end
+
+  it "can list of all measures" do
+    measure = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+
+    api_basic_authorize
+    run_get '/api/measures'
+
+    expect_result_resources_to_include_hrefs(
+      "resources", ["/api/measures/#{measure.id}"]
+    )
+    expect_result_to_match_hash(response_hash, "count" => 1)
+    expect_request_success
+  end
+
+  it "can show an individual measure" do
+    measure = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+
+    api_basic_authorize
+    run_get "/api/measures/#{measure.id}"
+
+    expect_result_to_match_hash(
+      response_hash,
+      "name" => measure.name,
+      "id"   => measure.id,
+      "href" => "/api/measures/#{measure.id}",
+    )
+    expect_request_success
+  end
+
   context "with an appropriate role" do
+    it "can create a new chargeback rate" do
+      api_basic_authorize action_identifier(:chargebacks, :create, :collection_actions)
+
+      expect do
+        run_post chargebacks_url,
+                 :description => "chargeback_0",
+                 :rate_type   => "Storage"
+      end.to change(ChargebackRate, :count).by(1)
+      expect_result_to_match_hash(response_hash["results"].first, "description" => "chargeback_0",
+                                                                  "rate_type"   => "Storage",
+                                                                  "default"     => false)
+      expect_request_success
+    end
+
+    it "returns bad request for incomplete chargeback rate" do
+      api_basic_authorize action_identifier(:chargebacks, :create, :collection_actions)
+
+      expect do
+        run_post chargebacks_url,
+                 :rate_type   => "Storage"
+      end.not_to change(ChargebackRate, :count)
+      expect_bad_request(/description can't be blank/i)
+    end
+
+    it "can edit a chargeback rate through POST" do
+      chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
+
+      api_basic_authorize action_identifier(:chargebacks, :edit)
+      run_post chargebacks_url(chargeback_rate.id), gen_request(:edit, :description => "chargeback_1")
+
+      expect(response_hash["description"]).to eq("chargeback_1")
+      expect_request_success
+      expect(chargeback_rate.reload.description).to eq("chargeback_1")
+    end
+
+    it "can edit a chargeback rate through PATCH" do
+      chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
+
+      api_basic_authorize action_identifier(:chargebacks, :edit)
+      run_patch chargebacks_url(chargeback_rate.id), [{:action => "edit",
+                                                       :path   => "description",
+                                                       :value  => "chargeback_1"}]
+
+      expect(response_hash["description"]).to eq("chargeback_1")
+      expect_request_success
+      expect(chargeback_rate.reload.description).to eq("chargeback_1")
+    end
+
+    it "can delete a chargeback rate" do
+      chargeback_rate = FactoryGirl.create(:chargeback_rate)
+
+      api_basic_authorize action_identifier(:chargebacks, :delete)
+
+      expect do
+        run_delete chargebacks_url(chargeback_rate.id)
+      end.to change(ChargebackRate, :count).by(-1)
+      expect_request_success_with_no_content
+    end
+
+    it "can delete a chargeback rate through POST" do
+      chargeback_rate = FactoryGirl.create(:chargeback_rate)
+
+      api_basic_authorize action_identifier(:chargebacks, :delete)
+
+      expect do
+        run_post chargebacks_url(chargeback_rate.id), :action => "delete"
+      end.to change(ChargebackRate, :count).by(-1)
+      expect_request_success
+    end
+
     it "can create a new chargeback rate detail" do
       api_basic_authorize action_identifier(:rates, :create, :collection_actions)
       chargeback_rate = FactoryGirl.create(:chargeback_rate)
@@ -164,6 +290,36 @@ RSpec.describe "chargebacks API" do
   end
 
   context "without an appropriate role" do
+    it "cannot create a chargeback rate" do
+      api_basic_authorize
+
+      expect { run_post chargebacks_url, :description => "chargeback_0" }.not_to change(ChargebackRate,
+                                                                                        :count)
+      expect_request_forbidden
+    end
+
+    it "cannot edit a chargeback rate" do
+      chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
+
+      api_basic_authorize
+
+      expect do
+        run_post chargebacks_url(chargeback_rate.id), gen_request(:edit, :description => "chargeback_1")
+      end.not_to change { chargeback_rate.reload.description }
+      expect_request_forbidden
+    end
+
+    it "cannot delete a chargeback rate" do
+      chargeback_rate = FactoryGirl.create(:chargeback_rate)
+
+      api_basic_authorize
+
+      expect do
+        run_delete chargebacks_url(chargeback_rate.id)
+      end.not_to change(ChargebackRate, :count)
+      expect_request_forbidden
+    end
+
     it "cannot create a chargeback rate detail" do
       api_basic_authorize
 

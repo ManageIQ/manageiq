@@ -42,6 +42,16 @@ describe ApiController do
       test_collection_query(:chargebacks, chargebacks_url, ChargebackRate)
     end
 
+    example "query Currencies" do
+      FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+      test_collection_query(:currencies, "/api/currencies", ChargebackRateDetailCurrency)
+    end
+
+    example "query Measures" do
+      FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+      test_collection_query(:measures, "/api/measures", ChargebackRateDetailMeasure)
+    end
+
     it "query Clusters" do
       FactoryGirl.create(:ems_cluster)
       test_collection_query(:clusters, clusters_url, EmsCluster)
