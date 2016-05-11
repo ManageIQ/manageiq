@@ -688,6 +688,7 @@ en:
       Compliance:               Compliance History
       Compliances:              Compliance History
       Condition:                Condition
+      ContainerBuild:           Container Build
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
       Container:                Container
@@ -806,6 +807,7 @@ en:
       OrchestrationTemplateCfn: CloudFormation Template
       OrchestrationTemplateHot: Heat Template
       OrchestrationTemplateAzure: Azure Template
+      PersistentVolume:         Persistent Volume
       ProductUpdate:            Product Update
       PxeCustomizationTemplate: Customization Template
       PxeImage:                 PXE Image
@@ -991,6 +993,7 @@ en:
       vm_infra:                    Virtual Machine
       vm_or_template:              Virtual Machine
       vms:                         VMs
+      volume:                      Volume
       zone:                        Zone
       zones:                       Zones
 
