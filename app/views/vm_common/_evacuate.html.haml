@@ -32,7 +32,7 @@
         %input.form-control{:type         => "password",
                             :name         => "admin_password",
                             'ng-model'    => "vmCloudModel.admin_password"}
-  #evacuate-select-destination-host{'ng-hide' => '!vmCloudModel.auto_select_host'}
+  #evacuate-select-destination-host{'ng-hide' => 'vmCloudModel.auto_select_host'}
     %h3
       = _('Select Destination Host')
     .form-horizontal
