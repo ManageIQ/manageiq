@@ -6,20 +6,22 @@ module ReportableMixin
       filter = options.delete(:filter)
 
       # Do normal find
-      results = []
-      find(count, :conditions => conditions, :include => get_include_for_find(options[:include])).each do|obj|
+      records = find(count, :conditions => conditions, :include => get_include_for_find(options[:include]))
+      records = records.select do |obj|
         if filter
           expression = self.filter.to_ruby
           expr = Condition.subst(expression, obj)
-          next unless eval(expr)
+          eval(expr)
+        else
+          true
         end
-
-        entry = {:obj => obj}
-        build_search_includes(obj, entry, options[:include]) if options[:include]
-        results.push(entry)
       end
 
-      results
+      records.collect do |obj|
+        entry = {:obj => obj}
+        build_search_includes(obj, entry, options[:include]) if options[:include]
+        entry
+      end
     end
 
     # private
