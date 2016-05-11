@@ -342,12 +342,16 @@ class VmCloudController < ApplicationController
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
     hosts = []
     unless @record.ext_management_system.nil?
-      connection = @record.ext_management_system.connect
-      current_hostname = connection.handled_list(:servers).find do |s|
-        s.name == @record.name
-      end.os_ext_srv_attr_hypervisor_hostname
-      hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
-        {:name => h.host_name, :id => h.host_name}
+      begin
+        connection = @record.ext_management_system.connect
+        current_hostname = connection.handled_list(:servers).find do |s|
+          s.name == @record.name
+        end.os_ext_srv_attr_hypervisor_hostname
+        hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
+          {:name => h.host_name, :id => h.host_name}
+        end
+      rescue
+        hosts = []
       end
     end
     render :json => {
