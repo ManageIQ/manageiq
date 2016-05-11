@@ -27,7 +27,14 @@ def drop_triggers(conn, table, triggers)
     puts "Dropping trigger #{trigger} from table #{table}"
     conn.async_exec("DROP TRIGGER IF EXISTS #{trigger} ON #{table}")
     conn.async_exec("DROP FUNCTION IF EXISTS #{trigger}()")
+    drop_pending_changes(conn, trigger)
   end
+end
+
+def drop_pending_changes(conn, trigger)
+  table = trigger.sub(/rr\d+_/, "")
+  puts "Dropping pending changes for table #{table}"
+  conn.async_exec("DELETE FROM #{CHANGES_TABLE} WHERE CHANGE_TABLE='#{table}'")
 end
 
 begin
@@ -37,6 +44,8 @@ rescue PG::Error => e
   puts "Please run this script on the appliance where the database is running"
   exit
 end
+
+CHANGES_TABLE = conn.async_exec("SELECT relname FROM pg_class WHERE relname LIKE 'rr%_pending_changes'").first["relname"]
 
 conn.async_exec(TRIGGER_QUERY).each do |tt|
   triggers = sql_array_to_ruby(tt["triggers"])
