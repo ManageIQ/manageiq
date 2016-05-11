@@ -117,14 +117,19 @@ class VmCloudController < ApplicationController
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
     hosts = []
     unless @record.ext_management_system.nil?
-      connection = @record.ext_management_system.connect
-      current_hostname = connection.handled_list(:servers).find do |s|
-        s.name == @record.name
-      end.os_ext_srv_attr_hypervisor_hostname
-      # OS requires its own name for the host be used in the migrate API, so get the
-      # provider hostname from fog.
-      hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
-        {:name => h.host_name, :id => h.host_name}
+      # wrap in a rescue block in the event the connection to the provider fails
+      begin
+        connection = @record.ext_management_system.connect
+        current_hostname = connection.handled_list(:servers).find do |s|
+          s.name == @record.name
+        end.os_ext_srv_attr_hypervisor_hostname
+        # OS requires its own name for the host be used in the migrate API, so get the
+        # provider hostname from fog.
+        hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
+          {:name => h.host_name, :id => h.host_name}
+        end
+      rescue
+        hosts = []
       end
     end
     render :json => {
