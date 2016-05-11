@@ -3,14 +3,7 @@ module ReportableMixin
   module ClassMethods
     def search(count = :all, options = {})
       records = find(count, :conditions => options[:conditions], :include => get_include_for_find(options[:include]))
-
-      if options.delete(:filter)
-        records = records.select do |obj|
-          expression = self.filter.to_ruby
-          expr = Condition.subst(expression, obj)
-          eval(expr)
-        end
-      end
+      records = records.select { |obj| eval(Condition.subst(filter.to_ruby, obj)) } if options.delete(:filter)
 
       records.collect do |obj|
         entry = {:obj => obj}
