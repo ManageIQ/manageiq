@@ -32,6 +32,10 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     end
   end
 
+  after do
+    ::Azure::Armrest::ArmrestService.clear_caches
+  end
+
   it ".ems_type" do
     expect(described_class.ems_type).to eq(:azure)
   end
