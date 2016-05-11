@@ -16,24 +16,30 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
 
   def gather_storage_account_properties
     sas = nil
+
     source.with_provider_connection do |azure|
       sas = Azure::Armrest::StorageAccountService.new(azure)
     end
+
     return if sas.nil?
 
     begin
-      key             = sas.list_account_keys(storage_account_name, storage_account_resource_group).fetch('key1')
-      storage_account = sas.get(storage_account_name, storage_account_resource_group)
-      blob            = storage_account.blobs("system", key).first
-      blob_properties = storage_account.blob_properties(blob.container, blob.name, key)
-      endpoint        = storage_account.properties.primary_endpoints.blob
-      source_uri      = File.join(endpoint, blob.container, blob.name)
-      target_uri      = File.join(endpoint, "manageiq", dest_name + "_" + SecureRandom.uuid + ".vhd")
+      image = sas.list_private_images(storage_account_resource_group).find do |img|
+        img.uri == source.ems_ref
+      end
+
+      return unless image
+
+      platform   = image.operating_system
+      endpoint   = image.storage_account.properties.primary_endpoints.blob
+      source_uri = image.uri
+
+      target_uri = File.join(endpoint, "manageiq", dest_name + "_" + SecureRandom.uuid + ".vhd")
     rescue Azure::Armrest::ResourceNotFoundException => err
       _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
     end
 
-    return target_uri, source_uri, blob_properties.x_ms_meta_microsoftazurecompute_ostype
+    return target_uri, source_uri, platform
   end
 
   def custom_data
