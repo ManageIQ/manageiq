@@ -46,9 +46,9 @@ describe ProviderForemanController do
 
     @inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => "testinvgroup", :ems_id => @config_ans.id)
     @inventory_group2 = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => "testinvgroup2", :ems_id => @config_ans2.id)
-    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "ans_test_configured_system",
-                                                                                                              :inventory_root_group_id  => @inventory_group.id,
-                                                                                                              :manager_id               => @config_ans.id)
+    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "ans_test_configured_system",
+                                                                                                              :inventory_root_group_id => @inventory_group.id,
+                                                                                                              :manager_id              => @config_ans.id)
 
     @ans_configured_system2a = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2a_ans_configured_system",
                                                                                                                 :inventory_root_group_id => @inventory_group.id,
@@ -548,12 +548,12 @@ describe ProviderForemanController do
 
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "xx-fr_fr-" + ApplicationRecord.compress_id(ems.id)
+    "fr-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def ems_key_for_ans_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "xx-at_at-" + ApplicationRecord.compress_id(ems.id)
+    "at-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def config_profile_key(config_profile)
