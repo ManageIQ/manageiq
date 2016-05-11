@@ -28,6 +28,7 @@ module ReportFormatter
         mri.chart[:data][:names][series_id] = label
       else
         mri.chart[:data][:columns] = data.collect { |a| [a[:tooltip], a[:value]] }
+        data.each{ |a| mri.chart[:data][:names][a[:tooltip]] = slice_legend(a[:tooltip]) }
       end
 
       if chart_is_stacked?
@@ -47,12 +48,11 @@ module ReportFormatter
       type = c3_convert_type("#{mri.graph[:type]}")
       mri.chart = {
         :miqChart => type,
-        :data     => {:columns => []},
+        :data     => {:columns => [], :names => {}},
         :axis     => {}
       }
 
       if chart_is_2d?
-        mri.chart[:data][:names] = {}
         mri.chart[:axis] = {
           :x => {
             :categories => []
