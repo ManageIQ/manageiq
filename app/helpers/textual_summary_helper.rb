@@ -39,9 +39,8 @@ module TextualSummaryHelper
     Array.wrap(summaries).map { |summary| expand_textual_summary(summary, context) }.compact
   end
 
-  def tags_from_record
-    tags = []
-    @record.tags.each do |tag|
+  def tags_from_record(record)
+    record.tags.each_with_object(Array.new(0)) do |tag,tags|
       values = tag.name.split('/')
       p = tags.find { |x| x[:label] == values[2].humanize }
       value = Classification.find_by(:tag_id => tag.id).description
@@ -52,7 +51,6 @@ module TextualSummaryHelper
         tags.push(:image => "smarttag", :label => name, :value => [value])
       end
     end
-    tags
   end
 
   def textual_tags
@@ -62,7 +60,7 @@ module TextualSummaryHelper
       tags[:image] = "smarttag"
       tags[:value] = _("No %{label} have been assigned") % {:label => label}
     else
-      tags[:value] = tags_from_record
+      tags[:value] = tags_from_record(@record)
       tags[:value].each { |value| value[:value].sort! }
       tags[:value].sort_by!{ |x| x[:label] }
     end

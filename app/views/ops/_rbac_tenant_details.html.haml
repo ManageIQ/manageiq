@@ -76,4 +76,6 @@
       %p
         = _("Note: Total quota can be restricted by quotas defined at upper levels")
       %hr/
-  = render :partial => "rbac_tag_box"
+  .form-group
+    .col-md-10
+      = render :partial => "shared/summary/textual_tags", :locals => {:title => _("Smart Management"), :items => textual_group_smart_management}
