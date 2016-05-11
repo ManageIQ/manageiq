@@ -1409,7 +1409,6 @@ module ApplicationController::Filter
       end
     else
       add_flash(_("Select an expression element type"), :error)
-      add_flash(_("Expression element type must be selected"), :error)
     end
   end
 
