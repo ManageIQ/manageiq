@@ -1,0 +1,33 @@
+<div ng-controller="containers.deployProviderCDNChannelController">
+  <div miq-wizard-substep step-title="CDN Channel" step-id="details-channel" step-priority="2" next-enabled="deploymentDetailsCDNComplete"
+       on-show="onCdnShow" review-template="{{reviewTemplate}}">
+    <div class="miq-form-heading">Specify CDN configuration</div>
+    <div>
+      <div class="checkbox-inline">
+        <label class="miq-checkbox-input-label">
+          <input type="checkbox" ng-model="data.cdnEnabled" ng-change="validateForm()">Enable CDN Channel
+        </label>
+        <form class="form-horizontal sub-group">
+          <div pf-form-group pf-label="Username" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+            <input id="rhn-user-name" name="name" ng-model="data.rhnUsername" type="text" ng-change="validateForm()" required ng-disabled="!data.cdnEnabled"/>
+          </div>
+          <div pf-form-group pf-label="Password" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+            <input id="rhn-password" name="name" ng-model="data.rhnPassword" type="password" ng-change="validateForm()" required ng-disabled="!data.cdnEnabled"/>
+          </div>
+          <div pf-form-group pf-label="SKU" required pf-label-class="miq-input-label-class" pf-input-class="miq-input-class">
+            <input id="rhn-sku" name="name" ng-model="data.rhnSKU" type="text" ng-change="validateForm()" required ng-disabled="!data.cdnEnabled"/>
+          </div>
+          <div class="miq-input-checkbox-form">
+            <div class="checkbox-inline">
+              <label class="miq-checkbox-input-label">
+                <input type="checkbox" ng-model="data.specifySatelliteUrl" ng-change="validateForm()" ng-disabled="!data.cdnEnabled">RHN Satellite URL
+              </label>
+              <input id="satellite-url" name="name" ng-model="data.rhnSatelliteUrl" type="text" ng-change="validateForm()"
+                     required ng-disabled="!data.cdnEnabled || data.specifySatelliteUrl === false"/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

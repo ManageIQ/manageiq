@@ -1,0 +1,20 @@
+<div ng-controller="containers.deployProviderReviewController">
+  <form class="form-horizontal">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Configure:</span>
+    </div>
+  </form>
+  <form role="form">
+    <ul class="miq-wizard-review-list">
+      <li ng-if="data.configureRouter">Router</li>
+      <li ng-if="data.configureRegistry">Registry</li>
+      <ul>
+        <li ng-if="data.useDefaultRegistry">Use default registry</li>
+        <li ng-if="data.useS3Registry">Use S3</li>
+        <li ng-if="data.useSwift">Use Swift</li>
+      </ul>
+      <li ng-if="data.configureMetrics">Metrics</li>
+      <li ng-if="!data.configureRouter && !configureRegistry && !data.configureMetrics">There are not items selected to configure</li>
+    </ul>
+  </form>
+</div>
