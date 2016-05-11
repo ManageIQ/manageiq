@@ -260,7 +260,7 @@ class Tenant < ApplicationRecord
   #
   # @return [Tenant] the root tenant
   def self.root_tenant
-    roots.first
+    in_my_region.roots.first
   end
 
   # NOTE: returns the root tenant
