@@ -40,20 +40,19 @@ module MiqReport::Search
 
   def get_order_info
     return [] if sortby.nil? # apply limits (note: without order it is non-deterministic)
-    # Convert sort cols from sub-tables from the form of assoc_name.column to the form of table_name.column
-    order = Array.wrap(sortby).collect do |c|
+    # Convert sort cols from sub-tables from the form of assoc_name.column to arel
+    Array.wrap(sortby).collect do |c|
       sql_col, sql_type = association_column(c)
       return nil if sql_col.nil?
-      [:string, :text].include?(sql_type) ? Arel::Nodes::NamedFunction.new('LOWER', [sql_col]) : sql_col
+      sql_col = Arel::Nodes::NamedFunction.new('LOWER', [sql_col]) if [:string, :text].include?(sql_type)
+      if order.nil?
+        sql_col
+      elsif ascending?
+        Arel::Nodes::Ascending.new(sql_col)
+      else
+        Arel::Nodes::Descending.new(sql_col)
+      end
     end
-
-    if (self.order && !ascending?)
-      order = order.map { |col| Arel::Nodes::Descending.new col }
-    elsif (self.order && ascending?)
-      order = order.map { |col| Arel::Nodes::Ascending.new col }
-    end
-
-    order
   end
 
   def get_parent_targets(parent, assoc)

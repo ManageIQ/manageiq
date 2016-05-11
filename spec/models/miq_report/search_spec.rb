@@ -74,6 +74,20 @@ describe MiqReport do
           expect(stringify_arel(order)).to eq(%w{LOWER("vms"."name") LOWER("system_services"."name") LOWER("users"."name")})
         end
       end
+
+      it "adds ascending" do
+        @miq_report.sortby = ["name", "evm_owner.name"]
+        @miq_report.order = "Ascending"
+        order = @miq_report.get_order_info
+        expect(stringify_arel(order)).to eq(['LOWER("vms"."name") ASC', 'LOWER("users"."name") ASC'])
+      end
+
+      it "adds descending" do
+        @miq_report.sortby = ["name", "evm_owner.name"]
+        @miq_report.order = "Descending"
+        order = @miq_report.get_order_info
+        expect(stringify_arel(order)).to eq(['LOWER("vms"."name") DESC', 'LOWER("users"."name") DESC'])
+      end
     end
 
     it "is not sortable for a complex virtual column" do
