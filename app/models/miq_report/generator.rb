@@ -268,16 +268,18 @@ module MiqReport::Generator
       # TODO: need to enhance only_cols to better support virtual columns
       # only_cols += conditions.columns_for_sql if conditions # Add cols references in expression to ensure they are present for evaluation
       # NOTE: using search to get user property "managed", otherwise this is overkill
+      targets = db_class
+      targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
+      # TODO: add once only_cols is fixed
+      # targets = targets.select(only_cols)
+
       results, attrs = Rbac.search(
         options.merge(
-          # TODO: add once only_cols is fixed
-          # :targets          => klass.select(only_cols),
-          :class            => db,
+          :targets          => targets,
           :filter           => conditions,
           :include_for_find => includes,
           :where_clause     => where_clause,
           :results_format   => :objects,
-          :ext_options      => ext_options
         )
       )
       results = Metric::Helper.remove_duplicate_timestamps(results)
