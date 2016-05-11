@@ -15,7 +15,7 @@ module ReportableMixin
         end
 
         entry = {:obj => obj}
-        obj.search_includes(entry, options[:include]) if options[:include]
+        build_search_includes(obj, entry, options[:include]) if options[:include]
         results.push(entry)
       end
 
