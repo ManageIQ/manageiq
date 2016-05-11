@@ -2464,4 +2464,9 @@ class ApplicationController < ActionController::Base
     @accords = allowed_features.map(&:accord_hash)
     set_active_elements(allowed_features.first)
   end
+
+  def get_error_message_from_fog(ex)
+    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
+    matched_message ? matched_message[1] : ex
+  end
 end
