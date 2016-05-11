@@ -350,6 +350,7 @@ class TreeBuilder
                         when ManageIQ::Providers::AnsibleTower::ConfigurationManager then
                           x_get_tree_cmat_kids(parent, count_only)
                         when ConfigurationProfile then x_get_tree_cpf_kids(parent, count_only)
+                        when ManageIQ::Providers::ConfigurationManager::InventoryRootGroup then x_get_tree_igf_kids(parent, count_only)
                         when CustomButtonSet     then x_get_tree_aset_kids(parent, count_only)
                         when Dialog              then x_get_tree_dialog_kids(parent, count_only, options[:type])
                         when DialogGroup         then x_get_tree_dialog_group_kids(parent, count_only, options[:type])

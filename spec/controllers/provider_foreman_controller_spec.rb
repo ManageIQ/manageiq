@@ -44,11 +44,11 @@ describe ProviderForemanController do
     @provider_ans2 = ManageIQ::Providers::AnsibleTower::Provider.create(:name => "ansibletest2", :url => "10.8.96.109", :zone => @zone)
     @config_ans2 = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find_by_provider_id(@provider_ans2.id)
 
-    @inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryGroup.create(:name => "testinvgroup", :ems_id => @config_ans.id)
-    @inventory_group2 = ManageIQ::Providers::ConfigurationManager::InventoryGroup.create(:name => "testinvgroup2", :ems_id => @config_ans2.id)
-    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "ans_test_configured_system",
-                                                                                                              :configuration_profile_id => @inventory_group.id,
-                                                                                                              :manager_id               => @config_mgr.id)
+    @inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => "testinvgroup", :ems_id => @config_ans.id)
+    @inventory_group2 = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => "testinvgroup2", :ems_id => @config_ans2.id)
+    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "ans_test_configured_system",
+                                                                                                              :inventory_root_group_id => @inventory_group.id,
+                                                                                                              :manager_id              => @config_ans.id)
 
     @ans_configured_system2a = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2a_ans_configured_system",
                                                                                                                 :inventory_root_group_id => @inventory_group.id,
@@ -258,6 +258,14 @@ describe ProviderForemanController do
     expect(objects).to match_array(expected_objects)
   end
 
+  it "constructs the ansible tower inventory tree node" do
+    controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
+    tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
+    objects = tree_builder.send(:x_get_tree_objects, @inventory_group, nil, false, nil)
+    expected_objects = [@ans_configured_system, @ans_configured_system2a]
+    expect(objects).to match_array(expected_objects)
+  end
+
   context "renders tree_select" do
     before do
       get :explorer
@@ -277,6 +285,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:current_page).and_return(1)
       controller.send(:build_accordions_and_trees)
     end
+
     it "renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it" do
       controller.instance_variable_set(:@_params, :id => "root")
       controller.instance_variable_set(:@search_text, "manager")
@@ -539,12 +548,12 @@ describe ProviderForemanController do
 
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "xx-fr_fr-" + ApplicationRecord.compress_id(ems.id)
+    "fr-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def ems_key_for_ans_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "xx-at_at-" + ApplicationRecord.compress_id(ems.id)
+    "at-" + ApplicationRecord.compress_id(ems.id)
   end
 
   def config_profile_key(config_profile)

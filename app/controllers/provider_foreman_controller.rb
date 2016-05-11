@@ -368,18 +368,6 @@ class ProviderForemanController < ApplicationController
       when "at" then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
       when "fr" then find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
       when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
-      when "at_at" then
-        if type == "f"
-          find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
-        else
-          find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
-        end
-      when "fr_fr" then
-        if type == "cp"
-          find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
-        else
-          find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-        end
       end
     end
   end
