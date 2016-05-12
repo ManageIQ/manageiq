@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: darga-1-beta1
+      default_value: darga-1-rc1.1
       substitute: true
       message: create
       visibility: 
