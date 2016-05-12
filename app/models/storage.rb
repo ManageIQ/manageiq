@@ -27,6 +27,7 @@ class Storage < ApplicationRecord
   virtual_has_one   :file_share,           :class_name => 'SniaFileShare'
   virtual_has_many  :storage_volumes,      :class_name => 'CimStorageVolume'
   virtual_has_one   :logical_disk,         :class_name => 'CimLogicalDisk'
+  virtual_has_many  :storage_clusters
 
   validates_presence_of     :name
   # We can't uncomment this until the SmartProxy starts sending location when registering VMs
