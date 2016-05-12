@@ -50,8 +50,6 @@ module ReportFormatter
         # Following line commented for now - for not showing repeating column values
         #       prev_data = String.new                # Initialize the prev_data variable
 
-        tot_cpu = tot_ram = tot_space = tot_disk = tot_net = 0.0 if mri.db == "VimUsage"  # Create usage total cols
-
         cfg = VMDB::Config.new("vmdb").config[:reporting]       # Read in the reporting column precisions
         default_precision = cfg[:precision][:default]           # Set the default
         precision_by_column = cfg[:precision_by_column]         # get the column overrides
@@ -95,39 +93,6 @@ module ReportFormatter
               output << '<td>'
               output << ui_lookup(:model => d.data[c])
               output << "</td>"
-            elsif mri.db == "VimUsage"                  # Format usage columns
-              case c
-              when "cpu_usagemhz_rate_average"
-                output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :general_number_precision_1))
-                tot_cpu += d.data[c].to_f
-              when "derived_memory_used"
-                output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :megabytes_human))
-                tot_ram += d.data[c].to_f
-              when "derived_vm_used_disk_storage"
-                output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c], :format => :bytes_human))
-                tot_space += d.data[c].to_f
-              when "derived_storage_used_managed"
-                output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c], :format => :bytes_human))
-                tot_space += d.data[c].to_f
-              when "disk_usage_rate_average"
-                output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
-                  " (#{CGI.escapeHTML(mri.format(c, d.data[c].to_f * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})"
-                tot_disk += d.data[c].to_f
-              when "net_usage_rate_average"
-                output << '<td style="text-align:right">'
-                output << CGI.escapeHTML(mri.format(c, d.data[c].to_f, :format => :general_number_precision_1)) <<
-                  " (#{CGI.escapeHTML(mri.format(c, d.data[c].to_f * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})"
-                tot_net += d.data[c].to_f
-              else
-                output << '<td>'
-                output << d.data[c].to_s
-              end
-              output << "</td>"
             else
               if d.data[c].kind_of?(Time)
                 output << '<td style="text-align:center">'
@@ -144,44 +109,6 @@ module ReportFormatter
             end
           end
 
-          output << "</tr>"
-        end
-
-        if mri.db == "VimUsage"                   # Output usage totals
-          if row == 0
-            output << '<tr class="row0 no-hover">'
-            row = 1
-          else
-            output << '<tr class="row1 no-hover">'
-            row = 0
-          end
-          output << "<td><strong>Totals:</strong></td>"
-          mri.col_order.each do |c|
-            case c
-            when "cpu_usagemhz_rate_average"
-              output << '<td style="text-align:right"><strong>' <<
-                CGI.escapeHTML(mri.format(c, tot_cpu, :format => :general_number_precision_1)) <<
-                "</strong></td>"
-            when "derived_memory_used"
-              output << '<td style="text-align:right"><strong>' <<
-                CGI.escapeHTML(mri.format(c, tot_ram, :format => :megabytes_human)) <<
-                "</strong></td>"
-            when "derived_storage_used_managed"
-              output << '<td style="text-align:right"><strong>' <<
-                CGI.escapeHTML(mri.format(c, tot_space, :format => :bytes_human)) <<
-                "</strong></td>"
-            when "derived_vm_used_disk_storage"
-              output << '<td style="text-align:right"><strong>' <<
-                CGI.escapeHTML(mri.format(c, tot_space, :format => :bytes_human)) <<
-                "</strong></td>"
-            when "disk_usage_rate_average"
-              output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(mri.format(c, tot_disk, :format => :general_number_precision_1)) <<
-                " (#{CGI.escapeHTML(mri.format(c, tot_disk * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})" << "</strong></td>"
-            when "net_usage_rate_average"
-              output << '<td style="text-align:right"><strong>' << CGI.escapeHTML(mri.format(c, tot_net, :format => :general_number_precision_1)) <<
-                " (#{CGI.escapeHTML(mri.format(c, tot_net * 1.kilobyte * mri.extras[:interval], :format => :bytes_human))})" << "</strong></td>"
-            end
-          end
           output << "</tr>"
         end
       end
