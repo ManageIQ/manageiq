@@ -6,29 +6,19 @@ class ApiController
 
     def show_auth
       requester_type = fetch_and_validate_requester_type
-      auth_token = generate_user_token(@auth_user, requester_type)
+      auth_token = @api_user_token_service.generate_token(@auth_user, requester_type)
       res = {
         :auth_token => auth_token,
-        :token_ttl  => @api_token_mgr.token_get_info(@module, auth_token, :token_ttl),
-        :expires_on => @api_token_mgr.token_get_info(@module, auth_token, :expires_on)
+        :token_ttl  => api_token_mgr.token_get_info(@module, auth_token, :token_ttl),
+        :expires_on => api_token_mgr.token_get_info(@module, auth_token, :expires_on)
       }
       render_resource :auth, res
     end
 
     def destroy_auth
-      @api_token_mgr.invalidate_token(@module, @auth_token)
+      api_token_mgr.invalidate_token(@module, @auth_token)
 
       render_normal_destroy
-    end
-
-    # Used from outside the API, needs to raise errors for invalid userid or requester_type
-    def generate_user_token(userid, requester_type)
-      api_log_info("Generating Authentication Token for user id: #{userid} requester_type: #{requester_type}")
-      User.find_by_userid!(userid)
-      REQUESTER_TTL_CONFIG.fetch(requester_type) if requester_type
-      @api_token_mgr.gen_token(@module,
-                               :userid           => userid,
-                               :token_ttl_config => REQUESTER_TTL_CONFIG[requester_type])
     end
 
     #
@@ -39,14 +29,14 @@ class ApiController
       @auth_token = @auth_user = nil
       if request.headers['X-Auth-Token']
         @auth_token  = request.headers['X-Auth-Token']
-        if !@api_token_mgr.token_valid?(@module, @auth_token)
+        if !api_token_mgr.token_valid?(@module, @auth_token)
           raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
         else
-          @auth_user     = @api_token_mgr.token_get_info(@module, @auth_token, :userid)
+          @auth_user     = api_token_mgr.token_get_info(@module, @auth_token, :userid)
           @auth_user_obj = userid_to_userobj(@auth_user)
 
           unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'
-            @api_token_mgr.reset_token(@module, @auth_token)
+            api_token_mgr.reset_token(@module, @auth_token)
           end
 
           authorize_user_group(@auth_user_obj)
@@ -125,12 +115,10 @@ class ApiController
 
     def fetch_and_validate_requester_type
       requester_type = params['requester_type']
-      return unless requester_type
-      REQUESTER_TTL_CONFIG.fetch(requester_type) do
-        requester_types = REQUESTER_TTL_CONFIG.keys.join(', ')
-        raise BadRequestError, "Invalid requester_type #{requester_type} specified, valid types are: #{requester_types}"
-      end
+      @api_user_token_service.validate_requester_type(requester_type)
       requester_type
+    rescue => err
+      raise BadRequestError, err.to_s
     end
 
     private
@@ -200,6 +188,10 @@ class ApiController
         href = "#{@req[:api_prefix]}/#{collection}"
         result[ident] << href
       end
+    end
+
+    def api_token_mgr
+      @api_user_token_service.token_mgr
     end
   end
 end

@@ -1,6 +1,7 @@
+throw "error";
 $('#invalid_sso_credentials_flash').click(function() {
-  $(this).text('');
+  $(this).hide();
 });
-$('#invalid_sso_credentials_flash').show()
-miqSparkle(false)
+$('#invalid_sso_credentials_flash').show();
+miqSparkle(false);
 miqEnableLoginFields(true);
