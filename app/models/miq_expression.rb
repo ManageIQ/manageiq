@@ -574,178 +574,9 @@ class MiqExpression
   def to_sql(tz = nil)
     tz ||= "UTC"
     @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
-    sql = _to_sql(@pexp, tz) if @pexp.present?
+    sql = to_arel(@pexp, tz).to_sql if @pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
-  end
-
-  def _to_sql(exp, tz)
-    operator = exp.keys.first
-
-    case operator.downcase
-    when "equal", "="
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
-              else
-                exp[operator]["value"]
-              end
-      clause = field.eq(value).to_sql
-    when ">", "after"
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
-              else
-                exp[operator]["value"]
-              end
-      clause = field.gt(value).to_sql
-    when ">="
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
-              else
-                exp[operator]["value"]
-              end
-      clause = field.gteq(value).to_sql
-    when "<", "before"
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
-              else
-                exp[operator]["value"]
-              end
-      clause = field.lt(value).to_sql
-    when "<="
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
-              else
-                exp[operator]["value"]
-              end
-      clause = field.lteq(value).to_sql
-    when "!="
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
-              else
-                exp[operator]["value"]
-              end
-      clause = field.not_eq(value).to_sql
-    when "like", "includes"
-      field = Field.parse(exp[operator]["field"])
-      clause = field.matches("%#{exp[operator]["value"]}%").to_sql
-    when "starts with"
-      field = Field.parse(exp[operator]["field"])
-      clause = field.matches("#{exp[operator]["value"]}%").to_sql
-    when "ends with"
-      field = Field.parse(exp[operator]["field"])
-      clause = field.matches("%#{exp[operator]["value"]}").to_sql
-    when "not like"
-      field = Field.parse(exp[operator]["field"])
-      clause = field.does_not_match("%#{exp[operator]["value"]}%").to_sql
-    when "and"
-      operands = exp[operator].each_with_object([]) do |operand, result|
-        next if operand.blank?
-        sql = _to_sql(operand, tz)
-        next if sql.blank?
-        result << sql
-      end
-      clause = Arel::Nodes::And.new(operands.collect { |o| Arel::Nodes::SqlLiteral.new(o) }).to_sql
-    when "or"
-      operands = exp[operator].each_with_object([]) do |operand, result|
-        next if operand.blank?
-        sql = _to_sql(operand, tz)
-        next if sql.blank?
-        result << sql
-      end
-      first, *rest = operands
-      clause = rest.inject(Arel::Nodes::SqlLiteral.new(first)) do |arel, operand|
-        Arel::Nodes::Or.new(arel, Arel::Nodes::SqlLiteral.new(operand))
-      end.to_sql
-    when "not", "!"
-      clause = Arel::Nodes::Not.new(Arel::Nodes::SqlLiteral.new(_to_sql(exp[operator], tz))).to_sql
-    when "is null"
-      field = Field.parse(exp[operator]["field"])
-      clause = field.eq(nil).to_sql
-    when "is not null"
-      field = Field.parse(exp[operator]["field"])
-      clause = field.not_eq(nil).to_sql
-    when "is empty"
-      field = Field.parse(exp[operator]["field"])
-      arel = field.eq(nil)
-      arel = arel.or(field.eq("")) if field.string?
-      clause = arel.to_sql
-    when "is not empty"
-      field = Field.parse(exp[operator]["field"])
-      arel = field.not_eq(nil)
-      arel = arel.and(field.not_eq("")) if field.string?
-      clause = arel.to_sql
-    when "contains"
-      # Only support for tags of the main model
-      if exp[operator].key?("tag")
-        klass, ns = exp[operator]["tag"].split(".")
-        ns  = "/" + ns.split("-").join("/")
-        ns = ns.sub(/(\/user_tag\/)/, "/user/") # replace with correct namespace for user tags
-        tag = exp[operator]["value"]
-        klass = klass.constantize
-        ids = klass.find_tagged_with(:any => tag, :ns => ns).pluck(:id)
-        clause = klass.arel_attribute(:id).in(ids).to_sql
-      else
-        field = Field.parse(exp[operator]["field"])
-        clause = field.contains(exp[operator]["value"]).to_sql
-      end
-    when "is"
-      field = Field.parse(exp[operator]["field"])
-      value = exp[operator]["value"]
-      if field.date?
-        if RelativeDatetime.relative?(value)
-          start_val = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
-          end_val = RelativeDatetime.normalize(value, "UTC", "end").to_date
-          clause = field.between(start_val..end_val).to_sql
-        else
-          value  = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
-          clause = field.eq(value).to_sql
-        end
-      else
-        start_val = RelativeDatetime.normalize(value, tz, "beginning").utc
-        end_val   = RelativeDatetime.normalize(value, tz, "end").utc
-        clause = field.between(start_val..end_val).to_sql
-      end
-    when "from"
-      field = Field.parse(exp[operator]["field"])
-      start_val, end_val = exp[operator]["value"]
-      if field.date?
-        start_val = RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date
-        end_val   = RelativeDatetime.normalize(end_val, "UTC", "end").to_date
-      else
-        start_val = RelativeDatetime.normalize(start_val, tz, "beginning").utc
-        end_val   = RelativeDatetime.normalize(end_val, tz, "end").utc
-      end
-      clause = field.between(start_val..end_val).to_sql
-    else
-      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
-    end
-
-    # puts "clause: #{clause}"
-    clause
   end
 
   def preprocess_for_sql(exp, attrs = nil)
@@ -1817,6 +1648,170 @@ class MiqExpression
   end
 
   private
+
+  def to_arel(exp, tz)
+    operator = exp.keys.first
+
+    case operator.downcase
+    when "equal", "="
+      field = Field.parse(exp[operator]["field"])
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+              else
+                exp[operator]["value"]
+              end
+      field.eq(value)
+    when ">", "after"
+      field = Field.parse(exp[operator]["field"])
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
+              else
+                exp[operator]["value"]
+              end
+      field.gt(value)
+    when ">="
+      field = Field.parse(exp[operator]["field"])
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+              else
+                exp[operator]["value"]
+              end
+      field.gteq(value)
+    when "<", "before"
+      field = Field.parse(exp[operator]["field"])
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+              else
+                exp[operator]["value"]
+              end
+      field.lt(value)
+    when "<="
+      field = Field.parse(exp[operator]["field"])
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
+              else
+                exp[operator]["value"]
+              end
+      field.lteq(value)
+    when "!="
+      field = Field.parse(exp[operator]["field"])
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+              else
+                exp[operator]["value"]
+              end
+      field.not_eq(value)
+    when "like", "includes"
+      field = Field.parse(exp[operator]["field"])
+      field.matches("%#{exp[operator]["value"]}%")
+    when "starts with"
+      field = Field.parse(exp[operator]["field"])
+      field.matches("#{exp[operator]["value"]}%")
+    when "ends with"
+      field = Field.parse(exp[operator]["field"])
+      field.matches("%#{exp[operator]["value"]}")
+    when "not like"
+      field = Field.parse(exp[operator]["field"])
+      field.does_not_match("%#{exp[operator]["value"]}%")
+    when "and"
+      operands = exp[operator].each_with_object([]) do |operand, result|
+        next if operand.blank?
+        arel = to_arel(operand, tz)
+        next if arel.blank?
+        result << arel
+      end
+      Arel::Nodes::And.new(operands)
+    when "or"
+      operands = exp[operator].each_with_object([]) do |operand, result|
+        next if operand.blank?
+        arel = to_arel(operand, tz)
+        next if arel.blank?
+        result << arel
+      end
+      first, *rest = operands
+      rest.inject(first) { |lhs, rhs| Arel::Nodes::Or.new(lhs, rhs) }
+    when "not", "!"
+      Arel::Nodes::Not.new(to_arel(exp[operator], tz))
+    when "is null"
+      field = Field.parse(exp[operator]["field"])
+      field.eq(nil)
+    when "is not null"
+      field = Field.parse(exp[operator]["field"])
+      field.not_eq(nil)
+    when "is empty"
+      field = Field.parse(exp[operator]["field"])
+      arel = field.eq(nil)
+      arel = arel.or(field.eq("")) if field.string?
+      arel
+    when "is not empty"
+      field = Field.parse(exp[operator]["field"])
+      arel = field.not_eq(nil)
+      arel = arel.and(field.not_eq("")) if field.string?
+      arel
+    when "contains"
+      # Only support for tags of the main model
+      if exp[operator].key?("tag")
+        klass, ns = exp[operator]["tag"].split(".")
+        ns  = "/" + ns.split("-").join("/")
+        ns = ns.sub(/(\/user_tag\/)/, "/user/") # replace with correct namespace for user tags
+        tag = exp[operator]["value"]
+        klass = klass.constantize
+        ids = klass.find_tagged_with(:any => tag, :ns => ns).pluck(:id)
+        klass.arel_attribute(:id).in(ids)
+      else
+        field = Field.parse(exp[operator]["field"])
+        field.contains(exp[operator]["value"])
+      end
+    when "is"
+      field = Field.parse(exp[operator]["field"])
+      value = exp[operator]["value"]
+      if field.date?
+        if RelativeDatetime.relative?(value)
+          start_val = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
+          end_val = RelativeDatetime.normalize(value, "UTC", "end").to_date
+          field.between(start_val..end_val)
+        else
+          value  = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
+          field.eq(value)
+        end
+      else
+        start_val = RelativeDatetime.normalize(value, tz, "beginning").utc
+        end_val   = RelativeDatetime.normalize(value, tz, "end").utc
+        field.between(start_val..end_val)
+      end
+    when "from"
+      field = Field.parse(exp[operator]["field"])
+      start_val, end_val = exp[operator]["value"]
+      if field.date?
+        start_val = RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date
+        end_val   = RelativeDatetime.normalize(end_val, "UTC", "end").to_date
+      else
+        start_val = RelativeDatetime.normalize(start_val, tz, "beginning").utc
+        end_val   = RelativeDatetime.normalize(end_val, tz, "end").utc
+      end
+      field.between(start_val..end_val)
+    else
+      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
+    end
+  end
 
   def self.determine_model(model, parts)
     model = model_class(model)
