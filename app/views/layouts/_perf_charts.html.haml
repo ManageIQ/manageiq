@@ -1,7 +1,7 @@
 %div{:id => "#{chart_set}_charts_div", :onmousedown => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
   - if @charts || @perf_options[:chart_type] != :performance
     - perf_options ||= @perf_options
-    - width, height = perf_options[:index] ? [1000, 700] : [350, 250]
+    - detailed_view = !!perf_options[:index]
     - charts ||= @charts
     - if chart_data
       - if !perf_parent? && !perf_compare_vm?
@@ -13,12 +13,14 @@
                                         :locals  => {:charts      => charts,
                                                      :chart_data  => chart_data,
                                                      :chart_set   => chart_set,
-                                                     :chart_index => c,
-                                                     :width       => width,
-                                                     :height      => height})
+                                                     :chart_index => c})
 
-                .col-md-6.col-lg-4
-                  = chart_render
+                - if detailed_view
+                  .col-md-12
+                    = chart_render
+                - else
+                  .col-md-6.col-lg-4
+                    = chart_render
         - else
           = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
         - if @html
@@ -37,17 +39,13 @@
                            :locals  => {:charts      => charts,
                                         :chart_data  => chart_data,
                                         :chart_set   => chart_set,
-                                        :chart_index => c,
-                                        :width       => width,
-                                        :height      => height})
+                                        :chart_index => c})
                 .col-md-6
                   = render(:partial => '/layouts/perf_chart',
                            :locals  => {:charts      => pcharts,
                                         :chart_data  => pchart_data,
                                         :chart_set   => "parent",
-                                        :chart_index => c,
-                                        :width       => width,
-                                        :height      => height})
+                                        :chart_index => c})
           - if @html
             .row
               .col-md-6
@@ -73,9 +71,7 @@
                              :locals  => {:charts      => charts,
                                           :chart_data  => chart_data,
                                           :chart_set   => chart_set,
-                                          :chart_index => c,
-                                          :width       => width,
-                                          :height      => height})
+                                          :chart_index => c})
               - else
                 = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
               - if @html
@@ -96,9 +92,7 @@
                            :locals  => {:charts      => ccharts,
                                         :chart_data  => cchart_data,
                                         :chart_set   => "comparevm",
-                                        :chart_index => c,
-                                        :width       => width,
-                                        :height      => height})
+                                        :chart_index => c})
             - else
               = render :partial => 'layouts/info_msg', :locals => {:message => _("No Capacity & Utilization data available.")}
 

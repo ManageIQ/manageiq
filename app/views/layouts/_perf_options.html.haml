@@ -1,6 +1,6 @@
 - url = url_for(:action => 'perf_chart_chooser',
                 :id     => @record.id)
-#perf_options_div{:onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
+#perf_options_div.card-pf{:onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
   - if @charts || @perf_options[:chart_type] != :performance
     %h3= _("Options %s") % (@record != @perf_record ? "(#{ui_lookup(:model => @perf_record.class.to_s)}: #{@perf_record.name})" : "")
     %dl.dl-horizontal
