@@ -455,7 +455,7 @@ class ApplicationHelper::ToolbarChooser
         return "stack_orchestration_template_center"
       elsif (@layout == "vm" || @layout == "host") && @display == "performance"
         return "#{@explorer ? "x_" : ""}vm_performance_tb"
-      elsif @display == "dashboard"
+      elsif @display == "dashboard" || @display == "topology"
         return "#{@layout}_center_tb"
       end
     elsif @lastaction == "compare_miq" || @lastaction == "compare_compress"

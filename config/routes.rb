@@ -1214,6 +1214,7 @@ Vmdb::Application.routes.draw do
         index
         show
         show_list
+        topology_data
         tagging_edit
       ) +
         compare_get,

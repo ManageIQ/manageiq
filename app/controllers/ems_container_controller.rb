@@ -17,4 +17,10 @@ class EmsContainerController < ApplicationController
   def index
     redirect_to :action => 'show_list'
   end
+
+  private
+
+  def generate_topology(provider_id)
+    ContainerTopologyService.new(provider_id).build_topology
+  end
 end

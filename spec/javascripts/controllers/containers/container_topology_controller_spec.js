@@ -14,7 +14,7 @@ describe('containerTopologyController', function() {
       scope = $rootScope.$new();
 
       $httpBackend = _$httpBackend_;
-      $httpBackend.when('GET','/container_topology/data').respond(mock_data);
+      $httpBackend.when('GET','/container_topology/topology_data').respond(mock_data);
       $controller = _$controller_('containerTopologyController',
           {$scope: scope});
       $httpBackend.flush();
