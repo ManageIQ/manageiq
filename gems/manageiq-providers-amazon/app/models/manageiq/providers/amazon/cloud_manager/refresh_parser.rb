@@ -64,10 +64,10 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   end
 
   def get_public_images
+    filters = @options.public_images_filters
     get_images(
       @aws_ec2.client.describe_images(:executable_users => [:all],
-                                      :filters          => [{:name   => "image-type",
-                                                             :values => ["machine"]}])[:images], true)
+                                      :filters          => filters)[:images], true)
   end
 
   def get_images(images, is_public = false)
