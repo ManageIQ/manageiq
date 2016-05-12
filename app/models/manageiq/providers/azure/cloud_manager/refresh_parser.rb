@@ -429,6 +429,7 @@ module ManageIQ::Providers
 
       def parse_stack_resource(resource, group)
         status_message = resource.properties.try(:status_message)
+        status_code = resource.properties.try(:status_code)
         new_result = {
           :ems_ref                => resource.properties.target_resource.id,
           :name                   => resource.properties.target_resource.resource_name,
@@ -436,7 +437,7 @@ module ManageIQ::Providers
           :physical_resource      => resource.properties.tracking_id,
           :resource_category      => resource.properties.target_resource.resource_type,
           :resource_status        => resource.properties.provisioning_state,
-          :resource_status_reason => status_message || resource.properties.status_code,
+          :resource_status_reason => status_message || status_code,
           :last_updated           => resource.properties.timestamp
         }
         uid = resource_uid(@subscription_id, group.downcase, new_result[:resource_category].downcase, new_result[:name])
