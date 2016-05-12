@@ -67,32 +67,40 @@ module MiqAeMethodService
     end
 
     def self.category_exists?(category)
-      cat = Classification.find_by_name(category)
-      cat.nil? ? false : true
+      ar_method do
+        cat = Classification.find_by_name(category)
+        cat.nil? ? false : true
+      end
     end
 
     def self.category_create(options = {})
-      ar_options = {}
-      options.each { |k, v| ar_options[k.to_sym] = v if Classification.column_names.include?(k.to_s) || k.to_s == 'name' }
-      cat = Classification.create_category!(ar_options)
-      true
+      ar_method do
+        ar_options = {}
+        options.each { |k, v| ar_options[k.to_sym] = v if Classification.column_names.include?(k.to_s) || k.to_s == 'name' }
+        cat = Classification.create_category!(ar_options)
+        true
+      end
     end
 
     def self.tag_exists?(category, entry)
-      cat = Classification.find_by_name(category)
-      return false if cat.nil?
-      ent = cat.find_entry_by_name(entry)
-      ent.nil? ? false : true
+      ar_method do
+        cat = Classification.find_by_name(category)
+        return false if cat.nil?
+        ent = cat.find_entry_by_name(entry)
+        ent.nil? ? false : true
+      end
     end
 
     def self.tag_create(category, options = {})
-      cat = Classification.find_by_name(category)
-      raise "Category <#{category}> does not exist" if cat.nil?
+      ar_method do
+        cat = Classification.find_by_name(category)
+        raise "Category <#{category}> does not exist" if cat.nil?
 
-      ar_options = {}
-      options.each { |k, v| ar_options[k.to_sym] = v if Classification.column_names.include?(k.to_s) || k.to_s == 'name' }
-      entry = cat.add_entry(ar_options)
-      true
+        ar_options = {}
+        options.each { |k, v| ar_options[k.to_sym] = v if Classification.column_names.include?(k.to_s) || k.to_s == 'name' }
+        entry = cat.add_entry(ar_options)
+        true
+      end
     end
 
     def self.service_now_eccq_insert(server, username, password, agent, queue, topic, name, source, *params)
