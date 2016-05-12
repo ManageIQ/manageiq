@@ -1,4 +1,7 @@
 class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
+  has_kids_for Dialog, [:x_get_tree_dialog_kids, :type]
+  has_kids_for ServiceTemplateCatalog, [:x_get_tree_stc_kids]
+
   private
 
   def tree_init_options(_tree_name)
@@ -27,9 +30,5 @@ class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
   def x_get_tree_stc_kids(object, count_only)
     objects = rbac_filtered_objects(object.service_templates.select(&:display))
     count_only_or_objects(count_only, objects, 'name')
-  end
-
-  def x_get_tree_st_kids(_object, count_only, _type)
-    count_only ? 0 : []
   end
 end

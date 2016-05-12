@@ -1,4 +1,6 @@
 class TreeBuilderReportReportsClass < TreeBuilder
+  has_kids_for MiqReport, [:x_get_tree_r_kids]
+
   private
 
   def x_get_tree_r_kids(object, count_only)
