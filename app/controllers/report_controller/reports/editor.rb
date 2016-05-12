@@ -1188,9 +1188,10 @@ module ReportController::Reports::Editor
           options[:tag] = "/managed/#{@edit[:new][:cb_tag_cat]}/#{@edit[:new][:cb_tag_value]}"
         end
       elsif @edit[:new][:cb_show_typ] == "entity"
-        options[:cb_model] = @edit[:new][:cb_model]
         options[:entity_id] = @edit[:new][:cb_entity_id]
       end
+
+      options[:cb_model] = @edit[:new][:cb_model]
       rpt.db_options[:options] = options
     end
 
