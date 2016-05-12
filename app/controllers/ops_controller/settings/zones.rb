@@ -39,7 +39,7 @@ module OpsController::Settings::Zones
         self.x_node = params[:button] == "save" ?
               "z-#{@zone.id}" : "xx-z"
         get_node_info(x_node)
-        replace_right_cell("root", [:settings, :diagnostics, :analytics])
+        replace_right_cell("root", [:settings, :diagnostics])
       else
         @in_a_form = true
         @edit[:errors].each { |msg| add_flash(msg, :error) }
@@ -74,7 +74,7 @@ module OpsController::Settings::Zones
       @sb[:active_tab] = "settings_list"
       self.x_node = "xx-z"
       get_node_info(x_node)
-      replace_right_cell(x_node, [:settings, :diagnostics, :analytics])
+      replace_right_cell(x_node, [:settings, :diagnostics])
     end
   end
 

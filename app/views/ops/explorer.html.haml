@@ -20,7 +20,6 @@
   = javascript_dim("diagnostics_tree_div", false) if role_allows(:feature => "ops_diagnostics")
   = javascript_dim("vmdb_tree_div", false) if role_allows(:feature => "ops_db")
   = javascript_dim("rbac_tree_div", false) if role_allows(:feature => "ops_rbac", :any => true)
-  = javascript_dim("analytics_tree_div", false) if get_vmdb_config[:product][:analytics]
   - if @sb[:active_tab] == "db_utilization"
     miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');
   - if @sb[:center_tb_filename].nil? || @sb[:center_tb_filename] == "blank_view_tb"

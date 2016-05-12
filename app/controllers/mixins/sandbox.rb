@@ -34,7 +34,6 @@ module Sandbox
     ae_tree
     alert_profile_tree
     alert_tree
-    analytics_tree
     automate_tree
     bottlenecks_tree
     cb_assignments_tree
@@ -95,7 +94,6 @@ module Sandbox
     action
     alert
     alert_profile
-    analytics
     cb_assignments
     cb_rates
     cb_reports
