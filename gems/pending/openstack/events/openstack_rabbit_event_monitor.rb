@@ -42,7 +42,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider."\
                 " Enable debug logging to see connection exception.") if $log
       $log.debug("#{log_prefix} Exception: #{e}") if $log
-      return false
+      raise e
     ensure
       connection.close if connection.respond_to? :close
     end

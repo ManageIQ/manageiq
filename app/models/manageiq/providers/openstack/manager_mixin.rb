@@ -1,3 +1,5 @@
+require 'bunny'
+
 module ManageIQ::Providers::Openstack::ManagerMixin
   extend ActiveSupport::Concern
 
@@ -98,6 +100,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     OpenstackEventMonitor.available?(event_monitor_options)
   rescue => e
     _log.error("Exeption trying to find openstack event monitor for #{name}(#{hostname}). #{e.message}")
+    _log.error(e.backtrace.join("\n"))
     false
   end
 
@@ -118,11 +121,11 @@ module ManageIQ::Providers::Openstack::ManagerMixin
 
   def translate_exception(err)
     case err
-    when Excon::Errors::Unauthorized
+    when Excon::Errors::Unauthorized, Bunny::AuthenticationFailureError
       MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
     when Excon::Errors::Timeout
       MiqException::MiqUnreachableError.new "Login attempt timed out"
-    when Excon::Errors::SocketError
+    when Excon::Errors::SocketError, Bunny::TCPConnectionFailedForAllHosts
       MiqException::MiqHostError.new "Socket error: #{err.message}"
     when MiqException::MiqInvalidCredentialsError
       err
