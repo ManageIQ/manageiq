@@ -259,24 +259,6 @@ class StorageController < ApplicationController
     @storage_pages, @storages = paginate(:storages, :per_page => @items_per_page, :order => @col_names[get_sort_col] + " " + @sortdir)
   end
 
-  # # Tag selected Storage Locations
-  # def tagstorage
-  #   storages = Array.new
-  #   storages = find_checked_items
-  #   if storages.length < 1
-  #     add_flash("One or more Storage Locations must be selected for tagging", :error)
-  #     @refresh_div = "flash_msg_div"
-  #     @refresh_partial = "layouts/flash_msg"
-  #   else
-  #     session[:tag_items] = storages  # Set the array of tag items
-  #     session[:tag_db] = Storage      # Remember the DB
-  #     session[:assigned_filters] = assigned_filters
-  #      render :update do |page|
-  #       page.redirect_to :controller => 'storage', :action => 'tagging'   # redirect to build the tagging screen
-  #     end
-  #   end
-  # end
-
   def accordion_select
     @lastaction = "explorer"
     @explorer = true

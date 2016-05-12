@@ -1048,7 +1048,6 @@ module OpsController::OpsRbac
 
   # Set form variables for user add/edit
   def rbac_group_set_form_vars
-    @assigned_filters = []
     @edit = {}
     @group = @record
     @edit[:group_id] = @record.id
@@ -1306,9 +1305,6 @@ module OpsController::OpsRbac
   # Validate some of the role fields
   def rbac_group_validate?
     valid = true
-    if @edit[:new][:filters].empty?
-      @assigned_filters = []
-    end
     if @edit[:new][:role].nil? || @edit[:new][:role] == ""
       add_flash(_("A User Group must be assigned a Role"), :error)
       valid = false

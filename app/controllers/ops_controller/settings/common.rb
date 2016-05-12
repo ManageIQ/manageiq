@@ -16,7 +16,6 @@ module OpsController::Settings::Common
 
     settings_get_form_vars
     return unless @edit
-    @assigned_filters = []
     case @sb[:active_tab] # Server, DB edit forms
     when 'settings_server', 'settings_authentication',
          'settings_custom_logos'
