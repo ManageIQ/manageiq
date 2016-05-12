@@ -1,4 +1,5 @@
 require 'VMwareWebService/VimConstants'
+require 'set'
 autoload :VimMappingRegistry, 'VMwareWebService/VimMappingRegistry'
 
 module VimType
