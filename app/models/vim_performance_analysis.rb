@@ -537,6 +537,7 @@ module VimPerformanceAnalysis
         mm[k] = val unless val.nil?
         mm
       end
+      h.reject! { |k, _v| perf_klass.virtual_attribute? k }
     end
 
     result.inject([]) do |recs, k|

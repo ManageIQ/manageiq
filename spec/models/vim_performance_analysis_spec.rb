@@ -58,6 +58,25 @@ RSpec.describe VimPerformanceAnalysis do
     end
   end
 
+  describe '.group_perf_by_timestamp' do
+    let(:storage_metric) do
+      FactoryGirl.create(:metric_rollup,
+                         :derived_storage_total => '42',
+                         :derived_storage_free  => '13')
+    end
+    let(:cols) { [:derived_storage_total, :derived_storage_free, :v_derived_storage_used] }
+
+    it 'does not pass virtual_attributes to MetricRollup.new' do
+      expect(storage_metric.v_derived_storage_used).to eq(42 - 13)
+      r = VimPerformanceAnalysis.group_perf_by_timestamp(ems, [storage_metric], cols)
+      expect(r.length).to eq(1)
+      expect(r[0]).to be_kind_of MetricRollup
+      cols.each do |c|
+        expect(r[0].send(c)).to eq(storage_metric.send(c))
+      end
+    end
+  end
+
   # describe ".child_tags_over_time_period" do
   #   it "returns only tagged nodes" do
   #     good_vm = FactoryGirl.create(:vm_vmware, :tags => [tag_good])
