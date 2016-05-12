@@ -115,6 +115,7 @@ module EmsRefresh::SaveInventory
 
         found.save!
         h[:id] = found.id
+        found.reload # reload to clear caches and lower memory usage
         h[:_object] = found
       rescue => err
         # If a vm failed to process, mark it as invalid and log an error
