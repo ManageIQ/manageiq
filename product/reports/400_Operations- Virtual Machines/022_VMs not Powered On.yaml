@@ -38,6 +38,7 @@ db: Vm
 cols: 
 - v_datastore_path
 - name
+- power_state
 - last_scan_on
 template_type: report
 group: c
