@@ -62,7 +62,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
          */
         added.attr("class", function(d) { return d.item.kind; });
         added.append("circle")
-            .attr("r", function(d) { return getDimensions(d).r})
+            .attr("r", function(d) { return self.getDimensions(d).r})
             .attr('class' , function(d) {
               return topologyService.getItemStatusClass(d);
             });
@@ -71,12 +71,12 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
             return self.dblclick(d);});
         added.append("image")
             .attr("xlink:href",function(d) {
-                return "/assets/svg/" + class_name(d) + ".svg";
+                return "/assets/svg/" + self.class_name(d) + ".svg";
             })
-            .attr("y", function(d) { return getDimensions(d).y})
-            .attr("x", function(d) { return getDimensions(d).x})
-            .attr("height", function(d) { return getDimensions(d).height})
-            .attr("width", function(d) { return getDimensions(d).width});
+            .attr("y", function(d) { return self.getDimensions(d).y})
+            .attr("x", function(d) { return self.getDimensions(d).x})
+            .attr("height", function(d) { return self.getDimensions(d).height})
+            .attr("width", function(d) { return self.getDimensions(d).width});
         added.append("text")
             .attr("x", 26)
             .attr("y", 24)
@@ -92,16 +92,16 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
         ev.preventDefault();
     });
 
-    function class_name(d) {
+    self.class_name = function class_name(d) {
         var class_name = d.item.icon;
         return class_name;
-    }
+    };
 
     this.dblclick = function dblclick(d) {
       window.location.assign(topologyService.geturl(d));
     };
 
-    function getDimensions(d) {
+    self.getDimensions = function getDimensions(d) {
         switch (d.item.kind) {
             case "MiddlewareManager":
                 return { x: -20, y: -20, height: 40, width: 40, r: 28};
@@ -113,7 +113,7 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
                 return { x: -9, y: -9, height: 18, width: 18, r: 17};
         }
 
-    }
+    };
 
     $scope.searchNode = function() {
       var svg = topologyService.getSVG(d3);
