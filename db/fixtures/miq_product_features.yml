@@ -4423,6 +4423,10 @@
         :description: Detach Volume from Instance
         :feature_type: control
         :identifier: instance_detach
+      - :name: Evacuate Instance
+        :description: Evacate Instance
+        :feature_type: control
+        :identifier: instance_evacuate
     - :name: Modify
       :description: Modify Instances
       :feature_type: admin

@@ -318,6 +318,94 @@ class VmCloudController < ApplicationController
     replace_right_cell
   end
 
+  def evacuate
+    assert_privileges("instance_evacuate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
+    if @record.is_available?(:evacuate) && !@record.ext_management_system.nil?
+      drop_breadcrumb(
+        :name => _("Evacuate Instance '%{name}'") % {:name => @record.name},
+        :url  => "/vm_cloud/evacuate"
+      ) unless @explorer
+      @in_a_form = true
+      @refresh_partial = "vm_common/evacuate"
+    else
+      add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
+        :instance => ui_lookup(:table => 'vm_cloud'),
+        :name     => @record.name,
+        :details  => @record.is_available_now_error_message(:evacuate)}, :error)
+    end
+  end
+  alias_method :instance_evacuate, :evacuate
+
+  def evacuate_form_fields
+    assert_privileges("instance_evacuate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    hosts = []
+    unless @record.ext_management_system.nil?
+      begin
+        connection = @record.ext_management_system.connect
+        current_hostname = connection.handled_list(:servers).find do |s|
+          s.name == @record.name
+        end.os_ext_srv_attr_hypervisor_hostname
+        hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
+          {:name => h.host_name, :id => h.host_name}
+        end
+      rescue
+        hosts = []
+      end
+    end
+    render :json => {
+      :hosts => hosts
+    }
+  end
+
+  def evacuate_vm
+    assert_privileges("instance_evacuate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Evacuation of %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => 'vm_cloud'),
+        :name  => @record.name
+      })
+    when "submit"
+      if @record.is_available?(:evacuate)
+        if params['auto_select_host'] == 'on'
+          hostname = nil
+        else
+          hostname = params[:destination_host]
+        end
+        on_shared_storage = params[:on_shared_storage] == 'on'
+        admin_password = on_shared_storage ? nil : params[:admin_password]
+        begin
+          @record.evacuate(
+            :hostname          => hostname,
+            :on_shared_storage => on_shared_storage,
+            :admin_password    => admin_password
+          )
+          add_flash(_("Evacuating %{instance} \"%{name}\"") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name})
+        rescue => ex
+          add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name,
+            :details  => get_error_message_from_fog(ex.to_s)}, :error)
+        end
+      else
+        add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
+          :instance => ui_lookup(:table => 'vm_cloud'),
+          :name     => @record.name,
+          :details  => @record.is_available_now_error_message(:evacuate)}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+      replace_right_cell
+    end
+  end
+
   private
 
   def features

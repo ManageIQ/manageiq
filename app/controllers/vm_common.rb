@@ -1619,7 +1619,7 @@ module VmCommon
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
       if %w(clone migrate miq_request_new pre_prov publish
-            reconfigure resize live_migrate attach detach).include?(@sb[:action])
+            reconfigure resize live_migrate attach detach evacuate).include?(@sb[:action])
         locals[:no_reset]        = true                              # don't need reset button on the screen
         locals[:submit_button]   = @sb[:action] != 'miq_request_new' # need submit button on the screen
         locals[:continue_button] = @sb[:action] == 'miq_request_new' # need continue button on the screen
@@ -1721,7 +1721,7 @@ module VmCommon
           ])
         # these subviews use angular, so they need to use a special partial
         # so the form buttons on the outer frame can be updated.
-        elsif %w(attach detach live_migrate).include?(@sb[:action])
+        elsif %w(attach detach live_migrate evacuate).include?(@sb[:action])
           presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
         elsif action != "retire" && action != "reconfigure_update"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
@@ -1877,6 +1877,10 @@ module VmCommon
       partial = "vm_common/live_migrate"
       header = _("Live Migrating %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
       action = "live_migrate_vm"
+    when "evacuate"
+      partial = "vm_common/evacuate"
+      header = _("Evacuating %{model} \"%{name}\"") % {:name => name, :model => ui_lookup(:table => table)}
+      action = "evacuate_vm"
     when "clone", "migrate", "publish"
       partial = "miq_request/prov_edit"
       task_headers = {"clone"   => _("Clone %{vm_or_template}"),
