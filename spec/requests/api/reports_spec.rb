@@ -137,9 +137,9 @@ RSpec.describe "reports API" do
 
     expect_result_to_match_hash(
       response_hash,
-      "href"      => "/api/reports/#{report.id}/schedules/#{schedule.id}",
-      "id"        => schedule.id,
-      "name"      => 'unit_test'
+      "href" => "/api/reports/#{report.id}/schedules/#{schedule.id}",
+      "id"   => schedule.id,
+      "name" => 'unit_test'
     )
     expect_request_success
   end
@@ -175,16 +175,20 @@ RSpec.describe "reports API" do
 
       expect do
         api_basic_authorize action_identifier(:reports, :schedule)
-        run_post "#{reports_url(report.id)}",
-          :action => 'schedule',
-          name: 'schedule_name',
-          enabled: true,
-          description: 'unit test',
-          start_date: '05/05/2016',
-          interval: {unit: 'daily', value: '110'},
-          time_zone: 'UTC'
+        run_post reports_url(report.id),
+                 :action      => 'schedule',
+                 :name        => 'schedule_name',
+                 :enabled     => true,
+                 :description => 'unit test',
+                 :start_date  => '05/05/2016',
+                 :interval    => {:unit => 'daily', :value => '110'},
+                 :time_zone   => 'UTC'
       end.to change(MiqSchedule, :count).by(1)
-      expect_request_success
+      expect_single_action_result(
+        :href    => reports_url(report.id),
+        :success => true,
+        :message => "scheduling of report #{report.id}"
+      )
     end
 
     it "can import a report" do

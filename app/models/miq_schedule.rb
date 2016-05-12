@@ -426,4 +426,10 @@ class MiqSchedule < ApplicationRecord
     return "" if zone.nil?
     zone.name
   end
+
+  def self.find_by_report_id(report_id)
+    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                    "value" => report_id})
+    where(:filter => exp)
+  end
 end # class MiqSchedule

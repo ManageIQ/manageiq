@@ -87,9 +87,8 @@ class MiqReport < ApplicationRecord
     data['name'] ||= name
     data['description'] ||= title
 
-    exp = {}
-    exp["="] = {"field" => "MiqReport.id", "value" => id}
-    data['filter'] = MiqExpression.new(exp)
+    data['filter'] = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                               "value" => id})
     data['towhat'] = "MiqReport"
     data['prod_default'] = "system"
 

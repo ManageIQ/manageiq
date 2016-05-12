@@ -1,6 +1,6 @@
 class ApiController
   module Reports
-    SCHEDULE_ATTR = %w(start_date interval time_zone send_email)
+    SCHEDULE_BODY_ATTR = %w(start_date interval time_zone send_email).freeze
     #
     # Reports Supporting Methods
     #
@@ -10,10 +10,7 @@ class ApiController
 
     def schedules_query_resource(object)
       klass = collection_class(:schedules)
-      exp = {}
-      exp["="] = {"field" => "MiqReport.id", "value" => object.id}
-      exp = MiqExpression.new(exp)
-      object ? klass.where(:filter => exp) : {}
+      object ? klass.find_by_report_id(object.id) : {}
     end
 
     def show_reports
@@ -54,26 +51,39 @@ class ApiController
       action_result(meta[:level] == :info, meta[:message], :result => result)
     end
 
-    def schedule_resource_reports(_type, id, data)
-      schedule_data = fetch_schedule_data data
-      MiqReport.find(id).add_schedule schedule_data
+    def schedule_resource_reports(type, id, data)
+      api_action(type, id) do |klass|
+        report = resource_search(id, type, klass)
+        schedule_reports(report, type, id, data)
+      end
     end
 
     private
 
+    def schedule_reports(report, type, id, data)
+      desc = "scheduling of report #{report.id}"
+      schedule = report.add_schedule fetch_schedule_data(data)
+      res = action_result(true, desc)
+      add_report_schedule_to_result(res, schedule.id, report.id)
+      add_href_to_result(res, type, id)
+      res
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     def fetch_schedule_data(data)
-      data['userid'] = @auth_user_obj.userid
-      data['run_at'] = {
+      schedule_data = data.except(*SCHEDULE_BODY_ATTR)
+
+      schedule_data['userid'] = @auth_user_obj.userid
+      schedule_data['run_at'] = {
         :start_time => data['start_date'],
         :tz         => data['time_zone'],
-        :interval   => {
-          :unit  =>  data['interval']['unit'],
-          :value =>  data['interval']['value']
-        }
+        :interval   => {:unit  => data['interval']['unit'],
+                        :value => data['interval']['value']}
       }
 
-      email_url_prefix = url_for( :controller => "report",
-                                  :action => "show_saved") + "/"
+      email_url_prefix = url_for(:controller => "report",
+                                 :action     => "show_saved") + "/"
       data['send_email'] ||= false
 
       schedule_options = {
@@ -81,10 +91,9 @@ class ApiController
         :email_url_prefix => email_url_prefix,
         :miq_group_id     => @auth_user_obj.current_group_id
       }
-      data['sched_action'] = { :method => "run_report",
-                               :options => schedule_options }
-
-      data.except(*SCHEDULE_ATTR)
+      schedule_data['sched_action'] = {:method  => "run_report",
+                                       :options => schedule_options}
+      schedule_data
     end
   end
 end
