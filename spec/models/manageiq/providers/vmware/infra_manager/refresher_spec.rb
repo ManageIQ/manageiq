@@ -149,6 +149,41 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(Lan.count).to eq(lans_count - 1)
   end
 
+  it 'handles vm target-refresh without causing its host to lose storages' do
+    EmsRefresh.refresh(@ems)
+    vm = VmOrTemplate.find_by(:ems_ref => 'vm-12441')
+    host = vm.host
+    host_storage_count = host.storages.length
+    EmsRefresh.refresh(vm)
+    host.reload
+    expect(host.storages.length).to eq(host_storage_count)
+  end
+
+  it 'handles host target-refresh without losing storages' do
+    EmsRefresh.refresh(@ems)
+    host = Host.find_by(:ems_ref => 'host-891')
+    host_storage_count = host.storages.length
+    EmsRefresh.refresh(host)
+    host.reload
+    expect(host.storages.length).to eq(host_storage_count)
+  end
+
+  it 'handles vm target-refresh without severing a vm on the same host but different storages' do
+    EmsRefresh.refresh(@ems)
+    vm    = VmOrTemplate.find_by(:ems_ref => 'vm-12441')
+    vm2   = VmOrTemplate.find_by(:ems_ref => 'vm-841')
+    host  = vm.host
+    host_storage_count = host.storages.length
+    expect(host).to eq(vm2.host)
+    expect(vm.storages).not_to match_array(vm2.storages)
+    EmsRefresh.refresh(vm)
+    host.reload
+    expect(host.storages.length).to eq(host_storage_count)
+    vm.reload
+    vm2.reload
+    expect(vm.host).to eq(vm2.host)
+  end
+
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(1)
     expect(Datacenter.count).to eq(3)
