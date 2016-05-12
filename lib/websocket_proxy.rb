@@ -1,5 +1,8 @@
 class WebsocketProxy
-  attr_reader :env, :url, :error
+  attr_reader :env, :url, :error, :ws, :sock
+  attr_writer :ts
+
+  TIMEOUT = 15
 
   def initialize(env, console)
     @env = env
@@ -11,15 +14,16 @@ class WebsocketProxy
     @url = scheme + '//' + env['HTTP_HOST'] + env['REQUEST_URI']
     @driver = WebSocket::Driver.rack(self, :protocols => %w(binary))
 
-    begin
-      # Hijack the socket from the Rack middleware
-      @ws = env['rack.hijack'].call
-      # Set up the socket client for the proxy
-      @sock = TCPSocket.open(@console.host_name, @console.port)
-      init_ssl if @console.ssl
-    rescue
-      @error = true
-    end
+    # TODO: check if session hijacking can throw an exception
+    # Hijack the socket from the Rack middleware
+    @ws = env['rack.hijack'].call
+
+    # Set up the socket client for the proxy
+    @sockaddr = Socket.sockaddr_in(@console.port, @console.host_name)
+    family = Addrinfo.tcp(@console.host_name, @console.port).afamily
+
+    @sock = Socket.new(family, Socket::SOCK_STREAM)
+    @sock.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
 
     @driver.on(:open) { @console.update(:opened => true) }
 
@@ -31,7 +35,23 @@ class WebsocketProxy
   end
 
   def start
+    @ts = Time.current
+
+    begin
+      connect
+    rescue IO::WaitWritable
+      @error = false
+    rescue
+      @error = true
+      return cleanup
+    end
+
     @driver.start
+    self
+  end
+
+  def connect
+    @sock.connect_nonblock(@sockaddr)
   end
 
   def transmit(sockets, is_ws)
@@ -53,17 +73,12 @@ class WebsocketProxy
     @ws.close if @ws && !@ws.closed?
   end
 
-  def descriptors
-    [@ws, @sock]
-  end
-
   def write(string)
     @ws.write(string)
   end
 
-  private
-
   def init_ssl
+    return unless @console.ssl
     context = OpenSSL::SSL::SSLContext.new
     context.cert = OpenSSL::X509::Certificate.new(File.open('certs/server.cer'))
     context.key = OpenSSL::PKey::RSA.new(File.open('certs/server.cer.key'))
@@ -72,5 +87,9 @@ class WebsocketProxy
     @ssl = OpenSSL::SSL::SSLSocket.new(@sock, context)
     @ssl.sync_close = true
     @ssl.connect
+  end
+
+  def timeout?
+    Time.current - @ts > TIMEOUT unless @ts.nil?
   end
 end
