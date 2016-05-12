@@ -219,7 +219,6 @@ module ApplicationController::CiProcessing
         session[:retire_items] = vms                                # Set the array of retire items
       end
     end
-    session[:assigned_filters] = assigned_filters
     if @explorer
       retire
     else

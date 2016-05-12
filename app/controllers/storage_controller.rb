@@ -36,7 +36,6 @@ class StorageController < ApplicationController
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
     @record = @storage = find_record( Storage, record || params[:id])
-    # @storage = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@storage)
 
     if !@explorer && @display == "main"
@@ -64,7 +63,6 @@ class StorageController < ApplicationController
     end
 
     @gtl_url = "/show"
-    #   drop_breadcrumb({:name=>ui_lookup(:tables=>"storages"), :url=>"/storage/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display
     when "all_miq_templates", "all_vms"

@@ -21,17 +21,13 @@
       - else
         - @assignments.sort_by { |a| [a.parent.description, a.description] }.each do |a|
           %tr{:id => "#{a.id}_tr"}
-            - if !session[:assigned_filters].include?(a.parent.description.downcase)
-              - cl = remote_function(:url => {:action => 'tag_edit_form_field_changed', :id => @sb[:rec_id] || @edit[:object_ids][0], :tag_remove => a.id},
+            - cl = remote_function(:url => {:action => 'tag_edit_form_field_changed', :id => @sb[:rec_id] || @edit[:object_ids][0], :tag_remove => a.id},
                 :loading  => "miqSparkle(true);",
                 :complete => "miqSparkle(false);")
-              %td{:onclick => cl, :title => t = _("Click to remove this assignment")}
-                %button.btn.btn-default
-                  %i.pficon.pficon-close.fa-lg
-            - else
-              %td
-                %ul#list
-                  %li
+            %td{:onclick => cl, :title => t = _("Click to remove this assignment")}
+              %button.btn.btn-default
+                %i.pficon.pficon-close.fa-lg
+
             %td
               = h(a.parent.description)
               - if a.parent.single_value?

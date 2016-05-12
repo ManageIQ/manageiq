@@ -40,8 +40,10 @@ module TextualSummaryHelper
   end
 
   def tags_from_record(record)
-    record.tags.each_with_object(Array.new(0)) do |tag,tags|
+    record.tags.each_with_object([]) do |tag,tags|
       values = tag.name.split('/')
+      # needs only tags
+      next unless values[1] == "managed"
       p = tags.find { |x| x[:label] == values[2].humanize }
       value = Classification.find_by(:tag_id => tag.id).description
       if p.present?
@@ -56,7 +58,7 @@ module TextualSummaryHelper
   def textual_tags
     label = _("%{name} Tags") % {:name => session[:customer_name]}
     tags = {:label => label}
-    if @record.tags.blank?
+    if @record.tags.blank? || tags_from_record(@record).blank?
       tags[:image] = "smarttag"
       tags[:value] = _("No %{label} have been assigned") % {:label => label}
     else

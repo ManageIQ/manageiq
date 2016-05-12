@@ -232,30 +232,6 @@ module ApplicationController::PolicySupport
     audit = {:event => event, :target_id => pp.id, :target_class => pp.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
-  def assigned_filters
-    assigned_filters = []
-    # adding assigned filters for a user into hash to display categories bold and gray out subcategory if checked
-    @get_filters = [current_user.get_managed_filters].flatten
-    h = Hash[*@get_filters.collect { |v| [@get_filters.index(v), v] }.flatten]
-    @get_filters = h.invert
-    h.invert.each do |val, _key|
-      categories = Classification.categories.collect { |c| c if c.show }.compact
-      categories.each do |category|
-        entries = {}
-        category.entries.each do |entry|
-          entries[entry.description] = entry.tag.name # Get the fully qual tag name
-          if val == entry.tag.name
-            @get_filters[entry.tag.name] = "cats_#{category.description}:#{entry.description}"
-            assigned_filters.push(category.description.downcase)
-            session[category.description.downcase] = [] if session[category.description.downcase].nil?
-            session[category.description.downcase].push(entry.description) unless session[category.description.downcase].include?(entry.description)
-          end
-        end
-      end
-    end
-    assigned_filters
-  end
-
   # Build the policy simulation screen
   def policy_sim_build_screen
     @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged

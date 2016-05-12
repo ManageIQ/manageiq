@@ -437,7 +437,6 @@ describe ProviderForemanController do
 
   it "renders tagging editor" do
     session[:tag_items] = [@configured_system.id]
-    session[:assigned_filters] = []
     parent = FactoryGirl.create(:classification, :name => "test_category")
     FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
     FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)

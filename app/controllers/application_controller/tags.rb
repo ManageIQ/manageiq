@@ -76,35 +76,6 @@ module ApplicationController::Tags
     end
   end
 
-  # Assign a classification entry to a set of objects
-  def classify_assign
-    entry = Classification.find_by_id(params["entry"]["id"])
-    session[:tag_items].each do |item|
-      entry.assign_entry_to(session[:tag_db].find(item))
-    end
-    classify_build_screen
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("value_div", :partial => "layouts/classify_value")
-      page.replace("table_div", :partial => "layouts/classify_table")
-      page << jquery_pulsate_element("#{entry.id}_tr")
-    end
-  end
-
-  # Remove a classification entry from a set of objects
-  def classify_remove
-    entry = Classification.find_by_id(params["id"])
-    session[:tag_items].each do |item|
-      entry.remove_entry_from(session[:tag_db].find(item))
-    end
-    classify_build_screen
-    render :update do |page|
-      page << javascript_prologue
-      page.replace("value_div", :partial => "layouts/classify_value")
-      page.replace("table_div", :partial => "layouts/classify_table")
-    end
-  end
-
   def filters
     @in_a_form = true
     session[:filter_object] = Host.find(1)
@@ -132,7 +103,6 @@ module ApplicationController::Tags
       return
     else
       session[:tag_items] = recs    # Set the array of tag items
-      session[:assigned_filters] = assigned_filters
     end
   end
 
@@ -276,11 +246,7 @@ module ApplicationController::Tags
         @categories[c.description] = c.name
       end
     end
-    cats.each do |cat_key|
-      if session[:assigned_filters].include?(cat_key.name.downcase)
-        cats.delete(cat_key)
-      end
-    end
+
     session[:cat] ||= cats.first                                    # Set to first category, if not already set
 
     @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
@@ -331,16 +297,6 @@ module ApplicationController::Tags
         @categories[c.description + " *"] = c.id
       else
         @categories[c.description] = c.id
-      end
-    end
-
-    if ["User", "MiqGroup", "Tenant"].include?(@tagging)
-      session[:assigned_filters] = []  # No view filters used for user/groups/tenants, set as empty for later methods
-    else
-      cats.each do |cat_key|  # not needed for user/group tags since they are not filtered for viewing
-        if session[:assigned_filters].include?(cat_key.name.downcase)
-          cats.delete(cat_key)
-        end
       end
     end
 

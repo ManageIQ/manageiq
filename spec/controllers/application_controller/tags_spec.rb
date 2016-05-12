@@ -44,7 +44,6 @@ describe ApplicationController  do
       controller.instance_variable_set(:@edit, :new => {})
       controller.instance_variable_set(:@tagging, 'ServiceTemplate')
       controller.instance_variable_set(:@object_ids, [@st.id])
-      session[:assigned_filters] = {:Test => %w("Entry1 Entry2)}
 
       controller.send(:tag_edit_build_screen)
       expect(convert_to_region_id(assigns(:categories)['Clergy']))
