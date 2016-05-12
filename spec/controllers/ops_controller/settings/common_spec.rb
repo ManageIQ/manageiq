@@ -279,5 +279,46 @@ describe OpsController do
         expect(response).not_to render_template(:partial => "layouts/_x_edit_buttons")
       end
     end
+
+    context "#settings_get_form_vars" do
+      before do
+        miq_server = FactoryGirl.create(:miq_server)
+        current = VMDB::Config.new("vmdb")
+        current.config[:authentication] = {:ldap_role         => true,
+                                           :get_direct_groups => true,
+                                           :mode              => 'ldap'
+        }
+        edit = {:current => current,
+                :new     => current.config,
+                :key     => "settings_authentication_edit__#{miq_server.id}"
+        }
+        controller.instance_variable_set(:@edit, edit)
+        session[:edit] = edit
+        controller.instance_variable_set(:@sb,
+                                         :selected_server_id => miq_server.id,
+                                         :active_tab         => 'settings_authentication'
+                                        )
+        controller.x_node = "svr-#{controller.to_cid(miq_server.id)}"
+      end
+
+      it "sets ldap_role to false to make forest entries div hidden" do
+        controller.instance_variable_set(:@_params,
+                                         :id                  => 'authentication',
+                                         :authentication_mode => 'database'
+                                        )
+        controller.send(:settings_get_form_vars)
+        expect(assigns(:edit)[:new][:authentication][:ldap_role]).to eq(false)
+      end
+
+      it "resets ldap_role to it's original state so forest entries div can be displayed" do
+        session[:edit][:new][:authentication][:mode] = 'database'
+        controller.instance_variable_set(:@_params,
+                                         :id                  => 'authentication',
+                                         :authentication_mode => 'ldap'
+                                        )
+        controller.send(:settings_get_form_vars)
+        expect(assigns(:edit)[:new][:authentication][:ldap_role]).to eq(true)
+      end
+    end
   end
 end
