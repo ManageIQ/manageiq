@@ -1634,7 +1634,8 @@ describe ApplicationHelper do
          :controller => 'availability_zone',
          :record     => FactoryGirl.create(:availability_zone),
          :action     => 'show_list',
-         :display    => 'something'}
+         :display    => 'something',
+         :title      => 'sometitle'}
       end
 
       subject { li_link(args) }
@@ -1645,6 +1646,10 @@ describe ApplicationHelper do
 
       it 'renders onclick correctly' do
         expect(subject).to have_xpath("//a[@onclick = 'return miqCheckForChanges()']")
+      end
+
+      it 'renders title correctly' do
+        expect(subject).to have_xpath("//a[@title = 'sometitle']")
       end
     end
 
@@ -1654,7 +1659,8 @@ describe ApplicationHelper do
          :controller => 'availability_zone',
          :record_id  => FactoryGirl.create(:availability_zone).id,
          :action     => 'show_list',
-         :display    => 'something'}
+         :display    => 'something',
+         :title      => 'sometitle'}
       end
 
       subject { li_link(args) }
@@ -1665,6 +1671,10 @@ describe ApplicationHelper do
 
       it 'renders onclick correctly' do
         expect(subject).to have_xpath("//a[@onclick = 'return miqCheckForChanges()']")
+      end
+
+      it 'renders title correctly' do
+        expect(subject).to have_xpath("//a[@title = 'sometitle']")
       end
     end
   end
