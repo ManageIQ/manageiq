@@ -927,7 +927,7 @@ module ApplicationHelper
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
       content_tag(:li) do
         if args[:record] && restful_routed?(args[:record])
-          link_to(link_text, polymorphic_path(args[:record], :display => args[:display]))
+          link_to(link_text, polymorphic_path(args[:record], :display => args[:display]), tag_attrs)
         else
           link_to(link_text, link_params, tag_attrs)
         end
