@@ -100,6 +100,50 @@ RSpec.describe "reports API" do
     expect(response).to have_http_status(:ok)
   end
 
+  it "can fetch all the schedule" do
+    report = FactoryGirl.create(:miq_report)
+
+    exp = {}
+    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
+    exp = MiqExpression.new(exp)
+
+    schedule_1 = FactoryGirl.create(:miq_schedule, :filter => exp)
+    schedule_2 = FactoryGirl.create(:miq_schedule, :filter => exp)
+
+    api_basic_authorize collection_action_identifier(:schedules, :read, :get)
+    run_get "/api/reports/#{report.id}/schedules"
+
+    expect_result_resources_to_include_hrefs(
+      "resources",
+      [
+        "/api/reports/#{report.id}/schedules/#{schedule_1.id}",
+        "/api/reports/#{report.id}/schedules/#{schedule_2.id}",
+      ]
+    )
+    expect_request_success
+  end
+
+  it "can show a single schedule" do
+    report = FactoryGirl.create(:miq_report)
+
+    exp = {}
+    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
+    exp = MiqExpression.new(exp)
+
+    schedule = FactoryGirl.create(:miq_schedule, :name => 'unit_test', :filter => exp)
+
+    api_basic_authorize collection_action_identifier(:schedules, :read, :get)
+    run_get "/api/reports/#{report.id}/schedules/#{schedule.id}"
+
+    expect_result_to_match_hash(
+      response_hash,
+      "href"      => "/api/reports/#{report.id}/schedules/#{schedule.id}",
+      "id"        => schedule.id,
+      "name"      => 'unit_test'
+    )
+    expect_request_success
+  end
+
   it "returns an empty result set if none has been run" do
     report = FactoryGirl.create(:miq_report_with_results)
     report_result = report.miq_report_results.first

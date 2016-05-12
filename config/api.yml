@@ -766,6 +766,7 @@
         :identifier: miq_report_run
     :subcollections:
     - :results
+    - :schedules
     :collection_actions:
       :get:
       - :name: read
@@ -858,6 +859,21 @@
       - :name: read
         :identifier: miq_report_view
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_view
+  :schedules:
+    :description: Report schedules
+    :identifier: miq_report_reports
+    :options:
+    - :subcollection
+    :methods: *70174834086080
+    :klass: MiqSchedule
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_report_view
+    :subresource_actions:
       :get:
       - :name: read
         :identifier: miq_report_view

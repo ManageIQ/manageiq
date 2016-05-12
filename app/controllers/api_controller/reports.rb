@@ -8,6 +8,14 @@ class ApiController
       object.miq_report_results
     end
 
+    def schedules_query_resource(object)
+      klass = collection_class(:schedules)
+      exp = {}
+      exp["="] = {"field" => "MiqReport.id", "value" => object.id}
+      exp = MiqExpression.new(exp)
+      object ? klass.where(:filter => exp) : {}
+    end
+
     def show_reports
       if @req.subcollection == "results" && (@req.s_id || expand?(:resources)) && attribute_selection == "all"
         @additional_attributes = %w(result_set)
