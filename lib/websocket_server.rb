@@ -22,7 +22,11 @@ class WebsocketServer
 
         # Do the data transfers
         reads.each do |read|
-          @pairing[read].proxy.transmit(writes, @pairing[read].is_ws)
+          begin
+            @pairing[read].proxy.transmit(writes, @pairing[read].is_ws)
+          rescue
+            cleanup(errors)
+          end
         end
       end
     end
