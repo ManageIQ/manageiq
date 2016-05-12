@@ -11,7 +11,7 @@ describe AzureBlobDisk do
     @client_id  = @test_env[:azure_client_id]
     @client_key = @test_env[:azure_client_key]
     @tenant_id  = @test_env[:azure_tenant_id]
-    @blob_uri   = "https://miqazuretest18686.blob.core.windows.net/vhds/miq-test-rhel12016218112243.vhd"
+    @blob_uri   = @test_env[:blob_uri]
 
     @test_env.ensure_recording_dir_exists
   end
