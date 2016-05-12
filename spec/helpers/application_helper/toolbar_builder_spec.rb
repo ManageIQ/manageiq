@@ -3013,22 +3013,22 @@ describe ApplicationHelper do
   context "build_toolbar" do
     before do
       controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
-      @pdf_button = {:id              => "download_choice__download_pdf",
-                     :child_id        => "download_pdf",
-                     :type            => :button,
-                     :img             => "download_pdf.png",
-                     :imgdis          => "download_pdf.png",
-                     :icon            => "fa fa-file-pdf-o fa-lg",
-                     :text            => "Download as PDF",
-                     :title           => "Download this report in PDF format",
-                     :name            => "download_choice__download_pdf",
-                     :hidden          => false,
-                     :pressed         => nil,
-                     :onwhen          => nil,
-                     :enabled         => true,
-                     :url             => "/download_data",
-                     :url_parms       => "?download_type=pdf",
-                     :html_attributes => nil}
+      @pdf_button = {:id        => "download_choice__download_pdf",
+                     :child_id  => "download_pdf",
+                     :type      => :button,
+                     :img       => "download_pdf.png",
+                     :imgdis    => "download_pdf.png",
+                     :icon      => "fa fa-file-pdf-o fa-lg",
+                     :text      => "Download as PDF",
+                     :title     => "Download this report in PDF format",
+                     :name      => "download_choice__download_pdf",
+                     :hidden    => false,
+                     :pressed   => nil,
+                     :onwhen    => nil,
+                     :enabled   => true,
+                     :url       => "/download_data",
+                     :url_parms => "?download_type=pdf",
+                     :data      => nil}
       @layout = "catalogs"
       allow(helper).to receive(:role_allows).and_return(true)
       allow(helper).to receive(:x_active_tree).and_return(:ot_tree)
