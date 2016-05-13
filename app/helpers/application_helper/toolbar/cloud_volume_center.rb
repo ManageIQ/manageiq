@@ -26,14 +26,16 @@ class ApplicationHelper::Toolbar::CloudVolumeCenter < ApplicationHelper::Toolbar
                        'pficon pficon-volume fa-lg',
                        t = N_('Attach this Cloud Volume to an Instance'),
                        t,
-                       :url_parms => 'main_div',
+                       :klass     => ApplicationHelper::Button::VolumeAttach,
+                       :url_parms => 'main_div'
                      ),
                      button(
                        :cloud_volume_detach,
                        'pficon pficon-volume fa-lg',
                        t = N_('Detach this Cloud Volume from an Instance'),
                        t,
-                       :url_parms => 'main_div',
+                       :klass     => ApplicationHelper::Button::VolumeDetach,
+                       :url_parms => 'main_div'
                      ),
                      button(
                        :cloud_volume_edit,

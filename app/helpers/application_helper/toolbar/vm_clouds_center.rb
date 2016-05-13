@@ -53,25 +53,6 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :onwhen    => "1+"),
         separator,
         button(
-          :instance_attach,
-          'pficon pficon-volume fa-lg',
-          t = N_('Attach a Cloud Volume to the selected Instance'),
-          t,
-          :url_parms => 'main_div',
-          :enabled   => 'false',
-          :onwhen    => '1'
-        ),
-        button(
-          :instance_detach,
-          'pficon pficon-volume fa-lg',
-          t = N_('Detach a Cloud Volume from the selected Instance'),
-          t,
-          :url_parms => 'main_div',
-          :enabled   => 'false',
-          :onwhen    => '1'
-        ),
-        separator,
-        button(
           :instance_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove selected items from the VMDB'),

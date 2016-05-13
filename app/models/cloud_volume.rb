@@ -5,6 +5,7 @@ class CloudVolume < ApplicationRecord
   include ReportableMixin
   include ProviderObjectMixin
   include AsyncDeleteMixin
+  include AvailabilityMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
   belongs_to :availability_zone
