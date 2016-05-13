@@ -2094,16 +2094,4 @@ describe MiqExpression do
       expect(obj.evaluate(@data_hash)).to eq(false)
     end
   end
-
-  describe ".evaluate_atoms" do
-    it "adds mapping 'result'=>false to expression if expression evaluates to false on supplied object" do
-      expression = {">=" => {"field" => "Vm-num_cpu",
-                             "value" => "2"}}
-      result = described_class.evaluate_atoms(expression, FactoryGirl.build(:vm))
-      expect(result).to include(
-        ">="     => {"field" => "Vm-num_cpu",
-                     "value" => "2"},
-        "result" => false)
-    end
-  end
 end
