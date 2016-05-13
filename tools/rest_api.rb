@@ -18,16 +18,8 @@ require 'trollop'
 require 'faraday'
 require 'faraday_middleware'
 
-api_cmd   = File.basename($PROGRAM_NAME)
-api_ver   = "2.3.0-pre"
-cmd_title = "ManageIQ REST API Access Script"
-
-sep       = "_" * 60
-prefix    = "/api"
-ctype     = "application/json"
-scriptdir = ENV['API_SCRIPTDIR'] ? ENV['API_SCRIPTDIR'] : ENV['HOME'] + "/bin"
-data      = ""
-
+class RestApi
+  class Cli
 def msg_exit(msg, exit_code = 1)
   puts msg
   exit exit_code
@@ -53,6 +45,17 @@ def prompt_get_data
   end
   data
 end
+
+def run
+api_cmd   = File.basename($PROGRAM_NAME)
+api_ver   = "2.3.0-pre"
+cmd_title = "ManageIQ REST API Access Script"
+
+sep       = "_" * 60
+prefix    = "/api"
+ctype     = "application/json"
+scriptdir = ENV['API_SCRIPTDIR'] ? ENV['API_SCRIPTDIR'] : ENV['HOME'] + "/bin"
+data      = ""
 
 path      = ""
 params    = {}
@@ -277,3 +280,7 @@ if response.body
 end
 
 exit response.status >= 400 ? 1 : 0
+end
+end
+end
+RestApi::Cli.new.run
