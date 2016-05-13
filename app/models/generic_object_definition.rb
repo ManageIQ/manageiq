@@ -15,8 +15,12 @@ class GenericObjectDefinition < ApplicationRecord
   has_one   :picture, :dependent => :destroy, :as => :resource
   has_many  :generic_objects
 
-  def defined_attributes
+  def defined_property_attributes
     properties[:attributes]
+  end
+
+  def property_attribute_defined?(attr)
+    defined_property_attributes.try(:key?, attr.to_s)
   end
 
   def properties=(props)
@@ -31,6 +35,6 @@ class GenericObjectDefinition < ApplicationRecord
   end
 
   def type_cast(attr_name, value)
-    TYPE_MAP.fetch(defined_attributes[attr_name]).cast(value)
+    TYPE_MAP.fetch(defined_property_attributes[attr_name]).cast(value)
   end
 end
