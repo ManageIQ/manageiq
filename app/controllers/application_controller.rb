@@ -2472,7 +2472,7 @@ class ApplicationController < ActionController::Base
 
   def start_url_for_user(start_url)
     return url_for(start_url) unless start_url.nil?
-    return url_for(:controller => "dashboard", :action => "show") unless @settings[:display][:startpage]
+    return url_for(:controller => "dashboard", :action => "show") unless self.helpers.settings(:display, :startpage)
 
     first_allowed_url = nil
     startpage_already_set = nil
@@ -2485,7 +2485,7 @@ class ApplicationController < ActionController::Base
     end
 
     # user first_allowed_url in start_pages to be default page, if default startpage is not allowed
-    @settings[:display][:startpage] = first_allowed_url unless startpage_already_set
+    @settings.store_path(:display, :startpage, first_allowed_url) unless startpage_already_set
     @settings[:display][:startpage]
   end
   helper_method :start_url_for_user
