@@ -53,13 +53,6 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-edit fa-lg',
           t = N_('Edit Management Engine Relationship'),
           t),
-        separator,
-        button(
-          :instance_resize,
-          'pficon pficon-edit fa-lg',
-          t = N_('Reconfigure this Instance'),
-          t,
-          :klass => ApplicationHelper::Button::InstanceReconfigure)
       ]
     ),
   ])
