@@ -129,7 +129,7 @@ describe EmsInfraController do
            @orchestration_stack_parameter_compute.name => 2 }
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.body).to include("redirected")
-      expect(response.body).to include("show")
+      expect(response.body).to include("ems_infra")
       expect(response.body).to include("1+to+2")
     end
 
@@ -196,7 +196,7 @@ describe EmsInfraController do
            :orchestration_stack_id => @ems.orchestration_stacks.first.id, :host_ids => [@ems.hosts[1].id]}
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.body).to include("redirected")
-      expect(response.body).to include("show")
+      expect(response.body).to include("ems_infra")
       expect(response.body).to include("down+to+1")
     end
 
