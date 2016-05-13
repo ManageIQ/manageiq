@@ -4,12 +4,13 @@ describe MiqPolicyController do
   end
   context "::Policies" do
     context "#policy_edit" do
+      render_views
+
       before :each do
         event = FactoryGirl.create(:miq_event_definition, :name => "host_compliance_check")
         action = FactoryGirl.create(:miq_action, :name => "compliance_failed")
         allow(controller).to receive(:policy_get_node_info)
         allow(controller).to receive(:get_node_info)
-        allow(controller).to receive(:replace_right_cell)
       end
 
       it "Correct active tree node is saved in @sb after Policy is added" do
@@ -24,6 +25,7 @@ describe MiqPolicyController do
                                                   :key     => "policy_edit__new"})
         session[:edit] = assigns(:edit)
         active_node = "xx-compliance_xx-compliance-host"
+        allow(controller).to receive(:replace_right_cell)
         controller.instance_variable_set(:@sb, {:trees       => {:policy_tree => {:active_node => active_node}},
                                                 :active_tree => :policy_tree})
         controller.instance_variable_set(:@_params, :button => "add")
@@ -31,6 +33,17 @@ describe MiqPolicyController do
         sb = assigns(:sb)
         expect(sb[:trees][sb[:active_tree]][:active_node]).to include("#{active_node}_p-")
         expect(assigns(:flash_array).first[:message]).to include("added")
+      end
+
+      it "Renders the control policy creation form correctly" do
+        session[:sandboxes] = {"miq_policy" => {:trees       => {:policy_tree => {:active_node => "xx-compliance_xx-compliance-host"}},
+                                                :active_tree => :policy_tree,
+                                                :folder      => "compliance-host"}}
+        session[:edit] = {:new => {:mode => "compliance", :towhat => "Host"}}
+        post :x_button, :pressed => "policy_new", :typ => "basic"
+        expect(response).to render_template("layouts/exp_atom/_editor")
+        expect(response).to render_template("layouts/_exp_editor")
+        expect(response).to render_template("miq_policy/_policy_details")
       end
     end
   end
