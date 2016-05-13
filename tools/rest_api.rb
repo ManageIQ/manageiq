@@ -64,13 +64,10 @@ class RestApi
       data = ""
       puts "Enter data to send with request:"
       puts "Terminate with \"\" or \".\""
-      s = gets
-      loop do
-        break if s.nil?
+      while (s = gets)
         s = s.strip
         break if s == "." || s == ""
-        data << s.strip
-        s = gets
+        data << s
       end
       data
     end
