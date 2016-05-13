@@ -29,6 +29,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def save!
+    assert_valid_schemas!
     id ? update_subscription : create_subscription
   end
 
@@ -186,6 +187,15 @@ class PglogicalSubscription < ActsAsArModel
     pglogical.subscription_create(new_subscription_name, dsn, [MiqPglogical::REPLICATION_SET_NAME],
                                   false).check
     self
+  end
+
+  def assert_valid_schemas!
+    local_errors = EvmDatabase.check_schema
+    raise local_errors if local_errors
+    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
+      remote_errors = EvmDatabase.check_schema(conn)
+      raise remote_errors if remote_errors
+    end
   end
 
   def dsn
