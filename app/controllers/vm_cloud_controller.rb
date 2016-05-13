@@ -14,25 +14,32 @@ class VmCloudController < ApplicationController
   def resize
     assert_privileges("instance_resize")
     @record = find_by_id_filtered(VmOrTemplate, params[:id]) # Set the VM object
-    drop_breadcrumb(
-      :name => _("Reconfigure Instance '%{name}'") % {:name => @record.name},
-      :url  => "/vm_cloud/resize"
-    ) unless @explorer
-    @flavors = {}
-    unless @record.ext_management_system.nil?
-      @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
+    if @record.is_available?(:resize)
+      drop_breadcrumb(
+        :name => _("Reconfigure Instance '%{name}'") % {:name => @record.name},
+        :url  => "/vm_cloud/resize"
+      ) unless @explorer
+      @flavors = {}
+      unless @record.ext_management_system.nil?
+        @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
+      end
+      @edit = {}
+      @edit[:new] ||= {}
+      unless @record.flavor.nil?
+        @edit[:new][:flavor] = @record.flavor.id
+      end
+      @edit[:key] = "vm_resize__#{@record.id}"
+      @edit[:vm_id] = @record.id
+      @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
+      session[:edit] = @edit
+      @in_a_form = true
+      @refresh_partial = "vm_common/resize"
+    else
+      add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
+        :instance => ui_lookup(:table => 'vm_cloud'),
+        :name     => @record.name,
+        :details  => @record.is_available_now_error_message(:resize)}, :error)
     end
-    @edit = {}
-    @edit[:new] ||= {}
-    unless @record.flavor.nil?
-      @edit[:new][:flavor] = @record.flavor.id
-    end
-    @edit[:key] = "vm_resize__#{@record.id}"
-    @edit[:vm_id] = @record.id
-    @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
-    session[:edit] = @edit
-    @in_a_form = true
-    @refresh_partial = "vm_common/resize"
   end
   alias instance_resize resize
 
@@ -50,8 +57,7 @@ class VmCloudController < ApplicationController
       @record = @sb[:action] = nil
       replace_right_cell
     when "submit"
-      validation = @record.validate_resize
-      if validation[:available]
+      if @record.is_available?(:resize)
         begin
           old_flavor = @record.flavor
           @record.resize(flavor)
@@ -70,7 +76,7 @@ class VmCloudController < ApplicationController
         add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
           :instance => ui_lookup(:table => 'vm_cloud'),
           :name     => @record.name,
-          :details  => validation[:message]}, :error)
+          :details  => @record.is_avaiable_now_error_message(:resize)}, :error)
       end
       params[:id] = @record.id.to_s # reset id in params for show
       @record = nil
