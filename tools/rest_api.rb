@@ -74,6 +74,14 @@ class RestApi
       data
     end
 
+    def script_filename(scriptdir, filename)
+      filename &&= filename.strip
+      return if filename.nil? || filename == ""
+      filename = "api_#{filename}" unless filename =~ /^api_/
+      filename = "#{filename}.rb" unless filename =~ /\.rb$/
+      File.join(scriptdir, filename)
+    end
+
     def run
       data      = ""
       path      = ""
@@ -95,8 +103,7 @@ class RestApi
 
              #{API_CMD} [options] vi|edit [script]
 
-                  Edit optional api_* scripts. script names must be specified without the
-                  api_ prefix or .rb suffix. Edits this script if not specified.
+                  Edit optional api_*.rb scripts.
 
              #{API_CMD} [options] run script [method]
 
@@ -162,11 +169,7 @@ class RestApi
 
       if action == "vi" || action == "edit"
         api_script = ARGV.shift
-        api_script_file = if api_script.nil? || api_script == ""
-                            File.expand_path($PROGRAM_NAME)
-                          else
-                            File.join(opts[:scriptdir], "api_#{api_script}.rb")
-                          end
+        api_script_file = script_filename(opts[:scriptdir], api_script) || File.expand_path($PROGRAM_NAME)
         ed_cmd = "vi"
         ed_cmd = ENV["EDITOR"] if action == "edit" && ENV["EDITOR"]
         cmd = "#{ed_cmd} #{api_script_file}"
