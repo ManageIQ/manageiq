@@ -201,18 +201,12 @@ class RestApi
       when "vi", "edit"
         run_vi(action, opts[:scriptdir], opts[:api_script]) ; exit 0
       when "run"
+        conn = create_connection(opts)
       else
+        conn = create_connection(opts)
         resource = "/" + resource             if resource && resource[0] != "/"
         resource = resource.gsub(PREFIX, '')  unless resource.nil?
         opts[:resource] = resource if resource
-      end
-
-      conn = Faraday.new(:url => opts[:url], :ssl => {:verify => false}) do |faraday|
-        faraday.request(:url_encoded)               # form-encode POST params
-        faraday.response(:logger) if opts[:verbose] # log requests to STDOUT
-        faraday.use FaradayMiddleware::FollowRedirects, :limit => 3, :standards_compliant => true
-        faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
-        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty? && opts[:miqtoken].empty?
       end
 
       if action == "run"
@@ -303,6 +297,16 @@ class RestApi
       ed_cmd = ed_cmd == "edit" && ENV["EDITOR"] ? ENV["EDITOR"] : "vi"
       cmd = "#{ed_cmd} #{api_script_file}"
       system(cmd)
+    end
+
+    def create_connection(opts)
+      Faraday.new(:url => opts[:url], :ssl => {:verify => false}) do |faraday|
+        faraday.request(:url_encoded)               # form-encode POST params
+        faraday.response(:logger) if opts[:verbose] # log requests to STDOUT
+        faraday.use FaradayMiddleware::FollowRedirects, :limit => 3, :standards_compliant => true
+        faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
+        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty?
+      end
     end
   end
 end
