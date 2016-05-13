@@ -17,6 +17,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
     $scope.saveUrl = $attrs.saveUrl;
     $scope.validateClicked = miqService.validateWithAjax;
     $scope.model = 'logCollectionModel';
+    $scope.miqDBBackupService = miqDBBackupService;
 
     ManageIQ.angular.scope = $scope;
 
