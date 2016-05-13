@@ -111,23 +111,23 @@ EOS
         opt :verbose,    "Verbose mode, show details of the communication",
             :default => false,                    :short => '-v'
         opt :apiversion, "API Version to access (default: none specified)",
-            :default => "",                       :short => '-V'
+            :type => :string,                     :short => '-V'
         opt :url,        "Base URL of Appliance",
             :default => "http://localhost:3000",  :short => '-l'
         opt :user,       "User for authentication",
             :default => "admin",                  :short => '-u'
         opt :group,      "User group for authorization",
-            :default => "",                       :short => '-g'
+            :type => :string,                     :short => '-g'
         opt :password,   "Password for user authentication",
             :default => "smartvm",                :short => '-p'
         opt :token,      "Token for authentication. Used instead of user and password",
-            :default => "",                       :short => '-t'
+            :type => :string,                     :short => '-t'
         opt :miqtoken,   "Token to use for system authentication",
             :default => "",                       :short => '-m'
         opt :format,     "Json format. i.e.: pretty|none",
             :default => "pretty",                 :short => '-f'
         opt :inputfile,  "File containing data used by POST, PUT, or PATCH",
-            :default => "",                       :short => '-i'
+            :type => :string,                     :short => '-i'
         opt :scriptdir,  "Directory for api_* scripts",
             :default => SCRIPTDIR,                :short => '-s'
         stop_on SUB_COMMANDS
@@ -144,12 +144,12 @@ EOS
         opts[:method] = ARGV.shift
       else
         api_params = Trollop.options do
-          norm_options  = {:default => ""}
-          multi_options = {:default => "", :multi => true}
+          norm_options  = {:type => :string}
+          multi_options = {:type => :string, :multi => true}
           API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
         end
         params = {}
-        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
+        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].nil? }
 
         opts[:resource] = ARGV.shift
         opts[:method] = METHODS[opts[:action]]
@@ -161,8 +161,8 @@ EOS
 
     def validate(opts)
       action = opts[:action]
-      unless opts[:inputfile].empty?
-        Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist" unless File.exist?(opts[:inputfile])
+      if opts[:inputfile] && !File.exist?(opts[:inputfile])
+        Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist"
       end
 
       begin
@@ -183,11 +183,11 @@ EOS
       end
 
       msg_exit("Unsupported action #{action} specified") if !%w(run vi edit).include?(opts[:method]) && action.nil?
-      msg_exit("Action #{action} requires data to be specified") if METHODS_NEEDING_DATA.include?(opts[:method]) && opts[:data].empty?
+      msg_exit("Action #{action} requires data to be specified") if METHODS_NEEDING_DATA.include?(opts[:method]) && opts[:data].nil?
     end
 
     def parse_data
-      opts[:inputfile].empty? ? prompt_get_data : File.read(opts[:inputfile])
+      opts[:inputfile].nil? ? prompt_get_data : File.read(opts[:inputfile])
     end
 
     def run
@@ -215,7 +215,7 @@ EOS
 
     def run_method(conn, opts)
       path = PREFIX.dup
-      path << "/v#{opts[:apiversion]}" unless opts[:apiversion].empty?
+      path << "/v#{opts[:apiversion]}" unless opts[:apiversion].nil?
 
       collection = ""
       item = ""
@@ -234,9 +234,9 @@ EOS
           req.url path
           req.headers[:content_type]  = CTYPE
           req.headers[:accept]        = CTYPE
-          req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].empty?
-          req.headers['X-MIQ-Token']  = opts[:miqtoken] unless opts[:miqtoken].empty?
-          req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].empty?
+          req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].nil?
+          req.headers['X-MIQ-Token']  = opts[:miqtoken] unless opts[:miqtoken].nil?
+          req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].nil?
           req.params.merge!(opts[:params])
           req.body = opts[:data] if METHODS_NEEDING_DATA.include?(opts[:method])
         end
@@ -287,7 +287,7 @@ EOS
         faraday.response(:logger) if opts[:verbose] # log requests to STDOUT
         faraday.use FaradayMiddleware::FollowRedirects, :limit => 3, :standards_compliant => true
         faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
-        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty?
+        faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].nil?
       end
     end
 
