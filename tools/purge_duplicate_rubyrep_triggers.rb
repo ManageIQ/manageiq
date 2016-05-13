@@ -51,7 +51,7 @@ conn.async_exec(TRIGGER_QUERY).each do |tt|
   triggers = sql_array_to_ruby(tt["triggers"])
   table = tt["relname"]
 
-  to_drop = triggers.reject { |t| t =~ /rr\d_#{table}/ }
+  to_drop = triggers.reject { |t| t =~ /rr\d+_#{table}/ }
   next if to_drop.empty?
 
   puts "This operation will drop the following trigger(s) on #{table}:"
