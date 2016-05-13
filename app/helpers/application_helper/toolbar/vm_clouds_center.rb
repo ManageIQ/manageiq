@@ -270,11 +270,11 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
         button(
           :instance_terminate,
           nil,
-          N_('Terminate the selected items'),
-          N_('Terminate'),
+          N_('Delete the selected items'),
+          N_('Delete'),
           :image     => "power_off",
           :url_parms => "main_div",
-          :confirm   => N_("Terminate the selected items?"),
+          :confirm   => N_("Delete the selected items?"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]
