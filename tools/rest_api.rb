@@ -157,28 +157,11 @@ class RestApi
       path      = ""
       params    = {}
 
-      if action == "ls"
-        d = Dir.open(opts[:scriptdir])
-        d.each do |file|
-          p = file.scan(/^api_(.*)\.rb/)
-          puts p unless p.nil?
-        end
-        d.close
-        exit 0
-      end
-
-      if action == "vi" || action == "edit"
-        api_script = ARGV.shift
-        api_script_file = if api_script.nil? || api_script == ""
-                            File.expand_path($PROGRAM_NAME)
-                          else
-                            File.join(opts[:scriptdir], "api_#{api_script}.rb")
-                          end
-        ed_cmd = "vi"
-        ed_cmd = ENV["EDITOR"] if action == "edit" && ENV["EDITOR"]
-        cmd = "#{ed_cmd} #{api_script_file}"
-        system(cmd)
-        exit 0
+      case action
+      when "ls"
+        run_ls(opts) ; exit 0
+      when "vi", "edit"
+        run_vi(action, opts) ; exit 0
       end
 
       if action == "run"
@@ -288,6 +271,27 @@ class RestApi
       end
 
       exit response.status >= 400 ? 1 : 0
+    end
+
+    def run_ls(opts)
+      d = Dir.open(opts[:scriptdir])
+      d.each do |file|
+        p = file.scan(/^api_(.*)\.rb/)
+        puts p unless p.nil?
+      end
+      d.close
+    end
+
+    def run_vi(ed_cmd, opts)
+      api_script = ARGV.shift
+      api_script_file = if api_script.nil? || api_script == ""
+                          File.expand_path($PROGRAM_NAME)
+                        else
+                          File.join(opts[:scriptdir], "api_#{api_script}.rb")
+                        end
+      ed_cmd = ed_cmd == "edit" && ENV["EDITOR"] ? ENV["EDITOR"] : "vi"
+      cmd = "#{ed_cmd} #{api_script_file}"
+      system(cmd)
     end
   end
 end
