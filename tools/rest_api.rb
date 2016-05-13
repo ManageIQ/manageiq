@@ -233,19 +233,7 @@ class RestApi
         collection, item = rscan[0..1]
       end
 
-      if opts[:verbose]
-        puts SEP
-        puts "Connection Endpoint: #{opts[:url]}"
-        puts "Action:              #{opts[:action]}"
-        puts "HTTP Method:         #{opts[:method]}"
-        puts "Resource:            #{resource}"
-        puts "Collection:          #{collection}"
-        puts "Item:                #{item}"
-        puts "Parameters:"
-        opts[:params].keys.each { |k| puts "#{' ' * 21}#{k} = #{opts[:params][k]}" }
-        puts "Path:                #{path}"
-        puts "Data:                #{opts[:data]}"
-      end
+      print_options(opts, resource, collection, item, path) if opts[:verbose]
 
       begin
         response = conn.send(method) do |req|
@@ -319,6 +307,20 @@ class RestApi
       as = ApiScript.new(CTYPE, conn)
       puts "Running #{opts[:api_script]} with method #{method} ..."
       opts[:method].nil? ? as.run : as.run(opts[:method])
+    end
+
+    def print_options(opts, resource, collection, item, path)
+      puts SEP
+      puts "Connection Endpoint: #{opts[:url]}"
+      puts "Action:              #{opts[:action]}"
+      puts "HTTP Method:         #{opts[:method]}"
+      puts "Resource:            #{resource}"
+      puts "Collection:          #{collection}"
+      puts "Item:                #{item}"
+      puts "Parameters:"
+      opts[:params].keys.each { |k| puts "#{' ' * 21}#{k} = #{opts[:params][k]}" }
+      puts "Path:                #{path}"
+      puts "Data:                #{opts[:data]}"
     end
   end
 end
