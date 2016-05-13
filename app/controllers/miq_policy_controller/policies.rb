@@ -18,7 +18,7 @@ module MiqPolicyController::Policies
       return
     when "reset", nil # Reset or first time in
       @sb[:action] = "policy_edit"
-      policy_build_edit_screen(session[:edit] ? session[:edit][:typ] : params[:typ])
+      policy_build_edit_screen(session[:edit].try(:key?, :typ) ? session[:edit][:typ] : params[:typ])
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
