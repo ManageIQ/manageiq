@@ -12,12 +12,13 @@ class MiqAeField < ApplicationRecord
 
   validates_inclusion_of  :substitute, :in => [true, false]
 
-  NULL_COALESCING_DATATYPE = "null coalescing"
+  NULL_COALESCING_DATATYPE = "null coalescing".freeze
   AVAILABLE_SCOPES    = ["class", "instance", "local"]
   validates_inclusion_of  :scope,      :in => AVAILABLE_SCOPES,    :allow_nil => true  # nil => instance
   AVAILABLE_AETYPES   = ["assertion", "attribute", "method", "relationship", "state"]
   validates_inclusion_of  :aetype,     :in => AVAILABLE_AETYPES,   :allow_nil => true  # nil => attribute
-  AVAILABLE_DATATYPES_FOR_UI = ["string", "symbol", "integer", "float", "boolean", "time", "array", "password", NULL_COALESCING_DATATYPE]
+  AVAILABLE_DATATYPES_FOR_UI = ["string", "symbol", "integer", "float", "boolean", "time",
+                                "array", "password", NULL_COALESCING_DATATYPE].freeze
   AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI + ["host", "vm", "storage", "ems", "policy", "server", "request", "provision"]
   validates_inclusion_of  :datatype,   :in => AVAILABLE_DATATYPES, :allow_nil => true  # nil => string
 

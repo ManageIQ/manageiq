@@ -38,7 +38,7 @@ module MiqAeEngine
       'request'                => 'MiqRequest',
       'server'                 => 'MiqServer'
     )
-    NULL_COALESCING_OPERATOR = '||'
+    NULL_COALESCING_OPERATOR = '||'.freeze
     attr_accessor :attributes, :namespace, :klass, :instance, :object_name, :instance_methods, :workspace, :current_field, :current_message
     attr_accessor :node_parent
     attr_reader :node_children

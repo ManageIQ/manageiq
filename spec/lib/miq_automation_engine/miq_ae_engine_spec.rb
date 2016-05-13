@@ -807,7 +807,7 @@ module MiqAeEngineSpec
                                 :datatype => MiqAeField::NULL_COALESCING_DATATYPE},
                    'field2' => {:aetype => 'attribute', :default_value => default_value,
                                 :datatype => MiqAeField::NULL_COALESCING_DATATYPE},
-                   'field3' => {:aetype => 'attribute',
+                   'field3' => {:aetype   => 'attribute',
                                 :datatype => MiqAeField::NULL_COALESCING_DATATYPE}}
       create_ae_model(:name => 'LUIGI', :ae_class => 'BARNEY',
                       :ae_namespace => 'A/C',
