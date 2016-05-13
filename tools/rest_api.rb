@@ -19,6 +19,9 @@ require 'faraday'
 require 'faraday_middleware'
 
 class RestApi
+  VERSION = "2.3.0-pre".freeze
+  API_CMD = File.basename($PROGRAM_NAME)
+
   class Cli
     def msg_exit(msg, exit_code = 1)
       puts msg
@@ -47,10 +50,6 @@ class RestApi
     end
 
     def run
-      api_cmd   = File.basename($PROGRAM_NAME)
-      api_ver   = "2.3.0-pre"
-      cmd_title = "ManageIQ REST API Access Script"
-
       sep       = "_" * 60
       prefix    = "/api"
       ctype     = "application/json"
@@ -82,11 +81,11 @@ class RestApi
       multi_params         = %w(filter)
 
       opts = Trollop.options do
-        version "#{api_cmd} #{api_ver} - #{cmd_title}"
+        version "#{API_CMD} #{VERSION} - ManageIQ REST API Access Script"
         banner <<-EOS
-      #{api_cmd} #{api_ver} - #{cmd_title}
+      #{version}
 
-      Usage: #{api_cmd} [options] <action> [parameters] [resource]
+      Usage: #{API_CMD} [options] <action> [parameters] [resource]
 
                   action - is the action to use for the request, i.e. get, post, patch, edit ...
 
@@ -95,20 +94,20 @@ class RestApi
 
                   [resource] - is the optional resource i.e. services
 
-             #{api_cmd} [options] vi|edit [script]
+             #{API_CMD} [options] vi|edit [script]
 
                   Edit optional api_* scripts. script names must be specified without the
                   api_ prefix or .rb suffix. Edits this script if not specified.
 
-             #{api_cmd} [options] run script [method]
+             #{API_CMD} [options] run script [method]
 
                   Run optional api_* scripts
 
-             #{api_cmd} [options] ls
+             #{API_CMD} [options] ls
 
                   List optional api_* scripts (without the api_ prefix)
 
-      #{api_cmd} options are:
+      #{API_CMD} options are:
       EOS
         opt :verbose,    "Verbose mode, show details of the communication",
             :default => false,                    :short => '-v'
