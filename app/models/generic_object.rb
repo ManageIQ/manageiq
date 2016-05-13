@@ -5,15 +5,6 @@ class GenericObject < ApplicationRecord
   validates :name, :presence => true, :uniqueness => true
   validate  :must_be_defined_attributes
 
-  TYPE_MAP = {
-    :boolean  => ActiveRecord::Type::Boolean.new,
-    :datetime => ActiveRecord::Type::DateTime.new,
-    :time     => ActiveRecord::Type::Time.new,
-    :float    => ActiveRecord::Type::Float.new,
-    :integer  => ActiveRecord::Type::Integer.new,
-    :string   => ActiveRecord::Type::String.new,
-  }.freeze
-
   def must_be_defined_attributes
     return errors.add(:base, "must specify a GenericObjectDefinition.") unless generic_object_definition
 
@@ -59,7 +50,7 @@ class GenericObject < ApplicationRecord
   def custom_attribute_getter(name)
     @custom_attributes ||= custom_attributes
     found = @custom_attributes.detect { |ca| ca.name == name }
-    found ? type_cast(found.name, found.value) : nil
+    found ? generic_object_definition.type_cast(name, found.value) : nil
   end
 
   def custom_attribute_setter(name, value)
@@ -75,9 +66,5 @@ class GenericObject < ApplicationRecord
     else
       value.inspect
     end
-  end
-
-  def type_cast(attr_name, value)
-    TYPE_MAP.fetch(generic_object_definition.defined_attributes[attr_name].to_sym).cast(value)
   end
 end
