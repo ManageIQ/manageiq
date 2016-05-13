@@ -33,7 +33,7 @@ class EmsInfraController < ApplicationController
     # Hiding the toolbars
     @in_a_form = true
 
-    redirect_to :action => 'show', :id => params[:id] if params[:cancel]
+    redirect_to ems_infra_path(params[:id]) if params[:cancel]
 
     drop_breadcrumb(:name => _("Scale Infrastructure Provider"), :url => "/ems_infra/scaling")
     @infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
@@ -71,7 +71,7 @@ class EmsInfraController < ApplicationController
 
   def scaledown
     assert_privileges("ems_infra_scale")
-    redirect_to :action => 'show', :id => params[:id] if params[:cancel]
+    redirect_to ems_infra_path(params[:id]) if params[:cancel]
 
     # Hiding the toolbars
     @in_a_form = true
@@ -143,7 +143,7 @@ class EmsInfraController < ApplicationController
       # A value was changed
       begin
         stack.raw_update_stack(nil, stack_parameters)
-        redirect_to :action => 'show', :id => provider_id, :flash_msg => return_message
+        redirect_to ems_infra_path(provider_id, :flash_msg => return_message)
       rescue => ex
         log_and_flash_message(_("Unable to initiate scaling: %{message}") % {:message => ex})
       end
