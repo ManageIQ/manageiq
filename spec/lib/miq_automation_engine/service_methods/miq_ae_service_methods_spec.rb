@@ -126,5 +126,37 @@ module MiqAeServiceMethodsSpec
       FactoryGirl.create(:classification, :name => category)
       expect(invoke_ae.root(@ae_result_key)).to be_truthy
     end
+
+    def category_create_script
+      <<-'RUBY'
+      options = {:name => 'flintstones',
+                 :description => 'testing'}
+      $evm.root['foo'] = $evm.execute(:category_create, options)
+      RUBY
+    end
+
+    it "#category_create" do
+      @ae_method.update_attributes(:data => category_create_script)
+
+      expect(invoke_ae.root(@ae_result_key)).to be_truthy
+    end
+
+    it "#tag_exists?" do
+      ct = FactoryGirl.create(:classification_department_with_tags)
+      method = "$evm.root['#{@ae_result_key}'] = $evm.execute(:tag_exists?, #{ct.name.inspect}, #{ct.entries.first.name.inspect})"
+      @ae_method.update_attributes(:data => method)
+
+      expect(invoke_ae.root(@ae_result_key)).to be_truthy
+    end
+
+    it "#tag_create" do
+      ct = FactoryGirl.create(:classification_department_with_tags)
+      method = "$evm.root['#{@ae_result_key}'] = $evm.execute(:tag_create, #{ct.name.inspect}, {:name => 'fred', :description => 'ABC'})"
+      @ae_method.update_attributes(:data => method)
+
+      expect(invoke_ae.root(@ae_result_key)).to be_truthy
+      ct.reload
+      expect(ct.entries.collect(&:name).include?('fred')).to be_truthy
+    end
   end
 end
