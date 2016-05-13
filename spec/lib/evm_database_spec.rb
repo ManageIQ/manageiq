@@ -32,7 +32,7 @@ describe EvmDatabase do
 
   context "schema checking" do
     def stub_test_database(db_hash)
-      conn = double(:connection)
+      conn = double(:connection, :raw_connection => double(:raw_conn, :conninfo_hash => {:host => "192.168.1.2"}))
       allow(conn).to receive(:tables).and_return(db_hash.keys)
       db_hash.each do |table, col_names|
         col_objs = col_names.map { |c| double(:name => c) }
@@ -84,7 +84,7 @@ describe EvmDatabase do
           conn = stub_test_database(current_db)
           stub_expected_schema(expected_db)
 
-          expect(subject.check_schema(conn)).to match(/Schema validation failed:.*/)
+          expect(subject.check_schema(conn)).to match(/Schema validation failed for host 192\.168\.1\.2:\.*/)
         end
 
         it "an extra table is in the schema" do
@@ -97,7 +97,7 @@ describe EvmDatabase do
           conn = stub_test_database(current_db)
           stub_expected_schema(expected_db)
 
-          expect(subject.check_schema(conn)).to match(/Schema validation failed:.*/)
+          expect(subject.check_schema(conn)).to match(/Schema validation failed for host 192\.168\.1\.2:.*/)
         end
 
         it "the expected tables are out of order" do
@@ -114,7 +114,7 @@ describe EvmDatabase do
           conn = stub_test_database(current_db)
           stub_expected_schema(expected_db)
 
-          expect(subject.check_schema(conn)).to match(/Schema validation failed:.*/)
+          expect(subject.check_schema(conn)).to match(/Schema validation failed for host 192\.168\.1\.2:.*/)
         end
 
         it "the columns in a table are out of order" do
@@ -131,7 +131,7 @@ describe EvmDatabase do
           conn = stub_test_database(current_db)
           stub_expected_schema(expected_db)
 
-          expect(subject.check_schema(conn)).to match(/Schema validation failed:.*/)
+          expect(subject.check_schema(conn)).to match(/Schema validation failed for host 192\.168\.1\.2:.*/)
         end
 
         it "a table has an extra column" do
@@ -148,7 +148,7 @@ describe EvmDatabase do
           conn = stub_test_database(current_db)
           stub_expected_schema(expected_db)
 
-          expect(subject.check_schema(conn)).to match(/Schema validation failed:.*/)
+          expect(subject.check_schema(conn)).to match(/Schema validation failed for host 192\.168\.1\.2:.*/)
         end
 
         it "a table is missing a column" do
@@ -165,7 +165,7 @@ describe EvmDatabase do
           conn = stub_test_database(current_db)
           stub_expected_schema(expected_db)
 
-          expect(subject.check_schema(conn)).to match(/Schema validation failed:.*/)
+          expect(subject.check_schema(conn)).to match(/Schema validation failed for host 192\.168\.1\.2:.*/)
         end
       end
     end

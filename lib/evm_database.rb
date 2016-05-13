@@ -137,7 +137,7 @@ class EvmDatabase
         next if compare_schema[table] == expected_columns
 
         errors << <<-ERROR.gsub!(/^ +/, "")
-          Schema validation failed:
+          Schema validation failed for host #{db_connection_host(connection)}:
 
           Columns for table #{table} in the current schema do not match the columns listed in #{SCHEMA_FILE}
 
@@ -161,14 +161,14 @@ class EvmDatabase
       diff_in_expected = expected_tables - current_tables
       if diff_in_current.empty? && diff_in_expected.empty?
         <<-ERROR.gsub!(/^ +/, "")
-          Schema validation failed:
+          Schema validation failed for host #{db_connection_host(connection)}:
 
           Expected schema table order does not match sorted current tables.
           Use 'rake evm:db:write_schema' to generate the new expected schema when making changes.
         ERROR
       else
         <<-ERROR.gsub!(/^ +/, "")
-          Schema validation failed:
+          Schema validation failed for host #{db_connection_host(connection)}:
 
           Current schema tables do not match expected
 
@@ -176,6 +176,10 @@ class EvmDatabase
           Missing tables in current schema: #{diff_in_expected}
         ERROR
       end
+    end
+
+    def db_connection_host(connection)
+      connection.raw_connection.conninfo_hash[:host] || "localhost"
     end
   end
 end
