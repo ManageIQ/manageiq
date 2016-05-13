@@ -104,5 +104,11 @@ describe('logCollectionFormController', function() {
         expect($scope.logCollectionModel.uri_prefix).toEqual(logProtocolChangedFormResponse.uri_prefix);
       });
     });
+
+    describe('miqDBBackupService should exist in the scope', function() {
+      it('returns true', function() {
+        expect($scope.miqDBBackupService).toBeDefined();
+      });
+    });
   });
 });
