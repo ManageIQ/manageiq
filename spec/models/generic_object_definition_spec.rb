@@ -34,4 +34,15 @@ describe GenericObjectDefinition do
       expect(definition.type_cast('max_number', '100')).to eq(100)
     end
   end
+
+  describe '#destroy' do
+    let(:generic_object) do
+      FactoryGirl.build(:generic_object, :generic_object_definition => definition, :name => 'test')
+    end
+
+    it 'raises an error if the definition is in use' do
+      generic_object.save!
+      expect { definition.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+    end
+  end
 end
