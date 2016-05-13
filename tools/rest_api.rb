@@ -127,15 +127,16 @@ class RestApi
         stop_on SUB_COMMANDS
       end
 
-      action = ARGV.shift
+      opts[:action] = action = ARGV.shift
 
-      if action == "edit"
-      elsif action == "vi"
-        api_script = ARGV.shift
-      elsif action == "run"
+      case(action)
+      when "edit"
+      when "vi"
+        opts[:api_script] = ARGV.shift
+      when "run"
         script = ARGV.shift
-        method = ARGV.shift
-        api_script = "#{opts[:scriptdir]}/api_#{script}.rb" if script
+        opts[:method] = ARGV.shift
+        opts[:api_script] = "#{opts[:scriptdir]}/api_#{script}.rb" if script
       else
         api_params = Trollop.options do
           norm_options  = {:default => ""}
@@ -145,14 +146,16 @@ class RestApi
         params = {}
         API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
 
-        resource = ARGV.shift
-        method = METHODS[action]
+        opts[:resource] = ARGV.shift
+        opts[:method] = METHODS[action]
+        opts[:params] = params
       end
 
-      [opts, action, method, api_script, resource, params]
+      opts
     end
 
-    def validate(opts, action, method, api_script, resource, params, data)
+    def validate(opts)
+      action = opts[:action]
       unless opts[:inputfile].empty?
         Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist" unless File.exist?(opts[:inputfile])
       end
@@ -170,33 +173,38 @@ class RestApi
       end
 
       if action == "run"
-        msg_exit("Must specify a script to run.") unless api_script
-        msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
+        msg_exit("Must specify a script to run.") unless opts[:api_script]
+        msg_exit("Script file #{opts[:api_script]} does not exist") unless File.exist?(opts[:api_script])
       end
 
-      msg_exit("Unsupported action #{action} specified") if !%w(run vi edit).include?(method) && action.nil?
-      msg_exit("Action #{action} requires data to be specified") if METHODS_NEEDING_DATA.include?(method) && data.empty?
+      msg_exit("Unsupported action #{action} specified") if !%w(run vi edit).include?(opts[:method]) && action.nil?
+      msg_exit("Action #{action} requires data to be specified") if METHODS_NEEDING_DATA.include?(opts[:method]) && opts[:data].empty?
     end
 
-    def parse_data(method)
+    def parse_data
       opts[:inputfile].empty? ? prompt_get_data : File.read(opts[:inputfile])
     end
 
     def run
-      opts, action, method, api_script, resource, params = parse
-      data = parse_data(opts) if METHODS_NEEDING_DATA.include?(method)
-      validate(opts, action, method, api_script, resource, params, data)
+      opts = parse
+      opts[:data] = parse_data if METHODS_NEEDING_DATA.include?(opts[:method])
+      validate(opts)
+
+      # common options used throughout
+      action = opts[:action]
+      method = opts[:method]
+      resource = opts[:resource]
 
       case action
       when "ls"
-        run_ls(opts) ; exit 0
+        run_ls(opts[:scriptdir]) ; exit 0
       when "vi", "edit"
-        run_vi(action, api_script) ; exit 0
-      end
-
-      if action != "run"
+        run_vi(action, opts[:scriptdir], opts[:api_script]) ; exit 0
+      when "run"
+      else
         resource = "/" + resource             if resource && resource[0] != "/"
         resource = resource.gsub(PREFIX, '')  unless resource.nil?
+        opts[:resource] = resource if resource
       end
 
       conn = Faraday.new(:url => opts[:url], :ssl => {:verify => false}) do |faraday|
@@ -208,10 +216,10 @@ class RestApi
       end
 
       if action == "run"
-        puts "Loading #{api_script}"
-        require api_script
+        puts "Loading #{opts[:api_script]}"
+        require opts[:api_script]
         as = ApiScript.new(CTYPE, conn)
-        puts "Running #{api_script} with method #{method} ..."
+        puts "Running #{opts[:api_script]} with method #{method} ..."
         method.nil? ? as.run : as.run(method)
         exit
       end
@@ -230,15 +238,15 @@ class RestApi
       if opts[:verbose]
         puts SEP
         puts "Connection Endpoint: #{opts[:url]}"
-        puts "Action:              #{action}"
-        puts "HTTP Method:         #{method}"
+        puts "Action:              #{opts[:action]}"
+        puts "HTTP Method:         #{opts[:method]}"
         puts "Resource:            #{resource}"
         puts "Collection:          #{collection}"
         puts "Item:                #{item}"
         puts "Parameters:"
-        params.keys.each { |k| puts "#{' ' * 21}#{k} = #{params[k]}" }
+        opts[:params].keys.each { |k| puts "#{' ' * 21}#{k} = #{opts[:params][k]}" }
         puts "Path:                #{path}"
-        puts "Data:                #{data}"
+        puts "Data:                #{opts[:data]}"
       end
 
       begin
@@ -249,8 +257,8 @@ class RestApi
           req.headers['X-MIQ-Group']  = opts[:group] unless opts[:group].empty?
           req.headers['X-MIQ-Token']  = opts[:miqtoken] unless opts[:miqtoken].empty?
           req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].empty?
-          req.params.merge!(params)
-          req.body = data if METHODS_NEEDING_DATA.include?(method)
+          req.params.merge!(opts[:params])
+          req.body = opts[:data] if METHODS_NEEDING_DATA.include?(method)
         end
       rescue => e
         msg_exit("\nFailed to connect to #{opts[:url]} - #{e}")
@@ -277,8 +285,8 @@ class RestApi
       exit response.status >= 400 ? 1 : 0
     end
 
-    def run_ls(opts)
-      d = Dir.open(opts[:scriptdir])
+    def run_ls(scriptdir)
+      d = Dir.open(scriptdir)
       d.each do |file|
         p = file.scan(/^api_(.*)\.rb/)
         puts p unless p.nil?
@@ -286,11 +294,11 @@ class RestApi
       d.close
     end
 
-    def run_vi(ed_cmd, api_script)
+    def run_vi(ed_cmd, script_dir, scriptdir)
       api_script_file = if api_script.nil? || api_script == ""
                           File.expand_path($PROGRAM_NAME)
                         else
-                          File.join(opts[:scriptdir], "api_#{api_script}.rb")
+                          File.join(scriptdir, "api_#{api_script}.rb")
                         end
       ed_cmd = ed_cmd == "edit" && ENV["EDITOR"] ? ENV["EDITOR"] : "vi"
       cmd = "#{ed_cmd} #{api_script_file}"
