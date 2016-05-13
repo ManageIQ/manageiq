@@ -39,39 +39,70 @@ describe GenericObject do
     expect(o).not_to be_valid
   end
 
-  it "should ensure uniqueness of name" do
-    GenericObject.new(:generic_object_definition => definition, :name => "MyGenericObject").save
-    expect(GenericObject.new(:generic_object_definition => definition, :name => "MyGenericObject")).not_to be_valid
-  end
+  describe "#create" do
+    it "creates a generic object without definition and properties" do
+      expect(GenericObject.create).to be_a_kind_of(GenericObject)
+    end
 
-  it "should require presence of GenericObjectDefinition" do
-    expect { GenericObject.create!(:name => 'no_definition') }.to raise_error(ActiveRecord::RecordInvalid)
+    it "creates a generic object with both definition and properties" do
+      expect(GenericObject.create(:max_number => max_number, :generic_object_definition => definition)).to be_a_kind_of(GenericObject)
+    end
+
+    it "raises an error when create a generic object with properties but no definition" do
+      expect { GenericObject.create(:max_number => max_number) }.to raise_error(ActiveModel::UnknownAttributeError)
+    end
   end
 
   context "custom attributes" do
-    it "can be accessed as an attribute" do
-      go.save!
-      expect(go.generic_object_definition).to eq(definition)
-      expect(go.name).to                      eq(go_object_name)
-      expect(go.max_number).to                eq(max_number)
-      expect(go.server).to                    eq(server_name)
-      expect(go.flag).to                      eq(true)
-      expect(go.data_read).to                 eq(data_read)
-      expect(go.s_time.to_i).to               be_same_time_as(s_time.to_i)
+    context "with generic_object_definition" do
+      it "can be accessed as an attribute" do
+        go.save!
+        expect(go.generic_object_definition).to eq(definition)
+        expect(go.name).to                      eq(go_object_name)
+        expect(go.max_number).to                eq(max_number)
+        expect(go.server).to                    eq(server_name)
+        expect(go.flag).to                      eq(true)
+        expect(go.data_read).to                 eq(data_read)
+        expect(go.s_time.to_i).to               eq(s_time.to_i)
+      end
+
+      it "can be set as an attribute" do
+        go.max_number = max_number + 100
+        go.save!
+        expect(go.reload.max_number).to eq(max_number + 100)
+      end
+
+      it "can't set undefined attributes" do
+        expect { go.some_thing = 'not_defined' }.to raise_error(NoMethodError)
+      end
+
+      it "sets defined property attributes" do
+        go.property_attributes = {:max_number => max_number + 100}
+        go.save!
+        expect(go.property_attributes).to have_attributes('max_number' => max_number + 100)
+      end
+
+      it "raises an error if any property attribute is not defined" do
+        expect { go.property_attributes = {:max_number => max_number + 100, :bad => ''} }.to raise_error(ActiveModel::UnknownAttributeError)
+        go.save!
+        expect(go.property_attributes).to have_attributes('max_number' => max_number)
+      end
     end
 
-    it "can be set as an attribute" do
-      go.max_number = max_number + 100
-      go.save!
-      expect(go.reload.max_number).to eq(max_number + 100)
-    end
+    context "without generic_object_definition" do
+      let (:empty_go) { FactoryGirl.create(:generic_object) }
 
-    it "can't set undefined attributes" do
-      expect { go.some_thing = 'not_defined' }.to raise_error(NoMethodError)
+      it "raises an error when set a property attribute" do
+        expect { empty_go.max_number = max_number }.to raise_error(NoMethodError)
+      end
+
+      it "raises an error when set property attributes" do
+        expect { empty_go.property_attributes = {:max_number => max_number} }.to raise_error(RuntimeError)
+      end
     end
   end
 
-  context "#inspect" do
+  describe "#inspect" do
     it "AR attributes" do
       expect(go.inspect).to match(/generic_object_definition_id: #{definition.id}/)
       expect(go.inspect).to match(/name: "#{go_object_name}"/)
