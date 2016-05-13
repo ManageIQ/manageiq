@@ -4,6 +4,8 @@ module MiqAeEngine
       @fqns_id_cache       = {}
       @fqns_id_class_cache = {}
       @partial_ns          = []
+      @cached_instance     = {}
+      @cached_method       = {}
     end
 
     def ae_user=(obj)
@@ -26,7 +28,26 @@ module MiqAeEngine
 
     private
 
+    def cache_lookup(ns, klass, instance, method)
+      if instance
+        lookup(@cached_instance, "#{ns}/#{klass}/#{instance}")
+      else
+        lookup(@cached_method, "#{ns}/#{klass}/#{method}")
+      end
+    end
+
+    def lookup(cache, key)
+      match = cache[key]
+      if match
+        $miq_ae_logger.info("Matched #{match}")
+        cache[key][:count] = match[:count] + 1
+        return match[:alternate]
+      end
+    end
+
     def search(uri, ns, klass, instance, method)
+      match = cache_lookup(ns, klass, instance, method)
+      return match if match
       unless @partial_ns.include?(ns)
         fqns = MiqAeNamespace.find_by_fqname(ns, false)
         if fqns && !fqns.domain?
@@ -41,6 +62,7 @@ module MiqAeEngine
     def find_first_fq_domain(uri, ns, klass, instance, method)
       # Check if the namespace, klass and instance exist if it does
       # swap out the namespace
+      original_ns = ns
       parts = ns.split('/')
       parts.unshift("")
       matching_domain = get_matching_domain(parts, klass, instance, method)
@@ -48,6 +70,11 @@ module MiqAeEngine
       if matching_domain
         parts[0]     = matching_domain
         ns = parts.join('/')
+        if instance
+          @cached_instance["#{original_ns}/#{klass}/#{instance}"] = {:alternate => "#{ns}", :count => 1}
+        else
+          @cached_method["#{original_ns}/#{klass}/#{method}"] = {:alternate => "#{ns}", :count => 1}
+        end
         $miq_ae_logger.info("Updated namespace [#{uri}  #{ns}]")
       end
       ns
