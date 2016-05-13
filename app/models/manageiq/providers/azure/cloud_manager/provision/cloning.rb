@@ -37,7 +37,7 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
   end
 
   def custom_data
-    Base64.encode64(userdata_payload.encode("UTF-8")).delete("\n")
+    userdata_payload.encode('UTF-8').delete("\n")
   end
 
   def prepare_for_clone_task
