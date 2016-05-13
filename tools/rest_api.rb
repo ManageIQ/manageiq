@@ -133,9 +133,9 @@ EOS
         stop_on SUB_COMMANDS
       end
 
-      opts[:action] = action = ARGV.shift
+      opts[:action] = ARGV.shift
 
-      case(action)
+      case(opts[:action])
       when "edit"
       when "vi"
         opts[:api_script] = script_filename(scriptdir, ARGV.shift)
@@ -152,7 +152,7 @@ EOS
         API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
 
         opts[:resource] = ARGV.shift
-        opts[:method] = METHODS[action]
+        opts[:method] = METHODS[opts[:action]]
         opts[:params] = params
       end
 
@@ -195,17 +195,12 @@ EOS
       opts[:data] = parse_data if METHODS_NEEDING_DATA.include?(opts[:method])
       validate(opts)
 
-      # common options used throughout
-      action = opts[:action]
-      method = opts[:method]
-      resource = opts[:resource]
-
-      case action
+      case opts[:action]
       when "ls"
         run_ls(opts[:scriptdir])
         exit 0
       when "vi", "edit"
-        run_vi(action, opts[:api_script])
+        run_vi(opts[:action], opts[:api_script])
         exit 0
       when "run"
         conn = create_connection(opts)
@@ -213,35 +208,29 @@ EOS
         exit
       else
         conn = create_connection(opts)
-        resource = "/" + resource             if resource && resource[0] != "/"
-        resource = resource.gsub(PREFIX, '')  unless resource.nil?
-        opts[:resource] = resource if resource
+        success = run_method(conn, opts)
+        exit success ? 0 : 1
       end
+    end
 
-      if action == "run"
-        puts "Loading #{opts[:api_script]}"
-        require opts[:api_script]
-        as = ApiScript.new(CTYPE, conn)
-        puts "Running #{opts[:api_script]} with method #{method} ..."
-        method.nil? ? as.run : as.run(method)
-        exit
-      end
-
+    def run_method(conn, opts)
       path = PREFIX.dup
       path << "/v#{opts[:apiversion]}" unless opts[:apiversion].empty?
 
       collection = ""
       item = ""
-      unless resource.nil?
+      if (resource = opts[:resource])
+        resource = "/" + resource if resource[0] != "/"
+        opts[:resource] = resource = resource.gsub(PREFIX, '')
         path << resource
         rscan = resource.scan(%r{[^/]+})
         collection, item = rscan[0..1]
       end
 
-      print_options(opts, resource, collection, item, path) if opts[:verbose]
+      print_options(opts, collection, item, path) if opts[:verbose]
 
       begin
-        response = conn.send(method) do |req|
+        response = conn.send(opts[:method]) do |req|
           req.url path
           req.headers[:content_type]  = CTYPE
           req.headers[:accept]        = CTYPE
@@ -249,7 +238,7 @@ EOS
           req.headers['X-MIQ-Token']  = opts[:miqtoken] unless opts[:miqtoken].empty?
           req.headers['X-Auth-Token'] = opts[:token] unless opts[:token].empty?
           req.params.merge!(opts[:params])
-          req.body = opts[:data] if METHODS_NEEDING_DATA.include?(method)
+          req.body = opts[:data] if METHODS_NEEDING_DATA.include?(opts[:method])
         end
       rescue => e
         msg_exit("\nFailed to connect to #{opts[:url]} - #{e}")
@@ -273,7 +262,7 @@ EOS
         end
       end
 
-      exit response.status >= 400 ? 1 : 0
+      response < 400
     end
 
     def run_ls(scriptdir)
@@ -310,12 +299,12 @@ EOS
       opts[:method].nil? ? as.run : as.run(opts[:method])
     end
 
-    def print_options(opts, resource, collection, item, path)
+    def print_options(opts, collection, item, path)
       puts SEP
       puts "Connection Endpoint: #{opts[:url]}"
       puts "Action:              #{opts[:action]}"
       puts "HTTP Method:         #{opts[:method]}"
-      puts "Resource:            #{resource}"
+      puts "Resource:            #{opts[:resource]}"
       puts "Collection:          #{collection}"
       puts "Item:                #{item}"
       puts "Parameters:"
