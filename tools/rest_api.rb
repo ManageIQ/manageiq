@@ -136,12 +136,23 @@ class RestApi
         script = ARGV.shift
         method = ARGV.shift
         api_script = "#{opts[:scriptdir]}/api_#{script}.rb" if script
+      else
+        api_params = Trollop.options do
+          norm_options  = {:default => ""}
+          multi_options = {:default => "", :multi => true}
+          API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
+        end
+        params = {}
+        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
+
+        resource = ARGV.shift
+        method = METHODS[action]
       end
 
-      [opts, action, method, api_script]
+      [opts, action, method, api_script, resource, params]
     end
 
-    def validate(opts, action, method, api_script)
+    def validate(opts, action, method, api_script, resource, params, data)
       unless opts[:inputfile].empty?
         Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist" unless File.exist?(opts[:inputfile])
       end
@@ -162,15 +173,19 @@ class RestApi
         msg_exit("Must specify a script to run.") unless api_script
         msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
       end
+
+      msg_exit("Unsupported action #{action} specified") if !%w(run vi edit).include?(method) && action.nil?
+      msg_exit("Action #{action} requires data to be specified") if METHODS_NEEDING_DATA.include?(method) && data.empty?
+    end
+
+    def parse_data(method)
+      opts[:inputfile].empty? ? prompt_get_data : File.read(opts[:inputfile])
     end
 
     def run
-      opts, action, method, api_script = parse
-      validate(opts, action, method, api_script)
-
-      data      = ""
-      path      = ""
-      params    = {}
+      opts, action, method, api_script, resource, params = parse
+      data = parse_data(opts) if METHODS_NEEDING_DATA.include?(method)
+      validate(opts, action, method, api_script, resource, params, data)
 
       case action
       when "ls"
@@ -180,28 +195,8 @@ class RestApi
       end
 
       if action != "run"
-        api_params = Trollop.options do
-          norm_options  = {:default => ""}
-          multi_options = {:default => "", :multi => true}
-          API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
-        end
-        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
-      end
-
-      if action != "run"
-        resource = ARGV.shift
-
         resource = "/" + resource             if resource && resource[0] != "/"
         resource = resource.gsub(PREFIX, '')  unless resource.nil?
-
-        method = METHODS[action]
-        msg_exit("Unsupported action #{action} specified") if method.nil?
-
-        if METHODS_NEEDING_DATA.include?(method)
-          data = opts[:inputfile].empty? ? prompt_get_data : File.read(opts[:inputfile])
-
-          msg_exit("Action #{action} requires data to be specified") if data.empty?
-        end
       end
 
       conn = Faraday.new(:url => opts[:url], :ssl => {:verify => false}) do |faraday|
