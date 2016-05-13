@@ -110,25 +110,25 @@ Options:
 EOS
         opt :verbose,    "Verbose mode, show details of the communication",
             :default => false,                    :short => '-v'
-        opt :apiversion, "Version of the API to access",
+        opt :apiversion, "API Version to access (default: none specified)",
             :default => "",                       :short => '-V'
-        opt :url,        "Base URL of Appliance to access",
+        opt :url,        "Base URL of Appliance",
             :default => "http://localhost:3000",  :short => '-l'
-        opt :user,       "User to authenticate as",
+        opt :user,       "User for authentication",
             :default => "admin",                  :short => '-u'
-        opt :group,      "User group to authorize as",
+        opt :group,      "User group for authorization",
             :default => "",                       :short => '-g'
-        opt :password,   "Password for user specified to authenticate as",
+        opt :password,   "Password for user authentication",
             :default => "smartvm",                :short => '-p'
-        opt :token,      "Token to use for authentication instead of user/password",
+        opt :token,      "Token for authentication. Used instead of user and password",
             :default => "",                       :short => '-t'
         opt :miqtoken,   "Token to use for system authentication",
             :default => "",                       :short => '-m'
-        opt :format,     "How to format Json, pretty|none",
+        opt :format,     "Json format. i.e.: pretty|none",
             :default => "pretty",                 :short => '-f'
-        opt :inputfile,  "File to use as input to the POST/PUT/PATCH methods",
+        opt :inputfile,  "File containing data used by POST, PUT, or PATCH",
             :default => "",                       :short => '-i'
-        opt :scriptdir,  "Directory where optional api_* scripts live",
+        opt :scriptdir,  "Directory for api_* scripts",
             :default => SCRIPTDIR,                :short => '-s'
         stop_on SUB_COMMANDS
       end
