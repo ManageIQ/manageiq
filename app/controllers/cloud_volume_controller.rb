@@ -188,8 +188,7 @@ class CloudVolumeController < ApplicationController
     when "attach"
       options = form_params
       vm = find_by_id_filtered(VmCloud, options[:vm_id])
-      valid_attach, attach_details = @volume.validate_attach_volume
-      if valid_attach
+      if @volume.is_available?(:attach_volume)
         begin
           @volume.raw_attach_volume(vm.ems_ref, options['device_path'])
           add_flash(_("Attaching %{volume} \"%{volume_name}\" to %{vm_name}") % {
@@ -201,10 +200,10 @@ class CloudVolumeController < ApplicationController
             :volume      => ui_lookup(:table => 'cloud_volume'),
             :volume_name => @volume.name,
             :vm_name     => vm.name,
-            :details     => ex}, :error)
+            :details     => get_error_message_from_fog(ex)}, :error)
         end
       else
-        add_flash(_(attach_details), :error)
+        add_flash(_(volume.is_available_now_error_message(:attach_volume)), :error)
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
@@ -212,21 +211,6 @@ class CloudVolumeController < ApplicationController
       render :update do |page|
         page << javascript_prologue
         page.redirect_to :action => "show", :id => @volume.id.to_s
-      end
-
-    when "validate"
-      @in_a_form = true
-      options = form_params
-      vm = find_by_id_filtered(options[:vm_id])
-      valid_attach, attach_details = CloudVolume.validate_attach_volume(vm.ems_ref, options['device_path'])
-      if valid_attach
-        add_flash(_("Validation successful"))
-      else
-        add_flash(_(attach_details), :error) unless details.nil?
-      end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
   end
@@ -245,8 +229,7 @@ class CloudVolumeController < ApplicationController
     when "detach"
       options = form_params
       vm = find_by_id_filtered(VmCloud, options[:vm_id])
-      valid_detach, detach_details = @volume.validate_detach_volume
-      if valid_detach
+      if @volume.is_available?(:detach_volume)
         begin
           @volume.raw_detach_volume(vm.ems_ref)
           add_flash(_("Detaching %{volume} \"%{volume_name}\" from %{vm_name}") % {
@@ -258,10 +241,10 @@ class CloudVolumeController < ApplicationController
             :volume      => ui_lookup(:table => 'cloud_volume'),
             :volume_name => @volume.name,
             :vm_name     => vm.name,
-            :details     => ex}, :error)
+            :details     => get_error_message_from_fog(ex)}, :error)
         end
       else
-        add_flash(_(detach_details), :error)
+        add_flash(_(volume.is_available_now_error_message(:detach_volume)), :error)
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
@@ -269,21 +252,6 @@ class CloudVolumeController < ApplicationController
       render :update do |page|
         page << javascript_prologue
         page.redirect_to :action => "show", :id => @volume.id.to_s
-      end
-
-    when "validate"
-      @in_a_form = true
-      options = form_params
-      vm = find_by_id_filtered(options[:vm_id])
-      valid_detach, detach_details = CloudVolume.validate_detach_volume(vm.ems_ref)
-      if valid_detach
-        add_flash(_("Validation successful"))
-      else
-        add_flash(_(detach_details), :error) unless details.nil?
-      end
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     end
   end
