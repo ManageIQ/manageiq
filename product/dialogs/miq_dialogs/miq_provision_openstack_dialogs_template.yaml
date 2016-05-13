@@ -309,21 +309,21 @@
     :volumes:
       :description: Volumes
       :fields:
-        :volume_name:
+        :name:
           :description: Volume Name
           :required: false
           :display: :edit
           :data_type: :string
           :min_length:
           :max_length: 100
-        :volume_size:
+        :size:
           :description: Size (gigabytes)
           :required: false
           :display: :edit
           :data_type: :string
           :min_length:
           :max_length: 10
-        :volume_delete_on_terminate:
+        :delete_on_terminate:
           :description: Delete on Instance Terminate
           :required: false
           :display: :edit

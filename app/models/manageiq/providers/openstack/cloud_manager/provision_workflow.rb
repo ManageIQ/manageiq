@@ -37,7 +37,7 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     # by prepare_volumes
     prepare_volumes = true
     volumes = []
-    keys = %w(volume_name volume_size volume_delete_on_terminate)
+    keys = %w(name size delete_on_terminate)
     while prepare_volumes
       new_volume = {}
       keys.each do |key|

@@ -329,13 +329,13 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
     end
     it "converts numbered volume form fields into an array" do
       volumes = workflow.prepare_volumes_fields(
-        :volume_name_1 => "v1n", :volume_size_1 => "v1s", :volume_delete_on_terminate_1 => true,
-        :volume_name_2 => "v2n", :volume_size_2 => "v2s", :volume_delete_on_terminate_2 => false,
+        :name_1 => "v1n", :size_1 => "v1s", :delete_on_terminate_1 => true,
+        :name_2 => "v2n", :size_2 => "v2s", :delete_on_terminate_2 => false,
         :other_irrelevant_key => 1
       )
       expect(volumes.length).to eq(2)
-      expect(volumes[0]).to eq(:volume_name => "v1n", :volume_size => "v1s", :volume_delete_on_terminate => true)
-      expect(volumes[1]).to eq(:volume_name => "v2n", :volume_size => "v2s", :volume_delete_on_terminate => false)
+      expect(volumes[0]).to eq(:name => "v1n", :size => "v1s", :delete_on_terminate => true)
+      expect(volumes[1]).to eq(:name => "v2n", :size => "v2s", :delete_on_terminate => false)
     end
     it "produces an empty array if there are no volume fields" do
       volumes = workflow.prepare_volumes_fields(:other_irrelevant_key => 1)
