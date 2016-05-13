@@ -15,6 +15,8 @@ class GenericObjectDefinition < ApplicationRecord
   has_one   :picture, :dependent => :destroy, :as => :resource
   has_many  :generic_objects
 
+  before_destroy :check_not_in_use
+
   def defined_property_attributes
     properties[:attributes]
   end
@@ -36,5 +38,13 @@ class GenericObjectDefinition < ApplicationRecord
 
   def type_cast(attr_name, value)
     TYPE_MAP.fetch(defined_property_attributes[attr_name]).cast(value)
+  end
+
+  private
+
+  def check_not_in_use
+    return true if generic_objects.empty?
+    errors[:base] << "Cannot delete the definition while it is referenced by some generic objects"
+    throw :abort
   end
 end

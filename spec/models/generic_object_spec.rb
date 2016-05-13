@@ -90,7 +90,7 @@ describe GenericObject do
     end
 
     context "without generic_object_definition" do
-      let (:empty_go) { FactoryGirl.create(:generic_object) }
+      let(:empty_go) { FactoryGirl.create(:generic_object) }
 
       it "raises an error when set a property attribute" do
         expect { empty_go.max_number = max_number }.to raise_error(NoMethodError)
