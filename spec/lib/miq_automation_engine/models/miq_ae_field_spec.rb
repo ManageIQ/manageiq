@@ -133,7 +133,8 @@ describe MiqAeField do
 
     it "should validate datatypes" do
       MiqAeField.available_datatypes.each do |datatype|
-        f = @c1.ae_fields.build(:name => "fname_#{datatype}", :aetype => "attribute", :datatype => datatype)
+        f = @c1.ae_fields.build(:name => "fname_#{datatype.gsub(/ /,'_')}",
+                                :aetype => "attribute", :datatype => datatype)
         expect(f).to be_valid
         expect(f.save!).to be_truthy
       end
