@@ -72,11 +72,7 @@ class RestApi
       data
     end
 
-    def run
-      data      = ""
-      path      = ""
-      params    = {}
-
+    def parse
       opts = Trollop.options do
         version "#{API_CMD} #{VERSION} - ManageIQ REST API Access Script"
         banner <<-EOS
@@ -131,6 +127,11 @@ class RestApi
         stop_on SUB_COMMANDS
       end
 
+      action = ARGV.shift
+      [opts, action]
+    end
+
+    def validate(opts, action)
       unless opts[:inputfile].empty?
         Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist" unless File.exist?(opts[:inputfile])
       end
@@ -141,12 +142,20 @@ class RestApi
         Trollop.die :url, "Invalid URL syntax specified #{opts[:url]}"
       end
 
-      action = ARGV.shift
       Trollop.die "Must specify an action" if action.nil?
 
       if SCRIPTDIR_ACTIONS.include?(action)
         msg_exit("Script directory #{opts[:scriptdir]} does not exist") unless File.directory?(opts[:scriptdir])
       end
+    end
+
+    def run
+      opts, action = parse
+      validate(opts, action)
+
+      data      = ""
+      path      = ""
+      params    = {}
 
       if action == "ls"
         d = Dir.open(opts[:scriptdir])
