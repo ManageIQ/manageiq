@@ -74,4 +74,7 @@ Vmdb::Application.configure do
   config.action_controller.include_all_helpers = false
 
   config.action_controller.allow_forgery_protection = true
+
+  config.assets.js_compressor = :uglifier
+  config.assets.css_compressor = :sass
 end
