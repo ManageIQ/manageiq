@@ -797,12 +797,18 @@ module MiqAeEngineSpec
     before do
       @user = FactoryGirl.create(:user_with_group)
       nco_value = '${/#var1} || ${XY/ABC#var2} || Pebbles'
+      default_value = '${/#var2} || ${XY/ABC#var2} || Bamm Bamm Rubble'
       instance_name = 'FRED'
       ae_instances = {instance_name => {'field1' => {:value => nco_value},
-                                        'field2' => {:value => 'Bamm Bamm Rubble'}}}
+                                        'field2' => {:value => nil},
+                                        'field3' => {:value => nil}}}
 
-      ae_fields = {'field1' => {:aetype => 'attribute', :datatype => MiqAeField::NULL_COALESCING_DATATYPE},
-                   'field2' => {:aetype => 'attribute', :datatype => MiqAeField::NULL_COALESCING_DATATYPE}}
+      ae_fields = {'field1' => {:aetype => 'attribute', :default_value => default_value,
+                                :datatype => MiqAeField::NULL_COALESCING_DATATYPE},
+                   'field2' => {:aetype => 'attribute', :default_value => default_value,
+                                :datatype => MiqAeField::NULL_COALESCING_DATATYPE},
+                   'field3' => {:aetype => 'attribute',
+                                :datatype => MiqAeField::NULL_COALESCING_DATATYPE}}
       create_ae_model(:name => 'LUIGI', :ae_class => 'BARNEY',
                       :ae_namespace => 'A/C',
                       :ae_fields => ae_fields, :ae_instances => ae_instances)
@@ -821,6 +827,12 @@ module MiqAeEngineSpec
 
         expect(workspace.root['field1']).to eq('wilma')
         expect(workspace.root['field2']).to eq('Bamm Bamm Rubble')
+      end
+
+      it "undefined variable" do
+        workspace = MiqAeEngine.instantiate("/A/C/BARNEY/FRED", @user)
+        expect(workspace.root['field2']).to eq('Bamm Bamm Rubble')
+        expect(workspace.root.attributes.keys.exclude?('field3')).to be_truthy
       end
     end
   end
