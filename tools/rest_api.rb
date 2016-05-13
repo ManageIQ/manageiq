@@ -197,11 +197,15 @@ class RestApi
 
       case action
       when "ls"
-        run_ls(opts[:scriptdir]) ; exit 0
+        run_ls(opts[:scriptdir])
+        exit 0
       when "vi", "edit"
-        run_vi(action, opts[:scriptdir], opts[:api_script]) ; exit 0
+        run_vi(action, opts[:scriptdir], opts[:api_script])
+        exit 0
       when "run"
         conn = create_connection(opts)
+        run_script(conn, opts)
+        exit
       else
         conn = create_connection(opts)
         resource = "/" + resource             if resource && resource[0] != "/"
@@ -307,6 +311,14 @@ class RestApi
         faraday.adapter(Faraday.default_adapter)    # make requests with Net::HTTP
         faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty?
       end
+    end
+
+    def run_script(conn, opts)
+      puts "Loading #{opts[:api_script]}"
+      require opts[:api_script]
+      as = ApiScript.new(CTYPE, conn)
+      puts "Running #{opts[:api_script]} with method #{method} ..."
+      opts[:method].nil? ? as.run : as.run(opts[:method])
     end
   end
 end
