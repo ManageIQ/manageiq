@@ -40,7 +40,7 @@ module TextualSummaryHelper
   end
 
   def tags_from_record(record)
-    record.tags.each_with_object([]) do |tag,tags|
+    record.tags.each_with_object([]) do |tag, tags|
       values = tag.name.split('/')
       # needs only tags
       next unless values[1] == "managed"
@@ -64,7 +64,7 @@ module TextualSummaryHelper
     else
       tags[:value] = tags_from_record(@record)
       tags[:value].each { |value| value[:value].sort! }
-      tags[:value].sort_by!{ |x| x[:label] }
+      tags[:value].sort_by! { |x| x[:label] }
     end
     tags
   end
