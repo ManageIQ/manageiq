@@ -128,10 +128,20 @@ class RestApi
       end
 
       action = ARGV.shift
-      [opts, action]
+
+      if action == "edit"
+      elsif action == "vi"
+        api_script = ARGV.shift
+      elsif action == "run"
+        script = ARGV.shift
+        method = ARGV.shift
+        api_script = "#{opts[:scriptdir]}/api_#{script}.rb" if script
+      end
+
+      [opts, action, method, api_script]
     end
 
-    def validate(opts, action)
+    def validate(opts, action, method, api_script)
       unless opts[:inputfile].empty?
         Trollop.die :inputfile, "File specified #{opts[:inputfile]} does not exist" unless File.exist?(opts[:inputfile])
       end
@@ -147,11 +157,16 @@ class RestApi
       if SCRIPTDIR_ACTIONS.include?(action)
         msg_exit("Script directory #{opts[:scriptdir]} does not exist") unless File.directory?(opts[:scriptdir])
       end
+
+      if action == "run"
+        msg_exit("Must specify a script to run.") unless api_script
+        msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
+      end
     end
 
     def run
-      opts, action = parse
-      validate(opts, action)
+      opts, action, method, api_script = parse
+      validate(opts, action, method, api_script)
 
       data      = ""
       path      = ""
@@ -161,16 +176,10 @@ class RestApi
       when "ls"
         run_ls(opts) ; exit 0
       when "vi", "edit"
-        run_vi(action, opts) ; exit 0
+        run_vi(action, api_script) ; exit 0
       end
 
-      if action == "run"
-        script = ARGV.shift
-        method = ARGV.shift
-        msg_exit("Must specify a script to run.") if script.nil?
-        api_script = "#{opts[:scriptdir]}/api_#{script}.rb"
-        msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
-      else
+      if action != "run"
         api_params = Trollop.options do
           norm_options  = {:default => ""}
           multi_options = {:default => "", :multi => true}
@@ -282,8 +291,7 @@ class RestApi
       d.close
     end
 
-    def run_vi(ed_cmd, opts)
-      api_script = ARGV.shift
+    def run_vi(ed_cmd, api_script)
       api_script_file = if api_script.nil? || api_script == ""
                           File.expand_path($PROGRAM_NAME)
                         else
