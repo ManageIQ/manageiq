@@ -84,31 +84,30 @@ class RestApi
       opts = Trollop.options do
         version "#{API_CMD} #{VERSION} - ManageIQ REST API Access Script"
         banner <<-EOS
-      #{version}
+#{version}
 
-      Usage: #{API_CMD} [options] <action> [parameters] [resource]
+Usage:
 
-                  action - is the action to use for the request, i.e. get, post, patch, edit ...
+  #{API_CMD} [options] <action> [parameters] [resource]
 
-                  [parameters] include: #{API_PARAMETERS.join(", ")}
-                               specify --help for additional help
+       <action>     request action i.e.: #{ACTIONS.join(", ")}
+       [parameters] optional query parameters i.e.: #{API_PARAMETERS.join(", ")}
+       [resource]   optional resource e.g.: vms, services
 
-                  [resource] - is the optional resource i.e. services
+  #{API_CMD} [options] vi|edit [script]
 
-             #{API_CMD} [options] vi|edit [script]
+       Edit api_*.rb script
 
-                    Edit optional api_*.rb scripts.
+  #{API_CMD} [options] run script [method]
 
-             #{API_CMD} [options] run script [method]
+       Run api_*.rb script
 
-                  Run optional api_* scripts
+  #{API_CMD} [options] ls
 
-             #{API_CMD} [options] ls
+       List api_*.rb scripts
 
-                  List optional api_* scripts (without the api_ prefix)
-
-      #{API_CMD} options are:
-      EOS
+Options:
+EOS
         opt :verbose,    "Verbose mode, show details of the communication",
             :default => false,                    :short => '-v'
         opt :apiversion, "Version of the API to access",
