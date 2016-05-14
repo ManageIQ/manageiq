@@ -89,8 +89,6 @@ class MiqQueue < ApplicationRecord
   STATUS_EXPIRED = STATE_EXPIRED
   DEFAULT_QUEUE  = "generic"
 
-  @@delete_command_file = File.join(File.expand_path(Rails.root), "miq_queue_delete_cmd_file")
-
   def data
     msg_data && Marshal.load(msg_data)
   end
@@ -445,16 +443,6 @@ class MiqQueue < ApplicationRecord
   end
 
   def self.atStartup
-    if File.exist?(@@delete_command_file)
-      options = YAML.load(ERB.new(File.read(@@delete_command_file)).result)
-      if options[:required_role].nil? || MiqServer.my_server(true).has_active_role?(options[:required_role])
-        _log.info("Executing: [#{@@delete_command_file}], Options: [#{options.inspect}]")
-        deleted = where(options[:conditions]).delete_all
-        _log.info("Executing: [#{@@delete_command_file}] complete, #{deleted} rows deleted")
-      end
-      File.delete(@@delete_command_file)
-    end
-
     _log.info("Cleaning up queue messages...")
     MiqQueue.where(:state => STATE_DEQUEUE).each do |message|
       if message.handler.nil?
