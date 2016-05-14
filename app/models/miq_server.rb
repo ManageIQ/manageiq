@@ -72,7 +72,10 @@ class MiqServer < ApplicationRecord
       server.sync_active_roles
       server.set_active_role_flags
     end
+    invoke_at_startups
+  end
 
+  def self.invoke_at_startups
     _log.info("Invoking startup methods")
     begin
       RUN_AT_STARTUP.each do |klass|
