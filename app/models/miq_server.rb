@@ -77,18 +77,14 @@ class MiqServer < ApplicationRecord
 
   def self.invoke_at_startups
     _log.info("Invoking startup methods")
-    begin
-      RUN_AT_STARTUP.each do |klass|
+    RUN_AT_STARTUP.each do |klass|
+      _log.info("Invoking startup method for #{klass}")
+      begin
         klass = klass.constantize
-        _log.info("Invoking startup method for #{klass}")
-        begin
-          klass.atStartup
-        rescue => err
-          _log.log_backtrace(err)
-        end
+        klass.atStartup
+      rescue => err
+        _log.log_backtrace(err)
       end
-    rescue => err
-      _log.log_backtrace(err)
     end
   end
 
