@@ -80,13 +80,11 @@ class MiqServer < ApplicationRecord
     begin
       RUN_AT_STARTUP.each do |klass|
         klass = Object.const_get(klass) if klass.class == String
-        if klass.respond_to?("atStartup")
-          _log.info("Invoking startup method for #{klass}")
-          begin
-            klass.atStartup
-          rescue => err
-            _log.log_backtrace(err)
-          end
+        _log.info("Invoking startup method for #{klass}")
+        begin
+          klass.atStartup
+        rescue => err
+          _log.log_backtrace(err)
         end
       end
     rescue => err
