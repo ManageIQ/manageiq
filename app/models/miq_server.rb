@@ -119,11 +119,7 @@ class MiqServer < ApplicationRecord
   end
 
   def start
-    begin
-      MiqEvent.raise_evm_event(self, "evm_server_start")
-    rescue Exception => err
-      _log.error "#{err}"
-    end
+    MiqEvent.raise_evm_event(self, "evm_server_start")
 
     msg = "Server starting in #{self.class.startup_mode} mode."
     _log.info("#{msg}")
@@ -425,11 +421,7 @@ class MiqServer < ApplicationRecord
 
   def shutdown
     _log.info("initiated for #{format_full_log_msg}")
-    begin
-      MiqEvent.raise_evm_event(self, "evm_server_stop")
-    rescue Exception => err
-      _log.error "#{err}"
-    end
+    MiqEvent.raise_evm_event(self, "evm_server_stop")
 
     quiesce
   end
