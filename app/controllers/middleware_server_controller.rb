@@ -20,6 +20,7 @@ class MiddlewareServerController < ApplicationController
   }.freeze
 
   def show
+    clear_topology_breadcrumb
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype = "main"

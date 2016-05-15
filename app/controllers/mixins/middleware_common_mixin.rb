@@ -21,4 +21,10 @@ module MiddlewareCommonMixin
     "100/#{icon}.png"
   end
 
+  def clear_topology_breadcrumb
+    # fix breadcrumbs - remove displaying 'topology' in breadcrumb when navigating to a middleware related entity summary page
+    if @breadcrumbs.present? && (@breadcrumbs.last[:name].eql? 'Topology')
+      @breadcrumbs.clear
+    end
+  end
 end

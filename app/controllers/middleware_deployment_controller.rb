@@ -9,6 +9,7 @@ class MiddlewareDeploymentController < ApplicationController
   after_action :set_session_data
 
   def show
+    clear_topology_breadcrumb
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype = "main"
