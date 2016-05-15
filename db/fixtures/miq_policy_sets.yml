@@ -39,10 +39,25 @@
           description: Mark as Non-Compliant
           action_type: default
           options: {}
+      - qualifier: failure
+        failure_sequence: 2
+        failure_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_compliance_check
+          description: Container Image Compliance Check
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: container_image_annotate_deny_execution
+          description: Prevent container image from running on OpenShift
+          action_type: default
+          options: {}
       Condition:
       - name:  if container image has high severity openscap rule results
         description: Has high severity OpenSCAP rule results
-        modifier: allow
+        modifier: deny
         expression: !ruby/object:MiqExpression
           exp:
             FIND:
@@ -75,8 +90,9 @@
       mode: control
       read_only: true
       MiqPolicyContent:
-      - qualifier: failure
+      - qualifier: success
         failure_sequence: 1
+        failure_synchronous: true
         MiqEventDefinition:
           name: containerimage_created
           description: Container Image Discovered
@@ -87,6 +103,34 @@
         MiqAction:
           name: container_image_analyze
           description: Initiate SmartState Analysis for Container Image
+          action_type: default
+          options: {}
+      Condition: []
+    - name: schedule compliance after smart state analysis
+      description: Schedule compliance after smart state analysis
+      expression:
+      towhat: ContainerImage
+      guid: bae4a2b0-1cfe-11e6-a243-02424d459b45
+      created_by: admin
+      updated_by: admin
+      notes:
+      active: true
+      mode: control
+      read_only: true
+      MiqPolicyContent:
+      - qualifier: success
+        success_sequence: 1
+        success_synchronous: true
+        MiqEventDefinition:
+          name: containerimage_scan_complete
+          description: Container Image Analysis Complete
+          event_type: Default
+          definition:
+          default:
+          enabled:
+        MiqAction:
+          name: check_compliance
+          description: Check Host or VM Compliance
           action_type: default
           options: {}
       Condition: []
