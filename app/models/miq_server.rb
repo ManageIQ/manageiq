@@ -448,14 +448,9 @@ class MiqServer < ApplicationRecord
 
   def quiesce
     update_attribute(:status, 'quiesce')
-    begin
-      deactivate_all_roles
-      quiesce_all_workers
-      update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
-    rescue => err
-      puts "#{err}"
-      puts "#{err.backtrace.join("\n")}"
-    end
+    deactivate_all_roles
+    quiesce_all_workers
+    update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
   end
 
   # Restart the local server
