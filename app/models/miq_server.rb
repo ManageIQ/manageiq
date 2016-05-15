@@ -378,8 +378,6 @@ class MiqServer < ApplicationRecord
 
     shutdown_and_exit_queue
     wait_for_stopped if sync
-  rescue Exception => err
-    _log.error "#{err}"
   end
 
   def wait_for_stopped
@@ -406,8 +404,6 @@ class MiqServer < ApplicationRecord
     (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
   rescue SystemExit
     raise
-  rescue Exception => err
-    _log.error "#{err}"
   end
 
   def self.kill
