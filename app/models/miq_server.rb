@@ -117,10 +117,6 @@ class MiqServer < ApplicationRecord
   def start
     begin
       MiqEvent.raise_evm_event(self, "evm_server_start")
-    rescue MiqException::PolicyPreventAction => err
-      _log.warn "#{err}"
-      # TODO: Need to decide what to do here. Should the cluster be stopped?
-      return
     rescue Exception => err
       _log.error "#{err}"
     end
@@ -428,9 +424,6 @@ class MiqServer < ApplicationRecord
     _log.info("initiated for #{format_full_log_msg}")
     begin
       MiqEvent.raise_evm_event(self, "evm_server_stop")
-    rescue MiqException::PolicyPreventAction => err
-      _log.warn "#{err}"
-      return
     rescue Exception => err
       _log.error "#{err}"
     end
