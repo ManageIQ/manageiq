@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::MiddlewareServersCenter < ApplicationHelper::T
         button(
           :middleware_server_reload,
           'pficon pficon-restart fa-lg',
-          N_('Reload these #{ui_lookup(:table=>"middleware_server")}'),
+          N_('Reload these #{ui_lookup(:table=>"middleware_servers")}'),
           N_('Reload Server'),
           :url_parms => "main_div",
           :confirm   => N_("Do you want to reload selected servers?"),
@@ -41,7 +41,7 @@ class ApplicationHelper::Toolbar::MiddlewareServersCenter < ApplicationHelper::T
         button(
           :middleware_server_stop,
           nil,
-          N_('Stop this #{ui_lookup(:table=>"middleware_server")}'),
+          N_('Stop these #{ui_lookup(:table=>"middleware_servers")}'),
           N_('Stop Server'),
           :url_parms => "main_div",
           :image     => "guest_shutdown",
