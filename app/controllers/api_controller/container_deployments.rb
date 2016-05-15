@@ -6,7 +6,7 @@ class ApiController
     end
 
     def collect_data_resource_container_deployments(_type, _id, _data)
-      {:data => DeploymentService.new.all_data}
+      {:data => ContainerDeploymentService.new.all_data}
     end
   end
 end

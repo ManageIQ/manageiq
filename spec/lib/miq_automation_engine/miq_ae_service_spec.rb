@@ -102,6 +102,14 @@ module MiqAeServiceSpec
       it "expose all expected active_record models as service_models" do
         excluded_model_names = %w(
           AuthToken
+          AuthenticationAllowAll
+          AuthenticationGithub
+          AuthenticationGoogle
+          AuthenticationHtpasswd
+          AuthenticationLdap
+          AuthenticationOpenId
+          AuthenticationRequestHeader
+          AuthenticationRhsm
           AuthUseridPassword
           Category
           Datacenter

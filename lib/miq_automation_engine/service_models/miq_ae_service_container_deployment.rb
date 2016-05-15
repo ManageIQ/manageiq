@@ -4,9 +4,15 @@ module MiqAeMethodService
     expose :deployed_ems, :association => true
     expose :deployed_on_ems, :association => true
     expose :automation_task, :association => true
+    expose :masters, :method => :masters
+    expose :nodes, :method => :nodes
+    expose :deployment_master, :method => :deployment_master
 
-    def assign_container_deployment_node(options)
-      object_send(:assign_container_deployment_node, options)
+    def assign_container_deployment_node(vm_id, role)
+      self.send(role).each do |deployment_node|
+        next unless deployment_node.vm_id.nil?
+        deployment_node.add_vm(vm_id)
+      end
     end
 
     def add_deployment_provider(options)

@@ -7,7 +7,7 @@ class ContainerDeploymentNode < ApplicationRecord
 
   def node_address
     if vm
-      vm.hostnames.first || vm.hardware.ipaddresses.last
+      vm.hostnames.last || vm.hardware.ipaddresses.last
     elsif address
       address
     end

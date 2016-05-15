@@ -1,4 +1,4 @@
-class DeploymentService
+class ContainerDeploymentService
   def all_data
     {
       :provision              => possible_provision_providers,
@@ -22,11 +22,11 @@ class DeploymentService
     result = []
     templates.each do |template|
       result << {
-        :ui_cpu  => template.cpu_total_cores,
-        :ui_memo => template.mem_cpu,
-        :name    => template.name,
-        :ems_id  => template.ems_id,
-        :id      => template.id
+        :cpu    => template.cpu_total_cores,
+        :memo   => template.mem_cpu,
+        :name   => template.name,
+        :ems_id => template.ems_id,
+        :id     => template.id
       }
     end
     result

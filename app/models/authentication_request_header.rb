@@ -1,6 +1,6 @@
 class AuthenticationRequestHeader < Authentication
-  #will be removed once moving to yaml format
 
+  #will be removed once moving to yaml format, no need to review method
   def generate_ansible_entry
     options = {}
     options["challengeURL"] = request_header_challenge_url

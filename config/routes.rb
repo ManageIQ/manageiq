@@ -1059,6 +1059,7 @@ Vmdb::Application.routes.draw do
                exp_post +
                save_post
     },
+
     :middleware_server            => {
       :get  => %w(
         download_data

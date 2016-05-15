@@ -31,6 +31,7 @@ def add_provider
       :provider_ipaddress => $evm.root['deployment_master'],
       :auth_type          => "bearer",
       :auth_key           => token)
+
     $evm.log(:info, "result: #{result}")
     if result
       provider = deployment.deployed_ems

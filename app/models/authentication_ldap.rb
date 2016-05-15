@@ -1,7 +1,7 @@
 class AuthenticationLdap < Authentication
-  #will be removed once moving to yaml format
 
-def generate_ansible_entry
+  #will be removed once moving to yaml format, no need to review method
+  def generate_ansible_entry
     options = {}
     options["attributes"] = {}
     options["attributes"]["id"] = ldap_id
@@ -9,7 +9,7 @@ def generate_ansible_entry
     options["attributes"]["name"] = ldap_name
     options["attributes"]["preferredUsername"] = ldap_preferred_user_name
     options["bindDN"] = ldap_bind_dn
-    options["bindPassword"] = password_encrypted
+    options["bindPassword"] = password
     options["ca"] = certificate_authority
     options["insecure"] = ldap_insecure.to_s
     options["url"] = ldap_url
@@ -24,7 +24,7 @@ def generate_ansible_entry
     options["attributes"]["name"] = ldap_name
     options["attributes"]["preferredUsername"] = ldap_preferred_user_name
     options["bindDN"] = ldap_bind_dn
-    options["bindPassword"] = password_encrypted
+    options["bindPassword"] = password
     options["ca"] = certificate_authority
     options["insecure"] = ldap_insecure.to_s
     options["url"] = ldap_url

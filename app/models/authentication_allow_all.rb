@@ -1,6 +1,6 @@
 class AuthenticationAllowAll < Authentication
 
-  #will be removed once moving to yaml format
+  #will be removed once moving to yaml format, no need to review method
   def generate_ansible_entry
     ansible_format
   end
@@ -9,7 +9,4 @@ class AuthenticationAllowAll < Authentication
     ansible_config
   end
 
-  def assign_values(options)
-    super
-  end
 end
