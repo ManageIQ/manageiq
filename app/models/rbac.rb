@@ -448,12 +448,7 @@ module Rbac
 
     _log.debug("Find options: #{find_options.inspect}")
 
-    if klass.respond_to?(:find)
-      targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
-    else
-      total_count = targets.length
-      auth_count  = targets.length
-    end
+    targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
 
     if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
       rejects     = targets.reject { |obj| self.matches_search_filters?(obj, search_filter, tz) }
