@@ -1,19 +1,34 @@
 describe ReportController, "::Reports" do
+  let(:user) { FactoryGirl.create(:user) }
+  let(:chargeback_report) do
+    FactoryGirl.create(:miq_report, :db => "ChargebackVm", :db_options => {:options => {:owner => user.userid}},
+                                    :col_order => ["name"], :headers => ["Name"])
+  end
+
+  tabs = {:formatting => 2, :filter => 3, :summary => 4, :charts => 5, :timeline => 6, :preview => 7,
+          :consolidation => 8, :styling => 9}
+
+  chargeback_tabs = [:formatting, :filter, :preview]
+
+  before { login_as user }
+
+  describe "#build_edit_screen" do
+    tabs.slice(*chargeback_tabs).each do |tab_number|
+      it "flash messages should be nil" do
+        controller.instance_variable_set(:@rpt, chargeback_report)
+        controller.send(:set_form_vars)
+        controller.instance_variable_set(:@sb, :miq_tab => "edit_#{tab_number.second}")
+        controller.send(:build_edit_screen)
+
+        expect(assigns(:flash_array)).to be_nil
+      end
+    end
+  end
+
   describe "#check_tabs" do
-    tabs = {
-      :formatting    => 2,
-      :filter        => 3,
-      :summary       => 4,
-      :charts        => 5,
-      :timeline      => 6,
-      :preview       => 7,
-      :consolidation => 8,
-      :styling       => 9
-    }
     tabs.each_pair do |tab_title, tab_number|
       title = tab_title.to_s.titleize
       it "check existence of flash message when tab is changed to #{title} without selecting fields" do
-        login_as FactoryGirl.create(:user)
         controller.instance_variable_set(:@sb, {})
         controller.instance_variable_set(:@edit, :new => {:fields => []})
         controller.instance_variable_set(:@_params, :tab => "new_#{tab_number}")
@@ -25,7 +40,6 @@ describe ReportController, "::Reports" do
       end
 
       it "flash messages should be nil when tab is changed to #{title} after selecting fields" do
-        login_as FactoryGirl.create(:user)
         controller.instance_variable_set(:@sb, {})
         controller.instance_variable_set(:@edit, :new => {
                                            :fields  => [["Date Created", "Vm-ems_created_on"]],
