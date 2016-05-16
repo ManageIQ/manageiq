@@ -3,15 +3,19 @@ class ApplicationHelper::Toolbar::Basic
 
   class << self
     extend Forwardable
-    delegate %i(button select twostate separator definition button_group) => :instance
+    delegate %i(button select twostate separator definition button_group custom_content) => :instance
   end
 
   attr_reader :definition
 
   private
 
+  def custom_content(name, args)
+    @definition[name] = ApplicationHelper::Toolbar::Custom.new(name, args)
+  end
+
   def button_group(name, buttons)
-    @definition[name] = buttons
+    @definition[name] = ApplicationHelper::Toolbar::Group.new(name, buttons)
   end
 
   def initialize

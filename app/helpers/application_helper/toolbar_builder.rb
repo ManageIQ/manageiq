@@ -192,31 +192,37 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
+  # @button_group is set in a controller
+  #
+  def group_skipped?(name)
+    @button_group && (!name.starts_with?(@button_group + "_") &&
+      !name.starts_with?("custom") && !name.starts_with?("dialog") &&
+      !name.starts_with?("miq_dialog") && !name.starts_with?("custom_button") &&
+      !name.starts_with?("instance_") && !name.starts_with?("image_")) &&
+       !%w(record_summary summary_main summary_download tree_main
+       x_edit_view_tb history_main ems_container_dashboard).include?(name)
+  end
+
   def build(toolbar)
     @toolbar = []
     @groups_added = []
     @sep_needed = false
-    @sep_added = nil
+    @sep_added = false
 
-    bg_idx = -1
-    toolbar.definition.each_pair do |name, items|
-      bg_idx += 1
+    toolbar.definition.each_with_index do |(name, group), group_index|
+      next if group_skipped?(name)
 
       @sep_added = false
-      if @button_group && (!name.starts_with?(@button_group + "_") &&
-        !name.starts_with?("custom") && !name.starts_with?("dialog") &&
-        !name.starts_with?("miq_dialog") && !name.starts_with?("custom_button") &&
-        !name.starts_with?("instance_") && !name.starts_with?("image_")) &&
-         !["record_summary", "summary_main", "summary_download", "tree_main",
-           "x_edit_view_tb", "history_main", "ems_container_dashboard"].include?(name)
-        next      # Skip if button_group doesn't match
-      else
-        # keeping track of groups that were not skipped to add separator, else it adds a separator before a button even tho no other groups were shown, i.e. vm sub screens, drift_history
-        @groups_added.push(bg_idx)
-      end
+      @groups_added.push(group_index)
 
-      items.each do |bgi|
-        build_button(bgi, bg_idx)
+      case group
+      when ApplicationHelper::Toolbar::Group
+        group.buttons.each do |bgi|
+          build_button(bgi, group_index)
+        end
+      when ApplicationHelper::Toolbar::Custom
+        group.render(@view_context)
+        @toolbar << group
       end
     end
 
