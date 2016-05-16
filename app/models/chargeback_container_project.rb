@@ -5,6 +5,9 @@ class ChargebackContainerProject < Chargeback
     :interval_name        => :string,
     :display_range        => :string,
     :project_name         => :string,
+    :project_uid          => :string,
+    :provider_name        => :string,
+    :provider_uid         => :string,
     :cpu_used_cost        => :float,
     :cpu_used_metric      => :float,
     :cpu_cost             => :float,
@@ -61,8 +64,13 @@ class ChargebackContainerProject < Chargeback
   def self.get_keys_and_extra_fields(perf, ts_key)
     project = @data_index.fetch_path(:container_project, :by_group_id, perf.resource_id)
     key = "#{project.id}_#{ts_key}"
-
-    [key, {"project_name"  => project.name}]
+    extra_fields = {
+      "project_name"  => project.name,
+      "project_uid"   => project.ems_ref,
+      "provider_name" => perf.parent_ems.name,
+      "provider_uid"  => perf.parent_ems.guid
+    }
+    [key, extra_fields]
   end
 
   def self.where_clause(records, _options)

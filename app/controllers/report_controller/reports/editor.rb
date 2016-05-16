@@ -1,6 +1,8 @@
 module ReportController::Reports::Editor
   extend ActiveSupport::Concern
 
+  CHARGEBACK_ALLOWED_FIELD_SUFFIXES = %w(_cost -owner_name _metric -provider_name -provider_uid -project_uid).freeze
+
   def miq_report_new
     assert_privileges("miq_report_new")
     @_params.delete :id # incase add button was pressed from report show screen.
@@ -1745,7 +1747,7 @@ module ReportController::Reports::Editor
       f_len = fields.length
       for f_idx in 1..f_len # Go thru fields in reverse
         f_key = fields[f_len - f_idx].last
-        next if f_key.ends_with?("_cost", "-owner_name", "_metric")
+        next if f_key.ends_with?(*CHARGEBACK_ALLOWED_FIELD_SUFFIXES)
         headers.delete(f_key)
         col_formats.delete(f_key)
         fields.delete_at(f_len - f_idx)
