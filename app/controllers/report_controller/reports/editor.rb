@@ -659,7 +659,7 @@ module ReportController::Reports::Editor
       @edit[:new][:cb_entity_id] = params[:cb_entity_id].blank? ? nil : params[:cb_entity_id]
     elsif params.key?(:cb_provider_id)
       @edit[:new][:cb_provider_id] = params[:cb_provider_id].blank? ? nil : params[:cb_provider_id]
-      @edit[:new][:cb_entity_id] = nil
+      @edit[:new][:cb_entity_id] = "all"
       build_edit_screen
       @refresh_div = "form_div"
       @refresh_partial = "form"
