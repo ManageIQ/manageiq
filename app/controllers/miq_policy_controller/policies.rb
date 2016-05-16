@@ -101,7 +101,7 @@ module MiqPolicyController::Policies
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       end
     else
-      new_pol = policy.copy(:description => new_desc, :created_by => session[:userid])
+      new_pol = policy.copy(:description => new_desc, :created_by => session[:userid], :read_only => nil)
       AuditEvent.success(:event        => "miqpolicy_copy",
                          :target_id    => new_pol.id,
                          :target_class => "MiqPolicy",
