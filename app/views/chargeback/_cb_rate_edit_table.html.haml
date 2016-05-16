@@ -62,11 +62,12 @@
           .dropdown.dropdown-kebab-pf
             %button.btn.btn-link.dropdown-toggle{:type => "button",
                                                  :id => "dropdownKebab",
+                                                 :style => "width: 100%",
                                                  "data-toggle" => "dropdown",
                                                  "aria-haspopup" => "true",
                                                  "aria-expanded" => "true"}
               %span.fa.fa-ellipsis-v
-            %ul.dropdown-menu{:"aria-labelledby" => "dropdownKebab"}
+            %ul.dropdown-menu{:"aria-labelledby" => "dropdownKebab", :style => "left: 5px; margin-top: 7px;"}
               %li
                 = link_to(_("Add a new tier below"), {:controller => "chargeback",
                                                       :action => "cb_tier_add",
@@ -103,11 +104,12 @@
             .dropdown.dropdown-kebab-pf
               %button.btn.btn-link.dropdown-toggle{:type => "button",
                                                    :id => "dropdownKebab",
+                                                   :style => "width: 100%",
                                                    "data-toggle" => "dropdown",
                                                    "aria-haspopup" => "true",
                                                    "aria-expanded" => "true"}
                 %span.fa.fa-ellipsis-v
-              %ul.dropdown-menu{:"aria-labelledby" => "dropdownKebab"}
+              %ul.dropdown-menu{:"aria-labelledby" => "dropdownKebab", :style => "left: 5px; margin-top: 7px;"}
                 %li
                   = link_to(_("Add a new tier below"), {:controller => "chargeback",
                                                         :action => "cb_tier_add",
@@ -118,11 +120,11 @@
                 %li.divider{:role => "separator"}
                 %li
                   = link_to(_("Delete tier"), {:controller => "chargeback",
-                                                :action => "cb_tier_remove",
-                                                :index => "#{detail_index}-#{tier_index}",
-                                                :button => "remove"},
-                                                :remote => true,
-                                                "data-method" => :post)
+                                               :action => "cb_tier_remove",
+                                               :index => "#{detail_index}-#{tier_index}",
+                                               :button => "remove"},
+                                               :remote => true,
+                                               "data-method" => :post)
 
     :javascript
       $('tbody tr.rdetail').hover( function(){hoverRowIn(this)}, function(row){hoverRowOut(this)});

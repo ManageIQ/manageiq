@@ -134,8 +134,8 @@ class ChargebackRateDetail < ApplicationRecord
     temp = self.class.new(:chargeback_tiers => tiers)
     if temp.contiguous_tiers?
       self.chargeback_tiers.replace(tiers)
-      self.chargeback_tiers.each { |v| v.save}
-      self.chargeback_tiers.reorder('start ASC')
+      chargeback_tiers.each(&:save)
+      chargeback_tiers.reorder('start ASC')
     else
       temp.errors.each {|a, e| errors.add(a, e)}
     end
