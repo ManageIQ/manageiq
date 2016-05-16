@@ -9,6 +9,10 @@ ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
 
+# Set Docker build ARGs
+ARG REF=master
+ARG APP_REPO=.
+
 # Fetch postgresql 9.4 COPR and pglogical repos
 RUN curl -sSLko /etc/yum.repos.d/rhscl-rh-postgresql94-epel-7.repo \
 https://copr-fe.cloud.fedoraproject.org/coprs/rhscl/rh-postgresql94/repo/epel-7/rhscl-rh-postgresql94-epel-7.repo && \
@@ -73,13 +77,16 @@ RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz
     rm -rf /chruby-* && rm -rf /usr/local/src/* && yum clean all
 
 ## GIT clone manageiq-appliance and self-service UI repo (SSUI)
-RUN git clone --depth 1 https://github.com/ManageIQ/manageiq-appliance.git ${APPLIANCE_ROOT} && \
-git clone --depth 1 https://github.com/ManageIQ/manageiq-ui-self_service.git ${SSUI_ROOT} && \
+RUN git clone --depth 1 --branch ${REF} https://github.com/ManageIQ/manageiq-appliance.git ${APPLIANCE_ROOT} && \
+git clone --depth 1 --branch ${REF} https://github.com/ManageIQ/manageiq-ui-self_service.git ${SSUI_ROOT} && \
 ln -vs ${APP_ROOT} /opt/manageiq/manageiq
 
 ## Create approot, ADD miq
 RUN mkdir -p ${APP_ROOT}
-ADD . ${APP_ROOT}
+ADD ${APP_REPO} ${APP_ROOT}
+RUN if [ -f ${APP_ROOT}/${REF} ]; then  \
+tar -xf ${APP_ROOT}/${REF} -C ${APP_ROOT} --strip-components=1; \
+rm -f ${APP_ROOT}/${REF}; fi
 
 ## Setup environment
 
@@ -132,8 +139,8 @@ EXPOSE 80 443
 
 LABEL name="manageiq" \
           vendor="ManageIQ" \
-          version="Capablanca" \
-          release="latest" \
+          version="Darga" \
+          release="${REF}" \
           architecture="x86_64" \
           url="http://manageiq.org/" \
           summary="ManageIQ appliance image" \
