@@ -9,7 +9,7 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
       return true
     rescue => ex
       $log.debug("Skipping Openstack Ceilometer events. Availability check failed with #{ex}.") if $log
-      raise ex
+      raise
     end
   end
 
