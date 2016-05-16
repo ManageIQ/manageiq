@@ -5,7 +5,7 @@
       .provider-card{"pf-card"         => "",
                      "show-top-border" => "true",
                      "ng-if"           => "isSingleProvider"}
-        %img.provider-icon-large{"src" =>"{{providerTypeIconImage}}"}
+        %img.provider-icon-large{"ng-src" =>"{{providerTypeIconImage}}"}
       %div{:layout                     => "tall",
            "pf-aggregate-status-card"  => "",
            "show-top-border"           => "true",

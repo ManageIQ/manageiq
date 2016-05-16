@@ -126,6 +126,7 @@ angular.module('miq.util').factory('chartsMixin', function(pfUtils) {
       })
       heatmapsStruct.data = _.sortBy(heatmapsStructData, 'value').reverse()
     } else  {
+      heatmapsStruct.data = [];
       heatmapsStruct.dataAvailable = false
     }
 
