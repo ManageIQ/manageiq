@@ -706,6 +706,9 @@ class ConfigurationController < ApplicationController
         :current     => current,
       }
       build_default_filters_tree(@edit[:current])
+      @df_tree = TreeBuilderDefaultFilters.new(:df_tree, :df, @sb, true, @edit[:current])
+      session[:tree_name] = "all_views_tree"
+      self.x_active_tree = :df_tree
     when 'ui_4'
       @edit = {
         :current     => {},

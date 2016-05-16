@@ -8,7 +8,7 @@
     = _('(Checked default filters will be visible.)')
     - tree_id = "#{session[:tree_name]}box"
     %div{:id => "#{tree_id}", :style => "color:#000; height:100%"}
-      = render(:partial => "layouts/dynatree",
+      -#= render(:partial => "layouts/dynatree",
                :locals => {:tree_id                     => tree_id,
                            :tree_name                   => session[:tree_name],
                            :json_tree                   => @all_views_tree,
@@ -19,4 +19,5 @@
                            :multi_lines                 => true,
                            :checkboxes                  => true,
                            :open_close_all_on_dbl_click => true})
+      = render(:partial => 'shared/tree', :locals => {:tree => @df_tree, :name => session[:tree_name]})
     = render :partial => '/layouts/form_buttons'

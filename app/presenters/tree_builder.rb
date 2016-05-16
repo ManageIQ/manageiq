@@ -90,8 +90,9 @@ class TreeBuilder
 
     when :datacenter              then TreeBuilderDatacenter
     when :vat                     then TreeBuilderVat
-
+        
     when :network                 then TreeBuilderNetwork
+    when :df                      then TreeBuilderDefaultFilters
     end
   end
 
