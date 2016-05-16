@@ -544,8 +544,6 @@ module EmsCommon
     @edit[:new][:provider_region] = @ems.provider_region
     @edit[:new][:hostname] = @ems.hostname
     @edit[:new][:emstype] = @ems.emstype
-    @edit[:amazon_regions] = get_regions('Amazon') if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
-    @edit[:google_regions] = get_regions('Google') if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
     @edit[:new][:port] = @ems.port
     @edit[:new][:api_version] = @ems.api_version
     @edit[:new][:provider_id] = @ems.provider_id
@@ -722,8 +720,6 @@ module EmsCommon
 
     @edit[:new][:host_default_vnc_port_start] = params[:host_default_vnc_port_start] if params[:host_default_vnc_port_start]
     @edit[:new][:host_default_vnc_port_end] = params[:host_default_vnc_port_end] if params[:host_default_vnc_port_end]
-    @edit[:amazon_regions] = get_regions('Amazon') if @edit[:new][:emstype] == "ec2"
-    @edit[:google_regions] = get_regions('Google') if @edit[:new][:emstype] == "gce"
     @edit[:new][:default_security_protocol] = params[:default_security_protocol] if params[:default_security_protocol]
     # TODO: (julian) Silly hack until we move Infra over to Angular to be consistant with Cloud
     @edit[:new][:default_security_protocol] = params[:security_protocol] if params[:security_protocol]
