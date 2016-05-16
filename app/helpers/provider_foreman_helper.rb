@@ -240,6 +240,10 @@ module ProviderForemanHelper
     {:label => _("Region"), :value => @record.region_description}
   end
 
+  def textual_configuration_script_variables
+    {:label => _("Variables"), :value => @record.variables}
+  end
+
   def textual_configuration_script_group_os
     %i(configuration_script_medium
        configuration_script_partition_table)

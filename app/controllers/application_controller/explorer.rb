@@ -50,7 +50,7 @@ module ApplicationController::Explorer
     'retire'       => :s2, 'right_size'       => :s2, 'snapshot_add'    => :s2,
     'tag'          => :s2, 'timeline'         => :s2, 'resize'          => :s2,
     'live_migrate' => :s2, 'attach'           => :s2, 'detach'          => :s2,
-    'evacuate'     => :s2,
+    'evacuate'     => :s2, 'service_dialog'   => :s2,
 
     # specials
     'perf'         => :show,
@@ -62,7 +62,7 @@ module ApplicationController::Explorer
   def x_button
     model, action = pressed2model_action(params[:pressed])
 
-    allowed_models = %w(common image instance vm miq_template provider storage)
+    allowed_models = %w(common image instance vm miq_template provider storage jobtemplate)
     raise ActionController::RoutingError.new('invalid button action') unless
       allowed_models.include?(model)
 
@@ -80,7 +80,7 @@ module ApplicationController::Explorer
     elsif X_BUTTON_ALLOWED_ACTIONS[action] == :s2
       # don't need to set params[:id] and do find_checked_items for methods
       # like ownership, the code in those methods handle it
-      if %w(edit right_size resize attach detach live_migrate evacuate).include?(action)
+      if %w(edit right_size resize attach detach live_migrate).include?(action)
         @_params[:id] = (params[:id] ? [params[:id]] : find_checked_items)[0]
       end
       if ['protect', 'tag'].include?(action)
