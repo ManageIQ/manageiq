@@ -112,9 +112,11 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
     availability = counter.metric_availabilities.detect { |ma| ma.time_grain == INTERVAL_1_MINUTE }
     return [] if availability.nil?
 
+    table_name = availability.location.table_info.last.try(:table_name)
+    return [] if table_name.nil?
+
     endpoint      = availability.location.table_endpoint
     partition_key = availability.location.partition_key
-    table_name    = availability.location.table_info.last.table_name
 
     storage_acct_name = URI.parse(endpoint).host.split('.').first
     storage_account   = storage_conn.get(storage_acct_name, target.resource_group)
