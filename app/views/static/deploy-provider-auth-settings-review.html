@@ -1,0 +1,122 @@
+<div ng-controller="containers.deployProviderReviewController">
+  <form class="form-horizontal" ng-if="data.authentication.mode == 'htPassword'">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Username:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.htPassword.username}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Password:</span>
+      <span class="wizard-miq-review-item-value">******</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">File Path:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.htPassword.filePath}}</span>
+    </div>
+  </form>
+  <form class="form-horizontal" ng-if="data.authentication.mode == 'ldap'">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">ID:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.id}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Email:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.email}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Name:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.name}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Username:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.username}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">BindDN:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.bindDN}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Bind Password:</span>
+      <span class="wizard-miq-review-item-value">******</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">CA:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.ca}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Insecure:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.insecure}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">URL:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.ldap.url}}</span>
+    </div>
+  </form>
+  <form class="form-horizontal" ng-if="data.authentication.mode == 'requestHeader'">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Challenge URL:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.requestHeader.challengeUrl}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Login URL:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.requestHeader.loginUrl}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Client CA:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.requestHeader.clientCA}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Headers:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.requestHeader.headers}}</span>
+    </div>
+  </form>
+  <form class="form-horizontal" ng-if="data.authentication.mode == 'openId'">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Client ID:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.openId.clientId}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Client Secret:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.openId.clientSecret}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Sub-claim:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.openId.subClaim}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Authorization-Endpoint:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.openId.authEndpoint}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Token-Endpoint:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.openId.tokenEndpoint}}</span>
+    </div>
+  </form>
+  <form class="form-horizontal" ng-if="data.authentication.mode == 'google'">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Client ID:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.google.clientId}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Client Secret:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.google.clientSecret}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Hosted Domain:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.google.hostedDomain}}</span>
+    </div>
+  </form>
+  <form class="form-horizontal" ng-if="data.authentication.mode == 'github'">
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Client ID:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.github.clientId}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Client Secret:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.github.clientSecret}}</span>
+    </div>
+    <div class="wizard-miq-review-item">
+      <span class="wizard-miq-review-item-label">Hosted Domain:</span>
+      <span class="wizard-miq-review-item-value">{{data.authentication.github.hostedDomain}}</span>
+    </div>
+  </form>
+</div>

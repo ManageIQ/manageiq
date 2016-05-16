@@ -1,0 +1,24 @@
+<div ng-app="miq.containers.providersModule" ng-controller="containers.deployProviderController" class="container-fluid container-tiles-pf containers-dashboard miq-dashboard-view"/>
+  <div miq-modal class="wizard-miq" modal-title="Deploy New Provider" visible="showDeploymentWizard" on-cancel="cancelDeploymentWizard()" on-hide="cancelDeploymentWizard()" modal-size="large">
+    <div ng-if="showDeploymentWizard === true"> <!-- this is done to reset the wizard each time it is shown -->
+      <div miq-wizard class="miq-deploy-provider-wizard" wizard-ready="deployProviderReady" on-finish="finishedWizard()" on-cancel="cancelWizard()" content-height="455px" next-title="nextButtonTitle"
+      next-callback="nextCallback" back-callback="backCallback" wizard-done="deployComplete || deployInProgress">
+        <div miq-wizard-step step-title="Deployment Details" substeps="true" step-id="details" step-priority="0" show-review="true" show-review-details="true">
+          <div ng-include="'/static/deploy-provider-details-general.html'"></div>
+          <div ng-include="'/static/deploy-provider-masters-nodes.html'"></div>
+          <div ng-include="'/static/deploy-provider-details-cdn-channel.html'"></div>
+        </div>
+        <div miq-wizard-step step-title="Configuration" substeps="true" step-id="configuration"step-priority="1"  show-review="true">
+          <div ng-include="'/static/deploy-provider-config-auth-mode.html'"></div>
+          <div ng-include="'/static/deploy-provider-config-auth-settings.html'"></div>
+          <div ng-include="'/static/deploy-provider-config-storage.html'"></div>
+          <div ng-include="'/static/deploy-provider-config-settings.html'"></div>
+        </div>
+        <div miq-wizard-step step-title="Review" substeps="true" step-id="review" step-priority="2">
+          <div ng-include="'/static/deploy-provider-review-summary.html'"></div>
+          <div ng-include="'/static/deploy-provider-review-progress.html'"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
