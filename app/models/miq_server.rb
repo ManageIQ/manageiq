@@ -115,7 +115,7 @@ class MiqServer < ApplicationRecord
 
   def self.running?
     p = PidFile.new(pidfile)
-    p.running?(/evm_server\.rb/) ? p.pid : false
+    p.running? ? p.pid : false
   end
 
   def start

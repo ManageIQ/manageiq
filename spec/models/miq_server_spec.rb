@@ -384,6 +384,15 @@ describe MiqServer do
     end
   end
 
+  it "detects already .running?" do
+    Tempfile.open("evmpid") do |file|
+      allow(MiqServer).to receive(:pidfile).and_return(file.path)
+      File.write(file.path, Process.pid)
+
+      expect(MiqServer.running?).to be_truthy
+    end
+  end
+
   describe "#active?" do
     context "Active status returns true" do
       ["starting", "started"].each do |status|
