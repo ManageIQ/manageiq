@@ -1,7 +1,7 @@
 FROM centos:7
 ENV container docker
 MAINTAINER ManageIQ https://github.com/ManageIQ/manageiq-appliance-build
-ARG REF=master
+ARG REF=darga
 
 # Set ENV, LANG only needed if building with docker-1.8
 ENV LANG en_US.UTF-8
@@ -135,7 +135,7 @@ EXPOSE 80 443
 
 LABEL name="manageiq" \
           vendor="ManageIQ" \
-          version="Master" \
+          version="Darga" \
           release=${REF} \
           architecture="x86_64" \
           url="http://manageiq.org/" \
