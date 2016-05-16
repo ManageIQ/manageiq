@@ -4,7 +4,6 @@ module ManageIQ::Providers
       include ManageIQ::Providers::Azure::RefreshHelperMethods
       include Vmdb::Logging
 
-      VALID_LOCATION = /\w+/
       TYPE_DEPLOYMENT = "microsoft.resources/deployments"
 
       def self.ems_inv_to_hashes(ems, options = nil)
