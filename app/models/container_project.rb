@@ -78,4 +78,8 @@ class ContainerProject < ApplicationRecord
     self.deleted_on = Time.now.utc
     save
   end
+
+  def archived?
+    ems_id.nil?
+  end
 end
