@@ -97,7 +97,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
     require 'openstack/openstack_event_monitor'
     OpenstackEventMonitor.available?(event_monitor_options)
   rescue => e
-    _log.error("Exeption trying to find openstack event monitor for #{name}(#{hostname}). #{e.message}")
+    _log.error("Exception trying to find openstack event monitor for #{name}(#{hostname}). #{e.message}")
     _log.error(e.backtrace.join("\n"))
     false
   end

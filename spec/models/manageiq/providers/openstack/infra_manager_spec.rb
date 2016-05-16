@@ -42,7 +42,8 @@ describe ManageIQ::Providers::Openstack::InfraManager do
 
     it "logs an error and indicates that an event monitor is not available when there's an error checking for an event monitor" do
       allow(OpenstackEventMonitor).to receive(:available?).and_raise(StandardError)
-      expect($log).to receive(:error).with(/Exeption trying to find openstack event monitor/)
+      expect($log).to receive(:error).with(/Exception trying to find openstack event monitor/)
+      expect($log).to receive(:error)
       expect(@ems.event_monitor_available?).to be_falsey
     end
   end
