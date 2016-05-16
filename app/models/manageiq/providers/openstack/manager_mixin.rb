@@ -1,5 +1,3 @@
-require 'bunny'
-
 module ManageIQ::Providers::Openstack::ManagerMixin
   extend ActiveSupport::Concern
 
@@ -121,13 +119,13 @@ module ManageIQ::Providers::Openstack::ManagerMixin
 
   def translate_exception(err)
     case err
-    when Excon::Errors::Unauthorized, Bunny::AuthenticationFailureError
+    when Excon::Errors::Unauthorized
       MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
     when Excon::Errors::Timeout
       MiqException::MiqUnreachableError.new "Login attempt timed out"
-    when Excon::Errors::SocketError, Bunny::TCPConnectionFailedForAllHosts
+    when Excon::Errors::SocketError
       MiqException::MiqHostError.new "Socket error: #{err.message}"
-    when MiqException::MiqInvalidCredentialsError
+    when MiqException::MiqInvalidCredentialsError, MiqException::MiqHostError
       err
     else
       MiqException::MiqEVMLoginError.new "Unexpected response returned from system: #{err.message}"
