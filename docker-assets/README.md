@@ -8,10 +8,19 @@ A typical build takes around 15 mins to complete.
 It needs to be initiated from the root directory of the manageiq git repository
 
 ```
-docker build -t manageiq .
+docker build -t manageiq/manageiq .
 ```
 
-The image has been tested and validated under docker-1.10 (Fedora23) and 1.8.2 (Centos7)
+To build versions other than the tip of master:
+
+```
+docker build -t manageiq/manageiq:darga --build-arg REF=darga .                 # From tip of darga branch
+docker build -t manageiq/manageiq:darga-1-beta1 --build-arg REF=darga-1-beta1 . # From darga-1-beta1 tag
+```
+
+If you want to build with local changes, you need to uncomment "ADD" and comment "RUN" in the "Add ManageIQ source" section of the Dockerfile.
+
+The image has been tested and validated under docker-1.10 (Fedora23)
 
 
 ## Run
@@ -20,7 +29,7 @@ The image has been tested and validated under docker-1.10 (Fedora23) and 1.8.2 (
 
 The first time you run the container, it will initialize the database, **please allow 2-4 mins** for MIQ to respond.
 ```
-docker run --privileged -di -p 80:80 -p 443:443 manageiq
+docker run --privileged -di -p 80:80 -p 443:443 manageiq/manageiq
 ```
 Please note you can ommit some ports from the run command if you don't need to use them
 
