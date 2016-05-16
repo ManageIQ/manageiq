@@ -36,8 +36,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def start
     image = target_entity
-    return queue_signal(:abort_job, "no image found", "error") unless image
-    return queue_signal(:abort_job, "cannont analyze non-docker images", "error") unless image.docker_id
+    return queue_abort("no image found") unless image
+    return queue_abort("cannont analyze non-docker images") unless image.docker_id
 
     ems_configs = VMDB::Config.new('vmdb').config[:ems]
 
@@ -60,12 +60,12 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     begin
       kubernetes_client.create_pod(pod)
     rescue SocketError, KubeException => e
-      msg = "pod creation for #{pod_full_name} failed: #{e}"
-      _log.info(msg)
-      return queue_signal(:abort_job, msg, "error")
+      return queue_abort("pod creation for #{pod_full_name} failed: #{e}")
     end
 
     queue_signal(:pod_wait)
+  rescue
+    queue_abort("unexpected exception, see log")
   end
 
   def pod_wait
@@ -103,11 +103,13 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
 
     queue_signal(:analyze)
+  rescue
+    queue_abort("unexpected exception, see log")
   end
 
   def analyze
     image = target_entity
-    return queue_signal(:abort_job, "no image found", "error") unless image
+    return queue_abort("no image found") unless image
 
     _log.info("scanning image #{options[:docker_image_id]}")
 
@@ -133,20 +135,13 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
                         "taskid" => jobid,
                         "host"   => MiqServer.my_server,
                         "args"   => [YAML.dump(scan_args)])
-  end
-
-  def collect_compliance_data(image)
-    _log.info "collecting compliance data for #{options[:docker_image_id]}"
-    openscap_result = image.openscap_result || OpenscapResult.new(:container_image => image)
-    openscap_result.attach_raw_result(image_inspector_client.fetch_oscap_arf)
-    openscap_result.save
-  rescue ImageInspectorClient::InspectorClientException => e
-    _log.error("collecting compliance data for #{options[:docker_image_id]} with error: #{e}")
+  rescue
+    queue_abort("unexpected exception, see log")
   end
 
   def synchronize
     image = target_entity
-    return queue_signal(:abort_job, "no image found", "error") unless image
+    return queue_abort("no image found") unless image
 
     image.sync_metadata(SCAN_CATEGORIES,
                         "taskid" => jobid,
@@ -213,6 +208,15 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   alias_method :abort_job, :cleanup
 
   private
+
+  def collect_compliance_data(image)
+    _log.info "collecting compliance data for #{options[:docker_image_id]}"
+    openscap_result = image.openscap_result || OpenscapResult.new(:container_image => image)
+    openscap_result.attach_raw_result(image_inspector_client.fetch_oscap_arf)
+    openscap_result.save
+  rescue ImageInspectorClient::InspectorClientException => e
+    _log.error("collecting compliance data for #{options[:docker_image_id]} with error: #{e}")
+  end
 
   def target_entity
     target_class.constantize.find_by_id(target_id)
@@ -350,6 +354,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     pod_def[:spec][:volumes].append(
       :name   => "inspector-admin-secret",
       :secret => {:secretName => inspector_admin_secret_name})
+  end
+
+  def queue_abort(error_msg)
+    _log.error(error_msg)
+    queue_signal(:abort_job, error_msg, "error")
   end
 
   def inspector_image
