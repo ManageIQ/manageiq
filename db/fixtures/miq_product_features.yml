@@ -3392,42 +3392,51 @@
       :feature_type: control
       :identifier: middleware_deployment_tag
 
-  # MiddlewareDatasource
-  - :name: MiddlewareDatasource
-    :description: Everything under Middleware Datasources
-    :feature_type: node
-    :identifier: middleware_datasource
+# Middleware Datasource
+- :name: Middleware Datasource
+  :description: Everything under Middleware Datasources
+  :feature_type: node
+  :identifier: middleware_datasource
+  :children:
+  - :name: View
+    :description: View Middleware Datasources
+    :feature_type: view
+    :identifier: middleware_datasource_view
     :children:
-    - :name: View
-      :description: View Middleware Datasources
+    - :name: List
+      :description: Display Lists of Middleware Datasources
       :feature_type: view
-      :identifier: middleware_datasource_view
-      :children:
-      - :name: List
-        :description: Display Lists of Middleware Datasources
-        :feature_type: view
-        :identifier: middleware_datasource_show_list
-      - :name: Show
-        :description: Display Individual Middleware Datasources
-        :feature_type: view
-        :identifier: middleware_datasource_show
-    - :name: Modify
-      :description: Modify Middleware Datasources
+      :identifier: middleware_datasource_show_list
+    - :name: Show
+      :description: Display Individual Middleware Datasources
+      :feature_type: view
+      :identifier: middleware_datasource_show
+  - :name: Modify
+    :description: Modify Middleware Datasources
+    :feature_type: admin
+    :identifier: middleware_datasource_admin
+    :children:
+    - :name: Remove
+      :description: Remove Middleware Datasource from the VMDB
       :feature_type: admin
-      :identifier: middleware_datasource_admin
-      :children:
-      - :name: Remove
-        :description: Remove Middleware Datasource from the VMDB
-        :feature_type: admin
-        :identifier: middleware_datasource_delete
-      - :name: Edit
-        :description: Edit a Middleware Datasource
-        :feature_type: admin
-        :identifier: middleware_datasource_edit
-      - :name: Add
-        :description: Add a Middleware Datasource
-        :feature_type: admin
-        :identifier: middleware_datasource_new
+      :identifier: middleware_datasource_delete
+    - :name: Edit
+      :description: Edit a Middleware Datasource
+      :feature_type: admin
+      :identifier: middleware_datasource_edit
+    - :name: Add
+      :description: Add a Middleware Datasource
+      :feature_type: admin
+      :identifier: middleware_datasource_new
+  - :name: Operate
+    :description: Perform Operations on Middleware Datasources
+    :feature_type: control
+    :identifier: middleware_datasource_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Middleware Datasources
+      :feature_type: control
+      :identifier: middleware_datasource_tag
 
 # EmsNetwork
 - :name: Network Providers

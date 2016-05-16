@@ -473,6 +473,7 @@ class ApplicationHelper::ToolbarChooser
               ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
               container_image_registry ems_infra flavor host container_build
               ontap_file_share ontap_logical_disk container_topology middleware_topology middleware_server
+              middleware_deployment middleware_datasource
               ontap_storage_system orchestration_stack resource_pool storage_manager
               timeline usage).include?(@layout)
           if ["show_list"].include?(@lastaction)
