@@ -390,7 +390,7 @@ module Rbac
     # Example with args:    :named_scope => [in_region, 1]
     scope             = options[:named_scope]
 
-    klass             = to_class(options[:class]) || Object
+    klass             = to_class(options[:class])
     conditions        = options[:conditions]
     where_clause      = options[:where_clause]
     sub_filter        = options[:sub_filter]
@@ -498,11 +498,11 @@ module Rbac
     scope_name = Array.wrap(scope).first
     if scope_name.nil?
       klass
+    elsif klass.nil? || !klass.respond_to?(scope_name)
+      class_name = klass.nil? ? "Object" : klass.name
+      raise _("Named scope '%{scope_name}' is not defined for class '%{class_name}'") % {:scope_name => scope_name,
+                                                                                         :class_name => class_name}
     else
-      unless klass.respond_to?(scope_name)
-        raise _("Named scope '%{scope_name}' is not defined for class '%{class_name}'") % {:scope_name => scope_name,
-                                                                                           :class_name => klass.name}
-      end
       klass.send(*scope)
     end
   end
