@@ -295,11 +295,7 @@ class ChargebackController < ApplicationController
 
     tier                 = {}
     tier[:start]         = tier_list[tier_index][:finish]
-    tier[:finish] = if tier_list[tier_index + 1].nil?
-                      Float::INFINITY
-                    else
-                      tier_list[tier_index + 1][:start]
-                    end
+    tier[:finish] = tier_list[tier_index + 1].nil? ? Float::INFINITY : tier_list[tier_index + 1][:start]
     tier[:fixed_rate]    = 0.0
     tier[:variable_rate] = 0.0
     tier[:new_tier]      = true
@@ -318,8 +314,6 @@ class ChargebackController < ApplicationController
 
     # Delete tier record
     @edit[:new][:tiers][detail_index].delete_at(tier_to_remove_index.to_i)
-
-    @changed = session[:changed] = true
 
     refresh_rate_edit_view
   end
@@ -906,6 +900,7 @@ class ChargebackController < ApplicationController
   end
 
   def refresh_rate_edit_view
+    @changed = session[:changed] = true
     render :update do |page|
       page << javascript_prologue
       page.replace_html("chargeback_rate_edit_form", :partial => "cb_rate_edit_table")
