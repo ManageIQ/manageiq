@@ -96,7 +96,7 @@ echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm
 ## Change workdir to application root, build/install gems
 WORKDIR ${APP_ROOT}
 RUN source /etc/default/evm && \
-/usr/bin/memcached -u memcached -p 11211 -m 64 -c 1024 -l 127.0.0.1 -d && \
+export RAILS_USE_MEMORY_STORE="true" && \
 npm install npm -g && \
 npm install gulp bower -g && \
 gem install bundler -v ">=1.8.4" && \
