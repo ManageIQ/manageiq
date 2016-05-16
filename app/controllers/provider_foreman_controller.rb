@@ -13,6 +13,10 @@ class ProviderForemanController < ApplicationController
     @table_name ||= "provider_foreman"
   end
 
+  CM_X_BUTTON_ALLOWED_ACTIONS = {
+    'jobtemplate_service_dialog' => :jobtemplate_service_dialog,
+  }.freeze
+
   def self.model_to_name(provmodel)
     if provmodel.include?("ManageIQ::Providers::AnsibleTower")
       Dictionary.gettext('ansible_tower', :type => :ui_title, :translate => false)
@@ -116,7 +120,7 @@ class ProviderForemanController < ApplicationController
 
   def tagging
     assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :configuration_manager_providers
-    assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
+    assert_privileges("configured_system_tag")
     tagging_edit('ConfiguredSystem', false)
     render_tagging_form
   end
@@ -408,7 +412,9 @@ class ProviderForemanController < ApplicationController
     @showtype     = "main"
     @button_group = rec_cls.to_s if x_active_accord == :cs_filter
     @button_group = "provider_foreman_#{rec_cls}" if x_active_accord == :configuration_manager_providers
-    @button_group = "cm_job_templates" if x_active_accord == :cm_job_templates
+    @button_group = if x_active_accord == :cm_job_templates
+                      @record.kind_of?(ConfigurationScript) ? "cm_job_template" : "cm_job_templates"
+                    end
   end
 
   def explorer
@@ -452,6 +458,26 @@ class ProviderForemanController < ApplicationController
   def change_tab
     @sb[:active_tab] = params[:tab_id]
     replace_right_cell
+  end
+
+  def jt_form_field_changed
+    id = params[:id]
+    return unless load_edit("jt_edit__#{id}", "replace_cell__explorer")
+    jt_edit_get_form_vars
+    render :update do |page|
+      page << javascript_prologue
+      page << javascript_hide("buttons_off")
+      page << javascript_show("buttons_on")
+    end
+  end
+
+  def jobtemplate_service_dialog_submit
+    case params[:button]
+      when "cancel"
+        jobtemplate_service_dialog_submit_cancel
+      when "save"
+        jobtemplate_service_dialog_submit_save
+    end
   end
 
   private ###########
@@ -723,6 +749,18 @@ class ProviderForemanController < ApplicationController
     render :js => presenter.to_html
   end
 
+  def render_service_dialog_form
+    return if %w(cancel save).include?(params[:button])
+    @in_a_form = true
+    clear_flash_msg
+    presenter, r = rendering_objects
+    update_service_dialog_partials(presenter, r)
+    rebuild_toolbars(false, presenter)
+    handle_bottom_cell(presenter, r)
+    presenter[:right_cell_text] = @right_cell_text
+    render :js => presenter.to_html
+  end
+
   def update_tree_and_render_list(replace_trees)
     @explorer = true
     get_node_info(x_node)
@@ -774,7 +812,7 @@ class ProviderForemanController < ApplicationController
     get_node_info(x_node)
     @delete_node = params[:id] if @replace_trees
     type, _id = x_node.split("_").last.split("-")
-    type && ["ConfiguredSystem"].include?(TreeBuilder.get_model_for_prefix(type))
+    type && ["ConfiguredSystem", "ConfigurationScript"].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def configuration_profile_record?(node = x_node)
@@ -829,7 +867,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_partials(record_showing, presenter, r)
-    if record_showing
+    if record_showing && valid_configured_system_record?(@configured_system_record)
       get_tagdata(@record)
       presenter.hide(:form_buttons_div)
       path_dir = "provider_foreman"
@@ -934,7 +972,7 @@ class ProviderForemanController < ApplicationController
   def display_adv_searchbox
     !(@configured_system_record ||
       @in_a_form ||
-      configuration_profile_summary_tab_selected?)
+      configuration_profile_summary_tab_selected? || @cm_job_template_record)
   end
 
   def configuration_profile_summary_tab_selected?
@@ -964,11 +1002,27 @@ class ProviderForemanController < ApplicationController
     }
   end
 
+  def locals_for_service_dialog
+    {:action_url   => 'service_dialog',
+     :record_id    => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
+    }
+  end
+
   def update_tagging_partials(presenter, r)
     presenter.update(:main_div, r[:partial => 'layouts/tagging',
                                   :locals  => locals_for_tagging])
     presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
                                           :locals  => locals_for_tagging])
+  end
+
+  def update_service_dialog_partials(presenter, r)
+    presenter.update(:main_div, r[:partial => 'service_dialog_from_jt',
+                                  :locals  => locals_for_service_dialog])
+    locals = {:record_id  => @edit[:rec_id],
+              :action_url => "jobtemplate_service_dialog_submit",
+              :serialize  => true}
+    presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
+                                          :locals  => locals])
   end
 
   def clear_flash_msg
@@ -1079,6 +1133,10 @@ class ProviderForemanController < ApplicationController
     cm_job_template_record.try(:id)
   end
 
+  def valid_configured_system_record?(configured_system_record)
+    configured_system_record.try(:id)
+  end
+
   def process_show_list(options = {})
     options[:dbname] = :cm_providers if x_active_accord == :configuration_manager_providers
     options[:dbname] = :cm_configured_systems if x_active_accord == :cs_filter
@@ -1112,4 +1170,52 @@ class ProviderForemanController < ApplicationController
 
   def set_session_data
   end
+
+  def jobtemplate_service_dialog
+    assert_privileges("jobtemplate_service_dialog")
+    jt = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript.find_by_id(params[:id])
+    @edit = {:new    => {:dialog_name => ""},
+             :key    => "jt_edit__#{jt.id}",
+             :rec_id => jt.id}
+    @in_a_form = true
+    @right_cell_text = _("Adding a new Service Dialog from Ansible Job Template \"%{name}\"") % {:name => jt.name}
+    render_service_dialog_form
+  end
+
+  def jobtemplate_service_dialog_submit_cancel
+    add_flash(_("Creation of a new Service Dialog was cancelled by the user"))
+    @in_a_form = false
+    @edit = @record = nil
+    replace_right_cell
+  end
+
+  def jobtemplate_service_dialog_submit_save
+    assert_privileges("jobtemplate_service_dialog")
+    load_edit("jt_edit__#{params[:id]}", "replace_cell__explorer")
+    begin
+      jt = ConfigurationScript.find_by_id(params[:id])
+      AnsibleTowerJobTemplateDialogService.new.create_dialog(jt, @edit[:new][:dialog_name])
+    rescue => bang
+      add_flash(_("Error when creating a Service Dialog from Ansible Job Template: %{error_message}") %
+                  {:error_message => bang.message}, :error)
+      render :update do |page|
+        page << javascript_prologue
+        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      end
+    else
+      add_flash(_("Service Dialog \"%{name}\" was successfully created") %
+                  {:name => @edit[:new][:dialog_name]}, :success)
+      @in_a_form = false
+      @edit = @record = nil
+      replace_right_cell
+    end
+  end
+
+  def jt_edit_get_form_vars
+    @edit[:new][:name] = params[:name] if params[:name]
+    @edit[:new][:description] = params[:description] if params[:description]
+    @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
+    @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
+  end
+
 end

@@ -4314,14 +4314,10 @@
       :feature_type: control
       :identifier: cm_job_template_control
       :children:
-        - :name: Edit Tags
-          :description: Edit Job Template Tags
-          :feature_type: control
-          :identifier: cm_job_template_tag
         - :name: Create Service Dialog
           :description: Create Service Dialog from Job Template
-          :feature_type: control
-          :identifier: cm_job_template_service_dialog
+          :feature_type: admin
+          :identifier: jobtemplate_service_dialog
     - :name: Modify
       :description: Modify Job Templates
       :feature_type: admin
