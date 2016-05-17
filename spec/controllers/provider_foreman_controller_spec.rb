@@ -56,6 +56,9 @@ describe ProviderForemanController do
     @ans_configured_system2b = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2b_ans_configured_system",
                                                                                                                 :inventory_root_group_id => @inventory_group2.id,
                                                                                                                 :manager_id              => @config_ans2.id)
+    @ans_job_template1 = FactoryGirl.create(:configuration_script, :name => "ConfigScript1", :manager_id => @config_ans.id)
+    @ans_job_template2 = FactoryGirl.create(:configuration_script, :name => "ConfigScript2", :manager_id => @config_ans2.id)
+    @ans_job_template3 = FactoryGirl.create(:configuration_script, :name => "ConfigScript3", :manager_id => @config_ans.id)
   end
 
   it "renders index" do
@@ -66,7 +69,7 @@ describe ProviderForemanController do
   end
 
   it "renders explorer" do
-    set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord)
+    set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord cm_job_templates_accord)
 
     get :explorer
     accords = controller.instance_variable_get(:@accords)
@@ -211,7 +214,7 @@ describe ProviderForemanController do
   context "renders right cell text" do
     before do
       right_cell_text = nil
-      set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord)
+      set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord cm_job_templates_accord)
       controller.instance_variable_set(:@right_cell_text, right_cell_text)
       allow(controller).to receive(:get_view_calculate_gtl_type)
       allow(controller).to receive(:get_view_pages)
@@ -263,6 +266,23 @@ describe ProviderForemanController do
     tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
     objects = tree_builder.send(:x_get_tree_objects, @inventory_group, nil, false, nil)
     expected_objects = [@ans_configured_system, @ans_configured_system2a]
+    expect(objects).to match_array(expected_objects)
+  end
+
+  it "builds ansible tower job templates tree" do
+    controller.send(:build_configuration_manager_tree, :cm_job_templates, :cm_job_templates_tree)
+    tree_builder = TreeBuilderConfigurationManagerJobTemplates.new("root", "", {})
+    objects = tree_builder.send(:x_get_tree_roots, false, {})
+    expected_objects = [@config_ans, @config_ans2]
+    expect(objects).to match_array(expected_objects)
+  end
+
+  it "constructs the ansible tower job templates tree node" do
+    set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord cm_job_templates_accord)
+    controller.send(:build_configuration_manager_tree, :cm_job_templates, :cm_job_templates_tree)
+    tree_builder = TreeBuilderConfigurationManagerJobTemplates.new("root", "", {})
+    objects = tree_builder.send(:x_get_tree_cmat_kids, @config_ans, false)
+    expected_objects = [@ans_job_template1, @ans_job_template3]
     expect(objects).to match_array(expected_objects)
   end
 
@@ -534,6 +554,36 @@ describe ProviderForemanController do
       expect(node2).to be_nil
     end
   end
+
+  context "#jobtemplate_service_dialog" do
+    before(:each) do
+      set_user_privileges
+      @jt = FactoryGirl.create(:configuration_script)
+      @dialog_label = "New Dialog 01"
+      session[:edit] = {
+        :new    => {:dialog_name => @dialog_label},
+        :key    => "jt_edit__#{@jt.id}",
+        :rec_id => @jt.id
+      }
+      controller.instance_variable_set(:@sb, :trees => {:cm_job_templates_tree => {:open_nodes => []}}, :active_tree => :cm_job_templates_tree)
+      controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
+    end
+
+    after(:each) do
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      expect(assigns(:edit)).to be_nil
+      expect(response.status).to eq(200)
+    end
+
+    it "Service Dialog is created from an Ansible Job Template" do
+      controller.instance_variable_set(:@_params, :button => "save", :id => @jt.id)
+      allow(controller).to receive(:replace_right_cell)
+      controller.send(:jobtemplate_service_dialog_submit)
+      expect(assigns(:flash_array).first[:message]).to include("was successfully created")
+      expect(Dialog.where(:label => @dialog_label).first).not_to be_nil
+    end
+  end
+
 
   def user_with_feature(features)
     features = EvmSpecHelper.specific_product_features(*features)
