@@ -6,6 +6,7 @@ ARG REF=darga
 # Set ENV, LANG only needed if building with docker-1.8
 ENV LANG en_US.UTF-8
 ENV TERM xterm
+ENV RUBY_GEMS_ROOT /opt/rubies/ruby-2.2.5/lib/ruby/gems/2.2.0
 ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
@@ -67,7 +68,7 @@ VOLUME [ "/var/opt/rh/rh-postgresql94/lib/pgsql/data" ]
 RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz && \
     cd chruby-0.3.9 && make install && scripts/setup.sh && \
     echo "gem: --no-ri --no-rdoc --no-document" > ~/.gemrc && \
-    echo "source /usr/local/share/chruby/chruby.sh" >> ~/.bashrc && \ 
+    echo "source /usr/local/share/chruby/chruby.sh" >> ~/.bashrc && \
     curl -sL https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz | tar xz && \
     cd ruby-install-0.6.0 && make install && ruby-install ruby 2.2.5 -- --disable-install-doc && \
     echo "chruby ruby-2.2.5" >> ~/.bash_profile && \
@@ -103,9 +104,15 @@ gem install bundler -v ">=1.8.4" && \
 bin/setup --no-db --no-tests && \
 rake evm:compile_assets && \
 rake evm:compile_sti_loader && \
-rm -rvf /opt/rubies/ruby-2.2.5/lib/ruby/gems/2.2.0/cache/* && \
+# Cleanup install artifacts
+npm cache clean && \
 bower cache clean && \
-npm cache clean
+find ${RUBY_GEMS_ROOT}/gems/ -name .git | xargs rm -rvf && \
+find ${RUBY_GEMS_ROOT}/gems/ | grep "\.s\?o$" | xargs rm -rvf && \
+rm -rvf ${RUBY_GEMS_ROOT}/gems/rugged-*/vendor/libgit2/build && \
+rm -rvf ${RUBY_GEMS_ROOT}/cache/* && \
+rm -rvf /root/.bundle/cache && \
+rm -rvf ${APP_ROOT}/tmp/cache/assets
 
 ## Build SSUI
 RUN source /etc/default/evm && \
@@ -113,8 +120,9 @@ cd ${SSUI_ROOT} && \
 npm install && \
 bower -F --allow-root install && \
 gulp build && \
-bower cache clean && \
-npm cache clean
+# Cleanup install artifacts
+npm cache clean && \
+bower cache clean
 
 ## Copy appliance-initialize script and service unit file
 COPY docker-assets/appliance-initialize.service /usr/lib/systemd/system
