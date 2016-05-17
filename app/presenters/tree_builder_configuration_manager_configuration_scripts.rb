@@ -1,4 +1,4 @@
-class TreeBuilderConfigurationManagerJobTemplates < TreeBuilder
+class TreeBuilderConfigurationManagerConfigurationScripts < TreeBuilder
   has_kids_for ManageIQ::Providers::AnsibleTower::ConfigurationManager, [:x_get_tree_cmat_kids]
   attr_reader :tree_nodes
 
@@ -10,7 +10,7 @@ class TreeBuilderConfigurationManagerJobTemplates < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:autoload => true, :id_prefix => 'jt_')
+    locals.merge!(:autoload => true, :id_prefix => 'cf_')
   end
 
   # Get root nodes count/array for explorer tree

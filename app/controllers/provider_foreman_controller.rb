@@ -14,7 +14,7 @@ class ProviderForemanController < ApplicationController
   end
 
   CM_X_BUTTON_ALLOWED_ACTIONS = {
-    'jobtemplate_service_dialog' => :jobtemplate_service_dialog,
+    'configscript_service_dialog' => :configscript_service_dialog,
   }.freeze
 
   def self.model_to_name(provmodel)
@@ -120,7 +120,7 @@ class ProviderForemanController < ApplicationController
 
   def tagging
     assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :configuration_manager_providers
-    assert_privileges("configured_system_tag")
+    assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
     tagging_edit('ConfiguredSystem', false)
     render_tagging_form
   end
@@ -291,12 +291,12 @@ class ProviderForemanController < ApplicationController
     session[:edit] = @edit
     @explorer = true
 
-    if x_tree[:type] != :cs_filter || x_node == "root"
+    if x_active_tree != :cs_filter_tree || x_node == "root"
       listnav_search_selected(0)
     else
       @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
 
-      if x_tree[:type] == :cs_filter && (@nodetype == "xx-csf" || @nodetype == "xx-csa")
+      if x_active_tree == :cs_filter_tree && (@nodetype == "xx-csf" || @nodetype == "xx-csa")
         search_id = @nodetype == "root" ? 0 : from_cid(id)
         listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
         if @edit[:adv_search_applied] &&
@@ -336,7 +336,7 @@ class ProviderForemanController < ApplicationController
       case x_active_tree
       when :configuration_manager_providers_tree then configuration_manager_providers_tree_rec
       when :cs_filter_tree                       then cs_filter_tree_rec
-      when :cm_job_templates_tree                then cm_job_templates_tree_rec
+      when :configuration_scripts_tree                then configuration_scripts_tree_rec
       end
   end
 
@@ -384,7 +384,7 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def cm_job_templates_tree_rec
+  def configuration_scripts_tree_rec
     nodes = x_node.split('-')
     type, _id = x_node.split("_").last.split("-")
     case nodes.first
@@ -412,8 +412,8 @@ class ProviderForemanController < ApplicationController
     @showtype     = "main"
     @button_group = rec_cls.to_s if x_active_accord == :cs_filter
     @button_group = "provider_foreman_#{rec_cls}" if x_active_accord == :configuration_manager_providers
-    @button_group = if x_active_accord == :cm_job_templates
-                      @record.kind_of?(ConfigurationScript) ? "cm_job_template" : "cm_job_templates"
+    @button_group = if x_active_accord == :configuration_scripts
+                      @record.kind_of?(ConfigurationScript) ? "configuration_script" : "configuration_scripts"
                     end
   end
 
@@ -460,10 +460,10 @@ class ProviderForemanController < ApplicationController
     replace_right_cell
   end
 
-  def jt_form_field_changed
+  def cs_form_field_changed
     id = params[:id]
-    return unless load_edit("jt_edit__#{id}", "replace_cell__explorer")
-    jt_edit_get_form_vars
+    return unless load_edit("cs_edit__#{id}", "replace_cell__explorer")
+    cs_edit_get_form_vars
     render :update do |page|
       page << javascript_prologue
       page << javascript_hide("buttons_off")
@@ -471,12 +471,12 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def jobtemplate_service_dialog_submit
+  def configscript_service_dialog_submit
     case params[:button]
       when "cancel"
-        jobtemplate_service_dialog_submit_cancel
+        configscript_service_dialog_submit_cancel
       when "save"
-        jobtemplate_service_dialog_submit_save
+        configscript_service_dialog_submit_save
     end
   end
 
@@ -495,9 +495,9 @@ class ProviderForemanController < ApplicationController
       :role_any => true,
       :name     => :cs_filter,
       :title    => _("Configured Systems")},
-     {:role     => "cm_job_templates_accord",
+     {:role     => "configuration_scripts_accord",
       :role_any => true,
-      :name     => :cm_job_templates,
+      :name     => :configuration_scripts,
       :title    => _("Ansible Job Templates")}
      ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
@@ -513,7 +513,7 @@ class ProviderForemanController < ApplicationController
            when :cs_filter_tree
              TreeBuilderConfigurationManagerConfiguredSystems.new(name, type, @sb)
            else
-             TreeBuilderConfigurationManagerJobTemplates.new(name, type, @sb)
+             TreeBuilderConfigurationManagerConfigurationScripts.new(name, type, @sb)
            end
     instance_variable_set :"@#{name}", tree.tree_nodes
     tree
@@ -539,7 +539,7 @@ class ProviderForemanController < ApplicationController
     when "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ConfiguredSystem"
       configured_system_list(id, model)
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript", "ConfigurationScript"
-      cm_job_templates_list(id, model)
+      configuration_scripts_list(id, model)
     when "MiqSearch"
       miq_search_node
     else
@@ -566,8 +566,8 @@ class ProviderForemanController < ApplicationController
       self.x_node = "root"
       get_node_info("root")
     else
-      if x_active_tree == :cm_job_templates_tree
-        jt_provider_node(provider)
+      if x_active_tree == :configuration_scripts_tree
+        cs_provider_node(provider)
       else
         @no_checkboxes = true
         case @record.type
@@ -589,7 +589,7 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def jt_provider_node(provider)
+  def cs_provider_node(provider)
     options = {:model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript", :match_via_descendants => ConfigurationScript, :where_clause => ["manager_id IN (?)", provider.id]}
     process_show_list(options)
     @right_cell_text = _("%{model} \"%{name}\"") %
@@ -677,18 +677,18 @@ class ProviderForemanController < ApplicationController
     @right_cell_text = _("All %{title} Configured Systems") % {:title => ui_lookup(:ui_title => "foreman")}
   end
 
-  def cm_job_templates_list(id, model)
-    return cm_job_template_node(id, model) if id
-    @listicon = "cm_job_template"
-    if x_active_tree == :cm_job_templates_tree
+  def configuration_scripts_list(id, model)
+    return configuration_script_node(id, model) if id
+    @listicon = "configuration_script"
+    if x_active_tree == :configuration_scripts_tree
       options = {:model => model.to_s}
-      @right_cell_text = _("All Ansible Job Templates")
+      @right_cell_text = _("All Ansible Tower Job Templates")
       process_show_list(options)
     end
   end
 
-  def cm_job_template_node(id, model)
-    @record = @cm_job_template_record = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript, id)
+  def configuration_script_node(id, model)
+    @record = @configuration_script_record = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript, id)
     if @record.nil?
       self.x_node = "root"
       get_node_info("root")
@@ -709,7 +709,7 @@ class ProviderForemanController < ApplicationController
       options = {:model => "ConfiguredSystem"}
       process_show_list(options)
       @right_cell_text = _("All Configured Systems")
-    elsif x_active_tree == :cm_job_templates_tree
+    elsif x_active_tree == :configuration_scripts_tree
       options = {:model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript"}
       process_show_list(options)
       @right_cell_text = _("All Ansible Tower Job Templates")
@@ -793,7 +793,7 @@ class ProviderForemanController < ApplicationController
     if replace_trees
       trees[:configuration_manager_providers] = build_configuration_manager_tree(:configuration_manager_providers, :configuration_manager_providers_tree) if replace_trees.include?(:configuration_manager_providers)
       trees[:cs_filter] = build_configuration_manager_tree(:cs_filter, :cs_filter_tree) if replace_trees.include?(:cs_filter)
-      trees[:cm_job_templates] = build_configuration_manager_tree(:cm_job_templates, :cm_job_templates_tree) if replace_trees.include?(:cm_job_templates)
+      trees[:configuration_scripts] = build_configuration_manager_tree(:configuration_scripts, :configuration_scripts_tree) if replace_trees.include?(:configuration_scripts)
     end
     presenter, r = rendering_objects
     update_partials(record_showing, presenter, r)
@@ -892,9 +892,9 @@ class ProviderForemanController < ApplicationController
       presenter.hide(:form_buttons_div)
       presenter.update(:main_div, r[:partial => "inventory_group",
                                     :locals  => {:controller => 'provider_foreman'}])
-    elsif valid_cm_job_template_record?(@cm_job_template_record)
+    elsif valid_configuration_script_record?(@configuration_script_record)
       presenter.hide(:form_buttons_div)
-      presenter.update(:main_div, r[:partial => "cm_job_template",
+      presenter.update(:main_div, r[:partial => "configuration_script",
                                     :locals  => {:controller => 'provider_foreman'}])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
@@ -972,7 +972,7 @@ class ProviderForemanController < ApplicationController
   def display_adv_searchbox
     !(@configured_system_record ||
       @in_a_form ||
-      configuration_profile_summary_tab_selected? || @cm_job_template_record)
+      configuration_profile_summary_tab_selected? || @configuration_script_record)
   end
 
   def configuration_profile_summary_tab_selected?
@@ -1016,10 +1016,10 @@ class ProviderForemanController < ApplicationController
   end
 
   def update_service_dialog_partials(presenter, r)
-    presenter.update(:main_div, r[:partial => 'service_dialog_from_jt',
+    presenter.update(:main_div, r[:partial => 'service_dialog_from_cs',
                                   :locals  => locals_for_service_dialog])
     locals = {:record_id  => @edit[:rec_id],
-              :action_url => "jobtemplate_service_dialog_submit",
+              :action_url => "configscript_service_dialog_submit",
               :serialize  => true}
     presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
                                           :locals  => locals])
@@ -1129,8 +1129,8 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def valid_cm_job_template_record?(cm_job_template_record)
-    cm_job_template_record.try(:id)
+  def valid_configuration_script_record?(configuration_script_record)
+    configuration_script_record.try(:id)
   end
 
   def valid_configured_system_record?(configured_system_record)
@@ -1140,7 +1140,7 @@ class ProviderForemanController < ApplicationController
   def process_show_list(options = {})
     options[:dbname] = :cm_providers if x_active_accord == :configuration_manager_providers
     options[:dbname] = :cm_configured_systems if x_active_accord == :cs_filter
-    options[:dbname] = :cm_job_templates if x_active_accord == :cm_job_templates
+    options[:dbname] = :configuration_scripts if x_active_accord == :configuration_scripts
     super
   end
 
@@ -1171,18 +1171,18 @@ class ProviderForemanController < ApplicationController
   def set_session_data
   end
 
-  def jobtemplate_service_dialog
-    assert_privileges("jobtemplate_service_dialog")
-    jt = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript.find_by_id(params[:id])
+  def configscript_service_dialog
+    assert_privileges("configscript_service_dialog")
+    cs = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript.find_by_id(params[:id])
     @edit = {:new    => {:dialog_name => ""},
-             :key    => "jt_edit__#{jt.id}",
-             :rec_id => jt.id}
+             :key    => "cs_edit__#{cs.id}",
+             :rec_id => cs.id}
     @in_a_form = true
-    @right_cell_text = _("Adding a new Service Dialog from Ansible Job Template \"%{name}\"") % {:name => jt.name}
+    @right_cell_text = _("Adding a new Service Dialog from \"%{name}\"") % {:name => cs.name}
     render_service_dialog_form
   end
 
-  def jobtemplate_service_dialog_submit_cancel
+  def configscript_service_dialog_submit_cancel
     set_user_privileges
     add_flash(_("Creation of a new Service Dialog was cancelled by the user"))
     @in_a_form = false
@@ -1190,14 +1190,14 @@ class ProviderForemanController < ApplicationController
     replace_right_cell
   end
 
-  def jobtemplate_service_dialog_submit_save
-    assert_privileges("jobtemplate_service_dialog")
-    load_edit("jt_edit__#{params[:id]}", "replace_cell__explorer")
+  def configscript_service_dialog_submit_save
+    assert_privileges("configscript_service_dialog")
+    load_edit("cs_edit__#{params[:id]}", "replace_cell__explorer")
     begin
-      jt = ConfigurationScript.find_by_id(params[:id])
-      AnsibleTowerJobTemplateDialogService.new.create_dialog(jt, @edit[:new][:dialog_name])
+      cs = ConfigurationScript.find_by_id(params[:id])
+      AnsibleTowerJobTemplateDialogService.new.create_dialog(cs, @edit[:new][:dialog_name])
     rescue => bang
-      add_flash(_("Error when creating a Service Dialog from Ansible Job Template: %{error_message}") %
+      add_flash(_("Error when creating Service Dialog: %{error_message}") %
                   {:error_message => bang.message}, :error)
       render :update do |page|
         page << javascript_prologue
@@ -1212,7 +1212,7 @@ class ProviderForemanController < ApplicationController
     end
   end
 
-  def jt_edit_get_form_vars
+  def cs_edit_get_form_vars
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]

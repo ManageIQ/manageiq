@@ -2024,8 +2024,8 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         tree_autoload_dynatree
         tree_select
-        jobtemplate_service_dialog_submit
-        jt_form_field_changed
+        configscript_service_dialog_submit
+        cs_form_field_changed
         users
         wait_for_task
       ) +
