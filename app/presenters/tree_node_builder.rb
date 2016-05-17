@@ -46,7 +46,9 @@ class TreeNodeBuilder
 
   def build
     case object
-    when AvailabilityZone     then generic_node(object.name, "availability_zone.png", "Availability Zone: #{object.name}")
+    when AvailabilityZone     then generic_node(object.name,
+                                                "availability_zone.png",
+                                                _("Availability Zone: %{name}") % {:name => object.name})
     when ExtManagementSystem  then
       # TODO: This should really leverage .base_model on an EMS
       prefix_model =
@@ -65,11 +67,15 @@ class TreeNodeBuilder
       name = "<b>" + _("Policy: ") + "</b>" + object.miq_policy_desc
       generic_node(name.html_safe, "#{object.miq_policy_result ? "check" : "x"}.png")
     when Condition            then generic_node(object.description, "miq_condition.png")
-    when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png", "Configuration Profile: #{object.name}")
-    when ConfiguredSystem     then generic_node(object.hostname, "configured_system.png", "Configured System: #{object.hostname}")
+    when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png",
+                                                              _("Configuration Profile: %{name}") % {:name => object.name})
+    when ConfiguredSystem     then generic_node(object.hostname,
+                                                "configured_system.png",
+                                                _("Configured System: %{hostname}") % {:hostname => object.hostname})
     when Container            then generic_node(object.name, "container.png")
-    when CustomButton         then generic_node(object.name, object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
-                                                "Button: #{object.description}")
+    when CustomButton         then generic_node(object.name,
+                                                object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
+                                                _("Button: %{button_description}") % {:button_description => object.description})
     when CustomButtonSet      then custom_button_set_node
     when CustomizationTemplate then generic_node(object.name, "customizationtemplate.png")
     when Dialog               then generic_node(object.label, "dialog.png")
@@ -89,8 +95,12 @@ class TreeNodeBuilder
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
     when Vm                   then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
-    when LdapDomain           then generic_node("Domain: #{object.name}", "ldap_domain.png", "LDAP Domain: #{object.name}")
-    when LdapRegion           then generic_node("Region: #{object.name}", "ldap_region.png", "LDAP Region: #{object.name}")
+    when LdapDomain           then generic_node(_("Domain: %{domain_name}") % {:domain_name => object.name},
+                                                "ldap_domain.png",
+                                                _("LDAP Domain: %{ldap_domain_name}") % {:ldap_domain_name => object.name})
+    when LdapRegion           then generic_node(_("Region: %{region_name}") % {:region_name => object.name},
+                                                "ldap_region.png",
+                                                _("LDAP Region: %{ldap_region_name}") % {:ldap_region_name => object.name})
     when MiqAeClass           then node_with_display_name("ae_class.png")
     when MiqAeInstance        then node_with_display_name("ae_instance.png")
     when MiqAeMethod          then node_with_display_name("ae_method.png")
@@ -128,7 +138,9 @@ class TreeNodeBuilder
     when ServiceTemplateCatalog then service_template_catalog_node
     when Storage              then generic_node(object.name, "storage.png")
     when User                 then generic_node(object.name, "user.png")
-    when MiqSearch            then generic_node(object.description, "filter.png", "Filter: #{object.description}")
+    when MiqSearch            then generic_node(object.description,
+                                                "filter.png",
+                                                _("Filter: %{filter_description}") % {:filter_description => object.description})
     when MiqDialog            then generic_node(object.description, "miqdialog.png", object[0])
     when MiqRegion            then miq_region_node
     when MiqWidget            then generic_node(object.title, "#{object.content_type}_widget.png", object.title)
@@ -180,7 +192,7 @@ class TreeNodeBuilder
 
   def normal_folder_node
     icon = options[:type] == :vandt ? "blue_folder.png" : "folder.png"
-    generic_node(object.name, icon, "Folder: #{object.name}")
+    generic_node(object.name, icon, _("Folder: %{folder_name}") % {:folder_name => object.name})
   end
 
   def hash_node
@@ -264,15 +276,25 @@ class TreeNodeBuilder
   end
 
   def custom_button_set_node
-    text  = options[:type] == :sandt ? "#{object.name.split("|").first} (Group)" : object.name.split("|").first
+    text = if options[:type] == :sandt
+             _("%{button_group_name} (Group)") % {:button_group_name => object.name.split("|").first}
+           else
+             object.name.split("|").first
+           end
     image = object.set_data && object.set_data[:button_image] ? "custom-#{object.set_data[:button_image]}.png" : "folder.png"
-    tip   = object.description ? "Button Group: #{object.description}" : object.name.split("|").first
+    tip = if object.description
+            _("Button Group: %{button_group_description}") % {:button_group_description => object.description}
+          else
+            object.name.split("|").first
+          end
     generic_node(text, image, tip)
   end
 
   def ems_folder_node
     if object.kind_of?(Datacenter)
-      generic_node(object.name, "datacenter.png", "Datacenter: #{object.name}")
+      generic_node(object.name,
+                   "datacenter.png",
+                   _("Datacenter: %{datacenter_name}") % {:datacenter_name => object.name})
     else # normal Folders
       normal_folder_node
     end
@@ -289,7 +311,8 @@ class TreeNodeBuilder
 
   def miq_server_node
     if options[:is_current]
-      tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.name} [#{object.id}] (current)"
+      tip  = _("%{server}: %{server_name} [%{server_id}] (current)") %
+             {:server => ui_lookup(:model => object.class.to_s), :server_name => object.name, :server_id => object.id}
       text = "<b class='dynatree-title'>#{ERB::Util.html_escape(tip)}</b>".html_safe
     else
       tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.name} [#{object.id}]"
@@ -334,7 +357,8 @@ class TreeNodeBuilder
 
   def zone_node
     if options[:is_current]
-      tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.description} (current)"
+      tip  = _("%{zone}: %{zone_description} (current)") %
+             {:zone => ui_lookup(:model => object.class.to_s), :zone_description => object.description}
       text = "<b class='dynatree-title'>#{ERB::Util.html_escape(tip)}</b>".html_safe
     else
       tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.description}"
@@ -391,9 +415,9 @@ class TreeNodeBuilder
 
       @node = TreeNodeBuilder.generic_tree_node(
         build_object_id,
-        "Generating Report",
+        _("Generating Report"),
         image,
-        "Generating Report for - #{name}",
+        _("Generating Report for - %{report_name}") % {:report_name => name},
         :expand => expand
       )
     else
