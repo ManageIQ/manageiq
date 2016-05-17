@@ -161,7 +161,9 @@ module ToolbarHelper
     hidden = props[:hidden]
     cls = props[:enabled] ? '' : 'disabled '
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
-      content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
+      content_tag(:a, prepare_data_keys(props)
+                  .update(:href => '#')
+                  .update(prepare_tag_keys(props))) do
         (toolbar_image(props) + _(props[:text].to_s).html_safe)
       end
     end
@@ -177,7 +179,9 @@ module ToolbarHelper
             props[:enabled] ? '' : 'disabled '
           end
     content_tag(:li, :class => cls + (hidden ? 'hidden' : '')) do
-      content_tag(:a, prepare_tag_keys(props).update(:href => '#')) do
+      content_tag(:a, prepare_data_keys(props)
+                      .update(:href => '#')
+                      .update(prepare_tag_keys(props))) do
         (toolbar_image(props) + _(props[:text].to_s).html_safe)
       end
     end
@@ -201,5 +205,15 @@ module ToolbarHelper
     h['name'] = props[:name] if props.key?(:name)
     h['data-confirm-tb'] = _(props[:confirm]) if props.key?(:confirm)
     h
+  end
+
+  # Calculate 'data-*' tags for <a> tag from custom attributes in button
+  # definition.
+  #
+  # These are added fists so that they cannot overwrite any data-*
+  # tags needed for generic toolbar functionality.
+  #
+  def prepare_data_keys(props)
+    Hash(props[:data]).each_with_object({}) { |(k, v), h| h["data-#{k}"] = v }
   end
 end

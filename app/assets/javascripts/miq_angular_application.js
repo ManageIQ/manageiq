@@ -20,3 +20,9 @@ function miq_bootstrap(selector, app) {
 
   return angular.bootstrap($(selector), [app], { strictDi: true });
 }
+
+function miqCallAngular(data) {
+  ManageIQ.angular.scope.$apply(function() {
+    ManageIQ.angular.scope[data.name].apply(ManageIQ.angular.scope, data.args);
+  });
+}
