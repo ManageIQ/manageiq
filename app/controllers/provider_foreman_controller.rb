@@ -15,9 +15,9 @@ class ProviderForemanController < ApplicationController
 
   def self.model_to_name(provmodel)
     if provmodel.include?("ManageIQ::Providers::AnsibleTower")
-      ui_lookup(:ui_title => 'ansible_tower')
+      Dictionary.gettext('ansible_tower', :type => :ui_title, :translate => false)
     elsif provmodel.include?("ManageIQ::Providers::Foreman")
-      ui_lookup(:ui_title => 'foreman')
+      Dictionary.gettext('foreman', :type => :ui_title, :translate => false)
     end
   end
 
