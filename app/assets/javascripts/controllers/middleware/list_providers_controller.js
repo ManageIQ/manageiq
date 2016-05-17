@@ -147,13 +147,13 @@
     var selectedIds = this.filterSelectedIds();
     if (selectedIds) {
       var shouldRemove = confirm(__('Are you sure you want to remove providers with IDs: ' + selectedIds.join(', ')));
-      var lodaingItem = this.MiQNotificationService.sendInfo(
+      var loadingItem = this.MiQNotificationService.sendLoading(
         this.MiQNotificationService.dismissibleMessage(
-          __('Remove of providers with IDs ' + dataResponse.data.removedIds.join(', ') +' initiated')
+          __('Remove of providers with IDs ' + selectedIds.join(', ') +' initiated')
         )
       );
       if (shouldRemove) {
-        this.deleteItems(selectedIds, lodaingItem);
+        this.deleteItems(selectedIds, loadingItem);
       }
     }
   };
@@ -162,15 +162,19 @@
     this.$http({
       url: '/ems_middleware/delete_provider',
       method: 'POST',
-      data: {miq_grid_checks: selectedIds.join(',')},
+      data: {miq_grid_checks: items.join(',')},
     }).then(function(dataResponse){
       this.MiQNotificationService.sendSuccess(
         this.MiQNotificationService.dismissibleMessage(
-          __('Remove of providers with IDs ' + dataResponse.data.removedIds.join(', ') +' was successful', null, lodaingItem)
+          __('Remove of providers with IDs ') + dataResponse.data.removedIds.join(', ') + __(' was successful'), '', loadingItem
         )
       );
-      this.loadData();
+      this.onDeleteSuccess(items);
     }.bind(this));
+  }
+
+  ListProvidersController.prototype.onDeleteSuccess = function(itemIds) {
+    this.data = this.MiQDataTableService.removeItems(itemIds);
   }
 
   /**
