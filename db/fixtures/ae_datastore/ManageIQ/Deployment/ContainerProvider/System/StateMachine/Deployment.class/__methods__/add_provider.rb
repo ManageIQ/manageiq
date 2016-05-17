@@ -1,60 +1,42 @@
-require 'net/ssh'
-
 DEPLOYMENT_TYPES = {
-  :origin            => "ManageIQ::Providers::Openshift::ContainerManager",
-  :enterprise        => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager",
-  :atomic            => "ManageIQ::Providers::Atomic::ContainerManager",
-  :atomic_enterprise => "ManageIQ::Providers::AtomicEnterprise::ContainerManager"
+  :origin               => "ManageIQ::Providers::Openshift::ContainerManager",
+  :openshift_enterprise => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager",
 }. freeze
+PROVIDER_PORT = "8443".freeze
+SERVICE_ACOUNT_NAME = "management-admin".freeze
+MANAGEMENT_PROJECT_NAME = "management-infra".freeze
 
 def provider_token
-  token = ""
-  Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true,
-                 :key_data => $evm.root['private_key']) do |ssh|
-    cmd = "oc get -n management-infra sa/management-admin --template='{{range .secrets}}{{printf " + '"%s\n"' \
-          " .name}}{{end}}' | grep token"
-    token_key = ssh.exec!(cmd)
-    token_key.delete!("\n")
-    cmd = "oc get -n management-infra secrets #{token_key} --template='{{.data.token}}' | base64 -d"
-    token = ssh.exec!(cmd)
-  end
-  token
+  $evm.root['container_deployment'].perform_agent_commands(["sudo oc sa get-token #{SERVICE_ACOUNT_NAME} -n #{MANAGEMENT_PROJECT_NAME}"])[:stdout]
 end
 
 def add_provider
   $evm.log(:info, "**************** #{$evm.root['ae_state']} ****************")
   token = provider_token
-  begin
-    deployment = $evm.vmdb(:container_deployment).find(
-      $evm.root['automation_task'].automation_request.options[:attrs][:deployment_id])
-    result = deployment.add_deployment_provider(
-      :provider_type      => DEPLOYMENT_TYPES[$evm.root['deployment_type'].to_sym],
-      :provider_name      => $evm.root['provider_name'],
-      :provider_port      => "8443",
-      :provider_hostname  => $evm.root['deployment_master'],
-      :provider_ipaddress => $evm.root['deployment_master'],
-      :auth_type          => "bearer",
-      :auth_key           => token)
-
-    $evm.log(:info, "result: #{result}")
-    if result[0]
-      provider = deployment.deployed_ems
-      provider.refresh
-      $evm.root['ae_result'] = "ok"
-      $evm.root['automation_task'].message = "successfully added #{$evm.root['provider_name']} as a container provider"
-    else
-      $evm.log(:error, result[1])
-      $evm.root['ae_result'] = "error"
-      $evm.root['automation_task'].message = "failed to add #{$evm.root['provider_name']} as a container provider"
-    end
-  rescue StandardError => e
+  hostname = $evm.root['container_deployment'].perform_agent_commands(["hostname"])[:stdout].strip
+  new_provider = $evm.root['container_deployment'].add_deployment_provider(
+    :provider_type      => DEPLOYMENT_TYPES[$evm.root['deployment_type'].tr("-", "_").to_sym],
+    :provider_name      => $evm.get_state_var(:provider_name),
+    :provider_port      => PROVIDER_PORT,
+    :provider_hostname  => hostname,
+    :provider_ipaddress => $evm.root['deployment_master'],
+    :auth_type          => "bearer",
+    :auth_key           => token)
+  if new_provider
+    $evm.root['ae_result'] = "ok"
+    $evm.root['automation_task'].message = "successfully added #{$evm.get_state_var(:provider_name)} as a container provider"
+  else
     $evm.root['ae_result'] = "error"
-    $evm.log(:error, e)
-    $evm.root['automation_task'].message = "failed to add #{$evm.root['provider_name']} as a container provider"
+    $evm.root['automation_task'].message = "failed to add #{$evm.get_state_var(:provider_name)} as a container provider"
   end
-
-  $evm.log(:info, "State: #{$evm.root['ae_state']} | Result: #{$evm.root['ae_result']} "\
-           "| Message: #{$evm.root['automation_task'].message}")
+  $evm.log(:info, "State: #{$evm.root['ae_state']} | Result: #{$evm.root['ae_result']} | Message: #{$evm.root['automation_task'].message}")
 end
 
-add_provider
+begin
+  add_provider
+rescue => err
+  $evm.log(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
+  $evm.root['ae_result'] = 'error'
+  $evm.root['ae_reason'] = "Error: #{err.message}"
+  exit MIQ_ERROR
+end

@@ -1,48 +1,16 @@
-def find_vm_by_tag(tag)
-  tag = "/managed/miq_openstack_deploy/#{tag}_#{$evm.root['automation_task'][:id]}"
-  $evm.vmdb(:vm).find_tagged_with(:any => tag, :ns => "*")
+def assign_vms_to_deployment_nodes
+  $evm.root['container_deployment'].assign_container_deployment_nodes
+  $evm.root['deployment_master'] = $evm.root['container_deployment'].roles_addresses("deployment_master")
+  $evm.root['inventory'] = $evm.root['container_deployment'].generate_ansible_yaml
+  $evm.root['rhel_subscribe_inventory'] = $evm.root['container_deployment'].generate_ansible_inventory_for_subscription
 end
 
-def assign_vms_to_deployment_nodes(masters, nodes)
-  deployment = $evm.vmdb(:container_deployment).find(
-    $evm.root['automation_task'].automation_request.options[:attrs][:deployment_id])
-  masters.each do |master|
-    deployment.assign_container_deployment_node(master.id, "master")
-  end
-  nodes.each do |node|
-    deployment.assign_container_deployment_node(node.id, "node")
-  end
-  $evm.root['deployment_master'] = deployment.roles_addresses("deployment_master")
-  $evm.root['inventory'] = deployment.regenerate_ansible_inventory
-  $evm.root['rhel_subscribe_inventory'] =  deployment.regenerate_ansible_subscription_inventory
-end
-
-def missing_subscription_fields?
-  $evm.root['rhsub_user'].nil? || $evm.root['rhsub_pass'].nil? || $evm.root['rhsub_sku'].nil?
-end
-
-def extract_ips(vms)
-  ips = []
-  vms.each do |vm|
-    ips << vm.hardware.ipaddresses.last unless vm.hardware.ipaddresses.empty?
-  end
-  ips
-end
-
-def wait_for_ip_adresses
+def wait_for_ip_addresses
   $evm.root['state'] = "post_provision"
   $evm.root['automation_task'].message = "Trying to receive ips"
-  tagged_vms_masters = find_vm_by_tag("master")
-  tagged_vms_nodes = find_vm_by_tag("node")
-  masters_ips = extract_ips(tagged_vms_masters)
-  nodes_ips = extract_ips(tagged_vms_nodes)
-  if nodes_ips.count + masters_ips.count == tagged_vms_masters.count + tagged_vms_nodes.count
-    assign_vms_to_deployment_nodes(tagged_vms_masters, tagged_vms_nodes)
-    $evm.root['masters'] = masters_ips
-    $evm.root['nodes'] = nodes_ips
+  if $evm.root['container_deployment'].provisioned_ips_set?
+    assign_vms_to_deployment_nodes
     $evm.root['ae_result'] = 'ok'
-    $evm.root['container_deployment'] = $evm.vmdb(:container_deployment).find(
-      $evm.root['automation_task'].automation_request.options[:attrs][:deployment_id])
   else
     $evm.log(:info, "*********  Post-Provision waiting on ips ************")
     $evm.root['ae_result']         = 'retry'
@@ -61,5 +29,15 @@ def refresh_provider
   end
 end
 
-$evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
-wait_for_ip_adresses
+begin
+  $evm.root['container_deployment'] ||= $evm.vmdb(:container_deployment).find(
+    $evm.root['automation_task'].automation_request.options[:attrs][:deployment_id]
+  )
+  $evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
+  wait_for_ip_addresses
+rescue => err
+  $evm.log(:error, "[#{err}]\n#{err.backtrace.join("\n")}")
+  $evm.root['ae_result'] = 'error'
+  $evm.root['ae_reason'] = "Error: #{err.message}"
+  exit MIQ_ERROR
+end
