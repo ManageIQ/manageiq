@@ -162,7 +162,7 @@ module MiqPolicyController::Policies
   end
 
   def policy_get_all
-    peca_get_all('policy', -> { get_view(MiqPolicy, :conditions => ["mode = ? and towhat = ?", @sb[:mode].downcase, @sb[:nodeid].titleize]) })
+    peca_get_all('policy', -> { get_view(MiqPolicy, :conditions => ["mode = ? and towhat = ?", @sb[:mode].downcase, @sb[:nodeid].camelize]) })
   end
 
   private
