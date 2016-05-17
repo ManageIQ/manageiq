@@ -47,6 +47,8 @@ cols:
 - v_datastore_path
 - name
 - updated_on
+- v_pct_free_disk_space
+- v_pct_used_disk_space
 template_type: report
 group: 
 sortby: 
