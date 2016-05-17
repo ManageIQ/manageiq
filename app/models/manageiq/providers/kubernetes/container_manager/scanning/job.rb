@@ -37,7 +37,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   def start
     image = target_entity
     return queue_signal(:abort_job, "no image found", "error") unless image
-    return queue_signal(:abort_job, "cannont analyze non-docker images", "error") unless image.docker_id
+    return queue_signal(:abort_job, "cannot analyze non docker images", "error") unless image.docker_id
 
     ems_configs = VMDB::Config.new('vmdb').config[:ems]
 
