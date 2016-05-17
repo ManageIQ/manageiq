@@ -232,6 +232,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :name                => name,
       :vendor              => "amazon",
       :raw_power_state     => status,
+      :boot_time           => instance.launch_time,
 
       :hardware            => {
         :bitness              => architecture_to_bitness(instance.architecture),
