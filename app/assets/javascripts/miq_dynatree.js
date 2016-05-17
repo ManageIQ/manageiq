@@ -132,7 +132,11 @@ function miqExpandParentNodes(treename, selected_node) {
 }
 
 function miqDynatreeNodeAddClass(treename, key, klass) {
-  var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+  var node
+  if (_.isString(key))
+  {node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);}
+  else
+  {node = $.ui.dynatree.getNode(key);}
   if (node) {
     node.data.addClass = klass;
     node.render();

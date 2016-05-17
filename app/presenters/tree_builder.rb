@@ -311,7 +311,8 @@ class TreeBuilder
       :exp_tree     => false,
       :highlighting => true,
       :tree_state   => true,
-      :multi_lines  => true
+      :multi_lines  => true,
+      :checkboxes   => false,
     }
   end
 

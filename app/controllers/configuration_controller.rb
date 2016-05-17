@@ -81,6 +81,7 @@ class ConfigurationController < ApplicationController
   # New tab was pressed
   def change_tab
     @tabform = @config_tab + "_" + params[:tab] if params[:tab] != "5"
+    #@sb[:trees].delete('df_tree') if @sb[:trees]
     edit
     render :action => "show"
   end
@@ -101,44 +102,33 @@ class ConfigurationController < ApplicationController
 
   # AJAX driven routine to check for changes in ANY field on the user form
   def filters_field_changed
-    # ui3 form
     return unless load_edit("config_edit__ui3", "configuration")
-    if params[:all_checked]                         # User checked/unchecked a tree node
-      @edit[:show_ids] = params[:all_checked].split(',')
-      if !@edit[:show_ids].blank?
-        @edit[:new].each_with_index do |arr, i|
-          if @edit[:show_ids].include?(arr.id.to_s)
-            @edit[:new][i].search_key = nil
-          else
-            @edit[:new][i].search_key = "_hidden_"
-          end
-        end
-      else      # if everything was unchecked
-        @edit[:new].each_with_index do |_search, i|
-          @edit[:new][i].search_key = nil
-        end
-      end
+    id = params[:id].split('-').last.to_i
+    checked_fields = params[:all_checked].split(',')
+    checked_fields.each do |checked_field|
+      checked_field_id = checked_field.split('-').last.to_i
+      @edit[:new].find{ |x| x.id == checked_field_id}.search_key = nil
     end
+    @edit[:new].find{ |x| x.id == id}.search_key = params[:check] == 'true' ? nil : '_hidden_'
     @edit[:current].each_with_index do |arr, i|          # needed to compare each array element's attributes to find out if something has changed
       if @edit[:new][i].search_key != arr.search_key
         @changed = true
         break
       end
     end
+    @changed = false unless @changed
     render :update do |page|
       page << javascript_prologue
-      # needed to compare each array element's attributes to find out if something has changed
-      @edit[:current].each_with_index do |_arr, i|
-        id = @edit[:new][i].id
-        if @edit[:new][i].search_key != @edit[:current][i].search_key
+      @edit[:current].each_with_index do |filter, i|
+        if filter.search_key != @edit[:new][i].search_key
           style_class = 'cfme-blue-bold-node'
         else
           style_class = 'dynatree-title'
         end
-        page << "miqDynatreeNodeAddClass('#{session[:tree_name]}', '#{id}', '#{style_class}')"
+        page << "miqDynatreeNodeAddClass('df_tree', $('[id$=\"-#{filter.id}\"]'), '#{style_class}')"
       end
-      page << javascript_for_miq_button_visibility(@changed) if @changed
-    end
+      page << javascript_for_miq_button_visibility(@changed)
+      end
   end
 
   # AJAX driven routine for gtl view selection
@@ -234,22 +224,10 @@ class ConfigurationController < ApplicationController
         return                                                      # No config file for Visuals yet, just return
       when "ui_3"                                                   # User Filters tab
         @edit = session[:edit]
-        @edit[:current].each do |arr|
-          s = MiqSearch.find(arr.id.to_i)
-          if @edit[:show_ids]
-            if @edit[:show_ids].include?(s.id.to_s)
-              s.search_key = nil
-            else
-              s.search_key = "_hidden_"
-            end
-            s.save
-          end
-        end
         add_flash(_("Default Filters saved successfully"))
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
-      end
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
       end
@@ -268,6 +246,7 @@ class ConfigurationController < ApplicationController
         build_tabs
         render :action => "show"
       end
+    end
     elsif params["reset"]
       edit
       add_flash(_("All changes have been reset"), :warning)
@@ -705,9 +684,8 @@ class ConfigurationController < ApplicationController
         :set_filters => true,
         :current     => current,
       }
-      build_default_filters_tree(@edit[:current])
+      #build_default_filters_tree(@edit[:current])
       @df_tree = TreeBuilderDefaultFilters.new(:df_tree, :df, @sb, true, @edit[:current])
-      session[:tree_name] = "all_views_tree"
       self.x_active_tree = :df_tree
     when 'ui_4'
       @edit = {

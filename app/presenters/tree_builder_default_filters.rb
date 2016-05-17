@@ -15,10 +15,6 @@ class TreeBuilderDefaultFilters < TreeBuilder
       :"manageiq::providers::inframanager::vm"       => %w(Infrastructure Virtual\ Machines VMs)
   }
 
-  #def node_builder
-  #  TreeNodeDefaultFiltersBuilder
-  #end
-
   def prepare_data(data)
     nodes = {}
     data.collect do |search|
@@ -43,15 +39,19 @@ class TreeBuilderDefaultFilters < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:full_ids => true,
-     :add_root => false,
-     :lazy     => false}
+    {:full_ids                    => false,
+     :add_root                    => false,
+     :lazy                        => false,
+     :open_close_all_on_dbl_click => true}
   end
 
   def set_locals_for_render
     locals = super
     locals.merge!(:id_prefix => 'df_',
-                  :open_close_all_on_dbl_click => true,)
+                  :open_close_all_on_dbl_click => true,
+                  :onclick => false,:check_url => "/configuration/filters_field_changed/",
+                  :onselect                    => "miqOnCheckSections",
+                  :checkboxes                  => true,)
   end
 
   def root_options
@@ -65,26 +65,40 @@ class TreeBuilderDefaultFilters < TreeBuilder
       node = {:id    => "#{folder}",
               :text  => folder,
               :image => "folder",
-              :tip   => folder}
+              :tip   => folder,
+              :style_class  => "cfme-no-cursor-node",
+              :hideCheckbox => true,}
       roots.push(node)
     end
     count_only_or_objects(count_only, roots)
   end
 
   def x_get_tree_hash_kids(parent, count_only)
-    path = parent[:id].split('_')
-    kids = @data.fetch_path(path)
     nodes = []
-    if kids.kind_of?(Hash)
-      folders = kids.keys
-      folders.each do |folder|
-        nodes.push({:id    => "#{parent[:id]}_#{folder}",
-                   :text  => folder,
-                   :image => "folder",
-                   :tip   => folder})
+    unless parent[:id].kind_of?(Fixnum)
+      path = parent[:id].split('_')
+      kids = @data.fetch_path(path)
+
+      if kids.kind_of?(Hash)
+        folders = kids.keys
+        folders.each do |folder|
+          nodes.push({:id    => "#{parent[:id]}_#{folder}",
+                      :text  => folder,
+                      :image => "folder",
+                      :tip   => folder,
+                      :style_class  => "cfme-no-cursor-node",
+                      :hideCheckbox => true,})
+        end
+      else
+        kids.each do |kid|
+          nodes.push({:id => kid[:id],
+                      :text => kid[:description],
+                      :image => 'filter',
+                      :tip => kid[:description],
+                      :select => kid[:search_key] != "_hidden_"
+                     })
+        end
       end
-    else
-      nodes = kids
     end
     count_only_or_objects(count_only, nodes)
   end
