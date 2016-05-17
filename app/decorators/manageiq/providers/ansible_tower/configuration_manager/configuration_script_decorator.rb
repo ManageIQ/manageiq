@@ -6,6 +6,6 @@ class  ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScr
   end
 
   def listicon_image
-    "100/cm_job_template.png"
+    "100/configuration_script.png"
   end
 end

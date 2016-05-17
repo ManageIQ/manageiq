@@ -62,7 +62,7 @@ module ApplicationController::Explorer
   def x_button
     model, action = pressed2model_action(params[:pressed])
 
-    allowed_models = %w(common image instance vm miq_template provider storage jobtemplate)
+    allowed_models = %w(common image instance vm miq_template provider storage configscript)
     raise ActionController::RoutingError.new('invalid button action') unless
       allowed_models.include?(model)
 
@@ -80,7 +80,7 @@ module ApplicationController::Explorer
     elsif X_BUTTON_ALLOWED_ACTIONS[action] == :s2
       # don't need to set params[:id] and do find_checked_items for methods
       # like ownership, the code in those methods handle it
-      if %w(edit right_size resize attach detach live_migrate).include?(action)
+      if %w(edit right_size resize attach detach live_migrate evacuate).include?(action)
         @_params[:id] = (params[:id] ? [params[:id]] : find_checked_items)[0]
       end
       if ['protect', 'tag'].include?(action)
