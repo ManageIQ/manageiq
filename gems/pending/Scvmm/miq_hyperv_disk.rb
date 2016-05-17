@@ -9,8 +9,8 @@ require 'memory_buffer'
 require 'rufus/lru'
 
 class MiqHyperVDisk
-  MIN_SECTORS_TO_CACHE = 8
-  DEF_BLOCK_CACHE_SIZE = 300
+  MIN_SECTORS_TO_CACHE = 64
+  DEF_BLOCK_CACHE_SIZE = 1200
   DEBUG_CACHE_STATS    = false
   BREAD_RETRIES        = 3
 
@@ -137,26 +137,41 @@ STAT_EOL
     number_sectors = @size_in_blocks - start_sector if (start_sector + number_sectors) > @size_in_blocks
     expected_bytes = number_sectors * @block_size
     read_script = <<-READ_EOL
-$file_stream = [System.IO.File]::Open("#{@virtual_disk}", "Open", "Read", "Read")
-$buffer      = New-Object System.Byte[] #{number_sectors * @block_size}
+$file_stream   = [System.IO.File]::Open("#{@virtual_disk}", "Open", "Read", "Read")
+$bufsize       = #{number_sectors * @block_size}
+$buffer        = New-Object System.Byte[] $bufsize
+$encodedbuflen = $bufsize * 4 / 3
+if (($encodedbuflen % 4) -ne 0)
+{
+  $encodedbuflen += 4 - ($encodedbuflen % 4)
+}
+$encodedarray    = New-Object Char[] $encodedbuflen
 $file_stream.seek(#{start_sector * @block_size}, 0)
 $file_stream.read($buffer, 0, #{expected_bytes})
-[System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($buffer))
 $file_stream.Close()
+[System.Convert]::ToBase64CharArray($buffer, 0, $bufsize, $encodedarray, 0)
+[string]::join("", $encodedarray)
 READ_EOL
 
+    i = 0
     (0...BREAD_RETRIES).each do
       t1           = Time.now.getlocal
       encoded_data = @parser.output_to_attribute(run_correct_powershell(read_script))
+      if encoded_data.empty?
+        $log.debug "#{log_header} no encoded data returned on attempt #{i}"
+        i += 1
+        continue
+      end
       t2           = Time.now.getlocal
-      buffer       = ""
-      Base64.decode64(encoded_data).split(' ').each { |c| buffer += c.to_i.chr }
+      decoded_data = Base64.decode64(encoded_data)
       @total_copy_from_remote_time += t2 - t1
       @total_read_execution_time += Time.now.getlocal - t1
-      return buffer if expected_bytes == buffer.size
-      $log.debug "#{log_header} expected #{expected_bytes} bytes - got #{buffer.size}"
+      decoded_size = decoded_data.size
+      return decoded_data if expected_bytes == decoded_size
+      $log.debug "#{log_header} expected #{expected_bytes} bytes - got #{decoded_size} on attempt #{i}"
+      i += 1
     end
-    raise "#{log_header} expected #{expected_bytes} bytes - got #{buffer.size}"
+    raise "#{log_header} expected #{expected_bytes} bytes - got #{decoded_size}"
   end
 
   def snap(vm_name)
