@@ -1183,6 +1183,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def jobtemplate_service_dialog_submit_cancel
+    set_user_privileges
     add_flash(_("Creation of a new Service Dialog was cancelled by the user"))
     @in_a_form = false
     @edit = @record = nil
