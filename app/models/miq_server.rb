@@ -405,8 +405,6 @@ class MiqServer < ApplicationRecord
     _log.info("initiated for #{format_full_log_msg}")
     update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
     (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
-  rescue SystemExit
-    raise
   end
 
   def self.kill
