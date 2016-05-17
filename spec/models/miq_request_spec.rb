@@ -1,4 +1,6 @@
 describe MiqRequest do
+  include MiqRequestMixin
+
   let(:fred)   { FactoryGirl.create(:user_with_group, :name => 'Fred Flintstone', :userid => 'fred',   :email => "fred@example.com") }
   let(:barney) { FactoryGirl.create(:user_with_group, :name => 'Barney Rubble',   :userid => 'barney', :email => "barney@example.com") }
 
@@ -304,6 +306,18 @@ describe MiqRequest do
       request = FactoryGirl.create(:service_template_provision_request, :description => description, :requester => fred)
       request.post_create_request_tasks
       expect(request.description).to eq(description)
+    end
+  end
+
+  context '#workflow' do
+    let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
+    let(:ems)          { FactoryGirl.create(:ems_vmware) }
+    let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
+    let(:host) { double('Host', :id => 1, :name => 'my_host') }
+
+    it "calls password_helper when a block is passed in" do
+      expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow).to receive(:password_helper).twice
+      provision_request.workflow({}, {:allowed_hosts => [host], :skip_dialog_load => true}) { |_x| 'test' }
     end
   end
 end
