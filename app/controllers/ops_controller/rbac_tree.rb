@@ -75,6 +75,7 @@ class OpsController
       Menu::Manager.each do |section|
         # skip storage node unless it's enabled in product setting
         next if section.id == :sto && !VMDB::Config.new("vmdb").config[:product][:storage]
+        next if section.id == :cons && !Settings.product.consumption
 
         top_nodes.push(build_section(section, root_node[:select]))
       end
