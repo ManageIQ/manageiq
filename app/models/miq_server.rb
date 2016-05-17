@@ -353,6 +353,8 @@ class MiqServer < ApplicationRecord
     Benchmark.realtime_block(:worker_monitor)          { monitor_workers }                  if threshold_exceeded?(:worker_monitor_frequency, now)
     Benchmark.realtime_block(:worker_dequeue)          { populate_queue_messages }          if threshold_exceeded?(:worker_dequeue_frequency, now)
   rescue SystemExit
+    # TODO: We're rescuing Exception below. WHY? :bomb:
+    # A SystemExit would be caught below, so we need to explicitly rescue/raise.
     raise
   rescue Exception => err
     _log.error("#{err.message}")
