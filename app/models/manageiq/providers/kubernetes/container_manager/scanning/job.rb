@@ -308,6 +308,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
           {
             :name            => "image-inspector",
             :image           => inspector_image,
+            :imagePullPolicy => "Always",
             :command         => [
               "/usr/bin/image-inspector",
               "--chroot",
@@ -353,6 +354,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def inspector_image
-    'docker.io/openshift/image-inspector:v2.0.z'
+    'docker.io/openshift/image-inspector:2.0'
   end
 end
