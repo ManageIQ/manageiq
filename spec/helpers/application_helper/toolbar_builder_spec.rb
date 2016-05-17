@@ -3027,7 +3027,8 @@ describe ApplicationHelper do
                      :onwhen    => nil,
                      :enabled   => true,
                      :url       => "/download_data",
-                     :url_parms => "?download_type=pdf"}
+                     :url_parms => "?download_type=pdf",
+                     :data      => nil}
       @layout = "catalogs"
       allow(helper).to receive(:role_allows).and_return(true)
       allow(helper).to receive(:x_active_tree).and_return(:ot_tree)
