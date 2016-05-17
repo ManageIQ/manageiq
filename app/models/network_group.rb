@@ -1,4 +1,4 @@
-class NetworkGroup < ActiveRecord::Base
+class NetworkGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include ReportableMixin
 

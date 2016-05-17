@@ -1,4 +1,4 @@
-class ChargebackRateDetailCurrency < ActiveRecord::Base
+class ChargebackRateDetailCurrency < ApplicationRecord
   belongs_to :chargeback_rate_detail
 
   # YAML.load_file(File.join(Rails.root, "db/fixtures/chargeback_rate_detail_currencies.yml"))

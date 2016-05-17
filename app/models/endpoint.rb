@@ -1,4 +1,4 @@
-class Endpoint < ActiveRecord::Base
+class Endpoint < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER

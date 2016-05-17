@@ -1,4 +1,4 @@
-class SettingsChange < ActiveRecord::Base
+class SettingsChange < ApplicationRecord
   serialize :value
 
   belongs_to :resource, :polymorphic => true
