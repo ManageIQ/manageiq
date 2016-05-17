@@ -7,7 +7,6 @@ class ContainerBuildController < ApplicationController
   after_action :set_session_data
 
   def show_list
-    @listicon = "container_build"
     process_show_list
   end
 
