@@ -1584,7 +1584,7 @@ function miqWidgetToolbarClick(e) {
   } else if (itemId == "add_widget") {
     return;
   } else {
-    miqAjax("/dashboard/widget_add?widget=" + itemId);
+    miqJqueryRequest("/dashboard/widget_add?widget=" + itemId, {beforeSend: true});
   }
 }
 
