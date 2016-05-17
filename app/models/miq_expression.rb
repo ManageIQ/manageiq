@@ -594,7 +594,7 @@ class MiqExpression
                 exp[operator]["value"]
               end
       clause = field.eq(value).to_sql
-    when ">"
+    when ">", "after"
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
@@ -616,7 +616,7 @@ class MiqExpression
                 exp[operator]["value"]
               end
       clause = field.gteq(value).to_sql
-    when "<"
+    when "<", "before"
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
@@ -649,28 +649,6 @@ class MiqExpression
                 exp[operator]["value"]
               end
       clause = field.not_eq(value).to_sql
-    when "before"
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
-              else
-                exp[operator]["value"]
-              end
-      clause = field.lt(value).to_sql
-    when "after"
-      field = Field.parse(exp[operator]["field"])
-      value = case
-              when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
-              when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
-              else
-                exp[operator]["value"]
-              end
-      clause = field.gt(value).to_sql
     when "like", "includes"
       field = Field.parse(exp[operator]["field"])
       clause = field.matches("%#{exp[operator]["value"]}%").to_sql
