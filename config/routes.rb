@@ -984,14 +984,11 @@ Vmdb::Application.routes.draw do
     :ems_container            => {
       :get  => %w(
         download_data
-        edit
-        index
-        new
         perf_top_chart
         protect
-        show
         show_list
         tagging_edit
+        ems_container_form_fields
         tag_edit_form_field_changed
       ) +
                compare_get,
@@ -2571,7 +2568,7 @@ Vmdb::Application.routes.draw do
 
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action
-    unless [:ems_cloud, :ems_infra].include?(controller_name)
+    unless [:ems_cloud, :ems_infra, :ems_container].include?(controller_name)
       match "#{controller_name}", :controller => controller_name, :action => :index, :via => :get
     end
 
@@ -2603,6 +2600,7 @@ Vmdb::Application.routes.draw do
 
   resources :ems_cloud, :as => :ems_clouds
   resources :ems_infra, :as => :ems_infras
+  resources :ems_container, :as => :ems_containers
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
   if Rails.env.development?

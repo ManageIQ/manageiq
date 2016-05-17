@@ -189,7 +189,8 @@ module EmsCommon
     set_form_vars
     @in_a_form = true
     session[:changed] = false
-    drop_breadcrumb({:name => "Edit #{ui_lookup(:tables => @table_name)} '#{@ems.name}'", :url => "/#{@table_name}/edit/#{@ems.id}"})
+    drop_breadcrumb(:name => "Edit #{ui_lookup(:tables => @table_name)} '#{@ems.name}'",
+                    :url  => "/#{@table_name}/#{@ems.id}/edit")
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
@@ -399,7 +400,7 @@ module EmsCommon
       tag(model) if params[:pressed] == "#{@table_name}_tag"
       assign_policies(model) if params[:pressed] == "#{@table_name}_protect"
       edit_record if params[:pressed] == "#{@table_name}_edit"
-      if params[:pressed] == "ems_cloud_timeline" || params[:pressed] == "ems_infra_timeline"
+      if params[:pressed] == "#{@table_name}_timeline"
         @showtype = "timeline"
         @record = find_by_id_filtered(model, params[:id])
         @timeline = @timeline_filter = true
@@ -410,6 +411,18 @@ module EmsCommon
         render :update do |page|
           page << javascript_prologue
           page.redirect_to  polymorphic_path(@record, :display => 'timeline')
+        end
+        return
+      end
+      if params[:pressed] == "#{@table_name}_perf"
+        @showtype = "performance"
+        @record = find_by_id_filtered(model, params[:id])
+        drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
+                        :url  => show_link(@record, :refresh => "n", :display => "performance"))
+        perf_gen_init_options # Intialize options, charts are generated async
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to polymorphic_path(@record, :display => "performance")
         end
         return
       end

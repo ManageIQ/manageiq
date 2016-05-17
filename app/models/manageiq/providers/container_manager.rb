@@ -1,3 +1,5 @@
+include AvailabilityMixin
+
 module ManageIQ::Providers
   class ContainerManager < BaseManager
     has_many :container_nodes, :foreign_key => :ems_id, :dependent => :destroy
@@ -33,6 +35,11 @@ module ManageIQ::Providers
       aggregate_hardware(:computer_systems, :memory_mb, targets)
     end
 
+    class << model_name
+      define_method(:route_key) { "ems_containers" }
+      define_method(:singular_route_key) { "ems_container" }
+    end
+
     def self.supported_subclasses
       [ManageIQ::Providers::Kubernetes::ContainerManager,
        ManageIQ::Providers::OpenshiftEnterprise::ContainerManager,
@@ -42,6 +49,14 @@ module ManageIQ::Providers
     # enables overide of ChartsLayoutService#find_chart_path
     def chart_layout_path
       "ManageIQ_Providers_ContainerManager"
+    end
+
+    def validate_timeline
+      {:available => true, :message => nil}
+    end
+
+    def validate_performance
+      {:available => true, :message => nil}
     end
   end
 end

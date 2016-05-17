@@ -79,7 +79,14 @@ module AuthenticationMixin
   end
 
   def required_credential_fields(type)
-    type.to_s == "bearer" ? [:auth_key] : [:userid]
+    case type.to_s
+    when "bearer"
+      [:auth_key]
+    when "hawkular"
+      []
+    else
+      [:userid]
+    end
   end
 
   def has_credentials?(type = nil)

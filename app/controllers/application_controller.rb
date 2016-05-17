@@ -1760,6 +1760,11 @@ class ApplicationController < ActionController::Base
           page << javascript_prologue
           page.redirect_to edit_ems_infra_path(params[:id])
         end
+      elsif params[:pressed] == "ems_container_edit" && params[:id]
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to edit_ems_container_path(params[:id])
+        end
       else
         render :update do |page|
           page << javascript_prologue
