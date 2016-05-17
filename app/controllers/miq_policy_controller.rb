@@ -969,7 +969,7 @@ class MiqPolicyController < ApplicationController
         @right_cell_div = "policy_list"
       end
     elsif x_active_tree == :condition_tree
-      @conditions = Condition.where(:towhat => @sb[:folder].titleize).sort_by { |c| c.description.downcase }
+      @conditions = Condition.where(:towhat => @sb[:folder].camelize).sort_by { |c| c.description.downcase }
       set_search_text
       @conditions = apply_search_filter(@search_text, @conditions) unless @search_text.blank?
       @right_cell_text = "All #{ui_lookup(:model => @sb[:folder])} Conditions"
