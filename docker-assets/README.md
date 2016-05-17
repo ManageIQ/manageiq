@@ -10,15 +10,19 @@ It needs to be initiated from the root directory of the manageiq git repository
 ```
 docker build -t manageiq/manageiq .
 ```
+please note:
+- in the example above we named the image manageiq/manageiq, but in fact when building from your own sources you can name the image the way you want it to be (e.g. branch name), if you do that, don't forget to run it using the same name.
+- you can do it from any branch you want and the build will also incluse all of you local changes in the appliance (including unmerged changes)
+- when building from a local branch which is not based on master you'll need the specific REF (see below) to pull in the appropriate additional appliance repos.
+- when building from a local branch based on master there is no need for any additional parameters and the above command is all you need. 
 
-To build versions other than the tip of master:
+To build versions from a specific manageiq REF (either branch or tag):
 
 ```
 docker build -t manageiq/manageiq:darga --build-arg REF=darga .                 # From tip of darga branch
 docker build -t manageiq/manageiq:darga-1-beta1 --build-arg REF=darga-1-beta1 . # From darga-1-beta1 tag
 ```
 
-If you want to build with local changes, you need to uncomment "ADD" and comment "RUN" in the "Add ManageIQ source" section of the Dockerfile.
 
 The image has been tested and validated under docker-1.10 (Fedora23)
 
