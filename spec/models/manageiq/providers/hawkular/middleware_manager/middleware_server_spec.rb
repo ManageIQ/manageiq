@@ -13,16 +13,16 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   let(:eap) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
-                       :feed                  => 'cda13e2a-e206-4e87-8bca-8cfdd5aea484',
+                       :feed                  => '3790a668-eb4d-47ba-be15-bcf658bb88ba',
                        :ems_ref               => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
-                                                 '/f;cda13e2a-e206-4e87-8bca-8cfdd5aea484/r;Local~~',
+                                                 '/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/r;Local~~',
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 4, 5, 0, 0, 0, "+02:00")    # Fixed time for testing
-    end_time = Time.new(2016, 4, 7, 0, 0, 0, "+02:00")      # Fixed time for testing
+    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")    # Fixed time for testing
+    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")      # Fixed time for testing
     interval = 3600                                         # Interval in seconds
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -35,8 +35,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 4, 5, 0, 0, 0, "+02:00")    # Fixed time for testing
-    end_time = Time.new(2016, 4, 7, 0, 0, 0, "+02:00")      # Fixed time for testing
+    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")    # Fixed time for testing
+    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")      # Fixed time for testing
     interval = 3600                                         # Interval in seconds
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
