@@ -1301,4 +1301,36 @@ describe ReportController do
       expect(rpt_menu.first.first).to eq("#{user.current_tenant.name} (EVM Group): #{user.current_group.name}")
     end
   end
+
+  describe "#miq_report_edit" do
+    let(:admin_user) { FactoryGirl.create(:user, :role => "super_administrator") }
+    let(:tenant)     { FactoryGirl.create(:tenant) }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      login_as admin_user
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      allow(controller).to receive(:load_edit).and_return(true)
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:x_node).and_return("root")
+      allow(controller).to receive(:replace_right_cell).and_return(true)
+    end
+
+    it "adds new report based on ChargebackVm" do
+      count_miq_reports = MiqReport.count
+
+      post :x_button, :params => {:pressed => "miq_report_new"}
+      post :form_field_changed, :params => {:id => "new", :chosen_model => "ChargebackVm"}
+      post :form_field_changed, :params => {:id => "new", :title => "test"}
+      post :form_field_changed, :params => {:id => "new", :name => "test"}
+      post :form_field_changed, :params => {:button => "right", :available_fields => ["ChargebackVm-cpu_cost"]}
+      post :form_field_changed, :params => {:id => "new", :cb_show_typ => "tenant"}
+      post :form_field_changed, :params => {:id => "new", :cb_tenant_id => tenant.id}
+
+      post :miq_report_edit, :params => {:button => "add"}
+
+      expect(MiqReport.count).to eq(count_miq_reports + 1)
+      expect(MiqReport.last.db_options[:options][:cb_model]).to eq("Vm")
+    end
+  end
 end
