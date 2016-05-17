@@ -698,25 +698,6 @@ class DashboardController < ApplicationController
     UserValidationService.new(self).validate_user(user, task_id, request, authenticate_options)
   end
 
-  def start_url_for_user(start_url)
-    return url_for(start_url) unless start_url.nil?
-    return url_for(:action => "show") unless @settings[:display][:startpage]
-
-    first_allowed_url = nil
-    startpage_already_set = nil
-    MiqShortcut.start_pages.each do |url, _description, rbac_feature_name|
-      allowed = start_page_allowed?(rbac_feature_name)
-      first_allowed_url ||= url if allowed
-      # if default startpage is set, check if it is allowed
-      startpage_already_set = true if @settings[:display][:startpage] == url && allowed
-      break if startpage_already_set
-    end
-
-    # user first_allowed_url in start_pages to be default page, if default startpage is not allowed
-    @settings[:display][:startpage] = first_allowed_url unless startpage_already_set
-    @settings[:display][:startpage]
-  end
-
   def session_reset
     # save some fields to recover back into session hash after session is cleared
     keys_to_restore = [:winH, :winW, :browser, :user_TZO]
