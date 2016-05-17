@@ -202,7 +202,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         @job.signal(:start)
         expect(@job.state).to eq 'finished'
         expect(@job.status).to eq 'error'
-        expect(@job.message).to eq "cannont analyze non-docker images"
+        expect(@job.message).to eq "cannot analyze non docker images"
       end
     end
 
