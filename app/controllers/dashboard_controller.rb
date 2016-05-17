@@ -401,12 +401,16 @@ class DashboardController < ApplicationController
       end
       ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
       w = MiqWidget.find_by_id(w)
-      ws.add_member(w) if w
-      save_user_dashboards
-      w.create_initial_content_for_user(session[:userid])
-      render :update do |page|
-        page << javascript_prologue
-        page.redirect_to :action => 'show'
+      if ws.add_member(w).present?
+        save_user_dashboards
+        w.create_initial_content_for_user(session[:userid])
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :action => 'show'
+        end
+      else
+        render_flash(_("The widget \"%{widget_name}\" is already part of the edited dashboard") %
+         {:widget_name => w.name}, :error)
       end
     else
       head :ok

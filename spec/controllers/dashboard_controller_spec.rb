@@ -196,6 +196,30 @@ describe DashboardController do
       controller.show
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
+
+    it "widget_add" do
+      ur = FactoryGirl.create(:miq_user_role)
+      group = FactoryGirl.create(:miq_group, :miq_user_role => ur)
+      user = FactoryGirl.create(:user, :miq_groups => [group])
+      wi = FactoryGirl.create(:miq_widget)
+      ws = FactoryGirl.create(:miq_widget_set, :name     => "default",
+                                               :set_data => {:last_group_db_updated => Time.now.utc,
+                                                             :col1 => [], :col2 => [], :col3 => []},
+                                               :userid   => user.userid,
+                                               :group_id => group.id)
+      session[:sandboxes] = {"dashboard" => {:active_db  => ws.name,
+                                             :dashboards => {ws.name => {:col1 => [], :col2 => [], :col3 => []}}}}
+      login_as user
+      allow(User).to receive(:server_timezone).and_return("UTC")
+      allow(MiqServer).to receive(:my_zone).and_return('default')
+      allow(controller).to receive(:check_privileges).and_return(true)
+      allow(controller).to receive(:assert_privileges).and_return(true)
+      post :widget_add, :widget => wi.id
+      expect(controller.send(:flash_errors?)).not_to be_truthy
+      post :widget_add, :widget => wi.id
+      expect(controller.send(:flash_errors?)).to be_truthy
+      expect(assigns(:flash_array).first[:message]).to include("is already part of the edited dashboard")
+    end
   end
 
   context "#main_tab redirects to correct url when maintab is pressed by limited access user" do
