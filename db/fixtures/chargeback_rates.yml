@@ -20,7 +20,7 @@
     - :description: Used CPU Cores
       :group: cpu
       :source: used
-      :metric: cpu_usage_rate_average
+      :metric: v_derived_cpu_total_cores_used
       :per_time: daily
       :per_unit: cpu core
       :type_currency: Dollars
