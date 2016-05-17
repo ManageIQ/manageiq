@@ -1,4 +1,4 @@
-class ServiceOrder < ActiveRecord::Base
+class ServiceOrder < ApplicationRecord
   STATE_CART    = 'cart'.freeze
   STATE_WISH    = 'wish'.freeze
   STATE_ORDERED = 'ordered'.freeze
