@@ -34,6 +34,8 @@ class MiddlewareServerController < ApplicationController
 
     if @display == 'middleware_datasources'
       show_container_display(@record, 'middleware_datasource', MiddlewareDatasource)
+    elsif @display == 'middleware_deployments'
+      show_container_display(@record, 'middleware_deployment', MiddlewareDeployment)
     else
       show_container(@record, controller_name, display_name)
     end
