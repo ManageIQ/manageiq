@@ -1,3 +1,4 @@
+gem "net-ssh", "=3.2.0.rc2"
 require 'net/ssh'
 
 LOCAL_BOOK = 'local_book.yaml'.freeze
@@ -7,8 +8,8 @@ def handle_rhel_subscriptions(commands)
   commands.unshift( "subscription-manager register --username=#{$evm.root['rhsub_user']}  --password=#{$evm.root['rhsub_pass']}",
                     "subscription-manager repos --disable=\"*\"",
                     "subscription-manager repos --enable=\"rhel-7-server-rh-common-rpms\" --enable=\"rhel-7-server-rpms\" --enable=\"rhel-7-server-extras-rpms\" --enable=\"rhel-7-server-ose-3.2-rpms\"")
-  system "scp -o 'StrictHostKeyChecking no' rhel_subscribe_inventory.yaml " \
-    "#{$evm.root['user']}@#{$evm.root['deployment_master']}:~/"
+  system ({"SSH_AUTH_SOCK" =>  $evm.root['agent_socket'], "SSH_AGENT_PID" =>  $evm.root['agent_pid']},"scp -o 'StrictHostKeyChecking no' rhel_subscribe_inventory.yaml " \
+     "#{$evm.root['ssh_username']}@#{$evm.root['deployment_master']}:~/")
   rhel_subscribe_cmd = "ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/rhel_subscribe.yml -i "\
                        "/usr/share/ansible/openshift-ansible/rhel_subscribe_inventory.yaml"
   commands.push("sudo mv ~/rhel_subscribe_inventory.yaml /usr/share/ansible/openshift-ansible/", rhel_subscribe_cmd)
@@ -19,7 +20,7 @@ def ssh_exec!(ssh, command)
   exit_code, exit_signal = nil, nil
 
   ssh.open_channel do |channel|
-    channel.exec("ssh -A -o 'StrictHostKeyChecking no' -t -t #{$evm.root['user']}@#{$evm.root['deployment_master']} " \
+    channel.exec("ssh -A -o 'StrictHostKeyChecking no' -t -t #{$evm.root['ssh_username']}@#{$evm.root['deployment_master']} " \
                  + command) do |_, success|
       raise StandardError, "Command \"#{command}\" was unable to execute" unless success
 
@@ -50,16 +51,15 @@ def ssh_exec!(ssh, command)
 end
 
 def pre_deployment
-  commands = ['sudo yum install -y ansible',
+  commands = ['sudo yum install -y ansible-1.9.4',
               'sudo yum install -y openshift-ansible openshift-ansible-playbooks pyOpenSSL',
               "sudo mv ~/inventory.yaml /usr/share/ansible/openshift-ansible/"
               ]
   $evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
   begin
-    Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true,
-                   :key_data => $evm.root['private_key']) do |ssh|
+    Net::SSH.start($evm.root['deployment_master'], $evm.root['ssh_username'], :paranoid => false, :forward_agent => true, :agent_socket_factory => ->{ UNIXSocket.open($evm.root['agent_socket']) }) do |ssh|
       $evm.log(:info, "Connected to deployment master, ip address: #{$evm.root['deployment_master']}")
-      system "scp -o 'StrictHostKeyChecking no' inventory.yaml #{$evm.root['user']}@#{$evm.root['deployment_master']}:~/"
+      system({"SSH_AUTH_SOCK" =>  $evm.root['agent_socket'], "SSH_AGENT_PID" =>  $evm.root['agent_pid']}, "scp -o 'StrictHostKeyChecking no' inventory.yaml #{$evm.root['ssh_username']}@#{$evm.root['deployment_master']}:~/")
       failed_execute = false
       release = ssh.exec!("cat /etc/redhat-release")
       if release.include?("CentOS")
@@ -87,10 +87,10 @@ def pre_deployment
         $evm.root['automation_task'].message = "successful pre-deployment"
       end
     end
-  rescue
+  rescue Exception => e
+    $evm.log(:info, e)
     $evm.root['ae_result'] = "error"
-    $evm.root['automation_task'].message = "Cannot connect to deployment master " \
-                                           "(#{$evm.root['deployment_master']}) via ssh"
+    $evm.root['automation_task'].message = e.message
   ensure
     $evm.log(:info, "State: #{$evm.root['ae_state']} | Result: #{$evm.root['ae_result']} "\
              "| Message: #{$evm.root['automation_task'].message}")

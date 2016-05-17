@@ -1,21 +1,17 @@
+gem "net-ssh", "=3.2.0.rc2"
 require 'net/ssh'
 
 DEPLOYMENT_TYPES = {
-  :origin            => "ManageIQ::Providers::Openshift::ContainerManager",
-  :enterprise        => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager",
-  :atomic            => "ManageIQ::Providers::Atomic::ContainerManager",
-  :atomic_enterprise => "ManageIQ::Providers::AtomicEnterprise::ContainerManager"
+  :origin                 => "ManageIQ::Providers::Openshift::ContainerManager",
+  :openshift_enterprise   => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager",
+  :atomic                 => "ManageIQ::Providers::Atomic::ContainerManager",
+  :atomic_enterprise      => "ManageIQ::Providers::AtomicEnterprise::ContainerManager"
 }. freeze
 
 def provider_token
   token = ""
-  Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true,
-                 :key_data => $evm.root['private_key']) do |ssh|
-    cmd = "oc get -n management-infra sa/management-admin --template='{{range .secrets}}{{printf " + '"%s\n"' \
-          " .name}}{{end}}' | grep token"
-    token_key = ssh.exec!(cmd)
-    token_key.delete!("\n")
-    cmd = "oc get -n management-infra secrets #{token_key} --template='{{.data.token}}' | base64 -d"
+  Net::SSH.start($evm.root['deployment_master'], $evm.root['ssh_username'], :paranoid => false, :forward_agent => true, :agent_socket_factory => ->{ UNIXSocket.open($evm.root['agent_socket']) }) do |ssh|
+    cmd = "oc get secrets `oc describe serviceaccount management-admin -n management-infra | awk '/Tokens:/ { print $2 }'` --template '{{.data.token}}' -n management-infra | base64 -d"
     token = ssh.exec!(cmd)
   end
   token
@@ -28,7 +24,7 @@ def add_provider
     deployment = $evm.vmdb(:container_deployment).find(
       $evm.root['automation_task'].automation_request.options[:attrs][:deployment_id])
     result = deployment.add_deployment_provider(
-      :provider_type      => DEPLOYMENT_TYPES[$evm.root['deployment_type'].to_sym],
+      :provider_type      => DEPLOYMENT_TYPES[$evm.root['deployment_type'].gsub("-", "_").to_sym],
       :provider_name      => $evm.root['provider_name'],
       :provider_port      => "8443",
       :provider_hostname  => $evm.root['deployment_master'],
@@ -37,20 +33,18 @@ def add_provider
       :auth_key           => token)
 
     $evm.log(:info, "result: #{result}")
-    if result[0]
+    if result
       provider = deployment.deployed_ems
-      provider.refresh
       $evm.root['ae_result'] = "ok"
       $evm.root['automation_task'].message = "successfully added #{$evm.root['provider_name']} as a container provider"
     else
-      $evm.log(:error, result[1])
       $evm.root['ae_result'] = "error"
       $evm.root['automation_task'].message = "failed to add #{$evm.root['provider_name']} as a container provider"
     end
-  rescue StandardError => e
+  rescue Exception => e
+    $evm.log(:info, e)
     $evm.root['ae_result'] = "error"
-    $evm.log(:error, e)
-    $evm.root['automation_task'].message = "failed to add #{$evm.root['provider_name']} as a container provider"
+    $evm.root['automation_task'].message = e.message
   end
 
   $evm.log(:info, "State: #{$evm.root['ae_state']} | Result: #{$evm.root['ae_result']} "\
