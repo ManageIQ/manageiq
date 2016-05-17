@@ -32,7 +32,7 @@ module ManageIQ::Providers
     def collect_live_metric(metric, start_time, end_time, interval)
       validate_metric(metric)
       starts = (start_time - interval).to_i.in_milliseconds
-      ends = end_time.to_i.in_milliseconds
+      ends = end_time.to_i.in_milliseconds + 1
       bucket_duration = "#{interval}s"
       metrics = fetch_metrics(metric[:id], metric[:type], starts, ends, bucket_duration)
       process_data(metric, metrics)

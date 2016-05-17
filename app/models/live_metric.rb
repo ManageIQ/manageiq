@@ -65,7 +65,7 @@ class LiveMetric < ActsAsArModel
   end
 
   def self.process_timestamps(processed, condition)
-    ts = Time.parse(condition[:value]).utc
+    ts = Time.parse("#{condition[:value]} UTC").utc
     if %w(>= > =).include? condition[:op]
       processed[:start_time] = ts
     end
