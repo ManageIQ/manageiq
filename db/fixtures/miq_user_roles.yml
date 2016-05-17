@@ -48,6 +48,7 @@
   - ems_middleware
   - middleware_server
   - middleware_deployment
+  - middleware_datasource
   - middleware_topology
   - host
   - job_all_smartproxy
