@@ -41,6 +41,14 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   PERF_ROLLUP_CHILDREN = :container_nodes
 
+  def hawkular_status
+    client = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(self)
+    response = client.status
+    raise BadRequestError "MetricsService: #{response[:MetricsService]}" unless response[:MetricsService] != 'STARTED'
+
+    response[:MetricsService] != 'STARTED'
+  end
+
   # UI methods for determining availability of fields
   def supports_port?
     true
@@ -66,8 +74,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def verify_credentials(auth_type = nil, options = {})
     options = options.merge(:auth_type => auth_type)
-
-    with_provider_connection(options, &:api_valid?)
+    if options[:auth_type] == "hawkular"
+      hawkular_status
+    else
+      with_provider_connection(options, &:api_valid?)
+    end
   rescue SocketError,
          Errno::ECONNREFUSED,
          RestClient::ResourceNotFound,
