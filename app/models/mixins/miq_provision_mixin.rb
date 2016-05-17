@@ -75,20 +75,22 @@ module MiqProvisionMixin
   def eligible_resources(rsc_type)
     prov_options = options.dup
     prov_options[:placement_auto] = [false, 0]
-    prov_wf = workflow(prov_options, :skip_dialog_load => true)
-    klass = resource_type_to_class(rsc_type)
+    result = nil
+    workflow(prov_options, :skip_dialog_load => true) do |prov_wf|
+      klass = resource_type_to_class(rsc_type)
 
-    allowed_method = "allowed_#{rsc_type}"
-    unless prov_wf.respond_to?(allowed_method)
-      error_str = _("Provision workflow does not contain the expected method <%{method}>") % {:method => allowed_method}
-      raise MiqException::MiqProvisionError, error_str
+      allowed_method = "allowed_#{rsc_type}"
+      unless prov_wf.respond_to?(allowed_method)
+        error_str = _("Provision workflow does not contain the expected method <%{method}>") % {:method => allowed_method}
+        raise MiqException::MiqProvisionError, error_str
+      end
+
+      result = prov_wf.send(allowed_method)
+      result = result.collect { |rsc| eligible_resource_lookup(klass, rsc) }
+
+      data = result.collect { |rsc| "#{rsc.id}:#{resource_display_name(rsc)}" }
+      _log.info("returning <#{rsc_type}>:<#{data.join(', ')}>")
     end
-
-    result = prov_wf.send(allowed_method)
-    result = result.collect { |rsc| eligible_resource_lookup(klass, rsc) }
-
-    data = result.collect { |rsc| "#{rsc.id}:#{resource_display_name(rsc)}" }
-    _log.info("returning <#{rsc_type}>:<#{data.join(', ')}>")
     result
   end
 
@@ -195,33 +197,34 @@ module MiqProvisionMixin
     else
       custom_spec_name = custom_spec_name.name unless custom_spec_name.kind_of?(String)
       options = self.options.dup
-      prov_wf = workflow
-      options[:sysprep_enabled] = %w(fields Specification)
-      prov_wf.init_from_dialog(options)
-      prov_wf.get_all_dialogs
-      prov_wf.allowed_customization_specs
-      prov_wf.get_timezones
-      prov_wf.refresh_field_values(options)
-      custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
-      if custom_spec.nil?
-        raise MiqException::MiqProvisionError,
-              _("Customization Specification [%{name}] does not exist.") % {:name => custom_spec_name}
+      workflow do |prov_wf|
+        options[:sysprep_enabled] = %w(fields Specification)
+        prov_wf.init_from_dialog(options)
+        prov_wf.get_all_dialogs
+        prov_wf.allowed_customization_specs
+        prov_wf.get_timezones
+        prov_wf.refresh_field_values(options)
+        custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
+        if custom_spec.nil?
+          raise MiqException::MiqProvisionError,
+                _("Customization Specification [%{name}] does not exist.") % {:name => custom_spec_name}
+        end
+
+        options[:sysprep_custom_spec] = [custom_spec.id, custom_spec.name]
+        override_value = override == false ? [false, 0] : [true, 0]
+        options[:sysprep_spec_override] = override_value
+        # Call refresh_field_values a second time so it recognizes the config change
+        # and loads the defaults the customization spec settings
+        prov_wf.refresh_field_values(options)
+
+        self.options.keys.each do |key|
+          v_old = self.options[key]
+          v_new = options[key]
+          _log.info "option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>" unless v_old == v_new
+        end
+
+        update_attribute(:options, options)
       end
-
-      options[:sysprep_custom_spec] = [custom_spec.id, custom_spec.name]
-      override_value = override == false ? [false, 0] : [true, 0]
-      options[:sysprep_spec_override] = override_value
-      # Call refresh_field_values a second time so it recognizes the config change
-      # and loads the defaults the customization spec settings
-      prov_wf.refresh_field_values(options)
-
-      self.options.keys.each do |key|
-        v_old = self.options[key]
-        v_new = options[key]
-        _log.info "option <#{key}> was changed from <#{v_old.inspect}> to <#{v_new.inspect}>" unless v_old == v_new
-      end
-
-      update_attribute(:options, options)
     end
 
     true

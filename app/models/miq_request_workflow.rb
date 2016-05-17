@@ -821,7 +821,7 @@ class MiqRequestWorkflow
     end
   end
 
-  def password_helper(values, encrypt = true)
+  def password_helper(values = @values, encrypt = true)
     self.class.encrypted_options_fields.each do |pwd_key|
       next if values[pwd_key].blank?
       if encrypt
