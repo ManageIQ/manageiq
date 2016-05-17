@@ -1458,6 +1458,8 @@ class ApplicationHelper::ToolbarBuilder
     return true if id == "drift_all"
     return true if id.starts_with?("comparemode_") && id.ends_with?(@settings[:views][:compare_mode])
     return true if id.starts_with?("driftmode_") && id.ends_with?(@settings[:views][:drift_mode])
+    return true if id == "view_dashboard" && @showtype == "dashboard"
+    return true if id == "view_summary" && @showtype == "main"
     false
   end
 
