@@ -22,7 +22,9 @@ class VmCloudController < ApplicationController
       @flavors = {}
       unless @record.ext_management_system.nil?
         @record.ext_management_system.flavors.each do |f|
-          @flavors[f.name_with_details] = f.id unless f == @record.flavor
+          unless f == @record.flavor || @record.flavor.root_disk_size > f.root_disk_size
+            @flavors[f.name_with_details] = f.id
+          end
         end
       end
       @edit = {}
