@@ -1,6 +1,13 @@
 describe MiqServer do
   include_examples ".seed called multiple times"
 
+  it ".invoke_at_startups" do
+    described_class::RUN_AT_STARTUP.each do |klass|
+      expect(klass.constantize).to receive(:atStartup)
+    end
+    described_class.invoke_at_startups
+  end
+
   context ".my_guid" do
     let(:guid_file) { Rails.root.join("GUID") }
 

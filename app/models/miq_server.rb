@@ -72,22 +72,19 @@ class MiqServer < ApplicationRecord
       server.sync_active_roles
       server.set_active_role_flags
     end
+    invoke_at_startups
+  end
 
+  def self.invoke_at_startups
     _log.info("Invoking startup methods")
-    begin
-      RUN_AT_STARTUP.each do |klass|
-        klass = Object.const_get(klass) if klass.class == String
-        if klass.respond_to?("atStartup")
-          _log.info("Invoking startup method for #{klass}")
-          begin
-            klass.atStartup
-          rescue => err
-            _log.log_backtrace(err)
-          end
-        end
+    RUN_AT_STARTUP.each do |klass|
+      _log.info("Invoking startup method for #{klass}")
+      begin
+        klass = klass.constantize
+        klass.atStartup
+      rescue => err
+        _log.log_backtrace(err)
       end
-    rescue => err
-      _log.log_backtrace(err)
     end
   end
 
