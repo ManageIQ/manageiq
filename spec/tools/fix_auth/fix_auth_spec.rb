@@ -1,7 +1,6 @@
 $LOAD_PATH << Rails.root.join("tools")
 
-require "fix_auth/fix_auth"
-require "fix_auth/models"
+require "fix_auth"
 
 describe FixAuth::FixAuth do
   describe "#fix_database_yml" do
