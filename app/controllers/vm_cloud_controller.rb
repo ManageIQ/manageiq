@@ -21,7 +21,9 @@ class VmCloudController < ApplicationController
       ) unless @explorer
       @flavors = {}
       unless @record.ext_management_system.nil?
-        @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
+        @record.ext_management_system.flavors.each do |f|
+          @flavors[f.name_with_details] = f.id unless f == @record.flavor
+        end
       end
       @edit = {}
       @edit[:new] ||= {}
