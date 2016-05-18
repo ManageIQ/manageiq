@@ -21,6 +21,8 @@
         .form-group
           %label.col-md-2.control-label{:valign => "top"}
             = _(workflow.get_field(key, dialog)[:description])
+            - if @edit && workflow.get_field(key, dialog)[:required] && workflow.get_field(key, dialog)[:display] == :edit
+              *
           .col-md-8
             - if workflow.get_field(key, dialog)[:data_type] == :string
               - if @edit && workflow.get_field(key, dialog)[:display] == :edit && !@edit[:stamp_typ]
