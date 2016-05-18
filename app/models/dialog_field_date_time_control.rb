@@ -18,9 +18,10 @@ class DialogFieldDateTimeControl < DialogFieldDateControl
     date_time_value = with_current_user_timezone { Time.parse(@value) }
 
     {
-      :date => date_time_value.strftime("%m/%d/%Y"),
-      :hour => date_time_value.strftime("%H"),
-      :min  => date_time_value.strftime("%M")
+      :date      => date_time_value.strftime("%m/%d/%Y"),
+      :hour      => date_time_value.strftime("%H"),
+      :min       => date_time_value.strftime("%M"),
+      :read_only => read_only?
     }
   end
 

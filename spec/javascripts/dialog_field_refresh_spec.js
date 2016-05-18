@@ -41,6 +41,38 @@ describe('dialogFieldRefresh', function() {
     });
   });
 
+  describe('#setReadOnly', function() {
+    beforeEach(function() {
+      var html = "";
+      html += '<input id="text-test" title="bogus title" type="text" />';
+      setFixtures(html);
+    });
+
+    context('when readOnly is true', function() {
+      it('sets the title', function() {
+        dialogFieldRefresh.setReadOnly($('#text-test'), true);
+        expect($('#text-test').attr('title')).toBe('This element is disabled because it is read only');
+      });
+
+      it('disables the element', function() {
+        dialogFieldRefresh.setReadOnly($('#text-test'), true);
+        expect($('#text-test').prop('disabled')).toBe(true);
+      });
+    });
+
+    context('when readOnly is false', function() {
+      it('clears the title', function() {
+        dialogFieldRefresh.setReadOnly($('#text-test'), false);
+        expect($('#text-test').attr('title')).toBe('');
+      });
+
+      it('enables the element', function() {
+        dialogFieldRefresh.setReadOnly($('#text-test'), false);
+        expect($('#text-test').prop('disabled')).toBe(false);
+      });
+    });
+  });
+
   describe('#refreshDropDownList', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'addOptionsToDropDownList');
