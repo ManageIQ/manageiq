@@ -118,7 +118,7 @@ object:
       datatype: string
       priority: 6
       owner: 
-      default_value: "#/Service/Provisioning/StateMachines/Methods/ConfigureChildDialog"
+      default_value: 
       substitute: true
       message: create
       visibility: 
