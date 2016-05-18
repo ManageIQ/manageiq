@@ -4,7 +4,7 @@ class ApiController
     # Software Subcollection Supporting Methods
     #
     def software_query_resource(object)
-      object.send("guest_applications")
+      object.guest_applications
     end
   end
 end

@@ -4,7 +4,7 @@ class ApiController
     # Accounts Subcollection Supporting Methods
     #
     def accounts_query_resource(object)
-      object.send("accounts")
+      object.accounts
     end
   end
 end
