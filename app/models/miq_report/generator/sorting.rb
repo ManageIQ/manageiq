@@ -1,11 +1,10 @@
 module MiqReport::Generator::Sorting
   SORT_COL_SUFFIX = "_sort_"
 
+  # @param table [Ruport::Data::Table] Enumerable of Ruport::Data::Record
+  # @param col_names [Array<String>] Array of column names to be sorted
+  # @param order [Symbol] :ascending, :descending
   def sort_table(table, col_names, order)
-    # => Add special sorting logic here
-    # => table     - Ruport::Data::Table. This class includes enumerable so it can be accessed as a collection of Ruport::Data::Record objects
-    # => col_names - Array of column names to be sorted
-    # => order     - Sort order: "Ascending" | "Descending"
     table.sort_rows_by(col_names, order)
   end
 
@@ -34,8 +33,8 @@ module MiqReport::Generator::Sorting
       end
     end
 
-    order = self.order.blank? ? "Ascending" : self.order                        # Default to Ascending sort
-    @table = sort_table(@table, new_sortby, :order => order.downcase.to_sym)      # Sort the table
+    order = ascending? ? :ascending : :descending
+    @table = sort_table(@table, new_sortby, :order => order)
 
     # Remove any subtituted values we put in the table earlier
     new_sortby.each_with_index do |sb, idx|

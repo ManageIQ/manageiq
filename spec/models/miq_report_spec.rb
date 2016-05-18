@@ -595,4 +595,56 @@ describe MiqReport do
       end
     end
   end
+
+  describe ".ascending?" do
+    it "handles nil" do
+      report = MiqReport.new(:order => nil)
+      expect(report).to be_ascending
+    end
+
+    it "handles ascending" do
+      report = MiqReport.new(:order => "Ascending")
+      expect(report).to be_ascending
+    end
+
+    it "handles descending" do
+      report = MiqReport.new(:order => "Descending")
+      expect(report).not_to be_ascending
+    end
+  end
+
+  describe ".ascending=" do
+    it "handles nil" do
+      report = MiqReport.new
+      report.ascending = true
+      expect(report).to be_ascending
+    end
+
+    it "handles ascending" do
+      report = MiqReport.new
+      report.ascending = false
+      expect(report).not_to be_ascending
+    end
+  end
+
+  describe ".sort_col" do
+    it "uses sort_by if available" do
+      report = MiqReport.new(
+        :db        => "Host",
+        :cols      => %w(name hostname smart),
+        :col_order => %w(name hostname smart),
+        :sortby    => ["hostname"]
+      )
+      expect(report.sort_col).to eq(1)
+    end
+
+    it "falls back to first column" do
+      report = MiqReport.new(
+        :db        => "Host",
+        :cols      => %w(name hostname smart),
+        :col_order => %w(name hostname smart),
+      )
+      expect(report.sort_col).to eq(0)
+    end
+  end
 end

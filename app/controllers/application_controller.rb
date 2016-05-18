@@ -1552,18 +1552,15 @@ class ApplicationController < ActionController::Base
     end
 
     # Get the current sort info, else get defaults from the view
-    @sortcol = if session[sortcol_sym].nil?
-                 view.sortby.nil? ? view.col_order.index(view.col_order.first) : view.col_order.index(view.sortby.first)
-               else
-                 session[sortcol_sym].to_i
-               end
-    @sortdir = session[sortdir_sym] || (view.order == "Descending" ? "DESC" : "ASC")
+    @sortcol = session[sortcol_sym].try(:to_i) || view.sort_col
+    @sortdir = session[sortdir_sym] || (view.ascending? ? "ASC" : "DESC")
+
     # Set/reset the sortby column and order
     get_sort_col                                  # set the sort column and direction
     session[sortcol_sym] = @sortcol               # Save the new sort values
     session[sortdir_sym] = @sortdir
     view.sortby = [view.col_order[@sortcol]]      # Set sortby array in the view
-    view.order = @sortdir.downcase == "desc" ? "Descending" : "Ascending" # Normalize sort order
+    view.ascending = @sortdir.to_s.downcase != "desc"
 
     @items_per_page = controller_name.downcase == "miq_policy" ? ONE_MILLION : get_view_pages_perpage(dbname)
     @items_per_page = ONE_MILLION if 'vm' == db_sym.to_s && controller_name == 'service'
