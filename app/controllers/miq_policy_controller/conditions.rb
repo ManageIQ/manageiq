@@ -168,7 +168,7 @@ module MiqPolicyController::Conditions
     if params[:id] && params[:typ] != "new"   # If editing existing condition, grab model
       @edit[:new][:towhat] = Condition.find(params[:id]).towhat
     else
-      @edit[:new][:towhat] = x_active_tree == :condition_tree ? @sb[:folder].titleize : MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])).towhat
+      @edit[:new][:towhat] = x_active_tree == :condition_tree ? @sb[:folder].camelize : MiqPolicy.find(from_cid(@sb[:node_ids][x_active_tree]["p"])).towhat
     end
 
     @edit[:condition_id] = @condition.id
