@@ -12,10 +12,8 @@ describe MiqAzureVm do
     @client_id  = @test_env[:azure_client_id]
     @client_key = @test_env[:azure_client_key]
     @tenant_id  = @test_env[:azure_tenant_id]
-    @image_name = "https://miqazuretest14047.blob.core.windows.net/system/Microsoft.Compute/" \
-                  "Images/miq-test-container/test-win2k12-img-osDisk.e17a95b0-f4fb-4196-93c5-0c8be7d5c536.vhd"
-    @image_uri  = "https://miqazuretest14047.blob.core.windows.net/system/Microsoft.Compute/" \
-                  "Images/miq-test-container/test-win2k12-img-osDisk.e17a95b0-f4fb-4196-93c5-0c8be7d5c536.vhd"
+    @image_name = @test_env[:image_name]
+    @image_uri  = @test_env[:image_uri]
 
     @test_env.ensure_recording_dir_exists
   end

@@ -12,9 +12,9 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Length:
-      - '188'
+      - '186'
       Content-Type:
       - application/x-www-form-urlencoded
   response:
@@ -33,11 +33,11 @@ http_interactions:
       Server:
       - Microsoft-IIS/8.5
       X-Ms-Request-Id:
-      - b428eae1-9f5a-4ea0-ab40-a58532ce7c95
+      - 83b53626-edfe-4474-971f-dccc08c7e93f
       Client-Request-Id:
-      - 2c17fede-7790-400e-b2cf-24d57d18bfab
+      - ae1d5e67-20b9-41ac-b8c0-2cbd628c4ff1
       X-Ms-Gateway-Service-Instanceid:
-      - ESTSFE_IN_462
+      - ESTSFE_IN_491
       X-Content-Type-Options:
       - nosniff
       Strict-Transport-Security:
@@ -45,22 +45,22 @@ http_interactions:
       P3p:
       - CP="DSP CUR OTPi IND OTRi ONL FIN"
       Set-Cookie:
-      - esctx=AAABAAAAiL9Kn2Z27UubvWFPbm0gLce_pJOHTu-ezVz2iYbi2AqxjH-MrnGJOijmKzMRoYyjBAp5shqwKqoQKyPcQwiCBaL_5Cf8U1fWJ1t_O1cTuWVinVbDkvL_DhTQND2uc8RC_aqabkkkxHhwBA0jT_upZ_Fu7pVJiBwc4N4_CCBVBSfpubitSZmm2sN87ldbb2oFIAA;
+      - esctx=AAABAAAAiL9Kn2Z27UubvWFPbm0gLblTgyctc0Xjgs4CKEYXbyMQuhAzl5wHEqQIWTpiFUp3UIAYNlThUDrVU6zjHR-XcsqUDUKRf28Lfz9sI1Xwcky8Wp9zDiMSYHMsxZkLlN94LuUeg90_fKLF_fX2s-n8ypc8Z6QfaZ4xgNyuVqw-s0DqIluZqdEXD2T2D6UjxNxvIAA;
         domain=.login.windows.net; path=/; secure; HttpOnly
       - flight-uxoptin=true; path=/; secure; HttpOnly
       - stsservicecookie=ests; path=/; secure; HttpOnly
-      - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
+      - x-ms-gateway-slice=productionb; path=/; secure; HttpOnly
       X-Powered-By:
       - ASP.NET
       Date:
-      - Tue, 10 May 2016 11:15:07 GMT
+      - Thu, 12 May 2016 18:10:35 GMT
       Content-Length:
       - '1247'
     body:
       encoding: UTF-8
-      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3600","expires_on":"1462882507","not_before":"1462878607","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4Nzg2MDcsIm5iZiI6MTQ2Mjg3ODYwNywiZXhwIjoxNDYyODgyNTA3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.PHc65YQA30GxhpxUyPs6SbR1bhEG9UYE7539qyOOCpQFSvIiL16s1dtln-IZtJBaxHv8NWonQ5UBqExNnjs-VHc1W2TMemxFGl1FEo_vdJU2HPlRhGtqqZ8JvkZn0V9aXt25hRGNy60O1og-Te1rjzIpSvsu6eR1YpVsV_k2x8J9q3X3MXRzil07O252E1-eJo-79HN9vi5SAYfR9YMSQvb9fRHEEyc0XLebQYfEl7of_nbJ4YlvdsDczZ2sDMkQWTJWRwi8AA4Q0yonyuHSV_MFb6Uw3cMwJhsjeWdby7OqPmJLur5NZeO-Mppi1RM-uPYpfKNlt42Oml2F_7VscQ"}'
+      string: '{"token_type":"Bearer","scope":"user_impersonation","expires_in":"3599","expires_on":"1463080237","not_before":"1463076337","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYzMzcsIm5iZiI6MTQ2MzA3NjMzNywiZXhwIjoxNDYzMDgwMjM3LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.gUQKtC2-FmCq13D0Dl2xk3h5bUR5mAY8Nwnj54eDgAZ2HyTzrl0Vh2T2m0xfglO_0G4NJg3XdS1UrLq3mFUvFf_esb2SHbFbvcza54ioyFfaVbxcmwNYdGd8bSRMxpjjcJnomodRzRHcRFlhZJoRXb2sjXDAmaX-PwbNo4oIWmCqZ9BOxbd3YcwFxyAO767cSnGF6RfgM7XTiiCHx_EzWcdSdbjMoUs4S6_ldCnAPNhyIX07d_mWJP_H9sVFAI5KT7GcEYPhfNWJg1b1gaQLa1KZwxVOYaAA5zMh7ZcMM7LTOUO-bXp_Czq25k1JVxG5HRWYXcIfj14j9XYXwcmXiA"}'
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:07 GMT
+  recorded_at: Thu, 12 May 2016 18:10:36 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions?api-version=2015-01-01
@@ -73,11 +73,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4Nzg2MDcsIm5iZiI6MTQ2Mjg3ODYwNywiZXhwIjoxNDYyODgyNTA3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.PHc65YQA30GxhpxUyPs6SbR1bhEG9UYE7539qyOOCpQFSvIiL16s1dtln-IZtJBaxHv8NWonQ5UBqExNnjs-VHc1W2TMemxFGl1FEo_vdJU2HPlRhGtqqZ8JvkZn0V9aXt25hRGNy60O1og-Te1rjzIpSvsu6eR1YpVsV_k2x8J9q3X3MXRzil07O252E1-eJo-79HN9vi5SAYfR9YMSQvb9fRHEEyc0XLebQYfEl7of_nbJ4YlvdsDczZ2sDMkQWTJWRwi8AA4Q0yonyuHSV_MFb6Uw3cMwJhsjeWdby7OqPmJLur5NZeO-Mppi1RM-uPYpfKNlt42Oml2F_7VscQ
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYzMzcsIm5iZiI6MTQ2MzA3NjMzNywiZXhwIjoxNDYzMDgwMjM3LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.gUQKtC2-FmCq13D0Dl2xk3h5bUR5mAY8Nwnj54eDgAZ2HyTzrl0Vh2T2m0xfglO_0G4NJg3XdS1UrLq3mFUvFf_esb2SHbFbvcza54ioyFfaVbxcmwNYdGd8bSRMxpjjcJnomodRzRHcRFlhZJoRXb2sjXDAmaX-PwbNo4oIWmCqZ9BOxbd3YcwFxyAO767cSnGF6RfgM7XTiiCHx_EzWcdSdbjMoUs4S6_ldCnAPNhyIX07d_mWJP_H9sVFAI5KT7GcEYPhfNWJg1b1gaQLa1KZwxVOYaAA5zMh7ZcMM7LTOUO-bXp_Czq25k1JVxG5HRWYXcIfj14j9XYXwcmXiA
   response:
     status:
       code: 200
@@ -96,24 +96,23 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
-      - '14999'
+      - '14996'
       X-Ms-Request-Id:
-      - 229f697a-6860-4d7f-b4ce-586d00b45a9a
+      - 8fca4582-59f5-4e3e-b5f2-1618c3c90b76
       X-Ms-Correlation-Request-Id:
-      - 229f697a-6860-4d7f-b4ce-586d00b45a9a
+      - 8fca4582-59f5-4e3e-b5f2-1618c3c90b76
       X-Ms-Routing-Request-Id:
-      - WESTUS:20160510T111507Z:229f697a-6860-4d7f-b4ce-586d00b45a9a
+      - EASTUS:20160512T181036Z:8fca4582-59f5-4e3e-b5f2-1618c3c90b76
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 10 May 2016 11:15:06 GMT
+      - Thu, 12 May 2016 18:10:35 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c","subscriptionId":"2586c64b-38b4-4527-a140-012d49dfc02c","displayName":"Microsoft
-        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}},{"id":"/subscriptions/462f2af8-e67e-40c6-9fbf-02824d1dd485","subscriptionId":"462f2af8-e67e-40c6-9fbf-02824d1dd485","displayName":"Visual
-        Studio Ultimate with MSDN","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"MSDN_2014-09-01"}}]}'
+        Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01"}}]}'
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:08 GMT
+  recorded_at: Thu, 12 May 2016 18:10:36 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames?api-version=2015-01-01
@@ -126,11 +125,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4Nzg2MDcsIm5iZiI6MTQ2Mjg3ODYwNywiZXhwIjoxNDYyODgyNTA3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.PHc65YQA30GxhpxUyPs6SbR1bhEG9UYE7539qyOOCpQFSvIiL16s1dtln-IZtJBaxHv8NWonQ5UBqExNnjs-VHc1W2TMemxFGl1FEo_vdJU2HPlRhGtqqZ8JvkZn0V9aXt25hRGNy60O1og-Te1rjzIpSvsu6eR1YpVsV_k2x8J9q3X3MXRzil07O252E1-eJo-79HN9vi5SAYfR9YMSQvb9fRHEEyc0XLebQYfEl7of_nbJ4YlvdsDczZ2sDMkQWTJWRwi8AA4Q0yonyuHSV_MFb6Uw3cMwJhsjeWdby7OqPmJLur5NZeO-Mppi1RM-uPYpfKNlt42Oml2F_7VscQ
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYzMzcsIm5iZiI6MTQ2MzA3NjMzNywiZXhwIjoxNDYzMDgwMjM3LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.gUQKtC2-FmCq13D0Dl2xk3h5bUR5mAY8Nwnj54eDgAZ2HyTzrl0Vh2T2m0xfglO_0G4NJg3XdS1UrLq3mFUvFf_esb2SHbFbvcza54ioyFfaVbxcmwNYdGd8bSRMxpjjcJnomodRzRHcRFlhZJoRXb2sjXDAmaX-PwbNo4oIWmCqZ9BOxbd3YcwFxyAO767cSnGF6RfgM7XTiiCHx_EzWcdSdbjMoUs4S6_ldCnAPNhyIX07d_mWJP_H9sVFAI5KT7GcEYPhfNWJg1b1gaQLa1KZwxVOYaAA5zMh7ZcMM7LTOUO-bXp_Czq25k1JVxG5HRWYXcIfj14j9XYXwcmXiA
   response:
     status:
       code: 200
@@ -147,24 +146,24 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Subscription-Reads:
-      - '14919'
+      - '14978'
       X-Ms-Request-Id:
-      - 6c4c7295-38d6-4bc9-80c1-b55c867f94c0
+      - 1bbde30b-4d43-49bc-98ed-ae475310e057
       X-Ms-Correlation-Request-Id:
-      - 6c4c7295-38d6-4bc9-80c1-b55c867f94c0
+      - 1bbde30b-4d43-49bc-98ed-ae475310e057
       X-Ms-Routing-Request-Id:
-      - WESTUS:20160510T111507Z:6c4c7295-38d6-4bc9-80c1-b55c867f94c0
+      - EASTUS:20160512T181036Z:1bbde30b-4d43-49bc-98ed-ae475310e057
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 10 May 2016 11:15:07 GMT
+      - Thu, 12 May 2016 18:10:35 GMT
       Content-Length:
       - '2903'
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName","tagName":"displayName","count":{"type":"Total","value":19},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterVirtualMachine","tagValue":"OpenShiftMasterVirtualMachine","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/DeployOpenShift","tagValue":"DeployOpenShift","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodes","tagValue":"OpenShiftNodes","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/PrepNodes","tagValue":"PrepNodes","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/KeyVault","tagValue":"KeyVault","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeLB","tagValue":"OpenShiftNodeLB","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterNetworkInterface","tagValue":"OpenShiftMasterNetworkInterface","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeNetworkInterfaces","tagValue":"OpenShiftNodeNetworkInterfaces","count":{"type":"Total","value":3}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftNodeLBPublicIP","tagValue":"OpenShiftNodeLBPublicIP","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/OpenShiftMasterPublicIP","tagValue":"OpenShiftMasterPublicIP","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/VirtualNetwork","tagValue":"VirtualNetwork","count":{"type":"Total","value":1}},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/displayName/tagValues/StorageAccounts","tagValue":"StorageAccounts","count":{"type":"Total","value":2}}]},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/on-demand","tagName":"on-demand","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/on-demand/tagValues/true","tagValue":"true","count":{"type":"Total","value":1}}]},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/rlt_test","tagName":"rlt_test","count":{"type":"Total","value":1},"values":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/tagNames/rlt_test/tagValues/b","tagValue":"b","count":{"type":"Total","value":1}}]}]}'
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:08 GMT
+  recorded_at: Thu, 12 May 2016 18:10:36 GMT
 - request:
     method: get
     uri: https://management.azure.com/providers?api-version=2015-01-01
@@ -177,11 +176,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4Nzg2MDcsIm5iZiI6MTQ2Mjg3ODYwNywiZXhwIjoxNDYyODgyNTA3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.PHc65YQA30GxhpxUyPs6SbR1bhEG9UYE7539qyOOCpQFSvIiL16s1dtln-IZtJBaxHv8NWonQ5UBqExNnjs-VHc1W2TMemxFGl1FEo_vdJU2HPlRhGtqqZ8JvkZn0V9aXt25hRGNy60O1og-Te1rjzIpSvsu6eR1YpVsV_k2x8J9q3X3MXRzil07O252E1-eJo-79HN9vi5SAYfR9YMSQvb9fRHEEyc0XLebQYfEl7of_nbJ4YlvdsDczZ2sDMkQWTJWRwi8AA4Q0yonyuHSV_MFb6Uw3cMwJhsjeWdby7OqPmJLur5NZeO-Mppi1RM-uPYpfKNlt42Oml2F_7VscQ
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYzMzcsIm5iZiI6MTQ2MzA3NjMzNywiZXhwIjoxNDYzMDgwMjM3LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.gUQKtC2-FmCq13D0Dl2xk3h5bUR5mAY8Nwnj54eDgAZ2HyTzrl0Vh2T2m0xfglO_0G4NJg3XdS1UrLq3mFUvFf_esb2SHbFbvcza54ioyFfaVbxcmwNYdGd8bSRMxpjjcJnomodRzRHcRFlhZJoRXb2sjXDAmaX-PwbNo4oIWmCqZ9BOxbd3YcwFxyAO767cSnGF6RfgM7XTiiCHx_EzWcdSdbjMoUs4S6_ldCnAPNhyIX07d_mWJP_H9sVFAI5KT7GcEYPhfNWJg1b1gaQLa1KZwxVOYaAA5zMh7ZcMM7LTOUO-bXp_Czq25k1JVxG5HRWYXcIfj14j9XYXwcmXiA
   response:
     status:
       code: 200
@@ -200,21 +199,22 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
-      - '14999'
+      - '14996'
       X-Ms-Request-Id:
-      - 891047b1-88ab-4cea-aa4e-dfa08797b6d6
+      - a6cbff37-133a-470c-a28a-2f98c3cd2d0b
       X-Ms-Correlation-Request-Id:
-      - 891047b1-88ab-4cea-aa4e-dfa08797b6d6
+      - a6cbff37-133a-470c-a28a-2f98c3cd2d0b
       X-Ms-Routing-Request-Id:
-      - WESTUS:20160510T111508Z:891047b1-88ab-4cea-aa4e-dfa08797b6d6
+      - EASTUS:20160512T181037Z:a6cbff37-133a-470c-a28a-2f98c3cd2d0b
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 10 May 2016 11:15:07 GMT
+      - Thu, 12 May 2016 18:10:36 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"namespace":"Aspera.Transfers","resourceTypes":[{"resourceType":"services","locations":["West
-        US","West US (Partner)"],"apiVersions":["2016-03-25"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-03-25"]},{"resourceType":"listCommunicationPreference","locations":["West
+        US","North Europe","Central US","East US","West Europe","East Asia","Southeast
+        Asia","Japan East","Japan West","West US (Partner)"],"apiVersions":["2016-03-25"]},{"resourceType":"operations","locations":[],"apiVersions":["2016-03-25"]},{"resourceType":"listCommunicationPreference","locations":["West
         US (Partner)"],"apiVersions":["2016-03-25"]},{"resourceType":"updateCommunicationPreference","locations":["West
         US (Partner)"],"apiVersions":["2016-03-25"]}]},{"namespace":"Conexlink.MyCloudIT","resourceTypes":[{"resourceType":"accounts","locations":["West
         US (Partner)","Central US"],"apiVersions":["2015-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]}]},{"namespace":"Microsoft.ADHybridHealthService","resourceTypes":[{"resourceType":"services","locations":["West
@@ -229,9 +229,9 @@ http_interactions:
         US"],"apiVersions":["2014-01-01"]},{"resourceType":"anonymousapiusers","locations":["West
         US"],"apiVersions":["2014-01-01"]}]},{"namespace":"Microsoft.ApiManagement","resourceTypes":[{"resourceType":"service","locations":["Australia
         East","Australia Southeast","Central US","East US","East US 2","North Central
-        US","South Central US","West US","North Europe","West Europe","East Asia","Southeast
-        Asia","Japan East","Japan West","Brazil South","Central India","South India","West
-        India"],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"validateServiceName","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkServiceNameAvailability","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkNameAvailability","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"reportFeedback","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkFeedbackRequired","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-09-15","2014-02-14"]}]},{"namespace":"Microsoft.AppService","resourceTypes":[{"resourceType":"apiapps","locations":["East
+        US","South Central US","West US","Canada Central","Canada East","North Europe","West
+        Europe","East Asia","Southeast Asia","Japan East","Japan West","Brazil South","Central
+        India","South India","West India"],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"validateServiceName","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkServiceNameAvailability","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkNameAvailability","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"reportFeedback","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"checkFeedbackRequired","locations":[],"apiVersions":["2015-09-15","2014-02-14"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-09-15","2014-02-14"]}]},{"namespace":"Microsoft.AppService","resourceTypes":[{"resourceType":"apiapps","locations":["East
         US","West US","South Central US","North Europe","East Asia","Japan East","West
         Europe","Southeast Asia","Japan West","North Central US","Central US","Brazil
         South","East US 2","Australia Southeast","Australia East","West India","South
@@ -441,7 +441,7 @@ http_interactions:
         US","East US 2","West US","Central US","North Central US","South Central US","North
         Europe","West Europe","East Asia","Southeast Asia","Japan East","Japan West","Australia
         East","Australia Southeast","Brazil South","South India","Central India","West
-        India"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"disks","locations":["Southeast
+        India","Canada Central","Canada East"],"apiVersions":["2016-03-30","2015-06-15","2015-05-01-preview"]},{"resourceType":"disks","locations":["Southeast
         Asia","West US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"snapshots","locations":["Southeast
         Asia","West US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"locations/diskoperations","locations":["Southeast
         Asia","West US"],"apiVersions":["2016-04-30-preview"]},{"resourceType":"virtualMachines/diagnosticSettings","locations":["East
@@ -485,22 +485,16 @@ http_interactions:
         US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
         East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]},{"resourceType":"IotHubs","locations":["East
         US","North Europe","East Asia","West US","West Europe","Southeast Asia","Japan
-        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]}]},{"namespace":"Microsoft.DevTestLab","resourceTypes":[{"resourceType":"labs","locations":["Southeast
-        Asia","Australia East","Australia Southeast","Brazil South","North Europe","North
-        Central US","East US","West US","South Central US","West Europe","East Asia","East
-        US 2","Japan East","Japan West","Central US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"environments","locations":["Southeast
-        Asia","Australia East","Australia Southeast","Brazil South","North Europe","North
-        Central US","East US","West US","West Europe","East Asia","East US 2","Japan
-        East","Japan West","Central US","South Central US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"labs/environments","locations":["Southeast
-        Asia","Australia East","Australia Southeast","Brazil South","North Europe","North
-        Central US","South Central US","East US","West US","West Europe","East Asia","East
-        US 2","Japan East","Japan West","Central US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"labs/virtualMachines","locations":["Southeast
-        Asia","Australia East","Australia Southeast","Brazil South","North Europe","North
-        Central US","East US","West US","South Central US","West Europe","East Asia","East
-        US 2","Japan East","Japan West","Central US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-05-21-preview","2015-05-01"]},{"resourceType":"locations/operations","locations":["Southeast
-        Asia","Australia East","Australia Southeast","Brazil South","North Europe","North
-        Central US","East US","East US 2","West US","South Central US","West Europe","East
-        Asia","Japan East","Japan West","Central US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2015-05-21-preview"]}]},{"namespace":"Microsoft.DocumentDB","resourceTypes":[{"resourceType":"databaseAccounts","locations":["West
+        East","Japan West","Australia East","Australia Southeast"],"apiVersions":["2016-02-03","2015-08-15-preview"]}]},{"namespace":"Microsoft.DevTestLab","resourceTypes":[{"resourceType":"labs","locations":["Australia
+        East","Australia Southeast","Brazil South","Central US","East Asia","East
+        US","East US 2","Japan East","Japan West","North Central US","North Europe","South
+        Central US","Southeast Asia","West Europe","West US"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"labs/virtualMachines","locations":["Australia
+        East","Australia Southeast","Brazil South","Central US","East Asia","East
+        US","East US 2","Japan East","Japan West","North Central US","North Europe","South
+        Central US","Southeast Asia","West US","West Europe"],"apiVersions":["2015-05-21-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-05-21-preview"]},{"resourceType":"locations","locations":[],"apiVersions":["2015-05-21-preview"]},{"resourceType":"locations/operations","locations":["Australia
+        East","Australia Southeast","Brazil South","Central US","East Asia","East
+        US","East US 2","Japan East","Japan West","North Central US","North Europe","Southeast
+        Asia","South Central US","West US","West Europe"],"apiVersions":["2015-05-21-preview"]}]},{"namespace":"Microsoft.DocumentDB","resourceTypes":[{"resourceType":"databaseAccounts","locations":["West
         US","North Europe","West Europe","East US","East US 2","East Asia","Southeast
         Asia","Australia East","Australia Southeast","Central India","South India","South
         Central US","Central US","Japan East","Japan West"],"apiVersions":["2015-04-08","2014-04-01"]},{"resourceType":"databaseAccountNames","locations":["West
@@ -674,11 +668,11 @@ http_interactions:
         US","East Asia","Southeast Asia","East US","East US 2","West US","North Central
         US","South Central US","North Europe","West Europe","Japan East","Japan West","Brazil
         South","Australia Southeast","Australia East","West India","South India","Central
-        India","UK North","UK South 2","Canada Central","Canada East"],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/resourceGroups","locations":["Central
+        India","Canada Central","Canada East","UK North","UK South 2"],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/resourceGroups","locations":["Central
         US","East Asia","Southeast Asia","East US","East US 2","West US","North Central
         US","South Central US","North Europe","West Europe","Japan East","Japan West","Brazil
         South","Australia Southeast","Australia East","West India","South India","Central
-        India","UK North","UK South 2","Canada Central","Canada East"],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/resourcegroups/resources","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/locations","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/tagnames","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/tagNames/tagValues","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"deployments","locations":[],"apiVersions":["2016-02-01","2015-11-01","2015-01-01","2014-04-01-preview"]},{"resourceType":"deployments/operations","locations":[],"apiVersions":["2016-02-01","2015-11-01","2015-01-01","2014-04-01-preview"]},{"resourceType":"links","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-01-01"]}]},{"namespace":"Microsoft.Scheduler","resourceTypes":[{"resourceType":"jobcollections","locations":["North
+        India","Canada Central","Canada East","UK North","UK South 2"],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/resourcegroups/resources","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/locations","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/tagnames","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"subscriptions/tagNames/tagValues","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"deployments","locations":[],"apiVersions":["2016-02-01","2015-11-01","2015-01-01","2014-04-01-preview"]},{"resourceType":"deployments/operations","locations":[],"apiVersions":["2016-02-01","2015-11-01","2015-01-01","2014-04-01-preview"]},{"resourceType":"links","locations":[],"apiVersions":["2015-01-01","2014-04-01-preview"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-01-01"]}]},{"namespace":"Microsoft.Scheduler","resourceTypes":[{"resourceType":"jobcollections","locations":["North
         Central US","South Central US","North Europe","West Europe","East Asia","Southeast
         Asia","West US","East US","Japan West","Japan East","Brazil South","Central
         US","East US 2","Australia East","Australia Southeast","South India","Central
@@ -727,185 +721,185 @@ http_interactions:
         East","Australia Southeast","Central US","East US","East US 2","West US","North
         Central US","South Central US","East Asia","Southeast Asia","Brazil South","Japan
         East","Japan West","North Europe","West Europe","Central India","South India","West
-        India","Canada Central","Canada East"],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"checkNamespaceAvailability","locations":[],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-08-01","2014-09-01"]}]},{"namespace":"Microsoft.ServiceFabric","resourceTypes":[{"resourceType":"clusters","locations":["West
-        US","East US","West Europe","Australia East","Australia Southeast","North
-        Central US","Japan West","South Central US"],"apiVersions":["2016-03-01","2016-01-01-beta","2015-01-01-alpha"]}]},{"namespace":"Microsoft.Sql","resourceTypes":[{"resourceType":"operations","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"checkNamespaceAvailability","locations":[],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"premiumMessagingRegions","locations":[],"apiVersions":["2015-08-01","2014-09-01"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-08-01","2014-09-01"]}]},{"namespace":"Microsoft.ServiceFabric","resourceTypes":[{"resourceType":"clusters","locations":["West
+        US","East US","East US 2","Central US","West Europe","Australia East","Australia
+        Southeast","North Central US","Japan West","South Central US"],"apiVersions":["2016-03-01","2016-01-01-beta","2015-01-01-alpha"]}]},{"namespace":"Microsoft.Sql","resourceTypes":[{"resourceType":"operations","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"locations","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"locations","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"locations/capabilities","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"locations/capabilities","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"checkNameAvailability","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"checkNameAvailability","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers","locations":["North
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers","locations":["North
         Europe","East US","West US","South Central US","East US 2","Central US","North
         Central US","East Asia","Southeast Asia","Japan West","Japan East","West Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/serviceObjectives","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/serviceObjectives","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/communicationLinks","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/communicationLinks","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/administrators","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/administrators","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/administratorOperationResults","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/administratorOperationResults","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/restorableDroppedDatabases","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/restorableDroppedDatabases","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/recoverableDatabases","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/recoverableDatabases","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/import","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/import","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/importExportOperationResults","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/importExportOperationResults","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/operationResults","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/operationResults","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/firewallrules","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/firewallrules","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databaseSecurityPolicies","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databaseSecurityPolicies","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/auditingPolicies","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/auditingPolicies","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/recommendedElasticPools","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/recommendedElasticPools","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/auditingPolicies","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/auditingPolicies","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/connectionPolicies","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/connectionPolicies","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/connectionPolicies","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/connectionPolicies","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/dataMaskingPolicies","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/dataMaskingPolicies","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/dataMaskingPolicies/rules","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/dataMaskingPolicies/rules","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/securityAlertPolicies","locations":["West
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/securityAlertPolicies","locations":["West
         Europe","West US","South Central US","East US 2","Central US","North Central
         US","East US","East Asia","Southeast Asia","Japan West","Japan East","North
         Europe","Brazil South","Australia East","Australia Southeast","Central India","West
-        India","South India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/securityAlertPolicies","locations":["West
+        India","South India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/securityAlertPolicies","locations":["West
         US","South Central US","East US 2","Central US","North Central US","East US","East
         Asia","Southeast Asia","Japan West","Japan East","North Europe","West Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/databases/auditingSettings","locations":["West
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/databases/auditingSettings","locations":["West
         US","South Central US","East US 2","Central US","North Central US","East US","East
         Asia","Southeast Asia","Japan West","Japan East","North Europe","West Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/auditingSettings","locations":["West
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/auditingSettings","locations":["West
         US","South Central US","East US 2","Central US","North Central US","East US","East
         Asia","Southeast Asia","Japan West","Japan East","North Europe","West Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/resourcepools","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview"]},{"resourceType":"servers/resourcepools","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticpools","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticpools","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/disasterRecoveryConfiguration","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/disasterRecoveryConfiguration","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/usages","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/usages","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/metricDefinitions","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/metricDefinitions","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/metrics","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/metrics","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/aggregatedDatabaseMetrics","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/aggregatedDatabaseMetrics","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticpools/metrics","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticpools/metrics","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticpools/metricdefinitions","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticpools/metricdefinitions","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/topQueries","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/topQueries","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/topQueries/queryText","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/topQueries/queryText","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/advisors","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/advisors","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticPools/advisors","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticPools/advisors","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/advisors","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/advisors","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/extensions","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview","2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/databases/extensions","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticPoolEstimates","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2014-04-01-preview","2014-04-01"]},{"resourceType":"servers/elasticPoolEstimates","locations":["East
         US","West US","South Central US","East US 2","Central US","North Central US","East
         Asia","Southeast Asia","Japan West","Japan East","West Europe","North Europe","Brazil
         South","Australia East","Australia Southeast","Central India","West India","South
-        India"],"apiVersions":["2015-05-01-preview"]}]},{"namespace":"Microsoft.Storage","resourceTypes":[{"resourceType":"storageAccounts","locations":["East
+        India","Canada Central","Canada East"],"apiVersions":["2015-05-01-preview"]}]},{"namespace":"Microsoft.Storage","resourceTypes":[{"resourceType":"storageAccounts","locations":["East
         US","East US 2","East US 2 (Stage)","West US","West Europe","East Asia","Southeast
         Asia","Japan East","Japan West","North Central US","South Central US","Central
         US","North Europe","Brazil South","Australia East","Australia Southeast","South
@@ -1192,7 +1186,7 @@ http_interactions:
         US","Australia Southeast","Australia East","South Central US"],"apiVersions":["2014-04-01"]}]},{"namespace":"TrendMicro.DeepSecurity","resourceTypes":[{"resourceType":"accounts","locations":["West
         US (Partner)","Central US"],"apiVersions":["2015-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]}]}]}'
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:09 GMT
+  recorded_at: Thu, 12 May 2016 18:10:37 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/providers/Microsoft.Storage/storageAccounts?api-version=2016-01-01
@@ -1205,11 +1199,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4Nzg2MDcsIm5iZiI6MTQ2Mjg3ODYwNywiZXhwIjoxNDYyODgyNTA3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.PHc65YQA30GxhpxUyPs6SbR1bhEG9UYE7539qyOOCpQFSvIiL16s1dtln-IZtJBaxHv8NWonQ5UBqExNnjs-VHc1W2TMemxFGl1FEo_vdJU2HPlRhGtqqZ8JvkZn0V9aXt25hRGNy60O1og-Te1rjzIpSvsu6eR1YpVsV_k2x8J9q3X3MXRzil07O252E1-eJo-79HN9vi5SAYfR9YMSQvb9fRHEEyc0XLebQYfEl7of_nbJ4YlvdsDczZ2sDMkQWTJWRwi8AA4Q0yonyuHSV_MFb6Uw3cMwJhsjeWdby7OqPmJLur5NZeO-Mppi1RM-uPYpfKNlt42Oml2F_7VscQ
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYzMzcsIm5iZiI6MTQ2MzA3NjMzNywiZXhwIjoxNDYzMDgwMjM3LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.gUQKtC2-FmCq13D0Dl2xk3h5bUR5mAY8Nwnj54eDgAZ2HyTzrl0Vh2T2m0xfglO_0G4NJg3XdS1UrLq3mFUvFf_esb2SHbFbvcza54ioyFfaVbxcmwNYdGd8bSRMxpjjcJnomodRzRHcRFlhZJoRXb2sjXDAmaX-PwbNo4oIWmCqZ9BOxbd3YcwFxyAO767cSnGF6RfgM7XTiiCHx_EzWcdSdbjMoUs4S6_ldCnAPNhyIX07d_mWJP_H9sVFAI5KT7GcEYPhfNWJg1b1gaQLa1KZwxVOYaAA5zMh7ZcMM7LTOUO-bXp_Czq25k1JVxG5HRWYXcIfj14j9XYXwcmXiA
   response:
     status:
       code: 200
@@ -1219,39 +1213,32 @@ http_interactions:
       - no-cache
       Pragma:
       - no-cache
-      Transfer-Encoding:
-      - chunked
       Content-Type:
-      - application/json
+      - application/json; charset=utf-8
       Expires:
       - "-1"
       Vary:
       - Accept-Encoding
       X-Ms-Request-Id:
-      - 05fd3238-0f5a-45cc-a7b6-8d90001f1dbb
-      Server:
-      - Microsoft-Azure-Storage-Resource-Provider/1.0
-      - Microsoft-HTTPAPI/2.0
-      X-Ms-Ratelimit-Remaining-Subscription-Reads:
-      - '14911'
+      - 55aa7d3e-ae5c-4b2c-b3a4-6d21bfd0ec04
       X-Ms-Correlation-Request-Id:
-      - 05fd3238-0f5a-45cc-a7b6-8d90001f1dbb
+      - 55aa7d3e-ae5c-4b2c-b3a4-6d21bfd0ec04
       X-Ms-Routing-Request-Id:
-      - WESTUS:20160510T111509Z:05fd3238-0f5a-45cc-a7b6-8d90001f1dbb
+      - EASTUS:20160512T181037Z:55aa7d3e-ae5c-4b2c-b3a4-6d21bfd0ec04
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 10 May 2016 11:15:08 GMT
+      - Thu, 12 May 2016 18:10:37 GMT
+      Content-Length:
+      - '6840'
     body:
       encoding: ASCII-8BIT
-      string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/azurerhjb/providers/Microsoft.Storage/storageAccounts/azurerhjb1517","kind":"Storage","location":"eastus","name":"azurerhjb1517","properties":{"creationTime":"2016-02-15T23:49:10.9259881Z","primaryEndpoints":{"blob":"https://azurerhjb1517.blob.core.windows.net/","file":"https://azurerhjb1517.file.core.windows.net/","queue":"https://azurerhjb1517.queue.core.windows.net/","table":"https://azurerhjb1517.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/billgroup/providers/Microsoft.Storage/storageAccounts/billgroup4826","kind":"Storage","location":"westus","name":"billgroup4826","properties":{"creationTime":"2016-04-19T15:58:58.0237628Z","primaryEndpoints":{"blob":"https://billgroup4826.blob.core.windows.net/","file":"https://billgroup4826.file.core.windows.net/","queue":"https://billgroup4826.queue.core.windows.net/","table":"https://billgroup4826.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/bronaghs/providers/Microsoft.Storage/storageAccounts/bronaghs2182","kind":"Storage","location":"eastus","name":"bronaghs2182","properties":{"creationTime":"2016-04-20T12:19:48.2081566Z","primaryEndpoints":{"blob":"https://bronaghs2182.blob.core.windows.net/","file":"https://bronaghs2182.file.core.windows.net/","queue":"https://bronaghs2182.queue.core.windows.net/","table":"https://bronaghs2182.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/bronaghs/providers/Microsoft.Storage/storageAccounts/bronaghs4379","kind":"Storage","location":"westus","name":"bronaghs4379","properties":{"creationTime":"2016-04-19T15:19:01.8714680Z","primaryEndpoints":{"blob":"https://bronaghs4379.blob.core.windows.net/","file":"https://bronaghs4379.file.core.windows.net/","queue":"https://bronaghs4379.queue.core.windows.net/","table":"https://bronaghs4379.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/cewong-dev/providers/Microsoft.Storage/storageAccounts/cewongdev1530","kind":"Storage","location":"eastus","name":"cewongdev1530","properties":{"creationTime":"2016-05-09T17:28:28.4906323Z","primaryEndpoints":{"blob":"https://cewongdev1530.blob.core.windows.net/","file":"https://cewongdev1530.file.core.windows.net/","queue":"https://cewongdev1530.queue.core.windows.net/","table":"https://cewongdev1530.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/cewong-dev/providers/Microsoft.Storage/storageAccounts/cewongdev3926","kind":"Storage","location":"eastus","name":"cewongdev3926","properties":{"creationTime":"2016-05-09T17:28:28.4546271Z","primaryEndpoints":{"blob":"https://cewongdev3926.blob.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jdg/providers/Microsoft.Storage/storageAccounts/cli468770919193495834","kind":"Storage","location":"eastus","name":"cli468770919193495834","properties":{"creationTime":"2016-02-23T19:28:44.1218470Z","primaryEndpoints":{"blob":"https://cli468770919193495834.blob.core.windows.net/","file":"https://cli468770919193495834.file.core.windows.net/","queue":"https://cli468770919193495834.queue.core.windows.net/","table":"https://cli468770919193495834.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jdg/providers/Microsoft.Storage/storageAccounts/cli716087223193495834","kind":"Storage","location":"eastus","name":"cli716087223193495834","properties":{"creationTime":"2016-02-23T19:26:37.8839131Z","primaryEndpoints":{"blob":"https://cli716087223193495834.blob.core.windows.net/","file":"https://cli716087223193495834.file.core.windows.net/","queue":"https://cli716087223193495834.queue.core.windows.net/","table":"https://cli716087223193495834.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/dberger1/providers/Microsoft.Storage/storageAccounts/dberger16406","kind":"Storage","location":"centralus","name":"dberger16406","properties":{"creationTime":"2016-03-18T14:18:57.0067083Z","primaryEndpoints":{"blob":"https://dberger16406.blob.core.windows.net/","file":"https://dberger16406.file.core.windows.net/","queue":"https://dberger16406.queue.core.windows.net/","table":"https://dberger16406.table.core.windows.net/"},"primaryLocation":"centralus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/group/providers/Microsoft.Storage/storageAccounts/group4375","kind":"Storage","location":"eastus","name":"group4375","properties":{"creationTime":"2016-03-09T09:46:47.3729722Z","primaryEndpoints":{"blob":"https://group4375.blob.core.windows.net/","file":"https://group4375.file.core.windows.net/","queue":"https://group4375.queue.core.windows.net/","table":"https://group4375.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/heslinrg1/providers/Microsoft.Storage/storageAccounts/heslinrg11568","kind":"Storage","location":"eastus","name":"heslinrg11568","properties":{"creationTime":"2016-03-22T15:30:19.8068265Z","primaryEndpoints":{"blob":"https://heslinrg11568.blob.core.windows.net/","file":"https://heslinrg11568.file.core.windows.net/","queue":"https://heslinrg11568.queue.core.windows.net/","table":"https://heslinrg11568.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jboss-fuse/providers/Microsoft.Storage/storageAccounts/jbossfuse4086","kind":"Storage","location":"eastus","name":"jbossfuse4086","properties":{"creationTime":"2016-03-23T13:06:58.3181305Z","primaryEndpoints":{"blob":"https://jbossfuse4086.blob.core.windows.net/","file":"https://jbossfuse4086.file.core.windows.net/","queue":"https://jbossfuse4086.queue.core.windows.net/","table":"https://jbossfuse4086.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jdg/providers/Microsoft.Storage/storageAccounts/jdg","kind":"Storage","location":"eastus","name":"jdg","properties":{"creationTime":"2016-02-05T21:51:24.6337976Z","primaryEndpoints":{"blob":"https://jdg.blob.core.windows.net/","file":"https://jdg.file.core.windows.net/","queue":"https://jdg.queue.core.windows.net/","table":"https://jdg.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://jdg-secondary.blob.core.windows.net/","queue":"https://jdg-secondary.queue.core.windows.net/","table":"https://jdg-secondary.table.core.windows.net/"},"secondaryLocation":"westus","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jdg/providers/Microsoft.Storage/storageAccounts/jdg6614","kind":"Storage","location":"eastus","name":"jdg6614","properties":{"creationTime":"2016-02-05T21:38:38.8046010Z","primaryEndpoints":{"blob":"https://jdg6614.blob.core.windows.net/","file":"https://jdg6614.file.core.windows.net/","queue":"https://jdg6614.queue.core.windows.net/","table":"https://jdg6614.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jdg/providers/Microsoft.Storage/storageAccounts/jdg9637","kind":"Storage","location":"eastus","name":"jdg9637","properties":{"creationTime":"2016-02-18T20:29:17.8554399Z","primaryEndpoints":{"blob":"https://jdg9637.blob.core.windows.net/","file":"https://jdg9637.file.core.windows.net/","queue":"https://jdg9637.queue.core.windows.net/","table":"https://jdg9637.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jmarc/providers/Microsoft.Storage/storageAccounts/jmarc8345","kind":"Storage","location":"westus","name":"jmarc8345","properties":{"creationTime":"2016-04-15T16:51:31.3598166Z","primaryEndpoints":{"blob":"https://jmarc8345.blob.core.windows.net/","file":"https://jmarc8345.file.core.windows.net/","queue":"https://jmarc8345.queue.core.windows.net/","table":"https://jmarc8345.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/lgraham/providers/Microsoft.Storage/storageAccounts/lgraham5856","kind":"Storage","location":"eastus","name":"lgraham5856","properties":{"creationTime":"2016-03-08T21:25:13.9692989Z","primaryEndpoints":{"blob":"https://lgraham5856.blob.core.windows.net/","file":"https://lgraham5856.file.core.windows.net/","queue":"https://lgraham5856.queue.core.windows.net/","table":"https://lgraham5856.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/lgrahamtest/providers/Microsoft.Storage/storageAccounts/lgrahamtest7949","kind":"Storage","location":"eastus","name":"lgrahamtest7949","properties":{"creationTime":"2016-03-22T14:23:46.4874930Z","primaryEndpoints":{"blob":"https://lgrahamtest7949.blob.core.windows.net/","file":"https://lgrahamtest7949.file.core.windows.net/","queue":"https://lgrahamtest7949.queue.core.windows.net/","table":"https://lgrahamtest7949.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/mahendra-armrg-east/providers/Microsoft.Storage/storageAccounts/mahendraarmrgeast1894","kind":"Storage","location":"westus","name":"mahendraarmrgeast1894","properties":{"creationTime":"2016-05-09T16:48:22.1247913Z","primaryEndpoints":{"blob":"https://mahendraarmrgeast1894.blob.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/mahendra-armrg-east/providers/Microsoft.Storage/storageAccounts/mahendraarmrgeast5489","kind":"Storage","location":"westus","name":"mahendraarmrgeast5489","properties":{"creationTime":"2016-05-06T22:44:03.1554053Z","primaryEndpoints":{"blob":"https://mahendraarmrgeast5489.blob.core.windows.net/","file":"https://mahendraarmrgeast5489.file.core.windows.net/","queue":"https://mahendraarmrgeast5489.queue.core.windows.net/","table":"https://mahendraarmrgeast5489.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/mahendra-armrg-east/providers/Microsoft.Storage/storageAccounts/mahendraeasttorage","kind":"Storage","location":"eastus","name":"mahendraeasttorage","properties":{"creationTime":"2016-03-04T00:27:17.1254062Z","primaryEndpoints":{"blob":"https://mahendraeasttorage.blob.core.windows.net/","file":"https://mahendraeasttorage.file.core.windows.net/","queue":"https://mahendraeasttorage.queue.core.windows.net/","table":"https://mahendraeasttorage.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/mheslin/providers/Microsoft.Storage/storageAccounts/mheslin6364","kind":"Storage","location":"eastus","name":"mheslin6364","properties":{"creationTime":"2016-02-17T14:16:39.9366262Z","primaryEndpoints":{"blob":"https://mheslin6364.blob.core.windows.net/","file":"https://mheslin6364.file.core.windows.net/","queue":"https://mheslin6364.queue.core.windows.net/","table":"https://mheslin6364.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test2/providers/Microsoft.Storage/storageAccounts/miqazureshared1","kind":"Storage","location":"centralus","name":"miqazureshared1","properties":{"creationTime":"2016-03-18T20:42:52.4980850Z","primaryEndpoints":{"blob":"https://miqazureshared1.blob.core.windows.net/","file":"https://miqazureshared1.file.core.windows.net/","queue":"https://miqazureshared1.queue.core.windows.net/","table":"https://miqazureshared1.table.core.windows.net/"},"primaryLocation":"centralus","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://miqazureshared1-secondary.blob.core.windows.net/","queue":"https://miqazureshared1-secondary.queue.core.windows.net/","table":"https://miqazureshared1-secondary.table.core.windows.net/"},"secondaryLocation":"eastus2","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/miqazuretest14047","kind":"Storage","location":"eastus","name":"miqazuretest14047","properties":{"creationTime":"2016-03-18T17:30:25.7028008Z","primaryEndpoints":{"blob":"https://miqazuretest14047.blob.core.windows.net/","file":"https://miqazuretest14047.file.core.windows.net/","queue":"https://miqazuretest14047.queue.core.windows.net/","table":"https://miqazuretest14047.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/miqazuretest16487","kind":"Storage","location":"eastus","name":"miqazuretest16487","properties":{"creationTime":"2016-03-18T17:26:55.3231669Z","primaryEndpoints":{"blob":"https://miqazuretest16487.blob.core.windows.net/","file":"https://miqazuretest16487.file.core.windows.net/","queue":"https://miqazuretest16487.queue.core.windows.net/","table":"https://miqazuretest16487.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/miqazuretest18686","kind":"Storage","location":"eastus","name":"miqazuretest18686","properties":{"creationTime":"2016-03-18T17:22:54.7808677Z","primaryEndpoints":{"blob":"https://miqazuretest18686.blob.core.windows.net/","file":"https://miqazuretest18686.file.core.windows.net/","queue":"https://miqazuretest18686.queue.core.windows.net/","table":"https://miqazuretest18686.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test2/providers/Microsoft.Storage/storageAccounts/miqazuretest26611","kind":"Storage","location":"eastus","name":"miqazuretest26611","properties":{"creationTime":"2016-05-02T18:01:29.2743021Z","primaryEndpoints":{"blob":"https://miqazuretest26611.blob.core.windows.net/","file":"https://miqazuretest26611.file.core.windows.net/","queue":"https://miqazuretest26611.queue.core.windows.net/","table":"https://miqazuretest26611.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/miqazuretest32946","kind":"Storage","location":"westus","name":"miqazuretest32946","properties":{"creationTime":"2016-03-18T21:18:37.0793411Z","primaryEndpoints":{"blob":"https://miqazuretest32946.blob.core.windows.net/","file":"https://miqazuretest32946.file.core.windows.net/","queue":"https://miqazuretest32946.queue.core.windows.net/","table":"https://miqazuretest32946.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/miqazuretest39555","kind":"Storage","location":"eastus","name":"miqazuretest39555","properties":{"creationTime":"2016-04-21T17:46:50.8278568Z","primaryEndpoints":{"blob":"https://miqazuretest39555.blob.core.windows.net/","file":"https://miqazuretest39555.file.core.windows.net/","queue":"https://miqazuretest39555.queue.core.windows.net/","table":"https://miqazuretest39555.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/mjenner/providers/Microsoft.Storage/storageAccounts/mjenner7038","kind":"Storage","location":"eastus","name":"mjenner7038","properties":{"creationTime":"2016-03-08T20:18:15.0201982Z","primaryEndpoints":{"blob":"https://mjenner7038.blob.core.windows.net/","file":"https://mjenner7038.file.core.windows.net/","queue":"https://mjenner7038.queue.core.windows.net/","table":"https://mjenner7038.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/mjenner/providers/Microsoft.Storage/storageAccounts/mjenner7404","kind":"Storage","location":"eastus","name":"mjenner7404","properties":{"creationTime":"2016-03-08T19:56:38.8902974Z","primaryEndpoints":{"blob":"https://mjenner7404.blob.core.windows.net/","file":"https://mjenner7404.file.core.windows.net/","queue":"https://mjenner7404.queue.core.windows.net/","table":"https://mjenner7404.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jdetiber/providers/Microsoft.Storage/storageAccounts/mtyzyq4noof6yjdetnodesa","kind":"Storage","location":"eastus","name":"mtyzyq4noof6yjdetnodesa","properties":{"creationTime":"2016-05-07T04:35:55.7841326Z","primaryEndpoints":{"blob":"https://mtyzyq4noof6yjdetnodesa.blob.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{"displayName":"StorageAccounts"},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/walatestforqepremium2/providers/Microsoft.Storage/storageAccounts/ondemandwala","kind":"Storage","location":"westus","name":"ondemandwala","properties":{"creationTime":"2016-03-01T06:49:36.6145398Z","primaryEndpoints":{"blob":"https://ondemandwala.blob.core.windows.net/","file":"https://ondemandwala.file.core.windows.net/","queue":"https://ondemandwala.queue.core.windows.net/","table":"https://ondemandwala.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/openshiftops-us-east1/providers/Microsoft.Storage/storageAccounts/openshiftopsuseast1stor1","kind":"Storage","location":"eastus","name":"openshiftopsuseast1stor1","properties":{"creationTime":"2016-02-07T16:11:48.9428028Z","primaryEndpoints":{"blob":"https://openshiftopsuseast1stor1.blob.core.windows.net/","file":"https://openshiftopsuseast1stor1.file.core.windows.net/","queue":"https://openshiftopsuseast1stor1.queue.core.windows.net/","table":"https://openshiftopsuseast1stor1.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/openshiftops-us-east1/providers/Microsoft.Storage/storageAccounts/openshiftopsuseast1stor2","kind":"Storage","location":"eastus","name":"openshiftopsuseast1stor2","properties":{"creationTime":"2016-03-01T15:17:57.3574398Z","primaryEndpoints":{"blob":"https://openshiftopsuseast1stor2.blob.core.windows.net/","file":"https://openshiftopsuseast1stor2.file.core.windows.net/","queue":"https://openshiftopsuseast1stor2.queue.core.windows.net/","table":"https://openshiftopsuseast1stor2.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/openshift-storage-dev/providers/Microsoft.Storage/storageAccounts/openshiftstoragede1802","kind":"Storage","location":"eastus","name":"openshiftstoragede1802","properties":{"creationTime":"2016-04-27T00:39:42.9151124Z","primaryEndpoints":{"blob":"https://openshiftstoragede1802.blob.core.windows.net/","file":"https://openshiftstoragede1802.file.core.windows.net/","queue":"https://openshiftstoragede1802.queue.core.windows.net/","table":"https://openshiftstoragede1802.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/openshift-storage-dev/providers/Microsoft.Storage/storageAccounts/openshiftstoragede2939","kind":"Storage","location":"eastus","name":"openshiftstoragede2939","properties":{"creationTime":"2016-04-27T14:02:18.2887593Z","primaryEndpoints":{"blob":"https://openshiftstoragede2939.blob.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/pep-openshift/providers/Microsoft.Storage/storageAccounts/pepopenshift6724","kind":"Storage","location":"northeurope","name":"pepopenshift6724","properties":{"creationTime":"2016-03-07T21:19:45.6564181Z","primaryEndpoints":{"blob":"https://pepopenshift6724.blob.core.windows.net/","file":"https://pepopenshift6724.file.core.windows.net/","queue":"https://pepopenshift6724.queue.core.windows.net/","table":"https://pepopenshift6724.table.core.windows.net/"},"primaryLocation":"northeurope","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/psachin-group/providers/Microsoft.Storage/storageAccounts/psachingroup9041","kind":"Storage","location":"southeastasia","name":"psachingroup9041","properties":{"creationTime":"2016-05-05T11:35:37.1163164Z","primaryEndpoints":{"blob":"https://psachingroup9041.blob.core.windows.net/","file":"https://psachingroup9041.file.core.windows.net/","queue":"https://psachingroup9041.queue.core.windows.net/","table":"https://psachingroup9041.table.core.windows.net/"},"primaryLocation":"southeastasia","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/rjanik-resource-group/providers/Microsoft.Storage/storageAccounts/rjanikazuretest","kind":"Storage","location":"westeurope","name":"rjanikazuretest","properties":{"creationTime":"2016-03-11T09:29:40.5028699Z","primaryEndpoints":{"blob":"https://rjanikazuretest.blob.core.windows.net/","file":"https://rjanikazuretest.file.core.windows.net/","queue":"https://rjanikazuretest.queue.core.windows.net/","table":"https://rjanikazuretest.table.core.windows.net/"},"primaryLocation":"westeurope","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/simaishi1/providers/Microsoft.Storage/storageAccounts/simaishi1","kind":"Storage","location":"eastus2","name":"simaishi1","properties":{"creationTime":"2016-03-17T23:45:38.3075216Z","primaryEndpoints":{"blob":"https://simaishi1.blob.core.windows.net/","file":"https://simaishi1.file.core.windows.net/","queue":"https://simaishi1.queue.core.windows.net/","table":"https://simaishi1.table.core.windows.net/"},"primaryLocation":"eastus2","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/simathew/providers/Microsoft.Storage/storageAccounts/simathew9750","kind":"Storage","location":"southeastasia","name":"simathew9750","properties":{"creationTime":"2016-03-10T19:12:10.6744092Z","primaryEndpoints":{"blob":"https://simathew9750.blob.core.windows.net/","file":"https://simathew9750.file.core.windows.net/","queue":"https://simathew9750.queue.core.windows.net/","table":"https://simathew9750.table.core.windows.net/"},"primaryLocation":"southeastasia","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/spec0deply1stor","kind":"Storage","location":"eastus","name":"spec0deply1stor","properties":{"creationTime":"2016-04-04T23:05:07.8274794Z","primaryEndpoints":{"blob":"https://spec0deply1stor.blob.core.windows.net/","file":"https://spec0deply1stor.file.core.windows.net/","queue":"https://spec0deply1stor.queue.core.windows.net/","table":"https://spec0deply1stor.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/sprintdemovms/providers/Microsoft.Storage/storageAccounts/sprintdemovms4922","kind":"Storage","location":"eastus","name":"sprintdemovms4922","properties":{"creationTime":"2016-04-19T16:30:37.6302855Z","primaryEndpoints":{"blob":"https://sprintdemovms4922.blob.core.windows.net/","file":"https://sprintdemovms4922.file.core.windows.net/","queue":"https://sprintdemovms4922.queue.core.windows.net/","table":"https://sprintdemovms4922.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/msft/providers/Microsoft.Storage/storageAccounts/storage4msft","kind":"Storage","location":"eastus","name":"storage4msft","properties":{"creationTime":"2016-02-03T08:04:46.6738580Z","primaryEndpoints":{"blob":"https://storage4msft.blob.core.windows.net/","file":"https://storage4msft.file.core.windows.net/","queue":"https://storage4msft.queue.core.windows.net/","table":"https://storage4msft.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://storage4msft-secondary.blob.core.windows.net/","queue":"https://storage4msft-secondary.queue.core.windows.net/","table":"https://storage4msft-secondary.table.core.windows.net/"},"secondaryLocation":"westus","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/testtest/providers/Microsoft.Storage/storageAccounts/testtest7648","kind":"Storage","location":"eastus","name":"testtest7648","properties":{"creationTime":"2016-02-17T21:20:46.4839379Z","primaryEndpoints":{"blob":"https://testtest7648.blob.core.windows.net/","file":"https://testtest7648.file.core.windows.net/","queue":"https://testtest7648.queue.core.windows.net/","table":"https://testtest7648.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/usertest/providers/Microsoft.Storage/storageAccounts/usertest9104","kind":"Storage","location":"centralus","name":"usertest9104","properties":{"creationTime":"2016-03-01T11:36:11.8718294Z","primaryEndpoints":{"blob":"https://usertest9104.blob.core.windows.net/","file":"https://usertest9104.file.core.windows.net/","queue":"https://usertest9104.queue.core.windows.net/","table":"https://usertest9104.table.core.windows.net/"},"primaryLocation":"centralus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/walatest/providers/Microsoft.Storage/storageAccounts/walatestforqe","kind":"Storage","location":"eastus2","name":"walatestforqe","properties":{"creationTime":"2016-01-28T03:16:07.3300555Z","primaryEndpoints":{"blob":"https://walatestforqe.blob.core.windows.net/","file":"https://walatestforqe.file.core.windows.net/","queue":"https://walatestforqe.queue.core.windows.net/","table":"https://walatestforqe.table.core.windows.net/"},"primaryLocation":"eastus2","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://walatestforqe-secondary.blob.core.windows.net/","queue":"https://walatestforqe-secondary.queue.core.windows.net/","table":"https://walatestforqe-secondary.table.core.windows.net/"},"secondaryLocation":"centralus","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/walatestforqe2/providers/Microsoft.Storage/storageAccounts/walatestforqe2","kind":"Storage","location":"westus","name":"walatestforqe2","properties":{"creationTime":"2016-02-26T08:04:58.6474436Z","primaryEndpoints":{"blob":"https://walatestforqe2.blob.core.windows.net/","file":"https://walatestforqe2.file.core.windows.net/","queue":"https://walatestforqe2.queue.core.windows.net/","table":"https://walatestforqe2.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://walatestforqe2-secondary.blob.core.windows.net/","queue":"https://walatestforqe2-secondary.queue.core.windows.net/","table":"https://walatestforqe2-secondary.table.core.windows.net/"},"secondaryLocation":"eastus","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/walatestforqepremium/providers/Microsoft.Storage/storageAccounts/walatestforqepremium","kind":"Storage","location":"eastus2","name":"walatestforqepremium","properties":{"creationTime":"2016-02-18T04:23:52.6378330Z","primaryEndpoints":{"blob":"https://walatestforqepremium.blob.core.windows.net/"},"primaryLocation":"eastus2","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/walatestforqepremium2/providers/Microsoft.Storage/storageAccounts/walatestforqepremium2","kind":"Storage","location":"westus","name":"walatestforqepremium2","properties":{"creationTime":"2016-02-23T10:23:31.9147202Z","primaryEndpoints":{"blob":"https://walatestforqepremium2.blob.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/walatestforqepremium3/providers/Microsoft.Storage/storageAccounts/walatestforqepremium3","kind":"Storage","location":"westus","name":"walatestforqepremium3","properties":{"creationTime":"2016-02-26T06:47:45.7326749Z","primaryEndpoints":{"blob":"https://walatestforqepremium3.blob.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/walatestforqewe/providers/Microsoft.Storage/storageAccounts/walatestforqewe","kind":"Storage","location":"westeurope","name":"walatestforqewe","properties":{"creationTime":"2016-05-04T09:38:11.0446817Z","primaryEndpoints":{"blob":"https://walatestforqewe.blob.core.windows.net/","file":"https://walatestforqewe.file.core.windows.net/","queue":"https://walatestforqewe.queue.core.windows.net/","table":"https://walatestforqewe.table.core.windows.net/"},"primaryLocation":"westeurope","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://walatestforqewe-secondary.blob.core.windows.net/","queue":"https://walatestforqewe-secondary.queue.core.windows.net/","table":"https://walatestforqewe-secondary.table.core.windows.net/"},"secondaryLocation":"northeurope","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/jdetiber/providers/Microsoft.Storage/storageAccounts/ylplyioro2yrmjdetnodesa","kind":"Storage","location":"eastus","name":"ylplyioro2yrmjdetnodesa","properties":{"creationTime":"2016-05-07T04:35:55.8001167Z","primaryEndpoints":{"blob":"https://ylplyioro2yrmjdetnodesa.blob.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{"displayName":"StorageAccounts"},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/zagato/providers/Microsoft.Storage/storageAccounts/zagato5216","kind":"Storage","location":"westus","name":"zagato5216","properties":{"creationTime":"2016-05-06T20:56:16.3058779Z","primaryEndpoints":{"blob":"https://zagato5216.blob.core.windows.net/","file":"https://zagato5216.file.core.windows.net/","queue":"https://zagato5216.queue.core.windows.net/","table":"https://zagato5216.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"}]}
-
-'
+      string: '{"value":[{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/cli374271593924959008","kind":"Storage","location":"westus","name":"cli374271593924959008","properties":{"creationTime":"2016-05-12T15:39:54.4351309Z","primaryEndpoints":{"blob":"https://cli374271593924959008.blob.core.windows.net/","file":"https://cli374271593924959008.file.core.windows.net/","queue":"https://cli374271593924959008.queue.core.windows.net/","table":"https://cli374271593924959008.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test2/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account1","kind":"Storage","location":"centralus","name":"my-azure-storage-account1","properties":{"creationTime":"2016-03-18T20:42:52.4980850Z","primaryEndpoints":{"blob":"https://my-azure-storage-account1.blob.core.windows.net/","file":"https://my-azure-storage-account1.file.core.windows.net/","queue":"https://my-azure-storage-account1.queue.core.windows.net/","table":"https://my-azure-storage-account1.table.core.windows.net/"},"primaryLocation":"centralus","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://my-azure-storage-account1-secondary.blob.core.windows.net/","queue":"https://my-azure-storage-account1-secondary.queue.core.windows.net/","table":"https://my-azure-storage-account1-secondary.table.core.windows.net/"},"secondaryLocation":"eastus2","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account2","kind":"Storage","location":"eastus","name":"my-azure-storage-account2","properties":{"creationTime":"2016-03-18T17:30:25.7028008Z","primaryEndpoints":{"blob":"https://my-azure-storage-account2.blob.core.windows.net/","file":"https://my-azure-storage-account2.file.core.windows.net/","queue":"https://my-azure-storage-account2.queue.core.windows.net/","table":"https://my-azure-storage-account2.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account3","kind":"Storage","location":"eastus","name":"my-azure-storage-account3","properties":{"creationTime":"2016-03-18T17:26:55.3231669Z","primaryEndpoints":{"blob":"https://my-azure-storage-account3.blob.core.windows.net/","file":"https://my-azure-storage-account3.file.core.windows.net/","queue":"https://my-azure-storage-account3.queue.core.windows.net/","table":"https://my-azure-storage-account3.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account4","kind":"Storage","location":"eastus","name":"my-azure-storage-account4","properties":{"creationTime":"2016-03-18T17:22:54.7808677Z","primaryEndpoints":{"blob":"https://my-azure-storage-account4.blob.core.windows.net/","file":"https://my-azure-storage-account4.file.core.windows.net/","queue":"https://my-azure-storage-account4.queue.core.windows.net/","table":"https://my-azure-storage-account4.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test2/providers/Microsoft.Storage/storageAccounts/miqazuretest26611","kind":"Storage","location":"eastus","name":"miqazuretest26611","properties":{"creationTime":"2016-05-02T18:01:29.2743021Z","primaryEndpoints":{"blob":"https://miqazuretest26611.blob.core.windows.net/","file":"https://miqazuretest26611.file.core.windows.net/","queue":"https://miqazuretest26611.queue.core.windows.net/","table":"https://miqazuretest26611.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account5","kind":"Storage","location":"westus","name":"my-azure-storage-account5","properties":{"creationTime":"2016-03-18T21:18:37.0793411Z","primaryEndpoints":{"blob":"https://my-azure-storage-account5.blob.core.windows.net/","file":"https://my-azure-storage-account5.file.core.windows.net/","queue":"https://my-azure-storage-account5.queue.core.windows.net/","table":"https://my-azure-storage-account5.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/miqazuretest39555","kind":"Storage","location":"eastus","name":"miqazuretest39555","properties":{"creationTime":"2016-04-21T17:46:50.8278568Z","primaryEndpoints":{"blob":"https://miqazuretest39555.blob.core.windows.net/","file":"https://miqazuretest39555.file.core.windows.net/","queue":"https://miqazuretest39555.queue.core.windows.net/","table":"https://miqazuretest39555.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/spec0deply1stor","kind":"Storage","location":"eastus","name":"spec0deply1stor","properties":{"creationTime":"2016-04-04T23:05:07.8274794Z","primaryEndpoints":{"blob":"https://spec0deply1stor.blob.core.windows.net/","file":"https://spec0deply1stor.file.core.windows.net/","queue":"https://spec0deply1stor.queue.core.windows.net/","table":"https://spec0deply1stor.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"}]}'
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:10 GMT
+  recorded_at: Thu, 12 May 2016 18:10:37 GMT
 - request:
     method: post
-    uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/miqazuretest18686/listKeys?api-version=2016-01-01
+    uri: https://management.azure.com/subscriptions/2586c64b-38b4-4527-a140-012d49dfc02c/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account4/listKeys?api-version=2016-01-01
     body:
       encoding: ASCII-8BIT
       string: ''
@@ -1261,11 +1248,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjI4Nzg2MDcsIm5iZiI6MTQ2Mjg3ODYwNywiZXhwIjoxNDYyODgyNTA3LCJhcHBpZCI6IjUxYjFjMmEzLTlkMjgtNDc2Zi1iMjFmLWY1OGE0YzY1ZTYwOCIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJzdWIiOiIxODk4NWViMC00ZTIyLTQ1Y2ItYmQzMS00YWI2ZTk5MmY5NDEiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.PHc65YQA30GxhpxUyPs6SbR1bhEG9UYE7539qyOOCpQFSvIiL16s1dtln-IZtJBaxHv8NWonQ5UBqExNnjs-VHc1W2TMemxFGl1FEo_vdJU2HPlRhGtqqZ8JvkZn0V9aXt25hRGNy60O1og-Te1rjzIpSvsu6eR1YpVsV_k2x8J9q3X3MXRzil07O252E1-eJo-79HN9vi5SAYfR9YMSQvb9fRHEEyc0XLebQYfEl7of_nbJ4YlvdsDczZ2sDMkQWTJWRwi8AA4Q0yonyuHSV_MFb6Uw3cMwJhsjeWdby7OqPmJLur5NZeO-Mppi1RM-uPYpfKNlt42Oml2F_7VscQ
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSIsImtpZCI6Ik1uQ19WWmNBVGZNNXBPWWlKSE1iYTlnb0VLWSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NjMwNzYzMzcsIm5iZiI6MTQ2MzA3NjMzNywiZXhwIjoxNDYzMDgwMjM3LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImlkcCI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJvaWQiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJzdWIiOiIzMDZlYjQyYS0zNTg1LTRhMzctOTViNy0zOGJjMGU5ODI4ZDIiLCJ0aWQiOiI3N2VjZWZiNi1jZmYwLTRlOGQtYTQ0Ni03NTdhNjljYjk0ODUiLCJ2ZXIiOiIxLjAifQ.gUQKtC2-FmCq13D0Dl2xk3h5bUR5mAY8Nwnj54eDgAZ2HyTzrl0Vh2T2m0xfglO_0G4NJg3XdS1UrLq3mFUvFf_esb2SHbFbvcza54ioyFfaVbxcmwNYdGd8bSRMxpjjcJnomodRzRHcRFlhZJoRXb2sjXDAmaX-PwbNo4oIWmCqZ9BOxbd3YcwFxyAO767cSnGF6RfgM7XTiiCHx_EzWcdSdbjMoUs4S6_ldCnAPNhyIX07d_mWJP_H9sVFAI5KT7GcEYPhfNWJg1b1gaQLa1KZwxVOYaAA5zMh7ZcMM7LTOUO-bXp_Czq25k1JVxG5HRWYXcIfj14j9XYXwcmXiA
       Content-Length:
       - '0'
   response:
@@ -1286,30 +1273,30 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Request-Id:
-      - 7e2128b4-017a-44bb-92ce-24f4a8506a46
+      - ffdb2751-8a74-4b32-83cf-8db60998350e
       Server:
       - Microsoft-Azure-Storage-Resource-Provider/1.0
       - Microsoft-HTTPAPI/2.0
       X-Ms-Ratelimit-Remaining-Subscription-Writes:
       - '1199'
       X-Ms-Correlation-Request-Id:
-      - 7e2128b4-017a-44bb-92ce-24f4a8506a46
+      - ffdb2751-8a74-4b32-83cf-8db60998350e
       X-Ms-Routing-Request-Id:
-      - WESTUS:20160510T111509Z:7e2128b4-017a-44bb-92ce-24f4a8506a46
+      - EASTUS:20160512T181038Z:ffdb2751-8a74-4b32-83cf-8db60998350e
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Tue, 10 May 2016 11:15:09 GMT
+      - Thu, 12 May 2016 18:10:37 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"keys":[{"keyName":"key1","permissions":"Full","value":"32PV5jeBt8nw1XvFbZokY26SXchbD6H2tw/YrteEYVE0kpMLKrZ74VrwaIjDyucdi/RxDaAlf7dJIilLS7muNw=="},{"keyName":"key2","permissions":"Full","value":"Eo5x9CQJL1/wl6Tkj5N7M5eEdw6Hym6AeyTt3xjcDl30sV8Iadro6ywZzOHQwNDlmrDaBF6x2a9ZFL7zswxQ7w=="}]}
 
 '
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:10 GMT
+  recorded_at: Thu, 12 May 2016 18:10:38 GMT
 - request:
     method: head
-    uri: https://miqazuretest18686.blob.core.windows.net/vhds/miq-test-rhel12016218112243.vhd
+    uri: https://my-azure-storage-account4.blob.core.windows.net/vhds/miq-test-rhel12016218112243.vhd
     body:
       encoding: US-ASCII
       string: ''
@@ -1319,15 +1306,15 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Type:
       - ''
       X-Ms-Date:
-      - Tue, 10 May 2016 11:15:10 GMT
+      - Thu, 12 May 2016 18:10:38 GMT
       X-Ms-Version:
       - '2015-02-21'
       Authorization:
-      - SharedKey miqazuretest18686:1UblOtBp8ckkhmPtQCS/O8yYQguaGY6DZwDK4Copgr4=
+      - SharedKey my-azure-storage-account4:/3x31mil9eq7qd9fQCnzqVf3NFgVBc98LD/zYbd+SeA=
   response:
     status:
       code: 200
@@ -1340,15 +1327,15 @@ http_interactions:
       Content-Md5:
       - dQL+XHjFNPdoMEweI63fwQ==
       Last-Modified:
-      - Tue, 10 May 2016 11:12:42 GMT
+      - Thu, 12 May 2016 18:10:36 GMT
       Accept-Ranges:
       - bytes
       Etag:
-      - '"0x8D378C401C2348E"'
+      - '"0x8D37A90B79F8D6B"'
       Server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       X-Ms-Request-Id:
-      - fc943bb5-0001-00fe-4bad-aa1a1a000000
+      - 6a4abd78-0001-0038-6379-ac6726000000
       X-Ms-Version:
       - '2015-02-21'
       X-Ms-Meta-Microsoftazurecompute-Resourcegroupname:
@@ -1372,7 +1359,7 @@ http_interactions:
       X-Ms-Blob-Type:
       - PageBlob
       X-Ms-Blob-Sequence-Number:
-      - '135'
+      - '137'
       X-Ms-Copy-Id:
       - b967ea05-82a2-405a-8df9-4615d59df4eb
       X-Ms-Copy-Source:
@@ -1384,15 +1371,15 @@ http_interactions:
       X-Ms-Copy-Completion-Time:
       - Fri, 18 Mar 2016 17:23:28 GMT
       Date:
-      - Tue, 10 May 2016 11:15:10 GMT
+      - Thu, 12 May 2016 18:10:38 GMT
     body:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:10 GMT
+  recorded_at: Thu, 12 May 2016 18:10:38 GMT
 - request:
     method: get
-    uri: https://miqazuretest18686.blob.core.windows.net/vhds/miq-test-rhel12016218112243.vhd
+    uri: https://my-azure-storage-account4.blob.core.windows.net/vhds/miq-test-rhel12016218112243.vhd
     body:
       encoding: US-ASCII
       string: ''
@@ -1402,11 +1389,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0.rc1 (darwin15.3.0 x86_64) ruby/2.2.3p173
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.2p95
       Content-Type:
       - ''
       X-Ms-Date:
-      - Tue, 10 May 2016 11:15:10 GMT
+      - Thu, 12 May 2016 18:10:38 GMT
       X-Ms-Version:
       - '2015-02-21'
       Verb:
@@ -1416,7 +1403,7 @@ http_interactions:
       X-Ms-Range-Get-Content-Md5:
       - 'true'
       Authorization:
-      - SharedKey miqazuretest18686:kBMynDYoEG3mrEplk66wH0LgnGUQVLOf7wVkj1UGJrM=
+      - SharedKey my-azure-storage-account4:3biz+St7Yrz1QoMSzO3cRxLz2uxHmw3TThJF7XbYqVA=
   response:
     status:
       code: 206
@@ -1431,15 +1418,15 @@ http_interactions:
       Content-Range:
       - bytes 440-443/32212255232
       Last-Modified:
-      - Tue, 10 May 2016 11:12:42 GMT
+      - Thu, 12 May 2016 18:10:36 GMT
       Accept-Ranges:
       - bytes
       Etag:
-      - '"0x8D378C401C2348E"'
+      - '"0x8D37A90B79F8D6B"'
       Server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       X-Ms-Request-Id:
-      - b5288030-0001-00a2-1dad-aaebe3000000
+      - 21381743-0001-0119-1679-ac4c42000000
       X-Ms-Version:
       - '2015-02-21'
       X-Ms-Meta-Microsoftazurecompute-Resourcegroupname:
@@ -1463,7 +1450,7 @@ http_interactions:
       X-Ms-Blob-Type:
       - PageBlob
       X-Ms-Blob-Sequence-Number:
-      - '135'
+      - '137'
       X-Ms-Copy-Id:
       - b967ea05-82a2-405a-8df9-4615d59df4eb
       X-Ms-Copy-Source:
@@ -1475,11 +1462,11 @@ http_interactions:
       X-Ms-Copy-Completion-Time:
       - Fri, 18 Mar 2016 17:23:28 GMT
       Date:
-      - Tue, 10 May 2016 11:15:09 GMT
+      - Thu, 12 May 2016 18:10:38 GMT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
         UrkCAA==
     http_version: 
-  recorded_at: Tue, 10 May 2016 11:15:11 GMT
+  recorded_at: Thu, 12 May 2016 18:10:38 GMT
 recorded_with: VCR 2.9.3
