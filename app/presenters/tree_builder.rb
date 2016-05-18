@@ -13,7 +13,7 @@ class TreeBuilder
     # Catalog explorer trees
     when :configuration_manager_providers then TreeBuilderConfigurationManager
     when :cs_filter                       then TreeBuilderConfigurationManagerConfiguredSystems
-    when :configuration_scripts                then TreeBuilderConfigurationManagerConfigurationScripts
+    when :configuration_scripts           then TreeBuilderConfigurationManagerConfigurationScripts
 
     # Catalog explorer trees
     when :ot               then TreeBuilderOrchestrationTemplates
