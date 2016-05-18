@@ -1,11 +1,13 @@
 describe WebsocketServer do
   before(:each) do
-    @server = described_class.new
+    allow(logger).to receive(:info)
+    @server = described_class.new(:logger => logger)
     Thread.list.reject { |t| t == Thread.current }.each(&:kill)
   end
 
   let(:sockets) { @server.instance_variable_get(:@sockets) }
   let(:pairing) { @server.instance_variable_get(:@pairing) }
+  let(:logger) { double }
 
   let(:pipes) { IO.pipe }
   let(:left) { pipes.first }
@@ -45,6 +47,7 @@ describe WebsocketServer do
         right => WebsocketServer::Pairing.new(false, proxy)
       )
       sockets.push(left, right)
+      allow(proxy).to receive(:vm_id).and_return('unknown')
     end
 
     let(:error) { right }
