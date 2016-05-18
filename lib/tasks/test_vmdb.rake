@@ -24,7 +24,7 @@ namespace :test do
     end
   end
 
-  task :vmdb_parallel do
+  task :vmdb_parallel => [:initialize, "evm:compile_sti_loader"] do
     require 'parallel_tests'
     # find spec             -name "*_spec.rb" |sort | wc -l =>   1035
     # find spec/automation  -name "*_spec.rb" |sort | wc -l =>     53
