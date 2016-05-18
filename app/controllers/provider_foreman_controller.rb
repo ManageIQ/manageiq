@@ -356,7 +356,6 @@ class ProviderForemanController < ApplicationController
 
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
-    type, _id = x_node.split("_").last.split("-")
     case nodes.first
     when "root" then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
     when "fr"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
