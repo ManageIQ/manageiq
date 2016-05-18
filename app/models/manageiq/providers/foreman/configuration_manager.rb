@@ -23,4 +23,8 @@ class ManageIQ::Providers::Foreman::ConfigurationManager < ManageIQ::Providers::
   def self.description
     @description ||= "Foreman Configuration".freeze
   end
+
+  def image_name
+    "foreman_configuration"
+  end
 end

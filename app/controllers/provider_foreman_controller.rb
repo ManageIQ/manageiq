@@ -607,7 +607,6 @@ class ProviderForemanController < ApplicationController
 
   def configured_system_list(id, model)
     return configured_system_node(id, model) unless id.nil?
-    @listicon = "configured_system"
     if self.x_active_tree == :cs_filter_tree
       options = {:model => "#{model}"}
       @right_cell_text = _("All %{title} Configured Systems") % {:title => model_to_name(model)}
@@ -964,15 +963,6 @@ class ProviderForemanController < ApplicationController
       "#{TreeBuilder.get_prefix_for_model(row[:type])}" % to_cid(row['id'])
     else
       to_cid(row['id'])
-    end
-  end
-
-  def list_row_image(_image, item = nil)
-    # Unassigned Profiles Group
-    if item.kind_of?(ConfigurationProfile) && empty_configuration_profile_record?(item)
-      'folder'
-    else
-      super
     end
   end
 

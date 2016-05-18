@@ -72,4 +72,8 @@ class ConfigurationProfile < ApplicationRecord
   def total_configured_systems
     Rbac.filtered(configured_systems, :match_via_descendants => ConfiguredSystem).count
   end
+
+  def image_name
+    "configuration_profile"
+  end
 end

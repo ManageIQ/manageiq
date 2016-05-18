@@ -86,4 +86,8 @@ class ConfiguredSystem < ApplicationRecord
     hosts = includes(:configuration_location, :configuration_organization).where(:id => ids)
     hosts.collect(&:available_configuration_profiles).inject(:&).presence
   end
+
+  def image_name
+    "configured_system"
+  end
 end

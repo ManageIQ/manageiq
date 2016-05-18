@@ -24,6 +24,10 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager < ManageIQ::Provid
     @description ||= "Ansible Tower Configuration".freeze
   end
 
+  def image_name
+    "ansible_tower_configuration"
+  end
+
   private
 
   def connection_source(options = {})
