@@ -89,6 +89,8 @@ class TreeBuilder
 
     when :datacenter              then TreeBuilderDatacenter
     when :vat                     then TreeBuilderVat
+
+    when :network                 then TreeBuilderNetwork
     end
   end
 
@@ -474,6 +476,7 @@ class TreeBuilder
     "hot" => "OrchestrationTemplateHot",
     "isd" => "IsoDatastore",
     "isi" => "IsoImage",
+    "l"   => "Lan",
     "ld"  => "LdapDomain",
     "lr"  => "LdapRegion",
     "me"  => "MiqEnterprise",
@@ -500,6 +503,7 @@ class TreeBuilder
     "st"  => "ServiceTemplate",
     "stc" => "ServiceTemplateCatalog",
     "sr"  => "ServiceResource",
+    "sw"  => "Switch",
     "t"   => "MiqTemplate",
     "tb"  => "VmdbTable",
     "ti"  => "VmdbIndex",

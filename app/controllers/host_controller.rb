@@ -52,7 +52,9 @@ class HostController < ApplicationController
     when "network"
       drop_breadcrumb(:name => _("%{name} (Network)") % {:name => @host.name},
                       :url  => "/host/show/#{@host.id}?display=network")
-      build_network_tree
+
+      @tree_vms = []
+      @network_tree = TreeBuilderNetwork.new(:network_tree, :network, @sb, true, @host, @tree_vms)
       self.x_active_tree = :network_tree
 
     when "performance"
@@ -639,81 +641,6 @@ class HostController < ApplicationController
 
   def breadcrumb_name(_model)
     title_for_hosts
-  end
-
-  # Build the tree object to display the host network info
-  def build_network_tree
-    @tree_vms = []                   # Capture all VM ids in the tree
-    host_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@host.id}",
-      @host.name,
-      "host.png",
-      _("Host: %{name}") % {:name => @host.name},
-      :expand => true
-    )
-    host_node[:children] = add_host_branch if @host.switches.length > 0
-    @network_tree = [host_node].to_json
-    session[:tree_name]  = "network_tree"
-  end
-
-  def add_host_branch
-    @host.switches.collect do |s|
-      switch_node = TreeNodeBuilder.generic_tree_node(
-        "s_#{s.id}",
-        s.name,
-        "switch.png",
-        _("Switch: %{name}") % {:name => s.name}
-      )
-      switch_node_children = []
-      switch_node_children.concat(add_guest_devices(s)) if s.guest_devices.length > 0
-      switch_node_children.concat(add_lans(s))          if s.lans.length > 0
-      switch_node[:children] = switch_node_children     unless switch_node_children.empty?
-      switch_node
-    end
-  end
-
-  def add_guest_devices(switch)
-    switch.guest_devices.collect do |p|
-      TreeNodeBuilder.generic_tree_node(
-        "n_#{p.id}",
-        p.device_name,
-        "pnic.png",
-        _("Physical NIC: %{name}") % {:name => p.device_name}
-      )
-    end
-  end
-
-  def add_lans(switch)
-    switch.lans.collect do |l|
-      lan_node = TreeNodeBuilder.generic_tree_node(
-        "l_#{l.id}",
-        l.name,
-        "lan.png",
-        _("Port Group: %{name}") % {:name => l.name}
-      )
-      lan_node[:children] = add_vm_nodes(l) if l.respond_to?("vms_and_templates") &&
-                                               l.vms_and_templates.length > 0
-      lan_node
-    end
-  end
-
-  def add_vm_nodes(lan)
-    lan.vms_and_templates.sort_by { |l| l.name.downcase }.collect do |v|
-      if v.authorized_for_user?(session[:userid])
-        @tree_vms.push(v) unless @tree_vms.include?(v)
-        if v.template?
-          image = v.host ? "template.png" : "template-no-host.png"
-        else
-          image = "#{v.current_state.downcase}.png"
-        end
-        TreeNodeBuilder.generic_tree_node(
-          "v-#{v.id}",
-          v.name,
-          image,
-          _("VM: %{name} (Click to view)") % {:name => v.name}
-        )
-      end
-    end
   end
 
   # Validate the host record fields

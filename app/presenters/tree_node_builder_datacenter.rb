@@ -29,4 +29,12 @@ class TreeNodeBuilderDatacenter < TreeNodeBuilder
     icon = options[:type] == :vat ? "blue_folder.png" : "folder.png"
     generic_node(object.name, icon, "Folder: #{object.name}")
   end
+
+  def vm_node(object)
+    image = "currentstate-#{object.normalized_state.downcase}.png"
+    if object.template?
+      image = object.host ? "template.png" : "template-no-host.png"
+    end
+    generic_node(object.name, image, _("VM: %{name}") % {:name => object.name})
+  end
 end

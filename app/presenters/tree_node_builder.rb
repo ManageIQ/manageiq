@@ -84,17 +84,18 @@ class TreeNodeBuilder
     when DialogField          then generic_node(object.label, "dialog_field.png")
     when EmsFolder            then ems_folder_node
     when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
-    when GuestDevice          then generic_node(object.device_name,
-                                                "sa_#{object.controller_type.downcase}.png",
-                                                _("%{type} Storage Adapter: %{name}") %
-                                                  {:type => object.controller_type, :name => object.device_name})
+    when GuestDevice          then guest_node(object)
     when Host                 then generic_node(object.name,
                                                 "host.png",
                                                 "#{ui_lookup(:table => "host")}: #{object.name}")
     when IsoDatastore         then generic_node(object.name, "isodatastore.png")
     when IsoImage             then generic_node(object.name, "isoimage.png")
     when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
-    when Vm                   then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
+
+    when Vm                   then vm_node(object)
+    when Lan                  then generic_node(object.name,
+                                                "lan.png",
+                                                _("Port Group: %{name}") % {:name => object.name})
     when LdapDomain           then generic_node(_("Domain: %{domain_name}") % {:domain_name => object.name},
                                                 "ldap_domain.png",
                                                 _("LDAP Domain: %{ldap_domain_name}") % {:ldap_domain_name => object.name})
@@ -137,6 +138,9 @@ class TreeNodeBuilder
     when ServiceTemplate      then service_template_node
     when ServiceTemplateCatalog then service_template_catalog_node
     when Storage              then generic_node(object.name, "storage.png")
+    when Switch               then generic_node(object.name,
+                                                "switch.png",
+                                                _("Switch: %{name}") % {:name => object.name})
     when User                 then generic_node(object.name, "user.png")
     when MiqSearch            then generic_node(object.description,
                                                 "filter.png",
@@ -193,6 +197,17 @@ class TreeNodeBuilder
   def normal_folder_node
     icon = options[:type] == :vandt ? "blue_folder.png" : "folder.png"
     generic_node(object.name, icon, _("Folder: %{folder_name}") % {:folder_name => object.name})
+  end
+
+  def guest_node(object)
+    if object.device_type == "ethernet"
+      generic_node(object.device_name, "pnic.png", _("Physical NIC: %{name}") % {:name => object.device_name})
+    else
+      generic_node(object.device_name,
+                   "sa_#{object.controller_type.downcase}.png",
+                   _("%{type} Storage Adapter: %{name}") % {:type => object.controller_type,
+                                                            :name => object.device_name})
+    end
   end
 
   def hash_node
@@ -255,6 +270,14 @@ class TreeNodeBuilder
     }
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)
+  end
+
+  def vm_node(object)
+    image = "currentstate-#{object.normalized_state.downcase}.png"
+    if object.template?
+      image = object.host ? "template.png" : "template-no-host.png"
+    end
+    generic_node(object.name, image, _("VM: %{name} (Click to view)") % {:name => object.name})
   end
 
   def image_for_node(object, image)

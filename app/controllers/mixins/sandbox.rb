@@ -57,6 +57,7 @@ module Sandbox
     instances_filter_tree
     instances_tree
     iso_datastores_tree
+    network_tree
     old_dialogs_tree
     ot_tree
     network_tree
