@@ -738,7 +738,7 @@ function miqChartMenuClick(itemId) {
   }
 }
 
-function miqRESTAjaxButton(url, button, data) {
+function miqRESTAjaxButton(url, button, dataType, data) {
   var form = $(button).parents('form:first')[0];
   if (form) {
     $(form).submit(function(e) {
@@ -751,10 +751,11 @@ function miqRESTAjaxButton(url, button, data) {
     else {
       formData = $(form).serialize();
     }
-    miqJqueryRequest(form.action, {
+    return miqJqueryRequest(form.action, {
       beforeSend: true,
       complete: true,
-      data: formData
+      data: formData,
+      dataType: dataType
     });
   } else {
     miqAjaxButton(url, true);
