@@ -30,7 +30,7 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream
     @start_time ||= (Time.current - 1.minute).to_i * 1000
     $mw_log.debug "Catching Events since [#{@start_time}]"
 
-    new_events = @alerts_client.list_events("startTime" => @start_time)
+    new_events = @alerts_client.list_events("startTime" => @start_time, "tags" => "miq.event_type|*", "thin" => true)
     @start_time = new_events.max_by(&:ctime).ctime + 1 unless new_events.empty? # add 1 ms to avoid dups with GTE filter
     new_events
   rescue => err

@@ -108,10 +108,8 @@ class EmsEvent < EventStream
 
     # Write the event
     new_event = create_event(event_hash)
-
     # Create a 'completed task' event if this is the last in a series of events
     create_completed_event(event_hash) if task_final_events.key?(event_type.to_sym)
-
     new_event
   end
 
@@ -168,8 +166,8 @@ class EmsEvent < EventStream
       unless klass.nil?
         process_object_in_event!(klass, event, :ems_ref_key => :middleware_ref)
       end
-      event.except!(:middleware_ref, :middleware_type)
     end
+    event.except!(:middleware_ref, :middleware_type)
   end
 
   def self.process_availability_zone_in_event!(event, options = {})

@@ -33,7 +33,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream 
           subject.stop
         end
         expect(result.count).to be == 1
-        expect(result[0].category).to eq 'Hawkular Deployment'
+        expect(result[0].tags['miq.event_type']).to eq 'hawkular_event.critical'
       end
     end
   end
