@@ -181,6 +181,7 @@ module UiConstants
       :containerservice                         => "list",
       :containerroute                           => "list",
       :containerproject                         => "list",
+      :containerreplicator                      => "list",
       :containerimage                           => "list",
       :containerimageregistry                   => "list",
       :persistentvolume                         => "list",
