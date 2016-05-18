@@ -46,7 +46,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       host_default_vnc_port_end: '',
       event_stream_selection: '',
       bearer_token_exists: false,
-      ems_controller: ''
+      ems_controller: '',
+      default_auth_status: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
     $scope.formId = emsCommonFormId;
@@ -55,6 +56,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.formFieldsUrl = $attrs.formFieldsUrl;
     $scope.createUrl = $attrs.createUrl;
     $scope.updateUrl = $attrs.updateUrl;
+    $scope.checkAuthentication = true;
+
     $scope.model = 'emsCommonModel';
 
     ManageIQ.angular.scope = $scope;
@@ -72,8 +75,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.hawkular_api_port               = 443;
         $scope.emsCommonModel.api_version                     = 'v2';
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
-
         $scope.emsCommonModel.ems_controller == 'ems_container' ? $scope.emsCommonModel.default_api_port = 8443 : $scope.emsCommonModel.default_api_port = 5000;
+        $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -126,6 +129,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.bearer_token_exists             = data.bearer_token_exists;
 
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
+        $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
 
         if ($scope.emsCommonModel.default_userid != '') {
           $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
@@ -300,8 +304,15 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
   $scope.validateClicked = function($event, credType, url, formSubmit) {
     miqService.validateWithREST($event, credType, url, formSubmit)
       .then(function success(data) {
-        miqService.miqFlash(data.level, data.message);
-        miqSparkleOff();
+        $scope.$apply(function() {
+          if(data.level == "error") {
+            $scope.emsCommonModel.default_auth_status = false;
+          } else {
+            $scope.emsCommonModel.default_auth_status = true;
+          }
+          miqService.miqFlash(data.level, data.message);
+          miqSparkleOff();
+        });
       });
   };
 
