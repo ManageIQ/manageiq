@@ -121,7 +121,7 @@ class TreeBuilder
     when :cb_reports_tree               then [_("Saved Chargeback Reports"),       _("Saved Chargeback Reports")]
     when :containers_tree               then [_("All Containers"),                 _("All Containers")]
     when :containers_filter_tree        then [_("All Containers"),                 _("All Containers")]
-    when :configuration_scripts_tree         then [_("All Ansible Job Templates"),      _("All Ansible Job Templates")]
+    when :configuration_scripts_tree    then [_("All Ansible Job Templates"),      _("All Ansible Job Templates")]
     when :cs_filter_tree                then [_("All Configured Systems"),         _("All Configured Systems")]
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => 'CustomizationTemplate')} - #{ui_lookup(:models => 'PxeImageType')}"
@@ -445,12 +445,12 @@ class TreeBuilder
     "aei" => "MiqAeInstance",
     "aem" => "MiqAeMethod",
     "aen" => "MiqAeNamespace",
-    "jt " => "ConfigurationScript",
     "al"  => "MiqAlert",
     "ap"  => "MiqAlertSet",
     "az"  => "AvailabilityZone",
     "azu" => "OrchestrationTemplateAzure",
     "at"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
+    "cf " => "ConfigurationScript",
     "cnt" => "Container",
     "co"  => "Condition",
     "cbg" => "CustomButtonSet",

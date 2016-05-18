@@ -96,10 +96,9 @@ class ApplicationHelper::ToolbarChooser
         end
       elsif @layout == "miq_policy_rsop"
         return session[:rsop_tree] ? "miq_policy_rsop_center_tb" : "blank_view_tb"
-      elsif @layout == "provider_foreman"
-        if x_active_tree == :configuration_manager_providers_tree || :cs_filter_tree || :configuration_scripts_tree
-          return center_toolbar_filename_configuration_manager_providers
-        end
+      elsif @layout == "provider_foreman" && (x_active_tree == :configuration_manager_providers_tree ||
+        x_active_tree == :cs_filter_tree || x_active_tree == :configuration_scripts_tree)
+        return center_toolbar_filename_configuration_manager_providers
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
