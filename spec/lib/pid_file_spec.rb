@@ -78,6 +78,11 @@ describe PidFile do
         expect(@pid_file.running?).to be_falsey
       end
 
+      it "returns false if MiqProcess.command_line returns an empty string" do
+        allow(MiqProcess).to receive(:command_line).and_return("")
+        expect(@pid_file.running?).to be_falsey
+      end
+
       context "MiqProcess.command_line returns valid value" do
         before(:each) do
           @cmd_line = "my favorite program"
