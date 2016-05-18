@@ -1,7 +1,7 @@
 class MiqAeDomain < MiqAeNamespace
   default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
   validates_inclusion_of :parent_id, :in => [nil], :message => 'should be nil for Domain'
-  
+
   validates_presence_of :tenant, :message => "object is needed to own the domain"
   after_destroy :squeeze_priorities
   default_value_for :system,  false
@@ -53,12 +53,16 @@ class MiqAeDomain < MiqAeNamespace
     version_field.try(:fetch_path, 'field', 'default_value')
   end
 
-  def self.import_git_repo(domain_name, git_repo, ref = DEFAULT_BRANCH, ref_type = BRANCH)
-    MiqAeDomain.find_by(:name => domain_name).try(:destroy)
-    MiqAeImport.new(domain_name, import_options(git_repo, ref, ref_type)).import
-    domain = MiqAeDomain.find_by(:name => domain_name)
-    raise MiqAeException::DomainNotFound, "Domain #{domain_name} not found after import" unless domain
-    domain.update_git_info(git_repo, ref, ref_type)
+  def self.import_git_repo(options)
+    git_repo = GitRepository.find(options['git_repository_id'])
+    raise "Git repository with id #{options['git_repository_id']} not found" unless git_repo
+
+    MiqAeDomain.find_by(:name => options['domain']).try(:destroy) if options['domain']
+    import_options(git_repo, options)
+    domain = Array.wrap(MiqAeImport.new(options['domain'] || '*', options).import).first
+    raise MiqAeException::DomainNotFound, "Import of domain failed" unless domain
+    domain.update_git_info(git_repo, options['ref'], options['ref_type'])
+    domain
   end
 
   def update_git_info(git_repo, ref, ref_type)
@@ -117,15 +121,19 @@ class MiqAeDomain < MiqAeNamespace
     File.join(MiqAeDatastore::DATASTORE_DIRECTORY, "#{about.fqname}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME) if about
   end
 
-  def self.import_options(git_repo, ref, ref_type)
-    options = {'git_dir' => git_repo.directory_name, 'preview' => false}
-    case ref_type
+  def self.import_options(git_repo, options)
+    options['git_dir'] = git_repo.directory_name
+    options['preview'] ||= false
+    options['ref'] ||= DEFAULT_BRANCH
+    options['ref_type'] ||= BRANCH
+    options['ref_type'] = options['ref_type'].downcase
+
+    case options['ref_type']
     when BRANCH
-      options['branch'] = ref
+      options['branch'] = options['ref']
     when TAG
-      options['tag'] = ref
+      options['tag'] = options['ref']
     end
-    options
   end
 
   private_class_method :import_options
