@@ -44,7 +44,7 @@ module CloudObjectStoreContainerHelper::TextualSummary
     h = {:label => label, :image => "cloud_object_store_object", :value => num}
     if num > 0 && role_allows(:feature => "cloud_object_store_object_show_list")
       h[:title] = _("Show this Cloud Object Store's child %{children}") % {:children => label}
-      h[:link]  = url_for(:controller => 'cloud_object_store_object', :action => 'show_list')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_object_store_objects')
     end
     h
   end
