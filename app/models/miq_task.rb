@@ -140,6 +140,32 @@ class MiqTask < ApplicationRecord
     update_attributes(:state => STATE_FINISHED)
   end
 
+  def human_status
+    case state
+    when STATE_INITIALIZED
+      return "Initialized"
+    when STATE_QUEUED
+      return "Queued"
+    when STATE_ACTIVE
+      return "Running"
+    when STATE_FINISHED
+      case status
+      when STATUS_OK
+        return "Complete"
+      when STATUS_WARNING
+        return "Finished with Warnings"
+      when STATUS_ERROR
+        return "Error"
+      when STATUS_TIMEOUT
+        return "Timed Out"
+      else
+        raise _("Unknown status of: %{task_status}") % {:task_status => status.inspect}
+      end
+    else
+      raise _("Unknown state of: %{task_status}") % {:task_status => state.inspect}
+    end
+  end
+
   def queue_callback(state, status, message, result)
     if status.casecmp(STATUS_OK) == 0
       message = MESSAGE_TASK_COMPLETED_SUCCESSFULLY
