@@ -28,12 +28,11 @@ class ManageIQ::Providers::Vmware::InfraManager
 
       when VmOrTemplate
         filtered_data = Hash.new { |h, k| h[k] = {} }
-
         vm_data = vm_inv_by_vm(target)
         unless vm_data.nil?
           filtered_data[:vm] = vm_data
-          filtered_data[:storage] = storage_inv_by_vm_inv(vm_data)
           filtered_data[:host] = host_inv_by_vm_inv(vm_data)
+          filtered_data[:storage] = storage_inv_by_host_inv(filtered_data[:host])
           filtered_data[:dvswitch], filtered_data[:dvportgroup] = dvswitch_and_dvportgroup_inv_by_vm_inv(vm_data)
           filtered_data[:folder], filtered_data[:dc], filtered_data[:cluster], filtered_data[:host_res] =
             ems_metadata_inv_by_vm_inv(vm_data)
@@ -158,20 +157,6 @@ class ManageIQ::Providers::Vmware::InfraManager
       rp_inv = {}
       host_inv.each_key { |host_mor| rp_inv.merge!(rp_inv_by_host_mor(host_mor)) }
       rp_inv
-    end
-
-    ### Collection methods by VM inv
-
-    def storage_inv_by_vm_inv(vm_inv)
-      storage_inv = {}
-      return storage_inv if @vc_data[:storage].empty?
-
-      vm_inv.each_value do |vm_data|
-        get_mors(vm_data, 'datastore').each do |storage_mor|
-          storage_inv[storage_mor] = @vc_data[:storage][storage_mor]
-        end
-      end
-      storage_inv
     end
 
     def host_inv_by_vm_inv(vm_inv)
