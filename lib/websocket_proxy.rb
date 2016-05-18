@@ -61,6 +61,10 @@ class WebsocketProxy
     @ws.write(string)
   end
 
+  def vm_id
+    @console ? @console.vm_id : 'unknown'
+  end
+
   private
 
   def init_ssl
