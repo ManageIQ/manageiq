@@ -136,11 +136,11 @@ module VmCommon
       :connect_src => ["'self'", "#{proto}://#{request.env['HTTP_HOST']}"],
       :img_src     => %w(data: 'self')
     )
-    %i(proto secret url).each { |p| params.require(p) }
+    %i(secret url).each { |p| params.require(p) }
     @secret = j(params[:secret])
     @url = j(params[:url])
 
-    case params[:proto]
+    case j(params[:proto])
     when 'spice'     # spice, vnc - from rhevm
       render(:template => 'vm_common/console_spice', :layout => false)
     when nil, 'vnc'  # nil - from vmware
