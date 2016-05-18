@@ -3,7 +3,6 @@ module Menu
     class << self
       def compute_menu_section
         Menu::Section.new(:compute, N_("Compute"), 'fa product-memory fa-2x', [
-          services_menu_section,
           clouds_menu_section,
           infrastructure_menu_section,
           container_menu_section,
@@ -209,7 +208,7 @@ module Menu
 
       def default_menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
-        [cloud_inteligence_menu_section, compute_menu_section, configuration_menu_section,
+        [cloud_inteligence_menu_section, services_menu_section, compute_menu_section, configuration_menu_section,
          network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
          automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
