@@ -133,13 +133,13 @@ module MiqServer::WorkerManagement::Monitor
         sync_message = "sync_active_roles"
       end
 
+      sync_config                if config_changed
       set_assigned_roles         if config_changed
       log_role_changes           if roles_changed
       sync_active_roles          if roles_changed
       set_active_role_flags      if roles_changed
       stop_apache                if roles_changed && !apache_needed?
 
-      sync_config                if config_changed
       reset_queue_messages       if config_changed || roles_changed
     end
 
