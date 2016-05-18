@@ -989,7 +989,7 @@ class ApplicationController < ActionController::Base
               item.decorate.try(:listicon_image) if item.decorator_class?
             end
 
-    list_row_image(image || default, item)
+    image || default
   end
 
   def get_host_for_vm(vm)
@@ -2394,10 +2394,6 @@ class ApplicationController < ActionController::Base
 
   def list_row_id(row)
     to_cid(row['id'])
-  end
-
-  def list_row_image(image, _item)
-    image
   end
 
   def render_flash_not_applicable_to_model(type, model_type = "items")
