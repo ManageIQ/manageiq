@@ -11,7 +11,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Resize
       service.resize_server(ems_ref, new_flavor.ems_ref)
     end
     MiqQueue.put(:class_name  => self.class.name,
-                 :expires_on  => Time.now.utc + 4.hours,
+                 :expires_on  => Time.now.utc + 2.hours,
                  :instance_id => id,
                  :method_name => "raw_resize_finish")
   rescue => err
@@ -33,7 +33,8 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Resize
   end
 
   def raw_resize_finish
-    raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 2.minutes) unless validate_resize_confirm
+    refresh_ems
+    raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) unless validate_resize_confirm
     raw_resize_confirm
   end
 

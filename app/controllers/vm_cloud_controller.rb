@@ -61,7 +61,7 @@ class VmCloudController < ApplicationController
         begin
           old_flavor = @record.flavor
           @record.resize(flavor)
-          add_flash(_("Reconfiguring %{instance} \"%{name}\" from %{old_flavor} %{new_flavor}") % {
+          add_flash(_("Reconfiguring %{instance} \"%{name}\" from %{old_flavor} to %{new_flavor}") % {
             :instance   => ui_lookup(:table => 'vm_cloud'),
             :name       => @record.name,
             :old_flavor => old_flavor.name,
