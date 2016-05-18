@@ -56,46 +56,20 @@ class ApiController
       #
       # Initializing REST API environment, called once @ startup
       #
-      def init_env(cfg = VMDB::Config.new("vmdb"))
-        mod  = base_config[:module]
-        name = base_config[:name]
+      def init_env
+        $api_log.info("Initializing Environment for #{base_config[:name]}")
+        @api_user_token_service ||= ApiUserTokenService.new(@config, :log_init => true)
+        log_config
+      end
 
-        $api_log.info("Initializing Environment for #{name}")
-
+      def log_config
         $api_log.info("")
         $api_log.info("Static Configuration")
         base_config.each { |key, val| log_kv(key, val) }
 
         $api_log.info("")
         $api_log.info("Dynamic Configuration")
-        api_config = cfg.config[mod.to_sym].merge(REQUESTER_TTL_CONFIG["ui"] => fetch_ui_token_ttl(cfg))
-        api_config.each { |key, val| log_kv(key, val) }
-
-        new_token_mgr(mod, name, api_config)
-      end
-
-      #
-      # Let's create a new token manager for the API
-      #
-      def new_token_mgr(mod, name, api_config)
-        token_ttl   = api_config[:token_ttl]
-
-        options                          = {}
-        options[:token_ttl]              = token_ttl.to_i_with_method if token_ttl
-        options[REQUESTER_TTL_CONFIG["ui"]] = fetch_ui_token_ttl
-
-        $api_log.info("")
-        $api_log.info("Creating new Token Manager for the #{name}")
-        $api_log.info("   Token Manager  module: #{mod}")
-        $api_log.info("   Token Manager options:")
-        options.each { |key, val| log_kv(key, val, "    ") }
-        $api_log.info("")
-
-        TokenManager.new(mod, options)
-      end
-
-      def fetch_ui_token_ttl(cfg = VMDB::Config.new("vmdb"))
-        cfg.config.fetch_path(:session, :timeout).to_i_with_method
+        @api_user_token_service.api_config.each { |key, val| log_kv(key, val) }
       end
 
       #
