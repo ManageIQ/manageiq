@@ -4,7 +4,7 @@ class ApiController
     # Features Subcollection Supporting Methods
     #
     def features_query_resource(object)
-      object.send("miq_product_features")
+      object.miq_product_features
     end
 
     def features_assign_resource(object, _type, id = nil, data = nil)
