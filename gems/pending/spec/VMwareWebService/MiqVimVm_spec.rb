@@ -135,21 +135,17 @@ describe MiqVimVm do
 
     context "#getScsiCandU" do
       let(:miq_vim_vm) do
-        {"config" => {"hardware" =>
-        {"device" => [{"key" => "1000",
-                       "deviceInfo" => {"label" => "SCSI controller 0", "summary" => "VMware paravirtual SCSI"},
-                       "slotInfo" => {"pciSlotNumber" => "160"},
-                       "controllerKey" => "100",
-                       "unitNumber" => "3",
-                       "busNumber" => "0",
-                       "device" => ["2000"],
-                       "hotAddRemove" => "true",
-                       "sharedBus" => "noSharing",
-                       "scsiCtlrUnitNumber" => "7"},
-                      {"key" => "100",
-                       "deviceInfo" => {"label" => "PCI controller 0", "summary" => "PCI controller 0"},
-                       "busNumber" => "0",
-                       "device" => %w(500 12000 1000 15000 4000)}]}}
+        {
+          "config" => {
+            "hardware" => {
+              "device" => [
+                VimHash.new("VirtualPCIController") do |pci|
+                  pci["key"]       = "100"
+                  pci["busNumber"] = "0"
+                end
+              ]
+            }
+          }
         }
       end
 
@@ -157,31 +153,310 @@ describe MiqVimVm do
         allow(@inv_obj).to receive(:getMoProp).with("vm-100", "config.hardware").and_return(miq_vim_vm)
       end
 
-      it "returns the next available unit number" do
-        allow_any_instance_of(Hash).to receive(:xsiType).and_return("ParaVirtualSCSIController")
-        scsi_controller_hash = @vim_vm.getScsiCandU
-        pci_controller = @inv_obj.getMoProp("vm-100", "config.hardware")["config"]["hardware"]["device"][1]
-        scsi_controller = @inv_obj.getMoProp("vm-100", "config.hardware")["config"]["hardware"]["device"][0]
-
-        expect(pci_controller["key"]).to eq "100"
-        expect(pci_controller["unitNumber"]).to be_nil
-        expect(scsi_controller["controllerKey"]).to eq "100"
-        expect(scsi_controller["unitNumber"]).to eq "3"
-        expect(scsi_controller_hash.class).to eq Array
-        expect(scsi_controller_hash.size).to eq 2
-        expect(scsi_controller_hash[0]).to eq "1000"
-        expect(scsi_controller_hash[1]).to eq 1
+      context "with 0 scsi controllers" do
+        it "returns nil, nil" do
+          controller_key, unit_number = @vim_vm.getScsiCandU
+          expect(controller_key).to be_nil
+          expect(unit_number).to    be_nil
+        end
       end
 
-      it "returns the next available unit number for an LSI controller type" do
-        allow_any_instance_of(Hash).to receive(:xsiType).and_return("VirtualLsiLogicSASController")
-        scsi_controller_hash = @vim_vm.getScsiCandU
-        pci_controller = @inv_obj.getMoProp("vm-100", "config.hardware")["config"]["hardware"]["device"][1]
+      context "with 1 Bus Logic SATA controller" do
+        before(:each) do
+          pci_controller = miq_vim_vm["config"]["hardware"]["device"].detect { |dev| dev["key"] == "100" }
+          pci_controller["device"] = []
 
-        expect(pci_controller["key"]).to eq "100"
-        expect(scsi_controller_hash.size).to eq 2
-        expect(scsi_controller_hash[0]).to eq "1000"
-        expect(scsi_controller_hash[1]).to eq 1
+          bus_logic_controller = VimHash.new("VirtualBusLogicController") do |scsi|
+            scsi["key"]                = "1000"
+            scsi["scsiCtlrUnitNumber"] = "7"
+            scsi["controllerKey"]      = "100"
+            scsi["unitNumber"]         = "0"
+            scsi["busNumber"]          = "0"
+          end
+
+          miq_vim_vm["config"]["hardware"]["device"] << bus_logic_controller
+          pci_controller["device"] << bus_logic_controller["key"]
+        end
+
+        context "with 0 disks" do
+          it "returns the first unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(0)
+          end
+        end
+      end
+
+      context "with 1 Lsi Logic SATA controller" do
+        before(:each) do
+          pci_controller = miq_vim_vm["config"]["hardware"]["device"].detect { |dev| dev["key"] == "100" }
+          pci_controller["device"] = []
+
+          lsi_logic = VimHash.new("VirtualLsiLogicController") do |scsi|
+            scsi["key"]                = "1000"
+            scsi["scsiCtlrUnitNumber"] = "7"
+            scsi["controllerKey"]      = "100"
+            scsi["unitNumber"]         = "3"
+            scsi["busNumber"]          = "0"
+          end
+
+          miq_vim_vm["config"]["hardware"]["device"] << lsi_logic
+          pci_controller["device"] << lsi_logic["key"]
+        end
+
+        context "with 0 disks" do
+          it "returns the first unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(0)
+          end
+        end
+      end
+
+      context "with 1 Lsi Logic SAS controller" do
+        before(:each) do
+          pci_controller = miq_vim_vm["config"]["hardware"]["device"].detect { |dev| dev["key"] == "100" }
+          pci_controller["device"] = []
+
+          lsi_logic_sas = VimHash.new("VirtualLsiLogicSASController") do |scsi|
+            scsi["key"]                = "1000"
+            scsi["scsiCtlrUnitNumber"] = "7"
+            scsi["controllerKey"]      = "100"
+            scsi["unitNumber"]         = "3"
+            scsi["busNumber"]          = "0"
+          end
+
+          miq_vim_vm["config"]["hardware"]["device"] << lsi_logic_sas
+          pci_controller["device"] << lsi_logic_sas["key"]
+        end
+
+        context "with 0 disks" do
+          it "returns the first unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(0)
+          end
+        end
+      end
+
+      context "with 1 pvscsi controller" do
+        before(:each) do
+          pci_controller = miq_vim_vm["config"]["hardware"]["device"].detect { |dev| dev["key"] == "100" }
+          pci_controller["device"] = []
+
+          pvscsi = VimHash.new("ParaVirtualSCSIController") do |scsi|
+            scsi["key"]                = "1000"
+            scsi["deviceInfo"]         = {
+              "label"   => "SCSI controller 0",
+              "summary" => "VMware paravirtual SCSI"
+            }
+            scsi["scsiCtlrUnitNumber"] = "7"
+            scsi["controllerKey"]      = "100"
+            scsi["unitNumber"]         = "3"
+            scsi["busNumber"]          = "0"
+          end
+
+          miq_vim_vm["config"]["hardware"]["device"] << pvscsi
+          pci_controller["device"] << pvscsi["key"]
+        end
+
+        context "with 0 disks" do
+          it "returns the first unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(0)
+          end
+        end
+
+        context "with 1 disk" do
+          before(:each) do
+            scsi_controller = miq_vim_vm["config"]["hardware"]["device"].find { |dev| dev["key"] == "1000" }
+            scsi_controller["device"] = []
+
+            new_disk = VimHash.new("VirtualDisk") do |disk|
+              disk["key"]           = "2000"
+              disk["controllerKey"] = "1000"
+              disk["unitNumber"]    = "0"
+            end
+
+            miq_vim_vm["config"]["hardware"]["device"] << new_disk
+            scsi_controller["device"] << new_disk["key"]
+          end
+
+          it "returns the first available unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(1)
+          end
+        end
+
+        context "with 2 consecutive disks" do
+          before(:each) do
+            scsi_controller = miq_vim_vm["config"]["hardware"]["device"].find { |dev| dev["key"] == "1000" }
+            scsi_controller["device"] = []
+
+            Array.new(2) do |i|
+              new_disk = VimHash.new("VirtualDisk") do |disk|
+                disk["key"]           = "200#{i}"
+                disk["controllerKey"] = "1000"
+                disk["unitNumber"]    = i.to_s
+              end
+
+              miq_vim_vm["config"]["hardware"]["device"] << new_disk
+              scsi_controller["device"] << new_disk["key"]
+            end
+          end
+
+          it "returns the first available unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(2)
+          end
+        end
+
+        context "with 2 non-consecutive disks" do
+          before(:each) do
+            scsi_controller = miq_vim_vm["config"]["hardware"]["device"].find { |dev| dev["key"] == "1000" }
+            scsi_controller["device"] = []
+
+            [0, 2].each do |i|
+              new_disk = VimHash.new("VirtualDisk") do |disk|
+                disk["key"]           = "200#{i}"
+                disk["controllerKey"] = "1000"
+                disk["unitNumber"]    = i.to_s
+              end
+
+              miq_vim_vm["config"]["hardware"]["device"] << new_disk
+              scsi_controller["device"] << new_disk["key"]
+            end
+          end
+
+          it "returns the lowest available unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(1)
+          end
+        end
+
+        context "with 7 consecutive disks" do
+          before(:each) do
+            scsi_controller = miq_vim_vm["config"]["hardware"]["device"].find { |dev| dev["key"] == "1000" }
+            scsi_controller["device"] = []
+
+            [*0..6].each do |i|
+              new_disk = VimHash.new("VirtualDisk") do |disk|
+                disk["key"]           = "200#{i}"
+                disk["controllerKey"] = "1000"
+                disk["unitNumber"]    = i.to_s
+              end
+
+              miq_vim_vm["config"]["hardware"]["device"] << new_disk
+              scsi_controller["device"] << new_disk["key"]
+            end
+          end
+
+          it "skips the scsi controller unit number" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(8)
+          end
+        end
+
+        context "with a full scsi controller" do
+          before(:each) do
+            scsi_controller = miq_vim_vm["config"]["hardware"]["device"].find { |dev| dev["key"] == "1000" }
+            scsi_controller["device"] = []
+
+            [*0..6, *8..15].each do |i|
+              new_disk = VimHash.new("VirtualDisk") do |disk|
+                disk["key"]           = "200#{i}"
+                disk["controllerKey"] = "1000"
+                disk["unitNumber"]    = i.to_s
+              end
+
+              miq_vim_vm["config"]["hardware"]["device"] << new_disk
+              scsi_controller["device"] << new_disk["key"]
+            end
+          end
+
+          it "returns nil, nil" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to be_nil
+            expect(unit_number).to    be_nil
+          end
+        end
+      end
+
+      context "with 2 pvscsi controllers" do
+        before(:each) do
+          pci_controller = miq_vim_vm["config"]["hardware"]["device"].detect { |dev| dev["key"] == "100" }
+          pci_controller["device"] = []
+
+          Array.new(2) do |i|
+            pvscsi = VimHash.new("ParaVirtualSCSIController") do |scsi|
+              scsi["key"]                = "100#{i}"
+              scsi["deviceInfo"]         = {
+                "label"   => "SCSI controller 0",
+                "summary" => "VMware paravirtual SCSI"
+              }
+              scsi["scsiCtlrUnitNumber"] = "7"
+              scsi["controllerKey"]      = "100"
+              scsi["unitNumber"]         = i.to_s
+              scsi["busNumber"]          = "0"
+            end
+
+            miq_vim_vm["config"]["hardware"]["device"] << pvscsi
+            pci_controller["device"] << pvscsi["key"]
+          end
+        end
+
+        context "with 1 free unit on the first controller" do
+          before(:each) do
+            scsi_controller = miq_vim_vm["config"]["hardware"]["device"].find { |dev| dev["key"] == "1000" }
+            scsi_controller["device"] = []
+
+            [*0..6, *9..15].each do |i|
+              new_disk = VimHash.new("VirtualDisk") do |disk|
+                disk["key"]           = "200#{i}"
+                disk["controllerKey"] = "1000"
+                disk["unitNumber"]    = i.to_s
+              end
+
+              miq_vim_vm["config"]["hardware"]["device"] << new_disk
+              scsi_controller["device"] << new_disk["key"]
+            end
+          end
+
+          it "picks the free unit on the first controller" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1000")
+            expect(unit_number).to    eq(8)
+          end
+        end
+
+        context "with the first controller full" do
+          before(:each) do
+            scsi_controller = miq_vim_vm["config"]["hardware"]["device"].find { |dev| dev["key"] == "1000" }
+            scsi_controller["device"] = []
+
+            [*0..6, *8..15].each do |i|
+              new_disk = VimHash.new("VirtualDisk") do |disk|
+                disk["key"]           = "200#{i}"
+                disk["controllerKey"] = "1000"
+                disk["unitNumber"]    = i.to_s
+              end
+
+              miq_vim_vm["config"]["hardware"]["device"] << new_disk
+              scsi_controller["device"] << new_disk["key"]
+            end
+          end
+
+          it "picks the first unit on the second controller" do
+            controller_key, unit_number = @vim_vm.getScsiCandU
+            expect(controller_key).to eq("1001")
+            expect(unit_number).to    eq(0)
+          end
+        end
       end
     end
   end
