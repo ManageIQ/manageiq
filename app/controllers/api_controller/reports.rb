@@ -4,7 +4,7 @@ class ApiController
     # Reports Supporting Methods
     #
     def results_query_resource(object)
-      object.send("miq_report_results")
+      object.miq_report_results
     end
 
     def show_reports
