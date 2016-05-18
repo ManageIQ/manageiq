@@ -21,6 +21,6 @@ class TreeBuilderConfigurationManagerConfigurationScripts < TreeBuilder
 
   def x_get_tree_cmat_kids(object, count_only)
     count_only_or_objects(count_only,
-                          rbac_filtered_objects( ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript.where(:manager_id => object.id)), "name")
+                          rbac_filtered_objects(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript.where(:manager_id => object.id)), "name")
   end
 end

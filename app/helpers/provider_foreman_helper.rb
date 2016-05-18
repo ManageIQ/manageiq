@@ -248,5 +248,4 @@ module ProviderForemanHelper
     %i(configuration_script_medium
        configuration_script_partition_table)
   end
-
 end
