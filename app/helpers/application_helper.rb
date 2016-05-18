@@ -330,6 +330,8 @@ module ApplicationHelper
       action = "diagnostics_worker_selected"
     when "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
       controller = request.parameters[:controller]
+    when "ContainerVolume"
+      controller = "persistent_volume"
     when /^ManageIQ::Providers::(\w+)Manager$/
       controller = "ems_#{$1.underscore}"
     when /^ManageIQ::Providers::(\w+)Manager::(\w+)$/
