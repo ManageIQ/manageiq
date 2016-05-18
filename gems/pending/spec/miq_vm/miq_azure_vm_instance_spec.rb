@@ -12,8 +12,8 @@ describe MiqAzureVm do
     @client_id               = @test_env[:azure_client_id]
     @client_key              = @test_env[:azure_client_key]
     @tenant_id               = @test_env[:azure_tenant_id]
-    @instance_name           = "miq-test-rhel1"
-    @instance_resource_group = "miq-azure-test1" 
+    @instance_name           = @test_env[:instance_name]
+    @instance_resource_group = @test_env[:instance_resource_group]
 
     @test_env.ensure_recording_dir_exists
   end
@@ -74,7 +74,7 @@ describe MiqAzureVm do
       let(:expected_num_roots)    { 1 }
       let(:expected_guest_os)     { "Linux" }
       let(:expected_num_fs)       { 1 }
-      let(:expected_num_fs_types) { ["XFS"] }
+      let(:expected_num_fs_types) { ["Ext4"] }
       let(:expected_mount_points) { ["/"] }
     end
   end
