@@ -75,7 +75,7 @@ module Mixins
         add_flash(_("Credential validation was not successful: %{details}") % {:details => details}, :error)
       end
 
-      render_flash
+      render :json => {:message => @flash_array.last(1)[0][:message], :level => @flash_array.last(1)[0][:level]}
     end
 
     def create

@@ -51,7 +51,6 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
     $scope.formId = emsCommonFormId;
     $scope.afterGet = false;
-    $scope.validateClicked = miqService.validateWithREST;
     $scope.modelCopy = angular.copy( $scope.emsCommonModel );
     $scope.formFieldsUrl = $attrs.formFieldsUrl;
     $scope.createUrl = $attrs.createUrl;
@@ -296,6 +295,14 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos') {
       $scope.note = $scope.realmNote;
     }
+  };
+
+  $scope.validateClicked = function($event, credType, url, formSubmit) {
+    miqService.validateWithREST($event, credType, url, formSubmit)
+      .then(function success(data) {
+        miqService.miqFlash(data.level, data.message);
+        miqSparkleOff();
+      });
   };
 
   init();
