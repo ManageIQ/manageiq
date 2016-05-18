@@ -70,7 +70,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
 
   def event_monitor_options
     @event_monitor_options ||= begin
-      opts = {:ems => self}
+      opts = {:ems => self, :automatic_recovery => false, :recover_from_connection_close => false}
 
       ceilometer = connection_configuration_by_role("ceilometer")
 

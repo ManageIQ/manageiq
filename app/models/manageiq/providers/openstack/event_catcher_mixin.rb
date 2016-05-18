@@ -4,12 +4,15 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
     require 'openstack/openstack_event_monitor'
     unless @event_monitor_handle
       options = @ems.event_monitor_options
-      options[:topics]     = worker_settings[:topics]
-      options[:duration]   = worker_settings[:duration]
-      options[:capacity]   = worker_settings[:capacity]
-      options[:heartbeat]  = worker_settings[:amqp_heartbeat]
-      options[:ceilometer] = worker_settings[:ceilometer]
-      options[:ems]        = @ems
+      options[:topics]                        = worker_settings[:topics]
+      options[:duration]                      = worker_settings[:duration]
+      options[:capacity]                      = worker_settings[:capacity]
+      options[:heartbeat]                     = worker_settings[:amqp_heartbeat]
+      options[:ceilometer]                    = worker_settings[:ceilometer]
+      options[:automatic_recovery]            = true
+      options[:recover_from_connection_close] = true
+      options[:recovery_attempts]             = worker_settings[:amqp_recovery_attempts]
+      options[:ems]                           = @ems
 
       options[:client_ip] = server.ipaddress
       @event_monitor_handle = OpenstackEventMonitor.new(options)
