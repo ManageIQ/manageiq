@@ -907,6 +907,20 @@ function miqAjaxAuth(url) {
   });
 }
 
+// Send SSO login authentication via ajax
+function miqAjaxAuthSso(url) {
+  miqEnableLoginFields(false);
+  miqSparkleOn();
+
+  // Note: /dashboard/kerberos_authenticate creates an API token
+  //       based on the authenticated external user
+  //       and stores it in sessionStore.miq_token
+
+  miqJqueryRequest(url || '/dashboard/kerberos_authenticate', {
+    beforeSend: true,
+  });
+}
+
 // add a flash message to an existing #flash_msg_div
 // levels are error, warning, info, success
 function add_flash(msg, level, options) {

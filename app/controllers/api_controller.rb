@@ -116,11 +116,6 @@ class ApiController < ApplicationController
   ID_ATTRS = %w(href id)
 
   #
-  # Requester type token ttl's for authentication
-  #
-  REQUESTER_TTL_CONFIG = {"ui" => :ui_token_ttl}
-
-  #
   # To skip CSRF token verification as API clients would
   # not have these. They would instead dealing with the /api/auth
   # mechanism.
@@ -140,7 +135,7 @@ class ApiController < ApplicationController
     @prefix          = "/#{@module}"
     @req             = {}      # To store API request details by parse_api_request
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
-    @api_token_mgr   = TokenManager.new(@module)
+    @api_user_token_service = ApiUserTokenService.new(@config)
   end
 
   #

@@ -14,6 +14,11 @@
         = render(:partial => "layouts/spinner",
                  :locals  => {:login => true})
 
+        #invalid_sso_credentials_flash{:style => "display: none"}
+          #flash_text_div{:title => "Click to remove message"}
+            .alert.alert-danger
+              %span.pficon.pficon-error-circle-o
+              %strong= _("Invalid Single Sign-On credentials")
         = render :partial => "layouts/flash_msg"
 
         - if ext_auth?(:saml_enabled)
@@ -101,7 +106,7 @@
                       :alt                   => "SSO Login",
                       :title                 => _("SSO Login"),
                       :style                 => "display: none;",
-                      :onclick              => "miqAjaxAuth('#{j sso_url}'); return false;")
+                      :onclick              => "miqAjaxAuthSso('#{j sso_url}'); return false;")
 
     .col-md-6.col-lg-7.details
       - if get_vmdb_config[:session][:show_login_info]

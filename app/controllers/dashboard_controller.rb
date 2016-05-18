@@ -499,11 +499,11 @@ class DashboardController < ApplicationController
       @user_name = params[:user_name] = request.headers["X-Remote-User"].split("@").first
     end
 
-    authenticate
+    authenticate(true)
   end
 
   # Handle user credentials from login screen
-  def authenticate
+  def authenticate(require_api_token = false)
     @layout = "dashboard"
 
     unless params[:task_id] # First time thru, check for buttons pressed
@@ -556,8 +556,10 @@ class DashboardController < ApplicationController
     when :wait_for_task
       # noop, page content already set by initiate_wait_for_task
     when :pass
+      miq_api_token = require_api_token ? generate_ui_api_token(user[:name]) : nil
       render :update do |page|
         page << javascript_prologue
+        page << "sessionStorage.miq_token = '#{j_str miq_api_token}';" if miq_api_token
         page.redirect_to(validation.url)
       end
     when :fail
@@ -571,6 +573,11 @@ class DashboardController < ApplicationController
         page << "miqEnableLoginFields(true);"
       end
     end
+  end
+
+  def generate_ui_api_token(userid)
+    @api_user_token_service ||= ApiUserTokenService.new
+    @api_user_token_service.generate_token(userid, "ui")
   end
 
   def timeline
