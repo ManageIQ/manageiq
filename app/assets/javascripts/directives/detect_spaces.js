@@ -2,25 +2,14 @@ ManageIQ.angular.app.directive('detectSpaces', function() {
   return {
     require: 'ngModel',
     link: function (scope, elem, attrs, ctrl) {
-      scope.$watch(attrs.ngModel, function() {
-        if((ctrl.$modelValue != undefined)) {
-          setValidityForSpaces(ctrl, ctrl.$modelValue);
+      ctrl.$validators.detectedSpaces = function (modelValue, viewValue) {
+        if (angular.isDefined(viewValue) && !detectedSpaces(viewValue)) {
+          return true;
         }
-      });
-      ctrl.$parsers.push(function(value) {
-        setValidityForSpaces(ctrl, value);
-        return value;
-      });
-
-      var setValidityForSpaces = function(ctrl, value) {
-        if(hasWhiteSpace(value)) {
-          ctrl.$setValidity("detectedSpaces", false);
-        } else {
-          ctrl.$setValidity("detectedSpaces", true);
-        }
+        return false;
       };
 
-      var hasWhiteSpace = function(s) {
+      var detectedSpaces = function(s) {
         return /\s/g.test(s);
       }
     }

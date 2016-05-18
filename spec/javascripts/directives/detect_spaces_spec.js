@@ -16,15 +16,15 @@ describe('detectSpaces initialization', function() {
 
   describe('detect-spaces', function() {
     it('sets the form to invalid if hostname has spaces in it', function() {
-      $scope.emsCommonModel = {'hostname': ''};
-      angularForm.hostname.$setViewValue('test.com ');
+      angularForm.hostname.$setViewValue('test. com');
+      expect(angularForm.hostname.$error.detectedSpaces).toBeDefined();
       expect(angularForm.hostname.$valid).toBeFalsy();
       expect(angularForm.$invalid).toBeTruthy();
     });
 
     it('sets the form to valid if hostname does not have spaces in it', function() {
-      $scope.emsCommonModel = {'hostname': ''};
       angularForm.hostname.$setViewValue('test.com');
+      expect(angularForm.hostname.$error.detectedSpaces).not.toBeDefined();
       expect(angularForm.hostname.$valid).toBeTruthy();
       expect(angularForm.$invalid).toBeFalsy();
     });
