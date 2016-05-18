@@ -3,7 +3,6 @@ module Menu
     class << self
       def compute_menu_section
         Menu::Section.new(:compute, N_("Compute"), 'fa product-memory fa-2x', [
-          services_menu_section,
           clouds_menu_section,
           infrastructure_menu_section,
           container_menu_section,
@@ -37,7 +36,7 @@ module Menu
       end
 
       def services_menu_section
-        Menu::Section.new(:svc, N_("Services"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:svc, N_("Services"), 'fa pficon-service fa-2x', [
           Menu::Item.new('services',       N_('My Services'), 'service',             {:feature => 'service', :any => true},             '/service/explorer'),
           Menu::Item.new('catalogs',       N_('Catalogs'),    'catalog',             {:feature => 'catalog', :any => true},             '/catalog/explorer'),
           Menu::Item.new('vm_or_template', N_('Workloads'),   'vm_explorer_accords', {:feature => 'vm_explorer_accords', :any => true}, '/vm_or_template/explorer'),
@@ -209,7 +208,7 @@ module Menu
 
       def default_menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
-        [cloud_inteligence_menu_section, compute_menu_section, configuration_menu_section,
+        [cloud_inteligence_menu_section, services_menu_section, compute_menu_section, configuration_menu_section,
          network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
          automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
