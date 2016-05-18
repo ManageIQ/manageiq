@@ -1,7 +1,7 @@
 module Openstack
   module RefreshSpecEnvironments
     def allowed_enviroments
-      [:grizzly, :havana, :icehouse, :juno, :kilo, :kilo_keystone_v3, :liberty]
+      [:grizzly, :havana, :icehouse, :juno, :kilo, :kilo_keystone_v3, :liberty, :liberty_keystone_v3]
     end
 
     def networking_service
@@ -15,7 +15,7 @@ module Openstack
 
     def identity_service
       case @environment
-      when :kilo_keystone_v3
+      when :kilo_keystone_v3, :liberty_keystone_v3
         :v3
       else
         :v2
@@ -24,7 +24,7 @@ module Openstack
 
     def environment_release_number
       case @environment
-      when :liberty
+      when :liberty, :liberty_keystone_v3
         8
       when :kilo, :kilo_keystone_v3
         7
