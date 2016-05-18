@@ -212,6 +212,8 @@ module Mixins
         service_account = @ems.authentication_token
       end
 
+      default_auth_status = @ems.authentication_status_ok?
+
       render :json => {:name                            => @ems.name,
                        :emstype                         => @ems.emstype,
                        :zone                            => zone,
@@ -237,7 +239,8 @@ module Mixins
                        :project                         => project ? project : "",
                        :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
                        :event_stream_selection          => retrieve_event_stream_selection,
-                       :ems_controller                  => controller_name
+                       :ems_controller                  => controller_name,
+                       :default_auth_status             => default_auth_status
       } if controller_name == "ems_cloud" || controller_name == "ems_network"
 
       render :json => {:name                        => @ems.name,
