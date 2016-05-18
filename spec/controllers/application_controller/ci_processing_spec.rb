@@ -167,15 +167,40 @@ describe ApplicationController do
   end
 
   describe "#ownership_build_screen" do
+    let(:child_role)                     { FactoryGirl.create(:miq_user_role, :name => "Role_1") }
+    let(:grand_child_tenant_role)        { FactoryGirl.create(:miq_user_role, :name => "Role_2") }
+    let(:great_grand_child_tenant_role)  { FactoryGirl.create(:miq_user_role, :name => "Role_3") }
+
+    let(:child_tenant)             { FactoryGirl.create(:tenant) }
+    let(:grand_child_tenant)       { FactoryGirl.create(:tenant, :parent => child_tenant) }
+    let(:great_grand_child_tenant) { FactoryGirl.create(:tenant, :parent => grand_child_tenant) }
+
+    let(:child_group) do
+      FactoryGirl.create(:miq_group, :description => "Child group", :role => child_role, :tenant => child_tenant)
+    end
+
+    let(:grand_child_group) do
+      FactoryGirl.create(:miq_group, :description => "Grand child group", :role => grand_child_tenant_role,
+                                     :tenant => grand_child_tenant)
+    end
+
+    let(:great_grand_child_group) do
+      FactoryGirl.create(:miq_group, :description => "Great Grand Child group", :role => great_grand_child_tenant_role,
+                                     :tenant => great_grand_child_tenant)
+    end
+
+    let!(:admin_user)             { FactoryGirl.create(:user_admin) }
+    let!(:child_user)             { FactoryGirl.create(:user, :miq_groups => [child_group]) }
+    let!(:grand_child_user)       { FactoryGirl.create(:user, :miq_groups => [grand_child_group]) }
+    let!(:great_grand_child_user) { FactoryGirl.create(:user, :miq_groups => [great_grand_child_group]) }
+
     before do
-      @admin_user = FactoryGirl.create(:user_admin)
-      @user = FactoryGirl.create(:user_with_group)
       @vm_or_template = FactoryGirl.create(:vm_or_template)
       @edit = {:ownership_items => [@vm_or_template.id], :klass => VmOrTemplate, :new => {:user => nil}}
     end
 
     it "lists all groups when (admin user is logged)" do
-      login_as(@admin_user)
+      login_as(admin_user)
       controller.instance_variable_set(:@edit, @edit)
       controller.ownership_build_screen
       groups = controller.instance_variable_get(:@groups)
@@ -183,27 +208,29 @@ describe ApplicationController do
     end
 
     it "lists all users when (admin user is logged)" do
-      login_as(@admin_user)
+      login_as(admin_user)
       controller.instance_variable_set(:@edit, @edit)
       controller.ownership_build_screen
       users = controller.instance_variable_get(:@users)
       expect(users.count).to eq(User.all.count)
     end
 
-    it "lists users from current user's groups (non-admin user is logged)" do
-      login_as(@user)
+    it "lists users in the tenant that the user belongs to and the users in the tenants below" do
+      login_as(grand_child_user)
       controller.instance_variable_set(:@edit, @edit)
       controller.ownership_build_screen
       users = controller.instance_variable_get(:@users)
-      expect(users.count).to eq(1)
+      expected_ids = [great_grand_child_tenant.user_ids, grand_child_tenant.user_ids].flatten
+      expect(expected_ids).to match_array(users.values(&:id).map(&:to_i))
     end
 
-    it "lists user's groups (non-admin user is logged)" do
-      login_as(@user)
+    it "lists all groups that are related to descendants tenats strategy" do
+      login_as(grand_child_user)
       controller.instance_variable_set(:@edit, @edit)
       controller.ownership_build_screen
       groups = controller.instance_variable_get(:@groups)
-      expect(groups.count).to eq(1)
+      expected_ids = [great_grand_child_tenant.miq_group_ids, grand_child_tenant.miq_group_ids].flatten
+      expect(expected_ids).to match_array(groups.values(&:id).map(&:to_i))
     end
   end
 end

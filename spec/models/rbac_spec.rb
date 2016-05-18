@@ -237,8 +237,8 @@ describe Rbac do
   end
 
   context "common setup" do
-    let(:group) { FactoryGirl.create(:miq_group) }
-    let(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
+    let(:group) { FactoryGirl.create(:miq_group, :tenant => default_tenant) }
+    let(:user)  { FactoryGirl.create(:user, :miq_groups => [group]) }
 
     before(:each) do
       @tags = {
@@ -1145,7 +1145,7 @@ describe Rbac do
                                                 :miq_group      => group,
                                                 :results_format => :objects)
         expect(results.length).to eq(2)
-        expect(attrs[:total_count]).to eq(2)
+        expect(attrs[:total_count]).to eq(3)
       end
     end
 

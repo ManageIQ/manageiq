@@ -79,7 +79,7 @@ module ApplicationController::CiProcessing
   # Build the ownership assignment screen
   def ownership_build_screen
     @users = {}   # Users array for first chooser
-    User.with_current_user_groups.each { |u| @users[u.name] = u.id.to_s }
+    rbac_filtered_objects(User).each { |u| @users[u.name] = u.id.to_s }
     record = @edit[:klass].find(@edit[:ownership_items][0])
     user = record.evm_owner if @edit[:ownership_items].length == 1
     @edit[:new][:user] = user ? user.id.to_s : nil            # Set to first category, if not already set
@@ -88,7 +88,7 @@ module ApplicationController::CiProcessing
     # need to do this only if 1 vm is selected and miq_group has been set for it
     group = record.miq_group if @edit[:ownership_items].length == 1
     @edit[:new][:group] = group ? group.id.to_s : nil
-    MiqGroup.with_current_user_groups.each { |g| @groups[g.description] = g.id.to_s }
+    rbac_filtered_objects(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
 
     @edit[:new][:user] = @edit[:new][:group] = DONT_CHANGE_OWNER if @edit[:ownership_items].length > 1
 

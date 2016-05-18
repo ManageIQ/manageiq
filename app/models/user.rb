@@ -43,6 +43,26 @@ class User < ApplicationRecord
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 
+  def self.scope_by_tenant?
+    true
+  end
+
+  ACCESSIBLE_STRATEGY_WITHOUT_IDS = {:descendant_ids => :descendants, :ancestor_ids => :ancestors}.freeze
+
+  def self.tenant_id_clause(user_or_group)
+    strategy = Rbac.accessible_tenant_ids_strategy(self)
+    tenant = user_or_group.try(:current_tenant)
+    return [] if tenant.root?
+
+    accessible_tenants = tenant.send(ACCESSIBLE_STRATEGY_WITHOUT_IDS[strategy])
+
+    users_ids = accessible_tenants.collect(&:user_ids).flatten + tenant.user_ids
+
+    return if users_ids.empty?
+
+    {table_name => {:id => users_ids}}
+  end
+
   def self.in_region
     where(:region => my_region_number)
   end
