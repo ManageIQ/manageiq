@@ -165,7 +165,7 @@
 
     Line: _.defaultsDeep(
       {
-        axis : {x:{type: 'category', tick: {centered: true}}},
+        axis : {x:{type: 'category'}},
         data : {type: 'line'},
       },c3mixins.pfColorPattern,
       $().c3ChartDefaults().getDefaultLineConfig()
