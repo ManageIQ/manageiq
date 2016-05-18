@@ -13,8 +13,8 @@ class ManageIQ::Providers::Nuage::NetworkManager < ManageIQ::Providers::NetworkM
   end
 
   def self.raw_connect(auth_url, username, password)
-    #VsdClient.new(auth_url, username, password)
-    DummyVsdClient.new(auth_url, username, password)
+    VsdClient.new(auth_url, username, password)
+    #DummyVsdClient.new(auth_url, username, password)
   end
 
   def connect(options = {})
