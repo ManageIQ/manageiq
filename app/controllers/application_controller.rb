@@ -1974,7 +1974,7 @@ class ApplicationController < ActionController::Base
     when "miq_capacity"
       session[:tab_url][:opt] = inbound_url if ["utilization", "planning", "bottlenecks", "waste"].include?(action_name)
     when "catalog", "vm", "vm_or_template", "miq_template", "service"
-      session[:tab_url][:compute] = session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
+      session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
     when "availability_zone", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
       session[:tab_url][:compute] = session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
     when "ems_cluster", "ems_infra", "host", "pxe", "resource_pool", "storage", "vm_infra"
@@ -1989,7 +1989,7 @@ class ApplicationController < ActionController::Base
     when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_topology"
       session[:tab_url][:compute] = session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
     when "miq_request"
-      session[:tab_url][:compute] = session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
+      session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
       session[:tab_url][:compute] = session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
     when "provider_foreman"
       session[:tab_url][:conf] = inbound_url if %w(show explorer).include?(action_name)
