@@ -34,16 +34,7 @@
         %label.control-label.col-md-2= _('Current Status')
         .col-md-10
           %p.form-control-static
-            - case @widget.status.downcase
-            - when "complete"
-              - glyphicon = "pficon pficon-ok"
-            - when "queued"
-              - glyphicon = "fa fa-pause"
-            - when "running"
-              - glyphicon = "fa fa-play"
-            - when "error"
-              - glyphicon = "fa fa-warning"
-            - if @widget.status.downcase != "none"
+            - unless (glyphicon = listicon_glyphicon_tag_for_widget(@widget)).nil?
               %i{:class => "#{glyphicon}"}
             = h(@widget.status)
       .form-group

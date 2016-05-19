@@ -1362,6 +1362,15 @@ module ApplicationHelper
     image_tag(ActionController::Base.helpers.image_path("100/#{image.downcase}.png"), img_attr)
   end
 
+  def listicon_glyphicon_tag_for_widget(widget)
+    case widget.status.downcase
+    when 'complete' then 'pficon pficon-ok'
+    when 'queued'   then 'fa fa-pause'
+    when 'running'  then 'fa fa-play'
+    when 'error'    then 'fa fa-warning'
+    end
+  end
+
   def listicon_glyphicon_tag(db, row)
     glyphicon2 = nil
     case db
@@ -1394,18 +1403,7 @@ module ApplicationHelper
         glyphicon = "fa fa-rss"
       end
       # for second icon to show status in widget list
-      if row.status != "none"
-        case row.status.downcase
-        when "complete"
-          glyphicon2 = "pficon pficon-ok"
-        when "queued"
-          glyphicon2 = "fa fa-pause"
-        when "running"
-          glyphicon2 = "fa fa-play"
-        when "error"
-          glyphicon2 = "fa fa-warning"
-        end
-      end
+      glyphicon2 = listicon_glyphicon_tag_for_widget(row)
     end
 
     content_tag(:ul, :class => 'icons list-unstyled') do
