@@ -49,7 +49,7 @@ class ApplicationHelper::Toolbar::CloudVolumeCenter < ApplicationHelper::Toolbar
                        'pficon pficon-delete fa-lg',
                        t = N_('Delete this Cloud Volume'),
                        t,
-                       :url_parms => '&refresh=y',
+                       :url_parms => 'main_div',
                        :confirm   => 'Warning: This Cloud Volume and ALL of its components will be removed. Are you sure you want to remove this Cloud Volume?'
                      ),
                    ]

@@ -419,14 +419,15 @@ class CloudVolumeController < ApplicationController
       volume = CloudVolume.find_by_id(v)
       if volume.nil?
         add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "cloud_volume")}, :error)
-      elsif !volume.attachments.length.empty?
-        add_flash(_("%{model} \"%{name}\" cannot be removed because it has attachments") % {
-          :model => ui_lookup(:table => 'cloud_volume'),
-          :name  => volume.name}, :warning)
+      elsif !volume.attachments.empty?
+        add_flash(_("%{model} \"%{name}\" cannot be removed because it is attached to one or more %{instances}") % {
+          :model     => ui_lookup(:table => 'cloud_volume'),
+          :name      => volume.name,
+          :instances => ui_lookup(:tables => 'vm_cloud')}, :warning)
       else
         valid_delete, delete_details = volume.validate_delete_volume
         if valid_delete
-          volumes_to_delete.push(v)
+          volumes_to_delete.push(volume)
         else
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
             :model   => ui_lookup(:table => 'cloud_volume'),
@@ -466,7 +467,7 @@ class CloudVolumeController < ApplicationController
     return if volumes.empty?
 
     if task == "destroy"
-      CloudVolume.find_all_by_id(volumes, :order => "lower(name)").each do |volume|
+      volumes.each do |volume|
         audit = {
           :event        => "cloud_volume_record_delete_initiateed",
           :message      => "[#{volume.name}] Record delete initiated",
@@ -478,7 +479,7 @@ class CloudVolumeController < ApplicationController
         volume.delete_volume
       end
       add_flash(_("Delete initiated for %{models}.") % {
-        :models => pluralize(valid_deletions, ui_lookup(:table => 'cloud_volume'))
+        :models => pluralize(volumes.length, ui_lookup(:table => 'cloud_volume'))
       })
     end
   end
