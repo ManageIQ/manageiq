@@ -1,24 +1,16 @@
 // CTRL+SHIFT+X stops the spinner
 $(document).bind('keyup', 'ctrl+shift+x', miqSparkleOff);
 
-// CTRL+SHIFT+Z checks for duplicate element ids
-$(document).bind('keyup', 'ctrl+shift+z', function() {
-  var ids = {};
+/// Warn for duplicate DOM IDs
+(function () {
+  var duplicate = function () {
+    $('[id]').each(function(){
+      var ids = $('[id="' + this.id + '"]');
+      if (ids.length > 1 && ids.indexOf(this) !== -1)
+        console.warn('Duplicate DOM ID #' + this.id);
+    });
+  };
 
-  $('[id]').each(function(_i, e) {
-    var id = $(e).attr('id');
-    if (id in ids) {
-      ids[id]++;
-    } else {
-      ids[id] = 1;
-    }
-  });
-
-  _.keys(ids).forEach(function(id) {
-    if (ids[id] <= 1)
-      return;
-
-    console.log('duplicate id', id, ids[id], $('[id="' + id + '"]'));
-  });
-  console.log('done');
-});
+  $(duplicate);
+  $(document).ajaxComplete(duplicate);
+})();
