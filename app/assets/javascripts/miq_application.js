@@ -1697,5 +1697,7 @@ $(function () {
 
 function miqScrollToSelected(div_name) {
   var rowpos = $('tr.selected').position();
-  $('#' + div_name).scrollTop(rowpos.top);
+  if (rowpos) {
+    $('#' + div_name).scrollTop(rowpos.top);
+  }
 }
