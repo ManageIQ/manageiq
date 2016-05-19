@@ -89,11 +89,11 @@ module ManageIQ::Providers
     end
 
     def availability_zones_compute
-      @availability_zones_compute ||= @connection.availability_zones
+      @availability_zones_compute ||= safe_list { @connection.availability_zones }
     end
 
     def availability_zones_volume
-      @availability_zones_volume ||= @volume_service.availability_zones
+      @availability_zones_volume ||= safe_list { @volume_service.availability_zones }
     end
 
     def availability_zones
@@ -112,8 +112,8 @@ module ManageIQ::Providers
     end
 
     def get_private_flavor(id)
-      private_flavor = @connection.flavors.get(id)
-      process_collection([private_flavor], :flavors) { |flavor| parse_flavor(flavor) }
+      private_flavor = safe_get { @connection.flavors.get(id) }
+      process_collection([private_flavor], :flavors) { |flavor| parse_flavor(flavor) } if private_flavor
     end
 
     def get_availability_zones
@@ -128,10 +128,10 @@ module ManageIQ::Providers
     end
 
     def get_quotas
-      quotas = @compute_service.quotas_for_accessible_tenants
-      quotas.concat(@volume_service.quotas_for_accessible_tenants)  if @volume_service.name == :cinder
+      quotas = safe_list { @compute_service.quotas_for_accessible_tenants }
+      quotas.concat(safe_list { @volume_service.quotas_for_accessible_tenants })  if @volume_service.name == :cinder
       # TODO(lsmola) can this somehow be moved under NetworkManager
-      quotas.concat(@network_service.quotas_for_accessible_tenants) if @network_service.name == :neutron
+      quotas.concat(safe_list { @network_service.quotas_for_accessible_tenants }) if @network_service.name == :neutron
 
       process_collection(flatten_quotas(quotas), :cloud_resource_quotas) { |quota| parse_quota(quota) }
     end

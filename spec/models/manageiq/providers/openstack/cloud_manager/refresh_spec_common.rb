@@ -12,6 +12,8 @@ require_relative 'refresh_spec_environments'
 require_relative 'refresh_spec_helpers'
 require_relative 'refresh_spec_matchers'
 
+require 'fog/openstack'
+
 module Openstack
   module RefreshSpecCommon
     def self.included(klass)
@@ -19,6 +21,79 @@ module Openstack
         include RefreshSpecEnvironments
         include RefreshSpecHelpers
         include RefreshSpecMatchers
+      end
+    end
+
+    def stub_excon_errors
+      forbidden = Excon::Errors::Forbidden.new("Forbidden")
+      not_found = Excon::Errors::NotFound.new("NotFound")
+
+      # Error in all stack relations
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:outputs).and_raise(forbidden)
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:resources).and_raise(not_found)
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:parameters).and_raise(not_found)
+      allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:template).and_raise(not_found)
+
+      # Error in directory relation
+      allow_any_instance_of(Fog::Storage::OpenStack::Directory).to receive(:files).and_raise(not_found)
+
+      # Error in Availability zones list
+      allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:availability_zones).and_raise(forbidden)
+      allow_any_instance_of(Fog::Volume::OpenStack::Real).to  receive(:availability_zones).and_raise(not_found)
+
+      # Error in list of quotas
+      allow_any_instance_of(Fog::Compute::OpenStack::Real).to receive(:get_quota).and_raise(forbidden)
+      allow_any_instance_of(Fog::Network::OpenStack::Real).to receive(:get_quota).and_raise(not_found)
+      allow_any_instance_of(Fog::Volume::OpenStack::Real).to  receive(:get_quota).and_raise(not_found)
+
+      # And random error caught by handled_list
+      allow_any_instance_of(Fog::Compute::OpenStack::KeyPairs).to receive(:all).and_raise(not_found)
+      allow_any_instance_of(Fog::Compute::OpenStack::Flavors).to receive(:all).and_raise(forbidden)
+    end
+
+    def assert_with_errors
+      expect(OrchestrationStack.count).to          eq orchestration_data.stacks.count
+      expect(OrchestrationStackParameter.count).to eq 0
+      expect(OrchestrationStackResource.count).to  eq 0
+      expect(OrchestrationStackOutput.count).to    eq 0
+      expect(OrchestrationTemplate.count).to       eq 0
+      expect(CloudObjectStoreContainer.count).to   eq storage_data.directories.count
+      expect(CloudObjectStoreObject.count).to      eq 0
+      expect(CloudResourceQuota.count).to          eq 0
+      expect(AuthPrivateKey.count).to              eq 0
+      expect(AvailabilityZone.count).to            eq 1 # just NoZone
+
+      # We have broken flavor list, but there is fallback for private flavors using get, which will collect used flavors
+      expect(Flavor.count).to              eq 2
+
+      expect(ExtManagementSystem.count).to eq 2 # Can this be not hardcoded?
+      expect(SecurityGroup.count).to       eq security_groups_count
+      expect(FirewallRule.count).to        eq firewall_rules_count
+      expect(FloatingIp.count).to          eq network_data.floating_ips.sum
+      expect(CloudNetwork.count).to        eq network_data.networks.count
+      expect(CloudSubnet.count).to         eq network_data.subnets.count
+      expect(NetworkRouter.count).to       eq network_data.routers.count
+      expect(CloudVolume.count).to         eq volumes_count
+      expect(VmOrTemplate.count).to        eq vms_count + images_count
+      expect(MiqTemplate.count).to         eq images_count
+      expect(Disk.count).to                eq disks_count
+      expect(Hardware.count).to            eq vms_count + images_count
+      expect(Vm.count).to                  eq vms_count
+      expect(OperatingSystem.count).to     eq 0
+      expect(Snapshot.count).to            eq 0
+      expect(SystemService.count).to       eq 0
+      expect(GuestDevice.count).to         eq 0
+      expect(CustomAttribute.count).to     eq 0
+
+      # Just check that Relationship are not empty
+      expect(Relationship.count).to        be > 0
+      # Just check that queue is not empty
+      expect(MiqQueue.count).to            be > 0
+
+      if volume_snapshot_pagination_bug
+        expect(CloudVolumeSnapshot.count).to be > 0
+      else
+        expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count
       end
     end
 
@@ -173,7 +248,6 @@ module Openstack
       expect(CloudSubnet.count).to         eq network_data.subnets.count
       expect(NetworkRouter.count).to       eq network_data.routers.count
       expect(CloudVolume.count).to         eq volumes_count
-      expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count unless volume_snapshot_pagination_bug
       expect(VmOrTemplate.count).to        eq vms_count + images_count
       expect(Vm.count).to                  eq vms_count
       expect(MiqTemplate.count).to         eq images_count
@@ -194,6 +268,13 @@ module Openstack
       # Just check that queue is not empty
       expect(MiqQueue.count).to            be > 0
       expect(CloudService.count).to        be > 0
+      expect(CloudResourceQuota.count).to  be > 0
+
+      if volume_snapshot_pagination_bug
+        expect(CloudVolumeSnapshot.count).to be > 0
+      else
+        expect(CloudVolumeSnapshot.count).to eq volume_snapshots_count
+      end
     end
 
     def assert_table_counts_orchestration

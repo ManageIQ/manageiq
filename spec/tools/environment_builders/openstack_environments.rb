@@ -34,6 +34,9 @@ def load_environments
     file_name = File.join(test_base_dir, "refresher_rhos_#{env_name}_spec.rb")
     change_file(file_name, OBFUSCATED_PASSWORD, env["password"], OBFUSCATED_IP, env["ip"])
 
+    file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}_with_errors.yml")
+    change_file(file_name, OBFUSCATED_PASSWORD, env["password"], OBFUSCATED_IP, env["ip"])
+
     file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}.yml")
     change_file(file_name, OBFUSCATED_PASSWORD, env["password"], OBFUSCATED_IP, env["ip"])
   end
@@ -47,6 +50,9 @@ def obfuscate_environments
     puts "-------------------------------------------------------------------------------------------------------------"
     puts "Obfuscating enviroment credentials for #{env_name}"
     file_name = File.join(test_base_dir, "refresher_rhos_#{env_name}_spec.rb")
+    change_file(file_name, env["password"], OBFUSCATED_PASSWORD, env["ip"], OBFUSCATED_IP)
+
+    file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}_with_errors.yml")
     change_file(file_name, env["password"], OBFUSCATED_PASSWORD, env["ip"], OBFUSCATED_IP)
 
     file_name = File.join(vcr_base_dir, "refresher_rhos_#{env_name}.yml")
