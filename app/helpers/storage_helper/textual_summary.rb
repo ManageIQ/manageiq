@@ -76,7 +76,8 @@ module StorageHelper::TextualSummary
     num   = @record.number_of(:hosts)
     h     = {:label => label, :image => "host", :value => num}
     if num > 0 && role_allows(:feature => "host_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hosts')
+      h[:explorer] = @explorer
+      h[:link]  = url_for(:action => 'hosts', :id => @record, :db => controller.controller_name)
       h[:title] = _("Show all %{label}") % {:label => label}
     end
     h

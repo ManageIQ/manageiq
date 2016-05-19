@@ -2223,6 +2223,7 @@ Vmdb::Application.routes.draw do
         debris_files
         explorer
         files
+        hosts
         listnav_search_selected
         panel_control
         disk_files
