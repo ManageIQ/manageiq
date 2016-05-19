@@ -45,7 +45,7 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
                        'pficon pficon-delete fa-lg',
                        t = N_('Delete selected Cloud Volumes'),
                        t,
-                       :url_parms => '&refresh=y',
+                       :url_parms => 'main_div',
                        :confirm   => 'Warning: The selected Cloud Volume and ALL of their components will be removed. Are you sure you want to remove these Cloud Volumes?',
                        :enabled   => false,
                        :onwhen    => '1+'
