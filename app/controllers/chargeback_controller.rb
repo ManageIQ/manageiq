@@ -390,47 +390,39 @@ class ChargebackController < ApplicationController
       return
     end
     @right_cell_text ||= _("Saved Chargeback Report [%{name}]") % {:name => rr.name}
-    if rr.userid != session[:userid]
+    if !current_user.miq_group_ids.include?(rr.miq_group_id) && !admin_user?
       add_flash(_("Report is not authorized for the logged in user"), :error)
       @saved_reports = cb_rpts_get_all_reps(id.split('-')[1])
       return
     else
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime]  = rr.last_run_on
-      @report = rr.report_results
-      session[:rpt_task_id] = nil
-      if @report.blank?
-        add_flash(_("Saved Report \"%{name}\" not found, Schedule may have failed") %
-          {:name => format_timezone(rr.last_run_on, Time.zone, "gtl")}, :error)
-        @saved_reports = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
-        rep = MiqReport.find_by_id(rr.miq_report_id)
-        if x_active_tree == :cb_reports
-          self.x_node = "reports-#{rep.id}"
+      if rr.status.casecmp("finished") == 0
+        @report = rr.report_results
+        session[:rpt_task_id] = nil
+        if @report.blank?
+          add_flash(_("Saved Report \"%{name}\" not found, Schedule may have failed") %
+            {:name => format_timezone(rr.last_run_on, Time.zone, "gtl")}, :error)
+          @saved_reports = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
+          rep = MiqReport.find_by_id(rr.miq_report_id)
+          if x_active_tree == :cb_reports_tree
+            self.x_node = "reports-#{rep.id}"
+          end
+          return
         else
-          @sb[:rpt_menu].each_with_index do |lvl1, i|
-            if lvl1[0] == current_tenant.name
-              lvl1[1].each_with_index do |lvl2, k|
-                if lvl2[0].downcase == "custom"
-                  @sb[:active_node]["report"] = "reports-#{i}-#{k}-#{lvl2[1].length - 1}_#{rep.id}"
-                end
-              end
+          if @report.contains_records?
+            @html = report_first_page(rr) # Get the first page of the results
+            unless @report.graph.blank?
+              @zgraph = true
+              @ght_type = "hybrid"
+            else
+              @ght_type = "tabular"
             end
-          end
-        end
-        return
-      else
-        if @report.contains_records?
-          @html = report_first_page(rr)              # Get the first page of the results
-          unless @report.graph.blank?
-            @zgraph = true
-            @ght_type = "hybrid"
+            @report.extras ||= {} # Create extras hash
+            @report.extras[:to_html] ||= @html # Save the html report
           else
-            @ght_type = "tabular"
+            add_flash(_("No records found for this report"), :warning)
           end
-          @report.extras ||= {}                # Create extras hash
-          @report.extras[:to_html] ||= @html        # Save the html report
-        else
-          add_flash(_("No records found for this report"), :warning)
         end
       end
     end
@@ -504,24 +496,22 @@ class ChargebackController < ApplicationController
   def cb_rpt_build_folder_nodes
     @parent_reports = {}
 
-    MiqReportResult.auto_generated.select(:miq_report_id, :name).distinct.where(
-      :db     => "Chargeback",
-      :userid => session[:userid]
-    ).sort_by { |sr| sr.name.downcase }.each_with_index do |sr, sr_idx|
-      @parent_reports[sr.name] = "#{to_cid(sr.miq_report_id)}-#{sr_idx}"
+    MiqReportResult.with_saved_chargeback_reports.select_distinct_results.each_with_index do |sr, sr_idx|
+      @parent_reports[sr.miq_report.name] = "#{to_cid(sr.miq_report_id)}-#{sr_idx}"
     end
   end
 
   def cb_rpts_get_all_reps(nodeid)
+    return [] if nodeid.blank?
     @sb[:miq_report_id] = from_cid(nodeid)
     miq_report = MiqReport.find(@sb[:miq_report_id])
-    saved_reports = miq_report.miq_report_results.where(:userid => session[:userid])
-                    .select("id, miq_report_id, name,last_run_on,report_source").order("created_on DESC")
+    saved_reports = miq_report.miq_report_results.with_current_user_groups
+                              .select("id, miq_report_id, name, last_run_on, report_source")
+                              .order(:last_run_on)
+
     @sb[:last_run_on] = {}
-    @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr  # Saving converted time to be displayed on saved reports list view
     saved_reports.each do |s|
-      @sb[:last_run_on][s.last_run_on] =
-        "#{convert_time_from_utc(s.last_run_on).strftime('%m/%d/%Y %I:%M')} #{@sb[:timezone_abbr]}" if s.last_run_on
+      @sb[:last_run_on][s.last_run_on] = format_timezone(s.last_run_on, Time.zone, 'gtl') + "aa" if s.last_run_on
     end
     @sb[:tree_typ] = "reports"
     @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Reports", :name => miq_report.name}
