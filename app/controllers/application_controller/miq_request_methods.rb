@@ -832,6 +832,7 @@ module ApplicationController::MiqRequestMethods
           @edit[:new][:start_min] = "00"
         end
       end
+      @edit[:new][:src_vm_id] = [nil, nil] unless @edit[:new][:src_vm_id]
       @edit[:new][tag_symbol_for_workflow] ||= []  # Initialize for new record
       @edit[:current] ||= {}
       @edit[:current] = copy_hash(@edit[:new])
