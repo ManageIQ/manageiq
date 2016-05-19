@@ -35,4 +35,17 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
       assert_with_skips
     end
   end
+
+  context "when random 403 and 404 errors occurs" do
+    it "refresh will continue" do
+      stub_excon_errors
+
+      with_cassette('kilo_with_errors', @ems) do
+        EmsRefresh.refresh(@ems)
+        EmsRefresh.refresh(@ems.network_manager)
+      end
+
+      assert_with_errors
+    end
+  end
 end
