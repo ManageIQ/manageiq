@@ -7,6 +7,8 @@
       %dt
         = _("Interval")
       %dd
+        :javascript
+           miqInitSelectPicker();
         - if @perf_options[:index] && %w(host vm).include?(request.parameters["controller"])
           - rt_chart = YAML.load(File.open("#{CHARTS_LAYOUTS_FOLDER}/realtime_perf_charts/#{@perf_options[:model]}.yaml"))
           - @rt_hide = rt_chart[@perf_options[:index].to_i][:type] == "None"
@@ -19,7 +21,6 @@
                         "data-miq_sparkle_on" => true,
                         :class    => "selectpicker")
           :javascript
-             miqInitSelectPicker();
              miqSelectPickerEvent("perf_typ", "#{url}")
         - else
           = select_tag("perf_typ",
