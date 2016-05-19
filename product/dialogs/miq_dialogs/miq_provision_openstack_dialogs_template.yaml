@@ -100,7 +100,7 @@
         :owner_email:
           :description: E-Mail
           :required_method: :validate_regex
-          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i 
+          :required_regex: !ruby/regexp /\A[\w!#$\%&'*+\/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+\/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z/i
           :required: true
           :display: :edit
           :data_type: :string
@@ -306,6 +306,30 @@
           :display: :edit
           :data_type: :integer
       :display: :show
+    :volumes:
+      :description: Volumes
+      :fields:
+        :name:
+          :description: Volume Name
+          :required: false
+          :display: :edit
+          :data_type: :string
+          :min_length:
+          :max_length: 100
+        :size:
+          :description: Size (gigabytes)
+          :required: false
+          :display: :edit
+          :data_type: :string
+          :min_length:
+          :max_length: 10
+        :delete_on_terminate:
+          :description: Delete on Instance Terminate
+          :required: false
+          :display: :edit
+          :data_type: :boolean
+          :default: false
+      :display: :show
     :customize:
       :description: Customize
       :fields:
@@ -378,5 +402,6 @@
   - :service
   - :environment
   - :hardware
+  - :volumes
   - :customize
   - :schedule

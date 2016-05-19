@@ -813,7 +813,6 @@ class MiqRequestWorkflow
   def set_request_values(values)
     # Ensure that tags selected in the pre-dialog get applied to the request
     values[:vm_tags] = (values[:vm_tags].to_miq_a + @values[:pre_dialog_vm_tags]).uniq unless @values.nil? || @values[:pre_dialog_vm_tags].blank?
-
     values[:requester_group] ||= @requester.current_group.description
     email = values[:owner_email]
     if email.present? && values[:owner_group].blank?
