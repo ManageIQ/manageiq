@@ -21,6 +21,7 @@ class MiqVimVm
                                   VirtualLsiLogicSASController
                                   ParaVirtualSCSIController
                                 ).freeze
+  MAX_SCSI_DEVICES          = 15
 
   attr_reader :name, :localPath, :dsPath, :hostSystem, :uuid, :vmh, :devices, :invObj, :annotation, :customValues, :vmMor
 
@@ -853,20 +854,35 @@ class MiqVimVm
   # return its key and next available unit number.
   #
   def getScsiCandU
-    devs = getProp("config.hardware")["config"]["hardware"]["device"]
-    ctrlrHash = {}
+    controller_key = unit_number = nil
 
-    scsi_dev = devs.detect { |x| VIRTUAL_SCSI_CONTROLLERS.include?(x.xsiType) } || {}
-    key = scsi_dev['key']
-    ctrlrHash[key] = 0 if key
+    devices = getProp("config.hardware")["config"]["hardware"]["device"]
+    scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
 
-    ctrlrHash.each_key do |ck|
-      control = devs.detect { |x| x['controllerKey'] == ck } || {}
-      unit_number = control['unitNumber'].to_i
-      ctrlrHash[ck] = unit_number if unit_number > ctrlrHash[ck]
+    scsi_controllers.sort_by { |s| s["key"].to_i }.each do |scsi_controller|
+      # Skip if all controller units are populated
+      # Bus has 16 units, controller takes up 1 unit itself
+      next if scsi_controller["device"].to_miq_a.count >= MAX_SCSI_DEVICES
+
+      # We've found the lowest scsi controller with an available unit
+      controller_key = scsi_controller["key"]
+
+      # Get a list of disks on this controller
+      disks = devices.select { |dev| scsi_controller["device"].to_miq_a.include?(dev["key"]) }
+
+      # Get a list of all populated units on the controller
+      populated_units = disks.collect { |disk| disk["unitNumber"].to_i }
+      populated_units << scsi_controller["scsiCtlrUnitNumber"].to_i
+
+      # Pick the lowest available unit number
+      all_unit_numbers = [*0..MAX_SCSI_DEVICES]
+      available_units  = all_unit_numbers - populated_units
+
+      unit_number = available_units.sort.first
+      break
     end
 
-    ctrlrHash.each { |k, v| return([k, v + 1]) }
+    return controller_key, unit_number
   end # def getScsiCandU
 
   #
