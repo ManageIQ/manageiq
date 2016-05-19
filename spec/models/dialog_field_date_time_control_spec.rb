@@ -136,7 +136,7 @@ describe DialogFieldDateTimeControl do
   end
 
   describe "#refresh_json_value" do
-    let(:dialog_field) { described_class.new }
+    let(:dialog_field) { described_class.new(:read_only => true) }
 
     before do
       allow(described_class).to receive(:server_timezone).and_return("UTC")
@@ -145,9 +145,10 @@ describe DialogFieldDateTimeControl do
 
     it "returns the default value in a hash" do
       expect(dialog_field.refresh_json_value).to eq(
-        :date => "02/03/2015",
-        :hour => "18",
-        :min  => "50"
+        :date      => "02/03/2015",
+        :hour      => "18",
+        :min       => "50",
+        :read_only => true
       )
     end
 
