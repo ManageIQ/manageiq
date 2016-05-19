@@ -15,9 +15,9 @@ class TreeBuilderConfigurationManager < TreeBuilder
     objects = []
     objects.push(:id            => "fr",
                  :tree          => "fr_tree",
-                 :text          => _("Foreman Providers"),
+                 :text          => _("%{name} Providers") % {:name => ui_lookup(:ui_title => 'foreman')},
                  :image         => "folder",
-                 :tip           => _("Foreman Providers"),
+                 :tip           => _("%{name} Providers") % {:name => ui_lookup(:ui_title => 'foreman')},
                  :load_children => true)
     objects.push(:id            => "at",
                  :tree          => "at_tree",
