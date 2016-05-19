@@ -142,27 +142,18 @@ class MiqTask < ApplicationRecord
 
   def human_status
     case state
-    when STATE_INITIALIZED
-      return "Initialized"
-    when STATE_QUEUED
-      return "Queued"
-    when STATE_ACTIVE
-      return "Running"
+    when STATE_INITIALIZED then "Initialized"
+    when STATE_QUEUED      then "Queued"
+    when STATE_ACTIVE      then "Running"
     when STATE_FINISHED
       case status
-      when STATUS_OK
-        return "Complete"
-      when STATUS_WARNING
-        return "Finished with Warnings"
-      when STATUS_ERROR
-        return "Error"
-      when STATUS_TIMEOUT
-        return "Timed Out"
-      else
-        raise _("Unknown status of: %{task_status}") % {:task_status => status.inspect}
+      when STATUS_OK      then "Complete"
+      when STATUS_WARNING then "Finished with Warnings"
+      when STATUS_ERROR   then "Error"
+      when STATUS_TIMEOUT then "Timed Out"
+      else raise _("Unknown status of: %{task_status}") % {:task_status => status.inspect}
       end
-    else
-      raise _("Unknown state of: %{task_status}") % {:task_status => state.inspect}
+    else raise _("Unknown state of: %{task_status}") % {:task_status => state.inspect}
     end
   end
 
