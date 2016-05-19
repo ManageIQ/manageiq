@@ -89,7 +89,7 @@ class VMDBLogger < Logger
 
   def self.log_hashes(logger, h, options = {})
     level  = options[:log_level] || :info
-    filter = [options[:filter]].flatten.compact.map(&:to_s) << "password"
+    filter = Array(options[:filter]).flatten.compact.map(&:to_s) << "password"
     filter.uniq!
 
     YAML.dump(h).split("\n").each do |l|

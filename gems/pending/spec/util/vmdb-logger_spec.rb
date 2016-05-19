@@ -28,6 +28,14 @@ describe VMDBLogger do
       buffer.rewind
       expect(buffer.read).to_not include("pa$$w0rd")
     end
+
+    it "when :filter option is a Set object, filters out the given Set elements" do
+      hash = {:a => {:b => 1, :bind_pwd => "pa$$w0rd", :amazon_secret => "pa$$w0rd", :password => "pa$$w0rd"}}
+      logger.log_hashes(hash, :filter => %i(bind_pwd password amazon_secret).to_set)
+
+      buffer.rewind
+      expect(buffer.read).to_not include("pa$$w0rd")
+    end
   end
 
   it ".contents with no log returns empty string" do
