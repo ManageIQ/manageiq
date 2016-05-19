@@ -1490,6 +1490,8 @@ function miqToolbarOnClick(e) {
       // If url starts with / it is non-ajax
       tb_url = "/" + ManageIQ.controller + button.data('url');
       if (ManageIQ.record.recordId !== null) {
+        // remove last "/" if exist
+        tb_url = tb_url.replace(/\/$/, "");
         tb_url += "/" + ManageIQ.record.recordId;
       }
       if (button.data("url_parms")) {
