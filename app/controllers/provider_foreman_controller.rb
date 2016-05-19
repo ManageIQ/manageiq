@@ -136,8 +136,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def add_provider_foreman
-    @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == "new"
-    @provider_cfgmgmt ||= find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider # TODO: Why is params[:id] an ExtManagementSystem ID instead of Provider ID?
+    find_or_build_provider
 
     @provider_cfgmgmt.update_attributes(
       :name       => params[:name],
@@ -489,6 +488,11 @@ class ProviderForemanController < ApplicationController
   end
 
   private ###########
+
+  def find_or_build_provider
+    @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == "new"
+    @provider_cfgmgmt ||= find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider # TODO: Why is params[:id] an ExtManagementSystem ID instead of Provider ID?
+  end
 
   def provider_class_from_provtype
     params[:provtype] == 'Ansible Tower' ? ManageIQ::Providers::AnsibleTower::Provider : ManageIQ::Providers::Foreman::Provider
