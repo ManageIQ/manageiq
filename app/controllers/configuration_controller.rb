@@ -251,6 +251,7 @@ class ConfigurationController < ApplicationController
         return                                                      # No config file for Visuals yet, just return
       when "ui_4"                                                   # User Filters tab
         @edit = session[:edit]
+        @edit[:timeprofile] = TimeProfile.find(@edit[:timeprofile]) if @edit[:timeprofile].present?
         @edit[:current].each do |arr|
           s = MiqSearch.find(arr.id.to_i)
           if @edit[:show_ids]
@@ -404,6 +405,7 @@ class ConfigurationController < ApplicationController
 
   def timeprofile_get_form_vars
     @edit = session[:edit]
+    @edit[:timeprofile] =  @edit[:timeprofile].present? ? TimeProfile.find(@edit[:timeprofile]) : TimeProfile.new
     @timeprofile = @edit[:timeprofile]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:profile_type] = params[:profile_type] if params[:profile_type]
@@ -784,6 +786,7 @@ class ConfigurationController < ApplicationController
     when "ui_4"                                               # Visual Settings tab
       @edit[:new][:display][:compare] = params[:display][:compare] if !params[:display].nil? && !params[:display][:compare].nil?
       @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
+      @edit[:timeprofile] = TimeProfile.find(@edit[:timeprofile]) if @edit[:timeprofile].present?
     end
   end
 

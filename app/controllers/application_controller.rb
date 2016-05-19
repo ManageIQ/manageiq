@@ -2214,6 +2214,7 @@ class ApplicationController < ActionController::Base
     end
 
     session[:edit] = @edit ? @edit : nil                    # Set or clear session edit hash
+    session[:edit][:timeprofile] = @edit[:timeprofile].id if @edit && @edit[:timeprofile].present?
 
     session[:view] = @view ? @view : nil                    # Set or clear view in session hash
     unless params[:controller] == "miq_task"                # Proxy needs data for delete all
