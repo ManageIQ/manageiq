@@ -206,17 +206,8 @@ class ProviderForemanController < ApplicationController
   end
 
   def authentication_validate
-    @provider_cfgmgmt = if params[:log_password]
-                          provider_class_from_provtype.new(
-                            :name       => params[:name],
-                            :url        => params[:url],
-                            :verify_ssl => params[:verify_ssl].eql?("on"),
-                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                          )
-                        else
-                          find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
-                        end
-
+    find_or_build_provider
+    sync_form_to_instance
     update_authentication_provider
 
     begin
