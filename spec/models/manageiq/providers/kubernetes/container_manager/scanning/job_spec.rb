@@ -186,7 +186,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         @job.signal(:start)
         expect(@job.state).to eq 'finished'
         expect(@job.status).to eq 'error'
-        expect(@job.message).to eq "pod creation for management-infra/manageiq-img-scan-3629a651e6c1" \
+        expect(@job.message).to eq "pod creation for management-infra/manageiq-img-scan-#{@job.guid[0..4]}" \
                                " failed: HTTP status code #{CODE}, #{CLIENT_MESSAGE}"
       end
     end
