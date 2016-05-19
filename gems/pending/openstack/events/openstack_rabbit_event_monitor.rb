@@ -22,8 +22,15 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
   # It creates a test mock point for specs
   def self.connect(options = {})
     connection_options = {:host => options[:hostname]}
-    connection_options[:port]      = options[:port] || DEFAULT_AMQP_PORT
-    connection_options[:heartbeat] = options[:heartbeat] || DEFAULT_AMQP_HEARTBEAT
+    connection_options[:port]               = options[:port] || DEFAULT_AMQP_PORT
+    connection_options[:heartbeat]          = options[:heartbeat] || DEFAULT_AMQP_HEARTBEAT
+    connection_options[:automatic_recovery] = options[:automatic_recovery] if options.key? :automatic_recovery
+    connection_options[:recovery_attempts]  = options[:recovery_attempts] if options.key? :recovery_attempts
+
+    if options.key? :recover_from_connection_close
+      connection_options[:recover_from_connection_close] = options[:recover_from_connection_close]
+    end
+
     if options.key? :username
       connection_options[:username] = options[:username]
       connection_options[:password] = options[:password]
