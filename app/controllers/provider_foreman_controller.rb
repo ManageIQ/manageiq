@@ -584,30 +584,29 @@ class ProviderForemanController < ApplicationController
       @no_checkboxes = true
       case @record.type
       when "ManageIQ::Providers::Foreman::ConfigurationManager"
-        options = {:model => "ConfigurationProfile",
-                   :match_via_descendants => ConfiguredSystem,
-                   :where_clause => ["manager_id IN (?)", provider.id]}
+        options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem, :where_clause => ["manager_id IN (?)", provider.id]}
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => provider.name,
-                                                        :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model} Provider"}
+        @right_cell_text = _("%{model} \"%{name}\"") %
+        {:name => provider.name,
+         :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model} Provider"}
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
-        options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup",
-                   :match_via_descendants => ConfiguredSystem,
-                   :where_clause => ["ems_id IN (?)", provider.id]}
+        options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
         process_show_list(options)
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => provider.name,
-                                                        :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
+        @right_cell_text = _("%{model} \"%{name}\"") %
+          {:name => provider.name, :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
       end
     end
   end
 
   def cs_provider_node(provider)
-    options = {:model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
-               :match_via_descendants => ConfigurationScript,
-               :where_clause => ["manager_id IN (?)", provider.id]}
+    options = {
+      :model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
+      :match_via_descendants => ConfigurationScript,
+      :where_clause => ["manager_id IN (?)", provider.id]
+    }
     process_show_list(options)
     @right_cell_text = _("%{model} \"%{name}\"") %
       {:name => provider.name, :model => "#{ui_lookup(:tables => "job_templates")} under "}
@@ -685,8 +684,8 @@ class ProviderForemanController < ApplicationController
     else
       show_record(from_cid(id))
       @right_cell_text = _("%{model} \"%{name}\"") %
-        {:name => @record.name,
-         :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
+      {:name => @record.name,
+       :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
     end
   end
 
@@ -714,8 +713,7 @@ class ProviderForemanController < ApplicationController
     else
       show_record(from_cid(id))
       @right_cell_text = _("%{model} \"%{name}\"") %
-        {:name => @record.name,
-         :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
+      {:name => @record.name, :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
     end
   end
 
