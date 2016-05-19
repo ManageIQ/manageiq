@@ -217,11 +217,15 @@ class ProviderForemanController < ApplicationController
     begin
       @provider_cfgmgmt.verify_credentials(params[:type])
     rescue StandardError => bang
-      add_flash("#{bang}", :error)
+      error = if bang.kind_of?(Faraday::Error::ClientError) # ansible uses faraday and returns a json as a response
+                JSON.parse(bang.to_s)['detail']
+              else
+                bang.to_s
+              end
+      render_flash(_("Credential validation was not successful: %{details}") % {:details => error}, :error)
     else
-      add_flash(_("Credential validation was successful"))
+      render_flash(_("Credential validation was successful"))
     end
-    render_flash
   end
 
   def show(id = nil)
