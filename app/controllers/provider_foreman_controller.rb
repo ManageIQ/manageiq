@@ -137,13 +137,8 @@ class ProviderForemanController < ApplicationController
 
   def add_provider_foreman
     find_or_build_provider
+    sync_form_to_instance
 
-    @provider_cfgmgmt.update_attributes(
-      :name       => params[:name],
-      :url        => params[:url],
-      :verify_ssl => params[:verify_ssl].eql?("on"),
-      :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-    )
     update_authentication_provider(:save)
   end
 
@@ -496,6 +491,13 @@ class ProviderForemanController < ApplicationController
 
   def provider_class_from_provtype
     params[:provtype] == 'Ansible Tower' ? ManageIQ::Providers::AnsibleTower::Provider : ManageIQ::Providers::Foreman::Provider
+  end
+
+  def sync_form_to_instance
+    @provider_cfgmgmt.name       = params[:name]
+    @provider_cfgmgmt.url        = params[:url]
+    @provider_cfgmgmt.verify_ssl = params[:verify_ssl].eql?("on")
+    @provider_cfgmgmt.zone       = Zone.find_by_name(MiqServer.my_zone)
   end
 
   def features
