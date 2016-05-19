@@ -21,9 +21,8 @@ module MiqAeExpressionMethodSpec
     end
 
     let(:vm_search) do
-      FactoryGirl.create(:miq_search,
-                         :db     => "Vm",
-                         :filter => MiqExpression.new(complex_qs_exp))
+      {:db => 'Vm',
+       :expression => complex_qs_exp}.to_yaml
     end
 
     it "expression_method" do
@@ -35,7 +34,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
       expect(ws.root.attributes['values']).to match_array(%w(cfme_2.1 cfme_3.1))
@@ -49,7 +48,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
       expect(ws.root.attributes['values'].keys).to match_array([vm1.id, vm2.id])
@@ -65,7 +64,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
       expect(ws.root.attributes['ae_result']).to eq('error')
@@ -82,7 +81,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
       expect(ws.root.attributes['ae_result']).to eq('warn')
@@ -99,7 +98,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
       expect(ws.root.attributes['vitalstatistix']).to match_array(%w(cfme_2.1 cfme_3.1))
@@ -115,7 +114,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
       expect(ws.root.attributes['values']).to match_array([400])
@@ -129,7 +128,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
 
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
@@ -145,7 +144,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
 
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
@@ -162,7 +161,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => m_params,
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
       end.to raise_error(MiqAeException::MethodExpressionResultTypeInvalid)
@@ -173,7 +172,7 @@ module MiqAeExpressionMethodSpec
                                   :ae_class => 'ASTERIX', :instance_name => 'DOGMATIX',
                                   :method_name => 'OBELIX', :method_params => {},
                                   :method_loc  => 'expression',
-                                  :method_script => vm_search.name)
+                                  :method_script => vm_search)
 
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
@@ -189,7 +188,7 @@ module MiqAeExpressionMethodSpec
 
       expect do
         MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
-      end.to raise_error(MiqAeException::MethodExpressionNotFound)
+      end.to raise_error(MiqAeException::MethodExpressionInvalid)
     end
   end
 end

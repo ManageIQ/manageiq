@@ -7,22 +7,35 @@ module MiqAeEngine
       @workspace = obj.workspace
       @inputs = inputs
       @attributes = inputs['distinct'] || inputs['attributes'] || %w(name)
-      @search = MiqSearch.where(:name => method_obj.data).try(:first)
-      raise MiqAeException::MethodExpressionNotFound, "Search expression #{method_obj.data} not found" unless @search
+      load_expression(method_obj.data)
       process_filter
     end
 
     def run
       @search_objects = Rbac.search(:filter         => MiqExpression.new(@exp),
-                                    :class          => @search.db,
+                                    :class          => @exp_object,
                                     :results_format => :objects).first
       @search_objects.empty? ? error_handler : set_result
     end
 
     private
 
+    def load_expression(data)
+      raise MiqAeException::MethodExpressionEmpty, "Empty expression" if data.blank?
+      begin
+        hash = YAML.load(data)
+        if hash[:expression] && hash[:db]
+          @exp = hash[:expression]
+          @exp_object = hash[:db]
+        else
+          raise MiqAeException::MethodExpressionInvalid, "Invalid expression #{data}"
+        end
+      rescue
+          raise MiqAeException::MethodExpressionInvalid, "Invalid expression #{data}"
+      end
+    end
+
     def process_filter
-      @exp = @search.filter.exp
       exp_table = exp_build_table(@exp)
       qs_tokens = create_tokens(exp_table, @exp)
       values = get_args(qs_tokens.keys.length)
