@@ -30,6 +30,7 @@ namespace :evm do
 
   # update_start can be called in an environment where the database configuration is
   # not set, so we need to give it a dummy config
+  desc "Start updating the appliance"
   task :update_start do
     EvmRakeHelper.with_dummy_database_url_configuration do
       Rake::Task["environment"].invoke
@@ -37,6 +38,7 @@ namespace :evm do
     end
   end
 
+  desc "Stop updating the appliance"
   task :update_stop => :environment do
     EvmApplication.update_stop
   end
@@ -48,6 +50,7 @@ namespace :evm do
     end
   end
 
+  desc "Compile STI inheritance relationship cache"
   task :compile_sti_loader do
     EvmRakeHelper.with_dummy_database_url_configuration do
       Rake::Task["environment"].invoke
