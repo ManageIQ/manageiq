@@ -272,6 +272,12 @@ table.table.table-selectable tbody tr.selected td {
   width: 80px;
 }
 
+/* extra vertical margin to accomodate multiple switches */
+.form-horizontal .form-group .bootstrap-switch{
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
 /* Ensure .form-control-static doesn't change height when it's empty - Bootstrap fix #15699 */
 .form-control-static {
   min-height: ($line-height-computed + $font-size-small - 20);
