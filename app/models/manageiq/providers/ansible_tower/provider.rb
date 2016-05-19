@@ -30,7 +30,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     end
 
     verify_ssl = options[:verify_ssl] || self.verify_ssl
-    base_url   = options[:base_url] || url
+    base_url   = options[:url] || url
     username   = options[:username] || authentication_userid(auth_type)
     password   = options[:password] || authentication_password(auth_type)
 
