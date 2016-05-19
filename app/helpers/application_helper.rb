@@ -880,6 +880,7 @@ module ApplicationHelper
   QS_VALID_USER_INPUT_OPERATORS = ["=", "!=", ">", ">=", "<", "<=", "INCLUDES", "STARTS WITH", "ENDS WITH", "CONTAINS"]
   QS_VALID_FIELD_TYPES = [:string, :boolean, :integer, :float, :percent, :bytes, :megabytes]
   def qs_show_user_input_checkbox?
+    return true if @edit[:expression_method]
     return false unless @edit[:adv_search_open]  # Only allow user input for advanced searches
     return false unless QS_VALID_USER_INPUT_OPERATORS.include?(@edit[@expkey][:exp_key])
     val = (@edit[@expkey][:exp_typ] == "field" && # Field atoms with certain field types return true

@@ -49,6 +49,8 @@
           :mode                    => "ruby",
           :line_numbers            => true,
           :read_only               => true}
+    - elsif @ae_method.location == 'expression'
+      = @expression
     - else
       = @ae_method.data
     -# show inputs parameters grid if there are any inputs
