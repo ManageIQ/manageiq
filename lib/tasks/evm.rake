@@ -43,10 +43,14 @@ namespace :evm do
     EvmApplication.update_stop
   end
 
-  task :compile_assets do
-    EvmRakeHelper.with_dummy_database_url_configuration do
-      Rake::Task["assets:clobber"].invoke
-      Rake::Task["assets:precompile"].invoke
+  task :compile_assets => 'evm:assets:compile'
+  namespace :assets do
+    desc "Compile assets (clobber and precompile)"
+    task :compile do
+      EvmRakeHelper.with_dummy_database_url_configuration do
+        Rake::Task["assets:clobber"].invoke
+        Rake::Task["assets:precompile"].invoke
+      end
     end
   end
 
