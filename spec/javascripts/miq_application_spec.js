@@ -392,9 +392,43 @@ describe('miq_application.js', function() {
       $('#miq-select-picker-1').val('quux').trigger('change');
 
       expect(miqObserveRequest).toHaveBeenCalledWith('/foo/?miq-select-picker-1=quux', {
+        no_encoding: true
+      });
+    });
+
+    it("sends beforeSend & complete options to miqObserveRequest", function() {
+      spyOn(window, 'miqObserveRequest');
+      spyOn(_, 'debounce').and.callFake(function(fn, opts) {
+        return fn;
+      });
+
+      miqSelectPickerEvent('miq-select-picker-1', '/foo/', {beforeSend: true, complete: true});
+
+      $('#miq-select-picker-1').val('1').trigger('change');
+
+      expect(miqObserveRequest).toHaveBeenCalledWith('/foo/?miq-select-picker-1=1', {
         no_encoding: true,
-        beforeSend: false,
-        complete: false,
+        beforeSend: true,
+        complete: true,
+      });
+    });
+
+    it("sets beforeSend & complete options using data-miq_sparkle_on & data-miq_sparkle_off", function() {
+      var html = '<select class="selectpicker bs-select-hidden" id="miq-select-picker-1" name="miq-select-picker-1" data-miq_sparkle_on="true" data-miq_sparkle_off="true"><option value="one">1</option> <option value="two" selected="selected">2</option></select>';
+      setFixtures(html);
+      spyOn(window, 'miqObserveRequest');
+      spyOn(_, 'debounce').and.callFake(function(fn, opts) {
+        return fn;
+      });
+
+      miqSelectPickerEvent('miq-select-picker-1', '/foo/');
+
+      $('#miq-select-picker-1').val('one').trigger('change');
+
+      expect(miqObserveRequest).toHaveBeenCalledWith('/foo/?miq-select-picker-1=one', {
+        no_encoding: true,
+        beforeSend: true,
+        complete: true,
       });
     });
   });
