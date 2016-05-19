@@ -210,8 +210,10 @@
     :application:
       :critical:
       - hawkular_deployment.error
+      - hawkular_event.critical
       :detail:
-      - hawkular_deployment.success
+      - hawkular_deployment.ok
+      - hawkular_event
       :name: Application
     :configuration:
       :critical:
