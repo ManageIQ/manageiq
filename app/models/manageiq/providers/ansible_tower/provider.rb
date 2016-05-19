@@ -43,6 +43,8 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     validity
   rescue Faraday::ConnectionFailed, Faraday::SSLError => err
     raise MiqException::MiqUnreachableError, err.message, err.backtrace
+  rescue Faraday::Error::ClientError => err
+    raise MiqException::MiqCommunicationsError, JSON.parse(err.message)['detail']
   end
 
   def self.process_tasks(options)
