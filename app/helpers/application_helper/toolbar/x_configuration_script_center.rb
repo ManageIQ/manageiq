@@ -6,12 +6,12 @@ class ApplicationHelper::Toolbar::XConfigurationScriptCenter < ApplicationHelper
                                                 t = N_('Configuration'),
                                                 t,
                                                 :items => [
-                                                            button(
-                                                              :configscript_service_dialog,
-                                                              'pficon pficon-add-circle-o fa-lg',
-                                                              t = N_('Create Service Dialog from this Job Template'),
-                                                              t),
-                                                ]
+                                                  button(
+                                                    :configscript_service_dialog,
+                                                    'pficon pficon-add-circle-o fa-lg',
+                                                    t = N_('Create Service Dialog from this Job Template'),
+                                                    t),
+                                                          ]
                                               ),
-                                          ])
+                                            ])
 end
