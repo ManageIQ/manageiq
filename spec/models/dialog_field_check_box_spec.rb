@@ -176,14 +176,14 @@ describe DialogFieldCheckBox do
   end
 
   describe "#refresh_json_value" do
-    let(:dialog_field) { described_class.new }
+    let(:dialog_field) { described_class.new(:read_only => true) }
 
     before do
       allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return("f")
     end
 
     it "returns the checked value in a hash" do
-      expect(dialog_field.refresh_json_value).to eq(:checked => false)
+      expect(dialog_field.refresh_json_value).to eq(:checked => false, :read_only => true)
     end
 
     it "assigns the processed value to value" do

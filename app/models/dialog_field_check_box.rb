@@ -30,7 +30,7 @@ class DialogFieldCheckBox < DialogField
   def refresh_json_value
     @value = values_from_automate
 
-    {:checked => checked?}
+    {:checked => checked?, :read_only => read_only?}
   end
 
   def trigger_automate_value_updates

@@ -23,6 +23,7 @@ var dialogFieldRefresh = {
 
     $.post('dynamic_checkbox_refresh', {name: fieldName}, function(data) {
       $('.dynamic-checkbox-' + fieldId).prop('checked', data.values.checked);
+      dialogFieldRefresh.setReadOnly($('.dynamic-checkbox-' + fieldId), data.values.read_only);
       miqSparkle(false);
     });
   },
@@ -38,6 +39,8 @@ var dialogFieldRefresh = {
         $('.dynamic-date-min-' + fieldId).val(data.values.min);
       }
 
+      dialogFieldRefresh.setReadOnly($('.dynamic-date-' + fieldId), data.values.read_only);
+
       miqSparkle(false);
     });
   },
@@ -51,6 +54,7 @@ var dialogFieldRefresh = {
     })
     .done(function(data) {
       dialogFieldRefresh.addOptionsToDropDownList(data, fieldId);
+      dialogFieldRefresh.setReadOnly($('#' + fieldName), data.values.read_only);
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', data.values.checked_value);
     });
@@ -134,6 +138,7 @@ var dialogFieldRefresh = {
 
     $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
       $('.dynamic-text-area-' + fieldId).val(data.values.text);
+      dialogFieldRefresh.setReadOnly($('.dynamic-text-area-' + fieldId), data.values.read_only);
       miqSparkle(false);
     });
   },
@@ -143,6 +148,7 @@ var dialogFieldRefresh = {
 
     $.post('dynamic_text_box_refresh', {name: fieldName}, function(data) {
       $('.dynamic-text-box-' + fieldId).val(data.values.text);
+      dialogFieldRefresh.setReadOnly($('.dynamic-text-box-' + fieldId), data.values.read_only);
       miqSparkle(false);
     });
   },
@@ -150,6 +156,16 @@ var dialogFieldRefresh = {
   triggerAutoRefresh: function(fieldId, trigger) {
     if (trigger === "true") {
       parent.postMessage({fieldId: fieldId}, '*');
+    }
+  },
+
+  setReadOnly: function(field, readOnly) {
+    if (readOnly === true) {
+      field.attr('title', __('This element is disabled because it is read only'));
+      field.prop('disabled', true);
+    } else {
+      field.prop('disabled', false);
+      field.attr('title', '');
     }
   }
 };
