@@ -8,18 +8,20 @@ class LiveMetric < ActsAsArModel
     validate_raw_query(raw_query)
     processed = process_conditions(raw_query[:conditions])
     resource = fetch_resource(processed[:resource_type], processed[:resource_id])
+    ext_options = raw_query[:ext_options]
+    filtered_cols = ext_options ? ext_options[:only_cols] : nil
     if resource.nil?
       []
     else
-      filter_and_fetch_metrics(resource, raw_query[:ext_options][:only_cols], processed[:start_time],
+      filter_and_fetch_metrics(resource, filtered_cols, processed[:start_time],
                                processed[:end_time], processed[:interval_name])
     end
   end
 
   def self.validate_raw_query(raw)
-    unless raw && %i(conditions ext_options).all? { |k| raw.key?(k) }
-      _log.error("LiveMetric expression #{raw} doesn't contain 'conditions' or 'ext_options'.")
-      raise LiveMetricError, "LiveMetric expression doesn't contain 'conditions' or 'ext_options'"
+    unless raw && raw[:conditions]
+      _log.error("LiveMetric expression #{raw} doesn't contain 'conditions'.")
+      raise LiveMetricError, "LiveMetric expression doesn't contain 'conditions'"
     end
   end
 
