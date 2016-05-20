@@ -15,11 +15,11 @@
 %div{"ng-controller" => "emsKeypairController as vm", "ng-init" => "vm.initialize(#{ng_model}, formId)"}
   %div{"ng-show" => "#{ng_show}"}
     .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_userid.$error.required}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "#{prefix}_userid"}
         = userid_label
       .col-md-4
         %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
+                            "id"          => "#{prefix}_userid",
                             "ng-required" => "#{ng_reqd_userid}",
                             "ng-disabled" => userid_disabled,
                             "name"        => "#{prefix}_userid",
@@ -32,7 +32,7 @@
 
   %div{"ng-show" => "#{ng_show}"}
     .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_password.$error.required}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "#{prefix}_password"}
         %div{"ng-show" => "!vm.changeKey"}
           = private_key_label
         %div{"ng-show" => "vm.changeKey"}
@@ -40,7 +40,7 @@
       .col-md-4
         %div{"ng-if" => "vm.inEditMode('#{prefix}_userid')"}
           %input.form-control{"type"         => "file",
-                              "id"           => "textInput-markup",
+                              "id"           => "#{prefix}_password",
                               "ng-required"  => "#{ng_reqd_private_key}",
                               "ng-disabled"  => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
                               "ng-model"     => "#{ng_model}.#{prefix}_password",
@@ -50,7 +50,7 @@
                               "require-file" => ""}
         %div{"ng-if" => "!vm.inEditMode('#{prefix}_userid')"}
           %input.form-control{"type"         => "text",
-                              "id"           => "textInput-markup",
+                              "id"           => "#{prefix}_password",
                               "ng-required"  => "#{ng_reqd_private_key}",
                               "ng-disabled"  => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
                               "ng-model"     => "#{ng_model}.#{prefix}_password",
@@ -59,7 +59,7 @@
                               "checkchange"  => "",
                               "require-file" => ""}
         %input{"type"        => "password",
-               "id"          => "textInput-markup",
+               "id"          => "#{prefix}_password",
                "name"        => "#{prefix}_password",
                "style"       => "display: none !important",
                "ng-model"    => "#{ng_model}.#{prefix}_password",

@@ -3,11 +3,11 @@
 
 %div{"ng-if" => defined?(hostname_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_hostname.$invalid}"}
-    %label.col-md-2.control-label{"for" => "textInput-markup"}
+    %label.col-md-2.control-label{"for" => "#{prefix}_hostname"}
       = _('Hostname (or IPv4 or IPv6 address)')
     .col-md-8
       %input.form-control{"type"          => "text",
-                          "id"            => "textInput-markup",
+                          "id"            => "#{prefix}_hostname",
                           "name"          => "#{prefix}_hostname",
                           "ng-model"      => "#{ng_model}.#{prefix}_hostname",
                           "maxlength"     => "#{MAX_NAME_LEN}",
@@ -26,11 +26,11 @@
                          "emsCommonModel.emstype == 'openstack_infra' || " + |
                          "emsCommonModel.emstype == 'rhevm' || " +           |
                          "emsCommonModel.ems_controller == 'ems_container'"} |
-    %label.col-md-2.control-label{"for" => "textInput-markup"}
+    %label.col-md-2.control-label{"for" => "#{prefix}_api_port"}
       = _('API Port')
     .col-md-8
       %input.form-control{"type"          => "text",
-                          "id"            => "textInput-markup",
+                          "id"            => "#{prefix}_api_port",
                           "name"          => "#{prefix}_api_port",
                           "ng-model"      => "#{ng_model}.#{prefix}_api_port",
                           "maxlength"     => 15,
@@ -46,7 +46,7 @@
 %div{"ng-if" => defined?(security_protocol_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_security_protocol.$invalid}",
               "ng-if"    => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'scvmm'"}
-    %label.col-md-2.control-label{"for" => "textInput-markup"}
+    %label.col-md-2.control-label{"for" => "#{prefix}_security_protocol"}
       = _('Security Protocol')
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
       - prefix == "amqp" ? security_protocols = @openstack_amqp_security_protocols : security_protocols = @openstack_security_protocols
@@ -66,11 +66,11 @@
                        "selectpicker-for-select-tag" => "")
 .form-group{"ng-class" => "{'has-error': angularForm.realm.$invalid}",
             "ng-if" => "emsCommonModel.emstype == 'scvmm' && emsCommonModel.default_security_protocol == 'kerberos'"}
-  %label.col-md-2.control-label{"for" => "textInput-markup"}
+  %label.col-md-2.control-label{"for" => "realm"}
     = _('Realm')
   .col-md-8
     %input.form-control{"type"          => "text",
-                        "id"            => "textInput-markup",
+                        "id"            => "realm",
                         "name"          => "realm",
                         "ng-model"      => "emsCommonModel.realm",
                         "maxlength"     => "#{MAX_NAME_LEN}",

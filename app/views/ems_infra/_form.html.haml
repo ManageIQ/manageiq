@@ -47,7 +47,6 @@
         = select_tag('api_version',
                      options_for_select(@openstack_api_versions),
                      "ng-model"                    => "emsCommonModel.api_version",
-                     "id"                          => "ems_api_version",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
 
@@ -69,7 +68,6 @@
           = select_tag('zone',
                        options_for_select(@server_zones.sort_by { |name, _name| name }),
                        "ng-model"                    => "emsCommonModel.zone",
-                       "id"                          => "ems_zone",
                        "checkchange"                 => "",
                        "required"                    => "",
                        "selectpicker-for-select-tag" => "")
