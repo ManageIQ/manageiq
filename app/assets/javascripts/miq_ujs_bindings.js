@@ -101,10 +101,12 @@ $(document).ready(function () {
           });
         } else {
           // tack on the id and value to the URL
-          var urlstring = url + "?" + el.attr('id') + "=" + encodeURIComponent(el.prop('value'));
-          miqObserveRequest(urlstring, {
-            no_encoding: true,
+          var data = {};
+          data[el.attr('id')] = el.prop('value');
+
+          miqObserveRequest(url, {
             done: attemptAutoRefreshTrigger(parms),
+            data: data,
           });
         }
       });
