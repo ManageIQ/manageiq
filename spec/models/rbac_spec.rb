@@ -992,112 +992,117 @@ describe Rbac do
         # Vm.all(:order => "last_scan_on").each {|v| puts " #{v.last_scan_on ? v.last_scan_on.iso8601 : "nil"} => #{v.name} -> #{v.host_id}"}
 
         # Test >, <, >=, <=
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})).first
+        filter = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(13)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})).first
+        filter = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(13)
 
         # Test IS EMPTY and IS NOT EMPTY
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS EMPTY" => {"field" => "Vm-last_scan_on"})).first
+        filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-last_scan_on"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(2)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS EMPTY" => {"field" => "Vm-retires_on"})).first
+        filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-retires_on"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(2)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-last_scan_on"})).first
+        filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-last_scan_on"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(60)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-retires_on"})).first
+        filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-retires_on"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(60)
 
         # Test IS
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(3)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(22)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Today"})).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Today"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(22)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(1)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "3 Hours Ago"})).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "3 Hours Ago"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(22)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Month"})).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Month"})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(9)
 
         # Test FROM
-        result = Rbac.search(:class  => "Vm",
-                             :filter => MiqExpression.new(
-                               "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2010-07-11", "2010-12-31"]}
-                             )).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2010-07-11", "2010-12-31"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(20)
 
-        result = Rbac.search(:class  => "Vm",
-                             :filter => MiqExpression.new(
-                               "FROM" => {"field" => "Vm-retires_on", "value" => ["2010-07-11", "2010-12-31"]}
-                             )).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2010-07-11", "2010-12-31"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(20)
 
-        result = Rbac.search(:class  => "Vm",
-                             :filter => MiqExpression.new(
-                               "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]}
-                             )).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(4)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(8)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(8)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "This Week"]})).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "This Week"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(33)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "1 Month Ago"]})).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "1 Month Ago"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(14)
 
-        result = Rbac.search(:class => "Vm", :filter => MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]})).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]})
+        result = Vm.where(filter.to_sql.first)
         expect(result.length).to eq(9)
 
         # Inside a find/check expression
-        result = Rbac.search(:class => "Host", :filter => MiqExpression.new(
+        filter = MiqExpression.new(
           "FIND" => {
             "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on", "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
-            "search"   => {"IS NOT NULL" => {"field" => "Host.vms-name"}}}
-        )).first
+            "search"   => {"IS NOT NULL" => {"field" => "Host.vms-name"}}})
+        result = Rbac.search(:class => "Host", :filter => filter).first
         expect(result.length).to eq(1)
 
-        result = Rbac.search(:class => "Host", :filter => MiqExpression.new(
+        filter = MiqExpression.new(
           "FIND" => {
             "search"   => {"FROM" => {"field" => "Host.vms-last_scan_on", "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
             "checkall" => {"IS NOT NULL" => {"field" => "Host.vms-name"}}}
-        )).first
+        )
+        result = Rbac.search(:class => "Host", :filter => filter).first
         expect(result.length).to eq(1)
 
         # Test FROM with time zone
-        result = Rbac.search(:class  => "Vm",
-                             :user   => user,
-                             :filter => MiqExpression.new(
-                               "FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]}
-                             )).first
+        filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
+        result = Vm.where(filter.to_sql(user.get_timezone).first)
         expect(result.length).to eq(8)
 
         # Test IS with time zone
-        result = Rbac.search(:class  => "Vm",
-                             :user   => user,
-                             :filter => MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-                            ).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+        result = Vm.where(filter.to_sql(user.get_timezone).first)
         expect(result.length).to eq(3)
 
-        result = Rbac.search(:class  => "Vm",
-                             :user   => user,
-                             :filter => MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
-                            ).first
+        filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
+        result = Vm.where(filter.to_sql(user.get_timezone).first)
         expect(result.length).to eq(17)
 
         # TODO: More tests with time zone
