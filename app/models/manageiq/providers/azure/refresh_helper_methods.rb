@@ -39,4 +39,8 @@ module ManageIQ::Providers::Azure::RefreshHelperMethods
   def network_interfaces
     @network_interfaces ||= gather_data_for_this_region(@nis)
   end
+
+  def ip_addresses
+    @ip_addresses ||= gather_data_for_this_region(@ips)
+  end
 end

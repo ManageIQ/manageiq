@@ -5,6 +5,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_azure, :zone => zone, :provider_region => 'eastus')
 
+    # This will only pick up resources that the "MIQ Azure Testing" service principal has access to.
     @client_id  = Rails.application.secrets.azure.try(:[], 'client_id') || 'AZURE_CLIENT_ID'
     @client_key = Rails.application.secrets.azure.try(:[], 'client_secret') || 'AZURE_CLIENT_SECRET'
     @tenant_id  = Rails.application.secrets.azure.try(:[], 'tenant_id') || 'AZURE_TENANT_ID'
@@ -65,6 +66,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       assert_specific_template
       assert_specific_orchestration_template
       assert_specific_orchestration_stack
+      assert_specific_nic_and_ip
     end
   end
 
@@ -73,25 +75,25 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :ext_management_system         => 2,
       :flavor                        => 53,
       :availability_zone             => 1,
-      :vm_or_template                => 8,
-      :vm                            => 7,
+      :vm_or_template                => 9,
+      :vm                            => 8,
       :miq_template                  => 1,
-      :disk                          => 7,
+      :disk                          => 8,
       :guest_device                  => 0,
-      :hardware                      => 8,
-      :network                       => 12,
-      :operating_system              => 7,
+      :hardware                      => 9,
+      :network                       => 14,
+      :operating_system              => 8,
       :relationship                  => 0,
-      :miq_queue                     => 9,
+      :miq_queue                     => 10,
       :orchestration_template        => 2,
-      :orchestration_stack           => 9,
-      :orchestration_stack_parameter => 134,
+      :orchestration_stack           => 10,
+      :orchestration_stack_parameter => 138,
       :orchestration_stack_output    => 7,
-      :orchestration_stack_resource  => 41,
+      :orchestration_stack_resource  => 42,
       :security_group                => 6,
-      :network_port                  => 8,
+      :network_port                  => 9,
       :cloud_network                 => 4,
-      :floating_ip                   => 8,
+      :floating_ip                   => 9,
       :network_router                => 0,
       :cloud_subnet                  => 4,
     }
@@ -146,7 +148,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(@ems.miq_templates.size).to eq(expected_table_counts[:miq_template])
 
     expect(@ems.orchestration_stacks.size).to eql(expected_table_counts[:orchestration_stack])
-    expect(@ems.direct_orchestration_stacks.size).to eql(8)
+    expect(@ems.direct_orchestration_stacks.size).to eql(9)
   end
 
   def assert_specific_security_group
@@ -546,5 +548,36 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     # orchestration stack can have cloud networks
     cloud_network = CloudNetwork.find_by(:name => 'spec0deply1vnet')
     expect(cloud_network.orchestration_stack).to eql(@orch_stack)
+  end
+
+  def assert_specific_nic_and_ip
+    nic_group  = 'miq-azure-test1' # EastUS
+    ip_group   = 'miq-azure-test4' # Also EastUS
+    ip_address = '40.76.5.200'
+
+    nic_name = "/subscriptions/#{@subscription_id}/resourceGroups"\
+               "/#{nic_group}/providers/Microsoft.Network"\
+               "/networkInterfaces/miqmismatch1"
+
+    ems_ref = "/subscriptions/#{@subscription_id}/resourceGroups"\
+               "/#{ip_group}/providers/Microsoft.Network"\
+               "/publicIPAddresses/miqmismatch1"
+
+    @network_port = ManageIQ::Providers::Azure::CloudManager::NetworkPort.where(:name => nic_name).first
+    @floating_ip  = ManageIQ::Providers::Azure::CloudManager::FloatingIp.where(:ems_ref => ems_ref).first
+
+    expect(@network_port).to have_attributes(
+      :status  => 'Succeeded',
+      :name    => nic_name,
+      :ems_ref => nic_name, # Same
+    )
+
+    expect(@floating_ip).to have_attributes(
+      :status  => 'Succeeded',
+      :address => ip_address,
+      :ems_ref => ems_ref,
+    )
+
+    expect(@network_port.device.id).to eql(@floating_ip.vm.id)
   end
 end

@@ -275,8 +275,9 @@ module ManageIQ::Providers
             public_ip_obj = ipconfig.properties.try(:public_ip_address)
             next unless public_ip_obj
 
-            name = File.basename(public_ip_obj.id)
-            ip_profile = @ips.get(name, nic_profile.resource_group)
+            ip_profile = ip_addresses.find { |ip| ip.id == public_ip_obj.id }
+            next unless ip_profile
+
             public_ip_addr = ip_profile.properties.try(:ip_address)
             networks_array << {:description => "public", :ipaddress => public_ip_addr, :hostname => hostname}
           end
