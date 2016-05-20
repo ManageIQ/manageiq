@@ -39,6 +39,10 @@ module VirtualArel
       end
     end
 
+    def attribute_supported_by_sql?(name)
+      load_schema
+      !virtual_attribute?(name) || !!_virtual_arel[name.to_s]
+    end
     private
 
     def define_virtual_arel(name, arel)
