@@ -9,7 +9,7 @@
     - if api_auth_token && validation_url
       :javascript
         sessionStorage.miq_token = '#{j_str api_auth_token}';
-        window.location.href = '#{j_str validation_url}';
+        window.location = '#{j_str validation_url}';
     - else
       :javascript
-        window.location.href = '/dashboard/logout';
+        window.location = '/dashboard/logout';
