@@ -18,7 +18,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(catalog_item parent_service)
+    %i(catalog_item parent_service orchestration_stack)
   end
 
   def textual_group_tags
@@ -102,6 +102,10 @@ module ServiceHelper::TextualSummary
       :title => _("Show this Service's Parent Service"),
       :link  => url_for(:controller => 'service', :action => 'show', :id => parent)
     } if parent
+  end
+
+  def textual_orchestration_stack
+    @record.try(:orchestration_stack)
   end
 
   def textual_owner
