@@ -19,12 +19,6 @@ class ApplicationHelper::Toolbar::EmsNetworkCenter < ApplicationHelper::Toolbar:
           :confirm => N_("Refresh relationships and power states for all items related to this \#{ui_lookup(:table=>\"ems_network\")}?")),
         separator,
         button(
-          :ems_network_edit,
-          'pficon pficon-edit fa-lg',
-          t = N_('Edit this #{ui_lookup(:table=>"ems_network")}'),
-          t,
-          :url => "/edit"),
-        button(
           :ems_network_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this #{ui_lookup(:table=>"ems_network")} from the VMDB'),
