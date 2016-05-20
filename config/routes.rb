@@ -1574,6 +1574,7 @@ Vmdb::Application.routes.draw do
         import_export
         log
         resolve
+        review_git_import
         review_import
       ),
       :post => %w(
@@ -1583,6 +1584,7 @@ Vmdb::Application.routes.draw do
         import_automate_datastore
         reset_datastore
         resolve
+        retrieve_git_datastore
         upload
         upload_import_file
         wait_for_task

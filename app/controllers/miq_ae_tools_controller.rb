@@ -185,6 +185,34 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
     @message = params[:message]
   end
 
+  def retrieve_git_datastore
+    redirect_options = {:action => :review_git_import}
+    git_url = params[:git_url]
+
+    if git_url.blank?
+      add_flash(_("Please provide a valid git URL"), :error)
+    else
+      git_repo = GitRepository.create(:url => git_url)
+      git_repo.update_authentication(:values => {:userid => params[:git_username], :password => params[:git_password]})
+      git_repo.refresh
+      add_flash(_("Successfully found git repository, please choose a branch or tag"), :success)
+      branch_names = git_repo.git_branches.collect(&:name)
+      tag_names = git_repo.git_tags.collect(&:name)
+      redirect_options[:git_branches_and_tags] = (branch_names + tag_names).to_json
+      redirect_options[:git_repo_id] = git_repo.id
+    end
+
+    redirect_options[:message] = @flash_array.first.to_json
+
+    redirect_to redirect_options
+  end
+
+  def review_git_import
+    @message = params[:message]
+    @git_branches_and_tags = params[:git_branches_and_tags]
+    @git_repo_id = params[:git_repo_id]
+  end
+
   # Import classes
   def upload
     if params[:upload] && !params[:upload][:datastore].blank?

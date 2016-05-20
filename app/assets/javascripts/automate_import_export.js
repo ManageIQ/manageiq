@@ -31,6 +31,28 @@ var Automate = {
       });
   },
 
+  renderGitImport: function(branchesAndTags, gitRepoId, messages) {
+    if (JSON.parse(messages).level === "error") {
+      showErrorMessage(JSON.parse(message).message);
+    } else {
+      $('.hidden-git-repo-id').val(gitRepoId);
+      $('.git-import-data').show();
+      $('.import-or-export').hide();
+      showSuccessMessage(JSON.parse(messages).message);
+
+      $.each(JSON.parse(branchesAndTags), function(index, child) {
+        $('select.git-branches-and-tags').append(
+          $('<option>', {
+          value: child,
+          text: child
+        })
+        );
+      });
+
+      $('select.git-branches-and-tags').selectpicker('refresh');
+    }
+  },
+
   addDomainOptions: function(domains) {
     $('select.importing-domains').empty();
 

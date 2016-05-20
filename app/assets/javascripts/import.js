@@ -3,7 +3,29 @@
 var ImportSetup = {
   listenForPostMessages: function(getAndRenderJsonCallback) {
     window.addEventListener('message', function(event) {
-      ImportSetup.respondToPostMessages(event, getAndRenderJsonCallback);
+      if (event.data.import_file_upload_id) {
+        ImportSetup.respondToPostMessages(event, getAndRenderJsonCallback);
+      }
+    });
+  },
+
+  listenForGitPostMessages: function() {
+    window.addEventListener('message', function(event) {
+      var unencodedMessage = event.data.message.replace(/&quot;/g, '"');
+      var messageData = JSON.parse(unencodedMessage);
+
+      if (messageData.level === 'error') {
+        showErrorMessage(messageData.message);
+        $('#git-url-import').prop('disabled', null);
+      }
+
+      if (event.data.git_branches_and_tags) {
+        Automate.renderGitImport(
+          event.data.git_branches_and_tags,
+          event.data.git_repo_id,
+          event.data.message
+        );
+      }
     });
   },
 
