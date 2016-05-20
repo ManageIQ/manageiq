@@ -366,7 +366,7 @@ module VmHelper::TextualSummary
 
   def textual_service
     h = {:label => _("Service"), :image => "service"}
-    service = @record.service || @record.try(:orchestration_stack).try(:service)
+    service = @record.service || @record.try(:orchestration_stack).try(:service) || @record.try(:orchestration_stack).try(:root).try(:service)
     if service.nil?
       h[:value] = _("None")
     else
