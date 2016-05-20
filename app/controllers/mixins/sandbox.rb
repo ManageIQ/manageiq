@@ -39,6 +39,7 @@ module Sandbox
     cb_assignments_tree
     cb_rates_tree
     cb_reports_tree
+    configuration_scripts_tree
     condition_tree
     containers_tree
     containers_filter_tree
@@ -98,6 +99,7 @@ module Sandbox
     cb_assignments
     cb_rates
     cb_reports
+    configuration_scripts
     condition
     containers
     containers_filter

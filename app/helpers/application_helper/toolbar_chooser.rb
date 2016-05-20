@@ -96,10 +96,8 @@ class ApplicationHelper::ToolbarChooser
         end
       elsif @layout == "miq_policy_rsop"
         return session[:rsop_tree] ? "miq_policy_rsop_center_tb" : "blank_view_tb"
-      elsif @layout == "provider_foreman"
-        if x_active_tree == :configuration_manager_providers_tree || :cs_filter_tree
-          return center_toolbar_filename_configuration_manager_providers
-        end
+      elsif @layout == "provider_foreman" && [:configuration_manager_providers_tree, :cs_filter_tree, :configuration_scripts_tree].include?(x_active_tree)
+        return center_toolbar_filename_configuration_manager_providers
       else
         if x_active_tree == :ae_tree
           return center_toolbar_filename_automate
@@ -507,6 +505,8 @@ class ApplicationHelper::ToolbarChooser
       configuration_manager_providers_tree_center_tb(nodes)
     elsif x_active_tree == :cs_filter_tree
       cs_filter_tree_center_tb(nodes)
+    elsif x_active_tree == :configuration_scripts_tree
+      configuration_scripts_tree_center_tb(nodes)
     end
   end
 
@@ -529,6 +529,14 @@ class ApplicationHelper::ToolbarChooser
   def cs_filter_tree_center_tb(nodes)
     case nodes.first
     when "root", "ms", "xx", "csa", "csf" then "configured_system_foreman_center_tb"
+    end
+  end
+
+  def configuration_scripts_tree_center_tb(nodes)
+    if %w(root at).include?(nodes.first)
+      "configuration_scripts_center_tb"
+    else
+      "configuration_script_center_tb"
     end
   end
 
