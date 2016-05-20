@@ -18,6 +18,7 @@ module OpenstackHandle
     SERVICE_NAME_MAP = {
       "Compute"       => :nova,
       "Network"       => :neutron,
+      "NFV"           => :nfv,
       "Image"         => :glance,
       "Volume"        => :cinder,
       "Storage"       => :swift,
@@ -155,7 +156,7 @@ module OpenstackHandle
         # For identity ,there is only domain scope, with project_name nil
         opts[:openstack_project_name] = @project_name = tenant
       end
-      
+
       opts[:openstack_domain_id] = domain
 
       svc_cache = (@connection_cache[service] ||= {})
@@ -217,6 +218,15 @@ module OpenstackHandle
 
     def detect_network_service(tenant_name = nil)
       detect_service("Network", tenant_name)
+    end
+
+    def nfv_service(tenant_name = nil)
+      connect(:service => "NFV", :tenant_name => tenant_name)
+    end
+    alias_method :connect_nfv, :nfv_service
+
+    def detect_nfv_service(tenant_name = nil)
+      detect_service("NFV", tenant_name)
     end
 
     def image_service(tenant_name = nil)

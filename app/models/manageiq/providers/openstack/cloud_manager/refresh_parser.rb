@@ -25,6 +25,7 @@ module ManageIQ::Providers
       @compute_service            = @connection # for consistency
       # TODO(lsmola) delete network_service once everything is moved under NetworkManager
       @network_service            = @os_handle.detect_network_service
+      @nfv_service                = @os_handle.detect_nfv_service
       @image_service              = @os_handle.detect_image_service
       @volume_service             = @os_handle.detect_volume_service
       @storage_service            = @os_handle.detect_storage_service
@@ -59,6 +60,8 @@ module ManageIQ::Providers
       get_quotas
       get_key_pairs
       load_orchestration_stacks
+      get_vnfs
+      get_vnfds
       # get_hosts
       get_images
       get_servers
@@ -86,6 +89,10 @@ module ManageIQ::Providers
 
     def servers
       @servers ||= @connection.handled_list(:servers)
+    end
+
+    def vnfs
+      @vnfs ||= @nfv_service.handled_list(:vnfs)
     end
 
     def availability_zones_compute
@@ -155,6 +162,19 @@ module ManageIQ::Providers
     def get_servers
       openstack_infra_hosts = @ems.provider.try(:infra_ems).try(:hosts)
       process_collection(servers, :vms) { |server| parse_server(server, openstack_infra_hosts) }
+    end
+
+    def get_vnfds
+      return unless @nfv_service
+
+      process_collection(@nfv_service.handled_list(:vnfds), :orchestration_templates) { |vnfd| parse_vnfd(vnfd) }
+    end
+
+    def get_vnfs
+      return unless @nfv_service
+
+      process_collection(vnfs, :orchestration_stacks) { |stack| parse_vnf(stack) }
+      update_vnf_stack_relations
     end
 
     def link_vm_genealogy
@@ -448,6 +468,44 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
+    def parse_vnf(vnf)
+      uid = vnf.id.to_s
+
+      outputs = [
+        {
+          :ems_ref     => uid + 'mgmt_url',
+          :key         => 'mgmt_url',
+          :value       => vnf.mgmt_url,
+        }
+      ]
+
+      new_result = {
+        :type                   => "ManageIQ::Providers::Openstack::CloudManager::Vnf",
+        :ems_ref                => uid,
+        :name                   => vnf.name,
+        :description            => vnf.description,
+        :status                 => vnf.status,
+        :child_stack_id         => vnf.instance_id,
+        :outputs                => outputs,
+        :cloud_tenant           => @data_index.fetch_path(:cloud_tenants, vnf.tenant_id)
+      }
+      return uid, new_result
+    end
+
+    def parse_vnfd(vnfd)
+      uid = vnfd.id
+
+      new_result = {
+        :type        => "OrchestrationTemplateVnfd",
+        :ems_ref     => uid,
+        :name        => vnfd.name,
+        :description => vnfd.description,
+        :content     => vnfd.vnf_attributes["vnfd"],
+        :orderable   => true
+      }
+      return uid, new_result
+    end
+
     def clean_up_extra_flavor_keys
       @data[:flavors].each do |f|
         f.delete(:ephemeral_disk)
@@ -491,6 +549,16 @@ module ManageIQ::Providers
       }
 
       return uid, new_result
+    end
+
+    # Remap from children to parent
+    def update_vnf_stack_relations
+      @data[:orchestration_stacks].each do |stack|
+        next if (child_stack_id = stack.delete(:child_stack_id)).blank?
+
+        child_stack = @data_index.fetch_path(:orchestration_stacks, child_stack_id)
+        child_stack[:parent] = stack if child_stack
+      end
     end
   end
 end
