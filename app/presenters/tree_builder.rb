@@ -116,13 +116,13 @@ class TreeBuilder
         icon  = :miq_region
       end
       [title, title, icon]
-    when :cb_assignments_tree           then [_("Assignments"),                    _("Assignments")]
-    when :cb_rates_tree                 then [_("Rates"),                          _("Rates")]
-    when :cb_reports_tree               then [_("Saved Chargeback Reports"),       _("Saved Chargeback Reports")]
-    when :containers_tree               then [_("All Containers"),                 _("All Containers")]
-    when :containers_filter_tree        then [_("All Containers"),                 _("All Containers")]
-    when :configuration_scripts_tree    then [_("All Ansible Job Templates"),      _("All Ansible Job Templates")]
-    when :cs_filter_tree                then [_("All Configured Systems"),         _("All Configured Systems")]
+    when :cb_assignments_tree           then [_("Assignments"),                     _("Assignments")]
+    when :cb_rates_tree                 then [_("Rates"),                           _("Rates")]
+    when :cb_reports_tree               then [_("Saved Chargeback Reports"),        _("Saved Chargeback Reports")]
+    when :containers_tree               then [_("All Containers"),                  _("All Containers")]
+    when :containers_filter_tree        then [_("All Containers"),                  _("All Containers")]
+    when :configuration_scripts_tree    then [_("All Ansible Tower Job Templates"), _("All Ansible Tower Job Templates")]
+    when :cs_filter_tree                then [_("All Configured Systems"),          _("All Configured Systems")]
     when :customization_templates_tree  then
       title = "All #{ui_lookup(:models => 'CustomizationTemplate')} - #{ui_lookup(:models => 'PxeImageType')}"
       [title, title]
