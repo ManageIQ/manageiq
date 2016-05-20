@@ -20,8 +20,7 @@
             :javascript
               miqInitBootstrapSwitch('all_clusters', "#{url}")
           .note
-            Note:
-            %b= _("Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
+            %b= _("Note: Collect for All %s must be checked to be able to collect C & U data from Cloud Providers such as Red Hat OpenStack or Amazon EC2") % clusters_title
           #clusters_div{:style => "display:#{@edit[:new][:all_clusters] ? "none" : ""}"}
             - cluster_title = title_for_cluster
             - if @edit[:new][:clusters].blank? && @edit[:new][:non_cl_hosts].blank?
