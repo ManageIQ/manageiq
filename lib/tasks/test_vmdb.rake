@@ -12,7 +12,7 @@ namespace :test do
     task :teardown
   end
 
-  desc "Run all vmdb specs; Use PARALLEL=1 to run in parallel."
+  desc "Run all vmdb specs; Use PARALLEL=true to run in parallel."
   task :vmdb do
     if ENV['PARALLEL']
       Rake::Task['test:vmdb_parallel'].invoke
