@@ -31,9 +31,22 @@ describe OpenstackRabbitEventMonitor do
       expect(OpenstackRabbitEventMonitor.test_connection(@options)).to be_truthy
     end
 
-    it "returns false on an unsuccessful test" do
+    it "raise exception on an unsuccessful test with bad credentials" do
+      expect(@rabbit_connection).to receive(:start).and_raise(Bunny::AuthenticationFailureError.new('test', 'test', 5))
+      expect(@rabbit_connection).to receive(:close)
+      expect { OpenstackRabbitEventMonitor.test_connection(@options) }.to raise_error(MiqException::MiqInvalidCredentialsError)
+    end
+
+    it "raise exception on an unsuccessful test with unreachable hostname" do
+      expect(@rabbit_connection).to receive(:start).and_raise(Bunny::TCPConnectionFailedForAllHosts.new)
+      expect(@rabbit_connection).to receive(:close)
+      expect { OpenstackRabbitEventMonitor.test_connection(@options) }.to raise_error(MiqException::MiqHostError)
+    end
+
+    it "raise exception on an unsuccessful test with unexpected exception" do
       expect(@rabbit_connection).to receive(:start).and_raise("Cannot connect to rabbit amqp")
-      expect(OpenstackRabbitEventMonitor.test_connection(@options)).to be_falsey
+      expect(@rabbit_connection).to receive(:close)
+      expect { OpenstackRabbitEventMonitor.test_connection(@options) }.to raise_error("Cannot connect to rabbit amqp")
     end
   end
 

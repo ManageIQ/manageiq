@@ -9,8 +9,8 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
       return true
     rescue => ex
       $log.debug("Skipping Openstack Ceilometer events. Availability check failed with #{ex}.") if $log
+      raise
     end
-    false
   end
 
   def self.plugin_priority

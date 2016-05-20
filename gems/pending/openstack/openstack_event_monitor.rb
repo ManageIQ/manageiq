@@ -36,7 +36,7 @@ class OpenstackEventMonitor
   # Need to consider how this will impact the model for legacy amqp connection
   # testing
   def self.test_amqp_connection(options)
-    available?(options)
+    event_monitor_selected_class(options).available?(options)
   end
 
   # See OpenstackEventMonitor.new for details on event monitor selection
@@ -67,24 +67,28 @@ class OpenstackEventMonitor
   cache_with_timeout(:event_monitor_cache) { Hash.new }
 
   def self.event_monitor_class(options)
-    event_monitor_class = case options[:events_monitor]
-                          when :ceilometer
-                            OpenstackCeilometerEventMonitor
-                          when :amqp
-                            OpenstackRabbitEventMonitor
-                          else
-                            OpenstackNullEventMonitor
-                          end
+    event_monitor_class = event_monitor_selected_class(options)
 
     key = event_monitor_key(options)
     event_monitor_class_cache[key] ||= available_event_monitor(event_monitor_class, options)
+  end
+
+  def self.event_monitor_selected_class(options)
+    case options[:events_monitor]
+    when :ceilometer
+      OpenstackCeilometerEventMonitor
+    when :amqp
+      OpenstackRabbitEventMonitor
+    else
+      OpenstackNullEventMonitor
+    end
   end
 
   def self.available_event_monitor(event_monitor_class, options)
     monitor_available = begin
       event_monitor_class.available?(options)
     rescue => e
-      $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor}
+      $log.warn("MIQ(#{self}.#{__method__}) Error occured testing #{event_monitor_selected_class(options)}
                  for #{options[:hostname]}. Event collection will be disabled for
                  #{options[:hostname]}. #{e.message}")
       false
