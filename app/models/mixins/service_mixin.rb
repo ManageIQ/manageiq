@@ -9,7 +9,6 @@ module ServiceMixin
     serialize  :options, Hash
 
     include UuidMixin
-    include OwnershipMixin
     include ReportableMixin
     acts_as_miq_taggable
   end
