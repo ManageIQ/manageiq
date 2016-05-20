@@ -71,6 +71,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def enable
+    assert_valid_schemas!
     pglogical.subscription_enable(id).check
   end
 
