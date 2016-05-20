@@ -1,6 +1,6 @@
 class ApiController
   module Reports
-    SCHEDULE_BODY_ATTR = %w(start_date interval time_zone send_email).freeze
+    SCHEDULE_ATTRS_TO_TRANSFORM = %w(start_date interval time_zone send_email).freeze
     #
     # Reports Supporting Methods
     #
@@ -72,7 +72,7 @@ class ApiController
     end
 
     def fetch_schedule_data(data)
-      schedule_data = data.except(*SCHEDULE_BODY_ATTR)
+      schedule_data = data.except(*SCHEDULE_ATTRS_TO_TRANSFORM)
 
       schedule_data['userid'] = @auth_user_obj.userid
       schedule_data['run_at'] = {
@@ -84,10 +84,9 @@ class ApiController
 
       email_url_prefix = url_for(:controller => "report",
                                  :action     => "show_saved") + "/"
-      data['send_email'] ||= false
 
       schedule_options = {
-        :send_email       => data['send_email'],
+        :send_email       => data['send_email'] || false,
         :email_url_prefix => email_url_prefix,
         :miq_group_id     => @auth_user_obj.current_group_id
       }
