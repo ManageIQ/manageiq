@@ -853,8 +853,9 @@ class MiqVimVm
   # Find a SCSI controller and
   # return its key and next available unit number.
   #
-  def getScsiCandU
-    controller_key = unit_number = nil
+  def available_scsi_units
+    scsi_units       = []
+    all_unit_numbers = [*0..MAX_SCSI_DEVICES]
 
     devices = getProp("config.hardware")["config"]["hardware"]["device"]
     scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
@@ -875,14 +876,18 @@ class MiqVimVm
       populated_units << scsi_controller["scsiCtlrUnitNumber"].to_i
 
       # Pick the lowest available unit number
-      all_unit_numbers = [*0..MAX_SCSI_DEVICES]
       available_units  = all_unit_numbers - populated_units
 
-      unit_number = available_units.sort.first
-      break
+      available_units.each do |unit|
+        scsi_units << [controller_key, unit]
+      end
     end
 
-    return controller_key, unit_number
+    scsi_units
+  end # def available_scsi_units
+
+  def getScsiCandU
+    available_scsi_units.first
   end # def getScsiCandU
 
   #
