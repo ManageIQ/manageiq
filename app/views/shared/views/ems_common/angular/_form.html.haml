@@ -4,11 +4,11 @@
   = render :partial => "layouts/flash_msg"
   %div
     .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_name"}
         = _('Name')
       .col-md-8
         %input.form-control{"type"           => "text",
-                            "id"             => "textInput-markup",
+                            "id"             => "ems_name",
                             "name"           => "name",
                             "ng-model"       => "emsCommonModel.name",
                             "maxlength"      => "#{MAX_NAME_LEN}",
@@ -20,7 +20,7 @@
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.emstype.$invalid}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_type"}
         = _('Type')
       .col-md-8
         = select_tag('emstype',
@@ -28,12 +28,13 @@
                      "ng-if"                       => "newRecord",
                      "ng-model"                    => "emsCommonModel.emstype",
                      "ng-change"                   => "providerTypeChanged()",
+                     "id"                          => "ems_type",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
         %div{"ng-if" => "!newRecord"}
           %label.form-control{"type"        => "text",
-                              "id"          => "textInput-markup",
+                              "id"          => "ems_type",
                               "name"        => "emstype",
                               "ng-if"       => "!newRecord",
                               "readonly"    => true,
@@ -42,13 +43,14 @@
 
 
     .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "isRegionSupported()", "ng-switch" => "", "on" => "emsCommonModel.emstype"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_region"}
         = _('Region')
       .col-md-8
         = select_tag('provider_region',
                      options_for_select([["<#{_('Choose')}>", nil]] + Array(@amazon_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-model"                    => "emsCommonModel.provider_region",
                      "ng-switch-when"              => "ec2",
+                     "id"                          => "ems_region",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
@@ -56,27 +58,29 @@
                      options_for_select([["<#{_('Choose')}>", nil]] + Array(@azure_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-model"                    => "emsCommonModel.provider_region",
                      "ng-switch-when"              => "azure",
+                     "id"                          => "ems_region",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
 
     .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "emsCommonModel.emstype == 'gce'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_preferred_region"}
         = _('Preferred Region')
       .col-md-8
         = select_tag('provider_region',
                      options_for_select([["<#{_('Choose')}>", nil]] + Array(@google_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
                      "ng-model"                    => "emsCommonModel.provider_region",
+                     "id"                          => "ems_preferred_region",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
 
     .form-group{"ng-class" => "{'has-error': angularForm.project.$invalid}", "ng-if" => "emsCommonModel.emstype == 'gce'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_project"}
         = _('Project')
       .col-md-8
         %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
+                            "id"          => "ems_project",
                             "name"        => "project",
                             "ng-model"    => "emsCommonModel.project",
                             "maxlength"   => "#{MAX_NAME_LEN}",
@@ -86,11 +90,11 @@
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.azure_tenant_id.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_tenant_id"}
         = _('Tenant ID')
       .col-md-8
         %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
+                            "id"          => "ems_tenant_id",
                             "name"        => "azure_tenant_id",
                             "ng-model"    => "emsCommonModel.azure_tenant_id",
                             "required"    => "",
@@ -99,53 +103,55 @@
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.subscription.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_subscription"}
         = _('Subscription ID')
       .col-md-8
         %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
+                            "id"          => "ems_subscription",
                             "name"        => "subscription",
                             "ng-model"    => "emsCommonModel.subscription",
                             "checkchange" => ""}
 
     .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_api_version"}
         = _("API Version")
       .col-md-8
         = select_tag('api_version',
                      options_for_select(@openstack_api_versions),
                      "ng-model"                    => "emsCommonModel.api_version",
+                     "id"                          => "ems_api_version",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
 
     .form-group{"ng-class" => "{'has-error': angularForm.keystone_v3_domain_id.$invalid}", "ng-if" => "emsCommonModel.api_version == 'v3' && (emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra')"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_keystone_domain_id"}
         = _('Keystone V3 Domain ID')
       .col-md-8
         %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
+                            "id"          => "ems_keystone_domain_id",
                             "name"        => "keystone_v3_domain_id",
                             "ng-model"    => "emsCommonModel.keystone_v3_domain_id",
                             "required"    => true,
                             "checkchange" => ""}
 
     .form-group{"ng-class" => "{'has-error': angularForm.provider_id.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' && emsCommonModel.openstack_infra_providers_exist"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_infra_provider_id"}
         = _("Openstack Infra Provider")
       .col-md-8
         = select_tag('provider_id',
                      options_for_select([["<#{_('blank')}>", nil]] + @openstack_infra_providers.sort_by { |name, _name| name }),
                      "ng-model"                    => "emsCommonModel.provider_id",
+                     "id"                          => "ems_infra_provider_id",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
 
     .form-group{"ng-class" => "{'has-error': angularForm.zone.$invalid}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_zone"}
         = _("Zone")
       .col-md-8
         - if @server_zones.length <= 1
           %input.form-control{"type"        => "text",
-                              "id"          => "textInput-markup",
+                              "id"          => "ems_zone",
                               "name"        => "zone",
                               "ng-model"    => "emsCommonModel.zone",
                               "maxlength"   => 15,
@@ -157,16 +163,17 @@
           = select_tag('zone',
                        options_for_select(@server_zones.sort_by { |name, _name| name }),
                        "ng-model"                    => "emsCommonModel.zone",
+                       "id"                          => "ems_zone",
                        "checkchange"                 => "",
                        "required"                    => "",
                        "selectpicker-for-select-tag" => "")
 
     .form-group{"ng-class" => "{'has-error': angularForm.host_default_vnc_port_start.$invalid}", "ng-if" => "emsCommonModel.emstype_vm"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_vnc_start_port"}
         = _('Host Default VNC Start Port')
       .col-md-8
         %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
+                            "id"          => "ems_vnc_start_port",
                             "name"        => "host_default_vnc_port_start",
                             "ng-model"    => "emsCommonModel.host_default_vnc_port_start",
                             "maxlength"   => 6,
@@ -175,11 +182,11 @@
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.host_default_vnc_port_end.$invalid}", "ng-if" => "emsCommonModel.emstype_vm"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_vnc_end_port"}
         = _('Host Default VNC End Port')
       .col-md-8
         %input.form-control{"type"        => "text",
-                            "id"          => "textInput-markup",
+                            "id"          => "ems_vnc_end_port",
                             "name"        => "host_default_vnc_port_end",
                             "ng-model"    => "emsCommonModel.host_default_vnc_port_end",
                             "maxlength"   => 6,
