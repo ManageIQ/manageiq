@@ -399,21 +399,21 @@ module UiConstants
   VALID_PLANNING_VM_MODES = PLANNING_VM_MODES.keys.index_by(&:to_s)
 
   TASK_TIME_PERIODS = {
-    0 => _("Today"),
-    1 => _("1 Day Ago"),
-    2 => _("2 Days Ago"),
-    3 => _("3 Days Ago"),
-    4 => _("4 Days Ago"),
-    5 => _("5 Days Ago"),
-    6 => _("6 Days Ago")
+    0 => N_("Today"),
+    1 => N_("1 Day Ago"),
+    2 => N_("2 Days Ago"),
+    3 => N_("3 Days Ago"),
+    4 => N_("4 Days Ago"),
+    5 => N_("5 Days Ago"),
+    6 => N_("6 Days Ago")
   }
-  SP_STATES = [[_("Initializing"), "initializing"], [_("Waiting to Start"), "waiting_to_start"],
-               [_("Cancelling"), "cancelling"], [_("Aborting"), "aborting"], [_("Finished"), "finished"],
-               [_("Snapshot Create"), "snapshot_create"], [_("Scanning"), "scanning"],
-               [_("Snapshot Delete"), "snapshot_delete"], [_("Synchronizing"), "synchronizing"],
-               [_("Deploy Smartproxy"), "deploy_smartproxy"]].freeze
-  UI_STATES = [[_("Initialized"), "Initialized"], [_("Queued"), "Queued"], [_("Active"), "Active"],
-               [_("Finished"), "Finished"]].freeze
+  SP_STATES = [[N_("Initializing"), "initializing"], [N_("Waiting to Start"), "waiting_to_start"],
+               [N_("Cancelling"), "cancelling"], [N_("Aborting"), "aborting"], [N_("Finished"), "finished"],
+               [N_("Snapshot Create"), "snapshot_create"], [N_("Scanning"), "scanning"],
+               [N_("Snapshot Delete"), "snapshot_delete"], [N_("Synchronizing"), "synchronizing"],
+               [N_("Deploy Smartproxy"), "deploy_smartproxy"]].freeze
+  UI_STATES = [[N_("Initialized"), "Initialized"], [N_("Queued"), "Queued"], [N_("Active"), "Active"],
+               [N_("Finished"), "Finished"]].freeze
 
   PROV_STATES = {
     "pending_approval" => _("Pending Approval"),
