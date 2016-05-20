@@ -34,7 +34,12 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :tree  => "otazu_tree",
        :text  => _("Azure Templates"),
        :image => "orchestration_template_azure",
-       :tip   => _("Azure Templates")}
+       :tip   => _("Azure Templates")},
+      {:id    => 'otvnf',
+       :tree  => "otvnf_tree",
+       :text  => _("Vnfd Templates"),
+       :image => "orchestration_template_vnfd",
+       :tip   => _("Vnfd Templates")}
     ]
     count_only ? children.length : children
   end
@@ -43,7 +48,8 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
     classes = {
       "otcfn" => OrchestrationTemplateCfn,
       "othot" => OrchestrationTemplateHot,
-      "otazu" => OrchestrationTemplateAzure
+      "otazu" => OrchestrationTemplateAzure,
+      "otvnf" => OrchestrationTemplateVnfd
     }
     objects = rbac_filtered_objects(classes[object[:id]].where(["orderable=?", true])).sort_by { |o| o.name.downcase }
     count_only_or_objects(count_only, objects, nil)

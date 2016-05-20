@@ -872,7 +872,7 @@ class ApplicationHelper::ToolbarBuilder
       when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
-    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
+    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
       return true unless role_allows(:feature => id)
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
@@ -1198,7 +1198,7 @@ class ApplicationHelper::ToolbarBuilder
       when "orchestration_stack_retire_now"
         return N_("Orchestration Stack is already retired") if @record.retired == true
       end
-    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
+    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure", "OrchestrationTemplateVnfd"
       case id
       when "orchestration_template_remove"
         return N_("Read-only Orchestration Template cannot be deleted") if @record.in_use?

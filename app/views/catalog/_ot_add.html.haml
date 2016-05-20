@@ -34,7 +34,8 @@
           = select_tag("type",
                        options_for_select({"Amazon CloudFormation" => "OrchestrationTemplateCfn",
                                            "OpenStack Heat" => "OrchestrationTemplateHot",
-                                           "Microsoft Azure" => "OrchestrationTemplateAzure",},
+                                           "Microsoft Azure" => "OrchestrationTemplateAzure",
+                                           "Vnfd" => "OrchestrationTemplateVnfd",},
                                           @edit[:new][:type]),
                        :class => "selectpicker")
           :javascript
