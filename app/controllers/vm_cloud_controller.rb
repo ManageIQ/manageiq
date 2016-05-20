@@ -21,7 +21,12 @@ class VmCloudController < ApplicationController
       ) unless @explorer
       @flavors = {}
       unless @record.ext_management_system.nil?
-        @record.ext_management_system.flavors.each { |f| @flavors[f.name] = f.id unless f == @record.flavor }
+        @record.ext_management_system.flavors.each do |ems_flavor|
+          # include only flavors with root disks at least as big as the instance's current root disk.
+          if (ems_flavor != @record.flavor) && (ems_flavor.root_disk_size >= @record.flavor.root_disk_size)
+            @flavors[ems_flavor.name_with_details] = ems_flavor.id
+          end
+        end
       end
       @edit = {}
       @edit[:new] ||= {}
