@@ -832,6 +832,7 @@ module ManageIQ::Providers
 
           # Collect the storages and hardware inventory
           storages = get_mors(vm_inv, 'datastore').collect { |s| storage_uids[s] }.compact
+          storage  = storage_uids[normalize_vm_storage_uid(vm_inv, storage_inv)]
 
           host_mor = runtime['host']
           hardware = vm_inv_to_hardware_hash(vm_inv)
@@ -873,7 +874,7 @@ module ManageIQ::Providers
             :host                  => host_uids[host_mor],
             :ems_cluster           => cluster_uids_by_host[host_mor],
             :storages              => storages,
-            :storage               => storage_uids[:storage_id][normalize_vm_storage_uid(vm_inv, storage_inv)],
+            :storage               => storage,
             :operating_system      => vm_inv_to_os_hash(vm_inv),
             :hardware              => hardware,
             :custom_attributes     => vm_inv_to_custom_attribute_hashes(vm_inv),
@@ -1454,57 +1455,12 @@ module ManageIQ::Providers
       end
 
       def self.normalize_vm_storage_uid(inv, full_storage_inv)
-        ############################################################################
-        # For VMFS, we will use the GUID as the identifier
-        ############################################################################
+        vm_path_name   = inv.fetch_path('summary', 'config', 'vmPathName')
+        datastore_name = vm_path_name.gsub(/^\[([^\]]*)\].*/, '\1') if vm_path_name
 
-        # VMFS has the GUID in the vmLocalPathName:
-        #   From VC4:  sanfs://vmfs_uuid:49861d7d-25f008ac-ffbf-001b212bed24/RedHat6.2/RedHat6.2.vmx
-        #   From VC5:  ds://vmfs/volumes/49861d7d-25f008ac-ffbf-001b212bed24/RedHat6.2/RedHat6.2.vmx
-        #   From ESX5: /vmfs/volumes/49861d7d-25f008ac-ffbf-001b212bed24/RedHat6.2/RedHat6.2.vmx
-        local_path_name = inv.fetch_path('summary', 'config', 'vmLocalPathName').to_s.downcase
-        return $1 if local_path_name =~ /([0-9a-f]{8}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{12})/
-
-        ############################################################################
-        # For NFS on VC5, we will use the "half GUID" as the identifier
-        # For other NFS, we will use a path as the identifier in the form: ipaddress/path/parts
-        ############################################################################
-
-        # NFS on VC5 has the "half GUID" in the vmLocalPathName:
-        #   ds:///vmfs/volumes/18f2f698-aae589d5/RedHat6.2/RedHat6.2.vmx
-        return $1 if local_path_name[0, 5] == "ds://" && local_path_name =~ /([0-9a-f]{8}-[0-9a-f]{8})/
-
-        # NFS on VC has a full netfs:// path in the vmLocalPathName:
-        #   netfs://192.168.254.80//shares/public/RedHat6.2/RedHat6.2.vmx
-        # and the "[storage] path" in the vmPathName:
-        #   [NFSUbuntu] RedHat6.2/RedHat6.2.vmx
-        #
-        # Get the sub-path from the vmPathName, chomp it off the vmLocalPathName,
-        #   and clean the result to the format.
-        path_name = inv.fetch_path('summary', 'config', 'vmPathName').to_s.downcase
-        path = $1.strip if path_name =~ /^\[[^\]]*\]\s*(.*)$/
-        local_path = local_path_name.chomp(path).chomp('/')
-        return local_path[8..-1].gsub('//', '/') if local_path_name[0..7] == "netfs://"
-
-        # NFS on ESX has a local path with a half-GUID in the vmLocalPathName:
-        #   /vmfs/volumes/d8d30672-9fe697d9/RedHat6.2/RedHat6.2.vmx
-        # and the "[storage] path" in the vmPathName:
-        #   [NFSUbuntu] RedHat6.2/RedHat6.2.vmx
-        #
-        # The storage inventory has a half-GUID in the url:
-        #   /vmfs/volumes/d8d30672-9fe697d9
-        # and a path in the datastore:
-        #   192.168.254.80:/shares/public
-        #
-        # Get the sub-path from the vmPathName, chomp it off the vmLocalPathName,
-        #   use the leftover half-GUID to find the storage in the full storage
-        #   inventory by url, and then clean the datastore from that storage.
-        s_data = full_storage_inv.values.find { |v| v.fetch_path('summary', 'url') == local_path }
-        datastore = s_data.fetch_path('summary', 'datastore').to_s.downcase unless s_data.nil?
-        return datastore.gsub(':/', '/') if datastore =~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
-
-        # For anything else, we return the local path name
-        local_path_name
+        inv['datastore'].to_miq_a.detect do |mor|
+          full_storage_inv.fetch_path(mor, 'summary', 'name') == datastore_name
+        end
       end
 
       def self.get_mor_type(mor)
