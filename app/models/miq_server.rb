@@ -31,7 +31,7 @@ class MiqServer < ApplicationRecord
 
   virtual_column :zone_description, :type => :string
 
-  RUN_AT_STARTUP  = %w( MiqRegion MiqWorker MiqQueue MiqReportResult VmdbTable )
+  RUN_AT_STARTUP  = %w( MiqRegion MiqWorker MiqQueue MiqReportResult )
 
   STATUS_STARTING       = 'starting'.freeze
   STATUS_STARTED        = 'started'.freeze

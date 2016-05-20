@@ -2,9 +2,13 @@ describe MiqServer do
   include_examples ".seed called multiple times"
 
   it ".invoke_at_startups" do
+    MiqRegion.seed
     described_class::RUN_AT_STARTUP.each do |klass|
+      next unless klass.respond_to?(:atStartup)
       expect(klass.constantize).to receive(:atStartup)
     end
+
+    expect(Vmdb.logger).to receive(:log_backtrace).never
     described_class.invoke_at_startups
   end
 
