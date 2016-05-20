@@ -24,7 +24,16 @@ namespace :test do
     end
   end
 
-  task :vmdb_parallel => [:initialize, "evm:compile_sti_loader"] do
+  namespace :vmdb_parallel do
+    desc "Setup environment for parallel vmdb specs"
+    task :setup do
+      ParallelTests::CLI.new.run(["--type", "rspec"] + ["-e", "rake test:vmdb:setup"])
+    end
+
+  end
+
+  desc "Run all core specs in parallel"
+  task :vmdb_parallel => [:initialize, :verify_no_db_access_loading_rails_environment] do
     require 'parallel_tests'
     # find spec             -name "*_spec.rb" |sort | wc -l =>   1035
     # find spec/automation  -name "*_spec.rb" |sort | wc -l =>     53
