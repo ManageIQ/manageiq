@@ -44,12 +44,17 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       connection = connect(options)
       connection.start
       return true
+    rescue Bunny::AuthenticationFailureError => e
+      $log.info("MIQ(#{name}.#{__method__}) Failed testing rabbit amqp connection: #{e.message}")
+      raise MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
+    rescue Bunny::TCPConnectionFailedForAllHosts => e
+      raise MiqException::MiqHostError.new "Socket error: #{e.message}"
     rescue => e
       log_prefix = "MIQ(#{name}.#{__method__}) Failed testing rabbit amqp connection for #{options[:hostname]}. "
       $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider."\
                 " Enable debug logging to see connection exception.") if $log
       $log.debug("#{log_prefix} Exception: #{e}") if $log
-      return false
+      raise
     ensure
       connection.close if connection.respond_to? :close
     end
