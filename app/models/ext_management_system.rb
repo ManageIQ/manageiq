@@ -632,9 +632,8 @@ class ExtManagementSystem < ApplicationRecord
   def build_endpoint_by_role(options)
     return if options.blank?
     endpoint = endpoints.detect { |e| e.role == options[:role].to_s }
-    # update or create
     if endpoint
-      endpoint.update(options)
+      endpoint.assign_attributes(options)
     else
       endpoints.build(options)
     end
