@@ -4,9 +4,6 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
   include ManageIQ::Providers::Azure::RefreshHelperMethods
   include Vmdb::Logging
 
-  VALID_LOCATION = /\w+/
-  TYPE_DEPLOYMENT = "microsoft.resources/deployments".freeze
-
   def self.ems_inv_to_hashes(ems, options = nil)
     new(ems, options).ems_inv_to_hashes
   end
