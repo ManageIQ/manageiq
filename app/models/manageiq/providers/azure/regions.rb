@@ -2,45 +2,33 @@ module ManageIQ
   module Providers::Azure
     module Regions
       REGIONS = {
-        "westus" => {
-          :name        => "westus",
-          :description => _("US West"),
+        "brazilsouth" => {
+          :name        => "brazilsouth",
+          :description => _("Brazil South"),
         },
-        "eastus" => {
-          :name        => "eastus",
-          :description => _("US East"),
+        "canadacentral" => {
+          :name        => "canadacentral",
+          :description => _("Canada Central"),
+        },
+        "canadaeast" => {
+          :name        => "canadaeast",
+          :description => _("Canada East"),
         },
         "centralus" => {
           :name        => "centralus",
           :description => _("Central US"),
         },
-        "eastus2" => {
-          :name        => "eastus2",
-          :description => _("East US2"),
-        },
-        "northcentralus" => {
-          :name        => "northcentralus",
-          :description => _("North Central US"),
-        },
-        "southcentralus" => {
-          :name        => "southcentralus",
-          :description => _("South Central US"),
-        },
-        "northeurope" => {
-          :name        => "northeurope",
-          :description => _("North Europe"),
-        },
-        "westeurope" => {
-          :name        => "westeurope",
-          :description => _("West Europe"),
-        },
         "eastasia" => {
           :name        => "eastasia",
           :description => _("East Asia"),
         },
-        "southeastasia" => {
-          :name        => "southeastasia",
-          :description => _("South East Asia"),
+        "eastus" => {
+          :name        => "eastus",
+          :description => _("US East"),
+        },
+        "eastus2" => {
+          :name        => "eastus2",
+          :description => _("East US2"),
         },
         "japaneast" => {
           :name        => "japaneast",
@@ -50,10 +38,30 @@ module ManageIQ
           :name        => "japanwest",
           :description => _("Japan West"),
         },
-        "brazilsouth" => {
-          :name        => "brazilsouth",
-          :description => _("Brazil South"),
-        }
+        "northcentralus" => {
+          :name        => "northcentralus",
+          :description => _("North Central US"),
+        },
+        "northeurope" => {
+          :name        => "northeurope",
+          :description => _("North Europe"),
+        },
+        "southcentralus" => {
+          :name        => "southcentralus",
+          :description => _("South Central US"),
+        },
+        "southeastasia" => {
+          :name        => "southeastasia",
+          :description => _("South East Asia"),
+        },
+        "westeurope" => {
+          :name        => "westeurope",
+          :description => _("West Europe"),
+        },
+        "westus" => {
+          :name        => "westus",
+          :description => _("US West"),
+        },
       }
 
       def self.all
