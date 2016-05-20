@@ -1088,8 +1088,6 @@ class ProviderForemanController < ApplicationController
   def list_row_id(row)
     if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
       "-#{row['manager_id']}-unassigned"
-    elsif row[:type]
-      "#{TreeBuilder.get_prefix_for_model(row[:type])}" % to_cid(row['id'])
     else
       to_cid(row['id'])
     end
