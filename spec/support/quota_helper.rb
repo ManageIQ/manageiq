@@ -98,15 +98,20 @@ module QuotaHelper
     @miq_request = @miq_provision_request
   end
 
+  def vmware_requested_quota_values
+    {:number_of_vms     => 1,
+     :owner_email       => 'tester@miq.com',
+     :vm_memory         => [1024, '1024'],
+     :number_of_sockets => [2, '2'],
+     :cores_per_socket  => [2, '2']}
+  end
+
   def vmware_model
     @ems = FactoryGirl.create(:ems_vmware)
     @vm_template = FactoryGirl.create(:template_vmware,
                                       :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
     @storage = FactoryGirl.create(:storage_nfs)
-    create_request(:number_of_vms => 1, :owner_email => 'tester@miq.com',
-                                     :vm_memory         => [1024, '1024'],
-                                     :number_of_sockets => [2, '2'],
-                                     :cores_per_socket  => [2, '2'])
+    create_request(vmware_requested_quota_values)
     create_hardware
     create_vmware_vms
   end
@@ -117,12 +122,30 @@ module QuotaHelper
     @vm_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
     m2_small_flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id, :cloud_subnet_required => false,
                                          :cpus => 4, :cpu_cores => 1, :memory => 1024)
-    create_request(:number_of_vms => 1, :owner_email => 'tester@miq.com',
-                                         :src_vm_id      => @vm_template.id,
-                                         :boot_disk_size => ["10.GB", "10 GB"],
-                                         :placement_auto => [true, 1],
-                                         :instance_type  => [m2_small_flavor.id, m2_small_flavor.name])
+    create_request(:number_of_vms => 1, :owner_email    => 'user@example.com',
+                                        :src_vm_id      => @vm_template.id,
+                                        :boot_disk_size => ["10.GB", "10 GB"],
+                                        :placement_auto => [true, 1],
+                                        :instance_type  => [m2_small_flavor.id, m2_small_flavor.name])
     create_google_vms
+  end
+
+  def build_generic_service_item
+    @service_template = FactoryGirl.create(:service_template,
+                                           :name         => 'generic',
+                                           :service_type => 'atomic',
+                                           :prov_type    => 'generic')
+    @service_request = build_service_template_request("generic", @user, :dialog => {"test" => "dialog"})
+  end
+
+  def build_vmware_service_item
+    options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(vmware_requested_quota_values)
+    model = {"vmware_service_item" => {:type      => 'atomic',
+                                       :prov_type => 'vmware',
+                                       :request   => options}
+             }
+    build_service_template_tree(model)
+    @service_request = build_service_template_request("vmware_service_item", @user, :dialog => {"test" => "dialog"})
   end
 
   def setup_model(vendor = "vmware")
@@ -130,6 +153,6 @@ module QuotaHelper
     @miq_group = @user.current_group
     @tenant = @miq_group.tenant
     create_tenant_quota
-    send("#{vendor}_model")
+    send("#{vendor}_model") unless vendor == 'generic'
   end
 end
