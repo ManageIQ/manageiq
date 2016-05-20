@@ -5,6 +5,11 @@
 # - Create single automation request    /api/automation_requests    action "create"
 # - Create multiple automation requests /api/automation_requests    action "create"
 #
+# - Approve single automation request      /api/automation_requests/:id    action "approve"
+# - Approve multiple automation requests   /api/automation_requests        action "approve"
+# - Deny single automation request         /api/automation_requests/:id    action "deny"
+# - Deny multiple automation requests      /api/automation_requests        action "deny"
+#
 describe ApiController do
   describe "Automation Requests" do
     let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
@@ -59,6 +64,63 @@ describe ApiController do
       task_id1, task_id2 = response_hash["results"].collect { |r| r["id"] }
       expect(AutomationRequest.exists?(task_id1)).to be_truthy
       expect(AutomationRequest.exists?(task_id2)).to be_truthy
+    end
+  end
+
+  context "Automation requests approval" do
+    let(:template)      { FactoryGirl.create(:template_amazon) }
+    let(:request_body)  { {:requester => @user, :source_type => 'VmOrTemplate', :source_id => template.id} }
+    let(:request1)      { FactoryGirl.create(:automation_request, request_body) }
+    let(:request1_url)  { automation_requests_url(request1.id) }
+    let(:request2)      { FactoryGirl.create(:automation_request, request_body) }
+    let(:request2_url)  { automation_requests_url(request2.id) }
+
+    it "supports approving a request" do
+      api_basic_authorize collection_action_identifier(:automation_requests, :approve)
+
+      run_post(request1_url, gen_request(:approve, :reason => "approve reason"))
+
+      expected_msg = "Automation request #{request1.id} approved"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => :request1_url)
+    end
+
+    it "supports denying a request" do
+      api_basic_authorize collection_action_identifier(:automation_requests, :deny)
+
+      run_post(request2_url, gen_request(:deny, :reason => "deny reason"))
+
+      expected_msg = "Automation request #{request2.id} denied"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => :request2_url)
+    end
+
+    it "supports approving multiple requests" do
+      api_basic_authorize collection_action_identifier(:automation_requests, :approve)
+
+      run_post(automation_requests_url, gen_request(:approve, [{"href" => request1_url, "reason" => "approve reason"},
+                                                               {"href" => request2_url, "reason" => "approve reason"}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", [request1_url, request2_url])
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/Automation request #{request1.id} approved/i, /Automation request #{request2.id} approved/i]
+      )
+    end
+
+    it "supports denying multiple requests" do
+      api_basic_authorize collection_action_identifier(:automation_requests, :deny)
+
+      run_post(automation_requests_url, gen_request(:deny, [{"href" => request1_url, "reason" => "deny reason"},
+                                                            {"href" => request2_url, "reason" => "deny reason"}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", [request1_url, request2_url])
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/Automation request #{request1.id} denied/i, /Automation request #{request2.id} denied/i]
+      )
     end
   end
 end
