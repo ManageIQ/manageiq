@@ -38,7 +38,7 @@ col_order:
 
 # Column titles, in order
 headers:
-- Nname
+- Name
 - Type
 - Description
 - Created On
