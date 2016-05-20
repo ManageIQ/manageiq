@@ -8,6 +8,7 @@ module ManageIQ::Providers::Openstack::CloudManager::CloudVolume::Operations
   end
 
   def raw_attach_volume(server_ems_ref, device = nil)
+    device = nil if device.try(:empty?)
     ext_management_system.with_provider_connection(connection_options) do |service|
       service.servers.get(server_ems_ref).attach_volume(ems_ref, device)
     end

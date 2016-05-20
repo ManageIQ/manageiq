@@ -270,10 +270,9 @@ class VmCloudController < ApplicationController
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
-      session[:flash_msgs] = @flash_array.dup if @flash_array
-      render :update do |page|
-        page.redirect_to :action => "show", :id => @vm.id.to_s
-      end
+      @record = @sb[:action] = nil
+      replace_right_cell
+
     end
   end
 
@@ -310,10 +309,8 @@ class VmCloudController < ApplicationController
       end
       @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
-      session[:flash_msgs] = @flash_array.dup if @flash_array
-      render :update do |page|
-        page.redirect_to :action => "show", :id => @vm.id.to_s
-      end
+      @record = @sb[:action] = nil
+      replace_right_cell
     end
   end
 
