@@ -4257,6 +4257,24 @@
             :description: Provision Configured Systems
             :feature_type: control
             :identifier: configured_system_provision
+  - :name: Ansible Job Templates
+    :description: Everything under Ansible Job Templates accordion
+    :feature_type: node
+    :identifier: configuration_scripts_accord
+    :children:
+    - :name: View
+      :description: View Job Templates
+      :feature_type: view
+      :identifier: configuration_script_view
+    - :name: Operate
+      :description: Perform Operations on Providers and Configured Systems
+      :feature_type: control
+      :identifier: configuration_script_control
+      :children:
+        - :name: Create Service Dialog
+          :description: Create Service Dialog from Job Template
+          :feature_type: admin
+          :identifier: configscript_service_dialog
 
 - :name: All VM and Instance Access Rules
   :description: All VM and Instance Access Rules

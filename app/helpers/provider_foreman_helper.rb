@@ -226,4 +226,26 @@ module ProviderForemanHelper
   def textual_inventory_group_partition_table
     {:label => _("Partition Table"), :value => @record.customization_script_ptable_name}
   end
+
+  def textual_configuration_script_group_properties
+    %i(configuration_script_name
+       configuration_script_region)
+  end
+
+  def textual_configuration_script_name
+    {:label => _("Name"), :value => @record.name}
+  end
+
+  def textual_configuration_script_region
+    {:label => _("Region"), :value => @record.region_description}
+  end
+
+  def textual_configuration_script_variables
+    {:label => _("Variables"), :value => @record.variables}
+  end
+
+  def textual_configuration_script_group_os
+    %i(configuration_script_medium
+       configuration_script_partition_table)
+  end
 end

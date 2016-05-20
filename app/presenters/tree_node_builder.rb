@@ -49,6 +49,9 @@ class TreeNodeBuilder
     when AvailabilityZone     then generic_node(object.name,
                                                 "availability_zone.png",
                                                 _("Availability Zone: %{name}") % {:name => object.name})
+    when ConfigurationScript then generic_node(object.name,
+                                               "configuration_script.png",
+                                               "Ansible Job Template: #{object.name}")
     when ExtManagementSystem  then
       # TODO: This should really leverage .base_model on an EMS
       prefix_model =
