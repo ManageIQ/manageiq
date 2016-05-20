@@ -5,30 +5,6 @@ describe ApplicationController do
     expect(CimBaseStorageExtentController.model).to eq CimBaseStorageExtent
   end
 
-  context "Service Templates" do
-    before :each do
-      EvmSpecHelper.local_miq_server
-      child_tenant = FactoryGirl.create(:tenant)
-      tenant_role = FactoryGirl.create(:miq_user_role, :settings => {:restrictions => {:vms => :user_or_group}})
-      user_with_child_tenant = FactoryGirl.create(:user_with_group)
-      user_with_child_tenant.current_group.miq_user_role = tenant_role
-      user_with_child_tenant.current_group.tenant = child_tenant
-      user_with_child_tenant.current_group.save
-      FactoryGirl.create(:user_admin)
-
-      FactoryGirl.create(:service_template) # created with root tenant
-      @service_template_with_child_tenant = FactoryGirl.create(:service_template, :tenant => child_tenant)
-      login_as user_with_child_tenant
-    end
-
-    it "returns all catalog items related to current tenant and root tenant" do
-      controller.instance_variable_set(:@settings, {})
-      allow_any_instance_of(ApplicationController).to receive(:fetch_path)
-      view, _pages = controller.send(:get_view, ServiceTemplate, {})
-      expect(view.table.data.count).to eq(2)
-    end
-  end
-
   context "#find_by_id_filtered" do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
