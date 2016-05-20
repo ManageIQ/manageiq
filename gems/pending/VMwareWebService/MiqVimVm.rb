@@ -887,7 +887,7 @@ class MiqVimVm
     scsi_units
   end # def available_scsi_units
 
-  def available_scsi_controller_buses
+  def available_scsi_buses
     scsi_controller_bus_numbers = [*0..MAX_SCSI_CONTROLLERS - 1]
 
     devices = getProp("config.hardware")["config"]["hardware"]["device"]
