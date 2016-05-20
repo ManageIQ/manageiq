@@ -169,13 +169,17 @@ module MiqWebServerWorkerMixin
     params = {
       :Host        => self.class.binding_address,
       :environment => Rails.env.to_s,
-      :app         => defined?(self.class::RACK_APPLICATION) ? self.class::RACK_APPLICATION.new : Rails.application
+      :app         => rails_application
     }
 
     params[:Port] = port.kind_of?(Numeric) ? port : 3000
     params[:pid]  = self.class.pid_file(params[:Port]).to_s
 
     params
+  end
+
+  def rails_application
+    @app ||= defined?(self.class::RACK_APPLICATION) ? self.class::RACK_APPLICATION.new : Rails.application
   end
 
   def start
