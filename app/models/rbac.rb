@@ -545,9 +545,6 @@ module Rbac
   end
 
   def self.matches_search_filters?(obj, filter, tz)
-    return true if filter.nil?
-    expression = filter.to_ruby(tz)
-    return true if expression.nil?
-    Condition.subst_matches?(expression, obj)
+    filter.nil? || filter.lenient_evaluate(obj, tz)
   end
 end

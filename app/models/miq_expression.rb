@@ -1007,6 +1007,11 @@ class MiqExpression
     Metric::Rollup.excluded_col_for_expression?(col.to_sym)
   end
 
+  def lenient_evaluate(obj, tz = nil)
+    ruby_exp = to_ruby(tz)
+    ruby_exp.nil? || Condition.subst_matches?(ruby_exp, obj)
+  end
+
   def evaluate(obj, tz = nil)
     ruby_exp = to_ruby(tz)
     _log.debug("Expression before substitution: #{ruby_exp}")
