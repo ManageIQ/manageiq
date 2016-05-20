@@ -22,6 +22,7 @@ class MiqVimVm
                                   ParaVirtualSCSIController
                                 ).freeze
   MAX_SCSI_DEVICES          = 15
+  MAX_SCSI_CONTROLLERS      = 4
 
   attr_reader :name, :localPath, :dsPath, :hostSystem, :uuid, :vmh, :devices, :invObj, :annotation, :customValues, :vmMor
 
@@ -885,6 +886,19 @@ class MiqVimVm
 
     scsi_units
   end # def available_scsi_units
+
+  def available_scsi_controller_buses
+    scsi_controller_bus_numbers = [*0..MAX_SCSI_CONTROLLERS - 1]
+
+    devices = getProp("config.hardware")["config"]["hardware"]["device"]
+
+    scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
+    scsi_controllers.each do |controller|
+      scsi_controller_bus_numbers -= [controller["busNumber"].to_i]
+    end
+
+    scsi_controller_bus_numbers
+  end
 
   def getScsiCandU
     available_scsi_units.first
