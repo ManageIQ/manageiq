@@ -587,7 +587,7 @@ describe ProviderForemanController do
       expect(response.status).to eq(200)
     end
 
-    it "Service Dialog is created from an Ansible Job Template" do
+    it "Service Dialog is created from an Ansible Tower Job Template" do
       controller.instance_variable_set(:@_params, :button => "save", :id => @cs.id)
       allow(controller).to receive(:replace_right_cell)
       controller.send(:configscript_service_dialog_submit)
