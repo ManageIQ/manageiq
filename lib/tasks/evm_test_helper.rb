@@ -1,5 +1,4 @@
 module EvmTestHelper
-  #TODO: Reuse the array of excluded directories for building the FileList exclusion
   VMDB_EXCLUDED_SPEC_DIRECTORIES = %w(replication migrations automation).freeze
   REPLICATION_SPECS      = FileList['spec/replication/replication_spec.rb']
   REPLICATION_UTIL_SPECS = FileList['spec/replication/util/*_spec.rb']
