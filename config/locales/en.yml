@@ -728,6 +728,7 @@ en:
       #ManageIQ::Providers::BaseManager::VmOrTemplate: VM or Template
       #ManageIQ::Providers::BaseManager::Vm:           VM and Instance
       ManageIQ::Providers::AnsibleTower::ConfigurationManager:              Configuration Manager (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript: Job Template (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
       ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem: Configured System (Ansible Tower)
