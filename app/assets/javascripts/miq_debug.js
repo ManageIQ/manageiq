@@ -6,8 +6,8 @@ $(document).bind('keyup', 'ctrl+shift+x', miqSparkleOff);
   var duplicate = function () {
     $('[id]').each(function(){
       var ids = $('[id="' + this.id + '"]');
-      if (ids.length > 1 && ids.indexOf(this) !== -1)
-        console.warn('Duplicate DOM ID #' + this.id);
+      if (ids.length > 1 && $.inArray(this, ids) !== -1)
+        console.warn('Duplicate DOM ID #' + this.id, this);
     });
   };
 
