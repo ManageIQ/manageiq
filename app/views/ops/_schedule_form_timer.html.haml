@@ -2,7 +2,7 @@
   %div
     %div
       .form-group
-        %label.col-md-2.control-label{"for" => "textInput-markup"}
+        %label.col-md-2.control-label{"for" => "timer_typ"}
           = _("Run")
         .col-md-10
           = select_tag("timer_typ",
@@ -21,7 +21,7 @@
                               "checkchange"               => ""}
           %input{"type" => "hidden", "ng-value" => "scheduleModel.timer_value", "name" => "timer_value"}
       .form-group
-        %label.col-md-2.control-label{"for" => "textInput-markup"}
+        %label.col-md-2.control-label{"for" => "time_zone"}
           = _("Time Zone")
         .col-md-10
           = select_tag("time_zone",
@@ -33,11 +33,12 @@
           = _("* Changing the Time Zone will reset the Starting Date and Time fields below")
 
       .form-group
-        %label.col-md-2.control-label{"for" => "textInput-markup"}
+        %label.col-md-2.control-label{"for" => "start_date"}
           = _("Starting Date")
         .col-md-3
           .input-group.date
             %input{:type             => "text",
+                   :id               => "start_date",
                    :name             => "start_date",
                    "ng-model"        => "scheduleModel.start_date",
                    "datepicker-init" => "",
@@ -49,7 +50,7 @@
             %span.input-group-addon{"data-toggle" => "datepicker"}
               %span.fa.fa-calendar
       .form-group
-        %label.col-md-2.control-label{"for" => "textInput-markup"}
+        %label.col-md-2.control-label{"for" => "start_hour"}
           = _("Starting Time")
           (
           %span#tz_span {{scheduleModel.time_zone}}
