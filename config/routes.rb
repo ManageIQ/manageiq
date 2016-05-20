@@ -2652,7 +2652,7 @@ Vmdb::Application.routes.draw do
   resources :ems_container, :as => :ems_containers
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
-  if Rails.env.development?
+  if Rails.env.development? && defined?(Rails::Server)
     mount WebsocketServer.new => '/ws'
   end
   # rubocop:enable MultilineOperationIndentation
