@@ -1372,11 +1372,12 @@ function miqSelectPickerEvent(element, url, options) {
   $('#' + element).on('change', _.debounce(function() {
     var selected = $(this).val();
     var finalUrl = url + (firstarg ? '?' : '&') + element + '=' + escape(selected);
-    var is_sparkle_on = $(this).attr('data-miq_sparkle_on') == 'true'
-    var is_sparkle_off = $(this).attr('data-miq_sparkle_off') == 'true'
 
-    options.beforeSend = is_sparkle_on;
-    options.complete = is_sparkle_off;
+    if (typeof $(this).attr('data-miq_sparkle_on') != 'undefined')
+      options.beforeSend = $(this).attr('data-miq_sparkle_on') == 'true';
+
+    if(typeof $(this).attr('data-miq_sparkle_off') != 'undefined')
+      options.complete = $(this).attr('data-miq_sparkle_off') == 'true';
 
     if (options.callback) {
       options.done = function() {
