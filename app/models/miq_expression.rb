@@ -1458,16 +1458,6 @@ class MiqExpression
     @model_relats[model] ||= build_relats(model)
   end
 
-  def self.build_lists(model)
-    _log.info("Building lists for: [#{model}]...")
-
-    # Build expression lists
-    [:exp_available_fields, :exp_available_counts, :exp_available_finds].each { |what| miq_adv_search_lists(model, what) }
-
-    # Build reporting lists
-    reporting_available_fields(model) unless model == model.ends_with?("Trend", "Performance") # Can't do trend/perf models at startup
-  end
-
   def self.miq_adv_search_lists(model, what)
     @miq_adv_search_lists ||= {}
     @miq_adv_search_lists[model.to_s] ||= {}
