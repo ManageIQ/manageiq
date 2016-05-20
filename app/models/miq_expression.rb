@@ -1012,7 +1012,7 @@ class MiqExpression
     _log.debug("Expression before substitution: #{ruby_exp}")
     subst_expr = Condition.subst(ruby_exp, obj)
     _log.debug("Expression after substitution: #{subst_expr}")
-    result = eval(subst_expr) ? true : false
+    result = Condition.do_eval(subst_expr)
     _log.debug("Expression evaluation result: [#{result}]")
     result
   end

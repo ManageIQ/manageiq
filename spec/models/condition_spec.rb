@@ -77,4 +77,28 @@ describe Condition do
       end
     end
   end
+
+  describe ".do_eval" do
+    it "detects true" do
+      expect(Condition.do_eval("true")).to be_truthy
+    end
+
+    it "detects false" do
+      expect(Condition.do_eval("false")).not_to be_truthy
+    end
+  end
+
+  describe ".subst_matches?" do
+    let(:vm1) { FactoryGirl.build(:vm_vmware, :host => FactoryGirl.build(:host, :name => "XXX")) }
+
+    it "detects match" do
+      expr = "<find><search><value ref=vm, type=string>/virtual/host/name</value> == 'XXX'</search><check mode=count><count> == 1</check></find>"
+      expect(Condition.subst_matches?(expr, vm1)).to be_truthy
+    end
+
+    it "detects non-match" do
+      expr = "<find><search><value ref=vm, type=string>/virtual/host/name</value> == 'YYY'</search><check mode=count><count> == 1</check></find>"
+      expect(Condition.subst_matches?(expr, vm1)).not_to be_truthy
+    end
+  end
 end
