@@ -4,7 +4,7 @@ describe AnsibleTowerJobTemplateDialogService do
   describe "#create_dialog" do
     it "creates a dialog from a job template" do
       survey =
-        "[{\"index\": 0, \"question_name\": \"Param1\", \"min\": 10, \
+        "{\"spec\":[{\"index\": 0, \"question_name\": \"Param1\", \"min\": 10, \
         \"default\": 19, \"max\": 100, \"question_description\": \"param 1\", \"required\": true, \"variable\": \
         \"param1\", \"choices\": \"\", \"type\": \"integer\"}, {\"index\": 1, \"question_name\": \"Param2\", \"min\": \
         2, \"default\": \"as\", \"max\": 5, \"question_description\": \"param 2\", \"required\": true, \"variable\": \
@@ -19,7 +19,7 @@ describe AnsibleTowerJobTemplateDialogService do
         \"opt1\\n222\", \"max\": \"\", \"question_name\": \"Param6\", \"required\": true, \"variable\": \"param6\", \
         \"choices\": \"opt1\\n222\\nopt3\", \"type\": \"multiselect\"}, {\"index\": 6, \"question_name\": \"Param7\", \
         \"min\": \"\", \"default\": 14.5, \"max\": \"\", \"question_description\": \"param 7\", \"required\": true, \
-        \"variable\": \"param7\", \"choices\": \"\", \"type\": \"float\"}]"
+        \"variable\": \"param7\", \"choices\": \"\", \"type\": \"float\"}],\"name\":\"\",\"description\":\"\"}"
       allow(template).to receive(:survey_spec).and_return(JSON.parse(survey))
 
       allow(template).to receive(:variables).and_return('some_extra_var' => 'blah')

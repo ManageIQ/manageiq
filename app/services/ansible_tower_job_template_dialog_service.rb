@@ -50,12 +50,13 @@ class AnsibleTowerJobTemplateDialogService
   end
 
   def add_survey_group(tab, position, template)
+    parameters = template.survey_spec['spec'] || []
     tab.dialog_groups.build(
       :display  => "edit",
       :label    => "Survey",
       :position => position
     ).tap do |dialog_group|
-      template.survey_spec.each_with_index { |param, index| add_parameter_field(param, dialog_group, index) }
+      parameters.each_with_index { |param, index| add_parameter_field(param, dialog_group, index) }
     end
   end
 
