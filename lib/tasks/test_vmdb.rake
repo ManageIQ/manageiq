@@ -12,14 +12,26 @@ namespace :test do
     task :teardown
   end
 
-  desc "Run all core specs (excludes automation, migrations, replication, etc)"
-  RSpec::Core::RakeTask.new(:vmdb => [:initialize, "evm:compile_sti_loader"]) do |t|
-    EvmTestHelper.init_rspec_task(t)
-    t.pattern = EvmTestHelper.vmdb_spec_directories
+  desc "Run all vmdb specs; Use PARALLEL=1 to run in parallel."
+  task :vmdb do
+    if ENV['PARALLEL']
+      Rake::Task['vmdb_parallel'].invoke
+    else
+      Rake::Task['vmdb_sequential'].invoke
+    end
   end
 
-  desc "Run all core specs in parallel"
-  task :vmdb_parallel => [:initialize, :verify_no_db_access_loading_rails_environment] do
+  # Private
+  task :vmdb_sequential do
+    # Create an anonymous rake task and invoke to avoid RSpec adding a rake description
+    RSpec::Core::RakeTask.new(:nop => [:initialize, "evm:compile_sti_loader"]) do |t|
+      EvmTestHelper.init_rspec_task(t)
+      t.pattern = EvmTestHelper.vmdb_spec_directories
+    end.invoke
+  end
+
+  # Private
+  task :vmdb_parallel => [:initialize, "evm:compile_sti_loader"] do
     ParallelTests::CLI.new.run(["--type", "rspec"] + EvmTestHelper.vmdb_spec_directories)
   end
 end
