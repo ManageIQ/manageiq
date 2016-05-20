@@ -29,6 +29,19 @@
   :modifier: deny
   :mode: control
   :action: prevent
+- :name: Prevent Retired Instance from Starting
+  :description: Prevent Retired Instance from starting
+  :towhat: Vm
+  :event: vm_resume
+  :applies_to?: true
+  :active: true
+  :condition:
+    "=":
+      field: Vm-retired
+      value: true
+  :modifier: deny
+  :mode: control
+  :action: vm_suspend
 - :name: Stop Retired VM
   :description: Stop Retired VM
   :towhat: Vm
@@ -42,3 +55,4 @@
   :modifier: deny
   :mode: control
   :action: vm_stop
+
