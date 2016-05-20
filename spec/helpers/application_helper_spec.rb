@@ -1641,4 +1641,23 @@ describe ApplicationHelper do
       ).to eq('host_services')
     end
   end
+
+  describe "#multiple_relationship_link" do
+    context "When record is a Container Provider" do
+      it "Uses polymorphic_path for the show action" do
+        ems = FactoryGirl.create(:ems_kubernetes)
+        ContainerProject.create(:ext_management_system => ems, :name => "Test Project")
+        expect(helper.multiple_relationship_link(ems, "container_project")).to eq("<li><a title=\"Show Projects\" href=\"/ems_container/#{ems.id}?display=container_projects\">Projects (1)</a></li>")
+      end
+    end
+
+    context "When record is a Middleware Provider" do
+      it "Routes to the controller's show action" do
+        allow(helper).to receive_messages(:controller_name => "ems_middleware")
+        ems = FactoryGirl.create(:ems_hawkular)
+        MiddlewareDatasource.create(:ext_management_system => ems, :name => "Test Middleware")
+        expect(helper.multiple_relationship_link(ems, "middleware_datasource")).to eq("<li><a title=\"Show Middleware Datasources\" href=\"/ems_middleware/show/#{ems.id}?display=middleware_datasources\">Middleware Datasources (1)</a></li>")
+      end
+    end
+  end
 end
