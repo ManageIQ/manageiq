@@ -17,20 +17,6 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
           :onwhen    => "1+"),
         separator,
         button(
-          :ems_network_new,
-          'pficon pficon-add-circle-o fa-lg',
-          t = N_('Add a New #{ui_lookup(:table=>"ems_network")}'),
-          t,
-          :url => "/new"),
-        button(
-          :ems_network_edit,
-          'pficon pficon-edit fa-lg',
-          N_('Select a single #{ui_lookup(:table=>"ems_network")} to edit'),
-          N_('Edit Selected #{ui_lookup(:table=>"ems_network")}'),
-          :url_parms => "main_div",
-          :enabled   => false,
-          :onwhen    => "1"),
-        button(
           :ems_network_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove selected #{ui_lookup(:tables=>"ems_networks")} from the VMDB'),
