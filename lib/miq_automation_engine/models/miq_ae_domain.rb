@@ -136,6 +136,11 @@ class MiqAeDomain < MiqAeNamespace
     end
   end
 
+  def display_name
+    domain_name = name || @display_name
+    git_enabled? ? "#{domain_name} (#{latest_ref_info['name']})" : domain_name
+  end
+
   private
 
   def squeeze_priorities
