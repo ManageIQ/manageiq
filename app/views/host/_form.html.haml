@@ -14,11 +14,11 @@
       %div
         %div
           .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
-            %label.col-md-2.control-label{"for" => "textInput-markup"}
+            %label.col-md-2.control-label{"for" => "name"}
               = _("Name")
             .col-md-8
               %input.form-control{"type"           => "text",
-                                  "id"             => "textInput-markup",
+                                  "id"             => "name",
                                   "name"           => "name",
                                   "ng-model"       => "hostModel.name",
                                   "maxlength"      => "#{MAX_NAME_LEN}",
@@ -28,11 +28,11 @@
               %span.help-block{"ng-show" => "angularForm.name.$error.miqrequired"}
                 = _("Required")
           .form-group{"ng-class" => "{'has-error': angularForm.hostname.$invalid}"}
-            %label.col-md-2.control-label{"for" => "textInput-markup"}
+            %label.col-md-2.control-label{"for" => "hostname"}
               = _("Hostname (or IPv4 or IPv6 address)")
             .col-md-8
               %input.form-control{"type"        => "text",
-                                  "id"          => "textInput-markup",
+                                  "id"          => "hostname",
                                   "name"        => "hostname",
                                   "ng-model"    => "hostModel.hostname",
                                   "maxlength"   => "#{MAX_HOSTNAME_LEN}",
@@ -62,10 +62,11 @@
                                            "maxlength"   => 50,
                                            "checkchange" => ""}
           .form-group{"ng-class" => "{'has-error': angularForm.ipmi_address.$error.requiredDependsOn}"}
-            %label.col-md-2.control-label{"for" => "textInput-markup"}
+            %label.col-md-2.control-label{"for" => "ipmi_address"}
               = _("IPMI IP Address")
             .col-md-8
               %input.form-control#ipmi_address{"type"                => "text",
+                                               "id"                  => "ipmi_address",
                                                "name"                => "ipmi_address",
                                                "ng-model"            => "hostModel.ipmi_address",
                                                "required-depends-on" => "hostModel.ipmi_userid",

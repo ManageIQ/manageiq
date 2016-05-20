@@ -4,11 +4,11 @@
   = render :partial => "layouts/flash_msg"
   %div
     .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_name"}
         = _('Name')
       .col-md-8
         %input.form-control{"type" => "text",
-                            "id" => "textInput-markup",
+                            "id" => "ems_name",
                             "name" => "name",
                             "ng-model" => "emsCommonModel.name",
                             "maxlength" => MAX_NAME_LEN,
@@ -20,7 +20,7 @@
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.emstype.$invalid}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_type"}
         = _('Type')
       .col-md-8
         = select_tag('emstype',
@@ -28,12 +28,13 @@
                      "ng-if" => "newRecord",
                      "ng-model" => "emsCommonModel.emstype",
                      "ng-change" => "providerTypeChanged()",
+                     "id" => "ems_type",
                      "required" => "",
                      "checkchange" => "",
                      "selectpicker-for-select-tag" => "")
         %div{"ng-if" => "!newRecord"}
           %label.form-control{"type" => "text",
-                              "id" => "textInput-markup",
+                              "id" => "ems_type",
                               "name" => "emstype",
                               "ng-if" => "!newRecord",
                               "readonly" => true,
@@ -41,12 +42,12 @@
             = @emstype_display
 
     .form-group{"ng-class" => "{'has-error': angularForm.zone.$invalid}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "ems_zone"}
         = _("Zone")
       .col-md-8
         - if @server_zones.length <= 1
           %input.form-control{"type" => "text",
-                              "id" => "textInput-markup",
+                              "id" => "ems_zone",
                               "name" => "zone",
                               "ng-model" => "emsCommonModel.zone",
                               "maxlength" => 15,
@@ -57,6 +58,7 @@
           = select_tag('zone',
                        options_for_select(@server_zones.sort_by { |name, _name| name }),
                        "ng-model" => "emsCommonModel.zone",
+                       "id" => "ems_zone",
                        "checkchange" => "",
                        "required" => "",
                        "selectpicker-for-select-tag" => "")

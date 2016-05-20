@@ -23,7 +23,7 @@
           = _("Required")
 
     .form-group{"ng-class" => "{'has-error': angularForm.type.$invalid}"}
-      %label.col-md-2.control-label{"for" => "textInput-markup"}
+      %label.col-md-2.control-label{"for" => "provider_type"}
         = _('Type')
       .col-md-8
         = select_tag('provtype',
@@ -31,25 +31,28 @@
                      "ng-if"                       => "newRecord",
                      "ng-model"                    => "providerForemanModel.provtype",
                      "ng-change"                   => "providerTypeChanged()",
+                     "id"                          => "provider_type",
                      "required"                    => "",
                      "checkchange"                 => "",
                      "selectpicker-for-select-tag" => "")
         %div{"ng-if" => "!newRecord"}
-          %input.form-control{:type        => "text",
-                              :name        => "provtype",
-                              "ng-model"    => "providerForemanModel.provtype",
-                              "ng-if"       => "!newRecord",
-                              "readonly"    => true,
-                              "style"       => "color: black; font-weight: normal;"}
+          %input.form-control{:type      => "text",
+                              :name      => "provtype",
+                              "ng-model" => "providerForemanModel.provtype",
+                              "ng-if"    => "!newRecord",
+                              "id"       => "provider_type",
+                              "readonly" => true,
+                              "style"    => "color: black; font-weight: normal;"}
 
     .form-group{"ng-class" => "{'has-error': angularForm.url.$invalid}"}
-      %label.col-md-2.control-label
+      %label.col-md-2.control-label{"for" => "provider_url"}
         = _("Url")
       .col-md-8
         %input.form-control{:type        => "text",
                             :name        => "url",
                             'ng-model'   => "providerForemanModel.url",
                             :maxlength   => MAX_DESC_LEN,
+                            "id"         => "provider_url",
                             :required    => "",
                             :checkchange => true}
         %span.help-block{"ng-show" => "angularForm.url.$error.required"}
