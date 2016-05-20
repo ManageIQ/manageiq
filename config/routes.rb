@@ -1582,6 +1582,7 @@ Vmdb::Application.routes.draw do
         cancel_import
         form_field_changed
         import_automate_datastore
+        import_via_git
         reset_datastore
         resolve
         retrieve_git_datastore

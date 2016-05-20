@@ -130,6 +130,30 @@ class MiqAeToolsController < ApplicationController
     end
   end
 
+  def import_via_git
+    git_repo = GitRepository.find_by(:id => params[:git_repo_id])
+
+    if git_repo.git_branches.any? { |git_branch| git_branch.name == params[:git_branch_or_tag] }
+      ref_type = "branch"
+    else
+      ref_type = "tag"
+    end
+
+    options = {
+      "git_repository_id" => git_repo.id,
+      "ref"               => params[:git_branch_or_tag],
+      "ref_type"          => ref_type
+    }
+    domain = MiqAeDomain.import_git_repo(options)
+    domain.update_attribute(:enabled, true)
+
+    add_flash(_("Imported from git"), :info)
+
+    respond_to do |format|
+      format.js { render :json => @flash_array.to_json, :status => 200 }
+    end
+  end
+
   def import_automate_datastore
     if params[:selected_namespaces].present?
       selected_namespaces = determine_all_included_namespaces(params[:selected_namespaces])

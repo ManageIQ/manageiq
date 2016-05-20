@@ -9,7 +9,7 @@ class GitRepository < ApplicationRecord
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
 
-  INFO_KEYS = %w(commit_sha commit_message commit_time).freeze
+  INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
 
   def refresh
     @repo = Dir.exist?(directory_name) ? update_repo : init_repo
