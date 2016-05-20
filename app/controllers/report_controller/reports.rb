@@ -178,10 +178,6 @@ module ReportController::Reports
       report_id = from_cid(nodeid.split('_')[0])
       @view, @pages = get_view(MiqReportResult, :named_scope => [:with_current_user_groups_and_report, report_id])
       @sb[:timezone_abbr] = @timezone_abbr if @timezone_abbr
-      # Saving converted time to be displayed on saved reports list view
-      @view.table.data.each_with_index do |s, _s_idx|
-        @report_running = true if s.status.downcase == "running" || s.status.downcase == "queued"
-      end
 
       @current_page = @pages[:current] unless @pages.nil? # save the current page number
       session["#{x_active_tree}_sortcol".to_sym] = @sortcol
