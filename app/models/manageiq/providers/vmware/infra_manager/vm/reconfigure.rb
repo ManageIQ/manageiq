@@ -81,18 +81,21 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
     new_scsi_controller_key = -99
 
     disks.each do |d|
+      # Grab the first available unit
       controller_key, unit_number = available_units.shift
       if controller_key.nil?
+        # If we need to add a new scsi controller find the next bus number
         new_scsi_bus_number = available_scsi_buses.shift
-        break if new_scsi_bus_number.nil? # No more open scsi buses
+        break if new_scsi_bus_number.nil? # No more scsi controllers can be added
 
+        # Add a new controller with this reconfig task
         add_scsi_controller(vmcs, new_scsi_bus_number, new_scsi_controller_key)
-        [*0..6, *8..15].each do |unit|
-          available_units << [new_scsi_controller_key.to_s, unit]
-        end
 
-        controller_key = new_scsi_controller_key
-        unit_number    = 0
+        # Add all units on the new controller as available
+        new_scsi_units = scsi_controller_units(new_scsi_controller_key)
+        available_units.concat(new_scsi_units)
+
+        controller_key, unit_number = available_units.shift
 
         new_scsi_controller_key += 1
       end
@@ -101,6 +104,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
       d[:unit_number]    = unit_number
 
       add_disk_config_spec(vmcs, d)
+    end
+  end
+
+  def scsi_controller_units(controller_key)
+    [*0..6, *8..15].each.collect do |unit_number|
+      [controller_key, unit_number]
     end
   end
 
