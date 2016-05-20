@@ -76,7 +76,19 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
   end
 
   def add_disks(vim_obj, vmcs, disks)
-    controller_key, unit_number = vim_obj.send(:getScsiCandU)
+    available_units      = vim_obj.send(:available_scsi_units)
+
+    disks.each do |d|
+      controller_key, unit_number = available_units.pop
+      if controller_key.nil?
+        # TODO
+      end
+
+      d[:controller_key] = controller_key
+      d[:unit_number]    = unit_number
+
+      add_disk_config_spec(vmcs, d)
+    end
 
     # if there is no scsi controller
     if controller_key.blank?
