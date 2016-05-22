@@ -1,6 +1,6 @@
 module JobProxyDispatcherHelper
-  def build_hosts_proxies_storages_vms(options = {})
-    options = {:hosts => 2, :storages => 2, :vms => 3, :repo_vms => 3}.merge(options)
+  def build_entities(options = {})
+    options = {:hosts => 2, :storages => 2, :vms => 3, :repo_vms => 3, :container_providers => [1, 2]}.merge(options)
 
     proxies = []
     storages = []
@@ -43,6 +43,15 @@ module JobProxyDispatcherHelper
       vm.save
       repo_vms << vm
     end
-    return hosts, proxies, storages, vms, repo_vms
+
+    container_providers = []
+    options[:container_providers].each_with_index do |images_count, i|
+      ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :name => "test_container_provider_#{i}")
+      container_providers << ems_kubernetes
+      images_count.times do |idx|
+        FactoryGirl.create(:container_image, :name => "test_container_images_#{idx}", :ems_id => ems_kubernetes.id)
+      end
+    end
+    return hosts, proxies, storages, vms, repo_vms, container_providers
   end
 end

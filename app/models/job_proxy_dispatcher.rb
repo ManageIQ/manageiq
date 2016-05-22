@@ -7,21 +7,23 @@ class JobProxyDispatcher
   def initialize
     @vm = nil
     @all_busy_by_host_id_storage_id = {}
-    @active_scans = nil
+    @active_vm_scans_by_zone = nil
+    @active_container_scans_by_zone_and_ems = nil
     @zone = nil
   end
 
   def dispatch
     _dummy, t = Benchmark.realtime_block(:total_time) do
-      jobs_to_dispatch, = Benchmark.realtime_block(:pending_jobs) { pending_jobs }
-      Benchmark.current_realtime[:jobs_to_dispatch_count] = jobs_to_dispatch.length
+      Benchmark.realtime_block(:container_dispatching) { dispatch_container_scan_jobs }
+      jobs_to_dispatch, = Benchmark.realtime_block(:pending_vm_jobs) { pending_jobs }
+      Benchmark.current_realtime[:vm_jobs_to_dispatch_count] = jobs_to_dispatch.length
 
       # Skip work if there are no jobs to dispatch
       if jobs_to_dispatch.length > 0
         broker_available, = Benchmark.realtime_block(:miq_vim_broker_available) { MiqVimBrokerWorker.available_in_zone?(@zone) }
         logged_broker_unavailable = false
 
-        Benchmark.realtime_block(:active_scans) { active_scans }
+        Benchmark.realtime_block(:active_vm_scans) { active_vm_scans_by_zone }
         Benchmark.realtime_block(:busy_proxies) { busy_proxies }
         Benchmark.realtime_block(:busy_resources_for_embedded_scanning) { busy_resources_for_embedded_scanning }
 
@@ -35,8 +37,9 @@ class JobProxyDispatcher
         concurrent_vm_scans_limit = zone.settings.blank? ? 0 : zone.settings[:concurrent_vm_scans].to_i
 
         jobs_to_dispatch.each do |job|
-          if concurrent_vm_scans_limit > 0 && @active_scans[@zone] >= concurrent_vm_scans_limit
-            _log.warn "SKIPPING remaining jobs in dispatch since there are [#{@active_scans[@zone]}] active scans in the zone [#{@zone}]"
+          if concurrent_vm_scans_limit > 0 && active_vm_scans_by_zone[@zone] >= concurrent_vm_scans_limit
+            _log.warn "SKIPPING remaining %s jobs in dispatch since there are [%d] active scans in the zone [%s]" %
+                      [ui_lookup(:table => VmOrTemplate.name), active_vm_scans_by_zone[@zone], @zone]
             break
           end
           @vm = @vms_for_dispatch_jobs.detect { |v| v.id == job.target_id }
@@ -90,6 +93,50 @@ class JobProxyDispatcher
     _log.info "Complete - Timings: #{t.inspect}"
   end
 
+  def dispatch_container_scan_jobs
+    jobs_by_ems, = Benchmark.realtime_block(:pending_container_jobs) { pending_container_jobs }
+    Benchmark.current_realtime[:container_jobs_to_dispatch_count] = jobs_by_ems.values.reduce(0) { |m, o| m + o.length }
+    jobs_by_ems.each do |ems_id, jobs|
+      dispatch_to_ems(ems_id, jobs, Settings.container_scanning.concurrent_per_ems.to_i)
+    end
+  end
+
+  def dispatch_to_ems(ems_id, jobs, concurrent_ems_limit)
+    jobs.each do |job|
+      active_ems_scans = active_container_scans_by_zone_and_ems[@zone][ems_id]
+      if concurrent_ems_limit > 0 && active_ems_scans >= concurrent_ems_limit
+        _log.warn(
+          "SKIPPING remaining %s scan jobs for %s [%s] in dispatch since there are [%d] active scans in zone [%s]" %
+            [
+              ui_lookup(:table => ContainerImage.name),
+              ui_lookup(:table => ExtManagementSystem.name),
+              ems_id,
+              active_ems_scans,
+              @zone
+            ]
+        )
+        break
+      end
+      do_dispatch(job, ems_id)
+    end
+  end
+
+  def do_dispatch(job, ems_id)
+    _log.info "Signaling start for container image scan job [#{job.id}]"
+    job.update(:dispatch_status => "active", :started_on => Time.now.utc)
+    @active_container_scans_by_zone_and_ems[@zone][ems_id] += 1
+    MiqQueue.put_unless_exists(
+      :args        => [:start],
+      :class_name  => "Job",
+      :instance_id => job.id,
+      :method_name => "signal",
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => "smartstate",
+      :task_id     => job.guid,
+      :zone        => job.zone
+    )
+  end
+
   def queue_signal(job, options)
     Benchmark.current_realtime[:queue_signal_count] += 1
     Benchmark.realtime_block(:queue_signal) do
@@ -114,9 +161,9 @@ class JobProxyDispatcher
   def start_job_on_proxy(job, proxy)
     assign_proxy_to_job(proxy, job)
     _log.info "Job [#{job.guid}] update: userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}]"
-    job_options = {:args => ["start"], :zone => @zone}
+    job_options = {:args => ["start"], :zone => MiqServer.my_zone}
     job_options.merge!(:server_guid => proxy.guid, :role => "smartproxy") if proxy.kind_of?(MiqServer)
-    @active_scans[@zone] += 1
+    @active_vm_scans_by_zone[MiqServer.my_zone] += 1
     queue_signal(job, job_options)
   end
 
@@ -144,19 +191,27 @@ class JobProxyDispatcher
     end
   end
 
-  def pending_jobs
+  def pending_jobs(target_class = VmOrTemplate)
+    class_name = target_class.base_class.name
     @zone = MiqServer.my_zone
     Job.order(:id)
-      .where(:state           => "waiting_to_start")
-      .where(:dispatch_status => "pending")
-      .where("zone is null or zone = ?", @zone)
-      .where("sync_key is NULL or
-        sync_key not in (
+       .where(:state           => "waiting_to_start")
+       .where(:dispatch_status => "pending")
+       .where(:target_class    => class_name)
+       .where("zone is null or zone = ?", @zone)
+       .where("sync_key is NULL or
+         sync_key not in (
            select sync_key from jobs where
              dispatch_status = 'active' and
              state != 'finished' and
              (zone is null or zone = ?) and
              sync_key is not NULL)", @zone)
+  end
+
+  def pending_container_jobs
+    pending_jobs(ContainerImage).each_with_object(Hash.new { |h, k| h[k] = [] }) do |job, h|
+      h[job.options[:ems_id]] << job
+    end
   end
 
   def busy_proxy?(proxy, _job)
@@ -197,11 +252,28 @@ class JobProxyDispatcher
     end
   end
 
-  def active_scans
-    @active_scans ||= begin
-      actives = Hash.new(0)
-      actives[@zone] = Job.where(:zone => @zone, :dispatch_status => "active").where.not(:state => "finished").count
-      actives
+  def active_scans_by_zone(target_class, count = true)
+    class_name = target_class.base_class.name
+    actives = Hash.new(0)
+    jobs = Job.where(:zone => @zone, :dispatch_status => "active", :target_class => class_name)
+              .where.not(:state => "finished")
+    actives[@zone] = count ? jobs.count : jobs
+    actives
+  end
+
+  def active_vm_scans_by_zone
+    @active_vm_scans_by_zone ||= active_scans_by_zone(VmOrTemplate)
+  end
+
+  def active_container_scans_by_zone_and_ems
+    @active_container_scans_by_zone_and_ems ||= begin
+      memo = Hash.new do |h, k|
+        h[k] = Hash.new(0)
+      end
+      active_scans_by_zone(ContainerImage, false)[@zone].each do |job|
+        memo[@zone][job.options[:ems_id]] += 1
+      end
+      memo
     end
   end
 
