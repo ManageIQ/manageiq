@@ -23,7 +23,7 @@ ManageIQ.angular.app.service('topologyService', function() {
     var nodes = svg.selectAll("g");
     if (query != "") {
       var selected = nodes.filter(function (d) {
-        return d.item.name != query;
+        return d.item.name.indexOf(query) == -1;
       });
       selected.style("opacity", "0.2");
       var links = svg.selectAll("line");
