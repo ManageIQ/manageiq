@@ -353,27 +353,32 @@ describe MiqExpression do
 
       # VMs hours apart
       (0...20).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Hour #{i}", :last_scan_on => i.hours.ago.utc, :retires_on => i.hours.ago.utc.to_date, :host => @host1)
+        FactoryGirl.create(:vm_vmware, :name => "VM Hour #{i}", :last_scan_on => i.hours.ago.utc,
+                           :retires_on => i.hours.ago.utc.to_date, :host => @host1)
       end
 
       # VMs days apart
       (0...15).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Day #{i}", :last_scan_on => i.days.ago.utc, :retires_on => i.days.ago.utc.to_date, :host => @host2)
+        FactoryGirl.create(:vm_vmware, :name => "VM Day #{i}", :last_scan_on => i.days.ago.utc,
+                           :retires_on => i.days.ago.utc.to_date, :host => @host2)
       end
 
       # VMs weeks apart
       (0...10).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Week #{i}", :last_scan_on => i.weeks.ago.utc, :retires_on => i.weeks.ago.utc.to_date, :host => @host2)
+        FactoryGirl.create(:vm_vmware, :name => "VM Week #{i}", :last_scan_on => i.weeks.ago.utc,
+                           :retires_on => i.weeks.ago.utc.to_date, :host => @host2)
       end
 
       # VMs months apart
       (0...10).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Month #{i}", :last_scan_on => i.months.ago.utc, :retires_on => i.months.ago.utc.to_date, :host => @host2)
+        FactoryGirl.create(:vm_vmware, :name => "VM Month #{i}", :last_scan_on => i.months.ago.utc,
+                           :retires_on => i.months.ago.utc.to_date, :host => @host2)
       end
 
       # VMs quarters apart
       (0...5).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Quarter #{i}", :last_scan_on => (i * 3).months.ago.utc, :retires_on => (i * 3).months.ago.utc.to_date, :host => @host2)
+        FactoryGirl.create(:vm_vmware, :name => "VM Quarter #{i}", :last_scan_on => (i * 3).months.ago.utc,
+                           :retires_on => (i * 3).months.ago.utc.to_date, :host => @host2)
       end
 
       # VMs with nil dates/times
@@ -387,8 +392,6 @@ describe MiqExpression do
     end
 
     it "should return the correct results when searching with a date/time filter" do
-      # Vm.all(:order => "last_scan_on").each {|v| puts " #{v.last_scan_on ? v.last_scan_on.iso8601 : "nil"} => #{v.name} -> #{v.host_id}"}
-
       # Test >, <, >=, <=
       filter = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
       result = Vm.where(filter.to_sql.first)
@@ -449,7 +452,8 @@ describe MiqExpression do
       result = Vm.where(filter.to_sql.first)
       expect(result.length).to eq(20)
 
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
+      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
+                                            "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
       result = Vm.where(filter.to_sql.first)
       expect(result.length).to eq(4)
 
@@ -476,21 +480,24 @@ describe MiqExpression do
       # Inside a find/check expression
       filter = MiqExpression.new(
         "FIND" => {
-          "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on", "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
+          "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on",
+                                    "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
           "search"   => {"IS NOT NULL" => {"field" => "Host.vms-name"}}})
       result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
       expect(result.length).to eq(1)
 
       filter = MiqExpression.new(
         "FIND" => {
-          "search"   => {"FROM" => {"field" => "Host.vms-last_scan_on", "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
+          "search"   => {"FROM" => {"field" => "Host.vms-last_scan_on",
+                                    "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
           "checkall" => {"IS NOT NULL" => {"field" => "Host.vms-name"}}}
       )
       result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
       expect(result.length).to eq(1)
 
       # Test FROM with time zone
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
+      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
+                                            "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
       result = Vm.where(filter.to_sql(timezone).first)
       expect(result.length).to eq(8)
 
