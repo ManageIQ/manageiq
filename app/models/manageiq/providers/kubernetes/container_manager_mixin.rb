@@ -43,10 +43,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def hawkular_status
     client = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(self)
-    response = client.status
-    raise BadRequestError "MetricsService: #{response[:MetricsService]}" unless response[:MetricsService] != 'STARTED'
-
-    response[:MetricsService] != 'STARTED'
+    client.status
   end
 
   # UI methods for determining availability of fields
@@ -75,7 +72,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   def verify_credentials(auth_type = nil, options = {})
     options = options.merge(:auth_type => auth_type)
     if options[:auth_type] == "hawkular"
-      hawkular_status
+      hawkular_status['MetricsService'] == 'STARTED'
     else
       with_provider_connection(options, &:api_valid?)
     end
