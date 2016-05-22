@@ -63,11 +63,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     it "#initialize" do
       image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
       job = @ems.scan_job_create(image.class.name, image.id)
-
-      expect(MiqQueue.exists?(:method_name => 'signal',
-                              :class_name  => 'Job',
-                              :instance_id => job.id,
-                              :role        => 'smartstate')).to be true
+      expect(job).to have_attributes(
+        :dispatch_status => "pending",
+        :state           => "waiting_to_start",
+        :status          => "ok",
+        :message         => "process initiated",
+        :target_class    => "ContainerImage"
+      )
     end
   end
 

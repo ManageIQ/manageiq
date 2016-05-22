@@ -110,7 +110,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       :target_id       => entity_id,
       :zone            => my_zone,
       :miq_server_host => MiqServer.my_server.hostname,
-      :miq_server_guid => MiqServer.my_server.guid
+      :miq_server_guid => MiqServer.my_server.guid,
+      :ems_id          => id,
     )
   end
 
