@@ -15,6 +15,15 @@ window.addEventListener('error', function(err) {
 
 describe("Parse errors", function() {
   it("shouldn't happen", function() {
-    expect(window.was_syntax_error).toEqual(null);
+    var err = window.was_syntax_error;
+    expect(err).toEqual(null);
+
+    if (err) {
+      // just in case the error happens only in `test:javascript` and not `environment jasmine`
+      // and since we have no other way to output to console from there..
+      expect("message").toEqual(err.message)
+      expect("filename").toEqual(err.filename);
+      expect("lineno").toEqual(err.lineno);
+    }
   });
 });
