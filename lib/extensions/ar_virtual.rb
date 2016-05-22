@@ -112,18 +112,24 @@ module VirtualDelegates
         if to_ref.macro == :has_one
           lambda do |t|
             src_model_id = arel_attribute(to_ref.association_primary_key, t)
-            to_model_id = to_model.arel_attribute(to_ref.foreign_key)
-            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+            VirtualDelegates.select_from_alias(to_model, col, to_ref.foreign_key, src_model_id)
           end
         elsif to_ref.macro == :belongs_to
           lambda do |t|
             src_model_id = arel_attribute(to_ref.association_foreign_key, t)
-            to_model_id = to_model.arel_attribute(to_ref.active_record_primary_key)
-            Arel.sql("(#{to_model.select(to_model.arel_attribute(col)).where(to_model_id.eq(src_model_id)).to_sql})")
+            VirtualDelegates.select_from_alias(to_model, col, to_ref.active_record_primary_key, src_model_id)
           end
         end
       end
     end
+  end
+
+  def self.select_from_alias(to_model, col, to_model_col_name, src_model_id)
+    to_table = to_model.arel_table.dup
+    # use a table alias to not conflict with table aliases in primary query
+    to_table.table_alias = "#{to_model.table_name}_ss"
+    to_model_id = to_model.arel_attribute(to_model_col_name, to_table)
+    Arel.sql("(#{to_table.project(to_model.arel_attribute(col, to_table)).where(to_model_id.eq(src_model_id)).to_sql})")
   end
 end
 
