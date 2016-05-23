@@ -81,7 +81,7 @@ module ApplicationHelper
                      :action     => 'show',
                      :id         => record.id,
                      :display    => table_name.to_s.pluralize},
-                    :title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural})
+                    {:title => _("Show %{plural_linked_name}") % {:plural_linked_name => plural}})
           end
         end
       end
