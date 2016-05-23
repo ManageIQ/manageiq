@@ -437,6 +437,18 @@ module EmsCommon
         end
         return
       end
+      if params[:pressed] == "ems_cloud_recheck_auth_status"
+        @record = find_by_id_filtered(model, params[:id])
+        result, details = @record.authentication_check_types_queue(@record.authentication_for_summary.pluck(:authtype),
+                                                                   :save => true)
+        if result
+          add_flash(_("Re-checking Authentication status initiated for this #{ui_lookup(:table => "ems_cloud")}"))
+        else
+          add_flash(_("Re-checking Authentication status for this #{ui_lookup(:table => "ems_cloud")} was not successful: %{details}") % {:details => details}, :error)
+        end
+        render_flash
+        return
+      end
 
       custom_buttons if params[:pressed] == "custom_button"
 
