@@ -621,16 +621,25 @@ class MiqExpression
     when "not like"
       field = Field.parse(exp[operator]["field"])
       clause = field.does_not_match("%#{exp[operator]["value"]}%").to_sql
-    when "and", "or"
-      operands = exp[operator].collect do|operand|
-        o = _to_sql(operand, tz) if operand.present?
-        o.blank? ? nil : o
-      end.compact
-      if operands.length > 1
-        clause = "(" + operands.join(" #{self.class.normalize_sql_operator(operator)} ") + ")"
-      elsif operands.length == 1 # Operands may have been stripped out during pre-processing
-        clause = "(" + operands.first + ")"
+    when "and"
+      operands = exp[operator].each_with_object([]) do |operand, result|
+        next if operand.blank?
+        sql = _to_sql(operand, tz)
+        next if sql.blank?
+        result << sql
       end
+      clause = Arel::Nodes::And.new(operands.collect { |o| Arel::Nodes::SqlLiteral.new(o) }).to_sql
+    when "or"
+      operands = exp[operator].each_with_object([]) do |operand, result|
+        next if operand.blank?
+        sql = _to_sql(operand, tz)
+        next if sql.blank?
+        result << sql
+      end
+      first, *rest = operands
+      clause = rest.inject(Arel::Nodes::SqlLiteral.new(first)) do |arel, operand|
+        Arel::Nodes::Or.new(arel, Arel::Nodes::SqlLiteral.new(operand))
+      end.to_sql
     when "not", "!"
       clause = Arel::Nodes::Not.new(Arel::Nodes::SqlLiteral.new(_to_sql(exp[operator], tz))).to_sql
     when "is null"
