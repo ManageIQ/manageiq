@@ -510,17 +510,17 @@ class MiqExpression
       col_type = get_col_type(col_name)
       value = exp[operator]["value"]
       if col_type == :date
-        if self.date_time_value_is_relative?(value)
-          start_val = quote(normalize_date_time(value, "UTC", "beginning").to_date, :date)
-          end_val   = quote(normalize_date_time(value, "UTC", "end").to_date, :date)
+        if RelativeDatetime.relative?(value)
+          start_val = quote(RelativeDatetime.normalize(value, "UTC", "beginning").to_date, :date)
+          end_val   = quote(RelativeDatetime.normalize(value, "UTC", "end").to_date, :date)
           clause    = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
         else
-          value  = quote(normalize_date_time(value, "UTC", "beginning").to_date, :date)
+          value  = quote(RelativeDatetime.normalize(value, "UTC", "beginning").to_date, :date)
           clause = "val=#{col_ruby}; !val.nil? && val.to_date == #{value}"
         end
       else
-        start_val = quote(normalize_date_time(value, tz, "beginning").utc, :datetime)
-        end_val   = quote(normalize_date_time(value, tz, "end").utc, :datetime)
+        start_val = quote(RelativeDatetime.normalize(value, tz, "beginning").utc, :datetime)
+        end_val   = quote(RelativeDatetime.normalize(value, tz, "end").utc, :datetime)
         clause    = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
     when "from"
@@ -530,13 +530,13 @@ class MiqExpression
 
       start_val, end_val = exp[operator]["value"]
       if col_type == :date
-        start_val = quote(normalize_date_time(start_val, "UTC", "beginning").to_date, :date)
-        end_val   = quote(normalize_date_time(end_val, "UTC", "end").to_date, :date)
+        start_val = quote(RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date, :date)
+        end_val   = quote(RelativeDatetime.normalize(end_val, "UTC", "end").to_date, :date)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
       else
-        start_val = quote(normalize_date_time(start_val, tz, "beginning").utc, :datetime)
-        end_val   = quote(normalize_date_time(end_val, tz, "end").utc, :datetime)
+        start_val = quote(RelativeDatetime.normalize(start_val, tz, "beginning").utc, :datetime)
+        end_val   = quote(RelativeDatetime.normalize(end_val, tz, "end").utc, :datetime)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
@@ -555,11 +555,11 @@ class MiqExpression
              end
 
       if col_type == :date
-        val = normalize_date_time(exp[operator]["value"], "UTC", mode)
+        val = RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date #{normalized_operator} #{quote(val.to_date, :date)}"
       else
-        val = normalize_date_time(exp[operator]["value"], tz, mode)
+        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_time #{normalized_operator} #{quote(val.utc, :datetime)}"
       end
@@ -569,66 +569,6 @@ class MiqExpression
 
     # puts "clause: #{clause}"
     clause
-  end
-
-  def self.normalize_date_time(rel_time, tz, mode = "beginning")
-    # time_spec =
-    #   <value> <interval> Ago
-    #   "Today"
-    #   "Yesterday"
-    #   "Now"
-    #   "Last Week"
-    #   "Last Month"
-    #   "Last Quarter"
-    #   "This Week"
-    #   "This Month"
-    #   "This Quarter"
-
-    rt = rel_time.downcase
-
-    if rt.starts_with?("this", "last")
-      # Convert these into the time spec form: <value> <interval> Ago
-      value, interval = rt.split
-      rt = "#{value == "this" ? 0 : 1} #{interval} ago"
-    end
-
-    if rt.ends_with?("ago")
-      # Time spec <value> <interval> Ago
-      value, interval, ago = rt.split
-      interval = interval.pluralize
-
-      if interval == "hours"
-        beginning_or_end_of_hour(value.to_i.hours.ago.in_time_zone(tz), mode)
-      elsif interval == "quarters"
-        ts = Time.now.in_time_zone(tz).beginning_of_quarter
-        (ts - (value.to_i * 3.months)).send("#{mode}_of_quarter")
-      else
-        value.to_i.send(interval).ago.in_time_zone(tz).send("#{mode}_of_#{interval.singularize}")
-      end
-    elsif rt == "today"
-      Time.now.in_time_zone(tz).send("#{mode}_of_day")
-    elsif rt == "yesterday"
-      1.day.ago.in_time_zone(tz).send("#{mode}_of_day")
-    elsif rt == "now"
-      beginning_or_end_of_hour(Time.now.in_time_zone(tz), mode)
-    else
-      # Assume it's an absolute date or time
-      value_is_date = !rel_time.include?(":")
-      ts = Time.use_zone(tz) { Time.zone.parse(rel_time) }
-      ts = ts.send("#{mode}_of_day") if mode && value_is_date
-      ts
-    end
-  end
-
-  def self.beginning_or_end_of_hour(ts, mode)
-    ts_str = ts.iso8601
-    ts_str[14..18] = mode == "end" ? "59:59" : "00:00"
-    Time.parse(ts_str)
-  end
-
-  def self.date_time_value_is_relative?(value)
-    v = value.downcase
-    v.starts_with?("this", "last") || v.ends_with?("ago") || ["today", "yesterday", "now"].include?(v)
   end
 
   def to_sql(tz = nil)
@@ -727,28 +667,28 @@ class MiqExpression
       field = Field.parse(exp[operator]["field"])
       value = exp[operator]["value"]
       if field.date?
-        if self.class.date_time_value_is_relative?(value)
-          start_val = self.class.normalize_date_time(value, "UTC", "beginning").to_date
-          end_val = self.class.normalize_date_time(value, "UTC", "end").to_date
+        if RelativeDatetime.relative?(value)
+          start_val = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
+          end_val = RelativeDatetime.normalize(value, "UTC", "end").to_date
           clause = field.between(start_val..end_val).to_sql
         else
-          value  = self.class.normalize_date_time(value, "UTC", "beginning").to_date
+          value  = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
           clause = field.eq(value).to_sql
         end
       else
-        start_val = self.class.normalize_date_time(value, tz, "beginning").utc
-        end_val   = self.class.normalize_date_time(value, tz, "end").utc
+        start_val = RelativeDatetime.normalize(value, tz, "beginning").utc
+        end_val   = RelativeDatetime.normalize(value, tz, "end").utc
         clause = field.between(start_val..end_val).to_sql
       end
     when "from"
       field = Field.parse(exp[operator]["field"])
       start_val, end_val = exp[operator]["value"]
       if field.date?
-        start_val = self.class.normalize_date_time(start_val, "UTC", "beginning").to_date
-        end_val   = self.class.normalize_date_time(end_val, "UTC", "end").to_date
+        start_val = RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date
+        end_val   = RelativeDatetime.normalize(end_val, "UTC", "end").to_date
       else
-        start_val = self.class.normalize_date_time(start_val, tz, "beginning").utc
-        end_val   = self.class.normalize_date_time(end_val, tz, "end").utc
+        start_val = RelativeDatetime.normalize(start_val, tz, "beginning").utc
+        end_val   = RelativeDatetime.normalize(end_val, tz, "end").utc
       end
       clause = field.between(start_val..end_val).to_sql
     when "date_time_with_logical_operator"
@@ -766,11 +706,11 @@ class MiqExpression
              end
 
       if col_type == :date
-        val = self.class.normalize_date_time(exp[operator]["value"], "UTC", mode)
+        val = RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode)
 
         clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.to_date, :date, :sql)}"
       else
-        val = self.class.normalize_date_time(exp[operator]["value"], tz, mode)
+        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
 
         clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.utc, :datetime, :sql)}"
       end
@@ -1748,7 +1688,7 @@ class MiqExpression
 
       values_converted = values.collect do |v|
         return _("Date/Time value must not be blank") if value.blank?
-        v_cvt = normalize_date_time(v, "UTC") rescue nil
+        v_cvt = RelativeDatetime.normalize(v, "UTC") rescue nil
         return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
         v_cvt
       end
