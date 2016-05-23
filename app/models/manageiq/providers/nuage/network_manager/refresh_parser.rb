@@ -69,7 +69,7 @@ module ManageIQ::Providers
     end
 
     def to_cidr(netmask)
-      '/' + netmask.to_i.to_s(2).count("1").to_s
+      '/' + netmask.split(".").map { |e| e.to_i.to_s(2).rjust(8, "0") }.join.count("1").to_s
     end
 
     def parse_network_group(network_group)
