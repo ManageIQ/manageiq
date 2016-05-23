@@ -24,4 +24,16 @@ describe ConfigurationController do
       expect(assigns(:all_views_tree)).not_to be_nil
     end
   end
+  context "#timeprofile_get_form_vars" do
+    before do
+      timeprofile = FactoryGirl.create(:time_profile)
+      @request.session = {:edit => {:new         => {:profile_type => 'Not a user'},
+                                    :userid      => 1234,
+                                    :timeprofile_id => timeprofile.id}}
+    end
+    it 'sets @timeprofile' do
+      controller.send(:timeprofile_get_form_vars)
+      expect(controller.instance_variable_get(:@timeprofile)).to be_a_kind_of(TimeProfile)
+    end
+  end
 end

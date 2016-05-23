@@ -249,23 +249,6 @@ class ConfigurationController < ApplicationController
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
-      when "ui_4"                                                   # User Filters tab
-        @edit = session[:edit]
-        @edit[:current].each do |arr|
-          s = MiqSearch.find(arr.id.to_i)
-          if @edit[:show_ids]
-            if @edit[:show_ids].include?(s.id.to_s)
-              s.search_key = nil
-            else
-              s.search_key = "_hidden_"
-            end
-            s.save
-          end
-        end
-        add_flash(_("Default Filters saved successfully"))
-        edit
-        render :action => "show"
-        return                                                      # No config file for Visuals yet, just return
       end
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
@@ -404,7 +387,7 @@ class ConfigurationController < ApplicationController
 
   def timeprofile_get_form_vars
     @edit = session[:edit]
-    @timeprofile = @edit[:timeprofile]
+    @timeprofile = TimeProfile.find(@edit[:timeprofile_id]) if @edit[:timeprofile_id]
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:profile_type] = params[:profile_type] if params[:profile_type]
     @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.key?(:profile_tz)
@@ -517,6 +500,7 @@ class ConfigurationController < ApplicationController
         end
         return
       end
+      @timeprofile = TimeProfile.new unless @timeprofile
       timeprofile_set_record_vars(@timeprofile)
       begin
         @timeprofile.save!
@@ -583,23 +567,23 @@ class ConfigurationController < ApplicationController
         end
         return
       end
-      timeprofile = TimeProfile.find(@edit[:timeprofile].id)    # get the current record
-      timeprofile_set_record_vars(timeprofile)
+      timeprofile_set_record_vars(@timeprofile)
       begin
-        timeprofile.save!
+        @timeprofile.save!
       rescue StandardError => bang
         add_flash(_("TimeProfile \"%{name}\": Error during 'save': %{error_message}") %
-          {:name => timeprofile.description, :error_message => bang.message}, :error)
+          {:name => @timeprofile.description, :error_message => bang.message}, :error)
         @in_a_form = true
-        drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => timeprofile.description},
+        drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
                         :url  => "/configuration/timeprofile_edit")
         render :update do |page|
           page << javascript_prologue
           page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         end
       else
-        AuditEvent.success(build_created_audit(timeprofile, @edit))
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"), :name => timeprofile.description})
+        AuditEvent.success(build_created_audit(@timeprofile, @edit))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"),
+                                                         :name  => @timeprofile.description})
         session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
         render :update do |page|
           page << javascript_prologue
@@ -724,10 +708,10 @@ class ConfigurationController < ApplicationController
       build_default_filters_tree(@edit[:current])
     when 'ui_4'
       @edit = {
-        :timeprofile => @timeprofile,
         :current     => {},
         :key         => 'config_edit__ui4',
       }
+      @edit[:timeprofile_id] = @timeprofile.try(:id)
       if ['timeprofile_new',  'timeprofile_copy',
           'timeprofile_edit', 'timeprofile_update'].include?(params[:action])
         @edit[:current] = {
