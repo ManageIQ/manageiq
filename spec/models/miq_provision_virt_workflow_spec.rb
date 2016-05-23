@@ -1,6 +1,24 @@
 describe MiqProvisionVirtWorkflow do
   let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
 
+  context "#new" do
+    let(:sdn)  { 'SysprepDomainName' }
+    let(:host) { double('Host', :id => 1, :name => 'my_host') }
+    let(:user) { FactoryGirl.create(:user_with_email) }
+
+    before do
+      allow(workflow).to receive_messages(:validate => true)
+      allow(workflow).to receive_messages(:get_dialogs => {})
+      workflow.instance_variable_set(:@values, :vm_tags => [], :src_vm_id => 123, :sysprep_enabled => 'fields',
+                                     :sysprep_domain_name => sdn)
+    end
+
+    it "calls password_helper once when a block is not passed in" do
+      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:password_helper).with({:allowed_hosts => [host], :skip_dialog_load => true}, false).once
+      MiqProvisionVirtWorkflow.new({:allowed_hosts => [host]}, user, {:skip_dialog_load => true})
+    end
+  end
+
   context "#continue_request" do
     let(:sdn) { 'SysprepDomainName' }
 
