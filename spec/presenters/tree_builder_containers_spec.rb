@@ -8,15 +8,20 @@ describe TreeBuilderContainers do
     MiqRegion.seed
     EvmSpecHelper.local_miq_server
 
-    @tagged_container = FactoryGirl.create(:container, :name => "Tagged Container", :tags => [tag])
-    @untagged_container = FactoryGirl.create(:container, :name => "Untagged Container")
-
+    @container_group = FactoryGirl.create(:container_group, :name => "Container group", :id => 42)
+    @tagged_container = FactoryGirl.create(:container,
+                                           :name            => "Tagged Container",
+                                           :tags            => [tag],
+                                           :container_group => @container_group)
+    @untagged_container = FactoryGirl.create(:container,
+                                             :name            => "Untagged Container",
+                                             :container_group => @container_group)
     login_as user
   end
 
   describe ".new" do
     def get_tree_results(tree)
-      JSON.parse(tree.tree_nodes).first['children'].collect { |h| h['title'] }
+      tree.x_get_child_nodes("xx-42").map { |c| c[:title] }
     end
 
     it "returns all containers" do

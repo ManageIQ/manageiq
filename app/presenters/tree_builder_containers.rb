@@ -4,6 +4,7 @@ class TreeBuilderContainers < TreeBuilder
   def tree_init_options(_)
     {
       :leaf     => "Container",
+      :open_all => true,
       :full_ids => true
     }
   end
@@ -16,12 +17,30 @@ class TreeBuilderContainers < TreeBuilder
     )
   end
 
+  # level 0 - root
   def root_options
-    [t = _("All Containers"), t]
+    [t = _("All Containers (by Pods)"), t]
   end
 
-  # Get root nodes count/array for explorer tree
+  # level 1 - pods
   def x_get_tree_roots(count_only, _options)
-    count_only_or_objects(count_only, rbac_filtered_objects(Container.where(:deleted_on => nil)), "name")
+    objects = ContainerGroup.where(:deleted_on => nil).order(:name)
+    list = objects.compact.map do |c|
+      {
+        :id          => c.id,
+        :text        => c.name,
+        :tip         => c.ems_ref,
+        :image       => "folder",
+        :cfmeNoClick => true
+      }
+    end
+    count_only_or_objects(count_only, list, nil)
+  end
+
+  # level 2 - containers
+  def x_get_tree_custom_kids(object, count_only, _options)
+    container_group = ContainerGroup.find(object[:id])
+    objects = rbac_filtered_objects(container_group.containers.where(:deleted_on => nil)) if container_group
+    count_only_or_objects(count_only, objects, 'name')
   end
 end
