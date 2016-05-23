@@ -1,7 +1,40 @@
 describe CatalogController do
-  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:user)                { FactoryGirl.create(:user_with_group) }
+  let(:admin_user)          { FactoryGirl.create(:user, :role => "super_administrator") }
+  let(:root_tenant)         { user.current_tenant }
+  let(:tenant_role)         { FactoryGirl.create(:miq_user_role) }
+  let(:child_tenant)        { FactoryGirl.create(:tenant, :parent => root_tenant) }
+  let(:child_tenant_group)  { FactoryGirl.create(:miq_group, :tenant => child_tenant, :miq_user_role => tenant_role) }
+  let(:child_tenant_user)   { FactoryGirl.create(:user, :miq_groups => [child_tenant_group]) }
+
+  let!(:service_template_with_root_tenant) { FactoryGirl.create(:service_template, :tenant => root_tenant) }
+  let!(:service_template_with_child_tenant) do
+    FactoryGirl.create(:service_template, :miq_group => child_tenant_group, :tenant => child_tenant)
+  end
+
   before(:each) do
     set_user_privileges user
+    controller.instance_variable_set(:@settings, {})
+    allow_any_instance_of(ApplicationController).to receive(:fetch_path)
+  end
+
+  it "returns all catalog items related to current tenant and root tenant when non-self service user is logged" do
+    login_as child_tenant_user
+    view, _pages = controller.send(:get_view, ServiceTemplate, {})
+    expect(view.table.data.count).to eq(2)
+  end
+
+  it "returns all catalog items related to current user's groups when self service user is logged" do
+    allow_any_instance_of(MiqGroup).to receive_messages(:self_service? => true)
+    login_as child_tenant_user
+    view, _pages = controller.send(:get_view, ServiceTemplate, {})
+    expect(view.table.data.count).to eq(1)
+  end
+
+  it "returns all catalog items when admin user is logged" do
+    login_as admin_user
+    view, _pages = controller.send(:get_view, ServiceTemplate, {})
+    expect(view.table.data.count).to eq(2)
   end
 
   # some methods should not be accessible through the legacy routes
