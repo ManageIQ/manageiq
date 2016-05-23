@@ -83,18 +83,6 @@ class MiqReport < ApplicationRecord
     q
   end
 
-  def add_schedule(data)
-    data['name'] ||= name
-    data['description'] ||= title
-
-    data['filter'] = MiqExpression.new("=" => {"field" => "MiqReport.id",
-                                               "value" => id})
-    data['towhat'] = "MiqReport"
-    data['prod_default'] = "system"
-
-    MiqSchedule.create! data
-  end
-
   def view_filter_columns
     col_order.collect { |c| [headers[col_order.index(c)], c] }
   end
@@ -154,6 +142,24 @@ class MiqReport < ApplicationRecord
       multi = relats.fetch_path(*path)
       multi == true ? r << c : r
     end
+  end
+
+  def list_schedules
+    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                    "value" => id})
+    MiqSchedule.filter_matches_with exp
+  end
+
+  def add_schedule(data)
+    data['name'] ||= name
+    data['description'] ||= title
+
+    data['filter'] = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                               "value" => id})
+    data['towhat'] = "MiqReport"
+    data['prod_default'] = "system"
+
+    MiqSchedule.create! data
   end
 
   def db_class

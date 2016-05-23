@@ -9,8 +9,7 @@ class ApiController
     end
 
     def schedules_query_resource(object)
-      klass = collection_class(:schedules)
-      object ? klass.find_by_report_id(object.id) : {}
+      object ? object.list_schedules : {}
     end
 
     def show_reports

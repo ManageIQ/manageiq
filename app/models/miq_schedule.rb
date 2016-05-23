@@ -21,6 +21,10 @@ class MiqSchedule < ApplicationRecord
     where("updated_at > ?", time)
   }
 
+  scope :filter_matches_with, lambda { |exp|
+    where(:filter => exp)
+  }
+
   serialize :sched_action
   serialize :filter
   serialize :run_at
@@ -425,11 +429,5 @@ class MiqSchedule < ApplicationRecord
   def v_zone_name
     return "" if zone.nil?
     zone.name
-  end
-
-  def self.find_by_report_id(report_id)
-    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
-                                    "value" => report_id})
-    where(:filter => exp)
   end
 end # class MiqSchedule
