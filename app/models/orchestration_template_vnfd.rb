@@ -1,10 +1,10 @@
 class OrchestrationTemplateVnfd < OrchestrationTemplate
   def parameter_groups
-
+    []
   end
 
   def parameters
-
+    []
   end
 
   def self.eligible_manager_types
