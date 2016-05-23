@@ -59,6 +59,16 @@
     :collection_actions:
       :post:
       - :name: create
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
+    :resource_actions:
+      :post:
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
   :availability_zones:
     :description: Availability Zones
     :identifier: availability_zone
