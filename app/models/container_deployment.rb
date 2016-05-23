@@ -9,7 +9,7 @@ class ContainerDeployment < ApplicationRecord
   serialize :customizations, Hash
   AUTHENTICATIONS_TYPES = {:AllowAllPasswordIdentityProvider => AuthenticationAllowAll, :HTPasswdPasswordIdentityProvider => AuthenticationHtpasswd, :LDAPPasswordIdentityProvider => AuthenticationLdap, :RequestHeaderIdentityProvider => AuthenticationRequestHeader, :OpenIDIdentityProvider => AuthenticationOpenId, :GoogleIdentityProvider => AuthenticationGoogle, :GitHubIdentityProvider => AuthenticationGithub, :ssh => AuthPrivateKey, :rhsm => AuthenticationRhsm}.freeze
   AUTHENTICATIONS_NAMES = {:AllowAllPasswordIdentityProvider => "all", :HTPasswdPasswordIdentityProvider => "htPassword", :LDAPPasswordIdentityProvider => "ldap", :RequestHeaderIdentityProvider => "requestHeader", :OpenIDIdentityProvider => "openId", :GoogleIdentityProvider => "google", :GitHubIdentityProvider => "github", :ssh => "ssh", :rhsm => "rhsm"}.freeze
-
+  ANSIBLE_CONFIG_LOCATION = "/usr/share/atomic-openshift-utils/ansible.cfg".freeze
   def ssh_auth
     authentications.where(:type => "AuthPrivateKey").first
   end
@@ -22,33 +22,21 @@ class ContainerDeployment < ApplicationRecord
     authentications.where.not(:type => "AuthPrivateKey").where.not(:type => "AuthenticationRhsm")
   end
 
-  def masters
-    container_deployment_nodes.find_tagged_with(:any => "/user/master", :ns => "*")
+  def roles_addresses(role)
+    unless role.include? "deployment_master"
+      addresses_array container_nodes_by_role(role)
+    else
+      extract_public_ip_or_hostname container_nodes_by_role(role).first
+    end
   end
 
-  def deployment_master
-    container_deployment_nodes.find_tagged_with(:any => "/user/deployment_master", :ns => "*")
-  end
-
-  def nodes
-    container_deployment_nodes.find_tagged_with(:any => "/user/node", :ns => "*")
+  def container_nodes_by_role(role)
+    container_deployment_nodes.find_tagged_with(:any => "/user/#{role}", :ns => "*")
   end
 
   # will be removed once moving to yaml format, no need to review method
   def nfs_addresses
     addresses_array container_deployment_nodes.find_tagged_with(:any => "/user/nfs", :ns => "*")
-  end
-
-  def masters_addresses
-    addresses_array masters
-  end
-
-  def deployment_master_address
-    extract_public_ip_or_hostname deployment_master.first
-  end
-
-  def nodes_addresses
-    addresses_array(nodes, true)
   end
 
   # will be removed once moving to yaml format, no need to review method
@@ -106,10 +94,10 @@ rhsub_pass=#{rhsm_auth.password_encrypted}
 rhsub_pool=#{rhsm_auth.rhsm_sku}
 
 [masters]
-#{masters_addresses.join("\n") unless masters.empty?}
+#{roles_addresses("master").join("\n") unless roles_addresses("master").empty?}
 
 [nodes]
-#{nodes_addresses.join("\n") unless nodes.empty?}
+#{roles_addresses("node").join("\n") unless roles_addresses("node").empty?}
 eos
     template
   end
@@ -135,13 +123,13 @@ ansible_ssh_user=#{ssh_auth.userid}
 ansible_sudo=true
 deployment_type=#{kind}
 #openshift_use_manageiq=True
-#{add_role("nfs") unless nfs_addresses.empty?}
+#{add_role("nfs") unless roles_addresses("nfs").empty?}
 
 [masters]
-#{(deployment_master_address.to_s + " ansible_connection=local openshift_scheduleable=True") unless deployment_master_address.nil?}
-    #{masters_addresses.join("\n") unless masters.empty?}
+#{(roles_addresses("deployment_master").to_s + " ansible_connection=local openshift_scheduleable=True") unless roles_addresses("deployment_master").nil?}
+#{roles_addresses("master").join("\n") unless roles_addresses("master").empty?}
 [nodes]
-#{nodes_addresses.join("\n") unless nodes.empty?}
+#{roles_addresses("node").join("\n") unless roles_addresses("node").empty?}
 eos
     template
   end
@@ -150,7 +138,7 @@ eos
     hash = {}
     hash[:version] = version
     hash[:deployment] = {}
-    hash[:deployment][:ansible_config] = "/usr/share/atomic-openshift-utils/ansible.cfg"
+    hash[:deployment][:ansible_config] = ANSIBLE_CONFIG_LOCATION
     hash[:deployment][:ansible_ssh_user] = ssh_auth.userid
     hash[:deployment][:hosts] = container_deployment_nodes.collect(&:ansible_config_format)
     hash[:deployment][:roles] = {}
@@ -273,9 +261,10 @@ eos
       parameters.merge parameters_provision
     else
       parameters_existing = { # non-managed + managed-existing
-        :deployment_master => deployment_master_address,
-        :masters           => masters_addresses,
-        :nodes             => nodes_addresses
+        :deployment_master => roles_addresses("deployment_master"),
+        :masters           => roles_addresses("master"),
+        :nodes             => roles_addresses("node")
+
       }
       parameters.merge parameters_existing
     end
@@ -360,14 +349,15 @@ eos
     create_deployment_authentication("rhsm" => {"userid" => params["rhnUsername"], "password" => params["rhnPassword"], "rhsm_sku" => params["rhnSKU"]}, "mode" => "rhsm")
     save!
     create_automation_request(generate_automation_params(params), user)
+    self
   end
 
   def create_needed_tags(params = {})
-    node_tag = create_or_get_tag("node").name
-    master_tag = create_or_get_tag("master").name
-    deployment_master_tag = create_or_get_tag("deployment_master").name
+    node_tag = find_or_create_by("node").name
+    master_tag = find_or_create_by("master").name
+    deployment_master_tag = find_or_create_by("deployment_master").name
     tags = [node_tag, master_tag, deployment_master_tag]
-    nfs_tag = create_or_get_tag("nfs").name if params["nfs_id_or_ip"]
+    nfs_tag = find_or_create_by("nfs").name if params["nfs_id_or_ip"]
     tags += [nfs_tag] if nfs_tag
     tags
   end
@@ -379,10 +369,10 @@ eos
     additional_roles_vms
   end
 
-  def create_or_get_tag(tag)
-    ent = Tag.find_by_name(tag)
+  def find_or_create_by(tag_name)
+    ent = Tag.find_by_name(tag_name)
     unless ent
-      ent = Tag.new(:name => tag)
+      ent = Tag.new(:name => tag_name)
       ent.save
     end
     ent

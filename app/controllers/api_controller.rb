@@ -59,6 +59,7 @@ class ApiController < ApplicationController
   include_concern 'AutomationRequests'
   include_concern 'Categories'
   include_concern 'Conditions'
+  include_concern 'ContainerDeployments'
   include_concern 'CustomAttributes'
   include_concern 'Events'
   include_concern 'Features'
@@ -86,7 +87,6 @@ class ApiController < ApplicationController
   include_concern 'Tenants'
   include_concern 'Users'
   include_concern 'Vms'
-  include_concern 'ContainerDeployments'
 
   #
   # Api Controller Hooks

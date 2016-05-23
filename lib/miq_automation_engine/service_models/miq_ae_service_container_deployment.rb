@@ -9,9 +9,9 @@ module MiqAeMethodService
     expose :deployment_master, :method => :deployment_master
 
     def assign_container_deployment_node(vm_id, role)
-      self.send(role).each do |deployment_node|
+      object_send(:container_nodes_by_role, role).each do |deployment_node|
         next unless deployment_node.vm_id.nil?
-        deployment_node.add_vm(vm_id)
+        deployment_node.vm_id = vm_id
       end
     end
 

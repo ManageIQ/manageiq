@@ -2,26 +2,23 @@ class ContainerDeploymentService
   def all_data
     {
       :provision              => possible_provision_providers,
-      :providers              => possible_providers_and_vms_for_provisioning,
+      :providers              => possible_providers_and_vms,
       :cloud_init_template_id => cloud_init_template_id,
     }.compact
   end
 
   def possible_provision_providers
-    result = []
-    providers = ExtManagementSystem.all.select do |m|
+    providers = ExtManagementSystem.select do |m|
       m.instance_of?(ManageIQ::Providers::Amazon::CloudManager) || m.instance_of?(ManageIQ::Providers::Redhat::InfraManager)
     end
-    providers.each do |provider|
-      result << {:provider => provider, :templates => templates(provider.miq_templates)}
+    providers.map do |provider|
+      {:provider => provider, :templates => templates(provider.miq_templates)}
     end
-    result
   end
 
   def templates(templates)
-    result = []
-    templates.each do |template|
-      result << {
+    templates.map do |template|
+      {
         :cpu    => template.cpu_total_cores,
         :memo   => template.mem_cpu,
         :name   => template.name,
@@ -29,18 +26,28 @@ class ContainerDeploymentService
         :id     => template.id
       }
     end
-    result
   end
 
-  def possible_providers_and_vms_for_provisioning
-    result = []
-    providers = ExtManagementSystem.all.select do |m|
-      m.type.to_s.include?("CloudManager") || m.type.to_s.include?("InfraManager")
+  def possible_providers_and_vms
+    providers = ExtManagementSystem.select do |m|
+      m.is_a?(ManageIQ::Providers::CloudManager) || m.is_a?(ManageIQ::Providers::InfraManager)
     end
-    providers.each do |provider|
-      result << {:provider => provider, :vms => provider.vms.select { |vm| !vm.hardware.ipaddresses.empty? }}
+    providers.map do |provider|
+      {:provider => provider, :vms => optional_vms(provider.vms)}
     end
-    result
+  end
+
+  def optional_vms(vms)
+    optional_vms = vms.select { |vm| !vm.hardware.ipaddresses.empty? }
+    optional_vms.map do |vm|
+      {
+        :cpu    => vm.hardware.cpu_total_cores,
+        :memo   => vm.hardware.memory_mb,
+        :name   => vm.name,
+        :ems_id => vm.ems_id,
+        :id     => vm.id
+      }
+    end
   end
 
   def cloud_init_template_id

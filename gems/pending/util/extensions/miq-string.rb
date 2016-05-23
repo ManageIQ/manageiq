@@ -161,7 +161,7 @@ class String
     end
   end
 
-  def is_json?
+  def json?
     !!JSON.parse(self)
   rescue
     false

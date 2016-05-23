@@ -14,7 +14,7 @@ class ContainerDeploymentNode < ApplicationRecord
   end
 
   def labels_hash
-    labels = {}
+    labels ||= {}
     labels.each do |key, val|
       labels[key] = val
     end
@@ -23,7 +23,7 @@ class ContainerDeploymentNode < ApplicationRecord
 
   def roles
     roles = []
-    self.tags.reset if tags.empty?
+    tags.reset
     tags.each do |tag|
       tag_entry = tag.name.split("/").last
       roles << tag_entry
@@ -31,17 +31,12 @@ class ContainerDeploymentNode < ApplicationRecord
     roles
   end
 
-  def node_main_role
-    return "node" if roles.include? "node"
-    "master"
-  end
-
   def ansible_config_format
     hash = {}
     hash[:connect_to] = node_address
     hash[:hostname] = vm.hostnames.last if vm && !vm.hostnames.empty?
     hash[:node_labels] = labels_hash if roles.include?("node") && !labels_hash.empty?
-    hash[:roles] = node_main_role
+    hash[:roles] = roles.include?("node") ? "node" : "master"
     hash
   end
 end

@@ -81,7 +81,7 @@ class Authentication < ApplicationRecord
       if self[key].kind_of? Array
         self[key] << value
       else
-        self[key] = (!value.kind_of?(Array) && value.to_json.is_json?) ? value.to_json : value
+        self[key] = (!value.kind_of?(Array) && value.to_json.json?) ? value.to_json : value
       end
     end
   end

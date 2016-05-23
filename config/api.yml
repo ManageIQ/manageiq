@@ -1609,7 +1609,7 @@
     - :collection
     :collection_actions:
       :post:
-      - :name: start
-        :identifier: start
+      - :name: create
+        :identifier: create
       - :name: collect_data
         :identifier: collect_data
