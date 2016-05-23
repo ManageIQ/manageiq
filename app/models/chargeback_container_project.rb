@@ -7,7 +7,7 @@ class ChargebackContainerProject < Chargeback
     :project_name         => :string,
     :project_uid          => :string,
     :provider_name        => :string,
-    :provider_uid         => :string,
+    :provider_hostname    => :string,
     :cpu_used_cost        => :float,
     :cpu_used_metric      => :float,
     :fixed_compute_1_cost => :float,
@@ -64,10 +64,10 @@ class ChargebackContainerProject < Chargeback
     project = @data_index.fetch_path(:container_project, :by_group_id, perf.resource_id)
     key = "#{project.id}_#{ts_key}"
     extra_fields = {
-      "project_name"  => project.name,
-      "project_uid"   => project.ems_ref,
-      "provider_name" => perf.parent_ems.name,
-      "provider_uid"  => perf.parent_ems.guid
+      "project_name"      => project.name,
+      "project_uid"       => project.ems_ref,
+      "provider_name"     => perf.parent_ems.name,
+      "provider_hostname" => perf.parent_ems.hostname
     }
     [key, extra_fields]
   end
