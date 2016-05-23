@@ -86,19 +86,6 @@ module ManageIQ::Providers
       return uid, new_result
     end
 
-    def parse_network_group(network_group)
-      uid     = network_group[:uid]
-      status  = "active"
-
-      new_result = {
-        :type                      => self.class.network_group_type,
-        :name                      => uid,
-        :ems_ref                   => uid,
-        :status                    => status,
-      }
-      return uid, new_result
-    end
-
     def parse_subnet(subnet)
       uid = subnet['ID']
 
@@ -124,18 +111,6 @@ module ManageIQ::Providers
        'domain_id'       => zone[1],
        'zone_name'       => zone[0],
        'zone_id'         => zone_id}
-    end
-
-    def map_extra_attributes(subnet_parent_id)
-      zone_id              = subnet_parent_id
-      zone                 = @zones[subnet_parent_id]
-      zone_name            = zone[0]
-      domain_id            = zone[1]
-      domain_name          = zone[2]
-      enterprise_id        = zone[3]
-      enterprise_name      = zone[4]
-      return {'enterprise_name' => enterprise_name, 'enterprise_id' => enterprise_id,
-        'domain_name' => domain_name, 'domain_id' => domain_id, 'zone_name' => zone_name, 'zone_id' => zone_id}
     end
 
     class << self
