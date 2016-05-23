@@ -145,7 +145,17 @@ module MiqRequestMixin
   end
 
   def workflow(request_options = options, flags = {})
-    workflow_class.new(request_options, get_user, flags) if workflow_class
+    if workflow_class
+      current_workflow = workflow_class.new(request_options, get_user, flags)
+      if block_given?
+        begin
+          yield(current_workflow)
+        ensure
+          current_workflow.password_helper
+        end
+      end
+      current_workflow
+    end
   end
 
   def request_dialog(action_name)

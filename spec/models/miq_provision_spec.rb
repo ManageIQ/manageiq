@@ -150,7 +150,7 @@ describe MiqProvision do
       expect(prov).to receive(:workflow) { |options, flags|
         expect(options[:placement_auto]).to eq([false, 0])
         expect(flags[:skip_dialog_load]).to be_truthy
-      }.and_return(workflow)
+      }.and_yield(workflow).and_return(workflow)
 
       prov.eligible_resources(:hosts)
     end
