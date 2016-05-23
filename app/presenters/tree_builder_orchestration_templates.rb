@@ -37,9 +37,9 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :tip   => _("Azure Templates")},
       {:id    => 'otvnf',
        :tree  => "otvnf_tree",
-       :text  => _("Vnfd Templates"),
+       :text  => _("VNF Templates"),
        :image => "orchestration_template_vnfd",
-       :tip   => _("Vnfd Templates")}
+       :tip   => _("VNF Templates")}
     ]
     count_only ? children.length : children
   end

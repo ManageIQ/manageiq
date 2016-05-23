@@ -9,10 +9,10 @@
 #
 
 # Report title
-title: Vnfd Orchestration Templates
+title: VNF Orchestration Templates
 
 # Menu name
-name: Vnfd Orchestration Template
+name: VNF Orchestration Template
 
 # Main DB table report is based on
 db: OrchestrationTemplateVnfd
