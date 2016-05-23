@@ -42,7 +42,8 @@ module VirtualArel
     private
 
     def define_virtual_arel(name, arel)
-      self._virtual_arel = _virtual_arel.merge(name => arel)
+      arel = Arel::Nodes::Grouping.new(arel) unless arel.respond_to?(:eq)
+      self._virtual_arel[name] = arel
     end
   end
 end
