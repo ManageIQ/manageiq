@@ -37,11 +37,14 @@ class ChargebackContainerProject < Chargeback
     #   :entity_id => 1/2/3.../all rails id of entity
 
     # Find Project by id or get all projects
+    provider_id = options[:provider_id]
     id = options[:entity_id]
-    raise "must provide option :entity_id" if id.nil?
+    raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
 
-    @groups = if id == "all"
+    @groups = if provider_id == "all"
                 ContainerGroup.all
+              elsif id == "all"
+                ContainerGroup.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
               else
                 ContainerGroup.where('container_project_id = ? or old_container_project_id = ?', id, id)
               end
