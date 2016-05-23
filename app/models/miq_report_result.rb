@@ -33,31 +33,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def status
-    return "Unknown" if miq_task.nil?
-
-    case miq_task.state
-    when MiqTask::STATE_INITIALIZED
-      return "Initialized"
-    when MiqTask::STATE_QUEUED
-      return "Queued"
-    when MiqTask::STATE_ACTIVE
-      return "Running"
-    when MiqTask::STATE_FINISHED
-      case miq_task.status
-      when MiqTask::STATUS_OK
-        return "Finished"
-      when MiqTask::STATUS_WARNING
-        return "Finished with Warnings"
-      when MiqTask::STATUS_ERROR
-        return "Error"
-      when MiqTask::STATUS_TIMEOUT
-        return "Timed Out"
-      else
-        raise _("Unknown status of: %{status}") % {:status => miq_task.status.inspect}
-      end
-    else
-      raise _("Unknown state of: %{state}") % {:state => miq_task.state.inspect}
-    end
+    miq_task.nil? ? "Unknown" : miq_task.human_status
   end
 
   def status_message

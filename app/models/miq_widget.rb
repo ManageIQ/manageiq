@@ -69,30 +69,7 @@ class MiqWidget < ApplicationRecord
       return "None" if last_run_on.nil?
       return "Complete"
     end
-
-    case miq_task.state
-    when MiqTask::STATE_INITIALIZED
-      return "Initialized"
-    when MiqTask::STATE_QUEUED
-      return "Queued"
-    when MiqTask::STATE_ACTIVE
-      return "Running"
-    when MiqTask::STATE_FINISHED
-      case miq_task.status
-      when MiqTask::STATUS_OK
-        return "Complete"
-      when MiqTask::STATUS_WARNING
-        return "Finished with Warnings"
-      when MiqTask::STATUS_ERROR
-        return "Error"
-      when MiqTask::STATUS_TIMEOUT
-        return "Timed Out"
-      else
-        raise _("Unknown status of: %{task_status}") % {:task_status => miq_task.status.inspect}
-      end
-    else
-      raise _("Unknown state of: %{task_status}") % {:task_status => miq_task.state.inspect}
-    end
+    miq_task.human_status
   end
 
   def status_message
