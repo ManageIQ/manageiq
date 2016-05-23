@@ -632,7 +632,7 @@ class MiqExpression
         clause = "(" + operands.first + ")"
       end
     when "not", "!"
-      clause = self.class.normalize_sql_operator(operator) + " " + _to_sql(exp[operator], tz)
+      clause = Arel::Nodes::Not.new(Arel::Nodes::SqlLiteral.new(_to_sql(exp[operator], tz))).to_sql
     when "is null"
       field = Field.parse(exp[operator]["field"])
       clause = field.eq(nil).to_sql
