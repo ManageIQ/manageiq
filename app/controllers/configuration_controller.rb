@@ -249,23 +249,6 @@ class ConfigurationController < ApplicationController
         edit
         render :action => "show"
         return                                                      # No config file for Visuals yet, just return
-      when "ui_4"                                                   # User Filters tab
-        @edit = session[:edit]
-        @edit[:current].each do |arr|
-          s = MiqSearch.find(arr.id.to_i)
-          if @edit[:show_ids]
-            if @edit[:show_ids].include?(s.id.to_s)
-              s.search_key = nil
-            else
-              s.search_key = "_hidden_"
-            end
-            s.save
-          end
-        end
-        add_flash(_("Default Filters saved successfully"))
-        edit
-        render :action => "show"
-        return                                                      # No config file for Visuals yet, just return
       end
       @update.config.each_key do |category|
         @update.config[category] = @edit[:new][category].dup
