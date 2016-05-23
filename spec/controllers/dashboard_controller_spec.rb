@@ -110,15 +110,26 @@ describe DashboardController do
       expect(response).to redirect_to(:action => "logout")
     end
 
-    it "SAML protected page should redirect to validation.url with a valid user" do
-      user = FactoryGirl.create(:user, :userid => "johndoe", :role => "test")
-      request.env["HTTP_X_REMOTE_USER"] = "johndoe"
+    it "SAML protected page should render the saml_login page with the proper validation_url and api token" do
+      user           = FactoryGirl.create(:user, :userid => "johndoe", :role => "test")
+      auth_token     = "aabbccddeeff"
+      validation_url = "/user_validation_url"
 
-      skip_data_checks('/user_validation_url')
+      request.env["HTTP_X_REMOTE_USER"] = user.userid
+      skip_data_checks(validation_url)
+
       allow(User).to receive(:authenticate).and_return(user)
+      allow_any_instance_of(ApiUserTokenService).to receive(:generate_token)
+        .with(user.userid, "ui")
+        .and_return(auth_token)
 
-      get :saml_login
-      expect(response).to redirect_to("/user_validation_url")
+      expect(controller).to receive(:render)
+        .with(:template => "dashboard/saml_login",
+              :layout   => false,
+              :locals   => {:api_auth_token => auth_token, :validation_url => validation_url})
+        .exactly(1).times
+
+      controller.send(:saml_login)
     end
   end
 

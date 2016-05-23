@@ -470,7 +470,6 @@ class DashboardController < ApplicationController
 
   # Login support for SAML - GET /saml_login
   def saml_login
-    session[:saml_login_request] = nil
     if @user_name.blank? && request.env.key?("HTTP_X_REMOTE_USER").present?
       @user_name = params[:user_name] = request.env["HTTP_X_REMOTE_USER"].split("@").first
     else
@@ -483,8 +482,10 @@ class DashboardController < ApplicationController
 
     case validation.result
     when :pass
-      session[:saml_login_request] = true
-      redirect_to validation.url
+      render :template => "dashboard/saml_login",
+             :layout   => false,
+             :locals   => {:api_auth_token => generate_ui_api_token(@user_name),
+                           :validation_url => validation.url}
       return
     when :fail
       session[:user_validation_error] = validation.flash_msg || "User validation failed"

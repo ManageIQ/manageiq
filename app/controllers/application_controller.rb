@@ -1124,8 +1124,6 @@ class ApplicationController < ActionController::Base
 
     return if action_name == 'auth_error'
 
-    session[:saml_login_request] = nil
-
     pass = %w(button x_button).include?(action_name) ? handle_button_rbac : handle_generic_rbac
     $audit_log.failure("Username [#{current_userid}], Role ID [#{current_user.miq_user_role.try(:id)}] attempted to access area [#{controller_name}], type [Action], task [#{action_name}]") unless pass
   end
