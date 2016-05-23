@@ -19,7 +19,7 @@ class ApiController
       end
 
       attrs.each do |k|
-        value =  normalize_direct(type, k, obj[k])
+        value =  normalize_direct(type, k, obj.kind_of?(ActiveRecord::Base) ? obj.try(k) : obj[k])
         result[k] = value unless value.nil?
       end
       result
