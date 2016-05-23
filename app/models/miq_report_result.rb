@@ -45,7 +45,7 @@ class MiqReportResult < ApplicationRecord
     when MiqTask::STATE_FINISHED
       case miq_task.status
       when MiqTask::STATUS_OK
-        return "Finished"
+        return "Complete"
       when MiqTask::STATUS_WARNING
         return "Finished with Warnings"
       when MiqTask::STATUS_ERROR
