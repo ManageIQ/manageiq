@@ -1398,18 +1398,13 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to select a classification entry
   def field_method_select
     get_method_form_vars
-    if row_selected_in_grid?
-      @refresh_div = "class_methods_div"
-      @refresh_partial = "class_methods"
-    else
-      @refresh_div = "method_inputs_div"
-      @refresh_partial = "method_inputs"
-    end
+    @refresh_div = "inputs_div"
+    @refresh_partial = "inputs"
     @changed = (@edit[:new] != @edit[:current])
     @in_a_form = true
     render :update do |page|
       page << javascript_prologue
-      page.replace_html(@refresh_div, :partial => @refresh_partial) if @refresh_div
+      page.replace_html(@refresh_div, :partial => @refresh_partial)
       if row_selected_in_grid?
         page << javascript_show("class_methods_div")
         page << javascript_focus('cls_field_name')
@@ -1426,19 +1421,14 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to select a classification entry
   def field_method_accept
     get_method_form_vars
-    if row_selected_in_grid?
-      @refresh_div = "class_methods_div"
-      @refresh_partial = "class_methods"
-    else
-      @refresh_div = "method_inputs_div"
-      @refresh_partial = "method_inputs"
-    end
+    @refresh_div = "inputs_div"
+    @refresh_partial = "inputs"
     session[:field_data] = {}
     @changed = (@edit[:new] != @edit[:current])
     @in_a_form = true
     render :update do |page|
       page << javascript_prologue
-      page.replace_html(@refresh_div, :partial => @refresh_partial)  if @refresh_div
+      page.replace_html(@refresh_div, :partial => @refresh_partial)
       if row_selected_in_grid?
         page << javascript_show("class_methods_div")
       else
@@ -1453,13 +1443,8 @@ class MiqAeClassController < ApplicationController
   # AJAX driven routine to delete a classification entry
   def field_method_delete
     get_method_form_vars
-    if row_selected_in_grid?
-      @refresh_div = "class_methods_div"
-      @refresh_partial = "class_methods"
-    else
-      @refresh_div = "method_inputs_div"
-      @refresh_partial = "method_inputs"
-    end
+    @refresh_div = "inputs_div"
+    @refresh_partial = "inputs"
 
     if params.key?(:id) && @edit[:fields_to_delete].exclude?(params[:id])
       @edit[:fields_to_delete].push(params[:id])
@@ -1470,7 +1455,7 @@ class MiqAeClassController < ApplicationController
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue
-      page.replace_html(@refresh_div, :partial => @refresh_partial)  if @refresh_div
+      page.replace_html(@refresh_div, :partial => @refresh_partial)
       if row_selected_in_grid?
         page << javascript_show("class_methods_div")
       else
