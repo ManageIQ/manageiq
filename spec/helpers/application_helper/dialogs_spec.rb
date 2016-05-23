@@ -88,7 +88,6 @@ describe ApplicationHelper::Dialogs do
       it "returns the tag options with a disabled true" do
         expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
           :class     => "dynamic-text-area-100 form-control",
-          :maxlength => 8192,
           :size      => "50x6",
           :disabled  => true,
           :title     => "This element is disabled because it is read only"
@@ -105,7 +104,6 @@ describe ApplicationHelper::Dialogs do
         it "returns the tag options with a data-miq-observe" do
           expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
             :class             => "dynamic-text-area-100 form-control",
-            :maxlength         => 8192,
             :size              => "50x6",
             "data-miq_observe" => {
               :interval     => ".5",
@@ -124,7 +122,6 @@ describe ApplicationHelper::Dialogs do
         it "returns the tag options with a data-miq-observe" do
           expect(helper.textarea_tag_options(dialog_field, "url")).to eq(
             :class             => "dynamic-text-area-100 form-control",
-            :maxlength         => 8192,
             :size              => "50x6",
             "data-miq_observe" => '{"interval":".5","url":"url"}'
           )

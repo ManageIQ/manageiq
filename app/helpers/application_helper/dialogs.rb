@@ -44,7 +44,6 @@ module ApplicationHelper::Dialogs
   def textarea_tag_options(field, url)
     tag_options = {
       :class     => "dynamic-text-area-#{field.id} form-control",
-      :maxlength => 8192,
       :size      => "50x6"
     }
 
