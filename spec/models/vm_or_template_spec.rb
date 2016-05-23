@@ -610,6 +610,26 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".disconnected" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :connection_state => "connected") }
+    let(:vm2) { FactoryGirl.create(:vm_vmware, :connection_state => "disconnected") }
+
+    it "calculates in ruby" do
+      expect(vm.disconnected).to be_falsey
+      expect(vm2.disconnected).to be_truthy
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_falsey
+    end
+
+    it "calculates in the database" do
+      vm2.save
+      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_truthy
+    end
+  end
+
   describe "#disconnect_ems" do
     let(:ems) { FactoryGirl.build(:ext_management_system) }
     let(:vm) do
