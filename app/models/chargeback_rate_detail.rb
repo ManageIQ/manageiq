@@ -49,23 +49,7 @@ class ChargebackRateDetail < ApplicationRecord
     when "yearly"  then rate / 24 / 365
     else raise "rate time unit of '#{per_time}' not supported"
     end
-  end
 
-  def hourly_rate
-    _fixed_rate, variable_rate = find_rate(0.0)
-    return 0.0 if variable_rate.zero?
-
-    hr = case per_time
-         when "hourly"  then variable_rate
-         when "daily"   then variable_rate / 24
-         when "weekly"  then variable_rate / 24 / 7
-         when "monthly" then variable_rate / 24 / 30
-         when "yearly"  then variable_rate / 24 / 365
-         else raise _("rate time unit of '%{time_type}' not supported") % {:time_type => per_time}
-         end
-
-    # Handle cases where we need to adjust per_unit to a common value.
-    rate_adjustment(hr)
   end
 
   # Scale the rate in the unit difine by user to the default unit of the metric
