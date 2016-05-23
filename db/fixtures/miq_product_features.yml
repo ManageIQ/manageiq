@@ -364,6 +364,10 @@
       :description: Refresh Cloud Providers
       :feature_type: control
       :identifier: ems_cloud_refresh
+    - :name: Re-check Authentication Status 
+      :description: Re-check Authentication Status of Cloud Providers
+      :feature_type: control
+      :identifier: ems_cloud_recheck_auth_status 
   - :name: Modify
     :description: Modify Cloud Providers
     :feature_type: admin
