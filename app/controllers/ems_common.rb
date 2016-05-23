@@ -637,9 +637,8 @@ module EmsCommon
       @server_zones.push([zone.description, zone.name])
     end
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
-    @amazon_regions, @azure_regions, @google_regions = %w(Amazon Azure Google).map do |provider_name|
-      get_regions(provider_name)
-    end
+
+    @provider_regions = retrieve_provider_regions
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_security_protocols = retrieve_openstack_security_protocols
     @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols
@@ -648,13 +647,16 @@ module EmsCommon
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
-  def get_regions(provider_name)
-    regions = {}
-    "ManageIQ::Providers::#{provider_name}::Regions".constantize.all.each do |region|
-      regions[region[:name]] = region[:description]
+  def retrieve_provider_regions
+    cloud_managers = model.supported_subclasses.select { |c| c.is_available?(:regions) }
+    cloud_managers.each_with_object({}) do |cloud_manager, provider_regions|
+      regions = cloud_manager.parent::Regions.all.sort_by { |r| r[:description] }
+      provider_regions[cloud_manager.ems_type] = regions.map do |region|
+        [region[:description], region[:name]]
+      end
     end
-    regions
   end
+  private :retrieve_provider_regions
 
   def retrieve_openstack_infra_providers
     ManageIQ::Providers::Openstack::Provider.pluck(:name, :id)

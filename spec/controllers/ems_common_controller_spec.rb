@@ -43,6 +43,25 @@ describe EmsCloudController do
       end
     end
 
+    context "#new" do
+      before do
+        set_user_privileges
+        allow(controller).to receive(:drop_breadcrumb)
+      end
+
+      it "assigns provider_regions" do
+        controller.send(:new)
+
+        regions = {
+          # FIXME: (durandom) add a mock provider in order to remove this dependency on an actual provider
+          'azure' => ManageIQ::Providers::Azure::Regions.all.sort_by { |r| r[:description] }.map do |r|
+            [r[:description], r[:name]]
+          end
+        }
+        expect(assigns(:provider_regions)).to include(regions)
+      end
+    end
+
     context "#form_field_changed" do
       before :each do
         set_user_privileges
