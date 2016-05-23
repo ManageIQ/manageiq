@@ -48,7 +48,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :ems_id          => image.ext_management_system.id,
       :docker_image_id => image.docker_id,
       :image_full_name => image.full_name,
-      :pod_name        => "manageiq-img-scan-#{image.docker_id[0..11]}",
+      :pod_name        => "manageiq-img-scan-#{guid[0..4]}",
       :pod_port        => INSPECTOR_PORT,
       :pod_namespace   => namespace
     ))
