@@ -15,7 +15,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vnf < ManageIQ::Providers::C
   end
 
   def raw_update_stack(_template, _options)
-
+    # TODO(lsmola) implement updates
   rescue => err
     _log.error "stack=[#{name}], error: #{err}"
     raise MiqException::MiqOrchestrationUpdateError, err.to_s, err.backtrace
@@ -23,7 +23,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vnf < ManageIQ::Providers::C
 
   def raw_delete_stack
     options = {:service => "NFV"}
-    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    options[:tenant_name] = cloud_tenant.name if cloud_tenant
     ext_management_system.with_provider_connection(options) do |service|
       service.vnfs.destroy(ems_ref)
     end
@@ -35,7 +35,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vnf < ManageIQ::Providers::C
   def raw_status
     ems = ext_management_system
     options = {:service => "NFV"}
-    options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    options[:tenant_name] = cloud_tenant.name if cloud_tenant
     ems.with_provider_connection(options) do |service|
       raw_stack = service.vnfs.get(ems_ref)
       raise MiqException::MiqOrchestrationStackNotExistError, "#{name} does not exist on #{ems.name}" unless raw_stack

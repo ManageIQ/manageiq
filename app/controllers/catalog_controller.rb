@@ -767,12 +767,12 @@ class CatalogController < ApplicationController
   def ot_add
     assert_privileges("orchestration_template_add")
     ot_type = x_node == "root" ? "OrchestrationTemplateCfn" : node_name_to_template_name(x_node)
-    @edit = {:new => {:name          => "",
-                      :description   => "",
-                      :content       => "",
-                      :type          => ot_type,
-                      :draft         => false,
-                      :manager_id    => ''}}
+    @edit = {:new => {:name        => "",
+                      :description => "",
+                      :content     => "",
+                      :type        => ot_type,
+                      :draft       => false,
+                      :manager_id  => ''}}
     @edit[:new][:available_managers] =
       ManageIQ::Providers::Openstack::CloudManager.all.collect { |t| [t.name, t.id] }.sort || []
     @edit[:current] = @edit[:new].dup

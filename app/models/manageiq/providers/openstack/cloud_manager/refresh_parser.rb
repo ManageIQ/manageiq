@@ -473,21 +473,21 @@ module ManageIQ::Providers
 
       outputs = [
         {
-          :ems_ref     => uid + 'mgmt_url',
-          :key         => 'mgmt_url',
-          :value       => vnf.mgmt_url,
+          :ems_ref => uid + 'mgmt_url',
+          :key     => 'mgmt_url',
+          :value   => vnf.mgmt_url,
         }
       ]
 
       new_result = {
-        :type                   => "ManageIQ::Providers::Openstack::CloudManager::Vnf",
-        :ems_ref                => uid,
-        :name                   => vnf.name,
-        :description            => vnf.description,
-        :status                 => vnf.status,
-        :child_stack_id         => vnf.instance_id,
-        :outputs                => outputs,
-        :cloud_tenant           => @data_index.fetch_path(:cloud_tenants, vnf.tenant_id)
+        :type           => "ManageIQ::Providers::Openstack::CloudManager::Vnf",
+        :ems_ref        => uid,
+        :name           => vnf.name,
+        :description    => vnf.description,
+        :status         => vnf.status,
+        :child_stack_id => vnf.instance_id,
+        :outputs        => outputs,
+        :cloud_tenant   => @data_index.fetch_path(:cloud_tenants, vnf.tenant_id)
       }
       return uid, new_result
     end
@@ -496,12 +496,12 @@ module ManageIQ::Providers
       uid = vnfd.id
 
       new_result = {
-        :type         => "OrchestrationTemplateVnfd",
-        :ems_ref      => uid,
-        :name         => vnfd.name.blank? ? uid : vnfd.name,
-        :description  => vnfd.description,
-        :content      => vnfd.vnf_attributes["vnfd"],
-        :orderable    => true
+        :type        => "OrchestrationTemplateVnfd",
+        :ems_ref     => uid,
+        :name        => vnfd.name.blank? ? uid : vnfd.name,
+        :description => vnfd.description,
+        :content     => vnfd.vnf_attributes["vnfd"],
+        :orderable   => true
       }
       return uid, new_result
     end

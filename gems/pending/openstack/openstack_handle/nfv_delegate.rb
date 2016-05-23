@@ -3,7 +3,7 @@ module OpenstackHandle
     include OpenstackHandle::HandledList
     include Vmdb::Logging
 
-    SERVICE_NAME = "NFV"
+    SERVICE_NAME = "NFV".freeze
 
     attr_reader :name
 

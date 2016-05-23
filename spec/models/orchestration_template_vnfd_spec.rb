@@ -9,8 +9,7 @@ describe OrchestrationTemplateVnfd do
 
   let(:valid_template) { FactoryGirl.create(:orchestration_template_vnfd_with_content) }
 
-
-   describe '#validate_format' do
+  describe '#validate_format' do
     it 'passes validation if no content' do
       template = OrchestrationTemplateVnfd.new
       expect(template.validate_format).to be_nil
