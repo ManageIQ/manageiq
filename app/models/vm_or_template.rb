@@ -1391,7 +1391,7 @@ class VmOrTemplate < ApplicationRecord
   def disconnected?
     connection_state != "connected"
   end
-  virtual_attribute :disconnected, :boolean, :arel => ->(t) { t[:connected_state].not_eq("connected") }
+  virtual_attribute :disconnected, :boolean, :arel => ->(t) { t[:connection_state].not_eq("connected") }
   alias_method :disconnected, :disconnected?
 
   def normalized_state
