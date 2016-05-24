@@ -30,7 +30,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     end
 
     verify_ssl = options[:verify_ssl] || self.verify_ssl
-    base_url   = options[:base_url] || url
+    base_url   = options[:url] || url
     username   = options[:username] || authentication_userid(auth_type)
     password   = options[:password] || authentication_password(auth_type)
 
@@ -43,6 +43,8 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     validity
   rescue Faraday::ConnectionFailed, Faraday::SSLError => err
     raise MiqException::MiqUnreachableError, err.message, err.backtrace
+  rescue Faraday::Error::ClientError => err
+    raise MiqException::MiqCommunicationsError, JSON.parse(err.message)['detail']
   end
 
   def self.process_tasks(options)
@@ -86,7 +88,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
     new_url  = "https://#{new_url}" unless new_url =~ %r{\Ahttps?:\/\/} # HACK: URI can't properly parse a URL with no scheme
     uri      = URI(new_url)
     uri.path = default_api_path if uri.path.blank?
-    default_endpoint.update_attributes(:url => uri.to_s)
+    default_endpoint.url = uri.to_s
   end
 
   private

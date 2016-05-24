@@ -4,18 +4,20 @@ describe ManageIQ::Providers::AnsibleTower::Provider do
   subject { FactoryGirl.build(:provider_ansible_tower) }
 
   describe "#connect" do
-    let(:attrs) { {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER} }
+    let(:attrs) { {:username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER} }
 
     it "with no port" do
-      expect(AnsibleTowerClient::Connection).to receive(:new).with(attrs)
-      subject.connect(attrs)
+      url = "example.com"
+
+      expect(AnsibleTowerClient::Connection).to receive(:new).with(attrs.merge(:base_url => url))
+      subject.connect(attrs.merge(:url => url))
     end
 
     it "with a port" do
-      attrs[:base_url] = "example.com:555"
+      url = "example.com:555"
 
-      expect(AnsibleTowerClient::Connection).to receive(:new).with(attrs)
-      subject.connect(attrs)
+      expect(AnsibleTowerClient::Connection).to receive(:new).with(attrs.merge(:base_url => url))
+      subject.connect(attrs.merge(:url => url))
     end
   end
 

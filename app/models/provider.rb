@@ -10,7 +10,7 @@ class Provider < ApplicationRecord
   belongs_to :zone
   has_many :managers, :class_name => "ExtManagementSystem"
 
-  has_many :endpoints, :through => :managers
+  has_many :endpoints, :through => :managers, :autosave => true
 
   delegate :verify_ssl,
            :verify_ssl?,
