@@ -13,7 +13,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_status
-    textual_authentications + %i(refresh_status)
+    textual_authentications(@ems.authentication_for_summary) + %i(refresh_status)
   end
 
   def textual_group_smart_management
@@ -122,25 +122,6 @@ module EmsCloudHelper::TextualSummary
 
   def textual_security_groups
     @record.security_groups
-  end
-
-  def textual_authentications
-    authentications = @ems.authentication_for_summary
-    return [{:label => _("Default Authentication"), :title => _("None"), :value => _("None")}] if authentications.blank?
-
-    authentications.collect do |auth|
-      label =
-        case auth[:authtype]
-        when "default" then _("Default")
-        when "metrics" then _("C & U Database")
-        when "amqp"    then _("AMQP")
-        else;               _("<Unknown>")
-        end
-
-      {:label => _("%{label} Credentials") % {:label => label},
-       :value => auth[:status] || _("None"),
-       :title => auth[:status_details]}
-    end
   end
 
   def textual_refresh_status

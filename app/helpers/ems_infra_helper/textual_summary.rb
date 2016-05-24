@@ -12,7 +12,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_group_status
-    textual_authentications + %i(refresh_status orchestration_stacks_status)
+    textual_authentications(@ems.authentication_userid_passwords) + %i(refresh_status orchestration_stacks_status)
   end
 
   def textual_group_smart_management
@@ -142,25 +142,6 @@ module EmsInfraHelper::TextualSummary
 
   def textual_templates
     @ems.miq_templates
-  end
-
-  def textual_authentications
-    authentications = @ems.authentication_userid_passwords
-    return [{:label => _("Default Authentication"), :title => t = _("None"), :value => t}] if authentications.blank?
-
-    authentications.collect do |auth|
-      label =
-        case auth.authtype
-        when "default" then _("Default")
-        when "metrics" then _("C & U Database")
-        when "amqp" then    _("AMQP")
-        else;               _("<Unknown>")
-        end
-
-      {:label => _("%{label} Credentials") % {:label => label},
-       :value => auth.status || _("None"),
-       :title => auth.status_details}
-    end
   end
 
   def textual_orchestration_stacks_status
