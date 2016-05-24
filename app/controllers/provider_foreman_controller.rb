@@ -136,15 +136,9 @@ class ProviderForemanController < ApplicationController
   end
 
   def add_provider_foreman
-    @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == "new"
-    @provider_cfgmgmt ||= find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider # TODO: Why is params[:id] an ExtManagementSystem ID instead of Provider ID?
+    find_or_build_provider
+    sync_form_to_instance
 
-    @provider_cfgmgmt.update_attributes(
-      :name       => params[:name],
-      :url        => params[:url],
-      :verify_ssl => params[:verify_ssl].eql?("on"),
-      :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-    )
     update_authentication_provider(:save)
   end
 
@@ -212,27 +206,13 @@ class ProviderForemanController < ApplicationController
   end
 
   def authentication_validate
-    @provider_cfgmgmt = if params[:log_password]
-                          provider_class_from_provtype.new(
-                            :name       => params[:name],
-                            :url        => params[:url],
-                            :verify_ssl => params[:verify_ssl].eql?("on"),
-                            :zone_id    => Zone.find_by_name(MiqServer.my_zone).id,
-                          )
-                        else
-                          find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider
-                        end
-
+    find_or_build_provider
+    sync_form_to_instance
     update_authentication_provider
 
     begin
       @provider_cfgmgmt.verify_credentials(params[:type])
-    rescue StandardError => bang
-      error = if bang.kind_of?(Faraday::Error::ClientError) # ansible uses faraday and returns a json as a response
-                JSON.parse(bang.to_s)['detail']
-              else
-                bang.to_s
-              end
+    rescue StandardError => error
       render_flash(_("Credential validation was not successful: %{details}") % {:details => error}, :error)
     else
       render_flash(_("Credential validation was successful"))
@@ -495,8 +475,20 @@ class ProviderForemanController < ApplicationController
 
   private ###########
 
+  def find_or_build_provider
+    @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == "new"
+    @provider_cfgmgmt ||= find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider # TODO: Why is params[:id] an ExtManagementSystem ID instead of Provider ID?
+  end
+
   def provider_class_from_provtype
     params[:provtype] == 'Ansible Tower' ? ManageIQ::Providers::AnsibleTower::Provider : ManageIQ::Providers::Foreman::Provider
+  end
+
+  def sync_form_to_instance
+    @provider_cfgmgmt.name       = params[:name]
+    @provider_cfgmgmt.url        = params[:url]
+    @provider_cfgmgmt.verify_ssl = params[:verify_ssl].eql?("on")
+    @provider_cfgmgmt.zone       = Zone.find_by_name(MiqServer.my_zone)
   end
 
   def features
