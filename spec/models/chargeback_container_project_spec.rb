@@ -86,8 +86,8 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.cpu_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate * @metric_size)
+      expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
     end
 
     it "memory" do
@@ -175,8 +175,8 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.cpu_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate * @metric_size)
+      expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
     end
 
     it "memory" do

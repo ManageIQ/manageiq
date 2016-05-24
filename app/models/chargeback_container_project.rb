@@ -1,27 +1,27 @@
 class ChargebackContainerProject < Chargeback
   set_columns_hash(
-    :start_date           => :datetime,
-    :end_date             => :datetime,
-    :interval_name        => :string,
-    :display_range        => :string,
-    :project_name         => :string,
-    :project_uid          => :string,
-    :provider_name        => :string,
-    :provider_uid         => :string,
-    :archived             => :string,
-    :cpu_used_cost        => :float,
-    :cpu_used_metric      => :float,
-    :fixed_compute_1_cost => :float,
-    :fixed_compute_2_cost => :float,
-    :fixed_2_cost         => :float,
-    :fixed_cost           => :float,
-    :memory_used_cost     => :float,
-    :memory_used_metric   => :float,
-    :net_io_used_cost     => :float,
-    :net_io_used_metric   => :float,
-    :net_io_cost          => :float,
-    :net_io_metric        => :float,
-    :total_cost           => :float
+    :start_date            => :datetime,
+    :end_date              => :datetime,
+    :interval_name         => :string,
+    :display_range         => :string,
+    :project_name          => :string,
+    :project_uid           => :string,
+    :provider_name         => :string,
+    :provider_uid          => :string,
+    :archived              => :string,
+    :cpu_cores_used_cost   => :float,
+    :cpu_cores_used_metric => :float,
+    :fixed_compute_1_cost  => :float,
+    :fixed_compute_2_cost  => :float,
+    :fixed_2_cost          => :float,
+    :fixed_cost            => :float,
+    :memory_used_cost      => :float,
+    :memory_used_metric    => :float,
+    :net_io_used_cost      => :float,
+    :net_io_used_metric    => :float,
+    :net_io_cost           => :float,
+    :net_io_metric         => :float,
+    :total_cost            => :float
   )
 
   def self.build_results_for_report_ChargebackContainerProject(options)
@@ -85,18 +85,18 @@ class ChargebackContainerProject < Chargeback
 
   def self.report_col_options
     {
-      "cpu_used_cost"        => {:grouping => [:total]},
-      "cpu_used_metric"      => {:grouping => [:total]},
-      "fixed_compute_1_cost" => {:grouping => [:total]},
-      "fixed_compute_2_cost" => {:grouping => [:total]},
-      "fixed_cost"           => {:grouping => [:total]},
-      "memory_used_cost"     => {:grouping => [:total]},
-      "memory_used_metric"   => {:grouping => [:total]},
-      "net_io_cost"          => {:grouping => [:total]},
-      "net_io_metric"        => {:grouping => [:total]},
-      "net_io_used_cost"     => {:grouping => [:total]},
-      "net_io_used_metric"   => {:grouping => [:total]},
-      "total_cost"           => {:grouping => [:total]}
+      "cpu_cores_used_cost"   => {:grouping => [:total]},
+      "cpu_cores_used_metric" => {:grouping => [:total]},
+      "fixed_compute_1_cost"  => {:grouping => [:total]},
+      "fixed_compute_2_cost"  => {:grouping => [:total]},
+      "fixed_cost"            => {:grouping => [:total]},
+      "memory_used_cost"      => {:grouping => [:total]},
+      "memory_used_metric"    => {:grouping => [:total]},
+      "net_io_cost"           => {:grouping => [:total]},
+      "net_io_metric"         => {:grouping => [:total]},
+      "net_io_used_cost"      => {:grouping => [:total]},
+      "net_io_used_metric"    => {:grouping => [:total]},
+      "total_cost"            => {:grouping => [:total]}
     }
   end
 end # class Chargeback
