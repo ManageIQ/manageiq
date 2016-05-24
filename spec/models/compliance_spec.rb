@@ -95,7 +95,13 @@ describe Compliance do
         let(:policy)     { FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Vm', :active => true) }
         let(:policy_set) { FactoryGirl.create(:miq_policy_set) }
         let(:template)   { FactoryGirl.create(:template_vmware, :host => host1, :ext_management_system => ems_vmware) }
-
+        let(:action)     { FactoryGirl.create(:miq_action, :name => 'compliance_failed', :action_type => 'default') }
+        let(:content) do
+          FactoryGirl.create(
+            :miq_policy_content, :qualifier => 'failure', :failure_sequence => 1, :failure_synchronous => true
+          )
+        end
+        let(:event_definition) { MiqEventDefinition.find_by_name("vm_compliance_check") }
         let(:container_policy) do
           FactoryGirl.create(:miq_policy, :mode => 'compliance', :towhat => 'Container Image', :active => true)
         end
@@ -103,6 +109,9 @@ describe Compliance do
         before do
           policy.sync_events([FactoryGirl.create(:miq_event_definition, :name => "vm_compliance_check")])
           policy.conditions << FactoryGirl.create(:condition, :expression => MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-id"}))
+          content.miq_event_definition = event_definition
+          content.miq_action = action
+          policy.miq_policy_contents << content
           policy_set.add_member(policy)
           ems_vmware.add_policy(policy_set)
         end
@@ -110,6 +119,7 @@ describe Compliance do
         it "compliant" do
           expect(MiqEvent).to receive(:raise_evm_event_queue).with(subject, "vm_compliance_passed")
           expect(Compliance.check_compliance(subject)).to be_truthy
+          expect(subject.compliances.last.compliant).to be_truthy
         end
 
         it "non-compliant" do
@@ -117,6 +127,7 @@ describe Compliance do
 
           expect(MiqEvent).to receive(:raise_evm_event_queue).with(subject, "vm_compliance_failed")
           expect(Compliance.check_compliance(subject)).to be_falsey
+          expect(subject.compliances.last.compliant).to be_falsey
         end
       end
 
