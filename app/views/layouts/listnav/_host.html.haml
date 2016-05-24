@@ -74,7 +74,7 @@
         - if role_allows(:feature => "ems_infra_show") && !@record.ext_management_system.nil?
           %li
             = link_to("#{ui_lookup(:table => "ext_management_systems")}: #{@record.ext_management_system.name}",
-              {:controller => "ems_infra", :action => 'show', :id => @record.ext_management_system.id.to_s},
+              ems_infra_path(@record.ext_management_system),
               :title => _("Show this %s parent %s") % ["#{host_title}'s", ui_lookup(:table => "ems_infra")])
 
         - if role_allows(:feature => "ems_cluster_show") && !@record.ems_cluster.nil?
