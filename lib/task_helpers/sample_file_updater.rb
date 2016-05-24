@@ -3,8 +3,8 @@ require 'io/console'
 
 module TaskHelpers
   class SampleFileUpdater
-    PROMPT_TO_OVERWRITE = {"config/database.pg.yml" => "config/database.yml"}
-    COPY_IF_NONEXISTENT = {"certs/v2_key.dev"       => "certs/v2_key"}
+    PROMPT_TO_OVERWRITE = {"config/database.pg.yml" => "config/database.yml"}.freeze
+    COPY_IF_NONEXISTENT = {"certs/v2_key.dev"       => "certs/v2_key"}.freeze
 
     def self.run
       new.run
@@ -28,7 +28,7 @@ module TaskHelpers
             puts "Your local copy of '#{actual.basename}' differs from the example ('#{example.basename}')"
             case prompt_overwrite
             when :overwrite
-              cp(example, actual, overwrite: true)
+              cp(example, actual, :overwrite => true)
             when :skip
               puts "Ok, skipping..."
             when :skip_all
