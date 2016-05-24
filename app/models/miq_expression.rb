@@ -585,30 +585,70 @@ class MiqExpression
     case operator.downcase
     when "equal", "="
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.eq(exp[operator]["value"]).to_sql
-    when ">"
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+              else
+                exp[operator]["value"]
+              end
+      clause = field.eq(value).to_sql
+    when ">", "after"
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.gt(exp[operator]["value"]).to_sql
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
+              else
+                exp[operator]["value"]
+              end
+      clause = field.gt(value).to_sql
     when ">="
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.gteq(exp[operator]["value"]).to_sql
-    when "<"
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+              else
+                exp[operator]["value"]
+              end
+      clause = field.gteq(value).to_sql
+    when "<", "before"
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.lt(exp[operator]["value"]).to_sql
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+              else
+                exp[operator]["value"]
+              end
+      clause = field.lt(value).to_sql
     when "<="
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.lteq(exp[operator]["value"]).to_sql
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
+              else
+                exp[operator]["value"]
+              end
+      clause = field.lteq(value).to_sql
     when "!="
       field = Field.parse(exp[operator]["field"])
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz) if field.date? || field.datetime?
-      clause = field.not_eq(exp[operator]["value"]).to_sql
-    when "before", "after"
-      return _to_sql({"date_time_with_logical_operator" => exp}, tz)
+      value = case
+              when field.date?
+                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+              when field.datetime?
+                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+              else
+                exp[operator]["value"]
+              end
+      clause = field.not_eq(value).to_sql
     when "like", "includes"
       field = Field.parse(exp[operator]["field"])
       clause = field.matches("%#{exp[operator]["value"]}%").to_sql
@@ -700,29 +740,6 @@ class MiqExpression
         end_val   = RelativeDatetime.normalize(end_val, tz, "end").utc
       end
       clause = field.between(start_val..end_val).to_sql
-    when "date_time_with_logical_operator"
-      exp = exp[operator]
-      operator = exp.keys.first
-
-      col_name = exp[operator]["field"]
-      col_type = self.class.get_col_type(col_name)
-      col_sql, dummy = self.class.operands2sqlvalue(operator, "field" => col_name)
-
-      normalized_operator = self.class.normalize_sql_operator(operator)
-      mode = case normalized_operator
-             when ">", "<="  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
-             when "<", ">="  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
-             end
-
-      if col_type == :date
-        val = RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode)
-
-        clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.to_date, :date, :sql)}"
-      else
-        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
-
-        clause = "#{col_sql} #{normalized_operator} #{self.class.quote(val.utc, :datetime, :sql)}"
-      end
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
