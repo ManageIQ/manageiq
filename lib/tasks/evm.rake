@@ -1,5 +1,6 @@
 $:.push("#{File.dirname(__FILE__)}")
 require 'evm_application'
+require 'task_helpers/sample_file_updater'
 
 namespace :evm do
   desc "Start the ManageIQ EVM Application"
@@ -53,5 +54,9 @@ namespace :evm do
       Rake::Task["environment"].invoke
       DescendantLoader.instance.class_inheritance_relationships
     end
+  end
+
+  task :update_sample_files do
+    TaskHelpers::SampleFileUpdater.run
   end
 end
