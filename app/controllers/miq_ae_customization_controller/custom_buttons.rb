@@ -1,22 +1,7 @@
 module MiqAeCustomizationController::CustomButtons
   extend ActiveSupport::Concern
 
-  def automate_button
-    @in_a_form = true
-    @resolve = {} if params[:button] == "reset"
-    if params[:button] == "cancel_simulate"
-      # resetting changed, when coming back from simulate screen.
-      @changed = session[:changed]
-      session[:changed] =~ session[:changed]
-      @edit = session[:edit] = nil
-      @custom_button = @edit[:custom_button] if @edit && @edit[:custom_button]
-    else
-      @edit = nil
-    end
-    explorer
-  end
-
-  private ###########
+  private
 
   def buttons_node_image(node)
     case node
