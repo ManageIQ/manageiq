@@ -16,6 +16,10 @@ class EmsContainerController < ApplicationController
     @table_name ||= "ems_container"
   end
 
+  def show_list
+    process_show_list(:gtl_dbname => 'emscontainer')
+  end
+
   def ems_path(*args)
     ems_container_path(*args)
   end
