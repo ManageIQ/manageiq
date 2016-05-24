@@ -66,6 +66,8 @@ module ManageIQ::Providers
     end
 
     def get_zones
+      @rest_call.append_headers("X-Nuage-FilterType" , "predicate")
+      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulZone'")
       response = @rest_call.get(@server + '/zones')
       if response.code == 200
         if response.body == ''
@@ -78,6 +80,8 @@ module ManageIQ::Providers
     end
     
     def get_subnets
+      @rest_call.append_headers("X-Nuage-FilterType" , "predicate")
+      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulSubnet'")
       response = @rest_call.get(@server + '/subnets')
       if response.code == 200
         if response.body == ''
