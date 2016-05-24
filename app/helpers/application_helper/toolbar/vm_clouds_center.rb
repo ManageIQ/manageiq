@@ -158,7 +158,7 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :onwhen    => '1'),
         button(
           :instance_evacuate,
-          'product product-evacuate fa-lg',
+          'product product-migrate fa-lg',
           t = N_('Evacuate selected Instance'),
           t,
           :url_parms => 'main_div',
