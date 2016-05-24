@@ -4,19 +4,19 @@ module MiqAeMethodService
 
     module ClassMethods
       def find_ar_object_by_id(id)
-        rbac = Thread.current.thread_variable_get(:miq_rbac)
-        rbac ? Rbac.search(:class => model, :targets => [id], :results_format => :objects).first.first : model.send(:find, *id)
+        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
+        MiqAeService.rbac_enabled? ? Rbac.search(:class => model, :targets => [id], :results_format => :objects).first.first : model.send(:find, *id)
       end
 
       def all
-        rbac = Thread.current.thread_variable_get(:miq_rbac)
-        objs = rbac ? Rbac.search(:class => model, :results_format => :objects).first : model.send(:all)
+        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
+        objs = MiqAeService.rbac_enabled? ? Rbac.search(:class => model, :results_format => :objects).first : model.send(:all)
         wrap_results(objs)
       end
 
       def count
-        rbac = Thread.current.thread_variable_get(:miq_rbac)
-        rbac ? Rbac.search(:class => model).first.count : model.send(:count)
+        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
+        MiqAeService.rbac_enabled? ? Rbac.search(:class => model).first.count : model.send(:count)
       end
 
       def first
@@ -28,10 +28,11 @@ module MiqAeMethodService
         array = Array.wrap(objs)
         return [] if array.empty?
 
-        rbac = Thread.current.thread_variable_get(:miq_rbac)
-        ret = rbac ? Rbac.filtered(array) : array
+        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
+        ret = MiqAeService.rbac_enabled? ? Rbac.filtered(array) : array
         (objs.kind_of?(Array) || objs.kind_of?(ActiveRecord::Relation)) ? ret : ret.first
       end
+
     end
   end
 end

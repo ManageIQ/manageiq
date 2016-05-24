@@ -10,14 +10,12 @@ module MiqAeMethodService
 
   class MiqAeServiceFront
     include DRbUndumped
+    attr_accessor :user
     def initialize(user)
       @user = user
-      Thread.current.thread_variable_set(:miq_rbac, false)
     end
 
     def find(id)
-      Thread.current.thread_variable_set(:miq_rbac, false)
-      User.current_user = @user
       MiqAeService.find(id)
     end
   end
@@ -32,6 +30,23 @@ module MiqAeMethodService
 
     @@id_hash = {}
     @@current = []
+    @@rbac    = false
+
+    def self.rbac_enabled?
+      @@rbac
+    end
+
+    def self.enable_rbac
+      @@rbac = true
+    end
+
+    def self.disable_rbac
+      @@rbac = false
+    end
+
+    def self.set_current_user
+      User.current_user ||= DRb.front.user
+    end
 
     def self.current
       @@current.last
@@ -60,6 +75,7 @@ module MiqAeMethodService
       self.body              = body if body
       @persist_state_hash    = ws.persist_state_hash
       @logger                = logger
+      self.class.disable_rbac
       self.class.add(self)
     end
 
@@ -72,11 +88,15 @@ module MiqAeMethodService
     end
 
     def enable_rbac
-      Thread.current.thread_variable_set(:miq_rbac, true)
+      self.class.enable_rbac
     end
 
     def disable_rbac
-      Thread.current.thread_variable_set(:miq_rbac, false)
+      self.class.disable_rbac
+    end
+
+    def rbac_enabled?
+      self.class.rbac_enabled?
     end
 
     def destroy
