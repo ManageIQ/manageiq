@@ -58,6 +58,7 @@ class MiqRubyrep
     config.include_tables /#{include_tables}/
 
     rp_conf[:exclude_tables] ||= %w(.+)
+    rp_conf[:exclude_tables] += %w(ar_internal_metadata schema_migrations)
     exclude_tables = rp_conf[:exclude_tables].to_a.join("|")
     exclude_tables = "^(#{exclude_tables})$"
     config.exclude_tables /#{exclude_tables}/
