@@ -473,7 +473,7 @@ module OpsController::Settings::Common
         session[:changed] = @changed = false
         get_node_info(x_node)
         if @sb[:active_tab] == "settings_server"
-          replace_right_cell(@nodetype, [:settings])
+          replace_right_cell(@nodetype, [:diagnostics, :settings])
         elsif @sb[:active_tab] == "settings_custom_logos"
           render :update do |page|
             page << javascript_prologue
