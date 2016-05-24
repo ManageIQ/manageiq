@@ -12,7 +12,7 @@ menu_name: "Reconfigure Events by Department"
 rpt_group: Custom
 priority: 
 col_order: 
-- managed.department
+- vm.managed.department
 - vm_name
 - timestamp
 - username
@@ -38,7 +38,7 @@ cols:
 template_type: report
 group: c
 sortby: 
-- managed.department
+- vm.managed.department
 - vm_name
 headers: 
 - ManageIQ Tag Department

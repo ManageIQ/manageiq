@@ -23,11 +23,11 @@ col_order:
 - miq_provision_template.name
 - evm_owner.name
 - evm_owner.email
-- miq_request.requester_name
-- miq_request.created_on
-- miq_request.v_approved_by
-- miq_request.v_approved_by_email
-- miq_request.fulfilled_on
+- miq_provision.miq_request.requester_name
+- miq_provision.miq_request.created_on
+- miq_provision.miq_request.v_approved_by
+- miq_provision.miq_request.v_approved_by_email
+- miq_provision.miq_request.fulfilled_on
 - miq_provision.description
 - miq_provision.message
 - retires_on
@@ -130,7 +130,7 @@ cols:
 template_type: report
 group: 
 sortby: 
-- miq_request.fulfilled_on
+- miq_provision.miq_request.fulfilled_on
 rpt_options: {}
 
 headers: 

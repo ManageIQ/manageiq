@@ -45,11 +45,34 @@ describe 'YAML reports' do
     end
   end
 
-  def collect_columns(include_hash)
+  def collect_columns(include_hash, parent = nil)
     return [] if include_hash.nil?
     include_hash.inject([]) do |cols, (table_name, data)|
-      cols += data["columns"].collect { |col_name| "#{table_name}.#{col_name}" } if data['columns']
-      cols + collect_columns(data['include'])
+      if parent
+        full_path = "#{parent}.#{table_name}"
+      else
+        full_path = "#{table_name}"
+      end
+      cols += data["columns"].collect { |col_name| "#{full_path}.#{col_name}" } if data['columns']
+      cols + collect_columns(data['include'], full_path)
+    end
+  end
+
+  it "defines fields for reporting by fully qualified name" do
+    #report_yamls = ["/Users/yrudman/work/rh/manageiq/product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml"]
+
+    report_yamls.each do |yaml|
+      report_yaml = YAML.load(File.open(yaml))
+      report_yaml.delete('menu_name')
+      report = MiqReport.new(report_yaml)
+      report.generate_table(:userid => @user.userid)
+      cols_from_data = report.table.column_names.to_set
+      cols_from_yaml = report_yaml['col_order'].to_set
+      
+      expect(cols_from_yaml).to be_subset(cols_from_data)
+      
+      sortby_cols = report_yaml['sortby'].to_set
+      expect(sortby_cols).to be_subset(cols_from_data)
     end
   end
 end
