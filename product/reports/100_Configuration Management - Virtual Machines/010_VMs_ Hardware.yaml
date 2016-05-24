@@ -13,11 +13,11 @@ col_order:
 - name
 - hardware.memory_mb
 - hardware.cpu_total_cores
-- disks.controller_type
-- disks.device_type
-- disks.mode
-- disks.start_connected
-- disks.size
+- hardware.disks.controller_type
+- hardware.disks.device_type
+- hardware.disks.mode
+- hardware.disks.start_connected
+- hardware.disks.size
 timeline:
 id: 89
 file_mtime:

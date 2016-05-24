@@ -23,13 +23,13 @@ col_order:
 - name
 - v_owning_cluster
 - storage.name
-- volumes.name
-- volumes.free_space_percent
-- volumes.free_space
-- volumes.size
-- volumes.used_space_percent
-- volumes.used_space
-- volumes.filesystem
+- hardware.volumes.name
+- hardware.volumes.free_space_percent
+- hardware.volumes.free_space
+- hardware.volumes.size
+- hardware.volumes.used_space_percent
+- hardware.volumes.used_space
+- hardware.volumes.filesystem
 timeline: 
 id: 141
 file_mtime: 
@@ -59,7 +59,7 @@ template_type: report
 group: c
 sortby: 
 - v_owning_cluster
-- volumes.free_space_percent
+- hardware.volumes.free_space_percent
 headers: 
 - Name
 - Parent Cluster

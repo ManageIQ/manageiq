@@ -16,7 +16,7 @@ col_order:
 - ext_management_system.name
 - ext_management_system.ipaddress
 - name
-- networks.ipaddress
+- hardware.networks.ipaddress
 timeline: 
 id: 115
 file_mtime: 
