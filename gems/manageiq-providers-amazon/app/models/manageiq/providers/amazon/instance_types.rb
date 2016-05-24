@@ -949,6 +949,30 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :cluster_networking      => true,
       :vpc_only                => false,
     },
+
+    "x1.32xlarge"  => {
+      :name                    => "x1.32xlarge",
+      :family                  => "Memory Optimized",
+      :description             => "X1 32xlarge",
+      :memory                  => 1952.gigabytes,
+      :vcpu                    => 128,
+      :ebs_only                => false,
+      :instance_store_size     => 1920.gigabytes,
+      :instance_store_volumes  => 2,
+      :architecture            => [:x86_64],
+      :virtualization_type     => [:hvm],
+      :network_performance     => :very_high,
+      :physical_processor      => "Intel Xeon E7-8880 v3",
+      :processor_clock_speed   => 2.3, # GHz
+      :intel_aes_ni            => true,
+      :intel_avx               => true,
+      :intel_avx2              => true,
+      :intel_turbo             => true,
+      :ebs_optimized_available => true,
+      :enhanced_networking     => false,
+      :cluster_networking      => false,
+      :vpc_only                => false,
+    },
   }
 
   # Types that are still advertised, but not recommended for new instances.
