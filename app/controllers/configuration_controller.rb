@@ -81,7 +81,6 @@ class ConfigurationController < ApplicationController
   # New tab was pressed
   def change_tab
     @tabform = @config_tab + "_" + params[:tab] if params[:tab] != "5"
-    #@sb[:trees].delete('df_tree') if @sb[:trees]
     edit
     render :action => "show"
   end
@@ -104,14 +103,9 @@ class ConfigurationController < ApplicationController
   def filters_field_changed
     return unless load_edit("config_edit__ui3", "configuration")
     id = params[:id].split('-').last.to_i
-    checked_fields = params[:all_checked].split(',')
-    checked_fields.each do |checked_field|
-      checked_field_id = checked_field.split('-').last.to_i
-      @edit[:new].find{ |x| x.id == checked_field_id}.search_key = nil
-    end
-    @edit[:new].find{ |x| x.id == id}.search_key = params[:check] == 'true' ? nil : '_hidden_'
+    @edit[:new].find{ |x| x[:id] == id}[:search_key] = params[:check] == 'true' ? nil : '_hidden_'
     @edit[:current].each_with_index do |arr, i|          # needed to compare each array element's attributes to find out if something has changed
-      if @edit[:new][i].search_key != arr.search_key
+      if @edit[:new][i][:search_key] != arr[:search_key]
         @changed = true
         break
       end
@@ -120,15 +114,15 @@ class ConfigurationController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       @edit[:current].each_with_index do |filter, i|
-        if filter.search_key != @edit[:new][i].search_key
+        if filter[:search_key] != @edit[:new][i][:search_key]
           style_class = 'cfme-blue-bold-node'
         else
           style_class = 'dynatree-title'
         end
-        page << "miqDynatreeNodeAddClass('df_tree', $('[id$=\"-#{filter.id}\"]'), '#{style_class}')"
+        page << "miqDynatreeNodeAddClass('df_tree', $('[id$=\"-#{filter[:id]}\"]'), '#{style_class}')"
       end
       page << javascript_for_miq_button_visibility(@changed)
-      end
+    end
   end
 
   # AJAX driven routine for gtl view selection
@@ -224,32 +218,18 @@ class ConfigurationController < ApplicationController
         return                                                      # No config file for Visuals yet, just return
       when "ui_3"                                                   # User Filters tab
         @edit = session[:edit]
+        @edit[:new].each do |filter|
+          search = MiqSearch.find(filter[:id])
+          search.update(search_key: filter[:search_key]) #unless search.search_key == filter[:search_key]
+        end
         add_flash(_("Default Filters saved successfully"))
         edit
         render :action => "show"
-        return                                                      # No config file for Visuals yet, just return
-      @update.config.each_key do |category|
-        @update.config[category] = @edit[:new][category].dup
+        return # No config file for Visuals yet, just return
       end
-      if @update.validate                                           # Have VMDB class validate the settings
-        @update.save                                              # Save other settings for current server
-        AuditEvent.success(build_config_audit(@edit[:new], @edit[:current].config))
-        add_flash(_("Configuration settings saved"))
-        edit
-        render :action => "show"
-      else
-        @update.errors.each do |field, msg|
-          add_flash("#{field.titleize}: #{msg}", :error)
-        end
-        @changed = true
-        session[:changed] = @changed
-        build_tabs
-        render :action => "show"
-      end
-    end
     elsif params["reset"]
       edit
-      add_flash(_("All changes have been reset"), :warning)
+      add_flash(_("All changes have been reset"), :warning)q
       render :action => "show"
     end
   end
@@ -663,14 +643,16 @@ class ConfigurationController < ApplicationController
         :key     => 'config_edit__ui2',
       }
     when 'ui_3'
-      current = MiqSearch.where(:search_type => "default")
-                .sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }
+      filters = MiqSearch.where(:search_type => "default")
+      current = filters.map do |filter|
+        {:id => filter.id, :search_key => filter.search_key}
+      end
       @edit = {
         :key         => 'config_edit__ui3',
         :set_filters => true,
         :current     => current,
       }
-      @df_tree = TreeBuilderDefaultFilters.new(:df_tree, :df, @sb, true, @edit[:current])
+      @df_tree = TreeBuilderDefaultFilters.new(:df_tree, :df, @sb, true, filters)
       self.x_active_tree = :df_tree
     when 'ui_4'
       @edit = {

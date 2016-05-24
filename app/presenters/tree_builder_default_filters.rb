@@ -17,7 +17,7 @@ class TreeBuilderDefaultFilters < TreeBuilder
 
   def prepare_data(data)
     nodes = {}
-    data.collect do |search|
+    data.sort_by { |s| [NAV_TAB_PATH[s.db.downcase.to_sym], s.description.downcase] }.collect do |search|
       folder_nodes = NAV_TAB_PATH[search[:db].downcase.to_sym]
       if nodes.fetch_path(folder_nodes)
         path = nodes.fetch_path(folder_nodes)
