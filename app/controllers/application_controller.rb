@@ -2460,11 +2460,6 @@ class ApplicationController < ActionController::Base
     set_active_elements(allowed_features.first)
   end
 
-  def get_error_message_from_fog(ex)
-    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
-    matched_message ? matched_message[1] : ex
-  end
-
   def start_url_for_user(start_url)
     return url_for(start_url) unless start_url.nil?
     return url_for(:controller => "dashboard", :action => "show") unless self.helpers.settings(:display, :startpage)

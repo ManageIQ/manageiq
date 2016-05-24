@@ -535,7 +535,7 @@ module ApplicationController::CiProcessing
           add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
             :name     => @record.name,
-            :details  => get_error_message_from_fog(ex.to_s)}, :error)
+            :details  => get_error_message_from_fog(ex)}, :error)
         end
       else
         add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
@@ -627,7 +627,7 @@ module ApplicationController::CiProcessing
           add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
             :instance => ui_lookup(:table => 'vm_cloud'),
             :name     => @record.name,
-            :details  => get_error_message_from_fog(ex.to_s)}, :error)
+            :details  => get_error_message_from_fog(ex)}, :error)
         end
       else
         add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
@@ -1337,9 +1337,10 @@ module ApplicationController::CiProcessing
     end
   end
 
-  def get_error_message_from_fog(ex)
-    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
-    matched_message ? matched_message[1] : ex
+  def get_error_message_from_fog(exception)
+    exception_string = exception.to_s
+    matched_message = exception_string.match(/message\\\": \\\"(.*)\\\", /)
+    matched_message ? matched_message[1] : exception_string
   end
 
   private ############################

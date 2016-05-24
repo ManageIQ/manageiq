@@ -134,7 +134,7 @@ class AuthKeyPairCloudController < ApplicationController
           add_flash(_("Unable to create %{model} %{name}. %{error}") % {
             :model => ui_lookup(:table => 'auth_key_pair_cloud'),
             :name  => options[:name],
-            :error => get_error_message_from_fog(ex.to_s)}, :error)
+            :error => get_error_message_from_fog(ex)}, :error)
         end
         @breadcrumbs.pop if @breadcrumbs
         session[:edit] = nil
@@ -300,10 +300,5 @@ class AuthKeyPairCloudController < ApplicationController
     session[:auth_key_pair_cloud_display]    = @display unless @display.nil?
     session[:auth_key_pair_cloud_filters]    = @filters
     session[:auth_key_pair_cloud_catinfo]    = @catinfo
-  end
-
-  def get_error_message_from_fog(ex)
-    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
-    matched_message ? matched_message[1] : ex
   end
 end
