@@ -233,6 +233,38 @@ describe MiqAeCustomizationController do
         expect(assigns(:flash_array)).not_to include("the flash messages")
       end
     end
+
+    context "when in dialog edit state" do
+      render_views
+
+      before do
+        FactoryGirl.create(:miq_server, :guid => MiqServer.my_guid)
+        MiqServer.my_server_clear_cache
+      end
+
+      it "still renders the main_div" do
+        session[:sandboxes] = {
+          "miq_ae_customization" => {
+            :trees         => {:dialog_edit_tree => {:active_node => "root"},
+                               :dialogs_tree     => {:active_node => "root"}},
+            :active_tree   => :dialog_edit_tree,
+            :active_accord => :dialogs,
+          },
+        }
+        session[:edit] = {
+          :new => {},
+          :current => {},
+        }
+
+        get :explorer
+
+        expect(assigns(:sb)[:active_tree]).to eq(:dialogs_tree)
+        expect(response).to render_template('miq_ae_customization/explorer')
+
+        # empty main_div
+        expect(response.body).not_to match(/<div id=['"]main_div['"]>\s*<\/div>/)
+      end
+    end
   end
 
   describe "#upload_import_file" do
