@@ -304,7 +304,7 @@ module MiqPolicyController::MiqActions
     r_node = TreeNodeBuilder.generic_tree_node(
       "r_#{current_tenant.name}",
       "#{current_tenant.name} Tags",
-      "",
+      "tag.png",
       "#{current_tenant.name} Tags",
       :style_class => "cfme-no-cursor-node",
       :expand      => true
@@ -317,7 +317,7 @@ module MiqPolicyController::MiqActions
           c_node = TreeNodeBuilder.generic_tree_node(
             "c_#{c.id}",
             c.description,
-            "",
+            "tag.png",
             c.description,
             :style_class => "cfme-no-cursor-node"
           )
