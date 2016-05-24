@@ -567,7 +567,7 @@ class MiqExpression
   def to_sql(tz = nil)
     tz ||= "UTC"
     @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
-    sql = to_arel(@pexp, tz).to_sql if @pexp.present?
+    sql = Component.build(@pexp, tz).to_sql(tz) if @pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
   end
@@ -1640,100 +1640,6 @@ class MiqExpression
       op1 ? "#{val_with_cast} #{op1} #{quote(val1, col_type)}" : nil,
       op2 ? "#{val_with_cast} #{op2} #{quote(val2, col_type)}" : nil,
     ].compact.join(" && ")
-  end
-
-  def to_arel(exp, tz)
-    operator = exp.keys.first
-    field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
-    if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"]))
-      parsed_value = Field.parse(exp[operator]["value"]).arel_attribute
-    elsif exp[operator].kind_of?(Hash)
-      parsed_value = exp[operator]["value"]
-    end
-    case operator.downcase
-    when "equal", "="
-      field.eq(parsed_value)
-    when ">"
-      field.gt(parsed_value)
-    when "after"
-      value = RelativeDatetime.normalize(parsed_value, tz, "end", field.date?)
-      field.gt(value)
-    when ">="
-      field.gteq(parsed_value)
-    when "<"
-      field.lt(parsed_value)
-    when "before"
-      value = RelativeDatetime.normalize(parsed_value, tz, "beginning", field.date?)
-      field.lt(value)
-    when "<="
-      field.lteq(parsed_value)
-    when "!="
-      field.not_eq(parsed_value)
-    when "like", "includes"
-      field.matches("%#{parsed_value}%")
-    when "starts with"
-      field.matches("#{parsed_value}%")
-    when "ends with"
-      field.matches("%#{parsed_value}")
-    when "not like"
-      field.does_not_match("%#{parsed_value}%")
-    when "and"
-      operands = exp[operator].each_with_object([]) do |operand, result|
-        next if operand.blank?
-        arel = to_arel(operand, tz)
-        next if arel.blank?
-        result << arel
-      end
-      Arel::Nodes::And.new(operands)
-    when "or"
-      operands = exp[operator].each_with_object([]) do |operand, result|
-        next if operand.blank?
-        arel = to_arel(operand, tz)
-        next if arel.blank?
-        result << arel
-      end
-      first, *rest = operands
-      rest.inject(first) { |lhs, rhs| lhs.or(rhs) }
-    when "not", "!"
-      Arel::Nodes::Not.new(to_arel(exp[operator], tz))
-    when "is null"
-      field.eq(nil)
-    when "is not null"
-      field.not_eq(nil)
-    when "is empty"
-      arel = field.eq(nil)
-      arel = arel.or(field.eq("")) if field.string?
-      arel
-    when "is not empty"
-      arel = field.not_eq(nil)
-      arel = arel.and(field.not_eq("")) if field.string?
-      arel
-    when "contains"
-      # Only support for tags of the main model
-      if exp[operator].key?("tag")
-        tag = Tag.parse(exp[operator]["tag"])
-        tag.contains(parsed_value)
-      else
-        field.contains(parsed_value)
-      end
-    when "is"
-      value = parsed_value
-      start_val = RelativeDatetime.normalize(value, tz, "beginning", field.date?)
-      end_val = RelativeDatetime.normalize(value, tz, "end", field.date?)
-
-      if !field.date? || RelativeDatetime.relative?(value)
-        field.between(start_val..end_val)
-      else
-        field.eq(start_val)
-      end
-    when "from"
-      start_val, end_val = parsed_value
-      start_val = RelativeDatetime.normalize(start_val, tz, "beginning", field.date?)
-      end_val   = RelativeDatetime.normalize(end_val, tz, "end", field.date?)
-      field.between(start_val..end_val)
-    else
-      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
-    end
   end
 
   def self.determine_model(model, parts)
