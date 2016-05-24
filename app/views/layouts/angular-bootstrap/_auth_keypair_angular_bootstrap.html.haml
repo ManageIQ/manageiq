@@ -49,7 +49,7 @@
                               "checkchange"  => "",
                               "require-file" => ""}
         %div{"ng-if" => "!vm.inEditMode('#{prefix}_userid')"}
-          %textarea.form-control{"id"           => "textInput-markup",
+          %textarea.form-control{"id"           => "#{prefix}_password",
                                  "ng-required"  => "#{ng_reqd_private_key}",
                                  "ng-disabled"  => "!vm.inEditMode('#{prefix}_userid')" || private_key_disabled,
                                  "ng-model"     => "#{ng_model}.#{prefix}_password",
@@ -58,7 +58,7 @@
                                  "checkchange"  => "",
                                  "require-file" => "",
                                  "rows"         => 1}
-        %textarea{"id"          => "textInput-markup",
+        %textarea{"id"          => "#{prefix}_password",
                   "name"        => "#{prefix}_password",
                   "style"       => "display: none !important",
                   "ng-model"    => "#{ng_model}.#{prefix}_password",
