@@ -208,8 +208,9 @@ class ContainerController < ApplicationController
       @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => typ)}
     else
       show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") % {:name  => @record.name,
-                                                      :model => ui_lookup(:model => TreeBuilder.get_model_for_prefix(@nodetype))}
+      @right_cell_text = _("%{model} \"%{name}\" (Summary)") % {
+        :name  => @record.name,
+        :model => ui_lookup(:model => TreeBuilder.get_model_for_prefix(@nodetype))}
     end
 
     if @edit && @edit.fetch_path(:adv_search_applied, :qs_exp) # If qs is active, save it in history
