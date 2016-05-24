@@ -634,12 +634,6 @@ module ReportController::Reports::Editor
       @edit[:new][:cb_tenant_id] = params[:cb_tenant_id].blank? ? nil : params[:cb_tenant_id].to_i
     elsif params.key?(:cb_tag_value)
       @edit[:new][:cb_tag_value] = params[:cb_tag_value].blank? ? nil : params[:cb_tag_value]
-    elsif params.key?(:cb_model)
-      @edit[:new][:cb_model] = params[:cb_model].blank? ? nil : params[:cb_model]
-      reset_report_col_fields
-      build_edit_screen
-      @refresh_div = "form_div"
-      @refresh_partial = "form"
     elsif params.key?(:cb_entity_id)
       @edit[:new][:cb_entity_id] = params[:cb_entity_id].blank? ? nil : params[:cb_entity_id]
     elsif params.key?(:cb_provider_id)
@@ -1203,7 +1197,6 @@ module ReportController::Reports::Editor
         options[:entity_id] = @edit[:new][:cb_entity_id]
       end
 
-      options[:cb_model] = @edit[:new][:cb_model]
       rpt.db_options[:options] = options
     end
 
@@ -1495,7 +1488,7 @@ module ReportController::Reports::Editor
       end
 
       @edit[:new][:cb_show_typ] = "entity"
-      @edit[:new][:cb_model] = options[:cb_model]
+      @edit[:new][:cb_model] = Chargeback.report_cb_model(@rpt.db)
       @edit[:new][:cb_entity_id] = options[:entity_id]
       @edit[:new][:cb_provider_id] = options[:provider_id]
       @edit[:new][:cb_interval] = options[:interval]
