@@ -1189,7 +1189,7 @@ describe Rbac do
     end
 
     # fix once Rbac filtered is fixed
-    skip "skips rbac on nil targets" do
+    it "skips rbac on nil targets" do
       all_vms
       expect(Rbac.filtered(nil, :class => Vm)).to match_array(all_vms)
     end
