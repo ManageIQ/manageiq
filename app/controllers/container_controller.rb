@@ -184,12 +184,12 @@ class ContainerController < ApplicationController
     [{:role     => "container_accord",
       :role_any => true,
       :name     => :containers,
-      :title    => _("Relationships")},
+      :title    => ui_lookup(:tables => "container")},
 
      {:role     => "container_filter_accord",
       :role_any => true,
       :name     => :containers_filter,
-      :title    => _("All Containers")},
+      :title    => _("Filters")},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
