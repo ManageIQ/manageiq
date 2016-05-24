@@ -8,10 +8,8 @@ module ArelSpecHelper
 
   # run the sql for a virtual column. making sure it works in select and order
   def virtual_column_sql_value(klass, v_col_name)
-    query = klass.select(klass.arel_attribute("id"),
-                         Arel::Nodes::As.new(klass.arel_attribute(v_col_name),
-                                             Arel::Nodes::SqlLiteral.new("extra")))
-                 .order(klass.arel_attribute(v_col_name))
+    query = klass.select(:id, klass.arel_attribute(v_col_name.to_sym).as("extra"))
+                 .order(v_col_name.to_sym)
     query.first["extra"]
   end
 end
