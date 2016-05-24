@@ -1303,8 +1303,9 @@ describe ReportController do
   end
 
   describe "#miq_report_edit" do
-    let(:admin_user) { FactoryGirl.create(:user, :role => "super_administrator") }
-    let(:tenant)     { FactoryGirl.create(:tenant) }
+    let(:admin_user)   { FactoryGirl.create(:user, :role => "super_administrator") }
+    let(:tenant)       { FactoryGirl.create(:tenant) }
+    let(:chosen_model) { "ChargebackVm" }
 
     before do
       EvmSpecHelper.local_miq_server
@@ -1320,7 +1321,7 @@ describe ReportController do
       count_miq_reports = MiqReport.count
 
       post :x_button, :params => {:pressed => "miq_report_new"}
-      post :form_field_changed, :params => {:id => "new", :chosen_model => "ChargebackVm"}
+      post :form_field_changed, :params => {:id => "new", :chosen_model => chosen_model}
       post :form_field_changed, :params => {:id => "new", :title => "test"}
       post :form_field_changed, :params => {:id => "new", :name => "test"}
       post :form_field_changed, :params => {:button => "right", :available_fields => ["ChargebackVm-cpu_cost"]}
@@ -1330,7 +1331,8 @@ describe ReportController do
       post :miq_report_edit, :params => {:button => "add"}
 
       expect(MiqReport.count).to eq(count_miq_reports + 1)
-      expect(MiqReport.last.db_options[:options][:cb_model]).to eq("Vm")
+      expect(MiqReport.last.db_options[:rpt_type]).to eq(chosen_model)
+      expect(MiqReport.last.db).to eq(chosen_model)
     end
   end
 end
