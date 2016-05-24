@@ -26,8 +26,8 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
   def disconnect_inv
     super
 
-    # Mark all instances no longer found as unknown
-    self.raw_power_state = "unknown"
+    # Mark all instances no longer found as missing
+    self.raw_power_state = "_missing"
     save
   end
 
@@ -40,13 +40,20 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
   end
 
   def self.calculate_power_state(raw_power_state)
-    case raw_power_state.downcase
-    when /running/, /starting/
-      "on"
-    when /terminated/, /stopping/
-      "off"
-    else
-      "unknown"
+    # See https://cloud.google.com/compute/docs/reference/latest/instances#resource
+    # for possible power states. A good description of the states is available
+    # here:
+    # https://cloud.google.com/compute/docs/instances/checking-instance-status
+    case raw_power_state
+    when "PROVISIONING" then "wait_for_launch"
+    when "STAGING"      then "wait_for_launch"
+    when "RUNNING"      then "on"
+    when "STOPPING"     then "off"
+    when "SUSPENDED"    then "suspended"
+    when "SUSPENDING"   then "suspended"
+    when "TERMINATED"   then "off" # confusingly GCE refers to instances that are stopped as "terminated"
+    when "_missing"     then "terminated" # special value added by #disconnect_inv
+    else "unknown"
     end
   end
 

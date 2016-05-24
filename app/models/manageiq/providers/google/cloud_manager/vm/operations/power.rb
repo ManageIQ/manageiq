@@ -25,11 +25,15 @@ module ManageIQ::Providers::Google::CloudManager::Vm::Operations::Power
 
   def raw_start
     with_provider_object(&:start)
-    self.update_attributes!(:raw_power_state => "starting")
+    # it's a better user experience if we update the state here, but should we
+    # be making a service call instead?
+    update_attributes!(:raw_power_state => "PROVISIONING")
   end
 
   def raw_stop
     with_provider_object(&:stop)
-    self.update_attributes!(:raw_power_state => "stopping")
+    # it's a better user experience if we update the state here, but should we
+    # be making a service call instead?
+    update_attributes!(:raw_power_state => "STOPPING")
   end
 end
