@@ -109,8 +109,13 @@ class VimPerformanceDaily < MetricRollup
       _int, rtype, rid = key
 
       if rollup_day
-        (Metric::Rollup::ROLLUP_COLS & (only_cols || Metric::Rollup::ROLLUP_COLS)).each do |c|
+        rollup_columns = (Metric::Rollup::ROLLUP_COLS & (only_cols || Metric::Rollup::ROLLUP_COLS))
+        average_columns = rollup_columns - Metric::Rollup::DAILY_SUM_COLUMNS
+
+        average_columns.each do |c|
           Metric::Aggregation::Process.average(c, nil, result[key], counts[key])
+        end
+        rollup_columns.each do |c|
           result[key][c] = result[key][c].round if columns_hash[c.to_s].type == :integer && !result[key][c].nil?
         end
       else
