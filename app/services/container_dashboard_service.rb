@@ -105,10 +105,7 @@ class ContainerDashboardService
 
   def get_url_to_entity(entity)
     if @ems.present?
-      @controller.url_for(:action     => 'show',
-                          :id         => @provider_id,
-                          :display    => entity.to_s.pluralize,
-                          :controller => :ems_container)
+      @controller.polymorphic_url(@ems, :display => entity.to_s.pluralize)
     else
       @controller.url_for(:action     => 'show_list',
                           :controller => entity)
