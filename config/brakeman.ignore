@@ -1,24 +1,5 @@
 {
   "ignored_warnings": [
-    {
-      "warning_type": "Dangerous Eval",
-      "warning_code": 13,
-      "fingerprint": "fc0b8f868d1623b918b9b8cbde69c330ebb229483744a3e5cf54e27ba504f2af",
-      "message": "User input in eval",
-      "file": "app/models/miq_expression.rb",
-      "line": 800,
-      "link": "http://brakemanscanner.org/docs/warning_types/dangerous_eval/",
-      "code": "eval(Condition.subst(to_ruby(tz), obj))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MiqExpression",
-        "method": "evaluate"
-      },
-      "user_input": "Condition.subst(to_ruby(tz), obj)",
-      "confidence": "High",
-      "note": ""
-    }
   ],
   "updated": "2016-05-13 11:16:37 -0400",
   "brakeman_version": "3.1.5"

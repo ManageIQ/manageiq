@@ -86,6 +86,12 @@ class Condition < ApplicationRecord
     result
   end
 
+  # similar to MiqExpression#evaluate
+  # @return [Boolean] true if the expression matches the record
+  def self.subst_matches?(expr, rec)
+    do_eval(subst(expr, rec))
+  end
+
   def self.do_eval(expr)
     eval(expr) ? true : false
   end
