@@ -348,7 +348,7 @@ module ApplicationController::Tags
     @edit[:cat] ||= cats.min_by(&:description)
 
     unless @object_ids.blank?
-      @tagitems = @tagging.constantize.find(@object_ids).sort_by { |t| t.name.try(:downcase).to_s }
+      @tagitems = @tagging.constantize.where(:id => @object_ids).sort_by { |t| t.name.try(:downcase).to_s }
     end
 
     @view = get_db_view(@tagging)               # Instantiate the MIQ Report view object
