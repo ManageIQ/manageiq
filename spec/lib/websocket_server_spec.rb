@@ -37,7 +37,7 @@ describe WebsocketServer do
   end
 
   describe '#cleanup' do
-    subject { @server.send(:cleanup, errors) }
+    subject { @server.send(:cleanup, error) }
 
     before(:each) do
       pairing.merge!(
@@ -47,27 +47,13 @@ describe WebsocketServer do
       sockets.push(left, right)
     end
 
-    context 'without errors' do
-      let(:errors) { [] }
+    let(:error) { right }
 
-      it 'removes a closed socket' do
-        left.close
-        expect(proxy).to receive(:cleanup)
-        subject
-        expect(sockets).to_not include(left)
-        expect(pairing.keys).to_not include(left)
-      end
-    end
-
-    context 'with errors' do
-      let(:errors) { [right] }
-
-      it 'removes the failed socket' do
-        expect(proxy).to receive(:cleanup)
-        subject
-        expect(sockets).to_not include(right)
-        expect(pairing.keys).to_not include(right)
-      end
+    it 'removes the failed socket' do
+      expect(proxy).to receive(:cleanup)
+      subject
+      expect(sockets).to_not include(right)
+      expect(pairing.keys).to_not include(right)
     end
   end
 end
