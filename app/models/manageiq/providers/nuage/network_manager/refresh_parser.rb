@@ -54,17 +54,15 @@ module ManageIQ::Providers
     end
 
     def get_subnets
-      process_collection([{:uid => 'default'}], :network_groups) { |n| parse_network_group(n) }
-
       @data[:cloud_subnets] = []
       @data[:network_groups].each do |net|
-        net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }
+       net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }
 
-        # Lets store also subnets into indexed data, so we can reference them elsewhere
-        net[:cloud_subnets].each do |x|
-          @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
-          @data[:cloud_subnets] << x
-        end
+       # Lets store also subnets into indexed data, so we can reference them elsewhere
+       net[:cloud_subnets].each do |x|
+         @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
+         @data[:cloud_subnets] << x
+       end
       end
     end
 
@@ -73,7 +71,7 @@ module ManageIQ::Providers
     end
 
     def parse_network_group(network_group)
-      uid     = network_group[:uid]
+      uid     = network_group['ID']
       status  = "active"
 
       new_result = {
