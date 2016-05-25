@@ -341,6 +341,7 @@ class StorageController < ApplicationController
   end
 
   def tree_select
+    @lastaction = "explorer"
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node        = params[:id]
 
