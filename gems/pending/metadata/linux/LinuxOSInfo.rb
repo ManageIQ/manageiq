@@ -32,9 +32,6 @@ module MiqLinux
         end
       end
 
-      # Get the OS information
-      attrs = {:type => "linux"}
-
       if @distribution == "lsb"
         lsbd = ""
         fs.fileOpen(release_file) { |fo| lsbd = fo.read }
@@ -104,13 +101,13 @@ module MiqLinux
       end
 
       @hostname = "" unless @hostname
-      attrs[:hostname] = @hostname
 
+      network_attrs = {:hostname => @hostname}
       # Collect network settings
       case @distribution.downcase
-      when "ubuntu" then networking_debian(fs, attrs)
-      when "redhat", "fedora" then networking_redhat(fs, attrs)
-      when "hercules" then networking_hercules(fs, attrs)
+      when "ubuntu" then networking_debian(fs, network_attrs)
+      when "redhat", "fedora" then networking_redhat(fs, network_attrs)
+      when "hercules" then networking_hercules(fs, network_attrs)
       end
 
       @os = {:type => "linux", :machine_name => @hostname, :product_type => @os_type, :distribution => @distribution, :product_name => @description}
