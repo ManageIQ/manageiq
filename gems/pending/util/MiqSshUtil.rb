@@ -8,7 +8,7 @@ require 'util/MiqSockUtil'
 # puts "SSH Version: #{Net::SSH::Version::STRING}"
 # puts "SFTP Version: #{Net::SFTP::Version::STRING}"
 
-if Net::SSH::Version::MAJOR == 2
+if Net::SSH::Version::MAJOR > 1
   require 'util/MiqSshUtilV2'
 else
   raise "MiqSshUtil does not support version #{Net::SSH::Version::STRING} of Net::SSH"
