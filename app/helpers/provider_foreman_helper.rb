@@ -241,11 +241,53 @@ module ProviderForemanHelper
   end
 
   def textual_configuration_script_variables
-    {:label => _("Variables"), :value => @record.variables}
+    textual_variables(@record.variables)
+  end
+
+  def textual_configuration_script_survey
+    textual_survey_group(@record.survey_spec['spec'])
   end
 
   def textual_configuration_script_group_os
     %i(configuration_script_medium
        configuration_script_partition_table)
   end
+
+  def textual_survey_group(items)
+    return unless items
+    h = {:label     => _("Questions"),
+         :headers   => [_('Question Name'), _('Question Description'), _('Variable'),
+                        _('Type'),  _('Min'), _('Max'), _('Default'), _('Required'), _('Choices')],
+         :col_order => %w(question_name question_description variable type min max default required choices)}
+    h[:value] = items.collect do |item|
+      {
+        :title                => item['index'],
+        :question_name        => item['question_name'],
+        :question_description => item['question_description'],
+        :variable             => item['variable'],
+        :type                 => item['type'],
+        :min                  => item['min'],
+        :max                  => item['max'],
+        :default              => item['default'],
+        :required             => item['required'],
+        :choices              => item['choices']
+      }
+    end
+    h
+  end
+
+  def textual_variables(vars)
+    return unless vars
+    h = {:label     => _("Variables"),
+         :headers   => [_('Name'), _('Value')],
+         :col_order => %w(name value)}
+    h[:value] = vars.collect do |item|
+      {
+        :name  => item[0].to_s,
+        :value => item[1].to_s
+      }
+    end
+    h
+  end
 end
+#
