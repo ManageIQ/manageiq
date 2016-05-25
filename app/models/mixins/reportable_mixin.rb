@@ -2,24 +2,14 @@ module ReportableMixin
   extend ActiveSupport::Concern
   module ClassMethods
     def search(count = :all, options = {})
-      conditions = options.delete(:conditions)
-      filter = options.delete(:filter)
+      records = find(count, :conditions => options[:conditions], :include => get_include_for_find(options[:include]))
+      records = records.select { |obj| eval(Condition.subst(filter.to_ruby, obj)) } if options.delete(:filter)
 
-      # Do normal find
-      results = []
-      find(count, :conditions => conditions, :include => get_include_for_find(options[:include])).each do|obj|
-        if filter
-          expression = self.filter.to_ruby
-          expr = Condition.subst(expression, obj)
-          next unless eval(expr)
-        end
-
+      records.collect do |obj|
         entry = {:obj => obj}
-        obj.search_includes(entry, options[:include]) if options[:include]
-        results.push(entry)
+        build_search_includes(obj, entry, options[:include]) if options[:include]
+        entry
       end
-
-      results
     end
 
     # private
