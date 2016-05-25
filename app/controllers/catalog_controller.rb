@@ -722,6 +722,7 @@ class CatalogController < ApplicationController
       page << javascript_prologue
       page << javascript_hide("buttons_off")
       page << javascript_show("buttons_on")
+      page << "miqSparkle(false);"
     end
   end
 
@@ -745,7 +746,8 @@ class CatalogController < ApplicationController
           {:name => ot.name}, :error)
       else
         begin
-          ot.delete
+          ot.remote_proxy = true
+          ot.destroy
         rescue StandardError => bang
           add_flash(_("Error during 'Orchestration Template Deletion': %{error_message}") %
             {:error_message => bang.message}, :error)
@@ -765,11 +767,14 @@ class CatalogController < ApplicationController
   def ot_add
     assert_privileges("orchestration_template_add")
     ot_type = x_node == "root" ? "OrchestrationTemplateCfn" : node_name_to_template_name(x_node)
-    @edit = {:new => {:name        => "",
-                      :description => "",
-                      :content     => "",
-                      :type        => ot_type,
-                      :draft       => false}}
+    @edit = {:new => {:name          => "",
+                      :description   => "",
+                      :content       => "",
+                      :type          => ot_type,
+                      :draft         => false,
+                      :manager_id    => ''}}
+    @edit[:new][:available_managers] =
+      ManageIQ::Providers::Openstack::CloudManager.all.collect { |t| [t.name, t.id] }.sort || []
     @edit[:current] = @edit[:new].dup
     @edit[:key] = "ot_add__new"
     @right_cell_text = _("Adding a new Orchestration Template")
@@ -793,11 +798,15 @@ class CatalogController < ApplicationController
     @edit[:new][:type] = params[:type] if params[:type]
     @edit[:new][:content] = params[:content] if params[:content]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
+    @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
+    @edit[:new][:available_managers] =
+      ManageIQ::Providers::Openstack::CloudManager.all.collect { |t| [t.name, t.id] }.sort || []
     render :update do |page|
       page << javascript_prologue
       page << javascript_hide("buttons_off")
       page << javascript_show("buttons_on")
       page << "miqSparkle(false);"
+      page.replace("form_div", :partial => "ot_add") if params[:type]
     end
   end
 
@@ -972,6 +981,7 @@ class CatalogController < ApplicationController
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
     @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
+    @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
   end
 
   def ot_edit_set_form_vars(right_cell_text)
@@ -981,8 +991,12 @@ class CatalogController < ApplicationController
     @edit = {:current => {:name        => @record.name,
                           :description => @record.description,
                           :content     => @record.content,
-                          :draft       => @record.draft},
+                          :draft       => @record.draft,
+                          :type        => @record.type,
+                          :manager_id  => @record.ems_id},
              :rec_id  => @record.id}
+    @edit[:current][:available_managers] =
+      ManageIQ::Providers::Openstack::CloudManager.all.collect { |t| [t.name, t.id] }.sort || []
     @edit[:new] = @edit[:current].dup
     @edit[:key] = "ot_edit__#{@record.id}"
     @right_cell_text = right_cell_text % @record.name
@@ -1007,6 +1021,8 @@ class CatalogController < ApplicationController
       ot = OrchestrationTemplate.find_by_id(@edit[:rec_id])
       ot.name = @edit[:new][:name]
       ot.description = @edit[:new][:description]
+      ot.ems_id = @edit[:new][:manager_id]
+      ot.remote_proxy = true
       unless ot.in_use?
         ot.content = params[:template_content]
         ot.draft = @edit[:new][:draft]
@@ -1057,11 +1073,13 @@ class CatalogController < ApplicationController
         {:name => @edit[:new][:name]}, :error)
     else
       ot = OrchestrationTemplate.new(
-        :name        => @edit[:new][:name],
-        :description => @edit[:new][:description],
-        :type        => old_ot.type,
-        :content     => params[:template_content],
-        :draft       => @edit[:new][:draft] == true || @edit[:new][:draft] == "true")
+        :name         => @edit[:new][:name],
+        :description  => @edit[:new][:description],
+        :type         => old_ot.type,
+        :content      => params[:template_content],
+        :draft        => @edit[:new][:draft] == true || @edit[:new][:draft] == "true",
+        :ems_id       => @edit[:new][:manager_id],
+        :remote_proxy => true)
       begin
         ot.save_as_orderable!
       rescue StandardError => bang
@@ -1101,11 +1119,13 @@ class CatalogController < ApplicationController
       render_flash(_("Error during Orchestration Template creation: new template content cannot be empty"), :error)
     else
       ot = OrchestrationTemplate.new(
-        :name        => @edit[:new][:name],
-        :description => @edit[:new][:description],
-        :type        => @edit[:new][:type],
-        :content     => params[:content],
-        :draft       => @edit[:new][:draft])
+        :name         => @edit[:new][:name],
+        :description  => @edit[:new][:description],
+        :type         => @edit[:new][:type],
+        :content      => params[:content],
+        :draft        => @edit[:new][:draft],
+        :ems_id       => @edit[:new][:manager_id],
+        :remote_proxy => true)
       begin
         ot.save_as_orderable!
       rescue StandardError => bang
