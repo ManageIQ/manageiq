@@ -1129,7 +1129,7 @@ module ApplicationController::CiProcessing
       if request.parameters[:controller] == 'ems_infra'
         @discover_type = ExtManagementSystem.ems_infra_discovery_types
       else
-        @discover_type = ExtManagementSystem.cloud_discovery_managers.map do |cloud_manager|
+        @discover_type = ManageIQ::Providers::CloudManager.subclasses.select(&:supports_discovery?).map do |cloud_manager|
           [cloud_manager.description, cloud_manager.ems_type]
         end
         @discover_type_selected = @discover_type.first.try!(:last)
@@ -1219,8 +1219,8 @@ module ApplicationController::CiProcessing
             end
             Host.discoverByIpRange(from_ip, to_ip, options)
           else
-            cloud_manager = ExtManagementSystem.cloud_discovery_managers.find do |ems|
-              ems.ems_type == params[:discover_type_selected]
+            cloud_manager = ManageIQ::Providers::CloudManager.subclasses.detect do |ems|
+              ems.supports_discovery? && ems.ems_type == params[:discover_type_selected]
             end
             if cloud_manager.ems_type == 'azure'
               cloud_manager.discover_queue(@client_id, @client_key, @azure_tenant_id)

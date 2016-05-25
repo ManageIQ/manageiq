@@ -79,17 +79,6 @@ describe ExtManagementSystem do
     expect(described_class.ems_infra_discovery_types).to match_array(expected_types)
   end
 
-  it ".cloud_discovery_managers" do
-    module ManageIQ::Providers::Example
-      class CloudManager < ManageIQ::Providers::CloudManager
-        def self.supports_discovery?
-          true
-        end
-      end
-    end
-    expect(described_class.cloud_discovery_managers).to include(ManageIQ::Providers::Example::CloudManager)
-  end
-
   context "#ipaddress / #ipaddress=" do
     it "will delegate to the default endpoint" do
       ems = FactoryGirl.build(:ems_vmware, :ipaddress => "1.2.3.4")
