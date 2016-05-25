@@ -585,7 +585,7 @@ class MiqExpression
     case operator.downcase
     when "and"
       exp[operator].dup.each { |atom| preprocess_for_sql(atom, attrs) }
-      exp[operator] = exp[operator].collect { |o| o.blank? ? nil : o }.compact # Clean out empty operands
+      exp[operator].reject!(&:blank?)
       exp.delete(operator) if exp[operator].empty?
     when "or"
       or_attrs = {:supported_by_sql => true}
