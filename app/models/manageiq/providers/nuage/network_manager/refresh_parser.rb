@@ -56,7 +56,8 @@ module ManageIQ::Providers
     def get_subnets
       @data[:cloud_subnets] = []
       @data[:network_groups].each do |net|
-       net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }
+      #filtering out subnets based on the enterprise they are mapped to
+       net[:cloud_subnets] = @vsd_client.get_subnets.collect { |s| parse_subnet(s) }.select { |filter| filter[:extra_attributes][:enterprise_name] == net[:name] }
 
        # Lets store also subnets into indexed data, so we can reference them elsewhere
        net[:cloud_subnets].each do |x|
