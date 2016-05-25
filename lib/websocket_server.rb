@@ -6,12 +6,13 @@ class WebsocketServer
     @sockets = Concurrent::Array.new
 
     Thread.new do
-      errors = []
       loop do
         begin
           reads, writes, errors = IO.select(@sockets, @sockets, @sockets, 1)
         rescue IOError
-          cleanup(errors)
+          @sockets.select(&:closed?).each { |err| cleanup(err) }
+        else
+          Array(errors).each { |err| cleanup(err) }
         end
 
         # Skip this loop if we can't do anything
@@ -21,11 +22,11 @@ class WebsocketServer
         end
 
         # Do the data transfers
-        reads.each do |read|
+        reads.each do |socket|
           begin
-            @pairing[read].proxy.transmit(writes, @pairing[read].is_ws)
+            @pairing[socket].proxy.transmit(writes, @pairing[socket].is_ws)
           rescue
-            cleanup(errors)
+            cleanup(socket)
           end
         end
       end
@@ -62,12 +63,10 @@ class WebsocketServer
     @sockets.push(ws, sock)
   end
 
-  def cleanup(errors)
-    (@sockets.select(&:closed?) + errors).uniq.each do |socket|
-      @pairing[socket].proxy.cleanup
-      @sockets.delete(socket)
-      @pairing.delete(socket)
-    end
+  def cleanup(socket)
+    @pairing[socket].proxy.cleanup
+    @sockets.delete(socket)
+    @pairing.delete(socket)
   end
 
   def not_found
