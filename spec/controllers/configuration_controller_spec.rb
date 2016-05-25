@@ -13,17 +13,6 @@ describe ConfigurationController do
     end
   end
 
-  context "#set_form_vars" do
-    before do
-      MiqSearch.seed
-    end
-
-    it "#successfully sets all_view_tree for default filters tree" do
-      controller.instance_variable_set(:@tabform, "ui_3")
-      controller.send(:set_form_vars)
-      expect(assigns(:all_views_tree)).not_to be_nil
-    end
-  end
   context "#timeprofile_get_form_vars" do
     before do
       timeprofile = FactoryGirl.create(:time_profile)

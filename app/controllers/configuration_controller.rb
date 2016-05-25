@@ -103,7 +103,7 @@ class ConfigurationController < ApplicationController
   def filters_field_changed
     return unless load_edit("config_edit__ui3", "configuration")
     id = params[:id].split('-').last.to_i
-    @edit[:new].find{ |x| x[:id] == id}[:search_key] = params[:check] == 'true' ? nil : '_hidden_'
+    @edit[:new].find { |x| x[:id] == id }[:search_key] = params[:check] == 'true' ? nil : '_hidden_'
     @edit[:current].each_with_index do |arr, i|          # needed to compare each array element's attributes to find out if something has changed
       if @edit[:new][i][:search_key] != arr[:search_key]
         @changed = true
@@ -114,10 +114,10 @@ class ConfigurationController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       @edit[:current].each_with_index do |filter, i|
-        if filter[:search_key] != @edit[:new][i][:search_key]
-          style_class = 'cfme-blue-bold-node'
-        else
-          style_class = 'dynatree-title'
+        style_class = if filter[:search_key] != @edit[:new][i][:search_key]
+                        'cfme-blue-bold-node'
+                      else
+                        'dynatree-title'
         end
         page << "miqDynatreeNodeAddClass('df_tree', $('[id$=\"-#{filter[:id]}\"]'), '#{style_class}')"
       end
@@ -220,7 +220,7 @@ class ConfigurationController < ApplicationController
         @edit = session[:edit]
         @edit[:new].each do |filter|
           search = MiqSearch.find(filter[:id])
-          search.update(search_key: filter[:search_key]) #unless search.search_key == filter[:search_key]
+          search.update(:search_key => filter[:search_key]) unless search.search_key == filter[:search_key]
         end
         add_flash(_("Default Filters saved successfully"))
         edit
@@ -229,7 +229,7 @@ class ConfigurationController < ApplicationController
       end
     elsif params["reset"]
       edit
-      add_flash(_("All changes have been reset"), :warning)q
+      add_flash(_("All changes have been reset"), :warning)
       render :action => "show"
     end
   end
@@ -718,7 +718,7 @@ class ConfigurationController < ApplicationController
       @edit[:new][:display][:drift] = params[:display][:drift] if !params[:display].nil? && !params[:display][:drift].nil?
     end
   end
-  
+
   def get_session_data
     @title        = session[:config_title] ? _("Configuration") : session[:config_title]
     @layout       = "configuration"
