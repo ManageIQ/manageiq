@@ -254,7 +254,7 @@ module ProviderForemanHelper
   end
 
   def textual_survey_group(items)
-    return if !items
+    return unless items
     h = {:label     => _("Questions"),
          :headers   => [_('Question Name'), _('Question Description'), _('Variable'),
                         _('Type'),  _('Min'), _('Max'), _('Default'), _('Required'), _('Choices')],
@@ -276,11 +276,16 @@ module ProviderForemanHelper
     h
   end
 
-  def textual_variables (vars)
-    h = []
-    vars.each do |item|
-        h << {:label => item[0].to_s,
-         :value => item[1].to_s}
+  def textual_variables(vars)
+    return unless vars
+    h = {:label     => _("Variables"),
+         :headers   => [_('Name'), _('Value')],
+         :col_order => %w(name value)}
+    h[:value] = vars.collect do |item|
+      {
+        :name  => item[0].to_s,
+        :value => item[1].to_s
+      }
     end
     h
   end
