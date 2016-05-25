@@ -50,7 +50,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_group_authentications
-    textual_authentications
+    textual_authentications(@record.authentication_userid_passwords + @record.authentication_key_pairs)
   end
 
   def textual_group_openstack_status
@@ -500,26 +500,6 @@ module HostHelper::TextualSummary
     attrs = @record.ems_custom_attributes
     return nil if attrs.blank?
     attrs.collect { |a| {:label => a.name, :value => a.value} }
-  end
-
-  def textual_authentications
-    authentications = @record.authentication_userid_passwords + @record.authentication_key_pairs
-    return [{:label => _("Default Authentication"), :title => _("None"), :value => _("None")}] if authentications.blank?
-
-    authentications.collect do |auth|
-      label =
-        case auth.authtype
-        when "default" then     _("Default")
-        when "ipmi" then        _("IPMI")
-        when "remote" then      _("Remote Login")
-        when "ws" then          _("Web Services")
-        when "ssh_keypair" then _("SSH Key Pair")
-        else;                   _("<Unknown>")
-        end
-
-      {:label => _("%{label} Credentials") %
-        {:label => label}, :value => auth.status || _("None"), :title => auth.status_details}
-    end
   end
 
   def host_title
