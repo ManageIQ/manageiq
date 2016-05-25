@@ -301,7 +301,7 @@
     :megabytes: :megabytes_human
     :gigabytes: :gigabytes_human
     :kbps:      :kbps
-    :mhz:       :mhz
+    :mhz:       :mhz_precision_2
     :mhz_avg:   :mhz_avg
     :percent: :percent_precision_1
     :elapsed_time: :elapsed_time_human
@@ -421,11 +421,23 @@
     :description: Megahertz Avg (12.1 Mhz)
     :columns:
     :sub_types:
+      - :mhz
       - :mhz_avg
     :function:
       :name: mhz_to_human_size
       :delimiter: ","
     :precision: 1
+
+  :mhz_precision_2:
+    :description: Megahertz Avg (12.11 Mhz)
+    :columns:
+    :sub_types:
+      - :mhz
+      - :mhz_avg
+    :function:
+      :name: mhz_to_human_size
+      :delimiter: ","
+    :precision: 2
 
   :percent_precision_0:
     :description: Percentage (99%)
