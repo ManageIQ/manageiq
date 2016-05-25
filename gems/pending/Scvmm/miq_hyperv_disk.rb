@@ -13,6 +13,7 @@ class MiqHyperVDisk
   DEF_BLOCK_CACHE_SIZE = 1200
   DEBUG_CACHE_STATS    = false
   BREAD_RETRIES        = 3
+  OPEN_ERRORS          = %w( Exception\ calling At\ line: ).freeze
 
   attr_reader :hostname, :virtual_disk, :file_offset, :file_size, :parser, :vm_name, :temp_snapshot_name
 
@@ -38,7 +39,10 @@ class MiqHyperVDisk
     (Get-Item "#{@virtual_disk}").length
 STAT_EOL
     file_size, stderr = @parser.parse_single_powershell_value(run_correct_powershell(stat_script))
-    raise "Unable to obtain virtual disk size for #{vm_disk}" if stderr.include?("At line:")
+    if @network && stderr.include?("RegisterTaskDefinition")
+      raise "Unable to obtain virtual disk size for #{vm_disk}. Check Hyper-V Host Domain Credentials"
+    end
+    OPEN_ERRORS.each { |error| raise "Unable to obtain virtual disk size for #{vm_disk}" if stderr.include?(error) }
     @file_size           = file_size.to_i
     @end_byte_addr       = @file_size - 1
     @size_in_blocks, rem = @file_size.divmod(@block_size)
