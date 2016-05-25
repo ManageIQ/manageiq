@@ -2011,7 +2011,7 @@ module ApplicationController::CiProcessing
   def deletestorages
     assert_privileges("storage_delete")
     datastores = []
-    if @lastaction == "show_list" || @lastaction == "storage_list" || (@lastaction == "show" && @layout != "storage")  # showing a list, scan all selected hosts
+    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || (@lastaction == "show" && @layout != "storage") # showing a list, scan all selected hosts
       datastores = find_checked_items
       if datastores.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "storage"), :task => display_name}, :error)
