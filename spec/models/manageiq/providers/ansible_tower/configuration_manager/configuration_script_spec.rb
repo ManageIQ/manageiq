@@ -39,7 +39,9 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationS
       expect_any_instance_of(AnsibleTowerClient::JobTemplate).to receive(:launch).with(:extra_vars=>"{\"instance_ids\":[\"i-3434\"],\"some_key\":\"some_value\"}")
       manager.configuration_scripts.first.run(added_extras)
     end
+  end
 
+  context "#merge_extra_vars" do
     it "merges internal and external hashes to send out to the tower gem" do
       config_script = manager.configuration_scripts.first
       external = {:some_key => :some_value}
