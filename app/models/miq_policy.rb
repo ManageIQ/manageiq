@@ -165,8 +165,8 @@ class MiqPolicy < ApplicationRecord
     # TODO: If we need this validation on the object, create a real/virtual attribute so ActiveModel doesn't yell
     target.errors.add(:smart, result[:result])
 
-    action = invoke_actions(target, mode, profiles, succeeded, failed, inputs.merge(:event => erec))
-    result[:action] = action if action
+    actions = invoke_actions(target, mode, profiles, succeeded, failed, inputs.merge(:event => erec))
+    result[:actions] = actions if actions
     result
   end
 
