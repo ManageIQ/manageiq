@@ -19,9 +19,16 @@ class MiqAeField < ApplicationRecord
   validates_inclusion_of  :aetype,     :in => AVAILABLE_AETYPES,   :allow_nil => true  # nil => attribute
   AVAILABLE_DATATYPES_FOR_UI = ["string", "symbol", "integer", "float", "boolean", "time",
                                 "array", "password", NULL_COALESCING_DATATYPE].freeze
-  AVAILABLE_DATATYPES = AVAILABLE_DATATYPES_FOR_UI + ["host", "vm", "storage",
-                                                      "ems", "policy", "server",
-                                                      "request", "provision", "user"]
+  AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI +
+                               %w(host
+                                  vm
+                                  storage
+                                  ems
+                                  policy
+                                  server
+                                  request
+                                  provision
+                                  user)
   validates_inclusion_of  :datatype,   :in => AVAILABLE_DATATYPES, :allow_nil => true  # nil => string
 
   before_save        :set_message_and_default_value
@@ -37,7 +44,7 @@ class MiqAeField < ApplicationRecord
   end
 
   class <<self
-    alias_method :available_datatypes_for_ui, :available_datatypes
+    alias available_datatypes_for_ui available_datatypes
   end
 
   def self.defaults
