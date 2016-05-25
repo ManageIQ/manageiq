@@ -339,10 +339,12 @@ class MiqQueue < ApplicationRecord
         status = STATUS_OK
         message = "Message delivered successfully"
         Timeout.timeout(msg_timeout) do
-          if obj.kind_of?(Class) && !target_id.nil?
-            result = obj.send(method_name, target_id, *args)
-          else
-            result = obj.send(method_name, *args)
+          ActiveRecord::Base.connection.cache do
+            if obj.kind_of?(Class) && !target_id.nil?
+              result = obj.send(method_name, target_id, *args)
+            else
+              result = obj.send(method_name, *args)
+            end
           end
         end
       rescue MiqException::MiqQueueRetryLater => err
