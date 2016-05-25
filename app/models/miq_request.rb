@@ -25,7 +25,6 @@ class MiqRequest < ApplicationRecord
 
   validate :validate_class, :validate_request_type
 
-  include ReportableMixin
   include TenancyMixin
 
   virtual_column  :reason,               :type => :string,   :uses => :miq_approvals

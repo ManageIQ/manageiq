@@ -2,8 +2,6 @@ class Compliance < ApplicationRecord
   belongs_to  :resource,  :polymorphic => true
   has_many    :compliance_details, :dependent => :destroy
 
-  include ReportableMixin
-
   def self.check_compliance_queue(targets, inputs = {})
     targets.to_miq_a.each do |target|
       MiqQueue.put(

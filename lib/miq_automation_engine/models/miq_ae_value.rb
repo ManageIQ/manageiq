@@ -4,8 +4,6 @@ class MiqAeValue < ApplicationRecord
   belongs_to :ae_field,    :class_name => "MiqAeField",    :foreign_key => :field_id
   belongs_to :ae_instance, :class_name => "MiqAeInstance", :foreign_key => :instance_id
 
-  include ReportableMixin
-
   def to_export_xml(options = {})
     require 'builder'
     xml = options[:builder] ||= ::Builder::XmlMarkup.new(:indent => options[:indent])

@@ -13,8 +13,6 @@ class MiqDialog < ApplicationRecord
 
   serialize :content
 
-  include ReportableMixin
-
   def self.seed
     sync_from_dir
   end

@@ -15,7 +15,6 @@ class MiqServer < ApplicationRecord
   include UuidMixin
   include MiqPolicyMixin
   acts_as_miq_taggable
-  include ReportableMixin
   include RelationshipMixin
 
   belongs_to              :vm, :inverse_of => :miq_server

@@ -1,6 +1,5 @@
 class CustomizationTemplate < ApplicationRecord
   include NewWithTypeStiMixin
-  include ReportableMixin
 
   belongs_to :pxe_image_type
   has_many   :pxe_images, :through => :pxe_image_type

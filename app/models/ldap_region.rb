@@ -1,16 +1,10 @@
 class LdapRegion < ApplicationRecord
-  include ReportableMixin
-
   validates_presence_of   :name
   validates_uniqueness_of :name
 
   belongs_to :zone
 
   has_many   :ldap_domains
-
-  # acts_as_miq_taggable
-
-  # include ReportableMixin
 
   def is_valid?
     ldap_domains.any?(&:is_valid?)

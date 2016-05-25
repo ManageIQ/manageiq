@@ -8,7 +8,6 @@ class MiqEventDefinition < ApplicationRecord
   validates_presence_of     :description
 
   acts_as_miq_set_member
-  include ReportableMixin
   acts_as_miq_taggable
 
   has_many :miq_policy_contents

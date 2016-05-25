@@ -15,8 +15,6 @@ class FirewallRule < ApplicationRecord
     port..(end_port || port)
   end
 
-  include ReportableMixin
-
   def self.add_elements(target, xmlNode)
     add_missing_elements(target, xmlNode, nil)
   end

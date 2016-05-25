@@ -2,8 +2,6 @@ require 'cim_profile_defs'
 require 'lun_durable_names'
 
 class MiqCimDatastore < MiqCimInstance
-  include ReportableMixin
-
   virtual_has_one   :backing,         :class_name => 'MiqCimInstance'
   virtual_has_one   :file_share,        :class_name => 'SniaFileShare'
   virtual_has_many  :storage_volumes,     :class_name => 'CimStorageVolume'

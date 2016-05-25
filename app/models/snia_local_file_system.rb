@@ -1,7 +1,6 @@
 require 'cim_profile_defs'
 
 class SniaLocalFileSystem < MiqCimInstance
-  include ReportableMixin
   acts_as_miq_taggable
 
   virtual_column    :zone_name,           :type => :string,   :uses => :zone

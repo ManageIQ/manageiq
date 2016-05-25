@@ -1,8 +1,6 @@
 class AdvancedSetting < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
-  include ReportableMixin
-
   def self.add_elements(parent, xmlNode)
     add_missing_elements(parent, xmlNode, nil)
   end

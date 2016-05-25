@@ -1,8 +1,6 @@
 require 'cim_profile_defs'
 
 class MiqCimVirtualMachine < MiqCimInstance
-  include ReportableMixin
-
   virtual_has_many  :cim_virtual_disks,     :class_name => 'MiqCimVirtualDisk'
   virtual_has_many  :cim_datastores,      :class_name => 'MiqCimDatastore'
   virtual_has_many  :storages,          :class_name => 'Storage'

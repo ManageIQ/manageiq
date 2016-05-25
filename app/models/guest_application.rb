@@ -3,8 +3,6 @@ class GuestApplication < ApplicationRecord
   belongs_to :host
   belongs_to :container_image
 
-  include ReportableMixin
-
   virtual_column :v_unique_name, :type => :string
 
   def self.add_elements(parent, xmlNode)

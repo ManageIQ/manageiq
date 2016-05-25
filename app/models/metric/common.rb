@@ -16,8 +16,6 @@ module Metric::Common
     scope :hourly,   -> { where(:capture_interval_name => 'hourly') }
     scope :realtime, -> { where(:capture_interval_name => 'realtime') }
 
-    include ReportableMixin
-
     serialize :assoc_ids
     serialize :min_max   # TODO: Move this to MetricRollup
 

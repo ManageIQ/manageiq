@@ -1,6 +1,4 @@
 class ServiceReconfigureTask < MiqRequestTask
-  include ReportableMixin
-
   validate :validate_request_type, :validate_state
 
   AUTOMATE_DRIVES = true

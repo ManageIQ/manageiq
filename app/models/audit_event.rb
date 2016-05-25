@@ -1,6 +1,4 @@
 class AuditEvent < ApplicationRecord
-  include ReportableMixin
-
   validates_presence_of     :event, :status, :message, :severity
   validates_inclusion_of    :status,   :in => ["success", "failure"]
   validates_inclusion_of    :severity, :in => ["fatal", "error", "warn", "info", "debug"]

@@ -4,9 +4,6 @@ class Disk < ApplicationRecord
   belongs_to :backing, :polymorphic => true
   has_many :partitions
   has_one :miq_cim_instance, :as => :vmdb_obj, :dependent => :destroy
-
-  include ReportableMixin
-
   virtual_column :allocated_space,             :type => :integer, :uses => :partitions
   virtual_column :allocated_space_percent,     :type => :float,   :uses => :allocated_space
   virtual_column :unallocated_space,           :type => :integer, :uses => :allocated_space

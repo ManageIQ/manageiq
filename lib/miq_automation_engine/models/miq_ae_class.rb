@@ -14,8 +14,6 @@ class MiqAeClass < ApplicationRecord
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :namespace_id
   validates_format_of     :name, :with => /\A[A-Za-z0-9_.-]+\z/i
 
-  include ReportableMixin
-
   def self.find_by_fqname(fqname, args = {})
     ns, name = parse_fqname(fqname)
     find_by_namespace_and_name(ns, name, args)

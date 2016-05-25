@@ -5,7 +5,6 @@ class Snapshot < ApplicationRecord
 
   belongs_to :vm_or_template
 
-  include ReportableMixin
   include SerializedEmsRefObjMixin
 
   serialize :disks, Array

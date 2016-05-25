@@ -1,8 +1,6 @@
 class OsProcess < ApplicationRecord
   belongs_to :operating_system
 
-  include ReportableMixin
-
   def self.add_elements(vm, xmlNode)
     add_missing_elements(vm, xmlNode, nil)
   end

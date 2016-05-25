@@ -1,7 +1,6 @@
 class ContainerImage < ApplicationRecord
   include ComplianceMixin
   include MiqPolicyMixin
-  include ReportableMixin
   include ScanningMixin
 
   DOCKER_IMAGE_PREFIX = "docker://"

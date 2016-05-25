@@ -1,7 +1,5 @@
 class ConfigurationTag < ApplicationRecord
   include NewWithTypeStiMixin
-  include ReportableMixin
-
   acts_as_miq_taggable
 
   belongs_to :manager

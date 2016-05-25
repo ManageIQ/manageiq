@@ -1,8 +1,6 @@
 class BottleneckEvent < ApplicationRecord
   belongs_to :resource, :polymorphic => true
 
-  include ReportableMixin
-
   serialize :context_data
 
   def self.last_created_on(obj)

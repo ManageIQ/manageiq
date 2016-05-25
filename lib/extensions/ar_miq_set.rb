@@ -59,7 +59,6 @@ module ActsAsMiqSet
 
     belongs_to  :owner, :polymorphic => true
 
-    include ReportableMixin
     acts_as_miq_taggable
 
     alias_with_relationship_type :members,            :children

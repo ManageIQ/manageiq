@@ -18,7 +18,6 @@ class MiqRegion < ApplicationRecord
   virtual_has_many :vms,                    :uses => :all_relationships
 
   acts_as_miq_taggable
-  include ReportableMixin
   include UuidMixin
   include NamingSequenceMixin
   include AggregationMixin

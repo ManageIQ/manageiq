@@ -124,7 +124,6 @@ class VmOrTemplate < ApplicationRecord
   belongs_to                :tenant
 
   acts_as_miq_taggable
-  include ReportableMixin
 
   virtual_column :is_evm_appliance,                     :type => :boolean,    :uses => :miq_server
   virtual_column :os_image_name,                        :type => :string,     :uses => [:operating_system, :hardware]

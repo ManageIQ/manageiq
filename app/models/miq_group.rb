@@ -33,7 +33,6 @@ class MiqGroup < ApplicationRecord
   default_value_for(:sequence) { next_sequence }
 
   acts_as_miq_taggable
-  include ReportableMixin
   include CustomAttributeMixin
   include ActiveVmAggregationMixin
   include TimezoneMixin

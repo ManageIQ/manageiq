@@ -9,8 +9,6 @@ class OperatingSystem < ApplicationRecord
   has_many   :event_logs, :dependent => :destroy
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
 
-  include ReportableMixin
-
   @@os_map = [
     ["windows_generic", %w(winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt)],
     ["windows_generic", %w(winxppro winxp xp)],

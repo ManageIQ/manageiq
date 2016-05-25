@@ -38,8 +38,6 @@ class User < ApplicationRecord
   # with the class method of the same name (User.authenticate)
   alias_method :authenticate_bcrypt, :authenticate
 
-  include ReportableMixin
-
   serialize     :settings, Hash   # Implement settings column as a hash
   default_value_for(:settings) { Hash.new }
 

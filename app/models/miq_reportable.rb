@@ -4,7 +4,9 @@ module MiqReportable
     return Ruport::Data::Table.new if records.blank?
 
     data_records = records.map do |r|
-      r.get_attributes(only_columns)
+      only_columns.each_with_object({}) do |column, attrs|
+        attrs[column] = r.send(column) if r.respond_to?(column)
+      end
     end
 
     column_names = data_records.flat_map(&:keys).uniq

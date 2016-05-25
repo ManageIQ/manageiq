@@ -1,7 +1,6 @@
 require 'cim_profile_defs'
 
 class CimStorageExtent < MiqCimInstance
-  include ReportableMixin
   acts_as_miq_taggable
 
   virtual_column    :description,       :type => :string

@@ -1,7 +1,6 @@
 require 'cim_profile_defs'
 
 class CimComputerSystem < MiqCimInstance
-  include ReportableMixin
   acts_as_miq_taggable
 
   virtual_column    :element_name,        :type => :string

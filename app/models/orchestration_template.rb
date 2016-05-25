@@ -3,7 +3,6 @@ class OrchestrationTemplate < ApplicationRecord
   TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
 
   include NewWithTypeStiMixin
-  include ReportableMixin
 
   acts_as_miq_taggable
 

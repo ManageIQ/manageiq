@@ -2,7 +2,6 @@ class CloudVolume < ApplicationRecord
   include_concern 'Operations'
 
   include NewWithTypeStiMixin
-  include ReportableMixin
   include ProviderObjectMixin
   include AsyncDeleteMixin
   include AvailabilityMixin

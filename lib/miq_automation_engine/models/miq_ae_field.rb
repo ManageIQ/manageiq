@@ -19,8 +19,6 @@ class MiqAeField < ApplicationRecord
   AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI + ["host", "vm", "storage", "ems", "policy", "server", "request", "provision"]
   validates_inclusion_of  :datatype,   :in => AVAILABLE_DATATYPES, :allow_nil => true  # nil => string
 
-  include ReportableMixin
-
   before_save        :set_message_and_default_value
 
   DEFAULTS = {:substitute => true, :datatype => "string", :aetype => "attribute", :scope => "instance", :message => "create"}

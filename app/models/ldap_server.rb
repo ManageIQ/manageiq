@@ -7,8 +7,6 @@ class LdapServer < ApplicationRecord
   attr_accessor :ldap
 
   acts_as_miq_taggable
-
-  include ReportableMixin
   include AuthenticationMixin
 
   def name

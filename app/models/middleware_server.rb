@@ -1,6 +1,4 @@
 class MiddlewareServer < ApplicationRecord
-  include ReportableMixin
-
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :middleware_deployments, :foreign_key => "server_id", :dependent => :destroy
   has_many :middleware_datasources, :foreign_key => "server_id", :dependent => :destroy

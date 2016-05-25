@@ -1,6 +1,5 @@
 class AvailabilityZone < ApplicationRecord
   include NewWithTypeStiMixin
-  include ReportableMixin
   include Metric::CiMixin
   include EventMixin
   include ProviderObjectMixin

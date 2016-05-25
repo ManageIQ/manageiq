@@ -9,8 +9,6 @@ class Condition < ApplicationRecord
   acts_as_miq_taggable
   acts_as_miq_set_member
 
-  include ReportableMixin
-
   belongs_to :miq_policy
   has_and_belongs_to_many :miq_policies
 

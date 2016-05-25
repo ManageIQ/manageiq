@@ -1,6 +1,4 @@
 class ServiceTemplateProvisionTask < MiqRequestTask
-  include ReportableMixin
-
   validate :validate_request_type, :validate_state
 
   virtual_belongs_to :service_resource, :class_name => "ServiceResource"

@@ -11,8 +11,6 @@ class Filesystem < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy
 
   include FilterableMixin
-  include ReportableMixin
-
   virtual_column :contents,           :type => :string,  :uses => {:binary_blob => :binary_blob_parts}
   virtual_column :contents_available, :type => :boolean, :uses => :binary_blob
 

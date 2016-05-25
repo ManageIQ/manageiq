@@ -2,8 +2,6 @@ class Patch < ApplicationRecord
   belongs_to :vm_or_template
   belongs_to :host
 
-  include ReportableMixin
-
   virtual_column :v_install_date, :type => :string
 
   def self.add_elements(vm, xmlNode)

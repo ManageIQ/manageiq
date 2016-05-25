@@ -3,7 +3,6 @@ class EmsFolder < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
 
-  include ReportableMixin
   acts_as_miq_taggable
 
   include SerializedEmsRefObjMixin

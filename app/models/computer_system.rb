@@ -1,6 +1,4 @@
 class ComputerSystem < ApplicationRecord
-  include ReportableMixin
-
   belongs_to :managed_entity, :polymorphic => true
 
   has_one :operating_system, :dependent => :destroy

@@ -26,8 +26,6 @@ class Hardware < ApplicationRecord
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
 
-  include ReportableMixin
-
   include DeprecationMixin
   deprecate_attribute :cores_per_socket, :cpu_cores_per_socket
   deprecate_attribute :logical_cpus, :cpu_total_cores

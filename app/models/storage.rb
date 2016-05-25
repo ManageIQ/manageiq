@@ -37,7 +37,6 @@ class Storage < ApplicationRecord
   self.default_relationship_type = "ems_metadata"
 
   acts_as_miq_taggable
-  include ReportableMixin
 
   include SerializedEmsRefObjMixin
   include FilterableMixin

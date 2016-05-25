@@ -13,8 +13,6 @@ class MiqHostProvision < MiqRequestTask
   alias_attribute :miq_host_provision_request, :miq_request
   alias_attribute :host,                       :source
 
-  include ReportableMixin
-
   validates_inclusion_of :request_type, :in => %w( host_pxe_install ),                           :message => "should be 'host_pxe_install'"
   validates_inclusion_of :state,        :in => %w( pending queued active provisioned finished ), :message => "should be pending, queued, active, provisioned or finished"
 

@@ -10,8 +10,6 @@ class MiqAeInstance < ApplicationRecord
   validates_presence_of   :name
   validates_format_of     :name, :with => /\A[A-Za-z0-9_.-]+\z/i
 
-  include ReportableMixin
-
   def self.find_by_name(name)
     where("lower(name) = ?", name.downcase).first
   end

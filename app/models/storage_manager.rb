@@ -6,7 +6,6 @@ class StorageManager < ApplicationRecord
   include RelationshipMixin
 
   acts_as_miq_taggable
-  include ReportableMixin
 
   include MiqStorageDefs
 

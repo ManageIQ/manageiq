@@ -10,8 +10,6 @@ class Partition < ApplicationRecord
                .where("#{p}.id" => id)
            }, :foreign_key => :volume_group
 
-  include ReportableMixin
-
   virtual_column :aligned, :type => :boolean
 
   def volume_group

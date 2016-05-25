@@ -1,8 +1,6 @@
 class EventLog < ApplicationRecord
   belongs_to :operating_system
 
-  include ReportableMixin
-
   def self.add_elements(parent, xmlNode)
     add_missing_elements(parent, xmlNode)
   end

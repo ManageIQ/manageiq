@@ -27,8 +27,6 @@ class MiqTask < ApplicationRecord
 
   virtual_has_one :task_results
 
-  include ReportableMixin
-
   def self.status_ok?(status)
     status.casecmp(STATUS_OK) == 0
   end
