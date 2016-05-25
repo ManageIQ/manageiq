@@ -1,6 +1,7 @@
 class MiddlewareServerController < ApplicationController
   include EmsCommon
   include ContainersCommonMixin
+  include MiddlewareCommonMixin
 
   before_action :check_privileges
   before_action :get_session_data
@@ -18,15 +19,8 @@ class MiddlewareServerController < ApplicationController
     }
   }.freeze
 
-  def show_list
-    process_show_list
-  end
-
-  def index
-    redirect_to :action => 'show_list'
-  end
-
   def show
+    clear_topology_breadcrumb
     @display = params[:display] || "main" unless control_selected?
     @lastaction = "show"
     @showtype = "main"
@@ -64,10 +58,6 @@ class MiddlewareServerController < ApplicationController
   end
 
   private ############################
-
-  def display_name
-    _('Middleware Servers')
-  end
 
   # Identify the selected servers. When we got the call from the
   # single server page, we need to look at :id, otherwise from
