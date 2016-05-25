@@ -240,7 +240,7 @@ FactoryGirl.define do
           :parent  => :configuration_manager
 
   trait(:provider) do
-    after(:create) { |x| x.create_provider }
+    after(:build, &:create_provider)
   end
 
   trait(:configuration_script) do

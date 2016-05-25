@@ -23,10 +23,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationS
   end
 
   context "#run" do
-    before do
-      allow_any_instance_of(Provider).to receive_messages(:connect => connection)
-      allow_any_instance_of(ManageIQ::Providers::ConfigurationManager).to receive_messages(:provider => manager.provider)
-    end
+    before { allow_any_instance_of(Provider).to receive_messages(:connect => connection) }
 
     it "launches the referenced ansible job template" do
       expect(manager.provider).to be_a Provider
