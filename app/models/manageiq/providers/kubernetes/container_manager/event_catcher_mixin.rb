@@ -1,5 +1,7 @@
 module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   extend ActiveSupport::Concern
+
+  # https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/container/event.go
   # 'Created', 'Failed', 'Started', 'Killing', 'Stopped' and 'Unhealthy' are in fact container related events,
   # returned as part of a pod event.
   ENABLED_EVENTS = {
