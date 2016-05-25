@@ -1,7 +1,11 @@
 require 'time'
+require 'linux_admin'
+require 'fileutils'
 
 module EvmWatchdog
   PID_LOCATION = '/var/www/miq/vmdb/tmp/pids/evm.pid'.freeze
+  UPDATE_FILE  = '/var/www/miq/vmdb/tmp/miq_update'.freeze
+
   def self.check_evm
     pid_file = read_pid_file(PID_LOCATION)
     pid_ps = get_ps_pids('MIQ Server')
@@ -33,6 +37,13 @@ module EvmWatchdog
         log_info("Detected a PID file: [#{pid_file}], but server state should be: [#{db_state}]...")
       end
     end
+  end
+
+  def self.check_for_update
+    return unless File.exist?(UPDATE_FILE)
+    packages = File.read(UPDATE_FILE).split(",")
+    LinuxAdmin::Yum.update(*packages)
+    FileUtils.rm_f(UPDATE_FILE)
   end
 
   def self.read_pid_file(path_or_io)
