@@ -155,7 +155,7 @@
   */
   NewProviderController.prototype.stripProtocol = function(item) {
     if (item.hasOwnProperty('hostname')) {
-      item.hostname = item.hostname.replace(/.*?:\/\//g, "");
+      item.hostname = item.hostname.replace(/.*?:\/\//g, '');
       if (item.hostname.lastIndexOf('/') === item.hostname.length - 1) {
         item.hostname = item.hostname.slice(0,-1);
       }

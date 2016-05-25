@@ -116,6 +116,10 @@ Vmdb::Application.routes.draw do
     x_show
   )
 
+  providers_settings = %w(
+    toolbar_settings
+  )
+
   controller_routes = {
     :alert                    => {
       :get  => %w(
@@ -1037,7 +1041,8 @@ Vmdb::Application.routes.draw do
         tag_edit_form_field_changed
         list_providers
       ) +
-               compare_get,
+               compare_get +
+               providers_settings,
       :post => %w(
         edit_tags
         delete_provider

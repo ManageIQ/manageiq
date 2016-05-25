@@ -1,58 +1,4 @@
 (function(){
-  /**
-  * Define Default action which will be used as placeholder for empty data.
-  */
-  var setDefaultAction = function() {
-    return {
-      id: 'new_provider',
-      title: __('Add a New Middleware Provider'),
-      icon: 'pficon pficon-add-circle-o fa-lg',
-      actionFunction: function(){
-        this.defaultActionFunction();
-      }.bind(this)
-    };
-  };
-
-  /**
-  * Define Toolbar Items, these items requre binding object which Contains
-  * editSelected, removeSelected and editTags functions.
-  */
-  var setToolbarItems = function() {
-    return [
-      {
-        title: __('Configuration'),
-        icon: 'fa fa-cog fa-lg',
-        children: [this.defaultAction, {
-            id: 'edit_provider',
-            title: __('Edit Selected Middleware Provider'),
-            disabled: true,
-            icon: 'pficon pficon-edit fa-lg',
-            actionFunction: function(){
-              this.editSelected();
-            }.bind(this)
-          }, {
-            title: __('Remove Middleware Providers from the VMDB'),
-            disabled: true,
-            icon: 'pficon pficon-delete fa-lg',
-            actionFunction: function(){
-              this.removeSelected();
-            }.bind(this)
-        }]
-      }, {
-        title: __('Policy'),
-        icon: 'fa fa-shield fa-lg',
-        disabled: true,
-        children: [{
-          title: __('Edit Tags'),
-          disabled: true,
-          icon: 'pficon pficon-edit fa-lg',
-          actionFunction: function(){
-            this.editTags();
-          }.bind(this)
-        }]
-      }
-    ]
-  }
 
   /**
   * Define Per Page items.
@@ -70,6 +16,57 @@
     }
   }
 
+  /**
+  * Function for binding toolbarIds with functions.
+  * Which object should be used is determined by las index of '_' in ID and text after '_'
+  * If isDefault is set this method will be used as default in datables.
+  */
+  setFunctionReference = function() {
+    return {
+      '_tag': {
+        actionFunction: function(){
+          this.editTags();
+        }.bind(this)
+      },
+      '_delete': {
+        actionFunction: function(){
+          this.removeSelected();
+        }.bind(this)
+      },
+      '_new': {
+        isDefault: true,
+        actionFunction: function(){
+          this.defaultActionFunction();
+        }.bind(this)
+      }
+    };
+  }
+
+  /**
+  * Function which iterates trough each item of toolbar and bind functions to it.
+  * @see #setFunctionReference() for reference how to add new function bind.
+  */
+  setFunctionsForToolbar = function() {
+    _.chain(this.toolbarItems)
+      .flatten()
+      .map('items')
+      .flatten()
+      .each(function(item) {
+        if (item && item.hasOwnProperty('id')) {
+          var lastIndex = item.id.lastIndexOf('_');
+          var identifier = item.id.substring(lastIndex);
+          if (this.functionReference.hasOwnProperty(identifier)) {
+            item.actionFunction = this.functionReference[identifier].actionFunction;
+            this.functionReference[identifier].isDefault && (this.defaultAction = item);
+          }
+        }
+      }.bind(this))
+      .value();
+  }
+
+  /**
+  * This function will handle fetching of defaultView based on location.
+  */
   getDefaultView = function() {
     var lastIndex = window.location.pathname.lastIndexOf('/');
     if (lastIndex !== -1) {
@@ -81,13 +78,30 @@
   }
 
   /**
+  * Function fo enabling or disabling items in toolbar.
+  * It is based on onwhen property of toolbarItem.
+  * @param toolbarItem this item will enabled/disabled.
+  * @param countSelected number of selected items.
+  */
+  enableToolbarItemByCountSelected = function(toolbarItem, countSelected) {
+    if (toolbarItem.onwhen) {
+      if (toolbarItem.onwhen.slice(-1) === '+') {
+        toolbarItem.enabled = countSelected >=  toolbarItem.onwhen.slice(0, toolbarItem.onwhen.length - 1);
+      } else {
+        toolbarItem.enabled = countSelected === parseInt(toolbarItem.onwhen);
+      }
+    }
+  }
+
+  /**
   * ListProvidersController constructor.
   * @param  MiQDataTableService service with dataTable loading and sorting.
   * @param $state service for angular redirect.
   * @param $http provider for gets and posts.
   * @param MiQNotificationService service for accessing alerts messages.
   */
-  var ListProvidersController = function(MiQDataTableService, $state, $http, MiQNotificationService) {
+  var ListProvidersController = function(MiQDataTableService, $state, $http, MiQNotificationService, MiQToolbarSettingsService) {
+    this.MiQToolbarSettingsService = MiQToolbarSettingsService;
     this.MiQNotificationService = MiQNotificationService;
     this.$state = $state;
     this.$http = $http;
@@ -96,10 +110,14 @@
     this.isSelectable = true;
     this.hasFooter = true;
     this.hasHeader = true;
+    this.isList = true;
     this.data = [];
     this.columnsToShow = [];
-    this.defaultAction = setDefaultAction.bind(this)();
-    this.toolbarItems = setToolbarItems.bind(this)();
+    this.MiQToolbarSettingsService.getSettings(this.isList).then(function(toolbarItems){
+      this.functionReference = setFunctionReference.bind(this)();
+      this.toolbarItems = toolbarItems;
+      setFunctionsForToolbar.bind(this)();
+    }.bind(this))
     this.perPage = setPerPage.bind(this)();
   };
 
@@ -133,10 +151,11 @@
   };
 
   ListProvidersController.prototype.filterSelectedIds = function() {
-    return _.chain(this.data)
-                        .filter({selected: true})
-                        .map('id')
-                        .value();
+    return _
+      .chain(this.data)
+      .filter({selected: true})
+      .map('id')
+      .value();
   }
 
   /**
@@ -195,19 +214,17 @@
   ListProvidersController.prototype.onRowSelected = function() {
     var disabled = _.findIndex(this.data, {selected: true}) === -1;
     var countSelected = _.countBy(this.data, {selected: true})['true'];
-    _.each(this.toolbarItems, function(oneToolbarItem) {
-      if (oneToolbarItem.title !== 'Configuration') {
-        oneToolbarItem.disabled = disabled;
-      }
-      _.each(oneToolbarItem.children, function(oneChild) {
-        if (oneChild.id !== 'new_provider') {
-          oneChild.disabled = disabled;
-        }
-        if (countSelected > 1 && oneChild.id === 'edit_provider') {
-          oneChild.disabled = true;
+    _.chain(this.toolbarItems)
+      .flatten()
+      .each(function(item){
+        if (item) {
+          enableToolbarItemByCountSelected(item, countSelected);
+          _.each(item.items, function(oneButton){
+            enableToolbarItemByCountSelected(oneButton, countSelected);
+          });
         }
       })
-    });
+      .value();
   };
 
   /**
@@ -250,7 +267,8 @@
     this.columnsToShow = rowsCols.cols;
   };
 
-  ListProvidersController.$inject = ['MiQDataTableService', '$state', '$http', 'MiQNotificationService'];
+  ListProvidersController.$inject = ['MiQDataTableService', '$state', '$http',
+  'MiQNotificationService', 'MiQToolbarSettingsService'];
   miqHttpInject(angular.module('middleware.provider'))
   .controller('miqListProvidersController', ListProvidersController);
 })();

@@ -1,5 +1,6 @@
 class EmsMiddlewareController < ApplicationController
   include EmsCommon
+  include ProvidersSettings
 
   before_action :check_privileges
   before_action :get_session_data
@@ -24,6 +25,11 @@ class EmsMiddlewareController < ApplicationController
 
   def new
     redirect_to :action => :index, :anchor => "new"
+  end
+
+  def toolbar_settings
+    @lastaction = params[:is_list] ? 'show_list' : nil
+    render :json => toolbar_from_hash
   end
 
   def show_list
@@ -68,11 +74,6 @@ class EmsMiddlewareController < ApplicationController
       result_object[:validation_errors] = @edit[:errors]
       result_object[:database_errors] = result_object[:ems_object].errors
     end
-  end
-
-  def generate_providers
-    view = get_view(ManageIQ::Providers::MiddlewareManager)[0]
-    view_to_hash(view)
   end
 
   def provider_validator
