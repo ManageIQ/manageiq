@@ -7,6 +7,7 @@ module LiveMetricsMixin
 
   delegate :fetch_metrics_available, :to => :metrics_capture
   delegate :collect_live_metric, :to => :metrics_capture
+  delegate :collect_stats_metric, :to => :metrics_capture
 
   included do
     def collect_live_metrics(metrics, start_time, end_time, interval)

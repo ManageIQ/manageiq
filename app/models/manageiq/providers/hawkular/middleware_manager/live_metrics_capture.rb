@@ -44,6 +44,14 @@ module ManageIQ::Providers
       process_data(metric, metrics)
     end
 
+    def collect_stats_metric(metric, start_time, end_time, interval)
+      validate_metric(metric)
+      starts = start_time.to_i.in_milliseconds
+      ends = end_time.to_i.in_milliseconds
+      bucket_duration = "#{interval}s"
+      fetch_raw_metrics(metric[:id], metric[:type], starts, ends, bucket_duration)
+    end
+
     def first_and_last_capture(metric)
       validate_metric(metric)
       case metric[:type]
@@ -67,27 +75,21 @@ module ManageIQ::Providers
     end
 
     def fetch_metrics(metric_id, metric_type, starts, ends, bucket_duration)
-      case metric_type
-      when "GAUGE"        then gauges(metric_id, starts, ends, bucket_duration)
-      when "COUNTER"      then counters(metric_id, starts, ends, bucket_duration)
-      when "AVAILABILITY" then availabilities(metric_id, starts, ends, bucket_duration)
-      else raise MetricValidationError, "Validation error: unknown type #{metric_type}"
-      end
+      sort_and_normalize(fetch_raw_metrics(metric_id, metric_type, starts, ends, bucket_duration))
     end
 
-    def gauges(metric_id, starts, ends, bucket_duration)
-      sort_and_normalize(@gauges.get_data(metric_id, :starts => starts, :ends => ends,
-                                          :bucketDuration => bucket_duration))
-    end
-
-    def counters(metric_id, starts, ends, bucket_duration)
-      sort_and_normalize(@counters.get_rate(metric_id, :starts => starts, :ends => ends,
-                                          :bucket_duration => bucket_duration))
-    end
-
-    def availabilities(metric_id, starts, ends, bucket_duration)
-      sort_and_normalize(@avail.get_data(metric_id, :starts => starts, :ends => ends,
-                                         :bucketDuration => bucket_duration))
+    def fetch_raw_metrics(metric_id, metric_type, starts, ends, bucket_duration)
+      data = case metric_type
+             when "GAUGE"
+               @gauges.get_data(metric_id, :starts => starts, :ends => ends, :bucketDuration => bucket_duration)
+             when "COUNTER"
+               @counters.get_rate(metric_id, :starts => starts, :ends => ends, :bucket_duration => bucket_duration)
+             when "AVAILABILITY"
+               @avail.get_data(metric_id, :starts => starts, :ends => ends, :bucketDuration => bucket_duration)
+             else
+               raise MetricValidationError, "Validation error: unknown type #{metric_type}"
+             end
+      data
     end
 
     def sort_and_normalize(data)
