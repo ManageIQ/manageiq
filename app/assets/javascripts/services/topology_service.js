@@ -43,6 +43,7 @@ ManageIQ.angular.app.service('topologyService', function() {
     var action = '/show/' + d.item.miq_id;
     switch (d.item.kind) {
       case "ContainerManager":
+        action = '/' + d.item.miq_id;
         entity_url = "ems_container";
         break;
       case "NetworkManager":
@@ -51,7 +52,7 @@ ManageIQ.angular.app.service('topologyService', function() {
       case "MiddlewareManager":
         entity_url = "ems_middleware";
         break;
-      default :
+      default : // for non provider entities, use the show action
         entity_url = _.snakeCase(d.item.kind);
       }
 
