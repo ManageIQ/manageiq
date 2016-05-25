@@ -167,7 +167,7 @@ module ManageIQ::Providers
     def get_vnfds
       return unless @nfv_service
 
-      process_collection(@nfv_service.handled_list(:vnfds), :orchestration_templates) { |vnfd| parse_vnfd(vnfd) }
+      process_collection(@nfv_service.handled_list(:vnfds), :orchestration_templates_catalog) { |vnfd| parse_vnfd(vnfd) }
     end
 
     def get_vnfs
@@ -496,12 +496,12 @@ module ManageIQ::Providers
       uid = vnfd.id
 
       new_result = {
-        :type        => "OrchestrationTemplateVnfd",
-        :ems_ref     => uid,
-        :name        => vnfd.name,
-        :description => vnfd.description,
-        :content     => vnfd.vnf_attributes["vnfd"],
-        :orderable   => true
+        :type         => "OrchestrationTemplateVnfd",
+        :ems_ref      => uid,
+        :name         => vnfd.name.blank? ? uid : vnfd.name,
+        :description  => vnfd.description,
+        :content      => vnfd.vnf_attributes["vnfd"],
+        :orderable    => true
       }
       return uid, new_result
     end
