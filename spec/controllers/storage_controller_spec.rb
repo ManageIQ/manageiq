@@ -100,6 +100,7 @@ describe StorageController do
       before do
         session[:settings] = {:views => {}, :perpage => {:list => 5}}
         EvmSpecHelper.create_guid_miq_server_zone
+        @datastore = FactoryGirl.create(:storage, :name => 'storage_name')
       end
 
       it 'can render the explorer' do
@@ -159,6 +160,12 @@ describe StorageController do
         expect(response.status).to eq(200)
         expect(response.body).to include('<h3>\n1 Datastore Being Tagged\n<\/h3>')
         expect(response.body).to include("Name: #{datastore.name} | Datastores Type: ")
+      end
+
+      it 'can Perform a datastore Smart State Analysis from the datastore summary page' do
+        allow(controller).to receive(:x_node).and_return("ds-#{@datastore.compressed_id}")
+        post :x_button, :params => { :pressed => 'storage_scan', :id => @datastore.id }
+        expect(response.status).to eq(200)
       end
     end
 
