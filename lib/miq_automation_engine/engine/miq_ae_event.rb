@@ -81,6 +81,12 @@ module MiqAeEvent
       aevent.merge!("#{hash[:class].name}::#{hash[:name]}" => vmdb_object.id, "#{hash[:key]}_id".to_sym  => vmdb_object.id)
     end
 
+    inputs.delete_if do |_k, value|
+      next unless value.kind_of?(ApplicationRecord)
+      klass = value.class.base_class.name
+      aevent.merge!("#{klass}::#{klass.underscore}" => value.id, "#{klass.underscore}_id".to_sym => value.id)
+    end
+
     aevent.merge(inputs)
   end
 
