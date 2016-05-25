@@ -125,6 +125,8 @@ describe EmsInfraController do
     it "when values are changed, and values do not exceed number of hosts available" do
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
         .to receive(:raw_update_stack)
+      expect_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
+        .not_to receive(:queue_post_scaledown_task)
       post :scaling, :params => { :id => @ems.id, :scale => "", :orchestration_stack_id => @ems.orchestration_stacks.first.id,
            @orchestration_stack_parameter_compute.name => 2 }
       expect(controller.send(:flash_errors?)).to be_falsey
@@ -192,6 +194,8 @@ describe EmsInfraController do
     it "when values are changed, and selected host is in correct state" do
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
         .to receive(:raw_update_stack)
+      expect_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack)
+        .to receive(:queue_post_scaledown_task)
       post :scaledown, :params => {:id => @ems.id, :scaledown => "",
            :orchestration_stack_id => @ems.orchestration_stacks.first.id, :host_ids => [@ems.hosts[1].id]}
       expect(controller.send(:flash_errors?)).to be_falsey
