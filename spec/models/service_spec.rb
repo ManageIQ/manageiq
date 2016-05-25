@@ -248,6 +248,15 @@ describe Service do
     end
   end
 
+  describe "#indirect_service_children" do
+    it "returns 1 level down children" do
+      create_deep_tree
+      Vmdb::Deprecation.silenced do
+        expect(@service.indirect_service_children).to match_array([@service_c11, @service_c12, @service_c121])
+      end
+    end
+  end
+
   describe "#descendants" do
     it "returns all descendants" do
       create_deep_tree
