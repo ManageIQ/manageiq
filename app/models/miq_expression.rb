@@ -589,11 +589,8 @@ class MiqExpression
       exp.delete(operator) if exp[operator].empty?
     when "or"
       or_attrs = {:supported_by_sql => true}
-      exp[operator].each_with_index do |atom, i|
-        preprocess_for_sql(atom, or_attrs)
-        exp[operator][i] = nil if atom.blank?
-      end
-      exp[operator].compact!
+      exp[operator].each { |atom| preprocess_for_sql(atom, or_attrs) }
+      exp[operator].reject!(&:blank?)
       attrs.merge!(or_attrs)
       exp.delete(operator) if !or_attrs[:supported_by_sql] || exp[operator].empty? # Clean out unsupported or empty operands
     when "not", "!"
