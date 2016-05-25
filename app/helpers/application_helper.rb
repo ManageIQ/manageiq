@@ -331,7 +331,8 @@ module ApplicationHelper
     when "MiqWorker"
       controller = request.parameters[:controller]
       action = "diagnostics_worker_selected"
-    when "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource"
+    when "OrchestrationStackOutput", "OrchestrationStackParameter", "OrchestrationStackResource",
+         "ManageIQ::Providers::CloudManager::OrchestrationStack"
       controller = request.parameters[:controller]
     when "ContainerVolume"
       controller = "persistent_volume"
