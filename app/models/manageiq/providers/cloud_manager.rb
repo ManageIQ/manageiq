@@ -8,8 +8,6 @@ module ManageIQ::Providers
     require_nested :Vm
     require_nested :OrchestrationStack
 
-    include AvailabilityMixin
-
     class << model_name
       define_method(:route_key) { "ems_clouds" }
       define_method(:singular_route_key) { "ems_cloud" }
@@ -53,6 +51,14 @@ module ManageIQ::Providers
 
     def validate_timeline
       {:available => true, :message => nil}
+    end
+
+    def self.validate_regions
+      if "#{parent}::Regions".safe_constantize
+        {:available => true, :message => nil}
+      else
+        {:available => false, :message => nil}
+      end
     end
 
     def stop_event_monitor_queue_on_credential_change

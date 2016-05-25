@@ -42,38 +42,18 @@
             = @emstype_display
 
 
-    .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "isRegionSupported()", "ng-switch" => "", "on" => "emsCommonModel.emstype"}
+    .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "#{@provider_regions.keys.to_json}.includes(emsCommonModel.emstype)", "ng-switch" => "", "on" => "emsCommonModel.emstype"}
       %label.col-md-2.control-label{"for" => "ems_region"}
         = _('Region')
       .col-md-8
-        = select_tag('provider_region',
-                     options_for_select([["<#{_('Choose')}>", nil]] + Array(@amazon_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
-                     "ng-model"                    => "emsCommonModel.provider_region",
-                     "ng-switch-when"              => "ec2",
-                     "id"                          => "ems_region",
-                     "required"                    => "",
-                     "checkchange"                 => "",
-                     "selectpicker-for-select-tag" => "")
-        = select_tag('provider_region',
-                     options_for_select([["<#{_('Choose')}>", nil]] + Array(@azure_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
-                     "ng-model"                    => "emsCommonModel.provider_region",
-                     "ng-switch-when"              => "azure",
-                     "id"                          => "ems_region",
-                     "required"                    => "",
-                     "checkchange"                 => "",
-                     "selectpicker-for-select-tag" => "")
-
-    .form-group{"ng-class" => "{'has-error': angularForm.provider_region.$invalid}", "ng-if" => "emsCommonModel.emstype == 'gce'"}
-      %label.col-md-2.control-label{"for" => "ems_preferred_region"}
-        = _('Preferred Region')
-      .col-md-8
-        = select_tag('provider_region',
-                     options_for_select([["<#{_('Choose')}>", nil]] + Array(@google_regions.invert).sort_by { |desc, _name| desc }, disabled: ["<#{_('Choose')}>", nil]),
-                     "ng-model"                    => "emsCommonModel.provider_region",
-                     "id"                          => "ems_preferred_region",
-                     "required"                    => "",
-                     "checkchange"                 => "",
-                     "selectpicker-for-select-tag" => "")
+        - @provider_regions.each do |name, regions|
+          = select_tag('provider_region',
+                       options_for_select([["<#{_('Choose')}>", nil]] + regions, disabled: ["<#{_('Choose')}>", nil]),
+                       "ng-model"                    => "emsCommonModel.provider_region",
+                       "ng-switch-when"              => name,
+                       "required"                    => "",
+                       "checkchange"                 => "",
+                       "selectpicker-for-select-tag" => "")
 
     .form-group{"ng-class" => "{'has-error': angularForm.project.$invalid}", "ng-if" => "emsCommonModel.emstype == 'gce'"}
       %label.col-md-2.control-label{"for" => "ems_project"}

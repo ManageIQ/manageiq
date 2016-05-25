@@ -17,7 +17,12 @@ module AvailabilityMixin
 
   class_methods do
     def is_available?(request_type, *args)
-      send("validate_#{request_type}", *args)[:available]
+      validate_method = "validate_#{request_type}"
+      if respond_to?(validate_method)
+        send(validate_method, *args)[:available]
+      else
+        false
+      end
     end
 
     # Returns an error message string if there is an error.
@@ -25,6 +30,8 @@ module AvailabilityMixin
     def is_available_now_error_message(request_type, *args)
       send("validate_#{request_type}", *args)[:message]
     end
+
+    # FIXME: refactor validate_ call
   end
 
   included do
