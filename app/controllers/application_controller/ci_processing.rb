@@ -1945,7 +1945,7 @@ module ApplicationController::CiProcessing
     storages = []
 
     # Either a list or coming from a different controller (eg from host screen, go to its storages)
-    if @lastaction == "show_list" || @lastaction == 'storage_list'|| @layout != "storage"
+    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || @layout != "storage"
       storages = find_checked_items
 
       if method == 'scan' && !Storage.batch_operation_supported?('smartstate_analysis', storages)
