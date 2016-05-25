@@ -210,6 +210,11 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       ($scope.currentTab == "default" ||
       ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
+    } else if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype == "softlayer") &&
+        ($scope.emsCommonModel.default_userid != '' && $scope.angularForm.default_userid.$valid &&
+       $scope.emsCommonModel.default_password != '' && $scope.angularForm.default_password.$valid &&
+       $scope.emsCommonModel.default_verify != '' && $scope.angularForm.default_verify.$valid)) {
+      return true;
     }
 
     else
@@ -268,7 +273,9 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
   };
 
   $scope.isRegionSupported = function() {
-    if ($scope.emsCommonModel.emstype === 'ec2' || $scope.emsCommonModel.emstype === 'azure') {
+    if ($scope.emsCommonModel.emstype === 'ec2' ||
+        $scope.emsCommonModel.emstype === 'azure' ||
+        $scope.emsCommonModel.emstype === 'softlayer') {
       return true;
     }
 

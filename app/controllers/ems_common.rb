@@ -637,7 +637,7 @@ module EmsCommon
       @server_zones.push([zone.description, zone.name])
     end
     @ems_types = Array(model.supported_types_and_descriptions_hash.invert).sort_by(&:first)
-    @amazon_regions, @azure_regions, @google_regions = %w(Amazon Azure Google).map do |provider_name|
+    @amazon_regions, @azure_regions, @google_regions, @softlayer_regions = %w(Amazon Azure Google Softlayer).map do |provider_name|
       get_regions(provider_name)
     end
     @openstack_infra_providers = retrieve_openstack_infra_providers
