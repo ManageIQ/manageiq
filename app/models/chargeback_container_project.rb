@@ -8,6 +8,7 @@ class ChargebackContainerProject < Chargeback
     :project_uid          => :string,
     :provider_name        => :string,
     :provider_uid         => :string,
+    :archived             => :string,
     :cpu_used_cost        => :float,
     :cpu_used_metric      => :float,
     :fixed_compute_1_cost => :float,
@@ -67,8 +68,10 @@ class ChargebackContainerProject < Chargeback
       "project_name"  => project.name,
       "project_uid"   => project.ems_ref,
       "provider_name" => perf.parent_ems.name,
-      "provider_uid"  => perf.parent_ems.guid
+      "provider_uid"  => perf.parent_ems.guid,
+      "archived"      => project.archived? ? _("Yes") : _("No")
     }
+
     [key, extra_fields]
   end
 
