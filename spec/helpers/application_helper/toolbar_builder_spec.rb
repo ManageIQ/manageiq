@@ -109,7 +109,7 @@ describe ApplicationHelper do
           :items        => button_set_item1_items
         }
         group_name = "custom_buttons_#{@button_set.name}"
-        expect(build_custom_buttons_toolbar(subject).definition[group_name]).to eq([button_set_item1])
+        expect(build_custom_buttons_toolbar(subject).definition[group_name].buttons).to eq([button_set_item1])
       end
     end
 
