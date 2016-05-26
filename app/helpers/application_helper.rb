@@ -1316,14 +1316,14 @@ module ApplicationHelper
       img_attr = {:valign => "middle", :width => "16", :height => "16", :alt => nil}
       if row["state"].downcase == "finished" && row["status"]
         row_status = _("Status = %{row}") % {:row => row["status"].capitalize}
-        strsearch = row["message"].gsub!("cancel", "cancel")
-        if row["status"].downcase == "ok" && strsearch.nil?
+        cancel_msg = row["message"].include?('cancel')
+        if row["status"].downcase == "ok" && !cancel_msg
           image = "checkmark"
           img_attr.merge!(:title => row_status)
-        elsif row["status"].downcase == "error" || !strsearch.nil?
+        elsif row["status"].downcase == "error" || cancel_msg
           image = "x"
           img_attr.merge!(:title => row_status)
-        elsif row["status"].downcase == "warn" || !strsearch.nil?
+        elsif row["status"].downcase == "warn" || cancel_msg
           image = "warning"
           img_attr.merge!(:title => row_status)
         end
