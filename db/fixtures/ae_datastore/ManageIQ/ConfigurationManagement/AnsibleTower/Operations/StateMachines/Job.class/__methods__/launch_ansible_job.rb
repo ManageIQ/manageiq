@@ -6,6 +6,7 @@
 
 class LaunchAnsibleJob
   ANSIBLE_VAR_REGEX = Regexp.new(/(.*)=(.*$)/)
+  ANSIBLE_DIALOG_VAR_REGEX = Regexp.new(/dialog_param_(.*)/)
   SCRIPT_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript'.freeze
   JOB_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job'.freeze
 
@@ -36,8 +37,13 @@ class LaunchAnsibleJob
   def object_vars(object, ext_vars)
     key_list = object.attributes.keys.select { |k| k.start_with?('param', 'dialog_param') }
     key_list.each_with_object(ext_vars) do |key, hash|
-      match_data = ANSIBLE_VAR_REGEX.match(object[key])
-      hash[match_data[1].strip] ||= match_data[2] if match_data
+      if key.start_with?('param')
+        match_data = ANSIBLE_VAR_REGEX.match(object[key])
+        hash[match_data[1].strip] ||= match_data[2] if match_data
+      else
+        match_data = ANSIBLE_DIALOG_VAR_REGEX.match(key)
+        hash[match_data[1]] = object[key] if match_data
+      end
     end
   end
 

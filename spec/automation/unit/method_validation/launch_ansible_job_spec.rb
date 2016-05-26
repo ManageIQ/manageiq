@@ -69,6 +69,20 @@ describe LaunchAnsibleJob do
     expect(service.get_state_var(:ansible_job_id)).to eq(job.id)
   end
 
+  it "extra vars from dialog params" do
+    root_object['vm'] = svc_vm
+    root_object[:job_template_name] = job_template.name
+    ext_vars['x'] = '1'
+    ext_vars['y'] = '2'
+    job_args[:limit] = vm.name
+    current_object = MiqAeMockObject.new('dialog_param_x' => '1', 'dialog_param_y' => '2')
+    current_object.parent = root_object
+    service.object = current_object
+    expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
+    LaunchAnsibleJob.new(service).main
+    expect(service.get_state_var(:ansible_job_id)).to eq(job.id)
+  end
+
   it "use limit from job template" do
     root_object[:job_template_name] = job_template.name
     ext_vars['x'] = '1'
