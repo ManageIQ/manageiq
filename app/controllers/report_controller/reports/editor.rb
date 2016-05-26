@@ -1502,12 +1502,13 @@ module ReportController::Reports::Editor
         @edit[:cb_tags] = {}
         cat = Classification.find_by_name(@edit[:new][:cb_tag_cat])
         cat.entries.each { |e| @edit[:cb_tags][e.name] = e.description } if cat  # Collect the tags, if category is valid
+      elsif options.key?(:entity_id)
+        @edit[:new][:cb_show_typ] = "entity"
+        @edit[:new][:cb_entity_id] = options[:entity_id]
+        @edit[:new][:cb_provider_id] = options[:provider_id]
       end
 
-      @edit[:new][:cb_show_typ] = "entity"
       @edit[:new][:cb_model] = Chargeback.report_cb_model(@rpt.db)
-      @edit[:new][:cb_entity_id] = options[:entity_id]
-      @edit[:new][:cb_provider_id] = options[:provider_id]
       @edit[:new][:cb_interval] = options[:interval]
       @edit[:new][:cb_interval_size] = options[:interval_size]
       @edit[:new][:cb_end_interval_offset] = options[:end_interval_offset]

@@ -118,5 +118,48 @@ describe ReportController do
         expect(assigns(:tabs)).to include(["edit_1", ""])
       end
     end
+
+    describe "set_form_vars" do
+      let(:admin_user) { FactoryGirl.create(:user, :role => "super_administrator") }
+      let(:chargeback_report) do
+        FactoryGirl.create(:miq_report, :db => "ChargebackVm", :col_order => ["name"], :headers => ["Name"])
+      end
+
+      let(:fake_id) { 999_999_999 }
+
+      before do
+        login_as admin_user
+        controller.instance_variable_set(:@rpt, chargeback_report)
+        @edit_form_vars = {}
+        @edit_form_vars[:new] = {}
+        @edit_form_vars[:new][:name] = chargeback_report.name
+        @edit_form_vars[:new][:model] = chargeback_report.db
+        @edit_form_vars[:new][:fields] = []
+      end
+
+      it "sets proper UI var(cb_show_typ) for chargeback filters in chargeback report" do
+        %w(owner tenant tag entity).each do |show_typ|
+          chargeback_report.db_options = {}
+          chargeback_report.db_options[:options] = {}
+
+          case
+          when show_typ == "owner"
+            chargeback_report.db_options[:options] = {:owner => fake_id}
+          when show_typ == "tenant"
+            chargeback_report.db_options[:options] = {:tenant_id => fake_id}
+          when show_typ == "tag"
+            chargeback_report.db_options[:options] = {:tag => "/managed/prov_max_cpu/1"}
+          when show_typ == "entity"
+            chargeback_report.db_options[:options] = {:provider_id => fake_id, :entity_id => fake_id}
+          end
+
+          controller.instance_variable_set(:@rpt, chargeback_report)
+          controller.send(:set_form_vars)
+
+          displayed_edit_form = assigns(:edit)[:new]
+          expect(displayed_edit_form[:cb_show_typ]).to eq(show_typ)
+        end
+      end
+    end
   end
 end
