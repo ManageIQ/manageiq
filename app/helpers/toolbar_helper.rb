@@ -194,6 +194,7 @@ module ToolbarHelper
   def prepare_tag_keys(props)
     h = data_hash_keys(props)
     h.update('title'      => _(props[:title]),
+             'id'         => props[:id],
              'data-click' => props[:id])
     h['name'] = props[:name] if props.key?(:name)
     h['data-confirm-tb'] = _(props[:confirm]) if props.key?(:confirm)
