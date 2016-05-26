@@ -177,4 +177,8 @@ class Chargeback < ActsAsArModel
   def self.report_cb_model(model)
     model.gsub(/^Chargeback/, "")
   end
+
+  def self.db_is_chargeback?(db)
+    subclasses.collect(&:to_s).include?(db)
+  end
 end # class Chargeback
