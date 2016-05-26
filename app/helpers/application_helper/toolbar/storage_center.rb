@@ -34,8 +34,7 @@ class ApplicationHelper::Toolbar::StorageCenter < ApplicationHelper::Toolbar::Ba
           :storage_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"storages")}'),
-          N_('Edit Tags'),
-          :url_parms => "main_div",),
+          N_('Edit Tags')),
       ]
     ),
   ])
