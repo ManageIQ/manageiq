@@ -284,12 +284,11 @@ describe OpsController do
       before do
         miq_server = FactoryGirl.create(:miq_server)
         current = VMDB::Config.new("vmdb")
-        current.config[:authentication] = {:ldap_role         => true,
-                                           :get_direct_groups => true,
-                                           :mode              => 'ldap'
+        current.config[:authentication] = {:ldap_role => true,
+                                           :mode      => 'ldap'
         }
         edit = {:current => current,
-                :new     => current.config,
+                :new     => copy_hash(current.config),
                 :key     => "settings_authentication_edit__#{miq_server.id}"
         }
         controller.instance_variable_set(:@edit, edit)
