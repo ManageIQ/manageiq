@@ -228,16 +228,15 @@ module MiqReport::Generator
       unless conditions.nil?
         conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
         exp_sql, exp_includes = conditions.to_sql
-        where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
         # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
       end
 
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
       results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, klass)
-                              .where(where_clause).where(options[:where_clause])
+                              .where(where_clause).where(exp_sql).where(options[:where_clause])
                               .where(:timestamp => time_range)
-                              .includes(includes).references(includes)
+                              .includes(includes).includes(exp_includes || []).references(includes)
                               .limit(options[:limit])
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
@@ -251,11 +250,10 @@ module MiqReport::Generator
 
       # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
       exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
-      where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
 
       results = klass.with_interval_and_time_range(interval, time_range)
-                     .where(where_clause).where(options[:where_clause])
-                     .includes(includes).limit(options[:limit])
+                     .where(where_clause).where(options[:where_clause]).where(exp_sql)
+                     .includes(includes).includes(exp_includes || []).limit(options[:limit])
 
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
