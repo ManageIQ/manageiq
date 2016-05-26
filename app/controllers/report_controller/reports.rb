@@ -312,12 +312,12 @@ module ReportController::Reports
   def valid_chargeback_fields
     is_valid = false
     # There are valid show typ fields
-    if %w(owner tenant tag).include?(@edit[:new][:cb_show_typ])
+    if %w(owner tenant tag entity).include?(@edit[:new][:cb_show_typ])
       is_valid = case @edit[:new][:cb_show_typ]
                  when "owner" then @edit[:new][:cb_owner_id]
                  when "tenant" then @edit[:new][:cb_tenant_id]
                  when "tag" then @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
-                 when "entity" then @edit[:new][:cb_entity_id]
+                 when "entity" then @edit[:new][:cb_entity_id] && @edit[:new][:cb_provider_id]
                  end
     end
     is_valid
