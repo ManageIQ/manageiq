@@ -3,6 +3,7 @@ module StorageController::StorageD
   extend ActiveSupport::Concern
 
   def storage_tree_select
+    @lastaction = "explorer"
     _typ, id = params[:id].split("_")
     @record = Storage.find(from_cid(id))
   end

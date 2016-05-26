@@ -1945,7 +1945,7 @@ module ApplicationController::CiProcessing
     storages = []
 
     # Either a list or coming from a different controller (eg from host screen, go to its storages)
-    if @lastaction == "show_list" || @lastaction == 'storage_list'|| @layout != "storage"
+    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || @layout != "storage"
       storages = find_checked_items
 
       if method == 'scan' && !Storage.batch_operation_supported?('smartstate_analysis', storages)
@@ -1958,8 +1958,8 @@ module ApplicationController::CiProcessing
         process_storage(storages, method)
       end
 
-      if @lastaction == "show_list" || @lastaction == "explorer" # In storage controller, refresh show_list, else let the other controller handle it
-        show_list
+      if @lastaction == "show_list"
+        show_list unless @explorer
         @refresh_partial = "layouts/gtl"
       end
 
@@ -2011,7 +2011,7 @@ module ApplicationController::CiProcessing
   def deletestorages
     assert_privileges("storage_delete")
     datastores = []
-    if @lastaction == "show_list" || @lastaction == "storage_list" || (@lastaction == "show" && @layout != "storage")  # showing a list, scan all selected hosts
+    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || (@lastaction == "show" && @layout != "storage") # showing a list, scan all selected hosts
       datastores = find_checked_items
       if datastores.empty?
         add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "storage"), :task => display_name}, :error)
