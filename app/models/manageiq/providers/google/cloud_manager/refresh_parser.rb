@@ -314,6 +314,10 @@ module ManageIQ::Providers
         flavor_uid       = parse_uid_from_url(instance.machine_type)
         flavor           = @data_index.fetch_path(:flavors, flavor_uid)
 
+        # If the flavor isn't found in our index, check if it is a custom flavor
+        # that we have to get directly
+        flavor           = query_and_add_flavor(flavor_uid) if flavor.nil?
+
         zone_uid         = parse_uid_from_url(instance.zone)
         zone             = @data_index.fetch_path(:availability_zones, zone_uid)
 
@@ -488,6 +492,12 @@ module ManageIQ::Providers
         # returns the last component of the url
         uid = url.split('/')[-1]
         uid
+      end
+
+      def query_and_add_flavor(flavor_uid)
+        flavor = @connection.flavors.get(flavor_uid)
+        process_collection(flavor.to_miq_a, :flavors) { |f| parse_flavor(f) }
+        @data_index.fetch_path(:flavors, flavor_uid)
       end
     end
   end
