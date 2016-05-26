@@ -193,6 +193,7 @@ class PglogicalSubscription < ActsAsArModel
   def assert_valid_schemas!
     local_errors = EvmDatabase.check_schema
     raise local_errors if local_errors
+    find_password if password.nil?
     MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
       remote_errors = EvmDatabase.check_schema(conn)
       raise remote_errors if remote_errors
