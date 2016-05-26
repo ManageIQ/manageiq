@@ -1,6 +1,10 @@
 describe VmOrTemplate do
   include ArelSpecHelper
 
+  let(:vm)      { FactoryGirl.create(:vm_or_template) }
+  let(:ems)     { FactoryGirl.create(:ext_management_system) }
+  let(:storage) { FactoryGirl.create(:storage) }
+
   context ".event_by_property" do
     context "should add an EMS event" do
       before(:each) do
@@ -377,25 +381,6 @@ describe VmOrTemplate do
     end
   end
 
-  context "Status Methods" do
-    let(:vm)      { FactoryGirl.create(:vm_or_template) }
-    let(:ems)     { FactoryGirl.create(:ext_management_system) }
-    let(:storage) { FactoryGirl.create(:storage) }
-
-    context "with EMS" do
-      before { vm.ext_management_system = ems }
-      it { expect(vm).to be_active }
-    end
-
-    context "without EMS" do
-      it { expect(vm).to be_archived }
-      context "with storage" do
-        before { vm.storage = storage }
-        it { expect(vm).to be_orphaned }
-      end
-    end
-  end
-
   context ".refresh_ems queues refresh for proper class" do
     [:template_vmware, :vm_vmware].each do |vm_or_template|
       let(:instance) { FactoryGirl.create(vm_or_template) }
@@ -556,7 +541,7 @@ describe VmOrTemplate do
     expect(template.miq_provision_vms.collect(&:id)).to eq([vm.id])
   end
 
-  describe ".v_pct_free_disk_space" do
+  describe ".v_pct_free_disk_space (delegated to hardware)" do
     let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
     let(:hardware) { FactoryGirl.create(:hardware, :disk_free_space => 20, :disk_capacity => 100) }
 
@@ -610,23 +595,112 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".active" do
+    it "detects active" do
+      vm.update_attributes(:ext_management_system => ems)
+      expect(vm).to be_active
+      expect(virtual_column_sql_value(VmOrTemplate, "active")).to be true
+    end
+
+    it "detects non-active" do
+      vm.update_attributes(:ext_management_system => nil)
+      expect(vm).not_to be_active
+      expect(virtual_column_sql_value(VmOrTemplate, "active")).to be false
+    end
+  end
+
+  describe ".archived" do
+    it "detects archived" do
+      vm.update_attributes(:ext_management_system => nil, :storage => nil)
+      expect(vm).to be_archived
+      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be true
+    end
+
+    it "detects non-archived (has ems and storage)" do
+      vm.update_attributes(:ext_management_system => ems, :storage => storage)
+      expect(vm).not_to be_archived
+      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
+    end
+
+    it "detects non-archived (has ems)" do
+      vm.update_attributes(:ext_management_system => ems, :storage => nil)
+      expect(vm).not_to be_archived
+      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
+    end
+
+    it "detects non-archived (has storage)" do
+      vm.update_attributes(:ext_management_system => nil, :storage => storage)
+      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
+      expect(vm).not_to be_archived
+      vm.ext_management_system = nil
+    end
+  end
+
+  describe ".orphaned" do
+    it "detects orphaned" do
+      vm.update_attributes(:ext_management_system => nil, :storage => storage)
+      expect(vm).to be_orphaned
+      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be true
+    end
+
+    it "detects non-orphaned (ems and no storage)" do
+      vm.update_attributes(:ext_management_system => ems, :storage => nil)
+      expect(vm).not_to be_orphaned
+      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
+    end
+
+    it "detects non-orphaned (no storage)" do
+      vm.update_attributes(:ext_management_system => nil, :storage => nil)
+      expect(vm).not_to be_orphaned
+      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
+    end
+
+    it "detects non-orphaned (has ems)" do
+      vm.update_attributes(:ext_management_system => ems, :storage => storage)
+      expect(vm).not_to be_orphaned
+      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
+    end
+  end
+
   describe ".disconnected" do
     let(:vm) { FactoryGirl.create(:vm_vmware, :connection_state => "connected") }
     let(:vm2) { FactoryGirl.create(:vm_vmware, :connection_state => "disconnected") }
 
-    it "calculates in ruby" do
-      expect(vm.disconnected).to be_falsey
-      expect(vm2.disconnected).to be_truthy
+    it "detects nil" do
+      vm.update_attributes(:connection_state => nil)
+      expect(vm.disconnected).to be_truthy
+      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_truthy
     end
 
-    it "calculates in the database" do
-      vm.save
+    it "detects connected" do
+      expect(vm.disconnected).to be_falsey
       expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_falsey
     end
 
-    it "calculates in the database" do
+    it "detects disconnected" do
       vm2.save
+      expect(vm2.disconnected).to be_truthy
       expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_truthy
+    end
+  end
+
+  describe ".v_is_a_template" do
+    it "detects nil" do
+      vm.update_attribute(:template, nil) # sorry, but wanted a nil in there
+      expect(vm.v_is_a_template).to eq("False")
+      expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(false)
+    end
+
+    it "detects false" do
+      vm.update_attributes(:template => false)
+      expect(vm.v_is_a_template).to eq("False")
+      expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(false)
+    end
+
+    it "detects true" do
+      vm.update_attributes(:template => true)
+      expect(vm.v_is_a_template).to eq("True")
+      expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(true)
     end
   end
 

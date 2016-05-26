@@ -1372,26 +1372,35 @@ class VmOrTemplate < ApplicationRecord
     ems_id.nil? && storage_id.nil?
   end
   alias_method :archived, :archived?
-  virtual_attribute :archived, :boolean, :arel => ->(t) { t[:ems_id].eq(nil).and(t[:storage_id].eq(nil)) }
+  virtual_attribute :archived, :boolean, :arel => (lambda do |t|
+    t.grouping(t[:ems_id].eq(nil).and(t[:storage_id].eq(nil)))
+  end)
 
   def orphaned?
     ems_id.nil? && !storage_id.nil?
   end
   alias_method :orphaned, :orphaned?
-  virtual_attribute :orphaned, :boolean, :arel => ->(t) { t[:ems_id].eq(nil).and(t[:storage_id].not_eq(nil)) }
+  virtual_attribute :orphaned, :boolean, :arel => (lambda do |t|
+    t.grouping(t[:ems_id].eq(nil).and(t[:storage_id].not_eq(nil)))
+  end)
 
   def active?
     !archived? && !orphaned? && !retired? && !template?
   end
   alias_method :active, :active?
-  virtual_attribute :active, :boolean, :arel => (lambda do (t)
-    t[:ems_id].not_eq(nil).and(t[:retired].not_eq(true)).and(t[:template].not_eq(true))
+  # in sql nil != false ==> false
+  virtual_attribute :active, :boolean, :arel => (lambda do |t|
+    t.grouping(t[:ems_id].not_eq(nil)
+     .and(t[:retired].eq(nil).or(t[:retired].eq(t.create_false)))
+     .and(t[:template].eq(nil).or(t[:template].eq(t.create_false))))
   end)
 
   def disconnected?
     connection_state != "connected"
   end
-  virtual_attribute :disconnected, :boolean, :arel => ->(t) { t[:connection_state].not_eq("connected") }
+  virtual_attribute :disconnected, :boolean, :arel => (lambda do |t|
+    t.grouping(t[:connection_state].eq(nil).or(t[:connection_state].not_eq("connected")))
+  end)
   alias_method :disconnected, :disconnected?
 
   def normalized_state
@@ -1501,7 +1510,7 @@ class VmOrTemplate < ApplicationRecord
   # technically it is capitalized, but for sorting, not a concern
   # but we do need nil to become false
   virtual_attribute :v_is_a_template, :string, :arel => (lambda do |t|
-    Arel::Nodes::NamedFunction.new('COALESCE', [t[:template], Arel::Nodes.build_quoted("false")])
+    t.grouping(arel_coalesce([t[:template], t.create_false]))
   end)
 
   def v_datastore_path
@@ -1939,6 +1948,11 @@ class VmOrTemplate < ApplicationRecord
               :message   => "#{message_prefix} cannot be performed on orphaned #{self.class.model_suffix} VM."}
     end
     {:available => true,   :message => nil}
+  end
+
+  # this is verbose, helper for generating arel
+  def self.arel_coalesce(values)
+    Arel::Nodes::NamedFunction.new('COALESCE', values)
   end
 
   include DeprecatedCpuMethodsMixin
