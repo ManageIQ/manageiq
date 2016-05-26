@@ -1939,7 +1939,7 @@ class ApplicationController < ActionController::Base
     when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip"
       session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
     when "ems_middleware", "middleware_server", "middleware_deployment", "middleware_datasource", "middleware_topology"
-      session[:tab_url][:compute] = session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
+      session[:tab_url][:mdl] = inbound_url if %w(show show_list).include?(action_name)
     when "miq_request"
       session[:tab_url][:svc] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "vm"
       session[:tab_url][:compute] = session[:tab_url][:inf] = inbound_url if ["index"].include?(action_name) && request.parameters["typ"] == "host"
