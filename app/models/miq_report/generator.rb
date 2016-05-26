@@ -187,7 +187,6 @@ module MiqReport::Generator
     custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
 
     includes = get_include_for_find(include)
-    where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
 
     time_profile.tz ||= tz if time_profile # Default time zone in profile to report time zone
     ext_options = {:tz => tz, :time_profile => time_profile}
@@ -215,7 +214,7 @@ module MiqReport::Generator
         build_table(results, db, options)
       else
         results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.group_by_tags(
-          db_class.find_entries(ext_options).where(where_clause),
+          db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
           :category     => performance[:group_by_category],
           :cat_model    => options[:cat_model],
           :include      => includes
@@ -236,7 +235,8 @@ module MiqReport::Generator
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
       results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, klass)
-                              .where(where_clause).where(:timestamp => time_range)
+                              .where(where_clause).where(options[:where_clause])
+                              .where(:timestamp => time_range)
                               .includes(includes).references(includes)
                               .limit(options[:limit])
       results = Rbac.filtered(results, :class        => db,
@@ -254,7 +254,8 @@ module MiqReport::Generator
       where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
 
       results = klass.with_interval_and_time_range(interval, time_range)
-                     .where(where_clause).includes(includes).limit(options[:limit])
+                     .where(where_clause).where(options[:where_clause])
+                     .includes(includes).limit(options[:limit])
 
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
@@ -271,6 +272,7 @@ module MiqReport::Generator
       targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
       # TODO: add once only_cols is fixed
       # targets = targets.select(only_cols)
+      where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
 
       results, attrs = Rbac.search(
         options.merge(
