@@ -77,7 +77,8 @@ module ReportFormatter
               output << group_rows(save_val, mri.col_order.length, group_text)
             end
             save_val = d.data[mri.sortby[0]].to_s
-            group_text = d.data["display_range"] if mri.db == "Chargeback" && mri.sortby[0] == "start_date" # Chargeback, sort by date, but show range
+            # Chargeback, sort by date, but show range
+            group_text = d.data["display_range"] if Chargeback.db_is_chargeback?(db) && mri.sortby[0] == "start_date"
           end
 
           if row == 0
