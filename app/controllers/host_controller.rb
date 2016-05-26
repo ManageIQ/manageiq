@@ -228,6 +228,12 @@ class HostController < ApplicationController
     show_association('host_services', label, 'service', :host_services, SystemService, nil, condition)
   end
 
+  def host_cloud_services
+    @center_toolbar = 'host_cloud_services'
+    @no_checkboxes = false
+    show_association('host_cloud_services', _('Cloud Services'), 'service', :cloud_services, CloudService, nil, nil)
+  end
+
   def advanced_settings
     show_association('advanced_settings', _('Advanced Settings'), 'advancedsetting', :advanced_settings, AdvancedSetting)
   end
@@ -533,6 +539,7 @@ class HostController < ApplicationController
       edit_record if params[:pressed] == "host_edit"
       custom_buttons if params[:pressed] == "custom_button"
       prov_redirect if params[:pressed] == "host_miq_request_new"
+      toggleservicescheduling if params[:pressed] == "host_cloud_service_scheduling_toggle"
 
       # Handle Host power buttons
       if ["host_shutdown", "host_reboot", "host_standby", "host_enter_maint_mode", "host_exit_maint_mode",

@@ -923,6 +923,10 @@
       :description: Restart a Host / Node
       :feature_type: control
       :identifier: host_reboot
+    - :name: Cloud Service Scheduling toggle
+      :description: Cloud Service Scheduling toggle
+      :feature_type: control
+      :identifier: host_cloud_service_scheduling_toggle
   - :name: Modify
     :description: Modify Hosts / Nodes
     :feature_type: admin

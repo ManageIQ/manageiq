@@ -4,6 +4,8 @@ class CloudService < ApplicationRecord
   belongs_to :system_service
   belongs_to :availability_zone
 
+  alias_attribute :name, :executable_name
+
   def fog_service
     connection_options = {:service => source}
     ext_management_system.with_provider_connection(connection_options) do |service|

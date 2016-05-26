@@ -53,6 +53,10 @@ module HostHelper::TextualSummary
     textual_authentications(@record.authentication_userid_passwords + @record.authentication_key_pairs)
   end
 
+  def textual_group_cloud_services
+    textual_openstack_nova_scheduler if @record.openstack_host?
+  end
+
   def textual_group_openstack_status
     return nil unless @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::Host)
     textual_generate_openstack_status
@@ -500,6 +504,19 @@ module HostHelper::TextualSummary
     attrs = @record.ems_custom_attributes
     return nil if attrs.blank?
     attrs.collect { |a| {:label => a.name, :value => a.value} }
+  end
+
+  def textual_openstack_nova_scheduler
+    {:label => _("Openstack Nova Scheduler"), :value => openstack_nova_scheduler_value,
+     :link => url_for(:controller => controller.controller_name, :action => 'host_cloud_services', :id => @record)}
+  end
+
+  def openstack_nova_scheduler_value
+    return _("Not available. Did you assigned Cloud Provider and run SSA?") if @record.cloud_services.empty?
+    "%{enabled_cnt} Enabled / %{disabled_cnt} Disabled " % {
+      :enabled_cnt  => @record.cloud_services.where(:scheduling_disabled => false).count,
+      :disabled_cnt => @record.cloud_services.where(:scheduling_disabled => true).count
+    }
   end
 
   def host_title
