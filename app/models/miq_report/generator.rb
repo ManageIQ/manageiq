@@ -214,11 +214,10 @@ module MiqReport::Generator
         results, self.extras[:interval]  = db_class.vms_by_category(performance)
         build_table(results, db, options)
       else
-        results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.find_and_group_by_tags(
-          :where_clause => where_clause,
+        results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.group_by_tags(
+          db_class.find_entries(ext_options).where(where_clause),
           :category     => performance[:group_by_category],
           :cat_model    => options[:cat_model],
-          :ext_options  => ext_options,
           :include      => includes
         )
         build_correlate_tag_cols
