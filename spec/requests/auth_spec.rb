@@ -20,6 +20,12 @@ describe "Login process" do
       expect(session[:start_url]).to eq('http://www.example.com/host/show/10')
     end
 
+    it "redirects to 'login' and sets start_url for main menu click" do
+      get '/dashboard/maintab/?tab=svc'
+      expect(response).to redirect_to(:controller => 'dashboard', :action => 'login', :timeout => false)
+      expect(session[:start_url]).to eq('http://www.example.com/dashboard/maintab?tab=svc')
+    end
+
     it "allows login with correct password" do
       post '/dashboard/authenticate', :params => { :user_name => user.userid, :user_password => 'smartvm' }
       expect(response.status).to eq(200)
