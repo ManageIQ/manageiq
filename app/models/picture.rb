@@ -1,6 +1,5 @@
 class Picture < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
-  include ReportableMixin
 
   virtual_has_one :image_href, :class_name => "String"
 

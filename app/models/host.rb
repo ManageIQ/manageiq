@@ -105,7 +105,6 @@ class Host < ApplicationRecord
   has_many :filesystems_custom_attributes, :through => :filesystems, :source => 'custom_attributes'
 
   acts_as_miq_taggable
-  include ReportableMixin
 
   virtual_column :os_image_name,                :type => :string,      :uses => [:operating_system, :hardware]
   virtual_column :platform,                     :type => :string,      :uses => [:operating_system, :hardware]

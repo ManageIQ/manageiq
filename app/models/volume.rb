@@ -8,8 +8,6 @@ class Volume < ApplicationRecord
       .where("#{v}.id" => id).to_sql
   }, :foreign_key => :volume_group
 
-  include ReportableMixin
-
   virtual_column :free_space_percent, :type => :float
   virtual_column :used_space_percent, :type => :float
 

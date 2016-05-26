@@ -3,7 +3,6 @@ class OrchestrationStack < ApplicationRecord
   require_nested :Status
 
   include NewWithTypeStiMixin
-  include ReportableMixin
   include AsyncDeleteMixin
   include ProcessTasksMixin
   include_concern 'RetirementManagement'

@@ -1,7 +1,5 @@
 class FloatingIp < ApplicationRecord
   include NewWithTypeStiMixin
-  include ReportableMixin
-
   acts_as_miq_taggable
 
   # TODO(lsmola) NetworkManager, once all providers use network manager rename this to

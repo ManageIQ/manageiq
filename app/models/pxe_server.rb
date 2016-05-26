@@ -2,7 +2,6 @@ class PxeServer < ApplicationRecord
   autoload :WimParser, "win32/wim_parser" # via gems/pending
 
   include FileDepotMixin
-  include ReportableMixin
 
   alias_attribute :description, :name
 

@@ -6,8 +6,6 @@ class MiqProvisionRequest < MiqRequest
 
   delegate :my_zone, :to => :source
 
-  include ReportableMixin
-
   TASK_DESCRIPTION  = 'VM Provisioning'
   SOURCE_CLASS_NAME = 'Vm'
   ACTIVE_STATES     = %w(migrated) + base_class::ACTIVE_STATES

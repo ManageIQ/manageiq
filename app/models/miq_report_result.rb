@@ -24,8 +24,6 @@ class MiqReportResult < ApplicationRecord
     end
   end
 
-  include ReportableMixin
-
   delegate :table, :to => :report_results, :allow_nil => true
 
   def result_set

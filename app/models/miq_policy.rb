@@ -4,7 +4,6 @@ class MiqPolicy < ApplicationRecord
   acts_as_miq_taggable
   acts_as_miq_set_member
   include_concern 'ImportExport'
-  include ReportableMixin
 
   include UuidMixin
   include YAMLImportExportMixin

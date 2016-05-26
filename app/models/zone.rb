@@ -19,8 +19,6 @@ class Zone < ApplicationRecord
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
   virtual_has_many :vms_and_templates,  :uses => {:ext_management_systems => :vms_and_templates}
 
-  include ReportableMixin
-
   before_destroy :check_zone_in_use_on_destroy
   after_save     :queue_ntp_reload_if_changed
 

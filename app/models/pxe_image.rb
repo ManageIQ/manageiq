@@ -5,8 +5,6 @@ class PxeImage < ApplicationRecord
 
   has_many :customization_templates, :through => :pxe_image_type
 
-  include ReportableMixin
-
   before_validation do
     if self.default_for_windows_changed? && self.default_for_windows?
       pxe_server.pxe_images.where(:default_for_windows => true).update_all(:default_for_windows => false)

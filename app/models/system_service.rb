@@ -8,8 +8,6 @@ class SystemService < ApplicationRecord
 
   serialize :dependencies, Hash
 
-  include ReportableMixin
-
   SVC_TYPES = {
     # Type     Display
     ""    => "",

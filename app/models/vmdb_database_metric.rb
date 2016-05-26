@@ -3,5 +3,4 @@ class VmdbDatabaseMetric < ApplicationRecord
 
   VmdbMetric # Eager load VmdbMetric class to allow access to VmdbMetric::Purging
   include_concern 'VmdbMetric::Purging'
-  include ReportableMixin
 end

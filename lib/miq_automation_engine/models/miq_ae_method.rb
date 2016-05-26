@@ -19,8 +19,6 @@ class MiqAeMethod < ApplicationRecord
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
 
-  include ReportableMixin
-
   def self.available_languages
     AVAILABLE_LANGUAGES
   end

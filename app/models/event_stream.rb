@@ -18,6 +18,4 @@ class EventStream < ApplicationRecord
   belongs_to :dest_host,           :class_name => "Host"
 
   belongs_to :service
-
-  include ReportableMixin
 end

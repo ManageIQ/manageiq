@@ -3,7 +3,6 @@ class RegistryItem < ApplicationRecord
   belongs_to :miq_set    # ScanItemSet
   belongs_to :scan_item
 
-  include ReportableMixin
   include FilterableMixin
 
   def self.add_elements(miq_set, scan_item, vm, xmlNode)

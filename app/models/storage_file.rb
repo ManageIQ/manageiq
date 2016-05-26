@@ -4,8 +4,6 @@ class StorageFile < ApplicationRecord
   belongs_to :vm,           :foreign_key => :vm_or_template_id
   belongs_to :miq_template, :foreign_key => :vm_or_template_id
 
-  include ReportableMixin
-
   virtual_column :v_size_numeric, :type => :integer
 
   def self.is_snapshot_disk_file(file)

@@ -1,7 +1,6 @@
 class EmsCluster < ApplicationRecord
   include NewWithTypeStiMixin
   include_concern 'CapacityPlanning'
-  include ReportableMixin
   include EventMixin
   include VirtualTotalMixin
 

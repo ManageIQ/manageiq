@@ -26,7 +26,6 @@ class MiqWidget < ApplicationRecord
   serialize :options
 
   include_concern 'ImportExport'
-  include ReportableMixin
   include UuidMixin
   include YAMLImportExportMixin
   acts_as_miq_set_member

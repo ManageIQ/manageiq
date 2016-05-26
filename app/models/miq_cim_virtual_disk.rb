@@ -1,9 +1,6 @@
 class MiqCimVirtualDisk < MiqCimInstance
-  include ReportableMixin
-
   virtual_has_one   :cim_datastore,     :class_name => 'MiqCimDatastore'
   virtual_has_one   :storage,       :class_name => 'Storage'
-
   virtual_has_one   :cim_vm,        :class_name => 'MiqCimVirtualMachine'
   virtual_has_one   :vm,          :class_name => 'Vm'
   virtual_has_many  :hosts,         :class_name => 'Host'

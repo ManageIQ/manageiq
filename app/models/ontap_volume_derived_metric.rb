@@ -1,6 +1,4 @@
 class OntapVolumeDerivedMetric < ApplicationRecord
-  include ReportableMixin
-
   belongs_to    :miq_cim_instance
   belongs_to    :miq_storage_metric
   belongs_to    :storage_metrics_metadata

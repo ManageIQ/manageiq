@@ -8,8 +8,6 @@ class LdapUser < ApplicationRecord
 
   acts_as_miq_taggable
 
-  include ReportableMixin
-
   DEFAULT_MAPPING = {
     :givenname                  => :first_name,
     :sn                         => :last_name,

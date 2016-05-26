@@ -2,7 +2,6 @@ require 'io/wait'
 
 class MiqWorker < ApplicationRecord
   include UuidMixin
-  include ReportableMixin
 
   before_destroy :log_destroy_of_worker_messages
 

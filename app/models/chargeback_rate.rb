@@ -1,6 +1,5 @@
 class ChargebackRate < ApplicationRecord
   include UuidMixin
-  include ReportableMixin
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :storage, :ext_management_system, :my_enterprise]
 

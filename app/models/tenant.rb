@@ -5,7 +5,6 @@ class Tenant < ApplicationRecord
   HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
   DEFAULT_URL = nil
 
-  include ReportableMixin
   include ActiveVmAggregationMixin
 
   acts_as_miq_taggable

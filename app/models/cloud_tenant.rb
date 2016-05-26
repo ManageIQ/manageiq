@@ -1,5 +1,4 @@
 class CloudTenant < ApplicationRecord
-  include ReportableMixin
   include NewWithTypeStiMixin
   include VirtualTotalMixin
 

@@ -31,7 +31,6 @@ class MiqAction < ApplicationRecord
 
   acts_as_miq_taggable
   acts_as_miq_set_member
-  include ReportableMixin
 
   has_many :miq_policy_contents
 

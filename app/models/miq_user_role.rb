@@ -19,8 +19,6 @@ class MiqUserRole < ApplicationRecord
 
   before_destroy { |r| raise _("Read only roles cannot be deleted.") if r.read_only }
 
-  include ReportableMixin
-
   FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
 

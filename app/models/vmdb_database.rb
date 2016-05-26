@@ -7,7 +7,6 @@ class VmdbDatabase < ApplicationRecord
   virtual_has_many :vmdb_database_settings
   virtual_has_many :vmdb_database_connections
 
-  include ReportableMixin
   include VmdbDatabaseMetricsMixin
 
   include_concern 'VmdbDatabase::MetricCapture'

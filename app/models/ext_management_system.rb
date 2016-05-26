@@ -81,12 +81,8 @@ class ExtManagementSystem < ApplicationRecord
   acts_as_miq_taggable
 
   include FilterableMixin
-  include ReportableMixin
-
   include EventMixin
-
   include MiqPolicyMixin
-
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 

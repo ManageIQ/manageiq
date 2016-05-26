@@ -1,5 +1,4 @@
 class Container < ApplicationRecord
-  include ReportableMixin
   include NewWithTypeStiMixin
 
   has_one    :container_group, :through => :container_definition

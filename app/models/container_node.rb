@@ -1,5 +1,4 @@
 class ContainerNode < ApplicationRecord
-  include ReportableMixin
   include NewWithTypeStiMixin
 
   # :name, :uid, :creation_timestamp, :resource_version

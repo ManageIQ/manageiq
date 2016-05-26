@@ -8,7 +8,6 @@ class Dialog < ApplicationRecord
   validate :validate_children
 
   include DialogMixin
-  include ReportableMixin
   has_many   :resource_actions
   virtual_has_one :content, :class_name => "Hash"
 

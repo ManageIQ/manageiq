@@ -1,6 +1,5 @@
 class CloudVolumeSnapshot < ApplicationRecord
   include NewWithTypeStiMixin
-  include ReportableMixin
   include VirtualTotalMixin
 
   acts_as_miq_taggable

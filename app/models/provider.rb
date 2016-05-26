@@ -1,7 +1,6 @@
 class Provider < ApplicationRecord
   include NewWithTypeStiMixin
   include AuthenticationMixin
-  include ReportableMixin
   include AsyncDeleteMixin
   include EmsRefresh::Manager
   include TenancyMixin

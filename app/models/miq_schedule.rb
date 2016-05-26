@@ -3,8 +3,6 @@ class MiqSchedule < ApplicationRecord
   validates_presence_of   :name, :description, :towhat, :run_at
   validate                :validate_run_at, :validate_file_depot
 
-  include ReportableMixin
-
   before_save :set_start_time_and_prod_default
 
   virtual_column :v_interval_unit, :type => :string

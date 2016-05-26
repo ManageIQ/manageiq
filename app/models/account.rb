@@ -2,7 +2,6 @@ class Account < ApplicationRecord
   belongs_to :vm_or_template
   belongs_to :host
 
-  include ReportableMixin
   include RelationshipMixin
   self.default_relationship_type = "accounts"
 

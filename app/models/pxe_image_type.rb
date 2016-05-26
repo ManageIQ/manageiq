@@ -1,5 +1,4 @@
 class PxeImageType < ApplicationRecord
-  include ReportableMixin
   has_many :customization_templates
   has_many :pxe_images
   has_many :windows_images

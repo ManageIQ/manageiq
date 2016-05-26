@@ -25,8 +25,6 @@ class MiqAlert < ApplicationRecord
     BASE_TABLES
   end
 
-  include ReportableMixin
-
   acts_as_miq_set_member
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]
