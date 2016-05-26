@@ -129,18 +129,6 @@ module ApplicationController::Buttons
     end
   end
 
-  # AJAX routine for user selected
-  def button_select
-    render :update do |page|
-      page << javascript_prologue
-      if params[:id] == "new"
-        page.redirect_to :action => 'button_new'    # redirect to new
-      else
-        page.redirect_to :action => 'button_edit', :id => params[:id], :field => params[:field]   # redirect to edit
-      end
-    end
-  end
-
   # AJAX driven routine to delete a user
   def ab_button_delete
     assert_privileges("ab_button_delete")

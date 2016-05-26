@@ -107,7 +107,11 @@ class MiqAeCustomizationController < ApplicationController
     @trees = []
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
     @explorer = true
+
     build_resolve_screen
+
+    # service dialog edit abandoned
+    self.x_active_tree = :dialogs_tree if x_active_tree == :dialog_edit_tree
 
     build_accordions_and_trees
 
