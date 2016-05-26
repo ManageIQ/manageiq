@@ -183,5 +183,32 @@ module MiqAeEventSpec
         end
       end
     end
+
+    describe '.build_evm_event' do
+      let(:host) { FactoryGirl.create(:host_vmware_esx, :ext_management_system => ems) }
+      let(:ems_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems) }
+
+      it 'has no object in attrs sent to queue' do
+        FactoryGirl.create(:miq_event_definition, :name => 'host_add_to_cluster')
+        args = {
+          :user_id      => admin.id,
+          :miq_group_id => ems.tenant.default_miq_group.id,
+          :tenant_id    => ems.tenant.id,
+          :attrs        => {
+            :event_type                 => "host_add_to_cluster",
+            "Host::host"                => host.id,
+            :host_id                    => host.id,
+            "EmsCluster::ems_cluster"   => ems_cluster.id,
+            :ems_cluster_id             => ems_cluster.id,
+            "MiqEvent::miq_event"       => be_kind_of(Integer),
+            :miq_event_id               => be_kind_of(Integer),
+            "EventStream::event_stream" => be_kind_of(Integer),
+            :event_stream_id            => be_kind_of(Integer)
+          },
+        }
+        expect(MiqAeEngine).to receive(:deliver_queue).with(hash_including(args), anything)
+        MiqEvent.raise_evm_event(host, "host_add_to_cluster", :ems_cluster => ems_cluster, :host => host)
+      end
+    end
   end
 end
