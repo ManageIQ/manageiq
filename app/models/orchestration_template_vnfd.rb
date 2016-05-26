@@ -9,9 +9,11 @@ class OrchestrationTemplateVnfd < OrchestrationTemplate
     vnfd_data = {:attributes    => {:vnfd => content},
                  :service_types => [{:service_type => "vnfd"}],
                  :mgmt_driver   => "noop",
-                 :infra_driver  => "heat",
-                 :name          => name,
-                 :description   => description}
+                 :infra_driver  => "heat"}
+
+    vnfd_data[:name] = name unless name.blank?
+    vnfd_data[:description] = description unless description.blank?
+
     connection_options = {:service => "NFV"}
     ext_management_system.with_provider_connection(connection_options) do |service|
       self.ems_ref = service.vnfds.create(:vnfd => vnfd_data, :auth => {}).id
