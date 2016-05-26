@@ -18,9 +18,8 @@
                   %td{:valign => "bottom", :width => "5", :style => "padding-top: #{@gtl_small_tiles ? 80 : 0}px;"}
                     - unless @embedded || @no_checkboxes
                       = check_box_tag("check_#{to_cid(@id)}", 1, false,
-                        :id      => "listcheckbox",
-                        :class   => "list-grid-checkbox",
-                        :onclick => "miqGridOnCheck(this, '#{button_div}', 'gtl_div');")
+                                      :class   => "listcheckbox list-grid-checkbox",
+                                      :onclick => "miqGridOnCheck(this, '#{button_div}', 'gtl_div');")
                   %td
                     = render_quadicon(item, :mode => :icon)
                 %tr

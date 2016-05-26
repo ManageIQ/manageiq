@@ -60,7 +60,7 @@
           %td.narrow
             = check_box_tag("check_server_#{update.id}", 1,
                             update.checked,
-                            :id => 'listcheckbox',
+                            :class => 'listcheckbox',
                             :onclick => "miqUpdateButtons(this,'rhn_buttons');")
           %td= update.name
           %td= update.zone
