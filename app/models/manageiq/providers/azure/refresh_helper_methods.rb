@@ -18,10 +18,22 @@ module ManageIQ::Providers::Azure::RefreshHelperMethods
     keys.join('\\')
   end
 
-  def gather_data_for_this_region(arm_service, method = "list")
-    resource_groups.collect do |resource_group|
-      arm_service.send(method, resource_group.name)
-    end.flatten
+  # For those resources without a location, default to the location of
+  # their resource group.
+  #
+  def gather_data_for_this_region(arm_service, method_name = 'list_all')
+    if method_name.to_s == 'list_all'
+      arm_service.send(method_name).select do |resource|
+        resource.location == @ems.provider_region
+      end.flatten
+    else
+      resource_groups.collect do |resource_group|
+        arm_service.send(method_name, resource_group.name).select do |resource|
+          location = resource.respond_to?(:location) ? resource.location : resource_group.location
+          location == @ems.provider_region
+        end
+      end.flatten
+    end
   end
 
   def resource_groups
