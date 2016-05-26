@@ -13,6 +13,10 @@ class TreeBuilderStorage < TreeBuilder
     )
   end
 
+  def root_options
+    [t = _("All Datastores"), t]
+  end
+
   def x_get_tree_roots(count_only, _options)
     objects =
       [

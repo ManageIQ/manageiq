@@ -16,6 +16,10 @@ class TreeBuilderReportSchedules < TreeBuilder
     )
   end
 
+  def root_options
+    [t = _("All Schedules"), t, :miq_schedule]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     if User.current_user.current_group.miq_user_role.name.split('-').last == 'super_administrator'

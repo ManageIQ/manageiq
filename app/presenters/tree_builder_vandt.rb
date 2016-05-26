@@ -3,6 +3,19 @@ class TreeBuilderVandt < TreeBuilder
     {:leaf => 'VmOrTemplate'}
   end
 
+  def set_locals_for_render
+    locals = super
+    locals.merge!(
+      :id_prefix         => "vt_",
+      :no_getitem_alerts => true,
+      :autoload          => true
+    )
+  end
+
+  def root_options
+    [_("All VMs & Templates"), _("All VMs & Templates that I can see")]
+  end
+
   def x_get_tree_roots(count_only, options)
     objects = rbac_filtered_objects(EmsInfra.order("lower(name)"), :match_via_descendants => VmOrTemplate)
 
@@ -16,15 +29,6 @@ class TreeBuilderVandt < TreeBuilder
         {:id => "orph", :text => _("<Orphaned>"), :image => "currentstate-orphaned", :tip => _("Orphaned VMs and Templates")}
       ]
     end
-  end
-
-  def set_locals_for_render
-    locals = super
-    locals.merge!(
-      :id_prefix         => "vt_",
-      :no_getitem_alerts => true,
-      :autoload          => true
-    )
   end
 
   # Handle custom tree nodes (object is a Hash)

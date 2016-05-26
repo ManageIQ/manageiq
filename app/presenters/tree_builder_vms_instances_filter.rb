@@ -11,4 +11,8 @@ class TreeBuilderVmsInstancesFilter < TreeBuilderVmsFilter
       :id_prefix => "vf_",
     )
   end
+
+  def root_options
+    [_("All VMs & Instances"), _("All of the VMs & Instances that I can see")]
+  end
 end

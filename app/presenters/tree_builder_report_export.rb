@@ -17,6 +17,10 @@ class TreeBuilderReportExport < TreeBuilder
     )
   end
 
+  def root_options
+    [t = _("Import / Export"), t, :report]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     export_children = [

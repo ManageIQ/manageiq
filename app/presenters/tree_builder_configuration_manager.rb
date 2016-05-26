@@ -15,6 +15,10 @@ class TreeBuilderConfigurationManager < TreeBuilder
     locals.merge!(:id_prefix => 'pt_', :autoload => true)
   end
 
+  def root_options
+    [t = _("All Configuration Manager Providers"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []

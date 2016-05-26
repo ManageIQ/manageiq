@@ -12,4 +12,8 @@ class TreeBuilderImagesFilter < TreeBuilderVmsFilter
       :autoload  => false
     )
   end
+
+  def root_options
+    [_("All Images"), _("All of the Images that I can see")]
+  end
 end

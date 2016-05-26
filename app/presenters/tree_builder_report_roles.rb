@@ -16,6 +16,16 @@ class TreeBuilderReportRoles < TreeBuilder
     )
   end
 
+  def root_options
+    user = User.current_user
+    if user.super_admin_user?
+      title = _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
+    else
+      title = _("My %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
+    end
+    [title, title, :miq_group]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     user  = User.current_user

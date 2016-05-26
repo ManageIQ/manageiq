@@ -12,4 +12,8 @@ class TreeBuilderCatalogs < TreeBuilderCatalogsClass
       :autoload  => 'true',
     )
   end
+
+  def root_options
+    [t = _("All Catalogs"), t]
+  end
 end

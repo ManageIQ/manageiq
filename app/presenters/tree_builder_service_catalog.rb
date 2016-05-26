@@ -16,6 +16,10 @@ class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
     )
   end
 
+  def root_options
+    [t = _("All Services"), t]
+  end
+
   def x_get_tree_roots(count_only, _options)
     objects = rbac_filtered_objects(ServiceTemplateCatalog.all).sort_by { |o| o.name.downcase }
     filtered_objects = []

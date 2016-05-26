@@ -18,6 +18,10 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
     )
   end
 
+  def root_options
+    [t = _("VMDB"), t, :miq_database]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = rbac_filtered_objects(VmdbDatabase.my_database.evm_tables).sort { |a, b| a.name.downcase <=> b.name.downcase }

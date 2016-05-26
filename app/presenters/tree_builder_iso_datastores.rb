@@ -15,6 +15,10 @@ class TreeBuilderIsoDatastores < TreeBuilder
     )
   end
 
+  def root_options
+    [t = _("All ISO Datastores"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     count_only_or_objects(count_only, IsoDatastore.all, "name")

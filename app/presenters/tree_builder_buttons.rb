@@ -7,6 +7,10 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
     {:leaf => "CustomButton", :open_all => true, :full_ids => true}
   end
 
+  def root_options
+    [t = _("Object Types"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(_count_only, _options)
     resolve = {}

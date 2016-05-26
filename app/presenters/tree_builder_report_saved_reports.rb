@@ -16,6 +16,10 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
     )
   end
 
+  def root_options
+    [t = _("All Saved Reports"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     folder_ids = {}
