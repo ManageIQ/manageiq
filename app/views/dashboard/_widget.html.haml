@@ -1,14 +1,15 @@
 -# Parameters:
 -# widget MiqWidget object
+- button_id = "btn_#{presenter.widget.id}"
 %div{:id => "w_#{presenter.widget.id}"}
   .card-pf
     .card-pf-heading
       %h2.card-pf-title.sortable-handle{:style => "cursor:move"}
         = h(presenter.widget.title)
         .dropdown.dropdown-kebab-pf.pull-right
-          %button.btn.btn-link.dropdown-toggle{:type => "button", :id => "dropdownKebab", "data-toggle" => "dropdown"}
+          %button.btn.btn-link.dropdown-toggle{:type => "button", :id => button_id, "data-toggle" => "dropdown"}
             %span.fa.fa-ellipsis-v
-          %ul.dropdown-menu{"aria-labelledby" => "dropdownKebab"}
+          %ul.dropdown-menu{"aria-labelledby" => button_id}
             - if role_allows(:feature => "dashboard_add")
               %li
                 = presenter.button_close
