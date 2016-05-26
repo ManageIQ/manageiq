@@ -90,12 +90,12 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :orchestration_stack_parameter => 138,
       :orchestration_stack_output    => 7,
       :orchestration_stack_resource  => 42,
-      :security_group                => 6,
-      :network_port                  => 9,
-      :cloud_network                 => 4,
-      :floating_ip                   => 9,
+      :security_group                => 8,
+      :network_port                  => 10,
+      :cloud_network                 => 6,
+      :floating_ip                   => 11,
       :network_router                => 0,
-      :cloud_subnet                  => 4,
+      :cloud_subnet                  => 6,
     }
   end
 

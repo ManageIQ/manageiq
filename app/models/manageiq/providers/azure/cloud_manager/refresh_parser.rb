@@ -79,7 +79,7 @@ module ManageIQ::Providers
       def get_stacks
         # deployments are realizations of a template in the Azure provider
         # they are parsed and converted to stacks in vmdb
-        deployments = gather_data_for_this_region(@tds)
+        deployments = gather_data_for_this_region(@tds, 'list')
         process_collection(deployments, :orchestration_stacks) { |dp| parse_stack(dp) }
         update_nested_stack_relations
       end
@@ -148,7 +148,7 @@ module ManageIQ::Providers
       end
 
       def get_images
-        images = gather_data_for_this_region(@sas, "list_private_images")
+        images = gather_data_for_this_region(@sas, 'list_private_images')
         process_collection(images, :vms) { |image| parse_image(image) }
       end
 
