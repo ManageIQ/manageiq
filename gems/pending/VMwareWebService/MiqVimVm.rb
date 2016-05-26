@@ -738,7 +738,7 @@ class MiqVimVm
     # - persistent is set to true to be backward compatible
     # - thin_provisioned is set to false explicitly since we call to_s on it further, so nil will not work for us
     options = {:persistent => true, :thin_provisioned => false}.merge(options)
-    ck, un = getScsiCandU
+    ck, un = available_scsi_units.first
     raise "addDisk: no SCSI controller found" unless ck
 
     vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
@@ -899,10 +899,6 @@ class MiqVimVm
 
     scsi_controller_bus_numbers
   end
-
-  def getScsiCandU
-    available_scsi_units.first
-  end # def getScsiCandU
 
   #
   # Returns the [controllerKey, key] pair for the virtul device
