@@ -215,6 +215,8 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
 
     if git_url.blank?
       add_flash(_("Please provide a valid git URL"), :error)
+    elsif !MiqRegion.my_region.role_active?("git_owner")
+      add_flash(_("Git Owner role not enabled, enable it in Settings -> Configuration"), :error)
     else
       git_repo = GitRepository.create(:url => git_url)
       git_repo.update_authentication(:values => {:userid => params[:git_username], :password => params[:git_password]})

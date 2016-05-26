@@ -5,6 +5,7 @@ module ApplicationHelper
   include_concern 'PageLayouts'
   include_concern 'FormTags'
   include_concern 'Tasks'
+  include_concern 'AutomateImportExport'
   include Sandbox
   include CompressedIds
   include JsHelper
