@@ -15,7 +15,7 @@ describe TreeBuilder do
       sb[:trees].key?(:cb_rates_tree)
     end
   end
-  
+
   context "title_and_tip" do
     it "sets title and tooltip for the passed in root node" do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
