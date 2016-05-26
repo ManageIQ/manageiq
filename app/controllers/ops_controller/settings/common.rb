@@ -732,11 +732,11 @@ module OpsController::Settings::Common
       if params[:authentication_mode] && params[:authentication_mode] != auth[:mode]
         if params[:authentication_mode] == "ldap"
           params[:authentication_ldapport] = "389"
-          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:get_direct_groups]
+          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:ldap_role]
           @authldapport_reset = true
         elsif params[:authentication_mode] == "ldaps"
           params[:authentication_ldapport] = "636"
-          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:get_direct_groups]
+          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:ldap_role]
           @authldapport_reset = true
         else
           @sb[:newrole] = auth[:ldap_role] = false    # setting it to false if database was selected to hide user_proxies box
