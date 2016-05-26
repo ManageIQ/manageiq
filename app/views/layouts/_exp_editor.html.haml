@@ -8,7 +8,7 @@
 
 #exp_editor_div
   %fieldset{:style => "width: auto; padding-left: 6px; padding-top: 6px"}
-    %ul#searchtoolbar
+    %ul.searchtoolbar
       - if @edit[@expkey][:exp_idx] > 0
         %li
           = link_to(image_tag(image_path('toolbars/undo.png'),

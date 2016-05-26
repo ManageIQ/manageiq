@@ -59,10 +59,10 @@ nobr { white-space: nowrap;}
 
 /************ Tabs ************/
 
-ul#searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px;}
-#searchtoolbar li { margin-right: 7px;padding: 0 4px 1px 4px; height:22px; width: 30px;float: left;display: inline;border: 1px solid #7e7e7e;}
-#searchtoolbar li:hover { background: #aeaeae;}
-#searchtoolbar li img.dimmed { background: none;}
+ul.searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px;}
+.searchtoolbar li { margin-right: 7px;padding: 0 4px 1px 4px; height:22px; width: 30px;float: left;display: inline;border: 1px solid #7e7e7e;}
+.searchtoolbar li:hover { background: #aeaeae;}
+.searchtoolbar li img.dimmed { background: none;}
 
 /* Automate Specific */
 .checkall { padding: 0 0 7px 7px;} /*styling for automate (Check All) */
