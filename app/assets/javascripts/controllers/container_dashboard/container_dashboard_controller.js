@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts', 'miq.card', 'miq.util']))
-  .controller('containerDashboardController', ['$scope', 'dashboardUtilsFactory', 'chartsMixin', '$http', '$interval', "$location",
-    function($scope, dashboardUtilsFactory, chartsMixin, $http, $interval, $location) {
+  .controller('containerDashboardController', ['$scope', 'dashboardUtilsFactory', 'chartsMixin', '$http', '$interval', '$window',
+    function($scope, dashboardUtilsFactory, chartsMixin, $http, $interval, $window) {
       document.getElementById("center_div").className += " miq-body";
 
       // Obj-status cards init
@@ -57,11 +57,13 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
 
       $scope.refresh = function() {
         var id;
-        if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
+        // get the pathname and remove trailing / if exist
+        var pathname = $window.location.pathname.replace(/\/$/, '');
+        if (pathname.match(/show$/)) {
           id = '';
-        }
-        else {
-          id = '/'+ (/\/(\d+)/.exec($location.absUrl())[1]);
+        } else {
+          // search for pattern ^/<controler>/<id>$ in the pathname
+          id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
         }
 
         var url = '/container_dashboard/data'+id;

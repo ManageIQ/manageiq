@@ -4,10 +4,17 @@ describe('containerDashboardController gets data and', function() {
 
   beforeEach(module('containerDashboard'));
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, $location) {
+  beforeEach(function() {
+    var $window = {location: { pathname: '/container_dashboard/show' }};
+
+    module(function($provide) {
+      $provide.value('$window', $window);
+    });
+  });
+
+  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
     var dummyDocument = document.createElement('div');
     spyOn(document, 'getElementById').and.returnValue(dummyDocument);
-    spyOn($location, 'absUrl').and.returnValue('/container_dashboard/show');
     $scope = $rootScope.$new();
 
     $httpBackend = _$httpBackend_;
@@ -52,10 +59,17 @@ describe('containerDashboardController gets no data and', function() {
 
   beforeEach(module('containerDashboard'));
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_, $location) {
+  beforeEach(function() {
+    var $window = {location: { pathname: '/container_dashboard/show' }};
+
+    module(function($provide) {
+      $provide.value('$window', $window);
+    });
+  });
+
+  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
     var dummyDocument = document.createElement('div');
     spyOn(document, 'getElementById').and.returnValue(dummyDocument);
-    spyOn($location, 'absUrl').and.returnValue('/container_dashboard/show');
     $scope = $rootScope.$new();
 
     $httpBackend = _$httpBackend_;
@@ -90,6 +104,59 @@ describe('containerDashboardController gets no data and', function() {
 
     it('in pod metrics', function() {
       expect($scope.dailyPodEntityTrend.dataAvailable).toBeDefined();
+    });
+  });
+});
+
+describe('containerDashboardController gets data for one provider and', function() {
+  var $scope, $controller, $httpBackend;
+  var mock_data = getJSONFixture('container_dashboard_response.json');
+
+  beforeEach(module('containerDashboard'));
+
+  beforeEach(function() {
+    var $window = {location: { pathname: '/ems_container/42' }};
+
+    module(function($provide) {
+      $provide.value('$window', $window);
+    });
+  });
+
+  beforeEach(inject(function(_$httpBackend_, $rootScope, _$controller_) {
+    var dummyDocument = document.createElement('div');
+    spyOn(document, 'getElementById').and.returnValue(dummyDocument);
+    $scope = $rootScope.$new();
+
+    $httpBackend = _$httpBackend_;
+    $httpBackend.when('GET','/container_dashboard/data/42').respond(mock_data);
+    $controller = _$controller_('containerDashboardController',
+      {$scope: $scope});
+    $httpBackend.flush();
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('data loads successfully', function() {
+    it('in single provider', function() {
+      expect($scope.isSingleProvider).toBe(true);
+    });
+
+    it('in heatmaps and donut', function() {
+      expect($scope.nodeMemoryUsage.data).toBeDefined();
+      expect($scope.nodeCpuUsage.data).toBeDefined();
+      expect($scope.cpuUsageData).toBeDefined();
+      expect($scope.memoryUsageData).toBeDefined();
+    });
+
+    it('in network metrics', function() {
+      expect($scope.dailyNetworkUtilization).toBeDefined();
+    });
+
+    it('in pod metrics', function() {
+      expect($scope.dailyPodEntityTrend).toBeDefined();
     });
   });
 });
