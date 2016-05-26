@@ -1,4 +1,5 @@
 class MiqExpression
+  require_nested :Tag
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
 
@@ -1183,7 +1184,7 @@ class MiqExpression
       field = [prefix, name].join("-")
       result.push([value2human(field, opts.merge(:classification => cat)), field])
     end
-    if opts[:include_my_tags] && opts[:userid] && Tag.exists?(["name like ?", "/user/#{opts[:userid]}/%"])
+    if opts[:include_my_tags] && opts[:userid] && ::Tag.exists?(["name like ?", "/user/#{opts[:userid]}/%"])
       prefix = path.nil? ? "user_tag" : [path, "user_tag"].join(".")
       field = [prefix, opts[:userid]].join("_")
       result.push([value2human(field, opts), field])
@@ -1419,7 +1420,7 @@ class MiqExpression
       return catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
     elsif ns == "user_tag" || ns == "user"
       cat = field.split("-").last
-      return Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
+      return ::Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
         tag_name = t.name.split("/").last
         [tag_name, tag_name]
       end
@@ -1710,13 +1711,8 @@ class MiqExpression
     when "contains"
       # Only support for tags of the main model
       if exp[operator].key?("tag")
-        klass, ns = exp[operator]["tag"].split(".")
-        ns  = "/" + ns.split("-").join("/")
-        ns = ns.sub(/(\/user_tag\/)/, "/user/") # replace with correct namespace for user tags
-        tag = exp[operator]["value"]
-        klass = klass.constantize
-        ids = klass.find_tagged_with(:any => tag, :ns => ns).pluck(:id)
-        klass.arel_attribute(:id).in(ids)
+        tag = Tag.parse(exp[operator]["tag"])
+        tag.contains(exp[operator]["value"])
       else
         field = Field.parse(exp[operator]["field"])
         field.contains(exp[operator]["value"])
