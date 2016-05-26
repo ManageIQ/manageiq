@@ -3,7 +3,7 @@
 
   .modal.fade#advsearchModal{"tabindex"        => "-1",
                              "role"            => "dialog",
-                             "aria-labelledby" => "exampleModalLabel",
+                             "aria-labelledby" => "adv_search_label",
                              "aria-describedby" => "modal",
                              "aria-hidden"     => "true",
                              "data-keyboard"   => "false",
@@ -18,7 +18,7 @@
               &times;
             %span.sr-only
               Close
-          %h4.modal-title#exampleModalLabel
+          %h4.modal-title#adv_search_label
             = _("Advanced Search")
         .modal-body
           %div{:id => "searching_spinner_center", :style => "position: absolute;display: block;top: 50%;left: 50%;"}
