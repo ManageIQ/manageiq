@@ -32,13 +32,20 @@ var Automate = {
   },
 
   renderGitImport: function(branchesAndTags, gitRepoId, messages) {
-    if (JSON.parse(messages).level === "error") {
-      showErrorMessage(JSON.parse(message).message);
+    message = JSON.parse(messages).message;
+    messageLevel = JSON.parse(messages).level;
+
+    if (messageLevel === "error") {
+      showErrorMessage(message);
     } else {
       $('.hidden-git-repo-id').val(gitRepoId);
       $('.git-import-data').show();
       $('.import-or-export').hide();
-      showSuccessMessage(JSON.parse(messages).message);
+      if (messageLevel === "warning") {
+        showWarningMessage(message);
+      } else {
+        showSuccessMessage(message);
+      }
 
       $.each(JSON.parse(branchesAndTags), function(index, child) {
         $('select.git-branches-and-tags').append(
@@ -151,10 +158,12 @@ var Automate = {
       });
     });
 
-    $('.git-import-cancel').click(function() {
+    $('.git-import-cancel').click(function(event) {
+      event.preventDefault();
       clearMessages();
       $('.import-or-export').show();
-      $('.import-data').hide();
+      $('.git-import-data').hide();
+      $('#git-url-import').prop('disabled', null);
       showSuccessMessage('Import cancelled');
     });
 

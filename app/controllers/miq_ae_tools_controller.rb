@@ -218,10 +218,22 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
     elsif !MiqRegion.my_region.role_active?("git_owner")
       add_flash(_("Git Owner role not enabled, enable it in Settings -> Configuration"), :error)
     else
+      if GitRepository.exists?(:url => git_url)
+        flash_message = <<FLASH
+This repository has been used previously for imports; If you use the same domain it will get deleted and recreated
+FLASH
+        status = :warning
+      else
+        flash_message = <<FLASH
+Successfully found git repository, please choose a branch or tag
+FLASH
+        status = :success
+      end
+
       git_repo = GitRepository.create(:url => git_url)
       git_repo.update_authentication(:values => {:userid => params[:git_username], :password => params[:git_password]})
       git_repo.refresh
-      add_flash(_("Successfully found git repository, please choose a branch or tag"), :success)
+      add_flash(_(flash_message), status)
       branch_names = git_repo.git_branches.collect(&:name)
       tag_names = git_repo.git_tags.collect(&:name)
       redirect_options[:git_branches_and_tags] = (branch_names + tag_names).to_json
