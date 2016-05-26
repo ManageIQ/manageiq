@@ -508,6 +508,7 @@ class StorageController < ApplicationController
       tagging
       return
     end
+    return if @in_a_form
     record_showing = leaf_record
 
     trees = {}
