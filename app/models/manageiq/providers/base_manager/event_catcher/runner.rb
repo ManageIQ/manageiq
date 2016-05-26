@@ -1,9 +1,12 @@
 require 'thread'
 require 'concurrent/atomic/event'
+require 'util/duplicate_blocker'
 
 class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runner
   class EventCatcherHandledException < StandardError
   end
+
+  include DuplicateBlocker
 
   self.wait_for_worker_monitor = false
 
@@ -20,8 +23,46 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     _log.info "#{log_prefix} Event Catcher skipping the following events:"
     $log.log_hashes(@filtered_events)
 
+    configure_event_flooding_prevention if worker_settings.try(:[], :flooding_monitor_enabled)
+
     # Global Work Queue
     @queue = Queue.new
+  end
+
+  def configure_event_flooding_prevention
+    flood_handler = self.class.dedup_handler
+
+    flood_handler.duplicate_threshold          = worker_settings[:flooding_monitor_threshold]
+    flood_handler.duplicate_window             = worker_settings[:flooding_monitor_window]
+    flood_handler.window_slot_width            = worker_settings[:flooding_monitor_slot_size]
+    flood_handler.progress_threshold           = worker_settings[:flooded_log_count]
+    flood_handler.throw_exception_when_blocked = false
+
+    flood_handler.logger = _log
+    flood_handler.descriptor    = ->(_meth, *args) { event_dedup_descriptor(args[0]) }
+    flood_handler.key_generator = ->(_meth, *args) { event_dedup_key(args[0]) }
+
+    self.class.dedup_instance_method(:queue_event)
+
+    _log.info("Event flood_handler settings:")
+    _log.info("  duplicate_window #{flood_handler.duplicate_window}")
+    _log.info("  duplicate_threshold #{flood_handler.duplicate_threshold}")
+    _log.info("  window_slot_width #{flood_handler.window_slot_width}")
+    _log.info("  progress_threshold #{flood_handler.progress_threshold}")
+  end
+
+  # Extract a key to represent an event. Events with the same key are considered duplicates and
+  # might be subjected to be blocked to prevent flooding
+  def event_dedup_key(event)
+    # Each subclass should override the implementation because the default implementation
+    # simply returns the event itself, thus hardly helps for flooding prevention
+    event
+  end
+
+  # A string representation for an event. This is used for logging the blocked events
+  def event_dedup_descriptor(event)
+    # Each subclass should override the implementation
+    event.to_s
   end
 
   def do_before_work_loop

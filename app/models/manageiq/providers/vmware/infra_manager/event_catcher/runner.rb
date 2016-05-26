@@ -43,6 +43,18 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
     reset_event_monitor_handle
   end
 
+  def event_dedup_key(event)
+    # duplicate the event but remove ids and timestamps that change with every event
+    # the remaining attributes are used to determine whether an event is a duplicate of another
+    event.except("key", "chainId", "createdTime").tap do |hash|
+      hash["info"] &&= hash["info"].except("key", "task", "queueTime", "eventChainId")
+    end
+  end
+
+  def event_dedup_descriptor(event)
+    event_dedup_key(event)
+  end
+
   def filtered?(event)
     event_type = event['eventType']
     return true if event_type.nil?
