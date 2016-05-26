@@ -391,7 +391,7 @@ module ReportController::Reports
       else
         if @edit[:new][:fields].length == 0
           add_flash(_("Preview tab is not available until at least 1 field has been selected"), :error)
-        elsif @edit[:new][:model] == "Chargeback" && !valid_chargeback_fields
+        elsif Chargeback.db_is_chargeback?(@edit[:new][:model]) && !valid_chargeback_fields
           add_flash(_("Preview tab is not available until Chargeback Filters has been configured"), :error)
           active_tab = "edit_3"
         end
