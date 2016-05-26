@@ -59,6 +59,12 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
     ]
   end
 
+  def storage_accounts
+    @storage_accounts ||= with_metrics_services do |_metrics_conn, storage_conn|
+      storage_conn.list_all
+    end
+  end
+
   def perf_capture_data_azure(metrics_conn, storage_conn, start_time, end_time)
     start_time -= 1.minutes # Get one extra minute so we can build the 20-second intermediate values
 
@@ -119,8 +125,8 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
     partition_key = availability.location.partition_key
 
     storage_acct_name = URI.parse(endpoint).host.split('.').first
-    storage_account   = storage_conn.get(storage_acct_name, target.resource_group)
-    storage_key       = storage_conn.list_account_keys(storage_acct_name, target.resource_group).fetch('key1')
+    storage_account   = storage_accounts.find { |account| account.name == storage_acct_name }
+    storage_key       = storage_conn.list_account_keys(storage_account.name, storage_account.resource_group).fetch('key1')
 
     # TODO: The following needs to pass :all => true for proper paging in case
     #       the time range is > 1000 metrics, but there seems to be a bug in
