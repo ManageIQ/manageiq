@@ -541,7 +541,7 @@ module ApplicationController::CiProcessing
     @gtl_url       = "/#{@db}/#{@listicon.pluralize}/#{@record.id}?"
     @showtype      = "details"
     @display       = "main"
-    @no_checkboxes = true
+    @no_checkboxes = @no_checkboxes.nil? || @no_checkboxes
     @showlinks     = true
 
     @view, @pages = get_view(db,
@@ -1784,6 +1784,26 @@ module ApplicationController::CiProcessing
                     {:hostname => host.name, :task => (task_name || task)}, :error)
         end
       end
+    when "service_scheduling"
+      each_host(hosts, task_name) do |host|
+        params[:miq_grid_checks].split(",").each do |cloud_service_id|
+          service = host.cloud_services.find(cloud_service_id)
+          if service.validate_enable_scheduling
+            resp = service.enable_scheduling
+            status = resp.body.fetch("service").fetch("status")
+            service.update(:scheduling_disabled => status == 'disabled')
+            add_flash(_("\"%{record}\": Scheduling is %{status} now.") % {:record => service.name, :status => status})
+          elsif service.validate_disable_scheduling
+            resp = service.disable_scheduling
+            status = resp.body.fetch("service").fetch("status")
+            service.update(:scheduling_disabled => status == 'disabled')
+            add_flash(_("\"%{record}\": Scheduling is %{status} now.") % {:record => service.name, :status => status})
+          else
+            add_flash(_("\"%{record}\": %{task} invalid") % {:record => service.name, :task => (display_name || task)},
+                      :error)
+          end
+        end
+      end
     else
       each_host(hosts, task_name) do |host|
         if host.respond_to?(task) && host.is_available?(task)
@@ -1832,6 +1852,12 @@ module ApplicationController::CiProcessing
   def maintenancehosts
     assert_privileges("host_toggle_maintenance")
     host_button_operation('maintenance', _('Toggle Maintenance'))
+  end
+
+  # Toggle Scheduling on all selected or single displayed Cloud Service
+  def toggleservicescheduling
+    assert_privileges("host_cloud_service_scheduling_toggle")
+    host_button_operation('service_scheduling', _('Toggle Scheduling for Cloud Service'))
   end
 
   def check_compliance_hosts

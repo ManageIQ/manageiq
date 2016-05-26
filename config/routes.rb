@@ -1391,6 +1391,7 @@ Vmdb::Application.routes.draw do
         guest_applications
         host_form_fields
         host_services
+        host_cloud_services
         index
         list
         new
@@ -1424,6 +1425,7 @@ Vmdb::Application.routes.draw do
         groups
         guest_applications
         host_services
+        host_cloud_services
         listnav_search_selected
         quick_search
         panel_control
