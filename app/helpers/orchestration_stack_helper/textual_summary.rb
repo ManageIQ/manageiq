@@ -67,7 +67,7 @@ module OrchestrationStackHelper::TextualSummary
   end
 
   def textual_orchestration_template
-    template = @record.orchestration_template
+    template = @record.try(:orchestration_template)
     return nil if template.nil?
     label = ui_lookup(:table => "orchestration_template")
     h = {:label => label, :image => "orchestration_template", :value => template.name}

@@ -19,7 +19,7 @@
               ems_cloud_path(@record.ext_management_system.id),
               :title => _("Show parent %s for this %s") % l)
 
-        - if @record.orchestration_template
+        - if @record.try(:orchestration_template)
           %li.disabled
             = link_to("#{ui_lookup(:table => 'orchestration_template')}: #{@record.orchestration_template.name}", "#")
 
