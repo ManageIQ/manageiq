@@ -255,6 +255,8 @@ module VmCommon
       drop_breadcrumb(:name => @record.name + _(" (Snapshots)"),
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
       build_snapshot_tree
+      #@snapshot_tree = TreeBuilderSnapshot.new(:snapshot_tree, :snapshot, @sb, true, #TODO)
+      #session[:snapshot_tree] = @ch_tree.tree_nodes
       @button_group = "snapshot"
     elsif @display == "devices"
       drop_breadcrumb(:name => @record.name + _(" (Devices)"),
