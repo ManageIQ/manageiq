@@ -1958,8 +1958,8 @@ module ApplicationController::CiProcessing
         process_storage(storages, method)
       end
 
-      if @lastaction == "show_list" || @lastaction == "explorer" # In storage controller, refresh show_list, else let the other controller handle it
-        show_list
+      if @lastaction == "show_list"
+        show_list unless @explorer
         @refresh_partial = "layouts/gtl"
       end
 
