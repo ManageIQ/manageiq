@@ -59,8 +59,6 @@ describe 'YAML reports' do
   end
 
   it "defines fields for reporting by fully qualified name" do
-    #report_yamls = ["/Users/yrudman/work/rh/manageiq/product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml"]
-
     report_yamls.each do |yaml|
       report_yaml = YAML.load(File.open(yaml))
       report_yaml.delete('menu_name')
@@ -68,11 +66,7 @@ describe 'YAML reports' do
       report.generate_table(:userid => @user.userid)
       cols_from_data = report.table.column_names.to_set
       cols_from_yaml = report_yaml['col_order'].to_set
-      
       expect(cols_from_yaml).to be_subset(cols_from_data)
-      
-      sortby_cols = report_yaml['sortby'].to_set
-      expect(sortby_cols).to be_subset(cols_from_data)
     end
   end
 end
