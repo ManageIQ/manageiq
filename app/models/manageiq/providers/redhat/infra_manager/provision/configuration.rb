@@ -28,6 +28,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
     configure_cpu(rhevm_vm)
     configure_host_affinity(rhevm_vm)
     configure_network_adapters
+    configure_cloud_init
   end
 
   private
