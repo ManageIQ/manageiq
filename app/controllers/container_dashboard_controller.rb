@@ -20,6 +20,10 @@ class ContainerDashboardController < ApplicationController
     render :json => {:data => collect_data(params[:id])}
   end
 
+  def dashboard_data
+    render :json => {:data => collect_data(params[:id])}
+  end
+
   private
 
   def get_session_data
@@ -28,6 +32,10 @@ class ContainerDashboardController < ApplicationController
 
   def collect_data(provider_id)
     ContainerDashboardService.new(provider_id, self).all_data
+  end
+
+  def collect_compliance_data(provider_id)
+    ContainerComplianceService.new(provider_id, self).all_data
   end
 
   def set_session_data

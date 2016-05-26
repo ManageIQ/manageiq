@@ -529,8 +529,8 @@ class ApplicationHelper::ToolbarBuilder
                    %w(instance_check_compliance instance_compare).include?(id)
 
     # don't hide view buttons in toolbar
-    return false if %( view_grid view_tile view_list view_dashboard view_summary refresh_log fetch_log common_drift
-      download_text download_csv download_pdf download_view vm_download_pdf
+    return false if %( view_grid view_tile view_list view_dashboard view_summary view_compliance refresh_log fetch_log
+      common_drift download_text download_csv download_pdf download_view vm_download_pdf
       tree_large tree_small).include?(id) && !%w(miq_policy_rsop ops).include?(@layout)
 
     # dont hide back to summary button button when not in explorer
@@ -1450,6 +1450,7 @@ class ApplicationHelper::ToolbarBuilder
     return true if id.starts_with?("driftmode_") && id.ends_with?(@settings[:views][:drift_mode])
     return true if id == "view_dashboard" && @showtype == "dashboard"
     return true if id == "view_summary" && @showtype == "main"
+    return true if id == "view_compliance" && @showtype == "compliance"
     false
   end
 
