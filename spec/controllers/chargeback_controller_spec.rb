@@ -70,6 +70,23 @@ describe ChargebackController do
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.status).to                 eq(200)
     end
+
+    describe "#cb_rpt_build_folder_nodes" do
+      let!(:admin_user)        { FactoryGirl.create(:user_admin) }
+      let!(:chargeback_report) { FactoryGirl.create(:miq_report_chargeback_with_results) }
+
+      before { login_as admin_user }
+
+      it "returns list of saved chargeback report results" do
+        controller.send(:cb_rpt_build_folder_nodes)
+
+        parent_reports = controller.instance_variable_get(:@parent_reports)
+
+        tree_id = "#{ApplicationRecord.compress_id(chargeback_report.id)}-0"
+        expected_result = {chargeback_report.miq_report_results.first.name => tree_id}
+        expect(parent_reports).to eq(expected_result)
+      end
+    end
   end
 
   context "#explorer" do

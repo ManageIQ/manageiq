@@ -324,6 +324,19 @@ class MiqReportResult < ApplicationRecord
     current_user.admin_user? ? all : where(:miq_group_id => current_user.miq_group_ids)
   end
 
+  def self.with_chargeback
+    includes(:miq_report).where(:miq_reports => {:db => Chargeback.subclasses})
+  end
+
+  def self.with_saved_chargeback_reports(report_id = nil)
+    with_report(report_id).auto_generated.with_current_user_groups.with_chargeback.order('LOWER(miq_reports.name)')
+  end
+
+  def self.select_distinct_results
+    select("DISTINCT ON(LOWER(miq_reports.name), miq_report_results.miq_report_id) LOWER(miq_reports.name), \
+            miq_report_results.miq_report_id")
+  end
+
   private
 
   def user_timezone

@@ -20,18 +20,18 @@ class TreeBuilderChargebackReports < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    items = MiqReportResult.auto_generated.select("miq_report_id, name").group("miq_report_id, name").where(
-      :db     => "Chargeback",
-      :userid => User.current_user.userid)
-
+    items = MiqReportResult.with_saved_chargeback_reports
+                           .select_distinct_results
+                           .group("miq_report_results.miq_report_id, miq_reports.name, miq_report_results.id, \
+                                   miq_reports.id")
     if count_only
       items.length
     else
       objects = []
-      items.sort_by { |item| item.name.downcase }.each_with_index do |item, idx|
+      items.each_with_index do |item, idx|
         objects.push(
           :id    => "#{to_cid(item.miq_report_id)}-#{idx}",
-          :text  => item.name,
+          :text  => item.miq_report.name,
           :image => "report",
           :tip   => item.name
         )
@@ -42,10 +42,9 @@ class TreeBuilderChargebackReports < TreeBuilder
 
   # Handle custom tree nodes (object is a Hash)
   def x_get_tree_custom_kids(object, count_only, _options)
-    objects = MiqReportResult.auto_generated.where(
-      :miq_report_id => from_cid(object[:id].split('-').first),
-      :userid        => User.current_user.userid
-    ).order("created_on DESC").select("id, miq_report_id, name, last_run_on, miq_task_id")
+    objects = MiqReportResult.with_saved_chargeback_reports(from_cid(object[:id].split('-').first))
+                             .select(:id, :miq_report_id, :name, :last_run_on, :miq_task_id)
+                             .order(:last_run_on)
 
     count_only_or_objects(count_only, objects, "name")
   end

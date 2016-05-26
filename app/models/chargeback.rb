@@ -1,4 +1,6 @@
 class Chargeback < ActsAsArModel
+  DescendantLoader.instance.load_subclasses(self)
+
   VIRTUAL_COL_USES = {
     "v_derived_cpu_total_cores_used" => "cpu_usage_rate_average"
   }
