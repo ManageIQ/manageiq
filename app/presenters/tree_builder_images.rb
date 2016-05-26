@@ -17,6 +17,10 @@ class TreeBuilderImages < TreeBuilder
     )
   end
 
+  def root_options
+    [_("Images by Provider"), _("All Images by Provider that I can see")]
+  end
+
   def x_get_tree_roots(count_only, _options)
     objects = rbac_filtered_objects(EmsCloud.order("lower(name)"), :match_via_descendants => TemplateCloud)
     objects += [

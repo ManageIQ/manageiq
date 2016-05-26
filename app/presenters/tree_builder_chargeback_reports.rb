@@ -14,6 +14,10 @@ class TreeBuilderChargebackReports < TreeBuilder
     locals.merge!(temp)
   end
 
+  def root_options
+    [t = _("Saved Chargeback Reports"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     items = MiqReportResult.auto_generated.select("miq_report_id, name").group("miq_report_id, name").where(

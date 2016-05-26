@@ -12,4 +12,8 @@ class TreeBuilderInstancesFilter < TreeBuilderVmsFilter
       :autoload  => false
     )
   end
+
+  def root_options
+    [_("All Instances"), _("All of the Instances that I can see")]
+  end
 end

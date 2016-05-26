@@ -5,6 +5,10 @@ class TreeBuilderProvisioningDialogs < TreeBuilderAeCustomization
     {:leaf => "MiqDialog", :open_all => true}
   end
 
+  def root_options
+    [t = _("All Dialogs"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = MiqDialog::DIALOG_TYPES.sort.collect do |typ|

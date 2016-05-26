@@ -9,6 +9,10 @@ class TreeBuilderReportWidgets < TreeBuilder
     super.merge!(:id_prefix => 'widgets_', :autoload => true)
   end
 
+  def root_options
+    [t = _("All Widgets"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = WIDGET_TYPES.collect { |k, v| {:id => k, :text => v, :image => 'folder', :tip => v} }

@@ -19,7 +19,7 @@ describe TreeBuilder do
   context "title_and_tip" do
     it "sets title and tooltip for the passed in root node" do
       tree = TreeBuilderChargebackRates.new("cb_rates_tree", "cb_rates", {})
-      title, tooltip, icon = tree.root_options
+      title, tooltip, icon = tree.send(:root_options)
       expect(title).to eq("Rates")
       expect(tooltip).to eq("Rates")
       expect(icon).to be_nil

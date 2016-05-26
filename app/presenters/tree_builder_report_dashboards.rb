@@ -18,6 +18,10 @@ class TreeBuilderReportDashboards < TreeBuilder
     )
   end
 
+  def root_options
+    [t = _("All Dashboards"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []

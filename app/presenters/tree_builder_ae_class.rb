@@ -13,6 +13,10 @@ class TreeBuilderAeClass < TreeBuilder
     locals.merge!(:autoload => true)
   end
 
+  def root_options
+    [t = _("Datastore"), t]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = if MIQ_AE_COPY_ACTIONS.include?(@sb[:action])

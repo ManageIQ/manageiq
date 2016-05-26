@@ -6,6 +6,18 @@ class TreeBuilderUtilization < TreeBuilderRegion
 
   private
 
+  def root_options
+    if MiqEnterprise.my_enterprise.is_enterprise?
+      title = _("Enterprise")
+      icon  = :enterprise
+    else
+      title = _("CFME Region: %{region_description} [%{region}]") %
+                {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
+      icon  = :miq_region
+    end
+    [title, title, icon]
+  end
+
   def x_get_tree_ems_kids(object, count_only)
     ems_clusters        = rbac_filtered_objects(object.ems_clusters)
     non_clustered_hosts = rbac_filtered_objects(object.non_clustered_hosts)

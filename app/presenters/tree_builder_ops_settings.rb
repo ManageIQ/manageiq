@@ -16,6 +16,13 @@ class TreeBuilderOpsSettings < TreeBuilderOps
     )
   end
 
+  def root_options
+    region = MiqRegion.my_region
+    title =  _("CFME Region: %{region_description} [%{region}]") % {:region_description => region.description,
+                                                                    :region             => region.region}
+    [title, title, :miq_region]
+  end
+
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(_count_only, _options)
     objects = [

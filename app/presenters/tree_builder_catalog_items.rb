@@ -16,6 +16,10 @@ class TreeBuilderCatalogItems < TreeBuilderCatalogsClass
     )
   end
 
+  def root_options
+    [t = _("All Catalog Items"), t]
+  end
+
   def x_get_tree_stc_kids(object, count_only)
     # TODO: may want to order in rbac and not in sql
     templates = if object.id.nil?

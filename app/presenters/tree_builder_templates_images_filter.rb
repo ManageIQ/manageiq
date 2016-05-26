@@ -11,4 +11,8 @@ class TreeBuilderTemplatesImagesFilter < TreeBuilderVmsFilter
       :id_prefix => "tf_",
     )
   end
+
+  def root_options
+    [_("All Templates & Images"), _("All of the Templates & Images that I can see")]
+  end
 end

@@ -1,6 +1,23 @@
 class TreeBuilderOrchestrationTemplates < TreeBuilder
   private
 
+  def tree_init_options(_tree_name)
+    {:full_ids => true,
+     :leaf     => 'OrchestrationTemplate'}
+  end
+
+  def set_locals_for_render
+    locals = super
+    locals.merge!(
+      :id_prefix => 'ot_',
+      :autoload  => 'true'
+    )
+  end
+
+  def root_options
+    [t = _("All Orchestration Templates"), t]
+  end
+
   def x_get_tree_roots(count_only, _options)
     children = [
       {:id    => 'otcfn',
@@ -20,19 +37,6 @@ class TreeBuilderOrchestrationTemplates < TreeBuilder
        :tip   => _("Azure Templates")}
     ]
     count_only ? children.length : children
-  end
-
-  def tree_init_options(_tree_name)
-    {:full_ids => true,
-     :leaf     => 'OrchestrationTemplate'}
-  end
-
-  def set_locals_for_render
-    locals = super
-    locals.merge!(
-      :id_prefix => 'ot_',
-      :autoload  => 'true'
-    )
   end
 
   def x_get_tree_custom_kids(object, count_only, _options)
