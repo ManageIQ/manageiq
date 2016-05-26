@@ -84,8 +84,8 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     raise NotImplementedError, _("must be implemented in subclass")
   end
 
-  def process_event(_event)
-    raise NotImplementedError, _("must be implemented in subclass")
+  def process_event(event)
+    queue_event(event) unless filtered?(event)
   end
 
   def event_monitor_running

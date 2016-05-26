@@ -39,12 +39,14 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
     reset_event_monitor_handle
   end
 
-  def process_event(event)
-    if filtered_events.include?(event[:name])
-      _log.info "#{log_prefix} Skipping caught event [#{event[:name]}]"
-    else
-      _log.info "#{log_prefix} Caught event [#{event[:name]}]"
-      EmsEvent.add_queue('add_rhevm', @cfg[:ems_id], event.to_hash)
+  def filtered?(event)
+    filtered_events.include?(event[:name]).tap do |result|
+      _log.info "#{log_prefix} Skipping caught event [#{event[:name]}]" if result
     end
+  end
+
+  def queue_event(event)
+    _log.info "#{log_prefix} Caught event [#{event[:name]}]"
+    EmsEvent.add_queue('add_rhevm', @cfg[:ems_id], event.to_hash)
   end
 end

@@ -23,15 +23,9 @@ class ManageIQ::Providers::Google::CloudManager::EventCatcher::Runner <
     reset_event_monitor_handle
   end
 
-  def process_event(event)
-    if filtered?(event)
-      _log.info(
-        "#{log_prefix} Skipping filtered Google event #{parse_event_type(event)} for #{parse_resource_id(event)}"
-      )
-    else
-      _log.info "#{log_prefix} Caught event #{parse_event_type(event)} for #{parse_resource_id(event)}"
-      EmsEvent.add_queue('add_google', @cfg[:ems_id], event)
-    end
+  def queue_event(event)
+    _log.info "#{log_prefix} Caught event #{parse_event_type(event)} for #{parse_resource_id(event)}"
+    EmsEvent.add_queue('add_google', @cfg[:ems_id], event)
   end
 
   private
@@ -46,6 +40,10 @@ class ManageIQ::Providers::Google::CloudManager::EventCatcher::Runner <
 
   def filtered?(event)
     event_type = parse_event_type(event)
-    filtered_events.include?(event_type)
+    filtered_events.include?(event_type).tap do |result|
+      _log.info(
+        "#{log_prefix} Skipping filtered Google event #{event_type} for #{parse_resource_id(event)}"
+      ) if result
+    end
   end
 end
