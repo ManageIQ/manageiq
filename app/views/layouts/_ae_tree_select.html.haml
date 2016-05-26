@@ -1,7 +1,7 @@
 - entry_point ||= "Instance"
 .modal.fade#automate_tree_div{"tabindex"        => "-1",
                               "role"            => "dialog",
-                              "aria-labelledby" => "exampleModalLabel",
+                              "aria-labelledby" => "ep_modal_label",
                               "aria-describedby" => "modal",
                               "aria-hidden"     => "true",
                               "data-keyboard"   => "false",
@@ -15,7 +15,7 @@
             &times;
           %span.sr-only
             Close
-        %h4.modal-title#exampleModalLabel
+        %h4.modal-title#ep_modal_label
           = hidden_field_tag(:ignore_form_changes)
           = _("Select Entry Point %s") % entry_point
 
