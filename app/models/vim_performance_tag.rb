@@ -3,8 +3,13 @@ class VimPerformanceTag < MetricRollup
     true
   end
 
+  def self.find_entries(_ext_options = {})
+    # noop - just return default scope (will be chained from here)
+    self
+  end
+
   def self.find_and_group_by_tags(options)
-    group_by_tags(where(options[:where_clause]), options)
+    group_by_tags(find_entries(options[:ext_options]).where(options[:where_clause]), options)
   end
 
   def self.group_by_tags(recs, options)
