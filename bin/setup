@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'pathname'
 require 'optparse'
+require_relative '../lib/task_helpers/sample_file_updater.rb'
 
 
 options = {:do_tests => true, :do_db => true}
@@ -29,12 +30,7 @@ Dir.chdir APP_ROOT do
   system "bower install --allow-root -F --config.analytics=false"
 
   puts "\n== Copying sample files =="
-  unless File.exist?("config/database.yml")
-    system "cp config/database.pg.yml config/database.yml"
-  end
-  unless File.exist?("certs/v2_key")
-    system "cp certs/v2_key.dev certs/v2_key"
-  end
+  TaskHelpers::SampleFileUpdater.run
 
   if options[:do_db]
     puts "\n== Preparing database =="
