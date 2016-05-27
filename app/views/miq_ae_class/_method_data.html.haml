@@ -12,6 +12,8 @@
       @edit[:new][:data],
       :maxlength         => MAX_NAME_LEN,
       "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  - if @edit[:new][:location] == 'builtin'
+    %em= _('Optional, if not specified, method name is used.')
   %tr
     %td
       %span#pwd_note{:style => "color: red;"}
