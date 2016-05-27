@@ -676,7 +676,7 @@ module MiqReport::Generator
       data_records = []
       full_path = get_full_path(parent_association, association)
       if include_has_options
-        assoc_options = includes[association].merge(:qualify_attribute_names => full_path, 
+        assoc_options = includes[association].merge(:qualify_attribute_names => full_path,
                                                     :only                    => includes[association]["columns"])
       else
         assoc_options = {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
