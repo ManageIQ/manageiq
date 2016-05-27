@@ -672,6 +672,8 @@ module VmCommon
     @policy_options[:passed] = true
     @policy_options[:failed] = true
     build_policy_tree(@polArr)
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name)
+    session[:tree_name] = "policy_simulation_tree"
     @edit = session[:edit] if session[:edit]
     if @edit && @edit[:explorer]
       render_flash(_("No policies were selected for Policy Simulation."), :error) if session[:policies].empty?
@@ -849,10 +851,12 @@ module VmCommon
     end
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     build_policy_tree(@polArr)
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name)
+    session[:tree_name] = "policy_simulation_tree"
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("flash_msg_div", :partial => "layouts/flash_msg")
-      page.replace_html("main_div", :partial => "vm_common/policies")
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+      page.replace("main_div", :partial => "vm_common/policies")
     end
   end
 
@@ -862,6 +866,8 @@ module VmCommon
     @policy_options ||= {}
     @policy_options[:out_of_scope] = (params[:out_of_scope] == "1")
     build_policy_tree(@polArr)
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name)
+    session[:tree_name] = "policy_simulation_tree"
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
