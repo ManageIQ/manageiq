@@ -15,6 +15,8 @@ module MiqAeEngine
     ).freeze
 
     class << self
+      DEFAULT_TYPE = :string
+
       # Define a new builtin for use in automate models
       #
       # Use it similarly like you would define a method. Required values are expressed using
@@ -22,10 +24,12 @@ module MiqAeEngine
       # considered an input, where it will pull out the value from inputs hash based on the name.
       # For backwards compatibility, argument "inputs" will receive all inputs.
       #
+      # You can specify the input types using metadata (TODO: elaborate)
+      #
       # ==== Attributes
       #
       # * +name+ - Name of the builtin. Symbol.
-      # * +metadata+ - Metadata (TODO - future use for reflection). Hash.
+      # * +metadata+ - Metadata. Hash.
       #
       # ==== Examples
       #
@@ -50,8 +54,7 @@ module MiqAeEngine
       # * +inputs+ - Inputs to pass to the method. Hash
       def invoke_builtin(name, obj, inputs)
         @builtins ||= {}
-        raise MiqAeException::MethodNotFound, "Built-In Method [#{name}] does not exist" unless builtin?(name)
-        meth = @builtins[name].first
+        meth = get_builtin(name).first
         meth_params = meth.parameters.collect do |_, param_name|
           if param_name == :obj
             obj
@@ -78,6 +81,39 @@ module MiqAeEngine
       # * +name+ - Name of the builtin to check. Symbol
       def builtin?(name)
         builtins.include?(name)
+      end
+
+      # Returns a list of known inputs that the builtin method takes
+      #
+      # The format of result is [[:inputname, :inputtype], ...]
+      #
+      # ==== Attributes
+      #
+      # * +name+ - Name of the builtin to check. Symbol
+      def builtin_inputs(name)
+        meth, meta = get_builtin(name)
+        types = meta[:types] || {}
+        meth.parameters.collect(&:last).reject { |m| m =~ /^obj|inputs$/ } .collect do |input|
+          [input, types[input] || DEFAULT_TYPE]
+        end
+      end
+
+      # Returns whether the builtin takes the "inputs" and therefore it is not detectable what
+      # inputs exactly does it take.
+      #
+      # ==== Attributes
+      #
+      # * +name+ - Name of the builtin to check. Symbol
+      def builtin_legacy_inputs?(name)
+        meth = get_builtin(name).first
+        !meth.parameters.collect(&:last).select { |m| m == :inputs } .empty?
+      end
+
+      private
+
+      def get_builtin(name)
+        raise MiqAeException::MethodNotFound, "Built-In Method [#{name}] does not exist" unless builtin?(name)
+        @builtins[name]
       end
     end
 
