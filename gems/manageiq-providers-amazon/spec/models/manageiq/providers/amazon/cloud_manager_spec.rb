@@ -19,10 +19,11 @@ describe ManageIQ::Providers::Amazon::CloudManager do
   describe ".discover" do
     let(:ec2_user) { "0123456789ABCDEFGHIJ" }
     let(:ec2_pass) { "ABCDEFGHIJKLMNO1234567890abcdefghijklmno" }
-    subject { described_class.discover(ec2_user, ec2_pass) }
+    # subject { described_class.discover(ec2_user, ec2_pass) }
 
     before do
-      EvmSpecHelper.local_miq_server(:zone => Zone.seed)
+      # EvmSpecHelper.local_miq_server(:zone => Zone.seed)
+      allow(MiqServer).to receive(:my_zone).and_return("default")
     end
 
     around do |example|
@@ -57,11 +58,17 @@ describe ManageIQ::Providers::Amazon::CloudManager do
       end
 
       it "with no existing records only creates default ems" do
-        expect(subject.count).to eq(1)
-
-        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-        expect(emses.count).to eq(1)
-        assert_region(emses[0], "us-east-1")
+        expect(described_class).to receive(:create!)
+                                     .once
+                                     .with(
+                                       hash_including(
+                                         :name => 'us-east-1',
+                                         :provider_region => 'us-east-1'
+                                       )
+                                     )
+                                     .and_return(described_class.new)
+        expect(MiqQueue).to receive(:put).once
+        described_class.discover(ec2_user, ec2_pass)
       end
     end
 
@@ -88,12 +95,24 @@ describe ManageIQ::Providers::Amazon::CloudManager do
       end
 
       it "with no existing records" do
-        expect(subject.count).to eq(2)
+        expect(described_class).to receive(:create!)
+                                     .with(
+                                       hash_including(
+                                         :name => 'us-east-1',
+                                         :provider_region => 'us-east-1'
+                                       )
+                                     )
+                                     .and_return(described_class.new)
 
-        emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-        expect(emses.count).to eq(2)
-        assert_region(emses[0], "us-east-1")
-        assert_region(emses[1], "us-west-1")
+        expect(described_class).to receive(:create!)
+                                     .with(
+                                       hash_including(
+                                         :name => 'us-west-1',
+                                         :provider_region => 'us-west-1'
+                                       )
+                                     )
+                                     .and_return(described_class.new)
+        expect(described_class.discover(ec2_user, ec2_pass).count).to eq 2
       end
 
       it "with some existing records" do
