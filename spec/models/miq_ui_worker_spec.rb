@@ -4,7 +4,7 @@ describe MiqUiWorker do
       require 'util/miq-process'
       allow(MiqProcess).to receive(:is_worker?).and_return(false)
 
-      guid, server1, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _guid, server1, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
       @worker1 = FactoryGirl.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3000", :status => 'started')
       @worker2 = FactoryGirl.create(:miq_ui_worker, :miq_server => server1, :uri => "http://0.0.0.0:3001", :status => 'started')
