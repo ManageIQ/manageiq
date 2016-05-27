@@ -282,6 +282,7 @@ class ChargebackController < ApplicationController
   def cb_tier_add
     index = params[:index]
     detail_index, tier_index = index.split("-")
+    raise _("Invalid input") unless is_integer?(detail_index) && is_integer?(tier_index)
     tier_index = tier_index.to_i
     ii = detail_index.to_i
 

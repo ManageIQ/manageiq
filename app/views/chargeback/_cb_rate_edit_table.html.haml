@@ -61,7 +61,7 @@
         %td.action
           .dropdown.dropdown-kebab-pf
             %button.btn.btn-link.dropdown-toggle{:type => "button",
-                                                 :id => "dropdownKebab",
+                                                 :id => "dropdownKebab-#{detail_index}-0",
                                                  :style => "width: 100%",
                                                  "data-toggle" => "dropdown",
                                                  "aria-haspopup" => "true",
@@ -103,7 +103,7 @@
           %td.action
             .dropdown.dropdown-kebab-pf
               %button.btn.btn-link.dropdown-toggle{:type => "button",
-                                                   :id => "dropdownKebab",
+                                                   :id => "dropdownKebab-#{detail_index}-#{tier_index}",
                                                    :style => "width: 100%",
                                                    "data-toggle" => "dropdown",
                                                    "aria-haspopup" => "true",
