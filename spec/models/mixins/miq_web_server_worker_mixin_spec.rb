@@ -58,4 +58,16 @@ describe MiqWebServerWorkerMixin do
       :app         => Rails.application
     )
   end
+
+  it "overloading and calling super on a class method" do
+    before = test_class.binding_address
+
+    test_class.class_eval do
+      def self.binding_address
+        super + "JUNK"
+      end
+    end
+
+    expect(test_class.binding_address).to eq (before + "JUNK")
+  end
 end
