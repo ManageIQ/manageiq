@@ -233,8 +233,10 @@ class ReportController < ApplicationController
         @import = import_file.widget_list
         add_flash(_("Import file was uploaded successfully"), :success)
       rescue WidgetImportValidator::NonYamlError
+        @in_a_form = false
         add_flash(_("Error: the file uploaded is not of the supported format"), :error)
       rescue WidgetImportValidator::InvalidWidgetYamlError
+        @in_a_form = false
         add_flash(_("Error: the file uploaded contains no widgets"), :error)
       end
     end
