@@ -303,8 +303,8 @@ module Rbac
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
-    user      ||= User.find_by_userid(userid) || User.current_user
-    miq_group ||= MiqGroup.find_by_id(miq_group_id)
+    user      ||= (userid && User.find_by_userid(userid)) || User.current_user
+    miq_group ||= miq_group_id && MiqGroup.find_by_id(miq_group_id)
     miq_group_id ||= miq_group.try!(:id)
     if user && miq_group && user.current_group_id != miq_group_id
       user.current_group = miq_group if user.miq_groups.include?(miq_group)
