@@ -48,11 +48,11 @@ describe 'YAML reports' do
   def collect_columns(include_hash, parent = nil)
     return [] if include_hash.nil?
     include_hash.inject([]) do |cols, (table_name, data)|
-      if parent
-        full_path = "#{parent}.#{table_name}"
-      else
-        full_path = "#{table_name}"
-      end
+      full_path = if parent
+                    "#{parent}.#{table_name}"
+                  else
+                    table_name.to_s
+                  end
       cols += data["columns"].collect { |col_name| "#{full_path}.#{col_name}" } if data['columns']
       cols + collect_columns(data['include'], full_path)
     end
