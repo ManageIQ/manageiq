@@ -18,7 +18,7 @@ describe MiqWorker do
       expect_any_instance_of(described_class).to receive(:stop)
       worker = FactoryGirl.create(:miq_worker, :status => "started")
       worker.class.workers = 0
-      expect(worker.class.sync_workers).to eq({:adds => [], :deletes => [worker.pid]})
+      expect(worker.class.sync_workers).to eq(:adds => [], :deletes => [worker.pid])
     end
   end
 
@@ -122,11 +122,11 @@ describe MiqWorker do
       {
         :workers => {
           :worker_base => {
-            :defaults => {:memory_threshold => "100.megabytes"},
+            :defaults          => {:memory_threshold => "100.megabytes"},
             :queue_worker_base => {
-              :defaults => {:memory_threshold => "300.megabytes"},
+              :defaults           => {:memory_threshold => "300.megabytes"},
               :ems_refresh_worker => {
-                :defaults => {:memory_threshold => "500.megabytes"},
+                :defaults                  => {:memory_threshold => "500.megabytes"},
                 :ems_refresh_worker_amazon => {
                   :memory_threshold => "700.megabytes"
                 }
@@ -233,11 +233,11 @@ describe MiqWorker do
         {
           :workers => {
             :worker_base => {
-              :defaults => {:memory_threshold => "100.megabytes"},
+              :defaults          => {:memory_threshold => "100.megabytes"},
               :queue_worker_base => {
-                :defaults => {:memory_threshold => "300.megabytes"},
+                :defaults           => {:memory_threshold => "300.megabytes"},
                 :ems_refresh_worker => {
-                  :defaults => {:memory_threshold => "500.megabytes"},
+                  :defaults                  => {:memory_threshold => "500.megabytes"},
                   :ems_refresh_worker_amazon => {
                     :memory_threshold => "700.megabytes"
                   }
@@ -252,11 +252,11 @@ describe MiqWorker do
         {
           :workers => {
             :worker_base => {
-              :defaults => {:memory_threshold => "200.megabytes"},
+              :defaults          => {:memory_threshold => "200.megabytes"},
               :queue_worker_base => {
-                :defaults => {:memory_threshold => "400.megabytes"},
+                :defaults           => {:memory_threshold => "400.megabytes"},
                 :ems_refresh_worker => {
-                  :defaults => {:memory_threshold => "600.megabytes"},
+                  :defaults                  => {:memory_threshold => "600.megabytes"},
                   :ems_refresh_worker_amazon => {
                     :memory_threshold => "800.megabytes"
                   }

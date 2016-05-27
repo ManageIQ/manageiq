@@ -48,7 +48,7 @@ describe "Server Monitor" do
         @miq_server.monitor_servers
 
         @miq_server.deactivate_all_roles
-        @miq_server.role    = 'event, ems_operations, scheduler, reporting'
+        @miq_server.role = 'event, ems_operations, scheduler, reporting'
       end
 
       it "should have no roles active after start" do
@@ -352,14 +352,14 @@ describe "Server Monitor" do
       before(:each) do
         @miq_server1 = EvmSpecHelper.local_miq_server
         @miq_server1.deactivate_all_roles
-        @miq_server1.role         = 'event, ems_operations, scheduler, reporting'
+        @miq_server1.role = 'event, ems_operations, scheduler, reporting'
         @roles1 = [['ems_operations', 1], ['event', 2], ['scheduler', 2], ['reporting', 1]]
         @roles1.each { |role, priority| @miq_server1.assign_role(role, priority) }
         @miq_server1.activate_roles("ems_operations", 'reporting')
 
         @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone)
         @miq_server2.deactivate_all_roles
-        @miq_server2.role         = 'event, ems_operations, scheduler, reporting'
+        @miq_server2.role = 'event, ems_operations, scheduler, reporting'
         @roles2 = [['ems_operations', 1], ['event', 1], ['scheduler', 1], ['reporting', 1]]
         @roles2.each { |role, priority| @miq_server2.assign_role(role, priority) }
         @miq_server2.activate_roles("event", "ems_operations", 'scheduler', 'reporting')
@@ -624,17 +624,17 @@ describe "Server Monitor" do
       before(:each) do
         @miq_server1 = EvmSpecHelper.local_miq_server(:name => "Server 1")
         @miq_server1.deactivate_all_roles
-        @miq_server1.role         = 'event, ems_operations, ems_inventory'
+        @miq_server1.role = 'event, ems_operations, ems_inventory'
         @miq_server1.activate_roles("ems_operations", "ems_inventory")
 
         @miq_server2 = FactoryGirl.create(:miq_server, :is_master => true, :zone => @miq_server1.zone, :name => "Server 2")
         @miq_server2.deactivate_all_roles
-        @miq_server2.role         = 'event, ems_metrics_coordinator, ems_operations'
+        @miq_server2.role = 'event, ems_metrics_coordinator, ems_operations'
         @miq_server2.activate_roles("event", "ems_metrics_coordinator", 'ems_operations')
 
         @miq_server3 = FactoryGirl.create(:miq_server, :zone => @miq_server2.zone, :name => "Server 3")
         @miq_server3.deactivate_all_roles
-        @miq_server3.role         = 'ems_metrics_coordinator, ems_inventory, ems_operations'
+        @miq_server3.role = 'ems_metrics_coordinator, ems_inventory, ems_operations'
         @miq_server3.activate_roles("ems_operations")
 
         @miq_server1.monitor_servers

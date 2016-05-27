@@ -68,6 +68,6 @@ describe MiqWebServerWorkerMixin do
       end
     end
 
-    expect(test_class.binding_address).to eq (before + "JUNK")
+    expect(test_class.binding_address).to eq(before + "JUNK")
   end
 end

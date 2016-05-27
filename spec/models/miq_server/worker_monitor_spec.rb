@@ -263,7 +263,7 @@ describe "MiqWorker Monitor" do
         context "when worker queues up message for server" do
           before(:each) do
             @ems_id = 7
-            @worker1.send_message_to_worker_monitor('reconnect_ems', "#{@ems_id}")
+            @worker1.send_message_to_worker_monitor('reconnect_ems', @ems_id.to_s)
           end
 
           it "should queue up work for the server" do
@@ -271,7 +271,7 @@ describe "MiqWorker Monitor" do
             expect(q.class_name).to eq("MiqServer")
             expect(q.instance_id).to eq(@miq_server.id)
             expect(q.method_name).to eq('message_for_worker')
-            expect(q.args).to eq([@worker1.id, 'reconnect_ems', "#{@ems_id}"])
+            expect(q.args).to eq([@worker1.id, 'reconnect_ems', @ems_id.to_s])
             expect(q.queue_name).to eq('miq_server')
             expect(q.zone).to eq(@miq_server.zone.name)
             expect(q.server_guid).to eq(@miq_server.guid)

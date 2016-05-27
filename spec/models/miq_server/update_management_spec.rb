@@ -166,7 +166,7 @@ describe MiqServer do
 
   it "#check_updates" do
     expect(yum).to receive(:updates_available?).twice.and_return(true)
-    expect(yum).to receive(:version_available).with("cfme-appliance").once.and_return({"cfme-appliance" => "3.1"})
+    expect(yum).to receive(:version_available).with("cfme-appliance").once.and_return("cfme-appliance" => "3.1")
     allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
 
     @server.check_updates
