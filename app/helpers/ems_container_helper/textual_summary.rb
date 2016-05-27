@@ -18,7 +18,26 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_group_status
-    %i(refresh_status)
+    textual_authentications + %i(refresh_status)
+  end
+
+  def textual_authentications
+    authentications = @ems.authentications
+    return [{:label => _("Default Authentication"), :title => t = _("None"), :value => t}] if authentications.blank?
+
+    authentications.collect do |auth|
+      label =
+        case auth.authtype
+        when "default" then _("Default")
+        when "bearer" then _("Bearer")
+        when "hawkular" then _("Hawkular")
+        else; _("<Unknown>")
+        end
+
+      {:label => _("%{label} Authentication") % {:label => label},
+       :value => auth.status || _("None"),
+       :title => auth.status_details}
+    end
   end
 
   def textual_group_component_statuses
