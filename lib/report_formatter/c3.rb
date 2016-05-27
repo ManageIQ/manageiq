@@ -74,6 +74,15 @@ module ReportFormatter
       if chart_is_stacked?
         mri.chart[:data][:groups] = [[]]
       end
+
+      # C&U chart
+      if graph_options[:chart_type] == :performance
+        format, options = javascript_format(mri.graph[:columns][0], nil)
+        return unless format
+
+        axis_formatter = {:function => format, :options => options}
+        mri.chart[:axis][:y] = {:tick => {:format => axis_formatter}}
+      end
     end
 
     def c3_convert_type(type)
