@@ -1,4 +1,3 @@
-Chargeback
 describe ChargebackContainerProject do
   before do
     MiqRegion.seed
