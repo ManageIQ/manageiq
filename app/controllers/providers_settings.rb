@@ -15,7 +15,7 @@ module ProvidersSettings
   # First record from get_view method is actual view.
   # This view is sent to view_to_hash(view) and here are fetched data as hash.
   def generate_providers
-    view = get_view(model)[0]
+    view, _view_pages = get_view(model)[0]
     view_to_hash(view)
   end
 end

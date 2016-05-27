@@ -1,34 +1,10 @@
-.row.toolbar-pf{"ng-init" => "vm.loadData()"}
+%miq-notification-section.col-md-12{:limit => "2", "show-info" => "{{true}}", "ng-init" => "vm.loadData()"}
+.row{:style => ""}
   .col-md-12
-    .toolbar-pf-actions
-      %miq-toolbar-menu{"toolbar-items" => "vm.toolbarItems"}
-      .toolbar-pf-view-selector.form-group
-        %ul.list-inline
-          %li{"ng-class" => "vm.getClassByLocation('grid')"}
-            %a{"ng-click" => "vm.activeView = 'grid'", :title => "Grid View", "ui-sref" => "list_providers.grid"}
-              %i.fa.fa-th{:style => ""}
-          %li{"ng-class" => "vm.getClassByLocation('tile')"}
-            %a{"ng-click" => "vm.activeView = 'tile'", :title => "Tile View", "ui-sref" => "list_providers.tile"}
-              %i.fa.fa-th-large{:style => ""}
-          %li{"ng-class" => "vm.getClassByLocation('list')"}
-            %a{"ng-click" => "vm.activeView = 'list'", :title => "List View", "ui-sref" => "list_providers.list"}
-              %i.fa.fa-th-list{:style => ""}
-.row.max-height
-  .col-md-2.col-ld-2.col-xs-3.sidebar-pf.sidebar-pf-left.max-height
-    %div
-      %br/
-      .alert.alert-info
-        %span.pficon.pficon-info
-        %strong
-          No filters defined.
-  .col-md-10.col-ld-10.max-height.miq-auto-overflow
-    %miq-notification-section.col-md-12{:limit => "2", "show-info" => "{{true}}"}
-    .row{:style => ""}
+    .row
+      .col-md-7
+        %h1
+          Middleware Managers
+    .row
       .col-md-12
-        .row
-          .col-md-7
-            %h1
-              Middleware Managers
-        .row
-          .col-md-12
-            %div{"ui-view" => ""}
+        %div{"ui-view" => ""}

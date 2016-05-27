@@ -1,0 +1,9 @@
+= render :partial => "layouts/vertical_navbar"
+.container-fluid.container-pf-nav-pf-vertical.container-pf-nav-pf-vertical-with-tertiary.max-height
+  .max-height{"data-ng-app" => @angular_app_name.to_s, "ng-controller" => "miqListProvidersController as vm"}
+    %div{"ui-view" => "toolbar"}
+    .row.max-height
+      .col-md-2.col-ld-2.col-xs-3.sidebar-pf.sidebar-pf-left.max-height{"ng-if" => "vm.hasTree"}
+        = render :partial => "layouts/listnav"
+      .max-height.miq-auto-overflow{"ng-class" => "{'col-md-10 col-ld-10': vm.hasTree, 'col-md-12 col-ld-12': !vm.hasTree}"}
+        %div{"ui-view" => "content"}

@@ -93,6 +93,21 @@
     }
   }
 
+  observeOnChanges = function() {
+    Rx.Observable.ofObjectChanges(ManageIQ.angular.dataAccessor).subscribe(function(event){
+      if (event.hasOwnProperty('object') && event.object.hasOwnProperty('data')) {
+        console.log(event.object.data);
+      }
+    }.bind(this));
+  }
+
+  enableTreeOnStateChange = function() {
+    Rx.Observable.ofObjectChanges(this.$state).subscribe(function(event){
+      this.hasTree = event.name === 'transition' &&
+        event.object.current.hasTree;
+    }.bind(this));
+  }
+
   /**
   * ListProvidersController constructor.
   * @param  MiQDataTableService service with dataTable loading and sorting.
@@ -113,12 +128,9 @@
     this.isList = true;
     this.data = [];
     this.columnsToShow = [];
-    this.MiQToolbarSettingsService.getSettings(this.isList).then(function(toolbarItems){
-      this.functionReference = setFunctionReference.bind(this)();
-      this.toolbarItems = toolbarItems;
-      setFunctionsForToolbar.bind(this)();
-    }.bind(this))
     this.perPage = setPerPage.bind(this)();
+    observeOnChanges.bind(this)();
+    enableTreeOnStateChange.bind(this)();
   };
 
   /**
@@ -252,6 +264,11 @@
   * It uses promises and calls #assignData(rowsCols) for handeling recieved data.
   */
   ListProvidersController.prototype.loadData = function() {
+    this.MiQToolbarSettingsService.getSettings(this.isList).then(function(toolbarItems){
+      this.functionReference = setFunctionReference.bind(this)();
+      this.toolbarItems = toolbarItems;
+      setFunctionsForToolbar.bind(this)();
+    }.bind(this))
     return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl().then(function(rowsCols){
       this.assignData(rowsCols);
       return rowsCols;

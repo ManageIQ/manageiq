@@ -9,8 +9,8 @@
 %miq-toolbar-list#per-page{"ng-if" => "vm.data",
 "on-item-click" => "vm.onPerPage(item)",
 "toolbar-list" => "vm.perPage"}
-%miq-small-tile-view.max-height{"has-loader" => "vm.MiQDataTableService.dataTableService.visibleItems.length < vm.MiQDataTableService.dataTableService.rows.length",
-:headers => "vm.columnsToShow",
+%miq-small-tile-view.max-height{:headers => "vm.columnsToShow",
+"has-loader" => "vm.MiQDataTableService.dataTableService.visibleItems.length < vm.MiQDataTableService.dataTableService.rows.length",
 "default-action" => "vm.defaultAction",
 :items => "vm.MiQDataTableService.dataTableService.visibleItems",
 "load-more-items" => "vm.MiQDataTableService.loadMore()",

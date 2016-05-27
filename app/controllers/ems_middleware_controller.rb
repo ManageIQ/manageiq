@@ -16,6 +16,7 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def index
+    @lastaction = "show_list"
     @angular_app_name = 'middleware.provider'
   end
 
