@@ -1,8 +1,8 @@
 describe MiqVimBrokerWorker do
   before(:each) do
-    guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
-    other_ems = FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
+    _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+    FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
+    FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
     allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:authentication_status_ok? => true)
   end
 

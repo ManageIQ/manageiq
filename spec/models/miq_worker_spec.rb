@@ -77,7 +77,7 @@ describe MiqWorker do
 
       it "that is a subset of server roles" do
         check_has_required_role(["foo"], true)
-        check_has_required_role(["bah", "foo"], true)
+        check_has_required_role(%w(bah foo), true)
       end
 
       it "that is not a subset of server roles" do
