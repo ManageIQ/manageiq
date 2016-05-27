@@ -15,7 +15,7 @@ class Chargeback < ActsAsArModel
     options[:ext_options] ||= {}
 
     base_rollup = MetricRollup.includes(
-      :resource           => :hardware,
+      :resource           => [:hardware, :tenant],
       :parent_host        => :tags,
       :parent_ems_cluster => :tags,
       :parent_storage     => :tags,
@@ -69,12 +69,16 @@ class Chargeback < ActsAsArModel
     @enterprise ||= MiqEnterprise.my_enterprise
 
     tags = perf.tag_names.split("|").reject { |n| n.starts_with?("folder_path_") }.sort.join("|")
-    key = "#{tags}_#{perf.parent_host_id}_#{perf.parent_ems_cluster_id}_#{perf.parent_storage_id}_#{perf.parent_ems_id}"
+    keys = [tags, perf.parent_host_id, perf.parent_ems_cluster_id, perf.parent_storage_id, perf.parent_ems_id]
+    tenant_resource = perf.resource.try(:tenant)
+    keys.push(tenant_resource.id) unless tenant_resource.nil?
+    key = keys.join("_")
     return @rates[key] if @rates.key?(key)
 
     tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "vm/tag/managed/#{t}"; arr }
 
     parents = [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise].compact
+    parents.push(tenant_resource) unless tenant_resource.nil?
 
     @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents, :associations_preloaded => true)
   end
