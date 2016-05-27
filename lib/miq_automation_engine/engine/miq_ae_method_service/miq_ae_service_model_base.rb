@@ -3,7 +3,6 @@ require_relative 'miq_ae_service_rbac'
 module MiqAeMethodService
   class MiqAeServiceModelBase
     SERVICE_MODEL_PATH = Rails.root.join("lib", "miq_automation_engine", "service_models")
-    SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join("miq_ae_service_*.rb")
     EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/].freeze
     class << self
       include DRbUndumped  # Ensure that Automate Method can get at the class itself over DRb
@@ -39,6 +38,11 @@ module MiqAeMethodService
     private_class_method :allowed_find_method?
 
     def self.inherited(subclass)
+      # Skip for anonymous classes
+      expose_class_attributes(subclass) if subclass.name
+    end
+
+    def self.expose_class_attributes(subclass)
       subclass.class_eval do
         model.attribute_names.each do |attr|
           next if EXPOSED_ATTR_BLACK_LIST.any? { |rexp| attr =~ rexp }
@@ -100,6 +104,62 @@ module MiqAeMethodService
 
         "MiqAeMethodService::#{model_name}".constantize
       end.compact!
+    end
+
+    def self.create_service_model_from_name(name)
+      backing_model = service_model_name_to_model(name)
+
+      create_service_model(backing_model) if ar_model?(backing_model)
+    end
+
+    def self.create_service_model(ar_model)
+      file_path = model_to_file_path(ar_model)
+      if File.exist?(file_path)
+        require file_path
+        model_name_from_active_record_model(ar_model).safe_constantize
+      else
+        dynamic_service_model_creation(ar_model, service_model_superclass(ar_model))
+      end
+    end
+    private_class_method :create_service_model
+
+    def self.dynamic_service_model_creation(ar_model, super_class)
+      Class.new(super_class) do |klass|
+        ::MiqAeMethodService.const_set(model_to_service_model_name(ar_model), klass)
+        expose_class_attributes(klass)
+      end
+    end
+    private_class_method :dynamic_service_model_creation
+
+    def self.service_model_superclass(ar_model)
+      return self if ar_model.superclass == ApplicationRecord
+
+      model_name_from_active_record_model(ar_model.superclass).safe_constantize
+    end
+    private_class_method :service_model_superclass
+
+    def self.ar_model?(the_model)
+      return false unless the_model
+      the_model < ApplicationRecord || false
+    end
+
+    def self.service_model_name_to_model(service_model_name)
+      ar_model_name = /MiqAeService(.+)$/.match(service_model_name)
+      return if ar_model_name.nil?
+
+      ar_model_name[1].gsub(/_/, '::').safe_constantize
+    end
+
+    def self.model_to_service_model_name(ar_model)
+      "MiqAeService#{ar_model.name.gsub(/::/, '_')}"
+    end
+
+    def self.model_to_file_name(ar_model)
+      "miq_ae_service_#{ar_model.name.underscore.tr('/', '-')}.rb"
+    end
+
+    def self.model_to_file_path(ar_model)
+      File.join(SERVICE_MODEL_PATH, model_to_file_name(ar_model))
     end
 
     def self.ar_base_model
