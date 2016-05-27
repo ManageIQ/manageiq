@@ -268,6 +268,7 @@ end
 
 ActiveRecord::Base.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
 ActiveSupport::Dependencies.send(:prepend, DescendantLoader::AsDependenciesClearWithLoader)
+ActsAsArModel.singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
 
 at_exit do
   DescendantLoader.instance.save_cache!
