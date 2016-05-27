@@ -137,6 +137,11 @@ module Metric::Rollup
     :cpu_usage_rate_average
   ]
 
+  DAILY_SUM_COLUMNS = [
+    :stat_container_group_create_rate,
+    :stat_container_group_delete_rate,
+    :stat_container_image_registration_rate
+  ].freeze
   BURST_COLS = [
     :cpu_usage_rate_average,
     :disk_usage_rate_average,
