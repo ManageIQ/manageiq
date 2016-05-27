@@ -23,12 +23,12 @@ describe MiqEmsRefreshCoreWorker::Runner do
       end
 
       it "with unknown properties" do
-        should_not_have_changed @vm, {"unknown.property" => "unknown_value"}
+        should_not_have_changed @vm, "unknown.property" => "unknown_value"
       end
 
       context "with runtime.memoryOverhead HACK" do
         it "alone" do
-          should_not_have_changed @vm, {"runtime.memoryOverhead" => 123456}
+          should_not_have_changed @vm, "runtime.memoryOverhead" => 123456
         end
 
         it "and other valid properties" do

@@ -24,7 +24,7 @@ describe MiqVimBrokerWorker::Runner do
     expect_any_instance_of(described_class).to receive(:start_broker_server).once
     expect_any_instance_of(described_class).to receive(:reset_broker_update_notification).once
     expect_any_instance_of(described_class).to receive(:reset_broker_update_sleep_interval).once
-    vim_broker_worker = described_class.new({:guid => @worker_guid})
+    vim_broker_worker = described_class.new(:guid => @worker_guid)
 
     expect(vim_broker_worker.instance_variable_get(:@initial_emses_to_monitor)).to match_array @zone.ext_management_systems
 
@@ -36,7 +36,7 @@ describe MiqVimBrokerWorker::Runner do
   context "with a worker created" do
     before(:each) do
       expect_any_instance_of(described_class).to receive(:after_initialize).once
-      @vim_broker_worker = described_class.new({:guid => @worker_guid})
+      @vim_broker_worker = described_class.new(:guid => @worker_guid)
       allow(@vim_broker_worker).to receive(:worker_settings).and_return(
         :vim_broker_worker_max_wait => 60, :vim_broker_worker_max_objects => 250)
     end

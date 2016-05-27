@@ -2,7 +2,7 @@ describe MiqReplicationWorker::Runner do
   before do
     EvmSpecHelper.create_guid_miq_server_zone
     allow_any_instance_of(MiqReplicationWorker::Runner).to receive(:worker_initialization)
-    @worker = MiqReplicationWorker::Runner.new.tap { |w| w.sync_worker_settings }
+    @worker = MiqReplicationWorker::Runner.new.tap(&:sync_worker_settings)
   end
 
   context "testing rubyrep_alive?" do
