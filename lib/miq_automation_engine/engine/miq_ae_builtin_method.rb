@@ -53,9 +53,9 @@ module MiqAeEngine
       # * +obj+ - Object to invoke the builtin on.
       # * +inputs+ - Inputs to pass to the method. Hash
       def invoke_builtin(name, obj, inputs)
-        @builtins ||= {}
         meth = get_builtin(name).first
-        meth_params = meth.parameters.collect do |_, param_name|
+        # Taking only :opt, we do not care about :rest
+        meth_params = meth.parameters.select { |pt, _| pt == :opt } .collect do |_, param_name|
           if param_name == :obj
             obj
           elsif param_name == :inputs
