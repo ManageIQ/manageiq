@@ -5,6 +5,7 @@ require 'uri'
 class VmOrTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include ScanningMixin
+  include SupportsFeatureMixin
 
   self.table_name = 'vms'
 
