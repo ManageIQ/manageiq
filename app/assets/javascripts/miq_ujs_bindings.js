@@ -19,7 +19,7 @@ $(document).ready(function () {
     if (el.attr('data-miq_sparkle_off')) {
       options.complete = true;
     }
-    submit = el.attr('data-submit');
+    var submit = el.attr('data-submit');
     if (typeof submit != "undefined")
       miqJqueryRequest(url, {data: miqSerializeForm(submit)});
     else

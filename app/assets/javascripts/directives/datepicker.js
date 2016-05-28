@@ -2,7 +2,7 @@ ManageIQ.angular.app.directive('datepickerInit', function () {
   return {
     require: 'ngModel',
     link: function (scope, elem, attr, ctrl) {
-      language = attr.language;
+      var language = attr.language;
       scope['form_' + ctrl.$name] = elem;
 
       scope.$watch(attr.ngModel, function() {

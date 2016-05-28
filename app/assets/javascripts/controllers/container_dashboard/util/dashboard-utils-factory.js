@@ -95,8 +95,8 @@ angular.module('miq.util').factory('dashboardUtilsFactory', function() {
     }
   };
   var parseDate = function(date) {
-    myDate = Date.parse(date);
-    return isNaN(myDate) ? date : myDate
+    var myDate = Date.parse(date);
+    return isNaN(myDate) ? date : myDate;
   };
   return {
     parseDate: parseDate,

@@ -98,6 +98,6 @@ function miqGetSortUrl(col_id) {
 }
 
 function miqGridSort(col_id) {
-  url = miqGetSortUrl(col_id);
+  var url = miqGetSortUrl(col_id);
   miqJqueryRequest(url, {beforeSend: true, complete: true});
 }
