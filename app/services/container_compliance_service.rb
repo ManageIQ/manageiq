@@ -246,12 +246,32 @@ class ContainerComplianceService
   end
 
   def daily_image_metrics
-    daily_image_metrics = Hash.new(0)
-    daily_provider_metrics.each do |m|
-      day = m.timestamp.strftime("%Y-%m-%d")
-      daily_image_metrics[day] +=
-          m.stat_container_image_registration_rate if m.stat_container_image_registration_rate.present?
+    # image_matrix: Divide the set of container images to disjoint groups:
+    #
+    # image_matrix = [
+    #   :high_severity_scap_infringers   => 2,
+    #   :medium_severity_scap_infringers => 3,
+    #   :low_severity_scap_infringers    => 5,
+    #   :no_violation_and_no_scap_data   => 2,
+    #   :no_violation_with_scap_data     => 2,
+    # ]
+    all_images = ContainerImage.pluck(:id)
+    # ContainerImage.joins(:openscap_result => :openscap_rule_results).where(:openscap_rule_results.result = 'fail')
+    sql = "SELECT container_images.id, openscap_rule_results.severity FROM container_images INNER JOIN openscap_results ON openscap_results.container_image_id = container_images.id INNER JOIN openscap_rule_results ON openscap_rule_results.openscap_result_id = openscap_results.id WHERE openscap_rule_results.result = 'fail'  GROUP BY openscap_rule_results.severity, container_images.id;"
+    container_image_severities = {}
+    ActiveRecord::Base.connection.execute(sql).each do |res|
+
+      container_image_severities[res['id']] ||= []
+      container_image_severities[res['id']] << res['severity']
     end
+
+
+    %w(low mediud high).each do |severity|
+      all_images.each do |image|
+
+      end
+    end
+
 
     if daily_image_metrics.any?
       {
