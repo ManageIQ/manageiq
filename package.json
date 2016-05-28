@@ -1,0 +1,25 @@
+{
+  "name": "manageiq",
+  "version": "1.0.0",
+  "description": "ManageIQ Cloud Management Platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManageIQ/manageiq.git"
+  },
+  "author": "ManageIQ",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ManageIQ/manageiq/issues"
+  },
+  "homepage": "https://github.com/ManageIQ/manageiq#readme",
+  "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "eslint": "^2.10.2",
+    "eslint-config-airbnb-es5": "^1.0.9",
+    "eslint-plugin-react": "^5.1.1"
+  }
+}
