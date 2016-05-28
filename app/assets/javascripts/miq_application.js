@@ -736,6 +736,7 @@ function miqRESTAjaxButton(url, button, data) {
       e.preventDefault();
       return false;
     });
+    var formData;
     if(data != undefined) {
       formData = data;
     }
@@ -1654,7 +1655,7 @@ function toggle_expansion(link) {
 function check_for_ellipsis(){
     var $element = $('.expand');
     $.each($element, function( i, value ) {
-        $val = $(value)
+        var $val = $(value)
         var $c = $val.clone().css('overflow', 'initial').appendTo('body');
         if( $c.width() > $val.width() && $val.parent().find('i.fa-angle-right').length == 0) {
             add_expanding_icon($val.parent())

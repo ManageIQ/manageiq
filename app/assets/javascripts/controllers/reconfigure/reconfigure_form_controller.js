@@ -151,10 +151,10 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         }
         else if ($scope.reconfigureModel.vmdisks[disk]['add_remove'] === 'add') {
           var dsize = parseInt($scope.reconfigureModel.vmdisks[disk].hdSize);
-          if($scope.reconfigureModel.vmdisks[disk].hdUnit == 'GB')
+          if ($scope.reconfigureModel.vmdisks[disk].hdUnit == 'GB')
             dsize *= 1024;
-          dmode = ($scope.reconfigureModel.vmdisks[disk].hdMode == 'persistent');
-          dtype = ($scope.reconfigureModel.vmdisks[disk].hdType == 'thin');
+          var dmode = ($scope.reconfigureModel.vmdisks[disk].hdMode == 'persistent');
+          var dtype = ($scope.reconfigureModel.vmdisks[disk].hdType == 'thin');
           $scope.reconfigureModel.vmAddDisks.push({disk_size_in_mb: dsize,
                                                    persistent: dmode,
                                                    thin_provisioned: dtype,

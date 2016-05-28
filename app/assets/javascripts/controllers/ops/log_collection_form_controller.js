@@ -35,7 +35,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
 
       miqService.sparkleOn();
 
-      url = $scope.logCollectionFormFieldsUrl;
+      var url = $scope.logCollectionFormFieldsUrl;
       $http.get(url + serverId).success(function(data) {
         $scope.logCollectionModel.log_protocol = data.log_protocol;
         $scope.logCollectionModel.depot_name = data.depot_name;
@@ -60,7 +60,7 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
 
     if(miqDBBackupService.knownProtocolsList.indexOf($scope.logCollectionModel.log_protocol) == -1 &&
        $scope.logCollectionModel.log_protocol != '') {
-      url = $scope.logProtocolChangedUrl;
+      var url = $scope.logProtocolChangedUrl;
       miqService.sparkleOn();
       $http.get(url + serverId + '?log_protocol=' + $scope.logCollectionModel.log_protocol).success(function (data) {
         $scope.logCollectionModel.depot_name = data.depot_name;
@@ -87,9 +87,10 @@ ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope
   $scope.saveClicked = function() {
     miqService.sparkleOn();
     var url = $scope.saveUrl + serverId + '?button=save';
-    moreUrlParams = $.param(miqService.serializeModel($scope.logCollectionModel));
-    if(moreUrlParams)
+    var moreUrlParams = $.param(miqService.serializeModel($scope.logCollectionModel));
+    if (moreUrlParams) {
       url += '&' + decodeURIComponent(moreUrlParams);
+    }
     miqService.miqAjaxButton(url, false);
     $scope.angularForm.$setPristine(true);
   };
