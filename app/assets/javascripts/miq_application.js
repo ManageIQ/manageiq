@@ -1,4 +1,4 @@
-/* global dialogFieldRefresh jqplot_bind_events miqBrowserDetect miqExpressionPrefill miqGridCheckAll miqGridGetCheckedRows miqLoadTL miqMenu miqValueStylePrefill performFiltering */
+/* global dialogFieldRefresh jqplot_bind_events miqBrowserDetect miqExpressionPrefill miqGridCheckAll miqGridGetCheckedRows miqLoadTL miqMenu miqValueStylePrefill performFiltering miq_after_onload */
 
 // MIQ specific JS functions
 
@@ -44,6 +44,7 @@ function miqOnLoad() {
   }
 
   // Run MIQ after onload code if present
+  // FIXME: miq_after_onload -> move under ManageIQ
   if (typeof miq_after_onload == "string") {
     eval(miq_after_onload);
   }
