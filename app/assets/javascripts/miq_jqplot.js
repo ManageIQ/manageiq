@@ -67,8 +67,8 @@ function jqplot_redraw_charts() {
   }
   for (var chart in ManageIQ.charts.charts)
     if (ManageIQ.charts.charts.hasOwnProperty(chart)) {
-	    // We are passing in the foobar option to fool jqplot into doing full reInitialize()
-	    // instead of quickInit() to properly recalculate the bar charts.
+      // We are passing in the foobar option to fool jqplot into doing full reInitialize()
+      // instead of quickInit() to properly recalculate the bar charts.
       try {
         ManageIQ.charts.charts[chart].replot({resetAxes: true, foobar: true});
       } catch (e) {};

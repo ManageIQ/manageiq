@@ -1665,16 +1665,17 @@ function check_for_ellipsis(){
     });
 };
 
-function add_expanding_icon(element){
-    element.find('.pull-right').append( "<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>" );
+function add_expanding_icon(element) {
+  element.find('.pull-right').append("<a onclick='toggle_expansion(this)'> <i class='fa fa-angle-right'></i>");
 }
 
 function chartData(type, data, data2) {
-  if(type == undefined){
+  if (type == undefined) {
     return;
   }
+
   // set maximum count of x axis tick labels
-  if(_.isObject(data.miq) && data.miq.performance){
+  if (_.isObject(data.miq) && data.miq.performance) {
     data.axis.x.tick.centered = true;
     data.axis.x.tick.culling = {max: 5}
   }

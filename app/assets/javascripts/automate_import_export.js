@@ -8,27 +8,27 @@ var Automate = {
 
     $.getJSON("automate_json?import_file_upload_id=" + importFileUploadId)
       .done(function(rows_json) {
-      Automate.addDomainOptions(rows_json.children);
-      Automate.setupInitialDynatree(rows_json.children);
+        Automate.addDomainOptions(rows_json.children);
+        Automate.setupInitialDynatree(rows_json.children);
 
-      $('select.importing-domains').change(function() {
-        Automate.importingDomainsChangeHandler(rows_json.children);
+        $('select.importing-domains').change(function() {
+          Automate.importingDomainsChangeHandler(rows_json.children);
+        });
+
+        $('#import_file_upload_id').val(importFileUploadId);
+        $('.import-data').show();
+        $('.import-or-export').hide();
+        showSuccessMessage(JSON.parse(message).message);
+      })
+      .fail(function(failedMessage) {
+        var messageData = JSON.parse(failedMessage.responseText);
+
+        if (messageData.level == 'warning') {
+          showWarningMessage(messageData.message);
+        } else {
+          showErrorMessage(messageData.message);
+        }
       });
-
-      $('#import_file_upload_id').val(importFileUploadId);
-      $('.import-data').show();
-      $('.import-or-export').hide();
-      showSuccessMessage(JSON.parse(message).message);
-    })
-    .fail(function(failedMessage) {
-      var messageData = JSON.parse(failedMessage.responseText);
-
-      if (messageData.level == 'warning') {
-        showWarningMessage(messageData.message);
-      } else {
-        showErrorMessage(messageData.message);
-      }
-    });
 
   },
 
