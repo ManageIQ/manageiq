@@ -20,7 +20,7 @@
 // Note: We currently allow eval() to parse the 'data' attribtes, when initializing from HTML.
 // TODO: pass jsHint with the options given in grunt.js only.
 //       The following should not be required:
-/*global alert */
+/*global alert check_for_ellipsis */
 /*jshint nomen:false, smarttabs:true, eqeqeq:false, evil:true, regexp:false */
 
 /*************************************************************************

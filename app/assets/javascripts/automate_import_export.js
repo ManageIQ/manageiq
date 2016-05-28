@@ -1,5 +1,7 @@
 //= require import
 
+/* global miqSparkleOn miqSparkleOff showSuccessMessage showErrorMessage showWarningMessage clearMessages */
+
 var Automate = {
   getAndRenderAutomateJson: function(importFileUploadId, message) {
     $('.hidden-import-file-upload-id').val(importFileUploadId);

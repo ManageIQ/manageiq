@@ -1,3 +1,5 @@
+/* global miqJqueryRequest miqSetButtons miqSparkleOn */
+
 (function($) {
   $.fn.miqGrid = function() {
     var table = $(this);
