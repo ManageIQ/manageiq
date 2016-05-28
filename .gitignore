@@ -122,5 +122,8 @@ tmp/*
 vendor/bundle
 vendor/assets/bower_components/
 
+# npm
+node_modules/
+
 # ignore included plugins in bundler.d
 bundler.d/*
