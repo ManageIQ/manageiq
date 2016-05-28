@@ -1,3 +1,5 @@
+/* global miqAjaxButton miqBuildCalendar miqButtons miqJqueryRequest miqRESTAjaxButton miqSparkleOff miqSparkleOn */
+
 ManageIQ.angular.app.service('miqService', function() {
 
   this.storedPasswordPlaceholder = "●●●●●●●●";

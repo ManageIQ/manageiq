@@ -1,3 +1,5 @@
+/* global DoNav miqClearTreeState miqDomElementExists miqJqueryRequest miqSetButtons miqSparkle */
+
 // Functions used by CFME for the dynatree control
 
 // OnCheck handler for the checkboxes in tree

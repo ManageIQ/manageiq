@@ -1,3 +1,5 @@
+/* global miqBuildChartMenuEx */
+
 // MIQ specific jqplot related code
 
 function _jqplot_eval_option(data, option) {

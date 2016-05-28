@@ -1,3 +1,5 @@
+/* global dialogFieldRefresh jqplot_bind_events miqBrowserDetect miqExpressionPrefill miqGridCheckAll miqGridGetCheckedRows miqLoadTL miqMenu miqValueStylePrefill performFiltering */
+
 // MIQ specific JS functions
 
 // Things to be done on page loads

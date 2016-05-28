@@ -1,3 +1,5 @@
+/* global dialogFieldRefresh miqCheckForChanges miqCheckMaxLength miqJqueryRequest miqMenuChangeRow miqObserveRequest miqSendDateRequest miqSendOneTrans miqSerializeForm miqSparkle miqSparkleOn */
+
 // MIQ unobtrusive javascript bindings run when document is fully loaded
 
 $(document).ready(function () {

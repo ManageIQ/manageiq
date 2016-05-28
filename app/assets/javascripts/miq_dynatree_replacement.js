@@ -1,3 +1,5 @@
+/* global miqAddNodeChildren miqBindHoverEvent miqCheckForChanges miqDeleteDynatreeCookies miqDynatreeActivateNodeSilently miqExpandParentNodes miqOnDblClickExpand miqOnDblClickNoBaseExpand miqOnLazyReadGetNodeChildren */
+
 ManageIQ.dynatreeReplacement = {
   replace: function (options) {
     var onDblClickFunction;
