@@ -55,18 +55,19 @@
 
   - if cfme_no_click
     onClick: function(node, event) {
-    event_type = node.getEventTargetType(event);
-    if (event_type != 'expander') return false;
+    var event_type = node.getEventTargetType(event);
+    if (event_type != 'expander') {
+    return false;
+    }
     },
 
   - if onselect
     onSelect: function(flag, node) {
     var selectedNodes = node.tree.getSelectedNodes();
-    var selectedKeys = $.map(selectedNodes, function(node){
+    var selectedKeys = $.map(selectedNodes, function(node) {
     return node.data.key;
     });
     #{onselect}('#{tree_name}', node.data.key, flag, selectedKeys);
-    return;
     },
 
   - if onclick || disable_checks || oncheck
@@ -77,7 +78,7 @@
       },
 
     onClick: function(node, event) {
-    event_type = node.getEventTargetType(event);
+    var event_type = node.getEventTargetType(event);
     if (event_type != 'expander' && node.data.cfmeNoClick) return false;
     - if onclick
       if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
