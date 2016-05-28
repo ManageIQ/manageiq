@@ -243,8 +243,9 @@ function miqOnMouseInHostNet(id) {
   if (nid) {
     // div id exists
     var node = $('#' + id); // Get html node
-    var top = getAbsoluteTop(node);
-    $("#" + nid).css({top: (top - 220) + "px"}); // Set quad top location
+    // FIXME: replace with a saner display method
+    var top  = node[0].getBoundingClientRect().top + node.scrollTop() - 220;
+    $("#" + nid).css({ top: top + "px" }); // Set quad top location
     $("#" + nid).show(); // Show the quad div
     return nid; // return current node id
   }
