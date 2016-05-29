@@ -14,7 +14,8 @@ module.exports = {
     },
   },
 
-  extends: 'airbnb-es5',
+  plugins: [ 'angular' ],
+  extends: [ 'airbnb-es5', 'angular' ],
 
   globals: {
     API: false, // local: miq_api.js
@@ -89,5 +90,33 @@ module.exports = {
       classes: true,
     }],
     'padded-blocks': [ 'error', 'never' ],
+
+    // eslint-plugin-angular
+    'angular/module-setter': 0,
+    'angular/foreach': 0,
+    'angular/watchers-execution': [ 'warn', '$apply' ], // but allow $digest for specs
+    'angular/json-functions': 0,
+    'angular/definedundefined': 0,
+    'angular/log': 0,
+    'angular/no-service-method': 0,
+    'angular/di': [ 'error', 'array' ], // strictDi
+
+    // TODO can enable these only in angular dirs
+    'angular/angularelement': 0,
+    'angular/timeout-service': 0,
+    'angular/interval-service': 0,
+
+    // only warnings for now
+    'angular/controller-as': 1,
+    'angular/module-getter': 1,
+    'angular/no-services': [ "warn", ['$http'] ],
+
+    // prefer lodash for typechecks
+    'angular/typecheck-array': 0,
+    'angular/typecheck-date': 0,
+    'angular/typecheck-function': 0,
+    'angular/typecheck-number': 0,
+    'angular/typecheck-object': 0,
+    'angular/typecheck-string': 0,
   },
 };
