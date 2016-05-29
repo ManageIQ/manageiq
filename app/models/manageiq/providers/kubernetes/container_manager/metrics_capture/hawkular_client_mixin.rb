@@ -7,11 +7,12 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
 
   def hawkular_entrypoint
     hawkular_endpoint = @ext_management_system.connection_configurations.hawkular.try(:endpoint)
+    hawkular_endpoint_empty = hawkular_endpoint.try(:hostname).blank?
     worker_class = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
 
     URI::HTTPS.build(
-      :host => hawkular_endpoint ? hawkular_endpoint.hostname : @ext_management_system.hostname,
-      :port => hawkular_endpoint ? hawkular_endpoint.port : worker_class.worker_settings[:metrics_port],
+      :host => hawkular_endpoint_empty ? @ext_management_system.hostname : hawkular_endpoint.hostname,
+      :port => hawkular_endpoint_empty ? worker_class.worker_settings[:metrics_port] : hawkular_endpoint.port,
       :path => worker_class.worker_settings[:metrics_path])
   end
 
