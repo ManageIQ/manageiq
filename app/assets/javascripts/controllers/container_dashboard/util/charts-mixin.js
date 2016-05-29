@@ -1,12 +1,6 @@
 angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) {
   'use strict';
 
-  var hourlyTimeTooltip = function (data) {
-    var theMoment = moment(data[0].x);
-    return _.template('<div class="tooltip-inner"><%- col1 %>: <%- col2 %></div>')
-      ({col1: theMoment.format('h:mm A'), col2: data[0].value + ' ' + data[0].name});
-  };
-
   var dailyTimeTooltip = function (data) {
     var theMoment = moment(data[0].x);
     return _.template('<div class="tooltip-inner"><%- col1 %>  <%- col2 %></div>')({

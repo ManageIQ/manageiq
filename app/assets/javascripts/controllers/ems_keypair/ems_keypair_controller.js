@@ -5,16 +5,15 @@
       vm.resetClicked();
     });
 
-    $scope.$on('setNewRecord', function(event, args) {
-      if(args != undefined) {
+    $scope.$on('setNewRecord', function(_event, args) {
+      if (args != undefined) {
         vm.newRecord = args.newRecord;
-      }
-      else {
+      } else {
         vm.newRecord = true;
       }
     });
 
-    $scope.$on('setUserId', function(event, args) {
+    $scope.$on('setUserId', function(_event, args) {
       if(args != undefined) {
         $scope.modelCopy[args.userIdName] = args.userIdValue;
       }

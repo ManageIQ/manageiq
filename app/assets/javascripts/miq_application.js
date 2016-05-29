@@ -53,7 +53,7 @@ function miqOnLoad() {
   if ($('#search_text').length) {
     try {
       $('#search_text').focus();
-    } catch (er) {}
+    } catch (_e) {}
   }
 
   miqInitAccordions();
@@ -454,19 +454,19 @@ function miqSetButtons(count, button_div) {
     var toolbar = $('#' + button_div);
 
     // Non-dropdown master buttons
-    toolbar.find('button:not(.dropdown-toggle)').each(function (k, v) {
+    toolbar.find('button:not(.dropdown-toggle)').each(function (_k, v) {
       var button = $(v);
       miqButtonOnWhen(button, button.data('onwhen'), count);
     });
 
     // Dropdown master buttons
-    toolbar.find('button.dropdown-toggle').each(function (k, v) {
+    toolbar.find('button.dropdown-toggle').each(function (_k, v) {
       var button = $(v);
       miqButtonOnWhen(button, button.data('onwhen'), count);
     });
 
     // Dropdown button items
-    toolbar.find('ul.dropdown-menu > li > a').each(function (k, v) {
+    toolbar.find('ul.dropdown-menu > li > a').each(function (_k, v) {
       var button = $(v);
       miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
     });
@@ -995,7 +995,7 @@ function miqInitDashboardCols() {
 }
 
 // Send the updated sortable order after jQuery drag/drop
-function miqDropComplete(event, ui) {
+function miqDropComplete(_event, _ui) {
   var el = $(this);
   var url = "/" + ManageIQ.widget.dashboardUrl + "?" + el.sortable(
               'serialize', {key: el.attr('id') + "[]"}
@@ -1310,14 +1310,14 @@ function miqJqueryRequest(url, options) {
   ]));
 
   if (options.beforeSend) {
-    ajax_options.beforeSend = function (request) {
+    ajax_options.beforeSend = function (_request) {
       miqSparkle(true);
     };
   }
 
   var complete = [];
   if (options.complete) {
-    complete.push(function (request) {
+    complete.push(function (_request) {
       miqSparkle(false);
     });
   }
@@ -1399,7 +1399,7 @@ function miqAccordSelect(e) {
 function miqInitBootstrapSwitch(element, url, options) {
   $("[name="+element+"]").bootstrapSwitch();
 
-  $('#' + element).on('switchChange.bootstrapSwitch', function(event, state){
+  $('#' + element).on('switchChange.bootstrapSwitch', function(_event, state) {
     options =  typeof options !== 'undefined' ? options : {}
     options['no_encoding'] = true;
 
@@ -1411,7 +1411,7 @@ function miqInitBootstrapSwitch(element, url, options) {
 }
 
 // Function to expand/collapse a pair of accordions
-function miqAccordionSwap(collapse, expand) {
+function miqAccordionSwap(_collapse, expand) {
   /*
    * Blocked by: https://github.com/twbs/bootstrap/issues/18418
    * TODO: uncomment this and delete below when the issue is fixed
@@ -1440,7 +1440,7 @@ function miqInitToolbars() {
 }
 
 // Function to run transactions when toolbar button is clicked
-function miqToolbarOnClick(e) {
+function miqToolbarOnClick(_e) {
   var tb_url;
   var button = $(this);
 
@@ -1589,7 +1589,7 @@ function miqSupportCasePrompt(tb_url) {
 }
 
 // Handle chart context menu clicks
-function miqWidgetToolbarClick(e) {
+function miqWidgetToolbarClick(_e) {
   var itemId = $(this).data('click');
   if (itemId == "reset") {
     if (confirm(__("Are you sure you want to reset this Dashboard's Widgets to the defaults?"))) {
@@ -1606,7 +1606,7 @@ function miqInitAccordions() {
   var height = $('#left_div').height() - $('#toolbar').outerHeight();
   var panel = $('.panel-heading').outerHeight();
   var count = $('#accordion:visible > .panel .panel-body').length;
-  $('#accordion:visible > .panel .panel-body').each(function (k, v) {
+  $('#accordion:visible > .panel .panel-body').each(function (_k, v) {
     $(v).css('max-height', (height - count * panel) + 'px');
     $(v).css('overflow-y', 'auto')
     $(v).css('overflow-x', 'hidden')
@@ -1648,21 +1648,21 @@ function miqHideSearchClearButton() {
 }
 
 function toggle_expansion(link) {
-    var link = $(link);
-    link.find("i").toggleClass("fa-angle-right fa-angle-down");
-    link.closest('td').children(0).toggleClass("expanded");
+  var link = $(link);
+  link.find("i").toggleClass("fa-angle-right fa-angle-down");
+  link.closest('td').children(0).toggleClass("expanded");
 }
 
-function check_for_ellipsis(){
-    var $element = $('.expand');
-    $.each($element, function( i, value ) {
-        var $val = $(value)
-        var $c = $val.clone().css('overflow', 'initial').appendTo('body');
-        if( $c.width() > $val.width() && $val.parent().find('i.fa-angle-right').length == 0) {
-            add_expanding_icon($val.parent())
-        }
-        $c.remove();
-    });
+function check_for_ellipsis() {
+  var $element = $('.expand');
+  $.each($element, function(_i, value) {
+    var $val = $(value)
+    var $c = $val.clone().css('overflow', 'initial').appendTo('body');
+    if ( $c.width() > $val.width() && $val.parent().find('i.fa-angle-right').length == 0) {
+      add_expanding_icon($val.parent())
+    }
+    $c.remove();
+  });
 };
 
 function add_expanding_icon(element) {

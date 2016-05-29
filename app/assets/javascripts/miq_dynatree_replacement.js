@@ -76,7 +76,7 @@ ManageIQ.dynatreeReplacement = {
       if (optionsDisableChecks || optionsOnCheckFunction) {
         if (optionsDisableChecks) {
           // Ignore checkbox clicks
-          onclickFunction = function (node, event) {
+          onclickFunction = function (_node, _event) {
             return false;
           };
         } else if (optionsOnCheckFunction) {
@@ -97,7 +97,7 @@ ManageIQ.dynatreeReplacement = {
       }
 
       if (options.onmousein || options.onmouseout) {
-        onExpandFunction = function (node) {
+        onExpandFunction = function (_node) {
           miqBindHoverEvent(options.tree_name);
         };
       }
@@ -122,7 +122,7 @@ ManageIQ.dynatreeReplacement = {
 
     // Activate silently (no onActivate event) selected node AFTER the tree is initially loaded or replaced by AJAX
     if (options.explorer && options.tree_name === options.x_active_tree) {
-      onPostInitFunction = function (isReloading, isError) {
+      onPostInitFunction = function (_isReloading, _isError) {
         miqDynatreeActivateNodeSilently(options.tree_name, options.select_node);
       };
     }

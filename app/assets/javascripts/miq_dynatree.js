@@ -9,7 +9,7 @@ function miqOnCheckHandler(node) {
 }
 
 // Expand/collapse all children on double click
-function miqOnDblClickExpand(node, event) {
+function miqOnDblClickExpand(node, _event) {
   var exp = !node.isExpanded();
   node.expand(exp);
   node.visit(function (n) {
@@ -46,7 +46,7 @@ function miqOnLazyReadGetNodeChildren(node, tree, controller) {
         miqJqueryRequest(url, {beforeSend: true});
       }
     },
-    error: function (node, request) {
+    error: function (_node, request) {
       if (request.status == 401) {
         window.location.href = "/?timeout=true";
       }
@@ -224,7 +224,7 @@ function miqDynatreeToggleExpand(treename, expand_mode) {
 }
 
 // OnCheck handler for the Protect screen
-function miqOnCheckProtect(node, treename) {
+function miqOnCheckProtect(node, _treename) {
   var ppid = node.data.key.split('_').pop();
   var url = check_url + ppid + '?check=' + Number(!node.isSelected());
   miqJqueryRequest(url);
@@ -306,7 +306,7 @@ function miqOnClickTimelineSelection(id) {
 }
 
 // OnCheck handler for the belongs to drift/compare sections tree
-function miqOnCheckSections(tree_name, key, checked, all_checked) {
+function miqOnCheckSections(_tree_name, key, checked, all_checked) {
   var url = check_url + '?id=' + key + '&check=' + checked + '&all_checked=' + all_checked;
   miqJqueryRequest(url);
   return true;
@@ -393,7 +393,7 @@ function miqDynatreeExpandNode(treename, key) {
   node.expand(true);
 }
 
-function miqOnDblClickNoBaseExpand(node, event) {
+function miqOnDblClickNoBaseExpand(node, _event) {
   if (!node.getParent().data.title) {
     return;
   } else {

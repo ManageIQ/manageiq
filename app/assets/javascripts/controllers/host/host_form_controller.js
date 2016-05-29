@@ -141,13 +141,6 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     miqService.miqFlash("warn", __("All changes have been reset"));
   };
 
-  var setFormToValid = function() {
-    for (var name in $scope.angularForm) {
-      if($scope.angularForm[name].$name == name)
-        $scope.angularForm[name].$setValidity('miqrequired', true);
-      }
-    }
-
   $scope.isBasicInfoValid = function() {
     if(($scope.currentTab == "default") &&
       ($scope.hostModel.hostname || $scope.hostModel.validate_id) &&

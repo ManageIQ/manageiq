@@ -101,7 +101,7 @@ var dialogFieldRefresh = {
     }, function(data) {
       var radioButtons = [];
 
-      $.each(data.values.refreshed_values, function(index, value) {
+      $.each(data.values.refreshed_values, function(_index, value) {
         var radio = $('<input>')
           .attr('id', fieldId)
           .attr('name', fieldName)

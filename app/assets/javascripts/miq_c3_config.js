@@ -51,7 +51,7 @@
 
   c3mixins.pfDataColorFunction = {
     data: {
-      color: function (color, d) {
+      color: function (_color, d) {
         return pfColors[d.index % pfColors.length];
       }
     }
@@ -97,10 +97,6 @@
       }
     }
   };
-
-  function percentLabelFormat (value, ratio) {
-    return d3.format('%')(ratio);
-  }
 
 
   ManageIQ.charts.c3config = {

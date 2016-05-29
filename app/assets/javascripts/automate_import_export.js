@@ -35,7 +35,7 @@ var Automate = {
   addDomainOptions: function(domains) {
     $('select.importing-domains').empty();
 
-    $.each(domains, function(index, child) {
+    $.each(domains, function(_index, child) {
       $('select.importing-domains').append(
         $('<option>', {
           value: child.title,
@@ -56,7 +56,7 @@ var Automate = {
   },
 
   importingDomainsChangeHandler: function(domains) {
-    $.each(domains, function(index, child) {
+    $.each(domains, function(_index, child) {
       if ($('select.importing-domains').val() === child.title) {
         $('.domain-tree').dynatree({
           checkbox: true,

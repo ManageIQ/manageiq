@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('retirementFormController', ['$http', '$scope', '$timeout', 'objectIds', 'miqService', function($http, $scope, $timeout, objectIds, miqService) {
+ManageIQ.angular.app.controller('retirementFormController', ['$http', '$scope', 'objectIds', 'miqService', function($http, $scope, objectIds, miqService) {
   $scope.objectIds = objectIds;
   $scope.retirementInfo = {
     retirementDate: null,

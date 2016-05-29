@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('vmCloudDetachFormController', ['$http', '$scope', 'vmCloudDetachFormId', 'miqService', function($http, $scope, vmCloudDetachFormId, miqService) {
+ManageIQ.angular.app.controller('vmCloudDetachFormController', ['$scope', 'vmCloudDetachFormId', 'miqService', function($scope, vmCloudDetachFormId, miqService) {
   $scope.vmCloudModel = { name: '' };
   $scope.formId = vmCloudDetachFormId;
   $scope.afterGet = false;

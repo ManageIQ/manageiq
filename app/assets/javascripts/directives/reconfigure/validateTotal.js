@@ -1,7 +1,7 @@
 ManageIQ.angular.app.directive('validateTotal', function() {
   return {
     require: 'ngModel',
-    link: function(scope, elm, attrs, ctrl) {
+    link: function(_scope, _elm, attrs, ctrl) {
       var maxvalue = attrs.miqmax;
       ctrl.$validators.integer = function(modelValue, viewValue) {
         if (ctrl.$isEmpty(modelValue)) {

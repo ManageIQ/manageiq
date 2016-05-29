@@ -73,8 +73,8 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       contextMenuShowing = false;
   };
 
-  self.contextMenu = function contextMenu(that, data) {
-    if(contextMenuShowing) {
+  self.contextMenu = function contextMenu(_that, data) {
+    if (contextMenuShowing) {
       removeContextMenu();
     } else {
       d3.event.preventDefault();
