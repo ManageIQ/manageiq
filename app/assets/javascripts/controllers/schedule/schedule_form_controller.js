@@ -105,7 +105,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
     angular.forEach(data.filtered_item_list, function(filteredItem) {
       var tempObj = {};
 
-      if (Object.prototype.toString.call(filteredItem) === '[object Array]') {
+      if (_.isArray(filteredItem)) {
         tempObj.text = filteredItem[1];
         tempObj.value = filteredItem[0];
       } else {
