@@ -4,6 +4,9 @@ LOCAL_BOOK = 'local_book.yaml'.freeze
 REPO_URL = "https://copr.fedorainfracloud.org/coprs/maxamillion/origin-next/repo/epel-7/maxamillion-origin-next-epel-7.repo".freeze
 
 def handle_rhel_subscriptions(commands)
+  commands.unshift( "subscription-manager register --username=#{$evm.root['rhsub_user']}  --password=#{$evm.root['rhsub_pass']}",
+                    "subscription-manager repos --disable=\"*\"",
+                    "subscription-manager repos --enable=\"rhel-7-server-rh-common-rpms\" --enable=\"rhel-7-server-rpms\" --enable=\"rhel-7-server-extras-rpms\" --enable=\"rhel-7-server-ose-3.2-rpms\"")
   system "scp -o 'StrictHostKeyChecking no' rhel_subscribe_inventory.yaml " \
     "#{$evm.root['user']}@#{$evm.root['deployment_master']}:~/"
   rhel_subscribe_cmd = "ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/rhel_subscribe.yml -i "\
@@ -68,6 +71,10 @@ def pre_deployment
       end
       commands.each do |cmd|
         result = ssh_exec!(ssh, cmd)
+        if cmd.include?("subscription-manager register") && result[:exit_code] == 0
+          pool_id = ssh_exec!(ssh, "subscription-manager list --available --matches=#{$evm.root['rhsub_sku']} --pool-only")[:stdout].split("\n").first.delete("\r")
+          ssh_exec!(ssh, "subscription-manager attach --pool=#{pool_id}")
+        end
         unless result[:exit_code] == 0
           $evm.root['automation_task'].message = "FAILED: couldn't execute command #{cmd}. ERROR: #{result[:stderr]}"
           $evm.root['ae_result'] = "error"
