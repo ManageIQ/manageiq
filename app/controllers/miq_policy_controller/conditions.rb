@@ -128,7 +128,7 @@ module MiqPolicyController::Conditions
                 :error)
     else
       conditions.push(params[:id])
-      @new_condition_node = "xx-#{con.towhat.downcase}"
+      @new_condition_node = "xx-#{con.towhat.camelize(:lower)}"
     end
     process_conditions(conditions, "destroy") unless conditions.empty?
     get_node_info(@new_condition_node)
