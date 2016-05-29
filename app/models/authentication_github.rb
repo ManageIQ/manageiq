@@ -18,11 +18,4 @@ class AuthenticationGithub < Authentication
     options["github_organizations"] = github_organizations if github_organizations
     ansible_config options
   end
-
-  def assign_values(options)
-    hash = {}
-    hash["password"] = options["clientSecret"]
-    hash["userid"] = options["clientId"]
-    super hash
-  end
 end

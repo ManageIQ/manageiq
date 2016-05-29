@@ -18,12 +18,4 @@ class AuthenticationGoogle < Authentication
     options["challenge"] = "false"
     ansible_config options
   end
-
-  def assign_values(options)
-    hash = {}
-    hash["password"] = options["clientSecret"]
-    hash["google_hosted_domain"] = options["hostedDomain"]
-    hash["userid"] = options["clientId"]
-    super hash
-  end
 end

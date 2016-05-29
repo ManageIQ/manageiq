@@ -113,7 +113,7 @@ class Authentication < ApplicationRecord
 
   # will be removed once moving to yaml format, no need to review method
   def ansible_format(options = {})
-    options.merge!('name' => "example_name", 'login' => "true", 'challenge' => "true", 'kind' => ContainerDeployment::AUTHENTICATIONS_NAMES.key(authtype))
+    options.merge!('name' => "example_name", 'login' => "true", 'challenge' => "true", 'kind' => authtype)
     res = "openshift_master_identity_providers=[" + options.to_json + "]"
     if type.instance_of?(AuthenticationHtpasswd) && !htpassd_users.empty?
       res += "\nopenshift_master_htpasswd_users=#{htpassd_users.first.to_json}"

@@ -33,8 +33,6 @@ class AuthenticationLdap < Authentication
 
   def assign_values(options)
     hash = {}
-    hash["password"] = options["ldap_bind_password"]
-    hash["certificate_authority"] = options["ldap_ca"]
     options.each do |key, val|
       hash["ldap_" + key.to_s] = val
     end

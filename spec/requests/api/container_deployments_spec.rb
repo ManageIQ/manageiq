@@ -2,18 +2,49 @@ describe ApiController do
   describe "Container Deployment create" do
     let(:container_deployment_create_request) do
       {
-        "providerName"       => "dfssasaasdsasada",
-        "providerType"       => "openshiftEnterprise",
-        "provisionOn"        => "exisiting_non_managed",
-        "authentication"     => {"mode" => "all"},
-        "masters"            => [{"vmName" => "10.0.0.1"}],
-        "nodes"              => [{"vmName" => "10.0.0.1"}, {"vmName" => "10.0.0.2"}],
-        "deploymentKey"      => "-----BEGIN RSA PRIVATE KEY----- private_key -----END RSA PRIVATE KEY-----",
-        "deploymentUsername" => "root",
-        "deploymentPassword" => "fds",
-        "rhnUsername"        => "exmaple@redhat.com",
-        "rhnPassword"        => "pass",
-        "rhnSKU"             => "ES0113909"
+        "provider_name": "dfssasaasdsasada",
+        "provider_type": "openshift-enterprise",
+        "method_type": "exisiting_non_managed",
+        "nodes": [{
+                    "name": "10.0.0.1",
+                    "id": nil,
+                    "roles": {
+                      "node": true,
+                      "master": true,
+                      "dns": false,
+                      "etcd": false,
+                      "infrastructure": false,
+                      "load_balancer": false,
+                      "storage": false
+                    }
+                  }, {
+                    "name": "10.0.0.2",
+                    "id": nil,
+                    "roles": {
+                      "node": true,
+                      "master": false,
+                      "dns": false,
+                      "etcd": false,
+                      "infrastructure": false,
+                      "load_balancer": false,
+                      "storage": false
+                    }
+                  }],
+        "underline_provider_id": 1,
+        "identity_authentication": {
+          "mode": "AuthenticationAllowAll"
+        },
+        "ssh_authentication": {
+          "mode": "AuthPrivateKey",
+          "auth_key": "-----BEGIN RSA PRIVATE KEY----- privatekey -----END RSA PRIVATE KEY-----",
+          "user_id": "root"
+        },
+        "rhsm_authentication": {
+          "mode": "AuthenticationRhsm",
+          "userid": "userid",
+          "password": "pass",
+          "rhsm_sku": "sku"
+        }
       }
     end
 

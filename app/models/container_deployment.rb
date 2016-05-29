@@ -7,9 +7,10 @@ class ContainerDeployment < ApplicationRecord
   has_many :custom_attributes, :as => :resource, :dependent => :destroy
   has_many :authentications, :as => :resource, :dependent => :destroy
   serialize :customizations, Hash
-  AUTHENTICATIONS_TYPES = {:AllowAllPasswordIdentityProvider => AuthenticationAllowAll, :HTPasswdPasswordIdentityProvider => AuthenticationHtpasswd, :LDAPPasswordIdentityProvider => AuthenticationLdap, :RequestHeaderIdentityProvider => AuthenticationRequestHeader, :OpenIDIdentityProvider => AuthenticationOpenId, :GoogleIdentityProvider => AuthenticationGoogle, :GitHubIdentityProvider => AuthenticationGithub, :ssh => AuthPrivateKey, :rhsm => AuthenticationRhsm}.freeze
-  AUTHENTICATIONS_NAMES = {:AllowAllPasswordIdentityProvider => "all", :HTPasswdPasswordIdentityProvider => "htPassword", :LDAPPasswordIdentityProvider => "ldap", :RequestHeaderIdentityProvider => "requestHeader", :OpenIDIdentityProvider => "openId", :GoogleIdentityProvider => "google", :GitHubIdentityProvider => "github", :ssh => "ssh", :rhsm => "rhsm"}.freeze
+  AUTH_CONSTS = {"AuthenticationAllowAll" => AuthenticationAllowAll, "AuthenticationHtpasswd" => AuthenticationHtpasswd, "AuthenticationLdap" => AuthenticationLdap, "AuthenticationRequestHeader" => AuthenticationRequestHeader, "AuthenticationOpenId" => AuthenticationOpenId, "AuthenticationGoogle" => AuthenticationGoogle, "AuthenticationGithub" => AuthenticationGithub, "AuthPrivateKey" => AuthPrivateKey, "AuthenticationRhsm" => AuthenticationRhsm}.freeze
+  AUTHENTICATIONS_NAMES = {"AuthenticationAllowAll" => "AllowAllPasswordIdentityProvider", "AuthenticationHtpasswd" => "HTPasswdPasswordIdentityProvider", "AuthenticationLdap" => "LDAPPasswordIdentityProvider", "AuthenticationRequestHeader" => "RequestHeaderIdentityProvider", "AuthenticationOpenId" => "OpenIDIdentityProvider", "AuthenticationGoogle" => "GoogleIdentityProvider", "AuthenticationGithub" => "GitHubIdentityProvider", "AuthPrivateKey" => "ssh", "AuthenticationRhsm" => "rhsm"}.freeze
   ANSIBLE_CONFIG_LOCATION = "/usr/share/atomic-openshift-utils/ansible.cfg".freeze
+
   def ssh_auth
     authentications.where(:type => "AuthPrivateKey").first
   end
@@ -34,9 +35,10 @@ class ContainerDeployment < ApplicationRecord
     container_deployment_nodes.find_tagged_with(:any => "/user/#{role}", :ns => "*")
   end
 
-  # will be removed once moving to yaml format, no need to review method
-  def nfs_addresses
-    addresses_array container_deployment_nodes.find_tagged_with(:any => "/user/nfs", :ns => "*")
+  def num_of_nodes
+    num = 0
+    nodes = container_deployment_nodes.find_tagged_with(:any => "/user/node", :ns => "*")
+    (nodes.select do |node| !node.is_tagged_with?("/master") end).count
   end
 
   # will be removed once moving to yaml format, no need to review method
@@ -69,14 +71,6 @@ class ContainerDeployment < ApplicationRecord
       provider.destroy
     end
     valid_provider
-  end
-
-  def assign_container_deployment_node(vm_id, role)
-    send(role).each do |deployment_node|
-      next unless deployment_node.vm.nil?
-      deployment_node.vm_id = Vm.find(vm_id)
-      deployment_node.save!
-    end
   end
 
   # will be removed once moving to yaml format, no need to review method
@@ -127,7 +121,7 @@ deployment_type=#{kind}
 
 [masters]
 #{(roles_addresses("deployment_master").to_s + " ansible_connection=local openshift_scheduleable=True") unless roles_addresses("deployment_master").nil?}
-#{roles_addresses("master").join("\n") unless roles_addresses("master").empty?}
+#{roles_addresses("master").join("\n") unless (roles_addresses("master") - [roles_addresses("deployment_master")]).empty?}
 [nodes]
 #{roles_addresses("node").join("\n") unless roles_addresses("node").empty?}
 eos
@@ -152,19 +146,8 @@ eos
     hash
   end
 
-  # will be removed once moving to yaml format, no need to review method
-  def replace_connecting_master_ip(nodes, master_ip)
-    nodes.each_with_index do |node, index|
-      if node.include? master_ip
-        nodes[index] = "#{master_ip}              ansible_connection=local"
-      end
-    end
-    nodes
-  end
-
   def extract_public_ip_or_hostname(deployment_node)
-    return deployment_node.address if deployment_node.address
-    return "" if method_type.include? "newVms"
+    return deployment_node.address if deployment_node.vm_id.nil?
     vm = deployment_node.vm
     hostname = vm.hostnames
     if hostname.empty?
@@ -211,24 +194,22 @@ eos
       :deployment_type          => kind.to_s,
       :deployment_method        => method_type,
       :deployment_id            => id,
-      :provider_name            => params["providerName"],
-      :ssh_private_key          => [ssh_auth.auth_key_encrypted],
+      :provider_name            => params["provider_name"],
+      :ssh_private_key          => ssh_auth.auth_key_encrypted.to_s,
       :ssh_username             => ssh_auth.userid,
-      :inventory                => generate_ansible_inventory,
-      :rhel_subscribe_inventory => generate_ansible_inventory_for_subscription,
       :containerized            => containerized,
       :rhsub_user               => rhsm_auth.rhsm_user,
       :rhsub_pass               => rhsm_auth.password_encrypted,
       :rhsub_sku                => rhsm_auth.rhsm_sku
     }
-    if method_type.include? "newVms"
-      parameters_provision = { # provision
+    if method_type.include? "provision"
+      parameters_provision = {
         :ssh_public_key        => ssh_auth.public_key,
         :provision_provider_id => deployed_on_ems.id,
         :masters_provision     => {
-          :number_of_vms  => params["masters"].count + 1,
+          :number_of_vms  => container_nodes_by_role("master").count,
           :templateFields => {
-            "guid" => VmOrTemplate.find(params["masterCreationTemplateId"]).guid, "name" => VmOrTemplate.find(params["masterCreationTemplateId"]).name
+            "guid" => VmOrTemplate.find(params["masters_creation_template_id"]).guid, "name" => VmOrTemplate.find(params["masters_creation_template_id"]).name
           },
           :vmFields       => vm_fields("masters", params),
           :requester      => {
@@ -242,9 +223,9 @@ eos
           }
         },
         :nodes_provision       => {
-          :number_of_vms  => (params["nodes"] - params["masters"]).count - 1,
+          :number_of_vms  => num_of_nodes,
           :templateFields => {
-            "guid" => VmOrTemplate.find(params["nodeCreationTemplateId"]).guid, "name" => VmOrTemplate.find(params["nodeCreationTemplateId"]).name
+            "guid" => VmOrTemplate.find(params["nodes_creation_template_id"]).guid, "name" => VmOrTemplate.find(params["nodes_creation_template_id"]).name
           },
           :vmFields       => vm_fields("nodes", params),
           :requester      => {
@@ -261,10 +242,11 @@ eos
       parameters.merge parameters_provision
     else
       parameters_existing = { # non-managed + managed-existing
-        :deployment_master => roles_addresses("deployment_master"),
-        :masters           => roles_addresses("master"),
-        :nodes             => roles_addresses("node")
-
+        :deployment_master        => roles_addresses("deployment_master"),
+        :masters                  => roles_addresses("master"),
+        :nodes                    => roles_addresses("node"),
+        :inventory                => generate_ansible_inventory,
+        :rhel_subscribe_inventory => generate_ansible_inventory_for_subscription,
       }
       parameters.merge parameters_existing
     end
@@ -273,7 +255,7 @@ eos
   def vm_fields(type, params)
     options = {}
     options["customization_template_id"] = CustomizationTemplate.find_by_name("SSH addition template").id
-    options["vm_name"] = type.include?("master") ? params["createMasterBaseName"] : params["createNodesBaseName"]
+    options["vm_name"] = type.include?("master") ? params["master_base_name"] : params["node_base_name"]
     options["vm_memory"] = params[type + "_vm_memory"] if params[type + "_vm_memory"]
     options["cpu"] = params[type + "_cpu"] if params[type + "_cpu"]
     options["instance_type"] = params[type + "_instance_type"] if params[type + "_instance_type"]
@@ -286,34 +268,27 @@ eos
     [keys.ssh_public_key, keys.private_key]
   end
 
-  def create_deployment_authentication(options)
-    auth = AUTHENTICATIONS_TYPES[AUTHENTICATIONS_NAMES.key(options["mode"]).to_sym].new
-    auth.authtype = AUTHENTICATIONS_NAMES.key(options["mode"]).to_s
-    unless options[options["mode"]].nil? || options[options["mode"]].empty?
-      auth.assign_values options[options["mode"]]
-    end
+  def create_deployment_authentication(authentication)
+    auth = AUTH_CONSTS[authentication["type"]].new
+    auth.authtype = AUTHENTICATIONS_NAMES[authentication["type"]]
+    auth.assign_values authentication
     authentications << auth
     save!
   end
 
-  def create_deployment_nodes(groups_vms_types, labels, tags)
-    work_by_vm_id = method_type.include? "existingVms"
-    groups_vms_types.each_with_index do |vms, index|
-      vms.each do |vm_attr|
-        container_deployment_node = ContainerDeploymentNode.where((work_by_vm_id ? :vm_id : :address) => vm_attr["vmName"])
-                                                           .where(:container_deployment_id => id)
-        if container_deployment_node.empty?
-          container_deployment_node = ContainerDeploymentNode.new
-          container_deployment_node.address = vm_attr["vmName"] unless work_by_vm_id
-          container_deployment_node.vm = Vm.find(vm_attr["vmName"]) if work_by_vm_id
-          container_deployment_nodes << container_deployment_node
-        else
-          container_deployment_node = container_deployment_node.first
+  def create_deployment_nodes(nodes)
+    work_by_vm_id = method_type.include? "existing_managed"
+    nodes.each do |node|
+      container_deployment_node = ContainerDeploymentNode.new
+      container_deployment_node.address = node["name"] unless work_by_vm_id
+      container_deployment_node.vm = Vm.find(node["id"]) if work_by_vm_id
+      container_deployment_nodes << container_deployment_node
+      node["roles"].each do |key, value|
+        if value
+          container_deployment_node.tag_add key
         end
-        container_deployment_node.labels = JSON.parse(labels[vm_attr["vmName"]].to_json).to_h if labels && labels[vm_attr["vmName"]]
-        container_deployment_node.tag_add tags[index]
-        container_deployment_node.save!
       end
+      container_deployment_node.save!
     end
   end
 
@@ -328,45 +303,42 @@ eos
 
   def create_deployment(params, user)
     self.version = "v3"
-    self.kind = params["providerType"].include?("openshiftOrigin") ? "origin" : "openshift-enterprise"
-    self.method_type = params["provisionOn"]
-    tags = create_needed_tags(params)
-    labels = params[:labels]
-    if method_type.include? "existingVms"
-      self.deployed_on_ems = ExtManagementSystem.find params["existingProviderId"]
-    elsif method_type.include? "newVms"
+    self.kind = params["provider_type"]
+    self.method_type = params["method_type"]
+    create_needed_tags
+    if method_type.include? "existing_managed"
+      self.deployed_on_ems = ExtManagementSystem.find params["underline_provider_id"]
+    elsif method_type.include? "provision"
       ContainerDeployment.add_basic_root_template
-      self.deployed_on_ems = ExtManagementSystem.find params["newVmProviderId"]
+      self.deployed_on_ems = ExtManagementSystem.find params["underline_provider_id"]
       public_key, private_key = generate_ssh_keys
-      params["deploymentKey"] = private_key
-      params["public_key"] = public_key
-      params["deploymentUsername"] = "root"
+      params["ssh_authentication"]["auth_key"] = private_key.chomp
+      params["ssh_authentication"]["public_key"] = public_key
+      params["ssh_authentication"]["userid"] = "root"
     end
-    deployment_master = params["masters"].shift
-    create_deployment_nodes([params["nodes"], params["masters"], [deployment_master]] + add_additional_roles(params), labels, tags)
-    create_deployment_authentication(params["authentication"])
-    create_deployment_authentication("ssh" => {"userid" => params["deploymentUsername"], "auth_key" => params["deploymentKey"], "public_key" => params["public_key"]}, "mode" => "ssh")
-    create_deployment_authentication("rhsm" => {"userid" => params["rhnUsername"], "password" => params["rhnPassword"], "rhsm_sku" => params["rhnSKU"]}, "mode" => "rhsm")
+    add_deployment_master_role params["nodes"]
+    create_deployment_nodes(params["nodes"])
+    create_deployment_authentication(params["identity_authentication"])
+    create_deployment_authentication(params["ssh_authentication"].merge("type" => "AuthPrivateKey"))
+    create_deployment_authentication(params["rhsm_authentication"].merge("type" => "AuthenticationRhsm"))
     save!
     create_automation_request(generate_automation_params(params), user)
     self
   end
 
-  def create_needed_tags(params = {})
-    node_tag = find_or_create_by("node").name
-    master_tag = find_or_create_by("master").name
-    deployment_master_tag = find_or_create_by("deployment_master").name
-    tags = [node_tag, master_tag, deployment_master_tag]
-    nfs_tag = find_or_create_by("nfs").name if params["nfs_id_or_ip"]
-    tags += [nfs_tag] if nfs_tag
-    tags
+  def add_deployment_master_role(nodes)
+    nodes.each do |node|
+      if node["roles"]["master"]
+        node["roles"]["deployment_master"] = true
+        break
+      end
+    end
   end
 
-  # will be removed once moving to yaml format, no need to review method
-  def add_additional_roles(params)
-    additional_roles_vms = []
-    additional_roles_vms = [params["nfs_id_or_ip"]] if params["nfs_id_or_ip"]
-    additional_roles_vms
+  def create_needed_tags(params = {})
+    %w(node master deployment_master dns etcd infrastructure load_balancer storage).each do |tag_name|
+      find_or_create_by(tag_name)
+    end
   end
 
   def find_or_create_by(tag_name)
@@ -375,7 +347,6 @@ eos
       ent = Tag.new(:name => tag_name)
       ent.save
     end
-    ent
   end
 
   def create_automation_request(parameters, user)

@@ -4,14 +4,13 @@ module MiqAeMethodService
     expose :deployed_ems, :association => true
     expose :deployed_on_ems, :association => true
     expose :automation_task, :association => true
-    expose :masters, :method => :masters
-    expose :nodes, :method => :nodes
-    expose :deployment_master, :method => :deployment_master
+    expose :roles_addresses
+    expose :container_nodes_by_role
 
     def assign_container_deployment_node(vm_id, role)
-      object_send(:container_nodes_by_role, role).each do |deployment_node|
+      self.container_nodes_by_role(role).each do |deployment_node|
         next unless deployment_node.vm_id.nil?
-        deployment_node.vm_id = vm_id
+        deployment_node.add_vm vm_id
       end
     end
 
@@ -23,7 +22,7 @@ module MiqAeMethodService
       object_send(:generate_ansible_inventory)
     end
 
-    def regenerate_ansible__subscription_inventory
+    def regenerate_ansible_subscription_inventory
       object_send(:generate_ansible_inventory_for_subscription)
     end
 

@@ -1,4 +1,5 @@
 class ContainerDeploymentService
+
   def all_data
     {
       :provision              => possible_provision_providers,
@@ -19,11 +20,12 @@ class ContainerDeploymentService
   def templates(templates)
     templates.map do |template|
       {
-        :cpu    => template.cpu_total_cores,
-        :memo   => template.mem_cpu,
-        :name   => template.name,
-        :ems_id => template.ems_id,
-        :id     => template.id
+        :cpu       => template.cpu_total_cores,
+        :memo      => template.mem_cpu,
+        :disk_size => ApplicationController.helpers.number_to_human_size(template.disks.first.size),
+        :name      => template.name,
+        :ems_id    => template.ems_id,
+        :id        => template.id
       }
     end
   end
@@ -41,11 +43,12 @@ class ContainerDeploymentService
     optional_vms = vms.select { |vm| !vm.hardware.ipaddresses.empty? }
     optional_vms.map do |vm|
       {
-        :cpu    => vm.hardware.cpu_total_cores,
-        :memo   => vm.hardware.memory_mb,
-        :name   => vm.name,
-        :ems_id => vm.ems_id,
-        :id     => vm.id
+        :cpu       => vm.hardware.cpu_total_cores,
+        :memo      => vm.hardware.memory_mb,
+        :disk_size => ApplicationController.helpers.number_to_human_size(vm.disks.first.size),
+        :name      => vm.name,
+        :ems_id    => vm.ems_id,
+        :id        => vm.id
       }
     end
   end
