@@ -34,7 +34,7 @@ var setUpImportClickHandlers = function(url, grid, importCallback) {
     clearMessages();
 
     var serializedDialogs = '';
-    $.each(grid.getData().getItems(), function(index, item) {
+    $.each(grid.getData().getItems(), function(_index, item) {
       if ($.inArray(item.id, grid.getSelectedRows()) !== -1) {
         serializedDialogs += '&dialogs_to_import[]=' + item.name;
       }

@@ -216,13 +216,13 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       return false;
   };
 
-  var emsCommonEditButtonClicked = function(buttonName, serializeFields, $event) {
+  var emsCommonEditButtonClicked = function(buttonName, _serializeFields, $event) {
     miqService.sparkleOn();
     var url = $scope.updateUrl + '?button=' + buttonName;
     miqService.restAjaxButton(url, $event.target);
   };
 
-  var emsCommonAddButtonClicked = function(buttonName, serializeFields, $event) {
+  var emsCommonAddButtonClicked = function(buttonName, _serializeFields, $event) {
     miqService.sparkleOn();
     var url = $scope.createUrl + '?button=' + buttonName;
     miqService.restAjaxButton(url, $event.target);

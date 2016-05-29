@@ -73,7 +73,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       contextMenuShowing = false;
   };
 
-  self.contextMenu = function contextMenu(that, data) {
+  self.contextMenu = function contextMenu(_that, data) {
     if(contextMenuShowing) {
       removeContextMenu();
     } else {

@@ -15,7 +15,7 @@ ManageIQ.angular.app.directive('autoFocus', ['$timeout', function($timeout) {
         }
       });
 
-      scope.$on('reactiveFocus', function(e) {;
+      scope.$on('reactiveFocus', function(_e) {;
         if (!angular.element(scope['form_focus_' + ctrl.$name]).is(":focus")) {
           $timeout(function(){
             angular.element(scope['form_focus_' + ctrl.$name]).focus();

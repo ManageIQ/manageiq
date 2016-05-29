@@ -1,7 +1,7 @@
 ManageIQ.angular.app.directive('validateMultiple', function(){
   return {
     require: 'ngModel',
-    link: function(scope, elm, attrs, ctrl) {
+    link: function(_scope, _elm, attrs, ctrl) {
       function multipleValidator(modelValue) {
         var memtype = attrs.memtype;
         var multiple = attrs.validateMultiple;

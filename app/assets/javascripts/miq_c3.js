@@ -24,8 +24,8 @@ function load_c3_chart(data, chart_id, height) {
 
   var generate_args = chartData(data.miqChart, data, { bindto: "#" + chart_id, size: {height: height}})
 
-  generate_args.data.onclick = function (data, i) {
-    var seriesIndex = data.id-1;
+  generate_args.data.onclick = function (data, _i) {
+    var seriesIndex = data.id - 1;
     var pointIndex = data.x;
 
     var parts = chart_id.split('_'); //miq_chart_candu_2

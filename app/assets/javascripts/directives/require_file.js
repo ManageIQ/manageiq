@@ -1,7 +1,7 @@
 ManageIQ.angular.app.directive('requireFile', ['$parse', function ($parse) {
   return {
     require: 'ngModel',
-    link:function(scope, el, attrs, ngModel) {
+    link: function(scope, el, attrs, _ngModel) {
       var modelGetter = $parse(attrs['ngModel']);
       var modelSetter = modelGetter.assign;
 

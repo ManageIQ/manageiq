@@ -1,7 +1,7 @@
 ManageIQ.angular.app.directive('verifypasswd', function() {
   return {
     require: 'ngModel',
-    link: function (scope, elem, attr, ctrl) {
+    link: function (scope, _elem, attr, ctrl) {
 
       var log_password = attr.prefix + "_password";
       var log_verify = attr.prefix + "_verify";
@@ -29,7 +29,7 @@ ManageIQ.angular.app.directive('verifypasswd', function() {
         return value;
       });
 
-      var setValidity = function(scope, logVerifyCtrl, valueNew, valueOrig) {
+      var setValidity = function(_scope, logVerifyCtrl, valueNew, valueOrig) {
         if (valueNew == valueOrig) {
           logVerifyCtrl.$setValidity("verifypasswd", true);
         } else {
