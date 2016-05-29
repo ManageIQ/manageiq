@@ -41,9 +41,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   PERF_ROLLUP_CHILDREN = :container_nodes
 
-  def hawkular_status
-    client = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(self)
-    client.status
+  def verify_hawkular_credentials
+    ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(self).hawkular_try_connect
   end
 
   # UI methods for determining availability of fields
@@ -72,7 +71,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   def verify_credentials(auth_type = nil, options = {})
     options = options.merge(:auth_type => auth_type)
     if options[:auth_type] == "hawkular"
-      hawkular_status['MetricsService'] == 'STARTED'
+      verify_hawkular_credentials
     else
       with_provider_connection(options, &:api_valid?)
     end
