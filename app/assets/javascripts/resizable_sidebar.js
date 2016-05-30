@@ -44,6 +44,7 @@ $.fn.resizableSidebar = function() {
               break;
             case 'col-md-pull-7':
               button.removeClass('btn-disabled'); // re-enable the button when resizing to the left from max
+              // pass
             case 'col-md-pull-8':
             case 'col-md-pull-9':
               left_class.push(change_col(v, +1));
@@ -65,6 +66,7 @@ $.fn.resizableSidebar = function() {
               break;
             case 'col-md-4':
               button.addClass('btn-disabled'); // disable the right button if it reached it's limit
+              // pass
             case 'col-md-3':
             case 'col-md-2':
               ajax = get_col(v) + 1;

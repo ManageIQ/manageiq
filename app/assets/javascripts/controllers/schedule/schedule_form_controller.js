@@ -250,7 +250,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
 
       if(!$scope.dbBackup() && $scope.scheduleModel.filter_typ &&
           ($scope.form.action_typ.$untouched && $scope.form.filter_typ.$untouched)) {
-        //AJAX-less Reset
+        // AJAX-less Reset
         $scope.toggleValueForWatch('filterValuesEmpty', false);
       }
 
