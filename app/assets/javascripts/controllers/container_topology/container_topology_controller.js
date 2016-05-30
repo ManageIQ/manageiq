@@ -132,12 +132,12 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr("r", function(d) {
         return self.getDimensions(d).r;
       })
-      .attr('class' , function(d) {
+      .attr('class', function(d) {
         return topologyService.getItemStatusClass(d);
       })
-    .on("contextmenu", function(d){
-          self.contextMenu(this, d);
-     });
+      .on("contextmenu", function(d) {
+        self.contextMenu(this, d);
+      });
 
     added.append("title");
 
@@ -186,7 +186,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
           return;
 
         $(this).text(iconInfo.icon)
-          .attr("class","glyph")
+          .attr("class", "glyph")
           .attr('font-family', iconInfo.fontfamily);
       })
 

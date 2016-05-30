@@ -136,7 +136,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       .attr("r", function(d) {
         return self.getDimensions(d).r;
       })
-      .attr('class' , function(d) {
+      .attr('class', function(d) {
         return topologyService.getItemStatusClass(d);
       })
       .on("contextmenu", function(d){
@@ -190,8 +190,8 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
           return;
 
         $(this).text(iconInfo.icon)
-            .attr("class","glyph")
-            .attr('font-family', iconInfo.fontfamily);
+          .attr("class", "glyph")
+          .attr('font-family', iconInfo.fontfamily);
       })
 
       .attr("y", function(d) {

@@ -15,7 +15,7 @@ ManageIQ.angular.app.service('topologyService', function() {
 
   this.addContextMenuOption = function(popup, text, data, callback) {
     popup.append("p").text(text)
-      .on('click' , function() {callback(data);});
+      .on('click', function() { callback(data); });
   };
 
   this.searchNode = function(svg, query) {
