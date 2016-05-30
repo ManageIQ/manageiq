@@ -671,9 +671,7 @@ module VmCommon
     @policy_options[:out_of_scope] = true
     @policy_options[:passed] = true
     @policy_options[:failed] = true
-    build_policy_tree(@polArr)
-    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name)
-    session[:tree_name] = "policy_simulation_tree"
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name, @policy_options)
     @edit = session[:edit] if session[:edit]
     if @edit && @edit[:explorer]
       render_flash(_("No policies were selected for Policy Simulation."), :error) if session[:policies].empty?
@@ -681,159 +679,6 @@ module VmCommon
       replace_right_cell
     else
       render :template => 'vm/show'
-    end
-  end
-
-  # policy simulation tree
-  def build_policy_tree(profiles)
-    session[:squash_open] = false
-    vm_node = TreeNodeBuilder.generic_tree_node(
-      "h_#{@record.name}",
-      @record.name,
-      "vm.png",
-      @record.name,
-      :style_class => "cfme-no-cursor-node",
-      :expand      => true
-    )
-    vm_node[:title] = "<b>#{vm_node[:title]}</b>"
-    vm_node[:children] = build_profile_nodes(profiles) if profiles.length > 0
-    session[:policy_tree] = [vm_node].to_json
-    session[:tree_name] = "rsop_tree"
-  end
-
-  def build_profile_nodes(profiles)
-    profile_nodes = []
-    profiles.each do |profile|
-      if profile["result"] == "allow"
-        icon = "checkmark.png"
-      elsif profile["result"] == "N/A"
-        icon = "na.png"
-      else
-        icon = "x.png"
-      end
-      profile_node = TreeNodeBuilder.generic_tree_node(
-        "policy_profile_#{profile['id']}",
-        profile['description'],
-        icon,
-        nil,
-        :style_class => "cfme-no-cursor-node"
-      )
-      profile_node[:title] = "<b>" + _("Policy Profile:") + "</b> #{profile_node[:title]}"
-      profile_node[:children] = build_policy_node(profile["policies"]) if profile["policies"].length > 0
-
-      if @policy_options[:out_of_scope] == false
-        profile_nodes.push(profile_node) if profile["result"] != "N/A"
-      else
-        profile_nodes.push(profile_node)
-      end
-    end
-    profile_nodes.push(build_empty_node) if profile_nodes.blank?
-    profile_nodes
-  end
-
-  def build_empty_node
-    TreeNodeBuilder.generic_tree_node(
-      nil,
-      "Items out of scope",
-      "blank.gif",
-      nil,
-      :style_class => "cfme-no-cursor-node"
-    )
-  end
-
-  def build_policy_node(policies)
-    policy_nodes = []
-    policies.sort_by { |a| a["description"] }.each do |policy|
-      active_caption = policy["active"] ? "" : _(" (Inactive)")
-      if policy["result"] == "allow"
-        icon = "checkmark.png"
-      elsif policy["result"] == "N/A"
-        icon = "na.png"
-      else
-        icon = "x.png"
-      end
-      policy_node = TreeNodeBuilder.generic_tree_node(
-        "policy_#{policy["id"]}",
-        policy['description'],
-        icon,
-        nil,
-        :style_class => "cfme-no-cursor-node"
-      )
-      policy_node[:title] = "<b>" + _("Policy %{caption}:") % {:caption => active_caption} +
-                            "</b> #{policy_node[:title]}"
-      policy_children = []
-      policy_children.push(build_scope_or_expression_node(policy["scope"], "scope_#{policy["id"]}_#{policy["name"]}", "Scope")) if policy["scope"]
-      policy_children.concat(build_condition_nodes(policy)) if policy["conditions"].length > 0
-      policy_node[:children] = policy_children unless policy_children.empty?
-
-      if @policy_options[:out_of_scope] == false && @policy_options[:passed] == true && @policy_options[:failed] == true
-        policy_nodes.push(policy_node) if policy["result"] != "N/A"
-      elsif @policy_options[:passed] == true && @policy_options[:failed] == false && @policy_options[:out_of_scope] == false
-        policy_nodes.push(policy_node) if policy["result"] == "allow"
-      elsif @policy_options[:passed] == true && @policy_options[:failed] == false && @policy_options[:out_of_scope] == true
-        policy_nodes.push(policy_node) if policy["result"] == "N/A" || policy["result"] == "allow"
-      elsif @policy_options[:failed] == true && @policy_options[:passed] == false
-        policy_nodes.push(policy_node) if policy["result"] == "deny"
-      elsif @policy_options[:out_of_scope] == true && @policy_options[:passed] == true && policy["result"] == "N/A"
-        policy_nodes.push(policy_node)
-      else
-        policy_nodes.push(policy_node)
-      end
-    end
-    policy_nodes
-  end
-
-  def build_condition_nodes(policy)
-    condition_nodes = []
-    policy["conditions"].sort_by { |a| a["description"] }.each do |condition|
-      if condition["result"] == "allow"
-        icon = "checkmark.png"
-      elsif condition["result"] == "N/A" || !condition["expression"]
-        icon = "na.png"
-      else
-        icon = "x.png"
-      end
-      condition_node = TreeNodeBuilder.generic_tree_node(
-        "condition_#{condition["id"]}_#{condition["name"]}_#{policy["name"]}",
-        condition["description"],
-        icon,
-        nil,
-        :style_class => "cfme-no-cursor-node"
-      )
-      condition_node[:title] = "<b>" + _("Condition:") + "</b> #{condition_node[:title]}"
-      condition_children = []
-      condition_children.push(build_scope_or_expression_node(condition["scope"], "scope_#{condition["id"]}_#{condition["name"]}", "Scope")) if condition["scope"]
-      condition_children.push(build_scope_or_expression_node(condition["expression"], "expression_#{condition["id"]}_#{condition["name"]}", "Expression")) if condition["expression"]
-      condition_node[:children] = condition_children unless condition_children.blank?
-      if @policy_options[:out_of_scope] == false
-        condition_nodes.push(condition_node) if condition["result"] != "N/A"
-      else
-        condition_nodes.push(condition_node)
-      end
-    end
-    condition_nodes
-  end
-
-  def build_scope_or_expression_node(scope_or_expression, node_key, title_prefix)
-    exp_string, exp_tooltip = exp_build_string(scope_or_expression)
-    if scope_or_expression["result"] == true
-      icon = "checkmark.png"
-    else
-      icon = "na.png"
-    end
-    node = TreeNodeBuilder.generic_tree_node(
-      node_key,
-      exp_string.html_safe,
-      icon,
-      exp_tooltip.html_safe,
-      :style_class => "cfme-no-cursor-node"
-    )
-    node[:title] = "<b>#{title_prefix}:</b> #{node[:title]}"
-
-    if @policy_options[:out_of_scope] == false
-      node if scope_or_expression["result"] != "N/A"
-    else
-      node
     end
   end
 
@@ -850,9 +695,7 @@ module VmCommon
       @policy_options[:passed] = true
     end
     @vm = @record = identify_record(params[:id], VmOrTemplate)
-    build_policy_tree(@polArr)
-    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name)
-    session[:tree_name] = "policy_simulation_tree"
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name, @policy_options)
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -865,9 +708,7 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     @policy_options ||= {}
     @policy_options[:out_of_scope] = (params[:out_of_scope] == "1")
-    build_policy_tree(@polArr)
-    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name)
-    session[:tree_name] = "policy_simulation_tree"
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name, @policy_options)
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
