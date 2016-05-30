@@ -6,11 +6,12 @@ ManageIQ.angular.app.directive('validateTotal', function() {
       ctrl.$validators.integer = function(modelValue, viewValue) {
         if (ctrl.$isEmpty(modelValue)) {
           return false;
-        } else{
-          var x = parseInt(viewValue, 10);
-          if (x <= parseInt(maxvalue, 10))
-            return true;
         }
+
+        var x = parseInt(viewValue, 10);
+        if (x <= parseInt(maxvalue, 10))
+          return true;
+
         return false;
       };
     }

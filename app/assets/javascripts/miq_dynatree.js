@@ -396,10 +396,10 @@ function miqDynatreeExpandNode(treename, key) {
 function miqOnDblClickNoBaseExpand(node, _event) {
   if (!node.getParent().data.title) {
     return;
-  } else {
-    var exp = !node.isExpanded();
-    node.expand(exp);
   }
+
+  var exp = !node.isExpanded();
+  node.expand(exp);
 }
 
 // OnClick handler for Server Roles Tree

@@ -1385,11 +1385,11 @@ function miqAccordSelect(e) {
   }
   if (!miqCheckForChanges()) {
     return false;
-  } else {
-    var url = '/' + $('body').data('controller') + '/accordion_select?id=' + $(e.target).attr('id');
-    miqJqueryRequest(url, {beforeSend: true, complete: true});
-    return true;
   }
+
+  var url = '/' + $('body').data('controller') + '/accordion_select?id=' + $(e.target).attr('id');
+  miqJqueryRequest(url, {beforeSend: true, complete: true});
+  return true;
 }
 
 function miqInitBootstrapSwitch(element, url, options) {

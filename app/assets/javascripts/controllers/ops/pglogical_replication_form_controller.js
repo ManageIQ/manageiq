@@ -196,7 +196,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
         $scope.pglogicalReplicationModel.replication_type === "global" &&
         $scope.pglogicalReplicationModel.subscriptions.length >= 1)
       return true;
-    else  if (saveable &&
+    else if (saveable &&
       $scope.pglogicalReplicationModel.replication_type !== "global" &&
       $scope.pglogicalReplicationModel.subscriptions.length == 0)
       return true;
@@ -206,8 +206,10 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
 
   // method to set flag to disable certain buttons when add of subscription in progress
   $scope.addInProgress = function() {
-    if ($scope.pglogicalReplicationModel.addEnabled === true) return true;
-    else return false;
+    if ($scope.pglogicalReplicationModel.addEnabled === true)
+      return true;
+    else
+      return false;
   }
 
   // validate new/existing subscription
@@ -264,7 +266,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
     if (typeof original_values != 'undefined' && original_values[fieldName] != subscription[fieldName])
       return true;
     else
-     return false;
+      return false;
   }
 
   $scope.subscriptionInValidMessage = function(){
