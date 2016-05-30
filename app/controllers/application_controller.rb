@@ -1563,7 +1563,7 @@ class ApplicationController < ActionController::Base
     @items_per_page = controller_name.downcase == "miq_policy" ? ONE_MILLION : get_view_pages_perpage(dbname)
     @items_per_page = ONE_MILLION if 'vm' == db_sym.to_s && controller_name == 'service'
 
-    @current_page = options[:page] || (params[:page].nil? ? 1 : params[:page].to_i)
+    @current_page = options[:page] || (params[:page].blank? ? 1 : params[:page].to_i)
 
     view.conditions = options[:conditions] # Get passed in conditions (i.e. tasks date filters)
 
