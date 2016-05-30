@@ -36,7 +36,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.newRecord = false;
 
       miqService.sparkleOn();
-      $http.get('reconfigure_form_fields/'+ reconfigureFormId + ',' + $scope.objectIds).success(function(data) {
+      $http.get('reconfigure_form_fields/' + reconfigureFormId + ',' + $scope.objectIds).success(function(data) {
         $scope.reconfigureModel.memory                 = data.memory;
         $scope.reconfigureModel.memory_type            = data.memory_type;
         $scope.reconfigureModel.socket_count           = data.socket_count;

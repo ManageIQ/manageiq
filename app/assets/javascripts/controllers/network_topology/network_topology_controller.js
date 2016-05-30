@@ -16,11 +16,11 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
     if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
       id = '';
     } else {
-      id = '/'+ (/network_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
+      id = '/' + (/network_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
     }
 
     var currentSelectedKinds = $scope.kinds;
-    var url = '/network_topology/data'+id;
+    var url = '/network_topology/data' + id;
 
     $http.get(url).success(function(data) {
       $scope.items = data.data.items;
