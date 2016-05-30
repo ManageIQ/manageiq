@@ -111,11 +111,9 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     miqService.sparkleOn();
     if (hostFormId == 'new') {
       var url = $scope.createUrl + 'new?button=cancel';
-    }
-    else if (hostFormId.split(",").length == 1) {
+    } else if (hostFormId.split(",").length == 1) {
       var url = $scope.updateUrl + hostFormId + '?button=cancel';
-    }
-    else if (hostFormId.split(",").length > 1) {
+    } else if (hostFormId.split(",").length > 1) {
       var url = $scope.updateUrl + '?button=cancel';
     }
     miqService.miqAjaxButton(url);
@@ -125,8 +123,7 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
     miqService.sparkleOn();
     if (hostFormId.split(",").length > 1) {
       var url = $scope.updateUrl + '?button=save';
-    }
-    else {
+    } else {
       var url = $scope.updateUrl + hostFormId + '?button=save';
     }
     miqService.miqAjaxButton(url, true);

@@ -38,8 +38,7 @@ var selectListElement = function(scope, timeout, ctrl, refresh) {
     if(refresh) {
       if (scope[scope['form_' + ctrl.$name + '_ngHide']] === true) {
         angular.element(scope['form_' + ctrl.$name]).selectpicker('hide');
-      }
-      else {
+      } else {
         angular.element(scope['form_' + ctrl.$name]).selectpicker({
           dropupAuto: false
         });
@@ -56,8 +55,7 @@ var selectListElement = function(scope, timeout, ctrl, refresh) {
       angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-red-border', 'remove');
       angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default');
       scope.invalidStyleSet = false;
-    }
-    else {
+    } else {
       angular.element(scope['form_' + ctrl.$name]).selectpicker('setStyle', 'btn-default btn-red-border');
       scope.invalidStyleSet = true;
     }

@@ -736,8 +736,7 @@ function miqRESTAjaxButton(url, button, data) {
     var formData;
     if(data != undefined) {
       formData = data;
-    }
-    else {
+    } else {
       formData = $(form).serialize();
     }
     miqJqueryRequest(form.action, {

@@ -79,8 +79,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       });
       $scope.afterGet  = true;
       $scope.modelCopy = angular.copy( $scope.emsCommonModel );
-    }
-    else {
+    } else {
       $scope.newRecord = false;
       miqService.sparkleOn();
 
@@ -129,22 +128,23 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
 
-        if($scope.emsCommonModel.default_userid != '') {
+        if ($scope.emsCommonModel.default_userid != '') {
           $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
         }
-        if($scope.emsCommonModel.amqp_userid != '') {
+        if ($scope.emsCommonModel.amqp_userid != '') {
           $scope.emsCommonModel.amqp_password = $scope.emsCommonModel.amqp_verify = miqService.storedPasswordPlaceholder;
         }
-        if($scope.emsCommonModel.metrics_userid != '') {
+        if ($scope.emsCommonModel.metrics_userid != '') {
           $scope.emsCommonModel.metrics_password = $scope.emsCommonModel.metrics_verify = miqService.storedPasswordPlaceholder;
         }
-        if($scope.emsCommonModel.ssh_keypair_userid != '') {
+        if ($scope.emsCommonModel.ssh_keypair_userid != '') {
           $scope.emsCommonModel.ssh_keypair_password = miqService.storedPasswordPlaceholder;
         }
-        if($scope.emsCommonModel.bearer_token_exists) {
+        if ($scope.emsCommonModel.bearer_token_exists) {
           $scope.emsCommonModel.bearer_userid = "_";
           $scope.emsCommonModel.bearer_password = $scope.emsCommonModel.bearer_verify = miqService.storedPasswordPlaceholder;
         }
+
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
 
@@ -210,10 +210,9 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       ($scope.currentTab == "default" ||
       ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
-    }
-
-    else
+    } else {
       return false;
+    }
   };
 
   var emsCommonEditButtonClicked = function(buttonName, _serializeFields, $event) {
@@ -246,23 +245,21 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
   };
 
   $scope.saveClicked = function($event, formSubmit) {
-    if(formSubmit) {
+    if (formSubmit) {
       angular.element('#button_name').val('save');
       emsCommonEditButtonClicked('save', true, $event);
       $scope.angularForm.$setPristine(true);
-    }
-    else {
+    } else {
       $event.preventDefault();
     }
   };
 
   $scope.addClicked = function($event, formSubmit) {
-    if(formSubmit) {
+    if (formSubmit) {
       angular.element('#button_name').val('add');
       emsCommonAddButtonClicked('add', true, $event);
       $scope.angularForm.$setPristine(true);
-    }
-    else {
+    } else {
       $event.preventDefault();
     }
   };

@@ -11,26 +11,24 @@ ManageIQ.angular.app.service('miqDBBackupService', function() {
 
   this.logProtocolChanged = function(model) {
     this.resetAll(model);
-    if(model.log_protocol == 'Network File System' || model.log_protocol == 'NFS') {
+    if (model.log_protocol == 'Network File System' || model.log_protocol == 'NFS') {
       model.uri_prefix = 'nfs';
-    }
-    else if(model.log_protocol == 'Samba') {
+    } else if (model.log_protocol == 'Samba') {
       model.uri_prefix = 'smb';
-    }
-    else if(model.log_protocol == 'Anonymous FTP' || model.log_protocol == 'FTP') {
+    } else if (model.log_protocol == 'Anonymous FTP' || model.log_protocol == 'FTP') {
       model.uri_prefix = 'ftp';
     }
   };
 
   this.sambaBackup = function(model) {
-    if(model.log_protocol == 'Samba')
+    if (model.log_protocol == 'Samba')
       return true;
     else
       return false;
   };
 
   this.credsProtocol = function(model) {
-    if(model.log_protocol == 'Samba' || model.log_protocol == 'FTP')
+    if (model.log_protocol == 'Samba' || model.log_protocol == 'FTP')
       return true;
     else
       return false;
