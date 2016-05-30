@@ -213,6 +213,7 @@ module UiConstants
       :manageiq_providers_middlewaremanager     => "grid",
       :middlewareserver                         => "list",
       :middlewaredeployment                     => "list",
+      :middlewaredatasource                     => "list",
       :miqaction                                => "list",
       :miqaeclass                               => "list",
       :miqaeinstance                            => "list",
