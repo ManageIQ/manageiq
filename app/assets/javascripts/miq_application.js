@@ -223,14 +223,14 @@ function miqGetBrowserInfo() {
 
 // Turn highlight on or off
 function miqHighlight(elem, status) {
+  if ($(elem).length) {
+    return;
+  }
+
   if (status) {
-    if ($(elem).length) {
-      $(elem).addClass('active');
-    }
+    $(elem).addClass('active');
   } else {
-    if ($(elem).length) {
-      $(elem).removeClass('active');
-    }
+    $(elem).removeClass('active');
   }
 }
 
@@ -301,13 +301,11 @@ function miqCheckForChanges() {
       }
       return answer;
     }
-  } else {
-    if ((($('#buttons_on').length &&
-          $('#buttons_on').is(":visible")) ||
-         ManageIQ.changes !== null) &&
-        !$('#ignore_form_changes').length) {
-      return confirm(__("Abandon changes?"));
-    }
+  } else if ((($('#buttons_on').length &&
+               $('#buttons_on').is(":visible")) ||
+              ManageIQ.changes !== null) &&
+             !$('#ignore_form_changes').length) {
+    return confirm(__("Abandon changes?"));
   }
   // use default browser reaction for onclick
   return true;
@@ -1098,19 +1096,19 @@ function miq_tabs_init(id, url) {
     if ($(e.target).parent().hasClass('disabled')) {
       e.preventDefault();
       return false;
-    } else {
+    } else if (typeof(url) != 'undefined') {
       // Load remote tab if an URL is specified
-      if (typeof(url) != 'undefined') {
-        var currTabTarget = $(e.target).attr('href').substring(1);
-        miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
-      }
+      var currTabTarget = $(e.target).attr('href').substring(1);
+      miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
     }
   });
+
   $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Refresh CodeMirror when its tab is toggled
     if ($($(e.target).attr('href')).hasClass('cm-tab') && typeof(ManageIQ.editor) != 'undefined') {
       ManageIQ.editor.refresh();
     }
+
     // Show buttons according to the show/hide-buttons class
     if ($($(e.target).attr('href')).hasClass('show-buttons')) {
       $("#center_buttons_div").show();
@@ -1118,20 +1116,21 @@ function miq_tabs_init(id, url) {
       $("#center_buttons_div").hide();
     }
   });
+
   // If no active tab is present, set the first tab as active
   var active_tabs = $(id + ' > ul.nav-tabs li.active:not(.hidden)').length;
   if ( active_tabs > 1) {
     var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().removeClass('active');
     $(tab.find('a').attr('href')).removeClass('active');
-  } else if( active_tabs != 1) {
+  } else if (active_tabs != 1) {
     var tab = $(id + ' > ul.nav-tabs li:not(.hidden)').first().addClass('active');
     $(tab.find('a').attr('href')).addClass('active');
   }
+
   // Hide the tab header when there is only one visible tab available
   if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length == 1) {
     $(id + ' > ul.nav-tabs').hide();
-  }
-  else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
+  } else if ($(id + ' > ul.nav-tabs > li:not(.hidden)').length > 1) {
     $(id + ' > ul.nav-tabs').show();
   }
 }

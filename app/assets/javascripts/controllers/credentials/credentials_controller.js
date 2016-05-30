@@ -8,23 +8,18 @@ ManageIQ.angular.app.controller('credentialsController', ['$scope', function($sc
     });
 
     $scope.$on('setNewRecord', function(_event, args) {
-      if (args != undefined) {
-        $scope.newRecord = args.newRecord;
-      } else {
-        $scope.newRecord = true;
-      }
+      $scope.newRecord = args ? args.newRecord : true;
     });
 
     $scope.$on('setUserId', function(_event, args) {
-      if (args != undefined) {
+      if (args) {
         $scope.modelCopy[args.userIdName] = args.userIdValue;
       }
     });
 
     if ($scope.formId == 'new') {
       $scope.newRecord = true;
-    }
-    else {
+    } else {
       $scope.newRecord = false;
       $scope.bChangeStoredPassword = false;
       $scope.bCancelPasswordChange = false;
@@ -37,7 +32,7 @@ ManageIQ.angular.app.controller('credentialsController', ['$scope', function($sc
   };
 
   $scope.cancelPasswordChange = function() {
-    if($scope.bChangeStoredPassword) {
+    if ($scope.bChangeStoredPassword) {
       $scope.bCancelPasswordChange = true;
       $scope.bChangeStoredPassword = false;
     }
