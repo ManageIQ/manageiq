@@ -10,16 +10,16 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
   if (cloudVolumeFormId == 'new') {
     $scope.cloudVolumeModel.name = "";
   } else {
-      miqService.sparkleOn();
+    miqService.sparkleOn();
 
-      $http.get('/cloud_volume/cloud_volume_form_fields/' + cloudVolumeFormId).success(function(data) {
-        $scope.afterGet = true;
-        $scope.cloudVolumeModel.name = data.name;
+    $http.get('/cloud_volume/cloud_volume_form_fields/' + cloudVolumeFormId).success(function(data) {
+      $scope.afterGet = true;
+      $scope.cloudVolumeModel.name = data.name;
 
-        $scope.modelCopy = angular.copy( $scope.cloudVolumeModel );
-        miqService.sparkleOff();
-      });
-   }
+      $scope.modelCopy = angular.copy( $scope.cloudVolumeModel );
+      miqService.sparkleOff();
+    });
+  }
 
   $scope.addClicked = function() {
     miqService.sparkleOn();
@@ -31,8 +31,7 @@ ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope',
     miqService.sparkleOn();
     if (cloudVolumeFormId == 'new') {
       var url = '/cloud_volume/create/new' + '?button=cancel';
-    }
-    else {
+    } else {
       var url = '/cloud_volume/update/' + cloudVolumeFormId + '?button=cancel';
     }
     miqService.miqAjaxButton(url);
