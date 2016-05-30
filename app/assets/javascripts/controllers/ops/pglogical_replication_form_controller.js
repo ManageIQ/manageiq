@@ -110,8 +110,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
       $scope.pglogicalReplicationModel.user          = subscription.user;
       $scope.pglogicalReplicationModel.password      = subscription.password;
       $scope.pglogicalReplicationModel.port          = subscription.port;
-    }
-    else if (confirm("An updated subscription must point to the same database with which it was originally created. Failure to do so will result in undefined behavior. Do you want to continue?")) {
+    } else if (confirm("An updated subscription must point to the same database with which it was originally created. Failure to do so will result in undefined behavior. Do you want to continue?")) {
       $scope.pglogicalReplicationModel.s_index       = idx;
       $scope.pglogicalReplicationModel.updateEnabled = true;
       $scope.pglogicalReplicationModel.dbname        = subscription.dbname;
