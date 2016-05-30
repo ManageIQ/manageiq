@@ -1,4 +1,4 @@
-ManageIQ.angular.app.controller('credentialsController', ['$scope', function($scope) {
+ManageIQ.angular.app.controller('CredentialsController', ['$scope', function($scope) {
   var init = function() {
     $scope.bChangeStoredPassword = undefined;
     $scope.bCancelPasswordChange = undefined;
