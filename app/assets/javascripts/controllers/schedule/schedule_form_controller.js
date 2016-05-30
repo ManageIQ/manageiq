@@ -97,7 +97,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
       });
     }
 
-    miqService.buildCalendar(oneMonthAgo.year, parseInt(oneMonthAgo.month) + 1, oneMonthAgo.date);
+    miqService.buildCalendar(oneMonthAgo.year, parseInt(oneMonthAgo.month, 10) + 1, oneMonthAgo.date);
   };
 
   var buildFilterList = function(data) {

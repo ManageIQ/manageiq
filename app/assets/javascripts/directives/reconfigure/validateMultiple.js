@@ -10,7 +10,7 @@ ManageIQ.angular.app.directive('validateMultiple', function(){
         var x = parseInt(modelValue, 10);
         if(memtype == "GB")
           x *= 1024;
-        if (x >= parseInt(minvalue) && x <= parseInt(maxvalue)) {
+        if (x >= parseInt(minvalue, 10) && x <= parseInt(maxvalue, 10)) {
           ctrl.$setValidity('inrange', true);
         } else {
           ctrl.$setValidity('inrange', false);
