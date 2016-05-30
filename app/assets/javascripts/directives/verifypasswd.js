@@ -2,11 +2,9 @@ ManageIQ.angular.app.directive('verifypasswd', function() {
   return {
     require: 'ngModel',
     link: function (scope, _elem, attr, ctrl) {
-
       var log_password = attr.prefix + "_password";
       var log_verify = attr.prefix + "_verify";
       var logVerifyCtrl = attr.prefix + "_VerifyCtrl";
-
 
       scope.$watch(attr.ngModel, function() {
         if((ctrl.$modelValue != undefined && scope.afterGet) || scope.formId == "new") {

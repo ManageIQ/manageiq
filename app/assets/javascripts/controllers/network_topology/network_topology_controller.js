@@ -278,5 +278,4 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
     // Reset the search term in search input
     $scope.search.query = "";
   };
-
 }
