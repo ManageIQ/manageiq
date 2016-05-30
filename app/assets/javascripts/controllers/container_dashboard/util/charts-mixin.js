@@ -144,8 +144,8 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
   };
 
   return {
-    dashboardHeatmapChartHeight:    90,
-    nodeHeatMapUsageLegendLabels:   ['< 70%', '70-80%' ,'80-90%', '> 90%'],
+    dashboardHeatmapChartHeight: 90,
+    nodeHeatMapUsageLegendLabels: ['< 70%', '70-80%', '80-90%', '> 90%'],
     chartConfig: chartConfig,
     processHeatmapData: processHeatmapData,
     processUtilizationData: processUtilizationData,

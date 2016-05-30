@@ -1,10 +1,10 @@
-ManageIQ.angular.app.controller('pglogicalReplicationFormController',['$http', '$scope', 'pglogicalReplicationFormId', 'miqService', function($http, $scope, pglogicalReplicationFormId, miqService) {
+ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', '$scope', 'pglogicalReplicationFormId', 'miqService', function($http, $scope, pglogicalReplicationFormId, miqService) {
   var init = function() {
     $scope.pglogicalReplicationModel = {
-      replication_type:'none',
-      subscriptions:[],
+      replication_type: 'none',
+      subscriptions: [],
       addEnabled: false,
-      updateEnabled: false
+      updateEnabled: false,
     };
     $scope.formId = pglogicalReplicationFormId;
     $scope.afterGet = false;

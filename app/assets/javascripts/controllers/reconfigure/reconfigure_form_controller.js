@@ -228,7 +228,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       }
       $scope.updateDisksAddRemove();
 
-      if(!angular.equals($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
+      if (!angular.equals($scope.reconfigureModel.vmAddDisks, $scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
         $scope.cb_disks = true;
       else
         $scope.cb_disks = false;
@@ -266,7 +266,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       $scope.mem_type_prev = $scope.reconfigureModel.memory_type;
       $scope.angularForm.$setPristine(true);
       $scope.updateDisksAddRemove();
-      if(!angular.equals($scope.reconfigureModel.vmAddDisks,$scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
+      if (!angular.equals($scope.reconfigureModel.vmAddDisks, $scope.modelCopy.vmAddDisks) || !angular.equals($scope.reconfigureModel.vmRemoveDisks, $scope.modelCopy.vmRemoveDisks))
         $scope.cb_disks = true;
       else
         $scope.cb_disks = false;

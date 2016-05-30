@@ -1,8 +1,8 @@
-ManageIQ.angular.app.controller('tenantQuotaFormController',['$http', '$scope', 'tenantQuotaFormId', 'tenantType', 'miqService', function($http, $scope, tenantQuotaFormId, tenantType, miqService) {
+ManageIQ.angular.app.controller('tenantQuotaFormController', ['$http', '$scope', 'tenantQuotaFormId', 'tenantType', 'miqService', function($http, $scope, tenantQuotaFormId, tenantType, miqService) {
   var init = function() {
     $scope.tenantQuotaModel = {
-      name:'',
-      quotas:{}
+      name: '',
+      quotas: {},
     };
     $scope.formId = tenantQuotaFormId;
     $scope.afterGet = false;
