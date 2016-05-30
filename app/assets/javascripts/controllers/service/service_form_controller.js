@@ -1,6 +1,5 @@
 ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'serviceFormId', 'miqService', function($http, $scope, serviceFormId, miqService) {
     var init = function() {
-
       $scope.serviceModel = {
         name: '',
         description: ''
@@ -26,7 +25,7 @@ ManageIQ.angular.app.controller('serviceFormController', ['$http', '$scope', 'se
     var serviceEditButtonClicked = function(buttonName, serializeFields) {
       miqService.sparkleOn();
       var url = '/service/service_edit/' + serviceFormId + '?button=' + buttonName;
-      
+
       miqService.miqAjaxButton(url, serializeFields);
     };
 

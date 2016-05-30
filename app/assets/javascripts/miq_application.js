@@ -449,7 +449,6 @@ function miqButtonOnWhen(button, onwhen, count) {
 
 // Set the buttons in a div based on the count of checked items passed in
 function miqSetButtons(count, button_div) {
-
   if (button_div.match("_tb$")) {
     var toolbar = $('#' + button_div);
 
@@ -470,7 +469,6 @@ function miqSetButtons(count, button_div) {
       var button = $(v);
       miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
     });
-
   } else if (button_div.match("_buttons$")) {
     // Handle newer divs with button elements
     if (count === 0) {

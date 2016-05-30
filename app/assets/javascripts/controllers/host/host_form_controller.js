@@ -56,7 +56,6 @@ ManageIQ.angular.app.controller('hostFormController', ['$http', '$scope', '$attr
       $scope.hostModel.ipmi_verify = "";
       $scope.hostModel.validate_id = "";
       $scope.afterGet = true;
-
     } else if (hostFormId.split(",").length == 1) {
         miqService.sparkleOn();
         $http.get($scope.formFieldsUrl + hostFormId).success(function (data) {

@@ -1,6 +1,5 @@
 ManageIQ.angular.app.controller('logCollectionFormController', ['$http', '$scope', 'serverId', '$attrs', 'miqService', 'miqDBBackupService', function($http, $scope, serverId, $attrs, miqService, miqDBBackupService) {
   var init = function() {
-
     $scope.logCollectionModel = {
       depot_name: '',
       uri: '',

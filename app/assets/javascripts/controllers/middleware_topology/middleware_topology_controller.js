@@ -30,7 +30,6 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
                 $scope.kinds = currentSelectedKinds;
             }
         });
-
     };
 
     $scope.checkboxModel = {
@@ -140,13 +139,13 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
     self.getCircleDimensions = function getCircleDimensions(d) {
         switch (d.item.kind) {
             case 'MiddlewareManager':
-                return { x: -20, y: -20, height: 40, width: 40, r: 28};
+                return { x: -20, y: -20, height: 40, width: 40, r: 28 };
             case 'Container' :
-                return { x: -7, y: -7,height: 14, width: 14, r: 13};
+                return { x: -7, y: -7,height: 14, width: 14, r: 13 };
             case 'MiddlewareServer' :
-                return { x: -12, y: -12, height: 23, width: 23, r: 19};
+                return { x: -12, y: -12, height: 23, width: 23, r: 19 };
             default :
-                return { x: -9, y: -9, height: 18, width: 18, r: 17};
+                return { x: -9, y: -9, height: 18, width: 18, r: 17 };
         }
     }
 
@@ -163,5 +162,4 @@ function MiddlewareTopologyCtrl($scope, $http, $interval, $location, topologySer
         // Reset the search term in search input
         $scope.search.query = '';
     };
-
 }

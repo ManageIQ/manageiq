@@ -275,5 +275,4 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     // Reset the search term in search input
     $scope.search.query = "";
   };
-
 }

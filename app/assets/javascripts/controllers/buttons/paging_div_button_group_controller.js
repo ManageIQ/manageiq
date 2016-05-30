@@ -50,7 +50,6 @@ ManageIQ.angular.app.controller('pagingDivButtonGroupController', ['$scope', 'mi
           angular.element(document.getElementById($attrs.pagingDivButtonsId)).append(compiledEnabledSave);
         }
       });
-
     } else {
       var disabledSaveHtml = '<button name="button" id="save_disabled" type="submit" class="btn btn-primary btn-disabled" ' +
         'alt={{altText}} title={{altText}} ng-click="disabledClick($event)" style="cursor:not-allowed" ' +

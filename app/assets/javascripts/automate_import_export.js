@@ -29,7 +29,6 @@ var Automate = {
           showErrorMessage(messageData.message);
         }
       });
-
   },
 
   addDomainOptions: function(domains) {
