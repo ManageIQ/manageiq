@@ -1,6 +1,13 @@
 class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper::Toolbar::Basic
   button_group('ems_container_dashboard', [
     twostate(
+      :view_compliance,
+      'fa fa-shield fa-1xplus',
+      N_('Compliance View'),
+      nil,
+      :url       => "/",
+      :url_parms => "?display=compliance"),
+    twostate(
       :view_dashboard,
       'fa fa-tachometer fa-1xplus',
       N_('Dashboard View'),

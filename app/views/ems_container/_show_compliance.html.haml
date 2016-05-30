@@ -1,0 +1,26 @@
+.container-fluid.container-tiles-pf.containers-dashboard.miq-dashboard-view{"ng-app"        => "containerCompliance",
+                                                                            "ng-controller" => "containerComplianceController as controller"}
+  .row.row-tile-pf
+    .col-xs-12.col-sm-12.col-md-2
+      %div{:layout                     => "tall",
+           "pf-aggregate-status-card"  => "",
+           "show-top-border"           => "true",
+           :status                     => "status",
+           "show-top-border"           => "true"}
+  .row.row-tile-pf
+    .col-xs-12.col-sm-6.col-md-7
+      %div{"head-title"   => _("Aggregated Smart State Analysis"),
+           :hidetopborder => "false",
+           "pf-card"      => ""}
+        .row
+          .col-xs-6.col-sm-6.col-md-6.text-center
+            %div{ "pf-donut-pct-chart" => "",
+                  "config"             => "donutConfig",
+                  "data"               => "donutData",
+                  "text-center"          => ""}
+          .col-xs-6.col-sm-6.col-md-6.text-center
+            %div{ "pf-donut-pct-chart" => "",
+                  "config"             => "donutConfig2",
+                  "data"               => "donutData2",
+                  "text-center"          => ""}
+          %label Images

@@ -51,6 +51,10 @@ module EmsCommon
       @showtype = "dashboard"
       @lastaction = "show_dashboard"
       drop_breadcrumb(:name => @ems.name + _(" (Dashboard)"), :url => show_link(@ems))
+    elsif @display == "compliance"
+      @showtype = "compliance"
+      @lastaction = "show_compliance"
+      drop_breadcrumb(:name => @ems.name + _(" (Compliance)"), :url => show_link(@ems))
     elsif @display == "performance"
       @showtype = "performance"
       drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
