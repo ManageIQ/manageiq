@@ -1,5 +1,3 @@
-/* global miqHttpInject */
-
 miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts', 'miq.card', 'miq.util']))
   .controller('containerDashboardController', ['$scope', 'dashboardUtilsFactory', 'chartsMixin', '$http', '$interval', '$window',
     function($scope, dashboardUtilsFactory, chartsMixin, $http, $interval, $window) {

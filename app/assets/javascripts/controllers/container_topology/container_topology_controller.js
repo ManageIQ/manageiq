@@ -16,11 +16,11 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     if ($location.absUrl().match("show/$") || $location.absUrl().match("show$")) {
       id = '';
     } else {
-      id = '/'+ (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
+      id = '/' + (/container_topology\/show\/(\d+)/.exec($location.absUrl())[1]);
     }
 
     var currentSelectedKinds = $scope.kinds;
-    var url = '/container_topology/data'+id;
+    var url = '/container_topology/data' + id;
 
     $http.get(url).success(function(data) {
       $scope.items = data.data.items;

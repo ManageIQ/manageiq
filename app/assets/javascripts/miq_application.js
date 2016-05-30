@@ -685,8 +685,8 @@ function miqChartBindEvents(chart_set, chart_index) {
 
 function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, chart_index) {
   var chart_data = ManageIQ.charts.chartData[chart_set];
-  var chart_el   = $('#miq_chart_parent_'+chart_set+'_'+chart_index);
-  var chartmenu_el = $('#miq_chartmenu_'+chart_set+'_'+chart_index);
+  var chart_el = $('#miq_chart_parent_' + chart_set + '_' + chart_index);
+  var chartmenu_el = $('#miq_chartmenu_' + chart_set + '_' + chart_index);
   chartmenu_el.empty();
 
   if (chart_data[chart_index].menu != null && chart_data[chart_index].menu.length) {
@@ -1395,7 +1395,7 @@ function miqAccordSelect(e) {
 }
 
 function miqInitBootstrapSwitch(element, url, options) {
-  $("[name="+element+"]").bootstrapSwitch();
+  $("[name=" + element + "]").bootstrapSwitch();
 
   $('#' + element).on('switchChange.bootstrapSwitch', function(_event, state) {
     options =  typeof options !== 'undefined' ? options : {}
