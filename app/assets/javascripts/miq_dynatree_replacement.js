@@ -43,33 +43,27 @@ ManageIQ.dynatreeReplacement = {
         if (click_url) {
           onClickFunction = function (node, event) {
             var event_type = node.getEventTargetType(event);
+            if ((event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') && node.isActive()) {
+              window[optionsClickFunction](node.data.key);
+              return;
+            }
+          };
+        } else if (miqCheckForChanges() === false) {
+          onClickFunction = function (node, event) {
+            var event_type = node.getEventTargetType(event);
             if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
-              if (node.isActive()) {
-                window[optionsClickFunction](node.data.key);
-                return;
-              }
+              this.activeNode.focus();
+              return false;
             }
           };
         } else {
-          if (miqCheckForChanges() === false) {
-            onClickFunction = function (node, event) {
-              var event_type = node.getEventTargetType(event);
-              if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
-                this.activeNode.focus();
-                return false;
-              }
-            };
-          } else {
-            onClickFunction = function (node, event) {
-              var event_type = node.getEventTargetType(event);
-              if (event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') {
-                if (node.isActive()) {
-                  window[optionsClickFunction](node.data.key);
-                  return;
-                }
-              }
-            };
-          }
+          onClickFunction = function (node, event) {
+            var event_type = node.getEventTargetType(event);
+            if ((event_type == 'icon' || event_type == 'title' || event.target.localName == 'img') && node.isActive()) {
+              window[optionsClickFunction](node.data.key);
+              return;
+            }
+          };
         }
       }
 
@@ -122,7 +116,7 @@ ManageIQ.dynatreeReplacement = {
 
     // Activate silently (no onActivate event) selected node AFTER the tree is initially loaded or replaced by AJAX
     if (options.explorer && options.tree_name === options.x_active_tree) {
-      onPostInitFunction = function (_isReloading, _isError) {
+      onPostInitFunction = function(_isReloading, _isError) {
         miqDynatreeActivateNodeSilently(options.tree_name, options.select_node);
       };
     }

@@ -19,7 +19,7 @@ ManageIQ.angular.app.directive('verifypasswd', function() {
       });
 
       ctrl.$parsers.push(function(value) {
-        if(ctrl.$name == log_verify) {
+        if (ctrl.$name == log_verify) {
           setValidity(scope, ctrl, ctrl.$viewValue, scope[scope.model][log_password]);
         }else if(ctrl.$name == log_password && scope[logVerifyCtrl] != undefined) {
           setValidity(scope, scope[logVerifyCtrl], ctrl.$viewValue, scope[scope.model][log_verify]);
@@ -30,9 +30,8 @@ ManageIQ.angular.app.directive('verifypasswd', function() {
       var setValidity = function(_scope, logVerifyCtrl, valueNew, valueOrig) {
         if (valueNew == valueOrig) {
           logVerifyCtrl.$setValidity("verifypasswd", true);
-        } else {
-          if(logVerifyCtrl.$dirty || valueOrig != "")
-            logVerifyCtrl.$setValidity("verifypasswd", false);
+        } else if (logVerifyCtrl.$dirty || valueOrig != "") {
+          logVerifyCtrl.$setValidity("verifypasswd", false);
         }
       };
     }

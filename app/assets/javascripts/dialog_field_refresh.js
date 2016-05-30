@@ -77,10 +77,8 @@ var dialogFieldRefresh = {
             option.prop('selected', true);
           }
         }
-      } else {
-        if (index === 0) {
-          option.prop('selected', true);
-        }
+      } else if (index === 0) {
+        option.prop('selected', true);
       }
 
       dropdownOptions.push(option);
