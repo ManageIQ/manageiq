@@ -139,7 +139,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       .attr('class', function(d) {
         return topologyService.getItemStatusClass(d);
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -179,7 +179,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -200,7 +200,7 @@ function NetworkTopologyCtrl($scope, $http, $interval, $location, topologyServic
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 

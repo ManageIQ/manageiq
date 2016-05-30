@@ -272,9 +272,9 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.default_api_port = "5000";
       $scope.emsCommonModel.event_stream_selection = "ceilometer";
       $scope.emsCommonModel.amqp_security_protocol = 'non-ssl';
-    } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
+    } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos') {
       $scope.note = $scope.realmNote;
-    } else if ($scope.emsCommonModel.emstype === 'rhevm'){
+    } else if ($scope.emsCommonModel.emstype === 'rhevm') {
       $scope.emsCommonModel.metrics_api_port = "5432";
     } else if ($scope.emsCommonModel.ems_controller === 'ems_container') {
       $scope.emsCommonModel.default_api_port = "8443";
@@ -283,7 +283,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
   $scope.scvmmSecurityProtocolChanged = function() {
     $scope.note = "";
-    if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos'){
+    if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos') {
       $scope.note = $scope.realmNote;
     }
   };

@@ -89,7 +89,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   };
 
   // add new subscription button pressed
-  $scope.enableSubscriptionAdd = function(){
+  $scope.enableSubscriptionAdd = function() {
     $scope.pglogicalReplicationModel.updateEnabled = false;
     $scope.pglogicalReplicationModel.addEnabled    = true;
     $scope.pglogicalReplicationModel.dbname        = '';
@@ -100,7 +100,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   };
 
   // update existing subscription button pressed
-  $scope.enableSubscriptionUpdate = function(idx){
+  $scope.enableSubscriptionUpdate = function(idx) {
     var subscription = $scope.pglogicalReplicationModel.subscriptions[idx];
     if (subscription.newRecord === true) {
       $scope.pglogicalReplicationModel.s_index       = idx;
@@ -269,7 +269,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
       return false;
   }
 
-  $scope.subscriptionInValidMessage = function(){
+  $scope.subscriptionInValidMessage = function() {
     if ($scope.pglogicalReplicationModel.replication_type == 'global' &&
       ($scope.pglogicalReplicationModel.subscriptions.length === 0 ||
       ($scope.pglogicalReplicationModel.subscriptions.length == 1 && $scope.pglogicalReplicationModel.subscriptions[0].remove === true)))

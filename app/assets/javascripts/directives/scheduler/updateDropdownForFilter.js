@@ -34,8 +34,8 @@ ManageIQ.angular.app.directive('updateDropdownForFilter', ['$timeout', function(
 }]);
 
 var selectListElement = function(scope, timeout, ctrl, refresh) {
-  timeout(function(){
-    if(refresh) {
+  timeout(function() {
+    if (refresh) {
       if (scope[scope['form_' + ctrl.$name + '_ngHide']] === true) {
         angular.element(scope['form_' + ctrl.$name]).selectpicker('hide');
       } else {

@@ -1006,7 +1006,7 @@ function miqDropComplete(_event, _ui) {
   miqJqueryRequest(url);
 }
 
-function miqUpdateElementsId(el){
+function miqUpdateElementsId(el) {
   $(el).children().each(function(idx, el) {
     var el_id = $(el).attr("id").split("|")[1];
     $(el).attr("id", "t_" + idx + "|" + el_id);
@@ -1673,7 +1673,7 @@ function chartData(type, data, data2) {
   // set maximum count of x axis tick labels
   if (_.isObject(data.miq) && data.miq.performance) {
     data.axis.x.tick.centered = true;
-    data.axis.x.tick.culling = {max: 5}
+    data.axis.x.tick.culling = { max: 5 };
   }
 
   // set formating function for tooltip and y tick labels
@@ -1681,14 +1681,14 @@ function chartData(type, data, data2) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
     data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
-    if(type == 'Donut' || type == 'Pie'){
+    if (type == 'Donut' || type == 'Pie') {
       data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
     }
   }
   var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
 
   // some PatternFly default configs define contents function, but it breaks formatting
-  if(_.isObject(config.tooltip)) {
+  if (_.isObject(config.tooltip)) {
     config.tooltip.contents = undefined;
   }
 
