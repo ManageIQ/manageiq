@@ -20,7 +20,7 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
   var lineChartTooltipPositionFactory = function(chartId) {
     var elementQuery = '#' + chartId + 'lineChart';
 
-    return function (_data, width, height, element) {
+    return function(_data, width, height, element) {
       try {
         var center = parseInt(element.getAttribute('x'), 10);
         var top = parseInt(element.getAttribute('y'), 10);
@@ -34,6 +34,7 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
           left: Math.min(x, chartBox.width - width),
         };
       } catch (_e) {
+        return null;
       }
     };
   };
@@ -123,24 +124,24 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
   };
 
   var processUtilizationData = function(data, xDataLabel, yDataLabel) {
-    if (data) {
-      data.xData.unshift(xDataLabel)
-      data.yData.unshift(yDataLabel)
-      return data;
-    } else {
+    if (!data) {
       return { dataAvailable: false }
     }
+
+    data.xData.unshift(xDataLabel)
+    data.yData.unshift(yDataLabel)
+    return data;
   };
 
   var processPodUtilizationData = function(data, xDataLabel, yCreatedLabel, yDeletedLabel) {
-    if (data) {
-      data.xData.unshift(xDataLabel);
-      data.yCreated.unshift(yCreatedLabel);
-      data.yDeleted.unshift(yDeletedLabel);
-      return data;
-    } else {
+    if (! data) {
       return { dataAvailable: false }
     }
+
+    data.xData.unshift(xDataLabel);
+    data.yCreated.unshift(yCreatedLabel);
+    data.yDeleted.unshift(yDeletedLabel);
+    return data;
   };
 
   return {
