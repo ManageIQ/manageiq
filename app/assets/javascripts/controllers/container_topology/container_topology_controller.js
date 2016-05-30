@@ -175,7 +175,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 
@@ -196,7 +196,7 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
       .attr("x", function(d) {
         return self.getDimensions(d).x;
       })
-      .on("contextmenu", function(d){
+      .on("contextmenu", function(d) {
         self.contextMenu(this, d);
       });
 

@@ -117,9 +117,8 @@ function jqplot_bind_events(chart_set, chart_index) {
   });
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
   $(window).resize(function() {
     if (ManageIQ.charts.provider == 'jqplot') setTimeout(jqplot_redraw_charts, 500);
   });
 });
-

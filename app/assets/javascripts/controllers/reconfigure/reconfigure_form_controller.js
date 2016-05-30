@@ -188,11 +188,11 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
         $scope.cb_disks = false;
     };
 
-    $scope.enableDiskAdd = function(){
+    $scope.enableDiskAdd = function() {
       $scope.reconfigureModel.addEnabled = true;
     };
 
-    $scope.hideAddDisk = function(){
+    $scope.hideAddDisk = function() {
       $scope.reconfigureModel.addEnabled = false;
       $scope.resetAddValues();
     };

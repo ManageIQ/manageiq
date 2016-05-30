@@ -5,7 +5,7 @@ function load_c3_charts() {
     for (var i = 0; i < ManageIQ.charts.chartData[set].length; i++) {
       var chart_id = "miq_chart_" + set + "_" + i.toString();
       var data = ManageIQ.charts.chartData[set][i];
-      if(data != null){
+      if (data != null) {
         load_c3_chart(data.xml, chart_id);
 
 

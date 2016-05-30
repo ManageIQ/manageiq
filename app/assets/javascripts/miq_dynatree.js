@@ -533,7 +533,7 @@ function miqSetAETreeNodeSelectionClass(id, prevId, bValidNode) {
   }
 }
 
-function miqSquashToggle(treeName){
+function miqSquashToggle(treeName) {
   if (ManageIQ.tree.expandAll) {
     $('#squash_button i').attr('class', 'fa fa-minus-square-o fa-lg');
     $('#squash_button').prop('title', __('Collapse All'));
