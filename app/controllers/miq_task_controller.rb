@@ -122,12 +122,6 @@ class MiqTaskController < ApplicationController
     if job_id.empty?
       add_flash(_("No %{model} were selected for cancellation") % {:model => ui_lookup(:tables => "miq_task")}, :error)
     end
-    case @layout
-    when "my_tasks", "all_tasks"
-      db_class = Job
-    when "my_ui_tasks", "all_ui_tasks"
-      db_class = MiqTask
-    end
     job = db_class.find_by_id(job_id)
     if job["state"].downcase == "finished"
       add_flash(_("Finished Task cannot be cancelled"), :error)
@@ -146,12 +140,6 @@ class MiqTaskController < ApplicationController
     if job_ids.empty?
       add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "miq_task")}, :error)
     else
-      case @layout
-      when "my_tasks", "all_tasks"
-        db_class = Job
-      when "my_ui_tasks", "all_ui_tasks"
-        db_class = MiqTask
-      end
       db_class.delete_by_id(job_ids)
       AuditEvent.success(:userid       => session[:userid],
                          :event        => "Delete selected tasks",
@@ -176,12 +164,6 @@ class MiqTaskController < ApplicationController
     if job_ids.empty?
       add_flash(_("No %{model} were selected for deletion") % {:model => ui_lookup(:tables => "miq_task")}, :error)
     else
-      case @layout
-      when "my_tasks", "all_tasks"
-        db_class = Job
-      when "my_ui_tasks", "all_ui_tasks"
-        db_class = MiqTask
-      end
       db_class.delete_by_id(job_ids)
       AuditEvent.success(:userid       => session[:userid],
                          :event        => "Delete all finished tasks",
@@ -200,12 +182,6 @@ class MiqTaskController < ApplicationController
   def deleteolderjobs
     assert_privileges("miq_task_deleteolder")
     jobid = find_checked_items
-    case @layout
-    when "my_tasks", "all_tasks"
-      db_class = Job
-    when "my_ui_tasks", "all_ui_tasks"
-      db_class = MiqTask
-    end
     # fetching job record for the selected job
     job = db_class.find_by_id(jobid)
     if job
@@ -227,12 +203,6 @@ class MiqTaskController < ApplicationController
   end
 
   def process_jobs(jobs, task)
-    case @layout
-    when "my_tasks", "all_tasks"
-      db_class = Job
-    when "my_ui_tasks", "all_ui_tasks"
-      db_class = MiqTask
-    end
     db_class.where(:id => jobs).order("lower(name)").each do |job|
       id = job.id
       job_name = job.name
@@ -340,6 +310,13 @@ class MiqTaskController < ApplicationController
   end
 
   private ############################
+
+  def db_class
+    case @layout
+    when 'my_tasks', 'all_tasks'       then Job
+    when 'my_ui_tasks', 'all_ui_tasks' then MiqTask
+    end
+  end
 
   # Set all task options to default
   def tasks_set_default_options
