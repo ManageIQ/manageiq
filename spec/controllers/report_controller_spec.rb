@@ -955,6 +955,7 @@ describe ReportController do
 
       before do
         allow(WidgetImportService).to receive(:new).and_return(widget_import_service)
+        login_as(FactoryGirl.create(:user))
       end
 
       context "when the widget importer does not raise an error" do
