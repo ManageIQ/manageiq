@@ -1,4 +1,6 @@
 class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqProvisionCloudWorkflow
+  include_concern "DialogFieldValidation"
+
   def allowed_instance_types(_options = {})
     source                  = load_ar_obj(get_source_vm)
     flavors                 = get_targets_for_ems(source, :cloud_filter, Flavor, 'flavors')
@@ -16,11 +18,6 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     source = load_ar_obj(get_source_vm)
     ems = get_targets_for_ems(source, :cloud_filter, CloudTenant, 'cloud_tenants')
     ems.each_with_object({}) { |f, h| h[f.id] = f.name }
-  end
-
-  def validate_cloud_network(field, values, dlg, fld, value)
-    return nil if allowed_cloud_networks.length <= 1
-    validate_placement(field, values, dlg, fld, value)
   end
 
   def set_request_values(values)

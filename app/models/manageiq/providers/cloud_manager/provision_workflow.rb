@@ -1,4 +1,5 @@
 class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
+  include_concern "DialogFieldValidation"
   include CloudInitTemplateMixin
 
   def allowed_availability_zones(_options = {})
@@ -78,13 +79,6 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def allowed_customization_templates(options = {})
     allowed_cloud_init_customization_templates(options)
-  end
-
-  def validate_cloud_subnet(field, values, dlg, fld, value)
-    return nil unless value.blank?
-    return nil if get_value(values[:cloud_network]).to_i.zero?
-    return nil unless get_value(values[field]).blank?
-    "#{required_description(dlg, fld)} is required"
   end
 
   private
