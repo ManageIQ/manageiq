@@ -50,7 +50,8 @@ module MiqReport::Generator::Html
             end
           end
           save_val = d.data[sortby[0]].to_s
-          group_text = d.data["display_range"] if db == "Chargeback" && sortby[0] == "start_date" # Chargeback, sort by date, but show range
+          # Chargeback, sort by date, but show range
+          group_text = d.data["display_range"] if Chargeback.db_is_chargeback?(db) && sortby[0] == "start_date"
         end
 
         # Build click thru if string can be created
