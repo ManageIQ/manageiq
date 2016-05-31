@@ -83,15 +83,14 @@ module ReportController::Schedules
         add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "MiqSchedule")}, :error)
       end
     end
-    process_schedules(scheds, "destroy")  unless scheds.empty?
+    single_name = MiqSchedule.find(scheds).first.name if scheds.length == 1
+    process_schedules(scheds, "destroy") unless scheds.empty?
     unless flash_errors?
-      msg_str = if scheds.length > 1
-                  _("The selected %{schedule} were deleted")
-                else
-                  _("The selected %{schedule} was deleted")
-                end
-      add_flash(msg_str % {:schedule => "#{ui_lookup(:model => "MiqReport")} #{ui_lookup(:models => "MiqSchedule")}"},
-                :success, true)
+      if single_name
+        add_flash(_("%{schedule} %{name} was deleted") % {:schedule => ui_lookup(:model => "MiqSchedule"), :name => single_name}, :success, true)
+      else
+        add_flash(_("The selected %{schedules} were deleted") % {:schedules => ui_lookup(:models => "MiqSchedule")}, :success, true)
+      end
     end
     self.x_node = "root"
     replace_right_cell(:replace_trees => [:schedules])
