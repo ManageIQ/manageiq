@@ -20,9 +20,9 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   def x_get_tree_roots(count_only, _options)
     objects = []
     objects.push(:id            => "csf",
-                 :text          => _("Foreman Configured Systems"),
+                 :text          => _("%{name} Configured Systems") % {:name => ui_lookup(:ui_title => 'foreman')},
                  :image         => "folder",
-                 :tip           => _("Foreman Configured Systems"),
+                 :tip           => _("%{name} Configured Systems") % {:name => ui_lookup(:ui_title => 'foreman')},
                  :load_children => true)
     objects.push(:id            => "csa",
                  :text          => _("Ansible Tower Configured Systems"),
