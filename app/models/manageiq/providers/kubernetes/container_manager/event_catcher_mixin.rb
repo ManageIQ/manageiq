@@ -67,8 +67,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
       return
     end
 
-    event_data[:event_type] = "#{event_data[:kind].upcase}_" \
-                              "#{event_data[:reason].upcase}"
+    event_type_prefix = event_data[:kind].upcase
 
     # Handle event data for specific entities
     case event_data[:kind]
@@ -77,15 +76,18 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     when 'Pod'
       /^spec.containers{(?<container_name>.*)}$/ =~ event_data[:fieldpath]
       unless container_name.nil?
-        event_data[:event_type] = "CONTAINER_#{event_data[:reason].upcase}"
+        event_type_prefix = "CONTAINER"
         event_data[:container_name] = container_name
       end
       event_data[:container_group_name] = event_data[:name]
       event_data[:container_namespace] = event_data[:namespace]
     when 'ReplicationController'
+      event_type_prefix = "REPLICATOR"
       event_data[:container_replicator_name] = event_data[:name]
       event_data[:container_namespace] = event_data[:namespace]
     end
+
+    event_data[:event_type] = "#{event_type_prefix}_#{event_data[:reason].upcase}"
 
     _log.info "#{log_prefix} Queuing event [#{event_data}]"
     EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
