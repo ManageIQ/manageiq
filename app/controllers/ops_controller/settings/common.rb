@@ -75,7 +75,13 @@ module OpsController::Settings::Common
           if ["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode])
             page << javascript_show("ldap_div")
             page << javascript_show("ldap_role_div")
-            page << javascript_show("user_proxies_div") if @edit[:new][:authentication][:ldap_role]
+            page << javascript_show("ldap_role_div")
+
+            page << set_element_visible("user_proxies_div",        @edit[:new][:authentication][:ldap_role])
+            page << set_element_visible("ldap_role_details_div",   @edit[:new][:authentication][:ldap_role])
+            page << set_element_visible("ldap_default_group_div", !@edit[:new][:authentication][:ldap_role])
+
+            page << (@edit[:new][:authentication][:ldap_role] ? javascript_checked('ldap_role') : javascript_unchecked('ldap_role'))
           else
             page << javascript_hide("ldap_div")
             page << javascript_hide("ldap_role_div")
@@ -732,11 +738,11 @@ module OpsController::Settings::Common
       if params[:authentication_mode] && params[:authentication_mode] != auth[:mode]
         if params[:authentication_mode] == "ldap"
           params[:authentication_ldapport] = "389"
-          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:get_direct_groups]
+          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:ldap_role]
           @authldapport_reset = true
         elsif params[:authentication_mode] == "ldaps"
           params[:authentication_ldapport] = "636"
-          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:get_direct_groups]
+          @sb[:newrole] = auth[:ldap_role] = @edit[:current].config[:authentication][:ldap_role]
           @authldapport_reset = true
         else
           @sb[:newrole] = auth[:ldap_role] = false    # setting it to false if database was selected to hide user_proxies box
