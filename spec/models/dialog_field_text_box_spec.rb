@@ -208,6 +208,14 @@ describe DialogFieldTextBox do
             expect(dialog_field.value).to eq(0)
           end
         end
+
+        context "when there is no value" do
+          let(:value) { nil }
+
+          it "does not convert nil value to zero" do
+            expect(dialog_field.value).to be_nil
+          end
+        end
       end
 
       context "when the data type is string" do
@@ -403,6 +411,14 @@ describe DialogFieldTextBox do
 
         it "converts the value to an integer" do
           expect(dialog_field.automate_output_value).to eq(12)
+        end
+      end
+
+      context "when there is no value" do
+        let(:nil_dialog_field) { described_class.new(:data_type => data_type) }
+
+        it "does not convert nil value to zero" do
+          expect(nil_dialog_field.automate_output_value).to be_nil
         end
       end
     end

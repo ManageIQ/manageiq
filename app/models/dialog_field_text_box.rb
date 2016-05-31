@@ -25,6 +25,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def automate_output_value
+    return nil if @value.nil?
     return MiqPassword.encrypt(@value) if self.protected?
     convert_value_to_type
   end
