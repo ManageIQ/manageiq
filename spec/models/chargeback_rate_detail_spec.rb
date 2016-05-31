@@ -28,25 +28,24 @@ describe ChargebackRateDetail do
                              :fixed_rate                => fixed_rate,
                              :variable_rate             => variable_rate)
     cbd.update(:chargeback_tiers => [cbt])
-    expect(cbd.cost(cvalue)).to eq(cvalue * cbd.hourly_rate + cbd.hourly(fixed_rate))
+    expect(cbd.cost(cvalue)).to eq(cvalue * cbd.hourly(variable_rate) + cbd.hourly(fixed_rate))
 
     cbd.group = 'fixed'
-    expect(cbd.cost(cvalue)).to eq(cbd.hourly_rate + cbd.hourly(fixed_rate))
+    expect(cbd.cost(cvalue)).to eq(cbd.hourly(variable_rate) + cbd.hourly(fixed_rate))
 
     cbd.enabled = false
     expect(cbd.cost(cvalue)).to eq(0.0)
   end
 
-  it "#hourly_rate" do
+  it "#hourly" do
     [
       0,
       0.0,
       0.00
     ].each do |rate|
-      cbd = FactoryGirl.build(:chargeback_rate_detail)
-      FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => cbd.id, :start => 0,
-                         :finish => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
-      expect(cbd.hourly_rate).to eq(0.0)
+      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_time => 'hourly')
+
+      expect(cbd.hourly(rate)).to eq(0.0)
     end
     cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
     rate = 8.26
@@ -55,8 +54,7 @@ describe ChargebackRateDetail do
       'daily',    'megabytes',  rate / 24,
       'weekly',   'megabytes',  rate / 24 / 7,
       'monthly',  'megabytes',  rate / 24 / 30,
-      'yearly',   'megabytes',  rate / 24 / 365,
-      'yearly',   'gigabytes',  rate / 24 / 365 / 1024,
+      'yearly',   'megabytes',  rate / 24 / 365
     ].each_slice(3) do |per_time, per_unit, hourly_rate|
       cbd = FactoryGirl.build(:chargeback_rate_detail,
                                :per_time                          => per_time,
@@ -64,17 +62,10 @@ describe ChargebackRateDetail do
                                :metric                            => 'derived_memory_available',
                                :chargeback_rate_detail_measure_id => cbdm.id
                               )
-      cbt = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => cbd.id, :start => 0,
-                               :finish => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
-      cbd.update(:chargeback_tiers => [cbt])
-      expect(cbd.hourly_rate).to eq(hourly_rate)
+      expect(cbd.hourly(rate)).to eq(hourly_rate)
     end
-
     cbd = FactoryGirl.build(:chargeback_rate_detail, :per_time => 'annually')
-    cbt = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => cbd.id, :start => 0,
-                             :finish => Float::INFINITY, :variable_rate => rate, :fixed_rate => 0.0)
-    cbd.update(:chargeback_tiers => [cbt])
-    expect  { cbd.hourly_rate }.to raise_error(RuntimeError, "rate time unit of 'annually' not supported")
+    expect  { cbd.hourly(rate) }.to raise_error(RuntimeError, "rate time unit of 'annually' not supported")
   end
 
   it "#rate_adjustment" do

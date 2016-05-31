@@ -37,7 +37,7 @@ FactoryGirl.define do
 
   factory :chargeback_rate_detail_cpu_cores_used, :parent => :chargeback_rate_detail do
     description "Used CPU in Cores"
-    group       "cpu"
+    group       "cpu_cores"
     source      "used"
     metric      "cpu_usage_rate_average"
     per_unit    "cores"
