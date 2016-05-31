@@ -716,6 +716,10 @@
       :description: Refresh Infrastructure Providers
       :feature_type: control
       :identifier: ems_infra_refresh
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_infra_recheck_auth_status
   - :name: Modify
     :description: Modify Infrastructure Providers
     :feature_type: admin
