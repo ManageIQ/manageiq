@@ -6,19 +6,20 @@ module SupportsFeatureMixin
   #     include SupportsFeatureMixin
   #     supports :publish
   #     supports_not :fake, "We keep it real"
-  #     supports :archive do |post|
-  #       post.unsupported[:archive] = "Its too good" if post.featured?
+  #     supports :archive do
+  #       unsupported_reason_add(:archive) = "Its too good" if featured?
   #     end
   #   end
   #
   # To make a feature conditionally supported, pass a block to the +supports+ method.
-  # The block receives the instance as an argument.
-  # If you set a key with the name of the feature to +instance.unsupported+ with a reason
-  # then the feature will be unsupported and the reason will be accessible through
+  # The block is evaluated in the context of the instance.
+  # If you call the private method +unsupported_reason_add+ whith the feature
+  # and a reason, then the feature will be unsupported and the reason will be
+  # accessible through
   #
-  #   instance.unsupported[:feature]
+  #   instance.unsupported_reason(:feature)
   #
-  # The above allows you to call +support_feature?+ methods on the Class and Instance:
+  # The above allows you to call +supports_feature?+ methods on the Class and Instance:
   #
   #   Post.supports_publish?                       # => true
   #   Post.new.supports_publish?                   # => true
@@ -28,9 +29,9 @@ module SupportsFeatureMixin
   #
   # To get a reason why a feature is unsupported use the +unsupported+ method
   #
-  #   Post.unsupported[:publish]                   # => nil
-  #   Post.unsupported[:fake]                      # => "We keep it real"
-  #   Post.new(featured).unsupported[:archive]     # => "Its too good"
+  #   Post.unsupported_reason(:publish)                     # => nil
+  #   Post.unsupported_reason(:fake)                        # => "We keep it real"
+  #   Post.new(featured: true).unsupported_reason(:archive) # => "Its too good"
   #
   # If you include this concern in a Module that gets included by the Model
   # you have to extend that model with +ActiveSupport::Concern+ and wrap the
@@ -48,18 +49,25 @@ module SupportsFeatureMixin
   #
   extend ActiveSupport::Concern
 
+  def unsupported_reason(feature)
+    public_send("supports_#{feature}?") unless unsupported.key?(feature)
+    unsupported[feature]
+  end
+
+  private
+
+  def unsupported_reason_add(feature, reason)
+    unsupported[feature] = reason
+  end
+
   def unsupported
-    @unsupported ||= Hash.new do |_hash, feature|
-      unsupported[feature] unless public_send("supports_#{feature}?")
-    end
+    @unsupported ||= {}
   end
 
   class_methods do
-    def unsupported
-      # TODO: durandom - is Thread.current needed here?
-      Thread.current["unsupported_#{object_id}"] ||= Hash.new do |_hash, feature|
-        unsupported[feature] unless public_send("supports_#{feature}?")
-      end
+    def unsupported_reason(feature)
+      public_send("supports_#{feature}?") unless unsupported.key?(feature)
+      unsupported[feature]
     end
 
     def supports(feature, &block)
@@ -72,13 +80,23 @@ module SupportsFeatureMixin
 
     private
 
-    def define_supports_methods(feature, is_supported, reason = nil)
+    def unsupported
+      # This is a class variable and it might be modified during runtime
+      # because we dont eager load all classes at boot time, so it needs to be thread safe
+      @unsupported ||= Concurrent::Hash.new
+    end
+
+    def unsupported_reason_add(feature, reason)
+      unsupported[feature] = reason
+    end
+
+    def define_supports_methods(feature, is_supported, reason = nil, &block)
       method_name = "supports_#{feature}?"
 
       define_method(method_name) do
         unsupported.delete(feature)
         if block_given?
-          yield(self)
+          instance_eval(&block)
         else
           unsupported[feature] = reason unless is_supported
         end

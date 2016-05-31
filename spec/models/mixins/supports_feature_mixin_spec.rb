@@ -27,8 +27,8 @@ describe SupportsFeatureMixin do
       extend ActiveSupport::Concern
 
       included do
-        supports :fake do |post|
-          post.unsupported[:fake] = "Need more money" unless post.bribe
+        supports :fake do
+          unsupported_reason_add(:fake, "Need more money") unless bribe
         end
       end
     end)
@@ -54,12 +54,12 @@ describe SupportsFeatureMixin do
       expect(Post.new.respond_to?(:supports_publish?)).to be true
     end
 
-    it "unsupported on the class" do
-      expect(Post.respond_to?(:unsupported)).to be true
+    it "unsupported_reason on the class" do
+      expect(Post.respond_to?(:unsupported_reason)).to be true
     end
 
-    it "unsupported on the instance" do
-      expect(Post.new.respond_to?(:unsupported)).to be true
+    it "unsupported_reason on the instance" do
+      expect(Post.new.respond_to?(:unsupported_reason)).to be true
     end
   end
 
@@ -72,12 +72,12 @@ describe SupportsFeatureMixin do
       expect(Post.new.supports_publish?).to be true
     end
 
-    it "#unsupported[:feature] is nil" do
-      expect(Post.new.unsupported[:publish]).to be nil
+    it "#unsupported_reason(:feature) is nil" do
+      expect(Post.new.unsupported_reason(:publish)).to be nil
     end
 
-    it ".unsupported[:feature] is nil" do
-      expect(Post.unsupported[:publish]).to be nil
+    it ".unsupported_reason(:feature) is nil" do
+      expect(Post.unsupported_reason(:publish)).to be nil
     end
   end
 
@@ -90,12 +90,12 @@ describe SupportsFeatureMixin do
       expect(Post.new.supports_fake?).to be false
     end
 
-    it "#unsupported[:feature] returns a reason" do
-      expect(Post.new.unsupported[:fake]).to eq "We keep it real!"
+    it "#unsupported_reason(:feature) returns a reason" do
+      expect(Post.new.unsupported_reason(:fake)).to eq "We keep it real!"
     end
 
-    it ".unsupported[:feature] returns a reason" do
-      expect(Post.unsupported[:fake]).to eq "We keep it real!"
+    it ".unsupported_reason(:feature) returns a reason" do
+      expect(Post.unsupported_reason(:fake)).to eq "We keep it real!"
     end
   end
 
@@ -134,11 +134,11 @@ describe SupportsFeatureMixin do
       end
 
       it "gives no reason on the class" do
-        expect(SpecialPost.unsupported[:fake]).to be nil
+        expect(SpecialPost.unsupported_reason(:fake)).to be nil
       end
 
       it "gives no reason on the instance" do
-        expect(SpecialPost.new(:bribe => true).unsupported[:fake]).to be nil
+        expect(SpecialPost.new(:bribe => true).unsupported_reason(:fake)).to be nil
       end
     end
 
@@ -146,11 +146,11 @@ describe SupportsFeatureMixin do
       it "gives a reason on the instance" do
         special_post = SpecialPost.new
         expect(special_post.supports_fake?).to be false
-        expect(special_post.unsupported[:fake]).to eq "Need more money"
+        expect(special_post.unsupported_reason(:fake)).to eq "Need more money"
       end
 
       it "gives a reason without calling supports_feature? first" do
-        expect(SpecialPost.new.unsupported[:fake]).to eq "Need more money"
+        expect(SpecialPost.new.unsupported_reason(:fake)).to eq "Need more money"
       end
     end
 
@@ -158,10 +158,10 @@ describe SupportsFeatureMixin do
       it "is checks the current condition" do
         special_post = SpecialPost.new
         expect(special_post.supports_fake?).to be false
-        expect(special_post.unsupported[:fake]).to eq "Need more money"
+        expect(special_post.unsupported_reason(:fake)).to eq "Need more money"
         special_post.bribe = true
         expect(special_post.supports_fake?).to be true
-        expect(special_post.unsupported[:fake]).to be nil
+        expect(special_post.unsupported_reason(:fake)).to be nil
       end
     end
   end
