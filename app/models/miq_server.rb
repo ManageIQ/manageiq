@@ -179,6 +179,7 @@ class MiqServer < ApplicationRecord
       _log.info("Creating Default MiqServer with guid=[#{my_guid}], zone=[#{Zone.default_zone.name}]")
       create!(:guid => my_guid, :zone => Zone.default_zone)
       my_server_clear_cache
+      Vmdb::Settings.init # Re-initialize the Settings now that we have a server record
       _log.info("Creating Default MiqServer... Complete")
     end
     my_server
