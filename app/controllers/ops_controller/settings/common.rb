@@ -75,7 +75,13 @@ module OpsController::Settings::Common
           if ["ldap", "ldaps"].include?(@edit[:new][:authentication][:mode])
             page << javascript_show("ldap_div")
             page << javascript_show("ldap_role_div")
-            page << javascript_show("user_proxies_div") if @edit[:new][:authentication][:ldap_role]
+            page << javascript_show("ldap_role_div")
+
+            page << set_element_visible("user_proxies_div",        @edit[:new][:authentication][:ldap_role])
+            page << set_element_visible("ldap_role_details_div",   @edit[:new][:authentication][:ldap_role])
+            page << set_element_visible("ldap_default_group_div", !@edit[:new][:authentication][:ldap_role])
+
+            page << (@edit[:new][:authentication][:ldap_role] ? javascript_checked('ldap_role') : javascript_unchecked('ldap_role'))
           else
             page << javascript_hide("ldap_div")
             page << javascript_hide("ldap_role_div")
