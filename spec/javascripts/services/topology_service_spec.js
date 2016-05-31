@@ -1,6 +1,17 @@
 describe('topologyService', function() {
     var testService;
     var replicator = { id:"396086e5-7b0d-11e5-8286-18037327aaeb",  item:{display_kind:"Replicator", kind:"ContainerReplicator", id:"396086e5-7b0d-11e5-8286-18037327aaeb", miq_id:"10"}};
+    var mw_manager = {
+        id: "1", item: {
+            "name": "Hawkular",
+            "kind": "MiddlewareManager",
+            "miq_id": 1,
+            "status": "Unknown",
+            "display_kind": "Hawkular",
+            "icon": "vendor-hawkular",
+            "id": "1"
+        }
+    };
 
     beforeEach(module('ManageIQ'));
 
@@ -23,6 +34,7 @@ describe('topologyService', function() {
       it('to entity pages', function() {
         var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37"}};
         expect(testService.geturl(d)).toEqual("/ems_container/37");
+        expect(testService.geturl(mw_manager)).toEqual("/ems_middleware/show/1");
         d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3", miq_id:"30"}};
         expect(testService.geturl(d)).toEqual("/container_group/show/30");
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
