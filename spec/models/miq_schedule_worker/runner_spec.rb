@@ -18,7 +18,7 @@ describe MiqScheduleWorker::Runner do
     context "with a stuck dispatch in each zone" do
       before(:each) do
         @cond = {:class_name => 'JobProxyDispatcher', :method_name => 'dispatch'}
-        @opts = @cond.merge({:state => 'dequeue', :updated_on => Time.now.utc})
+        @opts = @cond.merge(:state => 'dequeue', :updated_on => Time.now.utc)
         @stale_timeout = 2.minutes
         allow(@schedule_worker).to receive(:worker_settings).and_return(:job_proxy_dispatcher_stale_message_timeout => @stale_timeout)
 
@@ -270,7 +270,7 @@ describe MiqScheduleWorker::Runner do
                   job.call
                   @schedule_worker.do_work
                   expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name  => "LdapServer", :method_name => "sync_data_from_timer").first
+                  message = MiqQueue.where(:class_name => "LdapServer", :method_name => "sync_data_from_timer").first
                   expect(message).not_to be_nil
 
                   MiqQueue.delete_all
@@ -330,7 +330,7 @@ describe MiqScheduleWorker::Runner do
                   job.call
                   @schedule_worker.do_work
                   expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "capture_metrics_timer").first
+                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer").first
                   expect(message).not_to be_nil
                   expect(message.role).to eq("database_owner")
                   expect(message.zone).to be_nil
@@ -342,7 +342,7 @@ describe MiqScheduleWorker::Runner do
                   job.call
                   @schedule_worker.do_work
                   expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
+                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
                   expect(message).not_to be_nil
                   expect(message.role).to eq("database_owner")
                   expect(message.zone).to be_nil
@@ -356,7 +356,7 @@ describe MiqScheduleWorker::Runner do
                   expect(MiqQueue.count).to eq(2)
 
                   ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
-                    message = MiqQueue.where(:class_name  => class_name, :method_name => "purge_all_timer").first
+                    message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
                     expect(message).not_to be_nil
                     expect(message.role).to eq("database_operations")
                     expect(message.zone).to be_nil
@@ -390,7 +390,7 @@ describe MiqScheduleWorker::Runner do
                   job.call
                   @schedule_worker.do_work
                   expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "capture_metrics_timer").first
+                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer").first
                   expect(message).not_to be_nil
                   expect(message.role).to eq("database_operations")
                   expect(message.zone).to be_nil
@@ -402,7 +402,7 @@ describe MiqScheduleWorker::Runner do
                   job.call
                   @schedule_worker.do_work
                   expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name  => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
+                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
                   expect(message).not_to be_nil
                   expect(message.role).to eq("database_operations")
                   expect(message.zone).to be_nil
@@ -416,7 +416,7 @@ describe MiqScheduleWorker::Runner do
                   expect(MiqQueue.count).to eq(2)
 
                   ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
-                    message = MiqQueue.where(:class_name  => class_name, :method_name => "purge_all_timer").first
+                    message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
                     expect(message).not_to be_nil
                     expect(message.role).to eq("database_operations")
                     expect(message.zone).to be_nil
@@ -480,8 +480,8 @@ describe MiqScheduleWorker::Runner do
                 Timecop.freeze(@start_time) do
                   @schedule_worker.schedules_for_all_roles
 
-                  expect(@system.jobs(:tag => :server_updates).first.next_time).to eq(@start_time + 1.minutes)
-                  expect(@system.jobs(:tag => :rhn_mirror).first.next_time).to eq(@start_time + 1.minutes)
+                  expect(@system.jobs(:tag => :server_updates).first.next_time).to eq(@start_time + 1.minute)
+                  expect(@system.jobs(:tag => :rhn_mirror).first.next_time).to eq(@start_time + 1.minute)
                 end
               end
 
@@ -518,10 +518,10 @@ describe MiqScheduleWorker::Runner do
 
               case job.tags
               when %w(ems_event purge_schedule)
-                messages = MiqQueue.where(:class_name  => "EmsEvent", :method_name => "purge_timer")
+                messages = MiqQueue.where(:class_name => "EmsEvent", :method_name => "purge_timer")
                 expect(messages.count).to eq(1)
               when %w(policy_event purge_schedule)
-                messages = MiqQueue.where(:class_name  => "PolicyEvent", :method_name => "purge_timer")
+                messages = MiqQueue.where(:class_name => "PolicyEvent", :method_name => "purge_timer")
                 expect(messages.count).to eq(1)
               else
                 raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
