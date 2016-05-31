@@ -563,8 +563,8 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
                "/#{ip_group}/providers/Microsoft.Network"\
                "/publicIPAddresses/miqmismatch1"
 
-    @network_port = ManageIQ::Providers::Azure::CloudManager::NetworkPort.where(:name => nic_name).first
-    @floating_ip  = ManageIQ::Providers::Azure::CloudManager::FloatingIp.where(:ems_ref => ems_ref).first
+    @network_port = ManageIQ::Providers::Azure::NetworkManager::NetworkPort.where(:name => nic_name).first
+    @floating_ip  = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(:ems_ref => ems_ref).first
 
     expect(@network_port).to have_attributes(
       :status  => 'Succeeded',
