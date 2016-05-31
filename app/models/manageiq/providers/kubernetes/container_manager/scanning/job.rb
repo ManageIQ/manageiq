@@ -215,6 +215,12 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   alias_method :abort_job, :cleanup
 
+  def queue_callback(state, msg, _)
+    if state == "timeout" && self.state != "aborting"
+      queue_signal(:abort_job, "Job Timeout: #{msg}", "error")
+    end
+  end
+
   private
 
   def target_entity
@@ -250,7 +256,15 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :role        => "smartstate",
       :task_id     => guid,
       :zone        => zone
-    )
+    ) do |_msg, find_options|
+      find_options.merge(
+        :miq_callback => {
+          :class_name  => self.class.to_s,
+          :instance_id => id,
+          :method_name => :queue_callback
+        }
+      )
+    end
   end
 
   def pod_health_poll(client, health_url, http_opts)
