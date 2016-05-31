@@ -52,7 +52,12 @@ module JobProxyDispatcherEmbeddedScanSpec
         allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive_messages(:authentication_status_ok? => true)
         allow_any_instance_of(Host).to receive_messages(:authentication_status_ok? => true)
 
-        @hosts, @proxies, @storages, @vms, @repo_vms = build_hosts_proxies_storages_vms(:hosts => NUM_HOSTS, :storages => NUM_STORAGES, :vms => NUM_VMS, :repo_vms => NUM_REPO_VMS)
+        @hosts, @proxies, @storages, @vms, @repo_vms = build_entities(
+          :hosts    => NUM_HOSTS,
+          :storages => NUM_STORAGES,
+          :vms      => NUM_VMS,
+          :repo_vms => NUM_REPO_VMS
+        )
       end
 
       context "and a scan job for each vm" do

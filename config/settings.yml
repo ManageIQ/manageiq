@@ -76,6 +76,8 @@
   :concurrent_per_host: 1
   :scan_via_host: true
   :use_vim_broker: true
+:container_scanning:
+  :concurrent_per_ems: 3
 :database:
   :metrics_collection:
     :collection_schedule: "1 * * * *"

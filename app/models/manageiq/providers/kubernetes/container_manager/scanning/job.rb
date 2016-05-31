@@ -31,7 +31,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def initializing
-    queue_signal(:start)
+    # exactly like job.dispatch_start except for storage bits
+    _log.info "Dispatch Status is 'pending'"
+    update(:dispatch_status => "pending")
   end
 
   def start
@@ -45,7 +47,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     namespace = INSPECTOR_NAMESPACE_FALLBACK if namespace.blank?
 
     update!(:options => options.merge(
-      :ems_id          => image.ext_management_system.id,
       :docker_image_id => image.docker_id,
       :image_full_name => image.full_name,
       :pod_name        => "manageiq-img-scan-#{guid[0..4]}",
@@ -207,7 +208,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def finish(*_args)
-    # Dummy method, nothing to execute here. Job finished.
+    # exactly like job.dispatch_finish except for storage bits
+    _log.info "Dispatch Status is 'finished'"
+    update(:dispatch_status => "finished")
   end
 
   alias_method :abort_job, :cleanup
