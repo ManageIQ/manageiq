@@ -671,7 +671,12 @@ module VmCommon
     @policy_options[:out_of_scope] = true
     @policy_options[:passed] = true
     @policy_options[:failed] = true
-    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name, @policy_options)
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree,
+                                                              :policy_simulation, @sb,
+                                                              true,
+                                                              @polArr,
+                                                              @record.name,
+                                                              @policy_options)
     @edit = session[:edit] if session[:edit]
     if @edit && @edit[:explorer]
       render_flash(_("No policies were selected for Policy Simulation."), :error) if session[:policies].empty?
@@ -695,7 +700,13 @@ module VmCommon
       @policy_options[:passed] = true
     end
     @vm = @record = identify_record(params[:id], VmOrTemplate)
-    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name, @policy_options)
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree,
+                                                              :policy_simulation,
+                                                              @sb,
+                                                              true,
+                                                              @polArr,
+                                                              @record.name,
+                                                              @policy_options)
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
@@ -708,7 +719,13 @@ module VmCommon
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     @policy_options ||= {}
     @policy_options[:out_of_scope] = (params[:out_of_scope] == "1")
-    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree, :policy_simulation, @sb, true, @polArr, @record.name, @policy_options)
+    @policy_simulation_tree = TreeBuilderPolicySimulation.new(:policy_simulation_tree,
+                                                              :policy_simulation,
+                                                              @sb,
+                                                              true,
+                                                              @polArr,
+                                                              @record.name,
+                                                              @policy_options)
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
