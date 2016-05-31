@@ -3,7 +3,7 @@ module ApplicationController::ExpressionHtml
   #   and inserting sequential tokens for each expression part
   def exp_build_string(exp)
     exp_string = ""
-    exp_tooltip = ""      # string for tooltip without fonts tags
+    exp_tooltip = "" # string for tooltip without fonts tags
     if exp["and"]
       fcolor = calculate_font_color(exp["result"])
       exp_string << "<font color=#{fcolor}><b>(</b></font>"
@@ -45,8 +45,9 @@ module ApplicationController::ExpressionHtml
       fcolor = calculate_font_color(exp["result"])
       exp_string << "<font color=#{fcolor}> <b>NOT</b> </font>"
       exp_tooltip << " NOT "
-      exp_string << "<font color=#{fcolor}><b>(</b></font>" unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
-      exp_tooltip << "(" unless ["and", "or"].include?(exp["not"].keys.first) # No parens if and/or under me
+      # No parens if and/or under me
+      exp_string << "<font color=#{fcolor}><b>(</b></font>" unless %w(and or).include?(exp["not"].keys.first)
+      exp_tooltip << "(" unless %w(and or).include?(exp["not"].keys.first) # No parens if and/or under me
       exp_str, exp_tip = exp_build_string(exp["not"])
       if exp["result"] && !exp["not"]["result"]
         exp_string << "<font color=#{fcolor}><i>" << exp_str << "</i></font>"
@@ -55,8 +56,9 @@ module ApplicationController::ExpressionHtml
       end
 
       exp_tooltip << exp_tip
-      exp_string << "<font color=#{fcolor}><b>)</b></font>" unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
-      exp_tooltip << ")" unless ["and", "or"].include?(exp["not"].keys.first) # No parens if and/or under me
+      # No parens if and/or under me
+      exp_string << "<font color=#{fcolor}><b>)</b></font>" unless %w(and or).include?(exp["not"].keys.first)
+      exp_tooltip << ")" unless %w(and or).include?(exp["not"].keys.first) # No parens if and/or under me
     else
       fcolor = calculate_font_color(exp["result"])
       temp_exp = copy_hash(exp)
@@ -76,5 +78,4 @@ module ApplicationController::ExpressionHtml
     end
     fcolor
   end
-
 end
