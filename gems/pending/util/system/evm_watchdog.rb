@@ -41,7 +41,7 @@ module EvmWatchdog
 
   def self.check_for_update
     return unless File.exist?(UPDATE_FILE)
-    packages = File.read(UPDATE_FILE).split(",")
+    packages = File.read(UPDATE_FILE).split
     LinuxAdmin::Yum.update(*packages)
     FileUtils.rm_f(UPDATE_FILE)
   end
