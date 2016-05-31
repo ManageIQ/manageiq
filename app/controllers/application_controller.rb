@@ -246,7 +246,6 @@ class ApplicationController < ActionController::Base
     session[:async][:interval] ||= 1000 # Default interval to 1 second
     session[:async][:params] ||= {}
 
-    session[:async][:interval]         = options[:retry_seconds] * 1000 if options[:retry_seconds].kind_of?(Numeric)
     session[:async][:params]           = copy_hash(params)  # Save the incoming parms
     session[:async][:params][:task_id] = task_id
 
