@@ -1,1 +1,1 @@
-require 'ar_dba/postgresql'
+require_relative 'ar_dba/postgresql'
