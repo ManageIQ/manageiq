@@ -525,6 +525,10 @@ class ConfigurationController < ApplicationController
   end
 
   def timeprofile_update
+    p "######################################"
+    p params
+    p "######################################"
+
     assert_privileges("tp_edit")
     timeprofile_get_form_vars
     if params[:button] == "cancel"
@@ -591,6 +595,62 @@ class ConfigurationController < ApplicationController
         end
       end
     end
+  end
+
+  def time_profile_form_fields
+    assert_privileges("tp_edit")
+    @timeprofile = TimeProfile.new if params[:id] == 'new'
+    @timeprofile = TimeProfile.find(params[:id]) if params[:id] != 'new'
+    # set_form_vars
+
+    # @edit = {
+    #     :current     => {},
+    #     :key         => 'config_edit__ui4',
+    # }
+    # @edit[:timeprofile_id] = @timeprofile.try(:id)
+    # if ['timeprofile_new',  'timeprofile_copy',
+    #     'timeprofile_edit', 'timeprofile_update'].include?(params[:action])
+    #   @edit[:current] = {
+    #       :description  => @timeprofile.description,
+    #       :profile_type => @timeprofile.profile_type || "user",
+    #       :profile_key  => @timeprofile.profile_key,
+    #       :profile      => {
+    #           :days  => Array(@timeprofile.days).uniq.sort,
+    #           :hours => Array(@timeprofile.hours).uniq.sort,
+    #           :tz    => @timeprofile.tz,
+    #       },
+    #       :rollup_daily => @timeprofile.rollup_daily_metrics,
+    #   }
+    #   @edit[:all_days]  = @edit.fetch_path(:current, :profile, :days).length == 7
+    #   @edit[:all_hours] = @edit.fetch_path(:current, :profile, :hours).length == 24
+    # end
+    # show_timeprofiles
+
+    # @tp_restricted = true if @timeprofile.profile_type == "global" && !admin_user?
+    # title = (@timeprofile.profile_type == "global" && !admin_user?) ? _("Time Profile") : _("Edit")
+    # add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && !admin_user?
+    # session[:changed] = false
+    # @in_a_form = true
+    # drop_breadcrumb(:name => _("%{title} '%{description}'") % {:title       => title,
+    #                                                            :description => @timeprofile.description},
+    #                 :url  => "/configuration/timeprofile_edit")
+    #
+    # assert_privileges("provider_foreman_edit_provider")
+    # config_mgr = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    # provider   = config_mgr.provider
+
+    render :json => {:description             => @timeprofile.description,
+                     :admin_user              => admin_user?,
+                     :restricted_time_profile => @timeprofile.profile_type == "global" && !admin_user?,
+                     :profile_type            => @timeprofile.profile_type || "user",
+                     :profile_tz              => @timeprofile.tz.nil? ? "" : @timeprofile.tz,
+                     :rollup_daily            => !@timeprofile.rollup_daily_metrics.nil?,
+                     :all_days                => Array(@timeprofile.days).size == 7,
+                     :days                    => Array(@timeprofile.days).uniq.sort,
+                     :all_hours               => Array(@timeprofile.hours).size == 24,
+                     :hours                   => Array(@timeprofile.hours).uniq.sort,
+                     :miq_reports_count       => @timeprofile.miq_reports.count
+    }
   end
 
   private ############################
