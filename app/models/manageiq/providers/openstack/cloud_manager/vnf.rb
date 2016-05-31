@@ -2,7 +2,9 @@ class ManageIQ::Providers::Openstack::CloudManager::Vnf < ManageIQ::Providers::C
   require_nested :Status
 
   def self.raw_create_stack(orchestration_manager, stack_name, template, options = {})
-    create_options = {:vnf => {:name => stack_name, :vnfd_id => template.ems_ref}}.merge(options).except(:tenant_name)
+    create_options = {:vnf => {:name => stack_name, :vnfd_id => template.ems_ref}}
+    create_options[:vnf][:attributes] = options[:attributes] if options[:attributes]
+
     connection_options = {:service => "NFV"}.merge(options.slice(:tenant_name))
     orchestration_manager.with_provider_connection(connection_options) do |service|
       service.vnfs.create(create_options).id
