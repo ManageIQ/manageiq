@@ -4,7 +4,7 @@ module MiddlewareServerHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name hostname bind_addr product version)
+    %i(name hostname feed bind_addr product version)
   end
 
   def textual_group_relationships
@@ -26,6 +26,10 @@ module MiddlewareServerHelper::TextualSummary
 
   def textual_hostname
     @record.hostname
+  end
+
+  def textual_feed
+    @record.feed
   end
 
   def textual_bind_addr
