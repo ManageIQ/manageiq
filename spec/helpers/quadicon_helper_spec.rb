@@ -9,8 +9,8 @@ describe QuadiconHelper do
     end
 
     it "renders quadicon for a vmware vm" do
-      expect(subject).to have_selector('div#quadicon')
-      expect(subject).to have_selector('div#quadicon div.flobj')
+      expect(subject).to have_selector('div.quadicon')
+      expect(subject).to have_selector('div.quadicon div.flobj')
     end
   end
 

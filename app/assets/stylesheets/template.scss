@@ -59,10 +59,10 @@ nobr { white-space: nowrap;}
 
 /************ Tabs ************/
 
-ul#searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px;}
-#searchtoolbar li { margin-right: 7px;padding: 0 4px 1px 4px; height:22px; width: 30px;float: left;display: inline;border: 1px solid #7e7e7e;}
-#searchtoolbar li:hover { background: #aeaeae;}
-#searchtoolbar li img.dimmed { background: none;}
+ul.searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px;}
+.searchtoolbar li { margin-right: 7px;padding: 0 4px 1px 4px; height:22px; width: 30px;float: left;display: inline;border: 1px solid #7e7e7e;}
+.searchtoolbar li:hover { background: #aeaeae;}
+.searchtoolbar li img.dimmed { background: none;}
 
 /* Automate Specific */
 .checkall { padding: 0 0 7px 7px;} /*styling for automate (Check All) */
@@ -96,8 +96,8 @@ img.tiny { margin: 0; padding: 0;width:20px;height:20px; border: 0; vertical-ali
 /*************************** Class for html buttons in explorer views *********************************/
 /************ Quad Icons ************/
 
-#quadicon { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;}
-#quadicon:hover{ padding: 1px 0 0 1px;}
+.quadicon { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;}
+.quadicon:hover{ padding: 1px 0 0 1px;}
 
 div.panecontent .flobj { margin-left: 40px;}
 

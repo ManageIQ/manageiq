@@ -13,16 +13,17 @@ module QuadiconHelper
     options.reverse_merge! :size => 72
     options[:db] ||= db_from_item(item)
 
+    id = "quadicon_#{item.id}"
     if options[:typ] == :listnav
-      id = ""
       options[:height] ||= 80
       style = "margin-left: auto; margin-right: auto; width: 75px; height: #{options[:height]}px; z-index: 0;"
+      cls   = ""
     else
       style = ""
-      id = "quadicon"
+      cls   = "quadicon"
     end
 
-    content_tag(:div, :style => style, :id => id) do
+    content_tag(:div, :style => style, :id => id, :class => cls) do
       partial_name = partial_name_from_item(item)
       # List of removed partials with two lines
       norender = %w(cim_base_storage_extent cim_storage_extent ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume snia_local_file_system)

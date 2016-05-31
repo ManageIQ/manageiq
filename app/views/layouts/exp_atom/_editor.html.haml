@@ -21,7 +21,7 @@
       - exptypes -= [EXP_FIND_TYPE]
   #exp_atom_editor_div
     %fieldset{:style => "width:auto; padding-left: 6px; padding-top: 6px;"}
-      %ul#searchtoolbar
+      %ul.searchtoolbar
         %li
           - t = _('Commit expression element changes')
           = link_to(image_tag(image_path('toolbars/commit.png'), :alt => t),
