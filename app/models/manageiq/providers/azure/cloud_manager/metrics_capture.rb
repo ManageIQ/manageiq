@@ -138,10 +138,16 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
   end
 
   def get_counters(metrics_conn)
-    counters, _timings = Benchmark.realtime_block(:capture_counters) do
-      metrics_conn
-        .list('Microsoft.Compute', 'virtualMachines', target.name, target.resource_group)
-        .select { |m| m.name.value.in?(COUNTER_NAMES) }
+    begin
+      counters, _timings = Benchmark.realtime_block(:capture_counters) do
+        metrics_conn
+          .list('Microsoft.Compute', 'virtualMachines', target.name, target.resource_group)
+          .select { |m| m.name.value.in?(COUNTER_NAMES) }
+      end
+    rescue Exception => err
+      _log.error("Unhandled exception during counter collection: #{target.name}/#{target.resource_group}")
+      _log.log_backtrace(err)
+      raise
     end
     counters
   end
