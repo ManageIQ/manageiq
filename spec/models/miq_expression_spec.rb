@@ -341,176 +341,283 @@ describe MiqExpression do
         expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-11 14:00:00' AND '2011-01-11 14:59:59'")
       end
     end
+
+    describe "integration" do
+      context "date/time support" do
+        it "finds the correct instances for an AFTER expression with a datetime field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
+          filter = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for a > expression with a datetime field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
+          filter = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an IS EMPTY expression with a datetime field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:01")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => nil)
+          filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-last_scan_on"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an IS EMPTY expression with a date field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11")
+          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => nil)
+          filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-retires_on"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an IS NOT EMPTY expression with a datetime field" do
+          vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:01")
+          _vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => nil)
+          filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-last_scan_on"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm1])
+        end
+
+        it "finds the correct instances for an IS NOT EMPTY expression with a date field" do
+          vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11")
+          _vm2 = FactoryGirl.create(:vm_vmware, :retires_on => nil)
+          filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-retires_on"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm1])
+        end
+
+        it "finds the correct instances for an IS expression with a date field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-09")
+          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-10")
+          _vm3 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11")
+          filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an IS expression with a datetime field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-10 23:59:59.999999")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 0:00")
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 23:59:59.999999")
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-12 0:00")
+          filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with a datetime field, given date values" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2010-07-10 23:59:59.999999")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2010-07-11 00:00:00")
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2010-12-31 23:59:59.999999")
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-01 00:00:00")
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2010-07-11", "2010-12-31"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with a date field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2010-07-10")
+          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => "2010-07-11")
+          vm3 = FactoryGirl.create(:vm_vmware, :retires_on => "2010-12-31")
+          _vm4 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-01")
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2010-07-11", "2010-12-31"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with a datetime field, given datetimes" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 16:59:59.999999")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 17:30:00")
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-10 23:30:59")
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-10 23:31:00")
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
+                                                "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+      end
+
+      context "relative date/time support" do
+        around { |example| Timecop.freeze("2011-01-11 17:30 UTC") { example.run } }
+
+        it "finds the correct instances for an IS expression with 'Today'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.yesterday.end_of_day)
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.today)
+          _vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.tomorrow.beginning_of_day)
+          filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Today"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an IS expression with a datetime field and 'n Hours Ago'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("13:59:59.999999"))
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:00:00"))
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:59:59")) # BUG: Won't include 59.999999
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("15:00:00"))
+          filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for an IS expression with a date field and 'n Hours Ago" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => Time.zone.yesterday)
+          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => Time.zone.today)
+          _vm3 = FactoryGirl.create(:vm_vmware, :retires_on => Time.zone.tomorrow)
+          filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "3 Hours Ago"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an IS expression with 'Last Month'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => (1.month.ago.beginning_of_month - 1.day).end_of_day)
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month)
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month)
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => (1.month.ago.end_of_month + 1.day).beginning_of_day)
+          filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Month"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with a date field and 'Last Week'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.beginning_of_week - 1.day)
+          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.beginning_of_week)
+          vm3 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.end_of_week)
+          _vm4 = FactoryGirl.create(:vm_vmware, :retires_on => 1.week.ago.end_of_week + 1.day)
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with a datetime field and 'Last Week'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week - 1.second)
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week.beginning_of_day)
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.end_of_week.end_of_day)
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.end_of_week + 1.second)
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with 'Last Week' and 'This Week'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week - 1.second)
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.ago.beginning_of_week.beginning_of_day)
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.from_now.beginning_of_week - 1.second)
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.week.from_now.beginning_of_week.beginning_of_day)
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "This Week"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with 'n Months Ago'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 2.months.ago.beginning_of_month - 1.second)
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 2.months.ago.beginning_of_month.beginning_of_day)
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month.end_of_day)
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month + 1.second)
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "1 Month Ago"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with 'Last Month'" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month - 1.second)
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.beginning_of_month.beginning_of_day)
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month.end_of_day)
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => 1.month.ago.end_of_month + 1.second)
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+      end
+
+      context "timezone support" do
+        it "finds the correct instances for a FROM expression with a datetime field and timezone" do
+          timezone = "Eastern Time (US & Canada)"
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 21:59:59.999999")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-09 22:00:00")
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 04:30:59")
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 04:31:00")
+          filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
+                                                "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
+          result = Vm.where(filter.to_sql(timezone).first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+
+        it "finds the correct instances for a FROM expression with a date field and timezone" do
+          timezone = "Eastern Time (US & Canada)"
+          _vm1 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-09")
+          vm2 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-10")
+          _vm3 = FactoryGirl.create(:vm_vmware, :retires_on => "2011-01-11")
+          filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
+          result = Vm.where(filter.to_sql(timezone).first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an IS expression with timezone" do
+          timezone = "Eastern Time (US & Canada)"
+          _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 04:59:59.999999")
+          vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 05:00:00")
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-12 04:59:59.999999")
+          _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-12 05:00:00")
+          filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
+          result = Vm.where(filter.to_sql(timezone).first)
+          expect(result).to contain_exactly(vm2, vm3)
+        end
+      end
+    end
   end
 
-  context "Evaluating date/time expressions" do
-    let(:timezone) { "Eastern Time (US & Canada)" }
-    before(:each) do
-      Timecop.freeze("2011-01-11 17:30 UTC")
-
-      @host1 = FactoryGirl.create(:host)
-      @host2 = FactoryGirl.create(:host)
-
-      # VMs hours apart
-      (0...20).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Hour #{i}", :last_scan_on => i.hours.ago.utc,
-                           :retires_on => i.hours.ago.utc.to_date, :host => @host1)
+  describe "#lenient_evaluate" do
+    describe "integration" do
+      it "with a find/checkany expression" do
+        host1, host2, host3, host4, host5, host6, host7, host8 = FactoryGirl.create_list(:host, 8)
+        FactoryGirl.create(:vm_vmware, :host => host1, :description => "foo", :last_scan_on => "2011-01-08 16:59:59.999999")
+        FactoryGirl.create(:vm_vmware, :host => host2, :description => nil, :last_scan_on => "2011-01-08 16:59:59.999999")
+        FactoryGirl.create(:vm_vmware, :host => host3, :description => "bar", :last_scan_on => "2011-01-08 17:00:00")
+        FactoryGirl.create(:vm_vmware, :host => host4, :description => nil, :last_scan_on => "2011-01-08 17:00:00")
+        FactoryGirl.create(:vm_vmware, :host => host5, :description => "baz", :last_scan_on => "2011-01-09 23:30:59.999999")
+        FactoryGirl.create(:vm_vmware, :host => host6, :description => nil, :last_scan_on => "2011-01-09 23:30:59.999999")
+        FactoryGirl.create(:vm_vmware, :host => host7, :description => "qux", :last_scan_on => "2011-01-09 23:31:00")
+        FactoryGirl.create(:vm_vmware, :host => host8, :description => nil, :last_scan_on => "2011-01-09 23:31:00")
+        filter = MiqExpression.new(
+          "FIND" => {
+            "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on",
+                                      "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
+            "search"   => {"IS NOT NULL" => {"field" => "Host.vms-description"}}})
+        result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
+        expect(result).to contain_exactly(host3, host5)
       end
 
-      # VMs days apart
-      (0...15).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Day #{i}", :last_scan_on => i.days.ago.utc,
-                           :retires_on => i.days.ago.utc.to_date, :host => @host2)
+      it "with a find/checkall expression" do
+        host1, host2, host3, host4, host5 = FactoryGirl.create_list(:host, 5)
+
+        FactoryGirl.create(:vm_vmware, :host => host1, :description => "foo", :last_scan_on => "2011-01-08 16:59:59.999999")
+
+        FactoryGirl.create(:vm_vmware, :host => host2, :description => "bar", :last_scan_on => "2011-01-08 17:00:00")
+        FactoryGirl.create(:vm_vmware, :host => host2, :description => "baz", :last_scan_on => "2011-01-09 23:30:59.999999")
+
+        FactoryGirl.create(:vm_vmware, :host => host3, :description => "qux", :last_scan_on => "2011-01-08 17:00:00")
+        FactoryGirl.create(:vm_vmware, :host => host3, :description => nil, :last_scan_on => "2011-01-09 23:30:59.999999")
+
+        FactoryGirl.create(:vm_vmware, :host => host4, :description => nil, :last_scan_on => "2011-01-08 17:00:00")
+        FactoryGirl.create(:vm_vmware, :host => host4, :description => "quux", :last_scan_on => "2011-01-09 23:30:59.999999")
+
+        FactoryGirl.create(:vm_vmware, :host => host5, :description => "corge", :last_scan_on => "2011-01-09 23:31:00")
+
+        filter = MiqExpression.new(
+          "FIND" => {
+            "search"   => {"FROM" => {"field" => "Host.vms-last_scan_on",
+                                      "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
+            "checkall" => {"IS NOT NULL" => {"field" => "Host.vms-description"}}}
+        )
+        result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
+        expect(result).to eq([host2])
       end
-
-      # VMs weeks apart
-      (0...10).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Week #{i}", :last_scan_on => i.weeks.ago.utc,
-                           :retires_on => i.weeks.ago.utc.to_date, :host => @host2)
-      end
-
-      # VMs months apart
-      (0...10).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Month #{i}", :last_scan_on => i.months.ago.utc,
-                           :retires_on => i.months.ago.utc.to_date, :host => @host2)
-      end
-
-      # VMs quarters apart
-      (0...5).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Quarter #{i}", :last_scan_on => (i * 3).months.ago.utc,
-                           :retires_on => (i * 3).months.ago.utc.to_date, :host => @host2)
-      end
-
-      # VMs with nil dates/times
-      (0...2).each do |i|
-        FactoryGirl.create(:vm_vmware, :name => "VM Quarter #{i}", :host => @host2)
-      end
-    end
-
-    after(:each) do
-      Timecop.return
-    end
-
-    it "should return the correct results when searching with a date/time filter" do
-      # Test >, <, >=, <=
-      filter = MiqExpression.new("AFTER" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(13)
-
-      filter = MiqExpression.new(">" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11 9:00"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(13)
-
-      # Test IS EMPTY and IS NOT EMPTY
-      filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-last_scan_on"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(2)
-
-      filter = MiqExpression.new("IS EMPTY" => {"field" => "Vm-retires_on"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(2)
-
-      filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-last_scan_on"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(60)
-
-      filter = MiqExpression.new("IS NOT EMPTY" => {"field" => "Vm-retires_on"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(60)
-
-      # Test IS
-      filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(3)
-
-      filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(22)
-
-      filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Today"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(22)
-
-      filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(1)
-
-      filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "3 Hours Ago"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(22)
-
-      filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "Last Month"})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(9)
-
-      # Test FROM
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2010-07-11", "2010-12-31"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(20)
-
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["2010-07-11", "2010-12-31"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(20)
-
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
-                                            "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(4)
-
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-retires_on", "value" => ["Last Week", "Last Week"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(8)
-
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "Last Week"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(8)
-
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Week", "This Week"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(33)
-
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["2 Months Ago", "1 Month Ago"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(14)
-
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Month", "Last Month"]})
-      result = Vm.where(filter.to_sql.first)
-      expect(result.length).to eq(9)
-
-      # Inside a find/check expression
-      filter = MiqExpression.new(
-        "FIND" => {
-          "checkany" => {"FROM" => {"field" => "Host.vms-last_scan_on",
-                                    "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
-          "search"   => {"IS NOT NULL" => {"field" => "Host.vms-name"}}})
-      result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
-      expect(result.length).to eq(1)
-
-      filter = MiqExpression.new(
-        "FIND" => {
-          "search"   => {"FROM" => {"field" => "Host.vms-last_scan_on",
-                                    "value" => ["2011-01-08 17:00", "2011-01-09 23:30:59"]}},
-          "checkall" => {"IS NOT NULL" => {"field" => "Host.vms-name"}}}
-      )
-      result = Host.all.to_a.select { |rec| filter.lenient_evaluate(rec) }
-      expect(result.length).to eq(1)
-
-      # Test FROM with time zone
-      filter = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on",
-                                            "value" => ["2011-01-09 17:00", "2011-01-10 23:30:59"]})
-      result = Vm.where(filter.to_sql(timezone).first)
-      expect(result.length).to eq(8)
-
-      # Test IS with time zone
-      filter = MiqExpression.new("IS" => {"field" => "Vm-retires_on", "value" => "2011-01-10"})
-      result = Vm.where(filter.to_sql(timezone).first)
-      expect(result.length).to eq(3)
-
-      filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "2011-01-11"})
-      result = Vm.where(filter.to_sql(timezone).first)
-      expect(result.length).to eq(17)
-
-      # TODO: More tests with time zone
     end
   end
 
