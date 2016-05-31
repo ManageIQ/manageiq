@@ -275,6 +275,10 @@ class ConfigurationController < ApplicationController
     end
   end
 
+  def show
+    show_timeprofiles if params[:typ] == "timeprofiles"
+  end
+
   private ############################
 
   def build_tabs

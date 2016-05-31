@@ -1,7 +1,33 @@
 module ConfigurationController::TimeProfile
   extend ActiveSupport::Concern
 
-  # route
+  # route - opens an empty form - no params
+  def timeprofile_new
+    assert_privileges("timeprofile_new")
+    @timeprofile = ::TimeProfile.new
+    set_form_vars
+    @in_a_form = true
+    @breadcrumbs = []
+    drop_breadcrumb(:name => _("Add new Time Profile"), :url => "/configuration/timeprofile_edit")
+    render :action => "timeprofile_edit"
+  end
+
+  # route - opens an edit form - params[:id]
+  def timeprofile_edit
+    assert_privileges("tp_edit")
+    @timeprofile = ::TimeProfile.find(params[:id])
+    set_form_vars
+    @tp_restricted = true if @timeprofile.profile_type == "global" && !admin_user?
+    title = (@timeprofile.profile_type == "global" && !admin_user?) ? _("Time Profile") : _("Edit")
+    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && !admin_user?
+    session[:changed] = false
+    @in_a_form = true
+    drop_breadcrumb(:name => _("%{title} '%{description}'") % {:title       => title,
+                                                               :description => @timeprofile.description},
+                    :url  => "/configuration/timeprofile_edit")
+  end
+
+  # route - something changed - will go away
   def timeprofile_field_changed
     return unless load_edit("config_edit__ui4", "configuration")
     timeprofile_get_form_vars
@@ -25,43 +51,30 @@ module ConfigurationController::TimeProfile
     end
   end
 
-  def timeprofile_get_form_vars
-    @edit = session[:edit]
-    @timeprofile = ::TimeProfile.find(@edit[:timeprofile_id]) if @edit[:timeprofile_id]
-    @edit[:new][:description] = params[:description] if params[:description]
-    @edit[:new][:profile_type] = params[:profile_type] if params[:profile_type]
-    @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.key?(:profile_tz)
-    @redraw = true if params.key?(:profile_tz)
-    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params.key?(:rollup_daily)
-    @edit[:new][:profile_key] = @edit[:new][:profile_type] == "user" ? session[:userid] : nil
-    params.each do |var, val|
-      vars = var.split("_")
-      if vars[0] == "days"
-        val == "1" ?
-          @edit[:new][:profile][:days].push(vars[1].to_i) :
-          @edit[:new][:profile][:days].delete(vars[1].to_i)
-        @edit[:new][:profile][:days] = @edit[:new][:profile][:days].uniq.sort
-        break
-      elsif vars[0] == "hours"
-        val == "1" ?
-          @edit[:new][:profile][:hours].push(vars[1].to_i) :
-          @edit[:new][:profile][:hours].delete(vars[1].to_i)
-        @edit[:new][:profile][:hours] = @edit[:new][:profile][:hours].uniq.sort
-        break
-      end
+  # route - copy and open pre-filled form - params[:id]
+  def timeprofile_copy
+    assert_privileges("tp_copy")
+    session[:set_copy] = "copy"
+    @in_a_form = true
+    timeprofile = ::TimeProfile.find(params[:id])
+    @timeprofile = ::TimeProfile.new
+    @timeprofile.description = _("Copy of %{description}") % {:description => timeprofile.description}
+    @timeprofile.profile_type = "user"
+    @timeprofile.profile_key = timeprofile.profile_key
+    unless timeprofile.profile.nil?
+      @timeprofile.profile ||= {}
+      @timeprofile.profile[:days] = timeprofile.profile[:days] if timeprofile.profile[:days]
+      @timeprofile.profile[:hours] = timeprofile.profile[:hours] if timeprofile.profile[:hours]
+      @timeprofile.profile[:tz] = timeprofile.profile[:tz] if timeprofile.profile[:tz]
     end
-    if params[:all_days]
-      @edit[:all_days] = params[:all_days] == "1"
-      @edit[:new][:profile][:days] = params[:all_days] == "1" ? Array.new(7) { |i| i } : []
-      @redraw = true
-    end
-    if params[:all_hours]
-      @edit[:all_hours] = params[:all_hours] == "1"
-      @edit[:new][:profile][:hours] = params[:all_hours] == "1" ? Array.new(24) { |i| i } : []
-      @redraw = true
-    end
+    set_form_vars
+    session[:changed] = false
+    drop_breadcrumb(:name => _("Adding copy of '%{description}'") % {:description => @timeprofile.description},
+                    :url  => "/configuration/timeprofile_edit")
+    render :action => "timeprofile_edit"
   end
 
+  # route - actual save (or cancel), goes to list
   def timeprofile_create
     assert_privileges("timeprofile_new")
     timeprofile_get_form_vars
@@ -115,6 +128,7 @@ module ConfigurationController::TimeProfile
     end
   end
 
+  # route - save after editing (TODO merge with create..)
   def timeprofile_update
     assert_privileges("tp_edit")
     timeprofile_get_form_vars
@@ -184,28 +198,54 @@ module ConfigurationController::TimeProfile
     end
   end
 
-  def timeprofile_copy
-    assert_privileges("tp_copy")
-    session[:set_copy] = "copy"
-    @in_a_form = true
-    timeprofile = ::TimeProfile.find(params[:id])
-    @timeprofile = ::TimeProfile.new
-    @timeprofile.description = _("Copy of %{description}") % {:description => timeprofile.description}
-    @timeprofile.profile_type = "user"
-    @timeprofile.profile_key = timeprofile.profile_key
-    unless timeprofile.profile.nil?
-      @timeprofile.profile ||= {}
-      @timeprofile.profile[:days] = timeprofile.profile[:days] if timeprofile.profile[:days]
-      @timeprofile.profile[:hours] = timeprofile.profile[:hours] if timeprofile.profile[:hours]
-      @timeprofile.profile[:tz] = timeprofile.profile[:tz] if timeprofile.profile[:tz]
-    end
-    set_form_vars
-    session[:changed] = false
-    drop_breadcrumb(:name => _("Adding copy of '%{description}'") % {:description => @timeprofile.description},
-                    :url  => "/configuration/timeprofile_edit")
-    render :action => "timeprofile_edit"
+  # (button is the route) - toolbar buttons for copy, edit & delete (add goes directly to timeprofile_new; copy & edit pretty much just redirect, delete deletes and goes to list)
+  def timeprofile_button
+    timeprofile_delete if params[:pressed] == "tp_delete"
+    copy_record if params[:pressed] == "tp_copy"
+    edit_record if params[:pressed] == "tp_edit"
   end
 
+  private
+
+  # loads @edit from session, updates id from params
+  def timeprofile_get_form_vars
+    @edit = session[:edit]
+    @timeprofile = ::TimeProfile.find(@edit[:timeprofile_id]) if @edit[:timeprofile_id]
+    @edit[:new][:description] = params[:description] if params[:description]
+    @edit[:new][:profile_type] = params[:profile_type] if params[:profile_type]
+    @edit[:new][:profile][:tz] = params[:profile_tz].blank? ? nil : params[:profile_tz] if params.key?(:profile_tz)
+    @redraw = true if params.key?(:profile_tz)
+    @edit[:new][:rollup_daily] = params[:rollup_daily] == "1" || nil if params.key?(:rollup_daily)
+    @edit[:new][:profile_key] = @edit[:new][:profile_type] == "user" ? session[:userid] : nil
+    params.each do |var, val|
+      vars = var.split("_")
+      if vars[0] == "days"
+        val == "1" ?
+          @edit[:new][:profile][:days].push(vars[1].to_i) :
+          @edit[:new][:profile][:days].delete(vars[1].to_i)
+        @edit[:new][:profile][:days] = @edit[:new][:profile][:days].uniq.sort
+        break
+      elsif vars[0] == "hours"
+        val == "1" ?
+          @edit[:new][:profile][:hours].push(vars[1].to_i) :
+          @edit[:new][:profile][:hours].delete(vars[1].to_i)
+        @edit[:new][:profile][:hours] = @edit[:new][:profile][:hours].uniq.sort
+        break
+      end
+    end
+    if params[:all_days]
+      @edit[:all_days] = params[:all_days] == "1"
+      @edit[:new][:profile][:days] = params[:all_days] == "1" ? Array.new(7) { |i| i } : []
+      @redraw = true
+    end
+    if params[:all_hours]
+      @edit[:all_hours] = params[:all_hours] == "1"
+      @edit[:new][:profile][:hours] = params[:all_hours] == "1" ? Array.new(24) { |i| i } : []
+      @redraw = true
+    end
+  end
+
+  # updates the timeprofile from @edit - done on save
   def timeprofile_set_record_vars(profile)
     profile.description = @edit[:new][:description]
     profile.profile_type = @edit[:new][:profile_type]
@@ -215,6 +255,7 @@ module ConfigurationController::TimeProfile
     profile.rollup_daily_metrics = @edit[:new][:profile][:tz].nil? ? false : @edit[:new][:rollup_daily]
   end
 
+  # called from set_form_vars - initializes @edit from an actual @timeprofile instance
   def timeprofile_set_form_vars
     @edit = {
       :current     => {},
@@ -240,31 +281,7 @@ module ConfigurationController::TimeProfile
     show_timeprofiles
   end
 
-  def timeprofile_new
-    assert_privileges("timeprofile_new")
-    @timeprofile = ::TimeProfile.new
-    set_form_vars
-    @in_a_form = true
-    @breadcrumbs = []
-    drop_breadcrumb(:name => _("Add new Time Profile"), :url => "/configuration/timeprofile_edit")
-    render :action => "timeprofile_edit"
-  end
-
-  def timeprofile_edit
-    assert_privileges("tp_edit")
-    @timeprofile = ::TimeProfile.find(params[:id])
-    set_form_vars
-    @tp_restricted = true if @timeprofile.profile_type == "global" && !admin_user?
-    title = (@timeprofile.profile_type == "global" && !admin_user?) ? _("Time Profile") : _("Edit")
-    add_flash(_("Global Time Profile cannot be edited")) if @timeprofile.profile_type == "global" && !admin_user?
-    session[:changed] = false
-    @in_a_form = true
-    drop_breadcrumb(:name => _("%{title} '%{description}'") % {:title       => title,
-                                                               :description => @timeprofile.description},
-                    :url  => "/configuration/timeprofile_edit")
-  end
-
-  # Show the users list
+  # Show the timeprofile list - called from set_form_vars & show
   def show_timeprofiles
     build_tabs if params[:action] == "change_tab" || ["cancel", "add", "save"].include?(params[:button])
     if admin_user?
@@ -276,6 +293,7 @@ module ConfigurationController::TimeProfile
     drop_breadcrumb(:name => _("Time Profiles"), :url => "/configuration/change_tab/?tab=4")
   end
 
+  # uh, TODO ; called from show_timeprofiles
   def timeprofile_set_days_hours(_timeprofile = @timeprofile)
     @timeprofile_details = {}
     @timeprofiles.each do |timeprofile|
@@ -305,6 +323,7 @@ module ConfigurationController::TimeProfile
     end
   end
 
+  # uh, TODO ; used from timeprofile_set_days_hours
   def get_hr_str(hr)
     hours = (1..12).to_a
     hour = hr.to_i
@@ -318,7 +337,7 @@ module ConfigurationController::TimeProfile
     "#{hours[hour - 1]}#{from}-#{hours[hour]}#{to}"
   end
 
-  # Delete all selected or single displayed VM(s)
+  # deletes the time profile instance ; called from button
   def timeprofile_delete
     assert_privileges("tp_delete")
     timeprofiles = []
@@ -350,27 +369,17 @@ module ConfigurationController::TimeProfile
     set_form_vars
   end
 
-  def show
-    show_timeprofiles if params[:typ] == "timeprofiles"
-  end
-
-  # copy single selected Object
+  # prepares redirect to edit - called from button
   def edit_record
     obj = find_checked_items
     @refresh_partial = "timeprofile_edit"
     @redirect_id = obj[0]
   end
 
-  # copy single selected Object
+  # prepares redirect to copy - called from button
   def copy_record
     obj = find_checked_items
     @refresh_partial = "timeprofile_copy"
     @redirect_id = obj[0]
-  end
-
-  def timeprofile_button
-    timeprofile_delete if params[:pressed] == "tp_delete"
-    copy_record if params[:pressed] == "tp_copy"
-    edit_record if params[:pressed] == "tp_edit"
   end
 end
