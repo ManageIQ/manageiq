@@ -26,6 +26,9 @@ describe "routes for StorageController" do
     it "routes with GET" do
       expect(get("/#{controller_name}/debris_files")).to route_to("#{controller_name}#debris_files")
     end
+    it "routes with POST" do
+      expect(post("/#{controller_name}/debris_files")).to route_to("#{controller_name}#debris_files")
+    end
   end
 
   describe "#dialog_load" do
@@ -99,17 +102,26 @@ describe "routes for StorageController" do
     it "routes with GET" do
       expect(get("/#{controller_name}/snapshot_files")).to route_to("#{controller_name}#snapshot_files")
     end
+    it "routes with POST" do
+      expect(post("/#{controller_name}/snapshot_files")).to route_to("#{controller_name}#snapshot_files")
+    end
   end
 
   describe "#vm_misc_files" do
     it "routes with GET" do
       expect(get("/#{controller_name}/vm_misc_files")).to route_to("#{controller_name}#vm_misc_files")
     end
+    it "routes with POST" do
+      expect(post("/#{controller_name}/vm_misc_files")).to route_to("#{controller_name}#vm_misc_files")
+    end
   end
 
   describe "#vm_ram_files" do
     it "routes with GET" do
       expect(get("/#{controller_name}/vm_ram_files")).to route_to("#{controller_name}#vm_ram_files")
+    end
+    it "routes with POST" do
+      expect(post("/#{controller_name}/vm_ram_files")).to route_to("#{controller_name}#vm_ram_files")
     end
   end
 end
