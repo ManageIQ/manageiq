@@ -581,10 +581,7 @@ module ApplicationController::MiqRequestMethods
         if @breadcrumbs && (@breadcrumbs.empty? || @breadcrumbs.last[:url] == "/vm/show_list")
           page.redirect_to :action => "show_list", :controller => "vm"
         else
-          # had to get id from breadcrumbs url,
-          # because there is no params[:id] when cancel is pressed on copy Request screen.
-          url = @breadcrumbs.last[:url].split('/')
-          page.redirect_to :controller => url[1], :action => url[2], :id => url[3]
+          page.redirect_to @breadcrumbs.last[:url]
         end
       end
     end
