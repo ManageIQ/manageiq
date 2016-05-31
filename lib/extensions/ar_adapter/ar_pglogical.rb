@@ -1,4 +1,4 @@
-require 'ar_pglogical/pglogical_raw'
+require_relative 'ar_pglogical/pglogical_raw'
 
 module PgLogicalAdapterMixin
   def pglogical

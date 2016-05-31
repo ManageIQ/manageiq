@@ -1,1 +1,1 @@
-require 'ar_kill/postgresql'
+require_relative 'ar_kill/postgresql'
