@@ -2218,6 +2218,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         accordion_select
         button
+        debris_files
         explorer
         files
         listnav_search_selected
@@ -2233,11 +2234,14 @@ Vmdb::Application.routes.draw do
         show_list
         storage_list
         storage_pod_list
+        snapshot_files
         tag_edit_form_field_changed
         tagging
         tagging_edit
         tree_autoload_dynatree
         tree_select
+        vm_misc_files
+        vm_ram_files
         wait_for_task
         x_search_by_name
         x_show
