@@ -18,7 +18,7 @@
           :fixed_rate: 0.0
           :variable_rate: 0.02
     - :description: Used CPU Cores
-      :group: cpu
+      :group: cpu_cores
       :source: used
       :metric: v_derived_cpu_total_cores_used
       :per_time: daily
