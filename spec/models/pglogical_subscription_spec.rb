@@ -177,7 +177,7 @@ describe PglogicalSubscription do
 
     it "raises when the remote schema is invalid" do
       with_an_invalid_remote_schema
-      sub = described_class.new(:host => "some.host.example.com")
+      sub = described_class.new(:host => "some.host.example.com", :password => "1234")
       expect { sub.save! }.to raise_error(RuntimeError, "Different remote schema")
     end
 
@@ -202,7 +202,7 @@ describe PglogicalSubscription do
         expect(sync_structure).to be false
       end.and_return(double(:check => nil))
 
-      described_class.new(:host => "test-2.example.com", :user => "root").save!
+      described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234").save!
     end
 
     it "doesnt create the node when we are already a node" do
@@ -226,7 +226,7 @@ describe PglogicalSubscription do
         expect(sync_structure).to be false
       end.and_return(double(:check => nil))
 
-      ret = described_class.new(:host => "test-2.example.com", :user => "root").save!
+      ret = described_class.new(:host => "test-2.example.com", :password => "1234", :user => "root").save!
       expect(ret).to be_an_instance_of(described_class)
     end
 
@@ -305,8 +305,8 @@ describe PglogicalSubscription do
       end.and_return(double(:check => nil))
 
       to_save = []
-      to_save << described_class.new(:host => "test-2.example.com", :user => "root")
-      to_save << described_class.new(:host => "test-3.example.com", :user => "miq")
+      to_save << described_class.new(:host => "test-2.example.com", :password => "1234", :user => "root")
+      to_save << described_class.new(:host => "test-3.example.com", :password => "1234", :user => "miq")
 
       described_class.save_all!(to_save)
     end
@@ -334,9 +334,9 @@ describe PglogicalSubscription do
       expect(pglogical).to receive(:subscription_create).ordered.and_raise("Error two")
 
       to_save = []
-      to_save << described_class.new(:host => "test-2.example.com", :user => "root")
-      to_save << described_class.new(:host => "test-3.example.com", :user => "miq")
-      to_save << described_class.new(:host => "test-4.example.com", :user => "miq")
+      to_save << described_class.new(:host => "test-2.example.com", :user => "root", :password => "1234")
+      to_save << described_class.new(:host => "test-3.example.com", :user => "miq", :password => "1234")
+      to_save << described_class.new(:host => "test-4.example.com", :user => "miq", :password => "1234")
 
       expect { described_class.save_all!(to_save) }.to raise_error("Failed to save subscription " \
         "to test-2.example.com: Error one\nFailed to save subscription to test-4.example.com: Error two")
