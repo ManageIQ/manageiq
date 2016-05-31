@@ -63,6 +63,7 @@
                                     :name         => "dayValues",
                                     'ng-model'    => "timeProfileModel.dayValues[$index]",
                                     'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    'ng-change'   => "dayValuesChanged()",
                                     "bs-switch"   => "",
                                     :checkchange  => "",
                                    }
@@ -92,6 +93,7 @@
                                     :name         => "hourValuesAMFirstHalf",
                                     'ng-model'    => "timeProfileModel.hourValuesAMFirstHalf[$index]",
                                     'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    'ng-change'   => "hourValuesChanged()",
                                     "bs-switch"   => "",
                                     :checkchange  => "",
                                    }
@@ -105,6 +107,7 @@
                                     :name         => "hourValuesAMSecondHalf",
                                     'ng-model'    => "timeProfileModel.hourValuesAMSecondHalf[$index]",
                                     'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    'ng-change'   => "hourValuesChanged()",
                                     "bs-switch"   => "",
                                     :checkchange  => "",
                                    }
@@ -118,6 +121,7 @@
                 %input.form-control{:type         => "checkbox",
                                     :name         => "hourValuesPMFirstHalf",
                                     'ng-model'    => "timeProfileModel.hourValuesPMFirstHalf[$index]",
+                                    'ng-change'   => "hourValuesChanged()",
                                     'ng-disabled' => "timeProfileModel.restricted_time_profile",
                                     "bs-switch"   => "",
                                     :checkchange  => "",
@@ -131,6 +135,7 @@
                 %input.form-control{:type         => "checkbox",
                                     :name         => "hourValuesPMSecondHalf",
                                     'ng-model'    => "timeProfileModel.hourValuesPMSecondHalf[$index]",
+                                    'ng-change'   => "hourValuesChanged()",
                                     'ng-disabled' => "timeProfileModel.restricted_time_profile",
                                     "bs-switch"   => "",
                                     :checkchange  => "",

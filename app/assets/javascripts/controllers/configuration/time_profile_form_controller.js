@@ -66,6 +66,17 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
     }
   };
 
+  $scope.dayValuesChanged = function() {
+    var tempDays = [];
+
+    for(var i = 0; i < 7; i++) {
+      if ($scope.timeProfileModel.dayValues[i] === true) {
+        tempDays.push(i);
+      }
+    }
+    $scope.timeProfileModel.days = tempDays;
+  };
+
   $scope.getHoursValues = function() {
     for(i = 0; i < 6; i++) {
       if ($scope.timeProfileModel.hours.indexOf(i) > -1) {
@@ -95,6 +106,32 @@ ManageIQ.angular.app.controller('timeProfileFormController', ['$http', '$scope',
         $scope.timeProfileModel.hourValuesPMSecondHalf.push(false);
       }
     }
+  };
+
+  $scope.hourValuesChanged = function() {
+    var tempHours = [];
+
+    for(var i = 0; i < 6; i++) {
+      if ($scope.timeProfileModel.hourValuesAMFirstHalf[i] === true) {
+        tempHours.push(i);
+      }
+    }
+    for(var i = 0, j = 6; i < 6, j < 12; i++, j++) {
+      if ($scope.timeProfileModel.hourValuesAMSecondHalf[i] === true) {
+        tempHours.push(j);
+      }
+    }
+    for(var i = 0, j = 12; i < 6, j < 18; i++, j++) {
+      if ($scope.timeProfileModel.hourValuesPMFirstHalf[i] === true) {
+        tempHours.push(j);
+      }
+    }
+    for(var i = 0, j = 18; i < 6, j < 24; i++, j++) {
+      if ($scope.timeProfileModel.hourValuesPMSecondHalf[i] === true) {
+        tempHours.push(j);
+      }
+    }
+    $scope.timeProfileModel.hours = tempHours;
   };
 
   $scope.allDaysClicked = function() {
