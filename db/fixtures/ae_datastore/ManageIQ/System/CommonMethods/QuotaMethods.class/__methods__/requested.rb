@@ -9,21 +9,12 @@ def request_info
 end
 
 def cloud?(prov_type)
-  %w(amazon openstack).include?(prov_type)
+  %w(amazon openstack google).include?(prov_type)
 end
 
 def calculate_requested(options_hash = {})
-  storage = if @miq_request.source.vendor == 'google'
-              get_option_value(@miq_request, :boot_disk_size).gigabytes
-            else
-              get_total_requested(options_hash, :storage)
-            end
-  memory = get_total_requested(options_hash, :vm_memory)
-  if %w(amazon openstack google).exclude?(@miq_request.source.vendor)
-    memory = memory.megabytes
-  end
-  {:storage => storage,
-   :memory  => memory,
+  {:storage => get_total_requested(options_hash, :storage),
+   :memory  => get_total_requested(options_hash, :vm_memory),
    :cpu     => get_total_requested(options_hash, :number_of_cpus),
    :vms     => get_total_requested(options_hash, :number_of_vms)}
 end
@@ -69,8 +60,7 @@ def service_prov_option_value(prov_option, resource, options_array = [])
 
   case prov_option
   when :vm_memory
-    args_hash[:prov_value] = args_hash[:number_of_vms] * get_option_value(resource, :vm_memory)
-    request_hash_value(args_hash)
+    requested_memory(args_hash, get_option_value(resource, :prov_type))
   when :number_of_cpus
     requested_number_of_cpus(args_hash)
   when :storage
@@ -99,8 +89,7 @@ def vm_prov_option_value(prov_option, options_array = [])
 
   case prov_option
   when :vm_memory
-    args_hash[:prov_value] = args_hash[:number_of_vms] * get_option_value(@miq_request, :vm_memory)
-    request_hash_value(args_hash)
+    requested_memory(args_hash, @miq_request.source.vendor)
   when :number_of_cpus
     requested_number_of_cpus(args_hash)
   when :storage
@@ -109,6 +98,13 @@ def vm_prov_option_value(prov_option, options_array = [])
     options_value(args_hash)
   end
   options_array
+end
+
+def requested_memory(args_hash, vendor)
+  memory = get_option_value(args_hash[:resource], :vm_memory)
+  memory = memory.megabytes if %w(amazon openstack google).exclude?(vendor)
+  args_hash[:prov_value] = args_hash[:number_of_vms] * memory
+  request_hash_value(args_hash)
 end
 
 def requested_number_of_cpus(args_hash)
@@ -166,9 +162,22 @@ def request_hash_value(args_hash)
   default_option(args_hash[:prov_value], args_hash[:options_array])
 end
 
-def cloud_storage(flavor, dialog_array)
+def provision_type(resource)
+  if @service
+    resource.get_option(:st_prov_type)
+  else
+    resource.source.try(:vendor)
+  end
+end
+
+def cloud_storage(flavor, dialog_array, resource)
   return unless flavor
-  storage = flavor.root_disk_size.to_i + flavor.ephemeral_disk_size.to_i + flavor.swap_disk_size.to_i
+
+  storage = if provision_type(resource) == 'google'
+              get_option_value(resource, :boot_disk_size).gigabytes
+            else
+              flavor.root_disk_size.to_i + flavor.ephemeral_disk_size.to_i + flavor.swap_disk_size.to_i
+            end
   default_option(storage, dialog_array)
 end
 
@@ -193,7 +202,7 @@ def cloud_value(args_hash)
   when :vm_memory
     cloud_vm_memory(args_hash[:flavor], args_hash[:options_array])
   when :storage
-    cloud_storage(args_hash[:flavor], args_hash[:options_array])
+    cloud_storage(args_hash[:flavor], args_hash[:options_array], args_hash[:resource])
   end
 end
 
@@ -248,4 +257,12 @@ request_info
 error("request") if @miq_request.nil?
 
 options_hash = service_options if @service
+
+if @service && @service_template.prov_type == 'generic'
+  $evm.log(:info, "Generic Service Item.  No quota check being done.")
+  $evm.root['ae_result'] = 'ok'
+  $evm.root['ae_next_state'] = 'finished'
+  exit MIQ_OK
+end
+
 $evm.root['quota_requested'] = calculate_requested(options_hash)
