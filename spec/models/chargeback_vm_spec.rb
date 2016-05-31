@@ -20,7 +20,7 @@ describe ChargebackVm do
     @ems_cluster.hosts << @host1
     @admin = FactoryGirl.create(:user_admin)
 
-    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "compute")
+    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
     temp = {:cb_rate => @cbr, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
@@ -501,6 +501,29 @@ describe ChargebackVm do
         @user.delete
         expect { subject }.to raise_error(MiqException::Error, "Unable to find user '#{@user.userid}'")
       end
+    end
+  end
+
+  describe "#get_rates" do
+    let(:chargeback_rate)         { FactoryGirl.create(:chargeback_rate, :rate_type => "Compute") }
+    let(:chargeback_vm)           { FactoryGirl.build(:chargeback_vm) }
+    let(:rate_assignment_options) { {:cb_rate => @cbr, :object => Tenant.root_tenant} }
+    let(:metric_rollup) do
+      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z", :tag_names => "environment/prod",
+                                               :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                                               :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
+                                               :resource => @vm1)
+    end
+
+    before do
+      ChargebackRate.set_assignments(:compute, [rate_assignment_options])
+      @rate = chargeback_vm.get_rates(metric_rollup).first
+      @assigned_rate = ChargebackRate.get_assignments("Compute").first
+    end
+
+    it "return tenant chargeback detail rate" do
+      expect(@rate).not_to be_nil
+      expect(@rate.id).to eq(@assigned_rate[:cb_rate].id)
     end
   end
 end
