@@ -443,7 +443,7 @@ module EmsCommon
         result, details = @record.authentication_check_types_queue(@record.authentication_for_summary.pluck(:authtype),
                                                                    :save => true)
         if result
-          add_flash(_("Re-checking Authentication status initiated for this #{ui_lookup(:table => controller_name)}"))
+          add_flash(_("Authentication status will be saved and workers will be restarted for this #{ui_lookup(:table => controller_name)}"))
         else
           add_flash(_("Re-checking Authentication status for this #{ui_lookup(:table => "ems_cloud")} was not successful: %{details}") % {:details => details}, :error)
         end
