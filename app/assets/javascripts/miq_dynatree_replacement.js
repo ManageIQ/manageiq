@@ -70,11 +70,11 @@ ManageIQ.dynatreeReplacement = {
       if (optionsDisableChecks || optionsOnCheckFunction) {
         if (optionsDisableChecks) {
           // Ignore checkbox clicks
-          onclickFunction = function (_node, _event) {
+          onClickFunction = function (_node, _event) {
             return false;
           };
         } else if (optionsOnCheckFunction) {
-          onclickFunction = function (node, event) {
+          onClickFunction = function (node, event) {
             var event_type = node.getEventTargetType(event);
             if (event_type == 'checkbox') {
               window[optionsOnCheckFunction](node, tree_name);
