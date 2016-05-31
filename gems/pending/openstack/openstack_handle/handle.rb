@@ -66,6 +66,7 @@ module OpenstackHandle
       # Ensure the that if the Storage service is not available, it will not
       # throw an error trying to build an connection error message.
       opts[:openstack_service_type] = ["object-store"] if service == "Storage"
+      opts[:openstack_service_type] = ["nfv-orchestration"] if service == "NFV"
 
       if service == "Planning"
         # Special behaviour for Planning service Tuskar, since it is OpenStack specific service, there is no
