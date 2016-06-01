@@ -241,7 +241,7 @@ module EmsRefresh::SaveInventoryNetwork
   end
 
   def save_cloud_subnet_network_ports_inventory(network_port, hashes)
-    deletes = network_port.cloud_subnet_network_ports(true).dup
+    deletes = network_port.cloud_subnet_network_ports.reload.dup
 
     hashes.each do |h|
       %i(cloud_subnet).each do |relation|
