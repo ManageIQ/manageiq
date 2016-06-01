@@ -77,4 +77,20 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
       ]
     ),
   ])
+  button_group('ems_container_authentication', [
+    select(
+      :ems_container_authentication_choice,
+      'fa fa-lock fa-lg',
+      t = N_('Authentication'),
+      t,
+      :items => [
+        button(
+          :ems_container_recheck_auth_status,
+          'fa fa-search fa-lg',
+          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Re-check Authentication Status'),
+          :klass => ApplicationHelper::Button::EmsContainerRecheckAuthStatus),
+      ]
+    ),
+  ])
 end
