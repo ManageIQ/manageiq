@@ -119,6 +119,7 @@ class ContainerController < ApplicationController
     session.delete(:exp_parms)
     @in_a_form = false
     render :layout => "application"
+    process_show_list
   end
 
   def identify_container(id = nil)
