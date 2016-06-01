@@ -1,4 +1,6 @@
 class VmMigrateWorkflow < MiqRequestWorkflow
+  include_concern "DialogFieldValidation"
+
   def self.base_model
     VmMigrateWorkflow
   end
@@ -34,13 +36,6 @@ class VmMigrateWorkflow < MiqRequestWorkflow
     end
     rails_logger('get_source_and_targets', 1)
     @target_resource = result
-  end
-
-  def validate_placement(field, values, dlg, fld, value)
-    # check the :placement_auto flag, then make sure the field is not blank
-    return nil unless value.blank?
-    return nil unless get_value(values[field]).blank?
-    "#{required_description(dlg, fld)} is required"
   end
 
   private
