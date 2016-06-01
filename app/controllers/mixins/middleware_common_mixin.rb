@@ -1,6 +1,5 @@
 module MiddlewareCommonMixin
   extend ActiveSupport::Concern
-  include AuthorizationMessagesMixin
 
   def show_list
     process_show_list

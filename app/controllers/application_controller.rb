@@ -1588,7 +1588,6 @@ class ApplicationController < ActionController::Base
     # adding filters/conditions for download reports
     view.user_categories = attrs[:user_filters]["managed"] if attrs && attrs[:user_filters] && attrs[:user_filters]["managed"]
 
-    view.extras[:total_count] = attrs[:total_count]  if attrs[:total_count]
     view.extras[:auth_count]  = attrs[:auth_count]   if attrs[:auth_count]
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
@@ -1665,7 +1664,7 @@ class ApplicationController < ActionController::Base
     pages = {
       :perpage => get_view_pages_perpage(dbname),
       :current => params[:page].nil? ? 1 : params[:page].to_i,
-      :items   => view.extras[:auth_count] || view.extras[:total_count]
+      :items   => view.extras[:auth_count]
     }
     pages[:total] = (pages[:items] + pages[:perpage] - 1) / pages[:perpage]
     pages

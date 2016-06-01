@@ -20,9 +20,6 @@
             = select_tag("sort_choice", options_for_select(@view.headers.map { |x| [_(x), x] }), :class => "selectpicker dropup")
             :javascript
               miqSelectPickerEvent("sort_choice", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
-        - else
-          - if @bottom_msg
-            = h(@bottom_msg)
         - unless db.blank?
           - if %w(EmsInfra EmsCloud EmsCluster ResourcePool OntapStorageSystem OntapLogicalDisk CimBaseStorageExtent OntapStorageVolume StorageManager OntapFileShare SniaLocalFileSystem).include?(db)
             - @db = db.underscore

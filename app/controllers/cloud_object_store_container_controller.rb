@@ -1,5 +1,4 @@
 class CloudObjectStoreContainerController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -55,7 +54,6 @@ class CloudObjectStoreContainerController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @record, :association => :cloud_object_store_objects)
       @showtype = "cloud_object_store_objects"
-      notify_about_unauthorized_items(title, ui_lookup(:table => "cloud_object_store"))
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

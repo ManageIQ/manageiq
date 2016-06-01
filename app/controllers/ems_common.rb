@@ -1,6 +1,5 @@
 module EmsCommon
   extend ActiveSupport::Concern
-  include AuthorizationMessagesMixin
 
   def gtl_url
     restful? ? '/' : '/show'
@@ -121,7 +120,6 @@ module EmsCommon
     opts[:parent_method] = parent_method if parent_method
     @view, @pages = get_view(kls, **opts)
     @showtype = @display
-    notify_about_unauthorized_items(view_item_name, ui_lookup(:tables => @table_name))
   end
 
   # Show the main MS list view

@@ -29,10 +29,6 @@
                 miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
             - elsif @gtl_type == "list" && @view
               = h(sort_text)
-        - else
-          - if @bottom_msg
-            = h(@bottom_msg)
-
         .form-group.pull-right{:style => "border-right: 0"}
           %ul.pagination
             %li.first
