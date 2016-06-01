@@ -4,8 +4,8 @@ version: 1.0
 object:
   attributes:
     name: ContainerProvider
-    description:
-    display_name:
-    system:
-    priority:
-    enabled:
+    description: 
+    display_name: 
+    system: 
+    priority: 
+    enabled: 
