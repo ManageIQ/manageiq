@@ -10,7 +10,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   POD_POLL_INTERVAL = 10
   IMAGES_GUEST_OS = 'Linux'
   INSPECTOR_HEALTH_PATH = '/healthz'
-  ERRCODE_POD_NOTFOUND = 404
+  ERRCODE_NOTFOUND = 404
   IMAGE_INSPECTOR_SA = 'inspector-admin'
   INSPECTOR_ADMIN_SECRET_PATH = '/var/run/secrets/kubernetes.io/inspector-admin-secret-'
 
@@ -58,15 +58,23 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :pod_namespace   => namespace
     ))
 
-    pod = pod_definition
-    _log.info("creating pod #{pod_full_name} to analyze docker image " \
-              "#{options[:docker_image_id]}: #{pod.to_json}")
+    _log.info("Getting inspector-admin secret for pod [#{pod_full_name}]")
+    begin
+      inspector_admin_secret_name = inspector_admin_secret
+    rescue SocketError, KubeException => e
+      msg = "getting inspector-admin secret failed"
+      _log.error("#{msg}: [#{e}]")
+      return queue_signal(:abort_job, msg, "error")
+    end
 
+    pod = pod_definition(inspector_admin_secret_name)
+
+    _log.info("Creating pod [#{pod_full_name}] to analyze docker image [#{options[:docker_image_id]}] [#{pod.to_json}]")
     begin
       kubernetes_client.create_pod(pod)
     rescue SocketError, KubeException => e
-      msg = "pod creation for #{pod_full_name} failed: #{e}"
-      _log.info(msg)
+      msg = "pod creation for [#{pod_full_name}] failed"
+      _log.error("#{msg}: [#{e}]")
       return queue_signal(:abort_job, msg, "error")
     end
 
@@ -174,7 +182,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     begin
       pod = client.get_pod(options[:pod_name], options[:pod_namespace])
     rescue KubeException => e
-      if e.error_code == ERRCODE_POD_NOTFOUND
+      if e.error_code == ERRCODE_NOTFOUND
         _log.info("pod #{pod_full_name} not found, skipping delete")
         return
       end
@@ -310,13 +318,13 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       # TODO: support multiple imagePullSecrets. This depends on image-inspector support
       return inspector_sa.try(:imagePullSecrets).to_a[0].try(:name)
     rescue KubeException => e
-      raise e unless e.error_code == 404
+      raise e unless e.error_code == ERRCODE_NOTFOUND
       _log.warn("Service Account #{IMAGE_INSPECTOR_SA} does not exist.")
     end
     return nil
   end
 
-  def pod_definition
+  def pod_definition(inspector_admin_secret_name)
     pod_def = {
       :apiVersion => "v1",
       :kind       => "Pod",
@@ -367,7 +375,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       }
     }
 
-    inspector_admin_secret_name = inspector_admin_secret
     add_secret_to_pod_def(pod_def, inspector_admin_secret_name) unless inspector_admin_secret_name.blank?
 
     Kubeclient::Pod.new(pod_def)

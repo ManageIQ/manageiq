@@ -148,7 +148,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       allow_any_instance_of(described_class).to receive_messages(:kubernetes_client => MockKubeClient.new)
       kc = @job.kubernetes_client
       secret_name = kc.get_service_account[:imagePullSecrets][0][:name]
-      pod = @job.send(:pod_definition)
+      pod = @job.send(:pod_definition, secret_name)
       expect(pod[:spec][:containers][0][:command]).to include(
         "--dockercfg=" + described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name + "/.dockercfg")
       expect(pod[:spec][:containers][0][:volumeMounts]).to include(
@@ -188,8 +188,24 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         @job.signal(:start)
         expect(@job.state).to eq 'finished'
         expect(@job.status).to eq 'error'
-        expect(@job.message).to eq "pod creation for management-infra/manageiq-img-scan-#{@job.guid[0..4]}" \
-                               " failed: HTTP status code #{CODE}, #{CLIENT_MESSAGE}"
+        expect(@job.message).to eq "pod creation for [management-infra/manageiq-img-scan-#{@job.guid[0..4]}] failed"
+      end
+    end
+
+    context 'when getting the service account throws exception' do
+      CODE = 0
+      CLIENT_MESSAGE = 'error'.freeze
+      before(:each) do
+        allow_any_instance_of(MockKubeClient).to receive(:get_service_account) do |_instance, *_args|
+          raise KubeException.new(CODE, CLIENT_MESSAGE, nil)
+        end
+      end
+
+      it 'should report the error' do
+        @job.signal(:start)
+        expect(@job.state).to eq 'finished'
+        expect(@job.status).to eq 'error'
+        expect(@job.message).to eq "getting inspector-admin secret failed"
       end
     end
 
