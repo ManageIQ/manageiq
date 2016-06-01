@@ -49,19 +49,6 @@ module QuadiconHelper
         render_storage_quadicon(item, options)
       when 'vm_or_template'
         render_vm_or_template_quadicon(item, options)
-      else
-        render(
-          :partial => "layouts/quadicon/#{partial_name}",
-          :locals  => {
-            :row   => options[:row],
-            :mode  => options[:mode],
-            :size  => options[:size],
-            :width => options[:size] == 150 ? 54 : 35,
-            :item  => item,
-            :typ   => options[:typ],
-            :db    => options[:db]
-          }
-        )
       end
     end
   end
