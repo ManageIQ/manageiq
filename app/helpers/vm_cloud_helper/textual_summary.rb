@@ -116,9 +116,9 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_architecture
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
-    bitness = @record.hardware.try(:bitness)
-    {:label => _("Architecture"), :value => bitness.nil? ? "" : "#{bitness} bit"}
+    bitness = @record.hardware.try!(:bitness)
+    return nil if bitness.blank?
+    {:label => _("Architecture"), :value => "#{bitness} bit"}
   end
 
   def textual_advanced_settings
