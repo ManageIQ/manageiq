@@ -301,6 +301,38 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     }
   };
 
+  $scope.postValidationModelRegistry = function() {
+    $scope.postValidationModel = {
+      default_hostname:          $scope.emsCommonModel.default_hostname,
+      amqp_hostname:             $scope.emsCommonModel.amqp_hostname,
+      hawkular_hostname:         $scope.emsCommonModel.hawkular_hostname,
+      metrics_hostname:          $scope.emsCommonModel.metrics_hostname,
+      default_api_port:          $scope.emsCommonModel.default_api_port,
+      amqp_api_port:             $scope.emsCommonModel.amqp_api_port,
+      hawkular_api_port:         $scope.emsCommonModel.hawkular_api_port,
+      metrics_port:              $scope.emsCommonModel.metrics_port,
+      default_security_protocol: $scope.emsCommonModel.default_security_protocol,
+      amqp_security_protocol:    $scope.emsCommonModel.amqp_security_protocol,
+      realm:                     $scope.emsCommonModel.realm,
+      default_userid:            $scope.emsCommonModel.default_userid,
+      default_password:          $scope.emsCommonModel.default_password,
+      default_verify:            $scope.emsCommonModel.default_verify,
+      amqp_userid:               $scope.emsCommonModel.amqp_userid,
+      amqp_password:             $scope.emsCommonModel.amqp_password,
+      amqp_verify:               $scope.emsCommonModel.amqp_verify,
+      metrics_userid:            $scope.emsCommonModel.metrics_userid,
+      metrics_password:          $scope.emsCommonModel.metrics_password,
+      metrics_verify:            $scope.emsCommonModel.metrics_verify,
+      ssh_keypair_userid:        $scope.emsCommonModel.ssh_keypair_userid,
+      ssh_keypair_password:      $scope.emsCommonModel.ssh_keypair_password,
+      bearer_userid:             $scope.emsCommonModel.bearer_userid,
+      bearer_password:           $scope.emsCommonModel.bearer_password,
+      bearer_verify:             $scope.emsCommonModel.bearer_verify,
+      service_account:           $scope.emsCommonModel.service_account,
+      azure_tenant_id:           $scope.emsCommonModel.azure_tenant_id
+    };
+  };
+
   $scope.validateClicked = function($event, credType, url, formSubmit) {
     miqService.validateWithREST($event, credType, url, formSubmit)
       .then(function success(data) {
