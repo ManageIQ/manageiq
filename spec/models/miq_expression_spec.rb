@@ -302,7 +302,7 @@ describe MiqExpression do
       it "generates the SQL for a FROM expression with a 'Last Hour'/'This Hour' value for a datetime field" do
         exp = MiqExpression.new("FROM" => {"field" => "Vm-last_scan_on", "value" => ["Last Hour", "This Hour"]})
         sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-11 16:00:00' AND '2011-01-11 17:59:59'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-11 16:00:00' AND '2011-01-11 17:59:59.999999'")
       end
 
       it "generates the SQL for a FROM expression with a 'Last Week'/'Last Week' value for a date field" do
@@ -338,7 +338,7 @@ describe MiqExpression do
       it "generates the SQL for an IS expression with an 'n Hours Ago' value for a datetime field" do
         exp = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
         sql, * = exp.to_sql
-        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-11 14:00:00' AND '2011-01-11 14:59:59'")
+        expect(sql).to eq("\"vms\".\"last_scan_on\" BETWEEN '2011-01-11 14:00:00' AND '2011-01-11 14:59:59.999999'")
       end
     end
 
@@ -458,7 +458,7 @@ describe MiqExpression do
         it "finds the correct instances for an IS expression with a datetime field and 'n Hours Ago'" do
           _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("13:59:59.999999"))
           vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:00:00"))
-          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:59:59")) # BUG: Won't include 59.999999
+          vm3 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("14:59:59.999999"))
           _vm4 = FactoryGirl.create(:vm_vmware, :last_scan_on => Time.zone.parse("15:00:00"))
           filter = MiqExpression.new("IS" => {"field" => "Vm-last_scan_on", "value" => "3 Hours Ago"})
           result = Vm.where(filter.to_sql.first)
