@@ -8,7 +8,7 @@
         = _('Page Size')
       .col-md-8
         = select_tag('pdf_page_size',
-          options_for_select(PDF_PAGE_SIZES.invert.sort, @edit[:new][:pdf_page_size]),
+          options_for_select(PDF_PAGE_SIZES.map { |k, v| [_(v), v] }.sort, @edit[:new][:pdf_page_size]),
           :multiple             => false,
           :class                => "selectpicker")
         :javascript
