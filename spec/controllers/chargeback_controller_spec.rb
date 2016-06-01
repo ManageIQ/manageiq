@@ -533,4 +533,30 @@ describe ChargebackController do
       expect(flash_messages[0][:message]).to eq(expected_message)
     end
   end
+
+  describe "#cb_rpts_fetch_saved_report" do
+    let(:current_user) { User.current_user }
+    let(:miq_task)     { MiqTask.new(:name => "Generate Report result", :userid => current_user.userid) }
+    let(:miq_report_result) do
+      FactoryGirl.create(:miq_chargeback_report_result, :miq_group => current_user.current_group, :miq_task => miq_task)
+    end
+
+    let(:chargeback_report) { FactoryGirl.create(:miq_report_chargeback, :miq_report_results => [miq_report_result]) }
+
+    before do
+      miq_task.state_finished
+      miq_report_result.report = chargeback_report.to_hash.merge(:extras=> {:total_html_rows => 100})
+      miq_report_result.save
+      allow(controller).to receive(:report_first_page)
+    end
+
+    it "fetch existing report" do
+      controller.send(:cb_rpts_fetch_saved_report, controller.to_cid(miq_report_result.id))
+
+      fetched_report = controller.instance_variable_get(:@report)
+
+      expect(fetched_report).not_to be_nil
+      expect(fetched_report).to eq(chargeback_report)
+    end
+  end
 end
