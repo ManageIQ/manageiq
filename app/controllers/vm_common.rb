@@ -254,7 +254,6 @@ module VmCommon
     elsif @display == "snapshot_info"
       drop_breadcrumb(:name => @record.name + _(" (Snapshots)"),
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
-      build_snapshot_tree
       @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, @record)
       @button_group = "snapshot"
     elsif @display == "devices"
@@ -430,58 +429,6 @@ module VmCommon
     branch
   end
 
-  def build_snapshot_tree
-    vms = @record.snapshots
-    parent = TreeNodeBuilder.generic_tree_node(
-      "snaproot",
-      @record.name,
-      "vm.png",
-      nil,
-      :cfme_no_click => true,
-      :expand        => true,
-      :style_class   => "cfme-no-cursor-node"
-    )
-    @record.snapshots.each do |s|
-      if s.current.to_i == 1
-        @root   = s.id
-        @active = true
-      end
-    end
-    @root = @record.snapshots.first.id if @root.nil? && @record.snapshots.size > 0
-    session[:snap_selected] = @root if params[:display] == "snapshot_info"
-    @snap_selected = Snapshot.find(session[:snap_selected]) unless session[:snap_selected].nil?
-    snapshots = []
-    vms.each do |snap|
-      if snap.parent_id.nil?
-        snapshots.push(snaptree(snap))
-      end
-    end
-    parent[:children] = snapshots
-    top = @record.snapshots.find_by_parent_id(nil)
-    @snaps = [parent].to_json unless top.nil? && parent.blank?
-  end
-
-  # Recursive method to build a snapshot nodes
-  def snaptree(node)
-    branch = TreeNodeBuilder.generic_tree_node(
-      node.id,
-      node.name,
-      "snapshot.png",
-      _("Click to select"),
-      :expand => true
-    )
-    branch[:title] << _(" (Active)") if node.current?
-    branch[:addClass] = "dynatree-cfme-active" if session[:snap_selected].to_s == branch[:key].to_s
-    if node.children.count > 0
-      kids = []
-      node.children.each do |kid|
-        kids.push(snaptree(kid))
-      end
-      branch[:children] = kids
-    end
-    branch
-  end
-
   def vmtree_selected
     base = params[:id].split('-')
     session[:base_vm] = "_h-#{base[1]}"
@@ -500,8 +447,6 @@ module VmCommon
       @display = "snapshot_info"
       add_flash(_("Last selected Snapshot no longer exists"), :error)
     end
-    build_snapshot_tree
-    @record.snap_selected = @snap_selected
     @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, @record)
     @active = @snap_selected.current.to_i == 1 if @snap_selected
     @button_group = "snapshot"
@@ -515,7 +460,6 @@ module VmCommon
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("desc_content", :partial => "/vm_common/snapshots_desc",
                                    :locals  => {:selected => params[:id]})
-      #page.replace("snapshots_tree_div", :partial => "/vm_common/snapshots_tree")
     end
   end
 
