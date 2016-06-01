@@ -304,6 +304,14 @@ class Host < ApplicationRecord
     nil
   end
 
+  def validate_scan_and_check_compliance_queue
+    {:available => true, :message => nil}
+  end
+
+  def validate_check_compliance_queue
+    {:available => true, :message => nil}
+  end
+
   def validate_set_node_maintenance
     validate_unsupported("Maintenance mode is unavailable")
   end
