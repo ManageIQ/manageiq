@@ -186,9 +186,10 @@ describe MiqServer do
       expect(LinuxAdmin::Rpm).to receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release").and_return(true)
       expect(LinuxAdmin::Rpm).to receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-beta").and_return(true)
       expect(EvmDatabase).to receive(:local?).and_return(true)
-      expect(yum).to receive(:update).once.with("cfme-appliance")
 
       @server.apply_updates
+      expect(File.read(described_class::UPDATE_FILE)).to eq("cfme-appliance")
+      FileUtils.rm_f(described_class::UPDATE_FILE)
     end
 
     it "will apply all updates with remote database" do
@@ -197,9 +198,10 @@ describe MiqServer do
       expect(Dir).to receive(:glob).and_return(["/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"])
       expect(LinuxAdmin::Rpm).to receive(:import_key).with("/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release").and_return(true)
       expect(EvmDatabase).to receive(:local?).and_return(false)
-      expect(yum).to receive(:update).once.with(no_args)
 
       @server.apply_updates
+      expect(File.read(described_class::UPDATE_FILE)).to eq("")
+      FileUtils.rm_f(described_class::UPDATE_FILE)
     end
 
     it "does not have updates to apply" do
@@ -208,6 +210,7 @@ describe MiqServer do
       allow(MiqDatabase).to receive_messages(:postgres_package_name => "postgresql-server")
 
       @server.apply_updates
+      expect(File.exist?(described_class::UPDATE_FILE)).to be false
     end
   end
 
