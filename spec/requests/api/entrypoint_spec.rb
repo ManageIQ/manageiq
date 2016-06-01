@@ -16,4 +16,13 @@ RSpec.describe "API entrypoint" do
 
     expect(%w(en en_US)).to include(response_hash['settings']['locale'])
   end
+
+  it "collection query is sorted" do
+    api_basic_authorize
+
+    run_get entrypoint_url
+
+    collection_names = response_hash['collections'].map { |c| c['name'] }
+    expect(collection_names).to eq(collection_names.sort)
+  end
 end

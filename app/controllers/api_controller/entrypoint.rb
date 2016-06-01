@@ -30,7 +30,7 @@ class ApiController
     end
 
     def entrypoint_collections
-      collection_config.each.collect do |collection_name, collection_specification|
+      collection_config.sort.collect do |collection_name, collection_specification|
         if collection_specification[:options].include?(:collection)
           {
             :name        => collection_name,
