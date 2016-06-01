@@ -255,8 +255,7 @@ module VmCommon
       drop_breadcrumb(:name => @record.name + _(" (Snapshots)"),
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
       build_snapshot_tree
-      #@snapshot_tree = TreeBuilderSnapshot.new(:snapshot_tree, :snapshot, @sb, true, #TODO)
-      #session[:snapshot_tree] = @ch_tree.tree_nodes
+      @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, @record)
       @button_group = "snapshot"
     elsif @display == "devices"
       drop_breadcrumb(:name => @record.name + _(" (Devices)"),
@@ -494,7 +493,7 @@ module VmCommon
   end
 
   def snap_pressed
-    session[:snap_selected] = params[:id]
+    session[:snap_selected] = from_cid(params[:id])
     @snap_selected = Snapshot.find_by_id(session[:snap_selected])
     @vm = @record = identify_record(x_node.split('-').last, VmOrTemplate)
     if @snap_selected.nil?
@@ -502,6 +501,8 @@ module VmCommon
       add_flash(_("Last selected Snapshot no longer exists"), :error)
     end
     build_snapshot_tree
+    @record.snap_selected = @snap_selected
+    @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, @record)
     @active = @snap_selected.current.to_i == 1 if @snap_selected
     @button_group = "snapshot"
     @explorer = true
@@ -514,7 +515,7 @@ module VmCommon
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("desc_content", :partial => "/vm_common/snapshots_desc",
                                    :locals  => {:selected => params[:id]})
-      page.replace("snapshots_tree_div", :partial => "/vm_common/snapshots_tree")
+      #page.replace("snapshots_tree_div", :partial => "/vm_common/snapshots_tree")
     end
   end
 
