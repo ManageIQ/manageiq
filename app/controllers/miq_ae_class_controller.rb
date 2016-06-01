@@ -979,6 +979,7 @@ class MiqAeClassController < ApplicationController
           end
         end
         page << javascript_for_miq_button_visibility_changed(@changed)
+        page << "miqSparkle(false)"
       end
     end
   end
