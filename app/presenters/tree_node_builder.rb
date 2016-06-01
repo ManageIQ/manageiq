@@ -141,6 +141,7 @@ class TreeNodeBuilder
     when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
     when ServiceTemplate      then service_template_node
     when ServiceTemplateCatalog then service_template_catalog_node
+    when Snapshot             then generic_node(object.name, "snapshot.png", object.name)
     when Storage              then generic_node(object.name, "storage.png")
     when Switch               then generic_node(object.name,
                                                 "switch.png",

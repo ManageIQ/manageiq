@@ -80,6 +80,7 @@ module Sandbox
     savedreports_tree
     schedules_tree
     settings_tree
+    snapshot_tree
     stcat_tree
     storage_tree
     storage_pod_tree

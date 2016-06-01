@@ -2,10 +2,10 @@
   - if @record.snapshots.count > 0
     %fieldset
       %h3= _('Available Snapshots')
-      #snapshots_treebox{:style => "width: 100%"}
-      = render(:partial => "layouts/dynatree",
+      -##snapshots_treebox{:style => "width: 100%"}
+      -#= render(:partial => "layouts/dynatree",
         :locals => {:tree_id => "snapshots_treebox",
-          :tree_name => "snapshots_tree",
+          :tree_name => "snapshot_tree",
           :id_prefix => "snap_",
           :json_tree => @snaps,
           :onclick => 'miqOnClickSnapshotTree',
@@ -13,6 +13,6 @@
           :select_node => "#{session[:snap_selected]}",
           :icon_size => 24,
           :open_close_all_on_dbl_click => true})
-
+      = render(:partial => 'shared/tree', :locals => {:tree => @snapshot_tree, :name => @snapshot_tree.name})
     :javascript
       miqDynatreeActivateNodeSilently('snapshots_tree', "#{session[:snap_selected]}");

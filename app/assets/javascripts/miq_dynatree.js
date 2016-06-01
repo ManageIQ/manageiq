@@ -157,7 +157,12 @@ function miqDynatreeNodeAddClass(treename, key, klass) {
 }
 
 function miqDynatreeNodeRemoveClass(treename, key) {
-  var node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+    var node;
+    if (_.isString(key)) {
+      node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+    } else {
+      node = $.ui.dynatree.getNode(key);
+    }
   node.data.addClass = "";
   node.render();
 }
@@ -246,7 +251,12 @@ function miqOnCheckProtect(node, _treename) {
 
 // OnClick handler for the VM Snapshot Tree
 function miqOnClickSnapshotTree(id) {
-  miqJqueryRequest(ManageIQ.dynatree.clickUrl + id, {beforeSend: true, complete: true});
+  var tree = $("#" + 'snapshot_tree' + "box").dynatree("getTree");
+  tree.getRoot().visit(function(node){miqDynatreeNodeRemoveClass('snapshot_tree', node);})
+  miqDynatreeNodeAddClass('snapshot_tree', id, 'dynatree-cfme-active')
+  var pieces = id.split(/-/);
+  var shortId = pieces[pieces.length - 1]
+  miqJqueryRequest('/' + ManageIQ.controller + '/snap_pressed/' + shortId, {beforeSend: true, complete: true});
   return true;
 }
 
