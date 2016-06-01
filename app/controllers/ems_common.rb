@@ -438,7 +438,8 @@ module EmsCommon
         return
       end
       if params[:pressed] == "ems_cloud_recheck_auth_status" ||
-         params[:pressed] == "ems_infra_recheck_auth_status"
+         params[:pressed] == "ems_infra_recheck_auth_status" ||
+         params[:pressed] == "ems_container_recheck_auth_status"
         @record = find_by_id_filtered(model, params[:id])
         result, details = @record.authentication_check_types_queue(@record.authentication_for_summary.pluck(:authtype),
                                                                    :save => true)
