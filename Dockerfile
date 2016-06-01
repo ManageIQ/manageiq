@@ -128,7 +128,7 @@ bower cache clean
 COPY docker-assets/appliance-initialize.service /usr/lib/systemd/system
 COPY docker-assets/appliance-initialize.sh /bin
 
-## Scripts symblinks
+## Scripts symlinks
 RUN ln -s /var/www/miq/vmdb/docker-assets/docker_initdb /usr/bin
 
 ## Enable services on systemd
