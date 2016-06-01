@@ -210,9 +210,10 @@ module Mixins
       if @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
         project         = @ems.project
         service_account = @ems.authentication_token
+        service_account_auth_status = @ems.authentication_status_ok?
       end
 
-      default_auth_status = @ems.authentication_status_ok?
+      default_auth_status = @ems.authentication_status_ok? unless @ems.kind_of?(ManageIQ::Providers::Google::CloudManager)
 
       render :json => {:name                            => @ems.name,
                        :emstype                         => @ems.emstype,
@@ -240,7 +241,8 @@ module Mixins
                        :emstype_vm                      => @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager),
                        :event_stream_selection          => retrieve_event_stream_selection,
                        :ems_controller                  => controller_name,
-                       :default_auth_status             => default_auth_status
+                       :default_auth_status             => default_auth_status,
+                       :service_account_auth_status     => service_account_auth_status
       } if controller_name == "ems_cloud" || controller_name == "ems_network"
 
       render :json => {:name                        => @ems.name,
