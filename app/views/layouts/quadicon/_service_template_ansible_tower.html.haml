@@ -1,7 +1,6 @@
 .flobj
   %img{:src => image_path("#{size}/base-single.png")}
-
-- fname = item.picture ? item.picture.url_path : image_path('100/ansible_tower.png')
+- fname = item.picture ? item.picture.url_path : image_path("100/ansible_tower.png")
 .flobj{:class => "e#{size}"}
   - if !@embedded || @showlinks
     = link_to(image_tag(fname, :width => size, :height => size, :title => h(item.name)),
@@ -12,4 +11,4 @@
       :remote                => true)
   - else
     %a{:title => h(item.name)}
-      %img{:src => fname, :border => "0", :width => size, :height => size}
+      %img{:src => fname, :border => 0}
