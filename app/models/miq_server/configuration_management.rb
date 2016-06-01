@@ -6,7 +6,11 @@ module MiqServer::ConfigurationManagement
   end
 
   def get_config(type = "vmdb")
-    VMDB::Config.for_resource(type, self)
+    if is_local?
+      VMDB::Config.new(type)
+    else
+      VMDB::Config.for_resource(type, self)
+    end
   end
 
   def set_config(config)

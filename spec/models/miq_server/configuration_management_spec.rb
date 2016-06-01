@@ -11,6 +11,7 @@ describe MiqServer, "::ConfigurationManagement" do
         miq_server.settings_changes = [
           FactoryGirl.create(:settings_change, :key => "/api/token_ttl", :value => "2.minutes")
         ]
+        Settings.reload!
 
         config = miq_server.get_config("vmdb")
         expect(config).to be_kind_of(VMDB::Config)
@@ -21,11 +22,15 @@ describe MiqServer, "::ConfigurationManagement" do
     context "local server" do
       let(:miq_server) { EvmSpecHelper.local_miq_server }
 
+      before { stub_local_settings(miq_server) }
+
       include_examples "#get_config"
     end
 
     context "remote server" do
       let(:miq_server) { EvmSpecHelper.remote_miq_server }
+
+      before { stub_local_settings(nil) }
 
       include_examples "#get_config"
     end
