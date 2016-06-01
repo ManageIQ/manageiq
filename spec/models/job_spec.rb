@@ -16,6 +16,13 @@ describe Job do
       @job      = @vm.scan
     end
 
+    it "agent_state_update_queue updates agent_state and agent_message" do
+      Job.agent_state_update_queue(@job.guid, "finished", "failed!")
+      @job.reload
+      expect(@job.agent_state).to eq "finished"
+      expect(@job.agent_message).to eq "failed!"
+    end
+
     context "where job is dispatched but never started" do
       before(:each) do
         @job.update_attribute(:dispatch_status, "active")
