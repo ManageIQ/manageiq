@@ -47,7 +47,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       event_stream_selection: '',
       bearer_token_exists: false,
       ems_controller: '',
-      default_auth_status: ''
+      default_auth_status: '',
+      service_account_auth_status: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
     $scope.formId = emsCommonFormId;
@@ -77,6 +78,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
         $scope.emsCommonModel.ems_controller == 'ems_container' ? $scope.emsCommonModel.default_api_port = 8443 : $scope.emsCommonModel.default_api_port = 5000;
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
+        $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -130,6 +132,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
+        $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
 
         if ($scope.emsCommonModel.default_userid != '') {
           $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
@@ -333,14 +336,23 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     };
   };
 
-  $scope.validateClicked = function($event, credType, url, formSubmit) {
-    miqService.validateWithREST($event, credType, url, formSubmit)
+  $scope.validateClicked = function($event, authType, url, formSubmit) {
+    $scope.authType = authType;
+    miqService.validateWithREST($event, authType, url, formSubmit)
       .then(function success(data) {
         $scope.$apply(function() {
           if(data.level == "error") {
-            $scope.emsCommonModel.default_auth_status = false;
+            if ($scope.authType === "default") {
+              $scope.emsCommonModel.default_auth_status = false;
+            } else if ($scope.authType === "service_account") {
+              $scope.emsCommonModel.service_account_auth_status = false;
+            }
           } else {
-            $scope.emsCommonModel.default_auth_status = true;
+            if ($scope.authType === "default") {
+              $scope.emsCommonModel.default_auth_status = true;
+            } else if ($scope.authType === "service_account") {
+              $scope.emsCommonModel.service_account_auth_status = true;
+            }
           }
           miqService.miqFlash(data.level, data.message);
           miqSparkleOff();
