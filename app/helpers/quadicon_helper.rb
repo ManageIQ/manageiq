@@ -88,10 +88,10 @@ module QuadiconHelper
 
     if @embedded && !@showlinks
       column = case db
-                 when "MiqCimInstance"   then 'evm_display_name'
-                 when "ConfiguredSystem" then 'hostname'
-                 else 'name'
-                 end
+               when "MiqCimInstance"   then 'evm_display_name'
+               when "ConfiguredSystem" then 'hostname'
+               else 'name'
+               end
       content_tag(:span, :title => h(row[column])) do
         truncate_for_quad(h(row[column]))
       end
@@ -100,8 +100,8 @@ module QuadiconHelper
         # if sub-item is being shown
         if @listicon == "scan_history"
           href_link = url_for_item_quad_text(@vm, @id, @listicon.pluralize)
-          content_tag(:a, truncate_for_quad(row['started_on'].to_s),
-                      :href => href_link, :title => h(row['started_on']))
+          link_to(truncate_for_quad(row['started_on'].to_s),
+                  href_link, :title => h(row['started_on']))
         else
           href_link = if @vm
                         url_for_item_quad_text(@vm, @id, @listicon.pluralize)
@@ -110,20 +110,20 @@ module QuadiconHelper
                       elsif @storage
                         url_for_item_quad_text(@storage, @id, params[:action])
                       end
-          content_tag(:a, truncate_for_quad(row['name'] ? row['name'] : row['display_name']),
-                      :href => href_link, :title => h(row['name']))
+          link_to(truncate_for_quad(row['name'] ? row['name'] : row['display_name']),
+                  href_link, :title => h(row['name']))
         end
 
-      elsif @policy_sim && session[:policies].length > 0
+      elsif @policy_sim && !session[:policies].empty?
         # Policy sim (VMs only, for now)
-        content_tag(:a, truncate_for_quad(row['name']),
-                    :href => url_for_db(db), :title => _("Show policy details for %s") % row['name'])
+        link_to(truncate_for_quad(row['name']),
+                url_for_db(db), :title => _("Show policy details for %s") % row['name'])
       elsif db == "EmsCluster"
-        content_tag(:a, truncate_for_quad(row['v_qualified_desc']),
-                    :href => url_for_db("ems_cluster", "show"), :title => h(row['v_qualified_desc']))
+        link_to(truncate_for_quad(row['v_qualified_desc']),
+                url_for_db("ems_cluster", "show"), :title => h(row['v_qualified_desc']))
       elsif db == "StorageManager"
-        content_tag(:a, truncate_for_quad(row['name']),
-                    :href => url_for_db("storage_manager", "show"), :title => h(row['name']))
+        link_to(truncate_for_quad(row['name']),
+                url_for_db("storage_manager", "show"), :title => h(row['name']))
       else
         if @explorer
           column = case db
@@ -145,7 +145,7 @@ module QuadiconHelper
                 "data-miq_sparkle_off" => true
               )
             else
-              content_tag(:a, truncate_for_quad(name), :title => h(name))
+              link_to(truncate_for_quad(name), nil, h(name))
             end
           else
             link_to(
@@ -160,11 +160,11 @@ module QuadiconHelper
           end
         else
           if row['evm_display_name']
-            content_tag(:a, truncate_for_quad(row['evm_display_name']), :href => url_for_db(db, "show"), :title => h(row['evm_display_name']))
+            link_to(truncate_for_quad(row['evm_display_name']), url_for_db(db, "show"), :title => h(row['evm_display_name']))
           elsif row['key']
-            content_tag(:a, truncate_for_quad(row['key']), :href => url_for_db(db), :title => h(row['key']))
+            link_to(truncate_for_quad(row['key']), url_for_db(db), :title => h(row['key']))
           else
-            content_tag(:a, truncate_for_quad(row['name']), :href => url_for_db(db, "show", item), :title => h(row['name']))
+            link_to(truncate_for_quad(row['name']), url_for_db(db, "show", item), :title => h(row['name']))
           end
         end
       end
@@ -264,7 +264,7 @@ module QuadiconHelper
 
     output << flobj_img_simple(options[:size])
     output << flobj_img_simple(width * 1.8, "100/#{img}", "e#{size}")
-    output << flobj_img_simple(size, '100/shield.png', "g#{size}") if item.get_policies.length > 0
+    output << flobj_img_simple(size, '100/shield.png', "g#{size}") unless item.get_policies.empty?
 
     unless options[:typ] == :listnav
       # listnav, no clear image needed
@@ -272,7 +272,7 @@ module QuadiconHelper
         fname = ActionController::Base.helpers.image_path('clearpix.gif')
         if !@embedded || @showlinks
           link_to(image_tag(fname, :width => size, :height => size),
-            url_for_record(item), :title => h(item.name))
+                  url_for_record(item), :title => h(item.name))
         else
           link_nowhere(fname, item.name, size)
         end
@@ -299,7 +299,7 @@ module QuadiconHelper
       output << flobj_img_simple(size, "72/currentstate-#{h(item.state.downcase)}.png", "b#{size}") unless item.state.blank?
       output << flobj_img_simple(size, img_for_host_vendor(item), "c#{size}")
       output << flobj_img_simple(size, img_for_auth_status(item), "d#{size}")
-      output << flobj_img_simple(size, '100/shield.png', "g#{size}") if item.get_policies.length > 0
+      output << flobj_img_simple(size, '100/shield.png', "g#{size}") unless item.get_policies.empty?
     else
       output << flobj_img_simple(size)
       output << flobj_img_simple(width * 1.8, img_for_host_vendor(item), "e#{size}")
@@ -313,8 +313,6 @@ module QuadiconHelper
     else
       href = if !@embedded || @showlinks
                @edit && @edit[:hostitems] ? "/host/edit/?selected_host=#{item.id}" : url_for_record(item)
-             else
-               nil
              end
 
       output << content_tag(:div, :class => 'flobj') do
@@ -340,7 +338,7 @@ module QuadiconHelper
       output << flobj_p_simple("b#{size}", item.total_miq_templates) if item.kind_of?(EmsCloud)
       output << flobj_img_simple(size, "svg/vendor-#{h(item.image_name)}.svg", "c#{size}")
       output << flobj_img_simple(size, img_for_auth_status(item), "d#{size}")
-      output << flobj_img_simple(size, '100/shield.png', "g#{size}") if item.get_policies.length > 0
+      output << flobj_img_simple(size, '100/shield.png', "g#{size}") unless item.get_policies.empty?
     else
       output << flobj_img_simple(size, "#{size}/base-single.png")
       output << flobj_img_simple(width * 1.8, "svg/vendor-#{h(item.image_name)}.svg", "e#{size}")
@@ -368,7 +366,7 @@ module QuadiconHelper
 
     output << flobj_img_simple(size, "#{size}/base-single.png")
     output << flobj_img_simple(size * 1.8, "100/emscluster.png", "e#{size}")
-    output << flobj_img_simple(size, "100/shield.png", "g#{size}") if item.get_policies.length > 0
+    output << flobj_img_simple(size, "100/shield.png", "g#{size}") unless item.get_policies.empty?
 
     unless options[:typ] == :listnav
       # Listnav, no clear image needed
@@ -446,7 +444,8 @@ module QuadiconHelper
                   when "orchestration_stack_output", "output" then item.key
                   else item.name
                   end
-          href = url_for(:controller => @parent.class.base_class.to_s.underscore, :action => @lastaction, :id => @parent.id, :show => item.id)
+          href = url_for(:controller => @parent.class.base_class.to_s.underscore,
+                         :action => @lastaction, :id => @parent.id, :show => item.id)
         else
           href = nil
           title = item.name
@@ -489,14 +488,14 @@ module QuadiconHelper
       if @explorer
         if !@embedded || @showlinks
           output << content_tag(:div, :class => 'flobj') do
-              link_to(
-                image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
-                          :width => size, :height => size, :title => h(item.name)),
-                {:action => 'x_show', :id => to_cid(item.id)},
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                "data-method"          => :post,
-                :remote                => true)
+            link_to(
+              image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
+                        :width => size, :height => size, :title => h(item.name)),
+              {:action => 'x_show', :id => to_cid(item.id)},
+              "data-miq_sparkle_on"  => true,
+              "data-miq_sparkle_off" => true,
+              "data-method"          => :post,
+              :remote                => true)
           end
         else
           href = nil
@@ -532,10 +531,10 @@ module QuadiconHelper
       output << flobj_img_simple(size, "100/os-#{h(item.os_image_name.downcase)}.png", "a#{size}")
       output << flobj_img_simple(size, "72/currentstate-#{h(item.normalized_state.downcase)}.png", "b#{size}")
       output << flobj_img_simple(size, "svg/vendor-#{h(item.vendor.downcase)}.svg", "c#{size}")
-      output << flobj_img_simple(size, "100/shield.png", "g#{size}") if item.get_policies.length > 0
+      output << flobj_img_simple(size, "100/shield.png", "g#{size}") unless item.get_policies.empty?
 
       if @lastaction == "policy_sim"
-        output << flobj_img_simple(size, img_for_compliance(item), "d#{size}") if @policy_sim && session[:policies].length > 0
+        output << flobj_img_simple(size, img_for_compliance(item), "d#{size}") if @policy_sim && !session[:policies].empty?
       else
         output << flobj_p_simple("d#{size}", h(item.v_total_snapshots))
       end
@@ -543,7 +542,7 @@ module QuadiconHelper
       width = options[:size] == 150 ? 54 : 35
       output << flobj_img_simple(size, "#{size}/base-single.png")
       if @policy_sim == true
-        if @policy_sim && session[:policies].length > 0
+        if @policy_sim && !session[:policies].empty?
           output << flobj_img_simple(width * 1.8, img_for_compliance(item), "e#{size}")
         else
           output << flobj_img_simple(width * 1.8, img_for_vendor(item), "e#{size}")
@@ -572,12 +571,14 @@ module QuadiconHelper
                              item.name, size)
               end
             else
-              link_to(image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"), :width => size, :height => size, :title => h(item.name)),
-              {:action => 'x_show', :id => to_cid(item.id)},
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              :remote                => true,
-              "data-method"          => :post)
+              link_to(
+                image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
+                          :width => size, :height => size, :title => h(item.name)),
+                {:action => 'x_show', :id => to_cid(item.id)},
+                "data-miq_sparkle_on"  => true,
+                "data-miq_sparkle_off" => true,
+                :remote                => true,
+                "data-method"          => :post)
             end
           else
             link_to(
@@ -587,10 +588,11 @@ module QuadiconHelper
             )
           end
         else
-          if @policy_sim && session[:policies].length > 0
+          if @policy_sim && !session[:policies].empty?
             if @edit && @edit[:explorer]
               link_to(
-                image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"), :width => size, :height => size, :title => h(item.name)),
+                image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
+                          :width => size, :height => size, :title => h(item.name)),
                 {:action => 'policies', :id => to_cid(item.id)},
                 "data-miq_sparkle_on"  => true,
                 "data-miq_sparkle_off" => true,
