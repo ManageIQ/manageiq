@@ -1264,6 +1264,7 @@
         :poll_method: :normal
         :queue_timeout: 120.minutes
     :replication_worker:
+      :memory_threshold: 400.megabytes
       :poll: 1.seconds
       :replication:
         :destination:
