@@ -327,7 +327,6 @@ describe Rbac do
             @host1.tag_with(@tags.join(' '), :ns => '*')
             results, attrs = Rbac.search(:class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.get_filters)
-            expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
             expect(results.length).to eq(@timestamps.length)
             results.each { |vp| expect(vp.resource).to eq(@host1) }
@@ -339,7 +338,6 @@ describe Rbac do
 
             results, attrs = Rbac.search(:targets => HostPerformance, :class => "HostPerformance", :user => user, :results_format => :objects, :match_via_descendants => Vm)
             expect(attrs[:user_filters]).to eq(group.get_filters)
-            expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
             expect(results.length).to eq(@timestamps.length)
             results.each { |vp| expect(vp.resource).to eq(@host2) }
@@ -349,7 +347,6 @@ describe Rbac do
             @host1.tag_with(@tags.join(' '), :ns => '*')
             results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.get_filters)
-            expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
             expect(results.length).to eq(@timestamps.length)
             results.each { |vp| expect(vp.resource).to eq(@host1) }
@@ -379,7 +376,6 @@ describe Rbac do
           it ".search finds the right HostPerformance rows" do
             results, attrs = Rbac.search(:class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.get_filters)
-            expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
             expect(results.length).to eq(@timestamps.length)
             results.each { |vp| expect(vp.resource).to eq(@host1) }
@@ -388,7 +384,6 @@ describe Rbac do
           it ".search filters out the wrong HostPerformance rows" do
             results, attrs = Rbac.search(:targets => HostPerformance.all, :class => "HostPerformance", :user => user, :results_format => :objects)
             expect(attrs[:user_filters]).to eq(group.get_filters)
-            expect(attrs[:total_count]).to eq(@timestamps.length * hosts.length)
             expect(attrs[:auth_count]).to eq(@timestamps.length)
             expect(results.length).to eq(@timestamps.length)
             results.each { |vp| expect(vp.resource).to eq(@host1) }
@@ -616,7 +611,6 @@ describe Rbac do
         it "get all the descendants without belongsto filter" do
           results, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(results.length).to eq(4)
-          expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(4)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => []})
 
@@ -634,7 +628,6 @@ describe Rbac do
           group.save!
           results, attrs = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects)
           expect(results.length).to eq(0)
-          expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(0)
 
           [@vm1, @template1].each do |v|
@@ -648,7 +641,6 @@ describe Rbac do
 
           results2, attrs = Rbac.search(:class => "VmOrTemplate", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@cluster_folder_path]})
-          expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(2)
           expect(results2.length).to eq(2)
         end
@@ -660,7 +652,6 @@ describe Rbac do
           group.save!
           results, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@cluster_folder_path]})
-          expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
           expect(results.length).to eq(1)
 
@@ -670,7 +661,6 @@ describe Rbac do
           group.save!
           results2, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@mtc_folder_path]})
-          expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
           expect(results2.length).to eq(1)
 
@@ -680,7 +670,6 @@ describe Rbac do
           group.save!
           results3, attrs = Rbac.search(:class => "Host", :user => user, :results_format => :objects)
           expect(attrs[:user_filters]).to eq({"managed" => [], "belongsto" => [@ems_folder_path]})
-          expect(attrs[:total_count]).to eq(4)
           expect(attrs[:auth_count]).to eq(1)
           expect(results3.length).to eq(1)
         end
@@ -917,7 +906,6 @@ describe Rbac do
             expect(results.length).to eq(1)
             expect(results.first.name).to eq("Test Group 2 VM 1")
             expect(attrs[:auth_count]).to eq(3)
-            expect(attrs[:total_count]).to eq(4)
           end
 
           it "works when class does not participate in RBAC and user filters are passed" do
@@ -938,7 +926,6 @@ describe Rbac do
             expect(results.length).to eq(2)
             expect(attrs[:auth_count]).to eq(2)
             expect(attrs[:user_filters]["managed"]).to eq(group.get_managed_filters)
-            expect(attrs[:total_count]).to eq(2)
           end
         end
       end
@@ -969,7 +956,7 @@ describe Rbac do
                                                 :results_format => :objects)
 
         expect(results.length).to eq(2)
-        expect(attrs[:total_count]).to eq(2)
+        expect(attrs[:auth_count]).to eq(2)
       end
 
       it "when filtering on a virtual column (FB15509)" do
@@ -985,7 +972,7 @@ describe Rbac do
                                                 :miq_group      => group,
                                                 :results_format => :objects)
         expect(results.length).to eq(2)
-        expect(attrs[:total_count]).to eq(2)
+        expect(attrs[:auth_count]).to eq(2)
       end
     end
 
@@ -1092,7 +1079,7 @@ describe Rbac do
     it "works with no filters" do
       all_vms
       result = Rbac.find_targets_with_direct_rbac(Vm, {}, {}, nil, nil)
-      expect_counts(result, all_vms, all_vms.size, all_vms.size)
+      expect_counts(result, all_vms, all_vms.size)
     end
 
     # most of the functionality of search is channeled through find_options. including filters
@@ -1100,16 +1087,15 @@ describe Rbac do
     it "applies find_options[:conditions, :include]" do
       all_vms
       result = Rbac.find_targets_with_direct_rbac(Vm, {}, host_filter_find_options, nil, nil)
-      expect_counts(result, vms_match, 2, 2)
+      expect_counts(result, vms_match, 2)
     end
   end
 
   private
 
   # separate them to match easier for failures
-  def expect_counts(actual, expected_targets, expected_count, expected_auth_count)
-    expect(actual[1]).to eq(expected_count)
-    expect(actual[2]).to eq(expected_auth_count)
+  def expect_counts(actual, expected_targets, expected_auth_count)
+    expect(actual[1]).to eq(expected_auth_count)
     expect(actual[0].to_a).to match_array(expected_targets)
   end
 end

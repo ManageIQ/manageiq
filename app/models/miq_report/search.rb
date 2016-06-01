@@ -93,7 +93,7 @@ module MiqReport::Search
     if options[:parent]
       targets = get_parent_targets(options[:parent], options[:association] || options[:parent_method])
       if targets.empty?
-        search_results, attrs = [targets, {:auth_count => 0, :total_count => 0}]
+        search_results, attrs = [targets, {:auth_count => 0}]
       else
         search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
       end
