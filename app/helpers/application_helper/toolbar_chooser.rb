@@ -428,6 +428,8 @@ class ApplicationHelper::ToolbarChooser
 
   # Return non-explorer based toolbar file name
   def center_toolbar_filename_classic
+    return "#{@center_toolbar}_center_tb" if @center_toolbar
+
     # Original non vmx view code follows
     # toolbar buttons on sub-screens
     if ((@lastaction == "show" && @view) ||

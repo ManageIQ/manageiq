@@ -281,6 +281,7 @@ module ApplicationHelper
       when "host" then "host_services"
       when "vm"   then @lastaction
       end
+    when "CloudService" then "host_cloud_services"
     else view.scoped_association
     end
   end
@@ -756,6 +757,7 @@ module ApplicationHelper
       :sb             => @sb,
       :tabform        => @tabform,
       :view           => @view,
+      :center_toolbar => @center_toolbar
     )
   end
 
