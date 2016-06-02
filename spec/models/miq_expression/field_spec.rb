@@ -131,4 +131,26 @@ RSpec.describe MiqExpression::Field do
       expect(field.target).to eq(GuestApplication)
     end
   end
+
+  describe "#plural?" do
+    it "returns false if the column is on a 'belongs_to' association" do
+      field = described_class.new(Vm, ["storage"], "region_description")
+      expect(field).not_to be_plural
+    end
+
+    it "returns false if the column is on a 'has_one' association" do
+      field = described_class.new(Vm, ["hardware"], "guest_os")
+      expect(field).not_to be_plural
+    end
+
+    it "returns true if the column is on a 'has_many' association" do
+      field = described_class.new(Host, ["vms"], "name")
+      expect(field).to be_plural
+    end
+
+    it "returns true if the column is on a 'has_and_belongs_to_many' association" do
+      field = described_class.new(Vm, ["storages"], "name")
+      expect(field).to be_plural
+    end
+  end
 end

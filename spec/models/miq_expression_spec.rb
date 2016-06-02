@@ -1281,13 +1281,6 @@ describe MiqExpression do
     end
   end
 
-  describe ".is_plural?" do
-    it "should return true if assotiation of field is 'has_many' or 'has_and_belongs_to_many'" do
-      field = 'ManageIQ::Providers::InfraManager::Vm.storage-region_description' # vm belong_to storage
-      expect(MiqExpression.is_plural?(field)).to be_falsey
-    end
-  end
-
   describe ".atom_error" do
     it "should return false if value can be evaluated as regular expression" do
       value = '123[)'

@@ -190,7 +190,7 @@ module ApplicationController::Filter
           @edit[@expkey][:exp_value] = nil                          # Clear the value
           @edit[:suffix] = nil                                      # Clear the suffix
           unless params[:chosen_field] == "<Choose>"
-            if @edit[@expkey][:exp_model] != "_display_filter_" && MiqExpression.is_plural?(@edit[@expkey][:exp_field])
+            if @edit[@expkey][:exp_model] != "_display_filter_" && MiqExpression::Field.parse(@edit[@expkey][:exp_field]).plural?
               @edit[@expkey][:exp_key] = "CONTAINS"                 # CONTAINS only valid for plural tables
             else
               @edit[@expkey][:exp_key] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_key])  # Remove if not in list

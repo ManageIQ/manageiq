@@ -1429,20 +1429,6 @@ class MiqExpression
     end
   end
 
-  def self.is_plural?(field)
-    parts = field.split("-").first.split(".")
-    macro = nil
-    model = model_class(parts.shift)
-    parts.each do |assoc|
-      ref = model.reflection_with_virtual(assoc.to_sym)
-      return false if ref.nil?
-
-      macro = ref.macro
-      model = ref.klass
-    end
-    [:has_many, :has_and_belongs_to_many].include?(macro)
-  end
-
   def self.atom_error(field, operator, value)
     return false if operator == "DEFAULT" # No validation needed for style DEFAULT operator
 
