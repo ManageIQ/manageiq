@@ -9,7 +9,7 @@ class WebsocketServer
     @pairing = {}
     @sockets = Concurrent::Array.new
 
-    Thread.new do
+    @transmitter = Thread.new do
       loop do
         begin
           reads, writes, errors = IO.select(@sockets, @sockets, @sockets, 1)
@@ -49,6 +49,10 @@ class WebsocketServer
       logger.info("Invalid websocket request from: #{env['REMOTE_ADDR']}")
       not_found
     end
+  end
+
+  def healthy?
+    %w(run sleep).include?(@transmitter.status)
   end
 
   private

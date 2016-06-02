@@ -70,4 +70,14 @@ describe MiqWebServerWorkerMixin do
 
     expect(test_class.binding_address).to eq(before + "JUNK")
   end
+
+  describe '#rails_application' do
+    let(:websocket_worker) { FactoryGirl.create(:miq_websocket_worker, :uri => 'http://127.0.0.1:3000') }
+    let(:ui_worker) { FactoryGirl.create(:miq_ui_worker, :uri => 'http://127.0.0.1:3000') }
+
+    it 'provides access to the Rack/Rails application' do
+      expect(websocket_worker.rails_application).to be_a_kind_of(WebsocketServer)
+      expect(ui_worker.rails_application).to be_a_kind_of(Vmdb::Application)
+    end
+  end
 end
