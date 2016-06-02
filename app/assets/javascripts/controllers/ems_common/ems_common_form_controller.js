@@ -71,12 +71,12 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.zone                            = data.zone;
         $scope.emsCommonModel.emstype_vm                      = data.emstype_vm;
         $scope.emsCommonModel.openstack_infra_providers_exist = data.openstack_infra_providers_exist;
-        $scope.emsCommonModel.default_api_port                = 5000;
-        $scope.emsCommonModel.amqp_api_port                   = 5672;
-        $scope.emsCommonModel.hawkular_api_port               = 443;
+        $scope.emsCommonModel.default_api_port                = '5000';
+        $scope.emsCommonModel.amqp_api_port                   = '5672';
+        $scope.emsCommonModel.hawkular_api_port               = '443';
         $scope.emsCommonModel.api_version                     = 'v2';
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
-        $scope.emsCommonModel.ems_controller == 'ems_container' ? $scope.emsCommonModel.default_api_port = 8443 : $scope.emsCommonModel.default_api_port = 5000;
+        $scope.emsCommonModel.ems_controller == 'ems_container' ? $scope.emsCommonModel.default_api_port = '8443' : $scope.emsCommonModel.default_api_port = '5000';
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
         $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
         miqService.sparkleOff();
@@ -102,10 +102,10 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.provider_id                     = angular.isDefined(data.provider_id) ? data.provider_id.toString() : "";
 
-        $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port : '5000';
-        $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port : '5672';
-        $scope.emsCommonModel.hawkular_api_port               = angular.isDefined(data.hawkular_api_port) && data.hawkular_api_port != '' ? data.hawkular_api_port : '443';
-        $scope.emsCommonModel.metrics_api_port                = angular.isDefined(data.metrics_api_port) && data.metrics_api_port != '' ? data.metrics_api_port : '';
+        $scope.emsCommonModel.default_api_port                = angular.isDefined(data.default_api_port) && data.default_api_port != '' ? data.default_api_port.toString() : '5000';
+        $scope.emsCommonModel.amqp_api_port                   = angular.isDefined(data.amqp_api_port) && data.amqp_api_port != '' ? data.amqp_api_port.toString() : '5672';
+        $scope.emsCommonModel.hawkular_api_port               = angular.isDefined(data.hawkular_api_port) && data.hawkular_api_port != '' ? data.hawkular_api_port.toString() : '443';
+        $scope.emsCommonModel.metrics_api_port                = angular.isDefined(data.metrics_api_port) && data.metrics_api_port != '' ? data.metrics_api_port.toString() : '';
         $scope.emsCommonModel.api_version                     = data.api_version;
         $scope.emsCommonModel.default_security_protocol       = data.default_security_protocol;
         $scope.emsCommonModel.realm                           = data.realm;
