@@ -47,11 +47,27 @@
           %select{:name      => 'destination_host_id',
                   'ng-model' => 'vmCloudModel.host',
                   'ng-options' => 'host.name as host.name for host in hosts track by host.id'}
-
+- if @explorer
   %div_for_paging{'ng-controller'                    => "pagingDivButtonGroupController",
                   'paging_div_buttons_state_enabled' => true,
                   'paging_div_buttons_id'            => "angular_paging_div_buttons",
                   'paging_div_buttons_type'          => "Submit"}
+- else
+  %table{:width => '100%'}
+    %tr
+      %td{:align => 'right'}
+        #buttons_on
+          = button_tag(t = _('Submit'),
+            :class   => "btn btn-primary",
+            :alt     => t,
+            :title   => t,
+            :onclick => "miqAjaxButton('#{url_for(:action => "live_migrate_vm", :id => "#{@record.id}", :button => "submit")}');")
+          = button_tag(t = _('Cancel'),
+            :class   => "btn btn-default",
+            :alt     => t,
+            :title   => t,
+            :onclick => "miqAjaxButton('#{url_for(:action => "live_migrate_vm", :id => "#{@record.id}", :button => "cancel")}');")
+
 
 :javascript
   ManageIQ.angular.app.value('vmCloudLiveMigrateFormId', '#{@record.id}');

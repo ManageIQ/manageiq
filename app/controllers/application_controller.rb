@@ -52,6 +52,7 @@ class ApplicationController < ActionController::Base
   include_concern 'TreeSupport'
   include_concern 'SysprepAnswerFile'
   include_concern 'ReportDownloads'
+  include_concern 'VmCloudProcessing'
 
   before_action :reset_toolbar
   before_action :set_session_tenant, :except => [:window_sizes]
