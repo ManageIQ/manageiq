@@ -83,7 +83,7 @@ describe ChargebackController do
         parent_reports = controller.instance_variable_get(:@parent_reports)
 
         tree_id = "#{ApplicationRecord.compress_id(chargeback_report.id)}-0"
-        expected_result = {chargeback_report.miq_report_results.first.name => tree_id}
+        expected_result = {chargeback_report.miq_report_results.first.miq_report.name => tree_id}
         expect(parent_reports).to eq(expected_result)
       end
     end
