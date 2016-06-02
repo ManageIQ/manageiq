@@ -1,4 +1,5 @@
 class RenameEmsEventTableToEventStream < ActiveRecord::Migration
+  disable_ddl_transaction!
   include MigrationHelper
   include MigrationHelper::SharedStubs
 
@@ -13,7 +14,13 @@ class RenameEmsEventTableToEventStream < ActiveRecord::Migration
 
     add_column :event_streams, :type, :string
     say_with_time("Updating Type in EventStreams") do
-      EventStream.update_all(:type => 'EmsEvent')
+      base_relation = EventStream.where(:type => nil)
+      say "#{base_relation.size} records with batch size 1000", :subitem
+      loop do
+        count = base_relation.limit(1000).update_all(:type => 'EmsEvent')
+        print "."
+        break if count == 0
+      end
     end
 
     if RrPendingChange.table_exists?
