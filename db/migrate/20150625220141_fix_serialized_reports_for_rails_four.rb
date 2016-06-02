@@ -126,14 +126,14 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
 
   def up
     say_with_time("Converting MiqReportResult#report to a serialized hash") do
-      MiqReportResult.where('report IS NOT NULL').each do |rr|
+      MiqReportResult.where('report IS NOT NULL').find_each do |rr|
         val = rr.serialize_report_to_hash(rr.read_attribute(:report), self)
         rr.update_attribute(:report, val) if val
       end
     end
 
     say_with_time("Converting BinaryBlob report results to a serialized hash") do
-      BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').each do |bb|
+      BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').find_each do |bb|
         if bb.resource
           val = bb.serialize_report_to_hash(bb.binary, self)
           bb.binary = val if val
@@ -144,14 +144,14 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
 
   def down
     say_with_time("Converting MiqReportResult#report back to a serialized MiqReport") do
-      MiqReportResult.where('report IS NOT NULL').each do |rr|
+      MiqReportResult.where('report IS NOT NULL').find_each do |rr|
         val = rr.serialize_hash_to_report(rr.read_attribute(:report), :miq_report_result, self)
         rr.update_attribute(:report, val) if val
       end
     end
 
     say_with_time("Converting BinaryBlob report results back to a serialized MiqReport") do
-      BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').each do |bb|
+      BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').find_each do |bb|
         if bb.resource
           val = bb.serialize_hash_to_report(bb.binary, :binary_blob, self)
           bb.binary = val if val
