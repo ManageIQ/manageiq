@@ -424,6 +424,34 @@ describe ChargebackController do
       expect_chargeback_rate_to_eq_hash(new_chargeback_rate, compute_chargeback_rate_hash_from_yaml)
     end
 
+    it "doesn't add new chargeback rate because some of tier has start value bigger than finish value" do
+      allow(controller).to receive(:load_edit).and_return(true)
+
+      ChargebackRate.seed
+
+      post :x_button, :params => {:id => "new", :pressed => "chargeback_rates_new"}
+      post :cb_rate_form_field_changed, :params => {:id => "new", :description => "chargeback rate 1"}
+
+      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_remove, :params => {:button => "remove", :index => "#{index_to_rate_type}-1"}
+      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+
+      # add values to newly added tiers to be valid
+      change_form_value(:finish_0_0, "500.0", "new")
+      change_form_value(:start_0_1, "500.0", "new")
+      change_form_value(:finish_0_1, "50.0", "new")
+      change_form_value(:start_0_2, "50.0", "new")
+
+      post :cb_rate_edit, :params => {:button => "add"}
+
+      flash_messages = assigns(:flash_array)
+
+      expect(flash_messages.count).to eq(1)
+      expected_message = "'Allocated CPU Count' finish value must be greater than start value."
+      expect(flash_messages[0][:message]).to eq(expected_message)
+    end
+
     def convert_chargeback_rate_to_hash(rate)
       origin_chargeback_rate_hash = {}
       origin_chargeback_rate_hash[:rates] = []
@@ -529,7 +557,7 @@ describe ChargebackController do
       flash_messages = assigns(:flash_array)
 
       expect(flash_messages.count).to eq(1)
-      expected_message = "'Allocated Memory in MB' chargeback tiers contains ambiguous intervals."
+      expected_message = "'Allocated Memory in MB' finish value must be greater than start value."
       expect(flash_messages[0][:message]).to eq(expected_message)
     end
   end
