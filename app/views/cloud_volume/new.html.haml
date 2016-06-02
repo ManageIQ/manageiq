@@ -33,6 +33,7 @@
         = select_tag("cloud_tenant_id",
                       options_for_select(@cloud_tenant_choices.sort),
                       "ng-model"                    => "cloudVolumeModel.cloud_tenant_id",
+                      "required"                    => "",
                       :miqrequired                  => true,
                       :checkchange                  => true,
                       "selectpicker-for-select-tag" => "")
@@ -44,7 +45,8 @@
           - if @volume.id.nil?
             = button_tag("Add",
                          :class        => "btn btn-primary",
-                         "ng-class"    => "{'btn-disabled': !angularForm.$valid}",
+                         "ng-class"    => "{'btn-disabled': angularForm.$invalid}",
+                         "ng-disabled" => "angularForm.$invalid",
                          "ng-click"    => "addClicked()")
           - else
             = button_tag("Save",
