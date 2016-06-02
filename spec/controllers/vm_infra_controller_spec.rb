@@ -52,7 +52,6 @@ describe VmInfraController do
     expect(response.status).to eq(200)
     expect(response).to render_template('vm_common/_snapshots_desc')
     expect(response).to render_template('vm_common/_snapshots_tree')
-    expect(assigns(:snaps)).to be_present
   end
 
   it 'can open the right size tab' do

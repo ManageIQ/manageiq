@@ -157,12 +157,12 @@ function miqDynatreeNodeAddClass(treename, key, klass) {
 }
 
 function miqDynatreeNodeRemoveClass(treename, key) {
-    var node;
-    if (_.isString(key)) {
-      node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
-    } else {
-      node = $.ui.dynatree.getNode(key);
-    }
+  var node;
+  if (_.isString(key)) {
+    node = $("#" + treename + "box").dynatree('getTree').getNodeByKey(key);
+  } else {
+    node = $.ui.dynatree.getNode(key);
+  }
   node.data.addClass = "";
   node.render();
 }
