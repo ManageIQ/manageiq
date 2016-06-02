@@ -293,6 +293,6 @@
 
   ListProvidersController.$inject = ['MiQDataTableService', '$state', '$http',
   'MiQNotificationService', 'MiQToolbarSettingsService', 'MiQProvidersSettingsService', '$scope'];
-  miqHttpInject(angular.module('middleware.provider'))
+  miqHttpInject(angular.module('miq.provider'))
   .controller('miqListProvidersController', ListProvidersController);
 })();

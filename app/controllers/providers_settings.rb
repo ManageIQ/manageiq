@@ -28,10 +28,7 @@ module ProvidersSettings
   def types_to_hash(provider_types)
     types = []
     provider_types.each do |item, key|
-      item = {}
-      item[:id] = key
-      item[:title] = item
-      types.push(item)
+      types.push(:id => key, :title => item)
     end
     types
   end
@@ -46,7 +43,7 @@ module ProvidersSettings
   # }
   def new_provider_views(types)
     types.each do |item|
-      item[:templates] = %w('basic_information' 'detail_info')
+      item[:templates] = %w(basic_information detail_info)
     end
   end
 

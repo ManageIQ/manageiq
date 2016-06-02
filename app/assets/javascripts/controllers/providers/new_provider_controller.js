@@ -201,7 +201,9 @@
       }.bind(this))
   };
 
-  NewProviderController.$inject = ['MiQFormValidatorService', 'MiQNotificationService', '$timeout', '$state', 'MiQNewProviderStateService', 'MiQDataAccessService', 'MiQProvidersSettingsService'];
-  miqHttpInject(angular.module('middleware.provider'))
+  NewProviderController.$inject = ['MiQFormValidatorService', 'MiQNotificationService',
+  '$timeout', '$state', 'MiQNewProviderStateService',
+  'MiQDataAccessService', 'MiQProvidersSettingsService'];
+  miqHttpInject(angular.module('miq.provider'))
   .controller('miqNewProviderController', NewProviderController);
 })()

@@ -651,7 +651,7 @@ module EmsCommon
 
   def form_instances
     form_ems_instances
-    form_openStack_instaces
+    form_open_stack_instaces
     @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
     @openstack_api_versions = retrieve_openstack_api_versions
   end
@@ -667,7 +667,7 @@ module EmsCommon
     @provider_regions = retrieve_provider_regions
   end
 
-  def form_openStack_instaces
+  def form_open_stack_instaces
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_security_protocols = retrieve_openstack_security_protocols
     @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols

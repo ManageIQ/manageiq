@@ -17,7 +17,7 @@ class EmsMiddlewareController < ApplicationController
 
   def index
     @lastaction = "show_list"
-    @angular_app_name = 'middleware.provider'
+    @angular_app_name = 'miq.provider'
   end
 
   #    _____ ______ _______
