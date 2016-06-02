@@ -412,13 +412,7 @@ module Rbac
 
     def get_user_info(user, userid, miq_group, miq_group_id)
       user, miq_group = lookup_user_group(user, userid, miq_group, miq_group_id)
-      # for reports, user is currently nil, so use the group filter
-      user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
-      user_filters = user_filters.dup
-      user_filters["managed"] ||= []
-      user_filters["belongsto"] ||= []
-
-      [user, miq_group, user_filters]
+      [user, miq_group, lookup_user_filters(user || miq_group)]
     end
 
     def lookup_user_group(user, userid, miq_group, miq_group_id)
@@ -432,6 +426,14 @@ module Rbac
       [user, miq_group]
     end
 
+    # for reports, user is currently nil, so use the group filter
+    # the user.get_filters delegates to user.current_group anyway
+    def lookup_user_filters(miq_group)
+      filters = miq_group.try!(:get_filters).try!(:dup) || {}
+      filters["managed"] ||= []
+      filters["belongsto"] ||= []
+      filters
+    end
 
     # @param klass [Class] base_class found in CLASSES_THAT_PARTICIPATE_IN_RBAC
     # @option options :user [User]
