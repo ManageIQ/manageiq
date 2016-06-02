@@ -162,6 +162,7 @@ module Mixins
       end
       if @ems.has_authentication_type?(:amqp)
         amqp_userid = @ems.has_authentication_type?(:amqp) ? @ems.authentication_userid(:amqp).to_s : ""
+        amqp_auth_status = @ems.authentication_status_ok?(:amqp)
       end
 
       if @ems.has_authentication_type?(:ssh_keypair)
@@ -242,6 +243,7 @@ module Mixins
                        :event_stream_selection          => retrieve_event_stream_selection,
                        :ems_controller                  => controller_name,
                        :default_auth_status             => default_auth_status,
+                       :amqp_auth_status                => amqp_auth_status,
                        :service_account_auth_status     => service_account_auth_status
       } if controller_name == "ems_cloud" || controller_name == "ems_network"
 

@@ -48,6 +48,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       bearer_token_exists: false,
       ems_controller: '',
       default_auth_status: '',
+      amqp_auth_status: '',
       service_account_auth_status: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
@@ -78,6 +79,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
         $scope.emsCommonModel.ems_controller == 'ems_container' ? $scope.emsCommonModel.default_api_port = '8443' : $scope.emsCommonModel.default_api_port = '5000';
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
+        $scope.emsCommonModel.amqp_auth_status                = data.amqp_auth_status;
         $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
         miqService.sparkleOff();
       });
@@ -132,6 +134,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
 
         $scope.emsCommonModel.ems_controller                  = data.ems_controller;
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
+        $scope.emsCommonModel.amqp_auth_status                = data.amqp_auth_status;
         $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
 
         if ($scope.emsCommonModel.default_userid != '') {
@@ -344,12 +347,16 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
           if(data.level == "error") {
             if ($scope.authType === "default") {
               $scope.emsCommonModel.default_auth_status = false;
+            } else if ($scope.authType === "amqp") {
+              $scope.emsCommonModel.amqp_auth_status = false;
             } else if ($scope.authType === "service_account") {
               $scope.emsCommonModel.service_account_auth_status = false;
             }
           } else {
             if ($scope.authType === "default") {
               $scope.emsCommonModel.default_auth_status = true;
+            } else if ($scope.authType === "amqp") {
+              $scope.emsCommonModel.amqp_auth_status = true;
             } else if ($scope.authType === "service_account") {
               $scope.emsCommonModel.service_account_auth_status = true;
             }
