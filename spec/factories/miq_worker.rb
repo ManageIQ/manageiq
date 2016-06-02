@@ -5,6 +5,7 @@ FactoryGirl.define do
   end
 
   factory :miq_ui_worker, :class => "MiqUiWorker", :parent => :miq_worker
+  factory :miq_websocket_worker, :class => "MiqWebsocketWorker", :parent => :miq_worker
 
   factory :miq_ems_metrics_processor_worker, :class => "MiqEmsMetricsProcessorWorker", :parent => :miq_worker
 
