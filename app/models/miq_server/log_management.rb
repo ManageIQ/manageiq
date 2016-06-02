@@ -156,6 +156,7 @@ module MiqServer::LogManagement
 
     delete_old_requested_logs
     logfile = LogFile.current_logfile
+    logfile.update_attributes(:miq_task_id => taskid)
     begin
       log_files << logfile
       save
@@ -185,7 +186,6 @@ module MiqServer::LogManagement
         :logging_ended_on   => log_end,
         :name               => name,
         :description        => desc,
-        :miq_task_id        => task.id
       )
 
       logfile.upload
