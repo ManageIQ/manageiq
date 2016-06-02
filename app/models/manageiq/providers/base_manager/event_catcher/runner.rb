@@ -80,12 +80,27 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
     raise NotImplementedError, _("must be implemented in subclass")
   end
 
+  # the monitor runs in it's own thread and only yields raw events to put them into an internal queue
+  # this queue is read from another thread which parses the events and queues them for writing
+  # @yield [event_or_events] any object or array of objects to be parsed by parse_event
   def monitor_events
     raise NotImplementedError, _("must be implemented in subclass")
   end
 
   def process_event(_event)
     raise NotImplementedError, _("must be implemented in subclass")
+  end
+
+  def event_parser
+    @event_parser ||= @ems.class::EventCatcher::Parser.new(@filtered_events)
+  end
+
+  def process_event(event)
+    unless event_parser.filtered?(event)
+      event_hash = event_parser.event_to_hash(event)
+      event_hash[:ems_id] = @ems.id
+      EmsEvent.add_queue('add', @ems.id, event_hash)
+    end
   end
 
   def event_monitor_running
@@ -109,7 +124,9 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
     tid = Thread.new do
       begin
-        monitor_events
+        monitor_events do |event|
+          @queue.enq event
+        end
       rescue EventCatcherHandledException
         Thread.exit
       rescue TemporaryFailure
@@ -131,14 +148,8 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
 
   def drain_queue
     while @queue.length > 0
-      @queue.deq.to_miq_a.each { |event| process_event(event) }
-    end
-  end
-
-  def process_events(events)
-    events.to_miq_a.each do |event|
       heartbeat
-      process_event(event)
+      process_event(@queue.deq)
       Thread.pass
     end
   end
@@ -155,6 +166,6 @@ class ManageIQ::Providers::BaseManager::EventCatcher::Runner < ::MiqWorker::Runn
       @tid = start_event_monitor
     end
 
-    process_events(@queue.deq) while @queue.length > 0
+    drain_queue
   end
 end

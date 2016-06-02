@@ -1,5 +1,6 @@
 class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
   require_nested :Runner
+  require_nested :Parser
 
   include PerEmsWorkerMixin
 
