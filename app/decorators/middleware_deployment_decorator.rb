@@ -1,15 +1,10 @@
 class MiddlewareDeploymentDecorator < Draper::Decorator
   delegate_all
+  include MiddlewareDecoratorMixin
 
   def fonticon
     nil
   end
-
-  def listicon_image
-    item_image
-  end
-
-  private
 
   # Determine the icon
   # we want to display a different icon depending of the type

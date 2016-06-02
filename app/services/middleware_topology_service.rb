@@ -35,7 +35,7 @@ class MiddlewareTopologyService < TopologyService
     data = build_base_entity_data(entity)
     data.merge!(:status => 'Unknown',
                 :display_kind => entity_display_type(entity))
-    data[:icon] = entity.decorate.try(:listicon_image)
+    data[:icon] = entity.decorate.try(:item_image)
     data
   end
 
