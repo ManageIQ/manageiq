@@ -28,10 +28,10 @@ module ProvidersSettings
   def types_to_hash(provider_types)
     types = []
     provider_types.each do |item, key|
-      types.push({
-        :id => key,
-        :title => item
-        })
+      item = {}
+      item[:id] = key
+      item[:title] = item
+      types.push(item)
     end
     types
   end
@@ -46,17 +46,17 @@ module ProvidersSettings
   # }
   def new_provider_views(types)
     types.each do |item|
-      item[:templates] = ['basic_information', 'detail_info']
+      item[:templates] = %w('basic_information' 'detail_info')
     end
   end
 
   def default_list_providers_settings
     {
       :isSelectable => true,
-      :noFooter => false,
-      :hasHeader => true,
-      :title => @title,
-      :newProvider => _("Add New %{model}") % {:model => ui_lookup(:table => @table_name)}
+      :noFooter     => false,
+      :hasHeader    => true,
+      :title        => @title,
+      :newProvider  => _("Add New %{model}") % {:model => ui_lookup(:table => @table_name)}
     }
   end
 

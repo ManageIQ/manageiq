@@ -31,7 +31,6 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def show_list
-
     redirect_to :action => :index, :anchor => "show_list/" +
                                               session[:settings][:views][:manageiq_providers_middlewaremanager]
   end
@@ -91,7 +90,6 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def provider_validator
-
     create_or_edit
     middleware_provider = model.model_from_emstype(@edit[:new][:emstype]).new
     result_object = get_validation_object middleware_provider
