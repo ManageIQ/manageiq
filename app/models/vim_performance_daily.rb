@@ -4,22 +4,6 @@ class VimPerformanceDaily < MetricRollup
   INFO_COLS = [:resource_type, :resource_id, :resource_name]
   PARENT_COLS = [:parent_host_id, :parent_ems_cluster_id, :parent_storage_id, :parent_ems_id].freeze
 
-  def self.find(cnt, *args)
-    raise _("Unsupported finder value %{number}") % {:number => cnt} unless cnt == :all
-    Vmdb::Deprecation.deprecation_warning(:find, :find_entries, caller(1))
-
-    all(*args)
-  end
-
-  def self.all(*args)
-    Vmdb::Deprecation.deprecation_warning(:all, :find_entries, caller(1))
-    options = args.last.kind_of?(Hash) ? args.last : {}
-    ext_options = options.delete(:ext_options) || {}
-    find_entries(ext_options)
-      .apply_legacy_finder_options(options)
-      .to_a
-  end
-
   # @param ext_options [Hash] search options
   # @opts ext_options :klass [Class] class for metrics (default: MetricRollup)
   # @opts ext_options :time_profile [TimeProfile]
