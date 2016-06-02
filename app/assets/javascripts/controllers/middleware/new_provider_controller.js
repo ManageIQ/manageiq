@@ -167,7 +167,7 @@
   * Method for redirecting back to showing list of data.
   */
   NewProviderController.prototype.onBackToListClick = function() {
-    this.$state.go('list_providers.list');
+    this.$state.go('list_providers');
   };
 
   /**

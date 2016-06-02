@@ -68,9 +68,10 @@
   * This function will handle fetching of defaultView based on location.
   */
   getDefaultView = function() {
-    var lastIndex = window.location.pathname.lastIndexOf('/');
+    var defaultState = unescape(window.location.hash);
+    var lastIndex = defaultState.lastIndexOf('/');
     if (lastIndex !== -1) {
-      var defaultView = window.location.pathname.substring(lastIndex + 1);
+      var defaultView = defaultState.substring(lastIndex + 1);
       return (defaultView !== '')? defaultView : 'list';
     } else {
       return 'list';
@@ -103,7 +104,7 @@
     this.$scope.$on('$stateChangeSuccess', function() {
       this.hasTree = this.$state.current.hasTree;
     }.bind(this));
-    Rx.Observable.pairs(this.$state).subscribe(function(event){
+    Rx.Observable.pairs(this.$state).subscribe(function(){
       this.hasTree = this.$state.current.hasTree;
     }.bind(this));
   }
@@ -123,11 +124,11 @@
     this.$state = $state;
     this.$http = $http;
     this.MiQProvidersSettingsService = MiQProvidersSettingsService;
-    this.activeView = getDefaultView();
     this.isList = true;
     this.data = [];
     this.columnsToShow = [];
     this.perPage = setPerPage.bind(this)();
+    this.activeView = getDefaultView();
 
     observeOnChanges.bind(this)();
     enableTreeOnStateChange.bind(this)();
@@ -275,6 +276,7 @@
     }.bind(this));
 
     return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl().then(function(rowsCols) {
+      this.$state.go('list_providers.' + this.activeView);
       this.assignData(rowsCols);
       return rowsCols;
     }.bind(this));
