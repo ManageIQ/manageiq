@@ -43,7 +43,7 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_ipaddress
-    return nil if @ems.kind_of?(ManageIQ::Providers::Amazon::CloudManager)
+    return nil if @ems.ipaddress.blank?
     {:label => _("Discovered IP Address"), :value => @ems.ipaddress}
   end
 

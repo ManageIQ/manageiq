@@ -178,10 +178,8 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_host_default_vnc_port_range
-    return nil unless @ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-    value = @ems.host_default_vnc_port_start.blank? ?
-        "" :
-        "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
+    return nil if @ems.host_default_vnc_port_start.blank?
+    value = "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
     {:label => _("%{title} Default VNC Port Range") % {:title => title_for_host}, :value => value}
   end
 end
