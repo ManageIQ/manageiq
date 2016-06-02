@@ -3435,6 +3435,10 @@
       :description: Display Individual Middleware Datasources
       :feature_type: view
       :identifier: middleware_datasource_show
+    - :name: Utilization
+      :description: Show Capacity & Utilization data of Middleware DataSources
+      :feature_type: view
+      :identifier: middleware_datasource_perf
   - :name: Modify
     :description: Modify Middleware Datasources
     :feature_type: admin

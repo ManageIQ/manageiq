@@ -43,7 +43,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
-                     :decode_compressed_response     => true) do #, :record => :new_episodes) do
+                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
       metrics_available = ds.metrics_available
       metrics_data = ds.collect_live_metrics(metrics_available, start_time, end_time, interval)
       keys = metrics_data.keys
@@ -57,7 +57,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
-                     :decode_compressed_response     => true) do #, :record => :new_episodes) do
+                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
       metrics_available = ds.metrics_available
       expect(metrics_available.size).to be > 3
       metrics_data = ds.collect_live_metrics(metrics_available[0, 3],
@@ -73,7 +73,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   it "#first_and_last_capture" do
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
-                     :decode_compressed_response     => true) do #, :record => :new_episodes) do
+                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
       capture = ds.first_and_last_capture
       expect(capture[0]).to be < capture[1]
     end
