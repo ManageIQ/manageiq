@@ -5,6 +5,10 @@ module ManageIQ::Providers::Hawkular
     end
 
     def listicon_image
+      item_image
+    end
+
+    def item_image
       'vendor-hawkular'
     end
   end
