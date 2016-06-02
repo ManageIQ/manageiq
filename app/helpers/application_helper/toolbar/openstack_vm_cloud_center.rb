@@ -230,10 +230,10 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
         button(
           :instance_terminate,
           nil,
-          N_('Terminate this Instance'),
-          N_('Terminate'),
+          N_('Delete this Instance'),
+          N_('Delete'),
           :image   => "power_off",
-          :confirm => N_("Terminate this Instance?")),
+          :confirm => N_("Delete this Instance?")),
       ]
     ),
     button(
