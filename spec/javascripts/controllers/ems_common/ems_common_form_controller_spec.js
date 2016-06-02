@@ -64,11 +64,11 @@ describe('emsCommonFormController', function() {
     });
 
     it('sets the default_api_port to 5000', function() {
-      expect($scope.emsCommonModel.default_api_port).toEqual(5000);
+      expect($scope.emsCommonModel.default_api_port).toEqual('5000');
     });
 
     it('sets the amqp_api_port to 5672', function() {
-      expect($scope.emsCommonModel.amqp_api_port).toEqual(5672);
+      expect($scope.emsCommonModel.amqp_api_port).toEqual('5672');
     });
 
     it('sets the api_version to v2', function() {
@@ -443,7 +443,7 @@ describe('emsCommonFormController in the context of ems infra provider', functio
     });
 
     it('sets the api_port to 5000', function () {
-      expect($scope.emsCommonModel.default_api_port).toEqual(5000);
+      expect($scope.emsCommonModel.default_api_port).toEqual('5000');
     });
 
     it('sets the api_version to v2', function () {
