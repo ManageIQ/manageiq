@@ -151,7 +151,8 @@ module ManageIQ::Providers::Kubernetes
         {
           'gce'       => ['ManageIQ::Providers::Google::CloudManager'.safe_constantize, :name],
           'aws'       => ['ManageIQ::Providers::Amazon::CloudManager'.safe_constantize, :uid_ems],
-          'openstack' => ['ManageIQ::Providers::Openstack::CloudManager'.safe_constantize, :uid_ems]
+          'openstack' => ['ManageIQ::Providers::Openstack::CloudManager'.safe_constantize, :uid_ems],
+          'azure' => ['ManageIQ::Providers::Azure::CloudManager'.safe_constantize, :ems_ref]
         }.reject { |_key, (provider, _name)| provider.nil? }
       end
     end
