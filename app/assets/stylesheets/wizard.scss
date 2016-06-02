@@ -771,6 +771,8 @@ $wz-substep-nav-width: 250px;
           min-width: auto;
           padding-top: 4px;
           width: auto !important;
+          color: #fff;
+          font-weight: 600;
 
           &:focus {
             outline: none;
@@ -797,6 +799,9 @@ $wz-substep-nav-width: 250px;
             min-width: auto;
             text-align: left;
             width: auto !important;
+            color: #fff;
+            background-color: #00a8e1;
+            font-weight: 600;
             &[disabled] {
               background-color: #d1d1d1;
               color: #72767b;
