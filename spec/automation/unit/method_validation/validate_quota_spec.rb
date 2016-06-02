@@ -39,6 +39,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('error')
       @miq_request.reload
       expect(@miq_request.options[:quota_max_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
 
     it "failure warn memory" do
@@ -50,6 +51,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('ok')
       @miq_request.reload
       expect(@miq_request.options[:quota_warn_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
 
     it "failure max vms" do
@@ -61,6 +63,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('error')
       @miq_request.reload
       expect(@miq_request.options[:quota_max_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
 
     it "failure warn vms" do
@@ -72,6 +75,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('ok')
       @miq_request.reload
       expect(@miq_request.options[:quota_warn_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
 
     it "failure max cpu" do
@@ -83,6 +87,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('error')
       @miq_request.reload
       expect(@miq_request.options[:quota_max_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
 
     it "failure warn cpu" do
@@ -94,6 +99,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('ok')
       @miq_request.reload
       expect(@miq_request.options[:quota_warn_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
 
     it "failure max storage" do
@@ -105,6 +111,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('error')
       @miq_request.reload
       expect(@miq_request.options[:quota_max_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
 
     it "failure warn storage" do
@@ -116,6 +123,7 @@ describe "Quota Validation" do
       expect(ws.root['ae_result']).to eql('ok')
       @miq_request.reload
       expect(@miq_request.options[:quota_warn_exceeded]).to eql(err_msg)
+      expect(@miq_request.message).to eql(err_msg)
     end
   end
 end
