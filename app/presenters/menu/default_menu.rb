@@ -5,8 +5,7 @@ module Menu
         Menu::Section.new(:compute, N_("Compute"), 'fa product-memory fa-2x', [
           clouds_menu_section,
           infrastructure_menu_section,
-          container_menu_section,
-          middleware_menu_section
+          container_menu_section
         ])
       end
 
@@ -136,7 +135,7 @@ module Menu
       end
 
       def middleware_menu_section
-        Menu::Section.new(:mdl, N_("Middleware"), 'fa fa-plus fa-2x', [
+        Menu::Section.new(:mdl, N_("Middleware"), 'fa pficon-enterprise fa-2x', [
           Menu::Item.new('ems_middleware', N_('Providers'), 'ems_middleware', {:feature => 'ems_middleware_show_list'}, '/ems_middleware'),
           Menu::Item.new('middleware_server', deferred_ui_lookup(:tables => 'middleware_server'), 'middleware_server', {:feature => 'middleware_server_show_list'}, '/middleware_server'),
           Menu::Item.new('middleware_deployment', deferred_ui_lookup(:tables => 'middleware_deployment'), 'middleware_deployment', {:feature => 'middleware_deployment_show_list'}, '/middleware_deployment'),
@@ -209,8 +208,8 @@ module Menu
       def default_menu
         storage_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
         [cloud_inteligence_menu_section, services_menu_section, compute_menu_section, configuration_menu_section,
-         network_menu_section, storage_enabled ? storage_menu_section : nil, control_menu_section,
-         automate_menu_section, optimize_menu_section, settings_menu_section].compact
+         network_menu_section, middleware_menu_section, storage_enabled ? storage_menu_section : nil,
+         control_menu_section, automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
     end
   end
