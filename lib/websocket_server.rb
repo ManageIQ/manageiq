@@ -1,7 +1,11 @@
 class WebsocketServer
+  attr_accessor :logger
+
   Pairing = Struct.new(:is_ws, :proxy)
 
-  def initialize
+  def initialize(options = {})
+    @logger = options.fetch(:logger, $websocket_log)
+    logger.info('Initializing websocket worker!')
     @pairing = {}
     @sockets = Concurrent::Array.new
 
@@ -25,8 +29,8 @@ class WebsocketServer
         reads.each do |socket|
           begin
             @pairing[socket].proxy.transmit(writes, @pairing[socket].is_ws)
-          rescue
-            cleanup(socket)
+          rescue => error
+            cleanup(socket, error)
           end
         end
       end
@@ -42,6 +46,7 @@ class WebsocketServer
 
       [-1, {}, []]
     else
+      logger.info("Invalid websocket request from: #{env['REMOTE_ADDR']}")
       not_found
     end
   end
@@ -52,6 +57,7 @@ class WebsocketServer
     console = SystemConsole.find_by!(:url_secret => url)
     proxy = WebsocketProxy.new(env, console)
     return proxy.cleanup if proxy.error
+    logger.info("Starting websocket proxy for VM #{console.vm_id}")
     proxy.start
 
     # Release the connection because one SPICE console can open multiple TCP connections
@@ -63,7 +69,15 @@ class WebsocketServer
     @sockets.push(ws, sock)
   end
 
-  def cleanup(socket)
+  def cleanup(socket, error = nil)
+    return unless @pairing.include?(socket)
+
+    if error
+      "#{error.class} for #{@pairing[socket].proxy.vm_id}: #{error.message}\n#{error.backtrace.join("\n")}"
+    else
+      logger.info("Closing websocket proxy for VM #{@pairing[socket].proxy.vm_id}")
+    end
+
     @pairing[socket].proxy.cleanup
     @sockets.delete(socket)
     @pairing.delete(socket)
