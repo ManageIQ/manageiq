@@ -1,5 +1,5 @@
 describe('middleware.providers.miqListProvidersController', function() {
-  beforeEach(module('middleware.provider'));
+  beforeEach(module('miq.provider'));
 
   var mock_data = getJSONFixture('middleware/list_providers.json');
   var mock_toolbar_settings = getJSONFixture('middleware/toolbar_settings.json');

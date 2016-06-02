@@ -1,5 +1,5 @@
 describe('middleware.providers.miqNewProviderController', function() {
-  beforeEach(module('middleware.provider'));
+  beforeEach(module('miq.provider'));
   var mock_types = getJSONFixture('middleware/types.json');
   var $controller, $httpBackend, $scope, $q, MiQNotificationService, $state, $urlRouter;
 
