@@ -1,4 +1,16 @@
 describe MiqAction do
+  describe "#invoke_or_queue" do
+    before(:each) do
+      @action = MiqAction.new
+    end
+
+    it "executes synchronous actions" do
+      target = double("action")
+      allow(target).to receive(:target_method)
+      @action.instance_eval { invoke_or_queue(true, "__caller__", "role", nil, target, 'target_method', []) }
+    end
+  end
+
   context "#action_custom_automation" do
     before(:each) do
       tenant = FactoryGirl.create(:tenant)
@@ -67,6 +79,7 @@ describe MiqAction do
   context "#raise_automation_event" do
     before(:each) do
       @vm   = FactoryGirl.create(:vm_vmware)
+      allow(@vm).to receive(:my_zone).and_return("vm_zone")
       FactoryGirl.create(:miq_event_definition, :name => "raise_automation_event")
       FactoryGirl.create(:miq_event_definition, :name => "vm_start")
       FactoryGirl.create(:miq_action, :name => "raise_automation_event")
@@ -95,15 +108,13 @@ describe MiqAction do
     end
 
     it "asynchronous" do
-      vm_zone = "vm_zone"
-      allow(@vm).to receive(:my_zone).and_return(vm_zone)
       expect(MiqAeEvent).to receive(:raise_synthetic_event).never
       q_options = {
         :class_name  => "MiqAeEvent",
         :method_name => "raise_synthetic_event",
         :args        => [@vm, @event.name, @aevent],
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :zone        => vm_zone,
+        :zone        => "vm_zone",
         :role        => "automate"
       }
       expect(MiqQueue).to receive(:put).with(q_options).once
@@ -136,6 +147,7 @@ describe MiqAction do
   context "#action_vm_retire" do
     before do
       @vm     = FactoryGirl.create(:vm_vmware)
+      allow(@vm).to receive(:my_zone).and_return("vm_zone")
       @event  = FactoryGirl.create(:miq_event_definition, :name => "assigned_company_tag")
       @action = FactoryGirl.create(:miq_action, :name => "vm_retire")
     end
