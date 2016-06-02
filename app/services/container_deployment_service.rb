@@ -22,7 +22,7 @@ class ContainerDeploymentService
       {
         :cpu       => template.cpu_total_cores,
         :memo      => template.mem_cpu,
-        :disk_size => ApplicationController.helpers.number_to_human_size(template.disks.first.size),
+        :disk_size => ApplicationController.helpers.number_to_human_size(template.disks.first ? template.disks.first.size : 0),
         :name      => template.name,
         :ems_id    => template.ems_id,
         :id        => template.id
@@ -45,7 +45,7 @@ class ContainerDeploymentService
       {
         :cpu       => vm.hardware.cpu_total_cores,
         :memo      => vm.hardware.memory_mb,
-        :disk_size => ApplicationController.helpers.number_to_human_size(vm.disks.first.size),
+        :disk_size => ApplicationController.helpers.number_to_human_size(vm.disks.first ? vm.disks.first.size : 0),
         :name      => vm.name,
         :ems_id    => vm.ems_id,
         :id        => vm.id

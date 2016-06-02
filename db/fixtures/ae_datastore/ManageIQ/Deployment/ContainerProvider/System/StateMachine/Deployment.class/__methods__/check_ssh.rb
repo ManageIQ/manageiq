@@ -33,6 +33,7 @@ def check_ssh
         $evm.root['automation_task'].message = "Cannot preform ssh-add cmd"
       end
     }
+    $evm.log(:info, $evm.root['deployment_master'])
     Net::SSH.start($evm.root['deployment_master'], $evm.root['ssh_username'], :paranoid => false, :forward_agent => true, :agent_socket_factory => ->{ UNIXSocket.open(agent_socket) }) do |ssh|
       $evm.log(:info, "Connected to deployment master, ip address: #{$evm.root['deployment_master']}")
       connection_failure = false

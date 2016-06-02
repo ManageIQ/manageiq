@@ -8,7 +8,8 @@ def analyze_deployment
     $evm.root['nodes'] = $evm.root['automation_task'].automation_request.options[:attrs][:nodes]
     $evm.root['deployment_master'] =  $evm.root['automation_task'].automation_request.options[:attrs][:deployment_master]
     $evm.root['ssh_private_key'] = $evm.root['automation_task'].automation_request.options[:attrs][:ssh_private_key]
-
+    $evm.root['rhel_subscribe_inventory'] = $evm.root['automation_task'].automation_request.options[:attrs][:rhel_subscribe_inventory]
+    $evm.root['inventory'] = $evm.root['automation_task'].automation_request.options[:attrs][:inventory]
   end
   $evm.root['ssh_username'] =  $evm.root['automation_task'].automation_request.options[:attrs][:ssh_username]
 

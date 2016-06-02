@@ -6,11 +6,11 @@ RHEL_SUBSCRIBE_INVENTORY = 'rhel_subscribe_inventory.yaml'.freeze
 
 def create_ansible_inventory_file(subscribe = false)
   if subscribe
-    template = $evm.root['automation_task'].automation_request.options[:attrs][:rhel_subscribe_inventory]
+    template = $evm.root['rhel_subscribe_inventory']
     inv_file_path = RHEL_SUBSCRIBE_INVENTORY
   else
     $evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
-    template = $evm.root['masters'] = $evm.root['automation_task'].automation_request.options[:attrs][:inventory]
+    template = $evm.root['inventory']
     inv_file_path = INVENTORY_FILE
   end
   begin

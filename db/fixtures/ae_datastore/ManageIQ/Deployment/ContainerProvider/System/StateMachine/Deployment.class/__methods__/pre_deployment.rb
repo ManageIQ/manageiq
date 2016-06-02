@@ -7,9 +7,8 @@ REPO_URL = "https://copr.fedorainfracloud.org/coprs/maxamillion/origin-next/repo
 def handle_rhel_subscriptions(commands)
   commands.unshift( "subscription-manager register --username=#{$evm.root['rhsub_user']}  --password=#{$evm.root['rhsub_pass']}",
                     "subscription-manager repos --disable=\"*\"",
-                    "subscription-manager repos --enable=\"rhel-7-server-rh-common-rpms\" --enable=\"rhel-7-server-rpms\" --enable=\"rhel-7-server-extras-rpms\" --enable=\"rhel-7-server-ose-3.2-rpms\"")
-  system ({"SSH_AUTH_SOCK" =>  $evm.root['agent_socket'], "SSH_AGENT_PID" =>  $evm.root['agent_pid']},"scp -o 'StrictHostKeyChecking no' rhel_subscribe_inventory.yaml " \
-     "#{$evm.root['ssh_username']}@#{$evm.root['deployment_master']}:~/")
+                    "subscription-manager repos --enable=\"rhel-7-server-rh-common-rpms\" --enable=\"rhel-7-server-rpms\" --enable=\"rhel-7-server-extras-rpms\"")
+  system({"SSH_AUTH_SOCK" => $evm.root['agent_socket'], "SSH_AGENT_PID" => $evm.root['agent_pid']},"scp -o 'StrictHostKeyChecking no' rhel_subscribe_inventory.yaml #{$evm.root['ssh_username']}@#{$evm.root['deployment_master']}:~/")
   rhel_subscribe_cmd = "ansible-playbook /usr/share/ansible/openshift-ansible/playbooks/byo/rhel_subscribe.yml -i "\
                        "/usr/share/ansible/openshift-ansible/rhel_subscribe_inventory.yaml"
   commands.push("sudo mv ~/rhel_subscribe_inventory.yaml /usr/share/ansible/openshift-ansible/", rhel_subscribe_cmd)
@@ -67,9 +66,11 @@ def pre_deployment
                          "sudo curl -o /etc/yum.repos.d/maxamillion-origin-next-epel-7.repo #{REPO_URL}")
       elsif release.include?("Red Hat Enterprise Linux") &&
             !$evm.root['automation_task'].automation_request.options[:attrs][:containerized]
-        commands = handle_rhel_subscriptions(commands)
+        ssh.exec!("echo -e \"[temp]\nname=alontemp\nbaseurl=http://download.eng.bos.redhat.com/rcm-guest/puddles/RHAOS/AtomicOpenShift/3.2/arbitrary-yaml/x86_64/os/\nenabled=1\ngpgcheck=0\" > /etc/yum.repos.d/temp.repo")
+        # commands = handle_rhel_subscriptions(commands)
       end
       commands.each do |cmd|
+        # $evm.log(:info, "runnigng cmd #{cmd}")
         result = ssh_exec!(ssh, cmd)
         if cmd.include?("subscription-manager register") && result[:exit_code] == 0
           pool_id = ssh_exec!(ssh, "subscription-manager list --available --matches=#{$evm.root['rhsub_sku']} --pool-only")[:stdout].split("\n").first.delete("\r")

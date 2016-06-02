@@ -88,10 +88,10 @@ rhsub_pass=#{rhsm_auth.password_encrypted}
 rhsub_pool=#{rhsm_auth.rhsm_sku}
 
 [masters]
-#{roles_addresses("master").join("\n") unless roles_addresses("master").empty?}
+#{(roles_addresses("master") - [roles_addresses("deployment_master")]).join("\n") unless (roles_addresses("master") - [roles_addresses("deployment_master")]).empty?}
 
 [nodes]
-#{roles_addresses("node").join("\n") unless roles_addresses("node").empty?}
+#{(roles_addresses("node") - [roles_addresses("deployment_master")]).join("\n") unless roles_addresses("node").empty?}
 eos
     template
   end
@@ -123,7 +123,8 @@ deployment_type=#{kind}
 #{(roles_addresses("deployment_master").to_s + " ansible_connection=local openshift_scheduleable=True") unless roles_addresses("deployment_master").nil?}
 #{roles_addresses("master").join("\n") unless (roles_addresses("master") - [roles_addresses("deployment_master")]).empty?}
 [nodes]
-#{roles_addresses("node").join("\n") unless roles_addresses("node").empty?}
+#{roles_addresses("node").join("\n") unless (roles_addresses("node") - [roles_addresses("deployment_master")]).empty?}
+
 eos
     template
   end
@@ -303,7 +304,7 @@ eos
 
   def create_deployment(params, user)
     self.version = "v3"
-    self.kind = params["provider_type"]
+    self.kind = params["provider_type"].include?("openshiftOrigin") ? "origin" : "openshift-enterprise"
     self.method_type = params["method_type"]
     create_needed_tags
     if method_type.include? "existing_managed"
