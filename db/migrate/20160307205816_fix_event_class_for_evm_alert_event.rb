@@ -17,7 +17,7 @@ class FixEventClassForEvmAlertEvent < ActiveRecord::Migration
 
   def up
     say_with_time("Converting event class for EVMAlertEvent to MiqEvent") do
-      EventStream.where(:type => 'EmsEvent', :event_type => 'EVMAlertEvent').each do |event|
+      EventStream.where(:type => 'EmsEvent', :event_type => 'EVMAlertEvent').find_each do |event|
         attrs = {:type => 'MiqEvent'}
 
         if event.ems_cluster_id
