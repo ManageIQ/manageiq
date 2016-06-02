@@ -36,7 +36,7 @@ class MiqExpression::Field
   def reflections
     klass = model
     associations.collect do |association|
-      klass.reflect_on_association(association).tap do |reflection|
+      klass.reflection_with_virtual(association).tap do |reflection|
         raise ArgumentError, "One or more associations are invalid: #{associations.join(", ")}" unless reflection
         klass = reflection.klass
       end
