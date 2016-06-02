@@ -26,7 +26,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
@@ -46,7 +46,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: '100'
@@ -66,7 +66,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: '100'
@@ -86,7 +86,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
@@ -106,7 +106,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
@@ -126,7 +126,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
@@ -146,7 +146,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
@@ -166,7 +166,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
@@ -186,7 +186,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
@@ -206,7 +206,7 @@ object:
       scope: 
       description: 
       condition: 
-      on_entry:
+      on_entry: 
       on_exit: 
       on_error: 
       max_retries: 
