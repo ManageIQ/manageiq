@@ -94,17 +94,17 @@
   }
 
   observeOnChanges = function() {
-    Rx.Observable.ofObjectChanges(ManageIQ.angular.dataAccessor).subscribe(function(event){
-      if (event.hasOwnProperty('object') && event.object.hasOwnProperty('data')) {
-        console.log(event.object.data);
-      }
+    Rx.Observable.pairs(ManageIQ.angular.dataAccessor).subscribe(function(event){
+      console.log(event);
     }.bind(this));
   }
 
   enableTreeOnStateChange = function() {
-    Rx.Observable.ofObjectChanges(this.$state).subscribe(function(event){
-      this.hasTree = event.name === 'transition' &&
-        event.object.current.hasTree;
+    this.$scope.$on('$stateChangeSuccess', function() {
+      this.hasTree = this.$state.current.hasTree;
+    }.bind(this));
+    Rx.Observable.pairs(this.$state).subscribe(function(event){
+      this.hasTree = this.$state.current.hasTree;
     }.bind(this));
   }
 
@@ -115,20 +115,20 @@
   * @param $http provider for gets and posts.
   * @param MiQNotificationService service for accessing alerts messages.
   */
-  var ListProvidersController = function(MiQDataTableService, $state, $http, MiQNotificationService, MiQToolbarSettingsService) {
+  var ListProvidersController = function(MiQDataTableService, $state, $http, MiQNotificationService, MiQToolbarSettingsService, MiQProvidersSettingsService, $scope) {
+    this.$scope = $scope;
     this.MiQToolbarSettingsService = MiQToolbarSettingsService;
     this.MiQNotificationService = MiQNotificationService;
+    this.MiQDataTableService = MiQDataTableService;
     this.$state = $state;
     this.$http = $http;
+    this.MiQProvidersSettingsService = MiQProvidersSettingsService;
     this.activeView = getDefaultView();
-    this.MiQDataTableService = MiQDataTableService;
-    this.isSelectable = true;
-    this.hasFooter = true;
-    this.hasHeader = true;
     this.isList = true;
     this.data = [];
     this.columnsToShow = [];
     this.perPage = setPerPage.bind(this)();
+
     observeOnChanges.bind(this)();
     enableTreeOnStateChange.bind(this)();
   };
@@ -143,6 +143,7 @@
       window.location = '/ems_middleware/tagging_edit?db=' + responseData.data.db;
     });
   }
+
   /**
   * Default action function which is used when default action is triggered.
   */
@@ -162,6 +163,8 @@
     }
   };
 
+  /**
+  */
   ListProvidersController.prototype.filterSelectedIds = function() {
     return _
       .chain(this.data)
@@ -172,7 +175,6 @@
 
   /**
   * Method which removes selected item from VMDB.
-  * TODO: Call delete function.
   */
   ListProvidersController.prototype.removeSelected = function() {
     var selectedIds = this.filterSelectedIds();
@@ -189,23 +191,18 @@
     }
   };
 
+  /**
+  */
   ListProvidersController.prototype.deleteItems = function(items, loadingItem) {
-    this.$http({
-      url: '/ems_middleware/delete_provider',
-      method: 'POST',
-      data: {miq_grid_checks: items.join(',')},
-    }).then(function(dataResponse){
-      this.MiQNotificationService.sendSuccess(
-        this.MiQNotificationService.dismissibleMessage(
-          __('Remove of providers with IDs ') + dataResponse.data.removedIds.join(', ') + __(' was successful'), '', loadingItem
-        )
-      );
-      this.onDeleteSuccess(items);
-    }.bind(this));
-  }
-
-  ListProvidersController.prototype.onDeleteSuccess = function(itemIds) {
-    this.data = this.MiQDataTableService.removeItems(itemIds);
+    this.MiQDataTableService.deleteItems({miq_grid_checks: items.join(',')})
+      .then(function(responseData){
+        this.MiQNotificationService.sendSuccess(
+          this.MiQNotificationService.dismissibleMessage(
+            __('Remove of providers with IDs ') + responseData.removedIds.join(', ') + __(' was successful'), '', loadingItem
+          )
+        );
+        this.data = this.MiQDataTableService.dataTableService.rows;
+      }.bind(this));
   }
 
   /**
@@ -264,12 +261,20 @@
   * It uses promises and calls #assignData(rowsCols) for handeling recieved data.
   */
   ListProvidersController.prototype.loadData = function() {
-    this.MiQToolbarSettingsService.getSettings(this.isList).then(function(toolbarItems){
+    this.MiQProvidersSettingsService.getSettings().then(function(providersSettings) {
+      this.isSelectable = providersSettings.isSelectable;
+      this.noFooter = providersSettings.noFooter;
+      this.hasHeader = providersSettings.hasHeader;
+      this.title = providersSettings.title;
+    }.bind(this));
+
+    this.MiQToolbarSettingsService.getSettings(this.isList).then(function(toolbarItems) {
       this.functionReference = setFunctionReference.bind(this)();
       this.toolbarItems = toolbarItems;
       setFunctionsForToolbar.bind(this)();
-    }.bind(this))
-    return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl().then(function(rowsCols){
+    }.bind(this));
+
+    return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl().then(function(rowsCols) {
       this.assignData(rowsCols);
       return rowsCols;
     }.bind(this));
@@ -285,7 +290,7 @@
   };
 
   ListProvidersController.$inject = ['MiQDataTableService', '$state', '$http',
-  'MiQNotificationService', 'MiQToolbarSettingsService'];
+  'MiQNotificationService', 'MiQToolbarSettingsService', 'MiQProvidersSettingsService', '$scope'];
   miqHttpInject(angular.module('middleware.provider'))
   .controller('miqListProvidersController', ListProvidersController);
 })();

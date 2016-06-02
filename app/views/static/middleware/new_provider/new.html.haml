@@ -1,6 +1,8 @@
-.row.scrollable-sm{:style => "height: 100%"}
+.row.scrollable-sm{:style => "height: 100%", "ng-init" => "mwNew.loadData()"}
   %miq-notification-section.col-md-12{:limit => "2", "show-info" => "{{true}}"}
   .col-md-12
+    %h1
+      {{mwNew.newProviderTitle}}
     %form#form_div{:name => "form"}
       %h3
         Basic Information
@@ -21,13 +23,13 @@
               Type
             .col-md-8
               %select{:name => "server_emstype",
-              "ng-model" => "mwNew.newProvider.server_emstype",
+              "ng-model" => "mwNew.server_emstype",
               "ng-required" => "true",
               "pf-select" => "",
+              "id" => "123",
+              "ng-options" => "item as item.title for item in mwNew.types",
               "ng-change" => "mwNew.typeSelected()"}
                 %option{:value => ""} No Type selected
-                %option{:value => "{{type.value}}",
-                "ng-repeat" => "type in mwNew.types"} {{type.title}}
           %div{"ng-if" => "mwNew.newProvider.server_emstype", "ng-switch" => "mwNew.newProvider.server_emstype"}
             %div{"ui-view" => "basic_information"}
           .form-group

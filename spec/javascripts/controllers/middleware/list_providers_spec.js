@@ -2,6 +2,7 @@ describe('middleware.providers.miqListProvidersController', function() {
   beforeEach(module('middleware.provider'));
 
   var mock_data = getJSONFixture('middleware/list_providers.json');
+  var mock_toolbar_settings = getJSONFixture('middleware/toolbar_settings.json');
 
   var responseData;
   var $controller, $httpBackend, $scope, $q;
@@ -19,11 +20,13 @@ describe('middleware.providers.miqListProvidersController', function() {
      $scope = $injector.get('$rootScope').$new();
      $httpBackend = $injector.get('$httpBackend');
      var injectedCtrl = $injector.get('$controller');
-     $controller = injectedCtrl('miqListProvidersController');
+     $controller = injectedCtrl('miqListProvidersController', {$scope: $scope});
    }));
 
    beforeEach(function(done){
-     httpBackendWhen('GET', '/ems_middleware/list_providers').respond(200, mock_data);
+     $httpBackend.when('GET', '//list_providers_settings').respond(200, {});
+     $httpBackend.when('GET', '//toolbar_settings?is_list=true').respond(200, mock_toolbar_settings);
+     $httpBackend.when('GET', '//list_providers').respond(200, mock_data);
      var dataLoading = $controller.loadData();
      $q.all([dataLoading]).then(function() {
        done();
@@ -45,13 +48,13 @@ describe('middleware.providers.miqListProvidersController', function() {
     $controller.data[0].selecteItem(true);
     expect($controller.data[0].selected).toBe(true);
     $controller.onRowSelected();
-    _.each($controller.toolbarItems, function(toolbarItem){
-      if (toolbarItem.hasOwnProperty('disabled')) {
-        expect(toolbarItem.disabled).toBe(false);
+    _.each($controller.toolbarItems[0], function(toolbarItem){
+      if (toolbarItem.hasOwnProperty('enabled')) {
+        expect(toolbarItem.enabled).toBe(true);
       }
-      _.each(toolbarItem.children, function(oneChild){
-        if (oneChild.hasOwnProperty('disabled')) {
-          expect(oneChild.disabled).toBe(false);
+      _.each(toolbarItem.items, function(oneChild){
+        if (oneChild.hasOwnProperty('enabled')) {
+          expect(oneChild.enabled).toBe(true);
         }
       });
     });
@@ -61,13 +64,10 @@ describe('middleware.providers.miqListProvidersController', function() {
     $controller.data[0].selecteItem(true);
     $controller.data[0].selecteItem(false);
     $controller.onRowSelected();
-    _.each($controller.toolbarItems, function(toolbarItem){
-      if (toolbarItem.hasOwnProperty('disabled')) {
-        expect(toolbarItem.disabled).toBe(true);
-      }
-      _.each(toolbarItem.children, function(oneChild){
-        if (oneChild.hasOwnProperty('disabled')) {
-          expect(oneChild.disabled).toBe(true);
+    _.each($controller.toolbarItems[0], function(toolbarItem){
+      _.each(toolbarItem.items, function(oneChild){
+        if (oneChild.hasOwnProperty('enabled') && oneChild.child_id != 'ems_middleware_new') {
+          expect(oneChild.enabled).toBe(false);
         }
       });
     });
@@ -76,8 +76,8 @@ describe('middleware.providers.miqListProvidersController', function() {
   it('select 2 items and check if edit items is disabled', function(){
     $controller.data[0].selecteItem(true);
     $controller.data[1].selecteItem(true);
-    var edit_provider = _.find($controller.toolbarItems[0].children, {id: 'edit_provider'});
-    expect(edit_provider.disabled).toBe(true);
+    var edit_provider = _.find($controller.toolbarItems[0][0].items, {child_id: 'ems_middleware_edit'});
+    expect(edit_provider.enabled).toBe(false);
   });
 
   it('set 5 records per page and check number of visible items', function() {
@@ -90,8 +90,4 @@ describe('middleware.providers.miqListProvidersController', function() {
     $controller.MiQDataTableService.loadMore();
     expect($controller.MiQDataTableService.dataTableService.visibleItems.length > 5).toBeTruthy();
   });
-
-  function httpBackendWhen(type, url) {
-    return $httpBackend.when(type, 'http://' + location.hostname + ':' + location.port + url)
-  }
 });

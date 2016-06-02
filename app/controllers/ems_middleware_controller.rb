@@ -20,24 +20,37 @@ class EmsMiddlewareController < ApplicationController
     @angular_app_name = 'middleware.provider'
   end
 
-  def list_providers
-    render :json => generate_providers
-  end
-
+  #    _____ ______ _______
+  #   / ____|  ____|__   __|
+  #  | |  __| |__     | |
+  #  | | |_ |  __|    | |
+  #  | |__| | |____   | |
+  #   \_____|______|  |_|
   def new
     redirect_to :action => :index, :anchor => "new"
   end
 
-  def toolbar_settings
-    @lastaction = params[:is_list] ? 'show_list' : nil
-    render :json => toolbar_from_hash
-  end
-
   def show_list
+
     redirect_to :action => :index, :anchor => "show_list/" +
                                               session[:settings][:views][:manageiq_providers_middlewaremanager]
   end
 
+  def list_providers
+    render :json => generate_providers
+  end
+
+  def types
+    form_instances
+    render :json => new_provider_views(types_to_hash(@ems_types))
+  end
+
+  #   _____   ____   _____ _______
+  #  |  __ \ / __ \ / ____|__   __|
+  #  | |__) | |  | | (___    | |
+  #  |  ___/| |  | |\___ \   | |
+  #  | |    | |__| |____) |  | |
+  #  |_|     \____/|_____/   |_|
   def new_provider
     result_object = provider_validator
     if result_object[:result]
@@ -78,6 +91,7 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def provider_validator
+
     create_or_edit
     middleware_provider = model.model_from_emstype(@edit[:new][:emstype]).new
     result_object = get_validation_object middleware_provider

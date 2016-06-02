@@ -1,6 +1,6 @@
 describe('middleware.providers.miqNewProviderController', function() {
   beforeEach(module('middleware.provider'));
-
+  var mock_types = getJSONFixture('middleware/types.json');
   var $controller, $httpBackend, $scope, $q, MiQNotificationService, $state, $urlRouter;
 
   var validObject = {
@@ -34,40 +34,14 @@ describe('middleware.providers.miqNewProviderController', function() {
     $controller = injectedCtrl('miqNewProviderController');
   }));
 
-  it('validation of valid object should show success alert', function(){
-    $httpBackend.when('POST', '/ems_middleware/validate_provider')
-                .respond(200, {
-                  result: true,
-                  details: "",
-                  ems_object: validObject
-                });
-    spyOn($controller, 'stripProtocol');
-    spyOn($controller, 'validateFunction');
-
-    validateObject(validObject);
-
-    expect($controller.stripProtocol)
-      .toHaveBeenCalled();
-    expect($controller.validateFunction)
-      .toHaveBeenCalled();
-  });
-
-  it('save of valid object should be saved', function(){
-    $httpBackend.when('POST', '/ems_middleware/new_provider')
-                .respond(200, {
-                  result: true,
-                  details: "",
-                  ems_object: validObject
-                });
-    spyOn($controller, 'stripProtocol');
-    spyOn($controller, 'saveObject');
-
-    saveObject(validObject);
-
-    expect($controller.stripProtocol)
-      .toHaveBeenCalled();
-    expect($controller.saveObject)
-      .toHaveBeenCalled();
+  beforeEach(function(done){
+    $httpBackend.when('GET', '//list_providers_settings').respond(200, {});
+    $httpBackend.when('GET', '//types').respond(200, mock_types);
+    var dataLoading = $controller.loadData();
+    $q.all([dataLoading]).then(function() {
+      done();
+    });
+    $httpBackend.flush();
   });
 
   it('Check if new_provider.hawkular state has enough views', function() {
@@ -77,28 +51,4 @@ describe('middleware.providers.miqNewProviderController', function() {
     expect(newHawkular.views.hasOwnProperty('detail_info'))
       .toBeTruthy();
   });
-
-  it('Check if new_provider state has controller', function() {
-    expect($state.get('new_provider').hasOwnProperty('controller'))
-      .toBeTruthy();
-  });
-
-  function validateObject(objectForValidation) {
-    $controller.newProvider = objectForValidation;
-    $controller.validateAction();
-    $httpBackend.flush();
-    $scope.$digest();
-  }
-
-  function saveObject(objectForValidation) {
-    $controller.newProvider = objectForValidation;
-    $controller.saveAction();
-    $httpBackend.flush();
-    $scope.$digest();
-  }
-
-
-  function dumpStringify(rawObject) {
-    console.log(JSON.stringify(rawObject));
-  }
 });

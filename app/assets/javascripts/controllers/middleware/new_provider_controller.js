@@ -6,7 +6,7 @@
   var defaultActions = function() {
     return [{
       btnClass: 'btn-primary',
-      title: __('Add this Middleware Manager'),
+      title: __('Add this Manager'),
       validate: true,
       clickFunction: function(){
         this.saveAction();
@@ -14,7 +14,7 @@
       label: __('Add')
     }, {
       btnClass: 'btn-default',
-      title: __('Cancel and return to list of Middleware providers'),
+      title: __('Cancel and return to list of providers'),
       clickFunction: function(){
         this.onBackToListClick();
       }.bind(this),
@@ -40,16 +40,17 @@
   * @param MiQNotificationService notification service.
   * @param $timeout service for setTimeout over angular.
   */
-  var NewProviderController = function(MiQFormValidatorService, MiQNotificationService, $timeout, $state) {
+  var NewProviderController = function(MiQFormValidatorService, MiQNotificationService, $timeout, $state, MiQNewProviderStateService, MiQDataAccessService, MiQProvidersSettingsService) {
     this.$state = $state;
+    this.MiQDataAccessService = MiQDataAccessService;
     this.MiQFormValidatorService = MiQFormValidatorService;
     this.MiQNotificationService = MiQNotificationService;
+    this.MiQProvidersSettingsService = MiQProvidersSettingsService;
     this.$timeout = $timeout;
+    this.MiQNewProviderStateService = MiQNewProviderStateService;
 
     this.formActions = defaultActions.bind(this)();
     this.credentialsTabs = setCredentialsTab.bind(this)();
-
-    this.types = [{title: __('Hawkular'), value: 'Hawkular', view: 'new_provider.hawkular'}];
 
     this.zones = [__('Dan'), __('Dan 2 Zone'), __('Default Zone'), __('RHEV 1 for fleecing')];
 
@@ -61,12 +62,12 @@
   };
 
   /**
-  * Method which loads affitional view based on selected server ems type.
+  * Method which loads additional view based on selected server ems type.
   */
   NewProviderController.prototype.typeSelected = function() {
-    if (this.newProvider.server_emstype) {
-      var selectedType = _.find(this.types, {value: this.newProvider.server_emstype});
-      this.$state.go(selectedType.view);
+    if (this.server_emstype) {
+      this.newProvider.server_emstype = this.server_emstype.id;
+      this.$state.go(this.server_emstype.stateId);
     } else {
       this.$state.go('new_provider');
     }
@@ -167,10 +168,40 @@
   */
   NewProviderController.prototype.onBackToListClick = function() {
     this.$state.go('list_providers.list');
-    // this.$location.path('/ems_middleware/show_list/list');
   };
 
-  NewProviderController.$inject = ['MiQFormValidatorService', 'MiQNotificationService', '$timeout', '$state'];
+  /**
+  */
+  NewProviderController.prototype.mapTemplatesToViews = function() {
+    _.each(this.types, function(oneType) {
+      oneType.views = _
+        .chain(oneType.templates)
+        .zipObject(oneType.templates)
+        .mapValues(function (item) {
+          return '/static' + this.MiQDataAccessService.getUrlPrefix() + '/new_provider/' + item + '.html';
+        }.bind(this))
+        .value();
+    }.bind(this));
+  }
+
+  /**
+  */
+  NewProviderController.prototype.loadData = function() {
+    this.MiQProvidersSettingsService.getSettings().then(function(providersSettings) {
+      this.newProviderTitle = providersSettings.newProvider;
+    }.bind(this));
+
+    return this.MiQNewProviderStateService.getProviderTypes('new_provider')
+      .then(function(providerTypes) {
+          this.types = providerTypes;
+          if (!_.find(this.types, 'views') && _.find(this.types, 'templates')) {
+            this.mapTemplatesToViews();
+          }
+          this.MiQNewProviderStateService.addProviderStates(providerTypes);
+      }.bind(this))
+  };
+
+  NewProviderController.$inject = ['MiQFormValidatorService', 'MiQNotificationService', '$timeout', '$state', 'MiQNewProviderStateService', 'MiQDataAccessService', 'MiQProvidersSettingsService'];
   miqHttpInject(angular.module('middleware.provider'))
   .controller('miqNewProviderController', NewProviderController);
 })()

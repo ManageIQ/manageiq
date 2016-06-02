@@ -1,16 +1,19 @@
 miqHttpInject(angular.module('middleware.provider', ['miQStaticAssets', 'ui.bootstrap', 'ui.router', 'patternfly.select', 'ui.bootstrap.tabs', 'patternfly.views', 'ngAnimate']))
 .config(function(MiQDataAccessServiceProvider, MiQFormValidatorServiceProvider, MiQDataTableServiceProvider) {
+
   var prefixLocation = location.pathname.split('/')[1];
   MiQDataAccessServiceProvider.setUrlPrefix('/' + prefixLocation);
   MiQDataTableServiceProvider.endpoints = {
-    list: '/list_providers'
+    list: '/list_providers',
+    deleteItems: '/delete_provider'
   };
   MiQFormValidatorServiceProvider.endpoints = {
     validate: '/validate_provider',
     create: '/new_provider'
   }
 })
-.config(function($stateProvider, $locationProvider, $urlRouterProvider, MiQDataAccessServiceProvider) {
+.config(function($stateProvider, $locationProvider, $urlRouterProvider, MiQDataAccessServiceProvider, MiQNewProviderStateServiceProvider) {
+  MiQNewProviderStateServiceProvider.$stateProvider = $stateProvider;
   $stateProvider.state('list_providers', {
     url: MiQDataAccessServiceProvider.urlPrefix + '/show_list',
     views: {
@@ -38,21 +41,11 @@ miqHttpInject(angular.module('middleware.provider', ['miQStaticAssets', 'ui.boot
     hasTree: true
   })
   .state('new_provider', {
+    url: MiQDataAccessServiceProvider.urlPrefix + '/new',
     views: {
       'content': {
-        url: MiQDataAccessServiceProvider.urlPrefix + '/new',
         templateUrl: '/static/middleware/new_provider/new.html',
         controller: 'miqNewProviderController as mwNew'
-      }
-    }
-  })
-  .state('new_provider.hawkular', {
-    views: {
-      'basic_information': {
-        templateUrl: '/static/middleware/new_provider/hawkular_basic.html'
-      },
-      'detail_info': {
-        templateUrl: '/static/middleware/new_provider/hawkular.html'
       }
     }
   });

@@ -125,4 +125,3 @@ boot_files:
 #
 # rack_options:
 #   server: 'thin'
-

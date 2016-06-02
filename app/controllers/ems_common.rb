@@ -649,7 +649,7 @@ module EmsCommon
     session[:edit] = @edit
   end
 
-  def form_instance_vars
+  def form_instances
     @server_zones = []
     zones = Zone.order('lower(description)')
     zones.each do |zone|
@@ -663,6 +663,10 @@ module EmsCommon
     @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols
     @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
     @openstack_api_versions = retrieve_openstack_api_versions
+  end
+
+  def form_instance_vars
+    form_instances
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
   end
 
