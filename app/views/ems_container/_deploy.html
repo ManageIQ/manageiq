@@ -1,5 +1,5 @@
 <div ng-app="miq.containers.providersModule" ng-controller="containers.deployProviderController" class="container-fluid container-tiles-pf containers-dashboard miq-dashboard-view"/>
-  <div miq-modal class="wizard-miq" modal-title="Deploy New Provider" visible="showDeploymentWizard" on-cancel="cancelDeploymentWizard()" on-hide="cancelDeploymentWizard()" modal-size="large">
+  <div miq-modal class="wizard-miq" modal-title="Create Containers Provider" visible="showDeploymentWizard" on-cancel="cancelDeploymentWizard()" on-hide="cancelDeploymentWizard()" modal-size="large">
     <div ng-if="showDeploymentWizard === true"> <!-- this is done to reset the wizard each time it is shown -->
       <div miq-wizard class="miq-deploy-provider-wizard" wizard-ready="deployProviderReady" on-finish="finishedWizard()" on-cancel="cancelWizard()" content-height="455px" next-title="nextButtonTitle"
       next-callback="nextCallback" back-callback="backCallback" wizard-done="deployComplete || deployInProgress">
