@@ -49,7 +49,8 @@ module ReportFormatter
       mri.chart = {
         :miqChart => type,
         :data     => {:columns => [], :names => {}},
-        :axis     => {}
+        :axis     => {},
+        :tooltip  => {}
       }
 
       if chart_is_2d?

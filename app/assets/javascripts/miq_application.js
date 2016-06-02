@@ -1666,11 +1666,16 @@ function add_expanding_icon(element){
 }
 
 function chartData(type, data, data2) {
+  if(type == undefined){
+    return;
+  }
+  // set maximum count of x axis tick labels
   if(_.isObject(data.miq) && data.miq.performance){
     data.axis.x.tick.centered = true;
     data.axis.x.tick.culling = {max: 5}
   }
 
+  // set formating function for tooltip and y tick labels
   if (_.isObject(data.axis) && _.isObject(data.axis.y) && _.isObject(data.axis.y.tick) && _.isObject(data.axis.y.tick.format)) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
@@ -1685,6 +1690,23 @@ function chartData(type, data, data2) {
   if(_.isObject(config.tooltip)) {
     config.tooltip.contents = undefined;
   }
+
+  // tooltips have full name even if labels are shortened
+  if (_.isObject(data.axis.x) && _.isObject(data.axis.x.categories)) {
+    var tooltips = []
+    for (var i = 0; i <  data.axis.x.categories.length; i++ ) {
+        tooltips.push(data.axis.x.categories[i]);
+        data.axis.x.categories[i] = ManageIQ.charts.formatters.string_truncate(data.axis.x.categories[i], {length:7});
+    }
+    
+    if(_.isObject(data.tooltip.format)){
+      data.tooltip.format.title =  function (x) { return tooltips[x]; }
+    }
+    else {
+      data.tooltip.format =  { title: function (x) { return tooltips[x]; }}
+    }
+  }
+
   return _.defaultsDeep({}, data, config, data2);
 }
 
