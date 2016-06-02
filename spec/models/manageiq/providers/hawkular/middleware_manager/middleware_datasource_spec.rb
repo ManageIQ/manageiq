@@ -1,6 +1,5 @@
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource do
   let(:ems_hawkular) do
-    # allow(MiqServer).to receive(:my_zone).and_return("default")
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
     FactoryGirl.create(:ems_hawkular,
@@ -14,9 +13,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
     FactoryGirl.create(:hawkular_middleware_server,
                        :id                    => 1,
                        :name                  => 'Local',
-                       :feed                  => 'e6b8348f-e84a-4bbf-aa5d-327cd7960aa7',
-                       :ems_ref               => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
-                                                 '/f;e6b8348f-e84a-4bbf-aa5d-327cd7960aa7/r;Local~~',
+                       :feed                  => '27e06e8f-6e5d-45cd-8353-c1f9d4dfe991',
+                       :ems_ref               => '/t;hawkular'\
+                                                 '/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~',
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
@@ -24,9 +23,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   let(:ds) do
     FactoryGirl.create(:hawkular_middleware_datasource,
                        :name                  => 'KeycloakDS',
-                       :ems_ref               => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
-                                                 '/f;e6b8348f-e84a-4bbf-aa5d-327cd7960aa7/r;Local~~'\
-                                                 '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DKeycloakDS',
+                       :ems_ref               => '/t;hawkular'\
+                                                 '/f;27e06e8f-6e5d-45cd-8353-c1f9d4dfe991/r;Local~~'\
+                                                 '/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS',
                        :ext_management_system => ems_hawkular,
                        :middleware_server     => eap,
                        :properties            => {
@@ -38,8 +37,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 6, 1, 13, 0, 0, "+02:00")
-    end_time = Time.new(2016, 6, 1, 23, 0, 0, "+02:00")
+    start_time = Time.new(2016, 6, 22, 10, 0, 0, "+02:00")
+    end_time = Time.new(2016, 6, 22, 11, 0, 0, "+02:00")
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
@@ -52,8 +51,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource 
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 6, 1, 13, 0, 0, "+02:00")
-    end_time = Time.new(2016, 6, 1, 23, 0, 0, "+02:00")
+    start_time = Time.new(2016, 6, 22, 10, 0, 0, "+02:00")
+    end_time = Time.new(2016, 6, 22, 11, 0, 0, "+02:00")
     interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
