@@ -626,7 +626,7 @@ class MiqServer < ApplicationRecord
   end
 
   def server_timezone
-    get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+    @timezone ||= get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
   end
 
   def tenant_identity
