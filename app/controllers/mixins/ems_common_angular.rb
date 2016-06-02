@@ -358,6 +358,8 @@ module Mixins
 
       if ems.kind_of?(ManageIQ::Providers::ContainerManager)
         ems.hostname = hostname
+        hawkular_hostname = hostname if hawkular_hostname.blank?
+
         default_endpoint = {:role => :default, :hostname => hostname, :port => port}
         hawkular_endpoint = {:role => :hawkular, :hostname => hawkular_hostname, :port => hawkular_api_port}
       end
