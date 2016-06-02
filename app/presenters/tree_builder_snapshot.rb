@@ -1,3 +1,0 @@
-class TreeBuilderSnapshot < TreeBuilder
-
-end
