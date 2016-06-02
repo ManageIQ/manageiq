@@ -6,15 +6,16 @@
     %label.col-md-2.control-label{"for" => "#{prefix}_hostname"}
       = _('Hostname (or IPv4 or IPv6 address)')
     .col-md-8
-      %input.form-control{"type"          => "text",
-                          "id"            => "#{prefix}_hostname",
-                          "name"          => "#{prefix}_hostname",
-                          "ng-model"      => "#{ng_model}.#{prefix}_hostname",
-                          "maxlength"     => "#{MAX_NAME_LEN}",
-                          "required"      => defined?(hostname_not_required) ? false : true,
-                          "ng-trim"       => false,
-                          "detect-spaces" => "",
-                          "checkchange"   => ""}
+      %input.form-control{"type"                    => "text",
+                          "id"                      => "#{prefix}_hostname",
+                          "name"                    => "#{prefix}_hostname",
+                          "ng-model"                => "#{ng_model}.#{prefix}_hostname",
+                          "maxlength"               => "#{MAX_NAME_LEN}",
+                          "required"                => defined?(hostname_not_required) ? false : true,
+                          "ng-trim"                 => false,
+                          "detect-spaces"           => "",
+                          "checkchange"             => "",
+                          "reset-validation-status" => "#{prefix}_auth_status"}
       %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
         = _("Required")
       %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.detectedSpaces"}
@@ -29,15 +30,16 @@
     %label.col-md-2.control-label{"for" => "#{prefix}_api_port"}
       = _('API Port')
     .col-md-8
-      %input.form-control{"type"          => "text",
-                          "id"            => "#{prefix}_api_port",
-                          "name"          => "#{prefix}_api_port",
-                          "ng-model"      => "#{ng_model}.#{prefix}_api_port",
-                          "maxlength"     => 15,
-                          "required"      => defined?(apiport_not_required) ? false : true,
-                          "checkchange"   => "",
-                          "ng-trim"       => false,
-                          "detect-spaces" => ""}
+      %input.form-control{"type"                    => "text",
+                          "id"                      => "#{prefix}_api_port",
+                          "name"                    => "#{prefix}_api_port",
+                          "ng-model"                => "#{ng_model}.#{prefix}_api_port",
+                          "maxlength"               => 15,
+                          "required"                => defined?(apiport_not_required) ? false : true,
+                          "checkchange"             => "",
+                          "ng-trim"                 => false,
+                          "detect-spaces"           => "",
+                          "reset-validation-status" => "#{prefix}_auth_status"}
       %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.required"}
         = _("Required")
       %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.detectedSpaces"}
@@ -56,7 +58,8 @@
                        "checkchange"                 => "",
                        "required"                    => defined?(security_protocol_not_required) ? false : true,
                        "ng-change"                   => "openstackSecurityProtocolChanged()",
-                       "selectpicker-for-select-tag" => "")
+                       "selectpicker-for-select-tag" => "",
+                       "reset-validation-status"     => "#{prefix}_auth_status")
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
       = select_tag("#{prefix}_security_protocol",
                        options_for_select([["<#{_('Choose')}>", nil]] + @scvmm_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
@@ -64,7 +67,8 @@
                        "checkchange"                 => "",
                        "required"                    => "",
                        "ng-change"                   => "scvmmSecurityProtocolChanged()",
-                       "selectpicker-for-select-tag" => "")
+                       "selectpicker-for-select-tag" => "",
+                       "reset-validation-status"     => "#{prefix}_auth_status")
 .form-group{"ng-class" => "{'has-error': angularForm.realm.$invalid}",
             "ng-if" => "emsCommonModel.emstype == 'scvmm' && emsCommonModel.default_security_protocol == 'kerberos'"}
   %label.col-md-2.control-label{"for" => "realm"}
