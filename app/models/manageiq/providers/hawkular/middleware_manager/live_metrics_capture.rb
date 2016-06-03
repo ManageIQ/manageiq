@@ -12,7 +12,7 @@ module ManageIQ::Providers
       @avail = @ems.metrics_client.avail
     end
 
-    def metrics_available
+    def fetch_metrics_available
       resource = MetricsResource.new
       resource.id = @target.nativeid
       resource.feed = extract_feed(@target.ems_ref)
