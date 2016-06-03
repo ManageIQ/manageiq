@@ -999,13 +999,13 @@ class MiqExpression
     when "string", "text", "boolean", nil
       val = "" if val.nil? # treat nil value as empty string
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : val.to_s.inspect
+      return val.to_s.inspect
     when "date"
       return "nil" if val.blank? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "\'#{val}\'.to_date"
+      return "\'#{val}\'.to_date"
     when "datetime"
       return "nil" if val.blank? # treat nil value as empty string
-      return mode == :sql ? ActiveRecord::Base.connection.quote(val.iso8601) : "\'#{val.iso8601}\'.to_time(:utc)"
+      return "\'#{val.iso8601}\'.to_time(:utc)"
     when "integer", "decimal", "fixnum"
       return val.to_s.to_i_with_method
     when "float"
