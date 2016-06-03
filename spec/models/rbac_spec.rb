@@ -985,7 +985,7 @@ describe Rbac do
                                                 :miq_group      => group,
                                                 :results_format => :objects)
         expect(results.length).to eq(2)
-        expect(attrs[:total_count]).to eq(3)
+        expect(attrs[:total_count]).to eq(2)
       end
     end
 
