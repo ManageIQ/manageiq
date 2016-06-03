@@ -17,7 +17,7 @@ module ManageIQ::Providers
       resource.id = @target.nativeid
       resource.feed = extract_feed(@target.ems_ref)
       resource.path = @target.ems_ref
-      @ems.metrics_resource(resource.path).collect do |metric|
+      metrics_available = @ems.metrics_resource(resource.path).collect do |metric|
         next unless @target.class.supported_metrics[metric.name]
         {
           :id   => metric.id,
@@ -26,6 +26,25 @@ module ManageIQ::Providers
           :unit => metric.unit
         }
       end.compact
+      if @target.class.included_children
+        fetch_children_metrics(resource, metrics_available)
+      end
+      metrics_available
+    end
+
+    def fetch_children_metrics(resource, metrics_available)
+      children = @ems.child_resources(resource.path)
+      children.select { |child| @target.class.included_children.include?(child.name) }.each do |child|
+        @ems.metrics_resource(child.path).select { |metric| @target.class.supported_metrics[metric.name] }.each do |metric|
+          metrics_available << {
+            :id   => metric.id,
+            :name => @target.class.supported_metrics[metric.name],
+            :type => metric.type,
+            :unit => metric.unit
+          }
+        end
+      end
+      metrics_available
     end
 
     def collect_live_metric(metric, start_time, end_time, interval)

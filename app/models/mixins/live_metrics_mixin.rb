@@ -44,13 +44,23 @@ module LiveMetricsMixin
   end
 
   module ClassMethods
-    def supported_metrics
-      @supported_metrics ||= load_supported_metrics
+    def included_children
+      @live_metrics_config ||= load_live_metrics_config
+      @live_metrics_config['included_children']
     end
 
-    def load_supported_metrics
+    def supported_metrics
+      @live_metrics_config ||= load_live_metrics_config
+      @live_metrics_config['supported_metrics']
+    end
+
+    def load_live_metrics_config
       live_metrics_file = File.join(LIVE_METRICS_DIR, "#{name.demodulize.underscore}.yaml")
-      File.exist?(live_metrics_file) ? YAML.load_file(live_metrics_file).reduce({}, :merge) : {}
+      live_metrics_config = File.exist?(live_metrics_file) ? YAML.load_file(live_metrics_file) : {}
+      if live_metrics_config['supported_metrics']
+        live_metrics_config['supported_metrics'] = live_metrics_config['supported_metrics'].reduce({}, :merge)
+      end
+      live_metrics_config
     end
   end
 end
