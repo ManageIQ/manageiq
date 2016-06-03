@@ -92,4 +92,26 @@ namespace :gettext do
       end
     end
   end
+
+  desc "Extract human locale names from translation catalogs and store them in a yaml file"
+  task :extract_locale_names do
+    require 'yaml/store'
+    require Rails.root.join("lib/vmdb/fast_gettext_helper")
+
+    Vmdb::FastGettextHelper.register_locales
+
+    locale_hash = {}
+    FastGettext.available_locales.each do |locale|
+      FastGettext.locale = locale
+      # TRANSLATORS: Provide locale name in native language (e.g. English, Deutsch or Português)
+      human_locale = _("locale_name")
+      human_locale = locale if human_locale == "locale_name"
+      locale_hash[locale] = human_locale
+    end
+
+    store = YAML::Store.new("config/human_locale_names.yaml")
+    store.transaction do
+      store['human_locale_names'] = locale_hash
+    end
+  end
 end
