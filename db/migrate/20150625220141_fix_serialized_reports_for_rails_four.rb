@@ -2,7 +2,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   module Serializer
     YAML_ATTRS = [:table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                   :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
-                  :report_run_time, :chart, :reserved]
+                  :report_run_time, :chart, :reserved].to_set
 
     def serialize_report_to_hash(val, migration)
       if val.include?("!ruby/object:MiqReport")
