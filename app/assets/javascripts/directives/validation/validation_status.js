@@ -4,7 +4,7 @@ ManageIQ.angular.app.directive('validationStatus', function() {
     link: function (scope, elem, attrs, ctrl) {
       ctrl.$validators.validationRequired = function (modelValue, viewValue) {
         if (angular.isDefined(viewValue) && viewValue === true) {
-          scope.postValidationModelRegistry();
+          scope.postValidationModelRegistry(attrs.prefix);
           return true;
         }
         return false;

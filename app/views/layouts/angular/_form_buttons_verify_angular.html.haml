@@ -29,6 +29,7 @@
                             "id"                => "#{valtype}_auth_status",
                             "name"              => "#{valtype}_auth_status",
                             "ng-model"          => "#{ng_model}.#{valtype}_auth_status",
+                            "prefix"            => "#{valtype}",
                             "validation-status" => "",
                             "ng-show"           => false}
         %span.help-block{"ng-if" => "angularForm.#{valtype}_auth_status.$error.validationRequired"}

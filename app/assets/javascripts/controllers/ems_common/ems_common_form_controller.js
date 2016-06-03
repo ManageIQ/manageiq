@@ -157,6 +157,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.afterGet  = true;
         $scope.modelCopy = angular.copy( $scope.emsCommonModel );
 
+        $scope.populatePostValidationModel();
+
         miqService.sparkleOff();
       });
     }
@@ -307,36 +309,73 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     }
   };
 
-  $scope.postValidationModelRegistry = function() {
-    $scope.postValidationModel = {
-      default_hostname:          $scope.emsCommonModel.default_hostname,
-      amqp_hostname:             $scope.emsCommonModel.amqp_hostname,
-      hawkular_hostname:         $scope.emsCommonModel.hawkular_hostname,
-      metrics_hostname:          $scope.emsCommonModel.metrics_hostname,
-      default_api_port:          $scope.emsCommonModel.default_api_port,
-      amqp_api_port:             $scope.emsCommonModel.amqp_api_port,
-      hawkular_api_port:         $scope.emsCommonModel.hawkular_api_port,
-      metrics_port:              $scope.emsCommonModel.metrics_port,
-      default_security_protocol: $scope.emsCommonModel.default_security_protocol,
-      amqp_security_protocol:    $scope.emsCommonModel.amqp_security_protocol,
-      realm:                     $scope.emsCommonModel.realm,
-      default_userid:            $scope.emsCommonModel.default_userid,
-      default_password:          $scope.emsCommonModel.default_password,
-      default_verify:            $scope.emsCommonModel.default_verify,
-      amqp_userid:               $scope.emsCommonModel.amqp_userid,
-      amqp_password:             $scope.emsCommonModel.amqp_password,
-      amqp_verify:               $scope.emsCommonModel.amqp_verify,
-      metrics_userid:            $scope.emsCommonModel.metrics_userid,
-      metrics_password:          $scope.emsCommonModel.metrics_password,
-      metrics_verify:            $scope.emsCommonModel.metrics_verify,
-      ssh_keypair_userid:        $scope.emsCommonModel.ssh_keypair_userid,
-      ssh_keypair_password:      $scope.emsCommonModel.ssh_keypair_password,
-      bearer_userid:             $scope.emsCommonModel.bearer_userid,
-      bearer_password:           $scope.emsCommonModel.bearer_password,
-      bearer_verify:             $scope.emsCommonModel.bearer_verify,
-      service_account:           $scope.emsCommonModel.service_account,
-      azure_tenant_id:           $scope.emsCommonModel.azure_tenant_id
-    };
+  $scope.populatePostValidationModel = function() {
+    if ($scope.emsCommonModel.default_auth_status === true) {
+      $scope.postValidationModelRegistry("default");
+    }
+    if ($scope.emsCommonModel.amqp_auth_status === true) {
+      $scope.postValidationModelRegistry("amqp");
+    }
+    if ($scope.emsCommonModel.service_account_auth_status === true) {
+      $scope.postValidationModelRegistry("service_account");
+    }
+
+  };
+
+  $scope.postValidationModelRegistry = function(prefix) {
+    if (!angular.isDefined($scope.postValidationModel)) {
+      $scope.postValidationModel = {default: {}, amqp: {}}
+    }
+    if (prefix === "default") {
+      $scope.postValidationModel.default = {
+        default_hostname:          $scope.emsCommonModel.default_hostname,
+        default_api_port:          $scope.emsCommonModel.default_api_port,
+        default_security_protocol: $scope.emsCommonModel.default_security_protocol,
+        default_userid:            $scope.emsCommonModel.default_userid,
+        default_password:          $scope.emsCommonModel.default_password,
+        default_verify:            $scope.emsCommonModel.default_verify,
+        realm:                     $scope.emsCommonModel.realm,
+        azure_tenant_id:           $scope.emsCommonModel.azure_tenant_id
+      };
+    } else if (prefix === "amqp") {
+      $scope.postValidationModel.amqp = {
+        amqp_hostname:             $scope.emsCommonModel.amqp_hostname,
+        amqp_api_port:             $scope.emsCommonModel.amqp_api_port,
+        amqp_security_protocol:    $scope.emsCommonModel.amqp_security_protocol,
+        amqp_userid:               $scope.emsCommonModel.amqp_userid,
+        amqp_password:             $scope.emsCommonModel.amqp_password,
+        amqp_verify:               $scope.emsCommonModel.amqp_verify,
+      };
+    } else if (prefix === "metrics") {
+      var metricsValidationModel = {
+        metrics_hostname:          $scope.emsCommonModel.metrics_hostname,
+        metrics_port:              $scope.emsCommonModel.metrics_port,
+        metrics_userid:            $scope.emsCommonModel.metrics_userid,
+        metrics_password:          $scope.emsCommonModel.metrics_password,
+        metrics_verify:            $scope.emsCommonModel.metrics_verify,
+      };
+      $scope.postValidationModel['metrics'] = metricsValidationModel;
+    } else if (prefix === "ssh_keypair") {
+      $scope.postValidationModel['ssh_keypair'] = {
+        ssh_keypair_userid:        $scope.emsCommonModel.ssh_keypair_userid,
+        ssh_keypair_password:      $scope.emsCommonModel.ssh_keypair_password,
+      }
+    } else if (prefix === "bearer") {
+      $scope.postValidationModel['bearer'] = {
+        bearer_userid:             $scope.emsCommonModel.bearer_userid,
+        bearer_password:           $scope.emsCommonModel.bearer_password,
+        bearer_verify:             $scope.emsCommonModel.bearer_verify,
+      }
+    } else if (prefix === "service_account") {
+      $scope.postValidationModel['service_account'] = {
+        service_account:           $scope.emsCommonModel.service_account
+      }
+    } else if (prefix === "hawkular") {
+      $scope.postValidationModel['hawkular'] = {
+        hawkular_hostname:         $scope.emsCommonModel.hawkular_hostname,
+        hawkular_api_port:         $scope.emsCommonModel.hawkular_api_port,
+      }
+    }
   };
 
   $scope.validateClicked = function($event, authType, url, formSubmit) {
