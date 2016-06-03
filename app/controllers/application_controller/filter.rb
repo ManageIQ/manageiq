@@ -1625,7 +1625,7 @@ module ApplicationController::Filter
     @settings[:default_search] = current_user.settings[:default_search]  # Get the user's default search settings again, incase default search was deleted
     @default_search = MiqSearch.find(@settings[:default_search][db.to_sym].to_s) if @settings[:default_search] && @settings[:default_search][db.to_sym] && @settings[:default_search][db.to_sym] != 0 && MiqSearch.exists?(@settings[:default_search][db.to_sym])
     temp = MiqSearch.new
-    temp.description = "ALL"
+    temp.description = _("ALL")
     temp.id = 0
     @def_searches = MiqSearch.where(:db => db).visible_to_all.sort_by { |s| s.description.downcase }
     @def_searches = @def_searches.unshift(temp) unless @def_searches.empty?
