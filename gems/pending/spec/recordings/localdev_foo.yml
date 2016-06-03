@@ -1,0 +1,18 @@
+---
+RawBlockIO-size-64cdf7b9a61ace8ccad33f55d29df539: !ruby/object:Camcorder::Recording
+  value: 512
+  behavior: :return
+RawBlockIO-seek-31a74dfd79b390b01de0ade4cc56b17f: !ruby/object:Camcorder::Recording
+  value: 440
+  behavior: :return
+RawBlockIO-read-d874bdf9a2890edef0296d6a831b1a85: !ruby/object:Camcorder::Recording
+  value: !binary |-
+    AAAAAA==
+  behavior: :return
+RawBlockIO-seek-71e6e8fdd573cafdac151a9d340985c1: !ruby/object:Camcorder::Recording
+  value: 0
+  behavior: :return
+RawBlockIO-read-aedbdb9eddfb9f3a8e494712d51593b4: !ruby/object:Camcorder::Recording
+  value: !binary |-
+    AAAAAAAAAAAAAA==
+  behavior: :return
