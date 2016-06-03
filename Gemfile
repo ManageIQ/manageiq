@@ -65,6 +65,7 @@ gem "secure_headers",                 "~>3.0.0"
 # Needed by the REST API
 gem "gettext_i18n_rails",             "~>1.4.0"
 gem "gettext_i18n_rails_js",          "~>1.0.3"
+gem "fast_gettext",                   "~>1.1.0"
 gem "jbuilder",                       "~>2.3.1"
 gem "paperclip",                      "~>4.3.0"
 gem "rails-i18n",                     "~>5.x"
