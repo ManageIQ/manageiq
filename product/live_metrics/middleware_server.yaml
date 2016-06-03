@@ -35,3 +35,4 @@ supported_metrics:
   - Transactions Metrics~Number of Timed Out Transactions: mw_tx_timeout
   - Transactions Metrics~Number of Nested Transactions: mw_tx_nested
   - Transactions Metrics~Number of Heuristics: mw_tx_heuristics
+

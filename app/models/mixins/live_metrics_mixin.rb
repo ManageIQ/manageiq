@@ -23,7 +23,7 @@ module LiveMetricsMixin
     end
 
     def first_and_last_capture(interval_name = "realtime")
-      firsts, lasts = metrics_available.collect do |metric| #
+      firsts, lasts = metrics_available.collect do |metric|
         metrics_capture.first_and_last_capture(metric)
       end.transpose
       adjust_timestamps(firsts, lasts, interval_name)

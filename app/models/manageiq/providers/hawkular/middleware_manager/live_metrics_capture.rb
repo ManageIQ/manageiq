@@ -2,49 +2,37 @@ module ManageIQ::Providers
   class Hawkular::MiddlewareManager::LiveMetricsCapture
     class MetricValidationError < RuntimeError; end
 
-    MetricsResource = Struct.new(:id, :feed, :path)
-
     def initialize(target)
       @target = target
       @ems = @target.ext_management_system
       @gauges = @ems.metrics_client.gauges
       @counters = @ems.metrics_client.counters
       @avail = @ems.metrics_client.avail
+      @included_children = @target.class.included_children
+      @supported_metrics = @target.class.supported_metrics
     end
 
     def fetch_metrics_available
-      resource = MetricsResource.new
-      resource.id = @target.nativeid
-      resource.feed = extract_feed(@target.ems_ref)
-      resource.path = @target.ems_ref
-      metrics_available = @ems.metrics_resource(resource.path).collect do |metric|
-        next unless @target.class.supported_metrics[metric.name]
-        {
-          :id   => metric.id,
-          :name => @target.class.supported_metrics[metric.name],
-          :type => metric.type,
-          :unit => metric.unit
-        }
+      metrics_available = @ems.metrics_resource(@target.ems_ref).collect do |metric|
+        next unless @supported_metrics[metric.name]
+        parse_metric(metric)
       end.compact
-      if @target.class.included_children
-        fetch_children_metrics(resource, metrics_available)
+      fetch_child_metrics(@target.ems_ref, metrics_available) if @included_children
+      metrics_available
+    end
+
+    def fetch_child_metrics(resource_path, metrics_available)
+      children = @ems.child_resources(resource_path)
+      children.select { |child| @included_children.include?(child.name) }.each do |child|
+        @ems.metrics_resource(child.path).select { |metric| @supported_metrics[metric.name] }.each do |metric|
+          metrics_available << parse_metric(metric)
+        end
       end
       metrics_available
     end
 
-    def fetch_children_metrics(resource, metrics_available)
-      children = @ems.child_resources(resource.path)
-      children.select { |child| @target.class.included_children.include?(child.name) }.each do |child|
-        @ems.metrics_resource(child.path).select { |metric| @target.class.supported_metrics[metric.name] }.each do |metric|
-          metrics_available << {
-            :id   => metric.id,
-            :name => @target.class.supported_metrics[metric.name],
-            :type => metric.type,
-            :unit => metric.unit
-          }
-        end
-      end
-      metrics_available
+    def parse_metric(metric)
+      {:id => metric.id, :name => @supported_metrics[metric.name], :type => metric.type, :unit => metric.unit}
     end
 
     def collect_live_metric(metric, start_time, end_time, interval)

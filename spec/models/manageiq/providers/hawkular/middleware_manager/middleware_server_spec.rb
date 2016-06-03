@@ -49,9 +49,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 6, 23, 9, 0, 0, "+02:00")    # Fixed time for testing
-    end_time = Time.new(2016, 6, 23, 10, 0, 0, "+02:00")      # Fixed time for testing
-    interval = 3600                                           # Interval in seconds
+    start_time = Time.new(2016, 6, 23, 9, 0, 0, "+02:00")
+    end_time = Time.new(2016, 6, 23, 10, 0, 0, "+02:00")
+    interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true, :record => :new_episodes) do
@@ -63,9 +63,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 6, 23, 9, 0, 0, "+02:00")    # Fixed time for testing
-    end_time = Time.new(2016, 6, 23, 10, 0, 0, "+02:00")      # Fixed time for testing
-    interval = 3600                                           # Interval in seconds
+    start_time = Time.new(2016, 6, 23, 9, 0, 0, "+02:00")
+    end_time = Time.new(2016, 6, 23, 10, 0, 0, "+02:00")
+    interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
@@ -100,7 +100,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
       metrics_available = eap.metrics_available
-      metrics_available.each { |metric| expect(expected_metrics.has_value?(metric[:name])).to be(true) }
+      metrics_available.each { |metric| expect(expected_metrics.value?(metric[:name])).to be(true) }
     end
   end
 end
