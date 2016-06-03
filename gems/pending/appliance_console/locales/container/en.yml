@@ -1,0 +1,24 @@
+---
+en:
+  product:
+    name: ManageIQ
+  advanced_settings:
+    menu_order:
+    - timezone
+    - dbrestore
+    - db_config
+    - key_gen
+    - evmstop
+    - evmstart
+    - shutdown
+    - summary
+    - quit
+    timezone: Set Timezone
+    dbrestore: Restore Database From Backup
+    db_config: Configure Database
+    evmstop: Stop EVM Server Processes
+    key_gen: Generate Custom Encryption Key
+    evmstart: Start EVM Server Processes
+    shutdown: Shut Down Appliance
+    summary: Summary Information
+    quit: Quit
