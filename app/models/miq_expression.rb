@@ -1011,14 +1011,14 @@ class MiqExpression
       return val.to_s.to_f_with_method
     when "numeric_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.collect do |v|
+      v_arr = val.to_miq_a.flat_map do |v|
         v = eval(v) rescue nil if v.kind_of?(String)
         v.kind_of?(Range) ? v.to_a : v
-      end.flatten.compact.uniq.sort
+      end.compact.uniq.sort
       return "[#{v_arr.join(",")}]"
     when "string_set"
       val = val.split(",") if val.kind_of?(String)
-      v_arr = val.to_miq_a.collect { |v| "'#{v.to_s.strip}'" }.flatten.uniq.sort
+      v_arr = val.to_miq_a.flat_map { |v| "'#{v.to_s.strip}'" }.uniq.sort
       return "[#{v_arr.join(",")}]"
     when "raw"
       return val
