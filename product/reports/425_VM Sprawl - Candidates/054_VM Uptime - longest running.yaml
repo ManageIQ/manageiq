@@ -26,10 +26,10 @@ col_order:
 - vm.boot_time
 - vm.last_scan_on
 - vm.power_state
-- managed.environment
-- managed.function
-- managed.lob
-- managed.location
+- vm.managed.environment
+- vm.managed.function
+- vm.managed.lob
+- vm.managed.location
 - timestamp
 timeline: 
 id: 186

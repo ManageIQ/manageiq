@@ -110,7 +110,7 @@ rpt_group: Custom
 priority: 
 col_order: 
 - ems_cluster.name
-- managed.folder_path_yellow
+- vm.managed.folder_path_yellow
 - resource_name
 - vm.v_annotation
 - vm.cpu_total_cores
@@ -157,7 +157,7 @@ col_order:
 - vm.disk_6_size
 - vm.disk_6_size_on_disk
 - vm.disk_6_used_percent_of_provisioned
-- managed.department
+- vm.managed.department
 - host.name
 timeline: 
 file_mtime:
@@ -285,12 +285,12 @@ cols:
 template_type: report
 group: c
 sortby: 
-- managed.department
+- vm.managed.department
 - resource_name
 rpt_options: 
   :pivot: 
     :group_cols: 
-    - managed.department
+    - vm.managed.department
     - resource_name
 headers: 
 - Cluster

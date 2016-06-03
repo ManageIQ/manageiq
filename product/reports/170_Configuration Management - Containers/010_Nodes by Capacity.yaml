@@ -15,8 +15,8 @@ include:
         - memory_mb
 col_order:
 - name
-- hardware.cpu_total_cores
-- hardware.memory_mb
+- computer_system.hardware.cpu_total_cores
+- computer_system.hardware.memory_mb
 headers:
 - Name
 - CPU Cores
@@ -24,8 +24,8 @@ headers:
 conditions:
 order: Descending
 sortby:
-- hardware.cpu_total_cores
-- hardware.memory_mb
+- computer_system.hardware.cpu_total_cores
+- computer_system.hardware.memory_mb
 group:
 graph:
 dims:
