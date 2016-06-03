@@ -187,7 +187,6 @@ module MiqReport::Generator
     custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
 
     includes = get_include_for_find(include)
-    where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
 
     time_profile.tz ||= tz if time_profile # Default time zone in profile to report time zone
     ext_options = {:tz => tz, :time_profile => time_profile}
@@ -214,11 +213,10 @@ module MiqReport::Generator
         results, self.extras[:interval]  = db_class.vms_by_category(performance)
         build_table(results, db, options)
       else
-        results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.find_and_group_by_tags(
-          :where_clause => where_clause,
+        results, self.extras[:group_by_tag_cols], self.extras[:group_by_tags] = db_class.group_by_tags(
+          db_class.find_entries(ext_options).where(where_clause).where(options[:where_clause]),
           :category     => performance[:group_by_category],
           :cat_model    => options[:cat_model],
-          :ext_options  => ext_options,
           :include      => includes
         )
         build_correlate_tag_cols
@@ -230,15 +228,15 @@ module MiqReport::Generator
       unless conditions.nil?
         conditions.preprocess_options = {:vim_performance_daily_adhoc => (time_profile && time_profile.rollup_daily_metrics)}
         exp_sql, exp_includes = conditions.to_sql
-        where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
         # only_cols += conditions.columns_for_sql # Add cols references in expression to ensure they are present for evaluation
       end
 
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset], tz)
       # TODO: add .select(only_cols)
       results = Metric::Helper.find_for_interval_name('daily', time_profile || tz, klass)
-                              .where(where_clause).where(:timestamp => time_range)
-                              .includes(includes).references(includes)
+                              .where(where_clause).where(exp_sql).where(options[:where_clause])
+                              .where(:timestamp => time_range)
+                              .includes(includes).includes(exp_includes || []).references(includes)
                               .limit(options[:limit])
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
@@ -252,10 +250,10 @@ module MiqReport::Generator
 
       # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
       exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
-      where_clause, includes = MiqExpression.merge_where_clauses_and_includes([where_clause, exp_sql], [includes, exp_includes])
 
       results = klass.with_interval_and_time_range(interval, time_range)
-                     .where(where_clause).includes(includes).limit(options[:limit])
+                     .where(where_clause).where(options[:where_clause]).where(exp_sql)
+                     .includes(includes).includes(exp_includes || []).limit(options[:limit])
 
       results = Rbac.filtered(results, :class        => db,
                                        :filter       => conditions,
@@ -272,6 +270,7 @@ module MiqReport::Generator
       targets = db_class.find_entries(ext_options) if targets.respond_to?(:find_entries)
       # TODO: add once only_cols is fixed
       # targets = targets.select(only_cols)
+      where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
 
       results, attrs = Rbac.search(
         options.merge(

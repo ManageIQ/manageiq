@@ -3,12 +3,17 @@ class VimPerformanceTag < MetricRollup
     true
   end
 
+  def self.find_entries(_ext_options = {})
+    # noop - just return default scope (will be chained from here)
+    self
+  end
+
   def self.find_and_group_by_tags(options)
-    raise _("no category provided") if options[:category].blank?
-    group_by_tags(where(options[:where_clause]), options)
+    group_by_tags(find_entries(options[:ext_options]).where(options[:where_clause]), options)
   end
 
   def self.group_by_tags(recs, options)
+    raise _("no category provided") if options[:category].blank?
     raise _("option :cat_model must have a value") unless options[:cat_model]
     cat_assoc = Object.const_get(options[:cat_model].to_s).table_name.to_sym
     tp = options.fetch_path(:ext_options, :time_profile)
