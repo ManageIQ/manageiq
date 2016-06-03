@@ -1391,6 +1391,7 @@ Vmdb::Application.routes.draw do
         guest_applications
         host_form_fields
         host_services
+        host_cloud_services
         index
         list
         new
@@ -1424,6 +1425,7 @@ Vmdb::Application.routes.draw do
         groups
         guest_applications
         host_services
+        host_cloud_services
         listnav_search_selected
         quick_search
         panel_control
@@ -2657,7 +2659,7 @@ Vmdb::Application.routes.draw do
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
   if Rails.env.development? && defined?(Rails::Server)
-    mount WebsocketServer.new => '/ws'
+    mount WebsocketServer.new(:logger => Logger.new(STDOUT)) => '/ws'
   end
   # rubocop:enable MultilineOperationIndentation
   # rubocop:enable AlignHash

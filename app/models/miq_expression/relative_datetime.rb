@@ -1,7 +1,7 @@
 class MiqExpression::RelativeDatetime
   def self.beginning_or_end_of_hour(ts, mode)
     ts_str = ts.iso8601
-    ts_str[14..18] = mode == "end" ? "59:59" : "00:00"
+    ts_str[14..18] = mode == "end" ? "59:59.999999" : "00:00"
     Time.parse(ts_str)
   end
 

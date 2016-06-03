@@ -150,7 +150,7 @@ class ReportController < ApplicationController
     x_node_set("root", :roles_tree) if params[:load_edit_err]
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
     get_node_info
-    @right_cell_text ||= _("All %{models}") % ui_lookup(:models => "MiqReport")
+    @right_cell_text ||= _("All %{reports}") % {:reports => ui_lookup(:models => "MiqReport")}
     @sb[:rep_tree_build_time] = Time.now.utc
     @sb[:active_tab] = "report_info"
     @right_cell_text.gsub!(/'/, "&apos;")      # Need to escape single quote in title to load in right cell
@@ -750,26 +750,26 @@ class ReportController < ApplicationController
         val = session[:node_selected].split('__')[0]
         if val == "b"
           skin_class        = "menueditor"
-          fieldset_title    = "Manage Accordions"
-          img_title_top     = "Move selected Accordion to top"
-          img_title_up      = "Move selected Accordion up"
-          img_title_down    = "Move selected Accordion down"
-          img_title_add     = "Add folder to selected Accordion"
-          img_title_delete  = "Delete selected Accordion and its contents"
-          img_title_bottom  = "Move selected Accordion to bottom"
-          img_title_commit  = "Commit Accordion management changes"
-          img_title_discard = "Discard Accordion management changes"
+          fieldset_title    = _("Manage Accordions")
+          img_title_top     = _("Move selected Accordion to top")
+          img_title_up      = _("Move selected Accordion up")
+          img_title_down    = _("Move selected Accordion down")
+          img_title_add     = _("Add folder to selected Accordion")
+          img_title_delete  = _("Delete selected Accordion and its contents")
+          img_title_bottom  = _("Move selected Accordion to bottom")
+          img_title_commit  = _("Commit Accordion management changes")
+          img_title_discard = _("Discard Accordion management changes")
         else
           skin_class        = "menueditor2"
-          fieldset_title    = "Manage Folders"
-          img_title_top     = "Move selected folder to top"
-          img_title_up      = "Move selected folder up"
-          img_title_down    = "Move selected folder down"
-          img_title_add     = "Add subfolder to selected folder"
-          img_title_delete  = "Delete selected folder and its contents"
-          img_title_bottom  = "Move selected folder to bottom"
-          img_title_commit  = "Commit folder management changes"
-          img_title_discard = "Discard folder management changes"
+          fieldset_title    = _("Manage Folders")
+          img_title_top     = _("Move selected folder to top")
+          img_title_up      = _("Move selected folder up")
+          img_title_down    = _("Move selected folder down")
+          img_title_add     = _("Add subfolder to selected folder")
+          img_title_delete  = _("Delete selected folder and its contents")
+          img_title_bottom  = _("Move selected folder to bottom")
+          img_title_commit  = _("Commit folder management changes")
+          img_title_discard = _("Discard folder management changes")
         end
         presenter.update(:main_div, r[:partial => partial])
         presenter[:element_updates][:menu1_legend] = {:legend => fieldset_title}

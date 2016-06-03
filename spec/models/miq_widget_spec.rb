@@ -65,12 +65,12 @@ describe MiqWidget do
       end
 
       it "admin user" do
-        @widget.queue_generate_content_for_users_or_group(@user1)
+        @widget.queue_generate_content_for_users_or_group(@user1.userid)
         expect(MiqQueue.exists?(@queue_conditions)).to be_truthy
       end
 
       it "array of users" do
-        @widget.queue_generate_content_for_users_or_group([@user1, @user2])
+        @widget.queue_generate_content_for_users_or_group([@user1.userid, @user2.userid])
         expect(MiqQueue.exists?(@queue_conditions)).to be_truthy
       end
 

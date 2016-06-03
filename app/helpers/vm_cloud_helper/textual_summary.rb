@@ -313,7 +313,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_processes
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
     h = {:label => _("Running Processes"), :image => "processes"}
     date = last_date(:processes)
     if date.nil?
@@ -329,7 +329,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_event_logs
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
     num = @record.operating_system.nil? ? 0 : @record.operating_system.number_of(:event_logs)
     h = {:label => _("Event Logs"), :image => "event_logs", :value => (num == 0 ? _("Not Available") : _("Available"))}
     if num > 0
@@ -341,7 +341,7 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_vmsafe_enable
-    return nil if @record.vmsafe_enable || @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.vmsafe_enable || @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
     {:label => _("Enable"), :value => "false"}
   end
 
@@ -405,26 +405,26 @@ module VmCloudHelper::TextualSummary
   end
 
   def textual_boot_time
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
     date = @record.boot_time
     {:label => _("Last Boot Time"), :value => (date.nil? ? _("N/A") : format_timezone(date))}
   end
 
   def textual_state_changed_on
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
+    return nil if @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
     date = @record.state_changed_on
     {:label => _("State Changed On"), :value => (date.nil? ? _("N/A") : format_timezone(date))}
   end
 
   def textual_virtualization_type
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
-    v_type = @record.hardware.try(:virtualization_type)
+    v_type = @record.hardware.try!(:virtualization_type)
+    return nil if v_type.blank?
     {:label => _("Virtualization Type"), :value => v_type.to_s}
   end
 
   def textual_root_device_type
-    return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Vm)
-    rd_type = @record.hardware.try(:root_device_type)
+    rd_type = @record.hardware.try!(:root_device_type)
+    return nil if rd_type.blank?
     {:label => _("Root Device Type"), :value => rd_type.to_s}
   end
 end

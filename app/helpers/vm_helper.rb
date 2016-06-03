@@ -20,12 +20,12 @@ module VmHelper
   end
 
   def textual_cloud_network
-    return nil unless @record.kind_of?(ManageIQ::Providers::Amazon::CloudManager::Vm)
+    return nil unless @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
     {:label => _("Virtual Private Cloud"), :value => @record.cloud_network ? @record.cloud_network.name : _('None')}
   end
 
   def textual_cloud_subnet
-    return nil unless @record.kind_of?(ManageIQ::Providers::Amazon::CloudManager::Vm)
+    return nil unless @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
     {:label => _("Cloud Subnet"), :value => @record.cloud_subnet ? @record.cloud_subnet.name : _('None')}
   end
 

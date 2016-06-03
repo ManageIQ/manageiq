@@ -174,7 +174,7 @@ module QuadiconHelper
   end
 
   def partial_name_from_item(item)
-    partial_name = if %w(EmsCluster ResourcePool Repository Service ServiceTemplate Storage).include?(item.class.name)
+    partial_name = if %w(EmsCluster ResourcePool Repository Service ServiceTemplate Storage ServiceAnsibleTower ServiceTemplateAnsibleTower).include?(item.class.name)
                      item.class.name.underscore
                    elsif item.kind_of?(VmOrTemplate)
                      item.class.base_model.to_s.underscore

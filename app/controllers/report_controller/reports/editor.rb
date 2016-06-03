@@ -358,28 +358,28 @@ module ReportController::Reports::Editor
     req = "edit"
     if @edit[:new][:model] == TREND_MODEL
       @tabs = [
-        ["#{req}_1", "Columns"],
-        ["#{req}_3", "Filter"],
-        ["#{req}_7", "Preview"]
+        ["#{req}_1", _("Columns")],
+        ["#{req}_3", _("Filter")],
+        ["#{req}_7", _("Preview")]
       ]
     elsif @edit[:new][:model].to_s.starts_with?("Chargeback")
       @tabs = [
-        ["#{req}_1", "Columns"],
-        ["#{req}_2", "Formatting"],
-        ["#{req}_3", "Filter"],
-        ["#{req}_7", "Preview"]
+        ["#{req}_1", _("Columns")],
+        ["#{req}_2", _("Formatting")],
+        ["#{req}_3", _("Filter")],
+        ["#{req}_7", _("Preview")]
       ]
     else
       @tabs = [
-        ["#{req}_1", "Columns"],
-        ["#{req}_8", "Consolidation"],
-        ["#{req}_2", "Formatting"],
-        ["#{req}_9", "Styling"],
-        ["#{req}_3", "Filter"],
-        ["#{req}_4", "Summary"],
-        ["#{req}_5", "Charts"],
-        ["#{req}_6", "Timeline"],
-        ["#{req}_7", "Preview"]
+        ["#{req}_1", _("Columns")],
+        ["#{req}_8", _("Consolidation")],
+        ["#{req}_2", _("Formatting")],
+        ["#{req}_9", _("Styling")],
+        ["#{req}_3", _("Filter")],
+        ["#{req}_4", _("Summary")],
+        ["#{req}_5", _("Charts")],
+        ["#{req}_6", _("Timeline")],
+        ["#{req}_7", _("Preview")]
       ]
     end
     tab = @sb[:miq_tab].split("_")[1]           # Get the tab number of the active tab

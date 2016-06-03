@@ -1,0 +1,14 @@
+.flobj
+  %img{:src => image_path("#{size}/base-single.png")}
+- fname = item.picture ? item.picture.url_path : image_path("100/service_template.png")
+.flobj{:class => "e#{size}"}
+  - if !@embedded || @showlinks
+    = link_to(image_tag(fname, :width => size, :height => size, :title => h(item.name)),
+      {:action => 'x_show', :id => to_cid(item.id)},
+      "data-miq_sparkle_on"  => true,
+      "data-miq_sparkle_off" => true,
+      "data-method"          => :post,
+      :remote                => true)
+  - else
+    %a{:title => h(item.name)}
+      %img{:src => fname, :border => 0}

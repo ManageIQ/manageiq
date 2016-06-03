@@ -397,12 +397,10 @@ class ChargebackController < ApplicationController
     else
       @report_result_id = session[:report_result_id] = rr.id
       session[:report_result_runtime]  = rr.last_run_on
-      if rr.status.casecmp("finished") == 0
+      if MiqTask.state_finished(rr.miq_task_id)
         @report = rr.report_results
         session[:rpt_task_id] = nil
         if @report.blank?
-          add_flash(_("Saved Report \"%{name}\" not found, Schedule may have failed") %
-            {:name => format_timezone(rr.last_run_on, Time.zone, "gtl")}, :error)
           @saved_reports = cb_rpts_get_all_reps(rr.miq_report_id.to_s)
           rep = MiqReport.find_by_id(rr.miq_report_id)
           if x_active_tree == :cb_reports_tree
@@ -509,10 +507,6 @@ class ChargebackController < ApplicationController
                               .select("id, miq_report_id, name, last_run_on, report_source")
                               .order(:last_run_on)
 
-    @sb[:last_run_on] = {}
-    saved_reports.each do |s|
-      @sb[:last_run_on][s.last_run_on] = format_timezone(s.last_run_on, Time.zone, 'gtl') + "aa" if s.last_run_on
-    end
     @sb[:tree_typ] = "reports"
     @right_cell_text = _("%{model} \"%{name}\"") % {:model => "Reports", :name => miq_report.name}
     saved_reports

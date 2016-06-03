@@ -101,7 +101,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :enabled                  => true,
       :cpus                     => 1,
       :cpu_cores                => 1,
-      :memory                   => 613.megabytes.to_i,
+      :memory                   => 0.613.gigabytes.to_i,
       :supports_32_bit          => true,
       :supports_64_bit          => true,
       :supports_hvm             => false,
@@ -328,7 +328,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :bios                => nil,
       :annotation          => nil,
       :cpu_sockets         => 1,
-      :memory_mb           => 613,
+      :memory_mb           => 627,
       :disk_capacity       => 0, # TODO: Change to a flavor that has disks
       :bitness             => 64,
       :virtualization_type => "paravirtual"
@@ -407,7 +407,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
       :bios_location        => nil,
       :time_sync            => nil,
       :annotation           => nil,
-      :memory_mb            => 613,
+      :memory_mb            => 627,
       :host_id              => nil,
       :cpu_speed            => nil,
       :cpu_type             => nil,
