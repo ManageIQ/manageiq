@@ -15,6 +15,7 @@
                           "ng-trim"                 => false,
                           "detect-spaces"           => "",
                           "checkchange"             => "",
+                          "prefix"                  => "#{prefix}",
                           "reset-validation-status" => "#{prefix}_auth_status"}
       %span.help-block{"ng-show" => "angularForm.#{prefix}_hostname.$error.required"}
         = _("Required")
@@ -39,6 +40,7 @@
                           "checkchange"             => "",
                           "ng-trim"                 => false,
                           "detect-spaces"           => "",
+                          "prefix"                  => "#{prefix}",
                           "reset-validation-status" => "#{prefix}_auth_status"}
       %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.required"}
         = _("Required")
@@ -59,6 +61,7 @@
                        "required"                    => defined?(security_protocol_not_required) ? false : true,
                        "ng-change"                   => "openstackSecurityProtocolChanged()",
                        "selectpicker-for-select-tag" => "",
+                       "prefix"                      => "#{prefix}",
                        "reset-validation-status"     => "#{prefix}_auth_status")
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
       = select_tag("#{prefix}_security_protocol",
@@ -68,6 +71,7 @@
                        "required"                    => "",
                        "ng-change"                   => "scvmmSecurityProtocolChanged()",
                        "selectpicker-for-select-tag" => "",
+                       "prefix"                      => "#{prefix}",
                        "reset-validation-status"     => "#{prefix}_auth_status")
 .form-group{"ng-class" => "{'has-error': angularForm.realm.$invalid}",
             "ng-if" => "emsCommonModel.emstype == 'scvmm' && emsCommonModel.default_security_protocol == 'kerberos'"}
