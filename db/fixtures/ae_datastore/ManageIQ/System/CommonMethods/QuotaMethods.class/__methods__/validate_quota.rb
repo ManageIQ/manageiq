@@ -76,24 +76,21 @@ def check_quotas
 end
 
 def check_quota_results
-  message = ""
   unless @max_exceeded.empty?
     max_message = message_text(nil, "Request exceeds maximum allowed for the following: ", @max_exceeded)
-    message = set_exceeded_results(message, max_message, :quota_max_exceeded, "error")
+    @miq_request.set_message(set_exceeded_results(max_message, :quota_max_exceeded, "error"))
     return
   end
   unless @warn_exceeded.empty?
     warn_message = message_text('warn_', "Request exceeds warning limits for the following: ", @warn_exceeded)
-    message = set_exceeded_results(message, warn_message, :quota_warn_exceeded, "ok")
+    @miq_request.set_message(set_exceeded_results(warn_message, :quota_warn_exceeded, "ok"))
   end
-  @miq_request.set_message(message[0..250])
 end
 
-def set_exceeded_results(request_message, new_message, request_option, ae_result_text)
-  request_message += new_message
-  @miq_request.set_option(request_option, request_message)
+def set_exceeded_results(new_message, request_option, ae_result_text)
+  @miq_request.set_option(request_option, new_message)
   $evm.root['ae_result'] = ae_result_text
-  request_message
+  new_message
 end
 
 def message_text(type, msg, exceeded_hash)
