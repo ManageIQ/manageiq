@@ -994,7 +994,7 @@ class MiqExpression
     ret
   end
 
-  def self.quote(val, typ, mode = :ruby)
+  def self.quote(val, typ)
     case typ.to_s
     when "string", "text", "boolean", nil
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
