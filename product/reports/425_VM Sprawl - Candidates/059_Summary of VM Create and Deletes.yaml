@@ -29,8 +29,8 @@ col_order:
 - vm_name
 - vm.v_owning_cluster
 - host_name
-- managed.environment
-- managed.location
+- vm.managed.environment
+- vm.managed.location
 - timestamp
 - event_type
 - message

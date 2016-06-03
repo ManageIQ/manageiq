@@ -17,16 +17,16 @@ rpt_group: Custom
 priority: 
 col_order: 
 - name
-- processes.cpu_time
-- processes.percent_cpu
-- processes.created_on
-- processes.updated_on
-- processes.memory_size
-- processes.memory_usage
-- processes.name
-- processes.percent_memory
-- processes.pid
-- processes.priority
+- operating_system.processes.cpu_time
+- operating_system.processes.percent_cpu
+- operating_system.processes.created_on
+- operating_system.processes.updated_on
+- operating_system.processes.memory_size
+- operating_system.processes.memory_usage
+- operating_system.processes.name
+- operating_system.processes.percent_memory
+- operating_system.processes.pid
+- operating_system.processes.priority
 timeline: 
 id: 100
 file_mtime: 
@@ -57,7 +57,7 @@ template_type: report
 group: c
 sortby: 
 - name
-- processes.cpu_time
+- operating_system.processes.cpu_time
 headers: 
 - Name
 - Process Cpu Time

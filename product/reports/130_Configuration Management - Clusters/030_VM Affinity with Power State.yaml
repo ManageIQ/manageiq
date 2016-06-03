@@ -33,7 +33,7 @@ template_type: report
 group: c
 sortby: 
 - v_owning_cluster
-- power_state
+- vms.power_state
 headers: 
 - Cluster
 - Host Name

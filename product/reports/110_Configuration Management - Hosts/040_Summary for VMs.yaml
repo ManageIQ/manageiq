@@ -14,7 +14,7 @@ col_order:
 - ipaddress
 - vms.name
 - vms.os_image_name
-- managed.power_state
+- vms.managed.power_state
 - vms.v_owning_datacenter
 - vms.v_owning_folder
 - vms.v_owning_resource_pool
