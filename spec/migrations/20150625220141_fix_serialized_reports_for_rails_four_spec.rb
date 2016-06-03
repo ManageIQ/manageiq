@@ -5,6 +5,11 @@ describe FixSerializedReportsForRailsFour do
   let(:binary_blob_stub)   { migration_stub(:BinaryBlob) }
   let(:data_dir) { File.join(Rails.root, 'spec/migrations/data', File.basename(__FILE__, '.rb')) }
 
+#TODO: Needs specs for
+#  reentrance
+#  ignoring orphaned BBs
+#  actual verification of the data, not just expect(x).to be_a(Hash)
+
   migration_context :up do
     before do
       @raw_report   = File.read(File.join(data_dir, 'miq_report_obj.yaml'))

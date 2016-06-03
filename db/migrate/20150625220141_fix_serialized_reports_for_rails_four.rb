@@ -1,4 +1,9 @@
+require "parallel"
+
 class FixSerializedReportsForRailsFour < ActiveRecord::Migration
+  disable_ddl_transaction!
+  include MigrationHelper
+
   module Serializer
     YAML_ATTRS = [:table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                   :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
@@ -10,6 +15,8 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
       elsif val.starts_with?('--- !')
         migration.say "#{klass} id: #{id} does not contain an MiqReport object, skipping conversion", :subitem
         return
+      elsif val.starts_with?("---\n")
+        return # Record has already been converted
       else
         raise "unexpected format of report attribute encountered, '#{val.inspect.truncate(10000)}'"
       end
@@ -37,6 +44,8 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
         else
           YAML.dump(new_hash).sub(/---/, "--- !ruby/object:MiqReport")
         end
+      elsif val.include?("!ruby/object:MiqReport")
+        return # Record has already been converted
       else
         raise "unexpected format of report attribute encountered, '#{val.inspect.truncate(10000)}'"
       end
@@ -112,18 +121,58 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
 
   def up
     say_with_time("Converting MiqReportResult#report to a serialized hash") do
-      MiqReportResult.where('report IS NOT NULL').find_each do |rr|
-        val = Serializer.serialize_report_to_hash(rr.report, rr.class, rr.id, self)
-        rr.update_attribute(:report, val) if val
+      base_relation = MiqReportResult.where('report IS NOT NULL')
+
+      say_batch_started(base_relation.size)
+
+      base_relation.find_in_batches do |batch|
+        MiqReportResult.transaction do
+          batch.each do |rr|
+            val = Serializer.serialize_report_to_hash(rr.report, rr.class, rr.id, self)
+            rr.update_attribute(:report, val) if val
+          end
+        end
+        say_batch_processed(batch.size)
       end
     end
 
     say_with_time("Converting BinaryBlob report results to a serialized hash") do
-      BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').find_each do |bb|
-        if bb.resource
-          val = Serializer.serialize_report_to_hash(bb.binary, bb.class, bb.id, self)
-          bb.binary = val if val
+      # Pre-autoload classes that appear in reports
+      MiqExpression
+      Ruport
+
+      all_ids = BinaryBlob
+                  .where(:resource_type => 'MiqReportResult')
+                  .select(:id, :resource_id, :resource_type)
+                  .includes(:resource)
+                  .select(&:resource) # Ignore orphaned BinaryBlob records
+                  .map(&:id)
+
+      say_batch_started(all_ids.size)
+
+      all_ids.each_slice(1000) do |ids|
+        bbs = BinaryBlob.where(:id => ids)
+
+        # Extract the binaries from the AR objects so we don't have to pass
+        #   the AR objects through to Parallel
+        MiqPreloader.preload(bbs, :binary_blob_parts)
+        payload = bbs.map { |bb| [bb.binary, bb.class.name, bb.id] }
+
+        # Convert the binaries in parallel processes
+        converted = Parallel.map(payload) do |binary, klass, id|
+          close_pg_sockets_inherited_from_parent
+          Serializer.serialize_report_to_hash(binary, klass, id, self)
         end
+        reset_db_connections_after_parallel_forking
+
+        # Write the new binaries in a single transaction
+        BinaryBlob.transaction do
+          bbs.zip(converted).each do |bb, val|
+            bb.binary = val if val
+          end
+        end
+
+        say_batch_processed(ids.size)
       end
     end
   end
