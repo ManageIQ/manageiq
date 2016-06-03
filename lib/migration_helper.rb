@@ -13,6 +13,24 @@ module MigrationHelper
   end
 
   #
+  # Batching
+  #
+
+  def say_batch_started(count)
+    say "Processing #{count} rows", :subitem
+    @batch_total = count.to_f
+    @batch_count = 0
+  end
+
+  def say_batch_processed(count)
+    Thread.exclusive do
+      @batch_count += count
+      say "#{count} rows (#{"%.2f" % (@batch_count / @batch_total * 100)}% - #{@batch_count} total)", :subite
+      @batch_count
+    end
+  end
+
+  #
   # Triggers
   #
 
