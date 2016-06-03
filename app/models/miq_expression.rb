@@ -997,7 +997,6 @@ class MiqExpression
   def self.quote(val, typ, mode = :ruby)
     case typ.to_s
     when "string", "text", "boolean", nil
-      val = "" if val.nil? # treat nil value as empty string
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
       return val.to_s.inspect
     when "date"
