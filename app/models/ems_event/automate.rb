@@ -94,7 +94,6 @@ class EmsEvent
       _log.debug("Target object: [#{target.inspect}]")
       _log.debug("Policy source: [#{policy_src}]")
 
-      return if target.nil? || policy_event.nil? || policy_src.nil?
       [target, policy_event, policy_src]
     end
 
