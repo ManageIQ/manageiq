@@ -2,9 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 41 end 2016-05-30
+   
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+41+Ending+May+30%2C+2016%22+label%3Aenhancement)
+
+- REST API: API CLI moved to tools/rest_api.rb
+- Providers: Hawkular
+  - Test additions for topology
+  - Optimization and enhancement of event fetching
+
+### [Removed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+41+Ending+May+30%2C+2016%22+label%3A"technical debt")
+ 
+- REST API: gems/cfme_client removed
+
 ## Unreleased - as of Sprint 40 end 2016-05-09
 
-### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+9%2C+2016%22+label%3Aenhancement)
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+40+Ending+May+30%2C+2016%22+label%3Aenhancement)
 
 - REST API
   - Post Darga versioning updated to v2.3.0-pre
@@ -18,7 +31,7 @@ All notable changes to this project will be documented in this file.
      - Enabler for sharing entitlements   
    - MiqExpression Refactoring
 
-# Darga Release Candidate 1
+# Darga
 
 ## Added
 
@@ -42,6 +55,13 @@ All notable changes to this project will be documented in this file.
   - Added “networks” relationship to Hardware model
   - Support where method, find_by, and find_by!
   - Azure VM retirement modeling added
+  - Storage: Added storage_clusters association
+  - Openstack::NetworkManager::Network
+       - cloud_subnets
+       - network_routers
+       - public_networks
+  - Openstack Event compute.instance.power_on.end: added Policy event for vm_start
+
 - Services
   - Added instances/methods to generate emails for consolidated quota (Denied, Pending, Warning)
   - Enhanced Dialogs validation at build time to check tabs, and boxes in addition to fields.
@@ -54,6 +74,9 @@ All notable changes to this project will be documented in this file.
 - New service model Account
 - SSUI: Support dialogs with dynamic fields
 - Simulate UI support for state machine retries
+- New script to rebuild provision requests
+     -  Reconstructs the parameters of an existing provision request so that request can be resubmitted through a REST API or Automate call.
+
 
 ### Platform (Appliance)
 - Chargeback
@@ -84,6 +107,9 @@ All notable changes to this project will be documented in this file.
      - Migrations must have timestamp later than the last migration of previous version for correct column order
      - Specs added to validate schema
      - See [New Schema Specs for New Replication](http://talk.manageiq.org/t/new-schema-specs-for-new-replication/1404)
+  - Schema consistency checking - during configuration
+and before subscription is enabled
+  - Tool to fix column order mismatches
 - Appliance Console
   - Ability to reset database
   - Ability to create region in external database
@@ -91,6 +117,7 @@ All notable changes to this project will be documented in this file.
   - Updates for external authentication settings
 - Shopping cart model for ordering services
 - Consumption_administrator role with chargeback/reporting duties
+- Expresions: refactor SQL for all operators now build with Arel
 
 ### Providers
 - New provider types
@@ -110,13 +137,15 @@ All notable changes to this project will be documented in this file.
     - Persistent Volume Claims
     - Seed for policies, policy sets, policy contents and conditions 
     - Auto-tagging from kubernetes labels (backend only)
-    - MiqAction to annotate container images as non-secure at OpenShift
+    - MiqAction to annotate container images as non-secure at
+    - Multiple endpoint support OpenShift
 - Google Compute Engine 
   - Inventory
   - Power Operations
   - Provisioning
   - Events
   - Better OS identification for VMs
+  - Allow custom flavors
 - Hawkular 
   - First Middleware provider
   - Inventory and topology
@@ -124,10 +153,12 @@ All notable changes to this project will be documented in this file.
   - Capacity and Utilization collected live on demand without need for Cap and U workers
   - Links to provider and entity in event popups on Timelines
      - Ability to configure default views
-     - New Datasource entity (UI and Backend only)- Microsoft Azure
+     - New Datasource entity (UI and Backend only)
+- Microsoft Azure
   - Http proxy support
   - Provisioning
   - Subscriptions and Events
+  - Rely on resource location, metrics
 - Microsoft SCVMM
   - Inventory Performance improvements
   - Ability to delete VMs
@@ -151,6 +182,9 @@ All notable changes to this project will be documented in this file.
      - Support for Cinder and Glance v2
   - Enable / Disable cloud services
   - Make Keystone V3 Domain ID Configurable
+  - File upload for SSH keypair
+  - Add volumes during provisioning
+  - Evacuating instances
 - Continued work on Multi-endpoint modeling
 - Generic Targeted refresh process
 
@@ -184,13 +218,14 @@ All notable changes to this project will be documented in this file.
 - CRUD for Tenant quotas
 - Support for /api/settings
 - Added support for Shopping Carts
+- Automation Requests approve and deny actions
 
 ### SmartState
 - Microsoft SCVMM: new 
-  -  Virtual hard disks residing on Hyper-V servers
-  -  VHD, and newer VHDX disk formats
-  -  Snapshotted disks
-  -  Same filesystems as other providers
+  - Virtual hard disks residing on Hyper-V servers
+  - VHD, and newer VHDX disk formats
+  - Snapshotted disks
+  - Same filesystems as other providers
   - Support for network-mounted HyperV virtual disks and performance improvements (HyperDisk caching)
 - Microsoft Azure: new
   - Azure-armrest: added offset/length blob read support.
@@ -243,6 +278,9 @@ All notable changes to this project will be documented in this file.
 - New UI for replication configuration
 - OpenStack - Cloud Volumes Add/Delete/Update/Attach/Detach
 - Ansible Inventories/Configured Systems
+- Support for Ansible Tower Jobs
+- Support to add Service Dialog for a Job Template & display Surveys on summary screen
+- Support added for Evacuate Openstack VMs
    
 ## Removed
 
@@ -274,6 +312,8 @@ All notable changes to this project will be documented in this file.
   - SlickGrid replaced with Patternfly TreeGrid
   - Patternfly style updates to the Dashboard and other areas
   - Updates to support multiple provider endpoints
+  - Moved Services to top level Menus
+- Logo image on top left links to user's start page
 - VM Provisoning: Disabled Auto-Placement logic for create_provision_request and Rest API calls
 - Performance
   - Support for sorting Virtual Columns in the database
@@ -281,6 +321,8 @@ All notable changes to this project will be documented in this file.
   - RBAC: Ongoing effort to reduce the number SQL queries and quantity of data being transferred
   - Metrics Rollups bug fix
   - Performance capture failure on cloud platforms caused by orphan VMs
+  - Reduction in base size of workers
+  - Reduction in memory used by EmsRefresh
 - Platform 
   - Updated to Rails 5 (using Rails master branch until stable branch is cut)
   - Appliance OS updated to CentOS 7.2 build 1511
@@ -294,6 +336,9 @@ All notable changes to this project will be documented in this file.
      - Accessors for Host#groups and #inventory_id
      - Allow passing extra_vars to Job Template launch
      - Added JSON validation for extra_vars
+- Providers
+  - Memory issues during inventory collection
+  - Validating endpoints should not save data
 
 
 # Capablanca Release
