@@ -93,12 +93,15 @@ class FileDepotFtp < FileDepot
   private
 
   def create_directory_structure(directory_path)
-    Pathname.new(directory_path).descend do |path|
-      next if file_exists?(path)
-
-      _log.info("creating #{path}")
-      ftp.mkdir(path.to_s)
+    pwd = ftp.pwd
+    directory_path.to_s.split('/').each do |directory|
+      unless ftp.nlst.include?(directory)
+        _log.info("creating #{directory}")
+        ftp.mkdir(directory)
+      end
+      ftp.chdir(directory)
     end
+    ftp.chdir(pwd)
   end
 
   def upload(source, destination)
