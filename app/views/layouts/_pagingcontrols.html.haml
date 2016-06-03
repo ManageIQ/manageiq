@@ -17,9 +17,7 @@
         - if @gtl_type != "list" && @view
           .form-group{:style => "border-right: 0"}
             = _('Sorted by: ')
-            = select_tag("sort_choice",
-                            options_for_select(@view.headers),
-                            :class => "selectpicker dropup")
+            = select_tag("sort_choice", options_for_select(@view.headers.map { |x| [_(x), x] }), :class => "selectpicker dropup")
             :javascript
               miqSelectPickerEvent("sort_choice", "#{update_paging_url_parms(action_url, {}, true)}", {beforeSend: true, complete: true})
         - else
@@ -35,7 +33,7 @@
                 = _("Asc. by:")
               - else
                 = _("Desc. by:")
-            = @view.headers[@sortcol]
+            = _(@view.headers[@sortcol])
 
           .form-group.pull-right{:style => "border-right: 0"}
             %ul.pagination
