@@ -1,5 +1,4 @@
 require_relative '../bundler_setup'
-require 'azure-armrest'
 require 'vcr'
 
 if ENV["TRAVIS"]
@@ -35,18 +34,6 @@ RSpec.configure do |config|
   config.backtrace_exclusion_patterns -= [%r{/lib\d*/ruby/}, %r{/gems/}]
   config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
   config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
-end
-
-#
-# So tests can clear class-level caches between examples.
-# TODO: Add this to the azure-armrest gem.
-#
-class Azure::Armrest::ArmrestService
-  def self.clear_caches
-    @@providers_hash = {}
-    @@tokens         = {}
-    @@subscriptions  = {}
-  end
 end
 
 VCR.configure do |c|
