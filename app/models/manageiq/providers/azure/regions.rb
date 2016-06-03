@@ -2,6 +2,14 @@ module ManageIQ
   module Providers::Azure
     module Regions
       REGIONS = {
+        "australiaeast" => {
+          :name        => "australiaeast",
+          :description => _("Australia East"),
+        },
+        "australiasoutheast" => {
+          :name        => "australiasoutheast",
+          :description => _("Australia Southeast"),
+        },
         "brazilsouth" => {
           :name        => "brazilsouth",
           :description => _("Brazil South"),
@@ -13,6 +21,10 @@ module ManageIQ
         "canadaeast" => {
           :name        => "canadaeast",
           :description => _("Canada East"),
+        },
+        "centralindia" => {
+          :name        => "centralindia",
+          :description => _("Central India"),
         },
         "centralus" => {
           :name        => "centralus",
@@ -54,9 +66,25 @@ module ManageIQ
           :name        => "southeastasia",
           :description => _("South East Asia"),
         },
+        "southindia" => {
+          :name        => "southindia",
+          :description => _("South India"),
+        },
+        "usgoviowa" => {
+          :name        => "usgoviowa",
+          :description => _("US Gov Iowa"),
+        },
+        "usgovvirginia" => {
+          :name        => "usgovvirginia",
+          :description => _("US Gov Virginia"),
+        },
         "westeurope" => {
           :name        => "westeurope",
           :description => _("West Europe"),
+        },
+        "westindia" => {
+          :name        => "westindia",
+          :description => _("West India"),
         },
         "westus" => {
           :name        => "westus",
