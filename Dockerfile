@@ -98,7 +98,8 @@ RUN ${APPLIANCE_ROOT}/setup && \
     mkdir ${APP_ROOT}/log/apache && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
-    echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm
+    echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm && \
+    echo "export CONTAINER=true" >> /etc/default/evm
 
 ## Change workdir to application root, build/install gems
 WORKDIR ${APP_ROOT}
