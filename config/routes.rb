@@ -449,6 +449,7 @@ Vmdb::Application.routes.draw do
         timeprofile_copy
         timeprofile_edit
         timeprofile_new
+        time_profile_form_fields
       ),
       :post => %w(
         button

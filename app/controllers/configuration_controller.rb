@@ -523,6 +523,25 @@ class ConfigurationController < ApplicationController
     end
   end
 
+  def time_profile_form_fields
+    assert_privileges("tp_edit")
+    @timeprofile = TimeProfile.new if params[:id] == 'new'
+    @timeprofile = TimeProfile.find(params[:id]) if params[:id] != 'new'
+    
+    render :json => {:description             => @timeprofile.description,
+                     :admin_user              => admin_user?,
+                     :restricted_time_profile => @timeprofile.profile_type == "global" && !admin_user?,
+                     :profile_type            => @timeprofile.profile_type || "user",
+                     :profile_tz              => @timeprofile.tz.nil? ? "" : @timeprofile.tz,
+                     :rollup_daily            => !@timeprofile.rollup_daily_metrics.nil?,
+                     :all_days                => Array(@timeprofile.days).size == 7,
+                     :days                    => Array(@timeprofile.days).uniq.sort,
+                     :all_hours               => Array(@timeprofile.hours).size == 24,
+                     :hours                   => Array(@timeprofile.hours).uniq.sort,
+                     :miq_reports_count       => @timeprofile.miq_reports.count
+    }
+  end
+
   private ############################
 
   # copy single selected Object
