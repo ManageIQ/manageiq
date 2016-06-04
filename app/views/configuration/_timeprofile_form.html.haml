@@ -1,60 +1,159 @@
-- url = url_for(:action => "timeprofile_field_changed")
-#tab_div
-  = render :partial => "layouts/flash_msg"
-  - disabled = @tp_restricted
+%h3
+  = _('Time Profile Information')
+  %br
+  %br
 
-  %h3
-    = _('Time Profile Information')
-  .form-horizontal
-    .form-group
-      %label.col-md-2.control-label
+.form-horizontal{:id => "start_form_div", :style => "display:none"}
+  %form#form_div{:name           => "angularForm",
+                 'ng-controller' => "timeProfileFormController",
+                 'ng-show'       => "afterGet",
+                 :novalidate     => true}
+    = render :partial => "layouts/flash_msg"
+    .form-group{"ng-class" => "{'has-error': angularForm.description.$invalid}"}
+      %label.col-md-2.control-label{"for" => "description"}
         = _('Description')
       .col-md-8
-        = text_field_tag("description",
-                         @edit[:new][:description],
-                         :disabled          => disabled,
-                         :maxlength         => 50,
-                         "data-miq_focus"   => true,
-                         :class => "form-control",
-                         "data-miq_observe" => {:interval => ".5",
-                                                :url      => url}.to_json)
-    - if admin_user?
-      .form-group
-        %label.col-md-2.control-label
-          = _('Scope')
-        .col-md-8
-          = select_tag("profile_type",
-                       options_for_select([["#{_('All Users')}", "global"],
-                                           ["#{_('Current User')}", "user"]],
-                                          @edit[:new][:profile_type]),
-                       :disabled          => disabled,
-                       :class    => "selectpicker")
-
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("profile_type", "#{url}")
-  = render(:partial => "timeprofile_days_hours",
-           :locals  => {:disabled => disabled})
-  .form-horizontal
-    .form-group
+        %input.form-control{:type              => "text",
+                              :name            => "description",
+                              "id"             => "description",
+                              'ng-model'       => "timeProfileModel.description",
+                              'ng-disabled'    => "timeProfileModel.restricted_time_profile",
+                              :maxlength       => MAX_NAME_LEN,
+                              :required        => "",
+                              :checkchange     => true,
+                              "auto-focus"     => "",
+                              "start-form-div" => "start_form_div"}
+        %span.help-block{"ng-show" => "angularForm.description.$error.required"}
+          = _("Required")
+    .form-group{"ng-if" => "timeProfileModel.admin_user"}
       %label.col-md-2.control-label
-        = _('Timezone')
+        = _('Scope')
       .col-md-8
-        = select_tag("profile_tz",
-                     options_for_select([["<#{_('Determine at Run Time')}>", nil]] + ALL_TIMEZONES,
-                                        @edit[:new][:profile][:tz]),
-                     :disabled              => disabled,
-                     "data-live-search"     => "true",
-                     "data-miq_sparkle_on"  => true,
-                     "data-miq_sparkle_off" => true,
-                     :class    => "selectpicker")
+        = select_tag('profile_type',
+                   options_for_select([["<#{_('Choose')}>", nil]] + [["#{_('All Users')}", "global"], ["#{_('Current User')}", "user"]], disabled: ["<#{_('Choose')}>", nil]),
+                   "ng-model"                    => "timeProfileModel.profile_type",
+                   'ng-disabled'                 => "timeProfileModel.restricted_time_profile",
+                   "required"                    => "",
+                   "checkchange"                 => "",
+                   "selectpicker-for-select-tag" => "",
+                   "data-live-search"            => "true")
 
-        :javascript
-          miqInitSelectPicker();
-          miqSelectPickerEvent("profile_tz", "#{url}")
+    #timeprofile_days_hours_div
+      .form-horizontal
+        .form-group
+          %label.col-md-2.control-label
+            = _('Days')
+          .col-md-8
+            = _('All')
+            %div
+              %input.form-control{:type         => "checkbox",
+                                  :name         => "all_days",
+                                  "id"          => "all_days",
+                                  'ng-model'    => "timeProfileModel.all_days",
+                                  'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                  "ng-change"   => "allDaysClicked()",
+                                  "bs-switch"   => "",
+                                  :checkchange  => "",
+                                }
+        .form-group
+          %label.col-md-2.control-label
+          %div{"ng-hide" => "timeProfileModel.all_days"}
+            %span.col-sm-1{"ng-repeat" => "day in timeProfileModel.dayValues track by $index"}
+              {{dayNames[$index]}}
+              %div
+                %input.form-control{:type         => "checkbox",
+                                    :name         => "dayValues",
+                                    'ng-model'    => "timeProfileModel.dayValues[$index]",
+                                    'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    'ng-change'   => "dayValuesChanged()",
+                                    "bs-switch"   => "",
+                                    :checkchange  => "",
+                                   }
+        .form-group
+          %label.col-md-2.control-label
+            = _('Hours')
+          .col-md-8
+            = _('All')
+            %div
+              %input.form-control{:type         => "checkbox",
+                                  :name         => "all_hours",
+                                  "id"          => "all_hours",
+                                  'ng-model'    => "timeProfileModel.all_hours",
+                                  'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                  "ng-change"   => "allHoursClicked()",
+                                  "bs-switch"   => "",
+                                  :checkchange  => "",
+                                }
+        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+          %label.col-md-2.control-label
+            = _('AM')
+          %div
+            %span.col-sm-1{"ng-repeat" => "hour in timeProfileModel.hourValuesAMFirstHalf track by $index"}
+              {{hourNamesFirstHalf[$index]}}
+              %div
+                %input.form-control{:type         => "checkbox",
+                                    :name         => "hourValuesAMFirstHalf",
+                                    'ng-model'    => "timeProfileModel.hourValuesAMFirstHalf[$index]",
+                                    'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    'ng-change'   => "hourValuesChanged()",
+                                    "bs-switch"   => "",
+                                    :checkchange  => "",
+                                   }
+        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+          %label.col-md-2.control-label
+          %div
+            %span.col-sm-1{"ng-repeat" => "hour in timeProfileModel.hourValuesAMSecondHalf track by $index"}
+              {{hourNamesSecondHalf[$index]}}
+              %div
+                %input.form-control{:type         => "checkbox",
+                                    :name         => "hourValuesAMSecondHalf",
+                                    'ng-model'    => "timeProfileModel.hourValuesAMSecondHalf[$index]",
+                                    'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    'ng-change'   => "hourValuesChanged()",
+                                    "bs-switch"   => "",
+                                    :checkchange  => "",
+                                   }
+        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+          %label.col-md-2.control-label
+            = _('PM')
+          %div
+            %span.col-sm-1{"ng-repeat" => "hour in timeProfileModel.hourValuesPMFirstHalf track by $index"}
+              {{hourNamesFirstHalf[$index]}}
+              %div
+                %input.form-control{:type         => "checkbox",
+                                    :name         => "hourValuesPMFirstHalf",
+                                    'ng-model'    => "timeProfileModel.hourValuesPMFirstHalf[$index]",
+                                    'ng-change'   => "hourValuesChanged()",
+                                    'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    "bs-switch"   => "",
+                                    :checkchange  => "",
+                                   }
+        .form-group{"ng-hide" => "timeProfileModel.all_hours"}
+          %label.col-md-2.control-label
+          %div
+            %span.col-sm-1{"ng-repeat" => "hour in timeProfileModel.hourValuesPMSecondHalf track by $index"}
+              {{hourNamesSecondHalf[$index]}}
+              %div
+                %input.form-control{:type         => "checkbox",
+                                    :name         => "hourValuesPMSecondHalf",
+                                    'ng-model'    => "timeProfileModel.hourValuesPMSecondHalf[$index]",
+                                    'ng-change'   => "hourValuesChanged()",
+                                    'ng-disabled' => "timeProfileModel.restricted_time_profile",
+                                    "bs-switch"   => "",
+                                    :checkchange  => "",
+                                   }
+        .form-group
+          %label.col-md-2.control-label
+            = _('Scope')
+          .col-md-8
+            = select_tag('profile_tz',
+                       options_for_select([["<#{_('Determine at Run Time')}>", nil]] + ALL_TIMEZONES),
+                       "ng-model"                    => "timeProfileModel.profile_tz",
+                       'ng-disabled'                 => "timeProfileModel.restricted_time_profile",
+                       "checkchange"                 => "",
+                       "selectpicker-for-select-tag" => "")
 
-    - if admin_user?
-      .form-group#rollup_daily_tr{:style => ("display:none;" unless @edit[:new][:profile][:tz])}
+      .form-group{"ng-if" => "timeProfileModel.admin_user && timeProfileModel.profile_tz != ''"}
         %label.col-md-2.control-label
           = _('Roll Up Daily Performance')
         .col-md-8
@@ -101,8 +200,38 @@
           %th= _('Title')
       %tbody
         - @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
+          %input.form-control{:type             => "checkbox",
+                              :name             => "rollup_daily",
+                              'ng-model'        => "timeProfileModel.rollup_daily",
+                              "bs-switch"       => "",
+                              "switch-readonly" => "timeProfileModel.restricted_time_profile || timeProfileModel.miq_reports_count > 0",
+                              :checkchange      => "",
+                             }
+          %div{"ng-if" => "timeProfileModel.miq_reports_count > 0"}
+            {{note}}
+    = render :partial => "layouts/angular/x_edit_buttons_angular"
+    %br
+    %br
+    %div{"ng-if" => "timeProfileModel.miq_reports_count > 0"}
+      %fieldset
+        %h3= _('Reports Currently Using This Time Profile')
+        %table.table.table-striped.table-bordered.table-hover
           %tr
-            %td.narrow
-              %i.product-report.fa-lg
-            %td= r.name
-            %td= r.title
+            %td
+              %table.admintable
+                %thead
+                  %tr
+                    %th.icon
+                    %th.nowrap= _('Name')
+                    %th.nowrap= _('Title')
+                %tbody
+                  - @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
+                    %tr
+                      %td.icon
+                        %img{:src => image_path('100/report.png'), :valign => "middle", :border => "0", :height => "20", :width => "20"}
+                      %td= r.name
+                      %td= r.title
+
+:javascript
+  ManageIQ.angular.app.value('timeProfileFormId', '#{@timeprofile.id || "new"}');
+  miq_bootstrap('#form_div');
