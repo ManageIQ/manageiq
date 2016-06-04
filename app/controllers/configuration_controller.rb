@@ -469,6 +469,82 @@ class ConfigurationController < ApplicationController
     end
   end
 
+  def timeprofile_save
+    assert_privileges("tp_edit")
+
+    if params[:id] != "new"
+      @timeprofile = TimeProfile.find(params[:id])
+    else
+      @timeprofile = TimeProfile.new
+    end
+    if params[:button] == "cancel"
+      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "TimeProfile"), :name => @timeprofile.description})
+      params[:id] = @timeprofile.id.to_s
+      session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
+      end
+    elsif params[:button] == "save"
+      days = params[:days].collect{|i| i.to_i}
+      hours = params[:hours].collect{|i| i.to_i}
+      @timeprofile.description = params[:description]
+      @timeprofile.profile_key = params[:profile_type] == "user" ? session[:userid] : nil
+      @timeprofile.profile_type = params[:profile_type]
+      @timeprofile.profile = {
+          :days => days,
+          :hours => hours,
+          :tz => params[:profile_tz] == "" ? nil : params[:profile_tz]
+      }
+      @timeprofile.rollup_daily_metrics = params[:rollup_daily]
+      begin
+        @timeprofile.save!
+      rescue StandardError => bang
+        add_flash(_("TimeProfile \"%{name}\": Error during 'save': %{error_message}") %
+                      {:name => @timeprofile.description, :error_message => bang.message}, :error)
+        @in_a_form = true
+        drop_breadcrumb(:name => _("Edit '%{description}'") % {:description => @timeprofile.description},
+                        :url  => "/configuration/timeprofile_edit")
+        render :update do |page|
+          page << javascript_prologue
+          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        construct_edit_for_audit(@timeprofile)
+        AuditEvent.success(build_created_audit(@timeprofile, @edit))
+        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "TimeProfile"),
+                                                         :name  => @timeprofile.description})
+        session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :action => 'change_tab', :typ => "timeprofiles", :tab => 4, :id => @timeprofile.id.to_s
+        end
+      end
+    end
+  end
+
+  def construct_edit_for_audit(timeprofile)
+    @edit ||= {}
+    @edit[:current] = {
+        :description          => timeprofile.description,
+        :profile_key          => timeprofile.profile_key,
+        :profile_type         => timeprofile.profile_type,
+        :profile              => timeprofile.profile,
+        :rollup_daily_metrics => timeprofile.rollup_daily_metrics
+    }
+    days = params[:days].collect{|i| i.to_i}
+    hours = params[:hours].collect{|i| i.to_i}
+    @edit[:new] = {
+        :description          => params[:description],
+        :profile_key          => params[:profile_type] == "user" ? session[:userid] : nil,
+        :profile_type         => params[:profile_type],
+        :profile              => {:days  => days,
+                                  :hours => hours,
+                                  :tz    => params[:profile_tz] == "" ? nil : params[:profile_tz]},
+        :rollup_daily_metrics => params[:rollup_daily]
+    }
+  end
+
   def timeprofile_update
     assert_privileges("tp_edit")
     timeprofile_get_form_vars
@@ -527,7 +603,7 @@ class ConfigurationController < ApplicationController
     assert_privileges("tp_edit")
     @timeprofile = TimeProfile.new if params[:id] == 'new'
     @timeprofile = TimeProfile.find(params[:id]) if params[:id] != 'new'
-    
+
     render :json => {:description             => @timeprofile.description,
                      :admin_user              => admin_user?,
                      :restricted_time_profile => @timeprofile.profile_type == "global" && !admin_user?,
