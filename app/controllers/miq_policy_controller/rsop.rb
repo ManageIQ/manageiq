@@ -33,6 +33,7 @@ module MiqPolicyController::Rsop
         else
           @sb[:rsop][:results] = miq_task.task_results
           session[:rsop_tree] = rsop_build_tree
+          @rsop_tree = TreeBuilderPolicySimulationResults.new(:rsop_tree, :rsop, @sb, true, @sb[:rsop])
         end
       end
       c_tb = build_toolbar(center_toolbar_filename)
@@ -122,6 +123,7 @@ module MiqPolicyController::Rsop
     end
     @sb[:rsop][:open] = false           # reset the open state to select correct button in toolbar, need to replace partial to update checkboxes in form
     session[:rsop_tree] = rsop_build_tree
+    @rsop_tree = TreeBuilderPolicySimulationResults.new(:rsop_tree, :rsop, @sb, true, @sb[:rsop])
     rsop_button_pressed
   end
 
