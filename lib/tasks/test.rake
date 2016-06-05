@@ -34,6 +34,6 @@ end
 
 task :default => 'test:vmdb'
 
-desc "Run vmdb specs"
+desc "Alias of 'test:vmdb'"
 task :test => 'test:vmdb' # TODO: Run all test suites?
 end # ifdef
