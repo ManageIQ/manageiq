@@ -82,4 +82,20 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
       ]
     ),
   ])
+  button_group('ems_infra_authentication', [
+    select(
+      :ems_infra_authentication_choice,
+      'fa fa-lock fa-lg',
+      t = N_('Authentication'),
+      t,
+      :items => [
+        button(
+          :ems_infra_recheck_auth_status,
+          'fa fa-search fa-lg',
+          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_infra")}'),
+          N_('Re-check Authentication Status'),
+          :klass => ApplicationHelper::Button::EmsInfraRecheckAuthStatus),
+      ]
+    ),
+  ])
 end
