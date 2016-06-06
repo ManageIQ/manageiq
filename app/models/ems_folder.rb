@@ -12,6 +12,7 @@ class EmsFolder < ApplicationRecord
   self.default_relationship_type = "ems_metadata"
 
   include AggregationMixin
+  aggregation_mixin_virtual_columns_use :all_relationships
   include MiqPolicyMixin
 
   virtual_has_many :vms_and_templates, :uses => :all_relationships

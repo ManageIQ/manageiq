@@ -13,9 +13,7 @@ class ResourcePool < ApplicationRecord
   self.default_relationship_type = "ems_metadata"
 
   include AggregationMixin
-  # Since we've overridden the implementation of methods from AggregationMixin,
-  # we must also override the :uses portion of the virtual columns.
-  override_aggregation_mixin_virtual_columns_uses(:all_hosts, :all_relationships)
+  aggregation_mixin_virtual_columns_use :all_relationships
 
   include MiqPolicyMixin
   include AsyncDeleteMixin
