@@ -85,7 +85,7 @@ module ContainersCommonMixin
     elsif @display == "compliance_history"
       count = params[:count] ? params[:count].to_i : 10
       update_session_for_compliance_history(record, count)
-      drop_breadcrumb_for_compliance_history(record, controller_name, count)
+      drop_breadcrumb_for_compliance_history(record, controller_name)
       @showtype = @display
     elsif @display == "container_groups" || session[:display] == "container_groups" && params[:display].nil?
       show_container_display(record, "container_groups", ContainerGroup)
@@ -119,13 +119,12 @@ module ContainersCommonMixin
   end
 
   def update_session_for_compliance_history(record, count)
-    @ch_tree = TreeBuilderComplianceHistory.new(:ch_tree, :ch, @sb, true, record)
-    session[:ch_tree] = @ch_tree.tree_nodes
+    session[:ch_tree] = compliance_history_tree(record, count).to_json
     session[:tree_name] = "ch_tree"
     session[:squash_open] = (count == 1)
   end
 
-  def drop_breadcrumb_for_compliance_history(record, controller_name, count)
+  def drop_breadcrumb_for_compliance_history(record, controller_name)
     if count == 1
       drop_breadcrumb(:name => _("%{name} (Latest Compliance Check)") % {:name => record.name},
                       :url  => "/#{controller_name}/show/#{record.id}?display=#{@display}&refresh=n")
