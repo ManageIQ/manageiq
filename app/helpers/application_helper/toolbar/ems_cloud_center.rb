@@ -71,4 +71,20 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
       ]
     ),
   ])
+  button_group('ems_cloud_authentication', [
+    select(
+      :ems_cloud_authentication_choice,
+      'fa fa-lock fa-lg',
+      t = N_('Authentication'),
+      t,
+      :items => [
+        button(
+          :ems_cloud_recheck_auth_status,
+          'fa fa-search fa-lg',
+          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_cloud")}'),
+          N_('Re-check Authentication Status'),
+          :klass => ApplicationHelper::Button::EmsCloudRecheckAuthStatus),
+      ]
+    ),
+  ])
 end

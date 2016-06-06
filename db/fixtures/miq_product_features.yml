@@ -364,6 +364,10 @@
       :description: Refresh Cloud Providers
       :feature_type: control
       :identifier: ems_cloud_refresh
+    - :name: Re-check Authentication Status 
+      :description: Re-check Authentication Status of Cloud Providers
+      :feature_type: control
+      :identifier: ems_cloud_recheck_auth_status 
   - :name: Modify
     :description: Modify Cloud Providers
     :feature_type: admin
@@ -712,6 +716,10 @@
       :description: Refresh Infrastructure Providers
       :feature_type: control
       :identifier: ems_infra_refresh
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_infra_recheck_auth_status
   - :name: Modify
     :description: Modify Infrastructure Providers
     :feature_type: admin
@@ -3204,6 +3212,10 @@
       :description: Manage Policies of Containers Providers
       :feature_type: control
       :identifier: ems_container_protect
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Containers Providers
+      :feature_type: control
+      :identifier: ems_container_recheck_auth_status
   - :name: Modify
     :description: Modify Containers Providers
     :feature_type: admin
