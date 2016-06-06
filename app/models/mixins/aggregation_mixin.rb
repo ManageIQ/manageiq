@@ -11,29 +11,18 @@ module AggregationMixin
 
     virtual_column :aggregate_logical_cpus, :type => :integer, :uses => :hosts # Deprecated
 
-    # Helper method to override the virtual_column :uses definitions in the
-    # event that the all_* methods are overridden
-    def self.override_aggregation_mixin_virtual_columns_uses(type, new_uses)
-      case type
-      when :all_hosts
-        define_virtual_include "aggregate_cpu_speed",       new_uses
-        define_virtual_include "aggregate_cpu_total_cores", new_uses
-        define_virtual_include "aggregate_physical_cpus",   new_uses
-        define_virtual_include "aggregate_memory",          new_uses
-        define_virtual_include "aggregate_disk_capacity",   new_uses
-
-        define_virtual_include "aggregate_logical_cpus", new_uses # Deprecated
-
-      when :all_vms_and_templates
-        define_virtual_include "aggregate_vm_cpus",   new_uses
-        define_virtual_include "aggregate_vm_memory", new_uses
-      end
-    end
-
     def self.aggregation_mixin_virtual_columns_use(hosts, vms = nil)
       vms ||= hosts
-      override_aggregation_mixin_virtual_columns_uses(:all_hosts, hosts)
-      override_aggregation_mixin_virtual_columns_uses(:all_vms_and_templates, vms)
+      define_virtual_include "aggregate_cpu_speed",       hosts
+      define_virtual_include "aggregate_cpu_total_cores", hosts
+      define_virtual_include "aggregate_physical_cpus",   hosts
+      define_virtual_include "aggregate_memory",          hosts
+      define_virtual_include "aggregate_disk_capacity",   hosts
+
+      define_virtual_include "aggregate_logical_cpus", hosts # Deprecated
+
+      define_virtual_include "aggregate_vm_cpus",   vms
+      define_virtual_include "aggregate_vm_memory", vms
     end
   end
 
