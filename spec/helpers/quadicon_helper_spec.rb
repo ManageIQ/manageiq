@@ -73,4 +73,25 @@ describe QuadiconHelper do
     end
   end
 
+  describe "render_ext_management_system_quadicon" do
+    before(:each) do
+      @settings = {:quadicons => {:ems => true}}
+      @item = FactoryGirl.build(:ems_infra)
+      allow(@item).to receive(:hosts).and_return(%w(foo bar))
+      allow(@item).to receive(:image_name).and_return("foo")
+      @layout = "ems_infra"
+    end
+
+    let(:options) { {:size => 72, :typ => 'grid'} }
+
+    it "doesn't display IP Address in the tooltip" do
+      rendered = helper.send(:render_ext_management_system_quadicon, @item, options)
+      expect(rendered).not_to match(/IP Address/)
+    end
+
+    it "displays Host Name in the tooltip" do
+      rendered = helper.send(:render_ext_management_system_quadicon, @item, options)
+      expect(rendered).to match(/Hostname/)
+    end
+  end
 end
