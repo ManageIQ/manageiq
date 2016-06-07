@@ -1,4 +1,3 @@
-require 'parallel_tests'
 require_relative "./evm_test_helper"
 
 if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
@@ -9,6 +8,7 @@ namespace :test do
       if ENV['PARALLEL']
         database_config = Pathname.new(__dir__).expand_path + "../../config/database.yml"
         if File.readlines(database_config).grep(/TEST_ENV_NUMBER/).size > 0
+          require 'parallel_tests'
           ParallelTests::CLI.new.run(["--type", "rspec"] + ["-e", "bin/rake evm:db:reset"])
         else
           puts "Oops! Your database.yml doesn't appear to support parallel tests!"
@@ -53,6 +53,7 @@ namespace :test do
       ActiveRecord::Base.remove_connection
     end
 
+    require 'parallel_tests'
     ParallelTests::CLI.new.run(["--type", "rspec"] + EvmTestHelper.vmdb_spec_directories)
   end
 end
