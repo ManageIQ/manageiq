@@ -2292,6 +2292,13 @@ Vmdb::Application.routes.draw do
         policy_sim
         reconfigure
         reconfigure_form_fields
+        resize
+        evacuate
+        evacuate_form_fields
+        live_migrate
+        live_migrate_form_fields
+        attach
+        detach
         retire
         right_size
         show
@@ -2307,6 +2314,12 @@ Vmdb::Application.routes.draw do
         reconfigure
         reconfigure_form_fields
         reconfigure_update
+        resize_field_changed
+        resize_vm
+        evacuate_vm
+        live_migrate_vm
+        attach_volume
+        detach_volume
         retire
         right_size
         set_checked_items
