@@ -25,12 +25,26 @@ class CloudVolumeController < ApplicationController
     params[:display] = @display if %w(vms instances images).include?(@display)
     params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
 
-    @refresh_div = "main_div"
-    return tag("CloudVolume") if params[:pressed] == "cloud_volume_tag"
-    delete_volumes if params[:pressed] == 'cloud_volume_delete'
+    if params[:pressed].starts_with?("instance_")
+      pfx = pfx_for_vm_button_pressed(params[:pressed])
+      process_vm_buttons(pfx)
+      # Control transferred to another screen, so return
+      return if ["#{pfx}_policy_sim", "#{pfx}_compare", "#{pfx}_tag", "#{pfx}_retire", "#{pfx}_resize",
+                 "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_refresh", "#{pfx}_right_size",
+                 "#{pfx}_resize", "#{pfx}_live_migrate", "#{pfx}_evacuate", "#{pfx}_attach", "#{pfx}_detach"].include?(params[:pressed]) && @flash_array.nil?
+      unless ["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
+              "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
+        @refresh_div = "main_div"
+        @refresh_partial = "layouts/gtl"
+        show # Handle EMS buttons
+      end
+    else
+      @refresh_div = "main_div"
+      return tag("CloudVolume") if params[:pressed] == "cloud_volume_tag"
+      delete_volumes if params[:pressed] == 'cloud_volume_delete'
+    end
 
-    if @flash_array
-      show_list
+    if !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
       replace_gtl_main_div
     elsif params[:pressed] == "cloud_volume_attach"
       checked_volume_id = get_checked_volume_id(params)
@@ -64,8 +78,9 @@ class CloudVolumeController < ApplicationController
         page << javascript_prologue
         page.redirect_to :action => "new"
       end
-    elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
-      replace_gtl_main_div
+    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
+      render_or_redirect_partial(pfx)
     else
       render_flash
     end
