@@ -22,6 +22,7 @@ class MiqVimVm
                                   ParaVirtualSCSIController
                                 ).freeze
   MAX_SCSI_DEVICES          = 15
+  MAX_SCSI_CONTROLLERS      = 4
 
   attr_reader :name, :localPath, :dsPath, :hostSystem, :uuid, :vmh, :devices, :invObj, :annotation, :customValues, :vmMor
 
@@ -737,7 +738,7 @@ class MiqVimVm
     # - persistent is set to true to be backward compatible
     # - thin_provisioned is set to false explicitly since we call to_s on it further, so nil will not work for us
     options = {:persistent => true, :thin_provisioned => false}.merge(options)
-    ck, un = getScsiCandU
+    ck, un = available_scsi_units.first
     raise "addDisk: no SCSI controller found" unless ck
 
     vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
@@ -853,8 +854,9 @@ class MiqVimVm
   # Find a SCSI controller and
   # return its key and next available unit number.
   #
-  def getScsiCandU
-    controller_key = unit_number = nil
+  def available_scsi_units
+    scsi_units       = []
+    all_unit_numbers = [*0..MAX_SCSI_DEVICES]
 
     devices = getProp("config.hardware")["config"]["hardware"]["device"]
     scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
@@ -875,15 +877,28 @@ class MiqVimVm
       populated_units << scsi_controller["scsiCtlrUnitNumber"].to_i
 
       # Pick the lowest available unit number
-      all_unit_numbers = [*0..MAX_SCSI_DEVICES]
       available_units  = all_unit_numbers - populated_units
 
-      unit_number = available_units.sort.first
-      break
+      available_units.each do |unit|
+        scsi_units << [controller_key, unit]
+      end
     end
 
-    return controller_key, unit_number
-  end # def getScsiCandU
+    scsi_units
+  end # def available_scsi_units
+
+  def available_scsi_buses
+    scsi_controller_bus_numbers = [*0..MAX_SCSI_CONTROLLERS - 1]
+
+    devices = getProp("config.hardware")["config"]["hardware"]["device"]
+
+    scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
+    scsi_controllers.each do |controller|
+      scsi_controller_bus_numbers -= [controller["busNumber"].to_i]
+    end
+
+    scsi_controller_bus_numbers
+  end
 
   #
   # Returns the [controllerKey, key] pair for the virtul device
