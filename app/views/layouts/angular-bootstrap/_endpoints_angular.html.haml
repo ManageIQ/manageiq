@@ -28,6 +28,7 @@
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}",
               "ng-if" => "emsCommonModel.emstype == 'openstack' || " +       |
                          "emsCommonModel.emstype == 'openstack_infra' || " + |
+                         "emsCommonModel.emstype == 'nuage' || " +           |
                          "emsCommonModel.emstype == 'rhevm' || " +           |
                          "emsCommonModel.emstype == 'vmware_cloud' || " +    |
                          "emsCommonModel.ems_controller == 'ems_container'"} |
@@ -73,7 +74,10 @@
 
 %div{"ng-if" => defined?(security_protocol_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_security_protocol.$invalid}",
-              "ng-if"    => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'scvmm'"}
+              "ng-if"    => "emsCommonModel.emstype == 'openstack' || " +       |
+                            "emsCommonModel.emstype == 'openstack_infra' || " + |
+                            "emsCommonModel.emstype == 'nuage' || " +           |
+                            "emsCommonModel.emstype == 'scvmm'"}                |
     %label.col-md-2.control-label{"for" => "#{prefix}_security_protocol"}
       = _('Security Protocol')
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}

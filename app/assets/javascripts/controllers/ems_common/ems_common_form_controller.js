@@ -190,6 +190,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
        $scope.emsCommonModel.emstype == "openstack" && $scope.emsCommonModel.default_hostname ||
        $scope.emsCommonModel.emstype == "scvmm" && $scope.emsCommonModel.default_hostname ||
        $scope.emsCommonModel.emstype == "openstack_infra" && $scope.emsCommonModel.default_hostname ||
+       $scope.emsCommonModel.emstype == "nuage"  && $scope.emsCommonModel.default_hostname ||     
        $scope.emsCommonModel.emstype == "rhevm" && $scope.emsCommonModel.default_hostname ||
        $scope.emsCommonModel.emstype == "vmwarews" && $scope.emsCommonModel.default_hostname || 
        $scope.emsCommonModel.emstype == "vmware_cloud" && $scope.emsCommonModel.default_hostname) &&

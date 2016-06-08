@@ -81,7 +81,7 @@ module ManageIQ::Providers
     
     def get_subnets
       @rest_call.append_headers("X-Nuage-FilterType" , "predicate")
-      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulSubnet'")
+      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulSubnet' AND externalID IS null")
       response = @rest_call.get(@server + '/subnets')
       if response.code == 200
         if response.body == ''

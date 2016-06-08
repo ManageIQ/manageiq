@@ -53,7 +53,7 @@ class NetworkTopologyService < TopologyService
              :Amazon        => {:type => "image", :icon => provider_icon(:Amazon)},
              :Azure         => {:type => "image", :icon => provider_icon(:Azure)},
              :Google        => {:type => "image", :icon => provider_icon(:Google)},
-             :Nuage         => {:type => "image", :icon => provider_icon(:Nuage)}, 
+             :Nuage         => {:type => "image", :icon => provider_icon(:Nuage)},
     }
 
     populate_topology(topo_items, links, build_kinds, icons)
