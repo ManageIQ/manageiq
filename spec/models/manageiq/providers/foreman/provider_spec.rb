@@ -1,28 +1,28 @@
-require "manageiq_foreman"
+require 'manageiq_foreman'
 
 describe ManageIQ::Providers::Foreman::Provider do
   let(:provider) { FactoryGirl.build(:provider_foreman) }
   let(:attrs)    do
-    {:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => OpenSSL::SSL::VERIFY_PEER}
+    {:base_url => 'example.com', :username => 'admin', :password => 'smartvm', :verify_ssl => OpenSSL::SSL::VERIFY_PEER}
   end
 
-  describe "#connect" do
-    it "with no port" do
+  describe '#connect' do
+    it 'with no port' do
       expect(ManageiqForeman::Connection).to receive(:new).with(attrs)
       provider.connect
     end
 
-    it "with a port" do
-      provider.url = "example.com:555"
-      attrs[:base_url] = "example.com:555"
+    it 'with a port' do
+      provider.url = 'example.com:555'
+      attrs[:base_url] = 'example.com:555'
 
       expect(ManageiqForeman::Connection).to receive(:new).with(attrs)
       provider.connect
     end
   end
 
-  describe "#destroy" do
-    it "will remove all child objects" do
+  describe '#destroy' do
+    it 'will remove all child objects' do
       provider = FactoryGirl.create(:provider_foreman, :zone => FactoryGirl.create(:zone))
 
       provider.configuration_manager.configured_systems = [

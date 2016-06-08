@@ -22,13 +22,13 @@ module VMWareCowdDisk
   GT_SECTORS = 32
 
   def d_init
-    self.diskType = "VMWare CopyOnWrite"
+    self.diskType = 'VMWare CopyOnWrite'
     self.blockSize = 512
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
+    if dInfo.mountMode.nil? || dInfo.mountMode == 'r'
+      dInfo.mountMode = 'r'
+      fileMode = 'r'
+    elsif dInfo.mountMode == 'rw'
+      fileMode = 'r+'
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
@@ -112,7 +112,7 @@ module VMWareCowdDisk
 
       gp = getGTE(gn)
       gp = allocGrain(gn) if gp == 0
-      raise "Disk is full" if gp == -1
+      raise 'Disk is full' if gp == -1
       @vmwareCowDisk_file.seek(gp + so, IO::SEEK_SET)
       bytesWritten += @vmwareCowDisk_file.write(buf[bytesWritten, l], l)
     end
@@ -150,7 +150,7 @@ module VMWareCowdDisk
   def allocGrain(gn)
     allocGT(gn) if getGDE(gn) == 0
     freeSector = @EsxSparseHeader.freeSector
-    raise "Disk full." if freeSector + @grainSize > @EsxSparseHeader.numSectors
+    raise 'Disk full.' if freeSector + @grainSize > @EsxSparseHeader.numSectors
     thisGrain = freeSector * blockSize
     putGTE(gn, freeSector)
     freeSector += @grainSize
@@ -183,7 +183,7 @@ module VMWareCowdDisk
 
   def allocGT(gn)
     freeSector = @EsxSparseHeader.freeSector
-    raise "Disk full." if freeSector + GT_SECTORS > @EsxSparseHeader.numSectors
+    raise 'Disk full.' if freeSector + GT_SECTORS > @EsxSparseHeader.numSectors
     putGDE(gn, freeSector)
     freeSector += GT_SECTORS
     gtSize = ENTRIES_PER_TABLE * GTE_SIZE

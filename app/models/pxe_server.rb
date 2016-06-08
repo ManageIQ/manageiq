@@ -1,11 +1,11 @@
 class PxeServer < ApplicationRecord
-  autoload :WimParser, "win32/wim_parser" # via gems/pending
+  autoload :WimParser, 'win32/wim_parser' # via gems/pending
 
   include FileDepotMixin
 
   alias_attribute :description, :name
 
-  default_value_for :customization_directory, ""
+  default_value_for :customization_directory, ''
 
   serialize :visibility
 
@@ -14,8 +14,8 @@ class PxeServer < ApplicationRecord
 
   has_many :pxe_menus,      :dependent => :destroy
   has_many :pxe_images,     :dependent => :destroy
-  has_many :advertised_pxe_images, -> { where("pxe_menu_id IS NOT NULL") }, :class_name => "PxeImage"
-  has_many :discovered_pxe_images, -> { where(:pxe_menu_id => nil) }, :class_name => "PxeImage"
+  has_many :advertised_pxe_images, -> { where('pxe_menu_id IS NOT NULL') }, :class_name => 'PxeImage'
+  has_many :discovered_pxe_images, -> { where(:pxe_menu_id => nil) }, :class_name => 'PxeImage'
   has_many :windows_images, :dependent => :destroy
 
   def images
@@ -50,7 +50,7 @@ class PxeServer < ApplicationRecord
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "synchronize_advertised_images"
+      :method_name => 'synchronize_advertised_images'
     )
   end
 
@@ -65,7 +65,7 @@ class PxeServer < ApplicationRecord
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "sync_images"
+      :method_name => 'sync_images'
     )
   end
 
@@ -136,15 +136,15 @@ class PxeServer < ApplicationRecord
           path = Pathname.new(f).relative_path_from(Pathname.new(windows_images_directory)).to_s
 
           wim_parser = WimParser.new(File.join(depot_root, f))
-          wim_parser.xml_data["images"].each do |image_hash|
-            index   = image_hash["index"]
+          wim_parser.xml_data['images'].each do |image_hash|
+            index   = image_hash['index']
 
             image   = current.delete([path, index]) || windows_images.build
             stats[image.new_record? ? :adds : :updates] += 1
 
             image.update_attributes(
-              :name        => image_hash["name"],
-              :description => image_hash["description"].blank? ? nil : image_hash["description"],
+              :name        => image_hash['name'],
+              :description => image_hash['description'].blank? ? nil : image_hash['description'],
               :path        => path,
               :index       => index
             )

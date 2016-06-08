@@ -5,7 +5,7 @@ class Patch < ApplicationRecord
   virtual_column :v_install_date, :type => :string
 
   def self.add_elements(vm, xmlNode)
-    add_missing_elements(vm, xmlNode, "software/patches")
+    add_missing_elements(vm, xmlNode, 'software/patches')
   end
 
   def self.add_missing_elements(vm, xmlNode, findPath)
@@ -22,7 +22,7 @@ class Patch < ApplicationRecord
   end
 
   def self.highest_patch_level
-    levels = all.pluck(:name).collect { |name| name.split("-").last.to_i }
+    levels = all.pluck(:name).collect { |name| name.split('-').last.to_i }
     (levels.max || 0).to_s
   end
 
@@ -41,6 +41,6 @@ class Patch < ApplicationRecord
 
   def v_install_date
     # Windows install dates do not include times, so only display YYYY-MM-DD format
-    installed_on.strftime("%Y-%m-%d") unless installed_on.nil?
+    installed_on.strftime('%Y-%m-%d') unless installed_on.nil?
   end
 end

@@ -6,7 +6,7 @@ require 'yaml'
 class MiqPassword
   class MiqPasswordError < StandardError; end
 
-  CURRENT_VERSION = "2"
+  CURRENT_VERSION = '2'
   REGEXP = /v([0-9]+):\{([^}]*)\}/
   REGEXP_START_LINE = /^#{REGEXP}/
 
@@ -18,7 +18,7 @@ class MiqPassword
     @encStr = encrypt(str)
   end
 
-  def encrypt(str, ver = "v2", key = self.class.keys[ver])
+  def encrypt(str, ver = 'v2', key = self.class.keys[ver])
     value = key.encrypt64(str).delete("\n") unless str.nil? || str.empty?
     "#{ver}:{#{value}}"
   end
@@ -28,10 +28,10 @@ class MiqPassword
       str
     else
       ver, enc = self.class.split(str)
-      return "" if enc.empty?
+      return '' if enc.empty?
 
-      ver ||= "0" # if we don't know what it is, just assume legacy
-      key_name = (ver == "2" && legacy) ? "alt" : "v#{ver}"
+      ver ||= '0' # if we don't know what it is, just assume legacy
+      key_name = (ver == '2' && legacy) ? 'alt' : "v#{ver}"
 
       begin
         self.class.keys[key_name].decrypt64(enc).force_encoding('UTF-8')
@@ -46,12 +46,12 @@ class MiqPassword
     decrypted_str =
       begin
         # if a legacy v2 key exists, give decrypt the option to use that
-        decrypt(str, self.class.keys["alt"])
+        decrypt(str, self.class.keys['alt'])
       rescue
-        source_version = self.class.split(str).first || "0"
-        if source_version == "0" # it probably wasn't encrypted
+        source_version = self.class.split(str).first || '0'
+        if source_version == '0' # it probably wasn't encrypted
           return str
-        elsif source_version == "2" # tried with an alt key, see if regular v2 key works
+        elsif source_version == '2' # tried with an alt key, see if regular v2 key works
           decrypt(str)
         else
           raise
@@ -78,7 +78,7 @@ class MiqPassword
   end
 
   def self.sysprep_crypt(str)
-    Base64.encode64("#{try_decrypt(str)}AdministratorPassword".encode("UTF-16LE")).delete("\n")
+    Base64.encode64("#{try_decrypt(str)}AdministratorPassword".encode('UTF-16LE')).delete("\n")
   end
 
   def self.sanitize_string(s)
@@ -108,7 +108,7 @@ class MiqPassword
         if legacy =~ REGEXP_START_LINE
           [$1, $2]
         else
-          ["0", legacy]
+          ['0', legacy]
         end
       else
         [nil, encrypted_str]
@@ -117,7 +117,7 @@ class MiqPassword
   end
 
   def self.key_root
-    @@key_root ||= ENV["KEY_ROOT"]
+    @@key_root ||= ENV['KEY_ROOT']
   end
 
   def self.key_root=(key_root)
@@ -134,16 +134,16 @@ class MiqPassword
   end
 
   def self.keys
-    @@all_keys ||= {"v2" => load_v2_key}.delete_if { |_n, v| v.nil? }
+    @@all_keys ||= {'v2' => load_v2_key}.delete_if { |_n, v| v.nil? }
   end
 
   def self.v2_key
-    keys["v2"]
+    keys['v2']
   end
 
   def self.load_v2_key
-    ez_load("v2_key") || begin
-      key_file = File.expand_path("v2_key", key_root)
+    ez_load('v2_key') || begin
+      key_file = File.expand_path('v2_key', key_root)
       msg = <<-EOS
 #{key_file} doesn't exist!
 On an appliance, it should be generated on boot by evmserverd.
@@ -157,7 +157,7 @@ EOS
     end
   end
 
-  def self.add_legacy_key(filename, type = "alt")
+  def self.add_legacy_key(filename, type = 'alt')
     key = ez_load(filename, type != :v0)
     keys[type.to_s] = key if key
     key
@@ -165,11 +165,11 @@ EOS
 
   # used by tests only
   def self.v2_key=(key)
-    (@@all_keys ||= {})["v2"] = key
+    (@@all_keys ||= {})['v2'] = key
   end
 
   def self.generate_symmetric(filename = nil)
-    EzCrypto::Key.generate(:algorithm => "aes-256-cbc").tap do |key|
+    EzCrypto::Key.generate(:algorithm => 'aes-256-cbc').tap do |key|
       key.store(filename) if filename
     end
   end

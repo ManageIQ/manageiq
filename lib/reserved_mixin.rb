@@ -1,7 +1,7 @@
 module ReservedMixin
   extend ActiveSupport::Concern
   included do
-    has_one :reserved_rec, :class_name => "::Reserve", :as => :resource,
+    has_one :reserved_rec, :class_name => '::Reserve', :as => :resource,
       :autosave => true, :dependent => :delete
   end
 

@@ -19,14 +19,14 @@ begin
 
   puts "Connecting to #{ems.hostname}..."
   vim = MiqVim.new(ems.hostname, username, password)
-  puts "Done."
+  puts 'Done.'
 
   puts "vim.class: #{vim.class}"
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
   puts "API version: #{vim.apiVersion}"
   puts
 
-  puts "VMs with EVM snapshots:"
+  puts 'VMs with EVM snapshots:'
   vim.virtualMachinesByMor.each_value do |vm|
     miqVm = vim.getVimVmByMor(vm['MOR'])
     if miqVm.hasSnapshot?(MiqVimVm::EVM_SNAPSHOT_NAME)

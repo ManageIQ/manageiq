@@ -2,14 +2,14 @@ require 'disk/modules/MiqLargeFile'
 
 module RawDisk
   def d_init
-    self.diskType = "Raw"
+    self.diskType = 'Raw'
     self.blockSize = 512
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
+    if dInfo.mountMode.nil? || dInfo.mountMode == 'r'
+      dInfo.mountMode = 'r'
+      fileMode = 'r'
+    elsif dInfo.mountMode == 'rw'
+      fileMode = 'r+'
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end

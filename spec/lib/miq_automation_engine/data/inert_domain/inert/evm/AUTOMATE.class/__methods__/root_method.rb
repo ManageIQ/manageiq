@@ -1,1 +1,1 @@
-$evm.root['method_executed']  = "inert"
+$evm.root['method_executed']  = 'inert'

@@ -11,19 +11,19 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'fa fa-refresh fa-lg',
           N_('Refresh relationships and power states for all items related to this VM'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this VM?")),
+          :confirm => N_('Refresh relationships and power states for all items related to this VM?')),
         button(
           :vm_scan,
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this VM'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this VM?")),
+          :confirm => N_('Perform SmartState Analysis on this VM?')),
         button(
           :vm_collect_running_processes,
           'fa fa-eyedropper fa-lg',
           N_('Extract Running Processes for this VM'),
           N_('Extract Running Processes'),
-          :confirm => N_("Extract Running Processes for this VM?")),
+          :confirm => N_('Extract Running Processes for this VM?')),
         separator,
         button(
           :vm_edit,
@@ -40,8 +40,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-delete fa-lg',
           N_('Remove this VM from the VMDB'),
           N_('Remove from the VMDB'),
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This VM and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this VM?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This VM and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this VM?')),
         button(
           :vm_evm_relationship,
           'pficon pficon-edit fa-lg',
@@ -88,7 +88,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for this VM'),
           N_('Check Compliance of Last Known Configuration'),
-          :confirm => N_("Initiate Check Compliance of the last known configuration for this VM?")),
+          :confirm => N_('Initiate Check Compliance of the last known configuration for this VM?')),
       ]
     ),
   ])
@@ -124,7 +124,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'fa fa-clock-o fa-lg',
           t = N_('Retire this VM'),
           t,
-          :confirm => N_("Retire this VM?")),
+          :confirm => N_('Retire this VM?')),
       ]
     ),
   ])
@@ -140,13 +140,13 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this VM'),
           N_('Utilization'),
-          :url_parms => "?display=performance"),
+          :url_parms => '?display=performance'),
         button(
           :vm_timeline,
           'product product-timeline fa-lg',
           N_('Show Timelines for this VM'),
           N_('Timelines'),
-          :url_parms => "?display=timeline"),
+          :url_parms => '?display=timeline'),
       ]
     ),
   ])
@@ -162,44 +162,44 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           nil,
           N_('Shutdown the Guest OS on this VM'),
           N_('Shutdown Guest'),
-          :image   => "guest_shutdown",
-          :confirm => N_("Shutdown the Guest OS on this VM?")),
+          :image   => 'guest_shutdown',
+          :confirm => N_('Shutdown the Guest OS on this VM?')),
         button(
           :vm_guest_restart,
           nil,
           N_('Restart the Guest OS on this VM'),
           N_('Restart Guest'),
-          :image   => "guest_restart",
-          :confirm => N_("Restart the Guest OS on this VM?")),
+          :image   => 'guest_restart',
+          :confirm => N_('Restart the Guest OS on this VM?')),
         separator,
         button(
           :vm_start,
           nil,
           N_('Power On this VM'),
           N_('Power On'),
-          :image   => "power_on",
-          :confirm => N_("Power On this VM?")),
+          :image   => 'power_on',
+          :confirm => N_('Power On this VM?')),
         button(
           :vm_stop,
           nil,
           N_('Power Off this VM'),
           N_('Power Off'),
-          :image   => "power_off",
-          :confirm => N_("Power Off this VM?")),
+          :image   => 'power_off',
+          :confirm => N_('Power Off this VM?')),
         button(
           :vm_suspend,
           nil,
           N_('Suspend this VM'),
           N_('Suspend'),
-          :image   => "power_suspend",
-          :confirm => N_("Suspend this VM?")),
+          :image   => 'power_suspend',
+          :confirm => N_('Suspend this VM?')),
         button(
           :vm_reset,
           nil,
           N_('Reset this VM'),
           N_('Reset'),
-          :image   => "power_reset",
-          :confirm => N_("Reset this VM?")),
+          :image   => 'power_reset',
+          :confirm => N_('Reset this VM?')),
       ]
     ),
     button(
@@ -207,22 +207,22 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       'pficon pficon-screen fa-lg',
       N_('Open a web-based console for this VM'),
       nil,
-      :url     => "console",
-      :confirm => N_("Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?")),
+      :url     => 'console',
+      :confirm => N_('Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?')),
     button(
       :vm_vnc_console,
       'fa fa-html5 fa-lg',
       N_('Open a web-based VNC or SPICE console for this VM'),
       nil,
-      :url     => "html5_console",
-      :confirm => N_("Opening a web-based VM VNC or SPICE console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?")),
+      :url     => 'html5_console',
+      :confirm => N_('Opening a web-based VM VNC or SPICE console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?')),
     button(
       :vm_vmrc_console,
       'pficon pficon-screen fa-lg',
       N_('Open a web-based VMRC console for this VM.  This requires that VMRC is pre-configured to work in your browser.'),
       nil,
-      :url     => "vmrc_console",
-      :confirm => N_("Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?")),
+      :url     => 'vmrc_console',
+      :confirm => N_('Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?')),
   ])
   button_group('snapshot_tasks', [
     button(
@@ -230,7 +230,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       'pficon pficon-add-circle-o fa-lg',
       N_('Create a new snapshot for this VM'),
       nil,
-      :onwhen => "1"),
+      :onwhen => '1'),
     select(
       :vm_delete_snap_choice,
       'pficon pficon-delete fa-lg',
@@ -242,15 +242,15 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-delete fa-lg',
           t = N_('Delete Selected Snapshot'),
           t,
-          :confirm   => N_("The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?"),
-          :url_parms => "main_div",
-          :onwhen    => "1"),
+          :confirm   => N_('The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?'),
+          :url_parms => 'main_div',
+          :onwhen    => '1'),
         button(
           :vm_snapshot_delete_all,
           'pficon pficon-delete fa-lg',
           t = N_('Delete All Existing Snapshots'),
           t,
-          :confirm => N_("Delete all of this VMs existing snapshots?")),
+          :confirm => N_('Delete all of this VMs existing snapshots?')),
       ]
     ),
     button(
@@ -258,8 +258,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       'fa fa-undo fa-lg',
       N_('Revert to selected snapshot'),
       nil,
-      :confirm => N_("This VM will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?"),
-      :onwhen  => "1"),
+      :confirm => N_('This VM will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?'),
+      :onwhen  => '1'),
   ])
   button_group('vmtree_tasks', [
     button(
@@ -272,8 +272,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       'product product-compare fa-lg',
       N_('Compare selected VMs'),
       nil,
-      :url_parms => "main_div",
+      :url_parms => 'main_div',
       :enabled   => false,
-      :onwhen    => "2+"),
+      :onwhen    => '2+'),
   ])
 end

@@ -4,13 +4,13 @@ module Authenticator
   end
 
   def self.subclass_for(config, username)
-    return Database if username == "admin"
+    return Database if username == 'admin'
 
     case config[:mode]
-    when "database"      then Database
-    when "ldap", "ldaps" then Ldap
-    when "amazon"        then Amazon
-    when "httpd"         then Httpd
+    when 'database'      then Database
+    when 'ldap', 'ldaps' then Ldap
+    when 'amazon'        then Amazon
+    when 'httpd'         then Httpd
     end
   end
 
@@ -37,7 +37,7 @@ module Authenticator
     def authenticate(username, password, request = nil, options = {})
       options = options.dup
       options[:require_user] ||= false
-      fail_message = _("Authentication failed")
+      fail_message = _('Authentication failed')
 
       user_or_taskid = nil
 
@@ -60,7 +60,7 @@ module Authenticator
             unless user_or_taskid
               AuditEvent.failure(audit.merge(:message => "User #{username} authenticated but not defined in EVM"))
               raise MiqException::MiqEVMLoginError,
-                    _("User authenticated but not defined in EVM, please contact your EVM administrator")
+                    _('User authenticated but not defined in EVM, please contact your EVM administrator')
             end
           end
 
@@ -97,10 +97,10 @@ module Authenticator
     end
 
     def authorize(taskid, username, *args)
-      audit = {:event => "authorize", :userid => username}
+      audit = {:event => 'authorize', :userid => username}
       decrypt_ldap_password(config) if MiqLdap.using_ldap?
 
-      run_task(taskid, "Authorizing") do |task|
+      run_task(taskid, 'Authorizing') do |task|
         begin
           identity = find_external_identity(username, *args)
 
@@ -133,7 +133,7 @@ module Authenticator
 
           _log.info("Authorized User: [#{user.userid}]")
           task.userid = user.userid
-          task.update_status("Finished", "Ok", "User authorized successfully")
+          task.update_status('Finished', 'Ok', 'User authorized successfully')
 
           user
         rescue Exception => err
@@ -209,9 +209,9 @@ module Authenticator
       if authorize_queue?
         encrypt_ldap_password(config) if MiqLdap.using_ldap?
         MiqQueue.put(
-          :queue_name   => "generic",
+          :queue_name   => 'generic',
           :class_name   => self.class.to_s,
-          :method_name  => "authorize",
+          :method_name  => 'authorize',
           :args         => [config, task.id, username, *args],
           :server_guid  => MiqServer.my_guid,
           :priority     => MiqQueue::HIGH_PRIORITY,
@@ -232,11 +232,11 @@ module Authenticator
     def run_task(taskid, status)
       task = MiqTask.find_by_id(taskid)
       if task.nil?
-        message = _("Unable to find task with id: [%{task_id}]") % {:task_id => taskid}
+        message = _('Unable to find task with id: [%{task_id}]') % {:task_id => taskid}
         _log.error(message)
         raise message
       end
-      task.update_status("Active", "Ok", status)
+      task.update_status('Active', 'Ok', status)
 
       begin
         yield task

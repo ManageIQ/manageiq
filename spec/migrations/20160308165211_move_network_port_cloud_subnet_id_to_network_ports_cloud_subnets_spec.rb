@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 require_migration
 
 describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
@@ -9,20 +9,20 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
   let(:cloud_subnet_entries) do
     [
       {
-        :type         => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet",
-        :name         => "cs1"
+        :type         => 'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet',
+        :name         => 'cs1'
       },
       {
-        :type         => "ManageIQ::Providers::Azure::CloudManager::CloudSubnet",
-        :name         => "cs2"
+        :type         => 'ManageIQ::Providers::Azure::CloudManager::CloudSubnet',
+        :name         => 'cs2'
       },
       {
-        :type         => "ManageIQ::Providers::Amazon::CloudManager::CloudSubnet",
-        :name         => "cs3"
+        :type         => 'ManageIQ::Providers::Amazon::CloudManager::CloudSubnet',
+        :name         => 'cs3'
       },
       {
-        :type         => "ManageIQ::Providers::AnotherManager::CloudManager::CloudSubnet",
-        :name         => "cs4"
+        :type         => 'ManageIQ::Providers::AnotherManager::CloudManager::CloudSubnet',
+        :name         => 'cs4'
       }
     ]
   end
@@ -30,24 +30,24 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
   let(:network_port_entries) do
     [
       {
-        :type         => "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort",
+        :type         => 'ManageIQ::Providers::Openstack::NetworkManager::NetworkPort',
         :cloud_subnet => cloud_subnet_entries[0],
-        :name         => "np1"
+        :name         => 'np1'
       },
       {
-        :type         => "ManageIQ::Providers::Azure::CloudManager::NetworkPort",
+        :type         => 'ManageIQ::Providers::Azure::CloudManager::NetworkPort',
         :cloud_subnet => cloud_subnet_entries[1],
-        :name         => "np2"
+        :name         => 'np2'
       },
       {
-        :type         => "ManageIQ::Providers::Amazon::CloudManager::NetworkPort",
+        :type         => 'ManageIQ::Providers::Amazon::CloudManager::NetworkPort',
         :cloud_subnet => cloud_subnet_entries[2],
-        :name         => "np3"
+        :name         => 'np3'
       },
       {
-        :type         => "ManageIQ::Providers::AnotherManager::CloudManager::NetworkPort",
+        :type         => 'ManageIQ::Providers::AnotherManager::CloudManager::NetworkPort',
         :cloud_subnet => cloud_subnet_entries[3],
-        :name         => "np4"
+        :name         => 'np4'
       }
     ]
   end
@@ -57,28 +57,28 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
       {
         :network_port => network_port_entries[0],
         :cloud_subnet => cloud_subnet_entries[0],
-        :address      => "addr1"
+        :address      => 'addr1'
       },
       {
         :network_port => network_port_entries[1],
         :cloud_subnet => cloud_subnet_entries[1],
-        :address      => "addr1"
+        :address      => 'addr1'
       },
       {
         :network_port => network_port_entries[2],
         :cloud_subnet => cloud_subnet_entries[2],
-        :address      => "addr1"
+        :address      => 'addr1'
       },
       {
         :network_port => network_port_entries[3],
         :cloud_subnet => cloud_subnet_entries[3],
-        :address      => "addr1"
+        :address      => 'addr1'
       }
     ]
   end
 
   migration_context :up do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       cloud_subnet_entries.each do |x|
         x[:object] = cloud_subnet_stub.create!(
           :type => x[:type],
@@ -105,7 +105,7 @@ describe MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets do
   end
 
   migration_context :down do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       cloud_subnet_entries.each do |x|
         x[:object] = cloud_subnet_stub.create!(
           :type => x[:type],

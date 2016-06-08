@@ -12,17 +12,17 @@ module Win32
     BCD_LIBRARYSTRING_DESCRIPTION     = '12000004' # 0x12000004
 
     def self.registryPath(fs = nil, root = nil)
-      File.join(system32Path(fs, root), "config")
+      File.join(system32Path(fs, root), 'config')
     end
 
     def self.system32Path(fs = nil, root = nil)
-      return File.join(root, "system32") if root
-      File.join(systemRoot(fs), "system32")
+      return File.join(root, 'system32') if root
+      File.join(systemRoot(fs), 'system32')
     end
 
     def self.systemRoot(fs = nil, si = nil)
       si = systemIdentifier(fs) if si.nil?
-      raise(MiqException::MiqVmMountError, "Filesystem does not contain system root identifiers.") if si.blank?
+      raise(MiqException::MiqVmMountError, 'Filesystem does not contain system root identifiers.') if si.blank?
       system32_dir = File.join(si[:system_root], 'system32')
       raise(MiqException::MiqVmMountError, "Filesystem does not contain system root folder (#{system32_dir}).") unless fs.fileDirectory?(system32_dir)
       si[:system_root]
@@ -31,12 +31,12 @@ module Win32
     def self.systemIdentifier(fs = nil, options = {})
       # If we are not passed a fs handle return the %systemRoot% from the environment
       if fs.nil?
-        raise(MiqException::MiqVmMountError, "System root not available through environment variables.") if ENV["SystemRoot"].nil?
-        return File.normalize(ENV["SystemRoot"])
+        raise(MiqException::MiqVmMountError, 'System root not available through environment variables.') if ENV['SystemRoot'].nil?
+        return File.normalize(ENV['SystemRoot'])
       end
 
       # Use the boot.ini file to get the starting path to the Windows folder
-      fn = [{:file => "/boot.ini", :type => :boot_ini}, {:file => "/boot/BCD", :type => :bcd}, {:file => '/Windows/System32/config/SYSTEM', :type => :registry_file}]
+      fn = [{:file => '/boot.ini', :type => :boot_ini}, {:file => '/boot/BCD', :type => :bcd}, {:file => '/Windows/System32/config/SYSTEM', :type => :registry_file}]
       drive_letter = fs.pwd.to_s[0, 2]
       if drive_letter[1, 1] == ':'
         fs.chdir("#{drive_letter}/")
@@ -50,7 +50,7 @@ module Win32
       return {} if boot_cfg.nil?
 
       # Set default system root path
-      boot_cfg[:system_root] = "/Windows"
+      boot_cfg[:system_root] = '/Windows'
 
       $log.debug "Boot info stored in: [#{boot_cfg.inspect}]" if $log
       case boot_cfg[:type]
@@ -59,7 +59,7 @@ module Win32
           if fs.kind_of?(MiqFS)
             boot_cfg_text = fs.fileOpen(boot_cfg[:file]).read
             $log.warn "Contents of <#{boot_cfg[:file]}>\n#{boot_cfg_text}" if $log && options[:debug] == true
-            boot_cfg[:system_root] = $'.split("\n")[0].split("\\")[1].chomp if boot_cfg_text =~ /default=/
+            boot_cfg[:system_root] = $'.split("\n")[0].split('\\')[1].chomp if boot_cfg_text =~ /default=/
           end
           boot_cfg[:system_root].strip!
           boot_cfg[:system_root] = "/#{boot_cfg[:system_root]}"

@@ -21,7 +21,7 @@ module MiqAeServiceVmVmwareSpec
       $_miq_worker_current_msg = nil
     end
 
-    it "#set_number_of_cpus" do
+    it '#set_number_of_cpus' do
       service_vm.set_number_of_cpus(1)
 
       expect(MiqQueue.first).to have_attributes(
@@ -31,7 +31,7 @@ module MiqAeServiceVmVmwareSpec
       )
     end
 
-    it "#set_memory" do
+    it '#set_memory' do
       service_vm.set_memory(100)
 
       expect(MiqQueue.first).to have_attributes(
@@ -41,7 +41,7 @@ module MiqAeServiceVmVmwareSpec
       )
     end
 
-    it "#add_disk" do
+    it '#add_disk' do
       service_vm.add_disk('disk_1', 100)
 
       expect(MiqQueue.first).to have_attributes(
@@ -51,7 +51,7 @@ module MiqAeServiceVmVmwareSpec
       )
     end
 
-    it "#remove_from_disk async"do
+    it '#remove_from_disk async'do
       service_vm.remove_from_disk(false)
 
       expect(MiqQueue.first).to have_attributes(
@@ -61,7 +61,7 @@ module MiqAeServiceVmVmwareSpec
       )
     end
 
-    it "#create_snapshot without memory" do
+    it '#create_snapshot without memory' do
       service_vm.create_snapshot('snap', 'crackle & pop')
 
       expect(MiqQueue.first.args.first).to have_attributes(
@@ -72,7 +72,7 @@ module MiqAeServiceVmVmwareSpec
       )
     end
 
-    it "#create_snapshot with memory" do
+    it '#create_snapshot with memory' do
       service_vm.create_snapshot('snap', 'crackle & pop', true)
 
       expect(MiqQueue.first.args.first).to have_attributes(

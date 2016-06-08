@@ -17,7 +17,7 @@ class ApiController
       elsif data.key?('id') || data.key?('identifier')
         new_features = get_product_features(Array.wrap(data))
       else
-        raise BadRequestError, "Invalid feature assignment format specified."
+        raise BadRequestError, 'Invalid feature assignment format specified.'
       end
 
       existing_features = object.miq_product_features.dup.to_a
@@ -46,7 +46,7 @@ class ApiController
       elsif data.key?('id') || data.key?('identifier')
         removed_features = get_product_features(Array.wrap(data))
       else
-        raise BadRequestError, "Invalid feature un-assignment format specified."
+        raise BadRequestError, 'Invalid feature un-assignment format specified.'
       end
 
       existing_features = object.miq_product_features.dup.to_a

@@ -99,12 +99,12 @@ class MiqAeInstanceCopy
     find_or_create_class
     return unless @validate_schema
     @class_schema_status = MiqAeClassCompareFields.new(@src_class, @dest_class).compare
-    raise "Instance cannot be copied, automation class schema mismatch" if @flags & @class_schema_status == 0
+    raise 'Instance cannot be copied, automation class schema mismatch' if @flags & @class_schema_status == 0
   end
 
   def check_duplicity(domain, ns, instance_name)
     if domain.downcase == @src_domain.downcase && instance_name.downcase == @instance_name.downcase
-      raise "Cannot copy instance onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
+      raise 'Cannot copy instance onto itself' if ns.nil? || ns.downcase == @partial_ns.downcase
     end
   end
 end

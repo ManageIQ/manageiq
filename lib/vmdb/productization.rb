@@ -9,7 +9,7 @@ module Vmdb
 
     # Prepend the productization/assets directories to the asset paths.
     def prepare_asset_paths
-      pattern = Rails.root.join("productization", "assets", "*")
+      pattern = Rails.root.join('productization', 'assets', '*')
       paths   = Dir.glob(pattern).select { |f| File.directory?(f) }
       Rails.application.config.assets.paths.unshift(*paths)
     end
@@ -17,7 +17,7 @@ module Vmdb
     # sprockets-rails is very strict about the path to assets being in Rails.root.join("app/assets")
     #   so we must duplicate it with our new paths.
     LOOSE_APP_ASSETS = lambda do |logical_path, filename|
-      filename.start_with?(::Rails.root.join("productization/assets").to_s) &&
+      filename.start_with?(::Rails.root.join('productization/assets').to_s) &&
         !['.js', '.css', ''].include?(File.extname(logical_path))
     end
 

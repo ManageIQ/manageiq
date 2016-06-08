@@ -26,7 +26,7 @@ FactoryGirl.define do
     end
 
     factory :system_group do
-      group_type "system" # dont want to reference class from factory MiqGroup::SYSTEM_GROUP
+      group_type 'system' # dont want to reference class from factory MiqGroup::SYSTEM_GROUP
     end
   end
 end

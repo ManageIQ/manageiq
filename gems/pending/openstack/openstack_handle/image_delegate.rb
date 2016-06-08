@@ -3,7 +3,7 @@ module OpenstackHandle
     include OpenstackHandle::HandledList
     include Vmdb::Logging
 
-    SERVICE_NAME = "Image"
+    SERVICE_NAME = 'Image'
 
     attr_reader :name
 

@@ -1,5 +1,5 @@
 class MemCache
-  LARGE_VALUE_KEY = "***Oversized***"
+  LARGE_VALUE_KEY = '***Oversized***'
   LARGE_VALUE_SIZE = 1_048_064 # Chose 512 bytes less than 1MB due to memcache's seemingly random max limit
   CHUNK_SIZE = 1_048_064
 
@@ -43,7 +43,7 @@ class MemCache
   # see MemCache#add.
 
   def set(key, value, expiry = 0, raw = false)
-    raise MemCacheError, "Update of readonly cache" if @readonly
+    raise MemCacheError, 'Update of readonly cache' if @readonly
     server, cache_key = request_setup key
     socket = server.socket
 
@@ -79,7 +79,7 @@ class MemCache
   # MemCache#set or MemCache#[]=.
 
   def add(key, value, expiry = 0, raw = false)
-    raise MemCacheError, "Update of readonly cache" if @readonly
+    raise MemCacheError, 'Update of readonly cache' if @readonly
     server, cache_key = request_setup key
     socket = server.socket
 

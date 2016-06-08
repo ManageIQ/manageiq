@@ -5,12 +5,12 @@ class OntapSystemDerivedMetric < ApplicationRecord
   serialize   :base_counters
 
   def self.additional_counters
-    ["cpu_elapsed_time", "cpu_elapsed_time1", "cpu_elapsed_time2"]
+    ['cpu_elapsed_time', 'cpu_elapsed_time1', 'cpu_elapsed_time2']
   end
 
   include OntapDerivedMetricMixin
 
   def self.derive_metrics(prevMetric, curMetric, counterInfo)
-    derive_metrics_common(prevMetric, curMetric, counterInfo, "System")
+    derive_metrics_common(prevMetric, curMetric, counterInfo, 'System')
   end
 end

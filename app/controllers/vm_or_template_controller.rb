@@ -12,36 +12,36 @@ class VmOrTemplateController < ApplicationController
   def features
     [
       ApplicationController::Feature.new_with_hash(
-        :role  => "vms_instances_filter_accord",
+        :role  => 'vms_instances_filter_accord',
         :name  => :vms_instances_filter,
-        :title => _("VMs & Instances"),),
+        :title => _('VMs & Instances'),),
 
       ApplicationController::Feature.new_with_hash(
-        :role  => "templates_images_filter_accord",
+        :role  => 'templates_images_filter_accord',
         :name  => :templates_images_filter,
-        :title => _("Templates & Images"),),
+        :title => _('Templates & Images'),),
     ]
   end
 
   def prefix_by_nodetype(nodetype)
     case TreeBuilder.get_model_for_prefix(nodetype).underscore
-    when "miq_template" then "templates_images"
-    when "vm"           then "vms_instances"
+    when 'miq_template' then 'templates_images'
+    when 'vm'           then 'vms_instances'
     end
   end
 
   def set_elements_and_redirect_unauthorized_user
-    @nodetype, = params[:id].split("_").last.split("-")
+    @nodetype, = params[:id].split('_').last.split('-')
     prefix = prefix_by_nodetype(@nodetype)
 
     # Position in tree that matches selected record
     if role_allows(:feature => "#{prefix}_filter_accord")
       set_active_elements_authorized_user("#{prefix}_filter_tree", "#{prefix}_filter", false, nil, nil)
     else
-      redirect_to(:controller => 'dashboard', :action => "auth_error")
+      redirect_to(:controller => 'dashboard', :action => 'auth_error')
       return true
     end
-    nodetype, id = params[:id].split("-")
+    nodetype, id = params[:id].split('-')
     self.x_node = "#{nodetype}-#{to_cid(id)}"
     get_node_info(x_node)
   end

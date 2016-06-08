@@ -76,14 +76,14 @@ class C3Charting < Charting
   end
 
   CHART_NAMES = [
-    ["Bars (2D)",             "Bar"],
-    ["Bars, Stacked (2D)",    "StackedBar"],
-    ["Columns (2D)",          "Column"],
-    ["Columns, Stacked (2D)", "StackedColumn"],
-    ["Donut (2D)",            "Donut"],
-    ["Pie (2D)",              "Pie"],
-    ["Line (2D)",             "Line"],
-    ["Area (2D)",             "Area"],
-    ["Area, Stacked (2D)",    "StackedArea"],
+    ['Bars (2D)',             'Bar'],
+    ['Bars, Stacked (2D)',    'StackedBar'],
+    ['Columns (2D)',          'Column'],
+    ['Columns, Stacked (2D)', 'StackedColumn'],
+    ['Donut (2D)',            'Donut'],
+    ['Pie (2D)',              'Pie'],
+    ['Line (2D)',             'Line'],
+    ['Area (2D)',             'Area'],
+    ['Area, Stacked (2D)',    'StackedArea'],
   ]
 end

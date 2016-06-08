@@ -11,13 +11,13 @@ module MiqReport::Generator::Utilization
 
     resource = Object.const_get(db_options[:resource_type]).find_by_id(db_options[:resource_id])
     if resource.nil?
-      raise _("unable to find %{type} with id %{number}") % {:type   => db_options[:resource_type],
+      raise _('unable to find %{type} with id %{number}') % {:type   => db_options[:resource_type],
                                                              :number => db_options[:resource_id]}
     end
 
     if db_options[:tag]
-      tag_klass, cat, tag = db_options[:tag].split("/")
-      cond = ["resource_type = ? and tag_names like ?", tag_klass, "%#{cat}/#{tag}%"]
+      tag_klass, cat, tag = db_options[:tag].split('/')
+      cond = ['resource_type = ? and tag_names like ?', tag_klass, "%#{cat}/#{tag}%"]
       results = VimPerformanceAnalysis.find_child_perf_for_time_period(resource, db_options[:interval], db_options.merge(:conditions => cond, :ext_options => {:tz => tz, :time_profile => time_profile}))
 
       # Roll up results by timestamp

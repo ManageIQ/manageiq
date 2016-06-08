@@ -10,7 +10,7 @@ class TreeBuilderReportWidgets < TreeBuilder
   end
 
   def root_options
-    [t = _("All Widgets"), t]
+    [t = _('All Widgets'), t]
   end
 
   # Get root nodes count/array for explorer tree

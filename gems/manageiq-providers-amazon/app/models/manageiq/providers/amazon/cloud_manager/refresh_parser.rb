@@ -52,22 +52,22 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   def get_private_images
     get_images(
       @aws_ec2.client.describe_images(:owners  => [:self],
-                                      :filters => [{:name   => "image-type",
-                                                    :values => ["machine"]}])[:images])
+                                      :filters => [{:name   => 'image-type',
+                                                    :values => ['machine']}])[:images])
   end
 
   def get_shared_images
     get_images(
       @aws_ec2.client.describe_images(:executable_users => [:self],
-                                      :filters          => [{:name   => "image-type",
-                                                             :values => ["machine"]}])[:images])
+                                      :filters          => [{:name   => 'image-type',
+                                                             :values => ['machine']}])[:images])
   end
 
   def get_public_images
     get_images(
       @aws_ec2.client.describe_images(:executable_users => [:all],
-                                      :filters          => [{:name   => "image-type",
-                                                             :values => ["machine"]}])[:images], true)
+                                      :filters          => [{:name   => 'image-type',
+                                                             :values => ['machine']}])[:images], true)
   end
 
   def get_images(images, is_public = false)
@@ -165,7 +165,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
   def parse_image(image, is_public)
     uid      = image.image_id
     location = image.image_location
-    guest_os = (image.platform == "windows") ? "windows" : "linux"
+    guest_os = (image.platform == 'windows') ? 'windows' : 'linux'
 
     name     = get_from_tags(image, :name)
     name ||= image.name
@@ -178,8 +178,8 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :ems_ref            => uid,
       :name               => name,
       :location           => location,
-      :vendor             => "amazon",
-      :raw_power_state    => "never",
+      :vendor             => 'amazon',
+      :raw_power_state    => 'never',
       :template           => true,
       # the is_public flag here avoids having to make an additional API call
       # per image, since we already know whether it's a public image
@@ -207,7 +207,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     flavor_uid = instance.instance_type
     @known_flavors << flavor_uid
     flavor = @data_index.fetch_path(:flavors, flavor_uid) ||
-             @data_index.fetch_path(:flavors, "unknown")
+             @data_index.fetch_path(:flavors, 'unknown')
 
     private_network = {
       :ipaddress => instance.private_ip_address.presence,
@@ -230,7 +230,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :uid_ems             => uid,
       :ems_ref             => uid,
       :name                => name,
-      :vendor              => "amazon",
+      :vendor              => 'amazon',
       :raw_power_state     => status,
       :boot_time           => instance.launch_time,
 
@@ -253,11 +253,11 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
       :cloud_subnet        => @data_index.fetch_path(:cloud_subnets, instance.subnet_id),
       :key_pairs           => [@data_index.fetch_path(:key_pairs, instance.key_name)].compact,
       :orchestration_stack => @data_index.fetch_path(:orchestration_stacks,
-                                                     get_from_tags(instance, "aws:cloudformation:stack-id")),
+                                                     get_from_tags(instance, 'aws:cloudformation:stack-id')),
     }
     new_result[:location] = public_network[:hostname] if public_network[:hostname]
-    new_result[:hardware][:networks] << private_network.merge(:description => "private") unless private_network.blank?
-    new_result[:hardware][:networks] << public_network.merge(:description => "public")   unless public_network.blank?
+    new_result[:hardware][:networks] << private_network.merge(:description => 'private') unless private_network.blank?
+    new_result[:hardware][:networks] << public_network.merge(:description => 'public')   unless public_network.blank?
 
     if parent_image
       new_result[:parent_vm] = parent_image
@@ -327,7 +327,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     child_stacks = []
     resources = raw_resources.collect do |resource|
       physical_id = resource.physical_resource_id
-      child_stacks << physical_id if resource.resource_type == "AWS::CloudFormation::Stack"
+      child_stacks << physical_id if resource.resource_type == 'AWS::CloudFormation::Stack'
       @data_index.fetch_path(:orchestration_stack_resources, physical_id)
     end
 
@@ -338,7 +338,7 @@ class ManageIQ::Providers::Amazon::CloudManager::RefreshParser < ManageIQ::Provi
     # Only need a temporary unique identifier for the template. Using the stack id is the cheapest way.
     uid = stack.stack_id
     new_result = {
-      :type        => "OrchestrationTemplateCfn",
+      :type        => 'OrchestrationTemplateCfn',
       :name        => stack.name,
       :description => stack.description,
       :content     => stack.client.get_template(:stack_name => stack.name).template_body,

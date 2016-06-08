@@ -17,10 +17,10 @@ module QuadiconHelper
     if options[:typ] == :listnav
       options[:height] ||= 80
       style = "margin-left: auto; margin-right: auto; width: 75px; height: #{options[:height]}px; z-index: 0;"
-      cls   = ""
+      cls   = ''
     else
-      style = ""
-      cls   = "quadicon"
+      style = ''
+      cls   = 'quadicon'
     end
 
     content_tag(:div, :style => style, :id => id, :class => cls) do
@@ -53,7 +53,7 @@ module QuadiconHelper
     result = item.passes_profiles?(session[:policies].keys)
     if result == true
       '100/check.png'
-    elsif result == "N/A"
+    elsif result == 'N/A'
       '100/na.png'
     else
       '100/x.png'
@@ -66,10 +66,10 @@ module QuadiconHelper
 
   def img_for_auth_status(item)
     img = case item.authentication_status
-          when "Invalid" then "x"
-          when "Valid"   then "checkmark"
-          when "None"    then "unknown"
-          else "exclamationpoint"
+          when 'Invalid' then 'x'
+          when 'Valid'   then 'checkmark'
+          when 'None'    then 'unknown'
+          else 'exclamationpoint'
           end
     "100/#{h(img)}.png"
   end
@@ -84,8 +84,8 @@ module QuadiconHelper
 
     if @embedded && !@showlinks
       column = case db
-                 when "MiqCimInstance"   then 'evm_display_name'
-                 when "ConfiguredSystem" then 'hostname'
+                 when 'MiqCimInstance'   then 'evm_display_name'
+                 when 'ConfiguredSystem' then 'hostname'
                  else 'name'
                  end
       content_tag(:span, :title => h(row[column])) do
@@ -94,7 +94,7 @@ module QuadiconHelper
     else
       if !@listicon.nil? && (@vm || @host || @storage)
         # if sub-item is being shown
-        if @listicon == "scan_history"
+        if @listicon == 'scan_history'
           href_link = url_for_item_quad_text(@vm, @id, @listicon.pluralize)
           content_tag(:a, truncate_for_quad(row['started_on'].to_s),
                       :href => href_link, :title => h(row['started_on']))
@@ -113,32 +113,32 @@ module QuadiconHelper
       elsif @policy_sim && session[:policies].length > 0
         # Policy sim (VMs only, for now)
         content_tag(:a, truncate_for_quad(row['name']),
-                    :href => url_for_db(db), :title => _("Show policy details for %s") % row['name'])
-      elsif db == "EmsCluster"
+                    :href => url_for_db(db), :title => _('Show policy details for %s') % row['name'])
+      elsif db == 'EmsCluster'
         content_tag(:a, truncate_for_quad(row['v_qualified_desc']),
-                    :href => url_for_db("ems_cluster", "show"), :title => h(row['v_qualified_desc']))
-      elsif db == "StorageManager"
+                    :href => url_for_db('ems_cluster', 'show'), :title => h(row['v_qualified_desc']))
+      elsif db == 'StorageManager'
         content_tag(:a, truncate_for_quad(row['name']),
-                    :href => url_for_db("storage_manager", "show"), :title => h(row['name']))
+                    :href => url_for_db('storage_manager', 'show'), :title => h(row['name']))
       else
         if @explorer
           column = case db
-                   when "ServiceResource"      then 'resource_name'
-                   when "ConfiguredSystem"     then 'hostname'
-                   when "ConfigurationProfile" then 'description'
+                   when 'ServiceResource'      then 'resource_name'
+                   when 'ConfiguredSystem'     then 'hostname'
+                   when 'ConfigurationProfile' then 'description'
                    else 'name'
                    end
           name = row[column]
 
-          if request.parameters[:controller] == "service" && @view.db == "Vm"
+          if request.parameters[:controller] == 'service' && @view.db == 'Vm'
             attributes = vm_quad_link_attributes(item)
             if attributes[:link]
               link_to(
                 truncate_for_quad(name),
                 {:controller => attributes[:controller], :action => attributes[:action], :id => attributes[:id]},
                 :title                 => name,
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true
+                'data-miq_sparkle_on'  => true,
+                'data-miq_sparkle_off' => true
               )
             else
               content_tag(:a, truncate_for_quad(name), :title => h(name))
@@ -147,20 +147,20 @@ module QuadiconHelper
             link_to(
               truncate_for_quad(name),
               {:action => 'x_show', :id => controller.send(:list_row_id, row)},
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
+              'data-miq_sparkle_on'  => true,
+              'data-miq_sparkle_off' => true,
               :title                 => name,
-              "data-method"          => :post,
+              'data-method'          => :post,
               :remote                => true
             )
           end
         else
           if row['evm_display_name']
-            content_tag(:a, truncate_for_quad(row['evm_display_name']), :href => url_for_db(db, "show"), :title => h(row['evm_display_name']))
+            content_tag(:a, truncate_for_quad(row['evm_display_name']), :href => url_for_db(db, 'show'), :title => h(row['evm_display_name']))
           elsif row['key']
             content_tag(:a, truncate_for_quad(row['key']), :href => url_for_db(db), :title => h(row['key']))
           else
-            content_tag(:a, truncate_for_quad(row['name']), :href => url_for_db(db, "show", item), :title => h(row['name']))
+            content_tag(:a, truncate_for_quad(row['name']), :href => url_for_db(db, 'show', item), :title => h(row['name']))
           end
         end
       end
@@ -179,12 +179,12 @@ module QuadiconHelper
                    elsif item.kind_of?(VmOrTemplate)
                      item.class.base_model.to_s.underscore
                    elsif item.kind_of?(ManageIQ::Providers::ConfigurationManager)
-                     "single_quad"
+                     'single_quad'
                    elsif %w(ExtManagementSystem Host).include?(item.class.base_class.name)
                      item.class.base_class.name.underscore
                    else
                      # All other models that only need single large icon and use name for hover text
-                     "single_quad"
+                     'single_quad'
                    end
 
     # VMs and miq_templates use the same partial
@@ -199,13 +199,13 @@ module QuadiconHelper
   def truncate_for_quad(value)
     return value if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
-    when "b"  # Old version, used first x chars followed by ...
-      value.first(TRUNC_TO) + "..."
-    when "f"  # Chop off front
-      "..." + value.last(TRUNC_TO)
+    when 'b'  # Old version, used first x chars followed by ...
+      value.first(TRUNC_TO) + '...'
+    when 'f'  # Chop off front
+      '...' + value.last(TRUNC_TO)
     else      # Chop out the middle
       numchars = TRUNC_TO / 2
-      value.first(numchars) + "..." + value.last(numchars)
+      value.first(numchars) + '...' + value.last(numchars)
     end
   end
 

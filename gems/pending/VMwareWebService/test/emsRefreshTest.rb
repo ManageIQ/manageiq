@@ -6,7 +6,7 @@ require 'VMwareWebService/MiqVim'
 require 'util/extensions/miq-hash'
 require 'util/vmdb-logger'
 
-trap("INT") { exit }
+trap('INT') { exit }
 
 VC_ACCESSORS = [
   [:dataStoresByMor, :storage],
@@ -19,7 +19,7 @@ VC_ACCESSORS = [
   [:resourcePoolsByMor, :rp],
 ]
 
-$vim_log = VMDBLogger.new("./ems_refresh_test.log") unless USE_BROKER
+$vim_log = VMDBLogger.new('./ems_refresh_test.log') unless USE_BROKER
 
 begin
   loop do
@@ -28,11 +28,11 @@ begin
     begin
 
       if USE_BROKER
-        puts "Connecting with broker."
+        puts 'Connecting with broker.'
         broker = MiqVimBroker.new(:client)
         vim = broker.getMiqVim(SERVER, USERNAME, PASSWORD)
       else
-        puts "Connecting without broker."
+        puts 'Connecting without broker.'
         vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
       end
 
@@ -40,7 +40,7 @@ begin
       puts "API version: #{vim.apiVersion}"
       puts
 
-      puts "Retrieving inventory..."
+      puts 'Retrieving inventory...'
       VC_ACCESSORS.each do |acc, type|
         puts "  Retrieving #{type}"
         vc_data[type] = vim.send(acc)
@@ -58,15 +58,15 @@ begin
           end
         end
       end
-      puts "Retrieving inventory...Complete"
+      puts 'Retrieving inventory...Complete'
 
     ensure
-      puts "Disconnecting"
+      puts 'Disconnecting'
       vim.disconnect if vim rescue nil
       vim = nil
     end
 
-    puts "Pretending to do work with the data"
+    puts 'Pretending to do work with the data'
     puts
     sleep 0.5
   end

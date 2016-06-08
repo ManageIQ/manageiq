@@ -1,5 +1,5 @@
 class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::OrchestrationStack
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::InfraManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::InfraManager'
   belongs_to :orchestration_template
   belongs_to :cloud_tenant
 
@@ -17,7 +17,7 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
   end
 
   def raw_update_stack(template, parameters)
-    ext_management_system.with_provider_connection(:service => "Orchestration") do |connection|
+    ext_management_system.with_provider_connection(:service => 'Orchestration') do |connection|
       stack    = connection.stacks.get(name, ems_ref)
       template ||= connection.get_stack_template(stack).body
 
@@ -30,11 +30,11 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
 
   def update_ready?
     # Update is possible only when in complete or failed state, otherwise API returns exception
-    raw_status.first.end_with?("_COMPLETE", "_FAILED")
+    raw_status.first.end_with?('_COMPLETE', '_FAILED')
   end
 
   def raw_delete_stack
-    options = {:service => "Orchestration"}
+    options = {:service => 'Orchestration'}
     options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
     ext_management_system.with_provider_connection(options) do |service|
       service.stacks.get(name, ems_ref).try(:delete)
@@ -46,7 +46,7 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
 
   def raw_status
     ems = ext_management_system
-    ems.with_provider_connection(:service => "Orchestration") do |service|
+    ems.with_provider_connection(:service => 'Orchestration') do |service|
       raw_stack = service.stacks.get(name, ems_ref)
       raise MiqException::MiqOrchestrationStackNotExistError, "#{name} does not exist on #{ems.name}" unless raw_stack
 

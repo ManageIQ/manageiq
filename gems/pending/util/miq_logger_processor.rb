@@ -8,7 +8,7 @@ class MiqLoggerProcessor
   end
 
   def each
-    File.open(file_name, "r") do |f|
+    File.open(file_name, 'r') do |f|
       while (line = get_next_line(f))
         yield line
       end
@@ -96,7 +96,7 @@ class MiqLoggerProcessor
   def get_next_line(f)
     return nil if @next_line == :eof
 
-    line = @next_line || ""
+    line = @next_line || ''
 
     loop do
       new_line = f.gets
@@ -151,7 +151,7 @@ class MiqLoggerLine < String
     level = line[bracket_index + 2, 5].strip
 
     message = line[bracket_index + 13..-1]
-    if message[0, 9] == "Q-task_id"
+    if message[0, 9] == 'Q-task_id'
       q_bracket_index = message.index(']', 11)
       q_task_id = message[11...q_bracket_index]
       message = message[q_bracket_index + 3..-1]

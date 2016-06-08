@@ -8,10 +8,10 @@ class TreeBuilderUtilization < TreeBuilderRegion
 
   def root_options
     if MiqEnterprise.my_enterprise.is_enterprise?
-      title = _("Enterprise")
+      title = _('Enterprise')
       icon  = :enterprise
     else
-      title = _("CFME Region: %{region_description} [%{region}]") %
+      title = _('CFME Region: %{region_description} [%{region}]') %
                 {:region_description => MiqRegion.my_region.description, :region => MiqRegion.my_region.region}
       icon  = :miq_region
     end
@@ -30,9 +30,9 @@ class TreeBuilderUtilization < TreeBuilderRegion
     [
       {
         :id    => "folder_c_xx-#{to_cid(object.id)}",
-        :text  => _("Cluster / Deployment Role"),
-        :image => "folder",
-        :tip   => _("Cluster / Deployment Role (Click to open)")
+        :text  => _('Cluster / Deployment Role'),
+        :image => 'folder',
+        :tip   => _('Cluster / Deployment Role (Click to open)')
       }
     ]
   end
@@ -48,12 +48,12 @@ class TreeBuilderUtilization < TreeBuilderRegion
 
   def x_get_tree_vandt_datacenter_kids(object)
     # Count clusters directly in this folder
-    objects = rbac_filtered_sorted_objects(object.clusters, "name", :match_via_descendants => VmOrTemplate)
+    objects = rbac_filtered_sorted_objects(object.clusters, 'name', :match_via_descendants => VmOrTemplate)
     object.folders.each do |f|
-      if f.name == "vm"                 # Count vm folder children
-        objects += rbac_filtered_sorted_objects(f.folders, "name", :match_via_descendants => VmOrTemplate)
-        objects += rbac_filtered_sorted_objects(f.vms_and_templates, "name")
-      elsif f.name == "host"            # Don't count host folder children
+      if f.name == 'vm'                 # Count vm folder children
+        objects += rbac_filtered_sorted_objects(f.folders, 'name', :match_via_descendants => VmOrTemplate)
+        objects += rbac_filtered_sorted_objects(f.vms_and_templates, 'name')
+      elsif f.name == 'host'            # Don't count host folder children
       else                              # add in other folders
         objects += rbac_filtered_objects([f], :match_via_descendants => VmOrTemplate)
       end
@@ -61,13 +61,13 @@ class TreeBuilderUtilization < TreeBuilderRegion
   end
 
   def x_get_tree_handc_datacenter_kids(object)
-    objects = rbac_filtered_sorted_objects(object.clusters, "name")
+    objects = rbac_filtered_sorted_objects(object.clusters, 'name')
     object.folders.each do |f|
-      if f.name == "vm"                 # Don't add vm folder children
-      elsif f.name == "host"            # Add host folder children
-        objects += rbac_filtered_sorted_objects(f.folders, "name")
-        objects += rbac_filtered_sorted_objects(f.clusters, "name")
-        objects += rbac_filtered_sorted_objects(f.hosts, "name")
+      if f.name == 'vm'                 # Don't add vm folder children
+      elsif f.name == 'host'            # Add host folder children
+        objects += rbac_filtered_sorted_objects(f.folders, 'name')
+        objects += rbac_filtered_sorted_objects(f.clusters, 'name')
+        objects += rbac_filtered_sorted_objects(f.hosts, 'name')
       else                              # add in other folders
         objects += rbac_filtered_objects([f])
       end
@@ -88,11 +88,11 @@ class TreeBuilderUtilization < TreeBuilderRegion
   end
 
   def x_get_tree_cluster_kids(object, count_only)
-    objects =  rbac_filtered_sorted_objects(object.hosts, "name")
+    objects =  rbac_filtered_sorted_objects(object.hosts, 'name')
     # FIXME: is the condition below ever false?
     unless [:bottlenecks, :utilization].include?(@type)
-      objects += rbac_filtered_sorted_objects(object.resource_pools, "name")
-      objects += rbac_filtered_sorted_objects(object.vms, "name")
+      objects += rbac_filtered_sorted_objects(object.resource_pools, 'name')
+      objects += rbac_filtered_sorted_objects(object.vms, 'name')
     end
     count_only_or_objects(count_only, objects, nil)
   end

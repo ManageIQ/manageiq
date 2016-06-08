@@ -1,14 +1,14 @@
 module MountManagerProbe
-  MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
+  MODDIR = File.expand_path(File.join(File.dirname(__FILE__), 'modules'))
 
-  PROBE_FILES = Dir.glob(File.join(MODDIR, "*Probe.rb*"))
+  PROBE_FILES = Dir.glob(File.join(MODDIR, '*Probe.rb*'))
   PROBE_FILES.each do |p|
     p.slice!(0..MODDIR.length)
-    p.chomp!(".enc")
-    p.chomp!(".rb")
+    p.chomp!('.enc')
+    p.chomp!('.rb')
   end
   # Reorder known probes for optimization
-  PROBE_FILES.unshift("WinMountProbe") if PROBE_FILES.delete("WinMountProbe")
+  PROBE_FILES.unshift('WinMountProbe') if PROBE_FILES.delete('WinMountProbe')
 
   def self.getRootMod(dobj, probes = nil)
     probes = PROBE_FILES if probes.nil?
@@ -18,7 +18,7 @@ module MountManagerProbe
       $log.debug "MIQ(MountManagerProbe-getRootMod) Mount Manager probe attempting [#{pmod}]"
       require_relative "modules/#{pmod}"
       if Object.const_get(pmod).probe(dobj)
-        mod = pmod.chomp("Probe")
+        mod = pmod.chomp('Probe')
         $log.info "MIQ(MountManagerProbe-getRootMod) Mount Manager probe detected [#{mod}]"
         require_relative "modules/#{mod}"
         return Object.const_get(mod)

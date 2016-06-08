@@ -2,18 +2,18 @@ module MiqReport::Seeding
   extend ActiveSupport::Concern
 
   module ClassMethods
-    REPORT_DIR  = File.expand_path(File.join(Rails.root, "product/reports"))
-    COMPARE_DIR = File.expand_path(File.join(Rails.root, "product/compare"))
+    REPORT_DIR  = File.expand_path(File.join(Rails.root, 'product/reports'))
+    COMPARE_DIR = File.expand_path(File.join(Rails.root, 'product/compare'))
 
     def seed
       # Force creation of model instances for all report yaml files that exist in the product/reports directories
       # that don't already have an instance in the model
-      MiqReport.sync_from_dir("report")
-      MiqReport.sync_from_dir("compare")
+      MiqReport.sync_from_dir('report')
+      MiqReport.sync_from_dir('compare')
     end
 
-    def seed_report(pattern, type = "report")
-      dir = type == "report" ? REPORT_DIR : COMPARE_DIR
+    def seed_report(pattern, type = 'report')
+      dir = type == 'report' ? REPORT_DIR : COMPARE_DIR
       files = Dir.glob(File.join(dir, "**/*#{pattern}*"))
       files.collect do |f|
         sync_from_file(f, dir, type)
@@ -21,13 +21,13 @@ module MiqReport::Seeding
     end
 
     def sync_from_dir(typ)
-      if typ == "report"
+      if typ == 'report'
         dir = REPORT_DIR
-        pattern = "*/*.yaml"
+        pattern = '*/*.yaml'
         cond = {:rpt_type => 'Default', :template_type => [typ, nil]}
       else
         dir = COMPARE_DIR
-        pattern = "*.yaml"
+        pattern = '*.yaml'
         cond = {:rpt_type => 'Default', :template_type => typ}
       end
 
@@ -53,16 +53,16 @@ module MiqReport::Seeding
       column_names.each { |c| rpt[c.to_sym] = yml[c] }
       rpt.delete :id
       # rpt[:name] = File.basename(filename, ".*")
-      rpt[:name] = yml["menu_name"].strip
-      rpt[:rpt_group] = File.basename(File.dirname(filename)).split("_").last
-      rpt[:rpt_type] = "Default"
-      rpt[:filename] = filename.sub(dir + "/", "")
+      rpt[:name] = yml['menu_name'].strip
+      rpt[:rpt_group] = File.basename(File.dirname(filename)).split('_').last
+      rpt[:rpt_type] = 'Default'
+      rpt[:filename] = filename.sub(dir + '/', '')
       # DB and filesystem have different precision
       # so calling round is done in order to eliminate the second fractions diff
       # otherwise the comparison of the file time and the report time from db
       # will always be different
       rpt[:file_mtime] = File.mtime(filename).utc.round
-      rpt[:priority] = File.basename(filename).split("_").first.to_i
+      rpt[:priority] = File.basename(filename).split('_').first.to_i
       # rec = self.find_by_name_and_rpt_group(rpt[:name], rpt[:rpt_group])
       # rec = self.find_by(:name => rpt[:name], :filename => rpt[:filename])
       rpt[:template_type] = typ

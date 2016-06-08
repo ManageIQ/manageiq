@@ -16,7 +16,7 @@ module CloudObjectStoreObjectHelper::TextualSummary
   end
 
   def textual_content_length
-    {:label => _("Content Length"), :value => number_to_human_size(@record.content_length, :precision => 2)}
+    {:label => _('Content Length'), :value => number_to_human_size(@record.content_length, :precision => 2)}
   end
 
   def textual_last_modified
@@ -33,9 +33,9 @@ module CloudObjectStoreObjectHelper::TextualSummary
 
   def textual_cloud_tenant
     cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
-    label = ui_lookup(:table => "cloud_tenant")
-    h = {:label => label, :image => "cloud_tenant", :value => (cloud_tenant.nil? ? "None" : cloud_tenant.name)}
-    if cloud_tenant && role_allows(:feature => "cloud_tenant_show")
+    label = ui_lookup(:table => 'cloud_tenant')
+    h = {:label => label, :image => 'cloud_tenant', :value => (cloud_tenant.nil? ? 'None' : cloud_tenant.name)}
+    if cloud_tenant && role_allows(:feature => 'cloud_tenant_show')
       h[:title] = _("Show this Cloud Object's parent %{parent}") % {:parent => label}
       h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
     end
@@ -44,13 +44,13 @@ module CloudObjectStoreObjectHelper::TextualSummary
 
   def textual_cloud_object_store_container
     object_store_container = @record.cloud_object_store_container if @record.respond_to?(:cloud_object_store_container)
-    label = ui_lookup(:table => "cloud_object_store_container")
+    label = ui_lookup(:table => 'cloud_object_store_container')
     h = {
       :label => label,
-      :image => "cloud_object_store_container",
-      :value => (object_store_container.nil? ? "None" : object_store_container.key)
+      :image => 'cloud_object_store_container',
+      :value => (object_store_container.nil? ? 'None' : object_store_container.key)
     }
-    if object_store_container && role_allows(:feature => "cloud_object_store_container_show")
+    if object_store_container && role_allows(:feature => 'cloud_object_store_container_show')
       h[:title] = _("Show this Cloud Object's parent %{parent}") % {:parent => label}
       h[:link]  = url_for(:controller => 'cloud_object_store_container',
                           :action     => 'show',

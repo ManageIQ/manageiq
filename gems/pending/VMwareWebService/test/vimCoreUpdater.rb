@@ -2,9 +2,9 @@ require_relative '../../bundler_setup'
 require 'log4r'
 require 'VMwareWebService/MiqVimCoreUpdater'
 
-SERVER   = raise "please define SERVER"
-USERNAME = raise "please define USERNAME"
-PASSWORD = raise "please define PASSWORD"
+SERVER   = raise 'please define SERVER'
+USERNAME = raise 'please define USERNAME'
+PASSWORD = raise 'please define PASSWORD'
 #
 # Formatter to output log messages to the console.
 #
@@ -21,7 +21,7 @@ $vim_log.add 'err_console'
 
 vimEm = MiqVimCoreUpdater.new(SERVER, USERNAME, PASSWORD)
 
-Signal.trap("INT") { vimEm.stop }
+Signal.trap('INT') { vimEm.stop }
 
 begin
   thread = Thread.new do

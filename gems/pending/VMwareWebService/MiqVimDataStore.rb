@@ -47,14 +47,14 @@ class MiqVimDataStore
   end
 
   def browser_locked
-    raise "browser_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'browser_locked: cache lock not held' unless @cacheLock.sync_locked?
     return @browser if @browser
 
     begin
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      props = @invObj.getMoProp_local(@dsMor, "browser")
-      @browser = props["browser"] if props
+      props = @invObj.getMoProp_local(@dsMor, 'browser')
+      @browser = props['browser'] if props
     ensure
       @cacheLock.sync_unlock if unlock
     end
@@ -108,18 +108,18 @@ class MiqVimDataStore
   end
 
   def dsSearch(typeClass, pattern = nil, path = nil, pathOnly = true, recurse = true)
-    searchSpec = VimHash.new("HostDatastoreBrowserSearchSpec") do |hdbs|
-      hdbs.details = VimHash.new("FileQueryFlags") do |fqf|
-        fqf.fileSize    = "true"
-        fqf.fileType    = "true"
-        fqf.modification  = "true"
-        fqf.fileOwner   = "true"
+    searchSpec = VimHash.new('HostDatastoreBrowserSearchSpec') do |hdbs|
+      hdbs.details = VimHash.new('FileQueryFlags') do |fqf|
+        fqf.fileSize    = 'true'
+        fqf.fileType    = 'true'
+        fqf.modification  = 'true'
+        fqf.fileOwner   = 'true'
       end
-      hdbs.query = VimArray.new("ArrayOfFileQuery") do |fqa|
+      hdbs.query = VimArray.new('ArrayOfFileQuery') do |fqa|
         fqa << VimHash.new(typeClass)
       end if typeClass
       hdbs.matchPattern = pattern if pattern
-      hdbs.sortFoldersFirst = "true"
+      hdbs.sortFoldersFirst = 'true'
     end
 
     browserMor = nil
@@ -146,19 +146,19 @@ class MiqVimDataStore
 
     ra = VimArray.new
     retObj.each do |dsbr|
-      dsl = (dsbr["folderPath"][-1, 1] == ']')
+      dsl = (dsbr['folderPath'][-1, 1] == ']')
 
-      dsbr["file"] = dsbr["file"] || []
+      dsbr['file'] = dsbr['file'] || []
       # dsbr["file"] = [dsbr["file"]] if !dsbr["file"].kind_of? Array
 
-      dsbr["file"].each do |fInfo|
+      dsbr['file'].each do |fInfo|
         path = nil
         if dsl
-          path = dsbr["folderPath"] + " " + fInfo["path"]
+          path = dsbr['folderPath'] + ' ' + fInfo['path']
         else
-          path = File.join(dsbr["folderPath"], fInfo["path"])
+          path = File.join(dsbr['folderPath'], fInfo['path'])
         end
-        fInfo["fullPath"] = path
+        fInfo['fullPath'] = path
         if pathOnly
           ra << path
         else
@@ -188,20 +188,20 @@ class MiqVimDataStore
   end
 
   def dsHash_locked(refresh = false)
-    raise "dsHash_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'dsHash_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@dsHash) if @dsHash && !refresh
 
     begin
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      searchSpec = VimHash.new("HostDatastoreBrowserSearchSpec") do |hdbs|
-        hdbs.details = VimHash.new("FileQueryFlags") do |fqf|
-          fqf.fileSize    = "true"
-          fqf.fileType    = "true"
-          fqf.modification  = "true"
-          fqf.fileOwner   = "true"
+      searchSpec = VimHash.new('HostDatastoreBrowserSearchSpec') do |hdbs|
+        hdbs.details = VimHash.new('FileQueryFlags') do |fqf|
+          fqf.fileSize    = 'true'
+          fqf.fileType    = 'true'
+          fqf.modification  = 'true'
+          fqf.fileOwner   = 'true'
         end
-        hdbs.sortFoldersFirst = "true"
+        hdbs.sortFoldersFirst = 'true'
       end
 
       $vim_log.info "MiqVimDataStore(#{@invObj.server}, #{@invObj.username}).dsHash_locked: calling searchDatastoreSubFolders_Task" if $vim_log
@@ -218,36 +218,36 @@ class MiqVimDataStore
         # @invObj.dumpObj(dsbr)
         # puts "****** dsbr end"
         # puts "Folder Path: #{dsbr.folderPath}"
-        dsl = (dsbr["folderPath"][-1, 1] == ']')
+        dsl = (dsbr['folderPath'][-1, 1] == ']')
 
         if dsl
           rInfo = {}
-          rInfo['fileType'] = "FolderFileInfo"
-          @dsHash[dsbr["folderPath"]] = rInfo
+          rInfo['fileType'] = 'FolderFileInfo'
+          @dsHash[dsbr['folderPath']] = rInfo
         else
-          dsbr["folderPath"] = dsbr["folderPath"][0..-2] if dsbr["folderPath"][-1, 1] == "/"
+          dsbr['folderPath'] = dsbr['folderPath'][0..-2] if dsbr['folderPath'][-1, 1] == '/'
         end
 
-        raise "[BUG] Parent directory '#{dsbr["folderPath"]}' not defined" unless (parentDir = @dsHash[dsbr["folderPath"]])
+        raise "[BUG] Parent directory '#{dsbr["folderPath"]}' not defined" unless (parentDir = @dsHash[dsbr['folderPath']])
         parentDir['dirEntries'] = [] unless parentDir['dirEntries']
         dirEntries = parentDir['dirEntries']
 
-        dsbr["file"] = dsbr["file"] || []
-        dsbr["file"] = [dsbr["file"]] unless dsbr["file"].kind_of? Array
+        dsbr['file'] = dsbr['file'] || []
+        dsbr['file'] = [dsbr['file']] unless dsbr['file'].kind_of? Array
 
-        dsbr["file"].each do |fInfo|
+        dsbr['file'].each do |fInfo|
           # puts "***** fInfo.class: #{fInfo.class.to_s}"
           fInfoHash = fInfo
           # fInfoHash = @invObj.unMarshalSoapMappingObject(fInfo)
           fInfoHash['fileType'] = fInfoHash.xsiType
           # puts "\tType: #{fInfoHash['xmlattr_type']}, Path: #{fInfoHash["path"]}"
           if dsl
-            path = dsbr["folderPath"] + " " + fInfoHash["path"]
+            path = dsbr['folderPath'] + ' ' + fInfoHash['path']
           else
-            path = File.join(dsbr["folderPath"], fInfoHash["path"])
+            path = File.join(dsbr['folderPath'], fInfoHash['path'])
           end
-          fInfoHash['dirEntries'] = [] if fInfoHash['fileType'] == "FolderFileInfo" && !fInfoHash['dirEntries']
-          dirEntries << fInfoHash["path"]
+          fInfoHash['dirEntries'] = [] if fInfoHash['fileType'] == 'FolderFileInfo' && !fInfoHash['dirEntries']
+          dirEntries << fInfoHash['path']
           @dsHash[path] = fInfoHash
         end
       end
@@ -271,7 +271,7 @@ class MiqVimDataStore
   end
 
   def dumpProps
-    props = @invObj.getMoProp_local(@dsMor, "browser")["browser"]
+    props = @invObj.getMoProp_local(@dsMor, 'browser')['browser']
     @invObj.dumpObj(props)
   end
 
@@ -283,7 +283,7 @@ class MiqVimDataStore
     # Sample URL required to read file
     # agentURI = "https://192.168.254.247/folder/BH_9336_1/BH_9336_1.vmsd?dcPath=ha-datacenter&dsName=DCRaid2"
     # Note: dcPath is only required if going through vCenter.
-    raise "get_file_content not supported through Virtual Center" if @invObj.isVirtualCenter?
+    raise 'get_file_content not supported through Virtual Center' if @invObj.isVirtualCenter?
     /(\d*)\.(\d*)/ =~ @invObj.about['version']
     raise "get_file_content not supported on [#{@invObj.about['fullName']}]" if $1.to_i < 3 || ($1.to_i == 3 && $2.to_i < 5)
 

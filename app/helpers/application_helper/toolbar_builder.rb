@@ -37,7 +37,7 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   def build_toolbar(tb_name)
-    toolbar = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : generic_toolbar(tb_name)
+    toolbar = tb_name == 'custom_buttons_tb' ? build_custom_buttons_toolbar(@record) : generic_toolbar(tb_name)
     build(toolbar)
   end
 
@@ -69,7 +69,7 @@ class ApplicationHelper::ToolbarBuilder
         props = toolbar_button(
           bsi,
           :child_id => bsi[:id],
-          :id       => bgi[:id] + "__" + bsi[:id],
+          :id       => bgi[:id] + '__' + bsi[:id],
           :type     => :button,
           :img      => img = img_value(bsi),
           :imgdis   => img,
@@ -203,12 +203,12 @@ class ApplicationHelper::ToolbarBuilder
       bg_idx += 1
 
       @sep_added = false
-      if @button_group && (!name.starts_with?(@button_group + "_") &&
-        !name.starts_with?("custom") && !name.starts_with?("dialog") &&
-        !name.starts_with?("miq_dialog") && !name.starts_with?("custom_button") &&
-        !name.starts_with?("instance_") && !name.starts_with?("image_")) &&
-         !["record_summary", "summary_main", "summary_download", "tree_main",
-           "x_edit_view_tb", "history_main", "ems_container_dashboard"].include?(name)
+      if @button_group && (!name.starts_with?(@button_group + '_') &&
+        !name.starts_with?('custom') && !name.starts_with?('dialog') &&
+        !name.starts_with?('miq_dialog') && !name.starts_with?('custom_button') &&
+        !name.starts_with?('instance_') && !name.starts_with?('image_')) &&
+         !['record_summary', 'summary_main', 'summary_download', 'tree_main',
+           'x_edit_view_tb', 'history_main', 'ems_container_dashboard'].include?(name)
         next      # Skip if button_group doesn't match
       else
         # keeping track of groups that were not skipped to add separator, else it adds a separator before a button even tho no other groups were shown, i.e. vm sub screens, drift_history
@@ -234,7 +234,7 @@ class ApplicationHelper::ToolbarBuilder
       :icon      => "product product-custom-#{input[:image]} fa-lg",
       :title     => input[:description].to_s,
       :enabled   => options[:enabled],
-      :url       => "button",
+      :url       => 'button',
       :url_parms => "?id=#{record.id}&button_id=#{button_id}&cls=#{record.class}&pressed=custom_button&desc=#{button_name}"
     }
     button[:text] = button_name if input[:text_display]
@@ -279,7 +279,7 @@ class ApplicationHelper::ToolbarBuilder
     service_buttons = record_to_service_buttons(record)
     unless service_buttons.empty?
       buttons = service_buttons.collect { |b| create_custom_button_hash(b, record, :enabled => nil) }
-      toolbar.button_group("custom_buttons_", buttons)
+      toolbar.button_group('custom_buttons_', buttons)
     end
 
     toolbar
@@ -287,7 +287,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def button_class_name(record)
     case record
-    when Service then      "ServiceTemplate"            # Service Buttons are defined in the ServiceTemplate class
+    when Service then      'ServiceTemplate'            # Service Buttons are defined in the ServiceTemplate class
     when VmOrTemplate then record.class.base_model.name
     else               record.class.base_class.name
     end
@@ -311,7 +311,7 @@ class ApplicationHelper::ToolbarBuilder
     cbses.sort_by { |cbs| cbs[:set_data][:group_index] }.collect do |cbs|
       group = {
         :id           => cbs.id,
-        :text         => cbs.name.split("|").first,
+        :text         => cbs.name.split('|').first,
         :description  => cbs.description,
         :image        => cbs.set_data[:button_image],
         :text_display => cbs.set_data.key?(:display) ? cbs.set_data[:display] : true
@@ -338,7 +338,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def get_image(img, b_name)
     # to change summary screen button to green image
-    return "summary-green" if b_name == "show_summary" && %w(miq_schedule miq_task scan_profile).include?(@layout)
+    return 'summary-green' if b_name == 'show_summary' && %w(miq_schedule miq_task scan_profile).include?(@layout)
     img
   end
 
@@ -352,13 +352,13 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_cb(id)
     case x_active_tree
     when :cb_reports_tree
-      if role_allows(:feature => "chargeback_reports") && ["chargeback_download_csv", "chargeback_download_pdf",
-                                                           "chargeback_download_text", "chargeback_report_only"].include?(id)
+      if role_allows(:feature => 'chargeback_reports') && ['chargeback_download_csv', 'chargeback_download_pdf',
+                                                           'chargeback_download_text', 'chargeback_report_only'].include?(id)
         return false
       end
     when :cb_rates_tree
-      if role_allows(:feature => "chargeback_rates") && ["chargeback_rates_copy", "chargeback_rates_delete",
-                                                         "chargeback_rates_edit", "chargeback_rates_new"].include?(id)
+      if role_allows(:feature => 'chargeback_rates') && ['chargeback_rates_copy', 'chargeback_rates_delete',
+                                                         'chargeback_rates_edit', 'chargeback_rates_new'].include?(id)
         return false
       end
     end
@@ -368,20 +368,20 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_ops(id)
     case x_active_tree
     when :settings_tree
-      return ["schedule_run_now"].include?(id) ? true : false
+      return ['schedule_run_now'].include?(id) ? true : false
     when :diagnostics_tree
       case @sb[:active_tab]
-      when "diagnostics_audit_log"
-        return ["fetch_audit_log", "refresh_audit_log"].include?(id) ? false : true
-      when "diagnostics_collect_logs"
+      when 'diagnostics_audit_log'
+        return ['fetch_audit_log', 'refresh_audit_log'].include?(id) ? false : true
+      when 'diagnostics_collect_logs'
         return %(collect_current_logs collect_logs log_depot_edit
                  zone_collect_current_logs zone_collect_logs
                  zone_log_depot_edit).include?(id) ? false : true
-      when "diagnostics_evm_log"
-        return ["fetch_log", "refresh_log"].include?(id) ? false : true
-      when "diagnostics_production_log"
-        return ["fetch_production_log", "refresh_production_log"].include?(id) ? false : true
-      when "diagnostics_roles_servers", "diagnostics_servers_roles"
+      when 'diagnostics_evm_log'
+        return ['fetch_log', 'refresh_log'].include?(id) ? false : true
+      when 'diagnostics_production_log'
+        return ['fetch_production_log', 'refresh_production_log'].include?(id) ? false : true
+      when 'diagnostics_roles_servers', 'diagnostics_servers_roles'
         case id
         when "reload_server_tree"
           return false
@@ -393,10 +393,10 @@ class ApplicationHelper::ToolbarBuilder
           return !(@record.class == AssignedServerRole && @record.master_supported?)
         end
         return true
-      when "diagnostics_summary"
-        return ["refresh_server_summary", "restart_server"].include?(id) ? false : true
-      when "diagnostics_workers"
-        return ["refresh_workers", "restart_workers"].include?(id) ? false : true
+      when 'diagnostics_summary'
+        return ['refresh_server_summary', 'restart_server'].include?(id) ? false : true
+      when 'diagnostics_workers'
+        return ['refresh_workers', 'restart_workers'].include?(id) ? false : true
       else
         return true
       end
@@ -407,7 +407,7 @@ class ApplicationHelper::ToolbarBuilder
       return true if common_buttons.include?(id) && @record.project?
       return false
     when :vmdb_tree
-      return ["db_connections", "db_details", "db_indexes", "db_settings"].include?(@sb[:active_tab]) ? false : true
+      return ['db_connections', 'db_details', 'db_indexes', 'db_settings'].include?(@sb[:active_tab]) ? false : true
     else
       return true
     end
@@ -418,12 +418,12 @@ class ApplicationHelper::ToolbarBuilder
     when :customization_templates_tree
       return true unless role_allows(:feature => id)
       nodes = x_node.split('-')
-      if nodes.first == "root"
+      if nodes.first == 'root'
         # show only add button on root node
-        id != "customization_template_new"
-      elsif nodes.last == "system" || (@record && @record.system)
+        id != 'customization_template_new'
+      elsif nodes.last == 'system' || (@record && @record.system)
         # allow only copy button for system customization templates
-        id != "customization_template_copy"
+        id != 'customization_template_copy'
       else
         false
       end
@@ -441,22 +441,22 @@ class ApplicationHelper::ToolbarBuilder
     case x_active_tree
     when :widgets_tree
       case id
-      when "widget_new"
-        return x_node == "root"
-      when "widget_generate_content"
-        return @sb[:wtype] == "m"
+      when 'widget_new'
+        return x_node == 'root'
+      when 'widget_generate_content'
+        return @sb[:wtype] == 'm'
       end
       return false
     when :reports_tree
       case id
-      when "saved_report_delete", "reload"
+      when 'saved_report_delete', 'reload'
         return @sb[:active_tab] != "saved_reports"
-      when "miq_report_edit", "miq_report_delete"
+      when 'miq_report_edit', 'miq_report_delete'
         return @sb[:active_tab] == "report_info" && @record.rpt_type == "Custom" ?
                false : true
-      when "miq_report_copy", "miq_report_new", "miq_report_run", "miq_report_only", "miq_report_schedule_add"
+      when 'miq_report_copy', 'miq_report_new', "miq_report_run", "miq_report_only", "miq_report_schedule_add"
         return @sb[:active_tab] == "saved_reports"
-      when "view_graph", "view_hybrid", "view_tabular"
+      when 'view_graph', 'view_hybrid', "view_tabular"
         return @ght_type && @report && @report.graph &&
           (@zgraph || (@ght_type == "tabular" && @html)) ? false : true
       end
@@ -465,9 +465,9 @@ class ApplicationHelper::ToolbarBuilder
         return true unless role_allows(:feature => id)
       end
       case id
-      when "reload"
-        return x_node != "root"
-      when "view_graph", "view_hybrid", "view_tabular"
+      when 'reload'
+        return x_node != 'root'
+      when 'view_graph', 'view_hybrid', "view_tabular"
         return @ght_type && @report && @report.graph &&
           (@zgraph || (@ght_type == "tabular" && @html)) ? false : true
       end
@@ -478,7 +478,7 @@ class ApplicationHelper::ToolbarBuilder
 
   def build_toolbar_hide_button_service(id)
     case id
-    when "service_reconfigure"
+    when 'service_reconfigure'
       return true unless @record.validate_reconfigure
     end
     false
@@ -487,7 +487,7 @@ class ApplicationHelper::ToolbarBuilder
   # Determine if a button should be hidden
   def build_toolbar_hide_button(id)
     return false if id.start_with?('history_')
-    return true if id == "blank_button" # Always hide the blank button placeholder
+    return true if id == 'blank_button' # Always hide the blank button placeholder
 
     # Hide configuration buttons for specific Container* entities
     return true if %w(container_node_edit container_node_delete container_node_new).include?(id) &&
@@ -525,7 +525,7 @@ class ApplicationHelper::ToolbarBuilder
                    @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
 
     # hide compliance check and comparison buttons rendered for orchestration stack instances
-    return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
+    return true if @record.kind_of?(OrchestrationStack) && @display == 'instances' &&
                    %w(instance_check_compliance instance_compare).include?(id)
 
     # don't hide view buttons in toolbar
@@ -534,87 +534,87 @@ class ApplicationHelper::ToolbarBuilder
       tree_large tree_small).include?(id) && !%w(miq_policy_rsop ops).include?(@layout)
 
     # dont hide back to summary button button when not in explorer
-    return false if id == "show_summary" && !@explorer
+    return false if id == 'show_summary' && !@explorer
 
     # need to hide add buttons when on sub-list view screen of a CI.
-    return true if id.ends_with?("_new", "_discover") &&
-                   @lastaction == "show" && @display != "main"
+    return true if id.ends_with?('_new', '_discover') &&
+                   @lastaction == 'show' && @display != 'main'
 
-    if id == "summary_reload"                             # Show reload button if
+    if id == 'summary_reload'                             # Show reload button if
       return @explorer && # we are in explorer and
         ((@record && #    1) we are on a record and
-         !["miq_policy_rsop"].include?(@layout) && # @layout is not one of these
-         !["details", "item"].include?(@showtype)) || #       not showing list or single sub screen item i.e VM/Users
-         @lastaction == "show_list") ? # or 2) selected node shows a list of records
+         !['miq_policy_rsop'].include?(@layout) && # @layout is not one of these
+         !['details', 'item'].include?(@showtype)) || #       not showing list or single sub screen item i.e VM/Users
+         @lastaction == 'show_list') ? # or 2) selected node shows a list of records
         false : true
     end
 
     # user can see the buttons if they can get to Policy RSOP/Automate Simulate screen
-    return false if ["miq_ae_tools"].include?(@layout)
+    return false if ['miq_ae_tools'].include?(@layout)
 
     # hide this button when in custom buttons tree on ci node, this button is added in toolbar to show on Buttons folder node in CatalogItems tree
-    return true if id == "ab_button_new" && x_active_tree == :ab_tree && x_node.split('_').length == 2 && x_node.split('_')[0] == "xx-ab"
+    return true if id == 'ab_button_new' && x_active_tree == :ab_tree && x_node.split('_').length == 2 && x_node.split('_')[0] == 'xx-ab'
 
     # Form buttons don't need RBAC check
-    return false if ["button_add"].include?(id) && @edit && !@edit[:rec_id]
+    return false if ['button_add'].include?(id) && @edit && !@edit[:rec_id]
 
     # Form buttons don't need RBAC check
-    return false if ["button_save", "button_reset"].include?(id) && @edit && @edit[:rec_id]
+    return false if ['button_save', 'button_reset'].include?(id) && @edit && @edit[:rec_id]
 
     # Form buttons don't need RBAC check
-    return false if ["button_cancel"].include?(id)
+    return false if ['button_cancel'].include?(id)
 
     # buttons on compare/drift screen are allowed if user has access to compare/drift
-    return false if id.starts_with?("compare_", "drift_", "comparemode_", "driftmode_")
+    return false if id.starts_with?('compare_', 'drift_', 'comparemode_', 'driftmode_')
 
     # Allow custom buttons on CI show screen, user can see custom button if they can get to show screen
-    return false if id.starts_with?("custom_")
+    return false if id.starts_with?('custom_')
 
-    return false if id == "miq_request_reload" && # Show the request reload button
-                    (@lastaction == "show_list" || @showtype == "miq_provisions")
+    return false if id == 'miq_request_reload' && # Show the request reload button
+                    (@lastaction == 'show_list' || @showtype == 'miq_provisions')
 
-    if @layout == "miq_policy_rsop"
+    if @layout == 'miq_policy_rsop'
       return build_toolbar_hide_button_rsop(id)
     end
 
-    if id.starts_with?("chargeback_")
+    if id.starts_with?('chargeback_')
       res = build_toolbar_hide_button_cb(id)
       return res
     end
 
-    if @layout == "ops"
+    if @layout == 'ops'
       res = build_toolbar_hide_button_ops(id)
       return res
     end
 
-    if @layout == "pxe" || id.starts_with?("pxe_", "customization_template_")
+    if @layout == 'pxe' || id.starts_with?('pxe_', 'customization_template_')
       res = build_toolbar_hide_button_pxe(id)
       return res
     end
 
-    if @layout == "report"
+    if @layout == 'report'
       res = build_toolbar_hide_button_report(id)
       return res
     end
 
-    return false if role_allows(:feature => "my_settings_time_profiles") && @layout == "configuration" &&
-                    @tabform == "ui_4"
+    return false if role_allows(:feature => 'my_settings_time_profiles') && @layout == 'configuration' &&
+                    @tabform == 'ui_4'
 
-    return false if id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report"
+    return false if id.starts_with?('miq_capacity_') && @sb[:active_tab] == 'report'
 
     # hide button if id is approve/deny and miq_request_approval feature is not allowed.
-    return true if !role_allows(:feature => "miq_request_approval") && ["miq_request_approve", "miq_request_deny"].include?(id)
+    return true if !role_allows(:feature => 'miq_request_approval') && ['miq_request_approve', 'miq_request_deny'].include?(id)
 
     # don't check for feature RBAC if id is miq_request_approve/deny
     unless %w(miq_policy catalogs).include?(@layout)
-      return true if !role_allows(:feature => id) && !["miq_request_approve", "miq_request_deny"].include?(id) &&
+      return true if !role_allows(:feature => id) && !['miq_request_approve', 'miq_request_deny'].include?(id) &&
                      id !~ /^history_\d*/ &&
-                     !id.starts_with?("dialog_") && !id.starts_with?("miq_task_")
+                     !id.starts_with?('dialog_') && !id.starts_with?('miq_task_')
     end
 
     # Check buttons with other restriction logic
     case id
-    when "dialog_add_box", "dialog_add_element", "dialog_add_tab", "dialog_res_discard", "dialog_resource_remove"
+    when 'dialog_add_box', 'dialog_add_element', "dialog_add_tab", "dialog_res_discard", "dialog_resource_remove"
       return true unless @edit
       return true if id == "dialog_res_discard" && @sb[:edit_typ] != "add"
       return true if id == "dialog_resource_remove" && (@sb[:edit_typ] == "add" || x_node == "root")
@@ -622,20 +622,20 @@ class ApplicationHelper::ToolbarBuilder
       return true if id == "dialog_add_tab" && (nodes.length > 2)
       return true if id == "dialog_add_box" && (nodes.length < 2 || nodes.length > 3)
       return true if id == "dialog_add_element" && (nodes.length < 3 || nodes.length > 4)
-    when "dialog_copy", "dialog_delete", "dialog_edit", "dialog_new"
+    when 'dialog_copy', 'dialog_delete', "dialog_edit", "dialog_new"
       return true if @edit && @edit[:current]
-    when "miq_task_canceljob"
-      return true unless ["all_tasks", "all_ui_tasks"].include?(@layout)
-    when "vm_console"
+    when 'miq_task_canceljob'
+      return true unless ['all_tasks', 'all_ui_tasks'].include?(@layout)
+    when 'vm_console'
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'MKS' || !@record.console_supported?(type)
-    when "vm_vnc_console"
+    when 'vm_vnc_console'
       return !@record.console_supported?('vnc')
-    when "vm_vmrc_console"
+    when 'vm_vmrc_console'
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'VMRC' || !@record.console_supported?(type)
     # Check buttons behind SMIS setting
-    when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
+    when 'ontap_storage_system_statistics', 'ontap_logical_disk_statistics', "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
       return true unless get_vmdb_config[:product][:smis]
     when 'vm_publish'
@@ -643,65 +643,65 @@ class ApplicationHelper::ToolbarBuilder
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider
-    return true if (id == "ems_infra_scale" || id == "ems_infra_scaledown") &&
+    return true if (id == 'ems_infra_scale' || id == 'ems_infra_scaledown') &&
                    (@record.class != ManageIQ::Providers::Openstack::InfraManager ||
-                    !role_allows(:feature => "ems_infra_scale") ||
+                    !role_allows(:feature => 'ems_infra_scale') ||
                    (@record.class == ManageIQ::Providers::Openstack::InfraManager && @record.orchestration_stacks.count == 0))
 
     # Now check model/record specific rules
     case get_record_cls(@record)
-    when "AssignedServerRole"
+    when 'AssignedServerRole'
       case id
-      when "delete_server"
+      when 'delete_server'
         return true
       end
-    when "Condition"
+    when 'Condition'
       case id
-      when "condition_edit"
-        return true unless role_allows(:feature => "condition_edit")
-      when "condition_copy"
-        return true if x_active_tree != :condition_tree || !role_allows(:feature => "condition_new")
-      when "condition_delete"
-        return true if x_active_tree != :condition_tree || !role_allows(:feature => "condition_delete")
-      when "condition_policy_copy"
-        return true if x_active_tree == :condition_tree || !role_allows(:feature => "condition_new")
-      when "condition_remove"
-        return true if x_active_tree == :condition_tree || !role_allows(:feature => "condition_delete")
+      when 'condition_edit'
+        return true unless role_allows(:feature => 'condition_edit')
+      when 'condition_copy'
+        return true if x_active_tree != :condition_tree || !role_allows(:feature => 'condition_new')
+      when 'condition_delete'
+        return true if x_active_tree != :condition_tree || !role_allows(:feature => 'condition_delete')
+      when 'condition_policy_copy'
+        return true if x_active_tree == :condition_tree || !role_allows(:feature => 'condition_new')
+      when 'condition_remove'
+        return true if x_active_tree == :condition_tree || !role_allows(:feature => 'condition_delete')
       end
-    when "CustomButton"
+    when 'CustomButton'
       case id
-      when "ab_button_edit", "ab_button_delete", "ab_button_simulate"
+      when 'ab_button_edit', 'ab_button_delete', "ab_button_simulate"
         return !role_allows_button_manipulation if x_active_tree == :sandt_tree
       end
-    when "CustomButtonSet"
+    when 'CustomButtonSet'
       case id
-      when "ab_group_edit", "ab_group_delete", "ab_button_new"
+      when 'ab_group_edit', 'ab_group_delete', "ab_button_new"
         return !role_allows_button_manipulation if x_active_tree == :sandt_tree
       end
-    when "Host"
+    when 'Host'
       case id
-      when "host_protect"
+      when 'host_protect'
         return true unless @record.smart?
-      when "host_refresh"
+      when 'host_refresh'
         return true unless @record.is_refreshable?
-      when "host_scan"
+      when 'host_scan'
         return true unless @record.is_scannable?
-      when "host_shutdown", "host_standby", "host_reboot",
+      when 'host_shutdown', 'host_standby', "host_reboot",
           "host_enter_maint_mode", "host_exit_maint_mode",
           "host_start", "host_stop", "host_reset"
         btn_id = id.split("_")[1..-1].join("_")
         return true unless @record.is_available?(btn_id.to_sym)
-      when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
+      when 'perf_refresh', 'perf_reload', "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
-    when "MiqAction"
+    when 'MiqAction'
       case id
-      when "action_edit"
-        return true unless role_allows(:feature => "action_edit")
-      when "action_delete"
-        return true unless role_allows(:feature => "action_delete")
+      when 'action_edit'
+        return true unless role_allows(:feature => 'action_edit')
+      when 'action_delete'
+        return true unless role_allows(:feature => 'action_delete')
       end
-    when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
+    when 'MiqAeClass', 'MiqAeDomain', "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
       case id
       when "miq_ae_domain_lock"
@@ -711,205 +711,205 @@ class ApplicationHelper::ToolbarBuilder
       else
         return true unless editable_domain?(@record)
       end
-    when "MiqAlert"
+    when 'MiqAlert'
       case id
-      when "alert_copy"
-        return true unless role_allows(:feature => "alert_copy")
-      when "alert_edit"
-        return true unless role_allows(:feature => "alert_edit")
-      when "alert_delete"
-        return true unless role_allows(:feature => "alert_delete")
+      when 'alert_copy'
+        return true unless role_allows(:feature => 'alert_copy')
+      when 'alert_edit'
+        return true unless role_allows(:feature => 'alert_edit')
+      when 'alert_delete'
+        return true unless role_allows(:feature => 'alert_delete')
       end
-    when "MiqAlertSet"
+    when 'MiqAlertSet'
       case id
-      when "alert_profile_edit"
-        return true unless role_allows(:feature => "alert_profile_edit")
-      when "alert_profile_delete"
-        return true unless role_allows(:feature => "alert_profile_delete")
+      when 'alert_profile_edit'
+        return true unless role_allows(:feature => 'alert_profile_edit')
+      when 'alert_profile_delete'
+        return true unless role_allows(:feature => 'alert_profile_delete')
       end
-    when "MiqEventDefinition"
+    when 'MiqEventDefinition'
       case id
-      when "event_edit"
-        return true if x_active_tree == :event_tree || !role_allows(:feature => "event_edit")
+      when 'event_edit'
+        return true if x_active_tree == :event_tree || !role_allows(:feature => 'event_edit')
       end
-    when "MiqPolicy"
+    when 'MiqPolicy'
       case id
-      when "condition_edit", "policy_edit", "policy_edit_conditions"
+      when 'condition_edit', 'policy_edit', "policy_edit_conditions"
         return true unless role_allows(:feature => "policy_edit")
-      when "policy_edit_conditions"
-        return true unless role_allows(:feature => "policy_edit_conditions")
-      when "policy_edit_events"
-        return true if !role_allows(:feature => "policy_edit") ||
-                       @policy.mode == "compliance"
-      when "policy_copy"
-        return true if !role_allows(:feature => "policy_copy") ||
+      when 'policy_edit_conditions'
+        return true unless role_allows(:feature => 'policy_edit_conditions')
+      when 'policy_edit_events'
+        return true if !role_allows(:feature => 'policy_edit') ||
+                       @policy.mode == 'compliance'
+      when 'policy_copy'
+        return true if !role_allows(:feature => 'policy_copy') ||
                        x_active_tree != :policy_tree
-      when "policy_delete"
-        return true if !role_allows(:feature => "policy_delete") ||
+      when 'policy_delete'
+        return true if !role_allows(:feature => 'policy_delete') ||
                        x_active_tree != :policy_tree
       end
-    when "MiqPolicySet"
+    when 'MiqPolicySet'
       case id
-      when "profile_edit"
-        return true unless role_allows(:feature => "profile_edit")
-      when "profile_delete"
-        return true unless role_allows(:feature => "profile_delete")
+      when 'profile_edit'
+        return true unless role_allows(:feature => 'profile_edit')
+      when 'profile_delete'
+        return true unless role_allows(:feature => 'profile_delete')
       end
-    when "MiqRequest"
+    when 'MiqRequest'
       # Don't hide certain buttons on AutomationRequest screen
-      return true if @record.resource_type == "AutomationRequest" &&
-                     !["miq_request_approve", "miq_request_deny", "miq_request_delete"].include?(id)
+      return true if @record.resource_type == 'AutomationRequest' &&
+                     !['miq_request_approve', 'miq_request_deny', 'miq_request_delete'].include?(id)
 
       case id
-      when "miq_request_approve", "miq_request_deny"
+      when 'miq_request_approve', 'miq_request_deny'
         return true if ["approved", "denied"].include?(@record.approval_state) || @showtype == "miq_provisions"
-      when "miq_request_edit"
-        return true if current_user.name != @record.requester_name || ["approved", "denied"].include?(@record.approval_state)
-      when "miq_request_copy"
+      when 'miq_request_edit'
+        return true if current_user.name != @record.requester_name || ['approved', 'denied'].include?(@record.approval_state)
+      when 'miq_request_copy'
         resource_types_for_miq_request_copy = %w(MiqProvisionRequest
                                                  MiqHostProvisionRequest
                                                  MiqProvisionConfiguredSystemRequest)
         return true if !resource_types_for_miq_request_copy.include?(@record.resource_type) ||
                        ((current_user.name != @record.requester_name ||
                          !@record.request_pending_approval?) &&
-                        @showtype == "miq_provisions")
+                        @showtype == 'miq_provisions')
       end
-    when "MiqServer", "MiqRegion"
+    when 'MiqServer', 'MiqRegion'
       case id
       when "role_start", "role_suspend", "promote_server", "demote_server"
         return true
       when "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"
         return true
       end
-    when "MiqTemplate"
+    when 'MiqTemplate'
       case id
-      when "miq_template_clone"
+      when 'miq_template_clone'
         return true unless @record.is_available?(:clone)
-      when "miq_template_policy_sim", "miq_template_protect"
+      when 'miq_template_policy_sim', 'miq_template_protect'
         return true if @record.host && @record.host.vmm_product.downcase == "workstation"
-      when "miq_template_refresh"
-        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "miq_template_scan", "image_scan"
+      when 'miq_template_refresh'
+        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == 'workstation')
+      when 'miq_template_scan', 'image_scan'
         return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
         return true unless @record.has_proxy?
-      when "miq_template_refresh", "miq_template_reload"
+      when 'miq_template_refresh', 'miq_template_reload'
         return true unless @perf_options[:typ] == "realtime"
       end
-    when "ScanItemSet"
+    when 'ScanItemSet'
       case id
-      when "scan_delete"
+      when 'scan_delete'
         return true if @record.read_only
-      when "scan_edit"
+      when 'scan_edit'
         return true if @record.read_only
       end
-    when "ServerRole"
+    when 'ServerRole'
       case id
-      when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
+      when 'server_delete', 'role_start', "role_suspend", "promote_server", "demote_server"
         return true
       end
-    when "Service", "ServiceOrchestration"
+    when 'Service', 'ServiceOrchestration'
       return build_toolbar_hide_button_service(id)
-    when "ServiceTemplate"
+    when 'ServiceTemplate'
       case id
-      when "ab_group_new", "ab_button_new"
+      when 'ab_group_new', 'ab_button_new'
         return !role_allows_button_manipulation
       when /^history_\d*/
         return false
       else
         return !role_allows(:feature => id)
       end
-    when "Vm"
+    when 'Vm'
       case id
-      when "vm_clone"
+      when 'vm_clone'
         return true unless @record.is_available?(:clone)
-      when "vm_collect_running_processes"
-        return true if (@record.retired || @record.current_state == "never") && !@record.is_available?(:collect_running_processes)
-      when "vm_guest_startup", "vm_start", "instance_start", "instance_resume"
+      when 'vm_collect_running_processes'
+        return true if (@record.retired || @record.current_state == 'never') && !@record.is_available?(:collect_running_processes)
+      when 'vm_guest_startup', 'vm_start', "instance_start", "instance_resume"
         return true unless @record.is_available?(:start)
-      when "vm_guest_standby"
+      when 'vm_guest_standby'
         return true unless @record.is_available?(:standby_guest)
-      when "vm_guest_shutdown", "instance_guest_shutdown"
+      when 'vm_guest_shutdown', 'instance_guest_shutdown'
         return true unless @record.is_available?(:shutdown_guest)
-      when "vm_guest_restart", "instance_guest_restart"
+      when 'vm_guest_restart', 'instance_guest_restart'
         return true unless @record.is_available?(:reboot_guest)
-      when "vm_migrate"
+      when 'vm_migrate'
         return true unless @record.is_available?(:migrate)
-      when "vm_publish"
+      when 'vm_publish'
         return true unless @record.is_available?(:publish)
-      when "vm_reconfigure"
+      when 'vm_reconfigure'
         return true unless @record.reconfigurable?
-      when "vm_retire"
+      when 'vm_retire'
         return true unless @record.is_available?(:retire)
-      when "vm_retire_now"
+      when 'vm_retire_now'
         return true unless @record.is_available?(:retire_now)
-      when "vm_stop", "instance_stop"
+      when 'vm_stop', 'instance_stop'
         return true unless @record.is_available?(:stop)
-      when "vm_reset", "instance_reset"
+      when 'vm_reset', 'instance_reset'
         return true unless @record.is_available?(:reset)
-      when "vm_suspend", "instance_suspend"
+      when 'vm_suspend', 'instance_suspend'
         return true unless @record.is_available?(:suspend)
-      when "instance_shelve"
+      when 'instance_shelve'
         return true unless @record.is_available?(:shelve)
-      when "instance_shelve_offload"
+      when 'instance_shelve_offload'
         return true unless @record.is_available?(:shelve_offload)
-      when "instance_pause"
+      when 'instance_pause'
         return true unless @record.is_available?(:pause)
-      when "instance_terminate"
+      when 'instance_terminate'
         return true unless @record.is_available?(:terminate)
-      when "vm_policy_sim", "vm_protect"
+      when 'vm_policy_sim', 'vm_protect'
         return true if @record.host && @record.host.vmm_product.to_s.downcase == "workstation"
-      when "vm_refresh"
-        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == "workstation")
-      when "vm_scan", "instance_scan"
+      when 'vm_refresh'
+        return true if @record && !@record.ext_management_system && !(@record.host && @record.host.vmm_product.downcase == 'workstation')
+      when 'vm_scan', 'instance_scan'
         return true unless @record.is_available?(:smartstate_analysis) || @record.is_available_now_error_message(:smartstate_analysis)
         return true unless @record.has_proxy?
-      when "perf_refresh", "perf_reload", "vm_perf_refresh", "vm_perf_reload"
+      when 'perf_refresh', 'perf_reload', "vm_perf_refresh", "vm_perf_reload"
         return true unless @perf_options[:typ] == "realtime"
       end
-    when "OrchestrationTemplate", "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
+    when 'OrchestrationTemplate', 'OrchestrationTemplateCfn', "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
       return true unless role_allows(:feature => id)
-    when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
+    when 'ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem', 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem'
       case id
       when "configured_system_provision"
         return true unless @record.provisionable?
       end
-    when "NilClass"
+    when 'NilClass'
       case id
-      when "ab_group_new", "ab_button_new", "ab_group_reorder"
+      when 'ab_group_new', 'ab_button_new', "ab_group_reorder"
         return !role_allows_button_manipulation if x_active_tree == :sandt_tree
-      when "action_new"
-        return true unless role_allows(:feature => "action_new")
-      when "alert_profile_new"
-        return true unless role_allows(:feature => "alert_profile_new")
-      when "alert_new"
-        return true unless role_allows(:feature => "alert_new")
-      when "condition_new"
-        return true unless role_allows(:feature => "condition_new")
-      when "log_download"
-        return true if ["workers", "download_logs"].include?(@lastaction)
-      when "log_collect"
-        return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "log_reload"
-        return true if ["workers", "download_logs"].include?(@lastaction)
-      when "logdepot_edit"
-        return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "policy_new"
-        return true unless role_allows(:feature => "policy_new")
-      when "profile_new"
-        return true unless role_allows(:feature => "profile_new")
-      when "processmanager_restart"
-        return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "refresh_workers"
-        return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "refresh_logs"
-        return true if ["audit_logs", "evm_logs", "workers"].include?(@lastaction)
-      when "timeline_csv"
+      when 'action_new'
+        return true unless role_allows(:feature => 'action_new')
+      when 'alert_profile_new'
+        return true unless role_allows(:feature => 'alert_profile_new')
+      when 'alert_new'
+        return true unless role_allows(:feature => 'alert_new')
+      when 'condition_new'
+        return true unless role_allows(:feature => 'condition_new')
+      when 'log_download'
+        return true if ['workers', 'download_logs'].include?(@lastaction)
+      when 'log_collect'
+        return true if ['workers', 'evm_logs', 'audit_logs'].include?(@lastaction)
+      when 'log_reload'
+        return true if ['workers', 'download_logs'].include?(@lastaction)
+      when 'logdepot_edit'
+        return true if ['workers', 'evm_logs', 'audit_logs'].include?(@lastaction)
+      when 'policy_new'
+        return true unless role_allows(:feature => 'policy_new')
+      when 'profile_new'
+        return true unless role_allows(:feature => 'profile_new')
+      when 'processmanager_restart'
+        return true if ['download_logs', 'evm_logs', 'audit_logs'].include?(@lastaction)
+      when 'refresh_workers'
+        return true if ['download_logs', 'evm_logs', 'audit_logs'].include?(@lastaction)
+      when 'refresh_logs'
+        return true if ['audit_logs', 'evm_logs', 'workers'].include?(@lastaction)
+      when 'timeline_csv'
         return true unless @report
-      when "timeline_pdf"
+      when 'timeline_pdf'
         return true unless @report
-      when "timeline_txt"
+      when 'timeline_txt'
         return true unless @report
-      when "vm_clone", "vm_publish", "vm_migrate", "vm_retire", "vm_retire_now"
+      when 'vm_clone', 'vm_publish', "vm_migrate", "vm_retire", "vm_retire_now"
         if @sb[:trees][:vandt_tree].present? &&
            (@sb[:trees][:vandt_tree][:active_node] == "xx-arch" ||
             @sb[:trees][:vandt_tree][:active_node] == "xx-orph")
@@ -930,190 +930,190 @@ class ApplicationHelper::ToolbarBuilder
 
   # Determine if a button should be disabled
   def build_toolbar_disable_button(id)
-    return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
-    return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
-    return true if id == "history_1" && x_tree_history.length < 2 # Need 1 child button to show parent
-    return true if id == "view_dashboard" && (@showtype == "dashboard")
-    return true if id == "view_summary" && (@showtype != "dashboard")
+    return true if id.starts_with?('view_') && id.ends_with?('textual')  # Summary view buttons
+    return true if @gtl_type && id.starts_with?('view_') && id.ends_with?(@gtl_type)  # GTL view buttons
+    return true if id == 'history_1' && x_tree_history.length < 2 # Need 1 child button to show parent
+    return true if id == 'view_dashboard' && (@showtype == 'dashboard')
+    return true if id == 'view_summary' && (@showtype != 'dashboard')
 
     # Form buttons check if anything on form has changed
-    return true if ["button_add", "button_save", "button_reset"].include?(id) && !@changed
+    return true if ['button_add', 'button_save', 'button_reset'].include?(id) && !@changed
 
     # need to add this here, since this button is on list view screen
-    if @layout == "pxe" && id == "iso_datastore_new" && ManageIQ::Providers::Redhat::InfraManager.datastore?
-      return N_("No %{providers} are available to create an ISO Datastore on") %
-        {:providers => ui_lookup(:tables => "ext_management_system")}
+    if @layout == 'pxe' && id == 'iso_datastore_new' && ManageIQ::Providers::Redhat::InfraManager.datastore?
+      return N_('No %{providers} are available to create an ISO Datastore on') %
+        {:providers => ui_lookup(:tables => 'ext_management_system')}
     end
 
     case get_record_cls(@record)
-    when "AssignedServerRole"
+    when 'AssignedServerRole'
       case id
-      when "role_start"
-        if x_node != "root" && @record.server_role.regional_role?
-          return N_("This role can only be managed at the Region level")
+      when 'role_start'
+        if x_node != 'root' && @record.server_role.regional_role?
+          return N_('This role can only be managed at the Region level')
         elsif @record.active
-          return N_("This Role is already active on this Server")
+          return N_('This Role is already active on this Server')
         elsif !@record.miq_server.started? && !@record.active
-          return N_("Only available Roles on active Servers can be started")
+          return N_('Only available Roles on active Servers can be started')
         end
-      when "role_suspend"
-        if x_node != "root" && @record.server_role.regional_role?
-          return N_("This role can only be managed at the Region level")
+      when 'role_suspend'
+        if x_node != 'root' && @record.server_role.regional_role?
+          return N_('This role can only be managed at the Region level')
         else
           if @record.active
             unless @record.server_role.max_concurrent != 1
-              return N_("Activate the %{server_role_description} Role on another Server to suspend it on %{server_name} [%{server_id}]") %
+              return N_('Activate the %{server_role_description} Role on another Server to suspend it on %{server_name} [%{server_id}]') %
                 {:server_role_description => @record.server_role.description,
                  :server_name             => @record.miq_server.name,
                  :server_id               => @record.miq_server.id}
             end
           else
-            return N_("Only active Roles on active Servers can be suspended")
+            return N_('Only active Roles on active Servers can be suspended')
           end
         end
-      when "demote_server"
+      when 'demote_server'
         if @record.master_supported?
           if @record.priority == 1 || @record.priority == 2
-            if x_node != "root" && @record.server_role.regional_role?
-              return N_("This role can only be managed at the Region level")
+            if x_node != 'root' && @record.server_role.regional_role?
+              return N_('This role can only be managed at the Region level')
             end
           end
         end
-      when "promote_server"
+      when 'promote_server'
         if @record.master_supported?
           if (@record.priority != 1 && @record.priority != 2) || @record.priority == 2
-            if x_node != "root" && @record.server_role.regional_role?
-              return N_("This role can only be managed at the Region level")
+            if x_node != 'root' && @record.server_role.regional_role?
+              return N_('This role can only be managed at the Region level')
             end
           end
         end
       end
-    when "AvailabilityZone"
+    when 'AvailabilityZone'
       case id
-      when "availability_zone_perf"
+      when 'availability_zone_perf'
         unless @record.has_perf_data?
-          return N_("No Capacity & Utilization data has been collected for this Availability Zone")
+          return N_('No Capacity & Utilization data has been collected for this Availability Zone')
         end
-      when "availability_zone_timeline"
+      when 'availability_zone_timeline'
         unless @record.has_events? # || @record.has_events?(:policy_events), may add this check back in later
-          return N_("No Timeline data has been collected for this Availability Zone")
+          return N_('No Timeline data has been collected for this Availability Zone')
         end
       end
-    when "OntapStorageSystem"
+    when 'OntapStorageSystem'
       case id
-      when "ontap_storage_system_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
+      when 'ontap_storage_system_statistics'
+        return N_('No Statistics Collected') unless @record.latest_derived_metrics
       end
-    when "OntapLogicalDisk"
+    when 'OntapLogicalDisk'
       case id
-      when "ontap_logical_disk_perf"
+      when 'ontap_logical_disk_perf'
         unless @record.has_perf_data?
-          return N_("No Capacity & Utilization data has been collected for this Logical Disk")
+          return N_('No Capacity & Utilization data has been collected for this Logical Disk')
         end
-      when "ontap_logical_disk_statistics"
-        return N_("No Statistics collected for this Logical Disk") unless @record.latest_derived_metrics
+      when 'ontap_logical_disk_statistics'
+        return N_('No Statistics collected for this Logical Disk') unless @record.latest_derived_metrics
       end
-    when "CimBaseStorageExtent"
+    when 'CimBaseStorageExtent'
       case id
-      when "cim_base_storage_extent_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
+      when 'cim_base_storage_extent_statistics'
+        return N_('No Statistics Collected') unless @record.latest_derived_metrics
       end
-    when "Condition"
+    when 'Condition'
       case id
-      when "condition_delete"
-        return N_("Conditions assigned to Policies can not be deleted") unless @condition.miq_policies.empty?
+      when 'condition_delete'
+        return N_('Conditions assigned to Policies can not be deleted') unless @condition.miq_policies.empty?
       end
-    when "OntapStorageVolume"
+    when 'OntapStorageVolume'
       case id
-      when "ontap_storage_volume_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
+      when 'ontap_storage_volume_statistics'
+        return N_('No Statistics Collected') unless @record.latest_derived_metrics
       end
-    when "OntapFileShare"
+    when 'OntapFileShare'
       case id
-      when "ontap_file_share_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
+      when 'ontap_file_share_statistics'
+        return N_('No Statistics Collected') unless @record.latest_derived_metrics
       end
-    when "SniaLocalFileSystem"
+    when 'SniaLocalFileSystem'
       case id
-      when "snia_local_file_system_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
+      when 'snia_local_file_system_statistics'
+        return N_('No Statistics Collected') unless @record.latest_derived_metrics
       end
-    when "EmsCluster"
+    when 'EmsCluster'
       case id
-      when "ems_cluster_perf"
-        return N_("No Capacity & Utilization data has been collected for this Cluster") unless @record.has_perf_data?
-      when "ems_cluster_timeline"
+      when 'ems_cluster_perf'
+        return N_('No Capacity & Utilization data has been collected for this Cluster') unless @record.has_perf_data?
+      when 'ems_cluster_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Cluster")
+          return N_('No Timeline data has been collected for this Cluster')
         end
       end
-    when "Host"
+    when 'Host'
       case id
-      when "host_analyze_check_compliance", "host_check_compliance"
+      when 'host_analyze_check_compliance', 'host_check_compliance'
         return N_("No Compliance Policies assigned to this Host") unless @record.has_compliance_policies?
-      when "host_perf"
-        return N_("No Capacity & Utilization data has been collected for this Host") unless @record.has_perf_data?
-      when "host_miq_request_new"
-        return N_("This Host can not be provisioned because the MAC address is not known") unless @record.mac_address
+      when 'host_perf'
+        return N_('No Capacity & Utilization data has been collected for this Host') unless @record.has_perf_data?
+      when 'host_miq_request_new'
+        return N_('This Host can not be provisioned because the MAC address is not known') unless @record.mac_address
         count = PxeServer.all.size
-        return N_("No PXE Servers are available for Host provisioning") if count <= 0
-      when "host_refresh"
+        return N_('No PXE Servers are available for Host provisioning') if count <= 0
+      when 'host_refresh'
         return @record.is_refreshable_now_error_message unless @record.is_refreshable_now?
-      when "host_scan"
+      when 'host_scan'
         return @record.is_scannable_now_error_message unless @record.is_scannable_now?
-      when "host_timeline"
+      when 'host_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Host")
+          return N_('No Timeline data has been collected for this Host')
         end
-      when "host_shutdown"
+      when 'host_shutdown'
         return @record.is_available_now_error_message(:shutdown) if @record.is_available_now_error_message(:shutdown)
-      when "host_restart"
+      when 'host_restart'
         return @record.is_available_now_error_message(:reboot) if @record.is_available_now_error_message(:reboot)
       end
-    when "Container"
+    when 'Container'
       case id
-      when "container_timeline"
+      when 'container_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Container")
+          return N_('No Timeline data has been collected for this Container')
         end
       end
-    when "ContainerNode"
+    when 'ContainerNode'
       case id
-      when "container_node_timeline"
+      when 'container_node_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Node")
+          return N_('No Timeline data has been collected for this Node')
         end
       end
-    when "ContainerGroup"
+    when 'ContainerGroup'
       case id
-      when "container_group_timeline"
+      when 'container_group_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Pod")
+          return N_('No Timeline data has been collected for this Pod')
         end
       end
-    when "ContainerReplicator"
+    when 'ContainerReplicator'
       case id
-      when "container_replicator_timeline"
+      when 'container_replicator_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Replicator")
+          return N_('No Timeline data has been collected for this Replicator')
         end
       end
-    when "ContainerProject"
+    when 'ContainerProject'
       case id
-      when "container_project_timeline"
+      when 'container_project_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Project")
+          return N_('No Timeline data has been collected for this Project')
         end
       end
-    when "MiqAction"
+    when 'MiqAction'
       case id
-      when "action_edit"
-        return N_("Default actions can not be changed.") if @record.action_type == "default"
-      when "action_delete"
-        return N_("Default actions can not be deleted.") if @record.action_type == "default"
-        return N_("Actions assigned to Policies can not be deleted") unless @record.miq_policies.empty?
+      when 'action_edit'
+        return N_('Default actions can not be changed.') if @record.action_type == 'default'
+      when 'action_delete'
+        return N_('Default actions can not be deleted.') if @record.action_type == 'default'
+        return N_('Actions assigned to Policies can not be deleted') unless @record.miq_policies.empty?
       end
-    when "MiqAeDomain", "MiqAeNamespace"
+    when 'MiqAeDomain', 'MiqAeNamespace'
       editable_domain = editable_domain?(@record)
       case id
       when "miq_ae_domain_delete"
@@ -1125,38 +1125,38 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_ae_domain_unlock"
         return N_("Domain is Unlocked.") if editable_domain
       end
-    when "MiqAlert"
+    when 'MiqAlert'
       case id
-      when "alert_delete"
-        return N_("Alerts that belong to Alert Profiles can not be deleted") unless @record.memberof.empty?
-        return N_("Alerts referenced by Actions can not be deleted") unless @record.owning_miq_actions.empty?
+      when 'alert_delete'
+        return N_('Alerts that belong to Alert Profiles can not be deleted') unless @record.memberof.empty?
+        return N_('Alerts referenced by Actions can not be deleted') unless @record.owning_miq_actions.empty?
       end
-    when "MiqPolicy"
+    when 'MiqPolicy'
       case id
-      when "policy_delete"
-        return N_("Policies that belong to Profiles can not be deleted") unless @policy.memberof.empty?
+      when 'policy_delete'
+        return N_('Policies that belong to Profiles can not be deleted') unless @policy.memberof.empty?
       end
-    when "MiqRequest"
+    when 'MiqRequest'
       case id
-      when "miq_request_delete"
+      when 'miq_request_delete'
         requester = current_user
         return false if requester.admin_user?
-        return N_("Users are only allowed to delete their own requests") if requester.name != @record.requester_name
+        return N_('Users are only allowed to delete their own requests') if requester.name != @record.requester_name
         if %w(approved denied).include?(@record.approval_state)
-          return N_("%{approval_states} requests cannot be deleted") %
+          return N_('%{approval_states} requests cannot be deleted') %
             {:approval_states => @record.approval_state.titleize}
         end
       end
-    when "MiqGroup"
+    when 'MiqGroup'
       case id
-      when "rbac_group_delete"
-        return N_("This Group is Read Only and can not be deleted") if @record.read_only
-      when "rbac_group_edit"
-        return N_("This Group is Read Only and can not be edited") if @record.read_only
+      when 'rbac_group_delete'
+        return N_('This Group is Read Only and can not be deleted') if @record.read_only
+      when 'rbac_group_edit'
+        return N_('This Group is Read Only and can not be edited') if @record.read_only
       end
-    when "MiqServer"
+    when 'MiqServer'
       case id
-      when "collect_logs", "collect_current_logs"
+      when 'collect_logs', 'collect_current_logs'
         unless @record.started?
           return N_("Cannot collect current logs unless the %{server} is started") %
             {:server => ui_lookup(:table => "miq_server")}
@@ -1168,100 +1168,100 @@ class ApplicationHelper::ToolbarBuilder
         unless @record.log_file_depot
           return N_("Log collection requires the Log Depot settings to be configured")
         end
-      when "delete_server"
+      when 'delete_server'
         unless @record.is_deleteable?
-          return N_("Server %{server_name} [%{server_id}] can only be deleted if it is stopped or has not responded for a while") %
+          return N_('Server %{server_name} [%{server_id}] can only be deleted if it is stopped or has not responded for a while') %
             {:server_name => @record.name, :server_id => @record.id}
         end
-      when "restart_workers"
-        return N_("Select a worker to restart") if @sb[:selected_worker_id].nil?
+      when 'restart_workers'
+        return N_('Select a worker to restart') if @sb[:selected_worker_id].nil?
       end
-    when "MiqWidget"
+    when 'MiqWidget'
       case id
-      when "widget_generate_content"
-        return N_("Widget has to be assigned to a dashboard to generate content") if @record.memberof.count <= 0
-        return N_("This Widget content generation is already running or queued up") if @widget_running
+      when 'widget_generate_content'
+        return N_('Widget has to be assigned to a dashboard to generate content') if @record.memberof.count <= 0
+        return N_('This Widget content generation is already running or queued up') if @widget_running
       end
-    when "MiqWidgetSet"
+    when 'MiqWidgetSet'
       case id
-      when "db_delete"
-        return N_("Default Dashboard cannot be deleted") if @db.read_only
+      when 'db_delete'
+        return N_('Default Dashboard cannot be deleted') if @db.read_only
       end
-    when "OrchestrationStack"
+    when 'OrchestrationStack'
       case id
-      when "orchestration_stack_retire_now"
-        return N_("Orchestration Stack is already retired") if @record.retired == true
+      when 'orchestration_stack_retire_now'
+        return N_('Orchestration Stack is already retired') if @record.retired == true
       end
-    when "OrchestrationTemplateCfn", "OrchestrationTemplateHot", "OrchestrationTemplateAzure"
+    when 'OrchestrationTemplateCfn', 'OrchestrationTemplateHot', "OrchestrationTemplateAzure"
       case id
       when "orchestration_template_remove"
         return N_("Read-only Orchestration Template cannot be deleted") if @record.in_use?
       end
-    when "Service"
+    when 'Service'
       case id
-      when "service_retire_now"
-        return N_("Service is already retired") if @record.retired == true
+      when 'service_retire_now'
+        return N_('Service is already retired') if @record.retired == true
       end
-    when "ScanItemSet"
+    when 'ScanItemSet'
       case id
-      when "ap_delete"
-        return N_("Sample Analysis Profile cannot be deleted") if @record.read_only
-      when "ap_edit"
-        return N_("Sample Analysis Profile cannot be edited") if @record.read_only
+      when 'ap_delete'
+        return N_('Sample Analysis Profile cannot be deleted') if @record.read_only
+      when 'ap_edit'
+        return N_('Sample Analysis Profile cannot be edited') if @record.read_only
       end
-    when "ServiceTemplate"
+    when 'ServiceTemplate'
       case id
-      when "svc_catalog_provision"
+      when 'svc_catalog_provision'
         d = nil
         @record.resource_actions.each do |ra|
-          d = Dialog.find_by_id(ra.dialog_id.to_i) if ra.action.downcase == "provision"
+          d = Dialog.find_by_id(ra.dialog_id.to_i) if ra.action.downcase == 'provision'
         end
-        return N_("No Ordering Dialog is available") if d.nil?
+        return N_('No Ordering Dialog is available') if d.nil?
       end
-    when "Storage"
+    when 'Storage'
       case id
-      when "storage_perf"
+      when 'storage_perf'
         unless @record.has_perf_data?
-          return N_("No Capacity & Utilization data has been collected for this %{storage}") %
-            {:storage => ui_lookup(:table => "storage")}
+          return N_('No Capacity & Utilization data has been collected for this %{storage}') %
+            {:storage => ui_lookup(:table => 'storage')}
         end
-      when "storage_delete"
+      when 'storage_delete'
         unless @record.vms_and_templates.empty? && @record.hosts.empty?
-          return N_("Only %{storage} without VMs and Hosts can be removed") %
-            {:storage => ui_lookup(:table => "storage")}
+          return N_('Only %{storage} without VMs and Hosts can be removed') %
+            {:storage => ui_lookup(:table => 'storage')}
         end
-      when "storage_scan"
+      when 'storage_scan'
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
       end
-    when "Tenant"
-      return N_("Default Tenant can not be deleted") if @record.parent.nil? && id == "rbac_tenant_delete"
-    when "User"
+    when 'Tenant'
+      return N_('Default Tenant can not be deleted') if @record.parent.nil? && id == 'rbac_tenant_delete'
+    when 'User'
       case id
-      when "rbac_user_copy"
-        return N_("User [Administrator] can not be copied") if @record.userid == "admin"
-      when "rbac_user_delete"
-        return N_("User [Administrator] can not be deleted") if @record.userid == "admin"
+      when 'rbac_user_copy'
+        return N_('User [Administrator] can not be copied') if @record.userid == 'admin'
+      when 'rbac_user_delete'
+        return N_('User [Administrator] can not be deleted') if @record.userid == 'admin'
       end
-    when "UserRole"
+    when 'UserRole'
       case id
-      when "rbac_role_delete"
-        return N_("This Role is Read Only and can not be deleted") if @record.read_only
-        return N_("This Role is in use by one or more Groups and can not be deleted") if @record.group_count > 0
-      when "rbac_role_edit"
-        return N_("This Role is Read Only and can not be edited") if @record.read_only
+      when 'rbac_role_delete'
+        return N_('This Role is Read Only and can not be deleted') if @record.read_only
+        return N_('This Role is in use by one or more Groups and can not be deleted') if @record.group_count > 0
+      when 'rbac_role_edit'
+        return N_('This Role is Read Only and can not be edited') if @record.read_only
       end
-    when "Vm"
+    when 'Vm'
       case id
-      when "instance_perf", "vm_perf", "container_perf"
+      when 'instance_perf', 'vm_perf', "container_perf"
         return N_("No Capacity & Utilization data has been collected for this VM") unless @record.has_perf_data?
-      when "instance_check_compliance", "vm_check_compliance"
+      when 'instance_check_compliance', 'vm_check_compliance'
         model = model_for_vm(@record).to_s
         unless @record.has_compliance_policies?
           return N_("No Compliance Policies assigned to this virtual machine")
         end
-      when "vm_collect_running_processes"
+      when 'vm_collect_running_processes'
         return @record.is_available_now_error_message(:collect_running_processes) if @record.is_available_now_error_message(:collect_running_processes)
-      when "vm_console", "vm_vmrc_console"
+      when 'vm_console', 'vm_vmrc_console'
         if !is_browser?(%w(explorer firefox mozilla chrome)) ||
            !is_browser_os?(%w(windows linux))
           return N_("The web-based console is only available on IE, Firefox or Chrome (Windows/Linux)")
@@ -1278,25 +1278,25 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based console is not available because the VM is not powered on")
         end
-      when "vm_vnc_console"
-        if @record.current_state != "on"
-          return N_("The web-based VNC console is not available because the VM is not powered on")
+      when 'vm_vnc_console'
+        if @record.current_state != 'on'
+          return N_('The web-based VNC console is not available because the VM is not powered on')
         end
-      when "vm_guest_startup", "vm_start"
+      when 'vm_guest_startup', 'vm_start'
         return @record.is_available_now_error_message(:start) if @record.is_available_now_error_message(:start)
-      when "vm_guest_standby"
+      when 'vm_guest_standby'
         return @record.is_available_now_error_message(:standby_guest) if @record.is_available_now_error_message(:standby_guest)
-      when "vm_guest_shutdown"
+      when 'vm_guest_shutdown'
         return @record.is_available_now_error_message(:shutdown_guest) if @record.is_available_now_error_message(:shutdown_guest)
-      when "vm_guest_restart"
+      when 'vm_guest_restart'
         return @record.is_available_now_error_message(:reboot_guest) if @record.is_available_now_error_message(:reboot_guest)
-      when "vm_stop"
+      when 'vm_stop'
         return @record.is_available_now_error_message(:stop) if @record.is_available_now_error_message(:stop)
-      when "vm_reset"
+      when 'vm_reset'
         return @record.is_available_now_error_message(:reset) if @record.is_available_now_error_message(:reset)
-      when "vm_suspend"
+      when 'vm_suspend'
         return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
-      when "instance_retire", "instance_retire_now",
+      when 'instance_retire', 'instance_retire_now',
               "vm_retire", "vm_retire_now"
         if @record.retired == true
           if @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
@@ -1305,50 +1305,50 @@ class ApplicationHelper::ToolbarBuilder
             return N_("VM is already retired")
           end
         end
-      when "vm_scan", "instance_scan"
+      when 'vm_scan', 'instance_scan'
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message unless @record.has_active_proxy?
-      when "vm_timeline"
+      when 'vm_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this VM")
+          return N_('No Timeline data has been collected for this VM')
         end
-      when "vm_snapshot_add"
+      when 'vm_snapshot_add'
         if @record.number_of(:snapshots) <= 0
           return @record.is_available_now_error_message(:create_snapshot) unless @record.is_available?(:create_snapshot)
         else
           unless @record.is_available?(:create_snapshot)
             return @record.is_available_now_error_message(:create_snapshot)
           else
-            return N_("Select the Active snapshot to create a new snapshot for this VM") unless @active
+            return N_('Select the Active snapshot to create a new snapshot for this VM') unless @active
           end
         end
-      when "vm_snapshot_delete"
+      when 'vm_snapshot_delete'
         return @record.is_available_now_error_message(:remove_snapshot) unless @record.is_available?(:remove_snapshot)
-      when "vm_snapshot_delete_all"
+      when 'vm_snapshot_delete_all'
         return @record.is_available_now_error_message(:remove_all_snapshots) unless @record.is_available?(:remove_all_snapshots)
-      when "vm_snapshot_revert"
+      when 'vm_snapshot_revert'
         return @record.is_available_now_error_message(:revert_to_snapshot) unless @record.is_available?(:revert_to_snapshot)
       end
-    when "MiqTemplate"
+    when 'MiqTemplate'
       case id
-      when "image_check_compliance", "miq_template_check_compliance"
+      when 'image_check_compliance', 'miq_template_check_compliance'
         unless @record.has_compliance_policies?
           return N_("No Compliance Policies assigned to this %{vm}") %
             {:vm => ui_lookup(:model => model_for_vm(@record).to_s)}
         end
-      when "miq_template_perf"
-        return N_("No Capacity & Utilization data has been collected for this Template") unless @record.has_perf_data?
-      when "miq_template_scan", "image_scan"
+      when 'miq_template_perf'
+        return N_('No Capacity & Utilization data has been collected for this Template') unless @record.has_perf_data?
+      when 'miq_template_scan', 'image_scan'
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)
         return @record.active_proxy_error_message unless @record.has_active_proxy?
-      when "miq_template_timeline"
+      when 'miq_template_timeline'
         unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Template")
+          return N_('No Timeline data has been collected for this Template')
         end
       end
-    when "Zone"
+    when 'Zone'
       case id
-      when "zone_collect_logs", "zone_collect_current_logs"
+      when 'zone_collect_logs', 'zone_collect_current_logs'
         unless @record.any_started_miq_servers?
           return N_("Cannot collect current logs unless there are started %{servers} in the Zone") %
             {:servers => ui_lookup(:tables => "miq_servers")}
@@ -1360,17 +1360,17 @@ class ApplicationHelper::ToolbarBuilder
           return N_("Log collection is already in progress for one or more %{servers} in this Zone") %
             {:servers => ui_lookup(:tables => "miq_servers")}
         end
-      when "zone_delete"
-        if @selected_zone.name.downcase == "default"
+      when 'zone_delete'
+        if @selected_zone.name.downcase == 'default'
           return N_("'Default' zone cannot be deleted")
         elsif @selected_zone.ext_management_systems.count > 0 ||
               @selected_zone.storage_managers.count > 0 ||
               @selected_zone.miq_schedules.count > 0 ||
               @selected_zone.miq_servers.count > 0
-          return N_("Cannot delete a Zone that has Relationships")
+          return N_('Cannot delete a Zone that has Relationships')
         end
       end
-    when nil, "NilClass"
+    when nil, 'NilClass'
       case id
       when "ab_group_edit"
         return N_("Selected Custom Button Group cannot be edited") if x_node.split('-')[1] == "ub"
@@ -1414,7 +1414,7 @@ class ApplicationHelper::ToolbarBuilder
     when 'MiqReportResult'
       if id == 'report_only'
         return @report.present? && @report_result_id.present? &&
-          MiqReportResult.find(@report_result_id).try(:miq_report_result_details).try(:length).to_i > 0 ? false : N_("No records found for this report")
+          MiqReportResult.find(@report_result_id).try(:miq_report_result_details).try(:length).to_i > 0 ? false : N_('No records found for this report')
       end
     end
     false
@@ -1438,18 +1438,18 @@ class ApplicationHelper::ToolbarBuilder
 
   # Determine if a button should be selected for buttonTwoState
   def build_toolbar_select_button(id)
-    return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
-    return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
-    return true if @ght_type && id.starts_with?("view_") && id.ends_with?(@ght_type)  # GHT view buttons on report show
-    return true if id.starts_with?("tree_") && id.ends_with?(@settings[:views][:treesize].to_i == 32 ? "large" : "small")
-    return true if id.starts_with?("compare_") && id.ends_with?(@settings[:views][:compare])
-    return true if id.starts_with?("drift_") && id.ends_with?(@settings[:views][:drift])
-    return true if id == "compare_all"
-    return true if id == "drift_all"
-    return true if id.starts_with?("comparemode_") && id.ends_with?(@settings[:views][:compare_mode])
-    return true if id.starts_with?("driftmode_") && id.ends_with?(@settings[:views][:drift_mode])
-    return true if id == "view_dashboard" && @showtype == "dashboard"
-    return true if id == "view_summary" && @showtype == "main"
+    return true if id.starts_with?('view_') && id.ends_with?('textual')  # Summary view buttons
+    return true if @gtl_type && id.starts_with?('view_') && id.ends_with?(@gtl_type)  # GTL view buttons
+    return true if @ght_type && id.starts_with?('view_') && id.ends_with?(@ght_type)  # GHT view buttons on report show
+    return true if id.starts_with?('tree_') && id.ends_with?(@settings[:views][:treesize].to_i == 32 ? 'large' : 'small')
+    return true if id.starts_with?('compare_') && id.ends_with?(@settings[:views][:compare])
+    return true if id.starts_with?('drift_') && id.ends_with?(@settings[:views][:drift])
+    return true if id == 'compare_all'
+    return true if id == 'drift_all'
+    return true if id.starts_with?('comparemode_') && id.ends_with?(@settings[:views][:compare_mode])
+    return true if id.starts_with?('driftmode_') && id.ends_with?(@settings[:views][:drift_mode])
+    return true if id == 'view_dashboard' && @showtype == 'dashboard'
+    return true if id == 'view_summary' && @showtype == 'main'
     false
   end
 

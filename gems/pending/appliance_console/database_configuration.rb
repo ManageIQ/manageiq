@@ -8,7 +8,7 @@ require 'appliance_console/errors'
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
 
-RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
+RAILS_ROOT ||= Pathname.new(__dir__).join('../../..')
 
 module ApplianceConsole
   class DatabaseConfiguration
@@ -17,11 +17,11 @@ module ApplianceConsole
     class ModelWithNoBackingTable < ActiveRecord::Base
     end
 
-    DB_YML      = RAILS_ROOT.join("config/database.yml")
-    DB_YML_TMPL = RAILS_ROOT.join("config/database.pg.yml")
+    DB_YML      = RAILS_ROOT.join('config/database.yml')
+    DB_YML_TMPL = RAILS_ROOT.join('config/database.pg.yml')
 
     CREATE_REGION_AGREE = "WARNING: Creating a database region will destroy any existing data and cannot be undone.\n\nAre you sure you want to continue? (Y/N):".freeze
-    FAILED_WITH_ERROR_HYPHEN = "failed with error -".freeze
+    FAILED_WITH_ERROR_HYPHEN = 'failed with error -'.freeze
 
     # PG 9.2 bigint max 9223372036854775807 / ArRegion::DEFAULT_RAILS_SEQUENCE_FACTOR = 9223372
     # http://www.postgresql.org/docs/9.2/static/datatype-numeric.html
@@ -33,7 +33,7 @@ module ApplianceConsole
 
     def initialize(hash = {})
       initialize_from_hash(hash)
-      @adapter ||= "postgresql"
+      @adapter ||= 'postgresql'
       # introduced by Logging
       self.interactive = true unless hash.key?(:interactive)
     end
@@ -80,7 +80,7 @@ module ApplianceConsole
 
     def post_activation
       ServiceGroup.new.restart_services
-      LinuxAdmin::Service.new("evmserverd").enable.start
+      LinuxAdmin::Service.new('evmserverd').enable.start
     end
 
     def create_or_join_region
@@ -88,16 +88,16 @@ module ApplianceConsole
     end
 
     def create_region
-      ApplianceConsole::Utilities.bail_if_db_connections("preventing the setup of a database region")
+      ApplianceConsole::Utilities.bail_if_db_connections('preventing the setup of a database region')
       log_and_feedback(__method__) do
-        ApplianceConsole::Utilities.rake("evm:db:region", ["--", {:region => region}])
+        ApplianceConsole::Utilities.rake('evm:db:region', ['--', {:region => region}])
       end
     end
 
     def join_region
       output = AwesomeSpawn.run(
         'bin/rails runner',
-        :params => [File.expand_path("join_region.rb", __dir__)],
+        :params => [File.expand_path('join_region.rb', __dir__)],
         :chdir  => RAILS_ROOT
       ).output
 
@@ -111,39 +111,39 @@ module ApplianceConsole
 
     def reset_region
       say("Warning: RESETTING A DATABASE WILL DESTROY ANY EXISTING DATA AND CANNOT BE UNDONE.\n\n")
-      raise MiqSignalError unless are_you_sure?("reset the configured database")
+      raise MiqSignalError unless are_you_sure?('reset the configured database')
 
       create_new_region_questions(false)
-      ENV["DISABLE_DATABASE_ENVIRONMENT_CHECK"] = "1"
+      ENV['DISABLE_DATABASE_ENVIRONMENT_CHECK'] = '1'
       create_region
     ensure
-      ENV["DISABLE_DATABASE_ENVIRONMENT_CHECK"] = nil
+      ENV['DISABLE_DATABASE_ENVIRONMENT_CHECK'] = nil
     end
 
     def create_new_region_questions(warn = true)
       clear_screen
       say("\n\nNote: Creating a new database region requires an empty database.") if warn
       say("Each database region number must be unique.\n")
-      self.region = ask_for_integer("database region number", REGION_RANGE)
+      self.region = ask_for_integer('database region number', REGION_RANGE)
       raise MiqSignalError if warn && !agree(CREATE_REGION_AGREE)
     end
 
     def ask_for_database_credentials
-      self.host     = ask_for_ip_or_hostname("database hostname or IP address", host) if host.blank? || !local?
+      self.host     = ask_for_ip_or_hostname('database hostname or IP address', host) if host.blank? || !local?
       self.database = just_ask("name of the database on #{host}", database) unless local?
-      self.username = just_ask("username", username) unless local?
+      self.username = just_ask('username', username) unless local?
       count = 0
       loop do
         count += 1
         password1   = ask_for_password_or_none("database password on #{host}", password)
         # if they took the default, just bail
         break if (password1 == password)
-        password2   = ask_for_password("database password again")
+        password2   = ask_for_password('database password again')
         if password1 == password2
           self.password = password1
           break
         elsif count > 1 # only reprompt password once
-          raise ArgumentError, "passwords did not match"
+          raise ArgumentError, 'passwords did not match'
         else
           say("\nThe passwords did not match, please try again")
         end
@@ -229,8 +229,8 @@ FRIENDLY
     def self.encrypt_decrypt_password(settings)
       new_settings = {}
       settings.each_key { |section| new_settings[section] = settings[section].dup }
-      pass = new_settings["production"]["password"]
-      new_settings["production"]["password"] = yield(pass) if pass
+      pass = new_settings['production']['password']
+      new_settings['production']['password'] = yield(pass) if pass
       new_settings
     end
 

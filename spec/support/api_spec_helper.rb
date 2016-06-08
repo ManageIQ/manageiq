@@ -7,13 +7,13 @@ require 'json'
 
 module ApiSpecHelper
   HEADER_ALIASES = {
-    "auth_token" => "HTTP_X_AUTH_TOKEN",
-    "miq_group"  => "HTTP_X_MIQ_GROUP"
+    'auth_token' => 'HTTP_X_AUTH_TOKEN',
+    'miq_group'  => 'HTTP_X_MIQ_GROUP'
   }
 
   DEF_HEADERS = {
-    "Content-Type" => "application/json",
-    "Accept"       => "application/json"
+    'Content-Type' => 'application/json',
+    'Accept'       => 'application/json'
   }
 
   def response_hash
@@ -27,7 +27,7 @@ module ApiSpecHelper
         headers.delete(k)
       end
     end
-    headers.merge!("HTTP_AUTHORIZATION" => @http_authorization) if @http_authorization
+    headers.merge!('HTTP_AUTHORIZATION' => @http_authorization) if @http_authorization
     headers.merge(DEF_HEADERS)
   end
 
@@ -62,12 +62,12 @@ module ApiSpecHelper
 
   def api_config(param)
     @api_config = {
-      :user       => "api_user_id",
-      :password   => "api_user_password",
-      :user_name  => "API User",
-      :group_name => "API User Group",
-      :role_name  => "API User Role",
-      :entrypoint => "/api"
+      :user       => 'api_user_id',
+      :password   => 'api_user_password',
+      :user_name  => 'API User',
+      :group_name => 'API User Group',
+      :role_name  => 'API User Role',
+      :entrypoint => '/api'
     }
     @api_config[param]
   end
@@ -146,7 +146,7 @@ module ApiSpecHelper
   end
 
   def api_server_config
-    @api_server_config ||= YAML.load_file(Rails.root.join("config/api.yml"))
+    @api_server_config ||= YAML.load_file(Rails.root.join('config/api.yml'))
   end
 
   def collection_config
@@ -172,12 +172,12 @@ module ApiSpecHelper
   end
 
   def gen_request(action, data = nil, *hrefs)
-    request = {"action" => action.to_s}
+    request = {'action' => action.to_s}
     if hrefs.present?
       data ||= {}
-      request["resources"] = hrefs.collect { |href| data.dup.merge("href" => href) }
+      request['resources'] = hrefs.collect { |href| data.dup.merge('href' => href) }
     elsif data.present?
-      request[data.kind_of?(Array) ? "resources" : "resource"] = data
+      request[data.kind_of?(Array) ? 'resources' : 'resource'] = data
     end
     request
   end
@@ -187,7 +187,7 @@ module ApiSpecHelper
   end
 
   def declare_actions(*names)
-    include("actions" => a_collection_containing_exactly(*names.map { |name| a_hash_including("name" => name) }))
+    include('actions' => a_collection_containing_exactly(*names.map { |name| a_hash_including('name' => name) }))
   end
 
   # Rest API Expects
@@ -204,8 +204,8 @@ module ApiSpecHelper
     expect(response).to have_http_status(:bad_request)
     return if error_message.blank?
 
-    expect(response_hash).to have_key("error")
-    expect(response_hash["error"]["message"]).to match(error_message)
+    expect(response_hash).to have_key('error')
+    expect(response_hash['error']['message']).to match(error_message)
   end
 
   def expect_user_unauthorized
@@ -234,7 +234,7 @@ module ApiSpecHelper
     href_list = fetch_value(hrefs)
     expect(response_hash[collection].size).to eq(href_list.size)
     href_list.each do |href|
-      expect(resources_include_suffix?(response_hash[collection], "href", href)).to be_truthy
+      expect(resources_include_suffix?(response_hash[collection], 'href', href)).to be_truthy
     end
   end
 
@@ -274,7 +274,7 @@ module ApiSpecHelper
     attr_hash = fetch_value(attr_hash)
     attr_hash.each do |key, value|
       value = fetch_value(value)
-      attr_hash[key] = (key == "href" || key.ends_with?("_href")) ? a_string_matching(value) : value
+      attr_hash[key] = (key == 'href' || key.ends_with?('_href')) ? a_string_matching(value) : value
     end
     expect(result).to include(attr_hash)
   end
@@ -287,7 +287,7 @@ module ApiSpecHelper
   end
 
   def expect_result_resources_to_match_hash(result_hash)
-    expect_results_to_match_hash("resources", result_hash)
+    expect_results_to_match_hash('resources', result_hash)
   end
 
   def expect_result_resource_keys_to_be_like_klass(collection, key, klass)
@@ -314,22 +314,22 @@ module ApiSpecHelper
   end
 
   def expect_result_to_represent_task(result)
-    expect(result).to have_key("task_id")
-    expect(result).to have_key("task_href")
+    expect(result).to have_key('task_id')
+    expect(result).to have_key('task_href')
   end
 
   # Primary result construct methods
 
   def expect_empty_query_result(collection)
     expect_request_success
-    expect(response_hash).to include("name" => collection.to_s, "resources" => [])
+    expect(response_hash).to include('name' => collection.to_s, 'resources' => [])
   end
 
   def expect_query_result(collection, subcount, count = nil)
     expect_request_success
-    expect(response_hash).to include("name" => collection.to_s, "subcount" => fetch_value(subcount))
-    expect(response_hash["resources"].size).to eq(fetch_value(subcount))
-    expect(response_hash["count"]).to eq(fetch_value(count)) if count.present?
+    expect(response_hash).to include('name' => collection.to_s, 'subcount' => fetch_value(subcount))
+    expect(response_hash['resources'].size).to eq(fetch_value(subcount))
+    expect(response_hash['count']).to eq(fetch_value(count)) if count.present?
   end
 
   def expect_single_resource_query(attr_hash = {})
@@ -339,18 +339,18 @@ module ApiSpecHelper
 
   def expect_single_action_result(options = {})
     expect_request_success
-    expect(response_hash).to include("success" => options[:success]) if options.key?(:success)
-    expect(response_hash).to include("message" => a_string_matching(options[:message])) if options[:message]
-    expect(response_hash).to include("href" => a_string_matching(fetch_value(options[:href]))) if options[:href]
+    expect(response_hash).to include('success' => options[:success]) if options.key?(:success)
+    expect(response_hash).to include('message' => a_string_matching(options[:message])) if options[:message]
+    expect(response_hash).to include('href' => a_string_matching(fetch_value(options[:href]))) if options[:href]
     expect_result_to_represent_task(response_hash) if options[:task]
   end
 
   def expect_multiple_action_result(count, options = {})
     expect_request_success
-    expect(response_hash).to have_key("results")
-    results = response_hash["results"]
+    expect(response_hash).to have_key('results')
+    results = response_hash['results']
     expect(results.size).to eq(count)
-    expect(results.all? { |r| r["success"] }).to be_truthy
+    expect(results.all? { |r| r['success'] }).to be_truthy
 
     results.each { |r| expect_result_to_represent_task(r) } if options[:task]
   end
@@ -358,15 +358,15 @@ module ApiSpecHelper
   def expect_tagging_result(tagging_results)
     expect_request_success
     tag_results = fetch_value(tagging_results)
-    expect(response_hash).to have_key("results")
-    results = response_hash["results"]
+    expect(response_hash).to have_key('results')
+    results = response_hash['results']
     expect(results.size).to eq(tag_results.size)
     tag_results.zip(results) do |tag_result, result|
       expect(result).to include(
-        "success"      => tag_result[:success],
-        "href"         => a_string_matching(tag_result[:href]),
-        "tag_category" => tag_result[:tag_category],
-        "tag_name"     => tag_result[:tag_name]
+        'success'      => tag_result[:success],
+        'href'         => a_string_matching(tag_result[:href]),
+        'tag_category' => tag_result[:tag_category],
+        'tag_name'     => tag_result[:tag_name]
       )
     end
   end

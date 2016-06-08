@@ -12,14 +12,14 @@ describe AssignTenant do
   let(:stubs) { [ems_stub, miq_ae_namespace_stub, miq_group_stub, provider_stub, tenant_quota_stub, vm_stub] }
 
   migration_context :up do
-    describe "#root_tenant" do
-      it "doesnt create tenant if no records exist" do
+    describe '#root_tenant' do
+      it 'doesnt create tenant if no records exist' do
         migrate
 
         expect(tenant_stub.count).to eq(0)
       end
 
-      it "creates tenant if needed" do
+      it 'creates tenant if needed' do
         miq_group_stub.create!
         migrate
 
@@ -28,7 +28,7 @@ describe AssignTenant do
         expect(tenant_stub.first).to be_divisible
       end
 
-      it "doesnt creates additional root_tenant" do
+      it 'doesnt creates additional root_tenant' do
         tenant_stub.create!
         miq_group_stub.create!
 
@@ -41,7 +41,7 @@ describe AssignTenant do
       end
     end
 
-    it "updates existing records" do
+    it 'updates existing records' do
       tenant_stub.root_tenant
 
       stubs.map(&:create!)

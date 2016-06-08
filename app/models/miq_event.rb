@@ -90,7 +90,7 @@ class MiqEvent < EventStream
 
   def self.normalize_event(event)
     return event if MiqEventDefinition.find_by_name(event)
-    "unknown"
+    'unknown'
   end
 
   def self.raise_evm_event_queue_in_region(target, raw_event, inputs = {})
@@ -112,7 +112,7 @@ class MiqEvent < EventStream
 
   def self.raise_evm_alert_event_queue(target, raw_event, inputs = {})
     MiqQueue.put_unless_exists(
-      :class_name  => "MiqAlert",
+      :class_name  => 'MiqAlert',
       :method_name => 'evaluate_alerts',
       :args        => [[target.class.name, target.id], raw_event, inputs]
     ) if MiqAlert.alarm_has_alerts?(raw_event)
@@ -121,16 +121,16 @@ class MiqEvent < EventStream
   def self.raise_evm_job_event(target, options = {}, inputs = {}, q_options = {})
     # Eg. options = {:type => "scan", ":prefix => "request, :suffix => "abort"}
     options.reverse_merge!(
-      :type   => "scan",
+      :type   => 'scan',
       :prefix => nil,
       :suffix => nil
     )
 
     target_model = target.class.base_model.name.downcase
-    target_model = "vm" if target_model.match("template")
+    target_model = 'vm' if target_model.match('template')
 
-    base_event = [target_model, options[:type]].join("_")
-    evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join("_")
+    base_event = [target_model, options[:type]].join('_')
+    evm_event  = [options[:prefix], base_event, options[:suffix]].compact.join('_')
     raise_evm_event(target, evm_event, inputs, q_options)
   end
 

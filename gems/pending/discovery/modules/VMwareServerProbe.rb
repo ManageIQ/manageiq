@@ -7,7 +7,7 @@ require 'discovery/PortScan'
 class VMwareServerProbe
   def self.probe(ost)
     unless ost.discover_types.include?(:vmwareserver)
-      $log.debug "Skipping VMwareServerProbe" if $log
+      $log.debug 'Skipping VMwareServerProbe' if $log
       return
     end
 

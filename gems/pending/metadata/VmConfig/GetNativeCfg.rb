@@ -3,24 +3,24 @@ require 'util/runcmd'
 require 'metadata/VmConfig/VmConfig'
 
 class GetNativeCfg
-  LSHW = "lshw"
+  LSHW = 'lshw'
 
   def self.new
     lshwXml = MiqUtil.runcmd("#{LSHW} -xml")
     nodeHash = Hash.new { |h, k| h[k] = [] }
     doc = MiqXml.load(lshwXml)
-    doc.find_match("//node").each { |n| nodeHash[n.attributes["id"].split(':', 2)[0]] << n }
+    doc.find_match('//node').each { |n| nodeHash[n.attributes['id'].split(':', 2)[0]] << n }
 
-    hardware = ""
+    hardware = ''
 
-    nodeHash["disk"].each do |d|
+    nodeHash['disk'].each do |d|
       diskid = d.find_first('businfo').get_text.to_s
       next unless diskid
       sn = d.find_first('size')
       # If there's no size node, assume it's a removable drive.
       next unless sn
       busType, busAddr = diskid.split('@', 2)
-      if busType == "scsi"
+      if busType == 'scsi'
         f1, f2 = busAddr.split(':', 2)
         f2 = f2.split('.')[1]
         busAddr = "#{f1}:#{f2}"

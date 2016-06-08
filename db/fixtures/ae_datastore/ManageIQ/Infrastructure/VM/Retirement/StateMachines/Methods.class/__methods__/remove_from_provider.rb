@@ -11,11 +11,11 @@ $evm.set_state_var('vm_removed_from_provider', false)
 if vm
   ems = vm.ext_management_system
   case removal_type
-  when "remove_from_disk"
+  when 'remove_from_disk'
     $evm.log('info', "Removing VM:<#{vm.name}> from provider:<#{ems.try(:name)}>")
     vm.remove_from_disk(false)
     $evm.set_state_var('vm_removed_from_provider', true)
-  when "unregister"
+  when 'unregister'
     $evm.log('info', "Unregistering VM:<#{vm.name}> from provider:<#{ems.try(:name)}")
     vm.unregister
     $evm.set_state_var('vm_removed_from_provider', true)

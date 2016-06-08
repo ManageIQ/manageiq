@@ -2,10 +2,10 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
   belongs_to :cloud_tenant
 
   has_and_belongs_to_many :cloud_tenants,
-                          :foreign_key             => "vm_id",
-                          :join_table              => "cloud_tenants_vms",
-                          :association_foreign_key => "cloud_tenant_id",
-                          :class_name              => "ManageIQ::Providers::Openstack::CloudManager::CloudTenant"
+                          :foreign_key             => 'vm_id',
+                          :join_table              => 'cloud_tenants_vms',
+                          :association_foreign_key => 'cloud_tenant_id',
+                          :class_name              => 'ManageIQ::Providers::Openstack::CloudManager::CloudTenant'
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
@@ -59,6 +59,6 @@ class ManageIQ::Providers::Openstack::CloudManager::Template < ManageIQ::Provide
   end
 
   def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
+    validate_supported_check('Smartstate Analysis')
   end
 end

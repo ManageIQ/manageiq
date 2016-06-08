@@ -14,7 +14,7 @@ module MiqHostProvision::Pxe
     if image_id.kind_of?(String)
       # "new" style of choosing either a pxe image or a windows image, and
       #   storing the pxe_image_id field as "ClassName::id"
-      klass, id = image_id.split("::")
+      klass, id = image_id.split('::')
       image = klass.constantize.find_by_id(id)
 
       if image.kind_of?(WindowsImage)
@@ -51,7 +51,7 @@ module MiqHostProvision::Pxe
     pxe_image, windows_image = pxe_and_windows_image
     mac_address = host.mac_address
 
-    raise _("MAC Address is nil") if mac_address.nil?
+    raise _('MAC Address is nil') if mac_address.nil?
 
     substitution_options = nil
     if customization_template
@@ -69,7 +69,7 @@ module MiqHostProvision::Pxe
     pxe_image, windows_image = pxe_and_windows_image
     mac_address = host.mac_address
 
-    raise _("MAC Address is nil") if mac_address.nil?
+    raise _('MAC Address is nil') if mac_address.nil?
 
     pxe_server.delete_provisioning_files(pxe_image, mac_address, windows_image, customization_template)
   end

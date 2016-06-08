@@ -4,15 +4,15 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def database_version
-    select_value("SELECT version()")
+    select_value('SELECT version()')
   end
 
   def spid
-    select_value("SELECT pg_backend_pid()").to_i
+    select_value('SELECT pg_backend_pid()').to_i
   end
 
   def client_connections
-    data = select(<<-SQL, "Client Connections").to_a
+    data = select(<<-SQL, 'Client Connections').to_a
                   SELECT client_addr   AS client_address
                        , datname       AS database
                        , pid           AS spid
@@ -32,7 +32,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Removed some CASE... logic statements as not needed for our requirements.
   def table_bloat
-    data = select(<<-SQL, "Table Bloat")
+    data = select(<<-SQL, 'Table Bloat')
                 SELECT tablename                                                    AS table_name
                      , reltuples::bigint                                            AS rows
                      , relpages::bigint                                             AS pages
@@ -129,7 +129,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   # Removed  schemaname and totalwastedbytes columns from the original to fit our requirements.
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   def index_bloat
-    data = select(<<-SQL, "Index Bloat")
+    data = select(<<-SQL, 'Index Bloat')
                 SELECT   tablename                                         AS table_name
                        , iname                                             AS index_name
                        , ituples::bigint                                   AS rows
@@ -225,7 +225,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Changed to a UNION so that it is easier to read the output and to separate table stats from idx stats.
   def database_bloat
-    data = select(<<-SQL, "Database Bloat")
+    data = select(<<-SQL, 'Database Bloat')
               SELECT   tablename                                         AS table_name
                      , ' '                                               AS index_name
                      , reltuples::bigint                                 AS rows
@@ -376,7 +376,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def table_statistics
-    data = select(<<-SQL, "Table Statistics")
+    data = select(<<-SQL, 'Table Statistics')
                 SELECT relname            AS table_name
                      , seq_scan           AS table_scans
                      , seq_tup_read       AS sequential_rows_read
@@ -427,7 +427,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
 
   # Provide the database statistics for all tables and indexes
   def statistics
-    stats = select(<<-SQL, "Statistics")
+    stats = select(<<-SQL, 'Statistics')
       SELECT relname           AS name,
              reltuples         AS rows,
              relpages          AS pages
@@ -436,17 +436,17 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     SQL
 
     stats.each do |s|
-      s["rows"]  = s["rows"].to_f.to_i
-      s["pages"] = s["pages"].to_f.to_i
-      s["size"]  = s["pages"] * 8 * 1024
-      s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
+      s['rows']  = s['rows'].to_f.to_i
+      s['pages'] = s['pages'].to_f.to_i
+      s['size']  = s['pages'] * 8 * 1024
+      s['average_row_size'] = s['pages'].to_f / (s['rows'] + 1) * 8 * 1024
     end
 
     stats.to_a
   end
 
   def table_size
-    stats = select(<<-SQL, "Table Size")
+    stats = select(<<-SQL, 'Table Size')
                 SELECT relname                                                           AS table_name
                      , reltuples                                                         AS rows
                      , relpages                                                          AS pages
@@ -458,10 +458,10 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
                  SQL
 
     stats.each do |s|
-      s["rows"]  = s["rows"].to_f.to_i
-      s["pages"] = s["pages"].to_f.to_i
-      s["size"]  = s["pages"] * 8 * 1024
-      s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
+      s['rows']  = s['rows'].to_f.to_i
+      s['pages'] = s['pages'].to_f.to_i
+      s['size']  = s['pages'] * 8 * 1024
+      s['average_row_size'] = s['pages'].to_f / (s['rows'] + 1) * 8 * 1024
     end
 
     stats.to_a
@@ -472,7 +472,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def text_tables(table)
-    data = select(<<-SQL, "Text Tables")
+    data = select(<<-SQL, 'Text Tables')
       SELECT relname AS table_name
       FROM pg_class,
            (SELECT reltoastrelid
@@ -486,7 +486,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   # Returns an array of toast table indexes for the given toast table.
-  def text_table_indexes(table_name, name = "Text Table Indexes")
+  def text_table_indexes(table_name, name = 'Text Table Indexes')
     result = query(<<-SQL, name)
        SELECT distinct i.relname, d.indisunique, d.indkey, i.oid
        FROM pg_class t
@@ -503,7 +503,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     result.map do |row|
       index_name = row[0]
       unique     = row[1] == 't'
-      indkey     = row[2].split(" ")
+      indkey     = row[2].split(' ')
       oid        = row[3]
 
       columns = Hash[query(<<-SQL, "Columns for index #{index_name} on #{table_name}")]
@@ -536,7 +536,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     result.map do |row|
       index_name = row[0]
       unique     = row[1] == 't'
-      indkey     = row[2].split(" ")
+      indkey     = row[2].split(' ')
       oid        = row[3]
 
       columns = Hash[query(<<-SQL, "Columns for index #{row[0]} on #{table_name}")]
@@ -562,7 +562,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def table_metrics_bloat(table_name)
-    data = select(<<-SQL, "Table Metrics Bloat Analysis")
+    data = select(<<-SQL, 'Table Metrics Bloat Analysis')
             SELECT tablename                                                    AS table_name
                  , reltuples::bigint                                            AS rows
                  , relpages::bigint                                             AS pages
@@ -652,7 +652,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def table_metrics_analysis(table_name)
-    data = select(<<-SQL, "Table Metrics Stats Analysis")
+    data = select(<<-SQL, 'Table Metrics Stats Analysis')
               SELECT seq_scan           AS table_scans
                    , seq_tup_read       AS sequential_rows_read
                    , idx_scan           AS index_scans
@@ -702,20 +702,20 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def table_metrics_total_size(table_name)
-    select_value(<<-SQL, "Table Metrics Total Size").to_i
+    select_value(<<-SQL, 'Table Metrics Total Size').to_i
             SELECT pg_total_relation_size('#{table_name}'::regclass) AS total_table_size;
            SQL
   end
 
   def number_of_db_connections
-    select_value(<<-SQL, "DB Client Connections").to_i
+    select_value(<<-SQL, 'DB Client Connections').to_i
             SELECT count(*) as active_connections
               FROM pg_stat_activity
            SQL
   end
 
   def index_metrics_bloat(index_name)
-    data = select(<<-SQL, "Index Metrics Bloat Analysis")
+    data = select(<<-SQL, 'Index Metrics Bloat Analysis')
                 SELECT   tablename                                         AS table_name
                        , iname                                             AS index_name
                        , ituples::bigint                                   AS rows
@@ -803,7 +803,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def index_metrics_analysis(index_name)
-    data = select(<<-SQL, "Index Metrics Stats Analysis")
+    data = select(<<-SQL, 'Index Metrics Stats Analysis')
               SELECT relid                    AS table_id
                    , indexrelid               AS index_id
                    , schemaname
@@ -833,7 +833,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
   end
 
   def index_metrics_total_size(_index_name)
-    select_value(<<-SQL, "Index Metrics -  Size").to_i
+    select_value(<<-SQL, 'Index Metrics -  Size').to_i
             SELECT pg_total_relation_size('#{table_name}'::regclass) - pg_relation_size('#{table_name}') AS index_size;
            SQL
   end
@@ -844,7 +844,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
 
   # Fetch data directory
   def data_directory
-    select_value(<<-SQL, "Select data directory")
+    select_value(<<-SQL, 'Select data directory')
                     SELECT setting AS path
                       FROM pg_settings
                      WHERE name = 'data_directory'
@@ -853,7 +853,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
 
   # Fetch PostgreSQL last start date/time
   def last_start_time
-    start_time = select_value(<<-SQL, "Select last start date/time")
+    start_time = select_value(<<-SQL, 'Select last start date/time')
                                  SELECT pg_postmaster_start_time()
                               SQL
     ActiveRecord::Type::Time.new.deserialize(start_time)

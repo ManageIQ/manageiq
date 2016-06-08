@@ -5,8 +5,8 @@ $miq_cache_with_timeout_lock = Sync.new
 
 class Module
   def cache_with_timeout(method, timeout = nil, &block)
-    raise "no block given" if block.nil?
-    raise ArgumentError, "meth must be a Symbol" unless method.respond_to?(:to_sym)
+    raise 'no block given' if block.nil?
+    raise ArgumentError, 'meth must be a Symbol' unless method.respond_to?(:to_sym)
 
     method             = method.to_sym
     clear_cache_method = "#{method}_clear_cache".to_sym

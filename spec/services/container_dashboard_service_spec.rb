@@ -1,7 +1,7 @@
 require 'recursive-open-struct'
 
 describe ContainerDashboardService do
-  let(:controller) { RecursiveOpenStruct.new(:current_user => {:get_timezone => "UTC"}) }
+  let(:controller) { RecursiveOpenStruct.new(:current_user => {:get_timezone => 'UTC'}) }
   let(:time_profile) { FactoryGirl.create(:time_profile_utc) }
 
   before(:each) do
@@ -9,12 +9,12 @@ describe ContainerDashboardService do
     @zone = EvmSpecHelper.create_guid_miq_server_zone[2]
   end
 
-  context "providers" do
-    it "filters containers providers with zero entity count and sorts providers by type correctly" do
-      FactoryGirl.create(:ems_openshift, :hostname => "test2.com")
-      FactoryGirl.create(:ems_openshift_enterprise, :hostname => "test3.com")
-      FactoryGirl.create(:ems_atomic, :hostname => "test4.com")
-      FactoryGirl.create(:ems_atomic_enterprise, :hostname => "test5.com")
+  context 'providers' do
+    it 'filters containers providers with zero entity count and sorts providers by type correctly' do
+      FactoryGirl.create(:ems_openshift, :hostname => 'test2.com')
+      FactoryGirl.create(:ems_openshift_enterprise, :hostname => 'test3.com')
+      FactoryGirl.create(:ems_atomic, :hostname => 'test4.com')
+      FactoryGirl.create(:ems_atomic_enterprise, :hostname => 'test5.com')
 
       providers_data = ContainerDashboardService.new(nil, nil).providers
 
@@ -26,8 +26,8 @@ describe ContainerDashboardService do
     end
   end
 
-  context "ems_utilization" do
-    it "shows aggregated metrics from last 30 days only" do
+  context 'ems_utilization' do
+    it 'shows aggregated metrics from last 30 days only' do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
 
@@ -80,13 +80,13 @@ describe ContainerDashboardService do
         :cpu => {
           :used  => 2,
           :total => 2,
-          :xData => [current_date.strftime("%Y-%m-%d")],
+          :xData => [current_date.strftime('%Y-%m-%d')],
           :yData => [2]
         },
         :mem => {
           :used  => 1,
           :total => 2,
-          :xData => [current_date.strftime("%Y-%m-%d")],
+          :xData => [current_date.strftime('%Y-%m-%d')],
           :yData => [1]
         }
       )
@@ -95,19 +95,19 @@ describe ContainerDashboardService do
         :cpu => {
           :used  => 3,
           :total => 3,
-          :xData => [current_date.strftime("%Y-%m-%d")],
+          :xData => [current_date.strftime('%Y-%m-%d')],
           :yData => [3]
         },
         :mem => {
           :used  => 2,
           :total => 3,
-          :xData => [current_date.strftime("%Y-%m-%d")],
+          :xData => [current_date.strftime('%Y-%m-%d')],
           :yData => [2]
         }
       )
     end
 
-    it "returns hash with nil values when no metrics available" do
+    it 'returns hash with nil values when no metrics available' do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       node_utilization_all_providers = described_class.new(nil, controller).ems_utilization
       node_utilization_single_provider = described_class.new(ems_openshift.id, controller).ems_utilization
@@ -116,8 +116,8 @@ describe ContainerDashboardService do
     end
   end
 
-  context "heatmaps" do
-    it "shows aggregated metrics from last 30 days only" do
+  context 'heatmaps' do
+    it 'shows aggregated metrics from last 30 days only' do
       ems_openshift = FactoryGirl.create(:ems_openshift, :name => 'openshift', :zone => @zone)
       ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :name => 'kubernetes', :zone => @zone)
 
@@ -149,58 +149,58 @@ describe ContainerDashboardService do
         :nodeCpuUsage    => [
           {
             :id       => @node1.id,
-            :node     => "node1",
-            :provider => "openshift",
+            :node     => 'node1',
+            :provider => 'openshift',
             :total    => 4,
             :percent  => 0.9
           },
           {
             :id       => @node2.id,
-            :node     => "node2",
-            :provider => "openshift",
+            :node     => 'node2',
+            :provider => 'openshift',
             :total    => 4,
             :percent  => 0.9
           },
           {
             :id       => @node3.id,
-            :node     => "node3",
-            :provider => "kubernetes",
+            :node     => 'node3',
+            :provider => 'kubernetes',
             :total    => 4,
             :percent  => 0.9
           },
           {
             :id       => @node4.id,
-            :node     => "node4",
-            :provider => "kubernetes",
+            :node     => 'node4',
+            :provider => 'kubernetes',
             :total    => 4,
             :percent  => 0.9
           }],
         :nodeMemoryUsage => [
           {
             :id       => @node1.id,
-            :node     => "node1",
-            :provider => "openshift",
+            :node     => 'node1',
+            :provider => 'openshift',
             :total    => 8192,
             :percent  => 0.9
           },
           {
             :id       => @node2.id,
-            :node     => "node2",
-            :provider => "openshift",
+            :node     => 'node2',
+            :provider => 'openshift',
             :total    => 8192,
             :percent  => 0.9
           },
           {
             :id       => @node3.id,
-            :node     => "node3",
-            :provider => "kubernetes",
+            :node     => 'node3',
+            :provider => 'kubernetes',
             :total    => 8192,
             :percent  => 0.9
           },
           {
             :id       => @node4.id,
-            :node     => "node4",
-            :provider => "kubernetes",
+            :node     => 'node4',
+            :provider => 'kubernetes',
             :total    => 8192,
             :percent  => 0.9
           }]
@@ -210,15 +210,15 @@ describe ContainerDashboardService do
         :nodeCpuUsage    => [
           {
             :id       => @node1.id,
-            :node     => "node1",
-            :provider => "openshift",
+            :node     => 'node1',
+            :provider => 'openshift',
             :total    => 4,
             :percent  => 0.9
           },
           {
             :id       => @node2.id,
-            :node     => "node2",
-            :provider => "openshift",
+            :node     => 'node2',
+            :provider => 'openshift',
             :total    => 4,
             :percent  => 0.9
           }
@@ -226,15 +226,15 @@ describe ContainerDashboardService do
         :nodeMemoryUsage => [
           {
             :id       => @node1.id,
-            :node     => "node1",
-            :provider => "openshift",
+            :node     => 'node1',
+            :provider => 'openshift',
             :total    => 8192,
             :percent  => 0.9
           },
           {
             :id       => @node2.id,
-            :node     => "node2",
-            :provider => "openshift",
+            :node     => 'node2',
+            :provider => 'openshift',
             :total    => 8192,
             :percent  => 0.9
           }
@@ -242,7 +242,7 @@ describe ContainerDashboardService do
       )
     end
 
-    it "returns hash with nil values when no metrics available" do
+    it 'returns hash with nil values when no metrics available' do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       heatmaps_all_providers = described_class.new(nil, controller).heatmaps
       heatmaps_single_provider = described_class.new(ems_openshift.id, controller).heatmaps
@@ -251,8 +251,8 @@ describe ContainerDashboardService do
     end
   end
 
-  context "network trends" do
-    it "shows daily network trends from last 30 days only" do
+  context 'network trends' do
+    it 'shows daily network trends from last 30 days only' do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
 
@@ -286,17 +286,17 @@ describe ContainerDashboardService do
       daily_network_trends_single_provider = described_class.new(ems_openshift.id, controller).daily_network_metrics
 
       expect(daily_network_trends_single_provider).to eq(
-        :xData => [current_date.strftime("%Y-%m-%d")],
+        :xData => [current_date.strftime('%Y-%m-%d')],
         :yData => [1000]
       )
 
       expect(daily_network_trends).to eq(
-        :xData => [current_date.strftime("%Y-%m-%d")],
+        :xData => [current_date.strftime('%Y-%m-%d')],
         :yData => [2500]
       )
     end
 
-    it "show daily hourly network trends from last 24 hours only" do
+    it 'show daily hourly network trends from last 24 hours only' do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       ems_kubernetes = FactoryGirl.create(:ems_kubernetes, :zone => @zone)
 
@@ -347,7 +347,7 @@ describe ContainerDashboardService do
       )
     end
 
-    it "returns hash with nil values when no metrics available" do
+    it 'returns hash with nil values when no metrics available' do
       ems_openshift = FactoryGirl.create(:ems_openshift, :zone => @zone)
       hourly_network_trends = described_class.new(nil, controller).hourly_network_metrics
       hourly_network_trends_single_provider = described_class.new(ems_openshift.id, controller).hourly_network_metrics

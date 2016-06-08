@@ -1,6 +1,6 @@
 module RhevmDiskProbe
-  DESC_MOD = "RhevmDescriptor"
-  QCOW_MOD = "QcowDisk"
+  DESC_MOD = 'RhevmDescriptor'
+  QCOW_MOD = 'QcowDisk'
   RAW_MOD  = 'RawDisk'
 
   def self.probe(ostruct)
@@ -21,7 +21,7 @@ module RhevmDiskProbe
     #       trying to open a disk - so don't regress infinitely.
     if ostruct.Descriptor.nil?
       # Get descriptor metadata
-      f = File.open(descriptor_file, "r")
+      f = File.open(descriptor_file, 'r')
       descriptor = f.read; f.close
       if descriptor.include?('EOF')
         ostruct.Descriptor = descriptor

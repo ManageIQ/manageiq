@@ -67,9 +67,9 @@ module MiqSqlite3DB
           offset += flen
           if type == 'integer'
             fdata = "\x00".concat(fdata) if flen == 3
-            field['data'] = fdata.unpack("C")[0]  if flen == 1
-            field['data'] = fdata.unpack("n")[0]  if flen == 2
-            field['data'] = fdata.unpack("N")[0]  if flen == 3 || flen == 4
+            field['data'] = fdata.unpack('C')[0]  if flen == 1
+            field['data'] = fdata.unpack('n')[0]  if flen == 2
+            field['data'] = fdata.unpack('N')[0]  if flen == 3 || flen == 4
           else
             field['data'] = fdata
           end
@@ -80,7 +80,7 @@ module MiqSqlite3DB
     end
 
     def dump
-      puts "======== Dumping Cell ========="
+      puts '======== Dumping Cell ========='
       puts "Page:                            #{@page.pagenum}"
       puts "Cell:                            #{@pointer}"
       puts "Left Child:                      #{@left_child}" if @left_child

@@ -1,5 +1,5 @@
 describe MiqVimBrokerWorker do
-  it ".emses_to_monitor" do
+  it '.emses_to_monitor' do
     _guid, _server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)
     FactoryGirl.create(:ems_vmware_with_authentication, :zone => @zone)

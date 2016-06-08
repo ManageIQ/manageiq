@@ -12,7 +12,7 @@ module MiqHostProvision::OptionsHelper
   end
 
   def description
-    @description ||= _("PXE install on [%{name}] from image [%{id}]") % {:name => host_name,
+    @description ||= _('PXE install on [%{name}] from image [%{id}]') % {:name => host_name,
                                                                          :id   => get_option(:pxe_image_id)}
   end
 

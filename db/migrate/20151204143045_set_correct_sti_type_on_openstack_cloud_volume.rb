@@ -20,6 +20,6 @@ class SetCorrectStiTypeOnOpenstackCloudVolume < ActiveRecord::Migration
     CloudVolume.joins('join ext_management_systems on cloud_volumes.ems_id = ext_management_systems.id')
       .where(:cloud_volumes          => {:type => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume'},
              :ext_management_systems => {:type => 'ManageIQ::Providers::Openstack::CloudManager'})
-      .update_all("type = NULL")
+      .update_all('type = NULL')
   end
 end

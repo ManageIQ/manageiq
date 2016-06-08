@@ -7,12 +7,12 @@ describe MiqAeMethodService::MiqAeServiceClassification do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:categories) { MiqAeMethodService::MiqAeServiceClassification.categories }
 
-  it "get a list of categories" do
+  it 'get a list of categories' do
     cat_array = Classification.categories.collect(&:name)
     expect(categories.collect(&:name)).to match_array(cat_array)
   end
 
-  it "check the tags" do
+  it 'check the tags' do
     tags_array = @cc_cat.entries.collect(&:name)
     cc = categories.detect { |c| c.name == 'cc' }
     tags = cc.entries

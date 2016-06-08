@@ -51,7 +51,7 @@ module MiqSqlite3DB
     attr_accessor :buf, :leaf, :hasData, :intKey, :maxLocal, :minLocal, :pagenum
 
     def initialize(buf, db, pagenum)
-      raise "Nil buffer" if buf.nil?
+      raise 'Nil buffer' if buf.nil?
       @pagenum    = pagenum
       @db         = db
       @buf        = buf
@@ -101,7 +101,7 @@ module MiqSqlite3DB
     end
 
     def dump
-      puts "================="
+      puts '================='
       puts "Page:                            #{@pagenum}"
       #     puts "Page Size:                       #{@pagesize}"
       #     puts "Data Size:                       #{@data.size}"
@@ -119,19 +119,19 @@ module MiqSqlite3DB
     end
 
     def flags2str
-      str = ""
-      str << "IntKey "   if @intKey
-      str << "ZeroData " if @zeroData
-      str << "LeafData " if @leafData
-      str << "Leaf "     if @leaf
+      str = ''
+      str << 'IntKey '   if @intKey
+      str << 'ZeroData ' if @zeroData
+      str << 'LeafData ' if @leafData
+      str << 'Leaf '     if @leaf
       str.chomp
     end
 
     def cellPointers2String
       initCellPointers if @cellPointers.nil?
-      str = ""
+      str = ''
       @cellPointers.each { |p| str << "#{p} " }
-      return nil if str == ""
+      return nil if str == ''
       str.chomp
     end
 

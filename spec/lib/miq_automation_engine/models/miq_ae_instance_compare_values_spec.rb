@@ -15,17 +15,17 @@ describe MiqAeInstanceCompareValues do
     FileUtils.remove_entry_secure(@export_dir) if Dir.exist?(@export_dir)
   end
 
-  context "same instances" do
+  context 'same instances' do
     before do
-      prep_instance_file_names("instance1")
+      prep_instance_file_names('instance1')
     end
 
-    it "both instances in DB should be equivalent" do
+    it 'both instances in DB should be equivalent' do
       inst1  = MiqAeInstance.find_by_class_id_and_name(@class.id, @first_instance)
       instance_check_status(inst1, inst1, MiqAeInstanceCompareValues::CONGRUENT_INSTANCE)
     end
 
-    it "one instance in DB and other in YAML should be equivalent" do
+    it 'one instance in DB and other in YAML should be equivalent' do
       export_model(@domain)
       inst1 = MiqAeInstance.find_by_class_id_and_name(@class.id, @first_instance)
       inst2 = MiqAeInstanceYaml.new(@instance1_file)
@@ -44,7 +44,7 @@ describe MiqAeInstanceCompareValues do
       instance_check_status(inst1, inst2, MiqAeInstanceCompareValues::COMPATIBLE_INSTANCE)
     end
 
-    it "one instance in DB and other in YAML should be compatible" do
+    it 'one instance in DB and other in YAML should be compatible' do
       export_model(@domain)
       inst1 = MiqAeInstance.find_by_class_id_and_name(@class.id, @first_instance)
       inst2 = MiqAeInstanceYaml.new(@instance2_file)

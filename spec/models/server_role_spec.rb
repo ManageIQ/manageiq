@@ -1,5 +1,5 @@
 describe ServerRole do
-  context "Without Seeding" do
+  context 'Without Seeding' do
     before(:each) do
       @server_roles = []
       [
@@ -9,26 +9,26 @@ describe ServerRole do
       ].each { |r, max| @server_roles << FactoryGirl.create(:server_role, :name => r, :max_concurrent => max) }
     end
 
-    it "validates uniqueness of name" do
+    it 'validates uniqueness of name' do
       expect { FactoryGirl.create(:server_role, :name => @server_roles.first.name, :max_concurrent => @server_roles.first.max_concurrent) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it "should return all names" do
+    it 'should return all names' do
       expect(@server_roles.collect(&:name).sort).to eq(ServerRole.all_names.sort)
     end
 
-    it "should respond to master_supported? properly" do
+    it 'should respond to master_supported? properly' do
       @server_roles.each { |s| expect(s.max_concurrent == 1).to eq(s.master_supported?) }
     end
 
-    it "should respond to unlimited? properly" do
+    it 'should respond to unlimited? properly' do
       @server_roles.each { |s| expect(s.max_concurrent == 0).to eq(s.unlimited?) }
     end
   end
 
-  context "With Seeding" do
+  context 'With Seeding' do
     before(:each) do
-      @csv = <<-CSV.gsub(/^\s+/, "")
+      @csv = <<-CSV.gsub(/^\s+/, '')
         name,description,max_concurrent,external_failover,role_scope
         automate,Automation Engine,0,false,region
         database_operations,Database Operations,0,false,region
@@ -56,11 +56,11 @@ describe ServerRole do
       ServerRole.seed
     end
 
-    it "should create proper number of rows" do
+    it 'should create proper number of rows' do
       expect(@csv.split("\n").length - 1).to eq(ServerRole.count)
     end
 
-    it "should import rows properly" do
+    it 'should import rows properly' do
       roles = @csv.split("\n")
       cols  = roles.shift
       roles.each do |role|

@@ -12,14 +12,14 @@ class ApplicationHelper::Toolbar::MiqActionCenter < ApplicationHelper::Toolbar::
           t = N_('Edit this Action'),
           t,
           :klass     => ApplicationHelper::Button::MiqActionModify,
-          :url_parms => "?type=basic"),
+          :url_parms => '?type=basic'),
         button(
           :action_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Action'),
           t,
-          :url_parms => "main_div",
-          :confirm   => N_("Are you sure you want to delete this Action?")),
+          :url_parms => 'main_div',
+          :confirm   => N_('Are you sure you want to delete this Action?')),
       ]
     ),
   ])

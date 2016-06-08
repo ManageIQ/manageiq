@@ -7,19 +7,19 @@ module ApplicationController::Explorer
     @hist = x_tree_history[params[:item].to_i]  # Set instance var so we know hist button was pressed
     if @hist[:button]         # Button press from show screen
       self.x_node = @hist[:id]
-      nodetype, params[:id] = x_node.split("_").last.split("-")
+      nodetype, params[:id] = x_node.split('_').last.split('-')
       params[:x_show] = @hist[:item]
       params[:pressed] = @hist[:button] # Look like we came in with this action
       params[:display] = @hist[:display]
       x_button
     elsif @hist[:display]           # Display link from show screen
       self.x_node = @hist[:id]
-      nodetype, params[:id] = x_node.split("_").last.split("-")
+      nodetype, params[:id] = x_node.split('_').last.split('-')
       params[:display] = @hist[:display]
       show
     elsif @hist[:action]          # Action link from show screen
       self.x_node = @hist[:id]
-      nodetype, params[:id] = x_node.split("_").last.split("-")
+      nodetype, params[:id] = x_node.split('_').last.split('-')
       params[:x_show] = @hist[:item]
       params[:action] = @hist[:action]  # Look like we came in with this action
       session[:view] = @hist[:view] if @hist[:view]
@@ -114,20 +114,20 @@ module ApplicationController::Explorer
     return if performed?
     # no need to render anything, method will render flash message when async task is completed
 
-    if @refresh_partial == "layouts/flash_msg"
+    if @refresh_partial == 'layouts/flash_msg'
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     elsif @refresh_partial
       # no need to render anything when download_pdf button is pressed on summary screen
       replace_right_cell unless action == 'download_pdf'
     else
-      add_flash(_("Button not yet implemented %{model}:%{action}") %
+      add_flash(_('Button not yet implemented %{model}:%{action}') %
         {:model => model, :action => action}, :error) unless @flash_array
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     end
   end
@@ -152,9 +152,9 @@ module ApplicationController::Explorer
   def x_edit_tags_reset(db)
     @tagging = session[:tag_db] = db
     @object_ids = find_checked_items
-    if params[:button] == "reset"
+    if params[:button] == 'reset'
       id = params[:id] if params[:id]
-      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
+      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", 'replace_cell__explorer')
       @object_ids = @edit[:object_ids]
       session[:tag_db] = @tagging = @edit[:tagging]
     else
@@ -162,12 +162,12 @@ module ApplicationController::Explorer
       session[:tag_db] = @tagging = params[:tagging] if params[:tagging]
     end
 
-    @gtl_type = "list"  # No quad icons for user/group list views
+    @gtl_type = 'list'  # No quad icons for user/group list views
     x_tags_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
-    @right_cell_text = _("Editing %{model} Tags for \"%{name}\"") % {:name  => ui_lookup(:models => @tagging),
+    add_flash(_('All changes have been reset'), :warning)  if params[:button] == 'reset'
+    @right_cell_text = _('Editing %{model} Tags for "%{name}"') % {:name  => ui_lookup(:models => @tagging),
                                                                      :model => current_tenant.name}
     replace_right_cell(@sb[:action])
   end
@@ -188,8 +188,8 @@ module ApplicationController::Explorer
 
   def x_edit_tags_cancel
     id = params[:id]
-    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
-    add_flash(_("Tag Edit was cancelled by the user"))
+    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", 'replace_cell__explorer')
+    add_flash(_('Tag Edit was cancelled by the user'))
     get_node_info(x_node)
     @edit = nil # clean out the saved info
     replace_right_cell
@@ -217,15 +217,15 @@ module ApplicationController::Explorer
   # FIXME: move partly to Tree once Trees are made from TreeBuilder
   def valid_active_node(treenodeid)
     modelname, rec_id, nodetype = TreeBuilder.extract_node_model_and_id(treenodeid)
-    return treenodeid if ["root", ""].include?(nodetype) # incase node is root or doesn't have a prefix
+    return treenodeid if ['root', ''].include?(nodetype) # incase node is root or doesn't have a prefix
     raise _("No Class found for explorer tree node id '%{number}'") % {:number => treenodeid} if modelname.nil?
     kls = modelname.constantize
     return treenodeid if kls == Hash
 
     unless kls.where(:id => from_cid(rec_id)).exists?
       @replace_trees = [@sb[:active_accord]] # refresh trees
-      self.x_node = "root"
-      add_flash(_("Last selected %{record_name} no longer exists") %
+      self.x_node = 'root'
+      add_flash(_('Last selected %{record_name} no longer exists') %
         {:record_name => ui_lookup(:model => kls.to_s)}, :error)
     end
     x_node

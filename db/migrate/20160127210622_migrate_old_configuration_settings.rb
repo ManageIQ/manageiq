@@ -6,8 +6,8 @@ class MigrateOldConfigurationSettings < ActiveRecord::Migration
   def up
     update_methods = private_methods(false)
 
-    say_with_time("Migrating old configuration settings") do
-      Configuration.where(:typ => "vmdb").each do |config|
+    say_with_time('Migrating old configuration settings') do
+      Configuration.where(:typ => 'vmdb').each do |config|
         hash = config.settings.deep_symbolize_keys
         update_methods.each { |m| send(m, hash) }
         config.update_attributes!(:settings => hash)

@@ -5,7 +5,7 @@ module AssignmentMixin
   included do  #:nodoc:
     acts_as_miq_taggable
 
-    const_set("ASSIGNMENT_PARENT_ASSOCIATIONS", [:parent_blue_folders, :parent_resource_pool, :host, :ems_cluster, :ext_management_system, :my_enterprise]) unless const_defined?("ASSIGNMENT_PARENT_ASSOCIATIONS")
+    const_set('ASSIGNMENT_PARENT_ASSOCIATIONS', [:parent_blue_folders, :parent_resource_pool, :host, :ems_cluster, :ext_management_system, :my_enterprise]) unless const_defined?('ASSIGNMENT_PARENT_ASSOCIATIONS')
 
     cache_with_timeout(:assignments_cached, 1.minute) { assignments }
   end
@@ -18,7 +18,7 @@ module AssignmentMixin
       if obj.kind_of?(ActiveRecord::Base) # obj is a CI
         tag = "#{obj.class.base_model.name.underscore}/id/#{obj.id}"
       else                                # obj is the id of an instance of <klass>
-        raise _("Class must be specified when object is an integer") if klass.nil?
+        raise _('Class must be specified when object is an integer') if klass.nil?
         tag = "#{klass.underscore}/id/#{obj}"
       end
       tag_add(tag, :ns => namespace)
@@ -50,7 +50,7 @@ module AssignmentMixin
     result = {:objects => [], :tags => []}
     tags = tag_list(:ns => namespace).split
     tags.each do |t|
-      parts = t.split("/")
+      parts = t.split('/')
       klass = parts.shift
       type  = parts.shift
       case type.to_sym
@@ -59,7 +59,7 @@ module AssignmentMixin
         object = model.find_by_id(parts.pop) unless model.nil?
         result[:objects] << object unless object.nil?
       when :tag
-        tag = Tag.find_by_name("/" + parts.join("/"))
+        tag = Tag.find_by_name('/' + parts.join('/'))
         result[:tags] << [Classification.find_by_tag_id(tag.id), klass] unless tag.nil?
       end
     end
@@ -74,7 +74,7 @@ module AssignmentMixin
     # => cat = "host" will remove all the host assignments - both host/id/n and host/tag/...
     # => cat = "host/tag" will remove only the host tag assignments.
     # => cat = nil will remove all assignments from object
-    tag_with("", :ns => namespace, :cat => cat)
+    tag_with('', :ns => namespace, :cat => cat)
     reload
   end
 
@@ -86,7 +86,7 @@ module AssignmentMixin
       records = kind_of?(Class) ? all : self
       assignment_map = records.each_with_object({}) { |a, h| h[a.id] = a }
       Tag
-        .where("taggings.taggable_type = ? and tags.name like ?", name, "#{namespace}/%")
+        .where('taggings.taggable_type = ? and tags.name like ?', name, "#{namespace}/%")
         .joins(:taggings)
         .each_with_object([]) do |tag, arr|
           tag.taggings.each do |tagging|
@@ -122,12 +122,12 @@ module AssignmentMixin
 
       if options[:associations_preloaded]
         # Collect tags directly from association from parent objects if they were already preloaded by the caller
-        tags = parents.collect { |p| p.tags.select { |t| t.name.starts_with?("/managed/") } }.flatten.uniq
+        tags = parents.collect { |p| p.tags.select { |t| t.name.starts_with?('/managed/') } }.flatten.uniq
       else
         # Collect tags from all parent objects in a single query if they were NOT already preloaded by the caller
         tcond = []; targs = []
         parents.each do |p|
-          tcond << "(taggings.taggable_type=? AND taggings.taggable_id=?)"
+          tcond << '(taggings.taggable_type=? AND taggings.taggable_id=?)'
           # TODO: we may need to change taggings-related code to use base_model too
           targs << p.class.base_class.name << p.id
         end
@@ -142,7 +142,7 @@ module AssignmentMixin
           # Only collect taggings for parent objects
           klass = t.taggable_type
           if parent_ids_by_type[klass] && parent_ids_by_type[klass].include?(t.taggable_id)
-            if klass == "VmOrTemplate"       # right now NO support for tagged templates
+            if klass == 'VmOrTemplate'       # right now NO support for tagged templates
               arr << "vm/tag#{tag.name}"
             else
               arr << "#{klass.underscore}/tag#{tag.name}"

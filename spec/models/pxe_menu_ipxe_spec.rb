@@ -76,23 +76,23 @@ boot
 PXEMENU
   end
 
-  it ".parse_contents" do
+  it '.parse_contents' do
     expect(described_class.parse_contents(@contents).length).to eq(3)
     expect(described_class.parse_contents(@contents).all? { |h| h.kind_of?(Hash) }).to be_truthy
   end
 
-  it ".parse_kernel" do
-    k = "http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:19:e3:d7:5b:0e"
-    expect(described_class.parse_kernel(k)).to eq(["http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz", "ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:19:e3:d7:5b:0e"])
+  it '.parse_kernel' do
+    k = 'http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:19:e3:d7:5b:0e'
+    expect(described_class.parse_kernel(k)).to eq(['http://192.168.252.60/ipxe/rhel6.2-desktop/vmlinuz', 'ramdisk_size=10000 ks=http://192.168.252.60/pxelinux.cfg/rhel6.2-host.ks.cfg ksdevice=00:19:e3:d7:5b:0e'])
   end
 
-  context "#synchronize_images" do
+  context '#synchronize_images' do
     before(:each) do
       @pxe_server = FactoryGirl.create(:pxe_server)
       @pxe_menu   = FactoryGirl.create(:pxe_menu_ipxe, :contents => @contents, :pxe_server => @pxe_server)
     end
 
-    it "finds correct number of menu items" do
+    it 'finds correct number of menu items' do
       @pxe_menu.synchronize_images
       @pxe_menu.save!
       expect(@pxe_menu.pxe_images.length).to eq(3)

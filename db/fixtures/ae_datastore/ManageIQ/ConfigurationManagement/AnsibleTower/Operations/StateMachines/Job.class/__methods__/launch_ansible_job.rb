@@ -26,7 +26,7 @@ class LaunchAnsibleJob
   end
 
   def vm_from_request
-    @handle.root["miq_provision"].try(:destination)
+    @handle.root['miq_provision'].try(:destination)
   end
 
   def ansible_vars(object, ext_vars)
@@ -56,7 +56,7 @@ class LaunchAnsibleJob
     job_template = var_search(@handle.object, 'job_template') || job_template_by_name || job_template_by_id
 
     if job_template.nil?
-      raise "Job Template not specified"
+      raise 'Job Template not specified'
     end
     job_template
   end

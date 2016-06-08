@@ -71,7 +71,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def verify_credentials(auth_type = nil, options = {})
     options = options.merge(:auth_type => auth_type)
-    if options[:auth_type] == "hawkular"
+    if options[:auth_type] == 'hawkular'
       hawkular_status['MetricsService'] == 'STARTED'
     else
       with_provider_connection(options, &:api_valid?)
@@ -87,7 +87,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def ensure_authentications_record
     return if authentications.present?
-    update_authentication(:default => {:userid => "_", :save => false})
+    update_authentication(:default => {:userid => '_', :save => false})
   end
 
   def supported_auth_types
@@ -104,8 +104,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def scan_job_create(entity_class, entity_id)
     Job.create_job(
-      "ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job",
-      :name            => "Container image analysis",
+      'ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job',
+      :name            => 'Container image analysis',
       :target_class    => entity_class,
       :target_id       => entity_id,
       :zone            => my_zone,
@@ -134,7 +134,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       conn.send(
         "patch_#{provider_entity_name}".to_sym,
         ems_indentifier,
-        {"metadata" => {"annotations" => annotations}},
+        {'metadata' => {'annotations' => annotations}},
         container_project_name # nil is ok for non namespaced entities (e.g images)
       )
     end

@@ -3,7 +3,7 @@ describe VmdbMetric do
     EvmSpecHelper.create_guid_miq_server_zone
   end
 
-  it "should purge" do
+  it 'should purge' do
     expect do
       VmdbMetric.purge_daily_timer
       VmdbMetric.purge_daily_timer

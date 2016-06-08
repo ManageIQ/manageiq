@@ -18,14 +18,14 @@ class VMwareEsxVcProbe
 
   def self.probe(ost)
     if !ost.discover_types.include?(:virtualcenter) && !ost.discover_types.include?(:esx)
-      $log.debug "Skipping VMwareEsxVcProbe" if $log
+      $log.debug 'Skipping VMwareEsxVcProbe' if $log
       return
     end
 
     # First check if we can access the VMware webservice before even trying the port scans.
     $log.debug "VMwareEsxVcProbe: probing ip = #{ost.ipaddr}" if $log
     begin
-      MiqVimClientBase.new(ost.ipaddr, "test", "test")
+      MiqVimClientBase.new(ost.ipaddr, 'test', 'test')
     rescue => err
       $log.debug "VMwareEsxVcProbe: Failed to connect to VMware webservice: #{err}. ip = #{ost.ipaddr}" if $log
       return

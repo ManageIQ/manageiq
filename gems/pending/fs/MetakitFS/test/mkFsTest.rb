@@ -6,13 +6,13 @@ require 'fs/MiqFS/MiqFS'
 require 'fs/MetakitFS/MetakitFS'
 
 # MK_FILE = "mk4test"
-MK_FILE = "newmkfs"
-FROM_DIR = "../.."
-SAMP_FILE = "/lib/fs/MetakitFS/MetakitFS.rb"
+MK_FILE = 'newmkfs'
+FROM_DIR = '../..'
+SAMP_FILE = '/lib/fs/MetakitFS/MetakitFS.rb'
 
 def copyIn(fs, ff, tf)
   File.open(ff) do |ffo|
-    tfo = fs.fileOpen(tf, "wb")
+    tfo = fs.fileOpen(tf, 'wb')
     while (buf = ffo.read(1024))
       tfo.write(buf, buf.length)
     end
@@ -52,7 +52,7 @@ begin
   # end
 
   puts
-  puts "*****************************"
+  puts '*****************************'
   puts
 
   # puts "fsId = #{mkFS.fsId}"
@@ -60,7 +60,7 @@ begin
   # mkFS.tags("/").each { |t| puts "\t#{t}" }
   # puts
 
-  mkFS.findEach("/") do |path|
+  mkFS.findEach('/') do |path|
     puts "\t#{path}"
     mkFS.fileOpen(path) do |_fo|
       # tags = fo.tags
@@ -72,21 +72,21 @@ begin
     end
   end
 
-  unless mkFS.hasTagName?("/", "LABEL")
-    puts "*** Adding label..."
-    mkFS.tagAdd("/", "LABEL=MIQPAYLOAD")
+  unless mkFS.hasTagName?('/', 'LABEL')
+    puts '*** Adding label...'
+    mkFS.tagAdd('/', 'LABEL=MIQPAYLOAD')
   end
 
   exit
 
   puts
-  puts "*****************************"
+  puts '*****************************'
   puts
 
   fo = mkFS.fileOpen(SAMP_FILE)
-  fo.addTag("Rich")
-  fo.addTag("was")
-  fo.addTag("here")
+  fo.addTag('Rich')
+  fo.addTag('was')
+  fo.addTag('here')
   fo.close
 
   puts "FILE: #{SAMP_FILE}"
@@ -94,7 +94,7 @@ begin
     puts "\tTAGS:"
     fo.tags.each { |t| puts "\t\t#{t}" }
     puts
-    puts "***** CONTENTS:"
+    puts '***** CONTENTS:'
     unzipper = Zlib::Inflate.new
     while (buf = fo.read(1024)).length != 0
       unzipper << buf
@@ -103,7 +103,7 @@ begin
   end
 
   fo = mkFS.fileOpen(SAMP_FILE)
-  fo.deleteTag("was")
+  fo.deleteTag('was')
   puts "\tTAGS:"
   fo.tags.each { |t| puts "\t\t#{t}" }
   fo.close

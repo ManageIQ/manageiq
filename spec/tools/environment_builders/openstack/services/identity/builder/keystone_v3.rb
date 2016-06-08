@@ -8,7 +8,7 @@ module Openstack
           attr_reader :projects, :service
 
           def initialize(ems)
-            @service = ems.connect(:service => "Identity", :openstack_endpoint_type => 'adminURL')
+            @service = ems.connect(:service => 'Identity', :openstack_endpoint_type => 'adminURL')
             @data    = Data::KeystoneV3.new
 
             # Collected data
@@ -48,13 +48,13 @@ module Openstack
               admin_role = @service.roles.all(:domain_id => domain_id).detect { |x| x.name == role }
               @projects.each do |p|
                 puts "Creating role {:name => '#{role}', :tenant_id => '#{p.name}'} role in "\
-                     "Fog::Identity::OpenStack:Roles"
+                     'Fog::Identity::OpenStack:Roles'
                 begin
                   p.grant_role_to_user(admin_role.id, admin_user.id)
                 rescue Excon::Errors::Conflict
                   # Tenant already has the admin role
                   puts "Finding role {:name => 'admin', :tenant_id => '#{p.name}'} role in "\
-                       "Fog::Identity::OpenStack:Roles"
+                       'Fog::Identity::OpenStack:Roles'
                 end
               end
             end

@@ -13,7 +13,7 @@ end
 $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
-TARGET_VM = "NetAppDsTest7"
+TARGET_VM = 'NetAppDsTest7'
 
 begin
   broker = MiqVimBroker.new(:client)
@@ -37,9 +37,9 @@ begin
   # puts broker.connectionInfo.inspect
 
   puts
-  puts "logging broker status..."
+  puts 'logging broker status...'
   broker.logStatus
-  puts "done."
+  puts 'done.'
 
   # puts
   # puts "Loading VMs..."
@@ -58,18 +58,18 @@ begin
   # exit
 
   puts
-  puts "Resetting cache..."
+  puts 'Resetting cache...'
   vim.resetCache
 
   puts
-  puts "Loading VMs..."
+  puts 'Loading VMs...'
   t1 = Time.now
 
   # vim.receiveTimeout = 0
   vms = vim.virtualMachinesByMor
 
   t2 = Time.now
-  puts "VM load complete."
+  puts 'VM load complete.'
 
   puts "Number of VMs: #{vms.keys.length}"
   puts "VM load (transfer) time: #{t2 - t1}"

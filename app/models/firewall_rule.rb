@@ -1,13 +1,13 @@
 class FirewallRule < ApplicationRecord
   belongs_to :resource, :polymorphic => true
-  belongs_to :source_security_group, :class_name => "SecurityGroup"
+  belongs_to :source_security_group, :class_name => 'SecurityGroup'
 
   def operating_system
     resource.kind_of?(OperatingSystem) ? resource : nil
   end
 
   def operating_system=(os)
-    raise ArgumentError, _("must be an OperatingSystem") unless os.kind_of?(OperatingSystem)
+    raise ArgumentError, _('must be an OperatingSystem') unless os.kind_of?(OperatingSystem)
     self.resource = os
   end
 

@@ -7,7 +7,7 @@ class ConfigurationProfileDecorator < Draper::Decorator
 
   def listicon_image
     if id.nil?
-      "100/folder.png"
+      '100/folder.png'
     else
       "100/#{image_name.downcase}.png"
     end

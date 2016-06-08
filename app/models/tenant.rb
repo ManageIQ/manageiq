@@ -1,16 +1,16 @@
 require 'ancestry'
 
 class Tenant < ApplicationRecord
-  HARDCODED_LOGO = "custom_logo.png"
-  HARDCODED_LOGIN_LOGO = "custom_login_logo.png"
+  HARDCODED_LOGO = 'custom_logo.png'
+  HARDCODED_LOGIN_LOGO = 'custom_login_logo.png'
   DEFAULT_URL = nil
 
   include ActiveVmAggregationMixin
 
   acts_as_miq_taggable
 
-  default_value_for :name,        "My Company"
-  default_value_for :description, "Tenant for My Company"
+  default_value_for :name,        'My Company'
+  default_value_for :description, 'Tenant for My Company'
   default_value_for :divisible,   true
   default_value_for :use_config_for_attributes, false
 
@@ -32,24 +32,24 @@ class Tenant < ApplicationRecord
   has_many :miq_request_tasks, :dependent => :destroy
   has_many :services, :dependent => :destroy
 
-  belongs_to :default_miq_group, :class_name => "MiqGroup", :dependent => :destroy
+  belongs_to :default_miq_group, :class_name => 'MiqGroup', :dependent => :destroy
 
   # FUTURE: /uploads/tenant/:id/logos/:basename.:extension # may want style
   has_attached_file :logo,
-                    :url  => "/uploads/:basename.:extension",
-                    :path => ":rails_root/public/uploads/:basename.:extension"
+                    :url  => '/uploads/:basename.:extension',
+                    :path => ':rails_root/public/uploads/:basename.:extension'
 
   has_attached_file :login_logo,
-                    :url         => "/uploads/:basename.:extension",
-                    :default_url => ":default_login_logo",
-                    :path        => ":rails_root/public/uploads/:basename.:extension"
+                    :url         => '/uploads/:basename.:extension',
+                    :default_url => ':default_login_logo',
+                    :path        => ':rails_root/public/uploads/:basename.:extension'
 
   validates :subdomain, :uniqueness => true, :allow_nil => true
   validates :domain,    :uniqueness => true, :allow_nil => true
   validate  :validate_only_one_root
   validates :description, :presence => true
   validates :name, :presence => true, :unless => :use_config_for_attributes?
-  validates :name, :uniqueness => {:scope => :ancestry, :message => "should be unique per parent"}
+  validates :name, :uniqueness => {:scope => :ancestry, :message => 'should be unique per parent'}
   validate :validate_default_tenant, :on => :update, :if => :default_miq_group_id_changed?
 
   # FUTURE: allow more content_types
@@ -108,7 +108,7 @@ class Tenant < ApplicationRecord
   end
 
   def display_type
-    project? ? "Project" : "Tenant"
+    project? ? 'Project' : 'Tenant'
   end
 
   def login_text
@@ -124,7 +124,7 @@ class Tenant < ApplicationRecord
   def logo_content_type
     tenant_attribute(:logo_content_type, :custom_logo) do |_custom_logo|
       # fails validation when using custom_logo && "image/png"
-      "image/png"
+      'image/png'
     end
   end
 
@@ -137,7 +137,7 @@ class Tenant < ApplicationRecord
   def login_logo_content_type
     tenant_attribute(:login_logo_content_type, :custom_login_logo) do |_custom_logo|
       # fails validation when using custom_logo && "image/png"
-      "image/png"
+      'image/png'
     end
   end
 
@@ -265,7 +265,7 @@ class Tenant < ApplicationRecord
   # NOTE: returns the root tenant
   def self.seed
     root_tenant || create!(:use_config_for_attributes => true) do |_|
-      _log.info("Creating root tenant")
+      _log.info('Creating root tenant')
     end
   end
 
@@ -281,13 +281,13 @@ class Tenant < ApplicationRecord
   #   ]
   def self.tenant_and_project_names
     tenants_and_projects = Tenant.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name)
-                           .to_a.sort_by { |t| [t.ancestry || "", t.name] }
+                           .to_a.sort_by { |t| [t.ancestry || '', t.name] }
     tenants_by_id = tenants_and_projects.index_by(&:id)
 
     tenants_and_projects.partition(&:divisible?).map do |tenants|
       tenants.map do |t|
         all_names = (t.ancestor_ids + [t.id]).map { |tid| tenants_by_id[tid] }.map(&:name)
-        [all_names.join("/"), t.id]
+        [all_names.join('/'), t.id]
       end.sort_by(&:first)
     end
   end
@@ -337,14 +337,14 @@ class Tenant < ApplicationRecord
   end
 
   def get_vmdb_config
-    @vmdb_config ||= VMDB::Config.new("vmdb").config
+    @vmdb_config ||= VMDB::Config.new('vmdb').config
   end
 
   # validates that there is only one tree
   def validate_only_one_root
     unless parent_id || parent
       root = self.class.root_tenant
-      errors.add(:parent, "required") if root && root != self
+      errors.add(:parent, 'required') if root && root != self
     end
   end
 
@@ -354,12 +354,12 @@ class Tenant < ApplicationRecord
   end
 
   def ensure_can_be_destroyed
-    raise _("A tenant with groups associated cannot be deleted.") if miq_groups.non_tenant_groups.exists?
+    raise _('A tenant with groups associated cannot be deleted.') if miq_groups.non_tenant_groups.exists?
   end
 
   def validate_default_tenant
     if default_miq_group.tenant_id != id || !default_miq_group.tenant_group?
-      errors.add(:default_miq_group, "default group must be a default group for this tenant")
+      errors.add(:default_miq_group, 'default group must be a default group for this tenant')
     end
   end
 end

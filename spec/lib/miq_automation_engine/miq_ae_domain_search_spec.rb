@@ -21,14 +21,14 @@ module MiqAeDomainSearchSpec
                                   :method_name => 'OBELIX', :method_script => 'x=1')
     end
 
-    it "#get_alternate_domain" do
+    it '#get_alternate_domain' do
       create_ae_instances
       search.ae_user = user
       ns = search.get_alternate_domain('miqaedb', '/FRED/WILMA/DOGMATIX', 'FRED', 'WILMA', 'DOGMATIX')
       expect(ns).to eq('BARNEY/FRED')
     end
 
-    it "#get_alternate_domain_method" do
+    it '#get_alternate_domain_method' do
       create_ae_methods
       search.ae_user = user
       ns = search.get_alternate_domain_method('miqaedb', '/FRED/WILMA/OBELIX', 'FRED', 'WILMA', 'OBELIX')

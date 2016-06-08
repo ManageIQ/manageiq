@@ -1,32 +1,32 @@
 require 'util/miq-system'
 
 describe MiqSystem do
-  context ".normalize_df_file_argument" do
-    it "nil" do
-      expect(described_class.normalize_df_file_argument).to eq("-l")
+  context '.normalize_df_file_argument' do
+    it 'nil' do
+      expect(described_class.normalize_df_file_argument).to eq('-l')
     end
 
-    it "blank" do
-      expect(described_class.normalize_df_file_argument("  ")).to eq("-l")
+    it 'blank' do
+      expect(described_class.normalize_df_file_argument('  ')).to eq('-l')
     end
 
-    it "file exists" do
-      file = "/dev/null"
+    it 'file exists' do
+      file = '/dev/null'
       allow(File).to receive(:exist?).with(file).and_return(true)
       expect(described_class.normalize_df_file_argument(file)).to eq(file)
     end
 
-    it "file missing" do
-      file = "/dev/null"
+    it 'file missing' do
+      file = '/dev/null'
       allow(File).to receive(:exist?).with(file).and_return(false)
-      expect { described_class.normalize_df_file_argument(file) }.to raise_error(RuntimeError, "file /dev/null does not exist")
+      expect { described_class.normalize_df_file_argument(file) }.to raise_error(RuntimeError, 'file /dev/null does not exist')
     end
   end
 
-  context ".disk_usage(file)" do
+  context '.disk_usage(file)' do
     require 'fileutils'
 
-    let(:file) { Pathname.new(__dir__).join("empty file").to_s }
+    let(:file) { Pathname.new(__dir__).join('empty file').to_s }
 
     before do
       FileUtils.touch(file)
@@ -36,7 +36,7 @@ describe MiqSystem do
       FileUtils.rm_f(file)
     end
 
-    it "handles file with a space" do
+    it 'handles file with a space' do
       usage_hash = described_class.disk_usage(file).first
       expect(usage_hash[:filesystem]).to be_kind_of String
       expect(usage_hash[:filesystem]).to be_present
@@ -44,8 +44,8 @@ describe MiqSystem do
     end
   end
 
-  context ".disk_usage" do
-    it "linux" do
+  context '.disk_usage' do
+    it 'linux' do
       linux_df_output_bytes = <<EOF
 Filesystem              Type     1024-blocks    Used Available Capacity Mounted on
 /dev/mapper/fedora-root ext4        40185208 5932800  32188024      16% /
@@ -70,65 +70,65 @@ tmpfs                   tmpfs      992383     38   992345    1% /tmp
 EOF
       expected = [
         {
-          :filesystem          => "/dev/mapper/fedora-root",
-          :type                => "ext4",
+          :filesystem          => '/dev/mapper/fedora-root',
+          :type                => 'ext4',
           :total_bytes         => 41149652992,
           :used_bytes          => 6075187200,
           :available_bytes     => 32960536576,
           :used_bytes_percent  => 16,
-          :mount_point         => "/",
+          :mount_point         => '/',
           :total_inodes        => 2564096,
           :used_inodes         => 146929,
           :available_inodes    => 2417167,
           :used_inodes_percent => 6
         },
         {
-          :filesystem          => "devtmpfs",
-          :type                => "devtmpfs",
+          :filesystem          => 'devtmpfs',
+          :type                => 'devtmpfs',
           :total_bytes         => 4056653824,
           :used_bytes          => 0,
           :available_bytes     => 4056653824,
           :used_bytes_percent  => 0,
-          :mount_point         => "/dev",
+          :mount_point         => '/dev',
           :total_inodes        => 990394,
           :used_inodes         => 549,
           :available_inodes    => 989845,
           :used_inodes_percent => 1
         },
         {
-          :filesystem          => "tmpfs",
-          :type                => "tmpfs",
+          :filesystem          => 'tmpfs',
+          :type                => 'tmpfs',
           :total_bytes         => 4064800768,
           :used_bytes          => 7507968,
           :available_bytes     => 4057292800,
           :used_bytes_percent  => 1,
-          :mount_point         => "/dev/shm",
+          :mount_point         => '/dev/shm',
           :total_inodes        => 992383,
           :used_inodes         => 38,
           :available_inodes    => 992345,
           :used_inodes_percent => 1
         },
         {
-          :filesystem          => "/dev/sda1",
-          :type                => "ext4",
+          :filesystem          => '/dev/sda1',
+          :type                => 'ext4',
           :total_bytes         => 499355648,
           :used_bytes          => 134671360,
           :available_bytes     => 334275584,
           :used_bytes_percent  => 29,
-          :mount_point         => "/boot",
+          :mount_point         => '/boot',
           :total_inodes        => 128016,
           :used_inodes         => 385,
           :available_inodes    => 127631,
           :used_inodes_percent => 1
         },
         {
-          :filesystem          => "/dev/mapper/fedora-home",
-          :type                => "ext4",
+          :filesystem          => '/dev/mapper/fedora-home',
+          :type                => 'ext4',
           :total_bytes         => 196976660480,
           :used_bytes          => 9549549568,
           :available_bytes     => 177397694464,
           :used_bytes_percent  => 6,
-          :mount_point         => "/home",
+          :mount_point         => '/home',
           :total_inodes        => 12222464,
           :used_inodes         => 488787,
           :available_inodes    => 11733677,
@@ -136,18 +136,18 @@ EOF
         }
       ]
 
-      stub_const("Sys::Platform::IMPL", :linux)
+      stub_const('Sys::Platform::IMPL', :linux)
       expect(AwesomeSpawn).to receive(:run!)
-        .with("df", :params => ["-T", "-P", "-l"])
+        .with('df', :params => ['-T', '-P', '-l'])
         .and_return(double(:output => linux_df_output_bytes))
       expect(AwesomeSpawn).to receive(:run!)
-        .with("df", :params => ["-T", "-P", "-i", "-l"])
+        .with('df', :params => ['-T', '-P', '-i', '-l'])
         .and_return(double(:output => linux_df_output_inodes))
 
       expect(described_class.disk_usage).to eq(expected)
     end
 
-    it "macosx" do
+    it 'macosx' do
       mac_df_output = <<EOF
 Filesystem    1024-blocks      Used Available Capacity  iused    ifree %iused  Mounted on
 /dev/disk0s2    731734976 399664356 331814620    55% 99980087 82953655   55%   /
@@ -157,7 +157,7 @@ map auto_home           0         0         0   100%        0        0  100%   /
 EOF
       expected = [
         {
-          :filesystem          => "/dev/disk0s2",
+          :filesystem          => '/dev/disk0s2',
           :total_bytes         => 749296615424,
           :used_bytes          => 409256300544,
           :available_bytes     => 339778170880,
@@ -166,10 +166,10 @@ EOF
           :used_inodes         => 99980087,
           :available_inodes    => 82953655,
           :used_inodes_percent => 55,
-          :mount_point         => "/"
+          :mount_point         => '/'
         },
         {
-          :filesystem          => "devfs",
+          :filesystem          => 'devfs',
           :total_bytes         => 195584,
           :used_bytes          => 195584,
           :available_bytes     => 0,
@@ -178,7 +178,7 @@ EOF
           :used_inodes         => 662,
           :available_inodes    => 0,
           :used_inodes_percent => 100,
-          :mount_point         => "/dev"
+          :mount_point         => '/dev'
         },
         # TODO: Modify splitting on spaces to accept :filesystem or :mount_point with spaces
         # {
@@ -207,8 +207,8 @@ EOF
         # }
       ]
 
-      stub_const("Sys::Platform::IMPL", :macosx)
-      expect(AwesomeSpawn).to receive(:launch).and_return([mac_df_output, "", 0])
+      stub_const('Sys::Platform::IMPL', :macosx)
+      expect(AwesomeSpawn).to receive(:launch).and_return([mac_df_output, '', 0])
 
       expect(described_class.disk_usage).to eq(expected)
     end

@@ -37,7 +37,7 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::Cloning
     #   true  => Advanced Monitoring
     #   false => Basic    Monitoring
     clone_options[:monitoring] = {
-      :enabled => get_option(:monitoring).to_s.downcase == "advanced"
+      :enabled => get_option(:monitoring).to_s.downcase == 'advanced'
     }
 
     if clone_options[:availability_zone].present?
@@ -54,7 +54,7 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::Cloning
     if dest_availability_zone
       _log.info("Destination Availability Zone:   [#{dest_availability_zone.name} (#{dest_availability_zone.ems_ref})]")
     else
-      _log.info("Destination Availability Zone:  Default selection from provider")
+      _log.info('Destination Availability Zone:  Default selection from provider')
     end
     _log.info("Guest Access Key Pair:           [#{clone_options[:key_name].inspect}]")
     _log.info("Security Group:                  [#{clone_options[:security_group_ids].inspect}]")

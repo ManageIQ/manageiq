@@ -16,7 +16,7 @@ module Ext4
     attr_reader :block, :leaf
 
     def initialize(buf)
-      raise "Ext4::ExtentIndex.initialize: Nil buffer" if buf.nil?
+      raise 'Ext4::ExtentIndex.initialize: Nil buffer' if buf.nil?
       @ei = EXTENT_INDEX.decode(buf)
 
       @block      = @ei['block']

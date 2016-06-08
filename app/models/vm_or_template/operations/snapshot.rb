@@ -10,7 +10,7 @@ module VmOrTemplate::Operations::Snapshot
 
   def validate_remove_snapshot(task = 'Remove')
     return {:available => false, :message => "#{task} Snapshot operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
-    return {:available => false, :message => "There are no snapshots available for this VM"} if snapshots.size <= 0
+    return {:available => false, :message => 'There are no snapshots available for this VM'} if snapshots.size <= 0
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
     {:available => true, :message => nil}
@@ -39,7 +39,7 @@ module VmOrTemplate::Operations::Snapshot
   def raw_remove_snapshot(snapshot_id)
     raise_is_available_now_error_message(:remove_snapshot)
     snapshot = snapshots.find_by_id(snapshot_id)
-    raise _("Requested VM snapshot not found, unable to remove snapshot") unless snapshot
+    raise _('Requested VM snapshot not found, unable to remove snapshot') unless snapshot
     begin
       run_command_via_parent(:vm_remove_snapshot, :snMor => snapshot.uid_ems)
     rescue => err
@@ -74,7 +74,7 @@ module VmOrTemplate::Operations::Snapshot
       :instance_id => id,
       :method_name => 'remove_snapshot',
       :args        => [snapshot_id],
-      :role        => "ems_operations",
+      :role        => 'ems_operations',
       :zone        => my_zone,
       :task_id     => task_id
     )
@@ -86,7 +86,7 @@ module VmOrTemplate::Operations::Snapshot
       :instance_id => id,
       :method_name => 'remove_evm_snapshot',
       :args        => [snapshot_id],
-      :role        => "ems_operations",
+      :role        => 'ems_operations',
       :zone        => my_zone,
       :task_id     => task_id
     )
@@ -98,7 +98,7 @@ module VmOrTemplate::Operations::Snapshot
   end
 
   def remove_snapshot_by_description(description, refresh = false, retry_time = nil)
-    if (ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager) && ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && MiqVimBrokerWorker.available?) || host.nil? || host.state == "on"
+    if (ext_management_system.kind_of?(ManageIQ::Providers::Vmware::InfraManager) && ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && MiqVimBrokerWorker.available?) || host.nil? || host.state == 'on'
       raw_remove_snapshot_by_description(description, refresh)
     else
       if retry_time.nil?
@@ -111,7 +111,7 @@ module VmOrTemplate::Operations::Snapshot
                    :method_name => 'remove_snapshot_by_description',
                    :args        => [description, refresh, retry_time],
                    :deliver_on  => Time.now.utc + retry_time,
-                   :role        => "smartstate",
+                   :role        => 'smartstate',
                    :zone        => my_zone)
     end
   end
@@ -128,7 +128,7 @@ module VmOrTemplate::Operations::Snapshot
   def raw_revert_to_snapshot(snapshot_id)
     raise_is_available_now_error_message(:revert_to_snapshot)
     snapshot = snapshots.find_by_id(snapshot_id)
-    raise _("Requested VM snapshot not found, unable to RevertTo snapshot") unless snapshot
+    raise _('Requested VM snapshot not found, unable to RevertTo snapshot') unless snapshot
     run_command_via_parent(:vm_revert_to_snapshot, :snMor => snapshot.uid_ems)
   end
 

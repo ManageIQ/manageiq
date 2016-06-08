@@ -10,20 +10,20 @@ module NumberHelper
   def human_size_to_rails_method(size)
     s = size.dup
     case
-    when size.ends_with?(" Byte")
-      s[-5..-1] = ""
-    when size.ends_with?(" Bytes")
-      s[-6..-1] = ""
-    when size.ends_with?(" KB")
-      s[-3..-1] = ".kilobytes"
-    when size.ends_with?(" MB")
-      s[-3..-1] = ".megabytes"
-    when size.ends_with?(" GB")
-      s[-3..-1] = ".gigabytes"
-    when size.ends_with?(" TB")
-      s[-3..-1] = ".terabytes"
-    when size.ends_with?(" PB")
-      s[-3..-1] = ".petabytes"
+    when size.ends_with?(' Byte')
+      s[-5..-1] = ''
+    when size.ends_with?(' Bytes')
+      s[-6..-1] = ''
+    when size.ends_with?(' KB')
+      s[-3..-1] = '.kilobytes'
+    when size.ends_with?(' MB')
+      s[-3..-1] = '.megabytes'
+    when size.ends_with?(' GB')
+      s[-3..-1] = '.gigabytes'
+    when size.ends_with?(' TB')
+      s[-3..-1] = '.terabytes'
+    when size.ends_with?(' PB')
+      s[-3..-1] = '.petabytes'
     end
     return s
   rescue
@@ -76,7 +76,7 @@ module NumberHelper
     number = Float(number)
     is_negative = number < 0
     ret = yield number.abs
-    ret.insert(0, "-") if is_negative
+    ret.insert(0, '-') if is_negative
     ret
   end
 end

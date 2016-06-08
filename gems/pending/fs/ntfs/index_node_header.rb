@@ -39,7 +39,7 @@ module NTFS
     attr_reader :startEntries, :endEntries, :flags
 
     def initialize(buf)
-      raise "MIQ(NTFS::IndexNodeHeader.initialize) Nil buffer" if buf.nil?
+      raise 'MIQ(NTFS::IndexNodeHeader.initialize) Nil buffer' if buf.nil?
       buf  = buf.read(buf.length) if buf.kind_of?(DataRun)
       @inh = INDEX_NODE_HEADER.decode(buf)
 

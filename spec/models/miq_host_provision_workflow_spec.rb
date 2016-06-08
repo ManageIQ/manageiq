@@ -1,10 +1,10 @@
-silence_warnings { MiqHostProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
+silence_warnings { MiqHostProvisionWorkflow.const_set('DIALOGS_VIA_AUTOMATE', false) }
 
 describe MiqHostProvisionWorkflow do
   let(:user) { FactoryGirl.create(:user_with_group) }
   include WorkflowSpecHelper
-  context "seeded" do
-    context "After setup," do
+  context 'seeded' do
+    context 'After setup,' do
       before(:each) do
         @server = EvmSpecHelper.local_miq_server
 
@@ -18,18 +18,18 @@ describe MiqHostProvisionWorkflow do
         FactoryGirl.create(:miq_dialog_host_provision)
       end
 
-      context "Without a Valid IPMI Host," do
-        it "should not create an MiqRequest when calling from_ws" do
+      context 'Without a Valid IPMI Host,' do
+        it 'should not create an MiqRequest when calling from_ws' do
           lambda do
-            expect(MiqHostProvisionWorkflow.from_ws("1.1", user, @template_fields, @host_fields, @requester, false, nil, nil))
+            expect(MiqHostProvisionWorkflow.from_ws('1.1', user, @template_fields, @host_fields, @requester, false, nil, nil))
               .to raise_error(RuntimeError)
           end
         end
       end
 
-      context "With a Valid IPMI Host," do
+      context 'With a Valid IPMI Host,' do
         before(:each) do
-          ems = FactoryGirl.create(:ems_vmware, :name => "Test EMS", :zone => @server.zone)
+          ems = FactoryGirl.create(:ems_vmware, :name => 'Test EMS', :zone => @server.zone)
           FactoryGirl.create(:host_with_ipmi, :ext_management_system => ems)
           pxe_server = FactoryGirl.create(:pxe_server,
                                           :name       => 'PXE on 127.0.0.1',
@@ -41,8 +41,8 @@ describe MiqHostProvisionWorkflow do
                             )
         end
 
-        it "should create an MiqRequest when calling from_ws" do
-          request = MiqHostProvisionWorkflow.from_ws("1.1", user,
+        it 'should create an MiqRequest when calling from_ws' do
+          request = MiqHostProvisionWorkflow.from_ws('1.1', user,
                                                      @template_fields,
                                                      @host_fields,
                                                      @requester, false, nil, nil)
@@ -53,11 +53,11 @@ describe MiqHostProvisionWorkflow do
     end
   end
 
-  describe "#make_request" do
+  describe '#make_request' do
     let(:host)  { FactoryGirl.create(:host) }
     let(:admin) { FactoryGirl.create(:user_with_group) }
     let(:alt_user) { FactoryGirl.create(:user_with_group) }
-    it "creates and update a request" do
+    it 'creates and update a request' do
       EvmSpecHelper.local_miq_server
       stub_dialog(:get_pre_dialogs)
       stub_dialog(:get_dialogs)
@@ -66,8 +66,8 @@ describe MiqHostProvisionWorkflow do
       workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "host_provision_request_created",
-        :target_class => "Host",
+        :event        => 'host_provision_request_created',
+        :target_class => 'Host',
         :userid       => admin.userid,
         :message      => "Host Provisioning requested by <#{admin.userid}> for Host:#{[host.id].inspect}"
       )
@@ -81,7 +81,7 @@ describe MiqHostProvisionWorkflow do
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqHostProvisionRequest)
-      expect(request.request_type).to eq("host_pxe_install")
+      expect(request.request_type).to eq('host_pxe_install')
       expect(request.description).to eq("PXE install on [#{host.name}] from image []")
       expect(request.requester).to eq(admin)
       expect(request.userid).to eq(admin.userid)
@@ -92,8 +92,8 @@ describe MiqHostProvisionWorkflow do
       workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "host_provision_request_updated",
-        :target_class => "Host",
+        :event        => 'host_provision_request_updated',
+        :target_class => 'Host',
         :userid       => alt_user.userid,
         :message      => "Host Provisioning request updated by <#{alt_user.userid}> for Host:#{[host.id].inspect}"
       )

@@ -6,14 +6,14 @@ require 'util/extensions/miq-deep'
 module FixAuth
   class FixAuthentication < ActiveRecord::Base
     include FixAuth::AuthModel
-    self.table_name = "authentications"
+    self.table_name = 'authentications'
     self.password_columns = %w(password auth_key)
     self.inheritance_column = :_type_disabled
   end
 
   class FixMiqDatabase < ActiveRecord::Base
     include FixAuth::AuthModel
-    self.table_name = "miq_databases"
+    self.table_name = 'miq_databases'
     self.password_columns = %w(registration_http_proxy_server registration_http_proxy_password
                                session_secret_token csrf_secret_token)
 
@@ -24,10 +24,10 @@ module FixAuth
 
   class FixMiqAeValue < ActiveRecord::Base
     include FixAuth::AuthModel
-    self.table_name = "miq_ae_values"
+    self.table_name = 'miq_ae_values'
     self.password_columns = %w(value)
 
-    belongs_to :field,    :class_name => "FixMiqAeField",    :foreign_key => :field_id
+    belongs_to :field,    :class_name => 'FixMiqAeField',    :foreign_key => :field_id
 
     # only bring back columns that store passwords
     # we want to use joins, but using joins makes this readonly, so we're using includes instead
@@ -38,7 +38,7 @@ module FixAuth
 
   class FixMiqAeField < ActiveRecord::Base
     include FixAuth::AuthModel
-    self.table_name = "miq_ae_fields"
+    self.table_name = 'miq_ae_fields'
     self.password_columns = %w(default_value)
 
     # only fix columns with password values
@@ -53,9 +53,9 @@ module FixAuth
     self.inheritance_column = :_type_disabled
     self.password_columns = %w(options)
     self.password_fields = %w(root_password sysprep_password sysprep_domain_password)
-    self.password_prefix = "password::"
+    self.password_prefix = 'password::'
     self.symbol_keys = true
-    self.table_name = "miq_requests"
+    self.table_name = 'miq_requests'
 
     def self.contenders
       where("options like '%password%'")
@@ -68,9 +68,9 @@ module FixAuth
     self.inheritance_column = :_type_disabled
     self.password_columns = %w(options)
     self.password_fields = %w(root_password sysprep_password sysprep_domain_password)
-    self.password_prefix = "password::"
+    self.password_prefix = 'password::'
     self.symbol_keys = true
-    self.table_name = "miq_request_tasks"
+    self.table_name = 'miq_request_tasks'
 
     def self.contenders
       where("options like '%password%'")
@@ -79,7 +79,7 @@ module FixAuth
 
   class FixSettingsChange < ActiveRecord::Base
     include FixAuth::AuthModel
-    self.table_name = "settings_changes"
+    self.table_name = 'settings_changes'
     self.password_columns = %w(value)
 
     serialize :value
@@ -87,7 +87,7 @@ module FixAuth
     def self.contenders
       query = Vmdb::Settings::PASSWORD_FIELDS.collect do |field|
         "(key LIKE '%/#{field}')"
-      end.join(" OR ")
+      end.join(' OR ')
 
       super.where(query)
     end

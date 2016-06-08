@@ -1,12 +1,12 @@
 describe MiqHostProvision do
-  it "#host_name" do
-    host_name = "fred"
+  it '#host_name' do
+    host_name = 'fred'
     host = FactoryGirl.create(:host, :name => host_name)
     mhp  = MiqHostProvision.create(:host => host)
     expect(mhp.host_name).to eq(host_name)
   end
 
-  it "#host_rediscovered?" do
+  it '#host_rediscovered?' do
     pxe_image_type = FactoryGirl.create(:pxe_image_type, :name => 'esx')
     pxe_image = FactoryGirl.create(:pxe_image, :pxe_image_type => pxe_image_type)
 
@@ -21,16 +21,16 @@ describe MiqHostProvision do
     expect(mhp.host_rediscovered?).to be_truthy
   end
 
-  context "with default server and zone" do
+  context 'with default server and zone' do
     before(:each) do
       @miq_server = EvmSpecHelper.local_miq_server
     end
 
-    context "with host and miq_host_provision" do
+    context 'with host and miq_host_provision' do
       let(:host) { FactoryGirl.create(:host_vmware_esx, :name => 'fred') }
       let(:mhp)  { MiqHostProvision.create(:host => host) }
 
-      it "#reset_host_credentials" do
+      it '#reset_host_credentials' do
         password = 'secret'
         allow(mhp).to receive(:get_option).with(:root_password).and_return(password)
         expect(mhp).to receive(:signal).with(:create_pxe_configuration_files)
@@ -40,7 +40,7 @@ describe MiqHostProvision do
         expect(mhp.host.authentication_password(:default)).to eq(password)
       end
 
-      it "#reset_host_in_vmdb" do
+      it '#reset_host_in_vmdb' do
         ipmi_userid      = 'ipmi_user'
         ipmi_password    = 'ipmi_password'
         default_userid   = 'default_user'
@@ -69,12 +69,12 @@ describe MiqHostProvision do
         expect(mhp.host.authentication_password(:default)).to eq(dialog_password)
       end
 
-      it "#provision_completed" do
+      it '#provision_completed' do
         expect(mhp).to receive(:signal).with(:post_install_callback)
         mhp.provision_completed
       end
 
-      it "#post_install_callback" do
+      it '#post_install_callback' do
         expect(mhp).to receive(:update_and_notify_parent)
         expect(mhp).to receive(:signal).with(:delete_pxe_configuration_files)
         mhp.post_install_callback

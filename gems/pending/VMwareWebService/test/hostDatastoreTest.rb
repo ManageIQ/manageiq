@@ -18,7 +18,7 @@ $vim_log.add 'err_console'
 $stdout.sync = true
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -31,7 +31,7 @@ begin
   hh = vim.hostSystems[TARGET_HOST]
   dataStores = vim.dataStoresByMor
 
-  puts "**** Host datastores:"
+  puts '**** Host datastores:'
   # vim.dumpObj(hh['datastore'])
   # exit
 
@@ -39,19 +39,19 @@ begin
     puts "**** #{dataStores[dsMor]['summary']['name']} -> #{dsMor}"
     vim.dumpObj(dataStores[dsMor])
     info = vim.getMoProp(dsMor, 'info')
-    puts "  *********** INFO:"
+    puts '  *********** INFO:'
     vim.dumpObj(info, 1)
     puts
   end
 
-  scsiLun = vim.getMoProp(hh['MOR'], "config.storageDevice.scsiLun")['config']['storageDevice']['scsiLun']
+  scsiLun = vim.getMoProp(hh['MOR'], 'config.storageDevice.scsiLun')['config']['storageDevice']['scsiLun']
   puts
-  puts "*********** scsiLun:"
+  puts '*********** scsiLun:'
   vim.dumpObj(scsiLun)
 
-  scsiTopology = vim.getMoProp(hh['MOR'], "config.storageDevice.scsiTopology")['config']['storageDevice']['scsiTopology']
+  scsiTopology = vim.getMoProp(hh['MOR'], 'config.storageDevice.scsiTopology')['config']['storageDevice']['scsiTopology']
   puts
-  puts "*********** scsiTopology:"
+  puts '*********** scsiTopology:'
   vim.dumpObj(scsiTopology)
 rescue => err
   puts err.to_s

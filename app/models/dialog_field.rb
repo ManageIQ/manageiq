@@ -10,7 +10,7 @@ class DialogField < ApplicationRecord
 
   validates_presence_of   :name
   validates :name, :exclusion => {:in      => %w(action controller),
-                                  :message => "Field Name %{value} is reserved."}
+                                  :message => 'Field Name %{value} is reserved.'}
 
   default_value_for :required, false
 
@@ -44,16 +44,16 @@ class DialogField < ApplicationRecord
   ]
 
   DIALOG_FIELD_TYPES = {
-    "DialogFieldTextBox"         => _("Text Box"),
-    "DialogFieldTextAreaBox"     => _("Text Area Box"),
-    "DialogFieldCheckBox"        => _("Check Box"),
-    "DialogFieldDropDownList"    => _("Drop Down List"),
+    'DialogFieldTextBox'         => _('Text Box'),
+    'DialogFieldTextAreaBox'     => _('Text Area Box'),
+    'DialogFieldCheckBox'        => _('Check Box'),
+    'DialogFieldDropDownList'    => _('Drop Down List'),
     # Commented out next to field types until they can be implemented
     #    "DialogFieldButton" => "Button",
-    "DialogFieldTagControl"      => _("Tag Control"),
-    "DialogFieldDateControl"     => _("Date Control"),
-    "DialogFieldDateTimeControl" => _("Date/Time Control"),
-    "DialogFieldRadioButton"     => _("Radio Button")
+    'DialogFieldTagControl'      => _('Tag Control'),
+    'DialogFieldDateControl'     => _('Date Control'),
+    'DialogFieldDateTimeControl' => _('Date/Time Control'),
+    'DialogFieldRadioButton'     => _('Radio Button')
   }
 
   DIALOG_FIELD_DYNAMIC_CLASSES = %w(
@@ -89,7 +89,7 @@ class DialogField < ApplicationRecord
   end
 
   def automate_output_value
-    data_type == "integer" ? @value.to_i : @value
+    data_type == 'integer' ? @value.to_i : @value
   end
 
   def automate_key_name

@@ -108,7 +108,7 @@ class Win32EventLog
   }
 
   # Magic numbers used by log record types.
-  MAGIC_HDR = "LfLe"
+  MAGIC_HDR = 'LfLe'
   MAGIC_CSR = "\x11\x11\x11\x11\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44"
 
   # Registry constants.
@@ -126,15 +126,15 @@ class Win32EventLog
 
   # Lookup object for translating the common %? sequences in the messages
   FORMAT_TR = Hash.new { |_h, k| k }.merge(
-    '% '  => " ",
-    '%b'  => " ",
-    '%.'  => ".",
-    '%!'  => "!",
+    '% '  => ' ',
+    '%b'  => ' ',
+    '%.'  => '.',
+    '%!'  => '!',
     '%n'  => "\r\n",
     '%r'  => "\r",
     '%t'  => "\t",
-    '%0'  => "",
-    '!s!' => ""
+    '%0'  => '',
+    '!s!' => ''
   )
 
   # Keys that will be in the final node record
@@ -191,7 +191,7 @@ class Win32EventLog
 
     # Get event log file and validate it is a format we support
     event_file = mkLogPath(log)
-    unless File.extname(event_file).downcase == ".evt"
+    unless File.extname(event_file).downcase == '.evt'
       raise MiqException::NtEventLogFormat, "#{self.class}: Unsupported Win32 Eventlog format [#{File.extname(event_file)}] for event log [#{log}].  File:[#{event_file}]"
     end
 
@@ -264,13 +264,13 @@ class Win32EventLog
       appKey = XmlFind.findElement("CurrentControlSet/Services/Eventlog/#{log}/File", @reg_source_xml)
       logPath = appKey.text
     else
-      logPath = Win32::SystemPath.registryPath(@fs, @systemRoot) + "/"
+      logPath = Win32::SystemPath.registryPath(@fs, @systemRoot) + '/'
       logPath = case log
-                when 'Application'  then logPath + "appevent.evt"
-                when 'Security'     then logPath + "secevent.evt"
-                when 'System'       then logPath + "sysevent.evt"
+                when 'Application'  then logPath + 'appevent.evt'
+                when 'Security'     then logPath + 'secevent.evt'
+                when 'System'       then logPath + 'sysevent.evt'
                 else
-                  raise "#{self.class}::mkLogPath: '#{log}' is not a path to an event log file." unless log.class.to_s == "String"
+                  raise "#{self.class}::mkLogPath: '#{log}' is not a path to an event log file." unless log.class.to_s == 'String'
                   raise "#{self.class}::mkLogPath: File not found: '#{log}'" unless isFile?(log)
                   @customFileName = log
                 end
@@ -288,7 +288,7 @@ class Win32EventLog
     # Determine what file open method to use
     meth = @fs.respond_to?(:fileOpen) ? :fileOpen : :open
     fn = fn.tr('\\', '/')
-    f = @fs.send(meth, fn, "rb")
+    f = @fs.send(meth, fn, 'rb')
 
     # If we are passed a block, run it and close the file handle
     return f unless block_given?
@@ -300,7 +300,7 @@ class Win32EventLog
   end
 
   def mkXmlDoc(log, event_file)
-    @xmlDoc ||= XmlHash.createDoc("<event_log/>")
+    @xmlDoc ||= XmlHash.createDoc('<event_log/>')
     @xmlDoc.root.add_element(:log, {:name => log, :path => event_file})
   end
 
@@ -311,7 +311,7 @@ class Win32EventLog
     # is set this is likely to have moved, but should be in front of it, so start the search there.
     pos = findCursorRecord(hdr[:end_offset])
     pos = findCursorRecord(0) if pos.nil?
-    raise "Win32 Eventlog cursor record not found." if pos.nil?
+    raise 'Win32 Eventlog cursor record not found.' if pos.nil?
 
     EVENTLOGEOF.decode(read_buffer(pos - 4, EVENTLOGEOF.size))
   end
@@ -467,20 +467,20 @@ class Win32EventLog
   end
 
   def decodeSid(data)
-    sid = "S-"
+    sid = 'S-'
     # BYTE Revision
-    sid << data[0].to_s << "-"
+    sid << data[0].to_s << '-'
     # BYTE SubAuthorityCount
     subCount = data[1]
     # WORD Authority[3]
     0.upto(2) {|i|
       auth = data[2 + i * 2, 2].unpack('n')[0]
-      sid << auth.to_s << "-" if auth != 0
+      sid << auth.to_s << '-' if auth != 0
     }
     # DWORD SubAuthority[*]
     0.upto(subCount - 1) {|i|
       subAuth = data[8 + i * 4, 4].unpack('L')[0]
-      sid << subAuth.to_s << "-"
+      sid << subAuth.to_s << '-'
     }
     sid.chop!
     sid
@@ -497,7 +497,7 @@ class Win32EventLog
         str = weirdFixString(str)
         # Compensate for nil strings.
         if str == "\000"
-          rec[:strings] << ""
+          rec[:strings] << ''
           offset += 2
         else
           offset += str.length + 2
@@ -544,8 +544,8 @@ class Win32EventLog
       return
     end
 
-    msgfiles = sources[:message][src].split(";")
-    paramfiles = sources[:param][src].split(";") if sources[:param].key?(src)
+    msgfiles = sources[:message][src].split(';')
+    paramfiles = sources[:param][src].split(';') if sources[:param].key?(src)
 
     msg = errMsg = nil
     id = rec[:event_id]
@@ -553,7 +553,7 @@ class Win32EventLog
     msgfiles.each do |fn|
       msgtbls = getMessageTables(fn)
       unless msgtbls.kind_of?(Hash)
-        errMsg ||= ""
+        errMsg ||= ''
         errMsg << "#{msgtbls}\n"
         next
       end
@@ -573,17 +573,17 @@ class Win32EventLog
   end
 
   def getParamMessage(id, paramfiles)
-    return "" if paramfiles.nil?
+    return '' if paramfiles.nil?
 
     paramfiles.each do |fn|
       msgtbls = getMessageTables(fn)
-      return "" unless msgtbls.kind_of?(Hash)
+      return '' unless msgtbls.kind_of?(Hash)
 
       str = getString(id, msgtbls)
       return str.dup unless str.nil?
     end
 
-    ""
+    ''
   end
 
   # Search for id in messagetables.
@@ -655,7 +655,7 @@ class Win32EventLog
     # Load registry section where we find the NT event log message source files.
     if @reg_source_xml.nil?
       reg = RemoteRegistry.new(@fs, true)
-      @reg_source_xml = reg.loadHive("system", [{:key => 'CurrentControlSet/Services/Eventlog', :value => ['CategoryMessageFile', 'EventMessageFile', 'ParameterMessageFile', 'File']}])
+      @reg_source_xml = reg.loadHive('system', [{:key => 'CurrentControlSet/Services/Eventlog', :value => ['CategoryMessageFile', 'EventMessageFile', 'ParameterMessageFile', 'File']}])
     end
 
     appKey = XmlFind.findElement("CurrentControlSet/Services/Eventlog/#{log}", @reg_source_xml)
@@ -701,20 +701,20 @@ class Win32EventLog
   end
 
   def getEvtMsgFile(hKey)
-    buf = ""
+    buf = ''
     len = [0].pack('L')
     type = [0].pack('L')
-    res = @@RegQueryValueEx.call(hKey, "EventMessageFile", 0, type, buf, len)
+    res = @@RegQueryValueEx.call(hKey, 'EventMessageFile', 0, type, buf, len)
     # Beware: this MAY come up at some point.
     raise "#{self.class}::getEvtMsgFile: Got REG_MULTI_SZ" if type.unpack('L')[0] == REG_MULTI_SZ
 
     len = len.unpack('L')[0]
-    buf = " " * len
+    buf = ' ' * len
     len = [len].pack('L')
 
-    res = @@RegQueryValueEx.call(hKey, "EventMessageFile", 0, type, buf, len)
+    res = @@RegQueryValueEx.call(hKey, 'EventMessageFile', 0, type, buf, len)
     if res != ERROR_SUCCESS
-      buf = ""
+      buf = ''
       len = [0].pack('L')
     end
     return buf, len
@@ -722,7 +722,7 @@ class Win32EventLog
 
   def fixFileList(buf, len)
     buf = buf[0...(len.unpack('L')[0] - 1)]
-    buf = buf.split("\\").join("/")
+    buf = buf.split('\\').join('/')
     buf.gsub!(/%SystemRoot%/i, @systemRoot)
     buf
   end
@@ -730,14 +730,14 @@ end
 
 # If invoked from command line.
 if __FILE__ == $0
-  puts "Reading logs..."
+  puts 'Reading logs...'
   start = Time.now
   log = Win32EventLog.new
 
   filter = {:level => :warn}
-  log.readLog("Application", filter)
-  log.readLog("Security", filter)
-  log.readLog("System", filter)
+  log.readLog('Application', filter)
+  log.readLog('Security', filter)
+  log.readLog('System', filter)
 
   puts "Read logs completed in #{Time.now - start} seconds"
 end

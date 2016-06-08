@@ -27,9 +27,9 @@ module Vmdb
         end
       end
 
-      def self.diff_to_deltas(diff, key_path = "")
+      def self.diff_to_deltas(diff, key_path = '')
         diff.flat_map do |k, v|
-          new_key_path = [key_path, k].join("/")
+          new_key_path = [key_path, k].join('/')
           case v
           when Hash
             diff_to_deltas(v, new_key_path)

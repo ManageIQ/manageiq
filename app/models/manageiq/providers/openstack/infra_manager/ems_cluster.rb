@@ -49,20 +49,20 @@ class ManageIQ::Providers::Openstack::InfraManager::EmsCluster < ::EmsCluster
 
   # TODO: Add support for Ceph
   def block_storage?
-    name.include?("BlockStorage")
+    name.include?('BlockStorage')
   end
 
   # TODO: Add support for Ceph
   def object_storage?
-    name.include?("ObjectStorage")
+    name.include?('ObjectStorage')
   end
 
   def compute?
-    name.include?("Compute")
+    name.include?('Compute')
   end
 
   def controller?
-    name.include?("Controller")
+    name.include?('Controller')
   end
 
   # TODO: Assumes there is a single overcloud. Will need

@@ -19,10 +19,10 @@ class DialogImportService
 
     begin
       dialogs.each do |dialog|
-        if dialog_with_label?(dialog["label"])
+        if dialog_with_label?(dialog['label'])
           yield dialog if block_given?
         else
-          Dialog.create(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))
+          Dialog.create(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog)))
         end
       end
     rescue DialogFieldImporter::InvalidDialogFieldTypeError
@@ -42,7 +42,7 @@ class DialogImportService
     unless dialogs_to_import.nil?
       dialogs = YAML.load(import_file_upload.uploaded_content)
       dialogs = dialogs.select do |dialog|
-        dialogs_to_import.include?(dialog["label"])
+        dialogs_to_import.include?(dialog['label'])
       end
 
       import_from_dialogs(dialogs)
@@ -66,7 +66,7 @@ class DialogImportService
 
   def create_import_file_upload(file_contents)
     ImportFileUpload.create.tap do |import_file_upload|
-      import_file_upload.store_binary_data_as_yml(file_contents, "Service dialog import")
+      import_file_upload.store_binary_data_as_yml(file_contents, 'Service dialog import')
     end
   end
 
@@ -74,49 +74,49 @@ class DialogImportService
     raise ParsedNonDialogYamlError if dialogs.empty?
 
     dialogs.each do |dialog|
-      new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
-      new_or_existing_dialog.update_attributes(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))
+      new_or_existing_dialog = Dialog.where(:label => dialog['label']).first_or_create
+      new_or_existing_dialog.update_attributes(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog)))
     end
   rescue DialogFieldImporter::InvalidDialogFieldTypeError
     raise
   end
 
   def build_dialog_tabs(dialog)
-    dialog["dialog_tabs"].collect do |dialog_tab|
-      DialogTab.create(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab)))
+    dialog['dialog_tabs'].collect do |dialog_tab|
+      DialogTab.create(dialog_tab.merge('dialog_groups' => build_dialog_groups(dialog_tab)))
     end
   end
 
   def build_dialog_groups(dialog_tab)
-    dialog_tab["dialog_groups"].collect do |dialog_group|
-      DialogGroup.create(dialog_group.merge("dialog_fields" => build_dialog_fields(dialog_group)))
+    dialog_tab['dialog_groups'].collect do |dialog_group|
+      DialogGroup.create(dialog_group.merge('dialog_fields' => build_dialog_fields(dialog_group)))
     end
   end
 
   def build_dialog_fields(dialog_group)
-    dialog_group["dialog_fields"].collect do |dialog_field|
+    dialog_group['dialog_fields'].collect do |dialog_field|
       @dialog_field_importer.import_field(dialog_field)
     end
   end
 
   def dialog_with_label?(label)
-    Dialog.where("label" => label).exists?
+    Dialog.where('label' => label).exists?
   end
 
   def destroy_queued_deletion(import_file_upload_id)
     MiqQueue.unqueue(
-      :class_name  => "ImportFileUpload",
+      :class_name  => 'ImportFileUpload',
       :instance_id => import_file_upload_id,
-      :method_name => "destroy"
+      :method_name => 'destroy'
     )
   end
 
   def queue_deletion(import_file_upload_id)
     MiqQueue.put(
-      :class_name  => "ImportFileUpload",
+      :class_name  => 'ImportFileUpload',
       :instance_id => import_file_upload_id,
       :deliver_on  => 1.day.from_now,
-      :method_name => "destroy"
+      :method_name => 'destroy'
     )
   end
 end

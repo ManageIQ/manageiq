@@ -23,7 +23,7 @@ $stdout.sync = true
 # $DEBUG = true
 # MiqVimClientBase.wiredump_file = "clone.txt"
 
-SRC_VM      = "rpo-test2"
+SRC_VM      = 'rpo-test2'
 
 readRanges = [
   0,  256,
@@ -56,7 +56,7 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  svm = vim.virtualMachinesByFilter("config.name" => SRC_VM)
+  svm = vim.virtualMachinesByFilter('config.name' => SRC_VM)
   if svm.empty?
     puts "VM: #{SRC_VM} not found"
     exit
@@ -78,7 +78,7 @@ begin
   puts
 
   if vim.isVirtualCenter?
-    puts "Calling: miqVm.vdlVcConnection"
+    puts 'Calling: miqVm.vdlVcConnection'
     vdlc = miqVm.vdlVcConnection
     vDisk = vdlc.getDisk(diskFile, VixDiskLib_raw::VIXDISKLIB_FLAG_OPEN_READ_ONLY)
   else
@@ -88,7 +88,7 @@ begin
 
   dinfo = vDisk.info
   puts
-  puts "Disk info:"
+  puts 'Disk info:'
   dinfo.each { |k, v| puts "\t#{k} => #{v}" }
   puts
 

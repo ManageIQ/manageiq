@@ -22,7 +22,7 @@
 #
 ###################################
 def emailrequester(miq_request, appliance, msg, provisionRequestApproval)
-  $evm.log('info', "Requester email logic starting")
+  $evm.log('info', 'Requester email logic starting')
 
   # Get requester object
   requester = miq_request.requester
@@ -57,11 +57,11 @@ def emailrequester(miq_request, appliance, msg, provisionRequestApproval)
   end
 
   # Build email body
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br>#{msg}."
   body += "<br><br>Approvers notes: #{miq_request.reason}" if provisionRequestApproval
   body += "<br><br>For more information you can go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 
   # Send email to requester
@@ -77,7 +77,7 @@ end
 #
 ###################################
 def emailapprover(miq_request, appliance, msg, provisionRequestApproval)
-  $evm.log('info', "Approver email logic starting")
+  $evm.log('info', 'Approver email logic starting')
 
   # Override to requesters to_email_address below or get value from requester.email then from model
   requester_email = miq_request.requester.email
@@ -107,12 +107,12 @@ def emailapprover(miq_request, appliance, msg, provisionRequestApproval)
   end
 
   # Build email body
-  body = "Approver, "
+  body = 'Approver, '
   body += "<br>A request received from #{requester_email} was denied."
   body += "<br><br>#{msg}."
   body += "<br><br>Approvers notes: #{miq_request.reason}" if provisionRequestApproval
   body += "<br><br>For more information you can go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 
   # Send email to approver
@@ -122,7 +122,7 @@ end
 
 # Get miq_request from root
 miq_request = $evm.root['miq_request']
-raise "miq_request missing" if miq_request.nil?
+raise 'miq_request missing' if miq_request.nil?
 $evm.log('info', "Detected Request:<#{miq_request.id}> with Approval State:<#{miq_request.approval_state}>")
 
 # Override the default appliance IP Address below
@@ -131,7 +131,7 @@ appliance = nil
 appliance ||= $evm.root['miq_server'].ipaddress
 
 # Get incoming message or set it to default if nil
-msg = miq_request.resource.message || "Request denied"
+msg = miq_request.resource.message || 'Request denied'
 
 # Check to see which state machine called this method
 if msg.downcase.include?('quota')

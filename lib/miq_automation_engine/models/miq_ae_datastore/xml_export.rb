@@ -1,10 +1,10 @@
-require "builder"
+require 'builder'
 
 module MiqAeDatastore
   class XmlExport
     include Vmdb::Logging
     def self.to_xml
-      _log.info("Exporting to XML")
+      _log.info('Exporting to XML')
       xml = Builder::XmlMarkup.new(:indent => 2)
       xml.instruct!
       xml.MiqAeDatastore(:version => '1.0') do

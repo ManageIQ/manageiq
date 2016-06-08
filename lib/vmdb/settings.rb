@@ -52,7 +52,7 @@ module Vmdb
 
     def self.save!(miq_server, hash)
       new_settings = for_resource(miq_server).merge!(hash).to_hash
-      raise "configuration invalid" unless VMDB::Config::Validator.new(new_settings).valid?
+      raise 'configuration invalid' unless VMDB::Config::Validator.new(new_settings).valid?
 
       diff = HashDiffer.diff(template_settings.to_hash, new_settings)
       encrypt_passwords!(diff)
@@ -69,7 +69,7 @@ module Vmdb
     end
 
     def self.mask_passwords!(settings)
-      walk_passwords(settings) { |k, _v, h| h[k] = "********" }
+      walk_passwords(settings) { |k, _v, h| h[k] = '********' }
     end
 
     def self.decrypt_passwords!(settings)
@@ -97,7 +97,7 @@ module Vmdb
 
     def self.template_sources
       [
-        Rails.root.join("config/settings.yml").to_s,
+        Rails.root.join('config/settings.yml').to_s,
         Rails.root.join("config/settings/#{Rails.env}.yml").to_s,
         Rails.root.join("config/environments/#{Rails.env}.yml").to_s
       ]
@@ -106,7 +106,7 @@ module Vmdb
 
     def self.local_sources
       [
-        Rails.root.join("config/settings.local.yml").to_s,
+        Rails.root.join('config/settings.local.yml').to_s,
         Rails.root.join("config/settings/#{Rails.env}.local.yml").to_s,
         Rails.root.join("config/environments/#{Rails.env}.local.yml").to_s
       ]

@@ -10,6 +10,6 @@ class ApplicationHelper::Toolbar::LogsCenter < ApplicationHelper::Toolbar::Basic
       'fa fa-download fa-lg',
       N_('Download the Entire #{@msg_title} Log File'),
       nil,
-      :url => "/fetch_log"),
+      :url => '/fetch_log'),
   ])
 end

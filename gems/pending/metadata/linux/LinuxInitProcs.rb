@@ -4,9 +4,9 @@ require 'metadata/linux/InitProcHash'
 
 module MiqLinux
   class InitProcs
-    INIT_DIRS   = ["/etc/rc.d/init.d", "/etc/init.d"]
-    RC_DIRS     = ["/etc/rc.d", "/etc", "/etc/init.d"]
-    RC_CHECK    = ["rc0.d", "runlevels"]
+    INIT_DIRS   = ['/etc/rc.d/init.d', '/etc/init.d']
+    RC_DIRS     = ['/etc/rc.d', '/etc', '/etc/init.d']
+    RC_CHECK    = ['rc0.d', 'runlevels']
     RUN_LEVELS1 = ['0', '1', '2', '3', '4', '5', '6', 'S']
     RUN_LEVELS2 = ['boot', 'default', 'network', 'single']
 
@@ -17,7 +17,7 @@ module MiqLinux
       #
       # Try to determine where the system's init.d directory is.
       #
-      $log.debug "Determining init script directory..."
+      $log.debug 'Determining init script directory...'
       @init_dir = nil
       INIT_DIRS.each do |id|
         $log.debug "\tChecking: #{id}"
@@ -27,7 +27,7 @@ module MiqLinux
         break
       end
       unless @init_dir
-        $log.warn "Could not determine init script directory."
+        $log.warn 'Could not determine init script directory.'
         return
       end
 
@@ -36,7 +36,7 @@ module MiqLinux
       # NOTE: Gentoo is a special case. It uses "named" runlevel directories
       # under the directory "runlevels". As opposed to rc?.d directories.
       #
-      $log.debug "Determining RC script directory..."
+      $log.debug 'Determining RC script directory...'
       @rc_dir = nil
       @rc_chk = nil
       RC_DIRS.each do |rd|
@@ -55,19 +55,19 @@ module MiqLinux
         break
       end
       unless @rc_dir
-        $log.warn "Could not determine RC script directory."
+        $log.warn 'Could not determine RC script directory.'
         return
       end
 
       @fs.dirForeach(@init_dir) do |fn|
         next if @fs.fileDirectory?(File.join(@init_dir, fn))
-        name = @fs.fileBasename(fn, ".sh")
-        next if name.downcase == "readme" || name == "." || name == ".."
+        name = @fs.fileBasename(fn, '.sh')
+        next if name.downcase == 'readme' || name == '.' || name == '..'
 
         addScript(@init_dir, fn, name)
       end
 
-      if @rc_chk == "runlevels"
+      if @rc_chk == 'runlevels'
         @rc_dir = File.join(@rc_dir, @rc_chk)
         @run_levels = RUN_LEVELS2
       else
@@ -75,7 +75,7 @@ module MiqLinux
       end
 
       @run_levels.each do |rl|
-        if @rc_chk == "runlevels"
+        if @rc_chk == 'runlevels'
           rld = File.join(@rc_dir, rl)
         else
           rld = File.join(@rc_dir, "rc#{rl}.d")
@@ -84,7 +84,7 @@ module MiqLinux
         next unless @fs.fileDirectory?(rld)
         @fs.dirForeach(rld) do |fn|
           # If it's not a start of kill script, skip it.
-          next if fn[0, 1] != "S" && fn[0, 1] != "K" && @rc_chk != "runlevels"
+          next if fn[0, 1] != 'S' && fn[0, 1] != 'K' && @rc_chk != 'runlevels'
           # Full path to file.
           fp = File.join(rld, fn)
           # If the file isn't a symbolic link, skip it.
@@ -92,11 +92,11 @@ module MiqLinux
           lp = @fs.getLinkPath(fp)
 
           # The init.d script to which the file is linked.
-          name = @fs.fileBasename(lp, ".sh")
+          name = @fs.fileBasename(lp, '.sh')
 
           addScript(@fs.fileDirname(lp), @fs.fileBasename(lp), name) unless @scriptsByName[name]
 
-          sk = (@rc_chk == "runlevels" ? 'S' : fn[0, 1])
+          sk = (@rc_chk == 'runlevels' ? 'S' : fn[0, 1])
           @scriptsByName[name].runLevels[sk] << rl
         end
       end
@@ -117,25 +117,25 @@ module MiqLinux
       doc = MiqXml.createDoc(nil) unless doc
 
       @scriptsByName.each_value do |s|
-        ip = doc.add_element("service", "name" => s.name, "image_path" => s.path, "typename" => "linux_initprocess")
-        ip.attributes["description"] = s.desc if s.desc
+        ip = doc.add_element('service', 'name' => s.name, 'image_path' => s.path, 'typename' => 'linux_initprocess')
+        ip.attributes['description'] = s.desc if s.desc
 
-        s.runLevels['S'].each { |rl| ip.add_element("enable_run_level", "value" => rl) }
-        s.runLevels['K'].each { |rl| ip.add_element("disable_run_level", "value" => rl) }
+        s.runLevels['S'].each { |rl| ip.add_element('enable_run_level', 'value' => rl) }
+        s.runLevels['K'].each { |rl| ip.add_element('disable_run_level', 'value' => rl) }
       end
     end
 
     private
 
     def getDesc(f, n)
-      fdata = ""
+      fdata = ''
       begin
         @fs.fileOpen(f) { |fo| fdata = fo.read }
         fdata.each_line { |fl| return $1 if fl =~ /^\s*#\s+Short-Description:\s*(.*)$/ } unless fdata.nil?
         return InitProcHash[n]
       rescue => err
         $log.warn "getDesc: could not open #{f} - #{err}"
-        return ""
+        return ''
       end
     end
   end # class InitProcs

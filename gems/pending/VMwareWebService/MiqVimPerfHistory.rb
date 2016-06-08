@@ -15,8 +15,8 @@ class MiqVimPerfHistory
 
   def intervals
     if @intervals.nil?
-      @intervals = @invObj.getMoProp(@perfManager, "historicalInterval")["historicalInterval"]
-      @intervals = @intervals["PerfInterval"] if @intervals.kind_of?(Hash)
+      @intervals = @invObj.getMoProp(@perfManager, 'historicalInterval')['historicalInterval']
+      @intervals = @intervals['PerfInterval'] if @intervals.kind_of?(Hash)
     end
     @intervals
   end
@@ -42,7 +42,7 @@ class MiqVimPerfHistory
 
   def perfCounterInfo
     if @perfCounterInfo.nil?
-      @perfCounterInfo = @invObj.getMoProp(@perfManager, "perfCounter")['perfCounter']
+      @perfCounterInfo = @invObj.getMoProp(@perfManager, 'perfCounter')['perfCounter']
       @perfCounterInfo = @perfCounterInfo['PerfCounterInfo'] if @perfCounterInfo.kind_of?(Hash)
 
       #
@@ -181,8 +181,8 @@ class MiqVimPerfHistory
   private
 
   def getPerfQuerySpec(ah)
-    raise "getPerfQuerySpec: intervalId not specified" unless ah[:intervalId]
-    raise "getPerfQuerySpec: counterId not specified"  if !ah[:counterId] && !ah[:metricId]
+    raise 'getPerfQuerySpec: intervalId not specified' unless ah[:intervalId]
+    raise 'getPerfQuerySpec: counterId not specified'  if !ah[:counterId] && !ah[:metricId]
 
     pqSpec = VimHash.new('PerfQuerySpec') do |pqs|
       pqs.entity      = ah[:entity]     if ah[:entity]
@@ -202,7 +202,7 @@ class MiqVimPerfHistory
         ids.each do |midh|
           pmia << VimHash.new('PerfMetricId') do |pmi|
             pmi.counterId   = midh[:counterId]
-            pmi.instance    = midh[:instance] || ""
+            pmi.instance    = midh[:instance] || ''
           end
         end
       end

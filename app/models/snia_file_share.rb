@@ -141,7 +141,7 @@ class SniaFileShare < MiqCimInstance
   def cim_virtual_disks_long
     dh = {}
     getLeafNodes(FileShareToVirtualDisk, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimVirtualDisk" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimVirtualDisk' }
   end
 
   def cim_virtual_disks
@@ -159,7 +159,7 @@ class SniaFileShare < MiqCimInstance
   def cim_vms_long
     dh = {}
     getLeafNodes(FileShareToVm, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimVirtualMachine" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimVirtualMachine' }
   end
 
   def cim_vms
@@ -185,7 +185,7 @@ class SniaFileShare < MiqCimInstance
   def cim_hosts_long
     dh = {}
     getLeafNodes(FileShareToHost, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimHostSystem" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimHostSystem' }
   end
 
   def cim_hosts
@@ -257,14 +257,14 @@ class SniaFileShare < MiqCimInstance
   end
 
   def applicable_hosts
-    Host.select("name, id").each_with_object({}) { |host, h| h[host.id] = host.name }
+    Host.select('name, id').each_with_object({}) { |host, h| h[host.id] = host.name }
   end
 
   def queue_create_datastore(ds_name, hosts)
     unless /^[a-zA-Z0-9\-]+$/ =~ ds_name
       message          = "#{ds_name} is not valid"
       _log.error("#{message}")
-      errors.add("name", message)
+      errors.add('name', message)
       return false
     end
 
@@ -273,7 +273,7 @@ class SniaFileShare < MiqCimInstance
     if nrs.nil?
       message   = "No available manager entry for NetApp filer: #{evm_display_name}"
       _log.error("#{message}")
-      errors.add("netapp_filer", message)
+      errors.add('netapp_filer', message)
       return false
     end
 
@@ -289,7 +289,7 @@ class SniaFileShare < MiqCimInstance
   end
 
   def default_datastore_name
-    dname              = name.split("/").last
+    dname              = name.split('/').last
     return if dname.nil?
 
     dname.tr('_', '-')
@@ -303,11 +303,11 @@ class SniaFileShare < MiqCimInstance
     hosts              = hosts.to_miq_a
     nfs_path           = name
     local_path         = ds_name || default_datastore_name
-    access_mode        = "readWrite"
+    access_mode        = 'readWrite'
 
     storage_system     = self.storage_system
     nrs                = storage_system.storage_managers.first
-    raise _("Could not find manager entry for NetApp filer: %{name}") % {:name => evm_display_name} if nrs.nil?
+    raise _('Could not find manager entry for NetApp filer: %{name}') % {:name => evm_display_name} if nrs.nil?
 
     # TODO: Log hostname, not ipaddress
     _log.info("Found service entry for NetApp filer: #{evm_display_name} -> #{nrs.ipaddress}")
@@ -362,10 +362,10 @@ class SniaFileShare < MiqCimInstance
           _log.info("Trying address: #{address}...")
           miqDss.createNasDatastore(address, nfs_path, local_path, access_mode)
         rescue
-          _log.info("Failed.")
+          _log.info('Failed.')
           next
         end
-        _log.info("Success.")
+        _log.info('Success.')
         break
       end
 

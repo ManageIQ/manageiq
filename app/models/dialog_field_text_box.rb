@@ -8,7 +8,7 @@ class DialogFieldTextBox < DialogField
   end
 
   def initial_values
-    "<None>"
+    '<None>'
   end
 
   def protected=(passed_in_value)
@@ -39,7 +39,7 @@ class DialogFieldTextBox < DialogField
     return if !required? && @value.blank?
 
     return "#{dialog_tab.label}/#{dialog_group.label}/#{label} is required" if required? && @value.blank?
-    if data_type == "integer" && !@value.match(/^[0-9]+$/)
+    if data_type == 'integer' && !@value.match(/^[0-9]+$/)
       return "#{dialog_tab.label}/#{dialog_group.label}/#{label} must be an integer"
     end
 
@@ -51,11 +51,11 @@ class DialogFieldTextBox < DialogField
   end
 
   def script_error_values
-    "<Script error>"
+    '<Script error>'
   end
 
   def sample_text
-    dynamic ? "Sample Text" : (value || default_value)
+    dynamic ? 'Sample Text' : (value || default_value)
   end
 
   def normalize_automate_values(automate_hash)
@@ -63,7 +63,7 @@ class DialogFieldTextBox < DialogField
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
-    automate_hash["value"].to_s.presence || initial_values
+    automate_hash['value'].to_s.presence || initial_values
   end
 
   def refresh_json_value
@@ -79,6 +79,6 @@ class DialogFieldTextBox < DialogField
   private
 
   def convert_value_to_type
-    data_type == "integer" ? @value.to_i : @value
+    data_type == 'integer' ? @value.to_i : @value
   end
 end

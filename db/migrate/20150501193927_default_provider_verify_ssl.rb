@@ -4,7 +4,7 @@ class DefaultProviderVerifySsl < ActiveRecord::Migration
   end
 
   def up
-    say_with_time "Setting Provider verify_ssl values for nils" do
+    say_with_time 'Setting Provider verify_ssl values for nils' do
       Provider.where(:verify_ssl => nil).update_all(:verify_ssl => OpenSSL::SSL::VERIFY_PEER)
     end
   end

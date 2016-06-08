@@ -2,9 +2,9 @@
 # Description: This method is for services to enforce provision priority
 #
 
-$evm.log("info", "Listing Root Object Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
-$evm.log("info", "===========================================")
+$evm.log('info', 'Listing Root Object Attributes:')
+$evm.root.attributes.sort.each { |k, v| $evm.log('info', "\t#{k}: #{v}") }
+$evm.log('info', '===========================================')
 
 # Get current provisioning status
 task = $evm.root['service_template_provision_task']

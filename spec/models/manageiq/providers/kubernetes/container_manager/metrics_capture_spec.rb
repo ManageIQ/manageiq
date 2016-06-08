@@ -24,18 +24,18 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
                                     :ems_ref               => 'target')
   end
 
-  context "#perf_collect_metrics" do
-    it "fails quietly when no ems is defined" do
+  context '#perf_collect_metrics' do
+    it 'fails quietly when no ems is defined' do
       @node.ext_management_system = nil
       expect(@node.perf_collect_metrics('interval_name')).to eq([{}, {}])
     end
 
-    it "fails quietly when no cpu cores are defined" do
+    it 'fails quietly when no cpu cores are defined' do
       @node.hardware.cpu_total_cores = nil
       expect(@node.perf_collect_metrics('interval_name')).to eq([{}, {}])
     end
 
-    it "fails quietly when memory is not defined" do
+    it 'fails quietly when memory is not defined' do
       @node.hardware.memory_mb = nil
       expect(@node.perf_collect_metrics('interval_name')).to eq([{}, {}])
     end
@@ -111,21 +111,21 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
         ],
         :node_expected      => {
           Time.at(1_446_500_000).utc => {
-            "cpu_usage_rate_average"     => 10.0,
-            "mem_usage_absolute_average" => 50.0,
-            "net_usage_rate_average"     => 10.0
+            'cpu_usage_rate_average'     => 10.0,
+            'mem_usage_absolute_average' => 50.0,
+            'net_usage_rate_average'     => 10.0
           }
         },
         :container_expected => {
           Time.at(1_446_500_000).utc => {
-            "cpu_usage_rate_average"     => 10.0,
-            "mem_usage_absolute_average" => 50.0
+            'cpu_usage_rate_average'     => 10.0,
+            'mem_usage_absolute_average' => 50.0
           }
         }
       }
     ]
 
-    it "node counters and gauges are correctly processed" do
+    it 'node counters and gauges are correctly processed' do
       METRICS_EXERCISES.each do |exercise|
         exercise[:counters].each do |metrics|
           allow_any_instance_of(described_class::CaptureContext)
@@ -147,7 +147,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
       end
     end
 
-    it "container counters and gauges are correctly processed" do
+    it 'container counters and gauges are correctly processed' do
       METRICS_EXERCISES.each do |exercise|
         exercise[:counters].each do |metrics|
           allow_any_instance_of(described_class::CaptureContext)

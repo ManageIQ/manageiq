@@ -10,7 +10,7 @@ module MigrationSpecHelper
           clearing_caches(&example)
         end
 
-        it("with empty tables") { migrate }
+        it('with empty tables') { migrate }
 
         instance_eval(&block)
       end
@@ -35,7 +35,7 @@ module MigrationSpecHelper
   end
 
   def migration_stub(klass)
-    stub = ar_stubs.detect { |stub| stub.name.split("::").last == klass.to_s }
+    stub = ar_stubs.detect { |stub| stub.name.split('::').last == klass.to_s }
     raise NameError, "uninitialized constant #{klass} under #{described_class}" if stub.nil?
     stub
   end
@@ -69,7 +69,7 @@ module MigrationSpecHelper
 
   def migration_direction
     direction = self.class.metadata[:migrations]
-    raise "Example must be tagged with :migrations => :up or :migrations => :down" unless direction.in?([:up, :down])
+    raise 'Example must be tagged with :migrations => :up or :migrations => :down' unless direction.in?([:up, :down])
     direction
   end
 

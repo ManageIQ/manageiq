@@ -9,11 +9,11 @@ class ManageIQ::Providers::AtomicEnterprise::ContainerManager < ManageIQ::Provid
   require_nested :Refresher
 
   def self.ems_type
-    @ems_type ||= "atomic_enterprise".freeze
+    @ems_type ||= 'atomic_enterprise'.freeze
   end
 
   def self.description
-    @description ||= "Atomic Enterprise".freeze
+    @description ||= 'Atomic Enterprise'.freeze
   end
 
   def self.event_monitor_class

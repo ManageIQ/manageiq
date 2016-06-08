@@ -2,26 +2,26 @@ class MiqAeField < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
-  belongs_to :ae_class,   :class_name => "MiqAeClass",  :foreign_key => :class_id
-  belongs_to :ae_method,  :class_name => "MiqAeMethod", :foreign_key => :method_id
-  has_many   :ae_values,  :class_name => "MiqAeValue",  :foreign_key => :field_id, :dependent => :destroy
+  belongs_to :ae_class,   :class_name => 'MiqAeClass',  :foreign_key => :class_id
+  belongs_to :ae_method,  :class_name => 'MiqAeMethod', :foreign_key => :method_id
+  has_many   :ae_values,  :class_name => 'MiqAeValue',  :foreign_key => :field_id, :dependent => :destroy
 
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :method_id]
   validates_presence_of   :name
   validates_format_of     :name, :with => /\A[A-Za-z0-9_]+\z/i
 
   validates_inclusion_of  :substitute, :in => [true, false]
-  AVAILABLE_SCOPES    = ["class", "instance", "local"]
+  AVAILABLE_SCOPES    = ['class', 'instance', 'local']
   validates_inclusion_of  :scope,      :in => AVAILABLE_SCOPES,    :allow_nil => true  # nil => instance
-  AVAILABLE_AETYPES   = ["assertion", "attribute", "method", "relationship", "state"]
+  AVAILABLE_AETYPES   = ['assertion', 'attribute', 'method', 'relationship', 'state']
   validates_inclusion_of  :aetype,     :in => AVAILABLE_AETYPES,   :allow_nil => true  # nil => attribute
-  AVAILABLE_DATATYPES_FOR_UI = ["string", "symbol", "integer", "float", "boolean", "time", "array", "password"]
-  AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI + ["host", "vm", "storage", "ems", "policy", "server", "request", "provision"]
+  AVAILABLE_DATATYPES_FOR_UI = ['string', 'symbol', 'integer', 'float', 'boolean', 'time', 'array', 'password']
+  AVAILABLE_DATATYPES        = AVAILABLE_DATATYPES_FOR_UI + ['host', 'vm', 'storage', 'ems', 'policy', 'server', 'request', 'provision']
   validates_inclusion_of  :datatype,   :in => AVAILABLE_DATATYPES, :allow_nil => true  # nil => string
 
   before_save        :set_message_and_default_value
 
-  DEFAULTS = {:substitute => true, :datatype => "string", :aetype => "attribute", :scope => "instance", :message => "create"}
+  DEFAULTS = {:substitute => true, :datatype => 'string', :aetype => 'attribute', :scope => 'instance', :message => 'create'}
 
   def self.available_aetypes
     AVAILABLE_AETYPES
@@ -44,7 +44,7 @@ class MiqAeField < ApplicationRecord
   end
 
   def self.find_by_name(name)
-    where("lower(name) = ?", name.downcase).first
+    where('lower(name) = ?', name.downcase).first
   end
 
   def default_value=(value)
@@ -52,7 +52,7 @@ class MiqAeField < ApplicationRecord
   end
 
   def to_export_yaml
-    {"field" => export_attributes}
+    {'field' => export_attributes}
   end
 
   def to_export_xml(options = {})
@@ -63,7 +63,7 @@ class MiqAeField < ApplicationRecord
 
     self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?('_id')
 
       # Skip any columns that we process explicitly
       next if %w(name default_value substitute).include?(cname)
@@ -94,6 +94,6 @@ class MiqAeField < ApplicationRecord
   private
 
   def set_default_value(value)
-    write_attribute(:default_value, (datatype == "password") ? MiqAePassword.encrypt(value) : value)
+    write_attribute(:default_value, (datatype == 'password') ? MiqAePassword.encrypt(value) : value)
   end
 end

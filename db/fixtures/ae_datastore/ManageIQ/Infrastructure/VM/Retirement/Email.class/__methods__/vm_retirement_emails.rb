@@ -30,7 +30,7 @@ end
 prov = $evm.root['miq_provision_request'] || $evm.root['miq_provision']
 vm = prov.vm if prov && vm.nil?
 
-raise "User not specified" if vm.nil?
+raise 'User not specified' if vm.nil?
 
 # Get VM Name
 vm_name = vm['name']
@@ -55,7 +55,7 @@ end
 # VM Retirement Warning Email
 #
 ######################################
-if event_type == "vm_retire_warn"
+if event_type == 'vm_retire_warn'
 
   # Get from_email_address from model unless specified below
   from = nil
@@ -69,11 +69,11 @@ if event_type == "vm_retire_warn"
   subject = "VM Retirement Warning for #{vm_name}"
 
   # Build email body
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br><br>Your virtual machine: [#{vm_name}] will be retired on [#{vm['retires_on']}]."
-  body += "<br><br>If you need to use this virtual machine past this date please request"
-  body += "<br><br>an extension by contacting Support."
-  body += "<br><br> Thank you,"
+  body += '<br><br>If you need to use this virtual machine past this date please request'
+  body += '<br><br>an extension by contacting Support.'
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 end
 
@@ -82,7 +82,7 @@ end
 # VM Retirement Exended Email
 #
 ######################################
-if event_type == "vm_retire_extend"
+if event_type == 'vm_retire_extend'
 
   # Get from_email_address from model unless specified below
   from = nil
@@ -96,11 +96,11 @@ if event_type == "vm_retire_extend"
   subject = "VM Retirement Extended for #{vm_name}"
 
   # Build email body
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br><br>Your virtual machine: [#{vm_name}] will now be retired on [#{vm['retires_on']}]."
-  body += "<br><br>If you need to use this virtual machine past this date please request"
-  body += "<br><br>an extension by contacting Support."
-  body += "<br><br> Thank you,"
+  body += '<br><br>If you need to use this virtual machine past this date please request'
+  body += '<br><br>an extension by contacting Support.'
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 end
 
@@ -109,7 +109,7 @@ end
 # VM has entered Retirement Email
 #
 ######################################
-if event_type == "vm_entered_retirement"
+if event_type == 'vm_entered_retirement'
 
   # Get from_email_address from model unless specified below
   from = nil
@@ -123,10 +123,10 @@ if event_type == "vm_entered_retirement"
   subject = "VM #{vm_name} has entered retirement"
 
   # Build email body
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br><br>Your virtual machine named [#{vm_name}] has been retired."
-  body += "<br><br>You will have up to 3 days to un-retire this VM. Afterwhich time the VM will be deleted."
-  body += "<br><br> Thank you,"
+  body += '<br><br>You will have up to 3 days to un-retire this VM. Afterwhich time the VM will be deleted.'
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 end
 
@@ -135,7 +135,7 @@ end
 #  VM Retirement Email
 #
 ######################################
-if event_type == "vm_retired"
+if event_type == 'vm_retired'
 
   # Get from_email_address from model unless specified below
   from = nil
@@ -149,11 +149,11 @@ if event_type == "vm_retired"
   subject = "VM Retirement Alert for #{vm_name}"
 
   # Build email body
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br><br>Your virtual machine named [#{vm_name}] has been retired."
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 end
 
-$evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+$evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
 $evm.execute('send_email', to, from, subject, body)

@@ -2,7 +2,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
   extend ActiveSupport::Concern
 
   def connect(options = {})
-    raise MiqException::MiqHostError, _("No credentials defined") if missing_credentials?(options[:auth_type])
+    raise MiqException::MiqHostError, _('No credentials defined') if missing_credentials?(options[:auth_type])
 
     client_id  = options[:user] || authentication_userid(options[:auth_type])
     client_key = options[:pass] || authentication_password(options[:auth_type])
@@ -12,10 +12,10 @@ module ManageIQ::Providers::Azure::ManagerMixin
   def verify_credentials(_auth_type = nil, options = {})
     connect(options)
   rescue Azure::Armrest::UnauthorizedException
-    raise MiqException::MiqHostError, _("Incorrect credentials - check your Azure Client ID and Client Key")
+    raise MiqException::MiqHostError, _('Incorrect credentials - check your Azure Client ID and Client Key')
   rescue StandardError => err
     _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
-    raise MiqException::MiqHostError, _("Unexpected response returned from system, see log for details")
+    raise MiqException::MiqHostError, _('Unexpected response returned from system, see log for details')
   end
 
   module ClassMethods
@@ -59,7 +59,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
 
       # at least create the Azure-eastus region.
       if new_emses.blank? && known_emses.blank?
-        new_emses << create_discovered_region("Azure-eastus", clientid, clientkey, azure_tenant_id, subscription, all_ems_names)
+        new_emses << create_discovered_region('Azure-eastus', clientid, clientkey, azure_tenant_id, subscription, all_ems_names)
       end
 
       EmsRefresh.queue_refresh(new_emses) unless new_emses.blank?
@@ -70,7 +70,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
     def discover_queue(clientid, clientkey, azure_tenant_id, subscription)
       MiqQueue.put(
         :class_name  => name,
-        :method_name => "discover_from_queue",
+        :method_name => 'discover_from_queue',
         :args        => [clientid, MiqPassword.encrypt(clientkey), azure_tenant_id, subscription]
       )
     end

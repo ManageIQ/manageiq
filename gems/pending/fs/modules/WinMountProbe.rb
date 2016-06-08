@@ -2,7 +2,7 @@ require 'fs/MiqFS/MiqFS'
 require 'metadata/util/win32/system_path_win'
 
 module WinMountProbe
-  WIN_FS_TYPES   = ["FAT32", "NTFS", "ntfs"]
+  WIN_FS_TYPES   = ['FAT32', 'NTFS', 'ntfs']
 
   def self.probe(fs)
     unless WIN_FS_TYPES.include?(fs.fsType)

@@ -105,7 +105,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
 
   def network_adapter_ps_script
     if dest_virtual_network.nil?
-      $scvmm_log.info("Virtual Network is not available, network adapter will not be set")
+      $scvmm_log.info('Virtual Network is not available, network adapter will not be set')
       return
     end
 
@@ -137,6 +137,6 @@ module ManageIQ::Providers::Microsoft::InfraManager::Provision::Cloning
     $scvmm_log.debug(build_ps_script)
     json_results = source.ext_management_system.run_powershell_script(build_ps_script)
     vm_json      = ManageIQ::Providers::Microsoft::InfraManager.parse_json_results(json_results)
-    phase_context[:new_vm_ems_ref] = vm_json["ID"]
+    phase_context[:new_vm_ems_ref] = vm_json['ID']
   end
 end

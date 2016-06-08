@@ -6,13 +6,13 @@ class TreeBuilderVmsInstancesFilter < TreeBuilderVmsFilter
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :tree_id   => "vms_instances_filter_treebox",
-      :tree_name => "vms_instances_filter_tree",
-      :id_prefix => "vf_",
+      :tree_id   => 'vms_instances_filter_treebox',
+      :tree_name => 'vms_instances_filter_tree',
+      :id_prefix => 'vf_',
     )
   end
 
   def root_options
-    [_("All VMs & Instances"), _("All of the VMs & Instances that I can see")]
+    [_('All VMs & Instances'), _('All of the VMs & Instances that I can see')]
   end
 end

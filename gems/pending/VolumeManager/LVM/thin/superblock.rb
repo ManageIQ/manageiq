@@ -10,7 +10,7 @@ module Lvm2Thin
         superblock.metadata_volume = metadata_volume
         superblock.seek 0
         superblock.struct = superblock.read_struct SUPERBLOCK
-        raise "unknown lvm2 thin metadata magic number" if superblock.struct.magic != THIN_MAGIC
+        raise 'unknown lvm2 thin metadata magic number' if superblock.struct.magic != THIN_MAGIC
         superblock
       end
     end

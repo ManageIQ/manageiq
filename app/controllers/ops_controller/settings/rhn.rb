@@ -46,15 +46,15 @@ module OpsController::Settings::RHN
 
   def rhn_address_string
     product_key = @edit[:new][:register_to]
-    product_key = "sm_hosted" unless rhn_subscription_map.key?(product_key)
+    product_key = 'sm_hosted' unless rhn_subscription_map.key?(product_key)
     rhn_subscription_map[product_key] + _(' Address')
   end
 
   def rhn_account_info_string
-    if @edit[:new][:register_to] == "sm_hosted"
-      _("Enter your Red Hat account information")
+    if @edit[:new][:register_to] == 'sm_hosted'
+      _('Enter your Red Hat account information')
     else
-      _("Enter your Red Hat Network Satellite account information")
+      _('Enter your Red Hat Network Satellite account information')
     end
   end
 
@@ -125,7 +125,7 @@ module OpsController::Settings::RHN
     auth    = {:registration =>  {:userid => credentials[:userid], :password => credentials[:password]}}
     options = {:required => [:userid, :password]}
     db.update_authentication(auth, options)
-    unless credentials[:registration_type] == "sm_hosted"
+    unless credentials[:registration_type] == 'sm_hosted'
       db.registration_organization = @edit[:new][:customer_org]
       db.registration_organization_display_name = @edit[:organizations].key(@edit[:new][:customer_org])
     end
@@ -137,10 +137,10 @@ module OpsController::Settings::RHN
       @in_a_form = true
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     else
-      add_flash(_("Customer Information successfully saved"))
+      add_flash(_('Customer Information successfully saved'))
       @in_a_form = false
       @changed = false
       @edit    = nil
@@ -173,10 +173,10 @@ module OpsController::Settings::RHN
     if params[:task_id] # wait_for_task is done --> read the task record
       miq_task = MiqTask.find(params[:task_id])
       if miq_task.status != 'Ok'
-        add_flash(_("Credential validation returned: %{message}") % {:message => miq_task.message}, :error)
+        add_flash(_('Credential validation returned: %{message}') % {:message => miq_task.message}, :error)
       else
         # task succeeded, we have the hash of org names to org keys in miq_task.task_results
-        add_flash(_("Credential validation was successful"))
+        add_flash(_('Credential validation was successful'))
         yield miq_task.task_results
       end
     else # First time --> run the task
@@ -226,7 +226,7 @@ module OpsController::Settings::RHN
       if @edit[:new][field].present?
         false
       else
-        add_flash(_("%{name} is required") % {:name => RHN_OBLIGATORY_FIELD_NAMES[field]}, :error)
+        add_flash(_('%{name} is required') % {:name => RHN_OBLIGATORY_FIELD_NAMES[field]}, :error)
         true
       end
     end.empty?
@@ -250,7 +250,7 @@ module OpsController::Settings::RHN
       render :update do |page|
         page << javascript_prologue
         # TODO: replace following line with this after 5.2: page << set_spinner_off
-        page << "miqSparkle(false);"
+        page << 'miqSparkle(false);'
       end
     end
   end
@@ -276,11 +276,11 @@ module OpsController::Settings::RHN
         if 'rhn_satellite6' == @edit[:new][:register_to]
           page.replace_html('settings_rhn', :partial => 'settings_rhn_edit_tab')
         else
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
 
         # TODO: replace following line with this after 5.2: page << set_spinner_off
-        page << "miqSparkle(false);"
+        page << 'miqSparkle(false);'
       end
     end
   end
@@ -292,24 +292,24 @@ module OpsController::Settings::RHN
     if params[:button] != 'refresh'
       server_ids = (@edit[:new][:servers].keys rescue [])
       if server_ids.empty?
-        add_flash(_("No Server was selected"), :error)
+        add_flash(_('No Server was selected'), :error)
       else
         begin
           case params[:button]
           when 'register'
-            verb = _("Registration")
+            verb = _('Registration')
             MiqServer.queue_update_registration_status(server_ids)
           when 'check'
-            verb = _("Check for updates")
+            verb = _('Check for updates')
             MiqServer.queue_check_updates(server_ids)
           when 'update'
-            verb = _("Update")
+            verb = _('Update')
             MiqServer.queue_apply_updates(server_ids)
           end
 
-          add_flash(_("%{item} has been initiated for the selected Servers") % {:item => verb})
+          add_flash(_('%{item} has been initiated for the selected Servers') % {:item => verb})
         rescue => error
-          add_flash(_("Error occured when queuing action: %{message}") % {:message => error.message}, :error)
+          add_flash(_('Error occured when queuing action: %{message}') % {:message => error.message}, :error)
         end
       end
     end

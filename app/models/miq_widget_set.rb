@@ -3,7 +3,7 @@ class MiqWidgetSet < ApplicationRecord
 
   before_destroy :destroy_user_versions
 
-  WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/dashboards"))
+  WIDGET_DIR =  File.expand_path(File.join(Rails.root, 'product/dashboard/dashboards'))
 
   def self.with_users
     where.not(:userid => nil)
@@ -30,18 +30,18 @@ class MiqWidgetSet < ApplicationRecord
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each { |f| sync_from_file(f) }
+    Dir.glob(File.join(WIDGET_DIR, '*.yaml')).sort.each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
 
-    ws = find_by_name(attrs["name"])
+    ws = find_by_name(attrs['name'])
 
     if ws.nil? || ws.updated_on.utc < File.mtime(filename).utc
       # Convert widget descriptions to ids in set_data
       members = []
-      attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h, k|
+      attrs['set_data'] = attrs.delete('set_data_by_description').inject({}) do |h, k|
         col, arr = k
         h[col] = arr.collect do |d|
           w = MiqWidget.find_by_description(d)

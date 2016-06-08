@@ -25,39 +25,39 @@
 $evm.root['include_service'] = false
 
 service_template = $evm.root['service_template']
-raise "service_template missing" unless service_template
+raise 'service_template missing' unless service_template
 
 service_template_provision_task = $evm.root['service_template_provision_task']
-raise "service_template_provision_task missing" unless service_template_provision_task
+raise 'service_template_provision_task missing' unless service_template_provision_task
 
 miq_request = service_template_provision_task.miq_request
-raise "service provision request missing" unless miq_request
+raise 'service provision request missing' unless miq_request
 
-$evm.log("info", "Request: #{miq_request.inspect}")
+$evm.log('info', "Request: #{miq_request.inspect}")
 
 service = $evm.root['service']
 
 # If this is the top level service with no parent, we include it
 if service.nil?
   $evm.root['include_service'] = true
-  $evm.log("info", "No parent service found, root service will be installed")
+  $evm.log('info', 'No parent service found, root service will be installed')
 elsif service_template.service_type == 'composite'
   $evm.root['include_service'] = true
-  $evm.log("info", "Composite service will be installed")
+  $evm.log('info', 'Composite service will be installed')
 else
   service_template_tags = service_template.tags
   dialog_options = miq_request.options[:dialog]
 
-  $evm.log("info", "dialog : #{dialog_options}")
-  $evm.log("info", "tags   : #{service_template_tags}")
-  raise "this example needs dialog_environment to filter services" unless dialog_options.key?('dialog_environment')
+  $evm.log('info', "dialog : #{dialog_options}")
+  $evm.log('info', "tags   : #{service_template_tags}")
+  raise 'this example needs dialog_environment to filter services' unless dialog_options.key?('dialog_environment')
 
   # Add some custom filtering here based on dialog_options or tags
   # In this case we match the 'dialog_environment' to match the service_template name
 
-  $evm.root['include_service'] = dialog_options["dialog_environment"].downcase == service_template.name.downcase
+  $evm.root['include_service'] = dialog_options['dialog_environment'].downcase == service_template.name.downcase
 end
 
-$evm.log("info", "Include Service: #{service_template.name} Value: #{$evm.root['include_service']}")
+$evm.log('info', "Include Service: #{service_template.name} Value: #{$evm.root['include_service']}")
 
 exit MIQ_OK

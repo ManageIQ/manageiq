@@ -18,15 +18,15 @@ require_relative 'openstack/services/orchestration/builder'
 
 def usage(s)
   $stderr.puts(s)
-  $stderr.puts("Installs OpenStack on servers using packstack")
-  $stderr.puts("Filter one with --only-environment")
-  $stderr.puts("Options:")
+  $stderr.puts('Installs OpenStack on servers using packstack')
+  $stderr.puts('Filter one with --only-environment')
+  $stderr.puts('Options:')
   $stderr.puts("         [--only-envinronment <name>]  - allowed values #{allowed_enviroments}")
   exit(2)
 end
 
-unless File.exist?("openstack_environments.yml")
-  raise ArgumentError, usage("expecting openstack_environments.yml in ManageIQ root dir")
+unless File.exist?('openstack_environments.yml')
+  raise ArgumentError, usage('expecting openstack_environments.yml in ManageIQ root dir')
 end
 
 @only_environment = nil
@@ -50,7 +50,7 @@ def install_environments
   openstack_environments.each do |env|
     env_name     = env.keys.first
     env          = env[env_name]
-    ssh_user     = env["ssh_user"] || "root"
+    ssh_user     = env['ssh_user'] || 'root'
 
     cmd = "ssh-copy-id #{ssh_user}@#{env["ip"]}"
     puts "Executing: #{cmd}"
@@ -60,7 +60,7 @@ def install_environments
   openstack_environments.each do |env|
     env_name     = env.keys.first
     env          = env[env_name]
-    ssh_user     = env["ssh_user"] || "root"
+    ssh_user     = env['ssh_user'] || 'root'
 
     @environment = env_name.to_sym
 
@@ -69,7 +69,7 @@ def install_environments
       next unless @environment == @only_environment
     end
 
-    cmd = ""
+    cmd = ''
     case @environment
     when :grizzly
       cmd += "ssh #{ssh_user}@#{env["ip"]}"\
@@ -80,7 +80,7 @@ def install_environments
     else
       cmd += "ssh #{ssh_user}@#{env["ip"]}"\
              " 'curl http://file.brq.redhat.com/~mcornea/miq/openstack/openstack-install > openstack-install; "\
-             "  chmod 755 openstack-install; "\
+             '  chmod 755 openstack-install; '\
              "  ./openstack-install #{environment_release_number} #{networking_service} #{identity_service};' "
     end
 
@@ -88,13 +88,13 @@ def install_environments
     puts ` #{cmd} `
   end
 
-  puts "---------------------------------------------------------------------------------------------------------------"
-  puts "------------------------------------------- instalation finished ----------------------------------------------"
+  puts '---------------------------------------------------------------------------------------------------------------'
+  puts '------------------------------------------- instalation finished ----------------------------------------------'
 
   openstack_environments.each do |env|
     env_name     = env.keys.first
     env          = env[env_name]
-    ssh_user     = env["ssh_user"] || "root"
+    ssh_user     = env['ssh_user'] || 'root'
 
     @environment = env_name.to_sym
 
@@ -105,12 +105,12 @@ def install_environments
     cmd     = "ssh #{ssh_user}@#{env["ip"]} 'cat #{stackrc_name}'"
     puts stackrc = ` #{cmd} `
 
-    env["password"] = stackrc.match(/OS_PASSWORD=(.*?)$/)[1]
-    env["user"]     = stackrc.match(/OS_USERNAME=(.*?)$/)[1]
+    env['password'] = stackrc.match(/OS_PASSWORD=(.*?)$/)[1]
+    env['user']     = stackrc.match(/OS_USERNAME=(.*?)$/)[1]
   end
 
-  puts "---------------------------------------------------------------------------------------------------------------"
-  puts "Updating openstack_environments.yml with OpenStack credentials"
+  puts '---------------------------------------------------------------------------------------------------------------'
+  puts 'Updating openstack_environments.yml with OpenStack credentials'
   File.open(openstack_environment_file, 'w') { |f| f.write openstack_environments.to_yaml }
 end
 

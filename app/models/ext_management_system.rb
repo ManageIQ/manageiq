@@ -30,24 +30,24 @@ class ExtManagementSystem < ApplicationRecord
   has_many :container_deployments, :foreign_key => :deployed_on_ems_id, :inverse_of => :deployed_on_ems
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
-  has_many :hosts, :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
-  has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
-           :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
+  has_many :hosts, :foreign_key => 'ems_id', :dependent => :nullify, :inverse_of => :ext_management_system
+  has_many :vms_and_templates, :foreign_key => 'ems_id', :dependent => :nullify,
+           :class_name => 'VmOrTemplate', :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
 
-  has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
+  has_many :ems_events,     -> { order 'timestamp' }, :class_name => 'EmsEvent',    :foreign_key => 'ems_id',
                                                       :inverse_of => :ext_management_system
-  has_many :policy_events,  -> { order "timestamp" }, :class_name => "PolicyEvent", :foreign_key => "ems_id"
+  has_many :policy_events,  -> { order 'timestamp' }, :class_name => 'PolicyEvent', :foreign_key => 'ems_id'
 
-  has_many :blacklisted_events, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
-  has_many :ems_folders,    :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
-  has_many :ems_clusters,   :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
-  has_many :resource_pools, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :blacklisted_events, :foreign_key => 'ems_id', :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :ems_folders,    :foreign_key => 'ems_id', :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :ems_clusters,   :foreign_key => 'ems_id', :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :resource_pools, :foreign_key => 'ems_id', :dependent => :destroy, :inverse_of => :ext_management_system
 
-  has_many :customization_specs, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_many :customization_specs, :foreign_key => 'ems_id', :dependent => :destroy, :inverse_of => :ext_management_system
 
-  has_one  :iso_datastore, :foreign_key => "ems_id", :dependent => :destroy, :inverse_of => :ext_management_system
+  has_one  :iso_datastore, :foreign_key => 'ems_id', :dependent => :destroy, :inverse_of => :ext_management_system
 
   belongs_to :zone
 
@@ -67,7 +67,7 @@ class ExtManagementSystem < ApplicationRecord
 
     existing_hostnames = Endpoint.where.not(:resource_id => id).pluck(:hostname).compact.map(&:downcase)
 
-    errors.add(:hostname, "has already been taken") if existing_hostnames.include?(hostname.downcase)
+    errors.add(:hostname, 'has already been taken') if existing_hostnames.include?(hostname.downcase)
   end
 
   include NewWithTypeStiMixin
@@ -84,7 +84,7 @@ class ExtManagementSystem < ApplicationRecord
   include EventMixin
   include MiqPolicyMixin
   include RelationshipMixin
-  self.default_relationship_type = "ems_metadata"
+  self.default_relationship_type = 'ems_metadata'
 
   include AggregationMixin
   # Since we've overridden the implementation of methods from AggregationMixin,
@@ -173,11 +173,11 @@ class ExtManagementSystem < ApplicationRecord
 
       _log.info "#{ui_lookup(:table => "ext_management_systems")} #{ems.name} created"
       AuditEvent.success(
-        :event        => "ems_created",
+        :event        => 'ems_created',
         :target_id    => ems.id,
-        :target_class => "ExtManagementSystem",
-        :message      => "%{provider_type} %{provider_name} created" % {
-          :provider_type => Dictionary.gettext("ext_management_systems",
+        :target_class => 'ExtManagementSystem',
+        :message      => '%{provider_type} %{provider_name} created' % {
+          :provider_type => Dictionary.gettext('ext_management_systems',
                                                :type      => :table,
                                                :notfound  => :titleize,
                                                :plural    => false,
@@ -253,7 +253,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def supports_authentication?(authtype)
-    authtype.to_s == "default"
+    authtype.to_s == 'default'
   end
 
   # UI method for determining which icon to show for a particular EMS
@@ -262,8 +262,8 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def default_endpoint
-    default = endpoints.detect { |e| e.role == "default" }
-    default || endpoints.build(:role => "default")
+    default = endpoints.detect { |e| e.role == 'default' }
+    default || endpoints.build(:role => 'default')
   end
 
   # Takes multiple connection data
@@ -304,20 +304,20 @@ class ExtManagementSystem < ApplicationRecord
   # if no role is passed in assume is default role
   def add_connection_configuration_by_role(options)
     unless options[:endpoint].key?(:role)
-      options[:endpoint][:role] ||= "default"
+      options[:endpoint][:role] ||= 'default'
     end
     if options[:authentication].blank?
       options.delete(:authentication)
     else
       unless options[:authentication].key?(:role)
-        options[:authentication][:role] ||= "default"
+        options[:authentication][:role] ||= 'default'
       end
     end
 
     build_connection(options)
   end
 
-  def connection_configuration_by_role(role = "default")
+  def connection_configuration_by_role(role = 'default')
     endpoint = endpoints.detect { |e| e.role == role }
 
     if endpoint
@@ -352,7 +352,7 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def with_provider_connection(options = {})
-    raise _("no block given") unless block_given?
+    raise _('no block given') unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
@@ -373,18 +373,18 @@ class ExtManagementSystem < ApplicationRecord
 
   def last_refresh_status
     if last_refresh_date
-      last_refresh_error ? "error" : "success"
+      last_refresh_error ? 'error' : 'success'
     else
-      "never"
+      'never'
     end
   end
 
   def refresh_ems
     if missing_credentials?
-      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _('no %{table} credentials defined') % {:table => ui_lookup(:table => 'ext_management_systems')}
     end
     unless authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _('%{table} failed last authentication check') % {:table => ui_lookup(:table => 'ext_management_systems')}
     end
     EmsRefresh.queue_refresh(self)
   end
@@ -472,7 +472,7 @@ class ExtManagementSystem < ApplicationRecord
     if @association_cache.include?(:resource_pools)
       resource_pools.select { |r| !r.is_default }
     else
-      resource_pools.where("is_default != ?", true).to_a
+      resource_pools.where('is_default != ?', true).to_a
     end
   end
 
@@ -493,22 +493,22 @@ class ExtManagementSystem < ApplicationRecord
   end
 
   def total_storages
-    HostStorage.where(:host_id => host_ids).count("DISTINCT storage_id")
+    HostStorage.where(:host_id => host_ids).count('DISTINCT storage_id')
   end
 
   def vm_count_by_state(state)
     vms.inject(0) { |t, vm| vm.power_state == state ? t + 1 : t }
   end
 
-  def total_vms_on;        vm_count_by_state("on");        end
+  def total_vms_on;        vm_count_by_state('on');        end
 
-  def total_vms_off;       vm_count_by_state("off");       end
+  def total_vms_off;       vm_count_by_state('off');       end
 
-  def total_vms_unknown;   vm_count_by_state("unknown");   end
+  def total_vms_unknown;   vm_count_by_state('unknown');   end
 
-  def total_vms_never;     vm_count_by_state("never");     end
+  def total_vms_never;     vm_count_by_state('never');     end
 
-  def total_vms_suspended; vm_count_by_state("suspended"); end
+  def total_vms_suspended; vm_count_by_state('suspended'); end
 
   def get_reserve(field)
     (hosts + ems_clusters).inject(0) { |v, obj| v + (obj.send(field) || 0) }
@@ -577,16 +577,16 @@ class ExtManagementSystem < ApplicationRecord
   def stop_event_monitor_queue
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
-      :method_name => "stop_event_monitor",
+      :method_name => 'stop_event_monitor',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :zone        => my_zone,
-      :role        => "event"
+      :role        => 'event'
     )
   end
 
   def stop_event_monitor_queue_on_change
-    if event_monitor_class && !self.new_record? && default_endpoint.changed.include_any?("hostname", "ipaddress")
+    if event_monitor_class && !self.new_record? && default_endpoint.changed.include_any?('hostname', 'ipaddress')
       _log.info("EMS: [#{name}], Hostname or IP address has changed, stopping Event Monitor.  It will be restarted by the WorkerMonitor.")
       stop_event_monitor_queue
     end

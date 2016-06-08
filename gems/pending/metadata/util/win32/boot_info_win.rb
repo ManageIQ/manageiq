@@ -3,10 +3,10 @@ require 'metadata/util/win32/remote-registry'
 module Win32
   class SystemPath
     def self.driveAssignment(fs)
-      log_header = "MIQ(SystemPath.driveAssignment)"
+      log_header = 'MIQ(SystemPath.driveAssignment)'
       drives = []
       regHnd = RemoteRegistry.new(fs, true)
-      xml = regHnd.loadHive("system", ["MountedDevices"])
+      xml = regHnd.loadHive('system', ['MountedDevices'])
 
       # Find the MountedDevices node
       node = nil
@@ -14,8 +14,8 @@ module Win32
 
       unless node.nil?
         node.each_element do |e|
-          if e.attributes[:name].include?("DosDevices") && e.text.length <= 36
-            data = e.text.split(",")
+          if e.attributes[:name].include?('DosDevices') && e.text.length <= 36
+            data = e.text.split(',')
 
             # The partition signature is derived from the DiskID and the partition's starting
             # sector number. The DiskID (sometimes called the "NT serial number") is a group of
@@ -31,11 +31,11 @@ module Win32
             # \DosDevices\E:  = 16 3d 17 3d 00 d8 45 5b 05 00 00 00
 
             drives << {:device          => e.attributes[:name],
-                       :name            => e.attributes[:name].split("\\")[-1],
+                       :name            => e.attributes[:name].split('\\')[-1],
                        :raw_data        => e.text,
                        :serial_num      => "0x#{data[3]}#{data[2]}#{data[1]}#{data[0]}".to_i(16),
                        :starting_sector => "0x#{data[8]}#{data[7]}#{data[6]}#{data[5]}".to_i(16) / 2}
-          elsif e.attributes[:name].include?("DosDevices") && e.text.length <= 100
+          elsif e.attributes[:name].include?('DosDevices') && e.text.length <= 100
             $log.warn "#{log_header} Skipping disk #{e.attributes[:name]} - (#{e.text.length})#{e.text}"
           end
         end

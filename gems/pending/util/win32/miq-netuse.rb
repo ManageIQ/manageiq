@@ -28,7 +28,7 @@ class NetUseShare
 
     # Check for usernames that supplied the domain as well
     # Example manageiq\user1 or just user1
-    return username if username.include?("\\")
+    return username if username.include?('\\')
 
     # If we just have a username append the server name to it.  Otherwise
     # connecting will fail when running in SYSTEM context.
@@ -57,8 +57,8 @@ class NetUseShare
 
   def copyTo(srcFile)
     newPath = File.join(sharePath, File.basename(srcFile))
-    newPath.tr!("/", "\\")
-    srcFile.tr!("\\", "/")
+    newPath.tr!('/', '\\')
+    srcFile.tr!('\\', '/')
     require 'fileutils'
     FileUtils.copy(srcFile, newPath)
     File.utime(File.atime(srcFile), File.mtime(srcFile), newPath)

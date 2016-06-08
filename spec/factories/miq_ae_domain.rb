@@ -11,7 +11,7 @@ FactoryGirl.define do
     git_repository { FactoryGirl.create(:git_repository, :url => 'https://www.example.com/abc') }
   end
 
-  factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => "MiqAeDomain" do
+  factory :miq_ae_domain, :parent => :miq_ae_namespace, :class => 'MiqAeDomain' do
     sequence(:name) { |n| "miq_ae_domain#{seq_padded_for_sorting(n)}" }
     tenant { Tenant.seed }
     enabled true

@@ -16,10 +16,10 @@ Log4r::StderrOutputter.new('err_console', :level => Log4r::OFF, :formatter => Co
 $vim_log.add 'err_console'
 
 # $miq_wiredump = true
-TARGET_HOST   = ""
-HOST_USERNAME = ""
-HOST_PASSWORD = ""
-FOLDER_NAME   = ""
+TARGET_HOST   = ''
+HOST_USERNAME = ''
+HOST_PASSWORD = ''
+FOLDER_NAME   = ''
 
 miqCluster  = nil
 miqHost   = nil
@@ -41,7 +41,7 @@ begin
   puts
   puts "Adding host: #{TARGET_HOST}..."
   crMor = miqFolder.addStandaloneHost(TARGET_HOST, HOST_USERNAME, HOST_PASSWORD)
-  puts "Host added."
+  puts 'Host added.'
 
   newHostMor = vim.computeResourcesByMor[crMor].host.first
 
@@ -52,7 +52,7 @@ begin
   puts "Got object for new host: #{miqHost.name}"
 
   if miqHost.inMaintenanceMode?
-    puts "New host is in Maintenance Mode"
+    puts 'New host is in Maintenance Mode'
     puts "\texiting Maintenance Mode..."
     miqHost.exitMaintenanceMode
     puts "\tdone."

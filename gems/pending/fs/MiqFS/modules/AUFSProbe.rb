@@ -7,7 +7,7 @@ module AUFSProbe
   AUFS_MAGIC_OFFSET = 52
   AUFS_MAGIC_SIZE   = 4
   AUFS_SUPER_MAGIC  = 0x12121313
-  AUFS_FSTYPE       = "aufs"
+  AUFS_FSTYPE       = 'aufs'
 
   def self.probe(dobj)
     return(false) unless dobj.kind_of?(MiqDisk)
@@ -18,7 +18,7 @@ module AUFSProbe
     isAufs = false
     isAufs = true if buf.unpack('L')[0] == AUFS_SUPER_MAGIC
     isAufs = true if buf == AUFS_FSTYPE
-    raise "AUFS is Not Supported" if isAufs
+    raise 'AUFS is Not Supported' if isAufs
 
     # No AUFS.
     false

@@ -3,7 +3,7 @@ module OpenstackHandle
     include OpenstackHandle::HandledList
     include Vmdb::Logging
 
-    SERVICE_NAME = "Identity"
+    SERVICE_NAME = 'Identity'
 
     attr_reader :name
 
@@ -35,7 +35,7 @@ module OpenstackHandle
     #
     def visible_tenants_v2
       response = Handle.try_connection(@os_handle.security_protocol) do |scheme, connection_options|
-        url = Handle.url(@os_handle.address, @os_handle.port, scheme, "/v2.0/tenants")
+        url = Handle.url(@os_handle.address, @os_handle.port, scheme, '/v2.0/tenants')
         connection = Fog::Core::Connection.new(url, false, connection_options)
         response = connection.request(
           :expects => [200, 204],

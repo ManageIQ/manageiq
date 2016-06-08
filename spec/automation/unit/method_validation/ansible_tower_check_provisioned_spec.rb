@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision.class/__methods__/check_provisioned').to_s
 require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
@@ -18,7 +18,7 @@ describe AnsibleTowerCheckProvisioned do
 
     context 'ansible tower job completed' do
       before { allow_any_instance_of(job_class).to receive(:normalized_live_status).and_return(['create_complete', 'ok']) }
-      it "refreshes the job status" do
+      it 'refreshes the job status' do
         expect(job).to receive(:refresh_ems)
         described_class.new(ae_service).main
         expect(ae_service.root['ae_result']).to eq('ok')
@@ -27,7 +27,7 @@ describe AnsibleTowerCheckProvisioned do
 
     context 'ansible tower job is running' do
       before { allow_any_instance_of(job_class).to receive(:normalized_live_status).and_return(['running', 'ok']) }
-      it "retries the step" do
+      it 'retries the step' do
         described_class.new(ae_service).main
         expect(ae_service.root['ae_result']).to eq('retry')
       end
@@ -35,7 +35,7 @@ describe AnsibleTowerCheckProvisioned do
 
     context 'ansible tower job failed' do
       before { allow_any_instance_of(job_class).to receive(:normalized_live_status).and_return(['create_failed', 'bad']) }
-      it "signals error" do
+      it 'signals error' do
         expect(job).to receive(:refresh_ems)
         described_class.new(ae_service).main
         expect(ae_service.root['ae_result']).to eq('error')

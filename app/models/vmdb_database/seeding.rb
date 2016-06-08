@@ -35,7 +35,7 @@ module VmdbDatabase::Seeding
     def db_disk_size(disk)
       MiqSystem.disk_usage(disk).first[:filesystem]
     rescue RuntimeError => err
-      return nil if err.message.include?("does not exist")
+      return nil if err.message.include?('does not exist')
       raise
     end
   end

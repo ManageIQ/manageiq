@@ -1,13 +1,13 @@
 describe VmReconfigureRequest do
-  let(:admin)         { FactoryGirl.create(:user, :userid => "tester") }
+  let(:admin)         { FactoryGirl.create(:user, :userid => 'tester') }
   let(:ems_vmware)    { FactoryGirl.create(:ems_vmware, :zone => zone2) }
   let(:host_hardware) { FactoryGirl.build(:hardware, :cpu_total_cores => 40, :cpu_sockets => 10, :cpu_cores_per_socket => 4) }
   let(:host)          { FactoryGirl.build(:host, :hardware => host_hardware) }
   let(:request)       { FactoryGirl.create(:vm_reconfigure_request, :requester => admin) }
-  let(:vm_hardware)   { FactoryGirl.build(:hardware, :virtual_hw_version => "07") }
+  let(:vm_hardware)   { FactoryGirl.build(:hardware, :virtual_hw_version => '07') }
   let(:vm_redhat)     { FactoryGirl.create(:vm_redhat) }
   let(:vm_vmware)     { FactoryGirl.create(:vm_vmware, :hardware => vm_hardware, :host => host) }
-  let(:zone2)         { FactoryGirl.create(:zone, :name => "zone_2") }
+  let(:zone2)         { FactoryGirl.create(:zone, :name => 'zone_2') }
 
   before { _guid, _server, @zone1 = EvmSpecHelper.create_guid_miq_server_zone }
 
@@ -27,19 +27,19 @@ describe VmReconfigureRequest do
     end
   end
 
-  describe "#make_request" do
+  describe '#make_request' do
     let(:alt_user) { FactoryGirl.create(:user_with_group) }
-    it "creates and update a request" do
+    it 'creates and update a request' do
       EvmSpecHelper.local_miq_server
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_reconfigure_request_created",
-        :target_class => "Vm",
+        :event        => 'vm_reconfigure_request_created',
+        :target_class => 'Vm',
         :userid       => admin.userid,
         :message      => "VM Reconfigure requested by <#{admin.userid}> for Vm:#{[vm_vmware.id].inspect}"
       )
 
-      allow(MiqProvision).to receive(:get_next_vm_name).and_return("New VM")
+      allow(MiqProvision).to receive(:get_next_vm_name).and_return('New VM')
 
       # the dialogs populate this
       values = {:src_ids => [vm_vmware.id]}
@@ -48,7 +48,7 @@ describe VmReconfigureRequest do
 
       expect(request).to                be_valid
       expect(request).to                be_a_kind_of(described_class)
-      expect(request.request_type).to   eq("vm_reconfigure")
+      expect(request.request_type).to   eq('vm_reconfigure')
       expect(request.description).to    eq("VM Reconfigure for: #{vm_vmware.name} - ")
       expect(request.requester).to      eq(admin)
       expect(request.userid).to         eq(admin.userid)
@@ -57,8 +57,8 @@ describe VmReconfigureRequest do
       # updates a request
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_reconfigure_request_updated",
-        :target_class => "Vm",
+        :event        => 'vm_reconfigure_request_updated',
+        :target_class => 'Vm',
         :userid       => alt_user.userid,
         :message      => "VM Reconfigure request updated by <#{alt_user.userid}> for Vm:#{[vm_vmware.id].inspect}"
       )
@@ -66,39 +66,39 @@ describe VmReconfigureRequest do
     end
   end
 
-  context ".request_limits" do
+  context '.request_limits' do
     subject { described_class.request_limits(@options) }
 
-    context "RHEV only" do
-      it "single vm" do
+    context 'RHEV only' do
+      it 'single vm' do
         @options = {:src_ids => [vm_redhat.id]}
 
         assert_rhev_cpu_and_memory_min_max
       end
 
-      it "multiple vms" do
+      it 'multiple vms' do
         @options = {:src_ids => [vm_redhat.id, FactoryGirl.create(:vm_redhat).id]}
 
         assert_rhev_cpu_and_memory_min_max
       end
     end
 
-    context "Vmware only" do
-      it "single vm" do
+    context 'Vmware only' do
+      it 'single vm' do
         @options = {:src_ids => [vm_vmware.id]}
 
         assert_vmware_cpu_and_memory_min_max
       end
 
-      it "multiple vms" do
-        hardware = FactoryGirl.build(:hardware, :virtual_hw_version => "07")
+      it 'multiple vms' do
+        hardware = FactoryGirl.build(:hardware, :virtual_hw_version => '07')
         @options = {:src_ids => [vm_vmware.id, FactoryGirl.create(:vm_vmware, :host => host, :hardware => hardware).id]}
 
         assert_vmware_cpu_and_memory_min_max
       end
     end
 
-    it "hybrid" do
+    it 'hybrid' do
       @options = {:src_ids => [vm_redhat.id, vm_vmware.id]}
 
       assert_vmware_cpu_and_memory_min_max

@@ -15,13 +15,13 @@ begin
   vmCfgFile = nil
 
   startTime = Time.now
-  vms_path  = File.join((Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
-  vmCfgFile = File.join(vms_path, "vmware", "JanusVM", "JanusVM-17-sep-2007", "JanusVM", "JanusVM.vmx")
+  vms_path  = File.join((Sys::Platform::IMPL == :macosx ? '/Volumes' : '/mnt'), 'manageiq', 'fleecing_test', 'images', 'virtual_machines')
+  vmCfgFile = File.join(vms_path, 'vmware', 'JanusVM', 'JanusVM-17-sep-2007', 'JanusVM', 'JanusVM.vmx')
 
   # Load VM config file
   ost = OpenStruct.new
   vmCfg = if PROFILE_INIT
-            profile_block(:file_prefix => "init_") { MIQExtract.new(vmCfgFile, ost) }
+            profile_block(:file_prefix => 'init_') { MIQExtract.new(vmCfgFile, ost) }
           else
             MIQExtract.new(vmCfgFile, ost)
           end
@@ -40,7 +40,7 @@ begin
     $log.warn "Fleece for [#{c}] completed [#{Time.now - stf}]"
 
     $log.summary "[#{c}] extract return xml of type [#{xml.class}]" if xml
-    File.open(Tempfile.new("extract_#{c}.xml"), "w") { |f| xml.write(f, 2) } if xml
+    File.open(Tempfile.new("extract_#{c}.xml"), 'w') { |f| xml.write(f, 2) } if xml
   end
   $log.info "******************** Memory    : [#{MiqProcess.processInfo.inspect}] ********************"
 
@@ -56,7 +56,7 @@ begin
 #  sleep(5)
 
 rescue NameError => err
-  unless err.to_s.include?("MiqVm")
+  unless err.to_s.include?('MiqVm')
     $log.warn err
     $log.fatal err.backtrace.join("\n")
   end
@@ -65,4 +65,4 @@ rescue => err
   err.backtrace.each { |e| $log.fatal e }
 end
 
-$log.info "MIQExtract ending."
+$log.info 'MIQExtract ending.'

@@ -3,20 +3,20 @@ describe Authenticator::Ldap do
     EvmSpecHelper.create_guid_miq_server_zone
     @auth_config = {
       :authentication => {
-        :mode        => "ldap",
+        :mode        => 'ldap',
         :ldap_role   => true,
-        :user_suffix => "manageiq.org",
-        :user_type   => "userprincipalname",
+        :user_suffix => 'manageiq.org',
+        :user_type   => 'userprincipalname',
       }
     }
     @auth = Authenticator::Ldap.new(@auth_config[:authentication])
   end
 
-  context ".lookup_by_identity" do
+  context '.lookup_by_identity' do
     let(:current_user) { @auth.lookup_by_identity(@username) }
 
     before do
-      @username    = "upnuser"
+      @username    = 'upnuser'
       @user_suffix = @auth_config.fetch_path(:authentication, :user_suffix)
       @fqusername  = "#{@username}@#{@user_suffix}"
 
@@ -24,17 +24,17 @@ describe Authenticator::Ldap do
       allow(@miq_ldap).to receive_messages(:fqusername => @fqusername)
     end
 
-    it "initial status" do
+    it 'initial status' do
       expect(User.all.size).to eq(0)
     end
 
-    it "user exists" do
+    it 'user exists' do
       user = FactoryGirl.create(:user_admin, :userid => @fqusername)
       allow(@auth).to receive(:userprincipal_for).and_return(user)
       expect(current_user).to eq(user)
     end
 
-    it "user does not exist" do
+    it 'user does not exist' do
       group = create_super_admin_group
       setup_to_create_user(group)
 
@@ -43,47 +43,47 @@ describe Authenticator::Ldap do
     end
   end
 
-  context ".authenticate" do
+  context '.authenticate' do
     before do
-      @password = "secret"
+      @password = 'secret'
       setup_vmdb_config
       init_ldap_setup
       setup_to_get_fqdn
     end
 
-    subject { @auth.authenticate("username", @password, nil) }
+    subject { @auth.authenticate('username', @password, nil) }
 
-    it "password is blank" do
-      @password = ""
+    it 'password is blank' do
+      @password = ''
       expect(AuditEvent).to receive(:failure)
-      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
     end
 
-    it "ldap bind fails" do
+    it 'ldap bind fails' do
       allow(@miq_ldap).to receive_messages(:bind => false)
 
       expect(AuditEvent).to receive(:failure)
-      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      expect(-> { subject }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
     end
 
-    context "ldap binds" do
-      it "get groups from ldap" do
-        user = double("some user")
+    context 'ldap binds' do
+      it 'get groups from ldap' do
+        user = double('some user')
         allow(@auth).to receive_messages(:authorize_queue => user)
         expect(subject).to eq(user)
       end
 
-      context "get groups from ldap not enabled" do
+      context 'get groups from ldap not enabled' do
         before do
           @auth_config[:authentication][:ldap_role] = false
         end
 
-        it "no default group for users" do
+        it 'no default group for users' do
           expect { subject }.to raise_error(MiqException::MiqEVMLoginError)
         end
 
-        context "with default group for users enabled" do
-          it "group exists" do
+        context 'with default group for users enabled' do
+          it 'group exists' do
             allow(@auth).to receive(:find_or_create_by_ldap)
             group = create_super_admin_group
             setup_to_create_user(group)
@@ -91,8 +91,8 @@ describe Authenticator::Ldap do
             expect(subject.current_group).to eq(group)
           end
 
-          it "group does not exist" do
-            @auth_config[:authentication][:default_group_for_users] = "a deleted group"
+          it 'group does not exist' do
+            @auth_config[:authentication][:default_group_for_users] = 'a deleted group'
             expect { subject }.to raise_error(MiqException::MiqEVMLoginError)
           end
         end
@@ -103,8 +103,8 @@ describe Authenticator::Ldap do
   def create_super_admin_group
     FactoryGirl.create(
       :miq_group,
-      :description   => "EvmGroup-super_administrator",
-      :miq_user_role => FactoryGirl.create(:miq_user_role, :name => "EvmRole-super_administrator")
+      :description   => 'EvmGroup-super_administrator',
+      :miq_user_role => FactoryGirl.create(:miq_user_role, :name => 'EvmRole-super_administrator')
     )
   end
 
@@ -123,14 +123,14 @@ describe Authenticator::Ldap do
 
   def setup_to_create_user(group)
     setup_vmdb_config
-    allow(@ldap).to receive_messages(:get_user_object => "A Net::LDAP::Entry object")
-    allow(@ldap).to receive_messages(:normalize => "some unique string")
-    allow(@ldap).to receive_messages(:get_attr => "xx@xx.com")
+    allow(@ldap).to receive_messages(:get_user_object => 'A Net::LDAP::Entry object')
+    allow(@ldap).to receive_messages(:normalize => 'some unique string')
+    allow(@ldap).to receive_messages(:get_attr => 'xx@xx.com')
     allow(@auth).to receive_messages(:groups_for => [group.description])
   end
 
   def setup_to_get_fqdn
-    allow(@miq_ldap).to receive_messages(:fqusername => "some FQDN")
-    allow(@miq_ldap).to receive_messages(:normalize => "some normalized name")
+    allow(@miq_ldap).to receive_messages(:fqusername => 'some FQDN')
+    allow(@miq_ldap).to receive_messages(:normalize => 'some normalized name')
   end
 end

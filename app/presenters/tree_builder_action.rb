@@ -8,13 +8,13 @@ class TreeBuilderAction < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "ac_",
+      :id_prefix => 'ac_',
     )
   end
 
   # level 0 - root
   def root_options
-    [t = N_("All Actions"), t]
+    [t = N_('All Actions'), t]
   end
 
   # level 1 - actions

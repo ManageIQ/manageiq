@@ -3,7 +3,7 @@ require 'miq-hash_struct'
 
 class MiqRequestWorkflow
   include Vmdb::Logging
-  include_concern "DialogFieldValidation"
+  include_concern 'DialogFieldValidation'
 
   # We rely on MiqRequestWorkflow's descendants to be comprehensive
   singleton_class.send(:prepend, DescendantLoader::ArDescendantsWithLoader)
@@ -111,8 +111,8 @@ class MiqRequestWorkflow
 
     if request.process_on_create?
       # TODO: address auto-approve potential issue
-      request.call_automate_event_queue("request_created")
-      request.approve(@requester, "Auto-Approved") if auto_approve == true
+      request.call_automate_event_queue('request_created')
+      request.approve(@requester, 'Auto-Approved') if auto_approve == true
       request.reload if auto_approve
     end
 
@@ -136,7 +136,7 @@ class MiqRequestWorkflow
 
     request.log_request_success(@requester, :updated)
 
-    request.call_automate_event_queue("request_updated")
+    request.call_automate_event_queue('request_updated')
     request
   end
 
@@ -374,8 +374,8 @@ class MiqRequestWorkflow
     return parse_request_parameter_hash(text_input, options) if text_input.kind_of?(Hash)
     return {} unless text_input.kind_of?(String)
 
-    deprecated_warn = "method: parse_ws_string, arg Type => String"
-    solution = "arg should be a hash"
+    deprecated_warn = 'method: parse_ws_string, arg Type => String'
+    solution = 'arg should be a hash'
     MiqAeMethodService::Deprecation.deprecation_warning(deprecated_warn, solution)
 
     result = {}
@@ -418,7 +418,7 @@ class MiqRequestWorkflow
 
   def parse_ws_string_v1(values, _options = {})
     na = []
-    values.to_s.split("|").each_slice(2) do |k, v|
+    values.to_s.split('|').each_slice(2) do |k, v|
       next if v.nil?
       na << [k.strip, v.strip]
     end
@@ -482,7 +482,7 @@ class MiqRequestWorkflow
         end
       end
       if @values[fn].nil?
-        _log.info "set_value_from_list did not matched an item" if partial_key
+        _log.info 'set_value_from_list did not matched an item' if partial_key
         @values[fn] = [nil, nil]
       else
         _log.info "set_value_from_list matched item value:[#{value}] to item:[#{@values[fn][0]}]" if partial_key
@@ -521,7 +521,7 @@ class MiqRequestWorkflow
     enabled_field = "#{name}_enabled".to_sym
     # Check if the fields hash contains a <dialog_name>_enabled field
     enabled = get_value(values[enabled_field])
-    return false if enabled == false || enabled == "disabled"
+    return false if enabled == false || enabled == 'disabled'
     true
   end
 
@@ -539,7 +539,7 @@ class MiqRequestWorkflow
     unless email.blank?
       l = MiqLdap.new
       if l.bind_with_default == true
-        raise _("No information returned for %{email}") % {:email => email} if (d = l.get_user_info(email)).nil?
+        raise _('No information returned for %{email}') % {:email => email} if (d = l.get_user_info(email)).nil?
         [:first_name, :last_name, :address, :city, :state, :zip, :country, :title, :company,
          :department, :office, :phone, :phone_mobile, :manager, :manager_mail, :manager_phone].each do |prop|
           @values["owner_#{prop}".to_sym] = d[prop].nil? ? nil : d[prop].dup
@@ -605,7 +605,7 @@ class MiqRequestWorkflow
 
     cats, ents = class_tags.partition { |t| t.parent_id == 0 }
     cats.each do |t|
-      next unless t.tag2ns(t.tag.name) == "/managed"
+      next unless t.tag2ns(t.tag.name) == '/managed'
       next if exclude_list.include?(t.name)
       next unless include_list.blank? || include_list.include?(t.name)
       # Force passed tags to be single select
@@ -678,12 +678,12 @@ class MiqRequestWorkflow
 
   def get_dialogs
     @values[:miq_request_dialog_name] ||= @values[:provision_dialog_name] || dialog_name_from_automate || self.class.default_dialog_file
-    dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], ".rb")
+    dp = @values[:miq_request_dialog_name] = File.basename(@values[:miq_request_dialog_name], '.rb')
     _log.info "Loading dialogs <#{dp}> for user <#{@requester.userid}>"
-    d = MiqDialog.find_by("lower(name) = ? and dialog_type = ?", dp.downcase, self.class.base_model.name)
+    d = MiqDialog.find_by('lower(name) = ? and dialog_type = ?', dp.downcase, self.class.base_model.name)
     if d.nil?
       raise MiqException::Error,
-            "Dialog cannot be found.  Name:[%{name}]  Type:[%{type}]" % {:name => @values[:miq_request_dialog_name],
+            'Dialog cannot be found.  Name:[%{name}]  Type:[%{type}]' % {:name => @values[:miq_request_dialog_name],
                                                                          :type => self.class.base_model.name}
     end
     prov_dialogs = d.content
@@ -695,7 +695,7 @@ class MiqRequestWorkflow
     pre_dialogs = nil
     pre_dialog_name = dialog_name_from_automate('get_pre_dialog_name')
     unless pre_dialog_name.blank?
-      pre_dialog_name = File.basename(pre_dialog_name, ".rb")
+      pre_dialog_name = File.basename(pre_dialog_name, '.rb')
       d = MiqDialog.find_by(:name => pre_dialog_name, :dialog_type => self.class.base_model.name)
       unless d.nil?
         _log.info "Loading pre-dialogs <#{pre_dialog_name}> for user <#{@requester.userid}>"
@@ -709,7 +709,7 @@ class MiqRequestWorkflow
   def dialog_name_from_automate(message = 'get_dialog_name', input_fields = [:request_type], extra_attrs = {})
     return nil if self.class.automate_dialog_request.nil?
 
-    _log.info "Querying Automate Profile for dialog name"
+    _log.info 'Querying Automate Profile for dialog name'
     attrs = {'request' => self.class.automate_dialog_request, 'message' => message}
     extra_attrs.each { |k, v| attrs[k] = v }
 
@@ -726,7 +726,7 @@ class MiqRequestWorkflow
 
     input_fields.each { |k| attrs["dialog_input_#{k.to_s.downcase}"] = send(k).to_s }
 
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", @requester, attrs, :vmdb_object => @requester)
+    ws = MiqAeEngine.resolve_automation_object('REQUEST', @requester, attrs, :vmdb_object => @requester)
 
     if ws && ws.root
       dialog_option_prefix = 'dialog_option_'
@@ -739,7 +739,7 @@ class MiqRequestWorkflow
         @values[key.to_sym] = value
       end
 
-      name = ws.root("dialog_name")
+      name = ws.root('dialog_name')
       return name.presence
     end
 
@@ -757,13 +757,13 @@ class MiqRequestWorkflow
   def request_class
     req_class = self.class.request_class
     if get_value(@values[:service_template_request]) == true
-      req_class = (req_class.name + "Template").constantize
+      req_class = (req_class.name + 'Template').constantize
     end
     req_class
   end
 
   def self.request_class
-    @workflow_class ||= name.underscore.gsub(/_workflow$/, "_request").camelize.constantize
+    @workflow_class ||= name.underscore.gsub(/_workflow$/, '_request').camelize.constantize
   end
 
   def set_default_values
@@ -891,10 +891,10 @@ class MiqRequestWorkflow
     false
   end
 
-  def get_ems_folders(folder, dh = {}, full_path = "")
+  def get_ems_folders(folder, dh = {}, full_path = '')
     if folder.evm_object_class == :EmsFolder && !folder.hidden?
       full_path += full_path.blank? ? "#{folder.name}" : " / #{folder.name}"
-      dh[folder.id] = full_path unless folder.type == "Datacenter"
+      dh[folder.id] = full_path unless folder.type == 'Datacenter'
     end
 
     # Process child folders
@@ -904,7 +904,7 @@ class MiqRequestWorkflow
     dh
   end
 
-  def get_ems_respool(node, dh = {}, full_path = "")
+  def get_ems_respool(node, dh = {}, full_path = '')
     if node.kind_of?(XmlHash::Element)
       folder = node.attributes[:object]
       if node.name == :ResourcePool
@@ -945,7 +945,7 @@ class MiqRequestWorkflow
     # Walk the xml document parents to find the requested class
     while node.kind_of?(XmlHash::Element)
       ci = node.attributes[:object]
-      if node.name == klass_name && (datacenter == false || datacenter == true && ci.type == "Datacenter")
+      if node.name == klass_name && (datacenter == false || datacenter == true && ci.type == 'Datacenter')
         result = ci
         break
       end
@@ -972,7 +972,7 @@ class MiqRequestWorkflow
   def get_ems_metadata_tree(src)
     @ems_metadata_tree ||= begin
       st = Time.zone.now
-      result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => "VmOrTemplate")
+      result = load_ar_obj(src[:ems]).fulltree_arranged(:except_type => 'VmOrTemplate')
       ems_metadata_tree_add_hosts_under_clusters!(result)
       @ems_xml_nodes = {}
       xml = MiqXml.newDoc(:xmlhash)
@@ -1352,7 +1352,7 @@ class MiqRequestWorkflow
     result = []
     customization_template_id = get_value(@values[:customization_template_id])
     @values[:customization_template_script] = nil if customization_template_id.nil?
-    prov_typ = self.class == MiqHostProvisionWorkflow ? "host" : "vm"
+    prov_typ = self.class == MiqHostProvisionWorkflow ? 'host' : 'vm'
     image = supports_iso? ? get_iso_image : get_pxe_image
     unless image.nil?
       result = image.customization_templates.collect do |c|
@@ -1393,7 +1393,7 @@ class MiqRequestWorkflow
   def allowed_pxe_images(_options = {})
     pxe_server = get_pxe_server
     return [] if pxe_server.nil?
-    prov_typ = self.class == MiqHostProvisionWorkflow ? "host" : "vm"
+    prov_typ = self.class == MiqHostProvisionWorkflow ? 'host' : 'vm'
 
     pxe_server.pxe_images.collect do |p|
       next if p.pxe_image_type.nil? || p.default_for_windows
@@ -1449,7 +1449,7 @@ class MiqRequestWorkflow
     if data[:owner_email].present? && MiqLdap.using_ldap?
       email = data[:owner_email]
       unless email.include?('@')
-        suffix = VMDB::Config.new("vmdb").config[:authentication].fetch_path(:user_suffix)
+        suffix = VMDB::Config.new('vmdb').config[:authentication].fetch_path(:user_suffix)
         email = "#{email}@#{suffix}"
       end
       values[:owner_email] = email

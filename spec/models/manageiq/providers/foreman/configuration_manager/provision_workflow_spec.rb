@@ -5,8 +5,8 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
   let(:manager) { FactoryGirl.create(:configuration_manager_foreman) }
   let(:system)  { FactoryGirl.create(:configured_system_foreman, :manager => manager) }
 
-  it "#allowed_configuration_profiles" do
-    cp       = FactoryGirl.build(:configuration_profile, :name => "test", :description => "a/b/c/test")
+  it '#allowed_configuration_profiles' do
+    cp       = FactoryGirl.build(:configuration_profile, :name => 'test', :description => 'a/b/c/test')
     cs       = FactoryGirl.build(:configured_system_foreman)
     workflow = FactoryGirl.build(:miq_provision_configured_system_foreman_workflow)
 
@@ -16,10 +16,10 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
     expect(workflow.allowed_configuration_profiles).to eq(cp.id => cp.description)
   end
 
-  describe "#make_request" do
+  describe '#make_request' do
     let(:alt_user) { FactoryGirl.create(:user_with_group) }
 
-    it "creates and update a request" do
+    it 'creates and update a request' do
       EvmSpecHelper.local_miq_server
       stub_dialog(:get_pre_dialogs)
       stub_dialog(:get_dialogs)
@@ -27,8 +27,8 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
       workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "configured_system_provision_request_created",
-        :target_class => "ConfiguredSystem",
+        :event        => 'configured_system_provision_request_created',
+        :target_class => 'ConfiguredSystem',
         :userid       => admin.userid,
         :message      => "Configured System Provisioning requested by <#{admin.userid}> for ConfiguredSystem:#{[system.id].inspect}"
       )
@@ -42,7 +42,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqProvisionConfiguredSystemRequest)
-      expect(request.request_type).to eq("provision_via_foreman")
+      expect(request.request_type).to eq('provision_via_foreman')
       expect(request.description).to eq("Foreman install on [#{system.name}]")
       expect(request.requester).to eq(admin)
       expect(request.userid).to eq(admin.userid)
@@ -52,8 +52,8 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionWorkflow d
       workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "configured_system_provision_request_updated",
-        :target_class => "ConfiguredSystem",
+        :event        => 'configured_system_provision_request_updated',
+        :target_class => 'ConfiguredSystem',
         :userid       => alt_user.userid,
         :message      => "Configured System Provisioning request updated by <#{alt_user.userid}> for ConfiguredSystem:#{[system.id].inspect}"
       )

@@ -9,5 +9,5 @@ FactoryGirl.define do
     end
   end
 
-  factory :ems_cluster_openstack, :class => "ManageIQ::Providers::Openstack::InfraManager::EmsCluster", :parent => :ems_cluster
+  factory :ems_cluster_openstack, :class => 'ManageIQ::Providers::Openstack::InfraManager::EmsCluster', :parent => :ems_cluster
 end

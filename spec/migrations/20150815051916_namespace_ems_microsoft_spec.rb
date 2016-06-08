@@ -7,22 +7,22 @@ describe NamespaceEmsMicrosoft do
   let(:ems_stub) { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "EmsMicrosoft")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'EmsMicrosoft')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ManageIQ::Providers::Microsoft::InfraManager")
+      expect(ems.reload).to have_attributes(:type => 'ManageIQ::Providers::Microsoft::InfraManager')
     end
   end
 
   migration_context :down do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ManageIQ::Providers::Microsoft::InfraManager")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ManageIQ::Providers::Microsoft::InfraManager')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "EmsMicrosoft")
+      expect(ems.reload).to have_attributes(:type => 'EmsMicrosoft')
     end
   end
 end

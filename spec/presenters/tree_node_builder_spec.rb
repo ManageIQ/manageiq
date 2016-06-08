@@ -70,7 +70,7 @@ describe TreeNodeBuilder do
     end
 
     it 'valid EmsCluster node' do
-      cluster = FactoryGirl.create(:ems_cluster, :name => "My Cluster")
+      cluster = FactoryGirl.create(:ems_cluster, :name => 'My Cluster')
       node = TreeNodeBuilder.build(cluster, nil, {})
       expect(node).not_to be_nil
 
@@ -81,7 +81,7 @@ describe TreeNodeBuilder do
     end
 
     it 'valid Host Node' do
-      host = FactoryGirl.create(:host, :name => "My Host")
+      host = FactoryGirl.create(:host, :name => 'My Host')
       node = TreeNodeBuilder.build(host, nil, {})
 
       expect(node[:key]).to eq("h-#{MiqRegion.compress_id(host.id)}")
@@ -130,7 +130,7 @@ describe TreeNodeBuilder do
     it 'Vm node with tooltip' do
       vm = FactoryGirl.create(:vm_amazon, :name => 'name')
       node = TreeNodeBuilder.build(vm, nil, {})
-      expect(node[:tooltip]).to eq(_("VM: %{name} (Click to view)") % {:name => vm.name})
+      expect(node[:tooltip]).to eq(_('VM: %{name} (Click to view)') % {:name => vm.name})
     end
 
     it 'EmsFolder tooltip with %2f' do
@@ -196,7 +196,7 @@ describe TreeNodeBuilder do
     end
 
     it 'MiqTemplate node' do
-      template = FactoryGirl.build(:miq_template, :name => "template", :location => "abc/abc.vmtx", :template => true, :vendor => "vmware")
+      template = FactoryGirl.build(:miq_template, :name => 'template', :location => 'abc/abc.vmtx', :template => true, :vendor => 'vmware')
       node = TreeNodeBuilder.build(template, nil, {})
       expect(node).not_to be_nil
     end
@@ -208,7 +208,7 @@ describe TreeNodeBuilder do
     end
 
     it 'MiqAction node' do
-      action = FactoryGirl.build(:miq_action, :name => "raise_automation_event")
+      action = FactoryGirl.build(:miq_action, :name => 'raise_automation_event')
       node = TreeNodeBuilder.build(action, nil, :tree => :action_tree)
       expect(node).not_to be_nil
     end
@@ -348,21 +348,21 @@ describe TreeNodeBuilder do
       expect(node).not_to be_nil
     end
 
-    it "expand attribute of node should be set to true when open_all is true and expand is nil in options" do
+    it 'expand attribute of node should be set to true when open_all is true and expand is nil in options' do
       tenant = FactoryGirl.build(:tenant)
-      node = TreeNodeBuilder.build(tenant, "root", :expand => nil, :open_all => true)
+      node = TreeNodeBuilder.build(tenant, 'root', :expand => nil, :open_all => true)
       expect(node[:expand]).to eq(true)
     end
 
-    it "expand attribute of node should be set to nil when open_all is true and expand is set to false in options" do
+    it 'expand attribute of node should be set to nil when open_all is true and expand is set to false in options' do
       tenant = FactoryGirl.build(:tenant)
-      node = TreeNodeBuilder.build(tenant, "root", :expand => false, :open_all => true)
+      node = TreeNodeBuilder.build(tenant, 'root', :expand => false, :open_all => true)
       expect(node[:expand]).to eq(nil)
     end
 
-    it "expand attribute of node should be set to true when open_all and expand are true in options" do
+    it 'expand attribute of node should be set to true when open_all and expand are true in options' do
       tenant = FactoryGirl.build(:tenant)
-      node = TreeNodeBuilder.build(tenant, "root", :expand => true, :open_all => true)
+      node = TreeNodeBuilder.build(tenant, 'root', :expand => true, :open_all => true)
       expect(node[:expand]).to eq(true)
     end
 
@@ -375,37 +375,37 @@ describe TreeNodeBuilder do
     end
   end
 
-  context "#node_with_display_name" do
+  context '#node_with_display_name' do
     before do
       login_as FactoryGirl.create(:user_with_group)
     end
-    it "should return node text with Disabled in the text for Disabled domain" do
+    it 'should return node text with Disabled in the text for Disabled domain' do
       domain = FactoryGirl.create(:miq_ae_domain,
-                                  :name    => "test1",
+                                  :name    => 'test1',
                                   :enabled => false)
       node = TreeNodeBuilder.build(domain, nil, {})
       expect(node[:title]).to eq('test1 (Disabled)')
     end
 
-    it "should return node text with Locked in the text for Locked domain" do
+    it 'should return node text with Locked in the text for Locked domain' do
       domain = FactoryGirl.create(:miq_ae_domain,
-                                  :name   => "test1",
+                                  :name   => 'test1',
                                   :system => true)
       node = TreeNodeBuilder.build(domain, nil, {})
       expect(node[:title]).to eq('test1 (Locked)')
     end
 
-    it "should return node text with Locked & Disabled in the text for Locked & Disabled domain" do
+    it 'should return node text with Locked & Disabled in the text for Locked & Disabled domain' do
       domain = FactoryGirl.create(:miq_ae_domain,
-                                  :name    => "test1",
+                                  :name    => 'test1',
                                   :enabled => false,
                                   :system  => true)
       node = TreeNodeBuilder.build(domain, nil, {})
       expect(node[:title]).to eq('test1 (Locked & Disabled)')
     end
 
-    it "should return node text with no suffix when Domain is not Locked or Disabled" do
-      domain = FactoryGirl.create(:miq_ae_domain, :name => "test1")
+    it 'should return node text with no suffix when Domain is not Locked or Disabled' do
+      domain = FactoryGirl.create(:miq_ae_domain, :name => 'test1')
       node = TreeNodeBuilder.build(domain, nil, {})
       expect(node[:title]).to eq('test1')
     end

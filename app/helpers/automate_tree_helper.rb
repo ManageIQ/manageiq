@@ -6,12 +6,12 @@ module AutomateTreeHelper
       tree_close = proc do
         @edit[:ae_tree_select] = false
         @changed = (@edit[:new] != @edit[:current])
-        @changed = @edit[:new][:override_source] if params[:controller] == "miq_ae_class" &&
+        @changed = @edit[:new][:override_source] if params[:controller] == 'miq_ae_class' &&
                                                     @edit[:new][:namespace].nil?
-        page << javascript_hide("ae_tree_select_div")
-        page << javascript_hide("blocker_div")
+        page << javascript_hide('ae_tree_select_div')
+        page << javascript_hide('blocker_div')
         page << javascript_for_miq_button_visibility(@changed)
-        page << "miqSparkle(false);"
+        page << 'miqSparkle(false);'
       end
 
       case params[:button]
@@ -34,7 +34,7 @@ module AutomateTreeHelper
           @edit[:include_domain_prefix] = nil
           @edit[:domain_prefix_check] = nil
         end
-        page.replace("form_div", :partial => "copy_objects_form") if params[:controller] == "miq_ae_class"
+        page.replace('form_div', :partial => 'copy_objects_form') if params[:controller] == 'miq_ae_class'
         tree_close.call
 
       when 'cancel'
@@ -68,16 +68,16 @@ module AutomateTreeHelper
           @edit[:domain_prefix_check] = true
         end
         self.x_active_tree = :automate_tree
-        page << javascript_show("ae_tree_select_div")
-        page << javascript_show("blocker_div")
-        page << javascript_show("automate_tree_div")
+        page << javascript_show('ae_tree_select_div')
+        page << javascript_show('blocker_div')
+        page << javascript_show('automate_tree_div')
         page << "$('#automate_tree_div').addClass('modal fade in');"
         @edit[:ae_tree_select] = true
         type =  @edit[:ae_field_typ] || params[:typ]
         validnode = true
-        @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
+        @edit[:current][:selected] = @edit[:new][:selected].nil? ? '' : @edit[:new][:selected]
         if @edit[:new][type].nil?
-          @edit[:new][:selected] = "root"
+          @edit[:new][:selected] = 'root'
           validnode = false
         else
           @edit[:new][:selected] = @edit[:new][type]
@@ -92,22 +92,22 @@ module AutomateTreeHelper
 
   def at_tree_select(edit_key)
     id = from_cid(params[:id].split('_').last.split('-').last)
-    if params[:id].start_with?("aei-")
+    if params[:id].start_with?('aei-')
       record = MiqAeInstance.find_by_id(id)
-    elsif params[:id].start_with?("aen-") && controller_name == "miq_ae_class"
+    elsif params[:id].start_with?('aen-') && controller_name == 'miq_ae_class'
       record = MiqAeNamespace.find_by_id(id)
       record = nil if record.domain?
     end
 
     @edit[:new][edit_key] = @edit[edit_key] if @edit[:new][edit_key].nil?
     validnode = false
-    @edit[:current][:selected] = @edit[:new][:selected].nil? ? "" : @edit[:new][:selected]
+    @edit[:current][:selected] = @edit[:new][:selected].nil? ? '' : @edit[:new][:selected]
     @edit[:new][:selected] = params[:id]
 
     if record
       validnode = true
       @edit[:automate_tree_selected_path] =
-          controller_name == "miq_ae_class" ? record.fqname_sans_domain : record.fqname
+          controller_name == 'miq_ae_class' ? record.fqname_sans_domain : record.fqname
       # save selected id in edit until save button is pressed
       @edit[:active_id] = params[:id]
       @changed = @edit[:new][edit_key] != @edit[:automate_tree_selected_path]

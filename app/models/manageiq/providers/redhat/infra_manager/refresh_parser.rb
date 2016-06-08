@@ -138,7 +138,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
   end
 
   def self.host_inv_to_ip(inv, hostname = nil)
-    _log.debug("IP lookup for host in VIM inventory data...")
+    _log.debug('IP lookup for host in VIM inventory data...')
     ipaddress = nil
 
     inv[:host_nics].to_miq_a.each do |nic|
@@ -150,8 +150,8 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     end
 
     unless ipaddress.nil?
-      warn_msg = "IP lookup for host in VIM inventory data...Failed."
-      if [nil, "localhost", "localhost.localdomain", "127.0.0.1"].include?(hostname)
+      warn_msg = 'IP lookup for host in VIM inventory data...Failed.'
+      if [nil, 'localhost', 'localhost.localdomain', '127.0.0.1'].include?(hostname)
         _log.warn warn_msg
       else
         _log.warn "#{warn_msg} Falling back to reverse lookup."
@@ -338,7 +338,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       next if mor == '00000000-0000-0000-0000-000000000000'
 
       template        = vm_inv[:href].include?('/templates/')
-      raw_power_state = template ? "never" : vm_inv.attributes.fetch_path(:status, :state)
+      raw_power_state = template ? 'never' : vm_inv.attributes.fetch_path(:status, :state)
 
       boot_time = vm_inv[:start_time].blank? ? nil : vm_inv[:start_time]
 
@@ -368,12 +368,12 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
       hardware[:networks] = vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
 
       new_result = {
-        :type              => template ? "ManageIQ::Providers::Redhat::InfraManager::Template" : "ManageIQ::Providers::Redhat::InfraManager::Vm",
+        :type              => template ? 'ManageIQ::Providers::Redhat::InfraManager::Template' : 'ManageIQ::Providers::Redhat::InfraManager::Vm',
         :ems_ref           => vm_inv[:href],
         :ems_ref_obj       => vm_inv[:href],
         :uid_ems           => vm_inv[:id],
         :name              => URI.decode(vm_inv[:name]),
-        :vendor            => "redhat",
+        :vendor            => 'redhat',
         :raw_power_state   => raw_power_state,
         :location          => "#{vm_inv[:id]}.ovf",
         :boot_time         => boot_time,
@@ -514,7 +514,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     guest_os = inv.attributes.fetch_path(:os, :type)
     result = {
       # If the data from VC is empty, default to "Other"
-      :product_name => guest_os.blank? ? "Other" : guest_os
+      :product_name => guest_os.blank? ? 'Other' : guest_os
     }
     result[:system_type] = inv[:type] unless inv[:type].nil?
     result
@@ -539,7 +539,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
 
     # Fix case where blank description comes back as a Hash instead
     name = description = inv[:description]
-    name = "Active Image" if name[0, 13] == '_ActiveImage_'
+    name = 'Active Image' if name[0, 13] == '_ActiveImage_'
 
     result = {
       :uid_ems     => inv[:id],
@@ -564,7 +564,7 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :section => 'custom_field',
         :name    => ca[:name],
         :value   => ca[:value].try(:truncate, 255),
-        :source  => "VC",
+        :source  => 'VC',
       }
       result << new_result
     end

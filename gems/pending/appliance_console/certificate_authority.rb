@@ -8,8 +8,8 @@ module ApplianceConsole
   # configure ssl certificates for postgres communication
   # and appliance to appliance communications
   class CertificateAuthority
-    CFME_DIR        = "/var/www/miq/vmdb/certs"
-    PSQL_CLIENT_DIR = "/root/.postgresql"
+    CFME_DIR        = '/var/www/miq/vmdb/certs'
+    PSQL_CLIENT_DIR = '/root/.postgresql'
 
     # hostname of current machine
     attr_accessor :hostname
@@ -26,17 +26,17 @@ module ApplianceConsole
 
     def initialize(options = {})
       options.each { |n, v| public_send("#{n}=", v) }
-      @ca_name ||= "ipa"
+      @ca_name ||= 'ipa'
     end
 
     def ask_questions
       if ipa?
-        self.principal = just_ask("IPA Server Principal", @principal)
-        self.password  = ask_for_password("IPA Server Principal Password", @password)
+        self.principal = just_ask('IPA Server Principal', @principal)
+        self.password  = ask_for_password('IPA Server Principal Password', @password)
       end
-      self.pgclient = ask_yn("Configure certificate for postgres client", "Y")
-      self.pgserver = ask_yn("Configure certificate for postgres server", "Y")
-      self.http = ask_yn("Configure certificate for http server", "Y")
+      self.pgclient = ask_yn('Configure certificate for postgres client', 'Y')
+      self.pgserver = ask_yn('Configure certificate for postgres server', 'Y')
+      self.http = ask_yn('Configure certificate for http server', 'Y')
       true
     end
 
@@ -52,10 +52,10 @@ module ApplianceConsole
 
     def valid_environment?
       if ipa? && !ExternalHttpdAuthentication.ipa_client_configured?
-        raise ArgumentError, "ipa client not configured"
+        raise ArgumentError, 'ipa client not configured'
       end
 
-      raise ArgumentError, "hostname needs to be defined" unless hostname
+      raise ArgumentError, 'hostname needs to be defined' unless hostname
     end
 
     def configure_pgclient
@@ -67,7 +67,7 @@ module ApplianceConsole
       self.pgclient = Certificate.new(
         :cert_filename => "#{PSQL_CLIENT_DIR}/postgresql.crt",
         :root_filename => "#{PSQL_CLIENT_DIR}/root.crt",
-        :service       => "manageiq",
+        :service       => 'manageiq',
         :extensions    => %w(client),
         :ca_name       => ca_name,
         :hostname      => hostname,
@@ -79,16 +79,16 @@ module ApplianceConsole
       cert = Certificate.new(
         :cert_filename => "#{CFME_DIR}/postgres.crt",
         :root_filename => "#{CFME_DIR}/root.crt",
-        :service       => "postgresql",
+        :service       => 'postgresql',
         :extensions    => %w(server),
         :ca_name       => ca_name,
         :hostname      => hostname,
         :realm         => realm,
-        :owner         => "postgres.postgres"
+        :owner         => 'postgres.postgres'
       ).request
 
       if cert.complete?
-        say "configuring postgres to use certs"
+        say 'configuring postgres to use certs'
         # only telling postgres to rewrite server configuration files
         # no need for username/password since not writing database.yml
         InternalDatabaseConfiguration.new(:ssl => true).configure_postgres
@@ -102,25 +102,25 @@ module ApplianceConsole
         :key_filename  => "#{CFME_DIR}/server.cer.key",
         :cert_filename => "#{CFME_DIR}/server.cer",
         :root_filename => "#{CFME_DIR}/root.crt",
-        :service       => "HTTP",
+        :service       => 'HTTP',
         :extensions    => %w(server),
         :ca_name       => ca_name,
         :hostname      => hostname,
-        :owner         => "apache.apache",
+        :owner         => 'apache.apache',
       ).request
       if cert.complete?
-        say "configuring apache to use new certs"
-        LinuxAdmin::Service.new("httpd").restart
+        say 'configuring apache to use new certs'
+        LinuxAdmin::Service.new('httpd').restart
       end
       self.http = cert.status
     end
 
     def status
-      {"pgclient" => pgclient, "pgserver" => pgserver, "http" => http}.delete_if { |_n, v| !v }
+      {'pgclient' => pgclient, 'pgserver' => pgserver, 'http' => http}.delete_if { |_n, v| !v }
     end
 
     def status_string
-      status.collect { |n, v| "#{n}: #{v}" }.join " "
+      status.collect { |n, v| "#{n}: #{v}" }.join ' '
     end
 
     def complete?
@@ -128,7 +128,7 @@ module ApplianceConsole
     end
 
     def ipa?
-      ca_name == "ipa"
+      ca_name == 'ipa'
     end
 
     private

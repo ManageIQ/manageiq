@@ -92,7 +92,7 @@ module Metric::Aggregation
     args = args[0..3]
 
     meth = col
-    meth = col.to_s.split("_").last unless supports?(mode, meth)
+    meth = col.to_s.split('_').last unless supports?(mode, meth)
     meth = default_operation        unless supports?(mode, meth) || default_operation.nil?
     mode.send(meth, col, *args) if supports?(mode, meth)
   end

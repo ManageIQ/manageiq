@@ -4,10 +4,10 @@ FactoryGirl.define do
     sequence(:ems_ref) { |n| "ems_ref_#{seq_padded_for_sorting(n)}" }
   end
 
-  factory :network_port_openstack, :class  => "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort",
+  factory :network_port_openstack, :class  => 'ManageIQ::Providers::Openstack::NetworkManager::NetworkPort',
                                    :parent => :network_port
-  factory :network_port_amazon, :class  => "ManageIQ::Providers::Amazon::NetworkManager::NetworkPort",
+  factory :network_port_amazon, :class  => 'ManageIQ::Providers::Amazon::NetworkManager::NetworkPort',
                                 :parent => :network_port
-  factory :network_port_azure, :class  => "ManageIQ::Providers::Azure::NetworkManager::NetworkPort",
+  factory :network_port_azure, :class  => 'ManageIQ::Providers::Azure::NetworkManager::NetworkPort',
                                :parent => :network_port
 end

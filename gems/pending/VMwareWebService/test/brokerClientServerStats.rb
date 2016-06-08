@@ -23,12 +23,12 @@ SERVER_PASSES = 10
 CLIENT_PASSES = 5
 
 def with_server
-  pid = Kernel.spawn(SERVER_PROCESS, :out => "/dev/null", :err => "/dev/null")
+  pid = Kernel.spawn(SERVER_PROCESS, :out => '/dev/null', :err => '/dev/null')
   Process.detach(pid)
   sleep(2) # Give the server a chance to actually start up
   yield pid
 ensure
-  Process.kill("HUP", pid) # Because the script blocks INT for some reason
+  Process.kill('HUP', pid) # Because the script blocks INT for some reason
 end
 
 def connect_client
@@ -49,7 +49,7 @@ all_stats = SERVER_PASSES.times.collect do |t|
     end
   end
 
-  puts stats.collect { |s| "#{s[:time].round(4)}s #{s[:memory].round(2)}M" }.join(" | ")
+  puts stats.collect { |s| "#{s[:time].round(4)}s #{s[:memory].round(2)}M" }.join(' | ')
   stats
 end
 
@@ -62,7 +62,7 @@ def print_stats(stats)
     "#{memory.mean.round(2)}M ± #{memory.stddev.round(2)}M",
   ]
 
-  values.join(" | ")
+  values.join(' | ')
 end
 
 transposed  = all_stats.transpose
@@ -72,8 +72,8 @@ primed_once = transposed[2]
 primed_rest = transposed[3..-1].flatten
 
 puts
-puts "                 | Timing | Memory |"
-puts "---------------- | ------ | ------ |"
+puts '                 | Timing | Memory |'
+puts '---------------- | ------ | ------ |'
 puts "Before connect   | #{print_stats(before)} | "
 puts "Unprimed (first) | #{print_stats(unprimed)} | "
 puts "Primed (second)  | #{print_stats(primed_once)} | "

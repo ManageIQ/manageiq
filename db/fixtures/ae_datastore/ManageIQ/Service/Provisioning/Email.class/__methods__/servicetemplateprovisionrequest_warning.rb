@@ -28,18 +28,18 @@ def reason
 end
 
 def approver_text(appliance, requester_email, msg)
-  body = "Approver, "
+  body = 'Approver, '
   body += "<br>A service request received from #{requester_email} is approaching their quota."
   body += "<br><br>#{msg}."
-  body += "<br><br>For more information you can go to: "
+  body += '<br><br>For more information you can go to: '
   body += "<br><br><a href='https://#{appliance}/miq_request/show/#{@miq_request.id}'</a>"
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
   body
 end
 
 def email_approver(appliance, msg)
-  $evm.log(:info, "Approver email logic starting")
+  $evm.log(:info, 'Approver email logic starting')
 
   to = $evm.object['to_email_address']
   from = $evm.object['from_email_address']
@@ -50,18 +50,18 @@ def email_approver(appliance, msg)
 end
 
 def requester_text(appliance, msg)
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br>#{msg}."
-  body += "<br><br>For more information you can go to: "
+  body += '<br><br>For more information you can go to: '
   body += "<br><br><a href='https://#{appliance}/miq_request/show/#{@miq_request.id}'"
   body += ">https://#{appliance}/miq_request/show/#{@miq_request.id}</a>"
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
   body
 end
 
 def email_requester(appliance, msg)
-  $evm.log(:info, "Requester email logic starting")
+  $evm.log(:info, 'Requester email logic starting')
   to = requester_email_address
   from = $evm.object['from_email_address']
   subject = "Request ID #{@miq_request.id} - Warning your service request quota is approaching threshold"
@@ -81,7 +81,7 @@ appliance = $evm.root['miq_server'].ipaddress
 
 msg = @miq_request.get_option(:service_quota_warn_exceeded) ||
       @miq_request.resource.message ||
-      "Request Quota Warning"
+      'Request Quota Warning'
 
 email_requester(appliance, msg)
 email_approver(appliance, msg)

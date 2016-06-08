@@ -1,9 +1,9 @@
 namespace :gettext do
   task :store_dictionary_strings do
-    output_strings = ["# Strings extracted from en.yml for gettext to find"]
+    output_strings = ['# Strings extracted from en.yml for gettext to find']
     no_plurals = %w(NFS OS) # strings which we don't want to create automatic plurals for
 
-    dict = YAML.load(File.open(Rails.root.join("config/locales/en.yml")))["en"]["dictionary"]
+    dict = YAML.load(File.open(Rails.root.join('config/locales/en.yml')))['en']['dictionary']
     dict.keys.each do |tree|
       next unless %w(column model table).include?(tree) # subtrees of interest
 
@@ -31,7 +31,7 @@ namespace :gettext do
       end
     end
 
-    File.open(Rails.root.join("config/dictionary_strings.rb"), "w+") do |f|
+    File.open(Rails.root.join('config/dictionary_strings.rb'), 'w+') do |f|
       f.puts(output_strings)
     end
   end
@@ -66,10 +66,10 @@ namespace :gettext do
     end
 
     yamls = {
-      "db/fixtures/miq_product_features.*" => %w(name description),
-      "db/fixtures/miq_report_formats.*"   => %w(description),
-      "product/timelines/miq_reports/*.*"  => %w(title name headers),
-      "product/views/*.*"                  => %w(title name headers)
+      'db/fixtures/miq_product_features.*' => %w(name description),
+      'db/fixtures/miq_report_formats.*'   => %w(description),
+      'product/timelines/miq_reports/*.*'  => %w(title name headers),
+      'product/views/*.*'                  => %w(title name headers)
     }
 
     output = {}
@@ -81,7 +81,7 @@ namespace :gettext do
       end
     end
 
-    File.open(Rails.root.join("config/yaml_strings.rb"), "w+") do |f|
+    File.open(Rails.root.join('config/yaml_strings.rb'), 'w+') do |f|
       output.keys.each do |key|
         output[key].sort.uniq.each do |file|
           f.puts "# TRANSLATORS: file: #{file}"
@@ -91,10 +91,10 @@ namespace :gettext do
     end
   end
 
-  desc "Extract human locale names from translation catalogs and store them in a yaml file"
+  desc 'Extract human locale names from translation catalogs and store them in a yaml file'
   task :extract_locale_names do
     require 'yaml/store'
-    require Rails.root.join("lib/vmdb/fast_gettext_helper")
+    require Rails.root.join('lib/vmdb/fast_gettext_helper')
 
     Vmdb::FastGettextHelper.register_locales
 
@@ -102,12 +102,12 @@ namespace :gettext do
     FastGettext.available_locales.each do |locale|
       FastGettext.locale = locale
       # TRANSLATORS: Provide locale name in native language (e.g. English, Deutsch or Português)
-      human_locale = _("locale_name")
-      human_locale = locale if human_locale == "locale_name"
+      human_locale = _('locale_name')
+      human_locale = locale if human_locale == 'locale_name'
       locale_hash[locale] = human_locale
     end
 
-    store = YAML::Store.new("config/human_locale_names.yaml")
+    store = YAML::Store.new('config/human_locale_names.yaml')
     store.transaction do
       store['human_locale_names'] = locale_hash
     end

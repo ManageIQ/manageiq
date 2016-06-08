@@ -20,14 +20,14 @@ status_state = $evm.root['ae_status_state']
 
 vm = $evm.root['vm']
 
-$evm.log("info", "Server:<#{server.name}> Ae_Result:<#{$evm.root['ae_result']}> State:<#{state}> Step:<#{step}>")
-$evm.log("info", "Status_State:<#{status_state}> Status:<#{status}>")
+$evm.log('info', "Server:<#{server.name}> Ae_Result:<#{$evm.root['ae_result']}> State:<#{state}> Step:<#{step}>")
+$evm.log('info', "Status_State:<#{status_state}> Status:<#{status}>")
 
 # Update Status for on_error for all states other than the first state which is startretirement
 # in the retirement state machine.
 if $evm.root['ae_result'] == 'error'
   if step.downcase == 'startretirement'
-    $evm.log("info", "Cannot continue because VM is already retired or is being retired.")
+    $evm.log('info', 'Cannot continue because VM is already retired or is being retired.')
   else
     vm.retirement_state = 'error' if vm
   end

@@ -4,7 +4,7 @@ require 'fs/ext4/alloc_bitmap'
 module Ext4
   class GroupDescriptorTable
     def initialize(sb)
-      raise "Ext4::GroupDescriptorTable.initialize: Nil Superblock" if sb.nil?
+      raise 'Ext4::GroupDescriptorTable.initialize: Nil Superblock' if sb.nil?
 
       # Read all the group descriptor entries.
       @gdt = []

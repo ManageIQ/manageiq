@@ -3,7 +3,7 @@ models = MiqReport.reportable_models.collect do |m|
 end.sort
 
 require 'csv'
-CSV.open("reportable_fields.csv", "w") do |csv|
+CSV.open('reportable_fields.csv', 'w') do |csv|
   csv << %w(model_display_name model field_display_name field)
 
   models.each do |model_display_name, model|

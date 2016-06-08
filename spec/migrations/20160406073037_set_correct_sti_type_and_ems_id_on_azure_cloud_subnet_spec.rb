@@ -7,29 +7,29 @@ describe SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet do
 
   let(:ems_row_entries) do
     [
-      {:type => "ManageIQ::Providers::Openstack::CloudManager"},
-      {:type => "ManageIQ::Providers::Openstack::InfraManager"},
-      {:type => "ManageIQ::Providers::Azure::CloudManager"},
-      {:type => "ManageIQ::Providers::AnotherManager::CloudManager"}
+      {:type => 'ManageIQ::Providers::Openstack::CloudManager'},
+      {:type => 'ManageIQ::Providers::Openstack::InfraManager'},
+      {:type => 'ManageIQ::Providers::Azure::CloudManager'},
+      {:type => 'ManageIQ::Providers::AnotherManager::CloudManager'}
     ]
   end
 
   let(:ems_network_row_entries) do
     [
       {
-        :type       => "ManageIQ::Providers::Openstack::NetworkManager",
+        :type       => 'ManageIQ::Providers::Openstack::NetworkManager',
         :parent_ems => ems_row_entries[0]
       },
       {
-        :type       => "ManageIQ::Providers::Openstack::NetworkManager",
+        :type       => 'ManageIQ::Providers::Openstack::NetworkManager',
         :parent_ems => ems_row_entries[1]
       },
       {
-        :type       => "ManageIQ::Providers::Azure::NetworkManager",
+        :type       => 'ManageIQ::Providers::Azure::NetworkManager',
         :parent_ems => ems_row_entries[2]
       },
       {
-        :type       => "ManageIQ::Providers::AnotherManager::NetworkManager",
+        :type       => 'ManageIQ::Providers::AnotherManager::NetworkManager',
         :parent_ems => ems_row_entries[3]
       }
     ]
@@ -39,27 +39,27 @@ describe SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet do
     [
       {
         :ems  => ems_network_row_entries[0],
-        :name => "network_1",
+        :name => 'network_1',
         :type => 'ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private',
       },
       {
         :ems  => ems_network_row_entries[1],
-        :name => "network_2",
+        :name => 'network_2',
         :type => 'ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private',
       },
       {
         :ems  => ems_network_row_entries[2],
-        :name => "network_3",
+        :name => 'network_3',
         :type => 'ManageIQ::Providers::Azure::CloudManager::CloudNetwork',
       },
       {
         :ems  => ems_network_row_entries[3],
-        :name => "network_4",
+        :name => 'network_4',
         :type => nil,
       },
       {
         :ems  => ems_network_row_entries[3],
-        :name => "network_5",
+        :name => 'network_5',
         :type => 'ManageIQ::Providers::AnyManager::CloudNetwork',
       },
     ]
@@ -69,35 +69,35 @@ describe SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet do
     [
       {
         :cloud_network => network_row_entries[0],
-        :name          => "subnet_1",
+        :name          => 'subnet_1',
         :type_in       => 'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet',
         :type_out      => 'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet',
         :ems_out       => nil
       },
       {
         :cloud_network => network_row_entries[1],
-        :name          => "subnet_2",
+        :name          => 'subnet_2',
         :type_in       => 'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet',
         :type_out      => 'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet',
         :ems_out       => nil
       },
       {
         :cloud_network => network_row_entries[2],
-        :name          => "subnet_3",
+        :name          => 'subnet_3',
         :type_in       => nil,
         :type_out      => 'ManageIQ::Providers::Azure::NetworkManager::CloudSubnet',
         :ems_out       => ems_network_row_entries[2]
       },
       {
         :cloud_network => network_row_entries[3],
-        :name          => "subnet_4",
+        :name          => 'subnet_4',
         :type_in       => nil,
         :type_out      => nil,
         :ems_out       => nil
       },
       {
         :cloud_network => network_row_entries[4],
-        :name          => "subnet_5",
+        :name          => 'subnet_5',
         :type_in       => 'ManageIQ::Providers::AnyManager::CloudSubnet',
         :type_out      => 'ManageIQ::Providers::AnyManager::CloudSubnet',
         :ems_out       => nil
@@ -106,7 +106,7 @@ describe SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet do
   end
 
   migration_context :up do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end
@@ -141,7 +141,7 @@ describe SetCorrectStiTypeAndEmsIdOnAzureCloudSubnet do
   end
 
   migration_context :down do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end

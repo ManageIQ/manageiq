@@ -28,7 +28,7 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
     super
 
     # Mark all instances no longer found as unknown
-    self.raw_power_state = "unknown"
+    self.raw_power_state = 'unknown'
     save
   end
 
@@ -68,18 +68,18 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
   def self.calculate_power_state(raw_power_state)
     # http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceState.html
     case raw_power_state.to_s
-    when "running"       then "on"
-    when "powering_up"   then "powering_up"
-    when "shutting_down" then "powering_down"
-    when "shutting-down" then "powering_down"
-    when "stopping"      then "powering_down"
-    when "pending"       then "suspended"
-    when "terminated"    then "terminated"
-    when "stopped"       then "off"
-    when "off"           then "off"
+    when 'running'       then 'on'
+    when 'powering_up'   then 'powering_up'
+    when 'shutting_down' then 'powering_down'
+    when 'shutting-down' then 'powering_down'
+    when 'stopping'      then 'powering_down'
+    when 'pending'       then 'suspended'
+    when 'terminated'    then 'terminated'
+    when 'stopped'       then 'off'
+    when 'off'           then 'off'
     # 'unknown' will be set by #disconnect_ems - which means 'terminated' in our case
-    when "unknown"       then "terminated"
-    else                      "terminated"
+    when 'unknown'       then 'terminated'
+    else                      'terminated'
     end
   end
 
@@ -88,11 +88,11 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
   end
 
   def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
+    validate_unsupported('Smartstate Analysis')
   end
 
   def validate_timeline
     {:available => false,
-     :message   => _("Timeline is not available for %{model}") % {:model => ui_lookup(:model => self.class.to_s)}}
+     :message   => _('Timeline is not available for %{model}') % {:model => ui_lookup(:model => self.class.to_s)}}
   end
 end

@@ -13,12 +13,12 @@
 #
 
 # Get miq_request object
-miq_request = $evm.root["miq_request"]
+miq_request = $evm.root['miq_request']
 
-raise "miq_request missing" if miq_request.nil?
+raise 'miq_request missing' if miq_request.nil?
 
 # Build email to requester with reason
-$evm.log('info', "Requester email logic starting")
+$evm.log('info', 'Requester email logic starting')
 
 # Get requester email
 requester = $evm.root['miq_request'].requester
@@ -36,10 +36,10 @@ signature = $evm.object['signature']
 subject = "Request ID #{miq_request.id} - Your request to Reconfigure the Virtual Machine was Approved"
 
 # Build email body
-body = "Hello, "
-body += "<br>Your Virtual Machine VM Reconfiguration request was approved. "
-body += "<br><br> Thank you,"
+body = 'Hello, '
+body += '<br>Your Virtual Machine VM Reconfiguration request was approved. '
+body += '<br><br> Thank you,'
 body += "<br> #{signature}"
 
-$evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+$evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
 $evm.execute(:send_email, to, from, subject, body)

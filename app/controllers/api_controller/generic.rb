@@ -44,7 +44,7 @@ class ApiController
     def add_resource(type, _id, data)
       cspec = collection_config[type]
       klass = collection_class(type)
-      if data.key?("id") || data.key?("href")
+      if data.key?('id') || data.key?('href')
         raise BadRequestError,
               "Resource id or href should not be specified for creating a new #{type} resource"
       end
@@ -87,15 +87,15 @@ class ApiController
       if id
         msg = "Retiring #{type} id #{id}"
         resource = resource_search(id, type, klass)
-        if data && data["date"]
+        if data && data['date']
           opts = {}
-          opts[:date] = data["date"]
-          opts[:warn] = data["warn"] if data["warn"]
+          opts[:date] = data['date']
+          opts[:warn] = data['warn'] if data['warn']
           msg << " on: #{opts}"
           api_log_info(msg)
           resource.retire(opts)
         else
-          msg << " immediately."
+          msg << ' immediately.'
           api_log_info(msg)
           resource.retire_now
         end
@@ -150,10 +150,10 @@ class ApiController
         raise BadRequestError, "Cannot assign #{sc} to a #{type} resource" unless respond_to?(typed_target)
         sc_data.each do |sr|
           unless sr.blank?
-            collection, rid = parse_href(sr["href"])
+            collection, rid = parse_href(sr['href'])
             if collection == sc && rid
-              sr.delete("id")
-              sr.delete("href")
+              sr.delete('id')
+              sr.delete('href')
             end
             send(typed_target, resource, type, rid.to_i, sr)
           end
@@ -208,7 +208,7 @@ class ApiController
       wf = ResourceActionWorkflow.new({}, @auth_user_obj, custom_button.resource_action, :target => resource)
       data.each { |key, value| wf.set_value(key, value) } if data.present?
       wf_result = wf.submit_request
-      raise StandardError, Array(wf_result[:errors]).join(", ") if wf_result[:errors].present?
+      raise StandardError, Array(wf_result[:errors]).join(', ') if wf_result[:errors].present?
       wf_result
     end
 
@@ -218,12 +218,12 @@ class ApiController
 
     def set_ownership_action(klass, type, id, ownership)
       if ownership.blank?
-        action_result(false, "Must specify a valid owner or group for setting ownership")
+        action_result(false, 'Must specify a valid owner or group for setting ownership')
       else
         result = klass.set_ownership([id], ownership)
-        details = ownership.each.collect { |key, obj| "#{key}: #{obj.name}" }.join(", ")
+        details = ownership.each.collect { |key, obj| "#{key}: #{obj.name}" }.join(', ')
         desc = "setting ownership of #{type} id #{id} to #{details}"
-        result == true ? action_result(true, desc) : action_result(false, result.values.join(", "))
+        result == true ? action_result(true, desc) : action_result(false, result.values.join(', '))
       end
     rescue => err
       action_result(false, err.to_s)

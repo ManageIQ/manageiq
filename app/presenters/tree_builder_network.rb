@@ -23,15 +23,15 @@ class TreeBuilderNetwork < TreeBuilder
     locals = super
     locals.merge!(:id_prefix                   => 'h_',
                   :autoload                    => true,
-                  :click_url                   => "/vm/show/",
-                  :onclick                     => "miqOnClickHostNet",
-                  :onmousein                   => "miqOnMouseInHostNet",
-                  :onmouseout                  => "miqOnMouseOutHostNet",
+                  :click_url                   => '/vm/show/',
+                  :onclick                     => 'miqOnClickHostNet',
+                  :onmousein                   => 'miqOnMouseInHostNet',
+                  :onmouseout                  => 'miqOnMouseOutHostNet',
                   :open_close_all_on_dbl_click => true)
   end
 
   def root_options
-    [@root.name, _("Host: %{name}") % {:name => @root.name}, 'host']
+    [@root.name, _('Host: %{name}') % {:name => @root.name}, 'host']
   end
 
   def x_get_tree_roots(count_only = false, _options)
@@ -49,7 +49,7 @@ class TreeBuilderNetwork < TreeBuilder
 
   def x_get_tree_lan_kids(parent, count_only)
     kids = count_only ? 0 : []
-    if parent.respond_to?("vms_and_templates") && parent.vms_and_templates.present?
+    if parent.respond_to?('vms_and_templates') && parent.vms_and_templates.present?
       kids = count_only_or_objects(count_only, parent.vms_and_templates.sort_by { |l| l.name.downcase })
     end
     @tree_vms.concat(kids) unless count_only

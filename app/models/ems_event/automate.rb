@@ -57,7 +57,7 @@ class EmsEvent
         :save  => true
       }
 
-      call("src_vm", "template=", options)
+      call('src_vm', 'template=', options)
     end
 
     def change_event_target_state(target_str, param)
@@ -67,20 +67,20 @@ class EmsEvent
       }
 
       target = get_target(target_str)
-      method = target.respond_to?(:raw_power_state=) ? "raw_power_state=" : "state="
+      method = target.respond_to?(:raw_power_state=) ? 'raw_power_state=' : 'state='
       call(target_str, method, options)
     end
 
     def src_vm_destroy_all_snapshots
-      call("src_vm", "snapshots.destroy_all")
+      call('src_vm', 'snapshots.destroy_all')
     end
 
     def src_vm_disconnect_storage
-      call("src_vm", "disconnect_storage")
+      call('src_vm', 'disconnect_storage')
     end
 
     def src_vm_refresh_on_reconfig
-      call("src_vm", "refresh_on_reconfig")
+      call('src_vm', 'refresh_on_reconfig')
     end
 
     private

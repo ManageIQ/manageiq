@@ -10,7 +10,7 @@ class SupportController < ApplicationController
 
   def index
     about
-    render :action => "show"
+    render :action => 'show'
   end
 
   def show
@@ -22,17 +22,17 @@ class SupportController < ApplicationController
     @vmdb = {:version => Vmdb::Appliance.VERSION, :build => Vmdb::Appliance.BUILD}
     @user_role = User.current_user.miq_user_role_name
     @pdf_documents = pdf_documents
-    @layout = "about"
+    @layout = 'about'
   end
 
   private ############################
 
   def get_layout
-    %w(about diagnostics).include?(session[:layout]) ? session[:layout] : "about"
+    %w(about diagnostics).include?(session[:layout]) ? session[:layout] : 'about'
   end
 
   def get_session_data
-    @title  = _("Support")
+    @title  = _('Support')
     @layout = get_layout
   end
 
@@ -41,12 +41,12 @@ class SupportController < ApplicationController
   end
 
   def pdf_document_files
-    Dir.glob(Rails.root.join("public/doc/*.pdf"))
+    Dir.glob(Rails.root.join('public/doc/*.pdf'))
   end
 
   def pdf_documents
     pdf_document_files.sort.each_with_object({}) do |f, h|
-      f = File.basename(f, ".pdf")
+      f = File.basename(f, '.pdf')
       h[f] = f.titleize
     end
   end

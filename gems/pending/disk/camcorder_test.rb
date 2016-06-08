@@ -21,7 +21,7 @@ $log.add 'err_console'
 #
 # Path to RAW disk image.
 #
-VIRTUAL_DISK_FILE = "path to raw disk image file"
+VIRTUAL_DISK_FILE = 'path to raw disk image file'
 
 commit = true
 
@@ -44,10 +44,10 @@ begin
   # We constrain the probing here, so the test will run properly in the absence
   # of the disk file.
   #
-  disk = MiqDisk.getDisk(diskInfo, "RawDiskProbe")
+  disk = MiqDisk.getDisk(diskInfo, 'RawDiskProbe')
 
   unless disk
-    puts "Failed to open disk"
+    puts 'Failed to open disk'
     exit(1)
   end
 
@@ -83,8 +83,8 @@ ensure
   disk.close if disk
   if recorder && commit
     puts
-    puts "camcorder: committing recording..."
+    puts 'camcorder: committing recording...'
     recorder.commit
-    puts "done."
+    puts 'done.'
   end
 end

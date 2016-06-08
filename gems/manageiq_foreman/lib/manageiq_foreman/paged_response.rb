@@ -10,10 +10,10 @@ module ManageiqForeman
 
     # per_page, search, sort
     def initialize(json)
-      if json.kind_of?(Hash) && json["results"]
-        @results = json["results"]
-        @total   = json["total"].to_i
-        @page    = json["page"]
+      if json.kind_of?(Hash) && json['results']
+        @results = json['results']
+        @total   = json['total'].to_i
+        @page    = json['page']
       else
         @results = json.kind_of?(Array) ? json : Array[json]
         @total = json.size
@@ -36,9 +36,9 @@ module ManageiqForeman
     def denormalize
       self.class.new(
         results.collect do |record|
-          ancestors(results, record["ancestry"]).each_with_object({}) do |ancestor, h|
-            h.merge!(ancestor.select { |_n, v| !v.nil? && v != "" })
-          end.merge!(record.select { |_n, v| !v.nil? && v != "" })
+          ancestors(results, record['ancestry']).each_with_object({}) do |ancestor, h|
+            h.merge!(ancestor.select { |_n, v| !v.nil? && v != '' })
+          end.merge!(record.select { |_n, v| !v.nil? && v != '' })
         end
       )
     end
@@ -46,7 +46,7 @@ module ManageiqForeman
     private
 
     def ancestors(records, ancestry)
-      (ancestry || "").split("/").collect(&:to_i).collect { |id| records.detect { |r| r["id"] == id } }
+      (ancestry || '').split('/').collect(&:to_i).collect { |id| records.detect { |r| r['id'] == id } }
     end
   end
 end

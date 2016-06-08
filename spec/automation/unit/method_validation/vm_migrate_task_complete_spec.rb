@@ -10,7 +10,7 @@ describe 'vmmigratetask_complete method' do
   it 'sends email' do
     expect(GenericMailer).to receive(:deliver).with(:automation_notification,
                                                     hash_including(:to   => user.email,
-                                                                   :from => "evmadmin@example.com"
+                                                                   :from => 'evmadmin@example.com'
                                                                   )
                                                    )
     attrs = ["MiqServer::miq_server=#{miq_server.id}"]

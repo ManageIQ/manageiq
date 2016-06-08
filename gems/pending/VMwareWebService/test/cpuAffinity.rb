@@ -16,7 +16,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_VM = "rpo-vmsafe"
+TARGET_VM = 'rpo-vmsafe'
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 
 begin
@@ -24,7 +24,7 @@ begin
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
   puts "API version: #{vim.apiVersion}"
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   puts
   aa = nil

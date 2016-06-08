@@ -13,7 +13,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
     if time_threshold.seconds.ago.utc > w.last_heartbeat
       msg = "#{w.format_full_log_msg} has not responded in #{Time.now.utc - w.last_heartbeat} seconds, restarting worker"
       _log.error(msg)
-      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_not_responding", :event_details => msg, :type => w.class.name)
+      MiqEvent.raise_evm_event_queue(w.miq_server, 'evm_worker_not_responding', :event_details => msg, :type => w.class.name)
       restart_worker(w, :not_responding)
       return false
     end
@@ -25,7 +25,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
     if MiqWorker::STATUSES_CURRENT.include?(w.status) && usage_exceeds_threshold?(usage, memory_threshold)
       msg = "#{w.format_full_log_msg} process memory usage [#{usage}] exceeded limit [#{memory_threshold}], requesting worker to exit"
       _log.warn(msg)
-      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_memory_exceeded", :event_details => msg, :type => w.class.name)
+      MiqEvent.raise_evm_event_queue(w.miq_server, 'evm_worker_memory_exceeded', :event_details => msg, :type => w.class.name)
       restart_worker(w)
       return false
     end
@@ -33,7 +33,7 @@ module MiqServer::WorkerManagement::Monitor::Validation
     if time_interval_reached?(w.started_on, restart_interval)
       msg = "#{w.format_full_log_msg} uptime has reached the interval of #{restart_interval} seconds, requesting worker to exit"
       _log.info(msg)
-      MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_uptime_exceeded", :event_details => msg, :type => w.class.name)
+      MiqEvent.raise_evm_event_queue(w.miq_server, 'evm_worker_uptime_exceeded', :event_details => msg, :type => w.class.name)
       restart_worker(w)
       return false
     end

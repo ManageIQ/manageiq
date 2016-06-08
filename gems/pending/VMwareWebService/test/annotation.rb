@@ -16,7 +16,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_VM = raise "please define"
+TARGET_VM = raise 'please define'
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 
 begin
@@ -24,15 +24,15 @@ begin
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
   puts "API version: #{vim.apiVersion}"
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   puts
-  puts "** VM annotation start:"
+  puts '** VM annotation start:'
   puts miqVm.annotation
-  puts "** VM annotation end"
+  puts '** VM annotation end'
 
   puts
-  puts "Custom values:"
+  puts 'Custom values:'
   miqVm.customValues.each { |k, v| puts "\t#{k} => #{v}" }
 
 rescue => err

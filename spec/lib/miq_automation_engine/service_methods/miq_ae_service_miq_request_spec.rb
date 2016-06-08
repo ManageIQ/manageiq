@@ -19,32 +19,32 @@ module MiqAeServiceMiqRequestSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqRequest::miq_request=#{@miq_request.id}", @fred)
     end
 
-    it "#approve" do
+    it '#approve' do
       approver = 'wilma'
-      reason   = "Why Not?"
+      reason   = 'Why Not?'
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].approve('#{approver}', '#{reason}')"
       @ae_method.update_attributes(:data => method)
       expect_any_instance_of(MiqRequest).to receive(:approve).with(approver, reason).once
       expect(invoke_ae.root(@ae_result_key)).to  be_truthy
     end
 
-    it "#deny" do
+    it '#deny' do
       approver = 'wilma'
-      reason   = "Why Not?"
+      reason   = 'Why Not?'
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].deny('#{approver}', '#{reason}')"
       @ae_method.update_attributes(:data => method)
       expect_any_instance_of(MiqRequest).to receive(:deny).with(approver, reason).once
       expect(invoke_ae.root(@ae_result_key)).to  be_truthy
     end
 
-    it "#pending" do
+    it '#pending' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].pending"
       @ae_method.update_attributes(:data => method)
       expect_any_instance_of(MiqRequest).to receive(:pending).once
       expect(invoke_ae.root(@ae_result_key)).to  be_truthy
     end
 
-    it "#approvers" do
+    it '#approvers' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].approvers"
       @ae_method.update_attributes(:data => method)
       expect(invoke_ae.root(@ae_result_key)).to eq([])
@@ -72,14 +72,14 @@ module MiqAeServiceMiqRequestSpec
       end
     end
 
-    it "#requester" do
+    it '#requester' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].requester"
       @ae_method.update_attributes(:data => method)
       fred = invoke_ae.root(@ae_result_key)
       assert_ae_user_matches_ar_user(fred, @fred)
     end
 
-    it "#authorized?" do
+    it '#authorized?' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].authorized?"
       @ae_method.update_attributes(:data => method)
       [true, false].each do |expected_authorized|
@@ -89,11 +89,11 @@ module MiqAeServiceMiqRequestSpec
       end
     end
 
-    it "#resource" do
+    it '#resource' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].resource"
       @ae_method.update_attributes(:data => method)
 
-      vm_template = FactoryGirl.create(:template_vmware, :name => "template1")
+      vm_template = FactoryGirl.create(:template_vmware, :name => 'template1')
       resource    = FactoryGirl.create(:miq_provision_request, :requester => @fred, :src_vm_id => vm_template.id)
       @miq_request = resource
 
@@ -103,7 +103,7 @@ module MiqAeServiceMiqRequestSpec
       [:userid, :src_vm_id].each { |method| expect(ae_resource.send(method)).to eq(resource.send(method)) }
     end
 
-    it "#reason" do
+    it '#reason' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].reason"
       @ae_method.update_attributes(:data => method)
       reason = invoke_ae.root(@ae_result_key)
@@ -134,7 +134,7 @@ module MiqAeServiceMiqRequestSpec
       reasons.split('; ').each { |reason| expect([betty_reason, wilma_reason].include?(reason)).to be_truthy }
     end
 
-    it "#options" do
+    it '#options' do
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].options"
       @ae_method.update_attributes(:data => method)
       options = {:a => 1, :b => 'two'}
@@ -142,7 +142,7 @@ module MiqAeServiceMiqRequestSpec
       expect(invoke_ae.root(@ae_result_key)).to eq(options)
     end
 
-    it "#get_option" do
+    it '#get_option' do
       key    = 'key1'
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].get_option('#{key}')"
       @ae_method.update_attributes(:data => method)
@@ -154,7 +154,7 @@ module MiqAeServiceMiqRequestSpec
       end
     end
 
-    it "#set_option" do
+    it '#set_option' do
       options = {:a => 1, :b => 'two'}
       @miq_request.update_attributes(:options => options)
       key     = 'foo'
@@ -167,7 +167,7 @@ module MiqAeServiceMiqRequestSpec
       expect(@miq_request.reload.options).to eq(new_options)
     end
 
-    it "#get_tag" do
+    it '#get_tag' do
       category = 'category1'
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].get_tag('#{category}')"
       @ae_method.update_attributes(:data => method)
@@ -176,7 +176,7 @@ module MiqAeServiceMiqRequestSpec
       expect(invoke_ae.root(@ae_result_key)).to eq(value)
     end
 
-    it "#get_tags" do
+    it '#get_tags' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].get_tags"
       @ae_method.update_attributes(:data => method)
       tags = ['tag1', 'tag2']
@@ -184,15 +184,15 @@ module MiqAeServiceMiqRequestSpec
       expect(invoke_ae.root(@ae_result_key)).to eq(tags)
     end
 
-    context "#clear_tag" do
-      it "should work with no parms" do
+    context '#clear_tag' do
+      it 'should work with no parms' do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].clear_tag"
         @ae_method.update_attributes(:data => method)
         expect_any_instance_of(MiqRequest).to receive(:clear_tag).with(nil, nil).once
         invoke_ae
       end
 
-      it "should work with 1 parm" do
+      it 'should work with 1 parm' do
         category = 'category1'
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].clear_tag('#{category}')"
         @ae_method.update_attributes(:data => method)
@@ -200,7 +200,7 @@ module MiqAeServiceMiqRequestSpec
         invoke_ae
       end
 
-      it "should work with 2 parms" do
+      it 'should work with 2 parms' do
         category = 'category1'
         tag_name = 'tag_name1'
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].clear_tag('#{category}', '#{tag_name}')"
@@ -210,7 +210,7 @@ module MiqAeServiceMiqRequestSpec
       end
     end
 
-    it "#get_classification" do
+    it '#get_classification' do
       category = 'category1'
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].get_classification('#{category}')"
       @ae_method.update_attributes(:data => method)
@@ -219,7 +219,7 @@ module MiqAeServiceMiqRequestSpec
       expect(invoke_ae.root(@ae_result_key)).to eq(value)
     end
 
-    it "#get_classifications" do
+    it '#get_classifications' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].get_classifications"
       @ae_method.update_attributes(:data => method)
       classifications = ['classification1', 'classification2']
@@ -227,7 +227,7 @@ module MiqAeServiceMiqRequestSpec
       expect(invoke_ae.root(@ae_result_key)).to eq(classifications)
     end
 
-    it "#set_message" do
+    it '#set_message' do
       message = 'message1'
       method  = "$evm.root['miq_request'].set_message('#{message}')"
       @ae_method.update_attributes(:data => method)
@@ -235,7 +235,7 @@ module MiqAeServiceMiqRequestSpec
       expect(@miq_request.reload.message).to eq(message)
     end
 
-    it "#description=" do
+    it '#description=' do
       description = 'test description'
       method  = "$evm.root['miq_request'].description=('#{description}')"
       @ae_method.update_attributes(:data => method)

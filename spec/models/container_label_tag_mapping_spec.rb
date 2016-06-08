@@ -24,25 +24,25 @@ describe ContainerLabelTagMapping do
     ContainerLabelTagMapping.drop_cache
   end
 
-  context "with empty mapping" do
-    it "does nothing" do
+  context 'with empty mapping' do
+    it 'does nothing' do
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to be_empty
       expect(ContainerLabelTagMapping.mappable_tags).to be_empty
     end
   end
 
-  context "with 2 mappings for same label" do
+  context 'with 2 mappings for same label' do
     before do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
     end
 
-    it "tags_for_entity returns 2 tags" do
+    it 'tags_for_entity returns 2 tags' do
       label(node, 'name', 'value-1')
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
     end
 
-    it "tags_for_label returns same tags" do
+    it 'tags_for_label returns same tags' do
       label_obj = OpenStruct.new(:resource_type => 'ContainerNode',
                                  :name          => 'name',
                                  :value         => 'value-1')
@@ -50,7 +50,7 @@ describe ContainerLabelTagMapping do
     end
   end
 
-  context "with any-value and specific-value mappings" do
+  context 'with any-value and specific-value mappings' do
     before do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag1)
@@ -59,12 +59,12 @@ describe ContainerLabelTagMapping do
       tag2
     end
 
-    it "prefers specific-value" do
+    it 'prefers specific-value' do
       label(node, 'name', 'value-1')
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag_under_cat)
     end
 
-    it "creates tag for new value" do
+    it 'creates tag for new value' do
       expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat)
 
       label(node, 'name', 'value-2')
@@ -83,12 +83,12 @@ describe ContainerLabelTagMapping do
     end
   end
 
-  context "with any-value mapping whose tag has no classification" do
+  context 'with any-value mapping whose tag has no classification' do
     before do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag_without_classification)
     end
 
-    it "creates specific-value tag and the 2 needed classifications" do
+    it 'creates specific-value tag and the 2 needed classifications' do
       label(node, 'name', 'value-3')
       tags = ContainerLabelTagMapping.tags_for_entity(node)
       expect(tags.size).to eq(1)
@@ -101,13 +101,13 @@ describe ContainerLabelTagMapping do
   # Unclear if there is One Right behavior here; treating them independently
   # seemed the simplest well-defined behavior...
 
-  context "with any-type and specific-type mappings" do
+  context 'with any-type and specific-type mappings' do
     before do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
-    it "applies both independently" do
+    it 'applies both independently' do
       label(node, 'name', 'value')
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
     end
@@ -118,13 +118,13 @@ describe ContainerLabelTagMapping do
     end
   end
 
-  context "any-type specific-value vs specific-type any-value" do
+  context 'any-type specific-value vs specific-type any-value' do
     before do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
-    it "resolves them independently" do
+    it 'resolves them independently' do
       label(node, 'name', 'value')
       tags = ContainerLabelTagMapping.tags_for_entity(node)
       expect(tags.size).to eq(2)

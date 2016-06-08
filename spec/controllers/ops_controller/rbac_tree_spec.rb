@@ -7,8 +7,8 @@ describe OpsController::RbacTree do
     )
   end
 
-  it ".build" do
+  it '.build' do
     features_tree = described_class.build(role, role.feature_identifiers.sort).to_json
-    expect(features_tree).to include("Access Rules for all Virtual Machines")
+    expect(features_tree).to include('Access Rules for all Virtual Machines')
   end
 end

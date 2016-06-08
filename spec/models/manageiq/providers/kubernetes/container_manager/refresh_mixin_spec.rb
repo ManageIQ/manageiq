@@ -1,7 +1,7 @@
 require 'kubeclient'
 
 describe ManageIQ::Providers::Kubernetes::ContainerManager::RefresherMixin do
-  let(:client)  { double("client") }
+  let(:client)  { double('client') }
   let(:dummy) { (Class.new { include ManageIQ::Providers::Kubernetes::ContainerManager::RefresherMixin }).new }
 
   context 'when an exception is thrown' do

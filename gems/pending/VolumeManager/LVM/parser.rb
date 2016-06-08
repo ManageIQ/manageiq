@@ -12,7 +12,7 @@ class Lvm2MdParser
 
   def initialize(mdStr, pvHdrs)
     @pvHdrs = pvHdrs        # PV headers hashed by UUID
-    @mda = mdStr.gsub(/#.*$/, "").gsub("[", "[ ").gsub("]", " ]").gsub('"', ' " ').delete("=,").gsub(/\s+/, " ").split(' ')
+    @mda = mdStr.gsub(/#.*$/, '').gsub('[', '[ ').gsub(']', ' ]').gsub('"', ' " ').delete('=,').gsub(/\s+/, ' ').split(' ')
     @vgName = @mda.shift
   end # def initialize
 
@@ -29,7 +29,7 @@ class Lvm2MdParser
     md.lines do |line|
       line.strip!
       level -= 1 if line[0, 1] == HASH_END || line[0, 1] == ARRAY_END
-      $log.debug((level > 0 ? "    " * level : "") + line)
+      $log.debug((level > 0 ? '    ' * level : '') + line)
       level += 1 if line[-1, 1] == HASH_START || line[-1, 1] == ARRAY_START
     end
   end
@@ -38,11 +38,11 @@ class Lvm2MdParser
 
   def getVgObj(_vgName, vg)
     vgObj = VolumeGroup.new(vg['id'], @vgName, vg['extent_size'], vg['seqno'])
-    vgObj.lvmType = "LVM2"
-    vg["status"].each { |s| vgObj.status << s }
+    vgObj.lvmType = 'LVM2'
+    vg['status'].each { |s| vgObj.status << s }
 
-    vg["physical_volumes"].each { |pvName, pv| vgObj.physicalVolumes[pvName] = getPvObj(vgObj, pvName, pv) } unless vg["physical_volumes"].nil?
-    vg["logical_volumes"].each { |lvName, lv| vgObj.logicalVolumes[lvName] = getLvObj(vgObj, lvName, lv) } unless vg["logical_volumes"].nil?
+    vg['physical_volumes'].each { |pvName, pv| vgObj.physicalVolumes[pvName] = getPvObj(vgObj, pvName, pv) } unless vg['physical_volumes'].nil?
+    vg['logical_volumes'].each { |lvName, lv| vgObj.logicalVolumes[lvName] = getLvObj(vgObj, lvName, lv) } unless vg['logical_volumes'].nil?
 
     vgObj
   end # def getVgObj
@@ -58,7 +58,7 @@ class Lvm2MdParser
       dobj.pvObj = pvObj
     end
 
-    pv["status"].each { |s| pvObj.status << s }
+    pv['status'].each { |s| pvObj.status << s }
 
     pvObj
   end # def getPvObj
@@ -66,7 +66,7 @@ class Lvm2MdParser
   def getLvObj(vgObj, lvName, lv)
     lvObj = LogicalVolume.new(lv['id'], lvName, lv['segment_count'])
     lvObj.vgObj = vgObj
-    lv["status"].each { |s| lvObj.status << s }
+    lv['status'].each { |s| lvObj.status << s }
 
     (1..lvObj.segmentCount).each { |seg| lvObj.segments << getSegObj(lv["segment#{seg}"]) }
 
@@ -132,9 +132,9 @@ class Lvm2MdParser
     s = ''
     word = @mda.shift
     while word && word != STRING_END
-      s << word + " "
+      s << word + ' '
       word = @mda.shift
     end
-    s.chomp(" ")
+    s.chomp(' ')
   end
 end # class Lvm2MdParser

@@ -6,7 +6,7 @@ class MiqVimCustomizationSpecManager
     @sic                = invObj.sic
 
     @csManager      = @sic.customizationSpecManager
-    raise "The customizationSpecManager is not supported on this system." unless @csManager
+    raise 'The customizationSpecManager is not supported on this system.' unless @csManager
   end
 
   def encryptionKey

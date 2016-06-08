@@ -16,10 +16,10 @@ module Vm::Operations::Power
   end
 
   def validate_shelve
-    validate_unsupported("Shelve Operation")
+    validate_unsupported('Shelve Operation')
   end
 
   def validate_shelve_offload
-    validate_unsupported("Shelve Offload Operation")
+    validate_unsupported('Shelve Offload Operation')
   end
 end

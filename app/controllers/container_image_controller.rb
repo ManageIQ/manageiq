@@ -18,6 +18,6 @@ class ContainerImageController < ApplicationController
   def openscap_html
     @record = identify_record(params[:id])
 
-    send_data(@record.openscap_result.html, :filename => "openscap_result.html")
+    send_data(@record.openscap_result.html, :filename => 'openscap_result.html')
   end
 end

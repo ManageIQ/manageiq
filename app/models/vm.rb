@@ -26,7 +26,7 @@ class Vm < VmOrTemplate
 
   def validate_remote_console_vmrc_support
     raise(MiqException::RemoteConsoleNotSupportedError,
-          _("VMRC remote console is not supported on %{vendor}.") % {:vendor => vendor})
+          _('VMRC remote console is not supported on %{vendor}.') % {:vendor => vendor})
   end
 
   def self.find_all_by_mac_address_and_hostname_and_ipaddress(mac_address, hostname, ipaddress)
@@ -34,21 +34,21 @@ class Vm < VmOrTemplate
 
     include = [:vm_or_template]
     references = []
-    conds = [["hardwares.vm_or_template_id IS NOT NULL"]]
+    conds = [['hardwares.vm_or_template_id IS NOT NULL']]
     if mac_address
-      conds[0] << "guest_devices.address = ?"
+      conds[0] << 'guest_devices.address = ?'
       conds << mac_address
       include << :nics
       references << :guest_devices
     end
     if hostname
-      conds[0] << "networks.hostname = ?"
+      conds[0] << 'networks.hostname = ?'
       conds << hostname
       include << :networks
       references << :networks
     end
     if ipaddress
-      conds[0] << "networks.ipaddress = ?"
+      conds[0] << 'networks.ipaddress = ?'
       conds << ipaddress
       include << :networks
       references << :networks

@@ -2,7 +2,7 @@ $:.push(File.dirname(__FILE__))
 
 namespace :evm do
   namespace :dbsync do
-    desc "Destroy remote region"
+    desc 'Destroy remote region'
     task :destroy_remote_region => :environment do
       tables = ARGV[1..-1]
 
@@ -20,7 +20,7 @@ namespace :evm do
       exit if !tables.empty? && $final_rake_task.nil? || $final_rake_task == :destroy_remote_region
     end
 
-    desc "Remove remote region data from local database"
+    desc 'Remove remote region data from local database'
     task :destroy_local_region => :environment do
       region_number = ARGV[1].to_i
 
@@ -35,37 +35,37 @@ namespace :evm do
       exit if $final_rake_task.nil? || $final_rake_task == :destroy_local_region
     end
 
-    desc "Resync excluded tables"
+    desc 'Resync excluded tables'
     task :resync_excludes => :environment do
       require 'miq_pglogical'
       pgl = MiqPglogical.new
       pgl.refresh_excludes if pgl.provider?
     end
 
-    desc "Uninstall Rubyrep triggers and tables locally"
+    desc 'Uninstall Rubyrep triggers and tables locally'
     task :local_uninstall => :environment do
       tables = ARGV[1..-1]
 
       require 'rubyrep'
-      puts "Uninstalling Rubyrep locally..."
+      puts 'Uninstalling Rubyrep locally...'
       t = Time.now
       if tables.empty?
-        run_rr_command("uninstall")
+        run_rr_command('uninstall')
       else
         puts "  Only for tables: #{tables.join(", ")}"
-        run_rr_command("uninstall_tables", "-t", tables.join(","))
+        run_rr_command('uninstall_tables', '-t', tables.join(','))
       end
       puts "Uninstalling Rubyrep locally...Complete (#{Time.now - t}s)"
 
       exit if !tables.empty? && $final_rake_task.nil? || $final_rake_task == :local_uninstall
     end
 
-    desc "Add Rubyrep triggers and tables and do an initial sync"
+    desc 'Add Rubyrep triggers and tables and do an initial sync'
     task :prepare_replication => :environment do
       require 'rubyrep'
       puts "Preparing Replication in Region (#{MiqRegion.my_region_number})..."
       t = Time.now
-      run_rr_command("prepare_replication")
+      run_rr_command('prepare_replication')
       puts "Preparing Replication in Region (#{MiqRegion.my_region_number})...Complete (#{Time.now - t}s)"
 
       exit if $final_rake_task && $final_rake_task == :prepare_replication
@@ -76,30 +76,30 @@ namespace :evm do
       require 'rubyrep'
       puts "Preparing Replication in Region (#{MiqRegion.my_region_number})..."
       t = Time.now
-      run_rr_command("prepare_replication", "--no-sync")
+      run_rr_command('prepare_replication', '--no-sync')
       puts "Preparing Replication in Region (#{MiqRegion.my_region_number})...Complete (#{Time.now - t}s)"
     end
 
-    desc "Run Rubyrep replication"
+    desc 'Run Rubyrep replication'
     task :replicate => :environment do
       require 'rubyrep'
       puts "Replicating Region (#{MiqRegion.my_region_number}) to remote database..."
       t = Time.now
-      run_rr_command("replicate")
+      run_rr_command('replicate')
       puts "Replicating Region (#{MiqRegion.my_region_number}) to remote database...Complete (#{Time.now - t}s)"
     end
 
-    desc "Run Rubyrep Replication until the backlog is empty"
+    desc 'Run Rubyrep Replication until the backlog is empty'
     task :replicate_backlog => :environment do
       puts "Replicating Region (#{MiqRegion.my_region_number}) to remote database..."
 
       unless (total = RrPendingChange.count) == 0
         require 'ruby-progressbar'
         require 'rubyrep'
-        pbar = ProgressBar.create(:title => "Backlog", :total => total, :autofinish => false)
+        pbar = ProgressBar.create(:title => 'Backlog', :total => total, :autofinish => false)
 
         begin
-          pid     = Process.spawn("bin/rake evm:dbsync:replicate", :chdir => Rails.root)
+          pid     = Process.spawn('bin/rake evm:dbsync:replicate', :chdir => Rails.root)
           waiting = Thread.new { Process.wait2(pid) }
 
           # Wait for the Backlog to empty before continuing
@@ -109,10 +109,10 @@ namespace :evm do
             sleep 1
           end
 
-          puts "Stopping Replication worker..."
+          puts 'Stopping Replication worker...'
         ensure
           begin
-            Process.kill("INT", pid)
+            Process.kill('INT', pid)
             sleep(0.1) while waiting.status
           rescue Errno::ESRCH
           end
@@ -123,7 +123,7 @@ namespace :evm do
       puts "Current Replication Backlog: #{RrPendingChange.count}"
     end
 
-    desc "Reset Rubyrep installation"
+    desc 'Reset Rubyrep installation'
     task :reset do
       $final_rake_task ||= :prepare_replication
       %w{environment evm:dbsync:uninstall evm:dbsync:prepare_replication}.each do |t|
@@ -131,16 +131,16 @@ namespace :evm do
       end
     end
 
-    desc "Run Rubyrep sync command"
+    desc 'Run Rubyrep sync command'
     task :sync => :environment do
       require 'rubyrep'
       puts "Synchronizing Region (#{MiqRegion.my_region_number}) to remote database..."
       t = Time.now
-      run_rr_command("sync")
+      run_rr_command('sync')
       puts "Synchronizing Region (#{MiqRegion.my_region_number}) to remote database...Complete (#{Time.now - t}s)"
     end
 
-    desc "Full uninstall of Rubyrep"
+    desc 'Full uninstall of Rubyrep'
     task :uninstall do
       $final_rake_task ||= :local_uninstall
       %w{environment evm:dbsync:destroy_remote_region evm:dbsync:local_uninstall}.each do |t|
@@ -152,15 +152,15 @@ namespace :evm do
     # Tasks for bulk syncing
     #
 
-    desc "Run a bulk sync"
+    desc 'Run a bulk sync'
     task :sync_bulk => [:environment, :prepare_replication_without_sync, :sync_bulk_started, :sync_bulk_export, :sync_bulk_import, :sync_bulk_complete, :sync_bulk_export_cleanup]
 
     task :sync_bulk_export => [:environment, :sync_bulk_export_cleanup] do
-      puts "Exporting tables for bulk sync..."
+      puts 'Exporting tables for bulk sync...'
       t = Time.now
 
       db_conf = Rails.configuration.database_configuration[Rails.env]
-      adapter, database, username, password, host, port = db_conf.values_at("adapter", "database", "username", "password", "host", "port")
+      adapter, database, username, password, host, port = db_conf.values_at('adapter', 'database', 'username', 'password', 'host', 'port')
 
       tables = sync_tables
       puts "Exporting #{tables.join(", ")}..."
@@ -170,10 +170,10 @@ namespace :evm do
     end
 
     task :sync_bulk_import => :environment do
-      puts "Importing tables for bulk sync..."
+      puts 'Importing tables for bulk sync...'
       t = Time.now
 
-      rp_conf = VMDB::Config.new("vmdb").config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
+      rp_conf = VMDB::Config.new('vmdb').config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
       database, username, password, host, port = rp_conf[:destination].values_at(:database, :username, :password, :host, :port)
       database, adapter = MiqRegionRemote.prepare_default_fields(database, adapter)
 
@@ -186,14 +186,14 @@ namespace :evm do
 
     task :sync_bulk_export_cleanup do
       require 'fileutils'
-      FileUtils.rm_rf(File.join(Rails.root, "tmp", "sync"))
+      FileUtils.rm_rf(File.join(Rails.root, 'tmp', 'sync'))
     end
 
     task :sync_bulk_started => :environment do
       puts "Marking sync state as 'started'..."
       c = ActiveRecord::Base.connection
       c.execute("DELETE FROM rr#{MiqRegion.my_region_number}_sync_state")
-      values = sync_tables.collect { |t| "(#{c.quote(t)}, #{c.quote('started')})" }.join(",")
+      values = sync_tables.collect { |t| "(#{c.quote(t)}, #{c.quote('started')})" }.join(',')
       c.execute("INSERT INTO rr#{MiqRegion.my_region_number}_sync_state (table_name, state) VALUES #{values}") unless values.empty?
       puts "Marking sync state as 'started'...Complete"
     end
@@ -201,7 +201,7 @@ namespace :evm do
     task :sync_bulk_complete => :environment do
       puts "Marking sync state as 'complete'..."
       c = ActiveRecord::Base.connection
-      tables = sync_tables_from_exported_files.collect { |t| c.quote(t) }.join(",")
+      tables = sync_tables_from_exported_files.collect { |t| c.quote(t) }.join(',')
       c.execute("UPDATE rr#{MiqRegion.my_region_number}_sync_state SET state = #{c.quote('complete')} WHERE table_name IN (#{tables})") unless tables.empty?
       puts "Marking sync state as 'complete'...Complete"
     end
@@ -209,38 +209,38 @@ namespace :evm do
     private
 
     def run_rr_command(*args)
-      args += ["-c", File.join(Rails.root, "config", "replication.conf")]
-      args.unshift("--verbose")
+      args += ['-c', File.join(Rails.root, 'config', 'replication.conf')]
+      args.unshift('--verbose')
       exitstatus = RR::CommandRunner.run(args)
       exit(exitstatus) if exitstatus != 0
     end
 
     def sync_tables
-      rp_conf = VMDB::Config.new("vmdb").config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
+      rp_conf = VMDB::Config.new('vmdb').config.fetch_path(:workers, :worker_base, :replication_worker, :replication)
       ActiveRecord::Base.connection.tables
-        .reject { |t| t.start_with?("rr") || rp_conf[:exclude_tables].include?(t) }
+        .reject { |t| t.start_with?('rr') || rp_conf[:exclude_tables].include?(t) }
         .sort
     end
 
     def sync_tables_from_exported_files
-      Dir.glob(Rails.root.join("tmp/sync/*.sql"))
-        .collect { |f| File.basename(f, ".sql") }
+      Dir.glob(Rails.root.join('tmp/sync/*.sql'))
+        .collect { |f| File.basename(f, '.sql') }
         .sort
     end
 
     # TODO: possible overlap with PostgresAdmin
     def do_pg_copy(direction, tables, database, username, password, host, port)
-      dir = File.join(Rails.root, "tmp", "sync")
+      dir = File.join(Rails.root, 'tmp', 'sync')
       FileUtils.mkdir_p(dir)
 
       cmd_dir = case direction
-      when :export then "TO"
-      when :import then "FROM"
+      when :export then 'TO'
+      when :import then 'FROM'
       end
 
-      cmd = "\\\\COPY"
+      cmd = '\\\\COPY'
       password = "PGPASSWORD=#{password}" if password
-      password_cleanup = ""
+      password_cleanup = ''
 
       tables.sort.each do |table|
         file = File.expand_path(File.join(dir, "#{table}.sql"))

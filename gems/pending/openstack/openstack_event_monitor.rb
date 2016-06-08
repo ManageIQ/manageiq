@@ -42,19 +42,19 @@ class OpenstackEventMonitor
   # See OpenstackEventMonitor.new for details on event monitor selection
   def initialize(_options = {})
     # See OpenstackEventMonitor.new
-    raise NotImplementedError, "Cannot instantiate OpenstackEventMonitor directly."
+    raise NotImplementedError, 'Cannot instantiate OpenstackEventMonitor directly.'
   end
 
   def start
-    raise NotImplementedError, "must be implemented in subclass"
+    raise NotImplementedError, 'must be implemented in subclass'
   end
 
   def stop
-    raise NotImplementedError, "must be implemented in subclass"
+    raise NotImplementedError, 'must be implemented in subclass'
   end
 
   def each_batch
-    raise NotImplementedError, "must be implemented in subclass"
+    raise NotImplementedError, 'must be implemented in subclass'
   end
 
   def each
@@ -118,12 +118,12 @@ class OpenstackEventMonitor
 
   def openstack_event(_delivery_info, metadata, payload)
     OpenstackEvent.new(payload,
-                       :user_id      => payload["user_id"],
-                       :priority     => metadata["priority"],
-                       :content_type => metadata["content_type"],
+                       :user_id      => payload['user_id'],
+                       :priority     => metadata['priority'],
+                       :content_type => metadata['content_type'],
                       )
   end
 end
 
 # Dynamically load all event monitor plugins
-Dir.glob(File.join(File.dirname(__FILE__), "events/*event_monitor.rb")).each { |f| require f }
+Dir.glob(File.join(File.dirname(__FILE__), 'events/*event_monitor.rb')).each { |f| require f }

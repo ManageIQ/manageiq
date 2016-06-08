@@ -24,13 +24,13 @@ module XFS
       @miqfs = miqfs
     end
 
-    def open(mode = "r")
+    def open(mode = 'r')
       # XFS module methods use miqfs instance accessors to touch @boot_sector.
       @mode = mode.downcase
       @de = ifs_getFile(@path, @miqfs)
       raise "File is directory: '#{@path}'" if  @de && @de.directory?
 
-      if mode.include?("r")
+      if mode.include?('r')
         raise "File not found: '#{@path}'" if @de.nil?
         @inode = @miqfs.superblock.get_inode(@de.inode)
       end
@@ -39,7 +39,7 @@ module XFS
 
   # File system interface.
   def fs_init
-    self.fsType = "XFS"
+    self.fsType = 'XFS'
 
     # Initialize bs & read root dir.
     @dobj.seek(0, IO::SEEK_SET)
@@ -73,13 +73,13 @@ module XFS
   # Make a directory. Parent must exist.
   # TODO
   def fs_dirMkdir(_p)
-    raise "Write functionality is not yet supported on XFS."
+    raise 'Write functionality is not yet supported on XFS.'
   end
 
   # Remove a directory.
   # TODO
   def fs_dirRmdir(_p)
-    raise "Write functionality is not yet supported on XFS."
+    raise 'Write functionality is not yet supported on XFS.'
   end
 
   #
@@ -116,7 +116,7 @@ module XFS
 
   # Delete file.
   def fs_fileDelete(_p)
-    raise "Write functionality is not yet supported on XFS."
+    raise 'Write functionality is not yet supported on XFS.'
   end
 
   # Returns Ruby Time object.
@@ -171,7 +171,7 @@ module XFS
   # NOTE: FileObject must have access to XFS members.
   # This is kind of like a 'skip this' thing. XFS methods
   # use stuff owned by MiqFS, so this is necessary.
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     fobj = FileObject.new(p, self)
     fobj.open(mode)
     fobj
@@ -188,7 +188,7 @@ module XFS
   end
 
   def fs_fileWrite(_fobj, _buf, _len)
-    raise "Write functionality is not yet supported on XFS."
+    raise 'Write functionality is not yet supported on XFS.'
   end
 
   # Write changes & destroy.
@@ -211,7 +211,7 @@ module XFS
     p = unnormalizePath(p)
     dir, fname = File.split(p)
     # Fix for FB#835: if fil == root then fil needs to be "."
-    fname = "." if fname == "/" || fname == "\\"
+    fname = '.' if fname == '/' || fname == '\\'
 
     # Check for this file in the cache.
     cache_name = "#{dir == '/' ? '' : dir}/#{fname}"
@@ -234,7 +234,7 @@ module XFS
 
   # Create a directory entry.
   def ifs_putFile(_p, _miqfs = nil)
-    raise "Write functionality is not yet supported on XFS."
+    raise 'Write functionality is not yet supported on XFS.'
     # If this is being called from a FileObject instance, then MiqFS owns contained instance members.
     # If this is being called from an XFS module method, then self owns contained instance members.
     # miqfs = self if miqfs.nil?

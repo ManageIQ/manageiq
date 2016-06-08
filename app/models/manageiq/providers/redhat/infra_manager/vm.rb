@@ -15,7 +15,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
 
   def parent_cluster
     rp = parent_resource_pool
-    rp && rp.detect_ancestor(:of_type => "EmsCluster").first
+    rp && rp.detect_ancestor(:of_type => 'EmsCluster').first
   end
   alias_method :owning_cluster, :parent_cluster
   alias_method :ems_cluster, :parent_cluster
@@ -42,14 +42,14 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   def validate_migrate
-    validate_unsupported("Migrate")
+    validate_unsupported('Migrate')
   end
 
   def validate_publish
-    validate_unsupported("Publish VM")
+    validate_unsupported('Publish VM')
   end
 
   def validate_clone
-    validate_unsupported("Clone")
+    validate_unsupported('Clone')
   end
 end

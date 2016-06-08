@@ -16,7 +16,7 @@ module ActsAsMiqSetMember
   extend ActiveSupport::Concern
   included do
     include RelationshipMixin
-    self.default_relationship_type = "membership"
+    self.default_relationship_type = 'membership'
 
     alias_with_relationship_type :memberof,          :parents
     alias_with_relationship_type :make_not_memberof, :remove_parent
@@ -34,7 +34,7 @@ module ActsAsMiqSetMember
 
   def make_memberof(set)
     raise "object of type #{self.class} may not be a member of a set of type #{set.class}" unless self.kind_of?(set.class.model_class)
-    with_relationship_type("membership") { self.parent = set }
+    with_relationship_type('membership') { self.parent = set }
   end
 end # module ActsAsMiqSetMember
 
@@ -42,11 +42,11 @@ module ActsAsMiqSet
   extend ActiveSupport::Concern
   included do
     include RelationshipMixin
-    self.default_relationship_type ||= "membership"
+    self.default_relationship_type ||= 'membership'
 
     include UuidMixin
 
-    self.table_name         = "miq_sets"
+    self.table_name         = 'miq_sets'
     self.inheritance_column = :set_type
 
     serialize :set_data
@@ -92,6 +92,6 @@ module ActsAsMiqSet
 
   def add_member(member)
     raise "object of type #{member.class} may not be a member of a set of type #{self.class}" unless member.kind_of?(self.class.model_class)
-    with_relationship_type("membership") { add_child(member) }
+    with_relationship_type('membership') { add_child(member) }
   end
 end # module ActsAsMiqSet

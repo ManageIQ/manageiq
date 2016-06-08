@@ -13,13 +13,13 @@
 #
 
 # Get miq_request object
-miq_request = $evm.root["miq_request"]
+miq_request = $evm.root['miq_request']
 
 # Override the default appliance IP Address below
 appliance ||= $evm.root['miq_server'].ipaddress
 
 # Build email to requester with reason
-$evm.log('info', "Requester email logic starting")
+$evm.log('info', 'Requester email logic starting')
 
 # Get requester email
 requester = $evm.root['miq_request'].requester
@@ -39,11 +39,11 @@ signature ||= $evm.object['signature']
 subject = "Request ID #{miq_request.id} - Your request to migrate Virtual Machine was Approved"
 
 # Build email body
-body = "Hello, "
-body += "<br>Your Virtual Machine migration request was approved. You will be notified via email when the VM(s) have been migrated."
+body = 'Hello, '
+body += '<br>Your Virtual Machine migration request was approved. You will be notified via email when the VM(s) have been migrated.'
 body += "<br><br>To view this Request go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
-body += "<br><br> Thank you,"
+body += '<br><br> Thank you,'
 body += "<br> #{signature}"
 
-$evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+$evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
 $evm.execute(:send_email, to, from, subject, body)

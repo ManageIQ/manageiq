@@ -12,17 +12,17 @@ describe ApplicationHelper::Button::HistoryChoice do
       button['enabled']
     end
 
-    it "when x_tree_history.length > 1 then button is not disabled" do
-      @id = "history_choice"
+    it 'when x_tree_history.length > 1 then button is not disabled' do
+      @id = 'history_choice'
       expect(subject).not_to be false
     end
 
-    it "when x_tree_history.length < 2 then button is disabled" do
+    it 'when x_tree_history.length < 2 then button is disabled' do
       @sandbox = {
         :history     => {:testing => %w(something)},
         :active_tree => :testing
       }
-      @id = "history_choice"
+      @id = 'history_choice'
       expect(subject).to be_falsey
     end
    end

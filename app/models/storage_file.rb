@@ -7,11 +7,11 @@ class StorageFile < ApplicationRecord
   virtual_column :v_size_numeric, :type => :integer
 
   def self.is_snapshot_disk_file(file)
-    return false unless file.ext_name == "vmdk"
-    basename = File.basename(file.name, ".vmdk")
+    return false unless file.ext_name == 'vmdk'
+    basename = File.basename(file.name, '.vmdk')
     i = basename.rindex('-')
     test_str = i.nil? ? basename : basename[i + 1..-1]
-    test_str == "delta" || test_str =~ /^\d{6}$/
+    test_str == 'delta' || test_str =~ /^\d{6}$/
   end
 
   def self.split_file_types(files)
@@ -32,7 +32,7 @@ class StorageFile < ApplicationRecord
       when 'vmx', 'vmtx', 'vmxf', 'log', 'hlog'
         ret[:vm_misc] << f
       else
-        if f.ext_name[0, 5] == "redo_"
+        if f.ext_name[0, 5] == 'redo_'
           ret[:snapshot] << f
         else
           ret[:debris] << f
@@ -60,11 +60,11 @@ class StorageFile < ApplicationRecord
   end
 
   def is_file?
-    rsc_type == "file"
+    rsc_type == 'file'
   end
 
   def is_directory?
-    rsc_type == "dir"
+    rsc_type == 'dir'
   end
 
   def v_size_numeric

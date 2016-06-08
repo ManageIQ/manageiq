@@ -32,15 +32,15 @@ begin
   miqPh = vim.getVimPerfHistory
   # vim.dumpObj(miqPh.intervals)
 
-  puts "Available historical archive sampling intervals:"
+  puts 'Available historical archive sampling intervals:'
   miqPh.intervals.each { |i| puts "\t#{i['name']}: Sampling Period = #{i['samplingPeriod']}(secs), length = #{i['length']}" }
   puts
 
-  puts "Counter Groups:"
+  puts 'Counter Groups:'
   miqPh.groupInfo.each { |gk, gi| puts "\t#{gk}: label = #{gi['label']}, summary = #{gi['summary']}" }
   puts
 
-  puts "Counters by group:"
+  puts 'Counters by group:'
   miqPh.cInfoMap.each do |gn, nh|
     puts "\tGROUP: #{gn}"
     nh.each do |n, _ca|
@@ -83,7 +83,7 @@ begin
   # vim.dumpObj(psum)
   # puts
 
-  puts "Calling: availMetricsForEntity"
+  puts 'Calling: availMetricsForEntity'
   # pmids = miqPh.availMetricsForEntity(hostMor, :intervalId => iid, :beginTime => startTime, :endTime => endTime)
   pmids = miqPh.availMetricsForEntity(hostMor, :intervalId => psum['refreshRate'])
   # puts "Available Counters for: #{host}"
@@ -105,35 +105,35 @@ begin
   ma.each_slice(2) { |t, v| puts ":\tValue: #{v * 0.01} (#{units})\t\tTIme: #{t}" }
   puts
 
-  puts "**** queryPerfComposite start"
+  puts '**** queryPerfComposite start'
   pc = miqPh.queryPerfComposite(hostMor, :counterId => ci['key'], :intervalId => iid, :startTime => startTime, :endTime => endTime)
   puts "Parent MOR: #{pc['entity']['entity']}, Type: #{pc['entity']['entity'].vimType}"
-  puts "Child MORs:"
+  puts 'Child MORs:'
   pc['childEntity'].each { |e| puts "\tMOR: #{e['entity']}, Type: #{e['entity'].vimType}" }
   # puts
   # vim.dumpObj(pc)
-  puts "**** queryPerfComposite end"
+  puts '**** queryPerfComposite end'
   puts
 
   host2Mor = h2['MOR']
   raise "Host #{host2} not found" unless host2Mor
 
-  metricId = [{:counterId => ci['key'], :instance => ""}, {:counterId => ci2['key'], :instance => ""}]
+  metricId = [{:counterId => ci['key'], :instance => ''}, {:counterId => ci2['key'], :instance => ''}]
   e1h = {:entity => hostMor,  :intervalId => iid, :metricId => metricId, :startTime => startTime, :endTime => endTime}
   e2h = {:entity => host2Mor, :intervalId => iid, :metricId => metricId, :startTime => startTime, :endTime => endTime}
 
   # $miq_wiredump = true
 
-  puts "**** queryPerfMulti start"
+  puts '**** queryPerfMulti start'
   pcm = miqPh.queryPerfMulti([e1h, e2h])
   # vim.dumpObj(pcm)
-  puts "**** queryPerfMulti end"
+  puts '**** queryPerfMulti end'
 rescue => err
   puts err.to_s
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqPh.release if miqPh
   vim.disconnect if vim
 end

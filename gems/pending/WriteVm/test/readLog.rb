@@ -19,11 +19,11 @@ $log.add 'err_console'
 $stdout.sync = true
 $stderr.sync = true
 
-MKFILE  = "payload"
-SERVER    = raise "please define SERVER"
-USERNAME  = raise "please define USERNAME"
-PASSWORD  = raise "please define PASSWORD"
-TARGET_VM = raise "please define"
+MKFILE  = 'payload'
+SERVER    = raise 'please define SERVER'
+USERNAME  = raise 'please define USERNAME'
+PASSWORD  = raise 'please define PASSWORD'
+TARGET_VM = raise 'please define'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -37,7 +37,7 @@ begin
   #
   # Get the target VM
   #
-  tvm = vim.virtualMachinesByFilter("config.name" => TARGET_VM)
+  tvm = vim.virtualMachinesByFilter('config.name' => TARGET_VM)
   if tvm.empty?
     puts "VM: #{TARGET_VM} not found"
     exit
@@ -56,7 +56,7 @@ begin
   #
   # Construct the path to the new payload vmdk file.
   #
-  payloadVmdk = File.join(File.dirname(miqVm.dsPath),   "miqPayload.vmdk")
+  payloadVmdk = File.join(File.dirname(miqVm.dsPath),   'miqPayload.vmdk')
   puts "payloadVmdk = #{payloadVmdk}"
 
   #
@@ -70,16 +70,16 @@ begin
   #
   vixDiskInfo = {:connection => vdlConnection, :fileName   => payloadVmdk}
   dInfo = OpenStruct.new
-  dInfo.mountMode = "rw"
+  dInfo.mountMode = 'rw'
   dInfo.vixDiskInfo = vixDiskInfo
   disk = MiqDisk.getDisk(dInfo)
   unless disk
-    puts "Failed to open disk for writing"
+    puts 'Failed to open disk for writing'
     exit(1)
   end
 
   disk.seek(0)
-  magic, size, pos = disk.read(Log4r::MiqPayloadOutputter::HEADER_SIZE).unpack("a8LL")
+  magic, size, pos = disk.read(Log4r::MiqPayloadOutputter::HEADER_SIZE).unpack('a8LL')
 
   puts
   puts "MAGIC: #{magic}"
@@ -88,9 +88,9 @@ begin
   puts
 
   puts
-  puts "*** LOG START"
+  puts '*** LOG START'
   puts disk.read(pos)
-  puts "*** LOG END"
+  puts '*** LOG END'
 
   disk.close
 
@@ -99,7 +99,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vdlConnection.disconnect if vdlConnection
   vim.disconnect if vim

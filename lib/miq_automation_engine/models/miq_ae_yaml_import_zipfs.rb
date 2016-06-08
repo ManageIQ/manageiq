@@ -42,7 +42,7 @@ class MiqAeYamlImportZipfs < MiqAeYamlImport
   end
 
   def namespace_files(parent_folder)
-    glob_str = File.join(parent_folder, "*", NAMESPACE_YAML_FILENAME)
+    glob_str = File.join(parent_folder, '*', NAMESPACE_YAML_FILENAME)
     @sorted_entries.select { |entry| File.fnmatch(glob_str, entry.name, @fn_flags) }.sort.collect(&:name)
   end
 
@@ -73,7 +73,7 @@ class MiqAeYamlImportZipfs < MiqAeYamlImport
   end
 
   def class_files(namespace_folder)
-    glob_str = File.join(namespace_folder, "*", CLASS_YAML_FILENAME)
+    glob_str = File.join(namespace_folder, '*', CLASS_YAML_FILENAME)
     @sorted_entries.select { |entry| File.fnmatch(glob_str, entry.name, @fn_flags) }.sort.collect(&:name)
   end
 
@@ -82,14 +82,14 @@ class MiqAeYamlImportZipfs < MiqAeYamlImport
   end
 
   def get_instance_files(class_folder)
-    glob_str = File.join(class_folder, "*.yaml")
+    glob_str = File.join(class_folder, '*.yaml')
     flist = @sorted_entries.select { |entry| File.fnmatch(glob_str, entry.name, @fn_flags) }.sort.collect(&:name)
-    method_glob_str = File.join(class_folder, METHOD_FOLDER_NAME, "*.yaml")
+    method_glob_str = File.join(class_folder, METHOD_FOLDER_NAME, '*.yaml')
     flist.delete_if { |file| File.fnmatch(method_glob_str, file, @fn_flags) }
   end
 
   def get_method_files(class_folder)
-    glob_str = File.join(class_folder, METHOD_FOLDER_NAME, "*.yaml")
+    glob_str = File.join(class_folder, METHOD_FOLDER_NAME, '*.yaml')
     @sorted_entries.select { |entry| File.fnmatch(glob_str, entry.name, @fn_flags) }.sort.collect(&:name)
   end
 

@@ -10,11 +10,11 @@ module XmlMsHyperVConfig
   end
 
   def memory(element)
-    add_item("memsize", element.elements[1].elements[1].text)
+    add_item('memsize', element.elements[1].elements[1].text)
   end
 
   def processors(element)
-    add_item("numvcpu", element.elements['count'].text)
+    add_item('numvcpu', element.elements['count'].text)
   end
 
   def global_id(element)
@@ -31,11 +31,11 @@ module XmlMsHyperVConfig
   end
 
   def parse_create_time(filename)
-    name = File.basename(filename, ".*").split("_")[-1]
+    name = File.basename(filename, '.*').split('_')[-1]
     Time.parse("#{name[10..13]}-#{name[6..7]}-#{name[8..9]}T#{name[0..1]}:#{name[2..3]}:#{name[4..5]}").utc
   end
 
   def vendor
-    "microsoft"
+    'microsoft'
   end
 end

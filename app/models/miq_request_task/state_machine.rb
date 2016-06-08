@@ -87,7 +87,7 @@ module MiqRequestTask::StateMachine
     _log.error("[#{error_message}] encountered during phase [#{error_phase}]")
     $log.error(exception_backtrace.join("\n")) if exception_backtrace && exception_class && !(exception_class <= MiqException::MiqProvisionError)
 
-    update_and_notify_parent(:state => "finished", :status => "Error", :message => error_message)
+    update_and_notify_parent(:state => 'finished', :status => 'Error', :message => error_message)
     signal :finish
   end
 end

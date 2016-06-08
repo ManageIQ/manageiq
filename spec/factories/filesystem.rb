@@ -5,14 +5,14 @@ FactoryGirl.define do
   end
 
   factory :filesystem_openstack_conf, :parent => :filesystem do
-    name "etc/nova/nova.conf"
+    name 'etc/nova/nova.conf'
   end
 
   factory :filesystem_binary_file, :parent => :filesystem do
-    name "periodical/utilities/blue_screen.exe"
+    name 'periodical/utilities/blue_screen.exe'
   end
 
   factory :filesystem_txt_file, :parent => :filesystem do
-    name "periodical/utilities/blue_screen_description.txt"
+    name 'periodical/utilities/blue_screen_description.txt'
   end
 end

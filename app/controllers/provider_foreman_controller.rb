@@ -10,7 +10,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "provider_foreman"
+    @table_name ||= 'provider_foreman'
   end
 
   CM_X_BUTTON_ALLOWED_ACTIONS = {
@@ -18,15 +18,15 @@ class ProviderForemanController < ApplicationController
   }.freeze
 
   def self.model_to_name(provmodel)
-    if provmodel.include?("ManageIQ::Providers::AnsibleTower")
+    if provmodel.include?('ManageIQ::Providers::AnsibleTower')
       Dictionary.gettext('ansible_tower', :type => :ui_title, :translate => false)
-    elsif provmodel.include?("ManageIQ::Providers::Foreman")
+    elsif provmodel.include?('ManageIQ::Providers::Foreman')
       Dictionary.gettext('foreman', :type => :ui_title, :translate => false)
     end
   end
 
   def self.model_to_cs_name(provmodel)
-    if provmodel.include?("ManageIQ::Providers::AnsibleTower")
+    if provmodel.include?('ManageIQ::Providers::AnsibleTower')
       ui_lookup(:ui_title => 'Ansible Tower Job Template')
     end
   end
@@ -48,22 +48,22 @@ class ProviderForemanController < ApplicationController
   end
 
   def new
-    assert_privileges("provider_foreman_add_provider")
+    assert_privileges('provider_foreman_add_provider')
     @provider_cfgmgmt = ManageIQ::Providers::ConfigurationManager.new
-    @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
+    @provider_types = ['Ansible Tower', ui_lookup(:ui_title => 'foreman')]
     render_form
   end
 
   def edit
-    @provider_types = ["Ansible Tower", ui_lookup(:ui_title => 'foreman')]
+    @provider_types = ['Ansible Tower', ui_lookup(:ui_title => 'foreman')]
     case params[:button]
-    when "cancel"
+    when 'cancel'
       cancel_provider_foreman
-    when "save"
+    when 'save'
       add_provider_foreman
       save_provider_foreman
     else
-      assert_privileges("provider_foreman_edit_provider")
+      assert_privileges('provider_foreman_edit_provider')
       manager_id            = from_cid(params[:miq_grid_checks] || params[:id] || find_checked_items[0])
       @provider_cfgmgmt     = find_record(ManageIQ::Providers::ConfigurationManager, manager_id)
       @providerdisplay_type = model_to_name(@provider_cfgmgmt.type)
@@ -72,15 +72,15 @@ class ProviderForemanController < ApplicationController
   end
 
   def delete
-    assert_privileges("provider_foreman_delete_provider") # TODO: Privelege name should match generic ways from Infra and Cloud
+    assert_privileges('provider_foreman_delete_provider') # TODO: Privelege name should match generic ways from Infra and Cloud
     checked_items = find_checked_items # TODO: Checked items are managers, not providers.  Make them providers
     providers = ManageIQ::Providers::ConfigurationManager.where(:id => checked_items).includes(:provider).collect(&:provider)
     if providers.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "providers"), :task => "deletion"}, :error)
+      add_flash(_('No %{model} were selected for %{task}') % {:model => ui_lookup(:tables => 'providers'), :task => 'deletion'}, :error)
     else
       providers.each do |provider|
         AuditEvent.success(
-          :event        => "configuration_manager_record_delete_initiated", # TODO: Should be provider_record_delete_initiated
+          :event        => 'configuration_manager_record_delete_initiated', # TODO: Should be provider_record_delete_initiated
           :message      => "[#{provider.name}] Record delete initiated",
           :target_id    => provider.id,
           :target_class => provider.type,
@@ -89,26 +89,26 @@ class ProviderForemanController < ApplicationController
         provider.destroy_queue
       end
 
-      add_flash(_("Delete initiated for %{count_model}") % {:count_model => pluralize(providers.length, "provider")})
+      add_flash(_('Delete initiated for %{count_model}') % {:count_model => pluralize(providers.length, 'provider')})
     end
     replace_right_cell
   end
 
   def refresh
-    assert_privileges("provider_foreman_refresh_provider")
+    assert_privileges('provider_foreman_refresh_provider')
     @explorer = true
     foreman_button_operation('refresh_ems', _('Refresh'))
     replace_right_cell
   end
 
   def provision
-    assert_privileges("provider_foreman_configured_system_provision") if x_active_accord == :configuration_manager_providers
-    assert_privileges("configured_system_provision") if x_active_accord == :cs_filter
+    assert_privileges('provider_foreman_configured_system_provision') if x_active_accord == :configuration_manager_providers
+    assert_privileges('configured_system_provision') if x_active_accord == :cs_filter
     provisioning_ids = find_checked_items
     provisioning_ids.push(params[:id]) if provisioning_ids.empty?
 
     unless ConfiguredSystem.provisionable?(provisioning_ids)
-      add_flash(_("Provisioning is not supported for at least one of the selected systems"), :error)
+      add_flash(_('Provisioning is not supported for at least one of the selected systems'), :error)
       replace_right_cell
       return
     end
@@ -116,21 +116,21 @@ class ProviderForemanController < ApplicationController
     if ConfiguredSystem.common_configuration_profiles_for_selected_configured_systems(provisioning_ids)
       render :update do |page|
         page << javascript_prologue
-        page.redirect_to :controller     => "miq_request",
-                         :action         => "prov_edit",
+        page.redirect_to :controller     => 'miq_request',
+                         :action         => 'prov_edit',
                          :prov_id        => provisioning_ids,
-                         :org_controller => "configured_system",
+                         :org_controller => 'configured_system',
                          :escape         => false
       end
     else
-      add_flash(_("No common configuration profiles available for the selected configured %s") % n_('system', 'systems', provisioning_ids.size), :error)
+      add_flash(_('No common configuration profiles available for the selected configured %s') % n_('system', 'systems', provisioning_ids.size), :error)
       replace_right_cell
     end
   end
 
   def tagging
-    assert_privileges("provider_foreman_configured_system_tag") if x_active_accord == :configuration_manager_providers
-    assert_privileges("configured_system_tag") if x_active_accord == :cs_filter
+    assert_privileges('provider_foreman_configured_system_tag') if x_active_accord == :configuration_manager_providers
+    assert_privileges('configured_system_tag') if x_active_accord == :cs_filter
     tagging_edit('ConfiguredSystem', false)
     render_tagging_form
   end
@@ -163,11 +163,11 @@ class ProviderForemanController < ApplicationController
       @in_a_form = false
       @sb[:action] = nil
       model = "#{model_to_name(@provider_cfgmgmt.type)} #{ui_lookup(:model => 'ExtManagementSystem')}"
-      if params[:id] == "new"
-        add_flash(_("%{model} \"%{name}\" was added") % {:model => model, :name => @provider_cfgmgmt.name})
-        process_cfgmgr([@provider_cfgmgmt.configuration_manager.id], "refresh_ems")
+      if params[:id] == 'new'
+        add_flash(_('%{model} "%{name}" was added') % {:model => model, :name => @provider_cfgmgmt.name})
+        process_cfgmgr([@provider_cfgmgmt.configuration_manager.id], 'refresh_ems')
       else
-        add_flash(_("%{model} \"%{name}\" was updated") % {:model => model, :name => @provider_cfgmgmt.name})
+        add_flash(_('%{model} "%{name}" was updated') % {:model => model, :name => @provider_cfgmgmt.name})
       end
       replace_right_cell([:configuration_manager_providers])
     else
@@ -183,18 +183,18 @@ class ProviderForemanController < ApplicationController
   def cancel_provider_foreman
     @in_a_form = false
     @sb[:action] = nil
-    if params[:id] == "new"
-      add_flash(_("Add of Configuration Manager %{provider} was cancelled by the user") %
+    if params[:id] == 'new'
+      add_flash(_('Add of Configuration Manager %{provider} was cancelled by the user') %
         {:provider => ui_lookup(:model => 'ExtManagementSystem')})
     else
-      add_flash(_("Edit of Configuration Manager %{provider} was cancelled by the user") %
+      add_flash(_('Edit of Configuration Manager %{provider} was cancelled by the user') %
         {:provider => ui_lookup(:model => 'ExtManagementSystem')})
     end
     replace_right_cell
   end
 
   def provider_foreman_form_fields
-    assert_privileges("provider_foreman_edit_provider")
+    assert_privileges('provider_foreman_edit_provider')
     config_mgr = find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
     provider   = config_mgr.provider
 
@@ -213,9 +213,9 @@ class ProviderForemanController < ApplicationController
     begin
       @provider_cfgmgmt.verify_credentials(params[:type])
     rescue StandardError => error
-      render_flash(_("Credential validation was not successful: %{details}") % {:details => error}, :error)
+      render_flash(_('Credential validation was not successful: %{details}') % {:details => error}, :error)
     else
-      render_flash(_("Credential validation was successful"))
+      render_flash(_('Credential validation was successful'))
     end
   end
 
@@ -223,9 +223,9 @@ class ProviderForemanController < ApplicationController
     @flash_array = [] if params[:display]
     @sb[:action] = nil
 
-    @display = params[:display] || "main"
-    @lastaction = "show"
-    @showtype = "config"
+    @display = params[:display] || 'main'
+    @lastaction = 'show'
+    @showtype = 'config'
     @record = if configuration_profile_record?
                 find_record(ConfigurationProfile, id || params[:id])
               elsif inventory_group_record?
@@ -237,19 +237,19 @@ class ProviderForemanController < ApplicationController
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
-    @gtl_url = "/show"
-    set_summary_pdf_data if "download_pdf" == @display
+    @gtl_url = '/show'
+    set_summary_pdf_data if 'download_pdf' == @display
   end
 
   def tree_select
-    @lastaction = "explorer"
+    @lastaction = 'explorer'
     @flash_array = nil
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
     load_or_clear_adv_search
     apply_node_search_text if x_active_tree == :configuration_manager_providers_tree
 
-    unless action_name == "reload"
+    unless action_name == 'reload'
       @sb[:active_tab] = if active_tab_configured_systems?
                            'configured_systems'
                          else
@@ -262,7 +262,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def accordion_select
-    @lastaction = "explorer"
+    @lastaction = 'explorer'
 
     @sb[:foreman_search_text] ||= {}
     @sb[:foreman_search_text]["#{x_active_accord}_search_text"] = @search_text
@@ -277,17 +277,17 @@ class ProviderForemanController < ApplicationController
   end
 
   def load_or_clear_adv_search
-    adv_search_build("ConfiguredSystem")
+    adv_search_build('ConfiguredSystem')
     session[:edit] = @edit
     @explorer = true
 
-    if x_active_tree != :cs_filter_tree || x_node == "root"
+    if x_active_tree != :cs_filter_tree || x_node == 'root'
       listnav_search_selected(0)
     else
-      @nodetype, id = valid_active_node(x_node).split("_").last.split("-")
+      @nodetype, id = valid_active_node(x_node).split('_').last.split('-')
 
-      if x_active_tree == :cs_filter_tree && (@nodetype == "xx-csf" || @nodetype == "xx-csa")
-        search_id = @nodetype == "root" ? 0 : from_cid(id)
+      if x_active_tree == :cs_filter_tree && (@nodetype == 'xx-csf' || @nodetype == 'xx-csa')
+        search_id = @nodetype == 'root' ? 0 : from_cid(id)
         listnav_search_selected(search_id) unless params.key?(:search_text) # Clear or set the adv search filter
         if @edit[:adv_search_applied] &&
            MiqExpression.quick_search?(@edit[:adv_search_applied][:exp]) &&
@@ -315,7 +315,7 @@ class ProviderForemanController < ApplicationController
       format.html do                # HTML, redirect to explorer
         tree_node_id = TreeBuilder.build_node_id(@record)
         session[:exp_parms] = {:id => tree_node_id}
-        redirect_to :action => "explorer"
+        redirect_to :action => 'explorer'
       end
       format.any { head :not_found }  # Anything else, just send 404
     end
@@ -331,12 +331,12 @@ class ProviderForemanController < ApplicationController
   end
 
   def check_for_unassigned_configuration_profile
-    if action_name == "x_show"
+    if action_name == 'x_show'
       unassigned_configuration_profile?(params[:id]) ? tree_select : tree_select_unprovisioned_configured_system
-    elsif action_name == "tree_select"
+    elsif action_name == 'tree_select'
       tree_select_unprovisioned_configured_system
     else
-      redirect_to :action => "explorer"
+      redirect_to :action => 'explorer'
     end
   end
 
@@ -345,23 +345,23 @@ class ProviderForemanController < ApplicationController
       params[:id] = "cs-#{params[:id]}"
       tree_select
     else
-      redirect_to :action => "explorer"
+      redirect_to :action => 'explorer'
     end
   end
 
   def configuration_manager_providers_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root" then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
-    when "fr"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
-    when "at"   then find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
-    when "f"    then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
-    when "cp"   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
-    when "xx" then
+    when 'root' then find_record(ManageIQ::Providers::ConfigurationManager, params[:id])
+    when 'fr'   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile, params[:id])
+    when 'at'   then find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, params[:id])
+    when 'f'    then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem, params[:id])
+    when 'cp'   then find_record(ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem, params[:id])
+    when 'xx' then
       case nodes.second
-      when "at" then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
-      when "fr" then find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
-      when "csa", "csf" then find_record(ConfiguredSystem, params[:id])
+      when 'at' then find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager, params[:id])
+      when 'fr' then find_record(ManageIQ::Providers::Foreman::ConfigurationManager, params[:id])
+      when 'csa', 'csf' then find_record(ConfiguredSystem, params[:id])
       end
     end
   end
@@ -369,26 +369,26 @@ class ProviderForemanController < ApplicationController
   def cs_filter_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root", "xx" then find_record(ConfiguredSystem, params[:id])
-    when "ms"         then find_record(ConfiguredSystem, from_cid(params[:id]))
+    when 'root', 'xx' then find_record(ConfiguredSystem, params[:id])
+    when 'ms'         then find_record(ConfiguredSystem, from_cid(params[:id]))
     end
   end
 
   def configuration_scripts_tree_rec
     nodes = x_node.split('-')
     case nodes.first
-    when "root", "at"
+    when 'root', 'at'
       find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript, params[:id])
     end
   end
 
   def show_record(_id = nil)
-    @display    = params[:display] || "main" unless control_selected?
-    @lastaction = "show"
-    @showtype   = "config"
+    @display    = params[:display] || 'main' unless control_selected?
+    @lastaction = 'show'
+    @showtype   = 'config'
 
     if @record.nil?
-      add_flash(_("Error: Record no longer exists in the database"), :error)
+      add_flash(_('Error: Record no longer exists in the database'), :error)
       if request.xml_http_request? && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
         @delete_node = params[:id]                 # Set node to be removed from the tree
       end
@@ -399,20 +399,20 @@ class ProviderForemanController < ApplicationController
       rec_cls = "#{model_to_name(@record.class.to_s).downcase.tr(' ', '_')}_configured_system"
     end
     return unless %w(download_pdf main).include?(@display)
-    @showtype     = "main"
+    @showtype     = 'main'
     @button_group = case x_active_accord
                     when :cs_filter
                       rec_cls.to_s
                     when :configuration_manager_providers
                       "provider_foreman_#{rec_cls}"
                     when :configuration_scripts
-                      @record.kind_of?(ConfigurationScript) ? "configuration_script" : "configuration_scripts"
+                      @record.kind_of?(ConfigurationScript) ? 'configuration_script' : 'configuration_scripts'
                     end
   end
 
   def explorer
     @explorer = true
-    @lastaction = "explorer"
+    @lastaction = 'explorer'
 
     # if AJAX request, replace right cell, and return
     if request.xml_http_request?
@@ -431,7 +431,7 @@ class ProviderForemanController < ApplicationController
     session.delete(:exp_parms)
     @in_a_form = false
     if params[:id] # If a tree node id came in, show in one of the trees
-      nodetype, id = params[:id].split("-")
+      nodetype, id = params[:id].split('-')
       # treebuilder initializes x_node to root first time in locals_for_render,
       # need to set this here to force & activate node when link is clicked outside of explorer.
       @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
@@ -440,7 +440,7 @@ class ProviderForemanController < ApplicationController
     @sb[:open_tree_nodes] ||= []
     build_accordions_and_trees
 
-    render :layout => "application"
+    render :layout => 'application'
   end
 
   def tree_autoload_dynatree
@@ -455,20 +455,20 @@ class ProviderForemanController < ApplicationController
 
   def cs_form_field_changed
     id = params[:id]
-    return unless load_edit("cs_edit__#{id}", "replace_cell__explorer")
+    return unless load_edit("cs_edit__#{id}", 'replace_cell__explorer')
     cs_edit_get_form_vars
     render :update do |page|
       page << javascript_prologue
-      page << javascript_hide("buttons_off")
-      page << javascript_show("buttons_on")
+      page << javascript_hide('buttons_off')
+      page << javascript_show('buttons_on')
     end
   end
 
   def configscript_service_dialog_submit
     case params[:button]
-    when "cancel"
+    when 'cancel'
       configscript_service_dialog_submit_cancel
-    when "save"
+    when 'save'
       configscript_service_dialog_submit_save
     end
   end
@@ -476,7 +476,7 @@ class ProviderForemanController < ApplicationController
   private ###########
 
   def find_or_build_provider
-    @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == "new"
+    @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == 'new'
     @provider_cfgmgmt ||= find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider # TODO: Why is params[:id] an ExtManagementSystem ID instead of Provider ID?
   end
 
@@ -487,23 +487,23 @@ class ProviderForemanController < ApplicationController
   def sync_form_to_instance
     @provider_cfgmgmt.name       = params[:name]
     @provider_cfgmgmt.url        = params[:url]
-    @provider_cfgmgmt.verify_ssl = params[:verify_ssl].eql?("on")
+    @provider_cfgmgmt.verify_ssl = params[:verify_ssl].eql?('on')
     @provider_cfgmgmt.zone       = Zone.find_by_name(MiqServer.my_zone)
   end
 
   def features
-    [{:role     => "providers_accord",
+    [{:role     => 'providers_accord',
       :role_any => true,
       :name     => :configuration_manager_providers,
-      :title    => _("Providers")},
-     {:role     => "configured_systems_filter_accord",
+      :title    => _('Providers')},
+     {:role     => 'configured_systems_filter_accord',
       :role_any => true,
       :name     => :cs_filter,
-      :title    => _("Configured Systems")},
-     {:role     => "configuration_scripts_accord",
+      :title    => _('Configured Systems')},
+     {:role     => 'configuration_scripts_accord',
       :role_any => true,
       :name     => :configuration_scripts,
-      :title    => _("Ansible Tower Job Templates")}
+      :title    => _('Ansible Tower Job Templates')}
      ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
@@ -526,26 +526,26 @@ class ProviderForemanController < ApplicationController
 
   def get_node_info(treenodeid)
     @sb[:action] = nil
-    @nodetype, id = valid_active_node(treenodeid).split("_").last.split("-")
+    @nodetype, id = valid_active_node(treenodeid).split('_').last.split('-')
 
     model = TreeBuilder.get_model_for_prefix(@nodetype)
-    if model == "Hash"
+    if model == 'Hash'
       model = TreeBuilder.get_model_for_prefix(id)
       id = nil
     end
 
     case model
-    when "ManageIQ::Providers::Foreman::ConfigurationManager", "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
+    when 'ManageIQ::Providers::Foreman::ConfigurationManager', 'ManageIQ::Providers::AnsibleTower::ConfigurationManager'
       provider_list(id, model)
-    when "ConfigurationProfile"
+    when 'ConfigurationProfile'
       configuration_profile_node(id, model)
-    when "EmsFolder"
+    when 'EmsFolder'
       inventory_group_node(id, model)
-    when "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ConfiguredSystem"
+    when 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem', 'ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem', "ConfiguredSystem"
       configured_system_list(id, model)
-    when "ConfigurationScript"
+    when 'ConfigurationScript'
       configuration_scripts_list(id, model)
-    when "MiqSearch"
+    when 'MiqSearch'
       miq_search_node
     else
       if unassigned_configuration_profile?(treenodeid)
@@ -568,26 +568,26 @@ class ProviderForemanController < ApplicationController
   def provider_node(id, model)
     @record = provider = find_record(ExtManagementSystem, id)
     if provider.nil?
-      self.x_node = "root"
-      get_node_info("root")
+      self.x_node = 'root'
+      get_node_info('root')
     elsif x_active_tree == :configuration_scripts_tree
       cs_provider_node(provider)
     else
       @no_checkboxes = true
       case @record.type
-      when "ManageIQ::Providers::Foreman::ConfigurationManager"
-        options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem, :where_clause => ["manager_id IN (?)", provider.id]}
+      when 'ManageIQ::Providers::Foreman::ConfigurationManager'
+        options = {:model => 'ConfigurationProfile', :match_via_descendants => ConfiguredSystem, :where_clause => ['manager_id IN (?)', provider.id]}
         process_show_list(options)
         add_unassigned_configuration_profile_record(provider.id)
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
-        @right_cell_text = _("%{model} \"%{name}\"") %
+        @right_cell_text = _('%{model} "%{name}"') %
         {:name => provider.name,
          :model => "#{ui_lookup(:tables => "configuration_profile")} under #{record_model} Provider"}
-      when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
-        options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
+      when 'ManageIQ::Providers::AnsibleTower::ConfigurationManager'
+        options = {:model => 'ManageIQ::Providers::ConfigurationManager::InventoryGroup', :match_via_descendants => ConfiguredSystem, :where_clause => ['ems_id IN (?)', provider.id]}
         process_show_list(options)
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
-        @right_cell_text = _("%{model} \"%{name}\"") %
+        @right_cell_text = _('%{model} "%{name}"') %
           {:name => provider.name, :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
       end
     end
@@ -595,12 +595,12 @@ class ProviderForemanController < ApplicationController
 
   def cs_provider_node(provider)
     options = {
-      :model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
+      :model => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript',
       :match_via_descendants => ConfigurationScript,
-      :where_clause => ["manager_id IN (?)", provider.id]
+      :where_clause => ['manager_id IN (?)', provider.id]
     }
     process_show_list(options)
-    @right_cell_text = _("%{model} \"%{name}\"") %
+    @right_cell_text = _('%{model} "%{name}"') %
       {:name => provider.name, :model => "#{ui_lookup(:tables => "job_templates")} under "}
   end
 
@@ -608,7 +608,7 @@ class ProviderForemanController < ApplicationController
     return provider_node(id, model) if id
     if x_active_tree == :configuration_manager_providers_tree
       options = {:model => model.to_s}
-      @right_cell_text = _("All %{title} Providers") % {:title => model_to_name(model)}
+      @right_cell_text = _('All %{title} Providers') % {:title => model_to_name(model)}
       process_show_list(options)
     end
   end
@@ -616,14 +616,14 @@ class ProviderForemanController < ApplicationController
   def configuration_profile_node(id, model)
     @record = @configuration_profile_record = model ? find_record(ConfigurationProfile, id) : ConfigurationProfile.new
     if @configuration_profile_record.nil?
-      self.x_node = "root"
-      get_node_info("root")
+      self.x_node = 'root'
+      get_node_info('root')
     else
-      options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
+      options = {:model => 'ConfiguredSystem', :match_via_descendants => ConfiguredSystem}
       if empty_configuration_profile_record?(@configuration_profile_record)
-        options[:where_clause] = ["manager_id IN (?) AND configuration_profile_id IS NULL", id]
+        options[:where_clause] = ['manager_id IN (?) AND configuration_profile_id IS NULL', id]
       else
-        options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
+        options[:where_clause] = ['configuration_profile_id IN (?)', @configuration_profile_record.id]
       end
       process_show_list(options)
       record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
@@ -632,7 +632,7 @@ class ProviderForemanController < ApplicationController
       else
         @showtype        = 'main'
         @pages           = nil
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @configuration_profile_record.name,
+        @right_cell_text = _('%{model} "%{name}"') % {:name => @configuration_profile_record.name,
                                                         :model => record_model}
       end
     end
@@ -642,11 +642,11 @@ class ProviderForemanController < ApplicationController
     @record = @inventory_group_record = find_record(ManageIQ::Providers::ConfigurationManager::InventoryGroup, id) if model
 
     if @inventory_group_record.nil?
-      self.x_node = "root"
-      get_node_info("root")
+      self.x_node = 'root'
+      get_node_info('root')
     else
-      options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
-      options[:where_clause] = ["inventory_root_group_id IN (?)", from_cid(@inventory_group_record.id)]
+      options = {:model => 'ConfiguredSystem', :match_via_descendants => ConfiguredSystem}
+      options[:where_clause] = ['inventory_root_group_id IN (?)', from_cid(@inventory_group_record.id)]
       process_show_list(options)
       record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
@@ -654,7 +654,7 @@ class ProviderForemanController < ApplicationController
       else
         @showtype        = 'main'
         @pages           = nil
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @inventory_group_record.name, :model => record_model}
+        @right_cell_text = _('%{model} "%{name}"') % {:name => @inventory_group_record.name, :model => record_model}
       end
     end
   end
@@ -663,7 +663,7 @@ class ProviderForemanController < ApplicationController
     return configured_system_node(id, model) if id
     if x_active_tree == :cs_filter_tree
       options = {:model => model.to_s}
-      @right_cell_text = _("All %{title} Configured Systems") % {:title => model_to_name(model)}
+      @right_cell_text = _('All %{title} Configured Systems') % {:title => model_to_name(model)}
       process_show_list(options)
     end
   end
@@ -671,28 +671,28 @@ class ProviderForemanController < ApplicationController
   def configured_system_node(id, model)
     @record = @configured_system_record = find_record(ConfiguredSystem, id)
     if @record.nil?
-      self.x_node = "root"
-      get_node_info("root")
+      self.x_node = 'root'
+      get_node_info('root')
     else
       show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") %
+      @right_cell_text = _('%{model} "%{name}"') %
       {:name => @record.name,
        :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
     end
   end
 
   def miq_search_node
-    options = {:model => "ConfiguredSystem"}
+    options = {:model => 'ConfiguredSystem'}
     process_show_list(options)
-    @right_cell_text = _("All %{title} Configured Systems") % {:title => ui_lookup(:ui_title => "foreman")}
+    @right_cell_text = _('All %{title} Configured Systems') % {:title => ui_lookup(:ui_title => 'foreman')}
   end
 
   def configuration_scripts_list(id, model)
     return configuration_script_node(id, model) if id
-    @listicon = "configuration_script"
+    @listicon = 'configuration_script'
     if x_active_tree == :configuration_scripts_tree
       options = {:model => model.to_s}
-      @right_cell_text = _("All %{title}") % {:title => model_to_cs_name(model)}
+      @right_cell_text = _('All %{title}') % {:title => model_to_cs_name(model)}
       process_show_list(options)
     end
   end
@@ -700,29 +700,29 @@ class ProviderForemanController < ApplicationController
   def configuration_script_node(id, model)
     @record = @configuration_script_record = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript, id)
     if @record.nil?
-      self.x_node = "root"
-      get_node_info("root")
+      self.x_node = 'root'
+      get_node_info('root')
     else
       show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") %
+      @right_cell_text = _('%{model} "%{name}"') %
       {:name => @record.name, :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
     end
   end
 
   def default_node
-    return unless x_node == "root"
+    return unless x_node == 'root'
     if x_active_tree == :configuration_manager_providers_tree
-      options = {:model => "ManageIQ::Providers::ConfigurationManager"}
+      options = {:model => 'ManageIQ::Providers::ConfigurationManager'}
       process_show_list(options)
-      @right_cell_text = _("All Configuration Management Providers")
+      @right_cell_text = _('All Configuration Management Providers')
     elsif x_active_tree == :cs_filter_tree
-      options = {:model => "ConfiguredSystem"}
+      options = {:model => 'ConfiguredSystem'}
       process_show_list(options)
-      @right_cell_text = _("All Configured Systems")
+      @right_cell_text = _('All Configured Systems')
     elsif x_active_tree == :configuration_scripts_tree
-      options = {:model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript"}
+      options = {:model => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript'}
       process_show_list(options)
-      @right_cell_text = _("All Ansible Tower Job Templates")
+      @right_cell_text = _('All Ansible Tower Job Templates')
     end
   end
 
@@ -748,7 +748,7 @@ class ProviderForemanController < ApplicationController
   def render_tagging_form
     return if %w(cancel save).include?(params[:button])
     @in_a_form = true
-    @right_cell_text = _("Edit Tags for Configured Systems")
+    @right_cell_text = _('Edit Tags for Configured Systems')
     clear_flash_msg
     presenter, r = rendering_objects
     update_tagging_partials(presenter, r)
@@ -785,8 +785,8 @@ class ProviderForemanController < ApplicationController
   def update_title(presenter)
     @right_cell_text =
       case action_name
-      when "new"  then _("Add a new Configuration Management Provider")
-      when "edit" then _("Edit Configuration Manager Provider")
+      when 'new'  then _('Add a new Configuration Management Provider')
+      when 'edit' then _('Edit Configuration Manager Provider')
       end
     presenter[:right_cell_text] = @right_cell_text
   end
@@ -823,31 +823,31 @@ class ProviderForemanController < ApplicationController
   def leaf_record
     get_node_info(x_node)
     @delete_node = params[:id] if @replace_trees
-    type, _id = x_node.split("_").last.split("-")
+    type, _id = x_node.split('_').last.split('-')
     type && %w(ConfiguredSystem ConfigurationScript).include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def configuration_profile_record?(node = x_node)
-    type, _id = node.split("_").last.split("-")
+    type, _id = node.split('_').last.split('-')
     type && %w(ConfigurationProfile).include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def inventory_group_record?(node = x_node)
-    type, _id = node.split("_").last.split("-")
+    type, _id = node.split('_').last.split('-')
     type && %w(EmsFolder).include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def foreman_provider_record?(node = x_node)
-    node = node.split("-").last if node.split("-").first == 'xx'
-    type, _id = node.split("-")
-    type && ["ManageIQ::Providers::Foreman::ConfigurationManager"].include?(TreeBuilder.get_model_for_prefix(type))
+    node = node.split('-').last if node.split('-').first == 'xx'
+    type, _id = node.split('-')
+    type && ['ManageIQ::Providers::Foreman::ConfigurationManager'].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def ansible_tower_cfgmgr_record?(node = x_node)
     return @record.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager) if @record
 
-    type, _id = node.split("-")
-    type && ["ManageIQ::Providers::AnsibleTower::ConfigurationManager"].include?(TreeBuilder.get_model_for_prefix(type))
+    type, _id = node.split('-')
+    type && ['ManageIQ::Providers::AnsibleTower::ConfigurationManager'].include?(TreeBuilder.get_model_for_prefix(type))
   end
 
   def provider_record?(node = x_node)
@@ -855,9 +855,9 @@ class ProviderForemanController < ApplicationController
   end
 
   def search_text_type(node)
-    return "provider" if provider_record?(node)
-    return "configuration_profile" if configuration_profile_record?(node)
-    return "inventory_group" if inventory_group_record?(node)
+    return 'provider' if provider_record?(node)
+    return 'configuration_profile' if configuration_profile_record?(node)
+    return 'inventory_group' if inventory_group_record?(node)
     node
   end
 
@@ -882,31 +882,31 @@ class ProviderForemanController < ApplicationController
     if record_showing && valid_configured_system_record?(@configured_system_record)
       get_tagdata(@record)
       presenter.hide(:form_buttons_div)
-      path_dir = "provider_foreman"
+      path_dir = 'provider_foreman'
       presenter.update(:main_div, r[:partial => "#{path_dir}/main",
                                     :locals  => {:controller => 'provider_foreman'}])
     elsif @in_a_form
       partial_locals = {:controller => 'provider_foreman'}
       @right_cell_text =
-        if @sb[:action] == "provider_foreman_add_provider"
-          _("Add a new Configuration Manager Provider")
-        elsif @sb[:action] == "provider_foreman_edit_provider"
+        if @sb[:action] == 'provider_foreman_add_provider'
+          _('Add a new Configuration Manager Provider')
+        elsif @sb[:action] == 'provider_foreman_edit_provider'
           # set the title based on the configuration manager provider type
-          _("Edit Configuration Manager Provider")
+          _('Edit Configuration Manager Provider')
         end
       partial = 'form'
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     elsif valid_configuration_profile_record?(@configuration_profile_record)
       presenter.hide(:form_buttons_div)
-      presenter.update(:main_div, r[:partial => "configuration_profile",
+      presenter.update(:main_div, r[:partial => 'configuration_profile',
                                     :locals  => {:controller => 'provider_foreman'}])
     elsif valid_inventory_group_record?(@inventory_group_record)
       presenter.hide(:form_buttons_div)
-      presenter.update(:main_div, r[:partial => "inventory_group",
+      presenter.update(:main_div, r[:partial => 'inventory_group',
                                     :locals  => {:controller => 'provider_foreman'}])
     elsif valid_configuration_script_record?(@configuration_script_record)
       presenter.hide(:form_buttons_div)
-      presenter.update(:main_div, r[:partial => "configuration_script",
+      presenter.update(:main_div, r[:partial => 'configuration_script',
                                     :locals  => {:controller => 'provider_foreman'}])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
@@ -947,7 +947,7 @@ class ProviderForemanController < ApplicationController
 
   def rebuild_toolbars(record_showing, presenter)
     if configuration_profile_summary_tab_selected? || inventory_group_summary_tab_selected?
-      center_tb = "blank_view_tb"
+      center_tb = 'blank_view_tb'
       record_showing = true
     end
 
@@ -956,13 +956,13 @@ class ProviderForemanController < ApplicationController
       c_tb = build_toolbar(center_tb)
 
       v_tb = if record_showing
-               build_toolbar("x_summary_view_tb")
+               build_toolbar('x_summary_view_tb')
              else
-               build_toolbar("x_gtl_view_tb")
+               build_toolbar('x_gtl_view_tb')
              end
     end
 
-    h_tb = build_toolbar("x_history_tb") unless @in_a_form
+    h_tb = build_toolbar('x_history_tb') unless @in_a_form
 
     presenter.reload_toolbars(:history => h_tb, :center => c_tb, :view => v_tb)
 
@@ -1031,14 +1031,14 @@ class ProviderForemanController < ApplicationController
     presenter.update(:main_div, r[:partial => 'configscript_service_dialog',
                                   :locals  => locals_for_service_dialog])
     locals = {:record_id  => @edit[:rec_id],
-              :action_url => "configscript_service_dialog_submit",
+              :action_url => 'configscript_service_dialog_submit',
               :serialize  => true}
     presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
                                           :locals  => locals])
   end
 
   def clear_flash_msg
-    @flash_array = nil if params[:button] != "reset"
+    @flash_array = nil if params[:button] != 'reset'
   end
 
   def breadcrumb_name(_model)
@@ -1055,8 +1055,8 @@ class ProviderForemanController < ApplicationController
   end
 
   def unassigned_configuration_profile?(node)
-    _type, _pid, nodeinfo = node.split("_").last.split("-")
-    nodeinfo == "unassigned"
+    _type, _pid, nodeinfo = node.split('_').last.split('-')
+    nodeinfo == 'unassigned'
   end
 
   def empty_configuration_profile_record?(configuration_profile_record)
@@ -1068,7 +1068,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def list_row_id(row)
-    if row['name'] == _("Unassigned Profiles Group") && row['id'].nil?
+    if row['name'] == _('Unassigned Profiles Group') && row['id'].nil?
       "-#{row['manager_id']}-unassigned"
     else
       to_cid(row['id'])
@@ -1079,13 +1079,13 @@ class ProviderForemanController < ApplicationController
     record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
     return if @sb[:active_tab] != 'configured_systems'
     if valid_configuration_profile_record?(@configuration_profile_record)
-      @right_cell_text = _("%{model} under %{record_model} \"%{name}\"") %
-                         {:model        => ui_lookup(:tables => "configured_system"),
+      @right_cell_text = _('%{model} under %{record_model} "%{name}"') %
+                         {:model        => ui_lookup(:tables => 'configured_system'),
                           :record_model => record_model,
                           :name         => @configuration_profile_record.name}
     else
-      @right_cell_text = _("%{model} under Unassigned Profiles Group") %
-                         {:model => ui_lookup(:tables => "configured_system")}
+      @right_cell_text = _('%{model} under Unassigned Profiles Group') %
+                         {:model => ui_lookup(:tables => 'configured_system')}
     end
   end
 
@@ -1095,7 +1095,7 @@ class ProviderForemanController < ApplicationController
 
     return if unprovisioned_configured_systems == 0
 
-    unassigned_configuration_profile_desc = unassigned_configuration_profile_name = _("Unassigned Profiles Group")
+    unassigned_configuration_profile_desc = unassigned_configuration_profile_name = _('Unassigned Profiles Group')
     unassigned_configuration_profile = ConfigurationProfile.new
     unassigned_configuration_profile.manager_id = provider_id
     unassigned_configuration_profile.name = unassigned_configuration_profile_name
@@ -1132,8 +1132,8 @@ class ProviderForemanController < ApplicationController
     return if @sb[:active_tab] != 'configured_systems'
     if valid_inventory_group_record?(@inventory_group_record)
       record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
-      @right_cell_text = _("%{model} under Inventory Group \"%{name}\"") %
-                         {:model        => ui_lookup(:tables => "configured_system"),
+      @right_cell_text = _('%{model} under Inventory Group "%{name}"') %
+                         {:model        => ui_lookup(:tables => 'configured_system'),
                           :record_model => record_model,
                           :name         => @inventory_group_record.name}
     end
@@ -1160,12 +1160,12 @@ class ProviderForemanController < ApplicationController
   end
 
   def find_record(model, id)
-    raise _("Invalid input") unless is_integer?(from_cid(id))
+    raise _('Invalid input') unless is_integer?(from_cid(id))
     begin
       record = model.where(:id => from_cid(id)).first
     rescue ActiveRecord::RecordNotFound, StandardError => ex
       if @explorer
-        self.x_node = "root"
+        self.x_node = 'root'
         add_flash(ex.message, :error, true)
         session[:flash_msgs] = @flash_array.dup
       end
@@ -1174,12 +1174,12 @@ class ProviderForemanController < ApplicationController
   end
 
   def set_root_node
-    self.x_node = "root"
+    self.x_node = 'root'
     get_node_info(x_node)
   end
 
   def get_session_data
-    @title  = _("Providers")
+    @title  = _('Providers')
     @layout = controller_name
   end
 
@@ -1187,38 +1187,38 @@ class ProviderForemanController < ApplicationController
   end
 
   def configscript_service_dialog
-    assert_privileges("configscript_service_dialog")
+    assert_privileges('configscript_service_dialog')
     cs = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript.find_by_id(params[:id])
-    @edit = {:new    => {:dialog_name => ""},
+    @edit = {:new    => {:dialog_name => ''},
              :key    => "cs_edit__#{cs.id}",
              :rec_id => cs.id}
     @in_a_form = true
-    @right_cell_text = _("Adding a new Service Dialog from \"%{name}\"") % {:name => cs.name}
+    @right_cell_text = _('Adding a new Service Dialog from "%{name}"') % {:name => cs.name}
     render_service_dialog_form
   end
 
   def configscript_service_dialog_submit_cancel
-    add_flash(_("Creation of a new Service Dialog was cancelled by the user"))
+    add_flash(_('Creation of a new Service Dialog was cancelled by the user'))
     @in_a_form = false
     @edit = @record = nil
     replace_right_cell
   end
 
   def configscript_service_dialog_submit_save
-    assert_privileges("configscript_service_dialog")
-    load_edit("cs_edit__#{params[:id]}", "replace_cell__explorer")
+    assert_privileges('configscript_service_dialog')
+    load_edit("cs_edit__#{params[:id]}", 'replace_cell__explorer')
     begin
       cs = ConfigurationScript.find_by_id(params[:id])
       AnsibleTowerJobTemplateDialogService.new.create_dialog(cs, @edit[:new][:dialog_name])
     rescue => bang
-      add_flash(_("Error when creating Service Dialog: %{error_message}") %
+      add_flash(_('Error when creating Service Dialog: %{error_message}') %
                   {:error_message => bang.message}, :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     else
-      add_flash(_("Service Dialog \"%{name}\" was successfully created") %
+      add_flash(_('Service Dialog "%{name}" was successfully created') %
                   {:name => @edit[:new][:dialog_name]}, :success)
       @in_a_form = false
       @edit = @record = nil
@@ -1229,7 +1229,7 @@ class ProviderForemanController < ApplicationController
   def cs_edit_get_form_vars
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description] = params[:description] if params[:description]
-    @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
+    @edit[:new][:draft] = params[:draft] == 'true' ? true : false if params[:draft]
     @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
   end
 end

@@ -12,7 +12,7 @@ class EmsInfraController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "ems_infra"
+    @table_name ||= 'ems_infra'
   end
 
   def ems_path(*args)
@@ -28,20 +28,20 @@ class EmsInfraController < ApplicationController
   end
 
   def scaling
-    assert_privileges("ems_infra_scale")
+    assert_privileges('ems_infra_scale')
 
     # Hiding the toolbars
     @in_a_form = true
 
     redirect_to ems_infra_path(params[:id]) if params[:cancel]
 
-    drop_breadcrumb(:name => _("Scale Infrastructure Provider"), :url => "/ems_infra/scaling")
+    drop_breadcrumb(:name => _('Scale Infrastructure Provider'), :url => '/ems_infra/scaling')
     @infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
     # TODO: Currently assumes there is a single stack per infrastructure provider. This should
     # be improved to support multiple stacks.
     @stack = @infra.direct_orchestration_stacks.first
     if @stack.nil?
-      log_and_flash_message(_("Orchestration stack could not be found."))
+      log_and_flash_message(_('Orchestration stack could not be found.'))
       return
     end
 
@@ -54,13 +54,13 @@ class EmsInfraController < ApplicationController
     infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
     if assigned_hosts > infra.hosts.count
       # Validate number of selected hosts is not more than available
-      log_and_flash_message(_("Assigning %{hosts} but only have %{hosts_count} hosts available.") % {:hosts => assigned_hosts, :hosts_count => infra.hosts.count.to_s})
+      log_and_flash_message(_('Assigning %{hosts} but only have %{hosts_count} hosts available.') % {:hosts => assigned_hosts, :hosts_count => infra.hosts.count.to_s})
     else
       scale_parameters_formatted = {}
-      return_message = _("Scaling")
+      return_message = _('Scaling')
       @count_parameters.each do |p|
         if !scale_parameters[p.name].nil? && scale_parameters[p.name] != p.value
-          return_message += _(" %{name} from %{value} to %{parameters} ") % {:name => p.name, :value => p.value, :parameters => scale_parameters[p.name]}
+          return_message += _(' %{name} from %{value} to %{parameters} ') % {:name => p.name, :value => p.value, :parameters => scale_parameters[p.name]}
           scale_parameters_formatted[p.name] = scale_parameters[p.name]
         end
       end
@@ -70,19 +70,19 @@ class EmsInfraController < ApplicationController
   end
 
   def scaledown
-    assert_privileges("ems_infra_scale")
+    assert_privileges('ems_infra_scale')
     redirect_to ems_infra_path(params[:id]) if params[:cancel]
 
     # Hiding the toolbars
     @in_a_form = true
 
-    drop_breadcrumb(:name => _("Scale Infrastructure Provider Down"), :url => "/ems_infra/scaling")
+    drop_breadcrumb(:name => _('Scale Infrastructure Provider Down'), :url => '/ems_infra/scaling')
     @infra = ManageIQ::Providers::Openstack::InfraManager.find(params[:id])
     # TODO: Currently assumes there is a single stack per infrastructure provider. This should
     # be improved to support multiple stacks.
     @stack = @infra.direct_orchestration_stacks.first
     if @stack.nil?
-      log_and_flash_message(_("Orchestration stack could not be found."))
+      log_and_flash_message(_('Orchestration stack could not be found.'))
       return
     end
 
@@ -92,7 +92,7 @@ class EmsInfraController < ApplicationController
 
     host_ids = params[:host_ids]
     if host_ids.nil?
-      log_and_flash_message(_("No compute hosts were selected for scale down."))
+      log_and_flash_message(_('No compute hosts were selected for scale down.'))
     else
       hosts = host_ids.map { |host_id| find_by_id_filtered(Host, host_id) }
 
@@ -105,7 +105,7 @@ class EmsInfraController < ApplicationController
 
       # figure out scaledown parameters and update stack
       stack_parameters = get_scaledown_parameters(hosts, @infra, @compute_hosts)
-      return_message = _(" Scaling down to %{a} compute nodes") % {:a => stack_parameters['ComputeCount']}
+      return_message = _(' Scaling down to %{a} compute nodes') % {:a => stack_parameters['ComputeCount']}
       update_stack(@stack, stack_parameters, params[:id], return_message)
     end
   end
@@ -132,45 +132,45 @@ class EmsInfraController < ApplicationController
       # Check if stack is ready to be updated
       update_ready = stack.update_ready?
     rescue => ex
-      log_and_flash_message(_("Unable to update stack, obtaining of status failed: %{message}") %
+      log_and_flash_message(_('Unable to update stack, obtaining of status failed: %{message}') %
                             {:message => ex})
       return
     end
 
     if !update_ready
-      add_flash(_("Provider stack is not ready to be updated, another operation is in progress."), :error)
+      add_flash(_('Provider stack is not ready to be updated, another operation is in progress.'), :error)
     elsif !stack_parameters.empty?
       # A value was changed
       begin
         stack.raw_update_stack(nil, stack_parameters)
         redirect_to ems_infra_path(provider_id, :flash_msg => return_message)
       rescue => ex
-        log_and_flash_message(_("Unable to initiate scaling: %{message}") % {:message => ex})
+        log_and_flash_message(_('Unable to initiate scaling: %{message}') % {:message => ex})
       end
     else
       # No values were changed
-      add_flash(_("A value must be changed or provider stack will not be updated."), :error)
+      add_flash(_('A value must be changed or provider stack will not be updated.'), :error)
     end
   end
 
   def verify_hosts_for_scaledown(hosts)
     has_invalid_nodes = false
-    error_return_message = _("Not all hosts can be removed from the deployment.")
+    error_return_message = _('Not all hosts can be removed from the deployment.')
 
     hosts.each do |host|
       unless host.maintenance
         has_invalid_nodes = true
-        error_return_message += _(" %{host_uid_ems} needs to be in maintenance mode before it can be removed ") %
+        error_return_message += _(' %{host_uid_ems} needs to be in maintenance mode before it can be removed ') %
                                 {:host_uid_ems => host.uid_ems}
       end
       if host.number_of(:vms) > 0
         has_invalid_nodes = true
-        error_return_message += _(" %{host_uid_ems} needs to be evacuated before it can be removed ") %
+        error_return_message += _(' %{host_uid_ems} needs to be evacuated before it can be removed ') %
                                 {:host_uid_ems => host.uid_ems}
       end
       unless host.name.include?('Compute')
         has_invalid_nodes = true
-        error_return_message += _(" %{host_uid_ems} is not a compute node ") % {:host_uid_ems => host.uid_ems}
+        error_return_message += _(' %{host_uid_ems} is not a compute node ') % {:host_uid_ems => host.uid_ems}
       end
     end
 

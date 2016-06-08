@@ -3,10 +3,10 @@ describe ServiceController do
     set_user_privileges
   end
 
-  context "#service_delete" do
-    it "display flash message with description of deleted Service" do
+  context '#service_delete' do
+    it 'display flash message with description of deleted Service' do
       st  = FactoryGirl.create(:service_template)
-      svc = FactoryGirl.create(:service, :service_template => st, :name => "GemFire", :description => "VMware vFabric GEMFIRE")
+      svc = FactoryGirl.create(:service, :service_template => st, :name => 'GemFire', :description => 'VMware vFabric GEMFIRE')
 
       controller.instance_variable_set(:@record, svc)
       controller.instance_variable_set(:@sb,
@@ -24,7 +24,7 @@ describe ServiceController do
 
       # Check for Service Description to be part of flash message displayed
       flash_messages = assigns(:flash_array)
-      expect(flash_messages.first[:message]).to include("Service \"GemFire\": Delete successful")
+      expect(flash_messages.first[:message]).to include('Service "GemFire": Delete successful')
 
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
@@ -50,8 +50,8 @@ describe ServiceController do
     end
   end
 
-  context "#service_delete" do
-    it "replaces right cell after service is deleted" do
+  context '#service_delete' do
+    it 'replaces right cell after service is deleted' do
       service = FactoryGirl.create(:service)
       allow(controller).to receive(:x_build_dynatree)
       controller.instance_variable_set(:@settings, {})
@@ -62,7 +62,7 @@ describe ServiceController do
       controller.send(:service_delete)
 
       flash_message = assigns(:flash_array).first
-      expect(flash_message[:message]).to include("Delete successful")
+      expect(flash_message[:message]).to include('Delete successful')
       expect(flash_message[:level]).to be(:success)
     end
   end

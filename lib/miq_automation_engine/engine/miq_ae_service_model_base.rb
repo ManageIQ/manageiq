@@ -1,13 +1,13 @@
 module MiqAeMethodService
   class MiqAeServiceConverter
     def self.svc2obj(svc)
-      svc.instance_variable_get("@object")
+      svc.instance_variable_get('@object')
     end
   end
 
   class MiqAeServiceModelBase
-    SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/service_models")
-    SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join("miq_ae_service_*.rb")
+    SERVICE_MODEL_PATH = Rails.root.join('lib/miq_automation_engine/service_models')
+    SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join('miq_ae_service_*.rb')
     EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/]
     class << self
       include DRbUndumped  # Ensure that Automate Method can get at the class itself over DRb
@@ -21,7 +21,7 @@ module MiqAeMethodService
       return wrap_results(model.send(m, *args)) if class_method_exposed?(m)
       super
     rescue ActiveRecord::RecordNotFound
-      raise MiqAeException::ServiceNotFound, "Service Model not found"
+      raise MiqAeException::ServiceNotFound, 'Service Model not found'
     end
 
     def self.respond_to_missing?(method_name, include_private = false)
@@ -99,7 +99,7 @@ module MiqAeMethodService
     def self.service_models
       Dir.glob(MiqAeMethodService::MiqAeServiceModelBase::SERVICE_MODEL_GLOB).collect do |f|
         model_name = MiqAeMethodService::MiqAeServiceModelBase.model_name_from_file(f)
-        next if model_name == "MiqAeServiceMethods"
+        next if model_name == 'MiqAeServiceMethods'
 
         "MiqAeMethodService::#{model_name}".constantize
       end.compact!
@@ -110,9 +110,9 @@ module MiqAeMethodService
     end
 
     def self.expose(*args)
-      raise ArgumentError, "must pass at least one method name" if args.empty? || args.first.kind_of?(Hash)
+      raise ArgumentError, 'must pass at least one method name' if args.empty? || args.first.kind_of?(Hash)
       options = args.last.kind_of?(Hash) ? args.pop : {}
-      raise ArgumentError, "cannot have :method option if there is more than one method name specified" if options.key?(:method) && args.length != 1
+      raise ArgumentError, 'cannot have :method option if there is more than one method name specified' if options.key?(:method) && args.length != 1
 
       args.each do |method_name|
         next if method_name.to_sym == :id
@@ -164,8 +164,8 @@ module MiqAeMethodService
     #   delims      = "<" | ">" | "#" | "%" | <">
     #   unwise      = "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`"
     #
-    DELIMS = ['<', '>', '#', '%', "\""]
-    UNWISE = ['{', '}', '|', "\\", '^', '[', ']', "\`"]
+    DELIMS = ['<', '>', '#', '%', '"']
+    UNWISE = ['{', '}', '|', '\\', '^', '[', ']', '`']
     def self.normalize(str)
       return str unless str.kind_of?(String)
 
@@ -234,7 +234,7 @@ module MiqAeMethodService
     end
 
     def tags(category = nil)
-      ns = category.nil? ? "/managed" : "/managed/#{category}"
+      ns = category.nil? ? '/managed' : "/managed/#{category}"
       object_send(:tag_list, :ns => ns).split
     end
 

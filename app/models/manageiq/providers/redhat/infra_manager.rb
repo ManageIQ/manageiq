@@ -15,11 +15,11 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_nested :Vm
 
   def self.ems_type
-    @ems_type ||= "rhevm".freeze
+    @ems_type ||= 'rhevm'.freeze
   end
 
   def self.description
-    @description ||= "Red Hat Enterprise Virtualization Manager".freeze
+    @description ||= 'Red Hat Enterprise Virtualization Manager'.freeze
   end
 
   def self.default_blacklisted_event_names
@@ -45,7 +45,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     supported_auth_types.include?(authtype.to_s)
   end
 
-  def self.raw_connect(server, port, path, username, password, service = "Service")
+  def self.raw_connect(server, port, path, username, password, service = 'Service')
     require 'ovirt'
 
     Ovirt.logger = $rhevm_log
@@ -67,7 +67,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise 'no credentials defined' if self.missing_credentials?(options[:auth_type])
 
     # If there is API path stored in the endpoints table and use it:
     path = default_endpoint.path
@@ -77,7 +77,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     port     = options[:port] || self.port
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
-    service  = options[:service] || "Service"
+    service  = options[:service] || 'Service'
 
     result = self.class.raw_connect(server, port, path, username, password, service)
 
@@ -88,15 +88,15 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def rhevm_service
-    @rhevm_service ||= connect(:service => "Service")
+    @rhevm_service ||= connect(:service => 'Service')
   end
 
   def rhevm_inventory
-    @rhevm_inventory ||= connect(:service => "Inventory")
+    @rhevm_inventory ||= connect(:service => 'Inventory')
   end
 
   def with_provider_connection(options = {})
-    raise "no block given" unless block_given?
+    raise 'no block given' unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     begin
       connection = connect(options)
@@ -109,9 +109,9 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   def verify_credentials_for_rhevm(options = {})
     connect(options).api
   rescue URI::InvalidURIError
-    raise "Invalid URI specified for RHEV server."
+    raise 'Invalid URI specified for RHEV server.'
   rescue SocketError => err
-    raise "Error occurred attempted to connect to RHEV server.", err
+    raise 'Error occurred attempted to connect to RHEV server.', err
   rescue => err
     raise MiqException::MiqEVMLoginError, err
   end
@@ -138,7 +138,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     OvirtMetrics.connect(rhevm_metrics_connect_options(options))
     OvirtMetrics.connected?
   rescue PGError => e
-    message = (e.message.starts_with?("FATAL:") ? e.message[6..-1] : e.message).strip
+    message = (e.message.starts_with?('FATAL:') ? e.message[6..-1] : e.message).strip
 
     case message
     when /database \".*\" does not exist/
@@ -178,8 +178,8 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def self.provision_class(via)
     case via
-    when "iso" then self::ProvisionViaIso
-    when "pxe" then self::ProvisionViaPxe
+    when 'iso' then self::ProvisionViaIso
+    when 'pxe' then self::ProvisionViaPxe
     else            self::Provision
     end
   end
@@ -197,7 +197,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
         if api_version.nil?
           with_provider_connection(&:version_3_0?)
         else
-          api_version.starts_with?("3.0")
+          api_version.starts_with?('3.0')
         end
     end
 
@@ -210,11 +210,11 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
     vm.with_provider_object do |rhevm_vm|
       _log.info("#{log_header} Started...")
-      rhevm_vm.memory = spec["memoryMB"] * 1.megabyte   if spec["memoryMB"]
+      rhevm_vm.memory = spec['memoryMB'] * 1.megabyte   if spec['memoryMB']
 
       cpu_options = {}
-      cpu_options[:cores]   = spec["numCoresPerSocket"] if spec["numCoresPerSocket"]
-      cpu_options[:sockets] = spec["numCPUs"] / (cpu_options[:cores] || vm.cpu_cores_per_socket) if spec["numCPUs"]
+      cpu_options[:cores]   = spec['numCoresPerSocket'] if spec['numCoresPerSocket']
+      cpu_options[:sockets] = spec['numCPUs'] / (cpu_options[:cores] || vm.cpu_cores_per_socket) if spec['numCPUs']
 
       rhevm_vm.cpu_topology = cpu_options if cpu_options.present?
     end

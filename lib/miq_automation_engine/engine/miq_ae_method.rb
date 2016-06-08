@@ -8,13 +8,13 @@ module MiqAeEngine
     Dir.mkdir(AE_METHODS_DIR) unless File.directory?(AE_METHODS_DIR)
 
     def self.invoke_inline(aem, obj, inputs)
-      return invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == "ruby"
+      return invoke_inline_ruby(aem, obj, inputs) if aem.language.downcase.strip == 'ruby'
       raise  MiqAeException::InvalidMethod, "Inline Method Language [#{aem.language}] not supported"
     end
 
     def self.invoke_uri(aem, obj, _inputs)
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(aem.data)
-      raise  MiqAeException::MethodNotFound, "Specified URI [#{aem.data}] in Method [#{aem.name}] has unsupported scheme of #{scheme}; supported scheme is file" unless scheme.downcase == "file"
+      raise  MiqAeException::MethodNotFound, "Specified URI [#{aem.data}] in Method [#{aem.name}] has unsupported scheme of #{scheme}; supported scheme is file" unless scheme.downcase == 'file'
       raise  MiqAeException::MethodNotFound, "Invalid file specification -- #{aem.data}" if path.nil?
       # Create the filename corresponding to the URI specification
       fname = File.join(AE_METHODS_DIR, path)
@@ -47,13 +47,13 @@ module MiqAeEngine
         key   = f.name
         value = args[key]
         value = obj.attributes[key] || f.default_value if value.nil?
-        inputs[key] = MiqAeObject.convert_value_based_on_datatype(value, f["datatype"])
+        inputs[key] = MiqAeObject.convert_value_based_on_datatype(value, f['datatype'])
 
-        if obj.attributes[key] && f["datatype"] != "string"
+        if obj.attributes[key] && f['datatype'] != 'string'
           # the attributes data in the object start as string
           # if the datatype of the value stored in the object should be converted,
           # then update the object with the converted value
-          obj.attributes[key] = MiqAeObject.convert_value_based_on_datatype(obj.attributes[key], f["datatype"])
+          obj.attributes[key] = MiqAeObject.convert_value_based_on_datatype(obj.attributes[key], f['datatype'])
         end
 
         raise MiqAeException::MethodParmMissing, "Method [#{aem.fqname}] requires parameter [#{f.name}]" if inputs[key].nil?
@@ -61,7 +61,7 @@ module MiqAeEngine
 
       if obj.workspace.readonly?
         $miq_ae_logger.info("Workspace Instantiation is READONLY -- skipping method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
-      elsif ["inline", "builtin", "uri"].include?(aem.location.downcase.strip)
+      elsif ['inline', 'builtin', 'uri'].include?(aem.location.downcase.strip)
         $miq_ae_logger.info("Invoking [#{aem.location}] method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
         return MiqAeEngine::MiqAeMethod.send("invoke_#{aem.location.downcase.strip}", aem, obj, inputs)
       end
@@ -218,7 +218,7 @@ RUBY
     def self.ruby_method_runnable?(aem)
       return false if aem.data.blank?
 
-      raise MiqAeException::Error, "Unable to launch Automate Method because currently in SQL transaction" if ActiveRecord::Base.connection.open_transactions > open_transactions_threshold
+      raise MiqAeException::Error, 'Unable to launch Automate Method because currently in SQL transaction' if ActiveRecord::Base.connection.open_transactions > open_transactions_threshold
 
       true
     end
@@ -227,7 +227,7 @@ RUBY
       require 'drb/timeridconv'
       @global_id_conv = DRb.install_id_conv(DRb::TimerIdConv.new(drb_cache_timeout))
       drb_front  = MiqAeMethodService::MiqAeServiceFront.new
-      drb        = DRb.start_service("druby://127.0.0.1:0", drb_front)
+      drb        = DRb.start_service('druby://127.0.0.1:0', drb_front)
     end
 
     def self.drb_cache_timeout
@@ -303,7 +303,7 @@ RUBY
       rescue => err
         $miq_ae_logger.error("Method exec failed because (#{err.class}:#{err.message})")
         rc = MIQ_ABORT
-        msg = "Method execution failed"
+        msg = 'Method execution failed'
       ensure
         cleanup(method_pid, threads)
       end
@@ -314,7 +314,7 @@ RUBY
       if method_pid
         begin
           $miq_ae_logger.error("Terminating non responsive method with pid #{method_pid.inspect}")
-          Process.kill("TERM", method_pid)
+          Process.kill('TERM', method_pid)
           Process.wait(method_pid)
         rescue Errno::ESRCH, RangeError => err
           $miq_ae_logger.error("Error terminating #{method_pid.inspect} exception #{err}")

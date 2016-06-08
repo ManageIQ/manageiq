@@ -3,7 +3,7 @@ module NamingSequenceMixin
 
   included do
     # these are possible naming sequences because there is no constraint to source column
-    has_many :naming_sequences, :as => :resource, :dependent => :destroy, :class_name => "CustomAttribute"
+    has_many :naming_sequences, :as => :resource, :dependent => :destroy, :class_name => 'CustomAttribute'
   end
 
   def next_naming_sequence(name, source)

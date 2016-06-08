@@ -6,7 +6,7 @@ include Iso9660
 
 class TestIso9660BootSector < Minitest::Test
   def test_boot_sector
-    puts "Testing boot sector"
+    puts 'Testing boot sector'
     di = OpenStruct.new
     di.rawDisk = true
     di.fileName = $rawDisk

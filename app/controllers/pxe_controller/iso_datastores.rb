@@ -3,23 +3,23 @@ module PxeController::IsoDatastores
   extend ActiveSupport::Concern
 
   def iso_datastore_tree_select
-    typ, id = params[:id].split("_")
+    typ, id = params[:id].split('_')
     case typ
-    when "img"
+    when 'img'
       @record = MiqServer.find(from_cid(id))
-    when "wimg"
+    when 'wimg'
       @record = WindowsImage.find(from_cid(id))
-    when "ps"
+    when 'ps'
       @record = ServerRole.find(from_cid(id))
     end
   end
 
   def iso_datastore_new
-    assert_privileges("iso_datastore_new")
+    assert_privileges('iso_datastore_new')
     @isd = IsoDatastore.new
     iso_datastore_set_form_vars
     @in_a_form = true
-    replace_right_cell("isd")
+    replace_right_cell('isd')
   end
 
   def iso_datastore_edit
@@ -31,33 +31,33 @@ module PxeController::IsoDatastores
     iso_datastore_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    replace_right_cell("isd")
+    replace_right_cell('isd')
   end
 
   def iso_datastore_create
-    id = params[:id] || "new"
+    id = params[:id] || 'new'
     return unless load_edit("isd_edit__#{id}")
     iso_datastore_get_form_vars
-    if params[:button] == "cancel"
+    if params[:button] == 'cancel'
       @edit = session[:edit] = nil # clean out the saved info
-      add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "IsoDatastore")})
+      add_flash(_('Add of new %{model} was cancelled by the user') % {:model => ui_lookup(:model => 'IsoDatastore')})
       get_node_info(x_node)
       replace_right_cell(x_node)
-    elsif params[:button] == "add"
+    elsif params[:button] == 'add'
       isd = params[:id] ? find_by_id_filtered(IsoDatastore, params[:id]) : IsoDatastore.new
       if @edit[:new][:ems_id].blank?
-        add_flash(_("Provider is required"), :error)
+        add_flash(_('Provider is required'), :error)
       end
       if @flash_array
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
       iso_datastore_set_record_vars(isd)
 
-      add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "IsoDatastore"), :name => @edit[:ems_name]})
+      add_flash(_('%{model} "%{name}" was added') % {:model => ui_lookup(:model => 'IsoDatastore'), :name => @edit[:ems_name]})
 
       if !flash_errors? && isd.save!
         AuditEvent.success(build_created_audit(isd, @edit))
@@ -72,11 +72,11 @@ module PxeController::IsoDatastores
         end
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
       end
-    elsif params[:button] == "reset"
-      add_flash(_("All changes have been reset"), :warning)
+    elsif params[:button] == 'reset'
+      add_flash(_('All changes have been reset'), :warning)
       @in_a_form = true
       iso_datastore_edit
     end
@@ -84,7 +84,7 @@ module PxeController::IsoDatastores
 
   # AJAX driven routine to check for changes in ANY field on the form
   def iso_datastore_form_field_changed
-    return unless load_edit("isd_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("isd_edit__#{params[:id]}", 'replace_cell__explorer')
     iso_datastore_get_form_vars
     render :update do |page|
       page << javascript_prologue
@@ -95,7 +95,7 @@ module PxeController::IsoDatastores
 
   # Refresh the power states for selected or single VMs
   def iso_datastore_refresh
-    assert_privileges("iso_datastore_refresh")
+    assert_privileges('iso_datastore_refresh')
     iso_datastore_button_operation('synchronize_advertised_images_queue', 'Refresh Relationships')
   end
 
@@ -107,7 +107,7 @@ module PxeController::IsoDatastores
     if !params[:id]
       isds = find_checked_items
       if isds.empty?
-        add_flash(_("No %{model} were selected to %{button}") % {:model => ui_lookup(:models => "IsoDatastore"), :button => display_name},
+        add_flash(_('No %{model} were selected to %{button}') % {:model => ui_lookup(:models => 'IsoDatastore'), :button => display_name},
                   :error)
       else
         process_iso_datastores(isds, method, display_name)
@@ -117,17 +117,17 @@ module PxeController::IsoDatastores
       replace_right_cell(x_node, [:iso_datastores])
     else # showing 1 vm
       if params[:id].nil? || IsoDatastore.find_by_id(params[:id]).nil?
-        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "IsoDatastore")},
+        add_flash(_('%{model} no longer exists') % {:model => ui_lookup(:model => 'IsoDatastore')},
                   :error)
         iso_datastore_list
-        @refresh_partial = "layouts/x_gtl"
+        @refresh_partial = 'layouts/x_gtl'
       else
         isds.push(params[:id])
         process_iso_datastores(isds, method, display_name)  unless isds.empty?
         # TODO: tells callers to go back to show_list because this iso_datastore may be gone
         # Should be refactored into calling show_list right here
         if method == 'destroy'
-          self.x_node = "root"
+          self.x_node = 'root'
           @single_delete = true unless flash_errors?
         end
         get_node_info(x_node)
@@ -138,21 +138,21 @@ module PxeController::IsoDatastores
   end
 
   def iso_datastore_delete
-    assert_privileges("iso_datastore_delete")
+    assert_privileges('iso_datastore_delete')
     iso_datastore_button_operation('destroy', 'Delete')
   end
 
   def iso_datastore_list
-    @lastaction = "iso_datastore_list"
+    @lastaction = 'iso_datastore_list'
     @force_no_grid_xml   = true
-    @gtl_type            = "list"
+    @gtl_type            = 'list'
     @ajax_paging_buttons = true
     if params[:ppsetting]                                             # User selected new per page value
       @items_per_page = params[:ppsetting].to_i                       # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page         # Set the per page setting for this gtl type
     end
     @sortcol = session[:iso_sortcol].nil? ? 0 : session[:iso_sortcol].to_i
-    @sortdir = session[:iso_sortdir].nil? ? "ASC" : session[:iso_sortdir]
+    @sortdir = session[:iso_sortdir].nil? ? 'ASC' : session[:iso_sortdir]
 
     @view, @pages = get_view(IsoDatastore)  # Get the records (into a view) and the paginator
 
@@ -160,30 +160,30 @@ module PxeController::IsoDatastores
     session[:iso_sortcol] = @sortcol
     session[:iso_sortdir] = @sortdir
 
-    if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
+    if params[:action] != 'button' && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
       render :update do |page|
         page << javascript_prologue
-        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "iso_datastore_list"})
-        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
-        page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
+        page.replace('gtl_div', :partial => 'layouts/x_gtl', :locals => {:action_url => 'iso_datastore_list'})
+        page.replace_html('paging_div', :partial => 'layouts/x_pagingcontrols')
+        page << 'miqSparkle(false);'  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
   end
 
   def iso_image_edit
-    assert_privileges("iso_image_edit")
+    assert_privileges('iso_image_edit')
     case params[:button]
-    when "cancel"
-      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "IsoImage"), :name => session[:edit][:img].name})
+    when 'cancel'
+      add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'IsoImage'), :name => session[:edit][:img].name})
       @edit = session[:edit] = nil  # clean out the saved info
       get_node_info(x_node)
       replace_right_cell(x_node)
-    when "save"
-      return unless load_edit("iso_img_edit__#{params[:id]}", "replace_cell__explorer")
+    when 'save'
+      return unless load_edit("iso_img_edit__#{params[:id]}", 'replace_cell__explorer')
       update_img = find_by_id_filtered(IsoImage, params[:id])
       iso_img_set_record_vars(update_img)
       if update_img.valid? && !flash_errors? && update_img.save!
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "IsoImage"), :name => update_img.name})
+        add_flash(_('%{model} "%{name}" was saved') % {:model => ui_lookup(:model => 'IsoImage'), :name => update_img.name})
         AuditEvent.success(build_saved_audit(update_img, @edit))
         refresh_tree = @edit[:new][:default_for_windows] == @edit[:current][:default_for_windows] ? [] : [:iso_datastore]
         @edit = session[:edit] = nil  # clean out the saved info
@@ -197,11 +197,11 @@ module PxeController::IsoDatastores
         @changed = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
-    when "reset", nil
+    when 'reset', nil
       @img = IsoImage.find_by_id(from_cid(params[:id]))
       iso_img_set_form_vars
       @in_a_form = true
@@ -215,7 +215,7 @@ module PxeController::IsoDatastores
 
   # AJAX driven routine to check for changes in ANY field on the form
   def iso_img_form_field_changed
-    return unless load_edit("iso_img_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("iso_img_edit__#{params[:id]}", 'replace_cell__explorer')
     iso_img_get_form_vars
     render :update do |page|
       page << javascript_prologue
@@ -230,7 +230,7 @@ module PxeController::IsoDatastores
   def iso_img_get_form_vars
     @img = @edit[:img]
     @edit[:new][:img_type] = params[:image_typ] if params[:image_typ]
-    @edit[:new][:default_for_windows] = params[:default_for_windows] == "1" if params[:default_for_windows]
+    @edit[:new][:default_for_windows] = params[:default_for_windows] == '1' if params[:default_for_windows]
   end
 
   # Set form variables for edit
@@ -299,29 +299,29 @@ module PxeController::IsoDatastores
 
   # Common Schedule button handler routines
   def process_iso_datastores(elements, task, display_name)
-    process_elements(elements, IsoDatastore, task, display_name, "ems_id")
+    process_elements(elements, IsoDatastore, task, display_name, 'ems_id')
   end
 
   # Get information for an event
   def iso_datastore_build_tree
-    TreeBuilderIsoDatastores.new("iso_datastores_tree", "iso_datastores", @sb)
+    TreeBuilderIsoDatastores.new('iso_datastores_tree', 'iso_datastores', @sb)
   end
 
   def iso_datastore_get_node_info(treenodeid)
-    if treenodeid == "root"
+    if treenodeid == 'root'
       iso_datastore_list
-      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "IsoDatastore")}
-      @right_cell_div  = "iso_datastore_list"
+      @right_cell_text = _('All %{models}') % {:models => ui_lookup(:models => 'IsoDatastore')}
+      @right_cell_div  = 'iso_datastore_list'
     else
-      @right_cell_div = "iso_datastore_details"
-      nodes = treenodeid.split("-")
-      if (nodes[0] == "isd" && nodes.length == 2) || (["isd_xx"].include?(nodes[1]) && nodes.length == 3)
+      @right_cell_div = 'iso_datastore_details'
+      nodes = treenodeid.split('-')
+      if (nodes[0] == 'isd' && nodes.length == 2) || (['isd_xx'].include?(nodes[1]) && nodes.length == 3)
         # on iso_datastore node OR folder node is selected
         @record = @isd = IsoDatastore.find_by_id(from_cid(nodes.last))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @isd.name, :model => ui_lookup(:model => "IsoDatastore")}
-      elsif nodes[0] == "isi"
+        @right_cell_text = _('%{model} "%{name}"') % {:name => @isd.name, :model => ui_lookup(:model => 'IsoDatastore')}
+      elsif nodes[0] == 'isi'
         @record = @img = IsoImage.find_by_id(from_cid(nodes.last))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @img.name, :model => ui_lookup(:model => "IsoImage")}
+        @right_cell_text = _('%{model} "%{name}"') % {:name => @img.name, :model => ui_lookup(:model => 'IsoImage')}
       end
     end
   end

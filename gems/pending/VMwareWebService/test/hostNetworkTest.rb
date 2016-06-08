@@ -45,23 +45,23 @@ begin
     puts "Host name: #{miqHost.name}"
     puts
 
-    puts "**** configManager:"
+    puts '**** configManager:'
     vim.dumpObj(miqHost.configManager)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
     ns = miqHost.networkSystem
   
-    puts "**** Refreshing network info..."
+    puts '**** Refreshing network info...'
     ns.refreshNetworkSystem
-    puts "**** Done."
+    puts '**** Done.'
     puts
   
     ni = ns.networkInfo
   
-    puts "**** networkInfo:"
+    puts '**** networkInfo:'
     vim.dumpObj(ni)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
 rescue => err

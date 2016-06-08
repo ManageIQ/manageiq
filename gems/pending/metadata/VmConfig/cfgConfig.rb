@@ -1,6 +1,6 @@
 module CfgConfig
   def convert(filename)
-    @convertText = ""
+    @convertText = ''
     $log.debug "Processing Windows Configuration file [#{filename}]"
     begin
       fh = File.open(filename)
@@ -8,7 +8,7 @@ module CfgConfig
         line.AsciiToUtf8!.strip!
         next if line.length == 0
         next if line =~ /^#.*$/
-        next unless line.include?("=")
+        next unless line.include?('=')
         k, v = line.split(/\s*=\s*/)
         send(k, v) if self.respond_to?(k)
       end
@@ -19,17 +19,17 @@ module CfgConfig
   end
 
   def name(value)
-    vmName = value.gsub(/^"/, "").gsub(/"$/, "")
-    add_item("displayName", vmName)
+    vmName = value.gsub(/^"/, '').gsub(/"$/, '')
+    add_item('displayName', vmName)
   end
 
   def memory(value)
-    add_item("memsize", value)
+    add_item('memsize', value)
   end
 
   def disk(value)
     eval(value).each do |d|
-      diskProp = d.split(",")
+      diskProp = d.split(',')
       # scsi0:0.fileName = "Windows XP Professional x64 Edition.vmdk"
       add_item("scsi0:#{diskProp[1][-1..-1]}.fileName", File.basename(diskProp[0]))
     end
@@ -40,6 +40,6 @@ module CfgConfig
   end
 
   def vendor
-    "xen"
+    'xen'
   end
 end

@@ -3,7 +3,7 @@ require 'util/miq-ipmi'
 class IpmiProbe
   def self.probe(ost)
     unless ost.discover_types.include?(:ipmi)
-      $log.info "Skipping IPMI Probe" if $log
+      $log.info 'Skipping IPMI Probe' if $log
       return
     end
 

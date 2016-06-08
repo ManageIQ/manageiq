@@ -1,8 +1,8 @@
 class MiqAeValue < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
-  belongs_to :ae_field,    :class_name => "MiqAeField",    :foreign_key => :field_id
-  belongs_to :ae_instance, :class_name => "MiqAeInstance", :foreign_key => :instance_id
+  belongs_to :ae_field,    :class_name => 'MiqAeField',    :foreign_key => :field_id
+  belongs_to :ae_instance, :class_name => 'MiqAeInstance', :foreign_key => :instance_id
 
   def to_export_xml(options = {})
     require 'builder'
@@ -11,7 +11,7 @@ class MiqAeValue < ApplicationRecord
 
     self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?('_id')
 
       # Skip any columns that we process explicitly
       next if %w(name value).include?(cname)
@@ -31,6 +31,6 @@ class MiqAeValue < ApplicationRecord
   end
 
   def value=(value)
-    write_attribute(:value, (ae_field.datatype == "password") ? MiqAePassword.encrypt(value) : value)
+    write_attribute(:value, (ae_field.datatype == 'password') ? MiqAePassword.encrypt(value) : value)
   end
 end

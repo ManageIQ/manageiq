@@ -14,6 +14,6 @@ class TreeBuilderCatalogs < TreeBuilderCatalogsClass
   end
 
   def root_options
-    [t = _("All Catalogs"), t]
+    [t = _('All Catalogs'), t]
   end
 end

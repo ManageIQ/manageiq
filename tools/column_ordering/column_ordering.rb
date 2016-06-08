@@ -6,7 +6,7 @@ class ColumnOrdering
 
   attr_accessor :table
 
-  SCHEMA_FILE = Rails.root.join("db/schema.yml").freeze
+  SCHEMA_FILE = Rails.root.join('db/schema.yml').freeze
 
   def initialize(table, connection)
     @table = table
@@ -39,38 +39,38 @@ class ColumnOrdering
     begin
       @connection.begin_db_transaction
 
-      puts "Retrieving old sequence value ..."
+      puts 'Retrieving old sequence value ...'
       pk, sequence = @connection.pk_and_sequence_for(table)
       raise ColumnOrderingError, "Failed to retrieve primary key and sequence for #{table}" unless pk && sequence
       sequence_value = @connection.select_value("SELECT nextval('#{sequence}')")
       puts "Retrieved old sequence value #{sequence_value}"
 
-      puts "Renaming old table ..."
+      puts 'Renaming old table ...'
       @connection.rename_table(table, "#{table}_old")
-      puts "Table renamed"
+      puts 'Table renamed'
 
-      puts "Creating new table ..."
+      puts 'Creating new table ...'
       create_new_table = reordered_create_table_statement(create_table_statement)
       @connection.exec_query(create_new_table)
       puts "New table created as:\n#{create_new_table}"
 
-      puts "Moving data into new table ..."
+      puts 'Moving data into new table ...'
       @connection.exec_query(<<-SQL)
         INSERT INTO #{table} SELECT #{expected_columns.join(",")} FROM #{table}_old
       SQL
-      puts "Data moved"
+      puts 'Data moved'
 
-      puts "Dropping old table ..."
+      puts 'Dropping old table ...'
       @connection.exec_query("DROP TABLE #{table}_old")
-      puts "Old table removed"
+      puts 'Old table removed'
 
-      puts "Recreating remaining schema structure ..."
+      puts 'Recreating remaining schema structure ...'
       @connection.execute(remaining_schema_structure).check
-      puts "Schema structure recreated"
+      puts 'Schema structure recreated'
 
-      puts "Setting new sequence to old value ..."
+      puts 'Setting new sequence to old value ...'
       @connection.set_pk_sequence!(table, sequence_value)
-      puts "Sequence value set"
+      puts 'Sequence value set'
     rescue
       @connection.exec_rollback_db_transaction
       raise
@@ -96,9 +96,9 @@ class ColumnOrdering
       :d => PG::Connection.parse_connect_args(conf)
     }
 
-    pg_dump_result = AwesomeSpawn.run("pg_dump", :params => params)
+    pg_dump_result = AwesomeSpawn.run('pg_dump', :params => params)
 
-    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, "") if pg_dump_result.failure?
+    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, '') if pg_dump_result.failure?
       '#{pg_dump_result.command_line}' failed with #{pg_dump_result.exit_status}:
 
       stdout: #{pg_dump_result.output}
@@ -111,10 +111,10 @@ class ColumnOrdering
   # Separates the create table statement from the rest of the table dump
   # @returns create_table_statement, remaining_structure_dump
   def parse_create_table
-    create_table = ""
+    create_table = ''
     rest = table_dump.gsub(/create table #{table} \(.*?\);/mi) do |match|
       create_table = match
-      ""
+      ''
     end
 
     return create_table, rest
@@ -129,16 +129,16 @@ class ColumnOrdering
 
     create_table_statement_start = scanner.scan_until(/\(/)
     paren_stack = 1
-    create_table_statement_end = ""
+    create_table_statement_end = ''
 
-    params = ""
+    params = ''
     until scanner.eos?
       tok = scanner.scan_until(/\(|\)/)
 
       case tok[-1]
-      when "("
+      when '('
         paren_stack += 1
-      when ")"
+      when ')'
         paren_stack -= 1
         if paren_stack == 0
           create_table_statement_end = tok[-1] + scanner.rest
@@ -160,7 +160,7 @@ class ColumnOrdering
     paren_stack = 0
     column_hash = {}
     constraints = []
-    current_param = ""
+    current_param = ''
     scanner = StringScanner.new(params)
 
     until scanner.eos?
@@ -173,9 +173,9 @@ class ColumnOrdering
         scanner.terminate
       end
 
-      if paren_stack == 0 && (tok.nil? || tok.end_with?(","))
+      if paren_stack == 0 && (tok.nil? || tok.end_with?(','))
         current_param.strip!
-        val = current_param.end_with?(",") ? current_param[0..-2] : current_param
+        val = current_param.end_with?(',') ? current_param[0..-2] : current_param
         key = val.split.first
         if /^constraint$|^check$/i =~ key
           constraints << val
@@ -183,10 +183,10 @@ class ColumnOrdering
           key = key[1..-2] if key.start_with?('"') && key.end_with?('"')
           column_hash[key] = val
         end
-        current_param = ""
-      elsif tok.end_with?("(")
+        current_param = ''
+      elsif tok.end_with?('(')
         paren_stack += 1
-      elsif tok.end_with?(")")
+      elsif tok.end_with?(')')
         paren_stack -= 1
       end
     end
@@ -211,7 +211,7 @@ class ColumnOrdering
 
   def assert_column_list_sizes_match!
     return if current_columns.length == expected_columns.length
-    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, "")
+    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, '')
       Current and expected column arrays are of different size for table #{table}
 
       expected: #{expected_columns.inspect}
@@ -221,7 +221,7 @@ class ColumnOrdering
 
   def assert_column_list_contents_match!
     return if current_columns.sort == expected_columns.sort
-    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, "")
+    raise ColumnOrderingError <<-ERROR.gsub!(/^ +/, '')
       Current and expected column arrays have different contents for #{table}
 
       expected: #{expected_columns.inspect}

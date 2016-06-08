@@ -8,7 +8,7 @@ module ManageIQ::Providers::CloudManager::Provision::Placement
   private
 
   def automatic_placement
-    _log.info("Getting most suitable availability_zone for new instance...")
+    _log.info('Getting most suitable availability_zone for new instance...')
     availability_zone = get_most_suitable_availability_zone
     availability_zone ||= manual_placement
 

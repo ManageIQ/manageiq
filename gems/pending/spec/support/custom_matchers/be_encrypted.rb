@@ -17,6 +17,6 @@ RSpec::Matchers.define :be_encrypted do |expected|
   end
 
   description do
-    "expect to be an encrypted v2 password (with optional encrypted value)"
+    'expect to be an encrypted v2 password (with optional encrypted value)'
   end
 end

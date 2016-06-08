@@ -1,7 +1,7 @@
 # Class to Export Automate Model to a directory on the file system
 class MiqAeYamlExportFs < MiqAeYamlExport
   def initialize(domain, options)
-    raise ArgumentError, "Output directory not specified" if options['export_dir'].blank?
+    raise ArgumentError, 'Output directory not specified' if options['export_dir'].blank?
     options['overwrite'] ||= false
     dom_name = options['export_as'].present? ? options['export_as'] : domain
     dir_name = File.join(options['export_dir'], dom_name)

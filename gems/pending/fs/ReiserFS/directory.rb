@@ -17,7 +17,7 @@ module ReiserFS
     # Note:  BlockNum can always be computed from Key and the ROOT_DIR
     ###################################################################
     def initialize(sb, key = nil)
-      raise "Nil superblock" if sb.nil?
+      raise 'Nil superblock' if sb.nil?
       @sb        = sb
       @key       = key.nil? ? ROOT_DIR : key
       @leaves    = @sb.getLeafNodes(@key)

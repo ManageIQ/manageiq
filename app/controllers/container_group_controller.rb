@@ -13,6 +13,6 @@ class ContainerGroupController < ApplicationController
   private ############################
 
   def display_name
-    "Pods"
+    'Pods'
   end
 end

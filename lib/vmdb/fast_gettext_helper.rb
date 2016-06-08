@@ -12,7 +12,7 @@ module Vmdb
     end
 
     def self.fix_i18n_available_locales
-      I18n.available_locales += FastGettext.available_locales.grep(/_/).map { |i| i.tr("_", "-") }
+      I18n.available_locales += FastGettext.available_locales.grep(/_/).map { |i| i.tr('_', '-') }
     end
 
     def self.find_available_locales_via_directories
@@ -34,7 +34,7 @@ module Vmdb
     end
 
     def self.supported_locales_filename
-      @supported_locales_filename ||= Rails.root.join("config", "supported_locales.yml")
+      @supported_locales_filename ||= Rails.root.join('config', 'supported_locales.yml')
     end
 
     def self.supported_locales_specified?
@@ -48,7 +48,7 @@ module Vmdb
     end
 
     def self.locale_path
-      @locale_path ||= Rails.root.join("config/locales")
+      @locale_path ||= Rails.root.join('config/locales')
     end
 
     def self.register_locales

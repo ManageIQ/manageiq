@@ -20,7 +20,7 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
 
   def poll_volumes_complete
     status, status_message = do_volume_creation_check(phase_context[:requested_volumes])
-    status_message = "completed prepare provision work queued" if status
+    status_message = 'completed prepare provision work queued' if status
     message = "Volume creation is #{status_message}"
     _log.info(message)
     update_and_notify_parent(:message => message)
@@ -42,7 +42,7 @@ module ManageIQ::Providers::CloudManager::Provision::StateMachine
   def poll_clone_complete
     clone_status, status_message = do_clone_task_check(phase_context[:clone_task_ref])
 
-    status_message = "completed; post provision work queued" if clone_status
+    status_message = 'completed; post provision work queued' if clone_status
     message = "Clone of #{clone_direction} is #{status_message}"
     _log.info("#{message}")
     update_and_notify_parent(:message => message)

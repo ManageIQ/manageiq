@@ -13,8 +13,8 @@ module MiqAeServiceHostSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Host::host=#{@host.id}", @user)
     end
 
-    context "$evm.vmdb" do
-      it "with no parms" do
+    context '$evm.vmdb' do
+      it 'with no parms' do
         method = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host')"
         @ae_method.update_attributes(:data => method)
         ae_result = invoke_ae.root(@ae_result_key)
@@ -32,7 +32,7 @@ module MiqAeServiceHostSpec
         expect(ae_result).to eq(1)
       end
 
-      it "with ems_events" do
+      it 'with ems_events' do
         @ems_event = FactoryGirl.create(:ems_event)
         @host.ems_events << @ems_event
         method = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host').first.ems_events"
@@ -42,7 +42,7 @@ module MiqAeServiceHostSpec
         expect(ae_result.first.id).to eq(@ems_event.id)
       end
 
-      it "with id" do
+      it 'with id' do
         method = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host', #{@host.id})"
         @ae_method.update_attributes(:data => method)
         ae_result = invoke_ae.root(@ae_result_key)
@@ -50,7 +50,7 @@ module MiqAeServiceHostSpec
         expect(ae_result.id).to eq(@host.id)
       end
 
-      it "with array of ids" do
+      it 'with array of ids' do
         method = "$evm.root['#{@ae_result_key}'] = $evm.vmdb('host', [#{@host.id}])"
         @ae_method.update_attributes(:data => method)
         ae_result = invoke_ae.root(@ae_result_key)
@@ -63,7 +63,7 @@ module MiqAeServiceHostSpec
       end
     end
 
-    it "#ems_custom_keys" do
+    it '#ems_custom_keys' do
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['host'].ems_custom_keys"
       @ae_method.update_attributes(:data => method)
       ae_result = invoke_ae.root(@ae_result_key)
@@ -87,7 +87,7 @@ module MiqAeServiceHostSpec
       expect(ae_result.sort).to eq([key1, key2])
     end
 
-    it "#ems_custom_get" do
+    it '#ems_custom_get' do
       key    = 'key1'
       value  = 'value1'
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['host'].ems_custom_get('#{key}')"
@@ -100,7 +100,7 @@ module MiqAeServiceHostSpec
       expect(ae_result).to eq(value)
     end
 
-    it "#get_realtime_metric" do
+    it '#get_realtime_metric' do
       metric   = 'metric1'
       range    = 10.minutes
       function = :max

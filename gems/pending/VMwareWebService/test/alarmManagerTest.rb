@@ -35,7 +35,7 @@ begin
     if alarms
       vim.dumpObj(alarms)
     else
-      puts "No alarms currently defined"
+      puts 'No alarms currently defined'
     end
   
 rescue => err

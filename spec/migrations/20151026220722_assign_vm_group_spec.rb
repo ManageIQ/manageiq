@@ -6,7 +6,7 @@ describe AssignVmGroup do
   let(:service_stub) { migration_stub(:Service) }
 
   migration_context :up do
-    it "assigns vm groups" do
+    it 'assigns vm groups' do
       tenant_stub.create!(:default_miq_group_id => 1)
 
       vm_without_group = vmt_stub.create!(:miq_group_id => nil)
@@ -17,7 +17,7 @@ describe AssignVmGroup do
       expect(vm_with_group.reload.miq_group_id).to eq(2)
     end
 
-    it "assigns service groups" do
+    it 'assigns service groups' do
       tenant_stub.create!(:default_miq_group_id => 1)
 
       service_without_group = service_stub.create!(:miq_group_id => nil)

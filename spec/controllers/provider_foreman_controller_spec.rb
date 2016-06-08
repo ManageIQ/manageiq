@@ -1,37 +1,37 @@
 describe ProviderForemanController do
   render_views
 
-  let(:tags) { ["/managed/quota_max_memory/2048"] }
+  let(:tags) { ['/managed/quota_max_memory/2048'] }
   before(:each) do
     @zone = EvmSpecHelper.local_miq_server.zone
     Tag.find_or_create_by(:name => tags.first)
 
-    @provider = ManageIQ::Providers::Foreman::Provider.create(:name => "testForeman", :url => "10.8.96.102", :zone => @zone)
+    @provider = ManageIQ::Providers::Foreman::Provider.create(:name => 'testForeman', :url => '10.8.96.102', :zone => @zone)
     @config_mgr = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider.id)
-    @config_profile = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name        => "testprofile",
-                                                                                                      :description => "testprofile",
+    @config_profile = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name        => 'testprofile',
+                                                                                                      :description => 'testprofile',
                                                                                                       :manager_id  => @config_mgr.id)
-    @config_profile2 = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name        => "testprofile2",
-                                                                                                       :description => "testprofile2",
+    @config_profile2 = ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile.create(:name        => 'testprofile2',
+                                                                                                       :description => 'testprofile2',
                                                                                                        :manager_id  => @config_mgr.id)
-    @configured_system = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test_configured_system",
+    @configured_system = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => 'test_configured_system',
                                                                                                      :configuration_profile_id => @config_profile.id,
                                                                                                      :manager_id               => @config_mgr.id)
-    @configured_system2a = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test2a_configured_system",
+    @configured_system2a = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => 'test2a_configured_system',
                                                                                                        :configuration_profile_id => @config_profile2.id,
                                                                                                        :manager_id               => @config_mgr.id)
-    @configured_system2b = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "test2b_configured_system",
+    @configured_system2b = ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => 'test2b_configured_system',
                                                                                                        :configuration_profile_id => @config_profile2.id,
                                                                                                        :manager_id               => @config_mgr.id)
     @configured_system_unprovisioned =
-      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned",
+      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => 'configured_system_unprovisioned',
                                                                                   :configuration_profile_id => nil,
                                                                                   :manager_id               => @config_mgr.id)
 
-    @provider2 = ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman", :url => "10.8.96.103", :zone => @zone)
+    @provider2 = ManageIQ::Providers::Foreman::Provider.create(:name => 'test2Foreman', :url => '10.8.96.103', :zone => @zone)
     @config_mgr2 = ManageIQ::Providers::Foreman::ConfigurationManager.find_by_provider_id(@provider2.id)
     @configured_system_unprovisioned2 =
-      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => "configured_system_unprovisioned2",
+      ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem.create(:hostname                 => 'configured_system_unprovisioned2',
                                                                                   :configuration_profile_id => nil,
                                                                                   :manager_id               => @config_mgr2.id)
     controller.instance_variable_set(:@sb, :active_tree => :configuration_manager_providers_tree)
@@ -40,37 +40,37 @@ describe ProviderForemanController do
       cs.tag_with(tags, :namespace => '')
     end
 
-    @provider_ans = ManageIQ::Providers::AnsibleTower::Provider.create(:name => "ansibletest", :url => "10.8.96.108", :zone => @zone)
+    @provider_ans = ManageIQ::Providers::AnsibleTower::Provider.create(:name => 'ansibletest', :url => '10.8.96.108', :zone => @zone)
     @config_ans = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find_by_provider_id(@provider_ans.id)
 
-    @provider_ans2 = ManageIQ::Providers::AnsibleTower::Provider.create(:name => "ansibletest2", :url => "10.8.96.109", :zone => @zone)
+    @provider_ans2 = ManageIQ::Providers::AnsibleTower::Provider.create(:name => 'ansibletest2', :url => '10.8.96.109', :zone => @zone)
     @config_ans2 = ManageIQ::Providers::AnsibleTower::ConfigurationManager.find_by_provider_id(@provider_ans2.id)
 
-    @inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => "testinvgroup", :ems_id => @config_ans.id)
-    @inventory_group2 = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => "testinvgroup2", :ems_id => @config_ans2.id)
-    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "ans_test_configured_system",
+    @inventory_group = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => 'testinvgroup', :ems_id => @config_ans.id)
+    @inventory_group2 = ManageIQ::Providers::ConfigurationManager::InventoryRootGroup.create(:name => 'testinvgroup2', :ems_id => @config_ans2.id)
+    @ans_configured_system = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => 'ans_test_configured_system',
                                                                                                               :inventory_root_group_id => @inventory_group.id,
                                                                                                               :manager_id              => @config_ans.id)
 
-    @ans_configured_system2a = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2a_ans_configured_system",
+    @ans_configured_system2a = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => 'test2a_ans_configured_system',
                                                                                                                 :inventory_root_group_id => @inventory_group.id,
                                                                                                                 :manager_id              => @config_ans.id)
-    @ans_configured_system2b = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => "test2b_ans_configured_system",
+    @ans_configured_system2b = ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem.create(:hostname                => 'test2b_ans_configured_system',
                                                                                                                 :inventory_root_group_id => @inventory_group2.id,
                                                                                                                 :manager_id              => @config_ans2.id)
-    @ans_job_template1 = FactoryGirl.create(:ansible_configuration_script, :name => "ConfigScript1", :manager_id => @config_ans.id)
-    @ans_job_template2 = FactoryGirl.create(:ansible_configuration_script, :name => "ConfigScript2", :manager_id => @config_ans2.id)
-    @ans_job_template3 = FactoryGirl.create(:ansible_configuration_script, :name => "ConfigScript3", :manager_id => @config_ans.id)
+    @ans_job_template1 = FactoryGirl.create(:ansible_configuration_script, :name => 'ConfigScript1', :manager_id => @config_ans.id)
+    @ans_job_template2 = FactoryGirl.create(:ansible_configuration_script, :name => 'ConfigScript2', :manager_id => @config_ans2.id)
+    @ans_job_template3 = FactoryGirl.create(:ansible_configuration_script, :name => 'ConfigScript3', :manager_id => @config_ans.id)
   end
 
-  it "renders index" do
+  it 'renders index' do
     set_user_privileges
     get :index
     expect(response.status).to eq(302)
     expect(response).to redirect_to(:action => 'explorer')
   end
 
-  it "renders explorer" do
+  it 'renders explorer' do
     set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord configuration_scripts_accord)
 
     get :explorer
@@ -82,14 +82,14 @@ describe ProviderForemanController do
     expect(response.body).to_not be_empty
   end
 
-  context "renders explorer based on RBAC" do
+  context 'renders explorer based on RBAC' do
     it "renders explorer based on RBAC access to feature 'configured_system_tag'" do
       set_user_privileges user_with_feature %w(configured_system_tag)
 
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
-      expect(accords[0][:name]).to eq("cs_filter")
+      expect(accords[0][:name]).to eq('cs_filter')
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
     end
@@ -100,55 +100,55 @@ describe ProviderForemanController do
       get :explorer
       accords = controller.instance_variable_get(:@accords)
       expect(accords.size).to eq(1)
-      expect(accords[0][:name]).to eq("configuration_manager_providers")
+      expect(accords[0][:name]).to eq('configuration_manager_providers')
       expect(response.status).to eq(200)
       expect(response.body).to_not be_empty
     end
   end
 
-  context "asserts correct privileges" do
+  context 'asserts correct privileges' do
     before do
       login_as user_with_feature %w(configured_system_provision)
     end
 
-    it "should not raise an error for feature that user has access to" do
-      expect { controller.send(:assert_privileges, "configured_system_provision") }.not_to raise_error
+    it 'should not raise an error for feature that user has access to' do
+      expect { controller.send(:assert_privileges, 'configured_system_provision') }.not_to raise_error
     end
 
-    it "should raise an error for feature that user has access to" do
-      expect { controller.send(:assert_privileges, "provider_foreman_add_provider") }
+    it 'should raise an error for feature that user has access to' do
+      expect { controller.send(:assert_privileges, 'provider_foreman_add_provider') }
         .to raise_error(MiqException::RbacPrivilegeException)
     end
   end
 
-  it "renders show_list" do
+  it 'renders show_list' do
     set_user_privileges
     get :show_list
     expect(response.status).to eq(302)
     expect(response.body).to_not be_empty
   end
 
-  it "renders a new page" do
+  it 'renders a new page' do
     post :new, :format => :js
     expect(response.status).to eq(200)
   end
 
-  context "Verify the provisionable flag for CSs" do
-    it "Provision action should be allowed for a Configured System marked as provisionable" do
-      allow(controller).to receive(:x_node).and_return("root")
+  context 'Verify the provisionable flag for CSs' do
+    it 'Provision action should be allowed for a Configured System marked as provisionable' do
+      allow(controller).to receive(:x_node).and_return('root')
       allow(controller).to receive(:x_tree).and_return(:type => :filter)
-      controller.instance_variable_set(:@_params, :id => "cs_filter")
+      controller.instance_variable_set(:@_params, :id => 'cs_filter')
       allow(controller).to receive(:replace_right_cell)
       controller.instance_variable_set(:@_params, :id => @config_ans2.id)
       controller.send(:provision)
       expect(controller.send(:flash_errors?)).to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("Provisioning is not supported for at least one of the selected systems")
+      expect(assigns(:flash_array).first[:message]).to include('Provisioning is not supported for at least one of the selected systems')
     end
 
-    it "Provision action should not be allowed only for a Configured System marked as not provisionable" do
-      allow(controller).to receive(:x_node).and_return("root")
+    it 'Provision action should not be allowed only for a Configured System marked as not provisionable' do
+      allow(controller).to receive(:x_node).and_return('root')
       allow(controller).to receive(:x_tree).and_return(:type => :filter)
-      controller.instance_variable_set(:@_params, :id => "cs_filter")
+      controller.instance_variable_set(:@_params, :id => 'cs_filter')
       allow(controller).to receive(:replace_right_cell)
       allow(controller).to receive(:render)
       controller.instance_variable_set(:@_params, :id => @configured_system2a.id)
@@ -157,63 +157,63 @@ describe ProviderForemanController do
     end
   end
 
-  context "#save_provider_foreman" do
-    it "will not save with a duplicate name" do
-      ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman",
-                                                    :url => "10.8.96.103", :zone => @zone)
-      provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => "test2Foreman",
-                                                             :url => "10.8.96.103", :zone => @zone)
+  context '#save_provider_foreman' do
+    it 'will not save with a duplicate name' do
+      ManageIQ::Providers::Foreman::Provider.create(:name => 'test2Foreman',
+                                                    :url => '10.8.96.103', :zone => @zone)
+      provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => 'test2Foreman',
+                                                             :url => '10.8.96.103', :zone => @zone)
       controller.instance_variable_set(:@provider_cfgmgmt, provider2)
       expect(controller).to receive(:replace_right_cell).once
       controller.save_provider_foreman
-      expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
+      expect(assigns(:flash_array).first[:message]).to include('Configuration_manager.name has already been taken')
     end
   end
 
-  context "#edit" do
+  context '#edit' do
     before do
       set_user_privileges
     end
 
-    it "renders the edit page when the configuration manager id is supplied" do
+    it 'renders the edit page when the configuration manager id is supplied' do
       post :edit, :params => { :id => @config_mgr.id }
       expect(response.status).to eq(200)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq(_("Edit Configuration Manager Provider"))
+      expect(right_cell_text).to eq(_('Edit Configuration Manager Provider'))
     end
 
-    it "renders the edit page when the configuration manager id is selected from a list view" do
+    it 'renders the edit page when the configuration manager id is selected from a list view' do
       post :edit, :params => { :miq_grid_checks => @config_mgr.id }
       expect(response.status).to eq(200)
     end
 
-    it "renders the edit page when the configuration manager id is selected from a grid/tile" do
-      post :edit, :params => { "check_#{ApplicationRecord.compress_id(@config_mgr.id)}" => "1" }
+    it 'renders the edit page when the configuration manager id is selected from a grid/tile' do
+      post :edit, :params => { "check_#{ApplicationRecord.compress_id(@config_mgr.id)}" => '1' }
       expect(response.status).to eq(200)
     end
   end
 
-  context "#refresh" do
+  context '#refresh' do
     before do
       set_user_privileges
-      allow(controller).to receive(:x_node).and_return("root")
-      allow(controller).to receive(:rebuild_toolbars).and_return("true")
+      allow(controller).to receive(:x_node).and_return('root')
+      allow(controller).to receive(:rebuild_toolbars).and_return('true')
     end
 
-    it "renders the refresh flash message for Ansible Tower" do
+    it 'renders the refresh flash message for Ansible Tower' do
       post :refresh, :params => {:miq_grid_checks => @config_ans.id}
       expect(response.status).to eq(200)
-      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Ansible Tower)")
+      expect(assigns(:flash_array).first[:message]).to include('Refresh Provider initiated for 1 provider (Ansible Tower)')
     end
 
-    it "renders the refresh flash message for Foreman" do
+    it 'renders the refresh flash message for Foreman' do
       post :refresh, :params => {:miq_grid_checks => @config_mgr.id}
       expect(response.status).to eq(200)
-      expect(assigns(:flash_array).first[:message]).to include("Refresh Provider initiated for 1 provider (Foreman)")
+      expect(assigns(:flash_array).first[:message]).to include('Refresh Provider initiated for 1 provider (Foreman)')
     end
   end
 
-  context "renders right cell text" do
+  context 'renders right cell text' do
     before do
       right_cell_text = nil
       set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord configuration_scripts_accord)
@@ -227,69 +227,69 @@ describe ProviderForemanController do
       allow(controller).to receive(:render)
 
       allow(controller).to receive(:items_per_page).and_return(20)
-      allow(controller).to receive(:gtl_type).and_return("list")
+      allow(controller).to receive(:gtl_type).and_return('list')
       allow(controller).to receive(:current_page).and_return(1)
       controller.send(:build_accordions_and_trees)
     end
-    it "renders right cell text for root node" do
+    it 'renders right cell text for root node' do
       key = ems_key_for_provider(@provider)
-      controller.send(:get_node_info, "root")
+      controller.send(:get_node_info, 'root')
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("All Configuration Management Providers")
+      expect(right_cell_text).to eq('All Configuration Management Providers')
     end
 
-    it "renders right cell text for ConfigurationManagerForeman node" do
+    it 'renders right cell text for ConfigurationManagerForeman node' do
       ems_id = ems_key_for_provider(@provider)
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       right_cell_text = controller.instance_variable_get(:@right_cell_text)
-      expect(right_cell_text).to eq("Configuration Profiles under Foreman Provider \"testForeman Configuration Manager\"")
+      expect(right_cell_text).to eq('Configuration Profiles under Foreman Provider "testForeman Configuration Manager"')
     end
   end
 
-  it "builds foreman child tree" do
+  it 'builds foreman child tree' do
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
-    tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
-    objects = tree_builder.send(:x_get_tree_custom_kids, {:id => "fr"}, false, {})
+    tree_builder = TreeBuilderConfigurationManager.new('root', '', {})
+    objects = tree_builder.send(:x_get_tree_custom_kids, {:id => 'fr'}, false, {})
     expected_objects = [@config_mgr, @config_mgr2]
     expect(objects).to match_array(expected_objects)
   end
 
-  it "builds ansible tower child tree" do
+  it 'builds ansible tower child tree' do
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
-    tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
-    objects = tree_builder.send(:x_get_tree_custom_kids, {:id => "at"}, false, {})
+    tree_builder = TreeBuilderConfigurationManager.new('root', '', {})
+    objects = tree_builder.send(:x_get_tree_custom_kids, {:id => 'at'}, false, {})
     expected_objects = [@config_ans, @config_ans2]
     expect(objects).to match_array(expected_objects)
   end
 
-  it "constructs the ansible tower inventory tree node" do
+  it 'constructs the ansible tower inventory tree node' do
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
-    tree_builder = TreeBuilderConfigurationManager.new("root", "", {})
+    tree_builder = TreeBuilderConfigurationManager.new('root', '', {})
     objects = tree_builder.send(:x_get_tree_objects, @inventory_group, nil, false, nil)
     expected_objects = [@ans_configured_system, @ans_configured_system2a]
     expect(objects).to match_array(expected_objects)
   end
 
-  it "builds ansible tower job templates tree" do
+  it 'builds ansible tower job templates tree' do
     controller.send(:build_configuration_manager_tree, :configuration_scripts, :configuration_scripts_tree)
-    tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new("root", "", {})
+    tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new('root', '', {})
     objects = tree_builder.send(:x_get_tree_roots, false, {})
     expected_objects = [@config_ans, @config_ans2]
     expect(objects).to match_array(expected_objects)
   end
 
-  it "constructs the ansible tower job templates tree node" do
+  it 'constructs the ansible tower job templates tree node' do
     set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord configuration_scripts_accord)
     controller.send(:build_configuration_manager_tree, :configuration_scripts, :configuration_scripts_tree)
-    tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new("root", "", {})
+    tree_builder = TreeBuilderConfigurationManagerConfigurationScripts.new('root', '', {})
     objects = tree_builder.send(:x_get_tree_roots, false, {})
     objects = tree_builder.send(:x_get_tree_cmat_kids, objects[0], false)
     expected_objects = [@ans_job_template1, @ans_job_template3]
     expect(objects).to match_array(expected_objects)
   end
 
-  context "renders tree_select" do
+  context 'renders tree_select' do
     before do
       get :explorer
       right_cell_text = nil
@@ -304,20 +304,20 @@ describe ProviderForemanController do
       allow(controller).to receive(:render)
 
       allow(controller).to receive(:items_per_page).and_return(20)
-      allow(controller).to receive(:gtl_type).and_return("list")
+      allow(controller).to receive(:gtl_type).and_return('list')
       allow(controller).to receive(:current_page).and_return(1)
       controller.send(:build_accordions_and_trees)
     end
 
-    it "renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it" do
-      controller.instance_variable_set(:@_params, :id => "root")
-      controller.instance_variable_set(:@search_text, "manager")
+    it 'renders the list view based on the nodetype(root,provider,config_profile) and the search associated with it' do
+      controller.instance_variable_set(:@_params, :id => 'root')
+      controller.instance_variable_set(:@search_text, 'manager')
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
       expect(view.table.data.size).to eq(4)
 
-      controller.instance_variable_set(:@_params, :id => "xx-fr")
-      controller.instance_variable_set(:@search_text, "manager")
+      controller.instance_variable_set(:@_params, :id => 'xx-fr')
+      controller.instance_variable_set(:@search_text, 'manager')
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
       expect(view.table.data.size).to eq(2)
@@ -326,25 +326,25 @@ describe ProviderForemanController do
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].description).to eq("testprofile")
+      expect(view.table.data[0].description).to eq('testprofile')
 
-      controller.instance_variable_set(:@search_text, "2")
+      controller.instance_variable_set(:@search_text, '2')
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].description).to eq("testprofile2")
+      expect(view.table.data[0].description).to eq('testprofile2')
       config_profile_id2 = config_profile_key(@config_profile2)
       controller.instance_variable_set(:@_params, :id => config_profile_id2)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].hostname).to eq("test2a_configured_system")
+      expect(view.table.data[0].hostname).to eq('test2a_configured_system')
 
-      controller.instance_variable_set(:@search_text, "2b")
+      controller.instance_variable_set(:@search_text, '2b')
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].hostname).to eq("test2b_configured_system")
+      expect(view.table.data[0].hostname).to eq('test2b_configured_system')
 
-      controller.instance_variable_set(:@_params, :id => "xx-at")
-      controller.instance_variable_set(:@search_text, "manager")
+      controller.instance_variable_set(:@_params, :id => 'xx-at')
+      controller.instance_variable_set(:@search_text, 'manager')
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
       expect(view.table.data.size).to eq(2)
@@ -353,101 +353,101 @@ describe ProviderForemanController do
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].name).to eq("testinvgroup")
+      expect(view.table.data[0].name).to eq('testinvgroup')
 
-      controller.instance_variable_set(:@_params, :id => "xx-at")
-      controller.instance_variable_set(:@search_text, "2")
+      controller.instance_variable_set(:@_params, :id => 'xx-at')
+      controller.instance_variable_set(:@search_text, '2')
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].name).to eq("ansibletest2 Configuration Manager")
+      expect(view.table.data[0].name).to eq('ansibletest2 Configuration Manager')
 
       invgroup_id2 = inventory_group_key(@inventory_group2)
       controller.instance_variable_set(:@_params, :id => invgroup_id2)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].hostname).to eq("test2b_ans_configured_system")
+      expect(view.table.data[0].hostname).to eq('test2b_ans_configured_system')
 
-      controller.instance_variable_set(:@search_text, "2b")
+      controller.instance_variable_set(:@search_text, '2b')
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].hostname).to eq("test2b_ans_configured_system")
+      expect(view.table.data[0].hostname).to eq('test2b_ans_configured_system')
 
-      allow(controller).to receive(:x_node).and_return("root")
+      allow(controller).to receive(:x_node).and_return('root')
       allow(controller).to receive(:x_tree).and_return(:type => :filter)
-      controller.instance_variable_set(:@_params, :id => "cs_filter")
+      controller.instance_variable_set(:@_params, :id => 'cs_filter')
       controller.send(:accordion_select)
-      controller.instance_variable_set(:@search_text, "brew")
+      controller.instance_variable_set(:@search_text, 'brew')
       allow(controller).to receive(:x_tree).and_return(:type => :providers)
-      controller.instance_variable_set(:@_params, :id => "configuration_manager_providers")
+      controller.instance_variable_set(:@_params, :id => 'configuration_manager_providers')
       controller.send(:accordion_select)
 
-      controller.instance_variable_set(:@_params, :id => "root")
+      controller.instance_variable_set(:@_params, :id => 'root')
       controller.send(:tree_select)
       search_text = controller.instance_variable_get(:@search_text)
-      expect(search_text).to eq("manager")
+      expect(search_text).to eq('manager')
       view = controller.instance_variable_get(:@view)
       expect(view.table.data.size).to eq(4)
     end
-    it "renders tree_select for a ConfigurationManagerForeman node that contains an unassigned profile" do
+    it 'renders tree_select for a ConfigurationManagerForeman node that contains an unassigned profile' do
       ems_id = ems_key_for_provider(@provider)
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].data).to include('description' => "testprofile")
-      expect(view.table.data[2]).to include('description' => _("Unassigned Profiles Group"),
-                                            'name'        => _("Unassigned Profiles Group"))
+      expect(view.table.data[0].data).to include('description' => 'testprofile')
+      expect(view.table.data[2]).to include('description' => _('Unassigned Profiles Group'),
+                                            'name'        => _('Unassigned Profiles Group'))
     end
 
-    it "renders tree_select for a ConfigurationManagerForeman node that contains only an unassigned profile" do
+    it 'renders tree_select for a ConfigurationManagerForeman node that contains only an unassigned profile' do
       ems_id = ems_key_for_provider(@provider2)
       controller.instance_variable_set(:@_params, :id => ems_id)
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0]).to include('description' => _("Unassigned Profiles Group"),
-                                            'name'        => _("Unassigned Profiles Group"))
+      expect(view.table.data[0]).to include('description' => _('Unassigned Profiles Group'),
+                                            'name'        => _('Unassigned Profiles Group'))
     end
 
     it "renders tree_select for an 'Unassigned Profiles Group' node for the first provider" do
       controller.instance_variable_set(:@_params, :id => "-#{ems_id_for_provider(@provider)}-unassigned")
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].data).to include('hostname' => "configured_system_unprovisioned")
+      expect(view.table.data[0].data).to include('hostname' => 'configured_system_unprovisioned')
     end
 
     it "renders tree_select for an 'Unassigned Profiles Group' node for the second provider" do
       controller.instance_variable_set(:@_params, :id => "-#{ems_id_for_provider(@provider2)}-unassigned")
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].data).to include('hostname' => "configured_system_unprovisioned2")
+      expect(view.table.data[0].data).to include('hostname' => 'configured_system_unprovisioned2')
     end
 
-    it "renders tree_select for ansible tower job templates tree node" do
+    it 'renders tree_select for ansible tower job templates tree node' do
       allow(controller).to receive(:x_active_tree).and_return(:configuration_scripts_tree)
-      controller.instance_variable_set(:@_params, :id => "configuration_scripts")
+      controller.instance_variable_set(:@_params, :id => 'configuration_scripts')
       controller.send(:accordion_select)
-      controller.instance_variable_set(:@_params, :id => "at-" + ApplicationRecord.compress_id(@config_ans.id))
+      controller.instance_variable_set(:@_params, :id => 'at-' + ApplicationRecord.compress_id(@config_ans.id))
       controller.send(:tree_select)
       view = controller.instance_variable_get(:@view)
-      expect(view.table.data[0].name).to eq("ConfigScript1")
-      expect(view.table.data[1].name).to eq("ConfigScript3")
+      expect(view.table.data[0].name).to eq('ConfigScript1')
+      expect(view.table.data[1].name).to eq('ConfigScript3')
     end
   end
 
-  it "singularizes breadcrumb name" do
+  it 'singularizes breadcrumb name' do
     expect(controller.send(:breadcrumb_name, nil)).to eq("#{ui_lookup(:ui_title => "foreman")} Provider")
   end
 
-  it "renders tagging editor" do
+  it 'renders tagging editor' do
     session[:tag_items] = [@configured_system.id]
     session[:assigned_filters] = []
-    parent = FactoryGirl.create(:classification, :name => "test_category")
-    FactoryGirl.create(:classification_tag,      :name => "test_entry",         :parent => parent)
-    FactoryGirl.create(:classification_tag,      :name => "another_test_entry", :parent => parent)
+    parent = FactoryGirl.create(:classification, :name => 'test_category')
+    FactoryGirl.create(:classification_tag,      :name => 'test_entry',         :parent => parent)
+    FactoryGirl.create(:classification_tag,      :name => 'another_test_entry', :parent => parent)
     post :tagging, :params => { :id => @configured_system.id, :format => :js }
     expect(response.status).to eq(200)
   end
 
-  it "renders tree_select as js" do
+  it 'renders tree_select as js' do
     controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
 
     allow(controller).to receive(:process_show_list)
@@ -465,7 +465,7 @@ describe ProviderForemanController do
     expect(response.status).to eq(200)
   end
 
-  context "tree_select on provider foreman node" do
+  context 'tree_select on provider foreman node' do
     before do
       login_as user_with_feature %w(provider_foreman_refresh_provider provider_foreman_edit_provider provider_foreman_delete_provider)
 
@@ -478,7 +478,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:x_active_tree).and_return(:configuration_manager_providers_tree)
     end
 
-    it "does not hide Configuration button in the toolbar" do
+    it 'does not hide Configuration button in the toolbar' do
       controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
       key = ems_key_for_provider(@provider)
       post :tree_select, :params => { :id => key }
@@ -487,7 +487,7 @@ describe ProviderForemanController do
     end
   end
 
-  context "fetches the list setting:Grid/Tile/List from settings" do
+  context 'fetches the list setting:Grid/Tile/List from settings' do
     before do
       set_user_privileges user_with_feature %w(providers_accord configured_systems_filter_accord)
       allow(controller).to receive(:items_per_page).and_return(20)
@@ -500,8 +500,8 @@ describe ProviderForemanController do
       allow(controller).to receive(:render)
 
       controller.instance_variable_set(:@settings,
-                                       :views    => {:cm_providers          => "grid",
-                                                     :cm_configured_systems => "tile"})
+                                       :views    => {:cm_providers          => 'grid',
+                                                     :cm_configured_systems => 'tile'})
       controller.send(:build_accordions_and_trees)
     end
 
@@ -510,7 +510,7 @@ describe ProviderForemanController do
       allow(controller).to receive(:x_active_accord).and_return(:configuration_manager_providers)
       controller.send(:get_node_info, key)
       list_type = controller.instance_variable_get(:@gtl_type)
-      expect(list_type).to eq("grid")
+      expect(list_type).to eq('grid')
     end
 
     it "fetches list type = 'tile' from settings for Configured Systems accordion" do
@@ -518,33 +518,33 @@ describe ProviderForemanController do
       allow(controller).to receive(:x_active_accord).and_return(:cs_filter)
       controller.send(:get_node_info, key)
       list_type = controller.instance_variable_get(:@gtl_type)
-      expect(list_type).to eq("tile")
+      expect(list_type).to eq('tile')
     end
   end
 
-  context "#build_credentials" do
-    it "uses params[:log_password] for validation if one exists" do
+  context '#build_credentials' do
+    it 'uses params[:log_password] for validation if one exists' do
       controller.instance_variable_set(:@_params,
-                                       :log_userid   => "userid",
-                                       :log_password => "password2")
-      creds = {:userid => "userid", :password => "password2"}
+                                       :log_userid   => 'userid',
+                                       :log_password => 'password2')
+      creds = {:userid => 'userid', :password => 'password2'}
       expect(controller.send(:build_credentials)).to include(:default => creds)
     end
 
-    it "uses the stored password for validation if params[:log_password] does not exist" do
-      controller.instance_variable_set(:@_params, :log_userid => "userid")
+    it 'uses the stored password for validation if params[:log_password] does not exist' do
+      controller.instance_variable_set(:@_params, :log_userid => 'userid')
       controller.instance_variable_set(:@provider_cfgmgmt, @provider)
       expect(@provider).to receive(:authentication_password).and_return('password')
-      creds = {:userid => "userid", :password => "password"}
+      creds = {:userid => 'userid', :password => 'password'}
       expect(controller.send(:build_credentials)).to include(:default => creds)
     end
   end
 
-  context "when user with specific tag settings logs in" do
+  context 'when user with specific tag settings logs in' do
     before do
       login_as user_with_feature %w(providers_accord configured_systems_filter_accord)
     end
-    it "builds foreman tree with no nodes after rbac filtering" do
+    it 'builds foreman tree with no nodes after rbac filtering' do
       user_filters = {'belongs' => [], 'managed' => [tags]}
       allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
       controller.send(:build_configuration_manager_tree, :providers, :configuration_manager_providers_tree)
@@ -552,12 +552,12 @@ describe ProviderForemanController do
       expect(first_child).to eq(nil)
     end
 
-    it "builds foreman tree with only those nodes that contain the filtered configured systems" do
+    it 'builds foreman tree with only those nodes that contain the filtered configured systems' do
       user_filters = {'belongs' => [], 'managed' => [tags]}
       allow_any_instance_of(User).to receive(:get_filters).and_return(user_filters)
       Classification.seed
-      quota_2gb_tag = Classification.where("description" => "2GB").first
-      Classification.bulk_reassignment(:model      => "ConfiguredSystem",
+      quota_2gb_tag = Classification.where('description' => '2GB').first
+      Classification.bulk_reassignment(:model      => 'ConfiguredSystem',
                                        :object_ids => @configured_system.id,
                                        :add_ids    => quota_2gb_tag.id,
                                        :delete_ids => [])
@@ -569,11 +569,11 @@ describe ProviderForemanController do
     end
   end
 
-  context "#configscript_service_dialog" do
+  context '#configscript_service_dialog' do
     before(:each) do
       set_user_privileges
       @cs = FactoryGirl.create(:ansible_configuration_script)
-      @dialog_label = "New Dialog 01"
+      @dialog_label = 'New Dialog 01'
       session[:edit] = {
         :new    => {:dialog_name => @dialog_label},
         :key    => "cs_edit__#{@cs.id}",
@@ -589,11 +589,11 @@ describe ProviderForemanController do
       expect(response.status).to eq(200)
     end
 
-    it "Service Dialog is created from an Ansible Tower Job Template" do
-      controller.instance_variable_set(:@_params, :button => "save", :id => @cs.id)
+    it 'Service Dialog is created from an Ansible Tower Job Template' do
+      controller.instance_variable_set(:@_params, :button => 'save', :id => @cs.id)
       allow(controller).to receive(:replace_right_cell)
       controller.send(:configscript_service_dialog_submit)
-      expect(assigns(:flash_array).first[:message]).to include("was successfully created")
+      expect(assigns(:flash_array).first[:message]).to include('was successfully created')
       expect(Dialog.where(:label => @dialog_label).first).not_to be_nil
     end
   end
@@ -611,22 +611,22 @@ describe ProviderForemanController do
 
   def ems_key_for_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "fr-" + ApplicationRecord.compress_id(ems.id)
+    'fr-' + ApplicationRecord.compress_id(ems.id)
   end
 
   def ems_key_for_ans_provider(provider)
     ems = ExtManagementSystem.where(:provider_id => provider.id).first
-    "at-" + ApplicationRecord.compress_id(ems.id)
+    'at-' + ApplicationRecord.compress_id(ems.id)
   end
 
   def config_profile_key(config_profile)
     cp = ConfigurationProfile.where(:id => config_profile.id).first
-    "cp-" + ApplicationRecord.compress_id(cp.id)
+    'cp-' + ApplicationRecord.compress_id(cp.id)
   end
 
   def inventory_group_key(inv_group)
     ig =  ManageIQ::Providers::ConfigurationManager::InventoryGroup.where(:id => inv_group.id).first
-    "f-" + ApplicationRecord.compress_id(ig.id)
+    'f-' + ApplicationRecord.compress_id(ig.id)
   end
 
   def ems_id_for_provider(provider)

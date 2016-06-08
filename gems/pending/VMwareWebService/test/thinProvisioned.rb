@@ -15,7 +15,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-TARGET_VM = raise "please define"
+TARGET_VM = raise 'please define'
 miqVm = nil
 
 begin
@@ -28,7 +28,7 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   # puts miqVm.acquireMksTicket
 
@@ -37,7 +37,7 @@ begin
   puts "Power State:      #{miqVm.powerState}"
   puts
 
-  thinDevs = miqVm.devicesByFilter("backing.thinProvisioned" => "true")
+  thinDevs = miqVm.devicesByFilter('backing.thinProvisioned' => 'true')
 
   if thinDevs.empty?
     puts "#{TARGET_VM} has no thin provisioned disks."
@@ -90,7 +90,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   vimDs.release if vimDs
   miqVm.release if miqVm
   vim.disconnect if vim

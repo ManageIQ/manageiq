@@ -4,13 +4,13 @@ require 'VolumeManager/MiqNativeMountManager'
 require 'fs/MiqFsUtil'
 require 'WriteVm/MiqPayloadOutputter'
 
-PAYLOAD_SPEC = "/miq_payload.yaml"
+PAYLOAD_SPEC = '/miq_payload.yaml'
 
 #
 # Formatter to output log messages to the console.
 #
 class ConsoleFormatter < Log4r::Formatter
-  @@prog = File.basename(__FILE__, ".*")
+  @@prog = File.basename(__FILE__, '.*')
   def format(event)
     "#{Log4r::LNAMES[event.level]} [#{datetime}] -- #{@@prog}: " +
       (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
@@ -20,7 +20,7 @@ class ConsoleFormatter < Log4r::Formatter
 
   def datetime
     time = Time.now.utc
-    time.strftime("%Y-%m-%dT%H:%M:%S.") << "%06d " % time.usec
+    time.strftime('%Y-%m-%dT%H:%M:%S.') << '%06d ' % time.usec
   end
 end
 $log = Log4r::Logger.new 'toplog'
@@ -31,11 +31,11 @@ $log.add 'err_console'
 rootTrees = nil
 
 begin
-  $log.info "MIQ VM UPDATE START"
+  $log.info 'MIQ VM UPDATE START'
   rootTrees = MiqNativeMountManager.mountVolumes
 
   if rootTrees.nil? || rootTrees.empty?
-    $log.info "No root filesystems detected"
+    $log.info 'No root filesystems detected'
     exit
   end
 
@@ -52,12 +52,12 @@ begin
     fsu.loadUpdateSpec(PAYLOAD_SPEC)
     fsu.update
   end
-  $log.info "MIQ VM UPDATE SUCCEEDED"
+  $log.info 'MIQ VM UPDATE SUCCEEDED'
 rescue => err
   $log.error err.to_s
   $log.error err.backtrace.join("\n")
-  $log.error "MIQ VM UPDATE FAILED"
+  $log.error 'MIQ VM UPDATE FAILED'
 ensure
   rootTrees.each(&:umount) if rootTrees
-  $log.info "MIQ VM UPDATE END - " + (lo.partialLog ? "partial log" : "full log")
+  $log.info 'MIQ VM UPDATE END - ' + (lo.partialLog ? 'partial log' : 'full log')
 end

@@ -1,7 +1,7 @@
 describe TreeBuilderServices do
-  let(:builder) { TreeBuilderServices.new("x", "y", {}) }
+  let(:builder) { TreeBuilderServices.new('x', 'y', {}) }
 
-  it "generates tree" do
+  it 'generates tree' do
     create_deep_tree
 
     expect(root_nodes).to eq([@service])

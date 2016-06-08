@@ -9,7 +9,7 @@ class EnhanceFirewallRulesForNeutronNetworking < ActiveRecord::Migration
     add_column :firewall_rules, :network_protocol, :string
     rename_column :firewall_rules, :protocol, :host_protocol
 
-    say_with_time("Migrate ems_ref and network_protocol from reserved table") do
+    say_with_time('Migrate ems_ref and network_protocol from reserved table') do
       FirewallRule.includes(:reserved_rec).each do |fr|
         fr.reserved_hash_migrate(:ems_ref, :network_protocol)
       end
@@ -17,7 +17,7 @@ class EnhanceFirewallRulesForNeutronNetworking < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Migrating ems_ref and network_protocol to Reserves table") do
+    say_with_time('Migrating ems_ref and network_protocol to Reserves table') do
       FirewallRule.includes(:reserved_rec).each do |d|
         d.reserved_hash_set(:ems_ref, d.ems_ref)
         d.reserved_hash_set(:network_protocol, d.network_protocol)

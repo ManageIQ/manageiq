@@ -38,7 +38,7 @@ class ServiceOrchestration
     end
 
     def stack_create_options
-      raise NotImplementedError, "stack_create_options must be implemented by a subclass"
+      raise NotImplementedError, 'stack_create_options must be implemented by a subclass'
     end
 
     # factory method to instantiate a provider dependent converter

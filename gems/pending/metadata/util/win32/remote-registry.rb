@@ -3,8 +3,8 @@ require 'util/miq-xml'
 require 'util/xml/xml_hash'
 require 'metadata/util/win32/system_path_win'
 
-HKEY_LOCAL_MACHINE = "HKEY_LOCAL_MACHINE"     # 0x80000002
-HKEY_USERS = "default"                        # 0x80000003
+HKEY_LOCAL_MACHINE = 'HKEY_LOCAL_MACHINE'     # 0x80000002
+HKEY_USERS = 'default'                        # 0x80000003
 
 class RemoteRegistry
   attr_reader :fileLoadTime, :fileParseTime, :digitalProductKeys
@@ -20,13 +20,13 @@ class RemoteRegistry
 
     # Create XML document
     @xml = xml_class.createDoc(:registry)
-    @HKLM_element = @xml.root.add_element("HKEY_LOCAL_MACHINE")
+    @HKLM_element = @xml.root.add_element('HKEY_LOCAL_MACHINE')
 
     if fs.kind_of?(MiqFS)
       @fs = fs
       if reg_path.nil?
-        path = Win32::SystemPath.registryPath(@fs) + "/"
-        @RegPath = path.gsub(/^"/, "").gsub(/"$/, "")
+        path = Win32::SystemPath.registryPath(@fs) + '/'
+        @RegPath = path.gsub(/^"/, '').gsub(/"$/, '')
       else
         @RegPath = reg_path
       end
@@ -55,7 +55,7 @@ class RemoteRegistry
   end
 
   def open(key, subkey)
-    paths = subkey.tr("\\", "/").split("/")
+    paths = subkey.tr('\\', '/').split('/')
     if key == HKEY_LOCAL_MACHINE
       # $log.debug "Loading hive: #{paths[0].downcase}"
       loadHive(paths[0].downcase, nil)
@@ -66,31 +66,31 @@ class RemoteRegistry
   end
 
   def loadSoftwareHive(filter = nil)
-    loadHive("software", filter)
+    loadHive('software', filter)
   end
 
   def loadSystemHive(filter = nil)
-    loadHive("system", filter)
+    loadHive('system', filter)
   end
 
   def loadSecurityHive(filter = nil)
-    loadHive("security", filter)
+    loadHive('security', filter)
   end
 
   def loadSAMHive(filter = nil)
-    loadHive("SAM", filter)
+    loadHive('SAM', filter)
   end
 
   # Vista stores boot information in a registry hive in /boot/BCD
   def loadBootHive(_filter = nil)
-    loadHive("BCD", nil, "/boot")
+    loadHive('BCD', nil, '/boot')
   end
 
   def loadHive(name, filters = nil, path = @RegPath)
     xml = @xml
     unless @loadedHives.include?(name.downcase)
-      if name.downcase == "default"
-        xmlNode = @xml.root.add_element("HKEY_USERS").add_element("_DEFAULT")
+      if name.downcase == 'default'
+        xmlNode = @xml.root.add_element('HKEY_USERS').add_element('_DEFAULT')
       else
         xmlNode = @HKLM_element.add_element(name.upcase)
       end
@@ -103,7 +103,7 @@ class RemoteRegistry
   def loadCurrentUser(filters = nil)
     xml = @xml
     users = []
-    hkcu = loadHive("software", [{:key => "Microsoft/Windows NT/CurrentVersion/ProfileList", :value => ['ProfileImagePath']}])
+    hkcu = loadHive('software', [{:key => 'Microsoft/Windows NT/CurrentVersion/ProfileList', :value => ['ProfileImagePath']}])
     hkcu.root.each_recursive do |v|
       # Only process user accounts, not local system service accounts (like S-1-5-18)
       if v.name == :value && v.parent.attributes[:keyname].length > 8
@@ -115,7 +115,7 @@ class RemoteRegistry
     unless users.empty?
       # Sort so most recently updated is first
       users.sort! { |a, b| b[:mtime] <=> a[:mtime] }
-      xmlNode = @xml.root.add_element("HKEY_CURRENT_USER")
+      xmlNode = @xml.root.add_element('HKEY_CURRENT_USER')
       path, name = File.dirname(users.first[:path]), File.basename(users.first[:path])
       xml = process_hive(path, name, xmlNode, filters)
     end

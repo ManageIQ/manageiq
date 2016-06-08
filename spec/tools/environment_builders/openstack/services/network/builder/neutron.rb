@@ -7,7 +7,7 @@ module Openstack
       class Builder
         class Neutron < ::Openstack::Services::Network::Builder::Base
           def initialize(ems, project)
-            @service = ems.connect(:tenant_name => project.name, :service => "Network")
+            @service = ems.connect(:tenant_name => project.name, :service => 'Network')
             @data    = Data::Neutron.new
             @project = project
 
@@ -42,8 +42,8 @@ module Openstack
                 network = find_or_create(@service.networks, network.merge(:tenant_id => @project.id))
               rescue
                 # Havana and below can't deal with the provider networks
-                network.delete("provider:physical_network")
-                network.delete("provider:network_type")
+                network.delete('provider:physical_network')
+                network.delete('provider:network_type')
                 network = find_or_create(@service.networks, network.merge(:tenant_id => @project.id))
               end
 

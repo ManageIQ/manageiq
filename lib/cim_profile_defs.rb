@@ -11,23 +11,23 @@ if __FILE__ == $0
     exit
 
     puts
-    puts "storage_system_to_virtual_machine:"
-    CimProfiles.storage_system_to_virtual_machine.dump("    ")
+    puts 'storage_system_to_virtual_machine:'
+    CimProfiles.storage_system_to_virtual_machine.dump('    ')
     # exit
 
     puts
-    puts "CHECK ontap_filer:"
-    CimProfiles.ontap_filer.check("    ")
+    puts 'CHECK ontap_filer:'
+    CimProfiles.ontap_filer.check('    ')
     exit
 
     puts
-    puts "base_storage_extent_to_top_storage_extent:"
-    CimProfiles.base_storage_extent_to_top_storage_extent.dump("    ")
+    puts 'base_storage_extent_to_top_storage_extent:'
+    CimProfiles.base_storage_extent_to_top_storage_extent.dump('    ')
     # exit
 
     puts
-    puts "CHECK base_storage_extent_to_top_storage_extent:"
-    CimProfiles.base_storage_extent_to_top_storage_extent.check("    ")
+    puts 'CHECK base_storage_extent_to_top_storage_extent:'
+    CimProfiles.base_storage_extent_to_top_storage_extent.check('    ')
 
   rescue => err
 

@@ -6,14 +6,14 @@ class MigrateEmsAttributesToEndpoints < ActiveRecord::Migration
   class Endpoint < ActiveRecord::Base; end
 
   def up
-    say_with_time("Migrating EMS attributes to endpoints") do
+    say_with_time('Migrating EMS attributes to endpoints') do
       ExtManagementSystem.all.each do |e|
         Endpoint.create!(
-          :role          => "default",
+          :role          => 'default',
           :ipaddress     => e.ipaddress,
           :hostname      => e.hostname,
           :port          => e.port && e.port.to_i,
-          :resource_type => "ExtManagementSystem",
+          :resource_type => 'ExtManagementSystem',
           :resource_id   => e.id,
         )
       end
@@ -21,10 +21,10 @@ class MigrateEmsAttributesToEndpoints < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Migrating endpoints to EMS attributes") do
+    say_with_time('Migrating endpoints to EMS attributes') do
       endpoints = Endpoint.where(
-        :role          => "default",
-        :resource_type => "ExtManagementSystem",
+        :role          => 'default',
+        :resource_type => 'ExtManagementSystem',
       )
 
       endpoints.each do |endpoint|

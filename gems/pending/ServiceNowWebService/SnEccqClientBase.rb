@@ -23,7 +23,7 @@ class SnEccqClientBase < SnEccqService
       http_client.receive_timeout       = @receiveTimeout
 
       http_client.set_auth nil, @username, @password
-      headers['User-Agent'] = "ManageIQ/EVM"
+      headers['User-Agent'] = 'ManageIQ/EVM'
     end
 
     # Uncomment to enable wiredump output.

@@ -18,7 +18,7 @@ module ReportFormatter
       mri.table.data.each do |r|
         mri.col_formats ||= []                 # Backward compat - create empty array for formats
         mri.col_order.each_with_index do |f, i|
-          unless ["<compare>", "<drift>"].include?(mri.db)
+          unless ['<compare>', '<drift>'].include?(mri.db)
             data = mri.format(f,
                               r[f],
                               :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
@@ -36,7 +36,7 @@ module ReportFormatter
     # method to get friendly values for company tag and user filters
     def calculate_filter_names(tag)
       categories = Classification.categories.collect { |c| c if c.show }.compact
-      tag_val = ""
+      tag_val = ''
       categories.each do |category|
         entries = {}
         category.entries.each do |entry|
@@ -55,18 +55,18 @@ module ReportFormatter
     # calls fit_to_width to truncate table heading if necessary.
     def build_document_header
       mri = options.mri
-      raise "No settings configured for Table" if mri.table.nil?
+      raise 'No settings configured for Table' if mri.table.nil?
       calculate_max_col_widths
       @hr = hr
 
       unless mri.title.nil? # generate title line, if present
         output << @hr
         temp_title = mri.title
-        temp_title << " (" << mri.report_run_time.to_s << ")" unless mri.report_run_time.nil?
+        temp_title << ' (' << mri.report_run_time.to_s << ')' unless mri.report_run_time.nil?
         t = temp_title.center(@line_len - 2)
         output << fit_to_width("|#{t}|" + CRLF)
-        if !mri.db.nil? && mri.db == "<drift>"
-          t2 = "(* = Value changed from previous column)"
+        if !mri.db.nil? && mri.db == '<drift>'
+          t2 = '(* = Value changed from previous column)'
           t2 = t2.center(@line_len - 2)
           output << fit_to_width("|#{t2}|" + CRLF)
         end
@@ -95,7 +95,7 @@ module ReportFormatter
       save_val = nil
       counter = 0
 
-      cfg = VMDB::Config.new("vmdb").config[:reporting]       # Read in the reporting column precisions
+      cfg = VMDB::Config.new('vmdb').config[:reporting]       # Read in the reporting column precisions
       default_precision = cfg[:precision][:default]           # Set the default
       precision_by_column = cfg[:precision_by_column]         # get the column overrides
       precisions = {}                                         # Hash to store columns we hit
@@ -106,14 +106,14 @@ module ReportFormatter
         break if row_limit != 0 && d_idx > row_limit - 1
         line = []
         line_wrapper = false        # Clear line wrapper flag
-        if ["<compare>"].include?(mri.db) && r[0] == "% Match:"
+        if ['<compare>'].include?(mri.db) && r[0] == '% Match:'
           line_wrapper = true       # Wrap compare % lines with header rows
-        elsif ["<drift>"].include?(mri.db) && r[0] == "Changed:"
+        elsif ['<drift>'].include?(mri.db) && r[0] == 'Changed:'
           line_wrapper = true       # Wrap drift changed lines with header rows
         end
         mri.col_formats ||= []                 # Backward compat - create empty array for formats
         mri.col_order.each_with_index do |f, i|
-          unless ["<compare>", "<drift>"].include?(mri.db)
+          unless ['<compare>', '<drift>'].include?(mri.db)
             data = mri.format(f,
                               r[f],
                               :format => mri.col_formats[i] ? mri.col_formats[i] : :_default_,
@@ -130,9 +130,9 @@ module ReportFormatter
         end
 
         # generate a break line if grouping is turned on
-        if ["y", "c"].include?(mri.group) && !mri.sortby.nil?
+        if ['y', 'c'].include?(mri.group) && !mri.sortby.nil?
           if d_idx > 0 && save_val != r[mri.sortby[0]]
-            if mri.group == "c"
+            if mri.group == 'c'
               s += @hr
               t = " Total for #{save_val}: #{counter} ".center(@line_len - 2)
               s += fit_to_width("|#{t}|" + CRLF)
@@ -151,8 +151,8 @@ module ReportFormatter
       end
 
       # see if a final group line needs to be written
-      if ["y", "c"].include?(mri.group) && !mri.sortby.nil?
-        if mri.group == "c"
+      if ['y', 'c'].include?(mri.group) && !mri.sortby.nil?
+        if mri.group == 'c'
           s += @hr
           t = " Total for #{save_val}: #{counter} ".center(@line_len - 2)
           s += fit_to_width("|#{t}|" + CRLF)
@@ -172,12 +172,12 @@ module ReportFormatter
           user_filters = mri.user_categories.flatten
           unless user_filters.blank?
             customer_name = Tenant.root_tenant.name
-            user_filter = "User assigned " + customer_name + " Tag filters:"
-            t = user_filter + " " * (@line_len - 2 - user_filter.length)
+            user_filter = 'User assigned ' + customer_name + ' Tag filters:'
+            t = user_filter + ' ' * (@line_len - 2 - user_filter.length)
             output << fit_to_width("|#{t}|" + CRLF)
             user_filters.each do |filters|
-              tag_val = "  " + calculate_filter_names(filters)
-              tag_val1 = tag_val + " " * (@line_len - tag_val.length - 2)
+              tag_val = '  ' + calculate_filter_names(filters)
+              tag_val1 = tag_val + ' ' * (@line_len - tag_val.length - 2)
               output << fit_to_width("|#{tag_val1}|" + CRLF)
             end
           end
@@ -187,12 +187,12 @@ module ReportFormatter
           categories = mri.categories.flatten
           unless categories.blank?
             customer_name = Tenant.root_tenant.name
-            customer_name_title = "Report based " + customer_name + " Tag filters:"
-            t = customer_name_title + " " * (@line_len - customer_name_title.length - 2)
+            customer_name_title = 'Report based ' + customer_name + ' Tag filters:'
+            t = customer_name_title + ' ' * (@line_len - customer_name_title.length - 2)
             output << fit_to_width("|#{t}|" + CRLF)
             categories.each do |filters|
-              tag_val = "  " + calculate_filter_names(filters)
-              tag_val1 = tag_val + " " * (@line_len - tag_val.length - 2)
+              tag_val = '  ' + calculate_filter_names(filters)
+              tag_val1 = tag_val + ' ' * (@line_len - tag_val.length - 2)
               output << fit_to_width("|#{tag_val1}|" + CRLF)
             end
           end
@@ -200,38 +200,38 @@ module ReportFormatter
 
         unless mri.conditions.nil?
           if mri.conditions.kind_of?(Hash)
-            filter_fields = "Report based filter fields:"
-            t = filter_fields + " " * (@line_len - 2 - filter_fields.length)
+            filter_fields = 'Report based filter fields:'
+            t = filter_fields + ' ' * (@line_len - 2 - filter_fields.length)
             output << fit_to_width("|#{t}|" + CRLF)
 
             # Clean up the conditions for display
-            tables = mri.conditions[:field].split("-")[0].split(".")  # Get the model and tables
+            tables = mri.conditions[:field].split('-')[0].split('.')  # Get the model and tables
             field = Dictionary.gettext(tables[0], :type => :model, :notfound => :titleize) # Start with the model
             tables[1..-1].each do |t| # Add on any tables
-              field += "." + Dictionary.gettext(t, :type => :table, :notfound => :titleize)
+              field += '.' + Dictionary.gettext(t, :type => :table, :notfound => :titleize)
             end
             # Add on the column name
-            field += " : " + Dictionary.gettext(mri.conditions[:field].split("-")[1], :type => :column, :notfound => :titleize)
+            field += ' : ' + Dictionary.gettext(mri.conditions[:field].split('-')[1], :type => :column, :notfound => :titleize)
 
-            filter_val = "  " + field + " " + mri.conditions[:operator] + " " + mri.conditions[:string].to_s
-            t = filter_val + " " * (@line_len - filter_val.length - 2)
+            filter_val = '  ' + field + ' ' + mri.conditions[:operator] + ' ' + mri.conditions[:string].to_s
+            t = filter_val + ' ' * (@line_len - filter_val.length - 2)
             output << fit_to_width("|#{t}|" + CRLF)
           else
-            filter_fields = "Report based filter fields:"
-            t = filter_fields + " " * (@line_len - 2 - filter_fields.length)
+            filter_fields = 'Report based filter fields:'
+            t = filter_fields + ' ' * (@line_len - 2 - filter_fields.length)
             output << fit_to_width("|#{t}|" + CRLF)
             filter_val = mri.conditions.to_human
-            t = filter_val + " " * (@line_len - filter_val.length - 2)
+            t = filter_val + ' ' * (@line_len - filter_val.length - 2)
             output << fit_to_width("|#{t}|" + CRLF)
           end
         end
 
         unless mri.display_filter.nil?
-          filter_fields = "Display Filter:"
-          t = filter_fields + " " * (@line_len - 2 - filter_fields.length)
+          filter_fields = 'Display Filter:'
+          t = filter_fields + ' ' * (@line_len - 2 - filter_fields.length)
           output << fit_to_width("|#{t}|" + CRLF)
           filter_val = mri.display_filter.to_human
-          t = filter_val + " " * (@line_len - filter_val.length - 2)
+          t = filter_val + ' ' * (@line_len - filter_val.length - 2)
           output << fit_to_width("|#{t}|" + CRLF)
         end
       end
@@ -251,12 +251,12 @@ module ReportFormatter
     #   "+------------------+"
     def hr
       mri = options.mri
-      if mri.table.column_names.include?("id")  # Use 1 less column if "id" is present
+      if mri.table.column_names.include?('id')  # Use 1 less column if "id" is present
         @line_len = @max_col_width.inject((mri.table.data[0].to_miq_a.length - 1) * 3) { |s, e| s + e } + 1
-        "+" + "-" * (@line_len - 2) + "+" + CRLF
+        '+' + '-' * (@line_len - 2) + '+' + CRLF
       else
         @line_len = @max_col_width.inject((mri.table.data[0].to_miq_a.length) * 3) { |s, e| s + e } + 1
-        "+" + "-" * (@line_len - 2) + "+" + CRLF
+        '+' + '-' * (@line_len - 2) + '+' + CRLF
       end
     end
 
@@ -273,7 +273,7 @@ module ReportFormatter
       width < 2 ? max_width = @line_len : max_width = width
 
       s.split(CRLF).each do |r|
-        r.gsub!(/\A.{#{max_width + 1},}/) { |m| m[0, max_width - 2] + ">>" }
+        r.gsub!(/\A.{#{max_width + 1},}/) { |m| m[0, max_width - 2] + '>>' }
       end.join(CRLF) + CRLF
     end
   end

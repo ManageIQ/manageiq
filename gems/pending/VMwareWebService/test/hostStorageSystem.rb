@@ -8,7 +8,7 @@ require 'VMwareWebService/MiqVimBroker'
 #
 class ConsoleFormatter < Log4r::Formatter
   def format(event)
-    "**** " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+    '**** ' + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
   end
 end
 $vim_log = Log4r::Logger.new 'toplog'
@@ -18,17 +18,17 @@ $vim_log.add 'err_console'
 $stdout.sync = true
 $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
-ISCSI_SEND_TARGETS  = ["10.1.1.100", "10.1.1.210"]
+TARGET_HOST = raise 'please define'
+ISCSI_SEND_TARGETS  = ['10.1.1.100', '10.1.1.210']
 
-ISCSI_STATIC_TARGETS = VimArray.new("ArrayOfHostInternetScsiHbaStaticTarget") do |ta|
-  ta << VimHash.new("HostInternetScsiHbaStaticTarget") do |st|
-    st.address    = "10.1.1.210"
-    st.iScsiName  = "iqn.1992-08.com.netapp:sn.135107242"
+ISCSI_STATIC_TARGETS = VimArray.new('ArrayOfHostInternetScsiHbaStaticTarget') do |ta|
+  ta << VimHash.new('HostInternetScsiHbaStaticTarget') do |st|
+    st.address    = '10.1.1.210'
+    st.iScsiName  = 'iqn.1992-08.com.netapp:sn.135107242'
   end
-  ta << VimHash.new("HostInternetScsiHbaStaticTarget") do |st|
-    st.address    = "10.1.1.100"
-    st.iScsiName  = "iqn.2008-08.com.starwindsoftware:starwindm1-starm1-test1"
+  ta << VimHash.new('HostInternetScsiHbaStaticTarget') do |st|
+    st.address    = '10.1.1.100'
+    st.iScsiName  = 'iqn.2008-08.com.starwindsoftware:starwindm1-starm1-test1'
   end
 end
 
@@ -52,24 +52,24 @@ begin
   puts
 
   unless softwareInternetScsiEnabled
-    puts "Software iSCSI is disabled. Enabling software iSCSI..."
+    puts 'Software iSCSI is disabled. Enabling software iSCSI...'
     miqHss.updateSoftwareInternetScsiEnabled(true)
   end
-  puts "done."
+  puts 'done.'
 
   hish = miqHss.hostBusAdaptersByType('HostInternetScsiHba').first
-  raise "No HostInternetScsiHba found" if hish.nil?
+  raise 'No HostInternetScsiHba found' if hish.nil?
   iScsiHbaDevice = hish.device
 
   puts
   puts "Addedg iSCSI send targets to #{iScsiHbaDevice}..."
   miqHss.addInternetScsiSendTargets(iScsiHbaDevice, ISCSI_SEND_TARGETS)
-  puts "done."
+  puts 'done.'
 
   puts
   puts "Addedg iSCSI static targets to #{iScsiHbaDevice}..."
   miqHss.addInternetScsiStaticTargets(iScsiHbaDevice, ISCSI_STATIC_TARGETS)
-  puts "done."
+  puts 'done.'
 
   # puts
   # puts "*** HostInternetScsiHba:"

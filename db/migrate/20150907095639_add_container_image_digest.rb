@@ -14,8 +14,8 @@ class AddContainerImageDigest < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Update container images tags from digests") do
-      ContainerImage.where("digest IS NOT NULL").update_all('tag = digest')
+    say_with_time('Update container images tags from digests') do
+      ContainerImage.where('digest IS NOT NULL').update_all('tag = digest')
     end
     remove_column :container_images, :digest
   end

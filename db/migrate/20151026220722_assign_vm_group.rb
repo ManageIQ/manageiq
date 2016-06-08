@@ -19,11 +19,11 @@ class AssignVmGroup < ActiveRecord::Migration
 
     return unless group_id
 
-    say_with_time "assign default vm groups" do
+    say_with_time 'assign default vm groups' do
       VmOrTemplate.where(:miq_group_id => nil).update_all(:miq_group_id => group_id)
     end
 
-    say_with_time "assign default service miq_groups" do
+    say_with_time 'assign default service miq_groups' do
       Service.where(:miq_group_id => nil).update_all(:miq_group_id => group_id)
     end
   end

@@ -1,5 +1,5 @@
 class CustomizationTemplateSysprep < CustomizationTemplate
-  DISKPART_FILENAME = "diskpart.txt".freeze
+  DISKPART_FILENAME = 'diskpart.txt'.freeze
   DISKPART_CONTENTS = <<-EOF
 select disk 0
 clean
@@ -11,7 +11,7 @@ active
 exit
 EOF
 
-  IMAGE_BAT_FILENAME = "image.bat".freeze
+  IMAGE_BAT_FILENAME = 'image.bat'.freeze
   IMAGE_BAT_CONTENTS = <<-EOF
 diskpart /s diskpart.txt
 s:\\<%= evm[:windows_images_directory] %>\\imagex.exe /apply s:\\<%= evm[:windows_images_directory] %>\\<%= evm[:windows_image_path] %> <%= evm[:windows_image_index] %> c:
@@ -21,7 +21,7 @@ s:\\<%= evm[:windows_images_directory] %>\\curl <%= evm[:post_install_callback_u
 wpeutil shutdown
 EOF
 
-  UNATTEND_FILENAME = "unattend.xml".freeze
+  UNATTEND_FILENAME = 'unattend.xml'.freeze
 
   def self.pxe_server_filepath(pxe_server, pxe_image, mac_address)
     File.join(pxe_server.customization_directory, pxe_image.class.pxe_server_filename(mac_address))
@@ -36,8 +36,8 @@ EOF
     unattend_contents = script_with_substitution(substitution_options)
 
     image_bat_options = substitution_options.merge(
-      :windows_images_directory => pxe_server.windows_images_directory.chomp("/").gsub("/", "\\\\"),
-      :windows_image_path       => windows_image.path.chomp("/").gsub("/", "\\\\"),
+      :windows_images_directory => pxe_server.windows_images_directory.chomp('/').gsub('/', '\\\\'),
+      :windows_image_path       => windows_image.path.chomp('/').gsub('/', '\\\\'),
       :windows_image_index      => windows_image.index,
     )
     image_bat_contents = self.class.substitute_erb(IMAGE_BAT_CONTENTS, image_bat_options)

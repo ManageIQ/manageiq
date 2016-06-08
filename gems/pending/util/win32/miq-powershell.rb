@@ -72,12 +72,12 @@ module MiqPowerShell
   def self.verify_return_object(xml)
     return unless is_error_object?(xml)
     err_msg = "#{name} "
-    node = xml.find_first("//*/Property[@Name=\"FullyQualifiedErrorId\"]")
+    node = xml.find_first('//*/Property[@Name="FullyQualifiedErrorId"]')
     err_msg << "(#{node.text}): " unless node.nil?
-    node = xml.find_first("//*/Property[@Name=\"ErrorRecord\"]")
-    node = xml.find_first("//*/Property[@Name=\"Message\"]") if node.nil? || node.text.to_s.strip.empty?
+    node = xml.find_first('//*/Property[@Name="ErrorRecord"]')
+    node = xml.find_first('//*/Property[@Name="Message"]') if node.nil? || node.text.to_s.strip.empty?
     err_msg << "#{node.text} " unless node.nil?
-    node = xml.find_first("//*/Property[@Name=\"PositionMessage\"]")
+    node = xml.find_first('//*/Property[@Name="PositionMessage"]')
     err_msg << "#{node.text}" unless node.nil?
     raise err_msg
   end
@@ -87,7 +87,7 @@ module MiqPowerShell
       object_type = xml.root.elements[1].attributes['Type']
       object_type = object_type.value if object_type.respond_to?(:value)
     rescue
-      object_type = ""
+      object_type = ''
     end
 
     return true if !object_type.nil? && object_type.split('.').last == 'ErrorRecord'
@@ -149,7 +149,7 @@ module MiqPowerShell
   end
 
   def self.clear_orphaned_data_files
-    Dir.glob(File.join(get_xml_directory, "psd*.*")).each do |psd_file|
+    Dir.glob(File.join(get_xml_directory, 'psd*.*')).each do |psd_file|
       if File.file?(psd_file)
         $log.warn "MiqPowerShell removing orphaned temp data file <#{psd_file}>" if $log
         File.delete(psd_file)
@@ -308,7 +308,7 @@ module MiqPowerShell
       when :DT
         c_text = c.text
         if /\d+-\d+-\d+T\d+:\d+:\d+.\d+(.*)/ =~ c_text
-          c_text += "Z" if $1.length == 0
+          c_text += 'Z' if $1.length == 0
         end
         Time.parse(c_text)
       when :Nil then nil

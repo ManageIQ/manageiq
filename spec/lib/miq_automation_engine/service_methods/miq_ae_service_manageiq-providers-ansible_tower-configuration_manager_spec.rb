@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 module MiqAeServiceManageIQProvidersAnsibleTowerConfigurationManagerSpec
   include MiqAeEngine
@@ -6,7 +6,7 @@ module MiqAeServiceManageIQProvidersAnsibleTowerConfigurationManagerSpec
     let(:provider)              { FactoryGirl.create(:provider_ansible_tower) }
     let(:configuration_manager) { FactoryGirl.create(:configuration_manager_ansible_tower, :provider => provider) }
 
-    it "get the service model" do
+    it 'get the service model' do
       configuration_manager
       svc = described_class.find(configuration_manager.id)
 

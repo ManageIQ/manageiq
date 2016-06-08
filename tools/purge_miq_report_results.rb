@@ -4,20 +4,20 @@ require 'trollop'
 ARGV.shift if ARGV[0] == '--'
 opts = Trollop.options do
   banner "Purge miq_report_results records.\n\nUsage: rails runner #{$0} [-- options]\n\nOptions:\n\t"
-  opt :mode,      "Mode (#{MODES.join(", ")})",          :default => "count"
-  opt :window,    "Window of records to delete at once", :default => 100
-  opt :date,      "Range of reports to keep by date (default: VMDB configuration)",     :type => :string
-  opt :remaining, "Number of results to keep per report (default: VMDB configuration)", :type => :int
+  opt :mode,      "Mode (#{MODES.join(", ")})",          :default => 'count'
+  opt :window,    'Window of records to delete at once', :default => 100
+  opt :date,      'Range of reports to keep by date (default: VMDB configuration)',     :type => :string
+  opt :remaining, 'Number of results to keep per report (default: VMDB configuration)', :type => :int
 end
-Trollop.die "script must be run with bin/rails runner"    unless Object.const_defined?(:Rails)
+Trollop.die 'script must be run with bin/rails runner'    unless Object.const_defined?(:Rails)
 Trollop.die :mode,   "must be one of #{MODES.join(", ")}" unless MODES.include?(opts[:mode])
-Trollop.die :window, "must be a number greater than 0"    if opts[:window] <= 0
+Trollop.die :window, 'must be a number greater than 0'    if opts[:window] <= 0
 if opts[:remaining_given]
-  Trollop.die :remaining, "must be a number greater than 0" if opts[:remaining] <= 0
+  Trollop.die :remaining, 'must be a number greater than 0' if opts[:remaining] <= 0
   purge_mode  = :remaining
   purge_value = opts[:remaining]
 elsif opts[:date_given]
-  Trollop.die :date, "must be a number with method (e.g. 6.months)" unless opts[:date].number_with_method?
+  Trollop.die :date, 'must be a number with method (e.g. 6.months)' unless opts[:date].number_with_method?
   purge_mode  = :date
   purge_value = opts[:date].to_i_with_method.seconds.ago.utc
 else
@@ -41,11 +41,11 @@ count = MiqReportResult.purge_count(purge_mode, purge_value)
 log "Purge Count: #{formatter.number_with_delimiter(count)}"
 puts
 
-exit if opts[:mode] != "purge"
+exit if opts[:mode] != 'purge'
 
-log "Purging..."
+log 'Purging...'
 require 'ruby-progressbar'
-pbar = ProgressBar.create(:title => "Purging", :total => count, :autofinish => false)
+pbar = ProgressBar.create(:title => 'Purging', :total => count, :autofinish => false)
 
 if count > 0
   MiqReportResult.purge(purge_mode, purge_value, opts[:window]) do |increment, _|
@@ -54,4 +54,4 @@ if count > 0
 end
 
 pbar.finish
-log "Purging...Complete"
+log 'Purging...Complete'

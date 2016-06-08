@@ -1,5 +1,5 @@
 describe CloudTenant do
-  it "#all_cloud_networks" do
+  it '#all_cloud_networks' do
     ems     = FactoryGirl.create(:ems_openstack)
     tenant1 = FactoryGirl.create(:cloud_tenant,  :ext_management_system => ems)
     tenant2 = FactoryGirl.create(:cloud_tenant,  :ext_management_system => ems)

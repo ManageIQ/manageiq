@@ -7,10 +7,10 @@ def print_subtree(subtree, indent = '')
     end
 
     sub_type = case obj
-               when Datacenter   then "  (datacenter)"
-               when EmsFolder    then ""
-               when ResourcePool then obj.is_default ? "  (default)" : ""
-               else ""
+               when Datacenter   then '  (datacenter)'
+               when EmsFolder    then ''
+               when ResourcePool then obj.is_default ? '  (default)' : ''
+               else ''
                end
     puts "#{indent}- #{obj.class}: #{obj.name}#{sub_type}"
     print_subtree(children, "  #{indent}")

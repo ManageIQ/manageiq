@@ -18,8 +18,8 @@ $log.add 'err_console'
 # $miq_wiredump = true
 
 # TARGET_HOST = "vi4esxm1.manageiq.com"
-TARGET_HOST = raise "please define"
-VNIC_DEV  = "vmk1"
+TARGET_HOST = raise 'please define'
+VNIC_DEV  = 'vmk1'
 hMor = nil
 
 broker = MiqVimBroker.new(:client)
@@ -42,27 +42,27 @@ begin
   
     vnm = miqHost.hostVirtualNicManager
   
-    puts "**** hostVirtualNicManager.info:"
+    puts '**** hostVirtualNicManager.info:'
     vim.dumpObj(vnm.info)
-    puts "**** END hostVirtualNicManager.info"
+    puts '**** END hostVirtualNicManager.info'
     puts
   
-    cVnics = vnm.candidateVnicsByType("vmotion")
+    cVnics = vnm.candidateVnicsByType('vmotion')
   
-    puts "**** Candidate vnics for vmotion:"
+    puts '**** Candidate vnics for vmotion:'
     cVnics.each do |vmn|
       puts "Device: #{vmn.device}, Key: #{vmn.key}"
     end
-    puts "**** END Candidate vnics for vmotion"
+    puts '**** END Candidate vnics for vmotion'
     puts
   
-    selVna = vnm.selectedVnicsByType("vmotion")
+    selVna = vnm.selectedVnicsByType('vmotion')
   
-    puts "**** Selected vnics for vmotion:"
+    puts '**** Selected vnics for vmotion:'
     selVna.each do |vnn|
       puts "Key: #{vnn}"
     end
-    puts "**** END Selected vnics for vmotion"
+    puts '**** END Selected vnics for vmotion'
     puts
   
     # svn = selVna.first
@@ -80,8 +80,8 @@ begin
     # puts
   
     puts "**** Selecting: #{VNIC_DEV}..."
-    vnm.selectVnicForNicType("vmotion", VNIC_DEV)
-    puts "**** Done."
+    vnm.selectVnicForNicType('vmotion', VNIC_DEV)
+    puts '**** Done.'
     puts
   
 rescue => err

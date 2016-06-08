@@ -2,8 +2,8 @@ require 'log4r'
 require 'ostruct'
 require 'disk/MiqDisk'
 
-VMDK  = "/Volumes/WDpassport/Virtual Machines/Red Hat Linux.vmwarevm/payload2.vmdk"
-MKFILE  = "rawmkfs"
+VMDK  = '/Volumes/WDpassport/Virtual Machines/Red Hat Linux.vmwarevm/payload2.vmdk'
+MKFILE  = 'rawmkfs'
 
 #
 # Formatter to output log messages to the console.
@@ -19,7 +19,7 @@ Log4r::StderrOutputter.new('err_console', :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
 diskInfo = OpenStruct.new
-diskInfo.mountMode = "rw"
+diskInfo.mountMode = 'rw'
 diskInfo.fileName = VMDK
 
 disk = MiqDisk.getDisk(diskInfo)
@@ -41,7 +41,7 @@ puts
 parts = disk.getPartitions
 
 if parts && !parts.empty?
-  puts "Disk is partitioned, exiting"
+  puts 'Disk is partitioned, exiting'
   exit(0)
 end
 

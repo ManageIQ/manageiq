@@ -1,4 +1,4 @@
-describe "MiqAeStateMachineSteps" do
+describe 'MiqAeStateMachineSteps' do
   before do
     @user                = FactoryGirl.create(:user_with_group)
     @instance1           = 'instance1'
@@ -63,7 +63,7 @@ describe "MiqAeStateMachineSteps" do
 
   def create_method_class(attrs = {})
     ae_fields = {'ae_result'     => {:aetype => 'attribute', :datatype => 'string',
-                                     :default_value => "ok", :priority => 1},
+                                     :default_value => 'ok', :priority => 1},
                  'ae_next_state' => {:aetype => 'attribute', :datatype => 'string',
                                      :priority => 2},
                  'raise'         => {:aetype => 'attribute', :datatype => 'string',
@@ -72,8 +72,8 @@ describe "MiqAeStateMachineSteps" do
                                      :priority => 4}}
     inst_values = {'execute'       => {:value => @common_method_name},
                    'ae_result'     => {:value => 'ok'},
-                   'ae_next_state' => {:value => ""},
-                   'raise'         => {:value => ""}}
+                   'ae_next_state' => {:value => ''},
+                   'raise'         => {:value => ''}}
     ae_instances = {@instance1 => inst_values, @instance2 => inst_values,
                     @instance3 => inst_values}
     ae_methods = {@common_method_name  => {:scope => 'instance', :location => 'inline',
@@ -88,9 +88,9 @@ describe "MiqAeStateMachineSteps" do
   end
 
   def create_state_class(attrs = {})
-    all_steps = {'on_entry' => "common_state_method",
-                 'on_exit'  => "common_state_method",
-                 'on_error' => "common_state_method"}
+    all_steps = {'on_entry' => 'common_state_method',
+                 'on_exit'  => 'common_state_method',
+                 'on_error' => 'common_state_method'}
     ae_fields = {'state1' => {:aetype => 'state', :datatype => 'string', :priority => 1},
                  'state2' => {:aetype => 'state', :datatype => 'string', :priority => 2},
                  'state3' => {:aetype => 'state', :datatype => 'string', :priority => 3}}
@@ -128,7 +128,7 @@ describe "MiqAeStateMachineSteps" do
     instance.save
   end
 
-  it "process all states" do
+  it 'process all states' do
     all_instance_names = [@instance1, @instance2, @instance3]
     all_state_names    = %w(state1 state2 state3)
 
@@ -139,9 +139,9 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "one of the state raises an exception" do
+  it 'one of the state raises an exception' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance2,
-                   'raise', 'value', "Intentionally raise an error")
+                   'raise', 'value', 'Intentionally raise an error')
 
     ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2])
@@ -150,9 +150,9 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2))
   end
 
-  it "one of the state has an error" do
+  it 'one of the state has an error' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance2,
-                   'ae_result', 'value', "error")
+                   'ae_result', 'value', 'error')
 
     ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance2])
@@ -161,7 +161,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2))
   end
 
-  it "goto a specific state from on_entry" do
+  it 'goto a specific state from on_entry' do
     # When the next state is set run the on_exit method before going to
     # next state
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
@@ -174,7 +174,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "goto a specific state from on_exit" do
+  it 'goto a specific state from on_exit' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_exit', "common_state_method(ae_next_state => 'state3')")
 
@@ -185,9 +185,9 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "goto a specific state from on_error" do
+  it 'goto a specific state from on_error' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance1,
-                   'ae_result', 'value', "error")
+                   'ae_result', 'value', 'error')
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_error',
                    "common_state_method(ae_next_state => 'state3', ae_result => 'continue')")
@@ -199,9 +199,9 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to match_array(%w(state1))
   end
 
-  it "goto a specific state from main state" do
+  it 'goto a specific state from main state' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance1,
-                   'ae_next_state', 'value', "state3")
+                   'ae_next_state', 'value', 'state3')
     ws = MiqAeEngine.instantiate(@fqname, @user)
 
     expect(ws.root.attributes['states_executed']).to match_array([@instance1, @instance3])
@@ -210,7 +210,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "on_entry has an error" do
+  it 'on_entry has an error' do
     # The state wont get executed but the on_error for the state will be
     # processed.
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
@@ -223,7 +223,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to match_array(%w(state2))
   end
 
-  it "on_exit has an error" do
+  it 'on_exit has an error' do
     # The state machine will stop and all the subsequent states would be skipped
     # The on_error wont get executed
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
@@ -236,11 +236,11 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "continue even when a state has an error" do
+  it 'continue even when a state has an error' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_error', "common_state_method(ae_result => 'continue')")
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance2,
-                   'ae_result', 'value', "error")
+                   'ae_result', 'value', 'error')
 
     ws = MiqAeEngine.instantiate(@fqname, @user)
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(state1 state2 state3))
@@ -249,7 +249,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to match_array(%w(state2))
   end
 
-  it "skip a state" do
+  it 'skip a state' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_entry', "common_state_method(ae_result => 'skip')")
 
@@ -260,7 +260,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "non existent on_entry method" do
+  it 'non existent on_entry method' do
     # Executes the on_error method when the on_entry has a method missing
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_entry', "does_not_exist(ae_result => 'skip')")
@@ -272,7 +272,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to match_array(%w(state2))
   end
 
-  it "non existent on_exit method" do
+  it 'non existent on_exit method' do
     # Does not execute the on_error method when the on_exit has a method missing
     # This is different from when the on_entry is missing. Is this an intentional
     # design
@@ -286,10 +286,10 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "non existent on_error method" do
+  it 'non existent on_error method' do
     # If the on_error is missing the whole state machine aborts
     tweak_instance("/#{@domain}/#{@namespace}/#{@method_class}", @instance2,
-                   'ae_result', 'value', "error")
+                   'ae_result', 'value', 'error')
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state2', 'on_error', "does_not_exist(ae_result => 'skip')")
 
@@ -300,7 +300,7 @@ describe "MiqAeStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "goto a non existent state from on_entry" do
+  it 'goto a non existent state from on_entry' do
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class}", @state_instance,
                    'state1', 'on_entry', "common_state_method(ae_next_state => 'state_missing')")
 

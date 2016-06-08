@@ -1,4 +1,4 @@
-require "widget_import_validator"
+require 'widget_import_validator'
 
 class WidgetImportService
   class ParsedNonWidgetYamlError < StandardError; end
@@ -15,12 +15,12 @@ class WidgetImportService
   end
 
   def import_widget_from_hash(widget)
-    new_or_existing_widget = MiqWidget.where(:title => widget["title"]).first_or_create
-    new_or_existing_widget.title ||= widget["title"]
-    new_or_existing_widget.content_type ||= "rss"
+    new_or_existing_widget = MiqWidget.where(:title => widget['title']).first_or_create
+    new_or_existing_widget.title ||= widget['title']
+    new_or_existing_widget.content_type ||= 'rss'
     new_or_existing_widget.resource = build_report_contents(widget)
     new_or_existing_widget.miq_schedule = build_miq_schedule(widget)
-    widget.delete("resource_id")
+    widget.delete('resource_id')
 
     log_widget_import_message(new_or_existing_widget)
 
@@ -32,13 +32,13 @@ class WidgetImportService
       widgets = YAML.load(import_file_upload.uploaded_content)
 
       widgets = widgets.select do |widget|
-        widgets_to_import.include?(widget["MiqWidget"]["title"])
+        widgets_to_import.include?(widget['MiqWidget']['title'])
       end
 
       raise ParsedNonWidgetYamlError if widgets.empty?
 
       widgets.each do |widget|
-        import_widget_from_hash(widget["MiqWidget"])
+        import_widget_from_hash(widget['MiqWidget'])
       end
     end
 
@@ -60,24 +60,24 @@ class WidgetImportService
 
   def create_import_file_upload(file_contents)
     ImportFileUpload.create.tap do |import_file_upload|
-      import_file_upload.store_binary_data_as_yml(file_contents, "Widget import")
+      import_file_upload.store_binary_data_as_yml(file_contents, 'Widget import')
     end
   end
 
   def build_report_contents(widget)
-    report_contents = widget.delete("MiqReportContent")
+    report_contents = widget.delete('MiqReportContent')
 
     return if report_contents.blank?
 
     report_attributes = name = new_or_existing_report = nil
 
-    if report_contents.first["MiqReport"]
-      report_attributes = report_contents.first["MiqReport"]
-      name = report_attributes.delete("menu_name")
+    if report_contents.first['MiqReport']
+      report_attributes = report_contents.first['MiqReport']
+      name = report_attributes.delete('menu_name')
       new_or_existing_report = MiqReport.where(:name => name).first_or_initialize
-    elsif report_contents.first["RssFeed"]
-      report_attributes = report_contents.first["RssFeed"]
-      name = report_attributes["name"]
+    elsif report_contents.first['RssFeed']
+      report_attributes = report_contents.first['RssFeed']
+      name = report_attributes['name']
       new_or_existing_report = RssFeed.where(:name => name).first_or_initialize
     end
 
@@ -92,13 +92,13 @@ class WidgetImportService
   end
 
   def build_miq_schedule(widget)
-    schedule_contents = widget.delete("MiqSchedule")
+    schedule_contents = widget.delete('MiqSchedule')
 
     return if schedule_contents.blank?
 
     new_or_existing_schedule = MiqSchedule.where(
-      :name   => schedule_contents["name"],
-      :towhat => schedule_contents["towhat"]
+      :name   => schedule_contents['name'],
+      :towhat => schedule_contents['towhat']
     ).first_or_initialize
     new_or_existing_schedule.update_attributes(schedule_contents) if new_or_existing_schedule.new_record?
 
@@ -107,18 +107,18 @@ class WidgetImportService
 
   def destroy_queued_deletion(import_file_upload_id)
     MiqQueue.unqueue(
-      :class_name  => "ImportFileUpload",
+      :class_name  => 'ImportFileUpload',
       :instance_id => import_file_upload_id,
-      :method_name => "destroy"
+      :method_name => 'destroy'
     )
   end
 
   def queue_deletion(import_file_upload_id)
     MiqQueue.put(
-      :class_name  => "ImportFileUpload",
+      :class_name  => 'ImportFileUpload',
       :instance_id => import_file_upload_id,
       :deliver_on  => 1.day.from_now,
-      :method_name => "destroy"
+      :method_name => 'destroy'
     )
   end
 

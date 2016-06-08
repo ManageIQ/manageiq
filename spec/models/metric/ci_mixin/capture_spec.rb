@@ -10,11 +10,11 @@ describe Metric::CiMixin::Capture do
 
     @metering = double(:metering)
     allow(@metering).to receive(:list_meters).and_return(
-      OpenstackApiResult.new((@mock_meter_list.list_meters("resource_counters") +
-                              @mock_meter_list.list_meters("metadata_counters"))))
+      OpenstackApiResult.new((@mock_meter_list.list_meters('resource_counters') +
+                              @mock_meter_list.list_meters('metadata_counters'))))
 
     @ems_openstack = FactoryGirl.create(:ems_openstack, :zone => @zone)
-    allow(@ems_openstack).to receive(:connect).with(:service => "Metering").and_return(@metering)
+    allow(@ems_openstack).to receive(:connect).with(:service => 'Metering').and_return(@metering)
 
     @vm = FactoryGirl.create(:vm_perf_openstack, :ext_management_system => @ems_openstack)
   end
@@ -36,12 +36,12 @@ describe Metric::CiMixin::Capture do
     parse_datetime('2013-08-28T12:41:40Z')
   end
 
-  context "2 collection periods total, end of 1. period has incomplete stat" do
+  context '2 collection periods total, end of 1. period has incomplete stat' do
     ###################################################################################################################
     # DESCRIPTION FOR: net_usage_rate_average
     # MAIN SCENARIOS :
 
-    it "checks that saved metrics are correct" do
+    it 'checks that saved metrics are correct' do
       capture_data('2013-08-28T12:02:00Z', 20.minutes)
 
       stats_period_start = [api_time_as_utc(@read_bytes.first), api_time_as_utc(@write_bytes.first)].min
@@ -74,12 +74,12 @@ describe Metric::CiMixin::Capture do
     end
   end
 
-  context "2 collection periods total, end of 1. period has complete stats" do
+  context '2 collection periods total, end of 1. period has complete stats' do
     ###################################################################################################################
     # DESCRIPTION FOR: net_usage_rate_average
     # MAIN SCENARIOS :
 
-    it "checks that saved metrics are correct" do
+    it 'checks that saved metrics are correct' do
       capture_data('2013-08-28T12:06:00Z', 20.minutes)
 
       stats_period_start = [api_time_as_utc(@read_bytes.first), api_time_as_utc(@write_bytes.first)].min
@@ -112,8 +112,8 @@ describe Metric::CiMixin::Capture do
     end
   end
 
-  context "2 collection periods total, there is data hole between periods" do
-    it "verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged" do
+  context '2 collection periods total, there is data hole between periods' do
+    it 'verifies that hole in the data is logged, corrupted data is logged and no other warnings are logged' do
       # Hole in the data is logged
       expect($log).to receive(:warn).with(/expected to get data as of/).exactly(:once)
       # Corrupted data is logged
@@ -130,7 +130,7 @@ describe Metric::CiMixin::Capture do
     # 1.collection period, save all metrics
     allow(@metering).to receive(:get_statistics) do |name, _options|
       first_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
-                                                                                  "multiple_collection_periods"),
+                                                                                  'multiple_collection_periods'),
                                                   '<=',
                                                   second_collection_period_start)
 
@@ -143,7 +143,7 @@ describe Metric::CiMixin::Capture do
     # 2.collection period, save all metrics
     allow(@metering).to receive(:get_statistics) do |name, _options|
       second_collection_period = filter_statistics(@mock_stats_data.get_statistics(name,
-                                                                                   "multiple_collection_periods"),
+                                                                                   'multiple_collection_periods'),
                                                    '>',
                                                    second_collection_period_start,
                                                    collection_overlap_period)
@@ -161,11 +161,11 @@ describe Metric::CiMixin::Capture do
 
     # grab read bytes and write bytes data, these values are pulled directly from
     # spec/tools/openstack_data/openstack_perf_data/multiple_collection_periods.yml
-    @read_bytes = @mock_stats_data.get_statistics("network.incoming.bytes",
-                                                  "multiple_collection_periods")
+    @read_bytes = @mock_stats_data.get_statistics('network.incoming.bytes',
+                                                  'multiple_collection_periods')
 
-    @write_bytes = @mock_stats_data.get_statistics("network.outgoing.bytes",
-                                                   "multiple_collection_periods")
+    @write_bytes = @mock_stats_data.get_statistics('network.outgoing.bytes',
+                                                   'multiple_collection_periods')
   end
 
   def filter_statistics(stats, op, date, subtract_by = nil)
@@ -175,12 +175,12 @@ describe Metric::CiMixin::Capture do
   end
 
   def api_time_as_utc(api_result)
-    period_end = api_result["period_end"]
+    period_end = api_result['period_end']
     parse_datetime(period_end)
   end
 
   def parse_datetime(datetime)
-    datetime << "Z" if datetime.size == 19
+    datetime << 'Z' if datetime.size == 19
     Time.parse(datetime).utc
   end
 end

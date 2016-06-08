@@ -18,9 +18,9 @@ class LogFile < ApplicationRecord
     zone        = server.zone
     path        = "#{zone.name}_#{zone.id}", "#{server.name}_#{server.id}"
     date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
-    fname       = historical ? "Archive_" : "Current_"
+    fname       = historical ? 'Archive_' : 'Current_'
     fname += "region_#{MiqRegion.my_region.region rescue "unknown"}_#{zone.name}_#{zone.id}_#{server.name}_#{server.id}_#{date_string}#{File.extname(loc_file)}"
-    dest        = File.join("/", path, fname)
+    dest        = File.join('/', path, fname)
     _log.info("Built relative path: [#{dest}] from source: [#{loc_file}]")
     dest
   end
@@ -34,7 +34,7 @@ class LogFile < ApplicationRecord
     path.gsub!('%20', ' ')
 
     relpath  = relative_path_for_upload(loc_file)
-    new_path = File.join("/", path, relpath)
+    new_path = File.join('/', path, relpath)
     uri      = URI::HTTP.new(scheme, userinfo, host, port, registry, new_path, opaque, query, fragment).to_s
     _log.info("New URI: [#{uri}] from base: [#{base_uri}], and relative path: [#{relpath}]")
     uri
@@ -44,11 +44,11 @@ class LogFile < ApplicationRecord
     # TODO: Currently the ftp code in the LogFile class has LogFile logic for the destination folders (evm_1/server_1) and builds these paths and copies the logs
     # appropriately.  To make all the various mechanisms work, we need to build a destination URI based on the input filename and pass this along
     # so that the nfs, ftp, smb, etc. mechanism have very little LogFile logic and only need to know how decipher the URI and build the directories as appropraite.
-    raise _("LogFile local_file is nil") unless local_file
+    raise _('LogFile local_file is nil') unless local_file
     unless File.exist?(local_file)
       raise _("LogFile local_file: [#{file_name}] does not exist!") % {:file_name => local_file}
     end
-    raise _("Log Depot settings not configured") unless file_depot
+    raise _('Log Depot settings not configured') unless file_depot
 
     method = get_post_method(file_depot.uri)
     send("upload_log_file_#{method}")
@@ -81,7 +81,7 @@ class LogFile < ApplicationRecord
   # main UI method to call to request logs from a server
   def self.logs_from_server(*args)
     options = args.extract_options!
-    userid  = args[0] || "system"
+    userid  = args[0] || 'system'
 
     # If no server provided, use the MiqServer receiving this request
     server = args[1] || MiqServer.my_server
@@ -107,7 +107,7 @@ class LogFile < ApplicationRecord
 
       MiqQueue.put(
         :class_name   => name,
-        :method_name  => "_request_logs",
+        :method_name  => '_request_logs',
         :args         => [options],
         :zone         => zone,
         :miq_callback => cb,
@@ -120,7 +120,7 @@ class LogFile < ApplicationRecord
     else
       # return task id to the UI
       msg = "Queued the request for logs from server: [#{resource}]"
-      task.update_status("Queued", "Ok", msg)
+      task.update_status('Queued', 'Ok', msg)
       _log.info("Task: [#{task.id}] #{msg}")
       task.id
     end
@@ -135,14 +135,14 @@ class LogFile < ApplicationRecord
   end
 
   def self.empty_logfile(historical)
-    LogFile.create(:state       => "collecting",
+    LogFile.create(:state       => 'collecting',
                    :historical  => historical,
-                   :description => "Default logfile")
+                   :description => 'Default logfile')
   end
 
   # Added tcp ping stuff here until ftp is refactored into a separate class
   def self.get_ping_depot_options
-    @@ping_depot_options ||= VMDB::Config.new("vmdb").config[:log][:collection]
+    @@ping_depot_options ||= VMDB::Config.new('vmdb').config[:log][:collection]
   end
 
   def self.ping_timeout
@@ -163,7 +163,7 @@ class LogFile < ApplicationRecord
     uri_to_add = build_log_uri(file_depot.uri, local_file)
     uri        = MiqNfsSession.new(legacy_depot_hash).add(local_file, uri_to_add)
     update_attributes(
-      :state   => "available",
+      :state   => 'available',
       :log_uri => uri
     )
     post_upload_tasks
@@ -173,7 +173,7 @@ class LogFile < ApplicationRecord
     uri_to_add = build_log_uri(file_depot.uri, local_file)
     uri        = MiqSmbSession.new(legacy_depot_hash).add(local_file, uri_to_add)
     update_attributes(
-      :state   => "available",
+      :state   => 'available',
       :log_uri => uri
     )
     post_upload_tasks
@@ -189,7 +189,7 @@ class LogFile < ApplicationRecord
 
   def destination_file_name
     date_string = "#{format_log_time(logging_started_on)}_#{format_log_time(logging_ended_on)}"
-    destname    = historical ? "Archive_" : "Current_"
+    destname    = historical ? 'Archive_' : 'Current_'
     destname << "region_#{MiqRegion.my_region.try(:region) || "unknown"}_#{resource.zone.name}_#{resource.zone.id}_#{resource.name}_#{resource.id}_#{date_string}#{File.extname(local_file)}"
   end
 
@@ -198,7 +198,7 @@ class LogFile < ApplicationRecord
   end
 
   def format_log_time(time)
-    time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
+    time.respond_to?(:strftime) ? time.strftime('%Y%m%d_%H%M%S') : 'unknown'
   end
 
   private
@@ -236,16 +236,16 @@ class LogFile < ApplicationRecord
 
     # server must implement an instance method: started_on? which returns whether the server is started
     unless server.respond_to?(:started?)
-      raise MiqException::Error, _("started? not implemented for %{server_name}") % {:server_name => server.class.name}
+      raise MiqException::Error, _('started? not implemented for %{server_name}') % {:server_name => server.class.name}
     end
     unless server.started?
       if server.respond_to?(:name)
         raise MiqException::Error,
-              _("Log request failed since [%{resource} %{server_name}] is not started") % {:resource    => resource,
+              _('Log request failed since [%{resource} %{server_name}] is not started') % {:resource    => resource,
                                                                                            :server_name => server.name}
       else
         raise MiqException::Error,
-              _("Log request failed since [%{resource}] is not started") % {:resource => resource}
+              _('Log request failed since [%{resource}] is not started') % {:resource => resource}
       end
     end
 
@@ -253,18 +253,18 @@ class LogFile < ApplicationRecord
 
     msg = "Requesting logs from server: [#{resource}]"
     _log.info("#{log_header} #{msg}")
-    task.update_status("Active", "Ok", msg)
+    task.update_status('Active', 'Ok', msg)
 
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     unless server.respond_to?(:_post_my_logs)
       raise MiqException::Error,
-            _("_post_my_logs not implemented for %{server_name}") % {:server_name => server.class.name}
+            _('_post_my_logs not implemented for %{server_name}') % {:server_name => server.class.name}
     end
     options = options.merge(:callback => cb, :timeout => LOG_REQUEST_TIMEOUT)
     server._post_my_logs(options)
 
     msg = "Requested logs from: [#{resource}]"
     _log.info("#{log_header} #{msg}")
-    task.update_status("Queued", "Ok", msg)
+    task.update_status('Queued', 'Ok', msg)
   end
 end

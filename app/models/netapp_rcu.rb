@@ -2,8 +2,8 @@ require 'RcuWebService/RcuClientBase'
 
 class NetappRcu < StorageManager
   has_many  :controllers,
-            :class_name  => "StorageManager",
-            :foreign_key => "parent_agent_id"
+            :class_name  => 'StorageManager',
+            :foreign_key => 'parent_agent_id'
 
   DEFAULT_AGENT_TYPE = 'RCU'
   default_value_for :agent_type, DEFAULT_AGENT_TYPE
@@ -15,7 +15,7 @@ class NetappRcu < StorageManager
       begin
         # TODO: Use hostname, not ipaddress
         rcu = RcuClientBase.new(vc.ipaddress, *vc.auth_user_pwd(:default))
-        rcu.getMoref("", "")
+        rcu.getMoref('', '')
       rescue => err
         next
       end
@@ -26,7 +26,7 @@ class NetappRcu < StorageManager
 
   def self.add_from_ems(ems)
     unless ems.kind_of?(ManageIQ::Providers::Vmware::InfraManager)
-      raise _("NetappRcu.add_from_ems: unsupported ems type: %{type}") % {:type => ems.type}
+      raise _('NetappRcu.add_from_ems: unsupported ems type: %{type}') % {:type => ems.type}
     end
     # TODO: Use hostname, not ipaddress
     add(ems.ipaddress,
@@ -102,7 +102,7 @@ class NetappRcu < StorageManager
   end
 
   def current_controller
-    raise _("NetappRcu.current_controller: current controller is not set") unless @currentController
+    raise _('NetappRcu.current_controller: current controller is not set') unless @currentController
     @currentController
   end
 
@@ -111,7 +111,7 @@ class NetappRcu < StorageManager
   end
 
   def controller_spec
-    @currentControllerSpec ||= RcuHash.new("ControllerSpec") do |cs|
+    @currentControllerSpec ||= RcuHash.new('ControllerSpec') do |cs|
       # TODO: Use hostname, not ipaddress
       cs.ipAddress = current_controller.ipaddress
       cs.username  = current_controller.authentication_userid
@@ -148,7 +148,7 @@ class NetappRcu < StorageManager
     aggregate_or_volume_name  = params[:aggregate_or_volume_name]
     datastore_name        = params[:datastore_name]
     size            = params[:size]
-    protocol          = params[:protocol] || "NFS"
+    protocol          = params[:protocol] || 'NFS'
     thin_provision        = (params[:thin_provision].nil? ? false : params[:thin_provision])
     auto_grow         = (params[:auto_grow].nil? ? false : params[:auto_grow])
     auto_grow_increment     = params[:auto_grow_increment]
@@ -158,24 +158,24 @@ class NetappRcu < StorageManager
     # Size must be at least 1 gigabyte
     size = 1.gigabyte if size < 1.gigabyte
 
-    if protocol == "NFS"
+    if protocol == 'NFS'
       unless controller_has_aggregate?(aggregate_or_volume_name)
         raise _("Controller '%{name}' does not have aggregate '%{item}'") % {:name => controller_name,
                                                                              :item => aggregate_or_volume_name}
       end
-    elsif protocol == "VMFS" # XXX ???
+    elsif protocol == 'VMFS' # XXX ???
       unless controller_has_volume?(aggregate_or_volume_name)
         raise _("Controller '%{name}' does not have volume '%{item}'") % {:name => controller_name,
                                                                           :item => aggregate_or_volume_name}
       end
     else
-      raise _("Unrecognized protocol: %{protocol}") % {:protocol => protocol}
+      raise _('Unrecognized protocol: %{protocol}') % {:protocol => protocol}
     end
-    raise _("Container not provided") if container.nil?
+    raise _('Container not provided') if container.nil?
 
     if auto_grow
-      raise _("auto_grow it true, but auto_grow_increment is not set") unless auto_grow_increment
-      raise _("auto_grow it true, but auto_grow_maximum is not set") unless auto_grow_maximum
+      raise _('auto_grow it true, but auto_grow_increment is not set') unless auto_grow_increment
+      raise _('auto_grow it true, but auto_grow_maximum is not set') unless auto_grow_maximum
     else
       auto_grow_increment = 0
       auto_grow_maximum = 0
@@ -185,7 +185,7 @@ class NetappRcu < StorageManager
     targetMor = rcu_client.vimMorToRcu(container.ems_ref_obj)
 
     # Create the parameters needed for the rcu.createDatastore methods
-    datastoreSpec = RcuHash.new("DatastoreSpec") do |ds|
+    datastoreSpec = RcuHash.new('DatastoreSpec') do |ds|
       # RCU
       # ds.aggrOrVolName = aggregate_or_volume_name
       # VSC

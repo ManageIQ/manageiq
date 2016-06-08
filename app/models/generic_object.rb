@@ -6,7 +6,7 @@ class GenericObject < ApplicationRecord
   validate  :must_be_defined_attributes
 
   def must_be_defined_attributes
-    return errors.add(:base, "must specify a GenericObjectDefinition.") unless generic_object_definition
+    return errors.add(:base, 'must specify a GenericObjectDefinition.') unless generic_object_definition
 
     found = custom_attributes.detect { |ca| !generic_object_definition.defined_attributes.include?(ca.name) }
     if found
@@ -27,14 +27,14 @@ class GenericObject < ApplicationRecord
   end
 
   def method_missing(method_name, *args)
-    m = method_name.to_s.chomp("=")
+    m = method_name.to_s.chomp('=')
     super if generic_object_definition && !generic_object_definition.defined_attributes.include?(m)
     method_name.to_s.end_with?('=') ? custom_attribute_setter(m, args.first) : custom_attribute_getter(m)
   end
 
   def respond_to_missing?(method_name, *args)
     return true unless generic_object_definition
-    generic_object_definition.defined_attributes.include?(method_name.to_s.chomp!("=")) || super
+    generic_object_definition.defined_attributes.include?(method_name.to_s.chomp!('=')) || super
   end
 
   def property_attributes

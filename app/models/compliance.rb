@@ -21,7 +21,7 @@ class Compliance < ApplicationRecord
           :method_name => 'scan_and_check_compliance',
           :args        => [[target.class.name, target.id], inputs],
           :task_id     => 'vc-refresher',
-          :role        => "ems_inventory",
+          :role        => 'ems_inventory',
           :zone        => target.ext_management_system.try(:my_zone)
         )
       end
@@ -34,19 +34,19 @@ class Compliance < ApplicationRecord
       klass = Object.const_get(klass)
       target = klass.find_by_id(id)
       unless target
-        raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
+        raise _('Unable to find object with class: [%{class_name}], Id: [%{number}]') % {:class_name => klass,
                                                                                          :number     => id}
       end
     end
 
     unless target.kind_of?(Host)
-      raise _("Scan and Compliance check not supported for %{class_name} objects") % {:class_name => target.class.name}
+      raise _('Scan and Compliance check not supported for %{class_name} objects') % {:class_name => target.class.name}
     end
 
     log_target = "#{target.class.name} name: [#{target.name}], id: [#{target.id}]"
     _log.info("Requesting scan of #{log_target}")
     begin
-      MiqEvent.raise_evm_job_event(target, :type => "scan", :prefix => "request")
+      MiqEvent.raise_evm_job_event(target, :type => 'scan', :prefix => 'request')
     rescue => err
       _log.error("Error raising request scan event for #{log_target}: #{err.message}")
       return
@@ -62,22 +62,22 @@ class Compliance < ApplicationRecord
       klass = Object.const_get(klass)
       target = klass.find_by_id(id)
       unless target
-        raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
+        raise _('Unable to find object with class: [%{class_name}], Id: [%{number}]') % {:class_name => klass,
                                                                                          :number     => id}
       end
     end
     target_class = target.class.base_model.name.downcase
-    target_class = "vm" if target_class.match("template")
+    target_class = 'vm' if target_class.match('template')
 
     unless target.respond_to?(:compliances)
-      raise _("Compliance check not supported for %{class_name} objects") % {:class_name => target.class.name}
+      raise _('Compliance check not supported for %{class_name} objects') % {:class_name => target.class.name}
     end
     check_event = "#{target_class}_compliance_check"
-    _log.info("Checking compliance...")
+    _log.info('Checking compliance...')
     results = MiqPolicy.enforce_policy(target, check_event)
 
     if results[:details].empty?
-      _log.info("No compliance policies were assigned or in scope, compliance status will not be set")
+      _log.info('No compliance policies were assigned or in scope, compliance status will not be set')
       return
     end
 
@@ -93,22 +93,22 @@ class Compliance < ApplicationRecord
   end
 
   def self.set_compliancy(compliant, target, event, details)
-    name = target.respond_to?(:name) ? target.name : "NA"
+    name = target.respond_to?(:name) ? target.name : 'NA'
     _log.info("Marking as #{compliant ? "" : "Non-"}Compliant Object with Class: [#{target.class}], Id: [#{target.id}], Name: [#{name}]")
 
     comp  = create(:resource => target, :compliant => compliant, :event_type => event, :timestamp => Time.now.utc)
 
     details.each do |p|
       dhash = {
-        :miq_policy_id     => p["id"],
-        :miq_policy_desc   => p["description"],
-        :miq_policy_result => p["result"]
+        :miq_policy_id     => p['id'],
+        :miq_policy_desc   => p['description'],
+        :miq_policy_result => p['result']
       }
 
-      p["conditions"].each do |c|
-        dhash[:condition_id]     = c["id"]
-        dhash[:condition_desc]   = c["description"]
-        dhash[:condition_result] = c["result"] == "allow"
+      p['conditions'].each do |c|
+        dhash[:condition_id]     = c['id']
+        dhash[:condition_desc]   = c['description']
+        dhash[:condition_result] = c['result'] == 'allow'
         comp.compliance_details.create(dhash)
       end
     end

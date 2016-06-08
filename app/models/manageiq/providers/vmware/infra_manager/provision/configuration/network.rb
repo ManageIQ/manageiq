@@ -5,7 +5,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
 
     if requested_networks.blank?
       options[:requested_network_adapter_count] = template_networks.length
-      _log.warn "VLan options is nil.  VLan settings will be inherited from the template."
+      _log.warn 'VLan options is nil.  VLan settings will be inherited from the template.'
     else
       options[:requested_network_adapter_count] = requested_networks.length
       requested_networks.each_with_index do |net, idx|
@@ -139,7 +139,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
       vim.virtualMachineByMor(source.ems_ref_obj)
     end
 
-    devs = inventory_hash.fetch_path("config", "hardware", "device") || []
+    devs = inventory_hash.fetch_path('config', 'hardware', 'device') || []
     devs.select { |d| d.key?('macAddress') }.sort_by { |d| d['unitNumber'] }
   end
 
@@ -157,9 +157,9 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Netw
       return vnicDev
     else
       if svm.hardware.nil?
-        raise MiqException::MiqProvisionError, "Source template does not have a connection to the hardware table."
+        raise MiqException::MiqProvisionError, 'Source template does not have a connection to the hardware table.'
       else
-        raise MiqException::MiqProvisionError, "Source template does not have a nic defined."
+        raise MiqException::MiqProvisionError, 'Source template does not have a nic defined.'
       end
     end
   end

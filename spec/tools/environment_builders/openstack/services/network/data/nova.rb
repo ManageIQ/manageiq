@@ -33,14 +33,14 @@ module Openstack
           end
 
           def security_group_name_1
-            "EmsRefreshSpec-SecurityGroup"
+            'EmsRefreshSpec-SecurityGroup'
           end
 
           def security_groups
             [{:name        => security_group_name_1,
-              :description => "EmsRefreshSpec-SecurityGroup description"},
-             {:name        => "EmsRefreshSpec-SecurityGroup2",
-              :description => "EmsRefreshSpec-SecurityGroup2 description"}]
+              :description => 'EmsRefreshSpec-SecurityGroup description'},
+             {:name        => 'EmsRefreshSpec-SecurityGroup2',
+              :description => 'EmsRefreshSpec-SecurityGroup2 description'}]
           end
 
           def security_groups_rule_translate_table

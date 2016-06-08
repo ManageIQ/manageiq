@@ -8,7 +8,7 @@ class ChargebackRateDetailCurrency < ApplicationRecord
   validates :symbol,      :presence => true, :length => {:maximum => 100}
   validates :unicode_hex, :presence => true, :length => {:minimum => 1}
 
-  has_many :chargeback_rate_detail, :foreign_key => "chargeback_rate_detail_currency_id"
+  has_many :chargeback_rate_detail, :foreign_key => 'chargeback_rate_detail_currency_id'
 
   def self.currencies_for_select
     # Return a hash where the keys are the possible currencies and the values are their ids

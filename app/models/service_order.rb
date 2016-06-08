@@ -53,7 +53,7 @@ class ServiceOrder < ApplicationRecord
   def process_checkout(miq_requests)
     miq_requests.each do |request|
       request.update_attributes(:process => true)
-      request.call_automate_event_queue("request_created")
+      request.call_automate_event_queue('request_created')
     end
   end
 

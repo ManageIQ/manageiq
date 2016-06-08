@@ -8,7 +8,7 @@ require 'VMwareWebService/MiqVimBroker'
 # Formatter to output log messages to the console.
 #
 class ConsoleFormatter < Log4r::Formatter
-  @@prog = File.basename(__FILE__, ".*")
+  @@prog = File.basename(__FILE__, '.*')
   def format(event)
     "#{Log4r::LNAMES[event.level]} [#{datetime}] -- #{@@prog}: " +
       (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
@@ -18,7 +18,7 @@ class ConsoleFormatter < Log4r::Formatter
 
   def datetime
     time = Time.now.utc
-    time.strftime("%Y-%m-%dT%H:%M:%S.") << "%06d" % time.usec
+    time.strftime('%Y-%m-%dT%H:%M:%S.') << '%06d' % time.usec
   end
 end
 $vim_log = Log4r::Logger.new 'toplog'
@@ -30,7 +30,7 @@ $stderr.sync = true
 
 $miq_wiredump = false
 
-vm = "netapp-sim-host2"
+vm = 'netapp-sim-host2'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -40,29 +40,29 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  puts "*** Calling: getVimPerfHistory..."
+  puts '*** Calling: getVimPerfHistory...'
   miqPh = vim.getVimPerfHistory
-  puts "*** done."
+  puts '*** done.'
 
-  puts "*** Calling: cInfoMap..."
+  puts '*** Calling: cInfoMap...'
   cInfoMap = miqPh.cInfoMap
-  puts "*** done."
+  puts '*** done.'
   # puts "*** Counter info for group 'virtualDisk':"
   # vim.dumpObj(cInfoMap['virtualDisk'])
   # puts
 
   puts "*** Calling: virtualMachinesByFilter('config.name' => #{vm})..."
-  vmo = vim.virtualMachinesByFilter("config.name" => vm)
+  vmo = vim.virtualMachinesByFilter('config.name' => vm)
   if vmo.empty?
     puts "VM: #{vm} not found"
     exit
   end
   vmMor = vmo[0]['MOR']
-  puts "*** done."
+  puts '*** done.'
 
   puts "*** Calling: queryProviderSummary for #{vm}..."
   psum = miqPh.queryProviderSummary(vmMor)
-  puts "*** done."
+  puts '*** done.'
 
   read      = miqPh.getCounterInfo('virtualDisk', 'read',         'average',  'rate')
   write     = miqPh.getCounterInfo('virtualDisk', 'write',          'average',  'rate')
@@ -72,18 +72,18 @@ begin
   writeLatency  = miqPh.getCounterInfo('virtualDisk', 'totalWriteLatency',    'average',  'absolute')
 
   puts
-  puts "Metrics for virtualDisk:"
+  puts 'Metrics for virtualDisk:'
   [read, write, numberRead, numberWrite, readLatency, writeLatency].each do |ci|
     puts "\t#{ci.nameInfo['key']}[#{ci['key']}](#{ci.unitInfo.label}):\t#{ci.nameInfo.summary}"
   end
 
   metricId =  [
-    {:counterId => read['key'],      :instance => "*"},
-    {:counterId => write['key'],     :instance => "*"},
-    {:counterId => numberRead['key'],    :instance => "*"},
-    {:counterId => numberWrite['key'],   :instance => "*"},
-    {:counterId => readLatency['key'],   :instance => "*"},
-    {:counterId => writeLatency['key'],  :instance => "*"}
+    {:counterId => read['key'],      :instance => '*'},
+    {:counterId => write['key'],     :instance => '*'},
+    {:counterId => numberRead['key'],    :instance => '*'},
+    {:counterId => numberWrite['key'],   :instance => '*'},
+    {:counterId => readLatency['key'],   :instance => '*'},
+    {:counterId => writeLatency['key'],  :instance => '*'}
   ]
   ea = [{:entity => vmMor,  :intervalId => psum['refreshRate'], :metricId => metricId}]
 
@@ -95,7 +95,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqPh.release if miqPh
   vim.disconnect if vim
 end

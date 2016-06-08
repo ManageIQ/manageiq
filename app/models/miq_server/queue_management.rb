@@ -18,9 +18,9 @@ module MiqServer::QueueManagement
 
       status, message, result = msg.deliver(self)
 
-      if status == "timeout"
+      if status == 'timeout'
         begin
-          _log.info("Reconnecting to DB after timeout error during queue deliver")
+          _log.info('Reconnecting to DB after timeout error during queue deliver')
           ActiveRecord::Base.connection.reconnect!
         rescue => err
           _log.error("Error encountered during <ActiveRecord::Base.connection.reconnect!> error:#{err.class.name}: #{err.message}")
@@ -48,7 +48,7 @@ module MiqServer::QueueManagement
 
   # Tell the remote or local server to restart
   def restart_queue
-    log_message  = "Server restart requested"
+    log_message  = 'Server restart requested'
     log_message += ", remote server: [#{name}], GUID: [#{guid}], initiated from: [#{MiqServer.my_server.name}], GUID: [#{MiqServer.my_server.guid}]" if self.is_remote?
     _log.info log_message
     enqueue_for_server('restart')
@@ -58,9 +58,9 @@ module MiqServer::QueueManagement
     return unless MiqEnvironment::Command.is_appliance? # matches ntp_reload's guard clause
 
     MiqQueue.put_or_update(
-      :class_name  => "MiqServer",
+      :class_name  => 'MiqServer',
       :instance_id => id,
-      :method_name => "ntp_reload",
+      :method_name => 'ntp_reload',
       :server_guid => guid,
       :zone        => my_zone
     ) do |msg, item|

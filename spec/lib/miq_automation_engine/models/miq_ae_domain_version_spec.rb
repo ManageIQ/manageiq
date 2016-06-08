@@ -6,32 +6,32 @@ describe MiqAeDomain do
     @user = FactoryGirl.create(:user_with_group)
     @temp_dir = Dir.mktmpdir
     require 'miq_ae_datastore'
-    stub_const("MiqAeDatastore::DATASTORE_DIRECTORY", @temp_dir)
+    stub_const('MiqAeDatastore::DATASTORE_DIRECTORY', @temp_dir)
   end
 
   after do
     FileUtils.remove_entry_secure(@temp_dir) if Dir.exist?(@temp_dir)
   end
 
-  context "version" do
-    it "no about class" do
+  context 'version' do
+    it 'no about class' do
       d1 = FactoryGirl.create(:miq_ae_domain, :name => 'Obelix')
       expect(d1.version).to be_nil
     end
 
-    it "about class present" do
+    it 'about class present' do
       ver = '3.0.9'
       expect(create_about_class('Dogmatix', ver).version).to eq(ver)
     end
   end
 
-  context "available_version" do
-    it "no version specified" do
+  context 'available_version' do
+    it 'no version specified' do
       d1 = FactoryGirl.create(:miq_ae_domain, :name => 'Asterix')
       expect(d1.available_version).to be_nil
     end
 
-    it "about file present" do
+    it 'about file present' do
       version = '7.1.1'
       dom2 = create_about_class('Vitalstatistix', version)
       write_about_file(dom2, version)
@@ -40,9 +40,9 @@ describe MiqAeDomain do
   end
 
   def write_about_file(domain, version)
-    schema = [{"field" => {"name" => "version", "default_value" => version}}]
-    hash = {"object_type" => "class", "version" => 1.0,
-            "object" => {"attributes" => {"name" => "About"}, "schema" => schema}}
+    schema = [{'field' => {'name' => 'version', 'default_value' => version}}]
+    hash = {'object_type' => 'class', 'version' => 1.0,
+            'object' => {'attributes' => {'name' => 'About'}, 'schema' => schema}}
     fname = domain.send(:about_file_name)
     FileUtils.mkdir_p(File.dirname(fname))
     File.write(fname, hash.to_yaml)
@@ -50,7 +50,7 @@ describe MiqAeDomain do
 
   def create_about_class(domain, version)
     ae_fields = {'version' => {:aetype => 'attribute', :datatype => 'string', :default_value => version},
-                 'tree'    => {:aetype => 'attribute', :datatype => 'string', :default_value => "ast"}}
+                 'tree'    => {:aetype => 'attribute', :datatype => 'string', :default_value => 'ast'}}
     ae_instances = {'instance1' => {'version' => {:value => 'hello world'},
                                     'tree'    => {:value => 'adt'}}}
     create_ae_model(:name         => domain,

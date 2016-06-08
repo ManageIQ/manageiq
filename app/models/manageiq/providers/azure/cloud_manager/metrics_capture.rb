@@ -1,33 +1,33 @@
 class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Providers::BaseManager::MetricsCapture
-  INTERVAL_1_MINUTE = "PT1M".freeze
+  INTERVAL_1_MINUTE = 'PT1M'.freeze
 
   COUNTER_INFO = [
     {
       :native_counters => [
         # CPU percentage guest OS
-        "\\Processor(_Total)\\% Processor Time", # Windows
-        "\\Processor\\PercentProcessorTime"      # Linux
+        '\\Processor(_Total)\\% Processor Time', # Windows
+        '\\Processor\\PercentProcessorTime'      # Linux
       ],
-      :vim_style_counter_key => "cpu_usage_rate_average"
+      :vim_style_counter_key => 'cpu_usage_rate_average'
     },
   ].freeze
 
   COUNTER_NAMES = COUNTER_INFO.flat_map { |i| i[:native_counters] }.uniq.to_set.freeze
 
   VIM_STYLE_COUNTERS = {
-    "cpu_usage_rate_average" => {
-      :counter_key           => "cpu_usage_rate_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'cpu_usage_rate_average' => {
+      :counter_key           => 'cpu_usage_rate_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 1,
-      :rollup                => "average",
-      :unit_key              => "percent",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'percent',
+      :capture_interval_name => 'realtime'
     },
   }.freeze
 
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
-    raise "No EMS defined" if target.ext_management_system.nil?
+    raise 'No EMS defined' if target.ext_management_system.nil?
 
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
@@ -133,7 +133,7 @@ class ManageIQ::Providers::Azure::CloudManager::MetricsCapture < ManageIQ::Provi
     #       continuation tokens when doing this.
     storage_account.table_data(table_name, storage_key,
       :filter => "PartitionKey eq '#{partition_key}' and CounterName eq '#{counter.name.value}' and Timestamp ge datetime'#{start_time.iso8601}' and Timestamp le datetime'#{end_time.iso8601}'",
-      :select => "Timestamp,TIMESTAMP,Average"
+      :select => 'Timestamp,TIMESTAMP,Average'
     )
   end
 

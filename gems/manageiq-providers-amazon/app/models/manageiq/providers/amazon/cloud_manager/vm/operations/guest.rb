@@ -6,6 +6,6 @@ module ManageIQ::Providers::Amazon::CloudManager::Vm::Operations::Guest
   def raw_reboot_guest
     with_provider_object(&:reboot)
     # Temporarily update state for quick UI response until refresh comes along
-    self.update_attributes!(:raw_power_state => "pending") # show state as suspended
+    self.update_attributes!(:raw_power_state => 'pending') # show state as suspended
   end
 end

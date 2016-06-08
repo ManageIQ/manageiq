@@ -1,31 +1,31 @@
 FactoryGirl.define do
   factory :vm_or_template do
     sequence(:name) { |n| "vm_#{seq_padded_for_sorting(n)}" }
-    location        "unknown"
+    location        'unknown'
     uid_ems         { MiqUUID.new_guid }
-    vendor          "unknown"
+    vendor          'unknown'
     template        false
-    raw_power_state "running"
+    raw_power_state 'running'
   end
 
-  factory :template, :class => "MiqTemplate", :parent => :vm_or_template do
+  factory :template, :class => 'MiqTemplate', :parent => :vm_or_template do
     sequence(:name) { |n| "template_#{seq_padded_for_sorting(n)}" }
     template        true
-    raw_power_state "never"
+    raw_power_state 'never'
   end
 
-  factory(:vm,             :class => "Vm",            :parent => :vm_or_template)
-  factory(:vm_cloud,       :class => "VmCloud",       :parent => :vm)       { cloud true }
-  factory(:vm_infra,       :class => "VmInfra",       :parent => :vm)
-  factory(:template_cloud, :class => "TemplateCloud", :parent => :template) { cloud true }
-  factory(:template_infra, :class => "TemplateInfra", :parent => :template)
+  factory(:vm,             :class => 'Vm',            :parent => :vm_or_template)
+  factory(:vm_cloud,       :class => 'VmCloud',       :parent => :vm)       { cloud true }
+  factory(:vm_infra,       :class => 'VmInfra',       :parent => :vm)
+  factory(:template_cloud, :class => 'TemplateCloud', :parent => :template) { cloud true }
+  factory(:template_infra, :class => 'TemplateInfra', :parent => :template)
 
-  factory :template_openstack, :class => "ManageIQ::Providers::Openstack::CloudManager::Template", :parent => :template_cloud do
-    vendor "openstack"
+  factory :template_openstack, :class => 'ManageIQ::Providers::Openstack::CloudManager::Template', :parent => :template_cloud do
+    vendor 'openstack'
   end
 
-  factory :template_amazon, :class => "ManageIQ::Providers::Amazon::CloudManager::Template", :parent => :template_cloud do
+  factory :template_amazon, :class => 'ManageIQ::Providers::Amazon::CloudManager::Template', :parent => :template_cloud do
     location { |x| "#{x.name}/#{x.name}.img.manifest.xml" }
-    vendor   "amazon"
+    vendor   'amazon'
   end
 end

@@ -10,83 +10,83 @@ module ApplicationController::Filter
   # Handle buttons pressed in the expression editor
   def exp_button
     @edit = session[:edit]
-    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ""
+    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ''
     case params[:pressed]
-    when "undo", "redo"
+    when 'undo', 'redo'
       @edit[@expkey][:expression] = exp_array(params[:pressed].to_sym)
       @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression])
-    when "not"
+    when 'not'
       exp_add_not(@edit[@expkey][:expression], @edit[@expkey][:exp_token])
-    when "and", "or"
+    when 'and', 'or'
       exp_add_joiner(@edit[@expkey][:expression], @edit[@expkey][:exp_token], params[:pressed])
-    when "commit"
+    when 'commit'
       exp_commit(@edit[@expkey][:exp_token])
-    when "remove"
+    when 'remove'
       remove_top = exp_remove(@edit[@expkey][:expression], @edit[@expkey][:exp_token])
       if remove_top == true
         exp = @edit[@expkey][:expression]
-        if exp["not"]                                       # If the top expression is a NOT
-          exp["not"].each_key do |key|                      # Find the next lower key
+        if exp['not']                                       # If the top expression is a NOT
+          exp['not'].each_key do |key|                      # Find the next lower key
             next if key == :token                           # Skip the :token key
-            exp[key] = exp["not"][key]                      # Copy the key value up to the top
-            exp.delete("not")                               # Delete the NOT key
+            exp[key] = exp['not'][key]                      # Copy the key value up to the top
+            exp.delete('not')                               # Delete the NOT key
           end
         else
           exp.clear                                         # Remove all existing keys
-          exp["???"] = "???"                                # Set new exp key
+          exp['???'] = '???'                                # Set new exp key
           @edit[:edit_exp] = copy_hash(exp)
           exp_set_fields(@edit[:edit_exp])
         end
       else
         @edit[:edit_exp] = nil
       end
-    when "discard"
+    when 'discard'
       # Copy back the latest expression or empty expression, if nil
       @edit[@expkey].delete(:val1)
       @edit[@expkey].delete(:val2)
-      @edit[@expkey][:expression] = @edit[:new][@expkey].nil? ? {"???" => "???"} : copy_hash(@edit[:new][@expkey])
+      @edit[@expkey][:expression] = @edit[:new][@expkey].nil? ? {'???' => '???'} : copy_hash(@edit[:new][@expkey])
       @edit.delete(:edit_exp)
     else
-      add_flash(_("Button not yet implemented"), :error)
+      add_flash(_('Button not yet implemented'), :error)
     end
 
     if flash_errors?
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+        page.replace("flash_msg_div#{div_num}", :partial => 'layouts/flash_msg', :locals => {:div_num => div_num})
       end
     else
-      if ["commit", "not", "remove"].include?(params[:pressed])
+      if ['commit', 'not', 'remove'].include?(params[:pressed])
         copy = copy_hash(@edit[@expkey][:expression])
         copy.deep_delete :token
         @edit[:new][@expkey] = copy
         exp_array(:push, @edit[:new][@expkey])
       end
-      unless ["and", "or"].include?(params[:pressed]) # Unless adding an AND or OR token
+      unless ['and', 'or'].include?(params[:pressed]) # Unless adding an AND or OR token
         @edit[@expkey][:exp_token] = nil                        #   clear the current selected token
       end
       changed = (@edit[:new] != @edit[:current])
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+        page.replace("flash_msg_div#{div_num}", :partial => 'layouts/flash_msg', :locals => {:div_num => div_num})
         #       page.replace("form_expression_div", :partial=>"form_expression")
         if !@edit[:adv_search_open].nil?
-          page.replace("adv_search_body", :partial => "layouts/adv_search_body")
-          page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
+          page.replace('adv_search_body', :partial => 'layouts/adv_search_body')
+          page.replace('adv_search_footer', :partial => 'layouts/adv_search_footer')
         else
-          page.replace("exp_editor_div", :partial => "layouts/exp_editor")
+          page.replace('exp_editor_div', :partial => 'layouts/exp_editor')
         end
-        if ["not", "discard", "commit", "remove"].include?(params[:pressed])
-          page << javascript_hide("exp_buttons_on")
-          page << javascript_hide("exp_buttons_not")
-          page << javascript_show("exp_buttons_off")
+        if ['not', 'discard', 'commit', 'remove'].include?(params[:pressed])
+          page << javascript_hide('exp_buttons_on')
+          page << javascript_hide('exp_buttons_not')
+          page << javascript_show('exp_buttons_off')
         end
         if changed != session[:changed]
           session[:changed] = changed
           page << javascript_for_miq_button_visibility(changed)
         end
-        page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
+        page << 'miqSparkle(false);'  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
   end
@@ -94,13 +94,13 @@ module ApplicationController::Filter
   # A token was pressed on the exp editor
   def exp_token_pressed
     @edit = session[:edit]
-    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ""
+    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ''
     token = params[:token].to_i
     if token == @edit[@expkey][:exp_token] || # User selected same token as already selected
-       (@edit[@expkey][:exp_token] && @edit[:edit_exp].key?("???")) # or new token in process
+       (@edit[@expkey][:exp_token] && @edit[:edit_exp].key?('???')) # or new token in process
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
+        page.replace("flash_msg_div#{div_num}", :partial => 'layouts/flash_msg', :locals => {:div_num => div_num})
       end
     else
       exp = exp_find_by_token(@edit[@expkey][:expression], token)
@@ -108,23 +108,23 @@ module ApplicationController::Filter
       begin
         exp_set_fields(@edit[:edit_exp])
       rescue StandardError => bang
-        @exp_atom_errors = [_("There is an error in the selected expression element, perhaps it was imported or edited manually."),
-                            _("This element should be removed and recreated or you can report the error to your CFME administrator."),
-                            _("Error details: %{message}") % {:message => bang}]
+        @exp_atom_errors = [_('There is an error in the selected expression element, perhaps it was imported or edited manually.'),
+                            _('This element should be removed and recreated or you can report the error to your CFME administrator.'),
+                            _('Error details: %{message}') % {:message => bang}]
       end
       @edit[@expkey][:exp_token] = token
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div#{div_num}", :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
-        page.replace("exp_editor_div", :partial => "layouts/exp_editor")
+        page.replace("flash_msg_div#{div_num}", :partial => 'layouts/flash_msg', :locals => {:div_num => div_num})
+        page.replace('exp_editor_div', :partial => 'layouts/exp_editor')
         page << "$('#exp_#{token}').css({'background-color': 'yellow'})"
-        page << javascript_hide("exp_buttons_off")
-        if exp.key?("not") || @parent_is_not
-          page << javascript_hide("exp_buttons_on")
-          page << javascript_show("exp_buttons_not")
+        page << javascript_hide('exp_buttons_off')
+        if exp.key?('not') || @parent_is_not
+          page << javascript_hide('exp_buttons_on')
+          page << javascript_show('exp_buttons_not')
         else
-          page << javascript_hide("exp_buttons_not")
-          page << javascript_show("exp_buttons_on")
+          page << javascript_hide('exp_buttons_not')
+          page << javascript_show('exp_buttons_on')
         end
 
         page << ENABLE_CALENDAR if calendar_needed?
@@ -139,7 +139,7 @@ module ApplicationController::Filter
             page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
           end
         end
-        page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
+        page << 'miqSparkle(false);'  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
   end
@@ -147,7 +147,7 @@ module ApplicationController::Filter
   # Handle items changed in the expression editor
   def exp_changed
     @edit = session[:edit]
-    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ""
+    div_num = @edit[:flash_div_num] ? @edit[:flash_div_num] : ''
     if params[:chosen_typ] && params[:chosen_typ] != @edit[@expkey][:exp_typ] # Did the type field change?
       @edit[@expkey][:exp_typ] = params[:chosen_typ]
 
@@ -162,36 +162,36 @@ module ApplicationController::Filter
       @edit[:suffix] = @edit[:suffix2] = nil
 
       case @edit[@expkey][:exp_typ]                   # Change the exp fields based on the new type
-      when "<Choose>"
+      when '<Choose>'
         @edit[@expkey][:exp_typ] = nil
-      when "field"
+      when 'field'
         @edit[@expkey][:exp_field] = nil
-      when "count"
+      when 'count'
         @edit[@expkey][:exp_count] = nil
         @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:count).first
         exp_get_prefill_types                         # Get the field type
-      when "tag"
+      when 'tag'
         @edit[@expkey][:exp_tag] = nil
-        @edit[@expkey][:exp_key] = "CONTAINS"
-      when "regkey"
+        @edit[@expkey][:exp_key] = 'CONTAINS'
+      when 'regkey'
         @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:regkey).first
         exp_get_prefill_types                         # Get the field type
-      when "find"
+      when 'find'
         @edit[@expkey][:exp_field] = nil
-        @edit[@expkey][:exp_key] = "FIND"
-        @edit[@expkey][:exp_check] = "checkall"
+        @edit[@expkey][:exp_key] = 'FIND'
+        @edit[@expkey][:exp_check] = 'checkall'
         @edit[@expkey][:exp_cfield] = nil
       end
     else
       case @edit[@expkey][:exp_typ]                   # Check the type of expression we are dealing with
-      when "field"
+      when 'field'
         if params[:chosen_field] && params[:chosen_field] != @edit[@expkey][:exp_field] # Did the field change?
           @edit[@expkey][:exp_field] = params[:chosen_field]        # Save the field
           @edit[@expkey][:exp_value] = nil                          # Clear the value
           @edit[:suffix] = nil                                      # Clear the suffix
-          unless params[:chosen_field] == "<Choose>"
-            if @edit[@expkey][:exp_model] != "_display_filter_" && MiqExpression.is_plural?(@edit[@expkey][:exp_field])
-              @edit[@expkey][:exp_key] = "CONTAINS"                 # CONTAINS only valid for plural tables
+          unless params[:chosen_field] == '<Choose>'
+            if @edit[@expkey][:exp_model] != '_display_filter_' && MiqExpression.is_plural?(@edit[@expkey][:exp_field])
+              @edit[@expkey][:exp_key] = 'CONTAINS'                 # CONTAINS only valid for plural tables
             else
               @edit[@expkey][:exp_key] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_key])  # Remove if not in list
               @edit[@expkey][:exp_key] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first  # Default to first operator
@@ -210,11 +210,11 @@ module ApplicationController::Filter
         end
 
         if ui = params[:user_input]
-          @edit[@expkey][:exp_value] = ui == "1" ? :user_input : ""
+          @edit[@expkey][:exp_value] = ui == '1' ? :user_input : ''
         end
-      when "count"
+      when 'count'
         if params[:chosen_count] && params[:chosen_count] != @edit[@expkey][:exp_count] # Did the count field change?
-          unless params[:chosen_count] == "<Choose>"
+          unless params[:chosen_count] == '<Choose>'
             @edit[@expkey][:exp_count] = params[:chosen_count]                          # Save the field
             @edit[@expkey][:exp_key] = nil unless MiqExpression.get_col_operators(:count).include?(@edit[@expkey][:exp_key])  # Remove if not in list
             @edit[@expkey][:exp_key] ||= MiqExpression.get_col_operators(:count).first
@@ -230,26 +230,26 @@ module ApplicationController::Filter
         end
 
         if ui = params[:user_input]
-          @edit[@expkey][:exp_value] = ui == "1" ? :user_input : nil
+          @edit[@expkey][:exp_value] = ui == '1' ? :user_input : nil
         end
 
-      when "tag"
+      when 'tag'
         if params[:chosen_tag] && params[:chosen_tag] != @edit[@expkey][:exp_tag] # Did the tag field change?
-          unless params[:chosen_tag] == "<Choose>"
+          unless params[:chosen_tag] == '<Choose>'
             @edit[@expkey][:exp_tag] = params[:chosen_tag]          # Save the field
           else
             @edit[@expkey][:exp_tag] = nil
           end
-          @edit[@expkey][:exp_key] = @edit[@expkey][:exp_model] == "_display_filter_" ? "=" : "CONTAINS"
+          @edit[@expkey][:exp_key] = @edit[@expkey][:exp_model] == '_display_filter_' ? '=' : 'CONTAINS'
           @edit[@expkey][:exp_value] = nil                          # Clear out the tag value
           @edit[@expkey][:alias] = nil
         end
 
         if ui = params[:user_input]
-          @edit[@expkey][:exp_value] = ui == "1" ? :user_input : nil
+          @edit[@expkey][:exp_value] = ui == '1' ? :user_input : nil
         end
 
-      when "regkey"
+      when 'regkey'
         if params[:chosen_regkey] && params[:chosen_regkey] != @edit[@expkey][:exp_regkey].to_s # Did the regkey change?
           @edit[@expkey][:exp_regkey] = params[:chosen_regkey]      # Save the regkey
         end
@@ -260,19 +260,19 @@ module ApplicationController::Filter
         @edit[@expkey][:exp_key] = params[:chosen_key] if params[:chosen_key] && params[:chosen_key] != @edit[@expkey][:exp_key]
         exp_get_prefill_types                         # Get the field type
 
-      when "find"
+      when 'find'
         if params[:chosen_field] && params[:chosen_field] != @edit[@expkey][:exp_field] # Did the field change?
           @edit[@expkey][:exp_field] = params[:chosen_field]        # Save the field
           @edit[@expkey][:exp_value] = nil                          # Clear the value
           @edit[:suffix] = nil                                      # Clear the suffix
-          unless params[:chosen_field] == "<Choose>"
+          unless params[:chosen_field] == '<Choose>'
             @edit[@expkey][:exp_skey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_skey])  # Remove if not in list
             @edit[@expkey][:exp_skey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first # Default to first operator
             @edit[@expkey][:exp_available_cfields] = []      # Create the check fields pulldown array
             MiqExpression.miq_adv_search_lists(@edit[@expkey][:exp_model], :exp_available_finds).each do |af|
               unless af.last == @edit[@expkey][:exp_field]
-                if af.last.split("-").first == @edit[@expkey][:exp_field].split("-").first
-                  @edit[@expkey][:exp_available_cfields].push([af.first.split(":").last, af.last])
+                if af.last.split('-').first == @edit[@expkey][:exp_field].split('-').first
+                  @edit[@expkey][:exp_available_cfields].push([af.first.split(':').last, af.last])
                 end
               end
             end
@@ -284,8 +284,8 @@ module ApplicationController::Filter
           end
           if (@edit[@expkey][:exp_cfield].present? && @edit[@expkey][:exp_field].present?) && # Clear expression check portion
              (@edit[@expkey][:exp_field] == @edit[@expkey][:exp_cfield] || # if find field matches check field
-              @edit[@expkey][:exp_cfield].split("-").first != @edit[@expkey][:exp_field].split("-").first)  # or user chose a different table field
-            @edit[@expkey][:exp_check] = "checkall"
+              @edit[@expkey][:exp_cfield].split('-').first != @edit[@expkey][:exp_field].split('-').first)  # or user chose a different table field
+            @edit[@expkey][:exp_check] = 'checkall'
             @edit[@expkey][:exp_cfield] = nil
             @edit[@expkey][:exp_ckey] = nil
             @edit[@expkey][:exp_cvalue] = nil
@@ -301,7 +301,7 @@ module ApplicationController::Filter
           @edit[@expkey][:exp_check] = params[:chosen_check]      # Save the check type
           @edit[@expkey][:exp_cfield] = nil                       # Clear the field
           # Clear the operator, unless checkcount, then set to =
-          @edit[@expkey][:exp_ckey] = @edit[@expkey][:exp_check] == "checkcount" ? "=" : nil
+          @edit[@expkey][:exp_ckey] = @edit[@expkey][:exp_check] == 'checkcount' ? '=' : nil
           @edit[@expkey][:exp_cvalue] = nil                       # Clear the value
           @edit[:suffix2] = nil                                   # Clear the suffix
         end
@@ -309,7 +309,7 @@ module ApplicationController::Filter
           @edit[@expkey][:exp_cfield] = params[:chosen_cfield]    # Save the check field
           @edit[@expkey][:exp_cvalue] = nil                       # Clear the value
           @edit[:suffix2] = nil                                   # Clear the suffix
-          unless params[:chosen_cfield] == "<Choose>"
+          unless params[:chosen_cfield] == '<Choose>'
             @edit[@expkey][:exp_ckey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).include?(@edit[@expkey][:exp_ckey]) # Remove if not in list
             @edit[@expkey][:exp_ckey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).first  # Default to first operator
             exp_get_prefill_types                                 # Get the field types
@@ -331,7 +331,7 @@ module ApplicationController::Filter
 
       # Check the value field for all exp types
       if params[:chosen_value] && params[:chosen_value] != @edit[@expkey][:exp_value].to_s  # Did the value change?
-        if params[:chosen_value] == "<Choose>"
+        if params[:chosen_value] == '<Choose>'
           @edit[@expkey][:exp_value] = nil
         else
           @edit[@expkey][:exp_value] = params[:chosen_value]        # Save the value as a string
@@ -340,14 +340,14 @@ module ApplicationController::Filter
 
       # Use alias checkbox
       if params.key?(:use_alias)
-        if params[:use_alias] == "1"
+        if params[:use_alias] == '1'
           a = case @edit[@expkey][:exp_typ]
-              when "field", "find"
+              when 'field', 'find'
                 MiqExpression.value2human(@edit[@expkey][:exp_field]).split(":").last
-              when "tag"
-                MiqExpression.value2human(@edit[@expkey][:exp_tag]).split(":").last
-              when "count"
-                MiqExpression.value2human(@edit[@expkey][:exp_count]).split(".").last
+              when 'tag'
+                MiqExpression.value2human(@edit[@expkey][:exp_tag]).split(':').last
+              when 'count'
+                MiqExpression.value2human(@edit[@expkey][:exp_count]).split('.').last
               end
           @edit[@expkey][:alias] = a.strip
         else
@@ -366,18 +366,18 @@ module ApplicationController::Filter
 
       # Check incoming date and time values
       # Copy FIND exp_skey to exp_key so following IFs work properly
-      @edit[@expkey][:exp_key] = @edit[@expkey][:exp_skey] if @edit[@expkey][:exp_typ] == "FIND"
-      process_datetime_selector("1_0", :exp_key)  # First date selector
-      process_datetime_selector("1_1")            # 2nd date selector, only on FROM
-      process_datetime_selector("2_0", :exp_ckey) # First date selector in FIND/CHECK
-      process_datetime_selector("2_1")            # 2nd date selector, only on FROM
+      @edit[@expkey][:exp_key] = @edit[@expkey][:exp_skey] if @edit[@expkey][:exp_typ] == 'FIND'
+      process_datetime_selector('1_0', :exp_key)  # First date selector
+      process_datetime_selector('1_1')            # 2nd date selector, only on FROM
+      process_datetime_selector('2_0', :exp_ckey) # First date selector in FIND/CHECK
+      process_datetime_selector('2_1')            # 2nd date selector, only on FROM
 
       # Check incoming FROM/THROUGH date/time choice values
       if params[:chosen_from_1]
         @edit[@expkey][:exp_value][0] = params[:chosen_from_1]
         @edit[@expkey][:val1][:through_choices] = exp_through_choices(params[:chosen_from_1])
-        if (@edit[@expkey][:exp_typ] == "field" && @edit[@expkey][:exp_key] == EXP_FROM) ||
-           (@edit[@expkey][:exp_typ] == "find" && @edit[@expkey][:exp_skey] == EXP_FROM)
+        if (@edit[@expkey][:exp_typ] == 'field' && @edit[@expkey][:exp_key] == EXP_FROM) ||
+           (@edit[@expkey][:exp_typ] == 'find' && @edit[@expkey][:exp_skey] == EXP_FROM)
           # If the through value is not in the through choices, set it to the first choice
           unless @edit[@expkey][:val1][:through_choices].include?(@edit[@expkey][:exp_value][1])
             @edit[@expkey][:exp_value][1] = @edit[@expkey][:val1][:through_choices].first
@@ -402,13 +402,13 @@ module ApplicationController::Filter
     # Check for changes in date format
     if params[:date_format_1] && @edit[@expkey][:exp_value].present?
       @edit[@expkey][:val1][:date_format] = params[:date_format_1]
-      @edit[@expkey][:exp_value].collect! { |_| params[:date_format_1] == "s" ? nil : EXP_TODAY }
-      @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == "r"
+      @edit[@expkey][:exp_value].collect! { |_| params[:date_format_1] == 's' ? nil : EXP_TODAY }
+      @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == 'r'
     end
     if params[:date_format_2] && @edit[@expkey][:exp_cvalue].present?
       @edit[@expkey][:val2][:date_format] = params[:date_format_2]
-      @edit[@expkey][:exp_cvalue].collect! { |_| params[:date_format_2] == "s" ? nil : EXP_TODAY }
-      @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == "r"
+      @edit[@expkey][:exp_cvalue].collect! { |_| params[:date_format_2] == 's' ? nil : EXP_TODAY }
+      @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == 'r'
     end
 
     # Check for suffixes changed
@@ -427,12 +427,12 @@ module ApplicationController::Filter
       render :update do |page|
         page << javascript_prologue
         if !@refresh_partial.nil?
-          if @refresh_div == "flash_msg_div"
+          if @refresh_div == 'flash_msg_div'
             page.replace(@refresh_div + div_num, :partial => @refresh_partial, :locals => {:div_num => div_num})
           end
         else
-          page.replace("flash_msg_div" + div_num, :partial => "layouts/flash_msg", :locals => {:div_num => div_num})
-          page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
+          page.replace('flash_msg_div' + div_num, :partial => 'layouts/flash_msg', :locals => {:div_num => div_num})
+          page.replace('exp_atom_editor_div', :partial => 'layouts/exp_atom/editor')
 
           page << ENABLE_CALENDAR if calendar_needed?
           if @edit.fetch_path(@expkey, :val1, :type)
@@ -443,7 +443,7 @@ module ApplicationController::Filter
             page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
             page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
           end
-          page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
+          page << 'miqSparkle(false);'  # Need to turn off sparkle in case original ajax element gets replaced
         end
       end
     end
@@ -461,13 +461,13 @@ module ApplicationController::Filter
       if @edit[:adv_search_open] == true
         @edit[:adv_search_open] = false
         page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-true.png')}')"
-        page << javascript_hide("advsearchModal")
-        page << javascript_hide("blocker_div")
+        page << javascript_hide('advsearchModal')
+        page << javascript_hide('blocker_div')
       else
         @edit[:adv_search_open] = true
         page << "$('#clear_search').#{clear_search_show_or_hide}();"
-        page.replace("adv_search_body", :partial => "layouts/adv_search_body")
-        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
+        page.replace('adv_search_body', :partial => 'layouts/adv_search_body')
+        page.replace('adv_search_footer', :partial => 'layouts/adv_search_footer')
         page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-false.png')}')"
         page << ENABLE_CALENDAR if calendar_needed?
         if @edit.fetch_path(@expkey, :val1, :type)
@@ -519,7 +519,7 @@ module ApplicationController::Filter
 
   def clear_selected_search
     @edit[:adv_search_applied] = nil
-    @edit[@expkey][:expression] = {"???" => "???"}                            # Set as new exp element
+    @edit[@expkey][:expression] = {'???' => '???'}                            # Set as new exp element
     @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression])             # Copy to new exp
     exp_array(:init, @edit[@expkey][:expression])                             # Initialize the exp array
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the expression table
@@ -561,9 +561,9 @@ module ApplicationController::Filter
   end
 
   def clear_default_search
-    @edit[@expkey][:selected] = {:id => 0, :description => "All"}       # Save the last search loaded
+    @edit[@expkey][:selected] = {:id => 0, :description => 'All'}       # Save the last search loaded
     @edit[:adv_search_applied] = nil
-    @edit[@expkey][:expression] = {"???" => "???"}                              # Set as new exp element
+    @edit[@expkey][:expression] = {'???' => '???'}                              # Set as new exp element
     @edit[:new][@expkey] = @edit[@expkey][:expression]                        # Copy to new exp
     exp_array(:init, @edit[@expkey][:expression])                             # Initialize the exp array
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the expression table
@@ -580,7 +580,7 @@ module ApplicationController::Filter
     @edit[:new] = {}
     @edit[:new][@expkey] = @edit[@expkey][:expression]                # Copy to new exp
     s = MiqSearch.find(id) unless id.zero?
-    if s.nil? || s.search_key == "_hidden_" # search not found || admin changed default search to be hidden
+    if s.nil? || s.search_key == '_hidden_' # search not found || admin changed default search to be hidden
       clear_default_search
     else
       @edit[:new][@expkey] = s.filter.exp
@@ -604,26 +604,26 @@ module ApplicationController::Filter
     @view = session[:view]
     @edit[:custom_search] = false             # setting default to false
     case params[:button]
-    when "saveit"
-      if @edit[:new_search_name].nil? || @edit[:new_search_name] == ""
-        add_flash(_("Search Name is required"), :error)
-        params[:button] = "save"                                    # Redraw the save screen
+    when 'saveit'
+      if @edit[:new_search_name].nil? || @edit[:new_search_name] == ''
+        add_flash(_('Search Name is required'), :error)
+        params[:button] = 'save'                                    # Redraw the save screen
       else
         #       @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression]) # Copy the current expression to new
         if @edit[@expkey][:selected].nil? || # If no search was loaded
            @edit[:new_search_name] != @edit[@expkey][:selected][:description] || # or user changed the name of a loaded search
-           @edit[@expkey][:selected][:typ] == "default"                          # or loaded search is a default search, save it as my search
+           @edit[@expkey][:selected][:typ] == 'default'                          # or loaded search is a default search, save it as my search
           s = MiqSearch.new                                         # Adding a new search
           s.db = @edit[@expkey][:exp_model]                         # Set the model
           s.description = @edit[:new_search_name]
           if @edit[:search_type]        # adding global search
             s.name = "global_#{@edit[:new_search_name]}"            # Set the unique name within searches
             s.search_key = nil                                      # Set userid that saved search
-            s.search_type = "global"
+            s.search_type = 'global'
           else                  # adding user search
             s.name = "user_#{session[:userid]}_#{@edit[:new_search_name]}"          # Set the unique name within searches
             s.search_key = session[:userid]                                         # Set userid that saved search
-            s.search_type = "user"
+            s.search_type = 'user'
           end
         else          # if search was loaded exists or saving it with same name
           s = MiqSearch.find(@edit[@expkey][:selected][:id])            # Fetch the last search loaded
@@ -635,7 +635,7 @@ module ApplicationController::Filter
             end
             s.name = "global_#{@edit[:new_search_name]}"                # Set the unique name within searches
             s.search_key = nil                                          # Set userid that saved search
-            s.search_type = "global"
+            s.search_type = 'global'
           else                  # adding user search
             if s.name != "user_#{session[:userid]}_#{@edit[:new_search_name]}"              # if search selected was not my search, create new search
               s = MiqSearch.new
@@ -644,13 +644,13 @@ module ApplicationController::Filter
             end
             s.name = "user_#{session[:userid]}_#{@edit[:new_search_name]}"          # Set the unique name within searches
             s.search_key = session[:userid]                                         # Set userid that saved search
-            s.search_type = "user"
+            s.search_type = 'user'
           end
         end
         s.filter = MiqExpression.new(@edit[:new][@expkey])      # Set the new expression
         if s.save
           #         AuditEvent.success(build_created_audit(s, s_old))
-          add_flash(_("%{model} search \"%{name}\" was saved") %
+          add_flash(_('%{model} search "%{name}" was saved') %
             {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => @edit[:new_search_name]})
           adv_search_build_lists
 
@@ -665,11 +665,11 @@ module ApplicationController::Filter
           s.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
-          params[:button] = "save"                                  # Redraw the save screen
+          params[:button] = 'save'                                  # Redraw the save screen
         end
       end
 
-    when "loadit"
+    when 'loadit'
       if @edit[@expkey][:exp_chosen_search]
         @edit[:selected] = true
         s = MiqSearch.find(@edit[@expkey][:exp_chosen_search].to_s)
@@ -686,10 +686,10 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
       exp_array(:init, @edit[@expkey][:expression])
       @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
-      add_flash(_("%{model} search \"%{name}\" was successfully loaded") %
+      add_flash(_('%{model} search "%{name}" was successfully loaded') %
         {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => @edit[:new_search_name]})
 
-    when "delete"
+    when 'delete'
       s = MiqSearch.find(@edit[@expkey][:selected][:id])              # Fetch the latest record
       id = s.id
       sname = s.description
@@ -697,7 +697,7 @@ module ApplicationController::Filter
         s.destroy                                                   # Delete the record
       rescue StandardError => bang
         add_flash(_("%{model} \"%{name}\": Error during 'delete': %{error_message}") %
-          {:model => ui_lookup(:model => "MiqSearch"), :name => sname, :error_message => bang.message}, :error)
+          {:model => ui_lookup(:model => 'MiqSearch'), :name => sname, :error_message => bang.message}, :error)
       else
         if @settings[:default_search] && @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym] # See if a default search exists
           def_search = @settings[:default_search][@edit[@expkey][:exp_model].to_s.to_sym]
@@ -708,22 +708,22 @@ module ApplicationController::Filter
             @edit[:adv_search_applied] = nil          # clearing up applied search results
           end
         end
-        add_flash(_("%{model} search \"%{name}\": Delete successful") %
+        add_flash(_('%{model} search "%{name}": Delete successful') %
           {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => sname})
-        audit = {:event        => "miq_search_record_delete",
+        audit = {:event        => 'miq_search_record_delete',
                  :message      => "[#{sname}] Record deleted",
                  :target_id    => id,
-                 :target_class => "MiqSearch",
+                 :target_class => 'MiqSearch',
                  :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
 
       adv_search_build_lists
 
-    when "reset"
-      add_flash(_("The current search details have been reset"), :warning)
+    when 'reset'
+      add_flash(_('The current search details have been reset'), :warning)
 
-    when "apply"
+    when 'apply'
       @edit[@expkey][:selected] = @edit[@expkey][:exp_last_loaded] # Save the last search loaded (saved)
       @edit[:adv_search_applied] ||= {}
       @edit[:adv_search_applied][:exp] = {}
@@ -741,7 +741,7 @@ module ApplicationController::Filter
         session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
       end
       if @edit[:in_explorer]
-        self.x_node = "root"                                      # Position on root node
+        self.x_node = 'root'                                      # Position on root node
         replace_right_cell
       else
         render :update do |page|
@@ -751,14 +751,14 @@ module ApplicationController::Filter
       end
       return
 
-    when "cancel"
+    when 'cancel'
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the existing expression table
       exp_get_prefill_types                                     # Get the prefill field type
     end
 
     # Reset fields if delete or reset ran
-    if ["delete", "reset"].include?(params[:button])
-      @edit[@expkey][:expression] = {"???" => "???"}              # Set as new exp element
+    if ['delete', 'reset'].include?(params[:button])
+      @edit[@expkey][:expression] = {'???' => '???'}              # Set as new exp element
       @edit[:new][@expkey] = @edit[@expkey][:expression]        # Copy to new exp
       exp_array(:init, @edit[@expkey][:expression])             # Initialize the exp array
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Rebuild the expression table
@@ -766,13 +766,13 @@ module ApplicationController::Filter
       @edit[:adv_search_name] = nil                             # Clear search name
       @edit[:adv_search_report] = nil                           # Clear the report name
       @edit[@expkey][:selected] = nil                           # Clear selected search
-    elsif params[:button] == "save"
+    elsif params[:button] == 'save'
       @edit[:search_type] = nil
     end
 
-    if ["delete", "saveit"].include?(params[:button])
+    if ['delete', 'saveit'].include?(params[:button])
       if @edit[:in_explorer]
-        if "cs_filter_tree" == x_active_tree.to_s
+        if 'cs_filter_tree' == x_active_tree.to_s
           build_configuration_mananger_tree(:cs_filter, x_active_tree)
         else
           tree_type = x_active_tree.to_s.sub(/_tree/, '').to_sym
@@ -786,30 +786,30 @@ module ApplicationController::Filter
 
     render :update do |page|
       page << javascript_prologue
-      if ["load", "save"].include?(params[:button])
-        page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => params[:button]})
-        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer",
+      if ['load', 'save'].include?(params[:button])
+        page.replace('adv_search_body', :partial => 'layouts/adv_search_body', :locals => {:mode => params[:button]})
+        page.replace('adv_search_footer', :partial => 'layouts/adv_search_footer',
                                           :locals  => {:mode => params[:button]})
       else
         @edit[@expkey][:exp_chosen_report] = nil
         @edit[@expkey][:exp_chosen_search] = nil
-        page.replace("adv_search_body", :partial => "layouts/adv_search_body")
-        page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
+        page.replace('adv_search_body', :partial => 'layouts/adv_search_body')
+        page.replace('adv_search_footer', :partial => 'layouts/adv_search_footer')
       end
 
-      if ["delete", "saveit"].include?(params[:button])
+      if ['delete', 'saveit'].include?(params[:button])
         if @edit[:in_explorer]
           tree_name = x_active_tree.to_s
-          if "cs_filter_tree" == tree_name
+          if 'cs_filter_tree' == tree_name
             page.replace_html("#{tree_name}_div", :partial => "provider_foreman/#{tree_name}")
           else
-            page.replace_html("#{tree_name}_div", :partial => "shared/tree", :locals => {
+            page.replace_html("#{tree_name}_div", :partial => 'shared/tree', :locals => {
               :tree => tree,
               :name => tree_name
             })
           end
         else
-          page.replace(:listnav_div, :partial => "layouts/listnav")
+          page.replace(:listnav_div, :partial => 'layouts/listnav')
         end
       end
     end
@@ -820,7 +820,7 @@ module ApplicationController::Filter
     @edit = session[:edit]
     if params[:chosen_search]
       @edit[@expkey][:exp_chosen_report] = nil
-      if params[:chosen_search] == "0"
+      if params[:chosen_search] == '0'
         @edit[@expkey][:exp_chosen_search] = nil
       else
         @edit[@expkey][:exp_chosen_search] = params[:chosen_search].to_i
@@ -828,7 +828,7 @@ module ApplicationController::Filter
       end
     else
       @edit[@expkey][:exp_chosen_search] = nil
-      if params[:chosen_report] == "0"
+      if params[:chosen_report] == '0'
         @edit[@expkey][:exp_chosen_report] = nil
       else
         @edit[@expkey][:exp_chosen_report] = params[:chosen_report].to_i
@@ -837,8 +837,8 @@ module ApplicationController::Filter
     end
     render :update do |page|
       page << javascript_prologue
-      page.replace("adv_search_body", :partial => "layouts/adv_search_body", :locals => {:mode => 'load'})
-      page.replace("adv_search_footer", :partial => "layouts/adv_search_footer", :locals => {:mode => 'load'})
+      page.replace('adv_search_body', :partial => 'layouts/adv_search_body', :locals => {:mode => 'load'})
+      page.replace('adv_search_footer', :partial => 'layouts/adv_search_footer', :locals => {:mode => 'load'})
     end
   end
 
@@ -846,7 +846,7 @@ module ApplicationController::Filter
   def adv_search_name_typed
     @edit = session[:edit]
     @edit[:new_search_name] = params[:search_name] if params[:search_name]
-    @edit[:search_type] = params[:search_type].to_s == "1" ? "global" : nil if params[:search_type]
+    @edit[:search_type] = params[:search_type].to_s == '1' ? 'global' : nil if params[:search_type]
     render :update do |page|
       page << javascript_prologue
     end
@@ -858,16 +858,16 @@ module ApplicationController::Filter
       format.js do
         @explorer = true
         if x_active_tree.to_s =~ /_filter_tree$/ &&
-           !["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(@nodetype))
+           !['Vm', 'MiqTemplate'].include?(TreeBuilder.get_model_for_prefix(@nodetype))
           search_id = 0
           if x_active_tree == :cs_filter_tree
-            adv_search_build("ConfiguredSystem")
+            adv_search_build('ConfiguredSystem')
           else
             adv_search_build(vm_model_from_active_tree(x_active_tree))
           end
           session[:edit] = @edit              # Set because next method will restore @edit from session
           listnav_search_selected(search_id)  # Clear or set the adv search filter
-          self.x_node = "root"
+          self.x_node = 'root'
         end
         replace_right_cell
       end
@@ -886,7 +886,7 @@ module ApplicationController::Filter
           @edit[@expkey][:selected] = {:id => 0}
           @edit[:selected] = true     # Set a flag, this is checked whether to load initial default or clear was clicked
         end
-        redirect_to(:action => "show_list")
+        redirect_to(:action => 'show_list')
       end
       format.any { head :not_found }  # Anything else, just send 404
     end
@@ -896,14 +896,14 @@ module ApplicationController::Filter
   def save_default_search
     @edit = session[:edit]
     @view = session[:view]
-    cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + "-" + @view.scoped_association).to_sym
+    cols_key = @view.scoped_association.nil? ? @view.db.to_sym : (@view.db + '-' + @view.scoped_association).to_sym
     if params[:id]
-      if params[:id] != "0"
+      if params[:id] != '0'
         s = MiqSearch.find_by(:id => params[:id])
         if s.nil?
-          add_flash(_("The selected Filter record was not found"), :error)
+          add_flash(_('The selected Filter record was not found'), :error)
         elsif s.quick_search?
-          add_flash(_("The selected Filter can not be set as Default because it requires user input"), :error)
+          add_flash(_('The selected Filter can not be set as Default because it requires user input'), :error)
         end
       end
       if @flash_array.blank?
@@ -922,21 +922,21 @@ module ApplicationController::Filter
     render :update do |page|
       page << javascript_prologue
       if @flash_array.blank?
-        page.replace(:listnav_div, :partial => "layouts/listnav")
+        page.replace(:listnav_div, :partial => 'layouts/listnav')
       else
-        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => 'layouts/flash_msg')
       end
-      page << "miqSparkleOff();"
+      page << 'miqSparkleOff();'
     end
   end
 
   def quick_search_load_params_to_tokens
     # Capture any value/suffix entered
     params.each do |key, value|
-      token_key = key.to_s.split("_").last.to_i
-      if key.to_s.starts_with?("value_")
+      token_key = key.to_s.split('_').last.to_i
+      if key.to_s.starts_with?('value_')
         @edit[:qs_tokens][token_key][:value] = value
-      elsif key.to_s.starts_with?("suffix_")
+      elsif key.to_s.starts_with?('suffix_')
         @edit[:qs_tokens][token_key][:suffix] = value
       end
     end
@@ -972,7 +972,7 @@ module ApplicationController::Filter
       page << javascript_prologue
       page << "miqDynatreeActivateNodeSilently('#{x_active_tree}', '#{x_node}');" if @edit[:in_explorer]
       page << "$('#quicksearchbox').modal('hide');"
-      page << "miqSparkle(false);"
+      page << 'miqSparkle(false);'
     end
   end
   private :quick_search_cancel_click
@@ -1009,10 +1009,10 @@ module ApplicationController::Filter
 
     render :update do |page|
       page << javascript_prologue
-      page.replace(:user_input_filter, :partial => "layouts/user_input_filter")
+      page.replace(:user_input_filter, :partial => 'layouts/user_input_filter')
       page << "$('#advsearchModal').modal('hide');"
       page << "$('#quicksearchbox').modal('show');"
-      page << "miqSparkle(false);"
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -1020,14 +1020,14 @@ module ApplicationController::Filter
   def adv_search_set_text
     if @edit[@expkey][:exp_idx] == 0                          # Are we pointing at the first exp
       if @edit[:adv_search_name]
-        @edit[:adv_search_applied][:text] = _(" - Filtered by \"%{text}\"") % {:text => @edit[:adv_search_name]}
+        @edit[:adv_search_applied][:text] = _(' - Filtered by "%{text}"') % {:text => @edit[:adv_search_name]}
       else
-        @edit[:adv_search_applied][:text] = _(" - Filtered by \"%{text}\" report") %
+        @edit[:adv_search_applied][:text] = _(' - Filtered by "%{text}" report') %
                                               {:text => @edit[:adv_search_report]}
       end
     else
       @edit[:custom_search] = true
-      @edit[:adv_search_applied][:text] = _(" - Filtered by custom search")
+      @edit[:adv_search_applied][:text] = _(' - Filtered by custom search')
     end
   end
 
@@ -1056,13 +1056,13 @@ module ApplicationController::Filter
     @edit[@expkey][:val2] ||= {}
     @edit[@expkey][:val1][:type] = nil
     @edit[@expkey][:val2][:type] = nil
-    if @edit[@expkey][:exp_typ] == "field"
+    if @edit[@expkey][:exp_typ] == 'field'
       if @edit[@expkey][:exp_key] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
         @edit[@expkey][:val1][:type] = :date
       else
         @edit[@expkey][:val1][:type] = exp_prefill_type(@edit[@expkey][:exp_key], @edit[@expkey][:exp_field])
       end
-    elsif @edit[@expkey][:exp_typ] == "find"
+    elsif @edit[@expkey][:exp_typ] == 'find'
       if @edit[@expkey][:exp_skey] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
         @edit[@expkey][:val1][:type] = :date
       else
@@ -1071,11 +1071,11 @@ module ApplicationController::Filter
       if @edit[@expkey][:exp_ckey] && @edit[@expkey][:exp_ckey] == EXP_IS && @edit[@expkey][:val2][:date_format] == 's'
         @edit[@expkey][:val2][:type] = :date
       else
-        @edit[@expkey][:val2][:type] = @edit[@expkey][:exp_check] == "checkcount" ? :integer : exp_prefill_type(@edit[@expkey][:exp_ckey], @edit[@expkey][:exp_cfield])
+        @edit[@expkey][:val2][:type] = @edit[@expkey][:exp_check] == 'checkcount' ? :integer : exp_prefill_type(@edit[@expkey][:exp_ckey], @edit[@expkey][:exp_cfield])
       end
-    elsif @edit[@expkey][:exp_typ] == "count"
+    elsif @edit[@expkey][:exp_typ] == 'count'
       @edit[@expkey][:val1][:type] = :integer
-    elsif @edit[@expkey][:exp_typ] == "regkey"
+    elsif @edit[@expkey][:exp_typ] == 'regkey'
       @edit[@expkey][:val1][:type] = :string
     end
     @edit[@expkey][:val1][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:title] if @edit[@expkey][:val1][:type]
@@ -1085,7 +1085,7 @@ module ApplicationController::Filter
   # Get the field type for miqExpressionPrefill using the operator key and field
   def exp_prefill_type(key, field)
     return nil unless key && field
-    return :regex if key.starts_with?("REG")
+    return :regex if key.starts_with?('REG')
     typ = MiqExpression.get_col_info(field)[:format_sub_type] # :human_data_type?
     if MiqExpression::FORMAT_SUB_TYPES.keys.include?(typ)
       return typ
@@ -1104,12 +1104,12 @@ module ApplicationController::Filter
       exp.delete(:token)        # Remove :token key from any expression hash
 
       # Chase down any other tokens in child expressions
-      if exp["not"]
-        exp_remove_tokens(exp["not"])
-      elsif exp["and"]
-        exp_remove_tokens(exp["and"])
-      elsif exp["or"]
-        exp_remove_tokens(exp["or"])
+      if exp['not']
+        exp_remove_tokens(exp['not'])
+      elsif exp['and']
+        exp_remove_tokens(exp['and'])
+      elsif exp['or']
+        exp_remove_tokens(exp['or'])
       end
 
     end
@@ -1119,48 +1119,48 @@ module ApplicationController::Filter
   def exp_set_fields(exp)
     exp.delete(:token)                  # Clear out the token key, if present
     key = exp.keys.first
-    if exp[key]["field"]
-      typ = "field"
-      @edit[@expkey][:exp_field] = exp[key]["field"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["count"]
-      typ = "count"
-      @edit[@expkey][:exp_count] = exp[key]["count"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["tag"]
-      typ = "tag"
-      @edit[@expkey][:exp_tag] = exp[key]["tag"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["regkey"]
-      typ = "regkey"
-      @edit[@expkey][:exp_regkey] = exp[key]["regkey"]
-      @edit[@expkey][:exp_regval] = exp[key]["regval"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-    elsif exp[key]["search"]
-      typ = "find"
-      skey = @edit[@expkey][:exp_skey] = exp[key]["search"].keys.first  # Get the search operator
-      @edit[@expkey][:exp_field] = exp[key]["search"][skey]["field"]    # Get the search field
-      @edit[@expkey][:alias] = exp[key]["search"][skey]["alias"]        # Get the field alias
+    if exp[key]['field']
+      typ = 'field'
+      @edit[@expkey][:exp_field] = exp[key]['field']
+      @edit[@expkey][:exp_value] = exp[key]['value']
+      @edit[@expkey][:alias] = exp[key]['alias']
+    elsif exp[key]['count']
+      typ = 'count'
+      @edit[@expkey][:exp_count] = exp[key]['count']
+      @edit[@expkey][:exp_value] = exp[key]['value']
+      @edit[@expkey][:alias] = exp[key]['alias']
+    elsif exp[key]['tag']
+      typ = 'tag'
+      @edit[@expkey][:exp_tag] = exp[key]['tag']
+      @edit[@expkey][:exp_value] = exp[key]['value']
+      @edit[@expkey][:alias] = exp[key]['alias']
+    elsif exp[key]['regkey']
+      typ = 'regkey'
+      @edit[@expkey][:exp_regkey] = exp[key]['regkey']
+      @edit[@expkey][:exp_regval] = exp[key]['regval']
+      @edit[@expkey][:exp_value] = exp[key]['value']
+    elsif exp[key]['search']
+      typ = 'find'
+      skey = @edit[@expkey][:exp_skey] = exp[key]['search'].keys.first  # Get the search operator
+      @edit[@expkey][:exp_field] = exp[key]['search'][skey]['field']    # Get the search field
+      @edit[@expkey][:alias] = exp[key]['search'][skey]['alias']        # Get the field alias
       @edit[@expkey][:exp_available_cfields] = []                # Create the check fields pulldown array
       MiqExpression.miq_adv_search_lists(@edit[@expkey][:exp_model], :exp_available_finds).each do |af|
-        if af.last.split("-").first == @edit[@expkey][:exp_field].split("-").first
-          @edit[@expkey][:exp_available_cfields].push([af.first.split(":").last, af.last]) # Include fields from the chosen table
+        if af.last.split('-').first == @edit[@expkey][:exp_field].split('-').first
+          @edit[@expkey][:exp_available_cfields].push([af.first.split(':').last, af.last]) # Include fields from the chosen table
         end
       end
-      @edit[@expkey][:exp_value] = exp[key]["search"][skey]["value"]    # Get the search value
-      if exp[key].key?("checkall")                        # Find the check hash key
-        chk = @edit[@expkey][:exp_check] = "checkall"
-      elsif exp[key].key?("checkany")
-        chk = @edit[@expkey][:exp_check] = "checkany"
-      elsif exp[key].key?("checkcount")
-        chk = @edit[@expkey][:exp_check] = "checkcount"
+      @edit[@expkey][:exp_value] = exp[key]['search'][skey]['value']    # Get the search value
+      if exp[key].key?('checkall')                        # Find the check hash key
+        chk = @edit[@expkey][:exp_check] = 'checkall'
+      elsif exp[key].key?('checkany')
+        chk = @edit[@expkey][:exp_check] = 'checkany'
+      elsif exp[key].key?('checkcount')
+        chk = @edit[@expkey][:exp_check] = 'checkcount'
       end
       ckey = @edit[@expkey][:exp_ckey] = exp[key][chk].keys.first     # Get the check operator
-      @edit[@expkey][:exp_cfield] = exp[key][chk][ckey]["field"]        # Get the check field
-      @edit[@expkey][:exp_cvalue] = exp[key][chk][ckey]["value"]        # Get the check value
+      @edit[@expkey][:exp_cfield] = exp[key][chk][ckey]['field']        # Get the check field
+      @edit[@expkey][:exp_cvalue] = exp[key][chk][ckey]['value']        # Get the check value
     else
       typ = nil
     end
@@ -1178,8 +1178,8 @@ module ApplicationController::Filter
           @edit[:suffix] = :bytes                                         #  Default to :bytes
           @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_s    #  Get the value
         else                                                              # Value is a string
-          @edit[:suffix] = @edit[@expkey][:exp_value].split(".").last.to_sym  #  Get the suffix
-          @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].split(".")[0...-1].join(".")  # Remove the suffix
+          @edit[:suffix] = @edit[@expkey][:exp_value].split('.').last.to_sym  #  Get the suffix
+          @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].split('.')[0...-1].join('.')  # Remove the suffix
         end
       end
     end
@@ -1188,23 +1188,23 @@ module ApplicationController::Filter
         @edit[:suffix2] = :bytes                                        #  Default to :bytes
         @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_s  #  Get the value
       else                                                              # Value is a string
-        @edit[:suffix2] = @edit[@expkey][:exp_cvalue].split(".").last.to_sym  #  Get the suffix
-        @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].split(".")[0...-1].join(".")  # Remove the suffix
+        @edit[:suffix2] = @edit[@expkey][:exp_cvalue].split('.').last.to_sym  #  Get the suffix
+        @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].split('.')[0...-1].join('.')  # Remove the suffix
       end
     end
 
     # Change datetime and date field values into arrays while editing
     if [:datetime, :date].include?(@edit.fetch_path(@expkey, :val1, :type))
       @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_miq_a  # Turn date/time values into an array
-      @edit[@expkey][:val1][:date_format] = @edit[@expkey][:exp_value].to_s.first.include?("/") ? "s" : "r"
-      if key == EXP_FROM && @edit[@expkey][:val1][:date_format] == "r"
+      @edit[@expkey][:val1][:date_format] = @edit[@expkey][:exp_value].to_s.first.include?('/') ? 's' : 'r'
+      if key == EXP_FROM && @edit[@expkey][:val1][:date_format] == 'r'
         @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0])
       end
     end
     if [:datetime, :date].include?(@edit.fetch_path(@expkey, :val2, :type))
       @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_miq_a  # Turn date/time cvalues into an array
-      @edit[@expkey][:val2][:date_format] = @edit[@expkey][:exp_cvalue].first.include?("/") ? "s" : "r"
-      if ckey == EXP_FROM && @edit[@expkey][:val2][:date_format] == "r"
+      @edit[@expkey][:val2][:date_format] = @edit[@expkey][:exp_cvalue].first.include?('/') ? 's' : 'r'
+      if ckey == EXP_FROM && @edit[@expkey][:val2][:date_format] == 'r'
         @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0])
       end
     end
@@ -1219,7 +1219,7 @@ module ApplicationController::Filter
         else
           exp[joiner] = [{key => exp[key]}]             # Chain in the current key under the joiner array
           exp.delete(key)                             # Remove the current key
-          exp[joiner].push("???" => "???")            # Add in the new key under the joiner
+          exp[joiner].push('???' => '???')            # Add in the new key under the joiner
         end
       end
       return
@@ -1227,7 +1227,7 @@ module ApplicationController::Filter
       exp.each do |key, _value|                        # Go thru the next level down
         next if key == :token                         # Skip the :token key
         case key.upcase
-        when "AND", "OR"                              # If AND or OR, check all array items
+        when 'AND', 'OR'                              # If AND or OR, check all array items
           if key.downcase != joiner                   # Does the and/or match the joiner?
             exp[key].each_with_index do |item, _idx|   # No,
               exp_add_joiner(item, token, joiner)     #   check the lower expressions
@@ -1241,7 +1241,7 @@ module ApplicationController::Filter
               end
             end
           end
-        when "NOT"                                    # If NOT, check the sub-hash
+        when 'NOT'                                    # If NOT, check the sub-hash
           exp_add_joiner(exp[key], token, joiner)     # Check lower for the matching token
         end
       end
@@ -1254,19 +1254,19 @@ module ApplicationController::Filter
       exp.keys.each do |key|                          # Find the key
         next if key == :token                         # Skip the :token key
         next if exp[key].nil?                       # Check for the key already gone
-        exp["not"] = {}                         # Create the "not" hash
-        exp["not"][key] = exp[key]                    # copy the found key's value down into the "not" hash
+        exp['not'] = {}                         # Create the "not" hash
+        exp['not'][key] = exp[key]                    # copy the found key's value down into the "not" hash
         exp.delete(key)                               # Remove the existing key
       end
     else
       exp.each do |key, _value|                        # Go thru the next level down
         next if key == :token                         # Skip the :token key
         case key.upcase
-        when "AND", "OR"                              # If AND or OR, check all array items
+        when 'AND', 'OR'                              # If AND or OR, check all array items
           exp[key].each_with_index do |item, _idx|
             exp_add_not(item, token)                  # See if the NOT applies each level down
           end
-        when "NOT"                                    # If NOT, check the sub-hash
+        when 'NOT'                                    # If NOT, check the sub-hash
           exp_add_not(exp[key], token)                # See if the NOT applies to the next level down
         end
       end
@@ -1277,17 +1277,17 @@ module ApplicationController::Filter
   def exp_commit(token)
     exp = exp_find_by_token(@edit[@expkey][:expression], token.to_i)
     case @edit[@expkey][:exp_typ]
-    when "field"
+    when 'field'
       if @edit[@expkey][:exp_field].nil?
-        add_flash(_("A field must be chosen to commit this expression element"), :error)
+        add_flash(_('A field must be chosen to commit this expression element'), :error)
       elsif @edit[@expkey][:exp_value] != :user_input &&
             e = MiqExpression.atom_error(@edit[@expkey][:exp_field],
                                          @edit[@expkey][:exp_key],
                                          @edit[@expkey][:exp_value].kind_of?(Array) ?
                                            @edit[@expkey][:exp_value] :
-                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
+                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ''))
                                         )
-        add_flash(_("Field Value Error: %{msg}") % {:msg => e}, :error)
+        add_flash(_('Field Value Error: %{msg}') % {:msg => e}, :error)
       else
         # Change datetime and date values from single element arrays to text string
         if [:datetime, :date].include?(@edit[@expkey][:val1][:type])
@@ -1296,83 +1296,83 @@ module ApplicationController::Filter
 
         exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
         exp[@edit[@expkey][:exp_key]] = {}                        # Add in the new key
-        exp[@edit[@expkey][:exp_key]]["field"] = @edit[@expkey][:exp_field]     # Set the field
-        unless @edit[@expkey][:exp_key].include?("NULL") || @edit[@expkey][:exp_key].include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
-          exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]   #   else set the value
-          unless exp[@edit[@expkey][:exp_key]]["value"] == :user_input
-            exp[@edit[@expkey][:exp_key]]["value"] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
+        exp[@edit[@expkey][:exp_key]]['field'] = @edit[@expkey][:exp_field]     # Set the field
+        unless @edit[@expkey][:exp_key].include?('NULL') || @edit[@expkey][:exp_key].include?('EMPTY')  # Check for "IS/IS NOT NULL/EMPTY"
+          exp[@edit[@expkey][:exp_key]]['value'] = @edit[@expkey][:exp_value]   #   else set the value
+          unless exp[@edit[@expkey][:exp_key]]['value'] == :user_input
+            exp[@edit[@expkey][:exp_key]]['value'] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
           end
         end
-        exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
+        exp[@edit[@expkey][:exp_key]]['alias'] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
       end
-    when "count"
+    when 'count'
       if @edit[@expkey][:exp_value] != :user_input &&
          e = MiqExpression.atom_error(:count, @edit[@expkey][:exp_key], @edit[@expkey][:exp_value])
-        add_flash(_("Field Value Error: %{msg}") % {:msg => e}, :error)
+        add_flash(_('Field Value Error: %{msg}') % {:msg => e}, :error)
       else
         exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
         exp[@edit[@expkey][:exp_key]] = {}                        # Add in the new key
-        exp[@edit[@expkey][:exp_key]]["count"] = @edit[@expkey][:exp_count]     # Set the count table
-        exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]     # Set the value
-        exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
+        exp[@edit[@expkey][:exp_key]]['count'] = @edit[@expkey][:exp_count]     # Set the count table
+        exp[@edit[@expkey][:exp_key]]['value'] = @edit[@expkey][:exp_value]     # Set the value
+        exp[@edit[@expkey][:exp_key]]['alias'] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
       end
-    when "tag"
+    when 'tag'
       if @edit[@expkey][:exp_tag].nil?
-        add_flash(_("A tag category must be chosen to commit this expression element"), :error)
+        add_flash(_('A tag category must be chosen to commit this expression element'), :error)
       elsif @edit[@expkey][:exp_value].nil?
-        add_flash(_("A tag value must be chosen to commit this expression element"), :error)
+        add_flash(_('A tag value must be chosen to commit this expression element'), :error)
       else
         if exp.present?
           exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
           exp[@edit[@expkey][:exp_key]] = {}                        # Add in the new key
-          exp[@edit[@expkey][:exp_key]]["tag"] = @edit[@expkey][:exp_tag]         # Set the tag
-          exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]     # Set the value
-          exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
+          exp[@edit[@expkey][:exp_key]]['tag'] = @edit[@expkey][:exp_tag]         # Set the tag
+          exp[@edit[@expkey][:exp_key]]['value'] = @edit[@expkey][:exp_value]     # Set the value
+          exp[@edit[@expkey][:exp_key]]['alias'] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
         end
       end
-    when "regkey"
+    when 'regkey'
       if @edit[@expkey][:exp_regkey].blank?
-        add_flash(_("A registry key name must be entered to commit this expression element"), :error)
-      elsif @edit[@expkey][:exp_regval].blank? && @edit[@expkey][:exp_key] != "KEY EXISTS"
-        add_flash(_("A registry value name must be entered to commit this expression element"), :error)
-      elsif @edit[@expkey][:exp_key].include?("REGULAR EXPRESSION") && e = MiqExpression.atom_error(:regexp, @edit[@expkey][:exp_key], @edit[@expkey][:exp_value])
-        add_flash(_("Registry Value Error: %{msg}") % {:msg => e}, :error)
+        add_flash(_('A registry key name must be entered to commit this expression element'), :error)
+      elsif @edit[@expkey][:exp_regval].blank? && @edit[@expkey][:exp_key] != 'KEY EXISTS'
+        add_flash(_('A registry value name must be entered to commit this expression element'), :error)
+      elsif @edit[@expkey][:exp_key].include?('REGULAR EXPRESSION') && e = MiqExpression.atom_error(:regexp, @edit[@expkey][:exp_key], @edit[@expkey][:exp_value])
+        add_flash(_('Registry Value Error: %{msg}') % {:msg => e}, :error)
       else
         exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
         exp[@edit[@expkey][:exp_key]] = {}                        # Add in the new key
-        exp[@edit[@expkey][:exp_key]]["regkey"] = @edit[@expkey][:exp_regkey]   # Set the key name
-        unless  @edit[@expkey][:exp_key].include?("KEY EXISTS")
-          exp[@edit[@expkey][:exp_key]]["regval"] = @edit[@expkey][:exp_regval] # Set the value name
+        exp[@edit[@expkey][:exp_key]]['regkey'] = @edit[@expkey][:exp_regkey]   # Set the key name
+        unless  @edit[@expkey][:exp_key].include?('KEY EXISTS')
+          exp[@edit[@expkey][:exp_key]]['regval'] = @edit[@expkey][:exp_regval] # Set the value name
         end
-        unless  @edit[@expkey][:exp_key].include?("NULL") || # Check for "IS/IS NOT NULL/EMPTY" or "EXISTS"
-                @edit[@expkey][:exp_key].include?("EMPTY") ||
-                @edit[@expkey][:exp_key].include?("EXISTS")
-          exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]   #   else set the data value
+        unless  @edit[@expkey][:exp_key].include?('NULL') || # Check for "IS/IS NOT NULL/EMPTY" or "EXISTS"
+                @edit[@expkey][:exp_key].include?('EMPTY') ||
+                @edit[@expkey][:exp_key].include?('EXISTS')
+          exp[@edit[@expkey][:exp_key]]['value'] = @edit[@expkey][:exp_value]   #   else set the data value
         end
       end
-    when "find"
+    when 'find'
       if @edit[@expkey][:exp_field].nil?
-        add_flash(_("A find field must be chosen to commit this expression element"), :error)
-      elsif ["checkall", "checkany"].include?(@edit[@expkey][:exp_check]) &&
+        add_flash(_('A find field must be chosen to commit this expression element'), :error)
+      elsif ['checkall', 'checkany'].include?(@edit[@expkey][:exp_check]) &&
             @edit[@expkey][:exp_cfield].nil?
-        add_flash(_("A check field must be chosen to commit this expression element"), :error)
-      elsif @edit[@expkey][:exp_check] == "checkcount" &&
+        add_flash(_('A check field must be chosen to commit this expression element'), :error)
+      elsif @edit[@expkey][:exp_check] == 'checkcount' &&
             (@edit[@expkey][:exp_cvalue].nil? || is_integer?(@edit[@expkey][:exp_cvalue]) == false)
-        add_flash(_("The check count value must be an integer to commit this expression element"), :error)
+        add_flash(_('The check count value must be an integer to commit this expression element'), :error)
       elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_field],
                                          @edit[@expkey][:exp_skey],
                                          @edit[@expkey][:exp_value].kind_of?(Array) ?
                                            @edit[@expkey][:exp_value] :
-                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
+                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ''))
                                         )
-        add_flash(_("Find Value Error: %{msg}") % {:msg => e}, :error)
-      elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_check] == "checkcount" ? :count : @edit[@expkey][:exp_cfield],
+        add_flash(_('Find Value Error: %{msg}') % {:msg => e}, :error)
+      elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_check] == 'checkcount' ? :count : @edit[@expkey][:exp_cfield],
                                          @edit[@expkey][:exp_ckey],
                                          @edit[@expkey][:exp_cvalue].kind_of?(Array) ?
                                            @edit[@expkey][:exp_cvalue] :
-                                           (@edit[@expkey][:exp_cvalue].to_s + (@edit[:suffix2] ? ".#{@edit[:suffix2]}" : ""))
+                                           (@edit[@expkey][:exp_cvalue].to_s + (@edit[:suffix2] ? ".#{@edit[:suffix2]}" : ''))
                                         )
-        add_flash(_("Check Value Error: %{msg}") % {:msg => e}, :error)
+        add_flash(_('Check Value Error: %{msg}') % {:msg => e}, :error)
       else
         # Change datetime and date values from single element arrays to text string
         if [:datetime, :date].include?(@edit[@expkey][:val1][:type])
@@ -1384,31 +1384,31 @@ module ApplicationController::Filter
 
         exp.delete(@edit[@expkey][:exp_orig_key])                     # Remove the old exp fields
         exp[@edit[@expkey][:exp_key]] = {}                        # Add in the new key
-        exp[@edit[@expkey][:exp_key]]["search"] = {}              # Create the search hash
+        exp[@edit[@expkey][:exp_key]]['search'] = {}              # Create the search hash
         skey = @edit[@expkey][:exp_skey]
-        exp[@edit[@expkey][:exp_key]]["search"][skey] = {}        # Create the search operator hash
-        exp[@edit[@expkey][:exp_key]]["search"][skey]["field"] = @edit[@expkey][:exp_field] # Set the search field
-        unless skey.include?("NULL") || skey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
-          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] = @edit[@expkey][:exp_value] #   else set the value
-          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
+        exp[@edit[@expkey][:exp_key]]['search'][skey] = {}        # Create the search operator hash
+        exp[@edit[@expkey][:exp_key]]['search'][skey]['field'] = @edit[@expkey][:exp_field] # Set the search field
+        unless skey.include?('NULL') || skey.include?('EMPTY')  # Check for "IS/IS NOT NULL/EMPTY"
+          exp[@edit[@expkey][:exp_key]]['search'][skey]['value'] = @edit[@expkey][:exp_value] #   else set the value
+          exp[@edit[@expkey][:exp_key]]['search'][skey]['value'] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
         end
         chk = @edit[@expkey][:exp_check]
         exp[@edit[@expkey][:exp_key]][chk] = {}                 # Create the check hash
         ckey = @edit[@expkey][:exp_ckey]
         exp[@edit[@expkey][:exp_key]][chk][ckey] = {}           # Create the check operator hash
-        if @edit[@expkey][:exp_check] == "checkcount"
-          exp[@edit[@expkey][:exp_key]][chk][ckey]["field"] = "<count>" # Indicate count is being checked
+        if @edit[@expkey][:exp_check] == 'checkcount'
+          exp[@edit[@expkey][:exp_key]][chk][ckey]['field'] = '<count>' # Indicate count is being checked
         else
-          exp[@edit[@expkey][:exp_key]][chk][ckey]["field"] = @edit[@expkey][:exp_cfield] # Set the check field
+          exp[@edit[@expkey][:exp_key]][chk][ckey]['field'] = @edit[@expkey][:exp_cfield] # Set the check field
         end
-        unless ckey.include?("NULL") || ckey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
-          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] = @edit[@expkey][:exp_cvalue] #   else set the value
-          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] += ".#{@edit[:suffix2]}" if @edit[:suffix2]  # Append the suffix, if present
+        unless ckey.include?('NULL') || ckey.include?('EMPTY')  # Check for "IS/IS NOT NULL/EMPTY"
+          exp[@edit[@expkey][:exp_key]][chk][ckey]['value'] = @edit[@expkey][:exp_cvalue] #   else set the value
+          exp[@edit[@expkey][:exp_key]][chk][ckey]['value'] += ".#{@edit[:suffix2]}" if @edit[:suffix2]  # Append the suffix, if present
         end
-        exp[@edit[@expkey][:exp_key]]["search"][skey]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
+        exp[@edit[@expkey][:exp_key]]['search'][skey]['alias'] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
       end
     else
-      add_flash(_("Select an expression element type"), :error)
+      add_flash(_('Select an expression element type'), :error)
     end
   end
 
@@ -1421,7 +1421,7 @@ module ApplicationController::Filter
       exp.each do |key, _value|                          # Go thru each exp element
         next if key == :token                           # Skip the :token keys
         case key.upcase
-        when "AND", "OR"                                # If AND or OR
+        when 'AND', 'OR'                                # If AND or OR
           exp[key].each_with_index do |item, idx|       #   check all array items
             if exp_remove(item, token) == true          # See if this part should be removed
               if item.key?("not")                   # The item to remove is a NOT
@@ -1441,9 +1441,9 @@ module ApplicationController::Filter
               end
             end
           end
-        when "NOT"                                      # If NOT, check the sub-hash
+        when 'NOT'                                      # If NOT, check the sub-hash
           if exp_remove(exp[key], token) == true        # Next lower hash is to be removed
-            exp.delete("not")                           # Remove the NOT hash
+            exp.delete('not')                           # Remove the NOT hash
             return true                                 # Tell caller to remove me
           end
         else
@@ -1497,7 +1497,7 @@ module ApplicationController::Filter
         clear_default_search
       elsif @edit && @edit[:expression] && !@edit[:expression][:selected].blank?
         s = MiqSearch.find(@edit[:expression][:selected][:id])
-        clear_default_search if s.search_key == "_hidden_"
+        clear_default_search if s.search_key == '_hidden_'
       end
       @edit.delete(:exp_token)                                          # Remove any existing atom being edited
     else                                                                # Create new exp fields
@@ -1505,7 +1505,7 @@ module ApplicationController::Filter
       @edit[@expkey] ||= {}                                       # Create hash for this expression, if needed
       @edit[@expkey][:expression] = []                           # Store exps in an array
       @edit[@expkey][:exp_idx] = 0                                      # Start at first exp
-      @edit[@expkey][:expression] = {"???" => "???"}                      # Set as new exp element
+      @edit[@expkey][:expression] = {'???' => '???'}                      # Set as new exp element
       @edit[@expkey][:use_mytags] = true                                # Include mytags in tag search atoms
       @edit[:custom_search] = false                                     # setting default to false
       @edit[:new] = {}
@@ -1513,7 +1513,7 @@ module ApplicationController::Filter
       exp_array(:init, @edit[@expkey][:expression])                     # Initialize the exp array
       @edit[:adv_search_open] = false
       @edit[@expkey][:exp_model] = model.to_s
-      @edit[:flash_div_num] = "2"
+      @edit[:flash_div_num] = '2'
     end
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Build the table to display the exp
     @edit[:in_explorer] = @explorer # Remember if we're in an explorer
@@ -1529,11 +1529,11 @@ module ApplicationController::Filter
     db = @edit[@expkey][:exp_model]
     global_expressions = MiqSearch.get_expressions(
       :db          => db,
-      :search_type => "global"
+      :search_type => 'global'
     )
     user_expressions = MiqSearch.get_expressions(
       :db          => db,
-      :search_type => "user",
+      :search_type => 'user',
       :search_key  => session[:userid]
     )
 
@@ -1546,77 +1546,77 @@ module ApplicationController::Filter
   # Build a string from an array of expression symbols by recursively traversing the MiqExpression object
   #   and inserting sequential tokens for each expression part
   def exp_build_string(exp)
-    exp_string = ""
-    exp_tooltip = ""      # string for tooltip without fonts tags
-    if exp["and"]
-      fcolor = calculate_font_color(exp["result"])
+    exp_string = ''
+    exp_tooltip = ''      # string for tooltip without fonts tags
+    if exp['and']
+      fcolor = calculate_font_color(exp['result'])
       exp_string << "<font color=#{fcolor}><b>(</b></font>"
-      exp_tooltip << "("
-      exp["and"].each do |e|
-        fcolor = calculate_font_color(e["result"])
+      exp_tooltip << '('
+      exp['and'].each do |e|
+        fcolor = calculate_font_color(e['result'])
         exp_str, exp_tip = exp_build_string(e)
-        if exp["result"] && !e["result"]
-          exp_string << "<font color=#{fcolor}><i>" << exp_str << "</i></font>"
+        if exp['result'] && !e['result']
+          exp_string << "<font color=#{fcolor}><i>" << exp_str << '</i></font>'
         else
-          exp_string << "<font color=#{fcolor}>" << exp_str << "</font>"
+          exp_string << "<font color=#{fcolor}>" << exp_str << '</font>'
         end
         exp_tooltip << exp_tip
-        fcolor = calculate_font_color(exp["result"])
-        exp_string << "<font color=#{fcolor}> <b>AND</b> </font>" unless e == exp["and"].last
-        exp_tooltip << " AND " unless e == exp["and"].last
+        fcolor = calculate_font_color(exp['result'])
+        exp_string << "<font color=#{fcolor}> <b>AND</b> </font>" unless e == exp['and'].last
+        exp_tooltip << ' AND ' unless e == exp['and'].last
       end
       exp_string << "<font color=#{fcolor}><b>)</b></font>"
-      exp_tooltip << ")"
-    elsif exp["or"]
-      fcolor = calculate_font_color(exp["result"])
+      exp_tooltip << ')'
+    elsif exp['or']
+      fcolor = calculate_font_color(exp['result'])
       exp_string << "<font color=#{fcolor}><b>(</b></font>"
-      exp["or"].each do |e|
-        fcolor = calculate_font_color(e["result"])
+      exp['or'].each do |e|
+        fcolor = calculate_font_color(e['result'])
         exp_str, exp_tip = exp_build_string(e)
-        if exp["result"] && !e["result"]
-          exp_string << "<font color=#{fcolor}><i>" << exp_str << "</i></font>"
+        if exp['result'] && !e['result']
+          exp_string << "<font color=#{fcolor}><i>" << exp_str << '</i></font>'
         else
-          exp_string << "<font color=#{fcolor}>" << exp_str << "</font>"
+          exp_string << "<font color=#{fcolor}>" << exp_str << '</font>'
         end
         exp_tooltip << exp_tip
-        fcolor = calculate_font_color(exp["result"])
-        exp_string << "<font color=#{fcolor}> <b>OR</b> </font>" unless e == exp["or"].last
-        exp_tooltip << " OR " unless e == exp["or"].last
+        fcolor = calculate_font_color(exp['result'])
+        exp_string << "<font color=#{fcolor}> <b>OR</b> </font>" unless e == exp['or'].last
+        exp_tooltip << ' OR ' unless e == exp['or'].last
       end
       exp_string << "<font color=#{fcolor}><b>)</b></font>"
-      exp_tooltip << ")"
-    elsif exp["not"]
-      fcolor = calculate_font_color(exp["result"])
+      exp_tooltip << ')'
+    elsif exp['not']
+      fcolor = calculate_font_color(exp['result'])
       exp_string << "<font color=#{fcolor}> <b>NOT</b> </font>"
-      exp_tooltip << " NOT "
-      exp_string << "<font color=#{fcolor}><b>(</b></font>" unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
-      exp_tooltip << "(" unless ["and", "or"].include?(exp["not"].keys.first) # No parens if and/or under me
-      exp_str, exp_tip = exp_build_string(exp["not"])
-      if exp["result"] && !exp["not"]["result"]
-        exp_string << "<font color=#{fcolor}><i>" << exp_str << "</i></font>"
+      exp_tooltip << ' NOT '
+      exp_string << "<font color=#{fcolor}><b>(</b></font>" unless ['and', 'or'].include?(exp['not'].keys.first)  # No parens if and/or under me
+      exp_tooltip << '(' unless ['and', 'or'].include?(exp['not'].keys.first) # No parens if and/or under me
+      exp_str, exp_tip = exp_build_string(exp['not'])
+      if exp['result'] && !exp['not']['result']
+        exp_string << "<font color=#{fcolor}><i>" << exp_str << '</i></font>'
       else
-        exp_string << "<font color=#{fcolor}>" << exp_str << "</font>"
+        exp_string << "<font color=#{fcolor}>" << exp_str << '</font>'
       end
 
       exp_tooltip << exp_tip
-      exp_string << "<font color=#{fcolor}><b>)</b></font>" unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
-      exp_tooltip << ")" unless ["and", "or"].include?(exp["not"].keys.first) # No parens if and/or under me
+      exp_string << "<font color=#{fcolor}><b>)</b></font>" unless ['and', 'or'].include?(exp['not'].keys.first)  # No parens if and/or under me
+      exp_tooltip << ')' unless ['and', 'or'].include?(exp['not'].keys.first) # No parens if and/or under me
     else
-      fcolor = calculate_font_color(exp["result"])
+      fcolor = calculate_font_color(exp['result'])
       temp_exp = copy_hash(exp)
-      temp_exp.delete("result")
-      exp_string << "<font color=#{fcolor}>" << MiqExpression.to_human(temp_exp) << "</font>"
+      temp_exp.delete('result')
+      exp_string << "<font color=#{fcolor}>" << MiqExpression.to_human(temp_exp) << '</font>'
       exp_tooltip << MiqExpression.to_human(temp_exp)
     end
     return exp_string, exp_tooltip
   end
 
   def calculate_font_color(result)
-    fcolor = "black"
+    fcolor = 'black'
     if result == true
-      fcolor = "green"
+      fcolor = 'green'
     elsif result == false
-      fcolor = "red"
+      fcolor = 'red'
     end
     fcolor
   end
@@ -1625,11 +1625,11 @@ module ApplicationController::Filter
     @settings[:default_search] = current_user.settings[:default_search]  # Get the user's default search settings again, incase default search was deleted
     @default_search = MiqSearch.find(@settings[:default_search][db.to_sym].to_s) if @settings[:default_search] && @settings[:default_search][db.to_sym] && @settings[:default_search][db.to_sym] != 0 && MiqSearch.exists?(@settings[:default_search][db.to_sym])
     temp = MiqSearch.new
-    temp.description = "ALL"
+    temp.description = 'ALL'
     temp.id = 0
     @def_searches = MiqSearch.where(:db => db).visible_to_all.sort_by { |s| s.description.downcase }
     @def_searches = @def_searches.unshift(temp) unless @def_searches.empty?
-    @my_searches = MiqSearch.where(:search_type => "user", :search_key => session[:userid], :db => db).sort_by { |s| s.description.downcase }
+    @my_searches = MiqSearch.where(:search_type => 'user', :search_key => session[:userid], :db => db).sort_by { |s| s.description.downcase }
   end
 
   def process_changed_expression(params, chosen_key, exp_key, exp_value, exp_valx)
@@ -1638,7 +1638,7 @@ module ApplicationController::Filter
 
     # Set THROUGH value if changing to FROM
     if params[chosen_key] == EXP_FROM
-      if @edit[@expkey][exp_valx][:date_format] == "r" # Format is relative
+      if @edit[@expkey][exp_valx][:date_format] == 'r' # Format is relative
         @edit[@expkey][exp_valx][:through_choices] = exp_through_choices(@edit[@expkey][exp_value][0])
         @edit[@expkey][exp_value][1] = @edit[@expkey][exp_valx][:through_choices].first
       else                                          # Format is specific, just add second value
@@ -1650,14 +1650,14 @@ module ApplicationController::Filter
     exp_get_prefill_types # Prefill type may change based on selected key for date/time fields
 
     # Convert to/from "<date>" and "<date time>" strings in the exp_value array for specific date/times
-    if @edit[@expkey][exp_valx][:date_format] == "s"
+    if @edit[@expkey][exp_valx][:date_format] == 's'
       if [:datetime, :date].include?(@edit[@expkey][exp_valx][:type])
         @edit[@expkey][exp_value].each_with_index do |v, v_idx|
           next if v.blank?
           if params[chosen_key] == EXP_IS || @edit[@expkey][exp_valx][:type] == :date
-            @edit[@expkey][exp_value][v_idx] = v.split(" ").first if v.include?(":")
+            @edit[@expkey][exp_value][v_idx] = v.split(' ').first if v.include?(':')
           else
-            @edit[@expkey][exp_value][v_idx] = v + " 00:00" unless v.include?(":")
+            @edit[@expkey][exp_value][v_idx] = v + ' 00:00' unless v.include?(':')
           end
         end
       end
@@ -1666,14 +1666,14 @@ module ApplicationController::Filter
 
   def process_datetime_expression_field(value_key, exp_key, exp_value_key)
     if [:date, :datetime].include?(@edit[@expkey][value_key][:type])  # Set value for date/time fields
-      @edit[@expkey][value_key][:date_format] ||= "r"
+      @edit[@expkey][value_key][:date_format] ||= 'r'
       if @edit[@expkey][exp_key] == EXP_FROM
-        @edit[@expkey][exp_value_key] = @edit[@expkey][value_key][:date_format] == "s" ?
+        @edit[@expkey][exp_value_key] = @edit[@expkey][value_key][:date_format] == 's' ?
                                       Array.new(2) :
                                       [EXP_TODAY, EXP_TODAY]
-        @edit[@expkey][value_key][:through_choices] = [EXP_TODAY] if @edit[@expkey][value_key][:date_format] == "r"
+        @edit[@expkey][value_key][:through_choices] = [EXP_TODAY] if @edit[@expkey][value_key][:date_format] == 'r'
       else
-        @edit[@expkey][exp_value_key] = @edit[@expkey][value_key][:date_format] == "s" ? [] : [EXP_TODAY]
+        @edit[@expkey][exp_value_key] = @edit[@expkey][value_key][:date_format] == 's' ? [] : [EXP_TODAY]
       end
     end
   end
@@ -1685,14 +1685,14 @@ module ApplicationController::Filter
 
     exp_value_index = param_key_suffix[-1].to_i
     value_key       = "val#{param_key_suffix[0]}".to_sym
-    exp_value_key   = param_key_suffix.starts_with?("1") ? :exp_value : :exp_cvalue
+    exp_value_key   = param_key_suffix.starts_with?('1') ? :exp_value : :exp_cvalue
     exp             = @edit[@expkey]
 
     date = params[param_date_key] || (params[param_time_key] && exp[exp_value_key][exp_value_index].split(' ').first)
     time = params[param_time_key] if params[param_time_key]
 
     if time.to_s.blank? && exp[value_key][:type] == :datetime && exp[exp_key] != EXP_IS
-      time = "00:00" # If time is blank, add in midnight if needed
+      time = '00:00' # If time is blank, add in midnight if needed
     end
 
     time = " #{time}" unless time.to_s.blank? # Prepend a blank, if time is non-blank
@@ -1700,7 +1700,7 @@ module ApplicationController::Filter
     exp[exp_value_key][exp_value_index] = "#{date}#{time}"
   end
 
-  ENABLE_CALENDAR = "miqBuildCalendar();".freeze
+  ENABLE_CALENDAR = 'miqBuildCalendar();'.freeze
   def calendar_needed?
     return true if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type))
     return true if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))

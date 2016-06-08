@@ -5,9 +5,9 @@ describe RemoveVmDiscoverRowFromMiqEventDefinitions do
   let(:relationship_stub)  { migration_stub(:Relationship) }
 
   migration_context :up do
-    it "removes vm_discover from table miq_event_definitions and its relationships from table relationships" do
-      deleted = miq_event_def_stub.create!(:name => "vm_discover")
-      ignored = miq_event_def_stub.create!(:name => "vm_start")
+    it 'removes vm_discover from table miq_event_definitions and its relationships from table relationships' do
+      deleted = miq_event_def_stub.create!(:name => 'vm_discover')
+      ignored = miq_event_def_stub.create!(:name => 'vm_start')
 
       deleted_rel = relationship_stub.create!(:resource_type => 'MiqEventDefinition', :resource_id => deleted.id)
       ignored_rel = relationship_stub.create!(:resource_type => 'AnyOtherType', :resource_id => deleted.id)

@@ -3,20 +3,20 @@ module MiqPolicyController::Policies
 
   def policy_edit
     case params[:button]
-    when "cancel"
-      id = params[:id] ? params[:id] : "new"
-      return unless load_edit("policy_edit__#{id}", "replace_cell__explorer")
+    when 'cancel'
+      id = params[:id] ? params[:id] : 'new'
+      return unless load_edit("policy_edit__#{id}", 'replace_cell__explorer')
       @policy = MiqPolicy.find_by_id(@edit[:policy_id]) if @edit[:policy_id]
       if @policy && @policy.id
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqPolicy"), :name => @policy.description})
+        add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'MiqPolicy'), :name => @policy.description})
       else
-        add_flash(_("Add of new %{models} was cancelled by the user") % {:models => ui_lookup(:model => "MiqPolicy")})
+        add_flash(_('Add of new %{models} was cancelled by the user') % {:models => ui_lookup(:model => 'MiqPolicy')})
       end
       @edit = nil
       get_node_info(x_node)
       replace_right_cell(@nodetype)
       return
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       @sb[:action] = "policy_edit"
       policy_build_edit_screen(session[:edit].try(:key?, :typ) ? session[:edit][:typ] : params[:typ])
       if params[:button] == "reset"
@@ -27,12 +27,12 @@ module MiqPolicyController::Policies
     end
 
     # Load @edit/vars for other buttons
-    id = params[:id] ? params[:id] : "new"
-    return unless load_edit("policy_edit__#{id}", "replace_cell__explorer")
+    id = params[:id] ? params[:id] : 'new'
+    return unless load_edit("policy_edit__#{id}", 'replace_cell__explorer')
     @policy = @edit[:policy_id] ? MiqPolicy.find_by_id(@edit[:policy_id]) : MiqPolicy.new
 
     case params[:button]
-    when "save", "add"
+    when 'save', 'add'
       assert_privileges("policy_#{@policy.id ? "edit" : "new"}")
       policy = @policy.id.blank? ? MiqPolicy.new : MiqPolicy.find(@policy.id) # Get new or existing record
       policy.mode = @edit[:new][:mode]
@@ -82,7 +82,7 @@ module MiqPolicyController::Policies
         end
         replace_right_cell("p")
       end
-    when "move_right", "move_left", "move_allleft"
+    when 'move_right', 'move_left', "move_allleft"
       handle_selection_buttons(:conditions)
       session[:changed] = (@edit[:new] != @edit[:current])
       replace_right_cell("p")
@@ -91,63 +91,63 @@ module MiqPolicyController::Policies
 
   # Copy a policy
   def policy_copy
-    assert_privileges("policy_copy")
+    assert_privileges('policy_copy')
     policy = MiqPolicy.find(params[:id])
-    new_desc = truncate("Copy of #{policy.description}", :length => 255, :omission => "")
+    new_desc = truncate("Copy of #{policy.description}", :length => 255, :omission => '')
     if MiqPolicy.find_by_description(new_desc)
-      add_flash(_("%{model} \"%{name}\" already exists") % {:model => ui_lookup(:model => "MiqPolicy"), :name => new_desc}, :error)
+      add_flash(_('%{model} "%{name}" already exists') % {:model => ui_lookup(:model => 'MiqPolicy'), :name => new_desc}, :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     else
       new_pol = policy.copy(:description => new_desc, :created_by => session[:userid], :read_only => nil)
-      AuditEvent.success(:event        => "miqpolicy_copy",
+      AuditEvent.success(:event        => 'miqpolicy_copy',
                          :target_id    => new_pol.id,
-                         :target_class => "MiqPolicy",
+                         :target_class => 'MiqPolicy',
                          :userid       => session[:userid],
-                         :message      => "New Policy ID %{new_id} was copied from Policy ID %{old_id}" %
+                         :message      => 'New Policy ID %{new_id} was copied from Policy ID %{old_id}' %
                                           {:new_id => new_pol.id, :old_id => policy.id})
-      add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqPolicy"), :name => new_desc})
+      add_flash(_('%{model} "%{name}" was added') % {:model => ui_lookup(:model => 'MiqPolicy'), :name => new_desc})
       @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.downcase}_p-#{to_cid(policy.id)}"
       get_node_info(@new_policy_node)
-      replace_right_cell("p", [:policy])
+      replace_right_cell('p', [:policy])
     end
   end
 
   def policy_delete
-    assert_privileges("policy_delete")
+    assert_privileges('policy_delete')
     policies = []
     # showing 1 policy, delete it
     pol = MiqPolicy.find_by_id(params[:id])
     if params[:id].nil? || pol.nil?
-      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqPolicy")},
+      add_flash(_('%{models} no longer exists') % {:models => ui_lookup(:model => 'MiqPolicy')},
                 :error)
     else
       policies.push(params[:id])
       self.x_node = @new_policy_node = "xx-#{pol.mode.downcase}_xx-#{pol.mode.downcase}-#{pol.towhat.downcase}"
     end
-    process_policies(policies, "destroy") unless policies.empty?
-    add_flash(_("The selected %{models} was deleted") %
-      {:models => ui_lookup(:models => "MiqPolicy")}) if @flash_array.nil?
+    process_policies(policies, 'destroy') unless policies.empty?
+    add_flash(_('The selected %{models} was deleted') %
+      {:models => ui_lookup(:models => 'MiqPolicy')}) if @flash_array.nil?
     get_node_info(@new_policy_node)
-    replace_right_cell("xx", [:policy, :policy_profile])
+    replace_right_cell('xx', [:policy, :policy_profile])
   end
 
   def policy_field_changed
-    return unless load_edit("policy_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("policy_edit__#{params[:id]}", 'replace_cell__explorer')
     @profile = @edit[:profile]
 
     case @edit[:typ]
-    when "basic"
+    when 'basic'
       @edit[:new][:description] = params[:description].blank? ? nil : params[:description] if params[:description]
       @edit[:new][:notes] = params[:notes].blank? ? nil : params[:notes] if params[:notes]
-      @edit[:new][:active] = (params[:active] == "1") if params.key?(:active)
-    when "events"
+      @edit[:new][:active] = (params[:active] == '1') if params.key?(:active)
+    when 'events'
       params.keys.each do |field|
-        if field.to_s.starts_with?("event_")
-          event = field.to_s.split("_").last
-          if params[field] == "1"
+        if field.to_s.starts_with?('event_')
+          event = field.to_s.split('_').last
+          if params[field] == '1'
             @edit[:new][:events].push(event)      # Add event to array
           else
             @edit[:new][:events].delete(event)    # Delete event from array
@@ -162,7 +162,7 @@ module MiqPolicyController::Policies
   end
 
   def policy_get_all
-    peca_get_all('policy', -> { get_view(MiqPolicy, :conditions => ["mode = ? and towhat = ?", @sb[:mode].downcase, @sb[:nodeid].camelize]) })
+    peca_get_all('policy', -> { get_view(MiqPolicy, :conditions => ['mode = ? and towhat = ?', @sb[:mode].downcase, @sb[:nodeid].camelize]) })
   end
 
   private
@@ -178,7 +178,7 @@ module MiqPolicyController::Policies
 
     @policy = params[:id] ? MiqPolicy.find(params[:id]) : MiqPolicy.new                   # Get existing or new record
     @edit[:key] = "policy_edit__#{@policy.id || "new"}"
-    @mode = params[:id] ? @policy.mode.capitalize : x_node.split("_").first.split("-").last
+    @mode = params[:id] ? @policy.mode.capitalize : x_node.split('_').first.split('-').last
     @edit[:rec_id] = @policy.id || nil
 
     @edit[:typ] = edit_type                                                               # Remember edit type (basic/events/conditions)
@@ -190,7 +190,7 @@ module MiqPolicyController::Policies
     @edit[:new][:towhat] = @policy.id ? @policy.towhat : @sb[:folder].split('-').last.camelize # Set the towhat model
 
     case @edit[:typ]  # Build fields based on what is being edited
-    when "conditions" # Editing condition assignments
+    when 'conditions' # Editing condition assignments
       @edit[:new][:conditions] = {}
       conditions = @policy.conditions     # Get the condittions
       conditions.each { |c| @edit[:new][:conditions][c.description] = c.id }   # Build a hash for the members list box
@@ -199,7 +199,7 @@ module MiqPolicyController::Policies
       Condition.where(:towhat => @edit[:new][:towhat]).each { |c| @edit[:choices][c.description] = c.id } # Build a hash for the policies to choose from
 
       @edit[:new][:conditions].each_key { |key| @edit[:choices].delete(key) }  # Remove any choices that are in the members list box
-    when "events" # Editing event assignments
+    when 'events' # Editing event assignments
       @edit[:new][:events] = @policy.miq_event_definitions.collect { |e| e.id.to_s }.uniq.sort
 
       @edit[:allevents] = {}
@@ -221,29 +221,29 @@ module MiqPolicyController::Policies
   end
 
   def excluded_event?(event)
-    event.name.end_with?("compliance_check", "perf_complete")
+    event.name.end_with?('compliance_check', 'perf_complete')
   end
 
   def policy_get_all_folders(parent = nil)
     if !parent.nil?
       @folders = MiqPolicy::UI_FOLDERS.collect(&:name)
-      @right_cell_text = _("%{typ} %{model}") % {:typ => parent, :model => ui_lookup(:models => "MiqPolicy")}
-      @right_cell_div = "policy_folders"
+      @right_cell_text = _('%{typ} %{model}') % {:typ => parent, :model => ui_lookup(:models => 'MiqPolicy')}
+      @right_cell_div = 'policy_folders'
     else
-      @folders = ["Compliance", "Control"]
-      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicy")}
-      @right_cell_div = "policy_folders"
+      @folders = ['Compliance', 'Control']
+      @right_cell_text = _('All %{models}') % {:models => ui_lookup(:models => 'MiqPolicy')}
+      @right_cell_div = 'policy_folders'
     end
   end
 
   # Get information for a policy
   def policy_get_info(policy)
     @record = @policy = policy
-    @right_cell_text = _("%{model} \"%{name}\"") % {
+    @right_cell_text = _('%{model} "%{name}"') % {
       :model => "#{@sb[:mode]} Policy",
       :name  => @policy.description.gsub(/'/, "\\'")
     }
-    @right_cell_div = "policy_details"
+    @right_cell_div = 'policy_details'
     @policy_conditions = @policy.conditions
     @policy_events = @policy.miq_event_definitions
     @expression_table = @policy.expression.kind_of?(MiqExpression) ? exp_build_table(@policy.expression.exp) : nil

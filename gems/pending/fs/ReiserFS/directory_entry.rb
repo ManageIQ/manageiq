@@ -76,7 +76,7 @@ module ReiserFS
 
       statStruct = @version == 0 ? ITEM_STAT_V1 : ITEM_STAT_V2
       statSize   = @version == 0 ? SIZEOF_ITEM_STAT_V1 : SIZEOF_ITEM_STAT_V2
-      raise "Stat Structure Length Inconsistency" if statSize != @data.length
+      raise 'Stat Structure Length Inconsistency' if statSize != @data.length
       @stat = statStruct.decode(@data)
       @mode = @stat['mode']
     end

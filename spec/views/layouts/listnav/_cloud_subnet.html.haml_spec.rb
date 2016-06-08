@@ -1,9 +1,9 @@
 include QuadiconHelper
 
-describe "layouts/listnav/_cloud_subnet.html.haml" do
+describe 'layouts/listnav/_cloud_subnet.html.haml' do
   before :each do
-    set_controller_for_view("cloud_subnet")
-    assign(:panels, "ems_prop" => true, "ems_rel" => true)
+    set_controller_for_view('cloud_subnet')
+    assign(:panels, 'ems_prop' => true, 'ems_rel' => true)
     allow(view).to receive(:truncate_length).and_return(15)
     allow(view).to receive(:role_allows).and_return(true)
   end

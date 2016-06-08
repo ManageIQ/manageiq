@@ -3,7 +3,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
 
   include PerEmsWorkerMixin
 
-  self.required_roles = ["event"]
+  self.required_roles = ['event']
 
   def friendly_name
     @friendly_name ||= begin
@@ -11,7 +11,7 @@ class ManageIQ::Providers::BaseManager::EventCatcher < MiqWorker
       if ems.nil?
         queue_name.titleize
       else
-        _("Event Monitor for %{table}: %{name}") % {:table => ui_lookup(:table => "ext_management_systems"),
+        _('Event Monitor for %{table}: %{name}') % {:table => ui_lookup(:table => 'ext_management_systems'),
                                                     :name  => ems.name}
       end
     end

@@ -17,8 +17,8 @@ $vim_log.add 'err_console'
 
 # $DEBUG = true
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
-TARGET_VM = ""
-TARGET_HOST = ""
+TARGET_VM = ''
+TARGET_HOST = ''
 
 begin
   puts "vim.class: #{vim.class}"
@@ -35,13 +35,13 @@ begin
   if fields
     vim.dumpObj(fields)
   else
-    puts "No custom fields currently defined"
+    puts 'No custom fields currently defined'
   end
   puts
 
   fKey = miqCfm.getFieldKey('EVM Policy', 'VirtualMachine')
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
   puts "Target VM: #{TARGET_VM}, MOR: #{miqVm.vmMor}"
   puts
 

@@ -53,7 +53,7 @@ module ArRegion
       (region_number * rails_sequence_factor)..(region_number * rails_sequence_factor + rails_sequence_factor - 1)
     end
 
-    def region_to_conditions(region_number, col = "id")
+    def region_to_conditions(region_number, col = 'id')
       ["#{col} >= ? AND #{col} <= ?", *region_to_array(region_number)]
     end
 
@@ -125,7 +125,7 @@ module ArRegion
     end
 
     def region_number_from_sequence
-      id_to_region(connection.select_value("SELECT last_value FROM miq_databases_id_seq"))
+      id_to_region(connection.select_value('SELECT last_value FROM miq_databases_id_seq'))
     rescue ActiveRecord::StatementInvalid # sequence does not exist yet
       nil
     end
@@ -133,9 +133,9 @@ module ArRegion
     private
 
     def discover_my_region_number
-      region_file = File.join(Rails.root, "REGION")
+      region_file = File.join(Rails.root, 'REGION')
       region_num = File.read(region_file) if File.exist?(region_file)
-      region_num ||= ENV.fetch("REGION", nil)
+      region_num ||= ENV.fetch('REGION', nil)
       region_num ||= region_number_from_sequence
       region_num.to_i
     end

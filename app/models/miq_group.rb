@@ -1,7 +1,7 @@
 class MiqGroup < ApplicationRecord
-  USER_GROUP   = "user"
-  SYSTEM_GROUP = "system"
-  TENANT_GROUP = "tenant"
+  USER_GROUP   = 'user'
+  SYSTEM_GROUP = 'system'
+  TENANT_GROUP = 'tenant'
 
   belongs_to :tenant
   has_one    :entitlement, :dependent => :destroy, :autosave => true
@@ -49,11 +49,11 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.seed
-    role_map_file = FIXTURE_DIR.join("role_map.yaml")
+    role_map_file = FIXTURE_DIR.join('role_map.yaml')
     role_map = YAML.load_file(role_map_file) if role_map_file.exist?
     return unless role_map
 
-    filter_map_file = FIXTURE_DIR.join("filter_map.yaml")
+    filter_map_file = FIXTURE_DIR.join('filter_map.yaml')
     ldap_to_filters = filter_map_file.exist? ? YAML.load_file(filter_map_file) : {}
     root_tenant = Tenant.root_tenant
 
@@ -72,7 +72,7 @@ class MiqGroup < ApplicationRecord
       group.tenant              = root_tenant
 
       if group.changed?
-        mode = group.new_record? ? "Created" : "Updated"
+        mode = group.new_record? ? 'Created' : 'Updated'
         group.save!
         _log.info("#{mode} Group: #{group.description} with Role: #{user_role.name}")
       end
@@ -85,40 +85,40 @@ class MiqGroup < ApplicationRecord
         group.update_attributes(:miq_user_role => tenant_role)
       end
     else
-      _log.warn("Unable to find default tenant role for tenant access")
+      _log.warn('Unable to find default tenant role for tenant access')
     end
   end
 
   def self.get_ldap_groups_by_user(user, bind_dn, bind_pwd)
-    auth = VMDB::Config.new("vmdb").config[:authentication]
+    auth = VMDB::Config.new('vmdb').config[:authentication]
     auth[:group_memberships_max_depth] ||= User::DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 
     username = user.kind_of?(self) ? user.userid : user
     ldap = MiqLdap.new
 
     unless ldap.bind(ldap.fqusername(bind_dn), bind_pwd)
-      raise _("Bind failed for user %{user_name}") % {:user_name => bind_dn}
+      raise _('Bind failed for user %{user_name}') % {:user_name => bind_dn}
     end
     user_obj = ldap.get_user_object(ldap.normalize(ldap.fqusername(username)))
-    raise _("Unable to find user %{user_name} in directory") % {:user_name => username} if user_obj.nil?
+    raise _('Unable to find user %{user_name} in directory') % {:user_name => username} if user_obj.nil?
 
     ldap.get_memberships(user_obj, auth[:group_memberships_max_depth])
   end
 
   def self.get_httpd_groups_by_user(user)
-    require "dbus"
+    require 'dbus'
 
     username = user.kind_of?(self) ? user.userid : user
 
     sysbus = DBus.system_bus
-    ifp_service   = sysbus["org.freedesktop.sssd.infopipe"]
-    ifp_object    = ifp_service.object "/org/freedesktop/sssd/infopipe"
+    ifp_service   = sysbus['org.freedesktop.sssd.infopipe']
+    ifp_object    = ifp_service.object '/org/freedesktop/sssd/infopipe'
     ifp_object.introspect
-    ifp_interface = ifp_object["org.freedesktop.sssd.infopipe"]
+    ifp_interface = ifp_object['org.freedesktop.sssd.infopipe']
     begin
       user_groups = ifp_interface.GetUserGroups(user)
     rescue => err
-      raise _("Unable to get groups for user %{user_name} - %{error}") % {:user_name => username, :error => err}
+      raise _('Unable to get groups for user %{user_name} - %{error}') % {:user_name => username, :error => err}
     end
     user_groups.first
   end
@@ -184,7 +184,7 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.create_tenant_group(tenant)
-    tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join("/")
+    tenant_full_name = (tenant.ancestors.map(&:name) + [tenant.name]).join('/')
 
     create_with(
       :description         => "Tenant #{tenant_full_name} access",
@@ -216,13 +216,13 @@ class MiqGroup < ApplicationRecord
   # NOTE: old tenant is Tenant.find(tenant_id_was)
   def validate_default_tenant
     if tenant_id_was && tenant_group?
-      errors.add(:tenant_id, "cant change the tenant of a default group")
+      errors.add(:tenant_id, 'cant change the tenant of a default group')
     end
   end
 
   def ensure_can_be_destroyed
-    raise _("Still has users assigned.") unless users.empty?
-    raise _("A tenant default group can not be deleted") if tenant_group? && referenced_by_tenant?
-    raise _("A read only group cannot be deleted.") if system_group?
+    raise _('Still has users assigned.') unless users.empty?
+    raise _('A tenant default group can not be deleted') if tenant_group? && referenced_by_tenant?
+    raise _('A read only group cannot be deleted.') if system_group?
   end
 end

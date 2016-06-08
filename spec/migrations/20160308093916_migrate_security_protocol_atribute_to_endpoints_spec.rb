@@ -7,14 +7,14 @@ describe MigrateSecurityProtocolAtributeToEndpoints do
   migration_context :up do
     it 'migrates Security Protocol to Endpoints' do
       ems_stub.create!(
-        :security_protocol => "ssl"
+        :security_protocol => 'ssl'
       )
 
       migrate
 
       expect(endpoint_stub.count).to eq(1)
       expect(endpoint_stub.first).to have_attributes(
-        :security_protocol => "ssl"
+        :security_protocol => 'ssl'
       )
     end
   end
@@ -24,17 +24,17 @@ describe MigrateSecurityProtocolAtributeToEndpoints do
       ems = ems_stub.create!
 
       endpoint_stub.create!(
-        :resource_type => "ExtManagementSystem",
+        :resource_type => 'ExtManagementSystem',
         :resource_id   => ems.id,
-        :role          => "default",
-        :security_protocol => "ssl"
+        :role          => 'default',
+        :security_protocol => 'ssl'
       )
 
       migrate
 
       expect(endpoint_stub.count).to eq(0)
       expect(ems.reload).to have_attributes(
-        :security_protocol => "ssl"
+        :security_protocol => 'ssl'
       )
     end
   end

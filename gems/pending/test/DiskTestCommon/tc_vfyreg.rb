@@ -61,7 +61,7 @@ class TestReg < Minitest::Test
         thisDisk = OpenStruct.new('info' => di, 'disk' => dk)
         thisDisk.fs = MiqFS.getFS(dk.getPartitions[spec['vm_system_partition']])
         thisDisk.sy = FSTestUtil.lookSystemDir(thisDisk.fs)
-        thisDisk.sy = "/windows" if thisDisk.sy.nil?
+        thisDisk.sy = '/windows' if thisDisk.sy.nil?
         @disks << thisDisk
       else
         @disks << nil
@@ -85,7 +85,7 @@ class TestReg < Minitest::Test
       if disk.fs
         # puts "\ntc_vfyreg: Testing registry hives on #{disk.info.fileName}"
         %w(sam security software system default).each do |hive|
-          fn = disk.sy + "/system32/config/" + hive
+          fn = disk.sy + '/system32/config/' + hive
 
           # Perform basic checks
           puts disk.info.fileName
@@ -98,12 +98,12 @@ class TestReg < Minitest::Test
             next
           end
           hFile = disk.fs.fileOpen(fn)
-          raise "Registry file [#{fn}] does not contain valid marker." if hFile.read(4) != "regf"
+          raise "Registry file [#{fn}] does not contain valid marker." if hFile.read(4) != 'regf'
           hFile.seek(0)
 
           # Read in Registry header
           head_string = hFile.read(REGISTRY_HEADER_REGF.size)
-          raise "No header!" unless head_string
+          raise 'No header!' unless head_string
           @hiveHash = REGISTRY_HEADER_REGF.decode(head_string)
 
           # Get all data & verify hive.
@@ -122,13 +122,13 @@ class TestReg < Minitest::Test
     if @fs
       offset = 0x1000
       head_string = hiveBuf[offset..(offset + REGISTRY_STRUCT_HBIN.size)]
-      raise "No header!" unless head_string
+      raise 'No header!' unless head_string
       binHash = REGISTRY_STRUCT_HBIN.decode(head_string)
-      while (binHash["offset_to_next"] + binHash["offset_from_first"]) < @hiveHash["last_block"]
-        print "."
-        raise "Registry failed during HBin validation" unless binHash["id"] == "hbin"
+      while (binHash['offset_to_next'] + binHash['offset_from_first']) < @hiveHash['last_block']
+        print '.'
+        raise 'Registry failed during HBin validation' unless binHash['id'] == 'hbin'
         # Read the next hbin into memory and decode the header
-        offset += binHash["offset_to_next"]
+        offset += binHash['offset_to_next']
         head_string = hiveBuf[offset..(offset + REGISTRY_STRUCT_HBIN.size)]
         binHash = REGISTRY_STRUCT_HBIN.decode(head_string)
       end

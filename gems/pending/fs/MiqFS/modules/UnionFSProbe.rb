@@ -10,7 +10,7 @@ module UnionFSProbe
     # Assume UnionFS - read magic at offset.
     dobj.seek(UNIONFS_SUPER_OFFSET + UNIONFS_MAGIC_OFFSET)
     magic = dobj.read(UNIONFS_MAGIC_SIZE).unpack('L')
-    raise "UnionFS is Not Supported" if magic == UNIONFS_MAGIC
+    raise 'UnionFS is Not Supported' if magic == UNIONFS_MAGIC
 
     # No UnionFS.
     false

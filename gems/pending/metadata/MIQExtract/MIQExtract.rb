@@ -40,7 +40,7 @@ class MIQExtract
       $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
     else
       @externalMount = false
-      @configFile = filename.gsub(/^"/, "").gsub(/"$/, "")
+      @configFile = filename.gsub(/^"/, '').gsub(/"$/, '')
 
       $log.info "MIQExtract using config file: [#{@configFile}]  settings: [#{MiqPassword.sanitize_string(ost.scanData.inspect)}]"
       ost.openParent = true if ost.scanData.fetch_path('snapshot', 'use_existing') == true
@@ -57,7 +57,7 @@ class MIQExtract
       $log.info "Loading disk files for VM [#{@configFile}]"
       @systemFs = @target.rootTrees[0]
       if @systemFs.nil?
-        raise MiqException::MiqVmMountError, "No root filesystem found." if @target.diskInitErrors.empty?
+        raise MiqException::MiqVmMountError, 'No root filesystem found.' if @target.diskInitErrors.empty?
 
         err_msg = ''
         @target.diskInitErrors.each do |disk, err|
@@ -86,18 +86,18 @@ class MIQExtract
   end
 
   def split_registry(path)
-    y = path.tr("\\", "/").split("/")
+    y = path.tr('\\', '/').split('/')
     return y[0].downcase, y[1..-1].join("/")
   end
 
   def getProfileData(&blk)
     # First check for registry keys
-    if @systemFs.guestOS == "Windows"
+    if @systemFs.guestOS == 'Windows'
       reg_filters = @scanProfiles.get_registry_filters
 
       if reg_filters
         st = Time.now
-        $log.info "Scanning [Profile-Registry] information."
+        $log.info 'Scanning [Profile-Registry] information.'
         yield({:msg => 'Scanning Profile-Registry'}) if block_given?
 
         filters = []
@@ -106,7 +106,7 @@ class MIQExtract
 
         filters = {}
         reg_filters[:HKLM].each do |f|
-          hive, path = split_registry(f["key"])
+          hive, path = split_registry(f['key'])
           filters[hive.downcase] = [] if filters[hive.downcase].nil?
           filters[hive.downcase] << path
         end unless reg_filters[:HKLM].nil?
@@ -131,15 +131,15 @@ class MIQExtract
     category.to_miq_a.each do |c|
       c = c.downcase
       xml = case c
-            when "accounts" then getAccounts(c)
-            when "services" then getServices(c)
-            when "software" then getSoftware(c)
-            when "system"   then getSystem(c)
-            when "ntevents" then getEventLogs(c)
-            when "vmconfig" then getVMConfig(c)
+            when 'accounts' then getAccounts(c)
+            when 'services' then getServices(c)
+            when 'software' then getSoftware(c)
+            when 'system'   then getSystem(c)
+            when 'ntevents' then getEventLogs(c)
+            when 'vmconfig' then getVMConfig(c)
             # vmEvents are added to the blackbox externally, not extracted from the vm disks.
-            when "vmevents" then return nil
-            when "profiles" then getProfileData(&blk)
+            when 'vmevents' then return nil
+            when 'profiles' then getProfileData(&blk)
             else
               $log.warn "Warning: Category not processed [#{c}]"
               nil
@@ -163,8 +163,8 @@ class MIQExtract
 
     begin
       # Log snapshot data for diagnostic purposes
-      config_xml.find_each("//vm/snapshots") do |s|
-        formattedXml = ""
+      config_xml.find_each('//vm/snapshots') do |s|
+        formattedXml = ''
         s.write(formattedXml, 0)
 
         # Dump the formated snapshot xml section
@@ -174,7 +174,7 @@ class MIQExtract
         $log.info "Snapshot overview: Count:[#{s.attributes['numsnapshots']}]  Current:[#{s.attributes['current']}]"
 
         # Log each child snapshot element
-        s.find_each("child::snapshot") { |ss| $log.info "Snapshot details:  id:[#{ss.attributes['uid']}]  Name:[#{ss.attributes['displayname']}]" }
+        s.find_each('child::snapshot') { |ss| $log.info "Snapshot details:  id:[#{ss.attributes['uid']}]  Name:[#{ss.attributes['displayname']}]" }
       end
     rescue => e
       # $log.error e
@@ -200,9 +200,9 @@ class MIQExtract
     #   doc.root.attributes["xsi:schemaLocation"] += " accounts.xsd"
 
     case @systemFs.guestOS
-    when "Windows"
+    when 'Windows'
       MiqWin32::Accounts.new(c, @systemFs).to_xml(node)
-    when "Linux"
+    when 'Linux'
       MiqLinux::Users.new(@systemFs).to_xml(node)
     end
 
@@ -216,9 +216,9 @@ class MIQExtract
     #   doc.root.attributes["xsi:schemaLocation"] += " services.xsd"
 
     case @systemFs.guestOS
-    when "Windows"
+    when 'Windows'
       MiqWin32::Services.new(c, @systemFs).to_xml(node)
-    when "Linux"
+    when 'Linux'
       MiqLinux::Systemd.new(@systemFs).toXml(node) if MiqLinux::Systemd.detected?(@systemFs)
       MiqLinux::InitProcs.new(@systemFs).toXml(node)
     end
@@ -233,9 +233,9 @@ class MIQExtract
     #   doc.root.attributes["xsi:schemaLocation"] += " system.xsd"
 
     case @systemFs.guestOS
-    when "Windows"
+    when 'Windows'
       MiqWin32::System.new(c, @systemFs).to_xml(node)
-    when "Linux"
+    when 'Linux'
       MiqLinux::OSInfo.new(@systemFs).toXml(node)
     end
 
@@ -249,9 +249,9 @@ class MIQExtract
     #   doc.root.attributes["xsi:schemaLocation"] += " software.xsd"
 
     case @systemFs.guestOS
-    when "Windows"
+    when 'Windows'
       MiqWin32::Software.new(c, @systemFs).to_xml(node)
-    when "Linux"
+    when 'Linux'
       MiqLinux::Packages.new(@systemFs).toXml(node)
     end
 
@@ -265,25 +265,25 @@ class MIQExtract
 
   def scanMD5deep
     # Produce file system XML with MD5 info
-    $log.debug "Starting Filesystem scan"
+    $log.debug 'Starting Filesystem scan'
     # scanPath = "c:/program files"
-    scanPath = "c:/program files/Java/jdk1.5.0_12/jre/lib"
+    scanPath = 'c:/program files/Java/jdk1.5.0_12/jre/lib'
     md5 = MD5deep.new(@systemFs, 'versioninfo' => true, 'imports' => true)
     xml = md5.scan(scanPath, scanPath)
   end
 
   def getBaseConfigName
-    File.join(File.dirname(@configFile), File.basename(@configFile, ".*"))
+    File.join(File.dirname(@configFile), File.basename(@configFile, '.*'))
   end
 
   def close
     return if @externalMount
     # Call Unmount command if drive was succesfully mounted
     unless @target.nil?
-      $log.debug "Unmounting..."
+      $log.debug 'Unmounting...'
       begin
         @target.unmount
-        $log.debug "Unmounting complete"
+        $log.debug 'Unmounting complete'
       rescue => err
         $log.error "Error during disk unmounting for VM:[#{@configFile}]"
         $log.debug err.backtrace.join("\n")

@@ -122,12 +122,12 @@ describe VmInfraController do
                              :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '05'))
     FactoryGirl.create(:miq_report, :filename      => 'vms.yaml',
                                     :template_type => 'compare',
-                                    :name          => "Test Report",
-                                    :rpt_type      => "Custom",
-                                    :tz            => "Eastern Time (US & canada)",
-                                    :headers       => ["Name", "Boot time", "Disks aligned"],
-                                    :col_order     => ["name", "boot_time", "disks_aligned"],
-                                    :cols          => ["name", "boot_time", "disks_aligned"])
+                                    :name          => 'Test Report',
+                                    :rpt_type      => 'Custom',
+                                    :tz            => 'Eastern Time (US & canada)',
+                                    :headers       => ['Name', 'Boot time', 'Disks aligned'],
+                                    :col_order     => ['name', 'boot_time', 'disks_aligned'],
+                                    :cols          => ['name', 'boot_time', 'disks_aligned'])
 
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
@@ -136,10 +136,10 @@ describe VmInfraController do
     post :explorer
     expect(response.status).to eq(200)
 
-    controller.instance_variable_set(:@settings, :views => {:compare => "compressed"})
+    controller.instance_variable_set(:@settings, :views => {:compare => 'compressed'})
     controller.instance_variable_set(:@export_reports, [])
-    post :x_button, :params => { :pressed => 'vm_compare', "check_#{to_cid(vm.id)}" => "1",
-                                              "check_#{to_cid(vm2.id)}" => "1", "type" => "compressed" }
+    post :x_button, :params => { :pressed => 'vm_compare', "check_#{to_cid(vm.id)}" => '1',
+                                              "check_#{to_cid(vm2.id)}" => '1', 'type' => 'compressed' }
     expect(response.status).to eq(200)
     expect(response).to render_template(:partial => 'layouts/_compare')
   end
@@ -180,12 +180,12 @@ describe VmInfraController do
   end
 
   it 'can open Edit Tags' do
-    classification = FactoryGirl.create(:classification, :name => "department", :description => "D    epartment")
+    classification = FactoryGirl.create(:classification, :name => 'department', :description => 'D    epartment')
     @tag1 = FactoryGirl.create(:classification_tag,
-                               :name   => "tag1",
+                               :name   => 'tag1',
                                :parent => classification)
     @tag2 = FactoryGirl.create(:classification_tag,
-                               :name   => "tag2",
+                               :name   => 'tag2',
                                :parent => classification)
     get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')
@@ -345,7 +345,7 @@ describe VmInfraController do
   it 'the reconfigure tab for a vm with max_cpu_cores_per_socket > 1 should display the cpu_cores_per_socket dropdown' do
     vm = FactoryGirl.create(:vm_vmware,
                             :host     => host_2x2,
-                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '07'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :params => { :id => vm.id }
@@ -362,7 +362,7 @@ describe VmInfraController do
   it 'the reconfigure tab for a single vmware vm should display the list of disks' do
     vm = FactoryGirl.create(:vm_vmware,
                             :host     => host_2x2,
-                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '07'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :params => {:id => vm.id}
@@ -379,7 +379,7 @@ describe VmInfraController do
   it 'the reconfigure tab displays the submit and cancel buttons' do
     vm = FactoryGirl.create(:vm_vmware,
                             :host     => host_2x2,
-                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => "07"))
+                            :hardware => FactoryGirl.create(:hardware, :cpu1x1, :ram1GB, :virtual_hw_version => '07'))
     allow(controller).to receive(:x_node).and_return("v-#{vm.compressed_id}")
 
     get :show, :params => { :id => vm.id }
@@ -394,31 +394,31 @@ describe VmInfraController do
     expect(response.body).to include('class=\"btn btn-default\" alt=\"Cancel\"')
   end
 
-  context "breadcrumbs" do
+  context 'breadcrumbs' do
     subject { controller.instance_variable_get(:@breadcrumbs) }
 
-    context "skip or drop breadcrumb" do
+    context 'skip or drop breadcrumb' do
       before { get :explorer }
 
       it 'skips dropping a breadcrumb when a button action is executed' do
         post :x_button, :params => { :id => vm_vmware.id, :pressed => 'vm_ownership' }
-        expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
+        expect(subject).to eq([{:name => 'VM or Templates', :url => '/vm_infra/explorer'}])
       end
 
       it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
-        post :accordion_select, :params => { :id => "vms_filter" }
-        expect(subject).to eq([{:name => "Virtual Machines", :url => "/vm_infra/explorer"}])
+        post :accordion_select, :params => { :id => 'vms_filter' }
+        expect(subject).to eq([{:name => 'Virtual Machines', :url => '/vm_infra/explorer'}])
       end
     end
 
-    context "clear or retain existing breadcrumb path" do
+    context 'clear or retain existing breadcrumb path' do
       before { allow(controller).to receive_messages(:render => nil, :build_toolbar => nil) }
 
       it 'it clears the existing breadcrumb path and assigns the new explorer path when controllers are switched' do
-        session[:breadcrumbs] = [{:name => "Instances", :url => "/vm_cloud/explorer"}]
+        session[:breadcrumbs] = [{:name => 'Instances', :url => '/vm_cloud/explorer'}]
         allow(controller).to receive(:x_node).and_return("v-#{vm_vmware.compressed_id}")
         get :explorer
-        expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
+        expect(subject).to eq([{:name => 'VM or Templates', :url => '/vm_infra/explorer'}])
       end
 
       it 'retains the breadcrumb path when cancel is pressed from a VM action' do
@@ -429,23 +429,23 @@ describe VmInfraController do
         controller.instance_variable_set(:@in_a_form, nil)
         post :ownership_update, :params => { :button => 'cancel' }
 
-        expect(subject).to eq([{:name => "VM or Templates", :url => "/vm_infra/explorer"}])
+        expect(subject).to eq([{:name => 'VM or Templates', :url => '/vm_infra/explorer'}])
       end
     end
   end
 
   it "gets explorer when the request.referrer action is of type 'post'" do
-    allow(request).to receive(:referrer).and_return("http://localhost:3000/configuration/update")
+    allow(request).to receive(:referrer).and_return('http://localhost:3000/configuration/update')
     get :explorer
     expect(response.status).to eq(200)
   end
 
-  it "render creation snapshot flash message" do
+  it 'render creation snapshot flash message' do
     session[:edit] = {:explorer => true}
-    post :snap_vm, :params => {:name        => "test",
-                               :description => "test",
-                               :button      => "create",
+    post :snap_vm, :params => {:name        => 'test',
+                               :description => 'test',
+                               :button      => 'create',
                                :id          => vm_vmware.id}
-    expect(assigns(:flash_array).first[:message]).to include("Create Snapshot")
+    expect(assigns(:flash_array).first[:message]).to include('Create Snapshot')
   end
 end

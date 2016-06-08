@@ -5,20 +5,20 @@ module VMWareDescriptor
     # Check to see if a descriptor was not embedded.
     descriptor = dInfo.Descriptor
     if descriptor.nil?
-      f = File.open(dInfo.fileName, "rb")
+      f = File.open(dInfo.fileName, 'rb')
       descriptor = f.read; f.close
     end
 
     # Make sure this is a descriptor.
     desc, defs = parseDescriptor(descriptor, dInfo.fileName)
-    raise "No disk definitions" if defs.size == 0
+    raise 'No disk definitions' if defs.size == 0
     # Make sure each disk is there.
     defs.each do|diskDef|
       raise "No disk file: #{diskDef['filename']}" unless File.exist?(diskDef['filename'])
     end
 
     # Init needed stff.
-    self.diskType = "VMWare Descriptor"
+    self.diskType = 'VMWare Descriptor'
     self.blockSize = 512
     @desc     = desc  # This disk descriptor.
     @defs     = defs  # Disk extent definitions.
@@ -35,7 +35,7 @@ module VMWareDescriptor
         parentFileName = parentFileName.relative_path_from(Pathname.new(dInfo.fileName).dirname)
         $log.debug "VMWareDescriptor: Parent disk file is absolute. Using relative path [#{parentFileName}]" if $log
       end
-      parentFileName = File.dirname(dInfo.fileName) + "/" + parentFileName.to_s.tr("\\", "/")
+      parentFileName = File.dirname(dInfo.fileName) + '/' + parentFileName.to_s.tr('\\', '/')
       $log.debug "VMWareDescriptor: Getting parent disk file [#{parentFileName}]" if $log
 
       @parentOstruct.fileName = parentFileName
@@ -79,7 +79,7 @@ module VMWareDescriptor
       retBytes = @disks[dStart].d_read(pos, len, getDiskByteOffset(dStart))
     else
       # Case: span extents.
-      retBytes = ""; bytesRead = 0
+      retBytes = ''; bytesRead = 0
       dStart.upto(dEnd) do |diskIdx|
         readLen = @disks[diskIdx].d_size
 
@@ -163,8 +163,8 @@ module VMWareDescriptor
 
     descriptor.each_line do |line|
       line.chomp!; line.strip!
-      next if line.length == 0 || line[0, 1] == "\#"
-      eqSign = line.index("=")
+      next if line.length == 0 || line[0, 1] == '#'
+      eqSign = line.index('=')
       if eqSign.nil?
         defs << parseDiskDescription(line, File.dirname(fname))
       else
@@ -187,14 +187,14 @@ module VMWareDescriptor
     raise "Not Enough Disk Parameters: #{line}" if nelems < 4
     raise "Too Many Disk Parameters: #{line}"   if nelems > 5
 
-    disk = Hash["access", elems[0], "size", elems[1], "type", elems[2], "filename", elems[3], "offset", elems[4]]
-    disk["filename"] = File.join(dirname, fixBrokenExtension(unquote(disk["filename"])))
-    disk["offset"]   = 0 if (nelems == 4)
+    disk = Hash['access', elems[0], 'size', elems[1], 'type', elems[2], 'filename', elems[3], 'offset', elems[4]]
+    disk['filename'] = File.join(dirname, fixBrokenExtension(unquote(disk['filename'])))
+    disk['offset']   = 0 if (nelems == 4)
     disk
   end
 
   def unquote(str)
-    str.delete!("\"")
+    str.delete!('"')
     str.strip! unless str.nil?
     str
   end
@@ -203,9 +203,9 @@ module VMWareDescriptor
   # File.exist?("c:/window~1.vmd") will match "c:/window~1.vmdk", but
   # CreateFile will fail, so fix the extension.
   def fixBrokenExtension(fn)
-    if fn[-4, 4] == ".vmd" then fn += "k" end
+    if fn[-4, 4] == '.vmd' then fn += 'k' end
     if fn =~ /\.vmd[^k]/
-      fn.gsub!(/\.vmd/, ".vmdk")
+      fn.gsub!(/\.vmd/, '.vmdk')
     end
     fn
   end

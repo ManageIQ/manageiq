@@ -5,7 +5,7 @@ module VmdbMetric::Purging
   module ClassMethods
     def purge_date(interval)
       type  = "keep_#{interval}_metrics".to_sym
-      value = VMDB::Config.new("vmdb").config.fetch_path(:database, :metrics_history, type)
+      value = VMDB::Config.new('vmdb').config.fetch_path(:database, :metrics_history, type)
       value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
       value = value.to_i_with_method.seconds.ago.utc unless value.nil?
       value
@@ -17,14 +17,14 @@ module VmdbMetric::Purging
     end
 
     def purge_daily_timer(ts = nil)
-      interval = "daily"
+      interval = 'daily'
       mode = :date  # Only support :date mode, not :remaining mode
       ts ||= purge_date(interval) || 6.months.ago.utc
       purge_timer(mode, ts, interval)
     end
 
     def purge_hourly_timer(ts = nil)
-      interval = "hourly"
+      interval = 'hourly'
       mode = :date  # Only support :date mode, not :remaining mode
       ts ||= purge_date(interval) || 6.months.ago.utc
       purge_timer(mode, ts, interval)
@@ -33,10 +33,10 @@ module VmdbMetric::Purging
     def purge_timer(mode, value, interval)
       MiqQueue.put_unless_exists(
         :class_name    => name,
-        :method_name   => "purge",
-        :role          => "database_operations",
-        :queue_name    => "generic",
-        :state         => ["ready", "dequeue"],
+        :method_name   => 'purge',
+        :role          => 'database_operations',
+        :queue_name    => 'generic',
+        :state         => ['ready', 'dequeue'],
         :args_selector => ->(args) { args.kind_of?(Array) && args.last == interval }
       ) do |_msg, find_options|
         find_options.merge(:args => [mode, value, interval])
@@ -44,7 +44,7 @@ module VmdbMetric::Purging
     end
 
     def purge_window_size
-      VMDB::Config.new("vmdb").config.fetch_path(:database, :metrics_history, :purge_window_size) || 10000
+      VMDB::Config.new('vmdb').config.fetch_path(:database, :metrics_history, :purge_window_size) || 10000
     end
 
     def purge_count(mode, value, interval)

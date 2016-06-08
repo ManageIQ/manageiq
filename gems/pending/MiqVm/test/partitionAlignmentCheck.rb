@@ -15,9 +15,9 @@ Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => C
 toplog.add 'err_console'
 $vim_log = $log = toplog if $log.nil?
 
-SERVER        = raise "please define SERVER"
-USERNAME      = raise "please define USERNAME"
-PASSWORD      = raise "please define PASSWORD"
+SERVER        = raise 'please define SERVER'
+USERNAME      = raise 'please define USERNAME'
+PASSWORD      = raise 'please define PASSWORD'
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 
 vimVm = nil
@@ -56,7 +56,7 @@ begin
       #
       vm.volumeManager.allPhysicalVolumes.each do |pv|
         vmdk = pv.dInfo.filename || pv.dInfo.vixDiskInfo[:fileName]
-        aligned = pv.startByteAddr % alignment == 0 ? "Yes" : "No"
+        aligned = pv.startByteAddr % alignment == 0 ? 'Yes' : 'No'
         puts "\t#{vmdk}, Partition: #{pv.partNum}, Partition type: #{pv.partType}, LBA: #{pv.lbaStart}, offset: #{pv.startByteAddr}, aligned: #{aligned}"
       end
 

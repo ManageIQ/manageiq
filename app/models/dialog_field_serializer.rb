@@ -1,5 +1,5 @@
 class DialogFieldSerializer < Serializer
-  EXCLUDED_ATTRIBUTES = ["created_at", "dialog_group_id", "id", "updated_at"]
+  EXCLUDED_ATTRIBUTES = ['created_at', 'dialog_group_id', 'id', 'updated_at']
 
   def self.serialize(dialog_field)
     new.serialize(dialog_field)
@@ -13,15 +13,15 @@ class DialogFieldSerializer < Serializer
     serialized_resource_action = @resource_action_serializer.serialize(dialog_field.resource_action)
 
     extra_attributes = {
-      "resource_action" => serialized_resource_action
+      'resource_action' => serialized_resource_action
     }
 
     if dialog_field.dynamic?
       dynamic_values = dialog_field.trigger_automate_value_updates
-      extra_attributes["values"] = dynamic_values
+      extra_attributes['values'] = dynamic_values
     end
 
-    if dialog_field.type == "DialogFieldTagControl"
+    if dialog_field.type == 'DialogFieldTagControl'
       category = Category.find_by(:id => dialog_field.category)
       dialog_field.options.merge!(:category_name => category.name, :category_description => category.description)
     end

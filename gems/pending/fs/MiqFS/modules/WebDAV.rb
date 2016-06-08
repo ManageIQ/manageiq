@@ -7,7 +7,7 @@ module WebDAV
   attr_reader :guestOS
 
   def fs_init
-    @fsType = "WebDAV"
+    @fsType = 'WebDAV'
     @guestOS = @dobj.guest_os
 
     @uri = URI(@dobj.uri.to_s)
@@ -87,7 +87,7 @@ module WebDAV
     raise NotImplementedError
   end
 
-  def fs_fileOpen(path, mode = "r")
+  def fs_fileOpen(path, mode = 'r')
     raise Errno::EACCES unless mode == 'r'
     WebDAVFile.new(remote_uri(path), @connection.verify_mode, @headers)
   end

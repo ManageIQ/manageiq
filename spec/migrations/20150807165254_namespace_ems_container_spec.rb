@@ -7,22 +7,22 @@ describe NamespaceEmsContainer do
   let(:ems_stub) { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "EmsKubernetes")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'EmsKubernetes')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ManageIQ::Providers::Kubernetes::ContainerManager")
+      expect(ems.reload).to have_attributes(:type => 'ManageIQ::Providers::Kubernetes::ContainerManager')
     end
   end
 
   migration_context :down do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ManageIQ::Providers::Kubernetes::ContainerManager")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ManageIQ::Providers::Kubernetes::ContainerManager')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "EmsKubernetes")
+      expect(ems.reload).to have_attributes(:type => 'EmsKubernetes')
     end
   end
 end

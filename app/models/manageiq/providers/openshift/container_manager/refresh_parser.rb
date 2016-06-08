@@ -7,12 +7,12 @@ module ManageIQ::Providers
         get_routes(inventory)
         get_builds(inventory)
         get_build_pods(inventory)
-        EmsRefresh.log_inv_debug_trace(@data, "data:")
+        EmsRefresh.log_inv_debug_trace(@data, 'data:')
         @data
       end
 
       def get_builds(inventory)
-        process_collection(inventory["build_config"], :container_builds) { |n| parse_build(n) }
+        process_collection(inventory['build_config'], :container_builds) { |n| parse_build(n) }
 
         @data[:container_builds].each do |ns|
           @data_index.store_path(:container_builds, :by_name, ns[:name], ns)
@@ -20,7 +20,7 @@ module ManageIQ::Providers
       end
 
       def get_build_pods(inventory)
-        process_collection(inventory["build"], :container_build_pods) { |n| parse_build_pod(n) }
+        process_collection(inventory['build'], :container_build_pods) { |n| parse_build_pod(n) }
 
         @data[:container_build_pods].each do |ns|
           @data_index.store_path(:container_build_pods, :by_name, ns[:name], ns)
@@ -28,11 +28,11 @@ module ManageIQ::Providers
       end
 
       def get_routes(inventory)
-        process_collection(inventory["route"], :container_routes) { |n| parse_route(n) }
+        process_collection(inventory['route'], :container_routes) { |n| parse_route(n) }
       end
 
       def get_projects(inventory)
-        inventory["project"].each { |item| parse_project(item) }
+        inventory['project'].each { |item| parse_project(item) }
 
         @data[:container_projects].each do |ns|
           @data_index.store_path(:container_projects, :by_name, ns[:name], ns)
@@ -60,7 +60,7 @@ module ManageIQ::Providers
         )
 
         new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
-                                                      route.metadata["table"][:namespace])
+                                                      route.metadata['table'][:namespace])
         new_result[:container_service] = @data_index.fetch_path(:container_services, :by_namespace_and_name,
                                                                 new_result[:namespace], get_service_name(route))
         new_result
@@ -88,7 +88,7 @@ module ManageIQ::Providers
         )
 
         new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
-                                                      build.metadata["table"][:namespace])
+                                                      build.metadata['table'][:namespace])
         new_result
       end
 

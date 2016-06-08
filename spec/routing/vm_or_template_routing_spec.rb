@@ -1,34 +1,34 @@
-require "routing/shared_examples"
+require 'routing/shared_examples'
 
 describe VmOrTemplateController do
-  let(:controller_name) { "vm_or_template" }
+  let(:controller_name) { 'vm_or_template' }
 
-  it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has compare routes"
-  it_behaves_like "A controller that has dialog runner routes"
-  it_behaves_like "A controller that has download_data routes"
-  it_behaves_like "A controller that has policy protect routes"
-  it_behaves_like "A controller that has tagging routes"
-  it_behaves_like "A controller that has timeline routes"
-  it_behaves_like "A controller that has utilization routes"
+  it_behaves_like 'A controller that has advanced search routes'
+  it_behaves_like 'A controller that has compare routes'
+  it_behaves_like 'A controller that has dialog runner routes'
+  it_behaves_like 'A controller that has download_data routes'
+  it_behaves_like 'A controller that has policy protect routes'
+  it_behaves_like 'A controller that has tagging routes'
+  it_behaves_like 'A controller that has timeline routes'
+  it_behaves_like 'A controller that has utilization routes'
 
-  describe "#explorer" do
-    it "routes with GET" do
-      expect(get("/vm_or_template/explorer")).to route_to("vm_or_template#explorer")
+  describe '#explorer' do
+    it 'routes with GET' do
+      expect(get('/vm_or_template/explorer')).to route_to('vm_or_template#explorer')
     end
 
-    it "rotues with POST" do
-      expect(post("/vm_or_template/explorer")).to route_to("vm_or_template#explorer")
+    it 'rotues with POST' do
+      expect(post('/vm_or_template/explorer')).to route_to('vm_or_template#explorer')
     end
   end
 
-  describe "#show" do
-    it "routes with GET" do
-      expect(get("/vm_or_template/show")).to route_to("vm_or_template#show")
+  describe '#show' do
+    it 'routes with GET' do
+      expect(get('/vm_or_template/show')).to route_to('vm_or_template#show')
     end
 
-    it "rotues with POST" do
-      expect(post("/vm_or_template/show")).to route_to("vm_or_template#show")
+    it 'rotues with POST' do
+      expect(post('/vm_or_template/show')).to route_to('vm_or_template#show')
     end
   end
 
@@ -42,7 +42,7 @@ describe VmOrTemplateController do
     vm_show
   ).each do |path|
     describe "##{path}" do
-      it "routes with GET" do
+      it 'routes with GET' do
         expect(get("/vm_or_template/#{path}")).to route_to("vm_or_template##{path}")
       end
     end
@@ -114,7 +114,7 @@ describe VmOrTemplateController do
     x_show
   ).each do |path|
     describe "##{path}" do
-      it "routes with POST" do
+      it 'routes with POST' do
         expect(post("/vm_or_template/#{path}")).to route_to("vm_or_template##{path}")
       end
     end

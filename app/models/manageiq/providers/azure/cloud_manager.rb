@@ -23,7 +23,7 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
 
   has_one :network_manager,
           :foreign_key => :parent_ems_id,
-          :class_name  => "ManageIQ::Providers::Azure::NetworkManager",
+          :class_name  => 'ManageIQ::Providers::Azure::NetworkManager',
           :autosave    => true,
           :dependent   => :destroy
 
@@ -51,11 +51,11 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
   ExtManagementSystem.register_cloud_discovery_type('azure' => 'azure')
 
   def self.ems_type
-    @ems_type ||= "azure".freeze
+    @ems_type ||= 'azure'.freeze
   end
 
   def self.description
-    @description ||= "Azure".freeze
+    @description ||= 'Azure'.freeze
   end
 
   def self.default_blacklisted_event_names

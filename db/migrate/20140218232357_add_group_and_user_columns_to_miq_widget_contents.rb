@@ -9,7 +9,7 @@ class AddGroupAndUserColumnsToMiqWidgetContents < ActiveRecord::Migration
     remove_column :miq_widget_contents, :owner_type
     remove_column :miq_widget_contents, :owner_id
 
-    say_with_time "Remove all existing widget content" do
+    say_with_time 'Remove all existing widget content' do
       MiqWidgetContent.delete_all
     end
   end
@@ -22,7 +22,7 @@ class AddGroupAndUserColumnsToMiqWidgetContents < ActiveRecord::Migration
     remove_column :miq_widget_contents, :miq_group_id
     remove_column :miq_widget_contents, :user_id
 
-    say_with_time "Remove all existing widget content" do
+    say_with_time 'Remove all existing widget content' do
       MiqWidgetContent.delete_all
     end
   end

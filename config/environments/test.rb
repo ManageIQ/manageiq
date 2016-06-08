@@ -14,7 +14,7 @@ Vmdb::Application.configure do
 
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true
-  config.static_cache_control = "public, max-age=3600"
+  config.static_cache_control = 'public, max-age=3600'
 
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
@@ -55,9 +55,9 @@ Vmdb::Application.configure do
   config.secret_token = SecureRandom.random_bytes(32)
 end
 
-require "minitest"
-require "factory_girl"
-require "timecop"
-require "vcr"
-require "webmock/rspec"
-require "capybara"
+require 'minitest'
+require 'factory_girl'
+require 'timecop'
+require 'vcr'
+require 'webmock/rspec'
+require 'capybara'

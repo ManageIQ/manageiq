@@ -35,7 +35,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
 
   def vim_in_maintenance_mode?
     with_provider_object do |vim_host|
-      _log.info "Invoking"
+      _log.info 'Invoking'
       vim_host.inMaintenanceMode?
     end
   end
@@ -57,7 +57,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
   def vim_vmotion_enabled?(device = nil)
     with_provider_object do |vim_host|
       vnm      = vim_host.hostVirtualNicManager
-      selected = vnm.selectedVnicsByType("vmotion")
+      selected = vnm.selectedVnicsByType('vmotion')
       selected = selected.select { |vnic| vnic.device == device } unless device.nil?
       return !selected.empty?
     end
@@ -66,24 +66,24 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
   def vim_enable_vmotion(device = nil)
     with_provider_object do |vim_host|
       vnm      = vim_host.hostVirtualNicManager
-      device ||= vnm.candidateVnicsByType("vmotion").first.device rescue nil
+      device ||= vnm.candidateVnicsByType('vmotion').first.device rescue nil
       _log.info "Invoking for device=<#{device}>"
-      vnm.selectVnicForNicType("vmotion", device) unless device.nil?
+      vnm.selectVnicForNicType('vmotion', device) unless device.nil?
     end
   end
 
   def vim_disable_vmotion(device = nil)
     with_provider_object do |vim_host|
       vnm      = vim_host.hostVirtualNicManager
-      device ||= vnm.candidateVnicsByType("vmotion").first.device rescue nil
+      device ||= vnm.candidateVnicsByType('vmotion').first.device rescue nil
       _log.info "Invoking for device=<#{device}>"
-      vnm.deselectVnicForNicType("vmotion", device) unless device.nil?
+      vnm.deselectVnicForNicType('vmotion', device) unless device.nil?
     end
   end
 
   def get_host_virtual_nic_manager_with_vmotion_device(vim_host, device = nil)
     vnm = vim_host.hostVirtualNicManager
-    device ||= vnm.candidateVnicsByType("vmotion").first.device rescue nil
+    device ||= vnm.candidateVnicsByType('vmotion').first.device rescue nil
     return vnm, device
   end
 
@@ -111,7 +111,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
   end
 
   def verify_credentials_with_ws(auth_type = nil)
-    raise "No credentials defined" if self.missing_credentials?(auth_type)
+    raise 'No credentials defined' if self.missing_credentials?(auth_type)
 
     begin
       with_provider_connection(:use_broker => false, :auth_type => auth_type) {}
@@ -126,7 +126,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
       raise err.message
     rescue Exception => err
       _log.warn("#{err.inspect}")
-      raise "Unexpected response returned from system, see log for details"
+      raise 'Unexpected response returned from system, see log for details'
     else
       true
     end
@@ -141,7 +141,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
     begin
       vim = connect
       unless vim.nil?
-        sp = HostScanProfiles.new(ScanItem.get_profile("host default"))
+        sp = HostScanProfiles.new(ScanItem.get_profile('host default'))
         hashes = sp.parse_data_hostd(vim)
         EventLog.add_elements(self, hashes)
       end
@@ -149,7 +149,7 @@ class ManageIQ::Providers::Vmware::InfraManager::HostEsx < ManageIQ::Providers::
       _log.log_backtrace(err)
     rescue MiqException::MiqVimBrokerUnavailable => err
       MiqVimBrokerWorker.broker_unavailable(err.class.name,  err.to_s)
-      _log.warn("Reported the broker unavailable")
+      _log.warn('Reported the broker unavailable')
     rescue Timeout::Error
       _log.warn "Timeout encountered during log collection for Host [#{name}]"
     ensure

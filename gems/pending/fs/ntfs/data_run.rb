@@ -18,8 +18,8 @@ module NTFS
     attr_reader :runSpec, :boot_sector, :length, :pos
 
     def initialize(bs, buf, header)
-      raise "MIQ(NTFS::DataRun.initialize) Nil boot sector" if bs.nil?
-      raise "MIQ(NTFS::DataRun.initialize) Nil buffer"      if buf.nil?
+      raise 'MIQ(NTFS::DataRun.initialize) Nil boot sector' if bs.nil?
+      raise 'MIQ(NTFS::DataRun.initialize) Nil buffer'      if buf.nil?
 
       # Buffer boot sector & start spec array.
       @boot_sector     = bs

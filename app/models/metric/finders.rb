@@ -29,7 +29,7 @@ module Metric::Finders
     else
       scope = klass.where(:resource => resource)
     end
-    scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
+    scope = scope.where(:capture_interval_name => interval_name) if interval_name != 'realtime'
     scope.for_time_range(start_time, end_time)
   end
 

@@ -10,25 +10,25 @@ describe GuestDevice do
     @host    = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :guest_devices => [@host_gd]))
   end
 
-  it "#vm_or_template" do
+  it '#vm_or_template' do
     expect(@vm_gd.vm_or_template).to eq(@vm)
     expect(@template_gd.vm_or_template).to eq(@template)
     expect(@host_gd.vm_or_template).to     be_nil
   end
 
-  it "#vm" do
+  it '#vm' do
     expect(@vm_gd.vm).to eq(@vm)
     expect(@template_gd.vm).to be_nil
     expect(@host_gd.vm).to     be_nil
   end
 
-  it "#miq_template" do
+  it '#miq_template' do
     expect(@vm_gd.miq_template).to       be_nil
     expect(@template_gd.miq_template).to eq(@template)
     expect(@host_gd.miq_template).to     be_nil
   end
 
-  it "#host" do
+  it '#host' do
     expect(@vm_gd.host).to       be_nil
     expect(@template_gd.host).to be_nil
     expect(@host_gd.host).to eq(@host)

@@ -21,7 +21,7 @@ class ApiController
       # definition section.
       #
       def load_config
-        @config = YAML.load_file(Rails.root.join("config/api.yml"))
+        @config = YAML.load_file(Rails.root.join('config/api.yml'))
       end
 
       def base_config
@@ -49,7 +49,7 @@ class ApiController
 
       private
 
-      def log_kv(key, val, pref = "")
+      def log_kv(key, val, pref = '')
         $api_log.info("#{pref}  #{key.to_s.ljust([24, key.to_s.length].max, ' ')}: #{val}")
       end
 
@@ -63,12 +63,12 @@ class ApiController
       end
 
       def log_config
-        $api_log.info("")
-        $api_log.info("Static Configuration")
+        $api_log.info('')
+        $api_log.info('Static Configuration')
         base_config.each { |key, val| log_kv(key, val) }
 
-        $api_log.info("")
-        $api_log.info("Dynamic Configuration")
+        $api_log.info('')
+        $api_log.info('Dynamic Configuration')
         @api_user_token_service.api_config.each { |key, val| log_kv(key, val) }
       end
 

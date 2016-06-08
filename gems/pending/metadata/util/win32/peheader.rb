@@ -13,7 +13,7 @@ require 'util/miq-unicode'
 
 class PEheader
   IMAGE_NT_SIGNATURE = "PE\0\0"
-  IMAGE_DOS_SIGNATURE = "MZ"
+  IMAGE_DOS_SIGNATURE = 'MZ'
 
   attr_reader :imports, :icons, :messagetables, :versioninfo
 
@@ -32,7 +32,7 @@ class PEheader
       raise "File [#{@fname}] is empty." if File.zero?(@fname)
 
       # Open file and read contents into buffer
-      @fHnd = File.open(@fname, "rb")
+      @fHnd = File.open(@fname, 'rb')
       fBuf = fileread(2)
       @fHnd.close
     end
@@ -49,7 +49,7 @@ class PEheader
       fileseek(0, 'readPE')
     else
       # Open file
-      @fHnd = File.open(@fname, "rb")
+      @fHnd = File.open(@fname, 'rb')
     end
 
     # Read contents into buffer
@@ -250,7 +250,7 @@ class PEheader
             len = ent1[:length] - SIZEOF_MRE
             str = blkdir[:data][adrs + SIZEOF_MRE, len]
             (ent1[:flags] == MESSAGE_RESOURCE_UNICODE) ? str.UnicodeToUtf8! : str.AsciiToUtf8!
-            str.gsub!(/\000/, "")
+            str.gsub!(/\000/, '')
             messagetables[idx] = str
             adrs += len
           end
@@ -401,7 +401,7 @@ class PEheader
     return resDirEntry[:name] unless bit?(resDirEntry[:name], 31)
 
     # The low 30 bits of the 'Name' member is an offset to an IMAGE_RESOURCE_DIRECTORY_STRING_U struct.
-    str = ""
+    str = ''
     ptr = (resDirEntry[:name] & 0x7fffffff)
     len = @dataDirs[IMAGE_DIRECTORY_ENTRY_RESOURCE][:data][ptr, 2].unpack('S')[0]
     str = @dataDirs[IMAGE_DIRECTORY_ENTRY_RESOURCE][:data][ptr + 2, len * 2]
@@ -422,9 +422,9 @@ class PEheader
   def getImportList
     return nil if imports.nil?
     unless imports.empty?
-      import_list = ""
-      imports.each { |i| import_list += i + ", " }
-      return import_list.rstrip.chomp(",")
+      import_list = ''
+      imports.each { |i| import_list += i + ', ' }
+      return import_list.rstrip.chomp(',')
     end
   end
 
@@ -443,8 +443,8 @@ class PEheader
     vhHash = VS_VERSION_INFO_HEADER.decode(fBuf[offset..(offset + SIZEOF_VS_VERSION_INFO_HEADER)])
 
     # Create VersionInfo hash
-    viHash['FILEVERSION_HEADER']    = vhHash['fmajor'].to_s + "," + vhHash['fminor'].to_s + "," + vhHash['frev'].to_s + "," + vhHash['fbuild'].to_s
-    viHash['PRODUCTVERSION_HEADER'] = vhHash['pmajor'].to_s + "," + vhHash['pminor'].to_s + "," + vhHash['prev'].to_s + "," + vhHash['pbuild'].to_s
+    viHash['FILEVERSION_HEADER']    = vhHash['fmajor'].to_s + ',' + vhHash['fminor'].to_s + ',' + vhHash['frev'].to_s + ',' + vhHash['fbuild'].to_s
+    viHash['PRODUCTVERSION_HEADER'] = vhHash['pmajor'].to_s + ',' + vhHash['pminor'].to_s + ',' + vhHash['prev'].to_s + ',' + vhHash['pbuild'].to_s
 
     # Find the string file info signautre
     idx = fBuf.index(STRINGFILEINFO)
@@ -454,9 +454,9 @@ class PEheader
     offset = idx
     viEnd = offset + SIZEOF_STRING_INFO_HEADER
     viHash.merge!(STRING_INFO_HEADER.decode(fBuf[offset..viEnd]))
-    viHash['sig'].UnicodeToUtf8!.tr!("\0", "")
-    viHash['code_page'].UnicodeToUtf8!.tr!("\0", "")
-    viHash['lang'].UnicodeToUtf8!.tr!("\0", "")
+    viHash['sig'].UnicodeToUtf8!.tr!("\0", '')
+    viHash['code_page'].UnicodeToUtf8!.tr!("\0", '')
+    viHash['lang'].UnicodeToUtf8!.tr!("\0", '')
 
     # Read offsets for next string
     offset = viEnd
@@ -477,7 +477,7 @@ class PEheader
       break if name.nil? or value.nil? or name.empty?
       name.UnicodeToUtf8!.delete!("\0")
       # Do not allow spaces in the attribute names (will invalidate a XML file)
-      name.tr!(" ", "_")
+      name.tr!(' ', '_')
       value.UnicodeToUtf8!.delete!("\0")
       # $log.debug "[#{name}] => [#{value}]"
       viHash[name] = value
@@ -851,14 +851,14 @@ end
 if __FILE__ == $0
   st = Time.now
   puts "Running script [#{__FILE__}]"
-  fileName = "D:/temp/icons/PSPad.exe"
-  fileName = "D:/temp/icons/EventMsg2.dll"
+  fileName = 'D:/temp/icons/PSPad.exe'
+  fileName = 'D:/temp/icons/EventMsg2.dll'
   peHdr = PEheader.new(fileName)
   puts "Imports:[#{peHdr.imports.length}] - #{peHdr.imports.join(", ")}"
   puts "VerionsInfo: #{peHdr.versioninfo.inspect}"
   puts "Icon Count: [#{peHdr.icons.length}]"
   # Dump icons to d:\temp\icons\icon{n}.ico
-  peHdr.icons.each_with_index { |icon, ico| File.open("d:/temp/icons/icon#{ico}.ico", "wb") { |f| f.write(icon) } }
+  peHdr.icons.each_with_index { |icon, ico| File.open("d:/temp/icons/icon#{ico}.ico", 'wb') { |f| f.write(icon) } }
 
   puts "MessageTable Count: [#{peHdr.messagetables.length}]"
   peHdr.messagetables.each { |m| puts m }

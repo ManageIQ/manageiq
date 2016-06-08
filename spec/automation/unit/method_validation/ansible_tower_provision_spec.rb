@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision.class/__methods__/provision').to_s
 require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
@@ -15,12 +15,12 @@ describe AnsibleTowerProvision do
   let(:root_object) { MiqAeMockObject.new('service_template_provision_task' => svc_task) }
   let(:ae_service) { MiqAeMockService.new(root_object) }
 
-  it "launches an Ansible Tower job" do
+  it 'launches an Ansible Tower job' do
     expect(job_class).to receive(:create_job).and_return(job)
     described_class.new(ae_service).main
   end
 
-  it "fails the step when job launching fails" do
+  it 'fails the step when job launching fails' do
     expect(job_class).to receive(:create_job).and_raise('provider error')
     described_class.new(ae_service).main
     expect(ae_service.root['ae_result']).to eq('error')

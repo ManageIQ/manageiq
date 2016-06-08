@@ -101,13 +101,13 @@ describe Authenticator::Amazon do
   end
 
   describe '#uses_stored_password?' do
-    it "is false" do
+    it 'is false' do
       expect(subject.uses_stored_password?).to be_falsey
     end
   end
 
   describe '#lookup_by_identity' do
-    it "finds existing users" do
+    it 'finds existing users' do
       expect(local_user.userid).to eq(username)
       expect(subject.lookup_by_identity(local_user.userid)).to eq(local_user)
     end
@@ -120,65 +120,65 @@ describe Authenticator::Amazon do
   describe '.validate_connection' do
     let(:config) { super().merge(:mode => 'amazon') }
 
-    context "with aws root account" do
-      it "succeeds" do
+    context 'with aws root account' do
+      it 'succeeds' do
         result, errors = described_class.validate_connection(:authentication => config)
         expect(result).to be_truthy
         expect(errors).to eq({})
       end
     end
 
-    context "with bad credentials" do
+    context 'with bad credentials' do
       # Aws::EC2::Errors::AuthFailure
       let(:describe_regions_response) { 'AuthFailure' }
 
-      it "fails" do
+      it 'fails' do
         result, errors = described_class.validate_connection(:authentication => config)
         expect(result).not_to be
-        expect(errors).to eq("authentication_amazon" => "Login failed due to a bad username or password.")
+        expect(errors).to eq('authentication_amazon' => 'Login failed due to a bad username or password.')
       end
     end
 
-    context "with IAM credentials" do
+    context 'with IAM credentials' do
       let(:config) { super().merge(:amazon_key => AWS_IAM_USER_KEY) }
 
-      it "fails" do
+      it 'fails' do
         result, errors = described_class.validate_connection(:authentication => config)
         expect(result).not_to be
-        expect(errors).to eq("authentication_amazon" => "Access key #{config[:amazon_key]} belongs to IAM user, not to the AWS account holder.")
+        expect(errors).to eq('authentication_amazon' => "Access key #{config[:amazon_key]} belongs to IAM user, not to the AWS account holder.")
       end
     end
   end
 
   describe '#authenticate' do
     def authenticate
-      subject.authenticate(username, "some_password")
+      subject.authenticate(username, 'some_password')
     end
 
     let(:username) { AWS_IAM_USER_KEY }
 
-    context "without root credentials" do
+    context 'without root credentials' do
       let(:config) { super().merge(:amazon_key => AWS_IAM_USER_KEY) }
 
-      it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      it 'fails' do
+        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
       end
 
-      it "logs why we failed" do
+      it 'logs why we failed' do
         expect($log).to receive(:error).with(/belongs to IAM user/)
         authenticate rescue nil
       end
     end
 
-    context "with correct password" do
+    context 'with correct password' do
       let!(:local_user) { FactoryGirl.create(:user, :userid => username) }
 
-      context "using local authorization" do
-        it "succeeds" do
+      context 'using local authorization' do
+        it 'succeeds' do
           expect(authenticate).to eq(local_user)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
             :userid  => username,
@@ -193,28 +193,28 @@ describe Authenticator::Amazon do
           authenticate
         end
 
-        it "updates lastlogon" do
+        it 'updates lastlogon' do
           expect(-> { authenticate }).to change { local_user.reload.lastlogon }
         end
 
-        context "with no corresponding Amazon IAM user" do
+        context 'with no corresponding Amazon IAM user' do
           let(:username) { 'some_key_not_on_IAM' }
-          it "fails" do
-            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+          it 'fails' do
+            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
           end
         end
       end
 
-      context "using external authorization" do
+      context 'using external authorization' do
         let(:config) { super().merge(:amazon_role => true) }
         before(:each) { allow(subject).to receive(:authorize_queue?).and_return(false) }
 
-        it "enqueues an authorize task" do
+        it 'enqueues an authorize task' do
           expect(subject).to receive(:authorize_queue).and_return(123)
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
             :userid  => username,
@@ -229,68 +229,68 @@ describe Authenticator::Amazon do
           authenticate
         end
 
-        it "updates lastlogon" do
+        it 'updates lastlogon' do
           expect(-> { authenticate }).to change { local_user.reload.lastlogon }
         end
 
-        it "immediately completes the task" do
+        it 'immediately completes the task' do
           task_id = authenticate
           task = MiqTask.find(task_id)
           expect(User.find_by_userid(task.userid)).to eq(local_user)
         end
 
-        context "with no corresponding Amazon IAM user" do
+        context 'with no corresponding Amazon IAM user' do
           let(:username) { 'some_key_not_on_IAM' }
-          it "fails" do
-            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+          it 'fails' do
+            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
           end
         end
       end
 
-      context "without EC2 permissions" do
+      context 'without EC2 permissions' do
         # Aws::EC2::Errors::UnauthorizedOperation
         let(:describe_regions_response) { 'UnauthorizedOperation' }
-        it "succeeds" do
+        it 'succeeds' do
           expect(authenticate).to eq(local_user)
         end
       end
 
-      context "without IAM permissions" do
-        it "succeeds" do
+      context 'without IAM permissions' do
+        it 'succeeds' do
           expect(authenticate).to eq(local_user)
         end
       end
 
-      context "with signature mismatch" do
+      context 'with signature mismatch' do
         let(:describe_regions_response) { 'SignatureDoesNotMatch' }
-        it "fails" do
+        it 'fails' do
           # Aws::EC2::Errors::SignatureDoesNotMatch
-          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
         end
       end
 
-      context "with root account credentials" do
+      context 'with root account credentials' do
         let(:username) { AWS_ROOT_USER_KEY }
 
-        it "fails" do
-          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+        it 'fails' do
+          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
         end
 
-        it "logs why we failed" do
+        it 'logs why we failed' do
           expect($log).to receive(:error).with(/belongs to the AWS account holder/)
           authenticate rescue nil
         end
       end
     end
 
-    context "with bad password" do
+    context 'with bad password' do
       let(:username) { 'not_able_to_auth_on_aws' }
 
-      it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      it 'fails' do
+        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
       end
 
-      it "records one failing audit entry" do
+      it 'records one failing audit entry' do
         expect(AuditEvent).to receive(:failure).with(
           :event   => 'authenticate_amazon',
           :userid  => username,
@@ -300,7 +300,7 @@ describe Authenticator::Amazon do
         authenticate rescue nil
       end
 
-      it "logs the failure" do
+      it 'logs the failure' do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
@@ -311,18 +311,18 @@ describe Authenticator::Amazon do
       end
     end
 
-    context "with unknown username" do
+    context 'with unknown username' do
       let(:username) { AWS_IAM_USER_KEY }
 
-      context "with bad password" do
+      context 'with bad password' do
         # Aws::EC2::Errors::AuthFailure
         let(:describe_regions_response) { 'AuthFailure' }
 
-        it "fails" do
-          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+        it 'fails' do
+          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
         end
 
-        it "records one failing audit entry" do
+        it 'records one failing audit entry' do
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_amazon',
             :userid  => username,
@@ -332,19 +332,19 @@ describe Authenticator::Amazon do
           authenticate rescue nil
         end
 
-        it "logs the failure" do
+        it 'logs the failure' do
           allow($log).to receive(:warn).with(/Audit/)
           expect($log).to receive(:warn).with(/Authentication failed$/)
           authenticate rescue nil
         end
       end
 
-      context "using local authorization" do
-        it "fails" do
+      context 'using local authorization' do
+        it 'fails' do
           expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
         end
 
-        it "records one successful and one failing audit entry" do
+        it 'records one successful and one failing audit entry' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
             :userid  => username,
@@ -358,23 +358,23 @@ describe Authenticator::Amazon do
           authenticate rescue nil
         end
 
-        it "logs the failure" do
+        it 'logs the failure' do
           allow($log).to receive(:warn).with(/Audit/)
           expect($log).to receive(:warn).with(/User authenticated but not defined in EVM, please contact your EVM administrator/)
           authenticate rescue nil
         end
       end
 
-      context "using external authorization" do
+      context 'using external authorization' do
         let(:config) { super().merge(:amazon_role => true) }
         before(:each) { allow(subject).to receive(:authorize_queue?).and_return(false) }
 
-        it "enqueues an authorize task" do
+        it 'enqueues an authorize task' do
           expect(subject).to receive(:authorize_queue).and_return(123)
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_amazon',
             :userid  => username,
@@ -389,7 +389,7 @@ describe Authenticator::Amazon do
           authenticate
         end
 
-        it "immediately completes the task" do
+        it 'immediately completes the task' do
           task_id = authenticate
           task = MiqTask.find(task_id)
           user = User.find_by_userid(task.userid)
@@ -397,19 +397,19 @@ describe Authenticator::Amazon do
           expect(user.email).to be_nil
         end
 
-        it "creates a new User" do
+        it 'creates a new User' do
           expect(-> { authenticate }).to change { User.where(:userid => username).count }.from(0).to(1)
         end
 
-        context "with no matching groups" do
+        context 'with no matching groups' do
           let(:miq_group_name) { 'not_aws_group' }
 
-          it "enqueues an authorize task" do
+          it 'enqueues an authorize task' do
             expect(subject).to receive(:authorize_queue).and_return(123)
             expect(authenticate).to eq(123)
           end
 
-          it "records two successful audit entries plus one failure" do
+          it 'records two successful audit entries plus one failure' do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_amazon',
               :userid  => username,
@@ -432,7 +432,7 @@ describe Authenticator::Amazon do
             expect(-> { authenticate }).not_to change { User.where(:userid => username).count }.from(0)
           end
 
-          it "immediately marks the task as errored" do
+          it 'immediately marks the task as errored' do
             task_id = authenticate
             task = MiqTask.find(task_id)
             expect(task.status).to eq('Error')

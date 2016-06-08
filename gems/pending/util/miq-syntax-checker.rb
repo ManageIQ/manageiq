@@ -1,11 +1,11 @@
 require 'sys-uname'
-require "open3"
+require 'open3'
 
 class MiqSyntaxChecker
   def self.check(ruby)
     return MiqSyntaxCheckResult.new("Syntax OK\n") if Sys::Platform::OS == :windows
 
-    Open3.popen3 "ruby -wc" do |stdin, stdout, stderr|
+    Open3.popen3 'ruby -wc' do |stdin, stdout, stderr|
       stdin.write ruby
       stdin.close
       output = stdout.read

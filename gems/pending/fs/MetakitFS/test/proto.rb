@@ -1,6 +1,6 @@
 require 'mk4rb'
 
-require "fs/MetakitFS/MetakitFS"
+require 'fs/MetakitFS/MetakitFS'
 
 TYPE_FILE = 1
 TYPE_DIR  = 2
@@ -8,11 +8,11 @@ TYPE_DIR  = 2
 TEST_DATA = "Hello World\n"
 
 begin
-  pPath = Metakit::StringProp.new "fpath"
+  pPath = Metakit::StringProp.new 'fpath'
   pType, pSize = Metakit::IntProp[:ftype, :fsize]
-  pData = Metakit::BytesProp.new "fdata"
+  pData = Metakit::BytesProp.new 'fdata'
 
-  Metakit::Storage.open("myfile.dat", 1) do |storage|
+  Metakit::Storage.open('myfile.dat', 1) do |storage|
     puts "Description: #{storage.description}"
     vData   = storage.get_as MetakitFS::MK_FENTRY
     vSec    = storage.get_as MetakitFS::MK_HASHVW
@@ -20,14 +20,14 @@ begin
 
     row = Metakit::Row.new
 
-    pPath.set row, "/etc/passwd"
+    pPath.set row, '/etc/passwd'
     pType.set row, TYPE_FILE
     pSize.set row, 0
-    data = Metakit::Bytes.new("", 0)
+    data = Metakit::Bytes.new('', 0)
     pData.set row, data
     vFentry.add row
 
-    pPath.set row, "/etc/hosts"
+    pPath.set row, '/etc/hosts'
     vFentry.add row
 
     storage.commit
@@ -35,18 +35,18 @@ begin
 
   findrow = Metakit::Row.new
 
-  Metakit::Storage.open("myfile.dat", 1) do |storage|
+  Metakit::Storage.open('myfile.dat', 1) do |storage|
     puts "Description: #{storage.description}"
-    raise "myfile.dat is not a MetakitFS" if storage.description != "#{MetakitFS::MK_FENTRY},#{MetakitFS::MK_HASHVW}"
+    raise 'myfile.dat is not a MetakitFS' if storage.description != "#{MetakitFS::MK_FENTRY},#{MetakitFS::MK_HASHVW}"
     vData   = storage.get_as MetakitFS::MK_FENTRY
     vSec    = storage.get_as MetakitFS::MK_HASHVW
     vFentry = vData.hash(vSec, 1)
 
     (1..100).each do |n|
-      pPath.set findrow, "/etc/hosts"
+      pPath.set findrow, '/etc/hosts'
       idxsearch = vFentry.find(findrow, 0)
       puts "idxsearch = #{idxsearch}"
-      raise "File not found: /etc/hosts" if idxsearch < 0
+      raise 'File not found: /etc/hosts' if idxsearch < 0
 
       r = vFentry[idxsearch]
       puts "row = #{r}"
@@ -66,12 +66,12 @@ begin
     end
 
     puts
-    puts "****************"
+    puts '****************'
     puts
 
-    pPath.set findrow, "/etc/hosts"
+    pPath.set findrow, '/etc/hosts'
     idxsearch = vFentry.find(findrow, 0)
-    raise "File not found: /etc/hosts" if idxsearch < 0
+    raise 'File not found: /etc/hosts' if idxsearch < 0
 
     r = vFentry[idxsearch]
 

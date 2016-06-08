@@ -14,7 +14,7 @@ module EmsRefresh
           ems_refresh_start_time = Time.now
 
           begin
-            _log.info "Refreshing all targets..."
+            _log.info 'Refreshing all targets...'
             log_ems_target = format_ems_for_logging(ems)
             _log.info "#{log_ems_target} Refreshing targets for EMS..."
             targets.each { |t| _log.info "#{log_ems_target}   #{t.class} [#{t.name}] id [#{t.id}]" }
@@ -42,7 +42,7 @@ module EmsRefresh
           post_refresh(ems, ems_refresh_start_time)
         end
 
-        _log.info "Refreshing all targets...Complete"
+        _log.info 'Refreshing all targets...Complete'
       end
 
       def preprocess_targets

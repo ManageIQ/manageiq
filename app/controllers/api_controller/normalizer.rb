@@ -12,10 +12,10 @@ class ApiController
       attrs = normalize_select_attributes(obj, opts)
       result = {}
 
-      href = new_href(type, obj["id"], obj["href"], opts)
+      href = new_href(type, obj['id'], obj['href'], opts)
       if href.present?
-        result["href"] = href
-        attrs -= ["href"]
+        result['href'] = href
+        attrs -= ['href']
       end
 
       attrs.each do |k|
@@ -61,7 +61,7 @@ class ApiController
         normalize_attr(type, :time, value)
       elsif self.class.attr_type_hash(:url).key?(attr.to_s)
         normalize_attr(type, :url,  value)
-      elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s) || attr.to_s.include?("password")
+      elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s) || attr.to_s.include?('password')
         normalize_attr(type, :encrypted,  value)
       elsif self.class.attr_type_hash(:resource).key?(attr.to_s)
         normalize_attr(type, :resource, value)
@@ -104,7 +104,7 @@ class ApiController
     # Let's normalize href accessible resources
     #
     def normalize_resource(_type, value)
-      value.to_s.starts_with?("/") ? "#{@req[:base]}#{value}" : value
+      value.to_s.starts_with?('/') ? "#{@req[:base]}#{value}" : value
     end
 
     #

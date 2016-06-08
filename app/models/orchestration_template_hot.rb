@@ -1,22 +1,22 @@
 class OrchestrationTemplateHot < OrchestrationTemplate
   def parameter_groups
     content_hash = YAML.load(content)
-    raw_groups = content_hash["parameter_groups"]
+    raw_groups = content_hash['parameter_groups']
 
     if raw_groups
       indexed_parameters = parameters(content_hash).index_by(&:name)
       raw_groups.collect do |raw|
         OrchestrationTemplate::OrchestrationParameterGroup.new(
-          :label       => raw["label"],
-          :description => raw["description"],
+          :label       => raw['label'],
+          :description => raw['description'],
           # Map each parameter name to its corresponding object
-          :parameters  => raw["parameters"].collect { |name| indexed_parameters[name] }
+          :parameters  => raw['parameters'].collect { |name| indexed_parameters[name] }
         )
       end
     else
       # Create a single group to include all parameters
       [OrchestrationTemplate::OrchestrationParameterGroup.new(
-        :label      => "Parameters",
+        :label      => 'Parameters',
         :parameters => parameters(content_hash)
       )]
     end
@@ -24,7 +24,7 @@ class OrchestrationTemplateHot < OrchestrationTemplate
 
   def parameters(content_hash = nil)
     content_hash = YAML.load(content) unless content_hash
-    (content_hash["parameters"] || {}).collect do |key, val|
+    (content_hash['parameters'] || {}).collect do |key, val|
       OrchestrationTemplate::OrchestrationParameter.new(
         :name          => key,
         :label         => val.key?('label') ? val['label'] : key.titleize,
@@ -63,7 +63,7 @@ class OrchestrationTemplateHot < OrchestrationTemplate
       elsif raw_constraint.key? 'custom_constraint'
         parse_custom_constraint(raw_constraint)
       else
-        raise MiqException::MiqParsingError, _("Unknown constraint %{constraint}") % {:constraint => raw_constraint}
+        raise MiqException::MiqParsingError, _('Unknown constraint %{constraint}') % {:constraint => raw_constraint}
       end
     end
   end

@@ -22,10 +22,10 @@ class VimPerformanceTrend < ActsAsArModel
   CHART_X_AXIS_COL = :timestamp
 
   def self.vms_by_category(options)
-    model, interval = options[:interval_name] == "hourly" ? [MetricRollup, 1.hour] : [VimPerformanceDaily, 1.day]
+    model, interval = options[:interval_name] == 'hourly' ? [MetricRollup, 1.hour] : [VimPerformanceDaily, 1.day]
     rows = model.where(:timestamp             => options[:timestamp],
                        :capture_interval_name => options[:interval_name],
-                       :resource_type         => "VmOrTemplate")
+                       :resource_type         => 'VmOrTemplate')
                 .for_tag_names(options[:group_by_category], options[:group_by_tag])
     [build(rows.to_a, options), interval]
   end
@@ -38,7 +38,7 @@ class VimPerformanceTrend < ActsAsArModel
     #   :target_pcts    => [70, 80, 90, 100],
     # }
 
-    limit_col = options[:limit_col] ? options[:limit_col] : "limit"
+    limit_col = options[:limit_col] ? options[:limit_col] : 'limit'
 
     # group data by resource name
     grouped_objs = perfs.inject({}) do |h, o|
@@ -73,13 +73,13 @@ class VimPerformanceTrend < ActsAsArModel
         # row[col_name] = self.calc_value_at_target(pct_of_limit, trend_data[name]) || "Unknown"
         row[col_name] = calc_value_at_target(pct_of_limit, trend_data[name])
         if row[col_name].nil?
-          row[col_name] = "Unknown"
+          row[col_name] = 'Unknown'
         elsif row[col_name] < Time.now.utc
-          row[col_name] = "--------------"
+          row[col_name] = '--------------'
         elsif row[col_name] > Time.now.utc + 2.years
-          row[col_name] = "Over 2 Years"
+          row[col_name] = 'Over 2 Years'
         else
-          row[col_name] = row[col_name].strftime("%m/%d/%Y")
+          row[col_name] = row[col_name].strftime('%m/%d/%Y')
         end
       end
 
@@ -108,13 +108,13 @@ class VimPerformanceTrend < ActsAsArModel
 
       # slope
       row[:slope] = trend_data[name][:slope]
-      row[:slope] = options[:interval] == "daily" ? (row[:slope] * 1.day) : (row[:slope] * 1.hour) unless row[:slope].nil?
+      row[:slope] = options[:interval] == 'daily' ? (row[:slope] * 1.day) : (row[:slope] * 1.hour) unless row[:slope].nil?
 
       # trend count
       row[:count_of_trend] = trend_data[name][:count]
 
       # trend direction
-      row[:direction_of_trend] = row[:slope] ? row[:slope] > 0 ? "Up" : row[:slope] < 0 ? "Down" : "Flat" : nil
+      row[:direction_of_trend] = row[:slope] ? row[:slope] > 0 ? 'Up' : row[:slope] < 0 ? 'Down' : 'Flat' : nil
 
       # value of limit column
       row[:limit_col_value] = limit if options[:limit_col]
@@ -169,21 +169,21 @@ class VimPerformanceTrend < ActsAsArModel
       :cpu_usage_rate_average    => {},
       :disk_usage_rate_average   => {},
       :net_usage_rate_average    => {},
-      :derived_memory_used       => {:limit_cols => ["derived_memory_available"]}
+      :derived_memory_used       => {:limit_cols => ['derived_memory_available']}
     },
     :HostPerformance       => {
-      :cpu_usagemhz_rate_average => {:limit_cols => ["derived_cpu_available", "derived_cpu_reserved"]},
+      :cpu_usagemhz_rate_average => {:limit_cols => ['derived_cpu_available', 'derived_cpu_reserved']},
       :cpu_usage_rate_average    => {},
       :disk_usage_rate_average   => {},
       :net_usage_rate_average    => {},
-      :derived_memory_used       => {:limit_cols => ["derived_memory_available", "derived_memory_reserved"]}
+      :derived_memory_used       => {:limit_cols => ['derived_memory_available', 'derived_memory_reserved']}
     },
     :EmsClusterPerformance => {
-      :cpu_usagemhz_rate_average => {:limit_cols => ["derived_cpu_available", "derived_cpu_reserved"]},
+      :cpu_usagemhz_rate_average => {:limit_cols => ['derived_cpu_available', 'derived_cpu_reserved']},
       :cpu_usage_rate_average    => {},
       :disk_usage_rate_average   => {},
       :net_usage_rate_average    => {},
-      :derived_memory_used       => {:limit_cols => ["derived_memory_available", "derived_memory_reserved"]}
+      :derived_memory_used       => {:limit_cols => ['derived_memory_available', 'derived_memory_reserved']}
     },
     :ExtManagementSystemPerformance => {
       :cpu_usagemhz_rate_average => {:limit_cols => %w(derived_cpu_available derived_cpu_reserved)},
@@ -193,31 +193,31 @@ class VimPerformanceTrend < ActsAsArModel
       :derived_memory_used       => {:limit_cols => %w(derived_memory_available derived_memory_reserved)}
     },
     :StoragePerformance    => {
-      :derived_storage_free   => {:limit_cols => ["derived_storage_total"]},
-      :v_derived_storage_used => {:limit_cols => ["derived_storage_total"]}
+      :derived_storage_free   => {:limit_cols => ['derived_storage_total']},
+      :v_derived_storage_used => {:limit_cols => ['derived_storage_total']}
     }
   }
 
   def self.trend_model_details(interval)
     result = []
     TREND_COLS.each_key do |db|
-      friendly_db = Dictionary.gettext(db.to_s, :type => "model")
+      friendly_db = Dictionary.gettext(db.to_s, :type => 'model')
       TREND_COLS[db].each_key do |col|
-        cols = interval == "daily" ? ["min_#{col}", col, "max_#{col}"] : [col] # add in min and max if daily
-        cols.each { |c| result.push([[friendly_db, Dictionary.gettext([db, c.to_s].join("."), :type => "column")].join(" : "), [db, c.to_s].join("-")]) }
+        cols = interval == 'daily' ? ["min_#{col}", col, "max_#{col}"] : [col] # add in min and max if daily
+        cols.each { |c| result.push([[friendly_db, Dictionary.gettext([db, c.to_s].join('.'), :type => 'column')].join(' : '), [db, c.to_s].join('-')]) }
       end
     end
     result
   end
 
   def self.trend_limit_cols(db, col, interval)
-    col = col.starts_with?("min_", "max_") ? col[4..-1] : col
+    col = col.starts_with?('min_', 'max_') ? col[4..-1] : col
     return [] unless TREND_COLS[db.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym]
     return [] unless TREND_COLS[db.to_sym][col.to_sym][:limit_cols]
     TREND_COLS[db.to_sym][col.to_sym][:limit_cols].inject([]) do |arr, col|
-      cols = interval == "daily" ? ["max_#{col}"] : [col] # add in max if daily
-      cols.each { |c| arr.push([Dictionary.gettext([db, c.to_s].join("."), :type => "column"), c]) }
+      cols = interval == 'daily' ? ["max_#{col}"] : [col] # add in max if daily
+      cols.each { |c| arr.push([Dictionary.gettext([db, c.to_s].join('.'), :type => 'column'), c]) }
       arr
     end
   end
@@ -225,26 +225,26 @@ class VimPerformanceTrend < ActsAsArModel
   def self.report_cols(options)
     col_headers = []
     col_order = [
-      "resource_name",
-      "direction_of_trend",
-      "start_trend_value",
-      "end_trend_value",
-      "max_trend_value",
-      "min_trend_value",
-      "count_of_trend",
-      "slope"
+      'resource_name',
+      'direction_of_trend',
+      'start_trend_value',
+      'end_trend_value',
+      'max_trend_value',
+      'min_trend_value',
+      'count_of_trend',
+      'slope'
     ]
     col_order.each do |c|
-      if c.ends_with?("_trend_value")
+      if c.ends_with?('_trend_value')
         col_headers << "#{Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)} - #{Dictionary.gettext([options[:trend_db], options[:trend_col]].join("."), :type => "column", :notfound => :titleize)}"
       else
-        col_headers << Dictionary.gettext([options[:trend_db], c].join("."), :type => "column", :notfound => :titleize)
+        col_headers << Dictionary.gettext([options[:trend_db], c].join('.'), :type => 'column', :notfound => :titleize)
       end
     end
 
     if options[:limit_col]
-      col_order << "limit_col_value"
-      col_headers << Dictionary.gettext([options[:trend_db], options[:limit_col]].join("."), :type => "column", :notfound => :titleize)
+      col_order << 'limit_col_value'
+      col_headers << Dictionary.gettext([options[:trend_db], options[:limit_col]].join('.'), :type => 'column', :notfound => :titleize)
     end
 
     limit_pct_cols = options[:target_pcts].each do |c|
@@ -259,14 +259,14 @@ class VimPerformanceTrend < ActsAsArModel
     # Host Daily Max CPU Trend towards Available CPU (3/1/09 through 4/1/09)
     # Host Daily Avg Network I/O Trend towards 200 KBps (3/1/09 through 4/1/09)
     title =  options[:interval].titleize
-    title += " " + Dictionary.gettext(options[:trend_db], :type => :model)
-    title += " " + Dictionary.gettext([options[:trend_db], options[:trend_col]].join("."), :type => :column)
-    title += " Trend towards "
-    title += options[:limit_col] ? Dictionary.gettext([options[:trend_db], options[:limit_col]].join("."), :type => :column) : options[:limit_val].to_s
+    title += ' ' + Dictionary.gettext(options[:trend_db], :type => :model)
+    title += ' ' + Dictionary.gettext([options[:trend_db], options[:trend_col]].join('.'), :type => :column)
+    title += ' Trend towards '
+    title += options[:limit_col] ? Dictionary.gettext([options[:trend_db], options[:limit_col]].join('.'), :type => :column) : options[:limit_val].to_s
 
     start_time = options[:start_offset].seconds.ago.utc
     end_time   = options[:end_offset].nil? ? Time.now.utc : options[:end_offset].seconds.ago.utc
-    time_format = "%m/%d/%y"
+    time_format = '%m/%d/%y'
     title += " (#{start_time.strftime(time_format)} through #{end_time.strftime(time_format)})"
 
     title

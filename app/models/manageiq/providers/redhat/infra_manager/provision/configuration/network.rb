@@ -4,7 +4,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Netw
     requested_vnics   = options[:networks]
 
     if requested_vnics.nil?
-      _log.info "NIC settings will be inherited from the template."
+      _log.info 'NIC settings will be inherited from the template.'
       return
     end
 

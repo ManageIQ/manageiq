@@ -71,7 +71,7 @@ module MiqAeEvent
         raise "Invalid vmdb_id=#{input[:vmdb_id].inspect} for #{hash[:key]}" unless input[:vmdb_id].kind_of?(Numeric)
 
         vmdb_object = hash[:class].find_by_id(input[:vmdb_id])
-        raise "VMDB Object not found" if vmdb_object.nil?
+        raise 'VMDB Object not found' if vmdb_object.nil?
       elsif inputs[hash[:key]].kind_of?(hash[:class])
         vmdb_object = inputs.delete(hash[:key])
       else

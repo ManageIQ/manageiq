@@ -14,7 +14,7 @@ if vm
   if %w(off suspended).include?(power_state)
     # Bump State
     $evm.root['ae_result'] = 'ok'
-  elsif power_state == "never"
+  elsif power_state == 'never'
     # If never then this VM is a template so exit the retirement state machine
     $evm.root['ae_result'] = 'error'
   else

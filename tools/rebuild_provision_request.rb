@@ -50,27 +50,27 @@ Help! #{PROGRAM_STRING} -- --help
 Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
 
   EOS
-  opt :api_host, "The hostname to run the api call against", :default => 'localhost', :type => :string
-  opt :console,  "Show the output needed to run the POST in a Rails console", :default => false, :type => :bool
-  opt :count, "Adjust the number of request ids (requires the last-requests option)",  :type => :int, :default => 5
-  opt :last_requests, "Show a list of the last 5 request ids",  :type => :bool
-  opt :output,   "The output format (hash, json)", :default => 'hash', :type => :string, :short => '-t'
-  opt :password, "The password required for the API request", :default => 'smartvm', :type => :string
-  opt :port, "The port listening for the request", :default => 3000, :type => :int, :short => '-n'
-  opt :quiet, "Remove verbose output", :default => false, :type => :bool
-  opt :request_id, "The Automate request to rerun", :type => :int
-  opt :run_it, "Run the api request after outputting the values", :default => false, :type => :bool, :short => '-g'
-  opt :ssl, "Use SSL when talking to the API", :default => false, :type => :bool
-  opt :username, "The username required for the API request", :default => 'admin', :type => :string
+  opt :api_host, 'The hostname to run the api call against', :default => 'localhost', :type => :string
+  opt :console,  'Show the output needed to run the POST in a Rails console', :default => false, :type => :bool
+  opt :count, 'Adjust the number of request ids (requires the last-requests option)',  :type => :int, :default => 5
+  opt :last_requests, 'Show a list of the last 5 request ids',  :type => :bool
+  opt :output,   'The output format (hash, json)', :default => 'hash', :type => :string, :short => '-t'
+  opt :password, 'The password required for the API request', :default => 'smartvm', :type => :string
+  opt :port, 'The port listening for the request', :default => 3000, :type => :int, :short => '-n'
+  opt :quiet, 'Remove verbose output', :default => false, :type => :bool
+  opt :request_id, 'The Automate request to rerun', :type => :int
+  opt :run_it, 'Run the api request after outputting the values', :default => false, :type => :bool, :short => '-g'
+  opt :ssl, 'Use SSL when talking to the API', :default => false, :type => :bool
+  opt :username, 'The username required for the API request', :default => 'admin', :type => :string
 end
 
 if opts[:request_id].nil? && opts[:last_requests].nil?
-  Trollop.die :request_id, "must exist as an option"
+  Trollop.die :request_id, 'must exist as an option'
 elsif opts[:last_requests_given] && opts[:count]
-  Trollop.die :count, "must be greater than 0" if opts[:count] <= 0
+  Trollop.die :count, 'must be greater than 0' if opts[:count] <= 0
 else
-  Trollop.die :request_id, "must be a number greater than 0" if opts[:request_id] <= 0
-  Trollop.die :output, "must be either hash or json" unless %w(hash json).include?(opts[:output])
+  Trollop.die :request_id, 'must be a number greater than 0' if opts[:request_id] <= 0
+  Trollop.die :output, 'must be either hash or json' unless %w(hash json).include?(opts[:output])
 end
 
 class Tab
@@ -82,14 +82,14 @@ class Tab
     @quiet = quiet
     @log = "\n"
     @output = {
-      "version"               => "1.1",
-      "template_fields"       => {},
-      "vm_fields"             => {},
-      "requester"             => {},
-      "tags"                  => {},
-      "additional_values"     => {},
-      "ems_custom_attributes" => {},
-      "miq_custom_attributes" => {}
+      'version'               => '1.1',
+      'template_fields'       => {},
+      'vm_fields'             => {},
+      'requester'             => {},
+      'tags'                  => {},
+      'additional_values'     => {},
+      'ems_custom_attributes' => {},
+      'miq_custom_attributes' => {}
     }
     parse_dialog_tabs
   end
@@ -107,13 +107,13 @@ class Tab
   def parse_source
     src_id = @provision_options.delete(:src_vm_id)
     source = VmOrTemplate.find_by(:id => src_id)
-    @output["template_fields"] = {'guid' => source.guid, 'name' => source.name}
+    @output['template_fields'] = {'guid' => source.guid, 'name' => source.name}
   end
 
   def ws_only_files
-    @output["additional_values"]      = @provision_options.delete(:ws_values)
-    @output["ems_custom_attributes"]  = @provision_options.delete(:ws_ems_custom_attributes)
-    @output["miq_custom_attributes"]  = @provision_options.delete(:ws_miq_custom_attributes)
+    @output['additional_values']      = @provision_options.delete(:ws_values)
+    @output['ems_custom_attributes']  = @provision_options.delete(:ws_ems_custom_attributes)
+    @output['miq_custom_attributes']  = @provision_options.delete(:ws_miq_custom_attributes)
   end
 
   def dialog_field_values(dialog_tab)
@@ -135,14 +135,14 @@ class Tab
   end
 
   def requester(_tab, dialog_tab)
-    request = @output["requester"]
+    request = @output['requester']
     dialog_field_values(dialog_tab) do |field, value|
       request[field] = value
     end
   end
 
   def purpose(_tab, _dialog_tab)
-    request = @output["tags"]
+    request = @output['tags']
     tag_ids = @provision_options.delete(:vm_tags)
     Classification.where(:id => tag_ids).each do |tag|
       puts "Found tag: #{tag.name} - Adding parent tag: #{tag.parent.name}" unless @quiet
@@ -151,17 +151,17 @@ class Tab
   end
 
   def environment(_tab, _dialog_tab)
-    request = @output["vm_fields"]
+    request = @output['vm_fields']
     if @provision_options[:placement_auto].first == true
-      request["placement_auto"] = true
+      request['placement_auto'] = true
       return
     end
 
-    request["placement_auto"] = false
+    request['placement_auto'] = false
   end
 
   def general_tab(_tab, dialog_tab)
-    request = @output["vm_fields"]
+    request = @output['vm_fields']
     dialog_field_values(dialog_tab) do |field, value|
       request[field] = value
     end
@@ -173,7 +173,7 @@ class Tab
   end
 
   def schedule(tab, dialog_tab)
-    if @provision_options[:schedule_type].first == "immediately"
+    if @provision_options[:schedule_type].first == 'immediately'
       @provision_options.delete(:schedule_type)
       @provision_options.delete(:schedule_time)
     else
@@ -206,7 +206,7 @@ class AutomateHash
   include ActionView::Helpers::TextHelper
   attr_reader :request_id
 
-  URL_PATH = "/api/provision_requests".freeze
+  URL_PATH = '/api/provision_requests'.freeze
 
   def initialize(request_id, opts)
     @quiet = opts[:quiet]
@@ -251,7 +251,7 @@ class AutomateHash
 
   def hash_output
     print log unless @quiet
-    puts ""
+    puts ''
     if @options[:output] == 'json'
       puts JSON.pretty_generate(output)
     else

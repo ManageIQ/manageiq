@@ -150,7 +150,7 @@ module Ext4
     attr_reader :mode, :flags, :symlnk, :pos
 
     def initialize(buf, superblock, inum)
-      raise "Ext4::Inode.initialize: Nil buffer" if buf.nil?
+      raise 'Ext4::Inode.initialize: Nil buffer' if buf.nil?
       @in = INODE.decode(buf)
 
       @sb    = superblock
@@ -207,7 +207,7 @@ module Ext4
     end
 
     def write(buf, _len = buf.length)
-      raise "Ext4::Inode.write: Write functionality is not yet supported on Ext4."
+      raise 'Ext4::Inode.write: Write functionality is not yet supported on Ext4.'
     end
 
     # ////////////////////////////////////////////////////////////////////////////

@@ -2,13 +2,13 @@ class MiqDialog < ApplicationRecord
   validates_presence_of   :name, :description
   validates_uniqueness_of :name, :scope => :dialog_type, :case_sensitive => false
 
-  DIALOG_DIR = Rails.root.join("product/dialogs/miq_dialogs")
+  DIALOG_DIR = Rails.root.join('product/dialogs/miq_dialogs')
 
   DIALOG_TYPES = [
-    [_("VM Provision"),                "MiqProvisionWorkflow"],
-    [_("Configured System Provision"), "MiqProvisionConfiguredSystemWorkflow"],
-    [_("Host Provision"),              "MiqHostProvisionWorkflow"],
-    [_("VM Migrate"),                  "VmMigrateWorkflow"],
+    [_('VM Provision'),                'MiqProvisionWorkflow'],
+    [_('Configured System Provision'), 'MiqProvisionConfiguredSystemWorkflow'],
+    [_('Host Provision'),              'MiqHostProvisionWorkflow'],
+    [_('VM Migrate'),                  'VmMigrateWorkflow'],
   ]
 
   serialize :content
@@ -18,13 +18,13 @@ class MiqDialog < ApplicationRecord
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(DIALOG_DIR, "*.yaml")).each { |f| sync_from_file(f) }
+    Dir.glob(File.join(DIALOG_DIR, '*.yaml')).each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
     item = YAML.load_file(filename)
 
-    item[:filename] = filename.sub(DIALOG_DIR.to_path + "/", "")
+    item[:filename] = filename.sub(DIALOG_DIR.to_path + '/', '')
     item[:file_mtime] = File.mtime(filename).utc
     item[:default] = true
 

@@ -1,7 +1,7 @@
 class NetworkGroup < ApplicationRecord
   include NewWithTypeStiMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::CloudManager'
   belongs_to :orchestration_stack
 
   has_many :cloud_subnets, :dependent => :destroy

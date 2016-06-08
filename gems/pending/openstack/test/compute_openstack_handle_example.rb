@@ -1,11 +1,11 @@
-EMS_IP       = ""
-EMS_USERNAME = ""
-EMS_PASSWORD = ""
+EMS_IP       = ''
+EMS_USERNAME = ''
+EMS_PASSWORD = ''
 
 require_relative '../../bundler_setup'
 require 'openstack/openstack_handle'
 
-def dump_attrs(obj, pref = "")
+def dump_attrs(obj, pref = '')
   unless obj.respond_to?(:attributes)
     puts "#{pref}#{obj.class.name} does not support attributes."
     return
@@ -21,7 +21,7 @@ end
 begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
 
-  puts "**** Tenants:"
+  puts '**** Tenants:'
   os_handle.tenants.each do |t|
     puts "\t#{t.name}\t(#{t.id})"
   end

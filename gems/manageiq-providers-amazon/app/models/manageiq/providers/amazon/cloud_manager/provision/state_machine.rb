@@ -4,7 +4,7 @@ module ManageIQ::Providers::Amazon::CloudManager::Provision::StateMachine
     _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
 
-    destination.set_custom_field("Name", dest_name)
+    destination.set_custom_field('Name', dest_name)
     destination.update_attributes(:name => dest_name)
 
     super

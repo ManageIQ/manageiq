@@ -204,8 +204,8 @@ module MiqApache
     end
 
     def self.create_redirects_config(opts = {})
-      opts[:redirects].to_miq_a.each_with_object("") do |redirect, content|
-        if redirect == "/"
+      opts[:redirects].to_miq_a.each_with_object('') do |redirect, content|
+        if redirect == '/'
           content << "RewriteRule ^/self_service(?!/(assets|images|img|styles|js|fonts)) /self_service/index.html [L]\n"
           content << "RewriteCond \%{REQUEST_URI} !^/ws\n"
           content << "RewriteCond \%{REQUEST_URI} !^/proxy_pages\n"
@@ -238,12 +238,12 @@ module MiqApache
     end
 
     def create_directive(hash)
-      raise ArgumentError, ":directive key is required" if hash[:directive].blank?
+      raise ArgumentError, ':directive key is required' if hash[:directive].blank?
 
-      open  = "<#{hash[:directive]} #{hash[:attribute]}".strip << ">"
+      open  = "<#{hash[:directive]} #{hash[:attribute]}".strip << '>'
       close = "</#{hash[:directive]}>"
 
-      ["", open, add_content(hash[:configurations]), close, ""]
+      ['', open, add_content(hash[:configurations]), close, '']
     end
 
     def reload
@@ -286,9 +286,9 @@ module MiqApache
     def save
       backup = "#{@fname}_old"
       FileUtils.cp(@fname, backup)
-      File.write(@fname, @raw_lines.join(""))
+      File.write(@fname, @raw_lines.join(''))
       unless Control.config_ok?
-        $log.warn("MIQ(MiqApache::Conf.save) Restoring old configuration due to bad configuration!") if $log
+        $log.warn('MIQ(MiqApache::Conf.save) Restoring old configuration due to bad configuration!') if $log
         FileUtils.cp(backup, @fname)
         return false
       end

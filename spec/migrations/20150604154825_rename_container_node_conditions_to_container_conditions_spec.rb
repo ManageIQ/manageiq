@@ -14,7 +14,7 @@ describe RenameContainerNodeConditionsToContainerConditions do
       migrate
 
       cc = container_condition_stub.find_by(:id => cnc.id)
-      expect(cc.container_entity_type).to eq("ContainerNode")
+      expect(cc.container_entity_type).to eq('ContainerNode')
     end
   end
 

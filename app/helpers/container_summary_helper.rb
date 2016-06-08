@@ -40,7 +40,7 @@ module ContainerSummaryHelper
   end
 
   def textual_containers
-    textual_link(@record.containers, :feature => "containers") # should it be container_show_list?
+    textual_link(@record.containers, :feature => 'containers') # should it be container_show_list?
   end
 
   def textual_container_nodes
@@ -92,8 +92,8 @@ module ContainerSummaryHelper
   end
 
   def textual_guest_applications
-    textual_link(@record.guest_applications, :feature => "container_image_show",
-                                             :label   => _("Packages"),
+    textual_link(@record.guest_applications, :feature => 'container_image_show',
+                                             :label   => _('Packages'),
                                              :link    => url_for(:controller => controller.controller_name,
                                                                  :action     => 'guest_applications',
                                                                  :id         => @record,
@@ -103,8 +103,8 @@ module ContainerSummaryHelper
   def textual_openscap
     textual_link(
       @record.openscap_rule_results,
-      :feature => "container_image_show",
-      :label   => _("OpenSCAP Results"),
+      :feature => 'container_image_show',
+      :label   => _('OpenSCAP Results'),
       :link    => url_for(
         :controller => controller.controller_name,
         :action     => 'openscap_rule_results',
@@ -119,7 +119,7 @@ module ContainerSummaryHelper
   end
 
   def textual_openscap_html
-    h = {:label => _("OpenSCAP HTML")}
+    h = {:label => _('OpenSCAP HTML')}
     if @record.openscap_result
       h[:value] = _('Available')
       h[:link] = url_for(
@@ -138,7 +138,7 @@ module ContainerSummaryHelper
     if object.nil? && @record.respond_to?(:display_registry)
       {
         :label => ui_lookup(:model => ContainerImageRegistry.name),
-        :image => "container_image_registry_unknown",
+        :image => 'container_image_registry_unknown',
         :value => @record.display_registry
       }
     else
@@ -163,20 +163,20 @@ module ContainerSummaryHelper
   end
 
   def textual_tags
-    label = _("%{name} Tags") % {:name => session[:customer_name]}
+    label = _('%{name} Tags') % {:name => session[:customer_name]}
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.present?
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }.collect do |category, assigned|
         {
-          :image => "smarttag",
+          :image => 'smarttag',
           :label => category,
           :value => assigned
         }
       end
     else
-      h[:image] = "smarttag"
-      h[:value] = _("No %{label} have been assigned") % {:label => label}
+      h[:image] = 'smarttag'
+      h[:value] = _('No %{label} have been assigned') % {:label => label}
     end
 
     h

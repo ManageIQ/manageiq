@@ -9,11 +9,11 @@ class ManageIQ::Providers::OpenshiftEnterprise::ContainerManager < ManageIQ::Pro
   require_nested :Refresher
 
   def self.ems_type
-    @ems_type ||= "openshift_enterprise".freeze
+    @ems_type ||= 'openshift_enterprise'.freeze
   end
 
   def self.description
-    @description ||= "OpenShift Enterprise".freeze
+    @description ||= 'OpenShift Enterprise'.freeze
   end
 
   def self.event_monitor_class

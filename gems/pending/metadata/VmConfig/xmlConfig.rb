@@ -3,7 +3,7 @@ require 'util/runcmd'
 
 module XmlConfig
   def convert(filename)
-    @convertText = ""
+    @convertText = ''
     # $log.debug "Processing Windows Configuration file [#{filename}]"
 
     xml_data = nil
@@ -11,7 +11,7 @@ module XmlConfig
       if Sys::Platform::IMPL == :linux
         begin
           # First check to see if the command is available
-          MiqUtil.runcmd("virsh list")
+          MiqUtil.runcmd('virsh list')
           begin
             xml_data = MiqUtil.runcmd("virsh dumpxml #{File.basename(filename, ".*")}")
           rescue => err
@@ -27,22 +27,22 @@ module XmlConfig
       fileSize = File.size(filename)
       raise "Specified XML file [#{filename}] is not a valid VM configuration file." if fileSize > 104857
       xml = MiqXml.loadFile(filename)
-      if xml.encoding == "UTF-16" && xml.root.nil? && Object.const_defined?('Nokogiri')
-        xml_data = File.open(filename) { |f| Nokogiri::XML(f) }.to_xml(:encoding => "UTF-8")
+      if xml.encoding == 'UTF-16' && xml.root.nil? && Object.const_defined?('Nokogiri')
+        xml_data = File.open(filename) { |f| Nokogiri::XML(f) }.to_xml(:encoding => 'UTF-8')
         xml = MiqXml.load(xml_data)
       end
     else
       xml = MiqXml.load(xml_data)
     end
     xml_type = nil
-    xml_type = :xen unless xml.find_first("//vm/thinsyVmm").nil?
-    xml_type = :ms_hyperv  unless xml.find_first("//configuration/properties/type_id").nil?
+    xml_type = :xen unless xml.find_first('//vm/thinsyVmm').nil?
+    xml_type = :ms_hyperv  unless xml.find_first('//configuration/properties/type_id').nil?
     xml_type = :kvm if xml.root.name == 'domain' && ['kvm', 'qemu'].include?(xml.root.attributes['type'])
 
     raise "Specified XML file [#{filename}] is not a valid VM configuration file." if xml_type.nil?
 
     if xml_type == :ms_hyperv
-      require "metadata/VmConfig/xmlMsHyperVConfig"
+      require 'metadata/VmConfig/xmlMsHyperVConfig'
       extend  XmlMsHyperVConfig
     end
 
@@ -56,12 +56,12 @@ module XmlConfig
   end
 
   def vm(element)
-    add_item("displayName", element.attributes['name'])
-    add_item("memsize", element.attributes['minmem'])
+    add_item('displayName', element.attributes['name'])
+    add_item('memsize', element.attributes['minmem'])
   end
 
   def vmmversion(element)
-    add_item("config.version", element.text)
+    add_item('config.version', element.text)
   end
 
   def vdisk(element)
@@ -74,6 +74,6 @@ module XmlConfig
   end
 
   def vendor
-    "xen"
+    'xen'
   end
 end

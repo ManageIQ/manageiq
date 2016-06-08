@@ -1,13 +1,13 @@
 describe DialogYamlSerializer do
-  let(:dialog_tab_serializer) { double("DialogTabSerializer") }
+  let(:dialog_tab_serializer) { double('DialogTabSerializer') }
   let(:dialog_yaml_serializer) { described_class.new(dialog_tab_serializer) }
 
-  describe "#serialize" do
-    let(:buttons) { "the buttons" }
-    let(:description) { "the description" }
+  describe '#serialize' do
+    let(:buttons) { 'the buttons' }
+    let(:description) { 'the description' }
     let(:dialog_tab1) { DialogTab.new }
     let(:dialog_tab2) { DialogTab.new }
-    let(:label) { "the label" }
+    let(:label) { 'the label' }
 
     let(:dialog) do
       Dialog.new(
@@ -22,19 +22,19 @@ describe DialogYamlSerializer do
 
     let(:expected_data) do
       [{
-        "description" => description,
-        "buttons"     => buttons,
-        "label"       => label,
-        "dialog_tabs" => ["serialized_dialog1", "serialized_dialog2"]
+        'description' => description,
+        'buttons'     => buttons,
+        'label'       => label,
+        'dialog_tabs' => ['serialized_dialog1', 'serialized_dialog2']
       }]
     end
 
     before do
-      allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab1).and_return("serialized_dialog1")
-      allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab2).and_return("serialized_dialog2")
+      allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab1).and_return('serialized_dialog1')
+      allow(dialog_tab_serializer).to receive(:serialize).with(dialog_tab2).and_return('serialized_dialog2')
     end
 
-    it "serializes the dialog" do
+    it 'serializes the dialog' do
       expect(YAML.load(dialog_yaml_serializer.serialize(dialogs))).to eq(expected_data)
     end
   end

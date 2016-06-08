@@ -6,12 +6,12 @@ require 'rails/application/configuration'
 Rails::Application::Configuration.module_eval do
   prepend Module.new {
     def database_configuration
-      path = paths["config/database"].existent.first
+      path = paths['config/database'].existent.first
       yaml = Pathname.new(path) if path
 
       if yaml && yaml.exist?
-        require "yaml"
-        require "erb"
+        require 'yaml'
+        require 'erb'
 
         data = yaml.read
         data = ERB.new(data).result if !Rails.env.production? || ENV['ERB_IN_CONFIG']
@@ -20,7 +20,7 @@ Rails::Application::Configuration.module_eval do
           data = YAML.load(data) || {}
         rescue Psych::SyntaxError => e
           raise "YAML syntax error occurred while parsing #{paths["config/database"].first}. " \
-                "Please note that YAML must be consistently indented using spaces. Tabs are not allowed. " \
+                'Please note that YAML must be consistently indented using spaces. Tabs are not allowed. ' \
                 "Error: #{e.message}"
         rescue => e
           raise e, "Cannot load `Rails.application.database_configuration`:\n#{e.message}", e.backtrace

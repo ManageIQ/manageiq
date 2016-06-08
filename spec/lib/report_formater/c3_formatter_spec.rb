@@ -21,14 +21,14 @@ describe ReportFormatter::C3Formatter do
   context '#build_numeric_chart_simple' do
     let(:report) { numeric_chart_simple }
 
-    it "report chart have right data in ascending order" do
+    it 'report chart have right data in ascending order' do
       report.col_formats = [nil, :general_number_precision_0]
       render_report(report)
       expect(report.chart[:data][:columns][0].count).to eq(report.table.data.count + 1)
       expect(report.chart[:data][:columns][0][1]).to eq(2024)
     end
 
-    it "handles null data in chart column" do
+    it 'handles null data in chart column' do
       report = null_data_chart
 
       expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
@@ -48,7 +48,7 @@ describe ReportFormatter::C3Formatter do
       end
     end
 
-    it "handles null data in chart column" do
+    it 'handles null data in chart column' do
       report = null_data_chart
 
       expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original

@@ -15,11 +15,11 @@ module BrokerSyncDebug
   end
 
   def sync_for_drb
-    alloc_sync_lock("DRB#mutex")
+    alloc_sync_lock('DRB#mutex')
   end
 
   def sync_for_drb_drbconn
-    alloc_sync_lock("DRb::DRbConn#mutex")
+    alloc_sync_lock('DRb::DRbConn#mutex')
   end
 
   def alloc_sync_lock(lock_name)

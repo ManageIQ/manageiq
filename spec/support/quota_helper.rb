@@ -5,21 +5,21 @@ module QuotaHelper
                                           :single_value => false,
                                           :description  => category) unless cat
     cat.add_entry(:description  => tag,
-                  :read_only    => "0",
-                  :syntax       => "string",
+                  :read_only    => '0',
+                  :syntax       => 'string',
                   :name         => tag,
                   :example_text => nil,
                   :default      => true,
-                  :single_value => "0") if cat
+                  :single_value => '0') if cat
   end
 
   def setup_tags
-    test_values = {:storage => "1024", :vms => "2", :cpu => "2", :memory => "1024"}
+    test_values = {:storage => '1024', :vms => '2', :cpu => '2', :memory => '1024'}
     test_values.each do |k, v|
       max_cat = "quota_max_#{k}"
       max_tag = (v.to_i * 2).to_s
       create_category_and_tag(max_cat, max_tag)
-      @miq_group.tag_add(max_tag, :ns => "/managed", :cat => max_cat)
+      @miq_group.tag_add(max_tag, :ns => '/managed', :cat => max_cat)
       warn_cat = "quota_warn_#{k}"
       warn_tag = v.to_s
       create_category_and_tag(warn_cat, warn_tag)
@@ -39,10 +39,10 @@ module QuotaHelper
   end
 
   def create_disks
-    @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-    @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-    @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-    @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
+    @disk1 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw1.id)
+    @disk2 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw2.id)
+    @disk3 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw3.id)
+    @disk3 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw4.id)
   end
 
   def create_tenant_quota
@@ -124,7 +124,7 @@ module QuotaHelper
                                          :cpus => 4, :cpu_cores => 1, :memory => 1024)
     create_request(:number_of_vms => 1, :owner_email    => 'user@example.com',
                                         :src_vm_id      => @vm_template.id,
-                                        :boot_disk_size => ["10.GB", "10 GB"],
+                                        :boot_disk_size => ['10.GB', '10 GB'],
                                         :placement_auto => [true, 1],
                                         :instance_type  => [m2_small_flavor.id, m2_small_flavor.name])
     create_google_vms
@@ -135,20 +135,20 @@ module QuotaHelper
                                            :name         => 'generic',
                                            :service_type => 'atomic',
                                            :prov_type    => 'generic')
-    @service_request = build_service_template_request("generic", @user, :dialog => {"test" => "dialog"})
+    @service_request = build_service_template_request('generic', @user, :dialog => {'test' => 'dialog'})
   end
 
   def build_vmware_service_item
     options = {:src_vm_id => @vm_template.id, :requester => @user}.merge(vmware_requested_quota_values)
-    model = {"vmware_service_item" => {:type      => 'atomic',
+    model = {'vmware_service_item' => {:type      => 'atomic',
                                        :prov_type => 'vmware',
                                        :request   => options}
              }
     build_service_template_tree(model)
-    @service_request = build_service_template_request("vmware_service_item", @user, :dialog => {"test" => "dialog"})
+    @service_request = build_service_template_request('vmware_service_item', @user, :dialog => {'test' => 'dialog'})
   end
 
-  def setup_model(vendor = "vmware")
+  def setup_model(vendor = 'vmware')
     @user = FactoryGirl.create(:user_with_group)
     @miq_group = @user.current_group
     @tenant = @miq_group.tenant

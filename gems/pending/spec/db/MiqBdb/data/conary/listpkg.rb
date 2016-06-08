@@ -16,12 +16,12 @@
 begin
   require 'sqlite3'
 rescue LoadError
-  puts "sqlite3 library not found"
+  puts 'sqlite3 library not found'
   exit
 end
 
 if ARGV.length == 0
-  puts "No database name given"
+  puts 'No database name given'
   exit
 end
 
@@ -30,7 +30,7 @@ begin
   fh = File.open fn
   fh.close
 rescue
-  puts fn + " cannot be opened"
+  puts fn + ' cannot be opened'
   exit
 end
 
@@ -50,10 +50,10 @@ begin
       count += 1
       # process row
       cnt = count.to_s
-      print  cnt, " Pkg: ", row[0], " Version ID: ", row[1], " Version: ", row[2], "\n"
+      print  cnt, ' Pkg: ', row[0], ' Version ID: ', row[1], ' Version: ', row[2], "\n"
     end
   end
 rescue SQLite3::SQLException
-  puts "SQL Query failed for database: " + fn
+  puts 'SQL Query failed for database: ' + fn
   exit
 end

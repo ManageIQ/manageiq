@@ -29,7 +29,7 @@ class ApiController
     end
 
     def put_resource(type, id)
-      send(target_resource_method(false, type, "edit"), type, id, json_body)
+      send(target_resource_method(false, type, 'edit'), type, id, json_body)
     end
 
     #
@@ -47,9 +47,9 @@ class ApiController
     def patch_resource(type, id)
       patched_attrs = {}
       json_body.each do |patch_cmd|
-        action = patch_cmd["action"]
-        path   = patch_cmd["path"]
-        value  = patch_cmd["value"]
+        action = patch_cmd['action']
+        path   = patch_cmd['path']
+        value  = patch_cmd['value']
         if action.nil?
           api_log_info("Must specify an attribute action for each path command for the resource #{type}/#{id}")
         elsif path.nil?
@@ -59,10 +59,10 @@ class ApiController
         else
           attr = path.split('/')[0]
           patched_attrs[attr] = value if %w(edit add).include?(action)
-          patched_attrs[attr] = nil if action == "remove"
+          patched_attrs[attr] = nil if action == 'remove'
         end
       end
-      send(target_resource_method(false, type, "edit"), type, id, patched_attrs)
+      send(target_resource_method(false, type, 'edit'), type, id, patched_attrs)
     end
 
     def delete_subcollection_resource(type, id = nil)
@@ -74,8 +74,8 @@ class ApiController
       raise BadRequestError,
             "Cannot delete subcollection resources of type #{type}" unless respond_to?(typed_target)
 
-      resource = json_body["resource"]
-      resource = {"href" => "#{@req[:base]}#{@req[:path]}"} if !resource || resource.empty?
+      resource = json_body['resource']
+      resource = {'href' => "#{@req[:base]}#{@req[:path]}"} if !resource || resource.empty?
       send(typed_target, parent_resource, type, id.to_i, resource)
     end
 
@@ -89,7 +89,7 @@ class ApiController
         typed_target = "#{target}_#{type}"
         return typed_target if respond_to?(typed_target)
         return target if respond_to?(target)
-        resource_can_have_custom_actions(type) ? "custom_action_resource" : "undefined_api_method"
+        resource_can_have_custom_actions(type) ? 'custom_action_resource' : 'undefined_api_method'
       end
     end
 
@@ -100,8 +100,8 @@ class ApiController
 
     def get_and_update_multiple_collections(is_subcollection, target, type)
       resources = []
-      if json_body.key?("resources")
-        resources += json_body["resources"]
+      if json_body.key?('resources')
+        resources += json_body['resources']
       else
         resources << json_body_resource
       end
@@ -109,10 +109,10 @@ class ApiController
     end
 
     def json_body_resource
-      resource = json_body["resource"]
+      resource = json_body['resource']
       unless resource
         resource = json_body.dup
-        resource.delete("action")
+        resource.delete('action')
       end
       resource
     end
@@ -143,7 +143,7 @@ class ApiController
         update_one_collection(is_subcollection, target, type, rid, r)
       end
       raise BadRequestError, "No #{type} resources were specified for the #{action} action" if processed == 0
-      {"results" => results}
+      {'results' => results}
     end
   end
 end

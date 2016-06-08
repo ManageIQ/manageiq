@@ -3,45 +3,45 @@ module MiqProvision::Automate
 
   def get_placement_via_automate
     attrs = automate_attributes('get_placement')
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object('REQUEST', get_user, attrs, :vmdb_object => self)
     reload
 
     {
-      :host    => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"]),
-      :storage => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["storage"]),
-      :cluster => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["cluster"]),
+      :host    => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['host']),
+      :storage => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['storage']),
+      :cluster => MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['cluster']),
     }
   end
 
   def get_most_suitable_availability_zone
     attrs = automate_attributes('get_availability_zone')
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object('REQUEST', get_user, attrs, :vmdb_object => self)
     reload
-    MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["availability_zone"])
+    MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['availability_zone'])
   end
 
   def get_most_suitable_host_and_storage
     attrs = automate_attributes('get_host_and_storage')
 
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object('REQUEST', get_user, attrs, :vmdb_object => self)
     reload
-    host      = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
-    datastore = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["storage"])
+    host      = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['host'])
+    datastore = MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['storage'])
     return host, datastore
   end
 
   def get_most_suitable_cluster
     attrs = automate_attributes('get_cluster')
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object('REQUEST', get_user, attrs, :vmdb_object => self)
     reload
-    MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["cluster"])
+    MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['cluster'])
   end
 
   def get_most_suitable_host
     attrs = automate_attributes('get_host')
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs, :vmdb_object => self)
+    ws = MiqAeEngine.resolve_automation_object('REQUEST', get_user, attrs, :vmdb_object => self)
     reload
-    MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root["host"])
+    MiqAeMethodService::MiqAeServiceConverter.svc2obj(ws.root['host'])
   end
 
   def get_network_scope
@@ -51,10 +51,10 @@ module MiqProvision::Automate
 
   def get_network_details
     related_vm             = vm || source
-    related_vm_description = (related_vm == vm) ? "VM" : "Template"
+    related_vm_description = (related_vm == vm) ? 'VM' : 'Template'
 
     if related_vm.nil?
-      _log.error "No VM or Template Found for Provision Object"
+      _log.error 'No VM or Template Found for Provision Object'
       return nil
     end
 
@@ -78,14 +78,14 @@ module MiqProvision::Automate
     _log.info "<< vlan_name=<#{vlan_name}> vlan_id=#{vlan_id} vc_id=<#{vc_id}> user=<#{get_user}>"
 
     attrs = automate_attributes('get_networks')
-    ws = MiqAeEngine.resolve_automation_object("REQUEST", get_user, attrs)
+    ws = MiqAeEngine.resolve_automation_object('REQUEST', get_user, attrs)
 
     if ws.root.nil?
-      _log.warn "- Automate Failed (workspace empty)"
+      _log.warn '- Automate Failed (workspace empty)'
       return nil
     end
 
-    networks = ws.root("networks")
+    networks = ws.root('networks')
 
     networks.each do |network|
       next unless network.kind_of?(Hash)
@@ -116,7 +116,7 @@ module MiqProvision::Automate
     ws = call_automate_event(event_name, false)
     reload
     if ws.nil?
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => "Automation Error in processing Event #{event_name}")
+      update_and_notify_parent(:state => 'finished', :status => 'Error', :message => "Automation Error in processing Event #{event_name}")
       return false
     end
 
@@ -124,19 +124,19 @@ module MiqProvision::Automate
     ae_message = ws.root['ae_message']
 
     unless ae_result.nil?
-      return false if ae_result.casecmp("error").zero?
+      return false if ae_result.casecmp('error').zero?
 
-      if ae_result.casecmp("retry").zero?
-        interval, unit = ae_message.split(".")
+      if ae_result.casecmp('retry').zero?
+        interval, unit = ae_message.split('.')
         interval = interval.to_i
-        interval *= 60                     if unit == "minute" || unit == "minutes"
-        interval = interval * 60 * 60      if unit == "hour" || unit == "hours"
-        interval = interval * 60 * 60 * 24 if unit == "day" || unit == "days"
+        interval *= 60                     if unit == 'minute' || unit == 'minutes'
+        interval = interval * 60 * 60      if unit == 'hour' || unit == 'hours'
+        interval = interval * 60 * 60 * 24 if unit == 'day' || unit == 'days'
 
         MiqQueue.put(
           :class_name  => self.class.name,
           :instance_id => id,
-          :method_name => "execute",
+          :method_name => 'execute',
           :zone        => my_zone,
           :role        => my_role,
           :task_id     => my_task_id,
@@ -145,7 +145,7 @@ module MiqProvision::Automate
         )
         message = "Request [#{ae_message}] has been re-queued for processing in #{interval} seconds"
         _log.info("#{message}")
-        update_and_notify_parent(:state => "queued", :status => "Ok", :message => message)
+        update_and_notify_parent(:state => 'queued', :status => 'Ok', :message => message)
         return false
       end
     end

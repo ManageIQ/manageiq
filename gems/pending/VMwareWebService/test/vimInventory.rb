@@ -2,9 +2,9 @@ require_relative '../../bundler_setup'
 require 'VMwareWebService/MiqVimInventory'
 require 'log4r'
 
-SERVER   = raise "please define SERVER"
-USERNAME = raise "please define USERNAME"
-PASSWORD = raise "please define PASSWORD"
+SERVER   = raise 'please define SERVER'
+USERNAME = raise 'please define USERNAME'
+PASSWORD = raise 'please define PASSWORD'
 
 $stderr.sync = true
 class ConsoleFormatter < Log4r::Formatter

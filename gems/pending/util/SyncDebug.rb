@@ -134,13 +134,13 @@ module SyncDebug_m
   end
 
   def self.included(host_class)
-    raise "Sync_m module must be included before SyncDebug_m" unless host_class < Sync_m
+    raise 'Sync_m module must be included before SyncDebug_m' unless host_class < Sync_m
     host_class.extend(ClassMethods)
     define_aliases(host_class) unless host_class.instance_of?(Module)
   end
 
   def self.extended(host_obj)
-    raise "Objects extended by SyncDebug_m must be descendants of Sync_m" unless host_obj.class < Sync_m
+    raise 'Objects extended by SyncDebug_m must be descendants of Sync_m' unless host_obj.class < Sync_m
     define_aliases(host_obj.singleton_class)
     host_obj.init_sync_debug(MAX_LOCKED_TIME, WATCHDOG_POLL_PERIOD)
   end
@@ -370,7 +370,7 @@ module SyncDebug_m
       end
 
       if lia.empty?
-        msg = "pop_lock_info: stack underflow, " \
+        msg = 'pop_lock_info: stack underflow, ' \
               "pmode = #{li[:mode]}, " \
               "exli# = #{@ex_locker_info.length}, " \
               "shli# = #{@sh_locker_info[Thread.current].length}"
@@ -397,7 +397,7 @@ module SyncDebug_m
   def call_stack
     cs = caller
     cs0 = cs.first
-    while cs0["/sync.rb:"] || cs0["/SyncDebug.rb:"]
+    while cs0['/sync.rb:'] || cs0['/SyncDebug.rb:']
       cs.shift
       cs0 = cs.first
     end

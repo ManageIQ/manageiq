@@ -11,7 +11,7 @@ module RetirementMixin
         object = find_by_id(id)
         object.retire(options) if object.respond_to?(:retire)
       end
-      MiqQueue.put(:class_name => base_model.name, :method_name => "retirement_check")
+      MiqQueue.put(:class_name => base_model.name, :method_name => 'retirement_check')
     end
   end
 
@@ -65,18 +65,18 @@ module RetirementMixin
       if date
         message += " is scheduled to retire on date: [#{retires_on_date}]"
       else
-        message += " is no longer scheduled to retire"
+        message += ' is no longer scheduled to retire'
       end
     end
 
     if options.key?(:warn)
-      message += " and" if options.key?(:date)
+      message += ' and' if options.key?(:date)
       warn = options[:warn]
       self.retirement_warn = warn
       if warn
         message += " has a value for retirement warning days of: [#{retirement_warn}]"
       else
-        message += " has no value for retirement warning days"
+        message += ' has no value for retirement warning days'
       end
     end
 
@@ -124,9 +124,9 @@ module RetirementMixin
   end
 
   def finish_retirement
-    raise _("%{name} already retired") % {:name => name} if retired?
+    raise _('%{name} already retired') % {:name => name} if retired?
     $log.info("Finishing Retirement for [#{name}]")
-    update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => "retired")
+    update_attributes(:retires_on => Date.today, :retired => true, :retirement_state => 'retired')
     message = "#{self.class.base_model.name}: [#{name}], Retires On Date: [#{retires_on}], has been retired"
     $log.info("Calling audit event for: #{message} ")
     raise_audit_event(retired_event_name, message)
@@ -136,7 +136,7 @@ module RetirementMixin
   def start_retirement
     return if self.retired?
     $log.info("Starting Retirement for [#{name}]")
-    update_attributes(:retirement_state => "retiring")
+    update_attributes(:retirement_state => 'retiring')
   end
 
   def retired_validated?
@@ -144,7 +144,7 @@ module RetirementMixin
   end
 
   def retired_invalid_reason
-    ""
+    ''
   end
 
   def retirement_base_model_name
@@ -193,12 +193,12 @@ module RetirementMixin
   private
 
   def setup_event_hash(requester)
-    event_hash = {:retirement_initiator => "system"}
+    event_hash = {:retirement_initiator => 'system'}
     event_hash[retirement_base_model_name.underscore.to_sym] = self
     event_hash[:host] = host if self.respond_to?(:host)
     if requester
       event_hash[:userid] = requester
-      event_hash[:retirement_initiator] = "user"
+      event_hash[:retirement_initiator] = 'user'
     end
     event_hash[:type] ||= self.class.name
     event_hash

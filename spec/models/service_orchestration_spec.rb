@@ -40,46 +40,46 @@ describe ServiceOrchestration do
     service_mix_dialog_setter
   end
 
-  context "#stack_name" do
-    it "gets stack name from dialog options" do
+  context '#stack_name' do
+    it 'gets stack name from dialog options' do
       expect(service_with_dialog_options.stack_name).to eq('test123')
     end
 
-    it "gets stack name from overridden value" do
-      service_with_dialog_options.stack_name = "new_name"
-      expect(service_with_dialog_options.stack_name).to eq("new_name")
+    it 'gets stack name from overridden value' do
+      service_with_dialog_options.stack_name = 'new_name'
+      expect(service_with_dialog_options.stack_name).to eq('new_name')
     end
   end
 
-  context "#stack_options" do
+  context '#stack_options' do
     before do
       allow_any_instance_of(ManageIQ::Providers::Amazon::CloudManager::OrchestrationServiceOptionConverter).to(
         receive(:stack_create_options).and_return(dialog_options))
     end
 
-    it "gets stack options set by dialog" do
+    it 'gets stack options set by dialog' do
       expect(service_with_dialog_options.stack_options).to eq(dialog_options)
     end
 
-    it "gets stack options from overridden values" do
-      new_options = {"any_key" => "any_value"}
+    it 'gets stack options from overridden values' do
+      new_options = {'any_key' => 'any_value'}
       service_with_dialog_options.stack_options = new_options
       expect(service_with_dialog_options.stack_options).to eq(new_options)
     end
 
-    it "encrypts password when saves to DB" do
-      new_options = {:parameters => {"my_password" => "secret"}}
+    it 'encrypts password when saves to DB' do
+      new_options = {:parameters => {'my_password' => 'secret'}}
       service_with_dialog_options.stack_options = new_options
-      expect(service_with_dialog_options.options[:create_options][:parameters]["my_password"]).to eq(MiqPassword.encrypt("secret"))
+      expect(service_with_dialog_options.options[:create_options][:parameters]['my_password']).to eq(MiqPassword.encrypt('secret'))
     end
 
-    it "prefers the orchestration template set by dialog" do
+    it 'prefers the orchestration template set by dialog' do
       expect(service_mix_dialog_setter.orchestration_template).to eq(template_by_setter)
       service_mix_dialog_setter.stack_options
       expect(service_mix_dialog_setter.orchestration_template).to eq(template_by_dialog)
     end
 
-    it "prefers the orchestration manager set by dialog" do
+    it 'prefers the orchestration manager set by dialog' do
       expect(service_mix_dialog_setter.orchestration_manager).to eq(manager_by_setter)
       service_mix_dialog_setter.stack_options
       expect(service_mix_dialog_setter.orchestration_manager).to eq(manager_by_dialog)
@@ -132,7 +132,7 @@ describe ServiceOrchestration do
     end
 
     it 'saves update options and encrypts password' do
-      expect(reconfigurable_service.options[:update_options][:parameters]['DBRootPassword']).to eq(MiqPassword.encrypt("admin"))
+      expect(reconfigurable_service.options[:update_options][:parameters]['DBRootPassword']).to eq(MiqPassword.encrypt('admin'))
     end
   end
 

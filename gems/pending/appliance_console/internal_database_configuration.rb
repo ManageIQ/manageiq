@@ -1,10 +1,10 @@
-require "appliance_console/database_configuration"
-require "appliance_console/service_group"
-require "pathname"
-require "util/postgres_admin"
-require "pg"
+require 'appliance_console/database_configuration'
+require 'appliance_console/service_group'
+require 'pathname'
+require 'util/postgres_admin'
+require 'pg'
 
-RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
+RAILS_ROOT ||= Pathname.new(__dir__).join('../../../')
 
 module ApplianceConsole
   class InternalDatabaseConfiguration < DatabaseConfiguration
@@ -12,7 +12,7 @@ module ApplianceConsole
     attr_accessor :ssl
 
     def self.postgres_dir
-      PostgresAdmin.data_directory.relative_path_from(Pathname.new("/"))
+      PostgresAdmin.data_directory.relative_path_from(Pathname.new('/'))
     end
 
     def self.postgresql_template
@@ -20,7 +20,7 @@ module ApplianceConsole
     end
 
     def self.database_initialized?
-      configured? && !Dir[PostgresAdmin.data_directory.join("*")].empty?
+      configured? && !Dir[PostgresAdmin.data_directory.join('*')].empty?
     end
 
     def initialize(hash = {})
@@ -29,14 +29,14 @@ module ApplianceConsole
     end
 
     def set_defaults
-      self.host     = "127.0.0.1"
-      self.username = "root"
-      self.database = "vmdb_production"
+      self.host     = '127.0.0.1'
+      self.username = 'root'
+      self.database = 'vmdb_production'
     end
 
     def activate
       if self.class.database_initialized?
-        say(<<-EOF.gsub!(/^\s+/, ""))
+        say(<<-EOF.gsub!(/^\s+/, ''))
           An internal database already exists.
           Choose "Reset Internal Database" to reset the existing installation
           EOF
@@ -56,7 +56,7 @@ module ApplianceConsole
     end
 
     def choose_disk
-      @disk = ask_for_disk("database disk")
+      @disk = ask_for_disk('database disk')
     end
 
     def initialize_postgresql_disk
@@ -85,11 +85,11 @@ module ApplianceConsole
     end
 
     def configure_postgres
-      self.ssl = File.exist?(PostgresAdmin.certificate_location.join("postgres.key"))
+      self.ssl = File.exist?(PostgresAdmin.certificate_location.join('postgres.key'))
 
-      copy_template "postgresql.conf.erb"
-      copy_template "pg_hba.conf.erb"
-      copy_template "pg_ident.conf"
+      copy_template 'postgresql.conf.erb'
+      copy_template 'pg_hba.conf.erb'
+      copy_template 'pg_ident.conf'
     end
 
     def post_activation
@@ -100,9 +100,9 @@ module ApplianceConsole
 
     def copy_template(src, src_dir = self.class.postgresql_template, dest_dir = PostgresAdmin.data_directory)
       full_src = src_dir.join(src)
-      if src.include?(".erb")
-        full_dest = dest_dir.join(src.gsub(".erb", ""))
-        File.open(full_dest, "w") { |f| f.puts ERB.new(File.read(full_src), nil, '-').result(binding) }
+      if src.include?('.erb')
+        full_dest = dest_dir.join(src.gsub('.erb', ''))
+        File.open(full_dest, 'w') { |f| f.puts ERB.new(File.read(full_src), nil, '-').result(binding) }
       else
         FileUtils.cp full_src, dest_dir
       end
@@ -140,7 +140,7 @@ module ApplianceConsole
       # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(PostgresAdmin.data_directory)
       FileUtils.mkdir_p(PostgresAdmin.data_directory)
-      AwesomeSpawn.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
+      AwesomeSpawn.run!('mount', :params => {'-t' => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, PostgresAdmin.data_directory]})
     end
 
     def update_fstab
@@ -151,7 +151,7 @@ module ApplianceConsole
         :device        => @logical_volume.path,
         :mount_point   => PostgresAdmin.data_directory,
         :fs_type       => PostgresAdmin.database_disk_filesystem,
-        :mount_options => "rw,noatime",
+        :mount_options => 'rw,noatime',
         :dumpable      => 0,
         :fsck_order    => 0
       )
@@ -163,12 +163,12 @@ module ApplianceConsole
     def prep_database_mount_point
       # initdb will fail if the database directory is not empty or not owned by the PostgresAdmin.user
       FileUtils.chown_R(PostgresAdmin.user, PostgresAdmin.user, PostgresAdmin.data_directory)
-      FileUtils.rm_rf(PostgresAdmin.data_directory.join("pg_log"))
-      FileUtils.rm_rf(PostgresAdmin.data_directory.join("lost+found"))
+      FileUtils.rm_rf(PostgresAdmin.data_directory.join('pg_log'))
+      FileUtils.rm_rf(PostgresAdmin.data_directory.join('lost+found'))
     end
 
     def run_initdb
-      AwesomeSpawn.run!("service", :params => {nil => [PostgresAdmin.service_name, "initdb"]})
+      AwesomeSpawn.run!('service', :params => {nil => [PostgresAdmin.service_name, 'initdb']})
     end
 
     def start_postgres
@@ -183,13 +183,13 @@ module ApplianceConsole
     end
 
     def create_postgres_root_user
-      conn = PG.connect(:user => "postgres", :dbname => "postgres")
+      conn = PG.connect(:user => 'postgres', :dbname => 'postgres')
       esc_pass = conn.escape_string(password)
       conn.exec("CREATE ROLE #{username} WITH LOGIN CREATEDB SUPERUSER PASSWORD '#{esc_pass}'")
     end
 
     def create_postgres_database
-      conn = PG.connect(:user => "postgres", :dbname => "postgres")
+      conn = PG.connect(:user => 'postgres', :dbname => 'postgres')
       conn.exec("CREATE DATABASE #{database} OWNER #{username} ENCODING 'utf8'")
     end
 

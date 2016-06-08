@@ -33,11 +33,11 @@ def approver_denied_text(requester_email, msg, reason)
 end
 
 def approver_text(appliance, msg, requester_email)
-  body = "Approver, "
+  body = 'Approver, '
   body += approver_denied_text(requester_email, msg, reason)
-  body += "<br><br>For more information you can go to:"
+  body += '<br><br>For more information you can go to:'
   body += approver_href(appliance)
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
   body
 end
@@ -50,7 +50,7 @@ def requester_email_address
 end
 
 def email_approver(appliance, msg)
-  $evm.log(:info, "Approver email logic starting")
+  $evm.log(:info, 'Approver email logic starting')
   requester_email = requester_email_address
   to = $evm.object['to_email_address']
   from = $evm.object['from_email_address']
@@ -66,18 +66,18 @@ def requester_href(appliance)
 end
 
 def requester_text(appliance, msg)
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br>#{msg}."
   body += "<br><br>Approvers notes: #{reason}"
-  body += "<br><br>For more information you can go to:"
+  body += '<br><br>For more information you can go to:'
   body += requester_href(appliance)
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
   body
 end
 
 def email_requester(appliance, msg)
-  $evm.log(:info, "Requester email logic starting")
+  $evm.log(:info, 'Requester email logic starting')
   to = requester_email_address
   from = $evm.object['from_email_address']
   subject = "Request ID #{@miq_request.id} - Your service request was denied"
@@ -93,7 +93,7 @@ service_template = $evm.vmdb(@miq_request.source_type, @miq_request.source_id)
 $evm.log(:info, "service_template id: #{service_template.id} service_type: #{service_template.service_type}")
 $evm.log(:info, "description: #{service_template.description} services: #{service_template.service_resources.count}")
 
-msg = @miq_request.resource.message || "Request denied"
+msg = @miq_request.resource.message || 'Request denied'
 appliance = $evm.root['miq_server'].ipaddress
 
 email_requester(appliance, msg)

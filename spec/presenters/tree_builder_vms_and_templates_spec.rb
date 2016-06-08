@@ -6,16 +6,16 @@ describe TreeBuilderVmsAndTemplates do
     subfolder2 = FactoryGirl.create(:ems_folder)
     subfolder3 = FactoryGirl.create(:datacenter)
 
-    folder.with_relationship_type("ems_metadata") { folder.add_child(subfolder1) }
-    folder.with_relationship_type("ems_metadata") { folder.add_child(subfolder2) }
-    folder.with_relationship_type("ems_metadata") { folder.add_child(subfolder3) }
+    folder.with_relationship_type('ems_metadata') { folder.add_child(subfolder1) }
+    folder.with_relationship_type('ems_metadata') { folder.add_child(subfolder2) }
+    folder.with_relationship_type('ems_metadata') { folder.add_child(subfolder3) }
 
     @vandt_tree = TreeBuilderVmsAndTemplates.new(ems, {})
     @tree = {ems => {folder => {subfolder1 => {}, subfolder2 => {}, subfolder3 => {}}}}
   end
 
-  context "#sort_tree" do
-    it "making sure sort_tree was successful for mixed ems_folder types" do
+  context '#sort_tree' do
+    it 'making sure sort_tree was successful for mixed ems_folder types' do
       expect { @vandt_tree.send(:sort_tree, @tree) }.not_to raise_error
     end
   end

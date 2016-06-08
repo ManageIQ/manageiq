@@ -1,8 +1,8 @@
 module MiqHostProvision::Configuration
   def set_network_information
-    _log.info("Setting Network Information")
+    _log.info('Setting Network Information')
     destination.update_attributes!(:ipaddress => ip_address, :hostname => hostname)
-    _log.info("Validating Host Credentials")
+    _log.info('Validating Host Credentials')
 
     # add the ssh host key even if there's an existing one from the prior OS install
     destination.authentication_check(:default, :remember_host => true)
@@ -13,11 +13,11 @@ module MiqHostProvision::Configuration
   def set_maintenance_mode_vmware
     destination.with_provider_object(:connection_source => host) do |vim_host|
       if vim_host.inMaintenanceMode?
-        _log.info "Host is already Maintenance Mode"
+        _log.info 'Host is already Maintenance Mode'
       else
-        _log.info "Putting host into Maintenance Mode..."
+        _log.info 'Putting host into Maintenance Mode...'
         vim_host.enterMaintenanceMode
-        _log.info "Putting host into Maintenance Mode...complete"
+        _log.info 'Putting host into Maintenance Mode...complete'
       end
     end
   end
@@ -34,7 +34,7 @@ module MiqHostProvision::Configuration
   # TODO: Subclass
   def add_storage_vmware
     if destination.ext_management_system.nil?
-      _log.error "Host has no External Management System"
+      _log.error 'Host has no External Management System'
       return
     end
 

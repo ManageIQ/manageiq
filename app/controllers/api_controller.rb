@@ -9,7 +9,7 @@ class ApiController < ApplicationController
   class UnsupportedMediaTypeError < StandardError; end
 
   def handle_options_request
-    head(:ok) if request.request_method == "OPTIONS"
+    head(:ok) if request.request_method == 'OPTIONS'
   end
 
   before_action :set_access_control_headers
@@ -69,8 +69,8 @@ class ApiController < ApplicationController
   include_concern 'PolicyActions'
   include_concern 'Providers'
   include_concern 'ProvisionRequests'
-  include_concern "Rates"
-  include_concern "Reports"
+  include_concern 'Rates'
+  include_concern 'Reports'
   include_concern 'RequestTasks'
   include_concern 'ResourceActions'
   include_concern 'Roles'
@@ -95,7 +95,7 @@ class ApiController < ApplicationController
   rescue_from_api_errors
   prepend_before_action :require_api_user_or_token, :except => [:handle_options_request]
 
-  TAG_NAMESPACE = "/managed"
+  TAG_NAMESPACE = '/managed'
 
   #
   # Custom normalization on these attribute types.
@@ -134,7 +134,7 @@ class ApiController < ApplicationController
     @version         = base_config[:version]
     @prefix          = "/#{@module}"
     @req             = {}      # To store API request details by parse_api_request
-    @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
+    @api_config      = VMDB::Config.new('vmdb').config[@module.to_sym] || {}
     @api_user_token_service = ApiUserTokenService.new(@config)
   end
 
@@ -148,7 +148,7 @@ class ApiController < ApplicationController
   end
 
   def redirect_api_request(method)
-    collection    = @req[:collection] || "entrypoint"
+    collection    = @req[:collection] || 'entrypoint'
     target_method = "#{method}_#{collection}"
     if respond_to?(target_method)
       send(target_method)
@@ -169,7 +169,7 @@ class ApiController < ApplicationController
     parse_api_request
     log_api_request
     validate_api_request
-    api_error_type(:not_found, "Unknown resource specified") unless redirect_api_request(expected_method)
+    api_error_type(:not_found, 'Unknown resource specified') unless redirect_api_request(expected_method)
     log_api_response
   end
 

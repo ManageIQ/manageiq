@@ -1,5 +1,5 @@
 class FileDepotFtpAnonymous < FileDepotFtp
   def login_credentials
-    ["anonymous", "anonymous"]
+    ['anonymous', 'anonymous']
   end
 end

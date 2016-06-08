@@ -6,7 +6,7 @@ class CloudVolume < ApplicationRecord
   include AsyncDeleteMixin
   include AvailabilityMixin
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::CloudManager'
   belongs_to :availability_zone
   belongs_to :cloud_tenant
   belongs_to :base_snapshot, :class_name => 'CloudVolumeSnapshot', :foreign_key => :cloud_volume_snapshot_id
@@ -18,8 +18,8 @@ class CloudVolume < ApplicationRecord
   acts_as_miq_taggable
 
   def self.available
-    joins("LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id")
-      .where("disks.backing_id" => nil)
+    joins('LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id')
+      .where('disks.backing_id' => nil)
   end
 
   def self.class_by_ems(ext_management_system)
@@ -29,7 +29,7 @@ class CloudVolume < ApplicationRecord
   end
 
   def self.create_volume(ext_management_system, options = {})
-    raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
+    raise ArgumentError, _('ext_management_system cannot be nil') if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)
     tenant = options[:cloud_tenant]
@@ -49,11 +49,11 @@ class CloudVolume < ApplicationRecord
     klass = class_by_ems(ext_management_system)
     return klass.validate_create_volume(ext_management_system) if ext_management_system &&
                                                                   klass.respond_to?(:validate_create_volume)
-    validate_unsupported("Create Volume Operation")
+    validate_unsupported('Create Volume Operation')
   end
 
   def self.raw_create_volume(_ext_management_system, _options = {})
-    raise NotImplementedError, _("raw_create_volume must be implemented in a subclass")
+    raise NotImplementedError, _('raw_create_volume must be implemented in a subclass')
   end
 
   def update_volume(options = {})
@@ -61,11 +61,11 @@ class CloudVolume < ApplicationRecord
   end
 
   def validate_update_volume
-    validate_unsupported("Update Volume Operation")
+    validate_unsupported('Update Volume Operation')
   end
 
   def raw_update_volume(_options = {})
-    raise NotImplementedError, _("raw_update_volume must be implemented in a subclass")
+    raise NotImplementedError, _('raw_update_volume must be implemented in a subclass')
   end
 
   def delete_volume
@@ -73,10 +73,10 @@ class CloudVolume < ApplicationRecord
   end
 
   def validate_delete_volume
-    validate_unsupported("Delete Volume Operation")
+    validate_unsupported('Delete Volume Operation')
   end
 
   def raw_delete_volume
-    raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
+    raise NotImplementedError, _('raw_delete_volume must be implemented in a subclass')
   end
 end

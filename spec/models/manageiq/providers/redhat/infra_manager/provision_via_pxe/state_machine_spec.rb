@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe do
-  context "::StateMachine" do
+  context '::StateMachine' do
     before do
       ems      = FactoryGirl.create(:ems_redhat_with_authentication)
       template = FactoryGirl.create(:template_redhat, :ext_management_system => ems)
@@ -10,9 +10,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe do
                                  :state => 'pending', :status => 'Ok', :options => options)
     end
 
-    include_examples "common rhev state machine methods"
+    include_examples 'common rhev state machine methods'
 
-    it "#configure_destination" do
+    it '#configure_destination' do
       expect(@task).to receive(:create_pxe_configuration_file)
       @task.configure_destination
     end

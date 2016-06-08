@@ -5,10 +5,10 @@ describe 'miq_request/_prov_options.html.haml' do
       stub_server_configuration(:server => {}, :session => {})
 
       # Create users
-      @admin    = FactoryGirl.create(:user, :role => "super_administrator")
-      @vm_user  = FactoryGirl.create(:user, :role => "vm_user")
-      @desktop  = FactoryGirl.create(:user, :role => "desktop")
-      @approver = FactoryGirl.create(:user, :role => "approver")
+      @admin    = FactoryGirl.create(:user, :role => 'super_administrator')
+      @vm_user  = FactoryGirl.create(:user, :role => 'vm_user')
+      @desktop  = FactoryGirl.create(:user, :role => 'desktop')
+      @approver = FactoryGirl.create(:user, :role => 'approver')
       @users = [@admin, @vm_user, @desktop, @approver]
 
       # Create requests
@@ -60,7 +60,7 @@ describe 'miq_request/_prov_options.html.haml' do
     end
 
     it 'for desktop' do
-      desktop = FactoryGirl.create(:user, :role => "desktop")
+      desktop = FactoryGirl.create(:user, :role => 'desktop')
       FactoryGirl.create(:vm_migrate_request, :requester => desktop)
 
       sb = {:prov_options => {
@@ -84,7 +84,7 @@ describe 'miq_request/_prov_options.html.haml' do
     end
 
     it 'for vm_user' do
-      vm_user = FactoryGirl.create(:user, :role => "vm_user")
+      vm_user = FactoryGirl.create(:user, :role => 'vm_user')
       FactoryGirl.create(:vm_migrate_request, :requester => vm_user)
 
       # Set instance variables

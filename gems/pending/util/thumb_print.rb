@@ -22,10 +22,10 @@ class ThumbPrint
   def to_sha1
     @cert = to_cert if @cert.nil?
     $log.info "ThumbPrint.to_sha1 for host #{@host}" if $log
-    raise "Invalid Certificate" if @cert.nil?
+    raise 'Invalid Certificate' if @cert.nil?
     @x509_cert       = OpenSSL::X509::Certificate.new(@cert)
     @der_thumb_print = OpenSSL::Digest::SHA1.new(@x509_cert.to_der).to_s
-    @thumb_print     = @der_thumb_print.scan(/../).collect(&:upcase).join(":")
+    @thumb_print     = @der_thumb_print.scan(/../).collect(&:upcase).join(':')
     $log.info "ThumbPrint.to_sha1 for host #{@host} is #{@thumb_print}" if $log
     @thumb_print
   end

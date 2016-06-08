@@ -1,4 +1,4 @@
-describe "GOOGLE best fit" do
+describe 'GOOGLE best fit' do
   let(:availability_zone) { FactoryGirl.create(:availability_zone_google) }
   let(:cloud_network)     { FactoryGirl.create(:cloud_network, :ems_id => ems.id, :enabled => true) }
   let(:cloud_subnet)      { FactoryGirl.create(:cloud_subnet, :cloud_network_id => cloud_network.id) }
@@ -23,13 +23,13 @@ describe "GOOGLE best fit" do
   let(:vm_template)       { FactoryGirl.create(:template_google, :ext_management_system => ems) }
 
   let(:ws) do
-    MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
-                            "namespace=Cloud/VM/Provisioning&class=Placement" \
-                            "&instance=default&message=google&" \
+    MiqAeEngine.instantiate('/System/Request/Call_Instance_With_Message?' \
+                            'namespace=Cloud/VM/Provisioning&class=Placement' \
+                            '&instance=default&message=google&' \
                             "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
 
-  it "provision task object auto placement for cloud network" do
+  it 'provision task object auto placement for cloud network' do
     MiqServer.seed
     cloud_subnet
     ws.root

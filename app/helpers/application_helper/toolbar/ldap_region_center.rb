@@ -21,8 +21,8 @@ class ApplicationHelper::Toolbar::LdapRegionCenter < ApplicationHelper::Toolbar:
           'pficon pficon-delete fa-lg',
           t = N_('Delete this LDAP Region'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to delete this LDAP Region?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to delete this LDAP Region?')),
       ]
     ),
   ])

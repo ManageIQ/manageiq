@@ -9,7 +9,7 @@ describe LdapDomain do
     @ldap_group  = FactoryGirl.create(:ldap_group,  :ldap_domain => @ldap_domain)
   end
 
-  it "should create proper AR relationships" do
+  it 'should create proper AR relationships' do
     expect(@ldap_server.ldap_domain).to eq(@ldap_domain)
     expect(@ldap_user.ldap_domain).to eq(@ldap_domain)
     expect(@ldap_group.ldap_domain).to eq(@ldap_domain)

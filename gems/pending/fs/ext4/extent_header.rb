@@ -17,7 +17,7 @@ module Ext4
     attr_reader :magic, :entries, :max, :depth, :generation
 
     def initialize(buf)
-      raise "Ext4::ExtentHeader.initialize: Nil buffer" if buf.nil?
+      raise 'Ext4::ExtentHeader.initialize: Nil buffer' if buf.nil?
       @eh = EXTENT_HEADER.decode(buf)
 
       @magic      = @eh['magic']

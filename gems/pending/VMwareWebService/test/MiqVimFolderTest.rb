@@ -18,12 +18,12 @@ $vim_log.add 'err_console'
 $stderr.sync = true
 $stdout.sync = true
 
-TARGET_VM      = "rpo-clone-src"
+TARGET_VM      = 'rpo-clone-src'
 sVmMor = nil
 miqVm = nil
 
 vimDs = nil
-dsName = "DEVOpen-E0"
+dsName = 'DEVOpen-E0'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -32,7 +32,7 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   vmMor = miqVm.vmMor
   rpMor = miqVm.vmh.resourcePool
@@ -50,18 +50,18 @@ begin
 
   puts "Unregistering #{TARGET_VM}..."
   miqVm.unregister
-  puts "Done."
+  puts 'Done.'
 
   puts
   puts "Registering VM #{TARGET_VM}..."
   miqVmf.registerVM(vmPath, TARGET_VM, rpMor, hsMor, false)
-  puts "done."
+  puts 'done.'
 rescue => err
   puts err.to_s
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vim.disconnect if vim
 end

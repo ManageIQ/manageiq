@@ -12,12 +12,12 @@ describe MiqAeClassCopy do
     EvmSpecHelper.import_yaml_model_from_file(@yaml_file, @src_domain)
   end
 
-  context "clone the class to a new domain" do
+  context 'clone the class to a new domain' do
     before do
       @ns1 = MiqAeNamespace.find_by_fqname("#{@src_domain}/#{@src_ns}", false)
     end
 
-    it "after copy both classes in DB should be congruent" do
+    it 'after copy both classes in DB should be congruent' do
       class1 = MiqAeClass.find_by_namespace_id_and_name(@ns1.id, @src_class)
       class2 = MiqAeClassCopy.new(@src_fqname).to_domain(@dest_domain)
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
@@ -27,14 +27,14 @@ describe MiqAeClassCopy do
     end
   end
 
-  context "clone the class to a new domain with a different namespace" do
+  context 'clone the class to a new domain with a different namespace' do
     before do
       @ns1 = MiqAeNamespace.find_by_fqname("#{@src_domain}/#{@src_ns}", false)
     end
 
-    it "after copy both classes in DB should be congruent" do
+    it 'after copy both classes in DB should be congruent' do
       class1 = MiqAeClass.find_by_namespace_id_and_name(@ns1.id, @src_class)
-      new_ns   = "NS3/NS4"
+      new_ns   = 'NS3/NS4'
       class2 = MiqAeClassCopy.new(@src_fqname).to_domain(@dest_domain, new_ns)
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
       @ns2 = MiqAeNamespace.find_by_fqname("#{@dest_domain}/#{new_ns}", false)
@@ -43,12 +43,12 @@ describe MiqAeClassCopy do
     end
   end
 
-  context "copy to a new classname in the same domain" do
+  context 'copy to a new classname in the same domain' do
     before do
       @ns1 = MiqAeNamespace.find_by_fqname("#{@src_domain}/#{@src_ns}", false)
     end
 
-    it "after copy both classes in DB should be congruent" do
+    it 'after copy both classes in DB should be congruent' do
       new_name = "SAME_AS_#{@src_class}"
       class1 = MiqAeClass.find_by_namespace_id_and_name(@ns1.id, @src_class)
       class2 = MiqAeClassCopy.new(@src_fqname).as(new_name)
@@ -58,24 +58,24 @@ describe MiqAeClassCopy do
     end
   end
 
-  context "copy to a existing class in the same domain" do
+  context 'copy to a existing class in the same domain' do
     before do
       @ns1 = MiqAeNamespace.find_by_fqname("#{@src_domain}/#{@src_ns}", false)
     end
 
-    it "copy should fail with error" do
+    it 'copy should fail with error' do
       expect { MiqAeClassCopy.new(@src_fqname).as(@src_class) }.to raise_error(RuntimeError)
     end
   end
 
-  context "copy to a new class name in the same domain but different namespace" do
+  context 'copy to a new class name in the same domain but different namespace' do
     before do
       @ns1 = MiqAeNamespace.find_by_fqname("#{@src_domain}/#{@src_ns}", false)
     end
 
-    it "after copy both classes in DB should be congruent" do
+    it 'after copy both classes in DB should be congruent' do
       new_name = "SAME_AS_#{@src_class}"
-      new_ns   = "NS3/NS4"
+      new_ns   = 'NS3/NS4'
       class1 = MiqAeClass.find_by_namespace_id_and_name(@ns1.id, @src_class)
       class2 = MiqAeClassCopy.new(@src_fqname).as(new_name, new_ns)
       class_check_status(class1, class2, MiqAeClassCompareFields::CONGRUENT_SCHEMA)
@@ -85,12 +85,12 @@ describe MiqAeClassCopy do
     end
   end
 
-  context "copy class onto itself" do
-    it "pass in same domain" do
+  context 'copy class onto itself' do
+    it 'pass in same domain' do
       expect { MiqAeClassCopy.new(@src_fqname).to_domain(@src_domain, nil, true) }.to raise_error(RuntimeError)
     end
 
-    it "pass in same classname" do
+    it 'pass in same classname' do
       expect { MiqAeClassCopy.new(@src_fqname).as(@src_class, nil, true) }.to raise_error(RuntimeError)
     end
   end

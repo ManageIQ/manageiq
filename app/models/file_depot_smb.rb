@@ -2,12 +2,12 @@ require 'mount/miq_generic_mount_session'
 
 class FileDepotSmb < FileDepot
   def self.uri_prefix
-    "smb"
+    'smb'
   end
 
   def self.validate_settings(settings)
     res = MiqSmbSession.new(settings).verify
-    raise _("Depot Settings validation failed with error: %{error}") % {:error => res.last} unless res.first
+    raise _('Depot Settings validation failed with error: %{error}') % {:error => res.last} unless res.first
     res
   end
 

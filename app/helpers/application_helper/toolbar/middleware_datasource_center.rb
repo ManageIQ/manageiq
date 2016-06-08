@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::MiddlewareDatasourceCenter < ApplicationHelper
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => 'false',
       :items   => [
         button(
           :middleware_datasource_tag,

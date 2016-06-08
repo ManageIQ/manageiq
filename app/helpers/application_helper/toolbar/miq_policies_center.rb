@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::MiqPoliciesCenter < ApplicationHelper::Toolbar
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New #{ui_lookup(:model=>@sb[:nodeid])} #{@sb[:mode].capitalize} Policy'),
           t,
-          :url_parms => "?typ=basic"),
+          :url_parms => '?typ=basic'),
       ]
     ),
   ])

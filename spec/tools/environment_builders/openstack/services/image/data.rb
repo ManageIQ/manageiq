@@ -4,13 +4,13 @@ module Openstack
   module Services
     module Image
       class Data < ::Openstack::Services::BaseData
-        IMAGE_NAME = "EmsRefreshSpec-Image"
+        IMAGE_NAME = 'EmsRefreshSpec-Image'
 
         def images
           [{
             :name => IMAGE_NAME
           }, {
-            :name       => "EmsRefreshSpec-Image-Private",
+            :name       => 'EmsRefreshSpec-Image-Private',
             :visibility => 'private'
           }]
         end
@@ -23,8 +23,8 @@ module Openstack
 
         def servers_snapshots(server_name = nil)
           servers_snapshots = {
-            "EmsRefreshSpec-PoweredOn" => [{
-              :name                    => "EmsRefreshSpec-PoweredOn-SnapShot"}]}
+            'EmsRefreshSpec-PoweredOn' => [{
+              :name                    => 'EmsRefreshSpec-PoweredOn-SnapShot'}]}
 
           indexed_collection_return(servers_snapshots, server_name)
         end

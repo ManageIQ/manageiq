@@ -5,7 +5,7 @@ begin
 rescue LoadError
 end
 
-if ENV["TRAVIS"]
+if ENV['TRAVIS']
   require 'coveralls'
   Coveralls.wear!
 end
@@ -15,7 +15,7 @@ require 'vcr'
 # vcr helper
 RECORD = {:record => :new_episodes}
 # e.g.: with_vcr("_3hosts", RECORD)
-def with_vcr(extension = "", options = {})
+def with_vcr(extension = '', options = {})
   VCR.use_cassette("#{described_class.name}#{extension}", options) do
     yield
   end

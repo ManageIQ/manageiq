@@ -8,7 +8,7 @@ include Iso9660
 
 class TestIso9660Directory < Minitest::Test
   def test_root_dir
-    puts "Testing root dir."
+    puts 'Testing root dir.'
     di = OpenStruct.new
     di.rawDisk = true
     di.fileName = $rawDisk

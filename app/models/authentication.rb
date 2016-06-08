@@ -20,18 +20,18 @@ class Authentication < ApplicationRecord
 
   # TODO: DELETE ME!!!!
   ERRORS = {
-    :incomplete => "Incomplete credentials",
-    :invalid    => "Invalid credentials",
+    :incomplete => 'Incomplete credentials',
+    :invalid    => 'Invalid credentials',
   }
 
   STATUS_SEVERITY = Hash.new(-1).merge(
-    ""            => -1,
-    "valid"       => 0,
-    "none"        => 1,
-    "incomplete"  => 1,
-    "error"       => 2,
-    "unreachable" => 2,
-    "invalid"     => 3,
+    ''            => -1,
+    'valid'       => 0,
+    'none'        => 1,
+    'incomplete'  => 1,
+    'error'       => 2,
+    'unreachable' => 2,
+    'invalid'     => 3,
   ).freeze
 
   def status_severity
@@ -95,8 +95,8 @@ class Authentication < ApplicationRecord
 
   def event_prefix
     case resource_type
-    when "Host"                then "host"
-    when "ExtManagementSystem" then "ems"
+    when 'Host'                then 'host'
+    when 'ExtManagementSystem' then 'ems'
     end
   end
 end

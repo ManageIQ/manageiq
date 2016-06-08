@@ -100,13 +100,13 @@ module ToolbarHelper
       out = []
       out << content_tag(:button,
                          prepare_tag_keys(props).update(
-                           :type         => "button",
+                           :type         => 'button',
                            :class        => "#{cls}btn btn-default dropdown-toggle",
-                           'data-toggle' => "dropdown",
+                           'data-toggle' => 'dropdown',
                          )) do
         (toolbar_image(props) +
-          _(props[:text].to_s) + "&nbsp;".html_safe +
-          content_tag(:span, '', :class => "caret")).html_safe
+          _(props[:text].to_s) + '&nbsp;'.html_safe +
+          content_tag(:span, '', :class => 'caret')).html_safe
       end
       out << content_tag(:ul, :class => 'dropdown-menu') do
         Array(props[:items]).collect do |button|
@@ -124,10 +124,10 @@ module ToolbarHelper
     cls += 'active ' if props[:selected] # for buttonTwoState only
     cls += 'disabled ' unless props[:enabled]
     content_tag(:button, prepare_tag_keys(props).update(
-                           :type  => "button",
+                           :type  => 'button',
                            :class => "#{cls}btn btn-default")) do
       (toolbar_image(props) +
-        _(props[:text].to_s) + "&nbsp;".html_safe).html_safe
+        _(props[:text].to_s) + '&nbsp;'.html_safe).html_safe
     end
   end
 
@@ -145,7 +145,7 @@ module ToolbarHelper
   #
   def toolbar_button_separator(props)
     cls = props[:hidden] ? ' hidden' : ''
-    content_tag(:div, '', :class => "divider #{cls}", :role => "presentation")
+    content_tag(:div, '', :class => "divider #{cls}", :role => 'presentation')
   end
 
   # Render normal push child button

@@ -48,7 +48,7 @@ class Service < ApplicationRecord
 
   def add_resource(rsc, options = {})
     if rsc.kind_of?(Vm) && !rsc.service.nil?
-      raise MiqException::Error, _("Vm <%{name}> is already connected to a service.") % {:name => rsc.name}
+      raise MiqException::Error, _('Vm <%{name}> is already connected to a service.') % {:name => rsc.name}
     end
     super
   end
@@ -126,7 +126,7 @@ class Service < ApplicationRecord
     each_group_resource(group_idx) do |svc_rsc|
       begin
         rsc = svc_rsc.resource
-        rsc_name =  "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : "")
+        rsc_name =  "#{rsc.class.name}:#{rsc.id}" + (rsc.respond_to?(:name) ? ":#{rsc.name}" : '')
         if rsc.respond_to?(action)
           _log.info "Processing action <#{action}> for Service:<#{name}:#{id}>, RSC:<#{rsc_name}}> in Group Idx:<#{group_idx}>"
           rsc.send(action)
@@ -154,8 +154,8 @@ class Service < ApplicationRecord
     nh = {
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "process_group_action",
-      :role        => "ems_operations",
+      :method_name => 'process_group_action',
+      :role        => 'ems_operations',
       :task_id     => "#{self.class.name.underscore}_#{id}",
       :args        => [action, group_idx, direction]
     }
@@ -190,8 +190,8 @@ class Service < ApplicationRecord
 
   def raise_final_process_event(action)
     case action.to_s
-    when "start" then raise_started_event
-    when "stop"  then raise_stopped_event
+    when 'start' then raise_started_event
+    when 'stop'  then raise_stopped_event
     end
   end
 

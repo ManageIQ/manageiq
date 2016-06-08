@@ -38,7 +38,7 @@ module MiqLinux
         ftype = perms[0, 1]
         perms = perms[1..-2]
       else
-        raise "Invalid perms length"
+        raise 'Invalid perms length'
       end
 
       unless ftype.nil?
@@ -63,7 +63,7 @@ module MiqLinux
     end
 
     def self.octal_to_permissions(octal, ftype = nil)
-      perms = ""
+      perms = ''
 
       unless ftype.nil?
         ftype = ftype[0, 1]
@@ -134,7 +134,7 @@ module MiqLinux
          :systemd_active    => parts[2],
          :systemd_sub       => parts[3],
          :typename          => 'linux_systemd',
-         :description       => parts[4..-1].join(" "),
+         :description       => parts[4..-1].join(' '),
          :enable_run_level  => nil,
          :disable_run_level => nil,
          :running           => parts[3] == 'running'}

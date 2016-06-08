@@ -13,6 +13,6 @@ class ContainerBuildController < ApplicationController
   private ############################
 
   def display_name
-    "Builds"
+    'Builds'
   end
 end

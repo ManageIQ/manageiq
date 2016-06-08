@@ -1,23 +1,23 @@
-describe "pglogical replication" do
+describe 'pglogical replication' do
   self.use_transactional_tests = false
 
-  let(:slave_db_name)        { Rails.configuration.database_configuration[Rails.env]["database"] }
+  let(:slave_db_name)        { Rails.configuration.database_configuration[Rails.env]['database'] }
   let(:master_db_name)       { "#{slave_db_name}_master" }
-  let(:replication_set_name) { "test_rep_set" }
-  let(:sub_name)             { "test_subscription" }
+  let(:replication_set_name) { 'test_rep_set' }
+  let(:sub_name)             { 'test_subscription' }
 
   let(:excluded_tables_regex) do
-    excluded_tables = @replication_config[:exclude_tables].join("|")
+    excluded_tables = @replication_config[:exclude_tables].join('|')
     excluded_tables = "^(#{excluded_tables})$"
     Regexp.new(excluded_tables)
   end
 
   let(:conn_info) do
     config = Rails.configuration.database_configuration[Rails.env]
-    dsn = ""
-    dsn << "user=#{config["username"]} " if config["username"]
-    dsn << "password=#{config["password"]} " if config["password"]
-    dsn << "host=#{config["host"]}" if config["host"]
+    dsn = ''
+    dsn << "user=#{config["username"]} " if config['username']
+    dsn << "password=#{config["password"]} " if config['password']
+    dsn << "host=#{config["host"]}" if config['host']
     dsn
   end
 
@@ -25,7 +25,7 @@ describe "pglogical replication" do
   let(:master_dsn) { "dbname=#{master_db_name} #{conn_info}" }
 
   before do
-    skip "pglogical must be installed" unless ActiveRecord::Base.connection.pglogical.installed?
+    skip 'pglogical must be installed' unless ActiveRecord::Base.connection.pglogical.installed?
 
     MiqRegion.seed
     Zone.seed
@@ -51,11 +51,11 @@ describe "pglogical replication" do
   after do
     Object.send(:remove_const, :MasterDb) if defined? MasterDb
     @slave_connection.pglogical.replication_set_drop(replication_set_name)
-    @slave_connection.pglogical.node_drop("slave_node")
+    @slave_connection.pglogical.node_drop('slave_node')
   end
 
   # As these tests are not rolled back it makes sense to do the test in one shot and make them order dependant.
-  it "replicates" do
+  it 'replicates' do
     insert_start = 0
 
     # Test that rows are replicated initially on subscription create
@@ -73,10 +73,10 @@ describe "pglogical replication" do
 
       # Test subscription info methods
       sub_info = @master_connection.pglogical.subscription_show_status(sub_name)
-      expect(sub_info["subscription_name"]).to eq(sub_name)
-      expect(sub_info["status"]).to eq("replicating")
-      expect(sub_info["provider_dsn"]).to eq(slave_dsn)
-      expect(sub_info["replication_sets"]).to eq([replication_set_name])
+      expect(sub_info['subscription_name']).to eq(sub_name)
+      expect(sub_info['status']).to eq('replicating')
+      expect(sub_info['provider_dsn']).to eq(slave_dsn)
+      expect(sub_info['replication_sets']).to eq([replication_set_name])
 
       sub_list = @master_connection.pglogical.subscriptions
       expect(sub_list.first).to eq(sub_info)
@@ -121,11 +121,11 @@ describe "pglogical replication" do
 
       2.times do |n|
         fields = []
-        fields << [arel_table[:name],        "#{t}_#{n + start}"]  if @slave_connection.column_exists?(t, "name")
-        fields << [arel_table[:description], "#{t}_#{n + start}"]  if @slave_connection.column_exists?(t, "description")
-        fields << [arel_table[:timestamp],   Time.now.utc] if @slave_connection.column_exists?(t, "timestamp")
-        fields << [arel_table[:created_at],  Time.now.utc] if @slave_connection.column_exists?(t, "created_at")
-        fields << [arel_table[:updated_at],  Time.now.utc] if @slave_connection.column_exists?(t, "updated_at")
+        fields << [arel_table[:name],        "#{t}_#{n + start}"]  if @slave_connection.column_exists?(t, 'name')
+        fields << [arel_table[:description], "#{t}_#{n + start}"]  if @slave_connection.column_exists?(t, 'description')
+        fields << [arel_table[:timestamp],   Time.now.utc] if @slave_connection.column_exists?(t, 'timestamp')
+        fields << [arel_table[:created_at],  Time.now.utc] if @slave_connection.column_exists?(t, 'created_at')
+        fields << [arel_table[:updated_at],  Time.now.utc] if @slave_connection.column_exists?(t, 'updated_at')
         next if fields.empty?
 
         klass.all.insert(fields)
@@ -162,8 +162,8 @@ describe "pglogical replication" do
     @slave_connection.pglogical.enable
     @master_connection.pglogical.enable
 
-    @slave_connection.pglogical.node_create("slave_node", slave_dsn)
-    @master_connection.pglogical.node_create("master_node", master_dsn)
+    @slave_connection.pglogical.node_create('slave_node', slave_dsn)
+    @master_connection.pglogical.node_create('master_node', master_dsn)
 
     @slave_connection.pglogical.replication_set_create(replication_set_name)
     @slave_connection.tables.sort.each do |t|

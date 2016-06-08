@@ -3,7 +3,7 @@ require 'pg'
 class MiqPglogical
   REPLICATION_SET_NAME = 'miq'.freeze
   SETTINGS_PATH = [:workers, :worker_base, :replication_worker, :replication].freeze
-  NODE_PREFIX = "region_".freeze
+  NODE_PREFIX = 'region_'.freeze
 
   def initialize
     @connection = ApplicationRecord.connection
@@ -23,7 +23,7 @@ class MiqPglogical
 
   # Returns whether or not this server is a pglogical node
   def node?
-    pglogical.enabled? && pglogical.nodes.field_values("name").include?(self.class.local_node_name)
+    pglogical.enabled? && pglogical.nodes.field_values('name').include?(self.class.local_node_name)
   end
 
   # Creates a pglogical node using the rails connection
@@ -102,7 +102,7 @@ class MiqPglogical
   end
 
   def self.node_name_to_region(name)
-    name.sub(NODE_PREFIX, "").to_i
+    name.sub(NODE_PREFIX, '').to_i
   end
 
   private

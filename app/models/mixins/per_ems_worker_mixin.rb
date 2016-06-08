@@ -88,13 +88,13 @@ module PerEmsWorkerMixin
     end
 
     def find_by_queue_name(queue_name)
-      server_scope.where(:queue_name => queue_name).order("started_on DESC")
+      server_scope.where(:queue_name => queue_name).order('started_on DESC')
     end
 
     def queue_name_for_ems(ems)
       # Host objects do not have dedicated refresh workers so request a generic worker which will
       # be used to make a web-service call to a SmartProxy to initiate inventory collection.
-      return "generic" if ems.kind_of?(Host) && ems.acts_as_ems?
+      return 'generic' if ems.kind_of?(Host) && ems.acts_as_ems?
 
       return ems unless ems.kind_of?(ExtManagementSystem)
       "ems_#{ems.id}"
@@ -102,8 +102,8 @@ module PerEmsWorkerMixin
 
     def ems_id_from_queue_name(queue_name)
       return nil if queue_name.blank?
-      name, id = queue_name.split("_")
-      return nil unless name == "ems"
+      name, id = queue_name.split('_')
+      return nil unless name == 'ems'
       id.to_i
     end
 

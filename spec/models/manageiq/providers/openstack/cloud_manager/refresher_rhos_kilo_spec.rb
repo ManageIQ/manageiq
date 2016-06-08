@@ -1,4 +1,4 @@
-require_relative "refresh_spec_common"
+require_relative 'refresh_spec_common'
 
 describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   include Openstack::RefreshSpecCommon
@@ -19,14 +19,14 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
     end
   end
 
-  context "when configured with skips" do
+  context 'when configured with skips' do
     before(:each) do
       stub_settings(
         :ems_refresh => {:openstack => {:inventory_ignore => [:cloud_volumes, :cloud_volume_snapshots]}}
       )
     end
 
-    it "will not parse the ignored items" do
+    it 'will not parse the ignored items' do
       with_cassette(@environment, @ems) do
         EmsRefresh.refresh(@ems)
         EmsRefresh.refresh(@ems.network_manager)
@@ -36,8 +36,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
     end
   end
 
-  context "when random 403 and 404 errors occurs" do
-    it "refresh will continue" do
+  context 'when random 403 and 404 errors occurs' do
+    it 'refresh will continue' do
       stub_excon_errors
 
       with_cassette('kilo_with_errors', @ems) do

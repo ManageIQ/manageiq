@@ -17,7 +17,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 hMor = nil
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -45,18 +45,18 @@ begin
     puts "Host name: #{miqHost.name}"
     puts
 
-    puts "**** configManager:"
+    puts '**** configManager:'
     vim.dumpObj(miqHost.configManager)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
     ss = miqHost.snmpSystem
   
     si = ss.snmpSystem
   
-    puts "**** snmpSystem:"
+    puts '**** snmpSystem:'
     vim.dumpObj(si)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
 rescue => err

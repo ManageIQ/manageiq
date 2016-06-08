@@ -21,14 +21,14 @@ $miq_wiredump = false
 $stderr.sync = true
 $stdout.sync = true
 
-SRC_VM        = "rpo-clone-src"
-TARGET_VM     = "rpo-linked-clone"
+SRC_VM        = 'rpo-clone-src'
+TARGET_VM     = 'rpo-linked-clone'
 
 sVmMor = nil
 miqVm = nil
 
 vimDs = nil
-dsName = "DEVOpen-E0"
+dsName = 'DEVOpen-E0'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -41,7 +41,7 @@ begin
   #
   # Get the source VM.
   #
-  miqVm = vim.getVimVmByFilter("config.name" => SRC_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => SRC_VM)
 
   puts "#{SRC_VM} vmPathName:      #{miqVm.dsPath}"
   puts "#{SRC_VM} vmLocalPathName: #{miqVm.localPath}"
@@ -70,12 +70,12 @@ begin
   # See if the target VM already exists.
   #
   begin
-      dMiqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+      dMiqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
       puts "Target VM: #{TARGET_VM} already exists"
       puts "\tDeleting #{TARGET_VM}..."
       dMiqVm.destroy
-      puts "done."
+      puts 'done.'
       exit
     rescue
       # Ignore expectd error
@@ -100,16 +100,16 @@ begin
   end
 
   puts
-  puts "Cloning..."
+  puts 'Cloning...'
   miqVm.cloneVM_raw(fmor, TARGET_VM, cspec)
-  puts "done."
+  puts 'done.'
 
   exit
 
   #
   # Get the target VM.
   #
-  tvm = vim.virtualMachinesByFilter("config.name" => TARGET_VM)
+  tvm = vim.virtualMachinesByFilter('config.name' => TARGET_VM)
   if tvm.empty?
     puts "VM: #{TARGET_VM} not found"
     exit
@@ -136,7 +136,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vim.disconnect if vim
 end

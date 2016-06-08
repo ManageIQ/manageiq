@@ -1,15 +1,15 @@
 class Chargeback < ActsAsArModel
   VIRTUAL_COL_USES = {
-    "v_derived_cpu_total_cores_used" => "cpu_usage_rate_average"
+    'v_derived_cpu_total_cores_used' => 'cpu_usage_rate_average'
   }
 
   def self.build_results_for_report_chargeback(options)
-    _log.info("Calculating chargeback costs...")
+    _log.info('Calculating chargeback costs...')
 
     tz = Metric::Helper.get_time_zone(options[:ext_options])
     # TODO: Support time profiles via options[:ext_options][:time_profile]
 
-    interval = options[:interval] || "daily"
+    interval = options[:interval] || 'daily'
     cb = new
 
     options[:ext_options] ||= {}
@@ -20,7 +20,7 @@ class Chargeback < ActsAsArModel
       :parent_ems_cluster => :tags,
       :parent_storage     => :tags,
       :parent_ems         => :tags)
-                              .select(*Metric::BASE_COLS).order("resource_id, timestamp")
+                              .select(*Metric::BASE_COLS).order('resource_id, timestamp')
     perf_cols = MetricRollup.attribute_names
     rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
       rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
@@ -32,7 +32,7 @@ class Chargeback < ActsAsArModel
     data = {}
 
     timerange.step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      recs = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
+      recs = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => 'hourly')
       recs = where_clause(recs, options)
       recs = Metric::Helper.remove_duplicate_timestamps(recs)
       _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
@@ -47,10 +47,10 @@ class Chargeback < ActsAsArModel
           if data[key].nil?
             start_ts, end_ts, display_range = get_time_range(perf, interval, tz)
             data[key] = {
-              "start_date"    => start_ts,
-              "end_date"      => end_ts,
-              "display_range" => display_range,
-              "interval_name" => interval,
+              'start_date'    => start_ts,
+              'end_date'      => end_ts,
+              'display_range' => display_range,
+              'interval_name' => interval,
             }.merge(extra_fields)
           end
 
@@ -59,7 +59,7 @@ class Chargeback < ActsAsArModel
         end
       end
     end
-    _log.info("Calculating chargeback costs...Complete")
+    _log.info('Calculating chargeback costs...Complete')
 
     [data.map { |r| new(r.last) }]
   end
@@ -68,14 +68,14 @@ class Chargeback < ActsAsArModel
     @rates ||= {}
     @enterprise ||= MiqEnterprise.my_enterprise
 
-    tags = perf.tag_names.split("|").reject { |n| n.starts_with?("folder_path_") }.sort.join("|")
+    tags = perf.tag_names.split('|').reject { |n| n.starts_with?('folder_path_') }.sort.join('|')
     keys = [tags, perf.parent_host_id, perf.parent_ems_cluster_id, perf.parent_storage_id, perf.parent_ems_id]
     tenant_resource = perf.resource.try(:tenant)
     keys.push(tenant_resource.id) unless tenant_resource.nil?
-    key = keys.join("_")
+    key = keys.join('_')
     return @rates[key] if @rates.key?(key)
 
-    tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "vm/tag/managed/#{t}"; arr }
+    tag_list = perf.tag_names.split('|').inject([]) { |arr, t| arr << "vm/tag/managed/#{t}"; arr }
 
     parents = [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise].compact
     parents.push(tenant_resource) unless tenant_resource.nil?
@@ -85,7 +85,7 @@ class Chargeback < ActsAsArModel
 
   def self.calculate_costs(perf, h, rates)
     # This expects perf interval to be hourly. That will be the most granular interval available for chargeback.
-    unless perf.capture_interval_name == "hourly"
+    unless perf.capture_interval_name == 'hourly'
       raise _("expected 'hourly' performance interval but got '%{interval}") % {:interval => perf.capture_interval_name}
     end
 
@@ -118,11 +118,11 @@ class Chargeback < ActsAsArModel
   def self.get_group_key_ts(perf, interval, tz)
     ts = perf.timestamp.in_time_zone(tz)
     case interval
-    when "daily"
+    when 'daily'
       ts = ts.beginning_of_day
-    when "weekly"
+    when 'weekly'
       ts = ts.beginning_of_week
-    when "monthly"
+    when 'monthly'
       ts = ts.beginning_of_month
     else
       raise _("interval '%{interval}' is not supported") % {:interval => interval}
@@ -134,13 +134,13 @@ class Chargeback < ActsAsArModel
   def self.get_time_range(perf, interval, tz)
     ts = perf.timestamp.in_time_zone(tz)
     case interval
-    when "daily"
-      [ts.beginning_of_day, ts.end_of_day, ts.strftime("%m/%d/%Y")]
-    when "weekly"
+    when 'daily'
+      [ts.beginning_of_day, ts.end_of_day, ts.strftime('%m/%d/%Y')]
+    when 'weekly'
       s_ts = ts.beginning_of_week
       e_ts = ts.end_of_week
       [s_ts, e_ts, "Week of #{s_ts.strftime("%m/%d/%Y")}"]
-    when "monthly"
+    when 'monthly'
       s_ts = ts.beginning_of_month
       e_ts = ts.end_of_month
       [s_ts, e_ts, "#{s_ts.strftime("%b %Y")}"]
@@ -162,13 +162,13 @@ class Chargeback < ActsAsArModel
 
     ts = Time.now.in_time_zone(tz)
     case interval
-    when "daily"
+    when 'daily'
       start_time = (ts - start_interval_offset.days).beginning_of_day.utc
       end_time   = (ts - end_interval_offset.days).end_of_day.utc
-    when "weekly"
+    when 'weekly'
       start_time = (ts - start_interval_offset.weeks).beginning_of_week.utc
       end_time   = (ts - end_interval_offset.weeks).end_of_week.utc
-    when "monthly"
+    when 'monthly'
       start_time = (ts - start_interval_offset.months).beginning_of_month.utc
       end_time   = (ts - end_interval_offset.months).end_of_month.utc
     else
@@ -179,7 +179,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.report_cb_model(model)
-    model.gsub(/^Chargeback/, "")
+    model.gsub(/^Chargeback/, '')
   end
 
   def self.db_is_chargeback?(db)

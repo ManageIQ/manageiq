@@ -3,120 +3,120 @@ describe MiqPolicyController do
     set_user_privileges
   end
 
-  describe "#import" do
-    include_context "valid session"
+  describe '#import' do
+    include_context 'valid session'
 
     let(:params) { {:import_file_upload_id => 123, :commit => commit} }
-    let(:miq_policy_import_service) { double("MiqPolicyImportService") }
+    let(:miq_policy_import_service) { double('MiqPolicyImportService') }
 
     before do
       allow(MiqPolicyImportService).to receive(:new).and_return(miq_policy_import_service)
     end
 
-    shared_examples_for "MiqPolicyController#import" do
-      it "assigns the import file upload id" do
+    shared_examples_for 'MiqPolicyController#import' do
+      it 'assigns the import file upload id' do
         post :import, :params => params
-        expect(assigns(:import_file_upload_id)).to eq("123")
+        expect(assigns(:import_file_upload_id)).to eq('123')
       end
     end
 
-    context "when the commit parameter is import" do
-      let(:commit) { "import" }
+    context 'when the commit parameter is import' do
+      let(:commit) { 'import' }
 
       before do
         allow(miq_policy_import_service).to receive(:import_policy)
       end
 
-      it_behaves_like "MiqPolicyController#import"
+      it_behaves_like 'MiqPolicyController#import'
 
-      it "imports a policy" do
-        expect(miq_policy_import_service).to receive(:import_policy).with("123")
+      it 'imports a policy' do
+        expect(miq_policy_import_service).to receive(:import_policy).with('123')
         post :import, :params => params
       end
     end
 
-    context "when the commit parameter is cancel" do
-      let(:commit) { "cancel" }
+    context 'when the commit parameter is cancel' do
+      let(:commit) { 'cancel' }
 
       before do
         allow(miq_policy_import_service).to receive(:cancel_import)
       end
 
-      it_behaves_like "MiqPolicyController#import"
+      it_behaves_like 'MiqPolicyController#import'
 
-      it "cancels the import" do
-        expect(miq_policy_import_service).to receive(:cancel_import).with("123")
+      it 'cancels the import' do
+        expect(miq_policy_import_service).to receive(:cancel_import).with('123')
         post :import, :params => params
       end
     end
   end
 
-  describe "#upload" do
-    include_context "valid session"
+  describe '#upload' do
+    include_context 'valid session'
 
-    shared_examples_for "MiqPolicyController#upload that cannot locate an import file" do
-      it "redirects with a cannot locate import file error message" do
+    shared_examples_for 'MiqPolicyController#upload that cannot locate an import file' do
+      it 'redirects with a cannot locate import file error message' do
         post :upload, :params => params
         expect(response).to redirect_to(
-          :action      => "export",
-          :dbtype      => "dbtype",
-          :flash_msg   => "Use the Browse button to locate an Import file",
+          :action      => 'export',
+          :dbtype      => 'dbtype',
+          :flash_msg   => 'Use the Browse button to locate an Import file',
           :flash_error => true
         )
       end
     end
 
-    let(:params) { {:dbtype => "dbtype", :upload => upload} }
+    let(:params) { {:dbtype => 'dbtype', :upload => upload} }
 
-    context "when there is an upload parameter" do
+    context 'when there is an upload parameter' do
       let(:upload) { {:file => file_contents} }
 
-      context "when there is a file upload parameter" do
-        context "when the file upload parameter responds to read" do
+      context 'when there is a file upload parameter' do
+        context 'when the file upload parameter responds to read' do
           let(:file_contents) do
-            fixture_file_upload("files/dummy_file.yml", "text/yml")
+            fixture_file_upload('files/dummy_file.yml', 'text/yml')
           end
 
-          let(:miq_policy_import_service) { double("MiqPolicyImportService") }
+          let(:miq_policy_import_service) { double('MiqPolicyImportService') }
 
           before do
             allow(MiqPolicyImportService).to receive(:new).and_return(miq_policy_import_service)
           end
 
-          context "when there is not an error while importing" do
-            let(:import_file_upload) { double("ImportFileUpload", :id => 123) }
+          context 'when there is not an error while importing' do
+            let(:import_file_upload) { double('ImportFileUpload', :id => 123) }
 
             before do
               allow(miq_policy_import_service).to receive(:store_for_import).and_return(import_file_upload)
             end
 
-            it "sets the sandbox hide variable to true" do
+            it 'sets the sandbox hide variable to true' do
               post :upload, :params => params
               expect(assigns(:sb)[:hide]).to be_truthy
             end
 
-            it "imports a policy" do
+            it 'imports a policy' do
               expect(miq_policy_import_service).to receive(:store_for_import).with(an_instance_of(ActionDispatch::Http::UploadedFile))
               post :upload, :params => params
             end
 
-            it "redirects to import with the import_file_upload_id" do
+            it 'redirects to import with the import_file_upload_id' do
               post :upload, :params => params
-              expect(response).to redirect_to(:action => "import", :dbtype => "dbtype", :import_file_upload_id => 123)
+              expect(response).to redirect_to(:action => 'import', :dbtype => 'dbtype', :import_file_upload_id => 123)
             end
           end
 
-          context "when there is an error while importing" do
+          context 'when there is an error while importing' do
             before do
               allow(miq_policy_import_service).to receive(:store_for_import)
-                .with(an_instance_of(ActionDispatch::Http::UploadedFile)).and_raise(StandardError.new("message"))
+                .with(an_instance_of(ActionDispatch::Http::UploadedFile)).and_raise(StandardError.new('message'))
             end
 
-            it "redirects to export with an error message" do
+            it 'redirects to export with an error message' do
               post :upload, :params => params
               expect(response).to redirect_to(
-                :action      => "export",
-                :dbtype      => "dbtype",
+                :action      => 'export',
+                :dbtype      => 'dbtype',
                 :flash_msg   => "Error during 'Policy Import': message",
                 :flash_error => true
               )
@@ -124,24 +124,24 @@ describe MiqPolicyController do
           end
         end
 
-        context "when the file upload parameter does not respond to read" do
-          let(:file_contents) { "does not respond to read" }
+        context 'when the file upload parameter does not respond to read' do
+          let(:file_contents) { 'does not respond to read' }
 
-          it_behaves_like "MiqPolicyController#upload that cannot locate an import file"
+          it_behaves_like 'MiqPolicyController#upload that cannot locate an import file'
         end
       end
 
-      context "when there is not a file upload parameter" do
+      context 'when there is not a file upload parameter' do
         let(:file_contents) { nil }
 
-        it_behaves_like "MiqPolicyController#upload that cannot locate an import file"
+        it_behaves_like 'MiqPolicyController#upload that cannot locate an import file'
       end
     end
 
-    context "when there is not an upload parameter" do
+    context 'when there is not an upload parameter' do
       let(:upload) { nil }
 
-      it_behaves_like "MiqPolicyController#upload that cannot locate an import file"
+      it_behaves_like 'MiqPolicyController#upload that cannot locate an import file'
     end
   end
 
@@ -189,7 +189,7 @@ describe MiqPolicyController do
       [:alert_tree, 'root', 'miq_policy/_alert_list'],
     ].each do |tree_sym, node, partial_name|
       it "renders #{partial_name} when #{tree_sym} tree #{node} node is selected" do
-        session[:sandboxes] = {"miq_policy" => {:active_tree => tree_sym}}
+        session[:sandboxes] = {'miq_policy' => {:active_tree => tree_sym}}
         session[:settings] ||= {}
 
         post :tree_select, :params => { :id => node, :format => :js }
@@ -213,7 +213,7 @@ describe MiqPolicyController do
     it 'should not hide center toolbar while doing searches' do
       allow(controller).to receive(:params).and_return(:action => 'x_search_by_name')
       controller.instance_eval { @sb = {:active_tree => :action_tree} }
-      controller.instance_eval { @edit = {:new => {:expression => {"???" => "???", :token => 1}}} }
+      controller.instance_eval { @edit = {:new => {:expression => {'???' => '???', :token => 1}}} }
       allow(controller).to receive(:render).and_return(nil)
       presenter = ExplorerPresenter.new(:active_tree => :action_tree)
 

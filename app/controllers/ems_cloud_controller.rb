@@ -13,7 +13,7 @@ class EmsCloudController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "ems_cloud"
+    @table_name ||= 'ems_cloud'
   end
 
   def ems_path(*args)

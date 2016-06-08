@@ -9,7 +9,7 @@ class RenameMiqSearchDb < ActiveRecord::Migration
   )]
 
   def up
-    say_with_time("Rename MiqSearch db values") do
+    say_with_time('Rename MiqSearch db values') do
       MiqSearch.all.each do |search|
         search.update_attributes!(:db => NAME_HASH[search.db]) if NAME_HASH.key?(search.db)
       end

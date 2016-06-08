@@ -12,8 +12,8 @@ module ReportFormatter
 
     def build_document_header
       raise "Can't create a graph without a sortby column" if mri.sortby.nil? &&
-                                                              mri.db != "MiqReport" # MiqReport based charts are already sorted
-      raise "Graph type not specified" if mri.graph.nil? ||
+                                                              mri.db != 'MiqReport' # MiqReport based charts are already sorted
+      raise 'Graph type not specified' if mri.graph.nil? ||
                                           (mri.graph.kind_of?(Hash) && mri.graph[:type].nil?)
     end
 
@@ -24,7 +24,7 @@ module ReportFormatter
       # find the highest chart value and set the units accordingly for large disk values (identified by GB in units)
       maxcols = 8
       divider = 1
-      if graph_options[:units] == "GB" && !graph_options[:composite]
+      if graph_options[:units] == 'GB' && !graph_options[:composite]
         maxval = 0
         mri.graph[:columns].each_with_index do |col, col_idx|
           next if col_idx >= maxcols
@@ -34,13 +34,13 @@ module ReportFormatter
         if maxval > 10.gigabytes
           divider = 1.gigabyte
         elsif maxval > 10.megabytes
-          graph_options[:units] = "MB"
+          graph_options[:units] = 'MB'
           divider = 1.megabyte
         elsif maxval > 10.kilobytes
-          graph_options[:units] = "KB"
+          graph_options[:units] = 'KB'
           divider = 1.kilobyte
         else
-          graph_options[:units] = "Bytes"
+          graph_options[:units] = 'Bytes'
           graph_options[:decimals] = 0
           divider = 1
         end
@@ -80,19 +80,19 @@ module ReportFormatter
       mri.graph[:columns].each_with_index do |col, col_idx|
         next if col_idx >= maxcols
         allnil = true
-        tip = graph_options[:trendtip] if col.starts_with?("trend") && graph_options[:trendtip]
+        tip = graph_options[:trendtip] if col.starts_with?('trend') && graph_options[:trendtip]
         categories = []                      # Store categories and series counts in an array of arrays
         series = series_class.new
         mri.table.data.each_with_index do |r, d_idx|
           # Use timestamp or statistic_time (metrics vs ontap)
-          rec_time = (r["timestamp"] || r["statistic_time"]).in_time_zone(tz)
+          rec_time = (r['timestamp'] || r['statistic_time']).in_time_zone(tz)
 
-          if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
-            categories.push(rec_time.month.to_s + "/" + rec_time.day.to_s)
+          if mri.db.include?('Daily') || (mri.where_clause && mri.where_clause.include?('daily'))
+            categories.push(rec_time.month.to_s + '/' + rec_time.day.to_s)
           elsif mri.extras[:realtime] == true
-            categories.push(rec_time.strftime("%H:%M:%S"))
+            categories.push(rec_time.strftime('%H:%M:%S'))
           else
-            categories.push(rec_time.hour.to_s + ":00")
+            categories.push(rec_time.hour.to_s + ':00')
           end
           #           r[col] = nil if rec_time.day == 12  # Test code, uncomment to skip 12th day of the month
 
@@ -140,10 +140,10 @@ module ReportFormatter
       cat_cnt = 0
       cat_total = mri.table.size
       mri.table.data.each do |r|
-        cat = cat_cnt > 6 ? '<Other(1)>' : slice_legend(r["resource_name"])
+        cat = cat_cnt > 6 ? '<Other(1)>' : slice_legend(r['resource_name'])
         val = rounded_value(r[col]) / divider
         next if val == 0
-        if cat.starts_with?("<Other(") && categories[-1].starts_with?("<Other(") # Are we past the top 10?
+        if cat.starts_with?('<Other(') && categories[-1].starts_with?('<Other(') # Are we past the top 10?
           categories[-1] = "<Other(#{cat_total - (cat_cnt - 1)})>" # Fix the <Other> category count
           series.add_to_value(-1, val) # Accumulate the series value
           next
@@ -161,7 +161,7 @@ module ReportFormatter
 
     def build_planning_chart(_maxcols, _divider)
       case mri.graph[:type]
-      when "Column", "ColumnThreed" # Build XML for column charts
+      when 'Column', 'ColumnThreed' # Build XML for column charts
         categories = [] # Store categories and series counts in an array of arrays
         series     = []
         mri.graph[:columns].each_with_index do |col, col_idx|
@@ -230,15 +230,15 @@ module ReportFormatter
             series[col_idx - 1][:data] ||= series_class.new
             tip_key = col + '_tip'
             tip = case r[0] # Override the formatting for certain column groups on single day percent utilization chart
-                  when "CPU"
+                  when 'CPU'
                     mri.format(tip_key, r[tip_key], :format => {
                                  :function => {
-                                   :name      => "mhz_to_human_size",
-                                   :precision => "1"
+                                   :name      => 'mhz_to_human_size',
+                                   :precision => '1'
                                  }})
-                  when "Memory"
+                  when 'Memory'
                     mri.format(tip_key, r[tip_key].to_f * 1024 * 1024, :format => format_bytes_human_size_1)
-                  when "Disk"
+                  when 'Disk'
                     mri.format(tip_key, r[tip_key], :format => format_bytes_human_size_1)
                   else
                     mri.format(tip_key, r[tip_key])
@@ -264,7 +264,7 @@ module ReportFormatter
       series.delete_if { |s| s[:data].sum == 0 }
 
       if categories.empty?
-        no_records_found_chart("No data found for the selected day")
+        no_records_found_chart('No data found for the selected day')
         false
       else
         add_axis_category_text(categories)
@@ -340,7 +340,7 @@ module ReportFormatter
           series.push(:value   => ocount,
                       :tooltip => "#{key1} / Other: #{ocount}")
         end
-        add_series(_("Other"), series)
+        add_series(_('Other'), series)
       end
       counts
     end
@@ -532,7 +532,7 @@ module ReportFormatter
       if keep < categories.length                      # keep the cathegories w/ highest counts
         other = categories.slice!(keep..-1)
         ocount = other.reduce(0) { |a, e| a + e.last } # sum up and add the other counts
-        categories.push(["Other", ocount]) if show_other
+        categories.push(['Other', ocount]) if show_other
       end
 
       series = categories.each_with_object(
@@ -550,10 +550,10 @@ module ReportFormatter
     # C&U performance charts (Cluster, Host, VM based)
     def build_performance_chart(maxcols, divider)
       case mri.graph[:type]
-      when "Area", "AreaThreed", "Line", "StackedArea",
+      when 'Area', 'AreaThreed', "Line", "StackedArea",
            "StackedThreedArea", "ParallelThreedColumn"
         build_performance_chart_area(maxcols, divider)
-      when "Pie", "PieThreed"
+      when 'Pie', 'PieThreed'
         build_performance_chart_pie(maxcols, divider)
       end
     end

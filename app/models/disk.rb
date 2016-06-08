@@ -11,8 +11,8 @@ class Disk < ApplicationRecord
   virtual_column :used_percent_of_provisioned, :type => :float
   virtual_column :partitions_aligned,          :type => :string,  :uses => {:partitions => :aligned}
 
-  virtual_has_many  :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many  :storage_systems,      :class_name => "CimComputerSystem"
+  virtual_has_many  :base_storage_extents, :class_name => 'CimStorageExtent'
+  virtual_has_many  :storage_systems,      :class_name => 'CimComputerSystem'
 
   def self.find_hard_disks
     where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").to_a
@@ -55,16 +55,16 @@ class Disk < ApplicationRecord
   end
 
   def rdm_disk?
-    disk_type && disk_type.starts_with?("rdm")
+    disk_type && disk_type.starts_with?('rdm')
   end
 
   def partitions_aligned
-    return "Not Applicable" if self.rdm_disk?
+    return 'Not Applicable' if self.rdm_disk?
     plist = partitions
-    return "Unknown" if plist.empty?
-    return "True"    if plist.all?(&:aligned?)
-    return "False"   if plist.any? { |p| p.aligned? == false }
-    "Unknown"
+    return 'Unknown' if plist.empty?
+    return 'True'    if plist.all?(&:aligned?)
+    return 'False'   if plist.any? { |p| p.aligned? == false }
+    'Unknown'
   end
 
   def base_storage_extents

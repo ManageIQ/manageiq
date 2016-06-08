@@ -3,7 +3,7 @@ describe ReportController do
     EvmSpecHelper.create_guid_miq_server_zone
     set_user_privileges
   end
-  describe "#widget_edit" do
+  describe '#widget_edit' do
     let(:miq_schedule) { FactoryGirl.build(:miq_schedule, :run_at => {}, :sched_action => {}) }
     let(:new_widget) { controller.instance_variable_get(:@widget) }
 
@@ -19,45 +19,45 @@ describe ReportController do
       controller.instance_variable_set(:@sb, :wtype => 'c') # chart widget
     end
 
-    context "add new widget" do
+    context 'add new widget' do
       before :each do
-        controller.instance_variable_set(:@_params, :button => "add")
+        controller.instance_variable_set(:@_params, :button => 'add')
       end
 
-      context "valid attributes" do
+      context 'valid attributes' do
         before :each do
           timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015', '00', '10')
           controller.instance_variable_set(:@edit,
-                                           :schedule => miq_schedule, :new => {:title => "NewCustomWidget",
-                                                                               :description => "NewCustomWidget",
-                                                                               :enabled => true, :roles => ["_ALL_"],
+                                           :schedule => miq_schedule, :new => {:title => 'NewCustomWidget',
+                                                                               :description => 'NewCustomWidget',
+                                                                               :enabled => true, :roles => ['_ALL_'],
                                                                                :groups => [],
                                                                                :timer => timer,
                                                                                :repfilter => report_id})
           controller.send(:widget_edit)
         end
 
-        it "adds new widget with entered attributes" do
+        it 'adds new widget with entered attributes' do
           expect(MiqWidget.count).to eq(@previous_count_of_widgets + 1)
           expect(new_widget.errors.count).to eq(0)
-          expect(new_widget.title).to eq("NewCustomWidget")
-          expect(new_widget.description).to eq("NewCustomWidget")
+          expect(new_widget.title).to eq('NewCustomWidget')
+          expect(new_widget.description).to eq('NewCustomWidget')
           expect(new_widget.enabled).to eq(true)
         end
 
         it "creates widget with widget.id in 'value' field from cond. of MiqExpression (in MiqSchedule.filter)" do
           expect(new_widget.id).to be_instance_of(Fixnum)
-          expect(miq_schedule.filter.exp["="]["value"]).to eq(new_widget.id)
+          expect(miq_schedule.filter.exp['=']['value']).to eq(new_widget.id)
         end
       end
 
-      context "invalid attributes" do
+      context 'invalid attributes' do
         before :each do
           timer = ReportHelper::Timer.new('Hourly', 1, 1, 1, 1, '11/13/2015', '00', '10')
           controller.instance_variable_set(:@edit,
-                                           :schedule => miq_schedule, :new => {:title => "",
-                                                                               :description => "",
-                                                                               :enabled => true, :roles => ["_ALL_"],
+                                           :schedule => miq_schedule, :new => {:title => '',
+                                                                               :description => '',
+                                                                               :enabled => true, :roles => ['_ALL_'],
                                                                                :groups => [],
                                                                                :timer => timer,
                                                                                :repfilter => report_id})
@@ -70,7 +70,7 @@ describe ReportController do
         end
       end
 
-      context "rss widget" do
+      context 'rss widget' do
         before do
           RssFeed.seed
           controller.instance_variable_set(:@sb, :wtype => 'rf') # RSS Feed widget
@@ -95,7 +95,7 @@ describe ReportController do
           controller.send(:widget_new)
           expect(MiqWidget.count).to eq(@previous_count_of_widgets + 1)
           expect(new_widget.errors.count).to eq(0)
-          expect(new_widget.title).to eq("NewRssWidget")
+          expect(new_widget.title).to eq('NewRssWidget')
           expect(new_widget.resource.id).to eq(rss_feed.id)
           expect(new_widget.options).to eq(:row_count => default_row_count_value)
         end
@@ -131,7 +131,7 @@ describe ReportController do
           controller.send(:widget_edit)
           expect(MiqWidget.count).to eq(@previous_count_of_widgets + 1)
           expect(new_widget.errors.count).to eq(0)
-          expect(new_widget.title).to eq("NewRssWidget")
+          expect(new_widget.title).to eq('NewRssWidget')
           expect(new_widget.resource.id).to eq(rss_feed.id)
           expect(new_widget.options).to eq(:row_count => default_row_count_value)
         end

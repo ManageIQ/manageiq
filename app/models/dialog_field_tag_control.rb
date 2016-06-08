@@ -57,7 +57,7 @@ class DialogFieldTagControl < DialogFieldSortedItem
 
     return available_tags if sort_field == :none
 
-    if data_type == "integer"
+    if data_type == 'integer'
       available_tags.sort_by! { |cat| cat[sort_field].to_i }
     else
       available_tags.sort_by! { |cat| cat[sort_field] }
@@ -68,7 +68,7 @@ class DialogFieldTagControl < DialogFieldSortedItem
   end
 
   def automate_output_value
-    MiqAeEngine.create_automation_attribute_array_value(Classification.where(:id => @value.to_s.split(",")))
+    MiqAeEngine.create_automation_attribute_array_value(Classification.where(:id => @value.to_s.split(',')))
   end
 
   def automate_key_name

@@ -176,7 +176,7 @@ class ExplorerPresenter
     @out << "ManageIQ.widget.dashboardUrl = '#{@options[:miq_widget_dd_url]}';" if @options[:miq_widget_dd_url]
 
     # Always set 'def' view in left cell as active in case it was changed to show compare/drift sections
-    @out << "var show_clear_search = undefined"
+    @out << 'var show_clear_search = undefined'
     @out << "
       if ($('#advsearchModal').hasClass('modal fade in')){
         $('#advsearchModal').modal('hide');}"
@@ -196,7 +196,7 @@ class ExplorerPresenter
 
     @out << ajax_action(@options[:ajax_action]) if @options[:ajax_action]
 
-    @out << "ManageIQ.grids.gtl_list_grid = undefined;" if @options[:clear_gtl_list_grid]
+    @out << 'ManageIQ.grids.gtl_list_grid = undefined;' if @options[:clear_gtl_list_grid]
 
     @options[:set_visible_elements].each do |el, visible|
       @out << set_element_visible(el, visible)
@@ -237,7 +237,7 @@ class ExplorerPresenter
 
     @out << "$('#clear_search').#{@options[:clear_search_show_or_hide]}();" if @options[:clear_search_show_or_hide]
     # always replace content partial to adjust height of content div
-    @out << "miqInitMainContent();"
+    @out << 'miqInitMainContent();'
     @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
 
     # Don't turn off spinner for charts/timelines

@@ -8,6 +8,6 @@ FactoryGirl.define do
   end
 
   factory :time_profile_utc, :parent => :time_profile_with_rollup do
-    tz "UTC"
+    tz 'UTC'
   end
 end

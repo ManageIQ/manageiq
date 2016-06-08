@@ -5,18 +5,18 @@ class MiqSmbSession < MiqGenericMountSession
 
   def initialize(log_settings)
     super(log_settings.merge(:ports => PORTS))
-    raise "username is a required value!" if @settings[:username].nil?
-    raise "password is a required value!" if @settings[:password].nil?
+    raise 'username is a required value!' if @settings[:username].nil?
+    raise 'password is a required value!' if @settings[:password].nil?
   end
 
   def connect
     scheme, userinfo, @host, port, registry, @mount_root, opaque, query, fragment = URI.split(URI.encode(@settings[:uri]))
-    @mount_path = @mount_root.split("/")[0..1].join("/")
+    @mount_path = @mount_root.split('/')[0..1].join('/')
     super
   end
 
   def mount_root
-    File.join(@mnt_point, (@mount_root.split("/") - @mount_path.split("/")))
+    File.join(@mnt_point, (@mount_root.split('/') - @mount_path.split('/')))
   end
 
   def mount_share
@@ -40,8 +40,8 @@ class MiqSmbSession < MiqGenericMountSession
       raise "Expected 'domain/username' or 'domain\\username' format, received: '#{@settings[:username]}'"
     end
 
-    mount = "mount"
-    mount << " -r" if settings_read_only?
+    mount = 'mount'
+    mount << ' -r' if settings_read_only?
 
     logger.info("#{log_header} Connecting to host: [#{@host}], share: [#{@mount_path}], domain: [#{domain}], user: [#{user}], using mount point: [#{@mnt_point}]...")
     # mount -t cifs //192.168.252.140/temp /media/windows_share/ -o rw,username=jrafaniello,password=blah,domain=manageiq.com

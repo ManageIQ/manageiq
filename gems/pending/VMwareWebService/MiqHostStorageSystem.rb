@@ -38,9 +38,9 @@ class MiqHostStorageSystem
   def addInternetScsiSendTargets(iScsiHbaDevice, targets)
     ta = targets.kind_of?(Array) ? targets : [targets]
     unless ta.first.kind_of?(VimHash)
-      nta = VimArray.new("ArrayOfHostInternetScsiHbaSendTarget") do |nt|
+      nta = VimArray.new('ArrayOfHostInternetScsiHbaSendTarget') do |nt|
         ta.each do |t|
-          nt << VimHash.new("HostInternetScsiHbaSendTarget") { |st| st.address = t }
+          nt << VimHash.new('HostInternetScsiHbaSendTarget') { |st| st.address = t }
         end
       end
       ta = nta

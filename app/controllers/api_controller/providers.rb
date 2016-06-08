@@ -1,15 +1,15 @@
 class ApiController
   module Providers
-    TYPE_ATTR         = "type"
-    ZONE_ATTR         = "zone"
-    CREDENTIALS_ATTR  = "credentials"
-    AUTH_TYPE_ATTR    = "auth_type"
-    DEFAULT_AUTH_TYPE = "default"
+    TYPE_ATTR         = 'type'
+    ZONE_ATTR         = 'zone'
+    CREDENTIALS_ATTR  = 'credentials'
+    AUTH_TYPE_ATTR    = 'auth_type'
+    DEFAULT_AUTH_TYPE = 'default'
     ENDPOINT_ATTRS    = %w(hostname ipaddress port)
-    RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"]
+    RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, 'zone_id']
 
     def create_resource_providers(type, _id, data = {})
-      if data.key?("id") || data.key?("href")
+      if data.key?('id') || data.key?('href')
         raise BadRequestError,
               "Resource id or href should not be specified for creating a new #{type}"
       end
@@ -19,7 +19,7 @@ class ApiController
 
     def edit_resource_providers(type, id = nil, data = {})
       raise BadRequestError, "Must specify an id for editing a #{type} resource" unless id
-      raise BadRequestError, "Provider type cannot be updated" if data.key?(TYPE_ATTR)
+      raise BadRequestError, 'Provider type cannot be updated' if data.key?(TYPE_ATTR)
 
       provider = resource_search(id, type, collection_class(:providers))
       edit_provider(provider, data)
@@ -55,7 +55,7 @@ class ApiController
 
     def fetch_provider_klass(klass, data)
       supported_types = klass.supported_subclasses.collect(&:name)
-      types_string    = supported_types.join(", ")
+      types_string    = supported_types.join(', ')
       unless data.key?(TYPE_ATTR)
         raise BadRequestError, "Must specify a provider type, supported types are: #{types_string}"
       end
@@ -97,7 +97,7 @@ class ApiController
 
     def destroy_provider(provider)
       desc = "#{provider_ident(provider)} deleting"
-      task_id = queue_object_action(provider, desc, :method_name => "destroy")
+      task_id = queue_object_action(provider, desc, :method_name => 'destroy')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -118,8 +118,8 @@ class ApiController
       auth_type  = creds.delete(AUTH_TYPE_ATTR) || DEFAULT_AUTH_TYPE
       auth_types = provider.respond_to?(:supported_auth_types) ? provider.supported_auth_types : [DEFAULT_AUTH_TYPE]
       unless auth_types.include?(auth_type)
-        raise BadRequestError, format("Unsupported authentication type %s specified, %s supports: %s",
-                                      auth_type, provider.class.name, auth_types.join(", "))
+        raise BadRequestError, format('Unsupported authentication type %s specified, %s supports: %s',
+                                      auth_type, provider.class.name, auth_types.join(', '))
       end
       [auth_type, creds]
     end
@@ -128,8 +128,8 @@ class ApiController
       auth_attrs    = provider.supported_auth_attributes
       invalid_attrs = creds.keys - auth_attrs
       return if invalid_attrs.blank?
-      raise BadRequestError, format("Unsupported credential attributes %s specified, %s supports: %s",
-                                    invalid_attrs.join(', '), provider.class.name, auth_attrs.join(", "))
+      raise BadRequestError, format('Unsupported credential attributes %s specified, %s supports: %s',
+                                    invalid_attrs.join(', '), provider.class.name, auth_attrs.join(', '))
     end
 
     def fetch_provider_data(provider_klass, data, options = {})
@@ -153,7 +153,7 @@ class ApiController
       return unless data[ZONE_ATTR].present?
 
       zone_id = parse_id(data[ZONE_ATTR], :zone)
-      raise BadRequestError, "Missing zone href or id" if zone_id.nil?
+      raise BadRequestError, 'Missing zone href or id' if zone_id.nil?
       resource_search(zone_id, :zone, Zone) # Only support Rbac allowed zone
     end
   end

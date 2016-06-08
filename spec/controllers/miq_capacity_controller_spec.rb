@@ -1,28 +1,28 @@
 describe MiqCapacityController do
-  methods = ["util_get_node_info", "bottleneck_get_node_info"]
+  methods = ['util_get_node_info', 'bottleneck_get_node_info']
   methods.each do |method|
     context "##{method}" do
       it "set correct right cell headers in #{method}" do
-        mr = FactoryGirl.create(:miq_region, :description => "My Region")
-        e = FactoryGirl.create(:ems_vmware, :name => "My Management System")
-        cl = FactoryGirl.create(:ems_cluster, :name => "My Cluster")
-        host = FactoryGirl.create(:host, :name => "My Host")
-        ds = FactoryGirl.create(:storage_vmware, :name => "My Datastore")
-        title_suffix = method == "util_get_node_info" ? "Utilization Trend Summary" : "Bottlenecks Summary"
+        mr = FactoryGirl.create(:miq_region, :description => 'My Region')
+        e = FactoryGirl.create(:ems_vmware, :name => 'My Management System')
+        cl = FactoryGirl.create(:ems_cluster, :name => 'My Cluster')
+        host = FactoryGirl.create(:host, :name => 'My Host')
+        ds = FactoryGirl.create(:storage_vmware, :name => 'My Datastore')
+        title_suffix = method == 'util_get_node_info' ? 'Utilization Trend Summary' : 'Bottlenecks Summary'
         tree_nodes = {:region => {:active_node  => "mr-#{MiqRegion.compress_id(mr.id)}",
-                                  :title_prefix => "Region",
+                                  :title_prefix => 'Region',
                                   :title        => mr.description},
                       :e      => {:active_node  => "e-#{MiqRegion.compress_id(e.id)}",
-                                  :title_prefix => "Provider",
+                                  :title_prefix => 'Provider',
                                   :title        => e.name},
                       :cl     => {:active_node  => "c-#{MiqRegion.compress_id(cl.id)}",
-                                  :title_prefix => "Cluster / Deployment Role",
+                                  :title_prefix => 'Cluster / Deployment Role',
                                   :title        => cl.name},
                       :host   => {:active_node  => "h-#{MiqRegion.compress_id(host.id)}",
-                                  :title_prefix => "Host / Node",
+                                  :title_prefix => 'Host / Node',
                                   :title        => host.name},
                       :ds     => {:active_node  => "ds-#{MiqRegion.compress_id(ds.id)}",
-                                  :title_prefix => "Datastore",
+                                  :title_prefix => 'Datastore',
                                   :title        => ds.name}
                       }
         tree_nodes.each do |_key, node|
@@ -31,7 +31,7 @@ describe MiqCapacityController do
                                              :utilization_tree => {:active_node => node[:active_node]},
                                              :bottlenecks_tree => {:active_node => node[:active_node]}
                                            },
-                                                                                                     :active_tree => method == "util_get_node_info" ? :utilization_tree : :bottlenecks_tree,
+                                                                                                     :active_tree => method == 'util_get_node_info' ? :utilization_tree : :bottlenecks_tree,
                                                                                                      :bottlenecks => {:options => {}},
                                                                                                      :util        => {:options => {}}
                                           )
@@ -45,7 +45,7 @@ describe MiqCapacityController do
 end
 
 describe MiqCapacityController do
-  context "#find_filtered" do
+  context '#find_filtered' do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
       set_user_privileges
@@ -62,7 +62,7 @@ describe MiqCapacityController do
     it 'displays all Vms' do
       allow(controller).to receive(:render)
       controller.instance_variable_set(:@sb, :planning => {:vms => {}, :options => {}})
-      controller.instance_variable_set(:@_params, :filter_typ => "all")
+      controller.instance_variable_set(:@_params, :filter_typ => 'all')
       controller.send(:planning_option_changed)
       sb = controller.instance_variable_get(:@sb)
       expect(sb[:planning][:vms]).to eq(@vm1.id.to_s => @vm1.name,
@@ -74,7 +74,7 @@ describe MiqCapacityController do
     it 'displays Vms filtered by host' do
       allow(controller).to receive(:render)
       controller.instance_variable_set(:@sb, :planning => {:vms => {}, :options => {}})
-      controller.instance_variable_set(:@_params, :filter_typ => "host", :filter_value => @host1.id)
+      controller.instance_variable_set(:@_params, :filter_typ => 'host', :filter_value => @host1.id)
       controller.send(:planning_option_changed)
       sb = controller.instance_variable_get(:@sb)
       expect(sb[:planning][:vms]).to eq(@vm1.id.to_s => @vm1.name, @vm3.id.to_s => @vm3.name, @vm4.id.to_s => @vm4.name)

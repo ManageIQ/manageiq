@@ -7,7 +7,7 @@
 # 4. Added support for dynamic service naming
 #
 
-$evm.log("info", "Detected vmdb_object_type:<#{$evm.root['vmdb_object_type']}>")
+$evm.log('info', "Detected vmdb_object_type:<#{$evm.root['vmdb_object_type']}>")
 
 prov = $evm.root['miq_provision_request'] || $evm.root['miq_provision'] || $evm.root['miq_provision_request_template']
 
@@ -19,11 +19,11 @@ diamethod = prov.get_option(:vm_prefix).to_s.strip
 if vm_name.blank? || vm_name == 'changeme'
   vm_prefix = nil
   vm_prefix ||= $evm.object['vm_prefix']
-  $evm.log("info", "vm_name from dialog:<#{vm_name.inspect}> vm_prefix from dialog:<#{diamethod.inspect}> vm_prefix from model:<#{vm_prefix.inspect}>")
+  $evm.log('info', "vm_name from dialog:<#{vm_name.inspect}> vm_prefix from dialog:<#{diamethod.inspect}> vm_prefix from model:<#{vm_prefix.inspect}>")
 
   # Get Provisioning Tags for VM Name
   tags = prov.get_tags
-  $evm.log("info", "Provisioning Object Tags: #{tags.inspect}")
+  $evm.log('info', "Provisioning Object Tags: #{tags.inspect}")
 
   # Set a Prefix for VM Naming
   if diamethod.blank?
@@ -31,19 +31,19 @@ if vm_name.blank? || vm_name == 'changeme'
   else
     vm_name = diamethod
   end
-  $evm.log("info", "VM Naming Prefix: <#{vm_name}>")
+  $evm.log('info', "VM Naming Prefix: <#{vm_name}>")
 
   # Check :environment tag
   env = tags[:environment]
 
   # If environment tag is not nil
   unless env.nil?
-    $evm.log("info", "Environment Tag: <#{env}> detected")
+    $evm.log('info', "Environment Tag: <#{env}> detected")
     # Get the first 3 characters of the :environment tag
     env_first = env[0, 3]
 
     vm_name =  "#{vm_name}#{env_first}"
-    $evm.log("info", "Updating VM Name: <#{vm_name}>")
+    $evm.log('info', "Updating VM Name: <#{vm_name}>")
   end
   derived_name = "#{vm_name}$n{3}"
 else
@@ -55,4 +55,4 @@ else
 end
 
 $evm.object['vmname'] = derived_name
-$evm.log("info", "VM Name: <#{derived_name}>")
+$evm.log('info', "VM Name: <#{derived_name}>")

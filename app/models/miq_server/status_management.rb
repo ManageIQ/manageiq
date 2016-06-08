@@ -21,7 +21,7 @@ module MiqServer::StatusManagement
 
     def log_system_status
       svr        = my_server
-      svr_name   = svr ? svr.friendly_name : "EVM Server (Unidentified)"
+      svr_name   = svr ? svr.friendly_name : 'EVM Server (Unidentified)'
 
       status = MiqSystem.memory
       unless status.empty?
@@ -32,19 +32,19 @@ module MiqServer::StatusManagement
       disks = MiqSystem.disk_usage
       unless disks.empty?
         _log.info("[#{svr_name}] Disk Usage:")
-        format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
+        format_string = '%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s'
         header = format(format_string,
-                        "Filesystem",
-                        "Type",
-                        "Total",
-                        "Used",
-                        "Available",
-                        "%Used",
-                        "iTotal",
-                        "iUsed",
-                        "iFree",
-                        "%iUsed",
-                        "Mounted on"
+                        'Filesystem',
+                        'Type',
+                        'Total',
+                        'Used',
+                        'Available',
+                        '%Used',
+                        'iTotal',
+                        'iUsed',
+                        'iFree',
+                        '%iUsed',
+                        'Mounted on'
                        )
         _log.info("[#{svr_name}] #{header}")
 

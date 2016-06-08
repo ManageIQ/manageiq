@@ -2,7 +2,7 @@ module MiqPolicyMixin
   extend ActiveSupport::Concern
 
   def add_policy(policy)
-    ns = "/miq_policy"
+    ns = '/miq_policy'
     cat = "assignment/#{policy.class.to_s.underscore}"
     tag = policy.id.to_s
 
@@ -11,23 +11,23 @@ module MiqPolicyMixin
   end
 
   def remove_policy(policy)
-    ns = "/miq_policy"
+    ns = '/miq_policy'
     cat = "assignment/#{policy.class.to_s.underscore}"
     tag = policy.id.to_s
 
     tags = tag_list(:ns => ns, :cat => cat).split
     tags.delete(tag)
 
-    tag_with(tags.join(" "), :ns => ns, :cat => cat)
+    tag_with(tags.join(' '), :ns => ns, :cat => cat)
     reload
   end
 
   def get_policies(mode = nil)
-    ns = "/miq_policy"
-    cat = "assignment"
+    ns = '/miq_policy'
+    cat = 'assignment'
     tag_list(:ns => ns, :cat => cat).split.collect do|t|
-      klass, id = t.split("/")
-      next unless ["miq_policy", "miq_policy_set"].include?(klass)
+      klass, id = t.split('/')
+      next unless ['miq_policy', 'miq_policy_set'].include?(klass)
       policy = klass.camelize.constantize.find_by_id(id.to_i)
       mode.nil? || policy.mode == mode ? policy : nil
     end.compact
@@ -52,17 +52,17 @@ module MiqPolicyMixin
 
       next if presults.empty? # skip profiles that had no policies due to the event not matching or no policies in scope
 
-      prof_result = "allow"
+      prof_result = 'allow'
       presults.each do|r|
-        if r["result"] == "deny"
-          prof_result = "deny"
+        if r['result'] == 'deny'
+          prof_result = 'deny'
           break
         end
       end
 
-      result_list = presults.collect { |r| r["result"] }.uniq
-      prof_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
-      result.push(prof.attributes.merge("result" => prof_result, "policies" => presults))
+      result_list = presults.collect { |r| r['result'] }.uniq
+      prof_result = result_list.first if result_list.length == 1 && result_list.first == 'N/A'
+      result.push(prof.attributes.merge('result' => prof_result, 'policies' => presults))
     end
     result
   end
@@ -71,10 +71,10 @@ module MiqPolicyMixin
     list.nil? ? plist = policies : plist = resolve_policies(list)
     result = true
     plist.each do|policy|
-      result = false if policy["result"] == "deny"
+      result = false if policy['result'] == 'deny'
     end
-    result_list = plist.collect { |r| r["result"] }.uniq
-    result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
+    result_list = plist.collect { |r| r['result'] }.uniq
+    result = result_list.first if result_list.length == 1 && result_list.first == 'N/A'
     result
   end
 
@@ -82,10 +82,10 @@ module MiqPolicyMixin
     plist = resolve_profiles(list)
     result = true
     plist.each do|prof|
-      result = false if prof["result"] == "deny"
+      result = false if prof['result'] == 'deny'
     end
-    result_list = plist.collect { |r| r["result"] }.uniq
-    result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
+    result_list = plist.collect { |r| r['result'] }.uniq
+    result = result_list.first if result_list.length == 1 && result_list.first == 'N/A'
     result
   end
 
@@ -96,7 +96,7 @@ module MiqPolicyMixin
   module ClassMethods
     def rsop(event, targets)
       eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
-      raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
+      raise _('No event found for [%{event}]') % {:event => event} if eventobj.nil?
 
       targets = extract_objects(targets)
 
@@ -107,18 +107,18 @@ module MiqPolicyMixin
           t.send(assoc).get_policies unless t.send(assoc).nil?
         end).compact.flatten.uniq
         presults = t.resolve_profiles(profiles.collect(&:id), eventobj)
-        target_result = presults.inject("allow") { |s, r| break "deny" if r["result"] == "deny"; s }
+        target_result = presults.inject('allow') { |s, r| break 'deny' if r['result'] == 'deny'; s }
 
-        result_list = presults.collect { |r| r["result"] }.uniq
-        target_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
-        result.push("id" => t.id, "name" => t.name, "result" => target_result, "profiles" => presults)
+        result_list = presults.collect { |r| r['result'] }.uniq
+        target_result = result_list.first if result_list.length == 1 && result_list.first == 'N/A'
+        result.push('id' => t.id, 'name' => t.name, 'result' => target_result, 'profiles' => presults)
       end
       result
     end
 
     def rsop_async(event, targets, userid = nil)
       eventobj = event.kind_of?(String) ? MiqEventDefinition.find_by_name(event) : MiqEventDefinition.extract_objects(event)
-      raise _("No event found for [%{event}]") % {:event => event} if eventobj.nil?
+      raise _('No event found for [%{event}]') % {:event => event} if eventobj.nil?
 
       targets =  targets.first.kind_of?(self) ? targets.collect(&:id) : targets
 
@@ -128,7 +128,7 @@ module MiqPolicyMixin
       }
       qopts = {
         :class_name  => name,
-        :method_name => "rsop",
+        :method_name => 'rsop',
         :args        => [eventobj.name, targets],
         :priority    => MiqQueue::HIGH_PRIORITY
       }

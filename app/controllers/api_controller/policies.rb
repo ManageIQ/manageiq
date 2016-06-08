@@ -44,7 +44,7 @@ class ApiController
     private
 
     def policy_ident(ctype, policy)
-      cdesc = (ctype == :policies) ? "Policy" : "Policy Profile"
+      cdesc = (ctype == :policies) ? 'Policy' : 'Policy Profile'
       "#{cdesc}: id:'#{policy.id}' description:'#{policy.description}' guid:'#{policy.guid}'"
     end
 
@@ -61,10 +61,10 @@ class ApiController
     def parse_policy(data, collection, klass)
       return {} if data.blank?
 
-      guid = data["guid"]
+      guid = data['guid']
       return klass.find_by_guid(guid) if guid.present?
 
-      href = data["href"]
+      href = data['href']
       href.match(%r{^.*/#{collection}/[0-9]+$}) ? klass.find(href.split('/').last) : {}
     end
 

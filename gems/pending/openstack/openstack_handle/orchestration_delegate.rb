@@ -3,7 +3,7 @@ module OpenstackHandle
     include OpenstackHandle::HandledList
     include Vmdb::Logging
 
-    SERVICE_NAME = "Orchestration"
+    SERVICE_NAME = 'Orchestration'
 
     attr_reader :name
 

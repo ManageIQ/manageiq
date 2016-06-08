@@ -3,14 +3,14 @@ class MiqEnterprise < ApplicationRecord
   has_many :metric_rollups, :as => :resource  # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  virtual_has_many :miq_regions,             :class_name => "MiqRegion"
-  virtual_has_many :ext_management_systems,  :class_name => "ExtManagementSystem"
-  virtual_has_many :vms_and_templates,       :class_name => "VmOrTemplate"
-  virtual_has_many :vms,                     :class_name => "Vm"
-  virtual_has_many :miq_templates,           :class_name => "MiqTemplate"
-  virtual_has_many :hosts,                   :class_name => "Host"
-  virtual_has_many :storages,                :class_name => "Storage"
-  virtual_has_many :policy_events,           :class_name => "PolicyEvent"
+  virtual_has_many :miq_regions,             :class_name => 'MiqRegion'
+  virtual_has_many :ext_management_systems,  :class_name => 'ExtManagementSystem'
+  virtual_has_many :vms_and_templates,       :class_name => 'VmOrTemplate'
+  virtual_has_many :vms,                     :class_name => 'Vm'
+  virtual_has_many :miq_templates,           :class_name => 'MiqTemplate'
+  virtual_has_many :hosts,                   :class_name => 'Host'
+  virtual_has_many :storages,                :class_name => 'Storage'
+  virtual_has_many :policy_events,           :class_name => 'PolicyEvent'
 
   serialize :settings
 
@@ -26,8 +26,8 @@ class MiqEnterprise < ApplicationRecord
   include Metric::CiMixin
 
   def self.seed
-    in_my_region.first || create!(:name => "Enterprise", :description => "Enterprise Root Object") do |_|
-      _log.info("Creating Enterprise Root Object")
+    in_my_region.first || create!(:name => 'Enterprise', :description => 'Enterprise Root Object') do |_|
+      _log.info('Creating Enterprise Root Object')
     end
   end
 

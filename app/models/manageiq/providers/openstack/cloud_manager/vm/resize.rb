@@ -3,7 +3,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Resize
     msg = validate_vm_control
     return {:available => msg[0], :message => msg[1]} unless msg.nil?
     return {:available => true, :message => nil} if %w(ACTIVE SHUTOFF).include?(raw_power_state)
-    {:available => false, :message => _("The Instance cannot be resized, current state has to be active or shutoff.")}
+    {:available => false, :message => _('The Instance cannot be resized, current state has to be active or shutoff.')}
   end
 
   def raw_resize(new_flavor)
@@ -13,7 +13,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Resize
     MiqQueue.put(:class_name  => self.class.name,
                  :expires_on  => Time.now.utc + 2.hours,
                  :instance_id => id,
-                 :method_name => "raw_resize_finish")
+                 :method_name => 'raw_resize_finish')
   rescue => err
     _log.error "vm=[#{name}], flavor=[#{new_flavor.name}], error: #{err}"
     raise MiqException::MiqOpenstackApiRequestError, err.to_s, err.backtrace

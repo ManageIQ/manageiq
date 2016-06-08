@@ -13,11 +13,11 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :Vm
 
   def self.ems_type
-    @ems_type ||= "gce".freeze
+    @ems_type ||= 'gce'.freeze
   end
 
   def self.description
-    @description ||= "Google Compute Engine".freeze
+    @description ||= 'Google Compute Engine'.freeze
   end
 
   def self.hostname_required?
@@ -77,10 +77,10 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
     require 'fog/google'
 
     config = {
-      :provider               => "Google",
+      :provider               => 'Google',
       :google_project         => google_project,
       :google_json_key_string => google_json_key,
-      :app_name               => I18n.t("product.name"),
+      :app_name               => I18n.t('product.name'),
       :app_version            => Vmdb::Appliance.VERSION,
     }
 
@@ -98,14 +98,14 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   def connect(options = {})
     require 'fog/google'
 
-    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(options[:auth_type])
+    raise MiqException::MiqHostError, 'No credentials defined' if missing_credentials?(options[:auth_type])
 
     auth_token = authentication_token(options[:auth_type])
     self.class.raw_connect(project, auth_token, options)
   end
 
   def gce
-    @gce ||= connect(:service => "compute")
+    @gce ||= connect(:service => 'compute')
   end
 
   # Operations

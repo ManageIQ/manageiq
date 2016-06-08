@@ -1,5 +1,5 @@
-require "ostruct"
-require "disk/MiqDisk"
+require 'ostruct'
+require 'disk/MiqDisk'
 require 'binary_struct'
 require 'VolumeManager/MiqLvm'
 
@@ -25,7 +25,7 @@ class MiqNativeVolumeManager
 
     vgNames     = @vgHash.keys
     lvNames     = @lvHash.keys
-    hiddenDevNames  = `pvdisplay -c 2> /dev/null`.split("\n").collect! { |p| p.lstrip.split(":", 2)[0] }
+    hiddenDevNames  = `pvdisplay -c 2> /dev/null`.split("\n").collect! { |p| p.lstrip.split(':', 2)[0] }
 
     if $log.debug?
       $log.debug "\nVolume Groups: (#{vgNames.class}: #{vgNames.length})"
@@ -78,7 +78,7 @@ class MiqNativeVolumeManager
       dInfo = OpenStruct.new
       dInfo.localDev = lvn
       dInfo.lvObj = @lvHash[lvn]
-      dInfo.hardwareId = ""
+      dInfo.hardwareId = ''
       lvList << MiqDisk.getDisk(dInfo)
     end
     lvList
@@ -87,7 +87,7 @@ class MiqNativeVolumeManager
   def openPhysicalVolumes(diskFiles)
     pVolumes = []
 
-    $log.debug "openPhysicalVolumes: no disk files supplied." unless diskFiles
+    $log.debug 'openPhysicalVolumes: no disk files supplied.' unless diskFiles
 
     #
     # Build a list of the VM's physical volumes.
@@ -131,15 +131,15 @@ class MiqNativeVolumeManager
   end # def openPhysicalVolumes
 
   def getVg(vgl)
-    vga = vgl.lstrip.split(":")
+    vga = vgl.lstrip.split(':')
     (VolumeGroup.new(vga[16], vga[0]))
   end
 
   def getLv(lvl)
-    lva = lvl.lstrip.split(":")
+    lva = lvl.lstrip.split(':')
     lvPath = lva[0]
     vgName = lva[1]
-    lvId   = `lvdisplay -v #{lvPath} 2> /dev/null | grep "LV UUID"`.split(" ").last
+    lvId   = `lvdisplay -v #{lvPath} 2> /dev/null | grep "LV UUID"`.split(' ').last
     lv  = LogicalVolume.new(lvId, File.basename(lvPath))
 
     vg = @vgHash[vgName]

@@ -17,12 +17,12 @@ class SysprepFile
     IniFile.new(:content => content)
   rescue IniFile::Error => err
     raise err,
-          _("Invalid INI file contents detected. %{error_message}") % {:error_message => err.message},
+          _('Invalid INI file contents detected. %{error_message}') % {:error_message => err.message},
           err.backtrace
   end
 
   def validate_sysprep_xml
     name = Nokogiri::XML(content).root.try(:name)
-    raise _("Invalid XML file contents detected.") unless name == "unattend"
+    raise _('Invalid XML file contents detected.') unless name == 'unattend'
   end
 end

@@ -1,5 +1,5 @@
 class CustomizationTemplateKickstart < CustomizationTemplate
-  DEFAULT_FILENAME = "ks.cfg".freeze
+  DEFAULT_FILENAME = 'ks.cfg'.freeze
 
   def self.pxe_server_filename(pxe_image, mac_address)
     "#{pxe_image.class.pxe_server_filename(mac_address)}.ks.cfg"

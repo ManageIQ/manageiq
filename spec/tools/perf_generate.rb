@@ -2,21 +2,21 @@ require 'trollop'
 ARGV.shift if ARGV[0] == '--'
 opts = Trollop.options do
   banner "Generate metrics records.\n\nUsage: rails runner #{$0} [-- options]\n\nOptions:\n\t"
-  opt :realtime,    "Realtime range",      :default => "4.hours"
-  opt :hourly,      "Hourly range",        :default => "6.months"
-  opt :vms,         "Number of VMs",       :default => 2000
-  opt :hosts,       "Number of Hosts",     :default => 10
-  opt :clusters,    "Number of Clusters",  :default => 2
-  opt :ems,         "Number of EMSes",     :default => 1
-  opt :storages,    "Number of Storages",  :default => 5
-  opt :no_generate, "Skips generation of the import file"
-  opt :no_import,   "Skips performing the actual import"
-  opt :no_delete,   "Skips deleting of the generated files"
-  opt :dry_run,     "Same as --no-generate --no-import --no-delete"
+  opt :realtime,    'Realtime range',      :default => '4.hours'
+  opt :hourly,      'Hourly range',        :default => '6.months'
+  opt :vms,         'Number of VMs',       :default => 2000
+  opt :hosts,       'Number of Hosts',     :default => 10
+  opt :clusters,    'Number of Clusters',  :default => 2
+  opt :ems,         'Number of EMSes',     :default => 1
+  opt :storages,    'Number of Storages',  :default => 5
+  opt :no_generate, 'Skips generation of the import file'
+  opt :no_import,   'Skips performing the actual import'
+  opt :no_delete,   'Skips deleting of the generated files'
+  opt :dry_run,     'Same as --no-generate --no-import --no-delete'
 end
-Trollop.die "script must be run with rails runner" unless Object.const_defined?(:Rails)
-Trollop.die :realtime, "must be a number with method (e.g. 4.hours)"  unless opts[:realtime].number_with_method?
-Trollop.die :hourly,   "must be a number with method (e.g. 6.months)" unless opts[:hourly].number_with_method?
+Trollop.die 'script must be run with rails runner' unless Object.const_defined?(:Rails)
+Trollop.die :realtime, 'must be a number with method (e.g. 4.hours)'  unless opts[:realtime].number_with_method?
+Trollop.die :hourly,   'must be a number with method (e.g. 6.months)' unless opts[:hourly].number_with_method?
 opts[:no_generate] = opts[:no_import] = opts[:no_delete] = true if opts[:dry_run]
 
 require 'ruby-progressbar'
@@ -40,8 +40,8 @@ realtime_count = hourly_count = 0
   hourly_count += HOURLY_PER_HOUR
 end
 
-IMPORT_REALTIME_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "import_realtime.csv"))
-IMPORT_HOURLY_FNAME = File.expand_path(File.join(File.dirname(__FILE__), "import_hourly.csv"))
+IMPORT_REALTIME_FNAME = File.expand_path(File.join(File.dirname(__FILE__), 'import_realtime.csv'))
+IMPORT_HOURLY_FNAME = File.expand_path(File.join(File.dirname(__FILE__), 'import_hourly.csv'))
 METRICS_COLS = [:capture_interval_name, :resource_type, :resource_id, :timestamp]
 
 puts <<-EOL
@@ -61,21 +61,21 @@ Importing metrics for:
 EOL
 
 unless opts[:no_generate]
-  $pbar = ProgressBar.create(:title => "generate", :total => realtime_count + hourly_count, :autofinish => false)
-  $out_csv_realtime = CSV.open(IMPORT_REALTIME_FNAME, "wb", :row_sep => "\n")
+  $pbar = ProgressBar.create(:title => 'generate', :total => realtime_count + hourly_count, :autofinish => false)
+  $out_csv_realtime = CSV.open(IMPORT_REALTIME_FNAME, 'wb', :row_sep => "\n")
   $out_csv_realtime << METRICS_COLS
-  $out_csv_hourly   = CSV.open(IMPORT_HOURLY_FNAME, "wb", :row_sep => "\n")
+  $out_csv_hourly   = CSV.open(IMPORT_HOURLY_FNAME, 'wb', :row_sep => "\n")
   $out_csv_hourly << METRICS_COLS
 
   def insert_realtime(klass, id, timestamp)
     180.times do |rt_count|
-      $out_csv_realtime << ["realtime", klass, id, (timestamp + 20 * rt_count).iso8601]
+      $out_csv_realtime << ['realtime', klass, id, (timestamp + 20 * rt_count).iso8601]
       $pbar.increment
     end
   end
 
   def insert_hourly(klass, id, timestamp)
-    $out_csv_hourly << ["hourly", klass, id, timestamp.iso8601]
+    $out_csv_hourly << ['hourly', klass, id, timestamp.iso8601]
     $pbar.increment
   end
 
@@ -85,9 +85,9 @@ unless opts[:no_generate]
     NUM_HOSTS.times do |h_id|
       VMS_PER_HOST.times do |v_count|
         v_id = h_id * VMS_PER_HOST + v_count
-        yield "Vm", v_id + 1
+        yield 'Vm', v_id + 1
       end
-      yield "Host", h_id + 1
+      yield 'Host', h_id + 1
     end
   end
 
@@ -104,17 +104,17 @@ unless opts[:no_generate]
 
     # "capture" hourly Storage data from the last hour
     (1..NUM_STORAGES).each do |id|
-      insert_hourly("Storage", id, last_hour)
+      insert_hourly('Storage', id, last_hour)
     end
 
     # "rollup" hourly data from the last hour for all
     with_vms_and_hosts do |klass, id|
       insert_hourly(klass, id, last_hour)
     end
-    (1..NUM_CLUSTERS).each { |id| insert_hourly("EmsCluster", id, last_hour) }
-    (1..NUM_EMS).each { |id| insert_hourly("ExtManagementSystem", id, last_hour) }
-    insert_hourly("MiqRegion", 1, last_hour)
-    insert_hourly("MiqEnterprise", 1, last_hour)
+    (1..NUM_CLUSTERS).each { |id| insert_hourly('EmsCluster', id, last_hour) }
+    (1..NUM_EMS).each { |id| insert_hourly('ExtManagementSystem', id, last_hour) }
+    insert_hourly('MiqRegion', 1, last_hour)
+    insert_hourly('MiqEnterprise', 1, last_hour)
   end
 
   $out_csv_realtime.close
@@ -123,7 +123,7 @@ unless opts[:no_generate]
 end
 
 unless opts[:no_import]
-  $pbar = ProgressBar.create(:title => "import", :total => realtime_count + hourly_count, :autofinish => false)
+  $pbar = ProgressBar.create(:title => 'import', :total => realtime_count + hourly_count, :autofinish => false)
   # PostgreSQL specific
   ActiveRecord::Base.connection.execute(
     "COPY metrics (#{METRICS_COLS.join(",")}) FROM '#{IMPORT_REALTIME_FNAME}' WITH CSV HEADER"

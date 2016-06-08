@@ -5,7 +5,7 @@ class VimPerformanceDaily < MetricRollup
   PARENT_COLS = [:parent_host_id, :parent_ems_cluster_id, :parent_storage_id, :parent_ems_id].freeze
 
   def self.find(cnt, *args)
-    raise _("Unsupported finder value %{number}") % {:number => cnt} unless cnt == :all
+    raise _('Unsupported finder value %{number}') % {:number => cnt} unless cnt == :all
     Vmdb::Deprecation.deprecation_warning(:find, :find_entries, caller(1))
 
     all(*args)
@@ -28,7 +28,7 @@ class VimPerformanceDaily < MetricRollup
     ext_options ||= {}
     # TODO: remove changing ext_options once this side effect is no longer needed:
     time_profile = ext_options[:time_profile] ||= TimeProfile.default_time_profile(ext_options[:tz])
-    klass = Metric::Helper.class_for_interval_name("daily", ext_options[:class])
+    klass = Metric::Helper.class_for_interval_name('daily', ext_options[:class])
 
     klass.with_time_profile_or_tz(time_profile || ext_options[:tz]).where(:capture_interval_name => 'daily')
   end
@@ -127,7 +127,7 @@ class VimPerformanceDaily < MetricRollup
         :resource_type         => rtype,
         :resource_id           => rid,
         :capture_interval      => 1.day,
-        :capture_interval_name => "daily",
+        :capture_interval_name => 'daily',
         :intervals_in_rollup   => Metric::Helper.max_count(counts[key])
       )
     end
@@ -136,7 +136,7 @@ class VimPerformanceDaily < MetricRollup
     results.each do |h|
       min_max = h.delete(:min_max)
 
-      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.inject({}) do |mm, k|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?('min', 'max') }.inject({}) do |mm, k|
         val = h.delete(k)
         mm[k] = val unless val.nil?
         mm
@@ -154,9 +154,9 @@ class VimPerformanceDaily < MetricRollup
   def self.process_only_cols(recs)
     only_cols = recs.select_values.collect(&:to_sym).presence
     return unless only_cols
-    only_cols += only_cols.select { |c| c.to_s.starts_with?("min_", "max_") }.collect { |c| c.to_s[4..-1].to_sym }
-    only_cols += only_cols.select { |c| c.to_s.starts_with?("abs_") }.collect { |c| c.to_s.split("_")[2..-2].join("_").to_sym }
-    if only_cols.detect { |c| c.to_s.starts_with?("v_pct_") }
+    only_cols += only_cols.select { |c| c.to_s.starts_with?('min_', 'max_') }.collect { |c| c.to_s[4..-1].to_sym }
+    only_cols += only_cols.select { |c| c.to_s.starts_with?('abs_') }.collect { |c| c.to_s.split('_')[2..-2].join('_').to_sym }
+    if only_cols.detect { |c| c.to_s.starts_with?('v_pct_') }
       only_cols += [:cpu_ready_delta_summation, :cpu_wait_delta_summation, :cpu_used_delta_summation]
     end
     only_cols += [:derived_storage_total, :derived_storage_free] if only_cols.include?(:v_derived_storage_used)

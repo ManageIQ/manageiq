@@ -14,27 +14,27 @@ FactoryGirl.define do
   end
 
   factory :metric_rollup_vm_hr, :parent => :metric_rollup, :class => :MetricRollup do
-    capture_interval_name "hourly"
-    resource_type         "VmOrTemplate"
+    capture_interval_name 'hourly'
+    resource_type         'VmOrTemplate'
   end
 
   factory :metric_rollup_vm_daily, :parent => :metric_rollup, :class => :MetricRollup do
-    capture_interval_name "daily"
-    resource_type         "VmOrTemplate"
+    capture_interval_name 'daily'
+    resource_type         'VmOrTemplate'
   end
 
   factory :metric_rollup_host_hr, :parent => :metric_rollup, :class => :MetricRollup do
-    capture_interval_name "hourly"
-    resource_type         "Host"
+    capture_interval_name 'hourly'
+    resource_type         'Host'
   end
 
   factory :metric_rollup_cm_hr, :parent => :metric_rollup, :class => :MetricRollup do
-    capture_interval_name "hourly"
-    resource_type         "ExtManagementSystem"
+    capture_interval_name 'hourly'
+    resource_type         'ExtManagementSystem'
   end
 
   factory :metric_rollup_cm_daily, :parent => :metric_rollup, :class => :MetricRollup do
-    capture_interval_name "daily"
-    resource_type         "ExtManagementSystem"
+    capture_interval_name 'daily'
+    resource_type         'ExtManagementSystem'
   end
 end

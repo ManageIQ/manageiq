@@ -1,11 +1,11 @@
-require "appliance_console/principal"
+require 'appliance_console/principal'
 
 describe ApplianceConsole::Principal do
   before { expect(Open3).not_to receive(:capture3) }
-  let(:hostname) { "machine.network.com" }
-  let(:realm)    { "NETWORK.COM" }
-  let(:service)  { "postgres" }
-  let(:principal_name) { "postgres/machine.network.com@NETWORK.COM" }
+  let(:hostname) { 'machine.network.com' }
+  let(:realm)    { 'NETWORK.COM' }
+  let(:service)  { 'postgres' }
+  let(:principal_name) { 'postgres/machine.network.com@NETWORK.COM' }
 
   subject { described_class.new(:hostname => hostname, :realm => realm, :service => service) }
 
@@ -17,21 +17,21 @@ describe ApplianceConsole::Principal do
   it { expect(subject.subject_name).to match(/CN=#{hostname}.*O=#{realm}/) }
   it { expect(subject).to be_ipa }
 
-  it "should register if not yet registered" do
-    expect_run(/ipa/, ["-e", "skip_version_check=1", "service-find", "--principal", principal_name], response(1))
-    expect_run(/ipa/, ["-e", "skip_version_check=1", "service-add", "--force", principal_name], response)
+  it 'should register if not yet registered' do
+    expect_run(/ipa/, ['-e', 'skip_version_check=1', 'service-find', '--principal', principal_name], response(1))
+    expect_run(/ipa/, ['-e', 'skip_version_check=1', 'service-add', '--force', principal_name], response)
 
     subject.register
   end
 
-  it "should not register if already registered" do
-    expect_run(/ipa/, ["-e", "skip_version_check=1", "service-find", "--principal", principal_name], response)
+  it 'should not register if already registered' do
+    expect_run(/ipa/, ['-e', 'skip_version_check=1', 'service-find', '--principal', principal_name], response)
 
     subject.register
   end
 
-  it "should not register if not ipa" do
-    subject.ca_name = "other"
+  it 'should not register if not ipa' do
+    subject.ca_name = 'other'
     subject.register
   end
 
@@ -43,6 +43,6 @@ describe ApplianceConsole::Principal do
   end
 
   def response(ret_code = 0)
-    AwesomeSpawn::CommandResult.new("cmd", "output", "", ret_code)
+    AwesomeSpawn::CommandResult.new('cmd', 'output', '', ret_code)
   end
 end

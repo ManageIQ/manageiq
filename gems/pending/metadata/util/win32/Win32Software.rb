@@ -83,14 +83,14 @@ module MiqWin32
       @product_keys = collectProductKeys(@digital_product_keys)
 
       # Get the applications
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData", reg_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData', reg_doc.root)
       if reg_node
         reg_node.each_element_with_attribute(:keyname) do |users|
           users.each_element_with_attribute(:keyname) do |components|
-            if components.attributes[:keyname].downcase == "products"
+            if components.attributes[:keyname].downcase == 'products'
               components.each_element_with_attribute(:keyname) do |products|
                 attrs = XmlFind.decode(products, PRODUCTS_MAPPING)
-                attrs.merge!(:typename => "win32_product", :product_key => @product_keys[attrs[:name]])
+                attrs.merge!(:typename => 'win32_product', :product_key => @product_keys[attrs[:name]])
                 clean_up_path(attrs)
                 @applications << attrs
               end
@@ -99,42 +99,42 @@ module MiqWin32
         end
       end
 
-      ["HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths",
-       "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths"].each do |reg_path|
+      ['HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths',
+       'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths'].each do |reg_path|
         reg_node = MIQRexml.findRegElement(reg_path, reg_doc.root)
         if reg_node
           postProcessApps(reg_node, fs)
           reg_node.each_element_with_attribute(:keyname) do |e|
             attrs = XmlFind.decode(e, APP_PATHS_MAPPING)
             next if attrs[:name].nil?
-            attrs.merge!(:typename => "app_path", :product_key => @product_keys[attrs[:name]])
+            attrs.merge!(:typename => 'app_path', :product_key => @product_keys[attrs[:name]])
             clean_up_path(attrs)
             @applications << attrs unless isDupApp?(attrs)
           end
         end
       end
 
-      ["HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
-       "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"].each do |reg_path|
+      ['HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+       'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall'].each do |reg_path|
         reg_node = MIQRexml.findRegElement(reg_path, reg_doc.root)
         if reg_node
           reg_node.each_element_with_attribute(:keyname) do |e|
             attrs = XmlFind.decode(e, UNINSTALL_MAPPING)
             next if attrs[:name].nil?
-            if ["security update", "update"].include?(attrs.delete(:release_type).to_s.downcase)
+            if ['security update', 'update'].include?(attrs.delete(:release_type).to_s.downcase)
               @patch_install_dates[e.attributes[:keyname]] = Time.parse(attrs[:installed_on]) unless attrs[:installed_on].nil?
               next
             else
               attrs.delete(:installed_on)
             end
-            attrs.merge!(:typename => "uninstall", :product_key => @product_keys[attrs[:name]])
+            attrs.merge!(:typename => 'uninstall', :product_key => @product_keys[attrs[:name]])
             @applications << attrs unless isDupApp?(attrs)
           end
         end
       end
 
       # Get the patches (Win2000, Win2003, WinXP)
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Hotfix", reg_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Hotfix', reg_doc.root)
       if reg_node
         reg_node.each_element_with_attribute(:keyname) do |e|
           attrs = XmlFind.decode(e, HOTFIX_MAPPING)
@@ -143,27 +143,27 @@ module MiqWin32
           attrs.delete(:description2) if attrs[:description] || attrs[:description2].blank?
           attrs[:description] = attrs.delete(:description2) if attrs[:description2]
 
-          attrs.merge!(:name => e.attributes[:keyname], :vendor => "Microsoft Corporation", :installed_on => @patch_install_dates[e.attributes[:keyname]])
+          attrs.merge!(:name => e.attributes[:keyname], :vendor => 'Microsoft Corporation', :installed_on => @patch_install_dates[e.attributes[:keyname]])
           @patches << attrs
         end
       end
 
       # Get the patches (Vista, Win2008, Windows 7)
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\Packages", reg_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component Based Servicing\\Packages', reg_doc.root)
       if reg_node
         hotfix = {}
         reg_node.each_element do |e|
           if e.attributes[:keyname][0, 8] == 'Package_'
 
             # Get the hotfix id (KB #) out of the keyname
-            package = e.attributes[:keyname].split("_")
+            package = e.attributes[:keyname].split('_')
             hotfix_id = (package[2][0, 2] == 'KB') ? package[2] : package[3]
             hotfix_id = hotfix_id.split('~')[0]
 
             unless hotfix.key?(hotfix_id)
               attrs = XmlFind.decode(e, HOTFIX_MAPPING_VISTA)
               install_time = wtime2time(attrs[:install_time_high], attrs[:install_time_low])
-              @patches << {:name => hotfix_id, :vendor => "Microsoft Corporation", :installed_on => install_time, :installed => 1}
+              @patches << {:name => hotfix_id, :vendor => 'Microsoft Corporation', :installed_on => install_time, :installed => 1}
               hotfix[hotfix_id] = true
             end
           end
@@ -195,8 +195,8 @@ module MiqWin32
     def applicationsToXml(doc = nil)
       doc = MiqXml.createDoc(nil) unless doc
       unless @applications.empty?
-        node = doc.add_element("applications")
-        @applications.each { |a| node.add_element("application", XmlHelpers.stringify_keys(a)) }
+        node = doc.add_element('applications')
+        @applications.each { |a| node.add_element('application', XmlHelpers.stringify_keys(a)) }
       end
       doc
     end
@@ -204,8 +204,8 @@ module MiqWin32
     def patchesToXml(doc = nil)
       doc = MiqXml.createDoc(nil) unless doc
       unless @patches.empty?
-        node = doc.add_element("patches")
-        @patches.each { |p| node.add_element("patch", XmlHelpers.stringify_keys(p)) }
+        node = doc.add_element('patches')
+        @patches.each { |p| node.add_element('patch', XmlHelpers.stringify_keys(p)) }
       end
       doc
     end
@@ -223,15 +223,15 @@ module MiqWin32
 
     def clean_up_path(attrs)
       if attrs[:path]
-        ["\\", ";"].each { |c| attrs[:path].chomp!(c) }
-        attrs[:path].gsub!(/^"/, "")
-        attrs[:path].gsub!(/"$/, "")
+        ['\\', ';'].each { |c| attrs[:path].chomp!(c) }
+        attrs[:path].gsub!(/^"/, '')
+        attrs[:path].gsub!(/"$/, '')
       end
     end
 
     def self.DecodeProductKey(product_key)
       return if product_key.blank? || product_key.length < 67
-      y = []; product_key.split(",")[52..67].each { |b| y << b.hex }
+      y = []; product_key.split(',')[52..67].each { |b| y << b.hex }
       return MIQEncode.base24Decode(y)
     rescue => err
       $log.error "MIQ(DecodeProductKey): [#{err}]"
@@ -251,9 +251,9 @@ module MiqWin32
 
             fh = nil
             fileName = appNode.text
-            fileName.tr!("\\", "/")
-            fileName = fileName[1..-2] if fileName[0, 1] == "\"" && fileName[-1, 1] == "\""
-            fileName = "C:/" + fileName if fileName[0..0] == "/"
+            fileName.tr!('\\', '/')
+            fileName = fileName[1..-2] if fileName[0, 1] == '"' && fileName[-1, 1] == '"'
+            fileName = 'C:/' + fileName if fileName[0..0] == '/'
 
             fh = fs.fileOpen(fileName)
             vi = PEheader.new(fh).versioninfo

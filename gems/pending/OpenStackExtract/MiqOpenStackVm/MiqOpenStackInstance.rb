@@ -72,12 +72,12 @@ class MiqOpenStackInstance
 
     $log.debug "#{log_prefix}: Snapshotting instance: #{instance.name}..."
     # TODO: pass in snapshot name.
-    rv = compute_service.create_image(instance.id, "EvmSnapshot", :description => options[:desc])
+    rv = compute_service.create_image(instance.id, 'EvmSnapshot', :description => options[:desc])
     rv.body['image'][:service] = image_service
 
     miq_snapshot = image_service.images.get(rv.body['image']['id'])
 
-    until miq_snapshot.status.upcase == "ACTIVE"
+    until miq_snapshot.status.upcase == 'ACTIVE'
       $log.debug "#{log_prefix}: #{miq_snapshot.status}"
       sleep 1
       # TODO(lsmola) identity is missing in Glance V2 object, fix it in Fog, then miq_snapshot.reload will work
@@ -136,7 +136,7 @@ class MiqOpenStackInstance
       $log.debug "diskFormat = #{diskFormat}"
 
       ost = OpenStruct.new
-      ost.rawDisk = diskFormat == "raw"
+      ost.rawDisk = diskFormat == 'raw'
       MiqVm.new(hardware, ost)
     end
   end

@@ -17,7 +17,7 @@ class TreeBuilderReportSchedules < TreeBuilder
   end
 
   def root_options
-    [t = _("All Schedules"), t, :miq_schedule]
+    [t = _('All Schedules'), t, :miq_schedule]
   end
 
   # Get root nodes count/array for explorer tree

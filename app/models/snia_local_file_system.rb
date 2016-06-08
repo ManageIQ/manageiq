@@ -151,7 +151,7 @@ class SniaLocalFileSystem < MiqCimInstance
       if storage_system.nil?
         root
       else
-        storage_system.evm_display_name + ":" + root
+        storage_system.evm_display_name + ':' + root
       end
     end
   end

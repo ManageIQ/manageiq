@@ -66,19 +66,19 @@ class CimStorageExtent < MiqCimInstance
   def top_storage_extents
     dh = {}
     getLeafNodes(SeToTopSe, self, dh)
-    dh.values.delete_if { |ae| !ae.kinda?("CIM_StorageVolume") && !ae.kinda?("CIM_LogicalDisk") }.compact.uniq
+    dh.values.delete_if { |ae| !ae.kinda?('CIM_StorageVolume') && !ae.kinda?('CIM_LogicalDisk') }.compact.uniq
   end
 
   def storage_volumes
     dh = {}
     getLeafNodes(SeToTopSe, self, dh)
-    dh.values.delete_if { |ae| !ae.kinda?("CIM_StorageVolume") }.compact.uniq
+    dh.values.delete_if { |ae| !ae.kinda?('CIM_StorageVolume') }.compact.uniq
   end
 
   def logical_disks
     dh = {}
     getLeafNodes(SeToTopSe, self, dh)
-    dh.values.delete_if { |ae| !ae.kinda?("CIM_LogicalDisk") }.compact.uniq
+    dh.values.delete_if { |ae| !ae.kinda?('CIM_LogicalDisk') }.compact.uniq
   end
 
   def file_systems
@@ -167,7 +167,7 @@ class CimStorageExtent < MiqCimInstance
       if storage_system.nil?
         device_id
       else
-        storage_system.evm_display_name + ":" + device_id
+        storage_system.evm_display_name + ':' + device_id
       end
     end
   end

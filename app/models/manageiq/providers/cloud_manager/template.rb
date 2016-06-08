@@ -11,6 +11,6 @@ class ManageIQ::Providers::CloudManager::Template < ::MiqTemplate
   private
 
   def raise_created_event
-    MiqEvent.raise_evm_event(self, "vm_template", :vm => self)
+    MiqEvent.raise_evm_event(self, 'vm_template', :vm => self)
   end
 end

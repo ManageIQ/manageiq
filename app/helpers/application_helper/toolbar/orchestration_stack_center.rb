@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::OrchestrationStackCenter < ApplicationHelper::
           'pficon pficon-delete fa-lg',
           t = N_('Remove this #{ui_lookup(:table=>"orchestration_stack")} from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
+          :url_parms => '&refresh=y',
           :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"orchestration_stack\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"orchestration_stack\")}?")),
       ]
     ),
@@ -48,7 +48,7 @@ class ApplicationHelper::Toolbar::OrchestrationStackCenter < ApplicationHelper::
           'fa fa-clock-o fa-lg',
           t = N_('Retire this Orchestration Stack'),
           t,
-          :confirm => N_("Retire this Orchestration Stack")),
+          :confirm => N_('Retire this Orchestration Stack')),
       ]
     ),
   ])

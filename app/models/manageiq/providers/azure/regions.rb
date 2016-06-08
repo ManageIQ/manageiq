@@ -2,93 +2,93 @@ module ManageIQ
   module Providers::Azure
     module Regions
       REGIONS = {
-        "australiaeast" => {
-          :name        => "australiaeast",
-          :description => _("Australia East"),
+        'australiaeast' => {
+          :name        => 'australiaeast',
+          :description => _('Australia East'),
         },
-        "australiasoutheast" => {
-          :name        => "australiasoutheast",
-          :description => _("Australia Southeast"),
+        'australiasoutheast' => {
+          :name        => 'australiasoutheast',
+          :description => _('Australia Southeast'),
         },
-        "brazilsouth" => {
-          :name        => "brazilsouth",
-          :description => _("Brazil South"),
+        'brazilsouth' => {
+          :name        => 'brazilsouth',
+          :description => _('Brazil South'),
         },
-        "canadacentral" => {
-          :name        => "canadacentral",
-          :description => _("Canada Central"),
+        'canadacentral' => {
+          :name        => 'canadacentral',
+          :description => _('Canada Central'),
         },
-        "canadaeast" => {
-          :name        => "canadaeast",
-          :description => _("Canada East"),
+        'canadaeast' => {
+          :name        => 'canadaeast',
+          :description => _('Canada East'),
         },
-        "centralindia" => {
-          :name        => "centralindia",
-          :description => _("Central India"),
+        'centralindia' => {
+          :name        => 'centralindia',
+          :description => _('Central India'),
         },
-        "centralus" => {
-          :name        => "centralus",
-          :description => _("Central US"),
+        'centralus' => {
+          :name        => 'centralus',
+          :description => _('Central US'),
         },
-        "eastasia" => {
-          :name        => "eastasia",
-          :description => _("East Asia"),
+        'eastasia' => {
+          :name        => 'eastasia',
+          :description => _('East Asia'),
         },
-        "eastus" => {
-          :name        => "eastus",
-          :description => _("US East"),
+        'eastus' => {
+          :name        => 'eastus',
+          :description => _('US East'),
         },
-        "eastus2" => {
-          :name        => "eastus2",
-          :description => _("East US2"),
+        'eastus2' => {
+          :name        => 'eastus2',
+          :description => _('East US2'),
         },
-        "japaneast" => {
-          :name        => "japaneast",
-          :description => _("Japan East"),
+        'japaneast' => {
+          :name        => 'japaneast',
+          :description => _('Japan East'),
         },
-        "japanwest" => {
-          :name        => "japanwest",
-          :description => _("Japan West"),
+        'japanwest' => {
+          :name        => 'japanwest',
+          :description => _('Japan West'),
         },
-        "northcentralus" => {
-          :name        => "northcentralus",
-          :description => _("North Central US"),
+        'northcentralus' => {
+          :name        => 'northcentralus',
+          :description => _('North Central US'),
         },
-        "northeurope" => {
-          :name        => "northeurope",
-          :description => _("North Europe"),
+        'northeurope' => {
+          :name        => 'northeurope',
+          :description => _('North Europe'),
         },
-        "southcentralus" => {
-          :name        => "southcentralus",
-          :description => _("South Central US"),
+        'southcentralus' => {
+          :name        => 'southcentralus',
+          :description => _('South Central US'),
         },
-        "southeastasia" => {
-          :name        => "southeastasia",
-          :description => _("South East Asia"),
+        'southeastasia' => {
+          :name        => 'southeastasia',
+          :description => _('South East Asia'),
         },
-        "southindia" => {
-          :name        => "southindia",
-          :description => _("South India"),
+        'southindia' => {
+          :name        => 'southindia',
+          :description => _('South India'),
         },
-        "usgoviowa" => {
-          :name        => "usgoviowa",
-          :description => _("US Gov Iowa"),
+        'usgoviowa' => {
+          :name        => 'usgoviowa',
+          :description => _('US Gov Iowa'),
         },
-        "usgovvirginia" => {
-          :name        => "usgovvirginia",
-          :description => _("US Gov Virginia"),
+        'usgovvirginia' => {
+          :name        => 'usgovvirginia',
+          :description => _('US Gov Virginia'),
         },
-        "westeurope" => {
-          :name        => "westeurope",
-          :description => _("West Europe"),
+        'westeurope' => {
+          :name        => 'westeurope',
+          :description => _('West Europe'),
         },
-        "westindia" => {
-          :name        => "westindia",
-          :description => _("West India"),
+        'westindia' => {
+          :name        => 'westindia',
+          :description => _('West India'),
         },
-        "westus" => {
-          :name        => "westus",
-          :description => _("US West"),
+        'westus' => {
+          :name        => 'westus',
+          :description => _('US West'),
         },
       }
 

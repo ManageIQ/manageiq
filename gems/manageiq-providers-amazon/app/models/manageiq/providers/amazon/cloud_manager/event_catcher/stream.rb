@@ -15,7 +15,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   #
   # @param [ManageIQ::Providers::Amazon::CloudManager] ems
   # @param [String] sns_aws_config_topic_name
-  AWS_CONFIG_TOPIC = "AWSConfig_topic".freeze
+  AWS_CONFIG_TOPIC = 'AWSConfig_topic'.freeze
   def initialize(ems, sns_aws_config_topic_name = AWS_CONFIG_TOPIC)
     @ems          = ems
     @topic_name   = sns_aws_config_topic_name
@@ -146,7 +146,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   def queue_url_to_arn(queue_url)
     @queue_url_to_arn ||= {}
     @queue_url_to_arn[queue_url] ||= begin
-      arn_attribute = "QueueArn"
+      arn_attribute = 'QueueArn'
       @ems.with_provider_connection(:service => :SQS) do |sqs|
         sqs.client.get_queue_attributes(
           :queue_url       => queue_url,
@@ -160,10 +160,10 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   def parse_event(message)
     event = JSON.parse(JSON.parse(message.body)['Message'])
     $log.info("#{log_header} Found SNS Message with message type #{event["messageType"]}")
-    return unless event["messageType"] == "ConfigurationItemChangeNotification"
+    return unless event['messageType'] == 'ConfigurationItemChangeNotification'
 
-    event["messageId"] = message.message_id
-    event["eventType"] = parse_event_type(event)
+    event['messageId'] = message.message_id
+    event['eventType'] = parse_event_type(event)
     $log.info("#{log_header} Parsed event from SNS Message #{event["eventType"]}")
     event
   rescue JSON::ParserError => err
@@ -172,26 +172,26 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream
   end
 
   def parse_event_type(event)
-    event_type_prefix = event.fetch_path("configurationItem", "resourceType")
-    change_type       = event.fetch_path("configurationItemDiff", "changeType")
+    event_type_prefix = event.fetch_path('configurationItem', 'resourceType')
+    change_type       = event.fetch_path('configurationItemDiff', 'changeType')
 
-    if event_type_prefix.end_with?("::Instance")
-      suffix   = change_type if change_type == "CREATE"
+    if event_type_prefix.end_with?('::Instance')
+      suffix   = change_type if change_type == 'CREATE'
       suffix ||= parse_instance_state_change(event)
     else
       suffix = change_type
     end
 
     # e.g., AWS_EC2_Instance_STARTED
-    "#{event_type_prefix}_#{suffix}".gsub("::", "_")
+    "#{event_type_prefix}_#{suffix}".gsub('::', '_')
   end
 
   def parse_instance_state_change(event)
-    change_type = event["configurationItemDiff"]["changeType"]
-    return change_type if change_type == "CREATE"
+    change_type = event['configurationItemDiff']['changeType']
+    return change_type if change_type == 'CREATE'
 
-    state_changed = event.fetch_path("configurationItemDiff", "changedProperties", "Configuration.State.Name")
-    state_changed ? state_changed["updatedValue"] : change_type
+    state_changed = event.fetch_path('configurationItemDiff', 'changedProperties', 'Configuration.State.Name')
+    state_changed ? state_changed['updatedValue'] : change_type
   end
 
   def log_header

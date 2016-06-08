@@ -17,29 +17,29 @@ module MiqAeServiceServiceTemplateProvisionRequestSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceTemplateProvisionRequest::service_template_provision_request=#{@service_template_provision_request.id}", @user)
     end
 
-    it "#approve" do
+    it '#approve' do
       approver = 'wilma'
-      reason   = "Why Not?"
+      reason   = 'Why Not?'
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['service_template_provision_request'].approve('#{approver}', '#{reason}')"
       @ae_method.update_attributes(:data => method)
       expect_any_instance_of(MiqRequest).to receive(:approve).with(approver, reason).once
       expect(invoke_ae.root(@ae_result_key)).to be_truthy
     end
 
-    it "#user_message" do
-      service_service_template_provision_request.user_message = "fred"
+    it '#user_message' do
+      service_service_template_provision_request.user_message = 'fred'
 
-      expect(@service_template_provision_request.reload.message).to eq("fred")
-      expect(@service_template_provision_request.reload.options[:user_message]).to eq("fred")
+      expect(@service_template_provision_request.reload.message).to eq('fred')
+      expect(@service_template_provision_request.reload.options[:user_message]).to eq('fred')
     end
 
-    it "#user_message reset" do
-      service_service_template_provision_request.user_message = "fred"
-      expect(@service_template_provision_request.reload.message).to eq("fred")
-      expect(@service_template_provision_request.reload.options[:user_message]).to eq("fred")
+    it '#user_message reset' do
+      service_service_template_provision_request.user_message = 'fred'
+      expect(@service_template_provision_request.reload.message).to eq('fred')
+      expect(@service_template_provision_request.reload.options[:user_message]).to eq('fred')
 
-      service_service_template_provision_request.user_message = ""
-      expect(@service_template_provision_request.reload.message).to eq("fred")
+      service_service_template_provision_request.user_message = ''
+      expect(@service_template_provision_request.reload.message).to eq('fred')
       expect(@service_template_provision_request.reload.options[:user_message]).to be_blank
     end
   end

@@ -2,24 +2,24 @@ class DialogFieldImporter
   class InvalidDialogFieldTypeError < StandardError; end
 
   def import_field(dialog_field_attributes)
-    if dialog_field_attributes["type"] == "DialogFieldDynamicList"
-      dialog_field_attributes["type"] = "DialogFieldDropDownList"
-      dialog_field_attributes["dynamic"] = true
+    if dialog_field_attributes['type'] == 'DialogFieldDynamicList'
+      dialog_field_attributes['type'] = 'DialogFieldDropDownList'
+      dialog_field_attributes['dynamic'] = true
     end
 
-    if DialogField::DIALOG_FIELD_TYPES.include?(dialog_field_attributes["type"])
-      dialog_field_type_class = dialog_field_attributes["type"].constantize
-      resource_action_attributes = dialog_field_attributes.delete("resource_action")
+    if DialogField::DIALOG_FIELD_TYPES.include?(dialog_field_attributes['type'])
+      dialog_field_type_class = dialog_field_attributes['type'].constantize
+      resource_action_attributes = dialog_field_attributes.delete('resource_action')
       resource_action = ResourceAction.new(resource_action_attributes)
-      dialog_field = dialog_field_type_class.new(dialog_field_attributes.merge("resource_action" => resource_action))
-      if dialog_field_attributes["type"] == "DialogFieldTagControl"
+      dialog_field = dialog_field_type_class.new(dialog_field_attributes.merge('resource_action' => resource_action))
+      if dialog_field_attributes['type'] == 'DialogFieldTagControl'
         set_category_for_tag_control(dialog_field, dialog_field_attributes)
       end
       dialog_field.save
 
       dialog_field
-    elsif dialog_field_attributes["type"].nil?
-      dialog_field_attributes.delete("resource_action")
+    elsif dialog_field_attributes['type'].nil?
+      dialog_field_attributes.delete('resource_action')
       DialogField.create(dialog_field_attributes)
     else
       raise InvalidDialogFieldTypeError
@@ -29,13 +29,13 @@ class DialogFieldImporter
   private
 
   def set_category_for_tag_control(dialog_field, dialog_field_attributes)
-    category_name = dialog_field_attributes["options"][:category_name]
+    category_name = dialog_field_attributes['options'][:category_name]
     if category_name
-      category_description = dialog_field_attributes["options"][:category_description]
+      category_description = dialog_field_attributes['options'][:category_description]
       category = Category.find_by_name(category_name)
       dialog_field.category = category.try(:description) == category_description ? category.id.to_s : nil
     else
-      dialog_field.category = dialog_field_attributes["options"][:category_id]
+      dialog_field.category = dialog_field_attributes['options'][:category_id]
     end
   end
 end

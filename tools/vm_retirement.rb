@@ -19,7 +19,7 @@ def get_invalid(valid_warnings)
   valid_warnings = Array.new(valid_warnings) unless valid_warnings.kind_of?(Array)
 
   if valid_warnings.empty?
-    puts "Valid Warnings not specified"
+    puts 'Valid Warnings not specified'
     return []
   end
 
@@ -65,15 +65,15 @@ def parse_command_line
   original = $ARGV.dup
   if $ARGV.length > 0
     while $ARGV.length > 0
-      break unless $ARGV.first.starts_with?("-")
+      break unless $ARGV.first.starts_with?('-')
       break if     $ARGV.first == '--'
 
       opt, value = parse_command_line_option($ARGV.shift)
 
       case opt.downcase
-      when "--valid_warnings"
+      when '--valid_warnings'
         cmdline_parms[:valid_warnings]  = value.split(',').collect { |v| v.strip.to_i }
-      when "--default_warnings"
+      when '--default_warnings'
         cmdline_parms[:default_warning] = value.to_i
       else
         raise "Invalid Command Line Option: #{opt.inspect}"
@@ -89,7 +89,7 @@ def parse_command_line
 end
 
 DEFAULTS = {
-  :verb            => "list",
+  :verb            => 'list',
   :valid_warnings  => [2, 7],
   :default_warning => 7,
 }
@@ -97,11 +97,11 @@ DEFAULTS = {
 parameters = DEFAULTS.merge(parse_command_line)
 
 case parameters[:verb].downcase
-when "list"
+when 'list'
   list
-when "list_invalid"
+when 'list_invalid'
   list_invalid parameters[:valid_warnings]
-when "reset_invalid"
+when 'reset_invalid'
   reset_invalid parameters[:valid_warnings], parameters[:default_warning]
 else
   puts "Invalid Verb on Command Line: <#{parameters[:verb]}>"

@@ -8,7 +8,7 @@ module VmxConfig
     # Append the .vmsd file data.  Centralized file for storing information and metadata about snapshots.
     begin
       f = nil
-      vmsd_filename = File.join(File.dirname(filename), File.basename(filename, ".*") + ".vmsd")
+      vmsd_filename = File.join(File.dirname(filename), File.basename(filename, '.*') + '.vmsd')
       f = File.open(vmsd_filename)
       fileData << convert_vmsd(f)
     rescue
@@ -22,7 +22,7 @@ module VmxConfig
     # Only read the enabled snapshots from the file and ignore the rest
     numSnapshots = timeHigh = timeLow = nil
     knownSnapshots = []
-    fileData = ""
+    fileData = ''
 
     # First we need to find how many snapshots
     f.each_line do |line|
@@ -73,11 +73,11 @@ module VmxConfig
   end
 
   def diskCreateType(filename)
-    diskAttribute(filename, "createtype")
+    diskAttribute(filename, 'createtype')
   end
 
   def diskControllerType(filename)
-    diskAttribute(filename, "adaptertype")
+    diskAttribute(filename, 'adaptertype')
   end
 
   def diskAttribute(filename, attr)
@@ -100,7 +100,7 @@ module VmxConfig
       if File.exist?(filename)
         File.read(filename, 2048).each_line do |line|
           if line.downcase.include?(attr)
-            retVal = line.split("=")[1].strip.tr("\"", "")
+            retVal = line.split('=')[1].strip.tr('"', '')
             break
           end
         end
@@ -116,7 +116,7 @@ module VmxConfig
 
   def getBaseDiskName(filename)
     fn = File.basename(filename, File.extname(filename))
-    if fn[-7, 1] == "-" && !fn[-6..-1].to_i.zero?
+    if fn[-7, 1] == '-' && !fn[-6..-1].to_i.zero?
       return File.join(File.dirname(filename), fn[0...-7] + File.extname(filename))
     else
       return filename
@@ -126,10 +126,10 @@ module VmxConfig
   def getVmType
     type = @cfgHash.each_pair do |k, v|
       # Look for any disk with the create type of vmfs
-      break(v) if k.downcase.include?("createtype") && v[0..3].downcase === "vmfs"
+      break(v) if k.downcase.include?('createtype') && v[0..3].downcase === 'vmfs'
     end
-    return "ESX" if type.kind_of?(String) && type[0..3].downcase == "vmfs"
-    "Server"
+    return 'ESX' if type.kind_of?(String) && type[0..3].downcase == 'vmfs'
+    'Server'
   end
 
   def getScsiType
@@ -139,7 +139,7 @@ module VmxConfig
     0.upto(3) do |i|
       if @cfgHash["scsi#{i}.virtualdev"]
         stype = @cfgHash["scsi#{i}.virtualdev"]
-        scsiType = stype if ["lsilogic", "buslogic"].include?(stype.downcase)
+        scsiType = stype if ['lsilogic', 'buslogic'].include?(stype.downcase)
         break
       end
     end
@@ -148,15 +148,15 @@ module VmxConfig
     if scsiType.nil?
       type = @cfgHash.each_pair do |k, v|
         # Look for any disk with the adapterType set
-        break(v) if k.downcase.include?("adaptertype") && ["lsilogic", "buslogic"].include?(v.downcase)
+        break(v) if k.downcase.include?('adaptertype') && ['lsilogic', 'buslogic'].include?(v.downcase)
       end
       scsiType = type if type.kind_of?(String)
     end
-    return "lsilogic" if scsiType.nil?
+    return 'lsilogic' if scsiType.nil?
     scsiType
   end
 
   def vendor
-    "vmware"
+    'vmware'
   end
 end

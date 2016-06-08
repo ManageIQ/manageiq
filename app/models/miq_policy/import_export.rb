@@ -3,11 +3,11 @@ module MiqPolicy::ImportExport
 
   module ClassMethods
     def import_from_hash(policy, options = {})
-      raise _("No Policy to Import") if policy.nil?
-      pe = policy.delete("MiqPolicyContent") { |_k| raise "No contents for Policy == #{policy.inspect}" }
-      pc = policy.delete("Condition") || []
+      raise _('No Policy to Import') if policy.nil?
+      pe = policy.delete('MiqPolicyContent') { |_k| raise "No contents for Policy == #{policy.inspect}" }
+      pc = policy.delete('Condition') || []
 
-      status = {:class => name, :description => policy["description"], :children => []}
+      status = {:class => name, :description => policy['description'], :children => []}
       events = []
 
       actionsHash = {}
@@ -16,19 +16,19 @@ module MiqPolicy::ImportExport
 
       pe.each do |e|
         opts = {}
-        ["qualifier", "success_sequence", "failure_sequence", "success_synchronous", "failure_synchronous"].each do |k|
+        ['qualifier', 'success_sequence', 'failure_sequence', 'success_synchronous', 'failure_synchronous'].each do |k|
           v = e.delete(k)
           opts[k.to_sym] = v unless v.nil?
         end
 
         akey = nil
-        if e["MiqAction"]
-          akey = e["MiqAction"]["description"]
-          actionsHash[akey] = MiqAction.import_from_hash(e["MiqAction"], options) unless actionsHash.key?(akey)
+        if e['MiqAction']
+          akey = e['MiqAction']['description']
+          actionsHash[akey] = MiqAction.import_from_hash(e['MiqAction'], options) unless actionsHash.key?(akey)
         end
 
-        event = e["MiqEventDefinition"] || e["MiqEvent"]
-        ekey = event["name"]
+        event = e['MiqEventDefinition'] || e['MiqEvent']
+        ekey = event['name']
         eventsHash[ekey] = MiqEventDefinition.import_from_hash(event,  options) unless eventsHash.key?(ekey)
 
         e2a[ekey] = [] unless e2a.key?(ekey)
@@ -54,17 +54,17 @@ module MiqPolicy::ImportExport
 
       conditions = []
       pc.each do|c|
-        c.delete("condition_id")
+        c.delete('condition_id')
         condition, s = Condition.import_from_hash(c, options)
         status[:children].push(s)
         conditions.push(condition)
       end
 
-      policy["towhat"] ||= "Vm"      # Default "towhat" value to "Vm" to support older export decks that don't have a value set.
-      policy["active"] ||= true      # Default "active" value to true to support older export decks that don't have a value set.
-      policy["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
+      policy['towhat'] ||= 'Vm'      # Default "towhat" value to "Vm" to support older export decks that don't have a value set.
+      policy['active'] ||= true      # Default "active" value to true to support older export decks that don't have a value set.
+      policy['mode'] ||= 'control' # Default "mode" value to true to support older export decks that don't have a value set.
 
-      p = MiqPolicy.find_by_guid(policy["guid"])
+      p = MiqPolicy.find_by_guid(policy['guid'])
       msg_pfx = "Importing Policy: guid=[#{policy["guid"]}] description=[#{policy["description"]}]"
       if p.nil?
         p = MiqPolicy.new(policy)
@@ -106,7 +106,7 @@ module MiqPolicy::ImportExport
 
       input = YAML.load(fd)
       input.each do |e|
-        p, stat = import_from_hash(e["MiqPolicy"])
+        p, stat = import_from_hash(e['MiqPolicy'])
         stats.push(stat)
       end
 
@@ -116,9 +116,9 @@ module MiqPolicy::ImportExport
 
   def export_to_array
     h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqPolicyContent"] = miq_policy_contents.collect { |pe| pe.export_to_array.first["MiqPolicyContent"] unless pe.nil? }
-    h["Condition"] = conditions.collect { |c| c.export_to_array.first["Condition"] unless c.nil? }
+    ['id', 'created_on', 'updated_on'].each { |k| h.delete(k) }
+    h['MiqPolicyContent'] = miq_policy_contents.collect { |pe| pe.export_to_array.first['MiqPolicyContent'] unless pe.nil? }
+    h['Condition'] = conditions.collect { |c| c.export_to_array.first['Condition'] unless c.nil? }
     [self.class.to_s => h]
   end
 

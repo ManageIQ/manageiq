@@ -39,7 +39,7 @@ module ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask::StateM
 
   def enable_build_mode
     update_and_notify_parent(:message => "Setting build flag on #{source.name}")
-    source.with_provider_object { |cs| cs.update("id" => source.manager_ref, "build" => true) }
+    source.with_provider_object { |cs| cs.update('id' => source.manager_ref, 'build' => true) }
     source.with_provider_object(&:set_boot_mode)
     signal :os_build
   end
@@ -78,7 +78,7 @@ module ManageIQ::Providers::Foreman::ConfigurationManager::ProvisionTask::StateM
       _log.log_backtrace(err)
     end
 
-    update_and_notify_parent(:state => 'provisioned', :message => "Finished Configured System Customization")
+    update_and_notify_parent(:state => 'provisioned', :message => 'Finished Configured System Customization')
     signal :finish
   end
 

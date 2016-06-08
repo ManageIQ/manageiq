@@ -1,25 +1,25 @@
 require_relative '../../bundler_setup'
 require 'RcuWebService/RcuClientBase'
 
-VC        = raise "please define"
-VC_USER     = raise "please define"
-VC_PASSWORD   = raise "please define"
+VC        = raise 'please define'
+VC_USER     = raise 'please define'
+VC_PASSWORD   = raise 'please define'
 
-SOURCE_VM   = raise "please define"
+SOURCE_VM   = raise 'please define'
 
 begin
 
   rcu = RcuClientBase.new(VC, VC_USER, VC_PASSWORD)
 
   puts
-  puts "****"
-  srcVmtMor = rcu.getMoref(SOURCE_VM, "VirtualMachine")
+  puts '****'
+  srcVmtMor = rcu.getMoref(SOURCE_VM, 'VirtualMachine')
   raise "Source VM: #{SOURCE_VM} not found" unless srcVmtMor
   puts "Source VM: #{SOURCE_VM} (#{srcVmtMor})"
-  puts "****"
+  puts '****'
 
   puts
-  puts "Calling getVms..."
+  puts 'Calling getVms...'
   rv = rcu.getVms(srcVmtMor)
 
   puts

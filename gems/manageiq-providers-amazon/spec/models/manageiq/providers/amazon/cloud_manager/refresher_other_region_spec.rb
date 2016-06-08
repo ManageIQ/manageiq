@@ -1,14 +1,14 @@
 describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_amazon, :provider_region => "us-west-1", :zone => zone)
+    @ems = FactoryGirl.create(:ems_amazon, :provider_region => 'us-west-1', :zone => zone)
     @ems.update_authentication(:default => {
-                                 :userid   => "0123456789ABCDEFGHIJ",
-                                 :password => "ABCDEFGHIJKLMNO1234567890abcdefghijklmno"
+                                 :userid   => '0123456789ABCDEFGHIJ',
+                                 :password => 'ABCDEFGHIJKLMNO1234567890abcdefghijklmno'
                                })
   end
 
-  it "will perform a full refresh on another region" do
+  it 'will perform a full refresh on another region' do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
 
@@ -75,10 +75,10 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_flavor
-    @flavor = ManageIQ::Providers::Amazon::CloudManager::Flavor.where(:name => "t1.micro").first
+    @flavor = ManageIQ::Providers::Amazon::CloudManager::Flavor.where(:name => 't1.micro').first
     expect(@flavor).to have_attributes(
-      :name                 => "t1.micro",
-      :description          => "T1 Micro",
+      :name                 => 't1.micro',
+      :description          => 'T1 Micro',
       :enabled              => true,
       :cpus                 => 1,
       :cpu_cores            => 1,
@@ -93,58 +93,58 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_az
-    @az = ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => "us-west-1a").first
+    @az = ManageIQ::Providers::Amazon::CloudManager::AvailabilityZone.where(:name => 'us-west-1a').first
     expect(@az).to have_attributes(
-      :name => "us-west-1a",
+      :name => 'us-west-1a',
     )
   end
 
   def assert_specific_floating_ip
-    ip = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "54.215.0.230").first
+    ip = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => '54.215.0.230').first
     expect(ip).to have_attributes(
-      :address            => "54.215.0.230",
-      :ems_ref            => "54.215.0.230",
+      :address            => '54.215.0.230',
+      :ems_ref            => '54.215.0.230',
       :cloud_network_only => false
     )
   end
 
   def assert_specific_key_pair
-    @kp = ManageIQ::Providers::Amazon::CloudManager::AuthKeyPair.where(:name => "EmsRefreshSpec-KeyPair-OtherRegion").first
+    @kp = ManageIQ::Providers::Amazon::CloudManager::AuthKeyPair.where(:name => 'EmsRefreshSpec-KeyPair-OtherRegion').first
     expect(@kp).to have_attributes(
-      :name        => "EmsRefreshSpec-KeyPair-OtherRegion",
-      :fingerprint => "fc:53:30:aa:d2:23:c7:8d:e2:e8:05:95:a0:d2:90:fb:15:30:a2:51"
+      :name        => 'EmsRefreshSpec-KeyPair-OtherRegion',
+      :fingerprint => 'fc:53:30:aa:d2:23:c7:8d:e2:e8:05:95:a0:d2:90:fb:15:30:a2:51'
     )
   end
 
   def assert_specific_security_group
-    @sg = ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup.where(:name => "EmsRefreshSpec-SecurityGroup-OtherRegion").first
+    @sg = ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup.where(:name => 'EmsRefreshSpec-SecurityGroup-OtherRegion').first
     expect(@sg).to have_attributes(
-      :name        => "EmsRefreshSpec-SecurityGroup-OtherRegion",
-      :description => "EmsRefreshSpec-SecurityGroup-OtherRegion",
-      :ems_ref     => "sg-2b87746f"
+      :name        => 'EmsRefreshSpec-SecurityGroup-OtherRegion',
+      :description => 'EmsRefreshSpec-SecurityGroup-OtherRegion',
+      :ems_ref     => 'sg-2b87746f'
     )
 
     expect(@sg.firewall_rules.size).to eq(1)
     expect(@sg.firewall_rules.first).to have_attributes(
-      :host_protocol            => "TCP",
-      :direction                => "inbound",
+      :host_protocol            => 'TCP',
+      :direction                => 'inbound',
       :port                     => 0,
       :end_port                 => 65535,
       :source_security_group_id => nil,
-      :source_ip_range          => "0.0.0.0/0"
+      :source_ip_range          => '0.0.0.0/0'
     )
   end
 
   def assert_specific_template
-    @template = ManageIQ::Providers::Amazon::CloudManager::Template.where(:name => "EmsRefreshSpec-Image-OtherRegion").first
+    @template = ManageIQ::Providers::Amazon::CloudManager::Template.where(:name => 'EmsRefreshSpec-Image-OtherRegion').first
     expect(@template).to have_attributes(
       :template              => true,
-      :ems_ref               => "ami-183e175d",
+      :ems_ref               => 'ami-183e175d',
       :ems_ref_obj           => nil,
-      :uid_ems               => "ami-183e175d",
-      :vendor                => "amazon",
-      :power_state           => "never",
-      :location              => "200278856672/EmsRefreshSpec-Image-OtherRegion",
+      :uid_ems               => 'ami-183e175d',
+      :vendor                => 'amazon',
+      :power_state           => 'never',
+      :location              => '200278856672/EmsRefreshSpec-Image-OtherRegion',
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,
@@ -168,7 +168,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(@template.snapshots.size).to eq(0)
 
     expect(@template.hardware).to have_attributes(
-      :guest_os           => "linux",
+      :guest_os           => 'linux',
       :guest_os_full_name => nil,
       :bios               => nil,
       :annotation         => nil,
@@ -185,17 +185,17 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOn-OtherRegion", :raw_power_state => "running").first
+    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(:name => 'EmsRefreshSpec-PoweredOn-OtherRegion', :raw_power_state => 'running').first
     expect(v).to have_attributes(
       :template              => false,
-      :ems_ref               => "i-dc1ee486",
+      :ems_ref               => 'i-dc1ee486',
       :ems_ref_obj           => nil,
-      :uid_ems               => "i-dc1ee486",
-      :vendor                => "amazon",
-      :power_state           => "on",
-      :location              => "ec2-204-236-137-154.us-west-1.compute.amazonaws.com",
+      :uid_ems               => 'i-dc1ee486',
+      :vendor                => 'amazon',
+      :power_state           => 'on',
+      :location              => 'ec2-204-236-137-154.us-west-1.compute.amazonaws.com',
       :tools_status          => nil,
-      :boot_time             => "2013-08-31T00:12:43.000",
+      :boot_time             => '2013-08-31T00:12:43.000',
       :standby_action        => nil,
       :connection_state      => nil,
       :cpu_affinity          => nil,
@@ -224,7 +224,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.snapshots.size).to eq(0)
 
     expect(v.hardware).to have_attributes(
-      :guest_os           => "linux",
+      :guest_os           => 'linux',
       :guest_os_full_name => nil,
       :bios               => nil,
       :annotation         => nil,
@@ -239,26 +239,26 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.hardware.nics.size).to eq(0)
 
     expect(v.hardware.networks.size).to eq(2)
-    network = v.hardware.networks.where(:description => "public").first
+    network = v.hardware.networks.where(:description => 'public').first
     expect(network).to have_attributes(
-      :description => "public",
-      :ipaddress   => "204.236.137.154",
-      :hostname    => "ec2-204-236-137-154.us-west-1.compute.amazonaws.com"
+      :description => 'public',
+      :ipaddress   => '204.236.137.154',
+      :hostname    => 'ec2-204-236-137-154.us-west-1.compute.amazonaws.com'
     )
-    network = v.hardware.networks.where(:description => "private").first
+    network = v.hardware.networks.where(:description => 'private').first
     expect(network).to have_attributes(
-      :description => "private",
-      :ipaddress   => "10.191.129.95",
-      :hostname    => "ip-10-191-129-95.us-west-1.compute.internal"
+      :description => 'private',
+      :ipaddress   => '10.191.129.95',
+      :hostname    => 'ip-10-191-129-95.us-west-1.compute.internal'
     )
 
-    v.with_relationship_type("genealogy") do
+    v.with_relationship_type('genealogy') do
       expect(v.parent).to eq(@template)
     end
   end
 
   def assert_specific_vm_in_other_region
-    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOn-Basic").first
+    v = ManageIQ::Providers::Amazon::CloudManager::Vm.where(:name => 'EmsRefreshSpec-PoweredOn-Basic').first
     expect(v).to be_nil
   end
 
@@ -267,7 +267,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_subnet_required
-    @flavor = ManageIQ::Providers::Amazon::CloudManager::Flavor.where(:name => "t2.small").first
+    @flavor = ManageIQ::Providers::Amazon::CloudManager::Flavor.where(:name => 't2.small').first
     expect(@flavor).to have_attributes(:cloud_subnet_required => true)
   end
 end

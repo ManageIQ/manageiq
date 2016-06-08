@@ -23,7 +23,7 @@ class ChargebackRate < ApplicationRecord
   validates_uniqueness_of   :guid
   validates_uniqueness_of   :description, :scope => :rate_type
 
-  VALID_CB_RATE_TYPES = ["Compute", "Storage"]
+  VALID_CB_RATE_TYPES = ['Compute', 'Storage']
 
   def self.validate_rate_type(type)
     unless VALID_CB_RATE_TYPES.include?(type.to_s.capitalize)
@@ -63,7 +63,7 @@ class ChargebackRate < ApplicationRecord
   end
 
   def self.seed_chargeback_rate_measure
-    fixture_file_measure = File.join(FIXTURE_DIR, "chargeback_rates_measures.yml")
+    fixture_file_measure = File.join(FIXTURE_DIR, 'chargeback_rates_measures.yml')
     if File.exist?(fixture_file_measure)
       fixture = YAML.load_file(fixture_file_measure)
       fixture.each do |cbr|
@@ -87,7 +87,7 @@ class ChargebackRate < ApplicationRecord
   def self.seed_chargeback_rate_detail_currency
     # seeding the chargeback_rate_detail_currencies
     # Modified seed method. Now updates chargeback_rate_detail_currencies too
-    fixture_file_currency = File.join(FIXTURE_DIR, "chargeback_rate_detail_currencies.yml")
+    fixture_file_currency = File.join(FIXTURE_DIR, 'chargeback_rate_detail_currencies.yml')
     if File.exist?(fixture_file_currency)
       fixture = YAML.load_file(fixture_file_currency)
       fixture_mtime_currency = File.mtime(fixture_file_currency).utc
@@ -110,7 +110,7 @@ class ChargebackRate < ApplicationRecord
 
   def self.seed_chargeback_rate
     # seeding the rates fixtures
-    fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
+    fixture_file = File.join(FIXTURE_DIR, 'chargeback_rates.yml')
     if File.exist?(fixture_file)
       fixture = YAML.load_file(fixture_file)
       fix_mtime = File.mtime(fixture_file).utc
@@ -168,14 +168,14 @@ class ChargebackRate < ApplicationRecord
 
   def ensure_unassigned
     if assigned?
-      errors.add(:rate, "rate is assigned and cannot be deleted")
+      errors.add(:rate, 'rate is assigned and cannot be deleted')
       throw :abort
     end
   end
 
   def ensure_nondefault
     if default?
-      errors.add(:rate, "default rate cannot be deleted")
+      errors.add(:rate, 'default rate cannot be deleted')
       throw :abort
     end
   end

@@ -7,7 +7,7 @@ class Provider < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :zone
-  has_many :managers, :class_name => "ExtManagementSystem"
+  has_many :managers, :class_name => 'ExtManagementSystem'
 
   has_many :endpoints, :through => :managers, :autosave => true
 
@@ -38,12 +38,12 @@ class Provider < ApplicationRecord
   end
 
   def default_endpoint
-    default = endpoints.detect { |e| e.role == "default" }
-    default || endpoints.build(:role => "default")
+    default = endpoints.detect { |e| e.role == 'default' }
+    default || endpoints.build(:role => 'default')
   end
 
   def with_provider_connection(options = {})
-    raise _("no block given") unless block_given?
+    raise _('no block given') unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
     yield connect(options)
   end
@@ -55,10 +55,10 @@ class Provider < ApplicationRecord
 
   def refresh_ems
     if missing_credentials?
-      raise _("no %{table} credentials defined") % {:table => ui_lookup(:table => "provider")}
+      raise _('no %{table} credentials defined') % {:table => ui_lookup(:table => 'provider')}
     end
     unless authentication_status_ok?
-      raise _("%{table} failed last authentication check") % {:table => ui_lookup(:table => "provider")}
+      raise _('%{table} failed last authentication check') % {:table => ui_lookup(:table => 'provider')}
     end
     managers.each { |manager| EmsRefresh.queue_refresh(manager) }
   end

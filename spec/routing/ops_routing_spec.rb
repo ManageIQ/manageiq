@@ -1,7 +1,7 @@
-require "routing/shared_examples"
+require 'routing/shared_examples'
 
-describe "routing for OpsController" do
-  let(:controller_name) { "ops" }
+describe 'routing for OpsController' do
+  let(:controller_name) { 'ops' }
 
   %w(
     explorer

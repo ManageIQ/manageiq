@@ -40,16 +40,16 @@ module TextualSummaryHelper
   end
 
   def textual_tags
-    label = _("%{name} Tags") % {:name => session[:customer_name]}
+    label = _('%{name} Tags') % {:name => session[:customer_name]}
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.blank?
-      h[:image] = "smarttag"
-      h[:value] = _("No %{label} have been assigned") % {:label => label}
+      h[:image] = 'smarttag'
+      h[:value] = _('No %{label} have been assigned') % {:label => label}
     else
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }
                   .collect do |category, assigned|
-                    {:image => "smarttag",
+                    {:image => 'smarttag',
                      :label => category,
                      :value => assigned}
                   end
@@ -94,7 +94,7 @@ module TextualSummaryHelper
   def textual_collection_link(collection, as: nil, controller_collection: nil, explorer: false, feature: nil, label: nil, link: nil)
     if collection.kind_of?(Array)
       unless as && link
-        raise ArgumentError, ":as and :link are both required when linking to an array",
+        raise ArgumentError, ':as and :link are both required when linking to an array',
               caller.reject { |x| x =~ /^#{__FILE__}:/ }
       end
     end
@@ -129,7 +129,7 @@ module TextualSummaryHelper
         h[:link] = url_for(:controller => controller_collection,
                            :action     => 'list')
       end
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
       h[:explorer] = true if explorer
     end
 
@@ -151,31 +151,31 @@ module TextualSummaryHelper
 
   def textual_class_icon(klass)
     if klass <= AdvancedSetting
-      "advancedsetting"
+      'advancedsetting'
     elsif klass <= MiqTemplate
-      "vm"
+      'vm'
     else
       klass.name.underscore
     end
   end
 
   def textual_authentications(authentications)
-    return [{:label => _("Default Authentication"), :title => t = _("None"), :value => t}] if authentications.blank?
+    return [{:label => _('Default Authentication'), :title => t = _('None'), :value => t}] if authentications.blank?
 
     authentications.collect do |auth|
       label = case auth[:authtype]
-              when "default"     then _("Default")
-              when "metrics"     then _("C & U Database")
-              when "amqp"        then _("AMQP")
-              when "ipmi"        then _("IPMI")
-              when "remote"      then _("Remote Login")
-              when "ws"          then _("Web Services")
-              when "ssh_keypair" then _("SSH Key Pair")
-              else;              _("<Unknown>")
+              when 'default'     then _('Default')
+              when 'metrics'     then _('C & U Database')
+              when 'amqp'        then _('AMQP')
+              when 'ipmi'        then _('IPMI')
+              when 'remote'      then _('Remote Login')
+              when 'ws'          then _('Web Services')
+              when 'ssh_keypair' then _('SSH Key Pair')
+              else;              _('<Unknown>')
               end
 
-      {:label => _("%{label} Credentials") % {:label => label},
-       :value => auth[:status] || _("None"),
+      {:label => _('%{label} Credentials') % {:label => label},
+       :value => auth[:status] || _('None'),
        :title => auth[:status_details]}
     end
   end

@@ -1,13 +1,13 @@
 CREDS = [
   {
-    :ems_ip       => "1.2.3.4",
-    :ems_username => "",
-    :ems_password => ""
+    :ems_ip       => '1.2.3.4',
+    :ems_username => '',
+    :ems_password => ''
   },
   {
-    :ems_ip       => "5.6.7.8",
-    :ems_username => "",
-    :ems_password => ""
+    :ems_ip       => '5.6.7.8',
+    :ems_username => '',
+    :ems_password => ''
   }
 ]
 

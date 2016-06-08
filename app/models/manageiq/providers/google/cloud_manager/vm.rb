@@ -27,7 +27,7 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
     super
 
     # Mark all instances no longer found as unknown
-    self.raw_power_state = "unknown"
+    self.raw_power_state = 'unknown'
     save
   end
 
@@ -46,11 +46,11 @@ class ManageIQ::Providers::Google::CloudManager::Vm < ManageIQ::Providers::Cloud
     when /terminated/, /stopping/
       "off"
     else
-      "unknown"
+      'unknown'
     end
   end
 
   def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
+    validate_unsupported('Smartstate Analysis')
   end
 end

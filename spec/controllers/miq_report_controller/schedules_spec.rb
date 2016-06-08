@@ -1,4 +1,4 @@
-describe ReportController, "::Schedules" do
+describe ReportController, '::Schedules' do
   let(:user) { FactoryGirl.create(:user, :features => %w(miq_report_schedule_delete)) }
 
   before(:each) do
@@ -6,7 +6,7 @@ describe ReportController, "::Schedules" do
     login_as(user)
   end
 
-  describe "#miq_report_schedule_delete" do
+  describe '#miq_report_schedule_delete' do
     before(:each) do
       allow(controller).to receive(:x_node=)
       allow(controller).to receive(:replace_right_cell)
@@ -30,7 +30,7 @@ describe ReportController, "::Schedules" do
 
       it 'returns with a plural form in the flash' do
         controller.send(:miq_report_schedule_delete)
-        expect(assigns(:flash_array)).to eq([{:message => "The selected Schedules were deleted", :level => :success}])
+        expect(assigns(:flash_array)).to eq([{:message => 'The selected Schedules were deleted', :level => :success}])
       end
     end
   end

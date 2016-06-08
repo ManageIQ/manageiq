@@ -88,7 +88,7 @@ class MiqAeMethodCopy
 
   def check_duplicity(domain, ns, method_name)
     if domain.downcase == @src_domain.downcase && method_name.downcase == @method_name.downcase
-      raise "Cannot copy method onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
+      raise 'Cannot copy method onto itself' if ns.nil? || ns.downcase == @partial_ns.downcase
     end
   end
 end

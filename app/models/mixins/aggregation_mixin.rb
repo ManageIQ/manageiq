@@ -16,17 +16,17 @@ module AggregationMixin
     def self.override_aggregation_mixin_virtual_columns_uses(type, new_uses)
       case type
       when :all_hosts
-        define_virtual_include "aggregate_cpu_speed",       new_uses
-        define_virtual_include "aggregate_cpu_total_cores", new_uses
-        define_virtual_include "aggregate_physical_cpus",   new_uses
-        define_virtual_include "aggregate_memory",          new_uses
-        define_virtual_include "aggregate_disk_capacity",   new_uses
+        define_virtual_include 'aggregate_cpu_speed',       new_uses
+        define_virtual_include 'aggregate_cpu_total_cores', new_uses
+        define_virtual_include 'aggregate_physical_cpus',   new_uses
+        define_virtual_include 'aggregate_memory',          new_uses
+        define_virtual_include 'aggregate_disk_capacity',   new_uses
 
-        define_virtual_include "aggregate_logical_cpus", new_uses # Deprecated
+        define_virtual_include 'aggregate_logical_cpus', new_uses # Deprecated
 
       when :all_vms_and_templates
-        define_virtual_include "aggregate_vm_cpus",   new_uses
-        define_virtual_include "aggregate_vm_memory", new_uses
+        define_virtual_include 'aggregate_vm_cpus',   new_uses
+        define_virtual_include 'aggregate_vm_memory', new_uses
       end
     end
   end
@@ -103,7 +103,7 @@ module AggregationMixin
 
   def aggregate_hardware(from, field, targets = nil)
     from      = from.to_s.singularize
-    select    = field == :aggregate_cpu_speed ? "cpu_total_cores, cpu_speed" : field
+    select    = field == :aggregate_cpu_speed ? 'cpu_total_cores, cpu_speed' : field
     targets ||= send("all_#{from}_ids")
     targets   = targets.collect(&:id) unless targets.first.kind_of?(Integer)
     hdws      = Hardware.where("#{from}_id" => targets).select(select)

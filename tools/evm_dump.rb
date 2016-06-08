@@ -1,8 +1,8 @@
-LOG_DIR = "./"
-logfile = File.join(LOG_DIR, "evm_dump.log")
+LOG_DIR = './'
+logfile = File.join(LOG_DIR, 'evm_dump.log')
 File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
-$log.level = VMDBLogger.const_get("DEBUG")
+$log.level = VMDBLogger.const_get('DEBUG')
 
 yml_fnames = []
 
@@ -17,7 +17,7 @@ end
 
 def yml_dump(yml_fname, items)
   File.delete(yml_fname) if File.exist?(yml_fname)
-  File.open(yml_fname, "w") { |fd| fd.write(YAML.dump(items)) }
+  File.open(yml_fname, 'w') { |fd| fd.write(YAML.dump(items)) }
 end
 
 ### Main
@@ -58,7 +58,7 @@ MODELS.each do |klass|
 end
 
 if yml_fnames.length > 0
-  zip_fname = File.join(LOG_DIR, "evm_dump.zip")
+  zip_fname = File.join(LOG_DIR, 'evm_dump.zip')
   File.delete(zip_fname) if File.exist?(zip_fname)
   cmdline = "zip #{zip_fname} #{logfile} #{yml_fnames.join(' ')}"
   log :info, "Zipping dump into #{zip_fname}"
@@ -66,6 +66,6 @@ if yml_fnames.length > 0
   yml_fnames.each { |fname| File.delete(fname) }
 end
 
-log :info, "Done"
+log :info, 'Done'
 
 exit 0

@@ -102,7 +102,7 @@ describe EmsEventHelper do
 
       @policy_set = FactoryGirl.create(:miq_policy_set)
       @policy     = FactoryGirl.create(:miq_policy, :towhat => 'Vm', :active => true, :mode => 'control')
-      automate_options = {:ae_message => 'create', :ae_hash => {"kevin" => "1", "q" => "1"}}
+      automate_options = {:ae_message => 'create', :ae_hash => {'kevin' => '1', 'q' => '1'}}
       @action     = FactoryGirl.create(:miq_action, :description => 'create_incident', :action_type => 'custom_automation', :options => automate_options)
       @policy_set.add_member(@policy)
 
@@ -117,22 +117,22 @@ describe EmsEventHelper do
       @vm.add_policy(@policy)
     end
 
-    it "should handle event properly" do
-      routine = [ { "policy" => ["src_vm", "vm_start"] } ]
-      policy  = routine.first["policy"]
+    it 'should handle event properly' do
+      routine = [ { 'policy' => ['src_vm', 'vm_start'] } ]
+      policy  = routine.first['policy']
       event   = @ems_events.last
 
       expect { event.policy(policy[0], policy[1]) }.to_not raise_error
     end
 
-    it "should build evm event properly calling MiqAeEvent.build_evm_event" do
-      inputs = {:ae_message => 'create', :ae_hash => {"kevin" => "1", "q" => "1"}, :vm => @vm}
-      aevent = MiqAeEvent.build_evm_event("vm_start", inputs)
+    it 'should build evm event properly calling MiqAeEvent.build_evm_event' do
+      inputs = {:ae_message => 'create', :ae_hash => {'kevin' => '1', 'q' => '1'}, :vm => @vm}
+      aevent = MiqAeEvent.build_evm_event('vm_start', inputs)
 
       expect(aevent[:vm_id]).to eq(@vm.id)
-      expect(aevent["VmOrTemplate::vm"]).to eq(@vm.id)
-      expect(aevent[:ae_hash]["kevin"]).to eq("1")
-      expect(aevent[:ae_hash]["q"]).to eq("1")
+      expect(aevent['VmOrTemplate::vm']).to eq(@vm.id)
+      expect(aevent[:ae_hash]['kevin']).to eq('1')
+      expect(aevent[:ae_hash]['q']).to eq('1')
     end
   end
 end

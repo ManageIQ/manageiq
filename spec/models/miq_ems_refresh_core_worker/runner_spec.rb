@@ -9,93 +9,93 @@ describe MiqEmsRefreshCoreWorker::Runner do
     allow_any_instance_of(described_class).to receive(:sync_config)
     allow_any_instance_of(described_class).to receive(:set_connection_pool_size)
     allow_any_instance_of(described_class).to receive(:heartbeat_using_drb?).and_return(false)
-    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check).and_return([true, ""])
+    allow_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check).and_return([true, ''])
 
     @worker = MiqEmsRefreshCoreWorker::Runner.new(:guid => @worker_record.guid, :ems_id => @ems.id)
   end
 
-  context "#process_update" do
-    context "against a ManageIQ::Providers::Vmware::InfraManager::Vm" do
+  context '#process_update' do
+    context 'against a ManageIQ::Providers::Vmware::InfraManager::Vm' do
       before(:each) do
         Timecop.travel(1.day.ago) do
-          @vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :raw_power_state => "unknown")
+          @vm = FactoryGirl.create(:vm_with_ref, :ext_management_system => @ems, :raw_power_state => 'unknown')
         end
       end
 
-      it "with unknown properties" do
-        should_not_have_changed @vm, "unknown.property" => "unknown_value"
+      it 'with unknown properties' do
+        should_not_have_changed @vm, 'unknown.property' => 'unknown_value'
       end
 
-      context "with runtime.memoryOverhead HACK" do
-        it "alone" do
-          should_not_have_changed @vm, "runtime.memoryOverhead" => 123456
+      context 'with runtime.memoryOverhead HACK' do
+        it 'alone' do
+          should_not_have_changed @vm, 'runtime.memoryOverhead' => 123456
         end
 
-        it "and other valid properties" do
-          should_have_changed @vm, {"runtime.memoryOverhead" => 123456, "runtime.powerState" => "poweredOn"}, "on", false
+        it 'and other valid properties' do
+          should_have_changed @vm, {'runtime.memoryOverhead' => 123456, 'runtime.powerState' => 'poweredOn'}, 'on', false
         end
       end
 
-      it "with a deleted Vm" do
+      it 'with a deleted Vm' do
         should_not_have_changed @vm, nil
       end
 
-      it "with non-VM updates" do
+      it 'with non-VM updates' do
         expect do
-          @worker.process_update([VimString.new("host-123", "HostSystem", "ManagedObjectReference"), {"unknown.property" => "unknown_value"}])
+          @worker.process_update([VimString.new('host-123', 'HostSystem', 'ManagedObjectReference'), {'unknown.property' => 'unknown_value'}])
         end.not_to raise_error
       end
 
-      context "with runtime.powerState and/or config.template set to" do
-        it "poweredOff, true" do
-          should_have_changed @vm, {"runtime.powerState" => "poweredOff", "config.template" => "true"}, "never", true
+      context 'with runtime.powerState and/or config.template set to' do
+        it 'poweredOff, true' do
+          should_have_changed @vm, {'runtime.powerState' => 'poweredOff', 'config.template' => 'true'}, 'never', true
         end
 
-        it "poweredOff, false" do
-          should_have_changed @vm, {"runtime.powerState" => "poweredOff", "config.template" => "false"}, "off", false
+        it 'poweredOff, false' do
+          should_have_changed @vm, {'runtime.powerState' => 'poweredOff', 'config.template' => 'false'}, 'off', false
         end
 
-        it "poweredOn, false" do
-          should_have_changed @vm, {"runtime.powerState" => "poweredOn", "config.template" => "false"}, "on", false
+        it 'poweredOn, false' do
+          should_have_changed @vm, {'runtime.powerState' => 'poweredOn', 'config.template' => 'false'}, 'on', false
         end
 
-        it "poweredOn, unset" do
-          should_have_changed @vm, {"runtime.powerState" => "poweredOn"}, "on", false
+        it 'poweredOn, unset' do
+          should_have_changed @vm, {'runtime.powerState' => 'poweredOn'}, 'on', false
         end
 
-        it "poweredOff, unset" do
-          should_have_changed @vm, {"runtime.powerState" => "poweredOff"}, "off", false
+        it 'poweredOff, unset' do
+          should_have_changed @vm, {'runtime.powerState' => 'poweredOff'}, 'off', false
         end
 
-        it "suspended, unset" do
-          should_have_changed @vm, {"runtime.powerState" => "suspended"}, "suspended", false
+        it 'suspended, unset' do
+          should_have_changed @vm, {'runtime.powerState' => 'suspended'}, 'suspended', false
         end
 
-        it "unset, true" do
-          should_have_changed @vm, {"config.template" => "true"}, "never", true
+        it 'unset, true' do
+          should_have_changed @vm, {'config.template' => 'true'}, 'never', true
         end
 
-        it "unset, false" do
-          should_not_have_changed @vm, "config.template" => "false"
+        it 'unset, false' do
+          should_not_have_changed @vm, 'config.template' => 'false'
         end
       end
 
-      context "with guest.net" do
-        it "and no networks persisted" do
-          props = {"guest.net" => [{"ipAddress" => ["1.2.3.4", "::1:2:3:4"], 'macAddress' => "00:00:00:00:00:00"}]}
+      context 'with guest.net' do
+        it 'and no networks persisted' do
+          props = {'guest.net' => [{'ipAddress' => ['1.2.3.4', '::1:2:3:4'], 'macAddress' => '00:00:00:00:00:00'}]}
           @worker.process_update([@vm.ems_ref_obj, props])
           expect(@vm.ipaddresses).to be_empty
         end
 
-        context "and networks already persisted" do
+        context 'and networks already persisted' do
           before(:each) do
             @hw = FactoryGirl.create(:hardware, :vm_or_template => @vm)
             @nics = (1..2).collect { FactoryGirl.create(:guest_device_nic_with_network, :hardware => @hw) }.sort_by(&:address)
             @expected_addresses = @nics.collect { |n| [n.network.ipaddress, n.network.ipv6address] }
           end
 
-          it "and no ip changes" do
-            props = {"guest.net" => [{'macAddress' => @nics[0].address, 'connected' => true}]}
+          it 'and no ip changes' do
+            props = {'guest.net' => [{'macAddress' => @nics[0].address, 'connected' => true}]}
             @worker.process_update([@vm.ems_ref_obj, props])
             should_not_have_network_changes
 
@@ -104,14 +104,14 @@ describe MiqEmsRefreshCoreWorker::Runner do
             should_not_have_network_changes
           end
 
-          it "and ip changes but nic not connected" do
-            props = {"guest.net" => [{"ipAddress" => ["1.2.3.4", "::1:2:3:4"], 'macAddress' => @nics[0].address, 'connected' => false}]}
+          it 'and ip changes but nic not connected' do
+            props = {'guest.net' => [{'ipAddress' => ['1.2.3.4', '::1:2:3:4'], 'macAddress' => @nics[0].address, 'connected' => false}]}
             @worker.process_update([@vm.ems_ref_obj, props])
             should_not_have_network_changes
           end
 
-          it "and ip changes for unknown nic" do
-            props = {"guest.net" => [{"ipAddress" => ["1.2.3.4", "::1:2:3:4"], 'macAddress' => '00:00:00:00:00:00', 'connected' => false}]}
+          it 'and ip changes for unknown nic' do
+            props = {'guest.net' => [{'ipAddress' => ['1.2.3.4', '::1:2:3:4'], 'macAddress' => '00:00:00:00:00:00', 'connected' => false}]}
             @worker.process_update([@vm.ems_ref_obj, props])
             should_not_have_network_changes
           end
@@ -120,16 +120,16 @@ describe MiqEmsRefreshCoreWorker::Runner do
             @nics[0].update_attribute(:network, nil)
             @expected_addresses[0] = [nil, nil]
 
-            props = {"guest.net" => [{"ipAddress" => ["1.2.3.4", "::1:2:3:4"], 'macAddress' => @nics[0].address, 'connected' => true}]}
+            props = {'guest.net' => [{'ipAddress' => ['1.2.3.4', '::1:2:3:4'], 'macAddress' => @nics[0].address, 'connected' => true}]}
             @worker.process_update([@vm.ems_ref_obj, props])
             should_not_have_network_changes
           end
 
-          it "and ip changes" do
-            props = {"guest.net" => [{"ipAddress" => ["1.2.3.4", "::1:2:3:4"], 'macAddress' => @nics[0].address, 'connected' => true}]}
+          it 'and ip changes' do
+            props = {'guest.net' => [{'ipAddress' => ['1.2.3.4', '::1:2:3:4'], 'macAddress' => @nics[0].address, 'connected' => true}]}
             @worker.process_update([@vm.ems_ref_obj, props])
 
-            expected = [["1.2.3.4", "::1:2:3:4"], @expected_addresses[1]]
+            expected = [['1.2.3.4', '::1:2:3:4'], @expected_addresses[1]]
             should_have_network_changes(expected)
           end
         end
@@ -144,36 +144,36 @@ describe MiqEmsRefreshCoreWorker::Runner do
       end
     end
 
-    context "against a ManageIQ::Providers::Vmware::InfraManager::Template" do
+    context 'against a ManageIQ::Providers::Vmware::InfraManager::Template' do
       before(:each) do
         Timecop.travel(1.day.ago) do
           @template = FactoryGirl.create(:template_vmware_with_ref, :ext_management_system => @ems)
         end
       end
 
-      context "with runtime.powerState and/or config.template set to" do
-        it "poweredOff, false" do
-          should_have_changed @template, {"runtime.powerState" => "poweredOff", "config.template" => "false"}, "off", false
+      context 'with runtime.powerState and/or config.template set to' do
+        it 'poweredOff, false' do
+          should_have_changed @template, {'runtime.powerState' => 'poweredOff', 'config.template' => 'false'}, 'off', false
         end
 
-        it "poweredOn, false" do
-          should_have_changed @template, {"runtime.powerState" => "poweredOn", "config.template" => "false"}, "on", false
+        it 'poweredOn, false' do
+          should_have_changed @template, {'runtime.powerState' => 'poweredOn', 'config.template' => 'false'}, 'on', false
         end
 
-        it "poweredOff, true" do
-          should_not_have_changed @template, "runtime.powerState" => "poweredOff"
+        it 'poweredOff, true' do
+          should_not_have_changed @template, 'runtime.powerState' => 'poweredOff'
         end
 
-        it "poweredOff, set" do
-          should_not_have_changed @template, "runtime.powerState" => "poweredOff"
+        it 'poweredOff, set' do
+          should_not_have_changed @template, 'runtime.powerState' => 'poweredOff'
         end
 
-        it "unset, true" do
-          should_not_have_changed @template, "config.template" => "true"
+        it 'unset, true' do
+          should_not_have_changed @template, 'config.template' => 'true'
         end
 
-        it "unset, false" do
-          should_have_changed @template, {"config.template" => "false"}, "unknown", false
+        it 'unset, false' do
+          should_have_changed @template, {'config.template' => 'false'}, 'unknown', false
         end
       end
     end

@@ -5,7 +5,7 @@
 
 prov   = $evm.root['miq_provision']
 unless prov 
-  $evm.log(:error, "miq_provision object not provided")
+  $evm.log(:error, 'miq_provision object not provided')
   exit(MIQ_STOP)
 end
 

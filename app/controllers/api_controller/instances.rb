@@ -17,7 +17,7 @@ class ApiController
         instance = resource_search(id, type, klass)
         api_log_info("Stopping #{instance_ident(instance)}")
 
-        result = validate_instance_for_action(instance, "stop")
+        result = validate_instance_for_action(instance, 'stop')
         result = stop_instance(instance) if result[:success]
         result
       end
@@ -30,7 +30,7 @@ class ApiController
         instance = resource_search(id, type, klass)
         api_log_info("Starting #{instance_ident(instance)}")
 
-        result = validate_instance_for_action(instance, "start")
+        result = validate_instance_for_action(instance, 'start')
         result = start_instance(instance) if result[:success]
         result
       end
@@ -43,7 +43,7 @@ class ApiController
         instance = resource_search(id, type, klass)
         api_log_info("Pausing #{instance_ident(instance)}")
 
-        result = validate_instance_for_action(instance, "pause")
+        result = validate_instance_for_action(instance, 'pause')
         result = pause_instance(instance) if result[:success]
         result
       end
@@ -56,7 +56,7 @@ class ApiController
         instance = resource_search(id, type, klass)
         api_log_info("Suspending #{instance_ident(instance)}")
 
-        result = validate_instance_for_action(instance, "suspend")
+        result = validate_instance_for_action(instance, 'suspend')
         result = suspend_instance(instance) if result[:success]
         result
       end
@@ -69,7 +69,7 @@ class ApiController
         instance = resource_search(id, type, klass)
         api_log_info("Shelving #{instance_ident(instance)}")
 
-        result = validate_instance_for_action(instance, "shelve")
+        result = validate_instance_for_action(instance, 'shelve')
         result = shelve_instance(instance) if result[:success]
         result
       end
@@ -82,7 +82,7 @@ class ApiController
         instance = resource_search(id, type, klass)
         api_log_info("Rebooting #{instance_ident(instance)}")
 
-        result = validate_instance_for_action(instance, "reboot_guest")
+        result = validate_instance_for_action(instance, 'reboot_guest')
         result = reboot_guest_instance(instance) if result[:success]
         result
       end
@@ -95,7 +95,7 @@ class ApiController
         instance = resource_search(id, type, klass)
         api_log_info("Resetting #{instance_ident(instance)}")
 
-        result = validate_instance_for_action(instance, "reset")
+        result = validate_instance_for_action(instance, 'reset')
         result = reset_instance(instance) if result[:success]
         result
       end
@@ -109,7 +109,7 @@ class ApiController
 
     def terminate_instance(instance)
       desc = "#{instance_ident(instance)} terminating"
-      task_id = queue_object_action(instance, desc, :method_name => "vm_destroy", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'vm_destroy', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -117,7 +117,7 @@ class ApiController
 
     def stop_instance(instance)
       desc = "#{instance_ident(instance)} stopping"
-      task_id = queue_object_action(instance, desc, :method_name => "stop", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'stop', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -125,7 +125,7 @@ class ApiController
 
     def start_instance(instance)
       desc = "#{instance_ident(instance)} starting"
-      task_id = queue_object_action(instance, desc, :method_name => "start", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'start', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -133,7 +133,7 @@ class ApiController
 
     def pause_instance(instance)
       desc = "#{instance_ident(instance)} pausing"
-      task_id = queue_object_action(instance, desc, :method_name => "pause", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'pause', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -146,7 +146,7 @@ class ApiController
 
     def suspend_instance(instance)
       desc = "#{instance_ident(instance)} suspending"
-      task_id = queue_object_action(instance, desc, :method_name => "suspend", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'suspend', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -154,7 +154,7 @@ class ApiController
 
     def shelve_instance(instance)
       desc = "#{instance_ident(instance)} shelving"
-      task_id = queue_object_action(instance, desc, :method_name => "shelve", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'shelve', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -162,7 +162,7 @@ class ApiController
 
     def reboot_guest_instance(instance)
       desc = "#{instance_ident(instance)} rebooting"
-      task_id = queue_object_action(instance, desc, :method_name => "reboot_guest", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'reboot_guest', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -170,7 +170,7 @@ class ApiController
 
     def reset_instance(instance)
       desc = "#{instance_ident(instance)} resetting"
-      task_id = queue_object_action(instance, desc, :method_name => "reset", :role => "ems_operations")
+      task_id = queue_object_action(instance, desc, :method_name => 'reset', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)

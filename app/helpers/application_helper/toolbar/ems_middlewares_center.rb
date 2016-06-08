@@ -11,24 +11,24 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New #{ui_lookup(:table=>"ems_middleware")}'),
           t,
-          :url => "/new"),
+          :url => '/new'),
         button(
           :ems_middleware_edit,
           'pficon pficon-edit fa-lg',
           N_('Select a single #{ui_lookup(:table=>"ems_middleware")} to edit'),
           N_('Edit Selected #{ui_lookup(:table=>"ems_middleware")}'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => '1'),
         button(
           :ems_middleware_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove selected #{ui_lookup(:tables=>"ems_middlewares")} from the VMDB'),
           N_('Remove #{ui_lookup(:tables=>"ems_middlewares")} from the VMDB'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"ems_middlewares\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"ems_middlewares\")}?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])
@@ -39,16 +39,16 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
       t = N_('Policy'),
       t,
       :enabled => false,
-      :onwhen  => "1+",
+      :onwhen  => '1+',
       :items   => [
         button(
           :ems_middleware_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"ems_middleware")}'),
           N_('Edit Tags'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])

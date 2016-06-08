@@ -1,9 +1,9 @@
 class ApiController
   module ServiceOrders
     def create_resource_service_orders(type, id, data)
-      raise BadRequestError, "Can't create an ordered service order" if data["state"] == ServiceOrder::STATE_ORDERED
-      service_requests = data.delete("service_requests")
-      data["state"] ||= ServiceOrder::STATE_CART
+      raise BadRequestError, "Can't create an ordered service order" if data['state'] == ServiceOrder::STATE_ORDERED
+      service_requests = data.delete('service_requests')
+      data['state'] ||= ServiceOrder::STATE_CART
       if service_requests.blank?
         create_resource(type, id, data)
       else
@@ -29,7 +29,7 @@ class ApiController
     end
 
     def find_service_orders(id)
-      if id == "cart"
+      if id == 'cart'
         ServiceOrder.cart_for(@auth_user_obj)
       else
         ServiceOrder.find_for_user(@auth_user_obj, id)
@@ -62,12 +62,12 @@ class ApiController
     end
 
     def service_request_workflow(service_request)
-      service_template_id = href_id(service_request.delete("service_template_href"), :service_templates)
+      service_template_id = href_id(service_request.delete('service_template_href'), :service_templates)
       if service_template_id.blank?
-        raise BadRequestError, "Must specify a service_template_href for adding a service_request"
+        raise BadRequestError, 'Must specify a service_template_href for adding a service_request'
       end
       service_template = resource_search(service_template_id, :service_templates, ServiceTemplate)
-      resource_action = service_template.resource_actions.find_by_action("Provision")
+      resource_action = service_template.resource_actions.find_by_action('Provision')
       workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => service_template)
       service_request.each { |key, value| workflow.set_value(key, value) } if service_request.present?
       workflow

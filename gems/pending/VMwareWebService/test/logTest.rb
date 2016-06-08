@@ -77,6 +77,6 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   vim.disconnect if vim
 end

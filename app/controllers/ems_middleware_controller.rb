@@ -11,7 +11,7 @@ class EmsMiddlewareController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "ems_middleware"
+    @table_name ||= 'ems_middleware'
   end
 
   def index

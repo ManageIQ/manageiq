@@ -1,13 +1,13 @@
 class AuditEvent < ApplicationRecord
   validates_presence_of     :event, :status, :message, :severity
-  validates_inclusion_of    :status,   :in => ["success", "failure"]
-  validates_inclusion_of    :severity, :in => ["fatal", "error", "warn", "info", "debug"]
+  validates_inclusion_of    :status,   :in => ['success', 'failure']
+  validates_inclusion_of    :severity, :in => ['fatal', 'error', 'warn', 'info', 'debug']
 
   def self.generate(attrs)
     attrs = {
-      :severity => "info",
-      :status   => "success",
-      :userid   => "system",
+      :severity => 'info',
+      :status   => 'success',
+      :userid   => 'system',
       :source   => AuditEvent.source(caller)
     }.merge(attrs)
 
@@ -19,11 +19,11 @@ class AuditEvent < ApplicationRecord
   end
 
   def self.success(attrs)
-    AuditEvent.generate(attrs.merge(:status => "success", :source => AuditEvent.source(caller)))
+    AuditEvent.generate(attrs.merge(:status => 'success', :source => AuditEvent.source(caller)))
   end
 
   def self.failure(attrs)
-    AuditEvent.generate(attrs.merge(:status => "failure", :severity => "warn", :source => AuditEvent.source(caller)))
+    AuditEvent.generate(attrs.merge(:status => 'failure', :severity => 'warn', :source => AuditEvent.source(caller)))
   end
 
   private

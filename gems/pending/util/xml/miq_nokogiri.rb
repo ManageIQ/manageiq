@@ -69,7 +69,7 @@ begin
           end
         end
 
-        def each_element(xpath = "*", &_block)
+        def each_element(xpath = '*', &_block)
           find_match(xpath).each { |n| yield n }
         end
 
@@ -96,7 +96,7 @@ begin
         end
 
         def find_match(xpath = nil, nslist = nil)
-          xpath = "*" if xpath.nil?
+          xpath = '*' if xpath.nil?
           self.xpath(xpath, nslist)
         end
 
@@ -134,7 +134,7 @@ begin
         def self.loadFile(filename)
           Nokogiri::XML::Document.new(filename)
         rescue => err
-          $log.warn "Unable to load XML document with Nokogiri, retrying with REXML" if $log
+          $log.warn 'Unable to load XML document with Nokogiri, retrying with REXML' if $log
           from_xml(filename, true)
         end
 
@@ -157,9 +157,9 @@ begin
           end
           xml.encoding = 'UTF-8'
           if xml.root
-            xml.root.add_attributes("version"      => version,
-                                    "created_on"   => Time.now.to_i,
-                                    "display_time" => Time.now.getutc.iso8601,)
+            xml.root.add_attributes('version'      => version,
+                                    'created_on'   => Time.now.to_i,
+                                    'display_time' => Time.now.getutc.iso8601,)
             xml.root.add_attributes(rootAttrs) if rootAttrs
           end
           xml
@@ -183,7 +183,7 @@ begin
           xpath(name).each { |e| yield(e) }
         end
 
-        def find_match(xpath = "//*", _nslist = nil)
+        def find_match(xpath = '//*', _nslist = nil)
           self.xpath(xpath)
         end
       end  # class Document

@@ -27,7 +27,7 @@ class MiqRhevmVm < MiqVm
   def getCfg(_snap = nil)
     cfg_props = @rhevmVm.attributes
 
-    raise MiqException::MiqVimError, "Failed to retrieve configuration information for VM" if cfg_props.nil?
+    raise MiqException::MiqVimError, 'Failed to retrieve configuration information for VM' if cfg_props.nil?
 
     storage_domains = @rhevm.storagedomains
     $log.debug "MiqRhevmVm#getCfg: storage_domains = #{storage_domains.inspect}"
@@ -53,8 +53,8 @@ class MiqRhevmVm < MiqVm
       file_path = file_path_for_storage_type(storage_obj, disk)
 
       tag = "scsi0:#{idx}"
-      cfg_hash["#{tag}.present"]    = "true"
-      cfg_hash["#{tag}.devicetype"] = "disk"
+      cfg_hash["#{tag}.present"]    = 'true'
+      cfg_hash["#{tag}.devicetype"] = 'disk'
       cfg_hash["#{tag}.filename"]   = file_path.to_s
       cfg_hash["#{tag}.format"]     = disk[:format]
     end
@@ -66,7 +66,7 @@ class MiqRhevmVm < MiqVm
 
     # TODO: account for other storage types here.
     case storage_type
-    when "nfs", "glusterfs"
+    when 'nfs', 'glusterfs'
       add_fs_mount(storage_obj)
       fs_file_path(storage_obj, disk)
     else
@@ -125,13 +125,13 @@ class MiqRhevmVm < MiqVm
   end
 
   def nfs_mount_dir(storage_obj)
-    nfs_uri(storage_obj).gsub("_", "__").tr("/", "_")
+    nfs_uri(storage_obj).gsub('_', '__').tr('/', '_')
   end
 
   def mount_storage
     require 'util/mount/miq_nfs_session'
     require 'util/mount/miq_glusterfs_session'
-    log_header = "MIQ(MiqRhevmVm.mount_storage)"
+    log_header = 'MIQ(MiqRhevmVm.mount_storage)'
     $log.info "#{log_header} called"
 
     @ost.nfs_storage_mounted = false
@@ -147,9 +147,9 @@ class MiqRhevmVm < MiqVm
         $log.info "#{log_header} Mounting #{mount_info[:uri]} on #{mount_info[:mount_point]} for #{storage_id}"
 
         case mount_info[:type]
-        when "nfs"
+        when 'nfs'
           MiqNfsSession.new(mount_info).connect
-        when "glusterfs"
+        when 'glusterfs'
           MiqGlusterfsSession.new(mount_info).connect
         end
 
@@ -165,7 +165,7 @@ class MiqRhevmVm < MiqVm
 
   # Moved from MIQExtract.rb
   def unmount_storage
-    log_header = "MIQ(MiqRhevmVm.unmount_storage)"
+    log_header = 'MIQ(MiqRhevmVm.unmount_storage)'
     return if nfs_mounts.empty?
     begin
       $log.warn "#{log_header} Unmount all items from <#{nfs_mount_root}>"

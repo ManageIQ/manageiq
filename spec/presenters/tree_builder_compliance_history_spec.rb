@@ -1,15 +1,15 @@
 describe TreeBuilderComplianceHistory do
   context 'TreeBuilderComplianceHistory' do
     before do
-      role = MiqUserRole.find_by_name("EvmRole-operator")
-      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Compliance History Group")
+      role = MiqUserRole.find_by_name('EvmRole-operator')
+      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => 'Compliance History Group')
       login_as FactoryGirl.create(:user, :userid => 'comliance_history__wilma', :miq_groups => [@group])
       compliance_detail_one = FactoryGirl.create(:compliance_detail,
                                                  :miq_policy_id  => 1234,
-                                                 :condition_desc => "I am first condition")
+                                                 :condition_desc => 'I am first condition')
       compliance_detail_two = FactoryGirl.create(:compliance_detail,
                                                  :miq_policy_id  => 1234,
-                                                 :condition_desc => "I am second condition")
+                                                 :condition_desc => 'I am second condition')
       compliance_detail_negative = FactoryGirl.create(:compliance_detail,
                                                       :miq_policy_id     => 1111,
                                                       :miq_policy_result => false,
@@ -49,7 +49,7 @@ describe TreeBuilderComplianceHistory do
       parent = parents.find { |x| x.compliance_details == [] }
       kid = @ch_tree.send(:x_get_compliance_kids, parent, false).first
       expect(kid).to eq(:id    => "#{parent.id}-nopol",
-                        :text  => "No Compliance Policies Found",
+                        :text  => 'No Compliance Policies Found',
                         :image => "#{parent.id}-nopol",
                         :tip   => nil)
       expect(kid).to be_a_kind_of(Hash)
@@ -58,7 +58,7 @@ describe TreeBuilderComplianceHistory do
     it 'returns Policy with multiple Conditions' do
       grandparents = @ch_tree.send(:x_get_tree_roots, false)
       grandparent = grandparents.find { |x| x.compliance_details.present? }
-      grandparent_id = "cm-" + ApplicationRecord.compress_id(grandparent.id)
+      grandparent_id = 'cm-' + ApplicationRecord.compress_id(grandparent.id)
       parents = @ch_tree.send(:x_get_compliance_kids, grandparent, false)
       parent = parents.find { |x| x.miq_policy_id == 1234 }
       kids = @ch_tree.send(:x_get_compliance_detail_kids, parent, false, [grandparent_id])

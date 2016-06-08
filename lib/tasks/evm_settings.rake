@@ -1,8 +1,8 @@
 module EvmSettings
   ALLOWED_KEYS = [
-    "/authentication/sso_enabled",
-    "/authentication/saml_enabled",
-    "/authentication/local_login_disabled"
+    '/authentication/sso_enabled',
+    '/authentication/saml_enabled',
+    '/authentication/local_login_disabled'
   ].freeze
 
   INFO, WARN, ERROR = %w(info warn error)
@@ -20,7 +20,7 @@ module EvmSettings
   def self.put_keys(keyval_list = nil)
     import_hash = {}
     Array(keyval_list).each do |keyval|
-      key, value = keyval.split("=")
+      key, value = keyval.split('=')
       validate_key(key)
       keyval_hash = keyval_to_hash(key, value)
       import_hash.deep_merge!(keyval_hash) if keyval_hash.present?
@@ -58,7 +58,7 @@ module EvmSettings
   private_class_method :validate_key
 
   def self.key_parts(key)
-    key.split("/")[1..-1].collect(&:to_sym)
+    key.split('/')[1..-1].collect(&:to_sym)
   end
   private_class_method :key_parts
 
@@ -80,8 +80,8 @@ module EvmSettings
   private_class_method :str_to_value
 
   def self.value_to_str(value)
-    return "true"  if value  || value =~ /true/i
-    return "false" if !value || value =~ /false/i
+    return 'true'  if value  || value =~ /true/i
+    return 'false' if !value || value =~ /false/i
     value
   end
   private_class_method :value_to_str

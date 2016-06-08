@@ -14,7 +14,7 @@ class CreateMiqGroupsUsersJoinTable < ActiveRecord::Migration
       t.bigint :user_id
     end
 
-    say_with_time("Migrate eligible_miq_group_ids from reserved column") do
+    say_with_time('Migrate eligible_miq_group_ids from reserved column') do
       User.includes(:reserved_rec).each do |u|
         group_ids = u.reserved_hash_get(:eligible_miq_group_ids)
         next if group_ids.nil?

@@ -1,7 +1,7 @@
 module VMDB
   module Util
     def self.http_proxy_uri
-      proxy = VMDB::Config.new("vmdb").config[:http_proxy] || {}
+      proxy = VMDB::Config.new('vmdb').config[:http_proxy] || {}
       return nil unless proxy[:host]
       proxy = proxy.dup
 
@@ -9,10 +9,10 @@ module VMDB
       user &&= CGI.escape(user)
       password = proxy.delete(:password)
       password &&= CGI.escape(password)
-      userinfo = "#{user}:#{password}".chomp(":") unless user.blank?
+      userinfo = "#{user}:#{password}".chomp(':') unless user.blank?
 
       proxy[:userinfo]   = userinfo
-      proxy[:scheme] ||= "http"
+      proxy[:scheme] ||= 'http'
       proxy[:port] &&= proxy[:port].to_i
 
       URI::Generic.build(proxy)
@@ -20,8 +20,8 @@ module VMDB
 
     def self.compressed_log_patterns
       # From a log file create an array of strings containing the date patterns
-      log_dir = File.join(Rails.root, "log")
-      gz_pattern = File.join(log_dir, "*[0-9][0-9].gz")
+      log_dir = File.join(Rails.root, 'log')
+      gz_pattern = File.join(log_dir, '*[0-9][0-9].gz')
       Dir.glob(gz_pattern).inject([]) do |arr, f|
         f.match(/.+-(\d+\.gz)/)
         name = File.join(log_dir, "*#{$1}")
@@ -95,10 +95,10 @@ module VMDB
       end
     end
 
-    def self.zip_logs(zip_filename, dirs, userid = "system")
+    def self.zip_logs(zip_filename, dirs, userid = 'system')
       require 'zip/zipfilesystem'
 
-      zip_dir = Rails.root.join("data", "user", userid)
+      zip_dir = Rails.root.join('data', 'user', userid)
       FileUtils.mkdir_p(zip_dir) unless File.exist?(zip_dir)
 
       zfile = zip_dir.join(zip_filename)
@@ -140,8 +140,8 @@ module VMDB
     end
 
     def self.zip_entry_from_path(path)
-      rails_root_directories = Rails.root.to_s.split("/")
-      within_rails_root = path.split("/")[0, rails_root_directories.length] == rails_root_directories
+      rails_root_directories = Rails.root.to_s.split('/')
+      within_rails_root = path.split('/')[0, rails_root_directories.length] == rails_root_directories
       entry = within_rails_root ? Pathname.new(path).relative_path_from(Rails.root).to_s : "ROOT#{path}"
       entry
     end

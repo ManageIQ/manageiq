@@ -2,7 +2,7 @@
 # This script doesn't run in the context of the Rails environment,
 # so the following load path manipulation is required.
 #
-$LOAD_PATH << File.expand_path(File.join(__dir__, ".."))
+$LOAD_PATH << File.expand_path(File.join(__dir__, '..'))
 
 require 'drb/drb'
 require 'log4r'
@@ -13,9 +13,9 @@ require 'VixDiskLib/vdl_wrapper'
 class VixDiskLibError < RuntimeError
 end
 
-MIQ_ROOT    = File.expand_path(File.join(__dir__, "../../.."))
-LOG_DIR     = File.join(MIQ_ROOT, "log")
-LOG_FILE    = File.join(LOG_DIR, "vim.log")
+MIQ_ROOT    = File.expand_path(File.join(__dir__, '../../..'))
+LOG_DIR     = File.join(MIQ_ROOT, 'log')
+LOG_FILE    = File.join(LOG_DIR, 'vim.log')
 
 $vim_log = VMDBLogger.new LOG_FILE
 
@@ -49,14 +49,14 @@ class VDDKFactory
     thr = DRb.thread
     DRb.stop_service
     thr.join unless thr.nil?
-    $vim_log.info "Finished shutting down DRb"
+    $vim_log.info 'Finished shutting down DRb'
   end
 
   def shut_down_service(msg)
     $vim_log.info "#{msg}"
     VdlWrapper.__exit__ if @started
     @running = true
-    $vim_log.info "VdlWrapper.__exit__ finished"
+    $vim_log.info 'VdlWrapper.__exit__ finished'
     shut_down_drb
   end
 
@@ -67,7 +67,7 @@ class VDDKFactory
   def wait_for_status(status, secs_to_wait)
     start_time = Time.now
     sleep_secs = 2
-    until (status == "started") ? @started : @running
+    until (status == 'started') ? @started : @running
       sleep sleep_secs
       #
       # Specifically check the shutdown flag in case we've been asked
@@ -115,24 +115,24 @@ begin
   #
   # Trap Handlers useful for testing and debugging.
   #
-  trap('INT') { vddk.shut_down_service("Interrupt Signal received"); exit }
-  trap('TERM') { vddk.shut_down_service("Termination Signal received"); exit }
+  trap('INT') { vddk.shut_down_service('Interrupt Signal received'); exit }
+  trap('TERM') { vddk.shut_down_service('Termination Signal received'); exit }
 
   Thread.new do
-    $vim_log.info "Monitoring Thread"
+    $vim_log.info 'Monitoring Thread'
     #
     # This will block until the SmartProxyWorker (our parent) exits
     #
     proc_reader.read
-    $vim_log.info "Shutting down VixDiskLibServer - Worker has exited"
+    $vim_log.info 'Shutting down VixDiskLibServer - Worker has exited'
     exit
   end
   #
   # If we haven't been marked as started yet, wait for it.
   # We may return immediately because startup (and more) has already happened.
   #
-  $vim_log.info "calling watchdog for startup"
-  vddk.wait_for_status("started", 1800)
+  $vim_log.info 'calling watchdog for startup'
+  vddk.wait_for_status('started', 1800)
   $vim_log.info "startup has happened, shutdown flag is #{vddk.shutdown}"
   #
   # Wait for the DRb server thread to finish before exiting.
@@ -141,12 +141,12 @@ begin
     #
     # Wait no longer than the specified number of seconds for any vddk call, otherwise shut down.
     #
-    vddk.wait_for_status("running", 1800)
+    vddk.wait_for_status('running', 1800)
     Thread.pass unless vddk.shutdown
   end
 
-  vddk.shut_down_service("Shutting Down VixDiskLibServer")
-  $vim_log.info "Service has stopped"
+  vddk.shut_down_service('Shutting Down VixDiskLibServer')
+  $vim_log.info 'Service has stopped'
 rescue => err
   $vim_log.error "VixDiskLibServer ERROR: [#{err}]"
   $vim_log.debug "VixDiskLibServer ERROR: [#{err.backtrace.join("\n")}]"

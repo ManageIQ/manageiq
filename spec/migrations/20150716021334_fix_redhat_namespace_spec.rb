@@ -7,22 +7,22 @@ describe FixRedhatNamespace do
   let(:ems_stub) { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ManageIQ::Providers::Redhat::CloudManager")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ManageIQ::Providers::Redhat::CloudManager')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ManageIQ::Providers::Redhat::InfraManager")
+      expect(ems.reload).to have_attributes(:type => 'ManageIQ::Providers::Redhat::InfraManager')
     end
   end
 
   migration_context :down do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ManageIQ::Providers::Redhat::InfraManager")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ManageIQ::Providers::Redhat::InfraManager')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ManageIQ::Providers::Redhat::CloudManager")
+      expect(ems.reload).to have_attributes(:type => 'ManageIQ::Providers::Redhat::CloudManager')
     end
   end
 end

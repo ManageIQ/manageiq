@@ -3,11 +3,11 @@ class Account < ApplicationRecord
   belongs_to :host
 
   include RelationshipMixin
-  self.default_relationship_type = "accounts"
+  self.default_relationship_type = 'accounts'
 
   def self.add_elements(parent, xmlNode)
-    user_map = add_missing_elements(parent, xmlNode, "accounts/users", "user")
-    add_missing_elements(parent, xmlNode, "accounts/groups", "group")
+    user_map = add_missing_elements(parent, xmlNode, 'accounts/users', 'user')
+    add_missing_elements(parent, xmlNode, 'accounts/groups', 'group')
     add_missing_relationships(parent, user_map)
   end
 
@@ -67,7 +67,7 @@ class Account < ApplicationRecord
       nh[:acctid] = nh.delete("#{typeName}id".to_sym)
       nh[:acctid] = nil unless nh[:acctid].respond_to?(:to_int) || nh[:acctid].to_s =~ /^-?[0-9]+$/
       # Convert to signed integer values for acctid
-      nh[:acctid] = [nh[:acctid].to_i].pack("I").unpack("i")[0] unless nh[:acctid].nil?
+      nh[:acctid] = [nh[:acctid].to_i].pack('I').unpack('i')[0] unless nh[:acctid].nil?
 
       # Find the users for this group / groups for this user
       nh[:members] = []

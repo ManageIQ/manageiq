@@ -5,7 +5,7 @@ class FixHostStorageReplicationOnUpgrade < ActiveRecord::Migration
   class MiqRegion < ActiveRecord::Base; end
 
   class HostsStorage < ActiveRecord::Base
-    self.table_name = "host_storages"
+    self.table_name = 'host_storages'
   end
 
   def up
@@ -28,8 +28,8 @@ class FixHostStorageReplicationOnUpgrade < ActiveRecord::Migration
     return unless RrSyncState.table_exists?
 
     prefix = "rr#{ApplicationRecord.my_region_number}"
-    old_name = "hosts_storages"
-    new_name = "host_storages"
+    old_name = 'hosts_storages'
+    new_name = 'host_storages'
 
     drop_trigger(new_name, "#{prefix}_#{old_name}")
 

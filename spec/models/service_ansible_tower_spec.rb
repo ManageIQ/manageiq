@@ -35,24 +35,24 @@ describe ServiceAnsibleTower do
     service
   end
 
-  describe "#job_options" do
-    it "gets job options set by dialog" do
+  describe '#job_options' do
+    it 'gets job options set by dialog' do
       expect(service_with_dialog_options.job_options).to include(parsed_job_options)
     end
 
-    it "gets jobs options from overridden values" do
-      new_options = {"any_key" => "any_value"}
+    it 'gets jobs options from overridden values' do
+      new_options = {'any_key' => 'any_value'}
       service_with_dialog_options.job_options = new_options
       expect(service_with_dialog_options.job_options).to eq(new_options)
     end
 
-    it "encrypts password when saves to DB" do
-      new_options = {:extra_vars => {"my_password" => "secret"}}
+    it 'encrypts password when saves to DB' do
+      new_options = {:extra_vars => {'my_password' => 'secret'}}
       service_with_dialog_options.job_options = new_options
-      expect(service_with_dialog_options.options[:create_options][:extra_vars]["my_password"]).to eq(MiqPassword.encrypt("secret"))
+      expect(service_with_dialog_options.options[:create_options][:extra_vars]['my_password']).to eq(MiqPassword.encrypt('secret'))
     end
 
-    it "prefers the job template set by dialog" do
+    it 'prefers the job template set by dialog' do
       expect(service_mix_dialog_setter.job_template).to eq(template_by_setter)
       service_mix_dialog_setter.job_options
       expect(service_mix_dialog_setter.job_template).to eq(template_by_dialog)
@@ -65,9 +65,9 @@ describe ServiceAnsibleTower do
         expect(template).to be_kind_of ConfigurationScript
         expect(opts).to have_key(:limit)
         expect(opts).to have_key(:extra_vars)
-      end.and_return(double(:raw_job, :id => 1, :status => "completed"))
+      end.and_return(double(:raw_job, :id => 1, :status => 'completed'))
 
-      expect(service_mix_dialog_setter.launch_job).to have_attributes(:ems_ref => "1", :status => "completed")
+      expect(service_mix_dialog_setter.launch_job).to have_attributes(:ems_ref => '1', :status => 'completed')
     end
 
     it 'always saves options even when the manager fails to create a stack' do

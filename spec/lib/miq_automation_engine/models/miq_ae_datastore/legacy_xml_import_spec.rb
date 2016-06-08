@@ -1,4 +1,4 @@
-describe "LegacyXMLImport" do
+describe 'LegacyXMLImport' do
   let(:xml) do
     %(
     <MiqAeDatastore version='1.0'>
@@ -24,7 +24,7 @@ describe "LegacyXMLImport" do
     MiqAeDatastore::Import.load_xml(xml)
   end
 
-  it "Check the tenant" do
+  it 'Check the tenant' do
     expect(MiqAeDomain.first.tenant_id).to eql(Tenant.root_tenant.id)
   end
 end

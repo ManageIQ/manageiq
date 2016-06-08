@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Openstack::CloudManager::Provision::Configuration do
-  context "#configure_network_adapters" do
+  context '#configure_network_adapters' do
     before do
       @ems      = FactoryGirl.create(:ems_openstack_with_authentication)
       @template = FactoryGirl.create(:template_openstack, :ext_management_system => @ems)
@@ -17,37 +17,37 @@ describe ManageIQ::Providers::Openstack::CloudManager::Provision::Configuration 
                                    :cloud_network => [@net1.id, @net1.name]
                                  }
                                 )
-      allow(@task).to receive_messages(:miq_request => double("MiqRequest").as_null_object)
+      allow(@task).to receive_messages(:miq_request => double('MiqRequest').as_null_object)
     end
 
-    it "sets nic from dialog" do
+    it 'sets nic from dialog' do
       @task.configure_network_adapters
 
-      expect(@task.options[:networks]).to eq([{"net_id" => @net1.ems_ref}])
+      expect(@task.options[:networks]).to eq([{'net_id' => @net1.ems_ref}])
     end
 
-    it "sets nic from dialog with additional nic from automate" do
+    it 'sets nic from dialog with additional nic from automate' do
       @task.options[:networks] = [nil, {:network_id => @net2.id}]
 
       @task.configure_network_adapters
 
-      expect(@task.options[:networks]).to eq([{"net_id" => @net1.ems_ref}, {"net_id" => @net2.ems_ref}])
+      expect(@task.options[:networks]).to eq([{'net_id' => @net1.ems_ref}, {'net_id' => @net2.ems_ref}])
     end
 
-    it "override nic from dialog with nic from automate" do
+    it 'override nic from dialog with nic from automate' do
       @task.options[:networks] = [{:network_id => @net2.id}]
 
       @task.configure_network_adapters
 
-      expect(@task.options[:networks]).to eq([{"net_id" => @net2.ems_ref}])
+      expect(@task.options[:networks]).to eq([{'net_id' => @net2.ems_ref}])
     end
 
-    it "ensure there are no blanks in the array" do
+    it 'ensure there are no blanks in the array' do
       @task.options[:networks] = [nil, nil, {:network_id => @net2.id}]
 
       @task.configure_network_adapters
 
-      expect(@task.options[:networks]).to eq([{"net_id" => @net1.ems_ref}, {"net_id" => @net2.ems_ref}])
+      expect(@task.options[:networks]).to eq([{'net_id' => @net1.ems_ref}, {'net_id' => @net2.ems_ref}])
     end
   end
 end

@@ -13,9 +13,9 @@ verbose = false
 
 def pr_usage
   $stderr.puts "Usage: #{File.basename($0)}"
-  $stderr.puts "             --yaml <yaml_file> | -y <yaml_file>         #"
-  $stderr.puts "             --outfile <output_file> | -o <output_file>  #"
-  $stderr.puts "             [--verbose | -v]                            #"
+  $stderr.puts '             --yaml <yaml_file> | -y <yaml_file>         #'
+  $stderr.puts '             --outfile <output_file> | -o <output_file>  #'
+  $stderr.puts '             [--verbose | -v]                            #'
 end
 
 #
@@ -57,7 +57,7 @@ cf = MiqFsUtil.new(fromFs, toFs, yaml)
 cf.verbose = verbose
 cf.update
 
-unless toFs.hasTagName?("/", "LABEL")
-  puts "*** Adding label..."
-  toFs.tagAdd("/", "LABEL=MIQPAYLOAD")
+unless toFs.hasTagName?('/', 'LABEL')
+  puts '*** Adding label...'
+  toFs.tagAdd('/', 'LABEL=MIQPAYLOAD')
 end

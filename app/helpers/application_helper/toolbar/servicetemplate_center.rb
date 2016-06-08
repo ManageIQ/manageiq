@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::ServicetemplateCenter < ApplicationHelper::Too
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :onwhen => "1+",
+      :onwhen => '1+',
       :items  => [
         button(
           :ab_group_new,
@@ -22,14 +22,14 @@ class ApplicationHelper::Toolbar::ServicetemplateCenter < ApplicationHelper::Too
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Item'),
           t,
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
         button(
           :catalogitem_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove this Item from the VMDB'),
           N_('Remove Item from the VMDB'),
-          :url_parms => "main_div",
-          :confirm   => N_("Warning: This Catalog Items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Catalog Item?")),
+          :url_parms => 'main_div',
+          :confirm   => N_('Warning: This Catalog Items and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Catalog Item?')),
       ]
     ),
   ])
@@ -45,7 +45,7 @@ class ApplicationHelper::Toolbar::ServicetemplateCenter < ApplicationHelper::Too
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Catalog Item'),
           N_('Edit Tags'),
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
       ]
     ),
   ])

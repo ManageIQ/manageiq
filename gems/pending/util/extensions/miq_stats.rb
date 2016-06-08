@@ -1,7 +1,7 @@
 module MiqStats
   def self.slope(x_array, y_array)
     return [] if x_array.empty? || y_array.empty?
-    raise "Arrays are not the same length, unable to calculate slope" unless x_array.length == y_array.length
+    raise 'Arrays are not the same length, unable to calculate slope' unless x_array.length == y_array.length
 
     n = x_array.length
 

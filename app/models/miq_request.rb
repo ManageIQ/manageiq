@@ -3,7 +3,7 @@ class MiqRequest < ApplicationRecord
 
   belongs_to :source,            :polymorphic => true
   belongs_to :destination,       :polymorphic => true
-  belongs_to :requester,         :class_name  => "User"
+  belongs_to :requester,         :class_name  => 'User'
   belongs_to :tenant
   belongs_to :service_order
   has_many   :miq_approvals,     :dependent   => :destroy
@@ -42,39 +42,39 @@ class MiqRequest < ApplicationRecord
   MODEL_REQUEST_TYPES = {
     :Service        => {
       :MiqProvisionRequest                 => {
-        :template          => "VM Provision",
-        :clone_to_vm       => "VM Clone",
-        :clone_to_template => "VM Publish",
+        :template          => 'VM Provision',
+        :clone_to_vm       => 'VM Clone',
+        :clone_to_template => 'VM Publish',
       },
       :MiqProvisionConfiguredSystemRequest => {
         :provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"
       },
       :VmReconfigureRequest                => {
-        :vm_reconfigure => "VM Reconfigure"
+        :vm_reconfigure => 'VM Reconfigure'
       },
       :VmMigrateRequest                    => {
-        :vm_migrate => "VM Migrate"
+        :vm_migrate => 'VM Migrate'
       },
       :ServiceTemplateProvisionRequest     => {
-        :clone_to_service => "Service Provision"
+        :clone_to_service => 'Service Provision'
       },
       :ServiceReconfigureRequest           => {
-        :service_reconfigure => "Service Reconfigure"
+        :service_reconfigure => 'Service Reconfigure'
       }
     },
     :Infrastructure => {
       :MiqHostProvisionRequest => {
-        :host_pxe_install => "Host Provision"
+        :host_pxe_install => 'Host Provision'
       },
     },
     :Automate       => {
       :AutomationRequest => {
-        :automation => "Automation"
+        :automation => 'Automation'
       }
     }
   }
 
-  REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
+  REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => 'VM Provision Template'}}
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
 
   delegate :deny, :reason, :stamped_on, :to => :first_approval
@@ -95,7 +95,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def initialize_attributes
-    self.approval_state ||= "pending_approval"
+    self.approval_state ||= 'pending_approval'
     miq_approvals << build_default_approval if miq_approvals.empty?
 
     return unless requester
@@ -116,14 +116,14 @@ class MiqRequest < ApplicationRecord
   # end
 
   def must_have_user
-    errors.add(:userid, "must have valid user") unless requester
+    errors.add(:userid, 'must have valid user') unless requester
   end
 
   def call_automate_event_queue(event_name)
     MiqQueue.put(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "call_automate_event",
+      :method_name => 'call_automate_event',
       :args        => [event_name],
       :zone        => options.fetch(:miq_zone, my_zone),
       :msg_timeout => 3600
@@ -147,7 +147,7 @@ class MiqRequest < ApplicationRecord
     MiqAeEvent.raise_evm_event(event_name, self, build_request_event(event_name))
     _log.info("Raised  event [#{event_name}] to Automate")
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
+    message = _('Error returned from %{name} event processing in Automate: %{error_message}') %
                 {:name => event_name, :error_message => err.message}
     raise
   end
@@ -158,7 +158,7 @@ class MiqRequest < ApplicationRecord
     _log.info("Raised event [#{event_name}] to Automate")
     return ws
   rescue MiqAeException::Error => err
-    message = _("Error returned from %{name} event processing in Automate: %{error_message}") %
+    message = _('Error returned from %{name} event processing in Automate: %{error_message}') %
                 {:name => event_name, :error_message => err.message}
     raise
   end
@@ -180,7 +180,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def pending
-    call_automate_event_queue("request_pending")
+    call_automate_event_queue('request_pending')
   end
 
   def approval_approved
@@ -189,8 +189,8 @@ class MiqRequest < ApplicationRecord
       return false
     end
 
-    update_attributes(:approval_state => "approved")
-    call_automate_event_queue("request_approved")
+    update_attributes(:approval_state => 'approved')
+    call_automate_event_queue('request_approved')
 
     # execute parent now that request is approved
     _log.info("Request: [#{description}] has all approvals approved, proceeding with execution")
@@ -205,21 +205,21 @@ class MiqRequest < ApplicationRecord
   end
 
   def approval_denied
-    update_attributes(:approval_state => "denied", :request_state => "finished", :status => "Denied")
-    call_automate_event_queue("request_denied")
+    update_attributes(:approval_state => 'denied', :request_state => 'finished', :status => 'Denied')
+    call_automate_event_queue('request_denied')
   end
 
   def approved?
-    miq_approvals.all? { |a| a.state == "approved" }
+    miq_approvals.all? { |a| a.state == 'approved' }
   end
 
   def v_approved_by
-    miq_approvals.collect(&:stamper_name).compact.join(", ")
+    miq_approvals.collect(&:stamper_name).compact.join(', ')
   end
 
   def v_approved_by_email
     emails = miq_approvals.inject([]) { |arr, a| arr << a.stamper.email unless a.stamper.nil? || a.stamper.email.nil?; arr }
-    emails.join(", ")
+    emails.join(', ')
   end
 
   def get_options
@@ -227,7 +227,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def request_type_display
-    request_type.nil? ? "Unknown" : REQUEST_TYPES.fetch_path(type.to_sym, request_type.to_sym)
+    request_type.nil? ? 'Unknown' : REQUEST_TYPES.fetch_path(type.to_sym, request_type.to_sym)
   end
 
   def self.request_types
@@ -244,7 +244,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def build_default_approval
-    MiqApproval.new(:description => "Default Approval")
+    MiqApproval.new(:description => 'Default Approval')
   end
 
   # TODO: Helper methods to support UI in legacy mode - single approval by role
@@ -273,7 +273,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def self.workflow_class
-    @workflow_class ||= name.underscore.chomp("_template").gsub(/_request$/, "_workflow").camelize.constantize rescue nil
+    @workflow_class ||= name.underscore.chomp('_template').gsub(/_request$/, '_workflow').camelize.constantize rescue nil
   end
 
   def self.request_task_class
@@ -282,7 +282,7 @@ class MiqRequest < ApplicationRecord
       when 'MiqProvisionRequest', 'MiqHostProvisionRequest'
         name.underscore.chomp('_request').camelize.constantize
       else
-        name.underscore.gsub(/_request$/, "_task").camelize.constantize
+        name.underscore.gsub(/_request$/, '_task').camelize.constantize
       end
     end
   end
@@ -319,17 +319,17 @@ class MiqRequest < ApplicationRecord
     end
     total = states.delete(:total).to_i
     unknown_state = task_count - total
-    states["unknown"] = unknown_state unless unknown_state.zero?
-    msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
+    states['unknown'] = unknown_state unless unknown_state.zero?
+    msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join('; ')
 
-    req_state = (states.length == 1) ? states.keys.first : "active"
+    req_state = (states.length == 1) ? states.keys.first : 'active'
 
     # Determine status to report
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
-    if req_state == "finished"
+    if req_state == 'finished'
       update_attribute(:fulfilled_on, Time.now.utc)
-      msg = (req_status == 'Ok') ? "Request complete" : "Request completed with errors"
+      msg = (req_status == 'Ok') ? 'Request complete' : 'Request completed with errors'
     end
 
     # If there is only 1 request_task, set the parent message the same
@@ -354,19 +354,19 @@ class MiqRequest < ApplicationRecord
 
   def task_check_on_execute
     if self.class::ACTIVE_STATES.include?(request_state)
-      raise _("%{task} request is already being processed") % {:task => self.class::TASK_DESCRIPTION}
+      raise _('%{task} request is already being processed') % {:task => self.class::TASK_DESCRIPTION}
     end
-    if request_state == "finished"
-      raise _("%{task} request has already been processed") % {:task => self.class::TASK_DESCRIPTION}
+    if request_state == 'finished'
+      raise _('%{task} request has already been processed') % {:task => self.class::TASK_DESCRIPTION}
     end
-    raise _("approval is required for %{task}") % {:task => self.class::TASK_DESCRIPTION} unless approved?
+    raise _('approval is required for %{task}') % {:task => self.class::TASK_DESCRIPTION} unless approved?
   end
 
   def execute
     task_check_on_execute
 
     deliver_on = nil
-    if get_option(:schedule_type) == "schedule"
+    if get_option(:schedule_type) == 'schedule'
       deliver_on = get_option(:schedule_time).utc rescue nil
     end
 
@@ -374,7 +374,7 @@ class MiqRequest < ApplicationRecord
     MiqQueue.put(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "create_request_tasks",
+      :method_name => 'create_request_tasks',
       :zone        => options.fetch(:miq_zone, my_zone),
       :role        => my_role,
       :task_id     => "#{self.class.name.underscore}_#{id}",
@@ -386,7 +386,7 @@ class MiqRequest < ApplicationRecord
   def create_request_tasks
     _log.info("Creating request task instances for: <#{description}>...")
 
-    return if automate_event_failed?("request_starting")
+    return if automate_event_failed?('request_starting')
 
     # Create a MiqRequestTask object for each requested item
     update_attribute(:options, options.merge!(:delivered_on => Time.now.utc))
@@ -451,8 +451,8 @@ class MiqRequest < ApplicationRecord
 
     request.log_request_success(requester, :created)
 
-    request.call_automate_event_queue("request_created")
-    request.approve(requester, "Auto-Approved") if auto_approve
+    request.call_automate_event_queue('request_created')
+    request.approve(requester, 'Auto-Approved') if auto_approve
     request.reload if auto_approve
     request
   end
@@ -465,13 +465,13 @@ class MiqRequest < ApplicationRecord
 
     request.log_request_success(requester, :updated)
 
-    request.call_automate_event_queue("request_updated")
+    request.call_automate_event_queue('request_updated')
     request
   end
 
   def log_request_success(requester_id, mode)
     requester_id = requester_id.userid if requester_id.respond_to?(:userid)
-    status_message = mode == :created ? "requested" : "request updated"
+    status_message = mode == :created ? 'requested' : 'request updated'
     event_message = "#{self.class::TASK_DESCRIPTION} #{status_message} by <#{requester_id}> for #{my_records}"
 
     AuditEvent.success(
@@ -491,15 +491,15 @@ class MiqRequest < ApplicationRecord
   end
 
   def request_pending_approval?
-    approval_state == "pending_approval"
+    approval_state == 'pending_approval'
   end
 
   def request_approved?
-    approval_state == "approved"
+    approval_state == 'approved'
   end
 
   def request_denied?
-    approval_state == "denied"
+    approval_state == 'denied'
   end
 
   def my_records
@@ -512,7 +512,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def validate_class
-    errors.add(:type, "should be a descendant of MiqRequest") if instance_of?(MiqRequest)
+    errors.add(:type, 'should be a descendant of MiqRequest') if instance_of?(MiqRequest)
   end
 
   def validate_request_type

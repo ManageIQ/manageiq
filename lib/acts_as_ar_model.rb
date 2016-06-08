@@ -178,7 +178,7 @@ class ActsAsArModel
   def inspect
     attributes_as_nice_string = self.class.attribute_names.collect do |name|
       "#{name}: #{attribute_for_inspect(name)}"
-    end.compact.join(", ")
+    end.compact.join(', ')
     "#<#{self.class} #{attributes_as_nice_string}>"
   end
 

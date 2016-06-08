@@ -51,8 +51,8 @@ class MiqSshUtil
   end
 
   def exec(cmd, doneStr = nil)
-    errBuf = ""
-    outBuf = ""
+    errBuf = ''
+    outBuf = ''
     status = nil
     signal = nil
 
@@ -83,7 +83,7 @@ class MiqSshUtil
         end
 
         channel.on_eof do |_channel|
-          $log.debug "MiqSshUtil::exec - EOF RECEIVED" if $log
+          $log.debug 'MiqSshUtil::exec - EOF RECEIVED' if $log
         end
 
         channel.on_close do |_channel|
@@ -103,10 +103,10 @@ class MiqSshUtil
   end # def exec
 
   def suexec(cmd_str, doneStr = nil)
-    errBuf = ""
-    outBuf = ""
-    prompt = ""
-    cmdRX  = ""
+    errBuf = ''
+    outBuf = ''
+    prompt = ''
+    cmdRX  = ''
     status = nil
     signal = nil
     state  = :initial
@@ -117,7 +117,7 @@ class MiqSshUtil
           # now we request a "pty" (i.e. interactive) session so we can send data back and forth if needed.
           # it WILL NOT WORK without this, and it has to be done before any call to exec.
           channel.request_pty(:chars_wide => 256) do |_channel, success|
-            raise "Could not obtain pty (i.e. an interactive ssh session)" unless success
+            raise 'Could not obtain pty (i.e. an interactive ssh session)' unless success
           end
 
           channel.on_data do |channel, data|
@@ -153,8 +153,8 @@ class MiqSshUtil
             if (state == :initial)
               prompt << data.lstrip
               if data.strip =~ /[Pp]assword:/
-                prompt = ""
-                $log.debug "MiqSshUtil::suexec - Password Prompt detected: sending su password" if $log
+                prompt = ''
+                $log.debug 'MiqSshUtil::suexec - Password Prompt detected: sending su password' if $log
                 channel.send_data("#{@su_password}\n")
                 state = :password_sent
               end
@@ -177,7 +177,7 @@ class MiqSshUtil
           end
 
           channel.on_eof do |_channel|
-            $log.debug "MiqSshUtil::suexec - EOF RECEIVED" if $log
+            $log.debug 'MiqSshUtil::suexec - EOF RECEIVED' if $log
           end
 
           channel.on_close do |_channel|
@@ -200,7 +200,7 @@ class MiqSshUtil
   end # suexec
 
   def temp_cmd_file(cmd)
-    temp_remote_script = Tempfile.new(["miq-", ".sh"], "/var/tmp")
+    temp_remote_script = Tempfile.new(['miq-', '.sh'], '/var/tmp')
     temp_file          = temp_remote_script.path
     begin
       temp_remote_script.write(cmd)

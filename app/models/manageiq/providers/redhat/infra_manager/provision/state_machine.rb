@@ -33,7 +33,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
 
   def customize_destination
     if destination_image_locked?
-      _log.info("Destination image locked; re-queuing")
+      _log.info('Destination image locked; re-queuing')
       requeue_phase
     else
       message = "Starting New #{destination_type} Customization"
@@ -46,7 +46,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
 
   def autostart_destination
     if get_option(:vm_auto_start)
-      message = "Starting"
+      message = 'Starting'
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       get_provider_destination.start { |action| action.use_cloud_init(true) if phase_context[:boot_with_cloud_init] }
@@ -58,10 +58,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
   private
 
   def powered_off_in_provider?
-    destination.with_provider_object(&:status)[:state] == "down"
+    destination.with_provider_object(&:status)[:state] == 'down'
   end
 
   def powered_on_in_provider?
-    destination.with_provider_object(&:status)[:state] == "up"
+    destination.with_provider_object(&:status)[:state] == 'up'
   end
 end

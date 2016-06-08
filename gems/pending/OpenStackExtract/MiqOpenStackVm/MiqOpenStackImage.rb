@@ -42,7 +42,7 @@ class MiqOpenStackImage
       $log.debug "diskFormat = #{diskFormat}"
 
       ost = OpenStruct.new
-      ost.rawDisk = diskFormat == "raw"
+      ost.rawDisk = diskFormat == 'raw'
       MiqVm.new(hardware, ost)
     end
   end

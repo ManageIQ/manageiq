@@ -15,13 +15,13 @@ FactoryGirl.define do
   #
 
   factory :classification_cost_center, :parent => :classification do
-    name        "cc"
-    description "Cost Center"
+    name        'cc'
+    description 'Cost Center'
   end
 
   factory :classification_department, :parent => :classification do
-    name        "department"
-    description "Department"
+    name        'department'
+    description 'Department'
   end
 
   #
@@ -31,7 +31,7 @@ FactoryGirl.define do
   factory :classification_cost_center_with_tags, :parent => :classification_cost_center do
     children do
       [
-        FactoryGirl.create(:classification_tag, :name => "001", :description => "Cost Center 001"),
+        FactoryGirl.create(:classification_tag, :name => '001', :description => 'Cost Center 001'),
       ]
     end
   end
@@ -39,9 +39,9 @@ FactoryGirl.define do
   factory :classification_department_with_tags, :parent => :classification_department do
     children do
       [
-        FactoryGirl.create(:classification_tag, :name => "accounting", :description => "Accounting"),
-        FactoryGirl.create(:classification_tag, :name => "finance",    :description => "Financial Services"),
-        FactoryGirl.create(:classification_tag, :name => "hr",         :description => "Human Resources"),
+        FactoryGirl.create(:classification_tag, :name => 'accounting', :description => 'Accounting'),
+        FactoryGirl.create(:classification_tag, :name => 'finance',    :description => 'Financial Services'),
+        FactoryGirl.create(:classification_tag, :name => 'hr',         :description => 'Human Resources'),
       ]
     end
   end

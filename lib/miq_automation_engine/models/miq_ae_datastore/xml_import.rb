@@ -1,12 +1,12 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'util/xml')
 
 module MiqAeDatastore
   class XmlImport
     include Vmdb::Logging
     def self.process_class(input)
-      fields    = input.delete("MiqAeSchema")
-      instances = input.delete("MiqAeInstance")
-      methods   = input.delete("MiqAeMethod")
+      fields    = input.delete('MiqAeSchema')
+      instances = input.delete('MiqAeInstance')
+      methods   = input.delete('MiqAeMethod')
 
       # Create the AEClass
       aec       = MiqAeClass.new(input)
@@ -34,9 +34,9 @@ module MiqAeDatastore
     end
 
     def self.process_method(input)
-      fields             = input.delete("MiqAeField")
-      input["data"]      = input.delete("content")
-      input["data"].strip! unless input["data"].nil?
+      fields             = input.delete('MiqAeField')
+      input['data']      = input.delete('content')
+      input['data'].strip! unless input['data'].nil?
       aem                = MiqAeMethod.new(input)
 
       # Find or Create the Method Input Definitions
@@ -49,9 +49,9 @@ module MiqAeDatastore
       inputs = []
       fields.each do |f|
         priority += 1
-        f["priority"] = priority unless f.include?("priority")
-        default_value = f.delete("content")
-        f["default_value"] = default_value.strip unless f.key?("default_value") || default_value.nil?
+        f['priority'] = priority unless f.include?('priority')
+        default_value = f.delete('content')
+        f['default_value'] = default_value.strip unless f.key?('default_value') || default_value.nil?
         inputs << MiqAeField.new(f)
       end
       inputs
@@ -61,19 +61,19 @@ module MiqAeDatastore
       priority = 0
       ae_fields = []
       fields.each do |field|
-        field["MiqAeField"].each do |f|
+        field['MiqAeField'].each do |f|
           priority += 1
-          f["message"] ||= MiqAeField.default('message')
-          f["priority"] ||= priority
+          f['message'] ||= MiqAeField.default('message')
+          f['priority'] ||= priority
           f['substitute'] = MiqAeField.default('substitute') unless %w(true false).include?(f['substitute'])
           f['substitute'] = true  if f['substitute'] == 'true'
           f['substitute'] = false if f['substitute'] == 'false'
-          default_value = f.delete("content")
-          f["default_value"] = default_value.strip unless f.key?("default_value") || default_value.nil?
+          default_value = f.delete('content')
+          f['default_value'] = default_value.strip unless f.key?('default_value') || default_value.nil?
 
-          unless f["collect"].blank?
-            f["collect"] = f["collect"].first["content"]            if f["collect"].kind_of?(Array)
-            f["collect"] = REXML::Text.unnormalize(f["collect"].strip)
+          unless f['collect'].blank?
+            f['collect'] = f['collect'].first['content']            if f['collect'].kind_of?(Array)
+            f['collect'] = REXML::Text.unnormalize(f['collect'].strip)
           end
 
           %w(on_entry on_exit on_error max_retries max_time).each do |k|
@@ -87,8 +87,8 @@ module MiqAeDatastore
     end
 
     def self.process_instance(input, aec)
-      fields = input.delete("MiqAeField")
-      input.delete("content")
+      fields = input.delete('MiqAeField')
+      input.delete('content')
       aei = MiqAeInstance.new(input)
       aei.ae_class = aec
       fields.each { |f| process_field_value(aei, f) } unless fields.nil?
@@ -97,11 +97,11 @@ module MiqAeDatastore
 
     def self.process_field_value(aei, field)
       options = {}
-      fname = field["name"]
+      fname = field['name']
       ae_field = aei.ae_class.ae_fields.detect { |f| fname.casecmp(f.name) == 0 }
       raise MiqAeException::FieldNotFound, "Field [#{fname}] not found in MiqAeDatastore" if ae_field.nil?
       options[:ae_field] = ae_field
-      value = field["value"] || field["content"]
+      value = field['value'] || field['content']
       value.strip! unless value.blank?
       options[:value]    = value
       %w(collect on_entry on_exit on_error max_retries max_time).each do |key|
@@ -129,21 +129,21 @@ module MiqAeDatastore
           version = doc.children[0].attributes[:version]
           _log.info("  with version '#{version}'")
           raise "Unsupported version '#{version}'.  Must be at least '#{MiqAeDatastore::XML_VERSION_MIN_SUPPORTED}'." unless check_version(version)
-          classes = doc.to_h(:symbols => false)["MiqAeClass"]
-          buttons = doc.to_h(:symbols => false)["MiqAeButton"]
+          classes = doc.to_h(:symbols => false)['MiqAeClass']
+          buttons = doc.to_h(:symbols => false)['MiqAeButton']
         end
 
         create_domain(domain_name) if domain_name
         ae_namespaces = {}
         Benchmark.realtime_block(:datastore_import_time) do
           classes.each do |c|
-            namespace = c.delete("namespace")
+            namespace = c.delete('namespace')
             next if namespace == '$'
-            namespace = File.join(domain_name, namespace) if domain_name && namespace != "$"
+            namespace = File.join(domain_name, namespace) if domain_name && namespace != '$'
             ae_namespaces[namespace] ||= Benchmark.realtime_block(:build_namespaces) do
               MiqAeNamespace.find_or_create_by_fqname(namespace)
             end.first
-            c["ae_namespace"] = ae_namespaces[namespace]
+            c['ae_namespace'] = ae_namespaces[namespace]
             process_class(c)
           end unless classes.nil?
 
@@ -167,10 +167,10 @@ module MiqAeDatastore
       _log.info("Importing file '#{f}'")
       ext = File.extname(f).downcase
       case ext
-      when ".xml"          then load_xml_file(f, domain)
+      when '.xml'          then load_xml_file(f, domain)
       else raise "Unhandled File Extension [#{ext}] when trying to load #{f}"
       end
-      _log.info("Import complete")
+      _log.info('Import complete')
     end
   end
 end

@@ -1,7 +1,7 @@
 describe ProviderForemanHelper do
   before do
     @record = FactoryGirl.create(:ansible_configuration_script,
-                                 :name        => "ConfigScript1",
+                                 :name        => 'ConfigScript1',
                                  :survey_spec => {'spec' => [{'index' => 0, 'question_description' => 'Survey',
                                                               'min' => nil, 'default' => nil, 'max' => nil,
                                                               'question_name' => 'Survey', 'required' => false,
@@ -11,7 +11,7 @@ describe ProviderForemanHelper do
     login_as @user = FactoryGirl.create(:user)
   end
 
-  context ".textual_configuration_script_survey" do
+  context '.textual_configuration_script_survey' do
     subject { textual_configuration_script_survey }
     it 'shows the survey spec paramters' do
       expect(subject[:headers]).to match_array([_('Question Name'), _('Question Description'), _('Variable'),

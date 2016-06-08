@@ -17,10 +17,10 @@ def create_ansible_inventory_file(subscribe = false)
     File.open(inv_file_path, 'w') do |f|
       f.write(template)
     end
-    $evm.root['ae_result'] = "ok"
+    $evm.root['ae_result'] = 'ok'
     $evm.root['automation_task'].message = "successfully created #{inv_file_path}"
   rescue StandardError => e
-    $evm.root['ae_result'] = "error"
+    $evm.root['ae_result'] = 'error'
     $evm.root['automation_task'].message = "failed to create #{inv_file_path}: " + e
   end
 end
@@ -30,11 +30,11 @@ create_ansible_inventory_file
 begin
   Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true,
                  :key_data => $evm.root['private_key']) do |ssh|
-    create_ansible_inventory_file(true) if ssh.exec!("cat /etc/redhat-release").include?("Red Hat Enterprise Linux")
+    create_ansible_inventory_file(true) if ssh.exec!('cat /etc/redhat-release').include?('Red Hat Enterprise Linux')
   end
 rescue
-  $evm.root['ae_result'] = "error"
-  $evm.root['automation_task'].message = "Cannot connect to deployment master " \
+  $evm.root['ae_result'] = 'error'
+  $evm.root['automation_task'].message = 'Cannot connect to deployment master ' \
                                          "(#{$evm.root['deployment_master']}) via ssh"
 end
 $evm.log(:info, "State: #{$evm.root['ae_state']} | Result: #{$evm.root['ae_result']} "\

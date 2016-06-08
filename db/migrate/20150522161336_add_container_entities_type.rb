@@ -13,16 +13,16 @@ class AddContainerEntitiesType < ActiveRecord::Migration
 
   def up
     add_column :container_nodes, :type, :string
-    say_with_time("Update ContainerNodes type to ContainerNodeKubernetes") do
-      ContainerNode.update_all(:type => "ContainerNodeKubernetes")
+    say_with_time('Update ContainerNodes type to ContainerNodeKubernetes') do
+      ContainerNode.update_all(:type => 'ContainerNodeKubernetes')
     end
     add_column :containers, :type, :string
-    say_with_time("Update Containers type to ContainerKubernetes") do
-      Container.update_all(:type => "ContainerKubernetes")
+    say_with_time('Update Containers type to ContainerKubernetes') do
+      Container.update_all(:type => 'ContainerKubernetes')
     end
     add_column :container_groups, :type, :string
-    say_with_time("Update ContainerGroups type to ContainerGroupKubernetes") do
-      ContainerGroup.update_all(:type => "ContainerGroupKubernetes")
+    say_with_time('Update ContainerGroups type to ContainerGroupKubernetes') do
+      ContainerGroup.update_all(:type => 'ContainerGroupKubernetes')
     end
   end
 

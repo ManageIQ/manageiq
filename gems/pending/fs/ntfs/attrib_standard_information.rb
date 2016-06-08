@@ -77,7 +77,7 @@ module NTFS
     FP_INDEXVIEW  = 0x20000000
 
     def initialize(buf)
-      raise "MIQ(NTFS::StandardInformation.initialize) Nil buffer" if buf.nil?
+      raise 'MIQ(NTFS::StandardInformation.initialize) Nil buffer' if buf.nil?
 
       buf          = buf.read(buf.length) if buf.kind_of?(DataRun)
       @asi         = ATTRIB_STANDARD_INFORMATION.decode(buf)

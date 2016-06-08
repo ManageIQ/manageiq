@@ -19,7 +19,7 @@ module NTFS
     attr_reader :objectId, :birthVolumeId, :birthObjectId, :domainId
 
     def initialize(buf)
-      raise "MIQ(NTFS::ObjectId.initialize) Nil buffer" if buf.nil?
+      raise 'MIQ(NTFS::ObjectId.initialize) Nil buffer' if buf.nil?
       buf = buf.read(buf.length) if buf.kind_of?(DataRun)
       len = 16
       @objectId       = MiqUUID.parse_raw(buf[len * 0, len])

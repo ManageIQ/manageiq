@@ -21,11 +21,11 @@ class PxeImage < ApplicationRecord
   end
 
   def build_pxe_contents(ks_access_path, ks_device)
-    options = kernel_options.to_s.split(" ")
-    update_pxe_content_option(options, "ks=",       ks_access_path)
-    update_pxe_content_option(options, "ksdevice=", ks_device)
+    options = kernel_options.to_s.split(' ')
+    update_pxe_content_option(options, 'ks=',       ks_access_path)
+    update_pxe_content_option(options, 'ksdevice=', ks_device)
 
-    options.compact.join(" ").strip
+    options.compact.join(' ').strip
   end
 
   def parsed_contents=(contents)

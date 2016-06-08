@@ -1,4 +1,4 @@
-describe "amazon_check_pre_retirement Method Validation" do
+describe 'amazon_check_pre_retirement Method Validation' do
   before(:each) do
     @zone = FactoryGirl.create(:zone)
     @user = FactoryGirl.create(:user_with_group)
@@ -10,9 +10,9 @@ describe "amazon_check_pre_retirement Method Validation" do
                                                   :virtualization_type => 'paravirtual',
                                                   :root_device_type    => 'instance_store')
     @vm   = FactoryGirl.create(:vm_amazon,
-                               :name => "AMZN",    :raw_power_state => "running",
+                               :name => 'AMZN',    :raw_power_state => 'running',
                                :ems_id => @ems.id, :registered => true)
-    @ins  = "/Cloud/VM/Retirement/StateMachines/Methods/CheckPreRetirement"
+    @ins  = '/Cloud/VM/Retirement/StateMachines/Methods/CheckPreRetirement'
   end
 
   it "returns 'ok' for instance store instances even with power on" do
@@ -31,7 +31,7 @@ describe "amazon_check_pre_retirement Method Validation" do
 
   it "returns 'ok' for stopped ebs instances" do
     @vm.hardware = @ebs_hardware
-    @vm.update_attributes(:raw_power_state => "off")
+    @vm.update_attributes(:raw_power_state => 'off')
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
     expect(ws.root['ae_result']).to eq('ok')
     expect(ws.root['vm'].power_state).to eq('off')

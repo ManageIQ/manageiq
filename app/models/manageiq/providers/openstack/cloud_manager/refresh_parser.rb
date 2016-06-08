@@ -36,15 +36,15 @@ module ManageIQ::Providers
 
     def validate_required_services
       unless @identity_service
-        raise MiqException::MiqOpenstackKeystoneServiceMissing, "Required service Keystone is missing in the catalog."
+        raise MiqException::MiqOpenstackKeystoneServiceMissing, 'Required service Keystone is missing in the catalog.'
       end
 
       unless @compute_service
-        raise MiqException::MiqOpenstackNovaServiceMissing, "Required service Nova is missing in the catalog."
+        raise MiqException::MiqOpenstackNovaServiceMissing, 'Required service Nova is missing in the catalog.'
       end
 
       unless @image_service
-        raise MiqException::MiqOpenstackGlanceServiceMissing, "Required service Glance is missing in the catalog."
+        raise MiqException::MiqOpenstackGlanceServiceMissing, 'Required service Glance is missing in the catalog.'
       end
     end
 
@@ -123,7 +123,7 @@ module ManageIQ::Providers
     end
 
     def get_tenants
-      @tenants = @os_handle.accessible_tenants.select { |t| t.name != "services" }
+      @tenants = @os_handle.accessible_tenants.select { |t| t.name != 'services' }
       process_collection(@tenants, :cloud_tenants) { |tenant| parse_tenant(tenant) }
     end
 
@@ -148,7 +148,7 @@ module ManageIQ::Providers
     def get_snapshots
       return unless @volume_service.name == :cinder
       process_collection(@volume_service.handled_list(:list_snapshots_detailed,
-                                                      :__request_body_index => "snapshots"),
+                                                      :__request_body_index => 'snapshots'),
                          :cloud_volume_snapshots) { |snap| parse_snapshot(snap) }
     end
 
@@ -181,7 +181,7 @@ module ManageIQ::Providers
       uid = flavor.id
 
       new_result = {
-        :type                 => "ManageIQ::Providers::Openstack::CloudManager::Flavor",
+        :type                 => 'ManageIQ::Providers::Openstack::CloudManager::Flavor',
         :ems_ref              => uid,
         :name                 => flavor.name,
         :enabled              => !flavor.disabled,
@@ -204,15 +204,15 @@ module ManageIQ::Providers
 
     def parse_availability_zone(az)
       if az.nil?
-        uid        = "null_az"
+        uid        = 'null_az'
         new_result = {
-          :type    => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull",
+          :type    => 'ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull',
           :ems_ref => uid
         }
       else
         uid = name = az.zoneName
         new_result = {
-          :type    => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone",
+          :type    => 'ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone',
           :ems_ref => uid,
           :name    => name
         }
@@ -225,7 +225,7 @@ module ManageIQ::Providers
       uid = tenant.id
 
       new_result = {
-        :type        => "ManageIQ::Providers::Openstack::CloudManager::CloudTenant",
+        :type        => 'ManageIQ::Providers::Openstack::CloudManager::CloudTenant',
         :name        => tenant.name,
         :description => tenant.description,
         :enabled     => tenant.enabled,
@@ -249,7 +249,7 @@ module ManageIQ::Providers
       # The array of hashes returned from this block is the same as what would
       # be produced by parse_quota ... so, parse_quota just returns the same
       # hash with a compound key.
-      quota.except("id", "tenant_id", "service_name").collect do |key, value|
+      quota.except('id', 'tenant_id', 'service_name').collect do |key, value|
         begin
           value = value.to_i
         rescue
@@ -258,18 +258,18 @@ module ManageIQ::Providers
           value = 0
         end
         {
-          :cloud_tenant => @data_index.fetch_path(:cloud_tenants, quota["tenant_id"]),
-          :service_name => quota["service_name"],
-          :ems_ref      => quota["id"],
+          :cloud_tenant => @data_index.fetch_path(:cloud_tenants, quota['tenant_id']),
+          :service_name => quota['service_name'],
+          :ems_ref      => quota['id'],
           :name         => key,
           :value        => value,
-          :type         => "ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota",
+          :type         => 'ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota',
         }
       end
     end
 
     def parse_quota(quota)
-      uid = [quota["ems_ref"], quota["name"]]
+      uid = [quota['ems_ref'], quota['name']]
       return uid, quota
     end
 
@@ -278,7 +278,7 @@ module ManageIQ::Providers
     end
 
     def self.miq_template_type
-      "ManageIQ::Providers::Openstack::CloudManager::Template"
+      'ManageIQ::Providers::Openstack::CloudManager::Template'
     end
 
     def parse_volume(volume)
@@ -287,7 +287,7 @@ module ManageIQ::Providers
       uid = volume.id
       new_result = {
         :ems_ref           => uid,
-        :type              => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume",
+        :type              => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume',
         :name              => volume_name(volume),
         :status            => volume.status,
         :bootable          => volume.attributes['bootable'],
@@ -297,7 +297,7 @@ module ManageIQ::Providers
         :snapshot_uid      => volume.snapshot_id,
         :size              => volume.size.to_i.gigabytes,
         :tenant            => @data_index.fetch_path(:cloud_tenants, volume.tenant_id),
-        :availability_zone => @data_index.fetch_path(:availability_zones, volume.availability_zone || "null_az"),
+        :availability_zone => @data_index.fetch_path(:availability_zones, volume.availability_zone || 'null_az'),
       }
 
       volume.attachments.each do |a|
@@ -319,7 +319,7 @@ module ManageIQ::Providers
         if (disk = disks.detect { |d| d[:location] == dev })
           disk[:size] = new_result[:size]
         else
-          disk = add_instance_disk(disks, new_result[:size], dev, "OpenStack Volume")
+          disk = add_instance_disk(disks, new_result[:size], dev, 'OpenStack Volume')
         end
 
         if disk
@@ -349,7 +349,7 @@ module ManageIQ::Providers
       uid = snap['id']
       new_result = {
         :ems_ref       => uid,
-        :type          => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot",
+        :type          => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot',
         # Supporting both Cinder v1 and Cinder v2
         :name          => snap['display_name'] || snap['name'],
         :status        => snap['status'],
@@ -366,9 +366,9 @@ module ManageIQ::Providers
     def parse_server(server, parent_hosts = nil)
       uid = server.id
 
-      raw_power_state = server.state || "UNKNOWN"
+      raw_power_state = server.state || 'UNKNOWN'
 
-      flavor_uid = server.flavor["id"]
+      flavor_uid = server.flavor['id']
       @known_flavors << flavor_uid
       flavor = @data_index.fetch_path(:flavors, flavor_uid)
       if flavor.nil?
@@ -392,16 +392,16 @@ module ManageIQ::Providers
         parent_cluster = nil
       end
 
-      parent_image_uid = server.image["id"]
+      parent_image_uid = server.image['id']
 
       new_result = {
-        :type                => "ManageIQ::Providers::Openstack::CloudManager::Vm",
+        :type                => 'ManageIQ::Providers::Openstack::CloudManager::Vm',
         :uid_ems             => uid,
         :ems_ref             => uid,
         :name                => server.name,
-        :vendor              => "openstack",
+        :vendor              => 'openstack',
         :raw_power_state     => raw_power_state,
-        :connection_state    => "connected",
+        :connection_state    => 'connected',
 
         :hardware            => {
           :cpu_sockets          => flavor[:cpus],
@@ -418,7 +418,7 @@ module ManageIQ::Providers
         :host                => parent_host,
         :ems_cluster         => parent_cluster,
         :flavor              => flavor,
-        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone.blank? ? "null_az" : server.availability_zone),
+        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone.blank? ? 'null_az' : server.availability_zone),
         :key_pairs           => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
         # TODO(lsmola) moving this under has_many :security_groups, :through => :network_port will require changing
         # saving code and refresh of all providers
@@ -428,22 +428,22 @@ module ManageIQ::Providers
       }
       # TODO(lsmola) keeping for backwards compatibility, replaced with new networking models using network_ports
       # for connections, delete when not needed.
-      new_result[:hardware][:networks] << private_network.merge(:description => "private") unless private_network.blank?
-      new_result[:hardware][:networks] << public_network.merge(:description => "public")   unless public_network.blank?
+      new_result[:hardware][:networks] << private_network.merge(:description => 'private') unless private_network.blank?
+      new_result[:hardware][:networks] << public_network.merge(:description => 'public')   unless public_network.blank?
 
       new_result[:parent_vm_uid] = parent_image_uid unless parent_image_uid.nil?
 
       disks = new_result[:hardware][:disks]
-      dev = "vda"
+      dev = 'vda'
 
       if (sz = flavor[:root_disk_size]) == 0
         sz = 1.gigabytes
       end
-      add_instance_disk(disks, sz, dev.dup,       "Root disk")
+      add_instance_disk(disks, sz, dev.dup,       'Root disk')
       sz = flavor[:ephemeral_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, 'Ephemeral disk') unless sz.zero?
       sz = flavor[:swap_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")      unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, 'Swap disk')      unless sz.zero?
 
       return uid, new_result
     end
@@ -456,7 +456,7 @@ module ManageIQ::Providers
     end
 
     def add_instance_disk(disks, size, location, name)
-      super(disks, size, location, name, "openstack")
+      super(disks, size, location, name, 'openstack')
     end
 
     def get_cloud_services

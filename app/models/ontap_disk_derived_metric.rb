@@ -5,12 +5,12 @@ class OntapDiskDerivedMetric < ApplicationRecord
   serialize   :base_counters
 
   def self.additional_counters
-    ["base_for_disk_busy"]
+    ['base_for_disk_busy']
   end
 
   include OntapDerivedMetricMixin
 
   def self.derive_metrics(prevMetric, curMetric, counterInfo)
-    derive_metrics_common(prevMetric, curMetric, counterInfo, "disk")
+    derive_metrics_common(prevMetric, curMetric, counterInfo, 'disk')
   end
 end

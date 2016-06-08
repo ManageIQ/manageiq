@@ -65,7 +65,7 @@ module AutomationSpecHelper
   end
 
   def deliver_ae_request_from_queue
-    q = MiqQueue.all.detect { |item| item.state == 'ready' && item.class_name == "MiqAeEngine" }
+    q = MiqQueue.all.detect { |item| item.state == 'ready' && item.class_name == 'MiqAeEngine' }
     return nil unless q
     q.state = 'dequeue'
     q.save
@@ -78,7 +78,7 @@ module AutomationSpecHelper
     return if aei
     aef = aec.ae_fields.detect { |fld| fld.name == 'meth1' }
     aei = MiqAeInstance.new('name' => 'Call_Method')
-    aev = MiqAeValue.new(:ae_field => aef, :value =>  "${/#namespace}/${/#class}.${/#method}")
+    aev = MiqAeValue.new(:ae_field => aef, :value =>  '${/#namespace}/${/#class}.${/#method}')
     aei.ae_values << aev
     aec.ae_instances << aei
     aec.save

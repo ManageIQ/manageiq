@@ -85,7 +85,7 @@ module OntapLogicalDiskMixin
 
   def check_bool(val)
     return false if val.nil?
-    val.casecmp("true") == 0
+    val.casecmp('true') == 0
   end
 
   def sis_info(key)

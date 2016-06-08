@@ -14,9 +14,9 @@ class MiqHostProvisionRequest < MiqRequest
   def host_name
     if options[:src_host_ids].length == 1
       host = Host.find_by_id(options[:src_host_ids].first)
-      host.nil? ? "" : host.name
+      host.nil? ? '' : host.name
     else
-      "Multiple Hosts"
+      'Multiple Hosts'
     end
   end
 
@@ -58,7 +58,7 @@ class MiqHostProvisionRequest < MiqRequest
   end
 
   def originating_controller
-    "host"
+    'host'
   end
 
   def event_name(mode)

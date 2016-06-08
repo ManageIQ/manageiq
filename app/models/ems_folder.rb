@@ -1,7 +1,7 @@
 class EmsFolder < ApplicationRecord
   include NewWithTypeStiMixin
 
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => 'ems_id'
 
   acts_as_miq_taggable
 
@@ -9,7 +9,7 @@ class EmsFolder < ApplicationRecord
   include ProviderObjectMixin
 
   include RelationshipMixin
-  self.default_relationship_type = "ems_metadata"
+  self.default_relationship_type = 'ems_metadata'
 
   include AggregationMixin
   include MiqPolicyMixin
@@ -115,13 +115,13 @@ class EmsFolder < ApplicationRecord
 
   # Parent relationship methods
   def parent_datacenter
-    detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
+    detect_ancestor(:of_type => 'EmsFolder') { |a| a.kind_of?(Datacenter) }
   end
 
   # TODO: refactor by vendor/hypervisor (currently, this assumes VMware)
   def register_host(host)
     host = Host.extract_objects(host)
-    raise _("Host cannot be nil") if host.nil?
+    raise _('Host cannot be nil') if host.nil?
     userid, password = host.auth_user_pwd(:default)
     network_address  = host.address
 
@@ -133,7 +133,7 @@ class EmsFolder < ApplicationRecord
       rescue VimFault => verr
         fault = verr.vimFaultInfo.fault
         raise if     fault.nil?
-        raise unless fault.xsiType == "SSLVerifyFault"
+        raise unless fault.xsiType == 'SSLVerifyFault'
 
         ssl_thumbprint = fault.thumbprint
         _log.info "Invoking addStandaloneHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"
@@ -159,7 +159,7 @@ class EmsFolder < ApplicationRecord
   #     :exclude_non_display_folders => false
   def folder_path_objs(*args)
     options = args.extract_options!
-    folders = path(:of_type => "EmsFolder")
+    folders = path(:of_type => 'EmsFolder')
     folders = folders[1..-1] if options[:exclude_root_folder]
     folders = folders.reject(&:hidden?) if options[:exclude_non_display_folders]
     folders
@@ -177,13 +177,13 @@ class EmsFolder < ApplicationRecord
     options = args.extract_options!
     meth = options[:exclude_root_folder] ? :descendants_arranged : :subtree_arranged
 
-    subtree = folder.send(meth, :of_type => "EmsFolder")
+    subtree = folder.send(meth, :of_type => 'EmsFolder')
     child_folder_paths_recursive(subtree, options)
   end
 
   # Helper method for building the child folder paths given an arranged subtree.
   def self.child_folder_paths_recursive(subtree, options = {})
-    options[:prefix] ||= ""
+    options[:prefix] ||= ''
     subtree.each_with_object({}) do |(f, children), h|
       path = options[:prefix]
       unless options[:exclude_non_display_folders] && f.hidden?

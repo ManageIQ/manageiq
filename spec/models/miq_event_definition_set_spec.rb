@@ -1,5 +1,5 @@
 describe MiqEventDefinitionSet do
-  describe ".seed" do
+  describe '.seed' do
     context 'seeding from a csv file' do
       before { MiqEventDefinitionSet.seed }
 

@@ -17,7 +17,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 hMor = nil
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -37,117 +37,117 @@ begin
     puts "Host name: #{miqHost.name}"
     puts
 
-    puts "**** configManager:"
+    puts '**** configManager:'
     vim.dumpObj(miqHost.configManager)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
-    raise "Host has no filrwall system" if !(fws = miqHost.firewallSystem)
+    raise 'Host has no filrwall system' if !(fws = miqHost.firewallSystem)
     fwi = fws.firewallInfo
   
-    puts "**** firewallInfo:"
+    puts '**** firewallInfo:'
     vim.dumpObj(fwi)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
-    puts "**** Refreshing firewall..."
+    puts '**** Refreshing firewall...'
     fws.refreshFirewall
-    puts "**** Done."
+    puts '**** Done.'
     puts
   
     defaultPolicy = fws.firewallInfo.defaultPolicy
   
-    puts "**** Default Pilicy:"
+    puts '**** Default Pilicy:'
     vim.dumpObj(defaultPolicy)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
     ob0 = defaultPolicy.outgoingBlocked
     defaultPolicy.outgoingBlocked = (defaultPolicy.outgoingBlocked == 'false' ? 'true' : 'false')
   
-    puts "**** Updating default policy..."
+    puts '**** Updating default policy...'
     fws.updateDefaultPolicy(defaultPolicy)
-    puts "**** Done."
+    puts '**** Done.'
     puts
   
-    puts "**** Default Pilicy:"
+    puts '**** Default Pilicy:'
     vim.dumpObj(fws.firewallInfo.defaultPolicy)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
-    puts "**** Resetting default policy..."
+    puts '**** Resetting default policy...'
     defaultPolicy.outgoingBlocked = ob0
     fws.updateDefaultPolicy(defaultPolicy)
-    puts "**** Done."
+    puts '**** Done.'
     puts
   
-    puts "**** Default Pilicy:"
+    puts '**** Default Pilicy:'
     vim.dumpObj(fws.firewallInfo.defaultPolicy)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
-    puts "**** SSH Client rules:"
+    puts '**** SSH Client rules:'
     sshRs = fws.getRulesByFilter('label' => 'SSH Client').first
     if !sshRs
-      puts "Rules for SSH Client not found."
+      puts 'Rules for SSH Client not found.'
       exit
     end
     vim.dumpObj(sshRs)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
     if sshRs.enabled == 'false'
-      puts "**** SSH Client rules disabled, enabling..."
+      puts '**** SSH Client rules disabled, enabling...'
       fws.enableRuleset(sshRs.key)
-      puts "**** Done."
+      puts '**** Done.'
       puts
       
-      puts "**** Refreshing firewall..."
+      puts '**** Refreshing firewall...'
       fws.refreshFirewall
-      puts "**** Done."
+      puts '**** Done.'
       puts
       
-      puts "**** SSH Client rules:"
+      puts '**** SSH Client rules:'
       sshRs = fws.getRulesByFilter('label' => 'SSH Client').first
       if !sshRs
-        puts "Rules for SSH Client not found."
+        puts 'Rules for SSH Client not found.'
         exit
       end
       vim.dumpObj(sshRs)
-      puts "****************************************************************"
+      puts '****************************************************************'
       puts
       
       if sshRs.enabled == 'false'
-        puts "**** SSH Client rules not enabled."
+        puts '**** SSH Client rules not enabled.'
         exit
       end
       
-      puts "**** Disabling SSH Client rules."
+      puts '**** Disabling SSH Client rules.'
       fws.disableRuleset(sshRs.key)
-      puts "**** Done."
+      puts '**** Done.'
       puts
       
-      puts "**** Refreshing firewall..."
+      puts '**** Refreshing firewall...'
       fws.refreshFirewall
-      puts "**** Done."
+      puts '**** Done.'
       puts
       
-      puts "**** SSH Client rules:"
+      puts '**** SSH Client rules:'
       sshRs = fws.getRulesByFilter('label' => 'SSH Client').first
       if !sshRs
-        puts "Rules for SSH Client not found."
+        puts 'Rules for SSH Client not found.'
         exit
       end
       vim.dumpObj(sshRs)
-      puts "****************************************************************"
+      puts '****************************************************************'
       puts
       
       if sshRs.enabled == 'true'
-        puts "**** SSH Client rules not disabled."
+        puts '**** SSH Client rules not disabled.'
         exit
       end
     else
-      puts "**** SSH Client rules already enabled."
+      puts '**** SSH Client rules already enabled.'
     end
   
 rescue => err

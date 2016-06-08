@@ -4,7 +4,7 @@ describe RemoveVdiTabFromMiqDialogs do
   let(:miq_dialog_stub) { migration_stub(:MiqDialog) }
 
   migration_context :up do
-    it "Remove VDI tab from Provision dialogs" do
+    it 'Remove VDI tab from Provision dialogs' do
       d1 = miq_dialog_stub.create!(
         :name        => 'test',
         :dialog_type => 'MiqProvisionWorkflow',

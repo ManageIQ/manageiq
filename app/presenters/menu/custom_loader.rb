@@ -9,7 +9,7 @@ module Menu
     def load_custom_items
       @sections = []
       @items    = []
-      Dir.glob(File.join(File.dirname(__FILE__), "../../../product/menubar/*.yml")).each do |f|
+      Dir.glob(File.join(File.dirname(__FILE__), '../../../product/menubar/*.yml')).each do |f|
         load_custom_item(f)
       end
       [@sections, @items]

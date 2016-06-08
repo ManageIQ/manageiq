@@ -14,7 +14,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level=>Log4r::INFO, :formatter=>ConsoleFormatter)
 $vim_log.add 'err_console'
 
-TARGET_VM = "rpo-test2"
+TARGET_VM = 'rpo-test2'
 vmMor = nil
 miqVm = nil
 
@@ -26,14 +26,14 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
   
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
   
   puts "VM: #{miqVm.name}, HOST: #{miqVm.hostSystem}"
   puts
   
   targetHostName = nil
   targetHostObj  = nil
-  puts "Host systems:"
+  puts 'Host systems:'
   vim.hostSystems.each do |k, v|
       if k != miqVm.hostSystem
           targetHostName = k
@@ -43,7 +43,7 @@ begin
   end
   puts
   
-  raise "No suitable target host system found" if !targetHostName
+  raise 'No suitable target host system found' if !targetHostName
   
   targetRp = nil
   vim.resourcePoolsByMor.each_value do |rp|
@@ -61,7 +61,7 @@ begin
   end
   puts
   
-  raise "No suitable target resource pool found" if !targetRp
+  raise 'No suitable target resource pool found' if !targetRp
   
   puts "Migrating #{miqVm.name} from #{miqVm.hostSystem} to #{targetHostName}"
   puts
@@ -75,7 +75,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vim.disconnect if vim
 end

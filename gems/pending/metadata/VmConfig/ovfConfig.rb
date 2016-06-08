@@ -2,12 +2,12 @@ require 'util/miq-xml'
 
 module OvfConfig
   def convert(filename)
-    @convertText = ""
+    @convertText = ''
 
     xml = MiqXml.loadFile(filename)
 
-    content_node = xml.find_first("//Content")
-    @vendor_string = content_node.find_first("Section/System/vssd:VirtualSystemType")
+    content_node = xml.find_first('//Content')
+    @vendor_string = content_node.find_first('Section/System/vssd:VirtualSystemType')
 
     set_node_value(content_node, 'displayName', 'Name')
     set_node_value(content_node, 'guestOS',     "Section[@xsi:type='ovf:OperatingSystemSection_Type']/Description")
@@ -93,7 +93,7 @@ module OvfConfig
 
   def vendor
     vendor_str = @vendor_string.to_s.downcase
-    return "rhevm" if vendor_str.include?('rhevm')
+    return 'rhevm' if vendor_str.include?('rhevm')
     vendor_str
   end
 end

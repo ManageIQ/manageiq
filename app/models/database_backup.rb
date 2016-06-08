@@ -15,17 +15,17 @@ class DatabaseBackup < ApplicationRecord
   def backup(options)
     # TODO: Create a real exception out of this
     unless options[:task_id].kind_of?(Integer) && options[:file_depot_id].kind_of?(Integer)
-      raise _("Missing or Invalid task: %{task_id}, depot id: %{depot_id}") % {:task_id  => options[:task_id],
+      raise _('Missing or Invalid task: %{task_id}, depot id: %{depot_id}') % {:task_id  => options[:task_id],
                                                                                :depot_id => options[:file_depot_id]}
     end
 
     task = MiqTask.find(options[:task_id])
-    task.update_status("Active", "Ok", "Starting DB Backup for Region: #{region_name}")
+    task.update_status('Active', 'Ok', "Starting DB Backup for Region: #{region_name}")
 
     schedule_id = options[:miq_schedule_id]
     @sch = MiqSchedule.find(schedule_id) if schedule_id.kind_of?(Integer)
 
-    options[:userid] ||= "system"
+    options[:userid] ||= 'system'
 
     depot = FileDepot.find_by_id(options[:file_depot_id])
     _backup(:uri => depot.uri, :username => depot.authentication_userid, :password => depot.authentication_password, :remote_file_name => backup_file_name)
@@ -35,7 +35,7 @@ class DatabaseBackup < ApplicationRecord
       @sch.destroy
     end
 
-    task.update_status("Finished", "Ok", "Completed DB Backup for Region: #{region_name}.")
+    task.update_status('Finished', 'Ok', "Completed DB Backup for Region: #{region_name}.")
     task.id
   end
 
@@ -49,16 +49,16 @@ class DatabaseBackup < ApplicationRecord
 
   def self.gc(options)
     unless options[:task_id].kind_of?(Integer)
-      raise _("Missing or Invalid task: %{task_id}") % {:task_id => options[:task_id]}
+      raise _('Missing or Invalid task: %{task_id}') % {:task_id => options[:task_id]}
     end
 
     task = MiqTask.find(options[:task_id])
-    task.update_status("Active", "Ok", "Starting DB GC for Region: #{region_name}")
+    task.update_status('Active', 'Ok', "Starting DB GC for Region: #{region_name}")
 
-    options[:userid] ||= "system"
+    options[:userid] ||= 'system'
 
     _gc(options)
-    task.update_status("Finished", "Ok", "Completed DB GC for Region: #{region_name}.")
+    task.update_status('Finished', 'Ok', "Completed DB GC for Region: #{region_name}.")
     task.id
   end
 
@@ -78,8 +78,8 @@ class DatabaseBackup < ApplicationRecord
 
   def schedule_name
     @schedule_name ||= begin
-      sch_name = @sch.name.gsub(/[^[:alnum:]]/, "_") if @sch
-      sch_name ||= "schedule_unknown"
+      sch_name = @sch.name.gsub(/[^[:alnum:]]/, '_') if @sch
+      sch_name ||= 'schedule_unknown'
       sch_name
     end
   end
@@ -93,10 +93,10 @@ class DatabaseBackup < ApplicationRecord
   def current_db_opts
     current = Rails.configuration.database_configuration[Rails.env]
     {
-      :hostname => current["host"],
-      :dbname   => current["database"],
-      :username => current["username"],
-      :password => current["password"]
+      :hostname => current['host'],
+      :dbname   => current['database'],
+      :username => current['username'],
+      :password => current['password']
     }
   end
 end

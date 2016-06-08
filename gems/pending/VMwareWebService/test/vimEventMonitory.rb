@@ -2,9 +2,9 @@ require_relative '../../bundler_setup'
 require 'VMwareWebService/MiqVimEventMonitor'
 require 'log4r'
 
-SERVER   = raise "please define SERVER"
-USERNAME = raise "please define USERNAME"
-PASSWORD = raise "please define PASSWORD"
+SERVER   = raise 'please define SERVER'
+USERNAME = raise 'please define USERNAME'
+PASSWORD = raise 'please define PASSWORD'
 #
 # Formatter to output log messages to the console.
 #
@@ -21,7 +21,7 @@ $vim_log.add 'err_console'
 
 vimEm = MiqVimEventMonitor.new(SERVER, USERNAME, PASSWORD)
 
-Signal.trap("INT") { vimEm.stop }
+Signal.trap('INT') { vimEm.stop }
 
 puts "vimEm.class: #{vimEm.class}"
 puts "#{vimEm.server} is #{(vimEm.isVirtualCenter? ? 'VC' : 'ESX')}"
@@ -34,4 +34,4 @@ rescue => err
   puts err.to_s
 end
 
-puts "done"
+puts 'done'

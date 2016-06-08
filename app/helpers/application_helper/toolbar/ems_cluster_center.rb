@@ -11,14 +11,14 @@ class ApplicationHelper::Toolbar::EmsClusterCenter < ApplicationHelper::Toolbar:
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this item'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this item?")),
+          :confirm => N_('Perform SmartState Analysis on this item?')),
         button(
           :ems_cluster_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove this item from the VMDB'),
           N_('Remove from the VMDB'),
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This item and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this item?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This item and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this item?')),
       ]
     ),
   ])
@@ -54,15 +54,15 @@ class ApplicationHelper::Toolbar::EmsClusterCenter < ApplicationHelper::Toolbar:
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this item'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          :url       => '/show',
+          :url_parms => '?display=performance'),
         button(
           :ems_cluster_timeline,
           'product product-timeline fa-lg',
           N_('Show Timelines for this item'),
           N_('Timelines'),
-          :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url       => '/show',
+          :url_parms => '?display=timeline'),
       ]
     ),
   ])

@@ -4,7 +4,7 @@ require_relative '../SyncDebug'
 $stdout.sync = true
 
 $my_puts_mutex = Mutex.new
-def my_puts(str = "")
+def my_puts(str = '')
   $my_puts_mutex.synchronize { puts str }
 end
 
@@ -33,7 +33,7 @@ begin
 
   sync_dbg.max_locked_time      = 30
   sync_dbg.watchdog_poll_period = 15
-  sync_dbg.lock_name            = "test_lock"
+  sync_dbg.lock_name            = 'test_lock'
 
   sync_dbg.on_lock_request do |li|
     my_puts "Requesting lock: #{li[:lock].lock_name}, from_mode = #{li[:lock].sync_mode}, to_mode = #{li[:mode]} [#{li[:call_stack][0]}]"
@@ -60,13 +60,13 @@ begin
   sync_dbg.on_lock_timeout lambda { |li, dt|
     thr = li[:thread]
     my_puts "Lock timeout (from callback): thread #{thr.object_id} has held #{li[:lock].lock_name} for #{dt} seconds"
-    my_puts "Lock acquisition: Start backtrace"
+    my_puts 'Lock acquisition: Start backtrace'
     my_puts li[:call_stack].join("\n")
-    my_puts "Lock acquisition: End backtrace"
+    my_puts 'Lock acquisition: End backtrace'
 
-    my_puts "Locking thread: Start backtrace"
+    my_puts 'Locking thread: Start backtrace'
     my_puts thr.backtrace.join("\n") if thr.alive?
-    my_puts "Locking thread: End backtrace"
+    my_puts 'Locking thread: End backtrace'
     return true # raise exception
   }
 
@@ -78,9 +78,9 @@ begin
     my_puts "Watchdog for #{lock.lock_name} stopping"
     if err
       my_puts "Watchdog ERROR: #{err}"
-      my_puts "Watchdog: Start backtrace"
+      my_puts 'Watchdog: Start backtrace'
       my_puts err.backtrace.join("\n")
-      my_puts "Watchdog: End backtrace"
+      my_puts 'Watchdog: End backtrace'
     end
   end
 
@@ -100,57 +100,57 @@ begin
   sleep 2
 
   my_puts
-  my_puts "TEST 1: mode = EX, no timeout."
+  my_puts 'TEST 1: mode = EX, no timeout.'
   my_puts
-  my_puts "Creating test_thread..."
+  my_puts 'Creating test_thread...'
   test_thread = Thread.new(sync_dbg, :EX, sync_dbg.max_locked_time / 2) { |l, m, ss| lock_timeout_test(l, m, ss) }
-  my_puts "Waiting for test_thread..."
+  my_puts 'Waiting for test_thread...'
   test_thread.join
-  my_puts "Done."
+  my_puts 'Done.'
 
   sleep 30
 
   my_puts
-  my_puts "TEST 2: mode = SH, no timeout."
+  my_puts 'TEST 2: mode = SH, no timeout.'
   my_puts
-  my_puts "Creating test_thread..."
+  my_puts 'Creating test_thread...'
   test_thread = Thread.new(sync_dbg, :SH, sync_dbg.max_locked_time / 2) { |l, m, ss| lock_timeout_test(l, m, ss) }
-  my_puts "Waiting for test_thread..."
+  my_puts 'Waiting for test_thread...'
   test_thread.join
-  my_puts "Done."
+  my_puts 'Done.'
 
   my_puts
-  my_puts "TEST 3: mode = EX, w/timeout."
+  my_puts 'TEST 3: mode = EX, w/timeout.'
   my_puts
-  my_puts "Creating test_thread..."
+  my_puts 'Creating test_thread...'
   test_thread = Thread.new(sync_dbg, :EX, sync_dbg.max_locked_time * 4) { |l, m, ss| lock_timeout_test(l, m, ss) }
-  my_puts "Waiting for test_thread..."
+  my_puts 'Waiting for test_thread...'
   test_thread.join
-  my_puts "Done."
+  my_puts 'Done.'
 
   my_puts
-  my_puts "TEST 4: mode = SH, w/timeout."
+  my_puts 'TEST 4: mode = SH, w/timeout.'
   my_puts
-  my_puts "Creating test_thread..."
+  my_puts 'Creating test_thread...'
   test_thread = Thread.new(sync_dbg, :SH, sync_dbg.max_locked_time * 4) { |l, m, ss| lock_timeout_test(l, m, ss) }
-  my_puts "Waiting for test_thread..."
+  my_puts 'Waiting for test_thread...'
   test_thread.join
-  my_puts "Done."
+  my_puts 'Done.'
 
   mode = :SH
   my_puts
   my_puts "TEST 5: mode = #{mode}, dead locker."
   my_puts
-  my_puts "Creating test_thread..."
+  my_puts 'Creating test_thread...'
   begin
     test_thread = Thread.new(sync_dbg, mode) { |l, m| dead_locker_test(l, m) }
-    my_puts "Waiting for test_thread..."
+    my_puts 'Waiting for test_thread...'
     test_thread.join
     sleep sync_dbg.watchdog_poll_period * 3
   rescue => dlerr
     my_puts "Dead locker rescue (#{mode}): #{dlerr}"
   end
-  my_puts "Done."
+  my_puts 'Done.'
 
   # my_puts
   # my_puts "TEST 6: mode = SH, dead locker."

@@ -34,7 +34,7 @@ module ActsAsTaggable
     # @option options :separator delimiter for the tags provied by all and any
     def find_tagged_with(options = {})
       tag_names = ActsAsTaggable.split_tag_names(options[:any] || options[:all], options[:separator] || ' ')
-      raise "No tags were passed to :any or :all options" if tag_names.empty?
+      raise 'No tags were passed to :any or :all options' if tag_names.empty?
 
       tag_ids = Tag.for_names(tag_names, Tag.get_namespace(options)).pluck(:id)
       if options[:all]
@@ -123,7 +123,7 @@ module ActsAsTaggable
 
   def is_tagged_with?(tag, options = {})
     ns = Tag.get_namespace(options)
-    return is_vtagged_with?(tag, options) if  ns[0..7] == "/virtual" || tag[0..7] == "/virtual"
+    return is_vtagged_with?(tag, options) if  ns[0..7] == '/virtual' || tag[0..7] == '/virtual'
     # self.tagged_with(options).include?(File.join(ns ,tag))
     Array(tags).include?(File.join(ns, tag))
   end
@@ -132,9 +132,9 @@ module ActsAsTaggable
     ns = Tag.get_namespace(options)
 
     subject = self
-    parts = File.join(ns, tag.split("/")).split("/")[2..-1] # throw away /virtual
+    parts = File.join(ns, tag.split('/')).split('/')[2..-1] # throw away /virtual
     object = parts.pop
-    object = object.gsub(/%2f/, "/")  unless object.nil? # decode embedded slashes
+    object = object.gsub(/%2f/, '/')  unless object.nil? # decode embedded slashes
     attr = parts.pop
     begin
       # resolve any intermediate relationships, throw an error if any of them return multiple results
@@ -145,7 +145,7 @@ module ActsAsTaggable
       end
       relationship = parts.pop
       unless relationship
-        relationship = "self"
+        relationship = 'self'
         macro = :has_one
       else
         macro = subject.class.reflect_on_association(relationship.to_sym).macro
@@ -182,14 +182,14 @@ module ActsAsTaggable
 
   def tag_list(options = {})
     ns = Tag.get_namespace(options)
-    return vtag_list(options) if  ns[0..7] == "/virtual"
-    Tag.filter_ns(tags, ns).join(" ")
+    return vtag_list(options) if  ns[0..7] == '/virtual'
+    Tag.filter_ns(tags, ns).join(' ')
   end
 
   def vtag_list(options = {})
     ns = Tag.get_namespace(options)
 
-    predicate = ns.split("/")[2..-1] # throw away /virtual
+    predicate = ns.split('/')[2..-1] # throw away /virtual
 
     # p "ns: [#{ns}]"
     # p "predicate: [#{predicate.inspect}]"
@@ -199,7 +199,7 @@ module ActsAsTaggable
         target.public_send method
       end
     rescue NoMethodError => err
-      return ""
+      return ''
     end
   end
 end

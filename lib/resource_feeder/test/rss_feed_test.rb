@@ -64,7 +64,7 @@ class RssFeedTest < MiniTest::Unit::TestCase
   def test_should_allow_content_encoded_for_items
     rss_feed_for @records, :item => {:content_encoded => :full_html_body}
 
-    html_content = "<strong>Here is some <i>full</i> content, with out any excerpts</strong>"
+    html_content = '<strong>Here is some <i>full</i> content, with out any excerpts</strong>'
     assert_equal 5, @response.body.scan("<![CDATA[#{html_content}]]>").size
     assert_select 'item', 5 do
       assert_select 'description + *', "<![CDATA[#{html_content}" # assert_select seems to strip the ending cdata tag

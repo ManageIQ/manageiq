@@ -4,13 +4,13 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
       vms      = Azure::Armrest::VirtualMachineService.new(azure)
       instance = vms.get(clone_task_ref[:vm_name], clone_task_ref[:vm_resource_group])
       status   = instance.properties.provisioning_state
-      return true if status == "Succeeded"
+      return true if status == 'Succeeded'
       return false, status
     end
   end
 
   def find_destination_in_vmdb(vm_uid_hash)
-    ems_ref = vm_uid_hash.values.join("\\")
+    ems_ref = vm_uid_hash.values.join('\\')
     ManageIQ::Providers::Azure::CloudManager::Vm.find_by(:ems_ref => ems_ref.downcase)
   end
 
@@ -34,7 +34,7 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
       endpoint   = image.storage_account.properties.primary_endpoints.blob
       source_uri = image.uri
 
-      target_uri = File.join(endpoint, "manageiq", dest_name + "_" + SecureRandom.uuid + ".vhd")
+      target_uri = File.join(endpoint, 'manageiq', dest_name + '_' + SecureRandom.uuid + '.vhd')
     rescue Azure::Armrest::ResourceNotFoundException => err
       _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
     end
@@ -93,11 +93,11 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
   end
 
   def storage_account_resource_group
-    source.description.split("\\").first
+    source.description.split('\\').first
   end
 
   def storage_account_name
-    source.description.split("\\")[1]
+    source.description.split('\\')[1]
   end
 
   def create_nic

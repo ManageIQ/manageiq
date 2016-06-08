@@ -13,7 +13,7 @@ class MiqWebsocketWorker < MiqWorker
   CLUSTER                    = 'evmcluster_websocket'
 
   def friendly_name
-    @friendly_name ||= "Websocket Worker"
+    @friendly_name ||= 'Websocket Worker'
   end
 
   include MiqWebServerWorkerMixin

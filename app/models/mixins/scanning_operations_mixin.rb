@@ -13,11 +13,11 @@ module ScanningOperationsMixin
         MiqQueue.put(
           :target_id   => id,
           :class_name  => self.class.base_class.name,
-          :method_name => "save_metadata",
+          :method_name => 'save_metadata',
           :data        => Marshal.dump([xmlFile, type]),
           :task_id     => jobid,
           :zone        => my_zone,
-          :role        => "smartstate"
+          :role        => 'smartstate'
         )
         _log.info "target [#{guid}] data put on queue, job [#{jobid}]"
       end
@@ -34,12 +34,12 @@ module ScanningOperationsMixin
     begin
       Timeout.timeout(WS_TIMEOUT) do
         MiqQueue.put(
-          :class_name  => "Job",
-          :method_name => "agent_state_update_queue",
+          :class_name  => 'Job',
+          :method_name => 'agent_state_update_queue',
           :args        => [jobid, state, message],
           :task_id     => "agent_job_state_#{Time.now.to_i}",
           :zone        => MiqServer.my_zone,
-          :role        => "smartstate"
+          :role        => 'smartstate'
         )
         return true
       end
@@ -120,9 +120,9 @@ module ScanningOperationsMixin
 
   # TODO: Use this method above, remove ScanningOperations' version
   def self.reconnect_to_db
-    _log.info("Reconnecting to database after error...")
+    _log.info('Reconnecting to database after error...')
     ActiveRecord::Base.connection.reconnect!
-    _log.info("Reconnecting to database after error...Successful")
+    _log.info('Reconnecting to database after error...Successful')
   rescue Exception => err
     _log.error("Error during reconnect: #{err.message}")
   end

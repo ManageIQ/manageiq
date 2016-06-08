@@ -31,7 +31,7 @@ class CreateNetworkPortsAndRouters < ActiveRecord::Migration
       t.belongs_to :security_group,    :type => :bigint
     end
 
-    add_index :network_ports_security_groups, [:network_port_id, :security_group_id], :unique => true, :name => "index_network_ports_security_groups"
+    add_index :network_ports_security_groups, [:network_port_id, :security_group_id], :unique => true, :name => 'index_network_ports_security_groups'
 
     create_table :network_routers do |t|
       t.string     :type

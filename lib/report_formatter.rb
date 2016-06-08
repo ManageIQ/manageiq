@@ -14,7 +14,7 @@ require 'report_formatter/text'
 require 'report_formatter/timeline'
 
 module ReportFormatter
-  BLANK_VALUE = "Unknown"         # Chart constant for nil or blank key values
+  BLANK_VALUE = 'Unknown'         # Chart constant for nil or blank key values
   CRLF = "\r\n"
   LEGEND_LENGTH = 21              # Top legend text limit
   LABEL_LENGTH = 7                # Chart label text limit

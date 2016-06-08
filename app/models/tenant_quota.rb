@@ -5,43 +5,43 @@ class TenantQuota < ApplicationRecord
     :cpu_allocated       => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count".freeze
+      :text_modifier => 'Count'.freeze
     },
     :mem_allocated       => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB".freeze
+      :text_modifier => 'GB'.freeze
     },
     :storage_allocated   => {
       :unit          => :bytes,
       :format        => :gigabytes_human,
-      :text_modifier => "GB".freeze
+      :text_modifier => 'GB'.freeze
     },
     :vms_allocated       => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count".freeze
+      :text_modifier => 'Count'.freeze
     },
     :templates_allocated => {
       :unit          => :fixnum,
       :format        => :general_number_precision_0,
-      :text_modifier => "Count".freeze
+      :text_modifier => 'Count'.freeze
     }
   }
 
   DEFAULT_TEXT_FOR_ZERO_VALUES = {
-    :total     => "Not defined".freeze,
-    :available => "Not applicable".freeze
+    :total     => 'Not defined'.freeze,
+    :available => 'Not applicable'.freeze
   }
 
   NAMES = QUOTA_BASE.keys.map(&:to_s)
 
   validates :name,
             :inclusion  => {:in => NAMES},
-            :uniqueness => {:scope => :tenant_id, :message => "should be unique per tenant"}
+            :uniqueness => {:scope => :tenant_id, :message => 'should be unique per tenant'}
   validates :unit, :value, :presence => true
   validates :value, :numericality => {:greater_than => 0}
-  validates :warn_value, :numericality => {:greater_than => 0}, :if => "warn_value.present?"
+  validates :warn_value, :numericality => {:greater_than => 0}, :if => 'warn_value.present?'
 
   validate :check_for_over_allocation
 
@@ -64,7 +64,7 @@ class TenantQuota < ApplicationRecord
   end
 
   def self.format_quota_value(field, field_value, tenant_quota_name)
-    if field == "tenant_quotas.name"
+    if field == 'tenant_quotas.name'
       TenantQuota.tenant_quota_description(tenant_quota_name.to_sym)
     else
       row = QUOTA_BASE[tenant_quota_name.to_sym]
@@ -73,7 +73,7 @@ class TenantQuota < ApplicationRecord
   end
 
   def self.can_format_field?(field, tenant_quota_name)
-    table_field, = field.split(".")
+    table_field, = field.split('.')
     to_s.tableize == table_field ? NAMES.include?(tenant_quota_name) : false
   end
 
@@ -90,15 +90,15 @@ class TenantQuota < ApplicationRecord
   def self.tenant_quota_description(name)
     case name
     when :cpu_allocated
-      _("Allocated Virtual CPUs")
+      _('Allocated Virtual CPUs')
     when :mem_allocated
-      _("Allocated Memory in GB")
+      _('Allocated Memory in GB')
     when :storage_allocated
-      _("Allocated Storage in GB")
+      _('Allocated Storage in GB')
     when :vms_allocated
-      _("Allocated Number of Virtual Machines")
+      _('Allocated Number of Virtual Machines')
     when :templates_allocated
-      _("Allocated Number of Templates")
+      _('Allocated Number of Templates')
     end
   end
 
@@ -169,7 +169,7 @@ class TenantQuota < ApplicationRecord
     # First level tenant can also have unlimited quota
     return if tenant.root? || tenant.parent.root?
 
-    oval, nval = changes["value"]
+    oval, nval = changes['value']
 
     # Check that the new value is >= the amount that was already allocated to child tenants
     if nval < allocated
@@ -189,7 +189,7 @@ class TenantQuota < ApplicationRecord
     parent_quota = tenant.parent.tenant_quotas.send(name).take
     unless parent_quota.nil?
       if parent_quota.available < diff
-        errors.add(name, "quota is over allocated, parent tenant does not have enough quota")
+        errors.add(name, 'quota is over allocated, parent tenant does not have enough quota')
       end
     end
   end

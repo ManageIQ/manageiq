@@ -1,6 +1,6 @@
 include QuotaHelper
 
-describe "Quota Validation" do
+describe 'Quota Validation' do
   def run_automate_method(provision_request, quota_source)
     source = case quota_source
              when 'tenant'
@@ -12,7 +12,7 @@ describe "Quota Validation" do
     attrs = []
     attrs << "MiqProvisionRequest::miq_provision_request=#{provision_request.id}&" \
              "MiqRequest::miq_request=#{provision_request.id}&max_cpu=3&max_vms=2&#{source}" if provision_request
-    MiqAeEngine.instantiate("/ManageIQ/system/request/Call_instance?namespace=System/CommonMethods&" \
+    MiqAeEngine.instantiate('/ManageIQ/system/request/Call_instance?namespace=System/CommonMethods&' \
                             "class=QuotaMethods&instance=limits&#{attrs.join('&')}", @user)
   end
 
@@ -21,7 +21,7 @@ describe "Quota Validation" do
     setup_tags
   end
 
-  it "limits, using tenant as quota source" do
+  it 'limits, using tenant as quota source' do
     ws = run_automate_method(@miq_provision_request, 'tenant')
     root = ws.root
     expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceTenant)
@@ -31,7 +31,7 @@ describe "Quota Validation" do
     expect(root['quota_limit_max'][:memory]).to eq(2048)
   end
 
-  it "limits, using group as quota source" do
+  it 'limits, using group as quota source' do
     ws = run_automate_method(@miq_provision_request, 'group')
     root = ws.root
     expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqGroup)

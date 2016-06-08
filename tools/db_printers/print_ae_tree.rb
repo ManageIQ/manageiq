@@ -1,6 +1,6 @@
 # Rails.logger.level = $log.level = 0
 
-def print_ae_tree(nodes, indent = "")
+def print_ae_tree(nodes, indent = '')
   nodes.sort_by { |n| n.name.downcase }.each do |node|
     title = node.class.name.demodulize[5..-1]
     puts "#{indent}#{title}: #{node.name}"

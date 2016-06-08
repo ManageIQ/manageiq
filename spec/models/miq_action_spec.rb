@@ -1,44 +1,44 @@
 describe MiqAction do
-  describe "#invoke_or_queue" do
+  describe '#invoke_or_queue' do
     before(:each) do
       @action = MiqAction.new
     end
 
-    it "executes synchronous actions" do
-      target = double("action")
+    it 'executes synchronous actions' do
+      target = double('action')
       allow(target).to receive(:target_method)
-      @action.instance_eval { invoke_or_queue(true, "__caller__", "role", nil, target, 'target_method', []) }
+      @action.instance_eval { invoke_or_queue(true, '__caller__', 'role', nil, target, 'target_method', []) }
     end
   end
 
-  context "#action_custom_automation" do
+  context '#action_custom_automation' do
     before(:each) do
       tenant = FactoryGirl.create(:tenant)
       group  = FactoryGirl.create(:miq_group, :tenant => tenant)
-      @user = FactoryGirl.create(:user, :userid => "test", :miq_groups => [group])
+      @user = FactoryGirl.create(:user, :userid => 'test', :miq_groups => [group])
       @vm   = FactoryGirl.create(:vm_vmware, :evm_owner => @user, :miq_group => group)
-      FactoryGirl.create(:miq_action, :name => "custom_automation")
-      @action = MiqAction.find_by_name("custom_automation")
+      FactoryGirl.create(:miq_action, :name => 'custom_automation')
+      @action = MiqAction.find_by_name('custom_automation')
       expect(@action).not_to be_nil
-      @action.options = {:ae_request => "test_custom_automation"}
+      @action.options = {:ae_request => 'test_custom_automation'}
       @args = {
         :object_type      => @vm.class.base_class.name,
         :object_id        => @vm.id,
         :user_id          => @vm.evm_owner.id,
         :miq_group_id     => @vm.miq_group.id,
         :tenant_id        => @vm.tenant.id,
-        :attrs            => {:request => "test_custom_automation"},
-        :instance_name    => "REQUEST",
-        :automate_message => "create"
+        :attrs            => {:request => 'test_custom_automation'},
+        :instance_name    => 'REQUEST',
+        :automate_message => 'create'
       }
     end
 
-    it "synchronous" do
+    it 'synchronous' do
       expect(MiqAeEngine).to receive(:deliver).with(@args).once
       @action.action_custom_automation(@action, @vm, :synchronous => true)
     end
 
-    it "asynchronous" do
+    it 'asynchronous' do
       expect(MiqAeEngine).to receive(:deliver).never
 
       q_options = {
@@ -54,8 +54,8 @@ describe MiqAction do
     end
   end
 
-  context "#action_evm_event" do
-    it "for Vm" do
+  context '#action_evm_event' do
+    it 'for Vm' do
       ems = FactoryGirl.create(:ems_vmware)
       host = FactoryGirl.create(:host_vmware)
       vm = FactoryGirl.create(:vm_vmware, :host => host, :ext_management_system => ems)
@@ -66,7 +66,7 @@ describe MiqAction do
       expect(res.target).to eq(vm)
     end
 
-    it "for Datastore" do
+    it 'for Datastore' do
       storage = FactoryGirl.create(:storage)
       action  = FactoryGirl.create(:miq_action)
       result  = action.action_evm_event(action, storage, :policy => FactoryGirl.create(:miq_policy))
@@ -76,16 +76,16 @@ describe MiqAction do
     end
   end
 
-  context "#raise_automation_event" do
+  context '#raise_automation_event' do
     before(:each) do
       @vm   = FactoryGirl.create(:vm_vmware)
-      allow(@vm).to receive(:my_zone).and_return("vm_zone")
-      FactoryGirl.create(:miq_event_definition, :name => "raise_automation_event")
-      FactoryGirl.create(:miq_event_definition, :name => "vm_start")
-      FactoryGirl.create(:miq_action, :name => "raise_automation_event")
-      @action = MiqAction.find_by_name("raise_automation_event")
+      allow(@vm).to receive(:my_zone).and_return('vm_zone')
+      FactoryGirl.create(:miq_event_definition, :name => 'raise_automation_event')
+      FactoryGirl.create(:miq_event_definition, :name => 'vm_start')
+      FactoryGirl.create(:miq_action, :name => 'raise_automation_event')
+      @action = MiqAction.find_by_name('raise_automation_event')
       expect(@action).not_to be_nil
-      @event = MiqEventDefinition.find_by_name("vm_start")
+      @event = MiqEventDefinition.find_by_name('vm_start')
       expect(@event).not_to be_nil
       @aevent = {
         :vm     => @vm,
@@ -95,64 +95,64 @@ describe MiqAction do
       }
     end
 
-    it "synchronous" do
+    it 'synchronous' do
       expect(MiqAeEvent).to receive(:raise_synthetic_event).with(@vm, @event.name, @aevent).once
       expect(MiqQueue).to receive(:put).never
       @action.action_raise_automation_event(@action, @vm, :vm => @vm, :event => @event, :policy => @policy, :synchronous => true)
     end
 
-    it "synchronous, not passing vm in inputs hash" do
+    it 'synchronous, not passing vm in inputs hash' do
       expect(MiqAeEvent).to receive(:raise_synthetic_event).with(@vm, @event.name, @aevent).once
       expect(MiqQueue).to receive(:put).never
       @action.action_raise_automation_event(@action, @vm, :vm => nil, :event => @event, :policy => @policy, :synchronous => true)
     end
 
-    it "asynchronous" do
+    it 'asynchronous' do
       expect(MiqAeEvent).to receive(:raise_synthetic_event).never
       q_options = {
-        :class_name  => "MiqAeEvent",
-        :method_name => "raise_synthetic_event",
+        :class_name  => 'MiqAeEvent',
+        :method_name => 'raise_synthetic_event',
         :args        => [@vm, @event.name, @aevent],
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :zone        => "vm_zone",
-        :role        => "automate"
+        :zone        => 'vm_zone',
+        :role        => 'automate'
       }
       expect(MiqQueue).to receive(:put).with(q_options).once
       @action.action_raise_automation_event(@action, @vm, :vm => @vm, :event => @event, :policy => @policy, :synchronous => false)
     end
   end
 
-  context "#action_ems_refresh" do
+  context '#action_ems_refresh' do
     before(:each) do
-      FactoryGirl.create(:miq_action, :name => "ems_refresh")
-      @action = MiqAction.find_by_name("ems_refresh")
+      FactoryGirl.create(:miq_action, :name => 'ems_refresh')
+      @action = MiqAction.find_by_name('ems_refresh')
       expect(@action).not_to be_nil
       @zone1 = FactoryGirl.create(:small_environment)
       @vm = @zone1.vms.first
     end
 
-    it "synchronous" do
+    it 'synchronous' do
       expect(EmsRefresh).to receive(:refresh).with(@vm).once
       expect(EmsRefresh).to receive(:queue_refresh).never
       @action.action_ems_refresh(@action, @vm, {:vm => @vm, :policy => @policy, :event => @event, :synchronous => true})
     end
 
-    it "asynchronous" do
+    it 'asynchronous' do
       expect(EmsRefresh).to receive(:refresh).never
       expect(EmsRefresh).to receive(:queue_refresh).with(@vm).once
       @action.action_ems_refresh(@action, @vm, {:vm => @vm, :policy => @policy, :event => @event, :synchronous => false})
     end
   end
 
-  context "#action_vm_retire" do
+  context '#action_vm_retire' do
     before do
       @vm     = FactoryGirl.create(:vm_vmware)
-      allow(@vm).to receive(:my_zone).and_return("vm_zone")
-      @event  = FactoryGirl.create(:miq_event_definition, :name => "assigned_company_tag")
-      @action = FactoryGirl.create(:miq_action, :name => "vm_retire")
+      allow(@vm).to receive(:my_zone).and_return('vm_zone')
+      @event  = FactoryGirl.create(:miq_event_definition, :name => 'assigned_company_tag')
+      @action = FactoryGirl.create(:miq_action, :name => 'vm_retire')
     end
 
-    it "synchronous" do
+    it 'synchronous' do
       input  = {:synchronous => true}
 
       Timecop.freeze do
@@ -166,7 +166,7 @@ describe MiqAction do
       end
     end
 
-    it "asynchronous" do
+    it 'asynchronous' do
       input = {:synchronous => false}
       zone  = 'Test Zone'
       allow(@vm).to receive_messages(:my_zone => zone)
@@ -185,24 +185,24 @@ describe MiqAction do
     end
   end
 
-  context "#action_container_image_analyze" do
+  context '#action_container_image_analyze' do
     let(:container_image) { FactoryGirl.create(:container_image) }
     let(:container_image_registry) { FactoryGirl.create(:container_image_registry) }
-    let(:event) { FactoryGirl.create(:miq_event_definition, :name => "whatever") }
-    let(:event_loop) { FactoryGirl.create(:miq_event_definition, :name => "request_container_image_scan") }
-    let(:action) { FactoryGirl.create(:miq_action, :name => "container_image_analyze") }
+    let(:event) { FactoryGirl.create(:miq_event_definition, :name => 'whatever') }
+    let(:event_loop) { FactoryGirl.create(:miq_event_definition, :name => 'request_container_image_scan') }
+    let(:action) { FactoryGirl.create(:miq_action, :name => 'container_image_analyze') }
 
-    it "scans container images" do
+    it 'scans container images' do
       expect(container_image).to receive(:scan).once
       action.action_container_image_analyze(action, container_image, :event => event)
     end
 
-    it "avoids non container images" do
+    it 'avoids non container images' do
       expect(container_image_registry).to receive(:scan).exactly(0).times
       action.action_container_image_analyze(action, container_image_registry, :event => event)
     end
 
-    it "avoids an event loop" do
+    it 'avoids an event loop' do
       expect(container_image_registry).to receive(:scan).exactly(0).times
       action.action_container_image_analyze(action, container_image_registry, :event => event_loop)
     end
@@ -314,7 +314,7 @@ describe MiqAction do
         end
 
         it 'should add description' do
-          expect(first_created_action.description).to eq "Execute script: script.1.sh"
+          expect(first_created_action.description).to eq 'Execute script: script.1.sh'
         end
 
         it 'should put full file path into options hash' do
@@ -353,7 +353,7 @@ describe MiqAction do
       a = MiqAction.new
 
       expect(a.round_to_nearest_4mb(0)).to eq 0
-      expect(a.round_to_nearest_4mb("2")).to eq 4
+      expect(a.round_to_nearest_4mb('2')).to eq 4
       expect(a.round_to_nearest_4mb(15)).to eq 16
       expect(a.round_to_nearest_4mb(16)).to eq 16
       expect(a.round_to_nearest_4mb(17)).to eq 20

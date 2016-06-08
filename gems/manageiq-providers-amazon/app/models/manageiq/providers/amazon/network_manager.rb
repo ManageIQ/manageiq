@@ -13,7 +13,7 @@ class ManageIQ::Providers::Amazon::NetworkManager < ManageIQ::Providers::Network
 
   belongs_to :parent_manager,
              :foreign_key => :parent_ems_id,
-             :class_name  => "ManageIQ::Providers::BaseManager",
+             :class_name  => 'ManageIQ::Providers::BaseManager',
              :autosave    => true
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
@@ -52,11 +52,11 @@ class ManageIQ::Providers::Amazon::NetworkManager < ManageIQ::Providers::Network
            :allow_nil => true
 
   def self.ems_type
-    @ems_type ||= "ec2_network".freeze
+    @ems_type ||= 'ec2_network'.freeze
   end
 
   def self.description
-    @description ||= "Amazon EC2 Network".freeze
+    @description ||= 'Amazon EC2 Network'.freeze
   end
 
   def self.hostname_required?

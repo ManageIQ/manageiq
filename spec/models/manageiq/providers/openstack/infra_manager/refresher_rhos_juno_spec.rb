@@ -1,14 +1,14 @@
 describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
-                              :ipaddress => "192.0.2.1", :port => 5000, :api_version => 'v2',
+    @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => '192.0.2.1',
+                              :ipaddress => '192.0.2.1', :port => 5000, :api_version => 'v2',
                               :security_protocol => 'no-ssl')
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "5eba8beb33ec6754780b10e96c3821c6c16e455c"})
+      :default => {:userid => 'admin', :password => '5eba8beb33ec6754780b10e96c3821c6c16e455c'})
   end
 
-  it "will perform a full refresh" do
+  it 'will perform a full refresh' do
     2.times do  # Run twice to verify that a second run with existing data does not change anything
       @ems.reload
       # Caching OpenStack info between runs causes the tests to fail with:
@@ -32,7 +32,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     end
   end
 
-  it "will verify maintenance mode" do
+  it 'will verify maintenance mode' do
     # We need VCR to match requests differently here because fog adds a dynamic
     #   query param to avoid HTTP caching - ignore_awful_caching##########
     #   https://github.com/fog/fog/blob/master/lib/fog/openstack/compute.rb#L308
@@ -54,7 +54,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       @ems.reload
       @host.reload
       expect(@host.maintenance).to eq(true)
-      expect(@host.maintenance_reason).to eq("CFscaledown")
+      expect(@host.maintenance_reason).to eq('CFscaledown')
 
       @host.unset_node_maintenance
       EmsRefresh.refresh(@ems)
@@ -132,11 +132,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
 
     expect(@host).to have_attributes(
       :ipmi_address       => nil,
-      :vmm_vendor         => "redhat",
+      :vmm_vendor         => 'redhat',
       :vmm_version        => nil,
-      :vmm_product        => "rhel (No hypervisor, Host Type is Controller)",
-      :power_state        => "on",
-      :connection_state   => "connected",
+      :vmm_product        => 'rhel (No hypervisor, Host Type is Controller)',
+      :power_state        => 'on',
+      :connection_state   => 'connected',
       :service_tag        => nil,
       :maintenance        => false,
       :maintenance_reason => nil,
@@ -148,14 +148,14 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::NetworkPort)
 
     expect(@host.operating_system).to have_attributes(
-      :product_name     => "linux"
+      :product_name     => 'linux'
     )
 
     expect(@host.hardware).to have_attributes(
       :cpu_speed            => 3392,
-      :cpu_type             => "RHEL 7.2.0 PC (i440FX + PIIX, 1996)",
-      :manufacturer         => "Red Hat",
-      :model                => "KVM",
+      :cpu_type             => 'RHEL 7.2.0 PC (i440FX + PIIX, 1996)',
+      :manufacturer         => 'Red Hat',
+      :model                => 'KVM',
       :memory_mb            => 6144,
       :memory_console       => nil,
       :disk_capacity        => 50,
@@ -167,7 +167,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :cpu_usage            => nil,
       :memory_usage         => nil,
       :number_of_nics       => 1,
-      :bios                 => "seabios-1.7.5-11.el7"
+      :bios                 => 'seabios-1.7.5-11.el7'
     )
 
     assert_specific_disk(@host.hardware.disks.first)
@@ -187,7 +187,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_specific_public_template
-    assert_specific_template("overcloud-full-vmlinuz", true)
+    assert_specific_template('overcloud-full-vmlinuz', true)
   end
 
   def assert_specific_template(name, is_public = false)
@@ -196,9 +196,9 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :template              => true,
       :publicly_available    => is_public,
       :ems_ref_obj           => nil,
-      :vendor                => "openstack",
-      :power_state           => "never",
-      :location              => "unknown",
+      :vendor                => 'openstack',
+      :power_state           => 'never',
+      :location              => 'unknown',
       :tools_status          => nil,
       :boot_time             => nil,
       :standby_action        => nil,

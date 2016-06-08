@@ -55,7 +55,7 @@ class Ext3TestFile < Minitest::Test
         %w(/bin /usr/bin /usr/lib).each {|dir|
           if disk.fs.fileDirectory?(dir)
             assert_nothing_raised(id(__LINE__, disk)) { disk.fs.chdir(dir) }
-            assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirGlob("*") }
+            assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirGlob('*') }
           end
         }
       else
@@ -88,8 +88,8 @@ class Ext3TestFile < Minitest::Test
       next if disk.nil?
       if disk.fs
         # puts "\nExt3: Testing root directory on #{disk.info.fileName}"
-        disk.fs.chdir("/")
-        disk.fs.dirGlob("*") {|name|
+        disk.fs.chdir('/')
+        disk.fs.dirGlob('*') {|name|
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileCtime(name) }
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileAtime(name) }
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileMtime(name) }

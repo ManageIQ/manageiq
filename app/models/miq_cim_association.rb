@@ -2,8 +2,8 @@ require 'miq_storage_defs'
 
 class MiqCimAssociation < ApplicationRecord
   belongs_to  :result_instance,
-              :class_name  => "MiqCimInstance",
-              :foreign_key => "result_instance_id"
+              :class_name  => 'MiqCimInstance',
+              :foreign_key => 'result_instance_id'
   belongs_to  :miq_cim_instance
 
   STATUS_STALE  = 1

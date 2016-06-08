@@ -3,7 +3,7 @@
 require 'VolumeManager/LVM'
 
 if __FILE__ == $0
-  md = IO.read("lvmt2_metadata")
+  md = IO.read('lvmt2_metadata')
   parser = Lvm2MdParser.new(md, nil)
   puts "Parsing metadata for volume group: #{parser.vgName}"
   vg = parser.parse

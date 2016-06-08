@@ -41,9 +41,9 @@ class Job < ApplicationRecord
     self.userid ||= DEFAULT_USERID
     self.context ||= {}
     self.options ||= {}
-    self.status   = "ok"
+    self.status   = 'ok'
     self.code     = 0
-    self.message  = "process initiated"
+    self.message  = 'process initiated'
   end
 
   def check_active_on_destroy
@@ -57,7 +57,7 @@ class Job < ApplicationRecord
   end
 
   def self.agent_state_update_queue(jobid, state, message = nil)
-    job = Job.where("guid = ?", jobid).select("id, state, guid").first
+    job = Job.where('guid = ?', jobid).select('id, state, guid').first
     unless job.nil?
       job.agent_state_update(state, message)
     else
@@ -97,7 +97,7 @@ class Job < ApplicationRecord
     end
   end
 
-  def set_status(message, status = "ok", code = 0)
+  def set_status(message, status = 'ok', code = 0)
     self.message = message
     self.status  = status
     self.code    = code
@@ -107,7 +107,7 @@ class Job < ApplicationRecord
 
   def dispatch_start
     _log.info "Dispatch Status is 'pending'"
-    self.dispatch_status = "pending"
+    self.dispatch_status = 'pending'
     save
     @storage_dispatcher_process_finish_flag = false
   end
@@ -115,7 +115,7 @@ class Job < ApplicationRecord
   def dispatch_finish
     return if @storage_dispatcher_process_finish_flag
     _log.info "Dispatch Status is 'finished'"
-    self.dispatch_status = "finished"
+    self.dispatch_status = 'finished'
     save
     @storage_dispatcher_process_finish_flag = true
   end
@@ -123,7 +123,7 @@ class Job < ApplicationRecord
   def process_cancel(*args)
     options = args.first || {}
     options[:message] ||= options[:userid] ? "Job canceled by user [#{options[:useid]}] on #{Time.now}" : "Job canceled on #{Time.now}"
-    options[:status] ||= "ok"
+    options[:status] ||= 'ok'
     _log.info "job canceling, #{options[:message]}"
     signal(:finish, options[:message], options[:status])
   end
@@ -152,28 +152,28 @@ class Job < ApplicationRecord
     MiqQueue.put_unless_exists(
       :class_name    => self.class.base_class.name,
       :instance_id   => id,
-      :method_name   => "signal",
+      :method_name   => 'signal',
       :args_selector => ->(args) { args.kind_of?(Array) && args.first == :abort },
-      :role          => "smartstate",
+      :role          => 'smartstate',
       :zone          => MiqServer.my_zone
     ) do |_msg, find_options|
       message = "job timed out after #{Time.now - updated_on} seconds of inactivity.  Inactivity threshold [#{current_job_timeout} seconds]"
       _log.warn("Job: guid: [#{guid}], #{message}, aborting")
-      find_options.merge(:args => [:abort, message, "error"])
+      find_options.merge(:args => [:abort, message, 'error'])
     end
   end
 
   def self.check_jobs_for_timeout
-    $log.debug "Checking for timed out jobs"
+    $log.debug 'Checking for timed out jobs'
     begin
       in_my_region
         .where("state != 'finished' and (state != 'waiting_to_start' or dispatch_status = 'active')")
-        .where("zone is null or zone = ?", MiqServer.my_zone)
+        .where('zone is null or zone = ?', MiqServer.my_zone)
         .each do |job|
           next unless job.updated_on < job.current_job_timeout(timeout_adjustment(job)).seconds.ago
 
           # Allow jobs to run longer if the MiqQueue task is still active.  (Limited to MiqServer for now.)
-          if job.agent_class == "MiqServer"
+          if job.agent_class == 'MiqServer'
             # TODO: can we add method_name, queue_name, role, instance_id to the exists?
             next if MiqQueue.exists?(:state => %w(dequeue ready), :task_id => job.guid, :class_name => job.agent_class)
           end
@@ -227,12 +227,12 @@ class Job < ApplicationRecord
   end
 
   def is_active?
-    !["finished", "waiting_to_start"].include?(state)
+    !['finished', 'waiting_to_start'].include?(state)
   end
 
   def self.delete_older(ts, condition)
     _log.info("Queuing deletion of jobs older than: #{ts}")
-    ids = where("updated_on < ?", ts).where(condition).pluck("id")
+    ids = where('updated_on < ?', ts).where(condition).pluck('id')
     delete_by_id(ids)
   end
 
@@ -240,7 +240,7 @@ class Job < ApplicationRecord
     _log.info("Queuing deletion of jobs with the following ids: #{ids.inspect}")
     MiqQueue.put(
       :class_name  => name,
-      :method_name => "destroy",
+      :method_name => 'destroy',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [ids],
       :zone        => MiqServer.my_zone

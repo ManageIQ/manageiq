@@ -14,8 +14,8 @@ class ManageIQ::Providers::Openstack::CloudManager::AuthKeyPair < ManageIQ::Prov
       {:available => true, :message => nil}
     else
       {:available => false,
-       :message   => _("The Keypair is not connected to an active %{table}") %
-         {:table => ui_lookup(:table => "ext_management_system")}}
+       :message   => _('The Keypair is not connected to an active %{table}') %
+         {:table => ui_lookup(:table => 'ext_management_system')}}
     end
   end
 

@@ -99,14 +99,14 @@ module QcowDisk
   }
 
   def d_init
-    self.diskType = "QCOW"
+    self.diskType = 'QCOW'
     self.blockSize = SECTOR_SIZE
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      @fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      @fileMode = "r+"
+    if dInfo.mountMode.nil? || dInfo.mountMode == 'r'
+      dInfo.mountMode = 'r'
+      @fileMode = 'r'
+    elsif dInfo.mountMode == 'rw'
+      @fileMode = 'r+'
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
@@ -139,7 +139,7 @@ module QcowDisk
   end
 
   def d_write(_pos, _buf, _len, _offset = 0)
-    raise "QcowDisk#d_write not implemented"
+    raise 'QcowDisk#d_write not implemented'
   end
 
   def d_close
@@ -180,7 +180,7 @@ module QcowDisk
           bfn
         end
       else
-        ""
+        ''
       end
     end
   end
@@ -281,7 +281,7 @@ module QcowDisk
 
   def read_entries(n)
     entries = []
-    file_handle.read(n * SIZEOF_UINT64).unpack("N*").each_slice(2) { |hi, lo| entries << uint64_from_hi_lo(hi, lo) }
+    file_handle.read(n * SIZEOF_UINT64).unpack('N*').each_slice(2) { |hi, lo| entries << uint64_from_hi_lo(hi, lo) }
     entries
   end
 
@@ -328,7 +328,7 @@ module QcowDisk
   end
 
   def decompress_buffer(buf)
-    raise "decompression buffer cannot be nil" if buf.nil?
+    raise 'decompression buffer cannot be nil' if buf.nil?
 
     zi = Zlib::Inflate.new(ZLIB_WINDOW_BITS)
     rv = zi.inflate(buf)
@@ -368,7 +368,7 @@ module QcowDisk
       boffset  = sector_num * SECTOR_SIZE
       backing_file_handle.seek(boffset, IO::SEEK_SET)
       backing_buffer = backing_file_handle.read(nbytes)
-      raise "QCOW Backing File read returned NIL" if backing_buffer.nil?
+      raise 'QCOW Backing File read returned NIL' if backing_buffer.nil?
       raise "QCOW Backing File read returned #{rbuf.length} bytes - requested #{nbytes} bytes" if backing_buffer.length != nbytes
     end
 
@@ -380,13 +380,13 @@ module QcowDisk
     raise "QCOW size #{size} is less than computed offset (#{file_offset})" if file_offset > size
     file_handle.seek(file_offset, IO::SEEK_SET)
     buffer = file_handle.read(nbytes)
-    raise "QCOW Image File read returned NIL" if buffer.nil?
+    raise 'QCOW Image File read returned NIL' if buffer.nil?
     raise "QCOW Image File read returned #{buffer.to_s.length} bytes - requested #{nbytes} bytes" if buffer.length != nbytes
     buffer
   end
 
   def read_sectors(sector_num, nb_sectors)
-    buf = ""
+    buf = ''
 
     while nb_sectors > 0
       index_in_cluster = sector_num & (cluster_sectors - 1)
@@ -486,18 +486,18 @@ module QcowDisk
       file_handle.seek(0, IO::SEEK_SET)
       case partial_header['version']
       when 1
-        raise "QCOW Version 1 is not supported"
+        raise 'QCOW Version 1 is not supported'
         QCOW_HEADER_V1.decode(file_handle.read(SIZEOF_QCOW_HEADER_V1))
       when 2
         h = QCOW_HEADER_V2.decode(file_handle.read(SIZEOF_QCOW_HEADER_V2))
         # TODO: Handle Encryption
-        raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
+        raise 'QCOW Encryption is not supported' if h['crypt_method'] == 1
         h
       when 3
         h = QCOW_HEADER_V3.decode(file_handle.read(SIZEOF_QCOW_HEADER_V3))
         # TODO: warning if dirty or corrupt (?)
-        raise "QCOW Encryption is not supported" if h['crypt_method'] == 1
-        raise "Unknown QCOW incompatible features" if h['incompatible_features'] & ~KNOWN_INCOMPATIBLE_FEATURES_MASK > 0
+        raise 'QCOW Encryption is not supported' if h['crypt_method'] == 1
+        raise 'Unknown QCOW incompatible features' if h['incompatible_features'] & ~KNOWN_INCOMPATIBLE_FEATURES_MASK > 0
         h
       else
         raise "Uknown Version: #{partial_header['version'].inspect}"
@@ -530,7 +530,7 @@ module QcowDisk
   end
 
   def decode_entry(e)
-    uint64(UINT64.decode(e), "uint64")
+    uint64(UINT64.decode(e), 'uint64')
   end
 
   def get_entry(offset, index)

@@ -1,13 +1,13 @@
-describe "all tables" do
+describe 'all tables' do
   let(:connection) { ApplicationRecord.connection }
 
-  it "have a primary key called id" do
+  it 'have a primary key called id' do
     no_pk = []
     connection.tables.each do |t|
       next if %w(schema_migrations ar_internal_metadata).include?(t)
-      no_pk << t unless connection.primary_keys(t) == ["id"]
+      no_pk << t unless connection.primary_keys(t) == ['id']
     end
-    expect(no_pk.size).to eq(0), <<-EOS.gsub!(/^ +/, "")
+    expect(no_pk.size).to eq(0), <<-EOS.gsub!(/^ +/, '')
       Primary key "id" not found for the following table(s):
 
       #{no_pk.join("\n")}

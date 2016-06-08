@@ -29,30 +29,30 @@ describe RenameMiqEventTableToMiqEventDefinition do
       expect(ignored.reload.resource_type).to eq('SomeOtherType')
     end
 
-    context "renames miq_events to miq_event_definitions" do
+    context 'renames miq_events to miq_event_definitions' do
       before do
         pending_change_stub.create_table
         sync_state_stub.create_table
       end
 
-      it "in rr#_pending_changes tables" do
-        changed = pending_change_stub.create!(:change_table => "miq_events")
-        ignored = pending_change_stub.create!(:change_table => "some_other_table")
+      it 'in rr#_pending_changes tables' do
+        changed = pending_change_stub.create!(:change_table => 'miq_events')
+        ignored = pending_change_stub.create!(:change_table => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.change_table).to eq("miq_event_definitions")
-        expect(ignored.reload.change_table).to eq("some_other_table")
+        expect(changed.reload.change_table).to eq('miq_event_definitions')
+        expect(ignored.reload.change_table).to eq('some_other_table')
       end
 
-      it "in rr#_sync_states tables" do
-        changed = sync_state_stub.create!(:table_name => "miq_events")
-        ignored = sync_state_stub.create!(:table_name => "some_other_table")
+      it 'in rr#_sync_states tables' do
+        changed = sync_state_stub.create!(:table_name => 'miq_events')
+        ignored = sync_state_stub.create!(:table_name => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.table_name).to eq("miq_event_definitions")
-        expect(ignored.reload.table_name).to eq("some_other_table")
+        expect(changed.reload.table_name).to eq('miq_event_definitions')
+        expect(ignored.reload.table_name).to eq('some_other_table')
       end
     end
   end
@@ -91,30 +91,30 @@ describe RenameMiqEventTableToMiqEventDefinition do
       expect(changed.reload.resource_type).to eq('MiqEventSet')
     end
 
-    context "renames miq_event_definitions to miq_events" do
+    context 'renames miq_event_definitions to miq_events' do
       before do
         pending_change_stub.create_table
         sync_state_stub.create_table
       end
 
-      it "in rr#_pending_changes tables" do
-        changed = pending_change_stub.create!(:change_table => "miq_event_definitions")
-        ignored = pending_change_stub.create!(:change_table => "some_other_table")
+      it 'in rr#_pending_changes tables' do
+        changed = pending_change_stub.create!(:change_table => 'miq_event_definitions')
+        ignored = pending_change_stub.create!(:change_table => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.change_table).to eq("miq_events")
-        expect(ignored.reload.change_table).to eq("some_other_table")
+        expect(changed.reload.change_table).to eq('miq_events')
+        expect(ignored.reload.change_table).to eq('some_other_table')
       end
 
-      it "in rr#_sync_states tables" do
-        changed = sync_state_stub.create!(:table_name => "miq_event_definitions")
-        ignored = sync_state_stub.create!(:table_name => "some_other_table")
+      it 'in rr#_sync_states tables' do
+        changed = sync_state_stub.create!(:table_name => 'miq_event_definitions')
+        ignored = sync_state_stub.create!(:table_name => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.table_name).to eq("miq_events")
-        expect(ignored.reload.table_name).to eq("some_other_table")
+        expect(changed.reload.table_name).to eq('miq_events')
+        expect(ignored.reload.table_name).to eq('some_other_table')
       end
     end
   end

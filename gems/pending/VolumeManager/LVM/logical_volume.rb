@@ -30,7 +30,7 @@ class LogicalVolume
     @disk ||= begin
       dInfo = OpenStruct.new
       dInfo.lvObj = self
-      dInfo.hardwareId = ""
+      dInfo.hardwareId = ''
       MiqDisk.new(Lvm2DiskIO, dInfo, 0)
     end
   end

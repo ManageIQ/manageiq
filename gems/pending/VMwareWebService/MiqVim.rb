@@ -21,7 +21,7 @@ class MiqVim < MiqVimInventory
   end
 
   def getVimVm(path)
-    $vim_log.info "MiqVimMod.getVimVm: called"
+    $vim_log.info 'MiqVimMod.getVimVm: called'
     miqVimVm = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find VM: #{path}" unless (vmh = virtualMachines_locked[path])
@@ -32,7 +32,7 @@ class MiqVim < MiqVimInventory
   end # def getVimVm
 
   def getVimVmByMor(vmMor)
-    $vim_log.info "MiqVimMod.getVimVmByMor: called"
+    $vim_log.info 'MiqVimMod.getVimVmByMor: called'
     miqVimVm = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find VM: #{vmMor}" unless (vmh = virtualMachinesByMor_locked[vmMor])
@@ -47,11 +47,11 @@ class MiqVim < MiqVimInventory
   # matches the criteria defined by the filter.
   #
   def getVimVmByFilter(filter)
-    $vim_log.info "MiqVimMod.getVimVmByFilter: called"
+    $vim_log.info 'MiqVimMod.getVimVmByFilter: called'
     miqVimVm = nil
     @cacheLock.synchronize(:SH) do
       vms = applyFilter(virtualMachinesByMor_locked.values, filter)
-      raise MiqException::MiqVimResourceNotFound, "getVimVmByFilter: Could not find VM matching filter" if vms.empty?
+      raise MiqException::MiqVimResourceNotFound, 'getVimVmByFilter: Could not find VM matching filter' if vms.empty?
       miqVimVm = MiqVimVm.new(self, conditionalCopy(vms[0]))
     end
     $vim_log.info "MiqVimMod.getVimVmByFilter: returning object #{miqVimVm.object_id}"
@@ -59,7 +59,7 @@ class MiqVim < MiqVimInventory
   end # def getVimVmByFilter
 
   def getVimHost(name)
-    $vim_log.info "MiqVimMod.getVimHost: called"
+    $vim_log.info 'MiqVimMod.getVimHost: called'
     miqVimHost = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find Host: #{name}" unless (hh = hostSystems_locked[name])
@@ -70,7 +70,7 @@ class MiqVim < MiqVimInventory
   end # def getVimHost
 
   def getVimHostByMor(hMor)
-    $vim_log.info "MiqVimMod.getVimHostByMor: called"
+    $vim_log.info 'MiqVimMod.getVimHostByMor: called'
     miqVimHost = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find Host: #{hMor}" unless (hh = hostSystemsByMor_locked[hMor])
@@ -85,11 +85,11 @@ class MiqVim < MiqVimInventory
   # matches the criteria defined by the filter.
   #
   def getVimHostByFilter(filter)
-    $vim_log.info "MiqVimMod.getVimHostByFilter: called"
+    $vim_log.info 'MiqVimMod.getVimHostByFilter: called'
     miqVimHost = nil
     @cacheLock.synchronize(:SH) do
       ha = applyFilter(hostSystemsByMor_locked.values, filter)
-      raise MiqException::MiqVimResourceNotFound, "getVimHostByFilter: Could not find Host matching filter" if ha.empty?
+      raise MiqException::MiqVimResourceNotFound, 'getVimHostByFilter: Could not find Host matching filter' if ha.empty?
       miqVimHost = MiqVimHost.new(self, conditionalCopy(ha[0]))
     end
     $vim_log.info "MiqVimMod.getVimHostByFilter: returning object #{miqVimHost.object_id}"
@@ -97,7 +97,7 @@ class MiqVim < MiqVimInventory
   end # def getVimHostByFilter
 
   def getVimFolder(name)
-    $vim_log.info "MiqVimMod.getVimFolder: called"
+    $vim_log.info 'MiqVimMod.getVimFolder: called'
     miqVimFolder = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find Folder: #{name}" unless (fh = folders_locked[name])
@@ -108,7 +108,7 @@ class MiqVim < MiqVimInventory
   end # def getVimFolder
 
   def getVimFolderByMor(fMor)
-    $vim_log.info "MiqVimMod.getVimFolderByMor: called"
+    $vim_log.info 'MiqVimMod.getVimFolderByMor: called'
     miqVimFolder = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find Folder: #{fMor}" unless (fh = foldersByMor_locked[fMor])
@@ -119,11 +119,11 @@ class MiqVim < MiqVimInventory
   end # def getVimFolderByMor
 
   def getVimFolderByFilter(filter)
-    $vim_log.info "MiqVimMod.getVimFolderByFilter: called"
+    $vim_log.info 'MiqVimMod.getVimFolderByFilter: called'
     miqVimFolder = nil
     @cacheLock.synchronize(:SH) do
       folders = applyFilter(foldersByMor_locked.values, filter)
-      raise MiqException::MiqVimResourceNotFound, "getVimFolderByFilter: Could not find folder matching filter" if folders.empty?
+      raise MiqException::MiqVimResourceNotFound, 'getVimFolderByFilter: Could not find folder matching filter' if folders.empty?
       miqVimFolder = MiqVimFolder.new(self, conditionalCopy(folders[0]))
     end
     $vim_log.info "MiqVimMod.getVimFolderByFilter: returning object #{miqVimFolder.object_id}"
@@ -134,7 +134,7 @@ class MiqVim < MiqVimInventory
   # Cluster
   #
   def getVimCluster(name)
-    $vim_log.info "MiqVimMod.getVimCluster: called"
+    $vim_log.info 'MiqVimMod.getVimCluster: called'
     miqVimCluster = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find Cluster: #{name}" unless (ch = clusterComputeResources_locked[name])
@@ -145,7 +145,7 @@ class MiqVim < MiqVimInventory
   end # def getVimCluster
 
   def getVimClusterByMor(cMor)
-    $vim_log.info "MiqVimMod.getVimClusterByMor: called"
+    $vim_log.info 'MiqVimMod.getVimClusterByMor: called'
     miqVimCluster = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find Cluster: #{cMor}" unless (ch = clusterComputeResourcesByMor_locked[cMor])
@@ -156,11 +156,11 @@ class MiqVim < MiqVimInventory
   end # def getVimClusterByMor
 
   def getVimClusterByFilter(filter)
-    $vim_log.info "MiqVimMod.getVimClusterByFilter: called"
+    $vim_log.info 'MiqVimMod.getVimClusterByFilter: called'
     miqVimCluster = nil
     @cacheLock.synchronize(:SH) do
       clusters = applyFilter(clusterComputeResourcesByMor_locked.values, filter)
-      raise MiqException::MiqVimResourceNotFound, "getVimClusterByFilter: Could not find Cluster matching filter" if clusters.empty?
+      raise MiqException::MiqVimResourceNotFound, 'getVimClusterByFilter: Could not find Cluster matching filter' if clusters.empty?
       miqVimCluster = MiqVimCluster.new(self, conditionalCopy(clusters[0]))
     end
     $vim_log.info "MiqVimMod.getVimClusterByFilter: returning object #{miqVimCluster.object_id}"
@@ -171,7 +171,7 @@ class MiqVim < MiqVimInventory
   # DataStore
   #
   def getVimDataStore(dsName)
-    $vim_log.info "MiqVimMod.getVimDataStore: called"
+    $vim_log.info 'MiqVimMod.getVimDataStore: called'
     miqVimDs = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find datastore: #{dsName}" unless (dsh = dataStores_locked[dsName])
@@ -182,7 +182,7 @@ class MiqVim < MiqVimInventory
   end
 
   def getVimDataStoreByMor(dsMor)
-    $vim_log.info "MiqVimMod.getVimDataStoreByMor: called"
+    $vim_log.info 'MiqVimMod.getVimDataStoreByMor: called'
     miqVimDs = nil
     @cacheLock.synchronize(:SH) do
       raise MiqException::MiqVimResourceNotFound, "Could not find datastore: #{dsMor}" unless (dsh = dataStoresByMor_locked[dsMor])

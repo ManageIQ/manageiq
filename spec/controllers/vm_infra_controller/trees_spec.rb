@@ -5,8 +5,8 @@ describe VmInfraController do
     EvmSpecHelper.create_guid_miq_server_zone
   end
 
-  context "VMs & Templates #tree_select" do
-    it "renders list Archived nodes in VMs & Templates tree" do
+  context 'VMs & Templates #tree_select' do
+    it 'renders list Archived nodes in VMs & Templates tree' do
       FactoryGirl.create(:vm_vmware)
 
       session[:settings] = {}
@@ -19,7 +19,7 @@ describe VmInfraController do
     end
   end
 
-  context "#tree_select" do
+  context '#tree_select' do
     [
       ['Vms & Templates', 'vandt_tree'],
       %w(VMS vms_filter_tree),
@@ -39,7 +39,7 @@ describe VmInfraController do
       end
     end
 
-    it "renders VM details for VM node" do
+    it 'renders VM details for VM node' do
       vm = FactoryGirl.create(:vm_vmware)
 
       session[:settings] = {}
@@ -52,7 +52,7 @@ describe VmInfraController do
       expect(response.status).to eq(200)
     end
 
-    it "renders Template details for Template node" do
+    it 'renders Template details for Template node' do
       template = FactoryGirl.create(:template_vmware)
 
       session[:settings] = {}

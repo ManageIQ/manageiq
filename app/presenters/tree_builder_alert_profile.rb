@@ -10,7 +10,7 @@ class TreeBuilderAlertProfile < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "ap_",
+      :id_prefix => 'ap_',
       :autoload  => true,
     )
   end
@@ -21,7 +21,7 @@ class TreeBuilderAlertProfile < TreeBuilder
 
   # level 0 - root
   def root_options
-    [t = N_("All Alert Profiles"), t]
+    [t = N_('All Alert Profiles'), t]
   end
 
   # level 1 - * alert profiles
@@ -31,7 +31,7 @@ class TreeBuilderAlertProfile < TreeBuilder
       open_node("xx-#{db}")
 
       # Actual translation should happen in TreeNodeBuilder
-      text = PostponedTranslation.new(N_("%s Alert Profiles"), ui_lookup(:model => db)).to_proc
+      text = PostponedTranslation.new(N_('%s Alert Profiles'), ui_lookup(:model => db)).to_proc
       {:id => db, :text => text, :image => db.underscore.downcase, :tip => text}
     end
 

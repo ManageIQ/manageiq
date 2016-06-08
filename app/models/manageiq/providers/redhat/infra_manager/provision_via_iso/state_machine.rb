@@ -5,7 +5,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso::StateMachine
   end
 
   def boot_from_cdrom
-    message = "Booting from CDROM"
+    message = 'Booting from CDROM'
     _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
 
@@ -20,7 +20,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso::StateMachine
   end
 
   def post_provision
-    update_and_notify_parent(:message => "Post Provisioning")
+    update_and_notify_parent(:message => 'Post Provisioning')
 
     get_provider_destination.detach_floppy
 

@@ -21,15 +21,15 @@ class MSRegHive
   # is 0x1000 (same as HBIN) and the 4 byte 'hbin' signature
   REG_DATA_OFFSET = HBIN_SIZE + 0x4
 
-  def initialize(path, hiveName, xmlNode, fs = "M:/", filter = nil)
-    @RegPath = path.gsub(/^"/, "").gsub(/"$/, "")
+  def initialize(path, hiveName, xmlNode, fs = 'M:/', filter = nil)
+    @RegPath = path.gsub(/^"/, '').gsub(/"$/, '')
     @hiveName = hiveName
     @xmlNode = xmlNode
     @fs = fs if fs.kind_of?(MiqFS)
-    @expandEnv = {'%SystemDrive%' => 'C:', "%SystemRoot%" => "\\Windows", "%ProgramFiles%" => "\\Program Files"}
+    @expandEnv = {'%SystemDrive%' => 'C:', '%SystemRoot%' => '\\Windows', '%ProgramFiles%' => '\\Program Files'}
     @fileLoadTime, @fileParseTime = nil, nil
     @ccsIdx = 1     # CurrentControlSet default index
-    @ccsName = "controlset%03d" % @ccsIdx
+    @ccsName = 'controlset%03d' % @ccsIdx
     @stats = {:cache_hits => 0, :file_reads => 0, :bytes_read => 0}
     @hbin = {}
 
@@ -56,10 +56,10 @@ class MSRegHive
   def create_filter_hash(filter)
     if filter.kind_of?(Hash)
       nh = filter
-      nh[:key] = nh[:key].downcase.split("/")
+      nh[:key] = nh[:key].downcase.split('/')
       nh[:value].each { |v| @filter_value[v.downcase] = true } if nh[:value].kind_of?(Array)
     else
-      nh = {:key => filter.downcase.split("/")}
+      nh = {:key => filter.downcase.split('/')}
     end
     nh[:key_path] = nh[:key].join('\\')
     nh[:depth] = nh[:depth].to_i
@@ -102,14 +102,14 @@ class MSRegHive
   def pre_process
     # Determine what System/ControlSet00? to use when CurrentControlSet is
     # referenced and update the filter list.
-    determine_current_control_set if @hiveName == "system"
+    determine_current_control_set if @hiveName == 'system'
 
     # Load environment variables to be used to "expand string" (REG_EXPAND_SZ) resolution.
     # load_environment_variables
   end
 
   def post_process
-    if @hiveName == "system"
+    if @hiveName == 'system'
       ccsNode = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SYSTEM\\#{@ccsName}", @xmlNode.root)
       if ccsNode
         $log.debug "Changing [#{@ccsName}] to CurrentControlSet"
@@ -119,9 +119,9 @@ class MSRegHive
   end
 
   def load_environment_variables
-    $log.debug "Determining ControlControlSet index"
+    $log.debug 'Determining ControlControlSet index'
     save_filters = @filter
-    @filter = [create_filter_hash("#{@ccsName}/Control/Session Manager/Environment".downcase.split("/"))]
+    @filter = [create_filter_hash("#{@ccsName}/Control/Session Manager/Environment".downcase.split('/'))]
     # Start parsing the registry based on the data offset stored in the first record
     ccsNode = MiqXml.newNode
     parseRecord(@hiveHash[:data_offset], ccsNode, @hiveName, 0)
@@ -132,23 +132,23 @@ class MSRegHive
   end
 
   def determine_current_control_set
-    $log.debug "Determining ControlControlSet index"
+    $log.debug 'Determining ControlControlSet index'
     save_filters = @filter
     @filter = [create_filter_hash('select')]
     # Start parsing the registry based on the data offset stored in the first record
     # ccsNode = MiqXml.newNode(nil, REXML)
-    ccsNode = XmlHash::Document.new("ccs")
+    ccsNode = XmlHash::Document.new('ccs')
     parseRecord(@hiveHash[:data_offset], ccsNode, @hiveName, 0)
     # idx = ccsNode.find_first("//value[@name\"Current\"]")
     @ccsIdx = 0
-    ccsNode.elements[1].each_element_with_attribute(:name, "Current") { |e| @ccsIdx = e.text }
+    ccsNode.elements[1].each_element_with_attribute(:name, 'Current') { |e| @ccsIdx = e.text }
     @ccsIdx = 1 if @ccsIdx == 0
-    @ccsName = "controlset%03d" % @ccsIdx
+    @ccsName = 'controlset%03d' % @ccsIdx
     @filter = save_filters
     # Search through the filter list and change any "CurrentControlSet" values to the proper idx
     if @filter
       @filter.each do |a1|
-        if a1[:key][0] == "currentcontrolset"
+        if a1[:key][0] == 'currentcontrolset'
           a1[:key][0] = @ccsName
           a1[:key_path] = a1[:key].join('\\')
         end
@@ -159,7 +159,7 @@ class MSRegHive
 
   def parseRecord(offset, xmlNode, fqName, level)
     type = read_buffer(offset, 1).downcase
-    $log.debug sprintf("TYPE = [%s] at offset [0x%08x]", type, offset + REG_DATA_OFFSET) if DEBUG_PRINT
+    $log.debug sprintf('TYPE = [%s] at offset [0x%08x]', type, offset + REG_DATA_OFFSET) if DEBUG_PRINT
     begin
       send("parseRecord#{type}", offset, xmlNode, fqName, level)
     rescue => err
@@ -294,7 +294,7 @@ class MSRegHive
     vkHash = REGISTRY_STRUCT_VK.decode(read_buffer(offset, SIZEOF_REGISTRY_STRUCT_VK))
     vkHash[:data_type_display] = KEY_TYPES[vkHash[:data_type]]
     if vkHash[:name_length] == 0
-      vkHash[:data_name] = "(Default)"
+      vkHash[:data_name] = '(Default)'
     else
       vkHash[:data_name] = read_buffer(offset + SIZEOF_REGISTRY_STRUCT_VK, vkHash[:name_length] - 1)
     end
@@ -306,9 +306,9 @@ class MSRegHive
       case vkHash[:data_type_display]
       when :REG_SZ, :REG_EXPAND_SZ then vkHash[:data] = getRegString(vkHash, vkHash[:data_type_display])
       when :REG_DWORD    then vkHash[:data] = vkHash[:data_offset]
-      when :REG_NONE     then vkHash[:data] = "(zero-length binary value)"
+      when :REG_NONE     then vkHash[:data] = '(zero-length binary value)'
       when :REG_BINARY   then vkHash[:data] = getRegBinary(vkHash)
-      when :REG_QWORD    then vkHash[:data] = read_buffer(vkHash[:data_offset], 8).unpack("Q").join.to_i
+      when :REG_QWORD    then vkHash[:data] = read_buffer(vkHash[:data_offset], 8).unpack('Q').join.to_i
       when :REG_MULTI_SZ then vkHash[:data] = getRegMultiString(vkHash)
       else
         # Ignore types: REG_RESOURCE_REQUIREMENTS_LIST and REG_RESOURCE_LIS
@@ -324,7 +324,7 @@ class MSRegHive
       xmlSubNode.text = vkHash[:data]
 
       # This is a performance hack right now since searching the whole xml doc for DigitalProductIds takes so long.
-      @digitalProductKeys << xmlSubNode if vkHash[:data_name].downcase == "digitalproductid"
+      @digitalProductKeys << xmlSubNode if vkHash[:data_name].downcase == 'digitalproductid'
     end
   end
 
@@ -392,7 +392,7 @@ class MSRegHive
     @fileHnd = fileObj.send(@fs ? :fileOpen : :open, fileName, 'rb')
     regf_buf = read_hbin(0)
 
-    raise "Registry file [#{fileName}] does not contain valid marker." if regf_buf[0, 4] != "regf"
+    raise "Registry file [#{fileName}] does not contain valid marker." if regf_buf[0, 4] != 'regf'
     $log.info  "Reading #{fileName} with size (#{regSize})" if DEBUG_PRINT
 
     # Read in Registry header
@@ -429,11 +429,11 @@ class MSRegHive
 
   def self.regBinaryToRawBinary(data)
     raise ArgumentError unless isRegBinary(data)
-    [data.delete(',')].pack("H*")
+    [data.delete(',')].pack('H*')
   end
 
   def self.rawBinaryToRegBinary(data)
-    data.unpack("H*")[0].scan(/../).join(',')
+    data.unpack('H*')[0].scan(/../).join(',')
   end
 
   def getHash
@@ -616,7 +616,7 @@ class MSRegHive
   #   }
 
   # Return registry key type. Otherwise return the hex value of the integer
-  KEY_TYPES = Hash.new { |_h, k| "%08X" % k }
+  KEY_TYPES = Hash.new { |_h, k| '%08X' % k }
   KEY_TYPES.merge!(
     0  => :REG_NONE,              # No value type
     1  => :REG_SZ,                # A null-terminated string (Unicode)

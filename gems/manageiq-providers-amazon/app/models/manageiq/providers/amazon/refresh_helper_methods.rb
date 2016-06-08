@@ -38,7 +38,7 @@ module ManageIQ::Providers::Amazon::RefreshHelperMethods
   end
 
   def add_instance_disk(disks, size, name, location)
-    super(disks, size, name, location, "amazon")
+    super(disks, size, name, location, 'amazon')
   end
 
   # Compose an ems_ref combining some existing keys

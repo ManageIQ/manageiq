@@ -29,12 +29,12 @@ module NTFS
     VF_MODIFIED_BY_CHKDSK  = 0x8000
 
     def initialize(buf)
-      raise "MIQ(NTFS::VolumeInformation.initialize) Nil buffer" if buf.nil?
+      raise 'MIQ(NTFS::VolumeInformation.initialize) Nil buffer' if buf.nil?
       buf      = buf.read(buf.length) if buf.kind_of?(DataRun)
       @avi     = ATTRIB_VOLUME_INFORMATION.decode(buf)
 
       # Get accessor data.
-      @version = @avi['ver_major'].to_s + "." + @avi['ver_minor'].to_s
+      @version = @avi['ver_major'].to_s + '.' + @avi['ver_minor'].to_s
       @flags   = @avi['flags']
     end
 

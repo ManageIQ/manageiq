@@ -14,7 +14,7 @@ module MiqAeServiceMiqHostProvisionSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqHostProvision::miq_host_provision=#{@miq_host_provision.id}", @user)
     end
 
-    it "#miq_host_provision_request" do
+    it '#miq_host_provision_request' do
       miq_host_provision_request = FactoryGirl.create(:miq_host_provision_request, :provision_type => 'host_pxe_install', :state => 'pending', :status => 'Ok', :requester => @user)
       @miq_host_provision.miq_host_provision_request = miq_host_provision_request
       @miq_host_provision.save!
@@ -26,7 +26,7 @@ module MiqAeServiceMiqHostProvisionSpec
       [:id, :provision_type, :state, :userid].each { |method| expect(ae_object.send(method)).to eq(miq_host_provision_request.send(method)) }
     end
 
-    it "#host" do
+    it '#host' do
       host = FactoryGirl.create(:host)
       @miq_host_provision.host = host
       @miq_host_provision.save!
@@ -37,7 +37,7 @@ module MiqAeServiceMiqHostProvisionSpec
       [:id].each { |method| expect(ae_object.send(method)).to eq(host.send(method)) }
     end
 
-    context "#status" do
+    context '#status' do
       before(:each) do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_host_provision'].status"
         @ae_method.update_attributes!(:data => method, :display_name => 'RSpec')

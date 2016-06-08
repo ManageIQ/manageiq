@@ -11,13 +11,13 @@ class ApplicationHelper::Toolbar::XTemplateCloudCenter < ApplicationHelper::Tool
           'fa fa-refresh fa-lg',
           N_('Refresh relationships and power states for all items related to this Image'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this Image?")),
+          :confirm => N_('Refresh relationships and power states for all items related to this Image?')),
         button(
           :image_scan,
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this Image'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this Image?")),
+          :confirm => N_('Perform SmartState Analysis on this Image?')),
         separator,
         button(
           :image_edit,
@@ -34,8 +34,8 @@ class ApplicationHelper::Toolbar::XTemplateCloudCenter < ApplicationHelper::Tool
           'pficon pficon-delete fa-lg',
           N_('Remove this Image from the VMDB'),
           N_('Remove from the VMDB'),
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Image and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Image?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This Image and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Image?')),
         separator,
         button(
           :image_right_size,
@@ -77,7 +77,7 @@ class ApplicationHelper::Toolbar::XTemplateCloudCenter < ApplicationHelper::Tool
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for this Image'),
           N_('Check Compliance of Last Known Configuration'),
-          :confirm => N_("Initiate Check Compliance of the last known configuration for this Image?")),
+          :confirm => N_('Initiate Check Compliance of the last known configuration for this Image?')),
       ]
     ),
   ])

@@ -1,4 +1,4 @@
-require "handsoap"
+require 'handsoap'
 require 'ServiceNowWebService/ServiceNowTypes'
 
 class SnEccqService < Handsoap::Service
@@ -15,24 +15,24 @@ class SnEccqService < Handsoap::Service
     pe = Handsoap::XmlMason::Element.new(nil, nil, 'notification')
     payload.each { |k, v| pe.add k, v }
 
-    response = invoke("n1:insert") do |message|
-      message.add "n1:agent",   agent do |i|
-        i.set_attr "xsi:type", "xsd:string"
+    response = invoke('n1:insert') do |message|
+      message.add 'n1:agent',   agent do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
-      message.add "n1:queue",   queue do |i|
-        i.set_attr "xsi:type", "xsd:string"
+      message.add 'n1:queue',   queue do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
-      message.add "n1:topic",   topic do |i|
-        i.set_attr "xsi:type", "xsd:string"
+      message.add 'n1:topic',   topic do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
-      message.add "n1:name",    name do |i|
-        i.set_attr "xsi:type", "xsd:string"
+      message.add 'n1:name',    name do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
-      message.add "n1:source",  source do |i|
-        i.set_attr "xsi:type", "xsd:string"
+      message.add 'n1:source',  source do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
-      message.add "n1:payload", pe.to_s do |i|
-        i.set_attr "xsi:type", "xsd:string"
+      message.add 'n1:payload', pe.to_s do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
     end
     (parse_response(response, 'insertResponse'))
@@ -44,13 +44,13 @@ class SnEccqService < Handsoap::Service
     @ns = {'n1' => ns}
     on_create_document do |doc|
       doc.alias 'n1', ns
-      doc.find("Envelope").set_attr "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance"
+      doc.find('Envelope').set_attr 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance'
     end
   end
 
   def marshalObj(node, obj)
     if obj.kind_of? Array
-      puts "Array"
+      puts 'Array'
       obj.each do |v|
         marshalObj(node, v)
       end
@@ -81,8 +81,8 @@ class SnEccqService < Handsoap::Service
       return(ur)
     end
 
-    http_body = response.instance_variable_get("@http_body")
-    raise Handsoap::Fault.new("SNAuthFaultCode", "Authentication Failure", http_body)  if http_body.include?("This request requires HTTP authentication")
+    http_body = response.instance_variable_get('@http_body')
+    raise Handsoap::Fault.new('SNAuthFaultCode', 'Authentication Failure', http_body)  if http_body.include?('This request requires HTTP authentication')
     raise http_body
   end
 

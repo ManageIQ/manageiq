@@ -28,23 +28,23 @@ module Fat32
       @dirty = false
     end
 
-    def open(mode = "r")
+    def open(mode = 'r')
       # Fat32 module methods use miqfs instance accessors to touch @boot_sector.
       @mode = mode.downcase
       @de = ifs_getFile(@path, @miqfs)
       unless @de.nil?
         raise "File is directory: '#{@path}'" if @de.isDir?
       end
-      if mode.include?("r")
+      if mode.include?('r')
         raise "File not found: '#{@path}'" if @de.nil?
         @data = FileData.new(@de, @miqfs.boot_sector)
       end
-      if mode.include?("w")
+      if mode.include?('w')
         @de.delete(@miqfs.boot_sector) unless @de.nil?
         @de, @parentDirCluster = ifs_putFile(@path, @miqfs)
         @data = FileData.new(@de, @miqfs.boot_sector)
       end
-      if mode.include?("a")
+      if mode.include?('a')
         @de, @parentDirCluster = ifs_putFile(@path, @miqfs) if @de.nil?
         @data = FileData.new(@de, @miqfs.boot_sector) if @data.nil?
         @data.read
@@ -55,7 +55,7 @@ module Fat32
   # File system interface.
   def fs_init
     # puts "Fat32::fs_init(#{@dobj.dInfo.fileName})"
-    self.fsType = "FAT32"
+    self.fsType = 'FAT32'
 
     # Initialize bs & read root dir.
     @dobj.seek(0, IO::SEEK_SET)
@@ -115,7 +115,7 @@ module Fat32
 
   # Returns true if name exists, false if not.
   def fs_fileExists?(p)
-    return true if p == "/" || p == "\\"
+    return true if p == '/' || p == '\\'
     de = ifs_getFile(p)
     return false if de.nil?
     true
@@ -203,7 +203,7 @@ module Fat32
   # NOTE: FileObject must have access to Fat32 members.
   # This is kind of like a 'skip this' thing. Fat32 methods
   # use stuff owned by MiqFS, so this is necessary.
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     fobj = FileObject.new(p, self)
     fobj.open(mode)
     fobj
@@ -238,7 +238,7 @@ module Fat32
     miqfs = self if miqfs.nil?
 
     # If root dir return spoof dir ent.
-    return rootDirEnt if p == "/" || p == "\\"
+    return rootDirEnt if p == '/' || p == '\\'
 
     # Preprocess path.
     p = unnormalizePath(p)
@@ -291,7 +291,7 @@ module Fat32
     end
 
     # Return root if lone separator.
-    return Directory.new(miqfs.boot_sector) if p == "/" || p == "\\"
+    return Directory.new(miqfs.boot_sector) if p == '/' || p == '\\'
 
     # Get an array of directory names, kill off the first (it's always empty).
     names = p.split(/[\\\/]/); names.shift

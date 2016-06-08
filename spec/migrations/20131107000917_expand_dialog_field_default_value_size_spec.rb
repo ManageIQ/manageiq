@@ -5,24 +5,24 @@ describe ExpandDialogFieldDefaultValueSize do
   let(:reserve_stub)      { MigrationSpecStubs.reserved_stub }
 
   migration_context :up do
-    it "should convert default_value to text type" do
+    it 'should convert default_value to text type' do
       expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:string)
       migrate
       expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:text)
     end
 
-    it "should migrate default_value from the reserved table" do
-      val1      = "default value 1"
+    it 'should migrate default_value from the reserved table' do
+      val1      = 'default value 1'
       field1    = dialog_field_stub.create!
       reserved1 = reserve_stub.create!(:resource_id   => field1.id,
                                        :resource_type => 'DialogField',
                                        :reserved      => {:default_value => val1})
-      val2      = "default value 2"
+      val2      = 'default value 2'
       field2    = dialog_field_stub.create!(:default_value => val2)
       reserved2 = reserve_stub.create!(:resource_id   => field2.id,
                                        :resource_type => 'DialogField',
                                        :reserved      => {:some_field => 1})
-      val3   = "default value 3"
+      val3   = 'default value 3'
       field3 = dialog_field_stub.create!(:default_value => val3)
 
       migrate
@@ -36,14 +36,14 @@ describe ExpandDialogFieldDefaultValueSize do
   end
 
   migration_context :down do
-    it "should convert default_value to string type" do
+    it 'should convert default_value to string type' do
       expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:text)
       migrate
       expect(dialog_field_stub.columns_hash['default_value'].type).to eq(:string)
     end
 
-    it "should migrate default_value to the reserved table" do
-      val1   = "default value 1"
+    it 'should migrate default_value to the reserved table' do
+      val1   = 'default value 1'
       field1 = dialog_field_stub.create!(:default_value => val1)
       field2 = dialog_field_stub.create!
 

@@ -5,12 +5,12 @@ require 'MiqVm/MiqVm'
 require 'ovirt'
 Ovirt.logger = $rhevm_log if $rhevm_log
 
-RHEVM_SERVER        = raise "please define RHEVM_SERVER"
+RHEVM_SERVER        = raise 'please define RHEVM_SERVER'
 RHEVM_PORT          = 443
-RHEVM_DOMAIN        = raise "please define RHEVM_DOMAIN"
-RHEVM_USERNAME      = raise "please define RHEVM_USERNAME"
-RHEVM_PASSWORD      = raise "please define RHEVM_PASSWORD"
-VM_NAME             = raise "please define VM_NAME"
+RHEVM_DOMAIN        = raise 'please define RHEVM_DOMAIN'
+RHEVM_USERNAME      = raise 'please define RHEVM_USERNAME'
+RHEVM_PASSWORD      = raise 'please define RHEVM_PASSWORD'
+VM_NAME             = raise 'please define VM_NAME'
 
 class ConsoleFormatter < Log4r::Formatter
   def format(event)
@@ -54,14 +54,14 @@ begin
     puts
   end
 
-  ["services", "software", "system", "vmconfig"].each do |c|
+  ['services', 'software', 'system', 'vmconfig'].each do |c|
     puts
     puts "Extracting #{c}"
     vm.extract(c) # .to_xml.write($stdout, 4)
   end
 
   vm.unmount
-  puts "...done"
+  puts '...done'
 
 rescue => err
   $log.error err.to_s

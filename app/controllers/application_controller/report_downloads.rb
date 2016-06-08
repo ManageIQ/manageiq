@@ -60,23 +60,23 @@ module ApplicationController::ReportDownloads
     end
 
     miq_task = MiqTask.find(params[:task_id])
-    if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
-      add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
+    if miq_task.task_results.blank? || miq_task.status != 'Ok' # Check to see if any results came back or status not Ok
+      add_flash(_('Report generation returned: Status [%{status}] Message [%{message}]') % {:status => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|
         page << javascript_prologue
         page << "if (miqDomElementExists('flash_msg_div_report_list')){"
-        page.replace("flash_msg_div_report_list", :partial => "layouts/flash_msg",
-                                                  :locals  => {:div_num => "_report_list"})
-        page << "} else {"
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "}"
-        page << "miqSparkle(false);"
+        page.replace('flash_msg_div_report_list', :partial => 'layouts/flash_msg',
+                                                  :locals  => {:div_num => '_report_list'})
+        page << '} else {'
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+        page << '}'
+        page << 'miqSparkle(false);'
       end
     else
       @sb[:render_rr_id] = miq_task.miq_report_result.id
       render :update do |page|
         page << javascript_prologue
-        page << "miqSparkle(false);"
+        page << 'miqSparkle(false);'
         page << "DoNav('#{url_for(:action => "send_report_data")}');"
       end
     end
@@ -107,11 +107,11 @@ module ApplicationController::ReportDownloads
 
     @filename = filename_timestamp(@view.title)
     case params[:download_type]
-    when "pdf"
+    when 'pdf'
       download_pdf(@view)
-    when "text"
+    when 'text'
       download_txt(@view)
-    when "csv"
+    when 'csv'
       download_csv(@view)
     end
   end
@@ -158,18 +158,18 @@ module ApplicationController::ReportDownloads
     klass        = ui_lookup(:model => "#{@record.class}")
 
     @options = {
-      :page_layout => "portrait",
-      :page_size   => "us-letter",
-      :run_date    => run_time.strftime("%m/%d/%y %l:%m %p %z"),
+      :page_layout => 'portrait',
+      :page_size   => 'us-letter',
+      :run_date    => run_time.strftime('%m/%d/%y %l:%m %p %z'),
       :title       => "#{klass} \"#{@record.name}\"".html_safe,
     }
 
-    if @display == "download_pdf"
-      @display = "main"
+    if @display == 'download_pdf'
+      @display = 'main'
       case @record
       when Vm
         if @record.hardware.present?
-          @record_notes = @record.hardware.annotation || "<No notes have been entered for this VM>"
+          @record_notes = @record.hardware.annotation || '<No notes have been entered for this VM>'
         end
         get_host_for_vm(@record)
         set_config(@record)
@@ -180,10 +180,10 @@ module ApplicationController::ReportDownloads
       end
 
       disable_client_cache
-      html_string = render_to_string(:template => "/layouts/show_pdf", :layout => false)
-      pdf_data = PdfGenerator.pdf_from_string(html_string, "pdf_summary")
+      html_string = render_to_string(:template => '/layouts/show_pdf', :layout => false)
+      pdf_data = PdfGenerator.pdf_from_string(html_string, 'pdf_summary')
       send_data(pdf_data,
-                :type     => "application/pdf",
+                :type     => 'application/pdf',
                 :filename => filename_timestamp("#{klass}_#{@record.name}_summary") + '.pdf'
                )
     end

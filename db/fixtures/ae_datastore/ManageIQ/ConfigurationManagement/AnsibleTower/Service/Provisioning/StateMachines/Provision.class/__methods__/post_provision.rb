@@ -7,7 +7,7 @@ class AnsibleTowerPostProvision
   end
 
   def main
-    @handle.log("info", "Starting Ansible Tower Post-Provisioning")
+    @handle.log('info', 'Starting Ansible Tower Post-Provisioning')
     # job = service.job
 
     # You can add logic to process the job object in VMDB
@@ -19,14 +19,14 @@ class AnsibleTowerPostProvision
   private
 
   def task
-    @handle.root["service_template_provision_task"].tap do |task|
-      raise "service_template_provision_task not found" unless task
+    @handle.root['service_template_provision_task'].tap do |task|
+      raise 'service_template_provision_task not found' unless task
     end
   end
 
   def service
     task.destination.tap do |service|
-      raise "service is not of type AnsibleTower" unless service.respond_to?(:job_template)
+      raise 'service is not of type AnsibleTower' unless service.respond_to?(:job_template)
     end
   end
 end

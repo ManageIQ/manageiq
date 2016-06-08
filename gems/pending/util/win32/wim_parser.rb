@@ -1,6 +1,6 @@
 # encoding: US-ASCII
 
-require "binary_struct"
+require 'binary_struct'
 
 # Parser for the Windows Image Format (WIM).
 #   Information found here:
@@ -13,8 +13,8 @@ require "binary_struct"
 #       http://msdn.microsoft.com/en-us/library/windows/desktop/aa373931%28v=vs.85%29.aspx
 #       http://stackoverflow.com/questions/679381/accessing-guid-members-in-c-sharp
 class WimParser
-  autoload :NtUtil,   "util/win32/nt_util"
-  autoload :Nokogiri, "nokogiri"
+  autoload :NtUtil,   'util/win32/nt_util'
+  autoload :Nokogiri, 'nokogiri'
 
   HEADER_V1_STRUCT = BinaryStruct.new([
     'a8',  'image_tag',          # Signature that identifies the file as a .wim file. Value is set to "MSWIM\0\0".
@@ -70,49 +70,49 @@ class WimParser
   end
 
   def header
-    data = File.open(filename, "rb") do |f|
+    data = File.open(filename, 'rb') do |f|
       f.read(SIZEOF_HEADER_V1_STRUCT)
     end
     ret = HEADER_V1_STRUCT.decode(data)
-    raise "#{filename} is not a WIM file" if ret["image_tag"] != IMAGE_TAG
+    raise "#{filename} is not a WIM file" if ret['image_tag'] != IMAGE_TAG
     ret
   end
 
   def xml_data
     header_data = header
 
-    xml = File.open(filename, "rb") do |f|
-      f.seek(header_data["xml_data_offset"])
-      f.read(header_data["xml_data_size"])
+    xml = File.open(filename, 'rb') do |f|
+      f.seek(header_data['xml_data_offset'])
+      f.read(header_data['xml_data_size'])
     end
-    xml.force_encoding("UTF-16")
+    xml.force_encoding('UTF-16')
 
-    xml = Nokogiri::XML(xml).xpath("/WIM")
+    xml = Nokogiri::XML(xml).xpath('/WIM')
 
     ret = {}
-    ret["total_bytes"] = xml.xpath("./TOTALBYTES").text.to_i
-    ret["images"] = xml.xpath("./IMAGE").collect do |i|
+    ret['total_bytes'] = xml.xpath('./TOTALBYTES').text.to_i
+    ret['images'] = xml.xpath('./IMAGE').collect do |i|
       # Deal with hex time parts by removing the 0x prefix, padding with 0s to
       #   8 characters, appending the low part to the high part, converting
       #   to an integer, and then converting that to a time object.
-      high_part     = i.xpath("./CREATIONTIME/HIGHPART").text[2..-1].rjust(8, '0')
-      low_part      = i.xpath("./CREATIONTIME/LOWPART").text[2..-1].rjust(8, '0')
+      high_part     = i.xpath('./CREATIONTIME/HIGHPART').text[2..-1].rjust(8, '0')
+      low_part      = i.xpath('./CREATIONTIME/LOWPART').text[2..-1].rjust(8, '0')
       creation_time = NtUtil.nt_filetime_to_ruby_time("#{high_part}#{low_part}".to_i(16))
 
-      high_part     = i.xpath("./LASTMODIFICATIONTIME/HIGHPART").text[2..-1].rjust(8, '0')
-      low_part      = i.xpath("./LASTMODIFICATIONTIME/LOWPART").text[2..-1].rjust(8, '0')
+      high_part     = i.xpath('./LASTMODIFICATIONTIME/HIGHPART').text[2..-1].rjust(8, '0')
+      low_part      = i.xpath('./LASTMODIFICATIONTIME/LOWPART').text[2..-1].rjust(8, '0')
       last_mod_time = NtUtil.nt_filetime_to_ruby_time("#{high_part}#{low_part}".to_i(16))
 
       {
-        "index"                  => i["INDEX"].to_i,
-        "name"                   => i.xpath("./NAME").text,
-        "description"            => i.xpath("./DESCRIPTION").text,
-        "dir_count"              => i.xpath("./DIRCOUNT").text.to_i,
-        "file_count"             => i.xpath("./FILECOUNT").text.to_i,
-        "total_bytes"            => i.xpath("./TOTALBYTES").text.to_i,
-        "hard_link_bytes"        => i.xpath("./HARDLINKBYTES").text.to_i,
-        "creation_time"          => creation_time,
-        "last_modification_time" => last_mod_time,
+        'index'                  => i['INDEX'].to_i,
+        'name'                   => i.xpath('./NAME').text,
+        'description'            => i.xpath('./DESCRIPTION').text,
+        'dir_count'              => i.xpath('./DIRCOUNT').text.to_i,
+        'file_count'             => i.xpath('./FILECOUNT').text.to_i,
+        'total_bytes'            => i.xpath('./TOTALBYTES').text.to_i,
+        'hard_link_bytes'        => i.xpath('./HARDLINKBYTES').text.to_i,
+        'creation_time'          => creation_time,
+        'last_modification_time' => last_mod_time,
       }
     end
     ret

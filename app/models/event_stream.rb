@@ -12,10 +12,10 @@ class EventStream < ApplicationRecord
   belongs_to :availability_zone
   alias_method :src_host, :host
 
-  belongs_to :dest_vm_or_template, :class_name => "VmOrTemplate"
-  belongs_to :dest_vm,             :class_name => "Vm",          :foreign_key => :dest_vm_or_template_id
-  belongs_to :dest_miq_template,   :class_name => "MiqTemplate", :foreign_key => :dest_vm_or_template_id
-  belongs_to :dest_host,           :class_name => "Host"
+  belongs_to :dest_vm_or_template, :class_name => 'VmOrTemplate'
+  belongs_to :dest_vm,             :class_name => 'Vm',          :foreign_key => :dest_vm_or_template_id
+  belongs_to :dest_miq_template,   :class_name => 'MiqTemplate', :foreign_key => :dest_vm_or_template_id
+  belongs_to :dest_host,           :class_name => 'Host'
 
   belongs_to :service
 end

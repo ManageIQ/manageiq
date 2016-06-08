@@ -3,15 +3,15 @@ class MiqRegion < ApplicationRecord
   has_many :metric_rollups, :as => :resource # Destroy will be handled by purger
   has_many :vim_performance_states, :as => :resource # Destroy will be handled by purger
 
-  virtual_has_many :database_backups,       :class_name => "DatabaseBackup"
-  virtual_has_many :ext_management_systems, :class_name => "ExtManagementSystem"
-  virtual_has_many :hosts,                  :class_name => "Host"
-  virtual_has_many :storages,               :class_name => "Storage"
-  virtual_has_many :policy_events,          :class_name => "PolicyEvent"
-  virtual_has_many :zones,                  :class_name => "Zone"
+  virtual_has_many :database_backups,       :class_name => 'DatabaseBackup'
+  virtual_has_many :ext_management_systems, :class_name => 'ExtManagementSystem'
+  virtual_has_many :hosts,                  :class_name => 'Host'
+  virtual_has_many :storages,               :class_name => 'Storage'
+  virtual_has_many :policy_events,          :class_name => 'PolicyEvent'
+  virtual_has_many :zones,                  :class_name => 'Zone'
 
-  virtual_has_many :miq_servers,            :class_name => "MiqServer"
-  virtual_has_many :active_miq_servers,     :class_name => "MiqServer"
+  virtual_has_many :miq_servers,            :class_name => 'MiqServer'
+  virtual_has_many :active_miq_servers,     :class_name => 'MiqServer'
 
   virtual_has_many :vms_and_templates,      :uses => :all_relationships
   virtual_has_many :miq_templates,          :uses => :all_relationships
@@ -126,8 +126,8 @@ class MiqRegion < ApplicationRecord
       if pk
         conditions = sanitize_conditions(region_to_conditions(region, pk))
       else
-        id_cols = connection.columns(t).select { |c| c.name.ends_with?("_id") }
-        conditions = id_cols.collect { |c| "(#{sanitize_conditions(region_to_conditions(region, c.name))})" }.join(" OR ")
+        id_cols = connection.columns(t).select { |c| c.name.ends_with?('_id') }
+        conditions = id_cols.collect { |c| "(#{sanitize_conditions(region_to_conditions(region, c.name))})" }.join(' OR ')
       end
 
       rows = conn.delete("DELETE FROM #{t} WHERE #{conditions}")
@@ -220,7 +220,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ws_address
-    contact_with = VMDB::Config.new("vmdb").config.fetch_path(:webservices, :contactwith)
+    contact_with = VMDB::Config.new('vmdb').config.fetch_path(:webservices, :contactwith)
     contact_with == 'hostname' ? remote_ws_hostname : remote_ws_ipaddress
   end
 
@@ -284,17 +284,17 @@ class MiqRegion < ApplicationRecord
 
   def perf_capture_always
     @perf_capture_always ||= VALID_CAPTURE_ALWAYS_TYPES.each_with_object({}) do |type, h|
-      h[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
+      h[type] = self.is_tagged_with?('capture_enabled', :ns => "/performance/#{type}")
     end.freeze
   end
 
   def perf_capture_always=(options)
-    raise _("options should be a Hash of type => enabled") unless options.kind_of?(Hash)
+    raise _('options should be a Hash of type => enabled') unless options.kind_of?(Hash)
     unless options.keys.all? { |k| VALID_CAPTURE_ALWAYS_TYPES.include?(k.to_sym) }
-      raise _("options are invalid, all keys must be one of %{type}") % {:type => VALID_CAPTURE_ALWAYS_TYPES.inspect}
+      raise _('options are invalid, all keys must be one of %{type}') % {:type => VALID_CAPTURE_ALWAYS_TYPES.inspect}
     end
     unless options.values.all? { |v| [true, false].include?(v) }
-      raise _("options are invalid, all values must be one of [true, false]")
+      raise _('options are invalid, all values must be one of [true, false]')
     end
 
     options.each do |type, enable|
@@ -308,7 +308,7 @@ class MiqRegion < ApplicationRecord
     # Set @perf_capture_always since we already know all the answers
     options = options.dup
     (VALID_CAPTURE_ALWAYS_TYPES - options.keys).each do |type|
-      options[type] = self.is_tagged_with?("capture_enabled", :ns => "/performance/#{type}")
+      options[type] = self.is_tagged_with?('capture_enabled', :ns => "/performance/#{type}")
     end
     @perf_capture_always = options.freeze
   end

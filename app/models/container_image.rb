@@ -3,10 +3,10 @@ class ContainerImage < ApplicationRecord
   include MiqPolicyMixin
   include ScanningMixin
 
-  DOCKER_IMAGE_PREFIX = "docker://"
+  DOCKER_IMAGE_PREFIX = 'docker://'
 
   belongs_to :container_image_registry
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => 'ems_id'
   has_many :containers
   has_many :container_nodes, -> { distinct }, :through => :containers
   has_many :container_groups, -> { distinct }, :through => :containers
@@ -26,7 +26,7 @@ class ContainerImage < ApplicationRecord
   after_create :raise_creation_event
 
   def full_name
-    result = ""
+    result = ''
     result << "#{container_image_registry.full_name}/" unless container_image_registry.nil?
     result << name
     result << ":#{tag}" unless tag.nil?
@@ -49,7 +49,7 @@ class ContainerImage < ApplicationRecord
   alias_method :guid, :docker_id
 
   def display_registry
-    container_image_registry.present? ? container_image_registry.full_name : _("Unknown image source")
+    container_image_registry.present? ? container_image_registry.full_name : _('Unknown image source')
   end
 
   def scan
@@ -77,7 +77,7 @@ class ContainerImage < ApplicationRecord
   end
 
   def has_compliance_policies?
-    _, plist = MiqPolicy.get_policies_for_target(self, "compliance", "containerimage_compliance_check")
+    _, plist = MiqPolicy.get_policies_for_target(self, 'compliance', 'containerimage_compliance_check')
     !plist.blank?
   end
 
@@ -88,10 +88,10 @@ class ContainerImage < ApplicationRecord
       return
     end
     ext_management_system.annotate(
-      "image",
+      'image',
       digest,
-      "security.manageiq.org/failed-policy" => causing_policy,
-      "images.openshift.io/deny-execution"  => "true"
+      'security.manageiq.org/failed-policy' => causing_policy,
+      'images.openshift.io/deny-execution'  => 'true'
     )
   end
 

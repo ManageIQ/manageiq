@@ -47,6 +47,6 @@ module ManageIQ::Providers::Azure::CloudManager::VmOrTemplateShared::Scanning
   end
 
   def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
+    validate_supported_check('Smartstate Analysis')
   end
 end

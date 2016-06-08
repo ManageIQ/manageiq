@@ -1,7 +1,7 @@
 require 'yaml'
 
 module VimMappingRegistry
-  YML_DIR = File.join(File.dirname(__FILE__), "wsdl41", "methods")
+  YML_DIR = File.join(File.dirname(__FILE__), 'wsdl41', 'methods')
 
   def self.registry
     @registry ||= Hash.new do |h, k|

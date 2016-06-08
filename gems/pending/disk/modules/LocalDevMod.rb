@@ -5,7 +5,7 @@ module LocalDevMod
   attr_accessor :mkfile
 
   def d_init
-    self.diskType = "LocalDev"
+    self.diskType = 'LocalDev'
     self.blockSize  = 512
     @mkfile     = nil
     dev       = dInfo.localDev || dInfo.fileName
@@ -17,9 +17,9 @@ module LocalDevMod
     # fileName can then be used as a common reference for debugging, etc.
     #
     dInfo.fileName   = dev
-    dInfo.mountMode  = "r"
+    dInfo.mountMode  = 'r'
 
-    @rawDisk_file     = MiqLargeFile.open(dev, "r")
+    @rawDisk_file     = MiqLargeFile.open(dev, 'r')
   end
 
   def getBase
@@ -33,7 +33,7 @@ module LocalDevMod
   end
 
   def d_write(_pos, _buf, _len, _offset = 0)
-    raise "LocalDevMod: write not supported"
+    raise 'LocalDevMod: write not supported'
   end
 
   def d_close

@@ -19,7 +19,7 @@ module FixAuth
       def selection_criteria
         available_columns.collect do |column|
           "(COALESCE(#{column},'') <> '')"
-        end.join(" OR ")
+        end.join(' OR ')
       end
 
       def hardcode(_old_value, new_value)

@@ -1,8 +1,8 @@
 require 'util/extensions/miq-deep'
 
 describe 'miq-deep' do
-  CASE_HASH  = {"BETWEEN" => {:name => "test", :value => [1, 2], :token => 1}}
-  CASE_ARRAY = [{"BETWEEN" => {:name => "test", :value => [1, 2], :token => 1}}]
+  CASE_HASH  = {'BETWEEN' => {:name => 'test', :value => [1, 2], :token => 1}}
+  CASE_ARRAY = [{'BETWEEN' => {:name => 'test', :value => [1, 2], :token => 1}}]
 
   it 'Hash#deep_clone' do
     should_deep_clone(CASE_HASH.deep_clone, CASE_HASH)
@@ -14,7 +14,7 @@ describe 'miq-deep' do
 
   it 'Hash#deep_delete' do
     normal_delete = CASE_HASH.deep_clone
-    normal_delete["BETWEEN"].delete(:token)
+    normal_delete['BETWEEN'].delete(:token)
 
     h = CASE_HASH.deep_clone
     h = h.deep_delete(:token)
@@ -23,7 +23,7 @@ describe 'miq-deep' do
 
   it 'Array#deep_delete' do
     normal_delete = CASE_ARRAY.deep_clone
-    normal_delete[0]["BETWEEN"].delete(:token)
+    normal_delete[0]['BETWEEN'].delete(:token)
 
     h = CASE_ARRAY.deep_clone
     h = h.deep_delete(:token)

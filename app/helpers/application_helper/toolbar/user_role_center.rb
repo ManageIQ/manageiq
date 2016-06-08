@@ -21,8 +21,8 @@ class ApplicationHelper::Toolbar::UserRoleCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Role'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to delete this Role?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to delete this Role?')),
       ]
     ),
   ])

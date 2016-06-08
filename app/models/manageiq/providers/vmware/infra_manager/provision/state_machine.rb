@@ -26,7 +26,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::StateMachine
   def poll_clone_complete
     clone_status, status_message = do_clone_task_check(phase_context[:clone_task_mor])
 
-    status_message = "completed; post provision work queued" if clone_status
+    status_message = 'completed; post provision work queued' if clone_status
     message = "Clone of #{clone_direction} is #{status_message}"
     _log.info("#{message}")
     update_and_notify_parent(:message => message)
@@ -63,7 +63,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::StateMachine
 
   def autostart_destination
     if get_option(:vm_auto_start)
-      message = "Starting"
+      message = 'Starting'
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       start_with_cache_reset

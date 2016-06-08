@@ -54,12 +54,12 @@ EOS
     end
     let(:subject) { MiqLinux::Utils.parse_openstack_status(text) }
 
-    it "should return Array" do
+    it 'should return Array' do
       is_expected.to be_a Array
     end
 
     # we omit Keystone users section
-    it "should have 9 OpenStack services" do
+    it 'should have 9 OpenStack services' do
       expect(subject.count).to be_equal 9
     end
 
@@ -69,20 +69,20 @@ EOS
       end
     end
 
-    describe "Nova services" do
+    describe 'Nova services' do
       let(:subject) do
         MiqLinux::Utils.parse_openstack_status(text).find { |service| service['name'].include?('Nova') }['services']
       end
 
-      it "should have 6 services total" do
+      it 'should have 6 services total' do
         expect(subject.count).to be_equal 6
       end
 
-      it "should have 4 active services" do
+      it 'should have 4 active services' do
         expect(subject.count { |service| service['active'] }).to be_equal 4
       end
 
-      it "should have 2 inactive services" do
+      it 'should have 2 inactive services' do
         expect(subject.count { |service| !service['active'] }).to be_equal 2
       end
     end

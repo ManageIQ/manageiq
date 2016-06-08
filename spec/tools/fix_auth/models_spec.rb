@@ -1,22 +1,22 @@
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join('tools')
 
-require "fix_auth"
-require "tempfile"
-require "yaml"
+require 'fix_auth'
+require 'tempfile'
+require 'yaml'
 
 describe FixAuth::FixDatabaseYml do
   # TODO: add legacy password tests
 
-  it "updates password" do
-    with_databaseyml("oldpassword") do |databaseyml|
+  it 'updates password' do
+    with_databaseyml('oldpassword') do |databaseyml|
       FixAuth::FixDatabaseYml.file_name = databaseyml
       FixAuth::FixDatabaseYml.run(:hardcode => 'newpassword', :silent => true)
 
-      expect(dbpassword(databaseyml)).to be_encrypted("newpassword")
+      expect(dbpassword(databaseyml)).to be_encrypted('newpassword')
     end
   end
 
-  it "does not add a password" do
+  it 'does not add a password' do
     with_databaseyml do |databaseyml|
       FixAuth::FixDatabaseYml.file_name = databaseyml
       FixAuth::FixDatabaseYml.run(:silent => true)
@@ -28,7 +28,7 @@ describe FixAuth::FixDatabaseYml do
 
   # create a temporary databaseyml file to test
   def with_databaseyml(password = nil)
-    temp = Tempfile.new(["database", ".yml"], Rails.root.join("tmp").to_s)
+    temp = Tempfile.new(['database', '.yml'], Rails.root.join('tmp').to_s)
     temp.write(YAML.dump(settings(password)))
     temp.close
 
@@ -38,15 +38,15 @@ describe FixAuth::FixDatabaseYml do
   end
 
   def dbpassword(filename)
-    YAML.load_file(filename)["production"]["password"]
+    YAML.load_file(filename)['production']['password']
   end
 
   def settings(password)
     settings = {
-      "username" => "root",
-      "host"     => "server.example.com"
+      'username' => 'root',
+      'host'     => 'server.example.com'
     }
-    settings["password"] = password if password
-    {"production" => settings}
+    settings['password'] = password if password
+    {'production' => settings}
   end
 end

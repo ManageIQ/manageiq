@@ -6,11 +6,11 @@ module MiqAeClassHelper
 
   def add_read_only_suffix(node_string, editable, enabled)
     if enabled && !editable
-      suffix = "Locked"
+      suffix = 'Locked'
     elsif editable && !enabled
-      suffix = "Disabled"
+      suffix = 'Disabled'
     else # !rec.enabled && !rec.editable?
-      suffix = "Locked & Disabled"
+      suffix = 'Locked & Disabled'
     end
     "#{node_string} (#{suffix})".html_safe
   end
@@ -37,30 +37,30 @@ module MiqAeClassHelper
                else
                  rec.send(column)
                end
-    rec_name = rec_name.gsub(/\n/, "\\n")
-    rec_name = rec_name.gsub(/\t/, "\\t")
+    rec_name = rec_name.gsub(/\n/, '\\n')
+    rec_name = rec_name.gsub(/\t/, '\\t')
     rec_name = rec_name.tr('"', "'")
     rec_name = CGI.escapeHTML(rec_name)
-    rec_name.gsub(/\\/, "&#92;")
+    rec_name.gsub(/\\/, '&#92;')
   end
 
   def class_prefix(cls)
-    case cls.to_s.split("::").last
-    when "MiqAeClass"
-      "aec"
-    when "MiqAeDomain", "MiqAeNamespace"
+    case cls.to_s.split('::').last
+    when 'MiqAeClass'
+      'aec'
+    when 'MiqAeDomain', 'MiqAeNamespace'
       "aen"
-    when "MiqAeInstance"
-      "aei"
-    when "MiqAeField"
-      "Field"
-    when "MiqAeMethod"
-      "aem"
+    when 'MiqAeInstance'
+      'aei'
+    when 'MiqAeField'
+      'Field'
+    when 'MiqAeMethod'
+      'aem'
     end
   end
 
   def icon_class(cls)
-    cls.to_s.split("::").last.underscore.sub('miq_', 'product product-')
+    cls.to_s.split('::').last.underscore.sub('miq_', 'product product-')
   end
 
   def nonblank(*items)

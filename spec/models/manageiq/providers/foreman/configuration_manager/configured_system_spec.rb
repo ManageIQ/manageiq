@@ -1,23 +1,23 @@
 describe ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem do
   subject { described_class.new }
 
-  describe "#configuration_tags" do
-    let(:cd) { ConfigurationDomain.new(:name => "cd") }
-    let(:cr) { ConfigurationRealm.new(:name => "cr") }
-    let(:cr2) { ConfigurationRealm.new(:name => "cr2") }
+  describe '#configuration_tags' do
+    let(:cd) { ConfigurationDomain.new(:name => 'cd') }
+    let(:cr) { ConfigurationRealm.new(:name => 'cr') }
+    let(:cr2) { ConfigurationRealm.new(:name => 'cr2') }
 
-    it "defaults to no tags" do
+    it 'defaults to no tags' do
       expect(subject.configuration_tags).to eq([])
     end
 
     it { expect(subject.configuration_realm).to eq(nil) }
 
-    it "reads tag helpers" do
+    it 'reads tag helpers' do
       subject.configuration_tags << cd
       subject.configuration_tags << cr
-      subject.configuration_tags << ConfigurationArchitecture.new(:name => "CA")
-      subject.configuration_tags << ConfigurationComputeProfile.new(:name => "CC")
-      subject.configuration_tags << ConfigurationEnvironment.new(:name => "CE")
+      subject.configuration_tags << ConfigurationArchitecture.new(:name => 'CA')
+      subject.configuration_tags << ConfigurationComputeProfile.new(:name => 'CC')
+      subject.configuration_tags << ConfigurationEnvironment.new(:name => 'CE')
 
       expect(subject.configuration_domain).to eq(cd)
       expect(subject.configuration_realm).to eq(cr)

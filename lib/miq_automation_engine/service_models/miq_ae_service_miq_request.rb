@@ -1,6 +1,6 @@
 module MiqAeMethodService
   class MiqAeServiceMiqRequest < MiqAeServiceModelBase
-    require_relative "mixins/miq_ae_service_miq_request_mixin"
+    require_relative 'mixins/miq_ae_service_miq_request_mixin'
     include MiqAeServiceMiqRequestMixin
 
     expose :miq_request_tasks, :association => true

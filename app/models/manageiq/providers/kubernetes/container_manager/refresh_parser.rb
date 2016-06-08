@@ -26,7 +26,7 @@ module ManageIQ::Providers::Kubernetes
       get_component_statuses(inventory)
       get_registries
       get_images
-      EmsRefresh.log_inv_debug_trace(@data, "data:")
+      EmsRefresh.log_inv_debug_trace(@data, 'data:')
       @data
     end
 
@@ -41,21 +41,21 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def get_nodes(inventory)
-      process_collection(inventory["node"], :container_nodes) { |n| parse_node(n) }
+      process_collection(inventory['node'], :container_nodes) { |n| parse_node(n) }
       @data[:container_nodes].each do |cn|
         @data_index.store_path(:container_nodes, :by_name, cn[:name], cn)
       end
     end
 
     def get_services(inventory)
-      process_collection(inventory["service"], :container_services) { |s| parse_service(s) }
+      process_collection(inventory['service'], :container_services) { |s| parse_service(s) }
       @data[:container_services].each do |se|
         @data_index.store_path(:container_services, :by_namespace_and_name, se[:namespace], se[:name], se)
       end
     end
 
     def get_replication_controllers(inventory)
-      process_collection(inventory["replication_controller"],
+      process_collection(inventory['replication_controller'],
                          :container_replicators) do |rc|
         parse_replication_controllers(rc)
       end
@@ -66,7 +66,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def get_pods(inventory)
-      process_collection(inventory["pod"], :container_groups) { |n| parse_pod(n) }
+      process_collection(inventory['pod'], :container_groups) { |n| parse_pod(n) }
       @data[:container_groups].each do |cg|
         @data_index.store_path(:container_groups, :by_namespace_and_name,
                                cg[:namespace], cg[:name], cg)
@@ -74,7 +74,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def get_endpoints(inventory)
-      process_collection(inventory["endpoint"], :container_endpoints) { |n| parse_endpoint(n) }
+      process_collection(inventory['endpoint'], :container_endpoints) { |n| parse_endpoint(n) }
 
       @data[:container_endpoints].each do |ep|
         @data_index.store_path(:container_endpoints, :by_namespace_and_name,
@@ -83,7 +83,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def get_namespaces(inventory)
-      process_collection(inventory["namespace"], :container_projects) { |n| parse_namespace(n) }
+      process_collection(inventory['namespace'], :container_projects) { |n| parse_namespace(n) }
 
       @data[:container_projects].each do |ns|
         @data_index.store_path(:container_projects, :by_name, ns[:name], ns)
@@ -91,14 +91,14 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def get_persistent_volumes(inventory)
-      process_collection(inventory["persistent_volume"], :persistent_volumes) { |n| parse_persistent_volume(n) }
+      process_collection(inventory['persistent_volume'], :persistent_volumes) { |n| parse_persistent_volume(n) }
       @data[:persistent_volumes].each do |pv|
         @data_index.store_path(:persistent_volumes, :by_name, pv[:name], pv)
       end
     end
 
     def get_persistent_volume_claims(inventory)
-      process_collection(inventory["persistent_volume_claim"],
+      process_collection(inventory['persistent_volume_claim'],
                          :persistent_volume_claims) { |n| parse_persistent_volume_claim(n) }
       @data[:persistent_volume_claims].each do |pvc|
         @data_index.store_path(:persistent_volume_claims, :by_namespace_and_name, pvc[:namespace], pvc[:name], pvc)
@@ -106,15 +106,15 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def get_resource_quotas(inventory)
-      process_collection(inventory["resource_quota"], :container_quotas) { |n| parse_quota(n) }
+      process_collection(inventory['resource_quota'], :container_quotas) { |n| parse_quota(n) }
     end
 
     def get_limit_ranges(inventory)
-      process_collection(inventory["limit_range"], :container_limits) { |n| parse_range(n) }
+      process_collection(inventory['limit_range'], :container_limits) { |n| parse_range(n) }
     end
 
     def get_component_statuses(inventory)
-      process_collection(inventory["component_status"],
+      process_collection(inventory['component_status'],
                          :container_component_statuses) do |cs|
         parse_component_status(cs)
       end
@@ -139,7 +139,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def find_host_by_provider_id(provider_id)
-      scheme, instance_uri = provider_id.split("://", 2)
+      scheme, instance_uri = provider_id.split('://', 2)
       prov, name_field = scheme_to_provider_mapping[scheme]
       instance_id = instance_uri.split('/').last
 
@@ -206,7 +206,7 @@ module ManageIQ::Providers::Kubernetes
       end
 
       node_memory = node.status.try(:capacity).try(:memory)
-      node_memory = parse_capacity_field("Node-Memory", node_memory)
+      node_memory = parse_capacity_field('Node-Memory', node_memory)
       node_memory &&= node_memory / 1.megabyte
 
       new_result[:computer_system] = {
@@ -221,7 +221,7 @@ module ManageIQ::Providers::Kubernetes
       }
 
       max_container_groups = node.status.try(:capacity).try(:pods)
-      new_result[:max_container_groups] = parse_capacity_field("Pods", max_container_groups)
+      new_result[:max_container_groups] = parse_capacity_field('Pods', max_container_groups)
 
       new_result[:container_conditions] = parse_conditions(node)
       cross_link_node(new_result)
@@ -270,7 +270,7 @@ module ManageIQ::Providers::Kubernetes
       end
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
-                                                    service.metadata["table"][:namespace])
+                                                    service.metadata['table'][:namespace])
       new_result
     end
 
@@ -289,7 +289,7 @@ module ManageIQ::Providers::Kubernetes
         :container_node        => nil,
         :container_definitions => [],
         :container_replicator  => nil,
-        :build_pod_name        => pod.metadata.try(:annotations).try("openshift.io/build.name".to_sym)
+        :build_pod_name        => pod.metadata.try(:annotations).try('openshift.io/build.name'.to_sym)
       )
 
       unless pod.spec.nodeName.nil?
@@ -297,7 +297,7 @@ module ManageIQ::Providers::Kubernetes
           :container_nodes, :by_name, pod.spec.nodeName)
       end
 
-      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name, pod.metadata["table"][:namespace])
+      new_result[:project] = @data_index.fetch_path(:container_projects, :by_name, pod.metadata['table'][:namespace])
 
       # TODO, map volumes
       # TODO, podIP
@@ -319,7 +319,7 @@ module ManageIQ::Providers::Kubernetes
       #   pod.metadata.annotations.kubernetes.io/created-by
       # but 'annotations' may be nil. The weird attribute name is
       # generated by the JSON unmarshalling.
-      createdby_txt = pod.metadata.annotations.try("kubernetes.io/created-by")
+      createdby_txt = pod.metadata.annotations.try('kubernetes.io/created-by')
       unless createdby_txt.nil?
         # NOTE: the annotation content is JSON, so it needs to be parsed
         createdby = JSON.parse(createdby_txt)
@@ -349,7 +349,7 @@ module ManageIQ::Providers::Kubernetes
             :container_groups, :by_namespace_and_name,
             # namespace is overriden in more_core_extensions and hence needs
             # a non method access
-            address.targetRef["table"][:namespace], address.targetRef.name)
+            address.targetRef['table'][:namespace], address.targetRef.name)
           new_result[:container_groups] << cg unless cg.nil?
         end
       end
@@ -422,7 +422,7 @@ module ManageIQ::Providers::Kubernetes
       new_result[:project] = @data_index.fetch_path(
         :container_projects,
         :by_name,
-        resource_quota.metadata["table"][:namespace])
+        resource_quota.metadata['table'][:namespace])
       new_result[:container_quota_items] = parse_quota_items resource_quota
       new_result
     end
@@ -457,7 +457,7 @@ module ManageIQ::Providers::Kubernetes
       new_result[:project] = @data_index.fetch_path(
         :container_projects,
         :by_name,
-        limit_range.metadata["table"][:namespace])
+        limit_range.metadata['table'][:namespace])
       new_result[:container_limit_items] = parse_range_items limit_range
       new_result
     end
@@ -519,7 +519,7 @@ module ManageIQ::Providers::Kubernetes
       )
 
       new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
-                                                    container_replicator.metadata["table"][:namespace])
+                                                    container_replicator.metadata['table'][:namespace])
       new_result
     end
 
@@ -537,7 +537,7 @@ module ManageIQ::Providers::Kubernetes
         :message   => component_condition.message,
         # workaround for handling Kubernetes issue: "nil" string is returned in component status error
         # https://github.com/kubernetes/kubernetes/issues/16721
-        :error     => (component_condition.error unless component_condition.error == "nil")
+        :error     => (component_condition.error unless component_condition.error == 'nil')
       )
 
       new_result
@@ -563,7 +563,7 @@ module ManageIQ::Providers::Kubernetes
           :section => section,
           :name    => key.to_s,
           :value   => value,
-          :source  => "kubernetes"
+          :source  => 'kubernetes'
         }
         result << custom_attr
       end
@@ -706,7 +706,7 @@ module ManageIQ::Providers::Kubernetes
         :name             => item.metadata.name,
         # namespace is overriden in more_core_extensions and hence needs
         # a non method access
-        :namespace        => item.metadata["table"][:namespace],
+        :namespace        => item.metadata['table'][:namespace],
         :ems_created_on   => item.metadata.creationTimestamp,
         :resource_version => item.metadata.resourceVersion
       }

@@ -6,20 +6,20 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
   def tree_init_options(_tree_name)
     {
       :open_all => false,
-      :leaf     => "VmdbTable",
+      :leaf     => 'VmdbTable',
     }
   end
 
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "vmdb_",
+      :id_prefix => 'vmdb_',
       :autoload  => true
     )
   end
 
   def root_options
-    [t = _("VMDB"), t, :miq_database]
+    [t = _('VMDB'), t, :miq_database]
   end
 
   # Get root nodes count/array for explorer tree
@@ -35,12 +35,12 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
 
   # Handle custom tree nodes (object is a Hash)
   def x_get_tree_custom_kids(object, count_only, _options)
-    rec = VmdbTableEvm.find_by_id(from_cid(object[:id].split("|").last.split('-').last))
+    rec = VmdbTableEvm.find_by_id(from_cid(object[:id].split('|').last.split('-').last))
     indexes = []
     rec.vmdb_indexes.each do |ind|
-      indexes.push(ind) if ind.vmdb_table.type == "VmdbTableEvm"
+      indexes.push(ind) if ind.vmdb_table.type == 'VmdbTableEvm'
     end
-    count_only_or_objects(count_only, indexes, "name")
+    count_only_or_objects(count_only, indexes, 'name')
   end
 
   def x_get_tree_vmdb_table_kids(object, count_only)
@@ -52,9 +52,9 @@ class TreeBuilderOpsVmdb < TreeBuilderOps
       [
         {
           :id            => "#{to_cid(object.id.to_s)}",
-          :text          => _("Indexes"),
-          :image         => "folder",
-          :tip           => _("Indexes"),
+          :text          => _('Indexes'),
+          :image         => 'folder',
+          :tip           => _('Indexes'),
           :load_children => true
         }
       ]

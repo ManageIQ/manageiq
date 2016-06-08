@@ -1,9 +1,9 @@
 class Network < ApplicationRecord
   belongs_to :hardware
-  belongs_to :guest_device, :foreign_key => "device_id", :inverse_of => :network
+  belongs_to :guest_device, :foreign_key => 'device_id', :inverse_of => :network
 
   def self.add_elements(vm, xmlNode)
-    add_missing_elements(vm, xmlNode, "system/networks")
+    add_missing_elements(vm, xmlNode, 'system/networks')
   end
 
   def self.add_missing_elements(parent, xmlNode, findPath)

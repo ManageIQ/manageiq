@@ -6,16 +6,16 @@ class ApplicationHelper::Toolbar::OntapFileSharesCenter < ApplicationHelper::Too
       t = N_('Policy'),
       t,
       :enabled => false,
-      :onwhen  => "1+",
+      :onwhen  => '1+',
       :items   => [
         button(
           :ontap_file_share_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit tags for the selected File Shares'),
           N_('Edit Tags'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])

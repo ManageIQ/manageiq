@@ -3,15 +3,15 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
 
   def self.calculate_power_state(raw_power_state)
     case raw_power_state
-    when "Running"         then "on"
-    when "Paused", "Saved" then "suspended"
-    when "PowerOff"        then "off"
+    when 'Running'         then 'on'
+    when 'Paused', 'Saved' then "suspended"
+    when 'PowerOff'        then 'off'
     else                        super
     end
   end
 
   def validate_migrate
-    validate_unsupported("Migrate")
+    validate_unsupported('Migrate')
   end
 
   def proxies4job(_job = nil)
@@ -30,6 +30,6 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
   end
 
   def validate_publish
-    validate_unsupported("Publish VM")
+    validate_unsupported('Publish VM')
   end
 end

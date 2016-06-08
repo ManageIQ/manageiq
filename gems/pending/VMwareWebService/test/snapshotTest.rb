@@ -16,7 +16,7 @@ $vim_log.add 'err_console'
 
 $stdout.sync = true
 
-TARGET_VM = "AAA2206"
+TARGET_VM = 'AAA2206'
 vmMor = nil
 
 begin
@@ -26,23 +26,23 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   puts "Has EvmSnapshot: #{miqVm.hasSnapshot?('EvmSnapshot')}"
   miqVm.removeAllSnapshots
   exit
 
   puts
-  puts "*** START Snapshot info from vim.virtualMachines"
+  puts '*** START Snapshot info from vim.virtualMachines'
   vim.dumpObj(miqVm.vmh['snapshot'])
-  puts "*** END Snapshot info from vim.virtualMachines"
+  puts '*** END Snapshot info from vim.virtualMachines'
   puts
 
   ssInfo = miqVm.snapshotInfo
 
   if ssInfo
     # vim.dumpObj(ssInfo)
-    hasCh = miqVm.hasSnapshot?("Consolidate Helper", true)
+    hasCh = miqVm.hasSnapshot?('Consolidate Helper', true)
     puts "Has Consolidate Helper = #{hasCh}"
     # exit
 
@@ -51,14 +51,14 @@ begin
     puts
     puts "curSnapshot = #{curSnapshot}"
     puts "curSnapshot name = #{ssHash[ssInfo['currentSnapshot'].to_s]['name']}"
-    puts "++++++++++++++ snapshot props from tree +++++++++++++++++++++++++++"
+    puts '++++++++++++++ snapshot props from tree +++++++++++++++++++++++++++'
     vim.dumpObj(ssInfo)
-    puts "+++++++++++++++ end snapshot props from tree ++++++++++++++++++++++++++"
+    puts '+++++++++++++++ end snapshot props from tree ++++++++++++++++++++++++++'
   else
-    puts "No snapshots found"
+    puts 'No snapshots found'
   end
 
-  snMor = miqVm.createSnapshot("rpoTest", "test snapshot", false, "false")
+  snMor = miqVm.createSnapshot('rpoTest', 'test snapshot', false, 'false')
   puts "snMor = #{snMor}"
 
   miqVm.removeSnapshot(snMor)

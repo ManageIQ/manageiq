@@ -6,7 +6,7 @@ module MiqProvisionQuotaMixin
   def check_quota(quota_type = :vms_by_owner, options = {})
     quota_method = "quota_#{quota_type}"
     unless respond_to?(quota_method)
-      raise _("check_quota called with an invalid provisioning quota method <%{type}>") % {:type => quota_type}
+      raise _('check_quota called with an invalid provisioning quota method <%{type}>') % {:type => quota_type}
     end
     send(quota_method, options)
   end
@@ -82,7 +82,7 @@ module MiqProvisionQuotaMixin
     vms = []
     prov_owner = get_owner
     unless prov_owner.nil?
-      vms = Vm.where("miq_group_id = ?", prov_owner.current_group_id).includes(:hardware => :disks)
+      vms = Vm.where('miq_group_id = ?', prov_owner.current_group_id).includes(:hardware => :disks)
       vms.reject! do |vm|
         result = vm.template? || vm.host_id.nil?
         # if result is already true we can skip the following checks
@@ -117,15 +117,15 @@ module MiqProvisionQuotaMixin
     vms = []
     prov_owner = get_owner
     unless prov_owner.nil?
-      cond_str, cond_args  = "evm_owner_id = ? AND template = ? AND host_id is not NULL", [prov_owner.id, false]
+      cond_str, cond_args  = 'evm_owner_id = ? AND template = ? AND host_id is not NULL', [prov_owner.id, false]
 
       # Default return includes retired VMs that are still on a host
       if options[:retired_vms_only] == true
-        cond_str += " AND retired = ?"
+        cond_str += ' AND retired = ?'
         cond_args << true
       elsif options[:include_retired_vms] == false
         # Skip retired VMs
-        cond_str += " AND (retired is NULL OR retired = ?)"
+        cond_str += ' AND (retired is NULL OR retired = ?)'
         cond_args << false
       end
 
@@ -179,7 +179,7 @@ module MiqProvisionQuotaMixin
     )
 
     # Make sure we skip the current MiqProvisionRequest in the calculation.
-    skip_id = self.class.name == "MiqProvisionRequest" ? id : miq_provision_request.id
+    skip_id = self.class.name == 'MiqProvisionRequest' ? id : miq_provision_request.id
     load_ids = queued_requests.pluck(:instance_id)
     load_ids.delete(skip_id)
     provisions = MiqProvisionRequest.where(:id => load_ids).to_a
@@ -220,10 +220,10 @@ module MiqProvisionQuotaMixin
 
   def quota_find_prov_requests(_options)
     today_time_range = quota_get_time_range
-    requests = MiqRequest.where("type = ? and approval_state != ? and (created_on >= ? and created_on < ?)",
+    requests = MiqRequest.where('type = ? and approval_state != ? and (created_on >= ? and created_on < ?)',
                                 MiqProvisionRequest.name, 'denied', *today_time_range)
     # Make sure we skip the current MiqProvisionRequest in the calculation.
-    skip_id = self.class.name == "MiqProvisionRequest" ? id : miq_provision_request.id
+    skip_id = self.class.name == 'MiqProvisionRequest' ? id : miq_provision_request.id
     requests.collect { |request| request unless request.id == skip_id }.compact
   end
 
@@ -274,14 +274,14 @@ module MiqProvisionQuotaMixin
     prov_ids = []
     MiqQueue
       .where(:method_name => 'deliver', :state => %w(ready dequeue), :class_name => 'MiqAeEngine')
-      .where("task_id like ?", '%miq_provision_%')
+      .where('task_id like ?', '%miq_provision_%')
       .each do |q|
         if q.args
           args = q.args.first
           prov_ids << args[:object_id] if args[:object_type] == 'MiqProvision' && !args[:object_id].blank?
         end
       end
-    prov_req_ids += MiqProvision.where(:id => prov_ids).pluck("miq_request_id")
+    prov_req_ids += MiqProvision.where(:id => prov_ids).pluck('miq_request_id')
 
     MiqProvisionRequest.where(:id => prov_req_ids.compact.uniq)
   end

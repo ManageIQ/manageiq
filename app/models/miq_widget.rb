@@ -30,7 +30,7 @@ class MiqWidget < ApplicationRecord
   include YAMLImportExportMixin
   acts_as_miq_set_member
 
-  WIDGET_DIR =  File.expand_path(File.join(Rails.root, "product/dashboard/widgets"))
+  WIDGET_DIR =  File.expand_path(File.join(Rails.root, 'product/dashboard/widgets'))
 
   before_destroy :destroy_schedule
 
@@ -65,14 +65,14 @@ class MiqWidget < ApplicationRecord
 
   def status
     if miq_task.nil?
-      return "None" if last_run_on.nil?
-      return "Complete"
+      return 'None' if last_run_on.nil?
+      return 'Complete'
     end
     miq_task.human_status
   end
 
   def status_message
-    miq_task.nil? ? "Unknown" : miq_task.message
+    miq_task.nil? ? 'Unknown' : miq_task.message
   end
 
   # Returns status, last_run_on, message
@@ -81,17 +81,17 @@ class MiqWidget < ApplicationRecord
     miq_task = self.miq_task
 
     if miq_task.nil?
-      return "None" if last_run_on.nil?
-      return "Complete", last_run_on
+      return 'None' if last_run_on.nil?
+      return 'Complete', last_run_on
     end
 
     status =  case miq_task.state
               when MiqTask::STATE_QUEUED
-                "Queued"
+                'Queued'
               when MiqTask::STATE_FINISHED
-                "Complete"
+                'Complete'
               when MiqTask::STATE_ACTIVE
-                "Running"
+                'Running'
               else
                 raise "Unknown state=#{miq_task.state.inspect}"
               end
@@ -100,13 +100,13 @@ class MiqWidget < ApplicationRecord
   end
 
   def create_task(num_targets, userid = User.current_userid)
-    userid ||= "system"
+    userid ||= 'system'
     context_data = {:targets  => num_targets, :complete => 0}
     miq_task     = MiqTask.create(
       :name         => "Generate Widget: '#{title}'",
       :state        => MiqTask::STATE_QUEUED,
       :status       => MiqTask::STATUS_OK,
-      :message      => "Task has been queued",
+      :message      => 'Task has been queued',
       :pct_complete => 0,
       :userid       => userid,
       :context_data => context_data
@@ -126,20 +126,20 @@ class MiqWidget < ApplicationRecord
 
   def timeout_stalled_task
     return unless miq_task && miq_task.state != MiqTask::STATE_FINISHED &&
-                  !MiqQueue.where(:method_name => "generate_content",
+                  !MiqQueue.where(:method_name => 'generate_content',
                                   :class_name  => self.class.name,
                                   :instance_id => id).any?(&:unfinished?)
-    miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_TIMEOUT, "Timed out stalled task.")
+    miq_task.update_status(MiqTask::STATE_FINISHED, MiqTask::STATUS_TIMEOUT, 'Timed out stalled task.')
   end
 
   def queue_generate_content_for_users_or_group(*args)
     MiqQueue.put_or_update(
-      :queue_name  => "reporting",
-      :role        => "reporting",
+      :queue_name  => 'reporting',
+      :role        => 'reporting',
       :class_name  => self.class.to_s,
       :instance_id => id,
       :msg_timeout => 3600,
-      :method_name => "generate_content",
+      :method_name => 'generate_content',
       :args        => [*args]
     ) do |msg, q_hash|
       if msg.nil?
@@ -230,7 +230,7 @@ class MiqWidget < ApplicationRecord
       return
     end
 
-    if VMDB::Config.new("vmdb").config[:product][:report_sync]
+    if VMDB::Config.new('vmdb').config[:product][:report_sync]
       group_hash.each do |g, u|
         options = generate_content_options(g, u)
         generate_content(*options)
@@ -301,7 +301,7 @@ class MiqWidget < ApplicationRecord
     timezone = user.get_timezone
     if timezone.nil?
       _log.warn "#{log_prefix} No timezone provided for #{userid}! UTC will be used."
-      timezone = "UTC"
+      timezone = 'UTC'
     end
 
     begin
@@ -350,7 +350,7 @@ class MiqWidget < ApplicationRecord
     userid_for_result = "widget_id_#{id}|#{name}|schedule"
     MiqReportResult.purge_for_user(:userid => userid_for_result)
 
-    rpt.build_create_results(:userid => userid_for_result, :report_source => "Generated for widget", :timezone => timezone)
+    rpt.build_create_results(:userid => userid_for_result, :report_source => 'Generated for widget', :timezone => timezone)
   end
 
   def find_or_build_contents_for_user(group, user, timezone = nil)
@@ -365,14 +365,14 @@ class MiqWidget < ApplicationRecord
 
   # TODO: group/user support
   def create_initial_content_for_user(user, group = nil)
-    return unless contents_for_user(user).blank? && content_type != "menu"  # Menu widgets have no content
+    return unless contents_for_user(user).blank? && content_type != 'menu'  # Menu widgets have no content
 
     user    = self.class.get_user(user)
     group   = self.class.get_group(group)
     group ||= user.current_group
 
     options = generate_content_options(group, [user])
-    if VMDB::Config.new("vmdb").config[:product][:report_sync]
+    if VMDB::Config.new('vmdb').config[:product][:report_sync]
       generate_content(*options)
     else
       timeout_stalled_task
@@ -452,11 +452,11 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.available_for_all_roles
-    all.select { |w| w.visibility.key?(:roles) && w.visibility[:roles].include?("_ALL_") }
+    all.select { |w| w.visibility.key?(:roles) && w.visibility[:roles].include?('_ALL_') }
   end
 
   def has_visibility?(key, value)
-    visibility.kind_of?(Hash) && visibility.key?(key) && (visibility[key].include?(value) || visibility[key].include?("_ALL_"))
+    visibility.kind_of?(Hash) && visibility.key?(key) && (visibility[key].include?(value) || visibility[key].include?('_ALL_'))
   end
 
   def self.get_user(user)
@@ -486,31 +486,31 @@ class MiqWidget < ApplicationRecord
   end
 
   def self.sync_from_dir
-    Dir.glob(File.join(WIDGET_DIR, "*.yaml")).sort.each { |f| sync_from_file(f) }
+    Dir.glob(File.join(WIDGET_DIR, '*.yaml')).sort.each { |f| sync_from_file(f) }
   end
 
   def self.sync_from_file(filename)
     attrs = YAML.load_file(filename)
-    sync_from_hash(attrs.merge("filename" => filename))
+    sync_from_hash(attrs.merge('filename' => filename))
   end
 
   def self.sync_from_hash(attrs)
-    attrs.delete "id"
-    filename = attrs.delete("filename")
-    rname = attrs.delete("resource_name")
-    if rname && attrs["resource_type"]
-      klass = attrs.delete("resource_type").constantize
-      attrs["resource"] = klass.find_by_name(rname)
-      raise _("Unable to find %{class} with name %{name}") % {:class => klass, :name => rname} unless attrs["resource"]
+    attrs.delete 'id'
+    filename = attrs.delete('filename')
+    rname = attrs.delete('resource_name')
+    if rname && attrs['resource_type']
+      klass = attrs.delete('resource_type').constantize
+      attrs['resource'] = klass.find_by_name(rname)
+      raise _('Unable to find %{class} with name %{name}') % {:class => klass, :name => rname} unless attrs['resource']
     end
 
-    schedule_info = attrs.delete("miq_schedule_options")
+    schedule_info = attrs.delete('miq_schedule_options')
 
-    widget = find_by_description(attrs["description"])
+    widget = find_by_description(attrs['description'])
     if widget
       if filename && widget.updated_at.utc < File.mtime(filename).utc
         $log.info("Widget: [#{widget.description}] file has been updated on disk, synchronizing with model")
-        ["enabled", "visibility"].each { |a| attrs.delete(a) } # Don't updates these because they may have been modofoed by the end user.
+        ['enabled', 'visibility'].each { |a| attrs.delete(a) } # Don't updates these because they may have been modofoed by the end user.
         widget.updated_at = Time.now.utc
         widget.update_attributes(attrs)
         widget.save!
@@ -543,11 +543,11 @@ class MiqWidget < ApplicationRecord
     server_tz = MiqServer.my_server.server_timezone
     value     = schedule_info.fetch_path(:run_at, :interval, :value)
     unit      = schedule_info.fetch_path(:run_at, :interval, :unit)
-    if unit == "daily"
+    if unit == 'daily'
       sched_time = (Time.now.in_time_zone(server_tz) + 1.day).beginning_of_day
-    elsif unit == "hourly"
+    elsif unit == 'hourly'
       ts = (Time.now.utc + 1.hour).iso8601
-      ts[14..18] = "00:00"
+      ts[14..18] = '00:00'
       sched_time = ts.to_time(:utc).in_time_zone(server_tz)
     else
       raise _("Unsupported interval '%{interval}'") % {:interval => interval}
@@ -556,8 +556,8 @@ class MiqWidget < ApplicationRecord
     sched = MiqSchedule.create!(
       :name         => title,
       :description  => description,
-      :sched_action => {:method => "generate_widget"},
-      :filter       => MiqExpression.new("=" => {"field" => "MiqWidget.id", "value" => id}),
+      :sched_action => {:method => 'generate_widget'},
+      :filter       => MiqExpression.new('=' => {'field' => 'MiqWidget.id', 'value' => id}),
       :towhat       => self.class.name,
       :run_at       => {
         :interval   => {:value => value, :unit  => unit},

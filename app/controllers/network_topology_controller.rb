@@ -23,7 +23,7 @@ class NetworkTopologyController < ApplicationController
   private
 
   def get_session_data
-    @layout = "network_topology"
+    @layout = 'network_topology'
   end
 
   def set_session_data

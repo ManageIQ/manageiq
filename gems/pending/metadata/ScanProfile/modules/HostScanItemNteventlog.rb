@@ -5,7 +5,7 @@ require 'digest/md5'
 module HostScanItemNteventlog
   def parse_data(vim, data, &_blk)
     d = scan_definition
-    filter = d["content"][0][:filter]
+    filter = d['content'][0][:filter]
     if filter.nil?
       $log.warn("MIQ(#{self.class.name}.parse_data) Unable to find hostd filter in scan profile [host default]")
       return
@@ -51,7 +51,7 @@ module HostScanItemNteventlog
       end
 
       level = parts[level]
-      level = "warn" if level == "warning"
+      level = 'warn' if level == 'warning'
       next if EventLogFilter.filter_by_level?(level, filter)
 
       source = parts[source_start..source_end].join(' ')

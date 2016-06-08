@@ -77,7 +77,7 @@ class VimString < String
   # most strings are MORs, and this makes it easier to set the
   # vimType of the MOR.
   #
-  def initialize(val = "", vimType = nil, xsiType = nil)
+  def initialize(val = '', vimType = nil, xsiType = nil)
     self.xsiType = xsiType
     self.vimType = vimType
     super(val)
@@ -100,8 +100,8 @@ class VimClass
   @base_class      = Hash.new { |hash, key| hash[key] = key }
 
   # Add VmwareDistributedVirtualSwitch as a child class of DistributedVirtualSwitch
-  @class_hierarchy["DistributedVirtualSwitch"]  << "VmwareDistributedVirtualSwitch"
-  @base_class["VmwareDistributedVirtualSwitch"] =  "DistributedVirtualSwitch"
+  @class_hierarchy['DistributedVirtualSwitch']  << 'VmwareDistributedVirtualSwitch'
+  @base_class['VmwareDistributedVirtualSwitch'] =  'DistributedVirtualSwitch'
 
   def self.child_classes(vim_type)
     @class_hierarchy[vim_type]

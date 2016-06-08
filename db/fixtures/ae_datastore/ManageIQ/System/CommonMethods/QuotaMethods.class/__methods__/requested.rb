@@ -43,7 +43,7 @@ def service_prov_option(prov_option, options_array = [])
     if @service_template.service_type == 'composite'
       composite_service_options_value(child_service_resource, prov_option, options_array)
     else
-      next if @service_template.prov_type.starts_with?("generic")
+      next if @service_template.prov_type.starts_with?('generic')
       service_prov_option_value(prov_option, child_service_resource.resource, options_array)
     end
   end
@@ -254,12 +254,12 @@ def error(type)
 end
 
 request_info
-error("request") if @miq_request.nil?
+error('request') if @miq_request.nil?
 
 options_hash = service_options if @service
 
 if @service && @service_template.prov_type == 'generic'
-  $evm.log(:info, "Generic Service Item.  No quota check being done.")
+  $evm.log(:info, 'Generic Service Item.  No quota check being done.')
   $evm.root['ae_result'] = 'ok'
   $evm.root['ae_next_state'] = 'finished'
   exit MIQ_OK

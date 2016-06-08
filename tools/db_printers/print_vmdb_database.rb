@@ -7,9 +7,9 @@ def print_records(recs, indent = '')
 end
 
 db = VmdbDatabase.includes(:vmdb_tables => :vmdb_indexes).first
-puts "VmdbDatabase"
-print_records(db.vmdb_tables.where(:table_type => "vmdb"))
+puts 'VmdbDatabase'
+print_records(db.vmdb_tables.where(:table_type => 'vmdb'))
 
 puts
-puts "Toast Tables"
-print_records(db.vmdb_tables.where(:table_type => "text"), '  ')
+puts 'Toast Tables'
+print_records(db.vmdb_tables.where(:table_type => 'text'), '  ')

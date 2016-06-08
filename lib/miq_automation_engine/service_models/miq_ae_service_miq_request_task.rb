@@ -1,6 +1,6 @@
 module MiqAeMethodService
   class MiqAeServiceMiqRequestTask < MiqAeServiceModelBase
-    require_relative "mixins/miq_ae_service_miq_request_mixin"
+    require_relative 'mixins/miq_ae_service_miq_request_mixin'
     include MiqAeServiceMiqRequestMixin
 
     expose :execute, :method => :execute_queue, :override_return => true
@@ -21,7 +21,7 @@ module MiqAeMethodService
     end
 
     def status
-      $miq_ae_logger.warn("[DEPRECATION] status method is deprecated.  Please use statemachine_task_status instead.")
+      $miq_ae_logger.warn('[DEPRECATION] status method is deprecated.  Please use statemachine_task_status instead.')
       statemachine_task_status
     end
   end

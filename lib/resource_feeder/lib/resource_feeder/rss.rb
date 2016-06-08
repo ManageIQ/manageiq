@@ -21,14 +21,14 @@ module ResourceFeeder
         klass      = options[:class] || resources.first.class
         new_record = klass.new
       else
-        options[:feed] = {:title => "Empty", :link => "http://example.com"}
+        options[:feed] = {:title => 'Empty', :link => 'http://example.com'}
       end
       use_content_encoded = options[:item].key?(:content_encoded)
 
       options[:feed][:title] ||= klass.name.pluralize
       options[:feed][:link] ||= SimplyHelpful::PolymorphicRoutes.polymorphic_url(new_record, options[:url_writer])
-      options[:feed][:language] ||= "en-us"
-      options[:feed][:ttl] ||= "40"
+      options[:feed][:language] ||= 'en-us'
+      options[:feed][:ttl] ||= '40'
 
       options[:item][:title] ||= [:title, :subject, :headline, :name]
       options[:item][:description] ||= [:description, :body, :content]
@@ -37,7 +37,7 @@ module ResourceFeeder
       resource_link = ->(r) { SimplyHelpful::PolymorphicRoutes.polymorphic_url(r, options[:url_writer]) }
 
       rss_root_attributes = {:version => 2.0}
-      rss_root_attributes.merge!("xmlns:content" => "http://purl.org/rss/1.0/modules/content/") if use_content_encoded
+      rss_root_attributes.merge!('xmlns:content' => 'http://purl.org/rss/1.0/modules/content/') if use_content_encoded
 
       xml.instruct!
 

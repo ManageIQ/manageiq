@@ -1,5 +1,5 @@
 module MiqDumpObj
-  def initialize(pref = "", excludeIv = {})
+  def initialize(pref = '', excludeIv = {})
     @prefix = pref
     @excludeIv = excludeIv
   end

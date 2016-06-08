@@ -1,4 +1,4 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VixDiskLib")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'VixDiskLib')
 require 'yaml'
 
 module MiqServer::ServerSmartProxy
@@ -12,7 +12,7 @@ module MiqServer::ServerSmartProxy
     # Called from VM scan job as well as scan_sync_vm
 
     def use_broker_for_embedded_proxy?(type = nil)
-      cores_settings = MiqServer.my_server.get_config("vmdb").config[:coresident_miqproxy].dup
+      cores_settings = MiqServer.my_server.get_config('vmdb').config[:coresident_miqproxy].dup
       result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && cores_settings[:use_vim_broker]
 
       # Check for a specific type (host/ems) if passed
@@ -39,38 +39,38 @@ module MiqServer::ServerSmartProxy
   end
 
   def vm_scan_host_affinity?
-    with_relationship_type("vm_scan_affinity") { has_children? }
+    with_relationship_type('vm_scan_affinity') { has_children? }
   end
 
   def vm_scan_host_affinity=(hosts)
     hosts = [hosts].flatten
-    with_relationship_type("vm_scan_affinity") do
+    with_relationship_type('vm_scan_affinity') do
       replace_children(hosts)
     end
   end
 
   def vm_scan_host_affinity
-    with_relationship_type("vm_scan_affinity") { children }
+    with_relationship_type('vm_scan_affinity') { children }
   end
 
   def vm_scan_storage_affinity?
-    with_relationship_type("vm_scan_storage_affinity") { has_children? }
+    with_relationship_type('vm_scan_storage_affinity') { has_children? }
   end
 
   def vm_scan_storage_affinity=(storages)
     storages = [storages].flatten
-    with_relationship_type("vm_scan_storage_affinity") do
+    with_relationship_type('vm_scan_storage_affinity') do
       replace_children(storages)
     end
   end
 
   def vm_scan_storage_affinity
-    with_relationship_type("vm_scan_storage_affinity") { children }
+    with_relationship_type('vm_scan_storage_affinity') { children }
   end
 
   def queue_call(ost)
     case ost.method_name
-    when "scan_metadata", "sync_metadata"
+    when 'scan_metadata', 'sync_metadata'
       worker_setting = MiqSmartProxyWorker.worker_settings
       #
       # TODO: until we get location/offset read capability for OpenStack
@@ -126,7 +126,7 @@ module MiqServer::ServerSmartProxy
     rescue Exception => err
       _log.error err.to_s
       _log.debug err.backtrace.join("\n")
-      job.signal(:abort_retry, err.to_s, "error", true)
+      job.signal(:abort_retry, err.to_s, 'error', true)
       return
     end
   end
@@ -142,7 +142,7 @@ module MiqServer::ServerSmartProxy
     rescue Exception => err
       _log.error err.to_s
       _log.debug err.backtrace.join("\n")
-      job.signal(:abort_retry, err.to_s, "error", true)
+      job.signal(:abort_retry, err.to_s, 'error', true)
       return
     end
   end

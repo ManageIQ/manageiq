@@ -1,5 +1,5 @@
 describe Storage do
-  it "#scan_watchdog_interval" do
+  it '#scan_watchdog_interval' do
     allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.scan_watchdog_interval).to eq(Storage::DEFAULT_WATCHDOG_INTERVAL)
 
@@ -7,7 +7,7 @@ describe Storage do
     expect(Storage.scan_watchdog_interval).to eq(5.minutes)
   end
 
-  it "#max_parallel_storage_scans_per_host" do
+  it '#max_parallel_storage_scans_per_host' do
     allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.max_parallel_storage_scans_per_host).to eq(Storage::DEFAULT_MAX_PARALLEL_SCANS_PER_HOST)
 
@@ -15,7 +15,7 @@ describe Storage do
     expect(Storage.max_parallel_storage_scans_per_host).to eq(3)
   end
 
-  it "#max_qitems_per_scan_request" do
+  it '#max_qitems_per_scan_request' do
     allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.max_qitems_per_scan_request).to eq(Storage::DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST)
 
@@ -23,7 +23,7 @@ describe Storage do
     expect(Storage.max_qitems_per_scan_request).to eq(3)
   end
 
-  it "#scan_collection_timeout" do
+  it '#scan_collection_timeout' do
     allow(Storage).to receive_messages(:vmdb_storage_config => {})
     expect(Storage.scan_collection_timeout).to be_nil
 
@@ -31,22 +31,22 @@ describe Storage do
     expect(Storage.scan_collection_timeout).to eq(3)
   end
 
-  it "#scan_watchdog_deliver_on" do
+  it '#scan_watchdog_deliver_on' do
     scan_watchdog_interval = 7.minutes
     allow(Storage).to receive_messages(:scan_watchdog_interval => scan_watchdog_interval)
-    start = Time.parse("Sun March 10 01:00:00 UTC 2010")
+    start = Time.parse('Sun March 10 01:00:00 UTC 2010')
     Timecop.travel(start) do
       expect(Storage.scan_watchdog_deliver_on - (start + scan_watchdog_interval)).to be_within(0.001).of(0.0)
     end
   end
 
-  it "#vmdb_storage_config" do
+  it '#vmdb_storage_config' do
     config = {:foo => 1, :bar => 2}
-    stub_server_configuration(config, "storage")
+    stub_server_configuration(config, 'storage')
     expect(Storage.vmdb_storage_config).to eq(config)
   end
 
-  it "#scan_complete?" do
+  it '#scan_complete?' do
     miq_task = FactoryGirl.create(:miq_task)
     miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
@@ -57,38 +57,38 @@ describe Storage do
     expect(Storage.scan_complete?(miq_task)).to be_truthy
   end
 
-  it "#scan_complete_message" do
+  it '#scan_complete_message' do
     miq_task = FactoryGirl.create(:miq_task)
     miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
-    expect(Storage.scan_complete_message(miq_task)).to eq("SmartState Analysis for 3 storages complete")
+    expect(Storage.scan_complete_message(miq_task)).to eq('SmartState Analysis for 3 storages complete')
   end
 
-  it "#scan_update_message" do
+  it '#scan_update_message' do
     miq_task = FactoryGirl.create(:miq_task)
     miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
     miq_task.context_data[:targets]  = [123, 456, 789]
     miq_task.context_data[:complete] = [123]
     miq_task.context_data[:pending][789] = 98765
-    expect(Storage.scan_update_message(miq_task)).to eq("1 Storage Scans Pending; 1 of 3 Scans Complete")
+    expect(Storage.scan_update_message(miq_task)).to eq('1 Storage Scans Pending; 1 of 3 Scans Complete')
   end
 
-  context "with multiple storages" do
+  context 'with multiple storages' do
     before(:each) do
       @server = EvmSpecHelper.local_miq_server
       @zone   = @server.zone
 
       @zone2     = FactoryGirl.create(:zone, :name => 'Bedrock')
-      @ems1      = FactoryGirl.create(:ems_vmware, :name => "test_vcenter1",     :zone => @zone)
-      @ems2      = FactoryGirl.create(:ems_vmware, :name => "test_vcenter2",     :zone => @zone2)
-      @storage1  = FactoryGirl.create(:storage,               :name => "test_storage_vmfs", :store_type => "VMFS")
-      @storage2  = FactoryGirl.create(:storage,               :name => "test_storage_nfs",  :store_type => "NFS")
-      @storage3  = FactoryGirl.create(:storage,               :name => "test_storage_foo",  :store_type => "FOO")
-      @host1     = FactoryGirl.create(:host, :name => "test_host1", :hostname => "test_host1", :state => 'on', :ems_id => @ems1.id, :storages => [@storage1, @storage3])
-      @host2     = FactoryGirl.create(:host, :name => "test_host2", :hostname => "test_host2", :state => 'on', :ems_id => @ems2.id, :storages => [@storage2, @storage3])
+      @ems1      = FactoryGirl.create(:ems_vmware, :name => 'test_vcenter1',     :zone => @zone)
+      @ems2      = FactoryGirl.create(:ems_vmware, :name => 'test_vcenter2',     :zone => @zone2)
+      @storage1  = FactoryGirl.create(:storage,               :name => 'test_storage_vmfs', :store_type => 'VMFS')
+      @storage2  = FactoryGirl.create(:storage,               :name => 'test_storage_nfs',  :store_type => 'NFS')
+      @storage3  = FactoryGirl.create(:storage,               :name => 'test_storage_foo',  :store_type => 'FOO')
+      @host1     = FactoryGirl.create(:host, :name => 'test_host1', :hostname => 'test_host1', :state => 'on', :ems_id => @ems1.id, :storages => [@storage1, @storage3])
+      @host2     = FactoryGirl.create(:host, :name => 'test_host2', :hostname => 'test_host2', :state => 'on', :ems_id => @ems2.id, :storages => [@storage2, @storage3])
     end
 
-    it "#active_hosts_in_zone" do
+    it '#active_hosts_in_zone' do
       expect(@storage1.active_hosts_in_zone(@zone.name)).to eq([@host1])
       expect(@storage1.active_hosts_in_zone(@zone2.name)).to eq([])
       expect(@storage2.active_hosts_in_zone(@zone.name)).to eq([])
@@ -97,19 +97,19 @@ describe Storage do
       expect(@storage3.active_hosts_in_zone(@zone2.name)).to eq([@host2])
     end
 
-    it "#active_hosts" do
+    it '#active_hosts' do
       expect(@storage1.active_hosts).to eq([@host1])
       expect(@storage2.active_hosts).to eq([@host2])
       expect(@storage3.active_hosts).to match_array [@host1, @host2]
     end
 
-    it "#my_zone" do
+    it '#my_zone' do
       expect(@storage1.my_zone).to eq(@zone.name)
       expect(@storage2.my_zone).to eq(@zone2.name)
       expect(@storage3.my_zone).to eq(@zone.name)
     end
 
-    it "#scan_queue_item" do
+    it '#scan_queue_item' do
       scan_collection_timeout = 456
       allow(Storage).to receive_messages(:scan_collection_timeout => scan_collection_timeout)
 
@@ -126,7 +126,7 @@ describe Storage do
       expect(qitem.miq_callback).to eq({:class_name => @storage1.class.name, :instance_id => @storage1.id, :method_name => :scan_complete_callback, :args => [miq_task.id]})
     end
 
-    it "#scan_storages_unprocessed" do
+    it '#scan_storages_unprocessed' do
       miq_task = FactoryGirl.create(:miq_task)
       miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
       miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
@@ -147,7 +147,7 @@ describe Storage do
       expect(Storage.scan_storages_unprocessed(miq_task)).to eq([])
     end
 
-    it "#scan_queue_watchdog" do
+    it '#scan_queue_watchdog' do
       miq_task = FactoryGirl.create(:miq_task)
       deliver_on = Time.now.utc + 1.hour
       allow(Storage).to receive_messages(:scan_watchdog_deliver_on => deliver_on)
@@ -159,25 +159,25 @@ describe Storage do
       expect(watchdog.deliver_on).to eq(deliver_on)
     end
 
-    context "on a host without credentials" do
-      it "#scan will raise error" do
+    context 'on a host without credentials' do
+      it '#scan will raise error' do
         expect { @storage1.scan }.to raise_error(MiqException::MiqStorageError)
       end
     end
 
-    context "on a host authentication status ok" do
+    context 'on a host authentication status ok' do
       before(:each) do
         allow_any_instance_of(Authentication).to receive(:after_authentication_changed)
-        FactoryGirl.create(:authentication, :resource => @host1, :status => "Valid")
+        FactoryGirl.create(:authentication, :resource => @host1, :status => 'Valid')
       end
 
-      it "#ext_management_systems" do
+      it '#ext_management_systems' do
         expect(@storage1.ext_management_systems).to eq([@ems1])
         expect(@storage2.ext_management_systems).to eq([@ems2])
         expect(@storage3.ext_management_systems).to match_array [@ems1, @ems2]
       end
 
-      it "#ext_management_systems_in_zone" do
+      it '#ext_management_systems_in_zone' do
         expect(@storage1.ext_management_systems_in_zone(@zone.name)).to eq([@ems1])
         expect(@storage1.ext_management_systems_in_zone(@zone2.name)).to eq([])
         expect(@storage2.ext_management_systems_in_zone(@zone.name)).to eq([])
@@ -186,13 +186,13 @@ describe Storage do
         expect(@storage3.ext_management_systems_in_zone(@zone2.name)).to eq([@ems2])
       end
 
-      it "#active_hosts_with_authentication_status_ok" do
+      it '#active_hosts_with_authentication_status_ok' do
         expect(@storage1.active_hosts_with_authentication_status_ok).to eq([@host1])
         expect(@storage2.active_hosts_with_authentication_status_ok).to eq([])
         expect(@storage3.active_hosts_with_authentication_status_ok).to eq([@host1])
       end
 
-      it "#active_hosts_with_authentication_status_ok_in_zone" do
+      it '#active_hosts_with_authentication_status_ok_in_zone' do
         expect(@storage1.active_hosts_with_authentication_status_ok_in_zone(@zone.name)).to eq([@host1])
         expect(@storage1.active_hosts_with_authentication_status_ok_in_zone(@zone2.name)).to eq([])
         expect(@storage2.active_hosts_with_authentication_status_ok_in_zone(@zone.name)).to eq([])
@@ -201,36 +201,36 @@ describe Storage do
         expect(@storage3.active_hosts_with_authentication_status_ok_in_zone(@zone2.name)).to eq([])
       end
 
-      it "#scan" do
+      it '#scan' do
         expect { @storage3.scan }.to raise_error(MiqException::MiqUnsupportedStorage)
 
         expect(MiqEvent).to receive(:raise_evm_job_event).once
         @storage1.scan
 
         task = MiqTask.first
-        expect(task.userid).to eq("system")
+        expect(task.userid).to eq('system')
         expect(task.name).to eq("SmartState Analysis for [#{@storage1.name}]")
 
-        message = MiqQueue.where(:method_name => "smartstate_analysis").first
+        message = MiqQueue.where(:method_name => 'smartstate_analysis').first
         expect(message.instance_id).to eq(@storage1.id)
         expect(message.args).to eq([task.id])
         expect(message.zone).to eq(@zone.name)
-        expect(message.role).to eq("ems_operations")
+        expect(message.role).to eq('ems_operations')
       end
 
-      context "with performance capture disabled" do
+      context 'with performance capture disabled' do
         before(:each) do
           allow_any_instance_of(Storage).to receive_messages(:perf_capture_enabled? => false)
         end
 
-        it "#scan_eligible_storages" do
+        it '#scan_eligible_storages' do
           expect(Storage.scan_eligible_storages).to              be_empty
           expect(Storage.scan_eligible_storages(nil)).to         be_empty
           expect(Storage.scan_eligible_storages(@zone.name)).to  be_empty
           expect(Storage.scan_eligible_storages(@zone2.name)).to be_empty
         end
 
-        it "#scan_timer" do
+        it '#scan_timer' do
           expect(Storage).to receive(:scan_queue_watchdog).never
           miq_task  = Storage.scan_timer(nil)
           expect(miq_task).to be_nil
@@ -239,20 +239,20 @@ describe Storage do
         end
       end
 
-      context "with performance capture enabled" do
+      context 'with performance capture enabled' do
         before(:each) do
           allow_any_instance_of(Storage).to receive_messages(:perf_capture_enabled? => true)
           allow(MiqEvent).to receive(:raise_evm_job_event)
         end
 
-        it "#scan_eligible_storages" do
+        it '#scan_eligible_storages' do
           expect(Storage.scan_eligible_storages).to              match_array [@storage1, @storage2]
           expect(Storage.scan_eligible_storages(nil)).to         match_array [@storage1, @storage2]
           expect(Storage.scan_eligible_storages(@zone.name)).to eq([@storage1])
           expect(Storage.scan_eligible_storages(@zone2.name)).to eq([@storage2])
         end
 
-        it "#scan_queue" do
+        it '#scan_queue' do
           allow(Storage).to receive_messages(:max_parallel_storage_scans => 1)
           bogus_id = @storage1.id - 1
           miq_task = FactoryGirl.create(:miq_task)
@@ -294,7 +294,7 @@ describe Storage do
           expect(miq_task.context_data[:pending].length).to eq(0)
         end
 
-        it "#scan_watchdog" do
+        it '#scan_watchdog' do
           max_qitems_per_scan_request = 1
           allow(Storage).to receive_messages(:max_qitems_per_scan_request => max_qitems_per_scan_request)
           miq_task = FactoryGirl.create(:miq_task)
@@ -342,7 +342,7 @@ describe Storage do
           expect(miq_task.context_data[:pending].length).to eq(0)
         end
 
-        it "#scan_complete_callback" do
+        it '#scan_complete_callback' do
           miq_task = FactoryGirl.create(:miq_task)
           miq_task.context_data = {:targets => [], :complete => [], :pending  => {}}
           miq_task.context_data[:targets]  = [@storage1.id, @storage2.id, @storage3.id]
@@ -384,7 +384,7 @@ describe Storage do
           @storage1.scan_complete_callback(miq_task.id, 'status', 'message', 'result')
         end
 
-        it "#scan_timer" do
+        it '#scan_timer' do
           expect(Storage).to receive(:scan_queue_watchdog).once
           allow(Storage).to receive(:scan_queue)
           miq_task  = Storage.scan_timer(nil)
@@ -392,8 +392,8 @@ describe Storage do
           expect(miq_tasks.length).to eq(1)
           expect(miq_task).to eq(miq_tasks.first)
           expect(miq_task).not_to be_nil
-          expect(miq_task.userid).to eq("system")
-          expect(miq_task.name).to eq("SmartState Analysis for All Storages")
+          expect(miq_task.userid).to eq('system')
+          expect(miq_task.name).to eq('SmartState Analysis for All Storages')
           expect(miq_task.state).to eq(MiqTask::STATE_QUEUED)
           cdata = miq_task.context_data
           expect(cdata[:targets]).to  match_array Storage.scan_eligible_storages.collect(&:id)
@@ -401,7 +401,7 @@ describe Storage do
           expect(cdata[:pending]).to  be_empty
         end
 
-        it "#scan_timer(zone)" do
+        it '#scan_timer(zone)' do
           miq_task = Storage.scan_timer(@zone.name)
           expect(miq_task.name).to eq("SmartState Analysis for All Storages in Zone \"#{@zone.name}\"")
           expect(miq_task.context_data[:targets]).to match_array Storage.scan_eligible_storages(@zone.name).collect(&:id)
@@ -410,33 +410,33 @@ describe Storage do
     end
   end
 
-  context "#is_available? for Smartstate Analysis" do
+  context '#is_available? for Smartstate Analysis' do
     before do
       @storage =  FactoryGirl.create(:storage)
     end
 
-    it "returns true for VMware Storage" do
+    it 'returns true for VMware Storage' do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
       expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
     end
 
-    it "returns false for non-vmware Storage" do
+    it 'returns false for non-vmware Storage' do
       expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
     end
   end
 
-  context ".batch_operation_supported?" do
+  context '.batch_operation_supported?' do
     before do
       @storage =  FactoryGirl.create(:storage)
     end
 
-    it "when the storage supports smarstate analysis,  returns false" do
+    it 'when the storage supports smarstate analysis,  returns false' do
       expect(Storage.batch_operation_supported?(:smartstate_analysis, [@storage.id])).to eq(false)
     end
 
-    it "when the storage perform smartstate analysis, returns true" do
+    it 'when the storage perform smartstate analysis, returns true' do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
@@ -444,27 +444,27 @@ describe Storage do
     end
   end
 
-  describe "#update_vm_perf" do
-    it "will update a vm_perf with an attributes hash keyed with symbols" do
+  describe '#update_vm_perf' do
+    it 'will update a vm_perf with an attributes hash keyed with symbols' do
       storage = FactoryGirl.create(:storage)
       vm = FactoryGirl.create(:vm)
       metric_rollup = FactoryGirl.build(:metric_rollup)
-      attrs = {:resource_name => "test vm"}
+      attrs = {:resource_name => 'test vm'}
 
       storage.update_vm_perf(vm, metric_rollup, attrs)
 
-      expect(metric_rollup.resource_name).to eq("test vm")
+      expect(metric_rollup.resource_name).to eq('test vm')
     end
   end
 
-  describe "#count_of_vmdk_disk_files" do
-    it "ignores the correct files" do
-      FactoryGirl.create(:storage_file, :storage_id => 1, :ext_name => 'vmdk', :base_name => "good-stuff.vmdk")
-      FactoryGirl.create(:storage_file, :storage_id => 2, :ext_name => 'dat', :base_name => "bad-stuff.dat")
-      FactoryGirl.create(:storage_file, :storage_id => 3, :ext_name => 'vmdk', :base_name => "bad-flat.vmdk")
-      FactoryGirl.create(:storage_file, :storage_id => 4, :ext_name => 'vmdk', :base_name => "bad-delta.vmdk")
-      FactoryGirl.create(:storage_file, :storage_id => 5, :ext_name => 'vmdk', :base_name => "bad-123456.vmdk")
-      FactoryGirl.create(:storage_file, :storage_id => 6, :ext_name => 'vmdk', :base_name => "good-11.vmdk")
+  describe '#count_of_vmdk_disk_files' do
+    it 'ignores the correct files' do
+      FactoryGirl.create(:storage_file, :storage_id => 1, :ext_name => 'vmdk', :base_name => 'good-stuff.vmdk')
+      FactoryGirl.create(:storage_file, :storage_id => 2, :ext_name => 'dat', :base_name => 'bad-stuff.dat')
+      FactoryGirl.create(:storage_file, :storage_id => 3, :ext_name => 'vmdk', :base_name => 'bad-flat.vmdk')
+      FactoryGirl.create(:storage_file, :storage_id => 4, :ext_name => 'vmdk', :base_name => 'bad-delta.vmdk')
+      FactoryGirl.create(:storage_file, :storage_id => 5, :ext_name => 'vmdk', :base_name => 'bad-123456.vmdk')
+      FactoryGirl.create(:storage_file, :storage_id => 6, :ext_name => 'vmdk', :base_name => 'good-11.vmdk')
 
       counts = Storage.count_of_vmdk_disk_files
       expect(counts[1]).to eq(1)
@@ -476,30 +476,30 @@ describe Storage do
     end
   end
 
-  context "#is_available? for Smartstate Analysis" do
+  context '#is_available? for Smartstate Analysis' do
     before do
       @storage = FactoryGirl.create(:storage)
     end
 
-    it "returns true for VMware Storage" do
+    it 'returns true for VMware Storage' do
       FactoryGirl.create(:host_vmware,
                          :ext_management_system => FactoryGirl.create(:ems_vmware),
                          :storages              => [@storage])
       expect(@storage.is_available?(:smartstate_analysis)).to eq(true)
     end
 
-    it "returns false for non-vmware Storage" do
+    it 'returns false for non-vmware Storage' do
       expect(@storage.is_available?(:smartstate_analysis)).to_not eq(true)
     end
   end
-  describe "#smartstate_analysis_count_for_host_id" do
-    it "returns counts" do
+  describe '#smartstate_analysis_count_for_host_id' do
+    it 'returns counts' do
       EvmSpecHelper.local_miq_server
       host = FactoryGirl.create(:host)
       storage = FactoryGirl.create(:storage)
       storage.scan_queue_item(1)
       storage.scan_queue_item(2)
-      MiqQueue.update_all(:target_id => host.id, :state => "dequeue")
+      MiqQueue.update_all(:target_id => host.id, :state => 'dequeue')
       storage.scan_queue_item(3)
 
       expect(storage.smartstate_analysis_count_for_host_id(host.id)).to eq(2)

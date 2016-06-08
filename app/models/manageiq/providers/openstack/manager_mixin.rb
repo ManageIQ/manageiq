@@ -11,7 +11,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   # OpenStack interactions
   #
   module ClassMethods
-    def raw_connect(username, password, auth_url, service = "Compute")
+    def raw_connect(username, password, auth_url, service = 'Compute')
       require 'openstack/openstack_handle'
       OpenstackHandle::Handle.raw_connect(username, password, auth_url, service)
     end
@@ -33,12 +33,12 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   def openstack_handle(options = {})
     require 'openstack/openstack_handle'
     @openstack_handle ||= begin
-      raise MiqException::MiqInvalidCredentialsError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
+      raise MiqException::MiqInvalidCredentialsError, 'No credentials defined' if self.missing_credentials?(options[:auth_type])
 
       username = options[:user] || authentication_userid(options[:auth_type])
       password = options[:pass] || authentication_password(options[:auth_type])
 
-      vmdb_config = VMDB::Config.new("vmdb").config
+      vmdb_config = VMDB::Config.new('vmdb').config
       extra_options = {
         :ssl_ca_file    => vmdb_config.fetch_path(:ssl, :ssl_ca_file),
         :ssl_ca_path    => vmdb_config.fetch_path(:ssl, :ssl_ca_path),
@@ -61,22 +61,22 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   end
 
   def connect_volume
-    connect(:service => "Volume")
+    connect(:service => 'Volume')
   end
 
   def connect_identity
-    connect(:service => "Identity")
+    connect(:service => 'Identity')
   end
 
   def event_monitor_options
     @event_monitor_options ||= begin
       opts = {:ems => self, :automatic_recovery => false, :recover_from_connection_close => false}
 
-      ceilometer = connection_configuration_by_role("ceilometer")
+      ceilometer = connection_configuration_by_role('ceilometer')
 
       if ceilometer.try(:endpoint) && !ceilometer.try(:endpoint).try(:marked_for_destruction?)
         opts[:events_monitor] = :ceilometer
-      elsif (amqp = connection_configuration_by_role("amqp"))
+      elsif (amqp = connection_configuration_by_role('amqp'))
         opts[:events_monitor] = :amqp
         if (endpoint = amqp.try(:endpoint))
           opts[:hostname]          = endpoint.hostname
@@ -121,9 +121,9 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   def translate_exception(err)
     case err
     when Excon::Errors::Unauthorized
-      MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
+      MiqException::MiqInvalidCredentialsError.new 'Login failed due to a bad username or password.'
     when Excon::Errors::Timeout
-      MiqException::MiqUnreachableError.new "Login attempt timed out"
+      MiqException::MiqUnreachableError.new 'Login attempt timed out'
     when Excon::Errors::SocketError
       MiqException::MiqHostError.new "Socket error: #{err.message}"
     when MiqException::MiqInvalidCredentialsError, MiqException::MiqHostError
@@ -134,7 +134,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   end
 
   def verify_api_credentials(options = {})
-    options[:service] = "Identity"
+    options[:service] = 'Identity'
     with_provider_connection(options) {}
     true
   rescue => err
@@ -161,7 +161,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   def verify_credentials(auth_type = nil, options = {})
     auth_type ||= 'default'
 
-    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
+    raise MiqException::MiqHostError, 'No credentials defined' if self.missing_credentials?(auth_type)
 
     options.merge!(:auth_type => auth_type)
     case auth_type.to_s

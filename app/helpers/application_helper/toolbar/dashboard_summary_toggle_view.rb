@@ -5,14 +5,14 @@ class ApplicationHelper::Toolbar::DashboardSummaryToggleView < ApplicationHelper
       'fa fa-tachometer fa-1xplus',
       N_('Dashboard View'),
       nil,
-      :url       => "/",
-      :url_parms => "?display=dashboard"),
+      :url       => '/',
+      :url_parms => '?display=dashboard'),
     twostate(
       :view_summary,
       'fa fa-th-list',
       N_('Summary View'),
       nil,
-      :url       => "/",
-      :url_parms => ""),
+      :url       => '/',
+      :url_parms => ''),
   ])
 end

@@ -15,9 +15,9 @@ class VmReconfigureTask < MiqRequestTask
       # Single source has not been selected yet
       if req_obj.options[:src_ids].length == 1
         v = Vm.find_by_id(req_obj.options[:src_ids].first)
-        name = v.nil? ? "" : v.name
+        name = v.nil? ? '' : v.name
       else
-        name = "Multiple VMs"
+        name = 'Multiple VMs'
       end
     else
       name = req_obj.source.name

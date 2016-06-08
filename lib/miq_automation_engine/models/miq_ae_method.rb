@@ -4,19 +4,19 @@ class MiqAeMethod < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
-  belongs_to :ae_class, :class_name => "MiqAeClass", :foreign_key => :class_id
-  has_many   :inputs,   -> { order :priority }, :class_name => "MiqAeField", :foreign_key => :method_id,
+  belongs_to :ae_class, :class_name => 'MiqAeClass', :foreign_key => :class_id
+  has_many   :inputs,   -> { order :priority }, :class_name => 'MiqAeField', :foreign_key => :method_id,
                         :dependent => :destroy, :autosave => true
 
   validates_presence_of   :name, :scope
   validates_uniqueness_of :name, :case_sensitive => false, :scope => [:class_id, :scope]
   validates_format_of     :name, :with => /\A[A-Za-z0-9_]+\z/i
 
-  AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
+  AVAILABLE_LANGUAGES  = ['ruby', 'perl']  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
-  AVAILABLE_LOCATIONS  = ["builtin", "inline", "uri"]
+  AVAILABLE_LOCATIONS  = ['builtin', 'inline', 'uri']
   validates_inclusion_of  :location,  :in => AVAILABLE_LOCATIONS
-  AVAILABLE_SCOPES     = ["class", "instance"]
+  AVAILABLE_SCOPES     = ['class', 'instance']
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
 
   def self.available_languages
@@ -67,7 +67,7 @@ class MiqAeMethod < ApplicationRecord
 
     self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?('_id')
 
       # Skip any columns that we process explicitly
       next if %w(name language scope location data).include?(cname)

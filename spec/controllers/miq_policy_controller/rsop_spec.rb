@@ -5,14 +5,14 @@ describe MiqPolicyController do
     set_user_privileges
   end
 
-  context "#rsop" do
-    it "first time on RSOP screen, session[:changed] should be false" do
+  context '#rsop' do
+    it 'first time on RSOP screen, session[:changed] should be false' do
       session[:changed] = true
       controller.instance_variable_set(:@current_user,
                                        FactoryGirl.create(:user,
-                                                          :name       => "foo",
+                                                          :name       => 'foo',
                                                           :miq_groups => [],
-                                                          :userid     => "foo"))
+                                                          :userid     => 'foo'))
       controller.instance_variable_set(:@sb, {})
       allow(controller).to receive(:rsop_put_objects_in_sb)
       allow(controller).to receive(:find_filtered)

@@ -7,22 +7,22 @@ describe NamespaceEmsForeman do
   let(:ems_stub) { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ConfigurationManagerForeman")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ConfigurationManagerForeman')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ManageIQ::Providers::Foreman::ConfigurationManager")
+      expect(ems.reload).to have_attributes(:type => 'ManageIQ::Providers::Foreman::ConfigurationManager')
     end
   end
 
   migration_context :down do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ManageIQ::Providers::Foreman::ConfigurationManager")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ManageIQ::Providers::Foreman::ConfigurationManager')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ConfigurationManagerForeman")
+      expect(ems.reload).to have_attributes(:type => 'ConfigurationManagerForeman')
     end
   end
 end

@@ -1,4 +1,4 @@
-require "rexml/document"
+require 'rexml/document'
 class MiqTemplateController < ApplicationController
   include VmCommon        # common methods for vm controllers
 
@@ -19,8 +19,8 @@ class MiqTemplateController < ApplicationController
   private
 
   def get_session_data
-    @title          = _("Templates")
-    @layout         = session[:miq_template_type] ? session[:miq_template_type] : "miq_template"
+    @title          = _('Templates')
+    @layout         = session[:miq_template_type] ? session[:miq_template_type] : 'miq_template'
     @lastaction     = session[:miq_template_lastaction]
     @showtype       = session[:miq_template_showtype]
     @base           = session[:miq_template_compare_base]
@@ -28,8 +28,8 @@ class MiqTemplateController < ApplicationController
     @catinfo        = session[:miq_template_catinfo]
     @cats           = session[:miq_template_cats]
     @display        = session[:miq_template_display]
-    @polArr         = session[:polArr] || "" # current tags in effect
-    @policy_options = session[:policy_options] || ""
+    @polArr         = session[:polArr] || '' # current tags in effect
+    @policy_options = session[:policy_options] || ''
   end
 
   def set_session_data

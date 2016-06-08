@@ -127,7 +127,7 @@ module ManageIQ::Providers
             vim_csm = @vi.getVimCustomizationSpecManager
             @vc_data[:customization_specs] = vim_csm.getAllCustomizationSpecs
           rescue RuntimeError => err
-            raise unless err.message.include?("not supported on this system")
+            raise unless err.message.include?('not supported on this system')
             _log.info("#{log_header} #{err}")
           ensure
             vim_csm.release if vim_csm rescue nil
@@ -246,7 +246,7 @@ module ManageIQ::Providers
         log_header = format_ems_for_logging(ems)
 
         accessor = VC_ACCESSORS_BY_MOR[type]
-        raise ArgumentError, "Invalid type" if accessor.nil?
+        raise ArgumentError, 'Invalid type' if accessor.nil?
 
         mor = [mor] unless mor.kind_of?(Array)
 
@@ -282,7 +282,7 @@ module ManageIQ::Providers
         vm = @targets_by_ems_id[ems_id].first
         ems = vm.ext_management_system
 
-        _log.info "Refreshing target VM for reconfig..."
+        _log.info 'Refreshing target VM for reconfig...'
         _log.info "#{vm.class}: [#{vm.name}], id: [#{vm.id}]"
 
         dummy, timings = Benchmark.realtime_block(:total_time) do
@@ -296,11 +296,11 @@ module ManageIQ::Providers
             end
           end
 
-          _log.debug "Parsing VC inventory..."
+          _log.debug 'Parsing VC inventory...'
           hashes, = Benchmark.realtime_block(:parse_vc_data) do
             InfraManager::RefreshParser.reconfig_inv_to_hashes(@vc_data)
           end
-          _log.debug "Parsing VC inventory...Complete"
+          _log.debug 'Parsing VC inventory...Complete'
 
           Benchmark.realtime_block(:db_save_inventory) do
             EmsRefresh.reconfig_save_vm_inventory(vm, hashes)

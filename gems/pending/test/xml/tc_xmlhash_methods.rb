@@ -84,19 +84,19 @@ class TestXmlHashMethods < Minitest::Test
     assert_nil(xml_new.root)
     xml_new.add_element('root')
     refute_nil(xml_new.root)
-    assert_equal("root", xml_new.root.name.to_s)
+    assert_equal('root', xml_new.root.name.to_s)
 
-    new_node = xml_new.root.add_element("node1", "enabled" => true, "disabled" => false, "nothing" => nil)
+    new_node = xml_new.root.add_element('node1', 'enabled' => true, 'disabled' => false, 'nothing' => nil)
 
     assert_equal(true, MiqXml.isXmlElement?(new_node))
     assert_equal(false, MiqXml.isXmlElement?(nil))
 
     attrs = new_node.attributes
-    assert_equal("true", attrs["enabled"].to_s)
-    assert_equal("false", attrs["disabled"].to_s)
-    assert_nil(attrs["nothing"])
-    new_node.add_attributes("nothing" => "something")
-    assert_equal("something", new_node.attributes["nothing"].to_s)
+    assert_equal('true', attrs['enabled'].to_s)
+    assert_equal('false', attrs['disabled'].to_s)
+    assert_nil(attrs['nothing'])
+    new_node.add_attributes('nothing' => 'something')
+    assert_equal('something', new_node.attributes['nothing'].to_s)
 
     assert_kind_of(@xml_klass::Document, xml_new.document)
     assert_kind_of(@xml_klass::Document, xml_new.doc)
@@ -114,8 +114,8 @@ class TestXmlHashMethods < Minitest::Test
   end
 
   def test_create_new_node
-    node = MiqXml.newNode("scan_item", @xml_klass)
-    assert_equal("<scan_item/>", node.to_xml.to_s)
+    node = MiqXml.newNode('scan_item', @xml_klass)
+    assert_equal('<scan_item/>', node.to_xml.to_s)
     node = MiqXml.newNode(nil, @xml_klass)
     # TODO: This method does not return the expected empty node text
     # assert_equal("</>", node.to_xml.to_s)
@@ -150,7 +150,7 @@ class TestXmlHashMethods < Minitest::Test
     h2 = XmlHash.load(simple_xml_text).to_h(:symbols => false)
     assert_equal(h.inspect.length, h2.inspect.length)
 
-    xml = XmlHash.from_hash(h2, {:rootname => "MiqAeDatastore"})
+    xml = XmlHash.from_hash(h2, {:rootname => 'MiqAeDatastore'})
 
     assert_respond_to(xml, :xmlDiff)
     assert_respond_to(xml, :xmlPatch)
@@ -168,7 +168,7 @@ class TestXmlHashMethods < Minitest::Test
 
     time = Time.now
     html_text = "<b>#{time}</b>"
-    xml.root.add_cdata(html_text.gsub(",", "\\,"))
+    xml.root.add_cdata(html_text.gsub(',', '\\,'))
 
     assert(xml.to_xml.to_s.include?("![CDATA[<b>#{time}</b>]]"))
     assert_equal("<b>#{time}</b>", xml.root.text)

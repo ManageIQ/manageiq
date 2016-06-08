@@ -13,7 +13,7 @@ class MiqProvisionRequest < MiqRequest
   validates_inclusion_of :request_state,
                          :in      => %w(pending provisioned finished) + ACTIVE_STATES,
                          :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"
-  validates_presence_of  :source_id,      :message => "must have valid template"
+  validates_presence_of  :source_id,      :message => 'must have valid template'
   validate               :must_have_valid_vm
   validate               :must_have_user
 
@@ -40,7 +40,7 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def must_have_valid_vm
-    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if vm_template.nil?
+    errors.add(:vm_template, 'must have valid VM (must be in vmdb)') if vm_template.nil?
   end
 
   def set_description(force = false)
@@ -82,9 +82,9 @@ class MiqProvisionRequest < MiqRequest
 
     return false if dept.empty? || env.empty?
 
-    prov.options[:environment] = "prod" # Set env to prod to get service levels
+    prov.options[:environment] = 'prod' # Set env to prod to get service levels
     svc  = prov.allowed(:service_level) # Get service levels
-    return false if env.include?("prod") && svc.empty?  # Make sure we have at least one
+    return false if env.include?('prod') && svc.empty?  # Make sure we have at least one
 
     true
   end
@@ -103,7 +103,7 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def originating_controller
-    "vm"
+    'vm'
   end
 
   def template_valid?

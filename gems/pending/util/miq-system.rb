@@ -11,7 +11,7 @@ class MiqSystem
 
   def self.cpu_usage
     if Sys::Platform::IMPL == :linux
-      filename = "/var/www/miq/vmdb/log/vmstat_output.log"
+      filename = '/var/www/miq/vmdb/log/vmstat_output.log'
 
       begin
         mtime = File.mtime(filename)
@@ -57,18 +57,18 @@ class MiqSystem
     when :mswin, :mingw
       # raise "MiqSystem.memory: Windows Not Supported"
     when :linux
-      filename = "/proc/meminfo"
+      filename = '/proc/meminfo'
       data = nil
       File.open(filename, 'r') { |f| data = f.read_nonblock(10000) }
 
       data.to_s.each_line do |line|
-        key, value = line.split(":")
+        key, value = line.split(':')
         value = value.strip
 
-        valueArray = value.split(" ")
+        valueArray = value.split(' ')
 
         value = value.to_i                if valueArray.length == 1
-        value = valueArray[0].to_i * 1024 if valueArray.length == 2 && valueArray[1].downcase == "kb"
+        value = valueArray[0].to_i * 1024 if valueArray.length == 2 && valueArray[1].downcase == 'kb'
 
         result[key.strip.to_sym] = value
       end
@@ -90,7 +90,7 @@ class MiqSystem
     when :mswin, :mingw
       # raise "MiqSystem.status: Windows Not Supported"
     when :linux
-      filename = "/proc/stat"
+      filename = '/proc/stat'
       MiqSystem.readfile_async(filename).to_s.split("\n").each do |line|
         x                  = line.split(' ')
         key                = x.shift
@@ -109,8 +109,8 @@ class MiqSystem
     case Sys::Platform::IMPL
     when :linux
       # Collect bytes
-      result = AwesomeSpawn.run!("df", :params => ["-T", "-P", file]).output.lines.each_with_object([]) do |line, array|
-        lArray = line.strip.split(" ")
+      result = AwesomeSpawn.run!('df', :params => ['-T', '-P', file]).output.lines.each_with_object([]) do |line, array|
+        lArray = line.strip.split(' ')
         next if lArray.length != 7
         fsname, type, total, used, free, used_percentage, mount_point = lArray
         next unless total =~ /[0-9]+/
@@ -122,14 +122,14 @@ class MiqSystem
           :total_bytes        => total.to_i * 1024,
           :used_bytes         => used.to_i * 1024,
           :available_bytes    => free.to_i * 1024,
-          :used_bytes_percent => used_percentage.chomp("%").to_i,
+          :used_bytes_percent => used_percentage.chomp('%').to_i,
           :mount_point        => mount_point,
         }
       end
 
       # Collect inodes
-      AwesomeSpawn.run!("df", :params => ["-T", "-P", "-i", file]).output.lines.each do |line|
-        lArray = line.strip.split(" ")
+      AwesomeSpawn.run!('df', :params => ['-T', '-P', '-i', file]).output.lines.each do |line|
+        lArray = line.strip.split(' ')
         next if lArray.length != 7
         fsname, type, total, used, free, used_percentage, mount_point = lArray
         next unless total =~ /[0-9]+/
@@ -139,13 +139,13 @@ class MiqSystem
         h[:total_inodes]        = total.to_i
         h[:used_inodes]         = used.to_i
         h[:available_inodes]    = free.to_i
-        h[:used_inodes_percent] = used_percentage.chomp("%").to_i
+        h[:used_inodes_percent] = used_percentage.chomp('%').to_i
       end
       result
 
     when :macosx
-      AwesomeSpawn.run!("df", :params => ["-ki", file]).output.lines.each_with_object([]) do |line, array|
-        lArray = line.strip.split(" ")
+      AwesomeSpawn.run!('df', :params => ['-ki', file]).output.lines.each_with_object([]) do |line, array|
+        lArray = line.strip.split(' ')
         next if lArray.length != 9
         fsname, total, used, free, use_percentage, iused, ifree, iuse_percentage, mount_point = lArray
         next unless total =~ /[0-9]+/
@@ -156,11 +156,11 @@ class MiqSystem
           :total_bytes         => total.to_i * 1024,
           :used_bytes          => used.to_i * 1024,
           :available_bytes     => free.to_i * 1024,
-          :used_bytes_percent  => use_percentage.chomp("%").to_i,
+          :used_bytes_percent  => use_percentage.chomp('%').to_i,
           :total_inodes        => iused.to_i + ifree.to_i,
           :used_inodes         => iused.to_i,
           :available_inodes    => ifree.to_i,
-          :used_inodes_percent => iuse_percentage.chomp("%").to_i,
+          :used_inodes_percent => iuse_percentage.chomp('%').to_i,
           :mount_point         => mount_point,
         }
       end
@@ -169,7 +169,7 @@ class MiqSystem
 
   def self.normalize_df_file_argument(file = nil)
     # limit disk usage to local filesystems if no file provided
-    return "-l" if file.blank?
+    return '-l' if file.blank?
 
     raise "file #{file} does not exist" unless File.exist?(file)
     file
@@ -193,7 +193,7 @@ class MiqSystem
     lines = nil
     if Sys::Platform::OS == :unix
       tail  = `tail -n #{last} #{filename}` rescue nil
-      tail.force_encoding("BINARY") if tail.respond_to?(:force_encoding)
+      tail.force_encoding('BINARY') if tail.respond_to?(:force_encoding)
       lines = tail.nil? ? [] : tail.split("\n")
     end
 
@@ -234,8 +234,8 @@ if __FILE__ == $0
   def number_to_human_size(size, precision = 1)
     size = Kernel.Float(size)
     case
-    when size == (1024**0) then "1 Byte"
-    when size < (1024**1) then "%d Bytes" % size
+    when size == (1024**0) then '1 Byte'
+    when size < (1024**1) then '%d Bytes' % size
     when size < (1024**2) then "%.#{precision}f KB" % (size / (1024.0**1))
     when size < (1024**3) then "%.#{precision}f MB" % (size / (1024.0**2))
     when size < (1024**4) then "%.#{precision}f GB" % (size / (1024.0**3))
@@ -247,19 +247,19 @@ if __FILE__ == $0
   puts "Memory: #{result.inspect}"
 
   result = MiqSystem.disk_usage
-  format_string = "%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s"
+  format_string = '%-12s %6s %12s %12s %12s %12s %12s %12s %12s %12s %12s'
   header = format(format_string,
-                  "Filesystem",
-                  "Type",
-                  "Total",
-                  "Used",
-                  "Available",
-                  "%Used",
-                  "iTotal",
-                  "iUsed",
-                  "iFree",
-                  "%iUsed",
-                  "Mounted on")
+                  'Filesystem',
+                  'Type',
+                  'Total',
+                  'Used',
+                  'Available',
+                  '%Used',
+                  'iTotal',
+                  'iUsed',
+                  'iFree',
+                  '%iUsed',
+                  'Mounted on')
   puts header
 
   result.each { |disk|

@@ -3,19 +3,19 @@ require 'net_app_manageability/types'
 module OntapMetricsRollupMixin
   extend ActiveSupport::Concern
   NON_COUNTER_COLS = [
-    "id",
-    "statistic_time",
-    "interval",
-    "queue_depth",
-    "miq_storage_metric_id",
-    "position",
-    "created_at",
-    "updated_at",
-    "base_counters",
-    "rollup_type",
-    "time_profile_id",
-    "storage_metrics_metadata_id",
-    "miq_cim_instance_id"
+    'id',
+    'statistic_time',
+    'interval',
+    'queue_depth',
+    'miq_storage_metric_id',
+    'position',
+    'created_at',
+    'updated_at',
+    'base_counters',
+    'rollup_type',
+    'time_profile_id',
+    'storage_metrics_metadata_id',
+    'miq_cim_instance_id'
   ]
 
   included { init }
@@ -30,7 +30,7 @@ module OntapMetricsRollupMixin
       @rateCounterNames = nil
       @basedCounterNames  = nil
       @baseCounterNames = nil
-      @metadataClass    = (name + "Metadata").constantize
+      @metadataClass    = (name + 'Metadata').constantize
     end
 
     def metadataClass
@@ -50,7 +50,7 @@ module OntapMetricsRollupMixin
     end
 
     def rateCounterNames(counterInfo)
-      @rateCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c].properties != "rate" }
+      @rateCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c].properties != 'rate' }
     end
 
     def basedCounterNames(counterInfo)
@@ -109,7 +109,7 @@ module OntapMetricsRollupMixin
 
   def counter_unit(counterName)
     if (ci = counter_info[counterName]).nil?
-      raise _("%{class_name}.counter_unit: counter %{counter_name} not found") % {:class_name   => self.class.name,
+      raise _('%{class_name}.counter_unit: counter %{counter_name} not found') % {:class_name   => self.class.name,
                                                                                   :counter_name => counterName}
     end
     ci['unit']
@@ -117,7 +117,7 @@ module OntapMetricsRollupMixin
 
   def counter_desc(counterName)
     if (ci = counter_info[counterName]).nil?
-      raise _("%{class_name}.counter_desc: counter _{counter_name} not found") % {:class_name   => self.class.name,
+      raise _('%{class_name}.counter_desc: counter _{counter_name} not found') % {:class_name   => self.class.name,
                                                                                   :counter_name => counterName}
     end
     ci['desc']
@@ -126,7 +126,7 @@ module OntapMetricsRollupMixin
   def hourly_rollup(rollup_time, metric_list)
     _log.info "#{rollup_time}"
     self.statistic_time = rollup_time
-    self.rollup_type  = "hourly"
+    self.rollup_type  = 'hourly'
 
     m1 = metric_list.first
     rateCounterNames  = m1.rateCounterNames
@@ -153,8 +153,8 @@ module OntapMetricsRollupMixin
         rcTotal += val * metrics.interval
       end
       self[rc] = rcTotal / totInterval
-      self[rc + "_min"] = minVal
-      self[rc + "_max"] = maxVal
+      self[rc + '_min'] = minVal
+      self[rc + '_max'] = maxVal
       addMinMaxCounterInfo(counterInfo, rc)
     end
 
@@ -173,8 +173,8 @@ module OntapMetricsRollupMixin
       else
         self[bc] = bcTotal / bcv
       end
-      self[bc + "_min"] = minVal
-      self[bc + "_max"] = maxVal
+      self[bc + '_min'] = minVal
+      self[bc + '_max'] = maxVal
       addMinMaxCounterInfo(counterInfo, bc)
     end
     self.counter_info = counterInfo
@@ -184,7 +184,7 @@ module OntapMetricsRollupMixin
     _log.info "#{rollup_time}"
     self.statistic_time = rollup_time
     self.time_profile = time_profile
-    self.rollup_type  = "daily"
+    self.rollup_type  = 'daily'
 
     m1 = metric_list.first
     rateCounterNames  = m1.rateCounterNames
@@ -246,19 +246,19 @@ module OntapMetricsRollupMixin
   end
 
   def addMinMaxCounterInfo(counterInfo, cn)
-    cnMin = cn + "_min"
-    cnMax = cn + "_max"
+    cnMin = cn + '_min'
+    cnMax = cn + '_max'
     ci = counterInfo[cn]
 
     counterInfo[cnMin] = NetAppManageability::NAMHash.new do
       name  cnMin
       unit  ci.unit
-      desc  _("Minimum value over rollup period - %{number}") % {:nummber => ci.desc}
+      desc  _('Minimum value over rollup period - %{number}') % {:nummber => ci.desc}
     end
     counterInfo[cnMax] = NetAppManageability::NAMHash.new do
       name  cnMax
       unit  ci.unit
-      desc  _("Maximum value over rollup period - %{number}") % {:number => ci.desc}
+      desc  _('Maximum value over rollup period - %{number}') % {:number => ci.desc}
     end
   end
 

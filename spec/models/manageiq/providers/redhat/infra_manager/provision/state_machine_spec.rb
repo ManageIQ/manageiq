@@ -3,10 +3,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
 
   let(:cluster)  { FactoryGirl.create(:ems_cluster, :ext_management_system => ems) }
   let(:ems)      { FactoryGirl.create(:ems_redhat_with_authentication) }
-  let(:rhevm_vm) { double("RHEVM VM") }
+  let(:rhevm_vm) { double('RHEVM VM') }
   let(:task)     { request.tap(&:create_request_tasks).miq_request_tasks.first }
   let(:template) { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
-  let(:vm)       { FactoryGirl.create(:vm_redhat, :ext_management_system => ems, :raw_power_state => "on").tap { |v| allow(v).to receive(:with_provider_object).and_return(rhevm_vm) } }
+  let(:vm)       { FactoryGirl.create(:vm_redhat, :ext_management_system => ems, :raw_power_state => 'on').tap { |v| allow(v).to receive(:with_provider_object).and_return(rhevm_vm) } }
 
   let(:options) do
     {
@@ -15,8 +15,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
       :placement_cluster_name => [cluster.id, cluster.name],
       :src_vm_id              => template.id,
       :vm_auto_start          => true,
-      :vm_description         => "some description",
-      :vm_target_name         => "test_vm_1",
+      :vm_description         => 'some description',
+      :vm_target_name         => 'test_vm_1',
     }
   end
 
@@ -45,7 +45,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
     }
   end
 
-  include_examples "End-to-end State Machine Run"
+  include_examples 'End-to-end State Machine Run'
 
   def test_create_destination
     call_method
@@ -92,7 +92,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
   def test_autostart_destination_with_use_cloud_init
     task.phase_context[:boot_with_cloud_init] = true
 
-    xml = double("XML")
+    xml = double('XML')
     expect(xml).to receive(:use_cloud_init).with(true)
     expect(rhevm_vm).to receive(:start).and_yield(xml)
 
@@ -102,7 +102,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
   def test_autostart_destination_without_use_cloud_init
     task.phase_context.delete(:boot_with_cloud_init)
 
-    xml = double("XML")
+    xml = double('XML')
     expect(xml).not_to receive(:use_cloud_init)
     expect(rhevm_vm).to receive(:start).and_yield(xml)
 

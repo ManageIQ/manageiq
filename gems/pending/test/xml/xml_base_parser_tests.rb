@@ -104,11 +104,11 @@ module XmlBaseParserTests
     assert_equal(6, count)
 
     count = 0
-    xml.root.each_element("head") { |_e| count += 1 }
+    xml.root.each_element('head') { |_e| count += 1 }
     assert_equal(1, count)
 
     count = 0
-    xml.root.each_element("row") { |_e| count += 1 }
+    xml.root.each_element('row') { |_e| count += 1 }
     assert_equal(5, count)
 
     count = 0
@@ -133,27 +133,27 @@ module XmlBaseParserTests
   # Moving xml nodes between documents is a feature required for differencing
   def test_move_node
     xml_full = MiqXml.load(@xml_string, @xml_klass)
-    xml_part = MiqXml.load("<root/>", @xml_klass)
+    xml_part = MiqXml.load('<root/>', @xml_klass)
     xml_part.root << xml_full.root.elements[2]
 
     count = 0
     full_ids = []
-    xml_full.root.each_element { |e| count += 1; full_ids << e.attributes["id"] }
+    xml_full.root.each_element { |e| count += 1; full_ids << e.attributes['id'] }
     assert_equal(5, count)
 
     count = 0
     xml_part.root.each_element { |_e| count += 1 }
     assert_equal(1, count)
 
-    assert_equal("8", xml_part.root.elements[1].attributes["id"])
-    assert(!full_ids.include?("8"))
+    assert_equal('8', xml_part.root.elements[1].attributes['id'])
+    assert(!full_ids.include?('8'))
 
     # Re-assign root document value
     doc = MiqXml.load(@xml_string, @xml_klass)
     doc.root = doc.root.elements[1].elements[1]
 
-    assert_equal("column", doc.root.name.to_s)
-    assert_equal("link", doc.root.attributes[:type])
+    assert_equal('column', doc.root.name.to_s)
+    assert_equal('link', doc.root.attributes[:type])
   end
 
   def test_doc_root_reassignment
@@ -162,15 +162,15 @@ module XmlBaseParserTests
     doc.root = doc.root.elements[1].elements[1]
     GC.start  # Required by libxml to avoid core dump
 
-    assert_equal("column", doc.root.name.to_s)
-    assert_equal("link", doc.root.attributes["type"].to_s)
+    assert_equal('column', doc.root.name.to_s)
+    assert_equal('link', doc.root.attributes['type'].to_s)
   end
 
   def test_root_text
     node = @xml.root
-    assert_equal("", node.text.to_s.rstrip)
-    node.text = "Hello World"
-    assert_equal("Hello World", node.text.to_s.rstrip)
+    assert_equal('', node.text.to_s.rstrip)
+    node.text = 'Hello World'
+    assert_equal('Hello World', node.text.to_s.rstrip)
 
     # Make sure adding text does not destroy child elements
     assert_equal(true, node.has_elements?)
@@ -197,7 +197,7 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[3]
-    assert_equal("7", node.attributes[:id])
+    assert_equal('7', node.attributes[:id])
     node.remove!
     xml_diff = xml_new.xmlDiff(xml_old, stats)
 
@@ -208,7 +208,7 @@ module XmlBaseParserTests
     # Reload document and simulate an added node
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
-    node = xml_new.root.add_element("added_test_element", :id => 10)
+    node = xml_new.root.add_element('added_test_element', :id => 10)
     xml_diff = xml_new.xmlDiff(xml_old, stats)
     assert_equal(1, stats[:adds])
     assert_equal(0, stats[:deletes])
@@ -218,8 +218,8 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[1].elements[1]
-    assert_equal("link", node.attributes[:type])
-    node.add_attribute(:width, "11")
+    assert_equal('link', node.attributes[:type])
+    node.add_attribute(:width, '11')
     xml_diff = xml_new.xmlDiff(xml_old, stats)
     assert_equal(0, stats[:adds])
     assert_equal(0, stats[:deletes])
@@ -229,8 +229,8 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[1].elements[1]
-    assert_equal("link", node.attributes[:type])
-    node.add_attribute(:test_attr, "hello there")
+    assert_equal('link', node.attributes[:type])
+    node.add_attribute(:test_attr, 'hello there')
     xml_diff = xml_new.xmlDiff(xml_old, stats)
     assert_equal(0, stats[:adds])
     assert_equal(0, stats[:deletes])
@@ -240,9 +240,9 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[1].elements[1]
-    assert_equal("link", node.attributes[:type])
+    assert_equal('link', node.attributes[:type])
     node.attributes.delete(:sort)
-    node.attributes.delete("sort")
+    node.attributes.delete('sort')
     xml_diff = xml_new.xmlDiff(xml_old, stats)
     assert_equal(0, stats[:adds])
     assert_equal(0, stats[:deletes])
@@ -259,7 +259,7 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[3]
-    assert_equal("7", node.attributes[:id])
+    assert_equal('7', node.attributes[:id])
     node.remove!
     xml_diff = xml_new.xmlDiff(xml_old, stats)
     assert_equal(0, stats[:adds])
@@ -269,7 +269,7 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[3]
-    assert_equal("7", node.attributes[:id])
+    assert_equal('7', node.attributes[:id])
     node.remove!
     patch_ret = xml_old.xmlPatch(xml_diff)
     assert_equal(0, patch_ret[:errors])
@@ -283,8 +283,8 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[3]
-    assert_equal("7", node.attributes[:id])
-    node.add_element("new_test_node", "attr1" => "one")
+    assert_equal('7', node.attributes[:id])
+    node.add_element('new_test_node', 'attr1' => 'one')
     xml_diff = xml_new.xmlDiff(xml_old, stats)
     assert_equal(1, stats[:adds])
     assert_equal(0, stats[:deletes])
@@ -293,8 +293,8 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[3]
-    assert_equal("7", node.attributes[:id])
-    node.add_element("new_test_node", "attr1" => "one")
+    assert_equal('7', node.attributes[:id])
+    node.add_element('new_test_node', 'attr1' => 'one')
     patch_ret = xml_old.xmlPatch(xml_diff)
     assert_equal(0, patch_ret[:errors])
 
@@ -307,8 +307,8 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_new.root.elements[3]
-    assert_equal("7", node.attributes[:id])
-    node.add_attribute("new_test_node", "attr1" => "one")
+    assert_equal('7', node.attributes[:id])
+    node.add_attribute('new_test_node', 'attr1' => 'one')
     xml_diff = xml_new.xmlDiff(xml_old, stats)
     assert_equal(0, stats[:adds])
     assert_equal(0, stats[:deletes])
@@ -317,8 +317,8 @@ module XmlBaseParserTests
     xml_old = MiqXml.load(@xml_string, @xml_klass)
     xml_new = MiqXml.load(@xml_string, @xml_klass)
     node = xml_old.root.elements[3]
-    assert_equal("7", node.attributes[:id])
-    node.add_attribute("new_test_node", "attr1" => "one")
+    assert_equal('7', node.attributes[:id])
+    node.add_attribute('new_test_node', 'attr1' => 'one')
     patch_ret = xml_old.xmlPatch(xml_diff, -1)
     assert_equal(0, patch_ret[:errors])
 
@@ -353,8 +353,8 @@ module XmlBaseParserTests
     xml = @xml
     assert_kind_of(@xml_klass::Document, xml)
 
-    node = xml.find_first("//column")
-    assert_equal(true, node.attributes.key?("type"))
+    node = xml.find_first('//column')
+    assert_equal(true, node.attributes.key?('type'))
 
     attrs = xml.root.attributes.to_h
     assert_kind_of(Hash, attrs)
@@ -416,52 +416,52 @@ module XmlBaseParserTests
   def test_get_element
     xml = @xml
     node = xml.elements[1]
-    assert_equal("rows", node.name.to_s)
+    assert_equal('rows', node.name.to_s)
 
     node = xml.elements[1].elements[1]
-    assert_equal("head", node.name.to_s)
+    assert_equal('head', node.name.to_s)
 
     node = xml.elements[1].elements[1].elements[11].elements[1]
-    assert_equal("colwidth", node.name.to_s)
+    assert_equal('colwidth', node.name.to_s)
 
     # Test getting individual sub-elements
     node = xml.root.elements[1]
-    assert_nil(node.attributes["id"])
+    assert_nil(node.attributes['id'])
 
     node = xml.root.elements[1]
-    assert_nil(node.attributes["id"])
+    assert_nil(node.attributes['id'])
 
     node = xml.root.elements[3]
-    assert_equal("7", node.attributes["id"].to_s)
+    assert_equal('7', node.attributes['id'].to_s)
 
     node = xml.root.elements[6]
-    assert_equal("5", node.attributes["id"].to_s)
+    assert_equal('5', node.attributes['id'].to_s)
 
     assert_raises(RuntimeError) { xml.root.elements[0] }
 
     assert_nil(xml.root.elements[7])
 
     head = xml.root.elements[1]
-    assert_equal("head", head.name.to_s)
+    assert_equal('head', head.name.to_s)
 
     count = 0
     head.each_element { |_e| count += 1 }
     assert_equal(11, count)
 
     count = 0
-    head.each_element("settings") { |_e| count += 1 }
+    head.each_element('settings') { |_e| count += 1 }
     assert_equal(1, count)
 
     node = xml.root.elements[3]
     node2 = xml.root.elements[4]
     copied_node = node.elements << node2
-    assert_equal("7", copied_node.parent.attributes["id"].to_s)
+    assert_equal('7', copied_node.parent.attributes['id'].to_s)
 
     # Test that node (id=6) is now inside of node id=7
     node = xml.root.elements[3]
-    assert_equal("7", node.attributes["id"].to_s)
+    assert_equal('7', node.attributes['id'].to_s)
     node2 = node.elements[11]
-    assert_equal("6", node2.attributes["id"].to_s)
+    assert_equal('6', node2.attributes['id'].to_s)
   end
 
   def test_create_new_doc
@@ -469,19 +469,19 @@ module XmlBaseParserTests
     assert_nil(xml_new.root)
     xml_new.add_element('root')
     refute_nil(xml_new.root)
-    assert_equal("root", xml_new.root.name.to_s)
+    assert_equal('root', xml_new.root.name.to_s)
 
-    new_node = xml_new.root.add_element("node1", "enabled" => true, "disabled" => false, "nothing" => nil)
+    new_node = xml_new.root.add_element('node1', 'enabled' => true, 'disabled' => false, 'nothing' => nil)
 
     assert_equal(true, MiqXml.isXmlElement?(new_node))
     assert_equal(false, MiqXml.isXmlElement?(nil))
 
     attrs = new_node.attributes
-    assert_equal("true", attrs["enabled"].to_s)
-    assert_equal("false", attrs["disabled"].to_s)
-    assert_nil(attrs["nothing"])
-    new_node.add_attributes("nothing" => "something")
-    assert_equal("something", new_node.attributes["nothing"].to_s)
+    assert_equal('true', attrs['enabled'].to_s)
+    assert_equal('false', attrs['disabled'].to_s)
+    assert_nil(attrs['nothing'])
+    new_node.add_attributes('nothing' => 'something')
+    assert_equal('something', new_node.attributes['nothing'].to_s)
 
     assert_kind_of(@xml_klass::Document, xml_new.document)
     assert_kind_of(@xml_klass::Document, xml_new.doc)
@@ -494,14 +494,14 @@ module XmlBaseParserTests
     # Create an empty document with the utf-8 encoding
     # During assert allow for single quotes and new line char.
     xml_new = MiqXml.createDoc(nil, nil, nil, @xml_klass)
-    assert_equal("<?xml version='1.0' encoding='UTF-8'?>", xml_new.to_xml.to_s.tr("\"", "'").chomp)
+    assert_equal("<?xml version='1.0' encoding='UTF-8'?>", xml_new.to_xml.to_s.tr('"', "'").chomp)
   end
 
   def test_create_new_node
-    node = MiqXml.newNode("scan_item", @xml_klass)
-    assert_equal("<scan_item/>", node.to_xml.to_s)
+    node = MiqXml.newNode('scan_item', @xml_klass)
+    assert_equal('<scan_item/>', node.to_xml.to_s)
     node = MiqXml.newNode(nil, @xml_klass)
-    assert_equal("</>", node.to_xml.to_s)
+    assert_equal('</>', node.to_xml.to_s)
   end
 
   def test_xml_encoding
@@ -515,42 +515,42 @@ module XmlBaseParserTests
   def test_find_each
     xml = @xml
     row_order = %w(8 7 6 4 5)
-    REXML::XPath.each(xml, "//row") do |e|
-      assert_equal(e.attributes["id"], row_order.delete_at(0))
+    REXML::XPath.each(xml, '//row') do |e|
+      assert_equal(e.attributes['id'], row_order.delete_at(0))
     end
     assert_equal(0, row_order.length)
 
     row_order = %w(8 7 6 4 5)
-    xml.find_each("//row") do |e|
-      assert_equal(e.attributes["id"], row_order.delete_at(0))
+    xml.find_each('//row') do |e|
+      assert_equal(e.attributes['id'], row_order.delete_at(0))
     end
     assert_equal(0, row_order.length)
   end
 
   def test_find_first
     xml = @xml
-    x = REXML::XPath.first(xml, "//row")
+    x = REXML::XPath.first(xml, '//row')
     refute_nil(x)
-    assert_equal("8", x.attributes["id"])
+    assert_equal('8', x.attributes['id'])
 
-    x = xml.find_first("//row")
+    x = xml.find_first('//row')
     refute_nil(x)
-    assert_equal("8", x.attributes["id"])
+    assert_equal('8', x.attributes['id'])
   end
 
   def test_find_match
     xml = @xml
-    x = REXML::XPath.match(xml, "//row")
+    x = REXML::XPath.match(xml, '//row')
     refute_nil(x)
     assert_equal(5, x.length)
-    assert_equal("8", x[0].attributes["id"])
-    assert_equal("4", x[3].attributes["id"])
+    assert_equal('8', x[0].attributes['id'])
+    assert_equal('4', x[3].attributes['id'])
 
-    x = xml.find_match("//row")
+    x = xml.find_match('//row')
     refute_nil(x)
     assert_equal(5, x.length)
-    assert_equal("8", x[0].attributes["id"])
-    assert_equal("4", x[3].attributes["id"])
+    assert_equal('8', x[0].attributes['id'])
+    assert_equal('4', x[3].attributes['id'])
   end
 
   def test_deep_clone
@@ -564,7 +564,7 @@ module XmlBaseParserTests
 
   def test_node_loop_and_move
     xml_full = @xml
-    xml_part = MiqXml.load("<root/>", @xml_klass)
+    xml_part = MiqXml.load('<root/>', @xml_klass)
 
     count = 0
     xml_full.root.each_element do |e|
@@ -581,7 +581,7 @@ module XmlBaseParserTests
 
     time = Time.now
     html_text = "<b>#{time}</b>"
-    xml.root.add_cdata(html_text.gsub(",", "\\,"))
+    xml.root.add_cdata(html_text.gsub(',', '\\,'))
 
     assert(xml.to_s.include?("![CDATA[<b>#{time}</b>]]"))
     assert_equal("<b>#{time}</b>", xml.root.text)
@@ -626,22 +626,22 @@ module XmlBaseParserTests
     xml = @xml
     assert_kind_of(@xml_klass::Document, xml)
 
-    frozen_text = "A&P".freeze
+    frozen_text = 'A&P'.freeze
     xml.root.text = frozen_text
-    assert_equal("A&P", xml.root.text)
+    assert_equal('A&P', xml.root.text)
   end
 
   def test_write_method
     # Test writing from the document
-    @xml.write(test_string = "")
-    refute_equal("", test_string)
+    @xml.write(test_string = '')
+    refute_equal('', test_string)
     test_string = @xml.to_s
-    refute_equal("", test_string)
+    refute_equal('', test_string)
 
     # Test writing from an element
-    @xml.root.write(test_string = "")
-    refute_equal("", test_string)
+    @xml.root.write(test_string = '')
+    refute_equal('', test_string)
     test_string = @xml.root.to_s
-    refute_equal("", test_string)
+    refute_equal('', test_string)
   end
 end

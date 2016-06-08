@@ -10,7 +10,7 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
       allow(ApplicationRecord).to receive(:my_region_number).and_return(99)
     end
 
-    it "removes the rows from the tables" do
+    it 'removes the rows from the tables' do
       event_def_stub.create!(:id => 99_000_000_000_005)
       event_def_stub.create!(:id => 5)
       event_def_stub.create!(:id => 1_000_000_000_005)
@@ -28,7 +28,7 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
       expect(scan_item_stub.first.id).to eq 99_000_000_000_005
     end
 
-    it "adds newly excluded tables to the replication worker configuration" do
+    it 'adds newly excluded tables to the replication worker configuration' do
       empty_settings = {
         :workers => {
           :worker_base => {
@@ -40,7 +40,7 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
           }
         }
       }
-      config = conf_stub.create!(:typ => "vmdb", :settings => empty_settings)
+      config = conf_stub.create!(:typ => 'vmdb', :settings => empty_settings)
 
       migrate
 
@@ -50,10 +50,10 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
       expect(excludes).to include(scan_item_stub.table_name)
     end
 
-    it "adds newly excluded tables with datatype of keys as string " do
+    it 'adds newly excluded tables with datatype of keys as string ' do
       empty_settings = {
-        "workers" => {
-          "worker_base" => {
+        'workers' => {
+          'worker_base' => {
             :replication_worker => {
               :replication => {
                 :exclude_tables => []
@@ -62,7 +62,7 @@ describe RemoveReplicatedRowsFromNewlyExcludedTables do
           }
         }
       }
-      config = conf_stub.create!(:typ => "vmdb", :settings => empty_settings)
+      config = conf_stub.create!(:typ => 'vmdb', :settings => empty_settings)
 
       migrate
 

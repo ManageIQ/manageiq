@@ -8,7 +8,7 @@ class User < ApplicationRecord
   include TimezoneMixin
 
   has_many   :miq_approvals, :as => :approver
-  has_many   :miq_approval_stamps,  :class_name => "MiqApproval", :foreign_key => :stamper_id
+  has_many   :miq_approval_stamps,  :class_name => 'MiqApproval', :foreign_key => :stamper_id
   has_many   :miq_requests, :foreign_key => :requester_id
   has_many   :vms,           :foreign_key => :evm_owner_id
   has_many   :miq_templates, :foreign_key => :evm_owner_id
@@ -17,11 +17,11 @@ class User < ApplicationRecord
   has_many   :miq_widget_sets, :as => :owner, :dependent => :destroy
   has_many   :miq_reports, :dependent => :nullify
   has_many   :service_orders, :dependent => :nullify
-  belongs_to :current_group, :class_name => "MiqGroup"
+  belongs_to :current_group, :class_name => 'MiqGroup'
   has_and_belongs_to_many :miq_groups
-  scope      :admin, -> { where(:userid => "admin") }
+  scope      :admin, -> { where(:userid => 'admin') }
 
-  virtual_has_many :active_vms, :class_name => "VmOrTemplate"
+  virtual_has_many :active_vms, :class_name => 'VmOrTemplate'
 
   delegate   :miq_user_role, :current_tenant, :get_filters, :has_filters?, :get_managed_filters, :get_belongsto_filters,
              :to => :current_group, :allow_nil => true
@@ -31,7 +31,7 @@ class User < ApplicationRecord
   validates_presence_of   :name, :userid, :region
   validates_uniqueness_of :userid, :scope => :region
   validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
-    :allow_nil => true, :message => "must be a valid email address"
+    :allow_nil => true, :message => 'must be a valid email address'
   validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
 
   # use authenticate_bcrypt rather than .authenticate to avoid confusion
@@ -116,7 +116,7 @@ class User < ApplicationRecord
   def dummy_password_for_external_auth
     if password.blank? && password_digest.blank? &&
        !self.class.authenticator(userid).uses_stored_password?
-      self.password = "dummy"
+      self.password = 'dummy'
     end
   end
 
@@ -124,7 +124,7 @@ class User < ApplicationRecord
     auth = self.class.authenticator(userid)
     unless auth.uses_stored_password?
       raise MiqException::MiqEVMLoginError,
-            _("password change not allowed when authentication mode is %{name}") % {:name => auth.class.proper_name}
+            _('password change not allowed when authentication mode is %{name}') % {:name => auth.class.proper_name}
     end
     if auth.authenticate(userid, oldpwd)
       self.password = newpwd
@@ -166,7 +166,7 @@ class User < ApplicationRecord
   end
 
   def self.authenticator(username = nil)
-    Authenticator.for(VMDB::Config.new("vmdb").config[:authentication], username)
+    Authenticator.for(VMDB::Config.new('vmdb').config[:authentication], username)
   end
 
   def self.authenticate(username, password, request = nil, options = {})
@@ -184,15 +184,15 @@ class User < ApplicationRecord
   def logoff
     self.lastlogoff = Time.now.utc
     save
-    AuditEvent.success(:event => "logoff", :message => "User #{userid} has logged off", :userid => userid)
+    AuditEvent.success(:event => 'logoff', :message => "User #{userid} has logged off", :userid => userid)
   end
 
   def get_expressions(db = nil)
-    sql = ["((search_type=? and search_key is null) or (search_type=? and search_key is null) or (search_type=? and search_key=?))",
+    sql = ['((search_type=? and search_key is null) or (search_type=? and search_key is null) or (search_type=? and search_key=?))',
            'default', 'global', 'user', userid
           ]
     unless db.nil?
-      sql[0] += "and db=?"
+      sql[0] += 'and db=?'
       sql << db.to_s
     end
     MiqSearch.get_expressions(sql)
@@ -212,7 +212,7 @@ class User < ApplicationRecord
   end
 
   def admin?
-    userid == "admin"
+    userid == 'admin'
   end
 
   def subscribed_widget_sets
@@ -234,13 +234,13 @@ class User < ApplicationRecord
   end
 
   def self.super_admin
-    in_my_region.find_by_userid("admin")
+    in_my_region.find_by_userid('admin')
   end
 
   private
 
   def self.seed_file_name
-    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
+    @seed_file_name ||= Rails.root.join('db', 'fixtures', "#{table_name}.yml")
   end
 
   def self.seed_data

@@ -61,13 +61,13 @@ class DashboardController < ApplicationController
   end
 
   EXPLORER_FEATURE_LINKS = {
-    "catalog"             => "catalog",
-    "containers"          => "containers",
-    "pxe"                 => "pxe",
-    "service"             => "service",
-    "vm_cloud_explorer"   => "vm_cloud",
-    "vm_explorer_accords" => "vm_or_template",
-    "vm_infra_explorer"   => "vm_infra"
+    'catalog'             => 'catalog',
+    'containers'          => 'containers',
+    'pxe'                 => 'pxe',
+    'service'             => 'service',
+    'vm_cloud_explorer'   => 'vm_cloud',
+    'vm_explorer_accords' => 'vm_or_template',
+    'vm_infra_explorer'   => 'vm_infra'
   }
 
   # A main tab was pressed
@@ -76,7 +76,7 @@ class DashboardController < ApplicationController
     tab = Menu::Manager.section_id_string_to_symbol(params[:tab])
 
     unless tab.present? # no tab name or invalid tab name was passed in
-      render :action => "login"
+      render :action => 'login'
       return
     end
 
@@ -95,19 +95,19 @@ class DashboardController < ApplicationController
     case tab
     when :vi
       tab_features.detect do |f|
-        if f == "dashboard" && role_allows(:feature => "dashboard_view")
-          redirect_to :action => "show"
+        if f == 'dashboard' && role_allows(:feature => 'dashboard_view')
+          redirect_to :action => 'show'
         elsif role_allows(:feature => f)
           case f
-          when "miq_report" then redirect_to(:controller => "report",    :action => "explorer")
-          when "chargeback" then redirect_to(:controller => f,           :action => f)
-          when "timeline"   then redirect_to(:controller => "dashboard", :action => f)
-          when "rss"        then redirect_to(:controller => "alert",     :action => "show_list")
+          when 'miq_report' then redirect_to(:controller => 'report',    :action => 'explorer')
+          when 'chargeback' then redirect_to(:controller => f,           :action => f)
+          when 'timeline'   then redirect_to(:controller => 'dashboard', :action => f)
+          when 'rss'        then redirect_to(:controller => 'alert',     :action => 'show_list')
           end
         end
       end
     when :conf
-      redirect_to(:controller => "provider_foreman", :action => "show_list") if role_allows(:feature => 'provider_foreman_explorer')
+      redirect_to(:controller => 'provider_foreman', :action => 'show_list') if role_allows(:feature => 'provider_foreman_explorer')
     when :compute, :clo, :inf, :cnt, :svc, :mdl, :net
       tab_features.detect do |f|
         if EXPLORER_FEATURE_LINKS.include?(f) && role_allows(:feature => f, :any => true)
@@ -118,38 +118,38 @@ class DashboardController < ApplicationController
       end
     when :con
       tab_features.detect do |f|
-        if f == "control_explorer" && role_allows(:feature => "control_explorer_view")
-          redirect_to :controller => "miq_policy", :action => "explorer"
+        if f == 'control_explorer' && role_allows(:feature => 'control_explorer_view')
+          redirect_to :controller => 'miq_policy', :action => 'explorer'
         elsif role_allows(:feature => f)
           case f
-          when "policy_simulation"    then redirect_to(:controller => "miq_policy", :action => "rsop")
-          when "policy_import_export" then redirect_to(:controller => "miq_policy", :action => "export")
-          when "policy_log"           then redirect_to(:controller => "miq_policy", :action => "log")
+          when 'policy_simulation'    then redirect_to(:controller => 'miq_policy', :action => 'rsop')
+          when 'policy_import_export' then redirect_to(:controller => 'miq_policy', :action => 'export')
+          when 'policy_log'           then redirect_to(:controller => 'miq_policy', :action => 'log')
           end
         end
       end
     when :aut
       tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
         case f
-        when "miq_ae_class_explorer"      then redirect_to(:controller => "miq_ae_class", :action => "explorer")
-        when "miq_ae_class_simulation"    then redirect_to(:controller => "miq_ae_tools", :action => "resolve")
-        when "miq_ae_class_import_export" then redirect_to(:controller => "miq_ae_tools", :action => "import_export")
-        when "miq_ae_class_log"           then redirect_to(:controller => "miq_ae_tools", :action => "log")
+        when 'miq_ae_class_explorer'      then redirect_to(:controller => 'miq_ae_class', :action => 'explorer')
+        when 'miq_ae_class_simulation'    then redirect_to(:controller => 'miq_ae_tools', :action => 'resolve')
+        when 'miq_ae_class_import_export' then redirect_to(:controller => 'miq_ae_tools', :action => 'import_export')
+        when 'miq_ae_class_log'           then redirect_to(:controller => 'miq_ae_tools', :action => 'log')
         end
       end
     when :opt
       tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
-        redirect_to(:controller => "miq_capacity", :action => f) if f
+        redirect_to(:controller => 'miq_capacity', :action => f) if f
       end
     when :set
       tab_features.detect do |f|
-        if f == "my_settings" && role_allows(:feature => f, :any => true)
-          redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
+        if f == 'my_settings' && role_allows(:feature => f, :any => true)
+          redirect_to :controller => 'configuration', :action => 'index', :config_tab => 'ui'
         elsif role_allows(:feature => f, :any => true)
           case f
-          when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
-          when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
-          when "about"        then redirect_to(:controller => "support",   :action => "index", :support_tab => "about")
+          when 'tasks'        then redirect_to(:controller => 'configuration', :action => 'index')
+          when 'ops_explorer' then redirect_to(:controller => 'ops',       :action => 'explorer')
+          when 'about'        then redirect_to(:controller => 'support',   :action => 'index', :support_tab => 'about')
           end
         end
       end
@@ -164,11 +164,11 @@ class DashboardController < ApplicationController
   # New tab was pressed
   def change_tab
     show
-    render :action => "show"
+    render :action => 'show'
   end
 
   def show
-    @layout    = "dashboard"
+    @layout    = 'dashboard'
     @dashboard = true
 
     records = current_group.ordered_widget_sets
@@ -179,7 +179,7 @@ class DashboardController < ApplicationController
     # load first one on intial load, or load tab from params[:tab] changed,
     # or when coming back from another screen load active tab from sandbox
     if active_tab
-      @tabs.unshift([active_tab.id.to_s, ""])
+      @tabs.unshift([active_tab.id.to_s, ''])
       @sb[:active_db]    = active_tab.name
       @sb[:active_db_id] = active_tab.id
     end
@@ -225,11 +225,11 @@ class DashboardController < ApplicationController
     # Set tabs now if user's group didnt have any dashboards using default dashboard
     if records.empty?
       db = MiqWidgetSet.find_by_id(@sb[:active_db_id])
-      @tabs.unshift([ws.id.to_s, ""])
+      @tabs.unshift([ws.id.to_s, ''])
       @tabs.push([ws.id.to_s, db.description])
     # User's group has dashboards, delete userid|default dashboard if it exists, dont need to keep that
     else
-      db = MiqWidgetSet.where_unique_on("default", current_user).first
+      db = MiqWidgetSet.where_unique_on('default', current_user).first
       db.destroy if db.present?
     end
 
@@ -249,10 +249,10 @@ class DashboardController < ApplicationController
       @available_widgets.push(w.id)  # Keep track of widgets available to this user
       if !col_widgets.include?(w.id) && w.enabled
         image, tip = case w.content_type
-                     when "menu"   then ["fa fa-share-square-o fa-lg",     _("Add this Menu Widget")]
-                     when "rss"    then ["fa fa-rss fa-lg",  _("Add this RSS Feed Widget")]
-                     when "chart"  then ["product product-chart fa-lg", _("Add this Chart Widget")]
-                     when "report" then ["product product-report fa-lg",   _("Add this Report Widget")]
+                     when 'menu'   then ['fa fa-share-square-o fa-lg',     _('Add this Menu Widget')]
+                     when 'rss'    then ['fa fa-rss fa-lg',  _('Add this RSS Feed Widget')]
+                     when 'chart'  then ['product product-chart fa-lg', _('Add this Chart Widget')]
+                     when 'report' then ['product product-report fa-lg',   _('Add this Report Widget')]
                      end
         if prev_type && prev_type != w.content_type
           widget_list << {:id => w.content_type, :type => :separator}
@@ -268,8 +268,8 @@ class DashboardController < ApplicationController
       end
     end
 
-    can_add   = role_allows(:feature => "dashboard_add")
-    can_reset = role_allows(:feature => "dashboard_reset")
+    can_add   = role_allows(:feature => 'dashboard_add')
+    can_reset = role_allows(:feature => 'dashboard_reset')
     if can_add || can_reset
       @widgets_menu = {}
       if widget_list.blank?
@@ -285,7 +285,7 @@ class DashboardController < ApplicationController
 
   # Destroy and recreate a user's dashboard from the default
   def reset_widgets
-    assert_privileges("dashboard_reset")
+    assert_privileges('dashboard_reset')
     ws = MiqWidgetSet.where_unique_on(@sb[:active_db], current_user).first
     ws.destroy unless ws.nil?
     ws = create_user_dashboard(@sb[:active_db_id])
@@ -307,15 +307,15 @@ class DashboardController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       if @sb[:dashboards][@sb[:active_db]][:minimized].include?(w)
-        page << javascript_del_class("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
-        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-square-o-up fa-fw")
+        page << javascript_del_class("w_#{w}_minmax", 'fa fa-caret-square-o-down fa-fw')
+        page << javascript_add_class("w_#{w}_minmax", 'fa fa-caret-square-o-up fa-fw')
         page << javascript_show("dd_w#{w}_box")
         page << "$('#w_#{w}_minmax').prop('title', ' Minimize');"
         page << "$('#w_#{w}_minmax').text(' Minimize');"
         @sb[:dashboards][@sb[:active_db]][:minimized].delete(w)
       else
-        page << javascript_del_class("w_#{w}_minmax", "fa-caret-square-o-up fa-fw")
-        page << javascript_add_class("w_#{w}_minmax", "fa fa-caret-square-o-down fa-fw")
+        page << javascript_del_class("w_#{w}_minmax", 'fa-caret-square-o-up fa-fw')
+        page << javascript_add_class("w_#{w}_minmax", 'fa fa-caret-square-o-down fa-fw')
         page << javascript_hide("dd_w#{w}_box")
         page << "$('#w_#{w}_minmax').prop('title', ' Maximize');"
         page << "$('#w_#{w}_minmax').text(' Maximize');"
@@ -338,25 +338,25 @@ class DashboardController < ApplicationController
 
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("lightbox_div", :partial => "zoomed_chart", :locals => {:widget => widget})
+      page.replace_html('lightbox_div', :partial => 'zoomed_chart', :locals => {:widget => widget})
       page << "$('#lightbox-panel').fadeIn(300);"
-      page << "miqLoadCharts();"
+      page << 'miqLoadCharts();'
     end
   end
 
   # A widget has been dropped
   def widget_dd_done
     if params[:col1] || params[:col2] || params[:col3]
-      if params[:col1] && params[:col1] != [""]
-        @sb[:dashboards][@sb[:active_db]][:col1] = params[:col1].collect { |w| w.split("_").last.to_i }
+      if params[:col1] && params[:col1] != ['']
+        @sb[:dashboards][@sb[:active_db]][:col1] = params[:col1].collect { |w| w.split('_').last.to_i }
         @sb[:dashboards][@sb[:active_db]][:col2].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col1].include?(w) }
         @sb[:dashboards][@sb[:active_db]][:col3].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col1].include?(w) }
-      elsif params[:col2] && params[:col2] != [""]
-        @sb[:dashboards][@sb[:active_db]][:col2] = params[:col2].collect { |w| w.split("_").last.to_i }
+      elsif params[:col2] && params[:col2] != ['']
+        @sb[:dashboards][@sb[:active_db]][:col2] = params[:col2].collect { |w| w.split('_').last.to_i }
         @sb[:dashboards][@sb[:active_db]][:col1].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col2].include?(w) }
         @sb[:dashboards][@sb[:active_db]][:col3].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col2].include?(w) }
-      elsif params[:col3] && params[:col3] != [""]
-        @sb[:dashboards][@sb[:active_db]][:col3] = params[:col3].collect { |w| w.split("_").last.to_i }
+      elsif params[:col3] && params[:col3] != ['']
+        @sb[:dashboards][@sb[:active_db]][:col3] = params[:col3].collect { |w| w.split('_').last.to_i }
         @sb[:dashboards][@sb[:active_db]][:col1].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col3].include?(w) }
         @sb[:dashboards][@sb[:active_db]][:col2].delete_if { |w| @sb[:dashboards][@sb[:active_db]][:col3].include?(w) }
       end
@@ -388,7 +388,7 @@ class DashboardController < ApplicationController
 
   # A widget has been added
   def widget_add
-    assert_privileges("dashboard_add")
+    assert_privileges('dashboard_add')
     if params[:widget]                # Make sure we got a widget in
       w = params[:widget].to_i
       if @sb[:dashboards][@sb[:active_db]][:col3].length < @sb[:dashboards][@sb[:active_db]][:col1].length &&
@@ -409,7 +409,7 @@ class DashboardController < ApplicationController
           page.redirect_to :action => 'show'
         end
       else
-        render_flash(_("The widget \"%{widget_name}\" is already part of the edited dashboard") %
+        render_flash(_('The widget "%{widget_name}" is already part of the edited dashboard') %
          {:widget_name => w.name}, :error)
       end
     else
@@ -431,8 +431,8 @@ class DashboardController < ApplicationController
     css = @settings[:css] if @settings && @settings[:css] # Save prior CSS settings
     @settings = copy_hash(DEFAULT_SETTINGS)               # Need settings, else pages won't display
     @settings[:css] = css if css                          # Restore CSS settings for other tabs previusly logged in
-    @more = params[:type] && params[:type] != "less"
-    flash[:notice] = _("Session was timed out due to inactivity. Please log in again.") if params[:timeout] == "true"
+    @more = params[:type] && params[:type] != 'less'
+    flash[:notice] = _('Session was timed out due to inactivity. Please log in again.') if params[:timeout] == 'true'
     logon_details = MiqServer.my_server(true).logon_status_details
     @login_message = logon_details[:message] if logon_details[:status] == :starting && logon_details[:message]
 
@@ -441,7 +441,7 @@ class DashboardController < ApplicationController
       session[:user_validation_error] = nil
     end
 
-    render :layout => "login"
+    render :layout => 'login'
   end
 
   # AJAX login retry method
@@ -452,7 +452,7 @@ class DashboardController < ApplicationController
       logon_details = MiqServer.my_server(true).logon_status_details
       if logon_details[:status] == :starting
         @login_message = logon_details[:message] if logon_details[:message]
-        page.replace("login_message_div", :partial => "login_message")
+        page.replace('login_message_div', :partial => 'login_message')
         page << "setTimeout(\"#{remote_function(:url => {:action => 'login_retry'})}\", 10000);"
       else
         page.redirect_to :action => 'login'
@@ -470,8 +470,8 @@ class DashboardController < ApplicationController
 
   # Login support for SAML - GET /saml_login
   def saml_login
-    if @user_name.blank? && request.env.key?("HTTP_X_REMOTE_USER").present?
-      @user_name = params[:user_name] = request.env["HTTP_X_REMOTE_USER"].split("@").first
+    if @user_name.blank? && request.env.key?('HTTP_X_REMOTE_USER').present?
+      @user_name = params[:user_name] = request.env['HTTP_X_REMOTE_USER'].split('@').first
     else
       redirect_to :action => 'logout'
       return
@@ -482,13 +482,13 @@ class DashboardController < ApplicationController
 
     case validation.result
     when :pass
-      render :template => "dashboard/saml_login",
+      render :template => 'dashboard/saml_login',
              :layout   => false,
              :locals   => {:api_auth_token => generate_ui_api_token(@user_name),
                            :validation_url => validation.url}
       return
     when :fail
-      session[:user_validation_error] = validation.flash_msg || "User validation failed"
+      session[:user_validation_error] = validation.flash_msg || 'User validation failed'
       redirect_to :action => 'logout'
       return
     end
@@ -496,8 +496,8 @@ class DashboardController < ApplicationController
 
   # Handle single-signon from login screen
   def kerberos_authenticate
-    if @user_name.blank? && request.headers["X-Remote-User"].present?
-      @user_name = params[:user_name] = request.headers["X-Remote-User"].split("@").first
+    if @user_name.blank? && request.headers['X-Remote-User'].present?
+      @user_name = params[:user_name] = request.headers['X-Remote-User'].split('@').first
     end
 
     authenticate(true)
@@ -505,28 +505,28 @@ class DashboardController < ApplicationController
 
   # Handle user credentials from login screen
   def authenticate(require_api_token = false)
-    @layout = "dashboard"
+    @layout = 'dashboard'
 
     unless params[:task_id] # First time thru, check for buttons pressed
       # Handle More and Back buttons (for changing password)
       case params[:button]
-      when "more"
+      when 'more'
         @more = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("login_more_div", :partial => "login_more")
+          page.replace('login_more_div', :partial => 'login_more')
           page << javascript_focus('user_new_password')
-          page << javascript_show("back_button")
-          page << javascript_hide("more_button")
+          page << javascript_show('back_button')
+          page << javascript_hide('more_button')
         end
         return
-      when "back"
+      when 'back'
         render :update do |page|
           page << javascript_prologue
-          page.replace("login_more_div", :partial => "login_more")
+          page.replace('login_more_div', :partial => 'login_more')
           page << javascript_focus('user_name')
-          page << javascript_hide("back_button")
-          page << javascript_show("more_button")
+          page << javascript_hide('back_button')
+          page << javascript_show('more_button')
         end
         return
       end
@@ -540,10 +540,10 @@ class DashboardController < ApplicationController
     }
 
     if params[:user_name].blank? && params[:user_password].blank? &&
-       request.headers["X-Remote-User"].blank? &&
-       get_vmdb_config[:authentication][:mode] == "httpd" &&
+       request.headers['X-Remote-User'].blank? &&
+       get_vmdb_config[:authentication][:mode] == 'httpd' &&
        get_vmdb_config[:authentication][:sso_enabled] &&
-       params[:action] == "authenticate"
+       params[:action] == 'authenticate'
 
       render :update do |page|
         page << javascript_prologue
@@ -565,32 +565,32 @@ class DashboardController < ApplicationController
       end
     when :fail
       clear_current_user
-      add_flash(validation.flash_msg || _("Error: Authentication failed"), :error)
+      add_flash(validation.flash_msg || _('Error: Authentication failed'), :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << javascript_show("flash_div")
-        page << "miqSparkle(false);"
-        page << "miqEnableLoginFields(true);"
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+        page << javascript_show('flash_div')
+        page << 'miqSparkle(false);'
+        page << 'miqEnableLoginFields(true);'
       end
     end
   end
 
   def generate_ui_api_token(userid)
     @api_user_token_service ||= ApiUserTokenService.new
-    @api_user_token_service.generate_token(userid, "ui")
+    @api_user_token_service.generate_token(userid, 'ui')
   end
 
   def timeline
     @breadcrumbs = []
-    @layout      = "timeline"
+    @layout      = 'timeline'
     @report      = nil
     @timeline    = true
     if params[:id]
       build_timeline
       drop_breadcrumb(:name => @title, :url => "/dashboard/timeline/#{params[:id]}")
     else
-      drop_breadcrumb(:name => _("Timelines"), :url => "/dashboard/timeline")
+      drop_breadcrumb(:name => _('Timelines'), :url => '/dashboard/timeline')
       session[:last_rpt_id] = nil # Clear out last rpt record id
     end
     build_timeline_listnav
@@ -598,7 +598,7 @@ class DashboardController < ApplicationController
 
   def show_timeline
     @breadcrumbs = []
-    @layout      = "timeline"
+    @layout      = 'timeline'
     if params[:id]
       build_timeline
       render :update do |page|
@@ -609,7 +609,7 @@ class DashboardController < ApplicationController
       end
     else
       @report = nil
-      drop_breadcrumb(:name => _("Timelines"), :url => "/dashboard/timeline")
+      drop_breadcrumb(:name => _('Timelines'), :url => '/dashboard/timeline')
       @timeline = true
       session[:last_rpt_id] = nil # Clear out last rpt record id
       build_timeline_listnav
@@ -629,10 +629,10 @@ class DashboardController < ApplicationController
       page << javascript_prologue
       page << javascript_highlight("report_#{session[:last_rpt_id]}_link", false)  if session[:last_rpt_id]
       center_tb_buttons = {
-        'timeline_txt' => "text",
-        'timeline_csv' => "CSV"
+        'timeline_txt' => 'text',
+        'timeline_csv' => 'CSV'
       }
-      center_tb_buttons['timeline_pdf'] = "PDF" if PdfGenerator.available?
+      center_tb_buttons['timeline_pdf'] = 'PDF' if PdfGenerator.available?
       if @report
         page << javascript_highlight("report_#{@report.id}_link", true)
         status = @report.table.data.length == 0 ? :disabled : :enabled
@@ -646,8 +646,8 @@ class DashboardController < ApplicationController
           page << "ManageIQ.toolbars.hideItem('#center_tb', '#{button_id}');"
         end
       end
-      page.replace("tl_div", :partial => "dashboard/tl_detail")
-      page << "miqSparkle(false);"
+      page.replace('tl_div', :partial => 'dashboard/tl_detail')
+      page << 'miqSparkle(false);'
       session[:last_rpt_id] = @report ? @report.id : nil  # Remember rpt record id to turn off later
     end
   end
@@ -663,7 +663,7 @@ class DashboardController < ApplicationController
 
     # For SAML, let's do the SAML logout to clear mod_auth_mellon IdP cookies and such
     if ext_auth?(:saml_enabled)
-      redirect_to "/saml2/logout?ReturnTo=/"
+      redirect_to '/saml2/logout?ReturnTo=/'
     else
       redirect_to :action => 'login'
     end
@@ -689,7 +689,7 @@ class DashboardController < ApplicationController
 
   # Put out error msg if user's role is not authorized for an action
   def auth_error
-    add_flash(_("The user is not authorized for this task or item."), :error)
+    add_flash(_('The user is not authorized for this task or item.'), :error)
     add_flash(_("Press your browser's Back button or click a tab to continue"))
   end
 
@@ -697,7 +697,7 @@ class DashboardController < ApplicationController
 
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
-      tooltip = _("Download this Timeline data in %{typ} format") % {:typ => typ}
+      tooltip = _('Download this Timeline data in %{typ} format') % {:typ => typ}
       "ManageIQ.toolbars.enableItem('#center_tb', '#{button_id}'); ManageIQ.toolbars.setItemTooltip('#center_tb', '#{button_id}', '#{tooltip}');"
     else
       tooltip = _('No records found for this timeline')
@@ -750,7 +750,7 @@ class DashboardController < ApplicationController
     @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
 
     session[:user_TZO] = params[:user_TZO] ? params[:user_TZO].to_i : nil     # Grab the timezone (future use)
-    session[:browser] ||= Hash.new("Unknown")
+    session[:browser] ||= Hash.new('Unknown')
     if params[:browser_name]
       session[:browser][:name] = params[:browser_name].to_s.downcase
       session[:browser][:name_ui] = params[:browser_name]
@@ -764,14 +764,14 @@ class DashboardController < ApplicationController
 
   # Create a user's dashboard, pass in dashboard id if that is used to copy else use default dashboard
   def create_user_dashboard(db_id = nil)
-    db = db_id ? MiqWidgetSet.find_by_id(db_id) : MiqWidgetSet.where_unique_on("default").first
+    db = db_id ? MiqWidgetSet.find_by_id(db_id) : MiqWidgetSet.where_unique_on('default').first
     ws = MiqWidgetSet.where_unique_on(db.name, current_user).first
     if ws.nil?
       # Create new db if it doesn't exist
       ws = MiqWidgetSet.new(:name        => db.name,
                             :group_id    => current_group_id,
                             :userid      => current_userid,
-                            :description => _("%{name} dashboard for user %{id} in group id %{current_group_id}") %
+                            :description => _('%{name} dashboard for user %{id} in group id %{current_group_id}') %
                                               {:name             => db.name,
                                                :id               => current_userid,
                                                :current_group_id => current_group_id})
@@ -797,12 +797,12 @@ class DashboardController < ApplicationController
 
   # Gather information for the report accordians
   def build_timeline_listnav
-    build_report_listnav("timeline")
+    build_report_listnav('timeline')
   end
 
   def build_timeline
     @record = MiqReport.find_by_id(from_cid(params[:id]))
-    @ajax_action = "tl_generate"
+    @ajax_action = 'tl_generate'
   end
 
   def tl_gen_timeline_data
@@ -820,20 +820,20 @@ class DashboardController < ApplicationController
     miq_task = MiqTask.find(params[:task_id]) # Not first time, read the task record
     @report  = miq_task.task_results
     session[:rpt_task_id] = miq_task.id
-    if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
-      add_flash(_("Error building timeline  %{error_message}") % {:error_message => miq_task.message}, :error)
+    if miq_task.task_results.blank? || miq_task.status != 'Ok' # Check to see if any results came back or status not Ok
+      add_flash(_('Error building timeline  %{error_message}') % {:error_message => miq_task.message}, :error)
       return
     end
 
     @timeline = true
     if @report.table.data.empty?
-      add_flash(_("No records found for this timeline"), :warning)
+      add_flash(_('No records found for this timeline'), :warning)
       return
     end
 
     @report.extras[:browser_name] = browser_info(:name)
     if is_browser_ie?
-      blob = BinaryBlob.new(:name => "timeline_results")
+      blob = BinaryBlob.new(:name => 'timeline_results')
       blob.binary = @report.to_timeline
       session[:tl_xml_blob_id] = blob.id
     else
@@ -841,12 +841,12 @@ class DashboardController < ApplicationController
     end
 
     tz = @report.tz || Time.zone
-    session[:tl_position] = format_timezone(@report.extras[:tl_position], tz, "tl")
+    session[:tl_position] = format_timezone(@report.extras[:tl_position], tz, 'tl')
   end
 
   def get_layout
     # Don't change layout when window size changes session[:layout]
-    request.parameters["action"] == "window_sizes" ? session[:layout] : "login"
+    request.parameters['action'] == 'window_sizes' ? session[:layout] : 'login'
   end
 
   def get_session_data

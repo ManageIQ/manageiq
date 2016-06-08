@@ -52,7 +52,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     # TODO(lsmola) we really need to get rid of the building our own emf_ref, it makes crosslinking impossible, parsing
     # the id string like this is suboptimal
     return nil unless id
-    _, _, guid, _, resource_group, _, type, sub_type, name = id.split("/")
+    _, _, guid, _, resource_group, _, type, sub_type, name = id.split('/')
     resource_uid(guid,
                  resource_group.downcase,
                  "#{type.downcase}/#{sub_type.downcase}",
@@ -104,7 +104,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
       :type                => self.class.cloud_network_type,
       :ems_ref             => uid,
       :name                => cloud_network.name,
-      :cidr                => cloud_network.properties.address_space.address_prefixes.join(", "),
+      :cidr                => cloud_network.properties.address_space.address_prefixes.join(', '),
       :enabled             => true,
       :cloud_subnets       => cloud_subnets,
       :orchestration_stack => parent_manager_fetch_path(:orchestration_stacks_resources, uid).try(:stack),
@@ -166,7 +166,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
     # where id of the network port is
     # /subscriptions/{guid}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/networkInterfaces/vm1nic1
     cloud_subnet_network_port_id = ip.properties.try(:ip_configuration).try(:id)
-    cloud_subnet_network_port_id.split("/")[0..-3].join("/") if cloud_subnet_network_port_id
+    cloud_subnet_network_port_id.split('/')[0..-3].join('/') if cloud_subnet_network_port_id
   end
 
   def parse_floating_ip(ip)

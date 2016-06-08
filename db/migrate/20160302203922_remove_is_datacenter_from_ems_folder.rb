@@ -6,8 +6,8 @@ class RemoveIsDatacenterFromEmsFolder < ActiveRecord::Migration[5.0]
   def up
     # Go through all existing EmsFolder records and set :type => Datacenter
     # if the is_datacenter column is true before deleting it
-    say_with_time("Set type column for EmsFolders") do
-      EmsFolder.where(:is_datacenter => true).update_all(:type => "Datacenter")
+    say_with_time('Set type column for EmsFolders') do
+      EmsFolder.where(:is_datacenter => true).update_all(:type => 'Datacenter')
     end
 
     remove_column :ems_folders, :is_datacenter
@@ -16,9 +16,9 @@ class RemoveIsDatacenterFromEmsFolder < ActiveRecord::Migration[5.0]
   def down
     add_column :ems_folders, :is_datacenter, :boolean
 
-    say_with_time("Set is_datacenter for EmsFolders") do
+    say_with_time('Set is_datacenter for EmsFolders') do
       EmsFolder.where("type != 'Datacenter' OR type is NULL").update_all(:is_datacenter => false)
-      EmsFolder.where(:type => "Datacenter").update_all(:is_datacenter => true)
+      EmsFolder.where(:type => 'Datacenter').update_all(:is_datacenter => true)
     end
   end
 end

@@ -24,13 +24,13 @@ describe Authenticator::Httpd do
   end
 
   describe '#uses_stored_password?' do
-    it "is false" do
+    it 'is false' do
       expect(subject.uses_stored_password?).to be_falsey
     end
   end
 
   describe '#lookup_by_identity' do
-    it "finds existing users" do
+    it 'finds existing users' do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
     end
 
@@ -49,7 +49,7 @@ describe Authenticator::Httpd do
       headers.each do |k, v|
         env["HTTP_#{k.upcase.tr '-', '_'}"] = v if v
       end
-      ActionDispatch::Request.new(Rack::MockRequest.env_for("/", env))
+      ActionDispatch::Request.new(Rack::MockRequest.env_for('/', env))
     end
 
     let(:headers) do
@@ -66,60 +66,60 @@ describe Authenticator::Httpd do
     let(:username) { 'alice' }
     let(:user_groups) { 'wibble:bubble' }
 
-    context "with user details" do
-      context "using local authorization" do
-        it "succeeds" do
+    context 'with user details' do
+      context 'using local authorization' do
+        it 'succeeds' do
           expect(authenticate).to eq(alice)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'alice',
-            :message => "User alice successfully validated by External httpd",
+            :message => 'User alice successfully validated by External httpd',
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'alice',
-            :message => "Authentication successful for user alice",
+            :message => 'Authentication successful for user alice',
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
-        it "updates lastlogon" do
+        it 'updates lastlogon' do
           expect(-> { authenticate }).to change { alice.reload.lastlogon }
         end
       end
 
-      context "using external authorization" do
+      context 'using external authorization' do
         let(:config) { {:httpd_role => true} }
 
-        it "enqueues an authorize task" do
+        it 'enqueues an authorize task' do
           expect(subject).to receive(:authorize_queue).and_return(123)
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'alice',
-            :message => "User alice successfully validated by External httpd",
+            :message => 'User alice successfully validated by External httpd',
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'alice',
-            :message => "Authentication successful for user alice",
+            :message => 'Authentication successful for user alice',
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
-        it "updates lastlogon" do
+        it 'updates lastlogon' do
           expect(-> { authenticate }).to change { alice.reload.lastlogon }
         end
 
-        it "immediately completes the task" do
+        it 'immediately completes the task' do
           task_id = authenticate
           task = MiqTask.find(task_id)
           expect(User.find_by_userid(task.userid)).to eq(alice)
@@ -127,41 +127,41 @@ describe Authenticator::Httpd do
       end
     end
 
-    context "with invalid user" do
+    context 'with invalid user' do
       let(:headers) { super().except('X-Remote-User') }
 
-      it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      it 'fails' do
+        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
       end
 
-      it "puts the right name in a failing audit entry" do
+      it 'puts the right name in a failing audit entry' do
         expect(AuditEvent).to receive(:failure).with(
           :event   => 'authenticate_httpd',
           :userid  => 'alice',
-          :message => "Authentication failed for userid alice",
+          :message => 'Authentication failed for userid alice',
         )
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
     end
 
-    context "without a user" do
+    context 'without a user' do
       let(:username) { '' }
 
-      it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      it 'fails' do
+        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
       end
 
-      it "records one failing audit entry" do
+      it 'records one failing audit entry' do
         expect(AuditEvent).to receive(:failure).with(
           :event   => 'authenticate_httpd',
           :userid  => '',
-          :message => "Authentication failed for userid ",
+          :message => 'Authentication failed for userid ',
         )
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
-      it "logs the failure" do
+      it 'logs the failure' do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
@@ -170,76 +170,76 @@ describe Authenticator::Httpd do
         expect(-> { authenticate rescue nil }).not_to change { alice.reload.lastlogon }
       end
 
-      context "with specific failure message" do
+      context 'with specific failure message' do
         let(:headers) { super().merge('X-External-Auth-Error' => 'because reasons') }
 
-        it "reflects in the audit message" do
+        it 'reflects in the audit message' do
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_httpd',
             :userid  => '',
-            :message => "Authentication failed for userid : because reasons",
+            :message => 'Authentication failed for userid : because reasons',
           )
           authenticate rescue nil
         end
       end
     end
 
-    context "with unknown username" do
+    context 'with unknown username' do
       let(:username) { 'bob' }
       let(:headers) do
         super().merge('X-Remote-User-FullName' => 'Bob Builderson',
                       'X-Remote-User-Email'    => 'bob@example.com')
       end
 
-      context "using local authorization" do
-        it "fails" do
+      context 'using local authorization' do
+        it 'fails' do
           expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
         end
 
-        it "records one successful and one failing audit entry" do
+        it 'records one successful and one failing audit entry' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
-            :message => "User bob successfully validated by External httpd",
+            :message => 'User bob successfully validated by External httpd',
           )
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
-            :message => "User bob authenticated but not defined in EVM",
+            :message => 'User bob authenticated but not defined in EVM',
           )
           authenticate rescue nil
         end
-        it "logs the failure" do
+        it 'logs the failure' do
           allow($log).to receive(:warn).with(/Audit/)
           expect($log).to receive(:warn).with(/User authenticated but not defined in EVM, please contact your EVM administrator/)
           authenticate rescue nil
         end
       end
 
-      context "using external authorization" do
+      context 'using external authorization' do
         let(:config) { {:httpd_role => true} }
 
-        it "enqueues an authorize task" do
+        it 'enqueues an authorize task' do
           expect(subject).to receive(:authorize_queue).and_return(123)
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
-            :message => "User bob successfully validated by External httpd",
+            :message => 'User bob successfully validated by External httpd',
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_httpd',
             :userid  => 'bob',
-            :message => "Authentication successful for user bob",
+            :message => 'Authentication successful for user bob',
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
-        it "immediately completes the task" do
+        it 'immediately completes the task' do
           task_id = authenticate
           task = MiqTask.find(task_id)
           user = User.find_by_userid(task.userid)
@@ -247,28 +247,28 @@ describe Authenticator::Httpd do
           expect(user.email).to eq('bob@example.com')
         end
 
-        it "creates a new User" do
+        it 'creates a new User' do
           expect(-> { authenticate }).to change { User.where(:userid => 'bob').count }.from(0).to(1)
         end
 
-        context "with no matching groups" do
+        context 'with no matching groups' do
           let(:headers) { super().merge('X-Remote-User-Groups' => 'bubble:trouble') }
 
-          it "enqueues an authorize task" do
+          it 'enqueues an authorize task' do
             expect(subject).to receive(:authorize_queue).and_return(123)
             expect(authenticate).to eq(123)
           end
 
-          it "records two successful audit entries plus one failure" do
+          it 'records two successful audit entries plus one failure' do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
               :userid  => 'bob',
-              :message => "User bob successfully validated by External httpd",
+              :message => 'User bob successfully validated by External httpd',
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_httpd',
               :userid  => 'bob',
-              :message => "Authentication successful for user bob",
+              :message => 'Authentication successful for user bob',
             )
             expect(AuditEvent).to receive(:failure).with(
               :event   => 'authorize',
@@ -282,7 +282,7 @@ describe Authenticator::Httpd do
             expect(-> { authenticate }).not_to change { User.where(:userid => 'bob').count }.from(0)
           end
 
-          it "immediately marks the task as errored" do
+          it 'immediately marks the task as errored' do
             task_id = authenticate
             task = MiqTask.find(task_id)
             expect(task.status).to eq('Error')

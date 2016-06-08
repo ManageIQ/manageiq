@@ -17,7 +17,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
 
       options[:check_if_running] = true unless options.key?(:check_if_running)
       raise(MiqException::RemoteConsoleNotSupportedError,
-            "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
+            "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != 'on'
     end
 
     def remote_console_acquire_ticket(userid, console_type)

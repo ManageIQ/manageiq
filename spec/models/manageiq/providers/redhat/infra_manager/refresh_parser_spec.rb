@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
-  context "#vm_inv_to_disk_hashes" do
-    it "should assign location by boot order and name" do
+  context '#vm_inv_to_disk_hashes' do
+    it 'should assign location by boot order and name' do
       disk_inv = {:disks => [
         {
           :interface       => 'virtio',
@@ -60,21 +60,21 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
     end
   end
 
-  context "#vm_inv_to_custom_attribute_hashes" do
-    it "should truncate the custom attribute value" do
+  context '#vm_inv_to_custom_attribute_hashes' do
+    it 'should truncate the custom attribute value' do
       inv = {
         :custom_attributes => [
           :name  => 'custom_attribute',
-          :value => "0" * 1000
+          :value => '0' * 1000
         ]
       }
       result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_custom_attribute_hashes(inv)
       expect(result).to eq([
         {
-          :section => "custom_field",
-          :name    => "custom_attribute",
+          :section => 'custom_field',
+          :name    => 'custom_attribute',
           :value   => "#{"0" * 252}...",
-          :source  => "VC"
+          :source  => 'VC'
         }
       ])
     end

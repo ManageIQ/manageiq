@@ -1,7 +1,7 @@
 describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   before do
     unless provider.api_cached?
-      VCR.use_cassette("ems_refresh/refreshers/foreman_refresher_api_doc") do
+      VCR.use_cassette('ems_refresh/refreshers/foreman_refresher_api_doc') do
         provider.ensure_api_cached
       end
     end
@@ -12,7 +12,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     FactoryGirl.create(:provider_foreman,
                        :zone       => zone,
-                       :url        => "example.com",
+                       :url        => 'example.com',
                        :verify_ssl => false,
                       )
   end
@@ -22,7 +22,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   let(:orgs) { provisioning_manager.configuration_organizations.where(spec_related).sort_by(&:name) }
   let(:locs) { provisioning_manager.configuration_locations.where(spec_related).sort_by(&:name) }
 
-  it "loads data with locations and organizations" do
+  it 'loads data with locations and organizations' do
     allow(EmsRefresh).to receive(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
 
     2.times do
@@ -56,13 +56,13 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
     child = orgs.first
     parent = orgs.last
     expect(child).to have_attributes(
-      :title     => "Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization",
-      :name      => "ProviderRefreshSpecChildOrganization",
+      :title     => 'Infra/ProviderRefreshSpecOrganization/ProviderRefreshSpecChildOrganization',
+      :name      => 'ProviderRefreshSpecChildOrganization',
       :parent_id => parent.id,
     )
     expect(parent).to have_attributes(
-      :title => "Infra/ProviderRefreshSpecOrganization",
-      :name  => "ProviderRefreshSpecOrganization",
+      :title => 'Infra/ProviderRefreshSpecOrganization',
+      :name  => 'ProviderRefreshSpecOrganization',
     )
   end
 
@@ -71,13 +71,13 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
     child = locs.first
     parent = locs.last
     expect(child).to have_attributes(
-      :title     => "ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation",
-      :name      => "ProviderRefreshSpec-ChildLocation",
+      :title     => 'ProviderRefreshSpec-Location/ProviderRefreshSpec-ChildLocation',
+      :name      => 'ProviderRefreshSpec-ChildLocation',
       :parent_id => parent.id,
     )
     expect(parent).to have_attributes(
-      :title => "ProviderRefreshSpec-Location",
-      :name  => "ProviderRefreshSpec-Location",
+      :title => 'ProviderRefreshSpec-Location',
+      :name  => 'ProviderRefreshSpec-Location',
     )
   end
 

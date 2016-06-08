@@ -4,17 +4,17 @@ describe VmMigrateWorkflow do
   let(:ems) { FactoryGirl.create(:ems_vmware) }
   let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'My VM', :ext_management_system => ems) }
 
-  context "With a Valid Template," do
-    context "#allowed_hosts" do
+  context 'With a Valid Template,' do
+    context '#allowed_hosts' do
       let(:workflow) { VmMigrateWorkflow.new({:src_ids => [vm.id]}, admin) }
 
-      context "#allowed_hosts" do
-        it "with no hosts" do
+      context '#allowed_hosts' do
+        it 'with no hosts' do
           stub_dialog
           expect(workflow.allowed_hosts).to eq([])
         end
 
-        it "with a host" do
+        it 'with a host' do
           stub_dialog
           host = FactoryGirl.create(:host_vmware, :ext_management_system => ems)
           host.set_parent(ems)
@@ -26,10 +26,10 @@ describe VmMigrateWorkflow do
     end
   end
 
-  describe "#make_request" do
+  describe '#make_request' do
     let(:alt_user) { FactoryGirl.create(:user_with_group) }
 
-    it "creates and update a request" do
+    it 'creates and update a request' do
       EvmSpecHelper.local_miq_server
       stub_dialog
 
@@ -37,8 +37,8 @@ describe VmMigrateWorkflow do
       workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_migrate_request_created",
-        :target_class => "Vm",
+        :event        => 'vm_migrate_request_created',
+        :target_class => 'Vm',
         :userid       => admin.userid,
         :message      => "VM Migrate requested by <#{admin.userid}> for Vm:#{[vm.id].inspect}"
       )
@@ -52,7 +52,7 @@ describe VmMigrateWorkflow do
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(VmMigrateRequest)
-      expect(request.request_type).to eq("vm_migrate")
+      expect(request.request_type).to eq('vm_migrate')
       expect(request.description).to eq("VM Migrate for: #{vm.name} - ")
       expect(request.requester).to eq(admin)
       expect(request.userid).to eq(admin.userid)
@@ -64,8 +64,8 @@ describe VmMigrateWorkflow do
       workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_migrate_request_updated",
-        :target_class => "Vm",
+        :event        => 'vm_migrate_request_updated',
+        :target_class => 'Vm',
         :userid       => alt_user.userid,
         :message      => "VM Migrate request updated by <#{alt_user.userid}> for Vm:#{[vm.id].inspect}"
       )

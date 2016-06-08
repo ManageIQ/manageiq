@@ -22,7 +22,7 @@ module Ext3
     attr_accessor :blockAllocBmp, :inodeAllocBmp
 
     def initialize(buf)
-      raise "Ext3::GroupDescriptorEntry.initialize: Nil buffer" if buf.nil?
+      raise 'Ext3::GroupDescriptorEntry.initialize: Nil buffer' if buf.nil?
 
       # Decode the group descriptor table entry.
       @gde = GDE.decode(buf)

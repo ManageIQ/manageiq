@@ -77,7 +77,7 @@ module Ext3
     end
 
     def block_to_path(block)
-      raise ArgumentError, "block must be greater than or equal to 0" if block < 0
+      raise ArgumentError, 'block must be greater than or equal to 0' if block < 0
       @path = [nil, nil, nil, nil]
 
       if block < DIRECT_SIZE
@@ -111,7 +111,7 @@ module Ext3
         return
       end
 
-      raise ArgumentError, "block outside valid range"
+      raise ArgumentError, 'block outside valid range'
     end
 
     def path_to_block

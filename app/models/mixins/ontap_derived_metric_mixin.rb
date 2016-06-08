@@ -1,17 +1,17 @@
 module OntapDerivedMetricMixin
   extend ActiveSupport::Concern
   NON_COUNTER_COLS = [
-    "id",
-    "statistic_time",
-    "interval",
-    "queue_depth",
-    "miq_storage_metric_id",
-    "position",
-    "created_at",
-    "updated_at",
-    "base_counters",
-    "storage_metrics_metadata_id",
-    "miq_cim_instance_id"
+    'id',
+    'statistic_time',
+    'interval',
+    'queue_depth',
+    'miq_storage_metric_id',
+    'position',
+    'created_at',
+    'updated_at',
+    'base_counters',
+    'storage_metrics_metadata_id',
+    'miq_cim_instance_id'
   ]
 
   included { init }
@@ -22,9 +22,9 @@ module OntapDerivedMetricMixin
       @rateCounterNames = nil
       @basedCounterNames  = nil
       @baseCounterNames = nil
-      @metadataClass    = (name + "Metadata").constantize
+      @metadataClass    = (name + 'Metadata').constantize
 
-      cfg = VMDB::Config.new("vmdb").config
+      cfg = VMDB::Config.new('vmdb').config
       @storageMetricsCollectionInterval = cfg.fetch_path(:storage, :metrics_collection, :collection_interval).to_i_with_method
       @storageMetricsMaxGapToFill       = cfg.fetch_path(:storage, :metrics_collection, :max_gap_to_fill).to_i_with_method
     end
@@ -38,7 +38,7 @@ module OntapDerivedMetricMixin
     end
 
     def rateCounterNames(counterInfo)
-      @rateCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c].properties != "rate" }
+      @rateCounterNames ||= counterNames.dup.delete_if { |c| counterInfo[c].properties != 'rate' }
     end
 
     def basedCounterNames(counterInfo)
@@ -133,7 +133,7 @@ module OntapDerivedMetricMixin
 
   def counter_unit(counterName)
     if (ci = counter_info[counterName]).nil?
-      raise _("%{class_name}.counter_unit: counter %{counter_name} not found") % {:class_name   => self.class.name,
+      raise _('%{class_name}.counter_unit: counter %{counter_name} not found') % {:class_name   => self.class.name,
                                                                                   :counter_name => counterName}
     end
     ci['unit']
@@ -141,7 +141,7 @@ module OntapDerivedMetricMixin
 
   def counter_desc(counterName)
     if (ci = counter_info[counterName]).nil?
-      raise _("%{class_name}.counter_desc: counter %{counter_name} not found") % {:class_name   => self.class.name,
+      raise _('%{class_name}.counter_desc: counter %{counter_name} not found') % {:class_name   => self.class.name,
                                                                                   :counter_name => counterName}
     end
     ci['desc']

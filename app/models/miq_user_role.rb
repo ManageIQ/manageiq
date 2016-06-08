@@ -1,7 +1,7 @@
 class MiqUserRole < ApplicationRecord
-  SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
-  ADMIN_ROLE_NAME       = "EvmRole-administrator"
-  DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
+  SUPER_ADMIN_ROLE_NAME = 'EvmRole-super_administrator'
+  ADMIN_ROLE_NAME       = 'EvmRole-administrator'
+  DEFAULT_TENANT_ROLE_NAME = 'EvmRole-tenant_administrator'
 
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements
@@ -17,7 +17,7 @@ class MiqUserRole < ApplicationRecord
 
   default_value_for :read_only, false
 
-  before_destroy { |r| raise _("Read only roles cannot be deleted.") if r.read_only }
+  before_destroy { |r| raise _('Read only roles cannot be deleted.') if r.read_only }
 
   FIXTURE_PATH = File.join(FIXTURE_DIR, table_name)
   FIXTURE_YAML = "#{FIXTURE_PATH}.yml"
@@ -25,8 +25,8 @@ class MiqUserRole < ApplicationRecord
   SCOPES = [:base, :one, :sub]
 
   RESTRICTIONS = {
-    :user          => "Only User Owned",
-    :user_or_group => "Only User or Group Owned"
+    :user          => 'Only User Owned',
+    :user_or_group => 'Only User or Group Owned'
   }
 
   def feature_identifiers
@@ -35,7 +35,7 @@ class MiqUserRole < ApplicationRecord
 
   def allows?(options = {})
     ident = options[:identifier]
-    raise _("No value provided for option :identifier") if ident.nil?
+    raise _('No value provided for option :identifier') if ident.nil?
 
     if ident.kind_of?(MiqProductFeature)
       feat = ident
@@ -60,7 +60,7 @@ class MiqUserRole < ApplicationRecord
 
   def allows_any?(options = {})
     scope = options[:scope] || :sub
-    raise _(":scope must be one of %{scope}") % {:scope => SCOPES.inspect} unless SCOPES.include?(scope)
+    raise _(':scope must be one of %{scope}') % {:scope => SCOPES.inspect} unless SCOPES.include?(scope)
 
     idents = options[:identifiers].to_miq_a
     return false if idents.empty?
@@ -118,7 +118,7 @@ class MiqUserRole < ApplicationRecord
   def self.seed
     seed_from_array(YAML.load_file(FIXTURE_YAML))
 
-    Dir.glob(File.join(FIXTURE_PATH, "*.yml")).each do |fixture|
+    Dir.glob(File.join(FIXTURE_PATH, '*.yml')).each do |fixture|
       seed_from_array(YAML.load_file(fixture), true)
     end
   end
@@ -145,7 +145,7 @@ class MiqUserRole < ApplicationRecord
 
   def vm_restriction
     vmr = settings && settings.fetch_path(:restrictions, :vms)
-    vmr ? RESTRICTIONS[vmr] : "None"
+    vmr ? RESTRICTIONS[vmr] : 'None'
   end
 
   def super_admin_user?

@@ -6,12 +6,12 @@ describe 'vmreconfigure_request_approved method' do
   it 'sends email' do
     expect(GenericMailer).to receive(:deliver).with(:automation_notification,
                                                     hash_including(:to   => user.email,
-                                                                   :from => "evmadmin@example.com"
+                                                                   :from => 'evmadmin@example.com'
                                                                   )
                                                    )
     attrs = ["MiqServer::miq_server=#{miq_server.id}"]
     attrs << "MiqRequest::miq_request=#{request.id}"
-    MiqAeEngine.instantiate("/Infrastructure/VM/Reconfigure/Email/VmReconfigureRequestApproved?" \
+    MiqAeEngine.instantiate('/Infrastructure/VM/Reconfigure/Email/VmReconfigureRequestApproved?' \
                             "event=vm_reconfigured&#{attrs.join('&')}", user)
   end
 end

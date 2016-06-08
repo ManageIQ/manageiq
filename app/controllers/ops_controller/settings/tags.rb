@@ -5,7 +5,7 @@ module OpsController::Settings::Tags
   def category_select
     render :update do |page|
       page << javascript_prologue
-      if params[:id] == "new"
+      if params[:id] == 'new'
         page.redirect_to :action => 'category_new'    # redirect to new
       else
         page.redirect_to :action => 'category_edit', :id => params[:id], :field => params[:field]   # redirect to edit
@@ -17,14 +17,14 @@ module OpsController::Settings::Tags
   def category_delete
     category = Classification.find(params[:id])
     c_name = category.name
-    audit = {:event        => "category_record_delete",
-             :message      => _("[%{name}] Record deleted") % {:name => c_name},
+    audit = {:event        => 'category_record_delete',
+             :message      => _('[%{name}] Record deleted') % {:name => c_name},
              :target_id    => category.id,
-             :target_class => "Classification",
+             :target_class => 'Classification',
              :userid       => session[:userid]}
     if category.destroy
       AuditEvent.success(audit)
-      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "Classification"), :name => c_name})
+      add_flash(_('%{model} "%{name}": Delete successful') % {:model => ui_lookup(:model => 'Classification'), :name => c_name})
       category_get_all
       render :update do |page|
         page << javascript_prologue
@@ -34,25 +34,25 @@ module OpsController::Settings::Tags
       category.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     end
   end
 
   def category_edit
     case params[:button]
-    when "cancel"
+    when 'cancel'
       @category = session[:edit][:category] if session[:edit] && session[:edit][:category]
       if !@category || @category.id.blank?
-        add_flash(_("Add of new %{model} was cancelled by the user") %
-                    {:model => ui_lookup(:model => "Classification")})
+        add_flash(_('Add of new %{model} was cancelled by the user') %
+                    {:model => ui_lookup(:model => 'Classification')})
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Classification"), :name => @category.name})
+        add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'Classification'), :name => @category.name})
       end
       get_node_info(x_node)
       @category = @edit = session[:edit] = nil    # clean out the saved info
       replace_right_cell(@nodetype)
-    when "save", "add"
+    when 'save', 'add'
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("category_edit__#{id}", "replace_cell__explorer")
       @ldap_group = @edit[:ldap_group] if @edit && @edit[:ldap_group]
@@ -120,7 +120,7 @@ module OpsController::Settings::Tags
           replace_right_cell("root")
         end
       end
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       if params[:id]
         @category = Classification.find(params[:id])
         category_set_form_vars
@@ -138,13 +138,13 @@ module OpsController::Settings::Tags
 
   # AJAX driven routine to check for changes in ANY field on the user form
   def category_field_changed
-    return unless load_edit("category_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("category_edit__#{params[:id]}", 'replace_cell__explorer')
     category_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial,
-                                 :locals  => {:type => "classifications", :action_url => 'category_field_changed'}) if @refresh_div
+                                 :locals  => {:type => 'classifications', :action_url => 'category_field_changed'}) if @refresh_div
       page << javascript_for_miq_button_visibility_changed(@changed)
     end
   end
@@ -153,11 +153,11 @@ module OpsController::Settings::Tags
   def ce_new_cat
     ce_get_form_vars
     if params[:classification_name]
-      @cat = Classification.find_by_name(params["classification_name"])
+      @cat = Classification.find_by_name(params['classification_name'])
       ce_build_screen                                         # Build the Classification Edit screen
       render :update do |page|
         page << javascript_prologue
-        page.replace(:tab_div, :partial => "settings_co_tags_tab")
+        page.replace(:tab_div, :partial => 'settings_co_tags_tab')
       end
     end
   end
@@ -165,21 +165,21 @@ module OpsController::Settings::Tags
   # AJAX driven routine to select a classification entry
   def ce_select
     ce_get_form_vars
-    if params[:id] == "new"
+    if params[:id] == 'new'
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page.replace("classification_entries_div", :partial => "classification_entries", :locals => {:entry => "new", :edit => true})
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+        page.replace('classification_entries_div', :partial => 'classification_entries', :locals => {:entry => 'new', :edit => true})
         page << javascript_focus('entry_name')
         page << "$('#entry_name').select();"
       end
-      session[:entry] = "new"
+      session[:entry] = 'new'
     else
       entry = Classification.find(params[:id])
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page.replace("classification_entries_div", :partial => "classification_entries", :locals => {:entry => entry, :edit => true})
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+        page.replace('classification_entries_div', :partial => 'classification_entries', :locals => {:entry => entry, :edit => true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('#entry_#{j_str(params[:field])}').select();"
       end
@@ -190,16 +190,16 @@ module OpsController::Settings::Tags
   # AJAX driven routine to add/update a classification entry
   def ce_accept
     ce_get_form_vars
-    if session[:entry] == "new"
-      entry = @cat.entries.create(:name        => params["entry"]["name"],
-                                  :description => params["entry"]["description"])
+    if session[:entry] == 'new'
+      entry = @cat.entries.create(:name        => params['entry']['name'],
+                                  :description => params['entry']['description'])
     else
       entry = @cat.entries.find(session[:entry].id)
-      if entry.name == params["entry"]["name"] && entry.description == params["entry"]["description"]
+      if entry.name == params['entry']['name'] && entry.description == params['entry']['description']
         no_changes = true
       else
-        entry.name        = params["entry"]["name"]
-        entry.description = params["entry"]["description"]
+        entry.name        = params['entry']['name']
+        entry.description = params['entry']['description']
         entry.save
       end
     end
@@ -207,12 +207,12 @@ module OpsController::Settings::Tags
       entry.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         page << javascript_focus('entry_name')
       end
       return
     end
-    if session[:entry] == "new"
+    if session[:entry] == 'new'
       AuditEvent.success(ce_created_audit(entry))
     else
       AuditEvent.success(ce_saved_audit(entry)) unless no_changes
@@ -220,7 +220,7 @@ module OpsController::Settings::Tags
     ce_build_screen # Build the Classification Edit screen
     render :update do |page|
       page << javascript_prologue
-      page.replace(:tab_div, :partial => "settings_co_tags_tab")
+      page.replace(:tab_div, :partial => 'settings_co_tags_tab')
       unless no_changes
         page << jquery_pulsate_element("#{entry.id}_tr")
       end
@@ -231,24 +231,24 @@ module OpsController::Settings::Tags
   def ce_delete
     ce_get_form_vars
     entry = @cat.entries.find(params[:id])
-    audit = {:event        => "classification_entry_delete",
-             :message      => _("Category %{description} [%{name}] record deleted") % {:description => @cat.description,
+    audit = {:event        => 'classification_entry_delete',
+             :message      => _('Category %{description} [%{name}] record deleted') % {:description => @cat.description,
                                                                                        :name        => entry.name},
              :target_id    => entry.id,
-             :target_class => "Classification",
+             :target_class => 'Classification',
              :userid       => session[:userid]}
     if entry.destroy
       AuditEvent.success(audit)
       ce_build_screen                               # Build the Classification Edit screen
       render :update do |page|
         page << javascript_prologue
-        page.replace(:tab_div, :partial => "settings_co_tags_tab")
+        page.replace(:tab_div, :partial => 'settings_co_tags_tab')
       end
     else
       entry.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         page << javascript_focus('entry_name')
       end
     end
@@ -272,36 +272,36 @@ module OpsController::Settings::Tags
 
   # Build the audit object when a record is created, including all of the new fields
   def ce_created_audit(entry)
-    msg = _("Category %{description} [%{name}] record created (") % {:description => @cat.description,
+    msg = _('Category %{description} [%{name}] record created (') % {:description => @cat.description,
                                                                      :name        => entry.name}
-    event = "classification_entry_add"
+    event = 'classification_entry_add'
     i = 0
-    params["entry"].each_key do |k|
-      msg += ", " if i > 0
+    params['entry'].each_key do |k|
+      msg += ', ' if i > 0
       i += 1
-      msg = msg + k.to_s + ":[" + params["entry"][k].to_s + "]"
+      msg = msg + k.to_s + ':[' + params['entry'][k].to_s + ']'
     end
-    msg += ")"
+    msg += ')'
     audit = {:event => event, :target_id => entry.id, :target_class => entry.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
   # Build the audit object when a record is saved, including all of the changed fields
   def ce_saved_audit(entry)
-    msg = _("Category %{description} [%{name}] record updated (") % {:description => @cat.description,
+    msg = _('Category %{description} [%{name}] record updated (') % {:description => @cat.description,
                                                                      :name        => entry.name}
-    event = "classification_entry_update"
+    event = 'classification_entry_update'
     i = 0
     if entry.name != session[:entry].name
       i += 1
-      msg += _("name:[%{session}] to [%{name}]") % {:session => session[:entry].name, :name => entry.name}
+      msg += _('name:[%{session}] to [%{name}]') % {:session => session[:entry].name, :name => entry.name}
     end
     if entry.description != session[:entry].description
-      msg += ", " if i > 0
+      msg += ', ' if i > 0
       i += 1
-      msg += _("description:[%{session}] to [%{name}]") % {:session => session[:entry].description,
+      msg += _('description:[%{session}] to [%{name}]') % {:session => session[:entry].description,
                                                            :name    => entry.description}
     end
-    msg += ")"
+    msg += ')'
     audit = {:event => event, :target_id => entry.id, :target_class => entry.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
@@ -316,12 +316,12 @@ module OpsController::Settings::Tags
     #     @edit[:new][:show] = false
     #   end
     @edit[:new][:show] = (params[:show] == 'true') if params[:show]
-    @edit[:new][:perf_by_tag] = (params[:perf_by_tag] == "true") if params[:perf_by_tag]
+    @edit[:new][:perf_by_tag] = (params[:perf_by_tag] == 'true') if params[:perf_by_tag]
     @edit[:new][:example_text] = params[:example_text] if params[:example_text]
     #   if !@edit[:new][:name].blank? && !Classification.find_by_name(@edit[:new][:name]) && params[:button] != "add" && params[:single_value]
     #     @edit[:new][:single_value] = (params[:single_value] == "1")
     #   end
-    @edit[:new][:single_value] = (params[:single_value] == "true") if params[:single_value]
+    @edit[:new][:single_value] = (params[:single_value] == 'true') if params[:single_value]
   end
 
   def category_get_all
@@ -366,7 +366,7 @@ module OpsController::Settings::Tags
     @edit[:user] = @user
     @edit[:new] = {}
     @edit[:current] = {}
-    @edit[:key] = "category_edit__new"
+    @edit[:key] = 'category_edit__new'
     @edit[:new][:name] = nil
     @edit[:new][:description] = nil
     @edit[:new][:show] = true

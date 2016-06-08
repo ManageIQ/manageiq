@@ -4,7 +4,7 @@ module RubyParserRuby23Bridge
   def for_current_ruby
     result = super
   rescue => e
-    if e.message.include?("unrecognized RUBY_VERSION 2.3")
+    if e.message.include?('unrecognized RUBY_VERSION 2.3')
       Ruby22Parser.new
     else
       raise

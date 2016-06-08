@@ -3,7 +3,7 @@
 #
 $evm.root['ae_result'] = 'ok'
 stack = $evm.root['orchestration_stack']
-$evm.log("info", "Checking stack #{stack.try(:name)} removed from provider")
+$evm.log('info', "Checking stack #{stack.try(:name)} removed from provider")
 
 if stack && $evm.get_state_var('stack_exists_in_provider')
   begin

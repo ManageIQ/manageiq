@@ -2,7 +2,7 @@ require_relative '../../bundler_setup'
 require 'VcoWebService/MiqVcoClientBase'
 
 begin
-  work_flow_name  = "Clone VM (No customization at all)"
+  work_flow_name  = 'Clone VM (No customization at all)'
   target_vm   = 'Fedora7'
   to_host     = TARGET_HOST
 
@@ -15,10 +15,10 @@ begin
   wf = vco.getWorkflowsWithName(work_flow_name)
   vco.dumpObj(wf)
 
-  vms = vco.findByFilter("VC:VirtualMachine", 'name' => target_vm)[0]
+  vms = vco.findByFilter('VC:VirtualMachine', 'name' => target_vm)[0]
   vco.dumpObj(vms)
 
-  fo = vco.findByFilter("VC:VmFolder", 'name' => "vm")[0]
+  fo = vco.findByFilter('VC:VmFolder', 'name' => 'vm')[0]
   vco.dumpObj(fo)
 
   inputs = VcoArray.new('ArrayOfWorkflowTokenAttribute') do |ia|
@@ -40,12 +40,12 @@ begin
     ia << VcoHash.new('WorkflowTokenAttribute') do |i|
       i.name  = 'powerOn'
       i.type  = 'boolean'
-      i.value = "false"
+      i.value = 'false'
     end
     ia << VcoHash.new('WorkflowTokenAttribute') do |i|
       i.name  = 'template'
       i.type  = 'boolean'
-      i.value = "false"
+      i.value = 'false'
     end
   end
 

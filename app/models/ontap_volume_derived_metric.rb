@@ -11,6 +11,6 @@ class OntapVolumeDerivedMetric < ApplicationRecord
   include OntapDerivedMetricMixin
 
   def self.derive_metrics(prevMetric, curMetric, counterInfo)
-    derive_metrics_common(prevMetric, curMetric, counterInfo, "volume")
+    derive_metrics_common(prevMetric, curMetric, counterInfo, 'volume')
   end
 end

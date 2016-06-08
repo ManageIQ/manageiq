@@ -5,7 +5,7 @@ class ManageIQ::Providers::Microsoft::InfraManager::ProvisionWorkflow < ::MiqPro
 
   def allowed_provision_types(_options = {})
     {
-      "microsoft" => "Microsoft"
+      'microsoft' => 'Microsoft'
     }
   end
 

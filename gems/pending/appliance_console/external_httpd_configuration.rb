@@ -6,44 +6,44 @@ module ApplianceConsole
       #
       # External Authentication Definitions
       #
-      IPA_COMMAND         = "/usr/bin/ipa"
-      IPA_INSTALL_COMMAND = "/usr/sbin/ipa-client-install"
-      IPA_GETKEYTAB       = "/usr/sbin/ipa-getkeytab"
+      IPA_COMMAND         = '/usr/bin/ipa'
+      IPA_INSTALL_COMMAND = '/usr/sbin/ipa-client-install'
+      IPA_GETKEYTAB       = '/usr/sbin/ipa-getkeytab'
 
-      SSSD_CONFIG         = "/etc/sssd/sssd.conf"
-      PAM_CONFIG          = "/etc/pam.d/httpd-auth"
-      HTTP_KEYTAB         = "/etc/http.keytab"
-      HTTP_REMOTE_USER    = "/etc/httpd/conf.d/manageiq-remote-user.conf"
-      HTTP_EXTERNAL_AUTH  = "/etc/httpd/conf.d/manageiq-external-auth.conf"
+      SSSD_CONFIG         = '/etc/sssd/sssd.conf'
+      PAM_CONFIG          = '/etc/pam.d/httpd-auth'
+      HTTP_KEYTAB         = '/etc/http.keytab'
+      HTTP_REMOTE_USER    = '/etc/httpd/conf.d/manageiq-remote-user.conf'
+      HTTP_EXTERNAL_AUTH  = '/etc/httpd/conf.d/manageiq-external-auth.conf'
       HTTP_EXTERNAL_AUTH_TEMPLATE = "#{HTTP_EXTERNAL_AUTH}.erb"
 
-      GETSEBOOL_COMMAND   = "/usr/sbin/getsebool"
-      SETSEBOOL_COMMAND   = "/usr/sbin/setsebool"
-      GETENFORCE_COMMAND  = "/usr/sbin/getenforce"
+      GETSEBOOL_COMMAND   = '/usr/sbin/getsebool'
+      SETSEBOOL_COMMAND   = '/usr/sbin/setsebool'
+      GETENFORCE_COMMAND  = '/usr/sbin/getenforce'
 
-      APACHE_USER         = "apache"
+      APACHE_USER         = 'apache'
 
-      TIMESTAMP_FORMAT    = "%Y%m%d_%H%M%S"
+      TIMESTAMP_FORMAT    = '%Y%m%d_%H%M%S'
 
       LDAP_ATTRS          = {
-        "mail"        => "REMOTE_USER_EMAIL",
-        "givenname"   => "REMOTE_USER_FIRSTNAME",
-        "sn"          => "REMOTE_USER_LASTNAME",
-        "displayname" => "REMOTE_USER_FULLNAME"
+        'mail'        => 'REMOTE_USER_EMAIL',
+        'givenname'   => 'REMOTE_USER_FIRSTNAME',
+        'sn'          => 'REMOTE_USER_LASTNAME',
+        'displayname' => 'REMOTE_USER_FULLNAME'
       }
 
       def template_directory
-        Pathname.new(ENV.fetch("APPLIANCE_TEMPLATE_DIRECTORY"))
+        Pathname.new(ENV.fetch('APPLIANCE_TEMPLATE_DIRECTORY'))
       end
 
       #
       # IPA Configuration Methods
       #
       def ipa_client_configure(realm, domain, server, principal, password)
-        say("Configuring the IPA Client ...")
+        say('Configuring the IPA Client ...')
         AwesomeSpawn.run!(IPA_INSTALL_COMMAND,
                           :params => [
-                            "-N", :force_join, :fixed_primary, :unattended, {
+                            '-N', :force_join, :fixed_primary, :unattended, {
                               :realm=     => realm,
                               :domain=    => domain,
                               :server=    => server,
@@ -59,16 +59,16 @@ module ApplianceConsole
       end
 
       def ipa_client_unconfigure
-        say("Un-Configuring the IPA Client ...")
+        say('Un-Configuring the IPA Client ...')
         AwesomeSpawn.run(IPA_INSTALL_COMMAND, :params => [:uninstall, :unattended])
       end
 
       def unconfigure_httpd
-        say("Unconfiguring httpd ...")
+        say('Unconfiguring httpd ...')
         unconfigure_httpd_application
 
-        say("Restarting httpd ...")
-        LinuxAdmin::Service.new("httpd").restart
+        say('Restarting httpd ...')
+        LinuxAdmin::Service.new('httpd').restart
       end
 
       def configure_httpd_application
@@ -85,8 +85,8 @@ module ApplianceConsole
       # SSSD File Methods
       #
       def configure_sssd_domain(config, domain)
-        ldap_user_extra_attrs = LDAP_ATTRS.keys.join(", ")
-        if config.include?("ldap_user_extra_attrs = ")
+        ldap_user_extra_attrs = LDAP_ATTRS.keys.join(', ')
+        if config.include?('ldap_user_extra_attrs = ')
           pattern = "[domain/#{Regexp.escape(domain)}](\n.*)+ldap_user_extra_attrs = (.*)"
           config[/#{pattern}/, 2] = ldap_user_extra_attrs
         else
@@ -97,17 +97,17 @@ module ApplianceConsole
 
       def configure_sssd_service(config)
         services = config.match(/\[sssd\](\n.*)+services = (.*)/)[2]
-        services = "#{services}, ifp" unless services.include?("ifp")
+        services = "#{services}, ifp" unless services.include?('ifp')
         config[/\[sssd\](\n.*)+services = (.*)/, 2] = services
       end
 
       def configure_sssd_ifp(config)
-        user_attributes = LDAP_ATTRS.keys.collect { |k| "+#{k}" }.join(", ")
+        user_attributes = LDAP_ATTRS.keys.collect { |k| "+#{k}" }.join(', ')
         ifp_config      = "
   allowed_uids = #{APACHE_USER}, root
   user_attributes = #{user_attributes}
 "
-        if config.include?("[ifp]")
+        if config.include?('[ifp]')
           if config[/\[ifp\](\n.*)+user_attributes = (.*)/]
             config[/\[ifp\](\n.*)+user_attributes = (.*)/, 2] = user_attributes
           else
@@ -151,7 +151,7 @@ module ApplianceConsole
       end
 
       def valid_parameters?(ipaserver)
-        host_reachable?(ipaserver, "IPA Server")
+        host_reachable?(ipaserver, 'IPA Server')
       end
 
       #
@@ -159,13 +159,13 @@ module ApplianceConsole
       #
       def config_file_write(config, path, timestamp)
         FileUtils.copy(path, "#{path}.#{timestamp}") if File.exist?(path)
-        File.open(path, "w") { |f| f.write(config) }
+        File.open(path, 'w') { |f| f.write(config) }
       end
 
       #
       # Network validation
       #
-      def host_reachable?(host, what = "Server")
+      def host_reachable?(host, what = 'Server')
         require 'net/ping'
         say("Checking connectivity to #{host} ... ")
         unless Net::Ping::External.new(host).ping
@@ -173,21 +173,21 @@ module ApplianceConsole
           say("the #{what} must be reachable by name.")
           return false
         end
-        say("Succeeded.")
+        say('Succeeded.')
         true
       end
 
-      def cp_template(file, src_dir, dest_dir = "/")
+      def cp_template(file, src_dir, dest_dir = '/')
         src_path  = path_join(src_dir, file)
-        dest_path = path_join(dest_dir, file.gsub(".erb", ""))
-        if src_path.to_s.include?(".erb")
+        dest_path = path_join(dest_dir, file.gsub('.erb', ''))
+        if src_path.to_s.include?('.erb')
           File.write(dest_path, ERB.new(File.read(src_path), nil, '-').result(binding))
         else
           FileUtils.cp src_path, dest_path
         end
       end
 
-      def rm_file(file, dir = "/")
+      def rm_file(file, dir = '/')
         path = path_join(dir, file)
         File.delete(path) if File.exist?(path)
       end
@@ -200,7 +200,7 @@ module ApplianceConsole
     end
 
     def self.config_status
-      fetch_ipa_configuration("ipa_server") || fetch_sssd_domain || "not configured"
+      fetch_ipa_configuration('ipa_server') || fetch_sssd_domain || 'not configured'
     end
 
     def self.ipa_client_configured?

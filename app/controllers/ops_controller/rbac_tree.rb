@@ -26,7 +26,7 @@ class OpsController
         :key     => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{section.id}",
         :icon    => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title   => _(section.name),
-        :tooltip => _("%{title} Main Tab") % {:title => section.name},
+        :tooltip => _('%{title} Main Tab') % {:title => section.name},
       }
 
       section.items.each do |item|
@@ -56,7 +56,7 @@ class OpsController
         :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title    => _(root[:name]),
         :tooltip  => _(root[:description]) || _(root[:name]),
-        :addClass => "cfme-cursor-default",
+        :addClass => 'cfme-cursor-default',
         :expand   => true,
         :select   => @role_features.include?(root_feature)
       }
@@ -65,16 +65,16 @@ class OpsController
       @all_vm_node = {
         :key      => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm_rules",
         :icon     => ActionController::Base.helpers.image_path('100/feature_node.png'),
-        :title    => t = _("Access Rules for all Virtual Machines"),
+        :title    => t = _('Access Rules for all Virtual Machines'),
         :tooltip  => t,
         :children => [],
         :select   => root_node[:select]
       }
-      rbac_features_tree_add_node("all_vm_rules", root_node[:key], @all_vm_node[:select])
+      rbac_features_tree_add_node('all_vm_rules', root_node[:key], @all_vm_node[:select])
 
       Menu::Manager.each do |section|
         # skip storage node unless it's enabled in product setting
-        next if section.id == :sto && !VMDB::Config.new("vmdb").config[:product][:storage]
+        next if section.id == :sto && !VMDB::Config.new('vmdb').config[:product][:storage]
         next if section.id == :cons && !Settings.product.consumption
 
         top_nodes.push(build_section(section, root_node[:select]))

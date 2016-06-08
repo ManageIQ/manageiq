@@ -11,7 +11,7 @@ module ManageIQ::Providers::Google::CloudManager::EventParser
 
     event_hash = {
       :event_type => event_type,
-      :source     => "GOOGLE",
+      :source     => 'GOOGLE',
       :message    => event_type,
       :timestamp  => timestamp,
       :full_data  => event,

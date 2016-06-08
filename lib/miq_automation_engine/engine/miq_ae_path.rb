@@ -9,8 +9,8 @@ module MiqAeEngine
     end
 
     def to_s
-      return "" if parts.all?(&:blank?)
-      parts.join("/")
+      return '' if parts.all?(&:blank?)
+      parts.join('/')
     end
 
     def parts
@@ -31,8 +31,8 @@ module MiqAeEngine
     end
 
     def self.join(ns, klass, instance, attribute_name = nil)
-      return [nil, ns, klass, instance].join("/") if attribute_name.nil?
-      [nil, ns, klass, instance, attribute_name].join("/")
+      return [nil, ns, klass, instance].join('/') if attribute_name.nil?
+      [nil, ns, klass, instance, attribute_name].join('/')
     end
 
     def self.split(path, options = {})
@@ -50,11 +50,11 @@ module MiqAeEngine
 
     def self.has_wildcard?(path)
       return false if path.nil?
-      path.last == "*"
+      path.last == '*'
     end
 
     def self.get_domain_ns_klass_inst(fqname, options = {})
-      path = MiqAeUri.path(fqname, "miqaedb")
+      path = MiqAeUri.path(fqname, 'miqaedb')
       ns, klass, inst = split(path, options)
       ns_parts = ns.split('/')
       domain   = ns_parts.shift

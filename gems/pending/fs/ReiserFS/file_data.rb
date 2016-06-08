@@ -6,8 +6,8 @@ module ReiserFS
 
     # Initialization
     def initialize(dirEntry, superblock)
-      raise "Nil dirEntry object" if dirEntry.nil?
-      raise "Nil superblock"      if superblock.nil?
+      raise 'Nil dirEntry object' if dirEntry.nil?
+      raise 'Nil superblock'      if superblock.nil?
 
       @sb   = superblock
       @de   = dirEntry
@@ -20,14 +20,14 @@ module ReiserFS
       @sb.getLeafNodes(@key).each do |leaf|
         leaf.getItemHeaders(@key).each do |ih|
           next if Utils.typeIsStat?(leaf.getItemType(ih))
-          raise "Directory Node when FileData expected" if Utils.typeIsDirectory?(leaf.getItemType(ih))
+          raise 'Directory Node when FileData expected' if Utils.typeIsDirectory?(leaf.getItemType(ih))
 
           if Utils.typeIsDirect?(leaf.getItemType(ih))
             @blocks << {:blockNum => leaf.blockNum, :offset => ih['location'], :length => ih['length'], :blockObj => leaf}
           end
 
           if Utils.typeIsIndirect?(leaf.getItemType(ih))
-            leaf.getItem(ih).unpack("V*").each do |blockNum|
+            leaf.getItem(ih).unpack('V*').each do |blockNum|
               @blocks << {:blockNum => blockNum, :offset => 0, :length => @sb.blockSize}
             end
           end
@@ -74,7 +74,7 @@ module ReiserFS
       return nil if @pos >= @len
 
       index = findIndex(@pos)
-      out = ""
+      out = ''
 
       while out.length < bytes
         b      = @blocks[index]
@@ -103,7 +103,7 @@ module ReiserFS
     end
 
     def write(buf, _len = buf.length)
-      raise "Write functionality is not yet supported on ReiserFS."
+      raise 'Write functionality is not yet supported on ReiserFS.'
     end
 
     private

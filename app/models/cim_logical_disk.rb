@@ -116,7 +116,7 @@ class CimLogicalDisk < CimStorageExtent
   def cim_datastores_long
     dh = {}
     getLeafNodes(LogicalDiskToDatastores, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimDatastore" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimDatastore' }
   end
 
   def cim_datastores
@@ -142,7 +142,7 @@ class CimLogicalDisk < CimStorageExtent
   def cim_virtual_disks_long
     dh = {}
     getLeafNodes(LogicalDiskToVirtualDisk, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimVirtualDisk" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimVirtualDisk' }
   end
 
   def cim_virtual_disks
@@ -168,7 +168,7 @@ class CimLogicalDisk < CimStorageExtent
   def cim_vms_long
     dh = {}
     getLeafNodes(LogicalDiskToVm, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimVirtualMachine" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimVirtualMachine' }
   end
 
   def cim_vms
@@ -194,7 +194,7 @@ class CimLogicalDisk < CimStorageExtent
   def cim_hosts_long
     dh = {}
     getLeafNodes(LogicalDiskToHost, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimHostSystem" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimHostSystem' }
   end
 
   def cim_hosts
@@ -233,7 +233,7 @@ class CimLogicalDisk < CimStorageExtent
       if storage_system.nil?
         name
       else
-        storage_system.evm_display_name + ":" + name
+        storage_system.evm_display_name + ':' + name
       end
     end
   end

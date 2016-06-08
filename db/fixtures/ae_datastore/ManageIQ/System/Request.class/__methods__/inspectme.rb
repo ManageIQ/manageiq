@@ -5,10 +5,10 @@
 #
 
 def dump_root
-  $evm.log("info", "Root:<$evm.root> Attributes - Begin")
-  $evm.root.attributes.sort.each { |k, v| $evm.log("info", "  Attribute - #{k}: #{v}") }
-  $evm.log("info", "Root:<$evm.root> Attributes - End")
-  $evm.log("info", "")
+  $evm.log('info', 'Root:<$evm.root> Attributes - Begin')
+  $evm.root.attributes.sort.each { |k, v| $evm.log('info', "  Attribute - #{k}: #{v}") }
+  $evm.log('info', 'Root:<$evm.root> Attributes - End')
+  $evm.log('info', '')
 end
 
 def dump_ar_objects
@@ -18,36 +18,36 @@ def dump_ar_objects
 end
 
 def dump_ar_object(key, object)
-  $evm.log("info", "key:<#{key}>  object:<#{object}>")
+  $evm.log('info', "key:<#{key}>  object:<#{object}>")
   dump_attributes(object)
   dump_associations(object)
   dump_tags(object)
 end
 
 def dump_attributes(object)
-  $evm.log("info", "  Begin Attributes [object.attributes]")
-  object.attributes.sort.each { |k, v| $evm.log("info", "    #{k} = #{v.inspect}") }
-  $evm.log("info", "  End Attributes [object.attributes]")
-  $evm.log("info", "")
+  $evm.log('info', '  Begin Attributes [object.attributes]')
+  object.attributes.sort.each { |k, v| $evm.log('info', "    #{k} = #{v.inspect}") }
+  $evm.log('info', '  End Attributes [object.attributes]')
+  $evm.log('info', '')
 end
 
 def dump_associations(object)
-  $evm.log("info", "  Begin Associations [object.associations]")
-  object.associations.sort.each { |assc| $evm.log("info", "    Associations - #{assc}") }
-  $evm.log("info", "  End Associations [object.associations]")
-  $evm.log("info", "")
+  $evm.log('info', '  Begin Associations [object.associations]')
+  object.associations.sort.each { |assc| $evm.log('info', "    Associations - #{assc}") }
+  $evm.log('info', '  End Associations [object.associations]')
+  $evm.log('info', '')
 end
 
 def dump_tags(object)
   return if object.tags.nil?
 
-  $evm.log("info", "  Begin Tags [object.tags]")
+  $evm.log('info', '  Begin Tags [object.tags]')
   object.tags.sort.each do |tag_element|
     tag_text = tag_element.split('/')
-    $evm.log("info", "    Category:<#{tag_text.first.inspect}> Tag:<#{tag_text.last.inspect}>")
+    $evm.log('info', "    Category:<#{tag_text.first.inspect}> Tag:<#{tag_text.last.inspect}>")
   end
-  $evm.log("info", "  End Tags [object.tags]")
-  $evm.log("info", "")
+  $evm.log('info', '  End Tags [object.tags]')
+  $evm.log('info', '')
 end
 
 dump_root

@@ -1,7 +1,7 @@
 require 'workers/evm_server'
 
 describe EvmServer do
-  context "#start" do
+  context '#start' do
     let(:server) { described_class.new }
 
     before do
@@ -9,21 +9,21 @@ describe EvmServer do
       allow(PidFile).to receive(:create)
     end
 
-    it "SIGINT" do
+    it 'SIGINT' do
       allow(MiqServer).to receive(:start).and_raise(Interrupt)
       expect(server).to receive(:process_hard_signal)
       server.start
     end
 
-    it "SIGTERM" do
-      allow(MiqServer).to receive(:start).and_raise(SignalException, "SIGTERM")
+    it 'SIGTERM' do
+      allow(MiqServer).to receive(:start).and_raise(SignalException, 'SIGTERM')
       expect(server).to receive(:process_soft_signal)
       server.start
     end
 
-    it "unhandled signal SIGALRM" do
-      allow(MiqServer).to receive(:start).and_raise(SignalException, "SIGALRM")
-      expect { server.start }.to raise_error(SignalException, "SIGALRM")
+    it 'unhandled signal SIGALRM' do
+      allow(MiqServer).to receive(:start).and_raise(SignalException, 'SIGALRM')
+      expect { server.start }.to raise_error(SignalException, 'SIGALRM')
     end
   end
 end

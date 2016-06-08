@@ -1,14 +1,14 @@
 include AutomationSpecHelper
 
-describe "MiqAeMethodDispatch" do
+describe 'MiqAeMethodDispatch' do
   before do
     @method_name     = 'MY_METHOD'
     @method_instance = 'MY_METHOD_INSTANCE'
     @method_class    = 'MY_METHOD_CLASS'
     @domain          = 'SPEC_DOMAIN'
     @namespace       = 'NS1'
-    @root_class      = "TOP_OF_THE_WORLD"
-    @root_instance   = "EVEREST"
+    @root_class      = 'TOP_OF_THE_WORLD'
+    @root_instance   = 'EVEREST'
     @user            = FactoryGirl.create(:user_with_group)
     @automate_args   = {:namespace        => @namespace,
                         :class_name       => @root_class,
@@ -18,7 +18,7 @@ describe "MiqAeMethodDispatch" do
                         :tenant_id        => @user.current_tenant.id,
                         :automate_message => 'create'}
     allow(MiqServer).to receive(:my_zone).and_return('default')
-    @pidfile = File.join(Dir.mktmpdir, "rip_van_winkle.pid")
+    @pidfile = File.join(Dir.mktmpdir, 'rip_van_winkle.pid')
     clear_domain
   end
 
@@ -91,7 +91,7 @@ describe "MiqAeMethodDispatch" do
                                    'ae_instances' => ae_instances))
   end
 
-  it "long running method", :skip => "Fails sporadically because 2 seconds is not long enough" do
+  it 'long running method', :skip => 'Fails sporadically because 2 seconds is not long enough' do
     File.delete(@pidfile) if File.exist?(@pidfile)
     setup_model(rip_van_winkle_script)
     # Set the timeout to 2 seconds so we can terminate
@@ -103,7 +103,7 @@ describe "MiqAeMethodDispatch" do
     expect { Process.getpgid(pid) }.to raise_error(Errno::ESRCH)
   end
 
-  it "run method that writes to stderr and stdout" do
+  it 'run method that writes to stderr and stdout' do
     setup_model(std_script)
     send_ae_request_via_queue(@automate_args)
     _, _, ws = deliver_ae_request_from_queue

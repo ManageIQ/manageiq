@@ -1,22 +1,22 @@
 #
 # Description: This method is used to find all hosts, datastores that are the least utilized
 #
-$evm.log("info", "Args:    #{MIQ_ARGS.inspect}")
+$evm.log('info', "Args:    #{MIQ_ARGS.inspect}")
 
 # Get variables
-prov = $evm.root["miq_provision"]
+prov = $evm.root['miq_provision']
 vm = prov.vm_template
-raise "VM not specified" if vm.nil?
+raise 'VM not specified' if vm.nil?
 ems = vm.ext_management_system
 raise "EMS not found for VM [#{vm.name}]" if ems.nil?
 
 # Log space required
-$evm.log("info", "vm=[#{vm.name}], space required=[#{vm.provisioned_storage}]")
+$evm.log('info', "vm=[#{vm.name}], space required=[#{vm.provisioned_storage}]")
 
 host = storage = nil
 min_registered_vms = nil
 prov.eligible_hosts.each do |h|
-  next unless h.power_state == "on"
+  next unless h.power_state == 'on'
   nvms = h.vms.length
   if min_registered_vms.nil? || nvms < min_registered_vms
     s = h.writable_storages.sort { |a, b| a.free_space <=> b.free_space }.last
@@ -32,4 +32,4 @@ end
 prov.set_host(host) if host
 prov.set_storage(storage) if storage
 
-$evm.log("info", "vm=[#{vm.name}] host=[#{host}] storage=[#{storage}]")
+$evm.log('info', "vm=[#{vm.name}] host=[#{host}] storage=[#{storage}]")

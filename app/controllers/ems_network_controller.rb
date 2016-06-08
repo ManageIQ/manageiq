@@ -13,7 +13,7 @@ class EmsNetworkController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "ems_network"
+    @table_name ||= 'ems_network'
   end
 
   def ems_path(*args)

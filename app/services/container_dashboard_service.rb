@@ -156,7 +156,7 @@ class ContainerDashboardService
     total_mem = Hash.new(0)
 
     daily_provider_metrics.each do |metric|
-      date = metric.timestamp.strftime("%Y-%m-%d")
+      date = metric.timestamp.strftime('%Y-%m-%d')
       used_cpu[date] += metric.v_derived_cpu_total_cores_used if metric.v_derived_cpu_total_cores_used.present?
       used_mem[date] += metric.derived_memory_used if metric.derived_memory_used.present?
       total_cpu[date] += metric.derived_vm_numvcpus if metric.derived_vm_numvcpus.present?
@@ -188,7 +188,7 @@ class ContainerDashboardService
 
   def hourly_network_metrics
     hourly_network_trend = Hash.new(0)
-    MetricRollup.with_interval_and_time_range("hourly", (1.day.ago.beginning_of_hour.utc)..(Time.now.utc))
+    MetricRollup.with_interval_and_time_range('hourly', (1.day.ago.beginning_of_hour.utc)..(Time.now.utc))
                 .where(:resource => (@ems || ManageIQ::Providers::ContainerManager.all)).each do |m|
       hour = m.timestamp.beginning_of_hour.utc
       hourly_network_trend[hour] += m.net_usage_rate_average if m.net_usage_rate_average.present?
@@ -205,7 +205,7 @@ class ContainerDashboardService
   def daily_network_metrics
     daily_network_metrics = Hash.new(0)
     daily_provider_metrics.each do |m|
-      day = m.timestamp.strftime("%Y-%m-%d")
+      day = m.timestamp.strftime('%Y-%m-%d')
       daily_network_metrics[day] += m.net_usage_rate_average if m.net_usage_rate_average.present?
     end
 
@@ -219,7 +219,7 @@ class ContainerDashboardService
 
   def fill_daily_pod_metrics(metrics, pod_create_trend, pod_delete_trend)
     metrics.each do |m|
-      timestamp = m.timestamp.strftime("%Y-%m-%d")
+      timestamp = m.timestamp.strftime('%Y-%m-%d')
 
       pod_create_trend[timestamp] += m.stat_container_group_create_rate if m.stat_container_group_create_rate.present?
       pod_delete_trend[timestamp] += m.stat_container_group_delete_rate if m.stat_container_group_delete_rate.present?
@@ -245,7 +245,7 @@ class ContainerDashboardService
   def daily_image_metrics
     daily_image_metrics = Hash.new(0)
     daily_provider_metrics.each do |m|
-      day = m.timestamp.strftime("%Y-%m-%d")
+      day = m.timestamp.strftime('%Y-%m-%d')
       daily_image_metrics[day] +=
         m.stat_container_image_registration_rate if m.stat_container_image_registration_rate.present?
     end

@@ -5,7 +5,7 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
   self.wait_for_worker_monitor = true  # SmisRefreshWorker uses the VimBrokerWorker
 
   def after_initialize
-    _log.info "starting"
+    _log.info 'starting'
 
     @smis_update_period   = worker_settings[:smis_update_period] || 60 * 30
     @status_update_period = worker_settings[:status_update_period] || 60 * 5
@@ -36,7 +36,7 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
   def start_smis_update_thread
     return if @exiting
 
-    _log.info "starting smis_update_thread"
+    _log.info 'starting smis_update_thread'
 
     @smis_update_thread = Thread.new do
       @flagLock.synchronize(:EX) do
@@ -53,13 +53,13 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
       #
       @updateLock.synchronize(:EX) do
         begin
-          _log.info "update_smis start"
+          _log.info 'update_smis start'
           updated = MiqSmisAgent.update_smis(MiqSmisProfiles.extractProfile)
         rescue => err
           _log.error "update_smis - #{err}"
           _log.error err.backtrace.join("\n")
         ensure
-          _log.info "update_smis end"
+          _log.info 'update_smis end'
         end
       end
       #
@@ -79,14 +79,14 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
       # _log.info "update_from_vmdb end"
 
       @updateLock.synchronize(:EX) do
-        _log.info "cleanup start"
+        _log.info 'cleanup start'
         begin
           MiqSmisAgent.cleanup
         rescue => err
           _log.error "cleanup - #{err}"
           $log.error err.backtrace.join("\n")
         end
-        _log.info "cleanup end"
+        _log.info 'cleanup end'
       end
       @smis_update_requested = false
       @status_update_requested = false # this update will take care of this too
@@ -129,13 +129,13 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
 
         @updateLock.synchronize(:EX) do
           begin
-            _log.info "update_smis start"
+            _log.info 'update_smis start'
             MiqSmisAgent.update_smis(MiqSmisProfiles.extractProfile)
           rescue => err
             _log.error "update_smis - #{err}"
             _log.error err.backtrace.join("\n")
           ensure
-            _log.info "update_smis end"
+            _log.info 'update_smis end'
           end
         end
         #
@@ -151,26 +151,26 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
         # _log.info "update_from_vmdb end"
 
         @updateLock.synchronize(:EX) do
-          _log.info "cleanup start"
+          _log.info 'cleanup start'
           begin
             MiqSmisAgent.cleanup
           rescue => err
             _log.error "cleanup - #{err}"
             $log.error err.backtrace.join("\n")
           end
-          _log.info "cleanup end"
+          _log.info 'cleanup end'
         end
 
         break if @exiting
       end
-      _log.info "smis_update_thread exiting"
+      _log.info 'smis_update_thread exiting'
     end
   end
 
   def start_status_update_thread
     return if @exiting
 
-    _log.info "starting status_update_thread"
+    _log.info 'starting status_update_thread'
     @status_update_thread = Thread.new do
       loop do
         begin
@@ -201,25 +201,25 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
         end
 
         @updateLock.synchronize(:SH) do
-          _log.info "STATUS update start"
+          _log.info 'STATUS update start'
           begin
             MiqSmisAgent.update_status
           rescue => err
             _log.error "STATUS - #{err}"
             $log.error err.backtrace.join("\n")
           end
-          _log.info "STATUS update end"
+          _log.info 'STATUS update end'
         end
         break if @exiting
       end
-      _log.info "status_update_thread exiting"
+      _log.info 'status_update_thread exiting'
     end
   end
 
   def start_stats_update_thread
     return if @exiting
 
-    _log.info "starting stats_update_thread"
+    _log.info 'starting stats_update_thread'
     @stats_update_thread = Thread.new do
       loop do
         _log.info "STATS sleeping #{@stats_update_period}"
@@ -227,18 +227,18 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
         break if @exiting
 
         @updateLock.synchronize(:SH) do
-          _log.info "STATS update start"
+          _log.info 'STATS update start'
           begin
             MiqSmisAgent.update_stats
           rescue => err
             _log.error "STATS - #{err}"
             $log.error err.backtrace.join("\n")
           end
-          _log.info "STATS update end"
+          _log.info 'STATS update end'
         end
         break if @exiting
       end
-      _log.info "stats_update_thread exiting"
+      _log.info 'stats_update_thread exiting'
     end
   end
 
@@ -248,24 +248,24 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
 
   def do_heartbeat_work
     if @smis_update_thread && !@smis_update_thread.alive?
-      _log.info "restarting smis_update_thread"
+      _log.info 'restarting smis_update_thread'
       start_smis_update_thread # this will start all 3 if needed
       return
     end
 
     if @status_update_thread && !@status_update_thread.alive?
-      _log.info "restarting status_update_thread"
+      _log.info 'restarting status_update_thread'
       start_status_update_thread
     end
 
     if @stats_update_thread && !@stats_update_thread.alive?
-      _log.info "restarting stats_update_thread"
+      _log.info 'restarting stats_update_thread'
       start_stats_update_thread
     end
   end
 
   def message_request_smis_update(*_args)
-    _log.info "."
+    _log.info '.'
     @flagLock.synchronize(:EX) do
       return if @smis_update_in_progress || @smis_update_requested
       @smis_update_requested = true
@@ -277,7 +277,7 @@ class MiqSmisRefreshWorker::Runner < MiqWorker::Runner
   end
 
   def message_request_status_update(*_args)
-    _log.info "."
+    _log.info '.'
     @flagLock.synchronize(:EX) do
       return if @smis_update_in_progress || @smis_update_requested  # Includes status information.
       return if @status_update_in_progress || @status_update_requested

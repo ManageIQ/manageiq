@@ -9,11 +9,11 @@ def event_to_hash(event)
   hash = {}
   # copy content
   content = event.content
-  hash[:content] = content.reject { |k, _v| k.start_with? "_context_" }
+  hash[:content] = content.reject { |k, _v| k.start_with? '_context_' }
 
   # copy context
   hash[:context] = {}
-  content.select { |k, _v| k.start_with? "_context_" }.each_pair do |k, v|
+  content.select { |k, _v| k.start_with? '_context_' }.each_pair do |k, v|
     hash[:context][k] = v
   end
 
@@ -31,26 +31,26 @@ end
 
 require 'pp'
 
-OPENSTACK_RDU_DEV_SERVER = raise "please define"
-OPENSTACK_RDU_DEV_PORT   = ""
-OPENSTACK_RDU_USERNAME   = ""
-OPENSTACK_RDU_PASSWORD   = ""
+OPENSTACK_RDU_DEV_SERVER = raise 'please define'
+OPENSTACK_RDU_DEV_PORT   = ''
+OPENSTACK_RDU_USERNAME   = ''
+OPENSTACK_RDU_PASSWORD   = ''
 
 os_monitor = OpenstackEventMonitor.new(:events_monitor => :amqp,
                                        :hostname       => OPENSTACK_RDU_DEV_SERVER,
                                        :username       => OPENSTACK_RDU_USERNAME,
                                        :password       => OPENSTACK_RDU_PASSWORD,
-                                       :topics         => {"nova"    => "notifications.*",
-                                                           "glance"  => "notifications.*",
-                                                           "cinder"  => "notifications.*",
-                                                           "heat"    => "notifications.*",
-                                                           "quantum" => "notifications.*",
-                                                           "neutron" => "notifications.*"})
+                                       :topics         => {'nova'    => 'notifications.*',
+                                                           'glance'  => 'notifications.*',
+                                                           'cinder'  => 'notifications.*',
+                                                           'heat'    => 'notifications.*',
+                                                           'quantum' => 'notifications.*',
+                                                           'neutron' => 'notifications.*'})
 
-Signal.trap("INT") { os_monitor.stop }
+Signal.trap('INT') { os_monitor.stop }
 
 os_monitor.start
-puts "Connected ... waiting for Openstack events"
+puts 'Connected ... waiting for Openstack events'
 os_monitor.each do |event|
   puts "\n\nsaw event: #{event.inspect
        }"

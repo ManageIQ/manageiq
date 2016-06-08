@@ -11,7 +11,7 @@ class String
 
   def to_x_with_method
     n = delete(',')
-    return n unless n =~ NUMBER_WITH_METHOD_REGEX && $2 != "percent"
+    return n unless n =~ NUMBER_WITH_METHOD_REGEX && $2 != 'percent'
     n = $1.include?('.') ? $1.to_f : $1.to_i
     n.send($2)
   end

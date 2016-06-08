@@ -4,7 +4,7 @@ describe AddProcessToMiqRequests do
   migration_context :up do
     let(:miq_request_stub) { migration_stub(:MiqRequest) }
 
-    it "updates existing records" do
+    it 'updates existing records' do
       miq_request = miq_request_stub.create!
 
       migrate

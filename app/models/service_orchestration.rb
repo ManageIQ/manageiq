@@ -16,15 +16,15 @@ class ServiceOrchestration < Service
   def stack_ems_ref
     orchestration_stack.try(:ems_ref)
   end
-  Vmdb::Deprecation.deprecate_methods(ServiceOrchestration, :stack_ems_ref => "use orchestration_stack#ems_ref instead")
+  Vmdb::Deprecation.deprecate_methods(ServiceOrchestration, :stack_ems_ref => 'use orchestration_stack#ems_ref instead')
 
   def orchestration_stack_status
-    return "check_status_failed", "stack has not been deployed" unless orchestration_stack
+    return 'check_status_failed', "stack has not been deployed" unless orchestration_stack
 
     orchestration_stack.raw_status.normalized_status
   rescue MiqException::MiqOrchestrationStackNotExistError, MiqException::MiqOrchestrationStatusError => err
     # naming convention requires status to end with "failed"
-    ["check_status_failed", err.message]
+    ['check_status_failed', err.message]
   end
 
   def deploy_orchestration_stack
@@ -80,7 +80,7 @@ class ServiceOrchestration < Service
     dialog_options = options[:dialog] || {}
     manager_from_dialog = OptionConverter.get_manager(dialog_options)
     self.orchestration_manager = manager_from_dialog if manager_from_dialog
-    raise _("orchestration manager was not set") if orchestration_manager.nil?
+    raise _('orchestration manager was not set') if orchestration_manager.nil?
 
     # orchestration template from dialog_options overrides the one copied from service_template
     template_from_dialog = OptionConverter.get_template(dialog_options)

@@ -6,23 +6,23 @@ module ApplicationController::CiProcessing
   end
 
   # Set Ownership selected db records
-  def set_ownership(klass = "VmOrTemplate")
+  def set_ownership(klass = 'VmOrTemplate')
     assert_privileges(params[:pressed])
     @edit = {}
-    @edit[:key] = "ownership_edit__new"
+    @edit[:key] = 'ownership_edit__new'
     @edit[:current] = {}
     @edit[:new] = {}
     @edit[:klass] = klass.constantize
     # check to see if coming from show_list or drilled into vms from another CI
-    if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
-      rec_cls = "vm"
-    elsif ["miq_templates", "images"].include?(params[:display]) || params[:pressed].starts_with?("miq_template_")
-      rec_cls = "miq_template"
+    if request.parameters[:controller] == 'vm' || ['all_vms', 'vms', 'instances', 'images'].include?(params[:display])
+      rec_cls = 'vm'
+    elsif ['miq_templates', 'images'].include?(params[:display]) || params[:pressed].starts_with?('miq_template_')
+      rec_cls = 'miq_template'
     else
       rec_cls = request.parameters[:controller]
     end
     recs = []
-    if !session[:checked_items].nil? && @lastaction == "set_checked_items"
+    if !session[:checked_items].nil? && @lastaction == 'set_checked_items'
       recs = session[:checked_items]
     else
       recs = find_checked_items
@@ -31,10 +31,10 @@ module ApplicationController::CiProcessing
       recs = [params[:id].to_i]
     end
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to Set Ownership") % {
+      add_flash(_('One or more %{model} must be selected to Set Ownership') % {
         :model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
-      @refresh_div = "flash_msg_div"
-      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = 'flash_msg_div'
+      @refresh_partial = 'layouts/flash_msg'
       return
     else
       @edit[:ownership_items] = recs.collect(&:to_i)
@@ -46,7 +46,7 @@ module ApplicationController::CiProcessing
     else
       render :update do |page|
         page << javascript_prologue
-        if role_allows(:feature => "vm_ownership")
+        if role_allows(:feature => 'vm_ownership')
           page.redirect_to :controller => "#{rec_cls}", :action => 'ownership'              # redirect to build the ownership screen
         end
       end
@@ -64,17 +64,17 @@ module ApplicationController::CiProcessing
     ownership_build_screen
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
-    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+    drop_breadcrumb(:name => _('Set Ownership'), :url => '/vm_common/ownership')
     @in_a_form = @ownershipedit = true
     build_targets_hash(@ownershipitems)
     if @edit[:explorer]
-      @refresh_partial = "shared/views/ownership"
+      @refresh_partial = 'shared/views/ownership'
     else
-      render :action => "show"
+      render :action => 'show'
     end
   end
 
-  DONT_CHANGE_OWNER = "0"
+  DONT_CHANGE_OWNER = '0'
 
   # Build the ownership assignment screen
   def ownership_build_screen
@@ -98,7 +98,7 @@ module ApplicationController::CiProcessing
   end
 
   def ownership_field_changed
-    return unless load_edit("ownership_edit__new")
+    return unless load_edit('ownership_edit__new')
     ownership_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|
@@ -113,11 +113,11 @@ module ApplicationController::CiProcessing
   end
 
   def ownership_update
-    return unless load_edit("ownership_edit__new")
+    return unless load_edit('ownership_edit__new')
     ownership_get_form_vars
     case params[:button]
-    when "cancel"
-      add_flash(_("Set Ownership was cancelled by the user"))
+    when 'cancel'
+      add_flash(_('Set Ownership was cancelled by the user'))
       if @edit[:explorer]
         @edit = @sb[:action] = nil
         replace_right_cell
@@ -128,7 +128,7 @@ module ApplicationController::CiProcessing
           page.redirect_to(previous_breadcrumb_url)
         end
       end
-    when "save"
+    when 'save'
       opts = {}
       unless @edit[:new][:user] == DONT_CHANGE_OWNER
         if owner_changed?(:user)
@@ -148,16 +148,16 @@ module ApplicationController::CiProcessing
 
       result = @edit[:klass].set_ownership(@edit[:ownership_items], opts)
       unless result == true
-        result["missing_ids"].each { |msg| add_flash(msg, :error) } if result["missing_ids"]
-        result["error_updating"].each { |msg| add_flash(msg, :error) } if result["error_updating"]
+        result['missing_ids'].each { |msg| add_flash(msg, :error) } if result['missing_ids']
+        result['error_updating'].each { |msg| add_flash(msg, :error) } if result['error_updating']
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
       else
         object_types = object_types_for_flash_message(@edit[:klass], @edit[:ownership_items])
 
-        flash = _("Ownership saved for selected %{object_types}") % {:object_types => object_types}
+        flash = _('Ownership saved for selected %{object_types}') % {:object_types => object_types}
         add_flash(flash)
         if @edit[:explorer]
           @edit = @sb[:action] = nil
@@ -170,17 +170,17 @@ module ApplicationController::CiProcessing
           end
         end
       end
-    when "reset"
+    when 'reset'
       @in_a_form = true
       if @edit[:explorer]
         ownership
-        add_flash(_("All changes have been reset"), :warning)
-        request.parameters[:controller] == "service" ? replace_right_cell("ownership") : replace_right_cell
+        add_flash(_('All changes have been reset'), :warning)
+        request.parameters[:controller] == 'service' ? replace_right_cell('ownership') : replace_right_cell
       else
         render :update do |page|
           page << javascript_prologue
           page.redirect_to :action        => 'ownership',
-                           :flash_msg     => _("All changes have been reset"),
+                           :flash_msg     => _('All changes have been reset'),
                            :flash_warning => true,
                            :escape        => true
         end
@@ -193,27 +193,27 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     vms = find_checked_items
     if VmOrTemplate.includes_template?(vms.map(&:to_i).uniq)
-      add_flash(_("Set Retirement Date does not apply to selected %{model}") %
-        {:model => ui_lookup(:table => "miq_template")}, :error)
+      add_flash(_('Set Retirement Date does not apply to selected %{model}') %
+        {:model => ui_lookup(:table => 'miq_template')}, :error)
       render_flash_and_scroll
       return
     end
     # check to see if coming from show_list or drilled into vms from another CI
-    if request.parameters[:controller] == "vm" || %w(all_vms instances vms).include?(params[:display])
-      rec_cls = "vm"
-    elsif request.parameters[:controller] == "service"
-      rec_cls =  "service"
-    elsif request.parameters[:controller] == "orchestration_stack"
-      rec_cls = "orchestration_stack"
+    if request.parameters[:controller] == 'vm' || %w(all_vms instances vms).include?(params[:display])
+      rec_cls = 'vm'
+    elsif request.parameters[:controller] == 'service'
+      rec_cls =  'service'
+    elsif request.parameters[:controller] == 'orchestration_stack'
+      rec_cls = 'orchestration_stack'
     end
     if vms.blank?
       session[:retire_items] = [params[:id]]
     else
       if vms.length < 1
-        add_flash(_("At least one %{model} must be selected for tagging") %
-          {:model => ui_lookup(:model => "Vm")}, :error)
-        @refresh_div = "flash_msg_div"
-        @refresh_partial = "layouts/flash_msg"
+        add_flash(_('At least one %{model} must be selected for tagging') %
+          {:model => ui_lookup(:model => 'Vm')}, :error)
+        @refresh_div = 'flash_msg_div'
+        @refresh_partial = 'layouts/flash_msg'
         return
       else
         session[:retire_items] = vms                                # Set the array of retire items
@@ -223,7 +223,7 @@ module ApplicationController::CiProcessing
     if @explorer
       retire
     else
-      drop_breadcrumb(:name => _("Retire %{name}") % {:name => rec_cls.to_s.pluralize},
+      drop_breadcrumb(:name => _('Retire %{name}') % {:name => rec_cls.to_s.pluralize},
                       :url  => "/#{session[:controller]}/retire")
       render :update do |page|
         page << javascript_prologue
@@ -238,17 +238,17 @@ module ApplicationController::CiProcessing
 
   def retirement_info
     case request.parameters[:controller]
-    when "orchestration_stack"
-      assert_privileges("orchestration_stack_retire")
+    when 'orchestration_stack'
+      assert_privileges('orchestration_stack_retire')
       kls = OrchestrationStack
-    when "service"
-      assert_privileges("service_retire")
+    when 'service'
+      assert_privileges('service_retire')
       kls = Service
-    when "vm_cloud", "vm"
+    when 'vm_cloud', 'vm'
       assert_privileges("instance_retire")
       kls = Vm
-    when "vm_infra"
-      assert_privileges("vm_retire")
+    when 'vm_infra'
+      assert_privileges('vm_retire')
       kls = Vm
     end
     obj = kls.find_by_id(params[:id])
@@ -262,33 +262,33 @@ module ApplicationController::CiProcessing
   def retire
     @sb[:explorer] = true if @explorer
     kls = case request.parameters[:controller]
-          when "orchestration_stack"
+          when 'orchestration_stack'
             OrchestrationStack
-          when "service"
+          when 'service'
             Service
-          when "vm_infra", "vm_cloud", "vm", "vm_or_template"
+          when 'vm_infra', 'vm_cloud', "vm", "vm_or_template"
             Vm
           end
     if params[:button]
-      if params[:button] == "cancel"
-        flash = _("Set/remove retirement date was cancelled by the user")
+      if params[:button] == 'cancel'
+        flash = _('Set/remove retirement date was cancelled by the user')
         @sb[:action] = nil
-      elsif params[:button] == "save"
+      elsif params[:button] == 'save'
         if params[:retire_date].blank?
           t = nil
           w = nil
           if session[:retire_items].length == 1
-            flash = _("Retirement date removed")
+            flash = _('Retirement date removed')
           else
-            flash = _("Retirement dates removed")
+            flash = _('Retirement dates removed')
           end
         else
           t = "#{params[:retire_date]} 00:00:00 Z"
           w = params[:retire_warn].to_i
           if session[:retire_items].length == 1
-            flash = _("Retirement date set to %{date}") % {:date => params[:retire_date]}
+            flash = _('Retirement date set to %{date}') % {:date => params[:retire_date]}
           else
-            flash = _("Retirement dates set to %{date}") % {:date => params[:retire_date]}
+            flash = _('Retirement dates set to %{date}') % {:date => params[:retire_date]}
           end
         end
         kls.retire(session[:retire_items], :date => t, :warn => w) # Call the model to retire the VM(s)
@@ -307,7 +307,7 @@ module ApplicationController::CiProcessing
       return
     end
     session[:changed] = @changed = false
-    drop_breadcrumb(:name => _("Retire %{name}") % {:name => kls.to_s.pluralize},
+    drop_breadcrumb(:name => _('Retire %{name}') % {:name => kls.to_s.pluralize},
                     :url  => "/#{session[:controller]}/retire")
     session[:cat] = nil                 # Clear current category
     @retireitems = kls.find(session[:retire_items]).sort_by(&:name) # Get the db records
@@ -323,36 +323,36 @@ module ApplicationController::CiProcessing
     session[:retire_date] = t.nil? ? nil : "#{t.month}/#{t.day}/#{t.year}"
     session[:retire_warn] = w
     @in_a_form = true
-    @refresh_partial = "shared/views/retire" if @explorer || @layout == "orchestration_stack"
+    @refresh_partial = 'shared/views/retire' if @explorer || @layout == 'orchestration_stack'
   end
 
   def vm_right_size
     assert_privileges(params[:pressed])
     # check to see if coming from show_list or drilled into vms from another CI
-    rec_cls = "vm"
+    rec_cls = 'vm'
     recs = params[:display] ? find_checked_items : [params[:id].to_i]
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to Right-Size Recommendations") %
+      add_flash(_('One or more %{model} must be selected to Right-Size Recommendations') %
         {:model => ui_lookup(:table => request.parameters[:controller])}, :error)
-      @refresh_div = "flash_msg_div"
-      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = 'flash_msg_div'
+      @refresh_partial = 'layouts/flash_msg'
       return
     else
       if VmOrTemplate.includes_template?(recs)
-        add_flash(_("Right-Size Recommendations does not apply to selected %{model}") %
-          {:model => ui_lookup(:table => "miq_template")}, :error)
+        add_flash(_('Right-Size Recommendations does not apply to selected %{model}') %
+          {:model => ui_lookup(:table => 'miq_template')}, :error)
         render_flash_and_scroll
         return
       end
     end
     if @explorer
-      @refresh_partial = "vm_common/right_size"
+      @refresh_partial = 'vm_common/right_size'
       right_size
-      replace_right_cell if @orig_action == "x_history"
+      replace_right_cell if @orig_action == 'x_history'
     else
       render :update do |page|
         page << javascript_prologue
-        if role_allows(:feature => "vm_right_size")
+        if role_allows(:feature => 'vm_right_size')
           page.redirect_to :controller => "#{rec_cls}", :action => 'right_size', :id => recs[0], :escape => false           # redirect to build the ownership screen
         end
       end
@@ -365,7 +365,7 @@ module ApplicationController::CiProcessing
     @sb[:explorer] = true if @explorer
     @request_id = nil
     @in_a_form = @reconfigure = true
-    drop_breadcrumb(:name => _("Reconfigure"), :url => "/vm_common/reconfigure")
+    drop_breadcrumb(:name => _('Reconfigure'), :url => '/vm_common/reconfigure')
     if params[:rec_ids]
       @reconfigure_items = params[:rec_ids]
     end
@@ -375,17 +375,17 @@ module ApplicationController::CiProcessing
     @reconfigitems = Vm.find(@reconfigure_items).sort_by(&:name) # Get the db records
     build_targets_hash(@reconfigitems)
     @force_no_grid_xml   = true
-    @view, @pages = get_view(Vm, :view_suffix => "VmReconfigureRequest", :where_clause => ["vms.id IN (?)", @reconfigure_items])  # Get the records (into a view) and the paginator
+    @view, @pages = get_view(Vm, :view_suffix => 'VmReconfigureRequest', :where_clause => ['vms.id IN (?)', @reconfigure_items])  # Get the records (into a view) and the paginator
     get_reconfig_limits
     unless @explorer
-      render :action => "show"
+      render :action => 'show'
     end
   end
 
   def reconfigure_update
     case params[:button]
-    when "cancel"
-      add_flash(_("VM Reconfigure Request was cancelled by the user"))
+    when 'cancel'
+      add_flash(_('VM Reconfigure Request was cancelled by the user'))
       if @sb[:explorer]
         @sb[:action] = nil
         replace_right_cell
@@ -396,10 +396,10 @@ module ApplicationController::CiProcessing
           page.redirect_to(previous_breadcrumb_url)
         end
       end
-    when "submit"
+    when 'submit'
       options = {:src_ids => params[:objectIds]}
       if params[:cb_memory] == 'true'
-        options[:vm_memory] = params[:memory_type] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024)
+        options[:vm_memory] = params[:memory_type] == 'MB' ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024)
       end
       if params[:cb_cpu] == 'true'
         options[:cores_per_socket]  = params[:cores_per_socket_count].nil? ? 1 : params[:cores_per_socket_count].to_i
@@ -443,8 +443,8 @@ module ApplicationController::CiProcessing
         @request_id = params[:id]
       end
       if VmReconfigureRequest.make_request(@request_id, options, current_user)
-        flash = _("VM Reconfigure Request was saved")
-        if role_allows(:feature => "miq_request_show_list", :any => true)
+        flash = _('VM Reconfigure Request was saved')
+        if role_allows(:feature => 'miq_request_show_list', :any => true)
           render :update do |page|
             page << javascript_prologue
             page.redirect_to :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
@@ -458,12 +458,12 @@ module ApplicationController::CiProcessing
         end
       else
         # TODO - is request ever nil? ??
-        add_flash(_("Error adding VM Reconfigure Request"))
+        add_flash(_('Error adding VM Reconfigure Request'))
       end
       if @flash_array
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
@@ -485,43 +485,43 @@ module ApplicationController::CiProcessing
     db = params[:db] if params[:db]
 
     case params[:pressed]
-    when "miq_template_edit"
-      @redirect_controller = "miq_template"
-    when "image_edit", "instance_edit", "vm_edit"
+    when 'miq_template_edit'
+      @redirect_controller = 'miq_template'
+    when 'image_edit', 'instance_edit', "vm_edit"
       @redirect_controller = "vm"
-    when "host_edit"
-      @redirect_controller = "host"
+    when 'host_edit'
+      @redirect_controller = 'host'
       session[:host_items] = obj if obj.length > 1
     end
     @redirect_id = obj[0] if obj.length == 1      # not redirecting to an id if multi host are selected for credential edit
 
-    if !["ScanItemSet", "Condition", "Schedule", "MiqAeInstance"].include?(db)
+    if !['ScanItemSet', 'Condition', 'Schedule', 'MiqAeInstance'].include?(db)
       #       page.redirect_to :controller=>params[:rec], :action=>link   # redirect to build the compare screen
-      @refresh_partial = "edit"
-      @refresh_partial = "edit_set" if params[:db] == "policyprofile"
+      @refresh_partial = 'edit'
+      @refresh_partial = 'edit_set' if params[:db] == 'policyprofile'
     else
-      if db == "ScanItemSet"
+      if db == 'ScanItemSet'
         scan = ScanItemSet.find(obj[0])
         if !scan.read_only
-          @refresh_partial = "edit"
+          @refresh_partial = 'edit'
         else
-          @refresh_partial = "show_list_set"
+          @refresh_partial = 'show_list_set'
         end
-      elsif db == "Condition"
+      elsif db == 'Condition'
         cond = Condition.find(obj[0])
         if cond.filename.nil?
-          @refresh_partial = "edit"
+          @refresh_partial = 'edit'
         else
-          @refresh_partial = "show_list"
+          @refresh_partial = 'show_list'
         end
-      elsif db == "Schedule" && params[:controller] != "report"
+      elsif db == 'Schedule' && params[:controller] != 'report'
         sched = MiqSchedule.find(obj[0])
-        @refresh_partial = "edit"
-      elsif db == "Schedule" && params[:controller] == "report"
+        @refresh_partial = 'edit'
+      elsif db == 'Schedule' && params[:controller] == 'report'
         sched = MiqSchedule.find(obj[0])
-        @refresh_partial = "schedule_edit"
-      elsif db == "MiqAeInstance"
-        @refresh_partial = "instance_edit"
+        @refresh_partial = 'schedule_edit'
+      elsif db == 'MiqAeInstance'
+        @refresh_partial = 'instance_edit'
       end
     end
   end
@@ -529,7 +529,7 @@ module ApplicationController::CiProcessing
   # copy single selected Object
   def copy_record
     obj = find_checked_items
-    @refresh_partial = "copy"
+    @refresh_partial = 'copy'
     @redirect_id = obj[0]
   end
 
@@ -539,8 +539,8 @@ module ApplicationController::CiProcessing
     conditions  = options[:conditions]
     # generate the grid/tile/list url to come back here when gtl buttons are pressed
     @gtl_url       = "/#{@db}/#{@listicon.pluralize}/#{@record.id}?"
-    @showtype      = "details"
-    @display       = "main"
+    @showtype      = 'details'
+    @display       = 'main'
     @no_checkboxes = @no_checkboxes.nil? || @no_checkboxes
     @showlinks     = true
 
@@ -565,7 +565,7 @@ module ApplicationController::CiProcessing
 
   # show a single item from a detail list
   def show_item
-    @showtype = "item"
+    @showtype = 'item'
     if @explorer
       @refresh_partial = "layouts/#{@showtype}"
       replace_right_cell
@@ -583,19 +583,19 @@ module ApplicationController::CiProcessing
     return if record_no_longer_exists?(@record)
 
     @view = session[:view]                  # Restore the view from the session to get column names for the display
-    @display = "snia_local_file_systems"
+    @display = 'snia_local_file_systems'
     if !params[:show].nil?
       @item = SniaLocalFileSystem.find_by_id(from_cid(params[:show]))
-      drop_breadcrumb(:name => @record.evm_display_name + " (" + ui_lookup(:tables => "snia_local_file_system") + ")", :url => "/#{@db}/snia_local_file_systems/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => @record.evm_display_name + ' (' + ui_lookup(:tables => 'snia_local_file_system') + ')', :url => "/#{@db}/snia_local_file_systems/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.evm_display_name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
       show_item
     else
-      drop_breadcrumb(:name => @record.evm_display_name + " (" + ui_lookup(:tables => "snia_local_file_system") + ")", :url => "/#{@db}/snia_local_file_systems/#{@record.id}")
+      drop_breadcrumb(:name => @record.evm_display_name + ' (' + ui_lookup(:tables => 'snia_local_file_system') + ')', :url => "/#{@db}/snia_local_file_systems/#{@record.id}")
       # generate the grid/tile/list url to come back here when gtl buttons are pressed
-      @gtl_url = "/#{@db}/snia_local_file_systems/" + @record.id.to_s + "?"
-      @showtype = "details"
+      @gtl_url = "/#{@db}/snia_local_file_systems/" + @record.id.to_s + '?'
+      @showtype = 'details'
 
-      table_name = "snia_local_file_systems"
+      table_name = 'snia_local_file_systems'
       model_name = table_name.classify.constantize
       drop_breadcrumb(:name => @record.evm_display_name + " (All #{ui_lookup(:tables => @display.singularize)})", :url => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
       @view, @pages = get_view(model_name, :parent => @record, :parent_method => :local_file_systems)  # Get the records (into a view) and the paginator
@@ -612,21 +612,21 @@ module ApplicationController::CiProcessing
     return if record_no_longer_exists?(@record)
 
     @view = session[:view]                  # Restore the view from the session to get column names for the display
-    @display = "cim_base_storage_extents"
+    @display = 'cim_base_storage_extents'
     if !params[:show].nil?
       @item = CimBaseStorageExtent.find_by_id(from_cid(params[:show]))
-      drop_breadcrumb(:name => @record.evm_display_name + " (" + ui_lookup(:tables => "cim_base_storage_extent") + ")", :url => "/#{@db}/cim_base_storage_extents/#{@record.id}?page=#{@current_page}")
+      drop_breadcrumb(:name => @record.evm_display_name + ' (' + ui_lookup(:tables => 'cim_base_storage_extent') + ')', :url => "/#{@db}/cim_base_storage_extents/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.evm_display_name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
       show_item
     else
-      drop_breadcrumb(:name => @record.evm_display_name + " (" + ui_lookup(:tables => "cim_base_storage_extent") + ")", :url => "/#{@db}/cim_base_storage_extents/#{@record.id}")
+      drop_breadcrumb(:name => @record.evm_display_name + ' (' + ui_lookup(:tables => 'cim_base_storage_extent') + ')', :url => "/#{@db}/cim_base_storage_extents/#{@record.id}")
       # generate the grid/tile/list url to come back here when gtl buttons are pressed
-      @gtl_url = "/#{@db}/cim_base_storage_extents/" + @record.id.to_s + "?"
-      @showtype = "details"
+      @gtl_url = "/#{@db}/cim_base_storage_extents/" + @record.id.to_s + '?'
+      @showtype = 'details'
 
-      table_name = "cim_base_storage_extents"
+      table_name = 'cim_base_storage_extents'
       model_name = table_name.classify.constantize
-      drop_breadcrumb(:name => _("%{name} (All ${tables})") % {:name   => @record.evm_display_name,
+      drop_breadcrumb(:name => _('%{name} (All ${tables})') % {:name   => @record.evm_display_name,
                                                                :tables => ui_lookup(:tables => @display.singularize)},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
       @view, @pages = get_view(model_name, :parent => @record, :parent_method => :base_storage_extents)  # Get the records (into a view) and the paginator
@@ -635,11 +635,11 @@ module ApplicationController::CiProcessing
   end
 
   def get_record(db)
-    if db == "host"
+    if db == 'host'
       @host = @record = identify_record(params[:id], Host)
-    elsif db == "miq_template"
+    elsif db == 'miq_template'
       @miq_template = @record = identify_record(params[:id], MiqTemplate)
-    elsif ["vm_infra", "vm_cloud", "vm", "vm_or_template"].include?(db)
+    elsif ['vm_infra', 'vm_cloud', 'vm', 'vm_or_template'].include?(db)
       @vm = @record = identify_record(params[:id], VmOrTemplate)
     end
   end
@@ -653,15 +653,15 @@ module ApplicationController::CiProcessing
     @sb[:action] = params[:action]
     return if record_no_longer_exists?(@record)
 
-    @lastaction = "guest_applications"
+    @lastaction = 'guest_applications'
     if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.guest_applications.find(from_cid(id))
       if Regexp.new(/linux/).match(@record.os_image_name.downcase)
-        drop_breadcrumb(:name => _("%{name} (Packages)") % {:name => @record.name},
+        drop_breadcrumb(:name => _('%{name} (Packages)') % {:name => @record.name},
                         :url  => "/#{@db}/guest_applications/#{@record.id}?page=#{@current_page}")
       else
-        drop_breadcrumb(:name => _("%{name} (Applications)") % {:name => @record.name},
+        drop_breadcrumb(:name => _('%{name} (Applications)') % {:name => @record.name},
                         :url  => "/#{@db}/guest_applications/#{@record.id}?page=#{@current_page}")
       end
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
@@ -670,13 +670,13 @@ module ApplicationController::CiProcessing
     else
       drop_breadcrumb({:name => @record.name, :url => "/#{@db}/show/#{@record.id}"}, true)
       if Regexp.new(/linux/).match(@record.os_image_name.downcase)
-        drop_breadcrumb(:name => _("%{name} (Packages)") % {:name => @record.name},
+        drop_breadcrumb(:name => _('%{name} (Packages)') % {:name => @record.name},
                         :url  => "/#{@db}/guest_applications/#{@record.id}")
       else
-        drop_breadcrumb(:name => _("%{name} (Applications)") % {:name => @record.name},
+        drop_breadcrumb(:name => _('%{name} (Applications)') % {:name => @record.name},
                         :url  => "/#{@db}/guest_applications/#{@record.id}")
       end
-      @listicon = "guest_application"
+      @listicon = 'guest_application'
       show_details(GuestApplication)
     end
   end
@@ -690,19 +690,19 @@ module ApplicationController::CiProcessing
     @sb[:action] = params[:action]
     return if record_no_longer_exists?(@record)
 
-    @lastaction = "patches"
+    @lastaction = 'patches'
     if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.patches.find(from_cid(id))
-      drop_breadcrumb(:name => _("%{name} (Patches)") % {:name => @record.name},
+      drop_breadcrumb(:name => _('%{name} (Patches)') % {:name => @record.name},
                       :url  => "/#{@db}/patches/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/patches/#{@record.id}?show=#{@item.id}")
       @view = get_db_view(Patch)
       show_item
     else
-      drop_breadcrumb(:name => _("%{name} (Patches)") % {:name => @record.name},
+      drop_breadcrumb(:name => _('%{name} (Patches)') % {:name => @record.name},
                       :url  => "/#{@db}/patches/#{@record.id}")
-      @listicon = "patch"
+      @listicon = 'patch'
       show_details(Patch)
     end
   end
@@ -716,21 +716,21 @@ module ApplicationController::CiProcessing
     @sb[:action] = params[:action]
     return if record_no_longer_exists?(@record)
 
-    @lastaction = "groups"
+    @lastaction = 'groups'
     if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.groups.find(from_cid(id))
-      drop_breadcrumb(:name => _("%{name} (Groups)") % {:name => @record.name},
+      drop_breadcrumb(:name => _('%{name} (Groups)') % {:name => @record.name},
                       :url  => "/#{@db}/groups/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb({:name => @item.name, :url => "/#{@db}/groups/#{@record.id}?show=#{@item.id}"})
       @user_names = @item.users
-      @view = get_db_view(Account, :association => "groups")
+      @view = get_db_view(Account, :association => 'groups')
       show_item
     else
-      drop_breadcrumb(:name => _("%{name} (Groups)") % {:name => @record.name},
+      drop_breadcrumb(:name => _('%{name} (Groups)') % {:name => @record.name},
                       :url  => "/#{@db}/groups/#{@record.id}")
-      @listicon = "group"
-      show_details(Account, :association => "groups")
+      @listicon = 'group'
+      show_details(Account, :association => 'groups')
     end
   end
 
@@ -743,21 +743,21 @@ module ApplicationController::CiProcessing
     @sb[:action] = params[:action]
     return if record_no_longer_exists?(@record)
 
-    @lastaction = "users"
+    @lastaction = 'users'
     if !params[:show].nil? || !params[:x_show].nil?
       id = params[:show] ? params[:show] : params[:x_show]
       @item = @record.users.find(from_cid(id))
-      drop_breadcrumb(:name => _("%{name} (Users)") % {:name => @record.name},
+      drop_breadcrumb(:name => _('%{name} (Users)') % {:name => @record.name},
                       :url  => "/#{@db}/users/#{@record.id}?page=#{@current_page}")
       drop_breadcrumb(:name => @item.name, :url => "/#{@db}/show/#{@record.id}?show=#{@item.id}")
       @group_names = @item.groups
-      @view = get_db_view(Account, :association => "users")
+      @view = get_db_view(Account, :association => 'users')
       show_item
     else
-      drop_breadcrumb(:name => _("%{name} (Users)") % {:name => @record.name},
+      drop_breadcrumb(:name => _('%{name} (Users)') % {:name => @record.name},
                       :url  => "/#{@db}/users/#{@record.id}")
-      @listicon = "user"
-      show_details(Account, :association => "users")
+      @listicon = 'user'
+      show_details(Account, :association => 'users')
     end
   end
 
@@ -766,19 +766,19 @@ module ApplicationController::CiProcessing
     assert_privileges("#{controller_name}_discover")
     session[:type] = params[:discover_type] if params[:discover_type]
     title = set_discover_title(session[:type], request.parameters[:controller])
-    if params["cancel"]
+    if params['cancel']
       redirect_to :action    => 'show_list',
-                  :flash_msg => _("%{title} Discovery was cancelled by the user") % {:title => title}
+                  :flash_msg => _('%{title} Discovery was cancelled by the user') % {:title => title}
     end
-    @userid = ""
-    @password = ""
-    @verify = ""
-    @client_id = ""
-    @client_key = ""
-    @azure_tenant_id = ""
-    if session[:type] == "hosts"
+    @userid = ''
+    @password = ''
+    @verify = ''
+    @client_id = ''
+    @client_key = ''
+    @azure_tenant_id = ''
+    if session[:type] == 'hosts'
       @discover_type = Host.host_discovery_types
-    elsif session[:type] == "ems"
+    elsif session[:type] == 'ems'
       if request.parameters[:controller] == 'ems_infra'
         @discover_type = ExtManagementSystem.ems_infra_discovery_types
       else
@@ -793,11 +793,11 @@ module ApplicationController::CiProcessing
     discover_type = []
     @discover_type_checked = []        # to keep track of checked items when start button is pressed
     @discover_type_selected = nil
-    if params["start"]
-      audit = {:event => "ms_and_host_discovery", :target_class => "Host", :userid => session[:userid]}
-      if request.parameters[:controller] != "ems_cloud"
-        from_ip = params[:from_first].to_s + "." + params[:from_second].to_s + "." + params[:from_third].to_s + "." + params[:from_fourth]
-        to_ip = params[:from_first].to_s + "." + params[:from_second].to_s + "." + params[:from_third].to_s + "." + params[:to_fourth]
+    if params['start']
+      audit = {:event => 'ms_and_host_discovery', :target_class => 'Host', :userid => session[:userid]}
+      if request.parameters[:controller] != 'ems_cloud'
+        from_ip = params[:from_first].to_s + '.' + params[:from_second].to_s + '.' + params[:from_third].to_s + '.' + params[:from_fourth]
+        to_ip = params[:from_first].to_s + '.' + params[:from_second].to_s + '.' + params[:from_third].to_s + '.' + params[:to_fourth]
 
         i = 0
         while i < @discover_type.length
@@ -825,47 +825,47 @@ module ApplicationController::CiProcessing
         @to[:fourth] = params[:to_fourth]
       end
       @in_a_form = true
-      drop_breadcrumb(:name => _("%{title} Discovery") % {:title => title}, :url => "/host/discover")
+      drop_breadcrumb(:name => _('%{title} Discovery') % {:title => title}, :url => '/host/discover')
       @discover_type_selected = params[:discover_type_selected]
 
-      if request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
+      if request.parameters[:controller] == 'ems_cloud' && params[:discover_type_selected] == ExtManagementSystem.ems_cloud_discovery_types['azure']
         @client_id = params[:client_id] if params[:client_id]
         @client_key = params[:client_key] if params[:client_key]
         @azure_tenant_id = params[:azure_tenant_id] if params[:azure_tenant_id]
 
-        if @client_id == "" || @client_key == "" || @azure_tenant_id == ""
-          add_flash(_("Client ID, Client Key and Azure Tenant ID are required"), :error)
+        if @client_id == '' || @client_key == '' || @azure_tenant_id == ''
+          add_flash(_('Client ID, Client Key and Azure Tenant ID are required'), :error)
           render :action => 'discover'
           return
         end
-      elsif request.parameters[:controller] == "ems_cloud" || params[:discover_type_ipmi].to_s == "1"
+      elsif request.parameters[:controller] == 'ems_cloud' || params[:discover_type_ipmi].to_s == '1'
         @userid = params[:userid] if  params[:userid]
         @password = params[:password] if params[:password]
         @verify = params[:verify] if params[:verify]
-        if request.parameters[:controller] == "ems_cloud" && params[:userid] == ""
-          add_flash(_("Username is required"), :error)
+        if request.parameters[:controller] == 'ems_cloud' && params[:userid] == ''
+          add_flash(_('Username is required'), :error)
           render :action => 'discover'
           return
         end
-        if params[:userid] == "" && params[:password] != ""
-          add_flash(_("Username must be entered if Password is entered"), :error)
+        if params[:userid] == '' && params[:password] != ''
+          add_flash(_('Username must be entered if Password is entered'), :error)
           render :action => 'discover'
           return
         end
         if params[:password] != params[:verify]
-          add_flash(_("Password/Verify Password do not match"), :error)
+          add_flash(_('Password/Verify Password do not match'), :error)
           render :action => 'discover'
           return
         end
       end
 
-      if request.parameters[:controller] != "ems_cloud" && discover_type.length <= 0
-        add_flash(_("At least 1 item must be selected for discovery"), :error)
+      if request.parameters[:controller] != 'ems_cloud' && discover_type.length <= 0
+        add_flash(_('At least 1 item must be selected for discovery'), :error)
         render :action => 'discover'
       else
         begin
-          if request.parameters[:controller] != "ems_cloud"
-            if params[:discover_type_ipmi].to_s == "1"
+          if request.parameters[:controller] != 'ems_cloud'
+            if params[:discover_type_ipmi].to_s == '1'
               options = {:discover_types => discover_type, :credentials => {:ipmi => {:userid => @userid, :password => @password}}}
             else
               options = {:discover_types => discover_type}
@@ -880,27 +880,27 @@ module ApplicationController::CiProcessing
           end
         rescue => err
           #       @flash_msg = "'Host Discovery' returned: " + err.message; @flash_error = true
-          add_flash(_("%{title} Discovery returned: %{error_message}") %
+          add_flash(_('%{title} Discovery returned: %{error_message}') %
             {:title => title, :error_message => err.message}, :error)
           render :action => 'discover'
           return
         else
           AuditEvent.success(audit.merge(:message => "#{title} discovery initiated (from_ip:[#{from_ip}], to_ip:[#{to_ip}])"))
           redirect_to :action    => 'show_list',
-                      :flash_msg => _("%{model}: Discovery successfully initiated") % {:model => title}
+                      :flash_msg => _('%{model}: Discovery successfully initiated') % {:model => title}
         end
       end
     end
     # Fell through, must be first time
     @in_a_form = true
-    @title = _("%{title} Discovery") % {:title => title}
-    @from = {:first => "", :second => "", :third => "", :fourth => ""}
-    @to = {:first => "", :second => "", :third => "", :fourth => ""}
+    @title = _('%{title} Discovery') % {:title => title}
+    @from = {:first => '', :second => '', :third => '', :fourth => ''}
+    @to = {:first => '', :second => '', :third => '', :fourth => ''}
   end
 
   def set_discover_title(type, controller)
-    if type == "hosts"
-      return _("Hosts / Nodes")
+    if type == 'hosts'
+      return _('Hosts / Nodes')
     else
       return ui_lookup(:tables => controller)
     end
@@ -913,8 +913,8 @@ module ApplicationController::CiProcessing
       if params[:from_first]
         # params[:from][:first] =~ /[a-zA-Z]/
         if params[:from_first] =~ /[\D]/
-          temp = params[:from_first].gsub(/[\.]/, "")
-          field_shift = true if params[:from_first] =~ /[\.]/ && params[:from_first].gsub(/[\.]/, "") =~ /[0-9]/ && temp.gsub!(/[\D]/, "").nil?
+          temp = params[:from_first].gsub(/[\.]/, '')
+          field_shift = true if params[:from_first] =~ /[\.]/ && params[:from_first].gsub(/[\.]/, '') =~ /[0-9]/ && temp.gsub!(/[\D]/, '').nil?
           page << "$('#from_first').val('#{j_str(params[:from_first]).gsub(/[\D]/, "")}');"
           page << javascript_focus('from_second') if field_shift
         else
@@ -923,8 +923,8 @@ module ApplicationController::CiProcessing
         end
       elsif params[:from_second]
         if params[:from_second] =~ /[\D]/
-          temp = params[:from_second].gsub(/[\.]/, "")
-          field_shift = true if params[:from_second] =~ /[\.]/ && params[:from_second].gsub(/[\.]/, "") =~ /[0-9]/ && temp.gsub!(/[\D]/, "").nil?
+          temp = params[:from_second].gsub(/[\.]/, '')
+          field_shift = true if params[:from_second] =~ /[\.]/ && params[:from_second].gsub(/[\.]/, '') =~ /[0-9]/ && temp.gsub!(/[\D]/, '').nil?
           page << "$('#from_second').val('#{j_str(params[:from_second].gsub(/[\D]/, ""))}');"
           page << javascript_focus('from_third') if field_shift
         else
@@ -933,8 +933,8 @@ module ApplicationController::CiProcessing
         end
       elsif params[:from_third]
         if params[:from_third] =~ /[\D]/
-          temp = params[:from_third].gsub(/[\.]/, "")
-          field_shift = true if params[:from_third] =~ /[\.]/ && params[:from_third].gsub(/[\.]/, "") =~ /[0-9]/ && temp.gsub!(/[\D]/, "").nil?
+          temp = params[:from_third].gsub(/[\.]/, '')
+          field_shift = true if params[:from_third] =~ /[\.]/ && params[:from_third].gsub(/[\.]/, '') =~ /[0-9]/ && temp.gsub!(/[\D]/, '').nil?
           page << "$('#from_third').val('#{j_str(params[:from_third].gsub(/[\D]/, ""))}');"
           page << javascript_focus('from_fourth') if field_shift
         else
@@ -946,22 +946,22 @@ module ApplicationController::CiProcessing
       elsif params[:to_fourth] && params[:to_fourth] =~ /[\D]/
         page << "$('#to_fourth').val('#{j_str(params[:to_fourth].gsub(/[\D]/, ""))}');"
       end
-      if (request.parameters[:controller] == "ems_cloud" && params[:discover_type_selected]) || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "1")
+      if (request.parameters[:controller] == 'ems_cloud' && params[:discover_type_selected]) || (params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == '1')
         if params[:discover_type_selected] && params[:discover_type_selected] == 'azure'
-          page << javascript_hide("discover_credentials")
-          page << javascript_show("discover_azure_credentials")
+          page << javascript_hide('discover_credentials')
+          page << javascript_show('discover_azure_credentials')
         elsif params[:discover_type_selected] && params[:discover_type_selected] == 'amazon'
-          page << javascript_hide("discover_azure_credentials")
-          page << javascript_show("discover_credentials")
+          page << javascript_hide('discover_azure_credentials')
+          page << javascript_show('discover_credentials')
         else
           @ipmi = true
-          page << javascript_show("discover_credentials")
+          page << javascript_show('discover_credentials')
         end
-      elsif params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == "null"
+      elsif params[:discover_type_ipmi] && params[:discover_type_ipmi].to_s == 'null'
         @ipmi = false
-        page << javascript_hide("discover_credentials")
+        page << javascript_hide('discover_credentials')
       elsif @ipmi == false
-        page << javascript_hide("discover_credentials")
+        page << javascript_hide('discover_credentials')
       end
     end
   end
@@ -969,11 +969,11 @@ module ApplicationController::CiProcessing
   def process_elements(elements, klass, task, display_name = nil, order_field = nil)
     ['name', 'description', 'title'].each { |key| order_field ||= key if klass.column_names.include?(key) }
 
-    klass.where(:id => elements).order(order_field == "ems_id" ? order_field : "lower(#{order_field})").each do |elem|
+    klass.where(:id => elements).order(order_field == 'ems_id' ? order_field : "lower(#{order_field})").each do |elem|
       id          = elem.id
       description = get_record_display_name(elem)
       name        = elem.send(order_field.to_sym)
-      if task == "destroy"
+      if task == 'destroy'
         process_element_destroy(elem, klass, name)
       else
         model_name = ui_lookup(:model => klass.name) # Lookup friendly model name in dictionary
@@ -984,7 +984,7 @@ module ApplicationController::CiProcessing
                    {:model => model_name, :name => record_name, :task => (display_name || task),
                     :error_msg => bang.message}, :error)
         else
-          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") %
+          add_flash(_('%{model} "%{name}": %{task} successfully initiated') %
                    {:model => model_name, :name => description, :task => (display_name || task)})
         end
       end
@@ -1008,15 +1008,15 @@ module ApplicationController::CiProcessing
     begin
       element.destroy
     rescue => bang
-      add_flash(_("%{model} \"%{name}\": Error during delete: %{error_msg}") %
+      add_flash(_('%{model} "%{name}": Error during delete: %{error_msg}') %
                {:model => model_name, :name => record_name, :error_msg => bang.message}, :error)
     else
       if element.destroyed?
         AuditEvent.success(audit)
-        add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => record_name})
+        add_flash(_('%{model} "%{name}": Delete successful') % {:model => model_name, :name => record_name})
       else
         error_msg = element.errors.collect { |_attr, msg| msg }.join(';')
-        add_flash(_("%{model} \"%{name}\": Error during delete: %{error_msg}") %
+        add_flash(_('%{model} "%{name}": Error during delete: %{error_msg}') %
                  {:model => model_name, :name => record_name, :error_msg => error_msg}, :error)
       end
     end
@@ -1029,7 +1029,7 @@ module ApplicationController::CiProcessing
     rescue ActiveRecord::RecordNotFound
     rescue => @bang
       if @explorer
-        self.x_node = "root"
+        self.x_node = 'root'
         add_flash(@bang.message, :error, true)
         session[:flash_msgs] = @flash_array.dup
       end
@@ -1040,15 +1040,15 @@ module ApplicationController::CiProcessing
   def process_show_list(options = {})
     session["#{self.class.session_key_prefix}_display".to_sym] = nil
     @display  = nil
-    @lastaction  = "show_list"
-    @gtl_url = "/show_list"
+    @lastaction  = 'show_list'
+    @gtl_url = '/show_list'
 
     model = options.delete(:model) # Get passed in model override
     @view, @pages = get_view(model || self.class.model, options)  # Get the records (into a view) and the paginator
     if session[:bc] && session[:menu_click]               # See if we came from a perf chart menu click
       drop_breadcrumb(:name => session[:bc],
                       :url  => url_for(:controller    => self.class.table_name,
-                                       :action        => "show_list",
+                                       :action        => 'show_list',
                                        :bc            => session[:bc],
                                        :sb_controller => params[:sb_controller],
                                        :menu_click    => session[:menu_click],
@@ -1056,18 +1056,18 @@ module ApplicationController::CiProcessing
     else
       @breadcrumbs = []
       bc_name = breadcrumb_name(model)
-      bc_name += " - " + session["#{self.class.session_key_prefix}_type".to_sym].titleize if session["#{self.class.session_key_prefix}_type".to_sym]
-      bc_name += " (filtered)" if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
-      action = %w(container service vm_cloud vm_infra vm_or_template storage).include?(self.class.table_name) ? "explorer" : "show_list"
+      bc_name += ' - ' + session["#{self.class.session_key_prefix}_type".to_sym].titleize if session["#{self.class.session_key_prefix}_type".to_sym]
+      bc_name += ' (filtered)' if @filters && (!@filters[:tags].blank? || !@filters[:cats].blank?)
+      action = %w(container service vm_cloud vm_infra vm_or_template storage).include?(self.class.table_name) ? 'explorer' : 'show_list'
       @breadcrumbs.clear
       drop_breadcrumb(:name => bc_name, :url => "/#{self.class.table_name}/#{action}")
     end
     @layout = session["#{self.class.session_key_prefix}_type".to_sym] if session["#{self.class.session_key_prefix}_type".to_sym]
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
-    build_listnav_search_list(@view.db) if !["miq_task"].include?(@layout) && !session[:menu_click]
+    build_listnav_search_list(@view.db) if !['miq_task'].include?(@layout) && !session[:menu_click]
     # Came in from outside show_list partial
-    unless params[:action] == "explorer"
-      if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice])
+    unless params[:action] == 'explorer'
+      if params[:action] != 'button' && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice])
         replace_gtl_main_div
       end
     end
@@ -1082,10 +1082,10 @@ module ApplicationController::CiProcessing
     assert_privileges(params[:pressed])
     @request_id = nil
     # check to see if coming from show_list or drilled into vms from another CI
-    rec_cls = "vm"
+    rec_cls = 'vm'
     recs = []
     # if coming in to edit from miq_request list view
-    if !session[:checked_items].nil? && (@lastaction == "set_checked_items" || params[:pressed] == "miq_request_edit")
+    if !session[:checked_items].nil? && (@lastaction == 'set_checked_items' || params[:pressed] == 'miq_request_edit')
       @request_id = params[:id]
       recs = session[:checked_items]
     elsif !params[:id] || params[:pressed] == 'vm_reconfigure'
@@ -1095,19 +1095,19 @@ module ApplicationController::CiProcessing
       recs = [params[:id].to_i]
     end
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to Reconfigure") %
+      add_flash(_('One or more %{model} must be selected to Reconfigure') %
         {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
       render_flash_and_scroll
       return
     else
       if VmOrTemplate.includes_template?(recs)
-        add_flash(_("Reconfigure does not apply because you selected at least one %{model}") %
-          {:model => ui_lookup(:table => "miq_template")}, :error)
+        add_flash(_('Reconfigure does not apply because you selected at least one %{model}') %
+          {:model => ui_lookup(:table => 'miq_template')}, :error)
         render_flash_and_scroll
         return
       end
       unless VmOrTemplate.reconfigurable?(recs)
-        add_flash(_("Reconfigure does not apply because you selected at least one un-reconfigurable VM"), :error)
+        add_flash(_('Reconfigure does not apply because you selected at least one un-reconfigurable VM'), :error)
         render_flash_and_scroll
         return
       end
@@ -1116,11 +1116,11 @@ module ApplicationController::CiProcessing
     if @explorer
       reconfigure
       session[:changed] = true  # need to enable submit button when screen loads
-      @refresh_partial = "vm_common/reconfigure"
+      @refresh_partial = 'vm_common/reconfigure'
     else
       render :update do |page|
         page << javascript_prologue
-        if role_allows(:feature => "vm_reconfigure")
+        if role_allows(:feature => 'vm_reconfigure')
           page.redirect_to :controller => "#{rec_cls}", :action => 'reconfigure', :req_id => @request_id, :rec_ids => @reconfigure_items, :escape => false         # redirect to build the ownership screen
         end
       end
@@ -1247,10 +1247,10 @@ module ApplicationController::CiProcessing
 
   def reconfigure_calculations(mbsize)
     humansize = mbsize
-    fmt = "MB"
+    fmt = 'MB'
     if mbsize.to_i > 1024 && mbsize.to_i % 1024 == 0
       humansize = mbsize.to_i / 1024
-      fmt = "GB"
+      fmt = 'GB'
     end
     return humansize.to_s, fmt
   end
@@ -1260,41 +1260,41 @@ module ApplicationController::CiProcessing
     vms = []
 
     # Either a list or coming from a different controller (eg from host screen, go to its vms)
-    if @lastaction == "show_list" ||
+    if @lastaction == 'show_list' ||
        !%w(orchestration_stack service vm_cloud vm_infra vm miq_template vm_or_template).include?(
-         request.parameters["controller"]) # showing a list
+         request.parameters['controller']) # showing a list
 
       vms = find_checked_items
       if method == 'retire_now' && VmOrTemplate.includes_template?(vms)
-        add_flash(_("Retire does not apply to selected %{model}") %
-          {:model => ui_lookup(:table => "miq_template")}, :error)
+        add_flash(_('Retire does not apply to selected %{model}') %
+          {:model => ui_lookup(:table => 'miq_template')}, :error)
         render_flash_and_scroll
         return
       end
 
       if method == 'scan' && !VmOrTemplate.batch_operation_supported?('smartstate_analysis', vms)
-        render_flash_not_applicable_to_model('Smartstate Analysis', ui_lookup(:tables => "vm_or_template"))
+        render_flash_not_applicable_to_model('Smartstate Analysis', ui_lookup(:tables => 'vm_or_template'))
         return
       end
 
       if vms.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => request.parameters["controller"]), :task => display_name}, :error)
+        add_flash(_('No %{model} were selected for %{task}') % {:model => ui_lookup(:tables => request.parameters['controller']), :task => display_name}, :error)
       else
         process_objects(vms, method)
       end
 
-      if @lastaction == "show_list" # In vm controller, refresh show_list, else let the other controller handle it
+      if @lastaction == 'show_list' # In vm controller, refresh show_list, else let the other controller handle it
         show_list unless @explorer
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       end
 
     else # showing 1 vm
       klass = get_rec_cls
       if params[:id].nil? || klass.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") %
-          {:record => ui_lookup(:table => request.parameters["controller"])}, :error)
+        add_flash(_('%{record} no longer exists') %
+          {:record => ui_lookup(:table => request.parameters['controller'])}, :error)
         show_list unless @explorer
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       else
         vms.push(params[:id])
         process_objects(vms, method) unless vms.empty?
@@ -1317,12 +1317,12 @@ module ApplicationController::CiProcessing
   end
 
   def get_rec_cls
-    case request.parameters["controller"]
-    when "miq_template"
+    case request.parameters['controller']
+    when 'miq_template'
       return MiqTemplate
-    when "orchestration_stack"
+    when 'orchestration_stack'
       return OrchestrationStack
-    when "service"
+    when 'service'
       return Service
     else
       return VmOrTemplate
@@ -1331,26 +1331,26 @@ module ApplicationController::CiProcessing
 
   def process_objects(objs, task, display_name = nil)
     case get_rec_cls.to_s
-    when "OrchestrationStack"
-      objs, _objs_out_reg = filter_ids_in_region(objs, "OrchestrationStack")
+    when 'OrchestrationStack'
+      objs, _objs_out_reg = filter_ids_in_region(objs, 'OrchestrationStack')
       klass = OrchestrationStack
-    when "Service"
-      objs, _objs_out_reg = filter_ids_in_region(objs, "Service")
+    when 'Service'
+      objs, _objs_out_reg = filter_ids_in_region(objs, 'Service')
       klass = Service
-    when "VmOrTemplate"
-      objs, _objs_out_reg = filter_ids_in_region(objs, "VM") unless VmOrTemplate::POWER_OPS.include?(task)
+    when 'VmOrTemplate'
+      objs, _objs_out_reg = filter_ids_in_region(objs, 'VM') unless VmOrTemplate::POWER_OPS.include?(task)
       klass = Vm
     end
 
     return if objs.empty?
 
     options = {:ids => objs, :task => task, :userid => session[:userid]}
-    options[:snap_selected] = session[:snap_selected] if task == "remove_snapshot" || task == "revert_to_snapshot"
+    options[:snap_selected] = session[:snap_selected] if task == 'remove_snapshot' || task == 'revert_to_snapshot'
     klass.process_tasks(options)
   rescue => err
     add_flash(_("Error during '%{task}': %{error_message}") % {:task => task, :error_message => err.message}, :error)
   else
-    add_flash(_("%{task} initiated for %{model} from the CFME Database") %
+    add_flash(_('%{task} initiated for %{model} from the CFME Database') %
       {:task  => display_name ? display_name.titleize : task_name(task),
        :model => pluralize(objs.length, ui_lookup(:model => klass.to_s))})
   end
@@ -1359,7 +1359,7 @@ module ApplicationController::CiProcessing
     items = []
     if params[:id]
       if params[:id].nil? || !ExtManagementSystem.where(:id => params[:id]).exists?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => controller_name)}, :error)
+        add_flash(_('%{record} no longer exists') % {:record => ui_lookup(:table => controller_name)}, :error)
       else
         items.push(params[:id])
         @single_delete = true if method == 'destroy' && !flash_errors?
@@ -1367,7 +1367,7 @@ module ApplicationController::CiProcessing
     else
       items = find_checked_items
       if items.empty?
-        add_flash(_("No providers were selected for %{task}") % {:task  => display_name}, :error)
+        add_flash(_('No providers were selected for %{task}') % {:task  => display_name}, :error)
       else
         process_cfgmgr(items, method) unless items.empty? && !flash_errors?
       end
@@ -1375,7 +1375,7 @@ module ApplicationController::CiProcessing
   end
 
   def process_cfgmgr(providers, task)
-    providers, _services_out_region = filter_ids_in_region(providers, "ManageIQ::Providers::ConfigurationManager")
+    providers, _services_out_region = filter_ids_in_region(providers, 'ManageIQ::Providers::ConfigurationManager')
     return if providers.empty?
 
     options = {:ids => providers, :task => task, :userid => session[:userid]}
@@ -1384,10 +1384,10 @@ module ApplicationController::CiProcessing
   rescue => err
     add_flash(_("Error during '%{task}': %{message}") % {:task => task, :message => err.message}, :error)
   else
-    add_flash(_("%{task} initiated for %{count_model} (%{controller})") %
+    add_flash(_('%{task} initiated for %{count_model} (%{controller})') %
                 {:task        => task_name(task),
                  :controller  => ProviderForemanController.model_to_name(kls.to_s),
-                 :count_model => pluralize(providers.length, _("provider"))})
+                 :count_model => pluralize(providers.length, _('provider'))})
   end
 
   # Delete all selected or single displayed VM(s)
@@ -1575,10 +1575,10 @@ module ApplicationController::CiProcessing
       vms = [params[:id]]
     end
     if vms.length < 1
-      add_flash(_("At least 1 %{model} must be selected for Policy Simulation") %
-        {:model => ui_lookup(:model => "Vm")}, :error)
-      @refresh_div = "flash_msg_div"
-      @refresh_partial = "layouts/flash_msg"
+      add_flash(_('At least 1 %{model} must be selected for Policy Simulation') %
+        {:model => ui_lookup(:model => 'Vm')}, :error)
+      @refresh_div = 'flash_msg_div'
+      @refresh_partial = 'layouts/flash_msg'
     else
       session[:tag_items] = vms       # Set the array of tag items
       session[:tag_db] = VmOrTemplate # Remember the DB
@@ -1587,7 +1587,7 @@ module ApplicationController::CiProcessing
         @edit[:explorer] = true       # Since no @edit, create @edit and save explorer to use while building url for vms in policy sim grid
         session[:edit] = @edit
         policy_sim
-        @refresh_partial = "layouts/policy_sim"
+        @refresh_partial = 'layouts/policy_sim'
       else
         render :update do |page|
           page << javascript_prologue
@@ -1605,30 +1605,30 @@ module ApplicationController::CiProcessing
 
   # Common Cluster button handler routines
   def process_clusters(clusters, task)
-    clusters, _clusters_out_region = filter_ids_in_region(clusters, _("Cluster"))
+    clusters, _clusters_out_region = filter_ids_in_region(clusters, _('Cluster'))
     return if clusters.empty?
 
-    if task == "destroy"
-      EmsCluster.where(:id => clusters).order("lower(name)").each do |cluster|
+    if task == 'destroy'
+      EmsCluster.where(:id => clusters).order('lower(name)').each do |cluster|
         id = cluster.id
         cluster_name = cluster.name
-        audit = {:event => "ems_cluster_record_delete_initiated", :message => "[#{cluster_name}] Record delete initiated", :target_id => id, :target_class => "EmsCluster", :userid => session[:userid]}
+        audit = {:event => 'ems_cluster_record_delete_initiated', :message => "[#{cluster_name}] Record delete initiated", :target_id => id, :target_class => 'EmsCluster', :userid => session[:userid]}
         AuditEvent.success(audit)
       end
       EmsCluster.destroy_queue(clusters)
     else
-      EmsCluster.where(:id => clusters).order("lower(name)").each do |cluster|
+      EmsCluster.where(:id => clusters).order('lower(name)').each do |cluster|
         cluster_name = cluster.name
         begin
           cluster.send(task.to_sym) if cluster.respond_to?(task)    # Run the task
         rescue => err
           add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
-            {:model         => ui_lookup(:model => "EmsCluster"),
+            {:model         => ui_lookup(:model => 'EmsCluster'),
              :name          => cluster_name,
              :task          => task,
              :error_message => err.message}, :error) # Push msg and error flag
         else
-          add_flash(_("%{model}: %{task} successfully initiated") % {:model => ui_lookup(:model => "EmsCluster"), :task => task})
+          add_flash(_('%{model}: %{task} successfully initiated') % {:model => ui_lookup(:model => 'EmsCluster'), :task => task})
         end
       end
     end
@@ -1636,30 +1636,30 @@ module ApplicationController::CiProcessing
 
   # Common RP button handler routines
   def process_resourcepools(rps, task)
-    rps, _rps_out_region = filter_ids_in_region(rps, "Resource Pool")
+    rps, _rps_out_region = filter_ids_in_region(rps, 'Resource Pool')
     return if rps.empty?
 
-    if task == "destroy"
-      ResourcePool.where(:id => rps).order("lower(name)").each do |rp|
+    if task == 'destroy'
+      ResourcePool.where(:id => rps).order('lower(name)').each do |rp|
         id = rp.id
         rp_name = rp.name
-        audit = {:event => "rp_record_delete_initiated", :message => "[#{rp_name}] Record delete initiated", :target_id => id, :target_class => "ResourcePool", :userid => session[:userid]}
+        audit = {:event => 'rp_record_delete_initiated', :message => "[#{rp_name}] Record delete initiated", :target_id => id, :target_class => 'ResourcePool', :userid => session[:userid]}
         AuditEvent.success(audit)
       end
       ResourcePool.destroy_queue(rps)
     else
-      ResourcePool.where(:id => rps).order("lower(name)").each do |rp|
+      ResourcePool.where(:id => rps).order('lower(name)').each do |rp|
         rp_name = rp.name
         begin
           rp.send(task.to_sym) if rp.respond_to?(task)    # Run the task
         rescue => err
           add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
-            {:model         => ui_lookup(:model => "ResourcePool"),
+            {:model         => ui_lookup(:model => 'ResourcePool'),
              :name          => rp_name,
              :task          => task,
              :error_message => err.message}, :error)
         else
-          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "ResourcePool"), :name => rp_name, :task => task})
+          add_flash(_('%{model} "%{name}": %{task} successfully initiated') % {:model => ui_lookup(:model => 'ResourcePool'), :name => rp_name, :task => task})
         end
       end
     end
@@ -1669,22 +1669,22 @@ module ApplicationController::CiProcessing
     clusters = []
 
     # Either a list or coming from a different controller (eg from host screen, go to its clusters)
-    if @lastaction == "show_list" || @layout != "ems_cluster"
+    if @lastaction == 'show_list' || @layout != 'ems_cluster'
       clusters = find_checked_items
       if clusters.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "ems_clusters"), :task => display_name}, :error)
+        add_flash(_('No %{model} were selected for %{task}') % {:model => ui_lookup(:tables => 'ems_clusters'), :task => display_name}, :error)
       else
         process_clusters(clusters, method)
       end
 
-      if @lastaction == "show_list" # In cluster controller, refresh show_list, else let the other controller handle it
+      if @lastaction == 'show_list' # In cluster controller, refresh show_list, else let the other controller handle it
         show_list
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       end
 
     else # showing 1 cluster
       if params[:id].nil? || EmsCluster.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "ems_cluster")}, :error)
+        add_flash(_('%{record} no longer exists') % {:record => ui_lookup(:tables => 'ems_cluster')}, :error)
       else
         clusters.push(params[:id])
         process_clusters(clusters, method)  unless clusters.empty?
@@ -1698,10 +1698,10 @@ module ApplicationController::CiProcessing
       if method == 'destroy'
         @single_delete = true unless flash_errors?
       end
-      if ["vms", "hosts"].include?(@display)
-        @refresh_partial = "layouts/gtl"
+      if ['vms', 'hosts'].include?(@display)
+        @refresh_partial = 'layouts/gtl'
       else
-        @refresh_partial = "config"
+        @refresh_partial = 'config'
       end
     end
 
@@ -1710,18 +1710,18 @@ module ApplicationController::CiProcessing
 
   # Scan all selected or single displayed cluster(s)
   def scanclusters
-    assert_privileges("ems_cluster_scan")
+    assert_privileges('ems_cluster_scan')
     cluster_button_operation('scan', _('Analysis'))
   end
 
   def each_host(host_ids, task_name)
-    Host.where(:id => host_ids).order("lower(name)").each do |host|
+    Host.where(:id => host_ids).order('lower(name)').each do |host|
       begin
         yield host
       rescue => err
         add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
                   {
-                    :model   => ui_lookup(:model => "Host"),
+                    :model   => ui_lookup(:model => 'Host'),
                     :name    => host.name,
                     :task    => task_name,
                     :message => err.message
@@ -1732,74 +1732,74 @@ module ApplicationController::CiProcessing
 
   # Common Host button handler routines
   def process_hosts(hosts, task, display_name = nil)
-    hosts, _hosts_out_region = filter_ids_in_region(hosts, _("Host"))
+    hosts, _hosts_out_region = filter_ids_in_region(hosts, _('Host'))
     return if hosts.empty?
     task_name = (display_name || task)
 
     case task
-    when "refresh_ems"
+    when 'refresh_ems'
       Host.refresh_ems(hosts)
-      add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
+      add_flash(_('%{task} initiated for %{count_model} from the CFME Database') % \
         {:task        => (display_name || task_name(task)),
-         :count_model => pluralize(hosts.length, "Host")})
+         :count_model => pluralize(hosts.length, 'Host')})
       AuditEvent.success(:userid => session[:userid], :event => "host_#{task}",
           :message => "'#{task_name}' successfully initiated for #{pluralize(hosts.length, "Host")}",
-          :target_class => "Host")
-    when "destroy"
+          :target_class => 'Host')
+    when 'destroy'
       each_host(hosts, task_name) do |host|
-        audit = {:event        => "host_record_delete_initiated",
+        audit = {:event        => 'host_record_delete_initiated',
                  :message      => "[#{host.name}] Record delete initiated",
                  :target_id    => host.id,
-                 :target_class => "Host",
+                 :target_class => 'Host',
                  :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
       Host.destroy_queue(hosts)
-    when "scan"
+    when 'scan'
       each_host(hosts, task_name) do |host|
         if host.respond_to?(:scan)
           host.send(task.to_sym, session[:userid]) # Scan needs userid
-          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host.name, :task => (display_name || task)})
+          add_flash(_('"%{record}": %{task} successfully initiated') % {:record => host.name, :task => (display_name || task)})
         else
-          add_flash(_("\"%{task}\": not supported for %{hostname}") % {:hostname => host.name, :task => (task_name || task)}, :error)
+          add_flash(_('"%{task}": not supported for %{hostname}') % {:hostname => host.name, :task => (task_name || task)}, :error)
         end
       end
-    when "maintenance"
+    when 'maintenance'
       each_host(hosts, task_name) do |host|
         if host.maintenance
           if host.respond_to?(:unset_node_maintenance)
             host.send(:unset_node_maintenance)
-            add_flash(_("\"%{record}\": %{task} successfully initiated") %
+            add_flash(_('"%{record}": %{task} successfully initiated') %
                       {:record => host.name, :task => (display_name || task)})
           else
-            add_flash(_("\"%{task}\": not supported for %{hostname}") %
+            add_flash(_('"%{task}": not supported for %{hostname}') %
                       {:hostname => host.name, :task => (task_name || task)}, :error)
           end
         elsif host.respond_to?(:set_node_maintenance)
           host.send(:set_node_maintenance)
-          add_flash(_("\"%{record}\": %{task} successfully initiated") %
+          add_flash(_('"%{record}": %{task} successfully initiated') %
                     {:record => host.name, :task => (display_name || task)})
         else
-          add_flash(_("\"%{task}\": not supported for %{hostname}") %
+          add_flash(_('"%{task}": not supported for %{hostname}') %
                     {:hostname => host.name, :task => (task_name || task)}, :error)
         end
       end
-    when "service_scheduling"
+    when 'service_scheduling'
       each_host(hosts, task_name) do |host|
-        params[:miq_grid_checks].split(",").each do |cloud_service_id|
+        params[:miq_grid_checks].split(',').each do |cloud_service_id|
           service = host.cloud_services.find(cloud_service_id)
           if service.validate_enable_scheduling
             resp = service.enable_scheduling
-            status = resp.body.fetch("service").fetch("status")
+            status = resp.body.fetch('service').fetch('status')
             service.update(:scheduling_disabled => status == 'disabled')
-            add_flash(_("\"%{record}\": Scheduling is %{status} now.") % {:record => service.name, :status => status})
+            add_flash(_('"%{record}": Scheduling is %{status} now.') % {:record => service.name, :status => status})
           elsif service.validate_disable_scheduling
             resp = service.disable_scheduling
-            status = resp.body.fetch("service").fetch("status")
+            status = resp.body.fetch('service').fetch('status')
             service.update(:scheduling_disabled => status == 'disabled')
-            add_flash(_("\"%{record}\": Scheduling is %{status} now.") % {:record => service.name, :status => status})
+            add_flash(_('"%{record}": Scheduling is %{status} now.') % {:record => service.name, :status => status})
           else
-            add_flash(_("\"%{record}\": %{task} invalid") % {:record => service.name, :task => (display_name || task)},
+            add_flash(_('"%{record}": %{task} invalid') % {:record => service.name, :task => (display_name || task)},
                       :error)
           end
         end
@@ -1808,9 +1808,9 @@ module ApplicationController::CiProcessing
       each_host(hosts, task_name) do |host|
         if host.respond_to?(task) && host.is_available?(task)
           host.send(task.to_sym)
-          add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host.name, :task => (display_name || task)})
+          add_flash(_('"%{record}": %{task} successfully initiated') % {:record => host.name, :task => (display_name || task)})
         else
-          add_flash(_("\"%{task}\": not available for %{hostname}") % {:hostname => host.name, :task => (display_name || task)}, :error)
+          add_flash(_('"%{task}": not available for %{hostname}') % {:hostname => host.name, :task => (display_name || task)}, :error)
         end
       end
     end
@@ -1818,17 +1818,17 @@ module ApplicationController::CiProcessing
 
   # Common Stacks button handler routines
   def process_orchestration_stacks(stacks, task, _ = nil)
-    stacks, = filter_ids_in_region(stacks, "OrchestrationStack")
+    stacks, = filter_ids_in_region(stacks, 'OrchestrationStack')
     return if stacks.empty?
 
-    if task == "destroy"
-      OrchestrationStack.where(:id => stacks).order("lower(name)").each do |stack|
+    if task == 'destroy'
+      OrchestrationStack.where(:id => stacks).order('lower(name)').each do |stack|
         id = stack.id
         stack_name = stack.name
-        audit = {:event        => "stack_record_delete_initiated",
+        audit = {:event        => 'stack_record_delete_initiated',
                  :message      => "[#{stack_name}] Record delete initiated",
                  :target_id    => id,
-                 :target_class => "OrchestrationStack",
+                 :target_class => 'OrchestrationStack',
                  :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
@@ -1838,46 +1838,46 @@ module ApplicationController::CiProcessing
 
   # Refresh all selected or single displayed host(s)
   def refreshhosts
-    assert_privileges("host_refresh")
+    assert_privileges('host_refresh')
     host_button_operation('refresh_ems', _('Refresh'))
   end
 
   # Scan all selected or single displayed host(s)
   def scanhosts
-    assert_privileges("host_scan")
+    assert_privileges('host_scan')
     host_button_operation('scan', _('Analysis'))
   end
 
   # Toggle maintenance mode on all selected or single displayed host(s)
   def maintenancehosts
-    assert_privileges("host_toggle_maintenance")
+    assert_privileges('host_toggle_maintenance')
     host_button_operation('maintenance', _('Toggle Maintenance'))
   end
 
   # Toggle Scheduling on all selected or single displayed Cloud Service
   def toggleservicescheduling
-    assert_privileges("host_cloud_service_scheduling_toggle")
+    assert_privileges('host_cloud_service_scheduling_toggle')
     host_button_operation('service_scheduling', _('Toggle Scheduling for Cloud Service'))
   end
 
   def check_compliance_hosts
-    assert_privileges("host_check_compliance")
+    assert_privileges('host_check_compliance')
     host_button_operation('check_compliance_queue', _('Compliance Check'))
   end
 
   def analyze_check_compliance_hosts
-    assert_privileges("host_analyze_check_compliance")
+    assert_privileges('host_analyze_check_compliance')
     host_button_operation('scan_and_check_compliance_queue', _('Analyze and Compliance Check'))
   end
 
   # Handle the Host power buttons
   POWER_BUTTON_NAMES = {
-    "reboot"           => _("Restart"),
-    "start"            => _("Power On"),
-    "stop"             => _("Power Off"),
-    "enter_maint_mode" => _("Enter Maintenance Mode"),
-    "exit_maint_mode"  => _("Exit Maintenance Mode"),
-    "standby"          => _("Shutdown to Standby Mode")
+    'reboot'           => _('Restart'),
+    'start'            => _('Power On'),
+    'stop'             => _('Power Off'),
+    'enter_maint_mode' => _('Enter Maintenance Mode'),
+    'exit_maint_mode'  => _('Exit Maintenance Mode'),
+    'standby'          => _('Shutdown to Standby Mode')
   }
   def powerbutton_hosts(method)
     assert_privileges(params[:pressed])
@@ -1888,22 +1888,22 @@ module ApplicationController::CiProcessing
     hosts = []
 
     # Either a list or coming from a different controller (eg from ems screen, go to its hosts)
-    if @lastaction == "show_list" || @layout != "host"
+    if @lastaction == 'show_list' || @layout != 'host'
       hosts = find_checked_items
       if hosts.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "host"), :task => display_name}, :error)
+        add_flash(_('No %{model} were selected for %{task}') % {:model => ui_lookup(:tables => 'host'), :task => display_name}, :error)
       else
         process_hosts(hosts, method, display_name)
       end
 
-      if @lastaction == "show_list" # In host controller, refresh show_list, else let the other controller handle it
+      if @lastaction == 'show_list' # In host controller, refresh show_list, else let the other controller handle it
         show_list
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       end
 
     else # showing 1 host
       if params[:id].nil? || Host.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => "host")}, :error)
+        add_flash(_('%{record} no longer exists') % {:record => ui_lookup(:table => 'host')}, :error)
       else
         hosts.push(params[:id])
         process_hosts(hosts, method, display_name)  unless hosts.empty?
@@ -1917,10 +1917,10 @@ module ApplicationController::CiProcessing
       if method == 'destroy'
         @single_delete = true unless flash_errors?
       end
-      if @display == "vms"
-        @refresh_partial = "layouts/gtl"
+      if @display == 'vms'
+        @refresh_partial = 'layouts/gtl'
       else
-        @refresh_partial = "config"
+        @refresh_partial = 'config'
       end
     end
 
@@ -1928,39 +1928,39 @@ module ApplicationController::CiProcessing
   end
 
   def process_storage(storages, task)
-    storages, _storages_out_region = filter_ids_in_region(storages, _("Datastore"))
+    storages, _storages_out_region = filter_ids_in_region(storages, _('Datastore'))
     return if storages.empty?
 
-    if task == "destroy"
-      Storage.where(:id => storages).order("lower(name)").each do |storage|
+    if task == 'destroy'
+      Storage.where(:id => storages).order('lower(name)').each do |storage|
         id = storage.id
         storage_name = storage.name
-        audit = {:event => "storage_record_delete_initiated", :message => "[#{storage_name}] Record delete initiated", :target_id => id, :target_class => "Storage", :userid => session[:userid]}
+        audit = {:event => 'storage_record_delete_initiated', :message => "[#{storage_name}] Record delete initiated", :target_id => id, :target_class => 'Storage', :userid => session[:userid]}
         AuditEvent.success(audit)
       end
       Storage.destroy_queue(storages)
-      add_flash(n_("Delete initiated for Datastore from the CFME Database",
-                   "Delete initiated for Datastores from the CFME Database", storages.length))
+      add_flash(n_('Delete initiated for Datastore from the CFME Database',
+                   'Delete initiated for Datastores from the CFME Database', storages.length))
     else
-      Storage.where(:id => storages).order("lower(name)").each do |storage|
+      Storage.where(:id => storages).order('lower(name)').each do |storage|
         storage_name = storage.name
         begin
-          if task == "scan"
+          if task == 'scan'
             storage.send(task.to_sym, session[:userid]) # Scan needs userid
           else
             storage.send(task.to_sym) if storage.respond_to?(task)    # Run the task
           end
         rescue => err
           add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{error_message}") %
-            {:model         => ui_lookup(:model => "Storage"),
+            {:model         => ui_lookup(:model => 'Storage'),
              :name          => storage_name,
              :task          => task,
              :error_message => err.message}, :error) # Push msg and error flag
         else
-          if task == "refresh_ems"
-            add_flash(_("\"%{record}\": Refresh successfully initiated") % {:record => storage_name})
+          if task == 'refresh_ems'
+            add_flash(_('"%{record}": Refresh successfully initiated') % {:record => storage_name})
           else
-            add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => storage_name, :task => task})
+            add_flash(_('"%{record}": %{task} successfully initiated') % {:record => storage_name, :task => task})
           end
         end
       end
@@ -1971,27 +1971,27 @@ module ApplicationController::CiProcessing
     storages = []
 
     # Either a list or coming from a different controller (eg from host screen, go to its storages)
-    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || @layout != "storage"
+    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || @layout != 'storage'
       storages = find_checked_items
 
       if method == 'scan' && !Storage.batch_operation_supported?('smartstate_analysis', storages)
-        render_flash_not_applicable_to_model(_('Smartstate Analysis'), ui_lookup(:tables => "storage"))
+        render_flash_not_applicable_to_model(_('Smartstate Analysis'), ui_lookup(:tables => 'storage'))
         return
       end
       if storages.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "storage"), :task => display_name}, :error)
+        add_flash(_('No %{model} were selected for %{task}') % {:model => ui_lookup(:tables => 'storage'), :task => display_name}, :error)
       else
         process_storage(storages, method)
       end
 
-      if @lastaction == "show_list"
+      if @lastaction == 'show_list'
         show_list unless @explorer
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       end
 
     else # showing 1 storage
       if params[:id].nil? || Storage.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "storage")}, :error)
+        add_flash(_('%{record} no longer exists') % {:record => ui_lookup(:tables => 'storage')}, :error)
       else
         storages.push(params[:id])
         process_storage(storages, method)  unless storages.empty?
@@ -1999,10 +1999,10 @@ module ApplicationController::CiProcessing
 
       params[:display] = @display
       show
-      if ["vms", "hosts"].include?(@display)
-        @refresh_partial = "layouts/gtl"
+      if ['vms', 'hosts'].include?(@display)
+        @refresh_partial = 'layouts/gtl'
       else
-        @refresh_partial = "config"
+        @refresh_partial = 'config'
       end
     end
 
@@ -2011,36 +2011,36 @@ module ApplicationController::CiProcessing
 
   # Refresh all selected or single displayed Datastore(s)
   def refreshstorage
-    assert_privileges("storage_refresh")
+    assert_privileges('storage_refresh')
     storage_button_operation('refresh_ems', _('Refresh'))
   end
 
   # Scan all selected or single displayed storage(s)
   def scanstorage
-    assert_privileges("storage_scan")
+    assert_privileges('storage_scan')
     storage_button_operation('scan', _('Analysis'))
   end
 
   # Delete all selected or single displayed host(s)
   def deletehosts
-    assert_privileges("host_delete")
+    assert_privileges('host_delete')
     delete_elements(Host, :process_hosts)
   end
 
   # Delete all selected or single displayed stack(s)
   def orchestration_stack_delete
-    assert_privileges("orchestration_stack_delete")
+    assert_privileges('orchestration_stack_delete')
     delete_elements(OrchestrationStack, :process_orchestration_stacks)
   end
 
   # Delete all selected or single displayed datastore(s)
   def deletestorages
-    assert_privileges("storage_delete")
+    assert_privileges('storage_delete')
     datastores = []
-    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || (@lastaction == "show" && @layout != "storage") # showing a list, scan all selected hosts
+    if %w(show_list storage_list storage_pod_list).include?(@lastaction) || (@lastaction == 'show' && @layout != 'storage') # showing a list, scan all selected hosts
       datastores = find_checked_items
       if datastores.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:tables => "storage"), :task => display_name}, :error)
+        add_flash(_('No %{model} were selected for %{task}') % {:model => ui_lookup(:tables => 'storage'), :task => display_name}, :error)
       end
       ds_to_delete = []
       datastores.each do |s|
@@ -2048,77 +2048,77 @@ module ApplicationController::CiProcessing
         if ds.vms_and_templates.length <= 0 && ds.hosts.length <= 0
           ds_to_delete.push(s)
         else
-          add_flash(_("\"%{datastore_name}\": cannot be removed, has vms or hosts") %
+          add_flash(_('"%{datastore_name}": cannot be removed, has vms or hosts') %
             {:datastore_name => ds.name}, :warning)
         end
       end
-      process_storage(ds_to_delete, "destroy")  unless ds_to_delete.empty?
+      process_storage(ds_to_delete, 'destroy')  unless ds_to_delete.empty?
     else # showing 1 datastore, delete it
       if params[:id].nil? || Storage.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:tables => "storage")}, :error)
+        add_flash(_('%{record} no longer exists') % {:record => ui_lookup(:tables => 'storage')}, :error)
       else
         datastores.push(params[:id])
       end
-      process_storage(datastores, "destroy")  unless datastores.empty?
+      process_storage(datastores, 'destroy')  unless datastores.empty?
       @single_delete = true unless flash_errors?
-      add_flash(_("The selected %{record} was deleted") %
-        {:record => ui_lookup(:table => "storages")}) if @flash_array.nil?
+      add_flash(_('The selected %{record} was deleted') %
+        {:record => ui_lookup(:table => 'storages')}) if @flash_array.nil?
     end
-    if @lastaction == "show_list"
+    if @lastaction == 'show_list'
       show_list
-      @refresh_partial = "layouts/gtl"
+      @refresh_partial = 'layouts/gtl'
     end
   end
 
   def delete_elements(model_class, destroy_method)
     elements = []
-    if @lastaction == "show_list" || (@lastaction == "show" && @layout != model_class.table_name.singularize)  # showing a list
+    if @lastaction == 'show_list' || (@lastaction == 'show' && @layout != model_class.table_name.singularize)  # showing a list
       elements = find_checked_items
       if elements.empty?
-        add_flash(_("No %{model} were selected for deletion") %
+        add_flash(_('No %{model} were selected for deletion') %
           {:model => ui_lookup(:tables => model_class.table_name)}, :error)
       end
-      send(destroy_method, elements, "destroy") unless elements.empty?
-      add_flash(_("Delete initiated for %{count_model} from the CFME Database") %
+      send(destroy_method, elements, 'destroy') unless elements.empty?
+      add_flash(_('Delete initiated for %{count_model} from the CFME Database') %
         {:count_model => pluralize(elements.length, ui_lookup(:table => model_class.table_name))}) unless flash_errors?
     else # showing 1 element, delete it
       if params[:id].nil? || model_class.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => model_class.table_name)}, :error)
+        add_flash(_('%{record} no longer exists') % {:record => ui_lookup(:table => model_class.table_name)}, :error)
       else
         elements.push(params[:id])
       end
-      send(destroy_method, elements, "destroy") unless elements.empty?
+      send(destroy_method, elements, 'destroy') unless elements.empty?
       @single_delete = true unless flash_errors?
-      add_flash(_("The selected %{record} was deleted") %
+      add_flash(_('The selected %{record} was deleted') %
         {:record => ui_lookup(:table => model_class.table_name)}) if @flash_array.nil?
     end
-    if @lastaction == "show_list"
+    if @lastaction == 'show_list'
       show_list
-      @refresh_partial = "layouts/gtl"
+      @refresh_partial = 'layouts/gtl'
     end
   end
 
   # Delete all selected or single displayed cluster(s)
   def deleteclusters
-    assert_privileges("ems_cluster_delete")
+    assert_privileges('ems_cluster_delete')
     delete_elements(EmsCluster, :process_clusters)
   end
 
   # Delete all selected or single displayed RP(s)
   def deleteresourcepools
-    assert_privileges("resource_pool_delete")
+    assert_privileges('resource_pool_delete')
     delete_elements(ResourcePool, :process_resourcepools)
   end
 
   def pfx_for_vm_button_pressed(_button_pressed)
-    if params[:pressed].starts_with?("image_")
-      return "image"
-    elsif params[:pressed].starts_with?("instance_")
-      return "instance"
-    elsif params[:pressed].starts_with?("miq_template_")
-      return "miq_template"
+    if params[:pressed].starts_with?('image_')
+      return 'image'
+    elsif params[:pressed].starts_with?('instance_')
+      return 'instance'
+    elsif params[:pressed].starts_with?('miq_template_')
+      return 'miq_template'
     else
-      return "vm"
+      return 'vm'
     end
   end
 
@@ -2151,9 +2151,9 @@ module ApplicationController::CiProcessing
     when "#{pfx}_guest_standby"             then gueststandby
     when "#{pfx}_guest_restart"             then guestreboot
     when "#{pfx}_miq_request_new"           then prov_redirect
-    when "#{pfx}_clone"                     then prov_redirect("clone")
-    when "#{pfx}_migrate"                   then prov_redirect("migrate")
-    when "#{pfx}_publish"                   then prov_redirect("publish")
+    when "#{pfx}_clone"                     then prov_redirect('clone')
+    when "#{pfx}_migrate"                   then prov_redirect('migrate')
+    when "#{pfx}_publish"                   then prov_redirect('publish')
     when "#{pfx}_terminate"                 then terminatevms
     end
   end

@@ -8,7 +8,7 @@ module RealFS
       @guestOS = "Windows"
     when :linux
       self.fsType = `df -lT / | tail -1 | awk '{ print $2 }'`
-      @guestOS = "Linux"
+      @guestOS = 'Linux'
     when :macosx
     end
   end
@@ -61,7 +61,7 @@ module RealFS
     fobj.mtime
   end
 
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     File.new(p, mode)
   end
 

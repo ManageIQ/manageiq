@@ -7,9 +7,9 @@ class ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem < ::C
   belongs_to :direct_operating_system_flavor,
              :class_name  => 'OperatingSystemFlavor'
   belongs_to :direct_customization_script_medium,
-             :class_name => "CustomizationScriptMedium"
+             :class_name => 'CustomizationScriptMedium'
   belongs_to :direct_customization_script_ptable,
-             :class_name => "CustomizationScriptPtable"
+             :class_name => 'CustomizationScriptPtable'
 
   has_and_belongs_to_many :direct_configuration_tags,
                           :join_table  => 'direct_configuration_tags_configured_systems',

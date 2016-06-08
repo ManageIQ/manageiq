@@ -20,7 +20,7 @@ if $log.nil?
   end
 
   class MIQLogger
-    def self.get_log(config, fileName = nil, logName = "toplog")
+    def self.get_log(config, fileName = nil, logName = 'toplog')
       log = Log4r::Logger[logName]
       if log.nil?
         log = Log4r::Logger.new(logName)
@@ -34,7 +34,7 @@ if $log.nil?
         # level = debug
         # wrap_size = 10 MB
         # wrap_time = 24 Hrs
-        logSettings = {:level => "DEBUG", :wrap_size => 10485760, :wrap_time => 86400, :logDir => ".", :keep => 10}
+        logSettings = {:level => 'DEBUG', :wrap_size => 10485760, :wrap_time => 86400, :logDir => '.', :keep => 10}
         unless fileName.nil?
           unless config.nil?
             logSettings[:logDir] = config.miqLogs if config.miqLogs
@@ -60,11 +60,11 @@ if $log.nil?
           }
           log.outputters = Log4r::RollingFileOutputter.new(logName, logConfig)
 
-          log.addPostRollEvent(:log_cleanup, true) { cleanup_logs(logSettings[:logDir], File.basename(fileName, ".*"), logSettings[:keep], log) }
+          log.addPostRollEvent(:log_cleanup, true) { cleanup_logs(logSettings[:logDir], File.basename(fileName, '.*'), logSettings[:keep], log) }
         end
 
         # If we are not running as an NT service, log to the console as well.
-        log.add(Log4r::StdoutOutputter.new('stdout', :formatter => MIQLoggerFormatter)) unless ENV["HOMEDRIVE"].nil?
+        log.add(Log4r::StdoutOutputter.new('stdout', :formatter => MIQLoggerFormatter)) unless ENV['HOMEDRIVE'].nil?
 
         # Set default log level
         log.level = Log4r.const_get(logSettings[:level].upcase)
@@ -100,21 +100,21 @@ if $log.nil?
     # Create filename
     # filename + hostname + module_version + current date/time
     def self.getLogName(fileName, config)
-      name = File.basename(fileName, ".*")
+      name = File.basename(fileName, '.*')
       begin
-        name += "-" + MiqSockUtil.getHostName.strip.downcase
+        name += '-' + MiqSockUtil.getHostName.strip.downcase
       rescue
       end
       # name += "-" + config.host_version.join(".") if config
-      name += "-" + config.host_version[-1].to_s if config
-      name += "-" + Time.now.utc.iso8601.delete!("-")
-      name += "-.log"
-      name.delete!(":").tr!("@", "-")
+      name += '-' + config.host_version[-1].to_s if config
+      name += '-' + Time.now.utc.iso8601.delete!('-')
+      name += '-.log'
+      name.delete!(':').tr!('@', '-')
       name
     end
 
     def self.defaultFormatter
-      Log4r::PatternFormatter.new(:pattern => "[%5l] %d: %m")
+      Log4r::PatternFormatter.new(:pattern => '[%5l] %d: %m')
     end
   end
 
@@ -126,7 +126,7 @@ if $log.nil?
 
       def addPostRollEvent(name, run_now = false, &blk)
         outputters.each do |o|
-          if o.respond_to?("addLogRollEvent")
+          if o.respond_to?('addLogRollEvent')
             o.addLogRollEvent(name, :post, &blk)
           end
         end
@@ -139,7 +139,7 @@ if $log.nil?
         @miqFileName = fileName if fileName
         if logData == true && @miqFileName.nil? == false
           init_msg = "* [#{File.basename(@miqFileName, ".*")}] [#{Sys::Platform::IMPL}] started on [#{Time.now}] *"
-          border = "*" * init_msg.length
+          border = '*' * init_msg.length
           summary border
           summary init_msg
           summary border
@@ -164,7 +164,7 @@ if $log.nil?
             deleteOldFile = true
           else
             t = Time.now.getutc
-            @out.print "[9999] %s, [%s #%04s:%d] %5s -- : %s\n" % ["I", t.iso8601(6).chop, Process.pid, Thread.current.object_id, "INFO", "ROLLING LOG [#{File.basename(@filename)}]"]
+            @out.print "[9999] %s, [%s #%04s:%d] %5s -- : %s\n" % ['I', t.iso8601(6).chop, Process.pid, Thread.current.object_id, 'INFO', "ROLLING LOG [#{File.basename(@filename)}]"]
           end
         rescue
         end

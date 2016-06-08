@@ -9,7 +9,7 @@ class AnsibleTowerCheckProvisioned
   end
 
   def main
-    @handle.log("info", "Starting Ansible Tower Provisioning")
+    @handle.log('info', 'Starting Ansible Tower Provisioning')
     check_provisioned(task, service)
   end
 
@@ -27,8 +27,8 @@ class AnsibleTowerCheckProvisioned
     end
 
     unless @handle.root['ae_result'] == 'retry'
-      @handle.log("info", "AnsibleTower job finished. Status: #{@handle.root['ae_result']}, reason: #{@handle.root['ae_reason']}")
-      @handle.log("info", "Please examine job console output for more details") if @handle.root['ae_result'] == 'error'
+      @handle.log('info', "AnsibleTower job finished. Status: #{@handle.root['ae_result']}, reason: #{@handle.root['ae_reason']}")
+      @handle.log('info', 'Please examine job console output for more details') if @handle.root['ae_result'] == 'error'
 
       job.refresh_ems
       task.miq_request.user_message = @handle.root['ae_reason'].truncate(255) unless @handle.root['ae_reason'].blank?
@@ -51,14 +51,14 @@ class AnsibleTowerCheckProvisioned
   end
 
   def task
-    @handle.root["service_template_provision_task"].tap do |task|
-      raise "service_template_provision_task not found" unless task
+    @handle.root['service_template_provision_task'].tap do |task|
+      raise 'service_template_provision_task not found' unless task
     end
   end
 
   def service
     task.destination.tap do |service|
-      raise "service is not of type AnsibleTower" unless service.respond_to?(:job_template)
+      raise 'service is not of type AnsibleTower' unless service.respond_to?(:job_template)
     end
   end
 end

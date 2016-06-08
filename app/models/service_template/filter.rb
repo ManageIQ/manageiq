@@ -8,7 +8,7 @@ module ServiceTemplate::Filter
       user = parent_svc_task.get_user
       obj_array = [user, st, parent_svc, parent_svc_task]
       MiqAeEngine.set_automation_attributes_from_objects(obj_array, attrs)
-      uri = MiqAeEngine.create_automation_object("REQUEST", attrs, :vmdb_object => parent_svc_task)
+      uri = MiqAeEngine.create_automation_object('REQUEST', attrs, :vmdb_object => parent_svc_task)
       automate_result_include_service_template?(uri, user, st.name)
     end
 

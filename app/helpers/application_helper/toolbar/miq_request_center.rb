@@ -15,14 +15,14 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       'pficon pficon-delete fa-lg',
       N_('Delete this Request'),
       nil,
-      :url_parms => "&refresh=y",
-      :confirm   => N_("Are you sure you want to delete this Request?")),
+      :url_parms => '&refresh=y',
+      :confirm   => N_('Are you sure you want to delete this Request?')),
     button(
       :miq_request_reload,
       'fa fa-repeat fa-lg',
       N_('Reload the current display'),
       N_('Reload'),
-      :url_parms => "&display=miq_provisions"),
+      :url_parms => '&display=miq_provisions'),
   ])
   button_group('miq_request_approve', [
     button(
@@ -30,14 +30,14 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       'fa fa-check fa-lg',
       N_('Approve this Request'),
       nil,
-      :url       => "/stamp",
-      :url_parms => "?typ=a"),
+      :url       => '/stamp',
+      :url_parms => '?typ=a'),
     button(
       :miq_request_deny,
       'fa fa-ban fa-lg',
       N_('Deny this Request'),
       nil,
-      :url       => "/stamp",
-      :url_parms => "?typ=d"),
+      :url       => '/stamp',
+      :url_parms => '?typ=d'),
   ])
 end

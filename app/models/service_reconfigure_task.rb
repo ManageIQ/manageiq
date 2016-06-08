@@ -30,7 +30,7 @@ class ServiceReconfigureTask < MiqRequestTask
         :class_name       => ra.ae_class,
         :instance_name    => ra.ae_instance,
         :automate_message => ra.ae_message.blank? ? 'create' : ra.ae_message,
-        :attrs            => dialog_values.merge!("request" => req_type),
+        :attrs            => dialog_values.merge!('request' => req_type),
         :user_id          => get_user.id,
         :miq_group_id     => get_user.current_group_id,
         :tenant_id        => get_user.current_tenant.id
@@ -44,10 +44,10 @@ class ServiceReconfigureTask < MiqRequestTask
         :zone        => zone,
         :task_id     => "#{self.class.name.underscore}_#{id}"
       )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+      update_and_notify_parent(:state => 'pending', :status => 'Ok',  :message => 'Automation Starting')
     else
-      update_and_notify_parent(:state   => "finished",
-                               :status  => "Ok",
+      update_and_notify_parent(:state   => 'finished',
+                               :status  => 'Ok',
                                :message => "#{request_class::TASK_DESCRIPTION} completed")
     end
   end
@@ -59,12 +59,12 @@ class ServiceReconfigureTask < MiqRequestTask
     return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state   => "finished",
-                               :status  => "Ok",
+      update_and_notify_parent(:state   => 'finished',
+                               :status  => 'Ok',
                                :message => "#{request_class::TASK_DESCRIPTION} completed")
     else
-      update_and_notify_parent(:state   => "finished",
-                               :status  => "Error",
+      update_and_notify_parent(:state   => 'finished',
+                               :status  => 'Error',
                                :message => "#{request_class::TASK_DESCRIPTION} failed")
     end
   end

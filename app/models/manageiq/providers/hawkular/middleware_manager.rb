@@ -140,11 +140,11 @@ module ManageIQ::Providers
     end
 
     def self.ems_type
-      @ems_type ||= "hawkular".freeze
+      @ems_type ||= 'hawkular'.freeze
     end
 
     def self.description
-      @description ||= "Hawkular".freeze
+      @description ||= 'Hawkular'.freeze
     end
 
     def self.event_monitor_class

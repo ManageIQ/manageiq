@@ -21,14 +21,14 @@ describe AssignTenantToMiqRequest do
   end
 
   migration_context :up do
-    describe "tenant_stub.root_tenant" do
-      it "doesnt create tenant if no records exist" do
+    describe 'tenant_stub.root_tenant' do
+      it 'doesnt create tenant if no records exist' do
         migrate
 
         expect(tenant_stub.count).to eq(0)
       end
 
-      it "creates tenant if needed" do
+      it 'creates tenant if needed' do
         miq_group_stub.create!
         migrate
 
@@ -37,7 +37,7 @@ describe AssignTenantToMiqRequest do
         expect(tenant_stub.first).to be_divisible
       end
 
-      it "doesnt creates additional root_tenant" do
+      it 'doesnt creates additional root_tenant' do
         tenant_stub.create!
         miq_group_stub.create!
 
@@ -50,7 +50,7 @@ describe AssignTenantToMiqRequest do
       end
     end
 
-    it "updates existing records" do
+    it 'updates existing records' do
       tenant_stub.root_tenant
       miq_group_stub.create!
 

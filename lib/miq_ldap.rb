@@ -23,16 +23,16 @@ class MiqLdap
       result = ldap.ldap.bind
     rescue Exception => err
       result = false
-      errors[[:authentication, auth[:mode]].join("_")] = err.message
+      errors[[:authentication, auth[:mode]].join('_')] = err.message
     else
-      errors[[:authentication, auth[:mode]].join("_")] = "Authentication failed" unless result
+      errors[[:authentication, auth[:mode]].join('_')] = 'Authentication failed' unless result
     end
 
     return result, errors
   end
 
   def initialize(options = {})
-    @auth = options[:auth] || VMDB::Config.new("vmdb").config[:authentication]
+    @auth = options[:auth] || VMDB::Config.new('vmdb').config[:authentication]
 
     log_auth = Vmdb::Settings.mask_passwords!(@auth.deep_clone)
     _log.info("Server Settings: #{log_auth.inspect}")
@@ -50,7 +50,7 @@ class MiqLdap
       :port => @auth[:ldapport],
     }
     options = defaults.merge(options)
-    options[:encryption] = {:method => :simple_tls} if mode == "ldaps"
+    options[:encryption] = {:method => :simple_tls} if mode == 'ldaps'
 
     options[:host] = resolve_host(options[:host], options[:port])
 
@@ -94,7 +94,7 @@ class MiqLdap
       return selected_host if selected_host
     end
 
-    raise Net::LDAP::LdapError.new("unable to establish a connection to server")
+    raise Net::LDAP::LdapError.new('unable to establish a connection to server')
   end
 
   def bind(username, password)
@@ -194,7 +194,7 @@ class MiqLdap
         o.search_referrals.each do |ref|
           scheme, userinfo, host, port, registry, dn, opaque, query, fragment = URI.split(ref)
           port ||= self.class.default_ldap_port(scheme)
-          dn = normalize(dn.split("/").last)
+          dn = normalize(dn.split('/').last)
           next if seen[:objects].include?(dn)
 
           begin
@@ -235,7 +235,7 @@ class MiqLdap
     when :sub
       Net::LDAP::SearchScope_WholeSubtree
     else
-      raise "scope must be one of :base, :one or :sub"
+      raise 'scope must be one of :base, :one or :sub'
     end
   end
 
@@ -250,20 +250,20 @@ class MiqLdap
   end
 
   def self.object_sid_filter(sid_string)
-    Net::LDAP::Filter.eq("objectSID", sid_string)
+    Net::LDAP::Filter.eq('objectSID', sid_string)
   end
 
   def self.filter_users_only
-    Net::LDAP::Filter.eq("objectClass", "person") & Net::LDAP::Filter.ne("objectClass", "computer")
+    Net::LDAP::Filter.eq('objectClass', 'person') & Net::LDAP::Filter.ne('objectClass', 'computer')
   end
 
   def self.filter_groups_only
-    Net::LDAP::Filter.eq("objectClass", "group")
+    Net::LDAP::Filter.eq('objectClass', 'group')
   end
 
   def normalize(dn)
     return if dn.nil?
-    dn.split(",").collect { |i| i.downcase.strip }.join(",")
+    dn.split(',').collect { |i| i.downcase.strip }.join(',')
   end
 
   def is_dn?(str)
@@ -277,45 +277,45 @@ class MiqLdap
   def fqusername(username)
     return username if self.is_dn?(username) || self.domain_username?(username)
 
-    user_type = @user_type.split("-").first
-    user_prefix = @user_type.split("-").last
-    user_prefix = "cn" if user_prefix == "dn"
+    user_type = @user_type.split('-').first
+    user_prefix = @user_type.split('-').last
+    user_prefix = 'cn' if user_prefix == 'dn'
     case user_type
-    when "samaccountname"
+    when 'samaccountname'
       return "#{@domain_prefix}\\#{username}" unless @domain_prefix.blank?
       return username
-    when "upn", "userprincipalname"
+    when 'upn', 'userprincipalname'
       return username if @user_suffix.blank?
       return username if username =~ /^.+@.+$/ # already qualified with user@domain
 
       return "#{username}@#{@user_suffix}"
-    when"mail"
+    when'mail'
       username = "#{username}@#{@user_suffix}" unless @user_suffix.blank? || username =~ /^.+@.+$/
       dbuser = User.find_by_email(username.downcase)
       dbuser = User.find_by_userid(username.downcase) unless dbuser
       return dbuser.userid if dbuser && dbuser.userid
 
       return username
-    when "dn"
+    when 'dn'
       return "#{user_prefix}=#{username},#{@user_suffix}"
     end
   end
 
   def get_user_object(username, user_type = nil)
-    user_type ||= @user_type.split("-").first
-    user_type = "dn" if self.is_dn?(username)
+    user_type ||= @user_type.split('-').first
+    user_type = 'dn' if self.is_dn?(username)
     begin
-      search_opts = {:base => @basedn, :scope => :sub, :attributes => ["*", "memberof"]}
+      search_opts = {:base => @basedn, :scope => :sub, :attributes => ['*', 'memberof']}
 
       case user_type
-      when "samaccountname"
+      when 'samaccountname'
         search_opts[:filter] = "(#{user_type}=#{username.split("\\").last})"
-      when "upn", "userprincipalname", "mail"
+      when 'upn', 'userprincipalname', "mail"
         user_type = "userprincipalname" if user_type == "upn"
         search_opts[:filter] = "(#{user_type}=#{username})"
-      when "dn"
+      when 'dn'
         search_opts.merge!(:base => username, :scope => :base)
-      when "sid"
+      when 'sid'
         search_opts[:filter] = self.class.object_sid_filter(username)
       end
 
@@ -395,7 +395,7 @@ class MiqLdap
       end
 
       if cn.nil?
-        suffix = gobj.nil? ? "unable to extract CN from DN" : "has no CN"
+        suffix = gobj.nil? ? 'unable to extract CN from DN' : 'has no CN'
         _log.debug "Group: #{group} #{suffix}, skipping"
       else
         _log.debug "Group: DN: #{group}, extracted CN: #{cn}"
@@ -413,7 +413,7 @@ class MiqLdap
 
   def get_organizationalunits(basedn = nil, filter = nil)
     basedn ||= @basedn
-    filter ||= "(ObjectCategory=organizationalUnit)"
+    filter ||= '(ObjectCategory=organizationalUnit)'
     result = search(:base => basedn, :scope => :sub, :filter => filter)
     return nil unless result
     result.collect { |o| [get_attr(o, :dn), get_attr(o, :name)] }
@@ -423,11 +423,11 @@ class MiqLdap
     MiqLdap.sid_to_s(MiqLdap.get_attr(entry, :objectsid))
   end
 
-  def self.default_ldap_port(scheme = "ldap")
+  def self.default_ldap_port(scheme = 'ldap')
     case scheme
-    when "ldap"
+    when 'ldap'
       DEFAULT_LDAP_PORT
-    when "ldaps"
+    when 'ldaps'
       DEFAULT_LDAPS_PORT
     else
       raise "unknown scheme, '#{scheme}'"
@@ -435,24 +435,24 @@ class MiqLdap
   end
 
   def self.default_bind_timeout
-    value = VMDB::Config.new("vmdb").config[:authentication][:bind_timeout] || DEFAULT_BIND_TIMEOUT
+    value = VMDB::Config.new('vmdb').config[:authentication][:bind_timeout] || DEFAULT_BIND_TIMEOUT
     value = value.to_i_with_method if value.respond_to?(:to_i_with_method)
     value
   end
 
   def self.default_search_timeout
-    value = VMDB::Config.new("vmdb").config[:authentication][:search_timeout] || DEFAULT_SEARCH_TIMEOUT
+    value = VMDB::Config.new('vmdb').config[:authentication][:search_timeout] || DEFAULT_SEARCH_TIMEOUT
     value = value.to_i_with_method if value.respond_to?(:to_i_with_method)
     value
   end
 
   def self.using_ldap?
-    VMDB::Config.new("vmdb").config[:authentication][:mode].include?('ldap')
+    VMDB::Config.new('vmdb').config[:authentication][:mode].include?('ldap')
   end
 
   def self.resolve_ldap_host?
     if @resolve_ldap_host.nil?
-      @resolve_ldap_host = VMDB::Config.new("vmdb").config[:authentication][:resolve_ldap_host]
+      @resolve_ldap_host = VMDB::Config.new('vmdb').config[:authentication][:resolve_ldap_host]
       @resolve_ldap_host = false if @resolve_ldap_host.nil?
     end
 
@@ -460,19 +460,19 @@ class MiqLdap
   end
 
   def self.sid_to_s(data)
-    return "" if data.blank?
+    return '' if data.blank?
 
     sid = []
     sid << data.ord.to_s
 
-    rid = ""
+    rid = ''
     (6).downto(1) do |i|
       rid += byte2hex(data[i, 1].ord)
     end
     sid << rid.to_i.to_s
 
-    sid += data.unpack("bbbbbbbbV*")[8..-1]
-    "S-" + sid.join('-')
+    sid += data.unpack('bbbbbbbbV*')[8..-1]
+    'S-' + sid.join('-')
   end
 
   def self.byte2hex(b)

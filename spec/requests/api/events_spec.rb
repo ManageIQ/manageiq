@@ -14,8 +14,8 @@ describe ApiController do
     count.times { FactoryGirl.create(:miq_event_definition) }
   end
 
-  context "Event collection" do
-    it "query invalid event" do
+  context 'Event collection' do
+    it 'query invalid event' do
       api_basic_authorize action_identifier(:events, :read, :resource_actions, :get)
 
       run_get events_url(999_999)
@@ -23,7 +23,7 @@ describe ApiController do
       expect_resource_not_found
     end
 
-    it "query events with no events defined" do
+    it 'query events with no events defined' do
       api_basic_authorize collection_action_identifier(:events, :read, :get)
 
       run_get events_url
@@ -31,30 +31,30 @@ describe ApiController do
       expect_empty_query_result(:events)
     end
 
-    it "query events" do
+    it 'query events' do
       api_basic_authorize collection_action_identifier(:events, :read, :get)
       create_events(3)
 
       run_get events_url
 
       expect_query_result(:events, 3, 3)
-      expect_result_resources_to_include_hrefs("resources",
+      expect_result_resources_to_include_hrefs('resources',
                                                MiqEventDefinition.pluck(:id).collect { |id| /^.*#{events_url(id)}$/ })
     end
 
-    it "query events in expanded form" do
+    it 'query events in expanded form' do
       api_basic_authorize collection_action_identifier(:events, :read, :get)
       create_events(3)
 
-      run_get events_url, :expand => "resources"
+      run_get events_url, :expand => 'resources'
 
       expect_query_result(:events, 3, 3)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
+      expect_result_resources_to_include_data('resources', 'guid' => :miq_event_guid_list)
     end
   end
 
-  context "Event subcollection" do
-    let(:policy)             { FactoryGirl.create(:miq_policy, :name => "Policy 1") }
+  context 'Event subcollection' do
+    let(:policy)             { FactoryGirl.create(:miq_policy, :name => 'Policy 1') }
     let(:policy_url)         { policies_url(policy.id) }
     let(:policy_events_url)  { "#{policy_url}/events" }
 
@@ -64,7 +64,7 @@ describe ApiController do
       end
     end
 
-    it "query events with no events defined" do
+    it 'query events with no events defined' do
       api_basic_authorize
 
       run_get policy_events_url
@@ -72,26 +72,26 @@ describe ApiController do
       expect_empty_query_result(:events)
     end
 
-    it "query events" do
+    it 'query events' do
       api_basic_authorize
       create_events(3)
       relate_events_to(policy)
 
-      run_get policy_events_url, :expand => "resources"
+      run_get policy_events_url, :expand => 'resources'
 
       expect_query_result(:events, 3, 3)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_event_guid_list)
+      expect_result_resources_to_include_data('resources', 'guid' => :miq_event_guid_list)
     end
 
-    it "query policy with expanded events" do
+    it 'query policy with expanded events' do
       api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_events(3)
       relate_events_to(policy)
 
-      run_get policy_url, :expand => "events"
+      run_get policy_url, :expand => 'events'
 
-      expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
-      expect_result_resources_to_include_data("events", "guid" => :miq_event_guid_list)
+      expect_single_resource_query('name' => policy.name, 'description' => policy.description, 'guid' => policy.guid)
+      expect_result_resources_to_include_data('events', 'guid' => :miq_event_guid_list)
     end
   end
 end

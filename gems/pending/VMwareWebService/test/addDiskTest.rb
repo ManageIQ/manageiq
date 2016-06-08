@@ -19,7 +19,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-targetVm = raise "please define"
+targetVm = raise 'please define'
 targetVmPath = nil
 targetVmLpath = nil
 
@@ -33,18 +33,18 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  miqVm = vim.getVimVmByFilter("config.name" => targetVm)
+  miqVm = vim.getVimVmByFilter('config.name' => targetVm)
 
   targetVmPath = miqVm.dsPath
 
   puts
   puts "Target VM path: #{targetVmPath}"
 
-  newVmdk = File.join(File.dirname(targetVmPath), "testDisk.vmdk")
+  newVmdk = File.join(File.dirname(targetVmPath), 'testDisk.vmdk')
   puts "newVmdk = #{newVmdk}"
 
-  puts "********"
-  if ARGV[0] == "add"
+  puts '********'
+  if ARGV[0] == 'add'
     miqVm.addDisk(newVmdk, 100)
   else
     miqVm.removeDiskByFile(newVmdk, true)

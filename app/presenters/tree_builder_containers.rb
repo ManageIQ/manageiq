@@ -3,7 +3,7 @@ class TreeBuilderContainers < TreeBuilder
 
   def tree_init_options(_)
     {
-      :leaf     => "Container",
+      :leaf     => 'Container',
       :open_all => true,
       :full_ids => true
     }
@@ -12,14 +12,14 @@ class TreeBuilderContainers < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "container_",
+      :id_prefix => 'container_',
       :autoload  => true
     )
   end
 
   # level 0 - root
   def root_options
-    [t = _("All Containers (by Pods)"), t]
+    [t = _('All Containers (by Pods)'), t]
   end
 
   # level 1 - pods
@@ -30,7 +30,7 @@ class TreeBuilderContainers < TreeBuilder
         :id          => c.id,
         :text        => c.name,
         :tip         => c.ems_ref,
-        :image       => "folder",
+        :image       => 'folder',
         :cfmeNoClick => true
       }
     end

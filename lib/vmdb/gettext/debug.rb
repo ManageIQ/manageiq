@@ -4,8 +4,8 @@ require 'fast_gettext'
 module Vmdb
   module Gettext
     module Debug
-      DL = "\u00BB".encode("UTF-8")
-      DR = "\u00AB".encode("UTF-8")
+      DL = "\u00BB".encode('UTF-8')
+      DR = "\u00AB".encode('UTF-8')
 
       # modified copy of fast_gettext _ method
       def _(key)

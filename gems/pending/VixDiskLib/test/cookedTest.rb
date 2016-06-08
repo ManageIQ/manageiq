@@ -15,7 +15,7 @@ Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => 
 $vim_log.add 'err_console'
 
 diskFiles = [
-  "/vmfs/volumes/StarM2-LUN1/VMmini-101/VMmini-101.vmdk"
+  '/vmfs/volumes/StarM2-LUN1/VMmini-101/VMmini-101.vmdk'
 ]
 
 readRanges = [
@@ -44,11 +44,11 @@ VixDiskLib.init(->(s) { puts "INFO: #{s}" },
                 ->(s) { puts "ERROR: #{s}" })
 
 conParms = {
-  :serverName => "",
+  :serverName => '',
   :port       => 902,
   :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
-  :userName   => "",
-  :password   => "",
+  :userName   => '',
+  :password   => '',
 }
 
 connection = VixDiskLib.connect(conParms)
@@ -63,7 +63,7 @@ diskFiles.each do |vmdk|
 
   dinfo = vDisk.info
   puts
-  puts "Disk info:"
+  puts 'Disk info:'
   dinfo.each { |k, v| puts "\t#{k} => #{v}" }
   puts
 

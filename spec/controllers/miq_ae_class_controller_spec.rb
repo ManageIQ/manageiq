@@ -1,10 +1,10 @@
 describe MiqAeClassController do
-  context "#set_record_vars" do
-    it "Namespace remains unchanged when a class is edited" do
+  context '#set_record_vars' do
+    it 'Namespace remains unchanged when a class is edited' do
       ns = FactoryGirl.create(:miq_ae_namespace)
       cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
       ns_id = cls.namespace_id
-      new = {:name => "New Name", :description => "New Description", :display_name => "Display Name", :inherits => "Some_Class"}
+      new = {:name => 'New Name', :description => 'New Description', :display_name => 'Display Name', :inherits => 'Some_Class'}
       controller.instance_variable_set(:@sb,
                                        :trees       => {
                                          :ae_tree => {:active_node => "aec-#{cls.id}"}
@@ -16,25 +16,25 @@ describe MiqAeClassController do
     end
   end
 
-  context "#set_right_cell_text" do
-    it "check if correct namespace_path is being set" do
+  context '#set_right_cell_text' do
+    it 'check if correct namespace_path is being set' do
       ns = FactoryGirl.create(:miq_ae_namespace)
       cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
       controller.instance_variable_set(:@sb, {})
       id = "aec-#{cls.id}"
       fq_name = cls.fqname
       controller.send(:set_right_cell_text, id, cls)
-      expect(assigns(:sb)[:namespace_path]).to eq(fq_name.gsub!(%r{\/}, " / "))
+      expect(assigns(:sb)[:namespace_path]).to eq(fq_name.gsub!(%r{\/}, ' / '))
 
-      id = "root"
-      fq_name = ""
+      id = 'root'
+      fq_name = ''
       controller.send(:set_right_cell_text, id)
       expect(assigns(:sb)[:namespace_path]).to eq(fq_name)
     end
   end
 
-  context "#domain_lock" do
-    it "Marks domain as locked/readonly" do
+  context '#domain_lock' do
+    it 'Marks domain as locked/readonly' do
       set_user_privileges
       ns = FactoryGirl.create(:miq_ae_domain_enabled)
       controller.instance_variable_set(:@_params, :id => ns.id)
@@ -45,8 +45,8 @@ describe MiqAeClassController do
     end
   end
 
-  context "#domain_unlock" do
-    it "Marks domain as unlocked/editable" do
+  context '#domain_unlock' do
+    it 'Marks domain as unlocked/editable' do
       set_user_privileges
       ns = FactoryGirl.create(:miq_ae_domain_disabled)
       controller.instance_variable_set(:@_params, :id => ns.id)
@@ -57,20 +57,20 @@ describe MiqAeClassController do
     end
   end
 
-  context "#domains_priority_edit" do
-    it "sets priority of domains" do
+  context '#domains_priority_edit' do
+    it 'sets priority of domains' do
       set_user_privileges
-      FactoryGirl.create(:miq_ae_domain, :name => "test1", :parent => nil, :priority => 1)
-      FactoryGirl.create(:miq_ae_domain, :name => "test2", :parent => nil, :priority => 2)
-      FactoryGirl.create(:miq_ae_domain, :name => "test3", :parent => nil, :priority => 3)
-      FactoryGirl.create(:miq_ae_domain, :name => "test4", :parent => nil, :priority => 4)
+      FactoryGirl.create(:miq_ae_domain, :name => 'test1', :parent => nil, :priority => 1)
+      FactoryGirl.create(:miq_ae_domain, :name => 'test2', :parent => nil, :priority => 2)
+      FactoryGirl.create(:miq_ae_domain, :name => 'test3', :parent => nil, :priority => 3)
+      FactoryGirl.create(:miq_ae_domain, :name => 'test4', :parent => nil, :priority => 4)
       order = %w(test3 test2 test4 test1)
       edit = {
         :new     => {:domain_order => order},
-        :key     => "priority__edit",
+        :key     => 'priority__edit',
         :current => {:domain_order => order},
       }
-      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_params, :button => 'save')
       controller.instance_variable_set(:@edit, edit)
       controller.instance_variable_set(:@sb, {})
       session[:edit] = edit
@@ -82,19 +82,19 @@ describe MiqAeClassController do
     end
   end
 
-  context "#copy_objects" do
-    it "do not replace left side explorer tree when copy form is loaded initially" do
+  context '#copy_objects' do
+    it 'do not replace left side explorer tree when copy form is loaded initially' do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
-      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
-      cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => 'domain1')
+      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+      cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => ns1.id)
 
       node = "aec-#{cls1.id}"
       controller.instance_variable_set(:@sb,
                                        :active_tree => :ae_tree,
-                                       :action      => "miq_ae_class_copy",
+                                       :action      => 'miq_ae_class_copy',
                                        :trees       => {:ae_tree => {:active_node => node}})
-      controller.instance_variable_set(:@_params, :button => "reset", :id => cls1.id)
+      controller.instance_variable_set(:@_params, :button => 'reset', :id => cls1.id)
       allow(controller).to receive(:open_parent_nodes)
       expect(controller).to_not receive(:replace_trees_by_presenter)
       expect(controller).to receive(:render)
@@ -102,14 +102,14 @@ describe MiqAeClassController do
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "copies class under specified namespace" do
+    it 'copies class under specified namespace' do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
-      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
-      cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => 'domain1')
+      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+      cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => ns1.id)
 
-      d2 = FactoryGirl.create(:miq_ae_domain, :name => "domain2", :system => false)
-      ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
+      d2 = FactoryGirl.create(:miq_ae_domain, :name => 'domain2', :system => false)
+      ns2 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :overwrite_location => false}
       selected_items = {cls1.id => cls1.name}
@@ -121,22 +121,22 @@ describe MiqAeClassController do
         :current        => new,
         :selected_items => selected_items,
       }
-      controller.instance_variable_set(:@_params, :button => "copy", :id => cls1.id)
+      controller.instance_variable_set(:@_params, :button => 'copy', :id => cls1.id)
       controller.instance_variable_set(:@edit, edit)
-      controller.instance_variable_set(:@sb, :action => "miq_ae_class_copy")
+      controller.instance_variable_set(:@sb, :action => 'miq_ae_class_copy')
       session[:edit] = edit
       allow(controller).to receive(:replace_right_cell)
       controller.send(:copy_objects)
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("Copy selected Automate Class was saved")
+      expect(assigns(:flash_array).first[:message]).to include('Copy selected Automate Class was saved')
       expect(MiqAeClass.find_by(:name => cls1.name, :namespace_id => ns2.id)).not_to be_nil
     end
 
-    it "copy class under same namespace returns error when class exists" do
+    it 'copy class under same namespace returns error when class exists' do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
-      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
-      cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => 'domain1')
+      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+      cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => ns1.id)
 
       new = {:domain => d1.id, :namespace => ns1.fqname, :overwrite_location => false}
       selected_items = {cls1.id => cls1.name}
@@ -148,9 +148,9 @@ describe MiqAeClassController do
         :current        => new,
         :selected_items => selected_items,
       }
-      controller.instance_variable_set(:@_params, :button => "copy", :id => cls1.id)
+      controller.instance_variable_set(:@_params, :button => 'copy', :id => cls1.id)
       controller.instance_variable_set(:@edit, edit)
-      controller.instance_variable_set(:@sb, :action => "miq_ae_class_copy")
+      controller.instance_variable_set(:@sb, :action => 'miq_ae_class_copy')
       session[:edit] = edit
       allow(controller).to receive(:replace_right_cell)
       expect(controller).to receive(:render)
@@ -159,14 +159,14 @@ describe MiqAeClassController do
       expect(assigns(:flash_array).first[:message]).to include("Error during 'Automate Class copy':")
     end
 
-    it "overwrite class under same namespace when class exists" do
+    it 'overwrite class under same namespace when class exists' do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
-      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
-      cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => 'domain1')
+      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+      cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => ns1.id)
 
       d2 = FactoryGirl.create(:miq_ae_domain, :system => false)
-      ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => d2.id)
+      ns2 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => d2.id)
 
       new = {:domain => d2.id, :namespace => ns2.fqname, :override_existing => true}
       selected_items = {cls1.id => cls1.name}
@@ -178,21 +178,21 @@ describe MiqAeClassController do
         :current        => new,
         :selected_items => selected_items,
       }
-      controller.instance_variable_set(:@_params, :button => "copy", :id => cls1.id)
+      controller.instance_variable_set(:@_params, :button => 'copy', :id => cls1.id)
       controller.instance_variable_set(:@edit, edit)
-      controller.instance_variable_set(:@sb, :action => "miq_ae_class_copy")
+      controller.instance_variable_set(:@sb, :action => 'miq_ae_class_copy')
       session[:edit] = edit
       allow(controller).to receive(:replace_right_cell)
       controller.send(:copy_objects)
       expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Copy selected Automate Class was saved")
+      expect(assigns(:flash_array).first[:message]).to include('Copy selected Automate Class was saved')
     end
 
-    it "copies a class with new name under same domain" do
+    it 'copies a class with new name under same domain' do
       set_user_privileges
-      d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
-      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
-      cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+      d1 = FactoryGirl.create(:miq_ae_domain, :name => 'domain1')
+      ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+      cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => ns1.id)
 
       new = {:domain => d1.id, :namespace => ns1.fqname, :override_existing => true, :new_name => 'foo'}
       selected_items = {cls1.id => cls1.name}
@@ -206,28 +206,28 @@ describe MiqAeClassController do
         :current        => new,
         :selected_items => selected_items,
       }
-      controller.instance_variable_set(:@_params, :button => "copy", :id => cls1.id)
+      controller.instance_variable_set(:@_params, :button => 'copy', :id => cls1.id)
       controller.instance_variable_set(:@edit, edit)
-      controller.instance_variable_set(:@sb, :action => "miq_ae_class_copy")
+      controller.instance_variable_set(:@sb, :action => 'miq_ae_class_copy')
       session[:edit] = edit
       allow(controller).to receive(:replace_right_cell)
       controller.send(:copy_objects)
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(assigns(:record).name).to eq('foo')
-      expect(assigns(:flash_array).first[:message]).to include("Copy selected Automate Class was saved")
+      expect(assigns(:flash_array).first[:message]).to include('Copy selected Automate Class was saved')
     end
   end
 
-  context "get selected Class/Instance/Method record back" do
-    let(:miq_ae_domain) { double("MiqAeDomain", :name => "yet_another_fqname", :id => 1) }
-    let(:miq_ae_domain2) { double("MiqAeDomain", :name => "yet_another_fqname2", :id => 2) }
+  context 'get selected Class/Instance/Method record back' do
+    let(:miq_ae_domain) { double('MiqAeDomain', :name => 'yet_another_fqname', :id => 1) }
+    let(:miq_ae_domain2) { double('MiqAeDomain', :name => 'yet_another_fqname2', :id => 2) }
 
     let(:miq_ae_class) do
-      double("MiqAeClass",
+      double('MiqAeClass',
                                     :id           => 1,
-                                    :fqname       => "cls_fqname",
-                                    :display_name => "FOO",
-                                    :name         => "foo",
+                                    :fqname       => 'cls_fqname',
+                                    :display_name => 'FOO',
+                                    :name         => 'foo',
                                     :ae_fields    => [],
                                     :ae_instances => [],
                                     :ae_methods   => [],
@@ -236,40 +236,40 @@ describe MiqAeClassController do
     end
 
     let(:miq_ae_instance) do
-      double("MiqAeInstance",
+      double('MiqAeInstance',
                                     :id           => 123,
-                                    :display_name => "some name",
-                                    :name         => "some_name",
-                                    :fqname       => "fqname",
+                                    :display_name => 'some name',
+                                    :name         => 'some_name',
+                                    :fqname       => 'fqname',
                                     :created_on   => Time.now,
-                                    :updated_by   => "some_user",
+                                    :updated_by   => 'some_user',
                                     :domain       => miq_ae_domain
                                    )
     end
 
     let(:miq_ae_method) do
-      double("MiqAeMethod",
+      double('MiqAeMethod',
                                     :id           => 123,
-                                    :display_name => "some name",
+                                    :display_name => 'some name',
                                     :inputs       => [],
-                                    :name         => "some_name",
-                                    :fqname       => "fqname",
+                                    :name         => 'some_name',
+                                    :fqname       => 'fqname',
                                     :created_on   => Time.now,
-                                    :updated_by   => "some_user",
+                                    :updated_by   => 'some_user',
                                     :domain       => miq_ae_domain
                                    )
     end
 
     let(:override) do
-      double("MiqAeClass",
-                                    :fqname => "another_fqname/fqname",
+      double('MiqAeClass',
+                                    :fqname => 'another_fqname/fqname',
                                     :id     => 1,
                                     :domain => miq_ae_domain
                                    )
     end
     let(:override2) do
-      double("MiqAeClass",
-                                    :fqname => "another_fqname2/fqname",
+      double('MiqAeClass',
+                                    :fqname => 'another_fqname2/fqname',
                                     :id     => 2,
                                     :domain => miq_ae_domain2
                                    )
@@ -278,51 +278,51 @@ describe MiqAeClassController do
     before do
       @user =  FactoryGirl.create(:user_with_group)
       login_as @user
-      allow(MiqAeDomain).to receive(:find_by_name).with("another_fqname").and_return(miq_ae_domain)
-      allow(MiqAeDomain).to receive(:find_by_name).with("another_fqname2").and_return(miq_ae_domain2)
+      allow(MiqAeDomain).to receive(:find_by_name).with('another_fqname').and_return(miq_ae_domain)
+      allow(MiqAeDomain).to receive(:find_by_name).with('another_fqname2').and_return(miq_ae_domain2)
     end
 
-    context "#node_info" do
-      it "collect namespace info" do
+    context '#node_info' do
+      it 'collect namespace info' do
         set_user_privileges
-        d1 = FactoryGirl.create(:miq_ae_domain, :name => "domain1")
-        ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => d1.id)
-        FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => ns1.id)
-        FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => ns1.id)
+        d1 = FactoryGirl.create(:miq_ae_domain, :name => 'domain1')
+        ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
+        FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => ns1.id)
+        FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => ns1.id)
         node = "aen-#{ns1.id}"
         controller.instance_variable_set(:@sb,
                                          :active_tree => :ae_tree,
                                          :trees       => {:ae_tree => {:active_node => node}})
         controller.send(:get_node_info, node)
-        expect(assigns(:sb)[:namespace_path]).to eq(ns1.fqname.gsub!(%r{\/}, " / "))
+        expect(assigns(:sb)[:namespace_path]).to eq(ns1.fqname.gsub!(%r{\/}, ' / '))
       end
     end
 
-    context "#get_instance_node_info" do
-      context "when record does not exist" do
-        it "sets active node back to root" do
+    context '#get_instance_node_info' do
+      context 'when record does not exist' do
+        it 'sets active node back to root' do
           id = %w(aei some_id)
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
-                                           :trees       => {:ae_tree => {:active_node => "aei-some_id"}})
+                                           :trees       => {:ae_tree => {:active_node => 'aei-some_id'}})
           controller.send(:get_instance_node_info, id)
-          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq("root")
+          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq('root')
         end
       end
 
-      context "when the record exists" do
+      context 'when the record exists' do
         before do
           allow(MiqAeInstance).to receive(:find_by_id).with(123).and_return(miq_ae_instance)
           allow(miq_ae_instance).to receive(:ae_class).and_return(miq_ae_class)
           allow(MiqAeInstance).to receive(:get_homonymic_across_domains)
-            .with(@user, "fqname").and_return([override, override2])
+            .with(@user, 'fqname').and_return([override, override2])
         end
 
-        it "return instance record and check count of override instances being returned" do
-          id = ["aei", miq_ae_instance.id]
+        it 'return instance record and check count of override instances being returned' do
+          id = ['aei', miq_ae_instance.id]
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
-                                           :trees       => {:ae_tree => {:active_node => id.join("-")}})
+                                           :trees       => {:ae_tree => {:active_node => id.join('-')}})
           controller.send(:get_instance_node_info, id)
           expect(assigns(:record).name).to eq(miq_ae_instance.name)
           expect(assigns(:domain_overrides).count).to eq(2)
@@ -331,30 +331,30 @@ describe MiqAeClassController do
       end
     end
 
-    context "#get_class_node_info" do
-      context "when record does not exist" do
-        it "sets active node back to root" do
+    context '#get_class_node_info' do
+      context 'when record does not exist' do
+        it 'sets active node back to root' do
           id = %w(aec some_id)
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
-                                           :trees       => {:ae_tree => {:active_node => "aec-some_id"}})
+                                           :trees       => {:ae_tree => {:active_node => 'aec-some_id'}})
           controller.send(:get_instance_node_info, id)
-          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq("root")
+          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq('root')
         end
       end
 
-      context "when the record exists" do
+      context 'when the record exists' do
         before do
           allow(MiqAeClass).to receive(:find_by_id).with(1).and_return(miq_ae_class)
           allow(MiqAeClass).to receive(:get_homonymic_across_domains)
-            .with(@user, "cls_fqname").and_return([override, override2])
+            .with(@user, 'cls_fqname').and_return([override, override2])
         end
 
-        it "returns class record and check count of override classes being returned" do
-          id = ["aec", miq_ae_class.id]
+        it 'returns class record and check count of override classes being returned' do
+          id = ['aec', miq_ae_class.id]
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
-                                           :trees       => {:ae_tree => {:active_node => id.join("-")}})
+                                           :trees       => {:ae_tree => {:active_node => id.join('-')}})
           controller.send(:get_class_node_info, id)
           expect(assigns(:record).name).to eq(miq_ae_class.name)
           expect(assigns(:domain_overrides).count).to eq(2)
@@ -363,31 +363,31 @@ describe MiqAeClassController do
       end
     end
 
-    context "#get_method_node_info" do
-      context "when record does not exist" do
-        it "sets active node back to root" do
+    context '#get_method_node_info' do
+      context 'when record does not exist' do
+        it 'sets active node back to root' do
           id = %w(aem some_id)
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
-                                           :trees       => {:ae_tree => {:active_node => "aem-some_id"}})
+                                           :trees       => {:ae_tree => {:active_node => 'aem-some_id'}})
           controller.send(:get_instance_node_info, id)
-          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq("root")
+          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq('root')
         end
       end
 
-      context "when the record exists" do
+      context 'when the record exists' do
         before do
           allow(MiqAeMethod).to receive(:find_by_id).with(123).and_return(miq_ae_method)
           allow(miq_ae_method).to receive(:ae_class).and_return(miq_ae_class)
           allow(MiqAeMethod).to receive(:get_homonymic_across_domains)
-            .with(@user, "fqname").and_return([override, override2])
+            .with(@user, 'fqname').and_return([override, override2])
         end
 
-        it "returns method record and check count of override methods being returned" do
-          id = ["aem", miq_ae_method.id]
+        it 'returns method record and check count of override methods being returned' do
+          id = ['aem', miq_ae_method.id]
           controller.instance_variable_set(:@sb,
                                            :active_tree => :ae_tree,
-                                           :trees       => {:ae_tree => {:active_node => id.join("-")}})
+                                           :trees       => {:ae_tree => {:active_node => id.join('-')}})
           controller.send(:get_method_node_info, id)
           expect(assigns(:record).name).to eq(miq_ae_method.name)
           expect(assigns(:domain_overrides).count).to eq(2)
@@ -397,8 +397,8 @@ describe MiqAeClassController do
     end
   end
 
-  context "#delete_domain" do
-    it "Should only delete editable domains" do
+  context '#delete_domain' do
+    it 'Should only delete editable domains' do
       set_user_privileges
       domain1 = FactoryGirl.create(:miq_ae_domain_enabled, :system => true)
 
@@ -409,14 +409,14 @@ describe MiqAeClassController do
       allow(controller).to receive(:replace_right_cell)
       controller.send(:delete_domain)
       flash_messages = assigns(:flash_array)
-      expect(flash_messages.first[:message]).to include("cannot be deleted")
+      expect(flash_messages.first[:message]).to include('cannot be deleted')
       expect(flash_messages.first[:level]).to eq(:error)
-      expect(flash_messages.last[:message]).to include("Delete successful")
+      expect(flash_messages.last[:message]).to include('Delete successful')
       expect(flash_messages.last[:level]).to eq(:success)
     end
   end
 
-  context "#ae_class_validation" do
+  context '#ae_class_validation' do
     before(:each) do
       set_user_privileges
       ns = FactoryGirl.create(:miq_ae_namespace)
@@ -424,8 +424,8 @@ describe MiqAeClassController do
       @cls.ae_fields << FactoryGirl.create(:miq_ae_field, :name => 'fred',
                                            :class_id => @cls.id, :priority => 1)
       @cls.save
-      @method = FactoryGirl.create(:miq_ae_method, :name => "method01", :scope => "class",
-        :language => "ruby", :class_id => @cls.id, :data => "exit MIQ_OK", :location => "inline")
+      @method = FactoryGirl.create(:miq_ae_method, :name => 'method01', :scope => 'class',
+        :language => 'ruby', :class_id => @cls.id, :data => 'exit MIQ_OK', :location => 'inline')
       expect(controller).to receive(:render)
       controller.instance_variable_set(:@sb, :trees       => {:ae_tree => {:active_node => "aec-#{@cls.id}"}},
                                              :active_tree => :ae_tree)
@@ -433,15 +433,15 @@ describe MiqAeClassController do
 
     after(:each) do
       expect(controller.send(:flash_errors?)).to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
+      expect(assigns(:flash_array).first[:message]).to include('Name has already been taken')
       expect(assigns(:edit)).not_to be_nil
       expect(response.status).to eq(200)
     end
 
-    it "Should not allow to create two schema fields with identical name" do
-      field = {"aetype"   => "attribute",
-               "datatype" => "string",
-               "name"     => "name01"}
+    it 'Should not allow to create two schema fields with identical name' do
+      field = {'aetype'   => 'attribute',
+               'datatype' => 'string',
+               'name'     => 'name01'}
       session[:edit] = {
         :key         => "aefields_edit__#{@cls.id}",
         :ae_class_id => @cls.id,
@@ -451,15 +451,15 @@ describe MiqAeClassController do
           :fields    => [field, field]
         }
       }
-      controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
+      controller.instance_variable_set(:@_params, :button => 'save', :id => @cls.id)
       controller.send(:update_fields)
     end
 
-    it "Should not allow to add two parameters with identical name to a method" do
-      field = {"default_value" => nil,
-               "datatype"      => nil,
-               "name"          => "name01",
-               "method_id"     => @method.id}
+    it 'Should not allow to add two parameters with identical name to a method' do
+      field = {'default_value' => nil,
+               'datatype'      => nil,
+               'name'          => 'name01',
+               'method_id'     => @method.id}
       session[:edit] = {
         :key         => "aemethod_edit__#{@method.id}",
         :ae_class_id => @cls.id,
@@ -469,33 +469,33 @@ describe MiqAeClassController do
           :fields => [field, field]
         }
       }
-      controller.instance_variable_set(:@_params, :button => "save", :id => @method.id)
+      controller.instance_variable_set(:@_params, :button => 'save', :id => @method.id)
       controller.send(:update_method)
     end
 
-    it "Should not allow to add two parameters with identical name to a newly created method" do
-      field = {"default_value" => nil,
-               "datatype"      => nil,
-               "name"          => "name01",
-               "method_id"     => nil}
+    it 'Should not allow to add two parameters with identical name to a newly created method' do
+      field = {'default_value' => nil,
+               'datatype'      => nil,
+               'name'          => 'name01',
+               'method_id'     => nil}
       session[:edit] = {
-        :key         => "aemethod_edit__new",
+        :key         => 'aemethod_edit__new',
         :ae_class_id => @cls.id,
         :new_field   => {},
         :new         => {
-          :name         => "method01",
+          :name         => 'method01',
           :display_name => nil,
           :fields       => [field, field],
-          :scope        => "instance",
-          :language     => "ruby"
+          :scope        => 'instance',
+          :language     => 'ruby'
         }
       }
-      controller.instance_variable_set(:@_params, :button => "add")
+      controller.instance_variable_set(:@_params, :button => 'add')
       controller.send(:create_method)
     end
   end
 
-  context "save class/method" do
+  context 'save class/method' do
     before do
       set_user_privileges
       ns = FactoryGirl.create(:miq_ae_namespace)
@@ -503,18 +503,18 @@ describe MiqAeClassController do
       @cls.ae_fields << FactoryGirl.create(:miq_ae_field, :name => 'fred',
                                            :class_id => @cls.id, :priority => 1)
       @cls.save
-      @method = FactoryGirl.create(:miq_ae_method, :name => "method01", :scope => "class",
-        :language => "ruby", :class_id => @cls.id, :data => "exit MIQ_OK", :location => "inline")
+      @method = FactoryGirl.create(:miq_ae_method, :name => 'method01', :scope => 'class',
+        :language => 'ruby', :class_id => @cls.id, :data => 'exit MIQ_OK', :location => 'inline')
       allow(controller).to receive(:replace_right_cell)
       controller.instance_variable_set(:@sb, :trees       => {:ae_tree => {:active_node => "aec-#{@cls.id}"}},
                                              :active_tree => :ae_tree)
     end
 
-    it "update a method with inputs" do
-      field = {"default_value" => nil,
-               "datatype"      => nil,
-               "name"          => "name01",
-               "method_id"     => @method.id}
+    it 'update a method with inputs' do
+      field = {'default_value' => nil,
+               'datatype'      => nil,
+               'name'          => 'name01',
+               'method_id'     => @method.id}
       session[:edit] = {
         :key              => "aemethod_edit__#{@method.id}",
         :fields_to_delete => [],
@@ -528,16 +528,16 @@ describe MiqAeClassController do
           :fields   => [field]
         }
       }
-      controller.instance_variable_set(:@_params, :button => "save", :id => @method.id)
+      controller.instance_variable_set(:@_params, :button => 'save', :id => @method.id)
       controller.send(:update_method)
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.status).to eq(200)
     end
 
-    it "update a class with fields" do
-      field = {"aetype"   => "attribute",
-               "datatype" => "string",
-               "name"     => "name01"}
+    it 'update a class with fields' do
+      field = {'aetype'   => 'attribute',
+               'datatype' => 'string',
+               'name'     => 'name01'}
       session[:edit] = {
         :key              => "aefields_edit__#{@cls.id}",
         :ae_class_id      => @cls.id,
@@ -548,30 +548,30 @@ describe MiqAeClassController do
           :fields    => [field]
         }
       }
-      controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
+      controller.instance_variable_set(:@_params, :button => 'save', :id => @cls.id)
       controller.send(:update_fields)
       expect(controller.send(:flash_errors?)).to be_falsey
       expect(response.status).to eq(200)
     end
   end
 
-  context "#copy_objects_edit_screen" do
+  context '#copy_objects_edit_screen' do
     it "sets only current tenant's domains to be displayed in To Domain pull down" do
       FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)
       FactoryGirl.create(:miq_ae_domain, :tenant => FactoryGirl.create(:tenant))
       controller.instance_variable_set(:@sb, {})
       ns = FactoryGirl.create(:miq_ae_namespace)
-      controller.send(:copy_objects_edit_screen, MiqAeNamespace, [ns.id], "miq_ae_namespace_copy")
+      controller.send(:copy_objects_edit_screen, MiqAeNamespace, [ns.id], 'miq_ae_namespace_copy')
       expect(assigns(:edit)[:domains].count).to eq(1)
     end
   end
 
-  context "#delete_domain_or_namespaces" do
+  context '#delete_domain_or_namespaces' do
     before do
       set_user_privileges
       domain = FactoryGirl.create(:miq_ae_domain, :tenant => Tenant.seed)
-      @namespace = FactoryGirl.create(:miq_ae_namespace, :name => "foo_namespace", :parent => domain)
-      @ae_class = FactoryGirl.create(:miq_ae_class, :name => "foo_class", :namespace_id => 1)
+      @namespace = FactoryGirl.create(:miq_ae_namespace, :name => 'foo_namespace', :parent => domain)
+      @ae_class = FactoryGirl.create(:miq_ae_class, :name => 'foo_class', :namespace_id => 1)
       controller.instance_variable_set(:@sb,
                                        :trees       => {},
                                        :active_tree => :ae_tree)
@@ -579,47 +579,47 @@ describe MiqAeClassController do
     end
 
 
-    it "Should delete multiple selected items from list" do
+    it 'Should delete multiple selected items from list' do
       controller.instance_variable_set(:@_params,
                                        :miq_grid_checks => "aec-#{@ae_class.id},aen-#{@namespace.id}",
                                        :id              => @namespace.id
       )
       controller.send(:delete_domain_or_namespaces)
       flash_messages = assigns(:flash_array)
-      expect(flash_messages.first[:message]).to include("Automate Namespace \"foo_namespace\": Delete successful")
-      expect(flash_messages.last[:message]).to include("Automate Class \"foo_class\": Delete successful")
+      expect(flash_messages.first[:message]).to include('Automate Namespace "foo_namespace": Delete successful')
+      expect(flash_messages.last[:message]).to include('Automate Class "foo_class": Delete successful')
     end
 
-    it "Should delete selected namespace in the tree" do
+    it 'Should delete selected namespace in the tree' do
       controller.instance_variable_set(:@_params,
                                        :id => @namespace.id
       )
 
       controller.send(:delete_domain_or_namespaces)
       flash_messages = assigns(:flash_array)
-      expect(flash_messages.first[:message]).to include("Automate Namespace \"foo_namespace\": Delete successful")
+      expect(flash_messages.first[:message]).to include('Automate Namespace "foo_namespace": Delete successful')
     end
   end
 
-  context "#set_field_vars" do
-    it "sets priority of new schema fields" do
+  context '#set_field_vars' do
+    it 'sets priority of new schema fields' do
       ns = FactoryGirl.create(:miq_ae_namespace)
       cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
       field1 = FactoryGirl.create(:miq_ae_field,
-                                  :aetype   => "attribute",
-                                  :datatype => "string",
-                                  :name     => "name01",
+                                  :aetype   => 'attribute',
+                                  :datatype => 'string',
+                                  :name     => 'name01',
                                   :class_id => cls.id,
                                   :priority => 1)
       field2 = FactoryGirl.create(:miq_ae_field,
-                                  :aetype   => "attribute",
-                                  :datatype => "string",
-                                  :name     => "name02",
+                                  :aetype   => 'attribute',
+                                  :datatype => 'string',
+                                  :name     => 'name02',
                                   :class_id => cls.id,
                                   :priority => 2)
-      field3 = {"aetype"   => "attribute",
-                "datatype" => "string",
-                "name"     => "name03"}
+      field3 = {'aetype'   => 'attribute',
+                'datatype' => 'string',
+                'name'     => 'name03'}
       edit = {:fields_to_delete => [], :new => {:fields => [field2, field3, field1]}}
       controller.instance_variable_set(:@edit, edit)
       controller.instance_variable_set(:@ae_class, cls)
@@ -629,40 +629,40 @@ describe MiqAeClassController do
     end
   end
 
-  context "#fields_seq_field_changed" do
+  context '#fields_seq_field_changed' do
     before do
       ns = FactoryGirl.create(:miq_ae_namespace, :name => 'foo')
       @cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
       FactoryGirl.create(:miq_ae_field,
-                         :aetype   => "attribute",
-                         :datatype => "string",
-                         :name     => "name01",
+                         :aetype   => 'attribute',
+                         :datatype => 'string',
+                         :name     => 'name01',
                          :class_id => @cls.id,
                          :priority => 1)
       FactoryGirl.create(:miq_ae_field,
-                         :aetype   => "attribute",
-                         :datatype => "string",
-                         :name     => "name02",
+                         :aetype   => 'attribute',
+                         :datatype => 'string',
+                         :name     => 'name02',
                          :class_id => @cls.id,
                          :priority => 2)
     end
 
-    it "moves selected field down" do
+    it 'moves selected field down' do
       controller.send(:fields_seq_edit_screen, @cls.id)
-      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name01)", "(name02)"])
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(['(name01)', '(name02)'])
       controller.instance_variable_set(:@_params, :button => 'down', :id => 'seq', :seq_fields => "['(name01)']")
       expect(controller).to receive(:render)
       controller.fields_seq_field_changed
-      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name02)", "(name01)"])
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(['(name02)', '(name01)'])
     end
 
-    it "moves selected field up" do
+    it 'moves selected field up' do
       controller.send(:fields_seq_edit_screen, @cls.id)
-      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name01)", "(name02)"])
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(['(name01)', '(name02)'])
       controller.instance_variable_set(:@_params, :button => 'up', :id => 'seq', :seq_fields => "['(name02)']")
       expect(controller).to receive(:render)
       controller.fields_seq_field_changed
-      expect(assigns(:edit)[:new][:fields_list]).to match_array(["(name02)", "(name01)"])
+      expect(assigns(:edit)[:new][:fields_list]).to match_array(['(name02)', '(name01)'])
     end
   end
 end

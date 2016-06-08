@@ -16,22 +16,22 @@ describe ReportFormatter::C3Formatter do
     allow(Charting).to receive(:format).and_return(:c3)
   end
   context '#build_performance_chart_area' do
-    it "builds a daily chart with all nils" do
+    it 'builds a daily chart with all nils' do
       report = MiqReport.new(
-        :db          => "VimPerformanceDaily",
+        :db          => 'VimPerformanceDaily',
         :cols        => cols = %w(timestamp cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average resource.cpu_usagemhz_rate_average_high_over_time_period resource.cpu_usagemhz_rate_average_low_over_time_period),
         :include     => {
-          "resource" => {
-            "columns" => %w(cpu_usagemhz_rate_average_high_over_time_period cpu_usagemhz_rate_average_low_over_time_period derived_memory_used_high_over_time_period derived_memory_used_low_over_time_period),
+          'resource' => {
+            'columns' => %w(cpu_usagemhz_rate_average_high_over_time_period cpu_usagemhz_rate_average_low_over_time_period derived_memory_used_high_over_time_period derived_memory_used_low_over_time_period),
           }
         },
         :col_order   => cols,
-        :headers     => ["Date/Time", "Avg Used", "Max Available", "Max Reserved", "Trend Max Used", "foo", "bar"],
-        :order       => "ascending",
-        :sortby      => "timestamp",
-        :group       => "n",
+        :headers     => ['Date/Time', 'Avg Used', 'Max Available', 'Max Reserved', 'Trend Max Used', 'foo', 'bar'],
+        :order       => 'ascending',
+        :sortby      => 'timestamp',
+        :group       => 'n',
         :graph       => {
-          :type         => "Line",
+          :type         => 'Line',
           :columns      => %w(cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average resource.cpu_usagemhz_rate_average_high_over_time_period resource.cpu_usagemhz_rate_average_low_over_time_period),
           :legends      => nil,
           :max_col_size => nil
@@ -44,7 +44,7 @@ describe ReportFormatter::C3Formatter do
 
       report.table = Ruport::Data::Table.new(
         :column_names => %w(timestamp cpu_usagemhz_rate_average min_cpu_usagemhz_rate_average max_cpu_usagemhz_rate_average trend_max_cpu_usagemhz_rate_average),
-        :data         => [["Sun, 20 Mar 2016 00:00:00 UTC +00:00", 0.0, nil, nil, 0]])
+        :data         => [['Sun, 20 Mar 2016 00:00:00 UTC +00:00', 0.0, nil, nil, 0]])
 
       expect_any_instance_of(described_class).to receive(:build_performance_chart_area).once.and_call_original
       render_report(report) { |e| e.options.graph_options[:chart_type] = :performance }

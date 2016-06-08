@@ -13,7 +13,7 @@ class TreeBuilderVat < TreeBuilderDatacenter
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix => "vat_")
+    locals.merge!(:id_prefix => 'vat_')
   end
 
   def root_options
@@ -29,7 +29,7 @@ class TreeBuilderVat < TreeBuilderDatacenter
 
   def x_get_tree_datacenter_kids(parent, count_only = false, type)
     # Get rid of unwanted folder level
-    parent = @vat ? parent.folders.find { |x| x.name == "vm" } : parent.folders.find { |x| x.name == "host" }
+    parent = @vat ? parent.folders.find { |x| x.name == 'vm' } : parent.folders.find { |x| x.name == 'host' }
     if parent.nil?
       count_only ? 0 : []
     else
@@ -40,20 +40,20 @@ class TreeBuilderVat < TreeBuilderDatacenter
   def x_get_tree_folder_kids(parent, count_only, _type)
     objects = count_only ? 0 : []
 
-    if parent.name == "Datacenters"
+    if parent.name == 'Datacenters'
       folders = count_only_or_objects(count_only, parent.folders_only)
       datacenters = count_only_or_objects(count_only, parent.datacenters_only)
       objects = folders + datacenters
-    elsif parent.name == "host" && parent.parent.kind_of?(Datacenter)
+    elsif parent.name == 'host' && parent.parent.kind_of?(Datacenter)
       unless @vat
         folders = count_only_or_objects(count_only, parent.folders_only)
         clusters = count_only_or_objects(count_only, parent.clusters)
         hosts = count_only_or_objects(count_only, parent.hosts)
         objects = folders + clusters + hosts
       end
-    elsif parent.name == "datastore" && parent.parent.kind_of?(Datacenter)
+    elsif parent.name == 'datastore' && parent.parent.kind_of?(Datacenter)
       # Skip showing the datastore folder and sub-folders
-    elsif parent.name == "vm" && parent.parent.kind_of?(Datacenter)
+    elsif parent.name == 'vm' && parent.parent.kind_of?(Datacenter)
       if @vat
         folders = count_only_or_objects(count_only, parent.folders_only)
         vms = count_only_or_objects(count_only, parent.vms)

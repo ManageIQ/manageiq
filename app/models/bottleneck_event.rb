@@ -4,7 +4,7 @@ class BottleneckEvent < ApplicationRecord
   serialize :context_data
 
   def self.last_created_on(obj)
-    event = where(:resource => obj).order("created_on DESC").first
+    event = where(:resource => obj).order('created_on DESC').first
     event ? event.created_on : nil
   end
 
@@ -52,7 +52,7 @@ class BottleneckEvent < ApplicationRecord
 
   def self.future_event_definitions_for_obj(obj)
     search_type = obj.class.base_class.name.to_sym
-    event_definitions("projected").find_all { |e| e[:definition][:applies_to].include?(search_type) }
+    event_definitions('projected').find_all { |e| e[:definition][:applies_to].include?(search_type) }
   end
 
   def self.delete_future_events_for_obj(obj)
@@ -64,7 +64,7 @@ class BottleneckEvent < ApplicationRecord
   end
 
   def dictionary(col)
-    Dictionary.gettext(col.to_s, :type => "column")
+    Dictionary.gettext(col.to_s, :type => 'column')
   end
 
   def format(value, method, options = {})
@@ -106,19 +106,19 @@ class BottleneckEvent < ApplicationRecord
     ids_hash = child_types_and_ids(obj)
     result = ["(resource_type = '#{obj.class.base_class.name}' AND resource_id = #{obj.id})"]
     ids_hash.each { |k, v| result.push("(resource_type = '#{k}' AND resource_id in (#{v.join(",")}))") }
-    result.join(" OR ")
+    result.join(' OR ')
   end
 
   def self.child_types_and_ids(obj)
     result = {}
     relats = case obj.class.base_class.name
-             when "MiqEnterprise"
+             when 'MiqEnterprise'
                [:ext_management_systems, :storages]
-             when "MiqRegion"
+             when 'MiqRegion'
                [:ext_management_systems, :storages]
-             when "ExtManagementSystem"
+             when 'ExtManagementSystem'
                [:ems_clusters, :hosts]
-             when "EmsCluster"
+             when 'EmsCluster'
                [:hosts]
              else
                return result
@@ -142,7 +142,7 @@ class BottleneckEvent < ApplicationRecord
   def self.remove_duplicate_find_results(recs)
     seen = []
     recs.inject([]) do |a, r|
-      key = [r.resource_type, r.resource_id, r.event_type, r.severity, r.message].join("|")
+      key = [r.resource_type, r.resource_id, r.event_type, r.severity, r.message].join('|')
       next(a) if seen.include?(key)
       seen << key
       a << r

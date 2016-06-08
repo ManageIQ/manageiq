@@ -1,5 +1,5 @@
 module MiqReport::Generator::Sorting
-  SORT_COL_SUFFIX = "_sort_"
+  SORT_COL_SUFFIX = '_sort_'
 
   # @param table [Ruport::Data::Table] Enumerable of Ruport::Data::Record
   # @param col_names [Array<String>] Array of column names to be sorted
@@ -47,7 +47,7 @@ module MiqReport::Generator::Sorting
     new_sortby = []
     rpt_sortby = sortby.to_miq_a
     rpt_sortby.each do |sb|
-      col, sfx = sb.split("__")
+      col, sfx = sb.split('__')
       if sfx && self.class.is_break_suffix?(sfx)
         sort_col = "#{sb}#{SORT_COL_SUFFIX}"
 
@@ -67,7 +67,7 @@ module MiqReport::Generator::Sorting
   end
 
   def build_value_for_sort_suffix(value, suffix)
-    value = value.in_time_zone(get_time_zone("UTC")) if value && value.kind_of?(Time)
+    value = value.in_time_zone(get_time_zone('UTC')) if value && value.kind_of?(Time)
     value = value.to_time.utc.beginning_of_day            if value && value.kind_of?(Date)
     suffix = suffix.to_sym if suffix
 
@@ -75,7 +75,7 @@ module MiqReport::Generator::Sorting
     when :hour
       if value
         ts_str = value.iso8601
-        ts_str[14..18] = "00:00"
+        ts_str[14..18] = '00:00'
         Time.parse(ts_str)
       end
     when :day           then value ? value.beginning_of_day : nil
@@ -85,7 +85,7 @@ module MiqReport::Generator::Sorting
     when :year          then value ? value.beginning_of_year : nil
     when :hour_of_day   then value ? value.hour : 999
     when :day_of_week   then value ? value.wday : 999
-    when :week_of_year  then value ? value.strftime("%W").to_i : 999
+    when :week_of_year  then value ? value.strftime('%W').to_i : 999
     when :day_of_month  then value ? value.mday : 999
     when :month_of_year then value ? value.month : 999
     else

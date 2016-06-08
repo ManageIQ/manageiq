@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :log_file do
-    state       "collecting"
+    state       'collecting'
     historical  true
-    description "Default logfile"
+    description 'Default logfile'
   end
 end

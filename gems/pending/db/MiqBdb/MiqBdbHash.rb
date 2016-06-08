@@ -102,7 +102,7 @@ module MiqBerkeleyDB
     end
 
     def dump
-      out  = ""
+      out  = ''
       out << "Hash Database Header\n"
       out << "  nkeys:           #{@header['nelem']}\n"
       out << "  high_mask:       0x#{'%01x' % @header['high_mask']}\n"
@@ -110,8 +110,8 @@ module MiqBerkeleyDB
       out << "  ffactor:         #{@header['ffactor']}\n"
       out << "  h_charkey:       0x#{'%08x' % @header['h_charkey']}\n"
 
-      out << "  spare points:    "
-      @header['spares'].each { |s| out << s.to_s << " " }
+      out << '  spare points:    '
+      @header['spares'].each { |s| out << s.to_s << ' ' }
       out << "\n"
 
       out << "\n"
@@ -142,11 +142,11 @@ module MiqBerkeleyDB
     end
 
     def entryDataOverflow(_index, offset, page)
-      pgno = page.buf[offset + 4, 4].unpack("S1")[0]
+      pgno = page.buf[offset + 4, 4].unpack('S1')[0]
       # Not using the following at the moment
       # tlen = page.buf[offset + 8, 4].unpack("S1")[0]
 
-      data = ""
+      data = ''
       while pgno != 0
         opage = MiqBdbPage.getPage(self, pgno)
         data << opage.data[0, opage.offset]
@@ -168,8 +168,8 @@ module MiqBerkeleyDB
       data = case type
              when H_KEYDATA then   entryDataImmediate(index, offset, page)
              when H_OFFPAGE then   entryDataOverflow(index, offset, page)
-             when H_DUPLICATE then raise "Unsupported Type: H_DUPLICATE"
-             when H_OFFDUP then    raise "Unsupported Type: H_OFFDUP"
+             when H_DUPLICATE then raise 'Unsupported Type: H_DUPLICATE'
+             when H_OFFDUP then    raise 'Unsupported Type: H_OFFDUP'
              else                  raise "Unknown Type: #{type.inspect}"
              end
 

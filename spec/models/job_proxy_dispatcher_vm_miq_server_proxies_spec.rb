@@ -1,25 +1,25 @@
-describe "JobProxyDispatcherVmMiqServerProxies" do
+describe 'JobProxyDispatcherVmMiqServerProxies' do
   require File.expand_path(File.join(File.dirname(__FILE__), 'job_proxy_dispatcher/job_proxy_dispatcher_helper'))
   include JobProxyDispatcherHelper
 
-  context "with two servers on same zone, vix disk enabled for all, " do
+  context 'with two servers on same zone, vix disk enabled for all, ' do
     before(:each) do
       @server1 = EvmSpecHelper.local_miq_server
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
-    context "with hosts with a miq_proxy, vmware vms on storages" do
+    context 'with hosts with a miq_proxy, vmware vms on storages' do
       before(:each) do
         @hosts, @proxies, @storages, @vms = build_entities
         @vm = @vms.first
       end
 
-      context "with a started server, vix disk enabled, in same zone as a vmware vm with a host, " do
+      context 'with a started server, vix disk enabled, in same zone as a vmware vm with a host, ' do
         before(:each) do
         end
 
-        it "should return both servers" do
+        it 'should return both servers' do
           res = @vm.miq_server_proxies
           expect(res.length).to eq(2)
           expect(res.include?(@server1)).to be_truthy
@@ -27,53 +27,53 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
         end
       end
 
-      context "with main server stopped, " do
+      context 'with main server stopped, ' do
         before(:each) do
-          @server1.status = "stopped"
+          @server1.status = 'stopped'
           @server1.save
         end
-        it "should return second server" do
+        it 'should return second server' do
           expect(@vm.miq_server_proxies).to eq([@server2])
         end
       end
 
-      context "with no vix disk enabled servers, " do
+      context 'with no vix disk enabled servers, ' do
         before(:each) do
           allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => false)
         end
-        it "should return no servers" do
+        it 'should return no servers' do
           expect(@vm.miq_server_proxies).to be_empty
         end
       end
 
-      context "with only a server in a different zone than the vm, " do
+      context 'with only a server in a different zone than the vm, ' do
         before(:each) do
-          @vms_zone = FactoryGirl.create(:zone, :description => "Zone 1", :name => "zone1")
+          @vms_zone = FactoryGirl.create(:zone, :description => 'Zone 1', :name => 'zone1')
           @server2.zone = @vms_zone
           @server2.save
           allow(@vm).to receive_messages(:my_zone => @vms_zone.name)
         end
-        it "should return only server2, in same zone" do
+        it 'should return only server2, in same zone' do
           expect(@vm.miq_server_proxies).to eq([@server2])
         end
       end
 
-      context "with repository vm(a vm without a host), " do
+      context 'with repository vm(a vm without a host), ' do
         before(:each) do
           @vm.host = nil
           @vm.save
         end
-        it "should return no servers" do
+        it 'should return no servers' do
           expect(@vm.miq_server_proxies).to be_empty
         end
       end
 
-      context "with a vm without a storage, " do
+      context 'with a vm without a storage, ' do
         before(:each) do
           @vm.storage = nil
           @vm.save
         end
-        it "should return no servers" do
+        it 'should return no servers' do
           expect(@vm.miq_server_proxies).to be_empty
         end
       end
@@ -94,7 +94,7 @@ describe "JobProxyDispatcherVmMiqServerProxies" do
           @server1.vm_scan_host_affinity = [host]
         end
 
-        it "should return only second server (without any scan affinity)" do
+        it 'should return only second server (without any scan affinity)' do
           expect(@vm.miq_server_proxies).to eq([@server2])
         end
       end

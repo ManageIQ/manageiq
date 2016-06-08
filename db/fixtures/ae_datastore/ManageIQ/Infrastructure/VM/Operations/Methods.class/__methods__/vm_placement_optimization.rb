@@ -17,10 +17,10 @@ def emailresults(vmname, target_host, vm_host, vmotion, event_type)
   signature ||= $evm.object['signature']
   subject = "Alert! EVM has detected event [#{event_type}] on VM #{vmname}"
 
-  body  = "Hello, "
-  body += "<br>"
+  body  = 'Hello, '
+  body += '<br>'
   body += "EVM has detected event: #{event_type} on VM: <b>#{vmname}</b> running on Host: <b>#{vm_host}</b>."
-  body += "<br><br>"
+  body += '<br><br>'
 
   if vmotion
     body += "VM: <b>#{vmname}</b> will be moved to Host: <b>#{target_host}</b>"
@@ -29,19 +29,19 @@ def emailresults(vmname, target_host, vm_host, vmotion, event_type)
     body += "VM: <b>#{vmname}</b> will NOT be moved."
   end
 
-  body += "<br><br>"
-  body += "Thank You,"
-  body += "<br><br>"
+  body += '<br><br>'
+  body += 'Thank You,'
+  body += '<br><br>'
   body += "#{signature}"
-  body += "<br>"
+  body += '<br>'
 
-  $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+  $evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
   $evm.execute('send_email', to, from, subject, body)
 end
 
 # Initialize variables
 vm = $evm.root['vm']
-raise "VM object not found" if vm.nil?
+raise 'VM object not found' if vm.nil?
 
 vm_host = vm.host
 curr_host_cpu_percent = vm_host.get_realtime_metric(:v_pct_cpu_ready_delta_summation, [15.minutes.ago.utc, 5.minutes.ago.utc], :avg)
@@ -55,13 +55,13 @@ event_type ||= 'High CPU Percent Ready Time'
 host_scope = nil
 host_scope ||= $evm.object['host_scope']
 
-if host_scope && host_scope.downcase == "vc"
+if host_scope && host_scope.downcase == 'vc'
   ems = vm.ext_management_system
 else
   ems = vm.ems_cluster
 end
-$evm.log("info", "Detected Host Scope: <#{host_scope}>")
-$evm.log("info", "VM: <#{vm.name}> currently residing on Host: <#{vm_host.name}> with CPU % Ready: <#{curr_host_cpu_percent}>")
+$evm.log('info', "Detected Host Scope: <#{host_scope}>")
+$evm.log('info', "VM: <#{vm.name}> currently residing on Host: <#{vm_host.name}> with CPU % Ready: <#{curr_host_cpu_percent}>")
 
 # Get hosts attached to the VC
 hosts = ems.hosts
@@ -75,7 +75,7 @@ host_suspects.each do |h|
   host_cpu_percent = h.get_realtime_metric(:v_pct_cpu_ready_delta_summation, [15.minutes.ago.utc, 5.minutes.ago.utc], :avg)
 
   host_all << {:id => h.id, :percent => host_cpu_percent, :type => :cpu}
-  $evm.log("info", "ESX Host: <#{h.name}> CPU Ready Delta Summation: <#{host_cpu_percent}>")
+  $evm.log('info', "ESX Host: <#{h.name}> CPU Ready Delta Summation: <#{host_cpu_percent}>")
 end
 
 host_all.sort! { |a, b| a[:percent] <=> b[:percent] }
@@ -83,10 +83,10 @@ host_all.sort! { |a, b| a[:percent] <=> b[:percent] }
 target_host = host_suspects.detect { |h| h.id == host_all.first[:id] }
 vmotion = true
 if curr_host_cpu_percent <= host_all.first[:percent]
-  $evm.log("info", "ESX Host: >#{target_host}> is the lowest CPU Ready Host. VM: <#{vm.name}> will NOT be moved.")
+  $evm.log('info', "ESX Host: >#{target_host}> is the lowest CPU Ready Host. VM: <#{vm.name}> will NOT be moved.")
   vmotion = true
 else
-  $evm.log("info", "VM: <#{vm.name}> will be moved to ESX Host: <#{target_host.name}> with CPU % Ready: <#{host_all.first[:percent]}>")
+  $evm.log('info', "VM: <#{vm.name}> will be moved to ESX Host: <#{target_host.name}> with CPU % Ready: <#{host_all.first[:percent]}>")
 end
 
 # Email Results

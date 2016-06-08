@@ -14,7 +14,7 @@ class MkCollectFiles
     @csa = collectionSpec
     @csa = YAML.load_file(collectionSpec) if @csa.kind_of? String
     @csa = [@csa] if @csa.kind_of? Hash
-    raise "Invalid collection spec" unless @csa.kind_of? Array
+    raise 'Invalid collection spec' unless @csa.kind_of? Array
 
     dobj = OpenStruct.new
     dobj.mkfile = mkFile
@@ -29,7 +29,7 @@ class MkCollectFiles
   end
 
   def dumpSpec(specFile)
-    YAML.dump(@csa, File.open(specFile, "w"))
+    YAML.dump(@csa, File.open(specFile, 'w'))
   end
 
   private
@@ -140,7 +140,7 @@ class MkCollectFiles
   def copyFile(src, dest)
     puts "\t    COPY: #{src}\n\t      TO: #{dest}\n\n" if @verbose
     File.open(src) do |ffo|
-      tfo = @mkFS.fileOpen(dest, "wb")
+      tfo = @mkFS.fileOpen(dest, 'wb')
       while (buf = ffo.read(4096))
         tfo.write(buf, buf.length)
       end
@@ -152,13 +152,13 @@ class MkCollectFiles
   def compressFile(src, dest)
     puts "\tCOMPRESS: #{src}\n\t      TO: #{dest}\n\n" if @verbose
     File.open(src) do |ffo|
-      tfo = @mkFS.fileOpen(dest, "wb")
+      tfo = @mkFS.fileOpen(dest, 'wb')
       zipper = Zlib::Deflate.new
       while (buf = ffo.read(4096))
         zipper << buf
       end
       tfo.write(zipper.deflate(nil, Zlib::FINISH))
-      tfo.addTag("compressed")
+      tfo.addTag('compressed')
       tfo.close
     end
   end

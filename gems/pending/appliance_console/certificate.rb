@@ -1,5 +1,5 @@
-require "appliance_console/principal"
-require "awesome_spawn"
+require 'appliance_console/principal'
+require 'awesome_spawn'
 
 module ApplianceConsole
   class Certificate
@@ -33,9 +33,9 @@ module ApplianceConsole
 
     def initialize(options = {})
       options.each { |n, v| public_send("#{n}=", v) }
-      @ca_name ||= "ipa"
+      @ca_name ||= 'ipa'
       @extensions ||= %w(server client)
-      @realm ||= hostname.split(".")[1..-1].join(".").upcase if hostname
+      @realm ||= hostname.split('.')[1..-1].join('.').upcase if hostname
     end
 
     def request
@@ -73,7 +73,7 @@ module ApplianceConsole
     end
 
     def set_owner_of_key
-      FileUtils.chown(owner.split(".").first, owner.split(".")[1], key_filename) if owner && (owner != "root")
+      FileUtils.chown(owner.split('.').first, owner.split('.')[1], key_filename) if owner && (owner != 'root')
       self
     end
 
@@ -107,25 +107,25 @@ module ApplianceConsole
 
     def request_first
       params = {
-        nil  => "request",
-        "-c" => ca_name,
-        "-v" => nil, # verbose
-        "-w" => nil, # wait til completion if possible
-        "-k" => key_filename,
-        "-f" => cert_filename,
-        "-N" => principal.subject_name,
-        "-K" => principal.name,
-        "-C" => "chmod 644 #{cert_filename} #{root_filename}",
-        "-U" => key_ext_usage
+        nil  => 'request',
+        '-c' => ca_name,
+        '-v' => nil, # verbose
+        '-w' => nil, # wait til completion if possible
+        '-k' => key_filename,
+        '-f' => cert_filename,
+        '-N' => principal.subject_name,
+        '-K' => principal.name,
+        '-C' => "chmod 644 #{cert_filename} #{root_filename}",
+        '-U' => key_ext_usage
       }
-      params["-F"] = root_filename if root_filename
+      params['-F'] = root_filename if root_filename
 
-      AwesomeSpawn.run!("/usr/bin/getcert", :params => params)
+      AwesomeSpawn.run!('/usr/bin/getcert', :params => params)
       self
     end
 
     def request_again
-      AwesomeSpawn.run!("/usr/bin/getcert", :params => ["resubmit", "-w", "-f", cert_filename])
+      AwesomeSpawn.run!('/usr/bin/getcert', :params => ['resubmit', '-w', '-f', cert_filename])
       self
     end
 
@@ -134,12 +134,12 @@ module ApplianceConsole
     end
 
     def key_status
-      ret = AwesomeSpawn.run("/usr/bin/getcert", :params => ["status", "-f", cert_filename])
+      ret = AwesomeSpawn.run('/usr/bin/getcert', :params => ['status', '-f', cert_filename])
       STATUS_RETURN_CODES[ret.exit_status]
     end
 
     def key_ext_usage
-      extensions.collect { |n| "id-kp-#{n}Auth" }.join(",")
+      extensions.collect { |n| "id-kp-#{n}Auth" }.join(',')
     end
   end
 end

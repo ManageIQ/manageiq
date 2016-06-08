@@ -9,14 +9,14 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
   let(:template) { FactoryGirl.create(:template_openstack, :ext_management_system => provider) }
 
-  context "without applied tags" do
+  context 'without applied tags' do
     let(:workflow) do
       stub_dialog
       allow_any_instance_of(described_class).to receive(:update_field_visibility)
       described_class.new({:src_vm_id => template.id}, admin.userid)
     end
-    context "availability_zones" do
-      it "#get_targets_for_ems" do
+    context 'availability_zones' do
+      it '#get_targets_for_ems' do
         az = FactoryGirl.create(:availability_zone_amazon)
         provider.availability_zones << az
         filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, AvailabilityZone,
@@ -25,16 +25,16 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         expect(filtered.first.name).to eq(az.name)
       end
 
-      it "returns an empty array when no targets are found" do
+      it 'returns an empty array when no targets are found' do
         filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, AvailabilityZone,
                                  'availability_zones.available')
         expect(filtered).to eq([])
       end
     end
 
-    context "security_groups" do
-      context "non cloud network" do
-        it "#get_targets_for_ems" do
+    context 'security_groups' do
+      context 'non cloud network' do
+        it '#get_targets_for_ems' do
           sg = FactoryGirl.create(:security_group_openstack, :ext_management_system => provider.network_manager)
           filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup,
                                    'security_groups.non_cloud_network')
@@ -43,8 +43,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         end
       end
 
-      context "cloud network" do
-        it "#get_targets_for_ems" do
+      context 'cloud network' do
+        it '#get_targets_for_ems' do
           cn1 = FactoryGirl.create(:cloud_network, :ext_management_system => provider)
           sg_cn = FactoryGirl.create(:security_group_openstack, :ext_management_system => provider.network_manager, :cloud_network => cn1)
           filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, SecurityGroup, 'security_groups')
@@ -54,8 +54,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       end
     end
 
-    context "Instance Type (Flavor)" do
-      it "#get_targets_for_ems" do
+    context 'Instance Type (Flavor)' do
+      it '#get_targets_for_ems' do
         flavor = FactoryGirl.create(:flavor_openstack)
         provider.flavors << flavor
         filtered = workflow.send(:get_targets_for_ems, provider, :cloud_filter, Flavor, 'flavors')
@@ -65,7 +65,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
     end
   end
 
-  context "with applied tags" do
+  context 'with applied tags' do
     let(:workflow) do
       stub_dialog
       allow_any_instance_of(described_class).to receive(:update_field_visibility)
@@ -97,8 +97,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       Classification.classify(tagged_tenant, 'cc', '001')
     end
 
-    context "availability_zones" do
-      it "#get_targets_for_ems" do
+    context 'availability_zones' do
+      it '#get_targets_for_ems' do
         expect(provider.availability_zones.size).to eq(2)
         expect(provider.availability_zones.first.tags.size).to eq(1)
         expect(provider.availability_zones.last.tags.size).to eq(0)
@@ -109,8 +109,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       end
     end
 
-    context "security groups" do
-      it "#get_targets_for_ems" do
+    context 'security groups' do
+      it '#get_targets_for_ems' do
         expect(provider.security_groups.size).to eq(2)
         expect(provider.security_groups.first.tags.size).to eq(1)
         expect(provider.security_groups.last.tags.size).to eq(0)
@@ -124,8 +124,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       end
     end
 
-    context "instance types (Flavor)" do
-      it "#get_targets_for_ems" do
+    context 'instance types (Flavor)' do
+      it '#get_targets_for_ems' do
         expect(provider.flavors.size).to eq(2)
         expect(provider.flavors.first.tags.size).to eq(1)
         expect(provider.flavors.last.tags.size).to eq(0)
@@ -134,8 +134,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       end
     end
 
-    context "allowed_tenants" do
-      it "#get_targets_for_ems" do
+    context 'allowed_tenants' do
+      it '#get_targets_for_ems' do
         expect(provider.cloud_tenants.size).to eq(2)
         expect(provider.cloud_tenants.first.tags.size).to eq(1)
         expect(provider.cloud_tenants.last.tags.size).to eq(0)
@@ -145,40 +145,40 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
     end
   end
 
-  context "With a user" do
-    it "pass platform attributes to automate" do
+  context 'With a user' do
+    it 'pass platform attributes to automate' do
       stub_dialog
       assert_automate_dialog_lookup(admin, 'cloud', 'openstack')
 
       described_class.new({}, admin.userid)
     end
 
-    context "Without a Template" do
+    context 'Without a Template' do
       let(:workflow) do
         stub_dialog
         allow_any_instance_of(described_class).to receive(:update_field_visibility)
         described_class.new({}, admin.userid)
       end
 
-      it "#allowed_instance_types" do
+      it '#allowed_instance_types' do
         provider.flavors << FactoryGirl.create(:flavor_openstack)
 
         expect(workflow.allowed_instance_types).to eq({})
       end
     end
 
-    context "With a Valid Template" do
+    context 'With a Valid Template' do
       let(:workflow) do
         stub_dialog
         allow_any_instance_of(described_class).to receive(:update_field_visibility)
         described_class.new({:src_vm_id => template.id}, admin.userid)
       end
 
-      context "#allowed_instance_types" do
+      context '#allowed_instance_types' do
         let(:hardware) { FactoryGirl.create(:hardware, :size_on_disk => 1.gigabyte, :memory_mb_minimum => 512) }
         let(:template) { FactoryGirl.create(:template_openstack, :hardware => hardware, :ext_management_system => provider) }
 
-        it "filters flavors too small" do
+        it 'filters flavors too small' do
           flavor = FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.terabyte)
           provider.flavors << flavor
           provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.megabyte) # Disk too small
@@ -188,63 +188,63 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
         end
       end
 
-      context "with empty relationships" do
-        it "#allowed_availability_zones" do
+      context 'with empty relationships' do
+        it '#allowed_availability_zones' do
           expect(workflow.allowed_availability_zones).to eq({})
         end
 
-        it "#allowed_guest_access_key_pairs" do
+        it '#allowed_guest_access_key_pairs' do
           expect(workflow.allowed_guest_access_key_pairs).to eq({})
         end
 
-        it "#allowed_security_groups" do
+        it '#allowed_security_groups' do
           expect(workflow.allowed_security_groups).to eq({})
         end
       end
 
-      context "with valid relationships" do
-        it "#allowed_availability_zones" do
+      context 'with valid relationships' do
+        it '#allowed_availability_zones' do
           az = FactoryGirl.create(:availability_zone_openstack)
           provider.availability_zones << az
           expect(workflow.allowed_availability_zones).to eq(az.id => az.name)
         end
 
-        it "#allowed_availability_zones with NULL AZ" do
+        it '#allowed_availability_zones with NULL AZ' do
           provider.availability_zones << az = FactoryGirl.create(:availability_zone_openstack)
-          provider.availability_zones << FactoryGirl.create(:availability_zone_openstack_null, :ems_ref => "null_az")
+          provider.availability_zones << FactoryGirl.create(:availability_zone_openstack_null, :ems_ref => 'null_az')
 
           azs = workflow.allowed_availability_zones
           expect(azs.length).to eq(1)
           expect(azs.first).to eq([az.id, az.name])
         end
 
-        it "#allowed_guest_access_key_pairs" do
-          kp = AuthPrivateKey.create(:name => "auth_1")
+        it '#allowed_guest_access_key_pairs' do
+          kp = AuthPrivateKey.create(:name => 'auth_1')
           provider.key_pairs << kp
           expect(workflow.allowed_guest_access_key_pairs).to eq(kp.id => kp.name)
         end
 
-        it "#allowed_security_groups" do
+        it '#allowed_security_groups' do
           sg = FactoryGirl.create(:security_group_openstack)
           provider.security_groups << sg
           expect(workflow.allowed_security_groups).to eq(sg.id => sg.name)
         end
       end
 
-      context "#display_name_for_name_description" do
+      context '#display_name_for_name_description' do
         let(:flavor) { FactoryGirl.create(:flavor_openstack) }
 
-        it "with name only" do
+        it 'with name only' do
           expect(workflow.display_name_for_name_description(flavor)).to eq(flavor.name)
         end
 
-        it "with name and description" do
-          flavor.description = "Small"
+        it 'with name and description' do
+          flavor.description = 'Small'
           expect(workflow.display_name_for_name_description(flavor)).to eq("#{flavor.name}: Small")
         end
       end
 
-      context "tenant filtering" do
+      context 'tenant filtering' do
         before do
           @ct1 = FactoryGirl.create(:cloud_tenant)
           @ct2 = FactoryGirl.create(:cloud_tenant)
@@ -252,7 +252,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
           provider.cloud_tenants << @ct2
         end
 
-        context "cloud networks" do
+        context 'cloud networks' do
           before do
             @cn1 = FactoryGirl.create(:cloud_network)
             @cn2 = FactoryGirl.create(:cloud_network)
@@ -262,19 +262,19 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
             @ct2.cloud_networks << @cn2
           end
 
-          it "#allowed_cloud_networks with tenant selected" do
+          it '#allowed_cloud_networks with tenant selected' do
             workflow.values.merge!(:cloud_tenant => @ct2.id)
             cns = workflow.allowed_cloud_networks
             expect(cns.keys).to match_array [@cn2.id]
           end
 
-          it "#allowed_cloud_networks with tenant not selected" do
+          it '#allowed_cloud_networks with tenant not selected' do
             cns = workflow.allowed_cloud_networks
             expect(cns.keys).to match_array [@cn2.id, @cn1.id]
           end
         end
 
-        context "security groups" do
+        context 'security groups' do
           before do
             @sg1 = FactoryGirl.create(:security_group_openstack)
             @sg2 = FactoryGirl.create(:security_group_openstack)
@@ -284,35 +284,35 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
             @ct2.security_groups << @sg2
           end
 
-          it "#allowed_security_groups with tenant selected" do
+          it '#allowed_security_groups with tenant selected' do
             workflow.values.merge!(:cloud_tenant => @ct2.id)
             sgs = workflow.allowed_security_groups
             expect(sgs.keys).to match_array [@sg2.id]
           end
 
-          it "#allowed_security_groups with tenant not selected" do
+          it '#allowed_security_groups with tenant not selected' do
             sgs = workflow.allowed_security_groups
             expect(sgs.keys).to match_array [@sg2.id, @sg1.id]
           end
         end
 
-        context "floating ip" do
+        context 'floating ip' do
           before do
-            @ip1 = FactoryGirl.create(:floating_ip, :address => "1.1.1.1")
-            @ip2 = FactoryGirl.create(:floating_ip, :address => "2.2.2.2")
+            @ip1 = FactoryGirl.create(:floating_ip, :address => '1.1.1.1')
+            @ip2 = FactoryGirl.create(:floating_ip, :address => '2.2.2.2')
             provider.network_manager.floating_ips << @ip1
             provider.network_manager.floating_ips << @ip2
             @ct1.floating_ips << @ip1
             @ct2.floating_ips << @ip2
           end
 
-          it "#allowed_floating_ip_addresses with tenant selected" do
+          it '#allowed_floating_ip_addresses with tenant selected' do
             workflow.values.merge!(:cloud_tenant => @ct2.id)
             ips = workflow.allowed_floating_ip_addresses
             expect(ips.keys).to match_array [@ip2.id]
           end
 
-          it "#allowed_floating_ip_addresses with tenant not selected" do
+          it '#allowed_floating_ip_addresses with tenant not selected' do
             ips = workflow.allowed_floating_ip_addresses
             expect(ips.keys).to match_array [@ip2.id, @ip1.id]
           end
@@ -321,32 +321,32 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
     end
   end
 
-  describe "prepare_volumes_fields" do
+  describe 'prepare_volumes_fields' do
     let(:workflow) do
       stub_dialog
       allow_any_instance_of(described_class).to receive(:update_field_visibility)
       described_class.new({:src_vm_id => template.id}, admin.userid)
     end
-    it "converts numbered volume form fields into an array" do
+    it 'converts numbered volume form fields into an array' do
       volumes = workflow.prepare_volumes_fields(
-        :name_1 => "v1n", :size_1 => "v1s", :delete_on_terminate_1 => true,
-        :name_2 => "v2n", :size_2 => "v2s", :delete_on_terminate_2 => false,
+        :name_1 => 'v1n', :size_1 => 'v1s', :delete_on_terminate_1 => true,
+        :name_2 => 'v2n', :size_2 => 'v2s', :delete_on_terminate_2 => false,
         :other_irrelevant_key => 1
       )
       expect(volumes.length).to eq(2)
-      expect(volumes[0]).to eq(:name => "v1n", :size => "v1s", :delete_on_terminate => true)
-      expect(volumes[1]).to eq(:name => "v2n", :size => "v2s", :delete_on_terminate => false)
+      expect(volumes[0]).to eq(:name => 'v1n', :size => 'v1s', :delete_on_terminate => true)
+      expect(volumes[1]).to eq(:name => 'v2n', :size => 'v2s', :delete_on_terminate => false)
     end
-    it "produces an empty array if there are no volume fields" do
+    it 'produces an empty array if there are no volume fields' do
       volumes = workflow.prepare_volumes_fields(:other_irrelevant_key => 1)
       expect(volumes.length).to eq(0)
     end
   end
 
-  describe "#make_request" do
+  describe '#make_request' do
     let(:alt_user) { FactoryGirl.create(:user_with_group) }
 
-    it "creates and update a request" do
+    it 'creates and update a request' do
       EvmSpecHelper.local_miq_server
       stub_dialog(:get_pre_dialogs)
       stub_dialog(:get_dialogs)
@@ -355,8 +355,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_provision_request_created",
-        :target_class => "Vm",
+        :event        => 'vm_provision_request_created',
+        :target_class => 'Vm',
         :userid       => admin.userid,
         :message      => "VM Provisioning requested by <#{admin.userid}> for Vm:#{template.id}"
       )
@@ -371,7 +371,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqProvisionRequest)
-      expect(request.request_type).to eq("template")
+      expect(request.request_type).to eq('template')
       expect(request.description).to eq("Provision from [#{template.name}] to [New VM]")
       expect(request.requester).to eq(admin)
       expect(request.userid).to eq(admin.userid)
@@ -384,8 +384,8 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_provision_request_updated",
-        :target_class => "Vm",
+        :event        => 'vm_provision_request_updated',
+        :target_class => 'Vm',
         :userid       => alt_user.userid,
         :message      => "VM Provisioning request updated by <#{alt_user.userid}> for Vm:#{template.id}"
       )

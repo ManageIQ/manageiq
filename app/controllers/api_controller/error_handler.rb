@@ -20,7 +20,7 @@ class ApiController
     end
 
     def api_error_type(type, message)
-      api_error(type, message, self.class.name, "", Rack::Utils.status_code(type))
+      api_error(type, message, self.class.name, '', Rack::Utils.status_code(type))
     end
 
     private

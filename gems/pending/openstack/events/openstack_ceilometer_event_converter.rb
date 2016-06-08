@@ -10,10 +10,10 @@ class OpenstackCeilometerEventConverter
 
   def payload
     {
-      "message_id" => @event.message_id,
-      "event_type" => @event.event_type,
-      "timestamp"  => @event.generated,
-      "payload"    => @payload,
+      'message_id' => @event.message_id,
+      'event_type' => @event.event_type,
+      'timestamp'  => @event.generated,
+      'payload'    => @payload,
     }
   end
 
@@ -22,7 +22,7 @@ class OpenstackCeilometerEventConverter
   def hashize_traits(traits_list)
     output = {}
     traits_list.each do |property|
-      output[property["name"]] = property["value"]
+      output[property['name']] = property['value']
     end
     output
   end

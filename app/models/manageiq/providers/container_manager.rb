@@ -36,8 +36,8 @@ module ManageIQ::Providers
     end
 
     class << model_name
-      define_method(:route_key) { "ems_containers" }
-      define_method(:singular_route_key) { "ems_container" }
+      define_method(:route_key) { 'ems_containers' }
+      define_method(:singular_route_key) { 'ems_container' }
     end
 
     def self.supported_subclasses
@@ -48,7 +48,7 @@ module ManageIQ::Providers
 
     # enables overide of ChartsLayoutService#find_chart_path
     def chart_layout_path
-      "ManageIQ_Providers_ContainerManager"
+      'ManageIQ_Providers_ContainerManager'
     end
 
     def validate_timeline

@@ -12,7 +12,7 @@ module NTFSProbe
 
     ntfs = oem == 'NTFS'
     if $log
-      $log.debug("NTFSProbe << TRUE") if ntfs
+      $log.debug('NTFSProbe << TRUE') if ntfs
       $log.debug("NTFSProbe << FALSE because OEM Name is not NTFS, but is '#{oem}'") unless ntfs
     end
 

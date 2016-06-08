@@ -1,6 +1,6 @@
 describe OrchestrationTemplateHot do
-  describe ".eligible_manager_types" do
-    it "lists the classes of eligible managers" do
+  describe '.eligible_manager_types' do
+    it 'lists the classes of eligible managers' do
       OrchestrationTemplateHot.eligible_manager_types.each do |klass|
         expect(klass <= ManageIQ::Providers::Openstack::CloudManager).to be_truthy
       end
@@ -9,8 +9,8 @@ describe OrchestrationTemplateHot do
 
   let(:valid_template) { FactoryGirl.create(:orchestration_template_hot_with_content) }
 
-  context "when a raw template in YAML format is given" do
-    it "parses parameters from a template" do
+  context 'when a raw template in YAML format is given' do
+    it 'parses parameters from a template' do
       groups = valid_template.parameter_groups
       expect(groups.size).to eq(2)
 
@@ -20,8 +20,8 @@ describe OrchestrationTemplateHot do
   end
 
   def assert_general_group(group)
-    expect(group.label).to eq("General parameters")
-    expect(group.description).to eq("General parameters")
+    expect(group.label).to eq('General parameters')
+    expect(group.description).to eq('General parameters')
 
     assert_custom_constraint(group.parameters[0])
     assert_allowed_values(group.parameters[1])
@@ -29,8 +29,8 @@ describe OrchestrationTemplateHot do
   end
 
   def assert_db_group(group)
-    expect(group.label).to eq("DB parameters")
-    expect(group.description).to eq("Database related parameters")
+    expect(group.label).to eq('DB parameters')
+    expect(group.description).to eq('Database related parameters')
 
     assert_hidden_length_patterns(group.parameters[0])
     assert_min_max_value(group.parameters[1])
@@ -39,11 +39,11 @@ describe OrchestrationTemplateHot do
 
   def assert_custom_constraint(parameter)
     expect(parameter).to have_attributes(
-      :name          => "flavor",
-      :label         => "Flavor",
-      :description   => "Flavor for the instances to be created",
-      :data_type     => "string",
-      :default_value => "m1.small",
+      :name          => 'flavor',
+      :label         => 'Flavor',
+      :description   => 'Flavor for the instances to be created',
+      :data_type     => 'string',
+      :default_value => 'm1.small',
       :hidden        => false,
     )
     constraints = parameter.constraints
@@ -51,18 +51,18 @@ describe OrchestrationTemplateHot do
     expect(constraints[0]).to be_a OrchestrationTemplate::OrchestrationParameterCustom
     expect(constraints[0]).to be_kind_of OrchestrationTemplate::OrchestrationParameterConstraint
     expect(constraints[0]).to have_attributes(
-      :description       => "Must be a flavor known to Nova",
-      :custom_constraint => "nova.flavor"
+      :description       => 'Must be a flavor known to Nova',
+      :custom_constraint => 'nova.flavor'
     )
   end
 
   def assert_list_string_type(parameter)
     expect(parameter).to have_attributes(
-      :name          => "cartridges",
-      :label         => "Cartridges",
+      :name          => 'cartridges',
+      :label         => 'Cartridges',
       :description   => "Cartridges to install. \"all\" for all cartridges; \"standard\" for all cartridges except for JBossEWS or JBossEAP\n",
-      :data_type     => "string",  # HOT has type comma_delimited_list, but all examples use type string. Why?
-      :default_value => "cron,diy,haproxy,mysql,nodejs,perl,php,postgresql,python,ruby",
+      :data_type     => 'string',  # HOT has type comma_delimited_list, but all examples use type string. Why?
+      :default_value => 'cron,diy,haproxy,mysql,nodejs,perl,php,postgresql,python,ruby',
       :hidden        => false,
       :constraints   => [],
     )
@@ -70,11 +70,11 @@ describe OrchestrationTemplateHot do
 
   def assert_allowed_values(parameter)
     expect(parameter).to have_attributes(
-      :name          => "image_id",
-      :label         => "Image", # String#titleize removes trailing id
-      :description   => "ID of the image to use for the instance to be created.",
-      :data_type     => "string",
-      :default_value => "F18-x86_64-cfntools",
+      :name          => 'image_id',
+      :label         => 'Image', # String#titleize removes trailing id
+      :description   => 'ID of the image to use for the instance to be created.',
+      :data_type     => 'string',
+      :default_value => 'F18-x86_64-cfntools',
       :hidden        => false,
     )
     constraints = parameter.constraints
@@ -82,17 +82,17 @@ describe OrchestrationTemplateHot do
     expect(constraints[0]).to be_a OrchestrationTemplate::OrchestrationParameterAllowed
     expect(constraints[0]).to be_kind_of OrchestrationTemplate::OrchestrationParameterConstraint
     expect(constraints[0]).to have_attributes(
-      :description    => "Image ID must be either F18-i386-cfntools or F18-x86_64-cfntools.",
-      :allowed_values => ["F18-i386-cfntools", "F18-x86_64-cfntools"]
+      :description    => 'Image ID must be either F18-i386-cfntools or F18-x86_64-cfntools.',
+      :allowed_values => ['F18-i386-cfntools', 'F18-x86_64-cfntools']
     )
   end
 
   def assert_min_max_value(parameter)
     expect(parameter).to have_attributes(
-      :name          => "db_port",
-      :label         => "Port Number",  # provided by template
-      :description   => "Database port number",
-      :data_type     => "number",
+      :name          => 'db_port',
+      :label         => 'Port Number',  # provided by template
+      :description   => 'Database port number',
+      :data_type     => 'number',
       :default_value => 50_000,
       :hidden        => false,
     )
@@ -101,7 +101,7 @@ describe OrchestrationTemplateHot do
     expect(constraints[0]).to be_a OrchestrationTemplate::OrchestrationParameterRange
     expect(constraints[0]).to be_kind_of OrchestrationTemplate::OrchestrationParameterConstraint
     expect(constraints[0]).to have_attributes(
-      :description => "Port number must be between 40000 and 60000",
+      :description => 'Port number must be between 40000 and 60000',
       :min_value   => 40_000,
       :max_value   => 60_000
     )
@@ -109,10 +109,10 @@ describe OrchestrationTemplateHot do
 
   def assert_hidden_length_patterns(parameter)
     expect(parameter).to have_attributes(
-      :name          => "admin_pass",
-      :label         => "Admin Pass",
-      :description   => "Admin password",
-      :data_type     => "string",
+      :name          => 'admin_pass',
+      :label         => 'Admin Pass',
+      :description   => 'Admin password',
+      :data_type     => 'string',
       :default_value => nil,
       :hidden        => true
     )
@@ -130,23 +130,23 @@ describe OrchestrationTemplateHot do
     expect(constraints[1]).to be_a OrchestrationTemplate::OrchestrationParameterPattern
     expect(constraints[1]).to be_kind_of OrchestrationTemplate::OrchestrationParameterConstraint
     expect(constraints[1]).to have_attributes(
-      :description => "Password must consist of characters and numbers only",
-      :pattern     => "[a-zA-Z0-9]+"
+      :description => 'Password must consist of characters and numbers only',
+      :pattern     => '[a-zA-Z0-9]+'
     )
 
     expect(constraints[2]).to be_a OrchestrationTemplate::OrchestrationParameterPattern
     expect(constraints[2]).to have_attributes(
-      :description => "Password must start with an uppercase character",
-      :pattern     => "[A-Z]+[a-zA-Z0-9]*"
+      :description => 'Password must start with an uppercase character',
+      :pattern     => '[A-Z]+[a-zA-Z0-9]*'
     )
   end
 
   def assert_json_type(parameter)
     expect(parameter).to have_attributes(
-      :name          => "metadata",
-      :label         => "Metadata",
+      :name          => 'metadata',
+      :label         => 'Metadata',
       :description   => nil,
-      :data_type     => "json",
+      :data_type     => 'json',
       :default_value => nil,
       :hidden        => false,
       :constraints   => [],

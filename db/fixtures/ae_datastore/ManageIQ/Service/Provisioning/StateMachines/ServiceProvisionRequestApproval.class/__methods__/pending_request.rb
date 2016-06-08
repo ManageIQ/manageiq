@@ -7,4 +7,4 @@ msg = $evm.object['reason']
 $evm.log('info', "#{msg}")
 
 # Raise automation event: request_pending
-$evm.root["miq_request"].pending
+$evm.root['miq_request'].pending

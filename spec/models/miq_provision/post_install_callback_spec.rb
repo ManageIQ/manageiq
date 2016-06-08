@@ -54,7 +54,7 @@ describe MiqProvision::PostInstallCallback do
     :update_configuration
   ].freeze
 
-  context "#post_install_callback" do
+  context '#post_install_callback' do
     BLOCKED_PHASES.each do |phase|
       it "should not call power off for #{phase}" do
         expect(destination).not_to receive(:stop)

@@ -5,7 +5,7 @@ require 'securerandom'
 #
 class TokenManager
   RESTRICTED_OPTIONS = [:expires_on]
-  DEFAULT_NS         = "default"
+  DEFAULT_NS         = 'default'
 
   @token_caches = {}    # Hash of Memory/Dalli Store Caches, Keyed by namespace
   @config       = {:token_ttl => 10.minutes}    # Token expiration managed in seconds
@@ -85,7 +85,7 @@ class TokenManager
         ActiveSupport::Cache::MemoryStore.new(cache_store_options(namespace))
       else
         require 'active_support/cache/dalli_store'
-        memcache_server = VMDB::Config.new("vmdb").config[:session][:memcache_server] || "127.0.0.1:11221"
+        memcache_server = VMDB::Config.new('vmdb').config[:session][:memcache_server] || '127.0.0.1:11221'
         ActiveSupport::Cache::DalliStore.new(memcache_server, cache_store_options(namespace))
       end
     end

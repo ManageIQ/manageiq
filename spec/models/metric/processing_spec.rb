@@ -1,10 +1,10 @@
 describe Metric::Processing do
-  context ".process_derived_columns" do
-    context "on :derived_host_sockets" do
+  context '.process_derived_columns' do
+    context 'on :derived_host_sockets' do
       let(:hardware) { FactoryGirl.create(:hardware, :cpu_sockets => 2) }
       let(:host) { FactoryGirl.create(:host, :hardware => hardware) }
 
-      it "adds the derived host sockets" do
+      it 'adds the derived host sockets' do
         m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => host)
 
         derived_columns = described_class.process_derived_columns(host, m.attributes.symbolize_keys)
@@ -13,10 +13,10 @@ describe Metric::Processing do
       end
     end
 
-    context "on :derived_vm_numvcpus" do
+    context 'on :derived_vm_numvcpus' do
       let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => FactoryGirl.create(:hardware, :cpu_total_cores => 8)) }
 
-      it "with all usage values" do
+      it 'with all usage values' do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usage_rate_average    => 50.0,
@@ -28,7 +28,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_vm_numvcpus]).to eq 8
       end
 
-      it "with only cpu_usage_rate_average usage value" do
+      it 'with only cpu_usage_rate_average usage value' do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource               => vm,
                                :cpu_usage_rate_average => 50.0,
@@ -39,7 +39,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_vm_numvcpus]).to eq 8
       end
 
-      it "with only cpu_usagemhz_rate_average usage value" do
+      it 'with only cpu_usagemhz_rate_average usage value' do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usagemhz_rate_average => 1_500.0,
@@ -50,7 +50,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_vm_numvcpus]).to eq 8
       end
 
-      it "without usage values" do
+      it 'without usage values' do
         m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
@@ -58,7 +58,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_vm_numvcpus]).to be_nil
       end
 
-      it "without hardware" do
+      it 'without hardware' do
         vm = FactoryGirl.create(:vm_vmware)
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
@@ -72,7 +72,7 @@ describe Metric::Processing do
       end
     end
 
-    context "on :derived_cpu_available" do
+    context 'on :derived_cpu_available' do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
           FactoryGirl.create(:hardware,
@@ -84,7 +84,7 @@ describe Metric::Processing do
                           )
       end
 
-      it "with all usage values" do
+      it 'with all usage values' do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usage_rate_average    => 50.0,
@@ -96,7 +96,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_cpu_available]).to eq 24_000.0
       end
 
-      it "with only cpu_usage_rate_average usage value" do
+      it 'with only cpu_usage_rate_average usage value' do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource               => vm,
                                :cpu_usage_rate_average => 50.0,
@@ -107,7 +107,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_cpu_available]).to eq 24_000
       end
 
-      it "with only cpu_usagemhz_rate_average usage value" do
+      it 'with only cpu_usagemhz_rate_average usage value' do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
                                :cpu_usagemhz_rate_average => 1_500.0,
@@ -118,7 +118,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_cpu_available]).to eq 24_000
       end
 
-      it "without usage values" do
+      it 'without usage values' do
         m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
@@ -126,7 +126,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_cpu_available]).to be_nil
       end
 
-      it "without hardware" do
+      it 'without hardware' do
         vm = FactoryGirl.create(:vm_vmware)
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                  => vm,
@@ -140,7 +140,7 @@ describe Metric::Processing do
       end
     end
 
-    context "on :derived_memory_available" do
+    context 'on :derived_memory_available' do
       let(:vm) do
         FactoryGirl.create(:vm_vmware, :hardware =>
           FactoryGirl.create(:hardware,
@@ -149,7 +149,7 @@ describe Metric::Processing do
                           )
       end
 
-      it "with usage values" do
+      it 'with usage values' do
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                   => vm,
                                :mem_usage_absolute_average => 50.0,
@@ -160,7 +160,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_memory_available]).to eq 4_096
       end
 
-      it "without usage values" do
+      it 'without usage values' do
         m = FactoryGirl.create(:metric_rollup_vm_hr, :resource => vm)
 
         derived_columns = described_class.process_derived_columns(vm, m.attributes.symbolize_keys)
@@ -168,7 +168,7 @@ describe Metric::Processing do
         expect(derived_columns[:derived_memory_available]).to be_nil
       end
 
-      it "without hardware" do
+      it 'without hardware' do
         vm = FactoryGirl.create(:vm_vmware)
         m = FactoryGirl.create(:metric_rollup_vm_hr,
                                :resource                   => vm,

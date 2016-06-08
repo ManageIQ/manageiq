@@ -35,4 +35,4 @@ class Charting
 end
 
 # load all plugins
-Dir.glob(File.join(File.dirname(__FILE__), "charting/*.rb")).each { |f| require_dependency f }
+Dir.glob(File.join(File.dirname(__FILE__), 'charting/*.rb')).each { |f| require_dependency f }

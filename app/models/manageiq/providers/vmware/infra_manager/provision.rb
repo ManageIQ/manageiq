@@ -11,8 +11,8 @@ class ManageIQ::Providers::Vmware::InfraManager::Provision < ::MiqProvision
   def destination_type
     case request_type
     when 'template', 'clone_to_vm' then "Vm"
-    when 'clone_to_template'       then "Template"
-    else                                ""
+    when 'clone_to_template'       then 'Template'
+    else                                ''
     end
   end
 end

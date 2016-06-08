@@ -3,14 +3,14 @@ module OpsController::Settings::Zones
 
   def zone_edit
     case params[:button]
-    when "cancel"
+    when 'cancel'
       @edit = nil
       @zone = Zone.find_by_id(session[:edit][:zone_id]) if session[:edit] && session[:edit][:zone_id]
-      add_flash((@zone && @zone.id) ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:table => "miq_zone"), :name => @zone.name} :
-          _("Add of new %{table} was cancelled by the user") % {:table => ui_lookup(:table => "miq_zone")})
+      add_flash((@zone && @zone.id) ? _('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:table => 'miq_zone'), :name => @zone.name} :
+          _('Add of new %{table} was cancelled by the user') % {:table => ui_lookup(:table => 'miq_zone')})
       get_node_info(x_node)
       replace_right_cell(@nodetype)
-    when "save", "add"
+    when 'save', 'add'
       assert_privileges("zone_#{params[:id] ? "edit" : "new"}")
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("zone_edit__#{id}", "replace_cell__explorer")
@@ -48,7 +48,7 @@ module OpsController::Settings::Zones
         end
         replace_right_cell("ze")
       end
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       zone_build_edit_screen
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
@@ -59,7 +59,7 @@ module OpsController::Settings::Zones
 
   # AJAX driven routine to delete a zone
   def zone_delete
-    assert_privileges("zone_delete")
+    assert_privileges('zone_delete')
     zone = Zone.find(params[:id])
     zonename = zone.name
     begin
@@ -70,9 +70,9 @@ module OpsController::Settings::Zones
       self.x_node = "z-#{zone.id}"
       get_node_info(x_node)
     else
-      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "Zone"), :name => zonename})
-      @sb[:active_tab] = "settings_list"
-      self.x_node = "xx-z"
+      add_flash(_('%{model} "%{name}": Delete successful') % {:model => ui_lookup(:model => 'Zone'), :name => zonename})
+      @sb[:active_tab] = 'settings_list'
+      self.x_node = 'xx-z'
       get_node_info(x_node)
       replace_right_cell(x_node, [:settings, :diagnostics])
     end
@@ -80,13 +80,13 @@ module OpsController::Settings::Zones
 
   # AJAX driven routine to check for changes in ANY field on the user form
   def zone_field_changed
-    return unless load_edit("zone_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("zone_edit__#{params[:id]}", 'replace_cell__explorer')
     zone_get_form_vars
     @changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue
       page.replace(@refresh_div, :partial => @refresh_partial,
-                                 :locals  => {:type => "zones", :action_url => 'zone_field_changed'}) if @refresh_div
+                                 :locals  => {:type => 'zones', :action_url => 'zone_field_changed'}) if @refresh_div
 
       # checking to see if password/verify pwd fields either both have value or are both blank
       password_fields_changed = !(@edit[:new][:password].blank? ^ @edit[:new][:verify].blank?)
@@ -123,11 +123,11 @@ module OpsController::Settings::Zones
     valid = true
     @edit[:errors] = []
     if !zone.authentication_password.blank? && zone.authentication_userid.blank?
-      @edit[:errors].push(_("Username must be entered if Password is entered"))
+      @edit[:errors].push(_('Username must be entered if Password is entered'))
       valid = false
     end
     if @edit[:new][:password] != @edit[:new][:verify]
-      @edit[:errors].push(_("Password and Verify Password fields do not match"))
+      @edit[:errors].push(_('Password and Verify Password fields do not match'))
       valid = false
     end
     valid

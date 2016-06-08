@@ -16,7 +16,7 @@ class FixEventClassForEvmAlertEvent < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Converting event class for EVMAlertEvent to MiqEvent") do
+    say_with_time('Converting event class for EVMAlertEvent to MiqEvent') do
       EventStream.where(:type => 'EmsEvent', :event_type => 'EVMAlertEvent').find_each do |event|
         attrs = {:type => 'MiqEvent'}
 
@@ -36,7 +36,7 @@ class FixEventClassForEvmAlertEvent < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Converting event class for EVMAlertEvent to EmsEvent") do
+    say_with_time('Converting event class for EVMAlertEvent to EmsEvent') do
       EventStream.where(:type => 'MiqEvent', :event_type => 'EVMAlertEvent').update_all(
         :type => 'EmsEvent', :target_id => nil, :target_type => nil
       )

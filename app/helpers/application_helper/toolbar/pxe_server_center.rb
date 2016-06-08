@@ -16,15 +16,15 @@ class ApplicationHelper::Toolbar::PxeServerCenter < ApplicationHelper::Toolbar::
           'pficon pficon-delete fa-lg',
           t = N_('Remove this PXE Server from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This PXE Server and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this PXE Server?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This PXE Server and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this PXE Server?')),
         separator,
         button(
           :pxe_server_refresh,
           'fa fa-refresh fa-lg',
           N_('Refresh Relationships for this PXE Server'),
           N_('Refresh Relationships'),
-          :confirm => N_("Refresh Relationships for this PXE Server?")),
+          :confirm => N_('Refresh Relationships for this PXE Server?')),
       ]
     ),
   ])

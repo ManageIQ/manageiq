@@ -15,7 +15,7 @@ module MiqServer::NtpManagement
   end
 
   def ntp_config
-    get_config("vmdb").config[:ntp]
+    get_config('vmdb').config[:ntp]
   end
 
   def server_ntp_settings_blank?(ntp)
@@ -29,7 +29,7 @@ module MiqServer::NtpManagement
     return unless MiqEnvironment::Command.is_appliance? # matches ntp_reload_queue's guard clause
 
     if @ntp_settings && @ntp_settings == ntp_settings
-      _log.info("Skipping reload of ntp settings since they are unchanged")
+      _log.info('Skipping reload of ntp settings since they are unchanged')
       return
     end
 
@@ -44,7 +44,7 @@ module MiqServer::NtpManagement
     end
 
     if ntp_settings[:server].nil?
-      _log.warn("No ntp server settings to synchronize")
+      _log.warn('No ntp server settings to synchronize')
       return
     end
     _log.info("Synchronizing ntp settings: #{ntp_settings.inspect}")

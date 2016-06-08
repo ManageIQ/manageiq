@@ -6,7 +6,7 @@
 def refresh_provider(service)
   provider = service.orchestration_manager
 
-  $evm.log("info", "Refreshing provider #{provider.name}")
+  $evm.log('info', "Refreshing provider #{provider.name}")
   $evm.set_state_var('provider_last_refresh', provider.last_refresh_date.to_i)
   provider.refresh
 end
@@ -17,7 +17,7 @@ def refresh_may_have_completed?(service)
 end
 
 def check_updated(service)
-  $evm.log("info", "Check orchestration deployed")
+  $evm.log('info', 'Check orchestration deployed')
   # check whether the stack update has completed
   status, reason = service.orchestration_stack_status
   case status.downcase
@@ -35,7 +35,7 @@ def check_updated(service)
     return
   end
 
-  $evm.log("info", "Stack update finished. Status: #{$evm.root['ae_result']}, reason: #{$evm.root['ae_reason']}")
+  $evm.log('info', "Stack update finished. Status: #{$evm.root['ae_result']}, reason: #{$evm.root['ae_reason']}")
 
   $evm.set_state_var('update_result', $evm.root['ae_result'])
   $evm.set_state_var('update_reason', $evm.root['ae_reason'])
@@ -47,7 +47,7 @@ def check_updated(service)
 end
 
 def check_refreshed(service)
-  $evm.log("info", "Check refresh status of stack (#{service.stack_name})")
+  $evm.log('info', "Check refresh status of stack (#{service.stack_name})")
 
   if refresh_may_have_completed?(service)
     $evm.root['ae_result'] = $evm.get_state_var('update_result')
@@ -58,7 +58,7 @@ def check_refreshed(service)
   end
 end
 
-task = $evm.root["service_reconfigure_task"]
+task = $evm.root['service_reconfigure_task']
 service = task.source
 if $evm.state_var_exist?('provider_last_refresh')
   check_refreshed(service)

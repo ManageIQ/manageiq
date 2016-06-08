@@ -17,8 +17,8 @@ class ReportController < ApplicationController
   layout 'application', :except => [:render_txt, :render_csv, :render_pdf]
 
   def index
-    @title = _("Reports")
-    redirect_to :action => "show"
+    @title = _('Reports')
+    redirect_to :action => 'show'
   end
 
   def export_field_changed
@@ -68,7 +68,7 @@ class ReportController < ApplicationController
     @sb[:flash_msg] = []
     if params.fetch_path(:upload, :file) && File.size(params[:upload][:file].tempfile) == 0
       redirect_to :action      => 'explorer',
-                  :flash_msg   => _("Import file cannot be empty"),
+                  :flash_msg   => _('Import file cannot be empty'),
                   :flash_error => true
       return
     end
@@ -82,29 +82,29 @@ class ReportController < ApplicationController
         redirect_to :action => 'explorer'
       else
         self.x_active_tree = :export_tree
-        self.x_node ||= "root"
+        self.x_node ||= 'root'
         @sb[:flash_msg] = mri
         redirect_to :action => 'explorer'
       end
     else
       redirect_to :action        => 'explorer',
-                  :flash_msg     => _("Use the Browse button to locate an Import file"),
+                  :flash_msg     => _('Use the Browse button to locate an Import file'),
                   :flash_warning => true
     end
   end
 
   # New tab was pressed
   def change_tab
-    case params[:tab].split("_")[0]
-    when "edit"
-      redirect_to(:action => "miq_report_edit", :tab => params[:tab])
-    when "schedules"
+    case params[:tab].split('_')[0]
+    when 'edit'
+      redirect_to(:action => 'miq_report_edit', :tab => params[:tab])
+    when 'schedules'
       redirect_to(:action => params[:tab])
-    when "saved_reports"
+    when 'saved_reports'
       redirect_to(:action => params[:tab])
-    when "menueditor"
+    when 'menueditor'
       # redirect_to(:controller=>"configuration", :action=>"change_tab", :tab=>6)
-      redirect_to(:action => "menu_edit")
+      redirect_to(:action => 'menu_edit')
     else
       redirect_to(:action => params[:tab], :id => params[:id])
     end
@@ -112,7 +112,7 @@ class ReportController < ApplicationController
 
   def explorer
     @explorer = true
-    @lastaction      = "explorer"
+    @lastaction      = 'explorer'
     @ght_type        = nil
     @report          = nil
     @edit            = nil
@@ -147,17 +147,17 @@ class ReportController < ApplicationController
 
     @widget_nodes ||= []
     @sb[:node_clicked] = false
-    x_node_set("root", :roles_tree) if params[:load_edit_err]
+    x_node_set('root', :roles_tree) if params[:load_edit_err]
     @flash_array = @sb[:flash_msg] unless @sb[:flash_msg].blank?
     get_node_info
-    @right_cell_text ||= _("All %{reports}") % {:reports => ui_lookup(:models => "MiqReport")}
+    @right_cell_text ||= _('All %{reports}') % {:reports => ui_lookup(:models => 'MiqReport')}
     @sb[:rep_tree_build_time] = Time.now.utc
-    @sb[:active_tab] = "report_info"
-    @right_cell_text.gsub!(/'/, "&apos;")      # Need to escape single quote in title to load in right cell
+    @sb[:active_tab] = 'report_info'
+    @right_cell_text.gsub!(/'/, '&apos;')      # Need to escape single quote in title to load in right cell
     @x_edit_buttons_locals = set_form_locals if @in_a_form
     # show form buttons after upload is pressed
     @collapse_c_cell = !@in_a_form && !@pages && !saved_report_paging?
-    render :layout => "application"
+    render :layout => 'application'
   end
 
   def accordion_select
@@ -167,11 +167,11 @@ class ReportController < ApplicationController
     if params[:id]
       self.x_active_accord = params[:id].sub(/_accord$/, '')
       self.x_active_tree   = "#{self.x_active_accord}_tree"
-      x_node_set("root", :roles_tree) unless @changed   # reset menu editor to show All Roles if nothing has been changed
+      x_node_set('root', :roles_tree) unless @changed   # reset menu editor to show All Roles if nothing has been changed
 
       trees_to_replace = []
-      trees_to_replace << :widgets if params[:id] == "widgets"
-      trees_to_replace << :reports if params[:id] == "reports"
+      trees_to_replace << :widgets if params[:id] == 'widgets'
+      trees_to_replace << :reports if params[:id] == 'reports'
 
       replace_right_cell(:replace_trees => trees_to_replace)
     else
@@ -193,8 +193,8 @@ class ReportController < ApplicationController
     self.x_active_tree   = "#{params[:accord]}_tree" if params[:accord]
     self.x_active_tree   = params[:tree]             if params[:tree]
     self.x_node = params[:id]
-    @sb[:active_tab] = "report_info" if x_active_tree == :reports_tree && params[:action] != "reload"
-    if params[:action] == "reload" && @sb[:active_tab] == "saved_reports"
+    @sb[:active_tab] = 'report_info' if x_active_tree == :reports_tree && params[:action] != 'reload'
+    if params[:action] == 'reload' && @sb[:active_tab] == 'saved_reports'
       replace_right_cell(:replace_trees => [:reports, :savedreports])
     else
       replace_right_cell
@@ -211,10 +211,10 @@ class ReportController < ApplicationController
     if params[:widgets].present?
       widgets = MiqWidget.where(:id => params[:widgets])
       widget_yaml = MiqWidget.export_to_yaml(widgets, MiqWidget)
-      timestamp = format_timezone(Time.current, Time.zone, "export_filename")
+      timestamp = format_timezone(Time.current, Time.zone, 'export_filename')
       send_data(widget_yaml, :filename => "widget_export_#{timestamp}.yml")
     else
-      add_flash(_("At least 1 item must be selected for export"), :error)
+      add_flash(_('At least 1 item must be selected for export'), :error)
       @sb[:flash_msg] = @flash_array
       redirect_to :action => :explorer
     end
@@ -224,20 +224,20 @@ class ReportController < ApplicationController
     upload_file = params.fetch_path(:upload, :file)
 
     if upload_file.blank?
-      add_flash("Use the browse button to locate an import file", :warning)
+      add_flash('Use the browse button to locate an import file', :warning)
     else
       begin
         @in_a_form = true
         import_file = widget_import_service.store_for_import(upload_file.read)
         @import_file_upload_id = import_file.id
         @import = import_file.widget_list
-        add_flash(_("Import file was uploaded successfully"), :success)
+        add_flash(_('Import file was uploaded successfully'), :success)
       rescue WidgetImportValidator::NonYamlError
         @in_a_form = false
-        add_flash(_("Error: the file uploaded is not of the supported format"), :error)
+        add_flash(_('Error: the file uploaded is not of the supported format'), :error)
       rescue WidgetImportValidator::InvalidWidgetYamlError
         @in_a_form = false
-        add_flash(_("Error: the file uploaded contains no widgets"), :error)
+        add_flash(_('Error: the file uploaded contains no widgets'), :error)
       end
     end
 
@@ -250,13 +250,13 @@ class ReportController < ApplicationController
       if import_file_upload
         $log.info("[#{session[:userid]}] initiated import")
         widget_import_service.import_widgets(import_file_upload, params[:widgets_to_import])
-        add_flash(_("Widgets imported successfully"), :success)
+        add_flash(_('Widgets imported successfully'), :success)
       else
-        add_flash(_("Error: Widget import file upload expired"), :error)
+        add_flash(_('Error: Widget import file upload expired'), :error)
       end
     else
       widget_import_service.cancel_import(params[:import_file_upload_id])
-      add_flash(_("Widget import cancelled"), :info)
+      add_flash(_('Widget import cancelled'), :info)
     end
 
     replace_right_cell :partial => 'export_widgets'
@@ -273,36 +273,36 @@ class ReportController < ApplicationController
   end
 
   def features
-    [{:role     => "miq_report_saved_reports",
+    [{:role     => 'miq_report_saved_reports',
       :role_any => true,
       :name     => :savedreports,
-      :title    => _("Saved Reports")},
+      :title    => _('Saved Reports')},
 
-     {:role     => "miq_report_reports",
+     {:role     => 'miq_report_reports',
       :role_any => true,
       :name     => :reports,
-      :title    => _("Reports")},
+      :title    => _('Reports')},
 
-     {:role     => "miq_report_schedules",
+     {:role     => 'miq_report_schedules',
       :role_any => true,
       :name     => :schedules,
-      :title    => _("Schedules")},
+      :title    => _('Schedules')},
 
-     {:role  => "miq_report_dashboard_editor",
+     {:role  => 'miq_report_dashboard_editor',
       :name  => :db,
-      :title => _("Dashboards")},
+      :title => _('Dashboards')},
 
-     {:role  => "miq_report_widget_editor",
+     {:role  => 'miq_report_widget_editor',
       :name  => :widgets,
-      :title => _("Dashboard Widgets")},
+      :title => _('Dashboard Widgets')},
 
-     {:role  => "miq_report_menu_editor",
+     {:role  => 'miq_report_menu_editor',
       :name  => :roles,
-      :title => _("Edit Report Menus")},
+      :title => _('Edit Report Menus')},
 
-     {:role  => "miq_report_export",
+     {:role  => 'miq_report_export',
       :name  => :export,
-      :title => _("Import/Export")},
+      :title => _('Import/Export')},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
@@ -328,7 +328,7 @@ class ReportController < ApplicationController
   def get_subfilter_reports(reps)
     reports = MiqReport.where(:name => reps)
     reports.each do |report|
-      next if x_active_tree == :widgets_tree && report.db == "VimPerformanceTrend"
+      next if x_active_tree == :widgets_tree && report.db == 'VimPerformanceTrend'
       temp_arr = []
       temp_arr.push(report.name)
       temp_arr.push(report.id)
@@ -345,12 +345,12 @@ class ReportController < ApplicationController
     @report = rr.report_results                 # Grab the blobbed report, including table
     @zgraph = nil
     @html   = nil
-    if ["tabular", "hybrid"].include?(params[:type])
+    if ['tabular', 'hybrid'].include?(params[:type])
       @html = report_build_html_table(@report,
                                       rr.html_rows(:page     => @sb[:pages][:current],
                                                    :per_page => @sb[:pages][:perpage]).join)
     end
-    if ["graph", "hybrid"].include?(params[:type])
+    if ['graph', 'hybrid'].include?(params[:type])
       @zgraph = true      # Show the zgraph in the report
     end
     @ght_type = params[:type]
@@ -358,7 +358,7 @@ class ReportController < ApplicationController
   end
 
   def rebuild_trees
-    rep = MiqReportResult.with_current_user_groups_and_report.maximum("created_on")
+    rep = MiqReportResult.with_current_user_groups_and_report.maximum('created_on')
     return false unless rep
     build_trees = rep > @sb[:rep_tree_build_time]
     # save last tree build time to decide if tree needs to be refreshed automatically
@@ -377,21 +377,21 @@ class ReportController < ApplicationController
       db_get_node_info
     when :export_tree
       @export = true
-      get_export_reports unless x_node == "root"
-      @right_cell_text ||= _("Import / Export")
-      @help_topic        = request.parameters["controller"] + "-import_export"
+      get_export_reports unless x_node == 'root'
+      @right_cell_text ||= _('Import / Export')
+      @help_topic        = request.parameters['controller'] + '-import_export'
     when :roles_tree
       menu_get_all
       @changed = session[:changed] = false
-      @help_topic = request.parameters["controller"] + "-menus_editor"
+      @help_topic = request.parameters['controller'] + '-menus_editor'
     when :reports_tree
-      @right_cell_text ||= _("All Reports")
+      @right_cell_text ||= _('All Reports')
     when :savedreports_tree
       get_all_saved_reports
     when :schedules_tree
       @schedule = nil
       schedule_get_all
-      @help_topic = request.parameters["controller"] + "-schedules_list"
+      @help_topic = request.parameters['controller'] + '-schedules_list'
     when :widgets_tree
       widget_get_node_info
     end
@@ -424,22 +424,22 @@ class ReportController < ApplicationController
     nodes = x_node.split('-')
     show_saved_report
     @record = MiqReportResult.find_by_id(from_cid(nodes.last))
-    @right_cell_text = _("%{model} \"%{name}\"") % {
+    @right_cell_text = _('%{model} "%{name}"') % {
       :name  => "#{@record.name} - #{format_timezone(@record.created_on, Time.zone, "gt")}",
-      :model => "Saved Report"
+      :model => 'Saved Report'
     }
-    @right_cell_div  = "savedreports_list"
+    @right_cell_div  = 'savedreports_list'
   end
 
   def export_get_node_info
-    @right_cell_text = _("Import / Export")
-    if x_node.split('-').last == "exportcustomreports"
+    @right_cell_text = _('Import / Export')
+    if x_node.split('-').last == 'exportcustomreports'
       get_export_reports
-      @right_cell_div = "export_custom_reports"
+      @right_cell_div = 'export_custom_reports'
     else
       @in_a_form = true
       @widget_exports = MiqWidget.all.reject(&:read_only).collect { |widget| [widget.title, widget.id] }
-      @right_cell_div = "export_widgets"
+      @right_cell_div = 'export_widgets'
     end
   end
 
@@ -448,15 +448,15 @@ class ReportController < ApplicationController
     get_all_reps(nodes[1])
     miq_report = MiqReport.find(@sb[:miq_report_id])
     @sb[:sel_saved_rep_id] = nodes.last
-    @right_cell_div        = "savedreports_list"
-    @right_cell_text = _("%{model} \"%{name}\"") % {:name  => miq_report.name, :model => "Saved Reports"}
+    @right_cell_div        = 'savedreports_list'
+    @right_cell_text = _('%{model} "%{name}"') % {:name  => miq_report.name, :model => 'Saved Reports'}
   end
 
   def reports_get_node_info
     nodes = x_node.split('-')
 
     if nodes.length == 2
-      @right_cell_text ||= _("%{typ} %{model}") % {:typ   => @sb[:rpt_menu][nodes[1].to_i][0], :model => ui_lookup(:models => "MiqReport")}
+      @right_cell_text ||= _('%{typ} %{model}') % {:typ   => @sb[:rpt_menu][nodes[1].to_i][0], :model => ui_lookup(:models => 'MiqReport')}
 
     elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].present?
       @sb[:rep_details] = {}
@@ -465,27 +465,27 @@ class ReportController < ApplicationController
         r = MiqReport.find_by_name(rep)
         if r
           details                    = {}
-          details["display_filters"] = r.display_filter ? true : false
-          details["filters"]         = r.conditions ? true : false
-          details["charts"]          = r.graph ? true : false
-          details["sortby"]          = r.sortby ? true : false
-          details["id"]              = r.id
-          details["user"]            = r.user ? r.user.userid : ""
-          details["group"]           = r.miq_group ? r.miq_group.description : ""
+          details['display_filters'] = r.display_filter ? true : false
+          details['filters']         = r.conditions ? true : false
+          details['charts']          = r.graph ? true : false
+          details['sortby']          = r.sortby ? true : false
+          details['id']              = r.id
+          details['user']            = r.user ? r.user.userid : ''
+          details['group']           = r.miq_group ? r.miq_group.description : ''
           @sb[:rep_details][r.name]  = details
         end
       end
 
-      @right_cell_text ||= _("%{typ} %{model}") % {:typ   => @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][0], :model => ui_lookup(:models => "MiqReport")}
+      @right_cell_text ||= _('%{typ} %{model}') % {:typ   => @sb[:rpt_menu][nodes[1].to_i][1][nodes[3].to_i][0], :model => ui_lookup(:models => 'MiqReport')}
 
     elsif nodes.length == 4 && @sb[:rpt_menu][nodes[1].to_i].nil?
-      x_node_set("root", x_active_tree)
+      x_node_set('root', x_active_tree)
 
     elsif nodes.length == 5
       @sb[:selected_rep_id] = from_cid(nodes[4])
-      if role_allows(:feature => "miq_report_widget_editor")
+      if role_allows(:feature => 'miq_report_widget_editor')
         # all widgets for this report
-        get_all_widgets("report", from_cid(nodes[4]))
+        get_all_widgets('report', from_cid(nodes[4]))
       end
       get_all_reps(nodes[4])
 
@@ -495,8 +495,8 @@ class ReportController < ApplicationController
       show_saved
     end
 
-    @right_cell_div ||= "report_list"
-    @right_cell_text ||= _("All %{models}") % {:models => ui_lookup(:models => "MiqReport")}
+    @right_cell_div ||= 'report_list'
+    @right_cell_text ||= _('All %{models}') % {:models => ui_lookup(:models => 'MiqReport')}
   end
 
   # Get all info for the node about to be displayed
@@ -509,23 +509,23 @@ class ReportController < ApplicationController
                   else
                     treenodeid.split('-')[0]
                   end
-      self.x_active_tree = :savedreports_tree if @nodetype == "saved"
-      nodeid            = treenodeid.split("-")[1] if treenodeid.split("-")[1]
+      self.x_active_tree = :savedreports_tree if @nodetype == 'saved'
+      nodeid            = treenodeid.split('-')[1] if treenodeid.split('-')[1]
     else
-      @nodetype, nodeid = treenodeid.split("-")
+      @nodetype, nodeid = treenodeid.split('-')
     end
     @sb[:menu_buttons] = false
 
     case @nodetype
-    when "root"
+    when 'root'
       determine_root_node_info
-    when "g"
+    when 'g'
       determine_g_node_info(nodeid)
-    when "xx"
+    when 'xx'
       determine_xx_node_info
-    when "rr"
+    when 'rr'
       determine_rr_node_info
-    when "msc"
+    when 'msc'
       get_schedule(nodeid) unless nodeid.blank?
       @sb[:selected_sched_id] = nodeid unless nodeid.blank?
     end
@@ -539,7 +539,7 @@ class ReportController < ApplicationController
     @export_reports = {}
     user = current_user
     MiqReport.all.each do |rep|
-      if rep.rpt_type == "Custom" && (user.admin_user? || (rep.miq_group && rep.miq_group.id == user.current_group.id))
+      if rep.rpt_type == 'Custom' && (user.admin_user? || (rep.miq_group && rep.miq_group.id == user.current_group.id))
         @export_reports[rep.name] = rep.id
       end
     end
@@ -548,35 +548,35 @@ class ReportController < ApplicationController
   def set_form_locals
     locals = {}
     if x_active_tree == :export_tree
-      if x_node == "xx-exportwidgets"
+      if x_node == 'xx-exportwidgets'
         action_url = nil
         record_id = nil
       else
-        action_url = "download_report"
+        action_url = 'download_report'
         locals[:no_reset] = true
         locals[:no_cancel] = true
         locals[:multi_record] = true
         locals[:export_button] = true
       end
-    elsif x_active_tree == :schedules_tree || params[:pressed] == "miq_report_schedule_add"
-      action_url = "schedule_edit"
+    elsif x_active_tree == :schedules_tree || params[:pressed] == 'miq_report_schedule_add'
+      action_url = 'schedule_edit'
       record_id = @edit[:sched_id] ? @edit[:sched_id] : nil
     elsif x_active_tree == :widgets_tree
-      action_url = "widget_edit"
+      action_url = 'widget_edit'
       record_id = @edit[:widget_id] ? @edit[:widget_id] : nil
     elsif x_active_tree == :db_tree
       if @edit[:new][:dashboard_order]
-        action_url = "db_seq_edit"
+        action_url = 'db_seq_edit'
         locals[:multi_record] = true
       else
-        action_url = "db_edit"
+        action_url = 'db_edit'
         record_id = @edit[:db_id] ? @edit[:db_id] : nil
       end
     elsif x_active_tree == :reports_tree
-      action_url = "miq_report_edit"
+      action_url = 'miq_report_edit'
       record_id = @edit[:rpt_id] ? @edit[:rpt_id] : nil
     elsif x_active_tree == :roles_tree
-      action_url = "menu_update"
+      action_url = 'menu_update'
       locals[:default_button] = true
       record_id = @edit[:user_group]
     end
@@ -588,21 +588,21 @@ class ReportController < ApplicationController
   def set_partial_name
     case x_active_tree
     when :db_tree
-      return "db_list"
+      return 'db_list'
     when :export_tree
-      return "export"
+      return 'export'
     when :reports_tree
-      return params[:pressed] == "miq_report_schedule_add" ? "schedule_list" : "report_list"
+      return params[:pressed] == 'miq_report_schedule_add' ? 'schedule_list' : 'report_list'
     when :roles_tree
-      return "role_list"
+      return 'role_list'
     when :savedreports_tree
-      return "savedreports_list"
+      return 'savedreports_list'
     when :schedules_tree
-      return "schedule_list"
+      return 'schedule_list'
     when :widgets_tree
-      return "widget_list"
+      return 'widget_list'
     else
-      return "role_list"
+      return 'role_list'
     end
   end
 
@@ -648,8 +648,8 @@ class ReportController < ApplicationController
     # nodetype is special for menu editor, so set it to :menu_edit_action if passed in, else use x_node prefix
     nodetype = options[:menu_edit_action] ? options[:menu_edit_action] : x_node.split('-').first
 
-    @sb[:active_tab] = params[:tab_id] ? params[:tab_id] : "report_info" if x_active_tree == :reports_tree &&
-                                                                            params[:action] != "reload" && !["miq_report_run", "saved_report_delete"].include?(params[:pressed]) # do not reset if reload saved reports buttons is pressed
+    @sb[:active_tab] = params[:tab_id] ? params[:tab_id] : 'report_info' if x_active_tree == :reports_tree &&
+                                                                            params[:action] != 'reload' && !['miq_report_run', 'saved_report_delete'].include?(params[:pressed]) # do not reset if reload saved reports buttons is pressed
 
     trees                = {}
     rebuild              = @in_a_form ? false : rebuild_trees
@@ -665,7 +665,7 @@ class ReportController < ApplicationController
     # Clicked on right cell record, open the tree enough to show the node, if not already showing
     # Open the parent nodes of selected record, if not open
     # Showing a report
-    if (params[:action] == "get_report" && x_active_tree == :savedreports_tree && @record) ||
+    if (params[:action] == 'get_report' && x_active_tree == :savedreports_tree && @record) ||
        params[:action] == 'x_show'
       presenter[:add_nodes] = open_parent_nodes      # Open the parent nodes of selected record, if not open
     end
@@ -676,8 +676,8 @@ class ReportController < ApplicationController
     partial = options[:partial] ? options[:partial] : set_partial_name
     unless @in_a_form
       c_tb = build_toolbar(center_toolbar_filename)
-      h_tb = build_toolbar("x_history_tb")
-      v_tb = build_toolbar("report_view_tb") if @report && [:reports_tree, :savedreports_tree].include?(x_active_tree)
+      h_tb = build_toolbar('x_history_tb')
+      v_tb = build_toolbar('report_view_tb') if @report && [:reports_tree, :savedreports_tree].include?(x_active_tree)
     end
 
     replace_trees_by_presenter(presenter, trees)
@@ -691,32 +691,32 @@ class ReportController < ApplicationController
       when :db_tree
         if @in_a_form
           if @edit[:new][:dashboard_order]
-            @right_cell_text = _("Editing Dashboard sequence for \"%{name}\"") % {:name => @sb[:group_desc]}
+            @right_cell_text = _('Editing Dashboard sequence for "%{name}"') % {:name => @sb[:group_desc]}
           else
             @right_cell_text = @db.id ?
-                _("Editing Dashboard \"%{name}\"") % {:name => @db.name} : _("Adding a new dashboard")
+                _('Editing Dashboard "%{name}"') % {:name => @db.name} : _('Adding a new dashboard')
           end
           # URL to be used in miqDropComplete method
-          presenter[:miq_widget_dd_url] = "report/db_widget_dd_done"
+          presenter[:miq_widget_dd_url] = 'report/db_widget_dd_done'
           presenter[:init_dashboard] = true
         end
       when :export_tree
-        @right_cell_text = _("Import / Export")
+        @right_cell_text = _('Import / Export')
       when :reports_tree
-        if params[:pressed] == "miq_report_schedule_add"
+        if params[:pressed] == 'miq_report_schedule_add'
           if @in_a_form
             presenter[:build_calendar] = true
             @right_cell_text = @schedule.id ?
-                _("Editing %{model} \"%{name}\"") % {:name => @schedule.name, :model => ui_lookup(:model => "MiqSchedule")} :
-                _("Adding a new %{model}") % {:model => ui_lookup(:model => "MiqSchedule")}
+                _('Editing %{model} "%{name}"') % {:name => @schedule.name, :model => ui_lookup(:model => 'MiqSchedule')} :
+                _('Adding a new %{model}') % {:model => ui_lookup(:model => 'MiqSchedule')}
           end
         else
           if @in_a_form
             @right_cell_text = if @rpt.id
-                                 _("Editing %{model} \"%{name}\"") % {:name  => @rpt.name,
-                                                                      :model => ui_lookup(:model => "MiqReport")}
+                                 _('Editing %{model} "%{name}"') % {:name  => @rpt.name,
+                                                                      :model => ui_lookup(:model => 'MiqReport')}
                                else
-                                 _("Adding a new %{model}") % {:model => ui_lookup(:model => "MiqReport")}
+                                 _('Adding a new %{model}') % {:model => ui_lookup(:model => 'MiqReport')}
                                end
           end
         end
@@ -724,8 +724,8 @@ class ReportController < ApplicationController
         if @in_a_form
           presenter[:build_calendar] = true
           @right_cell_text = @schedule.id ?
-              _("Editing %{model} \"%{name}\"") % {:name => @schedule.name, :model => ui_lookup(:model => 'MiqSchedule')} :
-              _("Adding a new %{model}") % {:model => ui_lookup(:model => 'MiqSchedule')}
+              _('Editing %{model} "%{name}"') % {:name => @schedule.name, :model => ui_lookup(:model => 'MiqSchedule')} :
+              _('Adding a new %{model}') % {:model => ui_lookup(:model => 'MiqSchedule')}
         end
       when :widgets_tree
         if @in_a_form
@@ -739,37 +739,37 @@ class ReportController < ApplicationController
             presenter[:init_dashboard] = true
           end
           @right_cell_text = @widget.id ?
-              _("Editing %{model} \"%{name}\"") % {:name => @widget.name, :model => ui_lookup(:model => 'MiqWidget')} :
-              _("Adding a new %{model}") % {:model => ui_lookup(:model => 'MiqWidget')}
+              _('Editing %{model} "%{name}"') % {:name => @widget.name, :model => ui_lookup(:model => 'MiqWidget')} :
+              _('Adding a new %{model}') % {:model => ui_lookup(:model => 'MiqWidget')}
         end
       end
-    elsif nodetype == "g"
+    elsif nodetype == 'g'
       # group in menu editor is selected
       if @sb[:node_clicked]
         # folder selected to edit in menu tree
         val = session[:node_selected].split('__')[0]
-        if val == "b"
-          skin_class        = "menueditor"
-          fieldset_title    = _("Manage Accordions")
-          img_title_top     = _("Move selected Accordion to top")
-          img_title_up      = _("Move selected Accordion up")
-          img_title_down    = _("Move selected Accordion down")
-          img_title_add     = _("Add folder to selected Accordion")
-          img_title_delete  = _("Delete selected Accordion and its contents")
-          img_title_bottom  = _("Move selected Accordion to bottom")
-          img_title_commit  = _("Commit Accordion management changes")
-          img_title_discard = _("Discard Accordion management changes")
+        if val == 'b'
+          skin_class        = 'menueditor'
+          fieldset_title    = _('Manage Accordions')
+          img_title_top     = _('Move selected Accordion to top')
+          img_title_up      = _('Move selected Accordion up')
+          img_title_down    = _('Move selected Accordion down')
+          img_title_add     = _('Add folder to selected Accordion')
+          img_title_delete  = _('Delete selected Accordion and its contents')
+          img_title_bottom  = _('Move selected Accordion to bottom')
+          img_title_commit  = _('Commit Accordion management changes')
+          img_title_discard = _('Discard Accordion management changes')
         else
-          skin_class        = "menueditor2"
-          fieldset_title    = _("Manage Folders")
-          img_title_top     = _("Move selected folder to top")
-          img_title_up      = _("Move selected folder up")
-          img_title_down    = _("Move selected folder down")
-          img_title_add     = _("Add subfolder to selected folder")
-          img_title_delete  = _("Delete selected folder and its contents")
-          img_title_bottom  = _("Move selected folder to bottom")
-          img_title_commit  = _("Commit folder management changes")
-          img_title_discard = _("Discard folder management changes")
+          skin_class        = 'menueditor2'
+          fieldset_title    = _('Manage Folders')
+          img_title_top     = _('Move selected folder to top')
+          img_title_up      = _('Move selected folder up')
+          img_title_down    = _('Move selected folder down')
+          img_title_add     = _('Add subfolder to selected folder')
+          img_title_delete  = _('Delete selected folder and its contents')
+          img_title_bottom  = _('Move selected folder to bottom')
+          img_title_commit  = _('Commit folder management changes')
+          img_title_discard = _('Discard folder management changes')
         end
         presenter.update(:main_div, r[:partial => partial])
         presenter[:element_updates][:menu1_legend] = {:legend => fieldset_title}
@@ -784,7 +784,7 @@ class ReportController < ApplicationController
         presenter[:element_updates][:folder_discard]  = {:title => img_title_discard}
       else
         presenter.update(:main_div, r[:partial => partial])
-        presenter[:clear_tree_cookies] = "edit_treeOpenStatex"
+        presenter[:clear_tree_cookies] = 'edit_treeOpenStatex'
         unless @sb[:role_list_flag]
           # we dont need to show the overlay on first time load
           @sb[:role_list_flag] = true
@@ -792,31 +792,31 @@ class ReportController < ApplicationController
         end
         presenter.hide(:menu_div1, :menu_div2).show(:menu_div3)
       end
-    elsif nodetype == "menu_default" || nodetype == "menu_reset"
+    elsif nodetype == 'menu_default' || nodetype == 'menu_reset'
       presenter.update(:main_div, r[:partial => partial])
-      presenter.replace(:menu_div1, r[:partial => "menu_form1", :locals => {:folders => @grid_folders}])
+      presenter.replace(:menu_div1, r[:partial => 'menu_form1', :locals => {:folders => @grid_folders}])
       presenter.hide(:menu_div1, :menu_div2).show(:menu_div3).hide(:treeStatus)
       # set changed to true if menu has been set to default
       session[:changed] = @sb[:menu_default] ? true : (@edit[:new] != @edit[:current])
-    elsif nodetype == "menu_edit_reports"
-      presenter.replace(:flash_msg_div_menu_list, r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}]) if @flash_array
+    elsif nodetype == 'menu_edit_reports'
+      presenter.replace(:flash_msg_div_menu_list, r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}]) if @flash_array
       presenter.show(:menu_div1, :treeStatus)
-      presenter.replace(:menu_div2, r[:partial => "menu_form2"])
+      presenter.replace(:menu_div2, r[:partial => 'menu_form2'])
       presenter.hide(:menu_div1, :menu_div3).show(:menu_div2)
-    elsif nodetype == "menu_commit_reports"
-      presenter.replace(:flash_msg_div_menu_list, r[:partial => "layouts/flash_msg", :locals => {:div_num => "_menu_list"}]) if @flash_array
+    elsif nodetype == 'menu_commit_reports'
+      presenter.replace(:flash_msg_div_menu_list, r[:partial => 'layouts/flash_msg', :locals => {:div_num => '_menu_list'}]) if @flash_array
       if @refresh_div
         presenter.hide(:flash_msg_div_menu_list)
-        presenter.replace("#{@refresh_div}", r[:partial => @refresh_partial, :locals => {:action_url => "menu_update"}])
+        presenter.replace("#{@refresh_div}", r[:partial => @refresh_partial, :locals => {:action_url => 'menu_update'}])
         presenter.hide(:menu_div1)
-        if params[:pressed] == "commit"
+        if params[:pressed] == 'commit'
           presenter.show(:menu_div3).hide(:menu_div2)
         else
           presenter.hide(:menu_div3).show(:menu_div2)
         end
       elsif !@flash_array
-        presenter.replace(:menu_roles_div, r[:partial => "role_list"])
-        if params[:pressed] == "commit"
+        presenter.replace(:menu_roles_div, r[:partial => 'role_list'])
+        if params[:pressed] == 'commit'
           presenter.hide(:flash_msg_div_menu_list).show(:menu_div3).hide(:menu_div1, :menu_div2)
         else
           presenter.hide(:menu_div1, :menu_div3).show(:menu_div2)
@@ -835,7 +835,7 @@ class ReportController < ApplicationController
       if @sb[:tree_err]
         presenter.show(:menu_div1).hide(:menu_div2, :menu_div3)
       else
-        presenter.replace(:menu_roles_div, r[:partial => "role_list"])
+        presenter.replace(:menu_roles_div, r[:partial => 'role_list'])
         presenter.hide(:menu_div1, :menu_div2).show(:menu_div3).hide(:treeStatus)
       end
       @sb[:tree_err] = false
@@ -845,8 +845,8 @@ class ReportController < ApplicationController
       presenter.hide(:menu_div1, :menu_div2).show(:menu_div3).hide(:treeStatus)
     end
 
-    if x_active_tree == :roles_tree && x_node != "root"
-      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => session[:role_choice], :model => ui_lookup(:model => "MiqGroup")}
+    if x_active_tree == :roles_tree && x_node != 'root'
+      @right_cell_text = _('Editing %{model} "%{name}"') % {:name => session[:role_choice], :model => ui_lookup(:model => 'MiqGroup')}
     end
     presenter[:right_cell_text] = @right_cell_text
 
@@ -899,7 +899,7 @@ class ReportController < ApplicationController
     @report_result_id = session[:report_result_id]
     @menu             = session[:report_menu]
     @folders          = session[:report_folders]
-    @ght_type         = session[:ght_type] || "tabular"
+    @ght_type         = session[:ght_type] || 'tabular'
     @report_groups    = session[:report_groups]
     @edit             = session[:edit] unless session[:edit].nil?
     @catinfo          = session[:vm_catinfo]

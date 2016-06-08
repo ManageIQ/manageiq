@@ -1,7 +1,7 @@
 describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   before do
     unless provider.api_cached?
-      VCR.use_cassette("ems_refresh/refreshers/foreman_refresher_api_doc") do
+      VCR.use_cassette('ems_refresh/refreshers/foreman_refresher_api_doc') do
         provider.ensure_api_cached
       end
     end
@@ -12,7 +12,7 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     FactoryGirl.create(:provider_foreman,
                        :zone       => zone,
-                       :url        => "example.com",
+                       :url        => 'example.com',
                        :verify_ssl => false,
                       )
   end
@@ -35,11 +35,11 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   let(:my_env)                { environments.reverse.find  { |a| a.name = 'production' } }
   let(:my_arch)               { architectures.reverse.find { |a| a.name = 'x86_64' } }
 
-  it ".ems_type" do
+  it '.ems_type' do
     expect(described_class.ems_type).to eq(:foreman_configuration)
   end
 
-  it "will perform a full refresh on api v2" do
+  it 'will perform a full refresh on api v2' do
     # Stub the queueing of the refresh so that when the manager
     #  queues up an alternate refresh we will execute it immediately.
     allow(EmsRefresh).to receive(:queue_refresh) { |*args| EmsRefresh.refresh(*args) }
@@ -80,27 +80,27 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   def assert_media
     medium = mine(media)
     expect(medium).to have_attributes(
-      :name        => "ProviderRefreshSpec-Media",
-      :type        => "CustomizationScriptMedium",
-      :manager_ref => "8"
+      :name        => 'ProviderRefreshSpec-Media',
+      :type        => 'CustomizationScriptMedium',
+      :manager_ref => '8'
     )
   end
 
   def assert_ptables
     ptable = mine(ptables)
     expect(ptable).to have_attributes(
-      :name        => "ProviderRefreshSpec-PartitionTable",
-      :type        => "CustomizationScriptPtable",
-      :manager_ref => "12"
+      :name        => 'ProviderRefreshSpec-PartitionTable',
+      :type        => 'CustomizationScriptPtable',
+      :manager_ref => '12'
     )
   end
 
   def assert_osf
     osf = mine(osfs)
     expect(osf).to have_attributes(
-      :name        => "ProviderRefreshSpec-OperatingSystem 1.2",
-      :description => "OS 1.2",
-      :manager_ref => "4"
+      :name        => 'ProviderRefreshSpec-OperatingSystem 1.2',
+      :description => 'OS 1.2',
+      :manager_ref => '4'
     )
     expect(osf.customization_scripts).to            match_array [mine(ptables), mine(media)]
     expect(osf.customization_script_ptables).to     match_array [mine(ptables)]
@@ -131,10 +131,10 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
     child  = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-ChildHostGroup').first
     parent = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     expect(child).to have_attributes(
-      :type                               => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile",
-      :name                               => "ProviderRefreshSpec-ChildHostGroup",
-      :description                        => "ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup",
-      :manager_ref                        => "14",
+      :type                               => 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile',
+      :name                               => 'ProviderRefreshSpec-ChildHostGroup',
+      :description                        => 'ProviderRefreshSpec-HostGroup/ProviderRefreshSpec-ChildHostGroup',
+      :manager_ref                        => '14',
       :parent                             => parent,
       :configuration_architecture         => my_arch,
       :configuration_environment          => my_env,
@@ -156,10 +156,10 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
   def assert_configuration_profile_parent
     parent = configuration_manager.configuration_profiles.where(:name => 'ProviderRefreshSpec-HostGroup').first
     expect(parent).to have_attributes(
-      :type                               => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile",
-      :name                               => "ProviderRefreshSpec-HostGroup",
-      :description                        => "ProviderRefreshSpec-HostGroup",
-      :manager_ref                        => "13",
+      :type                               => 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile',
+      :name                               => 'ProviderRefreshSpec-HostGroup',
+      :description                        => 'ProviderRefreshSpec-HostGroup',
+      :manager_ref                        => '13',
       :parent                             => nil,
       :configuration_architecture         => my_arch,
       :configuration_environment          => my_env,
@@ -183,11 +183,11 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager::Refresher do
     system = configuration_manager.configured_systems.where("hostname like 'providerrefreshspec%'").first
 
     expect(system).to have_attributes(
-      :ipaddress                          => "192.168.169.254",
-      :mac_address                        => "00:00:00:00:00:00",
-      :type                               => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
-      :hostname                           => "providerrefreshspec-hostbaremetal.example.com",
-      :manager_ref                        => "38",
+      :ipaddress                          => '192.168.169.254',
+      :mac_address                        => '00:00:00:00:00:00',
+      :type                               => 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem',
+      :hostname                           => 'providerrefreshspec-hostbaremetal.example.com',
+      :manager_ref                        => '38',
       :configuration_profile              => child,
       :configuration_architecture         => my_arch,
       :configuration_environment          => my_env,

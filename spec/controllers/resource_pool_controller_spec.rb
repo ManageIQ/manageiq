@@ -1,55 +1,55 @@
 describe ResourcePoolController do
-  context "#button" do
+  context '#button' do
     before do
-      controller.instance_variable_set(:@display, "vms")
+      controller.instance_variable_set(:@display, 'vms')
     end
 
-    it "when VM Right Size Recommendations is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_right_size")
+    it 'when VM Right Size Recommendations is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_right_size')
       expect(controller).to receive(:vm_right_size)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Migrate is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_migrate")
-      controller.instance_variable_set(:@refresh_partial, "layouts/gtl")
-      expect(controller).to receive(:prov_redirect).with("migrate")
+    it 'when VM Migrate is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_migrate')
+      controller.instance_variable_set(:@refresh_partial, 'layouts/gtl')
+      expect(controller).to receive(:prov_redirect).with('migrate')
       expect(controller).to receive(:render)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Retire is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "vm_retire"})
+    it 'when VM Retire is pressed' do
+      controller.instance_variable_set(:@_params, {:pressed => 'vm_retire'})
       expect(controller).to receive(:retirevms).once
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Manage Policies is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_protect")
+    it 'when VM Manage Policies is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_protect')
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when MiqTemplate Manage Policies is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "miq_template_protect")
+    it 'when MiqTemplate Manage Policies is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'miq_template_protect')
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Tag is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_tag")
+    it 'when VM Tag is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_tag')
       expect(controller).to receive(:tag).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when MiqTemplate Tag is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "miq_template_tag")
+    it 'when MiqTemplate Tag is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'miq_template_tag')
       expect(controller).to receive(:tag).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy

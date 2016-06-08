@@ -3,10 +3,10 @@ require 'miq-process'
 
 host, user, pass, logfile = ARGV
 
-logfile ||= "./env_probe_event_catcher.log"
+logfile ||= './env_probe_event_catcher.log'
 File.delete(logfile) if File.exist?(logfile)
 $log = VMDBLogger.new(logfile)
-$log.level = VMDBLogger.const_get("INFO")
+$log.level = VMDBLogger.const_get('INFO')
 
 def log(level, msg)
   puts "[#{Time.now.utc}] #{level.to_s.upcase}: #{msg}"
@@ -19,7 +19,7 @@ def at_exit(msg)
   exit 0
 end
 
-["INT", "KILL", "TERM"].each { |s| trap(s) { at_exit("Interrupt signal (#{s}) received.") } if Signal.list.keys.include?(s) }
+['INT', 'KILL', 'TERM'].each { |s| trap(s) { at_exit("Interrupt signal (#{s}) received.") } if Signal.list.keys.include?(s) }
 
 $event_cnt = 0
 log :info, "Starting Event Catcher on #{host}..."
@@ -33,10 +33,10 @@ tid = Thread.new do
         next if event_type.nil?
 
         case event_type
-        when "TaskEvent"
+        when 'TaskEvent'
           sub_event_type = event.fetch_path('info', 'name')
           display_name   = "#{event_type}]-[#{sub_event_type}"
-        when "EventEx"
+        when 'EventEx'
           sub_event_type = event['eventTypeId']
           display_name   = "#{event_type}]-[#{sub_event_type}"
         else
@@ -49,8 +49,8 @@ tid = Thread.new do
       end
     end
   rescue => err
-    log "error", err.message
-    log "error", err.backtrace.join("\n")
+    log 'error', err.message
+    log 'error', err.backtrace.join("\n")
     exit 1
   end
 end

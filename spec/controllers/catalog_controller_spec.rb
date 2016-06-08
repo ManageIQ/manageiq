@@ -1,6 +1,6 @@
 describe CatalogController do
   let(:user)                { FactoryGirl.create(:user_with_group) }
-  let(:admin_user)          { FactoryGirl.create(:user, :role => "super_administrator") }
+  let(:admin_user)          { FactoryGirl.create(:user, :role => 'super_administrator') }
   let(:root_tenant)         { user.current_tenant }
   let(:tenant_role)         { FactoryGirl.create(:miq_user_role) }
   let(:child_tenant)        { FactoryGirl.create(:tenant, :parent => root_tenant) }
@@ -18,7 +18,7 @@ describe CatalogController do
     allow_any_instance_of(ApplicationController).to receive(:fetch_path)
   end
 
-  it "returns all catalog items related to current tenant and root tenant when non-self service user is logged" do
+  it 'returns all catalog items related to current tenant and root tenant when non-self service user is logged' do
     login_as child_tenant_user
     view, _pages = controller.send(:get_view, ServiceTemplate, {})
     expect(view.table.data.count).to eq(2)
@@ -31,7 +31,7 @@ describe CatalogController do
     expect(view.table.data.count).to eq(1)
   end
 
-  it "returns all catalog items when admin user is logged" do
+  it 'returns all catalog items when admin user is logged' do
     login_as admin_user
     view, _pages = controller.send(:get_view, ServiceTemplate, {})
     expect(view.table.data.count).to eq(2)
@@ -65,39 +65,39 @@ describe CatalogController do
     end
   end
 
-  context "#atomic_form_field_changed" do
+  context '#atomic_form_field_changed' do
     before :each do
       controller.instance_variable_set(:@sb, {})
       edit = {
-        :key          => "prov_edit__new",
+        :key          => 'prov_edit__new',
         :rec_id       => 1,
-        :st_prov_type => "generic",
+        :st_prov_type => 'generic',
         :new          => {
-          :name         => "New Name",
-          :description  => "New Description",
-          :st_prov_type => "generic"
+          :name         => 'New Name',
+          :description  => 'New Description',
+          :st_prov_type => 'generic'
         }
       }
       session[:edit] = edit
     end
     # these types do not have tabs on the screen, because we don't show tabs if there is only single tab on screen.
-    it "replaces form_div when generic type catalog item type is being added" do
-      post :atomic_form_field_changed, :params => {:display => "1", :id => "new"}
-      expect(response.body).to include("form_div")
+    it 'replaces form_div when generic type catalog item type is being added' do
+      post :atomic_form_field_changed, :params => {:display => '1', :id => 'new'}
+      expect(response.body).to include('form_div')
     end
 
     # these types already have tabs on the screen so it's only matter of show/hide Details tab for those.
-    it "does not replace form_div when non-generic type catalog item type is being added" do
-      session[:edit][:new][:st_prov_type] = "vmware"
-      post :atomic_form_field_changed, :params => {:display => "1", :id => "new"}
-      expect(response.body).not_to include("form_div")
+    it 'does not replace form_div when non-generic type catalog item type is being added' do
+      session[:edit][:new][:st_prov_type] = 'vmware'
+      post :atomic_form_field_changed, :params => {:display => '1', :id => 'new'}
+      expect(response.body).not_to include('form_div')
     end
   end
 
-  context "#atomic_st_edit" do
+  context '#atomic_st_edit' do
     it "Atomic Service Template and it's valid Resource Actions are saved" do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_params, :button => 'save')
       st = FactoryGirl.create(:service_template)
       3.times.each_with_index do |i|
         ns = FactoryGirl.create(:miq_ae_namespace, :name => "ns#{i}")
@@ -109,14 +109,14 @@ describe CatalogController do
       recon_fqname     = 'ns2/cls2/inst2'
       edit = {
         :new          => {
-          :name               => "New Name",
-          :description        => "New Description",
+          :name               => 'New Name',
+          :description        => 'New Description',
           :reconfigure_fqname => recon_fqname,
           :retire_fqname      => retire_fqname,
           :fqname             => provision_fqname},
-        :key          => "prov_edit__new",
+        :key          => 'prov_edit__new',
         :rec_id       => st.id,
-        :st_prov_type => "generic"
+        :st_prov_type => 'generic'
       }
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
@@ -161,21 +161,21 @@ describe CatalogController do
     end
   end
 
-  context "#st_edit" do
-    it "@record is cleared out after Service Template is added" do
+  context '#st_edit' do
+    it '@record is cleared out after Service Template is added' do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "add")
+      controller.instance_variable_set(:@_params, :button => 'add')
       st = FactoryGirl.create(:service_template)
       controller.instance_variable_set(:@record, st)
       provision_fqname = 'ns1/cls1/inst1'
       edit = {
-        :new    => {:name               => "New Name",
-                    :description        => "New Description",
+        :new    => {:name               => 'New Name',
+                    :description        => 'New Description',
                     :selected_resources => [st.id],
-                    :rsc_groups         => [[{:name => "Some name"}]],
+                    :rsc_groups         => [[{:name => 'Some name'}]],
                     :fqname             => provision_fqname,
                    },
-        :key    => "st_edit__new",
+        :key    => 'st_edit__new',
         :rec_id => st.id,
       }
       controller.instance_variable_set(:@edit, edit)
@@ -186,12 +186,12 @@ describe CatalogController do
     end
   end
 
-  context "#st_upload_image" do
+  context '#st_upload_image' do
     before do
       ApplicationController.handle_exceptions = true
 
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "save")
+      controller.instance_variable_set(:@_params, :button => 'save')
       @st = FactoryGirl.create(:service_template)
       3.times.each_with_index do |i|
         ns = FactoryGirl.create(:miq_ae_namespace, :name => "ns#{i}")
@@ -203,43 +203,43 @@ describe CatalogController do
       recon_fqname     = 'ns2/cls2/inst2'
       edit = {
         :new          => {
-          :name               => "New Name",
-          :description        => "New Description",
+          :name               => 'New Name',
+          :description        => 'New Description',
           :reconfigure_fqname => recon_fqname,
           :retire_fqname      => retire_fqname,
           :fqname             => provision_fqname},
-        :key          => "prov_edit__new",
+        :key          => 'prov_edit__new',
         :rec_id       => @st.id,
-        :st_prov_type => "generic"
+        :st_prov_type => 'generic'
       }
       controller.instance_variable_set(:@edit, edit)
       session[:edit] = edit
     end
 
-    it "uploads a selected png file " do
+    it 'uploads a selected png file ' do
       file = fixture_file_upload('files/upload_image.png', 'image/png')
       post :st_upload_image, :params => { :format => :js, :id => @st.id, :upload => {:image => file}, :active_tree => :sandt_tree, :commit => 'Upload' }
       expect(assigns(:flash_array).first[:message]).to include('Custom Image file "upload_image.png" successfully uploaded')
     end
 
-    it "displays an error when the selected file is not a png file or .jpg " do
+    it 'displays an error when the selected file is not a png file or .jpg ' do
       file = fixture_file_upload('files/upload_image.txt', 'image/png')
       post :st_upload_image, :params => { :format => :js, :id => @st.id, :upload => {:image => file}, :commit => 'Upload' }
-      expect(assigns(:flash_array).first[:message]).to include("Custom Image must be a .png or .jpg file")
+      expect(assigns(:flash_array).first[:message]).to include('Custom Image must be a .png or .jpg file')
     end
 
-    it "displays a message when an image file is not selected " do
+    it 'displays a message when an image file is not selected ' do
       post :st_upload_image, :params => { :format => :js, :id => @st.id, :commit => 'Upload' }
-      expect(assigns(:flash_array).first[:message]).to include("Use the Browse button to locate a .png or .jpg image file")
+      expect(assigns(:flash_array).first[:message]).to include('Use the Browse button to locate a .png or .jpg image file')
     end
   end
 
-  context "#ot_edit" do
+  context '#ot_edit' do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "save")
-      @new_name = "New Name"
-      @new_description = "New Description"
+      controller.instance_variable_set(:@_params, :button => 'save')
+      @new_name = 'New Name'
+      @new_description = 'New Description'
       @new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}\n"
       session[:edit] = {
         :new    => {
@@ -252,7 +252,7 @@ describe CatalogController do
       expect(response.status).to eq(200)
     end
 
-    it "Orchestration Template name and description are edited" do
+    it 'Orchestration Template name and description are edited' do
       ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.instance_variable_set(:@record, ot)
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
@@ -261,7 +261,7 @@ describe CatalogController do
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("was saved")
+      expect(assigns(:flash_array).first[:message]).to include('was saved')
       ot.reload
       expect(ot.name).to eq(@new_name)
       expect(ot.description).to eq(@new_description)
@@ -270,7 +270,7 @@ describe CatalogController do
       expect(assigns(:edit)).to be_nil
     end
 
-    it "Azure Orchestration Template name and description are edited" do
+    it 'Azure Orchestration Template name and description are edited' do
       ot = FactoryGirl.create(:orchestration_template_azure_with_content)
       controller.instance_variable_set(:@record, ot)
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
@@ -279,7 +279,7 @@ describe CatalogController do
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("was saved")
+      expect(assigns(:flash_array).first[:message]).to include('was saved')
       ot.reload
       expect(ot.name).to eq(@new_name)
       expect(ot.description).to eq(@new_description)
@@ -288,7 +288,7 @@ describe CatalogController do
       expect(assigns(:edit)).to be_nil
     end
 
-    it "Read-only Orchestration Template content cannot be edited" do
+    it 'Read-only Orchestration Template content cannot be edited' do
       ot = FactoryGirl.create(:orchestration_template_cfn_with_stacks)
       original_content = ot.content
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
@@ -302,29 +302,29 @@ describe CatalogController do
       expect(assigns(:edit)).to be_nil
     end
 
-    it "Orchestration Template content cannot be empty during edit" do
-      controller.instance_variable_set(:@_params, :button => "save")
+    it 'Orchestration Template content cannot be empty during edit' do
+      controller.instance_variable_set(:@_params, :button => 'save')
       controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template)
       session[:edit][:key] = "ot_edit__#{ot.id}"
       session[:edit][:rec_id] = ot.id
       original_content = ot.content
-      new_content = ""
+      new_content = ''
       controller.params.merge!(:id => ot.id, :template_content => new_content)
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
       expect(controller.send(:flash_errors?)).to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("cannot be empty")
+      expect(assigns(:flash_array).first[:message]).to include('cannot be empty')
       ot.reload
       expect(ot.content).to eq(original_content)
     end
 
-    it "Draft flag is set for an Orchestration Template" do
+    it 'Draft flag is set for an Orchestration Template' do
       ot = FactoryGirl.create(:orchestration_template)
       controller.params.merge!(:id => ot.id, :template_content => @new_content)
       session[:edit][:key] = "ot_edit__#{ot.id}"
       session[:edit][:rec_id] = ot.id
-      session[:edit][:new][:draft] = "true"
+      session[:edit][:new][:draft] = 'true'
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_edit_submit)
       ot.reload
@@ -333,16 +333,16 @@ describe CatalogController do
     end
   end
 
-  context "#ot_copy" do
+  context '#ot_copy' do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :button => "add")
+      controller.instance_variable_set(:@_params, :button => 'add')
       controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       ot = FactoryGirl.create(:orchestration_template_cfn)
       controller.x_node = "xx-otcfn_ot-#{ot.id}"
-      @new_name = "New Name"
-      new_description = "New Description"
-      new_content = "{\"AWSTemplateFormatVersion\" : \"new-version\"}"
+      @new_name = 'New Name'
+      new_description = 'New Description'
+      new_content = '{"AWSTemplateFormatVersion" : "new-version"}'
       controller.params.merge!(:original_ot_id   => ot.id,
                                :template_content => new_content)
       session[:edit] = {
@@ -356,28 +356,28 @@ describe CatalogController do
 
     after(:each) do
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("was saved")
+      expect(assigns(:flash_array).first[:message]).to include('was saved')
       expect(response.status).to eq(200)
       expect(OrchestrationTemplate.where(:name => @new_name).first).not_to be_nil
     end
 
-    it "Orchestration Template is copied" do
+    it 'Orchestration Template is copied' do
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_copy_submit)
     end
 
-    it "Orchestration Template is copied as a draft" do
-      session[:edit][:new][:draft] = "true"
+    it 'Orchestration Template is copied as a draft' do
+      session[:edit][:new][:draft] = 'true'
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_copy_submit)
       expect(OrchestrationTemplate.where(:name => @new_name).first.draft).to be_truthy
     end
   end
 
-  context "#ot_delete" do
+  context '#ot_delete' do
     before(:each) do
       controller.instance_variable_set(:@sb, {})
-      controller.instance_variable_set(:@_params, :pressed => "orchestration_template_remove")
+      controller.instance_variable_set(:@_params, :pressed => 'orchestration_template_remove')
       allow(controller).to receive(:replace_right_cell)
     end
 
@@ -385,31 +385,31 @@ describe CatalogController do
       expect(response.status).to eq(200)
     end
 
-    it "Orchestration Template is deleted" do
+    it 'Orchestration Template is deleted' do
       ot = FactoryGirl.create(:orchestration_template)
       controller.instance_variable_set(:@_response, ActionDispatch::TestResponse.new)
       controller.params.merge!(:id => ot.id)
       controller.send(:ot_remove_submit)
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("was deleted")
+      expect(assigns(:flash_array).first[:message]).to include('was deleted')
       expect(OrchestrationTemplate.find_by_id(ot.id)).to be_nil
     end
 
-    it "Read-only Orchestration Template cannot deleted" do
+    it 'Read-only Orchestration Template cannot deleted' do
       ot = FactoryGirl.create(:orchestration_template_with_stacks)
       controller.params.merge!(:id => ot.id)
       controller.send(:ot_remove_submit)
       expect(controller.send(:flash_errors?)).to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("read-only and cannot be deleted")
+      expect(assigns(:flash_array).first[:message]).to include('read-only and cannot be deleted')
       expect(OrchestrationTemplate.find_by_id(ot.id)).not_to be_nil
     end
   end
 
-  context "#ot_create" do
+  context '#ot_create' do
     before(:each) do
-      @new_name = "New Name"
-      new_description = "New Description"
-      new_type = "OrchestrationTemplateCfn"
+      @new_name = 'New Name'
+      new_description = 'New Description'
+      new_type = 'OrchestrationTemplateCfn'
       @new_content = '{"AWSTemplateFormatVersion" : "2010-09-09"}'
       edit = {
         :new => {
@@ -418,30 +418,30 @@ describe CatalogController do
           :content     => @new_content,
           :type        => new_type,
           :draft       => false},
-        :key => "ot_add__new",
+        :key => 'ot_add__new',
       }
       session[:edit] = edit
       controller.instance_variable_set(:@sb, :trees => {:ot_tree => {:open_nodes => []}}, :active_tree => :ot_tree)
     end
 
-    it "Orchestration Template is created" do
-      controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
+    it 'Orchestration Template is created' do
+      controller.instance_variable_set(:@_params, :content => @new_content, :button => 'add')
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_add_submit)
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("was saved")
+      expect(assigns(:flash_array).first[:message]).to include('was saved')
       expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
       expect(OrchestrationTemplate.where(:name => @new_name).first).not_to be_nil
     end
 
-    it "Orchestration Template draft is created" do
-      controller.instance_variable_set(:@_params, :content => @new_content, :button => "add")
+    it 'Orchestration Template draft is created' do
+      controller.instance_variable_set(:@_params, :content => @new_content, :button => 'add')
       session[:edit][:new][:draft] = true
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_add_submit)
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("was saved")
+      expect(assigns(:flash_array).first[:message]).to include('was saved')
       expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
       ot = OrchestrationTemplate.where(:name => @new_name).first
@@ -449,41 +449,41 @@ describe CatalogController do
       expect(ot.draft).to be_truthy
     end
 
-    it "Orchestration Template creation is cancelled" do
-      controller.instance_variable_set(:@_params, :content => @new_content, :button => "cancel")
+    it 'Orchestration Template creation is cancelled' do
+      controller.instance_variable_set(:@_params, :content => @new_content, :button => 'cancel')
       allow(controller).to receive(:replace_right_cell)
       controller.send(:ot_add_submit)
       expect(controller.send(:flash_errors?)).not_to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("was cancelled")
+      expect(assigns(:flash_array).first[:message]).to include('was cancelled')
       expect(assigns(:edit)).to be_nil
       expect(response.status).to eq(200)
       expect(OrchestrationTemplate.where(:name => @new_name).first).to be_nil
     end
   end
 
-  describe "#tags_edit" do
+  describe '#tags_edit' do
     before(:each) do
-      @ot = FactoryGirl.create(:orchestration_template, :name => "foo")
-      allow(@ot).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
-      classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
+      @ot = FactoryGirl.create(:orchestration_template, :name => 'foo')
+      allow(@ot).to receive(:tagged_with).with(:cat => user.userid).and_return('my tags')
+      classification = FactoryGirl.create(:classification, :name => 'department', :description => 'Department')
       @tag1 = FactoryGirl.create(:classification_tag,
-                                 :name   => "tag1",
+                                 :name   => 'tag1',
                                  :parent => classification
                                 )
       @tag2 = FactoryGirl.create(:classification_tag,
-                                 :name   => "tag2",
+                                 :name   => 'tag2',
                                  :parent => classification
                                 )
       allow(Classification).to receive(:find_assigned_entries).with(@ot).and_return([@tag1, @tag2])
       controller.instance_variable_set(:@sb,
-                                       :trees       => {:ot_tree => {:active_node => "root"}},
+                                       :trees       => {:ot_tree => {:active_node => 'root'}},
                                        :active_tree => :ot_tree)
       allow(controller).to receive(:get_node_info)
       allow(controller).to receive(:replace_right_cell)
-      session[:tag_db] = "OrchestrationTemplate"
+      session[:tag_db] = 'OrchestrationTemplate'
       edit = {
         :key        => "OrchestrationTemplate_edit_tags__#{@ot.id}",
-        :tagging    => "OrchestrationTemplate",
+        :tagging    => 'OrchestrationTemplate',
         :object_ids => [@ot.id],
         :current    => {:assignments => []},
         :new        => {:assignments => [@tag1.id, @tag2.id]}
@@ -495,35 +495,35 @@ describe CatalogController do
       expect(response.status).to eq(200)
     end
 
-    it "builds tagging screen" do
+    it 'builds tagging screen' do
       EvmSpecHelper.create_guid_miq_server_zone
 
-      controller.instance_variable_set(:@sb, :action => "ot_tags_edit")
+      controller.instance_variable_set(:@sb, :action => 'ot_tags_edit')
       controller.instance_variable_set(:@_params, :miq_grid_checks => @ot.id.to_s)
-      controller.send(:tags_edit, "OrchestrationTemplate")
+      controller.send(:tags_edit, 'OrchestrationTemplate')
       expect(assigns(:flash_array)).to be_nil
       expect(assigns(:entries)).not_to be_nil
     end
 
-    it "cancels tags edit" do
-      controller.instance_variable_set(:@_params, :button => "cancel", :id => @ot.id)
-      controller.send(:tags_edit, "OrchestrationTemplate")
-      expect(assigns(:flash_array).first[:message]).to include("was cancelled")
+    it 'cancels tags edit' do
+      controller.instance_variable_set(:@_params, :button => 'cancel', :id => @ot.id)
+      controller.send(:tags_edit, 'OrchestrationTemplate')
+      expect(assigns(:flash_array).first[:message]).to include('was cancelled')
       expect(assigns(:edit)).to be_nil
     end
 
-    it "save tags" do
-      controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
-      controller.send(:tags_edit, "OrchestrationTemplate")
-      expect(assigns(:flash_array).first[:message]).to include("Tag edits were successfully saved")
+    it 'save tags' do
+      controller.instance_variable_set(:@_params, :button => 'save', :id => @ot.id)
+      controller.send(:tags_edit, 'OrchestrationTemplate')
+      expect(assigns(:flash_array).first[:message]).to include('Tag edits were successfully saved')
       expect(assigns(:edit)).to be_nil
     end
   end
 
-  context "#service_dialog_create_from_ot" do
+  context '#service_dialog_create_from_ot' do
     before(:each) do
       @ot = FactoryGirl.create(:orchestration_template_cfn_with_content)
-      @dialog_label = "New Dialog 01"
+      @dialog_label = 'New Dialog 01'
       session[:edit] = {
         :new    => {:dialog_name => @dialog_label},
         :key    => "ot_edit__#{@ot.id}",
@@ -539,24 +539,24 @@ describe CatalogController do
       expect(response.status).to eq(200)
     end
 
-    it "Service Dialog is created from an Orchestration Template" do
-      controller.instance_variable_set(:@_params, :button => "save", :id => @ot.id)
+    it 'Service Dialog is created from an Orchestration Template' do
+      controller.instance_variable_set(:@_params, :button => 'save', :id => @ot.id)
       allow(controller).to receive(:replace_right_cell)
       controller.send(:service_dialog_from_ot_submit)
-      expect(assigns(:flash_array).first[:message]).to include("was successfully created")
+      expect(assigns(:flash_array).first[:message]).to include('was successfully created')
       expect(Dialog.where(:label => @dialog_label).first).not_to be_nil
     end
   end
 
-  context "#ot_rendering" do
+  context '#ot_rendering' do
     render_views
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       session[:settings] = {
-        :views => {:orchestrationtemplate => "grid"}
+        :views => {:orchestrationtemplate => 'grid'}
       }
       session[:sandboxes] = {
-        "catalog" => {
+        'catalog' => {
           :active_tree => :ot_tree
         }
       }
@@ -571,16 +571,16 @@ describe CatalogController do
       expect(response.status).to eq(200)
     end
 
-    it "Controller method is called with correct parameters" do
-      controller.params[:type] = "tile"
-      controller.instance_variable_set(:@settings, :views => {:orchestrationtemplate => "list"})
+    it 'Controller method is called with correct parameters' do
+      controller.params[:type] = 'tile'
+      controller.instance_variable_set(:@settings, :views => {:orchestrationtemplate => 'list'})
       expect(controller).to receive(:get_view_calculate_gtl_type).with(:orchestrationtemplate) do
-        expect(controller.instance_variable_get(:@settings)).to include(:views => {:orchestrationtemplate => "tile"})
+        expect(controller.instance_variable_get(:@settings)).to include(:views => {:orchestrationtemplate => 'tile'})
       end
-      controller.send(:get_view, "OrchestrationTemplateCfn", {:gtl_dbname => :orchestrationtemplate})
+      controller.send(:get_view, 'OrchestrationTemplateCfn', {:gtl_dbname => :orchestrationtemplate})
     end
 
-    it "Renders list of orchestration templates using correct GTL type" do
+    it 'Renders list of orchestration templates using correct GTL type' do
       %w(root xx-otcfn xx-othot xx-otazu).each do |id|
         post :tree_select, :params => { :id => id, :format => :js }
         expect(response).to render_template('layouts/gtl/_grid')
@@ -588,21 +588,21 @@ describe CatalogController do
     end
   end
 
-  context "#set_resource_action" do
+  context '#set_resource_action' do
     before do
       @st = FactoryGirl.create(:service_template)
       dialog = FactoryGirl.create(:dialog,
-                                  :label       => "Test Label",
-                                  :description => "Test Description",
-                                  :buttons     => "submit,reset,cancel"
+                                  :label       => 'Test Label',
+                                  :description => 'Test Description',
+                                  :buttons     => 'submit,reset,cancel'
                                  )
       retire_fqname    = 'ns0/cls0/inst0'
       provision_fqname = 'ns1/cls1/inst1'
       recon_fqname     = 'ns2/cls2/inst2'
       edit = {
         :new          => {
-          :name               => "New Name",
-          :description        => "New Description",
+          :name               => 'New Name',
+          :description        => 'New Description',
           :dialog_id          => dialog.id,
           :reconfigure_fqname => recon_fqname,
           :retire_fqname      => retire_fqname,
@@ -610,29 +610,29 @@ describe CatalogController do
       }
       controller.instance_variable_set(:@edit, edit)
     end
-    it "saves resource action" do
+    it 'saves resource action' do
       controller.send(:set_resource_action, @st)
       expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement Reconfigure))
     end
 
-    it "does not save blank resource action" do
+    it 'does not save blank resource action' do
       assigns(:edit)[:new][:reconfigure_fqname] = ''
       controller.send(:set_resource_action, @st)
       expect(@st.resource_actions.pluck(:action)).to match_array(%w(Provision Retirement))
     end
   end
 
-  context "#st_set_record_vars" do
+  context '#st_set_record_vars' do
     before do
       @st = FactoryGirl.create(:service_template)
       @catalog = FactoryGirl.create(:service_template_catalog,
-                                  :name       => "foo",
-                                  :description => "FOO"
+                                  :name       => 'foo',
+                                  :description => 'FOO'
       )
       edit = {
         :new          => {
-          :name               => "New Name",
-          :description        => "New Description",
+          :name               => 'New Name',
+          :description        => 'New Description',
           :display            => false,
           :catalog_id         => @catalog.id,
           :selected_resources => [],
@@ -641,7 +641,7 @@ describe CatalogController do
       controller.instance_variable_set(:@edit, edit)
     end
 
-    it "sets catalog for Catalog Bundle even when display is set to false" do
+    it 'sets catalog for Catalog Bundle even when display is set to false' do
       controller.send(:st_set_record_vars, @st)
       expect(@st.service_template_catalog).to match(@catalog)
     end

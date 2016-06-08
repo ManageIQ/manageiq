@@ -17,7 +17,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 hMor = nil
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -45,108 +45,108 @@ begin
   puts "Host name: #{miqHost.name}"
   puts
 
-  puts "**** configManager:"
+  puts '**** configManager:'
   vim.dumpObj(miqHost.configManager)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 
-  raise "Host has no service system" unless (ss = miqHost.serviceSystem)
+  raise 'Host has no service system' unless (ss = miqHost.serviceSystem)
 
-  puts "**** Refreshing services..."
+  puts '**** Refreshing services...'
   ss.refreshServices
-  puts "**** Done."
+  puts '**** Done.'
   puts
 
   si = ss.serviceInfo
 
-  puts "**** serviceInfo:"
+  puts '**** serviceInfo:'
   vim.dumpObj(si)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 
-  puts "**** SSH service:"
+  puts '**** SSH service:'
   sshRs = ss.getServicesByFilter('label' => 'SSH Server').first
   unless sshRs
-    puts "SSH service not found."
+    puts 'SSH service not found.'
     exit
   end
   vim.dumpObj(sshRs)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 
-  puts "**** Restarting SSH services..."
+  puts '**** Restarting SSH services...'
   ss.restartService(sshRs.key)
-  puts "**** Done."
+  puts '**** Done.'
   puts
 
-  puts "**** SSH service:"
+  puts '**** SSH service:'
   sshRs = ss.getServicesByFilter('label' => 'SSH Server').first
   unless sshRs
-    puts "SSH service not found."
+    puts 'SSH service not found.'
     exit
   end
   vim.dumpObj(sshRs)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 
-  puts "**** Stopping SSH services..."
+  puts '**** Stopping SSH services...'
   ss.stopService(sshRs.key)
-  puts "**** Done."
+  puts '**** Done.'
   puts
 
-  puts "**** SSH service:"
+  puts '**** SSH service:'
   sshRs = ss.getServicesByFilter('label' => 'SSH Server').first
   unless sshRs
-    puts "SSH service not found."
+    puts 'SSH service not found.'
     exit
   end
   vim.dumpObj(sshRs)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 
-  puts "**** Starting SSH services..."
+  puts '**** Starting SSH services...'
   ss.startService(sshRs.key)
-  puts "**** Done."
+  puts '**** Done.'
   puts
 
-  puts "**** SSH service:"
+  puts '**** SSH service:'
   sshRs = ss.getServicesByFilter('label' => 'SSH Server').first
   unless sshRs
-    puts "SSH service not found."
+    puts 'SSH service not found.'
     exit
   end
   vim.dumpObj(sshRs)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 
-  puts "**** Setting SSH service policy to off..."
-  ss.updateServicePolicy(sshRs.key, "off")
-  puts "**** Done."
+  puts '**** Setting SSH service policy to off...'
+  ss.updateServicePolicy(sshRs.key, 'off')
+  puts '**** Done.'
   puts
 
-  puts "**** SSH service:"
+  puts '**** SSH service:'
   sshRs = ss.getServicesByFilter('label' => 'SSH Server').first
   unless sshRs
-    puts "SSH service not found."
+    puts 'SSH service not found.'
     exit
   end
   vim.dumpObj(sshRs)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 
-  puts "**** Setting SSH service policy to automatic..."
-  ss.updateServicePolicy(sshRs.key, "automatic")
-  puts "**** Done."
+  puts '**** Setting SSH service policy to automatic...'
+  ss.updateServicePolicy(sshRs.key, 'automatic')
+  puts '**** Done.'
   puts
 
-  puts "**** SSH service:"
+  puts '**** SSH service:'
   sshRs = ss.getServicesByFilter('label' => 'SSH Server').first
   unless sshRs
-    puts "SSH service not found."
+    puts 'SSH service not found.'
     exit
   end
   vim.dumpObj(sshRs)
-  puts "****************************************************************"
+  puts '****************************************************************'
   puts
 rescue => err
   puts err.to_s

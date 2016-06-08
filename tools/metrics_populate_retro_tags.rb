@@ -2,14 +2,14 @@
 
 start_ts, end_ts, id_spec = ARGV
 
-klass, ids = id_spec.split(":")
+klass, ids = id_spec.split(':')
 klass = klass.classify.constantize
-ids = ids.split(",").compact
+ids = ids.split(',').compact
 if klass == Vm
   vm_ids = ids
 else
   vm_ids = []
-  meth = klass.instance_methods.collect(&:to_s).include?("all_vms") ? :all_vms : :vms
+  meth = klass.instance_methods.collect(&:to_s).include?('all_vms') ? :all_vms : :vms
   klass.where(:id => ids).each do |obj|
     vm_ids += obj.send(meth).collect(&:id)
   end
@@ -37,7 +37,7 @@ Host.where(:id => host_ids).order(:id).each do |host|
 
   host.preload_vim_performance_state_for_ts(time_cond)
   perf_recs = host.metric_rollups.where(time_cond).where(:capture_interval_name => 'hourly')
-  VimPerformanceTagValue.where(:metric_type => "Host", :metric_id => perf_recs.collect(&:id)).delete_all
+  VimPerformanceTagValue.where(:metric_type => 'Host', :metric_id => perf_recs.collect(&:id)).delete_all
   perf_recs.each do |perf|
     perf.resource.target = host
     VimPerformanceTagValue.build_from_performance_record(perf)

@@ -48,10 +48,10 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
 
   # neutron
   def security_group_rule_quota_used
-    join = "inner join security_groups on security_groups.id = firewall_rules.resource_id "
+    join = 'inner join security_groups on security_groups.id = firewall_rules.resource_id '
     join += "and firewall_rules.resource_type = 'SecurityGroup'"
     FirewallRule.joins(join)
-      .where("security_groups.cloud_tenant_id" => cloud_tenant_id)
+      .where('security_groups.cloud_tenant_id' => cloud_tenant_id)
       .count
   end
 
@@ -73,6 +73,6 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudResourceQuota < ::Cloud
   end
 
   def subnet_quota_used
-    CloudSubnet.joins(:cloud_network).where("cloud_networks.cloud_tenant_id" => cloud_tenant_id).count
+    CloudSubnet.joins(:cloud_network).where('cloud_networks.cloud_tenant_id' => cloud_tenant_id).count
   end
 end

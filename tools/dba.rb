@@ -7,7 +7,7 @@ module Dba
   # Extended PostgreSQL DBA functionality
   #
   def self.client_connections
-    all_connections = select(<<-SQL, "Client Connections")
+    all_connections = select(<<-SQL, 'Client Connections')
                       SELECT client_addr   AS client_address
                            , datname       AS database
                            , procpid       AS spid
@@ -27,7 +27,7 @@ module Dba
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Changed to a UNION so that it is easier to read the output and to separate table stats from idx stats.
   def self.database_bloat
-    db_array = select(<<-SQL, "Database Bloat")
+    db_array = select(<<-SQL, 'Database Bloat')
               SELECT   tablename                                         AS table_name
                      , ' '                                               AS index_name
                      , reltuples::bigint                                 AS rows
@@ -165,7 +165,7 @@ module Dba
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   # Removed some CASE... logic statements as not needed for our requirements.
   def self.table_bloat
-    tbl_array = select(<<-SQL, "Table Bloat")
+    tbl_array = select(<<-SQL, 'Table Bloat')
                 SELECT tablename                                                    AS table_name
                      , reltuples::bigint                                            AS rows
                      , relpages::bigint                                             AS pages
@@ -241,7 +241,7 @@ module Dba
   # Removed  schemaname and totalwastedbytes columns from the original to fit our requirements.
   # Reformatted the SQL and renamed some columns to make them more easier to id.
   def self.index_bloat
-    idx_array = select(<<-SQL, "Index Bloat")
+    idx_array = select(<<-SQL, 'Index Bloat')
                 SELECT   tablename                                         AS table_name
                        , iname                                             AS index_name
                        , ituples::bigint                                   AS rows
@@ -309,7 +309,7 @@ module Dba
 
   # Provide the database statistics for all tables and indexes
   def self.database_statistics
-    stats = select(<<-SQL, "Statistics")
+    stats = select(<<-SQL, 'Statistics')
       SELECT relname           AS name,
              reltuples         AS rows,
              relpages          AS pages
@@ -318,17 +318,17 @@ module Dba
     SQL
 
     stats.each do |s|
-      s["rows"]  = s["rows"].to_f.to_i
-      s["pages"] = s["pages"].to_f.to_i
-      s["size"]  = s["pages"] * 8 * 1024
-      s["average_row_size"] = s["pages"].to_f / (s["rows"] + 1) * 8 * 1024
+      s['rows']  = s['rows'].to_f.to_i
+      s['pages'] = s['pages'].to_f.to_i
+      s['size']  = s['pages'] * 8 * 1024
+      s['average_row_size'] = s['pages'].to_f / (s['rows'] + 1) * 8 * 1024
     end
 
     stats
   end
 
   def self.table_statistics
-    tbl_stats_array = select(<<-SQL, "Table Statistics")
+    tbl_stats_array = select(<<-SQL, 'Table Statistics')
                 SELECT relname            AS table_name
                      , seq_scan           AS table_scan
                      , seq_tup_read       AS sequential_rows_read
@@ -351,7 +351,7 @@ module Dba
   end
 
   def self.table_size
-    tbl_size_array = select(<<-SQL, "Table Size")
+    tbl_size_array = select(<<-SQL, 'Table Size')
                 SELECT relname                                                           AS table_name
                      , to_char(reltuples, '999G999G999G999')                             AS rows
                      , to_char(((relpages * 8.0) / (1024 *1024)), '999G999.999')         AS size_in_gb
@@ -365,7 +365,7 @@ module Dba
   end
 
   def self.text_table_indexes(table_name)
-    select(<<-SQL, "Text table Indexes")
+    select(<<-SQL, 'Text table Indexes')
                     SELECT relname
                       FROM pg_class,
                             ( SELECT reltoastrelid FROM pg_class

@@ -62,22 +62,22 @@ module MiqSqlite3DB
     end
 
     def decodeSchema
-      return if @type != "table" || @name[0..6] == "sqlite_"  # Names beginning with sqlite_ are internal to engine
+      return if @type != 'table' || @name[0..6] == 'sqlite_'  # Names beginning with sqlite_ are internal to engine
       @columns = []
-      sql = @sql.gsub(/[\n\r]/, "")
+      sql = @sql.gsub(/[\n\r]/, '')
       re1 = /\s*CREATE\s+TABLE\s+(\w+)\s*\((.*)\)\s*/
       m = re1.match(sql)
       tname = m[1].to_s.chomp
-      raise "Inconsistent Table Name" if tname != @name
+      raise 'Inconsistent Table Name' if tname != @name
       cols  = m[2].to_s
 
-      cols.split(",").each do |c|
+      cols.split(',').each do |c|
         words = c.split
         defn = {}
         defn['name'] = words[0]
         defn['type'] = words[1].downcase
-        defn['type'] = "key" if words[2] && words[2].upcase == "PRIMARY"
-        if defn['type'] == "key"
+        defn['type'] = 'key' if words[2] && words[2].upcase == 'PRIMARY'
+        if defn['type'] == 'key'
           @key = defn['name']
         else
           @columns << defn
@@ -105,7 +105,7 @@ module MiqSqlite3DB
     end
 
     def dump
-      puts "================="
+      puts '================='
       puts "Page:                            #{@pagenum}"
       puts "Length:                          #{@len}"
       puts "Type:                            #{@type}"

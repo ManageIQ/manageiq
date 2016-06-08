@@ -5,7 +5,7 @@ require 'openstack/events/openstack_ceilometer_event_converter'
 class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   def self.available?(options = {})
     begin
-      options[:ems].connect(:service => "Metering")
+      options[:ems].connect(:service => 'Metering')
       return true
     rescue => ex
       $log.debug("Skipping Openstack Ceilometer events. Availability check failed with #{ex}.") if $log
@@ -33,7 +33,7 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   end
 
   def provider_connection
-    @provider_connection ||= @ems.connect(:service => "Metering")
+    @provider_connection ||= @ems.connect(:service => 'Metering')
   end
 
   def each_batch
@@ -67,7 +67,7 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
   private
 
   def filter_unwanted_events(events)
-    $log.debug("Openstack Ceilometer received a new events batch: (before filtering)") if $log && events.any?
+    $log.debug('Openstack Ceilometer received a new events batch: (before filtering)') if $log && events.any?
     $log.debug(events.inspect) if $log && events.any?
     @event_type_regex ||= Regexp.new(@config[:event_types_regex].to_s)
     events.select { |event| @event_type_regex.match(event.event_type) }

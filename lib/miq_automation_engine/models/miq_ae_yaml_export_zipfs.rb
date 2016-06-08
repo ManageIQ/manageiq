@@ -2,7 +2,7 @@
 class MiqAeYamlExportZipfs < MiqAeYamlExport
   def initialize(domain, options)
     super
-    @temp_file_name = File.join(Dir.tmpdir, "temp_file.zip")
+    @temp_file_name = File.join(Dir.tmpdir, 'temp_file.zip')
     @zipfile_name   = options['zip_file'].blank? ? "#{@domain}.zip" : options['zip_file']
     options['overwrite'] ||= false
     if File.exist?(@zipfile_name) && !options['overwrite']
@@ -13,7 +13,7 @@ class MiqAeYamlExportZipfs < MiqAeYamlExport
   def write_data(base_path, export_hash)
     @zip_file.dir.mkdir(base_path) unless @zip_file.file.directory?(base_path)
     fq_filename = File.join(base_path, export_hash['output_filename'].downcase)
-    @zip_file.file.open(fq_filename, "w") { |zipf| zipf.puts export_hash['export_data'] }
+    @zip_file.file.open(fq_filename, 'w') { |zipf| zipf.puts export_hash['export_data'] }
     _log.info("writing zip fqfilename: #{fq_filename}")
   end
 

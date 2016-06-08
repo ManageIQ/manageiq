@@ -4,10 +4,10 @@ require 'metadata/util/win32/boot_info_win'
 
 module WinMount
   def fs_init
-    @guestOS = "Windows"
+    @guestOS = 'Windows'
 
     @rootFS = MiqFS.getFS(@rootVolume)
-    raise MiqException::MiqVmMountError, "WinMount: could not mount root volume" unless @rootFS
+    raise MiqException::MiqVmMountError, 'WinMount: could not mount root volume' unless @rootFS
     @allFileSystems << @rootFS
 
     #
@@ -16,7 +16,7 @@ module WinMount
     idToDriveLetter = {}
     drives = Win32::SystemPath.driveAssignment(@rootFS)
     if drives.empty?
-      idToDriveLetter["#{@rootVolume.diskSig}-#{@rootVolume.lbaStart}"] = "C:"
+      idToDriveLetter["#{@rootVolume.diskSig}-#{@rootVolume.lbaStart}"] = 'C:'
       $log.debug "WinMount.fs_init: [@rootVolume.diskSig}-@rootVolume.lbaStart] = [#{@rootVolume.diskSig}-#{@rootVolume.lbaStart}]"
     else
       drives.each do |da|
@@ -38,7 +38,7 @@ module WinMount
       @rootDriveLetter = idToDriveLetter[key]
       $log.debug "WinMount.fs_init: @rootDriveLetter = idToDriveLetter[#{key}] = #{@rootDriveLetter}"
     end
-    raise MiqException::MiqVmMountError, "Could not determine root drive letter." unless @rootDriveLetter
+    raise MiqException::MiqVmMountError, 'Could not determine root drive letter.' unless @rootDriveLetter
     @driveToFS[@rootDriveLetter] = @rootFS
     saveFs(@rootFS, @rootDriveLetter, key)
 

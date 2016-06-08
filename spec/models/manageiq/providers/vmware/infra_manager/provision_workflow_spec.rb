@@ -1,4 +1,4 @@
-silence_warnings { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.const_set("DIALOGS_VIA_AUTOMATE", false) }
+silence_warnings { ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.const_set('DIALOGS_VIA_AUTOMATE', false) }
 
 describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
   include WorkflowSpecHelper
@@ -10,15 +10,15 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
     EvmSpecHelper.local_miq_server
   end
 
-  describe "#new" do
-    it "pass platform attributes to automate" do
+  describe '#new' do
+    it 'pass platform attributes to automate' do
       stub_dialog(:get_dialogs)
-      assert_automate_dialog_lookup(admin, "infra", "vmware", "get_pre_dialog_name", nil)
+      assert_automate_dialog_lookup(admin, 'infra', 'vmware', 'get_pre_dialog_name', nil)
 
       described_class.new({}, admin.userid)
     end
 
-    it "sets up workflow" do
+    it 'sets up workflow' do
       stub_dialog(:get_pre_dialogs)
       stub_dialog(:get_dialogs)
       workflow = described_class.new(values = {}, admin.userid)
@@ -28,9 +28,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
     end
   end
 
-  describe "#make_request" do
+  describe '#make_request' do
     let(:alt_user) { FactoryGirl.create(:user_with_group) }
-    it "creates and update a request" do
+    it 'creates and update a request' do
       stub_dialog(:get_pre_dialogs)
       stub_dialog(:get_dialogs)
 
@@ -38,8 +38,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow = described_class.new(values = {:running_pre_dialog => false}, admin)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_provision_request_created",
-        :target_class => "Vm",
+        :event        => 'vm_provision_request_created',
+        :target_class => 'Vm',
         :userid       => admin.userid,
         :message      => "VM Provisioning requested by <#{admin.userid}> for Vm:#{template.id}"
       )
@@ -54,7 +54,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
 
       expect(request).to be_valid
       expect(request).to be_a_kind_of(MiqProvisionRequest)
-      expect(request.request_type).to eq("template")
+      expect(request.request_type).to eq('template')
       expect(request.description).to eq("Provision from [#{template.name}] to [New VM]")
       expect(request.requester).to eq(admin)
       expect(request.userid).to eq(admin.userid)
@@ -67,8 +67,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow = described_class.new(values, alt_user)
 
       expect(AuditEvent).to receive(:success).with(
-        :event        => "vm_provision_request_updated",
-        :target_class => "Vm",
+        :event        => 'vm_provision_request_updated',
+        :target_class => 'Vm',
         :userid       => alt_user.userid,
         :message      => "VM Provisioning request updated by <#{alt_user.userid}> for Vm:#{template.id}"
       )
@@ -89,20 +89,20 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
     end
 
     context 'vlans' do
-      let(:s11) { FactoryGirl.create(:switch, :name => "A") }
-      let(:s12) { FactoryGirl.create(:switch, :name => "B") }
-      let(:s13) { FactoryGirl.create(:switch, :name => "C") }
-      let(:s14) { FactoryGirl.create(:switch, :name => "DVS14", :shared => true) }
-      let(:s15) { FactoryGirl.create(:switch, :name => "DVS15", :shared => true) }
-      let(:s21) { FactoryGirl.create(:switch, :name => "DVS21", :shared => true) }
+      let(:s11) { FactoryGirl.create(:switch, :name => 'A') }
+      let(:s12) { FactoryGirl.create(:switch, :name => 'B') }
+      let(:s13) { FactoryGirl.create(:switch, :name => 'C') }
+      let(:s14) { FactoryGirl.create(:switch, :name => 'DVS14', :shared => true) }
+      let(:s15) { FactoryGirl.create(:switch, :name => 'DVS15', :shared => true) }
+      let(:s21) { FactoryGirl.create(:switch, :name => 'DVS21', :shared => true) }
 
       before do
-        @lan11 = FactoryGirl.create(:lan, :name => "lan_A",   :switch_id => s11.id)
-        @lan12 = FactoryGirl.create(:lan, :name => "lan_B",   :switch_id => s12.id)
-        @lan13 = FactoryGirl.create(:lan, :name => "lan_C",   :switch_id => s13.id)
-        @lan14 = FactoryGirl.create(:lan, :name => "lan_DVS", :switch_id => s14.id)
-        @lan15 = FactoryGirl.create(:lan, :name => "lan_DVS", :switch_id => s15.id)
-        @lan21 = FactoryGirl.create(:lan, :name => "lan_DVS", :switch_id => s21.id)
+        @lan11 = FactoryGirl.create(:lan, :name => 'lan_A',   :switch_id => s11.id)
+        @lan12 = FactoryGirl.create(:lan, :name => 'lan_B',   :switch_id => s12.id)
+        @lan13 = FactoryGirl.create(:lan, :name => 'lan_C',   :switch_id => s13.id)
+        @lan14 = FactoryGirl.create(:lan, :name => 'lan_DVS', :switch_id => s14.id)
+        @lan15 = FactoryGirl.create(:lan, :name => 'lan_DVS', :switch_id => s15.id)
+        @lan21 = FactoryGirl.create(:lan, :name => 'lan_DVS', :switch_id => s21.id)
       end
 
       it '#allowed_vlans' do

@@ -10,14 +10,14 @@ module MiqMemcached
     DEFAULT_USER = 'memcached'
     DEFAULT_MEMORY = 64
     DEFAULT_MAXCONN = 1024
-    DEFAULT_OPTIONS = "-l 127.0.0.1"
+    DEFAULT_OPTIONS = '-l 127.0.0.1'
 
     def initialize(opts = {})
       update(opts)
     end
 
     def save(fname)
-      File.open(fname, "w") { |f| f.write @config }
+      File.open(fname, 'w') { |f| f.write @config }
     end
 
     def update(opts = {})
@@ -93,14 +93,14 @@ END_OF_CONFIG
 
     def self.start(opts = {})
       MiqMemcached::Config.new(opts).save(CONF_FILE)
-      LinuxAdmin::Service.new("memcached").start
+      LinuxAdmin::Service.new('memcached').start
       _log.info("started memcached with options: #{opts.inspect}")
       true
     end
 
     def self.stop
-      LinuxAdmin::Service.new("memcached").stop
-      _log.info("stopped memcached")
+      LinuxAdmin::Service.new('memcached').stop
+      _log.info('stopped memcached')
     end
 
     def self.stop!
@@ -119,7 +119,7 @@ END_OF_CONFIG
     end
 
     def self.killall
-      MiqUtil.runcmd("killall -9 memcached")
+      MiqUtil.runcmd('killall -9 memcached')
     rescue => err
       raise unless err.to_s =~ /memcached: no process/
     end

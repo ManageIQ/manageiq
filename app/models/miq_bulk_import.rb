@@ -2,15 +2,15 @@ require 'csv'
 
 module MiqBulkImport
   def self.upload(fd, tags, keys)
-    _log.info "Uploading CSV file"
+    _log.info 'Uploading CSV file'
     data = fd.read
-    raise _("File is empty") if data.empty?
+    raise _('File is empty') if data.empty?
     data.gsub!(/\r/, "\n")
     begin
       reader = CSV.parse(data)
     rescue CSV::IllegalFormatError
-      _log.error "CSV file is invalid"
-      raise "CSV file is invalid"
+      _log.error 'CSV file is invalid'
+      raise 'CSV file is invalid'
     end
     header = reader.shift
 
@@ -73,13 +73,13 @@ module MiqBulkImport
   end
 
   def self.get_sub_key_values(rec, sub_key)
-    unless sub_key.include?(".")
+    unless sub_key.include?('.')
       return [] unless rec.respond_to?(sub_key)
       return rec.send(sub_key).downcase
     end
 
     # hardware.networks.hostname
-    parts = sub_key.split(".")
+    parts = sub_key.split('.')
     attr = parts.pop
 
     current = rec

@@ -17,7 +17,7 @@ $vim_log.add 'err_console'
 
 # $DEBUG = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 hMor = nil
 
 broker = MiqVimBroker.new(:client)
@@ -32,14 +32,14 @@ begin
 
     miqHost = vim.getVimHost(TARGET_HOST)
 
-    raise "Host has no advanced option manager" if !(aom = miqHost.advancedOptionManager)
+    raise 'Host has no advanced option manager' if !(aom = miqHost.advancedOptionManager)
   
     puts
-    puts "*** Advanced option supportedOption:"
+    puts '*** Advanced option supportedOption:'
     vim.dumpObj(aom.supportedOption)
   
     puts
-    puts "*** Advanced option setting:"
+    puts '*** Advanced option setting:'
     vim.dumpObj(aom.setting)
   
     puts

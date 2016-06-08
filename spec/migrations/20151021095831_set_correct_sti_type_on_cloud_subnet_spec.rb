@@ -13,17 +13,17 @@ describe SetCorrectStiTypeOnCloudSubnet do
   let!(:public_cloud_subnet)   { cloud_subnet_stub.create!(:cloud_network_id => public_cloud_network.id) }
 
   migration_context :up do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       migrate
 
-      expect(empty_cloud_subnet.reload.type).to eq("CloudSubnet")
+      expect(empty_cloud_subnet.reload.type).to eq('CloudSubnet')
       expect(private_cloud_subnet.reload.type).to eq(described_class::CLOUD_SUBNET)
       expect(public_cloud_subnet.reload.type).to eq(described_class::CLOUD_SUBNET)
     end
   end
 
   migration_context :down do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       private_cloud_subnet.type = described_class::CLOUD_SUBNET
       private_cloud_subnet.save!
 

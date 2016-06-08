@@ -5,10 +5,10 @@ module Metric::Common
     belongs_to  :time_profile
     has_many    :vim_performance_tag_values, :as => :metric, :dependent => :destroy
 
-    belongs_to  :parent_host,        :class_name => "Host"
-    belongs_to  :parent_ems_cluster, :class_name => "EmsCluster"
-    belongs_to  :parent_storage,     :class_name => "Storage"
-    belongs_to  :parent_ems,         :class_name => "ExtManagementSystem"
+    belongs_to  :parent_host,        :class_name => 'Host'
+    belongs_to  :parent_ems_cluster, :class_name => 'EmsCluster'
+    belongs_to  :parent_storage,     :class_name => 'Storage'
+    belongs_to  :parent_ems,         :class_name => 'ExtManagementSystem'
 
     validates :timestamp, :presence => true
 
@@ -47,14 +47,14 @@ module Metric::Common
   end
 
   def v_find_min_max(vcol)
-    interval, mode = vcol.to_s.split("_")[1..2]
-    col = vcol.to_s.split("_")[3..-1].join("_")
+    interval, mode = vcol.to_s.split('_')[1..2]
+    col = vcol.to_s.split('_')[3..-1].join('_')
 
-    return nil unless interval == "daily" && capture_interval == 1.day
+    return nil unless interval == 'daily' && capture_interval == 1.day
 
     cond = ["resource_type = ? and resource_id = ? and capture_interval_name = 'hourly' and timestamp >= ? and timestamp < ?",
             resource_type, resource_id, timestamp.to_date.to_s,  (timestamp + 1.day).to_date.to_s]
-    direction = mode == "min" ? "ASC" : "DESC"
+    direction = mode == 'min' ? 'ASC' : 'DESC'
     rec = MetricRollup.where(cond).order("#{col} #{direction}").first
     rec.nil? ? nil : rec.send(col)
   end
@@ -82,12 +82,12 @@ module Metric::Common
   end
 
   CHILD_ROLLUP_INTERVAL = {
-    "realtime" => [20, 1],
-    "hourly"   => [20, 60 * Metric::Capture::REALTIME_METRICS_PER_MINUTE],
-    "daily"    => [1.hour, 24]
+    'realtime' => [20, 1],
+    'hourly'   => [20, 60 * Metric::Capture::REALTIME_METRICS_PER_MINUTE],
+    'daily'    => [1.hour, 24]
   }
   def v_calc_pct_of_cpu_time(vcol)
-    col = vcol.to_s.split("_")[2..-1].join("_")
+    col = vcol.to_s.split('_')[2..-1].join('_')
     return nil if send(col).nil?
 
     int, default_intervals_in_rollup = CHILD_ROLLUP_INTERVAL[capture_interval_name]
@@ -116,7 +116,7 @@ module Metric::Common
   end
 
   def v_month
-    timestamp.strftime("%Y/%m")
+    timestamp.strftime('%Y/%m')
   end
 
   def v_time
@@ -161,12 +161,12 @@ module Metric::Common
   end
 
   def nil_out_values_for_apply_time_profile
-    (Metric::Rollup::ROLLUP_COLS + ["assoc_ids", "min_max"]).each { |c| send("#{c}=", nil) }
+    (Metric::Rollup::ROLLUP_COLS + ['assoc_ids', 'min_max']).each { |c| send("#{c}=", nil) }
   end
 
   class_methods do
     def for_tag_names(*args)
-      where("tag_names like ?", "%" + args.join("/") + "%")
+      where('tag_names like ?', '%' + args.join('/') + '%')
     end
 
     def for_time_range(start_time, end_time)

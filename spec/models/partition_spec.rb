@@ -1,5 +1,5 @@
 describe Partition do
-  it "#partition_type_name" do
+  it '#partition_type_name' do
     partition = FactoryGirl.create(:partition)
 
     partition.partition_type = 999

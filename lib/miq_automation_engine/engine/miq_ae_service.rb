@@ -100,7 +100,7 @@ module MiqAeMethodService
 
       callers.collect do |c|
         file, line, context = c.split(':')
-        if file == "-"
+        if file == '-'
           line_adjusted_for_preamble = line.to_i - @preamble_lines
           file = @body[line_adjusted_for_preamble - 1].to_s.strip
           "<code: #{file}>:#{line_adjusted_for_preamble}:#{context}"
@@ -187,11 +187,11 @@ module MiqAeMethodService
     end
 
     def root
-      @root_object ||= object("/")
+      @root_object ||= object('/')
     end
 
     def parent
-      @parent_object ||= object("..")
+      @parent_object ||= object('..')
     end
 
     def objects(aobj)
@@ -271,9 +271,9 @@ module MiqAeMethodService
       ns, klass, instance = MiqAeEngine::MiqAePath.split(path)
       aec = MiqAeClass.find_by_namespace_and_name(ns, klass)
       unless aec.nil?
-        instance.gsub!(".", '\.')
-        instance.gsub!("*", ".*")
-        instance.gsub!("?", ".{1}")
+        instance.gsub!('.', '\.')
+        instance.gsub!('*', '.*')
+        instance.gsub!('?', '.{1}')
         instance_re = Regexp.new("^#{instance}$", Regexp::IGNORECASE)
 
         aec.ae_instances.select { |i| instance_re =~ i.name }.each do |aei|
@@ -350,7 +350,7 @@ module MiqAeMethodService
     include DRbUndumped
 
     def initialize(obj, svc)
-      raise "object cannot be nil" if obj.nil?
+      raise 'object cannot be nil' if obj.nil?
       @object  = obj
       @service = svc
     end

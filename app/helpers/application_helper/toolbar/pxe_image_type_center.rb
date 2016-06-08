@@ -16,8 +16,8 @@ class ApplicationHelper::Toolbar::PxeImageTypeCenter < ApplicationHelper::Toolba
           'pficon pficon-delete fa-lg',
           t = N_('Remove this System Image Type from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This System Image Type will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this System Image Type?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This System Image Type will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this System Image Type?')),
       ]
     ),
   ])

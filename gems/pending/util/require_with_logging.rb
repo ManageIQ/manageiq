@@ -1,10 +1,10 @@
-puts "** Loading Require With Logging"
+puts '** Loading Require With Logging'
 
 $req_log_path ||= File.expand_path('.')
-$req_log_file ||= ENV["REQUIRE_LOG"] unless ENV["REQUIRE_LOG"].nil? || ENV["REQUIRE_LOG"] == "true"
+$req_log_file ||= ENV['REQUIRE_LOG'] unless ENV['REQUIRE_LOG'].nil? || ENV['REQUIRE_LOG'] == 'true'
 $req_log_file ||= "requires_#{Time.now.utc.strftime("%Y%m%d%H%M%S")}.log"
 
-$req_log ||= File.open(File.join($req_log_path, $req_log_file), "w")
+$req_log ||= File.open(File.join($req_log_path, $req_log_file), 'w')
 # $req_log = $stdout
 $req_log.sync = true
 
@@ -22,7 +22,7 @@ module Kernel
     true     => '<+',  # Successfully required
     false    => '<-'   # Already required
   }
-  REQ_LOG_TREE = "| "
+  REQ_LOG_TREE = '| '
 
   def log_require(path, mode, timing = nil)
     $req_depth -= 1 if mode == true || mode == false || mode == :fail
@@ -81,7 +81,7 @@ module Kernel
 
   public
 
-  def benchmark_requires(name = "** BENCHMARK REQUIRES **")
+  def benchmark_requires(name = '** BENCHMARK REQUIRES **')
     with_require_logging(name) { yield; true }
   end
 end

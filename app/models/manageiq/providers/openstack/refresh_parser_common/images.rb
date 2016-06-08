@@ -15,8 +15,8 @@ module ManageIQ::Providers::Openstack
           :uid_ems            => uid,
           :ems_ref            => uid,
           :name               => image.name,
-          :vendor             => "openstack",
-          :raw_power_state    => "never",
+          :vendor             => 'openstack',
+          :raw_power_state    => 'never',
           :template           => true,
           :publicly_available => public?(image),
           :cloud_tenants      => image_tenants(image),
@@ -56,7 +56,7 @@ module ManageIQ::Providers::Openstack
         return nil if architecture.blank?
         # Just simple name to bits, x86_64 will be the most used, we should probably support displaying of
         # architecture name
-        architecture.include?("64") ? 64 : 32
+        architecture.include?('64') ? 64 : 32
       end
 
       def public?(image)
@@ -69,14 +69,14 @@ module ManageIQ::Providers::Openstack
       def parse_image_parent_id(image)
         if @image_service.name == :glance
           # What version of openstack is this glance v1 on some old openstack version?
-          return image.copy_from["id"] if image.respond_to?(:copy_from) && image.copy_from
+          return image.copy_from['id'] if image.respond_to?(:copy_from) && image.copy_from
           # Glance V2
           return image.instance_uuid if image.respond_to? :instance_uuid
           # Glance V1
           image.properties.try(:[], 'instance_uuid')
         else
           # Probably nova images?
-          image.server["id"] if image.server
+          image.server['id'] if image.server
         end
       end
     end

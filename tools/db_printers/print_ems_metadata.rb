@@ -2,10 +2,10 @@ def print_subtree(subtree, indent = '')
   subtree = subtree.sort_by { |obj, _children| [obj.class.name, obj.name.downcase] }
   subtree.each do |obj, children|
     sub_type = case obj
-               when Datacenter   then "  (datacenter)"
-               when EmsFolder    then ""
-               when ResourcePool then obj.is_default ? "  (default)" : ""
-               else ""
+               when Datacenter   then '  (datacenter)'
+               when EmsFolder    then ''
+               when ResourcePool then obj.is_default ? '  (default)' : ''
+               else ''
                end
     puts "#{indent}- #{obj.class}: #{obj.name}#{sub_type}"
     print_subtree(children, "  #{indent}")

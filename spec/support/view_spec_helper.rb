@@ -14,7 +14,7 @@ module ViewSpecHelper
   def set_element_visibility(resp, id, visible)
     c = Capybara.string(resp)
     node = c.find(id, :visible => :all)
-    node.native["style"] = node.native["style"].gsub(/display\s*:[^;]+/, "display:#{visible ? "show" : "none"}")
+    node.native['style'] = node.native['style'].gsub(/display\s*:[^;]+/, "display:#{visible ? "show" : "none"}")
     c.native.to_s
   end
 

@@ -1,9 +1,9 @@
 class MiqWidget::ContentOptionGenerator
   def generate(group, users)
     if group.kind_of?(MiqGroup) && !group.self_service?
-      return "MiqGroup", group.description, nil, timezones_for_users(users)
+      return 'MiqGroup', group.description, nil, timezones_for_users(users)
     else
-      return "User", group.description, userids_for_users(users), nil
+      return 'User', group.description, userids_for_users(users), nil
     end
   end
 

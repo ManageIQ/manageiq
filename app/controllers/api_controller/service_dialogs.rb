@@ -9,7 +9,7 @@ class ApiController
     end
 
     def show_service_dialogs
-      @req[:additional_attributes] = %w(content) if attribute_selection == "all"
+      @req[:additional_attributes] = %w(content) if attribute_selection == 'all'
       show_generic(:service_dialogs)
     end
 
@@ -29,9 +29,9 @@ class ApiController
     #
     def fetch_service_dialogs_content(resource)
       case @req[:collection]
-      when "service_templates"
+      when 'service_templates'
         service_template = parent_resource_obj
-      when "services"
+      when 'services'
         service_template = parent_resource_obj.service_template
       end
       return resource.content if service_template.nil?
@@ -51,9 +51,9 @@ class ApiController
 
     def refresh_dialog_fields_service_dialog(service_dialog, data)
       data ||= {}
-      dialog_fields = Hash(data["dialog_fields"])
-      refresh_fields = data["fields"]
-      return action_result(false, "Must specify fields to refresh") if refresh_fields.blank?
+      dialog_fields = Hash(data['dialog_fields'])
+      refresh_fields = data['fields']
+      return action_result(false, 'Must specify fields to refresh') if refresh_fields.blank?
 
       define_service_dialog_fields(service_dialog, dialog_fields)
 

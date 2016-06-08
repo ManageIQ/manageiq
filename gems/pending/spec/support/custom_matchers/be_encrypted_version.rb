@@ -10,7 +10,7 @@ RSpec::Matchers.define :be_encrypted_version do |expected|
 
   failure_message do |actual|
     actual_version = MiqPassword.split(actual).first
-    actual_version_text = actual_version ? "encrypted with version #{actual_version}" : "not encrypted"
+    actual_version_text = actual_version ? "encrypted with version #{actual_version}" : 'not encrypted'
     "expected: #{actual.inspect} to be encrypted with version #{expected} but is #{actual_version_text}"
   end
 
@@ -19,7 +19,7 @@ RSpec::Matchers.define :be_encrypted_version do |expected|
   end
 
   description do
-    "expect to be encrypted with a particular version of miq password (e.g.: 2)"
+    'expect to be encrypted with a particular version of miq password (e.g.: 2)'
   end
 
   def utf8_to_ascii_bytestring(str)

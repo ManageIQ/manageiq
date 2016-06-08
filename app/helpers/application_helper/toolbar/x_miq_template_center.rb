@@ -11,13 +11,13 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
           'fa fa-refresh fa-lg',
           N_('Refresh relationships and power states for all items related to this Template'),
           N_('Refresh Relationships and Power States'),
-          :confirm => N_("Refresh relationships and power states for all items related to this Template?")),
+          :confirm => N_('Refresh relationships and power states for all items related to this Template?')),
         button(
           :miq_template_scan,
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this Template'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this Template?")),
+          :confirm => N_('Perform SmartState Analysis on this Template?')),
         separator,
         button(
           :miq_template_edit,
@@ -34,8 +34,8 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
           'pficon pficon-delete fa-lg',
           N_('Remove this Template from the VMDB'),
           N_('Remove from the VMDB'),
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Template and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Template?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This Template and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Template?')),
       ]
     ),
   ])
@@ -66,7 +66,7 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for this Template'),
           N_('Check Compliance of Last Known Configuration'),
-          :confirm => N_("Initiate Check Compliance of the last known configuration for this Template?")),
+          :confirm => N_('Initiate Check Compliance of the last known configuration for this Template?')),
       ]
     ),
   ])
@@ -97,13 +97,13 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Template'),
           N_('Utilization'),
-          :url_parms => "?display=performance"),
+          :url_parms => '?display=performance'),
         button(
           :miq_template_timeline,
           'product product-timeline fa-lg',
           N_('Show Timelines for this Template'),
           N_('Timelines'),
-          :url_parms => "?display=timeline"),
+          :url_parms => '?display=timeline'),
       ]
     ),
   ])
@@ -113,7 +113,7 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
       'pficon pficon-add-circle-o fa-lg',
       N_('Create a new snapshot for this Template'),
       nil,
-      :onwhen => "1"),
+      :onwhen => '1'),
     select(
       :miq_template_delete_snap_choice,
       'pficon pficon-delete fa-lg',
@@ -125,15 +125,15 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
           'pficon pficon-delete fa-lg',
           t = N_('Delete Selected Snapshot'),
           t,
-          :confirm   => N_("The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?"),
-          :url_parms => "main_div",
-          :onwhen    => "1"),
+          :confirm   => N_('The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?'),
+          :url_parms => 'main_div',
+          :onwhen    => '1'),
         button(
           :miq_template_snapshot_delete_all,
           'pficon pficon-delete fa-lg',
           t = N_('Delete All Existing Snapshots'),
           t,
-          :confirm => N_("Delete all of this Templates existing snapshots?")),
+          :confirm => N_('Delete all of this Templates existing snapshots?')),
       ]
     ),
     button(
@@ -141,8 +141,8 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
       'fa fa-undo fa-lg',
       N_('Revert to selected snapshot'),
       nil,
-      :confirm => N_("This Template will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?"),
-      :onwhen  => "1"),
+      :confirm => N_('This Template will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?'),
+      :onwhen  => '1'),
   ])
   button_group('vmtree_tasks', [
     button(
@@ -155,8 +155,8 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
       'product product-compare fa-lg',
       N_('Compare selected Templates'),
       nil,
-      :url_parms => "main_div",
+      :url_parms => 'main_div',
       :enabled   => false,
-      :onwhen    => "2+"),
+      :onwhen    => '2+'),
   ])
 end

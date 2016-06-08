@@ -18,7 +18,7 @@ describe AddContainerImageDigest do
   end
 
   migration_context :up do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       row_entries.each do |x|
         x[:image] = container_image_stub.create!(:tag => x[:tag_in])
       end
@@ -35,7 +35,7 @@ describe AddContainerImageDigest do
   end
 
   migration_context :down do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       row_entries.each do |x|
         x[:image] = container_image_stub.create!(
           :tag    => x[:tag_out],

@@ -4,13 +4,13 @@ require 'util/miq-xml'
 require 'digest/md5'
 require 'minitest/unit'
 
-$qaShare = File.join((Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt"), "manageiq", "fleecing_test", "images", "virtual_machines")
+$qaShare = File.join((Sys::Platform::IMPL == :macosx ? '/Volumes' : '/mnt'), 'manageiq', 'fleecing_test', 'images', 'virtual_machines')
 
 module Extract
   class TestRegistry < Minitest::Test
     @@vmList = [
-      {:vmName => File.join($qaShare, "vmware", "Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx"), :guestOS => "Windows"},
-      {:vmName => File.join($qaShare, "vmware", "Debian 40 Server/debian40server.vmx"), :guestOS => "Linux"},
+      {:vmName => File.join($qaShare, 'vmware', 'Windows Server 2003 Enterprise Edition/Windows Server 2003 Enterprise Edition.vmx'), :guestOS => 'Windows'},
+      {:vmName => File.join($qaShare, 'vmware', 'Debian 40 Server/debian40server.vmx'), :guestOS => 'Linux'},
     ]
 
     def setup
@@ -52,7 +52,7 @@ module Extract
       @rootDriveLetter = @systemFs.pwd
 
       # walkSystem32Path()
-      validateRegistryFiles if @systemFs.guestOS == "Windows"
+      validateRegistryFiles if @systemFs.guestOS == 'Windows'
       validateMetadata
 
       @vm.unmount if @vm
@@ -109,9 +109,9 @@ module Extract
         delta = xml.xmlDiff(refXml, stats)
 
         # If we find any changes write the diff xml out so it can be evaluated.
-        xmlDiffPath = File.join(File.dirname(@vm.vmConfigFile), "test_data", category + "_diff.xml")
+        xmlDiffPath = File.join(File.dirname(@vm.vmConfigFile), 'test_data', category + '_diff.xml')
         unless stats[:adds].zero? && stats[:deletes].zero? && stats[:updates].zero?
-          File.open(xmlDiffPath, "w") { |f| delta.write(f, 0) }
+          File.open(xmlDiffPath, 'w') { |f| delta.write(f, 0) }
         end
 
         # Test the results.
@@ -124,7 +124,7 @@ module Extract
 
     def generateMD5(xml)
       md5Sig = Digest::MD5.new
-      xmlFormatted = ""
+      xmlFormatted = ''
       xml.write(xmlFormatted, 0)
       md5Sig << xmlFormatted
       md5Sig.hexdigest
@@ -132,19 +132,19 @@ module Extract
 
     def loadReferenceXml(category)
       # Load the reference XML file
-      refXmlPath = File.join(File.dirname(@vm.vmConfigFile), "test_data", category + ".xml")
+      refXmlPath = File.join(File.dirname(@vm.vmConfigFile), 'test_data', category + '.xml')
       MiqXml.loadFile(refXmlPath)
     end
 
     def createReferenceXml(xml, category)
-      refXmlPath = File.join(File.dirname(@vm.vmConfigFile), "test_data", category + ".xml")
-      File.open(refXmlPath, "w") { |f| xml.write(f, 0) }
+      refXmlPath = File.join(File.dirname(@vm.vmConfigFile), 'test_data', category + '.xml')
+      File.open(refXmlPath, 'w') { |f| xml.write(f, 0) }
     end
 
     def walkSystem32Tree
       fs = @systemFs
       currPath = fs.pwd
-      [nil, "Windows", "System32", "config"].each do |p|
+      [nil, 'Windows', 'System32', 'config'].each do |p|
         currPath = File.join(currPath, p) unless p.nil?
         fs.chdir(currPath)
         fs.dirEntries(fs.pwd).each do |name|
@@ -157,7 +157,7 @@ module Extract
     def validateRegistryFiles
       fs = @systemFs
       filesFound = []
-      currPath = File.join(@rootDriveLetter, "Windows", "System32", "config")
+      currPath = File.join(@rootDriveLetter, 'Windows', 'System32', 'config')
       fs.chdir(currPath)
       fs.dirEntries(fs.pwd).each { |name| filesFound << name.downcase unless fs.fileDirectory?(name) }
       %w(sam security default system software).each do |hive|

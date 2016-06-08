@@ -1,6 +1,6 @@
 module Metric::ConfigSettings
   def self.host_overhead
-    VMDB::Config.new("vmdb").config.fetch_path(:performance, :host_overhead) || {}
+    VMDB::Config.new('vmdb').config.fetch_path(:performance, :host_overhead) || {}
   end
 
   def self.host_overhead_memory

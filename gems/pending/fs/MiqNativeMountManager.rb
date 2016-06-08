@@ -31,7 +31,7 @@ if __FILE__ == $0
   rootTrees = MiqNativeMountManager.mountVolumes
 
   if rootTrees.nil? || rootTrees.empty?
-    puts "No root filesystems detected"
+    puts 'No root filesystems detected'
     exit
   end
 
@@ -49,10 +49,10 @@ if __FILE__ == $0
   dn = "Dir-#{fn}"
   tstring = ts.to_s + "\n"
 
-  if rootTree.guestOS == "Linux"
+  if rootTree.guestOS == 'Linux'
     puts
-    puts "Files in /:"
-    rootTree.dirForeach("/") { |f| puts "\t#{f}" }
+    puts 'Files in /:'
+    rootTree.dirForeach('/') { |f| puts "\t#{f}" }
 
     # puts
     # puts "All files in /test_mount:"
@@ -60,10 +60,10 @@ if __FILE__ == $0
     #
     # tdn = File.join("/test_mount", dn)
     # tfn = File.join(tdn, fn)
-  elsif rootTree.guestOS == "Windows"
+  elsif rootTree.guestOS == 'Windows'
     puts
-    puts "Files in C:/"
-    rootTree.dirForeach("C:/") { |f| puts "\t#{f}" }
+    puts 'Files in C:/'
+    rootTree.dirForeach('C:/') { |f| puts "\t#{f}" }
 
     # ["E:/", "F:/"].each do |drive|
     #   puts
@@ -78,7 +78,7 @@ if __FILE__ == $0
   end
 
   puts
-  puts "*** Payloads:"
+  puts '*** Payloads:'
   rootTree.payloads.each { |p| puts "\t#{p.dobj.devFile}" }
 
   # puts

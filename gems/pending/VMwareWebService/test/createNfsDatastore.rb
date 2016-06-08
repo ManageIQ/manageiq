@@ -8,7 +8,7 @@ require 'VMwareWebService/MiqVimBroker'
 #
 class ConsoleFormatter < Log4r::Formatter
   def format(event)
-    "**** " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+    '**** ' + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
   end
 end
 $vim_log = Log4r::Logger.new 'toplog'
@@ -18,13 +18,13 @@ $vim_log.add 'err_console'
 $stdout.sync = true
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 
-VOL_NAME  = "api_test_vol1"
-REMOTE_HOST = ""
+VOL_NAME  = 'api_test_vol1'
+REMOTE_HOST = ''
 REMOTE_PATH = "/vol/#{VOL_NAME}"
 LOCAL_PATH  = VOL_NAME.tr('_', '-') # Datastore names cannot contain underscores
-ACCESS_MODE = "readWrite"
+ACCESS_MODE = 'readWrite'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -42,7 +42,7 @@ begin
   puts
   puts "Creating datastore: #{LOCAL_PATH}..."
   miqDss.createNasDatastore(REMOTE_HOST, REMOTE_PATH, LOCAL_PATH, ACCESS_MODE)
-  puts "done."
+  puts 'done.'
 
 rescue => err
   puts err.to_s

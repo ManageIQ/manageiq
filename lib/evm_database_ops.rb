@@ -1,12 +1,12 @@
 $LOAD_PATH << File.expand_path(__dir__)
 require 'util/postgres_admin'
 
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/mount")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'util/mount')
 require 'miq_generic_mount_session'
 
 class EvmDatabaseOps
   include Vmdb::Logging
-  BACKUP_TMP_FILE = "/tmp/miq_backup"
+  BACKUP_TMP_FILE = '/tmp/miq_backup'
 
   DEFAULT_OPTS = {:dbname => 'vmdb_production'}
 
@@ -48,7 +48,7 @@ class EvmDatabaseOps
 
         session = MiqGenericMountSession.new_session(connect_opts)
 
-        uri = File.join(connect_opts[:uri], "db_backup", connect_opts[:remote_file_name])
+        uri = File.join(connect_opts[:uri], 'db_backup', connect_opts[:remote_file_name])
         db_opts[:local_file] = session.uri_to_local_path(uri)
       end
 
@@ -59,7 +59,7 @@ class EvmDatabaseOps
       else
         msg = "Destination location: [#{db_opts[:local_file]}], does not have enough free disk space: [#{free_space} bytes] for database of size: [#{db_size} bytes]"
         _log.warn("#{msg}")
-        MiqEvent.raise_evm_event_queue(MiqServer.my_server, "evm_server_db_backup_low_space", :event_details => msg)
+        MiqEvent.raise_evm_event_queue(MiqServer.my_server, 'evm_server_db_backup_low_space', :event_details => msg)
         raise MiqException::MiqDatabaseBackupInsufficientSpace, msg
       end
       backup = PostgresAdmin.backup(db_opts)
@@ -108,18 +108,18 @@ class EvmDatabaseOps
   end
 
   def self.database_connections(database = nil, type = :all)
-    database ||= Rails.configuration.database_configuration[Rails.env]["database"]
+    database ||= Rails.configuration.database_configuration[Rails.env]['database']
     conn = ActiveRecord::Base.connection
-    conn.client_connections.count { |c| c["database"] == database }
+    conn.client_connections.count { |c| c['database'] == database }
   end
 
   def self.stop
-    _log.info("Stopping internal database")
+    _log.info('Stopping internal database')
     PostgresAdmin.stop(DEFAULT_OPTS.merge(:graceful => true))
   end
 
   def self.start
-    _log.info("Starting internal database")
+    _log.info('Starting internal database')
     PostgresAdmin.start(DEFAULT_OPTS)
   end
 
@@ -136,7 +136,7 @@ class EvmDatabaseOps
   end
 
   def self.backup_file_name
-    time_suffix  = Time.now.utc.strftime("%Y%m%d_%H%M%S")
+    time_suffix  = Time.now.utc.strftime('%Y%m%d_%H%M%S')
     "#{BACKUP_TMP_FILE}_#{time_suffix}"
   end
 end

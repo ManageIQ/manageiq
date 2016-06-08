@@ -1,17 +1,17 @@
 $:.push("#{File.dirname(__FILE__)}/..")
 
-require "VixDiskLib_raw"
+require 'VixDiskLib_raw'
 
-from_vmdk = "/vmfs/volumes/47dade33-4f4a4875-3951-00188b404015/rpo-test2/rpo-test2-000001.vmdk"
-to_vmdk = "/vmfs/volumes/47dade33-4f4a4875-3951-00188b404015/rpo-test2/rpo-test2_1_copy.vmdk"
-temp_vmdk = File.join(File.dirname(__FILE__), "fii.vmdk")
+from_vmdk = '/vmfs/volumes/47dade33-4f4a4875-3951-00188b404015/rpo-test2/rpo-test2-000001.vmdk'
+to_vmdk = '/vmfs/volumes/47dade33-4f4a4875-3951-00188b404015/rpo-test2/rpo-test2_1_copy.vmdk'
+temp_vmdk = File.join(File.dirname(__FILE__), 'fii.vmdk')
 
 conParms = {
-  :serverName => "",
+  :serverName => '',
   :port       => 902,
   :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
-  :userName   => "",
-  :password   => "",
+  :userName   => '',
+  :password   => '',
 }
 
 VixDiskLib_raw.init(lambda { |s| puts "INFO: #{s}" },
@@ -25,7 +25,7 @@ dHandle = VixDiskLib_raw.open(rconnection, from_vmdk, VixDiskLib_raw::VIXDISKLIB
 
 dinfo = VixDiskLib_raw.getInfo(dHandle)
 puts
-puts "Disk info:"
+puts 'Disk info:'
 dinfo.each { |k, v| puts "\t#{k} => #{v}" }
 puts
 

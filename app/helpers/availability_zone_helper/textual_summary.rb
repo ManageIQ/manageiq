@@ -20,12 +20,12 @@ module AvailabilityZoneHelper::TextualSummary
   #
 
   def textual_cloud_volumes
-    label = ui_lookup(:tables => "cloud_volume")
+    label = ui_lookup(:tables => 'cloud_volume')
     num   = @record.number_of(:cloud_volumes)
-    h     = {:label => label, :image => "cloud_volume", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_volume_show_list")
+    h     = {:label => label, :image => 'cloud_volume', :value => num}
+    if num > 0 && role_allows(:feature => 'cloud_volume_show_list')
       h[:link]  = url_for(:action => 'show', :id => @availability_zone, :display => 'cloud_volumes')
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
     end
     h
   end
@@ -35,12 +35,12 @@ module AvailabilityZoneHelper::TextualSummary
   end
 
   def textual_instances
-    label = ui_lookup(:tables => "vm_cloud")
+    label = ui_lookup(:tables => 'vm_cloud')
     num   = @record.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
+    h     = {:label => label, :image => 'vm', :value => num}
+    if num > 0 && role_allows(:feature => 'vm_show_list')
       h[:link]  = url_for(:action => 'show', :id => @availability_zone, :display => 'instances')
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
     end
     h
   end

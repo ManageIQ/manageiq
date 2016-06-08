@@ -53,7 +53,7 @@ def quota_limit_exceeded(item, reason)
 end
 
 def quota_warn_exceeded(item, reason)
-  key = reason_key(item, "warn_")
+  key = reason_key(item, 'warn_')
   $evm.log(:info, "Quota warning for key: #{key} reason: #{reason}")
   @warn_exceeded[key] = reason
 end
@@ -77,13 +77,13 @@ end
 
 def check_quota_results
   unless @max_exceeded.empty?
-    max_message = message_text(nil, "Request exceeds maximum allowed for the following: ", @max_exceeded)
-    @miq_request.set_message(set_exceeded_results(max_message, :quota_max_exceeded, "error"))
+    max_message = message_text(nil, 'Request exceeds maximum allowed for the following: ', @max_exceeded)
+    @miq_request.set_message(set_exceeded_results(max_message, :quota_max_exceeded, 'error'))
     return
   end
   unless @warn_exceeded.empty?
-    warn_message = message_text('warn_', "Request exceeds warning limits for the following: ", @warn_exceeded)
-    @miq_request.set_message(set_exceeded_results(warn_message, :quota_warn_exceeded, "ok"))
+    warn_message = message_text('warn_', 'Request exceeds warning limits for the following: ', @warn_exceeded)
+    @miq_request.set_message(set_exceeded_results(warn_message, :quota_warn_exceeded, 'ok'))
   end
 end
 
@@ -137,20 +137,20 @@ end
 setup
 
 request_info
-error("request") if @miq_request.nil?
+error('request') if @miq_request.nil?
 
 source_info
-error("source") if @source.nil?
+error('source') if @source.nil?
 
-error("used") if @used.nil?
+error('used') if @used.nil?
 
-error("requested") if @requested.nil?
+error('requested') if @requested.nil?
 
 $evm.log(:info, "quota_warning: #{@warn_limit.inspect}")
 $evm.log(:info, "quota_limits: #{@max_limit.inspect}")
 
 if !limits_set(@max_limit) && !limits_set(@warn_limit)
-  $evm.log(:info, "No Quota limits set. No quota check being done.")
+  $evm.log(:info, 'No Quota limits set. No quota check being done.')
   $evm.root['ae_result'] = 'ok'
   exit MIQ_OK
 end

@@ -1,6 +1,6 @@
 class SetReportTypeFromChargebackToChargebackVmOnMiqReports < ActiveRecord::Migration[5.0]
-  CHARGEBACK_REPORT_DB_MODEL = "Chargeback".freeze # old
-  CHARGEBACK_VM_REPORT_DB_MODEL = "ChargebackVm".freeze # new
+  CHARGEBACK_REPORT_DB_MODEL = 'Chargeback'.freeze # old
+  CHARGEBACK_VM_REPORT_DB_MODEL = 'ChargebackVm'.freeze # new
 
   class MiqReport < ActiveRecord::Base
     serialize :db_options

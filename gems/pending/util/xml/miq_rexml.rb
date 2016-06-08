@@ -34,11 +34,11 @@ class MIQRexml
   end
 
   def self.findElement(path, element)
-    findElementInt(path.tr("\\", "/").split("/"), element)
+    findElementInt(path.tr('\\', '/').split('/'), element)
   end
 
   def self.findRegElement(path, element)
-    path_fix_up = path.tr("\\", "/").split("/")
+    path_fix_up = path.tr('\\', '/').split('/')
     return XmlHash::XmhHelpers.findRegElementInt(path_fix_up, element) if element.kind_of?(Hash)
     findRegElementInt(path_fix_up, element)
   end
@@ -282,7 +282,7 @@ module REXML
       if err.class == ::Encoding::CompatibilityError
         data_utf8 = data.dup.force_encoding('UTF-8')
         # Check for UTF-8 BOM and remove
-        data_utf8 = data_utf8[3..-1] if data_utf8[0, 3] == "\xC3\xAF\xC2\xBB\xC2\xBF".force_encoding("UTF-8")
+        data_utf8 = data_utf8[3..-1] if data_utf8[0, 3] == "\xC3\xAF\xC2\xBB\xC2\xBF".force_encoding('UTF-8')
         REXML::Document.new(data_utf8)
       else
         raise
@@ -291,7 +291,7 @@ module REXML
 
     def self.loadFile(filename)
       f = nil
-      f = File.open(filename, "r")
+      f = File.open(filename, 'r')
       load(f)
     ensure
       f.close if f
@@ -299,12 +299,12 @@ module REXML
 
     def self.createDoc(rootName, rootAttrs = nil, version = MIQ_XML_VERSION)
       xml = rootName.kind_of?(Symbol) ? REXML::Document.new("<#{rootName}/>") : REXML::Document.new(rootName)
-      xml << XMLDecl.new(1.0, "UTF-8")
+      xml << XMLDecl.new(1.0, 'UTF-8')
       if xml.root
         xml.root.add_attributes(
-          "version"      => version,
-          "created_on"   => Time.now.to_i,
-          "display_time" => Time.now.getutc.iso8601,
+          'version'      => version,
+          'created_on'   => Time.now.to_i,
+          'display_time' => Time.now.getutc.iso8601,
         # TODO: Namespaces are causing an error during find_first below,
         #        namely during MIQExtract and the extraction of product keys
         #           "xmlns" => "http://www.manageiq.com/xsd",
@@ -322,7 +322,7 @@ module REXML
 
     def self.decode(encodedText)
       return REXML::Document.new(MIQEncode.decode(encodedText)) if encodedText
-      REXML::Document.new("")
+      REXML::Document.new('')
     end
 
     def find_first(xpath, ns = nil)

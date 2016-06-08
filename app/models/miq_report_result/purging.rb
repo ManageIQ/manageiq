@@ -4,14 +4,14 @@ module MiqReportResult::Purging
 
   module ClassMethods
     def purge_mode_and_value
-      value = VMDB::Config.new("vmdb").config.fetch_path(:reporting, :history, :keep_reports)
+      value = VMDB::Config.new('vmdb').config.fetch_path(:reporting, :history, :keep_reports)
       mode  = (value.nil? || value.number_with_method?) ? :date : :remaining
       value = (value || 6.months).to_i_with_method.seconds.ago.utc if mode == :date
       return mode, value
     end
 
     def purge_window_size
-      VMDB::Config.new("vmdb").config.fetch_path(:reporting, :history, :purge_window_size) || 100
+      VMDB::Config.new('vmdb').config.fetch_path(:reporting, :history, :purge_window_size) || 100
     end
 
     def purge_timer
@@ -21,9 +21,9 @@ module MiqReportResult::Purging
     def purge_queue(mode, value)
       MiqQueue.put_or_update(
         :class_name  => name,
-        :method_name => "purge",
-        :role        => "reporting",
-        :queue_name  => "reporting"
+        :method_name => 'purge',
+        :role        => 'reporting',
+        :queue_name  => 'reporting'
       ) { |_msg, item| item.merge(:args => [mode, value]) }
     end
 
@@ -80,7 +80,7 @@ module MiqReportResult::Purging
     def purge_ids_for_remaining(remaining)
       # TODO: in sql, use PARTITION BY and ROW_NUMBER()
       distinct.pluck(:miq_report_id).compact.sort.each_with_object({}) do |report_id, h|
-        results      = where(:miq_report_id => report_id).order("id DESC").limit(remaining + 1).pluck(:id)
+        results      = where(:miq_report_id => report_id).order('id DESC').limit(remaining + 1).pluck(:id)
         h[report_id] = results[-2] if results.length == remaining + 1
       end
     end

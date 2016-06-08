@@ -18,7 +18,7 @@ module FileDepotMixin
       return true unless MiqEnvironment::Command.is_appliance?
 
       res = mnt_instance(settings).verify
-      raise _("Connection Settings validation failed with error: %{error}") % {:error => res.last} unless res.first
+      raise _('Connection Settings validation failed with error: %{error}') % {:error => res.last} unless res.first
       res
     end
 
@@ -53,7 +53,7 @@ module FileDepotMixin
 
   def validate_depot_credentials
     # This only checks that credentials are present
-    errors.add(:file_depot, "is missing credentials") if self.requires_credentials? && self.missing_credentials?
+    errors.add(:file_depot, 'is missing credentials') if self.requires_credentials? && self.missing_credentials?
   end
 
   def verify_depot_credentials(_auth_type = nil)
@@ -71,7 +71,7 @@ module FileDepotMixin
   end
 
   def mnt
-    raise _("No credentials defined") if requires_credentials? && missing_credentials?
+    raise _('No credentials defined') if requires_credentials? && missing_credentials?
 
     return @mnt if @mnt
     @mnt = self.class.mnt_instance(depot_settings)

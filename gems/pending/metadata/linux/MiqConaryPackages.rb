@@ -6,8 +6,8 @@ class MiqConaryPackages
   def initialize(fs, dbFile)
     @pkgDb = MiqSqlite3DB::MiqSqlite3.new(dbFile, fs)
 
-    tVersions  = @pkgDb.getTable("Versions")
-    tInstances = @pkgDb.getTable("Instances")
+    tVersions  = @pkgDb.getTable('Versions')
+    tInstances = @pkgDb.getTable('Instances')
 
     @versions = {}
     tVersions.each_row do |row|
@@ -19,7 +19,7 @@ class MiqConaryPackages
     tInstances.each_row do |row|
       troveName = row['troveName']
       versionId = row['versionId']
-      @troves[troveName] = versionId if @versions.key?(versionId) && !troveName.include?(":") && row['isPresent']
+      @troves[troveName] = versionId if @versions.key?(versionId) && !troveName.include?(':') && row['isPresent']
     end
   end
 

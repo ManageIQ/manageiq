@@ -16,7 +16,7 @@ end
 def Dir(fs)
   names = fs.dirEntries(fs.pwd)
   names.each do |ent|
-    next if ent == "." || ent == ".."
+    next if ent == '.' || ent == '..'
     if fs.fileFile?(ent)
       fs_len = nil
       assert_nothing_raised { fs_len = fs.fileSize(ent) }
@@ -28,14 +28,14 @@ def Dir(fs)
       assert_nothing_raised { buf_len = readAll(fo) }
       assert_equal(fs_len, fo_len)
       assert_equal(fs_len, buf_len)
-      print "."
+      print '.'
       fo.close
     end
   end
 
   # Recurse directories.
   names.each do |ent|
-    next if ent == "." || ent == ".."
+    next if ent == '.' || ent == '..'
     if fs.fileDirectory?(ent) && !fs.fileSymLink?(ent)
       before = fs.pwd
       fs.chdir(ent)
@@ -47,7 +47,7 @@ end
 
 class TestIso9660FileSystem < Minitest::Test
   def test_miq_fs
-    puts "Testing file system"
+    puts 'Testing file system'
     di = OpenStruct.new
     di.rawDisk = true
     di.fileName = $rawDisk

@@ -93,22 +93,22 @@ describe Authenticator::Ldap do
   end
 
   describe '#uses_stored_password?' do
-    it "is false" do
+    it 'is false' do
       expect(subject.uses_stored_password?).to be_falsey
     end
   end
 
   describe '#lookup_by_identity' do
-    it "finds existing users" do
+    it 'finds existing users' do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
     end
 
-    it "normalizes usernames" do
+    it 'normalizes usernames' do
       expect(subject.lookup_by_identity('aXlice')).to eq(alice)
     end
 
-    context "using internal authorization" do
-      it "refuses users that exist in LDAP" do
+    context 'using internal authorization' do
+      it 'refuses users that exist in LDAP' do
         expect(-> { subject.lookup_by_identity('bob') }).to raise_error(/credentials are not configured/)
       end
 
@@ -118,10 +118,10 @@ describe Authenticator::Ldap do
       end
     end
 
-    context "using external authorization" do
+    context 'using external authorization' do
       let(:config) { super().merge(:ldap_role => true) }
 
-      it "creates new users from LDAP" do
+      it 'creates new users from LDAP' do
         expect(subject.lookup_by_identity('bob')).to be_a(User)
         expect(subject.lookup_by_identity('bob').name).to eq('Bob Builderson')
       end
@@ -132,17 +132,17 @@ describe Authenticator::Ldap do
         expect(subject.lookup_by_identity('bXob').name).to eq('Bob Builderson')
       end
 
-      context "with no matching groups" do
+      context 'with no matching groups' do
         let(:bob_data) { super().merge(:groups => %w(bubble trouble)) }
-        it "refuses LDAP users" do
+        it 'refuses LDAP users' do
           expect(-> { subject.lookup_by_identity('bob') }).to raise_error(/unable to match.*membership/)
         end
       end
 
-      context "with no corresponding LDAP user" do
+      context 'with no corresponding LDAP user' do
         let(:alice_data) { nil }
 
-        it "still finds the user" do
+        it 'still finds the user' do
           expect(subject.lookup_by_identity('alice')).to eq(alice)
         end
       end
@@ -166,7 +166,7 @@ describe Authenticator::Ldap do
       allow(subject).to receive(:find_or_create_by_ldap)
     end
 
-    context "when using LDAP" do
+    context 'when using LDAP' do
       let(:config) { super().merge(:ldap_role => true) }
 
       before do
@@ -174,114 +174,114 @@ describe Authenticator::Ldap do
         allow(MiqTask).to receive(:create).and_return(double(:id => :return_value))
       end
 
-      it "encrypts password for queuing" do
+      it 'encrypts password for queuing' do
         expect(subject).to receive(:encrypt_ldap_password)
         authenticate
       end
     end
 
-    context "with correct password" do
-      context "using local authorization" do
-        it "succeeds" do
+    context 'with correct password' do
+      context 'using local authorization' do
+        it 'succeeds' do
           expect(authenticate).to eq(alice)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'alice',
-            :message => "User alice successfully validated by LDAP",
+            :message => 'User alice successfully validated by LDAP',
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'alice',
-            :message => "Authentication successful for user alice",
+            :message => 'Authentication successful for user alice',
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
-        it "updates lastlogon" do
+        it 'updates lastlogon' do
           expect(-> { authenticate }).to change { alice.reload.lastlogon }
         end
 
-        context "with no corresponding LDAP user" do
+        context 'with no corresponding LDAP user' do
           let(:alice_data) { nil }
-          it "fails" do
-            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+          it 'fails' do
+            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
           end
         end
       end
 
-      context "using external authorization" do
+      context 'using external authorization' do
         let(:config) { super().merge(:ldap_role => true) }
         before(:each) { allow(subject).to receive(:authorize_queue?).and_return(false) }
 
-        context "with an LDAP user" do
+        context 'with an LDAP user' do
           before { allow(subject).to receive(:run_task) }
 
-          it "decrypts password after dequeuing" do
+          it 'decrypts password after dequeuing' do
             expect(subject).to receive(:decrypt_ldap_password)
             subject.authorize(22, 'alice', 1)
           end
         end
 
-        it "enqueues an authorize task" do
+        it 'enqueues an authorize task' do
           expect(subject).to receive(:authorize_queue).and_return(123)
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'alice',
-            :message => "User alice successfully validated by LDAP",
+            :message => 'User alice successfully validated by LDAP',
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'alice',
-            :message => "Authentication successful for user alice",
+            :message => 'Authentication successful for user alice',
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
-        it "updates lastlogon" do
+        it 'updates lastlogon' do
           expect(-> { authenticate }).to change { alice.reload.lastlogon }
         end
 
-        it "immediately completes the task" do
+        it 'immediately completes the task' do
           task_id = authenticate
           task = MiqTask.find(task_id)
           expect(User.find_by_userid(task.userid)).to eq(alice)
         end
 
-        context "with no corresponding LDAP user" do
+        context 'with no corresponding LDAP user' do
           let(:alice_data) { nil }
-          it "fails" do
-            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+          it 'fails' do
+            expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
           end
         end
       end
     end
 
-    context "with bad password" do
+    context 'with bad password' do
       let(:password) { 'incorrect' }
 
-      it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      it 'fails' do
+        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
       end
 
-      it "records one failing audit entry" do
+      it 'records one failing audit entry' do
         expect(AuditEvent).to receive(:failure).with(
           :event   => 'authenticate_ldap',
           :userid  => 'alice',
-          :message => "Authentication failed for userid alice",
+          :message => 'Authentication failed for userid alice',
         )
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
-      it "logs the failure" do
+      it 'logs the failure' do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
@@ -291,122 +291,122 @@ describe Authenticator::Ldap do
       end
     end
 
-    context "with unknown username" do
+    context 'with unknown username' do
       let(:username) { 'bob' }
 
-      context "with bad password" do
+      context 'with bad password' do
         let(:password) { 'incorrect' }
 
-        it "fails" do
-          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+        it 'fails' do
+          expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
         end
 
-        it "records one failing audit entry" do
+        it 'records one failing audit entry' do
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_ldap',
             :userid  => 'bob',
-            :message => "Authentication failed for userid bob",
+            :message => 'Authentication failed for userid bob',
           )
           expect(AuditEvent).not_to receive(:success)
           authenticate rescue nil
         end
-        it "logs the failure" do
+        it 'logs the failure' do
           allow($log).to receive(:warn).with(/Audit/)
           expect($log).to receive(:warn).with(/Authentication failed$/)
           authenticate rescue nil
         end
       end
 
-      context "using local authorization" do
-        it "fails" do
+      context 'using local authorization' do
+        it 'fails' do
           expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
         end
 
-        it "records one successful and one failing audit entry" do
+        it 'records one successful and one failing audit entry' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'bob',
-            :message => "User bob successfully validated by LDAP",
+            :message => 'User bob successfully validated by LDAP',
           )
           expect(AuditEvent).to receive(:failure).with(
             :event   => 'authenticate_ldap',
             :userid  => 'bob',
-            :message => "User bob authenticated but not defined in EVM",
+            :message => 'User bob authenticated but not defined in EVM',
           )
           authenticate rescue nil
         end
-        it "logs the failure" do
+        it 'logs the failure' do
           allow($log).to receive(:warn).with(/Audit/)
           expect($log).to receive(:warn).with(/User authenticated but not defined in EVM, please contact your EVM administrator/)
           authenticate rescue nil
         end
 
-        context "with a default group configured" do
+        context 'with a default group configured' do
           let(:config) { super().merge(:default_group_for_users => 'wibble') }
 
-          it "succeeds" do
+          it 'succeeds' do
             expect(authenticate).to be_a(User)
           end
 
-          it "looks in ldap" do
+          it 'looks in ldap' do
             expect(subject).to receive(:find_or_create_by_ldap)
             authenticate
           end
 
-          it "records two successful audit entries" do
+          it 'records two successful audit entries' do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
               :userid  => 'bob',
-              :message => "User bob successfully validated by LDAP",
+              :message => 'User bob successfully validated by LDAP',
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
               :userid  => 'bob',
-              :message => "Authentication successful for user bob",
+              :message => 'Authentication successful for user bob',
             )
             expect(AuditEvent).not_to receive(:failure)
             authenticate
           end
 
-          it "creates a new User" do
+          it 'creates a new User' do
             expect(-> { authenticate }).to change { User.where(:userid => 'bob').count }.from(0).to(1)
           end
         end
 
-        context "with a non-existant default group configured" do
+        context 'with a non-existant default group configured' do
           let(:config) { super().merge(:default_group_for_users => 'bubble') }
 
-          it "fails" do
+          it 'fails' do
             expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
           end
         end
       end
 
-      context "using external authorization" do
+      context 'using external authorization' do
         let(:config) { super().merge(:ldap_role => true) }
         before(:each) { allow(subject).to receive(:authorize_queue?).and_return(false) }
 
-        it "enqueues an authorize task" do
+        it 'enqueues an authorize task' do
           expect(subject).to receive(:authorize_queue).and_return(123)
           expect(authenticate).to eq(123)
         end
 
-        it "records two successful audit entries" do
+        it 'records two successful audit entries' do
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'bob',
-            :message => "User bob successfully validated by LDAP",
+            :message => 'User bob successfully validated by LDAP',
           )
           expect(AuditEvent).to receive(:success).with(
             :event   => 'authenticate_ldap',
             :userid  => 'bob',
-            :message => "Authentication successful for user bob",
+            :message => 'Authentication successful for user bob',
           )
           expect(AuditEvent).not_to receive(:failure)
           authenticate
         end
 
-        it "immediately completes the task" do
+        it 'immediately completes the task' do
           task_id = authenticate
           task = MiqTask.find(task_id)
           user = User.find_by_userid(task.userid)
@@ -414,28 +414,28 @@ describe Authenticator::Ldap do
           expect(user.email).to eq('bob@example.com')
         end
 
-        it "creates a new User" do
+        it 'creates a new User' do
           expect(-> { authenticate }).to change { User.where(:userid => 'bob').count }.from(0).to(1)
         end
 
-        context "with no matching groups" do
+        context 'with no matching groups' do
           let(:bob_data) { super().merge(:groups => %w(bubble trouble)) }
 
-          it "enqueues an authorize task" do
+          it 'enqueues an authorize task' do
             expect(subject).to receive(:authorize_queue).and_return(123)
             expect(authenticate).to eq(123)
           end
 
-          it "records two successful audit entries plus one failure" do
+          it 'records two successful audit entries plus one failure' do
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
               :userid  => 'bob',
-              :message => "User bob successfully validated by LDAP",
+              :message => 'User bob successfully validated by LDAP',
             )
             expect(AuditEvent).to receive(:success).with(
               :event   => 'authenticate_ldap',
               :userid  => 'bob',
-              :message => "Authentication successful for user bob",
+              :message => 'Authentication successful for user bob',
             )
             expect(AuditEvent).to receive(:failure).with(
               :event   => 'authorize',
@@ -449,7 +449,7 @@ describe Authenticator::Ldap do
             expect(-> { authenticate }).not_to change { User.where(:userid => 'bob').count }.from(0)
           end
 
-          it "immediately marks the task as errored" do
+          it 'immediately marks the task as errored' do
             task_id = authenticate
             task = MiqTask.find(task_id)
             expect(task.status).to eq('Error')

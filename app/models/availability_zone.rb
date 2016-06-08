@@ -7,7 +7,7 @@ class AvailabilityZone < ApplicationRecord
 
   acts_as_miq_taggable
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::CloudManager'
   has_many   :vms
   has_many   :vms_and_templates
   has_many   :cloud_volumes
@@ -21,7 +21,7 @@ class AvailabilityZone < ApplicationRecord
   virtual_total :total_vms, :vms
 
   def self.available
-    where(arel_table[:type].not_eq("ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull"))
+    where(arel_table[:type].not_eq('ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull'))
   end
 
   PERF_ROLLUP_CHILDREN = :vms

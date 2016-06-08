@@ -23,7 +23,7 @@ class Post
   end
 
   def full_html_body
-    "<strong>Here is some <i>full</i> content, with out any excerpts</strong>"
+    '<strong>Here is some <i>full</i> content, with out any excerpts</strong>'
   end
 
   def create_date
@@ -56,7 +56,7 @@ class MiniTest::Unit::TestCase
   end
 
   def posts_url
-    "http://example.com/posts"
+    'http://example.com/posts'
   end
 
   def post_url(post)

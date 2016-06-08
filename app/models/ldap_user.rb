@@ -2,8 +2,8 @@ class LdapUser < ApplicationRecord
   belongs_to :ldap_domain
 
   has_many   :ldap_managements, :dependent => :destroy
-  has_many   :managers, :through => :ldap_managements, :foreign_key => "ldap_user_id", :source => :manager
-  has_many   :inverse_managements, :class_name => "LdapManagement", :foreign_key => "manager_id", :dependent => :destroy
+  has_many   :managers, :through => :ldap_managements, :foreign_key => 'ldap_user_id', :source => :manager
+  has_many   :inverse_managements, :class_name => 'LdapManagement', :foreign_key => 'manager_id', :dependent => :destroy
   has_many   :direct_reports,  :through => :inverse_managements, :source => :ldap_user
 
   acts_as_miq_taggable
@@ -47,8 +47,8 @@ class LdapUser < ApplicationRecord
     user_count = creates = updates = 0
 
     # LDAP filters to return on record DB for people
-    opts = {:attributes => ["dn"], :base => ldap_server.ldap.basedn, :return_result => false, :scope => :sub}
-    opts[:filter] = Net::LDAP::Filter.eq("objectCategory", "Person")
+    opts = {:attributes => ['dn'], :base => ldap_server.ldap.basedn, :return_result => false, :scope => :sub}
+    opts[:filter] = Net::LDAP::Filter.eq('objectCategory', 'Person')
 
     ldap_server.search(opts) do |entry|
       dn = MiqLdap.get_attr(entry, :dn)
@@ -96,7 +96,7 @@ class LdapUser < ApplicationRecord
   def self.full_sync(ldap_server)
     log_header = "LDAP Server #{ldap_server.id} : <#{ldap_server.name}>"
     _log.info "#{log_header} Starting full LDAP User sync"
-    opts = {:return_result => false, :scope => :sub, :filter => Net::LDAP::Filter.eq("objectCategory", "Person")}
+    opts = {:return_result => false, :scope => :sub, :filter => Net::LDAP::Filter.eq('objectCategory', 'Person')}
 
     rec_count = 0
     ldap_server.ldap_users.each do |rec|
@@ -112,13 +112,13 @@ class LdapUser < ApplicationRecord
 
   def self.update_records_since(ldap_server, updates_since)
     log_header = "LDAP Server #{ldap_server.id} : <#{ldap_server.name}>"
-    opts = {:base => ldap_server.base_dn, :return_result => false, :scope => :sub, :filter => Net::LDAP::Filter.eq("objectCategory", "Person")}
+    opts = {:base => ldap_server.base_dn, :return_result => false, :scope => :sub, :filter => Net::LDAP::Filter.eq('objectCategory', 'Person')}
 
     # LDAP whenchanged format example: "20121214170416.0Z"
     when_changed = updates_since.utc.iso8601(1).gsub(/[-:T]/, '')
 
     _log.info "#{log_header} Checking for updated records since <#{when_changed}>"
-    opts[:filter] = opts[:filter] & Net::LDAP::Filter.ge("whenchanged", when_changed)
+    opts[:filter] = opts[:filter] & Net::LDAP::Filter.ge('whenchanged', when_changed)
 
     rec_count = 0
     ldap_server.search(opts) do |entry|

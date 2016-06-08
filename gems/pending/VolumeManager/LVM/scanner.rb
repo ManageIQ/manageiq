@@ -5,11 +5,11 @@ module Lvm2Scanner
 
   LVM_ID_LEN          = 8
   LVM_TYPE_LEN        = 8
-  LVM_ID              = "LABELONE"
+  LVM_ID              = 'LABELONE'
 
   PV_ID_LEN           = 32
   MDA_MAGIC_LEN       = 16
-  FMTT_MAGIC          = "\040\114\126\115\062\040\170\133\065\101\045\162\060\116\052\076"
+  FMTT_MAGIC          = ' LVM2 x[5A%r0N*>'
 
   #
   # On disk label header.
@@ -27,36 +27,36 @@ module Lvm2Scanner
   #
   PV_HEADER = BinaryStruct.new([
     "A#{PV_ID_LEN}",        'pv_uuid',
-    "Q",                    'device_size_xl'
+    'Q',                    'device_size_xl'
   ])
 
   #
   # On disk disk location structure.
   #
   DISK_LOCN = BinaryStruct.new([
-    "Q",                    'offset',
-    "Q",                    'size'
+    'Q',                    'offset',
+    'Q',                    'size'
   ])
 
   #
   # On disk metadata area header.
   #
   MDA_HEADER = BinaryStruct.new([
-    "L",                    'checksum_xl',
+    'L',                    'checksum_xl',
     "A#{MDA_MAGIC_LEN}",    'magic',
-    "L",                    'version',
-    "Q",                    'start',
-    "Q",                    'size'
+    'L',                    'version',
+    'Q',                    'start',
+    'Q',                    'size'
   ])
 
   #
   # On disk raw location header, points to metadata.
   #
   RAW_LOCN = BinaryStruct.new([
-    "Q",                    'offset',
-    "Q",                    'size',
-    "L",                    'checksum',
-    "L",                    'filler'
+    'Q',                    'offset',
+    'Q',                    'size',
+    'L',                    'checksum',
+    'L',                    'filler'
   ])
 
   #
@@ -82,7 +82,7 @@ module Lvm2Scanner
       end
     end
     pvh.mdList = mdList
-    pvh.lvm_type = lh.lvm_type.split(" ").first
+    pvh.lvm_type = lh.lvm_type.split(' ').first
     pvh
   end # def self.labelScan
 
@@ -126,7 +126,7 @@ module Lvm2Scanner
   def self.readMdah(d, dlh)
     d.seek(dlh.offset, IO::SEEK_SET)
     mdah = readStruct(d, MDA_HEADER)
-    raise "** readMdah: unknown magic number" if mdah.magic != FMTT_MAGIC
+    raise '** readMdah: unknown magic number' if mdah.magic != FMTT_MAGIC
 
     #
     # Read and save raw loaction headers for metadata.

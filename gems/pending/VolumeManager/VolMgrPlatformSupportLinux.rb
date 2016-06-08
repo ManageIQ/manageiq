@@ -10,17 +10,17 @@ module VolMgrPlatformSupportLinux
     @vimVm = nil
 
     unless @ost.force
-      $log.info "VolMgrPlatformSupportLinux.init: force flag = false"
+      $log.info 'VolMgrPlatformSupportLinux.init: force flag = false'
       return
     end
 
     if @ost.miqVimVm
-      $log.debug "VolMgrPlatformSupportLinux.init: Have miqVimVm"
+      $log.debug 'VolMgrPlatformSupportLinux.init: Have miqVimVm'
       @vimVm = @ost.miqVimVm
       return
     end
 
-    $log.debug "VolMgrPlatformSupportLinux.init: miqVimVm not set - should be a non VMware VM"
+    $log.debug 'VolMgrPlatformSupportLinux.init: miqVimVm not set - should be a non VMware VM'
   end
 
   def preMount
@@ -37,9 +37,9 @@ module VolMgrPlatformSupportLinux
       return
     end
 
-    desc = @ost.snapshotDescription ? @ost.snapshotDescription : "EVM Snapshot"
+    desc = @ost.snapshotDescription ? @ost.snapshotDescription : 'EVM Snapshot'
     st = Time.now
-    @snMor = @vimVm.createEvmSnapshot(desc, "false", true, @ost.snapshot_create_free_space)
+    @snMor = @vimVm.createEvmSnapshot(desc, 'false', true, @ost.snapshot_create_free_space)
     $log.info "VolMgrPlatformSupportLinux.preMount: VM snapshot created in [#{Time.now - st}] seconds"
     $log.debug "VolMgrPlatformSupportLinux.preMount: snMor = \"#{@snMor}\""
   end
@@ -55,7 +55,7 @@ module VolMgrPlatformSupportLinux
       else
         $log.debug "VolMgrPlatformSupportLinux.postMount: removing snapshot snMor = \"#{@snMor}\""
         begin
-          @vimVm.removeSnapshot(@snMor, "false", true, @ost.snapshot_remove_free_space)
+          @vimVm.removeSnapshot(@snMor, 'false', true, @ost.snapshot_remove_free_space)
         rescue => err
           $log.warn "VolMgrPlatformSupportLinux.postMount: failed to remove snapshot for VM: #{@cfgFile}"
           $log.warn "VolMgrPlatformSupportLinux.postMount: #{err}"

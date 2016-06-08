@@ -1,8 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceVmOrTemplate < MiqAeServiceModelBase
-    require_relative "mixins/miq_ae_service_ems_operations_mixin"
+    require_relative 'mixins/miq_ae_service_ems_operations_mixin'
     include MiqAeServiceEmsOperationsMixin
-    require_relative "mixins/miq_ae_service_retirement_mixin"
+    require_relative 'mixins/miq_ae_service_retirement_mixin'
     include MiqAeServiceRetirementMixin
 
     expose :ext_management_system, :association => true
@@ -45,14 +45,14 @@ module MiqAeMethodService
             :instance_id => @object.id,
             :method_name => m,
             :zone        => @object.my_zone,
-            :role        => "ems_operations"
+            :role        => 'ems_operations'
           )
           true
         end
       end
     end
 
-    def migrate(host, pool = nil, priority = "defaultPriority", state = nil)
+    def migrate(host, pool = nil, priority = 'defaultPriority', state = nil)
       raise "Host Class must be MiqAeServiceHost, but is <#{host.class.name}>" unless host.kind_of?(MiqAeServiceHost)
       raise "Pool Class must be MiqAeServiceResourcePool, but is <#{pool.class.name}>" unless pool.nil? || pool.kind_of?(MiqAeServiceResourcePool)
 
@@ -93,7 +93,7 @@ module MiqAeMethodService
 
     def scan(scan_categories = nil)
       options = scan_categories.nil? ? {} : {:categories => scan_categories}
-      job = object_send(:scan, "system", options)
+      job = object_send(:scan, 'system', options)
       wrap_results(job)
     end
 
@@ -147,27 +147,27 @@ module MiqAeMethodService
     end
 
     def owner=(owner)
-      raise ArgumentError, "owner must be nil or a MiqAeServiceUser" unless owner.nil? || owner.kind_of?(MiqAeMethodService::MiqAeServiceUser)
+      raise ArgumentError, 'owner must be nil or a MiqAeServiceUser' unless owner.nil? || owner.kind_of?(MiqAeMethodService::MiqAeServiceUser)
 
       ar_method do
-        @object.evm_owner = owner && owner.instance_variable_get("@object")
+        @object.evm_owner = owner && owner.instance_variable_get('@object')
         _log.info "Setting EVM Owning User on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{@object.evm_owner.inspect}"
         @object.save
       end
     end
 
     def group=(group)
-      raise ArgumentError, "group must be nil or a MiqAeServiceMiqGroup" unless group.nil? || group.kind_of?(MiqAeMethodService::MiqAeServiceMiqGroup)
+      raise ArgumentError, 'group must be nil or a MiqAeServiceMiqGroup' unless group.nil? || group.kind_of?(MiqAeMethodService::MiqAeServiceMiqGroup)
 
       ar_method do
-        @object.miq_group = group && group.instance_variable_get("@object")
+        @object.miq_group = group && group.instance_variable_get('@object')
         _log.info "Setting EVM Owning Group on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> to #{@object.miq_group.inspect}"
         @object.save
       end
     end
 
     def remove_from_disk(sync = true)
-      sync_or_async_ems_operation(sync, "vm_destroy", [])
+      sync_or_async_ems_operation(sync, 'vm_destroy', [])
     end
   end
 end

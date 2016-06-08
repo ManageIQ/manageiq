@@ -23,7 +23,7 @@ module Ext4
     attr_reader :first, :max_descriptors, :cur_descriptors, :node, :min_hash
 
     def initialize(buf, first = false)
-      raise "Ext4::HashTreeEntry.initialize: Nil buffer" if buf.nil?
+      raise 'Ext4::HashTreeEntry.initialize: Nil buffer' if buf.nil?
 
       @first = first
 

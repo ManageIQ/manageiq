@@ -6,7 +6,7 @@ class Zone < ApplicationRecord
 
   serialize :settings, Hash
 
-  belongs_to      :log_file_depot, :class_name => "FileDepot"
+  belongs_to      :log_file_depot, :class_name => 'FileDepot'
 
   has_many :miq_servers
   has_many :ext_management_systems
@@ -16,7 +16,7 @@ class Zone < ApplicationRecord
   has_many :providers
 
   virtual_has_many :hosts,              :uses => {:ext_management_systems => :hosts}
-  virtual_has_many :active_miq_servers, :class_name => "MiqServer"
+  virtual_has_many :active_miq_servers, :class_name => 'MiqServer'
   virtual_has_many :vms_and_templates,  :uses => {:ext_management_systems => :vms_and_templates}
 
   before_destroy :check_zone_in_use_on_destroy
@@ -40,8 +40,8 @@ class Zone < ApplicationRecord
   end
 
   def self.seed
-    create_with(:description => "Default Zone").find_or_create_by!(:name => 'default') do |_z|
-      _log.info("Creating default zone...")
+    create_with(:description => 'Default Zone').find_or_create_by!(:name => 'default') do |_z|
+      _log.info('Creating default zone...')
     end
   end
 
@@ -73,7 +73,7 @@ class Zone < ApplicationRecord
   end
 
   def self.default_zone
-    find_by(:name => "default")
+    find_by(:name => 'default')
   end
 
   # The zone to use when inserting a record into MiqQueue
@@ -233,7 +233,7 @@ class Zone < ApplicationRecord
   protected
 
   def check_zone_in_use_on_destroy
-    raise _("cannot delete default zone") if name == "default"
+    raise _('cannot delete default zone') if name == 'default'
     raise _("zone name '%{name}' is used by a server") % {:name => name} unless miq_servers.blank?
   end
 
@@ -248,9 +248,9 @@ class Zone < ApplicationRecord
 
     servers.each do |s|
       MiqQueue.put(
-        :class_name  => "MiqServer",
+        :class_name  => 'MiqServer',
         :instance_id => s.id,
-        :method_name => "ntp_reload",
+        :method_name => 'ntp_reload',
         :args        => [ntp_settings],
         :server_guid => s.guid,
         :priority    => MiqQueue::HIGH_PRIORITY,

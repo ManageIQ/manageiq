@@ -1,21 +1,21 @@
 require_relative '../../bundler_setup'
 require 'ServiceNowWebService/SnSctaskClientBase'
 
-server = "manageiqdev.service-now.com"
+server = 'manageiqdev.service-now.com'
 
 params = {
-  "state"             => 1,
-  "request_item"      => "RITM0010631",
-  "short_description" => "Provide Network Configuration to EVM"
+  'state'             => 1,
+  'request_item'      => 'RITM0010631',
+  'short_description' => 'Provide Network Configuration to EVM'
 }
 
 begin
 
-  sn = SnSctaskClientBase.new(server, "itil", "itil")
+  sn = SnSctaskClientBase.new(server, 'itil', 'itil')
   rva = sn.getRecords(params)
 
   puts
-  puts "*** RV:"
+  puts '*** RV:'
   # sn.dumpObj(rva)
   rva.each do |rv|
     #
@@ -44,7 +44,7 @@ begin
       end
     end
 
-    sn.update("sys_id" => rv.sys_id, "state" => 1) # keep state 1 to test - should be 3
+    sn.update('sys_id' => rv.sys_id, 'state' => 1) # keep state 1 to test - should be 3
   end
 
 rescue Handsoap::Fault => hserr

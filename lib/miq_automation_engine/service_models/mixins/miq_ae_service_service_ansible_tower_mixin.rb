@@ -7,7 +7,7 @@ module MiqAeServiceServiceAnsibleTowerMixin
 
   def job_template=(template)
     if template && !template.kind_of?(MiqAeMethodService::MiqAeServiceConfigurationScript)
-      raise ArgumentError, "template must be a MiqAeServiceConfigurationScript or nil"
+      raise ArgumentError, 'template must be a MiqAeServiceConfigurationScript or nil'
     end
 
     ar_method do

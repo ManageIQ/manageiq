@@ -25,8 +25,8 @@ module Openstack
     end
 
     def stub_excon_errors
-      forbidden = Excon::Errors::Forbidden.new("Forbidden")
-      not_found = Excon::Errors::NotFound.new("NotFound")
+      forbidden = Excon::Errors::Forbidden.new('Forbidden')
+      not_found = Excon::Errors::NotFound.new('NotFound')
 
       # Error in all stack relations
       allow_any_instance_of(Fog::Orchestration::OpenStack::Stack).to receive(:outputs).and_raise(forbidden)
@@ -179,7 +179,7 @@ module Openstack
 
     def expected_stack_parameters_count
       # We ignore AWS params added there by Heat
-      OrchestrationStackParameter.all.to_a.delete_if { |x| x.name.include?("AWS::") || x.name.include?("OS::") }.count
+      OrchestrationStackParameter.all.to_a.delete_if { |x| x.name.include?('AWS::') || x.name.include?('OS::') }.count
     end
 
     def stack_parameters_count
@@ -219,7 +219,7 @@ module Openstack
 
     def disks_count_for_vm(vm_or_stack, with_volumes = true)
       flavor = compute_data.flavors.detect do |x|
-        x[:name] == vm_or_stack[:__flavor_name] || x[:name] == vm_or_stack.fetch_path(:parameters, "instance_type")
+        x[:name] == vm_or_stack[:__flavor_name] || x[:name] == vm_or_stack.fetch_path(:parameters, 'instance_type')
       end
       # Count only disks that have size bigger that 0
       disks_count = (flavor[:disk] > 0 ? 1 : 0) + (flavor[:ephemeral] > 0 ? 1 : 0) + (flavor[:swap] > 0 ? 1 : 0)
@@ -365,7 +365,7 @@ module Openstack
       # This tests OpenStack functionality more than ManageIQ
       @az_null = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZoneNull.where(:ems_id => @ems.id).first
       expect(@az_null).to have_attributes(
-        :ems_ref => "null_az"
+        :ems_ref => 'null_az'
       )
     end
 
@@ -400,13 +400,13 @@ module Openstack
       expect(security_group.ems_ref).to be_guid
       # Each security group starts with these rules created
       default_test_data = [{
-        :direction => "outbound",
-        :protocol  => "",
-        :ethertype => "IPv4"
+        :direction => 'outbound',
+        :protocol  => '',
+        :ethertype => 'IPv4'
       }, {
-        :direction => "outbound",
-        :protocol  => "",
-        :ethertype => "IPv6"
+        :direction => 'outbound',
+        :protocol  => '',
+        :ethertype => 'IPv6'
       }]
 
       test_data = network_data.security_group_rules(security_group.name) || []
@@ -446,7 +446,7 @@ module Openstack
 
       blacklisted_attributes  = []
       # Havana and below doesn;t support provider networks
-      blacklisted_attributes += ["provider:network_type", "provider:physical_network"] if environment_release_number < 5
+      blacklisted_attributes += ['provider:network_type', 'provider:physical_network'] if environment_release_number < 5
       # Compare networks to expected
       assert_objects_with_hashes(networks,
                                  network_data.networks,
@@ -597,7 +597,7 @@ module Openstack
 
     def assert_templates
       # Ignoring shelved VMs, which are generating Image of the same name with suffix ''-shelved'
-      templates = ManageIQ::Providers::Openstack::CloudManager::Template.all.reject { |x| x.name.include?("-shelved") }
+      templates = ManageIQ::Providers::Openstack::CloudManager::Template.all.reject { |x| x.name.include?('-shelved') }
 
       assert_objects_with_hashes(templates,
                                  image_data.images + image_data.servers_snapshots,
@@ -616,9 +616,9 @@ module Openstack
           :template              => true,
           #:publicly_available    => is_public, # is not exposed now
           :ems_ref_obj           => nil,
-          :vendor                => "openstack",
-          :power_state           => "never",
-          :location              => "unknown",
+          :vendor                => 'openstack',
+          :power_state           => 'never',
+          :location              => 'unknown',
           :tools_status          => nil,
           :boot_time             => nil,
           :standby_action        => nil,
@@ -663,7 +663,7 @@ module Openstack
       if orchestration_supported?
         # When there are orchestration stacks, we will delete them from vm comparing, vm name contains unique
         # id, so it's hard to build it from stack
-        stack_vms     = OrchestrationStackResource.select { |x| x.resource_category == "OS::Nova::Server" }
+        stack_vms     = OrchestrationStackResource.select { |x| x.resource_category == 'OS::Nova::Server' }
         stack_vms_ids = stack_vms.collect(&:physical_resource)
 
         all_vms = all_vms.to_a.delete_if { |x| stack_vms_ids.include?(x.ems_ref) }
@@ -675,10 +675,10 @@ module Openstack
                                  {},
                                  [:key_name, :security_groups])
 
-      assert_specific_vm("EmsRefreshSpec-PoweredOn", :power_state => "on",)
-      assert_specific_vm("EmsRefreshSpec-Paused",    :power_state => "paused",)
-      assert_specific_vm("EmsRefreshSpec-Suspended", :power_state => "suspended",)
-      assert_specific_vm("EmsRefreshSpec-Shelved",   :power_state => "shelved_offloaded",)
+      assert_specific_vm('EmsRefreshSpec-PoweredOn', :power_state => 'on',)
+      assert_specific_vm('EmsRefreshSpec-Paused',    :power_state => 'paused',)
+      assert_specific_vm('EmsRefreshSpec-Suspended', :power_state => 'suspended',)
+      assert_specific_vm('EmsRefreshSpec-Shelved',   :power_state => 'shelved_offloaded',)
 
       assert_specific_template_created_from_vm
       assert_specific_vm_created_from_snapshot_template
@@ -692,13 +692,13 @@ module Openstack
         :template              => false,
         :cloud                 => true,
         :ems_ref_obj           => nil,
-        :vendor                => "openstack",
-        :power_state           => "on",
-        :location              => "unknown",
+        :vendor                => 'openstack',
+        :power_state           => 'on',
+        :location              => 'unknown',
         :tools_status          => nil,
         :boot_time             => nil,
         :standby_action        => nil,
-        :connection_state      => "connected",
+        :connection_state      => 'connected',
         :cpu_affinity          => nil,
         :memory_reserve        => nil,
         :memory_reserve_expand => nil,
@@ -765,49 +765,49 @@ module Openstack
       # TODO(lsmola) the flavor disk data should be stored in Flavor model, getting it from test data now
       flavor_expected = compute_data.flavors.detect { |x| x[:name] == vm.flavor.name }
 
-      disk = vm.hardware.disks.find_by_device_name("Root disk")
+      disk = vm.hardware.disks.find_by_device_name('Root disk')
       expect(disk).to have_attributes(
-        :device_name => "Root disk",
-        :device_type => "disk",
+        :device_name => 'Root disk',
+        :device_type => 'disk',
         :size        => flavor_expected[:disk].gigabyte
       )
-      disk = vm.hardware.disks.find_by_device_name("Ephemeral disk")
+      disk = vm.hardware.disks.find_by_device_name('Ephemeral disk')
       expect(disk).to have_attributes(
-        :device_name => "Ephemeral disk",
-        :device_type => "disk",
+        :device_name => 'Ephemeral disk',
+        :device_type => 'disk',
         :size        => flavor_expected[:ephemeral].gigabyte
       )
-      disk = vm.hardware.disks.find_by_device_name("Swap disk")
+      disk = vm.hardware.disks.find_by_device_name('Swap disk')
       expect(disk).to have_attributes(
-        :device_name => "Swap disk",
-        :device_type => "disk",
+        :device_name => 'Swap disk',
+        :device_type => 'disk',
         :size        => flavor_expected[:swap].megabytes
       )
 
       # TODO(lsmola) this is all bad, it should be done accoring to Builder's data, will change
       # when clud network models are merged in and used for refresh
       expect(vm.hardware.networks.size).to eq 2
-      network_public = vm.hardware.networks.where(:description => "public").first
+      network_public = vm.hardware.networks.where(:description => 'public').first
       expect(network_public).to have_attributes(
-        :description => "public",
+        :description => 'public',
       )
 
-      network_private = vm.hardware.networks.where(:description => "private").first
+      network_private = vm.hardware.networks.where(:description => 'private').first
       expect(network_private).to have_attributes(
-        :description => "private",
+        :description => 'private',
       )
     end
 
     # TODO(lsmola) specific checks below, do we need them?
     def assert_specific_template_created_from_vm
       @snap = ManageIQ::Providers::Openstack::CloudManager::Template.where(
-        :name => "EmsRefreshSpec-PoweredOn-SnapShot").first
+        :name => 'EmsRefreshSpec-PoweredOn-SnapShot').first
       expect(@snap).not_to be_nil
       # FIXME: @snap.parent.should == @vm
     end
 
     def assert_specific_vm_created_from_snapshot_template
-      t = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => "EmsRefreshSpec-PoweredOn-FromSnapshot").first
+      t = ManageIQ::Providers::Openstack::CloudManager::Vm.where(:name => 'EmsRefreshSpec-PoweredOn-FromSnapshot').first
       expect(t.parent).to eq(@snap)
     end
 

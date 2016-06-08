@@ -30,7 +30,7 @@ class CustomButton < ApplicationRecord
       applies_to_class = other
       applies_to_id    = applies_to_id
     else
-      raise _("Instance has no id") if other.id.nil?
+      raise _('Instance has no id') if other.id.nil?
       applies_to_class = other.class.base_model.name
       applies_to_id    = other.id
     end
@@ -59,7 +59,7 @@ class CustomButton < ApplicationRecord
       self.applies_to_class = other
       self.applies_to_id    = nil
     else
-      raise _("Instance has no id") if other.id.nil?
+      raise _('Instance has no id') if other.id.nil?
       self.applies_to_class = other.class.base_model.name
       self.applies_to_id    = other.id
     end
@@ -142,7 +142,7 @@ class CustomButton < ApplicationRecord
     role = user.miq_user_role_name
     # Return all automation uri's that has his role or is allowed for all roles.
     all.to_a.select do |uri|
-      uri.parent && uri.parent.name == group && uri.visibility.key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?("_ALL_"))
+      uri.parent && uri.parent.name == group && uri.visibility.key?(:roles) && (uri.visibility[:roles].include?(role) || uri.visibility[:roles].include?('_ALL_'))
     end
   end
 

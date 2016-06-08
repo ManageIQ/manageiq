@@ -79,7 +79,7 @@ module NTFS
     # NOTE: All the subordinate objects (attrib header & attributes) take
     #       a buffer (a packed string) starting at the start of the sub object.
     def initialize(buf)
-      raise "MIQ(NTFS::AttribHeader.initialize) Nil buffer" if buf.nil?
+      raise 'MIQ(NTFS::AttribHeader.initialize) Nil buffer' if buf.nil?
 
       # Decode standard attribute header.
       @header = STANDARD_ATTRIBUTE_HEADER.decode(buf)
@@ -160,7 +160,7 @@ module NTFS
     # file, the B-tree index of file names in the directory.
     ######################################################################################################
     def containsFileNameIndexes?
-      name == "$I30"
+      name == '$I30'
     end
 
     def dump

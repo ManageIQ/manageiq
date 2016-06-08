@@ -311,11 +311,11 @@ module XmlHash
     include MiqXmlDiff
     include MiqXmlPatch
 
-    def initialize(name = "xml", _attrs = {}, _parent = nil)
+    def initialize(name = 'xml', _attrs = {}, _parent = nil)
       super()
       self.merge!(:name     => name.to_sym,
                   :child    => [],
-                  :encoding => "UTF-8",
+                  :encoding => 'UTF-8',
                   :version  => 1.0)
     end
 
@@ -439,7 +439,7 @@ module XmlHash
 
     def self.loadFile(filename)
       f = nil
-      f = File.open(filename, "r")
+      f = File.open(filename, 'r')
       load(f)
     ensure
       f.close if f

@@ -1,9 +1,9 @@
 require 'ansible_tower_client'
 require 'faraday'
 describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
-  let(:faraday_connection) { instance_double("Faraday::Connection", :post => post, :get => get) }
-  let(:post) { instance_double("Faraday::Result", :body => {}.to_json) }
-  let(:get) { instance_double("Faraday::Result", :body => {'id' => 1}.to_json) }
+  let(:faraday_connection) { instance_double('Faraday::Connection', :post => post, :get => get) }
+  let(:post) { instance_double('Faraday::Result', :body => {}.to_json) }
+  let(:get) { instance_double('Faraday::Result', :body => {'id' => 1}.to_json) }
 
   let(:connection) { double(:connection, :api => double(:api, :jobs => double(:jobs, :find => the_raw_job))) }
 
@@ -22,7 +22,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
   subject { FactoryGirl.create(:ansible_tower_job, :job_template => template, :ext_management_system => manager) }
 
   describe 'job operations' do
-    context ".create_job" do
+    context '.create_job' do
       it 'creates a job' do
         expect(template).to receive(:run).and_return(the_raw_job)
 
@@ -44,7 +44,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
       end
     end
 
-    context "#refres_ems" do
+    context '#refres_ems' do
       before do
         allow_any_instance_of(Provider).to receive_messages(:connect => connection)
       end
@@ -83,7 +83,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
       end
 
       it 'catches errors from provider' do
-        expect(connection.api.jobs).to receive(:find).twice.and_raise("bad happened")
+        expect(connection.api.jobs).to receive(:find).twice.and_raise('bad happened')
         expect { subject.raw_status }.to raise_error(MiqException::MiqOrchestrationStatusError)
 
         expect { subject.raw_exists? }.to raise_error(MiqException::MiqOrchestrationStatusError)

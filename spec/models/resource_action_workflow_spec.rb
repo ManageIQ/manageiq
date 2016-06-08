@@ -1,6 +1,6 @@
 describe ResourceActionWorkflow do
   let(:admin) { FactoryGirl.create(:user_with_group) }
-  context "#create" do
+  context '#create' do
     before(:each) do
       @dialog       = FactoryGirl.create(:dialog, :label => 'dialog')
       @dialog_tab   = FactoryGirl.create(:dialog_tab, :label => 'tab')
@@ -13,17 +13,17 @@ describe ResourceActionWorkflow do
       @dialog_group.dialog_fields << @dialog_field2
       @dialog.dialog_tabs << @dialog_tab
 
-      @resource_action = FactoryGirl.create(:resource_action, :action => "Provision", :dialog => @dialog)
+      @resource_action = FactoryGirl.create(:resource_action, :action => 'Provision', :dialog => @dialog)
     end
 
-    it "new from resource_action" do
+    it 'new from resource_action' do
       @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       values = @wf.create_values_hash
       expect(values.fetch_path(:workflow_settings, :resource_action_id)).to eq(@resource_action.id)
       expect(@wf.dialog.id).to eq(@dialog.id)
     end
 
-    it "new from hash" do
+    it 'new from hash' do
       nh = {:workflow_settings => {:resource_action_id => @resource_action.id}}
       @wf = ResourceActionWorkflow.new(nh, admin, nil)
       values = @wf.create_values_hash
@@ -31,49 +31,49 @@ describe ResourceActionWorkflow do
       expect(@wf.dialog.id).to eq(@dialog.id)
     end
 
-    it "load default_value" do
-      @dialog_field.update_attribute(:default_value, "testing default")
+    it 'load default_value' do
+      @dialog_field.update_attribute(:default_value, 'testing default')
       @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
-      expect(@wf.value(@dialog_field.name)).to eq("testing default")
+      expect(@wf.value(@dialog_field.name)).to eq('testing default')
       df = @wf.dialog_field(@dialog_field.name)
-      expect(df.value).to eq("testing default")
+      expect(df.value).to eq('testing default')
     end
 
-    it "field_name_exists?" do
+    it 'field_name_exists?' do
       expect(@dialog.field_name_exist?('field_1')).to  be_truthy
       expect(@dialog.field_name_exist?('field_11')).to be_falsey
       expect(@dialog.field_name_exist?('FIELD_11')).to be_falsey
       expect(@dialog.field_name_exist?(:field_11)).to  be_falsey
     end
 
-    context "with workflow" do
+    context 'with workflow' do
       before(:each) do
         @wf = ResourceActionWorkflow.new({}, admin, @resource_action)
       end
 
-      it "set_value" do
-        @wf.set_value(:field_1, "test_var_1")
-        expect(@wf.value(:field_1)).to eq("test_var_1")
+      it 'set_value' do
+        @wf.set_value(:field_1, 'test_var_1')
+        expect(@wf.value(:field_1)).to eq('test_var_1')
       end
 
-      it "#validate" do
+      it '#validate' do
         expect { @wf.validate(nil) }.to_not raise_error
       end
     end
 
-    context "#submit_request" do
+    context '#submit_request' do
       subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
       let(:resource_action) { @resource_action }
 
-      context "with request class" do
+      context 'with request class' do
         let(:target) { FactoryGirl.create(:service) }
 
-        it "creates requests" do
+        it 'creates requests' do
           EvmSpecHelper.local_miq_server
           expect(subject).to receive(:create_request).and_call_original
           expect(AuditEvent).to receive(:success).with(
-            :event        => "service_reconfigure_request_created",
-            :target_class => "Service",
+            :event        => 'service_reconfigure_request_created',
+            :target_class => 'Service',
             :userid       => admin.userid,
             :message      => "Service Reconfigure requested by <#{admin.userid}> for Service:[#{target.id}]"
           )
@@ -82,13 +82,13 @@ describe ResourceActionWorkflow do
         end
       end
 
-      context "without request class" do
+      context 'without request class' do
         subject { ResourceActionWorkflow.new({}, admin, resource_action, :target => target) }
         let(:resource_action) { @resource_action }
 
         let(:target) { FactoryGirl.create(:vm_vmware) }
 
-        it "calls automate" do
+        it 'calls automate' do
           EvmSpecHelper.local_miq_server
           expect(subject).not_to receive(:create_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog).and_call_original
@@ -99,7 +99,7 @@ describe ResourceActionWorkflow do
         end
       end
 
-      context "with custom button request" do
+      context 'with custom button request' do
         let(:target) { FactoryGirl.build(:service) }
         let(:resource_action) do
           @resource_action.tap do |ra|
@@ -107,7 +107,7 @@ describe ResourceActionWorkflow do
           end
         end
 
-        it "calls automate" do
+        it 'calls automate' do
           expect(subject).not_to receive(:create_request)
           expect_any_instance_of(ResourceAction).to receive(:deliver_to_automate_from_dialog)
 

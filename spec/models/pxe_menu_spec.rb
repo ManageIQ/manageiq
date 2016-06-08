@@ -124,18 +124,18 @@ chain http://boot.ipxe.org/demo/boot.php
 PXEMENU
   end
 
-  it ".class_from_contents" do
+  it '.class_from_contents' do
     expect(described_class.class_from_contents(@contents_pxelinux)).to eq(PxeMenuPxelinux)
     expect(described_class.class_from_contents(@contents_ipxe)).to eq(PxeMenuIpxe)
   end
 
-  context "#synchronize" do
+  context '#synchronize' do
     before(:each) do
       @pxe_server = FactoryGirl.create(:pxe_server)
       allow(@pxe_server).to receive_messages(:read_file => @contents_ipxe)
     end
 
-    it "on typed menu" do
+    it 'on typed menu' do
       pxe_menu = FactoryGirl.create(:pxe_menu_ipxe, :pxe_server => @pxe_server)
       pxe_menu.synchronize
 
@@ -144,7 +144,7 @@ PXEMENU
       expect(new_pxe_menu.pxe_images.length).to eq(3)
     end
 
-    it "on untyped menu" do
+    it 'on untyped menu' do
       pxe_menu = FactoryGirl.create(:pxe_menu, :pxe_server => @pxe_server)
       pxe_menu.synchronize
 
@@ -153,7 +153,7 @@ PXEMENU
       expect(new_pxe_menu.pxe_images.length).to eq(3)
     end
 
-    it "on typed menu switching to a different type" do
+    it 'on typed menu switching to a different type' do
       pxe_menu = FactoryGirl.create(:pxe_menu_pxelinux, :contents => @contents_pxelinux, :pxe_server => @pxe_server)
       pxe_menu.synchronize
 

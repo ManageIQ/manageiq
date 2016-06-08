@@ -1,10 +1,10 @@
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream do
   subject do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    auth                 = AuthToken.new(:name     => "test",
-                                         :auth_key => "valid-token",
-                                         :userid   => "jdoe",
-                                         :password => "password")
+    auth                 = AuthToken.new(:name     => 'test',
+                                         :auth_key => 'valid-token',
+                                         :userid   => 'jdoe',
+                                         :password => 'password')
     ems                  = FactoryGirl.create(:ems_hawkular,
                                               :hostname        => 'localhost',
                                               :port            => 8080,
@@ -13,7 +13,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream 
     described_class.new(ems)
   end
 
-  context "#each_batch" do
+  context '#each_batch' do
     # VCR.eject_cassette
     # VCR.turn_off!(ignore_cassettes: true)
 
@@ -23,7 +23,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream 
       }
     end
 
-    it "yields a valid event" do
+    it 'yields a valid event' do
       # if generating a cassette the polling window is the previous 1 minute
       VCR.use_cassette(described_class.name.underscore.to_s) do # , :record => :new_episodes) do
         result = []

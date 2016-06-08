@@ -9,7 +9,7 @@ class GitWorktree
   MASTER_REF = 'refs/heads/master'
 
   def initialize(options = {})
-    raise ArgumentError, "Must specify path" unless options.key?(:path)
+    raise ArgumentError, 'Must specify path' unless options.key?(:path)
     @path          = options[:path]
     @email         = options[:email]
     @username      = options[:username]
@@ -294,7 +294,7 @@ class GitWorktree
     @current_index ||= Rugged::Index.new.tap do |index|
       unless @repo.empty?
         tree = lookup_commit_tree
-        raise ArgumentError, "Cannot locate commit tree" unless tree
+        raise ArgumentError, 'Cannot locate commit tree' unless tree
         @current_tree_oid = tree.oid
         index.read_tree(tree)
       end

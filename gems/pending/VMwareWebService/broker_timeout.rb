@@ -57,7 +57,7 @@ module Timeout
             state_lock.synchronize do
               if state == :sleeping
                 state = :timeout
-                x.raise exception, "execution expired"
+                x.raise exception, 'execution expired'
               end
             end
           end

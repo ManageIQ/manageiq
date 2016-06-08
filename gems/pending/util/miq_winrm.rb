@@ -12,7 +12,7 @@ class MiqWinRM
   end
 
   def build_uri
-    URI::HTTP.build(:port => @port, :path => "/wsman", :host => @hostname).to_s
+    URI::HTTP.build(:port => @port, :path => '/wsman', :host => @hostname).to_s
   end
 
   def connect(options = {})
@@ -42,8 +42,8 @@ class MiqWinRM
       $log.debug "Error Running Powershell on #{hostname} using user \"#{username}\": #{error}" if $log
       raise if wmi_error_retries > WMI_RETRIES
       wmi_error_retries += 1
-      if error.to_s.include? "This user is allowed a maximum number of "
-        $log.debug "Re-opening connection and retrying" if $log
+      if error.to_s.include? 'This user is allowed a maximum number of '
+        $log.debug 'Re-opening connection and retrying' if $log
         @executor.close
         @executor        = nil
         @connection      = raw_connect(@username, @password, @uri) if @elevated_runner
@@ -68,8 +68,8 @@ class MiqWinRM
       $log.debug "Error Running Powershell on #{hostname} using user \"#{username}\": #{error}" if $log
       raise if wmi_error_retries > WMI_RETRIES
       wmi_error_retries += 1
-      if error.to_s.include? "This user is allowed a maximum number of "
-        $log.debug "Re-opening connection and retrying" if $log
+      if error.to_s.include? 'This user is allowed a maximum number of '
+        $log.debug 'Re-opening connection and retrying' if $log
         @connection      = raw_connect(@username, @password, @uri)
         @elevated_runner = nil
         @executor.close if @executor
@@ -84,9 +84,9 @@ class MiqWinRM
   private
 
   def validate_options(options)
-    raise "no Username defined" if options[:user].nil?
-    raise "no Password defined" if options[:pass].nil?
-    raise "no Hostname defined" if options[:hostname].nil?
+    raise 'no Username defined' if options[:user].nil?
+    raise 'no Password defined' if options[:pass].nil?
+    raise 'no Hostname defined' if options[:hostname].nil?
     @username = options[:user]
     @password = options[:pass]
     @hostname = options[:hostname]

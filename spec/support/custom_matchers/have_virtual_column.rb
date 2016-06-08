@@ -15,6 +15,6 @@ RSpec::Matchers.define :have_virtual_column do |name, type|
   end
 
   description do
-    "expect the object to have the virtual column"
+    'expect the object to have the virtual column'
   end
 end

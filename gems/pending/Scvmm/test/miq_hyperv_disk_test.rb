@@ -18,15 +18,15 @@ $log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
-HOST = raise "Please define SERVERNAME"
-PORT = raise "Please define PORT"
-USER = raise "Please define USER"
-PASS = raise "Please define PASS"
-DISK = raise "Please define DISK"
+HOST = raise 'Please define SERVERNAME'
+PORT = raise 'Please define PORT'
+USER = raise 'Please define USER'
+PASS = raise 'Please define PASS'
+DISK = raise 'Please define DISK'
 
 hyperv_disk = MiqHyperVDisk.new(HOST, USER, PASS, PORT)
 
-$log.debug "Reading 256 byte slices"
+$log.debug 'Reading 256 byte slices'
 hyperv_disk.open(DISK)
 hyperv_disk.seek(0)
 (1..8).each do |i|

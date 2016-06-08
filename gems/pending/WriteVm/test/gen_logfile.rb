@@ -2,7 +2,7 @@
 # !/usr/bin/env ruby
 
 require 'optparse'
-require "WriteVm/MiqPayloadOutputter"
+require 'WriteVm/MiqPayloadOutputter'
 
 MB = 1024 * 1024
 BLOCK_SIZE = 512
@@ -12,9 +12,9 @@ size = -1
 
 def pr_usage
   $stderr.puts "Usage: #{File.basename($0)}"
-  $stderr.puts "             --outfile <output_file> | -o <output_file>  #"
-  $stderr.puts "             --size <size_in_bytes> | -s <size_in_bytes> #"
-  $stderr.puts "             --sizemb <size_in_mb> | -S <size_in_mb>     #"
+  $stderr.puts '             --outfile <output_file> | -o <output_file>  #'
+  $stderr.puts '             --size <size_in_bytes> | -s <size_in_bytes> #'
+  $stderr.puts '             --sizemb <size_in_mb> | -S <size_in_mb>     #'
 end
 
 #
@@ -34,10 +34,10 @@ end
 size += BLOCK_SIZE - (size % BLOCK_SIZE) if size % BLOCK_SIZE != 0
 puts "Log size: #{size}"
 
-out = File.new(outFile, "w")
+out = File.new(outFile, 'w')
 
 if out.write(Log4r::MiqPayloadOutputter.genHeader(size)) != Log4r::MiqPayloadOutputter::HEADER_SIZE
-  $stderr.puts "Could not write header to log file."
+  $stderr.puts 'Could not write header to log file.'
   exit 1
 end
 

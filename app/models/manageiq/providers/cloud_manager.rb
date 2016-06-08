@@ -9,8 +9,8 @@ module ManageIQ::Providers
     require_nested :OrchestrationStack
 
     class << model_name
-      define_method(:route_key) { "ems_clouds" }
-      define_method(:singular_route_key) { "ems_cloud" }
+      define_method(:route_key) { 'ems_clouds' }
+      define_method(:singular_route_key) { 'ems_cloud' }
     end
 
     has_many :availability_zones,            :foreign_key => :ems_id, :dependent => :destroy
@@ -23,7 +23,7 @@ module ManageIQ::Providers
     has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_databases,               :foreign_key => :ems_id, :dependent => :destroy
-    has_many :key_pairs,                     :class_name  => "AuthPrivateKey", :as => :resource, :dependent => :destroy
+    has_many :key_pairs,                     :class_name  => 'AuthPrivateKey', :as => :resource, :dependent => :destroy
     # TODO(lsmola) NetworkManager, when network manager is integrated to all cloud providers, change below relations
     # to delegations to network manager
     has_many :floating_ips,    :foreign_key => :ems_id, :dependent => :destroy

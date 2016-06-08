@@ -4,12 +4,12 @@ module MiqReport::Notification
     url = options[:email_url_prefix]
 
     user = User.find_by_userid(userid)
-    from = options[:email] && !options[:email][:from].blank? ? options[:email][:from] : VMDB::Config.new("vmdb").config[:smtp][:from]
+    from = options[:email] && !options[:email][:from].blank? ? options[:email][:from] : VMDB::Config.new('vmdb').config[:smtp][:from]
     to   = options[:email] ? options[:email][:to] : (user ? user.email : nil)
 
     msg = nil
     msg = "The system is not configured with a 'from' email address." if from.blank?
-    msg = "No to: email address provided." if to.blank?
+    msg = 'No to: email address provided.' if to.blank?
 
     unless msg.nil?
       _log.warn("Failed to email report because: #{msg}")
@@ -19,7 +19,7 @@ module MiqReport::Notification
     send_if_empty = options.fetch_path(:email, :send_if_empty)
     send_if_empty = true if send_if_empty.nil?
     if !self.table_has_records? && !send_if_empty
-      _log.info("No records found for scheduled report and :send_if_empty option is false, no Email will be sent. ")
+      _log.info('No records found for scheduled report and :send_if_empty option is false, no Email will be sent. ')
       return
     end
 
@@ -47,7 +47,7 @@ module MiqReport::Notification
     # When this happens, the addresses on the end spill over into the headers and cause the content and mime information to be ignored.
     #
     # Split recipient list into groups whose total length in bytes is around 100 bytes or the configured limit
-    cut_off = VMDB::Config.new("vmdb").config.fetch_path(:smtp, :recipient_address_byte_limit) || 100
+    cut_off = VMDB::Config.new('vmdb').config.fetch_path(:smtp, :recipient_address_byte_limit) || 100
     sub_group = []
     grouped_tos = to.uniq.inject([]) do |g, t|
       sub_group << t
@@ -79,10 +79,10 @@ module MiqReport::Notification
 
   def notify_email_body(_url, _result, recipients)
     if self.table_has_records?
-      _("Please find attached scheduled report \"%{name}\". This report was sent to: %{recipients}.") %
-        {:name => name, :recipients => recipients.join(", ")}
+      _('Please find attached scheduled report "%{name}". This report was sent to: %{recipients}.') %
+        {:name => name, :recipients => recipients.join(', ')}
     else
-      _("No records found for scheduled report \"%{name}\"") % {:name => name}
+      _('No records found for scheduled report "%{name}"') % {:name => name}
     end
   end
 end

@@ -50,7 +50,7 @@ class ApiController
     end
 
     def update_custom_attributes(ca, data)
-      ca.update_attributes(data.slice("name", "value", "section"))
+      ca.update_attributes(data.slice('name', 'value', 'section'))
     end
 
     def update_custom_field(object, ca)
@@ -63,17 +63,17 @@ class ApiController
 
     def find_custom_attribute_by_data(object, data)
       object.custom_attributes.detect do |ca|
-        ca.section.to_s == data["section"].to_s && ca.name.downcase == data["name"].downcase
+        ca.section.to_s == data['section'].to_s && ca.name.downcase == data['name'].downcase
       end
     end
 
     def new_custom_attribute(data)
-      name = data["name"].to_s.strip
-      raise BadRequestError, "Must specify a name for a custom attribute to be added" if name.blank?
+      name = data['name'].to_s.strip
+      raise BadRequestError, 'Must specify a name for a custom attribute to be added' if name.blank?
       CustomAttribute.new(:name    => name,
-                          :value   => data["value"],
-                          :source  => data["source"].blank? ? "EVM" : data["source"],
-                          :section => data["section"]
+                          :value   => data['value'],
+                          :source  => data['source'].blank? ? 'EVM' : data['source'],
+                          :section => data['section']
                          )
     end
   end

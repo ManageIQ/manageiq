@@ -25,7 +25,7 @@ class ContainerTopologyController < ApplicationController
   private
 
   def get_session_data
-    @layout = "container_topology"
+    @layout = 'container_topology'
   end
 
   def set_session_data

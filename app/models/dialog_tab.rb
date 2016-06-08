@@ -19,13 +19,13 @@ class DialogTab < ApplicationRecord
   end
 
   def validate_children
-    errors[:dialog_groups].delete("is invalid")
-    errors.add(:base, _("Tab %{tab_label} must have at least one Box") % {:tab_label => label}) if dialog_groups.blank?
+    errors[:dialog_groups].delete('is invalid')
+    errors.add(:base, _('Tab %{tab_label} must have at least one Box') % {:tab_label => label}) if dialog_groups.blank?
 
     dialog_groups.each do |dg|
       next if dg.valid?
       dg.errors.full_messages.each do |err_msg|
-        errors.add(:base, _("Tab %{tab_label} / %{error_message}") % {:tab_label => label, :error_message => err_msg})
+        errors.add(:base, _('Tab %{tab_label} / %{error_message}') % {:tab_label => label, :error_message => err_msg})
       end
     end
   end

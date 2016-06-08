@@ -4,7 +4,7 @@ describe SetReportTypeFromChargebackToChargebackVmOnMiqReports do
   let(:miq_report_stub) { migration_stub(:MiqReport) }
 
   migration_context :up do
-    it "sets with db = ChargeBack to ChargebackVm for column db and db_option[:rpt_type]" do
+    it 'sets with db = ChargeBack to ChargebackVm for column db and db_option[:rpt_type]' do
       db_options = {}
       db_options[:rpt_type] = described_class::CHARGEBACK_REPORT_DB_MODEL
 
@@ -23,7 +23,7 @@ describe SetReportTypeFromChargebackToChargebackVmOnMiqReports do
   end
 
   migration_context :down do
-    it "sets with db = ChargeBackVm to Chargeback for column db and db_option[:rpt_type]" do
+    it 'sets with db = ChargeBackVm to Chargeback for column db and db_option[:rpt_type]' do
       db_options = {}
       db_options[:rpt_type] = described_class::CHARGEBACK_VM_REPORT_DB_MODEL
 

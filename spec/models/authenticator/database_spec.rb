@@ -3,13 +3,13 @@ describe Authenticator::Database do
   let!(:alice) { FactoryGirl.create(:user, :userid => 'alice', :password => 'secret') }
 
   describe '#uses_stored_password?' do
-    it "is true" do
+    it 'is true' do
       expect(subject.uses_stored_password?).to be_truthy
     end
   end
 
   describe '#lookup_by_identity' do
-    it "finds existing users" do
+    it 'finds existing users' do
       expect(subject.lookup_by_identity('alice')).to be_truthy
     end
 
@@ -26,47 +26,47 @@ describe Authenticator::Database do
     let(:username) { 'alice' }
     let(:password) { 'secret' }
 
-    context "with correct password" do
-      it "succeeds" do
+    context 'with correct password' do
+      it 'succeeds' do
         expect(authenticate).to eq(alice)
       end
 
-      it "records two successful audit entries" do
+      it 'records two successful audit entries' do
         expect(AuditEvent).to receive(:success).with(
           :event   => 'authenticate_database',
           :userid  => 'alice',
-          :message => "User alice successfully validated by EVM",
+          :message => 'User alice successfully validated by EVM',
         )
         expect(AuditEvent).to receive(:success).with(
           :event   => 'authenticate_database',
           :userid  => 'alice',
-          :message => "Authentication successful for user alice",
+          :message => 'Authentication successful for user alice',
         )
         expect(AuditEvent).not_to receive(:failure)
         authenticate
       end
-      it "updates lastlogon" do
+      it 'updates lastlogon' do
         expect(-> { authenticate }).to change { alice.reload.lastlogon }
       end
     end
 
-    context "with bad password" do
+    context 'with bad password' do
       let(:password) { 'incorrect' }
 
-      it "fails" do
-        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, "Authentication failed")
+      it 'fails' do
+        expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError, 'Authentication failed')
       end
 
-      it "records one failing audit entry" do
+      it 'records one failing audit entry' do
         expect(AuditEvent).to receive(:failure).with(
           :event   => 'authenticate_database',
           :userid  => 'alice',
-          :message => "Authentication failed for userid alice",
+          :message => 'Authentication failed for userid alice',
         )
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
-      it "logs the failure" do
+      it 'logs the failure' do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil
@@ -76,23 +76,23 @@ describe Authenticator::Database do
       end
     end
 
-    context "with unknown username" do
+    context 'with unknown username' do
       let(:username) { 'bob' }
 
-      it "fails" do
+      it 'fails' do
         expect(-> { authenticate }).to raise_error(MiqException::MiqEVMLoginError)
       end
 
-      it "records one failing audit entry" do
+      it 'records one failing audit entry' do
         expect(AuditEvent).to receive(:failure).with(
           :event   => 'authenticate_database',
           :userid  => 'bob',
-          :message => "Authentication failed for userid bob",
+          :message => 'Authentication failed for userid bob',
         )
         expect(AuditEvent).not_to receive(:success)
         authenticate rescue nil
       end
-      it "logs the failure" do
+      it 'logs the failure' do
         allow($log).to receive(:warn).with(/Audit/)
         expect($log).to receive(:warn).with(/Authentication failed$/)
         authenticate rescue nil

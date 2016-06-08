@@ -1,13 +1,13 @@
 class ApiController
   module Roles
     def create_resource_roles(type, _id = nil, data = {})
-      if data.key?("id") || data.key?("href")
+      if data.key?('id') || data.key?('href')
         raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"
       end
 
       # Can't create a read-only role (reserved for out-of-box roles)
       if data['read_only']
-        raise BadRequestError, "Cannot create a read-only role."
+        raise BadRequestError, 'Cannot create a read-only role.'
       end
 
       role_klass = collection_class(type)
@@ -29,14 +29,14 @@ class ApiController
 
       # Can't set an existing role to read-only (reserved for out-of-box roles)
       if data['read_only']
-        raise BadRequestError, "Cannot set a non-system role to read-only."
+        raise BadRequestError, 'Cannot set a non-system role to read-only.'
       end
 
       role = resource_search(id, type, collection_class(:roles))
 
       # Can't edit a read-only role
       if role.read_only
-        raise BadRequestError, "Cannot edit a role that is read-only."
+        raise BadRequestError, 'Cannot edit a role that is read-only.'
       end
 
       get_settings_and_features(data)

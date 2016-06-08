@@ -1,7 +1,7 @@
 require 'util/extensions/miq-numeric'
 
 describe Numeric do
-  it "#apply_min_max" do
+  it '#apply_min_max' do
     expect(8.apply_min_max(nil, nil)).to eq(8)
     expect(8.apply_min_max(3, nil)).to eq(8)
     expect(8.apply_min_max(13, nil)).to eq(13)

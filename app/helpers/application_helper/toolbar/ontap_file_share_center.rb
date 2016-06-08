@@ -41,7 +41,7 @@ class ApplicationHelper::Toolbar::OntapFileShareCenter < ApplicationHelper::Tool
           'product product-monitoring fa-lg',
           N_('Show Utilization for this #{ui_lookup(:model=>"OntapFileShare").split(" - ").last}'),
           N_('Utilization'),
-          :url => "/show_statistics"),
+          :url => '/show_statistics'),
       ]
     ),
   ])

@@ -6,12 +6,12 @@ require 'tmpdir'
 
 module DiskTestCommon
   class TestMiqLargeFile < Minitest::Test
-    FILE_PATH = (Sys::Platform::IMPL == :macosx ? "/Volumes" : "/mnt") + "/manageiq/fleecing_test/images/"
+    FILE_PATH = (Sys::Platform::IMPL == :macosx ? '/Volumes' : '/mnt') + '/manageiq/fleecing_test/images/'
 
-    FILE_1MB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1MB"
-    FILE_1GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_1GB"
-    FILE_4GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_4GB"
-    FILE_5GB = FILE_PATH + "containers/raw/DiskTestCommon_MiqLargeFile_5GB"
+    FILE_1MB = FILE_PATH + 'containers/raw/DiskTestCommon_MiqLargeFile_1MB'
+    FILE_1GB = FILE_PATH + 'containers/raw/DiskTestCommon_MiqLargeFile_1GB'
+    FILE_4GB = FILE_PATH + 'containers/raw/DiskTestCommon_MiqLargeFile_4GB'
+    FILE_5GB = FILE_PATH + 'containers/raw/DiskTestCommon_MiqLargeFile_5GB'
 
     SIZE_1MB = 0x00100000
     SIZE_1GB = 0x40000000
@@ -36,7 +36,7 @@ module DiskTestCommon
       params.each do |filename|
         next unless File.exist?(filename)
 
-        f = MiqLargeFile.open(filename, "r")
+        f = MiqLargeFile.open(filename, 'r')
         refute_nil(MiqLargeFile, f)
         f.close
       end
@@ -56,7 +56,7 @@ module DiskTestCommon
         # Test both class method and instance method
         f = MiqLargeFile.size(filename)
         assert_equal(filesize, f)
-        f = MiqLargeFile.open(filename, "r")
+        f = MiqLargeFile.open(filename, 'r')
         assert_equal(filesize, f.size)
         f.close
       end
@@ -74,13 +74,13 @@ module DiskTestCommon
       params.each_slice(2) do |filename, offsets|
         next unless File.exist?(filename)
 
-        f = MiqLargeFile.open(filename, "r")
+        f = MiqLargeFile.open(filename, 'r')
         offsets.each do |offset|
           new_offset = f.seek(offset, IO::SEEK_SET)
           assert_equal(offset, new_offset)
 
           buf = f.read(1)
-          assert_equal("0", buf)
+          assert_equal('0', buf)
         end
         f.close
       end
@@ -100,13 +100,13 @@ module DiskTestCommon
           next unless File.exist?(filename)
 
           # Temporarily create the file, as MiqLargeFile only opens existing files
-          file_write = File.join(file_write_path, "DiskTestCommon_WriteTest")
-          File.new(file_write, "w").close
+          file_write = File.join(file_write_path, 'DiskTestCommon_WriteTest')
+          File.new(file_write, 'w').close
 
           # Copy the file 100+ MB at a time
           #   (using an "off" amount to validate that partial reads return properly)
-          f = MiqLargeFile.open(filename, "r")
-          f2 = MiqLargeFile.open(file_write, "+")
+          f = MiqLargeFile.open(filename, 'r')
+          f2 = MiqLargeFile.open(file_write, '+')
           while f.getFilePos < filesize
             buf = f.read(0x06400123)
             f2.write(buf, buf.length)
@@ -120,7 +120,7 @@ module DiskTestCommon
 
           # Get the md5 hash of the new file
           xml = MD5deep.new.scan(file_write_path)
-          assert_equal(md5, xml.root.elements[1].children[0].attributes["md5"])
+          assert_equal(md5, xml.root.elements[1].children[0].attributes['md5'])
 
           File.delete(file_write)
         end

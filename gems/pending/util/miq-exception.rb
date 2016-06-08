@@ -73,7 +73,7 @@ module MiqException
 
   # EMS Refresh errors
   class MiqIncompleteData < Error
-    def initialize(msg = "Incomplete data from EMS")
+    def initialize(msg = 'Incomplete data from EMS')
       super
     end
   end

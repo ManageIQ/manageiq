@@ -1,12 +1,12 @@
 describe MiqQueue do
   specify { expect(FactoryGirl.build(:miq_queue)).to be_valid }
 
-  context "#deliver" do
+  context '#deliver' do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
-    it "works with deliver_on" do
+    it 'works with deliver_on' do
       deliver_on = Time.now.utc + 1.minute
       allow(Storage).to receive(:foobar).and_raise(MiqException::MiqQueueRetryLater.new(:deliver_on => deliver_on))
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'Storage', :method_name => 'foobar')
@@ -27,7 +27,7 @@ describe MiqQueue do
       expect(msg.handler).to be_nil
     end
 
-    it "works with expires_on" do
+    it 'works with expires_on' do
       allow(MiqServer).to receive(:foobar).and_return(0)
 
       expires_on = 1.minute.from_now.utc
@@ -41,7 +41,7 @@ describe MiqQueue do
       expect(status).to eq(MiqQueue::STATUS_EXPIRED)
     end
 
-    it "sets last_exception on raised Exception" do
+    it 'sets last_exception on raised Exception' do
       allow(MiqServer).to receive(:foobar).and_raise(Exception)
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
       status, message, result = msg.deliver
@@ -50,7 +50,7 @@ describe MiqQueue do
     end
   end
 
-  context "With messages left in dequeue at startup," do
+  context 'With messages left in dequeue at startup,' do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
@@ -60,12 +60,12 @@ describe MiqQueue do
       @other_worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @other_miq_server.id)
     end
 
-    context "where worker has a message in dequeue" do
+    context 'where worker has a message in dequeue' do
       before do
         @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @worker)
       end
 
-      it "will destroy the message when it times out" do
+      it 'will destroy the message when it times out' do
         @msg.update_attributes(:msg_timeout => 1.minutes)
         begin
           Timecop.travel 10.minute
@@ -77,7 +77,7 @@ describe MiqQueue do
         end
       end
 
-      it "should cleanup message on startup" do
+      it 'should cleanup message on startup' do
         MiqQueue.atStartup
 
         @msg.reload
@@ -85,12 +85,12 @@ describe MiqQueue do
       end
     end
 
-    context "where worker on other server has a message in dequeue" do
+    context 'where worker on other server has a message in dequeue' do
       before do
         @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @other_worker)
       end
 
-      it "should not cleanup message on startup" do
+      it 'should not cleanup message on startup' do
         MiqQueue.atStartup
 
         @msg.reload
@@ -98,12 +98,12 @@ describe MiqQueue do
       end
     end
 
-    context "message in dequeue without a worker" do
+    context 'message in dequeue without a worker' do
       before do
         @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE)
       end
 
-      it "should cleanup message on startup" do
+      it 'should cleanup message on startup' do
         MiqQueue.atStartup
 
         @msg.reload
@@ -112,7 +112,7 @@ describe MiqQueue do
     end
   end
 
-  it "should validate formatting of message for logging" do
+  it 'should validate formatting of message for logging' do
     # Add various key/value combos as needs arise...
     message_parms = [
       {:target_id    => nil,
@@ -140,16 +140,16 @@ describe MiqQueue do
     end
   end
 
-  it "should validate formatting of message with encrypted password in args for logging" do
+  it 'should validate formatting of message with encrypted password in args for logging' do
     # Some reasonably accurate test data.
     args_test = [
-      "[datastore1] test-cfme-vddk2/test-cfme-vddk2.vmx",
-      "---ems: ems: :address: 16.16.52.50 :hostname: 16.16.52.50 :ipaddress: 16.16.52.50 :username: administrator :password: v2:{lalala} :class_name: ManageIQ::Providers::Vmware::InfraManager host: :address: 16.16.52.50 :hostname: myhost.redhat.com :ipaddress: 16.16.52.50 :username: root :password: v1:{lalala} :class_name: ManageIQ::Providers::Vmware::InfraManager::HostEsx connect_to: host snapshot: use_existing: false"
+      '[datastore1] test-cfme-vddk2/test-cfme-vddk2.vmx',
+      '---ems: ems: :address: 16.16.52.50 :hostname: 16.16.52.50 :ipaddress: 16.16.52.50 :username: administrator :password: v2:{lalala} :class_name: ManageIQ::Providers::Vmware::InfraManager host: :address: 16.16.52.50 :hostname: myhost.redhat.com :ipaddress: 16.16.52.50 :username: root :password: v1:{lalala} :class_name: ManageIQ::Providers::Vmware::InfraManager::HostEsx connect_to: host snapshot: use_existing: false'
     ]
 
     args_cleaned_password = [
-      "[datastore1] test-cfme-vddk2/test-cfme-vddk2.vmx",
-      "---ems: ems: :address: 16.16.52.50 :hostname: 16.16.52.50 :ipaddress: 16.16.52.50 :username: administrator :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager host: :address: 16.16.52.50 :hostname: myhost.redhat.com :ipaddress: 16.16.52.50 :username: root :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager::HostEsx connect_to: host snapshot: use_existing: false"
+      '[datastore1] test-cfme-vddk2/test-cfme-vddk2.vmx',
+      '---ems: ems: :address: 16.16.52.50 :hostname: 16.16.52.50 :ipaddress: 16.16.52.50 :username: administrator :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager host: :address: 16.16.52.50 :hostname: myhost.redhat.com :ipaddress: 16.16.52.50 :username: root :password: ******** :class_name: ManageIQ::Providers::Vmware::InfraManager::HostEsx connect_to: host snapshot: use_existing: false'
     ]
 
     message_parms = [
@@ -177,8 +177,8 @@ describe MiqQueue do
     end
   end
 
-  context "executing priority" do
-    it "should return adjusted value" do
+  context 'executing priority' do
+    it 'should return adjusted value' do
       expect(MiqQueue.priority(:max)).to eq(MiqQueue::MAX_PRIORITY)
       expect(MiqQueue.priority(:high)).to eq(MiqQueue::HIGH_PRIORITY)
       expect(MiqQueue.priority(:normal)).to eq(MiqQueue::NORMAL_PRIORITY)
@@ -199,7 +199,7 @@ describe MiqQueue do
       expect(MiqQueue.priority(:max, :higher, 1)).to eq(MiqQueue::MAX_PRIORITY)
     end
 
-    it "should validate comparisons" do
+    it 'should validate comparisons' do
       expect(MiqQueue.higher_priority(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY)).to eq(MiqQueue::MAX_PRIORITY)
       expect(MiqQueue.higher_priority(MiqQueue::MAX_PRIORITY, MiqQueue::MIN_PRIORITY)).to eq(MiqQueue::MAX_PRIORITY)
       expect(MiqQueue.higher_priority?(MiqQueue::MIN_PRIORITY, MiqQueue::MAX_PRIORITY)).to be_falsey
@@ -212,19 +212,19 @@ describe MiqQueue do
     end
   end
 
-  context "deliver to queue" do
+  context 'deliver to queue' do
     before do
       _, @miq_server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
-      @t1 = Time.parse("Wed Apr 20 00:15:00 UTC 2011")
-      @msg = FactoryGirl.create(:miq_queue, :zone => @zone.name, :role => "role1", :priority => 20, :created_on => @t1)
+      @t1 = Time.parse('Wed Apr 20 00:15:00 UTC 2011')
+      @msg = FactoryGirl.create(:miq_queue, :zone => @zone.name, :role => 'role1', :priority => 20, :created_on => @t1)
     end
 
-    it "should requeue a message with new message id" do
+    it 'should requeue a message with new message id' do
       options = {
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
-        :args        => ['rq_message', 1, ["A", "B", "C"], 'AUTOMATION', 'gp', 'warn', 'automate message', 'ae_fsm_started', 'ae_state_started', 'ae_state_retries'],
+        :args        => ['rq_message', 1, ['A', 'B', 'C'], 'AUTOMATION', 'gp', 'warn', 'automate message', 'ae_fsm_started', 'ae_state_started', 'ae_state_retries'],
         :zone        => @zone.name,
         :role        => 'automate',
         :msg_timeout => 60.minutes,
@@ -241,11 +241,11 @@ describe MiqQueue do
       expect(@msg.id).not_to eq(@msg.requeue(options).id)
     end
 
-    it "should requeue a message with message id higher last" do
+    it 'should requeue a message with message id higher last' do
       options = {
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
-        :args        => ['rq_message', 1, ["A", "B", "C"], 'AUTOMATION', 'gp', 'warn', 'automate message', 'ae_fsm_started', 'ae_state_started', 'ae_state_retries'],
+        :args        => ['rq_message', 1, ['A', 'B', 'C'], 'AUTOMATION', 'gp', 'warn', 'automate message', 'ae_fsm_started', 'ae_state_started', 'ae_state_retries'],
         :zone        => @zone.name,
         :role        => 'automate',
         :msg_timeout => 60.minutes
@@ -259,36 +259,36 @@ describe MiqQueue do
       expect(@msg.requeue(options).id).to be > @msg.id
     end
 
-    it "should requeue a message" do
-      hash_value = "test_string_2_05312011"
+    it 'should requeue a message' do
+      hash_value = 'test_string_2_05312011'
       @msg.data = hash_value
-      expect(@msg.data).to eq("test_string_2_05312011")
+      expect(@msg.data).to eq('test_string_2_05312011')
     end
   end
 
-  context "worker" do
+  context 'worker' do
     before do
       _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
 
       @worker = FactoryGirl.create(:miq_ems_refresh_worker, :miq_server_id => @miq_server.id)
-      @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :task_id => "task123", :handler => @worker)
+      @msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :task_id => 'task123', :handler => @worker)
     end
 
-    it "should find a message by task id" do
-      expect(MiqQueue.get_worker("task123")).to eq(@worker)
+    it 'should find a message by task id' do
+      expect(MiqQueue.get_worker('task123')).to eq(@worker)
     end
 
-    it "should return worker handler" do
+    it 'should return worker handler' do
       expect(@msg.get_worker).to eq(@worker)
     end
   end
 
-  context "#put" do
+  context '#put' do
     before do
       _, @miq_server, = EvmSpecHelper.create_guid_miq_server_zone
     end
 
-    it "should put one message on queue" do
+    it 'should put one message on queue' do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -299,7 +299,7 @@ describe MiqQueue do
       expect(MiqQueue.get).to eq(nil)
     end
 
-    it "should accept non-Array args (for now)" do
+    it 'should accept non-Array args (for now)' do
       begin
         class MiqQueueSpecNonArrayArgs
           def self.some_method(single_arg)
@@ -308,25 +308,25 @@ describe MiqQueue do
         end
 
         msg = MiqQueue.put(
-          :class_name  => "MiqQueueSpecNonArrayArgs",
-          :method_name => "some_method",
-          :args        => "not_an_array",
+          :class_name  => 'MiqQueueSpecNonArrayArgs',
+          :method_name => 'some_method',
+          :args        => 'not_an_array',
         )
 
         msg_from_db = MiqQueue.find(msg.id)
-        expect(msg_from_db.args).to eq(["not_an_array"])
+        expect(msg_from_db.args).to eq(['not_an_array'])
 
         _, _, result = msg_from_db.deliver
-        expect(result).to eq "not_an_array"
+        expect(result).to eq 'not_an_array'
       ensure
         Object.send(:remove_const, :MiqQueueSpecNonArrayArgs)
       end
     end
 
-    it "defaults args / miq_callback to [] / {}" do
+    it 'defaults args / miq_callback to [] / {}' do
       msg = MiqQueue.put(
-        :class_name  => "Class1",
-        :method_name => "Method1",
+        :class_name  => 'Class1',
+        :method_name => 'Method1',
       )
 
       msg_from_db = MiqQueue.find(msg.id)
@@ -334,7 +334,7 @@ describe MiqQueue do
       expect(msg_from_db.miq_callback).to eq({})
     end
 
-    it "should put a unique message on the queue if method_name is different" do
+    it 'should put a unique message on the queue if method_name is different' do
       msg1 = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -351,7 +351,7 @@ describe MiqQueue do
       expect(MiqQueue.get).to eq(nil)
     end
 
-    it "should ignore state when putting a new message on the queue" do
+    it 'should ignore state when putting a new message on the queue' do
       MiqQueue.put_unless_exists(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -361,7 +361,7 @@ describe MiqQueue do
       expect(MiqQueue.first.state).to eq(MiqQueue::STATE_READY)
     end
 
-    it "should respect hash updates in put_unless_exists" do
+    it 'should respect hash updates in put_unless_exists' do
       MiqQueue.put_unless_exists(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -373,7 +373,7 @@ describe MiqQueue do
       expect(MiqQueue.first.args).to eq([3, 3])
     end
 
-    it "should not call into put_unless_exists" do
+    it 'should not call into put_unless_exists' do
       MiqQueue.put_unless_exists(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -390,7 +390,7 @@ describe MiqQueue do
       expect(MiqQueue.first.args).to eq([1, 2])
     end
 
-    it "should not put duplicate messages on the queue" do
+    it 'should not put duplicate messages on the queue' do
       msg1 = MiqQueue.put_unless_exists(
         :class_name  => 'MyClass',
         :method_name => 'method2',
@@ -407,7 +407,7 @@ describe MiqQueue do
       expect(MiqQueue.get).to eq(nil)
     end
 
-    it "should use args param to find messages on the queue" do
+    it 'should use args param to find messages on the queue' do
       msg1 = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -434,7 +434,7 @@ describe MiqQueue do
       expect(MiqQueue.get).to eq(nil)
     end
 
-    it "should use args proc to find messages on the queue" do
+    it 'should use args proc to find messages on the queue' do
       msg1 = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -462,12 +462,12 @@ describe MiqQueue do
     end
   end
 
-  describe ".unqueue" do
+  describe '.unqueue' do
     before do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
-    it "should unqueue a message" do
+    it 'should unqueue a message' do
       msg = MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -498,7 +498,7 @@ describe MiqQueue do
       )).to eq(msg)
     end
 
-    it "should not unqueue a message from a different zone" do
+    it 'should not unqueue a message from a different zone' do
       MiqQueue.put(
         :class_name  => 'MyClass',
         :method_name => 'method1',
@@ -513,53 +513,53 @@ describe MiqQueue do
   end
 
   # this is a private method, but there are too many permutations to properly test get/put
-  context "#default_get_options" do
+  context '#default_get_options' do
     before do
-      allow(Zone).to receive_messages(:determine_queue_zone => "defaultzone")
+      allow(Zone).to receive_messages(:determine_queue_zone => 'defaultzone')
     end
 
-    it "should default the queue name" do
+    it 'should default the queue name' do
       expect(described_class.send(:default_get_options, {}
                                  )).to include(
                                    :queue_name => MiqQueue::DEFAULT_QUEUE
                                  )
     end
 
-    it "should default the queue name and others" do
+    it 'should default the queue name and others' do
       expect(described_class.send(
                :default_get_options,
-               :other_key => "x"
+               :other_key => 'x'
       )).to include(
         :queue_name => MiqQueue::DEFAULT_QUEUE,
-        :other_key  => "x",
+        :other_key  => 'x',
         :state      => MiqQueue::STATE_READY,
-        :zone       => "defaultzone"
+        :zone       => 'defaultzone'
       )
     end
 
-    it "should override the queue name" do
+    it 'should override the queue name' do
       expect(described_class.send(
                :default_get_options,
-               :queue_name => "non_generic"
+               :queue_name => 'non_generic'
       )).to include(
-        :queue_name => "non_generic"
+        :queue_name => 'non_generic'
       )
     end
   end
 
   # this is a private method, but easier to just test directly
-  it "should expand keys, not expand non specified keys, and not add missing keys" do
+  it 'should expand keys, not expand non specified keys, and not add missing keys' do
     expect(described_class.send(:optional_values, {
-                                  :not_expanded => "notexp",
-                                  :expanded     => "exp"
+                                  :not_expanded => 'notexp',
+                                  :expanded     => 'exp'
                                 }, [:expanded, :missing])).to eq(
-                                  :not_expanded => "notexp",
-                                  :expanded     => [nil, "exp"]
+                                  :not_expanded => 'notexp',
+                                  :expanded     => [nil, 'exp']
                                 )
   end
 
-  context "#delivered" do
-    it "destroys a stale object" do
+  context '#delivered' do
+    it 'destroys a stale object' do
       q = MiqQueue.create!(:state => 'ready')
       MiqQueue.find(q.id).tap { |q2| q2.state = 'dequeue' }.save # update_attributes doesn't expose the issue
 

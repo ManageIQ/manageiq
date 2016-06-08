@@ -9,18 +9,18 @@ module CatalogHelper::TextualSummary
         p[:value].push(value)
       else
         name = Classification.find_by(:id => Classification.find_by(:tag_id => tag.id).parent_id).description
-        tags.push(:image => "smarttag", :label => name, :value => [value])
+        tags.push(:image => 'smarttag', :label => name, :value => [value])
       end
     end
     tags
   end
 
   def textual_tags
-    label = _("%{name} Tags") % {:name => session[:customer_name]}
+    label = _('%{name} Tags') % {:name => session[:customer_name]}
     tags = {:label => label}
     if @record.tags.blank?
-      tags[:image] = "smarttag"
-      tags[:value] = _("No %{label} have been assigned") % {:label => label}
+      tags[:image] = 'smarttag'
+      tags[:value] = _('No %{label} have been assigned') % {:label => label}
     else
       tags[:value] = tags_from_record
       tags[:value].each { |value| value[:value].sort! }

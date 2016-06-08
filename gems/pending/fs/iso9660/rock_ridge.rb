@@ -16,7 +16,7 @@ module Iso9660
   # is where the "RR" extension is defined. This implementation uses the
   # assumed definition RR_HEADER.
 
-  RR_SIGNATURE = "RR"
+  RR_SIGNATURE = 'RR'
   RR_HEADER = BinaryStruct.new([
     'a2', 'signature',  # RR if Rock Ridge.
     'C',  'unused1',    # ? always seems to be 5.
@@ -26,14 +26,14 @@ module Iso9660
   RR_HEADER_SIZE = 5
 
   # These types are not used, but we want to know if they pop up.
-  RR_PN_SIGNATURE = "PN"
-  RR_CL_SIGNATURE = "CL"
-  RR_PL_SIGNATURE = "PL"
-  RR_RE_SIGNATURE = "RE"
-  RR_TF_SIGNATURE = "TF"
+  RR_PN_SIGNATURE = 'PN'
+  RR_CL_SIGNATURE = 'CL'
+  RR_PL_SIGNATURE = 'PL'
+  RR_RE_SIGNATURE = 'RE'
+  RR_TF_SIGNATURE = 'TF'
 
   # POSIX file attributes. See POSIX 5.6.1.
-  RR_PX_SIGNATURE = "PX"
+  RR_PX_SIGNATURE = 'PX'
   RR_PX = BinaryStruct.new([
     'L',  'modeLE',   # file mode (used to identify a link).
     'L',  'modeBE',
@@ -101,7 +101,7 @@ module Iso9660
   end # class PosixAttributes
 
   # Symbolic link.
-  RR_SL_SIGNATURE = "SL"
+  RR_SL_SIGNATURE = 'SL'
   RR_SL = BinaryStruct.new([
     'C',  'flags',  # See RR_EXT_SLF_ below.
     'a*', 'components'
@@ -141,14 +141,14 @@ module Iso9660
     end
 
     def assembleComponents(data)
-      out = ""; offset = 0
+      out = ''; offset = 0
       loop do
         comp = RR_SL_COMPONENT.decode(data[offset..-1])
 
         # Check for referential flags.
-        out += "./" if comp['flags'] & RR_EXT_SLCOMPF_CURRENT != 0
-        out += "../" if comp['flags'] & RR_EXT_SLCOMPF_PARENT != 0
-        out += "/" if comp['flags'] & RR_EXT_SLCOMPF_ROOT != 0
+        out += './' if comp['flags'] & RR_EXT_SLCOMPF_CURRENT != 0
+        out += '../' if comp['flags'] & RR_EXT_SLCOMPF_PARENT != 0
+        out += '/' if comp['flags'] & RR_EXT_SLCOMPF_ROOT != 0
 
         # Advance offset, append content (if any) & check for done.
         # puts "Component content:"
@@ -169,7 +169,7 @@ module Iso9660
   end # class SymbolicLink
 
   # Alternate name.
-  RR_NM_SIGNATURE = "NM"
+  RR_NM_SIGNATURE = 'NM'
   RR_NM = BinaryStruct.new([
     'C',  'flags',  # See RR_EXT_NMF_ below.
     'a*', 'content'
@@ -194,10 +194,10 @@ module Iso9660
       an = RR_NM.decode(data)
 
       # Check for referential flags.
-      @name = ""
-      @name += "./" if an['flags'] & RR_EXT_NMF_CURRENT != 0
-      @name += "../" if an['flags'] & RR_EXT_NMF_PARENT != 0
-      raise "RR extension NM: RESERVED3 flag is set." if an['flags'] & RR_EXT_NMF_RESERVED3 != 0
+      @name = ''
+      @name += './' if an['flags'] & RR_EXT_NMF_CURRENT != 0
+      @name += '../' if an['flags'] & RR_EXT_NMF_PARENT != 0
+      raise 'RR extension NM: RESERVED3 flag is set.' if an['flags'] & RR_EXT_NMF_RESERVED3 != 0
 
       # Reader data.
       @flags = an['flags']
@@ -206,7 +206,7 @@ module Iso9660
   end # class AlternateName
 
   # Sparse File.
-  RR_SF_SIGNATURE = "SF"
+  RR_SF_SIGNATURE = 'SF'
   RR_SF = BinaryStruct.new([
     'L',  'size_hiLE',
     'L',  'size_hiBE',
@@ -225,7 +225,7 @@ module Iso9660
       @sf = RR_SF.decode(data)
       @flags = 0
       @suff = suff
-      raise "Sparse file."
+      raise 'Sparse file.'
     end
 
     def length
@@ -283,15 +283,15 @@ module Iso9660
     attr_reader :extensions
 
     def initialize(de, suff)
-      raise "No DirectoryEntry specified." if de.nil?
-      raise "The specified DirectoryEntry has no System Use Area." if de.sua.nil?
+      raise 'No DirectoryEntry specified.' if de.nil?
+      raise 'The specified DirectoryEntry has no System Use Area.' if de.sua.nil?
 
       # Root directories need to skip SUSP header.
-      offset = de.name == "." ? SUSP_SIZE : 0
+      offset = de.name == '.' ? SUSP_SIZE : 0
 
       # Get the RR header from the DirectoryEntry & verify.
       @header = RR_HEADER.decode(de.sua[offset..-1])
-      raise "This is not a Rock Ridge extension record" if @header['signature'] != RR_SIGNATURE
+      raise 'This is not a Rock Ridge extension record' if @header['signature'] != RR_SIGNATURE
 
       # Loop through extensions.
       offset += RR_HEADER_SIZE

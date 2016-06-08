@@ -39,12 +39,12 @@ class MiqVimBrokerWorker < MiqWorker
   def self.drb_uri
     broker = find_current.first
     if broker.nil?
-      _log.warn("Active VimBroker not found")
+      _log.warn('Active VimBroker not found')
       return nil
     end
 
     if broker.uri.blank?
-      _log.warn("Active VimBroker DRb URI is blank")
+      _log.warn('Active VimBroker DRb URI is blank')
       return nil
     end
 
@@ -63,7 +63,7 @@ class MiqVimBrokerWorker < MiqWorker
   def self.broker_unavailable(err_class, message)
     _log.warn("The following error was encountered, '#{message}', the broker server should be restarted on the next heartbeat")
     broker = find_current.first
-    broker_message = (err_class == "Errno::EMFILE") ? "broker_too_many_files" : "broker_unavailable"
+    broker_message = (err_class == 'Errno::EMFILE') ? 'broker_too_many_files' : 'broker_unavailable'
     broker.send_message_to_worker_monitor(broker_message) unless broker.nil?
   end
 
@@ -72,7 +72,7 @@ class MiqVimBrokerWorker < MiqWorker
     _log.info "Queueing reconnect for EMS name: [#{ems.name}], id: [#{ems.id}] at [#{deliver_on}]"
     MiqQueue.put(
       :class_name  => name,
-      :method_name => "reconnect_ems",
+      :method_name => 'reconnect_ems',
       :args        => [ems.id],
       :deliver_on  => deliver_on
     )
@@ -102,6 +102,6 @@ class MiqVimBrokerWorker < MiqWorker
   end
 
   def friendly_name
-    @friendly_name ||= "VMware Session Broker"
+    @friendly_name ||= 'VMware Session Broker'
   end
 end

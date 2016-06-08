@@ -104,13 +104,13 @@ begin
   # exit
 
   files = vimDs.dsHash
-  puts "==============================="
+  puts '==============================='
   files.each do |p, fi|
     puts p
     puts "\tType: #{fi['fileType']}"
     puts "\tSize: #{fi['fileSize']}"
     puts "\tMod time: #{fi['modification']}"
-    if fi['fileType'] == "FolderFileInfo"
+    if fi['fileType'] == 'FolderFileInfo'
       puts "\t\tDirectory entries:"
       fi['dirEntries'].each { |de| puts "\t\t\t#{de}" }
     end
@@ -119,20 +119,20 @@ begin
 
   # exit
 
-  puts "==============================="
-  puts "Mounting file system..."
+  puts '==============================='
+  puts 'Mounting file system...'
   fs = vimDs.getFs
-  puts "done."
+  puts 'done.'
 
   puts "FS Type: #{fs.fsType}"
   puts "FS Id: #{fs.fsId}"
   puts "Volume name: #{fs.volName}"
 
   puts
-  puts "==============================="
-  puts "find:"
-  fs.findEach("/") do |fp|
-    next unless File.fnmatch("*.vmx", fp)
+  puts '==============================='
+  puts 'find:'
+  fs.findEach('/') do |fp|
+    next unless File.fnmatch('*.vmx', fp)
     dsp = fs.dsPath(fp)
     puts "\t" + fp
     puts "\t\tDS Path: #{dsp}"

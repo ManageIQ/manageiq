@@ -7,7 +7,7 @@ class PxeImageType < ApplicationRecord
   validates_uniqueness_of :name
 
   def self.seed_file_name
-    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
+    @seed_file_name ||= Rails.root.join('db', 'fixtures', "#{table_name}.yml")
   end
 
   def self.seed_data

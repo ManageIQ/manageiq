@@ -11,13 +11,13 @@ class ApplicationHelper::Toolbar::ContainerServiceCenter < ApplicationHelper::To
           'pficon pficon-edit fa-lg',
           t = N_('Edit this #{ui_lookup(:table=>"container_service")}'),
           t,
-          :url => "/edit"),
+          :url => '/edit'),
         button(
           :container_service_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this #{ui_lookup(:table=>"container_service")} from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
+          :url_parms => '&refresh=y',
           :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"container_service\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"container_service\")}?")),
       ]
     ),
@@ -34,8 +34,8 @@ class ApplicationHelper::Toolbar::ContainerServiceCenter < ApplicationHelper::To
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Service'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          :url       => '/show',
+          :url_parms => '?display=performance'),
       ]
     ),
   ])

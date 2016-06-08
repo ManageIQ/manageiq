@@ -5,8 +5,8 @@ describe DashboardController do
     ApplicationController.handle_exceptions = true
   end
 
-  describe "#current_tenant" do
-    it "defaults to the default tenant" do
+  describe '#current_tenant' do
+    it 'defaults to the default tenant' do
       get :login
       expect(controller.send(:current_tenant)).to be_default
     end

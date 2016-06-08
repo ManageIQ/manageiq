@@ -40,12 +40,12 @@ class JqplotCharting < Charting
   end
 
   CHART_NAMES = [
-    ["Bars",             "Bar"],
-    ["Bars, Stacked",    "StackedBar"],
-    ["Columns",          "Column"],
-    ["Columns, Stacked", "StackedColumn"],
-    ["Donut",            "Donut"],
-    ["Pie",              "Pie"],
+    ['Bars',             'Bar'],
+    ['Bars, Stacked',    'StackedBar'],
+    ['Columns',          'Column'],
+    ['Columns, Stacked', 'StackedColumn'],
+    ['Donut',            'Donut'],
+    ['Pie',              'Pie'],
   ]
 
   def chart_themes_for_select

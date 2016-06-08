@@ -16,10 +16,10 @@ Log4r::StderrOutputter.new('err_console', :level=>Log4r::OFF, :formatter=>Consol
 $vim_log.add 'err_console'
 
 # $miq_wiredump = true
-TARGET_HOST   = raise "please define"
-HOST_USERNAME = ""
-HOST_PASSWORD = ""
-CLUSTER_NAME  = ""
+TARGET_HOST   = raise 'please define'
+HOST_USERNAME = ''
+HOST_PASSWORD = ''
+CLUSTER_NAME  = ''
 
 miqCluster  = nil
 miqHost   = nil
@@ -42,14 +42,14 @@ begin
     # even though it doesn't seem to support standby.
     #
     unless miqHost.standbySupported?
-      puts "Host does not support standby"
+      puts 'Host does not support standby'
       exit
     end
   
     puts
-    puts "Putting host in StandBy Mode..."
+    puts 'Putting host in StandBy Mode...'
     miqHost.powerDownHostToStandBy
-    puts "done."
+    puts 'done.'
   
 
 rescue => err

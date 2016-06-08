@@ -47,8 +47,8 @@ class MiqPolicySet < ApplicationRecord
 
   def export_to_array
     h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqPolicy"] = members.collect { |p| p.export_to_array.first["MiqPolicy"] unless p.nil? }
+    ['id', 'created_on', 'updated_on'].each { |k| h.delete(k) }
+    h['MiqPolicy'] = members.collect { |p| p.export_to_array.first['MiqPolicy'] unless p.nil? }
     [self.class.to_s => h]
   end
 
@@ -58,9 +58,9 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def self.import_from_hash(policy_profile, options = {})
-    status = {:class => name, :description => policy_profile["description"], :children => []}
-    pp = policy_profile.delete("MiqPolicy") do |_k|
-      raise _("No Policies for Policy Profile == %{profile}") % {:profile => policy_profile.inspect}
+    status = {:class => name, :description => policy_profile['description'], :children => []}
+    pp = policy_profile.delete('MiqPolicy') do |_k|
+      raise _('No Policies for Policy Profile == %{profile}') % {:profile => policy_profile.inspect}
     end
 
     policies = []
@@ -70,7 +70,7 @@ class MiqPolicySet < ApplicationRecord
       policies.push(policy)
     end
 
-    pset = MiqPolicySet.find_by_guid(policy_profile["guid"])
+    pset = MiqPolicySet.find_by_guid(policy_profile['guid'])
     msg_pfx = "Importing Policy Profile: guid=[#{policy_profile["guid"]}] description=[#{policy_profile["description"]}]"
     if pset.nil?
       pset = MiqPolicySet.new(policy_profile)
@@ -86,7 +86,7 @@ class MiqPolicySet < ApplicationRecord
       status[:messages] = pset.errors.full_messages
     end
 
-    pset["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
+    pset['mode'] ||= 'control' # Default "mode" value to true to support older export decks that don't have a value set.
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
@@ -107,7 +107,7 @@ class MiqPolicySet < ApplicationRecord
     input = YAML.load(fd)
 
     input.each do |e|
-      p, stat = import_from_hash(e["MiqPolicySet"])
+      p, stat = import_from_hash(e['MiqPolicySet'])
       stats.push(stat)
     end
 
@@ -115,14 +115,14 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def self.seed
-    fixture_file = File.join(FIXTURE_DIR, "miq_policy_sets.yml")
+    fixture_file = File.join(FIXTURE_DIR, 'miq_policy_sets.yml')
     fixtures = File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
     MiqPolicy.import_from_array(fixtures, :save => true)
 
     all.each do |ps|
       if ps.mode.nil?
         _log.info("Updating [#{ps.name}]")
-        ps.update_attribute(:mode, "control")
+        ps.update_attribute(:mode, 'control')
       end
     end
   end

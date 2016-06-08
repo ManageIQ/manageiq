@@ -1,8 +1,8 @@
 RSpec.describe VimPerformanceAnalysis do
-  let(:tag_text) { "operations/good" }
+  let(:tag_text) { 'operations/good' }
   let(:tag_good) { FactoryGirl.create(:tag, :name => "/managed/#{tag_text}") }
-  let(:tag_bad)  { FactoryGirl.create(:tag, :name => "/managed/operations/bad") }
-  let(:time_profile) { FactoryGirl.create(:time_profile_with_rollup, :profile => {:tz => "UTC"}) }
+  let(:tag_bad)  { FactoryGirl.create(:tag, :name => '/managed/operations/bad') }
+  let(:time_profile) { FactoryGirl.create(:time_profile_with_rollup, :profile => {:tz => 'UTC'}) }
 
   let(:user) { FactoryGirl.create(:user_admin) }
 
@@ -11,7 +11,7 @@ RSpec.describe VimPerformanceAnalysis do
   let(:good_day) { DateTime.current - 2.day }
   let(:bad_day)  { DateTime.current - 4.months }
   let(:vm1) do
-    FactoryGirl.create(:vm_vmware, :name => "test_vm", :tags => [tag_good], :ext_management_system => ems).tap do |vm|
+    FactoryGirl.create(:vm_vmware, :name => 'test_vm', :tags => [tag_good], :ext_management_system => ems).tap do |vm|
       [7, 8, 9, 10].each do |hour|
         add_rollup(vm, (good_day + hour.hours).to_s, tag_text)
         add_rollup(vm, (bad_day + hour.hours).to_s, tag_text)
@@ -40,8 +40,8 @@ RSpec.describe VimPerformanceAnalysis do
     EvmSpecHelper.local_miq_server
   end
 
-  describe ".find_child_perf_for_time_period" do
-    it "returns only tagged nodes" do
+  describe '.find_child_perf_for_time_period' do
+    it 'returns only tagged nodes' do
       ems_cluster
       expect(MetricRollup.count).to be > 0
 
@@ -50,7 +50,7 @@ RSpec.describe VimPerformanceAnalysis do
       options = {:end_date => DateTime.current, :days => 30, :ext_options => {:time_profile => time_profile}}
 
       # currently, only vms have data, but only host data is returned
-      results = VimPerformanceAnalysis.find_child_perf_for_time_period(ems, "daily", options)
+      results = VimPerformanceAnalysis.find_child_perf_for_time_period(ems, 'daily', options)
       # expect(results).not_to be_empty
       VimPerformanceAnalysis.group_perf_by_timestamp(ems, results, cols)
 
@@ -65,10 +65,10 @@ RSpec.describe VimPerformanceAnalysis do
   #   end
   # end
 
-  describe ".get_daily_perf" do
-    it "should not raise an error" do
-      range       = {:days => 7, :end_date => "2016-04-19T23:00:00Z".to_time}
-      ext_options = {:tz => "UTC", :time_profile => time_profile}
+  describe '.get_daily_perf' do
+    it 'should not raise an error' do
+      range       = {:days => 7, :end_date => '2016-04-19T23:00:00Z'.to_time}
+      ext_options = {:tz => 'UTC', :time_profile => time_profile}
       perf_cols   = [:max_cpu_usagemhz_rate_average, :derived_cpu_available, :total_vcpus, :max_derived_memory_used, :derived_memory_available, :used_space, :total_space]
       expect { described_class.get_daily_perf(host1, range, ext_options, perf_cols).all.inspect }.not_to raise_error
     end

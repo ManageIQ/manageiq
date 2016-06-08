@@ -2,8 +2,8 @@ require 'ansible_tower_client'
 class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::OrchestrationStack
   require_nested :Status
 
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::ConfigurationManager"
-  belongs_to :job_template, :foreign_key => :orchestration_template_id, :class_name => "ConfigurationScript"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::ConfigurationManager'
+  belongs_to :job_template, :foreign_key => :orchestration_template_id, :class_name => 'ConfigurationScript'
 
   #
   # Allowed options are

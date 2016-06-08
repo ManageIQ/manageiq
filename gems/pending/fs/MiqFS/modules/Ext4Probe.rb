@@ -13,7 +13,7 @@ module Ext4Probe
       sb = Ext4::Superblock.new(dobj)
 
       # If initializing the superblock does not throw any errors, then this is Ext4
-      $log.debug("Ext4Probe << TRUE")
+      $log.debug('Ext4Probe << TRUE')
       return true
     rescue => err
       $log.debug "Ext4Probe << FALSE because #{err.message}" if $log

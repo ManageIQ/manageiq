@@ -23,31 +23,31 @@ module EmsContainerHelper::TextualSummary
 
   def textual_authentications
     authentications = @ems.authentications
-    return [{:label => _("Default Authentication"), :title => t = _("None"), :value => t}] if authentications.blank?
+    return [{:label => _('Default Authentication'), :title => t = _('None'), :value => t}] if authentications.blank?
 
     authentications.collect do |auth|
       label =
         case auth.authtype
-        when "default" then _("Default")
-        when "bearer" then _("Bearer")
-        when "hawkular" then _("Hawkular")
-        else; _("<Unknown>")
+        when 'default' then _('Default')
+        when 'bearer' then _('Bearer')
+        when 'hawkular' then _('Hawkular')
+        else; _('<Unknown>')
         end
 
-      {:label => _("%{label} Authentication") % {:label => label},
-       :value => auth.status || _("None"),
+      {:label => _('%{label} Authentication') % {:label => label},
+       :value => auth.status || _('None'),
        :title => auth.status_details}
     end
   end
 
   def textual_group_component_statuses
-    labels = [_("Name"), _("Healthy"), _("Error")]
+    labels = [_('Name'), _('Healthy'), _('Error')]
     h = {:labels => labels}
     h[:values] = @record.container_component_statuses.collect do |cs|
       [
         cs.name,
         cs.status,
-        (cs.error || "")
+        (cs.error || '')
       ]
     end
     h
@@ -78,13 +78,13 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_memory_resources
-    {:label => _("Aggregate Node Memory"),
+    {:label => _('Aggregate Node Memory'),
      :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte,
                                     :precision => 0)}
   end
 
   def textual_cpu_cores
-    {:label => _("Aggregate Node CPU Cores"),
+    {:label => _('Aggregate Node CPU Cores'),
      :value => @ems.aggregate_cpu_total_cores}
   end
 
@@ -93,7 +93,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
+    {:label => _('Managed by Zone'), :image => 'zone', :value => @ems.zone.name}
   end
 
   def textual_refresh_status
@@ -103,7 +103,7 @@ module EmsContainerHelper::TextualSummary
       last_refresh_status << " - #{last_refresh_date} Ago"
     end
     {
-      :label => _("Last Refresh"),
+      :label => _('Last Refresh'),
       :value => [{:value => last_refresh_status},
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
@@ -114,16 +114,16 @@ module EmsContainerHelper::TextualSummary
     {:label => _('Topology'),
      :image => 'topology',
      :link  => url_for(:controller => 'container_topology', :action => 'show', :id => @ems.id),
-     :title => _("Show topology")}
+     :title => _('Show topology')}
   end
 
   def textual_volumes
     count_of_volumes = @ems.number_of(:persistent_volumes)
-    label = ui_lookup(:tables => "volume")
-    h     = {:label => label, :image => "container_volume", :value => count_of_volumes}
-    if count_of_volumes > 0 && role_allows(:feature => "persistent_volume_show_list")
+    label = ui_lookup(:tables => 'volume')
+    h     = {:label => label, :image => 'container_volume', :value => count_of_volumes}
+    if count_of_volumes > 0 && role_allows(:feature => 'persistent_volume_show_list')
       h[:link]  = ems_container_path(@ems.id, :display => 'persistent_volumes')
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
     end
     h
   end

@@ -7,13 +7,13 @@ module RegistrationSystem
     options[:registration_http_proxy_password] = MiqPassword.try_encrypt(options[:registration_http_proxy_password])
 
     task_opts = {
-      :action => "Fetching Available Organizations",
-      :userid => "system"
+      :action => 'Fetching Available Organizations',
+      :userid => 'system'
     }
 
     queue_opts = {
-      :class_name  => "RegistrationSystem",
-      :method_name => "available_organizations",
+      :class_name  => 'RegistrationSystem',
+      :method_name => 'available_organizations',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [options.delete_blanks]
     }
@@ -27,13 +27,13 @@ module RegistrationSystem
     options[:registration_http_proxy_password] = MiqPassword.try_encrypt(options[:registration_http_proxy_password])
 
     task_opts = {
-      :action => "Verifying Credentials",
-      :userid => "system"
+      :action => 'Verifying Credentials',
+      :userid => 'system'
     }
 
     queue_opts = {
-      :class_name  => "RegistrationSystem",
-      :method_name => "verify_credentials",
+      :class_name  => 'RegistrationSystem',
+      :method_name => 'verify_credentials',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [options.delete_blanks]
     }

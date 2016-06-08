@@ -1,12 +1,12 @@
-require "appliance_console/logging"
+require 'appliance_console/logging'
 require 'appliance_console/prompts'
 
 module ApplianceConsole
   class DateTimeConfiguration
     DATE_REGEXP   = /^(2[0-9]{3})-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])/
-    DATE_PROMPT   = "current date (YYYY-MM-DD)".freeze
+    DATE_PROMPT   = 'current date (YYYY-MM-DD)'.freeze
     TIME_REGEXP   = /^(0?[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/
-    TIME_PROMPT   = "current time in 24 hour format (HH:MM:SS)".freeze
+    TIME_PROMPT   = 'current time in 24 hour format (HH:MM:SS)'.freeze
 
     attr_accessor :new_date, :new_time, :manual_time_sync
 
@@ -19,7 +19,7 @@ module ApplianceConsole
     end
 
     def activate
-      say("Applying time configuration...")
+      say('Applying time configuration...')
       establish_auto_sync &&
         configure_date_time
     end
@@ -63,9 +63,9 @@ Yes to disable Automatic time synchronization and prompt for date and time.
 
     def confirm_auto
       clear_screen
-      say("Date and Time Configuration will be automatic")
+      say('Date and Time Configuration will be automatic')
 
-      agree("Apply automatic time configuration? (Y/N): ")
+      agree('Apply automatic time configuration? (Y/N): ')
     end
 
     def confirm_manual
@@ -78,7 +78,7 @@ Date and Time Configuration
 
         EOL
 
-      agree("Apply manual time configuration? (Y/N): ")
+      agree('Apply manual time configuration? (Y/N): ')
     end
 
     def establish_auto_sync
@@ -86,21 +86,21 @@ Date and Time Configuration
     end
 
     def enable_auto_sync
-      LinuxAdmin::Service.new("chronyd").enable.start
-      LinuxAdmin::Service.new("systemd-timedated").restart
+      LinuxAdmin::Service.new('chronyd').enable.start
+      LinuxAdmin::Service.new('systemd-timedated').restart
       true
     rescue => e
-      say("Failed to enable time synchronization")
+      say('Failed to enable time synchronization')
       Logging.logger.error("Failed to enable time synchronization: #{e.message}")
       false
     end
 
     def disable_auto_sync
-      LinuxAdmin::Service.new("chronyd").stop.disable
-      LinuxAdmin::Service.new("systemd-timedated").restart
+      LinuxAdmin::Service.new('chronyd').stop.disable
+      LinuxAdmin::Service.new('systemd-timedated').restart
       true
     rescue => e
-      say("Failed to disable time synchronization")
+      say('Failed to disable time synchronization')
       Logging.logger.error("Failed to disable time synchronization: #{e.message}")
       false
     end
@@ -110,7 +110,7 @@ Date and Time Configuration
       LinuxAdmin::TimeDate.system_time = Time.parse("#{new_date} #{new_time}").getlocal
       true
     rescue => e
-      say("Failed to apply time configuration")
+      say('Failed to apply time configuration')
       Logging.logger.error("Failed to apply time configuration: #{e.message}")
       false
     end

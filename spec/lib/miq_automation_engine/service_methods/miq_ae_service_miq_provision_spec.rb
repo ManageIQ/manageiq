@@ -19,7 +19,7 @@ module MiqAeServiceMiqProvisionSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqProvision::miq_provision=#{@miq_provision.id}", @user)
     end
 
-    it "#miq_request" do
+    it '#miq_request' do
       miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :requester => @user)
 
       @miq_provision.miq_provision_request = miq_provision_request
@@ -32,7 +32,7 @@ module MiqAeServiceMiqProvisionSpec
       expect(ae_object.id).to eq(miq_provision_request.id)
     end
 
-    it "#miq_provision_request" do
+    it '#miq_provision_request' do
       miq_provision_request = FactoryGirl.create(:miq_provision_request, :provision_type => 'template', :state => 'pending', :status => 'Ok', :src_vm_id => @vm_template.id, :requester => @user)
       @miq_provision.miq_provision_request = miq_provision_request
       @miq_provision.save!
@@ -44,13 +44,13 @@ module MiqAeServiceMiqProvisionSpec
       [:id, :provision_type, :state, :status, :src_vm_id, :userid].each { |method| expect(ae_object.send(method)).to eq(miq_provision_request.send(method)) }
     end
 
-    it "#vm" do
+    it '#vm' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].vm"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
       expect(ae_object).to be_nil
 
-      vm = FactoryGirl.create(:vm_vmware, :name => "vm42", :location => "vm42/vm42.vmx")
+      vm = FactoryGirl.create(:vm_vmware, :name => 'vm42', :location => 'vm42/vm42.vmx')
       @miq_provision.vm = vm
       @miq_provision.save!
 
@@ -59,7 +59,7 @@ module MiqAeServiceMiqProvisionSpec
       [:id, :name, :location].each { |method| expect(ae_object.send(method)).to eq(vm.send(method)) }
     end
 
-    it "#vm_template" do
+    it '#vm_template' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].vm_template"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
@@ -67,7 +67,7 @@ module MiqAeServiceMiqProvisionSpec
       [:id, :name, :location].each { |method| expect(ae_object.send(method)).to eq(@vm_template.send(method)) }
     end
 
-    it "#execute" do
+    it '#execute' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].execute"
       @ae_method.update_attributes(:data => method)
 
@@ -75,7 +75,7 @@ module MiqAeServiceMiqProvisionSpec
       expect(invoke_ae.root(@ae_result_key)).to be_truthy
     end
 
-    it "#request_type" do
+    it '#request_type' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].request_type"
       @ae_method.update_attributes(:data => method)
 
@@ -85,7 +85,7 @@ module MiqAeServiceMiqProvisionSpec
       end
     end
 
-    it "#register_automate_callback - no previous callbacks" do
+    it '#register_automate_callback - no previous callbacks' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].register_automate_callback(:first_time_out, 'do_something_great')"
       @ae_method.update_attributes(:data => method)
       expect(invoke_ae.root(@ae_result_key)).to be_truthy
@@ -96,7 +96,7 @@ module MiqAeServiceMiqProvisionSpec
       expect(callback_hash[:first_time_out]).to eq('do_something_great')
     end
 
-    it "#register_automate_callback - with previous callbacks" do
+    it '#register_automate_callback - with previous callbacks' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].register_automate_callback(:first_time_out, 'do_something_great')"
       @ae_method.update_attributes(:data => method)
       expect(@miq_provision[:options][:callbacks]).to be_nil
@@ -111,7 +111,7 @@ module MiqAeServiceMiqProvisionSpec
       expect(callback_hash[:next_time_around]).to eq('do_something_better_yet')
     end
 
-    it "#set_vm_notes" do
+    it '#set_vm_notes' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].set_vm_notes"
       @ae_method.update_attributes(:data => method)
 
@@ -121,7 +121,7 @@ module MiqAeServiceMiqProvisionSpec
       # end
     end
 
-    it "#target_type" do
+    it '#target_type' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].target_type"
       @ae_method.update_attributes(:data => method)
 
@@ -136,14 +136,14 @@ module MiqAeServiceMiqProvisionSpec
       end
     end
 
-    context "iso_images" do
+    context 'iso_images' do
       before(:each) do
-        @iso_image = FactoryGirl.create(:iso_image, :name => "Test ISO Image")
+        @iso_image = FactoryGirl.create(:iso_image, :name => 'Test ISO Image')
         iso_image_struct = [MiqHashStruct.new(:id => "IsoImage::#{@iso_image.id}", :name => @iso_image.name, :evm_object_class => @iso_image.class.base_class.name.to_sym)]
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_iso_images).and_return(iso_image_struct)
       end
 
-      it "eligible_iso_images" do
+      it 'eligible_iso_images' do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].eligible_iso_images"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
@@ -151,7 +151,7 @@ module MiqAeServiceMiqProvisionSpec
         expect(result.first.class).to eq(MiqAeMethodService::MiqAeServiceIsoImage)
       end
 
-      it "set_iso_image" do
+      it 'set_iso_image' do
         method = <<-AUTOMATE_SCRIPT
           prov = $evm.root['miq_provision']
           prov.eligible_iso_images.each {|iso| prov.set_iso_image(iso)}
@@ -162,33 +162,33 @@ module MiqAeServiceMiqProvisionSpec
       end
     end
 
-    context "#source_type" do
+    context '#source_type' do
       before(:each) do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].source_type"
         @ae_method.update_attributes(:data => method)
       end
 
-      it "works with a template" do
+      it 'works with a template' do
         @vm_template.template = true
         @vm_template.save!
         expect(invoke_ae.root(@ae_result_key)).to eq('template')
       end
 
-      it "works with a vm" do
+      it 'works with a vm' do
         @vm_template.template = false
         @vm_template.save!
         expect(invoke_ae.root(@ae_result_key)).to eq('vm')
       end
     end
 
-    context "customization_templates" do
+    context 'customization_templates' do
       before(:each) do
-        @ct = FactoryGirl.create(:customization_template, :name => "Test Templates", :script => "script_text")
+        @ct = FactoryGirl.create(:customization_template, :name => 'Test Templates', :script => 'script_text')
         ct_struct = [MiqHashStruct.new(:id => @ct.id, :name => @ct.name, :evm_object_class => @ct.class.base_class.name.to_sym)]
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_customization_templates).and_return(ct_struct)
       end
 
-      it "#eligible_customization_templates" do
+      it '#eligible_customization_templates' do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].eligible_customization_templates"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
@@ -196,7 +196,7 @@ module MiqAeServiceMiqProvisionSpec
         expect(result.first.class).to eq(MiqAeMethodService::MiqAeServiceCustomizationTemplate)
       end
 
-      it "#set_customization_template" do
+      it '#set_customization_template' do
         method = <<-AUTOMATE_SCRIPT
           prov = $evm.root['miq_provision']
           prov.eligible_customization_templates.each {|ct| prov.set_customization_template(ct)}
@@ -208,14 +208,14 @@ module MiqAeServiceMiqProvisionSpec
       end
     end
 
-    context "resource_pools" do
+    context 'resource_pools' do
       before(:each) do
         @rsc = FactoryGirl.create(:resource_pool)
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_resource_pools).and_return(@rsc.id => @rsc.name)
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_respools).and_return(@rsc.id => @rsc.name)
       end
 
-      it "#eligible_resource_pools" do
+      it '#eligible_resource_pools' do
         method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision'].eligible_resource_pools"
         @ae_method.update_attributes(:data => method)
         result = invoke_ae.root(@ae_result_key)
@@ -223,7 +223,7 @@ module MiqAeServiceMiqProvisionSpec
         expect(result.first.class).to eq(MiqAeMethodService::MiqAeServiceResourcePool)
       end
 
-      it "#set_resource_pools" do
+      it '#set_resource_pools' do
         method = <<-AUTOMATE_SCRIPT
           prov = $evm.root['miq_provision']
           prov.eligible_resource_pools.each {|rsc| prov.set_resource_pool(rsc)}

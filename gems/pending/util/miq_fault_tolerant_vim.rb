@@ -166,7 +166,7 @@ class MiqFaultTolerantVim
 
   def _connect
     log_header = "MIQ(#{self.class.name}._connect) EMS: [#{_ems_name}]"
-    log_header << " [Broker]" if @use_broker
+    log_header << ' [Broker]' if @use_broker
 
     _execute(:on_connect) do
       $log.info("#{log_header} Connecting with address: [#{_ems_address}], userid: [#{_ems_userid}]...") if $log
@@ -203,7 +203,7 @@ class MiqFaultTolerantVim
 
   def _connect_broker_client
     return unless $vim_broker_client.nil?
-    raise MiqException::MiqVimBrokerUnavailable, "Broker is not available (not running)." if @vim_broker_drb_port.blank?
+    raise MiqException::MiqVimBrokerUnavailable, 'Broker is not available (not running).' if @vim_broker_drb_port.blank?
     $vim_broker_client = MiqVimBroker.new(:client, @vim_broker_drb_port)
     $vim_broker_client_port = @vim_broker_drb_port
   end
@@ -216,12 +216,12 @@ class MiqFaultTolerantVim
     if @use_broker
       case err
       when DRb::DRbConnError
-        return "Broker is not available (connection error)."
+        return 'Broker is not available (connection error).'
       when Errno::EMFILE
-        return "Broker is not available (too many open files)."
+        return 'Broker is not available (too many open files).'
       when RangeError
         # If the broker is now started but our handle is no longer valid
-        return "Broker has been restarted."
+        return 'Broker has been restarted.'
       end
     end
 

@@ -13,9 +13,9 @@
 
 vm = $evm.root['vm']
 
-raise "VM object not specified" if vm.nil?
+raise 'VM object not specified' if vm.nil?
 
-$evm.log("info", "Reconfiguration of VM Completed - VM: #{vm['name']}")
+$evm.log('info', "Reconfiguration of VM Completed - VM: #{vm['name']}")
 
 evm_owner_id = vm['evm_owner_id']
 owner = $evm.vmdb('user', evm_owner_id) unless evm_owner_id.nil?
@@ -24,7 +24,7 @@ owner = $evm.vmdb('user', evm_owner_id) unless evm_owner_id.nil?
 to = owner.email unless owner.nil?
 to ||= $evm.object['to_email_address']
 if to.nil?
-  $evm.log("info", "Reconfiguration email not sent because no recipient specified.")
+  $evm.log('info', 'Reconfiguration email not sent because no recipient specified.')
   exit MIQ_OK
 end
 
@@ -36,12 +36,12 @@ signature = $evm.object['signature']
 
 subject = "Your virtual machine request has Completed - VM: #{vm['name']}"
 
-body = "Hello, "
+body = 'Hello, '
 
 # VM Migration Email Body
 body += "<br><br>Your request to Reconfigure virtual machine #{vm.name} was approved and completed. "
-body += "<br><br> Thank you,"
+body += '<br><br> Thank you,'
 body += "<br> #{signature}"
 
-$evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+$evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
 $evm.execute('send_email', to, from, subject, body)

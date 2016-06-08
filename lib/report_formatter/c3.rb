@@ -11,12 +11,12 @@ module ReportFormatter
     end
 
     CONVERT_TYPES = {
-      "ColumnThreed"         => "Column",
-      "ParallelThreedColumn" => "Column",
-      "StackedThreedColumn"  => "StackedColumn",
-      "PieThreed"            => "Pie",
-      "AreaThreed"           => "Area",
-      "StackedAreaThreed"    => "StackedArea"
+      'ColumnThreed'         => 'Column',
+      'ParallelThreedColumn' => 'Column',
+      'StackedThreedColumn'  => 'StackedColumn',
+      'PieThreed'            => 'Pie',
+      'AreaThreed'           => 'Area',
+      'StackedAreaThreed'    => 'StackedArea'
     }
     def add_series(label, data)
       @counter ||= 0
@@ -119,7 +119,7 @@ module ReportFormatter
       # set flag for performance chart
       mri.chart[:miq] = {:performance => true}
       # this conditions are taken from build_performance_chart_area method from chart_commons.rb
-      if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
+      if mri.db.include?('Daily') || (mri.where_clause && mri.where_clause.include?('daily'))
         # set format for parsing
         mri.chart[:data][:xFormat] = '%m/%d'
         # set format for labels

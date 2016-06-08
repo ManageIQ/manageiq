@@ -5,7 +5,7 @@ describe AddUserCurrentGroupToMiqGroups do
     let(:miq_group_stub)  { migration_stub(:MiqGroup) }
     let(:user_stub)       { migration_stub(:User) }
 
-    it "add current_group to miq_groups if miq_groups empty" do
+    it 'add current_group to miq_groups if miq_groups empty' do
       group = miq_group_stub.create!
       user  = user_stub.create!(:current_group => group)
 
@@ -14,7 +14,7 @@ describe AddUserCurrentGroupToMiqGroups do
       expect(user.miq_groups).to match_array [group]
     end
 
-    it "add current_group to miq_groups if miq_groups not empty" do
+    it 'add current_group to miq_groups if miq_groups not empty' do
       group1 = miq_group_stub.create!
       group2 = miq_group_stub.create!
       user   = user_stub.create!(:current_group => group2, :miq_groups => [group1, group2])
@@ -24,7 +24,7 @@ describe AddUserCurrentGroupToMiqGroups do
       expect(user.miq_groups).to match_array [group1, group2]
     end
 
-    it "skip if current_group is present in miq_groups" do
+    it 'skip if current_group is present in miq_groups' do
       group = miq_group_stub.create!
       user  = user_stub.create!(:current_group => group, :miq_groups => [group])
 
@@ -46,7 +46,7 @@ describe AddUserCurrentGroupToMiqGroups do
       expect(user.current_group_id).to be_nil
     end
 
-    it "current group is valid but not in miq_groups" do
+    it 'current group is valid but not in miq_groups' do
       group1 = miq_group_stub.create!
       group2 = miq_group_stub.create!
       user   = user_stub.create!(:current_group => group2, :miq_groups => [group1])

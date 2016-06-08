@@ -12,7 +12,7 @@ module MiqServer::WorkerManagement::Monitor::Start
     loop do
       starting = MiqWorker.find_starting.find_all { |w| self.class.monitor_class_names.include?(w.class.name) }
       if starting.empty?
-        _log.info("All workers have been started")
+        _log.info('All workers have been started')
         break
       end
 
@@ -22,14 +22,14 @@ module MiqServer::WorkerManagement::Monitor::Start
         break
       end
 
-      which = ""
+      which = ''
       starting = starting.collect { |w| w.class.name }.sort
       until starting.empty?
         c, n = starting.first, 0
         c, n = starting.shift, n + 1 while c == starting.first
         which << "#{c} (#{n}), "
       end
-      which.chomp!(", ")
+      which.chomp!(', ')
 
       if which != last_which
         _log.info("Waiting for the following workers to start: #{which}")

@@ -1,19 +1,19 @@
 module NativeFS
-  MOUNT_DIR = "/miq_mounts"
-  VOL_ID    = "/KNOPPIX/lib/udev/vol_id"
+  MOUNT_DIR = '/miq_mounts'
+  VOL_ID    = '/KNOPPIX/lib/udev/vol_id'
 
   def self.supported?(dobj)
     devNode = dobj.devFile
     fsType = `fstype #{devNode}`.chomp
     $log.debug "NativeFS.supported?: devNode = #{devNode}, fsType = #{fsType}" if $log.debug?
 
-    return(false) if fsType.empty? || fsType == "auto" || fsType == "swap"
+    return(false) if fsType.empty? || fsType == 'auto' || fsType == 'swap'
     (true)
   end
 
   def fs_init
     dInfo = @dobj.dInfo
-    raise "NativeFS: disk is not a local device" unless @dobj.devFile
+    raise 'NativeFS: disk is not a local device' unless @dobj.devFile
 
     @devNode  = @dobj.devFile
 
@@ -26,7 +26,7 @@ module NativeFS
     if dInfo.lvObj
       lv = "#{dInfo.lvObj.vgObj.vgName}-#{dInfo.lvObj.lvName}"
       @mountPoint = File.join(MOUNT_DIR, lv)
-      @devNode  = File.join("/dev/mapper", lv)
+      @devNode  = File.join('/dev/mapper', lv)
     else
       @mountPoint = File.join(MOUNT_DIR, File.basename(@devNode))
     end
@@ -39,9 +39,9 @@ module NativeFS
     end
 
     return if isMounted?(@devNode)
-    system("mkdir", "-p", @mountPoint)
+    system('mkdir', '-p', @mountPoint)
     $log.debug "NativeFS.fs_init: mounting #{@devNode} on #{@mountPoint}" if $log.debug?
-    unless system("mount", @devNode, @mountPoint)
+    unless system('mount', @devNode, @mountPoint)
       raise "NativeFS: Could not mount #{@devNode} on #{@mountPoint}, exit status: #{$?.exitstatus}"
     end
   end
@@ -49,7 +49,7 @@ module NativeFS
   def fs_umount
     raise "NativeFS: #{@devNode} is not mounted" if @mountPoint.nil?
     $log.debug "NativeFS.fs_umount: unmounting #{@mountPoint}" if $log.debug?
-    unless system("umount", @mountPoint)
+    unless system('umount', @mountPoint)
       raise "NativeFS: Could not unmount #{@devNode} from #{@mountPoint}, exit status: #{$?.exitstatus}"
     end
     @mountPoint = nil
@@ -120,7 +120,7 @@ module NativeFS
     fobj.mtime
   end
 
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     File.new(internalPath(p), mode)
   end
 
@@ -135,7 +135,7 @@ module NativeFS
   def fs_fileWrite(fobj, buf, len)
     return(fobj.write(buf))     if buf.length == len
     return(fobj.write(buf[0, len])) if buf.length > len
-    raise "NativeFS.fs_fileWrite: attempt to write passed the end of buffer"
+    raise 'NativeFS.fs_fileWrite: attempt to write passed the end of buffer'
   end
 
   def fs_fileClose(fobj)
@@ -148,7 +148,7 @@ module NativeFS
   end
 
   def isMounted?(dev)
-    `mount`.each { |ml| return(true) if ml.split(" ", 2)[0] == dev }
+    `mount`.each { |ml| return(true) if ml.split(' ', 2)[0] == dev }
     (false)
   end
   private :isMounted?

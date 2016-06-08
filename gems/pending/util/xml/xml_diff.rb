@@ -10,7 +10,7 @@ module MiqXmlDiff
   def xmlDiff(xml, stats = {})
     st = Time.now
     stats[:deletes] = stats[:adds] = stats[:updates] = 0
-    delta = self.class.createDoc("<xmlDiff><adds/><deletes/><updates/></xmlDiff>")
+    delta = self.class.createDoc('<xmlDiff><adds/><deletes/><updates/></xmlDiff>')
     diff_elements = {}
     delta.root.each_element { |e| diff_elements[e.name.to_sym] = e }
     miq_compare_roots(self, xml, delta, diff_elements, stats)
@@ -83,7 +83,7 @@ module MiqXmlDiff
 
     # Add items to delta xml file
     path = srcPath.get_path
-    path_md5 = Digest::MD5.hexdigest(action.to_s + (path.nil? ? "root=>true" : path.to_s))
+    path_md5 = Digest::MD5.hexdigest(action.to_s + (path.nil? ? 'root=>true' : path.to_s))
 
     # Check if we have already added an item node for this action and path, if so
     # just add the data node(s) to it.  Otherwise create a new item node.

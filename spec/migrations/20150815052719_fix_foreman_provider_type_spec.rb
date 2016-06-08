@@ -7,22 +7,22 @@ describe FixForemanProviderType do
   let(:ems_stub) { migration_stub(:Provider) }
 
   migration_context :up do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ProviderForeman")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ProviderForeman')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ManageIQ::Providers::Foreman::Provider")
+      expect(ems.reload).to have_attributes(:type => 'ManageIQ::Providers::Foreman::Provider')
     end
   end
 
   migration_context :down do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ManageIQ::Providers::Foreman::Provider")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ManageIQ::Providers::Foreman::Provider')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ProviderForeman")
+      expect(ems.reload).to have_attributes(:type => 'ProviderForeman')
     end
   end
 end

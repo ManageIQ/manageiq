@@ -1,41 +1,41 @@
 describe ApplicationController  do
-  describe "#get_tagdata" do
-    let(:record) { double("Host") }
-    let(:user) { FactoryGirl.create(:user, :userid => "testuser") }
+  describe '#get_tagdata' do
+    let(:record) { double('Host') }
+    let(:user) { FactoryGirl.create(:user, :userid => 'testuser') }
 
     before do
       login_as user
-      allow(record).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
+      allow(record).to receive(:tagged_with).with(:cat => user.userid).and_return('my tags')
       allow(Classification).to receive(:find_assigned_entries).with(record).and_return(classifications)
     end
 
-    context "when classifications exist" do
-      let(:parent) { double("Parent", :description => "Department") }
-      let(:child1) { double("Child1", :parent => parent, :description => "Automotive") }
-      let(:child2) { double("Child2", :parent => parent, :description => "Financial Services") }
+    context 'when classifications exist' do
+      let(:parent) { double('Parent', :description => 'Department') }
+      let(:child1) { double('Child1', :parent => parent, :description => 'Automotive') }
+      let(:child2) { double('Child2', :parent => parent, :description => 'Financial Services') }
       let(:classifications) { [child1, child2] }
 
-      it "populates the assigned filters in the session" do
+      it 'populates the assigned filters in the session' do
         controller.send(:get_tagdata, record)
-        expect(session[:assigned_filters]['Department']).to eq(["Automotive", "Financial Services"])
-        expect(session[:mytags]).to eq("my tags")
+        expect(session[:assigned_filters]['Department']).to eq(['Automotive', 'Financial Services'])
+        expect(session[:mytags]).to eq('my tags')
       end
     end
 
-    context "when classifications do not exist" do
+    context 'when classifications do not exist' do
       let(:classifications) { [] }
 
-      it "sets the assigned filters to an empty hash in the session" do
+      it 'sets the assigned filters to an empty hash in the session' do
         controller.send(:get_tagdata, record)
         expect(session[:assigned_filters]).to eq({})
-        expect(session[:mytags]).to eq("my tags")
+        expect(session[:mytags]).to eq('my tags')
       end
     end
   end
 
-  context "tag_edit_build_screen" do
+  context 'tag_edit_build_screen' do
     def add_entry(cat, options)
-      raise "entries can only be added to classifications" unless cat.category?
+      raise 'entries can only be added to classifications' unless cat.category?
       # Inherit from parent classification
       options.merge!(:read_only    => cat.read_only,
                      :syntax       => cat.syntax,
@@ -57,23 +57,23 @@ describe ApplicationController  do
 
     before(:each) do
       # setup classification/entries with same name in different regions
-      clergy = FactoryGirl.create(:classification, :description => "Clergy")
-      add_entry(clergy, :name => "bishop", :description => "Bishop")
+      clergy = FactoryGirl.create(:classification, :description => 'Clergy')
+      add_entry(clergy, :name => 'bishop', :description => 'Bishop')
 
       # add another classification with different description,
       # then change description to be same as above after updating region id of record
-      clergy2 = FactoryGirl.create(:classification, :description => "Clergy2")
+      clergy2 = FactoryGirl.create(:classification, :description => 'Clergy2')
       update_record_region(clergy2)
-      clergy2.update_column(:description, "Clergy")
+      clergy2.update_column(:description, 'Clergy')
 
-      clergy_bishop2 = add_entry(clergy2, :name => "bishop", :description => "Bishop")
+      clergy_bishop2 = add_entry(clergy2, :name => 'bishop', :description => 'Bishop')
       update_record_region(clergy_bishop2)
 
       allow(Classification).to receive(:my_region_number).and_return(convert_to_region_id(clergy_bishop2.id))
       @st = FactoryGirl.create(:service_template, :name => 'foo')
     end
 
-    it "region id of classification/entries should match" do
+    it 'region id of classification/entries should match' do
       # only classification/entries from same region should be returned
       controller.instance_variable_set(:@edit, :new => {})
       controller.instance_variable_set(:@tagging, 'ServiceTemplate')

@@ -31,7 +31,7 @@ module VMDB
               _log.debug("  Invalid: #{errors}")
               errors.each do|e|
                 key, msg = e
-                @errors[[k, key].join("_")] = msg
+                @errors[[k, key].join('_')] = msg
               end
               valid = false
             end
@@ -47,11 +47,11 @@ module VMDB
 
         keys = data.each_pair.to_a.transpose.first.to_set
 
-        if keys.include?(:mode) && !["invoke", "disable"].include?(data.mode)
+        if keys.include?(:mode) && !['invoke', 'disable'].include?(data.mode)
           valid = false; errors << [:mode, "webservices mode, \"#{data.mode}\", invalid. Should be one of: invoke or disable"]
         end
 
-        if keys.include?(:contactwith) && !["ipaddress", "hostname"].include?(data.contactwith)
+        if keys.include?(:contactwith) && !['ipaddress', 'hostname'].include?(data.contactwith)
           valid = false; errors << [:contactwith, "webservices contactwith, \"#{data.contactwith}\", invalid. Should be one of: ipaddress or hostname"]
         end
 
@@ -78,11 +78,11 @@ module VMDB
           errors << [:mode, "authentication type, \"#{data.mode}\", invalid. Should be one of: #{AUTH_TYPES.join(", ")}"]
         end
 
-        if data.mode == "ldap"
+        if data.mode == 'ldap'
           if data.ldaphost.blank?
             valid = false; errors << [:ldaphost, "ldaphost can't be blank"]
           end
-        elsif data.mode == "amazon"
+        elsif data.mode == 'amazon'
           if data.amazon_key.blank?
             valid = false; errors << [:amazon_key, "amazon key can't be blank"]
           end
@@ -100,7 +100,7 @@ module VMDB
 
         # validate level
         data.each_pair do |key, value|
-          next unless key.to_s.start_with?("level")
+          next unless key.to_s.start_with?('level')
 
           level = value.to_s.upcase.to_sym
           unless VMDBLogger::Severity.constants.include?(level)
@@ -150,7 +150,7 @@ module VMDB
           end
         end
 
-        if keys.include?(:session_store) && !["sql", "memory", "cache"].include?(data.session_store)
+        if keys.include?(:session_store) && !['sql', 'memory', 'cache'].include?(data.session_store)
           valid = false; errors << [:session_store, "session_store, \"#{data.session_store}\", invalid. Should be one of \"sql\", \"memory\", \"cache\""]
         end
 
@@ -162,11 +162,11 @@ module VMDB
 
         keys = data.each_pair.to_a.transpose.first.to_set
 
-        if keys.include?(:authentication) && !["login", "plain", "none"].include?(data.authentication)
+        if keys.include?(:authentication) && !['login', 'plain', 'none'].include?(data.authentication)
           valid = false; errors << [:mode, "authentication, \"#{data.mode}\", invalid. Should be one of: login, plain, or none"]
         end
 
-        if data.authentication == "login" && data.user_name.blank?
+        if data.authentication == 'login' && data.user_name.blank?
           valid = false; errors << [:user_name, "cannot be blank for 'login' authentication"]
         end
 

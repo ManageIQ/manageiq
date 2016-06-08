@@ -18,7 +18,7 @@ $log = toplog if $log.nil?
 #
 # Path to RAW disk image.
 #
-VIRTUAL_DISK_FILE = "path to raw disk image file"
+VIRTUAL_DISK_FILE = 'path to raw disk image file'
 
 commit = true
 
@@ -50,11 +50,11 @@ rescue => err
   commit = false # don't commit recording on error
 ensure
   miqVm.unmount if miqVm
-  puts "...done"
+  puts '...done'
   if recorder && commit
     puts
-    puts "camcorder: committing recording..."
+    puts 'camcorder: committing recording...'
     recorder.commit
-    puts "done."
+    puts 'done.'
   end
 end

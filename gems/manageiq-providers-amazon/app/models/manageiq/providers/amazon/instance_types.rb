@@ -13,10 +13,10 @@
 module ManageIQ::Providers::Amazon::InstanceTypes
   # Types that are currently advertised for use
   AVAILABLE_TYPES = {
-    "t2.nano"     => {
-      :name                    => "t2.nano",
-      :family                  => "General Purpose",
-      :description             => "T2 Nano",
+    't2.nano'     => {
+      :name                    => 't2.nano',
+      :family                  => 'General Purpose',
+      :description             => 'T2 Nano',
       :memory                  => 0.5.gigabyte,
       :vcpu                    => 1,
       :ebs_only                => true,
@@ -25,7 +25,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:i386, :x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :low,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -37,11 +37,11 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "t2.micro"    => {
+    't2.micro'    => {
       :default                 => true,
-      :name                    => "t2.micro",
-      :family                  => "General Purpose",
-      :description             => "T2 Micro",
+      :name                    => 't2.micro',
+      :family                  => 'General Purpose',
+      :description             => 'T2 Micro',
       :memory                  => 1.gigabyte,
       :vcpu                    => 1,
       :ebs_only                => true,
@@ -50,7 +50,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:i386, :x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -62,10 +62,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "t2.small"    => {
-      :name                    => "t2.small",
-      :family                  => "General Purpose",
-      :description             => "T2 Small",
+    't2.small'    => {
+      :name                    => 't2.small',
+      :family                  => 'General Purpose',
+      :description             => 'T2 Small',
       :memory                  => 2.gigabyte,
       :vcpu                    => 1,
       :ebs_only                => true,
@@ -74,7 +74,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:i386, :x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -86,10 +86,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "t2.medium"   => {
-      :name                    => "t2.medium",
-      :family                  => "General Purpose",
-      :description             => "T2 Medium",
+    't2.medium'   => {
+      :name                    => 't2.medium',
+      :family                  => 'General Purpose',
+      :description             => 'T2 Medium',
       :memory                  => 4.gigabyte,
       :vcpu                    => 2,
       :ebs_only                => true,
@@ -98,7 +98,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => 3.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -110,10 +110,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "t2.large"    => {
-      :name                    => "t2.large",
-      :family                  => "General Purpose",
-      :description             => "T2 Large",
+    't2.large'    => {
+      :name                    => 't2.large',
+      :family                  => 'General Purpose',
+      :description             => 'T2 Large',
       :memory                  => 8.gigabyte,
       :vcpu                    => 2,
       :ebs_only                => true,
@@ -122,7 +122,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :low_to_moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => 3.0, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -134,10 +134,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m3.medium"   => {
-      :name                    => "m3.medium",
-      :family                  => "General Purpose",
-      :description             => "M3 General Purpose Medium",
+    'm3.medium'   => {
+      :name                    => 'm3.medium',
+      :family                  => 'General Purpose',
+      :description             => 'M3 General Purpose Medium',
       :memory                  => 3.75.gigabytes,
       :vcpu                    => 1,
       :ebs_only                => false,
@@ -146,7 +146,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -158,10 +158,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m3.large"    => {
-      :name                    => "m3.large",
-      :family                  => "General Purpose",
-      :description             => "M3 General Purpose Large",
+    'm3.large'    => {
+      :name                    => 'm3.large',
+      :family                  => 'General Purpose',
+      :description             => 'M3 General Purpose Large',
       :memory                  => 7.5.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => false,
@@ -170,7 +170,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -182,10 +182,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m3.xlarge"   => {
-      :name                    => "m3.xlarge",
-      :family                  => "General Purpose",
-      :description             => "M3 General Purpose Extra Large",
+    'm3.xlarge'   => {
+      :name                    => 'm3.xlarge',
+      :family                  => 'General Purpose',
+      :description             => 'M3 General Purpose Extra Large',
       :memory                  => 15.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => false,
@@ -194,7 +194,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -206,10 +206,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m3.2xlarge"  => {
-      :name                    => "m3.2xlarge",
-      :family                  => "General Purpose",
-      :description             => "M3 General Purpose Double Extra Large",
+    'm3.2xlarge'  => {
+      :name                    => 'm3.2xlarge',
+      :family                  => 'General Purpose',
+      :description             => 'M3 General Purpose Double Extra Large',
       :memory                  => 30.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -218,7 +218,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -230,10 +230,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m4.large"    => {
-      :name                    => "m4.large",
-      :family                  => "General Purpose",
-      :description             => "M4 General Purpose Large",
+    'm4.large'    => {
+      :name                    => 'm4.large',
+      :family                  => 'General Purpose',
+      :description             => 'M4 General Purpose Large',
       :memory                  => 8.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => true,
@@ -242,7 +242,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -254,10 +254,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m4.xlarge"   => {
-      :name                    => "m4.xlarge",
-      :family                  => "General Purpose",
-      :description             => "M4 General Purpose Extra Large",
+    'm4.xlarge'   => {
+      :name                    => 'm4.xlarge',
+      :family                  => 'General Purpose',
+      :description             => 'M4 General Purpose Extra Large',
       :memory                  => 16.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => true,
@@ -266,7 +266,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -278,10 +278,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m4.2xlarge"  => {
-      :name                    => "m4.2xlarge",
-      :family                  => "General Purpose",
-      :description             => "M4 General Purpose Double Extra Large",
+    'm4.2xlarge'  => {
+      :name                    => 'm4.2xlarge',
+      :family                  => 'General Purpose',
+      :description             => 'M4 General Purpose Double Extra Large',
       :memory                  => 32.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => true,
@@ -290,7 +290,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -302,10 +302,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m4.4xlarge"  => {
-      :name                    => "m4.4xlarge",
-      :family                  => "General Purpose",
-      :description             => "M4 General Purpose Quadruple Extra Large",
+    'm4.4xlarge'  => {
+      :name                    => 'm4.4xlarge',
+      :family                  => 'General Purpose',
+      :description             => 'M4 General Purpose Quadruple Extra Large',
       :memory                  => 64.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => true,
@@ -314,7 +314,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -326,10 +326,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "m4.10xlarge" => {
-      :name                    => "m4.10xlarge",
-      :family                  => "General Purpose",
-      :description             => "M4 General Purpose Ten Extra Large",
+    'm4.10xlarge' => {
+      :name                    => 'm4.10xlarge',
+      :family                  => 'General Purpose',
+      :description             => 'M4 General Purpose Ten Extra Large',
       :memory                  => 160.gigabytes,
       :vcpu                    => 40,
       :ebs_only                => true,
@@ -338,7 +338,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -350,10 +350,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c3.large"    => {
-      :name                    => "c3.large",
-      :family                  => "Compute Optimized",
-      :description             => "C3 High-CPU Large",
+    'c3.large'    => {
+      :name                    => 'c3.large',
+      :family                  => 'Compute Optimized',
+      :description             => 'C3 High-CPU Large',
       :memory                  => 3.75.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => false,
@@ -362,7 +362,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2680v2",
+      :physical_processor      => 'Intel Xeon E5-2680v2',
       :processor_clock_speed   => 2.8, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -374,10 +374,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.xlarge"   => {
-      :name                    => "c3.xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C3 High-CPU Extra Large",
+    'c3.xlarge'   => {
+      :name                    => 'c3.xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C3 High-CPU Extra Large',
       :memory                  => 7.5.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => false,
@@ -386,7 +386,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2680v2",
+      :physical_processor      => 'Intel Xeon E5-2680v2',
       :processor_clock_speed   => 2.8, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -398,10 +398,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.2xlarge"  => {
-      :name                    => "c3.2xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C3 High-CPU Double Extra Large",
+    'c3.2xlarge'  => {
+      :name                    => 'c3.2xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C3 High-CPU Double Extra Large',
       :memory                  => 15.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -410,7 +410,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2680v2",
+      :physical_processor      => 'Intel Xeon E5-2680v2',
       :processor_clock_speed   => 2.8, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -422,10 +422,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.4xlarge"  => {
-      :name                    => "c3.4xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C3 High-CPU Quadruple Extra Large",
+    'c3.4xlarge'  => {
+      :name                    => 'c3.4xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C3 High-CPU Quadruple Extra Large',
       :memory                  => 30.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
@@ -434,7 +434,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2680v2",
+      :physical_processor      => 'Intel Xeon E5-2680v2',
       :processor_clock_speed   => 2.8, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -446,10 +446,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c3.8xlarge"  => {
-      :name                    => "c3.8xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C3 High-CPU Eight Extra Large",
+    'c3.8xlarge'  => {
+      :name                    => 'c3.8xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C3 High-CPU Eight Extra Large',
       :memory                  => 60.gigabytes,
       :vcpu                    => 32,
       :ebs_only                => false,
@@ -458,7 +458,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2680v2",
+      :physical_processor      => 'Intel Xeon E5-2680v2',
       :processor_clock_speed   => 2.8, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -470,10 +470,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c4.large"    => {
-      :name                    => "c4.large",
-      :family                  => "Compute Optimized",
-      :description             => "C4 High-CPU Large",
+    'c4.large'    => {
+      :name                    => 'c4.large',
+      :family                  => 'Compute Optimized',
+      :description             => 'C4 High-CPU Large',
       :memory                  => 3.75.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => true,
@@ -482,7 +482,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2666v3",
+      :physical_processor      => 'Intel Xeon E5-2666v3',
       :processor_clock_speed   => 2.9, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -494,10 +494,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.xlarge"   => {
-      :name                    => "c4.xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C4 High-CPU Extra Large",
+    'c4.xlarge'   => {
+      :name                    => 'c4.xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C4 High-CPU Extra Large',
       :memory                  => 7.5.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => true,
@@ -506,7 +506,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2666v3",
+      :physical_processor      => 'Intel Xeon E5-2666v3',
       :processor_clock_speed   => 2.9, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -518,10 +518,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.2xlarge"  => {
-      :name                    => "c4.2xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C4 High-CPU Double Extra Large",
+    'c4.2xlarge'  => {
+      :name                    => 'c4.2xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C4 High-CPU Double Extra Large',
       :memory                  => 15.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => true,
@@ -530,7 +530,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2666v3",
+      :physical_processor      => 'Intel Xeon E5-2666v3',
       :processor_clock_speed   => 2.9, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -542,10 +542,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.4xlarge"  => {
-      :name                    => "c4.4xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C4 High-CPU Quadruple Extra Large",
+    'c4.4xlarge'  => {
+      :name                    => 'c4.4xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C4 High-CPU Quadruple Extra Large',
       :memory                  => 30.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => true,
@@ -554,7 +554,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2666v3",
+      :physical_processor      => 'Intel Xeon E5-2666v3',
       :processor_clock_speed   => 2.9, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -566,10 +566,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "c4.8xlarge"  => {
-      :name                    => "c4.8xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C4 High-CPU Eight Extra Large",
+    'c4.8xlarge'  => {
+      :name                    => 'c4.8xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C4 High-CPU Eight Extra Large',
       :memory                  => 60.gigabytes,
       :vcpu                    => 36,
       :ebs_only                => true,
@@ -578,7 +578,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2666v3",
+      :physical_processor      => 'Intel Xeon E5-2666v3',
       :processor_clock_speed   => 2.9, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -590,10 +590,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => true,
     },
 
-    "g2.2xlarge"  => {
-      :name                    => "g2.2xlarge",
-      :family                  => "GPU Instances",
-      :description             => "G2 Double Extra Large",
+    'g2.2xlarge'  => {
+      :name                    => 'g2.2xlarge',
+      :family                  => 'GPU Instances',
+      :description             => 'G2 Double Extra Large',
       :memory                  => 15.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -602,7 +602,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2670",
+      :physical_processor      => 'Intel Xeon E5-2670',
       :processor_clock_speed   => 2.6, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -614,10 +614,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "g2.8xlarge"  => {
-      :name                    => "g2.8xlarge",
-      :family                  => "GPU Instances",
-      :description             => "G2 Eight Extra Large",
+    'g2.8xlarge'  => {
+      :name                    => 'g2.8xlarge',
+      :family                  => 'GPU Instances',
+      :description             => 'G2 Eight Extra Large',
       :memory                  => 60.gigabytes,
       :vcpu                    => 32,
       :ebs_only                => false,
@@ -626,7 +626,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2670",
+      :physical_processor      => 'Intel Xeon E5-2670',
       :processor_clock_speed   => 2.6, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -638,10 +638,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.large"    => {
-      :name                    => "r3.large",
-      :family                  => "Memory Optimized",
-      :description             => "R3 High-Memory Large",
+    'r3.large'    => {
+      :name                    => 'r3.large',
+      :family                  => 'Memory Optimized',
+      :description             => 'R3 High-Memory Large',
       :memory                  => 15.25.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => false,
@@ -650,7 +650,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -662,10 +662,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.xlarge"   => {
-      :name                    => "r3.xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "R3 High-Memory Extra Large",
+    'r3.xlarge'   => {
+      :name                    => 'r3.xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'R3 High-Memory Extra Large',
       :memory                  => 30.5.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => false,
@@ -674,7 +674,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -686,10 +686,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.2xlarge"  => {
-      :name                    => "r3.2xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "R3 High-Memory Double Extra Large",
+    'r3.2xlarge'  => {
+      :name                    => 'r3.2xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'R3 High-Memory Double Extra Large',
       :memory                  => 61.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -698,7 +698,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -710,10 +710,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.4xlarge"  => {
-      :name                    => "r3.4xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "R3 High-Memory Quadruple Extra Large",
+    'r3.4xlarge'  => {
+      :name                    => 'r3.4xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'R3 High-Memory Quadruple Extra Large',
       :memory                  => 122.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
@@ -722,7 +722,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -734,10 +734,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "r3.8xlarge"  => {
-      :name                    => "r3.8xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "R3 High-Memory Eight Extra Large",
+    'r3.8xlarge'  => {
+      :name                    => 'r3.8xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'R3 High-Memory Eight Extra Large',
       :memory                  => 244.gigabytes,
       :vcpu                    => 32,
       :ebs_only                => false,
@@ -746,7 +746,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -758,10 +758,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.xlarge"   => {
-      :name                    => "i2.xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "I2 Extra Large",
+    'i2.xlarge'   => {
+      :name                    => 'i2.xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'I2 Extra Large',
       :memory                  => 30.5.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => false,
@@ -770,7 +770,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -782,10 +782,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.2xlarge"  => {
-      :name                    => "i2.2xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "I2 Double Extra Large",
+    'i2.2xlarge'  => {
+      :name                    => 'i2.2xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'I2 Double Extra Large',
       :memory                  => 61.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -794,7 +794,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -806,10 +806,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.4xlarge"  => {
-      :name                    => "i2.4xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "I2 Quadruple Extra Large",
+    'i2.4xlarge'  => {
+      :name                    => 'i2.4xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'I2 Quadruple Extra Large',
       :memory                  => 122.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
@@ -818,7 +818,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -830,10 +830,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "i2.8xlarge"  => {
-      :name                    => "i2.8xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "I2 Eight Extra Large",
+    'i2.8xlarge'  => {
+      :name                    => 'i2.8xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'I2 Eight Extra Large',
       :memory                  => 244.gigabytes,
       :vcpu                    => 32,
       :ebs_only                => false,
@@ -842,7 +842,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2670v2",
+      :physical_processor      => 'Intel Xeon E5-2670v2',
       :processor_clock_speed   => 2.5, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -854,10 +854,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.xlarge"   => {
-      :name                    => "d2.xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "D2 Extra Large",
+    'd2.xlarge'   => {
+      :name                    => 'd2.xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'D2 Extra Large',
       :memory                  => 30.5.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => false,
@@ -866,7 +866,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -878,10 +878,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.2xlarge"  => {
-      :name                    => "d2.2xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "D2 Double Extra Large",
+    'd2.2xlarge'  => {
+      :name                    => 'd2.2xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'D2 Double Extra Large',
       :memory                  => 61.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -890,7 +890,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -902,10 +902,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.4xlarge"  => {
-      :name                    => "d2.4xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "D2 Quadruple Extra Large",
+    'd2.4xlarge'  => {
+      :name                    => 'd2.4xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'D2 Quadruple Extra Large',
       :memory                  => 122.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
@@ -914,7 +914,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -926,10 +926,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "d2.8xlarge"  => {
-      :name                    => "d2.8xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "D2 Eight Extra Large",
+    'd2.8xlarge'  => {
+      :name                    => 'd2.8xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'D2 Eight Extra Large',
       :memory                  => 244.gigabytes,
       :vcpu                    => 36,
       :ebs_only                => false,
@@ -938,7 +938,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2676v3",
+      :physical_processor      => 'Intel Xeon E5-2676v3',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -950,10 +950,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "x1.32xlarge"  => {
-      :name                    => "x1.32xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "X1 32xlarge",
+    'x1.32xlarge'  => {
+      :name                    => 'x1.32xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'X1 32xlarge',
       :memory                  => 1952.gigabytes,
       :vcpu                    => 128,
       :ebs_only                => false,
@@ -962,7 +962,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E7-8880 v3",
+      :physical_processor      => 'Intel Xeon E7-8880 v3',
       :processor_clock_speed   => 2.3, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -977,10 +977,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
 
   # Types that are still advertised, but not recommended for new instances.
   DEPRECATED_TYPES = {
-    "t1.micro"    => {
-      :name                    => "t1.micro",
-      :family                  => "Micro Instances",
-      :description             => "T1 Micro",
+    't1.micro'    => {
+      :name                    => 't1.micro',
+      :family                  => 'Micro Instances',
+      :description             => 'T1 Micro',
       :memory                  => 0.613.gigabytes,
       :vcpu                    => 1,
       :ebs_only                => true,
@@ -989,7 +989,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:i386, :x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :very_low,
-      :physical_processor      => "Variable",
+      :physical_processor      => 'Variable',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => nil,
       :intel_avx               => nil,
@@ -1001,10 +1001,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.small"    => {
-      :name                    => "m1.small",
-      :family                  => "General Purpose",
-      :description             => "M1 General Purpose Small",
+    'm1.small'    => {
+      :name                    => 'm1.small',
+      :family                  => 'General Purpose',
+      :description             => 'M1 General Purpose Small',
       :memory                  => 1.7.gigabytes,
       :vcpu                    => 1,
       :ebs_only                => false,
@@ -1013,7 +1013,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:i386, :x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :low,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => nil,
       :intel_avx               => nil,
@@ -1025,10 +1025,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.medium"   => {
-      :name                    => "m1.medium",
-      :family                  => "General Purpose",
-      :description             => "M1 General Purpose Medium",
+    'm1.medium'   => {
+      :name                    => 'm1.medium',
+      :family                  => 'General Purpose',
+      :description             => 'M1 General Purpose Medium',
       :memory                  => 3.75.gigabytes,
       :vcpu                    => 1,
       :ebs_only                => false,
@@ -1037,7 +1037,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:i386, :x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => nil,
       :intel_avx               => nil,
@@ -1049,10 +1049,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.large"    => {
-      :name                    => "m1.large",
-      :family                  => "General Purpose",
-      :description             => "M1 General Purpose Large",
+    'm1.large'    => {
+      :name                    => 'm1.large',
+      :family                  => 'General Purpose',
+      :description             => 'M1 General Purpose Large',
       :memory                  => 7.5.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => false,
@@ -1061,7 +1061,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => nil,
       :intel_avx               => nil,
@@ -1073,10 +1073,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m1.xlarge"   => {
-      :name                    => "m1.xlarge",
-      :family                  => "General Purpose",
-      :description             => "M1 General Purpose Extra Large",
+    'm1.xlarge'   => {
+      :name                    => 'm1.xlarge',
+      :family                  => 'General Purpose',
+      :description             => 'M1 General Purpose Extra Large',
       :memory                  => 15.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => false,
@@ -1085,7 +1085,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => nil,
       :intel_avx               => nil,
@@ -1097,10 +1097,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c1.medium"   => {
-      :name                    => "c1.medium",
-      :family                  => "Compute Optimized",
-      :description             => "C1 High-CPU Medium",
+    'c1.medium'   => {
+      :name                    => 'c1.medium',
+      :family                  => 'Compute Optimized',
+      :description             => 'C1 High-CPU Medium',
       :memory                  => 1.7.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => false,
@@ -1109,7 +1109,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:i386, :x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1121,10 +1121,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "c1.xlarge"   => {
-      :name                    => "c1.xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "C1 High-CPU Extra Large",
+    'c1.xlarge'   => {
+      :name                    => 'c1.xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'C1 High-CPU Extra Large',
       :memory                  => 7.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -1133,7 +1133,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1145,10 +1145,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "cc2.8xlarge" => {
-      :name                    => "cc2.8xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "Cluster Compute Eight Extra Large",
+    'cc2.8xlarge' => {
+      :name                    => 'cc2.8xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'Cluster Compute Eight Extra Large',
       :memory                  => 60.5.gigabytes,
       :vcpu                    => 32,
       :ebs_only                => false,
@@ -1157,7 +1157,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2670",
+      :physical_processor      => 'Intel Xeon E5-2670',
       :processor_clock_speed   => 2.6, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -1169,10 +1169,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "cg1.4xlarge" => {
-      :name                    => "cg1.4xlarge",
-      :family                  => "GPU Instances",
-      :description             => "Cluster GPU Quadruple Extra Large",
+    'cg1.4xlarge' => {
+      :name                    => 'cg1.4xlarge',
+      :family                  => 'GPU Instances',
+      :description             => 'Cluster GPU Quadruple Extra Large',
       :memory                  => 22.5.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
@@ -1181,7 +1181,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon x5570",
+      :physical_processor      => 'Intel Xeon x5570',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1193,10 +1193,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m2.xlarge"   => {
-      :name                    => "m2.xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "M2 High-Memory Extra Large",
+    'm2.xlarge'   => {
+      :name                    => 'm2.xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'M2 High-Memory Extra Large',
       :memory                  => 17.1.gigabytes,
       :vcpu                    => 2,
       :ebs_only                => false,
@@ -1205,7 +1205,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1217,10 +1217,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m2.2xlarge"  => {
-      :name                    => "m2.2xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "M2 High-Memory Double Extra Large",
+    'm2.2xlarge'  => {
+      :name                    => 'm2.2xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'M2 High-Memory Double Extra Large',
       :memory                  => 34.2.gigabytes,
       :vcpu                    => 4,
       :ebs_only                => false,
@@ -1229,7 +1229,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :moderate,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1241,10 +1241,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "m2.4xlarge"  => {
-      :name                    => "m2.4xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "M2 High-Memory Quadruple Extra Large",
+    'm2.4xlarge'  => {
+      :name                    => 'm2.4xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'M2 High-Memory Quadruple Extra Large',
       :memory                  => 68.4.gigabytes,
       :vcpu                    => 8,
       :ebs_only                => false,
@@ -1253,7 +1253,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual],
       :network_performance     => :high,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1265,10 +1265,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "cr1.8xlarge" => {
-      :name                    => "cr1.8xlarge",
-      :family                  => "Memory Optimized",
-      :description             => "High-Memory Cluster Eight Extra Large",
+    'cr1.8xlarge' => {
+      :name                    => 'cr1.8xlarge',
+      :family                  => 'Memory Optimized',
+      :description             => 'High-Memory Cluster Eight Extra Large',
       :memory                  => 244.gigabytes,
       :vcpu                    => 32,
       :ebs_only                => false,
@@ -1277,7 +1277,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2670",
+      :physical_processor      => 'Intel Xeon E5-2670',
       :processor_clock_speed   => nil,
       :intel_aes_ni            => true,
       :intel_avx               => true,
@@ -1289,10 +1289,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "hi1.4xlarge" => {
-      :name                    => "hi1.4xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "High I/O Quadruple Extra Large",
+    'hi1.4xlarge' => {
+      :name                    => 'hi1.4xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'High I/O Quadruple Extra Large',
       :memory                  => 60.5.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
@@ -1301,7 +1301,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon Family",
+      :physical_processor      => 'Intel Xeon Family',
       :processor_clock_speed   => 2.4, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1313,10 +1313,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :vpc_only                => false,
     },
 
-    "hs1.8xlarge" => {
-      :name                    => "hs1.8xlarge",
-      :family                  => "Storage Optimized",
-      :description             => "High Storage Eight Extra Large",
+    'hs1.8xlarge' => {
+      :name                    => 'hs1.8xlarge',
+      :family                  => 'Storage Optimized',
+      :description             => 'High Storage Eight Extra Large',
       :memory                  => 117.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,
@@ -1325,7 +1325,7 @@ module ManageIQ::Providers::Amazon::InstanceTypes
       :architecture            => [:x86_64],
       :virtualization_type     => [:paravirtual, :hvm],
       :network_performance     => :very_high,
-      :physical_processor      => "Intel Xeon E5-2650",
+      :physical_processor      => 'Intel Xeon E5-2650',
       :processor_clock_speed   => 2.0, # GHz
       :intel_aes_ni            => true,
       :intel_avx               => nil,
@@ -1340,11 +1340,11 @@ module ManageIQ::Providers::Amazon::InstanceTypes
 
   # Types that are no longer advertised
   DISCONTINUED_TYPES = {
-    "unknown"     => {
+    'unknown'     => {
       :disabled                => true,
-      :name                    => "unknown",
-      :family                  => "unknown",
-      :description             => "unknown",
+      :name                    => 'unknown',
+      :family                  => 'unknown',
+      :description             => 'unknown',
       :memory                  => 0.megabytes,
       :vcpu                    => 1,
       :ebs_only                => true,
@@ -1367,10 +1367,10 @@ module ManageIQ::Providers::Amazon::InstanceTypes
 
     # cc1.4xlarge is not available in any of the documentation, but if you
     #   launch a new instance, it's still available to choose.
-    "cc1.4xlarge" => {
-      :name                    => "cc1.4xlarge",
-      :family                  => "Compute Optimized",
-      :description             => "Cluster Compute Quadruple Extra Large",
+    'cc1.4xlarge' => {
+      :name                    => 'cc1.4xlarge',
+      :family                  => 'Compute Optimized',
+      :description             => 'Cluster Compute Quadruple Extra Large',
       :memory                  => 23.gigabytes,
       :vcpu                    => 16,
       :ebs_only                => false,

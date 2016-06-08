@@ -3,7 +3,7 @@ require 'fileutils'
 require 'pathname'
 require 'vcr'
 
-GEMS_PENDING_ROOT ||= File.expand_path(File.join(__dir__, "../.."))
+GEMS_PENDING_ROOT ||= File.expand_path(File.join(__dir__, '../..'))
 
 class TestEnvHelper
   attr_reader :relative_dir, :absolute_recording_dir, :config_file
@@ -25,7 +25,7 @@ class TestEnvHelper
     @test_dir = @test_file.dirname
 
     # some_spec
-    @test_basename = @test_file.basename(".rb")
+    @test_basename = @test_file.basename('.rb')
 
     # some_dir1/some_dir2/some_spec
     @relative_dir = spec_relative_path(@test_dir).join(@test_basename)

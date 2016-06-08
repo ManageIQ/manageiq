@@ -13,9 +13,9 @@ class RemoveUiTasksAndUiTaskSets < ActiveRecord::Migration
     remove_index  :miq_groups, :ui_task_set_id
     remove_column :miq_groups, :ui_task_set_id
 
-    say_with_time "Removing UiTaskSets" do
-      MiqSet.where(:set_type => "UiTaskSet").delete_all
-      Relationship.where(:resource_type => ["UiTask", "UiTaskSet"]).delete_all
+    say_with_time 'Removing UiTaskSets' do
+      MiqSet.where(:set_type => 'UiTaskSet').delete_all
+      Relationship.where(:resource_type => ['UiTask', 'UiTaskSet']).delete_all
     end
   end
 

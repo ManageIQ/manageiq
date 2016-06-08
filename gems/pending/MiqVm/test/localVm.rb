@@ -13,8 +13,8 @@ $log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
-VHD = raise "Please define VHD"
-diskid    = "ide0:0"
+VHD = raise 'Please define VHD'
+diskid    = 'ide0:0'
 hardware  = "#{diskid}.present = \"TRUE\"\n"
 hardware += "#{diskid}.filename = \"#{VHD}\"\n"
 

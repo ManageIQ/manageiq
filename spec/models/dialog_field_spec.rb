@@ -1,10 +1,10 @@
 describe DialogField do
-  context "legacy tests" do
+  context 'legacy tests' do
     before(:each) do
       @df = FactoryGirl.create(:dialog_field, :label => 'dialog_field', :name => 'dialog_field')
     end
 
-    it "sets default value for required attribute" do
+    it 'sets default value for required attribute' do
       expect(@df.required).to eq(false)
     end
 
@@ -17,15 +17,15 @@ describe DialogField do
       expect(foo_field).to be_valid
     end
 
-    it "supports more than 255 characters within default_value" do
-      str = "0" * 10000
+    it 'supports more than 255 characters within default_value' do
+      str = '0' * 10000
       @df.default_value = str
       expect { @df.save }.to_not raise_error
       @df.reload
       expect(@df.default_value).to eq(str)
     end
 
-    describe "#validate" do
+    describe '#validate' do
       let(:dialog_field) do
         described_class.new(:label    => 'dialog_field',
                             :name     => 'dialog_field',
@@ -35,110 +35,110 @@ describe DialogField do
       let(:dialog_tab)   { double('DialogTab',   :label => 'tab') }
       let(:dialog_group) { double('DialogGroup', :label => 'group') }
 
-      shared_examples_for "DialogField#validate that returns nil" do
-        it "returns nil" do
+      shared_examples_for 'DialogField#validate that returns nil' do
+        it 'returns nil' do
           expect(dialog_field.validate_field_data(dialog_tab, dialog_group)).to be_nil
         end
       end
 
-      context "when required is true" do
+      context 'when required is true' do
         let(:required) { true }
 
-        context "with a blank value" do
-          let(:value) { "" }
+        context 'with a blank value' do
+          let(:value) { '' }
 
-          it "returns error message" do
-            expect(dialog_field.validate_field_data(dialog_tab, dialog_group)).to eq("tab/group/dialog_field is required")
+          it 'returns error message' do
+            expect(dialog_field.validate_field_data(dialog_tab, dialog_group)).to eq('tab/group/dialog_field is required')
           end
         end
 
-        context "with a non-blank value" do
-          let(:value) { "test value" }
+        context 'with a non-blank value' do
+          let(:value) { 'test value' }
 
-          it_behaves_like "DialogField#validate that returns nil"
+          it_behaves_like 'DialogField#validate that returns nil'
         end
       end
 
-      context "when required is false" do
+      context 'when required is false' do
         let(:required) { false }
 
-        context "with a blank value" do
-          let(:value) { "" }
+        context 'with a blank value' do
+          let(:value) { '' }
 
-          it_behaves_like "DialogField#validate that returns nil"
+          it_behaves_like 'DialogField#validate that returns nil'
         end
 
-        context "with a non-blank value" do
-          let(:value) { "test value" }
+        context 'with a non-blank value' do
+          let(:value) { 'test value' }
 
-          it_behaves_like "DialogField#validate that returns nil"
+          it_behaves_like 'DialogField#validate that returns nil'
         end
       end
     end
 
-    describe "#initialize_with_values" do
-      it "uses #automate_key_name for extracting initial dialog values" do
-        dialog_value = "dummy dialog value"
+    describe '#initialize_with_values' do
+      it 'uses #automate_key_name for extracting initial dialog values' do
+        dialog_value = 'dummy dialog value'
         @df.initialize_with_values(@df.automate_key_name => dialog_value)
         expect(@df.value).to eq(dialog_value)
       end
 
-      it "initializes to nil with no initial value and no default value" do
+      it 'initializes to nil with no initial value and no default value' do
         initial_dialog_values = {}
         @df.initialize_with_values(initial_dialog_values)
         expect(@df.value).to be_nil
       end
 
-      it "initializes to the default value with no initial value and a default value" do
+      it 'initializes to the default value with no initial value and a default value' do
         initial_dialog_values = {}
-        @df.default_value = "default_test"
+        @df.default_value = 'default_test'
         @df.initialize_with_values(initial_dialog_values)
-        expect(@df.value).to eq("default_test")
+        expect(@df.value).to eq('default_test')
       end
 
-      it "initializes to the dialog value with a dialog value and no default value" do
-        initial_dialog_values = {@df.automate_key_name => "test"}
+      it 'initializes to the dialog value with a dialog value and no default value' do
+        initial_dialog_values = {@df.automate_key_name => 'test'}
         @df.initialize_with_values(initial_dialog_values)
-        expect(@df.value).to eq("test")
+        expect(@df.value).to eq('test')
       end
 
-      it "initializes to the dialog value with a dialog value and a default value" do
-        initial_dialog_values = {@df.automate_key_name => "test"}
-        @df.default_value = "default_test"
+      it 'initializes to the dialog value with a dialog value and a default value' do
+        initial_dialog_values = {@df.automate_key_name => 'test'}
+        @df.default_value = 'default_test'
         @df.initialize_with_values(initial_dialog_values)
-        expect(@df.value).to eq("test")
+        expect(@df.value).to eq('test')
       end
     end
   end
 
-  describe "#automate_output_values" do
-    let(:dialog_field) { described_class.new(:data_type => data_type, :value => "123") }
+  describe '#automate_output_values' do
+    let(:dialog_field) { described_class.new(:data_type => data_type, :value => '123') }
 
-    context "when the data type is integer" do
-      let(:data_type) { "integer" }
+    context 'when the data type is integer' do
+      let(:data_type) { 'integer' }
 
-      it "returns the value as an integer" do
+      it 'returns the value as an integer' do
         expect(dialog_field.automate_output_value).to eq(123)
       end
     end
 
-    context "when the data type is not an integer" do
-      let(:data_type) { "potato" }
+    context 'when the data type is not an integer' do
+      let(:data_type) { 'potato' }
 
-      it "returns the value" do
-        expect(dialog_field.automate_output_value).to eq("123")
+      it 'returns the value' do
+        expect(dialog_field.automate_output_value).to eq('123')
       end
     end
   end
 
-  describe "#update_and_serialize_values" do
+  describe '#update_and_serialize_values' do
     let(:dialog_field) { described_class.new }
 
     before do
       allow(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
     end
 
-    it "serializes the dialog field" do
+    it 'serializes the dialog field' do
       expect(DialogFieldSerializer).to receive(:serialize).with(dialog_field)
       dialog_field.update_and_serialize_values
     end

@@ -16,8 +16,8 @@ describe ApiController do
     end
   end
 
-  context "Policy Action collection" do
-    it "query invalid action" do
+  context 'Policy Action collection' do
+    it 'query invalid action' do
       api_basic_authorize action_identifier(:policy_actions, :read, :resource_actions, :get)
 
       run_get policy_actions_url(999_999)
@@ -25,7 +25,7 @@ describe ApiController do
       expect_resource_not_found
     end
 
-    it "query policy actions with no actions defined" do
+    it 'query policy actions with no actions defined' do
       api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
 
       run_get policy_actions_url
@@ -33,30 +33,30 @@ describe ApiController do
       expect_empty_query_result(:policy_actions)
     end
 
-    it "query policy actions" do
+    it 'query policy actions' do
       api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
       create_actions(4)
 
       run_get policy_actions_url
 
       expect_query_result(:policy_actions, 4, 4)
-      expect_result_resources_to_include_hrefs("resources",
+      expect_result_resources_to_include_hrefs('resources',
                                                MiqAction.pluck(:id).collect { |id| /^.*#{policy_actions_url(id)}$/ })
     end
 
-    it "query policy actions in expanded form" do
+    it 'query policy actions in expanded form' do
       api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
       create_actions(4)
 
-      run_get policy_actions_url, :expand => "resources"
+      run_get policy_actions_url, :expand => 'resources'
 
       expect_query_result(:policy_actions, 4, 4)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_action_guid_list)
+      expect_result_resources_to_include_data('resources', 'guid' => :miq_action_guid_list)
     end
   end
 
-  context "Policy Action subcollection" do
-    let(:policy)             { FactoryGirl.create(:miq_policy, :name => "Policy 1") }
+  context 'Policy Action subcollection' do
+    let(:policy)             { FactoryGirl.create(:miq_policy, :name => 'Policy 1') }
     let(:policy_url)         { policies_url(policy.id) }
     let(:policy_actions_url) { "#{policy_url}/policy_actions" }
 
@@ -66,7 +66,7 @@ describe ApiController do
       end
     end
 
-    it "query policy actions with no actions defined" do
+    it 'query policy actions with no actions defined' do
       api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
 
       run_get policy_actions_url
@@ -74,26 +74,26 @@ describe ApiController do
       expect_empty_query_result(:policy_actions)
     end
 
-    it "query policy actions" do
+    it 'query policy actions' do
       api_basic_authorize collection_action_identifier(:policy_actions, :read, :get)
       create_actions(4)
       relate_actions_to(policy)
 
-      run_get policy_actions_url, :expand => "resources"
+      run_get policy_actions_url, :expand => 'resources'
 
       expect_query_result(:policy_actions, 4, 4)
-      expect_result_resources_to_include_data("resources", "guid" => :miq_action_guid_list)
+      expect_result_resources_to_include_data('resources', 'guid' => :miq_action_guid_list)
     end
 
-    it "query policy with expanded policy actions" do
+    it 'query policy with expanded policy actions' do
       api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
       create_actions(4)
       relate_actions_to(policy)
 
-      run_get policy_url, :expand => "policy_actions"
+      run_get policy_url, :expand => 'policy_actions'
 
-      expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
-      expect_result_resources_to_include_data("policy_actions", "guid" => :miq_action_guid_list)
+      expect_single_resource_query('name' => policy.name, 'description' => policy.description, 'guid' => policy.guid)
+      expect_result_resources_to_include_data('policy_actions', 'guid' => :miq_action_guid_list)
     end
   end
 end

@@ -4,7 +4,7 @@ class AddFiltersToEntitlements < ActiveRecord::Migration[5.0]
   class Entitlement < ActiveRecord::Base; end
 
   def change
-    return if previously_migrated_as?("20160414123914")
+    return if previously_migrated_as?('20160414123914')
 
     add_column :entitlements, :filters, :text
 

@@ -18,7 +18,7 @@ module ContainerProjectHelper::TextualSummary
 
   def textual_quota
     {
-      :labels => [_("Name"), _("Resource"), _("Desired"), _("Enforced"), _("Observed")],
+      :labels => [_('Name'), _('Resource'), _('Desired'), _('Enforced'), _('Observed')],
       :values => collect_quota_items
     }
   end
@@ -39,8 +39,8 @@ module ContainerProjectHelper::TextualSummary
 
   def textual_limits
     {
-      :labels => [_("Name"), _("Type"), _("Resource"), _("Max"), _("Min"), _("Default Limit"),
-                  _("Default Request"), _("Limit Request Ratio")],
+      :labels => [_('Name'), _('Type'), _('Resource'), _('Max'), _('Min'), _('Default Limit'),
+                  _('Default Request'), _('Limit Request Ratio')],
       :values => collect_limit_items
     }
   end

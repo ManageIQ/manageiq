@@ -4,9 +4,9 @@ describe ConvertShowRefreshButtonAndLoadValuesOnInitToRealColumnsForDialogFields
   let(:dialog_field_stub) { migration_stub(:DialogField) }
 
   migration_context :up do
-    it "migrates options[:show_refresh_button] to a column and removes that option" do
+    it 'migrates options[:show_refresh_button] to a column and removes that option' do
       dialog_field = dialog_field_stub.create!(
-        :name    => "test",
+        :name    => 'test',
         :options => {:show_refresh_button => true, :load_values_on_init => true}
       )
 
@@ -17,9 +17,9 @@ describe ConvertShowRefreshButtonAndLoadValuesOnInitToRealColumnsForDialogFields
       expect(dialog_field.show_refresh_button).to be(true)
     end
 
-    it "migrates options[:load_values_on_init] to a column and removes that option" do
+    it 'migrates options[:load_values_on_init] to a column and removes that option' do
       dialog_field = dialog_field_stub.create!(
-        :name    => "test",
+        :name    => 'test',
         :options => {:show_refresh_button => true, :load_values_on_init => true}
       )
 
@@ -32,9 +32,9 @@ describe ConvertShowRefreshButtonAndLoadValuesOnInitToRealColumnsForDialogFields
   end
 
   migration_context :down do
-    it "migrates the column back to options[:show_refresh_button]" do
+    it 'migrates the column back to options[:show_refresh_button]' do
       dialog_field = dialog_field_stub.create!(
-        :name                => "test",
+        :name                => 'test',
         :show_refresh_button => true,
         :load_values_on_init => true,
         :options             => {}
@@ -46,9 +46,9 @@ describe ConvertShowRefreshButtonAndLoadValuesOnInitToRealColumnsForDialogFields
       expect(dialog_field.options[:show_refresh_button]).to be(true)
     end
 
-    it "migrates the column back to options[:load_values_on_init]" do
+    it 'migrates the column back to options[:load_values_on_init]' do
       dialog_field = dialog_field_stub.create!(
-        :name                => "test",
+        :name                => 'test',
         :show_refresh_button => true,
         :load_values_on_init => true,
         :options             => {}

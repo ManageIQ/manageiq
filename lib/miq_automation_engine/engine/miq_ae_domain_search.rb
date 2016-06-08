@@ -12,14 +12,14 @@ module MiqAeEngine
 
     def get_alternate_domain(scheme, uri, ns, klass, instance)
       return ns if ns.nil? || klass.nil?
-      return ns if scheme != "miqaedb"
+      return ns if scheme != 'miqaedb'
       return ns if @fqns_id_cache.key?(ns)
       search(uri, ns, klass, instance, nil)
     end
 
     def get_alternate_domain_method(scheme, uri, ns, klass, method)
       return ns if ns.nil? || klass.nil?
-      return ns if scheme != "miqaedb"
+      return ns if scheme != 'miqaedb'
       return ns if @fqns_id_cache.key?(ns)
       search(uri, ns, klass, nil, method)
     end
@@ -42,7 +42,7 @@ module MiqAeEngine
       # Check if the namespace, klass and instance exist if it does
       # swap out the namespace
       parts = ns.split('/')
-      parts.unshift("")
+      parts.unshift('')
       matching_domain = get_matching_domain(parts, klass, instance, method)
       matching_domain ||= get_matching_domain(parts, klass, MiqAeObject::MISSING_INSTANCE, method)
       if matching_domain

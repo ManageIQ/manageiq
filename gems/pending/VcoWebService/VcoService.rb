@@ -1,5 +1,5 @@
-require "handsoap"
-require "VcoWebService/VcoTypes"
+require 'handsoap'
+require 'VcoWebService/VcoTypes'
 
 class VcoService < Handsoap::Service
   Handsoap.http_driver = :HTTPClient
@@ -10,8 +10,8 @@ class VcoService < Handsoap::Service
   end
 
   def echoWorkflow(wfMsg)
-    response = invoke("n1:echoWorkflow") do |message|
-      message.add "n1:workflowMessage" do |i|
+    response = invoke('n1:echoWorkflow') do |message|
+      message.add 'n1:workflowMessage' do |i|
         marshalObj(i, wfMsg)
       end
     end
@@ -19,15 +19,15 @@ class VcoService < Handsoap::Service
   end
 
   def executeWorkflow(wfId, username, password, inputs)
-    response = invoke("n1:executeWorkflow") do |message|
-      message.add "n1:workflowId", wfId
-      message.add "n1:username", username
-      message.add "n1:password", password
+    response = invoke('n1:executeWorkflow') do |message|
+      message.add 'n1:workflowId', wfId
+      message.add 'n1:username', username
+      message.add 'n1:password', password
       inputs.each do |wfi|
-        message.add "n1:workflowInputs" do |i|
-          i.add "n1:name",  wfi.name
-          i.add "n1:type",  wfi.type
-          i.add "n1:value", wfi.value
+        message.add 'n1:workflowInputs' do |i|
+          i.add 'n1:name',  wfi.name
+          i.add 'n1:type',  wfi.type
+          i.add 'n1:value', wfi.value
           # marshalObj(i, wfi)
         end
       end
@@ -36,69 +36,69 @@ class VcoService < Handsoap::Service
   end
 
   def find(type, query, username, password)
-    response = invoke("n1:find") do |message|
-      message.add "n1:type", type
-      message.add "n1:query", query
-      message.add "n1:username", username
-      message.add "n1:password", password
+    response = invoke('n1:find') do |message|
+      message.add 'n1:type', type
+      message.add 'n1:query', query
+      message.add 'n1:username', username
+      message.add 'n1:password', password
     end
     (parse_response(response, 'findResponse')['findReturn'])
   end
 
   def findRelation(parentType, parentId, relationName, username, password)
-    response = invoke("n1:findRelation") do |message|
-      message.add "n1:parentType", parentType
-      message.add "n1:parentId", parentId
-      message.add "n1:relationName", relationName
-      message.add "n1:username", username
-      message.add "n1:password", password
+    response = invoke('n1:findRelation') do |message|
+      message.add 'n1:parentType', parentType
+      message.add 'n1:parentId', parentId
+      message.add 'n1:relationName', relationName
+      message.add 'n1:username', username
+      message.add 'n1:password', password
     end
     (parse_response(response, 'findRelationResponse')['findRelationReturn'])
   end
 
   def getWorkflowForId(workflowId, username, password)
-    response = invoke("n1:getWorkflowForId") do |message|
-      message.add "n1:workflowId", workflowId
-      message.add "n1:username", username
-      message.add "n1:password", password
+    response = invoke('n1:getWorkflowForId') do |message|
+      message.add 'n1:workflowId', workflowId
+      message.add 'n1:username', username
+      message.add 'n1:password', password
     end
     (parse_response(response, 'getWorkflowForIdResponse')['getWorkflowForIdReturn'])
   end
 
   def getAllWorkflows(username, password)
-    response = invoke("n1:getAllWorkflows") do |message|
-      message.add "n1:username", username
-      message.add "n1:password", password
+    response = invoke('n1:getAllWorkflows') do |message|
+      message.add 'n1:username', username
+      message.add 'n1:password', password
     end
     (parse_response(response, 'getAllWorkflowsResponse')['getAllWorkflowsReturn'])
   end
 
   def getWorkflowTokenForId(workflowTokenId, username, password)
-    response = invoke("n1:getWorkflowTokenForId") do |message|
-      message.add "n1:workflowTokenId", workflowTokenId
-      message.add "n1:username", username
-      message.add "n1:password", password
+    response = invoke('n1:getWorkflowTokenForId') do |message|
+      message.add 'n1:workflowTokenId', workflowTokenId
+      message.add 'n1:username', username
+      message.add 'n1:password', password
     end
     (parse_response(response, 'getWorkflowTokenForIdResponse')['getWorkflowTokenForIdReturn'])
   end
 
   def getWorkflowTokenStatus(workflowTokenIds, username, password)
     workflowTokenIds = [workflowTokenIds] unless workflowTokenIds.kind_of?(Array)
-    response = invoke("n1:getWorkflowTokenStatus") do |message|
+    response = invoke('n1:getWorkflowTokenStatus') do |message|
       workflowTokenIds.each do |wfid|
-        message.add "n1:workflowTokenIds", wfid
+        message.add 'n1:workflowTokenIds', wfid
       end
-      message.add "n1:username", username
-      message.add "n1:password", password
+      message.add 'n1:username', username
+      message.add 'n1:password', password
     end
     (parse_response(response, 'getWorkflowTokenStatusResponse')['getWorkflowTokenStatusReturn'])
   end
 
   def getWorkflowsWithName(workflowName, username, password)
-    response = invoke("n1:getWorkflowsWithName") do |message|
-      message.add "n1:workflowName", workflowName
-      message.add "n1:username", username
-      message.add "n1:password", password
+    response = invoke('n1:getWorkflowsWithName') do |message|
+      message.add 'n1:workflowName', workflowName
+      message.add 'n1:username', username
+      message.add 'n1:password', password
     end
     (parse_response(response, 'getWorkflowsWithNameResponse')['getWorkflowsWithNameReturn'])
   end
@@ -114,7 +114,7 @@ class VcoService < Handsoap::Service
 
   def marshalObj(node, obj)
     if obj.kind_of? Array
-      puts "Array"
+      puts 'Array'
       obj.each do |v|
         marshalObj(node, v)
       end

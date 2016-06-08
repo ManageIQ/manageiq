@@ -3,7 +3,7 @@ module WorkflowSpecHelper
     allow_any_instance_of(described_class).to receive(method).and_return(:dialogs => {})
   end
 
-  def stub_get_next_vm_name(vm_name = "New VM")
+  def stub_get_next_vm_name(vm_name = 'New VM')
     allow(MiqProvision).to receive(:get_next_vm_name).and_return(vm_name)
   end
 
@@ -12,7 +12,7 @@ module WorkflowSpecHelper
     stub_automate_workspace(dialog_name, user, no_attrs, no_attrs, dialog_name)
 
     expect(MiqAeEngine).to receive(:create_automation_object).with(
-      "REQUEST",
+      'REQUEST',
       hash_including(
         'request'                   => 'UI_PROVISION_INFO',
         'message'                   => method,
@@ -25,16 +25,16 @@ module WorkflowSpecHelper
   end
 
   def assert_automate_vm_name_lookup(user, vm_name = 'vm_name')
-    stub_automate_workspace("get_vmname_url", user, vm_name)
+    stub_automate_workspace('get_vmname_url', user, vm_name)
 
     expect(MiqAeEngine).to receive(:create_automation_object).with(
-      "REQUEST",
+      'REQUEST',
       hash_including(
         'request'    => 'UI_PROVISION_INFO',
         'message'    => 'get_vmname',
         'User::user' => user.id
       ),
-      anything).and_return("get_vmname_url")
+      anything).and_return('get_vmname_url')
   end
 
   def stub_automate_workspace(url, user, *result)

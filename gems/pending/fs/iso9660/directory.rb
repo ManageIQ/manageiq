@@ -16,7 +16,7 @@ module Iso9660
       'n',  'check',
       'C',  'skip_bytes'
     ])
-    SUSP_SIGNATURE  = "SP"
+    SUSP_SIGNATURE  = 'SP'
     SUSP_SIZE       = 7
     SUSP_VERSION    = 1
     SUSP_CHECK_WORD = 0xbeef
@@ -24,9 +24,9 @@ module Iso9660
     attr_reader :myEnt, :susp
 
     def initialize(bs, thisEntry)
-      raise "Boot sector is nil." if bs.nil?
-      raise "No directory entry specified." if thisEntry.nil?
-      raise "Given entry is not a DirectoryEntry" if thisEntry.class.to_s != "Iso9660::DirectoryEntry"
+      raise 'Boot sector is nil.' if bs.nil?
+      raise 'No directory entry specified.' if thisEntry.nil?
+      raise 'Given entry is not a DirectoryEntry' if thisEntry.class.to_s != 'Iso9660::DirectoryEntry'
 
       @bs = bs
       @myEnt = thisEntry
@@ -81,7 +81,7 @@ module Iso9660
         return nil if susp['signature'] != SUSP_SIGNATURE
         return nil if susp['len'] != SUSP_SIZE
         return nil if susp['check'] != SUSP_CHECK_WORD
-        raise "System Use Sharing Protocol version mismatch" if susp['version'] != SUSP_VERSION
+        raise 'System Use Sharing Protocol version mismatch' if susp['version'] != SUSP_VERSION
         return susp
       end
       nil

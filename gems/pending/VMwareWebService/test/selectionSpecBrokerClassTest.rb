@@ -51,7 +51,7 @@ SelectionSpec = {}
 # Must be set in the broker server.
 # MiqVimBroker.setSelector(SelectionSpec)
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 hMor = nil
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -86,10 +86,10 @@ begin
     miqHost = vim.getVimHost(TARGET_HOST)
 
     puts
-    puts "*** storageDevice START"
+    puts '*** storageDevice START'
     sd = miqHost.storageDevice(:storageDeviceSS)
     vim.dumpObj(sd)
-    puts "*** storageDevice END"
+    puts '*** storageDevice END'
   
 rescue => err
     puts err.to_s

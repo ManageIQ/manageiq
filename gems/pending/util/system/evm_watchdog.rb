@@ -13,13 +13,13 @@ module EvmWatchdog
       # EVM exited gracefully - no pid file, nothing to do.
       # Future TODO - Check database to see if EVM should be started?
     elsif pid_file.empty? # Not really sure how we got an empty pid file, but we'll just log it for now.
-      log_info("Detected an empty PID file for EVM Server Process.")
-    elsif pid_file.include? "no_db"
+      log_info('Detected an empty PID file for EVM Server Process.')
+    elsif pid_file.include? 'no_db'
       db_state = get_db_state # TODO: - This is here because it is costly.  Should be moved up when not as costly.
       if db_state.empty?
         # Database down, nothing to do but wait for it to come up.
       else
-        log_info("Detected that the database is now available.")
+        log_info('Detected that the database is now available.')
         start_evm
       end
     elsif pid_file.to_i == 0
@@ -29,8 +29,8 @@ module EvmWatchdog
     else
       db_state = get_db_state # TODO: - See note above.
       if db_state.empty?
-        log_info("Detected that the database is down.")
-      elsif ["started", "starting"].include?(db_state)
+        log_info('Detected that the database is down.')
+      elsif ['started', 'starting'].include?(db_state)
         log_info("Detected that the EVM Server with PID [#{pid_file.to_i}] is no longer running.")
         start_evm
       else # Not sure why we have a pid file here, maybe we should remove it?
@@ -72,7 +72,7 @@ module EvmWatchdog
   end
 
   def self.start_evm
-    log_info("Starting EVM server...")
+    log_info('Starting EVM server...')
     `systemctl start evmserverd`
   end
 

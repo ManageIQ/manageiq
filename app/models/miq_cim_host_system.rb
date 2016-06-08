@@ -143,7 +143,7 @@ class MiqCimHostSystem < MiqCimInstance
   def local_file_systems_long
     dh = {}
     getLeafNodes(HostToLfs, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?("SNIA_LocalFileSystem") }
+    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?('SNIA_LocalFileSystem') }
   end
 
   def local_file_systems
@@ -178,7 +178,7 @@ class MiqCimHostSystem < MiqCimInstance
   def base_storage_extents_long
     dh = {}
     getLeafNodes(HostToBaseSe, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?("CIM_StorageExtent") }
+    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?('CIM_StorageExtent') }
   end
 
   def base_storage_extents

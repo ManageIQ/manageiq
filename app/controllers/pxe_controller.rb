@@ -64,35 +64,35 @@ class PxeController < ApplicationController
 
     build_accordions_and_trees
 
-    @right_cell_div ||= "pxe_server_list"
-    @right_cell_text ||= _("All PXE Servers")
+    @right_cell_div ||= 'pxe_server_list'
+    @right_cell_text ||= _('All PXE Servers')
     @pxe_image_types_count = PxeImageType.count
 
-    render :layout => "application"
+    render :layout => 'application'
   end
 
   private
 
   def features
-    [{:role     => "pxe_server_accord",
+    [{:role     => 'pxe_server_accord',
       :role_any => true,
       :name     => :pxe_servers,
-      :title    => _("PXE Servers")},
+      :title    => _('PXE Servers')},
 
-     {:role     => "customization_template_accord",
+     {:role     => 'customization_template_accord',
       :role_any => true,
       :name     => :customization_templates,
-      :title    => _("Customization Templates")},
+      :title    => _('Customization Templates')},
 
-     {:role     => "pxe_image_type_accord",
+     {:role     => 'pxe_image_type_accord',
       :role_any => true,
       :name     => :pxe_image_types,
-      :title    => _("System Image Types")},
+      :title    => _('System Image Types')},
 
-     {:role     => "iso_datastore_accord",
+     {:role     => 'iso_datastore_accord',
       :role_any => true,
       :name     => :iso_datastores,
-      :title    => _("ISO Datastores")},
+      :title    => _('ISO Datastores')},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
@@ -141,61 +141,61 @@ class PxeController < ApplicationController
     presenter.reload_toolbars(:history => h_tb)
     case x_active_tree
     when :pxe_servers_tree
-      presenter.update(:main_div, r[:partial => "pxe_server_list"])
-      if nodetype == "root"
-        right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "PxeServer")}
+      presenter.update(:main_div, r[:partial => 'pxe_server_list'])
+      if nodetype == 'root'
+        right_cell_text = _('All %{models}') % {:models => ui_lookup(:models => 'PxeServer')}
       else
         right_cell_text = case nodetype
                           when 'ps'
                             if @ps.id.blank?
-                              _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeServer")}
+                              _('Adding a new %{model}') % {:model => ui_lookup(:model => 'PxeServer')}
                             else
-                              temp = _("%{model} \"%{name}\"") % {:name  => @ps.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeServer")}
+                              temp = _('%{model} "%{name}"') % {:name  => @ps.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'PxeServer')}
                               @edit ? "Editing #{temp}" : temp
                             end
                           when 'pi'
-                            _("%{model} \"%{name}\"") % {:name  => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImage")}
+                            _('%{model} "%{name}"') % {:name  => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'PxeImage')}
                           when 'wi'
-                            _("%{model} \"%{name}\"") % {:name  => @wimg.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "WindowsImage")}
+                            _('%{model} "%{name}"') % {:name  => @wimg.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'WindowsImage')}
                           end
       end
     when :pxe_image_types_tree
-      presenter.update(:main_div, r[:partial => "pxe_image_type_list"])
+      presenter.update(:main_div, r[:partial => 'pxe_image_type_list'])
       right_cell_text = case nodetype
                         when 'root'
-                          _("All %{models}") % {:models => ui_lookup(:models => "PxeImageType")}
+                          _('All %{models}') % {:models => ui_lookup(:models => 'PxeImageType')}
                         when 'pit'
                           if @pxe_image_type.id.blank?
-                            _("Adding a new %{models}") % {:models => ui_lookup(:model => "PxeImageType")}
+                            _('Adding a new %{models}') % {:models => ui_lookup(:model => 'PxeImageType')}
                           else
-                            temp = _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
+                            temp = _('%{model} "%{name}"') % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'PxeImageType')}
                             @edit ? "Editing #{temp}" : temp
                           end
                         else
-                          _("%{model} \"%{name}\"") % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeImageType")}
+                          _('%{model} "%{name}"') % {:name  => @pxe_image_type.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'PxeImageType')}
                         end
     when :customization_templates_tree
-      presenter.update(:main_div, r[:partial => "template_list"])
+      presenter.update(:main_div, r[:partial => 'template_list'])
       nodes = nodetype.split('_')
       if @in_a_form
         right_cell_text =
           if @ct.id.blank?
-            _("Adding a new %{model}") % {:model => ui_lookup(:model => "PxeCustomizationTemplate")}
+            _('Adding a new %{model}') % {:model => ui_lookup(:model => 'PxeCustomizationTemplate')}
           else
-            @edit ? _("Editing %{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")} :
-                    _("%{model} \"%{name}\"") % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "PxeCustomizationTemplate")}
+            @edit ? _('Editing %{model} "%{name}"') % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'PxeCustomizationTemplate')} :
+                    _('%{model} "%{name}"') % {:name  => @ct.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'PxeCustomizationTemplate')}
           end
         # resetting ManageIQ.oneTransition.oneTrans when tab loads
         presenter.reset_one_trans
         presenter.one_trans_ie if %w(save reset).include?(params[:button]) && is_browser_ie?
       end
     when :iso_datastores_tree
-      presenter.update(:main_div, r[:partial => "iso_datastore_list"])
+      presenter.update(:main_div, r[:partial => 'iso_datastore_list'])
       right_cell_text =
         case nodetype
-        when 'root' then _("All %{models}") % {:models => ui_lookup(:models => "IsoDatastore")}
-        when 'isd'  then _("Adding a new %{models}") % {:models => ui_lookup(:model => "IsoDatastore")}
-        when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => "IsoImage")}
+        when 'root' then _('All %{models}') % {:models => ui_lookup(:models => 'IsoDatastore')}
+        when 'isd'  then _('Adding a new %{models}') % {:models => ui_lookup(:model => 'IsoDatastore')}
+        when 'isi'  then _('%{model} "%{name}"') % {:name => @img.name.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'IsoImage')}
         end
     end
 
@@ -212,32 +212,32 @@ class PxeController < ApplicationController
         action_url, multi_record = case x_active_tree
                                    when :pxe_servers_tree
                                      if x_node == 'root'
-                                       "pxe_server_create_update"
+                                       'pxe_server_create_update'
                                      else
                                        case x_node.split('-').first
-                                       when 'pi' then ["pxe_image_edit", true]
-                                       when 'wi' then ["pxe_wimg_edit",  true]
-                                       else "pxe_server_create_update"
+                                       when 'pi' then ['pxe_image_edit', true]
+                                       when 'wi' then ['pxe_wimg_edit',  true]
+                                       else 'pxe_server_create_update'
                                        end
                                      end
                                    when :iso_datastores_tree
-                                     if x_node == "root"
-                                       "iso_datastore_create"
+                                     if x_node == 'root'
+                                       'iso_datastore_create'
                                      else
-                                       if x_node.split('-').first == "isi"
-                                         ["iso_image_edit", true]
+                                       if x_node.split('-').first == 'isi'
+                                         ['iso_image_edit', true]
                                        else
-                                         "iso_datastore_create"
+                                         'iso_datastore_create'
                                        end
                                      end
                                    when :pxe_image_types_tree
-                                     "pxe_image_type_edit"
+                                     'pxe_image_type_edit'
                                    else
-                                     "template_create_update"
+                                     'template_create_update'
                                    end
 
         presenter.update(:form_buttons_div, r[
-          :partial => "layouts/x_edit_buttons",
+          :partial => 'layouts/x_edit_buttons',
           :locals  => {
             :record_id    => @edit[:rec_id],
             :action_url   => action_url,
@@ -265,8 +265,8 @@ class PxeController < ApplicationController
   end
 
   def get_session_data
-    @title        = "PXE"
-    @layout       = "pxe"
+    @title        = 'PXE'
+    @layout       = 'pxe'
     @lastaction   = session[:pxe_lastaction]
     @display      = session[:pxe_display]
     @current_page = session[:pxe_current_page]

@@ -4,13 +4,13 @@ require 'disk/modules/MSCommon'
 
 module MSVSDiffDisk
   def d_init
-    self.diskType = "MSVS Differencing"
+    self.diskType = 'MSVS Differencing'
     self.blockSize = MSCommon::SECTOR_LENGTH
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
+    if dInfo.mountMode.nil? || dInfo.mountMode == 'r'
+      dInfo.mountMode = 'r'
+      fileMode = 'r'
+    elsif dInfo.mountMode == 'rw'
+      fileMode = 'r+'
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
@@ -30,29 +30,29 @@ module MSVSDiffDisk
       next if @locators[idx - 1]['platform_code'] == "\000\000\000\000"
       locator = @locators[idx - 1]
       case locator['platform_code']
-      when "Wi2r"
+      when 'Wi2r'
       # Deprecated (no information on format)
 
-      when "Wi2k"
+      when 'Wi2k'
       # Deprecated (no information on format)
 
-      when "W2ru"
+      when 'W2ru'
       # Relative path. Would much rather have absolute path.
       # NOTE: Absolute path always accompanies relative path.
       # getParentPathWin(locator)
 
-      when "W2ku"
+      when 'W2ku'
         # Absolute path - this is the one.
         getParentPathWin(locator)
         getParent(locator)
 
-      when "Mac "
+      when 'Mac '
       #
       # TODO: need details on Mac Alias Blob.
       #
       # getParentPathMac(locator)
 
-      when "MacX"
+      when 'MacX'
         # Is platform spanning even something we should do?
         # NOTE: Oleg says don't worry about it for the present (03/14/2007).
         getParentPathMacX(locator)
@@ -122,7 +122,7 @@ module MSVSDiffDisk
   end
 
   def getPathData(locator)
-    @ms_disk_file.seek(MSCommon.getHiLo(locator, "data_offset"), IO::SEEK_SET)
+    @ms_disk_file.seek(MSCommon.getHiLo(locator, 'data_offset'), IO::SEEK_SET)
     @ms_disk_file.read(locator['data_length'])
   end
 end

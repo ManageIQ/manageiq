@@ -35,7 +35,7 @@ class MiqFS
   def initialize(fsm, dobj)
     extend(fsm)
     @dobj = dobj
-    @cwd = "/"
+    @cwd = '/'
     @fsId = ''
     @volName = ''
     fs_init
@@ -155,18 +155,18 @@ class MiqFS
     (fs_isSymLink?(p))
   end
 
-  def fileOpen(f, mode = "r", &block)
+  def fileOpen(f, mode = 'r', &block)
     fpf = normalizePath(f)
     fo = fileOpenCommon(fpf, mode, &block)
     (fo)
   end
 
-  def fileOpenLink(f, mode = "r", &block)
+  def fileOpenLink(f, mode = 'r', &block)
     fpf = normalizePath(f)
     fileOpenCommon(fpf, mode, &block)
   end
 
-  def fileOpenCommon(fpf, mode = "r", &block)
+  def fileOpenCommon(fpf, mode = 'r', &block)
     fobj = fs_fileOpen(fpf, mode)
     return(nil) unless fobj
     fo = MiqFile.new(self, fobj)
@@ -272,7 +272,7 @@ class MiqFS
   end
 
   def findEachPrune
-    raise "MiqFS.findEachPrune: findEach not in progress" unless @findEachYield
+    raise 'MiqFS.findEachPrune: findEach not in progress' unless @findEachYield
     @findEachPrune = true
   end
 
@@ -306,10 +306,10 @@ class MiqFS
     from = [from] unless from.kind_of?(Array)
     from.each { |t| allTargets.concat(dirGlob(t)) }
 
-    raise "copyOut: no source files matched" if allTargets.length == 0
+    raise 'copyOut: no source files matched' if allTargets.length == 0
     if allTargets.length > 1 || recursive
-      raise "copyOut: destination directory does not exist" unless File.exist?(to)
-      raise "copyOut: destination must be a directory for multi-file copy" unless File.directory?(to)
+      raise 'copyOut: destination directory does not exist' unless File.exist?(to)
+      raise 'copyOut: destination must be a directory for multi-file copy' unless File.directory?(to)
     end
 
     allTargets.each do |f|
@@ -352,7 +352,7 @@ class MiqFS
 
   def copyOutSingle(ff, tf)
     fileOpen(ff) do |ffo|
-      tfo = File.new(tf, "wb")
+      tfo = File.new(tf, 'wb')
       while (buf = ffo.read(1024))
         tfo.write(buf)
       end
@@ -372,10 +372,10 @@ class MiqFS
     from = [from] unless from.kind_of?(Array)
     from.each { |t| allTargets.concat(Dir.glob(t)) }
 
-    raise "copyIn: no source files matched" if allTargets.length == 0
+    raise 'copyIn: no source files matched' if allTargets.length == 0
     if allTargets.length > 1 || recursive
-      raise "copyIn: destination directory does not exist" unless self.fileExists?(to)
-      raise "copyIn: destination must be a directory for multi-file copy" unless self.fileDirectory?(to)
+      raise 'copyIn: destination directory does not exist' unless self.fileExists?(to)
+      raise 'copyIn: destination must be a directory for multi-file copy' unless self.fileDirectory?(to)
     end
 
     allTargets.each do |f|
@@ -418,7 +418,7 @@ class MiqFS
 
   def copyInSingle(ff, tf)
     File.open(ff) do |ffo|
-      tfo = fileOpen(tf, "wb")
+      tfo = fileOpen(tf, 'wb')
       while (buf = ffo.read(1024))
         tfo.write(buf)
       end
@@ -428,7 +428,7 @@ class MiqFS
 
   def normalizePath(p)
     # At the base FS level, we should never see a drive letter.
-    np = File.expand_path(p, @cwd).gsub(/^[a-zA-Z]:/, "")
+    np = File.expand_path(p, @cwd).gsub(/^[a-zA-Z]:/, '')
     # puts "MiqFS::normalizePath: p = #{p}, np = #{np}"
     (np)
   end
@@ -446,13 +446,13 @@ class MiqFS
     rpa = []
     tpa.each do |d|
       case d
-      when ".." then rpa.pop
-      when "."  then next
-      when ""   then next
+      when '..' then rpa.pop
+      when '.'  then next
+      when ''   then next
       else rpa << d
       end
     end
-    ("/" + rpa.join("/"))
+    ('/' + rpa.join('/'))
   end
 
   def optDir(dir)

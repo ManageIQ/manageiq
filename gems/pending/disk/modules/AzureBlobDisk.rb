@@ -1,4 +1,4 @@
-require_relative "../MiqDisk"
+require_relative '../MiqDisk'
 require 'ostruct'
 
 module AzureBlobDisk
@@ -15,7 +15,7 @@ module AzureBlobDisk
   end
 
   def d_init
-    @diskType         = "azure-blob"
+    @diskType         = 'azure-blob'
     @blockSize        = 512
     @blob_uri         = @dInfo.blob_uri
     @storage_acct_svc = @dInfo.storage_acct_svc
@@ -38,7 +38,7 @@ module AzureBlobDisk
     # puts "AzureBlobDisk#d_read(#{pos}, #{len})"
     return blob_read(pos, len) unless len > MAX_READ_LEN
 
-    ret = ""
+    ret = ''
     bytes_read = 0
     blocks, rem = len.divmod(MAX_READ_LEN)
 
@@ -56,7 +56,7 @@ module AzureBlobDisk
   end
 
   def d_write(_pos, _buf, _len)
-    raise "Write operation not supported."
+    raise 'Write operation not supported.'
   end
 
   private
@@ -71,7 +71,7 @@ module AzureBlobDisk
 
     ret = @storage_acct.get_blob_raw(@container, @blob, key, options)
 
-    content_md5  = ret.headers[:content_md5].unpack("m0").first.unpack("H*").first
+    content_md5  = ret.headers[:content_md5].unpack('m0').first.unpack('H*').first
     returned_md5 = Digest::MD5.hexdigest(ret.body)
     raise "Checksum error: #{range_str}, blob: #{@container}/#{@blob}" unless content_md5 == returned_md5
 

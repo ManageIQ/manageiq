@@ -1,5 +1,5 @@
 class PxeMenuPxelinux < PxeMenu
-  has_many :pxe_images, :class_name => "PxeImagePxelinux", :foreign_key => :pxe_menu_id, :dependent => :destroy
+  has_many :pxe_images, :class_name => 'PxeImagePxelinux', :foreign_key => :pxe_menu_id, :dependent => :destroy
 
   def self.parse_contents(contents)
     items = []
@@ -22,7 +22,7 @@ class PxeMenuPxelinux < PxeMenu
         sub_key = value.split.first
         value = value[sub_key.length..-1].strip
 
-        key = [key, sub_key].join("_").to_sym
+        key = [key, sub_key].join('_').to_sym
         value = true if key == :menu_default
 
         current_item[key] = value if [:menu_label, :menu_default].include?(key)
@@ -41,7 +41,7 @@ class PxeMenuPxelinux < PxeMenu
   def self.parse_append(append)
     options = append.split(' ')
 
-    initrd   = options.detect { |o| o.starts_with?("initrd=") }
+    initrd   = options.detect { |o| o.starts_with?('initrd=') }
     initrd &&= initrd[7..-1]
 
     rejects = %w( initrd= )

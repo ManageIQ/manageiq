@@ -31,9 +31,9 @@ class ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow < MiqProvisio
 
   def allowed_provision_types(_options = {})
     {
-      "pxe"          => "PXE",
-      "iso"          => "ISO",
-      "native_clone" => "Native Clone"
+      'pxe'          => 'PXE',
+      'iso'          => 'ISO',
+      'native_clone' => 'Native Clone'
     }
   end
 
@@ -80,6 +80,6 @@ class ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow < MiqProvisio
       result = result.select { |s| s.id == s_id }
     end
 
-    result.select { |s| s.storage_domain_type == "data" }
+    result.select { |s| s.storage_domain_type == 'data' }
   end
 end

@@ -21,8 +21,8 @@ class ApplicationHelper::Toolbar::MiqAeInstanceCenter < ApplicationHelper::Toolb
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Instance'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to remove this Instance?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to remove this Instance?')),
       ]
     ),
   ])

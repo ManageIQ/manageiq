@@ -16,8 +16,8 @@ class ApplicationHelper::Toolbar::ZoneCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Zone'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to delete this Zone?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to delete this Zone?')),
       ]
     ),
   ])

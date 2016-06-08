@@ -29,14 +29,14 @@ module Iso9660
       @miqfs = miqfs
     end
 
-    def open(mode = "r")
+    def open(mode = 'r')
       # Iso9660 module methods use miqfs instance accessors to touch @boot_sector.
       @mode = mode.downcase
       @de = ifs_getFile(@path, @miqfs)
       unless @de.nil?
         raise "File is directory: '#{@path}'" if @de.isDir?
       end
-      if mode.include?("r")
+      if mode.include?('r')
         raise "File not found: '#{@path}'" if @de.nil?
         @data = FileData.new(@de, @miqfs.boot_sector)
       end
@@ -44,7 +44,7 @@ module Iso9660
   end
 
   def fs_init
-    self.fsType = "ISO9660"
+    self.fsType = 'ISO9660'
 
     # Start by looking for a Joliet volume descriptor after the primary descriptor.
     found_joliet = false
@@ -100,12 +100,12 @@ module Iso9660
 
   # These two are not implemented.
   def fs_dirMkdir(_p)
-    raise "Write functionality is not supported on Iso9660."
+    raise 'Write functionality is not supported on Iso9660.'
   end
 
   # Remove a directory.
   def fs_dirRmdir(_p)
-    raise "Write functionality is not supported on Iso9660."
+    raise 'Write functionality is not supported on Iso9660.'
   end
 
   #
@@ -142,7 +142,7 @@ module Iso9660
 
   # Delete file.
   def fs_fileDelete(_p)
-    raise "Write functionality is not supported on Iso9660."
+    raise 'Write functionality is not supported on Iso9660.'
   end
 
   # Returns Ruby Time object.
@@ -197,7 +197,7 @@ module Iso9660
   # NOTE: FileObject must have access to Iso9660 members.
   # This is kind of like a 'skip this' thing. Ext3 methods
   # use stuff owned by MiqFS, so this is necessary.
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     fobj = FileObject.new(p, self)
     fobj.open(mode)
     fobj
@@ -214,7 +214,7 @@ module Iso9660
   end
 
   def fs_fileWrite(_fobj, _buf, _len)
-    raise "Write functionality is not supported on Iso9660."
+    raise 'Write functionality is not supported on Iso9660.'
   end
 
   # Destroy file object.
@@ -234,7 +234,7 @@ module Iso9660
     p = unnormalizePath(p)
     dir, fil = File.split(p)
     # Fix for FB#835: if fil == root then fil needs to be "."
-    fil = "." if fil == "/" || fil == "\\"
+    fil = '.' if fil == '/' || fil == '\\'
 
     # Look for file in dir, but don't barf if it doesn't exist.
     # NOTE: if p is a directory that's ok, find it.
@@ -266,7 +266,7 @@ module Iso9660
     end
 
     # Return root if lone separator.
-    return miqfs.drive_root if p == "/" || p == "\\"
+    return miqfs.drive_root if p == '/' || p == '\\'
 
     # Get an array of directory names, kill off the first (it's always empty).
     names = p.split(/[\\\/]/); names.shift

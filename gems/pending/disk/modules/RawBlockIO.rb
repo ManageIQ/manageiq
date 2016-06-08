@@ -4,7 +4,7 @@ require 'memory_buffer'
 class RawBlockIO
   MIN_SECTORS_TO_CACHE = 64
 
-  def initialize(filename, mode = "r")
+  def initialize(filename, mode = 'r')
     # We must start with a block special file
     raise "RawBlockIO: #{filename} is not a blockSpecial file" unless File.stat(filename).ftype == 'blockSpecial'
 

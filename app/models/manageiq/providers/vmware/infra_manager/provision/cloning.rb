@@ -2,7 +2,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
   def do_clone_task_check(clone_task_mor)
     source.with_provider_connection do |vim|
       begin
-        state, val = vim.pollTask(clone_task_mor, "VMClone")
+        state, val = vim.pollTask(clone_task_mor, 'VMClone')
         case state
         when TaskInfoState::Success
           return true
@@ -131,7 +131,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
         csl.pool         = vim_clone_options[:pool]       if vim_clone_options[:pool]
         csl.disk         = vim_clone_options[:disk]       if vim_clone_options[:disk]
         csl.transform    = vim_clone_options[:transform]  if vim_clone_options[:transform]
-        csl.diskMoveType = VimString.new('createNewChildDiskBacking', "VirtualMachineRelocateDiskMoveOptions") if vim_clone_options[:linked_clone] == true
+        csl.diskMoveType = VimString.new('createNewChildDiskBacking', 'VirtualMachineRelocateDiskMoveOptions') if vim_clone_options[:linked_clone] == true
       end
     end
 
@@ -159,8 +159,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
 
   def build_transform_spec
     case get_option(:disk_format)
-    when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")
-    when 'thick' then VimString.new('flat', "VirtualMachineRelocateTransformation")
+    when 'thin'  then VimString.new('sparse', 'VirtualMachineRelocateTransformation')
+    when 'thick' then VimString.new('flat', 'VirtualMachineRelocateTransformation')
     end
   end
 end

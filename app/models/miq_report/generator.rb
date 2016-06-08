@@ -9,17 +9,17 @@ module MiqReport::Generator
   include_concern 'Utilization'
 
   DATE_TIME_BREAK_SUFFIXES = [
-    [_("Hour"),              "hour"],
-    [_("Day"),               "day"],
-    [_("Week"),              "week"],
-    [_("Month"),             "month"],
-    [_("Quarter"),           "quarter"],
-    [_("Year"),              "year"],
-    [_("Hour of the Day"),   "hour_of_day"],
-    [_("Day of the Week"),   "day_of_week"],
-    [_("Day of the Month"),  "day_of_month"],
-    [_("Week of the Year"),  "week_of_year"],
-    [_("Month of the Year"), "month_of_year"]
+    [_('Hour'),              'hour'],
+    [_('Day'),               'day'],
+    [_('Week'),              'week'],
+    [_('Month'),             'month'],
+    [_('Quarter'),           'quarter'],
+    [_('Year'),              'year'],
+    [_('Hour of the Day'),   'hour_of_day'],
+    [_('Day of the Week'),   'day_of_week'],
+    [_('Day of the Month'),  'day_of_month'],
+    [_('Week of the Year'),  'week_of_year'],
+    [_('Month of the Year'), 'month_of_year']
   ].freeze
 
   module ClassMethods
@@ -31,7 +31,7 @@ module MiqReport::Generator
       col_type = get_col_type(col)
       case col_type
       when :date
-        date_time_break_suffixes.select { |_name, suffix| !suffix.to_s.starts_with?("hour") }
+        date_time_break_suffixes.select { |_name, suffix| !suffix.to_s.starts_with?('hour') }
       when :datetime
         date_time_break_suffixes
       else
@@ -48,13 +48,13 @@ module MiqReport::Generator
     end
 
     def default_queue_timeout
-      value = VMDB::Config.new("vmdb").config.fetch_path(:reporting, :queue_timeout) || 3600
+      value = VMDB::Config.new('vmdb').config.fetch_path(:reporting, :queue_timeout) || 3600
       value.to_i_with_method
     end
   end
 
   def col_to_expression_col(col)
-    parts = col.split(".")
+    parts = col.split('.')
     if parts.length == 1
       table = db
     else
@@ -102,13 +102,13 @@ module MiqReport::Generator
           assoc_reflection = klass.reflect_on_association(k)
           assoc_klass = assoc_reflection.nil? ? nil : (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass)
 
-          if v.nil? || v["include"].blank?
+          if v.nil? || v['include'].blank?
             result.merge!(k => {})
           else
-            result.merge!(k => get_include_for_find(v["include"], assoc_klass)) if assoc_klass
+            result.merge!(k => get_include_for_find(v['include'], assoc_klass)) if assoc_klass
           end
 
-          v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_attribute?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
+          v['columns'].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_attribute?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v['columns']
         end
       end
     elsif includes.kind_of?(Array)
@@ -124,11 +124,11 @@ module MiqReport::Generator
   end
 
   def queue_generate_table(options = {})
-    options[:userid] ||= "system"
-    options[:mode] ||= "async"
-    options[:report_source] ||= "Requested by user"
+    options[:userid] ||= 'system'
+    options[:mode] ||= 'async'
+    options[:report_source] ||= 'Requested by user'
 
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = VMDB::Config.new('vmdb').config[:product][:report_sync]
 
     task = MiqTask.create(:name => "Generate Report: '#{name}'")
 
@@ -142,23 +142,23 @@ module MiqReport::Generator
     )
 
     AuditEvent.success(
-      :event        => "generate_table",
+      :event        => 'generate_table',
       :target_class => self.class.base_class.name,
       :target_id    => id,
       :userid       => options[:userid],
       :message      => "#{task.name}, successfully initiated"
     )
 
-    task.update_status("Queued", "Ok", "Task has been queued")
+    task.update_status('Queued', 'Ok', 'Task has been queued')
 
     if sync
       _async_generate_table(task.id, options)
     else
       MiqQueue.put(
-        :queue_name  => "reporting",
+        :queue_name  => 'reporting',
         :class_name  => self.class.name,
         :instance_id => id,
-        :method_name => "_async_generate_table",
+        :method_name => '_async_generate_table',
         :args        => [task.id, options],
         :msg_timeout => queue_timeout
       )
@@ -282,8 +282,8 @@ module MiqReport::Generator
         )
       )
       results = Metric::Helper.remove_duplicate_timestamps(results)
-      results = BottleneckEvent.remove_duplicate_find_results(results) if db == "BottleneckEvent"
-      @user_categories = attrs[:user_filters]["managed"]
+      results = BottleneckEvent.remove_duplicate_find_results(results) if db == 'BottleneckEvent'
+      @user_categories = attrs[:user_filters]['managed']
     end
 
     if db_options && db_options[:long_term_averages] && results.first.kind_of?(MetricRollup)
@@ -310,14 +310,14 @@ module MiqReport::Generator
 
     _log.info("Creating report results with hash: [#{attrs.inspect}]")
     res   = MiqReportResult.find_by_miq_task_id(taskid) unless taskid.nil?
-    res ||= MiqReportResult.find_by_userid(options[:userid]) if options[:userid].include?("|") # replace results if adhoc (<userid>|<session_id|<mode>) user report
+    res ||= MiqReportResult.find_by_userid(options[:userid]) if options[:userid].include?('|') # replace results if adhoc (<userid>|<session_id|<mode>) user report
     res ||= MiqReportResult.new
     res.attributes = attrs
 
     res.report_results = self
 
     curr_tz = Time.zone # Save current time zone setting
-    userid = options[:userid].split("|").first if options[:userid]
+    userid = options[:userid].split('|').first if options[:userid]
     user = User.find_by_userid(userid) if userid
 
     # TODO: user is nil from MiqWidget#generate_report_result due to passing the username as the second part of :userid, such as widget_id_735|admin...
@@ -352,7 +352,7 @@ module MiqReport::Generator
     objs = data[0] && data[0].kind_of?(Integer) ? klass.where(:id => data) : data.compact
 
     # Add resource columns to performance reports cols and col_order arrays for widget click thru support
-    if klass.to_s.ends_with?("Performance")
+    if klass.to_s.ends_with?('Performance')
       res_cols = ['resource_name', 'resource_type', 'resource_id']
       self.cols = (cols + res_cols).uniq
       orig_col_order = col_order.dup
@@ -370,7 +370,7 @@ module MiqReport::Generator
 
     data = build_includes(objs)
     result = data.collect do|entry|
-      build_reportable_data(entry, {:only => only_cols, "include" => include}, nil)
+      build_reportable_data(entry, {:only => only_cols, 'include' => include}, nil)
     end.flatten
 
     if rpt_options && rpt_options[:pivot]
@@ -391,7 +391,7 @@ module MiqReport::Generator
 
     if options[:limit]
       options[:offset] ||= 0
-      self.extras[:target_ids_for_paging] = @table.data.collect { |d| d["id"] } # Save ids of targets, since we have then all, to avoid going back to SQL for the next page
+      self.extras[:target_ids_for_paging] = @table.data.collect { |d| d['id'] } # Save ids of targets, since we have then all, to avoid going back to SQL for the next page
       @table = @table.sub_table(@table.column_names, options[:offset]..options[:offset] + options[:limit] - 1)
     end
 
@@ -400,10 +400,10 @@ module MiqReport::Generator
 
   def build_table_from_report(options = {})
     unless db_options && db_options[:report]
-      raise _("No %{class_name} object provided") % {:class_name => self.class.name}
+      raise _('No %{class_name} object provided') % {:class_name => self.class.name}
     end
     unless db_options[:report].kind_of?(self.class)
-      raise _("DB option :report must be a %{class_name} object") % {:class_name => self.class.name}
+      raise _('DB option :report must be a %{class_name} object') % {:class_name => self.class.name}
     end
 
     result = generate_rows_from_data(get_data_from_report(db_options[:report]))
@@ -418,7 +418,7 @@ module MiqReport::Generator
   end
 
   def get_data_from_report(rpt)
-    raise _("Report table is nil") if rpt.table.nil?
+    raise _('Report table is nil') if rpt.table.nil?
 
     rpt_data = if db_options[:row_col] && db_options[:row_val]
                  rpt.table.find_all { |d| d.data.key?(db_options[:row_col]) && (d.data[db_options[:row_col]] == db_options[:row_val]) }.collect(&:data)
@@ -476,11 +476,11 @@ module MiqReport::Generator
         tag = tc[(c.length + 1)..-1]
         if tc.starts_with?(c)
           unless tags2desc.key?(tag)
-            unless tag == "_none_"
-              entry = Classification.find_by_name([performance[:group_by_category], tag].join("/"))
+            unless tag == '_none_'
+              entry = Classification.find_by_name([performance[:group_by_category], tag].join('/'))
               tags2desc[tag] = entry.nil? ? tag.titleize : entry.description
             else
-              tags2desc[tag] = "[None]"
+              tags2desc[tag] = '[None]'
             end
           end
           a << [tc, tags2desc[tag]]
@@ -489,20 +489,20 @@ module MiqReport::Generator
       a
     end
     arr.sort! { |a, b| a[1] <=> b[1] }
-    while arr.first[1] == "[None]"; arr.push(arr.shift); end unless arr.blank? || (arr.first[1] == "[None]" && arr.last[1] == "[None]")
+    while arr.first[1] == '[None]'; arr.push(arr.shift); end unless arr.blank? || (arr.first[1] == '[None]' && arr.last[1] == '[None]')
     arr.each { |c, h| self.cols.push(c); col_order.push(c); headers.push(h) }
 
     tarr = Array(tags2desc).sort { |a, b| a[1] <=> b[1] }
-    while tarr.first[1] == "[None]"; tarr.push(tarr.shift); end unless tarr.blank? || (tarr.first[1] == "[None]" && tarr.last[1] == "[None]")
+    while tarr.first[1] == '[None]'; tarr.push(tarr.shift); end unless tarr.blank? || (tarr.first[1] == '[None]' && tarr.last[1] == '[None]')
     self.extras[:group_by_tags] = tarr.collect { |a| a[0] }
     self.extras[:group_by_tag_descriptions] = tarr.collect { |a| a[1] }
   end
 
   def build_add_missing_timestamps(recs)
     return recs unless !recs.empty? && (recs.first.kind_of?(Metric) || recs.first.kind_of?(MetricRollup))
-    return recs if db_options && db_options[:calc_avgs_by] && db_options[:calc_avgs_by] != "time_interval" # Only fill in missing timestamps if averages are requested to be based on time
+    return recs if db_options && db_options[:calc_avgs_by] && db_options[:calc_avgs_by] != 'time_interval' # Only fill in missing timestamps if averages are requested to be based on time
 
-    base_cols = Metric::BASE_COLS - ["id"]
+    base_cols = Metric::BASE_COLS - ['id']
     int = recs.first.capture_interval_name == 'daily' ? 1.day.to_i : 1.hour.to_i
     klass = recs.first.class
     last_rec = nil
@@ -533,7 +533,7 @@ module MiqReport::Generator
     return results if display_filter.nil?
 
     if display_filter.kind_of?(MiqExpression)
-      display_filter.context_type = "hash" # Tell MiqExpression that the context objects are hashes
+      display_filter.context_type = 'hash' # Tell MiqExpression that the context objects are hashes
       results.find_all { |h| display_filter.evaluate(h) }
     elsif display_filter.kind_of?(Proc)
       results.select(&display_filter)
@@ -543,12 +543,12 @@ module MiqReport::Generator
       val = display_filter[:value]
       results.select do |r|
         case op
-        when "="  then (r[fld] == val)
-        when "!=" then (r[fld] != val)
-        when "<"  then (r[fld] < val)
-        when "<=" then (r[fld] <= val)
-        when ">"  then (r[fld] > val)
-        when ">=" then (r[fld] >= val)
+        when '='  then (r[fld] == val)
+        when '!=' then (r[fld] != val)
+        when '<'  then (r[fld] < val)
+        when '<=' then (r[fld] <= val)
+        when '>'  then (r[fld] > val)
+        when '>=' then (r[fld] >= val)
         else
           false
         end
@@ -557,7 +557,7 @@ module MiqReport::Generator
   end
 
   def get_group_val(row, keys)
-    keys.inject([]) { |a, k| a << row[k] }.join("__")
+    keys.inject([]) { |a, k| a << row[k] }.join('__')
   end
 
   def process_group_break(gid, group, totals, result)
@@ -577,9 +577,9 @@ module MiqReport::Generator
 
     # build grouping options for subtotal
     options = col_order.inject({}) do |h, col|
-      next(h) unless col.include?("__")
+      next(h) unless col.include?('__')
 
-      c, g = col.split("__")
+      c, g = col.split('__')
       h[c] ||= {}
       h[c][:grouping] ||= []
       h[c][:grouping] << g.to_sym
@@ -591,8 +591,8 @@ module MiqReport::Generator
     data = data.inject([]) do |a, (k, v)|
       next(a) if k == :_total_
       row = col_order.inject({}) do |h, col|
-        if col.include?("__")
-          c, g = col.split("__")
+        if col.include?('__')
+          c, g = col.split('__')
           h[col] = v[g.to_sym][c]
         else
           h[col] = v[:row][col]
@@ -607,8 +607,8 @@ module MiqReport::Generator
     return [] if hash.blank?
     hash.inject([]) do |a, (k, v)|
       full_path = get_full_path(parent_association, k)
-      v["columns"].each { |c| a << get_full_path(full_path, c) } if v.key?("columns")
-      a += (build_cols_from_include(v["include"], full_path) || []) if v.key?("include")
+      v['columns'].each { |c| a << get_full_path(full_path, c) } if v.key?('columns')
+      a += (build_cols_from_include(v['include'], full_path) || []) if v.key?('include')
       a
     end
   end
@@ -633,7 +633,7 @@ module MiqReport::Generator
 
       entry[assoc.to_sym] = assoc_objects.collect do|rec|
         new_entry = {:obj => rec}
-        build_search_includes(rec, new_entry, includes[assoc]["include"]) if includes[assoc]["include"]
+        build_search_includes(rec, new_entry, includes[assoc]['include']) if includes[assoc]['include']
         new_entry
       end
     end
@@ -642,7 +642,7 @@ module MiqReport::Generator
   def build_reportable_data(entry, options, parent_association)
     rec = entry[:obj]
     data_records = [build_get_attributes_with_options(rec, options)]
-    data_records = build_add_includes(data_records, entry, options["include"], parent_association) if options["include"]
+    data_records = build_add_includes(data_records, entry, options['include'], parent_association) if options['include']
     data_records
   end
 
@@ -676,15 +676,15 @@ module MiqReport::Generator
       full_path = get_full_path(parent_association, association)
       if include_has_options
         assoc_options = includes[association].merge(:qualify_attribute_names => full_path,
-                                                    :only                    => includes[association]["columns"])
+                                                    :only                    => includes[association]['columns'])
       else
-        assoc_options = {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
+        assoc_options = {:qualify_attribute_names => full_path, :only => includes[association]['columns']}
       end
 
-      if association == "categories" || association == "managed"
+      if association == 'categories' || association == 'managed'
         association_objects = []
         assochash = {}
-        @descriptions_by_tag_id ||= Classification.where("parent_id != 0").each_with_object({}) do |c, h|
+        @descriptions_by_tag_id ||= Classification.where('parent_id != 0').each_with_object({}) do |c, h|
           h[c.tag_id] = c.description
         end
 
@@ -695,7 +695,7 @@ module MiqReport::Generator
             next unless @descriptions_by_tag_id.key?(t.id)
             entarr << @descriptions_by_tag_id[t.id]
           end
-          assochash[full_path + "." + c] = entarr unless entarr.empty?
+          assochash[full_path + '.' + c] = entarr unless entarr.empty?
         end
         # join the the category data together
         longest = 0
@@ -716,7 +716,7 @@ module MiqReport::Generator
           data_records << existing_record
         else
           association_objects.each do |obj|
-            unless association == "categories" || association == "managed"
+            unless association == 'categories' || association == 'managed'
               association_records = build_reportable_data(obj, assoc_options, full_path)
             else
               association_records = [obj]
@@ -732,21 +732,21 @@ module MiqReport::Generator
   end
 
   def queue_report_result(options, res_opts)
-    options[:userid] ||= "system"
-    _log.info("Adding generate report task to the message queue...")
+    options[:userid] ||= 'system'
+    _log.info('Adding generate report task to the message queue...')
     task = MiqTask.create(:name => "Generate Report: '#{name}'", :userid => options[:userid])
 
     MiqQueue.put(
-      :queue_name  => "reporting",
-      :role        => "reporting",
+      :queue_name  => 'reporting',
+      :role        => 'reporting',
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "build_report_result",
+      :method_name => 'build_report_result',
       :msg_timeout => queue_timeout,
       :args        => [task.id, options, res_opts]
     )
-    AuditEvent.success(:event => "generate_table", :target_class => self.class.base_class.name, :target_id => id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
-    task.update_status("Queued", "Ok", "Task has been queued")
+    AuditEvent.success(:event => 'generate_table', :target_class => self.class.base_class.name, :target_id => id, :userid => options[:userid], :message => "#{task.name}, successfully initiated")
+    task.update_status('Queued', 'Ok', 'Task has been queued')
 
     _log.info("Finished adding generate report task with id [#{task.id}] to the message queue")
     task.id
@@ -758,11 +758,11 @@ module MiqReport::Generator
     # Generate the table only if the task does not already contain a MiqReport object
     if task.task_results.blank?
       _log.info("Generating report table with taskid [#{taskid}] and options [#{options.inspect}]")
-      _async_generate_table(taskid, options.merge(:mode => "schedule", :report_source => res_opts[:source]))
+      _async_generate_table(taskid, options.merge(:mode => 'schedule', :report_source => res_opts[:source]))
 
       # Reload the task after the _async_generate_table has updated it
       task.reload
-      if task.status != "Ok"
+      if task.status != 'Ok'
         _log.warn("Generating report table with taskid [#{taskid}]... Failed to complete, '#{task.message}'")
         return
       else

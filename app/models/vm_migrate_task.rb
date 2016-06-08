@@ -15,9 +15,9 @@ class VmMigrateTask < MiqRequestTask
       # Single source has not been selected yet
       if req_obj.options[:src_ids].length == 1
         v = Vm.find_by_id(req_obj.options[:src_ids].first)
-        name = v.nil? ? "" : v.name
+        name = v.nil? ? '' : v.name
       else
-        name = "Multiple VMs"
+        name = 'Multiple VMs'
       end
     else
       name = req_obj.source.name
@@ -48,8 +48,8 @@ class VmMigrateTask < MiqRequestTask
     datastore = Storage.find_by_id(datastore_id)
 
     disk_transform = case get_option(:disk_format)
-                     when 'thin'  then VimString.new('sparse', "VirtualMachineRelocateTransformation")
-                     when 'thick' then VimString.new('flat', "VirtualMachineRelocateTransformation")
+                     when 'thin'  then VimString.new('sparse', 'VirtualMachineRelocateTransformation')
+                     when 'thick' then VimString.new('flat', 'VirtualMachineRelocateTransformation')
                      end
 
     # Determine if we call migrate for relocate

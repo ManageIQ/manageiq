@@ -23,7 +23,7 @@ module NTFS
       @miqfs = miqfs
     end
 
-    def open(_mode = "rb")
+    def open(_mode = 'rb')
       # NTFS module methods use miqfs instance accessors to
       # touch @boot_sector, @drive_root, @index_cache and @cache_hits
       # (and any other NTFS members that may come later)
@@ -31,7 +31,7 @@ module NTFS
       raise "File not found: '#{@path}'"    if @din.nil?
       mft_entry = @din.resolve(@miqfs.boot_sector)
       raise "File is directory: '#{@path}'" if @din.isDir?
-      @data = mft_entry.attributeData || AttribData.new("", 0)
+      @data = mft_entry.attributeData || AttribData.new('', 0)
     end
 
     def seek(offset, method = IO::SEEK_SET)
@@ -41,7 +41,7 @@ module NTFS
 
   # File system interface.
   def fs_init
-    self.fsType = "NTFS"
+    self.fsType = 'NTFS'
 
     # Initialize Boot Sector
     @dobj.seek(0, IO::SEEK_SET)
@@ -59,8 +59,8 @@ module NTFS
 
   def getVolumeInfo
     vi = boot_sector.volumeInfo
-    volName = vi["name"]
-    fsId    = vi["objectId"]
+    volName = vi['name']
+    fsId    = vi['objectId']
     return fsId, volName
   end
 
@@ -171,7 +171,7 @@ module NTFS
   # NOTE: FileObject must have access to NTFS members.
   # This is kind of like a 'skip this' thing. NTFS methods
   # use stuff owned by MiqFS, so this is necessary.
-  def fs_fileOpen(p, _mode = "r")
+  def fs_fileOpen(p, _mode = 'r')
     fobj = FileObject.new(p, self)
     fobj.open
     fobj
@@ -209,7 +209,7 @@ module NTFS
     # Get directory & file as separate strings.
     dir = p.split(/[\\\/]/)
     fname = dir[dir.size - 1]
-    fname = "." if fname.nil? # Special case: if fname is nil then dir is root.
+    fname = '.' if fname.nil? # Special case: if fname is nil then dir is root.
     dir = dir.size > 2 ? dir[0...dir.size - 1].join('/') : '/'
 
     # Check for this file in the cache.

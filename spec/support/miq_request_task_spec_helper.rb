@@ -14,7 +14,7 @@ module MiqRequestTaskHelper
 
   def dequeue_method
     return unless (method = @queue.shift)
-    if method.to_s.start_with?("test_")
+    if method.to_s.start_with?('test_')
       send(method)
     else
       @current_state = method
@@ -35,4 +35,4 @@ module MiqRequestTaskHelper
   end
 end
 
-Dir.glob(Rails.root.join("spec", "models", "**", "state_machine_spec_helper.rb")).each { |file| require file }
+Dir.glob(Rails.root.join('spec', 'models', '**', 'state_machine_spec_helper.rb')).each { |file| require file }

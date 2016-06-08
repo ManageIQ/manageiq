@@ -1,13 +1,13 @@
 require 'fs/MiqFS/MiqFS'
 
 module LinuxMount
-  FSTAB_FILE_NAME = "/etc/fstab"
+  FSTAB_FILE_NAME = '/etc/fstab'
 
   def fs_init
-    @guestOS = "Linux"
+    @guestOS = 'Linux'
 
     @rootFS = MiqFS.getFS(@rootVolume)
-    raise "LinuxMount: could not mount root volume" unless @rootFS
+    raise 'LinuxMount: could not mount root volume' unless @rootFS
 
     #
     # Assign device letters to all ide and scsi devices,
@@ -16,14 +16,14 @@ module LinuxMount
     # devices.
     #
     sdLetter  = 'a'
-    ideMap    = {"ide0:0" => "a", "ide0:1" => "b", "ide1:0" => "c", "ide1:1" => "d"}
+    ideMap    = {'ide0:0' => 'a', 'ide0:1' => 'b', 'ide1:0' => 'c', 'ide1:1' => 'd'}
     @devHash = {}
     @vmConfig.getAllDiskKeys.each do |dk|
       if dk =~ /^ide.*$/
-        @devHash[dk] = "/dev/hd" + ideMap[dk]
+        @devHash[dk] = '/dev/hd' + ideMap[dk]
         $log.debug "LinuxMount: devHash[#{dk}] = /dev/hd#{ideMap[dk]}" if $log.debug?
       elsif dk =~ /^scsi.*$/
-        @devHash[dk] = "/dev/sd" + sdLetter
+        @devHash[dk] = '/dev/sd' + sdLetter
         $log.debug "LinuxMount: devHash[#{dk}] = /dev/sd#{sdLetter}" if $log.debug?
         sdLetter.succ!
       end
@@ -111,13 +111,13 @@ module LinuxMount
       next if fstl =~ /^#.*$/ || fstl =~ /^\s*$/
       fsSpec, mtPoint = fstl.split(/\s+/)
       $log.debug "LinuxMount: fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
-      next if fsSpec == "none" || mtPoint == "swap"
+      next if fsSpec == 'none' || mtPoint == 'swap'
       next unless (fs = fsSpecHash[fsSpec])
       $log.debug "LinuxMount: Adding fsSpec: #{fsSpec}, mtPoint: #{mtPoint}" if $log.debug?
       addMountPoint(mtPoint, fs, fsSpec)
       root_added = true if mtPoint == '/'
     end
-    saveFs(@rootFS, "/", "ROOT") unless root_added
+    saveFs(@rootFS, '/', 'ROOT') unless root_added
   end # def fs_init
 
   #
@@ -175,7 +175,7 @@ module LinuxMount
   def normalizePath(p)
     # When running on windows, File.expand_path will add a drive letter.
     # Remove it if it's there.
-    np = File.expand_path(p, @cwd).gsub(/^[a-zA-Z]:/, "")
+    np = File.expand_path(p, @cwd).gsub(/^[a-zA-Z]:/, '')
     # puts "LinuxMount::normalizePath: p = #{p}, np = #{np}"
     (np)
   end
@@ -196,7 +196,7 @@ module LinuxMount
     saveFs(fs, mp, fsSpec)
     return if mp == '/'
     path = mp.split('/')
-    path.delete("")
+    path.delete('')
     h = @mountPoints
     tn = nil
     path.each do |d|
@@ -244,7 +244,7 @@ module LinuxMount
 
     fs = @rootFS
     p = localPath.split('/')
-    p.delete("")
+    p.delete('')
 
     h = @mountPoints
     while d = p.shift
@@ -266,7 +266,7 @@ module LinuxMount
   def expandLinks(p)
     cp = '/'
     components = p.split('/')
-    components.shift if components[0] == "" # root
+    components.shift if components[0] == '' # root
 
     #
     # For each component of the path, check to see

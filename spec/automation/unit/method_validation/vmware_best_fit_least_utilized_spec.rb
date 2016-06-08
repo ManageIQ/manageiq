@@ -1,4 +1,4 @@
-describe "Vmware_best_fit_least_utilized" do
+describe 'Vmware_best_fit_least_utilized' do
   let(:datacenter)  { FactoryGirl.create(:datacenter, :ext_management_system => ems) }
   let(:ems)         { FactoryGirl.create(:ems_vmware_with_authentication) }
   let(:ems_cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems) }
@@ -14,13 +14,13 @@ describe "Vmware_best_fit_least_utilized" do
   let(:user)        { FactoryGirl.create(:user_with_group) }
   let(:vm_template) { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
   let(:ws) do
-    MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
-                            "namespace=Infrastructure/VM/Provisioning&class=Placement" \
-                            "&instance=default&message=vmware&" \
+    MiqAeEngine.instantiate('/System/Request/Call_Instance_With_Message?' \
+                            'namespace=Infrastructure/VM/Provisioning&class=Placement' \
+                            '&instance=default&message=vmware&' \
                             "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
 
-  context "Auto placement" do
+  context 'Auto placement' do
     let(:storages) { 4.times.collect { |r| FactoryGirl.create(:storage, :free_space => 1000 * (r + 1)) } }
 
     let(:ro_storage) { FactoryGirl.create(:storage, :free_space => 10000) }
@@ -39,15 +39,15 @@ describe "Vmware_best_fit_least_utilized" do
        MiqHashStruct.new(:id => host2.id, :evm_object_class => host2.class.base_class.name.to_sym)]
     end
 
-    context "hosts with a cluster" do
+    context 'hosts with a cluster' do
       before do
         host1.ems_cluster = ems_cluster
         host2.ems_cluster = ems_cluster
-        datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(ems_cluster) }
+        datacenter.with_relationship_type('ems_metadata') { datacenter.add_child(ems_cluster) }
         HostStorage.where(:host_id => host3.id, :storage_id => ro_storage.id).update(:read_only => true)
       end
 
-      it "selects a host with fewer vms and a storage with more free space" do
+      it 'selects a host with fewer vms and a storage with more free space' do
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(storages)
 
@@ -57,7 +57,7 @@ describe "Vmware_best_fit_least_utilized" do
         expect(miq_provision.options[:placement_ds_name]).to   eq([host1.storages[1].id, host1.storages[1].name])
       end
 
-      it "selects largest storage that is writable" do
+      it 'selects largest storage that is writable' do
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return([host3])
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(host3.storages)
 
@@ -69,12 +69,12 @@ describe "Vmware_best_fit_least_utilized" do
       end
     end
 
-    context "hosts without a cluster" do
+    context 'hosts without a cluster' do
       before do
-        datacenter.with_relationship_type("ems_metadata") { datacenter.add_child(host1); datacenter.add_child(host2) }
+        datacenter.with_relationship_type('ems_metadata') { datacenter.add_child(host1); datacenter.add_child(host2) }
       end
 
-      it "selects a host with fewer vms and a storage with more free space" do
+      it 'selects a host with fewer vms and a storage with more free space' do
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_hosts).and_return(host_struct)
         allow_any_instance_of(MiqProvisionWorkflow).to receive(:allowed_storages).and_return(storages)
 

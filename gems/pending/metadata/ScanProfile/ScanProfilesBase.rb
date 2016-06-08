@@ -45,7 +45,7 @@ class ScanProfilesBase
   end
 
   def to_xml
-    xml = @xml_class.createDoc("<scan_profiles/>")
+    xml = @xml_class.createDoc('<scan_profiles/>')
     each { |p| xml.root << p.to_xml }
     xml
   end

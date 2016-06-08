@@ -28,7 +28,7 @@ end
 
 class OpenstackPerfTestData < OpenstackTestData
   def data_dir
-    @data_dir = "openstack_perf_data"
+    @data_dir = 'openstack_perf_data'
   end
 
   def perf_data(test_data_file)
@@ -47,7 +47,7 @@ class OpenstackMeterListData < OpenstackPerfTestData
 end
 
 class OpenstackMetricStatsData < OpenstackPerfTestData
-  def get_statistics(meter_name, type = "standard")
+  def get_statistics(meter_name, type = 'standard')
     data = load_data(data_dir, type)
     data[meter_name]
   end

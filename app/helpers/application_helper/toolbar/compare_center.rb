@@ -5,21 +5,21 @@ class ApplicationHelper::Toolbar::CompareCenter < ApplicationHelper::Toolbar::Ba
       'product product-compare_all fa-lg',
       N_('All attributes'),
       nil,
-      :url       => "compare_miq_all",
+      :url       => 'compare_miq_all',
       :url_parms => "?id=\#{$vms_comp}&compare_task=all"),
     twostate(
       :compare_diff,
       'product product-compare_diff fa-lg',
       N_('Attributes with different values'),
       nil,
-      :url       => "compare_miq_differences",
+      :url       => 'compare_miq_differences',
       :url_parms => "?id=\#{$vms_comp}&compare_task=different"),
     twostate(
       :compare_same,
       'product product-compare_same fa-lg',
       N_('Attributes with same values'),
       nil,
-      :url       => "compare_miq_same",
+      :url       => 'compare_miq_same',
       :url_parms => "?id=\#{$vms_comp}&compare_task=same"),
   ])
   button_group('compare_mode', [
@@ -28,12 +28,12 @@ class ApplicationHelper::Toolbar::CompareCenter < ApplicationHelper::Toolbar::Ba
       'fa fa-bars fa-lg',
       N_('Details Mode'),
       nil,
-      :url => "compare_mode"),
+      :url => 'compare_mode'),
     twostate(
       :comparemode_exists,
       'product product-exists fa-lg',
       N_('Exists Mode'),
       nil,
-      :url => "compare_mode"),
+      :url => 'compare_mode'),
   ])
 end

@@ -1,9 +1,9 @@
-require_relative "menu_spec_helper"
+require_relative 'menu_spec_helper'
 
 include MenuSpecHelper
 
 describe Menu::CustomLoader do
-  it "loads custom menu section" do
+  it 'loads custom menu section' do
     temp_file = section_file
     begin
       expect(Dir).to receive(:glob).and_return([temp_file.path])
@@ -19,7 +19,7 @@ describe Menu::CustomLoader do
     end
   end
 
-  it "loads custom menu item" do
+  it 'loads custom menu item' do
     temp_file  = section_file
     temp_file2 = item_file
     begin

@@ -1,18 +1,18 @@
 require 'digest/md5'
 class OrchestrationTemplate < ApplicationRecord
-  TEMPLATE_DIR = Rails.root.join("product/orchestration_templates")
+  TEMPLATE_DIR = Rails.root.join('product/orchestration_templates')
 
   include NewWithTypeStiMixin
 
   acts_as_miq_taggable
 
-  has_many :stacks, :class_name => "OrchestrationStack"
+  has_many :stacks, :class_name => 'OrchestrationStack'
 
   default_value_for :draft, false
   default_value_for :orderable, true
 
   validates :md5,
-            :uniqueness => {:scope => :draft, :message => "of content already exists (content must be unique)"},
+            :uniqueness => {:scope => :draft, :message => 'of content already exists (content must be unique)'},
             :unless     => :draft?
   validates_presence_of :name
 
@@ -86,7 +86,7 @@ class OrchestrationTemplate < ApplicationRecord
   end
 
   def parameter_groups
-    raise NotImplementedError, _("parameter_groups must be implemented in subclass")
+    raise NotImplementedError, _('parameter_groups must be implemented in subclass')
   end
 
   # List managers that may be able to deploy this template
@@ -106,7 +106,7 @@ class OrchestrationTemplate < ApplicationRecord
   end
 
   def validate_format
-    raise NotImplementedError, _("validate_format must be implemented in subclass")
+    raise NotImplementedError, _('validate_format must be implemented in subclass')
   end
 
   # use cases for md5 conflict:
@@ -170,7 +170,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   def check_not_in_use
     return true unless in_use?
-    errors[:base] << "Cannot delete the template while it is used by some orchestration stacks"
+    errors[:base] << 'Cannot delete the template while it is used by some orchestration stacks'
     throw :abort
   end
 end

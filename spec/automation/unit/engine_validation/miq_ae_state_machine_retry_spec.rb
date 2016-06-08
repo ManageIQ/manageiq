@@ -1,4 +1,4 @@
-describe "MiqAeStateMachineRetry" do
+describe 'MiqAeStateMachineRetry' do
   before do
     @method_name     = 'MY_RETRY_METHOD'
     @method_instance = 'MY_RETRY_INSTANCE'
@@ -8,8 +8,8 @@ describe "MiqAeStateMachineRetry" do
     @state_class     = 'MY_STATE_MACHINE'
     @state_instance  = 'MY_STATE_INSTANCE'
     @max_retries     = 1
-    @root_class      = "TOP_OF_THE_WORLD"
-    @root_instance   = "EVEREST"
+    @root_class      = 'TOP_OF_THE_WORLD'
+    @root_instance   = 'EVEREST'
     @user            = FactoryGirl.create(:user_with_group)
     @miq_server      = FactoryGirl.create(:miq_server)
     @automate_args   = {:namespace        => @namespace,
@@ -173,7 +173,7 @@ describe "MiqAeStateMachineRetry" do
     create_root_class(:namespace => @ns_fqname, :name => @root_class)
   end
 
-  it "check persistent hash" do
+  it 'check persistent hash' do
     setup_model(method_script_state_var)
     expected = {'three' => 3, 'one'  => 1, 'two'  => 2, 'gravy' => 'train'}
     send_ae_request_via_queue(@automate_args)
@@ -187,7 +187,7 @@ describe "MiqAeStateMachineRetry" do
     expect(ws.root.attributes['finished']).to be_truthy
   end
 
-  it "check max retries" do
+  it 'check max retries' do
     setup_model(perpetual_retry_script)
     send_ae_request_via_queue(@automate_args)
     (@max_retries + 2).times do
@@ -198,7 +198,7 @@ describe "MiqAeStateMachineRetry" do
     expect(deliver_ae_request_from_queue).to be_nil
   end
 
-  it "check max_time" do
+  it 'check max_time' do
     max_time = 2
     setup_model(perpetual_retry_script, max_time)
     send_ae_request_via_queue(@automate_args)
@@ -219,7 +219,7 @@ describe "MiqAeStateMachineRetry" do
     end
   end
 
-  it "check restart without next state" do
+  it 'check restart without next state' do
     create_restart_model(simpleton_script, simpleton_script, perpetual_restart_script)
     send_ae_request_via_queue(@automate_args)
     status, _message, ws = deliver_ae_request_from_queue
@@ -229,7 +229,7 @@ describe "MiqAeStateMachineRetry" do
     expect(q.args[0][:state]).to eql('state1')
   end
 
-  it "check restart with next state" do
+  it 'check restart with next state' do
     create_restart_model(simpleton_script, simpleton_script, perpetual_restart_script_with_nextstate)
     send_ae_request_via_queue(@automate_args)
     status, _message, ws = deliver_ae_request_from_queue

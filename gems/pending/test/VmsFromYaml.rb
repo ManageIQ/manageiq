@@ -4,13 +4,13 @@ require 'sys-uname'
 class VmsFromYaml
   @vms = {}
   def initialize(file)
-    raise "Missing file" unless File.file?(file)
+    raise 'Missing file' unless File.file?(file)
     @vms = File.open(file)  { |yf| YAML.load(yf) }
     if Sys::Platform::OS == :unix
       root_dir = (Sys::Platform::IMPL == :macosx) ? '/Volumes' : '/mnt'
       @vms.each do |_vm, options|
-        options["location"].gsub!('\\\\miq-websvr1', root_dir)
-        options["location"].tr!('\\', '/')
+        options['location'].gsub!('\\\\miq-websvr1', root_dir)
+        options['location'].tr!('\\', '/')
       end
     end
   end

@@ -1,6 +1,6 @@
 class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Status < ::OrchestrationStack::Status
   def succeeded?
-    status.downcase == "create_complete"
+    status.downcase == 'create_complete'
   end
 
   def failed?
@@ -8,14 +8,14 @@ class ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack::Status <
   end
 
   def rolled_back?
-    status.downcase == "rollback_complete"
+    status.downcase == 'rollback_complete'
   end
 
   def deleted?
-    status.downcase == "delete_complete"
+    status.downcase == 'delete_complete'
   end
 
   def updated?
-    status.downcase == "update_complete"
+    status.downcase == 'update_complete'
   end
 end

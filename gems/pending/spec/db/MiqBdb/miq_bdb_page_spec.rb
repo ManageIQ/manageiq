@@ -7,7 +7,7 @@ describe MiqBerkeleyDB::MiqBdbPage do
     bdb.pages { |p| @page = p }
   end
 
-  it "#dump" do
+  it '#dump' do
     expect(@page.dump).to eq <<-DUMP
 Page 1
   type:            btree internal

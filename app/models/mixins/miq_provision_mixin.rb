@@ -1,28 +1,28 @@
 module MiqProvisionMixin
   RESOURCE_CLASS_KEY_MAP = {
     # Infrastructure
-    "Host"                                           => [:hosts,                   :placement_host_name],
-    "Storage"                                        => [:storages,                :placement_ds_name],
-    "EmsCluster"                                     => [:clusters,                :placement_cluster_name],
-    "ResourcePool"                                   => [:resource_pools,          :placement_rp_name],
-    "EmsFolder"                                      => [:folders,                 :placement_folder_name],
-    "PxeServer"                                      => [:pxe_servers,             :pxe_server_id],
-    "PxeImage"                                       => [:pxe_images,              :pxe_image_id],
-    "WindowsImage"                                   => [:windows_images,          :pxe_image_id],
-    "CustomizationTemplate"                          => [:customization_templates, :customization_template_id],
-    "IsoImage"                                       => [:iso_images,              :iso_image_id],
-    "CustomizationSpec"                              => [:customization_specs,     :sysprep_custom_spec],
+    'Host'                                           => [:hosts,                   :placement_host_name],
+    'Storage'                                        => [:storages,                :placement_ds_name],
+    'EmsCluster'                                     => [:clusters,                :placement_cluster_name],
+    'ResourcePool'                                   => [:resource_pools,          :placement_rp_name],
+    'EmsFolder'                                      => [:folders,                 :placement_folder_name],
+    'PxeServer'                                      => [:pxe_servers,             :pxe_server_id],
+    'PxeImage'                                       => [:pxe_images,              :pxe_image_id],
+    'WindowsImage'                                   => [:windows_images,          :pxe_image_id],
+    'CustomizationTemplate'                          => [:customization_templates, :customization_template_id],
+    'IsoImage'                                       => [:iso_images,              :iso_image_id],
+    'CustomizationSpec'                              => [:customization_specs,     :sysprep_custom_spec],
 
     # Cloud
-    "AvailabilityZone"                               => [:availability_zones,      :placement_availability_zone],
-    "CloudTenant"                                    => [:cloud_tenants,           :cloud_tenant],
-    "CloudNetwork"                                   => [:cloud_networks,          :cloud_network],
-    "CloudSubnet"                                    => [:cloud_subnets,           :cloud_subnet],
-    "SecurityGroup"                                  => [:security_groups,         :security_groups],
-    "ResourceGroup"                                  => [:resource_groups,         :resource_group],
-    "FloatingIp"                                     => [:floating_ip_addresses,   :floating_ip_address],
-    "Flavor"                                         => [:instance_types,          :instance_type],
-    "ManageIQ::Providers::CloudManager::AuthKeyPair" => [:guest_access_key_pairs,  :guest_access_key_pair]
+    'AvailabilityZone'                               => [:availability_zones,      :placement_availability_zone],
+    'CloudTenant'                                    => [:cloud_tenants,           :cloud_tenant],
+    'CloudNetwork'                                   => [:cloud_networks,          :cloud_network],
+    'CloudSubnet'                                    => [:cloud_subnets,           :cloud_subnet],
+    'SecurityGroup'                                  => [:security_groups,         :security_groups],
+    'ResourceGroup'                                  => [:resource_groups,         :resource_group],
+    'FloatingIp'                                     => [:floating_ip_addresses,   :floating_ip_address],
+    'Flavor'                                         => [:instance_types,          :instance_type],
+    'ManageIQ::Providers::CloudManager::AuthKeyPair' => [:guest_access_key_pairs,  :guest_access_key_pair]
   }.freeze
 
   def tag_ids
@@ -81,7 +81,7 @@ module MiqProvisionMixin
 
       allowed_method = "allowed_#{rsc_type}"
       unless prov_wf.respond_to?(allowed_method)
-        error_str = _("Provision workflow does not contain the expected method <%{method}>") % {:method => allowed_method}
+        error_str = _('Provision workflow does not contain the expected method <%{method}>') % {:method => allowed_method}
         raise MiqException::MiqProvisionError, error_str
       end
 
@@ -100,7 +100,7 @@ module MiqProvisionMixin
   # form "class_name::id".
   def eligible_resource_lookup(klass, rsc_data)
     ci_id = rsc_data.kind_of?(Array) ? rsc_data.first : rsc_data.id
-    ci_id = ci_id.split("::").last if ci_id.to_s.include?("::")
+    ci_id = ci_id.split('::').last if ci_id.to_s.include?('::')
     klass.find_by_id(ci_id)
   end
   private :eligible_resource_lookup
@@ -111,7 +111,7 @@ module MiqProvisionMixin
     rsc_class = resource_class(rsc)
     rsc_type, key = class_to_resource_type_and_key(rsc_class)
     if rsc_type.nil?
-      raise _("Unsupported resource type <%{class_name}> passed to set_resource for provisioning.") %
+      raise _('Unsupported resource type <%{class_name}> passed to set_resource for provisioning.') %
               {:class_name => rsc.class.base_class.name}
     end
 
@@ -120,7 +120,7 @@ module MiqProvisionMixin
 
     if result == false
       resource_str = "<#{rsc_class}> <#{rsc.id}:#{rsc_name}>"
-      raise _("Resource %{resource_name} is not an eligible resource for this provisioning instance.") %
+      raise _('Resource %{resource_name} is not an eligible resource for this provisioning instance.') %
               {:resource_name => resource_str}
     end
     value = construct_value(key, rsc_class, rsc.id, rsc_name)
@@ -170,9 +170,9 @@ module MiqProvisionMixin
 
   def get_source_vm
     vm_id = get_option(:src_vm_id)
-    raise _("Source VM not provided") if vm_id.nil?
+    raise _('Source VM not provided') if vm_id.nil?
     svm = VmOrTemplate.find_by_id(vm_id)
-    raise _("Unable to find VM with Id: [%{vm_id}]") % {:vm_id => vm_id} if svm.nil?
+    raise _('Unable to find VM with Id: [%{vm_id}]') % {:vm_id => vm_id} if svm.nil?
     svm
   end
 
@@ -185,7 +185,7 @@ module MiqProvisionMixin
     return [] if new_disks_req.blank?
 
     svm = get_source_vm
-    scsi_idx = svm.hardware.disks.collect { |d| d.location if d.controller_type == "scsi" }.compact
+    scsi_idx = svm.hardware.disks.collect { |d| d.location if d.controller_type == 'scsi' }.compact
 
     # Add any disk that does not already exist at the same location
     new_disks_req.reject { |d| scsi_idx.include?("#{d[:bus]}:#{d[:pos]}") }
@@ -207,7 +207,7 @@ module MiqProvisionMixin
         custom_spec = prov_wf.allowed_customization_specs.detect { |cs| cs.name == custom_spec_name }
         if custom_spec.nil?
           raise MiqException::MiqProvisionError,
-                _("Customization Specification [%{name}] does not exist.") % {:name => custom_spec_name}
+                _('Customization Specification [%{name}] does not exist.') % {:name => custom_spec_name}
         end
 
         options[:sysprep_custom_spec] = [custom_spec.id, custom_spec.name]

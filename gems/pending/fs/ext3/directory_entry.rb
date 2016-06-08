@@ -35,7 +35,7 @@ module Ext3
     attr_accessor :fileType
 
     def initialize(data, new_entry = true)
-      raise "Ext3::DirectoryEntry.initialize: Nil directory entry data" if data.nil?
+      raise 'Ext3::DirectoryEntry.initialize: Nil directory entry data' if data.nil?
       @isNew = new_entry
       # Both entries are same size.
       siz = SIZEOF_DIR_ENTRY_NEW

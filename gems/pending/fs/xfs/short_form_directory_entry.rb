@@ -48,8 +48,8 @@ module XFS
     def dot_entry(dots, inode_number)
       @length      = 0
       @name_length = dots
-      @name        = "."
-      @name        = ".." if dots == 2
+      @name        = '.'
+      @name        = '..' if dots == 2
       @inode       = inode_number
       # Inode Numbers will be filled in by the caller
     end
@@ -60,7 +60,7 @@ module XFS
       # "." and ".." directory entries.
       #
       return dot_entry(dots, inode_number) if dots
-      raise "XFS::ShortFormDirectoryEntry.initialize: Nil directory entry data" if data.nil?
+      raise 'XFS::ShortFormDirectoryEntry.initialize: Nil directory entry data' if data.nil?
       siz              = SIZEOF_SHORT_FORM_DIRECTORY_ENTRY
       @directory_entry = SHORT_FORM_DIRECTORY_ENTRY.decode(data[0..siz])
       @name_length     = @directory_entry['name_length']

@@ -17,15 +17,15 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager < ManageIQ::Provid
            :to => :provider
 
   def self.ems_type
-    @ems_type ||= "ansible_tower_configuration".freeze
+    @ems_type ||= 'ansible_tower_configuration'.freeze
   end
 
   def self.description
-    @description ||= "Ansible Tower Configuration".freeze
+    @description ||= 'Ansible Tower Configuration'.freeze
   end
 
   def image_name
-    "ansible_tower_configuration"
+    'ansible_tower_configuration'
   end
 
   private

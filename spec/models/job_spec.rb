@@ -1,12 +1,12 @@
 describe Job do
-  context "With a single scan job," do
+  context 'With a single scan job,' do
     before(:each) do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
 
       @miq_server = EvmSpecHelper.local_miq_server(:is_master => true)
       @zone = @miq_server.zone
-      @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone, :name => "Test EMS")
+      @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone, :name => 'Test EMS')
       @host       = FactoryGirl.create(:host)
 
       @worker = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id)
@@ -16,9 +16,9 @@ describe Job do
       @job      = @vm.scan
     end
 
-    context "where job is dispatched but never started" do
+    context 'where job is dispatched but never started' do
       before(:each) do
-        @job.update_attribute(:dispatch_status, "active")
+        @job.update_attribute(:dispatch_status, 'active')
 
         Timecop.travel 5.minutes
 
@@ -29,46 +29,46 @@ describe Job do
         Timecop.return
       end
 
-      context "after queue message is processed" do
+      context 'after queue message is processed' do
         before(:each) do
-          @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
+          @msg = MiqQueue.get(:role => 'smartstate', :zone => @zone.name)
           status, message, result = @msg.deliver
           @msg.delivered(status, message, result)
 
           @job.reload
         end
 
-        it "should queue a timeout job if one not already on there" do
+        it 'should queue a timeout job if one not already on there' do
           expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
         end
 
-        it "should be timed out after 5 minutes" do
+        it 'should be timed out after 5 minutes' do
           $log.info("@job: #{@job.inspect}")
-          expect(@job.state).to eq("finished")
-          expect(@job.status).to eq("error")
-          expect(@job.message.starts_with?("job timed out after")).to be_truthy
+          expect(@job.state).to eq('finished')
+          expect(@job.status).to eq('error')
+          expect(@job.message.starts_with?('job timed out after')).to be_truthy
         end
       end
 
-      it "should not queue a timeout job if one is already on there" do
+      it 'should not queue a timeout job if one is already on there' do
         expect { @job.timeout! }.not_to change { MiqQueue.count }
       end
 
-      it "should queue a timeout job if one is there, but it is failed" do
+      it 'should queue a timeout job if one is there, but it is failed' do
         MiqQueue.first.update_attributes(:state => MiqQueue::STATE_ERROR)
         expect { @job.timeout! }.to change { MiqQueue.count }.by(1)
       end
     end
 
-    context "where job is for a repository VM (no zone)" do
+    context 'where job is for a repository VM (no zone)' do
       before(:each) do
-        @job.update_attributes(:state => "scanning", :dispatch_status => "active", :zone => nil)
+        @job.update_attributes(:state => 'scanning', :dispatch_status => 'active', :zone => nil)
 
         Timecop.travel 5.minutes
 
         Job.check_jobs_for_timeout
 
-        @msg = MiqQueue.get(:role => "smartstate", :zone => @zone.name)
+        @msg = MiqQueue.get(:role => 'smartstate', :zone => @zone.name)
         status, message, result = @msg.deliver
         @msg.delivered(status, message, result)
 
@@ -79,23 +79,23 @@ describe Job do
         Timecop.return
       end
 
-      it "should be timed out after 5 minutes" do
+      it 'should be timed out after 5 minutes' do
         $log.info("@job: #{@job.inspect}")
-        expect(@job.state).to eq("finished")
-        expect(@job.status).to eq("error")
-        expect(@job.message.starts_with?("job timed out after")).to be_truthy
+        expect(@job.state).to eq('finished')
+        expect(@job.status).to eq('error')
+        expect(@job.message.starts_with?('job timed out after')).to be_truthy
       end
     end
 
-    context "where 2 VMs in 2 Zones have an EVM Snapshot" do
+    context 'where 2 VMs in 2 Zones have an EVM Snapshot' do
       before(:each) do
         scan_type   = nil
         build       = '12345'
         description = "Snapshot for scan job: #{@job.guid}, EVM Server build: #{build} #{scan_type} Server Time: #{Time.now.utc.iso8601}"
         @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => @vm.id, :name => 'EvmSnapshot', :description => description)
 
-        @zone2     = FactoryGirl.create(:zone, :name => "Zone 2")
-        @ems2      = FactoryGirl.create(:ems_vmware, :zone => @zone2, :name => "Test EMS 2")
+        @zone2     = FactoryGirl.create(:zone, :name => 'Zone 2')
+        @ems2      = FactoryGirl.create(:ems_vmware, :zone => @zone2, :name => 'Test EMS 2')
         @vm2       = FactoryGirl.create(:vm_vmware, :ems_id => @ems2.id)
         @job2      = @vm2.scan
         @job2.zone = @zone2.name
@@ -103,7 +103,7 @@ describe Job do
         @snapshot2 = FactoryGirl.create(:snapshot, :vm_or_template_id => @vm2.id, :name => 'EvmSnapshot', :description => description)
       end
 
-      it "should create proper AR relationships" do
+      it 'should create proper AR relationships' do
         expect(@snapshot.vm_or_template).to eq(@vm)
         expect(@vm.snapshots.first).to eq(@snapshot)
         expect(@vm.ext_management_system).to eq(@ems)
@@ -115,7 +115,7 @@ describe Job do
         expect(@ems2.vms.first).to eq(@vm2)
       end
 
-      it "should be able to find Job from Evm Snapshot" do
+      it 'should be able to find Job from Evm Snapshot' do
         job_guid, ts = Snapshot.parse_evm_snapshot_description(@snapshot.description)
         expect(Job.find_by_guid(job_guid)).to eq(@job)
 
@@ -123,29 +123,29 @@ describe Job do
         expect(Job.find_by_guid(job_guid)).to eq(@job2)
       end
 
-      context "where job is not found and the snapshot timestamp is less than an hour old with default job_not_found_delay" do
+      context 'where job is not found and the snapshot timestamp is less than an hour old with default job_not_found_delay' do
         before(:each) do
           @job.destroy
           Job.check_for_evm_snapshots
         end
 
-        it "should not create delete snapshot queue message" do
+        it 'should not create delete snapshot queue message' do
           assert_no_queue_message
         end
       end
 
-      context "where job is not found and the snapshot timestamp is less than an hour old with job_not_found_delay from worker settings" do
+      context 'where job is not found and the snapshot timestamp is less than an hour old with job_not_found_delay from worker settings' do
         before(:each) do
           @job.destroy
           Job.check_for_evm_snapshots(@schedule_worker_settings[:evm_snapshot_delete_delay_for_job_not_found])
         end
 
-        it "should not create delete snapshot queue message" do
+        it 'should not create delete snapshot queue message' do
           assert_no_queue_message
         end
       end
 
-      context "where job is not found and the snapshot timestamp is more than an hour old with job_not_found_delay from worker settings" do
+      context 'where job is not found and the snapshot timestamp is more than an hour old with job_not_found_delay from worker settings' do
         before(:each) do
           @job.destroy
           Timecop.travel 61.minutes
@@ -156,12 +156,12 @@ describe Job do
           Timecop.return
         end
 
-        it "should create delete snapshot queue message" do
+        it 'should create delete snapshot queue message' do
           assert_queue_message
         end
       end
 
-      context "where job is not found and job_not_found_delay passed with 5 minutes and the snapshot timestamp is more than an 5 minutes old" do
+      context 'where job is not found and job_not_found_delay passed with 5 minutes and the snapshot timestamp is more than an 5 minutes old' do
         before(:each) do
           @job.destroy
           Timecop.travel 6.minutes
@@ -172,41 +172,41 @@ describe Job do
           Timecop.return
         end
 
-        it "should create delete snapshot queue message" do
+        it 'should create delete snapshot queue message' do
           assert_queue_message
         end
       end
 
-      context "where job is not found and the snapshot timestamp is nil" do
+      context 'where job is not found and the snapshot timestamp is nil' do
         before(:each) do
           @job.destroy
-          @snapshot.update_attribute(:description, "Foo")
+          @snapshot.update_attribute(:description, 'Foo')
           Job.check_for_evm_snapshots
         end
 
-        it "should create delete snapshot queue message" do
+        it 'should create delete snapshot queue message' do
           assert_queue_message
         end
       end
 
-      context "where job is active" do
+      context 'where job is active' do
         before(:each) do
-          @job.update_attribute(:state, "active")
+          @job.update_attribute(:state, 'active')
           Job.check_for_evm_snapshots
         end
 
-        it "should not create delete snapshot queue message" do
+        it 'should not create delete snapshot queue message' do
           assert_no_queue_message
         end
       end
 
-      context "where job is finished" do
+      context 'where job is finished' do
         before(:each) do
-          @job.update_attribute(:state, "finished")
+          @job.update_attribute(:state, 'finished')
           Job.check_for_evm_snapshots
         end
 
-        it "should create delete snapshot queue message" do
+        it 'should create delete snapshot queue message' do
           assert_queue_message
 
           Job.check_for_evm_snapshots
@@ -229,9 +229,9 @@ describe Job do
     q = MiqQueue.first
     expect(q.instance_id).to eq(@vm.id)
     expect(q.class_name).to eq(@vm.class.name)
-    expect(q.method_name).to eq("remove_evm_snapshot")
+    expect(q.method_name).to eq('remove_evm_snapshot')
     expect(q.args).to eq([@snapshot.id])
-    expect(q.role).to eq("ems_operations")
+    expect(q.role).to eq('ems_operations')
     expect(q.zone).to eq(@zone.name)
   end
 

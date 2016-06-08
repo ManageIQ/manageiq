@@ -3,7 +3,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
 
   include PerEmsWorkerMixin
 
-  self.required_roles = "ems_inventory"
+  self.required_roles = 'ems_inventory'
 
   def friendly_name
     @friendly_name ||= begin
@@ -11,7 +11,7 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
       if ems.nil?
         queue_name.titleize
       else
-        _("Refresh Worker for %{table}: %{name}") % {:table => ui_lookup(:table => "ext_management_systems"),
+        _('Refresh Worker for %{table}: %{name}') % {:table => ui_lookup(:table => 'ext_management_systems'),
                                                      :name  => ems.name}
       end
     end
@@ -22,6 +22,6 @@ class ManageIQ::Providers::BaseManager::RefreshWorker < MiqQueueWorkerBase
   end
 
   def self.normalized_type
-    @normalized_type ||= "ems_refresh_worker"
+    @normalized_type ||= 'ems_refresh_worker'
   end
 end

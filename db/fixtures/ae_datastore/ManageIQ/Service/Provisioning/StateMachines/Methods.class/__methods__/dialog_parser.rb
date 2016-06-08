@@ -1,6 +1,6 @@
 
 def vmdb_object_from_array_entry(entry)
-  model, id = entry.split("::")
+  model, id = entry.split('::')
   $evm.vmdb(model, id.to_i) if model && id
 end
 
@@ -10,14 +10,14 @@ def parent_task(task)
 end
 
 def add_hash_value(sequence_id, option_key, value, hash)
-  $evm.log("info", "Adding seq_id: #{sequence_id} key: #{option_key} value: #{value} ")
+  $evm.log('info', "Adding seq_id: #{sequence_id} key: #{option_key} value: #{value} ")
   hash[sequence_id][option_key] = value
 end
 
 def process_comma_separated_object_array(sequence_id, option_key, value, hash)
   return if value.nil?
   options_value_array = []
-  value.split(",").each do |entry|
+  value.split(',').each do |entry|
     vmdb_obj = vmdb_object_from_array_entry(entry)
     next if vmdb_obj.nil?
     options_value_array << (vmdb_obj.respond_to?(:name) ? vmdb_obj.name : "#{vmdb_obj.class.name}::#{vmdb_obj.id}")
@@ -99,11 +99,11 @@ end
 def parent_task_dialog_information(task)
   bundle_task = parent_task(task)
   if bundle_task.nil?
-    $evm.log('error', "Unable to locate Dialog information")
+    $evm.log('error', 'Unable to locate Dialog information')
     exit MIQ_ABORT
   end
-  $evm.log('info', "Current task has empty dialogs, getting dialog information from parent task")
-  return YAML.load(bundle_task.get_option(:parsed_dialog_options) || "{}"),
+  $evm.log('info', 'Current task has empty dialogs, getting dialog information from parent task')
+  return YAML.load(bundle_task.get_option(:parsed_dialog_options) || '{}'),
          YAML.load(bundle_task.get_option(:parsed_dialog_tags) || "{}")
 end
 
@@ -125,7 +125,7 @@ options_hash, tags_hash = parse_dialog_entries(dialog_entries)
 if options_hash.blank? && tags_hash.blank?
   options_hash, tags_hash = parent_task_dialog_information(task)
 else
-  $evm.log('info', "Current task has dialog information")
+  $evm.log('info', 'Current task has dialog information')
 end
 
 save_parsed_dialog_information(options_hash, tags_hash, task)

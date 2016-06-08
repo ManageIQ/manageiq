@@ -46,7 +46,7 @@ module MiqOpenStackCommon
     if tf.size != isize
       $log.error "#{log_prefix}: Error downloading image #{iname}"
       $log.error "#{log_prefix}: Downloaded size does not match image size #{tf.size} != #{isize}"
-      raise "Image download failed"
+      raise 'Image download failed'
     end
     tf
   end
@@ -96,7 +96,7 @@ module MiqOpenStackCommon
     if tf.size != isize
       $log.error "#{log_prefix}: Error downloading image #{iname}"
       $log.error "#{log_prefix}: Downloaded size does not match image size #{tf.size} != #{isize}"
-      raise "Image download failed"
+      raise 'Image download failed'
     end
     tf
   end

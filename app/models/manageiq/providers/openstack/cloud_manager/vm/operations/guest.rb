@@ -10,12 +10,12 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Guest
   def raw_reboot_guest
     with_provider_object(&:reboot)
     # Temporarily update state for quick UI response until refresh comes along
-    self.update_attributes!(:raw_power_state => "REBOOT")
+    self.update_attributes!(:raw_power_state => 'REBOOT')
   end
 
   def raw_reset
-    with_provider_object { |instance| instance.reboot("HARD") }
+    with_provider_object { |instance| instance.reboot('HARD') }
     # Temporarily update state for quick UI response until refresh comes along
-    self.update_attributes!(:raw_power_state => "HARD_REBOOT")
+    self.update_attributes!(:raw_power_state => 'HARD_REBOOT')
   end
 end

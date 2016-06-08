@@ -9,9 +9,9 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     [:emsid, 'EMS Instance ID', String],
   ]
 
-  ROLES_NEEDING_RESTART = ["scheduler", "ems_metrics_coordinator", "event"]
+  ROLES_NEEDING_RESTART = ['scheduler', 'ems_metrics_coordinator', 'event']
   SCHEDULE_MEDIUM_PRIORITY = MiqQueue.priority(:normal, :higher, 10)
-  CLASS_TAG = "MiqSchedule"
+  CLASS_TAG = 'MiqSchedule'
 
   def after_initialize
     @queue            = Queue.new    # Global Work Queue
@@ -59,7 +59,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   end
 
   def load_user_schedules
-    return unless @active_roles.include?("scheduler")
+    return unless @active_roles.include?('scheduler')
     sync_all_user_schedules
   end
 
@@ -127,7 +127,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     end
 
     # Schedule - Periodic resync of RHN Mirror
-    if MiqEnvironment::Command.is_appliance? && MiqServer.my_server.has_assigned_role?("rhn_mirror")
+    if MiqEnvironment::Command.is_appliance? && MiqServer.my_server.has_assigned_role?('rhn_mirror')
       interval = worker_setting_or_default(:resync_rhn_mirror, 12.hours)
       @schedules[:all] << system_schedule_every(
         interval,
@@ -139,7 +139,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_scheduler_role
     # These schedules need to run only once in a zone per interval, so let the single scheduler role handle them
-    return unless @active_roles.include?("scheduler")
+    return unless @active_roles.include?('scheduler')
     @schedules[:scheduler] ||= []
 
     # Schedule - Check for timed out jobs
@@ -227,10 +227,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_database_operations_role
     # Schedule - Database Metrics capture run by the appliance with a database_operations role
-    return unless @active_roles.include?("database_operations")
+    return unless @active_roles.include?('database_operations')
     @schedules[:database_operations] ||= []
 
-    cfg = VMDB::Config.new("vmdb").config
+    cfg = VMDB::Config.new('vmdb').config
 
     sched = cfg.fetch_path(:database, :metrics_collection, :collection_schedule)
     _log.info("database_metrics_collection_schedule: #{sched}")
@@ -261,13 +261,13 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_ldap_synchronization_role
     # These schedules need to run with the LDAP SYnchronizartion role
-    return unless @active_roles.include?("ldap_synchronization")
+    return unless @active_roles.include?('ldap_synchronization')
     @schedules[:ldap_synchronization] ||= []
 
-    ldap_synchronization_schedule_default = "0 2 * * *"
+    ldap_synchronization_schedule_default = '0 2 * * *'
     ldap_synchronization_schedule         = [:ldap_synchronization, :ldap_synchronization_schedule]
 
-    sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
+    sched = VMDB::Config.new('vmdb').config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
     _log.info("ldap_synchronization_schedule: #{sched}")
 
     @schedules[:ldap_synchronization] << @system_scheduler.cron(
@@ -279,7 +279,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_ems_metrics_coordinator_role
     # These schedules need to run by the servers with the coordinator role
-    return unless @active_roles.include?("ems_metrics_coordinator")
+    return unless @active_roles.include?('ems_metrics_coordinator')
     @schedules[:ems_metrics_coordinator] ||= []
 
     # Schedule - Performance Collection and Performance Purging
@@ -310,14 +310,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
   def schedules_for_event_role
     # These schedules need to run by the servers with the event role
-    return unless @active_roles.include?("event")
+    return unless @active_roles.include?('event')
     @schedules[:event] ||= []
 
     # Schedule - Event Purging
     interval = worker_setting_or_default(:ems_events_purge_interval, 1.day)
     @schedules[:event] << system_schedule_every(
       interval,
-      :first_in => "300s",
+      :first_in => '300s',
       :tags     => [:ems_event, :purge_schedule]
     ) { enqueue :ems_event_purge_timer }
 
@@ -325,17 +325,17 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     interval = worker_setting_or_default(:policy_events_purge_interval, 1.day)
     @schedules[:event] << system_schedule_every(
       interval,
-      :first_in => "300s",
+      :first_in => '300s',
       :tags     => [:policy_event, :purge_schedule]
     ) { enqueue :policy_event_purge_timer }
   end
 
   def schedules_for_storage_metrics_coordinator_role
     # These schedules need to run by the servers with the coordinator role
-    return unless @active_roles.include?("storage_metrics_coordinator")
+    return unless @active_roles.include?('storage_metrics_coordinator')
     @schedules[:storage_metrics_coordinator] ||= []
 
-    cfg = VMDB::Config.new("vmdb").config
+    cfg = VMDB::Config.new('vmdb').config
 
     # Schedule - Storage metrics collection
     sched = cfg.fetch_path(:storage, :metrics_collection, :collection_schedule)
@@ -407,7 +407,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   def rufus_add_schedule(options = {})
     return if options.blank?
     unless @user_scheduler.respond_to?(options[:method])
-      raise _("invalid method: %{options}") % {:options => options[:method]}
+      raise _('invalid method: %{options}') % {:options => options[:method]}
     end
 
     options[:tags].to_miq_a << CLASS_TAG
@@ -494,7 +494,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
           send(m)
         end
 
-        load_user_schedules if added.include?("scheduler")
+        load_user_schedules if added.include?('scheduler')
 
         removed.each do |r|
           rs = r.to_sym
@@ -509,7 +509,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
               @system_scheduler.unschedule(j)
             else
               if j.respond_to?(:tags)
-                if j.tags.any? { |t| t.to_s.starts_with?("miq_schedules_") }
+                if j.tags.any? { |t| t.to_s.starts_with?('miq_schedules_') }
                   _log.info("Removing user schedule with Tags: #{j.tags.inspect}")
                 end
                 j.unschedule
@@ -558,13 +558,13 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     check_dst
 
     # If no work in queue, update users schedules which have been updated since last check
-    sync_updated_user_schedules if @active_roles.include?("scheduler")
+    sync_updated_user_schedules if @active_roles.include?('scheduler')
   end
 
   private
 
   def schedule_settings_for_ems_refresh
-    config = VMDB::Config.new("vmdb").config.fetch(:ems_refresh, {})
+    config = VMDB::Config.new('vmdb').config.fetch(:ems_refresh, {})
 
     ExtManagementSystem.leaf_subclasses.each.with_object({}) do |klass, hash|
       next unless klass.ems_type

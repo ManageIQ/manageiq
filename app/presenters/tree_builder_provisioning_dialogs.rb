@@ -2,11 +2,11 @@ class TreeBuilderProvisioningDialogs < TreeBuilderAeCustomization
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "MiqDialog", :open_all => true}
+    {:leaf => 'MiqDialog', :open_all => true}
   end
 
   def root_options
-    [t = _("All Dialogs"), t]
+    [t = _('All Dialogs'), t]
   end
 
   # Get root nodes count/array for explorer tree
@@ -15,7 +15,7 @@ class TreeBuilderProvisioningDialogs < TreeBuilderAeCustomization
       {
         :id    => "MiqDialog_#{typ[1]}",
         :text  => typ[0],
-        :image => "folder",
+        :image => 'folder',
         :tip   => typ[0]
       }
     end

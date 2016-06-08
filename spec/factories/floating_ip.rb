@@ -4,9 +4,9 @@ FactoryGirl.define do
   end
 
   factory :floating_ip_amazon, :parent => :floating_ip,
-                               :class  => "ManageIQ::Providers::Amazon::NetworkManager::FloatingIp"
+                               :class  => 'ManageIQ::Providers::Amazon::NetworkManager::FloatingIp'
   factory :floating_ip_azure, :parent => :floating_ip,
-                              :class  => "ManageIQ::Providers::Azure::NetworkManager::FloatingIp"
+                              :class  => 'ManageIQ::Providers::Azure::NetworkManager::FloatingIp'
   factory :floating_ip_openstack, :parent => :floating_ip,
-                                  :class  => "ManageIQ::Providers::Openstack::NetworkManager::FloatingIp"
+                                  :class  => 'ManageIQ::Providers::Openstack::NetworkManager::FloatingIp'
 end

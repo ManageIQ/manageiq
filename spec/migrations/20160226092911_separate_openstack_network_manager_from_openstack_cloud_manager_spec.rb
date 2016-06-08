@@ -43,7 +43,7 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
         :type          => x[:type_out],
         name_key(name) => x[:name],
       )
-      if x[:ems_out].include?("new_ems")
+      if x[:ems_out].include?('new_ems')
         expect(ems_row_entries.select { |e| e[:ems_in] }).to_not include(x[name].ems_id)
       else
         expect(x[name]).to have_attributes(
@@ -58,28 +58,28 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
       {
         :ems_in   => ems_row_entries[0],
         :ems_out  => 'new_ems',
-        :name     => "name_0",
+        :name     => 'name_0',
         :type_in  => "ManageIQ::Providers::Openstack::CloudManager::#{model_class_name}",
         :type_out => "ManageIQ::Providers::Openstack::NetworkManager::#{model_class_name}",
       },
       {
         :ems_in   => ems_row_entries[1],
         :ems_out  => 'new_ems_infra',
-        :name     => "name_1",
+        :name     => 'name_1',
         :type_in  => "ManageIQ::Providers::Openstack::InfraManager::#{model_class_name}",
         :type_out => "ManageIQ::Providers::Openstack::NetworkManager::#{model_class_name}",
       },
       {
         :ems_in   => ems_row_entries[2],
         :ems_out  => ems_row_entries[2],
-        :name     => "name_2",
+        :name     => 'name_2',
         :type_in  => "ManageIQ::Providers::Amazon::CloudManager::#{model_class_name}",
         :type_out => "ManageIQ::Providers::Amazon::CloudManager::#{model_class_name}",
       },
       {
         :ems_in   => ems_row_entries[3],
         :ems_out  => ems_row_entries[3],
-        :name     => "name_3",
+        :name     => 'name_3',
         :type_in  => "ManageIQ::Providers::AnotherManager::CloudManager::#{model_class_name}",
         :type_out => "ManageIQ::Providers::AnotherManager::CloudManager::#{model_class_name}",
       },
@@ -106,24 +106,24 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
   let(:floating_ip_stub) { migration_stub(:FloatingIp) }
   let(:security_group_stub) { migration_stub(:SecurityGroup) }
 
-  let(:cloud_networks) { build_mock_data("CloudNetwork") }
-  let(:cloud_subnets) { build_mock_data("CloudSubnet") }
-  let(:network_ports) { build_mock_data("NetworkPort") }
-  let(:network_routers) { build_mock_data("NetworkRouter") }
-  let(:floating_ips) { build_mock_data("FloatingIp") }
-  let(:security_groups) { build_mock_data("SecurityGroup") }
+  let(:cloud_networks) { build_mock_data('CloudNetwork') }
+  let(:cloud_subnets) { build_mock_data('CloudSubnet') }
+  let(:network_ports) { build_mock_data('NetworkPort') }
+  let(:network_routers) { build_mock_data('NetworkRouter') }
+  let(:floating_ips) { build_mock_data('FloatingIp') }
+  let(:security_groups) { build_mock_data('SecurityGroup') }
 
   let(:ems_row_entries) do
     [
-      {:type => "ManageIQ::Providers::Openstack::CloudManager"},
-      {:type => "ManageIQ::Providers::Openstack::InfraManager"},
-      {:type => "ManageIQ::Providers::Amazon::CloudManager"},
-      {:type => "ManageIQ::Providers::AnotherManager::CloudManager"}
+      {:type => 'ManageIQ::Providers::Openstack::CloudManager'},
+      {:type => 'ManageIQ::Providers::Openstack::InfraManager'},
+      {:type => 'ManageIQ::Providers::Amazon::CloudManager'},
+      {:type => 'ManageIQ::Providers::AnotherManager::CloudManager'}
     ]
   end
 
   migration_context :up do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end
@@ -145,19 +145,19 @@ describe SeparateOpenstackNetworkManagerFromOpenstackCloudManager do
   end
 
   migration_context :down do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end
 
       network_manager = ext_management_system_stub.create!(
-        :name          => "cloud_network",
-        :type          => "ManageIQ::Providers::Openstack::NetworkManager",
+        :name          => 'cloud_network',
+        :type          => 'ManageIQ::Providers::Openstack::NetworkManager',
         :parent_ems_id => ems_row_entries[0][:ems].id)
 
       network_manager_infra = ext_management_system_stub.create!(
-        :name          => "infra_network",
-        :type          => "ManageIQ::Providers::Openstack::NetworkManager",
+        :name          => 'infra_network',
+        :type          => 'ManageIQ::Providers::Openstack::NetworkManager',
         :parent_ems_id => ems_row_entries[1][:ems].id)
 
       all_model_names.each do |model_name|

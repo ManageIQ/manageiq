@@ -7,8 +7,8 @@ module Fat32
 
     # Initialization
     def initialize(dirEntry, bootSector)
-      raise "Nil directory entry" if dirEntry.nil?
-      raise "Nil boot sector" if bootSector.nil?
+      raise 'Nil directory entry' if dirEntry.nil?
+      raise 'Nil boot sector' if bootSector.nil?
 
       @bs = bootSector
       @de = dirEntry
@@ -97,7 +97,7 @@ module Fat32
       lcn = getLCN(vcn)
       # puts "vcn=#{vcn}, lcn=#{lcn}" if $track_pos
       return MemoryBuffer.create(@bs.bytesPerCluster) if lcn == -1
-      raise "LCN is nill" if lcn.nil?
+      raise 'LCN is nill' if lcn.nil?
       @bs.getCluster(lcn)
     end
 
@@ -120,7 +120,7 @@ module Fat32
       if lcn.nil?
         # puts "LCN is nil for VCN #{relClus}; Map size is #{@clusterMap.size}, cluster map follows:"
         # puts @clusterMap.inspect
-        raise "Bad cluster map."
+        raise 'Bad cluster map.'
       end
       lcn
     end

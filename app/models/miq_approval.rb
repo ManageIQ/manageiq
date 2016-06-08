@@ -1,9 +1,9 @@
 class MiqApproval < ApplicationRecord
   belongs_to :approver, :polymorphic => true
-  belongs_to :stamper,  :class_name => "User"
+  belongs_to :stamper,  :class_name => 'User'
   belongs_to :miq_request
 
-  default_value_for :state, "pending"
+  default_value_for :state, 'pending'
 
   def approver=(approver)
     super
@@ -12,8 +12,8 @@ class MiqApproval < ApplicationRecord
 
   def approve(userid, reason)
     user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
-    raise "not authorized" unless authorized?(user)
-    update_attributes(:state => "approved", :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
+    raise 'not authorized' unless authorized?(user)
+    update_attributes(:state => 'approved', :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
 
     # execute parent now that request is approved
     _log.info("Request: [#{miq_request.description}] has been approved by [#{user.userid}]")
@@ -26,8 +26,8 @@ class MiqApproval < ApplicationRecord
 
   def deny(userid, reason)
     user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
-    raise "not authorized" unless authorized?(user)
-    update_attributes(:state => "denied", :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
+    raise 'not authorized' unless authorized?(user)
+    update_attributes(:state => 'denied', :reason => reason, :stamper => user, :stamper_name => user.name, :stamped_on => Time.now.utc)
     miq_request.approval_denied
   end
 
@@ -35,7 +35,7 @@ class MiqApproval < ApplicationRecord
     user = userid.kind_of?(User) ? userid : User.find_by_userid(userid)
     return false unless user
 
-    return true if user.role_allows?(:identifier => "miq_request_approval")
+    return true if user.role_allows?(:identifier => 'miq_request_approval')
     return true if approver.kind_of?(User) && approver == user
 
     false

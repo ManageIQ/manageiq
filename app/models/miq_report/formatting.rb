@@ -3,14 +3,14 @@
 module MiqReport::Formatting
   extend ActiveSupport::Concern
 
-  format_hash = YAML.load_file(ApplicationRecord::FIXTURE_DIR.join("miq_report_formats.yml"))
+  format_hash = YAML.load_file(ApplicationRecord::FIXTURE_DIR.join('miq_report_formats.yml'))
   FORMATS                       = format_hash[:formats].freeze
   FORMAT_DEFAULTS_AND_OVERRIDES = format_hash[:defaults_and_overrides].freeze
 
   module ClassMethods
     def get_available_formats(path, dt)
-      col = path.split("-").last.to_sym
-      sfx = col.to_s.split("__").last
+      col = path.split('-').last.to_sym
+      sfx = col.to_s.split('__').last
       is_break_sfx = (sfx && self.is_break_suffix?(sfx))
       sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
       FORMATS.keys.inject({}) do |h, k|
@@ -31,8 +31,8 @@ module MiqReport::Formatting
     end
 
     def get_default_format(path, dt)
-      col = path.split("-").last.to_sym
-      sfx = col.to_s.split("__").last
+      col = path.split('-').last.to_sym
+      sfx = col.to_s.split('__').last
       sfx = sfx.to_sym if sfx
       sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
       FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_column][col] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
@@ -53,19 +53,19 @@ module MiqReport::Formatting
   end
 
   def format(col, value, options = {})
-    if db.to_s == "VimPerformanceTrend"
-      if col == "limit_col_value"
+    if db.to_s == 'VimPerformanceTrend'
+      if col == 'limit_col_value'
         col = db_options[:limit_col] || col
-      elsif col.to_s.ends_with?("_value")
+      elsif col.to_s.ends_with?('_value')
         col = db_options[:trend_col] || col
       end
-    elsif db.to_s == "ChargebackContainerProject" # override format: default is mhz but cores needed for containers
-      if col == "cpu_used_metric" || col == "cpu_metric"
+    elsif db.to_s == 'ChargebackContainerProject' # override format: default is mhz but cores needed for containers
+      if col == 'cpu_used_metric' || col == 'cpu_metric'
         options[:format] = :cores
       end
     end
     format = options.delete(:format)
-    return "" if value.nil?
+    return '' if value.nil?
     return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
 
     # Format name passed in as a symbol or string
@@ -97,7 +97,7 @@ module MiqReport::Formatting
     options[:column] = col
 
     # Chargeback Reports: Add the selected currency in the assigned rate to options
-    if db.to_s == "ChargebackVm" || db.to_s == "ChargebackContainerProject"
+    if db.to_s == 'ChargebackVm' || db.to_s == 'ChargebackContainerProject'
       compute_selected_rate = ChargebackRate.get_assignments(:compute)[0]
       storage_selected_rate = ChargebackRate.get_assignments(:storage)[0]
       selected_rate = compute_selected_rate.nil? ? storage_selected_rate : compute_selected_rate
@@ -178,14 +178,14 @@ module MiqReport::Formatting
     return val.to_s.titleize unless val.kind_of?(TrueClass) || val.kind_of?(FalseClass)
 
     case options[:format]
-    when "yes_no"
-      return val == true ? "Yes" : "No"
-    when "y_n"
-      return val == true ? "Y" : "N"
-    when "t_f"
-      return val == true ? "T" : "F"
-    when "pass_fail"
-      return val == true ? "Pass" : "Fail"
+    when 'yes_no'
+      return val == true ? 'Yes' : 'No'
+    when 'y_n'
+      return val == true ? 'Y' : 'N'
+    when 't_f'
+      return val == true ? 'T' : 'F'
+    when 'pass_fail'
+      return val == true ? 'Pass' : 'Fail'
     else
       return val.to_s.titleize
     end
@@ -204,9 +204,9 @@ module MiqReport::Formatting
     return val unless val.kind_of?(Time) || stime.kind_of?(Date)
 
     col = options[:column]
-    col, sfx = col.to_s.split("__") # The suffix (month, quarter, year) defines the range
+    col, sfx = col.to_s.split('__') # The suffix (month, quarter, year) defines the range
 
-    val = val.in_time_zone(get_time_zone("UTC"))
+    val = val.in_time_zone(get_time_zone('UTC'))
     if val.respond_to?("beginning_of_#{sfx}")
       stime = val.send("beginning_of_#{sfx}")
       etime = val.send("end_of_#{sfx}")
@@ -214,7 +214,7 @@ module MiqReport::Formatting
       stime = etime = val
     end
 
-    if options[:description].to_s.include?("Start")
+    if options[:description].to_s.include?('Start')
       return stime.strftime(options[:format])
     else
       return "(#{stime.strftime(options[:format])} - #{etime.strftime(options[:format])})"
@@ -223,7 +223,7 @@ module MiqReport::Formatting
 
   def format_set(val, options)
     return val unless val.kind_of?(Array)
-    options[:delimiter] ||= ", "
+    options[:delimiter] ||= ', '
     val.join(options[:delimiter])
   end
 
@@ -256,9 +256,9 @@ module MiqReport::Formatting
     sep    = ''
     values.each_index do |i|
       sfx = names[sidx + i]
-      sfx += "s" if values[i] > 1 || values[i] == 0
+      sfx += 's' if values[i] > 1 || values[i] == 0
       result = result + sep + "#{values[i]} #{sfx}"
-      sep = ", "
+      sep = ', '
     end
 
     result
@@ -266,7 +266,7 @@ module MiqReport::Formatting
 
   def format_string_truncate(val, options = {})
     result = val.to_s
-    result.length > options[:length] ? result[0..(options[:length] - 1)] + "..." : val
+    result.length > options[:length] ? result[0..(options[:length] - 1)] + '...' : val
   end
 
   def format_large_number_to_exponential_form(val, _options = {})

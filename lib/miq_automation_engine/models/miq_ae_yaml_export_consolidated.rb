@@ -4,7 +4,7 @@ class MiqAeYamlExportConsolidated < MiqAeYamlExport
 
   def initialize(domain, options)
     super
-    @temp_file_name = File.join(Dir.tmpdir, "temp_file.yaml")
+    @temp_file_name = File.join(Dir.tmpdir, 'temp_file.yaml')
     @yaml_file_name = options['yaml_file'].blank? ? "#{@domain}.yaml" : options['yaml_file']
     options['overwrite'] ||= false
     if File.exist?(@yaml_file_name) && !options['overwrite']

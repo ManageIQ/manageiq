@@ -17,7 +17,7 @@ module Ext4
     attr_reader :hash_version, :length, :leaf_level
 
     def initialize(buf)
-      raise "Ext4::HashTreeHeader.initialize: Nil buffer" if buf.nil?
+      raise 'Ext4::HashTreeHeader.initialize: Nil buffer' if buf.nil?
       @hth = HASH_TREE_HEADER.decode(buf)
 
       @hash_version = @hth['hash_ver']

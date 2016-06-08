@@ -1,8 +1,8 @@
 class MiqAeDomain < MiqAeNamespace
-  default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq("$")) }
+  default_scope { where(:parent_id => nil).where(arel_table[:name].not_eq('$')) }
   validates_inclusion_of :parent_id, :in => [nil], :message => 'should be nil for Domain'
 
-  validates_presence_of :tenant, :message => "object is needed to own the domain"
+  validates_presence_of :tenant, :message => 'object is needed to own the domain'
   after_destroy :squeeze_priorities
   default_value_for :system,  false
   default_value_for :enabled, false
@@ -60,7 +60,7 @@ class MiqAeDomain < MiqAeNamespace
     MiqAeDomain.find_by(:name => options['domain']).try(:destroy) if options['domain']
     import_options(git_repo, options)
     domain = Array.wrap(MiqAeImport.new(options['domain'] || '*', options).import).first
-    raise MiqAeException::DomainNotFound, "Import of domain failed" unless domain
+    raise MiqAeException::DomainNotFound, 'Import of domain failed' unless domain
     domain.update_git_info(git_repo, options['ref'], options['ref_type'])
     domain
   end
@@ -86,8 +86,8 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def latest_ref_info
-    raise MiqAeException::InvalidDomain, "Not Git enabled" unless git_enabled?
-    raise "No branch or tag selected for this domain" if ref.nil? && ref_type.nil?
+    raise MiqAeException::InvalidDomain, 'Not Git enabled' unless git_enabled?
+    raise 'No branch or tag selected for this domain' if ref.nil? && ref_type.nil?
     case ref_type
     when BRANCH
       git_repository.branch_info(ref)
@@ -112,8 +112,8 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def about_class
-    ns = MiqAeNamespace.where(:parent_id => id).find_by("lower(name) = ?", "system")
-    MiqAeClass.where(:namespace_id => ns.id).find_by("lower(name) = ?", "about") if ns
+    ns = MiqAeNamespace.where(:parent_id => id).find_by('lower(name) = ?', 'system')
+    MiqAeClass.where(:namespace_id => ns.id).find_by('lower(name) = ?', 'about') if ns
   end
 
   def about_file_name

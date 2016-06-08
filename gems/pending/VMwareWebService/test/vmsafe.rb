@@ -16,7 +16,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_VM = "rich-vmsafe-enabled"
+TARGET_VM = 'rich-vmsafe-enabled'
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 
 begin
@@ -25,7 +25,7 @@ begin
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
   puts "API version: #{vim.apiVersion}"
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   puts "VM UUID: #{miqVm.vmh['config']['uuid']}"
 
@@ -39,10 +39,10 @@ begin
     puts "vmsafe.immutableVM:  #{vmsAttr['immutableVM']}"
     puts "vmsafe.timeoutMS:    #{vmsAttr['timeoutMS']}"
   else
-    puts "VM is not vmsafe enabled"
+    puts 'VM is not vmsafe enabled'
   end
 
-  miqVm.setVmSafeAttributes('enable' => "true", 'timeoutMS' => "6000000", 'agentAddress' => "192.168.252.146", 'agentPort' => '8888')
+  miqVm.setVmSafeAttributes('enable' => 'true', 'timeoutMS' => '6000000', 'agentAddress' => '192.168.252.146', 'agentPort' => '8888')
   miqVm.refresh
 
   puts
@@ -55,7 +55,7 @@ begin
     puts "vmsafe.immutableVM:  #{vmsAttr['immutableVM']}"
     puts "vmsafe.timeoutMS:    #{vmsAttr['timeoutMS']}"
   else
-    puts "VM is not vmsafe enabled"
+    puts 'VM is not vmsafe enabled'
   end
 
 rescue => err

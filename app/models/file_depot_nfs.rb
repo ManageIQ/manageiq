@@ -4,6 +4,6 @@ class FileDepotNfs < FileDepot
   end
 
   def self.uri_prefix
-    "nfs"
+    'nfs'
   end
 end

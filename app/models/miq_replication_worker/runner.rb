@@ -34,7 +34,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
 
   def valid_destination_settings?
     dest_conf = worker_settings.fetch_path(:replication, :destination)
-    dest_conf[:adapter] ||= "postgresql"
+    dest_conf[:adapter] ||= 'postgresql'
     region = MiqRegion.my_region
     host_user_pass = dest_conf.values_at(:host, :port, :username, :password, :database, :adapter)
     host_user_pass.none?(&:blank?) && MiqRegionRemote.region_valid?(region.guid, region.region, *host_user_pass)
@@ -83,7 +83,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
   end
 
   def start_rubyrep(verb)
-    raise _("Cannot call start_rubyrep if a process already exists") if rubyrep_alive?
+    raise _('Cannot call start_rubyrep if a process already exists') if rubyrep_alive?
     _log.info("#{log_prefix} Starting #{verb.to_s.humanize} Process")
     start_rubyrep_process(verb)
     _log.info("#{log_prefix} Started  #{verb.to_s.humanize} Process")
@@ -106,7 +106,7 @@ class MiqReplicationWorker::Runner < MiqWorker::Runner
 
   def stop_rubyrep_process
     return unless @pid
-    Process.kill("INT", @pid)
+    Process.kill('INT', @pid)
     wait_on_rubyrep
   end
 

@@ -29,26 +29,26 @@ class MiqPolicyImportService
     uploaded_content, = MiqPolicy.import(file_contents, :preview => true)
 
     ImportFileUpload.create.tap do |import_file_upload|
-      import_file_upload.store_binary_data_as_yml(uploaded_content.to_yaml, "Policy import")
+      import_file_upload.store_binary_data_as_yml(uploaded_content.to_yaml, 'Policy import')
     end
   rescue
-    raise InvalidMiqPolicyYaml, "Invalid YAML file"
+    raise InvalidMiqPolicyYaml, 'Invalid YAML file'
   end
 
   def destroy_queued_deletion(import_file_upload_id)
     MiqQueue.find_by(
-      :class_name  => "ImportFileUpload",
+      :class_name  => 'ImportFileUpload',
       :instance_id => import_file_upload_id,
-      :method_name => "destroy"
+      :method_name => 'destroy'
     ).destroy
   end
 
   def queue_deletion(import_file_upload_id)
     MiqQueue.put_or_update(
-      :class_name  => "ImportFileUpload",
+      :class_name  => 'ImportFileUpload',
       :instance_id => import_file_upload_id,
       :deliver_on  => 1.day.from_now,
-      :method_name => "destroy"
+      :method_name => 'destroy'
     )
   end
 end

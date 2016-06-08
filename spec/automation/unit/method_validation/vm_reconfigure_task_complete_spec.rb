@@ -7,12 +7,12 @@ describe 'vmreconfiguretask_complete method' do
   it 'sends email' do
     expect(GenericMailer).to receive(:deliver).with(:automation_notification,
                                                     hash_including(:to   => user.email,
-                                                                   :from => "evmadmin@example.com"
+                                                                   :from => 'evmadmin@example.com'
                                                                   )
                                                    )
     attrs = ["MiqServer::miq_server=#{miq_server.id}"]
     attrs << "VmOrTemplate::vm=#{vm.id}"
-    MiqAeEngine.instantiate("/Infrastructure/VM/Reconfigure/Email/VmReconfigureTaskComplete?" \
+    MiqAeEngine.instantiate('/Infrastructure/VM/Reconfigure/Email/VmReconfigureTaskComplete?' \
                             "event=vm_reconfigure&#{attrs.join('&')}", user)
   end
 end

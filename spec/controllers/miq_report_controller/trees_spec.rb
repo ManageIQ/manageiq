@@ -10,7 +10,7 @@ describe ReportController do
       session[:settings] = {}
     end
 
-    context "saved reports tree" do
+    context 'saved reports tree' do
       before do
         seed_session_trees('savedreports', :savedreports_tree)
       end
@@ -23,19 +23,19 @@ describe ReportController do
       it 'renders show' do
         user = FactoryGirl.create(:user_with_group)
         login_as user
-        controller.instance_variable_set(:@html, "<h1>Test</h1>")
+        controller.instance_variable_set(:@html, '<h1>Test</h1>')
         allow(controller).to receive(:report_first_page)
         report = FactoryGirl.create(:miq_report_with_results)
         allow(report).to receive(:contains_records?).and_return(true)
         task = FactoryGirl.create(:miq_task)
-        task.update_attributes(:state => "Finished")
+        task.update_attributes(:state => 'Finished')
         task.reload
         report_result = FactoryGirl.create(:miq_report_result,
                                            :miq_group_id => user.current_group.id,
                                            :miq_task_id  => task.id)
         allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
         binary_blob = FactoryGirl.create(:binary_blob,
-                                         :resource_type => "MiqReportResult",
+                                         :resource_type => 'MiqReportResult',
                                          :resource_id   => report_result.id)
         FactoryGirl.create(:binary_blob_part,
                            :data           => "--- Quota \xE2\x80\x93 Max CPUs\n...\n",
@@ -46,7 +46,7 @@ describe ReportController do
       end
     end
 
-    context "reports tree" do
+    context 'reports tree' do
       before do
         seed_session_trees('report', :reports_tree)
       end
@@ -58,7 +58,7 @@ describe ReportController do
       end
     end
 
-    context "schedules tree" do
+    context 'schedules tree' do
       before do
         seed_session_trees('schedules', :schedules_tree)
       end
@@ -75,7 +75,7 @@ describe ReportController do
       end
     end
 
-    context "dashboards tree" do
+    context 'dashboards tree' do
       let!(:other_group)  { FactoryGirl.create(:miq_group) }
       let(:current_group) { User.current_user.current_group }
 
@@ -115,7 +115,7 @@ describe ReportController do
       end
     end
 
-    context "dashboard widgets tree" do
+    context 'dashboard widgets tree' do
       before do
         seed_session_trees('widgets', :widgets_tree)
       end
@@ -135,11 +135,11 @@ describe ReportController do
 
       let(:default_row_count_value)        { 5 }
       let(:other_row_count_value)          { 7 }
-      let(:widget_with_default_row_value)  { FactoryGirl.create(:miq_widget, :visibility => {:roles => ["_ALL_"]}) }
+      let(:widget_with_default_row_value)  { FactoryGirl.create(:miq_widget, :visibility => {:roles => ['_ALL_']}) }
       let(:widget_options)                 { {:row_count => other_row_count_value} }
 
       let(:widget_with_row_value) do
-        FactoryGirl.create(:miq_widget, :visibility => {:roles => ["_ALL_"]}, :options => widget_options)
+        FactoryGirl.create(:miq_widget, :visibility => {:roles => ['_ALL_']}, :options => widget_options)
       end
 
       let(:params_default_row_value) do
@@ -155,7 +155,7 @@ describe ReportController do
         "<div class=\\'col-md-10\\'>\\n<p class=\\'form-control-static\\'>#{row_count_value}<\\/p>\\n<\\/div>"
       end
 
-      it "renders show of Dashboard Widget in Widgets tree with default row_count value" do
+      it 'renders show of Dashboard Widget in Widgets tree with default row_count value' do
         post :tree_select, :params => params_default_row_value
 
         expect(response).to render_template('report/_widget_show')
@@ -163,7 +163,7 @@ describe ReportController do
         expect(response.body).to include(row_count_html(default_row_count_value))
       end
 
-      it "renders show of Dashboard Widget in Widgets tree with row_count value from widget" do
+      it 'renders show of Dashboard Widget in Widgets tree with row_count value from widget' do
         post :tree_select, :params => params_row_value
 
         expect(response).to render_template('report/_widget_show')
@@ -172,7 +172,7 @@ describe ReportController do
       end
     end
 
-    context "role menus tree" do
+    context 'role menus tree' do
       before do
         seed_session_trees('roles', :roles_tree)
       end

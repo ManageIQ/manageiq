@@ -1,5 +1,5 @@
 class PrivilegeCheckerService
-  def initialize(vmdb_config = VMDB::Config.new("vmdb").config)
+  def initialize(vmdb_config = VMDB::Config.new('vmdb').config)
     @vmdb_config = vmdb_config
   end
 

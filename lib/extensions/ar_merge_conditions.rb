@@ -2,7 +2,7 @@
 module ActiveRecord
   class Base
     def self.merge_conditions(*conditions)
-      ActiveSupport::Deprecation.warn "merge_conditions is old and busted; use Relation API instead", caller
+      ActiveSupport::Deprecation.warn 'merge_conditions is old and busted; use Relation API instead', caller
 
       segments = []
 

@@ -1,9 +1,9 @@
 describe MiqAeDatastore::XmlExport do
-  describe ".to_xml" do
-    let(:custom_button) { double("CustomButton") }
+  describe '.to_xml' do
+    let(:custom_button) { double('CustomButton') }
     let(:custom_buttons) { [custom_button] }
-    let(:miq_ae_class1) { double("MiqAeClass", :fqname => "z") }
-    let(:miq_ae_class2) { double("MiqAeClass", :fqname => "a") }
+    let(:miq_ae_class1) { double('MiqAeClass', :fqname => 'z') }
+    let(:miq_ae_class2) { double('MiqAeClass', :fqname => 'a') }
     let(:miq_ae_classes) { [miq_ae_class1, miq_ae_class2] }
 
     let(:expected_xml) do
@@ -26,7 +26,7 @@ describe MiqAeDatastore::XmlExport do
       allow(CustomButton).to receive(:all).and_return(custom_buttons)
     end
 
-    it "sorts the miq ae classes and returns the correct xml" do
+    it 'sorts the miq ae classes and returns the correct xml' do
       expect(miq_ae_class2).to receive(:to_export_xml) do |options|
         expect(options[:builder].target!).to eq <<-XML
 <?xml version="1.0" encoding="UTF-8"?>

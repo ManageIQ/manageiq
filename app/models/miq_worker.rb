@@ -7,9 +7,9 @@ class MiqWorker < ApplicationRecord
 
   belongs_to :miq_server
   has_many   :messages,           :as => :handler, :class_name => 'MiqQueue'
-  has_many   :active_messages,    -> { where ["state = ?", "dequeue"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :ready_messages,     -> { where ["state = ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue'
-  has_many   :processed_messages, -> { where ["state != ?", "ready"] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
+  has_many   :active_messages,    -> { where ['state = ?', 'dequeue'] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :ready_messages,     -> { where ['state = ?', 'ready'] }, :as => :handler, :class_name => 'MiqQueue'
+  has_many   :processed_messages, -> { where ['state != ?', 'ready'] }, :as => :handler, :class_name => 'MiqQueue', :dependent => :destroy
 
   virtual_column :friendly_name, :type => :string
   virtual_column :uri_or_queue_name, :type => :string
@@ -31,13 +31,13 @@ class MiqWorker < ApplicationRecord
   STATUSES_ALIVE    = STATUSES_CURRENT_OR_STARTING + [STATUS_STOPPING]
   PROCESS_INFO_FIELDS = %i(priority memory_usage percent_memory percent_cpu memory_size cpu_time proportional_set_size)
 
-  PROCESS_TITLE_PREFIX = "MIQ:".freeze
+  PROCESS_TITLE_PREFIX = 'MIQ:'.freeze
   def self.atStartup
     # Delete and Kill all workers that were running previously
     clean_all_workers
 
     # Clean queue of any worker startup entries
-    MiqQueue.where(:method_name => "start_event_monitor", :server_guid => MiqServer.my_guid).destroy_all
+    MiqQueue.where(:method_name => 'start_event_monitor', :server_guid => MiqServer.my_guid).destroy_all
   end
 
   def self.atShutdown
@@ -72,7 +72,7 @@ class MiqWorker < ApplicationRecord
     when Array
       required_roles.any? { |role| MiqServer.minimal_env_options.include?(role) }
     else
-      raise _("Unexpected type: <self.required_roles.class.name>")
+      raise _('Unexpected type: <self.required_roles.class.name>')
     end
   end
 
@@ -132,7 +132,7 @@ class MiqWorker < ApplicationRecord
     when Array
       required_roles.any? { |role| MiqServer.my_server.has_active_role?(role) }
     else
-      raise _("Unexpected type: <self.required_roles.class.name>")
+      raise _('Unexpected type: <self.required_roles.class.name>')
     end
   end
 
@@ -188,7 +188,7 @@ class MiqWorker < ApplicationRecord
     settings = {}
 
     unless miq_server.nil?
-      server_config = options[:config] || miq_server.get_config("vmdb")
+      server_config = options[:config] || miq_server.get_config('vmdb')
       server_config = server_config.config if server_config.respond_to?(:config)
       # Get the configuration values
       section = server_config[:workers]
@@ -196,7 +196,7 @@ class MiqWorker < ApplicationRecord
         classes = path_to_my_worker_settings
         classes.each do |c|
           section = section[c]
-          raise _("Missing config section %{section_name}") % {:section_name => c} if section.nil?
+          raise _('Missing config section %{section_name}') % {:section_name => c} if section.nil?
           defaults = section[:defaults]
           settings.merge!(defaults) unless defaults.nil?
         end
@@ -300,7 +300,7 @@ class MiqWorker < ApplicationRecord
 
   def self.send_message_to_worker_monitor(wid, message, *args)
     w = MiqWorker.find_by_id(wid)
-    raise _("Worker with id=<%{id}> does not exist") % {:id => wid} if w.nil?
+    raise _('Worker with id=<%{id}> does not exist') % {:id => wid} if w.nil?
     w.send_message_to_worker_monitor(message, *args)
   end
 
@@ -351,7 +351,7 @@ class MiqWorker < ApplicationRecord
     save
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
-    MiqEvent.raise_evm_event_queue(miq_server, "evm_worker_start", :event_details => msg, :type => self.class.name)
+    MiqEvent.raise_evm_event_queue(miq_server, 'evm_worker_start', :event_details => msg, :type => self.class.name)
 
     _log.info(msg)
     self
@@ -521,6 +521,6 @@ class MiqWorker < ApplicationRecord
 
   def self.nice_increment
     delta = worker_settings[:nice_delta]
-    delta.kind_of?(Integer) ? delta.to_s : "+10"
+    delta.kind_of?(Integer) ? delta.to_s : '+10'
   end
 end

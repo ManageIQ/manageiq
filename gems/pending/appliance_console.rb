@@ -8,12 +8,12 @@ $LOAD_PATH.push(File.dirname(__FILE__))
 require 'pathname'
 
 RAILS_ROOT = [
-  Pathname.new("/var/www/miq/vmdb"),
-  Pathname.new(File.expand_path(File.join(__dir__, "../..")))
+  Pathname.new('/var/www/miq/vmdb'),
+  Pathname.new(File.expand_path(File.join(__dir__, '../..')))
 ].detect { |f| File.exist?(f) }
 
 # Set up Environment
-ENV['BUNDLE_GEMFILE'] ||= RAILS_ROOT.join("Gemfile").to_s
+ENV['BUNDLE_GEMFILE'] ||= RAILS_ROOT.join('Gemfile').to_s
 require 'bundler'
 Bundler.setup
 
@@ -28,7 +28,7 @@ require 'awesome_spawn'
 include HighLine::SystemExtensions
 
 require 'i18n'
-LOCALES = File.join(File.expand_path(File.dirname(__FILE__)), "appliance_console/locales/*.yml")
+LOCALES = File.join(File.expand_path(File.dirname(__FILE__)), 'appliance_console/locales/*.yml')
 I18n.load_path = Dir[LOCALES].sort
 I18n.enforce_available_locales = true
 I18n.backend.load_translations
@@ -45,11 +45,11 @@ require 'appliance_console/errors'
 
 [:INT, :TERM, :ABRT, :TSTP].each { |s| trap(s) { raise MiqSignalError } }
 
-VERSION_FILE  = RAILS_ROOT.join("VERSION")
-LOGFILE       = RAILS_ROOT.join("log", "appliance_console.log")
-DB_RESTORE_FILE = "/tmp/evm_db.backup".freeze
+VERSION_FILE  = RAILS_ROOT.join('VERSION')
+LOGFILE       = RAILS_ROOT.join('log', 'appliance_console.log')
+DB_RESTORE_FILE = '/tmp/evm_db.backup'.freeze
 
-AS_OPTIONS = I18n.t("advanced_settings.menu_order").collect do |item|
+AS_OPTIONS = I18n.t('advanced_settings.menu_order').collect do |item|
   I18n.t("advanced_settings.#{item}")
 end
 
@@ -75,17 +75,17 @@ require 'appliance_console/prompts'
 include ApplianceConsole::Prompts
 
 # Restore database choices
-RESTORE_LOCAL   = "Local file".freeze
-RESTORE_NFS     = "Network File System (nfs)".freeze
-RESTORE_SMB     = "Samba (smb)".freeze
+RESTORE_LOCAL   = 'Local file'.freeze
+RESTORE_NFS     = 'Network File System (nfs)'.freeze
+RESTORE_SMB     = 'Samba (smb)'.freeze
 RESTORE_OPTIONS = [RESTORE_LOCAL, RESTORE_NFS, RESTORE_SMB, ApplianceConsole::CANCEL].freeze
 
 # Restart choices
-RE_RESTART  = "Restart".freeze
-RE_DELLOGS  = "Restart and Clean Logs".freeze
+RE_RESTART  = 'Restart'.freeze
+RE_DELLOGS  = 'Restart and Clean Logs'.freeze
 RE_OPTIONS  = [RE_RESTART, RE_DELLOGS, ApplianceConsole::CANCEL].freeze
 
-NETWORK_INTERFACE = "eth0".freeze
+NETWORK_INTERFACE = 'eth0'.freeze
 
 module ApplianceConsole
   eth0 = LinuxAdmin::NetworkInterface.new(NETWORK_INTERFACE)
@@ -98,7 +98,7 @@ module ApplianceConsole
 
   # Calling stty to provide the equivalent line settings when the console is run via an ssh session or
   # over the virtual machine console.
-  system("stty -echoprt ixany iexten echoe echok")
+  system('stty -echoprt ixany iexten echoe echok')
 
   say("#{I18n.t("product.name")} Virtual Appliance\n")
   say("To administer this appliance, browse to https://#{ip}\n") if configured
@@ -121,22 +121,22 @@ module ApplianceConsole
       configured = ApplianceConsole::DatabaseConfiguration.configured?
 
       summary_attributes = [
-        summary_entry("Hostname", host),
-        summary_entry("IP Address", ip),
-        summary_entry("Netmask", mask),
-        summary_entry("Gateway", gw),
-        summary_entry("Primary DNS", dns1),
-        summary_entry("Secondary DNS", dns2),
-        summary_entry("Search Order", order),
-        summary_entry("MAC Address", mac),
-        summary_entry("Timezone", timezone),
-        summary_entry("Local Database", ApplianceConsole::Utilities.pg_status),
+        summary_entry('Hostname', host),
+        summary_entry('IP Address', ip),
+        summary_entry('Netmask', mask),
+        summary_entry('Gateway', gw),
+        summary_entry('Primary DNS', dns1),
+        summary_entry('Secondary DNS', dns2),
+        summary_entry('Search Order', order),
+        summary_entry('MAC Address', mac),
+        summary_entry('Timezone', timezone),
+        summary_entry('Local Database', ApplianceConsole::Utilities.pg_status),
         summary_entry("#{I18n.t("product.name")} Database",
-                      configured ? "postgres @ #{dbhost || "localhost"}" : "not configured"),
-        summary_entry("Database/Region", configured ? "#{database} / #{region || 0}" : "not configured"),
-        summary_entry("External Auth", ExternalHttpdAuthentication.config_status),
+                      configured ? "postgres @ #{dbhost || "localhost"}" : 'not configured'),
+        summary_entry('Database/Region', configured ? "#{database} / #{region || 0}" : 'not configured'),
+        summary_entry('External Auth', ExternalHttpdAuthentication.config_status),
         summary_entry("#{I18n.t("product.name")} Version", version),
-        summary_entry("#{I18n.t("product.name")} Console", configured ? "https://#{ip}" : "not configured")
+        summary_entry("#{I18n.t("product.name")} Console", configured ? "https://#{ip}" : 'not configured')
       ]
 
       clear_screen
@@ -152,11 +152,11 @@ To modify the configuration, use a web browser to access the management page.
       press_any_key
 
       clear_screen
-      selection = ask_with_menu("Advanced Setting", AS_OPTIONS, nil, true)
+      selection = ask_with_menu('Advanced Setting', AS_OPTIONS, nil, true)
       case selection
-      when I18n.t("advanced_settings.dhcp")
+      when I18n.t('advanced_settings.dhcp')
         say("DHCP Network Configuration\n\n")
-        if agree("Apply DHCP network configuration? (Y/N): ")
+        if agree('Apply DHCP network configuration? (Y/N): ')
           say("\nApplying DHCP network configuration...")
 
           resolv = LinuxAdmin::Dns.new
@@ -171,17 +171,17 @@ To modify the configuration, use a web browser to access the management page.
           press_any_key
         end
 
-      when I18n.t("advanced_settings.static")
+      when I18n.t('advanced_settings.static')
         say("Static Network Configuration\n\n")
         say("Enter the new static network configuration settings.\n\n")
 
-        new_ip   = ask_for_ip("IP Address", ip)
-        new_mask = ask_for_ip("Netmask", mask)
-        new_gw   = ask_for_ip("Gateway", gw)
-        new_dns1 = ask_for_ip("Primary DNS", dns1)
+        new_ip   = ask_for_ip('IP Address', ip)
+        new_mask = ask_for_ip('Netmask', mask)
+        new_gw   = ask_for_ip('Gateway', gw)
+        new_dns1 = ask_for_ip('Primary DNS', dns1)
         new_dns2 = ask_for_ip_or_none("Secondary DNS (Enter 'none' for no value)")
 
-        new_search_order = ask_for_many("domain", "Domain search order", order)
+        new_search_order = ask_for_many('domain', 'Domain search order', order)
 
         clear_screen
         say(<<-EOL)
@@ -196,7 +196,7 @@ Static Network Configuration
 
           EOL
 
-        if agree("Apply static network configuration? (Y/N)")
+        if agree('Apply static network configuration? (Y/N)')
           say("\nApplying static network configuration...")
 
           resolv = LinuxAdmin::Dns.new
@@ -222,51 +222,51 @@ Static Network Configuration
           press_any_key
         end
 
-      when I18n.t("advanced_settings.testnet")
+      when I18n.t('advanced_settings.testnet')
         ApplianceConsole::Utilities.test_network
 
-      when I18n.t("advanced_settings.hostname")
+      when I18n.t('advanced_settings.hostname')
         say("Hostname Configuration\n\n")
-        new_host = just_ask("new hostname", host)
+        new_host = just_ask('new hostname', host)
 
         if new_host != host
-          say("Applying new hostname...")
+          say('Applying new hostname...')
           system_hosts = LinuxAdmin::Hosts.new
 
           system_hosts.parsed_file.each { |line| line[:hosts].to_a.delete(host) } unless host =~ /^localhost.*/
 
           system_hosts.hostname = new_host
-          system_hosts.set_canonical_hostname("127.0.0.1", new_host)
+          system_hosts.set_canonical_hostname('127.0.0.1', new_host)
           system_hosts.save
-          LinuxAdmin::Service.new("network").restart
+          LinuxAdmin::Service.new('network').restart
           press_any_key
         end
 
-      when I18n.t("advanced_settings.timezone")
+      when I18n.t('advanced_settings.timezone')
         say("#{selection}\n\n")
         timezone_config = ApplianceConsole::TimezoneConfiguration.new(timezone)
         if timezone_config.ask_questions && timezone_config.activate
-          say("Timezone configured")
+          say('Timezone configured')
           press_any_key
         else
-          say("Timezone not configured")
+          say('Timezone not configured')
           press_any_key
           raise MiqSignalError
         end
 
-      when I18n.t("advanced_settings.datetime")
+      when I18n.t('advanced_settings.datetime')
         say("#{selection}\n\n")
         date_time_config = ApplianceConsole::DateTimeConfiguration.new
         if date_time_config.ask_questions && date_time_config.activate
-          say("Date and time configured")
+          say('Date and time configured')
           press_any_key
         else
-          say("Date and time not configured")
+          say('Date and time not configured')
           press_any_key
           raise MiqSignalError
         end
 
-      when I18n.t("advanced_settings.httpdauth")
+      when I18n.t('advanced_settings.httpdauth')
         say("#{selection}\n\n")
 
         httpd_auth = ExternalHttpdAuthentication.new(host)
@@ -280,7 +280,7 @@ Static Network Configuration
           raise MiqSignalError
         end
 
-      when I18n.t("advanced_settings.extauth_opts")
+      when I18n.t('advanced_settings.extauth_opts')
         say("#{selection}\n\n")
 
         extauth_options = ExternalAuthOptions.new
@@ -292,14 +292,14 @@ Static Network Configuration
         end
         press_any_key
 
-      when I18n.t("advanced_settings.ca")
+      when I18n.t('advanced_settings.ca')
         say("#{selection}\n\n")
         begin
           ca = CertificateAuthority.new(:hostname => host)
           if ca.ask_questions && ca.activate
             say "\ncertificate result: #{ca.status_string}"
             unless ca.complete?
-              say "After the certificates are retrieved, rerun to update service configuration files"
+              say 'After the certificates are retrieved, rerun to update service configuration files'
             end
             press_any_key
           else
@@ -309,17 +309,17 @@ Static Network Configuration
         rescue AwesomeSpawn::CommandResultError => e
           say e.result.output
           say e.result.error
-          say ""
+          say ''
           press_any_key
         end
 
-      when I18n.t("advanced_settings.evmstop")
+      when I18n.t('advanced_settings.evmstop')
         say("#{selection}\n\n")
-        service = LinuxAdmin::Service.new("evmserverd")
+        service = LinuxAdmin::Service.new('evmserverd')
         if service.running?
           if ask_yn? "\nNote: It may take up to a few minutes for all #{I18n.t("product.name")} server processes to exit gracefully. Stop #{I18n.t("product.name")}"
             say("\nStopping #{I18n.t("product.name")} Server...")
-            Logging.logger.info("EVM server stop initiated by appliance console.")
+            Logging.logger.info('EVM server stop initiated by appliance console.')
             service.stop
           end
         else
@@ -327,42 +327,42 @@ Static Network Configuration
         end
         press_any_key
 
-      when I18n.t("advanced_settings.evmstart")
+      when I18n.t('advanced_settings.evmstart')
         say("#{selection}\n\n")
         if ask_yn?("\nStart #{I18n.t("product.name")}")
           say("\nStarting #{I18n.t("product.name")} Server...")
-          Logging.logger.info("EVM server start initiated by appliance console.")
-          LinuxAdmin::Service.new("evmserverd").start
+          Logging.logger.info('EVM server start initiated by appliance console.')
+          LinuxAdmin::Service.new('evmserverd').start
           press_any_key
         end
 
-      when I18n.t("advanced_settings.dbrestore")
+      when I18n.t('advanced_settings.dbrestore')
         say("#{selection}\n\n")
-        ApplianceConsole::Utilities.bail_if_db_connections "preventing a database restore"
+        ApplianceConsole::Utilities.bail_if_db_connections 'preventing a database restore'
 
         task_params = []
         uri = nil
 
         # TODO: merge into 1 prompt
-        case ask_with_menu("Restore Database File", RESTORE_OPTIONS, RESTORE_LOCAL, nil)
+        case ask_with_menu('Restore Database File', RESTORE_OPTIONS, RESTORE_LOCAL, nil)
         when RESTORE_LOCAL
           validate = ->(a) { File.exist?(a) }
-          uri = just_ask("location of the local restore file", DB_RESTORE_FILE, validate, "file that exists")
-          task = "evm:db:restore:local"
-          task_params = ["--", {:local_file => uri}]
+          uri = just_ask('location of the local restore file', DB_RESTORE_FILE, validate, 'file that exists')
+          task = 'evm:db:restore:local'
+          task_params = ['--', {:local_file => uri}]
 
         when RESTORE_NFS
-          uri = ask_for_uri("location of the remote backup file\nExample: #{sample_url('nfs')})", "nfs")
-          task = "evm:db:restore:remote"
-          task_params = ["--", {:uri => uri}]
+          uri = ask_for_uri("location of the remote backup file\nExample: #{sample_url('nfs')})", 'nfs')
+          task = 'evm:db:restore:remote'
+          task_params = ['--', {:uri => uri}]
 
         when RESTORE_SMB
-          uri = ask_for_uri("location of the remote backup file\nExample: #{sample_url('smb')}", "smb")
+          uri = ask_for_uri("location of the remote backup file\nExample: #{sample_url('smb')}", 'smb')
           user = just_ask("username with access to this file.\nExample: 'mydomain.com/user'")
           pass = ask_for_password("password for #{user}")
 
-          task = "evm:db:restore:remote"
-          task_params = ["--", {:uri => uri, :uri_username => user, :uri_password => pass}]
+          task = 'evm:db:restore:remote'
+          task_params = ['--', {:uri => uri, :uri_username => user, :uri_password => pass}]
 
         when ApplianceConsole::CANCEL
           raise MiqSignalError
@@ -374,11 +374,11 @@ Static Network Configuration
         delete_agreed = false
         if selection == RESTORE_LOCAL
           say "The local database restore file is located at: '#{uri}'.\n"
-          delete_agreed = agree("Should this file be deleted after completing the restore? (Y/N): ")
+          delete_agreed = agree('Should this file be deleted after completing the restore? (Y/N): ')
         end
 
         say "\nNote: A database restore cannot be undone.  The restore will use the file: #{uri}.\n"
-        if agree("Are you sure you would like to restore the database? (Y/N): ")
+        if agree('Are you sure you would like to restore the database? (Y/N): ')
           say("\nRestoring the database...")
           rake_success = ApplianceConsole::Utilities.rake(task, task_params)
           if rake_success && delete_agreed
@@ -390,7 +390,7 @@ Static Network Configuration
         end
         press_any_key
 
-      when I18n.t("advanced_settings.key_gen")
+      when I18n.t('advanced_settings.key_gen')
         say("#{selection}\n\n")
 
         key_config = ApplianceConsole::KeyConfiguration.new
@@ -403,13 +403,13 @@ Static Network Configuration
           raise MiqSignalError
         end
 
-      when I18n.t("advanced_settings.db_config")
+      when I18n.t('advanced_settings.db_config')
         say("#{selection}\n\n")
 
         key_config = ApplianceConsole::KeyConfiguration.new
         unless key_config.key_exist?
           say "No encryption key found.\n"
-          say "For migrations, copy encryption key from a hardened appliance."
+          say 'For migrations, copy encryption key from a hardened appliance.'
           say "For worker and multi-region setups, copy key from another appliance.\n"
           say "If this is your first appliance, just generate one now.\n\n"
 
@@ -423,91 +423,91 @@ Static Network Configuration
         end
 
         options = {
-          "Create Internal Database"           => "create_internal",
-          "Create Region in External Database" => "create_external",
-          "Join Region in External Database"   => "join_external",
-          "Reset Configured Database"          => "reset_region"
+          'Create Internal Database'           => 'create_internal',
+          'Create Region in External Database' => 'create_external',
+          'Join Region in External Database'   => 'join_external',
+          'Reset Configured Database'          => 'reset_region'
         }
-        action = ask_with_menu("Database Operation", options)
+        action = ask_with_menu('Database Operation', options)
 
         database_configuration =
           case action
-          when "create_internal"
+          when 'create_internal'
             ApplianceConsole::InternalDatabaseConfiguration.new
           when /_external/
-            ApplianceConsole::ExternalDatabaseConfiguration.new(:action => action.split("_").first.to_sym)
+            ApplianceConsole::ExternalDatabaseConfiguration.new(:action => action.split('_').first.to_sym)
           else
             ApplianceConsole::DatabaseConfiguration.new
           end
 
         case action
-        when "reset_region"
+        when 'reset_region'
           if database_configuration.reset_region
-            say("Database reset successfully")
+            say('Database reset successfully')
             say("Start the server processes via '#{I18n.t("advanced_settings.evmstart")}'.")
           else
-            say("Failed to reset database")
+            say('Failed to reset database')
           end
-        when "create_internal", /_external/
+        when 'create_internal', /_external/
           database_configuration.run_interactive
         end
         dbhost, database, region = ApplianceConsole::Utilities.db_host_database_region
         press_any_key
 
-      when I18n.t("advanced_settings.tmp_config")
+      when I18n.t('advanced_settings.tmp_config')
         say("#{selection}\n\n")
         tmp_config = ApplianceConsole::TempStorageConfiguration.new
         if tmp_config.ask_questions && tmp_config.activate
-          say("Temp storage disk configured")
+          say('Temp storage disk configured')
           press_any_key
         else
-          say("Temp storage disk not configured")
+          say('Temp storage disk not configured')
           press_any_key
           raise MiqSignalError
         end
 
-      when I18n.t("advanced_settings.restart")
-        case ask_with_menu("Restart Option", RE_OPTIONS, nil, false)
+      when I18n.t('advanced_settings.restart')
+        case ask_with_menu('Restart Option', RE_OPTIONS, nil, false)
         when ApplianceConsole::CANCEL
           # don't do anything
         when RE_RESTART
-          if are_you_sure?("restart the appliance now")
-            Logging.logger.info("Appliance restart initiated by appliance console.")
-            LinuxAdmin::Service.new("evmserverd").stop
+          if are_you_sure?('restart the appliance now')
+            Logging.logger.info('Appliance restart initiated by appliance console.')
+            LinuxAdmin::Service.new('evmserverd').stop
             LinuxAdmin::System.reboot!
           end
         when RE_DELLOGS
-          if are_you_sure?("restart the appliance now")
-            Logging.logger.info("Appliance restart with clean logs initiated by appliance console.")
-            LinuxAdmin::Service.new("evmserverd").stop
-            LinuxAdmin::Service.new("miqtop").stop
-            LinuxAdmin::Service.new("miqvmstat").stop
-            LinuxAdmin::Service.new("httpd").stop
-            FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/*.log*"))
-            FileUtils.rm_rf(Dir.glob("/var/www/miq/vmdb/log/apache/*.log*"))
-            Logging.logger.info("Logs cleaned and appliance rebooted by appliance console.")
+          if are_you_sure?('restart the appliance now')
+            Logging.logger.info('Appliance restart with clean logs initiated by appliance console.')
+            LinuxAdmin::Service.new('evmserverd').stop
+            LinuxAdmin::Service.new('miqtop').stop
+            LinuxAdmin::Service.new('miqvmstat').stop
+            LinuxAdmin::Service.new('httpd').stop
+            FileUtils.rm_rf(Dir.glob('/var/www/miq/vmdb/log/*.log*'))
+            FileUtils.rm_rf(Dir.glob('/var/www/miq/vmdb/log/apache/*.log*'))
+            Logging.logger.info('Logs cleaned and appliance rebooted by appliance console.')
             LinuxAdmin::System.reboot!
           end
         end
 
-      when I18n.t("advanced_settings.shutdown")
+      when I18n.t('advanced_settings.shutdown')
         say("#{selection}\n\n")
-        if are_you_sure?("shut down the appliance now")
+        if are_you_sure?('shut down the appliance now')
           say("\nShutting down appliance...  This process may take a few minutes.\n\n")
-          Logging.logger.info("Appliance shutdown initiated by appliance console")
-          LinuxAdmin::Service.new("evmserverd").stop
+          Logging.logger.info('Appliance shutdown initiated by appliance console')
+          LinuxAdmin::Service.new('evmserverd').stop
           LinuxAdmin::System.shutdown!
         end
 
-      when I18n.t("advanced_settings.scap")
+      when I18n.t('advanced_settings.scap')
         say("#{selection}\n\n")
         ApplianceConsole::Scap.new.lockdown
         press_any_key
 
-      when I18n.t("advanced_settings.summary")
+      when I18n.t('advanced_settings.summary')
         # Do nothing
 
-      when I18n.t("advanced_settings.quit")
+      when I18n.t('advanced_settings.quit')
         break
       end
     rescue MiqSignalError

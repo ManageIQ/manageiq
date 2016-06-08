@@ -8,15 +8,15 @@ class ContainerGroup < ApplicationRecord
   has_many :containers,
            :through => :container_definitions
   has_many :container_definitions, :dependent => :destroy
-  belongs_to  :ext_management_system, :foreign_key => "ems_id"
-  has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
-  has_many :node_selector_parts, -> { where(:section => "node_selectors") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  belongs_to  :ext_management_system, :foreign_key => 'ems_id'
+  has_many :labels, -> { where(:section => 'labels') }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
+  has_many :node_selector_parts, -> { where(:section => 'node_selectors') }, :class_name => 'CustomAttribute', :as => :resource, :dependent => :destroy
   has_many :container_conditions, :class_name => ContainerCondition, :as => :container_entity, :dependent => :destroy
   belongs_to :container_node
   has_and_belongs_to_many :container_services, :join_table => :container_groups_container_services
   belongs_to :container_replicator
   belongs_to :container_project
-  belongs_to :old_container_project, :foreign_key => "old_container_project_id", :class_name => 'ContainerProject'
+  belongs_to :old_container_project, :foreign_key => 'old_container_project_id', :class_name => 'ContainerProject'
   belongs_to :container_build_pod
   has_many :container_volumes, :foreign_key => :parent_id, :dependent => :destroy
 
@@ -32,7 +32,7 @@ class ContainerGroup < ApplicationRecord
   delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
-    container_conditions.find_by(:name => "Ready")
+    container_conditions.find_by(:name => 'Ready')
   end
 
   def ready_condition_status

@@ -4,7 +4,7 @@ class ManageIQ::Providers::Redhat::InfraManager::MetricsCapture < ManageIQ::Prov
   #
 
   def perf_init_rhevm
-    raise "no metrics credentials defined" unless target.ext_management_system.has_authentication_type?(:metrics)
+    raise 'no metrics credentials defined' unless target.ext_management_system.has_authentication_type?(:metrics)
 
     username, password = target.ext_management_system.auth_user_pwd(:metrics)
     metrics_hostname = target.ext_management_system.connection_configuration_by_role('metrics')

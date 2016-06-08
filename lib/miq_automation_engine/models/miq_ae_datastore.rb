@@ -1,13 +1,13 @@
 module MiqAeDatastore
-  XML_VERSION = "1.0"
-  XML_VERSION_MIN_SUPPORTED = "1.0"
-  MANAGEIQ_DOMAIN = "ManageIQ"
+  XML_VERSION = '1.0'
+  XML_VERSION_MIN_SUPPORTED = '1.0'
+  MANAGEIQ_DOMAIN = 'ManageIQ'
   MANAGEIQ_PRIORITY = 0
   DATASTORE_DIRECTORY = Rails.root.join('db/fixtures/ae_datastore')
   GIT_REPO_DIRECTORY = Rails.root.join('data/git_repos')
-  DEFAULT_OBJECT_NAMESPACE = "$"
-  TEMP_DOMAIN_PREFIX = "TEMP_DOMAIN"
-  ALL_DOMAINS = "*"
+  DEFAULT_OBJECT_NAMESPACE = '$'
+  TEMP_DOMAIN_PREFIX = 'TEMP_DOMAIN'
+  ALL_DOMAINS = '*'
   PRESERVED_ATTRS = [:priority, :enabled, :system]
 
   # deprecated module
@@ -18,7 +18,7 @@ module MiqAeDatastore
     end
   end
 
-  TMP_DIR = Rails.root.join("tmp/miq_automate_engine").expand_path
+  TMP_DIR = Rails.root.join('tmp/miq_automate_engine').expand_path
 
   def self.temp_domain
     "#{TEMP_DOMAIN_PREFIX}-#{MiqUUID.new_guid}"
@@ -120,7 +120,7 @@ module MiqAeDatastore
   end
 
   def self.reset
-    _log.info("Clearing datastore")
+    _log.info('Clearing datastore')
     [MiqAeClass, MiqAeField, MiqAeInstance, MiqAeNamespace, MiqAeMethod, MiqAeValue].each(&:delete_all)
   end
 
@@ -164,7 +164,7 @@ module MiqAeDatastore
   def self.reset_to_defaults
     raise "Datastore directory [#{DATASTORE_DIRECTORY}] not found" unless Dir.exist?(DATASTORE_DIRECTORY)
     saved_attrs = preserved_attrs_for_domains
-    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).each do |domain_file|
+    Dir.glob(DATASTORE_DIRECTORY.join('*', MiqAeDomain::DOMAIN_YAML_FILENAME)).each do |domain_file|
       domain_name = File.basename(File.dirname(domain_file))
       reset_domain(DATASTORE_DIRECTORY, domain_name, Tenant.root_tenant)
     end
@@ -176,13 +176,13 @@ module MiqAeDatastore
   def self.seed
     ns = MiqAeDomain.find_by_fqname(MANAGEIQ_DOMAIN)
     unless ns
-      _log.info "Seeding ManageIQ domain..."
+      _log.info 'Seeding ManageIQ domain...'
       begin
         reset_to_defaults
       rescue => err
         _log.error "Seeding... Reset failed, #{err.message}"
       else
-        _log.info "Seeding... Complete"
+        _log.info 'Seeding... Complete'
       end
     end
   end
@@ -198,7 +198,7 @@ module MiqAeDatastore
   def self.get_sorted_matching_objects(user, arclass, ns, klass, name, enabled)
     options = arclass == ::MiqAeClass ? {:has_instance_name => false} : {}
     domains = user.current_tenant.visible_domains
-    matches = arclass.where("lower(name) = ?", name.downcase).collect do |obj|
+    matches = arclass.where('lower(name) = ?', name.downcase).collect do |obj|
       get_domain_index_object(domains, obj, klass, ns, enabled, options)
     end.compact
     matches.sort_by { |a| a[:index] }.collect { |v| v[:obj] }

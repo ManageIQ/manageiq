@@ -1,15 +1,15 @@
 require_relative '../../bundler_setup'
 require 'log4r'
 require 'ostruct'
-require "util/extensions/miq-blank"
+require 'util/extensions/miq-blank'
 require 'metadata/VmConfig/VmConfig'
-require "VolumeManager/MiqVolumeManager"
-require "fs/MiqFS/MiqFS"
-require "MiqVm/MiqVm"
+require 'VolumeManager/MiqVolumeManager'
+require 'fs/MiqFS/MiqFS'
+require 'MiqVm/MiqVm'
 require 'VMwareWebService/MiqVimBroker'
 
-SRC_VM = raise "please define"
-vmCfg = "/Volumes/WDpassport/Virtual Machines/MIQAppliance-win2008x86/Win2008x86.vmx"
+SRC_VM = raise 'please define'
+vmCfg = '/Volumes/WDpassport/Virtual Machines/MIQAppliance-win2008x86/Win2008x86.vmx'
 
 class ConsoleFormatter < Log4r::Formatter
   def format(event)
@@ -46,21 +46,21 @@ begin
   rta = vm.rootTrees
   raise "No root filesystems detected for: #{vmCfg}" if rta.empty?
   rt = rta.first
-  puts "**** Filesystem information:"
+  puts '**** Filesystem information:'
   rt.toXml
   puts
 
   # exit
 
-  puts "**** First-level files:"
-  puts "C:"
-  rt.dirForeach("C:/") { |f| puts "\t#{f}" }
+  puts '**** First-level files:'
+  puts 'C:'
+  rt.dirForeach('C:/') { |f| puts "\t#{f}" }
   # puts "F:"
   # rt.dirForeach("F:/") { |f| puts "\t#{f}" }
 
   puts
-  puts "******************* SOFTWARE:"
-  xml = vm.extract("software")
+  puts '******************* SOFTWARE:'
+  xml = vm.extract('software')
   xml.write($stdout, 4)
   puts
 

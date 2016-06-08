@@ -1,7 +1,7 @@
 class EvmDatabase
   include Vmdb::Logging
 
-  SCHEMA_FILE = Rails.root.join("db/schema.yml").freeze
+  SCHEMA_FILE = Rails.root.join('db/schema.yml').freeze
 
   PRIMORDIAL_CLASSES = %w(
     MiqDatabase
@@ -31,7 +31,7 @@ class EvmDatabase
 
   def self.find_seedable_model_class_names
     @found_model_class_names ||= begin
-      Dir.glob(Rails.root.join("app/models/*.rb")).collect { |f| File.basename(f, ".*").camelize if File.read(f).include?("self.seed") }.compact.sort
+      Dir.glob(Rails.root.join('app/models/*.rb')).collect { |f| File.basename(f, '.*').camelize if File.read(f).include?('self.seed') }.compact.sort
     end
   end
 
@@ -41,8 +41,8 @@ class EvmDatabase
 
   def self.seed_primordial
     if ENV['SKIP_PRIMORDIAL_SEED'] && MiqDatabase.count > 0
-      puts "** Primordial seedings is skipped."
-      puts "** Unset SKIP_PRIMORDIAL_SEED to re-enable"
+      puts '** Primordial seedings is skipped.'
+      puts '** Unset SKIP_PRIMORDIAL_SEED to re-enable'
     else
       seed(PRIMORDIAL_CLASSES)
     end
@@ -53,7 +53,7 @@ class EvmDatabase
   end
 
   def self.seed(classes = nil, exclude_list = [])
-    _log.info("Seeding...")
+    _log.info('Seeding...')
 
     classes ||= PRIMORDIAL_CLASSES + (seedable_model_class_names - PRIMORDIAL_CLASSES)
     classes -= exclude_list
@@ -84,7 +84,7 @@ class EvmDatabase
       end
     end
 
-    _log.info("Seeding... Complete")
+    _log.info('Seeding... Complete')
   end
 
   def self.host
@@ -92,12 +92,12 @@ class EvmDatabase
   end
 
   def self.local?
-    host.blank? || ["localhost", "localhost.localdomain", "127.0.0.1", "0.0.0.0"].include?(host)
+    host.blank? || ['localhost', 'localhost.localdomain', '127.0.0.1', '0.0.0.0'].include?(host)
   end
 
   # Determines the average time to the database in milliseconds
   def self.ping(connection)
-    query = "SELECT 1"
+    query = 'SELECT 1'
     Benchmark.realtime { 10.times { connection.select_value(query) } } / 10 * 1000
   end
 
@@ -136,7 +136,7 @@ class EvmDatabase
       expected_schema.each do |table, expected_columns|
         next if compare_schema[table] == expected_columns
 
-        errors << <<-ERROR.gsub!(/^ +/, "")
+        errors << <<-ERROR.gsub!(/^ +/, '')
           Schema validation failed for host #{db_connection_host(connection)}:
 
           Columns for table #{table} in the current schema do not match the columns listed in #{SCHEMA_FILE}
@@ -160,14 +160,14 @@ class EvmDatabase
       diff_in_current  = current_tables - expected_tables
       diff_in_expected = expected_tables - current_tables
       if diff_in_current.empty? && diff_in_expected.empty?
-        <<-ERROR.gsub!(/^ +/, "")
+        <<-ERROR.gsub!(/^ +/, '')
           Schema validation failed for host #{db_connection_host(connection)}:
 
           Expected schema table order does not match sorted current tables.
           Use 'rake evm:db:write_schema' to generate the new expected schema when making changes.
         ERROR
       else
-        <<-ERROR.gsub!(/^ +/, "")
+        <<-ERROR.gsub!(/^ +/, '')
           Schema validation failed for host #{db_connection_host(connection)}:
 
           Current schema tables do not match expected
@@ -179,7 +179,7 @@ class EvmDatabase
     end
 
     def db_connection_host(connection)
-      connection.raw_connection.conninfo_hash[:host] || "localhost"
+      connection.raw_connection.conninfo_hash[:host] || 'localhost'
     end
   end
 end

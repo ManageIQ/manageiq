@@ -13,15 +13,15 @@ class MiqVolumeManager
   def self.fromNativePvs
     return nil unless Sys::Platform::IMPL == :linux
 
-    msg_pfx = "MiqVolumeManager.fromNativePvs"
+    msg_pfx = 'MiqVolumeManager.fromNativePvs'
 
-    bdevs = `pvdisplay -c | cut -d: -f1`.tr(" \t", "").split("\n")
-    ldevs = `lvdisplay -c | cut -d: -f1`.tr(" \t", "").split("\n")
+    bdevs = `pvdisplay -c | cut -d: -f1`.tr(" \t", '').split("\n")
+    ldevs = `lvdisplay -c | cut -d: -f1`.tr(" \t", '').split("\n")
     bdevs -= ldevs
     bda = []
 
     bdevs.each do |bd|
-      next if bd == "unknowndevice"
+      next if bd == 'unknowndevice'
       $log.debug "#{msg_pfx}: Opening PV = #{bd}"
 
       diskInfo = OpenStruct.new
@@ -97,7 +97,7 @@ class MiqVolumeManager
   end
 
   def close
-    $log.info "MiqVolumeManager.close called"
+    $log.info 'MiqVolumeManager.close called'
     @logicalVolumes     = @logicalVolumes.clear
     @physicalVolumes    = @physicalVolumes.clear
     @hiddenVolumes      = @hiddenVolumes.clear
@@ -115,15 +115,15 @@ class MiqVolumeManager
   end
 
   def closeAll
-    $log.info "MiqVolumeManager.closeAll called"
+    $log.info 'MiqVolumeManager.closeAll called'
     closePvols
     close
   end
 
   def parseLvmMetadata(pvHdrs)
     pvHdrs.each_value do |pvh|
-      if pvh.lvm_type == "LVM2"
-        $log.debug "MiqVolumeManager.parseLvmMetadata: parsing LVM2 metadata"
+      if pvh.lvm_type == 'LVM2'
+        $log.debug 'MiqVolumeManager.parseLvmMetadata: parsing LVM2 metadata'
         pvh.mdList.each do |md|
           Lvm2MdParser.dumpMetadata(md) if $log.debug?
           parser = Lvm2MdParser.new(md, pvHdrs)
@@ -131,8 +131,8 @@ class MiqVolumeManager
           @vgHash[parser.vgName] = parser.parse
           # @vgHash[parser.vgName].dump
         end
-      elsif pvh.lvm_type == "LDM"
-        $log.debug "MiqVolumeManager.parseLvmMetadata: parsing LDM metadata"
+      elsif pvh.lvm_type == 'LDM'
+        $log.debug 'MiqVolumeManager.parseLvmMetadata: parsing LDM metadata'
         parser = LdmMdParser.new(pvh, pvHdrs)
         next if @vgHash[parser.vgName]
         @vgHash[parser.vgName] = parser.parse
@@ -145,7 +145,7 @@ class MiqVolumeManager
 
   def parseLvmThinMetadata
     @vgHash.each do |vgname, vg|
-      $log.debug "MiqVolumeManager.parseLvmThinMetadata: setting LVM2 thin metadata"
+      $log.debug 'MiqVolumeManager.parseLvmThinMetadata: setting LVM2 thin metadata'
 
       vg.thin_volumes.each do |tv|
         tv.thin_segments.each do |seg|
@@ -186,27 +186,27 @@ class MiqVolumeManager
 
     pvs = doc.add_element volType
     vols.each do |dobj|
-      pv = pvs.add_element('volume',               "controller"        => dobj.hwId,
-                                                   "disk_type"         => dobj.diskType,
-                                                   "location"          => dobj.partNum,
-                                                   "partition_type"    => dobj.partType,
-                                                   "size"              => dobj.size,
-                                                   "virtual_disk_file" => dobj.dInfo.fileName,
-                                                   "start_address"     => dobj.startByteAddr,)
+      pv = pvs.add_element('volume',               'controller'        => dobj.hwId,
+                                                   'disk_type'         => dobj.diskType,
+                                                   'location'          => dobj.partNum,
+                                                   'partition_type'    => dobj.partType,
+                                                   'size'              => dobj.size,
+                                                   'virtual_disk_file' => dobj.dInfo.fileName,
+                                                   'start_address'     => dobj.startByteAddr,)
       if @rootTrees && @rootTrees.length > 0
-        pv.add_attribute("name", @rootTrees[0].osNames[dobj.hwId].to_s) if @rootTrees[0].osNames
+        pv.add_attribute('name', @rootTrees[0].osNames[dobj.hwId].to_s) if @rootTrees[0].osNames
 
         fs = @rootTrees[0].fileSystems.find { |f| f.fs.dobj.hwId == dobj.hwId }
         unless fs.nil?
-          pv.add_attributes("filesystem" => fs.fs.fsType,
-                            "free_space" => fs.fs.freeBytes,
-                            "used_space" => dobj.size - fs.fs.freeBytes)
+          pv.add_attributes('filesystem' => fs.fs.fsType,
+                            'free_space' => fs.fs.freeBytes,
+                            'used_space' => dobj.size - fs.fs.freeBytes)
         end
       end
 
       if dobj.pvObj
-        pv.add_attributes("volume_group" => dobj.pvObj.vgObj.vgName,
-                          "uid"          => dobj.pvObj.pvId)
+        pv.add_attributes('volume_group' => dobj.pvObj.vgObj.vgName,
+                          'uid'          => dobj.pvObj.pvId)
       end
     end
     doc
@@ -219,20 +219,20 @@ class MiqVolumeManager
     @logicalVolumes.each do |dobj|
       lvObj = dobj.dInfo.lvObj
       name = lvObj.driveHint.blank? ? lvObj.lvName : lvObj.driveHint
-      lv = lvs.add_element('volume',               "name"         => name,
-                                                   "type"         => dobj.diskType,
-                                                   "size"         => dobj.size,
-                                                   "uid"          => lvObj.lvId,
-                                                   "volume_group" => lvObj.vgObj.vgName,
-                                                   "drive_hint"   => lvObj.driveHint,
-                                                   "volume_name"  => lvObj.lvName,)
+      lv = lvs.add_element('volume',               'name'         => name,
+                                                   'type'         => dobj.diskType,
+                                                   'size'         => dobj.size,
+                                                   'uid'          => lvObj.lvId,
+                                                   'volume_group' => lvObj.vgObj.vgName,
+                                                   'drive_hint'   => lvObj.driveHint,
+                                                   'volume_name'  => lvObj.lvName,)
 
       if @rootTrees && @rootTrees.length > 0
         fs = @rootTrees[0].fileSystems.find { |f| f.fs.dobj.dInfo.lvObj && f.fs.dobj.dInfo.lvObj.lvName == lvObj.lvName }
         unless fs.nil?
-          lv.add_attributes("filesystem" => fs.fs.fsType,
-                            "free_space" => fs.fs.freeBytes,
-                            "used_space" => dobj.size - fs.fs.freeBytes)
+          lv.add_attributes('filesystem' => fs.fs.fsType,
+                            'free_space' => fs.fs.freeBytes,
+                            'used_space' => dobj.size - fs.fs.freeBytes)
         end
       end
     end
@@ -247,30 +247,30 @@ class MiqVolumeManager
       pext = 0
       lext = 0
 
-      vg = vgs.add_element('volume_group', {"name" => vgn})
+      vg = vgs.add_element('volume_group', {'name' => vgn})
 
       pvs = vg.add_element 'physical'
       vgo.physicalVolumes.each do |pvn, pvo|
-        pv = pvs.add_element('volume',                   "name"              => pvn,
-                                                         "uid"               => pvo.pvId,
-                                                         "controller"        => pvo.diskObj.hwId,
-                                                         "os_name"           => pvo.device,
-                                                         "physical_extents"  => pvo.peCount,
-                                                         "virtual_disk_file" => pvo.diskObj.dInfo.fileName)
+        pv = pvs.add_element('volume',                   'name'              => pvn,
+                                                         'uid'               => pvo.pvId,
+                                                         'controller'        => pvo.diskObj.hwId,
+                                                         'os_name'           => pvo.device,
+                                                         'physical_extents'  => pvo.peCount,
+                                                         'virtual_disk_file' => pvo.diskObj.dInfo.fileName)
         pext += pvo.peCount
       end
 
       lvs = vg.add_element 'logical'
       vgo.logicalVolumes.each do |lvn, lvo|
-        lv = lvs.add_element('volume',                   "name" => lvn,
-                                                         "uid"  => lvo.lvId)
+        lv = lvs.add_element('volume',                   'name' => lvn,
+                                                         'uid'  => lvo.lvId)
         lvo.segments.each { |s| lext += s.extentCount }
       end
 
-      vg.add_attributes("extent_size"      => vgo.extentSize,
-                        "physical_extents" => pext,
-                        "logical_extents"  => lext,
-                        "free_extents"     => pext - lext)
+      vg.add_attributes('extent_size'      => vgo.extentSize,
+                        'physical_extents' => pext,
+                        'logical_extents'  => lext,
+                        'free_extents'     => pext - lext)
     end if @vgHash
     doc
   end

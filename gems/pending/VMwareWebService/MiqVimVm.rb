@@ -1,7 +1,7 @@
 require 'sync'
 
 require 'enumerator'
-require "ostruct"
+require 'ostruct'
 
 require 'util/extensions/miq-hash'
 require 'util/miq-exception'
@@ -12,7 +12,7 @@ require 'vmware/vcenter_thumb_print'
 class MiqVimVm
   include MiqVimVdlVcConnectionMod
 
-  EVM_SNAPSHOT_NAME         = "EvmSnapshot".freeze # TODO: externalize - not VIM specific
+  EVM_SNAPSHOT_NAME         = 'EvmSnapshot'.freeze # TODO: externalize - not VIM specific
   CH_SNAPSHOT_NAME          = /^Consolidate Helper/
   VCB_SNAPSHOT_NAME         = '_VCB-BACKUP_'.freeze
   NETAPP_SNAPSHOT_NAME      = /^smvi/
@@ -25,7 +25,7 @@ class MiqVimVm
 
   attr_reader :name, :localPath, :dsPath, :hostSystem, :uuid, :vmh, :devices, :invObj, :annotation, :customValues, :vmMor
 
-  MIQ_ALARM_PFX = "MiqControl".freeze
+  MIQ_ALARM_PFX = 'MiqControl'.freeze
 
   def initialize(invObj, vmh)
     @invObj                 = invObj
@@ -143,25 +143,25 @@ class MiqVimVm
   end
 
   def powerState
-    getProp("runtime.powerState")["runtime"]["powerState"]
+    getProp('runtime.powerState')['runtime']['powerState']
   end
 
   def poweredOn?
-    powerState == "poweredOn"
+    powerState == 'poweredOn'
   end
 
   def poweredOff?
-    powerState == "poweredOff"
+    powerState == 'poweredOff'
   end
 
   def suspended?
-    powerState == "suspended"
+    powerState == 'suspended'
   end
 
   def connectionState
-    runtime = getProp("runtime.connectionState")
+    runtime = getProp('runtime.connectionState')
     raise "Failed to retrieve property 'runtime.connectionState' for VM MOR: <#{@vmMor}>" if runtime.nil?
-    runtime["runtime"]["connectionState"]
+    runtime['runtime']['connectionState']
   end
 
   ############################
@@ -184,14 +184,14 @@ class MiqVimVm
   end
 
   def template?
-    getProp("config.template")["config"]["template"] == "true"
+    getProp('config.template')['config']['template'] == 'true'
   end
 
   ################
   # VM Migration.
   ################
 
-  def migrate(host, pool = nil, priority = "defaultPriority", state = nil)
+  def migrate(host, pool = nil, priority = 'defaultPriority', state = nil)
     hmor = (host.kind_of?(Hash) ? host['MOR'] : host)
     pool = (pool.kind_of?(Hash) ? pool['MOR'] : pool) if pool
 
@@ -202,7 +202,7 @@ class MiqVimVm
     waitForTask(taskMor)
   end
 
-  def relocateVM(host, pool = nil, datastore = nil, disk_move_type = nil, transform = nil, priority = "defaultPriority", disk = nil)
+  def relocateVM(host, pool = nil, datastore = nil, disk_move_type = nil, transform = nil, priority = 'defaultPriority', disk = nil)
     pmor  = (pool.kind_of?(Hash) ? pool['MOR'] : pool)    if pool
     hmor  = (host.kind_of?(Hash) ? host['MOR'] : host)    if host
     dsmor = (datastore.kind_of?(Hash) ? datastore['MOR'] : datastore) if datastore
@@ -298,18 +298,18 @@ class MiqVimVm
   ####################
 
   def snapshotInfo_locked(refresh = false)
-    raise "snapshotInfo_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'snapshotInfo_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@snapshotInfo) if @snapshotInfo && !refresh
 
     begin
         @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-        unless (ssp = @invObj.getMoProp_local(@vmMor, "snapshot"))
+        unless (ssp = @invObj.getMoProp_local(@vmMor, 'snapshot'))
           @snapshotInfo = nil
           return(nil)
         end
 
-        ssObj = ssp["snapshot"]
+        ssObj = ssp['snapshot']
         ssMorHash = {}
         rsl = ssObj['rootSnapshotList']
         rsl = [rsl] unless rsl.kind_of?(Array)
@@ -334,18 +334,18 @@ class MiqVimVm
     (sni)
   end
 
-  def createEvmSnapshot(desc, quiesce = "false", wait = true, free_space_percent = 100)
+  def createEvmSnapshot(desc, quiesce = 'false', wait = true, free_space_percent = 100)
     hasEvm    = hasSnapshot?(EVM_SNAPSHOT_NAME, true)
     hasCh     = hasSnapshot?(CH_SNAPSHOT_NAME, false)
     hasVcb    = hasSnapshot?(VCB_SNAPSHOT_NAME, false)
     hasNetApp = hasSnapshot?(NETAPP_SNAPSHOT_NAME, false)
 
     if hasEvm || hasCh || hasVcb
-      raise MiqException::MiqVmSnapshotError, "VM has EVM and consolidate helper snapshots" if hasEvm && hasCh
-      raise MiqException::MiqVmSnapshotError, "VM already has an EVM snapshot"              if hasEvm
-      raise MiqException::MiqVmSnapshotError, "VM already has an VCB snapshot"              if hasVcb
-      raise MiqException::MiqVmSnapshotError, "VM already has a NetApp snapshot"            if hasNetApp
-      raise MiqException::MiqVmSnapshotError, "VM has a consolidate helper snapshot"
+      raise MiqException::MiqVmSnapshotError, 'VM has EVM and consolidate helper snapshots' if hasEvm && hasCh
+      raise MiqException::MiqVmSnapshotError, 'VM already has an EVM snapshot'              if hasEvm
+      raise MiqException::MiqVmSnapshotError, 'VM already has an VCB snapshot'              if hasVcb
+      raise MiqException::MiqVmSnapshotError, 'VM already has a NetApp snapshot'            if hasNetApp
+      raise MiqException::MiqVmSnapshotError, 'VM has a consolidate helper snapshot'
     end
     createSnapshot(EVM_SNAPSHOT_NAME, desc, false, quiesce, wait, free_space_percent)
   end
@@ -373,7 +373,7 @@ class MiqVimVm
   def createSnapshot(name, desc, memory, quiesce, wait = true, free_space_percent = 100)
     $vim_log.debug "MiqVimVm::createSnapshot(#{name}, #{desc}, #{memory}, #{quiesce})" if $vim_log
     cs = connectionState
-    raise "MiqVimVm(#{@invObj.server}, #{@invObj.username}).createSnapshot: VM is not connected, connectionState = #{cs}" if cs != "connected"
+    raise "MiqVimVm(#{@invObj.server}, #{@invObj.username}).createSnapshot: VM is not connected, connectionState = #{cs}" if cs != 'connected'
     snapshot_free_space_check('create', free_space_percent)
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).createSnapshot: calling createSnapshot_Task" if $vim_log
     taskMor = @invObj.createSnapshot_Task(@vmMor, name, desc, memory, quiesce)
@@ -390,7 +390,7 @@ class MiqVimVm
     taskMor
   end # def createSnapshot
 
-  def removeSnapshot(snMor, subTree = "false", wait = true, free_space_percent = 100)
+  def removeSnapshot(snMor, subTree = 'false', wait = true, free_space_percent = 100)
     $vim_log.debug "MiqVimVm::removeSnapshot(#{snMor}, #{subTree})" if $vim_log
     snMor = getSnapMor(snMor)
     snapshot_free_space_check('remove', free_space_percent)
@@ -402,7 +402,7 @@ class MiqVimVm
     waitForTask(taskMor)
   end # def removeSnapshot
 
-  def removeSnapshotByDescription(description, refresh = false, subTree = "false", wait = true, free_space_percent = 100)
+  def removeSnapshotByDescription(description, refresh = false, subTree = 'false', wait = true, free_space_percent = 100)
     mor = nil
     @cacheLock.synchronize(:SH) do
       return false unless (si = snapshotInfo_locked(refresh))
@@ -415,7 +415,7 @@ class MiqVimVm
   end # def removeSnapshotByDescription
 
   def removeAllSnapshots(free_space_percent = 100)
-    $vim_log.debug "MiqVimVm::removeAllSnapshots" if $vim_log
+    $vim_log.debug 'MiqVimVm::removeAllSnapshots' if $vim_log
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).removeAllSnapshots: calling removeAllSnapshots_Task" if $vim_log
     snapshot_free_space_check('remove_all', free_space_percent)
     taskMor = @invObj.removeAllSnapshots_Task(@vmMor)
@@ -435,7 +435,7 @@ class MiqVimVm
   end # def revertToSnapshot
 
   def revertToCurrentSnapshot
-    $vim_log.debug "MiqVimVm::revertToCurrentSnapshot" if $vim_log
+    $vim_log.debug 'MiqVimVm::revertToCurrentSnapshot' if $vim_log
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).revertToCurrentSnapshot: calling revertToCurrentSnapshot_Task" if $vim_log
     taskMor = @invObj.revertToCurrentSnapshot_Task(@vmMor)
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).revertToCurrentSnapshot: returned from revertToCurrentSnapshot_Task" if $vim_log
@@ -452,7 +452,7 @@ class MiqVimVm
   end # def renameSnapshot
 
   def snapshot_free_space_check(action, free_space_percent = 100)
-    config = @invObj.getMoProp_local(@vmMor, "config")
+    config = @invObj.getMoProp_local(@vmMor, 'config')
     disk_space_per_datastore(@devices, snapshot_directory_mor(config)).each do |ds_mor, disk_space_in_kb|
       check_disk_space(action, ds_mor, disk_space_in_kb, free_space_percent)
     end
@@ -463,7 +463,7 @@ class MiqVimVm
     required_snapshot_space = ((max_disk_space_in_kb * 1024) * (pct.to_f / 100.to_f)).to_i
 
     # Determine the free space on the datastore used for snapshots
-    ds_summary    = @invObj.getMoProp_local(ds_mor, "summary")
+    ds_summary    = @invObj.getMoProp_local(ds_mor, 'summary')
     ds_name       = ds_summary.fetch_path('summary', 'name')
     ds_free_space = ds_summary.fetch_path('summary', 'freeSpace').to_i
 
@@ -493,7 +493,7 @@ class MiqVimVm
   def snapshot_directory_mor(config)
     if @invObj.apiVersion.to_i >= 5
       redoNotWithParent = config.fetch_path('config', 'extraConfig').detect { |ec| ec['key'] == 'snapshot.redoNotWithParent' }
-      return nil if redoNotWithParent.nil? || redoNotWithParent['value'].to_s.downcase != "true"
+      return nil if redoNotWithParent.nil? || redoNotWithParent['value'].to_s.downcase != 'true'
     end
     snapshot_path = config.fetch_path('config', 'files', 'snapshotDirectory')
     dsn = @invObj.path2dsName(snapshot_path)
@@ -519,13 +519,13 @@ class MiqVimVm
 
   def getCfg(snap = nil)
     mor = snap ? getSnapMor(snap) : @vmMor
-    cfgProps = @invObj.getMoProp(mor, "config")
-    raise MiqException::MiqVimError, "Failed to retrieve configuration information for VM" if cfgProps.nil?
-    cfgProps = cfgProps["config"]
+    cfgProps = @invObj.getMoProp(mor, 'config')
+    raise MiqException::MiqVimError, 'Failed to retrieve configuration information for VM' if cfgProps.nil?
+    cfgProps = cfgProps['config']
 
     cfgHash = {
       'displayname'          => cfgProps['name'],
-      'guestos'              => cfgProps['guestId'].downcase.chomp("guest"),
+      'guestos'              => cfgProps['guestId'].downcase.chomp('guest'),
       'uuid.bios'            => cfgProps['uuid'],
       'uuid.location'        => cfgProps['locationId'],
       'memsize'              => cfgProps['hardware']['memoryMB'],
@@ -555,40 +555,40 @@ class MiqVimVm
           tag = "scsi#{dev['busNumber']}"
           dev['tag'] = tag
           controllerKeyHash[dev['key']] = dev
-          cfgHash["#{tag}.present"] = "true"
-          cfgHash["#{tag}.virtualdev"] = "buslogic"
+          cfgHash["#{tag}.present"] = 'true'
+          cfgHash["#{tag}.virtualdev"] = 'buslogic'
 
         when 'VirtualDisk'
           controller_tag = controllerKeyHash.fetch_path(dev['controllerKey'], 'tag')
           next if controller_tag.nil?
           tag = "#{controller_tag}:#{dev['unitNumber']}"
-          cfgHash["#{tag}.present"] = "true"
-          cfgHash["#{tag}.devicetype"] = "disk"
+          cfgHash["#{tag}.present"] = 'true'
+          cfgHash["#{tag}.devicetype"] = 'disk'
           cfgHash["#{tag}.filename"] = dev['backing']['fileName']
           cfgHash["#{tag}.mode"] = dev['backing']['diskMode']
-        when "VirtualCdrom"
+        when 'VirtualCdrom'
           controller_tag = controllerKeyHash.fetch_path(dev['controllerKey'], 'tag')
           next if controller_tag.nil?
           tag = "#{controller_tag}:#{dev['unitNumber']}"
-          cfgHash["#{tag}.present"] = "true"
+          cfgHash["#{tag}.present"] = 'true'
           if dev['backing']['fileName'].nil?
-            cfgHash["#{tag}.devicetype"] = "cdrom-raw"
+            cfgHash["#{tag}.devicetype"] = 'cdrom-raw'
             cfgHash["#{tag}.filename"] = dev['backing']['deviceName']
           else
-            cfgHash["#{tag}.devicetype"] = "cdrom-image"
+            cfgHash["#{tag}.devicetype"] = 'cdrom-image'
             cfgHash["#{tag}.filename"] = dev['backing']['fileName']
           end
           cfgHash["#{tag}.startconnected"] = dev['connectable']['startConnected']
-        when "VirtualFloppy"
+        when 'VirtualFloppy'
           tag = "floppy#{dev['unitNumber']}"
-          cfgHash["#{tag}.present"] = "true"
+          cfgHash["#{tag}.present"] = 'true'
           if dev['backing']['fileName'].nil?
             cfgHash["#{tag}.filename"] = dev['backing']['deviceName']
           else
             cfgHash["#{tag}.filename"] = dev['backing']['fileName']
           end
           cfgHash["#{tag}.startconnected"] = dev['connectable']['startConnected']
-        when "VirtualPCNet32", "VirtualE1000"
+        when 'VirtualPCNet32', 'VirtualE1000'
           tag = "ethernet#{dev['unitNumber'].to_i - 1}"
           cfgHash["#{tag}.present"] = "true"
           cfgHash["#{tag}.networkname"] = dev['backing']['deviceName']
@@ -610,11 +610,11 @@ class MiqVimVm
   end
 
   def getMemory
-    getProp("summary.config.memorySizeMB")["summary"]["config"]["memorySizeMB"].to_i
+    getProp('summary.config.memorySizeMB')['summary']['config']['memorySizeMB'].to_i
   end
 
   def setMemory(memMB)
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") { |cs| cs.memoryMB = memMB }
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') { |cs| cs.memoryMB = memMB }
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).setMemory: calling reconfigVM_Task" if $vim_log
     taskMor = @invObj.reconfigVM_Task(@vmMor, vmConfigSpec)
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).setMemory: returned from reconfigVM_Task" if $vim_log
@@ -622,11 +622,11 @@ class MiqVimVm
   end
 
   def getNumCPUs
-    getProp("summary.config.numCpu")["summary"]["config"]["numCpu"].to_i
+    getProp('summary.config.numCpu')['summary']['config']['numCpu'].to_i
   end
 
   def setNumCPUs(numCPUs)
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") { |cs| cs.numCPUs = numCPUs }
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') { |cs| cs.numCPUs = numCPUs }
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).setNumCPUs: calling reconfigVM_Task" if $vim_log
     taskMor = @invObj.reconfigVM_Task(@vmMor, vmConfigSpec)
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).setNumCPUs: returned from reconfigVM_Task" if $vim_log
@@ -638,11 +638,11 @@ class MiqVimVm
   end
 
   def connectDevice(dev, connect = true, onStartup = false)
-    raise "connectDevice: device #{dev['deviceInfo']['label']} is not a removable device" unless @invObj.hasProp?(dev, "connectable")
+    raise "connectDevice: device #{dev['deviceInfo']['label']} is not a removable device" unless @invObj.hasProp?(dev, 'connectable')
 
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      vmcs.deviceChange = VimArray.new("ArrayOfVirtualDeviceConfigSpec") do |vmcs_vca|
-        vmcs_vca << VimHash.new("VirtualDeviceConfigSpec") do |vdcs|
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') do |vmcs|
+      vmcs.deviceChange = VimArray.new('ArrayOfVirtualDeviceConfigSpec') do |vmcs_vca|
+        vmcs_vca << VimHash.new('VirtualDeviceConfigSpec') do |vdcs|
           vdcs.operation = VirtualDeviceConfigSpecOperation::Edit
           vdcs.device = @invObj.deepClone(dev)
           vdcs.device.connectable.startConnected = connect.to_s if onStartup
@@ -658,11 +658,11 @@ class MiqVimVm
   end # def connectDevice
 
   def attachIsoToCd(isoPath, cd = nil)
-    raise "MiqVimVmMod.attachIsoToCd: CD already set" if @cdSave
+    raise 'MiqVimVmMod.attachIsoToCd: CD already set' if @cdSave
 
     unless cd
-      cd = devicesByFilter("deviceInfo.label" => "CD/DVD Drive 1")
-      raise "MiqVimVmMod.attachIsoToCd: VM has no CD/DVD drive" if cd.empty?
+      cd = devicesByFilter('deviceInfo.label' => 'CD/DVD Drive 1')
+      raise 'MiqVimVmMod.attachIsoToCd: VM has no CD/DVD drive' if cd.empty?
       cd = cd.first
     end
 
@@ -674,14 +674,14 @@ class MiqVimVm
 
     @cdSave = @invObj.deepClone(cd)
 
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      vmcs.deviceChange = VimArray.new("ArrayOfVirtualDeviceConfigSpec") do |vmcs_vca|
-        vmcs_vca << VimHash.new("VirtualDeviceConfigSpec") do |vdcs|
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') do |vmcs|
+      vmcs.deviceChange = VimArray.new('ArrayOfVirtualDeviceConfigSpec') do |vmcs_vca|
+        vmcs_vca << VimHash.new('VirtualDeviceConfigSpec') do |vdcs|
           vdcs.operation = VirtualDeviceConfigSpecOperation::Edit
           vdcs.device = @invObj.deepClone(cd)
-          vdcs.device.connectable.startConnected = "true"
-          vdcs.device.connectable.connected = "true"
-          vdcs.device.backing = VimHash.new("VirtualCdromIsoBackingInfo") do |vdb|
+          vdcs.device.connectable.startConnected = 'true'
+          vdcs.device.connectable.connected = 'true'
+          vdcs.device.backing = VimHash.new('VirtualCdromIsoBackingInfo') do |vdb|
             vdb.fileName = isoPath
             vdb.datastore = dsMor if dsMor
           end
@@ -696,11 +696,11 @@ class MiqVimVm
   end
 
   def resetCd
-    raise "MiqVimVmMod.resetCd: No previous CD state" unless @cdSave
+    raise 'MiqVimVmMod.resetCd: No previous CD state' unless @cdSave
 
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      vmcs.deviceChange = VimArray.new("ArrayOfVirtualDeviceConfigSpec") do |vmcs_vca|
-        vmcs_vca << VimHash.new("VirtualDeviceConfigSpec") do |vdcs|
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') do |vmcs|
+      vmcs.deviceChange = VimArray.new('ArrayOfVirtualDeviceConfigSpec') do |vmcs_vca|
+        vmcs_vca << VimHash.new('VirtualDeviceConfigSpec') do |vdcs|
           vdcs.operation = VirtualDeviceConfigSpecOperation::Edit
           vdcs.device = @cdSave
         end
@@ -738,42 +738,42 @@ class MiqVimVm
     # - thin_provisioned is set to false explicitly since we call to_s on it further, so nil will not work for us
     options = {:persistent => true, :thin_provisioned => false}.merge(options)
     ck, un = getScsiCandU
-    raise "addDisk: no SCSI controller found" unless ck
+    raise 'addDisk: no SCSI controller found' unless ck
 
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      vmcs.deviceChange = VimArray.new("ArrayOfVirtualDeviceConfigSpec") do |vmcs_vca|
-        vmcs_vca << VimHash.new("VirtualDeviceConfigSpec") do |vdcs|
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') do |vmcs|
+      vmcs.deviceChange = VimArray.new('ArrayOfVirtualDeviceConfigSpec') do |vmcs_vca|
+        vmcs_vca << VimHash.new('VirtualDeviceConfigSpec') do |vdcs|
           vdcs.operation = VirtualDeviceConfigSpecOperation::Add
           if sizeInMB < 0
             sizeInMB = -sizeInMB
           else
             vdcs.fileOperation = VirtualDeviceConfigSpecFileOperation::Create
           end
-          vdcs.device = VimHash.new("VirtualDisk") do |vDev|
+          vdcs.device = VimHash.new('VirtualDisk') do |vDev|
             vDev.key      = -100 # temp key for creation
             vDev.capacityInKB = sizeInMB * 1024
             vDev.controllerKey  = ck
             vDev.unitNumber   = un
             # The following doesn't seem to work.
-            vDev.deviceInfo = VimHash.new("Description") do |desc|
+            vDev.deviceInfo = VimHash.new('Description') do |desc|
               desc.label    = label
               desc.summary  = summary
             end if label || summary
-            vDev.connectable = VimHash.new("VirtualDeviceConnectInfo") do |con|
-              con.allowGuestControl = "false"
-              con.startConnected    = "true"
-              con.connected     = "true"
+            vDev.connectable = VimHash.new('VirtualDeviceConnectInfo') do |con|
+              con.allowGuestControl = 'false'
+              con.startConnected    = 'true'
+              con.connected     = 'true'
             end
             if options[:dependent]
               mode = (options[:persistent] ? VirtualDiskMode::Persistent : VirtualDiskMode::Nonpersistent)
             else
               mode = (options[:persistent] ? VirtualDiskMode::Independent_persistent : VirtualDiskMode::Independent_nonpersistent)
             end
-            vDev.backing = VimHash.new("VirtualDiskFlatVer2BackingInfo") do |bck|
+            vDev.backing = VimHash.new('VirtualDiskFlatVer2BackingInfo') do |bck|
               bck.diskMode    = mode
-              bck.split     = "false"
+              bck.split     = 'false'
               bck.thinProvisioned = options[:thin_provisioned].to_s
-              bck.writeThrough  = "false"
+              bck.writeThrough  = 'false'
               bck.fileName    = backingFile
               begin
                   dsn = @invObj.path2dsName(@dsPath)
@@ -801,35 +801,35 @@ class MiqVimVm
   # will remain in place.
   #
   def removeDiskByFile(backingFile, deleteBacking = false)
-    raise "removeDiskByFile: false setting for deleteBacking not yet supported" if deleteBacking == false
+    raise 'removeDiskByFile: false setting for deleteBacking not yet supported' if deleteBacking == false
     controllerKey, key = getDeviceKeysByBacking(backingFile)
     raise "removeDiskByFile: no virtual device associated with: #{backingFile}" unless key
     $vim_log.debug "MiqVimVm::MiqVimVm: backingFile = #{backingFile}" if $vim_log
     $vim_log.debug "MiqVimVm::MiqVimVm: controllerKey = #{controllerKey}, key = #{key}" if $vim_log
 
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      vmcs.deviceChange = VimArray.new("ArrayOfVirtualDeviceConfigSpec") do |vmcs_vca|
-        vmcs_vca << VimHash.new("VirtualDeviceConfigSpec") do |vdcs|
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') do |vmcs|
+      vmcs.deviceChange = VimArray.new('ArrayOfVirtualDeviceConfigSpec') do |vmcs_vca|
+        vmcs_vca << VimHash.new('VirtualDeviceConfigSpec') do |vdcs|
           vdcs.operation = VirtualDeviceConfigSpecOperation::Remove
           if deleteBacking
             vdcs.fileOperation = VirtualDeviceConfigSpecFileOperation::Destroy
           else
             vdcs.fileOperation = VirtualDeviceConfigSpecFileOperation::Replace
           end
-          vdcs.device = VimHash.new("VirtualDisk") do |vDev|
+          vdcs.device = VimHash.new('VirtualDisk') do |vDev|
             vDev.key      = key
             vDev.capacityInKB = 0
             vDev.controllerKey  = controllerKey
-            vDev.connectable = VimHash.new("VirtualDeviceConnectInfo") do |con|
-              con.allowGuestControl = "false"
-              con.startConnected    = "true"
-              con.connected     = "true"
+            vDev.connectable = VimHash.new('VirtualDeviceConnectInfo') do |con|
+              con.allowGuestControl = 'false'
+              con.startConnected    = 'true'
+              con.connected     = 'true'
             end
-            vDev.backing = VimHash.new("VirtualDiskFlatVer2BackingInfo") do |bck|
+            vDev.backing = VimHash.new('VirtualDiskFlatVer2BackingInfo') do |bck|
               bck.diskMode    = VirtualDiskMode::Independent_persistent
-              bck.split     = "false"
-              bck.thinProvisioned = "false"
-              bck.writeThrough  = "false"
+              bck.split     = 'false'
+              bck.thinProvisioned = 'false'
+              bck.writeThrough  = 'false'
               bck.fileName    = backingFile
               begin
                   dsn = @invObj.path2dsName(@dsPath)
@@ -856,23 +856,23 @@ class MiqVimVm
   def getScsiCandU
     controller_key = unit_number = nil
 
-    devices = getProp("config.hardware")["config"]["hardware"]["device"]
+    devices = getProp('config.hardware')['config']['hardware']['device']
     scsi_controllers = devices.select { |dev| VIRTUAL_SCSI_CONTROLLERS.include?(dev.xsiType) }
 
-    scsi_controllers.sort_by { |s| s["key"].to_i }.each do |scsi_controller|
+    scsi_controllers.sort_by { |s| s['key'].to_i }.each do |scsi_controller|
       # Skip if all controller units are populated
       # Bus has 16 units, controller takes up 1 unit itself
-      next if scsi_controller["device"].to_miq_a.count >= MAX_SCSI_DEVICES
+      next if scsi_controller['device'].to_miq_a.count >= MAX_SCSI_DEVICES
 
       # We've found the lowest scsi controller with an available unit
-      controller_key = scsi_controller["key"]
+      controller_key = scsi_controller['key']
 
       # Get a list of disks on this controller
-      disks = devices.select { |dev| scsi_controller["device"].to_miq_a.include?(dev["key"]) }
+      disks = devices.select { |dev| scsi_controller['device'].to_miq_a.include?(dev['key']) }
 
       # Get a list of all populated units on the controller
-      populated_units = disks.collect { |disk| disk["unitNumber"].to_i }
-      populated_units << scsi_controller["scsiCtlrUnitNumber"].to_i
+      populated_units = disks.collect { |disk| disk['unitNumber'].to_i }
+      populated_units << scsi_controller['scsiCtlrUnitNumber'].to_i
 
       # Pick the lowest available unit number
       all_unit_numbers = [*0..MAX_SCSI_DEVICES]
@@ -890,12 +890,12 @@ class MiqVimVm
   # associated with the given backing file.
   #
   def getDeviceKeysByBacking(backingFile)
-    devs = getProp("config.hardware")["config"]["hardware"]["device"]
+    devs = getProp('config.hardware')['config']['hardware']['device']
 
     devs.each do |dev|
-      next if dev.xsiType != "VirtualDisk"
-      next if dev["backing"]["fileName"] != backingFile
-      return([dev["controllerKey"], dev["key"]])
+      next if dev.xsiType != 'VirtualDisk'
+      next if dev['backing']['fileName'] != backingFile
+      return([dev['controllerKey'], dev['key']])
     end
     ([nil, nil])
   end # def getDeviceKeysByBacking
@@ -908,23 +908,23 @@ class MiqVimVm
   # Only called from initialize.
   #
   def miqAlarmSpecEnabled
-    VimHash.new("AlarmSpec") do |as|
+    VimHash.new('AlarmSpec') do |as|
       as.name     = @miqAlarmName
       as.description  = "#{MIQ_ALARM_PFX} alarm"
-      as.enabled    = "true"
-      as.expression = VimHash.new("StateAlarmExpression") do |sae|
+      as.enabled    = 'true'
+      as.expression = VimHash.new('StateAlarmExpression') do |sae|
         sae.operator  = StateAlarmOperator::IsEqual
-        sae.statePath = "runtime.powerState"
+        sae.statePath = 'runtime.powerState'
         sae.type    = @vmMor.vimType
-        sae.yellow    = "poweredOn"
-        sae.red     = "suspended"
+        sae.yellow    = 'poweredOn'
+        sae.red     = 'suspended'
       end
-      as.action = VimHash.new("AlarmTriggeringAction") do |aa|
-        aa.green2yellow = "true"
-        aa.yellow2red   = "false"
-        aa.red2yellow   = "true"
-        aa.yellow2green = "false"
-        aa.action   = VimHash.new("MethodAction") { |aaa| aaa.name = "SuspendVM_Task" }
+      as.action = VimHash.new('AlarmTriggeringAction') do |aa|
+        aa.green2yellow = 'true'
+        aa.yellow2red   = 'false'
+        aa.red2yellow   = 'true'
+        aa.yellow2green = 'false'
+        aa.action   = VimHash.new('MethodAction') { |aaa| aaa.name = 'SuspendVM_Task' }
       end
     end
   end
@@ -935,7 +935,7 @@ class MiqVimVm
   #
   def miqAlarmSpecDisabled
     alarmSpec = @miqAlarmSpecEnabled.clone
-    alarmSpec.enabled = "false"
+    alarmSpec.enabled = 'false'
     (alarmSpec)
   end
   private :miqAlarmSpecEnabled
@@ -945,7 +945,7 @@ class MiqVimVm
   # Otherwise, add the alarm and return its MOR.
   #
   def addMiqAlarm_locked
-    raise "addMiqAlarm_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'addMiqAlarm_locked: cache lock not held' unless @cacheLock.sync_locked?
     if (alarmMor = getMiqAlarm)
       return(alarmMor)
     end
@@ -989,7 +989,7 @@ class MiqVimVm
   # Return the MOR of the Miq alarm if it exists, nil otherwise.
   #
   def getMiqAlarm_locked
-    raise "addMiqAlarm_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'addMiqAlarm_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@miqAlarmMor) if @miqAlarmMor
 
     begin
@@ -999,7 +999,7 @@ class MiqVimVm
       alarms = @invObj.getAlarm(@sic.alarmManager, @vmMor)
       $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).getMiqAlarm_locked: returned from getAlarm" if $vim_log
       alarms.each do |aMor|
-        ap = @invObj.getMoProp(aMor, "info.name")
+        ap = @invObj.getMoProp(aMor, 'info.name')
         next unless ap['info']['name'][MIQ_ALARM_PFX]
         @miqAlarmMor = aMor
         return(aMor)
@@ -1054,7 +1054,7 @@ class MiqVimVm
   def miqAlarmEnabled?
     @cacheLock.synchronize(:SH) do
       return(false) unless (alarmMor = getMiqAlarm_locked)
-      props = @invObj.getMoProp(alarmMor, "info.enabled")
+      props = @invObj.getMoProp(alarmMor, 'info.enabled')
       return(props['info.enabled'] == 'true')
     end
   end
@@ -1067,11 +1067,11 @@ class MiqVimVm
     return @extraConfig unless @extraConfig.nil?
 
     @extraConfig = {}
-    vmh = getProp("config.extraConfig")
+    vmh = getProp('config.extraConfig')
     if vmh['config'] && vmh['config']['extraConfig']
       vmh['config']['extraConfig'].each do |ov|
         # Fixes issue where blank values come back as VimHash objects
-        value = ov['value'].kind_of?(VimHash) ? VimString.new("", nil, "xsd:string") : ov['value']
+        value = ov['value'].kind_of?(VimHash) ? VimString.new('', nil, 'xsd:string') : ov['value']
         @extraConfig[ov['key']] = value
       end
     end
@@ -1085,14 +1085,14 @@ class MiqVimVm
   end
 
   def setExtraConfigAttributes(hash)
-    raise "setExtraConfigAttributes: no attributes specified" if !hash.kind_of?(Hash) || hash.empty?
+    raise 'setExtraConfigAttributes: no attributes specified' if !hash.kind_of?(Hash) || hash.empty?
 
-    vmConfigSpec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      vmcs.extraConfig = VimArray.new("ArrayOfOptionValue") do |vmcs_eca|
+    vmConfigSpec = VimHash.new('VirtualMachineConfigSpec') do |vmcs|
+      vmcs.extraConfig = VimArray.new('ArrayOfOptionValue') do |vmcs_eca|
         hash.each do |k, v|
-          vmcs_eca << VimHash.new("OptionValue") do |ov|
+          vmcs_eca << VimHash.new('OptionValue') do |ov|
             ov.key   = k.to_s
-            ov.value = VimString.new(v.to_s, nil, "xsd:string")
+            ov.value = VimString.new(v.to_s, nil, 'xsd:string')
           end
         end
       end
@@ -1143,7 +1143,7 @@ class MiqVimVm
 
   def vmsafeEnabled?
     return false unless (ve = extraConfig['vmsafe.enable'])
-    ve.casecmp("true") == 0
+    ve.casecmp('true') == 0
   end
 
   ####################
@@ -1162,15 +1162,15 @@ class MiqVimVm
     attrs = addExtraConfigPrefix(hash, RemoteDisplayVncAttributePrefix)
     attrs.each do |k, v|
       raise "setRemoteDisplayVncAttributes: unrecognized attribute: #{k[RemoteDisplayVncAttributePrefix.length + 1..-1]}" unless RemoteDisplayVncAttributes.include?(k)
-      raise "setRemoteDisplayVncAttributes: RemoteDisplay.vnc.key cannot be set" if k == "RemoteDisplay.vnc.key"
-      raise "setRemoteDisplayVncAttributes: RemoteDisplay.vnc.password cannot be longer than 8 characters" if k == "RemoteDisplay.vnc.password" && v.to_s.length > 8
+      raise 'setRemoteDisplayVncAttributes: RemoteDisplay.vnc.key cannot be set' if k == 'RemoteDisplay.vnc.key'
+      raise 'setRemoteDisplayVncAttributes: RemoteDisplay.vnc.password cannot be longer than 8 characters' if k == 'RemoteDisplay.vnc.password' && v.to_s.length > 8
     end
     setExtraConfigAttributes(attrs)
   end
 
   def remoteDisplayVncEnabled?
     return false unless (ve = extraConfig['RemoteDisplay.vnc.enabled'])
-    ve.casecmp("true") == 0
+    ve.casecmp('true') == 0
   end
 
   ########################

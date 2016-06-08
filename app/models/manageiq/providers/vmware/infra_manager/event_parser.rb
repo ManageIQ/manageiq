@@ -6,13 +6,13 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
     event_type = event['eventType']
     if event_type.nil?
       _log.error("#{log_header}eventType missing in event: [#{event.inspect}]")
-      raise MiqException::Error, "event must have an eventType"
+      raise MiqException::Error, 'event must have an eventType'
     end
 
     chain_id = event['chainId']
     if chain_id.nil?
       _log.error("#{log_header}chainId missing in event: [#{event.inspect}]")
-      raise MiqException::Error, "event must have a chain_id"
+      raise MiqException::Error, 'event must have a chain_id'
     end
 
     is_task = (event_type == 'TaskEvent')
@@ -53,7 +53,7 @@ module ManageIQ::Providers::Vmware::InfraManager::EventParser
       _log.debug { "#{log_header}changed event: [#{event.inspect}]" } if changed_event
 
       event_type = sub_event_type
-    elsif event_type == "EventEx"
+    elsif event_type == 'EventEx'
       sub_event_type = event['eventTypeId']
       event_type = sub_event_type unless sub_event_type.blank?
     end

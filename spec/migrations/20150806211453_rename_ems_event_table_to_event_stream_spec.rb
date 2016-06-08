@@ -13,24 +13,24 @@ describe RenameEmsEventTableToEventStream do
         sync_state_stub.create_table
       end
 
-      it "in rr#_pending_changes tables" do
-        changed = pending_change_stub.create!(:change_table => "ems_events")
-        ignored = pending_change_stub.create!(:change_table => "some_other_table")
+      it 'in rr#_pending_changes tables' do
+        changed = pending_change_stub.create!(:change_table => 'ems_events')
+        ignored = pending_change_stub.create!(:change_table => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.change_table).to eq("event_streams")
-        expect(ignored.reload.change_table).to eq("some_other_table")
+        expect(changed.reload.change_table).to eq('event_streams')
+        expect(ignored.reload.change_table).to eq('some_other_table')
       end
 
-      it "in rr#_sync_states tables" do
-        changed = sync_state_stub.create!(:table_name => "ems_events")
-        ignored = sync_state_stub.create!(:table_name => "some_other_table")
+      it 'in rr#_sync_states tables' do
+        changed = sync_state_stub.create!(:table_name => 'ems_events')
+        ignored = sync_state_stub.create!(:table_name => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.table_name).to eq("event_streams")
-        expect(ignored.reload.table_name).to eq("some_other_table")
+        expect(changed.reload.table_name).to eq('event_streams')
+        expect(ignored.reload.table_name).to eq('some_other_table')
       end
     end
 
@@ -62,24 +62,24 @@ describe RenameEmsEventTableToEventStream do
         sync_state_stub.create_table
       end
 
-      it "in rr#_pending_changes tables" do
-        changed = pending_change_stub.create!(:change_table => "event_streams")
-        ignored = pending_change_stub.create!(:change_table => "some_other_table")
+      it 'in rr#_pending_changes tables' do
+        changed = pending_change_stub.create!(:change_table => 'event_streams')
+        ignored = pending_change_stub.create!(:change_table => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.change_table).to eq("ems_events")
-        expect(ignored.reload.change_table).to eq("some_other_table")
+        expect(changed.reload.change_table).to eq('ems_events')
+        expect(ignored.reload.change_table).to eq('some_other_table')
       end
 
-      it "in rr#_sync_states tables" do
-        changed = sync_state_stub.create!(:table_name => "event_streams")
-        ignored = sync_state_stub.create!(:table_name => "some_other_table")
+      it 'in rr#_sync_states tables' do
+        changed = sync_state_stub.create!(:table_name => 'event_streams')
+        ignored = sync_state_stub.create!(:table_name => 'some_other_table')
 
         migrate
 
-        expect(changed.reload.table_name).to eq("ems_events")
-        expect(ignored.reload.table_name).to eq("some_other_table")
+        expect(changed.reload.table_name).to eq('ems_events')
+        expect(ignored.reload.table_name).to eq('some_other_table')
       end
     end
   end

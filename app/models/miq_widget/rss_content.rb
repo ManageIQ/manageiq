@@ -28,7 +28,7 @@ class MiqWidget::RssContent < MiqWidget::ContentGeneration
   end
 
   def external_feed
-    proxy = VMDB::Config.new("vmdb").config[:http_proxy]
+    proxy = VMDB::Config.new('vmdb').config[:http_proxy]
     SimpleRSS.parse(Net::HTTP::Proxy(proxy[:host], proxy[:port], proxy[:user], proxy[:password]).get(URI.parse(widget_options[:url])))
   end
 end

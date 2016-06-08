@@ -1,4 +1,4 @@
-require "ffi-vix_disk_lib/api_wrapper"
+require 'ffi-vix_disk_lib/api_wrapper'
 require 'log4r'
 
 #
@@ -13,7 +13,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-vmdk = "/vmfs/volumes/StarM1-Dev/Citrix-Mahwah2/Citrix-Mahwah2.vmdk"
+vmdk = '/vmfs/volumes/StarM1-Dev/Citrix-Mahwah2/Citrix-Mahwah2.vmdk'
 
 VixDiskLibApi  = FFI::VixDiskLib::ApiWrapper
 VixDiskLib_raw = FFI::VixDiskLib::API
@@ -23,10 +23,10 @@ VixDiskLibApi.init(nil, nil, nil, nil)
 tmodes = VixDiskLibApi.list_transport_modes
 puts "Transport Modes = [#{tmodes}]"
 
-SERVERNAME = raise "Please define SERVERNAME"
-PORTNUMBER = raise "Please define PORTNUMBER"
-USERNAME   = raise "Please define USERNAME"
-PASSWORD   = raise "Please define PASSWORD"
+SERVERNAME = raise 'Please define SERVERNAME'
+PORTNUMBER = raise 'Please define PORTNUMBER'
+USERNAME   = raise 'Please define USERNAME'
+PASSWORD   = raise 'Please define PASSWORD'
 
 con_parms = {
   :serverName => SERVERNAME,
@@ -46,7 +46,7 @@ rescue VixDiskLibError => err
 end
 dinfo = VixDiskLibApi.get_info(disk_handle)
 puts
-puts "Disk info:"
+puts 'Disk info:'
 dinfo.each { |k, v| puts "\t#{k} => #{v}" }
 puts
 
@@ -54,7 +54,7 @@ mode = VixDiskLibApi.get_transport_mode(disk_handle)
 puts "Transport Mode: #{mode}"
 
 mkeys = VixDiskLibApi.get_metadata_keys(disk_handle)
-puts "Metadata:"
+puts 'Metadata:'
 mkeys.each do |k|
   v = VixDiskLibApi.read_metadata(disk_handle, k)
   puts "\t#{k} => #{v}"

@@ -2,23 +2,23 @@
 # Description: This method sets the retirement_state to retiring
 #
 
-$evm.log("info", "Listing Root Object Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}")  }
-$evm.log("info", "===========================================")
+$evm.log('info', 'Listing Root Object Attributes:')
+$evm.root.attributes.sort.each { |k, v| $evm.log('info', "\t#{k}: #{v}")  }
+$evm.log('info', '===========================================')
 
 vm = $evm.root['vm']
 if vm.nil?
-  $evm.log('error', "VM Object not found")
+  $evm.log('error', 'VM Object not found')
   exit MIQ_ABORT
 end
 
 if vm.retired?
-  $evm.log('error', "VM is already retired. Aborting current State Machine.")
+  $evm.log('error', 'VM is already retired. Aborting current State Machine.')
   exit MIQ_ABORT
 end
 
 if vm.retiring?
-  $evm.log('error', "VM is in the process of being retired. Aborting current State Machine.")
+  $evm.log('error', 'VM is in the process of being retired. Aborting current State Machine.')
   exit MIQ_ABORT
 end
 

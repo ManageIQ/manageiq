@@ -7,7 +7,7 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
       nil,
       :klass     => ApplicationHelper::Button::View,
       :url       => "\#{@gtl_url}",
-      :url_parms => "?type=grid"),
+      :url_parms => '?type=grid'),
     twostate(
       :view_tile,
       'fa fa-th-large',
@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
       nil,
       :klass     => ApplicationHelper::Button::View,
       :url       => "\#{@gtl_url}",
-      :url_parms => "?type=tile"),
+      :url_parms => '?type=tile'),
     twostate(
       :view_list,
       'fa fa-th-list',
@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
       nil,
       :klass     => ApplicationHelper::Button::View,
       :url       => "\#{@gtl_url}",
-      :url_parms => "?type=list"),
+      :url_parms => '?type=list'),
   ])
   button_group('download_main', [
     select(
@@ -37,23 +37,23 @@ class ApplicationHelper::Toolbar::GtlView < ApplicationHelper::Toolbar::Basic
           'fa fa-file-text-o fa-lg',
           N_('Download this report in text format'),
           N_('Download as Text'),
-          :url       => "/download_data",
-          :url_parms => "?download_type=text"),
+          :url       => '/download_data',
+          :url_parms => '?download_type=text'),
         button(
           :download_csv,
           'fa fa-file-text-o fa-lg',
           N_('Download this report in CSV format'),
           N_('Download as CSV'),
-          :url       => "/download_data",
-          :url_parms => "?download_type=csv"),
+          :url       => '/download_data',
+          :url_parms => '?download_type=csv'),
         button(
           :download_pdf,
           'fa fa-file-pdf-o fa-lg',
           N_('Download this report in PDF format'),
           N_('Download as PDF'),
           :klass     => ApplicationHelper::Button::Pdf,
-          :url       => "/download_data",
-          :url_parms => "?download_type=pdf"),
+          :url       => '/download_data',
+          :url_parms => '?download_type=pdf'),
       ]
     ),
   ])

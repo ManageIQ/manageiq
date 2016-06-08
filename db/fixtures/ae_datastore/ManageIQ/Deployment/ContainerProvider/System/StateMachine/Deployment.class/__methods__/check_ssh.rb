@@ -22,24 +22,24 @@ def check_ssh
       connection_failure = false
       unreachable_hosts = []
       deployment_hosts.each do |host|
-        res = ssh.exec!("ssh -o 'StrictHostKeyChecking no' #{$evm.root['user']}@" + host + " echo $?")
+        res = ssh.exec!("ssh -o 'StrictHostKeyChecking no' #{$evm.root['user']}@" + host + ' echo $?')
         unless res.include? "0\n"
           connection_failure = true
           unreachable_hosts << host
         end
       end
       if connection_failure
-        $evm.root['ae_result'] = "error"
+        $evm.root['ae_result'] = 'error'
         $evm.root['automation_task'].message = "Cannot connect to #{unreachable_hosts.inspect} via ssh"
       else
-        $evm.root['ae_result'] = "ok"
-        $evm.root['automation_task'].message = "successful ssh to " \
+        $evm.root['ae_result'] = 'ok'
+        $evm.root['automation_task'].message = 'successful ssh to ' \
         "#{deployment_hosts.prepend($evm.root['deployment_master']).inspect}"
       end
     end
   rescue
-    $evm.root['ae_result'] = "error"
-    $evm.root['automation_task'].message = "Cannot connect to deployment master " \
+    $evm.root['ae_result'] = 'error'
+    $evm.root['automation_task'].message = 'Cannot connect to deployment master ' \
     "(#{$evm.root['deployment_master']}) via ssh"
   end
 end

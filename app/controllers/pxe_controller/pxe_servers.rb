@@ -3,27 +3,27 @@ module PxeController::PxeServers
   extend ActiveSupport::Concern
 
   def pxe_server_tree_select
-    typ, id = params[:id].split("_")
+    typ, id = params[:id].split('_')
     case typ
-    when "img"
+    when 'img'
       @record = MiqServer.find(from_cid(id))
-    when "wimg"
+    when 'wimg'
       @record = WindowsImage.find(from_cid(id))
-    when "ps"
+    when 'ps'
       @record = ServerRole.find(from_cid(id))
     end
   end
 
   def pxe_server_new
-    assert_privileges("pxe_server_new")
+    assert_privileges('pxe_server_new')
     @ps = PxeServer.new
     pxe_server_set_form_vars
     @in_a_form = true
-    replace_right_cell("ps")
+    replace_right_cell('ps')
   end
 
   def pxe_server_edit
-    assert_privileges("pxe_server_edit")
+    assert_privileges('pxe_server_edit')
     unless params[:id]
       obj           = find_checked_items
       @_params[:id] = obj[0] unless obj.empty?
@@ -32,30 +32,30 @@ module PxeController::PxeServers
     pxe_server_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    replace_right_cell("ps")
+    replace_right_cell('ps')
   end
 
   def pxe_server_create_update
-    id = params[:id] || "new"
+    id = params[:id] || 'new'
     return unless load_edit("pxe_edit__#{id}")
     pxe_server_get_form_vars
     changed = (@edit[:new] != @edit[:current])
-    if params[:button] == "cancel"
+    if params[:button] == 'cancel'
       @edit = session[:edit] = nil # clean out the saved info
       if @ps && @ps.id
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "PxeServer"), :name => @ps.name})
+        add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'PxeServer'), :name => @ps.name})
       else
-        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "PxeServer")})
+        add_flash(_('Add of new %{model} was cancelled by the user') % {:model => ui_lookup(:model => 'PxeServer')})
       end
       get_node_info(x_node)
       replace_right_cell(x_node)
-    elsif ["add", "save"].include?(params[:button])
+    elsif ['add', 'save'].include?(params[:button])
       pxe = params[:id] ? find_by_id_filtered(PxeServer, params[:id]) : PxeServer.new
       pxe_server_validate_fields
       if @flash_array
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
@@ -66,8 +66,8 @@ module PxeController::PxeServers
         pxe_server_set_record_vars(pxe)
       end
 
-      flash_key = pxe.id ? _("%{model} \"%{name}\" was saved") : _("%{model} \"%{name}\" was added")
-      add_flash(flash_key % {:model => ui_lookup(:model => "PxeServer"), :name => @edit[:new][:name]})
+      flash_key = pxe.id ? _('%{model} "%{name}" was saved') : _('%{model} "%{name}" was added')
+      add_flash(flash_key % {:model => ui_lookup(:model => 'PxeServer'), :name => @edit[:new][:name]})
 
       if pxe.valid? && !flash_errors? && pxe_server_set_record_vars(pxe) && pxe.save!
         AuditEvent.success(build_created_audit(pxe, @edit))
@@ -82,11 +82,11 @@ module PxeController::PxeServers
         end
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
       end
-    elsif params[:button] == "reset"
-      add_flash(_("All changes have been reset"), :warning)
+    elsif params[:button] == 'reset'
+      add_flash(_('All changes have been reset'), :warning)
       @in_a_form = true
       pxe_server_edit
     end
@@ -94,13 +94,13 @@ module PxeController::PxeServers
 
   # AJAX driven routine to check for changes in ANY field on the form
   def pxe_server_form_field_changed
-    return unless load_edit("pxe_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("pxe_edit__#{params[:id]}", 'replace_cell__explorer')
     @edit[:prev_protocol] = @edit[:new][:protocol]
     pxe_server_get_form_vars
     log_depot_set_verify_status
     render :update do |page|
       page << javascript_prologue
-      page.replace("form_div", :partial => "pxe_form") if @edit[:new][:protocol] != @edit[:prev_protocol]
+      page.replace('form_div', :partial => 'pxe_form') if @edit[:new][:protocol] != @edit[:prev_protocol]
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
       session[:log_depot_log_verify_status] = @edit[:log_verify_status]
@@ -114,7 +114,7 @@ module PxeController::PxeServers
 
   # Refresh the power states for selected or single VMs
   def pxe_server_refresh
-    assert_privileges("pxe_server_refresh")
+    assert_privileges('pxe_server_refresh')
     # pxe_button_operation('sync_images_queue', 'Refresh Relationships')
     pxe_button_operation('synchronize_advertised_images_queue', 'Refresh Relationships')
   end
@@ -127,7 +127,7 @@ module PxeController::PxeServers
     if !params[:id]
       pxes = find_checked_items
       if pxes.empty?
-        add_flash(_("No %{model} were selected to %{button}") % {:model => ui_lookup(:models => "PxeServer"), :button => display_name},
+        add_flash(_('No %{model} were selected to %{button}') % {:model => ui_lookup(:models => 'PxeServer'), :button => display_name},
                   :error)
       else
         process_pxes(pxes, method, display_name)
@@ -137,17 +137,17 @@ module PxeController::PxeServers
       replace_right_cell(x_node, [:pxe_servers])
     else # showing 1 vm
       if params[:id].nil? || PxeServer.find_by_id(params[:id]).nil?
-        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "PxeServer")},
+        add_flash(_('%{model} no longer exists') % {:model => ui_lookup(:model => 'PxeServer')},
                   :error)
         pxe_server_list
-        @refresh_partial = "layouts/x_gtl"
+        @refresh_partial = 'layouts/x_gtl'
       else
         pxes.push(params[:id])
         process_pxes(pxes, method, display_name)  unless pxes.empty?
         # TODO: tells callers to go back to show_list because this SMIS Agent may be gone
         # Should be refactored into calling show_list right here
         if method == 'destroy'
-          self.x_node = "root"
+          self.x_node = 'root'
           @single_delete = true unless flash_errors?
         end
         get_node_info(x_node)
@@ -158,21 +158,21 @@ module PxeController::PxeServers
   end
 
   def pxe_server_delete
-    assert_privileges("pxe_server_delete")
+    assert_privileges('pxe_server_delete')
     pxe_button_operation('destroy', 'Delete')
   end
 
   def pxe_server_list
-    @lastaction = "pxe_server_list"
+    @lastaction = 'pxe_server_list'
     @force_no_grid_xml   = true
-    @gtl_type            = "list"
+    @gtl_type            = 'list'
     @ajax_paging_buttons = true
     if params[:ppsetting]                                             # User selected new per page value
       @items_per_page = params[:ppsetting].to_i                       # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page         # Set the per page setting for this gtl type
     end
     @sortcol = session[:pxe_sortcol].nil? ? 0 : session[:pxe_sortcol].to_i
-    @sortdir = session[:pxe_sortdir].nil? ? "ASC" : session[:pxe_sortdir]
+    @sortdir = session[:pxe_sortdir].nil? ? 'ASC' : session[:pxe_sortdir]
 
     @view, @pages = get_view(PxeServer) # Get the records (into a view) and the paginator
 
@@ -180,30 +180,30 @@ module PxeController::PxeServers
     session[:pxe_sortcol] = @sortcol
     session[:pxe_sortdir] = @sortdir
 
-    if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
+    if params[:action] != 'button' && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page])
       render :update do |page|
         page << javascript_prologue
-        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "pxe_server_list"})
-        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
-        page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
+        page.replace('gtl_div', :partial => 'layouts/x_gtl', :locals => {:action_url => 'pxe_server_list'})
+        page.replace_html('paging_div', :partial => 'layouts/x_pagingcontrols')
+        page << 'miqSparkle(false);'  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
   end
 
   def pxe_image_edit
-    assert_privileges("pxe_image_edit")
+    assert_privileges('pxe_image_edit')
     case params[:button]
-    when "cancel"
-      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "PxeImage"), :name => session[:edit][:img].name})
+    when 'cancel'
+      add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'PxeImage'), :name => session[:edit][:img].name})
       @edit = session[:edit] = nil  # clean out the saved info
       get_node_info(x_node)
       replace_right_cell(x_node)
-    when "save"
-      return unless load_edit("pxe_img_edit__#{params[:id]}", "replace_cell__explorer")
+    when 'save'
+      return unless load_edit("pxe_img_edit__#{params[:id]}", 'replace_cell__explorer')
       update_img = find_by_id_filtered(PxeImage, params[:id])
       pxe_img_set_record_vars(update_img)
       if update_img.valid? && !flash_errors? && update_img.save!
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "PxeImage"), :name => update_img.name})
+        add_flash(_('%{model} "%{name}" was saved') % {:model => ui_lookup(:model => 'PxeImage'), :name => update_img.name})
         AuditEvent.success(build_saved_audit(update_img, @edit))
         refresh_trees = @edit[:new][:default_for_windows] == @edit[:current][:default_for_windows] ? [] : [:pxe_server]
         @edit = session[:edit] = nil  # clean out the saved info
@@ -217,11 +217,11 @@ module PxeController::PxeServers
         @changed = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
-    when "reset", nil
+    when 'reset', nil
       @img = PxeImage.find_by_id(from_cid(params[:id]))
       pxe_img_set_form_vars
       @in_a_form = true
@@ -235,7 +235,7 @@ module PxeController::PxeServers
 
   # AJAX driven routine to check for changes in ANY field on the form
   def pxe_img_form_field_changed
-    return unless load_edit("pxe_img_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("pxe_img_edit__#{params[:id]}", 'replace_cell__explorer')
     pxe_img_get_form_vars
     render :update do |page|
       page << javascript_prologue
@@ -245,19 +245,19 @@ module PxeController::PxeServers
   end
 
   def pxe_wimg_edit
-    assert_privileges("pxe_wimg_edit")
+    assert_privileges('pxe_wimg_edit')
     case params[:button]
-    when "cancel"
-      add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "WindowsImage"), :name => session[:edit][:wimg].name})
+    when 'cancel'
+      add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'WindowsImage'), :name => session[:edit][:wimg].name})
       @edit = session[:edit] = nil  # clean out the saved info
       get_node_info(x_node)
       replace_right_cell(x_node)
-    when "save"
-      return unless load_edit("pxe_wimg_edit__#{params[:id]}", "replace_cell__explorer")
+    when 'save'
+      return unless load_edit("pxe_wimg_edit__#{params[:id]}", 'replace_cell__explorer')
       update_wimg = find_by_id_filtered(WindowsImage, params[:id])
       pxe_wimg_set_record_vars(update_wimg)
       if update_wimg.valid? && !flash_errors? && update_wimg.save!
-        add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "WindowsImage"), :name => update_wimg.name})
+        add_flash(_('%{model} "%{name}" was saved') % {:model => ui_lookup(:model => 'WindowsImage'), :name => update_wimg.name})
         AuditEvent.success(build_saved_audit(update_wimg, @edit))
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
@@ -270,11 +270,11 @@ module PxeController::PxeServers
         @changed = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
-    when "reset", nil
+    when 'reset', nil
       @wimg = WindowsImage.find_by_id(from_cid(params[:id]))
       pxe_wimg_set_form_vars
       @in_a_form = true
@@ -288,7 +288,7 @@ module PxeController::PxeServers
 
   # AJAX driven routine to check for changes in ANY field on the form
   def pxe_wimg_form_field_changed
-    return unless load_edit("pxe_wimg_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("pxe_wimg_edit__#{params[:id]}", 'replace_cell__explorer')
     pxe_wimg_get_form_vars
     render :update do |page|
       page << javascript_prologue
@@ -301,25 +301,25 @@ module PxeController::PxeServers
 
   def pxe_server_validate_fields
     if @edit[:new][:name].blank?
-      add_flash(_("Name is required"), :error)
+      add_flash(_('Name is required'), :error)
     end
     if @edit[:new][:uri_prefix].blank?
-      add_flash(_("Depot Type is required"), :error)
+      add_flash(_('Depot Type is required'), :error)
     end
-    if @edit[:new][:uri_prefix] == "nfs" && @edit[:new][:uri].blank?
-      add_flash(_("URI is required"), :error)
+    if @edit[:new][:uri_prefix] == 'nfs' && @edit[:new][:uri].blank?
+      add_flash(_('URI is required'), :error)
     end
-    if @edit[:new][:uri_prefix] == "smb" || @edit[:new][:uri_prefix] == "ftp"
+    if @edit[:new][:uri_prefix] == 'smb' || @edit[:new][:uri_prefix] == 'ftp'
       if @edit[:new][:uri].blank?
-        add_flash(_("URI is required"), :error)
+        add_flash(_('URI is required'), :error)
       end
       if @edit[:new][:log_userid].blank?
-        add_flash(_("Username is required"), :error)
+        add_flash(_('Username is required'), :error)
       end
       if @edit[:new][:log_password].blank?
-        add_flash(_("Password is required"), :error)
+        add_flash(_('Password is required'), :error)
       elsif @edit[:new][:log_password] != @edit[:new][:log_verify]
-        add_flash(_("Password/Verify Password do not match"), :error)
+        add_flash(_('Password/Verify Password do not match'), :error)
       end
     end
   end
@@ -328,7 +328,7 @@ module PxeController::PxeServers
   def pxe_img_get_form_vars
     @img = @edit[:img]
     @edit[:new][:img_type] = params[:image_typ] if params[:image_typ]
-    @edit[:new][:default_for_windows] = params[:default_for_windows] == "1" if params[:default_for_windows]
+    @edit[:new][:default_for_windows] = params[:default_for_windows] == '1' if params[:default_for_windows]
   end
 
   # Set form variables for edit
@@ -397,7 +397,7 @@ module PxeController::PxeServers
     pxe.name = @edit[:new][:name]
     pxe.access_url = @edit[:new][:access_url]
     pxe.uri_prefix = @edit[:new][:uri_prefix]
-    pxe.uri = @edit[:new][:uri_prefix] + "://" + @edit[:new][:uri]
+    pxe.uri = @edit[:new][:uri_prefix] + '://' + @edit[:new][:uri]
     pxe.pxe_directory = @edit[:new][:pxe_directory]
     pxe.windows_images_directory = @edit[:new][:windows_images_directory]
     pxe.customization_directory = @edit[:new][:customization_directory]
@@ -424,8 +424,8 @@ module PxeController::PxeServers
     @edit[:new][:windows_images_directory] = params[:windows_images_directory] if params[:windows_images_directory]
     @edit[:new][:customization_directory] = params[:customization_directory] if params[:customization_directory]
     params.each do |var, val|
-      vars = var.to_s.split("_")
-      if vars[0] == "pxemenu"
+      vars = var.to_s.split('_')
+      if vars[0] == 'pxemenu'
         @edit[:new][:pxe_menus][vars[1].to_i] = val
       end
     end
@@ -464,10 +464,10 @@ module PxeController::PxeServers
     @ps.pxe_menus.each do |menu|
       @edit[:new][:pxe_menus].push(menu.file_name)
     end
-    @edit[:new][:pxe_menus].push("") if @edit[:new][:pxe_menus].empty?
-    @edit[:new][:log_userid]      = @ps.has_authentication_type?(:default) ? @ps.authentication_userid(:default).to_s : ""
-    @edit[:new][:log_password]    = @ps.has_authentication_type?(:default) ? @ps.authentication_password(:default).to_s : ""
-    @edit[:new][:log_verify]      = @ps.has_authentication_type?(:default) ? @ps.authentication_password(:default).to_s : ""
+    @edit[:new][:pxe_menus].push('') if @edit[:new][:pxe_menus].empty?
+    @edit[:new][:log_userid]      = @ps.has_authentication_type?(:default) ? @ps.authentication_userid(:default).to_s : ''
+    @edit[:new][:log_password]    = @ps.has_authentication_type?(:default) ? @ps.authentication_password(:default).to_s : ''
+    @edit[:new][:log_verify]      = @ps.has_authentication_type?(:default) ? @ps.authentication_password(:default).to_s : ''
 
     @edit[:current] = copy_hash(@edit[:new])
     log_depot_set_verify_status
@@ -481,27 +481,27 @@ module PxeController::PxeServers
 
   # Get information for an event
   def pxe_server_build_tree
-    TreeBuilderPxeServers.new("pxe_servers_tree", "pxe_servers", @sb)
+    TreeBuilderPxeServers.new('pxe_servers_tree', 'pxe_servers', @sb)
   end
 
   def pxe_server_get_node_info(treenodeid)
-    if treenodeid == "root"
+    if treenodeid == 'root'
       pxe_server_list
-      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "PxeServer")}
-      @right_cell_div  = "pxe_server_list"
+      @right_cell_text = _('All %{models}') % {:models => ui_lookup(:models => 'PxeServer')}
+      @right_cell_div  = 'pxe_server_list'
     else
-      @right_cell_div = "pxe_server_details"
-      nodes = treenodeid.split("-")
-      if (nodes[0] == "ps" && nodes.length == 2) || (["pxe_xx", "win_xx"].include?(nodes[1]) && nodes.length == 3)
+      @right_cell_div = 'pxe_server_details'
+      nodes = treenodeid.split('-')
+      if (nodes[0] == 'ps' && nodes.length == 2) || (['pxe_xx', 'win_xx'].include?(nodes[1]) && nodes.length == 3)
         # on pxe server node OR folder node is selected
         @record = @ps = PxeServer.find_by_id(from_cid(nodes.last))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @ps.name, :model => ui_lookup(:model => "PxeServer")}
-      elsif nodes[0] == "pi"
+        @right_cell_text = _('%{model} "%{name}"') % {:name => @ps.name, :model => ui_lookup(:model => 'PxeServer')}
+      elsif nodes[0] == 'pi'
         @record = @img = PxeImage.find_by_id(from_cid(nodes.last))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @img.name, :model => ui_lookup(:model => "PxeImage")}
-      elsif nodes[0] == "wi"
+        @right_cell_text = _('%{model} "%{name}"') % {:name => @img.name, :model => ui_lookup(:model => 'PxeImage')}
+      elsif nodes[0] == 'wi'
         @record = @wimg = WindowsImage.find_by_id(from_cid(nodes[1]))
-        @right_cell_text = _("%{model} \"%{name}\"") % {:name => @wimg.name, :model => ui_lookup(:model => "WindowsImage")}
+        @right_cell_text = _('%{model} "%{name}"') % {:name => @wimg.name, :model => ui_lookup(:model => 'WindowsImage')}
       end
     end
   end

@@ -1,6 +1,6 @@
 module LocalFS
   def fs_init
-    self.fsType = "LocalFS"
+    self.fsType = 'LocalFS'
 
     if @dobj && @dobj.root
       @root = @dobj.root
@@ -76,7 +76,7 @@ module LocalFS
     fobj.mtime
   end
 
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     File.new(internalPath(p), mode)
   end
 
@@ -91,7 +91,7 @@ module LocalFS
   def fs_fileWrite(fobj, buf, len)
     return(fobj.write(buf))     if buf.length == len
     return(fobj.write(buf[0, len])) if buf.length > len
-    raise "LocalFS.fs_fileWrite: attempt to write passed the end of buffer"
+    raise 'LocalFS.fs_fileWrite: attempt to write passed the end of buffer'
   end
 
   def fs_fileClose(fobj)

@@ -32,7 +32,7 @@ module NTFS
     end
 
     def initialize(buf)
-      raise "MIQ(NTFS::DirectoryIndexNode.initialize) Nil buffer" if buf.nil?
+      raise 'MIQ(NTFS::DirectoryIndexNode.initialize) Nil buffer' if buf.nil?
       buf = buf.read(buf.length) if buf.kind_of?(DataRun)
       # Decode the directory index node structure.
       @din = DIR_INDEX_NODE.decode(buf)

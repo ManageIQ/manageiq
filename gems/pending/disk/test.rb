@@ -23,14 +23,14 @@ begin
   # diskInfo.fileName = "/Users/rpo/vmware/knoppixDVM/knoppixDVM.vmdk"
   # diskInfo.fileName = "/volumes/SCRATCH/VMs/VirtualPC/VHDFixedFAT32TwoPart/VHDFixedFAT32.vhd"
 
-  diskInfo.fileName = "/dev/xvdf"
+  diskInfo.fileName = '/dev/xvdf'
   # diskInfo.fileName = "./Win2k3R2EE.vhd"
   # diskInfo.fileName = "./Windows XP Pro 2.vhd"
 
   disk = MiqDisk.getDisk(diskInfo)
 
   unless disk
-    puts "Failed to open disk"
+    puts 'Failed to open disk'
     exit(1)
   end
 

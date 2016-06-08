@@ -161,15 +161,15 @@ module XFS
       end
       unless good_version?
         $log.warn "XFS::Superblock.initialize: Bad Superblock version # #{@sb['version_number']} in AG #{agno}"
-        $log.warn "Attempting to access filesystem"
+        $log.warn 'Attempting to access filesystem'
       end
       if agno == 0 && @sb['in_progress'] != 0
-        $log.warn "XFS::Superblock.initialize: mkfs not completed successfully. Attempting to access filesystem"
+        $log.warn 'XFS::Superblock.initialize: mkfs not completed successfully. Attempting to access filesystem'
       end
     end
 
     def initialize(stream, agno = 0)
-      raise "XFS::Superblock.initialize: Nil stream" if stream.nil?
+      raise 'XFS::Superblock.initialize: Nil stream' if stream.nil?
       @stream = stream
 
       #
@@ -469,7 +469,7 @@ module XFS
     end
 
     def get_cluster(block)
-      raise "XFS::Superblock.get_cluster: block is nil" if block.nil?
+      raise 'XFS::Superblock.get_cluster: block is nil' if block.nil?
       @cluster_cache[block] = MemoryBuffer.create(@block_size * icluster_size_fsb) if block == 0
       unless @cluster_cache.key?(block)
         @stream.seek(fsb_to_b(block))
@@ -479,7 +479,7 @@ module XFS
     end
 
     def get_block(block)
-      raise "XFS::Superblock.get_block: block is nil" if block.nil?
+      raise 'XFS::Superblock.get_block: block is nil' if block.nil?
       @block_cache[block] = MemoryBuffer.create(@block_size) if block == 0
       unless @block_cache.key?(block)
         @stream.seek(fsb_to_b(block))
