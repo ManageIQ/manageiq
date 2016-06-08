@@ -133,7 +133,7 @@ describe MiqVimVm do
       end
     end
 
-    context "#getScsiCandU" do
+    context "#available_scsi_units" do
       let(:miq_vim_vm) do
         {
           "config" => {
@@ -155,7 +155,7 @@ describe MiqVimVm do
 
       context "with 0 scsi controllers" do
         it "returns nil, nil" do
-          controller_key, unit_number = @vim_vm.getScsiCandU
+          controller_key, unit_number = @vim_vm.available_scsi_units.first
           expect(controller_key).to be_nil
           expect(unit_number).to    be_nil
         end
@@ -180,7 +180,7 @@ describe MiqVimVm do
 
         context "with 0 disks" do
           it "returns the first unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(0)
           end
@@ -206,7 +206,7 @@ describe MiqVimVm do
 
         context "with 0 disks" do
           it "returns the first unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(0)
           end
@@ -232,7 +232,7 @@ describe MiqVimVm do
 
         context "with 0 disks" do
           it "returns the first unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(0)
           end
@@ -262,7 +262,7 @@ describe MiqVimVm do
 
         context "with 0 disks" do
           it "returns the first unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(0)
           end
@@ -284,7 +284,7 @@ describe MiqVimVm do
           end
 
           it "returns the first available unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(1)
           end
@@ -308,7 +308,7 @@ describe MiqVimVm do
           end
 
           it "returns the first available unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(2)
           end
@@ -332,7 +332,7 @@ describe MiqVimVm do
           end
 
           it "returns the lowest available unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(1)
           end
@@ -356,7 +356,7 @@ describe MiqVimVm do
           end
 
           it "skips the scsi controller unit number" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(8)
           end
@@ -380,7 +380,7 @@ describe MiqVimVm do
           end
 
           it "returns nil, nil" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to be_nil
             expect(unit_number).to    be_nil
           end
@@ -428,7 +428,7 @@ describe MiqVimVm do
           end
 
           it "picks the free unit on the first controller" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1000")
             expect(unit_number).to    eq(8)
           end
@@ -452,7 +452,7 @@ describe MiqVimVm do
           end
 
           it "picks the first unit on the second controller" do
-            controller_key, unit_number = @vim_vm.getScsiCandU
+            controller_key, unit_number = @vim_vm.available_scsi_units.first
             expect(controller_key).to eq("1001")
             expect(unit_number).to    eq(0)
           end
