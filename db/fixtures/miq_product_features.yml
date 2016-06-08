@@ -3407,6 +3407,10 @@
       :description: Edit Tags of Middleware Deployments
       :feature_type: control
       :identifier: middleware_deployment_tag
+    - :name: Undeploy middleware deployment
+      :description: Undeploy Middleware deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_undeploy
 
 # Middleware Datasource
 - :name: Middleware Datasource
