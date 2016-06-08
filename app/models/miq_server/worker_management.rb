@@ -33,7 +33,7 @@ module MiqServer::WorkerManagement
     acl = ACL.new(%w( deny all allow 127.0.0.1/32 ))
     DRb.install_acl(acl)
 
-    drb = DRb.start_service("druby://127.0.0.1:0", self)
+    drb = DRb.start_service('druby://127.0.0.1:0', self)
     update_attributes(:drb_uri => drb.uri)
   end
 

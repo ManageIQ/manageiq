@@ -38,21 +38,21 @@ class JobProxyDispatcher
 
         jobs_to_dispatch.each do |job|
           if concurrent_vm_scans_limit > 0 && active_vm_scans_by_zone[@zone] >= concurrent_vm_scans_limit
-            _log.warn "SKIPPING remaining %s jobs in dispatch since there are [%d] active scans in the zone [%s]" %
+            _log.warn 'SKIPPING remaining %s jobs in dispatch since there are [%d] active scans in the zone [%s]' %
                       [ui_lookup(:table => VmOrTemplate.name), active_vm_scans_by_zone[@zone], @zone]
             break
           end
           @vm = @vms_for_dispatch_jobs.detect { |v| v.id == job.target_id }
           if @vm.nil? # Handle job for VM that was deleted
             _log.warn("VM with id: [#{job.target_id}] no longer exists, aborting job [#{job.guid}]")
-            job.signal(:abort, "VM with id: [#{job.target_id}] no longer exists, job aborted.", "warn")
+            job.signal(:abort, "VM with id: [#{job.target_id}] no longer exists, job aborted.", 'warn')
             next
           end
 
           if @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Vm) || @vm.kind_of?(ManageIQ::Providers::Vmware::InfraManager::Template)
             unless broker_available
               unless logged_broker_unavailable
-                _log.warn("Skipping dispatch because broker is currently unavailable")
+                _log.warn('Skipping dispatch because broker is currently unavailable')
                 logged_broker_unavailable = true
               end
               next
@@ -74,7 +74,7 @@ class JobProxyDispatcher
             end
           rescue => err
             _log.warn("#{err}, attempting to dispatch job [#{job.guid}], aborting job")
-            job.signal(:abort, "Error [#{err}], attempting to dispatch, aborting job [#{job.guid}].", "error")
+            job.signal(:abort, "Error [#{err}], attempting to dispatch, aborting job [#{job.guid}].", 'error')
           end
 
           if proxy
@@ -106,7 +106,7 @@ class JobProxyDispatcher
       active_ems_scans = active_container_scans_by_zone_and_ems[@zone][ems_id]
       if concurrent_ems_limit > 0 && active_ems_scans >= concurrent_ems_limit
         _log.warn(
-          "SKIPPING remaining %s scan jobs for %s [%s] in dispatch since there are [%d] active scans in zone [%s]" %
+          'SKIPPING remaining %s scan jobs for %s [%s] in dispatch since there are [%d] active scans in zone [%s]' %
             [
               ui_lookup(:table => ContainerImage.name),
               ui_lookup(:table => ExtManagementSystem.name),
@@ -123,15 +123,15 @@ class JobProxyDispatcher
 
   def do_dispatch(job, ems_id)
     _log.info "Signaling start for container image scan job [#{job.id}]"
-    job.update(:dispatch_status => "active", :started_on => Time.now.utc)
+    job.update(:dispatch_status => 'active', :started_on => Time.now.utc)
     @active_container_scans_by_zone_and_ems[@zone][ems_id] += 1
     MiqQueue.put_unless_exists(
       :args        => [:start],
-      :class_name  => "Job",
+      :class_name  => 'Job',
       :instance_id => job.id,
-      :method_name => "signal",
+      :method_name => 'signal',
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :role        => "smartstate",
+      :role        => 'smartstate',
       :task_id     => job.guid,
       :zone        => job.zone
     )
@@ -142,12 +142,12 @@ class JobProxyDispatcher
     Benchmark.realtime_block(:queue_signal) do
       return if options.blank?
       default_opts = {
-        :class_name  => "Job",
-        :method_name => "signal",
+        :class_name  => 'Job',
+        :method_name => 'signal',
         :instance_id => job.id,
         :task_id     => job.guid,
         :priority    => MiqQueue::HIGH_PRIORITY,
-        :role        => "smartstate"
+        :role        => 'smartstate'
       }
 
       default_opts[:zone] = job.zone if job.zone
@@ -161,8 +161,8 @@ class JobProxyDispatcher
   def start_job_on_proxy(job, proxy)
     assign_proxy_to_job(proxy, job)
     _log.info "Job [#{job.guid}] update: userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}]"
-    job_options = {:args => ["start"], :zone => MiqServer.my_zone}
-    job_options.merge!(:server_guid => proxy.guid, :role => "smartproxy") if proxy.kind_of?(MiqServer)
+    job_options = {:args => ['start'], :zone => MiqServer.my_zone}
+    job_options.merge!(:server_guid => proxy.guid, :role => 'smartproxy') if proxy.kind_of?(MiqServer)
     @active_vm_scans_by_zone[MiqServer.my_zone] += 1
     queue_signal(job, job_options)
   end
@@ -174,7 +174,7 @@ class JobProxyDispatcher
     job.agent_class     = proxy.class.to_s
     job.agent_name      = proxy.name
     job.started_on      = Time.now.utc
-    job.dispatch_status = "active"
+    job.dispatch_status = 'active'
     job.save
 
     # Increment the counts for busy proxies and busy hosts for embedded
@@ -195,10 +195,10 @@ class JobProxyDispatcher
     class_name = target_class.base_class.name
     @zone = MiqServer.my_zone
     Job.order(:id)
-       .where(:state           => "waiting_to_start")
-       .where(:dispatch_status => "pending")
+       .where(:state           => 'waiting_to_start')
+       .where(:dispatch_status => 'pending')
        .where(:target_class    => class_name)
-       .where("zone is null or zone = ?", @zone)
+       .where('zone is null or zone = ?', @zone)
        .where("sync_key is NULL or
          sync_key not in (
            select sync_key from jobs where
@@ -242,8 +242,8 @@ class JobProxyDispatcher
 
   def busy_proxies
     @busy_proxies_hash ||= begin
-      Job.where(:dispatch_status => "active")
-      .where("state != ?", "finished")
+      Job.where(:dispatch_status => 'active')
+      .where('state != ?', 'finished')
       .select([:agent_id, :agent_class])
       .each_with_object({}) do |j, busy_hsh|
         busy_hsh["#{j.agent_class}_#{j.agent_id}"] ||= 0
@@ -255,8 +255,8 @@ class JobProxyDispatcher
   def active_scans_by_zone(target_class, count = true)
     class_name = target_class.base_class.name
     actives = Hash.new(0)
-    jobs = Job.where(:zone => @zone, :dispatch_status => "active", :target_class => class_name)
-              .where.not(:state => "finished")
+    jobs = Job.where(:zone => @zone, :dispatch_status => 'active', :target_class => class_name)
+              .where.not(:state => 'finished')
     actives[@zone] = count ? jobs.count : jobs
     actives
   end
@@ -280,15 +280,15 @@ class JobProxyDispatcher
   def busy_resources_for_embedded_scanning
     return @busy_resources_for_embedded_scanning_hash unless @busy_resources_for_embedded_scanning_hash.nil?
 
-    _log.debug("Initializing busy_resources_for_embedding_scanning hash")
+    _log.debug('Initializing busy_resources_for_embedding_scanning hash')
     @busy_resources_for_embedded_scanning_hash ||= {}
 
     vms_in_embedded_scanning =
-      Job.where(:dispatch_status => "active")
-      .where(:agent_class      => "MiqServer")
-      .where(:target_class     => "VmOrTemplate")
-      .where("state != ?", "finished")
-      .select("target_id").collect(&:target_id).compact.uniq
+      Job.where(:dispatch_status => 'active')
+      .where(:agent_class      => 'MiqServer')
+      .where(:target_class     => 'VmOrTemplate')
+      .where('state != ?', 'finished')
+      .select('target_id').collect(&:target_id).compact.uniq
     return @busy_resources_for_embedded_scanning_hash if vms_in_embedded_scanning.blank?
 
     embedded_scans_by_resource = Hash.new { |h, k| h[k] = 0 }
@@ -309,14 +309,14 @@ class JobProxyDispatcher
   end
 
   cache_with_timeout(:coresident_miqproxy, 30.seconds) do
-    MiqServer.my_server.get_config("vmdb").config.fetch_path(:coresident_miqproxy)
+    MiqServer.my_server.get_config('vmdb').config.fetch_path(:coresident_miqproxy)
   end
 
   def embedded_resource_limit_exceeded?(job)
-    return false unless job.target_class == "VmOrTemplate"
+    return false unless job.target_class == 'VmOrTemplate'
 
     if @vm.nil?
-      job.signal(:abort, "Unable to find vm [#{job.target_id}], aborting job [#{job.guid}].", "error")
+      job.signal(:abort, "Unable to find vm [#{job.target_id}], aborting job [#{job.guid}].", 'error')
       return
     end
 
@@ -348,19 +348,19 @@ class JobProxyDispatcher
 
     if @vm.nil?
       msg = "Unable to find vm [#{job.target_id}], aborting job [#{job.guid}]."
-      queue_signal(job, {:args => [:abort, msg, "error"]})
+      queue_signal(job, {:args => [:abort, msg, 'error']})
       return []
     end
 
     if @vm.requires_storage_for_scan?
       if @vm.storage.nil?
         msg = "Vm [#{@vm.path}] is not located on a storage, aborting job [#{job.guid}]."
-        queue_signal(job, {:args => [:abort, msg, "error"]})
+        queue_signal(job, {:args => [:abort, msg, 'error']})
         return []
       else
         unless %w(VSAN VMFS NAS NFS ISCSI DIR FCP CSVFS NTFS GLUSTERFS).include?(@vm.storage.store_type)
           msg = "Vm storage type [#{@vm.storage.store_type}] unsupported [#{job.target_id}], aborting job [#{job.guid}]."
-          queue_signal(job, {:args => [:abort, msg, "error"]})
+          queue_signal(job, {:args => [:abort, msg, 'error']})
           return []
         end
       end
@@ -369,7 +369,7 @@ class JobProxyDispatcher
     vm_proxies, = Benchmark.realtime_block(:get_eligible_proxies_for_job__proxies4job) { @vm.proxies4job(job) }
     if vm_proxies[:proxies].empty?
       msg = "No eligible proxies for VM :[#{@vm.path}] - [#{vm_proxies[:message]}], aborting job [#{job.guid}]."
-      queue_signal(job, {:args => [:abort, msg, "error"]})
+      queue_signal(job, {:args => [:abort, msg, 'error']})
       return []
     end
 

@@ -7,8 +7,8 @@ class ConfiguredSystem < ApplicationRecord
   belongs_to :counterpart, :polymorphic => true
   belongs_to :customization_script_medium
   belongs_to :customization_script_ptable
-  belongs_to :inventory_root_group, :class_name => "EmsFolder"
-  belongs_to :manager,              :class_name => "ExtManagementSystem"
+  belongs_to :inventory_root_group, :class_name => 'EmsFolder'
+  belongs_to :manager,              :class_name => 'ExtManagementSystem'
   belongs_to :operating_system_flavor
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   has_and_belongs_to_many :configuration_tags
@@ -86,6 +86,6 @@ class ConfiguredSystem < ApplicationRecord
   end
 
   def image_name
-    "configured_system"
+    'configured_system'
   end
 end

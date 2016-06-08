@@ -3,7 +3,7 @@ module MiqProvision::Naming
 
   NAME_VIA_AUTOMATE = true
   NAME_SEQUENCE_REGEX = /\$n\{(\d+)\}/
-  SOURCE_IDENTIFIER = "provisioning"  # a unique name for the source column in custom_attributes table
+  SOURCE_IDENTIFIER = 'provisioning'  # a unique name for the source column in custom_attributes table
 
   module ClassMethods
     def get_next_vm_name(prov_obj, determine_index = true)
@@ -13,9 +13,9 @@ module MiqProvision::Naming
         prov_obj.save
         attrs = {'request' => 'UI_PROVISION_INFO', 'message' => 'get_vmname'}
         MiqAeEngine.set_automation_attributes_from_objects([prov_obj.get_user], attrs)
-        ws = MiqAeEngine.resolve_automation_object("REQUEST", prov_obj.get_user, attrs, :vmdb_object => prov_obj)
+        ws = MiqAeEngine.resolve_automation_object('REQUEST', prov_obj.get_user, attrs, :vmdb_object => prov_obj)
 
-        unresolved_vm_name = ws.root("vmname")
+        unresolved_vm_name = ws.root('vmname')
         prov_obj.reload
       end
 
@@ -23,7 +23,7 @@ module MiqProvision::Naming
         options        = prov_obj.options
         options[:tags] = prov_obj.get_tags
 
-        load ApplicationRecord::FIXTURE_DIR.join("miq_provision_naming.rb")
+        load ApplicationRecord::FIXTURE_DIR.join('miq_provision_naming.rb')
         unresolved_vm_name = MiqProvisionNaming.naming(options)
       end
 
@@ -70,7 +70,7 @@ module MiqProvision::Naming
       return nil if prov_obj.vm_template.nil?
       ems = prov_obj.vm_template.ext_management_system
       return nil if ems.nil?
-      VmOrTemplate.find_by("ems_id = ? and lower(name) = ?", ems.id, fullname.downcase)
+      VmOrTemplate.find_by('ems_id = ? and lower(name) = ?', ems.id, fullname.downcase)
     end
   end
 

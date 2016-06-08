@@ -5,9 +5,9 @@ describe RemoveUiTasksAndUiTaskSets do
   let(:relationship_stub) { migration_stub(:Relationship) }
 
   migration_context :up do
-    it "removes MiqSet instances for UiTaskSets" do
-      deleted = miq_set_stub.create!(:set_type => "UiTaskSet",    :name => "super_administrator", :description => "Super Administrator")
-      ignored = miq_set_stub.create!(:set_type => "MiqWidgetSet", :name => "default", :description => "Default Dashboard")
+    it 'removes MiqSet instances for UiTaskSets' do
+      deleted = miq_set_stub.create!(:set_type => 'UiTaskSet',    :name => 'super_administrator', :description => 'Super Administrator')
+      ignored = miq_set_stub.create!(:set_type => 'MiqWidgetSet', :name => 'default', :description => 'Default Dashboard')
 
       migrate
 
@@ -15,9 +15,9 @@ describe RemoveUiTasksAndUiTaskSets do
       expect { ignored.reload }.to_not raise_error
     end
 
-    it "removes Relationship instances for UiTaskSets" do
-      deleted = relationship_stub.create!(:resource_type => "UiTaskSet",    :relationship => "membership")
-      ignored = relationship_stub.create!(:resource_type => "MiqWidgetSet", :relationship => "membership")
+    it 'removes Relationship instances for UiTaskSets' do
+      deleted = relationship_stub.create!(:resource_type => 'UiTaskSet',    :relationship => 'membership')
+      ignored = relationship_stub.create!(:resource_type => 'MiqWidgetSet', :relationship => 'membership')
 
       migrate
 

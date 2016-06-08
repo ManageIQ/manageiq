@@ -6,49 +6,49 @@ require 'yaml'
 require 'sync'
 
 module MiqOntapClient
-  NAME_SPACE    = "root/ontap"
+  NAME_SPACE    = 'root/ontap'
   MAX_CHUNK   = 20
   BLOCK_SIZE    = 4192
   LFS_BLOCK_SIZE  = 4096
   LUN_BLOCK_SIZE  = 512
 
   TYPE_SPECIFIC_MODEL_CLASSES = [
-    "ONTAP_ConcreteExtent",   # < MiqCimInstance
-    "ONTAP_FileShare",      # < SniaFileShare
-    "ONTAP_LogicalDisk",    # < CimLogicalDisk
-    "ONTAP_FlexVolExtent",    # < CimStorageExtent
-    "ONTAP_PlexExtent",     # < MiqCimInstance
-    "ONTAP_RAIDGroupExtent",  # < MiqCimInstance
-    "ONTAP_StorageVolume",    # < CimStorageVolume
-    "ONTAP_StorageSystem"   # < CimComputerSystem
+    'ONTAP_ConcreteExtent',   # < MiqCimInstance
+    'ONTAP_FileShare',      # < SniaFileShare
+    'ONTAP_LogicalDisk',    # < CimLogicalDisk
+    'ONTAP_FlexVolExtent',    # < CimStorageExtent
+    'ONTAP_PlexExtent',     # < MiqCimInstance
+    'ONTAP_RAIDGroupExtent',  # < MiqCimInstance
+    'ONTAP_StorageVolume',    # < CimStorageVolume
+    'ONTAP_StorageSystem'   # < CimComputerSystem
   ]
 
   CLASS_TO_PERF_OBJECT_NAMES  = {
-    "ONTAP_ConcreteExtent" => ["aggregate"],
-    "ONTAP_DiskExtent"     => ["disk"],
-    "ONTAP_StorageVolume"  => ["LUN"],
-    "ONTAP_StorageSystem"  => ["System"],
-    "ONTAP_LogicalDisk"    => ["volume"]
+    'ONTAP_ConcreteExtent' => ['aggregate'],
+    'ONTAP_DiskExtent'     => ['disk'],
+    'ONTAP_StorageVolume'  => ['LUN'],
+    'ONTAP_StorageSystem'  => ['System'],
+    'ONTAP_LogicalDisk'    => ['volume']
     # "ONTAP_FlexVolExtent" => [ "volume" ]
   }
 
   PERF_OBJECT_NAMES = CLASS_TO_PERF_OBJECT_NAMES.values.flatten.uniq
 
   OBJECT_NAME_TO_INST_KEY   = {
-    "aggregate" => ->(i) { i.name },
-    "disk"      => ->(i) { i.disk_uid },
-    "LUN"       => ->(i) { "#{i.path}-#{i.serial_number}" },
-    "processor" => ->(_i) { nil },
-    "System"    => ->(_i) { nil },
-    "volume"    => ->(i) { i.name }
+    'aggregate' => ->(i) { i.name },
+    'disk'      => ->(i) { i.disk_uid },
+    'LUN'       => ->(i) { "#{i.path}-#{i.serial_number}" },
+    'processor' => ->(_i) { nil },
+    'System'    => ->(_i) { nil },
+    'volume'    => ->(i) { i.name }
   }
 
   OBJECT_NAME_TO_COUNTERS   = {
-    "aggregate" => OntapAggregateDerivedMetric.counterNames,
-    "disk"      => OntapDiskDerivedMetric.counterNames,
-    "LUN"       => OntapLunDerivedMetric.counterNames,
-    "System"    => OntapSystemDerivedMetric.counterNames,
-    "volume"    => OntapVolumeDerivedMetric.counterNames
+    'aggregate' => OntapAggregateDerivedMetric.counterNames,
+    'disk'      => OntapDiskDerivedMetric.counterNames,
+    'LUN'       => OntapLunDerivedMetric.counterNames,
+    'System'    => OntapSystemDerivedMetric.counterNames,
+    'volume'    => OntapVolumeDerivedMetric.counterNames
   }
 
   HOSTED_SHARE_ASSOCIATION          = CimAssociations.CIM_ComputerSystem_TO_CIM_FileShare
@@ -166,7 +166,7 @@ module MiqOntapClient
     end
 
     def storageSystem
-      cimClassName = "ONTAP_StorageSystem"
+      cimClassName = 'ONTAP_StorageSystem'
       ontap_info = @conn.system_get_info.system_info
 
       ipa = []
@@ -177,12 +177,12 @@ module MiqOntapClient
       end
 
       keybindings = {
-        "CreationClassName" => cimClassName,
-        "Name"              => "ONTAP:#{ontap_info.system_id}"
+        'CreationClassName' => cimClassName,
+        'Name'              => "ONTAP:#{ontap_info.system_id}"
       }
       additionalProperties = {
-        "ElementName"          => ontap_info.system_name,
-        "OtherIdentifyingInfo" => ipa
+        'ElementName'          => ontap_info.system_name,
+        'OtherIdentifyingInfo' => ipa
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, ontap_info.merge(keybindings).merge(additionalProperties))
@@ -198,10 +198,10 @@ module MiqOntapClient
       ssNode
     end
 
-    IpAdEntAddr   = ".1.3.6.1.2.1.4.20.1.1"
-    IpAdEntIfIndex  = ".1.3.6.1.2.1.4.20.1.2"
-    IpAdEntNetMask  = ".1.3.6.1.2.1.4.20.1.3"
-    IfDescr     = ".1.3.6.1.2.1.2.2.1.2"
+    IpAdEntAddr   = '.1.3.6.1.2.1.4.20.1.1'
+    IpAdEntIfIndex  = '.1.3.6.1.2.1.4.20.1.2'
+    IpAdEntNetMask  = '.1.3.6.1.2.1.4.20.1.3'
+    IfDescr     = '.1.3.6.1.2.1.2.2.1.2'
 
     def getIpInfo
       ra = []
@@ -226,26 +226,26 @@ module MiqOntapClient
     end
 
     def ipProtocolEndpointNode(ipInfo, ssNode)
-      cimClassName = "ONTAP_IPProtocolEndPoint"
+      cimClassName = 'ONTAP_IPProtocolEndPoint'
 
       ip4 = ipInfo.v4_primary_address
       snm = ipInfo.subnet_mask
       ip6 = ipInfo.v6_primary_address
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "Name"                    => "IP:#{ipInfo.interface_name}:#{ip4}",
-        "SystemCreationClassName" => ssNode.class_name,
-        "SystemName"              => ssNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'Name'                    => "IP:#{ipInfo.interface_name}:#{ip4}",
+        'SystemCreationClassName' => ssNode.class_name,
+        'SystemName'              => ssNode.property('Name')
       }
 
       additionalProperties = {
-        "IPv4Address" => ip4,
-        "SubnetMask"  => snm,
-        "IPv6Address" => ip6,
-        "NameFormat"  => "IP:<Interface>:<IPV4|6 Address>",
-        "Caption"     => cimClassName,
-        "Description" => cimClassName
+        'IPv4Address' => ip4,
+        'SubnetMask'  => snm,
+        'IPv6Address' => ip6,
+        'NameFormat'  => 'IP:<Interface>:<IPV4|6 Address>',
+        'Caption'     => cimClassName,
+        'Description' => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -257,24 +257,24 @@ module MiqOntapClient
     end
 
     def storageVolumeNode(lunInfo)
-      cimClassName = "ONTAP_StorageVolume"
+      cimClassName = 'ONTAP_StorageVolume'
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "DeviceID"                => "#{lunInfo.path}:#{lunInfo.serial_number}",
-        "SystemCreationClassName" => @topMeNode.class_name,
-        "SystemName"              => @topMeNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'DeviceID'                => "#{lunInfo.path}:#{lunInfo.serial_number}",
+        'SystemCreationClassName' => @topMeNode.class_name,
+        'SystemName'              => @topMeNode.property('Name')
       }
       additionalProperties = {
-        "ElementName"      => lunInfo.path,
-        "Name"             => "NETAPP LUN #{lunInfo.serial_number}",
-        "BlockSize"        => LUN_BLOCK_SIZE.to_s, # XXX
-        "Caption"          => cimClassName,
-        "Primordial"       => 'false',
-        "ConsumableBlocks" => (lunInfo.size.to_i / LUN_BLOCK_SIZE).to_s,
-        "NumberOfBlocks"   => (lunInfo.size.to_i / LUN_BLOCK_SIZE).to_s,
-        "DeltaReservation" => "???",
-        "Description"      => cimClassName
+        'ElementName'      => lunInfo.path,
+        'Name'             => "NETAPP LUN #{lunInfo.serial_number}",
+        'BlockSize'        => LUN_BLOCK_SIZE.to_s, # XXX
+        'Caption'          => cimClassName,
+        'Primordial'       => 'false',
+        'ConsumableBlocks' => (lunInfo.size.to_i / LUN_BLOCK_SIZE).to_s,
+        'NumberOfBlocks'   => (lunInfo.size.to_i / LUN_BLOCK_SIZE).to_s,
+        'DeltaReservation' => '???',
+        'Description'      => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -286,24 +286,24 @@ module MiqOntapClient
     end
 
     def logicalDiskNode(volInfo)
-      cimClassName = "ONTAP_LogicalDisk"
+      cimClassName = 'ONTAP_LogicalDisk'
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "DeviceID"                => volInfo.uuid,
-        "SystemCreationClassName" => @topMeNode.class_name,
-        "SystemName"              => @topMeNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'DeviceID'                => volInfo.uuid,
+        'SystemCreationClassName' => @topMeNode.class_name,
+        'SystemName'              => @topMeNode.property('Name')
       }
       additionalProperties = {
-        "ElementName"      => volInfo.name,
-        "Name"             => volInfo.name,
-        "DeltaReservation" => volInfo.snapshot_percent_reserved.to_s,
-        "BlockSize"        => BLOCK_SIZE.to_s, # XXX
-        "ConsumableBlocks" => (volInfo.size_total.to_i / BLOCK_SIZE).to_s,
-        "Caption"          => cimClassName,
-        "NumberOfBlocks"   => (volInfo.size_total.to_i / BLOCK_SIZE).to_s,
-        "Primordial"       => 'false',
-        "Description"      => cimClassName
+        'ElementName'      => volInfo.name,
+        'Name'             => volInfo.name,
+        'DeltaReservation' => volInfo.snapshot_percent_reserved.to_s,
+        'BlockSize'        => BLOCK_SIZE.to_s, # XXX
+        'ConsumableBlocks' => (volInfo.size_total.to_i / BLOCK_SIZE).to_s,
+        'Caption'          => cimClassName,
+        'NumberOfBlocks'   => (volInfo.size_total.to_i / BLOCK_SIZE).to_s,
+        'Primordial'       => 'false',
+        'Description'      => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -315,24 +315,24 @@ module MiqOntapClient
     end
 
     def flexVolExtentNode(volInfo)
-      cimClassName = "ONTAP_FlexVolExtent"
+      cimClassName = 'ONTAP_FlexVolExtent'
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "DeviceID"                => volInfo.uuid,
-        "SystemCreationClassName" => @topMeNode.class_name,
-        "SystemName"              => @topMeNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'DeviceID'                => volInfo.uuid,
+        'SystemCreationClassName' => @topMeNode.class_name,
+        'SystemName'              => @topMeNode.property('Name')
       }
       additionalProperties = {
-        "ElementName"      => volInfo.name,
-        "Name"             => volInfo.name,
-        "DeltaReservation" => volInfo.snapshot_percent_reserved.to_s,
-        "BlockSize"        => LUN_BLOCK_SIZE.to_s, # XXX
-        "ConsumableBlocks" => (volInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s,
-        "Caption"          => cimClassName,
-        "NumberOfBlocks"   => (volInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s,
-        "Primordial"       => 'false',
-        "Description"      => cimClassName
+        'ElementName'      => volInfo.name,
+        'Name'             => volInfo.name,
+        'DeltaReservation' => volInfo.snapshot_percent_reserved.to_s,
+        'BlockSize'        => LUN_BLOCK_SIZE.to_s, # XXX
+        'ConsumableBlocks' => (volInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s,
+        'Caption'          => cimClassName,
+        'NumberOfBlocks'   => (volInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s,
+        'Primordial'       => 'false',
+        'Description'      => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -344,22 +344,22 @@ module MiqOntapClient
     end
 
     def concreteExtentNode(aggrInfo)
-      cimClassName = "ONTAP_ConcreteExtent"
+      cimClassName = 'ONTAP_ConcreteExtent'
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "DeviceID"                => aggrInfo.uuid,
-        "SystemCreationClassName" => @topMeNode.class_name,
-        "SystemName"              => @topMeNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'DeviceID'                => aggrInfo.uuid,
+        'SystemCreationClassName' => @topMeNode.class_name,
+        'SystemName'              => @topMeNode.property('Name')
       }
       additionalProperties = {
-        "Name"             => aggrInfo.name,
-        "BlockSize"        => LUN_BLOCK_SIZE.to_s, # XXX
-        "ConsumableBlocks" => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
-        "Caption"          => cimClassName,
-        "NumberOfBlocks"   => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
-        "Primordial"       => 'false',
-        "Description"      => cimClassName
+        'Name'             => aggrInfo.name,
+        'BlockSize'        => LUN_BLOCK_SIZE.to_s, # XXX
+        'ConsumableBlocks' => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
+        'Caption'          => cimClassName,
+        'NumberOfBlocks'   => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
+        'Primordial'       => 'false',
+        'Description'      => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -376,22 +376,22 @@ module MiqOntapClient
     end
 
     def plexExtentNode(plexInfo, aggrInfo)
-      cimClassName = "ONTAP_PlexExtent"
+      cimClassName = 'ONTAP_PlexExtent'
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "DeviceID"                => plexInfo.name,
-        "SystemCreationClassName" => @topMeNode.class_name,
-        "SystemName"              => @topMeNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'DeviceID'                => plexInfo.name,
+        'SystemCreationClassName' => @topMeNode.class_name,
+        'SystemName'              => @topMeNode.property('Name')
       }
       additionalProperties = {
-        "Name"             => plexInfo.name,
-        "BlockSize"        => LUN_BLOCK_SIZE.to_s, # XXX
-        "ConsumableBlocks" => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
-        "Caption"          => cimClassName,
-        "NumberOfBlocks"   => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
-        "Primordial"       => 'false',
-        "Description"      => cimClassName
+        'Name'             => plexInfo.name,
+        'BlockSize'        => LUN_BLOCK_SIZE.to_s, # XXX
+        'ConsumableBlocks' => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
+        'Caption'          => cimClassName,
+        'NumberOfBlocks'   => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
+        'Primordial'       => 'false',
+        'Description'      => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -408,22 +408,22 @@ module MiqOntapClient
     end
 
     def raidGroupExtentNode(rgInfo, aggrInfo)
-      cimClassName = "ONTAP_RAIDGroupExtent"
+      cimClassName = 'ONTAP_RAIDGroupExtent'
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "DeviceID"                => rgInfo.name,
-        "SystemCreationClassName" => @topMeNode.class_name,
-        "SystemName"              => @topMeNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'DeviceID'                => rgInfo.name,
+        'SystemCreationClassName' => @topMeNode.class_name,
+        'SystemName'              => @topMeNode.property('Name')
       }
       additionalProperties = {
-        "Name"             => rgInfo.name,
-        "BlockSize"        => LUN_BLOCK_SIZE.to_s, # XXX
-        "ConsumableBlocks" => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
-        "Caption"          => cimClassName,
-        "NumberOfBlocks"   => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
-        "Primordial"       => 'false',
-        "Description"      => cimClassName
+        'Name'             => rgInfo.name,
+        'BlockSize'        => LUN_BLOCK_SIZE.to_s, # XXX
+        'ConsumableBlocks' => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
+        'Caption'          => cimClassName,
+        'NumberOfBlocks'   => (aggrInfo.size_total.to_i / LUN_BLOCK_SIZE).to_s, # XXX
+        'Primordial'       => 'false',
+        'Description'      => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -442,22 +442,22 @@ module MiqOntapClient
     end
 
     def diskNode(diskInfo)
-      cimClassName = "ONTAP_DiskExtent"
+      cimClassName = 'ONTAP_DiskExtent'
 
       keybindings = {
-        "CreationClassName"       => cimClassName,
-        "DeviceID"                => diskInfo.name,
-        "SystemCreationClassName" => @topMeNode.class_name,
-        "SystemName"              => @topMeNode.property('Name')
+        'CreationClassName'       => cimClassName,
+        'DeviceID'                => diskInfo.name,
+        'SystemCreationClassName' => @topMeNode.class_name,
+        'SystemName'              => @topMeNode.property('Name')
       }
       additionalProperties = {
-        "Name"             => diskInfo.name,
-        "BlockSize"        => LUN_BLOCK_SIZE.to_s, # XXX
-        "ConsumableBlocks" => diskInfo.physical_blocks,
-        "Caption"          => cimClassName,
-        "NumberOfBlocks"   => diskInfo.physical_blocks,
-        "Primordial"       => 'true',
-        "Description"      => cimClassName
+        'Name'             => diskInfo.name,
+        'BlockSize'        => LUN_BLOCK_SIZE.to_s, # XXX
+        'ConsumableBlocks' => diskInfo.physical_blocks,
+        'Caption'          => cimClassName,
+        'NumberOfBlocks'   => diskInfo.physical_blocks,
+        'Primordial'       => 'true',
+        'Description'      => cimClassName
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -469,20 +469,20 @@ module MiqOntapClient
     end
 
     def localFileSystemNode(volInfo)
-      cimClassName = "ONTAP_LocalFS"
+      cimClassName = 'ONTAP_LocalFS'
 
       keybindings = {
-        "CreationClassName"   => cimClassName,
-        "CSCreationClassName" => @topMeNode.class_name,
-        "CSName"              => @topMeNode.property('Name'),
-        "Name"                => volInfo.uuid
+        'CreationClassName'   => cimClassName,
+        'CSCreationClassName' => @topMeNode.class_name,
+        'CSName'              => @topMeNode.property('Name'),
+        'Name'                => volInfo.uuid
       }
       additionalProperties = {
-        "FileSystemSize" => volInfo.size_total,
-        "Caption"        => volInfo.name,
-        "BlockSize"      => LFS_BLOCK_SIZE.to_s, # XXX
-        "Root"           => "/vol/#{volInfo.name}",
-        "FileSystemType" => "WAFL"
+        'FileSystemSize' => volInfo.size_total,
+        'Caption'        => volInfo.name,
+        'BlockSize'      => LFS_BLOCK_SIZE.to_s, # XXX
+        'Root'           => "/vol/#{volInfo.name}",
+        'FileSystemType' => 'WAFL'
       }
 
       obj = WBEM::CIMInstance.new(cimClassName, keybindings.merge(additionalProperties))
@@ -494,17 +494,17 @@ module MiqOntapClient
     end
 
     def nfsFileShareNode(nfsInfo)
-      cimClassName = "ONTAP_FileShare"
+      cimClassName = 'ONTAP_FileShare'
 
       pn = nfsInfo.pathname
       props = {
-        "ElementName" => pn,
-        "Name"        => pn,
-        "Caption"     => pn,
-        "InstanceID"  => "#{@topMeNode.property('Name')}:nfs:#{pn}:(#{pn})"
+        'ElementName' => pn,
+        'Name'        => pn,
+        'Caption'     => pn,
+        'InstanceID'  => "#{@topMeNode.property('Name')}:nfs:#{pn}:(#{pn})"
       }
       keybindings = {
-        "InstanceID"  => props["InstanceID"]
+        'InstanceID'  => props['InstanceID']
       }
       obj = WBEM::CIMInstance.new(cimClassName, props)
       objName = WBEM::CIMInstanceName.new(cimClassName, keybindings, nil, NAME_SPACE)
@@ -515,18 +515,18 @@ module MiqOntapClient
     end
 
     def cifsFileShareNode(cifsInfo)
-      cimClassName = "ONTAP_FileShare"
+      cimClassName = 'ONTAP_FileShare'
 
       mp = cifsInfo.mount_point
       sn = cifsInfo.share_name
       props = {
-        "ElementName" => sn,
-        "Name"        => mp,
-        "Caption"     => sn,
-        "InstanceID"  => "#{@topMeNode.property('Name')}:cifs:#{mp}:(#{sn})"
+        'ElementName' => sn,
+        'Name'        => mp,
+        'Caption'     => sn,
+        'InstanceID'  => "#{@topMeNode.property('Name')}:cifs:#{mp}:(#{sn})"
       }
       keybindings = {
-        "InstanceID"  => props["InstanceID"]
+        'InstanceID'  => props['InstanceID']
       }
       obj = WBEM::CIMInstance.new(cimClassName, props)
       objName = WBEM::CIMInstanceName.new(cimClassName, keybindings, nil, NAME_SPACE)
@@ -607,8 +607,8 @@ module MiqOntapClient
     end
 
     def volNameFromPath(path)
-      pa = path.split("/")
-      return "vol0" unless pa[1] == "vol"
+      pa = path.split('/')
+      return 'vol0' unless pa[1] == 'vol'
       pa[2]
     end
 
@@ -741,7 +741,7 @@ module MiqOntapClient
         end
       end
 
-      fullKey = ikeys.sort.join(", ")
+      fullKey = ikeys.sort.join(', ')
       if (metricId = @metricIdByKey[fullKey]).nil?
         metric = deriveMetrics(node, metricHash)
         @metricIdByKey[fullKey] = metric.id
@@ -767,15 +767,15 @@ module MiqOntapClient
       pon = CLASS_TO_PERF_OBJECT_NAMES[node.class_name].first
 
       case pon
-      when "aggregate"
+      when 'aggregate'
         metric = OntapAggregateMetric.new
-      when "disk"
+      when 'disk'
         metric = OntapDiskMetric.new
-      when "LUN"
+      when 'LUN'
         metric = OntapLunMetric.new
-      when "System"
+      when 'System'
         metric = OntapSystemMetric.new
-      when "volume"
+      when 'volume'
         metric = OntapVolumeMetric.new
       else
         metric = MiqCimMetric.new
@@ -856,9 +856,9 @@ module MiqOntapClient
   end # class OntapClient
 end # module MiqOntapClient
 
-if $0 == "script/runner"
+if $0 == 'script/runner'
 
-  require "util/MiqDumpObj"
+  require 'util/MiqDumpObj'
 
   module NetAppManageability
     class NAMHash
@@ -879,15 +879,15 @@ if $0 == "script/runner"
   begin
 
     # SERVER    = "192.168.252.30"
-    SERVER    = "192.168.252.169"
-    USERNAME  = "root"
-    PASSWORD  = "smartvm"
+    SERVER    = '192.168.252.169'
+    USERNAME  = 'root'
+    PASSWORD  = 'smartvm'
 
     include MiqOntapClient
 
     puts "Connecting to #{SERVER}..."
     oc = OntapClient.new(SERVER, USERNAME, PASSWORD)
-    puts "done."
+    puts 'done.'
 
     puts "Version: #{oc.version_string}"
     puts

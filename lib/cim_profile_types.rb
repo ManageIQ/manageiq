@@ -20,7 +20,7 @@ class CimAssoc
     dup.reverse!
   end
 
-  def dump(offset = "", lvl = 0)
+  def dump(offset = '', lvl = 0)
     ip("<#{self.class.name}>",          lvl, offset)
     ip("    assoc_class:  #{@assoc_class}",   lvl, offset)
     ip("    from_class:   #{@from_class}",    lvl, offset)
@@ -31,7 +31,7 @@ class CimAssoc
   end
 
   def ip(s, i, o)
-    print o + "    " + "        " * i
+    print o + '    ' + '        ' * i
     puts s
   end
   private :ip
@@ -41,7 +41,7 @@ class CimAssoc
   end
 
   def []=(sym, val)
-    send((sym.to_s.underscore + "=").to_sym, val)
+    send((sym.to_s.underscore + '=').to_sym, val)
   end
 
   def method_missing(sym, *args)
@@ -61,7 +61,7 @@ class CimProfNode
   attr_reader :flags, :association, :next
   attr_writer :tag
 
-  TAG_DELIMITER = "_to_"
+  TAG_DELIMITER = '_to_'
 
   def initialize(&block)
     @tag      = nil
@@ -183,7 +183,7 @@ class CimProfNode
     send(tag)
   end
 
-  def check(offset = "", lvl = 0, rank = 0)
+  def check(offset = '', lvl = 0, rank = 0)
     puts offset + "#{self.class.name}.check: level = #{lvl}, rank = #{rank} START"
     association.each { |fa| self.next.check_next(offset, fa, lvl, rank) }
     puts offset + "#{self.class.name}.check: level = #{lvl}, rank = #{rank} END"
@@ -193,13 +193,13 @@ class CimProfNode
     nil
   end
 
-  def dump(offset = "", lvl = 0, rank = 0)
+  def dump(offset = '', lvl = 0, rank = 0)
     ip("<#{self.class.name}> (#{object_id}) [#{lvl}, #{rank}]", lvl, offset)
     ip("    tag:   #{@tag}", lvl, offset)
     ip("    flags: #{@flags.inspect}", lvl, offset)
-    ip("    associations:", lvl, offset)
+    ip('    associations:', lvl, offset)
     @association.each { |a| a.dump(offset, lvl) }
-    ip("    next:", lvl, offset)
+    ip('    next:', lvl, offset)
     @next.dump(offset, lvl)
     ip("<END: #{self.class.name}> (#{object_id}) [#{lvl}, #{rank}]", lvl, offset)
   end
@@ -212,7 +212,7 @@ class CimProfNode
   def reverse_tag(tag)
     tag = tag.to_s
     sa = tag.split(TAG_DELIMITER)
-    return (tag + "_reversed").to_sym unless sa.length == 2
+    return (tag + '_reversed').to_sym unless sa.length == 2
     (sa[1] + TAG_DELIMITER + sa[0]).to_sym
   end
   private :reverse_tag
@@ -232,7 +232,7 @@ class CimProfNode
   private :get_node
 
   def ip(s, i, o)
-    print o + "    " + "        " * (i - 1) if i >= 1
+    print o + '    ' + '        ' * (i - 1) if i >= 1
     puts s
   end
   private :ip
@@ -325,7 +325,7 @@ class CimProfNodeGroup < Array
     ng
   end
 
-  def check(offset = "", lvl = 0, rank = 0)
+  def check(offset = '', lvl = 0, rank = 0)
     puts offset + "#{self.class.name}.check: level = #{lvl}, rank = #{rank} START"
     check_next(offset, nil, lvl, rank)
     puts offset + "#{self.class.name}.check: level = #{lvl}, rank = #{rank} END"
@@ -339,7 +339,7 @@ class CimProfNodeGroup < Array
   end
   private :cim_class_hier
 
-  def check_next(offset = "", from_assoc = nil, _lvl = 0, _rank = 0)
+  def check_next(offset = '', from_assoc = nil, _lvl = 0, _rank = 0)
     if from_assoc
       input_class = from_assoc.result_class
       assoc_class = from_assoc.assoc_class
@@ -360,7 +360,7 @@ class CimProfNodeGroup < Array
     end
   end
 
-  def dump(offset = "", lvl = 0)
+  def dump(offset = '', lvl = 0)
     puts offset + "input_class: #{@input_class}" unless @input_class.nil?
     each_with_index { |n, i| n.dump(offset, lvl + 1, i) }
   end
@@ -376,7 +376,7 @@ class CimAssociations < Hash
 
   DELIMITER = '_TO_'
 
-  def self.update(name_sfx = "", &block)
+  def self.update(name_sfx = '', &block)
     @instance = new unless @instance
 
     #
@@ -388,7 +388,7 @@ class CimAssociations < Hash
       block.arity < 1 ? @instance.instance_eval(&block) : block.call(@instance)
       @instance.default = nil
     end
-    @@name_sfx = ""
+    @@name_sfx = ''
   end
 
   def initialize

@@ -21,21 +21,21 @@ module VimBaseSyncDebug
       thr = li[:thread]
       ln  = li[:lock].lock_name
       $vim_log.error "VimSyncDebug - Locking Thread has terminated: Lock(#{ln}), Thread(#{thr.object_id})."
-      $vim_log.error "VimSyncDebug - Start backtrace"
+      $vim_log.error 'VimSyncDebug - Start backtrace'
       $vim_log.error li[:call_stack].join("\n")
-      $vim_log.error "VimSyncDebug - End backtrace"
+      $vim_log.error 'VimSyncDebug - End backtrace'
     end
 
     lock.on_lock_timeout lambda { |li, dt|
       thr = li[:thread]
       $vim_log.error "VimSyncDebug - Lock timeout: thread #{thr.object_id} has held #{li[:lock].lock_name} for #{dt} seconds"
-      $vim_log.error "VimSyncDebug - Lock acquisition: Start backtrace"
+      $vim_log.error 'VimSyncDebug - Lock acquisition: Start backtrace'
       $vim_log.error li[:call_stack].join("\n")
-      $vim_log.error "VimSyncDebug - Lock acquisition: End backtrace"
+      $vim_log.error 'VimSyncDebug - Lock acquisition: End backtrace'
 
-      $vim_log.error "VimSyncDebug - Locking thread: Start backtrace"
+      $vim_log.error 'VimSyncDebug - Locking thread: Start backtrace'
       $vim_log.error thr.backtrace.join("\n") if thr.alive?
-      $vim_log.error "VimSyncDebug - Locking thread: End backtrace"
+      $vim_log.error 'VimSyncDebug - Locking thread: End backtrace'
       return false # don't raise an exception
     }
 
@@ -47,9 +47,9 @@ module VimBaseSyncDebug
       $vim_log.info "VimSyncDebug - Watchdog for #{l.lock_name} stopping"
       if err
         $vim_log.error "VimSyncDebug - Watchdog ERROR: #{err}"
-        $vim_log.error "VimSyncDebug - Watchdog: Start backtrace"
+        $vim_log.error 'VimSyncDebug - Watchdog: Start backtrace'
         $vim_log.error err.backtrace.join("\n")
-        $vim_log.error "VimSyncDebug - Watchdog: End backtrace"
+        $vim_log.error 'VimSyncDebug - Watchdog: End backtrace'
       end
     end
 

@@ -1,16 +1,16 @@
 module Mixins
   module GenericShowMixin
     def show
-      @display = params[:display] || "main" unless control_selected?
+      @display = params[:display] || 'main' unless control_selected?
 
-      @lastaction = "show"
-      @showtype   = "config"
+      @lastaction = 'show'
+      @showtype   = 'config'
       @record     = identify_record(params[:id])
       return if record_no_longer_exists?(@record)
 
-      @gtl_url = "/show"
+      @gtl_url = '/show'
       case @display
-      when "download_pdf", "main", "summary_only"
+      when 'download_pdf', 'main', "summary_only"
         get_tagdata(@record)
         drop_breadcrumb({:name => "#{self.class.table_name}s",
                          :url  => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"},
@@ -52,18 +52,18 @@ module Mixins
     end
 
     def display_instances
-      nested_list("vm_cloud", ManageIQ::Providers::CloudManager::Vm)
+      nested_list('vm_cloud', ManageIQ::Providers::CloudManager::Vm)
     end
 
     def display_images
-      nested_list("template_cloud", ManageIQ::Providers::CloudManager::Template)
+      nested_list('template_cloud', ManageIQ::Providers::CloudManager::Template)
     end
 
     def nested_list(table_name, model)
       title = ui_lookup(:tables => table_name)
-      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record.name},
+      drop_breadcrumb(:name => _('%{name} (Summary)') % {:name => @record.name},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}")
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title},
+      drop_breadcrumb(:name => _('%{name} (All %{title})') % {:name => @record.name, :title => title},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
       @view, @pages = get_view(model, :parent => @record) # Get the records (into a view) and the paginator
       @showtype     = @display

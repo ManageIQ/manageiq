@@ -34,8 +34,8 @@ module NTFS
 
     def self.validate_signature(signature, expected)
       if signature != expected
-        raise "Uninitialized"   if signature == "\000\000\000\000"
-        raise "Bad Sector"      if signature == 'BAAD'
+        raise 'Uninitialized'   if signature == "\000\000\000\000"
+        raise 'Bad Sector'      if signature == 'BAAD'
         raise "Invalid Signature <#{signature}>"
       end
     end

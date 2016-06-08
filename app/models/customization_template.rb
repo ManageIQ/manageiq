@@ -8,7 +8,7 @@ class CustomizationTemplate < ApplicationRecord
   # validates :name,           :uniqueness => { :scope => :pxe_image_type }
 
   def self.seed_file_name
-    @seed_file_name ||= Rails.root.join("db", "fixtures", "#{table_name}.yml")
+    @seed_file_name ||= Rails.root.join('db', 'fixtures', "#{table_name}.yml")
   end
 
   def self.seed_data
@@ -37,7 +37,7 @@ class CustomizationTemplate < ApplicationRecord
     end
 
     current.values.each do |rec|
-      log_attrs = rec.attributes.slice("id", "name", "type", "description").symbolize_keys
+      log_attrs = rec.attributes.slice('id', 'name', 'type', 'description').symbolize_keys
       _log.info("Deleting #{log_attrs.inspect}")
       rec.destroy
     end

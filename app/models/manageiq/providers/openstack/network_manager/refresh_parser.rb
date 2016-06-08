@@ -25,7 +25,7 @@ module ManageIQ::Providers
 
     def validate_required_services
       unless @network_service
-        raise MiqException::MiqOpenstackNetworkServiceMissing, "Required service Neutron is missing in the catalog."
+        raise MiqException::MiqOpenstackNetworkServiceMissing, 'Required service Neutron is missing in the catalog.'
       end
     end
 
@@ -157,9 +157,9 @@ module ManageIQ::Providers
 
     def parse_network(network)
       uid     = network.id
-      status  = (network.status.to_s.downcase == "active") ? "active" : "inactive"
+      status  = (network.status.to_s.downcase == 'active') ? 'active' : 'inactive'
 
-      network_type_suffix = network.router_external ? "::Public" : "::Private"
+      network_type_suffix = network.router_external ? '::Public' : '::Private'
 
       new_result = {
         :type                      => self.class.cloud_network_type + network_type_suffix,
@@ -174,10 +174,10 @@ module ManageIQ::Providers
         :provider_physical_network => network.provider_physical_network,
         :provider_network_type     => network.provider_network_type,
         :provider_segmentation_id  => network.provider_segmentation_id,
-        :vlan_transparent          => network.attributes["vlan_transparent"],
+        :vlan_transparent          => network.attributes['vlan_transparent'],
         # TODO(lsmola) expose attributes in FOG
-        :maximum_transmission_unit => network.attributes["mtu"],
-        :port_security_enabled     => network.attributes["port_security_enabled"],
+        :maximum_transmission_unit => network.attributes['mtu'],
+        :port_security_enabled     => network.attributes['port_security_enabled'],
       }
       return uid, new_result
     end
@@ -187,14 +187,14 @@ module ManageIQ::Providers
       when /^compute\:.*?$/
         # Owner is in format compute:<availability_zone> or compute:None
         return parent_manager_find_device_connected_to_network_port(network_port.device_id)
-      when "network:router_gateway"
+      when 'network:router_gateway'
         # TODO(lsmola) the gateway here is public network, we model it directly now, that will probably change
-      when "network:dhcp"
+      when 'network:dhcp'
         # TODO(lsmola) we need to represent dhcp as object
-      when "network:floatingip"
+      when 'network:floatingip'
         # We don't need this association, floating ip has a direct link to subnet and network in it
-      when "network:router_interface"
-        subnet_id               = network_port.fixed_ips.try(:first).try(:[], "subnet_id")
+      when 'network:router_interface'
+        subnet_id               = network_port.fixed_ips.try(:first).try(:[], 'subnet_id')
         network_router          = @data_index.fetch_path(:network_routers, network_port.device_id)
         subnet                  = @data_index.fetch_path(:cloud_subnets, subnet_id)
         subnet[:network_router] = network_router
@@ -205,8 +205,8 @@ module ManageIQ::Providers
 
     def parse_cloud_subnet_network_port(cloud_subnet_network_port)
       {
-        :address      => cloud_subnet_network_port["ip_address"],
-        :cloud_subnet => @data_index.fetch_path(:cloud_subnets, cloud_subnet_network_port["subnet_id"])
+        :address      => cloud_subnet_network_port['ip_address'],
+        :cloud_subnet => @data_index.fetch_path(:cloud_subnets, cloud_subnet_network_port['subnet_id'])
       }
     end
 
@@ -232,13 +232,13 @@ module ManageIQ::Providers
         :cloud_tenant                      => parent_manager_fetch_path(:cloud_tenants, network_port.tenant_id),
         :cloud_subnet_network_ports        => cloud_subnet_network_ports,
         # TODO(lsmola) expose missing atttributes in FOG
-        :binding_host_id                   => network_port.attributes["binding:host_id"],
-        :binding_virtual_interface_type    => network_port.attributes["binding:vif_type"],
-        :binding_virtual_interface_details => network_port.attributes["binding:vif_details"],
-        :binding_virtual_nic_type          => network_port.attributes["binding:vnic_type"],
-        :binding_profile                   => network_port.attributes["binding:profile"],
-        :extra_dhcp_opts                   => network_port.attributes["extra_dhcp_opts"],
-        :allowed_address_pairs             => network_port.attributes["allowed_address_pairs"],
+        :binding_host_id                   => network_port.attributes['binding:host_id'],
+        :binding_virtual_interface_type    => network_port.attributes['binding:vif_type'],
+        :binding_virtual_interface_details => network_port.attributes['binding:vif_details'],
+        :binding_virtual_nic_type          => network_port.attributes['binding:vnic_type'],
+        :binding_profile                   => network_port.attributes['binding:profile'],
+        :extra_dhcp_opts                   => network_port.attributes['extra_dhcp_opts'],
+        :allowed_address_pairs             => network_port.attributes['allowed_address_pairs'],
         :fixed_ips                         => network_port.fixed_ips,
         :security_groups                   => security_groups,
       }
@@ -247,7 +247,7 @@ module ManageIQ::Providers
 
     def parse_network_router(network_router)
       uid        = network_router.id
-      network_id = network_router.try(:external_gateway_info).try(:fetch_path, "network_id")
+      network_id = network_router.try(:external_gateway_info).try(:fetch_path, 'network_id')
       new_result = {
         :type                  => self.class.network_router_type,
         :name                  => network_router.name,
@@ -258,9 +258,9 @@ module ManageIQ::Providers
         :status                => network_router.status,
         # TODO(lsmola) expose missing atttributes in FOG
         :external_gateway_info => network_router.external_gateway_info,
-        :distributed           => network_router.attributes["distributed"],
-        :routes                => network_router.attributes["routes"],
-        :high_availability     => network_router.attributes["ha"],
+        :distributed           => network_router.attributes['distributed'],
+        :routes                => network_router.attributes['routes'],
+        :high_availability     => network_router.attributes['ha'],
       }
       return uid, new_result
     end
@@ -271,23 +271,23 @@ module ManageIQ::Providers
         :name                           => subnet.name,
         :ems_ref                        => subnet.id,
         :cidr                           => subnet.cidr,
-        :status                         => (network.status.to_s.downcase == "active") ? "active" : "inactive",
+        :status                         => (network.status.to_s.downcase == 'active') ? 'active' : 'inactive',
         :network_protocol               => "ipv#{subnet.ip_version}",
         :gateway                        => subnet.gateway_ip,
         :dhcp_enabled                   => subnet.enable_dhcp,
         :cloud_tenant                   => parent_manager_fetch_path(:cloud_tenants, subnet.tenant_id),
         :dns_nameservers                => subnet.dns_nameservers,
-        :ipv6_router_advertisement_mode => subnet.attributes["ipv6_ra_mode"],
-        :ipv6_address_mode              => subnet.attributes["ipv6_address_mode"],
+        :ipv6_router_advertisement_mode => subnet.attributes['ipv6_ra_mode'],
+        :ipv6_address_mode              => subnet.attributes['ipv6_address_mode'],
         :allocation_pools               => subnet.allocation_pools,
         :host_routes                    => subnet.host_routes,
         :ip_version                     => subnet.ip_version,
-        :subnetpool_id                  => subnet.attributes["subnetpool_id"],
+        :subnetpool_id                  => subnet.attributes['subnetpool_id'],
       }
     end
 
     def parse_firewall_rule_neutron(rule)
-      direction = (rule.direction == "egress") ? "outbound" : "inbound"
+      direction = (rule.direction == 'egress') ? 'outbound' : 'inbound'
       {
         :direction             => direction,
         :ems_ref               => rule.id.to_s,
@@ -302,13 +302,13 @@ module ManageIQ::Providers
 
     def parse_firewall_rule_nova(rule)
       {
-        :direction             => "inbound",
+        :direction             => 'inbound',
         :ems_ref               => rule.id.to_s,
         :host_protocol         => rule.ip_protocol.to_s.upcase,
         :port                  => rule.from_port,
         :end_port              => rule.to_port,
-        :source_security_group => data_security_groups_by_name[rule.group["name"]],
-        :source_ip_range       => rule.ip_range["cidr"],
+        :source_security_group => data_security_groups_by_name[rule.group['name']],
+        :source_ip_range       => rule.ip_range['cidr'],
       }
     end
 
@@ -340,23 +340,23 @@ module ManageIQ::Providers
       end
 
       def network_router_type
-        "ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter"
+        'ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter'
       end
 
       def cloud_network_type
-        "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork"
+        'ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork'
       end
 
       def cloud_subnet_type
-        "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
+        'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet'
       end
 
       def floating_ip_type
-        "ManageIQ::Providers::Openstack::NetworkManager::FloatingIp"
+        'ManageIQ::Providers::Openstack::NetworkManager::FloatingIp'
       end
 
       def network_port_type
-        "ManageIQ::Providers::Openstack::NetworkManager::NetworkPort"
+        'ManageIQ::Providers::Openstack::NetworkManager::NetworkPort'
       end
     end
 

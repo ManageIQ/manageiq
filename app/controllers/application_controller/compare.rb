@@ -3,11 +3,11 @@ module ApplicationController::Compare
 
   def get_compare_report(model)
     db = model.kind_of?(String) ? model.constantize : model
-    MiqReport.find_by(:filename => "#{db.table_name}.yaml", :template_type => "compare")
+    MiqReport.find_by(:filename => "#{db.table_name}.yaml", :template_type => 'compare')
   end
 
   def create_compare_view
-    @sb[:miq_temp_params] = "all"
+    @sb[:miq_temp_params] = 'all'
     # @sb[:miq_squashed] = false # added to control expand/collapse all
 
     rpt = get_compare_report(@sb[:compare_db])
@@ -17,7 +17,7 @@ module ApplicationController::Compare
                                :include => session[:miq_sections]},
                               rpt
                              )
-    get_formatted_time("_model_", "compare")
+    get_formatted_time('_model_', 'compare')
     session[:compare_state] = {}
     @compare
   end
@@ -33,23 +33,23 @@ module ApplicationController::Compare
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
     if @compare.nil? # == nil
-      compare_init("compare")                                       # Init compare screen variables
+      compare_init('compare')                                       # Init compare screen variables
     end
     case @sb[:compare_db]
-    when "Vm"
-      session[:db_title] = "VMs"
-    when "Host"
-      session[:db_title] = "Hosts"
-    when "EmsCluster"
-      session[:db_title] = "Clusters"
-    when "MiqTemplate"
-      session[:db_title] = "Templates"
+    when 'Vm'
+      session[:db_title] = 'VMs'
+    when 'Host'
+      session[:db_title] = 'Hosts'
+    when 'EmsCluster'
+      session[:db_title] = 'Clusters'
+    when 'MiqTemplate'
+      session[:db_title] = 'Templates'
     else
-      session[:db_title] = "VMs"
+      session[:db_title] = 'VMs'
     end
-    drop_breadcrumb(:name => _("Compare %{name}") % {:name => ui_lookup(:model => @sb[:compare_db])},
+    drop_breadcrumb(:name => _('Compare %{name}') % {:name => ui_lookup(:model => @sb[:compare_db])},
                     :url  => "/#{session[:db_title].singularize.downcase}/compare_miq")
-    @lastaction = "compare_miq"
+    @lastaction = 'compare_miq'
     if params[:ppsetting]                                 # User selected new per page value
       @items_per_page = params[:ppsetting].to_i           # Set the new per page value
     end
@@ -59,37 +59,37 @@ module ApplicationController::Compare
     if params[:ppsetting]                     # Came in from per page setting
       render :update do |page|
         page << javascript_prologue
-        page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-        page << "miqSparkle(false);"
+        page.replace_html('main_div', :partial => 'layouts/compare')  # Replace the main div area contents
+        page << 'miqSparkle(false);'
       end
     else
       if @explorer
-        @refresh_partial = "layouts/compare"
+        @refresh_partial = 'layouts/compare'
       else
-        @showtype = "compare"
-        render :action => "show"
+        @showtype = 'compare'
+        render :action => 'show'
       end
     end
   end
 
   # Compare multiple VMs to show differences
   def compare_miq_same
-    @sb[:miq_temp_params] = "same"
+    @sb[:miq_temp_params] = 'same'
     compare_all_diff_same
   end
 
   # Compare multiple VMs to show all
   def compare_miq_all
-    @sb[:miq_temp_params] = "all"
+    @sb[:miq_temp_params] = 'all'
     compare_all_diff_same
   end
 
   def compare_squash
     @sb[:miq_squashed] = ! @sb[:miq_squashed]
     if @sb[:miq_squashed]
-      img_src = "close"
+      img_src = 'close'
     else
-      img_src = "squashed-all-true"
+      img_src = 'squashed-all-true'
     end
     render :update do |page|
       page << javascript_prologue
@@ -102,24 +102,24 @@ module ApplicationController::Compare
     @compare = Marshal.load(session[:miq_compare])
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
-    @compare.remove_id(params[:id].to_i) if @lastaction == "compare_remove"
-    drop_breadcrumb(:name => _("Compare %{name}") % {:name => session[:db_title]},
+    @compare.remove_id(params[:id].to_i) if @lastaction == 'compare_remove'
+    drop_breadcrumb(:name => _('Compare %{name}') % {:name => session[:db_title]},
                     :url  => "/#{session[:db_title].singularize.downcase}/compare_miq")
-    @lastaction = "compare_miq"
+    @lastaction = 'compare_miq'
     if params[:ppsetting]                                 # User selected new per page value
       @items_per_page = params[:ppsetting].to_i           # Set the new per page value
     end
     compare_to_json(@compare)
     render :update do |page|
       page << javascript_prologue
-      if @sb[:miq_temp_params] == "different"
+      if @sb[:miq_temp_params] == 'different'
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'compare_all');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'compare_all');"
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'compare_same');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'compare_same');"
         page << "ManageIQ.toolbars.disableItem('#center_tb', 'compare_diff');"
         page << "ManageIQ.toolbars.markItem('#center_tb', 'compare_diff');"
-      elsif @sb[:miq_temp_params] == "same"
+      elsif @sb[:miq_temp_params] == 'same'
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'compare_all');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'compare_all');"
         page << "ManageIQ.toolbars.disableItem('#center_tb', 'compare_same');"
@@ -134,14 +134,14 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'compare_diff');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'compare_diff');"
       end
-      page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare')  # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
   # Compare multiple VMs to show same
   def compare_miq_differences
-    @sb[:miq_temp_params] = "different"
+    @sb[:miq_temp_params] = 'different'
     compare_all_diff_same
   end
 
@@ -150,13 +150,13 @@ module ApplicationController::Compare
     @compare = Marshal.load(session[:miq_compare])
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
-    @compare.set_base_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
+    @compare.set_base_record(params[:id].to_i) if @lastaction == 'compare_miq'                      # Remove the VM from the vm compare
     compare_to_json(@compare)
     render :update do |page|
       page << javascript_prologue
       # page.replace("view_buttons_div", :partial=>"layouts/view_buttons")   # Replace the view buttons
-      page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare')  # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -180,8 +180,8 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#view_tb', 'compare_compressed');"
         page << "ManageIQ.toolbars.unmarkItem('#view_tb', 'compare_compressed');"
       end
-      page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare')  # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -205,22 +205,22 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'comparemode_exists');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'comparemode_exists');"
       end
-      page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare')  # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
   def compare_set_state
     @keep_compare = true
     session[:compare_state] ||= {}
-    if !session[:compare_state].include?(params["rowId"])
-      session[:compare_state][params["rowId"]] = params["state"]
-    elsif session[:compare_state].include?(params["rowId"]) && params["state"].to_i == -1
-      session[:compare_state].delete(params["rowId"])
+    if !session[:compare_state].include?(params['rowId'])
+      session[:compare_state][params['rowId']] = params['state']
+    elsif session[:compare_state].include?(params['rowId']) && params['state'].to_i == -1
+      session[:compare_state].delete(params['rowId'])
     end
     render :update do |page|
       page << javascript_prologue
-      page << "miqSparkle(false);"
+      page << 'miqSparkle(false);'
       # head :ok
     end
   end
@@ -235,12 +235,12 @@ module ApplicationController::Compare
     @compare = Marshal.load(session[:miq_compare])
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
-    @compare.remove_record(params[:id].to_i) if @lastaction == "compare_miq"                      # Remove the VM from the vm compare
+    @compare.remove_record(params[:id].to_i) if @lastaction == 'compare_miq'                      # Remove the VM from the vm compare
     compare_to_json(@compare)
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/compare")  # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare')  # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -248,7 +248,7 @@ module ApplicationController::Compare
   def compare_to_txt
     @compare = Marshal.load(session[:miq_compare])
     rpt = create_compare_report
-    filename = "compare_report_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = 'compare_report_' + format_timezone(Time.now, Time.zone, 'fname')
     disable_client_cache
     send_data(rpt.to_text, :filename => "#{filename}.txt")
   end
@@ -257,7 +257,7 @@ module ApplicationController::Compare
   def compare_to_csv
     @compare = Marshal.load(session[:miq_compare])
     rpt = create_compare_report(true)
-    filename = "compare_report_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = 'compare_report_' + format_timezone(Time.now, Time.zone, 'fname')
     disable_client_cache
     send_data(rpt.to_csv, :filename => "#{filename}.csv")
   end
@@ -271,17 +271,17 @@ module ApplicationController::Compare
 
   def column_names_for_compare_or_drift_report(mode)
     # Collect the column names from the @compare object
-    column_names = ["Section", "Entry", "Sub-Entry"]
+    column_names = ['Section', 'Entry', 'Sub-Entry']
 
     if mode == :compare
       column_names << @compare.records[0].name
       @compare.records[1..-1].each do |r|
-        column_names.push(r["name"]) unless r["id"] == @compare.records[0]["id"]
+        column_names.push(r['name']) unless r['id'] == @compare.records[0]['id']
       end
     else
       @compare.ids.each do |r|
         t = r.getgm
-        column_names.push(t.strftime("%m/%d/%y") + " " + t.strftime("%H:%M ") + t.zone)
+        column_names.push(t.strftime('%m/%d/%y') + ' ' + t.strftime('%H:%M ') + t.zone)
       end
     end
 
@@ -298,12 +298,12 @@ module ApplicationController::Compare
       if @compare.include[section[:name]][:checked]     # Only grab the sections that are checked
         if !records.nil? && !records.empty?
           records.each do |attr|
-            cols = [section[:header].to_s, attr, ""]      # Start the row with section and attribute names
+            cols = [section[:header].to_s, attr, '']      # Start the row with section and attribute names
             # Grab the base VM's value
             if records.include?(attr)
-              bas = "Found"
+              bas = 'Found'
             else
-              bas = "Missing"
+              bas = 'Missing'
             end
             cols.push(bas)
 
@@ -313,16 +313,16 @@ module ApplicationController::Compare
               # unless r[0] == @compare.records[0]["id"] # Skip the base VM
               unless idx == 0 # Skip the base VM
                 if @compare.results[r][section[:name]].include?(attr)                         # Set the report value
-                  rval = "Found"
-                  val = "Found"
+                  rval = 'Found'
+                  val = 'Found'
                 else
-                  rval = "Missing"
-                  val = "Missing"
+                  rval = 'Missing'
+                  val = 'Missing'
                 end
                 if mode == :compare
-                  rval = "* " + rval if bas.to_s != val.to_s      # Mark the ones that don't match the base
+                  rval = '* ' + rval if bas.to_s != val.to_s      # Mark the ones that don't match the base
                 else
-                  rval = "* " + rval if @compare.results[r][section[:name]][attr] && !@compare.results[r][section[:name]][attr][:_match_]     # Mark the ones that don't match the base
+                  rval = '* ' + rval if @compare.results[r][section[:name]][attr] && !@compare.results[r][section[:name]][attr][:_match_]     # Mark the ones that don't match the base
                 end
                 cols.push(rval)
               end
@@ -333,18 +333,18 @@ module ApplicationController::Compare
 
         if records.nil? && !fields.nil? && !fields.empty?
           fields.each do |attr|
-            cols = [section[:header].to_s, attr[:header].to_s, ""]     # Start the row with section and attribute names
+            cols = [section[:header].to_s, attr[:header].to_s, '']     # Start the row with section and attribute names
             @compare.ids.each_with_index do |r, idx|         # Go thru each of the VMs
               if !@compare.results[r][section[:name]].nil?
                 rval = @compare.results[r][section[:name]][attr[:name]][:_value_]
               else
-                rval = "(missing)"
+                rval = '(missing)'
               end
               unless idx == 0                             # If not generating CSV
                 if mode == :compare
-                  rval = "* " + rval.to_s if @compare.results[@compare.ids[0]][section[:name]][attr[:name]][:_value_].to_s != rval.to_s     # Mark the ones that don't match the base
+                  rval = '* ' + rval.to_s if @compare.results[@compare.ids[0]][section[:name]][attr[:name]][:_value_].to_s != rval.to_s     # Mark the ones that don't match the base
                 else
-                  rval = "* " + rval.to_s unless @compare.results[@compare.ids[idx]][section[:name]][attr[:name]][:_match_]      # Mark the ones that don't match the base
+                  rval = '* ' + rval.to_s unless @compare.results[@compare.ids[idx]][section[:name]][attr[:name]][:_match_]      # Mark the ones that don't match the base
                 end
               end
               cols.push(rval)
@@ -361,15 +361,15 @@ module ApplicationController::Compare
                 if !@compare.results[r][section[:name]][level2].nil?
                   rval = @compare.results[r][section[:name]][level2][attr[:name]][:_value_].to_s
                 else
-                  rval = "(missing)"
+                  rval = '(missing)'
                 end
                 if idx > 0
                   if mode == :compare
-                    rval = "* " + rval.to_s  if !@compare.results[@compare.ids[0]][section[:name]][level2].nil? && @compare.results[@compare.ids[0]][section[:name]][level2][attr[:name]][:_value_].to_s != rval.to_s     # Mark the ones that don't match the base
-                    rval = "* " + rval.to_s  if @compare.results[@compare.ids[0]][section[:name]][level2].nil? && rval.to_s != "(missing)"      # Mark the ones that don't match the base
+                    rval = '* ' + rval.to_s  if !@compare.results[@compare.ids[0]][section[:name]][level2].nil? && @compare.results[@compare.ids[0]][section[:name]][level2][attr[:name]][:_value_].to_s != rval.to_s     # Mark the ones that don't match the base
+                    rval = '* ' + rval.to_s  if @compare.results[@compare.ids[0]][section[:name]][level2].nil? && rval.to_s != '(missing)'      # Mark the ones that don't match the base
                   else
                     # Mark the ones that don't match the prior VM
-                    rval = "* " + rval if @compare.results[r][section[:name]][level2] && @compare.results[r][section[:name]][level2][attr[:name]] && !@compare.results[r][section[:name]][level2][attr[:name]][:_match_]
+                    rval = '* ' + rval if @compare.results[r][section[:name]][level2] && @compare.results[r][section[:name]][level2][attr[:name]] && !@compare.results[r][section[:name]][level2][attr[:name]][:_match_]
                   end
                 end
                 cols.push(rval)
@@ -381,24 +381,24 @@ module ApplicationController::Compare
 
         unless csv                              # Don't generate % lines for csv output
           if mode == :compare
-            cols = ["#{section[:header]} - % Match:", "", "", "Base"]    # Generate % line, first 3 cols
+            cols = ["#{section[:header]} - % Match:", '', '', 'Base']    # Generate % line, first 3 cols
           else
-            cols = ["#{section[:header]} - Changed:", "", ""]            # Generate % line, first 3 cols
+            cols = ["#{section[:header]} - Changed:", '', '']            # Generate % line, first 3 cols
           end
 
           @compare.ids.each do |r|            # Go thru each of the VMs
             if mode == :compare
-              next if r[0] == @compare.records[0]["id"] # Skip the base VM
-              cols.push(r[1][section[:name]][:_match_].to_s + "%")  # Grab the % value for this attr for this VM
+              next if r[0] == @compare.records[0]['id'] # Skip the base VM
+              cols.push(r[1][section[:name]][:_match_].to_s + '%')  # Grab the % value for this attr for this VM
             else
               if @compare.results[r][section[:name]][:_match_]  # Does it match?
-                cols.push("")                     # Yes, push a blank string
+                cols.push('')                     # Yes, push a blank string
               else
-                cols.push("*")                    # No, mark it with an *
+                cols.push('*')                    # No, mark it with an *
               end
             end
           end
-          build_download_rpt(cols, csv, "all")                        # Add the row to the data array
+          build_download_rpt(cols, csv, 'all')                        # Add the row to the data array
         end
       end
     end # end of all includes/sections
@@ -419,11 +419,11 @@ module ApplicationController::Compare
     rpt.sortby    = [column_names[0]]      # Set sortby to the first column
 
     if mode == :compare
-      rpt.db = "<compare>"            # Set special db setting for report formatter
-      rpt.title = _("%{name} Compare Report (* = Value does not match base)") %
+      rpt.db = '<compare>'            # Set special db setting for report formatter
+      rpt.title = _('%{name} Compare Report (* = Value does not match base)') %
                     {:name => ui_lookup(:model => @sb[:compare_db])}
     else
-      rpt.db = "<drift>"            # Set special db setting for report formatter
+      rpt.db = '<drift>'            # Set special db setting for report formatter
       rpt.title = _("${name} '%{vm_name}' Drift Report") % {:name    => ui_lookup(:model => @sb[:compare_db]),
                                                             :vm_name => @sb[:miq_vm_name]}
     end
@@ -443,29 +443,29 @@ module ApplicationController::Compare
   end
 
   def build_download_rpt(cols, csv, typ)
-    if typ.nil? || typ == "all"
+    if typ.nil? || typ == 'all'
       if csv # If generating CSV, remove * from data
         cols.each_with_index do |c, i|
-          if c.to_s.starts_with?("* ")
-            cols[i].gsub!(/\*\s/, "")
+          if c.to_s.starts_with?('* ')
+            cols[i].gsub!(/\*\s/, '')
           end
         end
       end
       @data.push(cols)                        # Add the row to the data array
-    elsif typ == "same"
+    elsif typ == 'same'
       same = true
       cols.each_with_index do |c, i|
-        if c.to_s.starts_with?("* ")
-          cols[i].gsub!(/\*\s/, "") if csv # If generating CSV
+        if c.to_s.starts_with?('* ')
+          cols[i].gsub!(/\*\s/, '') if csv # If generating CSV
           same = false
         end
       end
       @data.push(cols)  if same                     # Add the row to the data array
-    elsif typ == "different"
+    elsif typ == 'different'
       same = true
       cols.each_with_index do |c, i|
-        if c.to_s.starts_with?("* ")
-          cols[i].gsub!(/\*\s/, "") if csv # If generating CSV
+        if c.to_s.starts_with?('* ')
+          cols[i].gsub!(/\*\s/, '') if csv # If generating CSV
           same = false
         end
       end
@@ -477,13 +477,13 @@ module ApplicationController::Compare
     @drift_obj = nil
     begin
       db = @sb[:compare_db].constantize
-      if @sb[:compare_db] == "Host"
+      if @sb[:compare_db] == 'Host'
         @record = @host = @drift_obj = find_by_id_filtered(db, params[:id])
-      elsif @sb[:compare_db] == "MiqTemplate"
+      elsif @sb[:compare_db] == 'MiqTemplate'
         @record = @miq_templates = @drift_obj = find_by_id_filtered(db, params[:id])
-      elsif @sb[:compare_db] == "Vm"
+      elsif @sb[:compare_db] == 'Vm'
         @record = @vm = @drift_obj = find_by_id_filtered(db, params[:id])
-      elsif @sb[:compare_db] == "EmsCluster"
+      elsif @sb[:compare_db] == 'EmsCluster'
         @record = @ems_cluster = @drift_obj = find_by_id_filtered(db, params[:id])
       else
         @record = @drift_obj = find_by_id_filtered(db, params[:id])
@@ -494,8 +494,8 @@ module ApplicationController::Compare
   end
 
   def create_drift_view
-    @sb[:miq_drift_params] = "all"
-    compare_init("drift")                                     # Init compare screen variables
+    @sb[:miq_drift_params] = 'all'
+    compare_init('drift')                                     # Init compare screen variables
     identify_obj
 
     rpt = get_compare_report(@sb[:compare_db])
@@ -507,28 +507,28 @@ module ApplicationController::Compare
                         },
                                 rpt
                                )
-    get_formatted_time("_model_", "drift")
+    get_formatted_time('_model_', 'drift')
     session[:compare_state] = {}
     @compare
   end
 
-  def get_formatted_time(section, typ = "compare")
+  def get_formatted_time(section, typ = 'compare')
     @compare.results.each do |vm|
       vm[1][section.to_sym].each do |s|
-        if typ == "compare"
+        if typ == 'compare'
           @compare.master_list.each_slice(3) do |sections, records, _fields| # section is a symbol, records and fields are arrays
             if sections[:name].to_s == section.to_s
               if !records.blank?
                 if s[1].kind_of?(Hash)
                   s[1].each do |f|
-                    if f[1].kind_of?(Hash) && f[1].key?(:_value_) && f[1][:_value_].kind_of?(Time) && !f[1][:_value_].blank? && f[1][:_value_] != "" && f[1][:_value_] != MiqCompare::EMPTY
-                      f[1][:_value_] = format_timezone(f[1][:_value_], Time.zone, "view")
+                    if f[1].kind_of?(Hash) && f[1].key?(:_value_) && f[1][:_value_].kind_of?(Time) && !f[1][:_value_].blank? && f[1][:_value_] != '' && f[1][:_value_] != MiqCompare::EMPTY
+                      f[1][:_value_] = format_timezone(f[1][:_value_], Time.zone, 'view')
                     end
                   end
                 end
               else
-                if s[1].kind_of?(Hash) && s[1].key?(:_value_) && s[1][:_value_].kind_of?(Time) && !s[1][:_value_].blank? && s[1][:_value_] != "" && s[1][:_value_] != MiqCompare::EMPTY
-                  s[1][:_value_] = format_timezone(s[1][:_value_], Time.zone, "view")
+                if s[1].kind_of?(Hash) && s[1].key?(:_value_) && s[1][:_value_].kind_of?(Time) && !s[1][:_value_].blank? && s[1][:_value_] != '' && s[1][:_value_] != MiqCompare::EMPTY
+                  s[1][:_value_] = format_timezone(s[1][:_value_], Time.zone, 'view')
                 end
               end
             end
@@ -539,14 +539,14 @@ module ApplicationController::Compare
               if !records.blank?
                 if s[1].kind_of?(Hash)
                   s[1].each do |f|
-                    if DRIFT_TIME_COLUMNS.include?(f[0].to_s) && f[1].kind_of?(Hash) && f[1].key?(:_value_) && !f[1][:_value_].blank? && f[1][:_value_] != "" && f[1][:_value_] != MiqCompare::EMPTY
-                      f[1][:_value_] = format_timezone(f[1][:_value_], Time.zone, "view")
+                    if DRIFT_TIME_COLUMNS.include?(f[0].to_s) && f[1].kind_of?(Hash) && f[1].key?(:_value_) && !f[1][:_value_].blank? && f[1][:_value_] != '' && f[1][:_value_] != MiqCompare::EMPTY
+                      f[1][:_value_] = format_timezone(f[1][:_value_], Time.zone, 'view')
                     end
                   end
                 end
               else
-                if DRIFT_TIME_COLUMNS.include?(s[0].to_s) && s[1].kind_of?(Hash) && s[1].key?(:_value_) && !s[1][:_value_].blank? && s[1][:_value_] != "" && s[1][:_value_] != MiqCompare::EMPTY
-                  s[1][:_value_] = format_timezone(s[1][:_value_], Time.zone, "view")
+                if DRIFT_TIME_COLUMNS.include?(s[0].to_s) && s[1].kind_of?(Hash) && s[1].key?(:_value_) && !s[1][:_value_].blank? && s[1][:_value_] != '' && s[1][:_value_] != MiqCompare::EMPTY
+                  s[1][:_value_] = format_timezone(s[1][:_value_], Time.zone, 'view')
                 end
               end
             end
@@ -558,7 +558,7 @@ module ApplicationController::Compare
 
   # Show drift analysis for multiple VM scans
   def drift
-    @lastaction = "drift"
+    @lastaction = 'drift'
     @compare = create_drift_view
     build_sections_tree
     drift_to_json(@compare)
@@ -569,14 +569,14 @@ module ApplicationController::Compare
       render :update do |page| # Use RJS to update the display
         # Replace the main div area contents
         page << javascript_prologue
-        page.replace_html("main_div", :partial => "layouts/compare", :id => @drift_obj.id)
+        page.replace_html('main_div', :partial => 'layouts/compare', :id => @drift_obj.id)
       end
     else
-      @showtype = "drift"
+      @showtype = 'drift'
       if @explorer
-        @refresh_partial = "layouts/compare"
+        @refresh_partial = 'layouts/compare'
       else
-        render :action => "show", :id => @drift_obj.id
+        render :action => 'show', :id => @drift_obj.id
       end
     end
   end
@@ -596,18 +596,18 @@ module ApplicationController::Compare
     drift_to_json(@compare)
     drop_breadcrumb(:name => _("'%{name}' Drift Analysis") % {:name => @sb[:miq_vm_name]},
                     :url  => "/#{@sb[:compare_db].downcase}/drift")
-    @lastaction = "drift"
-    @showtype = "drift"
+    @lastaction = 'drift'
+    @showtype = 'drift'
     render :update do |page|
       page << javascript_prologue
-      if @sb[:miq_drift_params] == "different"
+      if @sb[:miq_drift_params] == 'different'
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'drift_all');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'drift_all');"
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'drift_same');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'drift_same');"
         page << "ManageIQ.toolbars.disableItem('#center_tb', 'drift_diff');"
         page << "ManageIQ.toolbars.markItem('#center_tb', 'drift_diff');"
-      elsif @sb[:miq_drift_params] == "same"
+      elsif @sb[:miq_drift_params] == 'same'
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'drift_all');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'drift_all');"
         page << "ManageIQ.toolbars.disableItem('#center_tb', 'drift_same');"
@@ -622,23 +622,23 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'drift_same');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'drift_same');"
       end
-      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare') # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
   def drift_all
-    @sb[:miq_drift_params] = "all"
+    @sb[:miq_drift_params] = 'all'
     drift_all_same_dff
   end
 
   def drift_differences
-    @sb[:miq_drift_params] = "different"
+    @sb[:miq_drift_params] = 'different'
     drift_all_same_dff
   end
 
   def drift_same
-    @sb[:miq_drift_params] = "same"
+    @sb[:miq_drift_params] = 'same'
     drift_all_same_dff
   end
 
@@ -646,21 +646,21 @@ module ApplicationController::Compare
   def sections_field_changed
     @keep_compare = true
     set_checked_sections
-    if params[:check] == "drift"
+    if params[:check] == 'drift'
       drift_checked
-    elsif params[:check] == "compare_miq"
+    elsif params[:check] == 'compare_miq'
       compare_checked
     else
       render :update do |page|
         page << javascript_prologue
-        page << "miqSparkle(false);"
+        page << 'miqSparkle(false);'
         # head :ok
       end
     end
   end
 
   def set_checked_sections
-    if params[:check] != "drift" && params[:check] != "compare_miq" && params[:all_checked]
+    if params[:check] != 'drift' && params[:check] != 'compare_miq' && params[:all_checked]
       arr = params[:all_checked].split(',')
       session[:selected_sections] = []
       arr.each do |a|
@@ -696,8 +696,8 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#center_tb', 'driftmode_exists');"
         page << "ManageIQ.toolbars.unmarkItem('#center_tb', 'driftmode_exists');"
       end
-      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare') # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -720,8 +720,8 @@ module ApplicationController::Compare
         page << "ManageIQ.toolbars.enableItem('#view_tb', 'drift_compressed');"
         page << "ManageIQ.toolbars.unmarkItem('#view_tb', 'drift_compressed');"
       end
-      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare') # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -729,7 +729,7 @@ module ApplicationController::Compare
   def drift_to_txt
     @compare = Marshal.load(session[:miq_compare])
     rpt = create_drift_report
-    filename = "drift_report_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = 'drift_report_' + format_timezone(Time.now, Time.zone, 'fname')
     disable_client_cache
     send_data(rpt.to_text, :filename => "#{filename}.txt")
   end
@@ -738,7 +738,7 @@ module ApplicationController::Compare
   def drift_to_csv
     @compare = Marshal.load(session[:miq_compare])
     rpt = create_drift_report(true)
-    filename = "drift_report_" + format_timezone(Time.now, Time.zone, "fname")
+    filename = 'drift_report_' + format_timezone(Time.now, Time.zone, 'fname')
     disable_client_cache
     send_data(rpt.to_csv, :filename => "#{filename}.csv")
   end
@@ -755,11 +755,11 @@ module ApplicationController::Compare
     identify_obj
     @timestamps = @drift_obj.drift_state_timestamps
     session[:timestamps] = @timestamps
-    @showtype = "drift_history"
-    drop_breadcrumb(:name => _("Drift History"), :url => "/#{controller_name}/drift_history/#{@drift_obj.id}")
-    @lastaction = "drift_history"
-    @display = "main"
-    @button_group = "common_drift"
+    @showtype = 'drift_history'
+    drop_breadcrumb(:name => _('Drift History'), :url => "/#{controller_name}/drift_history/#{@drift_obj.id}")
+    @lastaction = 'drift_history'
+    @display = 'main'
+    @button_group = 'common_drift'
     if @explorer || request.xml_http_request? # Is this an Ajax request?
       @sb[:action] = params[:action]
       @refresh_partial = "vm_common/#{@showtype}"
@@ -779,12 +779,12 @@ module ApplicationController::Compare
   def compare_init(mode)
     @compare = nil                                                            # Clear the compare array to have it rebuilt
     @base = nil                                                                 # Clear the base comparison VM
-    if mode == "compare"
-      session[:miq_compressed]  = (@settings[:views][:compare] == "compressed")
-      session[:miq_exists_mode] = (@settings[:views][:compare_mode] == "exists")
+    if mode == 'compare'
+      session[:miq_compressed]  = (@settings[:views][:compare] == 'compressed')
+      session[:miq_exists_mode] = (@settings[:views][:compare_mode] == 'exists')
     else
-      session[:miq_compressed]  = (@settings[:views][:drift] == "compressed")
-      session[:miq_exists_mode] = (@settings[:views][:drift_mode] == "exists")
+      session[:miq_compressed]  = (@settings[:views][:drift] == 'compressed')
+      session[:miq_exists_mode] = (@settings[:views][:drift_mode] == 'exists')
     end
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
@@ -815,17 +815,17 @@ module ApplicationController::Compare
               count += 1 if val == @base[:results][s[:name]][val_idx]   # count matches between the value and the base value
             end
             if r[:results][s[:name]].length > 0
-              r[:results][s[:name] + "_match"] = (count * 100) / r[:results][s[:name]].length # Set the percent of matches for the VM to the base
+              r[:results][s[:name] + '_match'] = (count * 100) / r[:results][s[:name]].length # Set the percent of matches for the VM to the base
               if s[:checked] == true                                                  # Only if section is currently checked
                 all_matches += count                                                # Add count to the total matches
                 all_total += r[:results][s[:name]].length                       # Add total to the grand total
               end
             else
-              r[:results][s[:name] + "_match"] = 0
+              r[:results][s[:name] + '_match'] = 0
             end
           end
         end
-        r[:results]["all_match"] = all_total == 0 ? 0 : all_matches * 100 / all_total # Calculate the total matches percent
+        r[:results]['all_match'] = all_total == 0 ? 0 : all_matches * 100 / all_total # Calculate the total matches percent
       end
     end
   end
@@ -835,7 +835,7 @@ module ApplicationController::Compare
     @compare.results.each_with_index do |r, idx|                            # Go thru each VM result
       if idx > 1                                                                            # Skip master list and first timestamp
         all_match = true
-        prev = ""
+        prev = ''
         session[:miq_sections].each do |s|                                        # Go thru each section
           section = s[:name]
           match = true
@@ -846,13 +846,13 @@ module ApplicationController::Compare
                 break                                                                     #   move on to the next section
               end
             end
-            r[:results][s[:name] + "_match"] = match                      # Set section match = true or false
+            r[:results][s[:name] + '_match'] = match                      # Set section match = true or false
             if s[:checked] == true                                                  # Only if section is currently checked
               all_match = match && all_match                                  # Set all_match
             end
           end
         end
-        r[:results]["all_match"] = all_match                                    # Set all match value in the object
+        r[:results]['all_match'] = all_match                                    # Set all match value in the object
       end
     end
   end
@@ -862,33 +862,33 @@ module ApplicationController::Compare
   def comparemiq
     assert_privileges(params[:pressed])
     vms = []
-    if !session[:checked_items].nil? && @lastaction == "set_checked_items"
+    if !session[:checked_items].nil? && @lastaction == 'set_checked_items'
       vms = session[:checked_items]
     else
       vms = find_checked_items
     end
 
-    case request.parameters["controller"].downcase
-    when "ems_cluster"
-      title = _("Clusters")
-    when "vm"
-      title = _("Virtual Machines")
-    when "miq_template"
-      title = _("VM Templates")
+    case request.parameters['controller'].downcase
+    when 'ems_cluster'
+      title = _('Clusters')
+    when 'vm'
+      title = _('Virtual Machines')
+    when 'miq_template'
+      title = _('VM Templates')
     else
-      title = request.parameters["controller"].pluralize.titleize
+      title = request.parameters['controller'].pluralize.titleize
     end
     if vms.length < 2
-      add_flash(_("At least 2 %{model} must be selected for Compare") % {:model => title}, :error)
-      if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
+      add_flash(_('At least 2 %{model} must be selected for Compare') % {:model => title}, :error)
+      if @layout == 'vm' # In vm controller, refresh show_list, else let the other controller handle it
         show_list
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       end
     elsif vms.length > 32
-      add_flash(_("No more than 32 %{model} can be selected for Compare") % {:model => title}, :error)
-      if @layout == "vm" # In vm controller, refresh show_list, else let the other controller handle it
+      add_flash(_('No more than 32 %{model} can be selected for Compare') % {:model => title}, :error)
+      if @layout == 'vm' # In vm controller, refresh show_list, else let the other controller handle it
         show_list
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       end
     else
       session[:miq_selected] = vms        # save the selected vms array for the redirect to compare_miq
@@ -913,31 +913,31 @@ module ApplicationController::Compare
 
   def compare_db(kls)
     case kls
-    when "host"
-      "Host"
-    when "ems_cluster"
-      "EmsCluster"
-    when "miq_template"
-      "MiqTemplate"
+    when 'host'
+      'Host'
+    when 'ems_cluster'
+      'EmsCluster'
+    when 'miq_template'
+      'MiqTemplate'
     else
-      "VmOrTemplate"
+      'VmOrTemplate'
     end
   end
 
   # Show drift
   def drift_analysis
-    assert_privileges("common_drift")
+    assert_privileges('common_drift')
     controller_name = @sb[:compare_db].underscore
     identify_obj
     tss = find_checked_items                                        # Get the indexes of the checked timestamps
     if tss.length < 2
-      add_flash(_("At least 2 Analyses must be selected for Drift"), :error)
-      @refresh_div = "flash_msg_div"
-      @refresh_partial = "layouts/flash_msg"
+      add_flash(_('At least 2 Analyses must be selected for Drift'), :error)
+      @refresh_div = 'flash_msg_div'
+      @refresh_partial = 'layouts/flash_msg'
     elsif tss.length > 10
-      add_flash(_("No more than 10 Analyses can be selected for Drift"), :error)
-      @refresh_div = "flash_msg_div"
-      @refresh_partial = "layouts/flash_msg"
+      add_flash(_('No more than 10 Analyses can be selected for Drift'), :error)
+      @refresh_div = 'flash_msg_div'
+      @refresh_partial = 'layouts/flash_msg'
     else
       timestamps = []
       session[:timestamps].each_with_index do |ts, idx|
@@ -972,7 +972,7 @@ module ApplicationController::Compare
       session[:miq_sections].each do |section|              # Find the section
         if session[:selected_sections].include?(section[0].to_s)
           @compare.add_section(section[0])
-          get_formatted_time(section[0], "compare")
+          get_formatted_time(section[0], 'compare')
         else
           @compare.remove_section(section[0])
         end
@@ -981,8 +981,8 @@ module ApplicationController::Compare
     send("#{mode}_to_json", @compare)
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/compare") # Replace the main div area contents
-      page << "miqSparkle(false);"
+      page.replace_html('main_div', :partial => 'layouts/compare') # Replace the main div area contents
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -1000,12 +1000,12 @@ module ApplicationController::Compare
         @group = section[:group]
         @ci_node = TreeNodeBuilder.generic_tree_node(
           "group_#{section[:group]}",
-          section[:group] == "Categories" ? "#{current_tenant.name} Tags" : section[:group],
+          section[:group] == 'Categories' ? "#{current_tenant.name} Tags" : section[:group],
           false,
           section[:group],
           :cfmeNoClick => true,
           :noLink      => true,
-          :style_class => "cfme-no-cursor-node"
+          :style_class => 'cfme-no-cursor-node'
         )
         @ci_kids = []
       end
@@ -1018,7 +1018,7 @@ module ApplicationController::Compare
           section[:header],
           :cfmeNoClick => true,
           :noLink      => true,
-          :style_class => "cfme-no-cursor-node"
+          :style_class => 'cfme-no-cursor-node'
         )
         # number of checked sections
         @sb[@group][:section_len] += 1
@@ -1040,28 +1040,28 @@ module ApplicationController::Compare
     end
 
     @all_sections_tree = all_sections.to_json # Add ci node array to root of tree
-    session[:tree] = "all_sections"
-    session[:tree_name] = "all_sections_tree"
+    session[:tree] = 'all_sections'
+    session[:tree_name] = 'all_sections_tree'
   end
 
   # Build the header row of the compare grid xml
   def drift_add_header(view)
     row = []
     rowtemp = {
-      :id    => "col0",
-      :name  => "",
-      :field => "col0",
+      :id    => 'col0',
+      :name  => '',
+      :field => 'col0',
       :width => 220
     }
     row.push(rowtemp)
 
     view.ids.each_with_index do |h, i|
-      txt = format_timezone(h, Time.zone, "compare_hdr")
+      txt = format_timezone(h, Time.zone, 'compare_hdr')
       rowtemp = {
         :id       => "col#{i + 1}",
         :field    => "col#{i + 1}",
         :width    => @compressed ? 40 : 150,
-        :cssClass => "cell-effort-driven",
+        :cssClass => 'cell-effort-driven',
         :name     => @compressed ? "<span class='rotated-text'>#{txt}</span>" : txt
       }
       row.push(rowtemp)
@@ -1072,18 +1072,18 @@ module ApplicationController::Compare
   # Build the total row of the compare grid xml
   def drift_add_total(view)
     row = {
-      :col0  => "<span class='cell-effort-driven cell-plain'>" + _("All Sections") + "</span>",
+      :col0  => "<span class='cell-effort-driven cell-plain'>" + _('All Sections') + '</span>',
       :id    => "id_#{@rows.length}",
       :total => true
     }
     view.ids.each_with_index do |_id, idx|
       if idx == 0
-        row.merge!(drift_add_same_image(idx, _("Same as previous")))
+        row.merge!(drift_add_same_image(idx, _('Same as previous')))
       else
         if view.results[view.ids[idx]][:_match_] == 100
-          row.merge!(drift_add_same_image(idx, _("Same as previous")))
+          row.merge!(drift_add_same_image(idx, _('Same as previous')))
         else
-          row.merge!(drift_add_diff_image(idx, _("Changed from previous")))
+          row.merge!(drift_add_diff_image(idx, _('Changed from previous')))
         end
       end
     end
@@ -1116,15 +1116,15 @@ module ApplicationController::Compare
     row = {}
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row.merge!(drift_add_same_image(idx, _("Starting values")))
+        row.merge!(drift_add_same_image(idx, _('Starting values')))
       else
         match_condition = view.results[id][section[:name]][:_match_]
         match_condition = view.results[id][section[:name]][:_match_exists_] if @exists_mode
 
         if match_condition == 100
-          row.merge!(drift_add_same_image(idx, _("Same as previous")))
+          row.merge!(drift_add_same_image(idx, _('Same as previous')))
         else
-          row.merge!(drift_add_diff_image(idx, _("Changed from previous")))
+          row.merge!(drift_add_diff_image(idx, _('Changed from previous')))
         end
       end
     end
@@ -1151,10 +1151,10 @@ module ApplicationController::Compare
 
   def drift_record_data_cols(view, section, record)
     row = {}
-    basval = ""                                              # Init base value
+    basval = ''                                              # Init base value
     match = 0
     view.ids.each_with_index do |id, idx|                    # Go thru all of the objects
-      val = view.results[id][section[:name]].include?(record) ? "Found" : "Missing" # Get the value for current object
+      val = view.results[id][section[:name]].include?(record) ? 'Found' : 'Missing' # Get the value for current object
       match = view.results[id][section[:name]][record][:_match_] if view.results[id][section[:name]][record]
       if idx == 0                                            # On the base?
         row.merge!(drift_add_same_image(idx, val))
@@ -1193,20 +1193,20 @@ module ApplicationController::Compare
 
   def drift_record_nonexistmode(idx, match, val, basval)
     row = {}
-    if val == "Found"                                             # This object has the record
-      if basval == "Found" && match == 100
+    if val == 'Found'                                             # This object has the record
+      if basval == 'Found' && match == 100
         row.merge!(drift_add_same_image(idx, val))
       else                                                        # Base doesn't have the record
         @same = false
         row.merge!(drift_add_diff_image(idx, val))
       end
     else                                                          # Record is missing from this object
-      if basval == "Found"                                        # Base has the record, no match
+      if basval == 'Found'                                        # Base has the record, no match
         @same = false
         row.merge!(drift_add_diff_image(idx, val))
       else
-        img_src = "16/plus-black.png"              # Base doesn't have the record, match
-        img_bkg = ""
+        img_src = '16/plus-black.png'              # Base doesn't have the record, match
+        img_bkg = ''
         row.merge!(drift_add_image_col(idx, img_src, img_bkg, val))
       end
     end
@@ -1215,22 +1215,22 @@ module ApplicationController::Compare
 
   def drift_record_existmode(idx, val, basval)
     row = {}
-    if val == "Found"                                             # This object has the record
-      img_bkg = ""
-      if basval == "Found"                                        # Base has the record
-        img_src = "16/plus-black.png"
+    if val == 'Found'                                             # This object has the record
+      img_bkg = ''
+      if basval == 'Found'                                        # Base has the record
+        img_src = '16/plus-black.png'
       else                                                        # Base doesn't have the record
         @same = false
-        img_src = "16/plus-orange.png"
+        img_src = '16/plus-orange.png'
       end
       row.merge!(drift_add_image_col(idx, img_src, img_bkg, val))
     else                                                          # Record is missing from this object
-      img_bkg = ""
-      if basval == "Found"                                        # Base has the record, no match
+      img_bkg = ''
+      if basval == 'Found'                                        # Base has the record, no match
         @same = false
-        img_src = "16/minus-orange.png"
+        img_src = '16/minus-orange.png'
       else                                                        # Base doesn't have the record, match
-        img_src = "16/minus-black.png"
+        img_src = '16/minus-black.png'
       end
       row.merge!(drift_add_image_col(idx, img_src, img_bkg, val))
     end
@@ -1252,7 +1252,7 @@ module ApplicationController::Compare
   end
 
   def drift_record_field_compressed(view, section, record, field)
-    basval = ""
+    basval = ''
     row = {:col0 => "#{field[:header]}"}
 
     view.ids.each_with_index do |id, idx|
@@ -1265,7 +1265,7 @@ module ApplicationController::Compare
         val = "#{view.results[id][section[:name]][record][field[:name]][:_value_]}"
         row.merge!(drift_record_field_exists_compressed(idx, match_condition, val))
       else
-        val = view.results[id][section[:name]].include?(record) ? "Found" : "Missing"
+        val = view.results[id][section[:name]].include?(record) ? 'Found' : 'Missing'
         basval = val if idx == 0       # On base object, # Hang on to base value
         row.merge!(drift_record_field_missing_compressed(idx, val, basval))
       end
@@ -1290,7 +1290,7 @@ module ApplicationController::Compare
         match_condition = !view.results[view.ids[0]][section[:name]][record].nil? &&
                           !view.results[view.ids[0]][section[:name]][record][field[:name]].nil?
 
-        val = "(missing)"
+        val = '(missing)'
         row.merge!(drift_record_field_missing_expanded(idx, match_condition, val))
       end
     end
@@ -1314,14 +1314,14 @@ module ApplicationController::Compare
   def drift_record_field_exists_expanded(idx, match_condition, val)
     row = {}
     if idx == 0
-      img_bkg = "cell-stripe"
+      img_bkg = 'cell-stripe'
       row.merge!(drift_add_txt_col(idx, val, img_bkg))
     else
       if match_condition
-        img_bkg = "cell-bkg-plain-no-shade"
+        img_bkg = 'cell-bkg-plain-no-shade'
         row.merge!(drift_add_txt_col(idx, val, img_bkg))
       else
-        img_bkg = "cell-bkg-plain-mark-txt-no-shade"
+        img_bkg = 'cell-bkg-plain-mark-txt-no-shade'
         row.merge!(drift_add_txt_col(idx, val, img_bkg))
       end
     end
@@ -1331,14 +1331,14 @@ module ApplicationController::Compare
   def drift_record_field_missing_expanded(idx, match_condition, val)
     row = {}
     if idx == 0
-      img_bkg = "cell-stripe"
+      img_bkg = 'cell-stripe'
       row.merge!(drift_add_txt_col(idx, val, img_bkg))
     else
       if match_condition
-        img_bkg = "cell-bkg-plain-mark-txt-no-shade-no-bold"
+        img_bkg = 'cell-bkg-plain-mark-txt-no-shade-no-bold'
         row.merge!(drift_add_txt_col(idx, val, img_bkg))
       else
-        img_bkg = "cell-bkg-plain-mark-txt-black"
+        img_bkg = 'cell-bkg-plain-mark-txt-black'
         row.merge!(drift_add_txt_col(idx, val, img_bkg))
       end
     end
@@ -1388,7 +1388,7 @@ module ApplicationController::Compare
           row.merge!(drift_add_diff_image(idx, val))
         end
       else
-        val = _("No Value Found")
+        val = _('No Value Found')
         row.merge!(drift_add_diff_image(idx, val))
       end
     end
@@ -1400,17 +1400,17 @@ module ApplicationController::Compare
     view.ids.each_with_index do |id, idx|
       if !view.results[id][section[:name]][field[:name]].nil? && idx == 0       # On base object
         col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
-        img_bkg = "cell-stripe"
+        img_bkg = 'cell-stripe'
         row.merge!(drift_add_txt_col(idx, col, img_bkg))
       elsif !view.results[id][section[:name]].nil? && !view.results[id][section[:name]][field[:name]].nil?
         if view.results[id][section[:name]][field[:name]][:_match_]
           col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
-          img_bkg = "cell-bkg-plain-no-shade"
+          img_bkg = 'cell-bkg-plain-no-shade'
           row.merge!(drift_add_txt_col(idx, col, img_bkg))
         else
           @same = false
           col = "#{view.results[id][section[:name]][field[:name]][:_value_]}"
-          img_bkg = "cell-bkg-plain-mark-txt-no-shade"
+          img_bkg = 'cell-bkg-plain-mark-txt-no-shade'
           row.merge!(drift_add_txt_col(idx, col, img_bkg))
         end
       end
@@ -1419,14 +1419,14 @@ module ApplicationController::Compare
   end
 
   def drift_add_same_image(idx, val)
-    img_src = "100/compare-same.png"
-    img_bkg = "cell-stripe"
+    img_src = '100/compare-same.png'
+    img_bkg = 'cell-stripe'
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
 
   def drift_add_diff_image(idx, val)
-    img_src = "100/drift-delta.png"
-    img_bkg = "cell-plain"
+    img_src = '100/drift-delta.png'
+    img_bkg = 'cell-plain'
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
 
@@ -1466,7 +1466,7 @@ module ApplicationController::Compare
     @grid_rows_json = @rows.to_json.to_s.html_safe
     @grid_cols_json = @cols.to_json.to_s.html_safe
 
-    @lastaction = "compare_miq"
+    @lastaction = 'compare_miq'
   end
 
   def compare_build_record_rows(view, section, records, fields)
@@ -1496,18 +1496,18 @@ module ApplicationController::Compare
 
   def compare_delete_row
     @sb[:miq_temp_params].nil? ||
-      @sb[:miq_temp_params] == "all" ||
-      (@sb[:miq_temp_params] == "same" && @same) ||
-      (@sb[:miq_temp_params] == "different" && !@same)
+      @sb[:miq_temp_params] == 'all' ||
+      (@sb[:miq_temp_params] == 'same' && @same) ||
+      (@sb[:miq_temp_params] == 'different' && !@same)
   end
 
   # Build the header row of the compare grid xml
   def comp_add_header(view)
     row = []
     rowtemp = {
-      :id    => "col0",
-      :name  => "",
-      :field => "col0",
+      :id    => 'col0',
+      :name  => '',
+      :field => 'col0',
       :width => 220
     }
     row.push(rowtemp)
@@ -1521,7 +1521,7 @@ module ApplicationController::Compare
         :id       => "col#{i + 1}",
         :field    => "col#{i + 1}",
         :width    => @compressed ? 40 : 190,
-        :cssClass => "cell-effort-driven",
+        :cssClass => 'cell-effort-driven',
         :name     => html_text
       }
       row.push(rowtemp)
@@ -1531,13 +1531,13 @@ module ApplicationController::Compare
 
   def comp_add_header_compressed(view, h, i)
     txt = h[:name].truncate(16)
-    html_text = ""
+    html_text = ''
     if %w(Vm VmOrTemplate).include?(@sb[:compare_db])
       img = ActionController::Base.helpers.image_path("100/vendor-#{h[:vendor].downcase}.png")
       html_text << "<a title=\"#{h[:name]}\" href=\"/#{controller_name}/show/#{h[:id]}\">
                       <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\"/>
                     </a>"
-    elsif @sb[:compare_db] == "Host"
+    elsif @sb[:compare_db] == 'Host'
       img = ActionController::Base.helpers.image_path("100/vendor-#{h[:vmm_vendor].downcase}.png")
       html_text << "<a href=\"/host/show/#{h[:id]}\">
                       <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\" />
@@ -1550,15 +1550,15 @@ module ApplicationController::Compare
         </a>"
     end
     if i == 0
-      html_text << "<a title='" + _("%{name} is the base") % {:name => h[:name]} + "'> #{txt.truncate(16)}</a>"
+      html_text << "<a title='" + _('%{name} is the base') % {:name => h[:name]} + "'> #{txt.truncate(16)}</a>"
     else
       url = "/#{controller_name}/compare_choose_base/#{view.ids[i]}"
       html_text <<
-        "<a title = '" + _("Make %{name} the base") % {:name => h[:name]} + "'
+        "<a title = '" + _('Make %{name} the base') % {:name => h[:name]} + "'
             onclick = \"miqJqueryRequest('#{url}',
                       {beforeSend: true, complete: true});\" href='#'>"
       html_text << "  #{txt.truncate(16)}"
-      html_text << "</a>"
+      html_text << '</a>'
     end
     "<div class='rotated-text'>#{html_text}</div>"
   end
@@ -1576,7 +1576,7 @@ module ApplicationController::Compare
 
   def comp_add_footer(view)
     row = {
-      :col0       => "",
+      :col0       => '',
       :id         => "id_#{@rows.length}",
       :remove_col => true
     }
@@ -1585,7 +1585,7 @@ module ApplicationController::Compare
       view.ids.each_with_index do |_id, idx|
         if idx != 0
           url = "/#{controller_name}/compare_remove/#{view.records[idx].id}"
-          title = _("Remove this %{title} from the comparison") % {:title => session[:db_title].singularize}
+          title = _('Remove this %{title} from the comparison') % {:title => session[:db_title].singularize}
           html_text = "<a onclick=\"miqJqueryRequest('#{url}', {beforeSend: true, complete: true}); return false;\"
                        title=\"#{title}\" href=\"#\">
                          <img src=\"#{ActionController::Base.helpers.image_path('toolbars/delete.png')}\"
@@ -1598,7 +1598,7 @@ module ApplicationController::Compare
     @rows << row
   end
 
-  def compare_add_txt_col(idx, txt, tooltip = "", img_bkg = "cell-stripe", style = "")
+  def compare_add_txt_col(idx, txt, tooltip = '', img_bkg = 'cell-stripe', style = '')
     txt_tooltip = tooltip.empty? ? txt : tooltip
     txt_tooltip = "<abbr title='#{txt_tooltip}'>#{txt}</abbr>"
     if style.empty?
@@ -1609,7 +1609,7 @@ module ApplicationController::Compare
     {"col#{idx + 1}".to_sym => html_text}
   end
 
-  def compare_add_piechart_image(idx, val, image, img_bkg = "cell-plain")
+  def compare_add_piechart_image(idx, val, image, img_bkg = 'cell-plain')
     width = 55
     height = 25
     width = height = 24 if @compressed
@@ -1620,27 +1620,27 @@ module ApplicationController::Compare
     {"col#{idx + 1}".to_sym => html_text}
   end
 
-  def compare_add_same_image(idx, val, img_bkg = "")
-    img_src = "100/compare-same.png"
+  def compare_add_same_image(idx, val, img_bkg = '')
+    img_src = '100/compare-same.png'
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
 
   def compare_add_diff_image(idx, val)
-    img_src = "100/compare-diff.png"
-    img_bkg = ""
+    img_src = '100/compare-diff.png'
+    img_bkg = ''
     drift_add_image_col(idx, img_src, img_bkg, val)
   end
 
   # Build the total row of the compare grid xml
   def comp_add_total(view)
     row = {
-      :col0  => "<span class='cell-effort-driven cell-plain'>" + _("Total Matches") + "</span>",
+      :col0  => "<span class='cell-effort-driven cell-plain'>" + _('Total Matches') + '</span>',
       :id    => "id_#{@rows.length}",
       :total => true
     }
     view.ids.each_with_index do |_id, idx|
       if idx == 0
-        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : _("% Matched:"), _("% Matched")))
+        row.merge!(compare_add_txt_col(idx, @compressed ? '%:' : _('% Matched:'), _('% Matched')))
       else
         key = @exists_mode ? :_match_exists_ : :_match_
         pct_match = view.results[view.ids[idx]][key]
@@ -1678,7 +1678,7 @@ module ApplicationController::Compare
     row = {}
     view.ids.each_with_index do |id, idx|
       if idx == 0
-        row.merge!(compare_add_txt_col(idx, @compressed ? "%:" : _("% Matched:"), _("% Matched")))
+        row.merge!(compare_add_txt_col(idx, @compressed ? '%:' : _('% Matched:'), _('% Matched')))
       else
         key = @exists_mode && !records.nil? ? :_match_exists_ : :_match_
         pct_match = view.results[id][section[:name]][key]
@@ -1715,12 +1715,12 @@ module ApplicationController::Compare
   def comp_record_data_cols(view, section, record)
     row = {}
     base_rec = view.results.fetch_path(view.ids[0], section[:name], record)
-    basval = base_rec ? "Found" : "Missing"
+    basval = base_rec ? 'Found' : 'Missing'
     match = 0
 
     view.ids.each_with_index do |id, idx|                              # Go thru all of the objects
       rec = view.results.fetch_path(id, section[:name], record)
-      rec_found = rec ? "Found" : "Missing"
+      rec_found = rec ? 'Found' : 'Missing'
       val = rec_found
 
       match = view.results[id][section[:name]][record][:_match_] if view.results[id][section[:name]][record]
@@ -1746,7 +1746,7 @@ module ApplicationController::Compare
   def comp_record_data_compressed_existsmode(idx, _match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      row.merge!(drift_add_image_col(idx, "100/blank.gif", "cell-stripe", val))
+      row.merge!(drift_add_image_col(idx, '100/blank.gif', 'cell-stripe', val))
     else
       if val == basval  # Compare this object's value to the base
         row.merge!(compare_add_same_image(idx, val))
@@ -1761,23 +1761,23 @@ module ApplicationController::Compare
   def comp_record_data_nonexistsmode(idx, match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      row.merge!(compare_add_txt_col(idx, "%:", _("% Matched")))
+      row.merge!(compare_add_txt_col(idx, '%:', _('% Matched')))
     else
-      if val == "Found"         # This object has the record
-        if basval == "Found"    # Base has the record
+      if val == 'Found'         # This object has the record
+        if basval == 'Found'    # Base has the record
           img_src = calculate_match_img(match)
           unset_same_flag(match)
-          row.merge!(compare_add_piechart_image(idx, "#{match}% matched", img_src, ""))
+          row.merge!(compare_add_piechart_image(idx, "#{match}% matched", img_src, ''))
         else
           unset_same_flag
-          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
+          row.merge!(compare_add_piechart_image(idx, '0% matched', '0', ''))
         end
       else
-        if basval == "Found"
+        if basval == 'Found'
           unset_same_flag
-          row.merge!(compare_add_piechart_image(idx, "0% matched", "0", ""))
+          row.merge!(compare_add_piechart_image(idx, '0% matched', '0', ''))
         else
-          row.merge!(compare_add_piechart_image(idx, "100% matched", "20", ""))
+          row.merge!(compare_add_piechart_image(idx, '100% matched', '20', ''))
         end
       end
     end
@@ -1805,26 +1805,26 @@ module ApplicationController::Compare
   def comp_record_data_expanded_existsmode(idx, _match, val, basval)
     row = {}
     if idx == 0                                                     # On the base?
-      if val == "Found"                                           # Base has the record
-        row.merge!(drift_add_image_col(idx, "16/plus-black.png", "cell-stripe", val))
+      if val == 'Found'                                           # Base has the record
+        row.merge!(drift_add_image_col(idx, '16/plus-black.png', 'cell-stripe', val))
       else                                                          # Base doesn't have the record
         unset_same_flag
-        row.merge!(drift_add_image_col(idx, "16/minus-black.png", "cell-stripe", val))
+        row.merge!(drift_add_image_col(idx, '16/minus-black.png', 'cell-stripe', val))
       end
     else
-      if val == "Found"                                             # This object has the record
-        if basval == "Found"                                        # Base has the record
-          row.merge!(drift_add_image_col(idx, "16/plus-green.png", "", val))
+      if val == 'Found'                                             # This object has the record
+        if basval == 'Found'                                        # Base has the record
+          row.merge!(drift_add_image_col(idx, '16/plus-green.png', '', val))
         else                                                        # Base doesn't have the record
           unset_same_flag
-          row.merge!(drift_add_image_col(idx, "16/plus-red.png", "", val))
+          row.merge!(drift_add_image_col(idx, '16/plus-red.png', '', val))
         end
       else                                                          # Record is missing from this object
-        if basval == "Found"                                        # Base has the record, no match
+        if basval == 'Found'                                        # Base has the record, no match
           unset_same_flag
-          row.merge!(drift_add_image_col(idx, "16/minus-red.png", "", val))
+          row.merge!(drift_add_image_col(idx, '16/minus-red.png', '', val))
         else                                                        # Base doesn't have the record, match
-          row.merge!(drift_add_image_col(idx, "16/minus-green.png", "", val))
+          row.merge!(drift_add_image_col(idx, '16/minus-green.png', '', val))
         end
       end
     end
@@ -1832,9 +1832,9 @@ module ApplicationController::Compare
   end
 
   def size_formatting(field_name, val)
-    if ["used_space", "free_space", "size"].include?(field_name.to_s) && val != "(empty)"
-      new_val = number_with_delimiter(val, :delimiter => ",", :separator => ".")
-      return  new_val << " bytes"
+    if ['used_space', 'free_space', 'size'].include?(field_name.to_s) && val != '(empty)'
+      new_val = number_with_delimiter(val, :delimiter => ',', :separator => '.')
+      return  new_val << ' bytes'
     else
       return val.to_s
     end
@@ -1864,7 +1864,7 @@ module ApplicationController::Compare
 
     view.ids.each_with_index do |id, idx|
       rec = view.results.fetch_path(id, section[:name], record)
-      rec_found = rec ? "Found" : "Missing"
+      rec_found = rec ? 'Found' : 'Missing'
       fld = rec.nil? ? nil : rec[field[:name]]
 
       if fld.nil?
@@ -1880,24 +1880,24 @@ module ApplicationController::Compare
 
   def comp_add_record_field_missing_compressed(idx, val, base_rec)
     if @exists_mode
-      passed_img = "passed"
-      failed_img = "failed"
-      img_path = "16"
+      passed_img = 'passed'
+      failed_img = 'failed'
+      img_path = '16'
     else
-      passed_img = "compare-same"
-      failed_img = "compare-diff"
-      img_path = "100"
+      passed_img = 'compare-same'
+      failed_img = 'compare-diff'
+      img_path = '100'
     end
     row = {}
 
-    base_rec_found = base_rec ? "Found" : "Missing"
+    base_rec_found = base_rec ? 'Found' : 'Missing'
 
     if idx == 0       # On base object
       row.merge!(drift_add_same_image(idx, val))
     else              # Not on base object
       row.merge!(drift_add_image_col(idx,
                                      "#{img_path}/#{base_rec_found == val ? passed_img : failed_img}.png",
-                                     "",
+                                     '',
                                      val))
     end
     row
@@ -1905,13 +1905,13 @@ module ApplicationController::Compare
 
   def comp_add_record_field_exists_compressed(idx, val, base_rec, field)
     if @exists_mode
-      passed_img = "passed"
-      failed_img = "failed"
-      img_path = "16"
+      passed_img = 'passed'
+      failed_img = 'failed'
+      img_path = '16'
     else
-      passed_img = "compare-same"
-      failed_img = "compare-diff"
-      img_path = "100"
+      passed_img = 'compare-same'
+      failed_img = 'compare-diff'
+      img_path = '100'
     end
     row = {}
 
@@ -1921,7 +1921,7 @@ module ApplicationController::Compare
     if idx == 0   # On base object
       row.merge!(drift_add_same_image(idx, val))
     else          # Not on base object
-      row.merge!(drift_add_image_col(idx, "#{img_path}/#{base_val == val ? passed_img : failed_img}.png", "", val))
+      row.merge!(drift_add_image_col(idx, "#{img_path}/#{base_val == val ? passed_img : failed_img}.png", '', val))
     end
     row
   end
@@ -1945,10 +1945,10 @@ module ApplicationController::Compare
 
   def comp_add_record_field_exists_expanded(idx, val, base_rec, field)
     if @exists_mode
-      passed_text_color = failed_text_color = "black"
+      passed_text_color = failed_text_color = 'black'
     else
-      passed_text_color = "#403990"
-      failed_text_color = "#21a0ec"
+      passed_text_color = '#403990'
+      failed_text_color = '#21a0ec'
     end
     row = {}
 
@@ -1959,26 +1959,26 @@ module ApplicationController::Compare
       row.merge!(compare_add_txt_col(idx, val))
     else
       style = "color:#{base_val == val ? passed_text_color : failed_text_color};"
-      row.merge!(compare_add_txt_col(idx, size_formatting(field[:name], val), "", "", style))
+      row.merge!(compare_add_txt_col(idx, size_formatting(field[:name], val), '', '', style))
     end
     row
   end
 
   def comp_add_record_field_missing_expanded(idx, base_rec, field)
     if @exists_mode
-      passed_text_color = failed_text_color = "black"
+      passed_text_color = failed_text_color = 'black'
     else
-      passed_text_color = "#403990"
-      failed_text_color = "#21a0ec"
+      passed_text_color = '#403990'
+      failed_text_color = '#21a0ec'
     end
     row = {}
     base_fld = base_rec.nil? ? nil : base_rec[field[:name]]
 
     if idx == 0
-      row.merge!(compare_add_txt_col(idx, _("(missing)")))
+      row.merge!(compare_add_txt_col(idx, _('(missing)')))
     else
       style = "color:#{base_fld.nil? ? passed_text_color : failed_text_color};"
-      row.merge!(compare_add_txt_col(idx, _("(missing)"), "", "", style))
+      row.merge!(compare_add_txt_col(idx, _('(missing)'), '', '', style))
     end
     row
   end
@@ -2012,16 +2012,16 @@ module ApplicationController::Compare
       val = fld[:_value_] unless fld.nil?
 
       if fld.nil?
-        row.merge!(compare_add_diff_image(idx, _("No Value Found")))
+        row.merge!(compare_add_diff_image(idx, _('No Value Found')))
       elsif idx == 0      # On base object
-        row.merge!(compare_add_same_image(idx, val, "cell-stripe"))
+        row.merge!(compare_add_same_image(idx, val, 'cell-stripe'))
       else
         if base_val == val
-          img_bkg = "cell-stripe"
-          img = "compare-same"
+          img_bkg = 'cell-stripe'
+          img = 'compare-same'
         else
-          img_bkg = ""
-          img = "compare-diff"
+          img_bkg = ''
+          img = 'compare-diff'
           unset_same_flag
         end
         row.merge!(drift_add_image_col(idx, "100/#{img}.png", img_bkg, val))
@@ -2042,14 +2042,14 @@ module ApplicationController::Compare
         row.merge!(compare_add_txt_col(idx, val))
       else
         if base_val == val
-          style = "color:#403990;font-weight:bold;"
-          img_bkg = "cell-stripe"
+          style = 'color:#403990;font-weight:bold;'
+          img_bkg = 'cell-stripe'
         else
-          style = "color:#21a0ec;font-weight:bold;"
-          img_bkg = ""
+          style = 'color:#21a0ec;font-weight:bold;'
+          img_bkg = ''
           unset_same_flag
         end
-        row.merge!(compare_add_txt_col(idx, val, "", img_bkg, style))
+        row.merge!(compare_add_txt_col(idx, val, '', img_bkg, style))
       end
     end
     row
@@ -2063,7 +2063,7 @@ module ApplicationController::Compare
   def drift_to_json(view)
     @rows = []
     @cols = []
-    @layout = view.report.db == "VmOrTemplate" ? @sb[:compare_db].underscore : view.report.db.underscore
+    @layout = view.report.db == 'VmOrTemplate' ? @sb[:compare_db].underscore : view.report.db.underscore
     @compressed = session[:miq_compressed]
     @exists_mode = session[:miq_exists_mode]
 
@@ -2083,7 +2083,7 @@ module ApplicationController::Compare
       @grid_rows_json = @rows.to_json.to_s.html_safe
       @grid_cols_json = @cols.to_json.to_s.html_safe
     end
-    @lastaction = "drift"
+    @lastaction = 'drift'
   end
 
   def drift_build_record_rows(view, section, records, fields)
@@ -2113,9 +2113,9 @@ module ApplicationController::Compare
 
   def drift_delete_row
     @sb[:miq_drift_params].nil? ||
-      @sb[:miq_drift_params] == "all" ||
-      (@sb[:miq_drift_params] == "same" && @same) ||
-      (@sb[:miq_drift_params] == "different" && !@same)
+      @sb[:miq_drift_params] == 'all' ||
+      (@sb[:miq_drift_params] == 'same' && @same) ||
+      (@sb[:miq_drift_params] == 'different' && !@same)
   end
 
   def collapsed_state(id)

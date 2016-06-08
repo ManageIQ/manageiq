@@ -12,7 +12,7 @@ module RhevmDescriptor
     end
 
     # Init needed stff.
-    self.diskType = "Rhevm Descriptor"
+    self.diskType = 'Rhevm Descriptor'
     self.blockSize = 512
     @desc     = desc  # This disk descriptor.
     @defs     = defs  # Disk extent definitions.
@@ -67,7 +67,7 @@ module RhevmDescriptor
       retBytes = @disks[dStart].d_read(pos, len, getDiskByteOffset(dStart))
     else
       # Case: span extents.
-      retBytes = ""; bytesRead = 0
+      retBytes = ''; bytesRead = 0
       dStart.upto(dEnd) do |diskIdx|
         readLen = @disks[diskIdx].d_size
 
@@ -162,6 +162,6 @@ module RhevmDescriptor
       parentFileName = parentFileName.relative_path_from(Pathname.new(dInfo.fileName).dirname)
       $log.debug "#{self.class.name}: Parent disk file is absolute. Using relative path [#{parentFileName}]" if $log
     end
-    File.join(File.dirname(dInfo.fileName), parentFileName.to_s.tr("\\", "/"))
+    File.join(File.dirname(dInfo.fileName), parentFileName.to_s.tr('\\', '/'))
   end
 end # module RhevmDescriptor

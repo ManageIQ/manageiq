@@ -36,7 +36,7 @@ module MiqEnvironment
     end
 
     def self.rake_command
-      "rake"
+      'rake'
     end
 
     def self.runner_command
@@ -44,14 +44,14 @@ module MiqEnvironment
     end
 
     def self.rails_command
-      "rails"
+      'rails'
     end
 
     private
 
     def self.supports_command?(cmd)
       return false unless EVM_KNOWN_COMMANDS.include?(cmd)
-      require "runcmd"
+      require 'runcmd'
 
       begin
         # If 'which apachectl' returns non-zero, it wasn't found
@@ -66,7 +66,7 @@ module MiqEnvironment
     def self.which
       case Sys::Platform::IMPL
       when :linux
-        "which"
+        'which'
       else
         raise "Not yet supported platform: #{Sys::Platform::IMPL}"
       end

@@ -4,7 +4,7 @@ module MiqServer::WorkerManagement::Dequeue
   def peek(queue_name, priority, limit)
     MiqQueue.peek(
       :conditions => {:queue_name => queue_name, :priority => priority, :role => @active_role_names},
-      :select     => "id, lock_version, priority, role",
+      :select     => 'id, lock_version, priority, role',
       :limit      => limit
     )
   end

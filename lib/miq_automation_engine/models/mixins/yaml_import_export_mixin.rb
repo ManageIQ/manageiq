@@ -34,7 +34,7 @@ module YAMLImportExportMixin
         reps = YAML.load(fd.read)
       rescue Psych::SyntaxError => err
         _log.error("Failed to load from #{fd}: #{err}")
-        raise "Invalid YAML file"
+        raise 'Invalid YAML file'
       end
 
       return reps, import_from_array(reps, options)

@@ -1,6 +1,6 @@
 describe Metric::Purging do
-  context "::Purging" do
-    it "#purge_all_timer" do
+  context '::Purging' do
+    it '#purge_all_timer' do
       EvmSpecHelper.create_guid_miq_server_zone
 
       Timecop.freeze(Time.now) do
@@ -12,7 +12,7 @@ describe Metric::Purging do
         q.each do |qi|
           expect(qi).to have_attributes(
             :class_name  => described_class.name,
-            :method_name => "purge"
+            :method_name => 'purge'
           )
         end
 
@@ -21,7 +21,7 @@ describe Metric::Purging do
       end
     end
 
-    context "with data" do
+    context 'with data' do
       let(:vm1) { FactoryGirl.create(:vm_vmware) }
       let(:vm2) { FactoryGirl.create(:vm_vmware) }
       let(:host) { FactoryGirl.create(:host) }
@@ -29,9 +29,9 @@ describe Metric::Purging do
         {
           :performance => {
             :history => {
-              :keep_daily_performance    => "6.months",
-              :keep_hourly_performance   => "6.months",
-              :keep_realtime_performance => "4.hours",
+              :keep_daily_performance    => '6.months',
+              :keep_hourly_performance   => '6.months',
+              :keep_realtime_performance => '4.hours',
               :purge_window_size         => 1000
             }
           }
@@ -52,25 +52,25 @@ describe Metric::Purging do
         ]
       end
 
-      it "#purge_count" do
-        expect(described_class.purge_count(6.months.ago, "hourly")).to eq(3)
+      it '#purge_count' do
+        expect(described_class.purge_count(6.months.ago, 'hourly')).to eq(3)
       end
 
-      context "#purge" do
-        it "without block" do
-          described_class.purge(6.months.ago, "hourly")
+      context '#purge' do
+        it 'without block' do
+          described_class.purge(6.months.ago, 'hourly')
           expect(MetricRollup.where(:resource_id => @metrics1.last.resource_id)).to eq([@metrics1.last])
           expect(MetricRollup.where(:resource_id => @metrics2.last.resource_id)).to eq([@metrics2.last])
         end
 
-        it "with a block" do
+        it 'with a block' do
           callbacks = []
 
           # Adjust the window size to force multiple block callbacks
           settings.store_path(:performance, :history, :purge_window_size, 2)
           stub_settings(settings)
 
-          described_class.purge(6.months.ago, "hourly") { |count, total| callbacks << [count, total] }
+          described_class.purge(6.months.ago, 'hourly') { |count, total| callbacks << [count, total] }
           expect(MetricRollup.where(:resource_id => @metrics1.last.resource_id)).to eq([@metrics1.last])
           expect(MetricRollup.where(:resource_id => @metrics2.last.resource_id)).to eq([@metrics2.last])
 

@@ -34,7 +34,7 @@ module MiqAeMethodService
             :instance_id => @object.id,
             :method_name => m,
             :zone        => @object.my_zone,
-            :role        => "ems_operations"
+            :role        => 'ems_operations'
           )
           true
         end

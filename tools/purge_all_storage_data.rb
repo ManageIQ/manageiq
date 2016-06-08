@@ -4,25 +4,25 @@ def log(msg)
 end
 
 STORAGE_CLASSES = [
-  "MiqCimInstance",
-  "MiqCimAssociation",
-  "MiqCimDerivedMetric",
-  "MiqStorageMetric",
-  "StorageMetricsMetadata",
-  "OntapAggregateDerivedMetric",
-  "OntapAggregateMetricsRollup",
-  "OntapDiskDerivedMetric",
-  "OntapDiskMetricsRollup",
-  "OntapLunDerivedMetric",
-  "OntapLunMetricsRollup",
-  "OntapSystemDerivedMetric",
-  "OntapSystemMetricsRollup",
-  "OntapVolumeDerivedMetric",
-  "OntapVolumeMetricsRollup"
+  'MiqCimInstance',
+  'MiqCimAssociation',
+  'MiqCimDerivedMetric',
+  'MiqStorageMetric',
+  'StorageMetricsMetadata',
+  'OntapAggregateDerivedMetric',
+  'OntapAggregateMetricsRollup',
+  'OntapDiskDerivedMetric',
+  'OntapDiskMetricsRollup',
+  'OntapLunDerivedMetric',
+  'OntapLunMetricsRollup',
+  'OntapSystemDerivedMetric',
+  'OntapSystemMetricsRollup',
+  'OntapVolumeDerivedMetric',
+  'OntapVolumeMetricsRollup'
 ]
 
 begin
-  log "Purging all storage data..."
+  log 'Purging all storage data...'
   gtotal = 0
   STORAGE_CLASSES.each do |scn|
     sc = scn.constantize

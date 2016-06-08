@@ -20,6 +20,6 @@ class ServiceReconfigureRequest < MiqRequest
   end
 
   def provision_dialog
-    request_dialog("Reconfigure")
+    request_dialog('Reconfigure')
   end
 end

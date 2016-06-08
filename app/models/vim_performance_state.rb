@@ -200,7 +200,7 @@ class VimPerformanceState < ApplicationRecord
   end
 
   def self.capture_tag_names(obj)
-    obj.tag_list(:ns => "/managed").split.join("|")
+    obj.tag_list(:ns => '/managed').split.join('|')
   end
 
   def self.capture_vm_disk_storage(obj, field)

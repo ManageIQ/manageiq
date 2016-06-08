@@ -6,7 +6,7 @@ describe ActiveRecord::AttributeAccessorThatYamls do
     attr_writer_that_yamls   :write1
   end
 
-  it "attr_accessor_that_yamls" do
+  it 'attr_accessor_that_yamls' do
     inst = Vm.new
     inst.access1 = 1
     inst.access2 = 2
@@ -15,17 +15,17 @@ describe ActiveRecord::AttributeAccessorThatYamls do
     expect(result.access2).to eq(2)
   end
 
-  it "attr_reader_that_yamls" do
+  it 'attr_reader_that_yamls' do
     inst = Vm.new
-    inst.instance_variable_set("@read1", 1)
+    inst.instance_variable_set('@read1', 1)
     result = YAML.load(YAML.dump(inst))
     expect(result.read1).to eq(1)
   end
 
-  it "attr_writer_that_yamls" do
+  it 'attr_writer_that_yamls' do
     inst = Vm.new
     inst.write1 = 1
     result = YAML.load(YAML.dump(inst))
-    expect(result.instance_variable_get("@write1")).to eq(1)
+    expect(result.instance_variable_get('@write1')).to eq(1)
   end
 end

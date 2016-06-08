@@ -29,7 +29,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       when ContainerNode  then collect_node_metrics
       when Container      then collect_container_metrics
       when ContainerGroup then collect_group_metrics
-      else raise TargetValidationError, "Validation error: unknown target"
+      else raise TargetValidationError, 'Validation error: unknown target'
       end
     end
 
@@ -49,9 +49,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
     end
 
     def validate_target
-      raise TargetValidationError, "Validation error: ems not defined"    unless @ext_management_system
-      raise TargetValidationError, "Validation error: cores not defined"  unless @node_cores.to_i > 0
-      raise TargetValidationError, "Validation error: memory not defined" unless @node_memory.to_i > 0
+      raise TargetValidationError, 'Validation error: ems not defined'    unless @ext_management_system
+      raise TargetValidationError, 'Validation error: cores not defined'  unless @node_cores.to_i > 0
+      raise TargetValidationError, 'Validation error: memory not defined' unless @node_memory.to_i > 0
     end
 
     def collect_node_metrics

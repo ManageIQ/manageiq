@@ -2,25 +2,25 @@ require_relative '../../bundler_setup'
 require 'VMwareWebService/MiqVimBroker'
 
 MAX_CLIENT        = 6
-BROKER_SERVER     = "MiqVimBrokerServer.rb"
-BROKER_SERVER_LOG = "./broker.log"
+BROKER_SERVER     = 'MiqVimBrokerServer.rb'
+BROKER_SERVER_LOG = './broker.log'
 BROKER_SERVER_CMD = "ruby #{BROKER_SERVER} > #{BROKER_SERVER_LOG} 2>&1 &"
 
 TESTS = [
-  "MiqVimBrokerClient.rb",
-  "browserTest.rb",
-  "brokerObjCountTest.rb",
-  "logTest.rb",
-  "virtualDiskPerf.rb",
-  "virtualApp.rb",
-  "selectionSpecVimTest.rb",
-  "MiqVimPerfTest.rb"
+  'MiqVimBrokerClient.rb',
+  'browserTest.rb',
+  'brokerObjCountTest.rb',
+  'logTest.rb',
+  'virtualDiskPerf.rb',
+  'virtualApp.rb',
+  'selectionSpecVimTest.rb',
+  'MiqVimPerfTest.rb'
 ]
 
 ERROR_STRINGS = [
-  "VimSyncDebug - Locking Thread has terminated:",
-  "VimSyncDebug - Lock timeout:",
-  "VimSyncDebug - Watchdog ERROR:"
+  'VimSyncDebug - Locking Thread has terminated:',
+  'VimSyncDebug - Lock timeout:',
+  'VimSyncDebug - Watchdog ERROR:'
 ]
 
 def client_count
@@ -31,10 +31,10 @@ def get_broker_pid
   rva = `ps -Ao pid,command | grep #{BROKER_SERVER}`.split("\n")
   ri = rva.find_index { |ai|  ai["ruby #{BROKER_SERVER}"] }
   raise "Could not determine server's PID." unless ri
-  rva[ri].split(" ")[0]
+  rva[ri].split(' ')[0]
 end
 
-def error_count(str = "ERROR")
+def error_count(str = 'ERROR')
   `grep "#{str}" #{BROKER_SERVER_LOG} | wc -l`.to_i
 end
 
@@ -110,7 +110,7 @@ begin
     puts "Killing VIM broker server #{BROKER_SERVER}: PID = #{broker_pid}"
     system("kill -9 #{broker_pid}")
   else
-    puts "Pre-existing broker instance continuing to run."
+    puts 'Pre-existing broker instance continuing to run.'
   end
 
   exit(0)

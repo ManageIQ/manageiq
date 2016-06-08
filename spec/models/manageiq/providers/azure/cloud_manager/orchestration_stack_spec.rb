@@ -24,7 +24,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       allow(rg).to receive(:create)
     end
 
-    context ".create_stack" do
+    context '.create_stack' do
       it 'creates a stack' do
         expect(orchestration_service).to receive(:create).and_return(the_raw_stack)
 
@@ -43,7 +43,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       end
     end
 
-    context "#update_stack" do
+    context '#update_stack' do
       it 'updates the stack' do
         expect(orchestration_service).to receive(:create)
         orchestration_stack.update_stack(template, {})
@@ -55,7 +55,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       end
     end
 
-    context "#delete_stack" do
+    context '#delete_stack' do
       it 'updates the stack' do
         expect(orchestration_service).to receive(:delete)
         orchestration_stack.delete_stack
@@ -80,14 +80,14 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
       end
 
       it 'parses error message to determine stack not exist' do
-        allow(orchestration_service).to receive(:get).and_raise("Deployment xxx could not be found")
+        allow(orchestration_service).to receive(:get).and_raise('Deployment xxx could not be found')
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStackNotExistError)
 
         expect(orchestration_stack.raw_exists?).to be_falsey
       end
 
       it 'catches errors from provider' do
-        allow(orchestration_service).to receive(:get).and_raise("bad request")
+        allow(orchestration_service).to receive(:get).and_raise('bad request')
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStatusError)
 
         expect { orchestration_stack.raw_exists? }.to raise_error(MiqException::MiqOrchestrationStatusError)

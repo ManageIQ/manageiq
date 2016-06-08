@@ -1,14 +1,14 @@
-describe "JobProxyDispatcherVmStorage2Hosts" do
+describe 'JobProxyDispatcherVmStorage2Hosts' do
   require File.expand_path(File.join(File.dirname(__FILE__), 'job_proxy_dispatcher/job_proxy_dispatcher_helper'))
   include JobProxyDispatcherHelper
-  context "with two servers on same zone, vix disk enabled for all, " do
+  context 'with two servers on same zone, vix disk enabled for all, ' do
     before(:each) do
       @server1 = EvmSpecHelper.local_miq_server(:is_master => true)
       @server2 = FactoryGirl.create(:miq_server, :zone => @server1.zone)
       allow_any_instance_of(MiqServer).to receive_messages(:is_vix_disk? => true)
     end
 
-    context "with hosts with a miq_proxy, vmware vms on storages" do
+    context 'with hosts with a miq_proxy, vmware vms on storages' do
       before(:each) do
         @hosts, @proxies, @storages, @vms = build_entities
         @vm = @vms.first
@@ -38,7 +38,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
             vm_storage.save
           end
 
-          it "should return repo host" do
+          it 'should return repo host' do
             expect(@vm.storage2hosts).to eq([@repo_host])
           end
         end
@@ -66,7 +66,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
             vm_storage.save
           end
 
-          it "should return repo host" do
+          it 'should return repo host' do
             expect(@vm.storage2hosts).to eq([@repo_host])
           end
         end
@@ -74,7 +74,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
         context "with a vmware vm on a non-vmware host which is also the only host on the vm's storage, " do
           before(:each) do
             @host = @hosts.first
-            @host.vmm_vendor = "microsoft"
+            @host.vmm_vendor = 'microsoft'
             @host.save
             @vm.host = @host
             vm_storage = @vm.storage
@@ -83,7 +83,7 @@ describe "JobProxyDispatcherVmStorage2Hosts" do
             @vm.save
           end
 
-          it "should exlude non-vmware hosts" do
+          it 'should exlude non-vmware hosts' do
             expect(@vm.storage2hosts).to be_empty
           end
         end

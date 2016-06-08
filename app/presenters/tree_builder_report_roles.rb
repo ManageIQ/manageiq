@@ -19,9 +19,9 @@ class TreeBuilderReportRoles < TreeBuilder
   def root_options
     user = User.current_user
     if user.super_admin_user?
-      title = _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
+      title = _('All %{models}') % {:models => ui_lookup(:models => 'MiqGroup')}
     else
-      title = _("My %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
+      title = _('My %{models}') % {:models => ui_lookup(:models => 'MiqGroup')}
     end
     [title, title, :miq_group]
   end

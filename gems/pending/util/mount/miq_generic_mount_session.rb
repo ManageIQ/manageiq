@@ -15,7 +15,7 @@ class MiqGenericMountSession
   attr_accessor :settings, :mnt_point, :logger
 
   def initialize(log_settings)
-    raise "URI missing" unless log_settings.key?(:uri)
+    raise 'URI missing' unless log_settings.key?(:uri)
     @settings  = log_settings.dup
     @mnt_point = nil
   end
@@ -34,7 +34,7 @@ class MiqGenericMountSession
     # If sudo is required, ensure you have /etc/sudoers.d/miq
     # Cmnd_Alias MOUNTALL = /bin/mount, /bin/umount
     # %wheel ALL = NOPASSWD: MOUNTALL
-    rv = `sudo #{cmd_str} 2>&1` if rv.include?("mount: only root can do that")
+    rv = `sudo #{cmd_str} 2>&1` if rv.include?('mount: only root can do that')
 
     if $? != 0
       raise rv
@@ -42,7 +42,7 @@ class MiqGenericMountSession
   end
 
   def self.in_depot_session(opts, &_block)
-    raise "No block provided!" unless block_given?
+    raise 'No block provided!' unless block_given?
     session = new_session(opts)
     yield session
   ensure
@@ -73,12 +73,12 @@ class MiqGenericMountSession
 
   def mount_share
     require 'tmpdir'
-    @mnt_point = settings_mount_point || Dir.mktmpdir("miq_")
+    @mnt_point = settings_mount_point || Dir.mktmpdir('miq_')
   end
 
   def get_ping_depot_options
     @@ping_depot_options ||= begin
-      opts = ::VMDB::Config.new("vmdb").config[:log][:collection] if defined?(::VMDB) && defined?(::VMDB::CONFIG)
+      opts = ::VMDB::Config.new('vmdb').config[:log][:collection] if defined?(::VMDB) && defined?(::VMDB::CONFIG)
       opts = {:ping_depot => false}
       opts
     end
@@ -183,7 +183,7 @@ class MiqGenericMountSession
   end
 
   def with_test_file(&_block)
-    raise "requires a block" unless block_given?
+    raise 'requires a block' unless block_given?
     file = '/tmp/miq_verify_test_file'
     begin
       `echo "testing" > #{file}`
@@ -206,24 +206,24 @@ class MiqGenericMountSession
       to = File.join(test_path, 'test_file')
       fq_file_path = File.join(relpath, to)
 
-      current_test = "create nested directories"
+      current_test = 'create nested directories'
       logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...")
       FileUtils.mkdir_p(File.dirname(fq_file_path))
       logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...complete")
 
       with_test_file do |from|
-        current_test = "copy file"
+        current_test = 'copy file'
         logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...")
         FileUtils.cp(from, fq_file_path)
         logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...complete")
       end
 
-      current_test = "delete file"
+      current_test = 'delete file'
       logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...")
       FileUtils.rm(fq_file_path, :force => true)
       logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...complete")
 
-      current_test = "remove nested directories"
+      current_test = 'remove nested directories'
       logger.info("#{log_header} [#{@settings[:uri]}] Testing #{current_test}...")
       FileUtils.rmdir(File.dirname(fq_file_path))
       FileUtils.rmdir(File.dirname(File.dirname(fq_file_path)))
@@ -233,7 +233,7 @@ class MiqGenericMountSession
       logger.error("#{log_header} Verify [#{current_test}] failed with error [#{err.class.name}] [#{err}], [#{err.backtrace[0]}]")
       res = false, err.to_s
     else
-      res = true, ""
+      res = true, ''
     ensure
       disconnect
     end
@@ -314,7 +314,7 @@ class MiqGenericMountSession
     return false if host != host_log
 
     # Since the depot URI is a base URI, remove all the directories in the log_uri from the base URI and check for empty?
-    return false unless (share.split("/") - share_log.split("/")).empty?
+    return false unless (share.split('/') - share_log.split('/')).empty?
     true
   end
 
@@ -376,7 +376,7 @@ class MiqGenericMountSession
 
   def glob(pattern)
     with_mounted_exception_handling do
-      Dir.glob("#{mount_root}/#{pattern}").collect { |path| (path.split("/") - mount_root.split("/")).join("/") }
+      Dir.glob("#{mount_root}/#{pattern}").collect { |path| (path.split('/') - mount_root.split('/')).join('/') }
     end
   end
 
@@ -401,7 +401,7 @@ class MiqGenericMountSession
   def write(file, contents)
     with_mounted_exception_handling do
       mkdir(File.dirname(file))
-      open(file, "w") { |fd| fd.write(contents) }
+      open(file, 'w') { |fd| fd.write(contents) }
     end
   end
 
@@ -439,7 +439,7 @@ class MiqGenericMountSession
     path.gsub!('%20', ' ')
 
     raise "path: #{path} or mount_path #{@mount_path} is blank" if path.nil? || @mount_path.nil? || path.empty? || @mount_path.empty?
-    res = (path.split("/") - @mount_path.split("/")).join("/")
+    res = (path.split('/') - @mount_path.split('/')).join('/')
     logger.info("#{log_header} mount point [#{@mount_path}], uri: [#{uri}]...relative: [#{res}]")
     res
   end
@@ -458,7 +458,7 @@ class MiqGenericMountSession
     when :linux
       runcmd("umount #{mnt_point}")
     else
-      raise "platform not supported"
+      raise 'platform not supported'
     end
   end
 

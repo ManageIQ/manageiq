@@ -1,10 +1,10 @@
 module Metric::Helper
   def self.class_for_interval_name(interval_name, rollup_class = nil)
-    interval_name == "realtime" ? Metric : (rollup_class || MetricRollup)
+    interval_name == 'realtime' ? Metric : (rollup_class || MetricRollup)
   end
 
   def self.class_and_association_for_interval_name(interval_name)
-    interval_name == "realtime" ? [Metric, :metrics] : [MetricRollup, :metric_rollups]
+    interval_name == 'realtime' ? [Metric, :metrics] : [MetricRollup, :metric_rollups]
   end
 
   def self.find_for_interval_name(interval_name, time_profile_or_tz = nil, rollup_class = nil)
@@ -34,7 +34,7 @@ module Metric::Helper
 
   def self.nearest_hourly_timestamp(ts)
     ts = ts.kind_of?(Time) ? ts.utc.iso8601 : ts.dup
-    ts[14..-1] = "00:00Z"
+    ts[14..-1] = '00:00Z'
     ts
   end
 
@@ -146,7 +146,7 @@ module Metric::Helper
 
     message = nil
     percent_norm = 100.0
-    if counter[:unit_key] == "percent" && value > percent_norm
+    if counter[:unit_key] == 'percent' && value > percent_norm
       message = "percent value #{value} is out of range, resetting to #{percent_norm}"
       value = percent_norm
     end
@@ -172,7 +172,7 @@ module Metric::Helper
   # @param end_offset [Fixnum|nil]
   # @return [Range<Datetime,Datetime>] timestamp range for offsets
   def self.time_range_from_offset(interval_name, start_offset, end_offset, tz = nil)
-    if interval_name == "daily"
+    if interval_name == 'daily'
       tz ||= Metric::Helper.get_time_zone
       time_in_tz = Time.now.in_time_zone(tz)
       now = time_in_tz.hour == 23 ? time_in_tz.utc : (time_in_tz.midnight - 1.hour).utc

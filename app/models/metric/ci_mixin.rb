@@ -21,7 +21,7 @@ module Metric::CiMixin
     end
   end
 
-  def has_perf_data?(interval_name = "hourly")
+  def has_perf_data?(interval_name = 'hourly')
     @has_perf_data ||= {}
     unless @has_perf_data.key?(interval_name) # memoize boolean
       @has_perf_data[interval_name] = associated_metrics(interval_name).exists?
@@ -34,17 +34,17 @@ module Metric::CiMixin
     send(meth).where(:capture_interval_name => interval_name)
   end
 
-  def last_capture(interval_name = "hourly")
+  def last_capture(interval_name = 'hourly')
     first_and_last_capture(interval_name).last
   end
 
-  def first_capture(interval_name = "hourly")
+  def first_capture(interval_name = 'hourly')
     first_and_last_capture(interval_name).first
   end
 
-  def first_and_last_capture(interval_name = "hourly")
+  def first_and_last_capture(interval_name = 'hourly')
     perf = associated_metrics(interval_name)
-           .select("MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts")
+           .select('MIN(timestamp) AS first_ts, MAX(timestamp) AS last_ts')
            .group(:resource_id)
            .limit(1).to_a
            .first
@@ -60,29 +60,29 @@ module Metric::CiMixin
 
   def performances_maintains_value_for_duration?(options)
     _log.info("options: #{options.inspect}")
-    raise _("Argument must be an options hash") unless options.kind_of?(Hash)
+    raise _('Argument must be an options hash') unless options.kind_of?(Hash)
     column = options[:column]
     value = options[:value].to_f
     duration = options[:duration]
     starting_on = options[:starting_on]
-    operator = options[:operator].nil? ? ">" : options[:operator]
-    operator = "==" if operator == "="
+    operator = options[:operator].nil? ? '>' : options[:operator]
+    operator = '==' if operator == '='
     trend = options[:trend_direction]
     slope_steepness = options[:slope_steepness].to_f
     percentage = options[:percentage] if options[:percentage]
-    interval_name = options[:interval_name] || "realtime"
+    interval_name = options[:interval_name] || 'realtime'
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
     now = options[:now] || Time.now.utc # for testing only
 
     # Turn on for the listing of timestamps and values in the debug log
-    debug_trace = (options[:debug_trace] == true || options[:debug_trace] == "true")
+    debug_trace = (options[:debug_trace] == true || options[:debug_trace] == 'true')
 
-    raise ":column required" if column.nil?
-    raise ":value required" if value.nil?
-    raise ":duration required" if duration.nil?
+    raise ':column required' if column.nil?
+    raise ':value required' if value.nil?
+    raise ':duration required' if duration.nil?
     # TODO: Check for valid operators
     unless percentage.nil? || percentage.kind_of?(Integer) && percentage >= 0 && percentage <= 100
-      raise _(":percentage expected integer from 0-100, received: %{number}") % {:number => percentage}
+      raise _(':percentage expected integer from 0-100, received: %{number}') % {:number => percentage}
     end
 
     # Make sure any rails durations (1.day, 1.hour) is truly an int
@@ -94,9 +94,9 @@ module Metric::CiMixin
     #
 
     pkey = "#{self.class}:#{id}"
-    last_task = MiqTask.where(:identifier => pkey).order("id DESC").first
+    last_task = MiqTask.where(:identifier => pkey).order('id DESC').first
 
-    default_how_long = (interval_name == "realtime" ? 70.minutes : 28.hours)
+    default_how_long = (interval_name == 'realtime' ? 70.minutes : 28.hours)
     starting_on ||= if last_task
                       # task start time + duration + 1 second
                       start_time = last_task.context_data[:start].to_time
@@ -116,8 +116,8 @@ module Metric::CiMixin
 
     total_records = scope
                     .where(:capture_interval_name => interval_name)
-                    .where(["timestamp >= ? and timestamp < ?", window_starting_on, now])
-                    .order("timestamp DESC")
+                    .where(['timestamp >= ? and timestamp < ?', window_starting_on, now])
+                    .order('timestamp DESC')
 
     total_records = total_records.to_a
     return false if total_records.empty?
@@ -186,7 +186,7 @@ module Metric::CiMixin
     end
 
     cap_int = total_records[0].capture_interval
-    cap_int = (interval_name == "realtime" ? (60 / Metric::Capture::REALTIME_METRICS_PER_MINUTE) : 3600) unless cap_int.kind_of?(Integer)
+    cap_int = (interval_name == 'realtime' ? (60 / Metric::Capture::REALTIME_METRICS_PER_MINUTE) : 3600) unless cap_int.kind_of?(Integer)
 
     # If not using a percent recs_in_window will equal recs_to_match. Otherwise recs_to_match is the percentage of recs_in_window
     recs_in_window = duration / cap_int

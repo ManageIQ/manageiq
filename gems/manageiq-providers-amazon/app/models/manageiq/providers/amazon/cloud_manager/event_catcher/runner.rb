@@ -28,7 +28,7 @@ class ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Runner < ManageIQ
   private
 
   def filtered?(event)
-    filtered_events.include?(event["messageType"])
+    filtered_events.include?(event['messageType'])
   end
 
   def event_monitor_handle

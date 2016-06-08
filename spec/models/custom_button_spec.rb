@@ -1,27 +1,27 @@
 describe CustomButton do
-  context "with no buttons" do
+  context 'with no buttons' do
     before(:each) do
       @miq_server = EvmSpecHelper.local_miq_server(:is_master => true, :zone => Zone.seed)
 
-      allow_any_instance_of(User).to receive(:role).and_return("admin")
+      allow_any_instance_of(User).to receive(:role).and_return('admin')
       @user = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
     end
 
-    it "should validate there are no buttons" do
+    it 'should validate there are no buttons' do
       expect(described_class.count).to eq(0)
     end
 
-    context "when I create a button via save_as_button class method" do
+    context 'when I create a button via save_as_button class method' do
       before(:each) do
-        @button_name   = "Power ON"
-        @button_text   = "Power ON during Business Hours ONLY"
+        @button_name   = 'Power ON'
+        @button_text   = 'Power ON during Business Hours ONLY'
         @button_number = 3
-        @button_class  = "Vm"
+        @button_class  = 'Vm'
         @target_id     = 2
         @ae_name       = 'Automation'
         @ae_attributes = {'phrase' => 'Hello World'}
         @ae_uri        = MiqAeEngine.create_automation_object(@ae_name, @ae_attributes)
-        @userid        = "guest"
+        @userid        = 'guest'
         uri_path, uri_attributes, uri_message = CustomButton.parse_uri(@ae_uri)
         @button = FactoryGirl.create(:custom_button,
           :name             => @button_name,
@@ -36,7 +36,7 @@ describe CustomButton do
         )
       end
 
-      it "creates the proper button" do
+      it 'creates the proper button' do
         expect(described_class.count).to eq(1)
         expect(@button.uri_path).to eq('/System/Process/Automation')
         expect(@button.applies_to_id).to eq(@target_id)
@@ -48,21 +48,21 @@ describe CustomButton do
         expect(@button.uri_attributes['MiqServer::miq_server']).to be_nil
       end
 
-      context "when invoking for a particular VM" do
+      context 'when invoking for a particular VM' do
         before(:each) do
           @vm    = FactoryGirl.create(:vm_vmware)
           @user2 = FactoryGirl.create(:user_with_group)
         end
 
-        it "calls automate without saved User and MiqServer" do
+        it 'calls automate without saved User and MiqServer' do
           User.with_user(@user2) { @button.invoke(@vm) }
 
           expect(MiqQueue.count).to eq(1)
           q = MiqQueue.first
-          expect(q.class_name).to eq("MiqAeEngine")
-          expect(q.method_name).to eq("deliver")
-          expect(q.role).to eq("automate")
-          expect(q.zone).to eq("default")
+          expect(q.class_name).to eq('MiqAeEngine')
+          expect(q.method_name).to eq('deliver')
+          expect(q.role).to eq('automate')
+          expect(q.zone).to eq('default')
           expect(q.priority).to eq(MiqQueue::HIGH_PRIORITY)
           a = q.args
           expect(a).to be_kind_of(Array)
@@ -78,23 +78,23 @@ describe CustomButton do
     end
   end
 
-  it ".buttons_for" do
+  it '.buttons_for' do
     vm         = FactoryGirl.create(:vm_vmware)
     vm_other   = FactoryGirl.create(:vm_vmware)
     button1all = FactoryGirl.create(:custom_button,
                                     :applies_to  => vm.class,
-                                    :name        => "foo",
-                                    :description => "foo foo")
+                                    :name        => 'foo',
+                                    :description => 'foo foo')
 
     button1vm  = FactoryGirl.create(:custom_button,
                                     :applies_to  => vm,
-                                    :name        => "bar",
-                                    :description => "bar bar")
+                                    :name        => 'bar',
+                                    :description => 'bar bar')
 
     button2vm  = FactoryGirl.create(:custom_button,
                                     :applies_to  => vm,
-                                    :name        => "foo",
-                                    :description => "foo foo")
+                                    :name        => 'foo',
+                                    :description => 'foo foo')
 
     expect(described_class.buttons_for(Host)).to eq([])
     expect(described_class.buttons_for(Vm)).to eq([button1all])
@@ -102,24 +102,24 @@ describe CustomButton do
     expect(described_class.buttons_for(vm_other)).to eq([])
   end
 
-  it "#save" do
+  it '#save' do
     ra     = FactoryGirl.create(:resource_action, :ae_namespace => 'SYSTEM', :ae_class => 'PROCESS', :ae_message => 'create')
-    button = FactoryGirl.create(:custom_button, :name => "My test button", :applies_to => Vm, :resource_action => ra)
+    button = FactoryGirl.create(:custom_button, :name => 'My test button', :applies_to => Vm, :resource_action => ra)
     button.save
 
-    ra.ae_message = "new message"
+    ra.ae_message = 'new message'
     button.save
 
     expect(button.reload.resource_action.ae_message).to eq('new message')
   end
 
-  context "validates uniqueness" do
+  context 'validates uniqueness' do
     before(:each) do
       @vm = FactoryGirl.create(:vm_vmware)
-      @default_name = @default_description = "boom"
+      @default_name = @default_description = 'boom'
     end
 
-    it "applies_to_class" do
+    it 'applies_to_class' do
       button_for_all_vms = FactoryGirl.create(:custom_button,
                                               :applies_to_class => 'Vm',
                                               :name             => @default_name,
@@ -141,23 +141,23 @@ describe CustomButton do
       dup_vm_name_button = described_class.new(
         :applies_to_class => 'Vm',
         :name             => @default_name,
-        :description      => "hello world")
+        :description      => 'hello world')
       expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to_class => 'Vm',
-        :name             => "hello",
+        :name             => 'hello',
         :description      => @default_description)
       expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to_class => 'Vm',
-        :name             => "hello",
-        :description      => "hello world")
+        :name             => 'hello',
+        :description      => 'hello world')
       expect(new_vm_button).to be_valid
     end
 
-    it "applies_to_instance" do
+    it 'applies_to_instance' do
       vm_other = FactoryGirl.create(:vm_vmware)
 
       button_for_single_vm = FactoryGirl.create(:custom_button,
@@ -178,19 +178,19 @@ describe CustomButton do
       dup_vm_name_button = described_class.new(
         :applies_to  => @vm,
         :name        => @default_name,
-        :description => "hello world")
+        :description => 'hello world')
       expect(dup_vm_name_button).not_to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => @vm,
-        :name        => "hello",
+        :name        => 'hello',
         :description => @default_description)
       expect(dup_vm_desc_button).not_to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => @vm,
-        :name        => "hello",
-        :description => "hello world")
+        :name        => 'hello',
+        :description => 'hello world')
       expect(new_vm_button).to be_valid
 
       # For other VM
@@ -203,61 +203,61 @@ describe CustomButton do
       dup_vm_name_button = described_class.new(
         :applies_to  => vm_other,
         :name        => @default_name,
-        :description => "hello world")
+        :description => 'hello world')
       expect(dup_vm_name_button).to be_valid
 
       dup_vm_desc_button = described_class.new(
         :applies_to  => vm_other,
-        :name        => "hello",
+        :name        => 'hello',
         :description => @default_description)
       expect(dup_vm_desc_button).to be_valid
 
       new_vm_button = described_class.new(
         :applies_to  => vm_other,
-        :name        => "hello",
-        :description => "hello world")
+        :name        => 'hello',
+        :description => 'hello world')
       expect(new_vm_button).to be_valid
     end
   end
 
-  describe "#expanded_serializable_hash" do
+  describe '#expanded_serializable_hash' do
     let(:test_button) { described_class.new(:resource_action => resource_action) }
     let(:expected_hash) do
       {
-        "id"                => nil,
-        "guid"              => nil,
-        "description"       => nil,
-        "applies_to_class"  => nil,
-        "applies_to_exp"    => nil,
-        "options"           => nil,
-        "userid"            => nil,
-        "wait_for_complete" => nil,
-        "created_on"        => nil,
-        "updated_on"        => nil,
-        "name"              => nil,
-        "visibility"        => nil,
-        "applies_to_id"     => nil
+        'id'                => nil,
+        'guid'              => nil,
+        'description'       => nil,
+        'applies_to_class'  => nil,
+        'applies_to_exp'    => nil,
+        'options'           => nil,
+        'userid'            => nil,
+        'wait_for_complete' => nil,
+        'created_on'        => nil,
+        'updated_on'        => nil,
+        'name'              => nil,
+        'visibility'        => nil,
+        'applies_to_id'     => nil
       }
     end
 
-    context "when a resource action exists" do
+    context 'when a resource action exists' do
       let(:resource_action) { ResourceAction.new }
 
       before do
-        allow(resource_action).to receive(:serializable_hash).and_return("resource_action_hash")
+        allow(resource_action).to receive(:serializable_hash).and_return('resource_action_hash')
       end
 
-      it "returns the button as a serializable hash with the resource action serialized hash" do
+      it 'returns the button as a serializable hash with the resource action serialized hash' do
         expect(test_button.expanded_serializable_hash).to eq(
-          expected_hash.merge(:resource_action => "resource_action_hash")
+          expected_hash.merge(:resource_action => 'resource_action_hash')
         )
       end
     end
 
-    context "when a resource action does not exist" do
+    context 'when a resource action does not exist' do
       let(:resource_action) { nil }
 
-      it "returns the button as a serializable hash" do
+      it 'returns the button as a serializable hash' do
         expect(test_button.expanded_serializable_hash).to eq(expected_hash)
       end
     end

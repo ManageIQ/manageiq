@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :miq_request_task do
-    status "Ok"
+    status 'Ok'
   end
 end

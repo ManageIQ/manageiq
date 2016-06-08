@@ -1,6 +1,6 @@
-EMS_IP       = ""
-EMS_USERNAME = ""
-EMS_PASSWORD = ""
+EMS_IP       = ''
+EMS_USERNAME = ''
+EMS_PASSWORD = ''
 
 require_relative '../../bundler_setup'
 require 'excon'
@@ -10,21 +10,21 @@ begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
   os_handle.connection_options = {:instrumentor => Excon::StandardInstrumentor}
 
-  puts "**** Tenants:"
+  puts '**** Tenants:'
   os_handle.tenants.each do |t|
     puts "\t#{t.name}\t(#{t.id})"
   end
 
   unless os_handle.storage_service.name == :swift
-    puts "Storeage service swift is not available, exiting."
+    puts 'Storeage service swift is not available, exiting.'
     exit
   end
 
   puts
-  puts "**** Object storage by tenant:"
+  puts '**** Object storage by tenant:'
 
   os_handle.tenant_names.each do |tn|
-    next if tn == "services"
+    next if tn == 'services'
 
     puts
     puts "\tDirectories for tenant: #{tn}"

@@ -1,4 +1,4 @@
-require "handsoap"
+require 'handsoap'
 require 'ServiceNowWebService/ServiceNowTypes'
 
 class SnSctaskService < Handsoap::Service
@@ -12,7 +12,7 @@ class SnSctaskService < Handsoap::Service
   end
 
   def getRecords(params)
-    response = invoke("n1:getRecords") do |message|
+    response = invoke('n1:getRecords') do |message|
       params.each do |k, v|
         message.add "n1:#{k}", v
       end
@@ -90,7 +90,7 @@ class SnSctaskService < Handsoap::Service
   end
 
   def update(params)
-    response = invoke("n1:update") do |message|
+    response = invoke('n1:update') do |message|
       params.each do |k, v|
         message.add "n1:#{k}", v
       end
@@ -111,13 +111,13 @@ class SnSctaskService < Handsoap::Service
     @ns = {'n1' => ns}
     on_create_document do |doc|
       doc.alias 'n1', ns
-      doc.find("Envelope").set_attr "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance"
+      doc.find('Envelope').set_attr 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance'
     end
   end
 
   def marshalObj(node, obj)
     if obj.kind_of? Array
-      puts "Array"
+      puts 'Array'
       obj.each do |v|
         marshalObj(node, v)
       end
@@ -148,8 +148,8 @@ class SnSctaskService < Handsoap::Service
       return(ur)
     end
 
-    http_body = response.instance_variable_get("@http_body")
-    raise Handsoap::Fault.new("SNAuthFaultCode", "Authentication Failure", http_body)  if http_body.include?("This request requires HTTP authentication")
+    http_body = response.instance_variable_get('@http_body')
+    raise Handsoap::Fault.new('SNAuthFaultCode', 'Authentication Failure', http_body)  if http_body.include?('This request requires HTTP authentication')
     raise http_body
   end
 

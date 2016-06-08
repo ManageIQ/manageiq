@@ -7,8 +7,8 @@ end
 entry_point = service.automate_retirement_entrypoint
 if entry_point.blank?
   entry_point = '/Service/Retirement/StateMachines/ServiceRetirement/Default'
-  $evm.log("info", "retirement_entrypoint not specified using default: #{entry_point}")
+  $evm.log('info', "retirement_entrypoint not specified using default: #{entry_point}")
 end
 
 $evm.root['retirement_entry_point'] = entry_point
-$evm.log("info", "retirement_entrypoint: #{entry_point}")
+$evm.log('info', "retirement_entrypoint: #{entry_point}")

@@ -17,12 +17,12 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   has_one  :floating_ip, :foreign_key => :vm_id
   has_many :floating_ips
   has_many :security_groups, -> { distinct }, :through => :network_ports
-  has_many :cloud_volumes, :through => :disks, :source => :backing, :source_type => "CloudVolume"
+  has_many :cloud_volumes, :through => :disks, :source => :backing, :source_type => 'CloudVolume'
 
   has_and_belongs_to_many :key_pairs, :join_table              => :key_pairs_vms,
                                       :foreign_key             => :vm_id,
                                       :association_foreign_key => :authentication_id,
-                                      :class_name              => "ManageIQ::Providers::CloudManager::AuthKeyPair"
+                                      :class_name              => 'ManageIQ::Providers::CloudManager::AuthKeyPair'
 
   default_value_for :cloud, true
 
@@ -71,7 +71,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   end
 
   def validate_resize
-    validate_unsupported(_("Resize"))
+    validate_unsupported(_('Resize'))
   end
 
   def disconnect_ems(e = nil)
@@ -82,6 +82,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
   private
 
   def raise_created_event
-    MiqEvent.raise_evm_event(self, "vm_create", :vm => self)
+    MiqEvent.raise_evm_event(self, 'vm_create', :vm => self)
   end
 end

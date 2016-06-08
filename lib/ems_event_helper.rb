@@ -2,7 +2,7 @@ class EmsEventHelper
   include Vmdb::Logging
 
   def initialize(event)
-    raise ArgumentError, "event must be an EmsEvent" unless event.kind_of?(EmsEvent)
+    raise ArgumentError, 'event must be an EmsEvent' unless event.kind_of?(EmsEvent)
     @event = event
   end
 
@@ -30,6 +30,6 @@ class EmsEventHelper
   end
 
   def handle_alert_event
-    @event.policy("src_vm", @event.event_type) if MiqAlert.event_alertable?(@event.event_type)
+    @event.policy('src_vm', @event.event_type) if MiqAlert.event_alertable?(@event.event_type)
   end
 end

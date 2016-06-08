@@ -2,7 +2,7 @@ def getDinfo(vim)
   dinfo = []
   vim.virtualMachinesByMor.each do |_k, v|
     v['config']['hardware']['device'].each do |dev|
-      next if dev.xsiType != "VirtualDisk"
+      next if dev.xsiType != 'VirtualDisk'
 
       dinfo << {
         :fileName        => dev['backing']['fileName'],

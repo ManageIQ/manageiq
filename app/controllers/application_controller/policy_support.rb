@@ -9,7 +9,7 @@ module ApplicationController::PolicySupport
 
     if params[:check]                            # Item was checked/unchecked
       @in_a_form = true
-      if params[:check] == "0"
+      if params[:check] == '0'
         @edit[:new].delete(profile_id)        # Unchecked, remove from new hash
       else
         @edit[:new][profile_id] = session[:pol_items].length # Added, set to all checked
@@ -30,36 +30,36 @@ module ApplicationController::PolicySupport
 
     elsif params[:button]                           # Button was pressed
       session[:changed] = false
-      if params[:button] == "cancel"
-        add_flash(_("Edit policy assignments was cancelled by the user"))
+      if params[:button] == 'cancel'
+        add_flash(_('Edit policy assignments was cancelled by the user'))
         @sb[:action] = nil
-      elsif params[:button] == "reset"
-        add_flash(_("All changes have been reset"), :warning)
+      elsif params[:button] == 'reset'
+        add_flash(_('All changes have been reset'), :warning)
         @explorer = true if @edit && @edit[:explorer]       # resetting @explorer from @edit incase reset button was pressed with explorer
         protect_build_screen                                #    build the protect screen
         if @edit[:explorer]
-          @sb[:action] = "protect"
+          @sb[:action] = 'protect'
           @in_a_form = true
           replace_right_cell
         else
-          render "shared/views/protect"
+          render 'shared/views/protect'
         end
         return
-      elsif params[:button] == "save"
+      elsif params[:button] == 'save'
         ppids = @edit[:new].keys + @edit[:current].keys # Get union of policy profile ids
         ppids.uniq.each do |ppid|
           unless @edit[:new][ppid] == @edit[:current][ppid] # Only process changes
             pp = MiqPolicySet.find(ppid)                    # Get the pol prof record
             if @edit[:new][ppid] == 0                   # Remove if new count is zero
               pp.remove_from(session[:pol_items], session[:pol_db])
-              AuditEvent.success(protect_audit(pp, "remove_from", session[:pol_db], session[:pol_items]))
+              AuditEvent.success(protect_audit(pp, 'remove_from', session[:pol_db], session[:pol_items]))
             else                                        # else add
               pp.add_to(session[:pol_items], session[:pol_db])
-              AuditEvent.success(protect_audit(pp, "add_to", session[:pol_db], session[:pol_items]))
+              AuditEvent.success(protect_audit(pp, 'add_to', session[:pol_db], session[:pol_items]))
             end
           end
         end
-        add_flash(_("Policy assignments successfully changed"))
+        add_flash(_('Policy assignments successfully changed'))
         @sb[:action] = nil
       end
       session[:flash_msgs] = @flash_array
@@ -72,7 +72,7 @@ module ApplicationController::PolicySupport
     else                                                  # First time in,
       protect_build_screen                                #    build the protect screen
       unless @edit[:explorer]
-        render "shared/views/protect"
+        render 'shared/views/protect'
       end
     end
   end
@@ -85,17 +85,17 @@ module ApplicationController::PolicySupport
       @edit[:explorer] = true       # since there is no @edit, create @edit and save explorer to use while building url for vms in policy sim grid
       session[:edit] = @edit
     end
-    @lastaction = "policy_sim"
-    drop_breadcrumb(:name => _("Policy Simulation"),
+    @lastaction = 'policy_sim'
+    drop_breadcrumb(:name => _('Policy Simulation'),
                     :url  => "/#{request.parameters["controller"]}/policy_sim?continue=true")
     session[:policies] = {} unless params[:continue]  # Clear current policies, unless continuing previous simulation
     policy_sim_build_screen
-    @tabs = [["polsim", nil], ["polsim", "Policy Simulation"]]
+    @tabs = [['polsim', nil], ['polsim', 'Policy Simulation']]
     if @explorer
       @record = @tagitems.first
       @in_a_form = true
-      if params[:action] == "policy_sim"
-        @refresh_partial = "layouts/policy_sim"
+      if params[:action] == 'policy_sim'
+        @refresh_partial = 'layouts/policy_sim'
         replace_right_cell
       end
     end
@@ -105,14 +105,14 @@ module ApplicationController::PolicySupport
   def policy_sim_add
     @edit = session[:edit]
     # Profile was selected
-    if params[:profile_id] != "<select>"
+    if params[:profile_id] != '<select>'
       prof = MiqPolicySet.find(params[:profile_id])               # Go thru all the profiles
       session[:policies][prof.id] = prof.description            # Add it to the list
     end
     policy_sim_build_screen
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/policy_sim")
+      page.replace_html('main_div', :partial => 'layouts/policy_sim')
     end
   end
 
@@ -123,7 +123,7 @@ module ApplicationController::PolicySupport
     policy_sim_build_screen
     render :update do |page|
       page << javascript_prologue
-      page.replace_html("main_div", :partial => "layouts/policy_sim")
+      page.replace_html('main_div', :partial => 'layouts/policy_sim')
     end
   end
 
@@ -131,13 +131,13 @@ module ApplicationController::PolicySupport
     @catinfo ||= {}
     session[:assignments] = session[:protect_item].get_policies
     session[:assignments].each do |policy|
-      cat = policy["description"]
+      cat = policy['description']
       @catinfo[cat] = true unless @catinfo.key?(cat)
     end
   end
 
   def profile_toggle
-    if params[:pressed] == "tag_cat_toggle"
+    if params[:pressed] == 'tag_cat_toggle'
       policy_escaped = j(params[:policy])
       cat            = params[:cat]
       render :update do |page|
@@ -153,10 +153,10 @@ module ApplicationController::PolicySupport
         end
       end
     else
-      add_flash(_("Button not yet implemented"), :error)
+      add_flash(_('Button not yet implemented'), :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => 'layouts/flash_msg')
       end
     end
   end
@@ -173,10 +173,10 @@ module ApplicationController::PolicySupport
       recs = [params[:id]]
     end
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to Policy assignment") % {
+      add_flash(_('One or more %{model} must be selected to Policy assignment') % {
         :model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
-      @refresh_div = "flash_msg_div"
-      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = 'flash_msg_div'
+      @refresh_partial = 'layouts/flash_msg'
       return
     else
       session[:pol_items] = recs    # Set the array of tag items
@@ -184,7 +184,7 @@ module ApplicationController::PolicySupport
     @in_a_form = true
     if @explorer
       protect
-      @refresh_partial = "layouts/protect"
+      @refresh_partial = 'layouts/protect'
     else
       render :update do |page|
         page << javascript_prologue
@@ -226,9 +226,9 @@ module ApplicationController::PolicySupport
 
   # Create policy assignment audit record
   def protect_audit(pp, mode, db, recs)
-    msg = _("[%{name}] Policy Profile %{mode} (db:[%{db}]") % {:name => pp.name, :mode => mode, :db => db}
+    msg = _('[%{name}] Policy Profile %{mode} (db:[%{db}]') % {:name => pp.name, :mode => mode, :db => db}
     msg += ", ids:[#{recs.sort_by(&:to_i).join(',')}])"
-    event = "policyset_" + mode
+    event = 'policyset_' + mode
     audit = {:event => event, :target_id => pp.id, :target_class => pp.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
@@ -260,7 +260,7 @@ module ApplicationController::PolicySupport
   def policy_sim_build_screen
     @tagitems = session[:tag_db].find(session[:tag_items]).sort_by(&:name)  # Get the db records that are being tagged
     @catinfo = {}
-    @lastaction = "policy_sim"
+    @lastaction = 'policy_sim'
     @pol_view = get_db_view(session[:tag_db])       # Instantiate the MIQ Report view object
     @pol_view.table = MiqFilter.records2table(@tagitems, @pol_view.cols + ['id'])
 
@@ -272,9 +272,9 @@ module ApplicationController::PolicySupport
       end
     end
     if @all_profs.length > 0
-      @all_profs["<select>"] = ""
+      @all_profs['<select>'] = ''
     else
-      @all_profs["<select>"] = _("No Policy Profiles are available")
+      @all_profs['<select>'] = _('No Policy Profiles are available')
     end
     build_targets_hash(@tagitems)
   end

@@ -57,7 +57,7 @@ class VMMount
   end
 
   def getMountFile(fn)
-    file_miq = File.join(File.dirname(fn), File.basename(fn, ".*") + ".miq")
+    file_miq = File.join(File.dirname(fn), File.basename(fn, '.*') + '.miq')
     return file_miq if File.exist?(file_miq)
     fn
   end

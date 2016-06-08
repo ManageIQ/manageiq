@@ -4,7 +4,7 @@ module WmiMswin
   def connectServer
     # Connect to WMI
     WIN32OLE.ole_initialize
-    objLocator = WIN32OLE.new("WbemScripting.SWbemLocator")
+    objLocator = WIN32OLE.new('WbemScripting.SWbemLocator')
     begin
       @objWMI = objLocator.ConnectServer(@server, @namespace, logon_username, @password)
     rescue
@@ -23,7 +23,7 @@ module WmiMswin
 
     # Check for usernames that supplied the domain as well
     # Example manageiq\user1 or just user1
-    return @username if @username.include?("\\")
+    return @username if @username.include?('\\')
 
     # If we just have a username append the server name to it.  Otherwise
     # connecting will fail when running in SYSTEM context.
@@ -48,16 +48,16 @@ module WmiMswin
     err = err.to_s.split("\n")
     err.delete_at(-1)
     err.each(&:strip!)
-    raise(WIN32OLERuntimeError, err.join(" - "))
+    raise(WIN32OLERuntimeError, err.join(' - '))
   end
 
   def runProcess(command, async = true, startup = {})
     startup = {:ShowWindow => 1, :Title => "MIQ - #{Time.now.utc.iso8601}"}.merge(startup)
-    objStartup = @objWMI.Get("Win32_ProcessStartup").SpawnInstance_
+    objStartup = @objWMI.Get('Win32_ProcessStartup').SpawnInstance_
     startup.each_pair { |k, v| objStartup.send("#{k}=", v) }
 
     # Obtain the Win32_Process class of object.
-    strShell = exec_method(@objWMI.Get("Win32_Process"), "Create", :CommandLine => command, :ProcessStartupInformation => objStartup)
+    strShell = exec_method(@objWMI.Get('Win32_Process'), 'Create', :CommandLine => command, :ProcessStartupInformation => objStartup)
 
     raise "Failed to create process [#{command}]" if strShell.ProcessID.nil?
     return strShell.ProcessID if async
@@ -153,7 +153,7 @@ module WmiMswin
     instance.SystemProperties_.each do |p|
       nh[p.name] = p.value
       # puts "%0*s[#{p.name}] = [#{p.value}]" % [level,'']
-      paths[p.value] = true if p.name == "__PATH"
+      paths[p.value] = true if p.name == '__PATH'
     end
 
     #    instance.Associators_.each do |a|

@@ -46,13 +46,13 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
       return true
     rescue Bunny::AuthenticationFailureError => e
       $log.info("MIQ(#{name}.#{__method__}) Failed testing rabbit amqp connection: #{e.message}")
-      raise MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
+      raise MiqException::MiqInvalidCredentialsError.new 'Login failed due to a bad username or password.'
     rescue Bunny::TCPConnectionFailedForAllHosts => e
       raise MiqException::MiqHostError.new "Socket error: #{e.message}"
     rescue => e
       log_prefix = "MIQ(#{name}.#{__method__}) Failed testing rabbit amqp connection for #{options[:hostname]}. "
       $log.info("#{log_prefix} The Openstack AMQP service may be using a different provider."\
-                " Enable debug logging to see connection exception.") if $log
+                ' Enable debug logging to see connection exception.') if $log
       $log.debug("#{log_prefix} Exception: #{e}") if $log
       raise
     ensure
@@ -129,7 +129,7 @@ class OpenstackRabbitEventMonitor < OpenstackEventMonitor
     end
 
     # notifications.* is a poorly named extra-old legacy queue
-    queue_name = "notifications.*"
+    queue_name = 'notifications.*'
     channel.queue_delete(queue_name) if connection.queue_exists?(queue_name)
 
     channel.close

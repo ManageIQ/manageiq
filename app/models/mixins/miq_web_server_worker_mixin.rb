@@ -2,7 +2,7 @@ require 'miq_apache'
 module MiqWebServerWorkerMixin
   extend ActiveSupport::Concern
 
-  BINDING_ADDRESS = ENV['BINDING_ADDRESS'] || (Rails.env.production? ? "127.0.0.1" : "0.0.0.0")
+  BINDING_ADDRESS = ENV['BINDING_ADDRESS'] || (Rails.env.production? ? '127.0.0.1' : '0.0.0.0')
 
   included do
     class << self
@@ -40,7 +40,7 @@ module MiqWebServerWorkerMixin
     end
 
     def rails_server
-      VMDB::Config.new("vmdb").config.fetch_path(:server, :rails_server) || "thin"
+      VMDB::Config.new('vmdb').config.fetch_path(:server, :rails_server) || 'thin'
     end
 
     def all_ports_in_use
@@ -195,7 +195,7 @@ module MiqWebServerWorkerMixin
 
     begin
       _log.info("Terminating #{format_full_log_msg}, status [#{status}]")
-      Process.kill("TERM", pid)
+      Process.kill('TERM', pid)
       # TODO: Variablize and clean up this 10-second-max loop of waiting on Worker to gracefully shut down
       10.times do
         unless MiqProcess.alive?(pid)

@@ -35,7 +35,7 @@ module Ext4
     attr_accessor :fileType
 
     def initialize(data, new_entry = true)
-      raise "Ext4::DirectoryEntry.initialize: Nil directory entry data" if data.nil?
+      raise 'Ext4::DirectoryEntry.initialize: Nil directory entry data' if data.nil?
       @isNew    = new_entry
       siz       = @isNew ? SIZEOF_DIR_ENTRY_NEW : SIZEOF_DIR_ENTRY_ORIGINAL
       @de       = @isNew ? DIR_ENTRY_NEW.decode(data[0..siz]) : DIR_ENTRY_ORIGINAL.decode(data[0..siz])
@@ -55,14 +55,14 @@ module Ext4
     end
 
     def fileTypeString
-      return "UNKNOWN"   if @fileType == FT_UNKNOWN
-      return "FILE"      if @fileType == FT_FILE
-      return "DIRECTORY" if @fileType == FT_DIRECTORY
-      return "CHAR"      if @fileType == FT_CHAR
-      return "BLOCK"     if @fileType == FT_BLOCK
-      return "FIFO"      if @fileType == FT_FIFO
-      return "SOCKET"    if @fileType == FT_SOCKET
-      return "SYMLINK"   if @fileType == FT_SYM_LNK
+      return 'UNKNOWN'   if @fileType == FT_UNKNOWN
+      return 'FILE'      if @fileType == FT_FILE
+      return 'DIRECTORY' if @fileType == FT_DIRECTORY
+      return 'CHAR'      if @fileType == FT_CHAR
+      return 'BLOCK'     if @fileType == FT_BLOCK
+      return 'FIFO'      if @fileType == FT_FIFO
+      return 'SOCKET'    if @fileType == FT_SOCKET
+      return 'SYMLINK'   if @fileType == FT_SYM_LNK
     end
 
     def dump

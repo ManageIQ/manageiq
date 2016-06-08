@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::MiqAeToolsSimulateCenter < ApplicationHelper::
       'fa fa-files-o fa-lg',
       N_('Copy object details for use in a Button'),
       N_('Copy'),
-      :url       => "resolve",
-      :url_parms => "?button=copy"),
+      :url       => 'resolve',
+      :url_parms => '?button=copy'),
   ])
 end

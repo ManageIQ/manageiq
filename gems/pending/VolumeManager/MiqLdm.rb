@@ -139,14 +139,14 @@ module LdmScanner
   VBT_VOLUME    = 0x51
 
   VBLK_TYPES  = {
-    VBT_NONE        => "NONE",
-    VBT_COMPONENT   => "Component",
-    VBT_PARTITION   => "Partition",
-    VBT_DISKV1      => "Disk v1",
-    VBT_DISKGROUPV1 => "Disk Group v1",
-    VBT_DISKV2      => "Disk v2",
-    VBT_DISKGROUPV2 => "Disk Group v2",
-    VBT_VOLUME      => "Volume"
+    VBT_NONE        => 'NONE',
+    VBT_COMPONENT   => 'Component',
+    VBT_PARTITION   => 'Partition',
+    VBT_DISKV1      => 'Disk v1',
+    VBT_DISKGROUPV1 => 'Disk Group v1',
+    VBT_DISKV2      => 'Disk v2',
+    VBT_DISKGROUPV2 => 'Disk Group v2',
+    VBT_VOLUME      => 'Volume'
   }
 
   def self.scan(d)
@@ -155,14 +155,14 @@ module LdmScanner
     d.seek(PRIVHEAD_OFFSET)
     ph = readStruct(d, PRIVHEAD)
     # LdmScanner.dumpPrivhead(ph)
-    return nil if ph.signature != "PRIVHEAD"
+    return nil if ph.signature != 'PRIVHEAD'
 
     ph.disk_id.delete!("\000")
     ph.diskgroup_id.delete!("\000")
     ph.diskgroup_name.delete!("\000")
     ph.host_id.delete!("\000")
 
-    ph.lvm_type = "LDM"
+    ph.lvm_type = 'LDM'
     ph.pv_uuid = ph.disk_id
     ph.diskObj = d
 
@@ -172,11 +172,11 @@ module LdmScanner
       d.seek(tblock_offset)
       tb = readStruct(d, TOCBLOCK)
       # LdmScanner.dumpTocblock(tb)
-      break if tb.signature == "TOCBLOCK"
+      break if tb.signature == 'TOCBLOCK'
     end
 
     unless tb
-      $log.warn "LdmScanner: could not find valid TOCBLOCK on LDM disk" if $log
+      $log.warn 'LdmScanner: could not find valid TOCBLOCK on LDM disk' if $log
       return nil
     end
 
@@ -199,15 +199,15 @@ module LdmScanner
   def self.readStruct(d, struct)
     h = BinaryStruct.decode(d.read(BinaryStruct.sizeof(struct)), struct)
     h.keys.delete_if { |k| !(/.*_H/ =~ k) }.each do |k|
-      (nk = k.dup)[/_H$/] = ""
-      lk = nk + "_L"
+      (nk = k.dup)[/_H$/] = ''
+      lk = nk + '_L'
       h[nk] = (h[k] << 32) | h[lk]
     end
     OpenStruct.new(h)
   end # def self.readStruct
 
   def self.getChunk(data)
-    len = data.slice!(0, 1).unpack("C")[0]
+    len = data.slice!(0, 1).unpack('C')[0]
     data.slice!(0, len)
   end
 
@@ -218,7 +218,7 @@ module LdmScanner
   end
 
   def self.getNBO8(data)
-    h, l = data.slice!(0, 8).unpack("N2")
+    h, l = data.slice!(0, 8).unpack('N2')
     ((h << 32) | l)
   end
 
@@ -235,19 +235,19 @@ module LdmScanner
     when VBT_COMPONENT    # Component
       vblk.children   = []
       vblk.volume_state = getChunk(buf)
-      vblk.component_type = BinaryStruct.stepDecode(buf, "C")
-      BinaryStruct.stepDecode(buf, "C4")
+      vblk.component_type = BinaryStruct.stepDecode(buf, 'C')
+      BinaryStruct.stepDecode(buf, 'C4')
       vblk.num_children = getNum(buf)
-      BinaryStruct.stepDecode(buf, "C16")
+      BinaryStruct.stepDecode(buf, 'C16')
       vblk.parent_id    = getNum(buf)
-      BinaryStruct.stepDecode(buf, "C")
+      BinaryStruct.stepDecode(buf, 'C')
       if vblk.flags != 0
         vblk.stripe_size  = getNum(buf)
         vblk.num_col    = getNum(buf)
       end
 
     when VBT_PARTITION    # Partition
-      BinaryStruct.stepDecode(buf, "C12")
+      BinaryStruct.stepDecode(buf, 'C12')
       vblk.start      = getNBO8(buf)
       vblk.volume_offset  = getNBO8(buf)
       vblk.size     = getNum(buf)
@@ -264,38 +264,38 @@ module LdmScanner
       vblk.dg_guid    = getChunk(buf)
 
     when VBT_DISKV2     # Disk v2
-      vblk.disk_guid1   = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
-      vblk.disk_guid2   = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      vblk.disk_guid1   = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, 'a16')).to_s
+      vblk.disk_guid2   = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, 'a16')).to_s
       ph.diskVb     = vblk if ph.disk_id == vblk.disk_guid1
 
     when VBT_DISKGROUPV2  # Disk Group v2
-      vblk.dg_guid    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
-      vblk.ds_guid    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      vblk.dg_guid    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, 'a16')).to_s
+      vblk.ds_guid    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, 'a16')).to_s
 
     when VBT_VOLUME     # Volume
       vblk.children   = []
       vblk.volume_type  = getChunk(buf)
-      BinaryStruct.stepDecode(buf, "C")
-      vblk.volume_state = BinaryStruct.stepDecode(buf, "a14").delete("\000")
-      vblk.volume_typeN = BinaryStruct.stepDecode(buf, "C")
-      BinaryStruct.stepDecode(buf, "C")
-      vblk.volume_number  = BinaryStruct.stepDecode(buf, "C")
-      BinaryStruct.stepDecode(buf, "C3")
-      vblk.vol_flags    = BinaryStruct.stepDecode(buf, "C")
+      BinaryStruct.stepDecode(buf, 'C')
+      vblk.volume_state = BinaryStruct.stepDecode(buf, 'a14').delete("\000")
+      vblk.volume_typeN = BinaryStruct.stepDecode(buf, 'C')
+      BinaryStruct.stepDecode(buf, 'C')
+      vblk.volume_number  = BinaryStruct.stepDecode(buf, 'C')
+      BinaryStruct.stepDecode(buf, 'C3')
+      vblk.vol_flags    = BinaryStruct.stepDecode(buf, 'C')
       vblk.num_children = getNum(buf)
-      BinaryStruct.stepDecode(buf, "C16")
+      BinaryStruct.stepDecode(buf, 'C16')
       vblk.size     = getNum(buf)
-      BinaryStruct.stepDecode(buf, "C4")
-      vblk.partition_type = BinaryStruct.stepDecode(buf, "C")
-      vblk.volume_id    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, "a16")).to_s
+      BinaryStruct.stepDecode(buf, 'C4')
+      vblk.partition_type = BinaryStruct.stepDecode(buf, 'C')
+      vblk.volume_id    = MiqUUID.parse_raw(BinaryStruct.stepDecode(buf, 'a16')).to_s
 
       vblk.id1      = getChunk(buf) if (vblk.flags & 0x08) != 0x0
       vblk.id2      = getChunk(buf) if (vblk.flags & 0x20) != 0x0
       vblk.csize      = getNum(buf) if (vblk.flags & 0x80) != 0x0
       vblk.drive_hint   = getChunk(buf) if (vblk.flags & 0x02) != 0x0
 
-      if vblk.volume_state == "ACTIVE"
-        if vblk.volume_type == "gen"
+      if vblk.volume_state == 'ACTIVE'
+        if vblk.volume_type == 'gen'
           ph.volumes << vblk
         else
           $log.warn "LdmScanner: unsupported volume type - #{vblk.volume_type}" if $log
@@ -303,14 +303,14 @@ module LdmScanner
       end
     end
 
-    vblk.delete_field("padding") if vblk.padding
+    vblk.delete_field('padding') if vblk.padding
     ph.vblkHash[vblk.vobject_id] = vblk
     (vblk)
   end
 
   def self.dumpPrivhead(ph)
     puts
-    puts "PRIVHEAD:"
+    puts 'PRIVHEAD:'
     puts "\tsignature:          #{ph.signature}"
     puts "\tver_major:          #{ph.ver_major}"
     puts "\tver_minor:          #{ph.ver_minor}"
@@ -335,7 +335,7 @@ module LdmScanner
 
   def self.dumpTocblock(tb)
     puts
-    puts "TOCBLOCK:"
+    puts 'TOCBLOCK:'
     puts "\tsignature:          #{tb.signature}"
     puts "\tsequence1:          #{tb.sequence1}"
     puts "\tsequence2:          #{tb.sequence2}"
@@ -347,7 +347,7 @@ module LdmScanner
 
   def self.dumpVmdb(vmdb)
     puts
-    puts "VMDB:"
+    puts 'VMDB:'
     puts "\tsignature:          #{vmdb.signature}"
     puts "\tsequence:           #{vmdb.sequence}"
     puts "\tvblk_size:          #{vmdb.vblk_size}"
@@ -363,7 +363,7 @@ module LdmScanner
   def self.dumpVblk_old(vb)
     return if vb.data_length == 0
     puts
-    puts "VBLK:"
+    puts 'VBLK:'
     puts   "\tsignature:          #{vb.signature}"
     puts   "\tvmdb_seq:           #{vb.vmdb_seq}"
     puts   "\tgrpnum:             #{vb.grpnum}"
@@ -375,7 +375,7 @@ module LdmScanner
     puts  "\tpadding.length:    #{vb.padding.length}"
   end
 
-  def self.dumpVblk(vb, indent = "")
+  def self.dumpVblk(vb, indent = '')
     return if vb.data_length == 0
     puts
     puts "#{indent}VBLK: #{VBLK_TYPES[vb.rec_type]}"
@@ -400,7 +400,7 @@ class LdmMdParser
 
   def getVgObj
     vgObj = VolumeGroup.new(@privhead.diskgroup_id, @vgName, 1)
-    vgObj.lvmType = "LDM"
+    vgObj.lvmType = 'LDM'
 
     @pvHdrs.each_value do |pvh|
       next if pvh.diskgroup_name != @vgName
@@ -440,7 +440,7 @@ end # class LdmMdParser
 
 if __FILE__ == $0
   SD = File.dirname(__FILE__)
-  $: << File.join(SD, "../disk")
+  $: << File.join(SD, '../disk')
 
   require 'rubygems'
   require 'log4r'
@@ -462,7 +462,7 @@ if __FILE__ == $0
 
   # DISK = "/Volumes/WDpassport/Virtual Machines/cn071vcce130/cn071vcce130_3.vmdk"
   # DISK = "/Volumes/WDpassport/Virtual Machines/cn071vcce130/cn071vcce130.vmdk"
-  DISK = "/Volumes/WDpassport/Virtual Machines/MIQAppliance-win2008x86/Win2008x86.vmdk"
+  DISK = '/Volumes/WDpassport/Virtual Machines/MIQAppliance-win2008x86/Win2008x86.vmdk'
   puts "VMDB size = #{BinaryStruct.sizeof(LdmScanner::VBLK)}"
 
   diskInfo = OpenStruct.new
@@ -471,7 +471,7 @@ if __FILE__ == $0
   disk = MiqDisk.getDisk(diskInfo)
 
   unless disk
-    puts "Failed to open disk"
+    puts 'Failed to open disk'
     exit(1)
   end
 
@@ -517,7 +517,7 @@ if __FILE__ == $0
   # end
 
   puts
-  puts "=============================================="
+  puts '=============================================='
 
   unless (ph = LdmScanner.scan(disk))
     puts "#{disk.dInfo.fileName} is not an LDM disk"

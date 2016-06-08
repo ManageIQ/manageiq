@@ -34,7 +34,7 @@ module MiqOptionParser
       @commands[command.name] = command
       @default_command        = command.name if default
       command.parent          = self
-      command.post_initialize if command.respond_to?("post_initialize")
+      command.post_initialize if command.respond_to?('post_initialize')
     end
 
     def <=>(other)
@@ -58,10 +58,10 @@ module MiqOptionParser
     #######
 
     def print_commands(level = 1, command = self)
-      puts "Available commands:" if level == 1
+      puts 'Available commands:' if level == 1
       command.commands.sort.each do |name, cmd|
-        print "  " * level + name.ljust(15) + cmd.short_desc.to_s
-        print " (=default command)" if name == command.default_command
+        print '  ' * level + name.ljust(15) + cmd.short_desc.to_s
+        print ' (=default command)' if name == command.default_command
         print "\n"
         print_commands(level + 1, cmd) if cmd.has_commands?
       end
@@ -74,7 +74,7 @@ module MiqOptionParser
 
     def initialize
       @program_name      = $0
-      @program_version   = "0.0.0"
+      @program_version   = '0.0.0'
       @handle_exceptions = false
       @exit_on_help      = true
       @exit_on_version   = true
@@ -141,7 +141,7 @@ module MiqOptionParser
     # Returns the reason plus the message.
     def message
       data = @@reason[self.class] || ['Unknown error', true]
-      data[0] + (data[1] ? ": " + super : '')
+      data[0] + (data[1] ? ': ' + super : '')
     end
   end
 
@@ -155,7 +155,7 @@ module MiqOptionParser
     end
 
     def post_initialize
-      command_parser.root_command.option_parser.on_tail("-h", "--help", "Show help") do
+      command_parser.root_command.option_parser.on_tail('-h', '--help', 'Show help') do
         execute([])
       end
     end
@@ -192,9 +192,9 @@ module MiqOptionParser
     def show_program_help
       puts command_parser.banner + "\n" if command_parser.banner
       puts "Usage: #{command_parser.program_name} [options] COMMAND [options] [COMMAND [options] ...] [args]"
-      puts ""
+      puts ''
       print_commands(1, command_parser.root_command)
-      puts ""
+      puts ''
       puts command_parser.root_command.option_parser.summarize
       puts
     end
@@ -203,11 +203,11 @@ module MiqOptionParser
   class DefaultVersionCommand < MiqCommand
     def initialize
       super('version')
-      self.short_desc = "Show the version of the program"
+      self.short_desc = 'Show the version of the program'
     end
 
     def post_initialize
-      command_parser.root_command.option_parser.on_tail("--version", "-v", "Show the version of the program") do
+      command_parser.root_command.option_parser.on_tail('--version', '-v', 'Show the version of the program') do
         execute([])
       end
     end

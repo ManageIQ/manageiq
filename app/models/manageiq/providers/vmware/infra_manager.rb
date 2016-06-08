@@ -21,11 +21,11 @@ module ManageIQ::Providers
     before_destroy :stop_event_monitor
 
     def self.ems_type
-      @ems_type ||= "vmwarews".freeze
+      @ems_type ||= 'vmwarews'.freeze
     end
 
     def self.description
-      @description ||= "VMware vCenter".freeze
+      @description ||= 'VMware vCenter'.freeze
     end
 
     def remote_console_vmrc_acquire_ticket
@@ -51,16 +51,16 @@ module ManageIQ::Providers
     end
 
     def validate_remote_console_vmrc_support
-      raise(MiqException::RemoteConsoleNotSupportedError, "vCenter needs to be refreshed to determine VMRC remote console support.")   unless self.remote_console_vmrc_support_known?
-      raise(MiqException::RemoteConsoleNotSupportedError, "vCenter version #{api_version} does not support VMRC remote console.") unless api_version >= "4.1"
-      raise(MiqException::RemoteConsoleNotSupportedError, "vCenter versions earlier than 5.x are not supported.  Found version #{api_version}.") unless api_version >= "5."
+      raise(MiqException::RemoteConsoleNotSupportedError, 'vCenter needs to be refreshed to determine VMRC remote console support.')   unless self.remote_console_vmrc_support_known?
+      raise(MiqException::RemoteConsoleNotSupportedError, "vCenter version #{api_version} does not support VMRC remote console.") unless api_version >= '4.1'
+      raise(MiqException::RemoteConsoleNotSupportedError, "vCenter versions earlier than 5.x are not supported.  Found version #{api_version}.") unless api_version >= '5.'
       true
     end
 
     def self.use_vim_broker?
       return false unless MiqVimBrokerWorker.has_required_role?
-      cfg = VMDB::Config.new("vmdb").config[:webservices][:use_vim_broker]
-      return true if cfg == "force"
+      cfg = VMDB::Config.new('vmdb').config[:webservices][:use_vim_broker]
+      return true if cfg == 'force'
       return true if cfg && Sys::Platform::OS == :unix
       false
     end
@@ -73,7 +73,7 @@ module ManageIQ::Providers
 
     def self.provision_class(via)
       case via
-      when "pxe" then self::ProvisionViaPxe
+      when 'pxe' then self::ProvisionViaPxe
       else            self::Provision
       end
     end
@@ -112,7 +112,7 @@ module ManageIQ::Providers
     end
 
     def verify_credentials(auth_type = nil, _options = {})
-      raise "no credentials defined" if self.missing_credentials?(auth_type)
+      raise 'no credentials defined' if self.missing_credentials?(auth_type)
 
       begin
         with_provider_connection(:use_broker => false, :auth_type => auth_type) {}
@@ -146,12 +146,12 @@ module ManageIQ::Providers
       return unless self.use_vim_broker?
       MiqQueue.put(
         :class_name  => self.class.name,
-        :method_name => "reset_vim_cache",
+        :method_name => 'reset_vim_cache',
         :instance_id => id,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(self),
         :zone        => my_zone,
-        :role        => "ems_inventory"
+        :role        => 'ems_inventory'
       )
     end
 
@@ -217,7 +217,7 @@ module ManageIQ::Providers
     def vm_migrate(vm, options = {})
       defaults = {
         :pool     => nil,
-        :priority => "defaultPriority",
+        :priority => 'defaultPriority',
         :state    => nil
       }
       options = defaults.merge(options)
@@ -242,7 +242,7 @@ module ManageIQ::Providers
         :datastore      => nil,
         :disk_move_type => nil,
         :transform      => nil,
-        :priority       => "defaultPriority",
+        :priority       => 'defaultPriority',
         :disk           => nil
       }
       options = defaults.merge(options)
@@ -302,15 +302,15 @@ module ManageIQ::Providers
     end
 
     def vm_connect_disconnect_cdrom(vm, connect, onStartup = false, user_event = nil)
-      vm_connect_disconnect_specified_connectable_devices(vm, "CD/DVD Drive", connect, onStartup, user_event)
+      vm_connect_disconnect_specified_connectable_devices(vm, 'CD/DVD Drive', connect, onStartup, user_event)
     end
 
     def vm_connect_disconnect_floppy(vm, connect, onStartup = false, user_event = nil)
-      vm_connect_disconnect_specified_connectable_devices(vm, "Floppy Drive", connect, onStartup, user_event)
+      vm_connect_disconnect_specified_connectable_devices(vm, 'Floppy Drive', connect, onStartup, user_event)
     end
 
     def vm_connect_disconnect_all_connectable_devices(vm, connect, onStartup = false, user_event = nil)
-      vm_connect_disconnect_specified_connectable_devices(vm, "*", connect, onStartup, user_event)
+      vm_connect_disconnect_specified_connectable_devices(vm, '*', connect, onStartup, user_event)
     end
 
     def vm_connect_disconnect_specified_connectable_devices(vm, deviceLabel, connect, onStartup = false, user_event = nil)
@@ -318,10 +318,10 @@ module ManageIQ::Providers
         vim_vm.logUserEvent(user_event) if user_event
 
         _log.info("EMS: [#{name}] VM path [#{vm.path}] Invoking [devicesByFilter]...")
-        devs = vim_vm.devicesByFilter("connectable.connected" => /(false|true)/)
+        devs = vim_vm.devicesByFilter('connectable.connected' => /(false|true)/)
         devs.each do |dev|
           currentLabel = dev['deviceInfo']['label']
-          next if  (deviceLabel != "*") && (currentLabel.index(deviceLabel) != 0)
+          next if  (deviceLabel != '*') && (currentLabel.index(deviceLabel) != 0)
           _log.info("EMS: [#{name}] VM path [#{vm.path}] Invoking [connectDevice] for device [#{currentLabel}]...")
           result = vim_vm.connectDevice(dev, connect, onStartup)
           _log.info("EMS: [#{name}] VM path [#{vm.path}] Returned with result [#{result}]...")
@@ -336,7 +336,7 @@ module ManageIQ::Providers
       config = VMDB::Config.new('vmdb').config
       defaults = {
         :memory             => false,
-        :quiesce            => "false",
+        :quiesce            => 'false',
         :wait               => true,
         :free_space_percent => config.fetch_path(:snapshots, :create_free_percent) || 100
       }
@@ -347,7 +347,7 @@ module ManageIQ::Providers
     def vm_create_evm_snapshot(vm, options = {})
       config = VMDB::Config.new('vmdb').config
       defaults = {
-        :quiesce            => "false",
+        :quiesce            => 'false',
         :wait               => true,
         :free_space_percent => config.fetch_path(:snapshots, :create_free_percent) || 100
       }
@@ -358,7 +358,7 @@ module ManageIQ::Providers
     def vm_remove_snapshot(vm, options = {})
       config = VMDB::Config.new('vmdb').config
       defaults = {
-        :subTree            => "false",
+        :subTree            => 'false',
         :wait               => true,
         :free_space_percent => config.fetch_path(:snapshots, :remove_free_percent) || 100
       }
@@ -369,7 +369,7 @@ module ManageIQ::Providers
     def vm_remove_snapshot_by_description(vm, options = {})
       config = VMDB::Config.new('vmdb').config
       defaults = {
-        :subTree            => "false",
+        :subTree            => 'false',
         :refresh            => false,
         :wait               => true,
         :free_space_percent => config.fetch_path(:snapshots, :remove_free_percent) || 100
@@ -475,8 +475,8 @@ module ManageIQ::Providers
       event_array = ['VmCreatedEvent']
 
       with_provider_connection do |vim|
-        eventSpec = VimHash.new("EventFilterSpec") do |efs|
-          efs.time = VimHash.new("EventFilterSpecByTime") { |eft| eft.endTime = vim.currentServerTime.to_s }
+        eventSpec = VimHash.new('EventFilterSpec') do |efs|
+          efs.time = VimHash.new('EventFilterSpecByTime') { |eft| eft.endTime = vim.currentServerTime.to_s }
           efs.disableFullMessage = 'false'
           if vim.v4
             efs.eventTypeId = event_array

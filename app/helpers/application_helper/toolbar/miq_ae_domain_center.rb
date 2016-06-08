@@ -16,7 +16,7 @@ class ApplicationHelper::Toolbar::MiqAeDomainCenter < ApplicationHelper::Toolbar
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Domain'),
           t,
-          :confirm => N_("Are you sure you want to remove this Domain?")),
+          :confirm => N_('Are you sure you want to remove this Domain?')),
         button(
           :miq_ae_domain_unlock,
           'fa fa-check fa-lg',
@@ -38,18 +38,18 @@ class ApplicationHelper::Toolbar::MiqAeDomainCenter < ApplicationHelper::Toolbar
           'pficon pficon-edit fa-lg',
           N_('Select a single Namespace to edit'),
           N_('Edit Selected Namespace'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => '1'),
         button(
           :miq_ae_namespace_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove selected Namespaces'),
           N_('Remove Namespaces'),
-          :url_parms => "main_div",
-          :confirm   => N_("Are you sure you want to remove the selected Namespaces?"),
+          :url_parms => 'main_div',
+          :confirm   => N_('Are you sure you want to remove the selected Namespaces?'),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])

@@ -1,7 +1,7 @@
 require 'sync'
 
 require 'enumerator'
-require "ostruct"
+require 'ostruct'
 
 require 'util/extensions/miq-hash'
 require 'util/miq-exception'
@@ -55,57 +55,57 @@ class MiqVimHost
   #
 
   def maintenanceModeSupported?
-    capabilityBool("maintenanceModeSupported")
+    capabilityBool('maintenanceModeSupported')
   end
 
   def nfsSupported?
-    capabilityBool("nfsSupported")
+    capabilityBool('nfsSupported')
   end
 
   def rebootSupported?
-    capabilityBool("rebootSupported")
+    capabilityBool('rebootSupported')
   end
 
   def sanSupported?
-    capabilityBool("sanSupported")
+    capabilityBool('sanSupported')
   end
 
   def shutdownSupported?
-    capabilityBool("shutdownSupported")
+    capabilityBool('shutdownSupported')
   end
 
   def standbySupported?
-    capabilityBool("standbySupported")
+    capabilityBool('standbySupported')
   end
 
   def storageVMotionSupported?
-    capabilityBool("storageVMotionSupported")
+    capabilityBool('storageVMotionSupported')
   end
 
   def vmotionSupported?
-    capabilityBool("vmotionSupported")
+    capabilityBool('vmotionSupported')
   end
 
   def vmotionWithStorageVMotionSupported?
-    capabilityBool("vmotionWithStorageVMotionSupported")
+    capabilityBool('vmotionWithStorageVMotionSupported')
   end
 
   def capabilityBool(cn)
     return nil unless (cap = @hh['capability'])
-    cap[cn] == "true"
+    cap[cn] == 'true'
   end
   private :capabilityBool
 
   def quickStats
-    @invObj.getMoProp(@hMor, "summary.quickStats")['summary']['quickStats']
+    @invObj.getMoProp(@hMor, 'summary.quickStats')['summary']['quickStats']
   end
 
   def inMaintenanceMode?
-    @invObj.getMoProp(@hMor, "runtime.inMaintenanceMode")['runtime']['inMaintenanceMode'] == "true"
+    @invObj.getMoProp(@hMor, 'runtime.inMaintenanceMode')['runtime']['inMaintenanceMode'] == 'true'
   end
 
   def powerState
-    @invObj.getMoProp(@hMor, "runtime.powerState")['runtime']['powerState']
+    @invObj.getMoProp(@hMor, 'runtime.powerState')['runtime']['powerState']
   end
 
   def enterMaintenanceMode(timeout = 0, evacuatePoweredOffVms = false, wait = true)
@@ -158,7 +158,7 @@ class MiqVimHost
 
   def configManager(mgr_type = nil)
     if @configManager.nil?
-      mgr = @invObj.getMoProp(@hMor, "configManager")
+      mgr = @invObj.getMoProp(@hMor, 'configManager')
       @configManager = mgr['configManager'] unless mgr.nil?
     end
 
@@ -256,7 +256,7 @@ class MiqVimHost
 
   def fileSystemVolume(selSpec = nil)
     if selSpec.nil?
-      return @invObj.getMoProp(@hMor, "config.fileSystemVolume")
+      return @invObj.getMoProp(@hMor, 'config.fileSystemVolume')
     else
       propPath = @invObj.selSpecToPropPath(selSpec)
       sd = @invObj.getMoProp(@hMor, propPath)
@@ -266,7 +266,7 @@ class MiqVimHost
 
   def storageDevice(selSpec = nil)
     if selSpec.nil?
-      return @invObj.getMoProp(@hMor, "config.storageDevice")
+      return @invObj.getMoProp(@hMor, 'config.storageDevice')
     else
       propPath = @invObj.selSpecToPropPath(selSpec)
       sd = @invObj.getMoProp(@hMor, propPath)

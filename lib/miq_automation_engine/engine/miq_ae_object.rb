@@ -666,7 +666,7 @@ module MiqAeEngine
         if left[0, 1] == ':'
           ltype = :symbol
           left  = left[1..-1].to_sym
-        elsif ["\"", "\'"].include?(left[0, 1])
+        elsif ['"', "\'"].include?(left[0, 1])
           ltype = :string
           left  = left[1..-2]
         else
@@ -787,8 +787,8 @@ module MiqAeEngine
       if value.starts_with?("'")
         raise "Unmatched Single Quoted String <#{e}> in Collect" unless value.ends_with?("'")
         return value[1..-2]
-      elsif value.starts_with?("\"")
-        raise "Unmatched Double Quoted String <#{e}> in Collect" unless value.ends_with?("\"")
+      elsif value.starts_with?('"')
+        raise "Unmatched Double Quoted String <#{e}> in Collect" unless value.ends_with?('"')
         return value[1..-2]
       elsif /^[+-]?[0-9]+\s*$/.match(value)
         return value.to_i

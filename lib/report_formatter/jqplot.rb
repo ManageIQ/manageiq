@@ -40,7 +40,7 @@ module ReportFormatter
       mri.chart = Jqplot.apply_theme(mri.chart, options.theme) unless options.theme.nil?
     end
 
-    def no_records_found_chart(topic = "No records found for this chart")
+    def no_records_found_chart(topic = 'No records found for this chart')
       mri.chart = {
         :data    => [[nil]],
         :options => {:title => topic}

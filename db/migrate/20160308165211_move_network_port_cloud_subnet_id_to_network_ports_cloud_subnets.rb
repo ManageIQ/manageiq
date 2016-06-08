@@ -8,7 +8,7 @@ class MoveNetworkPortCloudSubnetIdToNetworkPortsCloudSubnets < ActiveRecord::Mig
   end
 
   class CloudSubnetNetworkPort < ActiveRecord::Base
-    self.table_name = "cloud_subnets_network_ports"
+    self.table_name = 'cloud_subnets_network_ports'
   end
 
   def up

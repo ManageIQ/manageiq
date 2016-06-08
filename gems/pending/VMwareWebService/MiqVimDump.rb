@@ -1,10 +1,10 @@
 module MiqVimDump
   def dumpObj(obj, level = 0)
-    @globalIndent = "" unless @globalIndent
+    @globalIndent = '' unless @globalIndent
     @dumpToLog = false if @dumpToLog.nil?
     if level == 0 && obj.respond_to?(:xsiType) && !obj.xsiType.nil?
       indentedPrint("#{obj.class.name} <#{obj.xsiType}>:", 0)
-      @globalIndent += "    "
+      @globalIndent += '    '
     end
     if obj.kind_of? Array
       dumpArray(obj, level)
@@ -19,7 +19,7 @@ module MiqVimDump
 
   def dumpHash(h, level)
     h.each do |k, v|
-      s = ""
+      s = ''
       s = " <#{v.xsiType}>" if v.respond_to?(:xsiType) && !v.xsiType.nil?
       indentedPrint("Level#{level} (#{v.class}), #{k}#{s}:", level)
       dumpObj(v, level + 1)
@@ -29,7 +29,7 @@ module MiqVimDump
   def dumpArray(a, level)
     i = 0
     a.each do |ae|
-      s = ""
+      s = ''
       s = " <#{ae.xsiType}>" if ae.respond_to?(:xsiType) && !ae.xsiType.nil?
       indentedPrint("Level#{level} (#{ae.class}), [#{i}]#{s}:", level)
       dumpObj(ae, level + 1)
@@ -38,7 +38,7 @@ module MiqVimDump
   end
 
   def dumpClass(obj, level)
-    indentedPrint("*** Object type: " + obj.class.to_s, level)
+    indentedPrint('*** Object type: ' + obj.class.to_s, level)
     return unless obj
     if obj.kind_of?(DateTime)
       indentedPrint("Level#{level}, #{obj}:", level)
@@ -60,9 +60,9 @@ module MiqVimDump
 
   def indentedPrint(s, i)
     if @dumpToLog
-      $vim_log.debug @globalIndent + ("    " * i) + s.to_s
+      $vim_log.debug @globalIndent + ('    ' * i) + s.to_s
     else
-      print @globalIndent + "    " * i
+      print @globalIndent + '    ' * i
       puts s
     end
   end
@@ -76,14 +76,14 @@ module MiqVimDump
 
   def dumpAll
     accessors = [
-      "hostSystemsByMor",
-      "datacentersByMor",
-      "foldersByMor",
-      "resourcePoolsByMor",
-      "clusterComputeResourcesByMor",
-      "computeResourcesByMor",
-      "virtualMachinesByMor",
-      "dataStoresByMor"
+      'hostSystemsByMor',
+      'datacentersByMor',
+      'foldersByMor',
+      'resourcePoolsByMor',
+      'clusterComputeResourcesByMor',
+      'computeResourcesByMor',
+      'virtualMachinesByMor',
+      'dataStoresByMor'
     ]
 
     oldGi = @globalIndent
@@ -91,7 +91,7 @@ module MiqVimDump
 
     accessors.each do |a|
       puts
-      puts "*" * (a.length + 1)
+      puts '*' * (a.length + 1)
       puts "#{a}:"
       send(a).each do |k, o|
         puts "\t#{k}"

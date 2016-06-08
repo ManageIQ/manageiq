@@ -19,8 +19,8 @@ class MiqAeYamlExport
 
   def write_model
     case export_level
-    when "class"     then write_class(domain_object, @namespace, @klass.downcase)
-    when "namespace" then write_namespace(domain_object, @namespace)
+    when 'class'     then write_class(domain_object, @namespace, @klass.downcase)
+    when 'namespace' then write_namespace(domain_object, @namespace)
     else
       @domain == ALL_DOMAINS ? write_all_domains : write_domain(domain_object)
     end
@@ -29,11 +29,11 @@ class MiqAeYamlExport
 
   def export_level
     if @namespace.present? && @klass.present?
-      "class"
+      'class'
     elsif @namespace.present?
-      "namespace"
+      'namespace'
     else
-      "domain"
+      'domain'
     end
   end
 
@@ -54,7 +54,7 @@ class MiqAeYamlExport
   end
 
   def write_multipart_namespace_files(namespace)
-    parts = namespace.split("/").delete_if(&:blank?)
+    parts = namespace.split('/').delete_if(&:blank?)
     parts.pop
     parts.each_with_object([]) do |ns, new_ns|
       new_ns << ns
@@ -188,7 +188,7 @@ class MiqAeYamlExport
     if method_obj.data
       method_obj.data += NEW_LINE unless method_obj.data.end_with?(NEW_LINE)
     end
-    export_file_hash['export_data'] = method_obj.data || ""
+    export_file_hash['export_data'] = method_obj.data || ''
     write_export_file(export_file_hash)
   end
 

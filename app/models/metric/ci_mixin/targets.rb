@@ -15,13 +15,13 @@ module Metric::CiMixin::Targets
   alias_method :perf_capture_always, :perf_capture_always?
 
   def perf_capture_enabled?
-    @perf_capture_enabled ||= (perf_capture_always? || self.is_tagged_with?("capture_enabled", :ns => "/performance"))
+    @perf_capture_enabled ||= (perf_capture_always? || self.is_tagged_with?('capture_enabled', :ns => '/performance'))
   end
   alias_method :perf_capture_enabled, :perf_capture_enabled?
 
   # TODO: Should enabling a Host also enable the cluster?
   def perf_capture_enabled=(enable)
-    ns = "/performance"
+    ns = '/performance'
     enable ? tag_add('capture_enabled', :ns => ns) : tag_with('', :ns => ns)
 
     # Clear tag association cache instead of full reload.

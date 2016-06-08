@@ -3,7 +3,7 @@ module MiqReport::Generator::Trend
 
   CHART_X_AXIS_COLUMN          = :timestamp # this will need to be defined in the report object when we want to calculate trend on data other than performance
   CHART_X_AXIS_COLUMN_ADJUSTED = :time_profile_adjusted_timestamp
-  CHART_TREND_COLUMN_PREFIX    = "trend_"
+  CHART_TREND_COLUMN_PREFIX    = 'trend_'
 
   module ClassMethods
     def is_trend_column?(column)
@@ -26,11 +26,11 @@ module MiqReport::Generator::Trend
     # }
     trend_klass = db_options[:trend_db]
     trend_klass = Object.const_get(trend_klass) unless trend_klass.kind_of?(Class)
-    if db_options[:interval] == "daily"
+    if db_options[:interval] == 'daily'
       includes = include.blank? ? [] : include.keys
 
-      time_range = Metric::Helper.time_range_from_offset("daily", db_options[:start_offset], db_options[:end_offset], tz)
-      recs = Metric::Helper.find_for_interval_name("daily", time_profile || tz, trend_klass)
+      time_range = Metric::Helper.time_range_from_offset('daily', db_options[:start_offset], db_options[:end_offset], tz)
+      recs = Metric::Helper.find_for_interval_name('daily', time_profile || tz, trend_klass)
                            .where(where_clause).where(:timestamp => time_range).includes(includes)
     else
       time_range = Metric::Helper.time_range_from_offset('hourly', db_options[:start_offset], db_options[:end_offset])
@@ -142,7 +142,7 @@ module MiqReport::Generator::Trend
   end
 
   def calc_value_at_target(limit, trend_data_key, trend_data)
-    unknown = _("Trending Down")
+    unknown = _('Trending Down')
     if limit.nil? || trend_data[trend_data_key].nil? || trend_data[trend_data_key][:slope].nil? || trend_data[trend_data_key][:yint].nil? || trend_data[trend_data_key][:slope] <= 0 # can't project with a negative slope value
       return unknown
     else
@@ -150,12 +150,12 @@ module MiqReport::Generator::Trend
         result = MiqStats.solve_for_x(limit, trend_data[trend_data_key][:slope], trend_data[trend_data_key][:yint])
         if result <= 1.year.from_now.to_i
           if Time.at(result).utc <= Time.now.utc
-            return Time.at(result).utc.strftime("%m/%d/%Y")
+            return Time.at(result).utc.strftime('%m/%d/%Y')
           else
             return "#{((Time.at(result).utc - Time.now.utc) / 1.day).round} days, on #{Time.at(result).utc.strftime("%m/%d/%Y")} (#{get_time_zone("UTC")})"
           end
         else
-          return "after 1 year"
+          return 'after 1 year'
         end
       rescue RangeError
         return unknown

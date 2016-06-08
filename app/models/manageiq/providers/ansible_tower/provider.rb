@@ -1,7 +1,7 @@
 class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
   has_one :configuration_manager,
-          :foreign_key => "provider_id",
-          :class_name  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
+          :foreign_key => 'provider_id',
+          :class_name  => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager',
           :dependent   => :destroy,
           :autosave    => true
 
@@ -26,7 +26,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
   def connect(options = {})
     auth_type = options[:auth_type]
     if missing_credentials?(auth_type) && (options[:username].nil? || options[:password].nil?)
-      raise _("no credentials defined")
+      raise _('no credentials defined')
     end
 
     verify_ssl = options[:verify_ssl] || self.verify_ssl
@@ -39,7 +39,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
 
   def verify_credentials(auth_type = nil, options = {})
     validity = with_provider_connection(options.merge(:auth_type => auth_type), &:verify_credentials)
-    raise MiqException::MiqInvalidCredentialsError, _("Username or password is not valid") if validity.nil?
+    raise MiqException::MiqInvalidCredentialsError, _('Username or password is not valid') if validity.nil?
     validity
   rescue Faraday::ConnectionFailed, Faraday::SSLError => err
     raise MiqException::MiqUnreachableError, err.message, err.backtrace
@@ -48,12 +48,12 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
   end
 
   def self.process_tasks(options)
-    raise _("No ids given to process_tasks") if options[:ids].blank?
-    if options[:task] == "refresh_ems"
+    raise _('No ids given to process_tasks') if options[:ids].blank?
+    if options[:task] == 'refresh_ems'
       refresh_ems(options[:ids])
       create_audit_event(options)
     else
-      options[:userid] ||= "system"
+      options[:userid] ||= 'system'
       unknown_task_exception(options)
       invoke_tasks_queue(options)
     end
@@ -76,7 +76,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
 
   def self.unknown_task_exception(options)
     unless instance_methods.collect(&:to_s).include?(options[:task])
-      raise _("Unknown task, %{options}") % {:options => options[:task]}
+      raise _('Unknown task, %{options}') % {:options => options[:task]}
     end
   end
 
@@ -94,12 +94,12 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
   private
 
   def default_api_path
-    "/api/v1".freeze
+    '/api/v1'.freeze
   end
 
   def ensure_managers
     build_configuration_manager unless configuration_manager
-    configuration_manager.name    = _("%{name} Configuration Manager") % {:name => name}
+    configuration_manager.name    = _('%{name} Configuration Manager') % {:name => name}
     configuration_manager.zone_id = zone_id
   end
 end

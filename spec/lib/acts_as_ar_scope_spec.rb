@@ -1,5 +1,5 @@
 describe ActsAsArScope do
-  context "AR backed model" do
+  context 'AR backed model' do
     # model contains ids of important vms - acts like ar model
     let(:important_vm_model) do
       Class.new(ActsAsArScope) do
@@ -17,7 +17,7 @@ describe ActsAsArScope do
       end
     end
 
-    it "delegates to :aar_scope" do
+    it 'delegates to :aar_scope' do
       good = FactoryGirl.create_list(:vm, 3)
       bad = FactoryGirl.create_list(:vm, 1)
 

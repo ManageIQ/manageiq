@@ -20,8 +20,8 @@ class MiqNfsSession < MiqGenericMountSession
     # URI: nfs://192.168.252.139/exported/miq
     # mount 192.168.252.139:/exported/miq /mnt/miq
 
-    mount = "mount"
-    mount << " -r" if settings_read_only?
+    mount = 'mount'
+    mount << ' -r' if settings_read_only?
 
     # Quote the host:exported directory since the directory can have spaces in it
     case Sys::Platform::IMPL
@@ -30,7 +30,7 @@ class MiqNfsSession < MiqGenericMountSession
     when :linux
       runcmd("#{mount} '#{@host}:#{@mount_path}' #{@mnt_point}")
     else
-      raise "platform not supported"
+      raise 'platform not supported'
     end
     logger.info("#{log_header} Connecting to host: [#{@host}], share: [#{@mount_path}]...Complete")
   end

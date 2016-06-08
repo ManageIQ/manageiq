@@ -1,6 +1,6 @@
 module MiqAeServiceServiceSpec
   describe MiqAeMethodService::MiqAeServiceService do
-    let(:service)         { FactoryGirl.create(:service, :name => "test_service", :description => "test_description") }
+    let(:service)         { FactoryGirl.create(:service, :name => 'test_service', :description => 'test_description') }
     let(:service_service) { MiqAeMethodService::MiqAeServiceService.find(service.id) }
     let(:user)            { FactoryGirl.create(:user_with_group) }
 
@@ -10,14 +10,14 @@ module MiqAeServiceServiceSpec
       @ae_method     = ::MiqAeMethod.first
       @ae_result_key = 'foo'
 
-      @service   = FactoryGirl.create(:service, :name => "test_service", :description => "test_description")
+      @service   = FactoryGirl.create(:service, :name => 'test_service', :description => 'test_description')
     end
 
     def invoke_ae
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?Service::service=#{@service.id}", user)
     end
 
-    it "#remove_from_vmdb" do
+    it '#remove_from_vmdb' do
       expect(Service.count).to eq(1)
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].remove_from_vmdb"
       @ae_method.update_attributes(:data => method)
@@ -25,7 +25,7 @@ module MiqAeServiceServiceSpec
       expect(Service.count).to eq(0)
     end
 
-    it "#set the service name" do
+    it '#set the service name' do
       expect(@service.name).to eq('test_service')
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].name = 'new_test_service' "
       @ae_method.update_attributes(:data => method)
@@ -34,7 +34,7 @@ module MiqAeServiceServiceSpec
       expect(@service.name).to eq('new_test_service')
     end
 
-    it "#set the service description" do
+    it '#set the service description' do
       expect(@service.description).to eq('test_description')
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].description = 'new_test_description' "
       @ae_method.update_attributes(:data => method)
@@ -43,8 +43,8 @@ module MiqAeServiceServiceSpec
       expect(@service.description).to eq('new_test_description')
     end
 
-    context "#display=" do
-      it "updates the display visibility" do
+    context '#display=' do
+      it 'updates the display visibility' do
         @service.display = true
         @service.save
 
@@ -57,12 +57,12 @@ module MiqAeServiceServiceSpec
       end
     end
 
-    context "#parent_service=" do
+    context '#parent_service=' do
       before(:each) do
-        @parent = FactoryGirl.create(:service, :name => "parent_service")
+        @parent = FactoryGirl.create(:service, :name => 'parent_service')
       end
 
-      it "updates the parent service" do
+      it 'updates the parent service' do
         method = "$evm.root['service'].parent_service = $evm.vmdb('service').find(#{@parent.id})"
         @ae_method.update_attributes(:data => method)
         invoke_ae
@@ -71,7 +71,7 @@ module MiqAeServiceServiceSpec
         expect(@parent.direct_service_children.collect(&:id)).to eq([@service.id])
       end
 
-      it "clears the parent service" do
+      it 'clears the parent service' do
         method = "$evm.root['service'].parent_service = nil"
         @ae_method.update_attributes(:data => method)
         invoke_ae
@@ -80,7 +80,7 @@ module MiqAeServiceServiceSpec
         expect(@parent.direct_service_children).to eq([])
       end
 
-      it "validates the parent service" do
+      it 'validates the parent service' do
         method = "$evm.root['service'].parent_service = 'validate'"
         @ae_method.update_attributes(:data => method)
 
@@ -88,8 +88,8 @@ module MiqAeServiceServiceSpec
       end
     end
 
-    context "#self.create" do
-      it "creates a new service" do
+    context '#self.create' do
+      it 'creates a new service' do
         service_template = FactoryGirl.create(:service_template, :name => 'Dummy')
         service_name = 'service name'
         description = 'description'
@@ -110,14 +110,14 @@ EOF
         expect(service.service_template.id).to eq(service_template.id)
       end
 
-      it "requires a service name" do
+      it 'requires a service name' do
         method = "$evm.vmdb('service').create()"
         @ae_method.update_attributes(:data => method)
 
         expect { invoke_ae }.to raise_error(MiqAeException::AbortInstantiation)
       end
 
-      it "ignores attributes that cannot be overridden" do
+      it 'ignores attributes that cannot be overridden' do
         service_name = 'test service name'
         method = "$evm.vmdb('service').create(:name => '#{service_name}', :some_invalid_attr => 1)"
         @ae_method.update_attributes(:data => method)
@@ -127,21 +127,21 @@ EOF
       end
     end
 
-    it "#start_retirement" do
+    it '#start_retirement' do
       expect(service_service.retirement_state).to be_nil
       service_service.start_retirement
 
-      expect(service_service.retirement_state).to eq("retiring")
+      expect(service_service.retirement_state).to eq('retiring')
     end
 
-    it "#retire_now" do
+    it '#retire_now' do
       expect(@service.retirement_state).to be_nil
       expect(MiqEvent).to receive(:raise_evm_event).once
 
       service_service.retire_now
     end
 
-    it "#retire_service_resources" do
+    it '#retire_service_resources' do
       ems = FactoryGirl.create(:ems_vmware, :zone => @zone)
       vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
       service << vm
@@ -154,7 +154,7 @@ EOF
       # ae_object = invoke_ae.root(@ae_result_key)
     end
 
-    it "#finish_retirement" do
+    it '#finish_retirement' do
       expect(service_service.retired).to be_nil
       expect(service_service.retirement_state).to be_nil
       expect(service_service.retires_on).to be_nil
@@ -163,44 +163,44 @@ EOF
 
       expect(service_service.retired).to be_truthy
       expect(service_service.retires_on).to eq(Date.today)
-      expect(service_service.retirement_state).to eq("retired")
+      expect(service_service.retirement_state).to eq('retired')
     end
 
-    it "#retiring - false" do
+    it '#retiring - false' do
       expect(service_service.retiring?).to be_falsey
     end
 
-    it "#retiring? - true" do
+    it '#retiring? - true' do
       service_service.retirement_state = 'retiring'
 
       expect(service_service.retiring?).to be_truthy
     end
 
-    it "#error_retiring? - false" do
+    it '#error_retiring? - false' do
       expect(service_service.error_retiring?).to be_falsey
     end
 
-    it "#error_retiring? - true" do
+    it '#error_retiring? - true' do
       service_service.retirement_state = 'error'
 
       expect(service_service.error_retiring?).to be_truthy
     end
 
-    it "#retires_on - today" do
+    it '#retires_on - today' do
       service_service.retires_on = Date.today
       service.reload
 
       expect(service.retirement_due?).to be_truthy
     end
 
-    it "#retires_on - tomorrow" do
+    it '#retires_on - tomorrow' do
       service_service.retires_on = Date.today + 1
       service.reload
 
       expect(service.retirement_due?).to be_falsey
     end
 
-    it "#retirement_warn" do
+    it '#retirement_warn' do
       expect(service_service.retirement_warn).to be_nil
       service.retirement_last_warn = Date.today
       service_service.retirement_warn = 60

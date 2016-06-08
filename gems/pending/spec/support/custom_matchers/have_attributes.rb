@@ -1,7 +1,7 @@
 RSpec::Matchers.define :have_attributes do |attrs|
   match do |obj|
     if obj.nil?
-      @err_msg = "Unexpected call to have_attributes on NilClass"
+      @err_msg = 'Unexpected call to have_attributes on NilClass'
     else
       @err_msg = nil
       attrs.each do |attr, expected|
@@ -39,6 +39,6 @@ RSpec::Matchers.define :have_attributes do |attrs|
   end
 
   description do
-    "have the same attributes as passed"
+    'have the same attributes as passed'
   end
 end

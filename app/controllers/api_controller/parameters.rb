@@ -28,12 +28,12 @@ class ApiController
       return nil if params['filter'].blank?
 
       operators = {
-        "!=" => {:default => "!=", :regex => "REGULAR EXPRESSION DOES NOT MATCH", :null => "IS NOT NULL"},
-        "<=" => {:default => "<="},
-        ">=" => {:default => ">="},
-        "<"  => {:default => "<"},
-        ">"  => {:default => ">"},
-        "="  => {:default => "=", :regex => "REGULAR EXPRESSION MATCHES", :null => "IS NULL"}
+        '!=' => {:default => '!=', :regex => 'REGULAR EXPRESSION DOES NOT MATCH', :null => 'IS NOT NULL'},
+        '<=' => {:default => '<='},
+        '>=' => {:default => '>='},
+        '<'  => {:default => '<'},
+        '>'  => {:default => '>'},
+        '='  => {:default => '=', :regex => 'REGULAR EXPRESSION MATCHES', :null => 'IS NULL'}
       }
 
       and_expressions = []
@@ -41,9 +41,9 @@ class ApiController
 
       params['filter'].select(&:present?).each do |filter|
         parsed_filter = parse_filter(filter, operators)
-        *associations, attr = parsed_filter[:attr].split(".")
+        *associations, attr = parsed_filter[:attr].split('.')
         if associations.size > 1
-          raise BadRequestError, "Filtering of attributes with more than one association away is not supported"
+          raise BadRequestError, 'Filtering of attributes with more than one association away is not supported'
         end
         unless virtual_or_physical_attribute?(target_class(klass, associations), attr)
           raise BadRequestError, "attribute #{attr} does not exist"
@@ -51,11 +51,11 @@ class ApiController
         associations.map! { |assoc| ".#{assoc}" }
         field = "#{klass.name}#{associations.join}-#{attr}"
         target = parsed_filter[:logical_or] ? or_expressions : and_expressions
-        target << {parsed_filter[:operator] => {"field" => field, "value" => parsed_filter[:value]}}
+        target << {parsed_filter[:operator] => {'field' => field, 'value' => parsed_filter[:value]}}
       end
 
-      and_part = and_expressions.one? ? and_expressions.first : {"AND" => and_expressions}
-      composite_expression = or_expressions.empty? ? and_part : {"OR" => [and_part, *or_expressions]}
+      and_part = and_expressions.one? ? and_expressions.first : {'AND' => and_expressions}
+      composite_expression = or_expressions.empty? ? and_part : {'OR' => [and_part, *or_expressions]}
       MiqExpression.new(composite_expression)
     end
 
@@ -96,7 +96,7 @@ class ApiController
 
       if filter_value =~ /%|\*/
         filter_value = "/\\A#{Regexp.escape(filter_value)}\\z/"
-        filter_value.gsub!(/%|\\\*/, ".*")
+        filter_value.gsub!(/%|\\\*/, '.*')
       end
 
       {:logical_or => logical_or, :operator => method, :attr => filter_attr.strip, :value => filter_value}
@@ -107,7 +107,7 @@ class ApiController
     end
 
     def expand_param
-      params['expand'] && params['expand'].split(",")
+      params['expand'] && params['expand'].split(',')
     end
 
     def expand?(what)
@@ -115,7 +115,7 @@ class ApiController
     end
 
     def decorator_selection
-      params['decorators'].to_s.split(",")
+      params['decorators'].to_s.split(',')
     end
 
     def decorator_selection_for(collection)
@@ -126,9 +126,9 @@ class ApiController
 
     def attribute_selection
       if params['attributes'] || @req[:additional_attributes]
-        params['attributes'].to_s.split(",") | Array(@req[:additional_attributes]) | ID_ATTRS
+        params['attributes'].to_s.split(',') | Array(@req[:additional_attributes]) | ID_ATTRS
       else
-        "all"
+        'all'
       end
     end
 
@@ -140,7 +140,7 @@ class ApiController
 
     def render_attr(attr)
       as = attribute_selection
-      as == "all" || as.include?(attr)
+      as == 'all' || as.include?(attr)
     end
 
     #
@@ -151,9 +151,9 @@ class ApiController
     def sort_params(klass)
       return [] if params['sort_by'].blank?
 
-      orders = String(params['sort_order']).split(",")
-      options = String(params['sort_options']).split(",")
-      params['sort_by'].split(",").zip(orders).collect do |attr, order|
+      orders = String(params['sort_order']).split(',')
+      options = String(params['sort_options']).split(',')
+      params['sort_by'].split(',').zip(orders).collect do |attr, order|
         if klass.attribute_method?(attr) || klass.method_defined?(attr) || attr == klass.primary_key
           sort_directive(attr, order, options)
         else
@@ -164,9 +164,9 @@ class ApiController
 
     def sort_directive(attr, order, options)
       sort_item = attr
-      sort_item = "LOWER(#{sort_item})" if options.map(&:downcase).include?("ignore_case")
-      sort_item << " ASC"  if order && order.downcase.start_with?("asc")
-      sort_item << " DESC" if order && order.downcase.start_with?("desc")
+      sort_item = "LOWER(#{sort_item})" if options.map(&:downcase).include?('ignore_case')
+      sort_item << ' ASC'  if order && order.downcase.start_with?('asc')
+      sort_item << ' DESC' if order && order.downcase.start_with?('desc')
       sort_item
     end
   end

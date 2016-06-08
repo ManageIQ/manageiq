@@ -13,7 +13,7 @@ end
 
 # Loop through all tags from the dialog and create the categories and tags automatically
 def create_tags(category, single_value, tag)
-  log_and_update_message(:info, "Processing create_tags...", true)
+  log_and_update_message(:info, 'Processing create_tags...', true)
   # Convert to lower case and replace all non-word characters with underscores
   category_name = category.to_s.downcase.gsub(/\W/, '_')
   tag_name = tag.to_s.downcase.gsub(/\W/, '_')
@@ -30,7 +30,7 @@ def create_tags(category, single_value, tag)
     log_and_update_message(:info, "Adding new tag #{tag_name} in Category #{category_name}")
     $evm.execute('tag_create', category_name, :name => tag_name, :description => "#{tag}")
   end
-  log_and_update_message(:info, "Processing create_tags...Complete", true)
+  log_and_update_message(:info, 'Processing create_tags...Complete', true)
 end
 
 def override_service_attribute(dialogs_options_hash, attr_name)
@@ -55,7 +55,7 @@ end
 
 # service_tagging - tag the service with tags in dialogs_tags_hash[0]
 def tag_service(dialogs_tags_hash)
-  log_and_update_message(:info, "Processing tag_service...", true)
+  log_and_update_message(:info, 'Processing tag_service...', true)
 
   # Look for tags with a sequence_id of 0 to tag the service
   dialogs_tags_hash.fetch(0, {}).each do |key, value|
@@ -65,7 +65,7 @@ def tag_service(dialogs_tags_hash)
       process_tag(tag_category, tag_entry.downcase)
     end
   end
-  log_and_update_message(:info, "Processing tag_service...Complete", true)
+  log_and_update_message(:info, 'Processing tag_service...Complete', true)
 end
 
 def yaml_data(option)
@@ -76,7 +76,7 @@ def parsed_dialog_information
   dialog_options_hash = yaml_data(:parsed_dialog_options)
   dialog_tags_hash = yaml_data(:parsed_dialog_tags)
   if dialog_options_hash.blank? && dialog_tags_hash.blank?
-    log_and_update_message(:info, "Instantiating dialog_parser to populate dialog options")
+    log_and_update_message(:info, 'Instantiating dialog_parser to populate dialog options')
     $evm.instantiate('/Service/Provisioning/StateMachines/Methods/DialogParser')
     dialog_options_hash = yaml_data(:parsed_dialog_options)
     dialog_tags_hash = yaml_data(:parsed_dialog_tags)
@@ -96,8 +96,8 @@ begin
   dialog_options_hash, dialog_tags_hash = parsed_dialog_information
 
   unless dialog_options_hash.blank?
-    override_service_attribute(dialog_options_hash.fetch(0, {}), "name")
-    override_service_attribute(dialog_options_hash.fetch(0, {}), "description")
+    override_service_attribute(dialog_options_hash.fetch(0, {}), 'name')
+    override_service_attribute(dialog_options_hash.fetch(0, {}), 'description')
   end
 
   tag_service(dialog_tags_hash) unless dialog_tags_hash.blank?

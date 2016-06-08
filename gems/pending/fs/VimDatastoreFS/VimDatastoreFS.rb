@@ -2,7 +2,7 @@ module VimDatastoreFS
   def fs_init
     # raise "Object dobj (#{dobj.class.to_s}) is not a MiqVimDataStore object" if !@dobj.kind_of? MiqVimDataStore
 
-    @fsType = "VimDatastoreFS"
+    @fsType = 'VimDatastoreFS'
     @fsId = @dobj.name
     @volName = @dobj.name
 
@@ -12,8 +12,8 @@ module VimDatastoreFS
 
   def fs_dirEntries(p)
     raise "Directory: #{p} does not exist" unless (fi = getFileInfo(p))
-    raise "#{p} is not a directory" unless fi["fileType"] =~ /.*FolderFileInfo/
-    (fi["dirEntries"])
+    raise "#{p} is not a directory" unless fi['fileType'] =~ /.*FolderFileInfo/
+    (fi['dirEntries'])
   end
 
   def fs_fileExists?(p)
@@ -22,17 +22,17 @@ module VimDatastoreFS
 
   def fs_fileFile?(p)
     return false unless (fi = getFileInfo(p))
-    (fi["fileType"] != "FolderFileInfo")
+    (fi['fileType'] != 'FolderFileInfo')
   end
 
   def fs_fileDirectory?(p)
     return false unless (fi = getFileInfo(p))
-    (fi["fileType"] =~ /.*FolderFileInfo/)
+    (fi['fileType'] =~ /.*FolderFileInfo/)
   end
 
   def fs_fileSize(p)
     raise "File: #{p} does not exist" unless (fi = getFileInfo(p))
-    (fi["fileSize"])
+    (fi['fileSize'])
   end
 
   # def fs_fileAtime(p)
@@ -45,7 +45,7 @@ module VimDatastoreFS
 
   def fs_fileMtime(p)
     raise "File: #{p} does not exist" unless (fi = getFileInfo(p))
-    (fi["modification"])
+    (fi['modification'])
   end
 
   # def fs_fileSize_obj(fobj)
@@ -144,7 +144,7 @@ module VimDatastoreFS
   # end
 
   def dsPath(p)
-    return(p) if p[0, 1] == "["
+    return(p) if p[0, 1] == '['
     (path2key(normalizePath(p)))
   end
 
@@ -159,8 +159,8 @@ module VimDatastoreFS
   private
 
   def path2key(p)
-    return(@rootStr) if p == "/"
-    (@rootStr + " " + p[1..-1])
+    return(@rootStr) if p == '/'
+    (@rootStr + ' ' + p[1..-1])
   end
 
   def dsHash

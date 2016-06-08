@@ -102,11 +102,11 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
   )
 
   RENAMED_TABLES = {
-    "states"                => "drift_states",
-    "miq_cim_derived_stats" => "miq_cim_derived_metrics",
-    "miq_provisions"        => "miq_request_tasks",
-    "miq_cim_stats"         => "miq_storage_metrics",
-    "storages_vms"          => "storages_vms_and_templates",
+    'states'                => 'drift_states',
+    'miq_cim_derived_stats' => 'miq_cim_derived_metrics',
+    'miq_provisions'        => 'miq_request_tasks',
+    'miq_cim_stats'         => 'miq_storage_metrics',
+    'storages_vms'          => 'storages_vms_and_templates',
   }
 
   REMOVED_TABLES = %w(
@@ -117,9 +117,9 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
   )
 
   def up
-    say_with_time("Updating configurations for replication") do
-      path = ["workers", "worker_base", :replication_worker, :replication]
-      Configuration.where(:typ => "vmdb").each do |c|
+    say_with_time('Updating configurations for replication') do
+      path = ['workers', 'worker_base', :replication_worker, :replication]
+      Configuration.where(:typ => 'vmdb').each do |c|
         settings_path = path.dup.push(:include_tables)
         Rails.logger.info("Removing the path [#{settings_path.join(", ")}] from Configuration id [#{c.id}].")
         Rails.logger.info("Current value is:\n#{c.settings.fetch_path(settings_path).to_yaml}")
@@ -158,11 +158,11 @@ class FixReplicationOnUpgradeFromVersionFour < ActiveRecord::Migration
 
       require 'awesome_spawn'
 
-      say_with_time("Preparing rubyrep") do
-        AwesomeSpawn.run!("bin/rake evm:db:environmentlegacykey evm:dbsync:prepare_replication_without_sync")
+      say_with_time('Preparing rubyrep') do
+        AwesomeSpawn.run!('bin/rake evm:db:environmentlegacykey evm:dbsync:prepare_replication_without_sync')
       end
 
-      say_with_time("Uninstalling rubyrep for renamed tables") do
+      say_with_time('Uninstalling rubyrep for renamed tables') do
         AwesomeSpawn.run!("bin/rake evm:db:environmentlegacykey evm:dbsync:uninstall #{RENAMED_TABLES.values.join(" ")}")
       end
     end

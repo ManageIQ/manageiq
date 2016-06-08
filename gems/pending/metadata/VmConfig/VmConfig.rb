@@ -27,12 +27,12 @@ class VmConfig
         set_vmconfig_path(filename)
 
         begin
-          configType = File.extname(filename).delete(".").downcase
+          configType = File.extname(filename).delete('.').downcase
           require "metadata/VmConfig/#{configType}Config"
         rescue LoadError => e
           raise e, "Filetype unrecognized for file #{filename}"
         end
-        extend Kernel.const_get(configType.capitalize + "Config")
+        extend Kernel.const_get(configType.capitalize + 'Config')
         f = convert(filename)
       end
 
@@ -52,12 +52,12 @@ class VmConfig
       line.AsciiToUtf8!.strip!
       next if line.length == 0
       next if line =~ /^#.*$/
-      next unless line.include?("=")
+      next unless line.include?('=')
       k, v = line.split(/\s*=\s*/)
 
       # Note: All key names are lower-cased for easy lookup
       k = k.downcase
-      v = v.gsub(/^"/, "").gsub(/"$/, "")
+      v = v.gsub(/^"/, '').gsub(/"$/, '')
 
       @cfgHash[k] = v
     end
@@ -67,23 +67,23 @@ class VmConfig
     # Convert absolute paths to relative paths for the disks
     if @direct_file_access
       getAllDiskKeys.each do |dk|
-        next if @cfgHash[dk + ".devicetype"] && @cfgHash[dk + ".devicetype"].include?("cdrom")
-        next if @cfgHash[dk + ".filename"] && @cfgHash[dk + ".filename"].downcase == "auto detect"
+        next if @cfgHash[dk + '.devicetype'] && @cfgHash[dk + '.devicetype'].include?('cdrom')
+        next if @cfgHash[dk + '.filename'] && @cfgHash[dk + '.filename'].downcase == 'auto detect'
 
         begin
-          dskPath = Pathname.new(@cfgHash[dk + ".filename"])
+          dskPath = Pathname.new(@cfgHash[dk + '.filename'])
           begin
-            @cfgHash[dk + ".filename"] = dskPath.relative_path_from(Pathname.new(@configPath)).to_s.tr("\\", "/") if dskPath.absolute?
+            @cfgHash[dk + '.filename'] = dskPath.relative_path_from(Pathname.new(@configPath)).to_s.tr('\\', '/') if dskPath.absolute?
           rescue
-            @cfgHash[dk + ".filename"] = dskPath.to_s.tr("\\", "/")
+            @cfgHash[dk + '.filename'] = dskPath.to_s.tr('\\', '/')
           end
           if self.respond_to?(:diskCreateType)
-            createType = diskCreateType(@cfgHash[dk + ".filename"])
-            @cfgHash[dk + ".createType"] = createType if createType
+            createType = diskCreateType(@cfgHash[dk + '.filename'])
+            @cfgHash[dk + '.createType'] = createType if createType
           end
           if self.respond_to?(:diskControllerType)
-            adapterType = diskControllerType(@cfgHash[dk + ".filename"])
-            @cfgHash[dk + ".adapterType"] = adapterType if adapterType
+            adapterType = diskControllerType(@cfgHash[dk + '.filename'])
+            @cfgHash[dk + '.adapterType'] = adapterType if adapterType
           end
         rescue => err
           $log.warn "VmConfig: Failed to convert path: #{@cfgHash[dk + ".filename"]}, #{err}"
@@ -101,9 +101,9 @@ class VmConfig
 
     @diskFileHash = {}
     getAllDiskKeys.each do |dk|
-      next if @cfgHash[dk + ".devicetype"] && @cfgHash[dk + ".devicetype"].include?("cdrom")
-      next if @cfgHash[dk + ".filename"] && @cfgHash[dk + ".filename"].downcase == "auto detect"
-      filename = @cfgHash[dk + ".filename"]
+      next if @cfgHash[dk + '.devicetype'] && @cfgHash[dk + '.devicetype'].include?('cdrom')
+      next if @cfgHash[dk + '.filename'] && @cfgHash[dk + '.filename'].downcase == 'auto detect'
+      filename = @cfgHash[dk + '.filename']
       @diskFileHash[dk] = filename
       if @direct_file_access
         ds, dir, name = split_filename(filename)
@@ -116,8 +116,8 @@ class VmConfig
   end # getDiskFileHash
 
   def getAllDiskKeys
-    dskKeys = @cfgHash.keys.delete_if { |e| !diskKey?(e) }.collect! { |e| e.gsub(".filename", "") }
-    dskKeys.delete_if { |dk| @cfgHash[dk + ".present"].to_s.downcase == "false" }
+    dskKeys = @cfgHash.keys.delete_if { |e| !diskKey?(e) }.collect! { |e| e.gsub('.filename', '') }
+    dskKeys.delete_if { |dk| @cfgHash[dk + '.present'].to_s.downcase == 'false' }
     dskKeys.sort
   end
 
@@ -127,22 +127,22 @@ class VmConfig
     # For snapshots we need to keep the disks order by snapshot uid, then by device
     @snapshotdiskFileHash = Hash.new { |h, k| h[k] = {} }
     getSnapshotDiskKeys.each do |dk|
-      next if @cfgHash[dk + ".devicetype"].to_s.include?("cdrom")
-      next if @cfgHash[dk + ".filename"].to_s.downcase == "auto detect"
+      next if @cfgHash[dk + '.devicetype'].to_s.include?('cdrom')
+      next if @cfgHash[dk + '.filename'].to_s.downcase == 'auto detect'
       dk =~ /^snapshot\d+/
       sn_uid = @cfgHash["#{$&}.uid"]
-      key = @cfgHash[dk + ".node"]
+      key = @cfgHash[dk + '.node']
 
       # Independent disks do not par-take in snapshots.  Check the mode of the parent disk.
       next if @cfgHash["#{key}.mode"].to_s.include?('independent')
 
       @snapshotdiskFileHash[sn_uid]['disks'] ||= {}
-      filename = @cfgHash[dk + ".filename"]
+      filename = @cfgHash[dk + '.filename']
       disk_path = filename
 
       if @direct_file_access
         ds, dir, name = split_filename(filename)
-        if ds.nil? && !Pathname.new(@cfgHash[dk + ".filename"]).absolute?
+        if ds.nil? && !Pathname.new(@cfgHash[dk + '.filename']).absolute?
           disk_path = File.join(@configPath, filename)
         end
       end
@@ -152,8 +152,8 @@ class VmConfig
   end # getSnapshotDiskFileHash
 
   def getSnapshotDiskKeys
-    dskKeys = @cfgHash.keys.delete_if { |e| !snapshotdiskKey?(e) }.collect! { |e| e.gsub(".filename", "") }
-    dskKeys.delete_if { |dk| @cfgHash[dk + ".present"].to_s.downcase == "false" }
+    dskKeys = @cfgHash.keys.delete_if { |e| !snapshotdiskKey?(e) }.collect! { |e| e.gsub('.filename', '') }
+    dskKeys.delete_if { |dk| @cfgHash[dk + '.present'].to_s.downcase == 'false' }
     dskKeys.sort
   end
 
@@ -171,7 +171,7 @@ class VmConfig
 
     normalize_file_paths
 
-    xml = MiqXml.createDoc("<vm_configuration><hardware></hardware><vm/></vm_configuration>", "vendor" => vendor)
+    xml = MiqXml.createDoc('<vm_configuration><hardware></hardware><vm/></vm_configuration>', 'vendor' => vendor)
     # Sort the Hash into an array to group like keys and add each array to the XML doc
     @cfgHash.sort { |a, b| a <=> b }.each do |(k, v)|
       next if k[0..0] == '.'
@@ -217,13 +217,13 @@ class VmConfig
     xml = toXML(false)
     # Find the disk section of the XML
     xml.root.each_recursive do |e|
-      controller_type = e.attributes["type"] if e.name == "controller"
+      controller_type = e.attributes['type'] if e.name == 'controller'
       # Only process drives that are present and have a filename
-      if (!e.attributes['present'].nil? && e.attributes['present'].downcase == 'true') && !e.attributes['filename'].nil? && (!e.attributes['type'].nil? && e.attributes['type'].downcase == 'disk') && (!e.attributes['id'].nil? && e.attributes['id'].include?(":"))
+      if (!e.attributes['present'].nil? && e.attributes['present'].downcase == 'true') && !e.attributes['filename'].nil? && (!e.attributes['type'].nil? && e.attributes['type'].downcase == 'disk') && (!e.attributes['id'].nil? && e.attributes['id'].include?(':'))
         # Make sure the disk we are looking at is not a CD-ROM
-        if e.attributes['devicetype'].nil? || (!e.attributes['devicetype'].nil? && e.attributes['devicetype'].downcase.index("cd").nil?)
-          diskName = e.attributes['filename'].tr("\"", "").strip.tr("\\", "/")
-          diskName = File.join(@configPath, diskName) unless diskName[0..0] == "/"
+        if e.attributes['devicetype'].nil? || (!e.attributes['devicetype'].nil? && e.attributes['devicetype'].downcase.index('cd').nil?)
+          diskName = e.attributes['filename'].tr('"', '').strip.tr('\\', '/')
+          diskName = File.join(@configPath, diskName) unless diskName[0..0] == '/'
           $log.debug "Adding Disk name to list: [#{diskName}]"
           begin
             vmDisks.push(File.expand_path(diskName))
@@ -245,7 +245,7 @@ class VmConfig
   end
 
   def vendor
-    "unknown"
+    'unknown'
   end
 
   def find_file(filename, file_list = files)
@@ -265,7 +265,7 @@ class VmConfig
   end
 
   def insert_XML(key, value, xml)
-    maj, min, other = key.split(".")
+    maj, min, other = key.split('.')
 
     # Any elements that cannot be split are put into a misc class
     min, maj = maj, maj if min.nil?
@@ -275,21 +275,21 @@ class VmConfig
     else
       maj_name = maj
     end
-    if min[0...3] == "mem" || min[0...5] == "nvram"
-      path = [["hardware"], ["memory"]]
-    elsif maj_name == "uuid"
-      path = [["hardware"], ["bios"]]
+    if min[0...3] == 'mem' || min[0...5] == 'nvram'
+      path = [['hardware'], ['memory']]
+    elsif maj_name == 'uuid'
+      path = [['hardware'], ['bios']]
       # Drives
-    elsif maj_name == "scsi" || maj_name == "ide" || maj_name == "floppy"
-      path = getDevicePath(maj, "disk")
+    elsif maj_name == 'scsi' || maj_name == 'ide' || maj_name == 'floppy'
+      path = getDevicePath(maj, 'disk')
       # Ports
-    elsif maj_name == "usb" || maj_name == "parallel" || maj_name == "serial" || maj_name == "sound" || maj_name == "ethernet"
+    elsif maj_name == 'usb' || maj_name == 'parallel' || maj_name == 'serial' || maj_name == 'sound' || maj_name == 'ethernet'
       path = getDevicePath(maj, maj_name)
-    elsif maj_name == "snapshot"
+    elsif maj_name == 'snapshot'
       other, min = min, other if other
       path = getSnapShotPath(maj, maj_name, other)
     else
-      path = [["vm"], [maj]]
+      path = [['vm'], [maj]]
     end
 
     parent = xml.root
@@ -314,7 +314,7 @@ class VmConfig
 
   def add_disk_stats(xml, miqvm)
     # Now loop over the xml and find disk files
-    xml.find_first("/*/hardware").each_recursive do |e|
+    xml.find_first('/*/hardware').each_recursive do |e|
       # Find elements that have a filename attribute
       # Loop through the "whole disks" and get the size for this disk
       if e.attributes['filename']
@@ -346,15 +346,15 @@ class VmConfig
 
   # Match filenames to loaded disks using the hardware id.  IE scsi0:0 or ide0:0
   def is_same_disk?(hardware_id, xml_element)
-    diskId = xml_element.parent.attributes["type"] + xml_element.attributes["id"].to_s
+    diskId = xml_element.parent.attributes['type'] + xml_element.attributes['id'].to_s
     hardware_id.include?(diskId)
   end
 
   def normalize_path_names(xml)
     # Now loop over the xml and find disk files
     xml.root.each_recursive { |e| e.add_attribute('filename', resolve_ds_path(e.attributes['filename'])) if e.attributes['filename'] }
-    xml.find_first("/*/files").each_recursive { |e| e.add_attribute('name', resolve_ds_path(e.attributes['name'])) if e.attributes['name'] }
-    xml.find_first("/*/volumes").each_recursive { |e| e.add_attribute('virtual_disk_file', resolve_ds_path(e.attributes['virtual_disk_file'])) if e.attributes['virtual_disk_file'] }
+    xml.find_first('/*/files').each_recursive { |e| e.add_attribute('name', resolve_ds_path(e.attributes['name'])) if e.attributes['name'] }
+    xml.find_first('/*/volumes').each_recursive { |e| e.add_attribute('virtual_disk_file', resolve_ds_path(e.attributes['virtual_disk_file'])) if e.attributes['virtual_disk_file'] }
   end
 
   def resolve_ds_path(filename)
@@ -432,9 +432,9 @@ class VmConfig
   end
 
   def getDsName(filename, vi)
-    filename = File.join(File.dirname(@configFile), filename) if File.dirname(filename) == "."
+    filename = File.join(File.dirname(@configFile), filename) if File.dirname(filename) == '.'
     dsName = vi.datastorePath(filename)
-    dsName.sub!("] /", "] ") if dsName.index("] /")
+    dsName.sub!('] /', '] ') if dsName.index('] /')
     return dsName
   rescue
     return filename
@@ -442,11 +442,11 @@ class VmConfig
 
   def files(miqvm = nil)
     return @files if @files
-    log_header = "VmConfig.files"
+    log_header = 'VmConfig.files'
 
     @files = []
     if @direct_file_access
-      Dir.glob(File.join(@configPath, "/*.*")) do |f|
+      Dir.glob(File.join(@configPath, '/*.*')) do |f|
         s = File.sizeEx(f) rescue 0
         @files << {:path => f, :name => File.basename(f), :size => s, :mtime => File.mtime(f)}
       end
@@ -551,14 +551,14 @@ class VmConfig
   def add_file_sizes(xml, miqvm)
     return if miqvm.nil?
     begin
-      node = xml.root.add_element("files")
+      node = xml.root.add_element('files')
       total_size = 0
       files(miqvm).each do |fh|
         total_size += fh[:size]
-        node.add_element('file', {"name" => fh[:name], "size_on_disk" => fh[:size]})
+        node.add_element('file', {'name' => fh[:name], 'size_on_disk' => fh[:size]})
       end
       # Add the total size to the "files" node
-      node.add_attribute("size_on_disk", total_size)
+      node.add_attribute('size_on_disk', total_size)
 
       free_space = 0; disk_capacity = 0
       if miqvm && @vol_mgr_loaded
@@ -570,7 +570,7 @@ class VmConfig
           vmRoot.fileSystems.each do |fsd|
             $log.info "FileSystem: #{fsd.fsSpec}, Mounted on: #{fsd.mountPoint}, Type: #{fsd.fs.fsType}, Free bytes: #{fsd.fs.freeBytes}"
             # The root volume can appear more than once, so only add it one time.
-            if fsd.mountPoint == "/"
+            if fsd.mountPoint == '/'
               if rootAdded == false
                 free_space += fsd.fs.freeBytes
                 rootAdded = true
@@ -587,11 +587,11 @@ class VmConfig
           percent_free = free_space.to_f / disk_capacity.to_f * 100
 
           # Populate formated text fields
-          node.add_attributes("pct_free_wrt_size_on_disk" => percent_free, "pct_used_wrt_size_on_disk" => (100 - percent_free))
-          node.add_attributes("disk_free_space" => free_space, "disk_capacity" => disk_capacity)
+          node.add_attributes('pct_free_wrt_size_on_disk' => percent_free, 'pct_used_wrt_size_on_disk' => (100 - percent_free))
+          node.add_attributes('disk_free_space' => free_space, 'disk_capacity' => disk_capacity)
         end
       end
-      node.add_attributes("disk_free_space" => free_space, "disk_capacity" => disk_capacity)
+      node.add_attributes('disk_free_space' => free_space, 'disk_capacity' => disk_capacity)
     rescue => err
     end
   end
@@ -612,9 +612,9 @@ class VmConfig
         vimDs = miqvm.vim.getVimDataStore(ds)
       end
 
-      require "metadata/VmConfig/vmxConfig"
-      extend Kernel.const_get("VmxConfig")
-      snapshot_file = File.join(dir, File.basename(name, ".*") + ".vmsd")
+      require 'metadata/VmConfig/vmxConfig'
+      extend Kernel.const_get('VmxConfig')
+      snapshot_file = File.join(dir, File.basename(name, '.*') + '.vmsd')
       Timeout.timeout(60) do
         process_file(convert_vmsd(vimDs.get_file_content(snapshot_file)))
       end
@@ -644,7 +644,7 @@ class VmConfig
 
   def getDevicePath(name, endType)
     # Initialize variables
-    full_pos, maj_pos, device = nil, "0", name
+    full_pos, maj_pos, device = nil, '0', name
     # If the name contains a number, use it as the id
 
     if name.index(/\d/)
@@ -654,12 +654,12 @@ class VmConfig
     end
 
     # These devices only have 1 position number, and should be grouped under a controller
-    maj_pos = nil if ["ethernet", "floppy", "parallel", "serial"].include?(device)
+    maj_pos = nil if ['ethernet', 'floppy', 'parallel', 'serial'].include?(device)
 
-    ret = [["hardware"], ["bus", {"type" => "pci"}], ["controller", {"type" => device, "id" => maj_pos}]]
+    ret = [['hardware'], ['bus', {'type' => 'pci'}], ['controller', {'type' => device, 'id' => maj_pos}]]
     # Add a device type if the major position and full position differ, otherwise
     # we are processing a controller element.
-    ret << ["device", {"type" => endType, "id" => full_pos}] if maj_pos != full_pos
+    ret << ['device', {'type' => endType, 'id' => full_pos}] if maj_pos != full_pos
     ret
   end
 
@@ -667,8 +667,8 @@ class VmConfig
     # Initialize variables
     full_pos, maj_pos, device, pos_idx = split_data(name)
 
-    return [["vm"], ["snapshots"]] if pos_idx.nil?
-    ret = [["vm"], ["snapshots"], [endType, {"id" => full_pos}]]
+    return [['vm'], ['snapshots']] if pos_idx.nil?
+    ret = [['vm'], ['snapshots'], [endType, {'id' => full_pos}]]
 
     if disk
       a, b, subDevice, c = split_data(disk)
@@ -684,23 +684,23 @@ class VmConfig
 
     # First we need to loop through the snapshots and add flat files for any
     # disks that are just descriptor files
-    xml.find_each("//*/snapshots/snapshot/disk") do |e|
+    xml.find_each('//*/snapshots/snapshot/disk') do |e|
       unless e.attributes['filename'].nil?
         find_additional_disk_files(e.attributes['filename']) do |f|
-          e.parent.add_element("disk", "filename" => f[:path])
+          e.parent.add_element('disk', 'filename' => f[:path])
         end
       end
     end
 
     # Now loop through the filename and collect stats  (date/time/size)
-    node = xml.find_first("//*/snapshots")
+    node = xml.find_first('//*/snapshots')
     node.each_recursive do |e|
-      if e.attributes.include?("filename")
+      if e.attributes.include?('filename')
         begin
           filename = normalize_file_path(e.attributes['filename'])
           next if (fstat = find_file(filename)).nil?
-          e.add_attribute("size_on_disk",  fstat[:size])
-          e.add_attribute("mdate_on_disk", fstat[:mtime].getutc.iso8601(6))
+          e.add_attribute('size_on_disk',  fstat[:size])
+          e.add_attribute('mdate_on_disk', fstat[:mtime].getutc.iso8601(6))
         rescue => err
           # Ignore errors here, we will try to load almost anything.
           $log.error "VmConfig.add_snapshot_size [#{$!.class}]-[#{$!}]\n#{$!.backtrace.join("\n")}"
@@ -711,11 +711,11 @@ class VmConfig
 
   def adjust_snapshot_aligment(xml)
     sn = {}
-    sn_root = xml.find_first("//*/snapshots")
+    sn_root = xml.find_first('//*/snapshots')
 
     unless sn_root.nil?
       disks_by_snap = disks_by_snapshot_and_node
-      xml.find_each("//*/snapshots/snapshot") { |s| sn[s.attributes[:uid]] = s }
+      xml.find_each('//*/snapshots/snapshot') { |s| sn[s.attributes[:uid]] = s }
 
       sn_list = sn.sort { |a, b| a[1].attributes[:uid].to_s <=> b[1].attributes[:uid].to_s }
       clear_snapshot_disks(sn_list)
@@ -729,7 +729,7 @@ class VmConfig
         end
 
         filename = normalize_file_path(snapshot.attributes[:filename])
-        snapshot.add_element("vmem", "filename" => filename) if find_file(filename)
+        snapshot.add_element('vmem', 'filename' => filename) if find_file(filename)
       end
 
       current = sn[sn_root.attributes[:current]]
@@ -751,7 +751,7 @@ class VmConfig
 
   def split_data(name)
     # Initialize variables
-    full_pos, maj_pos, device = nil, "0", name
+    full_pos, maj_pos, device = nil, '0', name
     # If the name contains a number, use it as the id
     pos_idx = name.index(/\d/)
     if pos_idx
@@ -788,7 +788,7 @@ class VmConfig
       # This is to handle "Client Device" settings in VC that does not maintain the startconnected value.
       if k.include?('.devicetype') && v.include?('cdrom')
         dskKey = k.gsub('.devicetype', '')
-        fixup_keys << dskKey if @cfgHash[dskKey + ".filename"].to_s.delete('"').blank?
+        fixup_keys << dskKey if @cfgHash[dskKey + '.filename'].to_s.delete('"').blank?
       end
     end
     fixup_keys.each { |k| @cfgHash["#{k}.startconnected"] = 'false' }
@@ -930,7 +930,7 @@ class VmConfig
 
   def find_additional_disk_files(filename)
     ds, dir, name = split_filename(normalize_file_path(filename))
-    dfBase, ext = File.basename(name, ".*"), File.extname(name)
+    dfBase, ext = File.basename(name, '.*'), File.extname(name)
     %w(-flat -delta).each do |disk_type|
       search_filename = file_join(dir, dfBase + disk_type + ext)
       search_filename = "[#{ds}] " + search_filename unless ds.nil?

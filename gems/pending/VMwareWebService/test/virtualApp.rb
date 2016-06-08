@@ -8,7 +8,7 @@ require 'VMwareWebService/MiqVimBroker'
 #
 class ConsoleFormatter < Log4r::Formatter
   def format(event)
-    "**** " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+    '**** ' + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
   end
 end
 $vim_log = Log4r::Logger.new 'toplog'
@@ -18,8 +18,8 @@ $vim_log.add 'err_console'
 $stdout.sync = true
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
-DS_NAME   = "nas-ds-add-test"
+TARGET_HOST = raise 'please define'
+DS_NAME   = 'nas-ds-add-test'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -29,7 +29,7 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  puts "virtualApps from inventoryHash:"
+  puts 'virtualApps from inventoryHash:'
   vim.inventoryHash['VirtualApp'].each do |v|
     puts "\t" + v
   end
@@ -38,7 +38,7 @@ begin
   vmh = vim.virtualMachinesByMor
   vma = vim.inventoryHash['VirtualMachine']
 
-  puts "virtualAppsByMor:"
+  puts 'virtualAppsByMor:'
   vim.virtualAppsByMor.each do |mor, va|
     puts "\t#{mor}\t-> #{va.name} (parent = #{va.parent})"
     prp = vim.resourcePoolsByMor[va.parent] || vim.virtualAppsByMor[va.parent]

@@ -24,17 +24,17 @@ module MiqProvision::OptionsHelper
     source = VmOrTemplate.find_by_id(source_id)
     if source.nil?
       raise MiqException::MiqProvisionError,
-            _("Unable to find source Template/Vm with id [%{number}]") % {:number => source_id}
+            _('Unable to find source Template/Vm with id [%{number}]') % {:number => source_id}
     end
     ems = source.ext_management_system
     if ems.nil?
       raise MiqException::MiqProvisionError,
-            _("%{class_name} [%{name}] is not attached to a Management System") % {:class_name => source.class.name,
+            _('%{class_name} [%{name}] is not attached to a Management System') % {:class_name => source.class.name,
                                                                                    :name       => source.name}
     end
     unless MiqProvision::SUPPORTED_EMS_CLASSES.include?(ems.class.name)
       raise MiqException::MiqProvisionError,
-            _("%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning") %
+            _('%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning') %
               {:class_name     => source.class.name,
                :name           => source.name,
                :ems_class_name => ems.class.name,
@@ -42,7 +42,7 @@ module MiqProvision::OptionsHelper
     end
     if ems.missing_credentials?
       raise MiqException::MiqProvisionError,
-            _("%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> with missing credentials") %
+            _('%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> with missing credentials') %
               {:class_name     => source.class.name,
                :name           => source.name,
                :ems_class_name => ems.class.name,

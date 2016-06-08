@@ -101,7 +101,7 @@ class ManageIQ::Providers::Vmware::InfraManager
       dvportgroups = @vc_data[:dvportgroup] || {}
 
       dvswitches.each do |dvs_mor, dvs_data|
-        summary = dvs_data["summary"]
+        summary = dvs_data['summary']
         next if summary.nil?
 
         dvs_hosts = RefreshParser.get_dvswitch_hosts(dvswitches, dvs_mor)
@@ -110,7 +110,7 @@ class ManageIQ::Providers::Vmware::InfraManager
         dvswitch_inv[dvs_mor] = dvs_data
 
         dvportgroups.each do |dvpg_mor, dvpg_data|
-          if dvpg_data.fetch_path("config", "distributedVirtualSwitch") == dvs_mor
+          if dvpg_data.fetch_path('config', 'distributedVirtualSwitch') == dvs_mor
             dvportgroup_inv[dvpg_mor] = dvpg_data
           end
         end

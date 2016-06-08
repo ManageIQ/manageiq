@@ -13,12 +13,12 @@ describe ApiController do
     names.each.collect { |name| FactoryGirl.create(:vm_vmware, :name => name) }
   end
 
-  let(:vm1) { FactoryGirl.create(:vm_vmware, :name => "vm1") }
+  let(:vm1) { FactoryGirl.create(:vm_vmware, :name => 'vm1') }
 
-  describe "Querying vms" do
+  describe 'Querying vms' do
     before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
-    it "supports offset" do
+    it 'supports offset' do
       create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :offset => 2
@@ -26,7 +26,7 @@ describe ApiController do
       expect_query_result(:vms, 1, 3)
     end
 
-    it "supports limit" do
+    it 'supports limit' do
       create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :limit => 2
@@ -34,7 +34,7 @@ describe ApiController do
       expect_query_result(:vms, 2, 3)
     end
 
-    it "supports offset and limit" do
+    it 'supports offset and limit' do
       create_vms_by_name(%w(aa bb cc))
 
       run_get vms_url, :offset => 1, :limit => 1
@@ -42,374 +42,374 @@ describe ApiController do
       expect_query_result(:vms, 1, 3)
     end
 
-    it "supports paging via offset and limit" do
+    it 'supports paging via offset and limit' do
       create_vms_by_name %w(aa bb cc dd ee)
 
-      run_get vms_url, :offset => 0, :limit => 2, :sort_by => "name", :expand => "resources"
+      run_get vms_url, :offset => 0, :limit => 2, :sort_by => 'name', :expand => 'resources'
 
       expect_query_result(:vms, 2, 5)
-      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}])
+      expect_result_resources_to_match_hash([{'name' => 'aa'}, {'name' => 'bb'}])
 
-      run_get vms_url, :offset => 2, :limit => 2, :sort_by => "name", :expand => "resources"
+      run_get vms_url, :offset => 2, :limit => 2, :sort_by => 'name', :expand => 'resources'
 
       expect_query_result(:vms, 2, 5)
-      expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "dd"}])
+      expect_result_resources_to_match_hash([{'name' => 'cc'}, {'name' => 'dd'}])
 
-      run_get vms_url, :offset => 4, :limit => 2, :sort_by => "name", :expand => "resources"
+      run_get vms_url, :offset => 4, :limit => 2, :sort_by => 'name', :expand => 'resources'
 
       expect_query_result(:vms, 1, 5)
-      expect_result_resources_to_match_hash([{"name" => "ee"}])
+      expect_result_resources_to_match_hash([{'name' => 'ee'}])
     end
   end
 
-  describe "Sorting vms by attribute" do
+  describe 'Sorting vms by attribute' do
     before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
-    it "supports ascending order" do
+    it 'supports ascending order' do
       create_vms_by_name %w(cc aa bb)
 
-      run_get vms_url, :sort_by => "name", :sort_order => "asc", :expand => "resources"
+      run_get vms_url, :sort_by => 'name', :sort_order => 'asc', :expand => 'resources'
 
       expect_query_result(:vms, 3, 3)
-      expect_result_resources_to_match_hash([{"name" => "aa"}, {"name" => "bb"}, {"name" => "cc"}])
+      expect_result_resources_to_match_hash([{'name' => 'aa'}, {'name' => 'bb'}, {'name' => 'cc'}])
     end
 
-    it "supports decending order" do
+    it 'supports decending order' do
       create_vms_by_name %w(cc aa bb)
 
-      run_get vms_url, :sort_by => "name", :sort_order => "desc", :expand => "resources"
+      run_get vms_url, :sort_by => 'name', :sort_order => 'desc', :expand => 'resources'
 
       expect_query_result(:vms, 3, 3)
-      expect_result_resources_to_match_hash([{"name" => "cc"}, {"name" => "bb"}, {"name" => "aa"}])
+      expect_result_resources_to_match_hash([{'name' => 'cc'}, {'name' => 'bb'}, {'name' => 'aa'}])
     end
 
-    it "supports case insensitive ordering" do
+    it 'supports case insensitive ordering' do
       create_vms_by_name %w(B c a)
 
-      run_get vms_url, :sort_by => "name", :sort_order => "asc", :sort_options => "ignore_case", :expand => "resources"
+      run_get vms_url, :sort_by => 'name', :sort_order => 'asc', :sort_options => 'ignore_case', :expand => 'resources'
 
       expect_query_result(:vms, 3, 3)
-      expect_result_resources_to_match_hash([{"name" => "a"}, {"name" => "B"}, {"name" => "c"}])
+      expect_result_resources_to_match_hash([{'name' => 'a'}, {'name' => 'B'}, {'name' => 'c'}])
     end
 
-    it "supports sorting with physical attributes" do
-      FactoryGirl.create(:vm_vmware, :vendor => "vmware", :name => "vmware_vm")
-      FactoryGirl.create(:vm_redhat, :vendor => "redhat", :name => "redhat_vm")
+    it 'supports sorting with physical attributes' do
+      FactoryGirl.create(:vm_vmware, :vendor => 'vmware', :name => 'vmware_vm')
+      FactoryGirl.create(:vm_redhat, :vendor => 'redhat', :name => 'redhat_vm')
 
-      run_get vms_url, :sort_by => "vendor", :sort_order => "asc", :expand => "resources"
+      run_get vms_url, :sort_by => 'vendor', :sort_order => 'asc', :expand => 'resources'
 
       expect_query_result(:vms, 2, 2)
-      expect_result_resources_to_match_hash([{"name" => "redhat_vm"}, {"name" => "vmware_vm"}])
+      expect_result_resources_to_match_hash([{'name' => 'redhat_vm'}, {'name' => 'vmware_vm'}])
     end
   end
 
-  describe "Filtering vms" do
+  describe 'Filtering vms' do
     before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
-    it "supports attribute equality test using double quotes" do
+    it 'supports attribute equality test using double quotes' do
       _vm1, vm2 = create_vms_by_name(%w(aa bb))
 
-      run_get vms_url, :expand => "resources", :filter => ['name="bb"']
+      run_get vms_url, :expand => 'resources', :filter => ['name="bb"']
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm2.name, 'guid' => vm2.guid}])
     end
 
-    it "supports attribute equality test using single quotes" do
+    it 'supports attribute equality test using single quotes' do
       vm1, _vm2 = create_vms_by_name(%w(aa bb))
 
-      run_get vms_url, :expand => "resources", :filter => ["name='aa'"]
+      run_get vms_url, :expand => 'resources', :filter => ["name='aa'"]
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid}])
     end
 
-    it "supports attribute pattern matching via %" do
+    it 'supports attribute pattern matching via %' do
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa_B2 bb aa_A1))
 
-      run_get vms_url, :expand => "resources", :filter => ["name='aa%'"], :sort_by => "name"
+      run_get vms_url, :expand => 'resources', :filter => ["name='aa%'"], :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm3.name, "guid" => vm3.guid},
-                                             {"name" => vm1.name, "guid" => vm1.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm3.name, 'guid' => vm3.guid},
+                                             {'name' => vm1.name, 'guid' => vm1.guid}])
     end
 
-    it "supports attribute pattern matching via *" do
+    it 'supports attribute pattern matching via *' do
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa_B2 bb aa_A1))
 
-      run_get vms_url, :expand => "resources", :filter => ["name='aa*'"], :sort_by => "name"
+      run_get vms_url, :expand => 'resources', :filter => ["name='aa*'"], :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm3.name, "guid" => vm3.guid},
-                                             {"name" => vm1.name, "guid" => vm1.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm3.name, 'guid' => vm3.guid},
+                                             {'name' => vm1.name, 'guid' => vm1.guid}])
     end
 
-    it "supports inequality test via !=" do
+    it 'supports inequality test via !=' do
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
-      run_get vms_url, :expand => "resources", :filter => ["name!='b%'"], :sort_by => "name"
+      run_get vms_url, :expand => 'resources', :filter => ["name!='b%'"], :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
-                                             {"name" => vm3.name, "guid" => vm3.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid},
+                                             {'name' => vm3.name, 'guid' => vm3.guid}])
     end
 
-    it "supports NULL/nil equality test via =" do
+    it 'supports NULL/nil equality test via =' do
       vm1, vm2 = create_vms_by_name(%w(aa bb))
       vm2.update_attributes!(:retired => true)
 
-      run_get vms_url, :expand => "resources", :filter => ["retired=NULL"]
+      run_get vms_url, :expand => 'resources', :filter => ['retired=NULL']
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid}])
     end
 
-    it "supports NULL/nil inequality test via !=" do
+    it 'supports NULL/nil inequality test via !=' do
       _vm1, vm2 = create_vms_by_name(%w(aa bb))
       vm2.update_attributes!(:retired => true)
 
-      run_get vms_url, :expand => "resources", :filter => ["retired!=nil"]
+      run_get vms_url, :expand => 'resources', :filter => ['retired!=nil']
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm2.name, 'guid' => vm2.guid}])
     end
 
-    it "supports numerical less than comparison via <" do
+    it 'supports numerical less than comparison via <' do
       vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
-      run_get vms_url, :expand => "resources", :filter => ["id < #{vm3.id}"], :sort_by => "name"
+      run_get vms_url, :expand => 'resources', :filter => ["id < #{vm3.id}"], :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
-                                             {"name" => vm2.name, "guid" => vm2.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid},
+                                             {'name' => vm2.name, 'guid' => vm2.guid}])
     end
 
-    it "supports numerical less than or equal comparison via <=" do
+    it 'supports numerical less than or equal comparison via <=' do
       vm1, vm2, _vm3 = create_vms_by_name(%w(aa bb cc))
 
-      run_get vms_url, :expand => "resources", :filter => ["id <= #{vm2.id}"], :sort_by => "name"
+      run_get vms_url, :expand => 'resources', :filter => ["id <= #{vm2.id}"], :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
-                                             {"name" => vm2.name, "guid" => vm2.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid},
+                                             {'name' => vm2.name, 'guid' => vm2.guid}])
     end
 
-    it "support greater than numerical comparison via >" do
+    it 'support greater than numerical comparison via >' do
       vm1, vm2 = create_vms_by_name(%w(aa bb))
 
-      run_get vms_url, :expand => "resources", :filter => ["id > #{vm1.id}"], :sort_by => "name"
+      run_get vms_url, :expand => 'resources', :filter => ["id > #{vm1.id}"], :sort_by => 'name'
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm2.name, 'guid' => vm2.guid}])
     end
 
-    it "supports greater or equal than numerical comparison via >=" do
+    it 'supports greater or equal than numerical comparison via >=' do
       _vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
-      run_get vms_url, :expand => "resources", :filter => ["id >= #{vm2.id}"], :sort_by => "name"
+      run_get vms_url, :expand => 'resources', :filter => ["id >= #{vm2.id}"], :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm2.name, "guid" => vm2.guid},
-                                             {"name" => vm3.name, "guid" => vm3.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm2.name, 'guid' => vm2.guid},
+                                             {'name' => vm3.name, 'guid' => vm3.guid}])
     end
 
-    it "supports compound logical OR comparisons" do
+    it 'supports compound logical OR comparisons' do
       vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
-      run_get vms_url, :expand  => "resources",
+      run_get vms_url, :expand  => 'resources',
                        :filter  => ["id = #{vm1.id}", "or id > #{vm2.id}"],
-                       :sort_by => "name"
+                       :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
-                                             {"name" => vm3.name, "guid" => vm3.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid},
+                                             {'name' => vm3.name, 'guid' => vm3.guid}])
     end
 
-    it "supports multiple logical AND comparisons" do
+    it 'supports multiple logical AND comparisons' do
       vm1, _vm2 = create_vms_by_name(%w(aa bb))
 
-      run_get vms_url, :expand => "resources",
+      run_get vms_url, :expand => 'resources',
                        :filter => ["id = #{vm1.id}", "name = #{vm1.name}"]
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid}])
     end
 
-    it "supports multiple comparisons with both AND and OR" do
+    it 'supports multiple comparisons with both AND and OR' do
       vm1, vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
-      run_get vms_url, :expand  => "resources",
+      run_get vms_url, :expand  => 'resources',
                        :filter  => ["id = #{vm1.id}", "name = #{vm1.name}", "or id > #{vm2.id}"],
-                       :sort_by => "name"
+                       :sort_by => 'name'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid},
-                                             {"name" => vm3.name, "guid" => vm3.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid},
+                                             {'name' => vm3.name, 'guid' => vm3.guid}])
     end
 
-    it "supports filtering by attributes of associations" do
-      host1 = FactoryGirl.create(:host, :name => "foo")
-      host2 = FactoryGirl.create(:host, :name => "bar")
-      vm1 = FactoryGirl.create(:vm_vmware, :name => "baz", :host => host1)
-      _vm2 = FactoryGirl.create(:vm_vmware, :name => "qux", :host => host2)
+    it 'supports filtering by attributes of associations' do
+      host1 = FactoryGirl.create(:host, :name => 'foo')
+      host2 = FactoryGirl.create(:host, :name => 'bar')
+      vm1 = FactoryGirl.create(:vm_vmware, :name => 'baz', :host => host1)
+      _vm2 = FactoryGirl.create(:vm_vmware, :name => 'qux', :host => host2)
 
-      run_get vms_url, :expand => "resources",
+      run_get vms_url, :expand => 'resources',
                        :filter => ["host.name='foo'"]
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm1.name, "guid" => vm1.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm1.name, 'guid' => vm1.guid}])
     end
 
     it "does not support filtering by attributes of associations' associations" do
-      run_get vms_url, :expand => "resources", :filter => ["host.hardware.memory_mb>1024"]
+      run_get vms_url, :expand => 'resources', :filter => ['host.hardware.memory_mb>1024']
 
       expect_bad_request(/Filtering of attributes with more than one association away is not supported/)
     end
 
-    it "supports filtering by virtual string attributes" do
-      host_a = FactoryGirl.create(:host, :name => "aa")
-      host_b = FactoryGirl.create(:host, :name => "bb")
+    it 'supports filtering by virtual string attributes' do
+      host_a = FactoryGirl.create(:host, :name => 'aa')
+      host_b = FactoryGirl.create(:host, :name => 'bb')
       vm_a = FactoryGirl.create(:vm, :host => host_a)
       _vm_b = FactoryGirl.create(:vm, :host => host_b)
 
-      run_get(vms_url, :filter => ["host_name='aa'"], :expand => "resources")
+      run_get(vms_url, :filter => ["host_name='aa'"], :expand => 'resources')
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm_a.name, "guid" => vm_a.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm_a.name, 'guid' => vm_a.guid}])
     end
 
-    it "supports flexible filtering by virtual string attributes" do
-      host_a = FactoryGirl.create(:host, :name => "ab")
-      host_b = FactoryGirl.create(:host, :name => "cd")
+    it 'supports flexible filtering by virtual string attributes' do
+      host_a = FactoryGirl.create(:host, :name => 'ab')
+      host_b = FactoryGirl.create(:host, :name => 'cd')
       vm_a = FactoryGirl.create(:vm, :host => host_a)
       _vm_b = FactoryGirl.create(:vm, :host => host_b)
 
-      run_get(vms_url, :filter => ["host_name='a%'"], :expand => "resources")
+      run_get(vms_url, :filter => ["host_name='a%'"], :expand => 'resources')
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm_a.name, "guid" => vm_a.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm_a.name, 'guid' => vm_a.guid}])
     end
 
-    it "supports filtering by virtual boolean attributes" do
+    it 'supports filtering by virtual boolean attributes' do
       ems = FactoryGirl.create(:ext_management_system)
       storage = FactoryGirl.create(:storage)
       host = FactoryGirl.create(:host, :storages => [storage])
       _vm = FactoryGirl.create(:vm, :host => host, :ext_management_system => ems)
       archived_vm = FactoryGirl.create(:vm)
 
-      run_get(vms_url, :filter => ["archived=true"], :expand => "resources")
+      run_get(vms_url, :filter => ['archived=true'], :expand => 'resources')
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => archived_vm.name, "guid" => archived_vm.guid}])
+      expect_result_resources_to_match_hash([{'name' => archived_vm.name, 'guid' => archived_vm.guid}])
     end
 
-    it "supports filtering by comparison of virtual integer attributes" do
+    it 'supports filtering by comparison of virtual integer attributes' do
       hardware_1 = FactoryGirl.create(:hardware, :cpu_sockets => 4)
       hardware_2 = FactoryGirl.create(:hardware, :cpu_sockets => 8)
       _vm_1 = FactoryGirl.create(:vm, :hardware => hardware_1)
       vm_2 = FactoryGirl.create(:vm, :hardware => hardware_2)
 
-      run_get(vms_url, :filter => ["num_cpu > 4"], :expand => "resources")
+      run_get(vms_url, :filter => ['num_cpu > 4'], :expand => 'resources')
 
       expect_query_result(:vms, 1, 2)
-      expect_result_resources_to_match_hash([{"name" => vm_2.name, "guid" => vm_2.guid}])
+      expect_result_resources_to_match_hash([{'name' => vm_2.name, 'guid' => vm_2.guid}])
     end
   end
 
-  describe "Querying vm attributes" do
-    it "supports requests specific attributes" do
+  describe 'Querying vm attributes' do
+    it 'supports requests specific attributes' do
       api_basic_authorize collection_action_identifier(:vms, :read, :get)
       vm = create_vms_by_name(%w(aa)).first
 
-      run_get vms_url, :expand => "resources", :attributes => "name,vendor"
+      run_get vms_url, :expand => 'resources', :attributes => 'name,vendor'
 
       expect_query_result(:vms, 1, 1)
-      expect_result_resources_to_have_only_keys("resources", %w(id href name vendor))
-      expect_result_resources_to_match_hash([{"name" => "aa", "id" => vm.id, "href" => vms_url(vm.id)}])
+      expect_result_resources_to_have_only_keys('resources', %w(id href name vendor))
+      expect_result_resources_to_match_hash([{'name' => 'aa', 'id' => vm.id, 'href' => vms_url(vm.id)}])
     end
 
-    it "skips requests of invalid attributes" do
+    it 'skips requests of invalid attributes' do
       api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
 
-      run_get vms_url(vm1.id), :attributes => "bogus"
+      run_get vms_url(vm1.id), :attributes => 'bogus'
 
       expect_request_success
       expect_result_to_have_keys(%w(id href name vendor))
     end
   end
 
-  describe "Querying vms by tag" do
-    it "is supported" do
+  describe 'Querying vms by tag' do
+    it 'is supported' do
       api_basic_authorize collection_action_identifier(:vms, :read, :get)
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       dept = FactoryGirl.create(:classification_department)
-      FactoryGirl.create(:classification_tag, :name => "finance", :description => "Finance", :parent => dept)
-      Classification.classify(vm1, "department", "finance")
-      Classification.classify(vm3, "department", "finance")
+      FactoryGirl.create(:classification_tag, :name => 'finance', :description => 'Finance', :parent => dept)
+      Classification.classify(vm1, 'department', 'finance')
+      Classification.classify(vm3, 'department', 'finance')
 
-      run_get vms_url, :expand  => "resources", :by_tag => "/department/finance"
+      run_get vms_url, :expand  => 'resources', :by_tag => '/department/finance'
 
       expect_query_result(:vms, 2, 3)
-      expect_result_resources_to_include_data("resources", "name" => [vm1.name, vm3.name])
+      expect_result_resources_to_include_data('resources', 'name' => [vm1.name, vm3.name])
     end
   end
 
-  describe "Querying vms" do
+  describe 'Querying vms' do
     before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
 
-    it "and sorted by name succeeeds with unreferenced class" do
-      run_get vms_url, :sort_by => "name", :expand => "resources"
+    it 'and sorted by name succeeeds with unreferenced class' do
+      run_get vms_url, :sort_by => 'name', :expand => 'resources'
 
       expect_query_result(:vms, 0, 0)
     end
 
-    it "by invalid attribute" do
-      run_get vms_url, :sort_by => "bad_attribute", :expand => "resources"
+    it 'by invalid attribute' do
+      run_get vms_url, :sort_by => 'bad_attribute', :expand => 'resources'
 
-      expect_bad_request("bad_attribute is not a valid attribute")
+      expect_bad_request('bad_attribute is not a valid attribute')
     end
 
-    it "is supported without expanding resources" do
+    it 'is supported without expanding resources' do
       create_vms_by_name(%w(aa bb))
 
       run_get vms_url
 
       expect_query_result(:vms, 2, 2)
-      expect_result_resources_to_have_only_keys("resources", %w(href))
+      expect_result_resources_to_have_only_keys('resources', %w(href))
     end
 
-    it "supports expanding resources" do
+    it 'supports expanding resources' do
       create_vms_by_name(%w(aa bb))
 
-      run_get vms_url, :expand => "resources"
+      run_get vms_url, :expand => 'resources'
 
       expect_query_result(:vms, 2, 2)
-      expect_result_resources_to_include_keys("resources", %w(id href guid name vendor))
+      expect_result_resources_to_include_keys('resources', %w(id href guid name vendor))
     end
 
-    it "supports expanding resources and subcollections" do
+    it 'supports expanding resources and subcollections' do
       vm1 = create_vms_by_name(%w(aa)).first
-      FactoryGirl.create(:guest_application, :vm_or_template_id => vm1.id, :name => "LibreOffice")
+      FactoryGirl.create(:guest_application, :vm_or_template_id => vm1.id, :name => 'LibreOffice')
 
-      run_get vms_url, :expand => "resources,software"
+      run_get vms_url, :expand => 'resources,software'
 
       expect_query_result(:vms, 1, 1)
-      expect_result_resources_to_include_keys("resources", %w(id href guid name vendor software))
+      expect_result_resources_to_include_keys('resources', %w(id href guid name vendor software))
     end
   end
 
-  describe "Querying resources" do
-    it "does not return actions if not entitled" do
+  describe 'Querying resources' do
+    it 'does not return actions if not entitled' do
       api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id)
 
       expect_request_success
-      expect(response_hash).to_not have_key("actions")
+      expect(response_hash).to_not have_key('actions')
     end
 
-    it "returns actions if authorized" do
+    it 'returns actions if authorized' do
       api_basic_authorize action_identifier(:vms, :edit), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id)
@@ -418,19 +418,19 @@ describe ApiController do
       expect_result_to_have_keys(%w(id href name vendor actions))
     end
 
-    it "returns correct actions if authorized as such" do
+    it 'returns correct actions if authorized as such' do
       api_basic_authorize action_identifier(:vms, :suspend), action_identifier(:vms, :read, :resource_actions, :get)
 
       run_get vms_url(vm1.id)
 
       expect_request_success
       expect_result_to_have_keys(%w(id href name vendor actions))
-      actions = response_hash["actions"]
+      actions = response_hash['actions']
       expect(actions.size).to eq(1)
-      expect(actions.first["name"]).to eq("suspend")
+      expect(actions.first['name']).to eq('suspend')
     end
 
-    it "returns multiple actions if authorized as such" do
+    it 'returns multiple actions if authorized as such' do
       api_basic_authorize(action_identifier(:vms, :start),
                           action_identifier(:vms, :stop),
                           action_identifier(:vms, :read, :resource_actions, :get))
@@ -439,40 +439,40 @@ describe ApiController do
 
       expect_request_success
       expect_result_to_have_keys(%w(id href name vendor actions))
-      expect(response_hash["actions"].collect { |a| a["name"] }).to match_array(%w(start stop))
+      expect(response_hash['actions'].collect { |a| a['name'] }).to match_array(%w(start stop))
     end
 
-    it "returns actions if asked for with physical attributes" do
+    it 'returns actions if asked for with physical attributes' do
       api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
-      run_get vms_url(vm1.id), :attributes => "name,vendor,actions"
+      run_get vms_url(vm1.id), :attributes => 'name,vendor,actions'
 
       expect_request_success
       expect_result_to_have_only_keys(%w(id href name vendor actions))
     end
 
-    it "does not return actions if asking for a physical attribute" do
+    it 'does not return actions if asking for a physical attribute' do
       api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
-      run_get vms_url(vm1.id), :attributes => "name"
+      run_get vms_url(vm1.id), :attributes => 'name'
 
       expect_request_success
       expect_result_to_have_only_keys(%w(id href name))
     end
 
-    it "does return actions if asking for virtual attributes" do
+    it 'does return actions if asking for virtual attributes' do
       api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
-      run_get vms_url(vm1.id), :attributes => "disconnected"
+      run_get vms_url(vm1.id), :attributes => 'disconnected'
 
       expect_request_success
       expect_result_to_have_keys(%w(id href name vendor disconnected actions))
     end
 
-    it "does not return actions if asking for physical and virtual attributes" do
+    it 'does not return actions if asking for physical and virtual attributes' do
       api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
 
-      run_get vms_url(vm1.id), :attributes => "name,disconnected"
+      run_get vms_url(vm1.id), :attributes => 'name,disconnected'
 
       expect_request_success
       expect_result_to_have_only_keys(%w(id href name disconnected))

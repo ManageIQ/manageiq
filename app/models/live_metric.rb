@@ -45,10 +45,10 @@ class LiveMetric < ActsAsArModel
     processed = {}
     parsed_conditions.each do |condition|
       case condition[:column]
-      when "resource_type"         then processed[:resource_type] = condition[:value]
-      when "resource_id"           then processed[:resource_id] = condition[:value]
-      when "timestamp"             then process_timestamps(processed, condition)
-      when "capture_interval_name" then processed[:interval_name] = condition[:value]
+      when 'resource_type'         then processed[:resource_type] = condition[:value]
+      when 'resource_id'           then processed[:resource_id] = condition[:value]
+      when 'timestamp'             then process_timestamps(processed, condition)
+      when 'capture_interval_name' then processed[:interval_name] = condition[:value]
       end
     end
     validate_conditions(processed)
@@ -89,8 +89,8 @@ class LiveMetric < ActsAsArModel
 
   def self.fetch_live_metrics(resource, metrics, start_time, end_time, interval_name)
     interval = case interval_name
-               when "daily"  then 24 * 60 * 60
-               when "hourly" then 60 * 60
+               when 'daily'  then 24 * 60 * 60
+               when 'hourly' then 60 * 60
                else 60
                end
     begin

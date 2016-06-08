@@ -5,7 +5,7 @@ module MiqServer::ConfigurationManagement
     has_many :settings_changes, :as => :resource, :dependent => :destroy
   end
 
-  def get_config(type = "vmdb")
+  def get_config(type = 'vmdb')
     VMDB::Config.for_resource(type, self)
   end
 

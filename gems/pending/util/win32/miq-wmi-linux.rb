@@ -13,8 +13,8 @@ module WmiLinux
 
     # Check for usernames that supplied the domain as well
     # Example manageiq\user1 or just user1
-    if @username.include?("\\")
-      domain, name = @username.split("\\")
+    if @username.include?('\\')
+      domain, name = @username.split('\\')
       return "#{domain}/#{name}"
     end
 
@@ -49,8 +49,8 @@ module WmiLinux
 
   # Example of using winexe.  Likely will not uses because it relies on a remote installed service
   def get_windows_version
-    stdout_text = ""
-    stderr_text = ""
+    stdout_text = ''
+    stderr_text = ''
     command_line = "winexe -U #{@server}/#{@username} //#{@server} \"cmd\""
     Open3.popen3(command_line) do |stdin, stdout, stderr|
       Thread.new { loop { x = stderr.gets; stderr_text << x } } # ; puts "Err stream:    #{x}"
@@ -69,14 +69,14 @@ module WmiLinux
   end
 
   def run_query(wmiQuery)
-    command_result = AwesomeSpawn.run("wmic", :params => {"-U" => [logon_username],
+    command_result = AwesomeSpawn.run('wmic', :params => {'-U' => [logon_username],
                               :password => @password, :namespace => @namespace,
                               nil => ["//#{@server}", wmiQuery]})
 
     lines = command_result.output.lines
     raise lines.last unless lines[0].include?('CLASS: ')
 
-    wmi_class_name = lines[0].split(": ").last.strip
+    wmi_class_name = lines[0].split(': ').last.strip
     wmi_object = []
     col_names = lines[1].split('|').collect { |n| n.strip.to_sym }
     lines[2..-1].each do |data|
@@ -124,8 +124,8 @@ module WmiLinux
   # the separator used by the linux wmic program.
   def value_fixup(wmi_class_name, values, col_names)
     fixup_column_name = case wmi_class_name
-                        when "Win32_Process" then :OSName
-                        when "Win32_OperatingSystem" then :Name
+                        when 'Win32_Process' then :OSName
+                        when 'Win32_OperatingSystem' then :Name
                         end
     idx = 0
     col_names.each { |c| values[idx] += "|#{values.delete_at(idx + 1)}|#{values.delete_at(idx + 1)}" if c == fixup_column_name; idx += 1 } unless fixup_column_name.nil?

@@ -4,7 +4,7 @@ module MiqServer::WorkerManagement::Monitor::Stop
   def clean_stop_worker_queue_items
     MiqQueue.where(
       :class_name  => self.class.name,
-      :method_name => "stop_worker",
+      :method_name => 'stop_worker',
       :queue_name  => 'miq_server',
       :server_guid => guid
     ).destroy_all
@@ -32,7 +32,7 @@ module MiqServer::WorkerManagement::Monitor::Stop
 
     msg = "Stopping #{w.format_full_log_msg}, status [#{w.status}]..."
     _log.info(msg)
-    MiqEvent.raise_evm_event_queue(self, "evm_worker_stop", :event_details => msg, :type => w.type)
+    MiqEvent.raise_evm_event_queue(self, 'evm_worker_stop', :event_details => msg, :type => w.type)
 
     worker_set_monitor_status(w.pid, monitor_status)
     worker_set_monitor_reason(w.pid, monitor_reason)

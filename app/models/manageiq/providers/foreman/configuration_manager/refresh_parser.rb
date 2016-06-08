@@ -42,18 +42,18 @@ module ManageIQ::Providers
         def_org = tax_refs if indexes[:organizations].keys == %w(0)
         recs.collect do |profile|
           {
-            :type                                  => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile",
-            :manager_ref                           => profile["id"].to_s,
-            :parent_ref                            => (profile["ancestry"] || "").split("/").last.presence,
-            :name                                  => profile["name"],
-            :description                           => profile["title"],
+            :type                                  => 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile',
+            :manager_ref                           => profile['id'].to_s,
+            :parent_ref                            => (profile['ancestry'] || '').split('/').last.presence,
+            :name                                  => profile['name'],
+            :description                           => profile['title'],
             :direct_configuration_tag_ids          => tag_id_lookup(indexes, profile),
             :configuration_tags_hash               => tag_hash(profile),
-            :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], profile["operatingsystem_id"]),
-            :direct_customization_script_medium_id => id_lookup(indexes[:media], profile["medium_id"]),
-            :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], profile["ptable_id"]),
-            :configuration_location_ids            => ids_lookup(indexes[:locations], profile["locations"] || def_loc),
-            :configuration_organization_ids        => ids_lookup(indexes[:organizations], profile["organizations"] || def_org),
+            :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], profile['operatingsystem_id']),
+            :direct_customization_script_medium_id => id_lookup(indexes[:media], profile['medium_id']),
+            :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], profile['ptable_id']),
+            :configuration_location_ids            => ids_lookup(indexes[:locations], profile['locations'] || def_loc),
+            :configuration_organization_ids        => ids_lookup(indexes[:organizations], profile['organizations'] || def_org),
           }
         end.tap do |profiles|
           # populate profiles with rolled up values
@@ -74,8 +74,8 @@ module ManageIQ::Providers
             p[:configuration_tag_ids] = tag_id_lookup(indexes, rollup({}, configuration_tag_hashes))
 
             invalid = []
-            invalid << "location" if p[:configuration_location_ids].empty?
-            invalid << "organization" if p[:configuration_organization_ids].empty?
+            invalid << 'location' if p[:configuration_location_ids].empty?
+            invalid << 'organization' if p[:configuration_organization_ids].empty?
             _log.warn "hostgroup #{p[:name]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
           profiles.each { |p| p.delete(:configuration_tags_hash) }
@@ -88,22 +88,22 @@ module ManageIQ::Providers
         def_org = 0 if indexes[:organizations].keys == %w(0)
         recs.collect do |cs|
           {
-            :type                                  => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
-            :manager_ref                           => cs["id"].to_s,
-            :hostname                              => cs["name"],
-            :configuration_profile                 => id_lookup(indexes[:profiles], cs["hostgroup_id"]),
-            :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], cs["operatingsystem_id"]),
-            :direct_customization_script_medium_id => id_lookup(indexes[:media], cs["medium_id"]),
-            :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], cs["ptable_id"]),
+            :type                                  => 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem',
+            :manager_ref                           => cs['id'].to_s,
+            :hostname                              => cs['name'],
+            :configuration_profile                 => id_lookup(indexes[:profiles], cs['hostgroup_id']),
+            :direct_operating_system_flavor_id     => id_lookup(indexes[:flavors], cs['operatingsystem_id']),
+            :direct_customization_script_medium_id => id_lookup(indexes[:media], cs['medium_id']),
+            :direct_customization_script_ptable_id => id_lookup(indexes[:ptables], cs['ptable_id']),
             :direct_configuration_tag_ids          => tag_id_lookup(indexes, cs),
             :configuration_tags_hash               => tag_hash(cs),
-            :last_checkin                          => cs["last_compile"],
-            :build_state                           => cs["build"] ? "pending" : nil,
-            :ipaddress                             => cs["ip"],
-            :mac_address                           => cs["mac"],
-            :ipmi_present                          => cs["sp_ip"].present?,
-            :configuration_location_id             => id_lookup(indexes[:locations], cs["location_id"] || def_loc),
-            :configuration_organization_id         => id_lookup(indexes[:organizations], cs["organization_id"] || def_org),
+            :last_checkin                          => cs['last_compile'],
+            :build_state                           => cs['build'] ? 'pending' : nil,
+            :ipaddress                             => cs['ip'],
+            :mac_address                           => cs['mac'],
+            :ipmi_present                          => cs['sp_ip'].present?,
+            :configuration_location_id             => id_lookup(indexes[:locations], cs['location_id'] || def_loc),
+            :configuration_organization_id         => id_lookup(indexes[:organizations], cs['organization_id'] || def_org),
           }
         end.tap do |systems|
           # if the system doesn't have a value, use the rolled up profile value
@@ -123,8 +123,8 @@ module ManageIQ::Providers
             )
 
             invalid = []
-            invalid << "location" if s[:configuration_location_id].nil?
-            invalid << "organization" if s[:configuration_organization_id].nil?
+            invalid << 'location' if s[:configuration_location_id].nil?
+            invalid << 'organization' if s[:configuration_organization_id].nil?
             _log.warn "host #{s[:hostname]} missing: #{invalid.join(", ")}" unless invalid.empty?
           end
           systems.each { |s| s.delete(:configuration_tags_hash) }
@@ -144,19 +144,19 @@ module ManageIQ::Providers
         end
       end
 
-      def ids_lookup(ids, records, id_key = "id")
+      def ids_lookup(ids, records, id_key = 'id')
         (records || []).collect { |record| id_lookup(ids, record[id_key]) }.compact
       end
 
       # default taxonomy reference (locations and organizations)
       def tax_refs
-        [{"id" => 0, "name" => "Default", "title" => "Default"}]
+        [{'id' => 0, 'name' => 'Default', 'title' => 'Default'}]
       end
 
       # given an array of hashes, squash the values together, last value taking precidence
       def rollup(target, records)
         records.each do |record|
-          target.merge!(record.select { |_n, v| !v.nil? && v != "" })
+          target.merge!(record.select { |_n, v| !v.nil? && v != '' })
         end
         target
       end
@@ -164,11 +164,11 @@ module ManageIQ::Providers
       # lookup all the configuration_tags and return ids (from the indexes)
       def tag_id_lookup(indexes, record)
         [
-          id_lookup(indexes[:architectures], record["architecture_id"]),
-          id_lookup(indexes[:compute_profiles], record["compute_profile_id"]),
-          id_lookup(indexes[:domains], record["domain_id"]),
-          id_lookup(indexes[:environments], record["environment_id"]),
-          id_lookup(indexes[:realms], record["realm_id"]),
+          id_lookup(indexes[:architectures], record['architecture_id']),
+          id_lookup(indexes[:compute_profiles], record['compute_profile_id']),
+          id_lookup(indexes[:domains], record['domain_id']),
+          id_lookup(indexes[:environments], record['environment_id']),
+          id_lookup(indexes[:realms], record['realm_id']),
         ].compact
       end
 

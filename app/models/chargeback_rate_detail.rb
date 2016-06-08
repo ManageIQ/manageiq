@@ -1,7 +1,7 @@
 class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
-  belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
-  belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
+  belongs_to :detail_measure, :class_name => 'ChargebackRateDetailMeasure', :foreign_key => :chargeback_rate_detail_measure_id
+  belongs_to :detail_currency, :class_name => 'ChargebackRateDetailCurrency', :foreign_key => :chargeback_rate_detail_currency_id
   has_many :chargeback_tiers, :dependent => :destroy, :autosave => true
 
   default_scope { order(:group => :asc, :description => :asc) }
@@ -26,11 +26,11 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   PER_TIME_MAP = {
-    :hourly  => "Hour",
-    :daily   => "Day",
-    :weekly  => "Week",
-    :monthly => "Month",
-    :yearly  => "Year"
+    :hourly  => 'Hour',
+    :daily   => 'Day',
+    :weekly  => 'Week',
+    :monthly => 'Month',
+    :yearly  => 'Year'
   }
 
   def cost(value)
@@ -42,11 +42,11 @@ class ChargebackRateDetail < ApplicationRecord
 
   def hourly(rate)
     case per_time
-    when "hourly"  then rate
-    when "daily"   then rate / 24
-    when "weekly"  then rate / 24 / 7
-    when "monthly" then rate / 24 / 30
-    when "yearly"  then rate / 24 / 365
+    when 'hourly'  then rate
+    when 'daily'   then rate / 24
+    when 'weekly'  then rate / 24 / 7
+    when 'monthly' then rate / 24 / 30
+    when 'yearly'  then rate / 24 / 365
     else raise "rate time unit of '#{per_time}' not supported"
     end
 
@@ -64,13 +64,13 @@ class ChargebackRateDetail < ApplicationRecord
 
   def rate_adjustment(hr)
     case metric
-    when "cpu_usagemhz_rate_average" then
+    when 'cpu_usagemhz_rate_average' then
       per_unit == 'megahertz' ? hr : hr = adjustment_measure(hr, 'megahertz')
-    when "derived_memory_used", "derived_memory_available" then
+    when 'derived_memory_used', 'derived_memory_available' then
       per_unit == 'megabytes' ? hr : hr = adjustment_measure(hr, 'megabytes')
-    when "net_usage_rate_average", "disk_usage_rate_average" then
+    when 'net_usage_rate_average', 'disk_usage_rate_average' then
       per_unit == 'kbps' ? hr : hr = adjustment_measure(hr, 'kbps')
-    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then
+    when 'derived_vm_allocated_disk_storage', 'derived_vm_used_disk_storage' then
       per_unit == 'bytes' ? hr : hr = adjustment_measure(hr, 'bytes')
     else hr
     end
@@ -102,7 +102,7 @@ class ChargebackRateDetail < ApplicationRecord
       # Example: 10.00 Monthly
       "#{fixed_rate + variable_rate} #{per_time.to_s.capitalize}"
     else
-      s = ""
+      s = ''
       ChargebackTier.where(:chargeback_rate_detail_id => id).each do |tier|
         # Example: Daily @ .02 per MHz from 0.0 to Infinity
         s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + "\
@@ -165,8 +165,8 @@ class ChargebackRateDetail < ApplicationRecord
       break if error || ambiguous_error
     end
 
-    errors.add(:chargeback_tiers, _("must start at zero and not contain any gaps between start and prior end value.")) if error
-    errors.add(:chargeback_tiers, _("contains ambiguous intervals.")) if ambiguous_error
+    errors.add(:chargeback_tiers, _('must start at zero and not contain any gaps between start and prior end value.')) if error
+    errors.add(:chargeback_tiers, _('contains ambiguous intervals.')) if ambiguous_error
 
     !(error || ambiguous_error)
   end
@@ -198,7 +198,7 @@ class ChargebackRateDetail < ApplicationRecord
   def self.default_rate_details_for(rate_type)
     rate_details = []
 
-    fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
+    fixture_file = File.join(FIXTURE_DIR, 'chargeback_rates.yml')
     fixture = File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
     fixture.each do |chargeback_rate|
       next unless chargeback_rate[:rate_type] == rate_type

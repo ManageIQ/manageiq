@@ -6,7 +6,7 @@ class EmsCluster < ApplicationRecord
 
   acts_as_miq_taggable
 
-  belongs_to  :ext_management_system, :foreign_key => "ems_id"
+  belongs_to  :ext_management_system, :foreign_key => 'ems_id'
   has_many    :hosts, :dependent => :nullify
   has_many    :vms_and_templates, :dependent => :nullify
   has_many    :miq_templates, :inverse_of => :ems_cluster
@@ -16,7 +16,7 @@ class EmsCluster < ApplicationRecord
   has_many    :metric_rollups,         :as => :resource  # Destroy will be handled by purger
   has_many    :vim_performance_states, :as => :resource  # Destroy will be handled by purger
 
-  has_many    :policy_events, -> { order "timestamp" }
+  has_many    :policy_events, -> { order 'timestamp' }
   has_many    :miq_events,         :as => :target,   :dependent => :destroy
   has_many    :miq_alert_statuses, :as => :resource, :dependent => :destroy
 
@@ -34,8 +34,8 @@ class EmsCluster < ApplicationRecord
   virtual_has_many :resource_pools, :uses => :all_relationships
   virtual_has_many :failover_hosts, :uses => :hosts
 
-  virtual_has_many :base_storage_extents, :class_name => "CimStorageExtent"
-  virtual_has_many :storage_systems,      :class_name => "CimComputerSystem"
+  virtual_has_many :base_storage_extents, :class_name => 'CimStorageExtent'
+  virtual_has_many :storage_systems,      :class_name => 'CimComputerSystem'
   virtual_has_many :file_shares,          :class_name => 'SniaFileShare'
   virtual_has_many :storage_volumes,      :class_name => 'CimStorageVolume'
 
@@ -48,7 +48,7 @@ class EmsCluster < ApplicationRecord
   alias_method :last_scan_on, :last_drift_state_timestamp
 
   include RelationshipMixin
-  self.default_relationship_type = "ems_metadata"
+  self.default_relationship_type = 'ems_metadata'
 
   include AggregationMixin
   # Since we've overridden the implementation of methods from AggregationMixin,
@@ -99,7 +99,7 @@ class EmsCluster < ApplicationRecord
 
   def v_parent_datacenter
     dc = parent_datacenter
-    dc.nil? ? "" : dc.name
+    dc.nil? ? '' : dc.name
   end
 
   def v_qualified_desc
@@ -219,7 +219,7 @@ class EmsCluster < ApplicationRecord
 
   # Parent relationship methods
   def parent_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
+    detect_ancestor(:of_type => 'EmsFolder') { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
   end
 
   def parent_datacenter
@@ -243,36 +243,36 @@ class EmsCluster < ApplicationRecord
   end
 
   def event_where_clause(assoc = :ems_events)
-    return ["ems_cluster_id = ?", id] if assoc.to_sym == :policy_events
+    return ['ems_cluster_id = ?', id] if assoc.to_sym == :policy_events
 
-    cond = ["ems_cluster_id = ?"]
+    cond = ['ems_cluster_id = ?']
     cond_params = [id]
 
     ids = all_host_ids
     unless ids.empty?
-      cond << "host_id IN (?) OR dest_host_id IN (?)"
+      cond << 'host_id IN (?) OR dest_host_id IN (?)'
       cond_params += [ids, ids]
     end
 
     ids = all_vm_or_template_ids
     unless ids.empty?
-      cond << "vm_or_template_id IN (?) OR dest_vm_or_template_id IN (?)"
+      cond << 'vm_or_template_id IN (?) OR dest_vm_or_template_id IN (?)'
       cond_params += [ids, ids]
     end
 
-    cond_params.unshift(cond.join(" OR ")) unless cond.empty?
+    cond_params.unshift(cond.join(' OR ')) unless cond.empty?
     cond_params
   end
 
   def ems_events
     ewc = event_where_clause
     return [] if ewc.blank?
-    EmsEvent.where(ewc).order("timestamp").to_a
+    EmsEvent.where(ewc).order('timestamp').to_a
   end
 
   def scan
     zone = ext_management_system ? ext_management_system.my_zone : nil
-    MiqQueue.put(:class_name => self.class.to_s, :method_name => "save_drift_state", :instance_id => id, :zone => zone, :role => "smartstate")
+    MiqQueue.put(:class_name => self.class.to_s, :method_name => 'save_drift_state', :instance_id => id, :zone => zone, :role => 'smartstate')
   end
 
   def get_reserve(field)
@@ -291,9 +291,9 @@ class EmsCluster < ApplicationRecord
   def effective_resource(resource)
     resource = resource.to_s
     unless %w(cpu vcpu memory).include?(resource)
-      raise ArgumentError, _("Unknown resource %{name}") % {:name => resource.inspect}
+      raise ArgumentError, _('Unknown resource %{name}') % {:name => resource.inspect}
     end
-    resource = "cpu" if resource == "vcpu"
+    resource = 'cpu' if resource == 'vcpu'
     send("effective_#{resource}")
   end
 
@@ -344,7 +344,7 @@ class EmsCluster < ApplicationRecord
   # Vmware specific
   def register_host(host)
     host = Host.extract_objects(host)
-    raise _("Host cannot be nil") if host.nil?
+    raise _('Host cannot be nil') if host.nil?
     userid, password = host.auth_user_pwd(:default)
     network_address  = host.address
 
@@ -355,7 +355,7 @@ class EmsCluster < ApplicationRecord
       rescue VimFault => verr
         fault = verr.vimFaultInfo.fault
         raise if     fault.nil?
-        raise unless fault.xsiType == "SSLVerifyFault"
+        raise unless fault.xsiType == 'SSLVerifyFault'
 
         ssl_thumbprint = fault.thumbprint
         _log.info "Invoking addHost with options: address => #{network_address}, userid => #{userid}, sslThumbprint => #{ssl_thumbprint}"

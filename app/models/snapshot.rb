@@ -12,7 +12,7 @@ class Snapshot < ApplicationRecord
   after_create  :after_create_callback
 
   def after_create_callback
-    MiqEvent.raise_evm_event_queue(vm_or_template, "vm_snapshot_complete", attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
+    MiqEvent.raise_evm_event_queue(vm_or_template, 'vm_snapshot_complete', attributes) unless self.is_a_type?(:system_snapshot) || self.not_recently_created?
   end
 
   def self.add_elements(parentObj, xmlNode)
@@ -49,9 +49,9 @@ class Snapshot < ApplicationRecord
   def is_a_type?(stype)
     require 'MiqVimVm'
     value = case stype.to_sym
-            when :evm_snapshot        then MiqVimVm.const_get("EVM_SNAPSHOT_NAME")
-            when :consolidate_helper  then MiqVimVm.const_get("CH_SNAPSHOT_NAME")
-            when :vcb_snapshot        then MiqVimVm.const_get("VCB_SNAPSHOT_NAME")
+            when :evm_snapshot        then MiqVimVm.const_get('EVM_SNAPSHOT_NAME')
+            when :consolidate_helper  then MiqVimVm.const_get('CH_SNAPSHOT_NAME')
+            when :vcb_snapshot        then MiqVimVm.const_get('VCB_SNAPSHOT_NAME')
             when :system_snapshot     then :system_snapshot
             else
               raise "Unknown snapshot type '#{stype}' for #{self.class.name}.is_a_type?"
@@ -75,7 +75,7 @@ class Snapshot < ApplicationRecord
   end
 
   def self.remove_unused_evm_snapshots(delay)
-    _log.debug "Called"
+    _log.debug 'Called'
     find_all_evm_snapshots.each do |sn|
       job_guid, timestamp = parse_evm_snapshot_description(sn.description)
       unless Job.guid_active?(job_guid, timestamp, delay)
@@ -86,7 +86,7 @@ class Snapshot < ApplicationRecord
   end
 
   def recently_created?
-    @recent_threshold ||= (VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :raise_vm_snapshot_complete_if_created_within).to_i_with_method || 15.minutes)
+    @recent_threshold ||= (VMDB::Config.new('vmdb').config.fetch_path(:ems_refresh, :raise_vm_snapshot_complete_if_created_within).to_i_with_method || 15.minutes)
     create_time >= @recent_threshold.seconds.ago.utc
   end
 
@@ -119,7 +119,7 @@ class Snapshot < ApplicationRecord
         nh[:disks] = []
         e.each_recursive do |e1|
           total_size += e1.attributes['size_on_disk'].to_i
-          if e1.name == "disk"
+          if e1.name == 'disk'
             nh[:disks] << e1.attributes.to_h
 
             # If we do not get a snapshot create time in the header use the file create time

@@ -4,7 +4,7 @@ class ChangeOptionsInMiqAlertForEmailTo < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Changing email-to list from string to array") do
+    say_with_time('Changing email-to list from string to array') do
       email_to_path = [:notifications, :email, :to]
       MiqAlert.all.each do |a|
         value = a.options

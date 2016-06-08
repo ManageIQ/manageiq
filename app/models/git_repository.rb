@@ -34,7 +34,7 @@ class GitRepository < ApplicationRecord
 
   def directory_name
     parsed = URI.parse(url)
-    raise "Invalid URL missing path" if parsed.path.blank?
+    raise 'Invalid URL missing path' if parsed.path.blank?
     File.join(MiqAeDatastore::GIT_REPO_DIRECTORY, parsed.path)
   end
 

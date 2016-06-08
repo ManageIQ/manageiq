@@ -55,8 +55,8 @@ module Fat32
   ])
   SIZEOF_FSINFO = FSINFO.size
 
-  FSINFO_SIG1 = "RRaA"
-  FSINFO_SIG2 = "rrAa"
+  FSINFO_SIG1 = 'RRaA'
+  FSINFO_SIG2 = 'rrAa'
   FSINFO_SIG3 = 0xaa550000
 
   # ////////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ module Fat32
 
     # Initialization
     def initialize(stream)
-      raise "Nil stream" if stream.nil?
+      raise 'Nil stream' if stream.nil?
 
       # Init all.
       @bytesPerSector = 0; @bytesPerCluster = 0; @fatBase = 0
@@ -120,7 +120,7 @@ module Fat32
       # Verify FAT32 values according to Carrier.
       raise "Maximum files in root dir invalid: #{@bs['max_root']}\nIs partition FAT12/16?" if @bs['max_root'] != 0
       raise "Number of sectors in FAT invalid: #{@bs['fat_size32']}\nIs partition FAT12/16?" if @bs['fat_size32'] == 0
-      raise "Unknown number of sectors in file system." if @bs['num_sec16'] == 0 && @bs['num_sec32'] == 0
+      raise 'Unknown number of sectors in file system.' if @bs['num_sec16'] == 0 && @bs['num_sec32'] == 0
       raise "Boot sector signature invalid: 0x#{'%04x' % @bs['signature']}" if @bs['signature'] != 0xaa55
 
       # Calc location of the FAT & root dir.
@@ -168,7 +168,7 @@ module Fat32
 
     # Get data for the requested cluster.
     def getCluster(clus)
-      raise "Cluster is nil" if clus.nil?
+      raise 'Cluster is nil' if clus.nil?
       @stream.seek(clusToByte(clus))
       @stream.read(@bytesPerCluster)
     end
@@ -183,7 +183,7 @@ module Fat32
     def getNextCluster(clus)
       nxt = getFatEntry(clus)
       return nil if nxt > CC_END_OF_CHAIN
-      raise "Damaged cluster in cluster chain" if nxt == CC_DAMAGED
+      raise 'Damaged cluster in cluster chain' if nxt == CC_DAMAGED
       [nxt, getCluster(nxt)]
     end
 
@@ -231,7 +231,7 @@ module Fat32
         break if nxt != cur + 1
         cur = nxt; redo
       end
-      raise "Damaged cluster in cluster chain" if nxt == CC_DAMAGED
+      raise 'Damaged cluster in cluster chain' if nxt == CC_DAMAGED
       cur - clus + 1
     end
 
@@ -304,7 +304,7 @@ module Fat32
 
     # Translate a cluster number to an absolute byte location.
     def clusToByte(clus = @rootCluster)
-      raise "Cluster is nil" if clus.nil?
+      raise 'Cluster is nil' if clus.nil?
       @bs['res_sec'] * @bytesPerSector + @fatSize * @bs['num_fats'] + (clus - 2) * @bytesPerCluster
     end
 
@@ -336,7 +336,7 @@ module Fat32
     end
 
     def dumpFat(numEnt)
-      out = ""
+      out = ''
       0.upto(numEnt - 1) do|i|
         out += "#{i} #{'%08x' % getFatEntry(i)}\n"
       end

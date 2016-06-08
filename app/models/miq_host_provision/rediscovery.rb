@@ -19,7 +19,7 @@ module MiqHostProvision::Rediscovery
       return
     end
 
-    _log.info("Refreshing Power State via IPMI")
+    _log.info('Refreshing Power State via IPMI')
     host.refresh_ipmi_power_state
 
     _log.info("Rediscovering Host on IP Address: #{ip_address.inspect}")

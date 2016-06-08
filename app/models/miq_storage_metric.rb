@@ -2,12 +2,12 @@ require 'net_app_manageability/types'
 
 class MiqStorageMetric < ApplicationRecord
   has_one   :miq_cim_instance,
-            :foreign_key => "metric_id"
+            :foreign_key => 'metric_id'
 
   serialize :metric_obj
 
-  ROLLUP_TYPE_HOURLY  = "hourly"
-  ROLLUP_TYPE_DAILY = "daily"
+  ROLLUP_TYPE_HOURLY  = 'hourly'
+  ROLLUP_TYPE_DAILY = 'daily'
 
   SECONDS_PER_HOUR  = 60 * 60
   SECONDS_PER_DAY   = SECONDS_PER_HOUR * 24
@@ -118,11 +118,11 @@ class MiqStorageMetric < ApplicationRecord
   #
 
   def self.purge_window_size
-    VMDB::Config.new("vmdb").config.fetch_path(:storage, :metrics_history, :purge_window_size) || 100
+    VMDB::Config.new('vmdb').config.fetch_path(:storage, :metrics_history, :purge_window_size) || 100
   end
 
   def self.purge_date(type)
-    value = VMDB::Config.new("vmdb").config.fetch_path(:storage, :metrics_history, type.to_sym)
+    value = VMDB::Config.new('vmdb').config.fetch_path(:storage, :metrics_history, type.to_sym)
     return nil if value.nil?
 
     value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days

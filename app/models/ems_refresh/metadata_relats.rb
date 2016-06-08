@@ -143,8 +143,8 @@ module EmsRefresh::MetadataRelats
     klass = klass.class unless klass.kind_of?(Class)
     klass = klass.base_class
     type  = klass.to_s.underscore.pluralize
-    type  = "vms" if type == "vms_and_templates"
-    type  = type[4..-1] if type[0..3] == "ems_"
+    type  = 'vms' if type == 'vms_and_templates'
+    type  = type[4..-1] if type[0..3] == 'ems_'
     type.to_sym
   end
 

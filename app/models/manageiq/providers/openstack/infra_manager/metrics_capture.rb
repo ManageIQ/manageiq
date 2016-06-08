@@ -43,84 +43,84 @@ class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::P
     {
       :openstack_counters    => CPU_METERS,
       :calculation           => ->(stat, _) { stat },
-      :vim_style_counter_key => "cpu_usage_rate_average"
+      :vim_style_counter_key => 'cpu_usage_rate_average'
     },
     {
       :openstack_counters    => MEMORY_METERS,
       :calculation           => method(:memory_util_calculation).to_proc,
-      :vim_style_counter_key => "mem_usage_absolute_average"
+      :vim_style_counter_key => 'mem_usage_absolute_average'
     },
     {
       :openstack_counters    => SWAP_METERS,
       :calculation           => method(:memory_swapped_calculation).to_proc,
-      :vim_style_counter_key => "mem_swapped_absolute_average"
+      :vim_style_counter_key => 'mem_swapped_absolute_average'
     },
     {
       :openstack_counters    => DISK_METERS,
       :calculation           => method(:counter_sum_per_second_calculation).to_proc,
-      :vim_style_counter_key => "disk_usage_rate_average"
+      :vim_style_counter_key => 'disk_usage_rate_average'
     },
     {
       :openstack_counters    => NETWORK_METERS,
       :calculation           => method(:counter_sum_per_second_calculation).to_proc,
-      :vim_style_counter_key => "net_usage_rate_average"
+      :vim_style_counter_key => 'net_usage_rate_average'
     },
   ]
 
   COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:openstack_counters] }.flatten.uniq
 
   VIM_STYLE_COUNTERS = {
-    "cpu_usage_rate_average"       => {
-      :counter_key           => "cpu_usage_rate_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'cpu_usage_rate_average'       => {
+      :counter_key           => 'cpu_usage_rate_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 1,
-      :rollup                => "average",
-      :unit_key              => "percent",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'percent',
+      :capture_interval_name => 'realtime'
     },
-    "mem_usage_absolute_average"   => {
-      :counter_key           => "mem_usage_absolute_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'mem_usage_absolute_average'   => {
+      :counter_key           => 'mem_usage_absolute_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 1,
-      :rollup                => "average",
-      :unit_key              => "percent",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'percent',
+      :capture_interval_name => 'realtime'
     },
-    "mem_swapped_absolute_average" => {
-      :counter_key           => "mem_swapped_absolute_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'mem_swapped_absolute_average' => {
+      :counter_key           => 'mem_swapped_absolute_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 1,
-      :rollup                => "average",
-      :unit_key              => "megabytes",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'megabytes',
+      :capture_interval_name => 'realtime'
     },
-    "disk_usage_rate_average"      => {
-      :counter_key           => "disk_usage_rate_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'disk_usage_rate_average'      => {
+      :counter_key           => 'disk_usage_rate_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 2,
-      :rollup                => "average",
-      :unit_key              => "blockspersecond",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'blockspersecond',
+      :capture_interval_name => 'realtime'
     },
-    "net_usage_rate_average"       => {
-      :counter_key           => "net_usage_rate_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'net_usage_rate_average'       => {
+      :counter_key           => 'net_usage_rate_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 2,
-      :rollup                => "average",
-      :unit_key              => "datagramspersecond",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'datagramspersecond',
+      :capture_interval_name => 'realtime'
     }
   }
 
   def perf_capture_data(start_time, end_time)
     # Metadata filter covers all resources, resource filter can be nil
     resource_filter = nil
-    metadata_filter = target.ems_ref_obj ? {"field" => "metadata.resource_id", "value" => target.ems_ref_obj} : nil
+    metadata_filter = target.ems_ref_obj ? {'field' => 'metadata.resource_id', 'value' => target.ems_ref_obj} : nil
 
     perf_capture_data_openstack_base(self.class, start_time, end_time, resource_filter,
                                      metadata_filter)

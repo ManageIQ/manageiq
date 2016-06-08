@@ -9,11 +9,11 @@ module MiqFilter
 
   def self.belongsto2object_list(tag)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
-    raise _("invalid tag: %{tag}") % {:tag => tag} unless tag.starts_with?("/belongsto/ExtManagementSystem")
-    parts = tag.split("/")[2..-1]
+    raise _('invalid tag: %{tag}') % {:tag => tag} unless tag.starts_with?('/belongsto/ExtManagementSystem')
+    parts = tag.split('/')[2..-1]
 
     # root object
-    klass, name = parts.shift.split("|")
+    klass, name = parts.shift.split('|')
     klass = klass.constantize
     obj = klass.find_by_name(name)
 
@@ -24,7 +24,7 @@ module MiqFilter
 
     # traverse the tree
     parts.each_with_object([obj]) do |p, result|
-      tag_part_klass, name = p.split("|")
+      tag_part_klass, name = p.split('|')
       tag_part_klass = tag_part_klass.constantize
 
       obj = obj.with_relationship_type('ems_metadata') do
@@ -38,8 +38,8 @@ module MiqFilter
 
   def self.object2belongsto(obj)
     # /belongsto/ExtManagementSystem|<name>/EmsCluster|<name>/EmsFolder|<name>
-    unless obj.root_id[0] == "ExtManagementSystem"
-      raise _("Folder Root is not a %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}
+    unless obj.root_id[0] == 'ExtManagementSystem'
+      raise _('Folder Root is not a %{table}') % {:table => ui_lookup(:table => 'ext_management_systems')}
     end
 
     tag = obj.ancestry(
@@ -74,7 +74,7 @@ module MiqFilter
 
           next if vcmeta.nil?
 
-          if vcmeta == p || vcmeta.with_relationship_type("ems_metadata") { vcmeta.is_ancestor_of?(p) }
+          if vcmeta == p || vcmeta.with_relationship_type('ems_metadata') { vcmeta.is_ancestor_of?(p) }
             filtered.push(p)
             break
           end

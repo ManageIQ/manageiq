@@ -4,15 +4,15 @@ class Session < ApplicationRecord
   @@job ||= nil
 
   def self.check_session_timeout
-    $log.debug "Checking session data"
+    $log.debug 'Checking session data'
     ttl = timeout
-    cfg = VMDB::Config.new("vmdb").config[:session]
+    cfg = VMDB::Config.new('vmdb').config[:session]
     ttl = cfg[:timeout] if cfg[:timeout].to_int != ttl
     purge(ttl)
   end
 
   def self.purge(ttl)
-    ses = where("updated_at <= ?", ttl.seconds.ago.utc)
+    ses = where('updated_at <= ?', ttl.seconds.ago.utc)
     ses.each do|s|
       begin
         userid = Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]

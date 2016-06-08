@@ -45,9 +45,9 @@ describe MigrateProviderAttributesToEndpoints do
         :provider_id => provider.id
       )
       endpoint_stub.create!(
-        :resource_type => "ExtManagementSystem",
+        :resource_type => 'ExtManagementSystem',
         :resource_id   => ems.id,
-        :role          => "default",
+        :role          => 'default',
         :verify_ssl    => OpenSSL::SSL::VERIFY_NONE
       )
 

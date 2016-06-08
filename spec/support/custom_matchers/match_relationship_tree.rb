@@ -26,7 +26,7 @@ RSpec::Matchers.define :match_relationship_tree do |expected_tree|
   end
 
   description do
-    "expect the object to have the same relationship tree"
+    'expect the object to have the same relationship tree'
   end
 
   def sort_tree(tree)
@@ -42,7 +42,7 @@ RSpec::Matchers.define :match_relationship_tree do |expected_tree|
   end
 
   def pretty_tree(tree, indent = '  ')
-    sort_tree(tree).each_with_object("") do |(obj, children), output|
+    sort_tree(tree).each_with_object('') do |(obj, children), output|
       if obj.kind_of?(Array)
         # printing expected tree
         type, name, options = obj

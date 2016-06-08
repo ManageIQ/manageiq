@@ -6,9 +6,9 @@ require 'log4r'
 require 'time'
 require 'util/vmdb-logger'
 
-MIQ_ROOT    = File.expand_path(File.join(__dir__, "../../.."))
-LOG_DIR     = File.join(MIQ_ROOT, "log")
-LOG_FILE    = File.join(LOG_DIR, "vim.log")
+MIQ_ROOT    = File.expand_path(File.join(__dir__, '../../..'))
+LOG_DIR     = File.join(MIQ_ROOT, 'log')
+LOG_FILE    = File.join(LOG_DIR, 'vim.log')
 
 $vim_log = VMDBLogger.new LOG_FILE
 
@@ -41,7 +41,7 @@ class VdlWrapper
     $vim_log.warn "*** Open VdlDisks for server #{server_name}" if $vim_log
     @connection.dumpDisks unless @connection.nil? || @connection.serverName != server_name
     @vddk.running = true
-    $vim_log.warn "*** Open VdlDisks end" if $vim_log
+    $vim_log.warn '*** Open VdlDisks end' if $vim_log
   end
 
   def self.inc_server_disk_count
@@ -58,7 +58,7 @@ class VdlWrapper
 
   def self.connect(connect_parms)
     $vim_log.info "VdlWrapper.connect: #{connect_parms[:server_name]}" if $vim_log
-    raise VixDiskLibError, "VixDiskLib is not initialized" unless @initialized
+    raise VixDiskLibError, 'VixDiskLib is not initialized' unless @initialized
     raise VixDiskLibError, "Already connected to #{@connection.serverName}" if @connection
     @connection = VdlConnection.new(connect_parms, @vddk)
     @connection
@@ -66,13 +66,13 @@ class VdlWrapper
 
   def self.__disconnect__(conn_obj)
     $vim_log.info "VdlWrapper.__disconnect__: #{conn_obj.serverName}" if $vim_log
-    raise VixDiskLibError, "VixDiskLib is not initialized" unless @initialized
+    raise VixDiskLibError, 'VixDiskLib is not initialized' unless @initialized
     FFI::VixDiskLib::API.disconnect(conn_obj.vdl_connection)
     @connection = nil
   end
 
   def self.__exit__
-    raise VixDiskLibError, "VixDiskLib is not initialized" unless @initialized
+    raise VixDiskLibError, 'VixDiskLib is not initialized' unless @initialized
     __disconnect__(@connection) unless @connection.nil?
     #
     # NOTE: We have to comment this call out for now.
@@ -80,7 +80,7 @@ class VdlWrapper
     # the DRb service (this process) to segfault during the exit sequence.
     #
     # super
-    $vim_log.info "VixDiskLib has exited cleanly"
+    $vim_log.info 'VixDiskLib has exited cleanly'
     @vddk.running = true
     @vddk.shutdown = true
     @initialized = nil
@@ -140,7 +140,7 @@ class VdlConnection
       if nd >= MAX_DISK_WARN && $vim_log
         $vim_log.warn "VdlConnection::getDisk: connection to server: #{@serverName}"
         $vim_log.warn "VdlConnection::getDisk: number of open disks = #{nd}"
-        $vim_log.warn "VdlConnection::getDisk: subsequent open calls may fail"
+        $vim_log.warn 'VdlConnection::getDisk: subsequent open calls may fail'
         VdlWrapper.dumpDisks(@serverName)
       end
       return disk
@@ -165,7 +165,7 @@ class VdlConnection
 
   def __close_disks__
     raise VixDiskLibError,
-          "VdlConnection::__close_disks__: exclusive disk lock not held" unless @disk_lock.sync_exclusive?
+          'VdlConnection::__close_disks__: exclusive disk lock not held' unless @disk_lock.sync_exclusive?
     if !@vdl_connection
       $vim_log.warn "VDLConnection.disconnect: server: #{@serverName} not connected" if $vim_log
     else
@@ -218,7 +218,7 @@ class VdlDisk
     @vddk.running = true
     @handle_lock.sync_lock(:SH) if (unlock = !@handle_lock.sync_locked?)
 
-    raise VixDiskLibError, "VdlDisk.bread: disk is not open" unless @handle
+    raise VixDiskLibError, 'VdlDisk.bread: disk is not open' unless @handle
     return nil if start_sector >= @num_sectors
     num_sectors = @num_sectors - start_sector if (start_sector + num_sectors) > @num_sectors
 
@@ -231,7 +231,7 @@ class VdlDisk
     @vddk.running = true
     @handle_lock.sync_lock(:SH) if (unlock = !@handle_lock.sync_locked?)
 
-    raise VixDiskLibError, "VdlDisk.bwrite: disk is not open" unless @handle
+    raise VixDiskLibError, 'VdlDisk.bwrite: disk is not open' unless @handle
     return nil if start_sector >= @num_sectors
     num_sectors = @num_sectors - start_sector if (start_sector + num_sectors) > @num_sectors
 
@@ -263,7 +263,7 @@ class VdlDisk
   def read(pos, len)
     @vddk.running = true
     @handle_lock.synchronize(:SH) do
-      raise VixDiskLibError, "VdlDisk.read: disk is not open" unless @handle
+      raise VixDiskLibError, 'VdlDisk.read: disk is not open' unless @handle
 
       return nil if pos >= @num_bytes
       len = @num_bytes - pos if (pos + len) > @num_bytes
@@ -280,7 +280,7 @@ class VdlDisk
   def write(pos, buf, len)
     @vddk.running = true
     @handle_lock.synchronize(:SH) do
-      raise VixDiskLibError, "VdlDisk.write: disk is not open" unless @handle
+      raise VixDiskLibError, 'VdlDisk.write: disk is not open' unless @handle
 
       return nil if pos >= @num_bytes
       len = @num_bytes - pos if (pos + len) > @num_bytes

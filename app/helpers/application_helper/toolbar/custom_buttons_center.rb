@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::CustomButtonsCenter < ApplicationHelper::Toolb
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Button Group'),
           t,
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
         button(
           :ab_button_new,
           'pficon pficon-add-circle-o fa-lg',
@@ -22,8 +22,8 @@ class ApplicationHelper::Toolbar::CustomButtonsCenter < ApplicationHelper::Toolb
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Button Group'),
           t,
-          :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Button Group will be permanently removed.  Are you sure you want to remove the selected Button Group?")),
+          :url_parms => 'main_div',
+          :confirm   => N_('Warning: The selected Button Group will be permanently removed.  Are you sure you want to remove the selected Button Group?')),
       ]
     ),
   ])

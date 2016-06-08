@@ -4,7 +4,7 @@ class RemoveMiqWorkerRowsWithoutModel < ActiveRecord::Migration
   end
 
   def up
-    say_with_time "Remove MiqWorker records where the model was removed" do
+    say_with_time 'Remove MiqWorker records where the model was removed' do
       types = %w(MiqWorkerMonitor MiqStorageStatsCollectorWorker MiqPerfCollectorWorker MiqPerfProcessorWorker)
       MiqWorker.where(:type => types).delete_all
     end

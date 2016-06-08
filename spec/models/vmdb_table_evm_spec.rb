@@ -1,5 +1,5 @@
 describe VmdbTableEvm do
-  it "#seed" do
+  it '#seed' do
     db = VmdbDatabase.seed_self
     evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => 'foo')
     expect(evm_table).to receive(:seed_texts).once
@@ -7,13 +7,13 @@ describe VmdbTableEvm do
     evm_table.seed
   end
 
-  context "#seed_texts" do
+  context '#seed_texts' do
     before(:each) do
       @db = VmdbDatabase.seed_self
       @evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => 'foo')
     end
 
-    it "adds new tables" do
+    it 'adds new tables' do
       table_names = ['flintstones']
       allow(described_class.connection).to receive(:text_tables).and_return(table_names)
       @evm_table.seed_texts
@@ -21,7 +21,7 @@ describe VmdbTableEvm do
       @evm_table.text_tables.each { |t| expect(t.vmdb_database).to eq(@db) }
     end
 
-    it "removes deleted tables" do
+    it 'removes deleted tables' do
       table_names = ['flintstones']
       table_names.each { |t| FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :evm_table => @evm_table, :name => t) }
       @evm_table.reload
@@ -33,7 +33,7 @@ describe VmdbTableEvm do
       expect(@evm_table.text_tables.collect(&:name)).to eq([])
     end
 
-    it "finds existing tables" do
+    it 'finds existing tables' do
       table_names = ['flintstones']
       table_names.each { |t| FactoryGirl.create(:vmdb_table_text, :vmdb_database => @db, :evm_table => @evm_table, :name => t) }
       allow(described_class.connection).to receive(:text_tables).and_return(table_names)
@@ -43,10 +43,10 @@ describe VmdbTableEvm do
     end
   end
 
-  context "#capture_metrics" do
-    let(:table) { FactoryGirl.create(:vmdb_table_evm, :name => "accounts") }
+  context '#capture_metrics' do
+    let(:table) { FactoryGirl.create(:vmdb_table_evm, :name => 'accounts') }
 
-    it "creates a vmdb_metrics record" do
+    it 'creates a vmdb_metrics record' do
       # The first capture just gets the raw data
       table.capture_metrics
       expect(table.vmdb_metrics).to be_empty
@@ -69,8 +69,8 @@ describe VmdbTableEvm do
       end
     end
 
-    it "captures index metrics" do
-      index = FactoryGirl.create(:vmdb_index, :name => "accounts_pkey")
+    it 'captures index metrics' do
+      index = FactoryGirl.create(:vmdb_index, :name => 'accounts_pkey')
       table.vmdb_database = VmdbDatabase.seed_self
       table.vmdb_indexes << index
 
@@ -79,7 +79,7 @@ describe VmdbTableEvm do
     end
   end
 
-  context "#rollup_metrics" do
+  context '#rollup_metrics' do
     before :each do
       db = VmdbDatabase.seed_self
       @evm_table = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => db, :name => 'accounts')
@@ -141,7 +141,7 @@ describe VmdbTableEvm do
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_table, :timestamp => ts,            :rows => 500, :size => 5000, :wasted_bytes => 90, :percent_bloat => 50.7)
     end
 
-    it "returns 1 row with average daily rollups for metrics" do
+    it 'returns 1 row with average daily rollups for metrics' do
       interval_name = 'hourly'
       rollup_date   = Time.gm(2012, 8, 14, 00, 00, 01)
       @evm_table.rollup_metrics(interval_name, rollup_date)
@@ -156,7 +156,7 @@ describe VmdbTableEvm do
       expect(rollup_record.percent_bloat).to  be_within(0.01).of(22.54)
     end
 
-    it "verifies daily metric rollup execution" do
+    it 'verifies daily metric rollup execution' do
       ts  = Time.now.utc
       day = ts.beginning_of_day
       expect_any_instance_of(described_class).to receive(:rollup_metrics).with('daily', day)

@@ -25,7 +25,7 @@ class MiddlewareTopologyController < ApplicationController
   private
 
   def get_session_data
-    @layout = "middleware_topology"
+    @layout = 'middleware_topology'
   end
 
   def set_session_data

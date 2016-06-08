@@ -4,34 +4,34 @@ describe TreeBuilderOpsRbac do
     EvmSpecHelper.local_miq_server
   end
 
-  describe ".new" do
+  describe '.new' do
     def assert_tree_nodes(expected)
-      tree_json  = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {}).tree_nodes
+      tree_json  = TreeBuilderOpsRbac.new('rbac_tree', 'rbac', {}).tree_nodes
       tree_nodes = JSON.parse(tree_json).first['children'].collect { |h| h['title'] }
       expect(tree_nodes).to match_array expected
     end
 
-    it "with user with rbac_group role" do
+    it 'with user with rbac_group role' do
       login_as FactoryGirl.create(:user, :features => 'rbac_group_view')
-      assert_tree_nodes(["Groups"])
+      assert_tree_nodes(['Groups'])
     end
 
-    it "with user with rbac_role_view role" do
+    it 'with user with rbac_role_view role' do
       login_as FactoryGirl.create(:user, :features => 'rbac_role_view')
-      assert_tree_nodes(["Roles"])
+      assert_tree_nodes(['Roles'])
     end
 
-    it "with user with rbac_tenant role" do
+    it 'with user with rbac_tenant role' do
       login_as FactoryGirl.create(:user, :features => 'rbac_tenant_view')
-      assert_tree_nodes(["Tenants"])
+      assert_tree_nodes(['Tenants'])
     end
 
-    it "with user with rbac_user role" do
+    it 'with user with rbac_user role' do
       login_as FactoryGirl.create(:user, :features => 'rbac_user_view')
-      assert_tree_nodes(["Users"])
+      assert_tree_nodes(['Users'])
     end
 
-    it "with user with multiple rbac roles" do
+    it 'with user with multiple rbac roles' do
       login_as FactoryGirl.create(:user,
         :features => %w(rbac_group_view rbac_user_view rbac_role_view rbac_tenant_view)
       )
@@ -39,7 +39,7 @@ describe TreeBuilderOpsRbac do
     end
   end
 
-  describe "#x_get_tree_custom_kids" do
+  describe '#x_get_tree_custom_kids' do
     let(:group) { FactoryGirl.create(:miq_group) }
     let(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
     let(:other_group) { FactoryGirl.create(:miq_group) }
@@ -50,30 +50,30 @@ describe TreeBuilderOpsRbac do
     end
 
     def x_get_tree_custom_kids_for_and_expect_objects(type_of_model, expected_objects)
-      tree_builder = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
+      tree_builder = TreeBuilderOpsRbac.new('rbac_tree', 'rbac', {})
       objects = tree_builder.send(:x_get_tree_custom_kids, {:id => type_of_model}, false, {})
       expect(objects).to match_array(expected_objects)
     end
 
-    it "is listing all users" do
-      x_get_tree_custom_kids_for_and_expect_objects("u", [user, other_user])
+    it 'is listing all users' do
+      x_get_tree_custom_kids_for_and_expect_objects('u', [user, other_user])
     end
 
-    it "is listing all groups" do
-      x_get_tree_custom_kids_for_and_expect_objects("g", [user.current_group, other_group])
+    it 'is listing all groups' do
+      x_get_tree_custom_kids_for_and_expect_objects('g', [user.current_group, other_group])
     end
 
-    context "User with self service user" do
+    context 'User with self service user' do
       before :each do
         allow_any_instance_of(User).to receive_messages(:self_service? => true)
       end
 
-      it "is listing only current user" do
-        x_get_tree_custom_kids_for_and_expect_objects("u", [user])
+      it 'is listing only current user' do
+        x_get_tree_custom_kids_for_and_expect_objects('u', [user])
       end
 
       it "is listing only user's group" do
-        x_get_tree_custom_kids_for_and_expect_objects("g", [user.current_group])
+        x_get_tree_custom_kids_for_and_expect_objects('g', [user.current_group])
       end
     end
   end

@@ -98,7 +98,7 @@ module XFS
       @header_size   = btree_block_length
       @number_records = @btree_block['num_recs']
       @level         = @btree_block['level']
-      raise "Invalid BTreeBlock" unless (@btree_block['magic_num'] == XFS_BMAP_MAGIC) ||
+      raise 'Invalid BTreeBlock' unless (@btree_block['magic_num'] == XFS_BMAP_MAGIC) ||
                                         (@btree_block['magic_num'] == XFS_BMAP_CRC_MAGIC)
       @left_sibling  = @btree_block['left_sibling']
       @right_sibling = @btree_block['right_sibling']

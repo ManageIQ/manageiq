@@ -1,5 +1,5 @@
 describe Psych::Visitors::ToRuby do
-  let(:missing_model) { Rails.root.join("app/models/zzz_model.rb") }
+  let(:missing_model) { Rails.root.join('app/models/zzz_model.rb') }
 
   before do
     File.write(missing_model, "class ZzzModel\nend\n")
@@ -10,8 +10,8 @@ describe Psych::Visitors::ToRuby do
     FileUtils.rm_f(missing_model)
   end
 
-  it "missing constants during yaml load are autoloaded" do
+  it 'missing constants during yaml load are autoloaded' do
     dump = "--- !ruby/object:ZzzModel {}\n"
-    expect(YAML.load(dump).class.name).to eql "ZzzModel"
+    expect(YAML.load(dump).class.name).to eql 'ZzzModel'
   end
 end

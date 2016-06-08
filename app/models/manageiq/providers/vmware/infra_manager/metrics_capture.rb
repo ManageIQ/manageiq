@@ -7,7 +7,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
   #
 
   cache_with_timeout(:perf_history_results,
-                     -> { (VMDB::Config.new("vmdb").config.fetch_path(:performance, :vim_cache_ttl) || 1.hour).to_i_with_method }
+                     -> { (VMDB::Config.new('vmdb').config.fetch_path(:performance, :vim_cache_ttl) || 1.hour).to_i_with_method }
                     ) { Hash.new }
 
   def self.intervals(ems, vim_hist)
@@ -41,7 +41,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       raise
     end
 
-    if summary.kind_of?(Hash) && summary['currentSupported'].to_s == "true"
+    if summary.kind_of?(Hash) && summary['currentSupported'].to_s == 'true'
       interval = summary['refreshRate'].to_s
       _log.debug("#{log_header} Found realtime interval: [#{interval}] for mor: [#{mor}]")
     else
@@ -130,14 +130,14 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
     info = counter_info_by_counter_id(ems, vim_hist)
 
     results = avail_metrics.to_miq_a.each_with_object({}) do |metric, h|
-      counter = info[metric["counterId"]]
+      counter = info[metric['counterId']]
       next if counter.nil?
 
       # Filter the metrics for only the cols we will use
       next unless Metric::Capture.capture_cols.include?(counter[:counter_key].to_sym)
 
-      vim_key      = metric["counterId"].to_s
-      instance     = metric["instance"].to_s
+      vim_key      = metric['counterId'].to_s
+      instance     = metric['instance'].to_s
       full_vim_key = "#{vim_key}_#{instance}"
 
       h[full_vim_key] = {
@@ -355,7 +355,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
   end
 
   def perf_capture_counters(interval_by_mor)
-    _log.info("Capturing counters...")
+    _log.info('Capturing counters...')
 
     counters_by_mor = {}
 
@@ -364,12 +364,12 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       counters_by_mor[mor] = self.class.avail_metrics_for_entity(target.ext_management_system, @perf_vim_hist, mor, interval, @perf_intervals[interval.to_s])
     end
 
-    _log.info("Capturing counters...Complete")
+    _log.info('Capturing counters...Complete')
     counters_by_mor
   end
 
   def perf_build_query_params(interval_by_mor, counters_by_mor, start_time, end_time)
-    _log.info("Building query parameters...")
+    _log.info('Building query parameters...')
 
     params = []
     interval_by_mor.each do |mor, interval|
@@ -389,7 +389,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       params << param
     end
 
-    _log.info("Building query parameters...Complete")
+    _log.info('Building query parameters...Complete')
 
     params
   end

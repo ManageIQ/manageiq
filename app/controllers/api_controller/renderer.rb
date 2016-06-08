@@ -63,7 +63,7 @@ class ApiController
           if opts[:expand_resources]
             add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
           else
-            json.href normalize_href(reftype, resource["id"])
+            json.href normalize_href(reftype, resource['id'])
           end
         end
         aspecs = get_aspecs(type, opts[:collection_actions], :collection,
@@ -163,8 +163,8 @@ class ApiController
     # Return the response format requested, i.e. :json or raise an error
     #
     def validate_response_format
-      accept = request.headers["Accept"]
-      return :json if accept.blank? || accept.include?("json") || accept.include?("*/*")
+      accept = request.headers['Accept']
+      return :json if accept.blank? || accept.include?('json') || accept.include?('*/*')
       raise UnsupportedMediaTypeError, "Invalid Response Format #{accept} requested"
     end
 
@@ -269,7 +269,7 @@ class ApiController
       value = object_hash[base].public_send(attr)
       result = {attr => normalize_virtual(nil, attr, value, :ignore_nil => true)}
       # set nil vtype above to "#{type}/#{resource.id}/#{base.tr('.', '/')}/#{attr}" to support id normalization
-      base.split(".").reverse_each { |level| result = {level => result} }
+      base.split('.').reverse_each { |level| result = {level => result} }
       [value, result]
     end
 
@@ -280,11 +280,11 @@ class ApiController
       return if object_hash[object_path].present?
       related_resource = resource
       related_objects  = []
-      object_path.split(".").each do |related_object|
+      object_path.split('.').each do |related_object|
         related_objects << related_object
         if attr_accessible?(related_resource, related_object)
           related_resource = related_resource.public_send(related_object)
-          object_hash[related_objects.join(".")] = related_resource if related_resource
+          object_hash[related_objects.join('.')] = related_resource if related_resource
         end
       end
     end
@@ -293,7 +293,7 @@ class ApiController
     # Let's get a list of virtual attributes applicable to the resource.
     #
     def virtual_attributes_list(resource)
-      return [] if attribute_selection == "all"
+      return [] if attribute_selection == 'all'
       attribute_selection.collect do |requested_attr|
         requested_attr if attr_virtual?(resource, requested_attr)
       end.compact
@@ -301,8 +301,8 @@ class ApiController
 
     def split_virtual_attribute(attr)
       attr_parts = attr_split(attr)
-      return [attr_parts.first, ""] if attr_parts.length == 1
-      [attr_parts.last, attr_parts[0..-2].join(".")]
+      return [attr_parts.first, ''] if attr_parts.length == 1
+      [attr_parts.last, attr_parts[0..-2].join('.')]
     end
 
     def attr_accessible?(object, attr)
@@ -328,7 +328,7 @@ class ApiController
     end
 
     def attr_split(attr)
-      attr.tr("/", ".").split(".")
+      attr.tr('/', '.').split('.')
     end
 
     #
@@ -337,7 +337,7 @@ class ApiController
     def expand_actions(resource, json, type, opts)
       return unless render_actions(resource)
 
-      href   = json.attributes!["href"]
+      href   = json.attributes!['href']
       aspecs = get_aspecs(type, opts[:resource_actions], :resource,
                           :is_subcollection => opts[:is_subcollection], :ref => href, :resource => resource)
       add_actions(json, aspecs, type)
@@ -354,10 +354,10 @@ class ApiController
     def expand_resource_custom_actions(resource, json, type)
       return unless render_actions(resource) && resource_can_have_custom_actions(type)
 
-      href = json.attributes!["href"]
+      href = json.attributes!['href']
       json.actions do |js|
         resource_custom_action_names(resource).each do |action|
-          add_child js, "name" => action, "method" => :post, "href" => href
+          add_child js, 'name' => action, 'method' => :post, 'href' => href
         end
       end
     end
@@ -375,7 +375,7 @@ class ApiController
     def physical_attribute_selection(resource)
       return [] unless params['attributes']
 
-      physical_attributes = params['attributes'].split(",").select { |attr| attr_physical?(resource, attr) }
+      physical_attributes = params['attributes'].split(',').select { |attr| attr_physical?(resource, attr) }
       physical_attributes.present? ? ID_ATTRS | physical_attributes : []
     end
 
@@ -393,10 +393,10 @@ class ApiController
       else
         json.set! sc.to_s do |js|
           subresources.each do |scr|
-            if expand?(sc) || scr["id"].nil?
+            if expand?(sc) || scr['id'].nil?
               add_child js, normalize_hash(sctype, scr, :add_href => true)
             else
-              js.child! { |jsc| jsc.href normalize_href(sctype, scr["id"]) }
+              js.child! { |jsc| jsc.href normalize_href(sctype, scr['id']) }
             end
           end
         end
@@ -429,7 +429,7 @@ class ApiController
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
         typed_action_definitions.each.collect do |action|
           if !action[:disabled] && api_user_role_allows?(action[:identifier])
-            {"name" => action[:name], "method" => method, "href" => (href ? href : collection)}
+            {'name' => action[:name], 'method' => method, 'href' => (href ? href : collection)}
           end
         end
       end.flatten.compact
@@ -443,7 +443,7 @@ class ApiController
         typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
         typed_action_definitions.each.collect do |action|
           if !action[:disabled] && api_user_role_allows?(action[:identifier]) && action_validated?(resource, action)
-            {"name" => action[:name], "method" => method, "href" => href}
+            {'name' => action[:name], 'method' => method, 'href' => href}
           end
         end
       end.flatten.compact
@@ -466,7 +466,7 @@ class ApiController
     end
 
     def render_actions(resource)
-      render_attr("actions") || physical_attribute_selection(resource).blank?
+      render_attr('actions') || physical_attribute_selection(resource).blank?
     end
 
     def action_validated?(resource, action_spec)

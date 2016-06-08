@@ -1,6 +1,6 @@
 describe MiqSearch do
   describe '#descriptions' do
-    it "hashes" do
+    it 'hashes' do
       srchs = [
         FactoryGirl.create(:miq_search, :description => 'a'),
         FactoryGirl.create(:miq_search, :description => 'b'),
@@ -13,7 +13,7 @@ describe MiqSearch do
         srchs[2].id.to_s => srchs[2].description)
     end
 
-    it "supports scopes" do
+    it 'supports scopes' do
       srchs = [
         FactoryGirl.create(:miq_search, :description => 'a', :db => 'Vm'),
         FactoryGirl.create(:miq_search, :description => 'b', :db => 'Vm'),
@@ -28,84 +28,84 @@ describe MiqSearch do
 
   let(:vm_location_search) do
     FactoryGirl.create(:miq_search,
-                       :db     => "Vm",
-                       :filter => MiqExpression.new("=" => {"field" => "Vm-location", "value" => "good"})
+                       :db     => 'Vm',
+                       :filter => MiqExpression.new('=' => {'field' => 'Vm-location', 'value' => 'good'})
                       )
   end
 
-  let(:matched_vms) { FactoryGirl.create_list(:vm_vmware, 2, :location => "good") }
-  let(:other_vms)   { FactoryGirl.create_list(:vm_vmware, 1, :location => "other") }
+  let(:matched_vms) { FactoryGirl.create_list(:vm_vmware, 2, :location => 'good') }
+  let(:other_vms)   { FactoryGirl.create_list(:vm_vmware, 1, :location => 'other') }
   let(:all_vms)     { matched_vms + other_vms }
   let(:partial_matched_vms) { [matched_vms.first] }
   let(:partial_vms) { partial_matched_vms + other_vms }
 
-  describe "#quick_search?" do
-    let(:qs) { MiqExpression.new("=" => {"field" => "Vm-name", "value" => :user_input}) }
-    it "supports no filter" do
+  describe '#quick_search?' do
+    let(:qs) { MiqExpression.new('=' => {'field' => 'Vm-name', 'value' => :user_input}) }
+    it 'supports no filter' do
       expect(FactoryGirl.build(:miq_search, :filter => nil)).not_to be_quick_search
     end
 
-    it "supports a filter" do
+    it 'supports a filter' do
       expect(vm_location_search).not_to be_quick_search
     end
 
-    it "supports a quick search" do
+    it 'supports a quick search' do
       expect(FactoryGirl.build(:miq_search, :filter => qs)).to be_quick_search
     end
   end
 
   # general use cases around rbac
-  describe "#search" do
-    it "brings back filtered targets" do
+  describe '#search' do
+    it 'brings back filtered targets' do
       all_vms
       expect(vm_location_search.search.first).to match_array(matched_vms.map(&:id))
     end
 
-    it "resects search options" do
+    it 'resects search options' do
       all_vms
       expect(vm_location_search.search(:results_format => :objects).first).to match_array(matched_vms)
     end
   end
 
-  describe "#results" do
-    it "respects filter" do
+  describe '#results' do
+    it 'respects filter' do
       all_vms
       expect(vm_location_search.results).to match_array(matched_vms)
     end
   end
 
-  describe "#filtered" do
-    it "works with models" do
+  describe '#filtered' do
+    it 'works with models' do
       all_vms
       expect(vm_location_search.filtered(Vm)).to match_array(matched_vms)
     end
 
-    it "works with scopes" do
+    it 'works with scopes' do
       all_vms
       expect(vm_location_search.filtered(Vm.all)).to match_array(matched_vms)
     end
 
-    it "finds elements only in the array" do
+    it 'finds elements only in the array' do
       all_vms
       expect(vm_location_search.filtered(partial_vms)).to match_array(partial_matched_vms)
     end
 
-    it "brings back empty array for empty arrays" do
+    it 'brings back empty array for empty arrays' do
       all_vms
       expect(vm_location_search.filtered([])).to match_array([])
     end
   end
 
-  describe ".filtered" do
-    it "uses an existing search" do
+  describe '.filtered' do
+    it 'uses an existing search' do
       all_vms
-      results = MiqSearch.filtered(vm_location_search.id, "Vm", partial_vms)
+      results = MiqSearch.filtered(vm_location_search.id, 'Vm', partial_vms)
       expect(results).to match_array(partial_matched_vms)
     end
 
-    it "calls Rbac directly for no search" do
+    it 'calls Rbac directly for no search' do
       all_vms
-      results = MiqSearch.filtered(0, "Vm", partial_vms)
+      results = MiqSearch.filtered(0, 'Vm', partial_vms)
       expect(results).to match_array(partial_vms)
     end
   end

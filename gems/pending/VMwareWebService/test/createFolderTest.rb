@@ -15,13 +15,13 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::OFF, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-SERVER   = ""
-USERNAME = ""
-PASSWORD = ""
+SERVER   = ''
+USERNAME = ''
+PASSWORD = ''
 
 # $miq_wiredump = true
-PARENT_FOLDER_NAME  = ""
-NEW_FOLDER_NAME   = ""
+PARENT_FOLDER_NAME  = ''
+NEW_FOLDER_NAME   = ''
 
 # broker = MiqVimBroker.new(:client)
 # vim = broker.getMiqVim(SERVER, USERNAME, PASSWORD)
@@ -38,7 +38,7 @@ begin
   miqFolder = vim.getVimFolder(PARENT_FOLDER_NAME)
   puts "Found folder: #{miqFolder.name}"
 
-  puts "Sub-folders before:"
+  puts 'Sub-folders before:'
   miqFolder.subFolderMors.each do |sfmor|
     subFolder = vim.getVimFolderByMor(sfmor)
     puts "\t#{subFolder.name}"
@@ -47,7 +47,7 @@ begin
   puts
   puts "Creating folder: #{NEW_FOLDER_NAME}..."
   nfMor = miqFolder.createFolder(NEW_FOLDER_NAME)
-  puts "Folder added."
+  puts 'Folder added.'
 
   puts
   puts "New folder MOR: #{nfMor} (#{nfMor.class.name})"
@@ -58,7 +58,7 @@ begin
   puts "Found new folder: #{newFolder.name}"
 
   puts
-  puts "Sub-folders after:"
+  puts 'Sub-folders after:'
   miqFolder.reload # reload folder to update children.
   miqFolder.subFolderMors.each do |sfmor|
     subFolder = vim.getVimFolderByMor(sfmor)

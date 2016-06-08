@@ -15,18 +15,18 @@ module VmHelper
 
   def set_controller_action
     url = request.parameters[:controller]
-    action = "x_show"
+    action = 'x_show'
     return url, action
   end
 
   def textual_cloud_network
     return nil unless @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
-    {:label => _("Virtual Private Cloud"), :value => @record.cloud_network ? @record.cloud_network.name : _('None')}
+    {:label => _('Virtual Private Cloud'), :value => @record.cloud_network ? @record.cloud_network.name : _('None')}
   end
 
   def textual_cloud_subnet
     return nil unless @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
-    {:label => _("Cloud Subnet"), :value => @record.cloud_subnet ? @record.cloud_subnet.name : _('None')}
+    {:label => _('Cloud Subnet'), :value => @record.cloud_subnet ? @record.cloud_subnet.name : _('None')}
   end
 
   def calculate_disk_size(size)
@@ -35,25 +35,25 @@ module VmHelper
 
   def calculate_disk_name(disk)
     case disk.device_type
-    when "cdrom-raw"
+    when 'cdrom-raw'
       "CD-ROM (IDE #{disk.location})"
-    when "atapi-cdrom"
+    when 'atapi-cdrom'
       "ATAPI CD-ROM (IDE #{disk.location})"
-    when "cdrom-image"
+    when 'cdrom-image'
       "CD-ROM Image (IDE #{disk.location})"
-    when "disk"
-      if disk.controller_type.start_with?("ide")
+    when 'disk'
+      if disk.controller_type.start_with?('ide')
         "Hard Disk (IDE #{disk.location})"
-      elsif disk.controller_type.start_with?("scsi")
+      elsif disk.controller_type.start_with?('scsi')
         "Hard Disk (SCSI #{disk.location})"
       else
         "#{disk.controller_type} #{disk.location}"
       end
-    when "ide"
+    when 'ide'
       "Hard Disk (IDE #{disk.location})"
-    when "scsi", "scsi-hardDisk"
+    when 'scsi', 'scsi-hardDisk'
       "Hard Disk (SCSI #{disk.location})"
-    when "scsi-passthru"
+    when 'scsi-passthru'
       "Generic SCSI (#{disk.location})"
     else
       "#{disk.controller_type} #{disk.location}"

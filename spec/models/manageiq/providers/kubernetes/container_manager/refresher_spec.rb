@@ -1,9 +1,9 @@
 describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   before(:each) do
-    allow(MiqServer).to receive(:my_zone).and_return("default")
-    auth = AuthToken.new(:name => "test", :auth_key => "valid-token")
-    @ems = FactoryGirl.create(:ems_kubernetes, :hostname => "10.35.0.169",
-                              :ipaddress => "10.35.0.169", :port => 6443,
+    allow(MiqServer).to receive(:my_zone).and_return('default')
+    auth = AuthToken.new(:name => 'test', :auth_key => 'valid-token')
+    @ems = FactoryGirl.create(:ems_kubernetes, :hostname => '10.35.0.169',
+                              :ipaddress => '10.35.0.169', :port => 6443,
                               :authentications => [auth])
     # NOTE: the following :uid_ems should match (downcased) the kubernetes
     #       node systemUUID in the VCR yaml file
@@ -15,11 +15,11 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :uid_ems => 'cad16607-fb88-4412-a993-5242030f6afa')
   end
 
-  it ".ems_type" do
+  it '.ems_type' do
     expect(described_class.ems_type).to eq(:kubernetes)
   end
 
-  it "will perform a full refresh on k8s" do
+  it 'will perform a full refresh on k8s' do
     2.times do # Run twice to verify that a second run with existing data does not change anything
       VCR.use_cassette("#{described_class.name.underscore}") do # , :record => :new_episodes) do
         EmsRefresh.refresh(@ems)
@@ -65,7 +65,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   def assert_ems
     expect(@ems).to have_attributes(
       :port => 6443,
-      :type => "ManageIQ::Providers::Kubernetes::ContainerManager"
+      :type => 'ManageIQ::Providers::Kubernetes::ContainerManager'
     )
   end
 
@@ -78,13 +78,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container
-    @container = Container.find_by_name("heapster")
+    @container = Container.find_by_name('heapster')
     expect(@container).to have_attributes(
       # :ems_ref     => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
-      :name          => "heapster",
+      :name          => 'heapster',
       :restart_count => 2,
-      :state         => "running",
-      :last_state    => "terminated",
+      :state         => 'running',
+      :last_state    => 'terminated',
     # :backing_ref => "docker://87cd51044d7175c246fa1fa7699253fc2aecb769021837a966fa71e9dcb54d71"
     )
 
@@ -97,14 +97,14 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       expect(date_.kind_of?(ActiveSupport::TimeWithZone) || date_.kind_of?(NilClass)).to be_truthy
     end
 
-    expect(@container.container_image.name).to eq("kubernetes/heapster")
-    expect(@container.container_definition.command).to eq("/heapster --source\\=kubernetes:https://kubernetes "\
-                                                      "--sink\\=influxdb:http://monitoring-influxdb:80")
+    expect(@container.container_image.name).to eq('kubernetes/heapster')
+    expect(@container.container_definition.command).to eq('/heapster --source\\=kubernetes:https://kubernetes '\
+                                                      '--sink\\=influxdb:http://monitoring-influxdb:80')
 
-    @container2 = Container.find_by_name("influxdb")
+    @container2 = Container.find_by_name('influxdb')
     expect(@container2).to have_attributes(
       # :ems_ref       => "a7649eaa-e73f-11e4-b613-001a4a5f4a02_influxdb_kubernetes/heapster_influxdb:v0.3",
-      :name          => "influxdb",
+      :name          => 'influxdb',
       :restart_count => 0,
 
     # :backing_ref   => "docker://af741769b650a408f4a65d2d27043912b6d57e5e2a721faeb7a93a1989eef0c6"
@@ -112,31 +112,31 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     # Check the relation to container group
     expect(@container2.container_group).to have_attributes(
-      :name => "monitoring-influx-grafana-controller-22icy"
+      :name => 'monitoring-influx-grafana-controller-22icy'
     )
 
     # Check relation to provider, container definition and container image
-    expect(@container2.container_image.name).to eq("kubernetes/heapster_influxdb")
+    expect(@container2.container_image.name).to eq('kubernetes/heapster_influxdb')
     expect(@container2.container_definition).not_to be_nil
     expect(@container2.ext_management_system).to eq(@ems)
 
     expect(@container.container_node).to have_attributes(
-      :name => "10.35.0.169"
+      :name => '10.35.0.169'
     )
   end
 
   def assert_specific_container_definition
-    expect(ContainerDefinition.find_by_name("heapster").ext_management_system).to eq(@ems)
+    expect(ContainerDefinition.find_by_name('heapster').ext_management_system).to eq(@ems)
   end
 
   def assert_specific_container_group
-    @containergroup = ContainerGroup.find_by_name("monitoring-heapster-controller-4j5zu")
+    @containergroup = ContainerGroup.find_by_name('monitoring-heapster-controller-4j5zu')
     expect(@containergroup).to have_attributes(
       # :ems_ref        => "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
-      :name           => "monitoring-heapster-controller-4j5zu",
-      :restart_policy => "Always",
-      :dns_policy     => "ClusterFirst",
-      :phase          => "Running",
+      :name           => 'monitoring-heapster-controller-4j5zu',
+      :restart_policy => 'Always',
+      :dns_policy     => 'ClusterFirst',
+      :phase          => 'Running',
     )
     expect(@containergroup.labels.count).to eq(1)
 
@@ -149,8 +149,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(@services.count).to eq(1)
     expect(@services.first).to have_attributes(
       # :ems_ref => "49981230-e1b7-11e4-b7dc-001a4a5f4a02",
-      :name         => "monitoring-heapster",
-      :service_type => "ClusterIP"
+      :name         => 'monitoring-heapster',
+      :service_type => 'ClusterIP'
     )
 
     # Check the relation to containers
@@ -158,42 +158,42 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     # Check relations to replicator, labels and provider
     expect(@containergroup.container_replicator).to eq(
-      ContainerReplicator.find_by(:name => "monitoring-heapster-controller")
+      ContainerReplicator.find_by(:name => 'monitoring-heapster-controller')
     )
     expect(@containergroup.ext_management_system).to eq(@ems)
 
     # Check pod condition name is "Ready" with status "True"
-    @containergroupconditions = ContainerCondition.where(:container_entity_type => "ContainerGroup")
+    @containergroupconditions = ContainerCondition.where(:container_entity_type => 'ContainerGroup')
     expect(@containergroupconditions.first).to have_attributes(
-      :name   => "Ready",
-      :status => "True"
+      :name   => 'Ready',
+      :status => 'True'
     )
   end
 
   def assert_specific_container_node
-    @containernode = ContainerNode.where(:name => "10.35.0.169").first
+    @containernode = ContainerNode.where(:name => '10.35.0.169').first
     expect(@containernode).to have_attributes(
       # :ems_ref       => "a3d2a008-e73f-11e4-b613-001a4a5f4a02",
       :lives_on_type              => @openstack_vm.type,
       :lives_on_id                => @openstack_vm.id,
-      :container_runtime_version  => "docker://1.5.0",
-      :kubernetes_kubelet_version => "v1.0.0-dirty",
-      :kubernetes_proxy_version   => "v1.0.0-dirty",
+      :container_runtime_version  => 'docker://1.5.0',
+      :kubernetes_kubelet_version => 'v1.0.0-dirty',
+      :kubernetes_proxy_version   => 'v1.0.0-dirty',
       :max_container_groups       => 40
     )
 
-    @containernodeconditions = ContainerCondition.where(:container_entity_type => "ContainerNode")
+    @containernodeconditions = ContainerCondition.where(:container_entity_type => 'ContainerNode')
     expect(@containernodeconditions.count).to eq(2)
     expect(@containernodeconditions.first).to have_attributes(
-      :name   => "Ready",
-      :status => "True"
+      :name   => 'Ready',
+      :status => 'True'
     )
 
     expect(@containernode.labels.count).to eq(1)
 
     expect(@containernode.computer_system.operating_system).to have_attributes(
-      :distribution   => "Fedora 20 (Heisenbug)",
-      :kernel_version => "3.18.9-100.fc20.x86_64"
+      :distribution   => 'Fedora 20 (Heisenbug)',
+      :kernel_version => '3.18.9-100.fc20.x86_64'
     )
 
     expect(@containernode.hardware).to have_attributes(
@@ -208,7 +208,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
 
     # Leaving this test commented out until we find a way to test this more easily
     # Check relationship with oVirt provider
-    @containernode = ContainerNode.where(:name => "localhost.localdomain").first
+    @containernode = ContainerNode.where(:name => 'localhost.localdomain').first
     expect(@containernode).to have_attributes(
       :lives_on_type => @ovirt_vm.type,
       :lives_on_id   => @ovirt_vm.id,
@@ -219,12 +219,12 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_service
-    @containersrv = ContainerService.find_by_name("kubernetes")
+    @containersrv = ContainerService.find_by_name('kubernetes')
     expect(@containersrv).to have_attributes(
       # :ems_ref          => "a36a2858-e73f-11e4-b613-001a4a5f4a02",
-      :name             => "kubernetes",
-      :session_affinity => "None",
-      :portal_ip        => "10.0.0.1",
+      :name             => 'kubernetes',
+      :session_affinity => 'None',
+      :portal_ip        => '10.0.0.1',
     )
     expect(@containersrv.labels.count).to eq(2)
     expect(@containersrv.selector_parts.count).to eq(0)
@@ -234,21 +234,21 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     @confs = @confs.first
     expect(@confs).to have_attributes(
       :name        => nil,
-      :protocol    => "TCP",
+      :protocol    => 'TCP',
       :port        => 443,
-      :target_port => "443",
+      :target_port => '443',
       :node_port   => nil
     )
 
     # Check group relation
-    @groups = ContainerService.find_by_name("monitoring-influxdb-ui").container_groups
+    @groups = ContainerService.find_by_name('monitoring-influxdb-ui').container_groups
     expect(@groups.count).to eq(1)
     @group = @groups.first
     expect(@group).to have_attributes(
       # :ems_ref => "49b72714-e1b7-11e4-b7dc-001a4a5f4a02",
       # :name    => "monitoring-influx-grafana-controller-2toua"
-      :restart_policy => "Always",
-      :dns_policy     => "ClusterFirst"
+      :restart_policy => 'Always',
+      :dns_policy     => 'ClusterFirst'
     )
 
     expect(@containersrv.ext_management_system).to eq(@ems)
@@ -256,30 +256,30 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_replicator
-    @replicator = ContainerReplicator.where(:name => "monitoring-influx-grafana-controller").first
+    @replicator = ContainerReplicator.where(:name => 'monitoring-influx-grafana-controller').first
     expect(@replicator).to have_attributes(
-      :name             => "monitoring-influx-grafana-controller",
+      :name             => 'monitoring-influx-grafana-controller',
       :replicas         => 1,
       :current_replicas => 1
     )
     expect(@replicator.labels.count).to eq(1)
     expect(@replicator.selector_parts.count).to eq(1)
 
-    @group = ContainerGroup.where(:name => "monitoring-influx-grafana-controller-22icy").first
+    @group = ContainerGroup.where(:name => 'monitoring-influx-grafana-controller-22icy').first
     expect(@group.container_replicator).not_to be_nil
-    expect(@group.container_replicator.name).to eq("monitoring-influx-grafana-controller")
+    expect(@group.container_replicator.name).to eq('monitoring-influx-grafana-controller')
     expect(@replicator.ext_management_system).to eq(@ems)
 
     expect(@replicator.container_nodes.count).to eq(1)
     expect(@replicator.container_nodes.first).to have_attributes(
-      :name => "10.35.0.169"
+      :name => '10.35.0.169'
     )
   end
 
   def assert_specific_container_project
-    @container_pr = ContainerProject.find_by_name("default")
+    @container_pr = ContainerProject.find_by_name('default')
     expect(@container_pr).to have_attributes(
-      :name         => "default",
+      :name         => 'default',
       :display_name => nil
     )
 
@@ -291,7 +291,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_quota
-    container_quota = ContainerQuota.find_by_name("quota")
+    container_quota = ContainerQuota.find_by_name('quota')
     container_quota.ems_created_on.kind_of?(ActiveSupport::TimeWithZone)
     expect(container_quota.container_quota_items.count).to eq(8)
     cpu_quota = container_quota.container_quota_items.select { |x| x[:resource] == 'cpu' }[0]
@@ -300,14 +300,14 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :quota_enforced => '20',
       :quota_observed => '100m',
     )
-    expect(container_quota.container_project.name).to eq("default")
+    expect(container_quota.container_project.name).to eq('default')
   end
 
   def assert_specific_container_limit
-    container_limit = ContainerLimit.find_by_name("limits")
+    container_limit = ContainerLimit.find_by_name('limits')
     container_limit.ems_created_on.kind_of?(ActiveSupport::TimeWithZone)
     expect(container_limit.container_limit_items.count).to eq(2)
-    expect(container_limit.container_project.name).to eq("default")
+    expect(container_limit.container_project.name).to eq('default')
     item = container_limit.container_limit_items.each { |x| x[:item_type] == 'Container' && x[:resource] == 'cpu' }[0]
     assert_specific_limit_item item
   end
@@ -316,33 +316,33 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(item).to have_attributes(
       :max                     => nil,
       :min                     => nil,
-      :default                 => "100m",
+      :default                 => '100m',
       :default_request         => nil,
       :max_limit_request_ratio => nil,
     )
   end
 
   def assert_specific_container_image_and_registry
-    @image = ContainerImage.where(:name => "kubernetes/heapster").first
+    @image = ContainerImage.where(:name => 'kubernetes/heapster').first
     expect(@image).to have_attributes(
-      :name      => "kubernetes/heapster",
-      :tag       => "v0.16.0",
-      :image_ref => "docker://f79cf2701046bea8d5f1384f7efe79dd4d20620b3594fff5be39142fa862259d",
+      :name      => 'kubernetes/heapster',
+      :tag       => 'v0.16.0',
+      :image_ref => 'docker://f79cf2701046bea8d5f1384f7efe79dd4d20620b3594fff5be39142fa862259d',
     )
 
     expect(@image.container_image_registry).not_to be_nil
     expect(@image.container_image_registry).to have_attributes(
-      :host => "example.com",
-      :port => "1234",
+      :host => 'example.com',
+      :port => '1234',
     )
     expect(@image.container_nodes.count).to eq(1)
   end
 
   def assert_specific_container_component_status
-    @component_status = ContainerComponentStatus.find_by_name("etcd-0")
+    @component_status = ContainerComponentStatus.find_by_name('etcd-0')
     expect(@component_status).to have_attributes(
-      :condition => "Healthy",
-      :status    => "True"
+      :condition => 'Healthy',
+      :status    => 'True'
     )
   end
 end

@@ -1,6 +1,6 @@
 module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Container
   def build_config_spec
-    VimHash.new("VirtualMachineConfigSpec") do |vmcs|
+    VimHash.new('VirtualMachineConfigSpec') do |vmcs|
       vmcs.annotation = build_vm_notes
 
       #####################################################################################################
@@ -36,8 +36,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
         if cores.to_i >= 1
           vmcs_ec = vmcs.extraConfig = VimArray.new('ArrayOfOptionValue')
           vmcs_ec << VimHash.new('OptionValue') do |ov|
-            ov.key   = "cpuid.coresPerSocket"
-            ov.value = VimString.new(cores.to_s, nil, "xsd:string")
+            ov.key   = 'cpuid.coresPerSocket'
+            ov.value = VimString.new(cores.to_s, nil, 'xsd:string')
           end
         end
       end
@@ -104,19 +104,19 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
   end
 
   def set_cpu_and_memory_allocation(vm)
-    config_spec = VimHash.new("VirtualMachineConfigSpec") do |vmcs|
-      vmcs.cpuAllocation    = VimHash.new("ResourceAllocationInfo") do |rai|
+    config_spec = VimHash.new('VirtualMachineConfigSpec') do |vmcs|
+      vmcs.cpuAllocation    = VimHash.new('ResourceAllocationInfo') do |rai|
         set_spec_option(rai, :limit,       :cpu_limit,   nil, :to_i)
         set_spec_option(rai, :reservation, :cpu_reserve, nil, :to_i)
       end
 
-      vmcs.memoryAllocation = VimHash.new("ResourceAllocationInfo") do |rai|
+      vmcs.memoryAllocation = VimHash.new('ResourceAllocationInfo') do |rai|
         set_spec_option(rai, :limit,       :memory_limit,   nil, :to_i)
         set_spec_option(rai, :reservation, :memory_reserve, nil, :to_i)
       end
     end
 
-    _log.info("Calling VM reconfiguration")
+    _log.info('Calling VM reconfiguration')
     dumpObj(config_spec, "#{_log.prefix} Post-create Config spec: ", $log, :info)
     vm.spec_reconfigure(config_spec)
   end

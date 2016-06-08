@@ -10,11 +10,11 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
 
   def max_total_vcpus_by_version
     case hardware.virtual_hw_version
-    when "04"       then 4
-    when "07"       then 8
-    when "08"       then 32
-    when "09", "10" then 64
-    when "11"       then 128
+    when '04'       then 4
+    when '07'       then 8
+    when '08'       then 32
+    when '09', '10' then 64
+    when '11'       then 128
     else
       _log.warn("Add support for new hardware version [#{hardware.virtual_hw_version}].")
       128
@@ -23,11 +23,11 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
 
   def max_cpu_cores_per_socket(_total_vcpus = nil)
     case hardware.virtual_hw_version
-    when "04"       then 1
-    when "07"       then 8
-    when "08"       then 32
-    when "09", "10" then 64
-    when "11"       then 128
+    when '04'       then 1
+    when '07'       then 8
+    when '08'       then 32
+    when '09', '10' then 64
+    when '11'       then 128
     else
       _log.warn("Add support for new hardware version [#{hardware.virtual_hw_version}].")
       128
@@ -40,10 +40,10 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
 
   def max_memory_mb
     case hardware.virtual_hw_version
-    when "04"             then   64.gigabyte / 1.megabyte
-    when "07"             then  255.gigabyte / 1.megabyte
-    when "08", "09", "10" then 1011.gigabyte / 1.megabyte
-    when "11"             then    4.terabyte / 1.megabyte
+    when '04'             then   64.gigabyte / 1.megabyte
+    when '07'             then  255.gigabyte / 1.megabyte
+    when '08', '09', "10" then 1011.gigabyte / 1.megabyte
+    when '11'             then    4.terabyte / 1.megabyte
     else
       _log.warn("Add support for new hardware version [#{hardware.virtual_hw_version}].")
       4.terabyte / 1.megabyte
@@ -51,13 +51,13 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
   end
 
   def build_config_spec(options)
-    VimHash.new("VirtualMachineConfigSpec") do |vmcs|
+    VimHash.new('VirtualMachineConfigSpec') do |vmcs|
       case hardware.virtual_hw_version
-      when "07"
+      when '07'
         ec =  VimArray.new('ArrayOfOptionValue')
         ec << VimHash.new('OptionValue') do |ov|
-          ov.key   = "cpuid.coresPerSocket"
-          ov.value = VimString.new(options[:cores_per_socket].to_s, nil, "xsd:string")
+          ov.key   = 'cpuid.coresPerSocket'
+          ov.value = VimString.new(options[:cores_per_socket].to_s, nil, 'xsd:string')
         end
         vmcs.extraConfig = ec
       else
@@ -145,19 +145,19 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
 
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Add) do |vdcs|
       vdcs.fileOperation = VirtualDeviceConfigSpecFileOperation::Create
-      vdcs.device = VimHash.new("VirtualDisk") do |dev|
+      vdcs.device = VimHash.new('VirtualDisk') do |dev|
         dev.key            = -100 * options[:unit_number]  # temp key for creation
         dev.capacityInKB   = options[:disk_size_in_mb].to_i * 1024
         dev.controllerKey  = options[:controller_key]
         dev.unitNumber     = options[:unit_number]
 
-        dev.connectable = VimHash.new("VirtualDeviceConnectInfo") do |con|
-          con.allowGuestControl = "false"
-          con.startConnected    = "true"
-          con.connected         = "true"
+        dev.connectable = VimHash.new('VirtualDeviceConnectInfo') do |con|
+          con.allowGuestControl = 'false'
+          con.startConnected    = 'true'
+          con.connected         = 'true'
         end
 
-        dev.backing = VimHash.new("VirtualDiskFlatVer2BackingInfo") do |bck|
+        dev.backing = VimHash.new('VirtualDiskFlatVer2BackingInfo') do |bck|
           bck.diskMode        = disk_mode(options[:dependent], options[:persistent])
           bck.thinProvisioned = options[:thin_provisioned]
           bck.fileName        = backing_filename
@@ -167,7 +167,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
   end
 
   def remove_disk_config_spec(vim_obj, vmcs, options)
-    raise "remove_disk_config_spec: disk filename is required." unless options[:disk_name]
+    raise 'remove_disk_config_spec: disk filename is required.' unless options[:disk_name]
 
     options.reverse_merge!(:delete_backing => false)
     controller_key, key = vim_obj.send(:getDeviceKeysByBacking, options[:disk_name])
@@ -175,15 +175,15 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
 
     add_device_config_spec(vmcs, VirtualDeviceConfigSpecOperation::Remove) do |vdcs|
       vdcs.fileOperation = VirtualDeviceConfigSpecFileOperation::Destroy if options[:delete_backing]
-      vdcs.device = VimHash.new("VirtualDisk") do |dev|
+      vdcs.device = VimHash.new('VirtualDisk') do |dev|
         dev.key           = key
         dev.capacityInKB  = 0
         dev.controllerKey = controller_key
 
-        dev.connectable = VimHash.new("VirtualDeviceConnectInfo") do |con|
-          con.allowGuestControl = "false"
-          con.startConnected    = "true"
-          con.connected         = "true"
+        dev.connectable = VimHash.new('VirtualDeviceConnectInfo') do |con|
+          con.allowGuestControl = 'false'
+          con.startConnected    = 'true'
+          con.connected         = 'true'
         end
       end
     end

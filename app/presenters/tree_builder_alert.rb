@@ -8,13 +8,13 @@ class TreeBuilderAlert < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "al_",
+      :id_prefix => 'al_',
     )
   end
 
   # level 0 - root
   def root_options
-    [t = N_("All Alerts"), t]
+    [t = N_('All Alerts'), t]
   end
 
   # level 1 - alerts

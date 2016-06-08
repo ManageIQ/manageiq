@@ -9,16 +9,16 @@ class RssFeed < ApplicationRecord
   acts_as_miq_taggable
   include_concern 'ImportExport'
 
-  YML_DIR = File.join(File.expand_path(Rails.root), "product", "alerts", "rss")
+  YML_DIR = File.join(File.expand_path(Rails.root), 'product', 'alerts', 'rss')
 
   def url(host = nil)
-    proto = VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
+    proto = VMDB::Config.new('vmdb').config[:webservices][:consume_protocol]
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
     "#{host_url}#{link}"
   end
 
   def generate(host = nil, local = false, proto = nil)
-    proto ||= VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
+    proto ||= VMDB::Config.new('vmdb').config[:webservices][:consume_protocol]
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
 
     options = {
@@ -41,7 +41,7 @@ class RssFeed < ApplicationRecord
 
   def self.to_html(feed, options)
     limit = options[:limit_to_count]
-    output = ""
+    output = ''
     output << '<table class="table table-striped table-bordered table-hover">'
     output << '<tbody>'
     items = options[:limit_to_count] ? feed.items[0..options[:limit_to_count] - 1] : feed.items
@@ -50,7 +50,7 @@ class RssFeed < ApplicationRecord
       output << '<td>'
       output << i.title
       output << '<br/>'
-      pubDate = (i.pubDate.blank? || i.pubDate == "") ? "" : format_timezone(i.pubDate, options[:tz], "raw")
+      pubDate = (i.pubDate.blank? || i.pubDate == '') ? '' : format_timezone(i.pubDate, options[:tz], 'raw')
       output << "Date : #{pubDate}"
       output << '</td>'
       output << '</tr>'
@@ -66,20 +66,20 @@ class RssFeed < ApplicationRecord
     return @options unless @options.nil?
 
     file = RssFeed.yml_file_name(name)
-    raise _("no yml file found for name \"%{name}\"") % {:name => name} unless File.exist?(file)
+    raise _('no yml file found for name "%{name}"') % {:name => name} unless File.exist?(file)
     @options = YAML.load(File.read(file)).symbolize_keys
   end
 
   def self.roles
-    Tag.where("name like '/managed/roles/%'").pluck(:name).collect { |n| n.split("/").last }
+    Tag.where("name like '/managed/roles/%'").pluck(:name).collect { |n| n.split('/').last }
   end
 
   private
 
   def self.eval_item_attr(script, rec)
     _ = rec # used by eval
-    if script.starts_with?("<script>", "<SCRIPT>")
-      code = script.sub(/<script>|<SCRIPT>/, "").sub(/<\/script>|<\/SCRIPT>/, "").strip
+    if script.starts_with?('<script>', '<SCRIPT>')
+      code = script.sub(/<script>|<SCRIPT>/, '').sub(/<\/script>|<\/SCRIPT>/, '').strip
       result = eval(code)
     else
       result = eval('"' + script + '"')
@@ -90,7 +90,7 @@ class RssFeed < ApplicationRecord
   def find_items
     item_class = options[:item_class].constantize
     case options[:search_method]
-    when "find", nil
+    when 'find', nil
       if options[:tags] && options[:tags_include]
         any_or_all = options[:tags_include].to_sym
         items = item_class.find_tagged_with(
@@ -135,17 +135,17 @@ class RssFeed < ApplicationRecord
       rec = self.create!(rss)
     end
 
-    rec.tag_add(yml[:roles], :ns => "/managed", :cat => "roles") unless yml[:roles].nil?
+    rec.tag_add(yml[:roles], :ns => '/managed', :cat => 'roles') unless yml[:roles].nil?
   end
 
   def self.yml_file_name(name)
-    File.join(YML_DIR, name + ".yml")
+    File.join(YML_DIR, name + '.yml')
   end
 
   def self.sync_from_yml_dir
     # Add missing feeds to model
-    Dir.glob(File.join(YML_DIR, "*.yml")).each do |f|
-      sync_from_yml_file(File.basename(f, ".*"))
+    Dir.glob(File.join(YML_DIR, '*.yml')).each do |f|
+      sync_from_yml_file(File.basename(f, '.*'))
     end
 
     # Remove deleted feeds from model

@@ -2,13 +2,13 @@ require 'disk/modules/MSCommon'
 
 module MSVSDynamicDisk
   def d_init
-    self.diskType = "MSVS Dynamic"
+    self.diskType = 'MSVS Dynamic'
     self.blockSize = MSCommon::SECTOR_LENGTH
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
+    if dInfo.mountMode.nil? || dInfo.mountMode == 'r'
+      dInfo.mountMode = 'r'
+      fileMode = 'r'
+    elsif dInfo.mountMode == 'rw'
+      fileMode = 'r+'
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end

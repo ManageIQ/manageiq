@@ -113,7 +113,7 @@ class TreeBuilder
   def node_by_tree_id(id)
     model, rec_id, prefix = self.class.extract_node_model_and_id(id)
 
-    if model == "Hash"
+    if model == 'Hash'
       {:type => prefix, :id => rec_id, :full_id => id}
     elsif model.nil? && [:sandt, :svccat, :stcat].include?(@type)
       # Creating empty record to show items under unassigned catalog node
@@ -162,7 +162,7 @@ class TreeBuilder
 
   # return this nodes model and record id
   def self.extract_node_model_and_id(node_id)
-    prefix, record_id = node_id.split("_").last.split('-')
+    prefix, record_id = node_id.split('_').last.split('-')
     model = get_model_for_prefix(prefix)
     [model, record_id, prefix]
   end
@@ -222,9 +222,9 @@ class TreeBuilder
       :tree_id      => "#{@name}box",
       :tree_name    => @name.to_s,
       :json_tree    => @tree_nodes,
-      :onclick      => "miqOnClickSelectTreeNode",
+      :onclick      => 'miqOnClickSelectTreeNode',
       :id_prefix    => "#{@name}_",
-      :base_id      => "root",
+      :base_id      => 'root',
       :no_base_exp  => true,
       :exp_tree     => false,
       :highlighting => true,
@@ -332,7 +332,7 @@ class TreeBuilder
   end
 
   def get_vmdb_config
-    @vmdb_config ||= VMDB::Config.new("vmdb").config
+    @vmdb_config ||= VMDB::Config.new('vmdb').config
   end
 
   def rbac_filtered_objects(objects, options = {})
@@ -359,82 +359,82 @@ class TreeBuilder
 
   # Tree node prefixes for generic explorers
   X_TREE_NODE_PREFIXES = {
-    "a"   => "MiqAction",
-    "aec" => "MiqAeClass",
-    "aei" => "MiqAeInstance",
-    "aem" => "MiqAeMethod",
-    "aen" => "MiqAeNamespace",
-    "al"  => "MiqAlert",
-    "ap"  => "MiqAlertSet",
-    "az"  => "AvailabilityZone",
-    "azu" => "OrchestrationTemplateAzure",
-    "at"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
-    "cf " => "ConfigurationScript",
-    "cnt" => "Container",
-    "co"  => "Condition",
-    "cbg" => "CustomButtonSet",
-    "cb"  => "CustomButton",
-    "cfn" => "OrchestrationTemplateCfn",
-    "cm"  => "Compliance",
-    "cd"  => "ComplianceDetail",
-    "cp"  => "ConfigurationProfile",
-    "cr"  => "ChargebackRate",
-    "cs"  => "ConfiguredSystem",
-    "ct"  => "CustomizationTemplate",
-    "dc"  => "Datacenter",
-    "dg"  => "Dialog",
-    "ds"  => "Storage",
-    "dsc" => "StorageCluster",
-    "e"   => "ExtManagementSystem",
-    "ev"  => "MiqEventDefinition",
-    "c"   => "EmsCluster",
-    "csf" => "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem",
-    "csa" => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
-    "f"   => "EmsFolder",
-    "fr"  => "ManageIQ::Providers::Foreman::ConfigurationManager",
-    "g"   => "MiqGroup",
-    "gd"  => "GuestDevice",
-    "h"   => "Host",
-    "hot" => "OrchestrationTemplateHot",
-    "isd" => "IsoDatastore",
-    "isi" => "IsoImage",
-    "l"   => "Lan",
-    "ld"  => "LdapDomain",
-    "lr"  => "LdapRegion",
-    "me"  => "MiqEnterprise",
-    "mr"  => "MiqRegion",
-    "msc" => "MiqSchedule",
-    "ms"  => "MiqSearch",
-    "odg" => "MiqDialog",
-    "ot"  => "OrchestrationTemplate",
-    "pi"  => "PxeImage",
-    "pit" => "PxeImageType",
-    "ps"  => "PxeServer",
-    "pp"  => "MiqPolicySet",
-    "p"   => "MiqPolicy",
-    "rep" => "MiqReport",
-    "rr"  => "MiqReportResult",
-    "svr" => "MiqServer",
-    "ur"  => "MiqUserRole",
-    "r"   => "ResourcePool",
-    "s"   => "Service",
-    "sa"  => "StorageAdapter",
-    "sl"  => "MiqScsiLun",
-    "sg"  => "MiqScsiTarget",
-    "sis" => "ScanItemSet",
-    "st"  => "ServiceTemplate",
-    "stc" => "ServiceTemplateCatalog",
-    "sr"  => "ServiceResource",
-    "sw"  => "Switch",
-    "t"   => "MiqTemplate",
-    "tb"  => "VmdbTable",
-    "ti"  => "VmdbIndex",
-    "tn"  => "Tenant",
-    "u"   => "User",
-    "v"   => "Vm",
-    "wi"  => "WindowsImage",
-    "xx"  => "Hash",  # For custom (non-CI) nodes, specific to each tree
-    "z"   => "Zone"
+    'a'   => 'MiqAction',
+    'aec' => 'MiqAeClass',
+    'aei' => 'MiqAeInstance',
+    'aem' => 'MiqAeMethod',
+    'aen' => 'MiqAeNamespace',
+    'al'  => 'MiqAlert',
+    'ap'  => 'MiqAlertSet',
+    'az'  => 'AvailabilityZone',
+    'azu' => 'OrchestrationTemplateAzure',
+    'at'  => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager',
+    'cf ' => 'ConfigurationScript',
+    'cnt' => 'Container',
+    'co'  => 'Condition',
+    'cbg' => 'CustomButtonSet',
+    'cb'  => 'CustomButton',
+    'cfn' => 'OrchestrationTemplateCfn',
+    'cm'  => 'Compliance',
+    'cd'  => 'ComplianceDetail',
+    'cp'  => 'ConfigurationProfile',
+    'cr'  => 'ChargebackRate',
+    'cs'  => 'ConfiguredSystem',
+    'ct'  => 'CustomizationTemplate',
+    'dc'  => 'Datacenter',
+    'dg'  => 'Dialog',
+    'ds'  => 'Storage',
+    'dsc' => 'StorageCluster',
+    'e'   => 'ExtManagementSystem',
+    'ev'  => 'MiqEventDefinition',
+    'c'   => 'EmsCluster',
+    'csf' => 'ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem',
+    'csa' => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem',
+    'f'   => 'EmsFolder',
+    'fr'  => 'ManageIQ::Providers::Foreman::ConfigurationManager',
+    'g'   => 'MiqGroup',
+    'gd'  => 'GuestDevice',
+    'h'   => 'Host',
+    'hot' => 'OrchestrationTemplateHot',
+    'isd' => 'IsoDatastore',
+    'isi' => 'IsoImage',
+    'l'   => 'Lan',
+    'ld'  => 'LdapDomain',
+    'lr'  => 'LdapRegion',
+    'me'  => 'MiqEnterprise',
+    'mr'  => 'MiqRegion',
+    'msc' => 'MiqSchedule',
+    'ms'  => 'MiqSearch',
+    'odg' => 'MiqDialog',
+    'ot'  => 'OrchestrationTemplate',
+    'pi'  => 'PxeImage',
+    'pit' => 'PxeImageType',
+    'ps'  => 'PxeServer',
+    'pp'  => 'MiqPolicySet',
+    'p'   => 'MiqPolicy',
+    'rep' => 'MiqReport',
+    'rr'  => 'MiqReportResult',
+    'svr' => 'MiqServer',
+    'ur'  => 'MiqUserRole',
+    'r'   => 'ResourcePool',
+    's'   => 'Service',
+    'sa'  => 'StorageAdapter',
+    'sl'  => 'MiqScsiLun',
+    'sg'  => 'MiqScsiTarget',
+    'sis' => 'ScanItemSet',
+    'st'  => 'ServiceTemplate',
+    'stc' => 'ServiceTemplateCatalog',
+    'sr'  => 'ServiceResource',
+    'sw'  => 'Switch',
+    't'   => 'MiqTemplate',
+    'tb'  => 'VmdbTable',
+    'ti'  => 'VmdbIndex',
+    'tn'  => 'Tenant',
+    'u'   => 'User',
+    'v'   => 'Vm',
+    'wi'  => 'WindowsImage',
+    'xx'  => 'Hash',  # For custom (non-CI) nodes, specific to each tree
+    'z'   => 'Zone'
   }
 
   X_TREE_NODE_PREFIXES_INVERTED = X_TREE_NODE_PREFIXES.invert

@@ -7,36 +7,36 @@ module Manageiq
   class MiqWsPing
     def self.defaults
       {
-        :host  => "localhost",
+        :host  => 'localhost',
         :port  => 3000,
         :total => 5,
         :bytes => 64,
         :debug => 1,
-        :mode  => "server",
+        :mode  => 'server',
       }
     end
 
     def self.ping(cfg)
-      cfg.data = ""
-      cfg.bytes.times { cfg.data += "*" }
+      cfg.data = ''
+      cfg.bytes.times { cfg.data += '*' }
 
-      cfg.mode = "agent" if cfg.port == 1139
-      if cfg.mode == "agent"
-        ws = "miqPing"
+      cfg.mode = 'agent' if cfg.port == 1139
+      if cfg.mode == 'agent'
+        ws = 'miqPing'
       else
-        ws = "MiqPing"
+        ws = 'MiqPing'
       end
 
       puts "Pinging [#{cfg.host}:#{cfg.port}] with [#{cfg.bytes}] bytes of data:"
 
       driver = nil # Was soap/rpc/driver from soap4r
       # driver.add_method(ws, 'param0')
-      driver.add_method_with_soapaction_as(ws, ws, "/miqservices/api/MiqPing", 'data')
+      driver.add_method_with_soapaction_as(ws, ws, '/miqservices/api/MiqPing', 'data')
 
       if cfg.debug == 1
-        dfile = "miq_ping_wire_dump.out"
+        dfile = 'miq_ping_wire_dump.out'
         File.delete(dfile) if File.exist?(dfile)
-        wdFile = File.new("miq_ping_wire_dump.out", "w")
+        wdFile = File.new('miq_ping_wire_dump.out', 'w')
         driver.wiredump_dev = wdFile
       end
 

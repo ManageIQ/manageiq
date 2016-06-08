@@ -51,7 +51,7 @@ class MiqServer < ApplicationRecord
   end
 
   def self.atStartup
-    configuration  = VMDB::Config.new("vmdb")
+    configuration  = VMDB::Config.new('vmdb')
     starting_roles = configuration.config.fetch_path(:server, :role)
 
     # Change the database role to database_operations
@@ -75,7 +75,7 @@ class MiqServer < ApplicationRecord
   end
 
   def self.invoke_at_startups
-    _log.info("Invoking startup methods")
+    _log.info('Invoking startup methods')
     RUN_AT_STARTUP.each do |klass|
       _log.info("Invoking startup method for #{klass}")
       begin
@@ -89,8 +89,8 @@ class MiqServer < ApplicationRecord
 
   def starting_server_record
     self.started_on = self.last_heartbeat = Time.now.utc
-    self.stopped_on = ""
-    self.status     = "starting"
+    self.stopped_on = ''
+    self.status     = 'starting'
     self.pid        = Process.pid
     self.build      = Vmdb::Appliance.BUILD
     self.version    = Vmdb::Appliance.VERSION
@@ -101,7 +101,7 @@ class MiqServer < ApplicationRecord
 
   def self.setup_data_directory
     # create root data directory
-    data_dir = File.join(File.expand_path(Rails.root), "data")
+    data_dir = File.join(File.expand_path(Rails.root), 'data')
     Dir.mkdir data_dir unless File.exist?(data_dir)
   end
 
@@ -116,7 +116,7 @@ class MiqServer < ApplicationRecord
 
   def start
     begin
-      MiqEvent.raise_evm_event(self, "evm_server_start")
+      MiqEvent.raise_evm_event(self, 'evm_server_start')
     rescue MiqException::PolicyPreventAction => err
       _log.warn "#{err}"
       # TODO: Need to decide what to do here. Should the cluster be stopped?
@@ -169,8 +169,8 @@ class MiqServer < ApplicationRecord
     sync_workers
     wait_for_started_workers
 
-    update_attributes(:status => "started")
-    _log.info("Server starting complete")
+    update_attributes(:status => 'started')
+    _log.info('Server starting complete')
   end
 
   def self.seed
@@ -180,7 +180,7 @@ class MiqServer < ApplicationRecord
       create!(:guid => my_guid, :zone => Zone.default_zone)
       my_server_clear_cache
       Vmdb::Settings.init # Re-initialize the Settings now that we have a server record
-      _log.info("Creating Default MiqServer... Complete")
+      _log.info('Creating Default MiqServer... Complete')
     end
     my_server
   end
@@ -194,7 +194,7 @@ class MiqServer < ApplicationRecord
     check_migrations_up_to_date
     Vmdb::Settings.activate
 
-    config = VMDB::Config.new("vmdb")
+    config = VMDB::Config.new('vmdb')
 
     server = my_server(true)
     server_hash = {}
@@ -284,7 +284,7 @@ class MiqServer < ApplicationRecord
     _log.info("Heartbeat [#{t}]...")
     reload
     self.last_heartbeat = t
-    self.status = "started" if status == "not responding"
+    self.status = 'started' if status == 'not responding'
     save
     _log.info("Heartbeat [#{t}]...Complete")
   end
@@ -364,12 +364,12 @@ class MiqServer < ApplicationRecord
     _log.log_backtrace(err)
 
     begin
-      _log.info("Reconnecting to database after error...")
+      _log.info('Reconnecting to database after error...')
       ActiveRecord::Base.connection.reconnect!
     rescue Exception => err
       _log.error("#{err.message}, during reconnect!")
     else
-      _log.info("Reconnecting to database after error...Successful")
+      _log.info('Reconnecting to database after error...Successful')
     end
   end
 
@@ -410,7 +410,7 @@ class MiqServer < ApplicationRecord
 
     # Then kill this server
     _log.info("initiated for #{format_full_log_msg}")
-    update_attributes(:stopped_on => Time.now.utc, :status => "killed", :is_master => false)
+    update_attributes(:stopped_on => Time.now.utc, :status => 'killed', :is_master => false)
     (pid == Process.pid) ? shutdown_and_exit : Process.kill(9, pid)
   rescue SystemExit
     raise
@@ -427,7 +427,7 @@ class MiqServer < ApplicationRecord
   def shutdown
     _log.info("initiated for #{format_full_log_msg}")
     begin
-      MiqEvent.raise_evm_event(self, "evm_server_stop")
+      MiqEvent.raise_evm_event(self, 'evm_server_stop')
     rescue MiqException::PolicyPreventAction => err
       _log.warn "#{err}"
       return
@@ -448,7 +448,7 @@ class MiqServer < ApplicationRecord
     begin
       deactivate_all_roles
       quiesce_all_workers
-      update_attributes(:stopped_on => Time.now.utc, :status => "stopped", :is_master => false)
+      update_attributes(:stopped_on => Time.now.utc, :status => 'stopped', :is_master => false)
     rescue => err
       puts "#{err}"
       puts "#{err.backtrace.join("\n")}"
@@ -457,10 +457,10 @@ class MiqServer < ApplicationRecord
 
   # Restart the local server
   def restart
-    raise _("Server restart is only supported on Linux") unless MiqEnvironment::Command.is_linux?
+    raise _('Server restart is only supported on Linux') unless MiqEnvironment::Command.is_linux?
 
-    _log.info("Server restart initiating...")
-    update_attribute(:status, "restarting")
+    _log.info('Server restart initiating...')
+    update_attribute(:status, 'restarting')
 
     shutdown_and_exit(RESTART_EXIT_STATUS)
   end
@@ -474,7 +474,7 @@ class MiqServer < ApplicationRecord
   end
 
   def friendly_name
-    _("EVM Server (%{id})") % {:id => pid}
+    _('EVM Server (%{id})') % {:id => pid}
   end
 
   def who_am_i
@@ -495,13 +495,13 @@ class MiqServer < ApplicationRecord
 
   def is_deleteable?
     if self.is_local?
-      @error_message = N_("Cannot delete currently used %{log_message}") % {:log_message => format_short_log_msg}
+      @error_message = N_('Cannot delete currently used %{log_message}') % {:log_message => format_short_log_msg}
       return false
     end
     return true if self.stopped?
 
     if is_recently_active?
-      @error_message = N_("Cannot delete recently active %{log_message}") % {:log_message => format_short_log_msg}
+      @error_message = N_('Cannot delete recently active %{log_message}') % {:log_message => format_short_log_msg}
       return false
     end
 
@@ -509,11 +509,11 @@ class MiqServer < ApplicationRecord
   end
 
   def state
-    "on"
+    'on'
   end
 
   def started?
-    status == "started"
+    status == 'started'
   end
 
   def stopped?
@@ -530,7 +530,7 @@ class MiqServer < ApplicationRecord
 
   def logon_status
     return :ready if self.started?
-    started_on < (Time.now.utc - get_config("vmdb").config[:server][:startup_timeout]) ? :timed_out_starting : status.to_sym
+    started_on < (Time.now.utc - get_config('vmdb').config[:server][:startup_timeout]) ? :timed_out_starting : status.to_sym
   end
 
   def logon_status_details
@@ -538,7 +538,7 @@ class MiqServer < ApplicationRecord
     return result if result[:status] == :ready
 
     wcnt = MiqWorker.find_starting.length
-    workers = wcnt == 1 ? "worker" : "workers"
+    workers = wcnt == 1 ? 'worker' : 'workers'
     message = "Waiting for #{wcnt} #{workers} to start"
     result.merge(:message => message)
   end
@@ -548,7 +548,7 @@ class MiqServer < ApplicationRecord
   #
   def self.my_guid
     @@my_guid_cache ||= begin
-      guid_file = Rails.root.join("GUID")
+      guid_file = Rails.root.join('GUID')
       File.write(guid_file, MiqUUID.new_guid) unless File.exist?(guid_file)
       File.read(guid_file).strip
     end
@@ -592,7 +592,7 @@ class MiqServer < ApplicationRecord
     my_zone == zone_name
   end
 
-  CONDITION_CURRENT = {:status => ["starting", "started"]}
+  CONDITION_CURRENT = {:status => ['starting', 'started']}
   def self.find_started_in_my_region
     in_my_region.where(CONDITION_CURRENT)
   end
@@ -626,7 +626,7 @@ class MiqServer < ApplicationRecord
   end
 
   def server_timezone
-    get_config("vmdb").config.fetch_path(:server, :timezone) || "UTC"
+    get_config('vmdb').config.fetch_path(:server, :timezone) || 'UTC'
   end
 
   def tenant_identity

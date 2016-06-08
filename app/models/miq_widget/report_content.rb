@@ -30,8 +30,8 @@ class MiqWidget::ReportContent < MiqWidget::ContentGeneration
 
     rows = "<table class='table table-striped table-bordered table-hover'><thead><tr>"
     headers.each { |h| rows << "<th>#{h}</th>" }
-    rows << "</tr></thead><tbody>"
-    rows << (body.blank? ? "<tr><td colspan='5'>" + _("No records found") + "</td></tr>" : body)
-    rows << "</tbody></table>"
+    rows << '</tr></thead><tbody>'
+    rows << (body.blank? ? "<tr><td colspan='5'>" + _('No records found') + '</td></tr>' : body)
+    rows << '</tbody></table>'
   end
 end

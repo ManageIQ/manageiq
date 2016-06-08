@@ -33,36 +33,36 @@ module Vmdb
 
     # Had to add timezone methods here, they are being called from models
     # returns formatted time in specified timezone and format
-    def format_timezone(time, timezone = Time.zone.name, ftype = "view")
+    def format_timezone(time, timezone = Time.zone.name, ftype = 'view')
       timezone = timezone.name if timezone.kind_of?(ActiveSupport::TimeZone)   # If a Timezone object comes in, just get the name
       if !time.blank?
         new_time = time.in_time_zone(timezone)
         case ftype
-        when "gtl"                                  # for gtl views
-          new_time = new_time.strftime("%m/%d/%y %H:%M:%S %Z")
-        when "on_at"                                  # for gtl views
-          new_time = new_time.strftime("on %m/%d/%y at %H:%M:%S %Z")
-        when "fname"                                # for download filename
-          new_time = new_time.strftime("%Y_%m_%d")
-        when "date"                                 # for just mm/dd/yy
-          new_time = new_time.strftime("%m/%d/%y")
-        when "datetime"                             # mm/dd/yy hh:mm:ss
-          new_time = new_time.strftime("%m/%d/%y %H:%M:%S")
-        when "export_filename", "support_log_fname"    # for export/log filename
+        when 'gtl'                                  # for gtl views
+          new_time = new_time.strftime('%m/%d/%y %H:%M:%S %Z')
+        when 'on_at'                                  # for gtl views
+          new_time = new_time.strftime('on %m/%d/%y at %H:%M:%S %Z')
+        when 'fname'                                # for download filename
+          new_time = new_time.strftime('%Y_%m_%d')
+        when 'date'                                 # for just mm/dd/yy
+          new_time = new_time.strftime('%m/%d/%y')
+        when 'datetime'                             # mm/dd/yy hh:mm:ss
+          new_time = new_time.strftime('%m/%d/%y %H:%M:%S')
+        when 'export_filename', 'support_log_fname'    # for export/log filename
           new_time = new_time.strftime("%Y%m%d_%H%M%S")
-        when "tl"
-          new_time = new_time.strftime("%a %b %d %Y %H:%M:%S") + " " + Time.zone.to_s
-          new_time = new_time.gsub(/\) [a-zA-Z0-9\s\S]*/, ")")
-        when "raw"                                  # return without formatting
-        when "compare_hdr"                          # for drift/compare headers
-          new_time = new_time.strftime("%m/%d/%y %H:%M %Z")
-        when "widget_footer"                        # for widget footers
-          new_time = new_time.strftime("%m/%d/%y %H:%M")
+        when 'tl'
+          new_time = new_time.strftime('%a %b %d %Y %H:%M:%S') + ' ' + Time.zone.to_s
+          new_time = new_time.gsub(/\) [a-zA-Z0-9\s\S]*/, ')')
+        when 'raw'                                  # return without formatting
+        when 'compare_hdr'                          # for drift/compare headers
+          new_time = new_time.strftime('%m/%d/%y %H:%M %Z')
+        when 'widget_footer'                        # for widget footers
+          new_time = new_time.strftime('%m/%d/%y %H:%M')
         else                                        # for summary screens
-          new_time = new_time.strftime("%a %b %d %H:%M:%S %Z %Y")
+          new_time = new_time.strftime('%a %b %d %H:%M:%S %Z %Y')
         end
       else    # if time is nil
-        new_time = ""
+        new_time = ''
       end
       new_time
     end
@@ -92,16 +92,16 @@ module Vmdb
     def report_build_html_table(report, table_body)
       html = ''
       html << "<table class='table table-striped table-bordered'>"
-      html << "<thead>"
-      html << "<tr>"
+      html << '<thead>'
+      html << '<tr>'
 
       # table headings
       unless report.headers.nil?
         report.headers.each do |h|
-          html << "<th>" << CGI.escapeHTML(h.to_s) << "</th>"
+          html << '<th>' << CGI.escapeHTML(h.to_s) << '</th>'
         end
-        html << "</tr>"
-        html << "</thead>"
+        html << '</tr>'
+        html << '</thead>'
       end
       html << '<tbody>'
       html << table_body << '</tbody></table>'

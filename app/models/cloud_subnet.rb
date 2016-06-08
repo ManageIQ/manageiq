@@ -6,7 +6,7 @@ class CloudSubnet < ApplicationRecord
 
   # TODO(lsmola) NetworkManager, once all providers use network manager rename this to
   # "ManageIQ::Providers::NetworkManager"
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::BaseManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::BaseManager'
   belongs_to :cloud_network
   belongs_to :cloud_tenant
   belongs_to :availability_zone
@@ -40,7 +40,7 @@ class CloudSubnet < ApplicationRecord
   end
 
   def dns_nameservers_show
-    dns_nameservers.join(", ") if dns_nameservers
+    dns_nameservers.join(', ') if dns_nameservers
   end
   virtual_column :dns_nameservers_show, :type => :string, :uses => :dns_nameservers
 

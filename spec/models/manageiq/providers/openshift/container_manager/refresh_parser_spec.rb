@@ -1,11 +1,11 @@
-require "spec_helper"
+require 'spec_helper'
 require 'recursive-open-struct'
 
 describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
   let(:parser) { described_class.new }
 
-  describe "parse_build" do
-    it "handles simple data" do
+  describe 'parse_build' do
+    it 'handles simple data' do
       expect(parser.send(:parse_build,
                          RecursiveOpenStruct.new(
                            :metadata => {
@@ -54,8 +54,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_build_pod" do
-    it "handles simple data" do
+  describe 'parse_build_pod' do
+    it 'handles simple data' do
       expect(parser.send(:parse_build_pod,
                          RecursiveOpenStruct.new(
                            :metadata => {

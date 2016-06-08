@@ -28,13 +28,13 @@ module EmsCloudHelper::TextualSummary
   #
   def textual_provider_region
     return nil if @ems.provider_region.nil?
-    label_val = (@ems.type.include? "Google") ? _("Preferred Region") : _("Region")
+    label_val = (@ems.type.include? 'Google') ? _('Preferred Region') : _('Region')
     {:label => label_val, :value => @ems.description}
   end
 
   def textual_keystone_v3_domain_id
     return nil if !@ems.respond_to?(:keystone_v3_domain_id) || @ems.keystone_v3_domain_id.nil?
-    label_val = _("Keystone V3 Domain ID")
+    label_val = _('Keystone V3 Domain ID')
     {:label => label_val, :value => @ems.keystone_v3_domain_id}
   end
 
@@ -44,7 +44,7 @@ module EmsCloudHelper::TextualSummary
 
   def textual_ipaddress
     return nil if @ems.ipaddress.blank?
-    {:label => _("Discovered IP Address"), :value => @ems.ipaddress}
+    {:label => _('Discovered IP Address'), :value => @ems.ipaddress}
   end
 
   def textual_type
@@ -52,31 +52,31 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_port
-    @ems.supports_port? ? {:label => _("API Port"), :value => @ems.port} : nil
+    @ems.supports_port? ? {:label => _('API Port'), :value => @ems.port} : nil
   end
 
   def textual_guid
-    {:label => _("Management Engine GUID"), :value => @ems.guid}
+    {:label => _('Management Engine GUID'), :value => @ems.guid}
   end
 
   def textual_instances
-    label = ui_lookup(:tables => "vm_cloud")
+    label = ui_lookup(:tables => 'vm_cloud')
     num   = @ems.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
+    h     = {:label => label, :image => 'vm', :value => num}
+    if num > 0 && role_allows(:feature => 'vm_show_list')
       h[:link]  = ems_cloud_path(@ems.id, :display => 'instances')
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
     end
     h
   end
 
   def textual_images
-    label = ui_lookup(:tables => "template_cloud")
+    label = ui_lookup(:tables => 'template_cloud')
     num = @ems.number_of(:miq_templates)
-    h = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "miq_template_show_list")
+    h = {:label => label, :image => 'vm', :value => num}
+    if num > 0 && role_allows(:feature => 'miq_template_show_list')
       h[:link] = ems_cloud_path(@ems.id, :display => 'images')
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
     end
     h
   end
@@ -102,12 +102,12 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_cloud_object_store_containers
-    label = ui_lookup(:tables => "cloud_object_store_container")
+    label = ui_lookup(:tables => 'cloud_object_store_container')
     num = @ems.number_of(:cloud_object_store_containers)
-    h = {:label => label, :image => "cloud_object_store_container", :value => num}
-    if num > 0 && role_allows(:feature => "cloud_object_store_container_show_list")
+    h = {:label => label, :image => 'cloud_object_store_container', :value => num}
+    if num > 0 && role_allows(:feature => 'cloud_object_store_container_show_list')
       h[:link] = ems_cloud_path(@ems.id, :display => 'cloud_object_store_containers')
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
     end
     h
   end
@@ -131,7 +131,7 @@ module EmsCloudHelper::TextualSummary
       last_refresh_status << " - #{last_refresh_date} Ago"
     end
     {
-      :label => _("Last Refresh"),
+      :label => _('Last Refresh'),
       :value => [{:value => last_refresh_status},
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
@@ -139,6 +139,6 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
+    {:label => _('Managed by Zone'), :image => 'zone', :value => @ems.zone.name}
   end
 end

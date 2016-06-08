@@ -21,8 +21,8 @@ class ApplicationHelper::Toolbar::UserCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-delete fa-lg',
           t = N_('Delete this User'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to delete this User?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to delete this User?')),
       ]
     ),
   ])

@@ -1,6 +1,6 @@
 describe MiqPreloader do
-  describe ".preload" do
-    it "preloads once from an object" do
+  describe '.preload' do
+    it 'preloads once from an object' do
       ems = FactoryGirl.create(:ems_infra)
       expect(ems.vms).not_to be_loaded
       expect { preload(ems, :vms) }.to match_query_limit_of(1)
@@ -8,13 +8,13 @@ describe MiqPreloader do
       expect { preload(ems, :vms) }.to match_query_limit_of(0)
     end
 
-    it "preloads from an array" do
+    it 'preloads from an array' do
       emses = FactoryGirl.create_list(:ems_infra, 2)
       expect { preload(emses, :vms) }.to match_query_limit_of(1)
       expect(emses[0].vms).to be_loaded
     end
 
-    it "preloads from an association" do
+    it 'preloads from an association' do
       ems = FactoryGirl.create(:ems_infra)
       FactoryGirl.create_list(:vm, 2, :ext_management_system => ems)
 
@@ -27,8 +27,8 @@ describe MiqPreloader do
     end
   end
 
-  describe ".preload_and_map" do
-    it "preloads from an object" do
+  describe '.preload_and_map' do
+    it 'preloads from an object' do
       ems = FactoryGirl.create(:ems_infra)
       FactoryGirl.create_list(:vm, 2, :ext_management_system => ems)
 
@@ -37,7 +37,7 @@ describe MiqPreloader do
       expect { expect(vms.size).to eq(2) }.to match_query_limit_of(0)
     end
 
-    it "preloads from an association" do
+    it 'preloads from an association' do
       ems = FactoryGirl.create(:ems_infra)
       FactoryGirl.create_list(:vm, 2, :ext_management_system => ems)
 
@@ -50,8 +50,8 @@ describe MiqPreloader do
     end
   end
 
-  describe ".preload_and_scope" do
-    it "preloads (object).has_many" do
+  describe '.preload_and_scope' do
+    it 'preloads (object).has_many' do
       ems = FactoryGirl.create(:ems_infra)
       FactoryGirl.create_list(:vm, 2, :ext_management_system => ems)
 
@@ -60,7 +60,7 @@ describe MiqPreloader do
       expect { expect(vms.count).to eq(2) }.to match_query_limit_of(1)
     end
 
-    it "preloads (object.all).has_many" do
+    it 'preloads (object.all).has_many' do
       FactoryGirl.create_list(:vm, 2, :ext_management_system => FactoryGirl.create(:ems_infra))
       FactoryGirl.create(:template, :ext_management_system => FactoryGirl.create(:ems_infra))
 
@@ -69,14 +69,14 @@ describe MiqPreloader do
       expect { expect(vms.count).to eq(3) }.to match_query_limit_of(1)
     end
 
-    it "respects scopes (object.all).has_many {with scope}" do
+    it 'respects scopes (object.all).has_many {with scope}' do
       FactoryGirl.create_list(:vm, 2, :ext_management_system => FactoryGirl.create(:ems_infra))
       FactoryGirl.create(:template, :ext_management_system => FactoryGirl.create(:ems_infra))
 
       expect { expect(preload_and_scope(ExtManagementSystem.all, :vms).count).to eq(2) }.to match_query_limit_of(1)
     end
 
-    it "preloads (object.all).has_many.belongs_to" do
+    it 'preloads (object.all).has_many.belongs_to' do
       ems = FactoryGirl.create(:ems_infra)
       FactoryGirl.create_list(:vm, 2,
                               :ext_management_system => ems,
@@ -91,7 +91,7 @@ describe MiqPreloader do
       expect { expect(hosts.count).to eq(2) }.to match_query_limit_of(1)
     end
 
-    it "preloads (object.all).belongs_to.has_many" do
+    it 'preloads (object.all).belongs_to.has_many' do
       ems = FactoryGirl.create(:ems_infra)
       host = FactoryGirl.create(:host, :ext_management_system => ems)
       FactoryGirl.create_list(:vm, 2,

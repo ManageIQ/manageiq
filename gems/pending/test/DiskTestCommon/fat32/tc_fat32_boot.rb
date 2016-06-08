@@ -67,7 +67,7 @@ class Fat32TestBoot < Minitest::Test
       # There is some disagreement as to whether the FS is positively identified.
       # MS tools always set a file system label, others may not in which case
       # to_s won't come back with the required string.
-      assert_equal("FAT32   ", bs.to_s, id(__LINE__, disk))
+      assert_equal('FAT32   ', bs.to_s, id(__LINE__, disk))
 
       # Check bytes per sector (should normally be 512, but can vary occasionally).
       # Bytes per cluster must be less than or equal to 32K.

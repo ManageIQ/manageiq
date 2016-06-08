@@ -11,12 +11,12 @@ class BinaryBlob < ApplicationRecord
   # Get binary file from database into a raw String
   def binary
     # TODO: Change this to collect the binary_blob_parts in batches, so we are not pulling in every row into memory at once
-    data = binary_blob_parts.inject("") { |d, b| d << b.data; d }
+    data = binary_blob_parts.inject('') { |d, b| d << b.data; d }
     unless size.nil? || size == data.bytesize
-      raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+      raise _('size of %{name} id [%{number}] is incorrect') % {:name => self.class.name, :number => id}
     end
     unless md5.nil? || md5 == Digest::MD5.hexdigest(data)
-      raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+      raise _('md5 of %{name} id [%{number}] is incorrect') % {:name => self.class.name, :number => id}
     end
     data
   end
@@ -46,7 +46,7 @@ class BinaryBlob < ApplicationRecord
     hasher = Digest::MD5.new
 
     begin
-      fd = path_or_io.respond_to?(:write) ? path_or_io : File.open(path_or_io, "wb")
+      fd = path_or_io.respond_to?(:write) ? path_or_io : File.open(path_or_io, 'wb')
 
       # TODO: Change this to collect the binary_blob_parts in batches, so we are not pulling in every row into memory at once
       binary_blob_parts.each do |b|
@@ -60,10 +60,10 @@ class BinaryBlob < ApplicationRecord
     end
 
     unless size.nil? || size == dump_size
-      raise _("size of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+      raise _('size of %{name} id [%{number}] is incorrect') % {:name => self.class.name, :number => id}
     end
     unless md5.nil? || md5 == hasher.hexdigest
-      raise _("md5 of %{name} id [%{number}] is incorrect") % {:name => self.class.name, :number => id}
+      raise _('md5 of %{name} id [%{number}] is incorrect') % {:name => self.class.name, :number => id}
     end
     true
   end
@@ -78,7 +78,7 @@ class BinaryBlob < ApplicationRecord
 
     hasher = Digest::MD5.new
 
-    File.open(path, "rb") do |f|
+    File.open(path, 'rb') do |f|
       until f.eof?
         buf = f.read(self.part_size)
         self.size += buf.length
@@ -103,7 +103,7 @@ class BinaryBlob < ApplicationRecord
   end
 
   def serializer
-    data_type == "YAML" ? YAML : Marshal
+    data_type == 'YAML' ? YAML : Marshal
   end
 
   def data

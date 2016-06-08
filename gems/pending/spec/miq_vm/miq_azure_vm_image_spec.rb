@@ -35,32 +35,32 @@ describe MiqAzureVm do
     VCR.eject_cassette
   end
 
-  describe ".new" do
-    it "should raise ArgumentError when args are not provided", :ex_tag => 1 do
+  describe '.new' do
+    it 'should raise ArgumentError when args are not provided', :ex_tag => 1 do
       expect do
         MiqAzureVm.new(@azure_config)
       end.to raise_error(ArgumentError)
     end
 
-    it "should raise ArgumentError when :name arg is not provided", :ex_tag => 2 do
+    it 'should raise ArgumentError when :name arg is not provided', :ex_tag => 2 do
       expect do
         MiqAzureVm.new(@azure_config, :image_uri => @image_uri)
       end.to raise_error(ArgumentError)
     end
 
-    it "should raise ArgumentError when :image_uri arg is not provided", :ex_tag => 3 do
+    it 'should raise ArgumentError when :image_uri arg is not provided', :ex_tag => 3 do
       expect do
         MiqAzureVm.new(@azure_config, :name => @image_name)
       end.to raise_error(ArgumentError)
     end
 
-    it "should return an MiqAzureVm object", :ex_tag => 4 do
+    it 'should return an MiqAzureVm object', :ex_tag => 4 do
       azure_vm = MiqAzureVm.new(@azure_config, :name => @image_name, :image_uri => @image_uri)
       expect(azure_vm).to be_kind_of(MiqAzureVm)
     end
   end
 
-  describe "Instance methods" do
+  describe 'Instance methods' do
     before(:each) do
       @azure_vm = MiqAzureVm.new(@azure_config, :name => @image_name, :image_uri => @image_uri)
     end
@@ -69,13 +69,13 @@ describe MiqAzureVm do
       @azure_vm.unmount
     end
 
-    it_behaves_like "MiqVm instance methods" do
+    it_behaves_like 'MiqVm instance methods' do
       let(:miq_vm)                { @azure_vm }
       let(:expected_num_roots)    { 1 }
-      let(:expected_guest_os)     { "Windows" }
+      let(:expected_guest_os)     { 'Windows' }
       let(:expected_num_fs)       { 1 }
-      let(:expected_num_fs_types) { ["NTFS"] }
-      let(:expected_mount_points) { ["C:"] }
+      let(:expected_num_fs_types) { ['NTFS'] }
+      let(:expected_mount_points) { ['C:'] }
     end
   end
 end

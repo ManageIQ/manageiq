@@ -1,10 +1,10 @@
-describe MiqAeCustomizationController, "ApplicationController::Automate" do
-  context "#resolve" do
+describe MiqAeCustomizationController, 'ApplicationController::Automate' do
+  context '#resolve' do
     before(:each) do
       set_user_privileges
     end
-    it "Simulate button from custom buttons should redirect to resolve" do
-      custom_button = FactoryGirl.create(:custom_button, :applies_to_class => "Host")
+    it 'Simulate button from custom buttons should redirect to resolve' do
+      custom_button = FactoryGirl.create(:custom_button, :applies_to_class => 'Host')
       target_classes = {}
       CustomButton.button_classes.each { |db| target_classes[db] = ui_lookup(:model => db) }
       resolve = {
@@ -13,16 +13,16 @@ describe MiqAeCustomizationController, "ApplicationController::Automate" do
       }
       session[:resolve] = resolve
       controller.instance_variable_set(:@resolve, resolve)
-      post :resolve, :params => { :button => "simulate", :id => custom_button.id }
-      expect(response.body).to include("miq_ae_tools/resolve?escape=false&simulate=simulate")
+      post :resolve, :params => { :button => 'simulate', :id => custom_button.id }
+      expect(response.body).to include('miq_ae_tools/resolve?escape=false&simulate=simulate')
     end
   end
 end
 
-describe MiqAeToolsController, "ApplicationController::Automate" do
-  context "#build_results" do
-    let(:custom_button) { FactoryGirl.create(:custom_button, :applies_to_class => "Host") }
-    let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
+describe MiqAeToolsController, 'ApplicationController::Automate' do
+  context '#build_results' do
+    let(:custom_button) { FactoryGirl.create(:custom_button, :applies_to_class => 'Host') }
+    let(:workspace) { double('MiqAeEngine::MiqAeWorkspaceRuntime', :root => options) }
     before(:each) do
       set_user_privileges
     end
@@ -46,7 +46,7 @@ describe MiqAeToolsController, "ApplicationController::Automate" do
         controller.instance_variable_set(:@sb, sb)
         controller.instance_variable_set(:@_params, :button => 'throw')
         allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(workspace)
-        allow(workspace).to receive(:to_expanded_xml).and_return("<A/>")
+        allow(workspace).to receive(:to_expanded_xml).and_return('<A/>')
         allow(MiqAeToolsController).to receive(:ws_tree_from_xml).and_return(nil)
         controller.build_results
         expect(resolve[:ae_result]).to eql('ok')
@@ -56,7 +56,7 @@ describe MiqAeToolsController, "ApplicationController::Automate" do
 
     context 'state machine' do
       let(:options) { {'ae_result' => 'retry', 'ae_state' => 'state1'} }
-      it "retry" do
+      it 'retry' do
         state_hash = {'var1' => 1, 'var2' => 2}
         resolve = resolve_hash(custom_button)
         resolve[:state_attributes] = {'ae_state' => 'state3'}
@@ -66,7 +66,7 @@ describe MiqAeToolsController, "ApplicationController::Automate" do
         controller.instance_variable_set(:@sb, sb)
         controller.instance_variable_set(:@_params, :button => 'retry')
         allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(workspace)
-        allow(workspace).to receive(:to_expanded_xml).and_return("<A/>")
+        allow(workspace).to receive(:to_expanded_xml).and_return('<A/>')
         allow(workspace).to receive(:persist_state_hash).and_return(state_hash)
         allow(workspace).to receive(:current_state_info).and_return({})
         allow(MiqAeToolsController).to receive(:ws_tree_from_xml).and_return(nil)

@@ -3,10 +3,10 @@ module VmShowMixin
 
   def explorer
     @explorer = true
-    @lastaction = "explorer"
+    @lastaction = 'explorer'
     @timeline = @timeline_filter = true    # need to set these to load timelines on vm show screen
     if params[:menu_click]              # Came in from a chart context menu click
-      @_params[:id] = x_node.split("_").last.split("-").last
+      @_params[:id] = x_node.split('_').last.split('-').last
       @explorer = true
       perf_menu_click                    # Handle the menu action
       return
@@ -33,7 +33,7 @@ module VmShowMixin
     params.instance_variable_get(:@parameters).merge!(session[:exp_parms]) if session[:exp_parms]  # Grab any explorer parm overrides
     session.delete(:exp_parms)
 
-    if params[:commit] == "Upload" && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == "Sysprep Answer File"
+    if params[:commit] == 'Upload' && session.fetch_path(:edit, :new, :sysprep_enabled, 1) == 'Sysprep Answer File'
       upload_sysprep_file
       set_form_locals_for_sysprep
     end
@@ -45,7 +45,7 @@ module VmShowMixin
       set_active_elements(allowed_features.first) unless @upload_sysprep_file
     end
 
-    render :layout => "application" unless redirected
+    render :layout => 'application' unless redirected
   end
 
   def set_form_locals_for_sysprep
@@ -95,14 +95,14 @@ module VmShowMixin
   end
 
   def show_record(id = nil)
-    @display = params[:display] || "main" unless control_selected?
+    @display = params[:display] || 'main' unless control_selected?
 
-    @lastaction = "show"
-    @showtype   = "config"
+    @lastaction = 'show'
+    @showtype   = 'config'
     @vm = @record = identify_record(id, VmOrTemplate) unless @record
 
     if @record.nil?
-      add_flash(_("Error: Record no longer exists in the database"), :error)
+      add_flash(_('Error: Record no longer exists in the database'), :error)
       if request.xml_http_request? && params[:id]  # Is this an Ajax request clicking on a node that no longer exists?
         @delete_node = params[:id]                  # Set node to be removed from the tree
       end
@@ -110,25 +110,25 @@ module VmShowMixin
     end
 
     case @display
-    when "download_pdf", "main", "summary_only"
+    when 'download_pdf', 'main', "summary_only"
       @button_group = @record.kind_of?(MiqTemplate) ? "miq_template" : "vm"
 
       get_tagdata(@record)
       @showtype = "main"
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
-    when "performance"
-      @showtype = "performance"
+    when 'performance'
+      @showtype = 'performance'
       perf_gen_init_options                # Initialize perf chart options, charts will be generated async
 
-    when "timeline"
-      @showtype = "timeline"
+    when 'timeline'
+      @showtype = 'timeline'
       tl_build_timeline                    # Create the timeline report
     end
 
     unless @record.hardware.nil?
       @record_notes = if @record.hardware.annotation.nil?
-                        _("<No notes have been entered for this VM>")
+                        _('<No notes have been entered for this VM>')
                       else
                         @record.hardware.annotation
                       end
@@ -143,7 +143,7 @@ module VmShowMixin
   end
 
   def get_session_data
-    @title          = _("VMs And Templates")
+    @title          = _('VMs And Templates')
     @layout         = controller_name
     @lastaction     = session[:vm_lastaction]
     @showtype       = session[:vm_showtype]
@@ -152,8 +152,8 @@ module VmShowMixin
     @catinfo        = session[:vm_catinfo]
     @cats           = session[:vm_cats]
     @display        = session[:vm_display]
-    @polArr         = session[:polArr] || ""          # current tags in effect
-    @policy_options = session[:policy_options] || ""
+    @polArr         = session[:polArr] || ''          # current tags in effect
+    @policy_options = session[:policy_options] || ''
   end
 
   def set_session_data

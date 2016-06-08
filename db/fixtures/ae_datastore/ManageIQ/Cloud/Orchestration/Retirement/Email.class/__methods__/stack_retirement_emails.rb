@@ -25,7 +25,7 @@ if stack.nil?
   end
 end
 
-raise "Stack not specified" if stack.nil?
+raise 'Stack not specified' if stack.nil?
 
 stack_name = stack['name']
 
@@ -41,7 +41,7 @@ else
   to = $evm.object['to_email_address']
 end
 
-if event_type == "stack_retire_warn"
+if event_type == 'stack_retire_warn'
 
   from = nil
   from ||= $evm.object['from_email_address']
@@ -51,15 +51,15 @@ if event_type == "stack_retire_warn"
 
   subject = "Stack Retirement Warning for #{stack_name}"
 
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br><br>Your stack: [#{stack_name}] will be retired on [#{stack['retires_on']}]."
-  body += "<br><br>If you need to use this stack past this date please request an"
-  body += "<br><br>extension by contacting Support."
-  body += "<br><br> Thank you,"
+  body += '<br><br>If you need to use this stack past this date please request an'
+  body += '<br><br>extension by contacting Support.'
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 end
 
-if event_type == "stack_entered_retirement"
+if event_type == 'stack_entered_retirement'
 
   from = nil
   from ||= $evm.object['from_email_address']
@@ -69,14 +69,14 @@ if event_type == "stack_entered_retirement"
 
   subject = "Stack #{stack_name} has entered retirement"
 
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br><br>Your stack named [#{stack_name}] has been retired."
-  body += "<br><br>You will have up to 3 days to un-retire this stack. Afterwhich time the stack will be deleted."
-  body += "<br><br> Thank you,"
+  body += '<br><br>You will have up to 3 days to un-retire this stack. Afterwhich time the stack will be deleted.'
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 end
 
-if event_type == "stack_retired"
+if event_type == 'stack_retired'
 
   from = nil
   from ||= $evm.object['from_email_address']
@@ -86,11 +86,11 @@ if event_type == "stack_retired"
 
   subject = "Stack Retirement Alert for #{stack_name}"
 
-  body = "Hello, "
+  body = 'Hello, '
   body += "<br><br>Your stack named [#{stack_name}] has been retired."
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 end
 
-$evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>") if @debug
+$evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>") if @debug
 $evm.execute('send_email', to, from, subject, body)

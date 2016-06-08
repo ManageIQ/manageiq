@@ -16,7 +16,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_VM = "testxav"
+TARGET_VM = 'testxav'
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 
 begin
@@ -25,7 +25,7 @@ begin
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
   puts "API version: #{vim.apiVersion}"
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   puts "VM UUID: #{miqVm.vmh['config']['uuid']}"
 
@@ -37,10 +37,10 @@ begin
     puts "RemoteDisplay.vnc.password: #{vmsAttr['password']}"
     puts "RemoteDisplay.vnc.port:     #{vmsAttr['port']}"
   else
-    puts "VM RemoveDisplay.vnc is not enabled"
+    puts 'VM RemoveDisplay.vnc is not enabled'
   end
 
-  miqVm.setRemoteDisplayVncAttributes('enabled' => "true", 'password' => PASSWORD, 'port' => 5901)
+  miqVm.setRemoteDisplayVncAttributes('enabled' => 'true', 'password' => PASSWORD, 'port' => 5901)
   miqVm.refresh
 
   puts
@@ -51,7 +51,7 @@ begin
     puts "RemoteDisplay.vnc.password: #{vmsAttr['password']}"
     puts "RemoteDisplay.vnc.port:     #{vmsAttr['port']}"
   else
-    puts "VM RemoveDisplay.vnc vnc is not enabled"
+    puts 'VM RemoveDisplay.vnc vnc is not enabled'
   end
 
 rescue => err

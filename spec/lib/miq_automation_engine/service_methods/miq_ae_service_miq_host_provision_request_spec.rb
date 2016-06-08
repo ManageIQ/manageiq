@@ -20,7 +20,7 @@ module MiqAeServiceMiqHostProvisionRequestSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqHostProvisionRequest::miq_host_provision_request=#{@miq_host_provision_request.id}", @user)
     end
 
-    it "#miq_request" do
+    it '#miq_request' do
       @miq_host_provision_request.save!
 
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_host_provision_request'].miq_request"
@@ -30,7 +30,7 @@ module MiqAeServiceMiqHostProvisionRequestSpec
       expect(ae_object.id).to eq(@miq_host_provision_request.id)
     end
 
-    it "#miq_host_provisions" do
+    it '#miq_host_provisions' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_host_provision_request'].miq_host_provisions"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
@@ -62,7 +62,7 @@ module MiqAeServiceMiqHostProvisionRequestSpec
       end
     end
 
-    it "#ci_type" do
+    it '#ci_type' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_host_provision_request'].ci_type"
       @ae_method.update_attributes(:data => method)
       expect(invoke_ae.root(@ae_result_key)).to eq('host')

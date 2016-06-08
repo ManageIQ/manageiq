@@ -14,7 +14,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-TARGET_VM = "rpo-template-test"
+TARGET_VM = 'rpo-template-test'
 vmMor = nil
 miqVm = nil
 
@@ -26,7 +26,7 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
   puts "VM: #{miqVm.name}"
   puts
@@ -35,14 +35,14 @@ begin
 
   puts "Template: #{isTemplate}"
   unless isTemplate
-    puts "Marking VM as Template."
+    puts 'Marking VM as Template.'
     miqVm.markAsTemplate
     puts "Template: #{miqVm.template?}"
     exit
   end
 
   targetHostObj = vim.hostSystems.values.first
-  raise "No suitable target host system found" unless targetHostObj
+  raise 'No suitable target host system found' unless targetHostObj
 
   targetRp = nil
   vim.resourcePoolsByMor.each_value do |rp|
@@ -60,9 +60,9 @@ begin
   end
   puts
 
-  raise "No suitable target resource pool found" unless targetRp
+  raise 'No suitable target resource pool found' unless targetRp
 
-  puts "Marking VM as Virtual Machine."
+  puts 'Marking VM as Virtual Machine.'
   puts
   miqVm.markAsVm(targetRp, targetHostObj)
   puts "Template: #{miqVm.template?}"
@@ -71,7 +71,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vim.disconnect if vim
 end

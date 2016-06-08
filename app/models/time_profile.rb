@@ -1,7 +1,7 @@
 class TimeProfile < ApplicationRecord
   ALL_DAYS  = (0...7).to_a.freeze
   ALL_HOURS = (0...24).to_a.freeze
-  DEFAULT_TZ = "UTC"
+  DEFAULT_TZ = 'UTC'
 
   validates_uniqueness_of :description
 
@@ -29,14 +29,14 @@ class TimeProfile < ApplicationRecord
     default_time_profile || create!(
       :description          => DEFAULT_TZ,
       :tz                   => DEFAULT_TZ,
-      :profile_type         => "global",
+      :profile_type         => 'global',
       :rollup_daily_metrics => true) do |_|
-      _log.info("Creating global time profile")
+      _log.info('Creating global time profile')
     end
   end
 
   def global?
-    profile_type == "global"
+    profile_type == 'global'
   end
 
   def ts_in_profile?(ts, default_tz = DEFAULT_TZ)
@@ -96,7 +96,7 @@ class TimeProfile < ApplicationRecord
   end
 
   def rebuild_daily_metrics
-    oldest_hourly = MetricRollup.select(:timestamp).where(:capture_interval_name => "hourly").order(:timestamp).first
+    oldest_hourly = MetricRollup.select(:timestamp).where(:capture_interval_name => 'hourly').order(:timestamp).first
     destroy_metric_rollups
     return if oldest_hourly.nil?
 
@@ -143,8 +143,8 @@ class TimeProfile < ApplicationRecord
   def match_user_tz?(user_id, user_tz)
     user_id = user_id.to_s
     tz == user_tz &&
-      (profile_type == "global" ||
-        (profile_type == "user" && profile_key == user_id))
+      (profile_type == 'global' ||
+        (profile_type == 'user' && profile_key == user_id))
   end
 
   private
@@ -155,8 +155,8 @@ class TimeProfile < ApplicationRecord
 
   def rebuild_daily_metrics_on_save
     if rollup_daily_metrics
-      rebuild_daily_metrics_queue if @rebuild_daily_metrics_on_create || changed.include_any?("profile", "rollup_daily_metrics")
-    elsif changed.include?("rollup_daily_metrics")
+      rebuild_daily_metrics_queue if @rebuild_daily_metrics_on_create || changed.include_any?('profile', 'rollup_daily_metrics')
+    elsif changed.include?('rollup_daily_metrics')
       destroy_metric_rollups_queue
     end
   ensure
@@ -165,11 +165,11 @@ class TimeProfile < ApplicationRecord
 
   # TODO: use AR "or" here
   def self.for_user(user_id)
-    where("profile_type = ? or (profile_type = ? and profile_key = ?)", "global", "user", user_id)
+    where('profile_type = ? or (profile_type = ? and profile_key = ?)', 'global', 'user', user_id)
   end
 
   def self.ordered_by_desc
-    order("lower(description) ASC")
+    order('lower(description) ASC')
   end
 
   def self.profiles_for_user(user_id, region_id)

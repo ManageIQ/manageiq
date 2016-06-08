@@ -13,7 +13,7 @@ class DialogFieldRadioButton < DialogFieldSortedItem
   end
 
   def initial_values
-    [["", "<None>"]]
+    [['', '<None>']]
   end
 
   def refresh_json_value(checked_value)

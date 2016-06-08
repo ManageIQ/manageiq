@@ -10,7 +10,7 @@ module ArTableLock
   #   can be fount http://www.postgresql.org/docs/9.4/static/explicit-locking.html
   #
   def with_lock(timeout = 60.seconds)
-    lock = "SHARE ROW EXCLUSIVE"
+    lock = 'SHARE ROW EXCLUSIVE'
 
     transaction do
       _log.debug "Acquiring lock on #{name} (table: #{table_name}..."

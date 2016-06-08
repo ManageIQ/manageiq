@@ -45,4 +45,4 @@ keys = %w(vm orchestration_stack miq_request miq_provision miq_host_provision vm
 key_found = keys.detect { |key| provider_category = category_for_key(key) }
 
 $evm.root['ae_provider_category'] = provider_category || UNKNOWN
-$evm.log("info", "Parse Provider Category Key: #{key_found.inspect}  Value: #{$evm.root['ae_provider_category']}")
+$evm.log('info', "Parse Provider Category Key: #{key_found.inspect}  Value: #{$evm.root['ae_provider_category']}")

@@ -11,7 +11,7 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
   end
 
   class MiqUserRole < ActiveRecord::Base
-    DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
+    DEFAULT_TENANT_ROLE_NAME = 'EvmRole-tenant_administrator'
 
     # if there is no role, that is ok
     # MiqGroup.seed will populate
@@ -22,7 +22,7 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
   end
 
   class MiqGroup < ActiveRecord::Base
-    TENANT_GROUP = "tenant"
+    TENANT_GROUP = 'tenant'
 
     def self.create_tenant_group(tenant)
       role = ::AssignTenantDefaultGroup::MiqUserRole.default_tenant_role
@@ -37,7 +37,7 @@ class AssignTenantDefaultGroup < ActiveRecord::Migration
   end
 
   def up
-    say_with_time "adding default tenant groups" do
+    say_with_time 'adding default tenant groups' do
       Tenant.where(:default_miq_group_id => nil).each(&:add_default_miq_group)
     end
   end

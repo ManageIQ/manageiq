@@ -97,7 +97,7 @@ module MiqBerkeleyDB
     end
 
     def dump
-      out  = ""
+      out  = ''
       out << "B-Tree Database Header\n"
       out << "  minkey:          #{@header['minkey']}\n"
       out << "  re_rlen:         #{@header['re_rlen']}\n"
@@ -110,8 +110,8 @@ module MiqBerkeleyDB
     private
 
     def btreei_dump(h, index = nil)
-      out  = ""
-      out << "B-Tree Internal Node"
+      out  = ''
+      out << 'B-Tree Internal Node'
       out << " (#{index})" if index
       out << "\n"
       out << "  key/data item length: #{h.len}\n"
@@ -161,8 +161,8 @@ module MiqBerkeleyDB
         btpage = MiqBdbPage.getPage(self, header['pgno'])
         bttype = MiqBdbPage.type2string(btpage.ptype)
         case bttype
-        when "btree internal" then leaves(btpage) { |leaf| yield leaf }
-        when "btree leaf" then     yield btpage
+        when 'btree internal' then leaves(btpage) { |leaf| yield leaf }
+        when 'btree leaf' then     yield btpage
         else                   raise "Unexpected Page Type: #{bttype}"
         end
       end
@@ -193,11 +193,11 @@ module MiqBerkeleyDB
       #    03: Padding, unused
       # 04-07: Next page number
       # 08-11: Total length of item
-      pgno = page.buf[entryOffset(index, page) + 4, 4].unpack("S1")[0]
+      pgno = page.buf[entryOffset(index, page) + 4, 4].unpack('S1')[0]
       # Not using the following at the moment
       # tlen = page.buf[entryOffset(index,page)+8,4].unpack("S1")[0]
 
-      data = ""
+      data = ''
       while pgno != 0
         opage = MiqBdbPage.getPage(self, pgno)
         data << opage.data[0, opage.offset]
@@ -211,7 +211,7 @@ module MiqBerkeleyDB
       case type
       when B_KEYDATA then   return entryDataImmediate(index, page)
       when B_OVERFLOW then  return entryDataOverflow(index, page)
-      when B_DUPLICATE then raise "Unsupported Type: B_DUPLICATE"
+      when B_DUPLICATE then raise 'Unsupported Type: B_DUPLICATE'
       else              raise "Unknown Type: #{type}"
       end
     end

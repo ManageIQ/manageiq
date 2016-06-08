@@ -5,7 +5,7 @@ require 'ffi-vix_disk_lib/enum'
 #
 # The path to the VixDiskLib directory to be added to the process' LD_LIBRARY_PATH
 #
-VIXDISKLIB_PATH = "/usr/lib/vmware-vix-disklib/lib64"
+VIXDISKLIB_PATH = '/usr/lib/vmware-vix-disklib/lib64'
 #
 # Alias the New FFI Binding Class Name to the old C Binding Class Name
 #
@@ -15,9 +15,9 @@ class VixDiskLibError < RuntimeError
 end
 
 SERVER_PATH = File.expand_path(__dir__)
-MIQ_ROOT    = File.expand_path(File.join(SERVER_PATH, "../../.."))
-LOG_DIR     = File.join(MIQ_ROOT, "log")
-LOG_FILE    = File.join(LOG_DIR, "vim.log")
+MIQ_ROOT    = File.expand_path(File.join(SERVER_PATH, '../../..'))
+LOG_DIR     = File.join(MIQ_ROOT, 'log')
+LOG_FILE    = File.join(LOG_DIR, 'vim.log')
 
 class VixDiskLib
   VIXDISKLIB_FLAG_OPEN_READ_ONLY = FFI::VixDiskLib::API::VIXDISKLIB_FLAG_OPEN_READ_ONLY
@@ -37,8 +37,8 @@ class VixDiskLib
 
   def self.connect(connect_parms)
     @connection_lock.synchronize(:EX) do
-      raise VixDiskLibError, "VixDiskLib.connect() failed: VixDiskLib not initialized" if @initialized.nil?
-      raise VixDiskLibError, "VixDiskLib.connect() aborting: VixDiskLib shutting down" if @shutting_down
+      raise VixDiskLibError, 'VixDiskLib.connect() failed: VixDiskLib not initialized' if @initialized.nil?
+      raise VixDiskLibError, 'VixDiskLib.connect() aborting: VixDiskLib shutting down' if @shutting_down
       vix_disk_lib_service = start_service
       @drb_services << vix_disk_lib_service
       #
@@ -74,7 +74,7 @@ class VixDiskLib
           begin
             vdl_service.shutdown = true
           rescue DRb::DRbConnError
-            $vim_log.info "VixDiskLib.exit: DRb connection closed due to service shutdown.  Continuing" if $vim_log
+            $vim_log.info 'VixDiskLib.exit: DRb connection closed due to service shutdown.  Continuing' if $vim_log
           end
         end
       end
@@ -97,7 +97,7 @@ class VixDiskLib
       my_env.delete(key)
     end
 
-    my_env["LD_LIBRARY_PATH"] = (my_env["LD_LIBRARY_PATH"].to_s.split(':') << VIXDISKLIB_PATH).compact.join(":")
+    my_env['LD_LIBRARY_PATH'] = (my_env['LD_LIBRARY_PATH'].to_s.split(':') << VIXDISKLIB_PATH).compact.join(':')
     my_env
   end
 
@@ -112,7 +112,7 @@ class VixDiskLib
     server_cmd = "ruby #{SERVER_PATH}/VixDiskLibServer.rb"
     $vim_log.info "VixDiskLib.start_service: running command = #{server_cmd}"
     pid = Kernel.spawn(my_env, server_cmd,
-                       [:out, :err]     => [LOG_FILE, "a"],
+                       [:out, :err]     => [LOG_FILE, 'a'],
                        :unsetenv_others => true,
                        3                => uri_writer,
                        4                => proc_reader)
@@ -138,7 +138,7 @@ class VixDiskLib
       #
       # Error - unable to read the URI with port number written into the pipe by the child (Server).
       #
-      raise VixDiskLibError, "ERROR: VixDiskLib.connect() Unable to determine port used by VixDiskLib Server."
+      raise VixDiskLibError, 'ERROR: VixDiskLib.connect() Unable to determine port used by VixDiskLib Server.'
     end
     reader.gets
   end

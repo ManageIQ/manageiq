@@ -19,7 +19,7 @@ begin
 
   puts "Connecting to #{ems.hostname}..."
   vim = MiqVim.new(ems.hostname, username, password)
-  puts "Done."
+  puts 'Done.'
 
   puts "vim.class: #{vim.class}"
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
@@ -36,7 +36,7 @@ begin
       end
       puts "Deleting EVM snapshot for #{miqVm.name}..."
       miqVm.removeSnapshot(sso['snapshot'])
-      puts "done."
+      puts 'done.'
       puts
     end
   end

@@ -113,14 +113,14 @@ module MiqAeEngine
           process_method_raw(match_data[1])
         else
           process_relationship_raw(relationship, message, args, f['name'], f['collect'])
-          raise MiqAeException::MiqAeDatastoreError, "empty relationship" unless @rels[f['name']]
+          raise MiqAeException::MiqAeDatastoreError, 'empty relationship' unless @rels[f['name']]
         end
         $miq_ae_logger.info "Processed  State=[#{f['name']}] with Result=[#{@workspace.root['ae_result']}]"
       end
     end
 
     def process_state_method(f, method_name)
-      f[method_name].split(";").each do |method|
+      f[method_name].split(';').each do |method|
         method = substitute_value(method.strip)
         unless method.blank? || method.lstrip[0, 1] == '#'
           $miq_ae_logger.info "In State=[#{f['name']}], invoking [#{method_name}] method=[#{method}]"

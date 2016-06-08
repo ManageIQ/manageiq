@@ -42,51 +42,51 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_guid
-    {:label => _("Management Engine GUID"), :value => @record.guid}
+    {:label => _('Management Engine GUID'), :value => @record.guid}
   end
 
   def textual_aggregate_all_vm_cpus
-    {:label => _("CPU"), :value => @record.aggregate_all_vm_cpus}
+    {:label => _('CPU'), :value => @record.aggregate_all_vm_cpus}
   end
 
   def textual_aggregate_all_vm_memory
-    {:label => _("Memory"), :value => number_to_human_size(@record.aggregate_all_vm_memory.megabytes, :precision => 2)}
+    {:label => _('Memory'), :value => number_to_human_size(@record.aggregate_all_vm_memory.megabytes, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_disk_count
-    {:label => _("Disk Count"), :value => @record.aggregate_all_vm_disk_count}
+    {:label => _('Disk Count'), :value => @record.aggregate_all_vm_disk_count}
   end
 
   def textual_aggregate_all_vm_disk_space_allocated
-    {:label => _("Disk Space Allocated"),
+    {:label => _('Disk Space Allocated'),
      :value => number_to_human_size(@record.aggregate_all_vm_disk_space_allocated, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_disk_space_used
-    {:label => _("Disk Space Used"),
+    {:label => _('Disk Space Used'),
      :value => number_to_human_size(@record.aggregate_all_vm_disk_space_used, :precision => 2)}
   end
 
   def textual_aggregate_all_vm_memory_on_disk
-    {:label => _("Memory on Disk"),
+    {:label => _('Memory on Disk'),
      :value => number_to_human_size(@record.aggregate_all_vm_memory_on_disk, :precision => 2)}
   end
 
   def textual_retirement_date
-    {:label => _("Retirement Date"),
-     :image => "retirement",
-     :value => (@record.retires_on.nil? ? _("Never") : @record.retires_on.to_time.strftime("%x"))}
+    {:label => _('Retirement Date'),
+     :image => 'retirement',
+     :value => (@record.retires_on.nil? ? _('Never') : @record.retires_on.to_time.strftime('%x'))}
   end
 
   def textual_retirement_state
-    {:label => _("Retirement State"), :value => @record.retirement_state.to_s.capitalize}
+    {:label => _('Retirement State'), :value => @record.retirement_state.to_s.capitalize}
   end
 
   def textual_catalog_item
     # {:label => "Parent Catalog Item", :value => @record.service_template.name }
     st = @record.service_template
-    s = {:label => _("Parent Catalog Item"), :image => "service_template", :value => (st.nil? ? _("None") : st.name)}
-    if st && role_allows(:feature => "catalog_items_accord")
+    s = {:label => _('Parent Catalog Item'), :image => 'service_template', :value => (st.nil? ? _('None') : st.name)}
+    if st && role_allows(:feature => 'catalog_items_accord')
       s[:title] = _("Show this Service's Parent Service Catalog")
       s[:link]  = url_for(:controller => 'catalog', :action => 'show', :id => st)
     end
@@ -96,7 +96,7 @@ module ServiceHelper::TextualSummary
   def textual_parent_service
     parent = @record.parent_service
     {
-      :label => _("Parent Service"),
+      :label => _('Parent Service'),
       :image => parent.picture ? "/pictures/#{parent.picture.basename}" : 'service',
       :value => parent.name,
       :title => _("Show this Service's Parent Service"),
@@ -113,7 +113,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_created
-    {:label => _("Created On"), :value => format_timezone(@record.created_at)}
+    {:label => _('Created On'), :value => format_timezone(@record.created_at)}
   end
 
   def textual_miq_custom_attributes

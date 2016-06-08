@@ -2,7 +2,7 @@ class DialogFieldCheckBox < DialogField
   AUTOMATE_VALUE_FIELDS = %w(required read_only)
 
   def checked?
-    value == "t"
+    value == 't'
   end
 
   def value
@@ -15,7 +15,7 @@ class DialogFieldCheckBox < DialogField
   end
 
   def script_error_values
-    "<Script error>"
+    '<Script error>'
   end
 
   def normalize_automate_values(automate_hash)
@@ -23,8 +23,8 @@ class DialogFieldCheckBox < DialogField
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
-    return initial_values if automate_hash["value"].blank?
-    automate_hash["value"].to_s
+    return initial_values if automate_hash['value'].blank?
+    automate_hash['value'].to_s
   end
 
   def refresh_json_value
@@ -40,6 +40,6 @@ class DialogFieldCheckBox < DialogField
   private
 
   def required_value_error?
-    value != "t"
+    value != 't'
   end
 end

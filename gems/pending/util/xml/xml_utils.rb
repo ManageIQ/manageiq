@@ -12,7 +12,7 @@ class XmlFind
 
   def self.findNamedElement(findStr, ele)
     ele.each_element do |e|
-      if e.name == "value" && e.attributes['name'].downcase == findStr.downcase
+      if e.name == 'value' && e.attributes['name'].downcase == findStr.downcase
         return e.text
       end   # if
       if e.has_elements?
@@ -37,7 +37,7 @@ class XmlFind
   end
 
   def self.findElement(path, element)
-    path_fix_up = path.tr("\\", "/").split("/")
+    path_fix_up = path.tr('\\', '/').split('/')
     return XmlHash::XmhHelpers.findElementInt(path_fix_up, element) if element.kind_of?(Hash)
     findElementInt(path_fix_up, element)
   end
@@ -70,16 +70,16 @@ class XmlHelpers
 end
 
 class Xml2tags
-  def self.walk(node, parents = "")
+  def self.walk(node, parents = '')
     tags = []
 
-    sep = "/"
+    sep = '/'
     case node.name
-    when "value"
+    when 'value'
       node.each_child do|e|
-        if e.respond_to?("value")
-          if parents.split(":").last != node.attributes["name"]
-            tag = parents + sep + node.attributes["name"] + sep + e.value
+        if e.respond_to?('value')
+          if parents.split(':').last != node.attributes['name']
+            tag = parents + sep + node.attributes['name'] + sep + e.value
           else
             tag = parents + sep + e.value
           end
@@ -88,14 +88,14 @@ class Xml2tags
         else break
         end
       end
-    when"key"
-      if parents.split(sep).last != node.attributes["keyname"]
-        tag = parents + sep + node.attributes["keyname"]
+    when'key'
+      if parents.split(sep).last != node.attributes['keyname']
+        tag = parents + sep + node.attributes['keyname']
         tags << normalize(tag)
         # puts "Tag <key> = #{tag}"
-        parents = parents + sep + node.attributes["keyname"]
+        parents = parents + sep + node.attributes['keyname']
       end
-    when "miq"
+    when 'miq'
       # Don't include in tag
     else
       parents = parents + sep + node.name if parents.split(sep).last != node.name
@@ -118,13 +118,13 @@ end
 class Xml2Array
   def self.element2hash(doc, path)
     obj = {}
-    doc.find_each(path + "/*") do |element|
+    doc.find_each(path + '/*') do |element|
       text = element.text
-      text = "" if text.nil?
-      if text.strip != ""
+      text = '' if text.nil?
+      if text.strip != ''
         obj[element.name] = element.text
       else
-        cobj = element2hash(doc, path + "/" + element.name)
+        cobj = element2hash(doc, path + '/' + element.name)
         obj[element.name] = cobj unless cobj.nil?
       end
     end
@@ -133,8 +133,8 @@ class Xml2Array
 
   def self.getNodeDetails(doc, path)
     result = []
-    doc.elements.to_a("//" + path + "/*").each do|node|
-      path = "//" + node.name
+    doc.elements.to_a('//' + path + '/*').each do|node|
+      path = '//' + node.name
       result.push(element2hash(doc, path))
     end
     result

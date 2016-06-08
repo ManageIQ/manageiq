@@ -4,7 +4,7 @@ module ManageIQ::Providers
       include ManageIQ::Providers::Azure::RefreshHelperMethods
       include Vmdb::Logging
 
-      TYPE_DEPLOYMENT = "microsoft.resources/deployments"
+      TYPE_DEPLOYMENT = 'microsoft.resources/deployments'
 
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
@@ -155,7 +155,7 @@ module ManageIQ::Providers
       def parse_resource_group(resource_group)
         uid = resource_group.id
         new_result = {
-          :type    => "ResourceGroup",
+          :type    => 'ResourceGroup',
           :name    => resource_group.name,
           :ems_ref => uid,
         }
@@ -165,7 +165,7 @@ module ManageIQ::Providers
       def parse_series(s)
         name = uid = s.name
         new_result = {
-          :type           => "ManageIQ::Providers::Azure::CloudManager::Flavor",
+          :type           => 'ManageIQ::Providers::Azure::CloudManager::Flavor',
           :ems_ref        => uid,
           :name           => name,
           :cpus           => s.number_of_cores, # where are the virtual CPUs??
@@ -181,7 +181,7 @@ module ManageIQ::Providers
         id = az.id.downcase
 
         new_result = {
-          :type    => "ManageIQ::Providers::Azure::CloudManager::AvailabilityZone",
+          :type    => 'ManageIQ::Providers::Azure::CloudManager::AvailabilityZone',
           :ems_ref => id,
           :name    => az.name,
         }
@@ -205,7 +205,7 @@ module ManageIQ::Providers
           :uid_ems             => uid,
           :ems_ref             => uid,
           :name                => instance.name,
-          :vendor              => "azure",
+          :vendor              => 'azure',
           :raw_power_state     => power_status(instance),
           :operating_system    => process_os(instance),
           :flavor              => series,
@@ -255,7 +255,7 @@ module ManageIQ::Providers
       end
 
       def add_instance_disk(disks, size, name, location)
-        super(disks, size, location, name, "azure")
+        super(disks, size, location, name, 'azure')
       end
 
       # TODO(lsmola) NetworkManager, storing IP addresses under hardware/network will go away, once all providers are
@@ -268,7 +268,7 @@ module ManageIQ::Providers
             hostname = ipconfig.name
             private_ip_addr = ipconfig.properties.try(:private_ip_address)
             if private_ip_addr
-              networks_array << {:description => "private", :ipaddress => private_ip_addr, :hostname => hostname}
+              networks_array << {:description => 'private', :ipaddress => private_ip_addr, :hostname => hostname}
             end
 
             public_ip_obj = ipconfig.properties.try(:public_ip_address)
@@ -278,7 +278,7 @@ module ManageIQ::Providers
             next unless ip_profile
 
             public_ip_addr = ip_profile.properties.try(:ip_address)
-            networks_array << {:description => "public", :ipaddress => public_ip_addr, :hostname => hostname}
+            networks_array << {:description => 'public', :ipaddress => public_ip_addr, :hostname => hostname}
           end
         end
 
@@ -397,7 +397,7 @@ module ManageIQ::Providers
         ver = deployment.properties.try(:template_link).try(:content_version)
 
         new_result = {
-          :type        => "OrchestrationTemplateAzure",
+          :type        => 'OrchestrationTemplateAzure',
           :name        => deployment.name,
           :description => "contentVersion: #{ver}",
           :content     => content,
@@ -453,8 +453,8 @@ module ManageIQ::Providers
           :name               => build_image_name(image),
           :description        => build_image_description(image),
           :location           => @ems.provider_region,
-          :vendor             => "azure",
-          :raw_power_state    => "never",
+          :vendor             => 'azure',
+          :raw_power_state    => 'never',
           :template           => true,
           :publicly_available => false,
           :hardware           => {

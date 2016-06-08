@@ -4,42 +4,42 @@ module MiqExpression::FilterSubstMixin
   #   and inserting sequential tokens for each expression part
   def exp_build_table(exp, quick_search = false)
     exp_table = []
-    if exp["and"]
-      exp_table.push("(")
-      exp["and"].each do |e|
+    if exp['and']
+      exp_table.push('(')
+      exp['and'].each do |e|
         exp_table += exp_build_table(e, quick_search)
-        exp_table.push("AND") unless e == exp["and"].last
+        exp_table.push('AND') unless e == exp['and'].last
       end
-      exp_table.push(")")
-    elsif exp["or"]
-      exp_table.push("(")
-      exp["or"].each do |e|
+      exp_table.push(')')
+    elsif exp['or']
+      exp_table.push('(')
+      exp['or'].each do |e|
         exp_table += exp_build_table(e, quick_search)
-        exp_table.push("OR") unless e == exp["or"].last
+        exp_table.push('OR') unless e == exp['or'].last
       end
-      exp_table.push(")")
-    elsif exp["not"]
+      exp_table.push(')')
+    elsif exp['not']
       @exp_token ||= 0
       @exp_token += 1
       exp[:token] = @exp_token
-      exp_table.push(quick_search ? "NOT" : ["NOT", @exp_token])  # No token if building quick search exp
-      exp_table.push("(") unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
-      exp_table += exp_build_table(exp["not"], quick_search)
-      exp_table.push(")") unless ["and", "or"].include?(exp["not"].keys.first)  # No parens if and/or under me
+      exp_table.push(quick_search ? 'NOT' : ['NOT', @exp_token])  # No token if building quick search exp
+      exp_table.push('(') unless ['and', 'or'].include?(exp['not'].keys.first)  # No parens if and/or under me
+      exp_table += exp_build_table(exp['not'], quick_search)
+      exp_table.push(')') unless ['and', 'or'].include?(exp['not'].keys.first)  # No parens if and/or under me
     else
       @exp_token ||= 0
       @exp_token += 1
       exp[:token] = @exp_token
-      if exp["???"]                             # Found a new expression part
-        exp_table.push(["???", @exp_token])
+      if exp['???']                             # Found a new expression part
+        exp_table.push(['???', @exp_token])
         exp_context[@expkey][:exp_token] = @exp_token         # Save the token value for the view
         exp_context[:edit_exp] = copy_hash(exp)       # Save the exp part for the view
         exp_set_fields(exp_context[:edit_exp])        # Set the fields for a new exp part
       else
         if quick_search # Separate out the user input fields if doing a quick search
           human_exp = MiqExpression.to_human(exp)
-          if human_exp.include?("<user input>")
-            exp_table.push(human_exp.split("<user input>").join(""))
+          if human_exp.include?('<user input>')
+            exp_table.push(human_exp.split('<user input>').join(''))
             exp_table.push([:user_input, @exp_token])
           else
             exp_table.push(human_exp)
@@ -55,18 +55,18 @@ module MiqExpression::FilterSubstMixin
   # Go thru an expression and replace the quick search tokens
   def exp_replace_qs_tokens(exp, tokens)
     key = exp.keys.first
-    if ["and", "or"].include?(key)
+    if ['and', 'or'].include?(key)
       exp[key].each { |e| exp_replace_qs_tokens(e, tokens) }
-    elsif key == "not"
+    elsif key == 'not'
       exp_replace_qs_tokens(exp[key], tokens)
-    elsif exp.key?(:token) && exp[key].key?("value")
+    elsif exp.key?(:token) && exp[key].key?('value')
       token = exp[:token]
       if tokens[token]                # Only atoms included in tokens will have user input
         value = tokens[token][:value] # Get the user typed value
         if tokens[token][:value_type] == :bytes
           value += ".#{tokens[token][:suffix] || "bytes"}"  # For :bytes type, add in the suffix
         end
-        exp[key]["value"] = value     # Replace the exp value with the proper qs value
+        exp[key]['value'] = value     # Replace the exp value with the proper qs value
       end
     end
   end
@@ -82,12 +82,12 @@ module MiqExpression::FilterSubstMixin
     elsif exp[:token] && exp[:token] == token       # This is the token exp
       @parent_is_not = true if parent_is_not        # Remember that token exp's parent is a NOT
       return exp                                    #   return it
-    elsif exp["not"]
-      return exp_find_by_token(exp["not"], token, true) # Look for token under NOT (indicate we are a NOT)
-    elsif exp["and"]
-      return exp_find_by_token(exp["and"], token)   # Look for token under AND
-    elsif exp["or"]
-      return exp_find_by_token(exp["or"], token)    # Look for token under OR
+    elsif exp['not']
+      return exp_find_by_token(exp['not'], token, true) # Look for token under NOT (indicate we are a NOT)
+    elsif exp['and']
+      return exp_find_by_token(exp['and'], token)   # Look for token under AND
+    elsif exp['or']
+      return exp_find_by_token(exp['or'], token)    # Look for token under OR
     else
       return nil
     end
@@ -102,14 +102,14 @@ module MiqExpression::FilterSubstMixin
       exp        = exp_find_by_token(orig_exp, token)
       first_exp  = exp[exp.keys.first]
 
-      if first_exp.key?("field")  # Base token settings on exp type
-        field = exp[exp.keys.first]["field"]
+      if first_exp.key?('field')  # Base token settings on exp type
+        field = exp[exp.keys.first]['field']
         acc[token][:field]      = field
         acc[token][:value_type] = MiqExpression.get_col_info(field)[:format_sub_type]
-      elsif first_exp.key?("tag")
-        acc[token][:tag]   = first_exp["tag"]
-      elsif first_exp.key?("count")
-        acc[token][:count] = first_exp["count"]
+      elsif first_exp.key?('tag')
+        acc[token][:tag]   = first_exp['tag']
+      elsif first_exp.key?('count')
+        acc[token][:count] = first_exp['count']
       end
     end
   end

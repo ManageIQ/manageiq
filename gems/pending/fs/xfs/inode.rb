@@ -276,7 +276,7 @@ module XFS
     end
 
     def write(buf, _len = buf.length)
-      raise "XFS::Inode.write: Write functionality is not yet supported on XFS."
+      raise 'XFS::Inode.write: Write functionality is not yet supported on XFS.'
     end
 
     # ////////////////////////////////////////////////////////////////////////////

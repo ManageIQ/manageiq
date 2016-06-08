@@ -1,7 +1,7 @@
 class LdapServer < ApplicationRecord
   belongs_to :ldap_domain
 
-  default_value_for :mode, "ldaps"
+  default_value_for :mode, 'ldaps'
   default_value_for :port, 636
 
   attr_accessor :ldap

@@ -63,11 +63,11 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
   end
 
   def get_inbound_firewall_rules(sg)
-    sg.ip_permissions.collect { |perm| parse_firewall_rule(perm, "inbound") }.flatten
+    sg.ip_permissions.collect { |perm| parse_firewall_rule(perm, 'inbound') }.flatten
   end
 
   def get_outbound_firewall_rules(sg)
-    sg.ip_permissions_egress.collect { |perm| parse_firewall_rule(perm, "outbound") }.flatten
+    sg.ip_permissions_egress.collect { |perm| parse_firewall_rule(perm, 'outbound') }.flatten
   end
 
   def get_floating_ips
@@ -88,9 +88,9 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
     name   = get_from_tags(vpc, :name)
     name ||= uid
 
-    status  = (vpc.state == :available) ? "active" : "inactive"
+    status  = (vpc.state == :available) ? 'active' : 'inactive'
 
-    subnets = @aws_ec2.client.describe_subnets(:filters => [{:name => "vpc-id", :values => [vpc.vpc_id]}])[:subnets]
+    subnets = @aws_ec2.client.describe_subnets(:filters => [{:name => 'vpc-id', :values => [vpc.vpc_id]}])[:subnets]
     get_cloud_subnets(subnets)
     cloud_subnets = subnets.collect { |s| @data_index.fetch_path(:cloud_subnets, s.subnet_id) }
 
@@ -102,7 +102,7 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
       :status              => status,
       :enabled             => true,
       :orchestration_stack => parent_manager_fetch_path(:orchestration_stacks,
-                                                        get_from_tags(vpc, "aws:cloudformation:stack-id")),
+                                                        get_from_tags(vpc, 'aws:cloudformation:stack-id')),
       :cloud_subnets       => cloud_subnets,
     }
     return uid, new_result
@@ -136,7 +136,7 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
       :description         => sg.description.try(:truncate, 255),
       :cloud_network       => @data_index.fetch_path(:cloud_networks, sg.vpc_id),
       :orchestration_stack => parent_manager_fetch_path(:orchestration_stacks,
-                                                        get_from_tags(sg, "aws:cloudformation:stack-id")),
+                                                        get_from_tags(sg, 'aws:cloudformation:stack-id')),
     }
     return uid, new_result
   end
@@ -175,7 +175,7 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
       :ems_ref            => uid,
       :address            => address,
       :fixed_ip_address   => ip.private_ip_address,
-      :cloud_network_only => ip.domain["vpc"] ? true : false,
+      :cloud_network_only => ip.domain['vpc'] ? true : false,
       :network_port       => @data_index.fetch_path(:network_ports, ip.network_interface_id),
       :vm                 => parent_manager_fetch_path(:vms, ip.instance_id)
     }

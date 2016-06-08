@@ -14,7 +14,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-TARGET_VM = "rpo-test2"
+TARGET_VM = 'rpo-test2'
 vmMor = nil
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -24,9 +24,9 @@ begin
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
   puts "API version: #{vim.apiVersion}"
 
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
-  puts "******* Memory *******"
+  puts '******* Memory *******'
 
   origMem = miqVm.getMemory
   puts "Memory: #{origMem}"
@@ -37,7 +37,7 @@ begin
   miqVm.setMemory(newMem)
   puts "Memory: #{miqVm.getMemory}"
 
-  puts "******* CPUs *******"
+  puts '******* CPUs *******'
 
   origCPUs = miqVm.getNumCPUs
   puts "CPUs: #{miqVm.getNumCPUs}"

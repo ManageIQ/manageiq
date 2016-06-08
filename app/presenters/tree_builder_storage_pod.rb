@@ -2,19 +2,19 @@ class TreeBuilderStoragePod < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "Storage"}
+    {:leaf => 'Storage'}
   end
 
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "dsc_",
+      :id_prefix => 'dsc_',
       :autoload  => true
     )
   end
 
   def root_options
-    [t = _("All Datastore Clusters"), t]
+    [t = _('All Datastore Clusters'), t]
   end
 
   # Get root nodes count/array for explorer tree
@@ -23,9 +23,9 @@ class TreeBuilderStoragePod < TreeBuilder
     items = EmsFolder.where(:type => 'StorageCluster')
     items.each do |item|
       objects.push(:id            => item[:id],
-                   :tree          => "dsc_tree",
+                   :tree          => 'dsc_tree',
                    :text          => item[:name],
-                   :image         => "folder",
+                   :image         => 'folder',
                    :tip           => item[:description],
                    :load_children => true)
     end

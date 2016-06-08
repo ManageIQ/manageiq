@@ -1,7 +1,7 @@
 describe CustomAttributeMixin do
   before do
     class TestClass < ActiveRecord::Base
-      self.table_name = "vms"
+      self.table_name = 'vms'
       include CustomAttributeMixin
     end
 
@@ -9,22 +9,22 @@ describe CustomAttributeMixin do
   end
 
   after do
-    Object.send(:remove_const, "TestClass")
+    Object.send(:remove_const, 'TestClass')
   end
 
-  it "defines #miq_custom_keys" do
+  it 'defines #miq_custom_keys' do
     expect(TestClass.new).to respond_to(:miq_custom_keys)
   end
 
-  it "defines #miq_custom_get" do
+  it 'defines #miq_custom_get' do
     expect(TestClass.new).to respond_to(:miq_custom_get)
   end
 
-  it "defines #miq_custom_set" do
+  it 'defines #miq_custom_set' do
     expect(TestClass.new).to respond_to(:miq_custom_set)
   end
 
-  it "defines custom getter and setter methods" do
+  it 'defines custom getter and setter methods' do
     t = TestClass.new
     (1..9).each do |custom_id|
       custom_str = "custom_#{custom_id}"
@@ -36,38 +36,38 @@ describe CustomAttributeMixin do
     end
   end
 
-  it "#miq_custom_keys" do
+  it '#miq_custom_keys' do
     expect(TestClass.new.miq_custom_keys).to eq([])
     @supported_factories.each do |factory_name|
       object = FactoryGirl.create(factory_name)
 
       expect(object.miq_custom_keys).to eq([])
 
-      key  = "foo"
+      key  = 'foo'
       FactoryGirl.create(:miq_custom_attribute,
                          :resource_type => object.class.base_class.name,
                          :resource_id   => object.id,
                          :name          => key,
-                         :value         => "bar")
+                         :value         => 'bar')
 
       expect(object.reload.miq_custom_keys).to eq([key])
 
-      key2 = "foobar"
+      key2 = 'foobar'
       FactoryGirl.create(:miq_custom_attribute,
                          :resource_type => object.class.base_class.name,
                          :resource_id   => object.id,
                          :name          => key2,
-                         :value         => "bar")
+                         :value         => 'bar')
       expect(object.reload.miq_custom_keys).to match_array([key, key2])
     end
   end
 
-  it "#miq_custom_set" do
+  it '#miq_custom_set' do
     @supported_factories.each do |factory_name|
       object = FactoryGirl.create(factory_name)
 
-      key    = "foo"
-      value  = "bar"
+      key    = 'foo'
+      value  = 'bar'
       source = 'EVM'
 
       expect(CustomAttribute.where(
@@ -76,7 +76,7 @@ describe CustomAttributeMixin do
         :source        => source,
         :name          => key).first).to be_nil
 
-      object.miq_custom_set(key, "")
+      object.miq_custom_set(key, '')
       expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
@@ -91,7 +91,7 @@ describe CustomAttributeMixin do
         :name          => key,
         :value         => value).first).not_to be_nil
 
-      object.miq_custom_set(key, "")
+      object.miq_custom_set(key, '')
       expect(CustomAttribute.where(
         :resource_type => object.class.base_class.name,
         :resource_id   => object.id,
@@ -100,12 +100,12 @@ describe CustomAttributeMixin do
     end
   end
 
-  it "#miq_custom_get" do
+  it '#miq_custom_get' do
     @supported_factories.each do |factory_name|
       object = FactoryGirl.create(factory_name)
 
-      key   = "foo"
-      value = "bar"
+      key   = 'foo'
+      value = 'bar'
 
       expect(object.miq_custom_get(key)).to be_nil
 

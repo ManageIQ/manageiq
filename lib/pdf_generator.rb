@@ -22,7 +22,7 @@ class PdfGenerator
   #   stylesheet to be used
   # @return [String] The pdf file contents
   def pdf_from_string(_html_string, _stylesheet)
-    raise NotImplementedError, "must be implemented in a subclass"
+    raise NotImplementedError, 'must be implemented in a subclass'
   end
 
   def available?
@@ -49,4 +49,4 @@ class PdfGenerator
 end
 
 # Dynamically load all plugins
-Dir.glob(File.join(File.dirname(__FILE__), "pdf_generator/*.rb")).each { |f| require_dependency f }
+Dir.glob(File.join(File.dirname(__FILE__), 'pdf_generator/*.rb')).each { |f| require_dependency f }

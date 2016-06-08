@@ -2,14 +2,14 @@ class ContainerNode < ApplicationRecord
   include NewWithTypeStiMixin
 
   # :name, :uid, :creation_timestamp, :resource_version
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => 'ems_id'
   has_many   :container_groups
   has_many   :container_conditions, :class_name => ContainerCondition, :as => :container_entity, :dependent => :destroy
   has_many   :containers, :through => :container_groups
   has_many   :container_services, -> { distinct }, :through => :container_groups
   has_many   :container_routes, -> { distinct }, :through => :container_services
   has_many   :container_replicators, -> { distinct }, :through => :container_groups
-  has_many   :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many   :labels, -> { where(:section => 'labels') }, :class_name => 'CustomAttribute', :as => :resource, :dependent => :destroy
   has_one    :computer_system, :as => :managed_entity, :dependent => :destroy
   belongs_to :lives_on, :polymorphic => true
   has_one   :hardware, :through => :computer_system
@@ -27,7 +27,7 @@ class ContainerNode < ApplicationRecord
   delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
-    container_conditions.find_by(:name => "Ready")
+    container_conditions.find_by(:name => 'Ready')
   end
 
   def ready_condition_status

@@ -19,7 +19,7 @@ module ManageIQ::Providers
           fetch_entities(openshift_client, OPENSHIFT_ENTITIES)
         end
         entities = openshift_entities.merge(kube_entities)
-        EmsRefresh.log_inv_debug_trace(entities, "inv_hash:")
+        EmsRefresh.log_inv_debug_trace(entities, 'inv_hash:')
         ManageIQ::Providers::Openshift::ContainerManager::RefreshParser.ems_inv_to_hashes(entities)
       end
     end

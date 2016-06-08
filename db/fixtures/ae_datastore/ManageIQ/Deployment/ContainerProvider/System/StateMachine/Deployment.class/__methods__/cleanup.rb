@@ -12,10 +12,10 @@ def cleanup
       $evm.log(:info, "deleting #{RHEL_SUBSCRIBE_INVENTORY}")
       system "sudo rm #{RHEL_SUBSCRIBE_INVENTORY}"
     end
-    $evm.root['ae_result'] = "ok"
-    $evm.root['automation_task'].message = "successful deployment cleanup"
+    $evm.root['ae_result'] = 'ok'
+    $evm.root['automation_task'].message = 'successful deployment cleanup'
   rescue => e
-    $evm.root['ae_result'] = "error"
+    $evm.root['ae_result'] = 'error'
     $evm.root['automation_task'].message = e.message
   ensure
     $evm.log(:info, "State: #{$evm.root['ae_state']} | Result: #{$evm.root['ae_result']} "\

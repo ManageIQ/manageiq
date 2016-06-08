@@ -26,15 +26,15 @@ class ApplicationHelper::Toolbar::AvailabilityZoneCenter < ApplicationHelper::To
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Availability Zone'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          :url       => '/show',
+          :url_parms => '?display=performance'),
         button(
           :availability_zone_timeline,
           'product product-timeline fa-lg',
           N_('Show Timelines for this #{ui_lookup(:table=>"availability_zone")}'),
           N_('Timelines'),
-          :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url       => '/show',
+          :url_parms => '?display=timeline'),
       ]
     ),
   ])

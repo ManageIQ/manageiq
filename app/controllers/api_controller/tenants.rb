@@ -28,12 +28,12 @@ class ApiController
     private
 
     def parse_set_parent(data)
-      parent = parse_fetch_tenant(data.delete("parent"))
-      data.merge!("parent" => parent) if parent
+      parent = parse_fetch_tenant(data.delete('parent'))
+      data.merge!('parent' => parent) if parent
     end
 
     def data_includes_invalid_attrs(data)
-      data.keys.select { |k| INVALID_TENANT_ATTRS.include?(k) }.compact.join(", ") if data
+      data.keys.select { |k| INVALID_TENANT_ATTRS.include?(k) }.compact.join(', ') if data
     end
   end
 end

@@ -20,7 +20,7 @@ module MiqLinux
 
     def toXml(doc)
       @services.each do |service|
-        doc.add_element("service", service_xml(service))
+        doc.add_element('service', service_xml(service))
         # service_targets_xml(service).each { |tx| node.add_element("target", tx) }
       end
     end
@@ -56,7 +56,7 @@ module MiqLinux
       debug "Parsing service unit: #{file}"
 
       unit        = @fs.fileBasename(file)
-      name        = unit.gsub(".service", "")
+      name        = unit.gsub('.service', '')
       inif        = ini(file)
       desc        = parse_description(inif)
       wanted_by   = parse_wanted(inif)
@@ -93,7 +93,7 @@ module MiqLinux
       debug "Parsing target unit: #{file}"
 
       unit = @fs.fileBasename(file)
-      name = unit.gsub(".target", "")
+      name = unit.gsub('.target', '')
       inif = ini(file)
       desc = parse_description(inif)
 
@@ -107,15 +107,15 @@ module MiqLinux
     end
 
     def service_xml(service)
-      {"name"        => service[:name],
-       "image_path"  => service[:path],
-       "description" => service[:description],
-       "typename"    => "linux_systemd"}
+      {'name'        => service[:name],
+       'image_path'  => service[:path],
+       'description' => service[:description],
+       'typename'    => 'linux_systemd'}
     end
 
     def service_targets_xml(service)
       (service[:required_by] + service[:wanted_by]).collect do |tgt|
-        {"value" => tgt.gsub(".target", "")}
+        {'value' => tgt.gsub('.target', '')}
       end
     end
 

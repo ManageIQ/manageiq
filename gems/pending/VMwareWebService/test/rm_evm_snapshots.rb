@@ -26,7 +26,7 @@ password  = ARGV[2]
 begin
   puts "Connecting to #{server}..."
   vim = MiqVim.new(server, username, password)
-  puts "Done."
+  puts 'Done.'
 
   puts "vim.class: #{vim.class}"
   puts "#{vim.server} is #{(vim.isVirtualCenter? ? 'VC' : 'ESX')}"
@@ -43,7 +43,7 @@ begin
       end
       puts "Deleting EVM snapshot for #{miqVm.name}..."
       miqVm.removeSnapshot(sso['snapshot']) if miqVm.name == 'rpo-mp-test'
-      puts "done."
+      puts 'done.'
       puts
     end
   end

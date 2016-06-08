@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::StorageCenter < ApplicationHelper::Toolbar::Ba
           'pficon pficon-delete fa-lg',
           N_('Remove this #{ui_lookup(:table=>"storages")} from the VMDB'),
           N_('Remove from the VMDB'),
-          :url_parms => "&refresh=y",
+          :url_parms => '&refresh=y',
           :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"storages\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"storages\")}?")),
       ]
     ),
@@ -50,8 +50,8 @@ class ApplicationHelper::Toolbar::StorageCenter < ApplicationHelper::Toolbar::Ba
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this #{ui_lookup(:table=>"storages")}'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          :url       => '/show',
+          :url_parms => '?display=performance'),
       ]
     ),
   ])

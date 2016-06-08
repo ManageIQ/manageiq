@@ -1,5 +1,5 @@
 describe AggregationMixin do
-  it "aggregate host attributes" do
+  it 'aggregate host attributes' do
     cluster = FactoryGirl.create(:ems_cluster, :hosts =>
       2.times.collect do
         FactoryGirl.create(:host,

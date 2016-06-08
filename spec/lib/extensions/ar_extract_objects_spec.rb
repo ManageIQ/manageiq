@@ -1,13 +1,13 @@
-describe "ArExtractObjects" do
-  context "ArExtractObjectsTest" do
+describe 'ArExtractObjects' do
+  context 'ArExtractObjectsTest' do
     before(:each) do
       vms = (0...2).collect { FactoryGirl.create(:vm_vmware) }
       @vm1, @vm2 = *vms
       @id1, @id2 = vms.collect(&:id)
     end
 
-    context "calling extract_objects" do
-      it "should extract single objects" do
+    context 'calling extract_objects' do
+      it 'should extract single objects' do
         # Test ids
         expect(Vm.extract_objects([@id1])).to eq([@vm1])
         expect(Vm.extract_objects(@id1)).to eq(@vm1)
@@ -23,7 +23,7 @@ describe "ArExtractObjects" do
         expect(Vm.extract_objects(nil)).to be_nil
       end
 
-      it "should extract multiple objects" do
+      it 'should extract multiple objects' do
         # Test list of ids
         expect(Vm.extract_objects([@id1, @id2])).to match_array([@vm1, @vm2])
         expect(Vm.extract_objects(@id1, @id2)).to match_array([@vm1, @vm2])
@@ -41,8 +41,8 @@ describe "ArExtractObjects" do
       end
     end
 
-    context "calling extract_ids" do
-      it "should extract single objects" do
+    context 'calling extract_ids' do
+      it 'should extract single objects' do
         # Test ids
         expect(Vm.extract_ids([@id1])).to eq([@id1])
         expect(Vm.extract_ids(@id1)).to eq(@id1)
@@ -58,7 +58,7 @@ describe "ArExtractObjects" do
         expect(Vm.extract_ids(nil)).to be_nil
       end
 
-      it "should extract multiple objects" do
+      it 'should extract multiple objects' do
         # Test list of ids
         expect(Vm.extract_ids([@id1, @id2])).to match_array([@id1, @id2])
         expect(Vm.extract_ids(@id1, @id2)).to match_array([@id1, @id2])

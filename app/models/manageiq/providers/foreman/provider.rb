@@ -1,12 +1,12 @@
 class ManageIQ::Providers::Foreman::Provider < ::Provider
   has_one :configuration_manager,
-          :foreign_key => "provider_id",
-          :class_name  => "ManageIQ::Providers::Foreman::ConfigurationManager",
+          :foreign_key => 'provider_id',
+          :class_name  => 'ManageIQ::Providers::Foreman::ConfigurationManager',
           :dependent   => :destroy,
           :autosave    => true
   has_one :provisioning_manager,
-          :foreign_key => "provider_id",
-          :class_name  => "ManageIQ::Providers::Foreman::ProvisioningManager",
+          :foreign_key => 'provider_id',
+          :class_name  => 'ManageIQ::Providers::Foreman::ProvisioningManager',
           :dependent   => :destroy,
           :autosave    => true
 
@@ -38,7 +38,7 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
 
   def connect(options = {})
     auth_type = options[:auth_type]
-    raise "no credentials defined" if self.missing_credentials?(auth_type)
+    raise 'no credentials defined' if self.missing_credentials?(auth_type)
 
     verify_ssl = options[:verify_ssl] || self.verify_ssl
     base_url   = options[:url] || url
@@ -72,12 +72,12 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
   end
 
   def self.process_tasks(options)
-    raise "No ids given to process_tasks" if options[:ids].blank?
-    if options[:task] == "refresh_ems"
+    raise 'No ids given to process_tasks' if options[:ids].blank?
+    if options[:task] == 'refresh_ems'
       refresh_ems(options[:ids])
       create_audit_event(options)
     else
-      options[:userid] ||= "system"
+      options[:userid] ||= 'system'
       unknown_task_exception(options)
       invoke_tasks_queue(options)
     end

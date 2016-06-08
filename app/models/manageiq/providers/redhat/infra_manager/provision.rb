@@ -5,7 +5,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Provision < MiqProvision
   include_concern 'StateMachine'
 
   def destination_type
-    "Vm"
+    'Vm'
   end
 
   def get_provider_destination

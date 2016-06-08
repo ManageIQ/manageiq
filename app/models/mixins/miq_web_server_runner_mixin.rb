@@ -12,7 +12,7 @@ module MiqWebServerRunnerMixin
     @worker.release_db_connection
 
     # Since puma/thin traps interrupts, log that we're going away and update our worker row
-    at_exit { do_exit("Exit request received.") }
+    at_exit { do_exit('Exit request received.') }
   end
 
   module ClassMethods
@@ -31,7 +31,7 @@ module MiqWebServerRunnerMixin
     end
 
     def start_rails_server(options)
-      require "rails/commands/server"
+      require 'rails/commands/server'
 
       _log.info("With options: #{options.except(:app).inspect}")
       Rails::Server.new(options).tap do |server|

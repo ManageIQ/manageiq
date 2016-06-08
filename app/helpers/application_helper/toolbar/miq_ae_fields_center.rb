@@ -21,8 +21,8 @@ class ApplicationHelper::Toolbar::MiqAeFieldsCenter < ApplicationHelper::Toolbar
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Class'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to remove this Class?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to remove this Class?')),
         separator,
         button(
           :miq_ae_field_edit,

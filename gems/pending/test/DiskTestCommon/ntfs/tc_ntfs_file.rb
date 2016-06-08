@@ -60,7 +60,7 @@ class NtfsTestFile < Minitest::Test
       if disk.fs
         # puts "\ntc_ntfs_file: Testing files on #{disk.info.fileName}"
         disk.fs.chdir(disk.sy)
-        disk.fs.dirGlob("*.ini") do |f|
+        disk.fs.dirGlob('*.ini') do |f|
           fo = disk.fs.fileOpen(f)
           assert_nothing_raised(id(__LINE__, disk)) { fo.read }
           assert_nothing_raised(id(__LINE__, disk)) { fo.close }
@@ -111,10 +111,10 @@ class NtfsTestFile < Minitest::Test
         names = [
           "#{disk.sy}/system32",
           "#{disk.sy}/system32/config",
-          "/DocuMENTS aNd settINGS/All Users",
-          "/Documents and Settings/Osama Been Hiden",
+          '/DocuMENTS aNd settINGS/All Users',
+          '/Documents and Settings/Osama Been Hiden',
           "#{disk.sy}/bootstat.dat",
-          "/program files/common files/microsoft shared/wmi",
+          '/program files/common files/microsoft shared/wmi',
           "#{disk.sy}/system32/drivers/etc/hosts"
         ]
         names.each do |name|
@@ -135,7 +135,7 @@ class NtfsTestFile < Minitest::Test
       next if disk.nil?
       if disk.fs
         # puts "\ntc_ntfs_file: Testing root directory on #{disk.info.fileName}"
-        assert_equal("NTFS", disk.fs.fsType, id(__FILE__, disk))
+        assert_equal('NTFS', disk.fs.fsType, id(__FILE__, disk))
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirEntries(disk.fs.pwd) }
       else
         puts "\ntc_ntfs_file: FS is nil at line #{__LINE__} on #{disk.info.fileName}"

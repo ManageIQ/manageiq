@@ -1,5 +1,5 @@
 class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqProvisionCloudWorkflow
-  include_concern "DialogFieldValidation"
+  include_concern 'DialogFieldValidation'
 
   def allowed_instance_types(_options = {})
     source                  = load_ar_obj(get_source_vm)

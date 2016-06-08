@@ -10,12 +10,12 @@ class MigrateProviderAttributesToEndpoints < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Migrating Provider attributes to Endpoints") do
+    say_with_time('Migrating Provider attributes to Endpoints') do
       ExtManagementSystem.all.each do |ems|
         next if ems.provider_id.nil?
         provider = Provider.where(:id => ems.provider_id).first
         endpoint = Endpoint.where(
-          :resource_type => "ExtManagementSystem",
+          :resource_type => 'ExtManagementSystem',
           :resource_id   => ems.id).first_or_create
 
         endpoint.update_attributes!(:verify_ssl => provider.verify_ssl)
@@ -24,10 +24,10 @@ class MigrateProviderAttributesToEndpoints < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Migrating Endpoints to Provider attributes") do
+    say_with_time('Migrating Endpoints to Provider attributes') do
       endpoints = Endpoint.where(
-        :role          => "default",
-        :resource_type => "ExtManagementSystem",
+        :role          => 'default',
+        :resource_type => 'ExtManagementSystem',
       )
 
       endpoints.each do |endpoint|

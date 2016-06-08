@@ -317,7 +317,7 @@ module VirtualReflections
     private
 
     def add_virtual_reflection(reflection, name, uses, _options)
-      raise ArgumentError, "macro must be specified" unless reflection
+      raise ArgumentError, 'macro must be specified' unless reflection
       reset_virtual_reflection_information
       _virtual_reflections[name.to_sym] = reflection
       define_virtual_include(name.to_s, uses)

@@ -3,7 +3,7 @@ module MiqAeServiceUserSpec
     let(:user)         { FactoryGirl.create(:user_admin) }
     let(:service_user) { MiqAeMethodService::MiqAeServiceUser.find(user.id) }
 
-    ["current_group", "miq_group"].each do |group|
+    ['current_group', 'miq_group'].each do |group|
       it "##{group}" do
         user # create before setting expectation
         expect_any_instance_of(User).to receive(:current_group).and_call_original

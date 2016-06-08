@@ -18,10 +18,10 @@ module MiqReport::Search
   # @return nil if there is a virtual association in the path
   # @return [Class, String] ActiveRecord base object and column name for the association
   def association_column(assoc)
-    parts = assoc.split(".")
+    parts = assoc.split('.')
     col = parts.pop
     klass = db_class.follow_associations_with_virtual(parts)
-    raise _("Invalid reflection <%{item}> on model <%{name}>") % {:item => assoc, :name => db_class} if klass.nil?
+    raise _('Invalid reflection <%{item}> on model <%{name}>') % {:item => assoc, :name => db_class} if klass.nil?
     # only return attribute if it is accessible directly (not through virtual columns)
     [klass.arel_attribute(col), klass.type_for_attribute(col).type] if db_class.follow_associations(parts)
   end

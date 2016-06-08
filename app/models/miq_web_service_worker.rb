@@ -12,7 +12,7 @@ class MiqWebServiceWorker < MiqWorker
   CLUSTER                    = 'evmcluster_ws'
 
   def friendly_name
-    @friendly_name ||= "Web Services Worker"
+    @friendly_name ||= 'Web Services Worker'
   end
 
   include MiqWebServerWorkerMixin

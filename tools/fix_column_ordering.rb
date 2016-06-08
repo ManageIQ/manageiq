@@ -1,4 +1,4 @@
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join('tools')
 
 require 'column_ordering/column_ordering'
 

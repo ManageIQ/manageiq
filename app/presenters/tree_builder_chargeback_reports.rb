@@ -2,20 +2,20 @@ class TreeBuilderChargebackReports < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:full_ids => true, :leaf => "MiqReportResult"}
+    {:full_ids => true, :leaf => 'MiqReportResult'}
   end
 
   def set_locals_for_render
     locals = super
     temp = {
-      :id_prefix => "cbrpt_",
+      :id_prefix => 'cbrpt_',
       :autoload  => true
     }
     locals.merge!(temp)
   end
 
   def root_options
-    [t = _("Saved Chargeback Reports"), t]
+    [t = _('Saved Chargeback Reports'), t]
   end
 
   # Get root nodes count/array for explorer tree
@@ -32,7 +32,7 @@ class TreeBuilderChargebackReports < TreeBuilder
         objects.push(
           :id    => "#{to_cid(item.miq_report_id)}-#{idx}",
           :text  => item.miq_report.name,
-          :image => "report",
+          :image => 'report',
           :tip   => item.name
         )
       end
@@ -46,6 +46,6 @@ class TreeBuilderChargebackReports < TreeBuilder
                              .select(:id, :miq_report_id, :name, :last_run_on, :miq_task_id)
                              .order(:last_run_on)
 
-    count_only_or_objects(count_only, objects, "name")
+    count_only_or_objects(count_only, objects, 'name')
   end
 end

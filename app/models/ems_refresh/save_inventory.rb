@@ -86,7 +86,7 @@ module EmsRefresh::SaveInventory
           _log.info("#{log_header} Creating Vm [#{h[:name]}] location: [#{h[:location]}] storage id: [#{h[:storage_id]}] uid_ems: [#{h[:uid_ems]}] ems_ref: [#{h[:ems_ref]}]")
 
           # Handle the off chance that we are adding an "unknown" Vm to the db
-          h[:location] = "unknown" if h[:location].blank?
+          h[:location] = 'unknown' if h[:location].blank?
 
           # build a type-specific vm or template
           found = ems.vms_and_templates.build(h)
@@ -203,7 +203,7 @@ module EmsRefresh::SaveInventory
       end
     end
 
-    deletes = hardware.guest_devices.where(:device_type => ["ethernet", "storage"])
+    deletes = hardware.guest_devices.where(:device_type => ['ethernet', 'storage'])
     save_inventory_multi(hardware.guest_devices, hashes, deletes, [:device_type, :uid_ems], [:network, :miq_scsi_targets], [:switch, :lan])
     store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
   end

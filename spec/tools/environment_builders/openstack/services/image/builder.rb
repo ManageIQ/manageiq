@@ -11,7 +11,7 @@ module Openstack
         end
 
         def initialize(ems, project)
-          @service = ems.connect(:tenant_name => project.name, :service => "Image")
+          @service = ems.connect(:tenant_name => project.name, :service => 'Image')
           @data    = Data.new
           @project = project
 
@@ -78,17 +78,17 @@ module Openstack
             # TODO(lsmola) identity is missing in Glance V2 object, fix it in Fog, then image.reload will work
             # case image.reload.status
             case service.images.get(image.id).status
-            when "active"
+            when 'active'
               break
-            when "error"
-              puts "Error creating image"
+            when 'error'
+              puts 'Error creating image'
               exit 1
             else
-              print "."
+              print '.'
               sleep 1
             end
           end
-          puts "Finished"
+          puts 'Finished'
         end
 
         def import_image
@@ -107,8 +107,8 @@ module Openstack
         def cirros_image_data
           return @cirros_image_data unless @cirros_image_data.blank?
 
-          image_url = "http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img"
-          puts "Downloading Cirros image cirros-0.3.4-x86_64-disk.img..."
+          image_url = 'http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img'
+          puts 'Downloading Cirros image cirros-0.3.4-x86_64-disk.img...'
           require 'linux_admin'
           cirros_image_path = "/tmp/cirros-0.3.4-x86_64-disk#{SecureRandom.hex}.img"
           AwesomeSpawn.run!("wget -O #{cirros_image_path} #{image_url}")
@@ -121,8 +121,8 @@ module Openstack
         end
 
         def download_image
-          image_url = "https://launchpadlibrarian.net/83305869/cirros-0.3.0-x86_64-uec.tar.gz"
-          puts "Downloading Cirros image..."
+          image_url = 'https://launchpadlibrarian.net/83305869/cirros-0.3.0-x86_64-uec.tar.gz'
+          puts 'Downloading Cirros image...'
           require 'linux_admin'
           AwesomeSpawn.run!("wget -O #{image_path} #{image_url}")
         end
@@ -134,7 +134,7 @@ module Openstack
         end
 
         def upload_aki
-          puts "Uploading AKI..."
+          puts 'Uploading AKI...'
           aki   = "#{extract_path}/cirros-0.3.0-x86_64-vmlinuz"
           @aki  = @service.images.create(
             :name             => "#{image_name}-aki",
@@ -146,7 +146,7 @@ module Openstack
         end
 
         def upload_ari
-          puts "Uploading ARI..."
+          puts 'Uploading ARI...'
           ari   = "#{extract_path}/cirros-0.3.0-x86_64-initrd"
           @ari  = @service.images.create(
             :name             => "#{image_name}-ari",
@@ -158,7 +158,7 @@ module Openstack
         end
 
         def upload_ami
-          puts "Uploading AMI..."
+          puts 'Uploading AMI...'
           ami = "#{extract_path}/cirros-0.3.0-x86_64-blank.img"
           @service.images.create(
             :name             => image_name,
@@ -182,7 +182,7 @@ module Openstack
         end
 
         def image_name
-          @image_name ||= "cirros-0.3.0-amd64"
+          @image_name ||= 'cirros-0.3.0-amd64'
         end
       end
     end

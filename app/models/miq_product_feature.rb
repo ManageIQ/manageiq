@@ -6,7 +6,7 @@ class MiqProductFeature < ApplicationRecord
   validates_presence_of   :identifier
   validates_uniqueness_of :identifier
 
-  FIXTURE_PATH = Rails.root.join(*["db", "fixtures", table_name])
+  FIXTURE_PATH = Rails.root.join(*['db', 'fixtures', table_name])
 
   DETAIL_ATTRS = [
     :name,
@@ -16,7 +16,7 @@ class MiqProductFeature < ApplicationRecord
     :protected
   ]
 
-  FEATURE_TYPE_ORDER = ["view", "control", "admin", "node"]
+  FEATURE_TYPE_ORDER = ['view', 'control', 'admin', 'node']
 
   def self.feature_yaml(path = FIXTURE_PATH)
     "#{path}.yml".freeze
@@ -96,7 +96,7 @@ class MiqProductFeature < ApplicationRecord
     seen     = seed_from_hash(YAML.load_file(fixture_yaml), seen, nil, features)
 
     root_feature = MiqProductFeature.find_by(:identifier => 'everything')
-    Dir.glob(path.join("*.yml")).each do |fixture|
+    Dir.glob(path.join('*.yml')).each do |fixture|
       seed_from_hash(YAML.load_file(fixture), seen, root_feature)
     end
 
@@ -142,9 +142,9 @@ class MiqProductFeature < ApplicationRecord
   end
 
   def seed_vm_explorer_for_custom_roles
-    return unless identifier == "vm_explorer"
+    return unless identifier == 'vm_explorer'
 
-    MiqUserRole.includes(:miq_product_features).select { |r| r.feature_identifiers.include?("vm") && !r.feature_identifiers.include?("vm_explorer") }.each do |role|
+    MiqUserRole.includes(:miq_product_features).select { |r| r.feature_identifiers.include?('vm') && !r.feature_identifiers.include?('vm_explorer') }.each do |role|
       role.miq_product_features << self
       role.save!
     end

@@ -13,7 +13,7 @@ module LiveMetricsMixin
       processed
     end
 
-    def first_and_last_capture(interval_name = "realtime")
+    def first_and_last_capture(interval_name = 'realtime')
       firsts, lasts = metrics_capture.metrics_available.collect do |metric| #
         metrics_capture.first_and_last_capture(metric)
       end.transpose
@@ -27,7 +27,7 @@ module LiveMetricsMixin
       first = Time.at(firsts.min / 1000).utc
       last = Time.at(lasts.max / 1000).utc
       now = Time.new.utc
-      if interval_name == "hourly"
+      if interval_name == 'hourly'
         first = (now - first) > 1.hour ? first : nil
       end
       [first, last]

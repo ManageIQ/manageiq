@@ -1,6 +1,6 @@
 module MiqAeMethodService
   class MiqAeServiceServiceOrchestration < MiqAeServiceService
-    require_relative "mixins/miq_ae_service_service_orchestration_mixin"
+    require_relative 'mixins/miq_ae_service_service_orchestration_mixin'
     include MiqAeServiceServiceOrchestrationMixin
 
     expose :stack_name

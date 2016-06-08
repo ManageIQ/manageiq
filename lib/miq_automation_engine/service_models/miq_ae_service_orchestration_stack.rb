@@ -1,6 +1,6 @@
 module MiqAeMethodService
   class MiqAeServiceOrchestrationStack < MiqAeServiceModelBase
-    require_relative "mixins/miq_ae_service_retirement_mixin"
+    require_relative 'mixins/miq_ae_service_retirement_mixin'
     include MiqAeServiceRetirementMixin
 
     expose :parameters,             :association => true
@@ -13,7 +13,7 @@ module MiqAeMethodService
     expose :raw_exists?
 
     def add_to_service(service)
-      error_msg = "service must be a MiqAeServiceService"
+      error_msg = 'service must be a MiqAeServiceService'
       raise ArgumentError, error_msg unless service.kind_of?(MiqAeMethodService::MiqAeServiceService)
       ar_method { wrap_results(Service.find_by_id(service.id).add_resource!(@object)) }
     end

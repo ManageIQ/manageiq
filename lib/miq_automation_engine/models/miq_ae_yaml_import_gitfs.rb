@@ -43,7 +43,7 @@ class MiqAeYamlImportGitfs < MiqAeYamlImport
   end
 
   def namespace_files(parent_folder)
-    glob_str = File.join(parent_folder, "*", NAMESPACE_YAML_FILENAME)
+    glob_str = File.join(parent_folder, '*', NAMESPACE_YAML_FILENAME)
     @files.select { |entry| File.fnmatch(glob_str, entry, @fn_flags) }
   end
 
@@ -56,7 +56,7 @@ class MiqAeYamlImportGitfs < MiqAeYamlImport
   end
 
   def class_files(namespace_folder)
-    glob_str = File.join(namespace_folder, "*", CLASS_YAML_FILENAME)
+    glob_str = File.join(namespace_folder, '*', CLASS_YAML_FILENAME)
     @files.select { |entry| File.fnmatch(glob_str, entry, @fn_flags) }
   end
 
@@ -65,7 +65,7 @@ class MiqAeYamlImportGitfs < MiqAeYamlImport
   end
 
   def get_instance_files(class_folder)
-    glob_str = File.join(class_folder, "*.yaml")
+    glob_str = File.join(class_folder, '*.yaml')
     instance_files = @files.select { |entry| File.fnmatch(glob_str, entry, @fn_flags) }
 
     class_glob_str = File.join(class_folder, CLASS_YAML_FILENAME)
@@ -73,7 +73,7 @@ class MiqAeYamlImportGitfs < MiqAeYamlImport
   end
 
   def get_method_files(class_folder)
-    glob_str = File.join(class_folder, METHOD_FOLDER_NAME, "*.yaml")
+    glob_str = File.join(class_folder, METHOD_FOLDER_NAME, '*.yaml')
     @files.select { |entry| File.fnmatch(glob_str, entry, @fn_flags) }
   end
 

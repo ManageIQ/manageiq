@@ -1,10 +1,10 @@
 class ManageIQ::Providers::Amazon::NetworkManager::MetricsCollectorWorker < ::MiqEmsMetricsCollectorWorker
   require_nested :Runner
 
-  self.default_queue_name = "amazon_network"
+  self.default_queue_name = 'amazon_network'
 
   def friendly_name
-    @friendly_name ||= "C&U Metrics Collector for Amazon Network"
+    @friendly_name ||= 'C&U Metrics Collector for Amazon Network'
   end
 
   def self.ems_class

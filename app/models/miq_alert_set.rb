@@ -25,8 +25,8 @@ class MiqAlertSet < ApplicationRecord
 
   def export_to_array
     h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["MiqAlert"] = members.collect { |p| p.export_to_array.first["MiqAlert"] unless p.nil? }
+    ['id', 'created_on', 'updated_on'].each { |k| h.delete(k) }
+    h['MiqAlert'] = members.collect { |p| p.export_to_array.first['MiqAlert'] unless p.nil? }
     [self.class.to_s => h]
   end
 
@@ -36,8 +36,8 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def self.import_from_hash(alert_profile, options = {})
-    status = {:class => name, :description => alert_profile["description"], :children => []}
-    ap = alert_profile.delete("MiqAlert") { |_k| raise "No Alerts for Alert Profile == #{alert_profile.inspect}" }
+    status = {:class => name, :description => alert_profile['description'], :children => []}
+    ap = alert_profile.delete('MiqAlert') { |_k| raise "No Alerts for Alert Profile == #{alert_profile.inspect}" }
 
     alerts = []
     ap.each do |a|
@@ -46,7 +46,7 @@ class MiqAlertSet < ApplicationRecord
       alerts.push(alert)
     end
 
-    aset = MiqAlertSet.find_by_guid(alert_profile["guid"])
+    aset = MiqAlertSet.find_by_guid(alert_profile['guid'])
     msg_pfx = "Importing Alert Profile: guid=[#{alert_profile["guid"]}] description=[#{alert_profile["description"]}]"
     if aset.nil?
       aset = MiqAlertSet.new(alert_profile)
@@ -62,7 +62,7 @@ class MiqAlertSet < ApplicationRecord
       status[:messages] = aset.errors.full_messages
     end
 
-    aset["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
+    aset['mode'] ||= 'control' # Default "mode" value to true to support older export decks that don't have a value set.
 
     msg = "#{msg_pfx}, Status: #{status[:status]}"
     msg += ", Messages: #{status[:messages].join(",")}" if status[:messages]
@@ -83,7 +83,7 @@ class MiqAlertSet < ApplicationRecord
     input = YAML.load(fd)
 
     input.each do |e|
-      _a, stat = import_from_hash(e["MiqAlertSet"])
+      _a, stat = import_from_hash(e['MiqAlertSet'])
       stats.push(stat)
     end
 

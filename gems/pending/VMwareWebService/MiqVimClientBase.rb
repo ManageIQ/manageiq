@@ -34,7 +34,7 @@ class MiqVimClientBase < VimService
   end
 
   def sdk_uri
-    URI::HTTPS.build(:host => server, :path => "/sdk")
+    URI::HTTPS.build(:host => server, :path => '/sdk')
   end
 
   def self.receiveTimeout=(val)

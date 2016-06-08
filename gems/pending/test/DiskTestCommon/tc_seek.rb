@@ -53,12 +53,12 @@ class TestSeek < Minitest::Test
       if disk.fs
         # puts "\ntc_seek: Seek testing #{disk.info.fileName}"
         if disk.fs.fileExists?(TEST_FILE)
-          f = disk.fs.fileOpen(TEST_FILE, "r")
+          f = disk.fs.fileOpen(TEST_FILE, 'r')
           # Do 10,000 random seeks.
           10000.times do
             pos = rand(65534)
             f.seek(pos * 2)
-            got = f.read(2).unpack("S")[0]
+            got = f.read(2).unpack('S')[0]
             assert_equal(pos, got)
           end
           f.close

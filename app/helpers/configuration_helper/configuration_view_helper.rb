@@ -7,11 +7,11 @@ module ConfigurationHelper
        when :compare_mode, :drift_mode
          view == "details" ? compare_or_drift_mode_details(resource) : compare_or_drift_mode_exists(resource)
        when :treesize
-         view == "20" ? treesize_small : treesize_large
+         view == '20' ? treesize_small : treesize_large
        else
          case view
-         when "grid" then grid_view(resource)
-         when "tile" then tile_view(resource)
+         when 'grid' then grid_view(resource)
+         when 'tile' then tile_view(resource)
          else             list_view(resource)
          end
        end).html_safe
@@ -20,7 +20,7 @@ module ConfigurationHelper
     private
 
     def active_icon(image, text)
-      content_tag(:li, :class => "active") do
+      content_tag(:li, :class => 'active') do
         content_tag(:i, nil, :class => image, :title => text)
       end
     end
@@ -29,7 +29,7 @@ module ConfigurationHelper
       content_tag(:li) do
         link_to(content_tag(:i, nil, :class => image,
                                      :alt   => text),
-                {:action   => "view_selected",
+                {:action   => 'view_selected',
                  :resource => resource,
                  :view     => view},
                 :remote       => true,
@@ -39,51 +39,51 @@ module ConfigurationHelper
     end
 
     def compare_or_drift_compressed(resource)
-      inactive_icon("product product-view_expanded", _('Expanded View'), resource, "expanded") +
-        active_icon("fa fa-bars fa-rotate-90", _('Compressed View'))
+      inactive_icon('product product-view_expanded', _('Expanded View'), resource, 'expanded') +
+        active_icon('fa fa-bars fa-rotate-90', _('Compressed View'))
     end
 
     def compare_or_drift_expanded(resource)
-      active_icon("product product-view_expanded", _('Expanded View')) +
-        inactive_icon("fa fa-bars fa-rotate-90", _('Compressed View'), resource, "compressed")
+      active_icon('product product-view_expanded', _('Expanded View')) +
+        inactive_icon('fa fa-bars fa-rotate-90', _('Compressed View'), resource, 'compressed')
     end
 
     def compare_or_drift_mode_exists(resource)
-      inactive_icon("fa fa-bars fa-rotate-90", _('Details Mode'), resource, "details") +
-        active_icon("product product-exists", _('Exists Mode'))
+      inactive_icon('fa fa-bars fa-rotate-90', _('Details Mode'), resource, 'details') +
+        active_icon('product product-exists', _('Exists Mode'))
     end
 
     def compare_or_drift_mode_details(resource)
-      active_icon("fa fa-bars fa-rotate-90", _('Details Mode')) +
-        inactive_icon("product product-exists", _('Exists Mode'), resource, "exists")
+      active_icon('fa fa-bars fa-rotate-90', _('Details Mode')) +
+        inactive_icon('product product-exists', _('Exists Mode'), resource, 'exists')
     end
 
     def treesize_small
-      inactive_icon("tree-large.png", _('Large Trees'), :treesize, "32") +
-        active_icon("tree-small.png", _('Small Trees'))
+      inactive_icon('tree-large.png', _('Large Trees'), :treesize, '32') +
+        active_icon('tree-small.png', _('Small Trees'))
     end
 
     def treesize_large
-      active_icon("tree-large.png", _('Large Trees')) +
-        inactive_icon("tree-small.png", _('Small Trees'), :treesize, "20")
+      active_icon('tree-large.png', _('Large Trees')) +
+        inactive_icon('tree-small.png', _('Small Trees'), :treesize, '20')
     end
 
     def grid_view(resource)
-      [(active_icon("fa fa-th", _('Grid View')) if resource != :catalog),
-       inactive_icon("fa fa-th-large", _('Tile View'), resource, "tile"),
-       inactive_icon("fa fa-th-list", _('List View'), resource, "list")].compact.join('')
+      [(active_icon('fa fa-th', _('Grid View')) if resource != :catalog),
+       inactive_icon('fa fa-th-large', _('Tile View'), resource, 'tile'),
+       inactive_icon('fa fa-th-list', _('List View'), resource, 'list')].compact.join('')
     end
 
     def tile_view(resource)
-      [(inactive_icon("fa fa-th", _('Grid View'), resource, "grid") if resource != :catalog),
-       active_icon("fa fa-th-large", _('Tile View')),
-       inactive_icon("fa fa-th-list", _('List View'), resource, "list")].compact.join('')
+      [(inactive_icon('fa fa-th', _('Grid View'), resource, 'grid') if resource != :catalog),
+       active_icon('fa fa-th-large', _('Tile View')),
+       inactive_icon('fa fa-th-list', _('List View'), resource, 'list')].compact.join('')
     end
 
     def list_view(resource)
-      [(inactive_icon("fa fa-th", _('Grid View'), resource, "grid") if resource != :catalog),
-       inactive_icon("fa fa-th-large", _('Tile View'), resource, "tile"),
-       active_icon("fa fa-th-list", _('List View'))].compact.join('')
+      [(inactive_icon('fa fa-th', _('Grid View'), resource, 'grid') if resource != :catalog),
+       inactive_icon('fa fa-th-large', _('Tile View'), resource, 'tile'),
+       active_icon('fa fa-th-list', _('List View'))].compact.join('')
     end
 
     def has_any_role?(arr)

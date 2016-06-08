@@ -1,5 +1,5 @@
 describe EmsRefresh::MetadataRelats do
-  context ".vmdb_relats" do
+  context '.vmdb_relats' do
     before(:each) do
       @zone    = FactoryGirl.create(:zone)
       @ems     = FactoryGirl.create(:ems_vmware, :zone => @zone)
@@ -17,23 +17,23 @@ describe EmsRefresh::MetadataRelats do
       MiqQueue.delete_all
     end
 
-    it "with a Vm" do
+    it 'with a Vm' do
       expect(EmsRefresh.vmdb_relats(@vm)).to eq(:folders_to_clusters        => {@folder.id  => [@cluster.id]},
                                                 :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
                                                 :resource_pools_to_vms      => {@rp.id      => [@vm.id]})
     end
 
-    it "with a Host" do
+    it 'with a Host' do
       expect(EmsRefresh.vmdb_relats(@host)).to eq(:folders_to_clusters => {@folder.id => [@cluster.id]})
     end
 
-    it "with an EMS" do
+    it 'with an EMS' do
       expect(EmsRefresh.vmdb_relats(@ems)).to eq(:folders_to_clusters        => {@folder.id  => [@cluster.id]},
                                                  :clusters_to_resource_pools => {@cluster.id => [@rp.id]},
                                                  :resource_pools_to_vms      => {@rp.id      => [@vm.id]})
     end
 
-    context "with an invalid relats tree" do
+    context 'with an invalid relats tree' do
       before(:each) do
         @rp2 = FactoryGirl.create(:resource_pool, :ext_management_system => @ems)
         @host.set_child(@rp2)
@@ -43,7 +43,7 @@ describe EmsRefresh::MetadataRelats do
         MiqQueue.delete_all
       end
 
-      it "with an EMS" do
+      it 'with an EMS' do
         expect(EmsRefresh.vmdb_relats(@ems)).to eq(:folders_to_hosts           => {@folder.id  => [@host.id]},
                                                    :folders_to_clusters        => {@folder.id  => [@cluster.id]},
                                                    :clusters_to_resource_pools => {@cluster.id => [@rp.id]},

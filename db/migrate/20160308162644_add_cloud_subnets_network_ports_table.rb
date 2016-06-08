@@ -6,6 +6,6 @@ class AddCloudSubnetsNetworkPortsTable < ActiveRecord::Migration[5.0]
       t.string     :address
     end
 
-    add_index :cloud_subnets_network_ports, ["cloud_subnet_id", "network_port_id"], :name => "index_cloud_subnets_network_ports", :unique => true
+    add_index :cloud_subnets_network_ports, ['cloud_subnet_id', 'network_port_id'], :name => 'index_cloud_subnets_network_ports', :unique => true
   end
 end

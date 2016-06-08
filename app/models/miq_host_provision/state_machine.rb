@@ -7,21 +7,21 @@ module MiqHostProvision::StateMachine
   end
 
   def validate_provision
-    raise _("Unable to find PXE server with id [%{id}]") % {:id => get_option(:pxe_server_id)} if pxe_server.nil?
-    raise _("Unable to find PXE image with id [%{id}]") % {:id => get_option(:pxe_image_id)} if pxe_image.nil?
-    raise _("Host [%{name}] does not have a valid Mac Address") % {:name => host_name} if host.mac_address.blank?
+    raise _('Unable to find PXE server with id [%{id}]') % {:id => get_option(:pxe_server_id)} if pxe_server.nil?
+    raise _('Unable to find PXE image with id [%{id}]') % {:id => get_option(:pxe_image_id)} if pxe_image.nil?
+    raise _('Host [%{name}] does not have a valid Mac Address') % {:name => host_name} if host.mac_address.blank?
     if host.missing_credentials?(:ipmi)
-      raise _("Host [%{name}] does not have valid IPMI credentials") % {:name => host_name}
+      raise _('Host [%{name}] does not have valid IPMI credentials') % {:name => host_name}
     end
-    raise _("Host [%{name}] does not have an IP Address configured") % {:name => host_name} if ip_address.blank?
+    raise _('Host [%{name}] does not have an IP Address configured') % {:name => host_name} if ip_address.blank?
     if host.v_total_vms > 0
-      raise _("Host [%{name}] has %{number} VMs") % {:name => host_name, :number => host.v_total_vms}
+      raise _('Host [%{name}] has %{number} VMs') % {:name => host_name, :number => host.v_total_vms}
     end
     if host.v_total_miq_templates > 0
-      raise _("Host [%{name}] has %{number} Templates") % {:name => host_name, :number => host.v_total_miq_templates}
+      raise _('Host [%{name}] has %{number} Templates') % {:name => host_name, :number => host.v_total_miq_templates}
     end
     unless host.ext_management_system.nil?
-      raise _("Host [%{name}] is registered to %{system_name}") % {:name        => host_name,
+      raise _('Host [%{name}] is registered to %{system_name}') % {:name        => host_name,
                                                                    :system_name => host.ext_management_system.name}
     end
   end
@@ -65,7 +65,7 @@ module MiqHostProvision::StateMachine
   end
 
   def post_install_callback
-    message = "PXE Provisioning Complete"
+    message = 'PXE Provisioning Complete'
     _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
 
@@ -74,10 +74,10 @@ module MiqHostProvision::StateMachine
 
   def delete_pxe_configuration_files
     if get_option(:stateless)
-      message = "Stateless, NOT deleting PXE and Customization Files on PXE Server"
+      message = 'Stateless, NOT deleting PXE and Customization Files on PXE Server'
       _log.info("#{message} #{for_destination}")
     else
-      message = "Deleting PXE and Customization Files on PXE Server"
+      message = 'Deleting PXE and Customization Files on PXE Server'
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       delete_pxe_files
@@ -87,7 +87,7 @@ module MiqHostProvision::StateMachine
   end
 
   def poll_destination_in_vmdb
-    update_and_notify_parent(:message => "Validating New Host")
+    update_and_notify_parent(:message => 'Validating New Host')
 
     self.destination = find_destination_in_vmdb
     if destination
@@ -123,7 +123,7 @@ module MiqHostProvision::StateMachine
       _log.log_backtrace(err)
     end
 
-    message = "Finished New Host Placement"
+    message = 'Finished New Host Placement'
     if MiqHostProvision::AUTOMATE_DRIVES
       update_and_notify_parent(:state => 'provisioned', :message => message)
     else
@@ -136,7 +136,7 @@ module MiqHostProvision::StateMachine
 
   def finish
     if status != 'Error'
-      _log.info("Executing provision request ... Complete")
+      _log.info('Executing provision request ... Complete')
     end
   end
 

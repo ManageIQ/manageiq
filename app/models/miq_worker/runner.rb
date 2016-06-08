@@ -9,7 +9,7 @@ class MiqWorker::Runner
   attr_accessor :last_hb, :worker, :worker_settings
   attr_reader   :active_roles, :server
 
-  INTERRUPT_SIGNALS = ["SIGINT", "SIGTERM"]
+  INTERRUPT_SIGNALS = ['SIGINT', 'SIGTERM']
 
   OPTIONS_PARSER_SETTINGS = [
     [:guid,       'EVM Worker GUID',       String],
@@ -95,10 +95,10 @@ class MiqWorker::Runner
   end
 
   def worker_monitor_drb
-    raise _("%{log} No MiqServer found to establishing DRb Connection to") % {:log => log_prefix} if server.nil?
+    raise _('%{log} No MiqServer found to establishing DRb Connection to') % {:log => log_prefix} if server.nil?
     drb_uri = server.reload.drb_uri
     if drb_uri.blank?
-      raise _("%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]") %
+      raise _('%{log} Blank DRb_URI for MiqServer with ID=[%{number}], NAME=[%{name}], PID=[%{pid_number}], GUID=[%{guid_number}]') %
         {:log         => log_prefix,
          :number      => server.id,
          :name        => server.name,
@@ -169,7 +169,7 @@ class MiqWorker::Runner
   def starting_worker_record
     find_worker_record
     @worker.pid            = Process.pid
-    @worker.status         = "starting"
+    @worker.status         = 'starting'
     @worker.started_on     = Time.now.utc
     @worker.last_heartbeat = Time.now.utc
     @worker.update_spid
@@ -178,7 +178,7 @@ class MiqWorker::Runner
 
   def started_worker_record
     reload_worker_record
-    @worker.status         = "started"
+    @worker.status         = 'started'
     @worker.last_heartbeat = Time.now.utc
     @worker.update_spid
     @worker.save
@@ -202,10 +202,10 @@ class MiqWorker::Runner
   def safe_log(message = nil, exit_code = 0)
     meth = (exit_code == 0) ? :info : :error
 
-    prefix = "#{log_prefix} "      rescue ""
-    pid    = "PID [#{Process.pid}] "    rescue ""
-    guid   = @worker.nil? ? '' : "GUID [#{@worker.guid}] "  rescue ""
-    id     = @worker.nil? ? '' : "ID [#{@worker.id}] "      rescue ""
+    prefix = "#{log_prefix} "      rescue ''
+    pid    = "PID [#{Process.pid}] "    rescue ''
+    guid   = @worker.nil? ? '' : "GUID [#{@worker.guid}] "  rescue ''
+    id     = @worker.nil? ? '' : "ID [#{@worker.id}] "      rescue ''
     logmsg = "#{prefix}#{id}#{pid}#{guid}#{message}"
 
     begin
@@ -259,7 +259,7 @@ class MiqWorker::Runner
   #
 
   def message_exit(*_args)
-    do_exit("Exit request received.")
+    do_exit('Exit request received.')
   end
 
   def message_restarted(*_args)
@@ -287,7 +287,7 @@ class MiqWorker::Runner
     sync_blacklisted_events
     _log.info("ID [#{@worker.id}], PID [#{Process.pid}], GUID [#{@worker.guid}], Zone [#{@my_zone}], Active Roles [#{@active_roles.join(',')}], Assigned Roles [#{MiqServer.my_role}], Configuration:")
     $log.log_hashes(@worker_settings)
-    $log.info("---")
+    $log.info('---')
     $log.log_hashes(@cfg)
     after_sync_config
     @worker.release_db_connection if @worker.respond_to?(:release_db_connection)
@@ -314,7 +314,7 @@ class MiqWorker::Runner
   #
 
   def do_work
-    raise NotImplementedError, _("must be implemented in a subclass")
+    raise NotImplementedError, _('must be implemented in a subclass')
   end
 
   def do_wait_for_worker_monitor
@@ -335,7 +335,7 @@ class MiqWorker::Runner
       rescue TemporaryFailure
         recover_from_temporary_failure
       rescue SystemExit
-        do_exit("SystemExit signal received.  ")
+        do_exit('SystemExit signal received.  ')
       rescue => err
         do_exit("An error has occurred during work processing: #{err}\n#{err.backtrace.join("\n")}", 1)
       else
@@ -470,7 +470,7 @@ class MiqWorker::Runner
   end
 
   def set_process_title
-    type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
+    type   = @worker.type.sub(/^ManageIQ::Providers::/, '')
     title  = "#{MiqWorker::PROCESS_TITLE_PREFIX} #{type} id: #{@worker.id}"
     title << ", queue: #{@worker.queue_name}" if @worker.queue_name
     title << ", uri: #{@worker.uri}" if @worker.uri

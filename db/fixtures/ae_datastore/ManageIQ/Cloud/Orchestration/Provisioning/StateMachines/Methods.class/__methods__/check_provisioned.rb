@@ -6,7 +6,7 @@
 def refresh_provider(service)
   provider = service.orchestration_manager
 
-  $evm.log("info", "Refreshing provider #{provider.name}")
+  $evm.log('info', "Refreshing provider #{provider.name}")
   $evm.set_state_var('provider_last_refresh', provider.last_refresh_date.to_i)
   provider.refresh
 end
@@ -17,7 +17,7 @@ def refresh_may_have_completed?(service)
 end
 
 def check_deployed(service)
-  $evm.log("info", "Check orchestration deployed")
+  $evm.log('info', 'Check orchestration deployed')
   # check whether the stack deployment completed
   status, reason = service.orchestration_stack_status
   case status.downcase
@@ -33,8 +33,8 @@ def check_deployed(service)
     return
   end
 
-  $evm.log("info", "Stack deployment finished. Status: #{$evm.root['ae_result']}, reason: #{$evm.root['ae_reason']}")
-  $evm.log("info", "Please examine stack resources for more details") if $evm.root['ae_result'] == 'error'
+  $evm.log('info', "Stack deployment finished. Status: #{$evm.root['ae_result']}, reason: #{$evm.root['ae_reason']}")
+  $evm.log('info', 'Please examine stack resources for more details') if $evm.root['ae_result'] == 'error'
 
   return unless service.orchestration_stack
   $evm.set_state_var('deploy_result', $evm.root['ae_result'])
@@ -47,19 +47,19 @@ def check_deployed(service)
 end
 
 def check_refreshed(service)
-  $evm.log("info", "Check refresh status of stack (#{service.stack_name})")
+  $evm.log('info', "Check refresh status of stack (#{service.stack_name})")
 
   if refresh_may_have_completed?(service)
     $evm.root['ae_result'] = $evm.get_state_var('deploy_result')
     $evm.root['ae_reason'] = $evm.get_state_var('deploy_reason')
-    $evm.log("info", "Refresh completed.")
+    $evm.log('info', 'Refresh completed.')
   else
     $evm.root['ae_result']         = 'retry'
     $evm.root['ae_retry_interval'] = '30.seconds'
   end
 end
 
-task = $evm.root["service_template_provision_task"]
+task = $evm.root['service_template_provision_task']
 service = task.destination
 if $evm.state_var_exist?('provider_last_refresh')
   check_refreshed(service)

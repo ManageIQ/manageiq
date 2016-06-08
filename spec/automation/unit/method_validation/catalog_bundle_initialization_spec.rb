@@ -1,6 +1,6 @@
 include ServiceTemplateHelper
 
-describe "CatalogBundleInitialization Automate Method" do
+describe 'CatalogBundleInitialization Automate Method' do
   before do
     @allowed_service_templates = %w(top vm_service1 vm_service2)
     user_helper
@@ -9,22 +9,22 @@ describe "CatalogBundleInitialization Automate Method" do
   end
 
   def create_request_and_tasks(dialog_options = {})
-    @request = build_service_template_request("top", @user, dialog_options)
+    @request = build_service_template_request('top', @user, dialog_options)
     service_template_stubs
     request_stubs
     @request.create_request_tasks
   end
 
   def build_model
-    model = {"top"         => {:type          => 'composite',
+    model = {'top'         => {:type          => 'composite',
                                :children      => %w(vm_service1 vm_service2),
                                :child_options => {'vm_service1' => {:provision_index => 0},
                                                   'vm_service2' => {:provision_index => 1}}},
-             "vm_service1" => {:type    => 'atomic',
+             'vm_service1' => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
                                             :number_of_vms => 1, :requester => @user}
                               },
-             "vm_service2" => {:type    => 'atomic',
+             'vm_service2' => {:type    => 'atomic',
                                :request => {:src_vm_id => @src_vm.id,
                                             :number_of_vms => 1, :requester => @user}
                               }
@@ -36,9 +36,9 @@ describe "CatalogBundleInitialization Automate Method" do
     attrs = []
     attrs << "ServiceTemplateProvisionTask::service_template_provision_task=#{@stp.id}"
 
-    MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
-                            "namespace=Service/Provisioning/StateMachines&class=Methods" \
-                            "&instance=CatalogBundleInitialization&" \
+    MiqAeEngine.instantiate('/System/Request/Call_Instance_With_Message?' \
+                            'namespace=Service/Provisioning/StateMachines&class=Methods' \
+                            '&instance=CatalogBundleInitialization&' \
                             "#{attrs.join('&')}", @user)
   end
 
@@ -46,10 +46,10 @@ describe "CatalogBundleInitialization Automate Method" do
     @request.miq_request_tasks.detect { |y| y.miq_request_task_id.nil? }
   end
 
-  context "override" do
+  context 'override' do
     before do
-      @service_name = "Fred"
-      @service_description = "My Favorite Service"
+      @service_name = 'Fred'
+      @service_description = 'My Favorite Service'
       @dialog_hash = {'dialog_option_1_service_name'        => 'one',
                       'dialog_option_2_service_name'        => 'two',
                       'dialog_option_0_service_name'        => @service_name,
@@ -57,13 +57,13 @@ describe "CatalogBundleInitialization Automate Method" do
                       'dialog_tag_0_tracker'                => 'gps',
                       'dialog_tag_1_location'               => 'BOM',
                       'dialog_tag_2_location'               => 'EWR'}
-      @parsed_dialog_options_hash = {1 => {:service_name => "one"},
-                                     2 => {:service_name => "two"},
+      @parsed_dialog_options_hash = {1 => {:service_name => 'one'},
+                                     2 => {:service_name => 'two'},
                                      0 => {:service_name        => @service_name,
                                            :service_description => @service_description}}
-      @parsed_dialog_tags_hash = {1 => {:location => "BOM"},
-                                  2 => {:location => "EWR"},
-                                  0 => {:tracker => "gps"}}
+      @parsed_dialog_tags_hash = {1 => {:location => 'BOM'},
+                                  2 => {:location => 'EWR'},
+                                  0 => {:tracker => 'gps'}}
     end
 
     def check_svc_attrs
@@ -82,19 +82,19 @@ describe "CatalogBundleInitialization Automate Method" do
       run_automate_method
     end
 
-    it "service name and description" do
+    it 'service name and description' do
       parsed_options = {:parsed_dialog_options => @parsed_dialog_options_hash.to_yaml,
                         :parsed_dialog_tags    => @parsed_dialog_tags_hash.to_yaml}
       process_stp(parsed_options)
       check_svc_attrs
     end
 
-    it "backward compatibility" do
+    it 'backward compatibility' do
       process_stp(:dialog => @dialog_hash)
       check_svc_attrs
     end
 
-    it "allows blank dialogs" do
+    it 'allows blank dialogs' do
       expect { process_stp(:dialog => {'dialog_option_1_service_name' => ''}) }.not_to raise_exception
     end
   end

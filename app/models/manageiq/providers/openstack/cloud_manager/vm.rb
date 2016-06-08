@@ -8,7 +8,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
   has_many :cloud_subnets, :through    => :network_ports,
-                           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
+                           :class_name => 'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet'
   has_many :public_networks, :through => :cloud_subnets
 
   def floating_ip
@@ -36,18 +36,18 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
 
   def self.calculate_power_state(raw_power_state)
     case raw_power_state
-    when "ACTIVE"                then "on"
-    when "SHUTOFF"               then "off"
-    when "SUSPENDED"             then "suspended"
-    when "PAUSED"                then "paused"
-    when "SHELVED"               then "shelved"
-    when "SHELVED_OFFLOADED"     then "shelved_offloaded"
-    when "REBOOT", "HARD_REBOOT" then "reboot_in_progress"
-    when "ERROR"                 then "non_operational"
-    when "BUILD", "REBUILD"      then "wait_for_launch"
-    when "DELETED"               then "archived"
-    when "MIGRATING"             then "migrating"
-    else                              "unknown"
+    when 'ACTIVE'                then 'on'
+    when 'SHUTOFF'               then 'off'
+    when 'SUSPENDED'             then 'suspended'
+    when 'PAUSED'                then 'paused'
+    when 'SHELVED'               then 'shelved'
+    when 'SHELVED_OFFLOADED'     then 'shelved_offloaded'
+    when 'REBOOT', 'HARD_REBOOT' then "reboot_in_progress"
+    when 'ERROR'                 then 'non_operational'
+    when 'BUILD', 'REBUILD'      then "wait_for_launch"
+    when 'DELETED'               then 'archived'
+    when 'MIGRATING'             then 'migrating'
+    else                              'unknown'
     end
   end
 
@@ -108,6 +108,6 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   end
 
   def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
+    validate_supported_check('Smartstate Analysis')
   end
 end

@@ -4,13 +4,13 @@ describe ContainerDashboardController do
     set_user_privileges
   end
 
-  it "renders index" do
+  it 'renders index' do
     get :index
     expect(response.status).to eq(302)
     expect(response).to redirect_to(:action => 'show')
   end
 
-  it "renders show screen per provider id" do
+  it 'renders show screen per provider id' do
     EvmSpecHelper.create_guid_miq_server_zone
     ems = FactoryGirl.create(:ems_kubernetes)
     get :show, :params => { :id => ems.id }
@@ -19,7 +19,7 @@ describe ContainerDashboardController do
     expect(response).to render_template('container_dashboard/show')
   end
 
-  it "renders show screen for all providers" do
+  it 'renders show screen for all providers' do
     EvmSpecHelper.create_guid_miq_server_zone
     get :show
     expect(response.status).to eq(200)

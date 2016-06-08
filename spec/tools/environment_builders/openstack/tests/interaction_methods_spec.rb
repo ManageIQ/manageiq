@@ -1,40 +1,40 @@
 require_relative '../interaction_methods'
 
-$LOAD_PATH << Rails.root.join("tools")
+$LOAD_PATH << Rails.root.join('tools')
 
 describe Openstack::InteractionMethods do
-  let(:host1_data) { {:name => "name1", :connection_state => 'connection_state1', :settings => {}} }
-  let(:host2_data) { {:name => "name2", :connection_state => 'connection_state2', :settings => {}} }
-  let(:host3_data) { {:name => "name3", :connection_state => 'connection_state', :settings => {}} }
-  let(:host4_data) { {:name => "name4", :connection_state => 'connection_state', :settings => {}} }
+  let(:host1_data) { {:name => 'name1', :connection_state => 'connection_state1', :settings => {}} }
+  let(:host2_data) { {:name => 'name2', :connection_state => 'connection_state2', :settings => {}} }
+  let(:host3_data) { {:name => 'name3', :connection_state => 'connection_state', :settings => {}} }
+  let(:host4_data) { {:name => 'name4', :connection_state => 'connection_state', :settings => {}} }
   let(:host5_data) do
     {
-      :name             => "name5",
+      :name             => 'name5',
       :connection_state => 'connection_state5',
       :settings         => {
-        :ip_addr => "1.2.3.4",
+        :ip_addr => '1.2.3.4',
       }
     }
   end
 
   let(:host6_data) do
     {
-      :name             => "name6",
+      :name             => 'name6',
       :connection_state => 'connection_state6',
       :settings         => {
-        :ip_addr => "1.2.3.4",
-        :gateway => "192.0.2.1",
+        :ip_addr => '1.2.3.4',
+        :gateway => '192.0.2.1',
       }
     }
   end
 
   let(:host7_data) do
     {
-      :name             => "name7",
+      :name             => 'name7',
       :connection_state => 'connection_state7',
       :settings         => {
-        "ip_addr" => "1.2.3.5",
-        "gateway" => "192.0.2.2",
+        'ip_addr' => '1.2.3.5',
+        'gateway' => '192.0.2.2',
       }
     }
   end
@@ -59,36 +59,36 @@ describe Openstack::InteractionMethods do
     ]
   end
 
-  context "#Openstack::InteractionMethods" do
+  context '#Openstack::InteractionMethods' do
     let(:subject) { (Class.new { include Openstack::InteractionMethods }).new }
 
     before :each do
       allow($stdout).to receive(:puts)
     end
 
-    context "#find_all" do
-      it "should find one host with unique attribute value" do
-        expect(subject.find_all(data, :name => "name1")).to eq([host1])
+    context '#find_all' do
+      it 'should find one host with unique attribute value' do
+        expect(subject.find_all(data, :name => 'name1')).to eq([host1])
       end
 
-      it "should find all hosts with not unique attribute value" do
-        expect(subject.find_all(data, :connection_state => "connection_state")).to eq([host3, host4])
+      it 'should find all hosts with not unique attribute value' do
+        expect(subject.find_all(data, :connection_state => 'connection_state')).to eq([host3, host4])
       end
 
-      it "should find all hosts with nested hash in lookup pairs" do
-        finding = {:name => "name5", :settings => {:ip_addr => "1.2.3.4"}}
+      it 'should find all hosts with nested hash in lookup pairs' do
+        finding = {:name => 'name5', :settings => {:ip_addr => '1.2.3.4'}}
         expect(subject.find_all(data, finding)).to eq([host5])
       end
 
-      it "should find all hosts with blank nested hash in lookup pairs" do
+      it 'should find all hosts with blank nested hash in lookup pairs' do
         # {} is a subset of all hashes
-        finding = {:name => "name6", :settings => {}}
+        finding = {:name => 'name6', :settings => {}}
         expect(subject.find_all(data, finding)).to eq([host6])
       end
 
-      it "should not find any hosts with bad value in nested hash in lookup pairs" do
+      it 'should not find any hosts with bad value in nested hash in lookup pairs' do
         # TODO(lsmola) this should pass
-        finding = {:name => "name6", :settings => {:ip_addr => "1.2.3.5"}}
+        finding = {:name => 'name6', :settings => {:ip_addr => '1.2.3.5'}}
         expect(subject.find_all(data, finding)).to eq([])
       end
     end

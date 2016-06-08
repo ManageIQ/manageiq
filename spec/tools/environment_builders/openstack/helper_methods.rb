@@ -13,7 +13,7 @@ module Openstack
     end
 
     def openstack_environment_file
-      File.join(base_dir, "openstack_environments.yml")
+      File.join(base_dir, 'openstack_environments.yml')
     end
 
     def openstack_environments
@@ -22,7 +22,7 @@ module Openstack
 
     def create_or_update_ems(name, hostname, password, port, userid, version)
       puts "Finding EMS for environment #{hostname}"
-      attributes = {:name                  => name + " " + hostname,
+      attributes = {:name                  => name + ' ' + hostname,
                     :hostname              => hostname,
                     :ipaddress             => hostname,
                     :port                  => port,

@@ -59,7 +59,7 @@ class NamespaceEmsClasses < ActiveRecord::Migration
 
   def remap(mapping)
     condition_list = mapping.keys.map { |s| connection.quote(s) }.join(',')
-    case_expr = "CASE type " + mapping.map { |before, after| "WHEN #{connection.quote before} THEN #{connection.quote after}" }.join(' ') + " END"
+    case_expr = 'CASE type ' + mapping.map { |before, after| "WHEN #{connection.quote before} THEN #{connection.quote after}" }.join(' ') + ' END'
 
     STI_TABLES.each do |table|
       execute "UPDATE #{table} SET type = #{case_expr} WHERE type IN (#{condition_list})"
@@ -67,13 +67,13 @@ class NamespaceEmsClasses < ActiveRecord::Migration
   end
 
   def up
-    say_with_time "Rename class references for Vmware" do
+    say_with_time 'Rename class references for Vmware' do
       remap(NAME_MAP)
     end
   end
 
   def down
-    say_with_time "Rename class references for Vmware" do
+    say_with_time 'Rename class references for Vmware' do
       remap(NAME_MAP.invert)
     end
   end

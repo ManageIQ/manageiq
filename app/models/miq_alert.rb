@@ -29,7 +29,7 @@ class MiqAlert < ApplicationRecord
 
   ASSIGNMENT_PARENT_ASSOCIATIONS = [:host, :ems_cluster, :ext_management_system, :my_enterprise]
 
-  HOURLY_TIMER_EVENT   = "_hourly_timer_"
+  HOURLY_TIMER_EVENT   = '_hourly_timer_'
 
   cache_with_timeout(:alert_assignments) { Hash.new }
 
@@ -45,11 +45,11 @@ class MiqAlert < ApplicationRecord
   end
 
   def evaluation_description
-    return "Expression (Custom)" if     expression.kind_of?(MiqExpression)
-    return "None"                unless expression && expression.kind_of?(Hash) && expression.key?(:eval_method)
+    return 'Expression (Custom)' if     expression.kind_of?(MiqExpression)
+    return 'None'                unless expression && expression.kind_of?(Hash) && expression.key?(:eval_method)
 
     exp = self.class.expression_by_name(expression[:eval_method])
-    exp ? exp[:description] : "Unknown"
+    exp ? exp[:description] : 'Unknown'
   end
 
   # Define methods for notify_* virtual columns
@@ -72,24 +72,24 @@ class MiqAlert < ApplicationRecord
 
   def self.assigned_to_target(target, event = nil)
     # Get all assigned, enabled alerts based on target class and event
-    cond = "enabled = ? AND db = ?"
+    cond = 'enabled = ? AND db = ?'
     args = [true, target.class.base_model.name]
     key  = "#{target.class.base_model.name}_#{target.id}"
 
     unless event.nil?
-      cond += " AND responds_to_events LIKE ?"
+      cond += ' AND responds_to_events LIKE ?'
       args << "%#{event}%"
       key += "_#{event}"
     end
 
     alert_assignments[key] ||= begin
-      profiles  = MiqAlertSet.assigned_to_target(target, :find_options => {:conditions => ["mode = ?", target.class.base_model.name], :select => "id"})
-      alert_ids = profiles.collect { |p| p.members(:select => "id").collect(&:id) }.flatten.uniq
+      profiles  = MiqAlertSet.assigned_to_target(target, :find_options => {:conditions => ['mode = ?', target.class.base_model.name], :select => 'id'})
+      alert_ids = profiles.collect { |p| p.members(:select => 'id').collect(&:id) }.flatten.uniq
 
       if alert_ids.empty?
         []
       else
-        cond += " AND id IN (?)"
+        cond += ' AND id IN (?)'
         args << alert_ids
         where(cond, *args).to_a
       end
@@ -128,7 +128,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.evaluate_hourly_timer
-    _log.info("Starting")
+    _log.info('Starting')
 
     # Find all active alerts that respond to _hourly_timer_ that have assignments
     # assignments = MiqAlert.assignments(:conditions => ["enabled = ? and responds_to_events like ?", true, "%#{HOURLY_TIMER_EVENT}%"])
@@ -155,7 +155,7 @@ class MiqAlert < ApplicationRecord
     # Call evaluate_queue for each alert/target
     targets.uniq.each { |t| evaluate_alerts(t, HOURLY_TIMER_EVENT) }
 
-    _log.info("Complete")
+    _log.info('Complete')
   end
 
   def evaluate_queue(targets, inputs = {})
@@ -164,7 +164,7 @@ class MiqAlert < ApplicationRecord
       MiqQueue.put_unless_exists(
         :class_name  => self.class.name,
         :instance_id => id,
-        :method_name => "evaluate",
+        :method_name => 'evaluate',
         :args        => [[target.class.name, target.id], inputs],
         :zone        => zone
       )
@@ -222,7 +222,7 @@ class MiqAlert < ApplicationRecord
   def invoke_actions(target, inputs = {})
     build_actions.each do |a|
       if a.kind_of?(MiqAction)
-        inputs = inputs.merge(:policy => self, :event => MiqEventDefinition.new(:name => "AlertEvent", :description => "Alert condition met"))
+        inputs = inputs.merge(:policy => self, :event => MiqEventDefinition.new(:name => 'AlertEvent', :description => 'Alert condition met'))
         a.invoke(target, inputs.merge(:result => true, :sequence => a.sequence, :synchronous => false))
       else
         next if a == :delay_next_evaluation
@@ -262,8 +262,8 @@ class MiqAlert < ApplicationRecord
     }
 
     MiqQueue.put(
-      :class_name  => "MiqAeEvent",
-      :method_name => "raise_evm_event",
+      :class_name  => 'MiqAeEvent',
+      :method_name => 'raise_evm_event',
       :args        => [event, [target.class.name, target.id], inputs],
       :role        => 'automate',
       :priority    => MiqQueue::HIGH_PRIORITY,
@@ -290,7 +290,7 @@ class MiqAlert < ApplicationRecord
       elsif k == :snmp
         notifications[k].to_miq_a.each do |n|
           description = "#{k.to_s.titleize} Action for Alert: #{self.description}"
-          action_type = "snmp_trap"
+          action_type = 'snmp_trap'
           actions << MiqAction.new(
             :action_type => action_type,
             :options     => n,
@@ -300,7 +300,7 @@ class MiqAlert < ApplicationRecord
         end
       elsif k == :evm_event
         description = "#{k.to_s.titleize} Action for Alert: #{self.description}"
-        action_type = "evm_event"
+        action_type = 'evm_event'
         actions << MiqAction.new(
           :action_type => action_type,
           :name        => description,
@@ -316,14 +316,14 @@ class MiqAlert < ApplicationRecord
 
   def eval_expression(target, inputs = {})
     return Condition.evaluate(self, target, inputs) if expression.kind_of?(MiqExpression)
-    return true if expression.kind_of?(Hash) && expression[:eval_method] == "nothing"
+    return true if expression.kind_of?(Hash) && expression[:eval_method] == 'nothing'
 
     raise "unable to evaluate expression: [#{expression.inspect}], unknown format" unless expression.kind_of?(Hash)
 
     case expression[:mode]
-    when "internal" then return evaluate_internal(target, inputs)
-    when "automate" then return evaluate_in_automate(target, inputs)
-    when "script"   then return evaluate_script
+    when 'internal' then return evaluate_internal(target, inputs)
+    when 'automate' then return evaluate_in_automate(target, inputs)
+    when 'script'   then return evaluate_script
     else                 raise "unable to evaluate expression: [#{expression.inspect}], unknown mode"
     end
   end
@@ -348,12 +348,12 @@ class MiqAlert < ApplicationRecord
   def self.hourly_perf_model_details(dbs)
     dbs.inject({}) do |h, db|
       perf_model = "#{db}Performance"
-      h[db] = MiqExpression.model_details(perf_model, :include_model => false, :interval => "hourly").inject({}) do |hh, a|
+      h[db] = MiqExpression.model_details(perf_model, :include_model => false, :interval => 'hourly').inject({}) do |hh, a|
         d, c = a
-        model, col = c.split("-")
+        model, col = c.split('-')
         next(hh) unless model == perf_model
-        next(hh) if ["timestamp", "v_date", "v_time", "resource_name"].include?(col)
-        next(hh) if col.starts_with?("abs_") && col.ends_with?("_timestamp")
+        next(hh) if ['timestamp', 'v_date', 'v_time', 'resource_name'].include?(col)
+        next(hh) if col.starts_with?('abs_') && col.ends_with?('_timestamp')
         hh[col] = d
         hh
       end
@@ -363,83 +363,83 @@ class MiqAlert < ApplicationRecord
 
   def self.automate_expressions
     @automate_expressions ||= [
-      {:name => "nothing", :description => " Nothing", :db => BASE_TABLES, :options => []},
-      {:name => "ems_alarm", :description => "VMware Alarm", :db => ["Vm", "Host", "EmsCluster"], :responds_to_events => 'AlarmStatusChangedEvent_#{expression[:options][:ems_id]}_#{expression[:options][:ems_alarm_mor]}',
+      {:name => 'nothing', :description => ' Nothing', :db => BASE_TABLES, :options => []},
+      {:name => 'ems_alarm', :description => 'VMware Alarm', :db => ['Vm', 'Host', 'EmsCluster'], :responds_to_events => 'AlarmStatusChangedEvent_#{expression[:options][:ems_id]}_#{expression[:options][:ems_alarm_mor]}',
         :options => [
-          {:name => :ems_id, :description => "Management System"},
-          {:name => :ems_alarm_mor, :description => "Alarm"}
+          {:name => :ems_id, :description => 'Management System'},
+          {:name => :ems_alarm_mor, :description => 'Alarm'}
         ]},
-      {:name => "event_threshold", :description => "Event Threshold", :db => ["Vm"], :responds_to_events => '#{expression[:options][:event_types]}',
+      {:name => 'event_threshold', :description => 'Event Threshold', :db => ['Vm'], :responds_to_events => '#{expression[:options][:event_types]}',
         :options => [
-          {:name => :event_types, :description => "Event to Check", :values => ["CloneVM_Task", "CloneVM_Task_Complete", "DrsVmPoweredOnEvent", "MarkAsTemplate_Complete", "MigrateVM_Task", "PowerOnVM_Task_Complete", "ReconfigVM_Task_Complete", "ResetVM_Task_Complete", "ShutdownGuest_Complete", "SuspendVM_Task_Complete", "UnregisterVM_Complete", "VmPoweredOffEvent", "RelocateVM_Task_Complete"]},
-          {:name => :time_threshold, :description => "How Far Back to Check", :required => true},
-          {:name => :freq_threshold, :description => "Event Count Threshold", :required => true, :numeric => true}
+          {:name => :event_types, :description => 'Event to Check', :values => ['CloneVM_Task', 'CloneVM_Task_Complete', 'DrsVmPoweredOnEvent', 'MarkAsTemplate_Complete', 'MigrateVM_Task', 'PowerOnVM_Task_Complete', 'ReconfigVM_Task_Complete', 'ResetVM_Task_Complete', 'ShutdownGuest_Complete', 'SuspendVM_Task_Complete', 'UnregisterVM_Complete', 'VmPoweredOffEvent', 'RelocateVM_Task_Complete']},
+          {:name => :time_threshold, :description => 'How Far Back to Check', :required => true},
+          {:name => :freq_threshold, :description => 'Event Count Threshold', :required => true, :numeric => true}
         ]},
-      {:name => "event_log_threshold", :description => "Event Log Threshold", :db => ["Vm"], :responds_to_events  => "vm_scan_complete",
+      {:name => 'event_log_threshold', :description => 'Event Log Threshold', :db => ['Vm'], :responds_to_events  => 'vm_scan_complete',
         :options => [
-          {:name => :event_log_message_filter_type, :description => "Message Filter Type", :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
-          {:name => :event_log_message_filter_value, :description => "Message Filter", :required => true},
-          {:name => :event_log_name, :description => "Event Log Name"},
-          {:name => :event_log_level, :description => "Event Level"},
-          {:name => :event_log_event_id, :description => "Event Id"},
-          {:name => :event_log_source, :description => "Event Source"},
-          {:name => :time_threshold, :description => "How Far Back to Check", :required => true},
-          {:name => :freq_threshold, :description => "Event Count Threshold", :required => true, :numeric => true}
+          {:name => :event_log_message_filter_type, :description => 'Message Filter Type', :values => ['STARTS WITH', 'ENDS WITH', 'INCLUDES', 'REGULAR EXPRESSION'], :required => true},
+          {:name => :event_log_message_filter_value, :description => 'Message Filter', :required => true},
+          {:name => :event_log_name, :description => 'Event Log Name'},
+          {:name => :event_log_level, :description => 'Event Level'},
+          {:name => :event_log_event_id, :description => 'Event Id'},
+          {:name => :event_log_source, :description => 'Event Source'},
+          {:name => :time_threshold, :description => 'How Far Back to Check', :required => true},
+          {:name => :freq_threshold, :description => 'Event Count Threshold', :required => true, :numeric => true}
         ]},
-      {:name => "hostd_log_threshold", :description => "Hostd Log Threshold", :db => ["Host"], :responds_to_events => "host_scan_complete",
+      {:name => 'hostd_log_threshold', :description => 'Hostd Log Threshold', :db => ['Host'], :responds_to_events => 'host_scan_complete',
         :options => [
-          {:name => :event_log_message_filter_type, :description => "Message Filter Type", :values => ["STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION"], :required => true},
-          {:name => :event_log_message_filter_value, :description => "Message Filter", :required => true},
-          {:name => :event_log_level, :description => "Message Level"},
-          {:name => :event_log_source, :description => "Message Source"},
-          {:name => :time_threshold, :description => "How Far Back to Check", :required => true},
-          {:name => :freq_threshold, :description => "Event Count Threshold", :required => true, :numeric => true}
+          {:name => :event_log_message_filter_type, :description => 'Message Filter Type', :values => ['STARTS WITH', 'ENDS WITH', 'INCLUDES', 'REGULAR EXPRESSION'], :required => true},
+          {:name => :event_log_message_filter_value, :description => 'Message Filter', :required => true},
+          {:name => :event_log_level, :description => 'Message Level'},
+          {:name => :event_log_source, :description => 'Message Source'},
+          {:name => :time_threshold, :description => 'How Far Back to Check', :required => true},
+          {:name => :freq_threshold, :description => 'Event Count Threshold', :required => true, :numeric => true}
         ]},
-      {:name => "realtime_performance", :description => "Real Time Performance", :db => (dbs = ["Vm", "Host", "EmsCluster"]), :responds_to_events => '#{db.underscore}_perf_complete',
+      {:name => 'realtime_performance', :description => 'Real Time Performance', :db => (dbs = ['Vm', 'Host', 'EmsCluster']), :responds_to_events => '#{db.underscore}_perf_complete',
         :options => [
-          {:name => :perf_column, :description => "Performance Field", :values => rt_perf_model_details(dbs)},
-          {:name => :operator, :description => "Operator", :values => [">", ">=", "<", "<=", "="]},
-          {:name => :value_threshold, :description => "Value Threshold", :required => true},
-          {:name => :trend_direction, :description => "And is Trending", :required => true, :values => {"none" => " Don't Care", "up" => "Up", "up_more_than" => "Up More Than", "down" => "Down", "down_more_than" => "Down More Than", "not_up" => "Not Up", "not_down" => "Not Down"}},
-          {:name => :trend_steepness, :description => "Per Minute", :required => false},
-          {:name => :rt_time_threshold, :description => "Field Meets Criteria for", :required => true},
-          {:name => :debug_trace, :description => "Debug Tracing", :required => true, :values => ["false", "true"]},
+          {:name => :perf_column, :description => 'Performance Field', :values => rt_perf_model_details(dbs)},
+          {:name => :operator, :description => 'Operator', :values => ['>', '>=', '<', '<=', '=']},
+          {:name => :value_threshold, :description => 'Value Threshold', :required => true},
+          {:name => :trend_direction, :description => 'And is Trending', :required => true, :values => {'none' => " Don't Care", 'up' => 'Up', 'up_more_than' => 'Up More Than', 'down' => 'Down', 'down_more_than' => 'Down More Than', 'not_up' => 'Not Up', 'not_down' => 'Not Down'}},
+          {:name => :trend_steepness, :description => 'Per Minute', :required => false},
+          {:name => :rt_time_threshold, :description => 'Field Meets Criteria for', :required => true},
+          {:name => :debug_trace, :description => 'Debug Tracing', :required => true, :values => ['false', 'true']},
         ]},
-      {:name => "operating_range_exceptions", :description => "Normal Operating Range", :db => (dbs = ["Vm"]), :responds_to_events => "vm_perf_complete",
+      {:name => 'operating_range_exceptions', :description => 'Normal Operating Range', :db => (dbs = ['Vm']), :responds_to_events => 'vm_perf_complete',
         :options => [
-          {:name => :perf_column, :description => "Performance Field", :values => operating_range_perf_model_details(dbs)},
-          {:name => :operator, :description => "Operator", :values => ["Exceeded", "Fell Below"]},
-          {:name => :rt_time_threshold, :description => "Field Meets Criteria for", :required => true}
+          {:name => :perf_column, :description => 'Performance Field', :values => operating_range_perf_model_details(dbs)},
+          {:name => :operator, :description => 'Operator', :values => ['Exceeded', 'Fell Below']},
+          {:name => :rt_time_threshold, :description => 'Field Meets Criteria for', :required => true}
         ]},
-      {:name => "hourly_performance", :description => "Hourly Performance", :db => (dbs = ["EmsCluster"]), :responds_to_events => "_hourly_timer_",
+      {:name => 'hourly_performance', :description => 'Hourly Performance', :db => (dbs = ['EmsCluster']), :responds_to_events => '_hourly_timer_',
         :options => [
-          {:name => :perf_column, :description => "Performance Field", :values => hourly_perf_model_details(dbs)},
-          {:name => :operator, :description => "Operator", :values => [">", ">=", "<", "<=", "="]},
-          {:name => :value_threshold, :description => "Value Threshold", :required => true},
-          {:name => :trend_direction, :description => "And is Trending", :required => true, :values => {"none" => " Don't Care", "up" => "Up", "down" => "Down", "not_up" => "Not Up", "not_down" => "Not Down"}},
-          {:name => :hourly_time_threshold, :description => "Field Meets Criteria for", :required => true},
-          {:name => :debug_trace, :description => "Debug Tracing", :required => true, :values => ["false", "true"]},
+          {:name => :perf_column, :description => 'Performance Field', :values => hourly_perf_model_details(dbs)},
+          {:name => :operator, :description => 'Operator', :values => ['>', '>=', '<', '<=', '=']},
+          {:name => :value_threshold, :description => 'Value Threshold', :required => true},
+          {:name => :trend_direction, :description => 'And is Trending', :required => true, :values => {'none' => " Don't Care", 'up' => 'Up', 'down' => 'Down', 'not_up' => 'Not Up', 'not_down' => 'Not Down'}},
+          {:name => :hourly_time_threshold, :description => 'Field Meets Criteria for', :required => true},
+          {:name => :debug_trace, :description => 'Debug Tracing', :required => true, :values => ['false', 'true']},
         ]},
-      {:name => "reconfigured_hardware_value", :description => "Hardware Reconfigured", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
+      {:name => 'reconfigured_hardware_value', :description => 'Hardware Reconfigured', :db => ['Vm'], :responds_to_events => 'vm_reconfigure',
         :options => [
-          {:name => :hdw_attr, :description => "Hardware Attribute", :values => {:memory_mb => Dictionary.gettext("memory_mb", :type => "column"), :cpu_total_cores => Dictionary.gettext("cpu_total_cores", :type => "column")}},
-          {:name => :operator, :description => "Operator", :values => ["Increased", "Decreased"]}
+          {:name => :hdw_attr, :description => 'Hardware Attribute', :values => {:memory_mb => Dictionary.gettext('memory_mb', :type => 'column'), :cpu_total_cores => Dictionary.gettext('cpu_total_cores', :type => 'column')}},
+          {:name => :operator, :description => 'Operator', :values => ['Increased', 'Decreased']}
         ]},
-      {:name => "changed_vm_value", :description => "VM Value changed", :db => ["Vm"], :responds_to_events => "vm_reconfigure",
+      {:name => 'changed_vm_value', :description => 'VM Value changed', :db => ['Vm'], :responds_to_events => 'vm_reconfigure',
         :options => [
-          {:name => :hdw_attr, :description => "VM Attribute", :values => {
-            :cpu_affinity => Dictionary.gettext("cpu_affinity", :type => "column")
+          {:name => :hdw_attr, :description => 'VM Attribute', :values => {
+            :cpu_affinity => Dictionary.gettext('cpu_affinity', :type => 'column')
           }},
-          {:name => :operator, :description => "Operator", :values => ["Changed"]}
+          {:name => :operator, :description => 'Operator', :values => ['Changed']}
         ]}
     ]
   end
 
   EVM_TYPE_TO_VIM_TYPE = {
-    "Vm"         => "VirtualMachine",
-    "Host"       => "HostSystem",
-    "EmsCluster" => "ClusterComputeResource",
-    "Storage"    => "Datastore"
+    'Vm'         => 'VirtualMachine',
+    'Host'       => 'HostSystem',
+    'EmsCluster' => 'ClusterComputeResource',
+    'Storage'    => 'Datastore'
   }
 
   # TODO: vmware specific
@@ -456,7 +456,7 @@ class MiqAlert < ApplicationRecord
       $log.warn(msg)
       raise msg
     rescue MiqException::MiqVimBrokerUnavailable
-      msg = "Unable to retrieve alarms, Management System Connection Broker is currently unavailable"
+      msg = 'Unable to retrieve alarms, Management System Connection Broker is currently unavailable'
       $log.warn(msg)
       raise msg
     rescue => err
@@ -465,10 +465,10 @@ class MiqAlert < ApplicationRecord
     end
 
     alarms.inject({}) do |h, a|
-      exp = a.fetch_path("info", "expression", "expression")
+      exp = a.fetch_path('info', 'expression', 'expression')
       next(h) unless exp
-      next(h) unless exp.detect { |e| e["type"] == EVM_TYPE_TO_VIM_TYPE[db] || e["objectType"] == EVM_TYPE_TO_VIM_TYPE[db] }
-      h[a["MOR"]] = a["info"]["name"]
+      next(h) unless exp.detect { |e| e['type'] == EVM_TYPE_TO_VIM_TYPE[db] || e['objectType'] == EVM_TYPE_TO_VIM_TYPE[db] }
+      h[a['MOR']] = a['info']['name']
       h
     end
   end
@@ -492,7 +492,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.raw_events
-    @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values]
+    @raw_events ||= expression_by_name('event_threshold')[:options].find { |h| h[:name] == :event_types }[:values]
   end
 
   def self.event_alertable?(event)
@@ -500,11 +500,11 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.alarm_has_alerts?(alarm_event)
-    where("responds_to_events LIKE ?", "%#{alarm_event}%").count > 0
+    where('responds_to_events LIKE ?', "%#{alarm_event}%").count > 0
   end
 
   def responds_to_events_from_expression
-    return nil if expression.nil? || expression.kind_of?(MiqExpression) || expression[:eval_method] == "nothing"
+    return nil if expression.nil? || expression.kind_of?(MiqExpression) || expression[:eval_method] == 'nothing'
 
     options = self.class.expression_by_name(expression[:eval_method])
     options.nil? ? nil : substitute(options[:responds_to_events])
@@ -584,7 +584,7 @@ class MiqAlert < ApplicationRecord
 
   def evaluate_method_realtime_performance(target, options)
     eval_options = {
-      :interval_name   => "realtime",
+      :interval_name   => 'realtime',
       :duration        => options[:rt_time_threshold],
       :column          => options[:perf_column],
       :value           => options[:value_threshold],
@@ -598,7 +598,7 @@ class MiqAlert < ApplicationRecord
 
   def evaluate_method_operating_range_exceptions(target, options)
     eval_options = {
-      :interval_name => "realtime",
+      :interval_name => 'realtime',
       :duration      => options[:rt_time_threshold],
       :debug_trace   => options[:debug_trace]
     }
@@ -610,21 +610,21 @@ class MiqAlert < ApplicationRecord
     # A column name conversion is needed as follows
     eval_options[:column] =
       case options[:perf_column]
-      when "max_cpu_usage_rate_average"
-        "cpu_usage_rate_average"
-      when "max_mem_usage_absolute_average"
-        "mem_usage_absolute_average"
+      when 'max_cpu_usage_rate_average'
+        'cpu_usage_rate_average'
+      when 'max_mem_usage_absolute_average'
+        'mem_usage_absolute_average'
       else
         options[:perf_column]
       end
 
     case options[:operator].downcase
-    when "exceeded"
-      eval_options[:operator] = ">"
-      typ = "high"
-    when "fell below"
-      eval_options[:operator] = "<"
-      typ = "low"
+    when 'exceeded'
+      eval_options[:operator] = '>'
+      typ = 'high'
+    when 'fell below'
+      eval_options[:operator] = '<'
+      typ = 'low'
     else
       raise "operator '#{eval_options[:operator]}' is not valid"
     end
@@ -646,7 +646,7 @@ class MiqAlert < ApplicationRecord
 
   def evaluate_method_hourly_performance(target, options)
     eval_options = {
-      :interval_name   => "hourly",
+      :interval_name   => 'hourly',
       :duration        => options[:hourly_time_threshold],
       :column          => options[:perf_column],
       :value           => options[:value_threshold],
@@ -687,34 +687,34 @@ class MiqAlert < ApplicationRecord
     if self.options.kind_of?(Hash) && self.options.fetch_path(:notifications, :automate)
       event_name = self.options.fetch_path(:notifications, :automate, :event_name)
       unless (event_name =~ /[^a-z0-9_]/i).nil?
-        errors.add("Event Name", "must be alphanumeric characters and underscores without spaces")
+        errors.add('Event Name', 'must be alphanumeric characters and underscores without spaces')
         return
       end
     end
 
     return if expression.kind_of?(MiqExpression)
-    return if expression.kind_of?(Hash) && expression[:eval_method] == "nothing"
+    return if expression.kind_of?(Hash) && expression[:eval_method] == 'nothing'
 
     if expression[:options].blank?
-      errors.add("expression", "has no parameters")
+      errors.add('expression', 'has no parameters')
       return
     end
 
     exp_type = self.class.expression_options(expression[:eval_method])
     unless exp_type
-      errors.add("name", "#{expression[:options][:eval_method]} is invalid")
+      errors.add('name', "#{expression[:options][:eval_method]} is invalid")
       return
     end
 
     exp_type.each do |fld|
       next if fld[:required] != true
       if expression[:options][fld[:name]].blank?
-        errors.add("field", "'#{fld[:description]}' is required")
+        errors.add('field', "'#{fld[:description]}' is required")
         next
       end
 
       if fld[:numeric] == true && !is_numeric?(expression[:options][fld[:name]])
-        errors.add("field", "'#{fld[:description]}' must be a numeric")
+        errors.add('field', "'#{fld[:description]}' must be a numeric")
       end
     end
   end
@@ -724,7 +724,7 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.seed
-    action_fixture_file = File.join(FIXTURE_DIR, "miq_alert_default_action.yml")
+    action_fixture_file = File.join(FIXTURE_DIR, 'miq_alert_default_action.yml')
     if File.exist?(action_fixture_file)
       action_hash = YAML.load_file(action_fixture_file)
       action = MiqAction.new(action_hash)
@@ -732,12 +732,12 @@ class MiqAlert < ApplicationRecord
       action = nil
     end
 
-    alert_fixture_file = File.join(FIXTURE_DIR, "miq_alerts.yml")
+    alert_fixture_file = File.join(FIXTURE_DIR, 'miq_alerts.yml')
     if File.exist?(alert_fixture_file)
       alist = YAML.load_file(alert_fixture_file)
 
       alist.each do |alert_hash|
-        guid = alert_hash["guid"] || alert_hash[:guid]
+        guid = alert_hash['guid'] || alert_hash[:guid]
         rec = find_by_guid(guid)
         if rec.nil?
           alert_hash[:read_only] = true
@@ -754,7 +754,7 @@ class MiqAlert < ApplicationRecord
 
   def export_to_array
     h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
+    ['id', 'created_on', 'updated_on'].each { |k| h.delete(k) }
     [self.class.to_s => h]
   end
 
@@ -764,11 +764,11 @@ class MiqAlert < ApplicationRecord
   end
 
   def self.import_from_hash(alert, options = {})
-    raise "No Alert to Import" if alert.nil?
+    raise 'No Alert to Import' if alert.nil?
 
-    status = {:class => name, :description => alert["description"], :children => []}
+    status = {:class => name, :description => alert['description'], :children => []}
 
-    a = find_by_guid(alert["guid"])
+    a = find_by_guid(alert['guid'])
     msg_pfx = "Importing Alert: guid=[#{alert["guid"]}] description=[#{alert["description"]}]"
     if a.nil?
       a = new(alert)

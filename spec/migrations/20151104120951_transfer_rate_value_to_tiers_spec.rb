@@ -4,7 +4,7 @@ describe TransferRateValueToTiers do
   let(:chargeback_rate_detail_stub) { migration_stub(:ChargebackRateDetail) }
 
   migration_context :up do
-    it "transfers rate value" do
+    it 'transfers rate value' do
       cbrd = chargeback_rate_detail_stub.create(:rate => 1.0)
       migrate
       cbrd.reload

@@ -13,7 +13,7 @@ module ContainerGroupHelper::TextualSummary
   end
 
   def textual_group_conditions
-    labels = [_("Name"), _("Status")]
+    labels = [_('Name'), _('Status')]
     h = {:labels => labels}
     h[:values] = @record.container_conditions.collect do |condition|
       [
@@ -54,7 +54,7 @@ module ContainerGroupHelper::TextualSummary
   ]
 
   def textual_group_volumes
-    h = {:labels => [_("Name"), _("Property"), _("Value")], :values => []}
+    h = {:labels => [_('Name'), _('Property'), _('Value')], :values => []}
     @record.container_volumes.each do |volume|
       volume_values = @@key_dictionary.collect do |key, name|
         [nil, name, volume[key]] if volume[key].present?
@@ -87,20 +87,20 @@ module ContainerGroupHelper::TextualSummary
   end
 
   def textual_dns_policy
-    {:label => _("DNS Policy"), :value => @record.dns_policy}
+    {:label => _('DNS Policy'), :value => @record.dns_policy}
   end
 
   def textual_ip
-    {:label => _("IP Address"), :value => @record.ipaddress}
+    {:label => _('IP Address'), :value => @record.ipaddress}
   end
 
   def textual_lives_on
     lives_on_ems = @record.container_node.try(:lives_on).try(:ext_management_system)
     return nil if lives_on_ems.nil?
     # TODO: handle the case where the node is a bare-metal
-    lives_on_entity_name = lives_on_ems.kind_of?(EmsCloud) ? _("Instance") : _("Virtual Machine")
+    lives_on_entity_name = lives_on_ems.kind_of?(EmsCloud) ? _('Instance') : _('Virtual Machine')
     {
-      :label => _("Underlying %{name}") % {:name => lives_on_entity_name},
+      :label => _('Underlying %{name}') % {:name => lives_on_entity_name},
       :image => "vendor-#{lives_on_ems.image_name}",
       :value => "#{@record.container_node.lives_on.name}",
       :link  => url_for(

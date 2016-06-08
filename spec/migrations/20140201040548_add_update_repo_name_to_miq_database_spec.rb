@@ -5,13 +5,13 @@ describe AddUpdateRepoNameToMiqDatabase do
   let(:reserve_stub) { MigrationSpecStubs.reserved_stub }
 
   migration_context :up do
-    it "Migrates :update_repo_name from Reserves table to new column on MiqDatabase" do
+    it 'Migrates :update_repo_name from Reserves table to new column on MiqDatabase' do
       db = db_stub.create!
       reserve_stub.create!(
-        :resource_type => "MiqDatabase",
+        :resource_type => 'MiqDatabase',
         :resource_id   => db.id,
         :reserved      => {
-          :update_repo_name => "abc"
+          :update_repo_name => 'abc'
         }
       )
 
@@ -22,13 +22,13 @@ describe AddUpdateRepoNameToMiqDatabase do
       expect(db_stub.count).to      be(1)
 
       # Expect data
-      expect(db.reload.update_repo_name).to eq("abc")
+      expect(db.reload.update_repo_name).to eq('abc')
     end
   end
 
   migration_context :down do
-    it "Migrates :update_repo_name from column on MiqDatabase to Reserves table" do
-      db = db_stub.create!(:update_repo_name => "abc")
+    it 'Migrates :update_repo_name from column on MiqDatabase to Reserves table' do
+      db = db_stub.create!(:update_repo_name => 'abc')
 
       migrate
 
@@ -38,8 +38,8 @@ describe AddUpdateRepoNameToMiqDatabase do
 
       # Expect data
       expect(reserve_stub.first.resource_id).to    eq(db.id)
-      expect(reserve_stub.first.resource_type).to  eq("MiqDatabase")
-      expect(reserve_stub.first.reserved).to       eq(:update_repo_name => "abc")
+      expect(reserve_stub.first.resource_type).to  eq('MiqDatabase')
+      expect(reserve_stub.first.reserved).to       eq(:update_repo_name => 'abc')
     end
   end
 end

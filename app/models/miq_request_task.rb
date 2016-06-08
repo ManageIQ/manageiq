@@ -57,21 +57,21 @@ class MiqRequestTask < ApplicationRecord
     end
     total = states.delete(:total).to_i
     unknown_state = task_count - total
-    states["unknown"] = unknown_state unless unknown_state.zero?
-    msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join("; ")
+    states['unknown'] = unknown_state unless unknown_state.zero?
+    msg = states.sort.collect { |s| "#{s[0].capitalize} = #{s[1]}" }.join('; ')
 
-    req_state = (states.length == 1) ? states.keys.first : "active"
+    req_state = (states.length == 1) ? states.keys.first : 'active'
 
     # Determine status to report
     req_status = status.slice('Error', 'Timeout', 'Warn').keys.first || 'Ok'
 
-    if req_state == "finished" && state != "finished"
-      req_state = (req_status == 'Ok') ? 'provisioned' : "finished"
+    if req_state == 'finished' && state != 'finished'
+      req_state = (req_status == 'Ok') ? 'provisioned' : 'finished'
       $log.info("Child tasks finished but current task still processing. Setting state to: [#{req_state}]...")
     end
 
-    if req_state == "finished"
-      msg = (req_status == 'Ok') ? "Task complete" : "Task completed with errors"
+    if req_state == 'finished'
+      msg = (req_status == 'Ok') ? 'Task complete' : 'Task completed with errors'
     end
 
     # If there is only 1 request_task, set the parent message the same
@@ -84,8 +84,8 @@ class MiqRequestTask < ApplicationRecord
   end
 
   def execute_callback(state, message, _result)
-    unless state.to_s.downcase == "ok"
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => "Error: #{message}")
+    unless state.to_s.downcase == 'ok'
+      update_and_notify_parent(:state => 'finished', :status => 'Error', :message => "Error: #{message}")
     end
   end
 
@@ -95,7 +95,7 @@ class MiqRequestTask < ApplicationRecord
     elsif self <= MiqHostProvision
       MiqHostProvisionRequest
     else
-      name.underscore.gsub(/_task$/, "_request").camelize.constantize
+      name.underscore.gsub(/_task$/, '_request').camelize.constantize
     end
   end
 
@@ -109,16 +109,16 @@ class MiqRequestTask < ApplicationRecord
 
   def task_check_on_delivery
     if request_class::ACTIVE_STATES.include?(state)
-      raise _("%{task} request is already being processed") % {:task => request_class::TASK_DESCRIPTION}
+      raise _('%{task} request is already being processed') % {:task => request_class::TASK_DESCRIPTION}
     end
     task_check_on_execute
   end
 
   def task_check_on_execute
-    if state == "finished"
-      raise _("%{task} request has already been processed") % {:task => request_class::TASK_DESCRIPTION}
+    if state == 'finished'
+      raise _('%{task} request has already been processed') % {:task => request_class::TASK_DESCRIPTION}
     end
-    raise _("approval is required for %{task}") % {:task => request_class::TASK_DESCRIPTION} unless approved?
+    raise _('approval is required for %{task}') % {:task => request_class::TASK_DESCRIPTION} unless approved?
   end
 
   def deliver_to_automate(req_type = request_type, zone = nil)
@@ -130,8 +130,8 @@ class MiqRequestTask < ApplicationRecord
       args = {
         :object_type   => self.class.name,
         :object_id     => id,
-        :attrs         => {"request" => req_type},
-        :instance_name => "AUTOMATION",
+        :attrs         => {'request' => req_type},
+        :instance_name => 'AUTOMATION',
         :user_id       => get_user.id,
         :miq_group_id  => get_user.current_group.id,
         :tenant_id     => get_user.current_tenant.id,
@@ -146,7 +146,7 @@ class MiqRequestTask < ApplicationRecord
         :zone        => options.fetch(:miq_zone, zone),
         :task_id     => my_task_id,
       )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+      update_and_notify_parent(:state => 'pending', :status => 'Ok',  :message => 'Automation Starting')
     else
       execute_queue
     end
@@ -158,7 +158,7 @@ class MiqRequestTask < ApplicationRecord
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
 
     deliver_on = nil
-    if get_option(:schedule_type) == "schedule"
+    if get_option(:schedule_type) == 'schedule'
       deliver_on = get_option(:schedule_time).utc rescue nil
     end
 
@@ -167,7 +167,7 @@ class MiqRequestTask < ApplicationRecord
     queue_options.reverse_merge!(
       :class_name   => self.class.name,
       :instance_id  => id,
-      :method_name  => "execute",
+      :method_name  => 'execute',
       :zone         => options.fetch(:miq_zone, zone),
       :role         => miq_request.my_role,
       :task_id      => my_task_id,
@@ -176,12 +176,12 @@ class MiqRequestTask < ApplicationRecord
     )
     MiqQueue.put(queue_options)
 
-    update_and_notify_parent(:state => "queued", :status => "Ok", :message => "State Machine Initializing")
+    update_and_notify_parent(:state => 'queued', :status => 'Ok', :message => 'State Machine Initializing')
   end
 
   def execute
     _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
-    update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
+    update_and_notify_parent(:state => 'active', :status => 'Ok', :message => 'In Process')
 
     begin
       message = "#{request_class::TASK_DESCRIPTION} initiated"
@@ -195,7 +195,7 @@ class MiqRequestTask < ApplicationRecord
       message = "Error: #{err.message}"
       _log.error("[#{message}] encountered during #{request_class::TASK_DESCRIPTION}")
       _log.log_backtrace(err)
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => message)
+      update_and_notify_parent(:state => 'finished', :status => 'Error', :message => message)
       return
     end
   end

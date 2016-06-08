@@ -2,7 +2,7 @@ module OwnershipMixin
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :evm_owner, :class_name => "User"
+    belongs_to :evm_owner, :class_name => 'User'
     belongs_to :miq_group
 
     virtual_column :evm_owner_email,                      :type => :string,     :uses => :evm_owner
@@ -42,11 +42,11 @@ module OwnershipMixin
 
     def user_or_group_owned(user, miq_group)
       if user && miq_group
-        where("evm_owner_id" => user.id).or(where("miq_group_id" => miq_group.id))
+        where('evm_owner_id' => user.id).or(where('miq_group_id' => miq_group.id))
       elsif user
-        where("evm_owner_id" => user.id)
+        where('evm_owner_id' => user.id)
       elsif miq_group
-        where("miq_group_id" => miq_group.id)
+        where('miq_group_id' => miq_group.id)
       else
         none
       end

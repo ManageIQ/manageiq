@@ -38,8 +38,8 @@ module Metric::Processing
 
   def self.process_derived_columns(obj, attrs, ts = nil)
     unless VALID_PROCESS_TARGETS.any? { |t| obj.kind_of?(t) }
-      raise _("object %{name} is not one of %{items}") % {:name  => obj,
-                                                          :items => VALID_PROCESS_TARGETS.collect(&:name).join(", ")}
+      raise _('object %{name} is not one of %{items}') % {:name  => obj,
+                                                          :items => VALID_PROCESS_TARGETS.collect(&:name).join(', ')}
     end
 
     ts = attrs[:timestamp] if ts.nil?
@@ -52,21 +52,21 @@ module Metric::Processing
     have_mem_metrics = attrs[:mem_usage_absolute_average] || attrs[:derived_memory_used]
 
     DERIVED_COLS.each do |col|
-      dummy, group, typ, mode = col.to_s.split("_")
+      dummy, group, typ, mode = col.to_s.split('_')
       case typ
-      when "available"
+      when 'available'
         # Do not derive "available" values if there haven't been any usage
         # values collected
-        if group == "cpu"
+        if group == 'cpu'
           result[col] = total_cpu if have_cpu_metrics && total_cpu > 0
         else
           result[col] = total_mem if have_mem_metrics && total_mem > 0
         end
-      when "allocated"
-        method = col.to_s.split("_")[1..-1].join("_")
+      when 'allocated'
+        method = col.to_s.split('_')[1..-1].join('_')
         result[col] = state.send(method) if state.respond_to?(method)
-      when "used"
-        if group == "cpu"
+      when 'used'
+        if group == 'cpu'
           # TODO: This branch is never called because there isn't a column
           # called derived_cpu_used.  The callers, such as chargeback, generally
           # use cpu_usagemhz_rate_average directly, and the column may not be
@@ -74,7 +74,7 @@ module Metric::Processing
           # memory.  The derivation here could then use cpu_usagemhz_rate_average
           # directly if avaiable, otherwise do the calculation below.
           result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
-        elsif group == "memory"
+        elsif group == 'memory'
           if attrs[:mem_usage_absolute_average].nil?
             # If we can't get percentage usage, just used RAM in MB, lets compute percentage usage
             attrs[:mem_usage_absolute_average] = 100.0 / total_mem * attrs[:derived_memory_used] if total_mem > 0 && !attrs[:derived_memory_used].nil?
@@ -83,27 +83,27 @@ module Metric::Processing
             result[col] = (attrs[:mem_usage_absolute_average] / 100 * total_mem) unless total_mem == 0 || attrs[:mem_usage_absolute_average].nil?
           end
         else
-          method = col.to_s.split("_")[1..-1].join("_")
+          method = col.to_s.split('_')[1..-1].join('_')
           result[col] = state.send(method) if state.respond_to?(method)
         end
-      when "rate"
-        if col.to_s == "cpu_usagemhz_rate_average" && attrs[:cpu_usagemhz_rate_average].blank?
+      when 'rate'
+        if col.to_s == 'cpu_usagemhz_rate_average' && attrs[:cpu_usagemhz_rate_average].blank?
           # TODO(lsmola) for some reason, this column is used in chart, although from processing code above, it should
           # be named derived_cpu_used. Investigate what is the right solution and make it right. For now lets fill
           # the column shown in charts.
           result[col] = (attrs[:cpu_usage_rate_average] / 100 * total_cpu) unless total_cpu == 0 || attrs[:cpu_usage_rate_average].nil?
         end
-      when "reserved"
-        method = group == "cpu" ? :reserve_cpu : :reserve_mem
+      when 'reserved'
+        method = group == 'cpu' ? :reserve_cpu : :reserve_mem
         result[col] = state.send(method)
-      when "count"
-        method = [group, typ, mode].join("_")
+      when 'count'
+        method = [group, typ, mode].join('_')
         result[col] = state.send(method)
-      when "numvcpus" # This is actually logical cpus.  See note above.
+      when 'numvcpus' # This is actually logical cpus.  See note above.
         # Do not derive "available" values if there haven't been any usage
         # values collected
         result[col] = state.numvcpus if have_cpu_metrics && state.try(:numvcpus).to_i > 0
-      when "sockets"
+      when 'sockets'
         result[col] = state.host_sockets
       end
     end
@@ -121,10 +121,10 @@ module Metric::Processing
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     scope = obj.send(meth).for_time_range(start_time, end_time)
-    scope = scope.where(:capture_interval_name => interval_name) if interval_name != "realtime"
+    scope = scope.where(:capture_interval_name => interval_name) if interval_name != 'realtime'
 
     last_perf = {}
-    scope.order("timestamp, capture_interval_name").each do |perf|
+    scope.order('timestamp, capture_interval_name').each do |perf|
       interval = interval_name_to_interval(perf.capture_interval_name)
       last_perf[interval] = perf if last_perf[interval].nil?
 
@@ -138,7 +138,7 @@ module Metric::Processing
       new_perf.capture_interval = 0
       Metric::Rollup::ROLLUP_COLS.each do |c|
         next if new_perf.send(c).nil? || perf.send(c).nil?
-        new_perf.send(c.to_s + "=", (new_perf.send(c) + perf.send(c)) / 2)
+        new_perf.send(c.to_s + '=', (new_perf.send(c) + perf.send(c)) / 2)
       end
 
       unless perf.assoc_ids.nil?
@@ -158,10 +158,10 @@ module Metric::Processing
 
   def self.interval_name_to_interval(name)
     case name
-    when "realtime" then 20
-    when "hourly" then   1.hour.to_i
-    when "daily" then    1.day.to_i
-    else raise _("unknown interval name: [%{name}]") % {:name => name}
+    when 'realtime' then 20
+    when 'hourly' then   1.hour.to_i
+    when 'daily' then    1.day.to_i
+    else raise _('unknown interval name: [%{name}]') % {:name => name}
     end
   end
 end

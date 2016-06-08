@@ -11,7 +11,7 @@ module Openstack
         end
 
         def initialize(ems, project)
-          @service = ems.connect(:tenant_name => project.name, :service => "Storage")
+          @service = ems.connect(:tenant_name => project.name, :service => 'Storage')
           @data    = Data.new
           @project = project
 
@@ -70,17 +70,17 @@ module Openstack
 
           loop do
             case volume.reload.status
-            when "available", "in-use"
+            when 'available', 'in-use'
               break
-            when "error"
-              puts "Error creating volume"
+            when 'error'
+              puts 'Error creating volume'
               exit 1
             else
-              print "."
+              print '.'
               sleep 1
             end
           end
-          puts "Finished"
+          puts 'Finished'
         end
       end
     end

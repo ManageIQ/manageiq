@@ -1,17 +1,17 @@
 class ZiyaCharting < Charting
   def self.config
     @config ||= begin
-      yml = Rails.root.join("config/ziya_charting.yml")
+      yml = Rails.root.join('config/ziya_charting.yml')
       File.exist?(yml) ? YAML.load_file(yml) : {}
     end
   end
 
   def self.xmlswf_license
-    config["license"]
+    config['license']
   end
 
   def self.extra_themes
-    config["extra_themes"] || []
+    config['extra_themes'] || []
   end
 
   def self.init
@@ -71,21 +71,21 @@ class ZiyaCharting < Charting
 
     if options[:graph_type] =~ /^Pie/  # Pie charts must be set to 1 dimension
       # Gen text labels for legend
-      cat_text = graph_count.times.each_with_object([]) { |i, acc| acc.push(i.ordinalize + " Operating System") }
-      cat_text.push("Other") if options[:graph_other]            # Add "Other" legend label
+      cat_text = graph_count.times.each_with_object([]) { |i, acc| acc.push(i.ordinalize + ' Operating System') }
+      cat_text.push('Other') if options[:graph_other]            # Add "Other" legend label
       zgraph.add(:axis_category_text, cat_text)                  # Add the category texts to the chart
       # Gen random values, high to low
       series = graph_count.times.each_with_object([]) { |i, acc| acc.push(graph_count + 2 - i) }
       series.push(rand(options[:graph_count].to_i) + 1) if options[:graph_other] # Add a final value for "other"
-      zgraph.add(:series, "OS", series)                          # Add the series values to the chart
+      zgraph.add(:series, 'OS', series)                          # Add the series values to the chart
     else
-      zgraph.add(:axis_category_text, ["Vendor A", "Vendor B", "Vendor C", "Vendor D"])
+      zgraph.add(:axis_category_text, ['Vendor A', 'Vendor B', 'Vendor C', 'Vendor D'])
       # Build the series for each OS
       graph_count.times do |i|
         zgraph.add(:series, "#{i.ordinalize} Operating System",
                    4.times.collect { (rand(5) + 1) * (graph_count + 1 - i) })
       end
-      zgraph.add(:series, "Other", 4.times.collect { rand(10) }) if options[:graph_other]
+      zgraph.add(:series, 'Other', 4.times.collect { rand(10) }) if options[:graph_other]
     end
 
     zgraph.to_s
@@ -107,17 +107,17 @@ class ZiyaCharting < Charting
   CHART_NAMES = [
     # ["Area",                 "Area"],
     # ["Area, Stacked",        "StackedArea"],
-    ["Bars (2D)",              "Bar"],
-    ["Bars, Stacked (2D)",     "StackedBar"],
+    ['Bars (2D)',              'Bar'],
+    ['Bars, Stacked (2D)',     'StackedBar'],
     # ["Candlestick",            "CandleStick"],
-    ["Columns (2D)",           "Column"],
-    ["Columns, Stacked (2D)",  "StackedColumn"],
-    ["Columns (3D)",           "ColumnThreed"],
-    ["Columns, Parallel (3D)", "ParallelThreedColumn"],
-    ["Columns, Stacked (3D)",  "StackedThreedColumn"],
+    ['Columns (2D)',           'Column'],
+    ['Columns, Stacked (2D)',  'StackedColumn'],
+    ['Columns (3D)',           'ColumnThreed'],
+    ['Columns, Parallel (3D)', 'ParallelThreedColumn'],
+    ['Columns, Stacked (3D)',  'StackedThreedColumn'],
     # ["Line",                   "Line"],
-    ["Pie (2D)",               "Pie"],
-    ["Pie (3D)",               "PieThreed"]
+    ['Pie (2D)',               'Pie'],
+    ['Pie (3D)',               'PieThreed']
   ]
 
   def chart_themes_for_select
@@ -129,6 +129,6 @@ class ZiyaCharting < Charting
   end
 
   def self.available?
-    File.exist?(File.join(File.dirname(__FILE__), "../../public/charts/"))
+    File.exist?(File.join(File.dirname(__FILE__), '../../public/charts/'))
   end
 end

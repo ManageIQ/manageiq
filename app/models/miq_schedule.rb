@@ -14,28 +14,28 @@ class MiqSchedule < ApplicationRecord
   belongs_to :zone
 
   scope :in_zone, lambda { |zone_name|
-    includes(:zone).where("zones.name" => zone_name)
+    includes(:zone).where('zones.name' => zone_name)
   }
 
   scope :updated_since, lambda { |time|
-    where("updated_at > ?", time)
+    where('updated_at > ?', time)
   }
 
   serialize :sched_action
   serialize :filter
   serialize :run_at
 
-  SYSTEM_SCHEDULE_CLASSES = ["MiqReport", "MiqAlert", "MiqWidget"]
+  SYSTEM_SCHEDULE_CLASSES = ['MiqReport', 'MiqAlert', 'MiqWidget']
   VALID_INTERVAL_UNITS = ['minutely', 'hourly', 'daily', 'weekly', 'monthly', 'once']
-  ALLOWED_CLASS_METHOD_ACTIONS = ["db_backup", "db_gc"]
+  ALLOWED_CLASS_METHOD_ACTIONS = ['db_backup', 'db_gc']
 
-  default_value_for :userid,  "system"
+  default_value_for :userid,  'system'
   default_value_for :enabled, true
   default_value_for(:zone_id) { MiqServer.my_server.zone_id }
 
   def set_start_time_and_prod_default
     run_at # Internally this will correct :start_time to UTC
-    self.prod_default = "system" if SYSTEM_SCHEDULE_CLASSES.include?(towhat.to_s)
+    self.prod_default = 'system' if SYSTEM_SCHEDULE_CLASSES.include?(towhat.to_s)
   end
 
   def run_at
@@ -65,7 +65,7 @@ class MiqSchedule < ApplicationRecord
     method = sched.sched_action[:method] rescue nil
     _log.info("Queueing start of schedule id: [#{id}] [#{sched.name}] [#{sched.towhat}] [#{method}]")
 
-    action = "action_" + method
+    action = 'action_' + method
     unless sched.respond_to?(action)
       _log.warn("[#{sched.name}] no such action: [#{method}], aborting schedule")
       return
@@ -74,7 +74,7 @@ class MiqSchedule < ApplicationRecord
     msg = MiqQueue.put(
       :class_name  => name,
       :instance_id => sched.id,
-      :method_name => "invoke_actions",
+      :method_name => 'invoke_actions',
       :args        => [action, at],
       :msg_timeout => 1200
     )
@@ -134,7 +134,7 @@ class MiqSchedule < ApplicationRecord
     return nil if enabled == false
 
     # calculate what the next run on time should be
-    if run_at[:interval][:unit].downcase != "once"
+    if run_at[:interval][:unit].downcase != 'once'
       time = next_interval_time
     else
       time = (last_run_on && (last_run_on > run_at[:start_time])) ? nil : run_at[:start_time]
@@ -144,27 +144,27 @@ class MiqSchedule < ApplicationRecord
 
   def run_at_to_human(timezone)
     start_time = run_at[:start_time].in_time_zone(timezone)
-    start_time = start_time.strftime("%a %b %d %H:%M:%S %Z %Y")
-    if run_at[:interval][:unit].downcase == "once"
-      return _("Run %{interval} on %{start_time}") % {:interval => run_at[:interval][:unit], :start_time => start_time}
+    start_time = start_time.strftime('%a %b %d %H:%M:%S %Z %Y')
+    if run_at[:interval][:unit].downcase == 'once'
+      return _('Run %{interval} on %{start_time}') % {:interval => run_at[:interval][:unit], :start_time => start_time}
     else
       if run_at[:interval][:value].to_i == 1
-        return _("Run %{interval} starting on %{start_time}") % {:interval   => run_at[:interval][:unit],
+        return _('Run %{interval} starting on %{start_time}') % {:interval   => run_at[:interval][:unit],
                                                                  :start_time => start_time}
       else
         case run_at[:interval][:unit]
-        when "minutely"
-          unit = _("minutes")
-        when "hourly"
-          unit = _("hours")
-        when "daily"
-          unit = _("days")
-        when "weekly"
-          unit = _("weeks")
-        when "monthly"
-          unit = _("months")
+        when 'minutely'
+          unit = _('minutes')
+        when 'hourly'
+          unit = _('hours')
+        when 'daily'
+          unit = _('days')
+        when 'weekly'
+          unit = _('weeks')
+        when 'monthly'
+          unit = _('months')
         end
-        return _("Run %{interval} every %{value} %{unit} starting on %{start_time}") %
+        return _('Run %{interval} every %{value} %{unit} starting on %{start_time}') %
                  {:interval   => run_at[:interval][:unit],
                   :value      => run_at[:interval][:value],
                   :unit       => unit,
@@ -222,8 +222,8 @@ class MiqSchedule < ApplicationRecord
     opts = self.sched_action[:options]
     opts[:file_depot_id]   = file_depot.id
     opts[:miq_schedule_id] = id
-    queue_opts = {:class_name => klass.name, :method_name => "backup", :msg_timeout => 3600, :args => [opts], :role => "database_operations"}
-    task_opts  = {:action => "Database backup", :userid => self.sched_action[:options][:userid]}
+    queue_opts = {:class_name => klass.name, :method_name => 'backup', :msg_timeout => 3600, :args => [opts], :role => 'database_operations'}
+    task_opts  = {:action => 'Database backup', :userid => self.sched_action[:options][:userid]}
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -232,8 +232,8 @@ class MiqSchedule < ApplicationRecord
     self.sched_action[:options] ||= {}
     self.sched_action[:options][:userid] = userid
     opts = self.sched_action[:options]
-    queue_opts = {:class_name => klass.name, :method_name => "gc", :args => [opts], :role => "database_operations"}
-    task_opts  = {:action => "Database GC", :userid => self.sched_action[:options][:userid]}
+    queue_opts = {:class_name => klass.name, :method_name => 'gc', :args => [opts], :role => 'database_operations'}
+    task_opts  = {:action => 'Database GC', :userid => self.sched_action[:options][:userid]}
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
@@ -247,7 +247,7 @@ class MiqSchedule < ApplicationRecord
     # :aggressive   true  (if provided and true, a full GC will be done)
 
     userid = options.delete(:userid)
-    raise _("No userid provided!") unless userid
+    raise _('No userid provided!') unless userid
 
     sch = new(:userid => userid, :sched_action => {:options => options})
     sch.action_db_gc(DatabaseBackup, nil)
@@ -260,18 +260,18 @@ class MiqSchedule < ApplicationRecord
   end
 
   def rufus_schedule_opts
-    message = last_run_on ? "schedule updated" : "scheduled"
+    message = last_run_on ? 'schedule updated' : 'scheduled'
 
     options = {}
     case run_at[:interval][:unit].downcase
-    when "once"
+    when 'once'
       # Don't run onetime schedule again unless the start_time was updated to a later time
       unless last_run_on && (last_run_on > run_at[:start_time])
         time = run_at[:start_time].getlocal
         _log.info("Schedule [#{name}] #{message} to run at #{time}")
         options = {:method => :schedule_at, :interval => time, :schedule_id => id, :discard_past => true, :tags => tag}
       end
-    when "monthly"
+    when 'monthly'
       time = next_interval_time
       _log.info("Schedule [#{name}] #{message} to run at #{time} every #{run_at[:interval][:value]} months")
       options = {:method => :schedule_at, :months => run_at[:interval][:value].to_i, :schedule_id => id, :discard_past => true, :interval => time, :tags => tag}
@@ -295,16 +295,16 @@ class MiqSchedule < ApplicationRecord
       errors.add(:run_at, "run_at is missing :interval, run_at: [#{run_at.inspect}]") unless run_at[:interval]
       unless run_at[:interval].nil?
         errors.add(:run_at, "run_at is missing :unit, run_at: [#{run_at.inspect}]") unless run_at[:interval][:unit]
-        errors.add(:run_at, "run_at is missing :value, run_at: [#{run_at.inspect}]") if run_at[:interval][:unit].to_s.downcase != "once" && run_at[:interval][:value].nil?
+        errors.add(:run_at, "run_at is missing :value, run_at: [#{run_at.inspect}]") if run_at[:interval][:unit].to_s.downcase != 'once' && run_at[:interval][:value].nil?
         errors.add(:run_at, "run_at interval: [#{run_at[:interval][:unit]}] is not a valid interval") unless VALID_INTERVAL_UNITS.include?(run_at[:interval][:unit])
       end
     end
   end
 
   def validate_file_depot  # TODO: Do we need this if the validations are on the FileDepot classes?
-    if self.sched_action.kind_of?(Hash) && self.sched_action[:method] == "db_backup" && file_depot
-      errors.add(:file_depot, "is missing credentials") if !file_depot.uri.to_s.starts_with?("nfs") && file_depot.missing_credentials?
-      errors.add(:file_depot, "is missing uri") if file_depot.uri.blank?
+    if self.sched_action.kind_of?(Hash) && self.sched_action[:method] == 'db_backup' && file_depot
+      errors.add(:file_depot, 'is missing credentials') if !file_depot.uri.to_s.starts_with?('nfs') && file_depot.missing_credentials?
+      errors.add(:file_depot, 'is missing uri') if file_depot.uri.blank?
     end
   end
 
@@ -345,7 +345,7 @@ class MiqSchedule < ApplicationRecord
 
       meth = rails_interval
       if meth.nil?
-        raise _("Schedule: [%{id}] [%{name}], cannot calculate next run with past start_time using: %{path}") %
+        raise _('Schedule: [%{id}] [%{name}], cannot calculate next run with past start_time using: %{path}') %
                 {:id => id, :name => name, :path => run_at.fetch_path(:interval, :unit)}
       end
 
@@ -377,12 +377,12 @@ class MiqSchedule < ApplicationRecord
 
   def rails_interval
     case run_at.fetch_path(:interval, :unit).to_s.downcase
-    when "minutely" then :minutes
-    when "hourly" then   :hours
-    when "daily" then    :days
-    when "weekly" then   :weeks
-    when "monthly" then  :months
-    when "once" then     nil
+    when 'minutely' then :minutes
+    when 'hourly' then   :hours
+    when 'daily' then    :days
+    when 'weekly' then   :weeks
+    when 'monthly' then  :months
+    when 'once' then     nil
     end
   end
 
@@ -399,8 +399,8 @@ class MiqSchedule < ApplicationRecord
   end
 
   def self.preload_schedules
-    _log.info("Preloading sample schedules...")
-    fixture_file = File.join(FIXTURE_DIR, "miq_schedules.yml")
+    _log.info('Preloading sample schedules...')
+    fixture_file = File.join(FIXTURE_DIR, 'miq_schedules.yml')
     slist = YAML.load_file(fixture_file) if File.exist?(fixture_file)
 
     slist.each do |sched|
@@ -411,7 +411,7 @@ class MiqSchedule < ApplicationRecord
         rec.update_attributes(sched[:attributes])
       end
     end
-    _log.info("Preloading sample schedules... Done")
+    _log.info('Preloading sample schedules... Done')
   end
 
   def v_interval_unit
@@ -423,7 +423,7 @@ class MiqSchedule < ApplicationRecord
   end
 
   def v_zone_name
-    return "" if zone.nil?
+    return '' if zone.nil?
     zone.name
   end
 end # class MiqSchedule

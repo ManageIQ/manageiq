@@ -13,12 +13,12 @@ class VimPerformanceTag < MetricRollup
   end
 
   def self.group_by_tags(recs, options)
-    raise _("no category provided") if options[:category].blank?
-    raise _("option :cat_model must have a value") unless options[:cat_model]
+    raise _('no category provided') if options[:category].blank?
+    raise _('option :cat_model must have a value') unless options[:cat_model]
     cat_assoc = Object.const_get(options[:cat_model].to_s).table_name.to_sym
     tp = options.fetch_path(:ext_options, :time_profile)
     results = recs.inject(:res => [], :tags => [], :tcols => []) do |h, rec|
-      if rec.class.name == "VimPerformanceTag"
+      if rec.class.name == 'VimPerformanceTag'
         tvrecs = rec.vim_performance_tag_values.build_for_association(rec,
                                                                       options[:cat_model].pluralize.underscore,
                                                                       :save     => false,
@@ -33,8 +33,8 @@ class VimPerformanceTag < MetricRollup
       end
       if tvrecs.empty?
         tvrecs = VimPerformanceTagValue.tag_cols(rec.resource_type).inject([]) do |arr, c|
-          trec = VimPerformanceTagValue.new(:column_name => c, :tag_name => "_none_")
-          c == "assoc_ids" ? trec.assoc_ids = rec.send(c) : trec.value = rec.send(c)
+          trec = VimPerformanceTagValue.new(:column_name => c, :tag_name => '_none_')
+          c == 'assoc_ids' ? trec.assoc_ids = rec.send(c) : trec.value = rec.send(c)
           arr.push(trec)
           arr
         end
@@ -47,9 +47,9 @@ class VimPerformanceTag < MetricRollup
         else
           tv.value ||= 0
         end
-        c = [tv.column_name, tv.tag_name].join("_").to_sym
+        c = [tv.column_name, tv.tag_name].join('_').to_sym
         rec.class.class_eval("attr_accessor #{c.inspect}")
-        rec.send(c.to_s + "=", tv.column_name == "assoc_ids" ? tv.assoc_ids : tv.value)
+        rec.send(c.to_s + '=', tv.column_name == 'assoc_ids' ? tv.assoc_ids : tv.value)
         h[:tags].push(tv.tag_name).uniq!
         h[:tcols].push(c.to_s).uniq!
       end
@@ -71,7 +71,7 @@ class VimPerformanceTag < MetricRollup
 
   def self.fill_assoc_ids(_ts, result, assoc, tags)
     tags.each do |t|
-      assoc_ids_meth = ["assoc_ids", t].join("_").to_s
+      assoc_ids_meth = ['assoc_ids', t].join('_').to_s
       if result.send(assoc_ids_meth).nil?
         result.send("#{assoc_ids_meth}=", assoc => {:on => []})
       end

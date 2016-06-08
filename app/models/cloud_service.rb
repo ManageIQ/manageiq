@@ -1,5 +1,5 @@
 class CloudService < ApplicationRecord
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::CloudManager'
   belongs_to :host
   belongs_to :system_service
   belongs_to :availability_zone

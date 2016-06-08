@@ -22,7 +22,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?MiqProvisionRequest::miq_provision_request=#{@miq_provision_request.id}", @user)
     end
 
-    it "#miq_request" do
+    it '#miq_request' do
       @miq_provision_request.save!
 
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].miq_request"
@@ -32,7 +32,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       expect(ae_object.id).to eq(@miq_provision_request.id)
     end
 
-    it "#miq_provisions" do
+    it '#miq_provisions' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].miq_provisions"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
@@ -67,7 +67,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       end
     end
 
-    it "#vm_template" do
+    it '#vm_template' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].vm_template"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
@@ -75,7 +75,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       [:id, :name, :location].each { |method| expect(ae_object.send(method)).to eq(@vm_template.send(method)) }
     end
 
-    it "#request_type" do
+    it '#request_type' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].request_type"
       @ae_method.update_attributes(:data => method)
 
@@ -85,7 +85,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       end
     end
 
-    it "#target_type" do
+    it '#target_type' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].target_type"
       @ae_method.update_attributes(:data => method)
 
@@ -100,7 +100,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       end
     end
 
-    it "#register_automate_callback - no previous callbacks" do
+    it '#register_automate_callback - no previous callbacks' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].register_automate_callback(:first_time_out, 'do_something_great')"
       @ae_method.update_attributes(:data => method)
       expect(invoke_ae.root(@ae_result_key)).to be_truthy
@@ -111,7 +111,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       expect(callback_hash[:first_time_out]).to eq('do_something_great')
     end
 
-    it "#register_automate_callback - with previous callbacks" do
+    it '#register_automate_callback - with previous callbacks' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].register_automate_callback(:first_time_out, 'do_something_great')"
       @ae_method.update_attributes(:data => method)
       expect(@miq_provision_request[:options][:callbacks]).to be_nil
@@ -126,7 +126,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       expect(callback_hash[:next_time_around]).to eq('do_something_better_yet')
     end
 
-    it "#source_type" do
+    it '#source_type' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].source_type"
       @ae_method.update_attributes(:data => method)
 
@@ -141,7 +141,7 @@ module MiqAeServiceMiqProvisionRequestSpec
       expect(invoke_ae.root(@ae_result_key)).to eq('vm')
     end
 
-    it "#ci_type" do
+    it '#ci_type' do
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_provision_request'].ci_type"
       @ae_method.update_attributes(:data => method)
       expect(invoke_ae.root(@ae_result_key)).to eq('vm')

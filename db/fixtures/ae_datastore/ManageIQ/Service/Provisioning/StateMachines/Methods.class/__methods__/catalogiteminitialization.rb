@@ -38,36 +38,36 @@ def create_category_and_tags_if_necessary(dialog_tags_hash)
 end
 
 def override_service_name(dialog_options_hash)
-  log_and_update_message(:info, "Processing override_service_name...", true)
+  log_and_update_message(:info, 'Processing override_service_name...', true)
   new_service_name = dialog_options_hash.fetch(:service_name, nil)
   new_service_name = "#{@service.name}-#{Time.now.strftime('%Y%m%d-%H%M%S')}" if new_service_name.blank?
 
   log_and_update_message(:info, "Service name: #{new_service_name}")
   @service.name = new_service_name
-  log_and_update_message(:info, "Processing override_service_name...Complete", true)
+  log_and_update_message(:info, 'Processing override_service_name...Complete', true)
 end
 
 def override_service_description(dialog_options_hash)
-  log_and_update_message(:info, "Processing override_service_description...", true)
+  log_and_update_message(:info, 'Processing override_service_description...', true)
   new_service_description = dialog_options_hash.fetch(:service_description, nil)
   return if new_service_description.blank?
 
   log_and_update_message(:info, "Service description #{new_service_description}")
   @service.description = new_service_description
-  log_and_update_message(:info, "Processing override_service_description...Complete", true)
+  log_and_update_message(:info, 'Processing override_service_description...Complete', true)
 end
 
 def tag_service(dialog_tags_hash)
   return if dialog_tags_hash.nil?
 
-  log_and_update_message(:info, "Processing tag service...", true)
+  log_and_update_message(:info, 'Processing tag service...', true)
 
   dialog_tags_hash.each do |key, value|
     log_and_update_message(:info, "Processing Tag Key: #{key.inspect}  value: #{value.inspect}")
     next if value.blank?
     get_service_tags(key.downcase, value)
   end
-  log_and_update_message(:info, "Processing tag_service...Complete", true)
+  log_and_update_message(:info, 'Processing tag_service...Complete', true)
 end
 
 def get_service_tags(tag_category, tag_value)
@@ -82,7 +82,7 @@ def assign_service_tag(tag_category, tag_value)
 end
 
 def get_vm_name(dialog_options_hash, prov)
-  log_and_update_message(:info, "Processing get_vm_name", true)
+  log_and_update_message(:info, 'Processing get_vm_name', true)
   new_vm_name = dialog_options_hash.fetch(:vm_name, nil) || dialog_options_hash.fetch(:vm_target_name, nil)
 
   new_vm_name = prov.get_option(:vm_target_name) if new_vm_name.blank?
@@ -91,7 +91,7 @@ def get_vm_name(dialog_options_hash, prov)
   dialog_options_hash[:vm_target_hostname] = new_vm_name
   dialog_options_hash[:vm_name] = new_vm_name
   dialog_options_hash[:linux_host_name] = new_vm_name
-  log_and_update_message(:info, "Processing get_vm_name...Complete", true)
+  log_and_update_message(:info, 'Processing get_vm_name...Complete', true)
 end
 
 def service_item_dialog_values(dialogs_options_hash)
@@ -165,7 +165,7 @@ end
 
 def destination_key_name(key)
   key = key.to_s
-  return key if key.include?("::") || key.starts_with?("dialog_")
+  return key if key.include?('::') || key.starts_with?('dialog_')
   "dialog_#{key}"
 end
 
@@ -193,12 +193,12 @@ def pass_dialog_values_to_children(dialog_options_hash, dialog_tags_hash)
 end
 
 def remove_service
-  log_and_update_message(:info, "Processing remove_service...", true)
+  log_and_update_message(:info, 'Processing remove_service...', true)
   if @service
     log_and_update_message(:info, "Removing Service: #{@service.name} id: #{@service.id} due to failure")
     @service.remove_from_vmdb
   end
-  log_and_update_message(:info, "Processing remove_service...Complete", true)
+  log_and_update_message(:info, 'Processing remove_service...Complete', true)
 end
 
 def merge_dialog_information(dialog_options_hash, dialog_tags_hash)
@@ -218,7 +218,7 @@ def parsed_dialog_information
   dialog_options_hash = yaml_data(:parsed_dialog_options)
   dialog_tags_hash = yaml_data(:parsed_dialog_tags)
   if dialog_options_hash.blank? && dialog_tags_hash.blank?
-    log_and_update_message(:info, "Instantiating dialog_parser to populate dialog options")
+    log_and_update_message(:info, 'Instantiating dialog_parser to populate dialog options')
     $evm.instantiate('/Service/Provisioning/StateMachines/Methods/DialogParser')
     dialog_options_hash = yaml_data(:parsed_dialog_options)
     dialog_tags_hash = yaml_data(:parsed_dialog_tags)

@@ -1,6 +1,6 @@
 # Convert v4-style provisioning dialogs from Ruby files into YAML format
 # and store in the miq_dialogs table.
-Dir.glob(Rails.root.join("db/fixtures/*.rb")) do |dialog_file|
+Dir.glob(Rails.root.join('db/fixtures/*.rb')) do |dialog_file|
   begin
     dialog_text = File.read(dialog_file)
     next unless dialog_text.include?('module MiqProvisionDialogs') && dialog_text.include?('def self.dialogs')

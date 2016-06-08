@@ -39,7 +39,7 @@ class MiqHyperVDisk
     (Get-Item "#{@virtual_disk}").length
 STAT_EOL
     file_size, stderr = @parser.parse_single_powershell_value(run_correct_powershell(stat_script))
-    if @network && stderr.include?("RegisterTaskDefinition")
+    if @network && stderr.include?('RegisterTaskDefinition')
       raise "Unable to obtain virtual disk size for #{vm_disk}. Check Hyper-V Host Domain Credentials"
     end
     OPEN_ERRORS.each { |error| raise "Unable to obtain virtual disk size for #{vm_disk}" if stderr.include?(error) }

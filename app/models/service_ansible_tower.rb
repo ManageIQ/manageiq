@@ -36,7 +36,7 @@ class ServiceAnsibleTower < Service
       self.job_template = ConfigurationScript.find(dialog_options['dialog_job_template'])
     end
 
-    raise _("job template was not set") if job_template.nil?
+    raise _('job template was not set') if job_template.nil?
 
     build_stack_options_from_dialog(dialog_options)
   end

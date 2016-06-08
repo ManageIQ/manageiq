@@ -17,7 +17,7 @@ class ManageIQ::Providers::Azure::NetworkManager < ManageIQ::Providers::NetworkM
 
   belongs_to :parent_manager,
              :foreign_key => :parent_ems_id,
-             :class_name  => "ManageIQ::Providers::BaseManager",
+             :class_name  => 'ManageIQ::Providers::BaseManager',
              :autosave    => true
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
@@ -57,11 +57,11 @@ class ManageIQ::Providers::Azure::NetworkManager < ManageIQ::Providers::NetworkM
            :allow_nil => true
 
   def self.ems_type
-    @ems_type ||= "azure_network".freeze
+    @ems_type ||= 'azure_network'.freeze
   end
 
   def self.description
-    @description ||= "Azure Network".freeze
+    @description ||= 'Azure Network'.freeze
   end
 
   def self.hostname_required?

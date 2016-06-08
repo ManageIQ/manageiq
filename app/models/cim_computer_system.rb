@@ -24,11 +24,11 @@ class CimComputerSystem < MiqCimInstance
   virtual_column    :logical_disks_size,    :type => :integer
   virtual_column    :base_storage_extents_size, :type => :integer
 
-  virtual_has_many  :hosted_file_shares,  :class_name => "SniaFileShare"
-  virtual_has_many  :local_file_systems,  :class_name => "SniaLocalFileSystem"
-  virtual_has_many  :storage_volumes,   :class_name => "CimStorageVolume"
-  virtual_has_many  :logical_disks,     :class_name => "CimLogicalDisk"
-  virtual_has_many  :base_storage_extents,  :class_name => "CimStorageExtent"
+  virtual_has_many  :hosted_file_shares,  :class_name => 'SniaFileShare'
+  virtual_has_many  :local_file_systems,  :class_name => 'SniaLocalFileSystem'
+  virtual_has_many  :storage_volumes,   :class_name => 'CimStorageVolume'
+  virtual_has_many  :logical_disks,     :class_name => 'CimLogicalDisk'
+  virtual_has_many  :base_storage_extents,  :class_name => 'CimStorageExtent'
   virtual_has_many  :cim_datastores,    :class_name => 'MiqCimDatastore'
   virtual_has_many  :storages,        :class_name => 'Storage'
   virtual_has_many  :cim_vms,       :class_name => 'MiqCimVirtualMachine'
@@ -65,7 +65,7 @@ class CimComputerSystem < MiqCimInstance
   def cim_vms_long
     dh = {}
     getLeafNodes(CcsToVm, self, dh)
-    dh.values.delete_if { |ae| ae.class_name != "MIQ_CimVirtualMachine" }
+    dh.values.delete_if { |ae| ae.class_name != 'MIQ_CimVirtualMachine' }
   end
 
   def cim_vms
@@ -87,7 +87,7 @@ class CimComputerSystem < MiqCimInstance
   def cim_hosts_long
     dh = {}
     getLeafNodes(CcsToHosts, self, dh)
-    dh.values.delete_if { |ae| ae.class_name != "MIQ_CimHostSystem" }
+    dh.values.delete_if { |ae| ae.class_name != 'MIQ_CimHostSystem' }
   end
 
   def cim_hosts
@@ -113,7 +113,7 @@ class CimComputerSystem < MiqCimInstance
   def cim_datastores_long
     dh = {}
     getLeafNodes(CcsToDatastores, self, dh)
-    dh.values.delete_if { |ae| ae.class_name != "MIQ_CimDatastore" }
+    dh.values.delete_if { |ae| ae.class_name != 'MIQ_CimDatastore' }
   end
 
   def cim_datastores
@@ -271,16 +271,16 @@ class CimComputerSystem < MiqCimInstance
 
   def storage_managers
     storageManagers = []
-    return storageManagers if class_name != "ONTAP_StorageSystem"
+    return storageManagers if class_name != 'ONTAP_StorageSystem'
 
     getAssociators(:AssocClass => 'CIM_HostedAccessPoint',
-                   :Role       => "Antecedent",
-                   :ResultRole => "Dependent"
+                   :Role       => 'Antecedent',
+                   :ResultRole => 'Dependent'
                   ).each do |ap|
-      next if ap.property("CreationClassName") != "ONTAP_RemoteServiceAccessPoint"
-      ai = ap.property("AccessInfo")
+      next if ap.property('CreationClassName') != 'ONTAP_RemoteServiceAccessPoint'
+      ai = ap.property('AccessInfo')
       next unless /http:\/\/([^\/]*)\/na_admin/ =~ ai
-      sma = NetappRemoteService.where("ipaddress = ? or hostname = ?", $1, $1)
+      sma = NetappRemoteService.where('ipaddress = ? or hostname = ?', $1, $1)
       storageManagers.concat(sma) unless sma.length == 0
     end
     storageManagers
@@ -297,7 +297,7 @@ class CimComputerSystem < MiqCimInstance
     end
   end
 
-  def create_logical_disk(name, aggrName, size, _spaceReserve = "none")
+  def create_logical_disk(name, aggrName, size, _spaceReserve = 'none')
     # Returns: Array of true || false, If false, object will have errors attached
 
     _log.info("Create logical disk: #{name} ...")
@@ -305,7 +305,7 @@ class CimComputerSystem < MiqCimInstance
     # Get the management inteface for the storage system.
     nrs = storage_managers.first
     if nrs.nil?
-      field, message = ["NetAppFiler:", "Could not find manager entry: #{evm_display_name}"]
+      field, message = ['NetAppFiler:', "Could not find manager entry: #{evm_display_name}"]
       _log.error("#{field} #{message}")
       errors.add(field, message)
       return false
@@ -314,7 +314,7 @@ class CimComputerSystem < MiqCimInstance
 
     # Check to see if the volume already exists.
     if nrs.has_volume?(name)
-      field, message = ["LogicalDisk:", "#{name} already exists"]
+      field, message = ['LogicalDisk:', "#{name} already exists"]
       _log.error("#{field} #{message}")
       errors.add(field, message)
       return false
@@ -327,12 +327,12 @@ class CimComputerSystem < MiqCimInstance
       aggr_info = nrs.aggr_list_info(aggrName)
     rescue => err
       _log.log_backtrace(err)
-      errors.add("Aggregate:", err.message)
+      errors.add('Aggregate:', err.message)
       return false
     end
     aggr_free_space = aggr_info.size_available.to_i
     if aggr_free_space < size.to_i.gigabytes
-      field, message = ["Size:", "Insufficient free space in #{aggrName}: #{aggr_free_space}"]
+      field, message = ['Size:', "Insufficient free space in #{aggrName}: #{aggr_free_space}"]
       _log.error("#{field} #{message}")
       errors.add(field, message)
       return false

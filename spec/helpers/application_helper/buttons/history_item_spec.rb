@@ -18,12 +18,12 @@ describe ApplicationHelper::Button::HistoryItem do
       end
     end
 
-    it "when not history_1 and the tree history not exist" do
+    it 'when not history_1 and the tree history not exist' do
       @id = :history_10
       expect(subject).to be_truthy
     end
 
-    it "when with history_1" do
+    it 'when with history_1' do
       @id = :history_1
       expect(subject).to be_falsey
     end

@@ -55,7 +55,7 @@ module Openstack
         #
         def do_action(server, action)
           puts "Checking action #{action} on server #{server.name}."
-          if server.state == "ACTIVE"
+          if server.state == 'ACTIVE'
             puts "Doing action #{action} on server #{server.name}."
             server.send(action)
           end
@@ -76,9 +76,9 @@ module Openstack
               server_volumes.each do |server_volume|
                 name = server_volume.delete(:__name)
                 server_volume[:uuid] = case server_volume[:source_type]
-                                       when "image"
+                                       when 'image'
                                          images.detect { |x| x.name == name }.id
-                                       when "volume"
+                                       when 'volume'
                                          volumes.detect { |x| x.name == name }.id
                                        end
                 server[:block_device_mapping_v2] << server_volume
@@ -89,7 +89,7 @@ module Openstack
               nics = []
               network_names.each do |network_name|
                 network = networks.detect { |x| x.name == network_name }
-                nics << {"net_id" => network.id} if network
+                nics << {'net_id' => network.id} if network
               end
               server.merge!(:nics => nics) if nics
             end
@@ -125,11 +125,11 @@ module Openstack
         def associate_ip(server, network)
           puts "Finding floating ip on server #{server.name}"
           if server.addresses.blank? || (!server.addresses.blank? &&
-             server.addresses.values.flatten.detect { |x| x["OS-EXT-IPS:type"] == 'floating' }.blank?)
+             server.addresses.values.flatten.detect { |x| x['OS-EXT-IPS:type'] == 'floating' }.blank?)
             # Get first free floating IP
             floating_ip = network.free_floating_ips.first
             unless floating_ip
-              puts "!!!! No free floating IPs left!!!!"
+              puts '!!!! No free floating IPs left!!!!'
               return
             end
 
@@ -153,26 +153,26 @@ module Openstack
 
           loop do
             case server.reload.state
-            when "ACTIVE", "PAUSED", "SUSPENDED", "SHELVED", "SHELVED_OFFLOADED"
+            when 'ACTIVE', 'PAUSED', "SUSPENDED", "SHELVED", "SHELVED_OFFLOADED"
               break
-            when "ERROR"
-              puts "Error creating server"
+            when 'ERROR'
+              puts 'Error creating server'
               exit 1
-            when "SHUTOFF"
+            when 'SHUTOFF'
               # When our VCR labs goes down, it shuts off all the VMs, lets start them here
               unless starting_shutdown_server
                 starting_shutdown_server = true
-                puts "Server was shutoff, starting it again."
+                puts 'Server was shutoff, starting it again.'
                 server.start
               end
-              print "."
+              print '.'
               sleep 1
             else
-              print "."
+              print '.'
               sleep 1
             end
           end
-          puts "Finished"
+          puts 'Finished'
         end
 
         def find_or_create_flavors

@@ -9,7 +9,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
     raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} remote console requires the vm to be registered with a management system.") if ext_management_system.nil?
 
     options[:check_if_running] = true unless options.key?(:check_if_running)
-    raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
+    raise(MiqException::RemoteConsoleNotSupportedError, "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != 'on'
   end
 
   def remote_console_acquire_ticket(userid, protocol)
@@ -40,7 +40,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   #
 
   def remote_console_mks_acquire_ticket
-    validate_remote_console_acquire_ticket("mks", :check_if_running => false)
+    validate_remote_console_acquire_ticket('mks', :check_if_running => false)
     ext_management_system.vm_remote_console_mks_acquire_ticket(self)
   end
 
@@ -49,12 +49,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   #
 
   def remote_console_vmrc_acquire_ticket(_userid = nil)
-    validate_remote_console_acquire_ticket("vmrc")
+    validate_remote_console_acquire_ticket('vmrc')
     ext_management_system.remote_console_vmrc_acquire_ticket
   end
 
   def validate_remote_console_vmrc_support
-    validate_remote_console_acquire_ticket("vmrc")
+    validate_remote_console_acquire_ticket('vmrc')
     ext_management_system.validate_remote_console_vmrc_support
     true
   end
@@ -67,7 +67,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   end
 
   def remote_console_vnc_acquire_ticket(userid)
-    validate_remote_console_acquire_ticket("vnc")
+    validate_remote_console_acquire_ticket('vnc')
 
     password     = SecureRandom.base64[0, 8] # Random password from the Base64 character set
     host_port    = host.reserve_next_available_vnc_port

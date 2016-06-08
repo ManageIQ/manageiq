@@ -16,7 +16,7 @@ module ManageiqForeman
 
     def verify?
       results = Array(fetch(:home).try(:results)).first
-      results.respond_to?(:key?) && results.key?("links")
+      results.respond_to?(:key?) && results.key?('links')
     end
 
     def all(resource, filter = {})
@@ -39,7 +39,7 @@ module ManageiqForeman
     end
 
     def load_details(resources, resource)
-      resources.map! { |os| fetch(resource, :show, "id" => os["id"]).first } if resources
+      resources.map! { |os| fetch(resource, :show, 'id' => os['id']).first } if resources
     end
 
     # filter: "page" => 2, "per_page" => 50, "search" => "field=value", "value"
@@ -75,7 +75,7 @@ module ManageiqForeman
 
     def tmpdir
       if defined?(Rails)
-        Rails.root.join("tmp/foreman").to_s
+        Rails.root.join('tmp/foreman').to_s
       else
         require 'tmpdir'
         "#{Dir.tmpdir}/foreman"

@@ -4,7 +4,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Placement
   def placement
     desired = get_option(:placement_auto) ? automatic_placement : manual_placement
 
-    raise MiqException::MiqProvisionError, "Unable to find a suitable cluster" if desired[:cluster].nil?
+    raise MiqException::MiqProvisionError, 'Unable to find a suitable cluster' if desired[:cluster].nil?
 
     [:cluster, :host, :storage].each do |key|
       object = desired[key]

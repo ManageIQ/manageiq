@@ -80,9 +80,9 @@ module AuthenticationMixin
 
   def required_credential_fields(type)
     case type.to_s
-    when "bearer"
+    when 'bearer'
       [:auth_key]
-    when "hawkular"
+    when 'hawkular'
       []
     else
       [:userid]
@@ -99,11 +99,11 @@ module AuthenticationMixin
 
   def authentication_status
     ordered_auths = authentication_for_providers.sort_by(&:status_severity)
-    ordered_auths.last.try(:status) || "None"
+    ordered_auths.last.try(:status) || 'None'
   end
 
   def authentication_status_ok?(type = nil)
-    authentication_best_fit(type).try(:status) == "Valid"
+    authentication_best_fit(type).try(:status) == 'Valid'
   end
 
   def auth_user_pwd(type = nil)
@@ -129,7 +129,7 @@ module AuthenticationMixin
 
     options.reverse_merge!(:save => true)
 
-    @orig_credentials ||= auth_user_pwd || "none"
+    @orig_credentials ||= auth_user_pwd || 'none'
 
     # Invoke before callback
     before_update_authentication if self.respond_to?(:before_update_authentication) && options[:save]
@@ -162,15 +162,15 @@ module AuthenticationMixin
         if self.kind_of?(ManageIQ::Providers::Openstack::InfraManager) && value[:auth_key]
           # TODO(lsmola) investigate why build throws an exception, that it needs to be subclass of AuthUseridPassword
           cred = ManageIQ::Providers::Openstack::InfraManager::AuthKeyPair.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
-                                               :resource_id => id, :resource_type => "ExtManagementSystem")
+                                               :resource_id => id, :resource_type => 'ExtManagementSystem')
           authentications << cred
         elsif value[:auth_key]
           cred = AuthToken.new(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
-                                               :resource_id => id, :resource_type => "ExtManagementSystem")
+                                               :resource_id => id, :resource_type => 'ExtManagementSystem')
           authentications << cred
         else
           cred = authentications.build(:name => "#{self.class.name} #{name}", :authtype => type.to_s,
-                                            :type => "AuthUseridPassword")
+                                            :type => 'AuthUseridPassword')
         end
       end
       cred.userid = value[:userid]
@@ -186,8 +186,8 @@ module AuthenticationMixin
   end
 
   def credentials_changed?
-    @orig_credentials ||= auth_user_pwd || "none"
-    new_credentials = auth_user_pwd || "none"
+    @orig_credentials ||= auth_user_pwd || 'none'
+    new_credentials = auth_user_pwd || 'none'
     @orig_credentials != new_credentials
   end
 
@@ -219,7 +219,7 @@ module AuthenticationMixin
 
     MiqQueue.put_unless_exists(options) do |msg|
       # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
-      help = "Check for a running server"
+      help = 'Check for a running server'
       help << " in zone: [#{options[:zone]}]"   if options[:zone]
       help << " with role: [#{options[:role]}]" if options[:role]
       _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
@@ -271,16 +271,16 @@ module AuthenticationMixin
     verify_args = self.kind_of?(Host) ? [type, options] : type
     status, details =
       if self.missing_credentials?(type)
-        [:incomplete, "Missing credentials"]
+        [:incomplete, 'Missing credentials']
       else
         begin
-          verify_credentials(*verify_args) ? [:valid, ""] : [:invalid, "Unknown reason"]
+          verify_credentials(*verify_args) ? [:valid, ''] : [:invalid, 'Unknown reason']
         rescue MiqException::MiqUnreachableError => err
           [:unreachable, err]
         rescue MiqException::MiqInvalidCredentialsError => err
           [:invalid, err]
         rescue MiqException::MiqEVMLoginError
-          [:invalid, "Login failed due to a bad username or password."]
+          [:invalid, 'Login failed due to a bad username or password.']
         rescue => err
           [:error, err]
         end

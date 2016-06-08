@@ -32,11 +32,11 @@ module ApplianceConsole
 
     # database hostname
     def hostname
-      options[:internal] ? "localhost" : options[:hostname]
+      options[:internal] ? 'localhost' : options[:hostname]
     end
 
     def local?(name = hostname)
-      name.presence.in?(["localhost", "127.0.0.1", nil])
+      name.presence.in?(['localhost', '127.0.0.1', nil])
     end
 
     def set_host?
@@ -81,7 +81,7 @@ module ApplianceConsole
 
     def disk_from_string(path)
       return if path.blank?
-      path == "auto" ? disk : disk_by_path(path)
+      path == 'auto' ? disk : disk_by_path(path)
     end
 
     def disk
@@ -93,38 +93,38 @@ module ApplianceConsole
     end
 
     def parse(args)
-      args.shift if args.first == "--" # Handle when called through script/runner
+      args.shift if args.first == '--' # Handle when called through script/runner
       self.options = Trollop.options(args) do
-        banner "Usage: appliance_console_cli [options]"
+        banner 'Usage: appliance_console_cli [options]'
 
-        opt :host,     "/etc/hosts name",    :type => :string,  :short => 'H'
-        opt :region,   "Region Number",      :type => :integer, :short => "r"
-        opt :internal, "Internal Database",                     :short => 'i'
-        opt :hostname, "Database Hostname",  :type => :string,  :short => 'h'
-        opt :username, "Database Username",  :type => :string,  :short => 'U', :default => "root"
-        opt :password, "Database Password",  :type => :string,  :short => "p"
-        opt :dbname,   "Database Name",      :type => :string,  :short => "d", :default => "vmdb_production"
-        opt :key,      "Create encryption key",  :type => :boolean, :short => "k"
-        opt :fetch_key, "SSH host with encryption key", :type => :string, :short => "K"
-        opt :force_key, "Forcefully create encryption key", :type => :boolean, :short => "f"
-        opt :sshlogin,  "SSH login",         :type => :string,                 :default => "root"
-        opt :sshpassword, "SSH password",    :type => :string
-        opt :verbose,  "Verbose",            :type => :boolean, :short => "v"
-        opt :dbdisk,   "Database Disk Path", :type => :string
-        opt :tmpdisk,   "Temp storage Disk Path", :type => :string
-        opt :uninstall_ipa, "Uninstall IPA Client", :type => :boolean,         :default => false
-        opt :ipaserver,  "IPA Server FQDN",  :type => :string
-        opt :ipaprincipal,  "IPA Server principal", :type => :string,          :default => "admin"
-        opt :ipapassword,   "IPA Server password",  :type => :string
-        opt :ipadomain,     "IPA Server domain (optional)", :type => :string
-        opt :iparealm,      "IPA Server realm (optional)", :type => :string
-        opt :ca,                   "CA name used for certmonger",       :type => :string,  :default => "ipa"
-        opt :postgres_client_cert, "install certs for postgres client", :type => :boolean
-        opt :postgres_server_cert, "install certs for postgres server", :type => :boolean
-        opt :http_cert,            "install certs for http server",     :type => :boolean
-        opt :extauth_opts,         "External Authentication Options",   :type => :string
+        opt :host,     '/etc/hosts name',    :type => :string,  :short => 'H'
+        opt :region,   'Region Number',      :type => :integer, :short => 'r'
+        opt :internal, 'Internal Database',                     :short => 'i'
+        opt :hostname, 'Database Hostname',  :type => :string,  :short => 'h'
+        opt :username, 'Database Username',  :type => :string,  :short => 'U', :default => 'root'
+        opt :password, 'Database Password',  :type => :string,  :short => 'p'
+        opt :dbname,   'Database Name',      :type => :string,  :short => 'd', :default => 'vmdb_production'
+        opt :key,      'Create encryption key',  :type => :boolean, :short => 'k'
+        opt :fetch_key, 'SSH host with encryption key', :type => :string, :short => 'K'
+        opt :force_key, 'Forcefully create encryption key', :type => :boolean, :short => 'f'
+        opt :sshlogin,  'SSH login',         :type => :string,                 :default => 'root'
+        opt :sshpassword, 'SSH password',    :type => :string
+        opt :verbose,  'Verbose',            :type => :boolean, :short => 'v'
+        opt :dbdisk,   'Database Disk Path', :type => :string
+        opt :tmpdisk,   'Temp storage Disk Path', :type => :string
+        opt :uninstall_ipa, 'Uninstall IPA Client', :type => :boolean,         :default => false
+        opt :ipaserver,  'IPA Server FQDN',  :type => :string
+        opt :ipaprincipal,  'IPA Server principal', :type => :string,          :default => 'admin'
+        opt :ipapassword,   'IPA Server password',  :type => :string
+        opt :ipadomain,     'IPA Server domain (optional)', :type => :string
+        opt :iparealm,      'IPA Server realm (optional)', :type => :string
+        opt :ca,                   'CA name used for certmonger',       :type => :string,  :default => 'ipa'
+        opt :postgres_client_cert, 'install certs for postgres client', :type => :boolean
+        opt :postgres_server_cert, 'install certs for postgres server', :type => :boolean
+        opt :http_cert,            'install certs for http server',     :type => :boolean
+        opt :extauth_opts,         'External Authentication Options',   :type => :string
       end
-      Trollop.die :region, "needed when setting up a local database" if options[:region].nil? && local_database?
+      Trollop.die :region, 'needed when setting up a local database' if options[:region].nil? && local_database?
       self
     end
 
@@ -132,12 +132,12 @@ module ApplianceConsole
       Trollop.educate unless set_host? || key? || database? || tmp_disk? ||
                              uninstall_ipa? || install_ipa? || certs? || extauth_opts?
       if set_host?
-        ip = LinuxAdmin::NetworkInterface.new("eth0").address
+        ip = LinuxAdmin::NetworkInterface.new('eth0').address
         system_hosts = LinuxAdmin::Hosts.new
         system_hosts.hostname = options[:host]
         system_hosts.update_entry(ip, options[:host])
         system_hosts.save
-        LinuxAdmin::Service.new("network").restart
+        LinuxAdmin::Service.new('network').restart
       end
       create_key if key?
       set_db if database?
@@ -149,12 +149,12 @@ module ApplianceConsole
     rescue AwesomeSpawn::CommandResultError => e
       say e.result.output
       say e.result.error
-      say ""
+      say ''
       raise
     end
 
     def set_db
-      raise "No encryption key (v2_key) present" unless key_configuration.key_exist?
+      raise 'No encryption key (v2_key) present' unless key_configuration.key_exist?
       if local?
         set_internal_db
       else
@@ -163,7 +163,7 @@ module ApplianceConsole
     end
 
     def set_internal_db
-      say "configuring internal database"
+      say 'configuring internal database'
       config = ApplianceConsole::InternalDatabaseConfiguration.new({
         :database    => options[:dbname],
         :region      => options[:region],
@@ -184,7 +184,7 @@ module ApplianceConsole
     end
 
     def set_external_db
-      say "configuring external database"
+      say 'configuring external database'
       config = ApplianceConsole::ExternalDatabaseConfiguration.new({
         :host        => options[:hostname],
         :database    => options[:dbname],
@@ -214,12 +214,12 @@ module ApplianceConsole
     def create_key
       say "#{key_configuration.action} encryption key"
       unless key_configuration.activate
-        raise "Could not create encryption key (v2_key)"
+        raise 'Could not create encryption key (v2_key)'
       end
     end
 
     def install_certs
-      say "creating ssl certificates"
+      say 'creating ssl certificates'
       config = CertificateAuthority.new(
         :hostname => host,
         :realm    => options[:iparealm],
@@ -233,12 +233,12 @@ module ApplianceConsole
       config.activate
       say "\ncertificate result: #{config.status_string}"
       unless config.complete?
-        say "After the certificates are retrieved, rerun to update service configuration files"
+        say 'After the certificates are retrieved, rerun to update service configuration files'
       end
     end
 
     def install_ipa
-      raise "please uninstall ipa before reinstalling" if ExternalHttpdAuthentication.ipa_client_configured?
+      raise 'please uninstall ipa before reinstalling' if ExternalHttpdAuthentication.ipa_client_configured?
       config = ExternalHttpdAuthentication.new(
         host,
         :ipaserver => options[:ipaserver],
@@ -252,14 +252,14 @@ module ApplianceConsole
     end
 
     def uninstall_ipa
-      say "Uninstalling IPA-client"
+      say 'Uninstalling IPA-client'
       config = ExternalHttpdAuthentication.new
       config.deactivate if config.ipa_client_configured?
     end
 
     def config_tmp_disk
       if (tmp_disk = disk_from_string(options[:tmpdisk]))
-        say "creating temp disk"
+        say 'creating temp disk'
         config = ApplianceConsole::TempStorageConfiguration.new(:disk => tmp_disk)
         config.activate
       else
@@ -268,7 +268,7 @@ module ApplianceConsole
           say "could not find disk #{options[:tmpdisk]}"
           say "if you pass auto, it will choose: #{choose_disk}"
         else
-          say "no disks with a free partition"
+          say 'no disks with a free partition'
         end
       end
     end
@@ -276,7 +276,7 @@ module ApplianceConsole
     def extauth_opts
       extauthopts = ExternalAuthOptions.new
       extauthopts_hash = extauthopts.parse(options[:extauth_opts])
-      raise "Must specify at least one external authentication option to set" unless extauthopts_hash.present?
+      raise 'Must specify at least one external authentication option to set' unless extauthopts_hash.present?
       extauthopts.update_configuration(extauthopts_hash)
     end
 

@@ -31,17 +31,17 @@ class MiqLargeFileWin32
   @@getLastError      = Win32API.new('kernel32', 'GetLastError',      nil,        'L')
 
   # Default constructor.
-  def initialize(file, access = "r")
+  def initialize(file, access = 'r')
     accessOptions = 0
-    accessOptions |= GENERIC_READ if access.include?("r")
-    accessOptions |= GENERIC_WRITE if access.include?("+")
+    accessOptions |= GENERIC_READ if access.include?('r')
+    accessOptions |= GENERIC_WRITE if access.include?('+')
     @hFile = @@createFile.call(file, accessOptions, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0)
     raise "Couldn't open file #{file}" if @hFile == INVALID_HANDLE_VALUE
     $log.debug("MiqLargeFile<#{object_id}> Opening #{file}, handle 0x#{'%08x' % @hFile}") if $log
   end
 
   # Alternative initialization.
-  def self.open(file, access = "r")
+  def self.open(file, access = 'r')
     initialize(file, access)
   end
 
@@ -87,9 +87,9 @@ class MiqLargeFileWin32
     # NOTE: len must be a double word.
     bytesWritten = MemoryBuffer.create_long
     res = @@writeFile.call(@hFile, buf, len, bytesWritten, 0)
-    raise "WriteFile failed" if res == 0
+    raise 'WriteFile failed' if res == 0
     bytesWritten = bytesWritten.unpack('L')[0]
-    raise "Not all data written" if bytesWritten != len
+    raise 'Not all data written' if bytesWritten != len
     bytesWritten
   end
 

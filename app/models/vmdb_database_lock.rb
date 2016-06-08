@@ -12,15 +12,15 @@ class VmdbDatabaseLock < ApplicationRecord
 
   def blocking_lock_relation
     case locktype
-    when "relation"
+    when 'relation'
       self.class.where(:relation => relation, :database => database)
-    when "advisory"
+    when 'advisory'
       self.class.where(:classid => classid, :objid => objid, :objsubid => objsubid)
-    when "virtualxid"
+    when 'virtualxid'
       self.class.where(:virtualxid => virtualxid)
-    when "transactionid"
+    when 'transactionid'
       self.class.where(:transactionid => transactionid)
-    when "tuple"
+    when 'tuple'
       self.class.where(:database => database,
                        :relation => relation,
                        :page     => page,

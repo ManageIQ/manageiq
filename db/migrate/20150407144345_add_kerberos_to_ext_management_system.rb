@@ -10,7 +10,7 @@ class AddKerberosToExtManagementSystem < ActiveRecord::Migration
     add_column :ext_management_systems, :security_protocol, :string
     add_column :ext_management_systems, :realm, :string
 
-    say_with_time("Migrate data from reserved table") do
+    say_with_time('Migrate data from reserved table') do
       ExtManagementSystem.includes(:reserved_rec).each do |e|
         e.reserved_hash_migrate(:security_protocol, :realm)
       end
@@ -18,7 +18,7 @@ class AddKerberosToExtManagementSystem < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Migrating security_protocol and realm to Reserves table") do
+    say_with_time('Migrating security_protocol and realm to Reserves table') do
       ExtManagementSystem.includes(:reserved_rec).each do |e|
         e.reserved_hash_set(:security_protocol, e.security_protocol)
         e.reserved_hash_set(:realm, e.realm)

@@ -4,11 +4,11 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "CustomButton", :open_all => true, :full_ids => true}
+    {:leaf => 'CustomButton', :open_all => true, :full_ids => true}
   end
 
   def root_options
-    [t = _("Object Types"), t]
+    [t = _('Object Types'), t]
   end
 
   # Get root nodes count/array for explorer tree
@@ -24,7 +24,7 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
     nodes = object[:id].split('_')
     objects = CustomButtonSet.find_all_by_class_name(nodes[1])
     # add as first element of array
-    objects.unshift(CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => "[Unassigned Buttons]"))
+    objects.unshift(CustomButtonSet.new(:name => "[Unassigned Buttons]|ub-#{nodes[1]}", :description => '[Unassigned Buttons]'))
     count_only_or_objects(count_only, objects, nil)
   end
 
@@ -56,8 +56,8 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
 
   def buttons_node_image(node)
     case node
-    when "ExtManagementSystem" then "ext_management_system"
-    when "MiqTemplate"         then "vm"
+    when 'ExtManagementSystem' then 'ext_management_system'
+    when 'MiqTemplate'         then 'vm'
     else                            node.downcase
     end
   end

@@ -3,9 +3,9 @@ if ENV['RAILS_USE_MEMORY_STORE'] || (!Rails.env.development? && !Rails.env.produ
 else
   session_store =
     case Settings.server.session_store
-    when "sql"    then :active_record_store
-    when "memory" then :memory_store
-    when "cache"  then :mem_cache_store
+    when 'sql'    then :active_record_store
+    when 'memory' then :memory_store
+    when 'cache'  then :mem_cache_store
     end
 
   session_options = {}
@@ -17,9 +17,9 @@ else
   if session_store == :mem_cache_store
     require 'dalli'
     session_options = session_options.merge(
-      :cache        => Dalli::Client.new(Settings.session.memcache_server, :namespace => "MIQ:VMDB"),
+      :cache        => Dalli::Client.new(Settings.session.memcache_server, :namespace => 'MIQ:VMDB'),
       :expire_after => 24.hours,
-      :key          => "_vmdb_session",
+      :key          => '_vmdb_session',
     )
 
     require 'rack/session/dalli'

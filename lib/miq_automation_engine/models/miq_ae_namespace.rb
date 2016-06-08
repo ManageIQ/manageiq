@@ -8,9 +8,9 @@ class MiqAeNamespace < ApplicationRecord
                          /^commit_time/, /^commit_sha/, /^ref$/, /^ref_type$/,
                          /^last_import_on/].freeze
 
-  belongs_to :parent,        :class_name => "MiqAeNamespace",  :foreign_key => :parent_id
-  has_many   :ae_namespaces, :class_name => "MiqAeNamespace",  :foreign_key => :parent_id,    :dependent => :destroy
-  has_many   :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) },    :class_name => "MiqAeClass",      :foreign_key => :namespace_id, :dependent => :destroy
+  belongs_to :parent,        :class_name => 'MiqAeNamespace',  :foreign_key => :parent_id
+  has_many   :ae_namespaces, :class_name => 'MiqAeNamespace',  :foreign_key => :parent_id,    :dependent => :destroy
+  has_many   :ae_classes, -> { includes([:ae_methods, :ae_fields, :ae_instances]) },    :class_name => 'MiqAeClass',      :foreign_key => :namespace_id, :dependent => :destroy
 
   validates_presence_of   :name
   validates_format_of     :name, :with => /\A[A-Za-z0-9_\.\-\$]+\z/i
@@ -90,7 +90,7 @@ class MiqAeNamespace < ApplicationRecord
   end
 
   def fqname_sans_domain
-    fqname.split('/')[2..-1].join("/")
+    fqname.split('/')[2..-1].join('/')
   end
 
   def domain_name

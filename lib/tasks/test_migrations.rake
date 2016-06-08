@@ -1,8 +1,8 @@
-require_relative "./evm_test_helper"
+require_relative './evm_test_helper'
 
 if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
-  desc "Run all migration specs"
+  desc 'Run all migration specs'
   task :migrations => %w(
     test:initialize
     test:migrations:down
@@ -12,20 +12,20 @@ namespace :test do
   )
 
   namespace :migrations do
-    desc "Setup environment for migration specs"
+    desc 'Setup environment for migration specs'
     task :setup => :setup_db
 
     task :teardown
 
-    desc "Run the up migration specs only"
+    desc 'Run the up migration specs only'
     RSpec::Core::RakeTask.new(:up => :initialize) do |t|
-      EvmTestHelper.init_rspec_task(t, ["--tag", "migrations:up"])
+      EvmTestHelper.init_rspec_task(t, ['--tag', 'migrations:up'])
       t.pattern = EvmTestHelper::MIGRATION_SPECS
     end
 
-    desc "Run the down migration specs only"
+    desc 'Run the down migration specs only'
     RSpec::Core::RakeTask.new(:down => :initialize) do |t|
-      EvmTestHelper.init_rspec_task(t, ["--tag", "migrations:down"])
+      EvmTestHelper.init_rspec_task(t, ['--tag', 'migrations:down'])
       # NOTE: Since the upgrade to RSpec 2.12, pattern is automatically sorted
       #       under the covers, so the .reverse here is not honored.  There is
       #       currently no way to force the ordering, so the migrations will
@@ -38,13 +38,13 @@ namespace :test do
     end
 
     task :complete_up => :initialize do
-      puts "** Migrating all the way up"
-      EvmTestHelper.run_rake_via_shell("db:migrate", "VERBOSE" => ENV["VERBOSE"] || "false")
+      puts '** Migrating all the way up'
+      EvmTestHelper.run_rake_via_shell('db:migrate', 'VERBOSE' => ENV['VERBOSE'] || 'false')
     end
 
     task :complete_down => :initialize do
-      puts "** Migrating all the way down"
-      EvmTestHelper.run_rake_via_shell("db:migrate", "VERSION" => "0", "VERBOSE" => ENV["VERBOSE"] || "false")
+      puts '** Migrating all the way down'
+      EvmTestHelper.run_rake_via_shell('db:migrate', 'VERSION' => '0', 'VERBOSE' => ENV['VERBOSE'] || 'false')
     end
   end
 end

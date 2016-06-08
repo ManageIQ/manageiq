@@ -1,5 +1,5 @@
 describe EmsCluster do
-  context("VMware") do
+  context('VMware') do
     before(:each) do
       @cluster = FactoryGirl.create(:ems_cluster)
       @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster)
@@ -7,15 +7,15 @@ describe EmsCluster do
       @rp1 = FactoryGirl.create(:resource_pool)
       @rp2 = FactoryGirl.create(:resource_pool)
 
-      @cluster.with_relationship_type("ems_metadata") { @cluster.add_child @rp1 }
-      @rp1.with_relationship_type("ems_metadata") { @rp1.add_child @rp2 }
+      @cluster.with_relationship_type('ems_metadata') { @cluster.add_child @rp1 }
+      @rp1.with_relationship_type('ems_metadata') { @rp1.add_child @rp2 }
 
       @vm1 = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_cluster => @cluster)
-      @vm1.with_relationship_type("ems_metadata") { @vm1.parent = @rp1 }
+      @vm1.with_relationship_type('ems_metadata') { @vm1.parent = @rp1 }
       @template1 = FactoryGirl.create(:template_vmware, :host => @host1, :ems_cluster => @cluster)
 
       @vm2 = FactoryGirl.create(:vm_vmware, :host => @host2, :ems_cluster => @cluster)
-      @vm2.with_relationship_type("ems_metadata") { @vm2.parent = @rp2 }
+      @vm2.with_relationship_type('ems_metadata') { @vm2.parent = @rp2 }
       @template2 = FactoryGirl.create(:template_vmware, :host => @host2, :ems_cluster => @cluster)
     end
 
@@ -56,7 +56,7 @@ describe EmsCluster do
     it('ResourcePool#v_total_miq_templates')  { expect(@rp1.v_total_vms).to eq(2) }
   end
 
-  context("RedHat") do
+  context('RedHat') do
     before(:each) do
       @cluster = FactoryGirl.create(:ems_cluster)
       @host1 = FactoryGirl.create(:host, :ems_cluster => @cluster)
@@ -64,14 +64,14 @@ describe EmsCluster do
       @rp1 = FactoryGirl.create(:resource_pool)
       @rp2 = FactoryGirl.create(:resource_pool)
 
-      @cluster.with_relationship_type("ems_metadata") { @cluster.add_child @rp1 }
-      @rp1.with_relationship_type("ems_metadata") { @rp1.add_child @rp2 }
+      @cluster.with_relationship_type('ems_metadata') { @cluster.add_child @rp1 }
+      @rp1.with_relationship_type('ems_metadata') { @rp1.add_child @rp2 }
 
       @vm1 = FactoryGirl.create(:vm_redhat, :host => @host1, :ems_cluster => @cluster)
-      @vm1.with_relationship_type("ems_metadata") { @vm1.parent = @rp1 }
+      @vm1.with_relationship_type('ems_metadata') { @vm1.parent = @rp1 }
 
       @vm2 = FactoryGirl.create(:vm_redhat, :host => @host2, :ems_cluster => @cluster)
-      @vm2.with_relationship_type("ems_metadata") { @vm2.parent = @rp2 }
+      @vm2.with_relationship_type('ems_metadata') { @vm2.parent = @rp2 }
 
       @template1 = FactoryGirl.create(:template_redhat, :ems_cluster => @cluster)
       @template2 = FactoryGirl.create(:template_redhat, :ems_cluster => @cluster)
@@ -108,7 +108,7 @@ describe EmsCluster do
     it('#total_miq_templates')  { expect(@cluster.total_miq_templates).to eq(2) }
   end
 
-  it "#save_drift_state" do
+  it '#save_drift_state' do
     # TODO: Beef up with more data
     cluster = FactoryGirl.create(:ems_cluster)
     cluster.save_drift_state
@@ -123,7 +123,7 @@ describe EmsCluster do
       :aggregate_physical_cpus   => 0,
       :aggregate_vm_cpus         => 0,
       :aggregate_vm_memory       => 0,
-      :class                     => "EmsCluster",
+      :class                     => 'EmsCluster',
       :id                        => cluster.id,
       :name                      => cluster.name,
       :vms                       => [],
@@ -132,7 +132,7 @@ describe EmsCluster do
     })
   end
 
-  context("#perf_capture_enabled_host_ids=") do
+  context('#perf_capture_enabled_host_ids=') do
     before do
       @miq_region = FactoryGirl.create(:miq_region, :region => 1)
       allow(MiqRegion).to receive(:my_region).and_return(@miq_region)
@@ -141,27 +141,27 @@ describe EmsCluster do
       @host2 = FactoryGirl.create(:host, :ems_cluster => @cluster)
     end
 
-    it "Initially Performance capture for cluster and its hosts should not be set" do
+    it 'Initially Performance capture for cluster and its hosts should not be set' do
       expect(@cluster.perf_capture_enabled).to eq(false)
       expect(@host1.perf_capture_enabled).to eq(false)
       expect(@host2.perf_capture_enabled).to eq(false)
     end
 
-    it "Performance capture for cluster and its hosts should be set" do
+    it 'Performance capture for cluster and its hosts should be set' do
       @cluster.perf_capture_enabled_host_ids = [@host1.id, @host2.id]
       expect(@cluster.perf_capture_enabled).to eq(true)
       expect(@host1.perf_capture_enabled).to eq(true)
       expect(@host2.perf_capture_enabled).to eq(true)
     end
 
-    it "Performance capture for cluster and only 1 hosts should be set" do
+    it 'Performance capture for cluster and only 1 hosts should be set' do
       @cluster.perf_capture_enabled_host_ids = [@host2.id]
       expect(@cluster.perf_capture_enabled).to eq(true)
       expect(@host1.perf_capture_enabled).to eq(false)
       expect(@host2.perf_capture_enabled).to eq(true)
     end
 
-    it "Performance capture for cluster and its hosts should get unset" do
+    it 'Performance capture for cluster and its hosts should get unset' do
       @cluster.perf_capture_enabled_host_ids = [@host2.id]
       @cluster.perf_capture_enabled_host_ids = []
       expect(@cluster.perf_capture_enabled).to eq(false)
@@ -170,13 +170,13 @@ describe EmsCluster do
     end
   end
 
-  context "#node_types" do
+  context '#node_types' do
     before(:each) do
       @ems1 = FactoryGirl.create(:ems_vmware)
       @ems2 = FactoryGirl.create(:ems_openstack_infra)
     end
 
-    it "returns :mixed_clusters when there are both openstack & non-openstack clusters in db" do
+    it 'returns :mixed_clusters when there are both openstack & non-openstack clusters in db' do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
       FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
 
@@ -184,21 +184,21 @@ describe EmsCluster do
       expect(result).to eq(:mixed_clusters)
     end
 
-    it "returns :openstack when there are only openstack clusters in db" do
+    it 'returns :openstack when there are only openstack clusters in db' do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems2.id)
       result = EmsCluster.node_types
       expect(result).to eq(:openstack)
     end
 
-    it "returns :non_openstack when there are non-openstack clusters in db" do
+    it 'returns :non_openstack when there are non-openstack clusters in db' do
       FactoryGirl.create(:ems_cluster, :ems_id => @ems1.id)
       result = EmsCluster.node_types
       expect(result).to eq(:non_openstack)
     end
   end
 
-  context "#openstack_cluster?" do
-    it "returns true for openstack cluster" do
+  context '#openstack_cluster?' do
+    it 'returns true for openstack cluster' do
       ems = FactoryGirl.create(:ems_openstack_infra)
       cluster = FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
 
@@ -206,7 +206,7 @@ describe EmsCluster do
       expect(result).to be_truthy
     end
 
-    it "returns false for non-openstack cluster" do
+    it 'returns false for non-openstack cluster' do
       ems = FactoryGirl.create(:ems_vmware)
       cluster = FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
       result = cluster.openstack_cluster?
@@ -214,15 +214,15 @@ describe EmsCluster do
     end
   end
 
-  context "#tenant_identity" do
-    let(:admin)    { FactoryGirl.create(:user_with_group, :userid => "admin") }
+  context '#tenant_identity' do
+    let(:admin)    { FactoryGirl.create(:user_with_group, :userid => 'admin') }
     let(:tenant)   { FactoryGirl.create(:tenant) }
     let(:ems)      { FactoryGirl.create(:ext_management_system, :tenant => tenant) }
     before         { admin }
 
     subject        { @cluster.tenant_identity }
 
-    it "has tenant from provider" do
+    it 'has tenant from provider' do
       @cluster = FactoryGirl.create(:ems_cluster, :ems_id => ems.id)
 
       expect(subject).to                eq(admin)
@@ -230,7 +230,7 @@ describe EmsCluster do
       expect(subject.current_tenant).to eq(ems.tenant)
     end
 
-    it "without a provider, has tenant from root tenant" do
+    it 'without a provider, has tenant from root tenant' do
       @cluster = FactoryGirl.create(:ems_cluster)
 
       expect(subject).to                eq(admin)

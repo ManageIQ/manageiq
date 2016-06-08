@@ -4,24 +4,24 @@ class TreeBuilderIsoDatastores < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "IsoDatastore"}
+    {:leaf => 'IsoDatastore'}
   end
 
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "iso_",
+      :id_prefix => 'iso_',
       :autoload  => true
     )
   end
 
   def root_options
-    [t = _("All ISO Datastores"), t]
+    [t = _('All ISO Datastores'), t]
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    count_only_or_objects(count_only, IsoDatastore.all, "name")
+    count_only_or_objects(count_only, IsoDatastore.all, 'name')
   end
 
   def x_get_tree_iso_datastore_kids(object, count_only)
@@ -35,9 +35,9 @@ class TreeBuilderIsoDatastores < TreeBuilder
         @tree_state.x_tree(@name)[:open_nodes].push("isd_xx-#{to_cid(object.id)}")
         objects.push(
           :id    => "isd_xx-#{to_cid(object.id)}",
-          :text  => _("ISO Images"),
-          :image => "folder",
-          :tip   => _("ISO Images")
+          :text  => _('ISO Images'),
+          :image => 'folder',
+          :tip   => _('ISO Images')
         )
       end
       objects
@@ -48,7 +48,7 @@ class TreeBuilderIsoDatastores < TreeBuilder
     nodes = (object[:full_id] || object[:id]).split('_')
     isd = IsoDatastore.find_by_id(from_cid(nodes.last.split('-').last))
     # Iso Datastore node was clicked OR folder nodes was clicked
-    objects = isd.iso_images if nodes[0].end_with?("isd")
-    count_only_or_objects(count_only, objects, "name")
+    objects = isd.iso_images if nodes[0].end_with?('isd')
+    count_only_or_objects(count_only, objects, 'name')
   end
 end

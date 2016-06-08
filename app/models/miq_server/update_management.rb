@@ -4,7 +4,7 @@ LinuxAdmin.logger = $log
 module MiqServer::UpdateManagement
   extend ActiveSupport::Concern
 
-  UPDATE_FILE = Rails.root.join("tmp/miq_update").freeze
+  UPDATE_FILE = Rails.root.join('tmp/miq_update').freeze
 
   module ClassMethods
     def queue_update_registration_status(*ids)
@@ -25,7 +25,7 @@ module MiqServer::UpdateManagement
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "update_registration_status",
+      :method_name => 'update_registration_status',
       :server_guid => guid,
       :zone        => my_zone
     )
@@ -35,7 +35,7 @@ module MiqServer::UpdateManagement
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "check_updates",
+      :method_name => 'check_updates',
       :server_guid => guid,
       :zone        => my_zone
     )
@@ -45,7 +45,7 @@ module MiqServer::UpdateManagement
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "apply_updates",
+      :method_name => 'apply_updates',
       :server_guid => guid,
       :zone        => my_zone
     )
@@ -65,19 +65,19 @@ module MiqServer::UpdateManagement
   end
 
   def register
-    update_attributes(:upgrade_message => "registering")
+    update_attributes(:upgrade_message => 'registering')
     if LinuxAdmin::RegistrationSystem.registered?
-      _log.info("Appliance already registered")
+      _log.info('Appliance already registered')
       update_attributes(:rh_registered => true)
     else
-      _log.info("Registering appliance...")
+      _log.info('Registering appliance...')
       registration_type = MiqDatabase.first.registration_type
 
       registration_class = LinuxAdmin::SubscriptionManager
 
       # TODO: Prompt user for environment in UI for Satellite 6 registration, use default environment for now.
       registration_options = assemble_registration_options
-      registration_options[:environment] = "Library" if registration_type == "rhn_satellite6"
+      registration_options[:environment] = 'Library' if registration_type == 'rhn_satellite6'
 
       registration_class.register(registration_options)
 
@@ -88,27 +88,27 @@ module MiqServer::UpdateManagement
     end
 
     if rh_registered?
-      update_attributes(:upgrade_message => "registration successful")
-      _log.info("Registration Successful")
+      update_attributes(:upgrade_message => 'registration successful')
+      _log.info('Registration Successful')
     else
-      update_attributes(:upgrade_message => "registration failed")
-      _log.error("Registration Failed")
+      update_attributes(:upgrade_message => 'registration failed')
+      _log.error('Registration Failed')
     end
 
     rh_registered?
   end
 
   def attach_products
-    update_attributes(:upgrade_message => "attaching products")
-    _log.info("Attaching products based on installed certificates")
+    update_attributes(:upgrade_message => 'attaching products')
+    _log.info('Attaching products based on installed certificates')
     LinuxAdmin::RegistrationSystem.subscribe(assemble_registration_options)
   end
 
   def repos_enabled?
     enabled = LinuxAdmin::RegistrationSystem.enabled_repos
     if MiqDatabase.first.update_repo_names.all? { |desired| enabled.include?(desired) }
-      _log.info("Desired update repository is enabled")
-      update_attributes(:rh_subscribed => true, :upgrade_message => "registered")
+      _log.info('Desired update repository is enabled')
+      update_attributes(:rh_subscribed => true, :upgrade_message => 'registered')
       return true
     end
     false
@@ -139,16 +139,16 @@ module MiqServer::UpdateManagement
   end
 
   def check_updates
-    _log.info("Checking for platform updates...")
+    _log.info('Checking for platform updates...')
     check_platform_updates
 
-    _log.info("Checking for postgres updates...")
+    _log.info('Checking for postgres updates...')
     check_postgres_updates
 
-    _log.info("Checking for CFME updates...")
+    _log.info('Checking for CFME updates...')
     check_cfme_version_available
 
-    _log.info("Checking for updates... Complete")
+    _log.info('Checking for updates... Complete')
   end
 
   def apply_updates
@@ -157,12 +157,12 @@ module MiqServer::UpdateManagement
 
     import_gpg_certificates
 
-    _log.info("Applying Updates, Services will restart when complete.")
+    _log.info('Applying Updates, Services will restart when complete.')
 
     # MiqDatabase.cfme_package_name will update only the CFME package tree.  (Won't disturb the database)
     # "" will update everything
     packages_to_update = EvmDatabase.local? ? [MiqDatabase.cfme_package_name] : []
-    File.write(UPDATE_FILE, packages_to_update.join(" "))
+    File.write(UPDATE_FILE, packages_to_update.join(' '))
   end
 
   private
@@ -193,13 +193,13 @@ module MiqServer::UpdateManagement
   end
 
   def import_gpg_certificates
-    files = File.join("/etc/pki/rpm-gpg/**", "{RPM-GPG-KEY-*}")
+    files = File.join('/etc/pki/rpm-gpg/**', '{RPM-GPG-KEY-*}')
     Dir.glob(files).each { |key| LinuxAdmin::Rpm.import_key(key) }
   end
 
   def parse_product_version_number(version)
     return {} if version.blank?
 
-    Hash[[:major, :minor, :maintenance, :build].zip(version.split("."))]
+    Hash[[:major, :minor, :maintenance, :build].zip(version.split('.'))]
   end
 end

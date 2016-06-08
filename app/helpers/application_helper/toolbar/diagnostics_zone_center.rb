@@ -36,13 +36,13 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
           'pficon pficon-delete fa-lg',
           N_('Demote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to secondary for the #{@record.server_role.description} Role'),
           N_('Demote Server'),
-          :confirm => N_("Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.")),
+          :confirm => N_('Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.')),
         button(
           :zone_promote_server,
           'product product-migrate fa-lg',
           N_('Promote Server #{@record.miq_server.name} [#{@record.miq_server.id}] to primary for the #{@record.server_role.description} Role'),
           N_('Promote Server'),
-          :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role.")),
+          :confirm => N_('Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role.')),
       ]
     ),
     select(

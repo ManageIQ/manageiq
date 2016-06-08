@@ -30,7 +30,7 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared::Scanning
   end
 
   def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
+    validate_supported_check('Smartstate Analysis')
   end
 
   private
@@ -42,17 +42,17 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared::Scanning
       # Make sure we were given a ems/host to connect to
       ems_connect_type = ost.scanData.fetch_path('ems', 'connect_to') || 'host'
       $log.debug "connect_to_ems: ems_connect_type = #{ems_connect_type}"
-      miqVimHost = ost.scanData.fetch_path("ems", ems_connect_type) # XXX What is this???
+      miqVimHost = ost.scanData.fetch_path('ems', ems_connect_type) # XXX What is this???
       $log.debug "connect_to_ems: miqVimHost = #{miqVimHost.class.name}"
       if miqVimHost
         st = Time.now
-        use_broker = ost.scanData["ems"][:use_vim_broker] == true
+        use_broker = ost.scanData['ems'][:use_vim_broker] == true
         miqVimHost[:address] = miqVimHost[:ipaddress] if miqVimHost[:address].nil?
         ems_display_text = "#{ems_connect_type}(#{use_broker ? 'via broker' : 'directly'}):#{miqVimHost[:address]}"
         $log.info "Connecting to [#{ems_display_text}] for VM:[#{@vmCfgFile}]"
         password_decrypt = MiqPassword.decrypt(miqVimHost[:password])
         if !$miqHostCfg || !$miqHostCfg.emsLocal
-          ($miqHostCfg ||= OpenStruct.new).vimHost = ost.scanData["ems"]['host']
+          ($miqHostCfg ||= OpenStruct.new).vimHost = ost.scanData['ems']['host']
           $miqHostCfg.vimHost[:use_vim_broker] = use_broker
         end
 

@@ -36,8 +36,8 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   def validate_delete_volume
     msg = validate_volume
     return {:available => msg[:available], :message => msg[:message]} unless msg[:available]
-    if with_provider_object(&:status) == "in-use"
-      return validation_failed("Create Volume", "Can't delete volume that is in use.")
+    if with_provider_object(&:status) == 'in-use'
+      return validation_failed('Create Volume', "Can't delete volume that is in use.")
     end
     {:available => true, :message => nil}
   end
@@ -66,13 +66,13 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   end
 
   def nova_connection_options
-    connection_options = {:service => "Compute"}
+    connection_options = {:service => 'Compute'}
     connection_options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
     connection_options
   end
 
   def self.cinder_connection_options(cloud_tenant = nil)
-    connection_options = {:service => "Volume"}
+    connection_options = {:service => 'Volume'}
     connection_options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
     connection_options
   end

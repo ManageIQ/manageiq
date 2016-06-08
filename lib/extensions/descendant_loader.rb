@@ -58,7 +58,7 @@ class DescendantLoader
     io.puts(MiqProcess.processInfo[:memory_usage] / 1024)
 
     l = ObjectSpace.each_object(Class).select { |c| c < ActiveRecord::Base }
-    io.puts l.map(&:name).sort.join("  ")
+    io.puts l.map(&:name).sort.join('  ')
     io.puts l.size
     io.puts
   end
@@ -199,7 +199,7 @@ class DescendantLoader
 
   module Mapper
     def descendants_paths
-      @descendants_paths ||= [Rails.root.join("app/models")]
+      @descendants_paths ||= [Rails.root.join('app/models')]
     end
 
     def class_inheritance_relationships

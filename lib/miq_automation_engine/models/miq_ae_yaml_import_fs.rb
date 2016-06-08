@@ -17,11 +17,11 @@ class MiqAeYamlImportFs < MiqAeYamlImport
   end
 
   def namespace_files(parent_folder)
-    Dir.glob(File.join(parent_folder, "*", NAMESPACE_YAML_FILENAME)).sort
+    Dir.glob(File.join(parent_folder, '*', NAMESPACE_YAML_FILENAME)).sort
   end
 
   def class_files(namespace_folder)
-    Dir.glob(File.join(namespace_folder, "*", CLASS_YAML_FILENAME)).sort
+    Dir.glob(File.join(namespace_folder, '*', CLASS_YAML_FILENAME)).sort
   end
 
   def load_class_schema(class_folder)

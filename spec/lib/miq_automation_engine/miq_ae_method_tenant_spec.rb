@@ -1,6 +1,6 @@
 include AutomationSpecHelper
 
-describe "MiqAeMethodWithTenat" do
+describe 'MiqAeMethodWithTenat' do
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:user2) { FactoryGirl.create(:user_with_group) }
 
@@ -17,8 +17,8 @@ describe "MiqAeMethodWithTenat" do
     MiqAeEngine.instantiate(url, user)
   end
 
-  context "automate method" do
-    it "ignore user in url" do
+  context 'automate method' do
+    it 'ignore user in url' do
       result = invoke_ae("/EVM/AUTOMATE/test1?User::user=#{user2.id}", user).root['result']
 
       expect(result[:tenant_id]).to eql(Tenant.root_tenant.id)
@@ -26,8 +26,8 @@ describe "MiqAeMethodWithTenat" do
       expect(result[:group_id]).to eql(user.current_group.id)
     end
 
-    it "use the passed in user object" do
-      result = invoke_ae("/EVM/AUTOMATE/test1", user).root['result']
+    it 'use the passed in user object' do
+      result = invoke_ae('/EVM/AUTOMATE/test1', user).root['result']
 
       expect(result[:tenant_id]).to eql(Tenant.root_tenant.id)
       expect(result[:user_id]).to eql(user.id)

@@ -1,8 +1,8 @@
 describe TreeBuilderStorageAdapters do
   context 'TreeBuilderStorageAdapters' do
     before do
-      role = MiqUserRole.find_by_name("EvmRole-operator")
-      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "SA Group")
+      role = MiqUserRole.find_by_name('EvmRole-operator')
+      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => 'SA Group')
       login_as FactoryGirl.create(:user, :userid => 'sa_wilma', :miq_groups => [@group])
       host = FactoryGirl.create(:host)
       class << host

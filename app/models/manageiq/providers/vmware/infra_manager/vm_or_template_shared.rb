@@ -6,9 +6,9 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared
   module ClassMethods
     def calculate_power_state(raw_power_state)
       case raw_power_state
-      when "poweredOn"  then "on"
-      when "poweredOff" then "off"
-      when "suspended"  then "suspended"
+      when 'poweredOn'  then 'on'
+      when 'poweredOff' then 'off'
+      when 'suspended'  then 'suspended'
       else                   super
       end
     end
@@ -16,13 +16,13 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared
 
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
-    api_type = connection.about["apiType"]
+    api_type = connection.about['apiType']
     mor =
       case api_type
-      when "VirtualCenter"
+      when 'VirtualCenter'
         # The ems_ref in the VMDB is from the vCenter perspective
         ems_ref
-      when "HostAgent"
+      when 'HostAgent'
         # Since we are going directly to the host, it acts like a VC
         # Thus, there is only a single host in it
         # It has a MOR for itself, which is different from the vCenter MOR

@@ -5,7 +5,7 @@ class EmsEvent < EventStream
   virtual_column :group_level, :type => :symbol
   virtual_column :group_name,  :type => :string
 
-  CLONE_TASK_COMPLETE = "CloneVM_Task_Complete"
+  CLONE_TASK_COMPLETE = 'CloneVM_Task_Complete'
   SOURCE_DEST_TASKS = [
     'CloneVM_Task',
     'MarkAsTemplate',
@@ -52,11 +52,11 @@ class EmsEvent < EventStream
   def self.add_queue(meth, ems_id, event)
     MiqQueue.put(
       :target_id   => ems_id,
-      :class_name  => "EmsEvent",
+      :class_name  => 'EmsEvent',
       :method_name => meth,
       :args        => [event],
-      :queue_name  => "ems",
-      :role        => "event"
+      :queue_name  => 'ems',
+      :role        => 'event'
     )
   end
 
@@ -94,13 +94,13 @@ class EmsEvent < EventStream
 
   def self.add(ems_id, event_hash)
     event_type = event_hash[:event_type]
-    raise MiqException::Error, _("event_type must be set in event") if event_type.nil?
+    raise MiqException::Error, _('event_type must be set in event') if event_type.nil?
 
     event_hash[:ems_id] = ems_id
     process_vm_in_event!(event_hash)
-    process_vm_in_event!(event_hash, :prefix => "dest_")
+    process_vm_in_event!(event_hash, :prefix => 'dest_')
     process_host_in_event!(event_hash)
-    process_host_in_event!(event_hash, :prefix => "dest_")
+    process_host_in_event!(event_hash, :prefix => 'dest_')
     process_availability_zone_in_event!(event_hash)
     process_cluster_in_event!(event_hash)
     process_container_entities_in_event!(event_hash)
@@ -225,8 +225,8 @@ class EmsEvent < EventStream
       event = self
     end
 
-    target_type = "src_vm_or_template"  if target_type == "src_vm"
-    target_type = "dest_vm_or_template" if target_type == "dest_vm"
+    target_type = 'src_vm_or_template'  if target_type == 'src_vm'
+    target_type = 'dest_vm_or_template' if target_type == 'dest_vm'
 
     event.send(target_type)
   end
@@ -238,7 +238,7 @@ class EmsEvent < EventStream
   private
 
   def self.create_event(event)
-    event.delete_if { |k,| k.to_s.ends_with?("_ems_ref") }
+    event.delete_if { |k,| k.to_s.ends_with?('_ems_ref') }
 
     new_event = EmsEvent.create(event) unless EmsEvent.exists?(
       :event_type => event[:event_type],
@@ -343,7 +343,7 @@ class EmsEvent < EventStream
   #
 
   def self.keep_ems_events
-    VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :keep_ems_events)
+    VMDB::Config.new('vmdb').config.fetch_path(:ems_events, :history, :keep_ems_events)
   end
 
   def self.purge_date
@@ -353,7 +353,7 @@ class EmsEvent < EventStream
   end
 
   def self.purge_window_size
-    VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :purge_window_size) || 1000
+    VMDB::Config.new('vmdb').config.fetch_path(:ems_events, :history, :purge_window_size) || 1000
   end
 
   def self.purge_timer
@@ -363,9 +363,9 @@ class EmsEvent < EventStream
   def self.purge_queue(ts)
     MiqQueue.put_or_update(
       :class_name  => name,
-      :method_name => "purge",
-      :role        => "event",
-      :queue_name  => "ems"
+      :method_name => 'purge',
+      :role        => 'event',
+      :queue_name  => 'ems'
     ) { |_msg, item| item.merge(:args => [ts]) }
   end
 

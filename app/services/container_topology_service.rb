@@ -29,14 +29,14 @@ class ContainerTopologyService < TopologyService
     if entity.kind_of?(ManageIQ::Providers::ContainerManager)
       entity.class.short_token
     elsif entity.kind_of?(ContainerGroup)
-      "Pod"
+      'Pod'
     else
       name = entity.class.name.demodulize
-      if name.start_with? "Container"
-        if name.length > "Container".length # container related entities such as ContainerService
-          name["Container".length..-1]
+      if name.start_with? 'Container'
+        if name.length > 'Container'.length # container related entities such as ContainerService
+          name['Container'.length..-1]
         else
-          "Container" # the container entity itself
+          'Container' # the container entity itself
         end
       else
         if entity.kind_of?(Vm)

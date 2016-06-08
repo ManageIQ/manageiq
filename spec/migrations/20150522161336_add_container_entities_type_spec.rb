@@ -6,24 +6,24 @@ describe AddContainerEntitiesType do
   let(:container_group_stub) { migration_stub(:ContainerGroup) }
 
   migration_context :up do
-    it "up" do
+    it 'up' do
       container_node = container_node_stub.create!
       container = container_stub.create!
       container_group = container_group_stub.create!
 
       migrate
 
-      expect(container_node.reload).to have_attributes(:type => "ContainerNodeKubernetes")
-      expect(container.reload).to have_attributes(:type => "ContainerKubernetes")
-      expect(container_group.reload).to have_attributes(:type => "ContainerGroupKubernetes")
+      expect(container_node.reload).to have_attributes(:type => 'ContainerNodeKubernetes')
+      expect(container.reload).to have_attributes(:type => 'ContainerKubernetes')
+      expect(container_group.reload).to have_attributes(:type => 'ContainerGroupKubernetes')
     end
   end
 
   migration_context :down do
-    it "down" do
-      container_node = container_node_stub.create!(:type => "ContainerNodeKubernetes")
-      container = container_stub.create!(:type => "ContainerKubernetes")
-      container_group = container_group_stub.create!(:type => "ContainerGroupKubernetes")
+    it 'down' do
+      container_node = container_node_stub.create!(:type => 'ContainerNodeKubernetes')
+      container = container_stub.create!(:type => 'ContainerKubernetes')
+      container_group = container_group_stub.create!(:type => 'ContainerGroupKubernetes')
 
       migrate
 

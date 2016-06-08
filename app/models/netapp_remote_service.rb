@@ -2,12 +2,12 @@ require 'net_app_manageability/types'
 
 class NetappRemoteService < StorageManager
   has_many  :top_managed_elements,
-            :class_name  => "MiqCimInstance",
-            :foreign_key => "agent_top_id"
+            :class_name  => 'MiqCimInstance',
+            :foreign_key => 'agent_top_id'
 
   has_many  :managed_elements,
-            :class_name  => "MiqCimInstance",
-            :foreign_key => "agent_id",
+            :class_name  => 'MiqCimInstance',
+            :foreign_key => 'agent_id',
             :dependent   => :destroy # here, but not for SMI-S
 
   DEFAULT_AGENT_TYPE = 'NRS'
@@ -15,7 +15,7 @@ class NetappRemoteService < StorageManager
 
   def self.initialize_class_for_client
     return if class_initialized_for_client?
-    require "miq_ontap_client"
+    require 'miq_ontap_client'
     include MiqOntapClient
     @class_initialized_for_client = true
   end
@@ -41,13 +41,13 @@ class NetappRemoteService < StorageManager
   def ontap_client
     return @ontapClient unless @ontapClient.nil?
     connect
-    @ontapClient || (raise _("NetappRemoteService: not connected."))
+    @ontapClient || (raise _('NetappRemoteService: not connected.'))
   end
 
   def nma_client
     return @namClient unless @namClient.nil?
     connect
-    @namClient || (raise _("NetappRemoteService: not connected."))
+    @namClient || (raise _('NetappRemoteService: not connected.'))
   end
 
   def self.refresh_inventory_by_subclass(ids, args = {})
@@ -88,7 +88,7 @@ class NetappRemoteService < StorageManager
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
         :zone        => z,
-        :queue_name  => "netapp_refresh",
+        :queue_name  => 'netapp_refresh',
         :class_name  => name,
         :method_name => 'update_ontap'
       ) do |msg, queue_options|
@@ -109,7 +109,7 @@ class NetappRemoteService < StorageManager
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
         :zone        => z,
-        :queue_name  => "storage_metrics_collector",
+        :queue_name  => 'storage_metrics_collector',
         :class_name  => name,
         :method_name => 'update_metrics'
       ) do |msg, queue_options|
@@ -130,7 +130,7 @@ class NetappRemoteService < StorageManager
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
         :zone        => z,
-        :queue_name  => "storage_metrics_collector",
+        :queue_name  => 'storage_metrics_collector',
         :class_name  => name,
         :method_name => 'rollup_hourly_metrics'
       ) do |msg, queue_options|
@@ -151,7 +151,7 @@ class NetappRemoteService < StorageManager
       _log.info "queueing requests to zone #{z} for [ #{ids.join(', ')} ]"
       MiqQueue.put_or_update(
         :zone          => z,
-        :queue_name    => "storage_metrics_collector",
+        :queue_name    => 'storage_metrics_collector',
         :class_name    => name,
         :method_name   => 'rollup_daily_metrics',
         :args_selector => ->(a) { a[1] == time_profile_id }
@@ -325,24 +325,24 @@ class NetappRemoteService < StorageManager
   #
 
   def self.find_controllers
-    CimComputerSystem.where(:class_name => "ONTAP_StorageSystem").to_a
+    CimComputerSystem.where(:class_name => 'ONTAP_StorageSystem').to_a
   end
 
   def self.aggregate_names(oss)
     MiqCimInstance.select(:id, :properites)
-      .where(:class_name => "ONTAP_ConcreteExtent", :top_managed_element_id => oss.id)
+      .where(:class_name => 'ONTAP_ConcreteExtent', :top_managed_element_id => oss.id)
       .collect { |oce| oce.property('name') }
   end
 
   def self.volume_names(oss)
     MiqCimInstance.select(:id, :properites)
-      .where(:class_name => "ONTAP_LogicalDisk", :top_managed_element_id => oss.id)
+      .where(:class_name => 'ONTAP_LogicalDisk', :top_managed_element_id => oss.id)
       .collect { |old| old.property('name') }
   end
 
   def self.remote_service_ips(oss)
     MiqCimInstance.select(:id, :properites)
-      .where(:class_name => "ONTAP_RemoteServiceAccessPoint", :top_managed_element_id => oss.id)
+      .where(:class_name => 'ONTAP_RemoteServiceAccessPoint', :top_managed_element_id => oss.id)
       .collect { |rsap| rsap.property('name').split(':').first }
   end
 
@@ -424,7 +424,7 @@ class NetappRemoteService < StorageManager
     smis_agent.request_smis_update
   end
 
-  def queue_volume_create(volName, aggrName, volSize, spaceReserve = "none")
+  def queue_volume_create(volName, aggrName, volSize, spaceReserve = 'none')
     cb = {:class_name => self.class.name, :instance_id => id, :method_name => :queue_volume_create_callback}
     MiqQueue.put(
       :class_name   => self.class.name,
@@ -437,7 +437,7 @@ class NetappRemoteService < StorageManager
     )
   end
 
-  def volume_create(volName, aggrName, volSize, spaceReserve = "none")
+  def volume_create(volName, aggrName, volSize, spaceReserve = 'none')
     #
     # The creation of the volume will result in the creation a qtree entry for its root.
     # If we want to base a VMware datastore on the volume's NFS share, the security style of
@@ -447,7 +447,7 @@ class NetappRemoteService < StorageManager
     # The security style is always set to the value of the 'wafl.default_security_style' option.
     # So we must ensure that this value is set to either 'unix' or 'mixed' before the volume is created.
     #
-    if options_get('wafl.default_security_style') == "ntfs"
+    if options_get('wafl.default_security_style') == 'ntfs'
       options_set('wafl.default_security_style', 'mixed')
     end
 
@@ -464,7 +464,7 @@ class NetappRemoteService < StorageManager
 
     rv = nma_client.nfs_exportfs_list_rules(:pathname, path)
     unless rv.kind_of?(NetAppManageability::NAMHash)
-      raise _("NetappRemoteService.nfs_add_root_hosts: No export rules found for path %{path}") % {:path => path}
+      raise _('NetappRemoteService.nfs_add_root_hosts: No export rules found for path %{path}') % {:path => path}
     end
 
     rules = rv.rules
@@ -525,7 +525,7 @@ class NetappRemoteService < StorageManager
   end
 
   def verify_credentials(auth_type = nil)
-    raise _("no credentials defined") if missing_credentials?(auth_type)
+    raise _('no credentials defined') if missing_credentials?(auth_type)
 
     begin
       volume_list_info
@@ -535,8 +535,8 @@ class NetappRemoteService < StorageManager
       raise $!.message
     rescue Exception
       _log.warn("#{$!.inspect}")
-      raise _("Unexpected response returned from %{table}, see log for details") %
-              {:table => ui_lookup(:table => "storage_managers")}
+      raise _('Unexpected response returned from %{table}, see log for details') %
+              {:table => ui_lookup(:table => 'storage_managers')}
     else
       true
     end

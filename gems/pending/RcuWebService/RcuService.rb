@@ -1,4 +1,4 @@
-require "handsoap"
+require 'handsoap'
 require 'RcuWebService/RcuTypes'
 
 class RcuService < Handsoap::Service
@@ -12,8 +12,8 @@ class RcuService < Handsoap::Service
   end
 
   def createClones(arg0)
-    response = invoke("n1:createClones") do |message|
-      message.add "arg0" do |i|
+    response = invoke('n1:createClones') do |message|
+      message.add 'arg0' do |i|
         marshalObj(i, arg0)
       end
     end
@@ -21,11 +21,11 @@ class RcuService < Handsoap::Service
   end
 
   def createDatastore(arg0, arg1)
-    response = invoke("n1:createDatastore") do |message|
-      message.add "arg0" do |i|
+    response = invoke('n1:createDatastore') do |message|
+      message.add 'arg0' do |i|
         marshalObj(i, arg0)
       end
-      message.add "arg1" do |i|
+      message.add 'arg1' do |i|
         marshalObj(i, arg1)
       end
     end
@@ -33,11 +33,11 @@ class RcuService < Handsoap::Service
   end
 
   def destroyDatastore(arg0, arg1)
-    response = invoke("n1:destroyDatastore") do |message|
-      message.add "arg0" do |i|
+    response = invoke('n1:destroyDatastore') do |message|
+      message.add 'arg0' do |i|
         marshalObj(i, arg0)
       end
-      message.add "arg1" do |i|
+      message.add 'arg1' do |i|
         marshalObj(i, arg1)
       end
     end
@@ -45,14 +45,14 @@ class RcuService < Handsoap::Service
   end
 
   def getMoref(arg0, arg1, arg2)
-    response = invoke("n1:getMoref") do |message|
-      message.add "arg0",   arg0 do |i|
-        i.set_attr "xsi:type", "xsd:string"
+    response = invoke('n1:getMoref') do |message|
+      message.add 'arg0',   arg0 do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
-      message.add "arg1",   arg1 do |i|
-        i.set_attr "xsi:type", "xsd:string"
+      message.add 'arg1',   arg1 do |i|
+        i.set_attr 'xsi:type', 'xsd:string'
       end
-      message.add "arg2" do |i|
+      message.add 'arg2' do |i|
         marshalObj(i, arg2)
       end
     end
@@ -60,9 +60,9 @@ class RcuService < Handsoap::Service
   end
 
   def getVmFiles(arg0, arg1)
-    response = invoke("n1:getVmFiles") do |message|
-      message.add "arg0", arg0
-      message.add "arg1" do |i|
+    response = invoke('n1:getVmFiles') do |message|
+      message.add 'arg0', arg0
+      message.add 'arg1' do |i|
         marshalObj(i, arg1)
       end
     end
@@ -70,9 +70,9 @@ class RcuService < Handsoap::Service
   end
 
   def getVms(arg0, arg1)
-    response = invoke("n1:getVms") do |message|
-      message.add "arg0", arg0 if arg0
-      message.add "arg1" do |i|
+    response = invoke('n1:getVms') do |message|
+      message.add 'arg0', arg0 if arg0
+      message.add 'arg1' do |i|
         marshalObj(i, arg1)
       end
     end
@@ -83,11 +83,11 @@ class RcuService < Handsoap::Service
   end
 
   def resizeDatastore(arg0, arg1)
-    response = invoke("n1:resizeDatastore") do |message|
-      message.add "arg0" do |i|
+    response = invoke('n1:resizeDatastore') do |message|
+      message.add 'arg0' do |i|
         marshalObj(i, arg0)
       end
-      message.add "arg1" do |i|
+      message.add 'arg1' do |i|
         marshalObj(i, arg1)
       end
     end
@@ -100,8 +100,8 @@ class RcuService < Handsoap::Service
     @ns = {'n1' => ns}
     on_create_document do |doc|
       doc.alias 'n1', ns
-      env = doc.find("Envelope")
-      env.set_attr "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance"
+      env = doc.find('Envelope')
+      env.set_attr 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance'
     end
   end
 
@@ -125,7 +125,7 @@ class RcuService < Handsoap::Service
         end
       end
     elsif obj.kind_of? RcuVal
-      node.set_attr "xsi:type", obj.xsiType
+      node.set_attr 'xsi:type', obj.xsiType
       node.set_value(obj)
     else
       node.set_value(obj)
@@ -140,8 +140,8 @@ class RcuService < Handsoap::Service
       return(ur)
     end
 
-    http_body = response.instance_variable_get("@http_body")
-    raise Handsoap::Fault.new("SNAuthFaultCode", "Authentication Failure", http_body)  if http_body.include?("This request requires HTTP authentication")
+    http_body = response.instance_variable_get('@http_body')
+    raise Handsoap::Fault.new('SNAuthFaultCode', 'Authentication Failure', http_body)  if http_body.include?('This request requires HTTP authentication')
     raise http_body
   end
 

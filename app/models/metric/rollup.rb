@@ -1,9 +1,9 @@
 module Metric::Rollup
-  ROLLUP_COLS  = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float || c[0, 7] == "derived" }.compact +
+  ROLLUP_COLS  = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float || c[0, 7] == 'derived' }.compact +
                  [:stat_container_group_create_rate,
                   :stat_container_group_delete_rate,
                   :stat_container_image_registration_rate]
-  STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
+  STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?('derived_storage_') }.compact
 
   NON_STORAGE_ROLLUP_COLS = (ROLLUP_COLS - STORAGE_COLS)
 
@@ -154,7 +154,7 @@ module Metric::Rollup
 
   TIMEOUT_PROCESS = 30.minutes.to_i
   DERIVED_COLS_EXCLUDED_CLASSES = ['MiqRegion', 'MiqEnterprise']
-  TAG_SEP = "|"
+  TAG_SEP = '|'
 
   def self.rollup_realtime(obj, rt_ts, _interval_name, _time_profile, new_perf, orig_perf)
     # Roll up realtime metrics from child objects
@@ -238,7 +238,7 @@ module Metric::Rollup
     result = {}
     counts = {}
 
-    agg_cols = interval_name == "realtime" ? const_get("#{obj.class.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{obj.class.base_class}_#{assoc}".to_sym]
+    agg_cols = interval_name == 'realtime' ? const_get("#{obj.class.base_class.name.underscore.upcase}_REALTIME_COLS") : AGGREGATE_COLS["#{obj.class.base_class}_#{assoc}".to_sym]
     agg_cols.each do |c|
       # Initialize aggregation col values and counts to zero before starting
       counts[c] = 0
@@ -324,7 +324,7 @@ module Metric::Rollup
 
   def self.rollup_tags(c, result, value)
     return if value.blank?
-    result[c] ||= ""
+    result[c] ||= ''
     result[c] = result[c].split(TAG_SEP).concat(value.split(TAG_SEP)).uniq.join(TAG_SEP)
   end
 
@@ -344,15 +344,15 @@ module Metric::Rollup
   def self.perf_rollup_gap_queue(start_time, end_time, interval_name, time_profile_id = nil)
     MiqQueue.put_unless_exists(
       :class_name  => name,
-      :method_name => "perf_rollup_gap",
+      :method_name => 'perf_rollup_gap',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :args        => [start_time, end_time, interval_name, time_profile_id]
     )
   end
 
   def self.find_distinct_resources
-    metrics = Metric.in_my_region.select("DISTINCT resource_type, resource_id")
-    metric_rollups = MetricRollup.in_my_region.select("DISTINCT resource_type, resource_id")
+    metrics = Metric.in_my_region.select('DISTINCT resource_type, resource_id')
+    metric_rollups = MetricRollup.in_my_region.select('DISTINCT resource_type, resource_id')
 
     recs = (metrics + metric_rollups).group_by(&:resource_type)
     recs.keys.each { |k| recs[k] = recs[k].collect(&:resource_id).uniq }

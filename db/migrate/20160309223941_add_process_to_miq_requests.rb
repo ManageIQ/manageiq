@@ -5,7 +5,7 @@ class AddProcessToMiqRequests < ActiveRecord::Migration[5.0]
 
   def up
     add_column :miq_requests, :process, :boolean
-    say_with_time("Update process attribute") do
+    say_with_time('Update process attribute') do
       MiqRequest.update_all(:process => true)
     end
   end

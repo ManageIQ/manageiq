@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision.class/__methods__/preprovision').to_s
 require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
@@ -11,13 +11,13 @@ describe AnsibleTowerPreprovision do
   let(:root_object) { MiqAeMockObject.new('service_template_provision_task' => svc_task) }
   let(:ae_service) { MiqAeMockService.new(root_object) }
 
-  it "examines request configuration" do
+  it 'examines request configuration' do
     expect_any_instance_of(ServiceAnsibleTower).to receive(:configuration_manager).and_return(ansible_tower_manager)
     expect_any_instance_of(ServiceAnsibleTower).to receive(:job_template).at_least(1).times.and_return(job_template)
     described_class.new(ae_service).main
   end
 
-  it "modifies job options" do
+  it 'modifies job options' do
     test = described_class.new(ae_service)
     test.send(:modify_job_options, test.service)
     service_ansible_tower.reload

@@ -35,7 +35,7 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
     super
 
     # Mark all instances no longer found as unknown
-    self.raw_power_state = "unknown"
+    self.raw_power_state = 'unknown'
     save
   end
 
@@ -54,9 +54,9 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
     when /stopped/, /stopping/
       "suspended"
     when /dealloc/
-      "off"
+      'off'
     else
-      "unknown"
+      'unknown'
     end
   end
 end

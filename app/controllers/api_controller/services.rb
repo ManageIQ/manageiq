@@ -7,7 +7,7 @@ class ApiController
         svc = resource_search(id, type, klass)
         api_log_info("Reconfiguring #{service_ident(svc)}")
 
-        result = validate_service_for_action(svc, "reconfigure")
+        result = validate_service_for_action(svc, 'reconfigure')
         result = invoke_reconfigure_dialog(type, svc, data) if result[:success]
         result
       end
@@ -36,13 +36,13 @@ class ApiController
       wf = ResourceActionWorkflow.new({}, @auth_user_obj, ra, :target => svc)
       data.each { |key, value| wf.set_value(key, value) } if data.present?
       wf_result = wf.submit_request
-      raise StandardError, Array(wf_result[:errors]).join(", ") if wf_result[:errors].present?
+      raise StandardError, Array(wf_result[:errors]).join(', ') if wf_result[:errors].present?
       wf_result
     end
 
     def validate_service_for_action(svc, action)
       valid = svc.send("validate_#{action}")
-      msg = valid ? "" : "Action #{action} is not available for #{service_ident(svc)}"
+      msg = valid ? '' : "Action #{action} is not available for #{service_ident(svc)}"
       action_result(valid, msg)
     end
   end

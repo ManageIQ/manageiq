@@ -63,7 +63,7 @@ class OpenscapResult < ApplicationRecord
   end
 
   def with_openscap_objects(raw)
-    raise "no block given" unless block_given?
+    raise 'no block given' unless block_given?
     with_openscap_arf(raw) do |arf|
       begin
         test_results = arf.test_result

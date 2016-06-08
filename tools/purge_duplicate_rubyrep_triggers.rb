@@ -19,7 +19,7 @@ SQL
 def sql_array_to_ruby(sql_arr)
   # the array is returned like: "{value1,value2,value3}"
   # so we cut out the brackets and split on commas
-  sql_arr[1..-2].split(",")
+  sql_arr[1..-2].split(',')
 end
 
 def drop_triggers(conn, table, triggers)
@@ -32,35 +32,35 @@ def drop_triggers(conn, table, triggers)
 end
 
 def drop_pending_changes(conn, trigger)
-  table = trigger.sub(/rr\d+_/, "")
+  table = trigger.sub(/rr\d+_/, '')
   puts "Dropping pending changes for table #{table}"
   conn.async_exec("DELETE FROM #{CHANGES_TABLE} WHERE CHANGE_TABLE='#{table}'")
 end
 
 begin
-  conn = PG.connect(:dbname => "vmdb_production")
+  conn = PG.connect(:dbname => 'vmdb_production')
 rescue PG::Error => e
   puts e.message
-  puts "Please run this script on the appliance where the database is running"
+  puts 'Please run this script on the appliance where the database is running'
   exit
 end
 
-CHANGES_TABLE = conn.async_exec("SELECT relname FROM pg_class WHERE relname LIKE 'rr%_pending_changes'").first["relname"]
+CHANGES_TABLE = conn.async_exec("SELECT relname FROM pg_class WHERE relname LIKE 'rr%_pending_changes'").first['relname']
 
 conn.async_exec(TRIGGER_QUERY).each do |tt|
-  triggers = sql_array_to_ruby(tt["triggers"])
-  table = tt["relname"]
+  triggers = sql_array_to_ruby(tt['triggers'])
+  table = tt['relname']
 
   to_drop = triggers.reject { |t| t =~ /rr\d+_#{table}/ }
   next if to_drop.empty?
 
   puts "This operation will drop the following trigger(s) on #{table}:"
-  puts to_drop.join(", ").to_s
-  puts "Do you want to continue? (Y/N)"
+  puts to_drop.join(', ').to_s
+  puts 'Do you want to continue? (Y/N)'
 
   until %w(y n).include?(answer = gets.to_s.strip.downcase)
-    puts "Please enter Y to continue or N to skip these triggers"
+    puts 'Please enter Y to continue or N to skip these triggers'
   end
 
-  drop_triggers(conn, table, to_drop) if answer == "y"
+  drop_triggers(conn, table, to_drop) if answer == 'y'
 end

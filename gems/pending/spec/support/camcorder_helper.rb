@@ -14,7 +14,7 @@ module Camcorder
   end
 
   def self.use_recording(name)
-    raise "no block given" unless block_given?
+    raise 'no block given' unless block_given?
     self.default_recorder = recorder_for(name)
     default_recorder.transaction do
       begin

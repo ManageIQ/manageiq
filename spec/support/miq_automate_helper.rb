@@ -11,9 +11,9 @@ module MiqAutomateHelper
     @aei1 = FactoryGirl.create(:miq_ae_instance, :name     => identifiers[:instance],
                                                  :class_id => @aec1.id)
     @aem1 = FactoryGirl.create(:miq_ae_method, :class_id => @aec1.id,
-                               :name => identifiers[:method], :scope => "instance",
-                               :language => "ruby", :data => "puts 1",
-                               :location => "inline") if identifiers[:method].present?
+                               :name => identifiers[:method], :scope => 'instance',
+                               :language => 'ruby', :data => 'puts 1',
+                               :location => 'inline') if identifiers[:method].present?
     @aei1.ae_values << build_values(field_array, @aec1.ae_fields)
   end
 

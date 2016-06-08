@@ -6,15 +6,15 @@ describe ChargebackContainerProject do
     EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_openshift)
 
-    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => @ems)
-    @live_group = FactoryGirl.create(:container_group, :name => "live group", :ext_management_system => @ems)
+    @project = FactoryGirl.create(:container_project, :name => 'my project', :ext_management_system => @ems)
+    @live_group = FactoryGirl.create(:container_group, :name => 'live group', :ext_management_system => @ems)
     @disconnected_group = FactoryGirl.create(:container_group,
-                                             :name                  => "disconnected group",
+                                             :name                  => 'disconnected group',
                                              :ext_management_system => @ems)
     @project.container_groups << @live_group
     @project.container_groups << @disconnected_group
 
-    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "compute")
+    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => 'compute')
     temp = {:cb_rate => @cbr, :object => @ems}
     ChargebackRate.set_assignments(:compute, [temp])
 
@@ -28,25 +28,25 @@ describe ChargebackContainerProject do
 
     @options = {:interval_size       => 1,
                 :end_interval_offset => 0,
-                :tag                 => "/managed/environment/prod",
-                :ext_options         => {:tz => "Pacific Time (US & Canada)"},
+                :tag                 => '/managed/environment/prod',
+                :ext_options         => {:tz => 'Pacific Time (US & Canada)'},
                 :entity_id           => @project.id
     }
 
     @disconnected_group.disconnect_inv
 
-    Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
+    Timecop.travel(Time.parse('2012-09-01 00:00:00 UTC'))
   end
 
   after do
     Timecop.return
   end
 
-  context "Daily" do
+  context 'Daily' do
     before do
-      @options[:interval] = "daily"
+      @options[:interval] = 'daily'
 
-      ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
+      ['2012-08-31T07:00:00Z', '2012-08-31T08:00:00Z', '2012-08-31T09:00:00Z', '2012-08-31T10:00:00Z'].each do |t|
         @live_group.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => t,
                                                          :cpu_usage_rate_average   => @cpu_usage_rate,
@@ -55,7 +55,7 @@ describe ChargebackContainerProject do
                                                          :derived_memory_used      => @memory_used,
                                                          :net_usage_rate_average   => @net_usage_rate,
                                                          :parent_ems_id            => @ems.id,
-                                                         :tag_names                => "",
+                                                         :tag_names                => '',
                                                          :resource_name            => @live_group.name)
 
         @disconnected_group.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
@@ -66,7 +66,7 @@ describe ChargebackContainerProject do
                                                                  :derived_memory_used      => @memory_used,
                                                                  :net_usage_rate_average   => @net_usage_rate,
                                                                  :parent_ems_id            => @ems.id,
-                                                                 :tag_names                => "",
+                                                                 :tag_names                => '',
                                                                  :resource_name            => @live_group.name)
       end
       @metric_size = @live_group.metric_rollups.size + @disconnected_group.metric_rollups.size
@@ -74,10 +74,10 @@ describe ChargebackContainerProject do
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
 
-    it "cpu" do
+    it 'cpu' do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
                                :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
+                               :per_time           => 'hourly')
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
@@ -90,10 +90,10 @@ describe ChargebackContainerProject do
       expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
     end
 
-    it "memory" do
+    it 'memory' do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_memory_used,
                                :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
+                               :per_time           => 'hourly')
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
@@ -107,10 +107,10 @@ describe ChargebackContainerProject do
       expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
     end
 
-    it "net io" do
+    it 'net io' do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_net_io_used,
                                :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
+                               :per_time           => 'hourly')
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
@@ -125,9 +125,9 @@ describe ChargebackContainerProject do
     end
   end
 
-  context "Monthly" do
+  context 'Monthly' do
     before do
-      @options[:interval] = "monthly"
+      @options[:interval] = 'monthly'
 
       tz = Metric::Helper.get_time_zone(@options[:ext_options])
       ts = Time.now.in_time_zone(tz)
@@ -143,7 +143,7 @@ describe ChargebackContainerProject do
                                                          :derived_memory_used      => @memory_used,
                                                          :net_usage_rate_average   => @net_usage_rate,
                                                          :parent_ems_id            => @ems.id,
-                                                         :tag_names                => "",
+                                                         :tag_names                => '',
                                                          :resource_name            => @live_group.name)
 
         @disconnected_group.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
@@ -154,7 +154,7 @@ describe ChargebackContainerProject do
                                                                  :derived_memory_used      => @memory_used,
                                                                  :net_usage_rate_average   => @net_usage_rate,
                                                                  :parent_ems_id            => @ems.id,
-                                                                 :tag_names                => "",
+                                                                 :tag_names                => '',
                                                                  :resource_name            => @live_group.name)
         time += 12.hours
       end
@@ -163,10 +163,10 @@ describe ChargebackContainerProject do
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
 
-    it "cpu" do
+    it 'cpu' do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
                                :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
+                               :per_time           => 'hourly')
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
@@ -179,10 +179,10 @@ describe ChargebackContainerProject do
       expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
     end
 
-    it "memory" do
+    it 'memory' do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_memory_used,
                                :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
+                               :per_time           => 'hourly')
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,
@@ -195,10 +195,10 @@ describe ChargebackContainerProject do
       expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
     end
 
-    it "net io" do
+    it 'net io' do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_net_io_used,
                                :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
+                               :per_time           => 'hourly')
       cbt = FactoryGirl.create(:chargeback_tier,
                                :chargeback_rate_detail_id => cbrd.id,
                                :start                     => 0,

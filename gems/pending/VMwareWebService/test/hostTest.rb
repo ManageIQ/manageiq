@@ -17,7 +17,7 @@ $vim_log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 hMor = nil
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -31,11 +31,11 @@ begin
 
   miqHost = vim.getVimHost(TARGET_HOST)
 
-  puts "*** systemInfo"
+  puts '*** systemInfo'
   vim.dumpObj(miqHost.hh['hardware']['systemInfo'])
   exit
 
-  puts "*** quickStats"
+  puts '*** quickStats'
   qs = miqHost.quickStats
   vim.dumpObj(qs)
   exit
@@ -46,10 +46,10 @@ begin
 
   puts "Host name: #{miqHost.name}"
   puts
-  puts "**** fileSystemVolume:"
+  puts '**** fileSystemVolume:'
   vim.dumpObj(miqHost.fileSystemVolume)
   puts
-  puts "**** storageDevice:"
+  puts '**** storageDevice:'
   vim.dumpObj(miqHost.storageDevice)
 rescue => err
   puts err.to_s

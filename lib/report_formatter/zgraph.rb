@@ -40,7 +40,7 @@ module ReportFormatter
 
       build_html_title
       mri.chart = Ziya::Charts.const_get(graph_type).new(ZiyaCharting.xmlswf_license)
-      ztheme = options.theme.nil? ? "miq" : options.theme.downcase
+      ztheme = options.theme.nil? ? 'miq' : options.theme.downcase
       mri.chart.add(:theme, ztheme)
       mri.chart.add(:user_data, :title, mri.title)
       mri.chart.add(:user_data, :show_title, options.show_title)
@@ -49,7 +49,7 @@ module ReportFormatter
 
     # write message into legend box and positions chart box off of the actual
     # graph box so it is hidden
-    def no_records_found_chart(topic = "No records found for this chart")
+    def no_records_found_chart(topic = 'No records found for this chart')
       mri.chart.options[:graph_options].update(:chartx => 2000, :legendsize => 14)
       add_axis_category_text([''])
       add_series(topic, [{:value => 0}])

@@ -1,12 +1,12 @@
 module Manageiq
   class BlackBox
-    METADATA_CONFIG_FILE = "/metadata/xmldata.yml"
+    METADATA_CONFIG_FILE = '/metadata/xmldata.yml'
 
     def saveXmlData(xml, filename, options = {})
       filename.downcase!
       options = {:saveDiff => true}.merge(options)
 
-      xml.root.add_attribute("original_filename", filename)
+      xml.root.add_attribute('original_filename', filename)
       scanTime = xml.root.attributes['created_on']
       scanTime ||= xml.root.attributes[:created_on]
       scanTime = scanTime.to_s
@@ -43,11 +43,11 @@ module Manageiq
       validate_from_time(ost)
       ret = OpenStruct.new(:items_selected => 0, :items_total => 0)
 
-      ret.xml = MiqXml.createDoc("<vmmetadata/>")
-      ret.xml.root.add_attributes("original_filename" => filename, "from_time" => ost.from_time.to_s, "taskid" => ost.taskid)
-      if filename == "vmevents"
+      ret.xml = MiqXml.createDoc('<vmmetadata/>')
+      ret.xml.root.add_attributes('original_filename' => filename, 'from_time' => ost.from_time.to_s, 'taskid' => ost.taskid)
+      if filename == 'vmevents'
         # Change the name of the root element so the data does not go through state data processing.
-        ret.xml.root.name = "vmevents"
+        ret.xml.root.name = 'vmevents'
         # ret.xml.root << @mk.view("events").find_range_by_hash(ost.from_time.nil? ? nil : {:timestamp=>ost.from_time}).to_xml.root
       else
         @xmlData.each do |x|
@@ -70,18 +70,18 @@ module Manageiq
             xml_type = getXmlType(xmlNode)
 
             # If we have a "from_time" we are not sending full scans
-            next if ost.from_time && xml_type == "full"
+            next if ost.from_time && xml_type == 'full'
 
             # Create a new "item" element for the xml and record the scan type
-            e = ret.xml.root.add_element("item", {"scanType" => xml_type})
+            e = ret.xml.root.add_element('item', {'scanType' => xml_type})
             e << xmlNode
             # Keep count of the number of items we add
             ret.items_selected += 1
           end
         end
       end
-      ret.xml.root.add_attributes("items_selected" => ret.items_selected, "items_total" => ret.items_total,
-                  "last_scan" => ret.last_scan, "last_diff_scan" => ret.last_diff_scan)
+      ret.xml.root.add_attributes('items_selected' => ret.items_selected, 'items_total' => ret.items_total,
+                  'last_scan' => ret.last_scan, 'last_diff_scan' => ret.last_diff_scan)
       ret
     end
 
@@ -92,7 +92,7 @@ module Manageiq
       if xml.root.attributes['created_on'] > xml_prev.root.attributes['created_on']
         xml.extendXmlDiff
         delta = xml.xmlDiff(xml_prev)
-        delta.root.add_attribute("original_filename", filename)
+        delta.root.add_attribute('original_filename', filename)
         path = getXmlFileName(filename, xml_prev.root.attributes['created_on'])
         writeData(path, delta.to_s)
       end
@@ -150,7 +150,7 @@ module Manageiq
       return nil if xml.nil?
 
       type = getXmlType(xml)
-      return nil if type == "diff"
+      return nil if type == 'diff'
       xml
     end
 
@@ -163,18 +163,18 @@ module Manageiq
 
     def getXmlFileName(filename, time)
       timestr = time.to_s
-      File.join("/metadata", "#{timestr[0..7]}.#{timestr[8..11]}", filename + ".xml")
+      File.join('/metadata', "#{timestr[0..7]}.#{timestr[8..11]}", filename + '.xml')
     end
 
     def getXmlType(xml)
-      return "diff" if xml.root.name.downcase == "xmldiff"
-      "full"
+      return 'diff' if xml.root.name.downcase == 'xmldiff'
+      'full'
     end
 
     def validate_from_time(ost)
       # Delete the "from_time" field
       # TODO: do we still need to add from_time in the first place?
-      ost.delete_field("from_time") if ost.from_time
+      ost.delete_field('from_time') if ost.from_time
     end
   end
 end

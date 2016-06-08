@@ -6,7 +6,7 @@ class MiqReportResult < ApplicationRecord
   belongs_to :miq_task
   has_one    :binary_blob, :as => :resource, :dependent => :destroy
   has_many   :miq_report_result_details, :dependent => :delete_all
-  has_many   :html_details, -> { where "data_type = 'html'" }, :class_name => "MiqReportResultDetail", :foreign_key => "miq_report_result_id"
+  has_many   :html_details, -> { where "data_type = 'html'" }, :class_name => 'MiqReportResultDetail', :foreign_key => 'miq_report_result_id'
 
   serialize :report
 
@@ -14,10 +14,10 @@ class MiqReportResult < ApplicationRecord
   virtual_column :status,                :type => :string, :uses => :miq_task
   virtual_column :status_message,        :type => :string, :uses => :miq_task
 
-  virtual_has_one :result_set,           :class_name => "Hash"
+  virtual_has_one :result_set,           :class_name => 'Hash'
 
   before_save do
-    user_info = userid.to_s.split("|")
+    user_info = userid.to_s.split('|')
     if user_info.length == 1
       user = User.find_by_userid(user_info.first)
       self.miq_group_id ||= user.current_group_id unless user.nil?
@@ -31,11 +31,11 @@ class MiqReportResult < ApplicationRecord
   end
 
   def status
-    miq_task.nil? ? "Unknown" : miq_task.human_status
+    miq_task.nil? ? 'Unknown' : miq_task.human_status
   end
 
   def status_message
-    miq_task.nil? ? _("Report results are no longer available") : miq_task.message
+    miq_task.nil? ? _('Report results are no longer available') : miq_task.message
   end
 
   def miq_group_description
@@ -52,12 +52,12 @@ class MiqReportResult < ApplicationRecord
   end
 
   def report_results=(value)
-    build_binary_blob(:name => "report_results")
-    binary_blob.store_data("YAML", value.kind_of?(MiqReport) ? value.to_hash : value)
+    build_binary_blob(:name => 'report_results')
+    binary_blob.store_data('YAML', value.kind_of?(MiqReport) ? value.to_hash : value)
   end
 
   def report_html=(html)
-    results = html.collect { |row| {:data_type => "html", :data => row} }
+    results = html.collect { |row| {:data_type => 'html', :data => row} }
     miq_report_result_details.clear
     miq_report_result_details.build(results)
   end
@@ -71,11 +71,11 @@ class MiqReportResult < ApplicationRecord
     end
     update_attribute(:last_accessed_on, Time.now.utc)
     purge_for_user
-    html_details.apply_legacy_finder_options(options.merge(:order => "id asc")).collect(&:data)
+    html_details.apply_legacy_finder_options(options.merge(:order => 'id asc')).collect(&:data)
   end
 
   def save_for_user(userid)
-    update_attributes(:userid => userid, :report_source => "Saved by user")
+    update_attributes(:userid => userid, :report_source => 'Saved by user')
   end
 
   def report
@@ -103,9 +103,9 @@ class MiqReportResult < ApplicationRecord
   end
 
   def self.atStartup
-    _log.info("Purging adhoc report results...")
+    _log.info('Purging adhoc report results...')
     purge_for_user
-    _log.info("Purging adhoc report results... complete")
+    _log.info('Purging adhoc report results... complete')
   end
 
   #########################################################################################################
@@ -122,21 +122,21 @@ class MiqReportResult < ApplicationRecord
   #    userid
   #########################################################################################################
   def self.parse_userid(userid)
-    return userid unless userid.to_s.include?("|")
-    parts = userid.to_s.split("|")
+    return userid unless userid.to_s.include?('|')
+    parts = userid.to_s.split('|')
     return parts[0] if (parts.last == 'adhoc')
     return parts[1] if (parts.last == 'schedule')
-    raise _("Cannot parse userid %{user_id}") % {:user_id => userid.inspect}
+    raise _('Cannot parse userid %{user_id}') % {:user_id => userid.inspect}
   end
 
   def self.purge_for_user(options = {})
-    options[:userid] ||= "%" # This will purge for all users
+    options[:userid] ||= '%' # This will purge for all users
     cond = ["userid like ? and userid NOT like 'widget%' and last_accessed_on < ?", "#{options[:userid]}|%", 1.day.ago.utc]
     where(cond).delete_all
   end
 
   def purge_for_user
-    user = userid.split("|").first unless userid.nil?
+    user = userid.split('|').first unless userid.nil?
     self.class.purge_for_user(:userid => user) unless user.nil?
   end
 
@@ -145,7 +145,7 @@ class MiqReportResult < ApplicationRecord
     html_string = generate_pdf_header(
       :title     => name.gsub(/'/, '\\\\\&'), # Escape single quotes
       :page_size => report.page_size,
-      :run_date  => format_timezone(last_run_on, user_timezone, "gtl")
+      :run_date  => format_timezone(last_run_on, user_timezone, 'gtl')
     )
 
     html_string << report_build_html_table(report_results, html_rows.join)  # Build the html report table using all html rows
@@ -155,18 +155,18 @@ class MiqReportResult < ApplicationRecord
 
   # Generate the header html section for pdfs
   def generate_pdf_header(options = {})
-    page_size = options[:page_size] || "a4"
-    title     = options[:title] || _("<No Title>")
-    run_date  = options[:run_date] || "<N/A>"
+    page_size = options[:page_size] || 'a4'
+    title     = options[:title] || _('<No Title>')
+    run_date  = options[:run_date] || '<N/A>'
 
-    hdr  = "<head><style>"
+    hdr  = '<head><style>'
     hdr << "@page{size: #{page_size} landscape}"
-    hdr << "@page{margin: 40pt 30pt 40pt 30pt}"
+    hdr << '@page{margin: 40pt 30pt 40pt 30pt}'
     hdr << "@page{@top{content: '#{title}';color:blue}}"
     hdr << "@page{@bottom-left{content: url('#{ActionController::Base.helpers.image_path('layout/reportbanner_small1.png')}')}}"
     hdr << "@page{@bottom-center{font-size: 75%;content: 'Report date: #{run_date}'}}"
     hdr << "@page{@bottom-right{font-size: 75%;content: 'Page ' counter(page) ' of ' counter(pages)}}"
-    hdr << "</style></head>"
+    hdr << '</style></head>'
   end
 
   def async_generate_result(result_type, options = {})
@@ -177,22 +177,22 @@ class MiqReportResult < ApplicationRecord
     # }
 
     unless [:csv, :txt, :pdf].include?(result_type.to_sym)
-      raise _("Result type %{result_type} not supported") % {:result_type => result_type}
+      raise _('Result type %{result_type} not supported') % {:result_type => result_type}
     end
-    raise _("A valid userid is required") if options[:userid].nil?
+    raise _('A valid userid is required') if options[:userid].nil?
 
     _log.info("Adding generate report result [#{result_type}] task to the message queue...")
     task = MiqTask.new(:name => "Generate Report result [#{result_type}]: '#{report.name}'", :userid => options[:userid])
-    task.update_status("Queued", "Ok", "Task has been queued")
+    task.update_status('Queued', 'Ok', 'Task has been queued')
 
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = VMDB::Config.new('vmdb').config[:product][:report_sync]
 
     MiqQueue.put(
-      :queue_name  => "generic",
-      :role        => "reporting",
+      :queue_name  => 'generic',
+      :role        => 'reporting',
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "_async_generate_result",
+      :method_name => '_async_generate_result',
       :msg_timeout => report.queue_timeout,
       :args        => [task.id, result_type.to_sym, options],
       :priority    => MiqQueue::HIGH_PRIORITY
@@ -200,7 +200,7 @@ class MiqReportResult < ApplicationRecord
     _async_generate_result(task.id, result_type.to_sym, options) if sync
 
     AuditEvent.success(
-      :event        => "async_generate_result",
+      :event        => 'async_generate_result',
       :target_class => self.class.base_class.name,
       :target_id    => id,
       :userid       => options[:userid],
@@ -214,7 +214,7 @@ class MiqReportResult < ApplicationRecord
 
   def _async_generate_result(taskid, result_type, options = {})
     task = MiqTask.find_by_id(taskid)
-    task.update_status("Active", "Ok", "Generating report result [#{result_type}]") if task
+    task.update_status('Active', 'Ok', "Generating report result [#{result_type}]") if task
 
     user = options[:user] || User.find_by_userid(options[:userid])
     raise _("Unable to find user with userid 'options[:userid]'") if user.nil?
@@ -240,7 +240,7 @@ class MiqReportResult < ApplicationRecord
         when :pdf then to_pdf
         when :txt then rpt.to_text
         else
-          raise _("Result type %{result_type} not supported") % {:result_type => result_type}
+          raise _('Result type %{result_type} not supported') % {:result_type => result_type}
         end
       end
 
@@ -248,7 +248,7 @@ class MiqReportResult < ApplicationRecord
       task.miq_report_result = new_res
 
       task.save
-      task.update_status("Finished", "Ok", "Generate Report result [#{result_type}]")
+      task.update_status('Finished', 'Ok', "Generate Report result [#{result_type}]")
     rescue Exception => err
       _log.log_backtrace(err)
       task.error(err.message)
@@ -273,7 +273,7 @@ class MiqReportResult < ApplicationRecord
     }
 
     _log.info("Creating report results with hash: [#{attrs.inspect}]")
-    res = MiqReportResult.find_by_userid(options[:userid]) if options[:userid].include?("|") # replace results if adhoc (<userid>|<session_id|<mode>) user report
+    res = MiqReportResult.find_by_userid(options[:userid]) if options[:userid].include?('|') # replace results if adhoc (<userid>|<session_id|<mode>) user report
     res = MiqReportResult.new if res.nil?
     res.attributes = attrs
 
@@ -287,7 +287,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def self.counts_by_userid
-    where("userid NOT LIKE 'widget%'").select("userid, COUNT(id) as count").group("userid")
+    where("userid NOT LIKE 'widget%'").select('userid, COUNT(id) as count').group('userid')
       .collect { |rr| {:userid => rr.userid, :count => rr.count.to_i} }
   end
 
@@ -300,15 +300,15 @@ class MiqReportResult < ApplicationRecord
     _log.info("Queuing deletion of report results for the following user ids: #{userids.inspect}")
     MiqQueue.put(
       :class_name  => name,
-      :method_name => "destroy_all",
+      :method_name => 'destroy_all',
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :args        => [["userid IN (?)", userids]],
+      :args        => [['userid IN (?)', userids]],
       :zone        => MiqServer.my_zone
     )
   end
 
   def self.auto_generated
-    where.not(:report_source => "Generated by user")
+    where.not(:report_source => 'Generated by user')
   end
 
   def self.with_current_user_groups_and_report(report_id = nil)
@@ -340,7 +340,7 @@ class MiqReportResult < ApplicationRecord
   private
 
   def user_timezone
-    user = userid.include?("|") ? nil : User.find_by_userid(userid)
+    user = userid.include?('|') ? nil : User.find_by_userid(userid)
     user ? user.get_timezone : MiqServer.my_server.server_timezone
   end
 end

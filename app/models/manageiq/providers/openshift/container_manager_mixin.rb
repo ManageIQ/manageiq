@@ -27,7 +27,7 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
     end
 
     def raw_connect(hostname, port, options)
-      options[:service] ||= "openshift"
+      options[:service] ||= 'openshift'
       send("#{options[:service]}_connect", hostname, port, options)
     end
 

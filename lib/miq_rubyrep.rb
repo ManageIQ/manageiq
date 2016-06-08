@@ -2,9 +2,9 @@ class MiqRubyrep
   def self.filters
     if @filters.nil?
       @filters = []
-      Dir.glob(File.join(File.dirname(__FILE__), "rubyrep_filters", "*.rb")) do |f|
-        filter = File.basename(f, ".*")
-        require File.join("rubyrep_filters", filter)
+      Dir.glob(File.join(File.dirname(__FILE__), 'rubyrep_filters', '*.rb')) do |f|
+        filter = File.basename(f, '.*')
+        require File.join('rubyrep_filters', filter)
         @filters << [filter.underscore[0..-8], filter.camelize.constantize]
       end
     end
@@ -15,9 +15,9 @@ class MiqRubyrep
     db_conf = Rails.configuration.database_configuration[Rails.env].symbolize_keys
 
     rp_conf = MiqReplicationWorker.worker_settings[:replication]
-    raise "Replication configuration missing" if rp_conf.blank?
+    raise 'Replication configuration missing' if rp_conf.blank?
     if db_conf.slice(:host, :port, :database) == rp_conf.slice(:host, :port, :database)
-      raise "Replication configuration source must not point to destination"
+      raise 'Replication configuration source must not point to destination'
     end
 
     # Local master
@@ -53,13 +53,13 @@ class MiqRubyrep
     config.options[:id_range]                      = ApplicationRecord.rails_sequence_range
 
     rp_conf[:include_tables] ||= %w(.+)
-    include_tables = rp_conf[:include_tables].to_a.join("|")
+    include_tables = rp_conf[:include_tables].to_a.join('|')
     include_tables = "^(#{include_tables})$"
     config.include_tables /#{include_tables}/
 
     rp_conf[:exclude_tables] ||= %w(.+)
     rp_conf[:exclude_tables] += %w(ar_internal_metadata schema_migrations)
-    exclude_tables = rp_conf[:exclude_tables].to_a.join("|")
+    exclude_tables = rp_conf[:exclude_tables].to_a.join('|')
     exclude_tables = "^(#{exclude_tables})$"
     config.exclude_tables /#{exclude_tables}/
 
@@ -73,7 +73,7 @@ class MiqRubyrep
       config.right[:logger] = Logger.new(Rails.root.join('log/rubyrep_remote.log'))
     end
 
-    $log.info("Replication Settings:")
+    $log.info('Replication Settings:')
     $log.log_hashes({
                       :source         => config.left,
                       :destination    => config.right,

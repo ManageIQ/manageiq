@@ -1,11 +1,11 @@
-require "routing/shared_examples"
+require 'routing/shared_examples'
 
 describe OrchestrationStackController do
-  let(:controller_name) { "orchestration_stack" }
+  let(:controller_name) { 'orchestration_stack' }
 
-  it_behaves_like "A controller that has advanced search routes"
-  it_behaves_like "A controller that has download_data routes"
-  it_behaves_like "A controller that has tagging routes"
+  it_behaves_like 'A controller that has advanced search routes'
+  it_behaves_like 'A controller that has download_data routes'
+  it_behaves_like 'A controller that has tagging routes'
 
   %w(
     cloud_networks

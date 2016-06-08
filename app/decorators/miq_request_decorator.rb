@@ -7,10 +7,10 @@ class MiqRequestDecorator < Draper::Decorator
 
   def listicon_image
     case request_status.to_s.downcase
-    when "ok"
-      "100/checkmark.png"
-    when "error"
-      "100/x.png"
+    when 'ok'
+      '100/checkmark.png'
+    when 'error'
+      '100/x.png'
     # else - handled in application controller
     #  "100/#{@listicon.downcase}.png"
     end

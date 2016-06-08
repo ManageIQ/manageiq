@@ -11,7 +11,7 @@ end
 RemoteDatabase.establish_connection(config)
 new_region = RemoteDatabase.region_number_from_sequence.to_i
 
-region_file = Rails.root.join("REGION")
+region_file = Rails.root.join('REGION')
 old_region = region_file.exists? ? region_file.read.to_i : 0
 
 if new_region != old_region

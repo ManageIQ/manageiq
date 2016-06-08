@@ -17,13 +17,13 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
 
   belongs_to :parent_manager,
              :foreign_key => :parent_ems_id,
-             :class_name  => "ManageIQ::Providers::BaseManager",
+             :class_name  => 'ManageIQ::Providers::BaseManager',
              :autosave    => true
 
   has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
-           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public"
+           :class_name => 'ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public'
   has_many :private_networks, :foreign_key => :ems_id, :dependent => :destroy,
-           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private"
+           :class_name => 'ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private'
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
   delegate :authentication_check,
@@ -66,11 +66,11 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
   end
 
   def self.ems_type
-    @ems_type ||= "openstack_network".freeze
+    @ems_type ||= 'openstack_network'.freeze
   end
 
   def self.description
-    @description ||= "OpenStack Network".freeze
+    @description ||= 'OpenStack Network'.freeze
   end
 
   def self.default_blacklisted_event_names

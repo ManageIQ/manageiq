@@ -6,9 +6,9 @@ describe SetCorrectStiTypeOnOpenstackCloudVolume do
 
   let(:ems_row_entries) do
     [
-      {:type => "ManageIQ::Providers::Openstack::CloudManager"},
-      {:type => "ManageIQ::Providers::Amazon::CloudManager"},
-      {:type => "ManageIQ::Providers::AnotherManager"}
+      {:type => 'ManageIQ::Providers::Openstack::CloudManager'},
+      {:type => 'ManageIQ::Providers::Amazon::CloudManager'},
+      {:type => 'ManageIQ::Providers::AnotherManager'}
     ]
   end
 
@@ -16,31 +16,31 @@ describe SetCorrectStiTypeOnOpenstackCloudVolume do
     [
       {
         :ems      => ems_row_entries[0],
-        :name     => "volume_1",
+        :name     => 'volume_1',
         :type_in  => nil,
         :type_out => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume'
       },
       {
         :ems      => ems_row_entries[1],
-        :name     => "volume_2",
+        :name     => 'volume_2',
         :type_in  => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume',
         :type_out => 'ManageIQ::Providers::Openstack::CloudManager::CloudVolume'
       },
       {
         :ems      => ems_row_entries[1],
-        :name     => "volume_3",
+        :name     => 'volume_3',
         :type_in  => 'ManageIQ::Providers::Amazon::CloudManager::CloudVolume',
         :type_out => 'ManageIQ::Providers::Amazon::CloudManager::CloudVolume'
       },
       {
         :ems      => ems_row_entries[1],
-        :name     => "volume_4",
+        :name     => 'volume_4',
         :type_in  => nil,
         :type_out => nil
       },
       {
         :ems      => ems_row_entries[2],
-        :name     => "volume_5",
+        :name     => 'volume_5',
         :type_in  => 'ManageIQ::Providers::AnyManager::CloudVolume',
         :type_out => 'ManageIQ::Providers::AnyManager::CloudVolume'
       },
@@ -48,7 +48,7 @@ describe SetCorrectStiTypeOnOpenstackCloudVolume do
   end
 
   migration_context :up do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end
@@ -72,7 +72,7 @@ describe SetCorrectStiTypeOnOpenstackCloudVolume do
   end
 
   migration_context :down do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end

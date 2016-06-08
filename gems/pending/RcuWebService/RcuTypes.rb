@@ -48,7 +48,7 @@ end
 class RcuVal < String
   attr_accessor :xsiType
 
-  def initialize(val = "", xsiType = "xsd:string")
+  def initialize(val = '', xsiType = 'xsd:string')
     @xsiType = xsiType
     super(val)
     yield(self) if block_given?

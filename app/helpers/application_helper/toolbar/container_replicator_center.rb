@@ -11,13 +11,13 @@ class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper:
           'pficon pficon-edit fa-lg',
           t = N_('Edit this #{ui_lookup(:table=>"container_replicator")}'),
           t,
-          :url => "/edit"),
+          :url => '/edit'),
         button(
           :container_replicator_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this #{ui_lookup(:table=>"container_replicator")} from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
+          :url_parms => '&refresh=y',
           :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"container_replicator\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"container_replicator\")}?")),
       ]
     ),
@@ -34,15 +34,15 @@ class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper:
           'product product-timeline fa-lg',
           N_('Show Timelines for this Replicator'),
           N_('Timelines'),
-          :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url       => '/show',
+          :url_parms => '?display=timeline'),
         button(
           :container_replicator_perf,
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Replicator'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          :url       => '/show',
+          :url_parms => '?display=performance'),
       ]
     ),
   ])

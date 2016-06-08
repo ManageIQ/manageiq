@@ -15,7 +15,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
     rhevm_vm = get_provider_destination
 
     return false if rhevm_vm.nil?
-    rhevm_vm.attributes.fetch_path(:status, :state) == "image_locked"
+    rhevm_vm.attributes.fetch_path(:status, :state) == 'image_locked'
   end
 
   def find_destination_in_vmdb(ems_ref)
@@ -38,9 +38,9 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
 
   def sparse_disk_value
     case get_option(:disk_format)
-    when "preallocated" then false
-    when "thin"         then true
-    when "default"      then nil   # default choice implies inherit from template
+    when 'preallocated' then false
+    when 'thin'         then true
+    when 'default'      then nil   # default choice implies inherit from template
     end
   end
 

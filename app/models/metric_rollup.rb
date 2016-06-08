@@ -43,7 +43,7 @@ class MetricRollup < ApplicationRecord
   end
 
   def self.latest_rollups(resource_type, resource_ids = nil, capture_interval_name = nil)
-    capture_interval_name ||= "hourly"
+    capture_interval_name ||= 'hourly'
     metrics = where(:resource_type => resource_type, :capture_interval_name => capture_interval_name)
     metrics = metrics.where(:resource_id => resource_ids) if resource_ids
     metrics = metrics.order(:resource_id, :timestamp => :desc)

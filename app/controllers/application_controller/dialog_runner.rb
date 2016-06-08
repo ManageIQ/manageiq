@@ -19,18 +19,18 @@ module ApplicationController::DialogRunner
 
   def dialog_form_button_pressed
     case params[:button]
-    when "cancel"
-      flash = _("%{model} Order was cancelled by the user") % {:model => ui_lookup(:model => 'Service')}
+    when 'cancel'
+      flash = _('%{model} Order was cancelled by the user') % {:model => ui_lookup(:model => 'Service')}
       dialog_cancel_form(flash)
-    when "submit"
-      return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
+    when 'submit'
+      return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
       begin
         result = @edit[:wf].submit_request
       rescue StandardError => bang
         add_flash(_("Error during 'Provisioning': %{error_message}") % {:error_message => bang.message}, :error)
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
       else
         unless result[:errors].blank?
@@ -40,11 +40,11 @@ module ApplicationController::DialogRunner
           end
           render :update do |page|
             page << javascript_prologue
-            page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+            page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
           end
         else
-          flash = _("Order Request was Submitted")
-          if role_allows(:feature => "miq_request_show_list", :any => true)
+          flash = _('Order Request was Submitted')
+          if role_allows(:feature => 'miq_request_show_list', :any => true)
             @sb[:action] = @edit = nil
             @in_a_form = false
             if session[:edit][:explorer]
@@ -75,12 +75,12 @@ module ApplicationController::DialogRunner
           end
         end
       end
-    when "reset"  # Reset
+    when 'reset'  # Reset
       dialog_reset_form
-      flash = _("All changes have been reset")
+      flash = _('All changes have been reset')
       if session[:edit][:explorer]
         add_flash(flash, :warning)
-        replace_right_cell("dialog_provision")
+        replace_right_cell('dialog_provision')
       else
         render :update do |page|
           page << javascript_prologue
@@ -88,24 +88,24 @@ module ApplicationController::DialogRunner
         end
       end
     else
-      return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
-      add_flash(_("%{button_name} Button not yet implemented") % {:button_name => params[:button].capitalize}, :error)
+      return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
+      add_flash(_('%{button_name} Button not yet implemented') % {:button_name => params[:button].capitalize}, :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     end
   end
 
   # AJAX driven routine to check for changes in ANY field on the form
   def dialog_field_changed
-    return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
     dialog_get_form_vars
 
     # Use JS to update the display
     render :update do |page|
       page << javascript_prologue
-      page << "miqSparkle(false);"
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -115,8 +115,8 @@ module ApplicationController::DialogRunner
     @record = Dialog.find_by_id(@edit[:rec_id])
     @dialog_prov = true
     @in_a_form = true
-    @showtype = "dialog_provision"
-    render :action => "show"
+    @showtype = 'dialog_provision'
+    render :action => 'show'
   end
 
   def dynamic_radio_button_refresh
@@ -153,7 +153,7 @@ module ApplicationController::DialogRunner
   end
 
   def dialog_reset_form
-    return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
     @edit[:new] = copy_hash(@edit[:current])
     @record = Dialog.find_by_id(@edit[:rec_id])
     @right_cell_text = @edit[:right_cell_text]
@@ -179,7 +179,7 @@ module ApplicationController::DialogRunner
     @in_a_form = true
     @changed = session[:changed] = true
     if @edit[:explorer]
-      replace_right_cell("dialog_provision")
+      replace_right_cell('dialog_provision')
     else
       render :update do |page|
         page << javascript_prologue
@@ -192,10 +192,10 @@ module ApplicationController::DialogRunner
     @record = Dialog.find_by_id(@edit[:rec_id])
 
     params.each do |parameter_key, parameter_value|
-      parameter_key = parameter_key.split("__protected").first if parameter_key.ends_with?("__protected")
+      parameter_key = parameter_key.split('__protected').first if parameter_key.ends_with?('__protected')
 
-      if parameter_key.starts_with?("miq_date__") && @record.field_name_exist?(parameter_key.split("miq_date__").last)
-        field_name = parameter_key.split("miq_date__").last
+      if parameter_key.starts_with?('miq_date__') && @record.field_name_exist?(parameter_key.split('miq_date__').last)
+        field_name = parameter_key.split('miq_date__').last
         old = @edit[:wf].value(field_name)
         new = parameter_value
 
@@ -218,23 +218,23 @@ module ApplicationController::DialogRunner
           t = Time.zone.now + 1.day
           date_val = [t.strftime('%m/%d/%Y'), t.strftime('%H:%M')]
         else
-          date_val = old.split(" ")
+          date_val = old.split(' ')
         end
 
-        start_hour = date_val.length >= 2 ? date_val[1].split(":").first.to_i : 0
-        start_min = date_val.length >= 2 ? date_val[1].split(":").last.to_i : 0
+        start_hour = date_val.length >= 2 ? date_val[1].split(':').first.to_i : 0
+        start_min = date_val.length >= 2 ? date_val[1].split(':').last.to_i : 0
 
-        if parameter_key == "start_hour"
+        if parameter_key == 'start_hour'
           start_hour = parameter_value.to_i
         else
           start_min = parameter_value.to_i
         end
-        date_val[1] = "%02d:%02d" % [start_hour, start_min]
+        date_val[1] = '%02d:%02d' % [start_hour, start_min]
 
         @edit[:wf].set_value(field_name, date_val.join(' '))
 
-      elsif @edit[:wf].dialog.field(parameter_key).try(:type) == "DialogFieldCheckBox"
-        checkbox_value = parameter_value == "1" ? "t" : "f"
+      elsif @edit[:wf].dialog.field(parameter_key).try(:type) == 'DialogFieldCheckBox'
+        checkbox_value = parameter_value == '1' ? 't' : 'f'
         @edit[:wf].set_value(parameter_key, checkbox_value) if @record.field_name_exist?(parameter_key)
 
       else

@@ -2,6 +2,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManagerDecorator < Draper::Decor
   delegate_all
 
   def fonticon
-    "pficon-kubernetes".freeze
+    'pficon-kubernetes'.freeze
   end
 end

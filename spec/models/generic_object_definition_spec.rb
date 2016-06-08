@@ -2,14 +2,14 @@ describe GenericObjectDefinition do
   let(:definition) do
     FactoryGirl.create(
       :generic_object_definition,
-      :name       => "test_definition",
+      :name       => 'test_definition',
       :properties => {
         :attributes => {
-          :max_number => "integer",
-          :server     => "string",
-          :flag       => "boolean",
-          :data_read  => "float",
-          :s_time     => "datetime"
+          :max_number => 'integer',
+          :server     => 'string',
+          :flag       => 'boolean',
+          :data_read  => 'float',
+          :s_time     => 'datetime'
         }
       }
     )

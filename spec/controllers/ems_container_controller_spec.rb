@@ -3,7 +3,7 @@ describe EmsContainerController do
     set_user_privileges
   end
 
-  it "#new" do
+  it '#new' do
     controller.instance_variable_set(:@breadcrumbs, [])
     get :new
 
@@ -11,7 +11,7 @@ describe EmsContainerController do
     expect(allow(controller).to receive(:edit)).to_not be_nil
   end
 
-  describe "#show" do
+  describe '#show' do
     before do
       session[:settings] = {:views => {}, :quadicons => {}}
       EvmSpecHelper.create_guid_miq_server_zone
@@ -21,13 +21,13 @@ describe EmsContainerController do
 
     subject { get :show, :id => @container.id }
 
-    context "render" do
+    context 'render' do
       render_views
       it { is_expected.to render_template('ems_container/show') }
 
       it do
         is_expected.to have_http_status 200
-        is_expected.to render_template(:partial => "layouts/listnav/_ems_container")
+        is_expected.to render_template(:partial => 'layouts/listnav/_ems_container')
       end
     end
   end

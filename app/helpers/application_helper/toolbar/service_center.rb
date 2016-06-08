@@ -5,7 +5,7 @@ class ApplicationHelper::Toolbar::ServiceCenter < ApplicationHelper::Toolbar::Ba
       'fa fa-cog fa-lg',
       t = N_('Configuration'),
       t,
-      :onwhen => "1+",
+      :onwhen => '1+',
       :items  => [
         button(
           :service_edit,
@@ -17,8 +17,8 @@ class ApplicationHelper::Toolbar::ServiceCenter < ApplicationHelper::Toolbar::Ba
           'pficon pficon-delete fa-lg',
           N_('Remove this Service from the VMDB'),
           N_('Remove Service from the VMDB'),
-          :url_parms => "main_div",
-          :confirm   => N_("Warning: This Service and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Service?")),
+          :url_parms => 'main_div',
+          :confirm   => N_('Warning: This Service and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Service?')),
         separator,
         button(
           :service_ownership,
@@ -46,7 +46,7 @@ class ApplicationHelper::Toolbar::ServiceCenter < ApplicationHelper::Toolbar::Ba
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Service'),
           N_('Edit Tags'),
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
       ]
     ),
   ])
@@ -67,7 +67,7 @@ class ApplicationHelper::Toolbar::ServiceCenter < ApplicationHelper::Toolbar::Ba
           'fa fa-clock-o fa-lg',
           t = N_('Retire this Service'),
           t,
-          :confirm => N_("Retire this Service?")),
+          :confirm => N_('Retire this Service?')),
       ]
     ),
   ])

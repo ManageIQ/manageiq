@@ -28,8 +28,8 @@ module MiqAeServiceMiqProvisionMixin
   end
 
   def set_network_address_mode(mode)
-    set_option(:addr_mode, ["dhcp",   "DHCP"])   if mode.downcase == "dhcp"
-    set_option(:addr_mode, ["static", "Static"]) if mode.downcase == "static"
+    set_option(:addr_mode, ['dhcp',   'DHCP'])   if mode.downcase == 'dhcp'
+    set_option(:addr_mode, ['static', 'Static']) if mode.downcase == 'static'
   end
 
   def check_quota(quota_type, options = {})

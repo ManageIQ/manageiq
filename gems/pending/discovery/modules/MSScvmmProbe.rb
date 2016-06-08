@@ -6,7 +6,7 @@ require 'discovery/PortScan'
 class MSScvmmProbe
   def self.probe(ost)
     unless ost.discover_types.include?(:scvmm)
-      $log.debug "Skipping MSScvmmProbe" if $log
+      $log.debug 'Skipping MSScvmmProbe' if $log
       return
     end
 

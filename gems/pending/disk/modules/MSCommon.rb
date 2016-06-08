@@ -69,7 +69,7 @@ module MSCommon
 
   def self.connect_to_hyperv(ostruct)
     connection  = ostruct.hyperv_connection
-    @network    = ostruct.driveType == "Network"
+    @network    = ostruct.driveType == 'Network'
     hyperv_disk = MiqHyperVDisk.new(connection[:host],
                                     connection[:user],
                                     connection[:password],
@@ -100,7 +100,7 @@ module MSCommon
     if (bd = @blockSectorBitmapByteCount % 512) != 0
       @blockSectorBitmapByteCount = @blockSectorBitmapByteCount + 512 - bd
     end
-    @batBase = getHiLo(@header, "table_offset")
+    @batBase = getHiLo(@header, 'table_offset')
     process_bae
   end
 
@@ -110,7 +110,7 @@ module MSCommon
     blockEnd,   sectorEnd,   byteOffsetEnd   = blockPos(pos + len - 1)
 
     # Loop on blocks (2M entities of storage).
-    buf = ""
+    buf = ''
     (blockStart..blockEnd).each do |blockNum|
       # Loop on sectors (512 byte entities of storage).
       secStart = (blockNum == blockStart) ? sectorStart : 0
@@ -193,7 +193,7 @@ module MSCommon
 
   # Disk size in sectors.
   def self.d_size_common
-    getHiLo(@footer, "current_size") / @blockSize
+    getHiLo(@footer, 'current_size') / @blockSize
   end
 
   def self.getHiLo(hash, member)
@@ -222,7 +222,7 @@ module MSCommon
   private
 
   def self.getHeader(footer, skip_check = false)
-    hdrLoc = getHiLo(footer, "data_offset")
+    hdrLoc = getHiLo(footer, 'data_offset')
     hdrSiz = HEADER.size
     puts "VHD Header is mislocated: 0x#{'%04x' % hdrLoc} (s/b 0x0200)" if hdrLoc != HEADER_LOCATION && !skip_check
     @file.seek(hdrLoc, IO::SEEK_SET)
@@ -237,10 +237,10 @@ module MSCommon
   end
 
   def self.verifyFooterCopy(footer)
-    hdrLoc = getHiLo(footer, "data_offset")
+    hdrLoc = getHiLo(footer, 'data_offset')
     @file.seek(hdrLoc - FOOTER_LENGTH, IO::SEEK_SET)
     footer_copy = FOOTER.decode(@file.read(FOOTER_LENGTH))
-    puts "Footer copy does not match header." if footer_copy != @footer
+    puts 'Footer copy does not match header.' if footer_copy != @footer
   end
 
   def self.blockPos(pos)
@@ -332,11 +332,11 @@ module MSCommon
       seekBAE(0); ents = @header['max_tbl_ent']
       baes = @file.read(ents * BAE_SIZE).unpack("N#{ents}")
       baes.delete(BLOCK_NOT_ALLOCATED)
-      raise "Disk full." if baes.size == @header['max_tbl_ent']
+      raise 'Disk full.' if baes.size == @header['max_tbl_ent']
       @freeSector = baes.max
     end
     @freeSector += @secPerBlock
-    raise "Disk full." if @freeSector > d_size_common / @blockSize
+    raise 'Disk full.' if @freeSector > d_size_common / @blockSize
     @freeSector
   end
 

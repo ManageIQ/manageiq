@@ -1,6 +1,6 @@
 module MiqAeDatastoreConverter
   include MiqAeDatastore
-  describe "XML2YAML Converter" do
+  describe 'XML2YAML Converter' do
     before(:each) do
       MiqAeDatastore.reset
       EvmSpecHelper.local_guid_miq_server_zone
@@ -11,13 +11,13 @@ module MiqAeDatastoreConverter
     end
     def setup_export_dir
       @domain     = 'TEST'
-      @export_dir = File.join(Dir.tmpdir, "rspec_export_tests")
-      @zip_file   = File.join(Dir.tmpdir, "yaml_model.zip")
+      @export_dir = File.join(Dir.tmpdir, 'rspec_export_tests')
+      @zip_file   = File.join(Dir.tmpdir, 'yaml_model.zip')
       FileUtils.rm_rf(@export_dir) if File.exist?(@export_dir)
       FileUtils.rm_rf(@zip_file)   if File.exist?(@zip_file)
     end
 
-    context "convert xml to yaml" do
+    context 'convert xml to yaml' do
       before(:each) do
         setup_export_dir
         MiqAeDatastore.reset
@@ -53,7 +53,7 @@ module MiqAeDatastoreConverter
         XML
       end
 
-      it "convert a domain from XML into a ZIP and import it in" do
+      it 'convert a domain from XML into a ZIP and import it in' do
         MiqAeDatastore::XmlYamlConverter.convert(@root_xml, @domain, 'zip_file' => @zip_file)
         expect(MiqAeDomain.count).to eql(0)
         expect(MiqAeNamespace.count).to eql(0)
@@ -70,7 +70,7 @@ module MiqAeDatastoreConverter
         expect(MiqAeInstance.count).to eql(2)
       end
 
-      it "convert a domain from XML into filesystem and import it in" do
+      it 'convert a domain from XML into filesystem and import it in' do
         MiqAeDatastore::XmlYamlConverter.convert(@root_xml, @domain, 'export_dir' => @export_dir)
         expect(MiqAeDomain.count).to eql(0)
         expect(MiqAeNamespace.count).to eql(0)

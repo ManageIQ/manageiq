@@ -119,7 +119,7 @@ module EmsRefresh
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
       :class_name  => name,
       :method_name => 'refresh',
-      :role        => "ems_inventory",
+      :role        => 'ems_inventory',
       :zone        => ems.my_zone
     ) do |msg, item|
       targets = msg.nil? ? targets : (msg.args[0] | targets)
@@ -162,7 +162,7 @@ module EmsRefresh
       s
     end
 
-    ret.join(", ")
+    ret.join(', ')
   end
 
   #

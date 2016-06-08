@@ -9,8 +9,8 @@ class WaitForIP
   end
 
   def main
-    vm = @handle.root["miq_provision"].try(:destination)
-    vm ||= @handle.root["vm"]
+    vm = @handle.root['miq_provision'].try(:destination)
+    vm ||= @handle.root['vm']
     vm ? check_ip_addr_available(vm) : vm_not_found
   end
 
@@ -30,7 +30,7 @@ class WaitForIP
 
   def vm_not_found
     @handle.root['ae_result'] = 'error'
-    @handle.log(:error, "VM not found")
+    @handle.log(:error, 'VM not found')
   end
 end
 

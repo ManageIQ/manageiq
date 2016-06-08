@@ -37,8 +37,8 @@ module ReportHelper
       self.days   = run_at[:interval][:value] if run_at[:interval][:unit] == 'daily'
       self.hours  = run_at[:interval][:value] if run_at[:interval][:unit] == 'hourly'
       t = run_at[:start_time].utc.in_time_zone(timezone)
-      self.start_hour = t.strftime("%H")
-      self.start_min = t.strftime("%M")
+      self.start_hour = t.strftime('%H')
+      self.start_min = t.strftime('%M')
       self.start_date = "#{t.month}/#{t.day}/#{t.year}"
     end
 

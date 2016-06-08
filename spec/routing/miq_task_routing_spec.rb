@@ -1,5 +1,5 @@
-describe "routes for MiqTaskController" do
-  let(:controller_name) { "miq_task" }
+describe 'routes for MiqTaskController' do
+  let(:controller_name) { 'miq_task' }
 
   %w(
     change_tab

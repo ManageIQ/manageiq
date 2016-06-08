@@ -14,7 +14,7 @@ class MiqHostProvision < MiqRequestTask
   alias_attribute :host,                       :source
 
   validates_inclusion_of :request_type, :in => %w( host_pxe_install ),                           :message => "should be 'host_pxe_install'"
-  validates_inclusion_of :state,        :in => %w( pending queued active provisioned finished ), :message => "should be pending, queued, active, provisioned or finished"
+  validates_inclusion_of :state,        :in => %w( pending queued active provisioned finished ), :message => 'should be pending, queued, active, provisioned or finished'
 
   virtual_column :provision_type, :type => :string
 
@@ -29,7 +29,7 @@ class MiqHostProvision < MiqRequestTask
   end
 
   def deliver_to_automate
-    super("host_provision")
+    super('host_provision')
   end
 
   def do_request

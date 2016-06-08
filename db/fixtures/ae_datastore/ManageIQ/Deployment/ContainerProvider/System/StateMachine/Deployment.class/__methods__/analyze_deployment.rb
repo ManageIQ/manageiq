@@ -2,10 +2,10 @@ def analyze_deployment
   $evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
   $evm.root['deployment_method'] = $evm.root['automation_task'].automation_request.options[:attrs][:deployment_method]
 
-  if $evm.root['deployment_method'] == "managed_provision"
-    $evm.root['ae_next_state'] = "provision"
+  if $evm.root['deployment_method'] == 'managed_provision'
+    $evm.root['ae_next_state'] = 'provision'
   else
-    $evm.root['ae_next_state'] = "check_ssh"
+    $evm.root['ae_next_state'] = 'check_ssh'
     $evm.root['deployment_master'] = $evm.root['automation_task'].automation_request.options[:attrs][:deployment_master]
     $evm.root['masters'] = $evm.root['automation_task'].automation_request.options[:attrs][:masters]
     $evm.root['nodes'] = $evm.root['automation_task'].automation_request.options[:attrs][:nodes]
@@ -28,7 +28,7 @@ def analyze_deployment
       $evm.root['automation_task'].automation_request.options[:attrs][:deployment_id])
   deployment.add_automation_task($evm.root['automation_task'])
 
-  $evm.root['ae_result'] = "ok"
+  $evm.root['ae_result'] = 'ok'
   $evm.root['automation_task'].message = "deployment type - #{$evm.root['deployment_method']}"
   $evm.log(:info, "State: #{$evm.root['ae_state']} | Result: #{$evm.root['ae_result']} "\
            "| Message: #{$evm.root['automation_task'].message}")

@@ -1,11 +1,11 @@
 describe VmdbTable do
-  context "#seed_indexes" do
+  context '#seed_indexes' do
     before(:each) do
       @db = VmdbDatabase.seed_self
       @vmdb_table = FactoryGirl.create(:vmdb_table, :vmdb_database => @db, :name => 'foo')
     end
 
-    it "adds new indexes" do
+    it 'adds new indexes' do
       index_names = ['flintstones']
       index_results = index_names.collect do |i|
         index = double('sql_index')
@@ -17,7 +17,7 @@ describe VmdbTable do
       expect(@vmdb_table.vmdb_indexes.collect(&:name)).to eq(index_names)
     end
 
-    it "removes deleted indexes" do
+    it 'removes deleted indexes' do
       index_names = ['flintstones']
       index_names.each { |i| FactoryGirl.create(:vmdb_index, :vmdb_table => @vmdb_table, :name => i) }
       @vmdb_table.reload
@@ -29,7 +29,7 @@ describe VmdbTable do
       expect(@vmdb_table.vmdb_indexes.collect(&:name)).to eq([])
     end
 
-    it "finds existing indexes" do
+    it 'finds existing indexes' do
       index_names = ['flintstones']
       index_results = index_names.collect do |i|
         index = double('sql_index')

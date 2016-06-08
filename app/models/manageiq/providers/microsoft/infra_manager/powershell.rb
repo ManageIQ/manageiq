@@ -9,7 +9,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def run_powershell_script(connection, script)
         log_header = "MIQ(#{self.class.name}.#{__method__})"
-        File.open(script, "r") do |file|
+        File.open(script, 'r') do |file|
           begin
             results = connection.create_executor { |exec| exec.run_powershell_script(file) }
             log_dos_error_results(results)

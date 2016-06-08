@@ -26,10 +26,10 @@ module MiqWin32
       @services = []
 
       regHnd = RemoteRegistry.new(fs, true)
-      reg_doc = regHnd.loadHive("system", [{:key => 'CurrentControlSet/Services', :depth => 0, :value => SERVICE_VALUE_MAP}])
+      reg_doc = regHnd.loadHive('system', [{:key => 'CurrentControlSet/Services', :depth => 0, :value => SERVICE_VALUE_MAP}])
       regHnd.close
 
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\services", reg_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\services', reg_doc.root)
       if reg_node
         reg_node.each_element do |e|
           next if e.name != :key
@@ -57,13 +57,13 @@ module MiqWin32
     def service_type_to_string(type)
       type = type.nil? ? 1 : type.to_i
       if (type & 0x00000001) > 0
-        "kernel"
+        'kernel'
       elsif (type & 0x00000002) > 0
-        "filesystem"
+        'filesystem'
       elsif ((type & 0x00000010) > 0) || ((type & 0x00000020) > 0)
-        "win32_service"
+        'win32_service'
       else
-        "misc"
+        'misc'
       end
     end
 
@@ -74,10 +74,10 @@ module MiqWin32
         depends_service = s.delete(:depend_on_service)
         depends_group = s.delete(:depend_on_group)
 
-        node = doc.add_element("service", XmlHelpers.stringify_keys(s))
+        node = doc.add_element('service', XmlHelpers.stringify_keys(s))
 
-        depends_service.each { |d| node.add_element("depend_on_service", XmlHelpers.stringify_keys(d)) } if depends_service
-        depends_group.each { |d| node.add_element("depend_on_group", XmlHelpers.stringify_keys(d)) } if depends_group
+        depends_service.each { |d| node.add_element('depend_on_service', XmlHelpers.stringify_keys(d)) } if depends_service
+        depends_group.each { |d| node.add_element('depend_on_group', XmlHelpers.stringify_keys(d)) } if depends_group
       end
 
       doc

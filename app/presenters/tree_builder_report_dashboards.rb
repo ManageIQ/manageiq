@@ -19,7 +19,7 @@ class TreeBuilderReportDashboards < TreeBuilder
   end
 
   def root_options
-    [t = _("All Dashboards"), t]
+    [t = _('All Dashboards'), t]
   end
 
   # Get root nodes count/array for explorer tree
@@ -35,7 +35,7 @@ class TreeBuilderReportDashboards < TreeBuilder
   def x_get_tree_custom_kids(object, count_only, options)
     assert_type(options[:type], :db)
     objects = []
-    if object[:id].split('-').first == "g"
+    if object[:id].split('-').first == 'g'
       objects = rbac_filtered_objects(MiqGroup.non_tenant_groups)
       return count_only ? objects.count : objects.sort_by(&:name)
     end
@@ -45,7 +45,7 @@ class TreeBuilderReportDashboards < TreeBuilder
   def x_get_tree_g_kids(object, count_only)
     objects = []
     # dashboard nodes under each group
-    widgetsets = MiqWidgetSet.where(:owner_type => "MiqGroup", :owner_id => object.id)
+    widgetsets = MiqWidgetSet.where(:owner_type => 'MiqGroup', :owner_id => object.id)
     # if dashboard sequence was saved, build tree using that, else sort by name and build the tree
     if object.settings && object.settings[:dashboard_order]
       object.settings[:dashboard_order].each do |ws_id|

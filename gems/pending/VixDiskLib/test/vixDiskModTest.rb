@@ -21,22 +21,22 @@ $log = $vim_log
 VixDiskLib.init
 
 conParms = {
-  :serverName => "",
+  :serverName => '',
   :port       => 902,
   :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
-  :userName   => "",
-  :password   => "",
+  :userName   => '',
+  :password   => '',
 }
 
 connection = VixDiskLib.connect(conParms)
 
 diskFiles = [
-  "/vmfs/volumes/StarM2-LUN1/VMmini-101/VMmini-101.vmdk"
+  '/vmfs/volumes/StarM2-LUN1/VMmini-101/VMmini-101.vmdk'
 ]
 
 vixDiskInfo = {
   :connection => connection,
-  :fileName   => "/vmfs/volumes/StarM2-LUN1/VMmini-101/VMmini-101.vmdk"
+  :fileName   => '/vmfs/volumes/StarM2-LUN1/VMmini-101/VMmini-101.vmdk'
 }
 
 dInfo = OpenStruct.new
@@ -50,7 +50,7 @@ diskFiles.each do |df|
 
   disk = MiqDisk.getDisk(dInfo)
   unless disk
-    puts "Failed to open disk"
+    puts 'Failed to open disk'
     exit(1)
   end
 
@@ -92,7 +92,7 @@ diskFiles.each do |df|
   end
 
   unless foundFs
-    puts "No File Systems found."
+    puts 'No File Systems found.'
     exit(0)
   end
 

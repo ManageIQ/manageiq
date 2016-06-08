@@ -6,13 +6,13 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'Reconfigure'
 
   def add_miq_alarm
-    raise "VM has no EMS, unable to add alarm" unless ext_management_system
+    raise 'VM has no EMS, unable to add alarm' unless ext_management_system
     ext_management_system.vm_add_miq_alarm(self)
   end
   alias_method :addMiqAlarm, :add_miq_alarm
 
   def scan_on_registered_host_only?
-    state == "on"
+    state == 'on'
   end
 
   # Show certain non-generic charts

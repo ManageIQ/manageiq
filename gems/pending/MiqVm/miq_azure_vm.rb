@@ -6,7 +6,7 @@ class MiqAzureVm < MiqVm
     @azure_handle = azure_handle
     @uri          = nil
 
-    raise ArgumentError, "MiqAzureVm: missing required arg :name" unless (@name = args[:name])
+    raise ArgumentError, 'MiqAzureVm: missing required arg :name' unless (@name = args[:name])
 
     if args[:image_uri]
       @uri = args[:image_uri]
@@ -14,7 +14,7 @@ class MiqAzureVm < MiqVm
       vm_obj = vm_svc.get(@name, args[:resource_group])
       @uri = vm_obj.properties.storage_profile.os_disk.vhd.uri
     else
-      raise ArgumentError, "MiqAzureVm: missing required args: :image_uri or :resource_group"
+      raise ArgumentError, 'MiqAzureVm: missing required args: :image_uri or :resource_group'
     end
 
     super(getCfg)
@@ -26,9 +26,9 @@ class MiqAzureVm < MiqVm
 
     $log.debug "MiqAzureVm#getCfg: disk = #{@uri}"
 
-    tag = "scsi0:0"
-    cfg_hash["#{tag}.present"]    = "true"
-    cfg_hash["#{tag}.devicetype"] = "disk"
+    tag = 'scsi0:0'
+    cfg_hash["#{tag}.present"]    = 'true'
+    cfg_hash["#{tag}.devicetype"] = 'disk'
     cfg_hash["#{tag}.filename"]   = @uri
 
     cfg_hash
@@ -37,7 +37,7 @@ class MiqAzureVm < MiqVm
   def openDisks(diskFiles)
     p_volumes = []
 
-    $log.debug "openDisks: no disk files supplied." unless diskFiles
+    $log.debug 'openDisks: no disk files supplied.' unless diskFiles
 
     #
     # Build a list of the VM's physical volumes.

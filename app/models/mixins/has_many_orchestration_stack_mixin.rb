@@ -13,6 +13,6 @@ module HasManyOrchestrationStackMixin
     has_many :direct_orchestration_stacks,
              -> { where(:ancestry => nil) },
              :foreign_key => :ems_id,
-             :class_name  => "OrchestrationStack"
+             :class_name  => 'OrchestrationStack'
   end
 end

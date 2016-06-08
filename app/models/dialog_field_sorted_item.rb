@@ -5,7 +5,7 @@ class DialogFieldSortedItem < DialogField
 
   def sort_by=(value)
     unless [:value, :description, :none].include?(value.to_sym)
-      raise _("Invalid sort_by type <%{value}> specified.") % {:value => value}
+      raise _('Invalid sort_by type <%{value}> specified.') % {:value => value}
     end
     options[:sort_by] = value.to_sym
   end
@@ -41,7 +41,7 @@ class DialogFieldSortedItem < DialogField
   end
 
   def script_error_values
-    [[nil, "<Script error>"]]
+    [[nil, '<Script error>']]
   end
 
   def normalize_automate_values(automate_hash)
@@ -49,7 +49,7 @@ class DialogFieldSortedItem < DialogField
       send("#{key}=", automate_hash[key]) if automate_hash.key?(key)
     end
 
-    result = automate_hash["values"].to_a
+    result = automate_hash['values'].to_a
     result.blank? ? initial_values : result
   end
 
@@ -64,7 +64,7 @@ class DialogFieldSortedItem < DialogField
     return data_to_sort if sort_by == :none
 
     value_position = sort_by == :value ? :first : :last
-    value_modifier = data_type == "integer" ? :to_i : :to_s
+    value_modifier = data_type == 'integer' ? :to_i : :to_s
 
     data_to_sort = data_to_sort.sort_by { |d| d.send(value_position).send(value_modifier) }
     return data_to_sort.reverse! if sort_order == :descending

@@ -3,7 +3,7 @@ module OpenstackHandle
     include OpenstackHandle::HandledList
     include Vmdb::Logging
 
-    SERVICE_NAME = "Network"
+    SERVICE_NAME = 'Network'
 
     attr_reader :name
 

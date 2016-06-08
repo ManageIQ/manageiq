@@ -7,25 +7,25 @@ describe MoveLogCollectionDepotSettingsToFileDepot do
   let(:zone_stub) { migration_stub(:Zone) }
 
   migration_context :up do
-    it "Moves log depot settings to FileDepot table" do
+    it 'Moves log depot settings to FileDepot table' do
       server_settings = {
-        "log_depot" => {
-          "username" => "user",
-          "password" => "pass",
-          "uri"      => "ftp://ftp.example.com/dir"
+        'log_depot' => {
+          'username' => 'user',
+          'password' => 'pass',
+          'uri'      => 'ftp://ftp.example.com/dir'
         }
       }
 
       zone_settings = {
         :log_depot => {
-          :username => "user",
-          :password => "pass",
-          :uri      => "smb://server.example.com/path"
+          :username => 'user',
+          :password => 'pass',
+          :uri      => 'smb://server.example.com/path'
         }
       }
 
       configuration_stub.create!(:typ => 'vmdb', :settings => server_settings)
-      zone_stub.create!(:name => "default", :settings => zone_settings)
+      zone_stub.create!(:name => 'default', :settings => zone_settings)
 
       migrate
 

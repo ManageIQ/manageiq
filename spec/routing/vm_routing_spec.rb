@@ -1,7 +1,7 @@
-require "routing/shared_examples"
+require 'routing/shared_examples'
 
 describe VmOrTemplateController do
-  let(:controller_name) { "vm" }
+  let(:controller_name) { 'vm' }
 
   %w(
     download_data
@@ -16,7 +16,7 @@ describe VmOrTemplateController do
     show_list
   ).each do |path|
     describe "##{path}" do
-      it "routes with GET" do
+      it 'routes with GET' do
         expect(get("/#{controller_name}/#{path}")).to route_to("#{controller_name}##{path}")
       end
     end
@@ -44,7 +44,7 @@ describe VmOrTemplateController do
     vmtree_selected
   ).each do |path|
     describe "##{path}" do
-      it "routes with POST" do
+      it 'routes with POST' do
         expect(post("/#{controller_name}/#{path}")).to route_to("#{controller_name}##{path}")
       end
     end

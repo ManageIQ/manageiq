@@ -3,14 +3,14 @@ class ResourcePool < ApplicationRecord
 
   acts_as_miq_taggable
 
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => 'ems_id'
   has_many   :miq_events,            :as => :target, :dependent => :destroy
 
   include SerializedEmsRefObjMixin
   include FilterableMixin
 
   include RelationshipMixin
-  self.default_relationship_type = "ems_metadata"
+  self.default_relationship_type = 'ems_metadata'
 
   include AggregationMixin
   # Since we've overridden the implementation of methods from AggregationMixin,
@@ -133,7 +133,7 @@ class ResourcePool < ApplicationRecord
   end
 
   def parent_cluster_or_host
-    Relationship.resource(ancestor_rels(:of_type => ["EmsCluster", "Host"]).last)
+    Relationship.resource(ancestor_rels(:of_type => ['EmsCluster', 'Host']).last)
   end
 
   def parent_cluster
@@ -147,11 +147,11 @@ class ResourcePool < ApplicationRecord
   end
 
   def parent_datacenter
-    detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
+    detect_ancestor(:of_type => 'EmsFolder') { |a| a.kind_of?(Datacenter) }
   end
 
   def parent_folder
-    detect_ancestor(:of_type => "EmsFolder") { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
+    detect_ancestor(:of_type => 'EmsFolder') { |a| !a.kind_of?(Datacenter) && !%w(host vm).include?(a.name) } # TODO: Fix this to use EmsFolder#hidden?
   end
 
   # Overridden from AggregationMixin to provide hosts related to this RP
@@ -167,27 +167,27 @@ class ResourcePool < ApplicationRecord
   # Virtual cols for parents
   def v_parent_cluster
     p = parent_cluster
-    p ? p.name : ""
+    p ? p.name : ''
   end
 
   def v_parent_host
     p = parent_host
-    p ? p.name : ""
+    p ? p.name : ''
   end
 
   def v_parent_resource_pool
     p = parent_resource_pool
-    p ? p.name : ""
+    p ? p.name : ''
   end
 
   def v_parent_datacenter
     p = parent_datacenter
-    p ? p.name : ""
+    p ? p.name : ''
   end
 
   def v_parent_folder
     p = parent_folder
-    p ? p.name : ""
+    p ? p.name : ''
   end
 
   alias_method :v_direct_vms,           :total_direct_vms
@@ -206,6 +206,6 @@ class ResourcePool < ApplicationRecord
   end
 
   def absolute_path(*args)
-    absolute_path_objs(*args).collect(&:name).join("/")
+    absolute_path_objs(*args).collect(&:name).join('/')
   end
 end

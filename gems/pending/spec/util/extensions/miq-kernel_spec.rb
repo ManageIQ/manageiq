@@ -23,7 +23,7 @@ describe Kernel do
     end
   end
 
-  it ".require_relative" do
+  it '.require_relative' do
     expect(Kernel.respond_to?(:require_relative)).to be_truthy
   end
 end

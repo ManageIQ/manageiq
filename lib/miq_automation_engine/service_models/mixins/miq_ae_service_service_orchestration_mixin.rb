@@ -7,7 +7,7 @@ module MiqAeServiceServiceOrchestrationMixin
 
   def orchestration_template=(template)
     if template && !template.kind_of?(MiqAeMethodService::MiqAeServiceOrchestrationTemplate)
-      raise ArgumentError, "template must be a MiqAeServiceOrchestrationTemplate or nil"
+      raise ArgumentError, 'template must be a MiqAeServiceOrchestrationTemplate or nil'
     end
 
     ar_method do
@@ -18,7 +18,7 @@ module MiqAeServiceServiceOrchestrationMixin
 
   def orchestration_manager=(manager)
     if manager && !manager.kind_of?(MiqAeMethodService::MiqAeServiceExtManagementSystem)
-      raise ArgumentError, "manager must be a MiqAeServiceExtManagementSystem or nil"
+      raise ArgumentError, 'manager must be a MiqAeServiceExtManagementSystem or nil'
     end
 
     ar_method do

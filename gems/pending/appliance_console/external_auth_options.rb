@@ -4,19 +4,19 @@ require 'appliance_console/errors'
 require 'appliance_console/utilities'
 require 'appliance_console/logging'
 
-RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
+RAILS_ROOT ||= Pathname.new(__dir__).join('../../..')
 
 module ApplianceConsole
   class ExternalAuthOptions
     # VMDB_YML      = RAILS_ROOT.join("config/vmdb.yml.db")
     # VMDB_YML_TMPL = RAILS_ROOT.join("config/vmdb.tmpl.yml")
 
-    AUTH_PATH = "/authentication".freeze
+    AUTH_PATH = '/authentication'.freeze
 
     EXT_AUTH_OPTIONS = {
-      "#{AUTH_PATH}/sso_enabled"          => {:label => "Single Sign-On", :logic => true},
-      "#{AUTH_PATH}/saml_enabled"         => {:label => "SAML",           :logic => true},
-      "#{AUTH_PATH}/local_login_disabled" => {:label => "Local Login",    :logic => false}
+      "#{AUTH_PATH}/sso_enabled"          => {:label => 'Single Sign-On', :logic => true},
+      "#{AUTH_PATH}/saml_enabled"         => {:label => 'SAML',           :logic => true},
+      "#{AUTH_PATH}/local_login_disabled" => {:label => 'Local Login',    :logic => false}
     }.freeze
 
     include ApplianceConsole::Logging
@@ -53,13 +53,13 @@ module ApplianceConsole
     end
 
     def show_updates
-      updates_todo = ""
+      updates_todo = ''
       EXT_AUTH_OPTIONS.keys.each do |key|
         next unless @updates.key?(key)
-        updates_todo << ", " if updates_todo.present?
+        updates_todo << ', ' if updates_todo.present?
         updates_todo << " #{selected_verb(key, @updates[key])} #{EXT_AUTH_OPTIONS[key][:label]}"
       end
-      updates_to_apply = updates_todo.present? ? "Updates to apply: #{updates_todo}" : ""
+      updates_to_apply = updates_todo.present? ? "Updates to apply: #{updates_todo}" : ''
       say("\n#{updates_to_apply}")
     end
 
@@ -71,9 +71,9 @@ module ApplianceConsole
 
     def selected_verb(key, flag)
       if EXT_AUTH_OPTIONS[key][:logic]
-        flag ? "Enable" : "Disable"
+        flag ? 'Enable' : 'Disable'
       else
-        flag ? "Disable" : "Enable"
+        flag ? 'Disable' : 'Enable'
       end
     end
 
@@ -86,7 +86,7 @@ module ApplianceConsole
       if update_hash.present?
         say("\nUpdating external authentication options on appliance ...")
         params = update_hash.collect { |key, value| "#{key}=#{value}" }
-        result = ApplianceConsole::Utilities.rake_run("evm:settings:set", params)
+        result = ApplianceConsole::Utilities.rake_run('evm:settings:set', params)
         raise parse_errors(result).join(', ') if result.failure?
       end
     end
@@ -97,7 +97,7 @@ module ApplianceConsole
     #
     def parse(options)
       parsed_updates = {}
-      options.split(",").each do |keyval|
+      options.split(',').each do |keyval|
         key, val = keyval.split('=')
         key, val = normalize_key(key.to_s.strip), val.to_s.strip
         unless EXT_AUTH_OPTIONS.key?(key)
@@ -122,7 +122,7 @@ module ApplianceConsole
 
     def load_current
       say("\nFetching external authentication options from appliance ...")
-      result = ApplianceConsole::Utilities.rake_run("evm:settings:get", EXT_AUTH_OPTIONS.keys)
+      result = ApplianceConsole::Utilities.rake_run('evm:settings:get', EXT_AUTH_OPTIONS.keys)
 
       if result.success?
         return parse_response(result)
@@ -141,7 +141,7 @@ module ApplianceConsole
 
     def parse_response(result)
       result.output.split("\n").each_with_object({}) do |line, hash|
-        key, val = line.split("=")
+        key, val = line.split('=')
         hash[key] = parse_value(val)
       end
     end

@@ -5,7 +5,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
                   :report_run_time, :chart, :reserved]
 
     def serialize_report_to_hash(val, migration)
-      if val.include?("!ruby/object:MiqReport")
+      if val.include?('!ruby/object:MiqReport')
         val.sub!(/MiqReport/, 'Hash')
       elsif val.starts_with?('--- !')
         migration.say "#{self.class} Id: #{id} is not an MiqReport object, skipping conversion"
@@ -25,7 +25,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
     def serialize_hash_to_report(val, from, migration)
       if val.starts_with?('--- !')
         migration.say "#{self.class} Id: #{id} is not a Hash, skipping conversion"
-      elsif val.starts_with?("---")
+      elsif val.starts_with?('---')
         new_hash = {'attributes' => {}}
         YAML.load(val).each do |k, v|
           YAML_ATTRS.include?(k.to_sym) ? new_hash[k.to_s] = v : new_hash['attributes'][k.to_s] = v
@@ -35,7 +35,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
           # MiqReport was serialized as an Array with 1 element in miq_report_results
           YAML.dump([new_hash]).sub(/---\n- attributes:/, "---\n- !ruby/object:MiqReport\n  attributes:")
         else
-          YAML.dump(new_hash).sub(/---/, "--- !ruby/object:MiqReport")
+          YAML.dump(new_hash).sub(/---/, '--- !ruby/object:MiqReport')
         end
       else
         raise "unexpected format of report attribute encountered, '#{val.inspect}'"
@@ -54,11 +54,11 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
 
     def inspect
       # Clean up inspect so that we don't flood script/console
-      attrs = attribute_names.inject("{") { |s, n| s << "#{n.inspect}=>#{n == "data" ? "\"...\"" : read_attribute(n).inspect}, "; s }
-      attrs.chomp!(", ")
-      attrs << "}"
-      iv = instance_variables.inject(" ") { |s, v| s << "#{v}=#{v == "@attributes" ? attrs : instance_variable_get(v).inspect}, "; s }
-      iv.chomp!(", ")
+      attrs = attribute_names.inject('{') { |s, n| s << "#{n.inspect}=>#{n == "data" ? "\"...\"" : read_attribute(n).inspect}, "; s }
+      attrs.chomp!(', ')
+      attrs << '}'
+      iv = instance_variables.inject(' ') { |s, v| s << "#{v}=#{v == "@attributes" ? attrs : instance_variable_get(v).inspect}, "; s }
+      iv.chomp!(', ')
       iv.rstrip!
       "#{to_s.chop}#{iv}>"
     end
@@ -71,7 +71,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
     end
 
     def data=(val)
-      raise ArgumentError, "data cannot be set to nil" if val.nil?
+      raise ArgumentError, 'data cannot be set to nil' if val.nil?
       write_attribute(:data, val)
       self.md5 = Digest::MD5.hexdigest(val)
       self.size = val.bytesize
@@ -92,7 +92,7 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
     end
 
     def binary
-      data = binary_blob_parts.inject("") do |d, b|
+      data = binary_blob_parts.inject('') do |d, b|
         d << b.data
         d
       end
@@ -125,14 +125,14 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Converting MiqReportResult#report to a serialized hash") do
+    say_with_time('Converting MiqReportResult#report to a serialized hash') do
       MiqReportResult.where('report IS NOT NULL').find_each do |rr|
         val = rr.serialize_report_to_hash(rr.read_attribute(:report), self)
         rr.update_attribute(:report, val) if val
       end
     end
 
-    say_with_time("Converting BinaryBlob report results to a serialized hash") do
+    say_with_time('Converting BinaryBlob report results to a serialized hash') do
       BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').find_each do |bb|
         if bb.resource
           val = bb.serialize_report_to_hash(bb.binary, self)
@@ -143,14 +143,14 @@ class FixSerializedReportsForRailsFour < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Converting MiqReportResult#report back to a serialized MiqReport") do
+    say_with_time('Converting MiqReportResult#report back to a serialized MiqReport') do
       MiqReportResult.where('report IS NOT NULL').find_each do |rr|
         val = rr.serialize_hash_to_report(rr.read_attribute(:report), :miq_report_result, self)
         rr.update_attribute(:report, val) if val
       end
     end
 
-    say_with_time("Converting BinaryBlob report results back to a serialized MiqReport") do
+    say_with_time('Converting BinaryBlob report results back to a serialized MiqReport') do
       BinaryBlob.includes(:resource).where(:resource_type => 'MiqReportResult').find_each do |bb|
         if bb.resource
           val = bb.serialize_hash_to_report(bb.binary, :binary_blob, self)

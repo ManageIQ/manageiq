@@ -26,7 +26,7 @@ module MiqSmisClient
 
     @@classHierHash   = {}
     @@pruneUnless   = []
-    @@globalIndent    = ""
+    @@globalIndent    = ''
 
     @@serverCalls = Hash.new { |h, k| h[k] = 0 }
 
@@ -91,8 +91,8 @@ module MiqSmisClient
         #
         rp = AssociatorNames(pi,  :AssocClass  => 'CIM_ReferencedProfile',
                                   :ResultClass => 'CIM_RegisteredProfile',
-                                  :Role        => "Dependent",
-                                  :ResultRole  => "Antecedent")
+                                  :Role        => 'Dependent',
+                                  :ResultRole  => 'Antecedent')
 
         #
         # If no other profiles reference this one, then it's a top-level profile.
@@ -190,7 +190,7 @@ module MiqSmisClient
     end
 
     def newNode(obj, objName = nil, topMe = false)
-      raise "newNode: Both obj and objName are nil" unless obj || objName
+      raise 'newNode: Both obj and objName are nil' unless obj || objName
       objName ||= obj2ObjName(obj)
       objNameStr = objName.to_s
 
@@ -210,7 +210,7 @@ module MiqSmisClient
         node.obj_name       = objName
         node.obj_name_str     = objNameStr
         node.obj          = obj
-        node.source         = "SMIS"
+        node.source         = 'SMIS'
         node.is_top_managed_element = topMe
         node.top_managed_element  = @currentTopElement
         node.agent          = @agent
@@ -264,8 +264,8 @@ module MiqSmisClient
     def getAssociatedMetrics(meteredObj, _propList = nil)
       sd = @conn.Associators(meteredObj,  :AssocClass  => 'CIM_ElementStatisticalData',
                                           :ResultClass => 'CIM_BlockStorageStatisticalData',
-                                          :Role        => "ManagedElement",
-                                          :ResultRole  => "Stats"
+                                          :Role        => 'ManagedElement',
+                                          :ResultRole  => 'Stats'
                             )
       sd.first
     end
@@ -319,7 +319,7 @@ module MiqSmisClient
       if (hp = @@classHierHash[className])
         return hp
       end
-      klass = GetClass(className, :PropertyList => ["superclass"])
+      klass = GetClass(className, :PropertyList => ['superclass'])
       hp = classHier(klass.superclass).dup.unshift(className.to_s)
       @@classHierHash[className] = hp
       hp
@@ -371,7 +371,7 @@ module MiqSmisClient
     end
 
     def indentedPrint(s, i, io = $stdout)
-      io.print @@globalIndent + "  " * i
+      io.print @@globalIndent + '  ' * i
       io.puts s
     end
 
@@ -380,8 +380,8 @@ module MiqSmisClient
         puts node.objName.classname
         si = Associators(node.objName,  :AssocClass  => 'ONTAP_SnapshotBasedOnFlexVol',
                                         :ResultClass => 'ONTAP_Snapshot',
-                                        :Role        => "Antecedent",
-                                        :ResultRole  => "Dependent"
+                                        :Role        => 'Antecedent',
+                                        :ResultRole  => 'Dependent'
                         )
         unless si.empty?
           dumpInstances(si, 2)
@@ -389,8 +389,8 @@ module MiqSmisClient
         end
         si = Associators(node.objName,  :AssocClass  => 'ONTAP_SnapshotBasedOnExtent',
                                         :ResultClass => 'ONTAP_Snapshot',
-                                        :Role        => "Antecedent",
-                                        :ResultRole  => "Dependent"
+                                        :Role        => 'Antecedent',
+                                        :ResultRole  => 'Dependent'
                         )
         dumpInstances(si, 2) unless si.empty?
       end
@@ -425,13 +425,13 @@ module MiqSmisClient
       #
       blockStatSvc = @client.AssociatorNames(sysNode.obj_name,  :AssocClass  => 'CIM_HostedService',
                                                                 :ResultClass => 'CIM_BlockStatisticsService',
-                                                                :Role        => "Antecedent",
-                                                                :ResultRole  => "Dependent").first
+                                                                :Role        => 'Antecedent',
+                                                                :ResultRole  => 'Dependent').first
 
       blockStatCap = @client.Associators(blockStatSvc,      :AssocClass  => 'CIM_ElementCapabilities',
                                                             :ResultClass => 'CIM_BlockStatisticsCapabilities',
-                                                            :Role        => "ManagedElement",
-                                                            :ResultRole  => "Capabilities").first
+                                                            :Role        => 'ManagedElement',
+                                                            :ResultRole  => 'Capabilities').first
 
       @clockTickInterval  = blockStatCap['ClockTickInterval'].value
       @ticksPerSec    = 1000000.0 / @clockTickInterval
@@ -474,7 +474,7 @@ module MiqSmisClient
 
         if deltaSecs <= 0.0
           name = metricInstance.evm_display_name
-          zn = (deltaSecs == 0 ? "zero" : "negative")
+          zn = (deltaSecs == 0 ? 'zero' : 'negative')
           _log.warn "#{zn} Delta Time for (#{metricInstance.class}, #{metricInstance.id}, #{name})"
           next
         end
@@ -580,7 +580,7 @@ module MiqSmisClient
     end
 
     def self.dotStart(io = $stdout, rankDir = 'TB')
-      io.puts "digraph G {"
+      io.puts 'digraph G {'
       io.puts "\tsize = \"22,22\";"
       io.puts "\toverlap = false;"
       io.puts "\tsplines = true;"
@@ -595,11 +595,11 @@ module MiqSmisClient
       @clusterIdx = 0
       dumpDotClusters(io, dotClusters)
 
-      dotConnections.each_key { |k| io.puts k + ";" }
+      dotConnections.each_key { |k| io.puts k + ';' }
     end
 
     def self.dotEnd(io = $stdout)
-      io.puts "}"
+      io.puts '}'
     end
 
     def self.dotConnect(node, prof, flags, depth, connHash, cluster, level = 1, antecedent = nil)
@@ -692,16 +692,16 @@ module MiqSmisClient
       clusters.each do |c|
         if c.kind_of?(Array)
           shape, id = dotNodeInfo(c.first)
-          io.puts "    " * level + "subgraph cluster_#{@clusterIdx} {"
+          io.puts '    ' * level + "subgraph cluster_#{@clusterIdx} {"
           @clusterIdx += 1
           dumpDotClusters(io, c, level + 1)
-          io.puts "    " * level + "}"
+          io.puts '    ' * level + '}'
         else
           shape, id = dotNodeInfo(c)
-          color = ""
+          color = ''
           color = "color=#{dotHealth(c)},style=filled," if c.metric_id
           nodeDef = %(#{dotNodeName(c)} [shape=#{shape},#{color}label="#{c.class_name}\\n#{id}") + %(,URL="#"];)
-          io.puts "    " * level + nodeDef
+          io.puts '    ' * level + nodeDef
           # Rails.logger.info("GV: #{nodeDef}")
         end
       end

@@ -4,16 +4,16 @@ module OpsController::Db
 
   # Show list of VMDB tables or settings
   def db_list(exp = nil)
-    @lastaction = "db_list"
+    @lastaction = 'db_list'
     @force_no_grid_xml = true
     model = case @sb[:active_tab] # Build view based on tab selected
-            when "db_connections"
+            when 'db_connections'
               VmdbDatabaseConnection
-            when "db_details"
+            when 'db_details'
               VmdbTableEvm
-            when "db_indexes"
+            when 'db_indexes'
               VmdbIndex
-            when "db_settings"
+            when 'db_settings'
               VmdbDatabaseSetting
             end
     # @explorer = true if model == VmdbIndex
@@ -21,11 +21,11 @@ module OpsController::Db
     if model == VmdbIndex
       # building a filter with expression to show VmdbTableEvm tables only
       exp = MiqExpression.new(
-        "and" => [
+        'and' => [
           {
-            "=" => {
-              "value" => "VmdbTableEvm",
-              "field" => "VmdbIndex.vmdb_table-type"
+            '=' => {
+              'value' => 'VmdbTableEvm',
+              'field' => 'VmdbIndex.vmdb_table-type'
             }
           }
         ]
@@ -44,12 +44,12 @@ module OpsController::Db
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
 
     # Came in from outside show_list partial
-    if params[:action] == "list_view_filter" || params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
+    if params[:action] == 'list_view_filter' || params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|
         page << javascript_prologue
-        page.replace_html("gtl_div", :partial => 'layouts/x_gtl', :locals => {:action_url => "db_list"})
-        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
-        page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
+        page.replace_html('gtl_div', :partial => 'layouts/x_gtl', :locals => {:action_url => 'db_list'})
+        page.replace_html('paging_div', :partial => 'layouts/x_pagingcontrols')
+        page << 'miqSparkle(false);'  # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
   end
@@ -59,26 +59,26 @@ module OpsController::Db
     @sb[:zone_name] = params[:zone_name] if params[:zone_name]
     @sb[:filter_text] = params[:filter][:text] if params[:filter] && params[:filter][:text]
 
-    if params[:zone_name] && params[:zone_name] != "all"
+    if params[:zone_name] && params[:zone_name] != 'all'
       @sb[:zone_name] = params[:zone_name]
       cond_hash = {}
-      cond_hash["="] = {"value" => params[:zone_name], "field" => "VmdbDatabaseConnection-zone.name"}
+      cond_hash['='] = {'value' => params[:zone_name], 'field' => 'VmdbDatabaseConnection-zone.name'}
       @sb[:condition].push(cond_hash)
     end
-    if params[:filter] && params[:filter][:text] != ""
+    if params[:filter] && params[:filter][:text] != ''
       # @sb[:cond] =  ["vmdb_database_connection.address like ?", params[:filter][:text]]
       cond_hash = {}
-      cond_hash["like"] = {"value" => params[:filter][:text], "field" => "VmdbDatabaseConnection-address"}
+      cond_hash['like'] = {'value' => params[:filter][:text], 'field' => 'VmdbDatabaseConnection-address'}
       @sb[:condition].push(cond_hash)
     end
     condition = {}
-    condition["and"] = []
+    condition['and'] = []
     @sb[:condition].each do |c|
-      condition["and"].push(c)
+      condition['and'].push(c)
     end
     exp = MiqExpression.new(condition)
     # forcing to refresh the view when filtering results
-    @_params[:refresh] = "y"
+    @_params[:refresh] = 'y'
     db_list(exp)
   end
 
@@ -101,18 +101,18 @@ module OpsController::Db
       return
     end
     miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
-    if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
-      add_flash(_("Export generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
+    if miq_task.task_results.blank? || miq_task.status != 'Ok'  # Check to see if any results came back or status not Ok
+      add_flash(_('Export generation returned: Status [%{status}] Message [%{message}]') % {:status => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page << "miqSparkle(false);"
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+        page << 'miqSparkle(false);'
       end
     else
       session[:export_data_id] = miq_task.id
       render :update do |page|
         page << javascript_prologue
-        page << "miqSparkle(false);"
+        page << 'miqSparkle(false);'
         page << "DoNav('#{url_for(:action => "send_download_data")}');"
       end
     end
@@ -124,8 +124,8 @@ module OpsController::Db
     VmdbTable.analyze_queue(ids.collect(&:to_i))
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
+      page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -135,8 +135,8 @@ module OpsController::Db
     VmdbTable.reindex_queue(ids.collect(&:to_i))
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
+      page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -146,8 +146,8 @@ module OpsController::Db
     VmdbTable.vacuum_queue(ids.collect(&:to_i))
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
+      page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+      page << 'miqSparkle(false);'
     end
   end
 
@@ -157,78 +157,78 @@ module OpsController::Db
     VmdbTable.vacuum_full_queue(ids.collect(&:to_i))
     render :update do |page|
       page << javascript_prologue
-      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-      page << "miqSparkle(false);"
+      page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+      page << 'miqSparkle(false);'
     end
   end
 
   def send_download_data
     export_data = MiqTask.find_by_id(session[:export_data_id]).task_results
     disable_client_cache
-    send_data(export_data, :filename => session[:export_fname], :type => "application/zip")
+    send_data(export_data, :filename => session[:export_fname], :type => 'application/zip')
   end
 
   private #######################
 
   # Build a VMDB tree for Database accordion
   def db_build_tree
-    TreeBuilderOpsVmdb.new("vmdb_tree", "vmdb", @sb)
+    TreeBuilderOpsVmdb.new('vmdb_tree', 'vmdb', @sb)
   end
 
   # Get information for a DB tree node
   def db_get_info
-    if x_node == "root"
+    if x_node == 'root'
       # If root node is selected
-      if @sb[:active_tab] == "db_summary"
+      if @sb[:active_tab] == 'db_summary'
         @record = VmdbDatabase.my_database
-        @right_cell_text = _("VMDB Summary")
-      elsif @sb[:active_tab] == "db_utilization"
+        @right_cell_text = _('VMDB Summary')
+      elsif @sb[:active_tab] == 'db_utilization'
         @record = VmdbDatabase.my_database
         perf_gen_init_options               # Initialize perf chart options, charts will be generated async
         @sb[:record_class] = @record.class.base_class.name  # Hang on to record class/id for async trans
         @sb[:record_id] = @record.id
-        @right_cell_text = _("VMDB Utilization")
+        @right_cell_text = _('VMDB Utilization')
       else
         @right_cell_text = case @sb[:active_tab]
-                           when "db_connections"
-                             @right_cell_text = _("VMDB Client Connections")
-                           when "db_details"
-                             @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "VmdbTable")}
-                           when "db_indexes"
-                             @right_cell_text = _("All VMDB Indexes")
+                           when 'db_connections'
+                             @right_cell_text = _('VMDB Client Connections')
+                           when 'db_details'
+                             @right_cell_text = _('All %{models}') % {:models => ui_lookup(:models => 'VmdbTable')}
+                           when 'db_indexes'
+                             @right_cell_text = _('All VMDB Indexes')
                            else
-                             @right_cell_text = _("VMDB Settings")
+                             @right_cell_text = _('VMDB Settings')
                            end
         @force_no_grid_xml = true
         db_list
       end
-      @tab_text = _("Tables")
+      @tab_text = _('Tables')
     else
       # If table is selected
-      if @sb[:active_tab] == "db_indexes" || params[:action] == "x_show"
+      if @sb[:active_tab] == 'db_indexes' || params[:action] == 'x_show'
         nodes = x_node.split('-')
-        if nodes.first == "xx"
+        if nodes.first == 'xx'
           tb = VmdbTableEvm.find_by_id(from_cid(nodes.last))
           @indexes = get_indexes(tb)
-          @right_cell_text = _("Indexes for %{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbTable"), :name => tb.name}
-          @tab_text = "%{table_name} Indexes" % {:table_name => tb.name}
+          @right_cell_text = _('Indexes for %{model} "%{name}"') % {:model => ui_lookup(:model => 'VmdbTable'), :name => tb.name}
+          @tab_text = '%{table_name} Indexes' % {:table_name => tb.name}
         else
           @vmdb_index = VmdbIndex.find_by_id(from_cid(nodes.last))
-          @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbIndex"), :name => @vmdb_index.name}
+          @right_cell_text = _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'VmdbIndex'), :name => @vmdb_index.name}
           @tab_text = @vmdb_index.name
         end
-      elsif @sb[:active_tab] == "db_utilization"
+      elsif @sb[:active_tab] == 'db_utilization'
         @record = VmdbTable.find_by_id(from_cid(x_node.split('-').last))
         perf_gen_init_options               # Initialize perf chart options, charts will be generated async
         @sb[:record_class] = @record.class.base_class.name  # Hang on to record class/id for async trans
         @sb[:record_id] = @record.id
-        @right_cell_text = _("VMDB \"%{name}\" Table Utilization") % {:name => @record.name}
+        @right_cell_text = _('VMDB "%{name}" Table Utilization') % {:name => @record.name}
         @tab_text = @record.name
       else
-        @sb[:active_tab] = "db_details"
+        @sb[:active_tab] = 'db_details'
         @table = VmdbTable.find_by_id(from_cid(x_node.split('-').last))
         @indexes = get_indexes(@table)
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "VmdbTable"), :name => @table.name}
+        @right_cell_text = _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'VmdbTable'), :name => @table.name}
         @tab_text = @table.name
       end
     end
@@ -240,12 +240,12 @@ module OpsController::Db
   end
 
   def db_refresh
-    assert_privileges("db_refresh")
+    assert_privileges('db_refresh')
     db_get_info
     render :update do |page|
       page << javascript_prologue
-      page.replace_html(@sb[:active_tab], :partial => "db_details_tab")
-      page << "miqSparkle(false);"    # Need to turn off sparkle in case original ajax element gets replaced
+      page.replace_html(@sb[:active_tab], :partial => 'db_details_tab')
+      page << 'miqSparkle(false);'    # Need to turn off sparkle in case original ajax element gets replaced
     end
   end
 end

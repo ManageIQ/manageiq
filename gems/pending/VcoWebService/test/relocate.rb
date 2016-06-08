@@ -2,7 +2,7 @@ require_relative '../../bundler_setup'
 require 'VcoWebService/MiqVcoClientBase'
 
 begin
-  work_flow_name  = "Relocate VM"
+  work_flow_name  = 'Relocate VM'
   target_vm   = 'Fedora7'
   to_host     = TARGET_HOST
 
@@ -11,22 +11,22 @@ begin
   wf = vco.getWorkflowsWithName(work_flow_name)
   vco.dumpObj(wf)
 
-  vms = vco.findByFilter("VC:VirtualMachine", 'name' => target_vm)[0]
+  vms = vco.findByFilter('VC:VirtualMachine', 'name' => target_vm)[0]
   vco.dumpObj(vms)
 
   #
   # Keep VM on same datastore.
   #
-  ds = vco.findRelation("VC:VirtualMachine", vms.id, "getDatastore()")
+  ds = vco.findRelation('VC:VirtualMachine', vms.id, 'getDatastore()')
   vco.dumpObj(ds)
 
-  hs = vco.findByFilter("VC:HostSystem", 'name' => to_host)[0]
+  hs = vco.findByFilter('VC:HostSystem', 'name' => to_host)[0]
   vco.dumpObj(hs)
 
-  cr = vco.findByFilter("VC:ComputeResource", 'name' => to_host)[0]
+  cr = vco.findByFilter('VC:ComputeResource', 'name' => to_host)[0]
   vco.dumpObj(cr)
 
-  rp = vco.findRelation("VC:ComputeResource", cr.id, "getResourcePool()")
+  rp = vco.findRelation('VC:ComputeResource', cr.id, 'getResourcePool()')
   vco.dumpObj(rp)
 
   inputs = VcoArray.new('ArrayOfWorkflowTokenAttribute') do |ia|

@@ -7,7 +7,7 @@ require 'digest/md5'
 
 module Manageiq
   class BlackBox
-    GLOBAL_CONFIG_FILE = "/miq.yml"
+    GLOBAL_CONFIG_FILE = '/miq.yml'
 
     def initialize(vmName, ost = nil)
       @config_name = vmName
@@ -29,7 +29,7 @@ module Manageiq
       elsif $miqHostCfg && $miqHostCfg.dataDir
         @localDataDir = File.join($miqHostCfg.dataDir, Digest::MD5.hexdigest(@config_name))
       else
-        @localDataDir = "/tmp"
+        @localDataDir = '/tmp'
       end
 
       loadGlobalSettings
@@ -71,7 +71,7 @@ module Manageiq
     end
 
     def saveGlobalSettings
-      x = ""
+      x = ''
       YAML.dump(@cfg, x)
       writeData(GLOBAL_CONFIG_FILE, x)
     end
@@ -79,7 +79,7 @@ module Manageiq
     def deleteLocalDataDir(options = {})
       if @write_data_externally || options[:forceDelete]
         if File.exist?(@localDataDir)
-          Dir.foreach(@localDataDir) { |f| File.delete(File.join(@localDataDir, f)) unless f[0..0] === "." }
+          Dir.foreach(@localDataDir) { |f| File.delete(File.join(@localDataDir, f)) unless f[0..0] === '.' }
           Dir.delete(@localDataDir)
         end
       end
@@ -87,15 +87,15 @@ module Manageiq
 
     def writeData(filename, data)
       Dir.mkdir(@localDataDir, 0755) unless File.exist?(@localDataDir)
-      filename2 = filename.tr("/", "_")
+      filename2 = filename.tr('/', '_')
       fullpath = File.join(@localDataDir, filename2)
-      f = File.open(fullpath, "w")
+      f = File.open(fullpath, 'w')
       f.write(data.to_s)
       f.close
     end
 
     def readData(filename)
-      filename2 = filename.tr("/", "_")
+      filename2 = filename.tr('/', '_')
       fullpath = File.join(@localDataDir, filename2)
       File.read(fullpath)
     end

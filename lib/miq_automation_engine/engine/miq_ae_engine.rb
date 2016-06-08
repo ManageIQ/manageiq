@@ -190,7 +190,7 @@ module MiqAeEngine
     when MiqRequestTask
       object.class.base_model.name
     when VmOrTemplate
-      "VmOrTemplate"
+      'VmOrTemplate'
     else
       object.class.base_class.name
     end
@@ -203,7 +203,7 @@ module MiqAeEngine
     when MiqRequestTask
       object.class.base_model.name.underscore
     when VmOrTemplate
-      "vm"
+      'vm'
     else
       object.class.base_class.name.underscore
     end
@@ -221,13 +221,13 @@ module MiqAeEngine
   end
 
   def self.automation_attribute_is_array?(attr)
-    attr.to_s.downcase.starts_with?("array::")
+    attr.to_s.downcase.starts_with?('array::')
   end
 
   def self.create_automation_attributes_string(hash)
     args = create_automation_attributes(hash)
     return args if args.kind_of?(String)
-    args.collect { |a| a.join("=") }.join("&")
+    args.collect { |a| a.join('=') }.join('&')
   end
 
   def self.create_automation_attributes(hash)
@@ -256,7 +256,7 @@ module MiqAeEngine
   def self.create_automation_attribute_array_value(value)
     value.collect do |obj|
       obj.kind_of?(ActiveRecord::Base) ? "#{obj.class.name}::#{obj.id}" : obj.to_s
-    end.join(",")
+    end.join(',')
   end
 
   def self.set_automation_attributes_from_objects(objects, attrs_hash)
@@ -274,8 +274,8 @@ module MiqAeEngine
     if options[:fqclass]
       options[:namespace], options[:class], = MiqAePath.split(options[:fqclass], :has_instance_name => false)
     else
-      options[:namespace] ||= "System"
-      options[:class] ||= "Process"
+      options[:namespace] ||= 'System'
+      options[:class] ||= 'Process'
     end
     options[:instance_name] = name
 
@@ -297,12 +297,12 @@ module MiqAeEngine
     ([vmdb_object] + objects).each do |object|
       next if object.nil?
       key           = create_automation_attribute_key(object)
-      partial_key   = ae_attrs.keys.detect { |k| k.to_s.ends_with?(key.split("::").last.downcase) }
+      partial_key   = ae_attrs.keys.detect { |k| k.to_s.ends_with?(key.split('::').last.downcase) }
       next if partial_key # do NOT override any specified
       ae_attrs[key] = create_automation_attribute_value(object)
     end
 
-    ae_attrs["MiqRequest::miq_request"] = vmdb_object.id if vmdb_object.kind_of?(MiqRequest)
+    ae_attrs['MiqRequest::miq_request'] = vmdb_object.id if vmdb_object.kind_of?(MiqRequest)
     ae_attrs['vmdb_object_type'] = create_automation_attribute_name(vmdb_object) unless vmdb_object.nil?
 
     array_objects = ae_attrs.keys.find_all { |key| automation_attribute_is_array?(key) }
@@ -315,7 +315,7 @@ module MiqAeEngine
   # side effect in options, :uri is set
   # returns workspace
   def self.resolve_automation_object(uri, user_obj, attr = nil, options = {}, readonly = false)
-    raise "User object not passed in" unless user_obj.kind_of?(User)
+    raise 'User object not passed in' unless user_obj.kind_of?(User)
     uri = create_automation_object(uri, attr, options) if attr
     options[:uri] = uri
     MiqAeWorkspaceRuntime.instantiate(uri, user_obj, :readonly => readonly).tap do
@@ -324,7 +324,7 @@ module MiqAeEngine
   end
 
   def self.ae_user_object(options = {})
-    raise "user_id not specified in Automation request" if options[:user_id].blank?
+    raise 'user_id not specified in Automation request' if options[:user_id].blank?
     # raise "group_id not specified in Automation request" if options[:miq_group_id].blank?
     User.find_by!(:id => options[:user_id]).tap do |obj|
       # obj.current_group = MiqGroup.find_by!(:id => options[:miq_group_id])

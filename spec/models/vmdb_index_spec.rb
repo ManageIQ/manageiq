@@ -1,8 +1,8 @@
 describe VmdbIndex do
-  context "#capture_metrics" do
-    let(:index) { FactoryGirl.create(:vmdb_index, :name => "accounts_pkey") }
+  context '#capture_metrics' do
+    let(:index) { FactoryGirl.create(:vmdb_index, :name => 'accounts_pkey') }
 
-    it "creates a vmdb_metrics record" do
+    it 'creates a vmdb_metrics record' do
       # The first capture just gets the raw data
       index.capture_metrics
       expect(index.vmdb_metrics).to be_empty
@@ -31,11 +31,11 @@ describe VmdbIndex do
     end
   end
 
-  context "#rollup_metrics" do
+  context '#rollup_metrics' do
     before :each do
       db = VmdbDatabase.seed_self
       @evm_table  = FactoryGirl.create(:vmdb_table_evm, :vmdb_database => db,         :name => 'accounts')
-      @evm_index  = FactoryGirl.create(:vmdb_index,     :vmdb_table    => @evm_table, :name => "accounts_pkey")
+      @evm_index  = FactoryGirl.create(:vmdb_index,     :vmdb_table    => @evm_table, :name => 'accounts_pkey')
 
       ts = Time.gm(2012, 8, 15, 10, 00, 01)         # Need specific date in order to keep track of rollup data...
 
@@ -94,7 +94,7 @@ describe VmdbIndex do
       FactoryGirl.create(:vmdb_metric_hourly, :resource => @evm_index, :timestamp => ts,            :rows => 500, :size => 5000, :wasted_bytes => 90, :percent_bloat => 50.7)
     end
 
-    it "will return 1 row with average daily rollups for metrics" do
+    it 'will return 1 row with average daily rollups for metrics' do
       interval_name = 'hourly'
       rollup_date   = Time.gm(2012, 8, 14, 00, 00, 01)
       @evm_index.rollup_metrics(interval_name, rollup_date)

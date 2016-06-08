@@ -6,9 +6,9 @@ describe SetCorrectStiTypeOnOpenstackInfraMiqTemplate do
 
   let(:ems_row_entries) do
     [
-      {:type => "ManageIQ::Providers::Openstack::InfraManager"},
-      {:type => "ManageIQ::Providers::Openstack::CloudManager"},
-      {:type => "ManageIQ::Providers::AnotherManager"}
+      {:type => 'ManageIQ::Providers::Openstack::InfraManager'},
+      {:type => 'ManageIQ::Providers::Openstack::CloudManager'},
+      {:type => 'ManageIQ::Providers::AnotherManager'}
     ]
   end
 
@@ -16,25 +16,25 @@ describe SetCorrectStiTypeOnOpenstackInfraMiqTemplate do
     [
       {
         :ems      => ems_row_entries[0],
-        :name     => "template_1",
+        :name     => 'template_1',
         :type_in  => 'ManageIQ::Providers::Openstack::CloudManager::Template',
         :type_out => 'ManageIQ::Providers::Openstack::InfraManager::Template'
       },
       {
         :ems      => ems_row_entries[0],
-        :name     => "template_2",
+        :name     => 'template_2',
         :type_in  => 'ManageIQ::Providers::Openstack::CloudManager::Template',
         :type_out => 'ManageIQ::Providers::Openstack::InfraManager::Template'
       },
       {
         :ems      => ems_row_entries[1],
-        :name     => "template_3",
+        :name     => 'template_3',
         :type_in  => 'ManageIQ::Providers::Openstack::CloudManager::Template',
         :type_out => 'ManageIQ::Providers::Openstack::CloudManager::Template'
       },
       {
         :ems      => ems_row_entries[2],
-        :name     => "template_4",
+        :name     => 'template_4',
         :type_in  => 'ManageIQ::Providers::AnyManager::Template',
         :type_out => 'ManageIQ::Providers::AnyManager::Template'
       },
@@ -42,7 +42,7 @@ describe SetCorrectStiTypeOnOpenstackInfraMiqTemplate do
   end
 
   migration_context :up do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end
@@ -64,7 +64,7 @@ describe SetCorrectStiTypeOnOpenstackInfraMiqTemplate do
   end
 
   migration_context :down do
-    it "migrates a series of representative row" do
+    it 'migrates a series of representative row' do
       ems_row_entries.each do |x|
         x[:ems] = ext_management_system_stub.create!(:type => x[:type])
       end

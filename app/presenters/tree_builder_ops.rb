@@ -9,14 +9,14 @@ class TreeBuilderOps < TreeBuilder
     # FIXME: check all below
     case @name
     when :vmdb_tree
-      @tree_state.x_node_set("root", @name)
+      @tree_state.x_node_set('root', @name)
     else
       @tree_state.x_node_set("svr-#{to_cid(MiqServer.my_server(true).id)}", @name) unless @tree_state.x_node(@name)
     end
   end
 
   def x_get_tree_zone_kids(object, count_only)
-    count_only_or_objects(count_only, object.miq_servers, "name")
+    count_only_or_objects(count_only, object.miq_servers, 'name')
   end
 
   # Get root nodes count/array for explorer tree

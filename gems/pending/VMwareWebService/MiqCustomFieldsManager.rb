@@ -6,7 +6,7 @@ class MiqCustomFieldsManager
     @sic                = invObj.sic
 
     @cfManager      = @sic.customFieldsManager
-    raise "The customFieldsManager is not supported on this system." unless @cfManager
+    raise 'The customFieldsManager is not supported on this system.' unless @cfManager
   end
 
   def field

@@ -12,6 +12,6 @@ class PersistentVolumeController < ApplicationController
   private ############################
 
   def display_name
-    _("Volumes")
+    _('Volumes')
   end
 end

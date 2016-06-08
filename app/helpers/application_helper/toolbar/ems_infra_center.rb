@@ -28,19 +28,19 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-edit fa-lg',
           t = N_('Scale this #{ui_lookup(:table=>"ems_infra")}'),
           t,
-          :url => "/scaling"),
+          :url => '/scaling'),
         button(
           :ems_infra_scaledown,
           'pficon pficon-edit fa-lg',
           t = N_('Scale this #{ui_lookup(:table=>"ems_infra")} down'),
           t,
-          :url => "/scaledown"),
+          :url => '/scaledown'),
         button(
           :ems_infra_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this #{ui_lookup(:table=>"ems_infra")} from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
+          :url_parms => '&refresh=y',
           :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"ems_infra\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"ems_infra\")}?")),
       ]
     ),
@@ -78,7 +78,7 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           N_('Show Timelines for this #{ui_lookup(:table=>"ems_infra")}'),
           N_('Timelines'),
           :klass     => ApplicationHelper::Button::EmsInfraTimeline,
-          :url_parms => "?display=timeline"),
+          :url_parms => '?display=timeline'),
       ]
     ),
   ])

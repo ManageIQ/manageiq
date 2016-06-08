@@ -40,25 +40,25 @@ class MiqPolicy < ApplicationRecord
   def self.built_in_policies
     return @@built_in_policies.dup unless @@built_in_policies.nil?
 
-    policy_hashes = YAML.load_file(Rails.root.join("product", "policy", "built_in_policies.yml"))
+    policy_hashes = YAML.load_file(Rails.root.join('product', 'policy', 'built_in_policies.yml'))
 
     @@built_in_policies = policy_hashes.collect do |p_hash|
       policy = OpenStruct.new(p_hash)
       policy.attributes =
         {
-          "name"        => "(Built-in) #{p_hash[:name]}",
-          "description" => "(Built-in) #{p_hash[:description]}",
+          'name'        => "(Built-in) #{p_hash[:name]}",
+          'description' => "(Built-in) #{p_hash[:description]}",
           :applies_to?  => p_hash[:applies_to?]
         }
       policy.events = [MiqEventDefinition.find_by(:name => policy.event)]
       policy.conditions =
         if policy.condition
           [Condition.new(
-            :name        => policy.attributes["name"],
-            :description => policy.attributes["description"],
+            :name        => policy.attributes['name'],
+            :description => policy.attributes['description'],
             :expression  => MiqExpression.new(policy.condition),
             :modifier    => policy.modifier,
-            :towhat      => "Vm"
+            :towhat      => 'Vm'
           )]
         else
           []
@@ -98,7 +98,7 @@ class MiqPolicy < ApplicationRecord
   alias_method :actions, :miq_actions
 
   def actions_for_event(event, on = :failure)
-    order = on == :success ? "success_sequence" : "failure_sequence"
+    order = on == :success ? 'success_sequence' : 'failure_sequence'
     miq_policy_contents.where(:miq_event_definition => event).order(order).collect do |pe|
       next unless pe.qualifier == on.to_s
       pe.get_action(on)
@@ -107,7 +107,7 @@ class MiqPolicy < ApplicationRecord
 
   def action_result_for_event(action, event)
     pe = miq_policy_contents.find_by(:miq_action => action, :miq_event_definition => event)
-    pe.qualifier == "success"
+    pe.qualifier == 'success'
   end
 
   def delete_event(event)
@@ -133,8 +133,8 @@ class MiqPolicy < ApplicationRecord
     succes_seq = 0
     fail_seq = 0
     action_list.each do |action, opts|
-      opts[:qualifier] ||= "failure"
-      opts[:sequence]  = opts[:qualifier].to_s == "success" ? succes_seq += 1 : fail_seq += 1
+      opts[:qualifier] ||= 'failure'
+      opts[:sequence]  = opts[:qualifier].to_s == 'success' ? succes_seq += 1 : fail_seq += 1
       add_action_for_event(event, action, opts)
     end
   end
@@ -152,7 +152,7 @@ class MiqPolicy < ApplicationRecord
 
     logger.info("MIQ(policy-enforce_policy): Event: [#{event}], To: [#{target.name}]")
 
-    mode = event.ends_with?("compliance_check") ? "compliance" : "control"
+    mode = event.ends_with?('compliance_check') ? 'compliance' : 'control'
 
     profiles, plist = get_policies_for_target(target, mode, erec, inputs)
     return result if plist.blank?
@@ -191,12 +191,12 @@ class MiqPolicy < ApplicationRecord
 
       cond_result, clist = evaluate_conditions_for_policy(target, p, mode, inputs)
 
-      if cond_result == "deny"
+      if cond_result == 'deny'
         result[:result] = false
-        result[:details].push(p.attributes.merge("result" => false, "conditions" => clist))
+        result[:details].push(p.attributes.merge('result' => false, 'conditions' => clist))
         failed.push(p)
       else
-        result[:details].push(p.attributes.merge("result" => true, "conditions" => clist))
+        result[:details].push(p.attributes.merge('result' => true, 'conditions' => clist))
         succeeded.push(p)
       end
     end
@@ -205,7 +205,7 @@ class MiqPolicy < ApplicationRecord
   private_class_method :evaluate_conditions
 
   def self.evaluate_conditions_for_policy(target, policy, mode, inputs)
-    cond_result = "allow"
+    cond_result = 'allow'
     clist = []
     policy.conditions.uniq.each do|c|
       unless c.applies_to?(target, inputs)
@@ -215,10 +215,10 @@ class MiqPolicy < ApplicationRecord
       end
 
       eval_result = eval_condition(c, target, inputs)
-      cond_result = eval_result if eval_result == "deny"
-      clist.push(c.attributes.merge("result" => eval_result))
+      cond_result = eval_result if eval_result == 'deny'
+      clist.push(c.attributes.merge('result' => eval_result))
 
-      break if eval_result == "deny" && mode == "control"
+      break if eval_result == 'deny' && mode == 'control'
     end
     [cond_result, clist]
   end
@@ -262,15 +262,15 @@ class MiqPolicy < ApplicationRecord
     policies.collect do |p|
       next if event && !p.events.include?(event)
 
-      policy_hash = {"result" => "N/A", "conditions" => [], "actions" => []}
-      policy_hash["scope"] = MiqExpression.evaluate_atoms(p.expression, rec) unless p.expression.nil?
-      if policy_hash["scope"].nil? || policy_hash["scope"]["result"]
+      policy_hash = {'result' => 'N/A', 'conditions' => [], 'actions' => []}
+      policy_hash['scope'] = MiqExpression.evaluate_atoms(p.expression, rec) unless p.expression.nil?
+      if policy_hash['scope'].nil? || policy_hash['scope']['result']
         policy_hash['result'], policy_hash['conditions'] = resolve_policy_conditions(p, rec)
 
-        action_on = policy_hash["result"] == "deny" ? :failure : :success
-        policy_hash["actions"] =
+        action_on = policy_hash['result'] == 'deny' ? :failure : :success
+        policy_hash['actions'] =
           p.actions_for_event(event, action_on).uniq.collect do |a|
-            {"id" => a.id, "name" => a.name, "description" => a.description, "result" => policy_hash["result"]}
+            {'id' => a.id, 'name' => a.name, 'description' => a.description, 'result' => policy_hash['result']}
           end unless event.nil?
       end
       p.attributes.merge(policy_hash)
@@ -282,33 +282,33 @@ class MiqPolicy < ApplicationRecord
     conditions =
       policy.conditions.collect do |c|
         rec_model = rec.class.base_model.name
-        rec_model = "Vm" if rec_model.downcase.match("template")
-        next unless rec_model == c["towhat"]
+        rec_model = 'Vm' if rec_model.downcase.match('template')
+        next unless rec_model == c['towhat']
 
         resolve_condition(c, rec).tap do |cond_hash|
-          policy_result = cond_hash["result"] if cond_hash["result"] == "deny"
+          policy_result = cond_hash['result'] if cond_hash['result'] == 'deny'
         end
       end.compact
 
     if policy.active == true
-      result_list = conditions.collect { |c| c["result"] }.uniq
-      policy_result = result_list.first if result_list.length == 1 && result_list.first == "N/A"
+      result_list = conditions.collect { |c| c['result'] }.uniq
+      policy_result = result_list.first if result_list.length == 1 && result_list.first == 'N/A'
     else
-      policy_result = "N/A" # Ignore condition result if policy is inactive
+      policy_result = 'N/A' # Ignore condition result if policy is inactive
     end
     [policy_result, conditions]
   end
   private_class_method :resolve_policy_conditions
 
   def self.resolve_condition(cond, rec)
-    cond_hash = {"id" => cond.id, "name" => cond.name, "description" => cond.description}
-    cond_hash["scope"] = MiqExpression.evaluate_atoms(cond.applies_to_exp, rec) unless cond.applies_to_exp.nil?
-    if cond_hash["scope"].nil? || cond_hash["scope"]["result"]
-      cond_hash["result"] = eval_condition(cond, rec)
-      cond_hash["expression"] = MiqExpression.evaluate_atoms(cond.expression, rec)
+    cond_hash = {'id' => cond.id, 'name' => cond.name, 'description' => cond.description}
+    cond_hash['scope'] = MiqExpression.evaluate_atoms(cond.applies_to_exp, rec) unless cond.applies_to_exp.nil?
+    if cond_hash['scope'].nil? || cond_hash['scope']['result']
+      cond_hash['result'] = eval_condition(cond, rec)
+      cond_hash['expression'] = MiqExpression.evaluate_atoms(cond.expression, rec)
     else
-      cond_hash["result"] = "N/A"
-      cond_hash["expression"] = cond.expression.exp
+      cond_hash['result'] = 'N/A'
+      cond_hash['expression'] = cond.expression.exp
     end
     cond_hash
   end
@@ -316,7 +316,7 @@ class MiqPolicy < ApplicationRecord
 
   def applies_to?(rec, inputs = {})
     rec_model = rec.class.base_model.name
-    rec_model = "Vm" if rec_model.downcase.match("template")
+    rec_model = 'Vm' if rec_model.downcase.match('template')
 
     return false if towhat && rec_model != towhat
     return true  if expression.nil?
@@ -335,7 +335,7 @@ class MiqPolicy < ApplicationRecord
   end
   private_class_method :eval_condition
 
-  EVENT_GROUPS_EXCLUDED = ["evm_operations", "ems_operations"]
+  EVENT_GROUPS_EXCLUDED = ['evm_operations', 'ems_operations']
   def self.all_policy_events
     MiqEventDefinition.all_events.select { |e| !e.memberof.empty? && !EVENT_GROUPS_EXCLUDED.include?(e.memberof.first.name) }
   end
@@ -359,9 +359,9 @@ class MiqPolicy < ApplicationRecord
   def self.seed
     all.each do |p|
       attrs = {}
-      attrs[:towhat] = "Vm"      if p.towhat.nil?
+      attrs[:towhat] = 'Vm'      if p.towhat.nil?
       attrs[:active] = true      if p.active.nil?
-      attrs[:mode]   = "control" if p.mode.nil?
+      attrs[:mode]   = 'control' if p.mode.nil?
       next if attrs.empty?
       _log.info("Updating [#{p.name}]")
       p.update_attributes(attrs)
@@ -376,7 +376,7 @@ class MiqPolicy < ApplicationRecord
     plist = built_in_policies.concat(plist).uniq
 
     towhat = target.class.base_model.name
-    towhat = "Vm" if towhat.downcase.match("template")
+    towhat = 'Vm' if towhat.downcase.match('template')
     plist.keep_if do |p|
       p.mode == mode &&
       p.towhat == towhat &&
@@ -453,13 +453,13 @@ class MiqPolicy < ApplicationRecord
     # update the correct DB sequence and synchronous value with the value from the UI
     opt_hash[:qualifier] = opt_hash[:qualifier].to_s
     case opt_hash[:qualifier]
-    when "success"
+    when 'success'
       opt_hash[:success_sequence]    = opt_hash[:sequence]
       opt_hash[:success_synchronous] = opt_hash[:synchronous]
-    when "failure"
+    when 'failure'
       opt_hash[:failure_sequence]    = opt_hash[:sequence]
       opt_hash[:failure_synchronous] = opt_hash[:synchronous]
-    when "both"
+    when 'both'
       opt_hash[:success_sequence]    = opt_hash[:sequence]
       opt_hash[:failure_sequence]    = opt_hash[:sequence]
       opt_hash[:success_synchronous] = opt_hash[:synchronous]

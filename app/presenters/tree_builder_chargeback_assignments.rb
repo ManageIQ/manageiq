@@ -2,19 +2,19 @@ class TreeBuilderChargebackAssignments < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:open_all => true, :full_ids => true, :leaf => "ChargebackRate"}
+    {:open_all => true, :full_ids => true, :leaf => 'ChargebackRate'}
   end
 
   def set_locals_for_render
     locals = super
     temp = {
-      :id_prefix      => "cba_",
+      :id_prefix      => 'cba_',
     }
     locals.merge!(temp)
   end
 
   def root_options
-    [t = _("Assignments"), t]
+    [t = _('Assignments'), t]
   end
 
   # Get root nodes count/array for explorer tree

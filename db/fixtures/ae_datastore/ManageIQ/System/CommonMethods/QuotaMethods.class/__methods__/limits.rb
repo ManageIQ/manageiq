@@ -42,7 +42,7 @@ end
 def parent_model_value(attr)
   value = $evm.parent[attr].to_i
   $evm.log(:info, "Quota Model #{attr}: #{value}") unless value.zero?
-  if attr.ends_with?("storage") || attr.ends_with?("memory")
+  if attr.ends_with?('storage') || attr.ends_with?('memory')
     value = value.megabytes
   end
   value
@@ -85,7 +85,7 @@ def set_root_limit_values(quota_max, quota_warn)
 end
 
 def model_and_tag_quota_values
-  $evm.log(:info, "Getting Group and Tag Quota Values.")
+  $evm.log(:info, 'Getting Group and Tag Quota Values.')
   quota_max = {}
   quota_warn = {}
   QUOTA_ATTRIBUTES.each do |name|
@@ -101,12 +101,12 @@ def limits_set(limit_hash)
 end
 
 @source = $evm.root['quota_source']
-error("source") if @source.nil?
+error('source') if @source.nil?
 
 quota_by_tenant? ? tenant_quota_values : model_and_tag_quota_values
 
 if !limits_set($evm.root['quota_limit_max']) && !limits_set($evm.root['quota_limit_warn'])
-  $evm.log(:info, "No Quota limits set. No quota check being done.")
+  $evm.log(:info, 'No Quota limits set. No quota check being done.')
   $evm.root['ae_result'] = 'ok'
   $evm.root['ae_next_state'] = 'finished'
   exit MIQ_OK

@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/ConfigurationManagement/AnsibleTower/Operations/StateMachines/Job.class/__methods__/wait_for_ip').to_s
 require Rails.root.join('spec/support/miq_ae_mock_service').to_s
 
@@ -12,7 +12,7 @@ describe WaitForIP do
   let(:root_object) { MiqAeMockObject.new }
   let(:service) { MiqAeMockService.new(root_object) }
 
-  it "#main - ok" do
+  it '#main - ok' do
     root_object['vm'] = svc_vm
     allow_any_instance_of(klass).to receive(:ipaddresses).with(no_args).and_return(ip_addr)
     allow_any_instance_of(klass).to receive(:refresh).with(no_args).and_return(nil)
@@ -22,7 +22,7 @@ describe WaitForIP do
     expect(root_object['ae_result']).to eq('ok')
   end
 
-  it "#main - retry" do
+  it '#main - retry' do
     root_object['vm'] = svc_vm
     allow_any_instance_of(klass).to receive(:ipaddresses).with(no_args).and_return([])
     allow_any_instance_of(klass).to receive(:refresh).with(no_args).and_return(nil)

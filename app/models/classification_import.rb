@@ -3,8 +3,8 @@ class ClassificationImport
   attr_accessor :errors
   attr_accessor :stats
 
-  REQUIRED_COLS = ["category", "entry"]
-  MATCH_KEYS = ["name", "hardware.networks.hostname", "guid"]
+  REQUIRED_COLS = ['category', 'entry']
+  MATCH_KEYS = ['name', 'hardware.networks.hostname', 'guid']
 
   def initialize(data)
     @data = data[0]
@@ -42,7 +42,7 @@ class ClassificationImport
         _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a vm, an entry will be skipped"
         @errors.add(:severalvmsfound4keys, "#{@keys[0].titleize}: #{line[@keys[0]]}: Could not resolve a vm, an entry will be skipped")
       else
-        cat = Classification.find_by_description(line["category"])
+        cat = Classification.find_by_description(line['category'])
         if cat.nil?
           bad += 1
           _log.warn "#{@keys[0].titleize}: #{line[@keys[0]]}: Unable to find category #{line["category"]}"
@@ -51,11 +51,11 @@ class ClassificationImport
         end
 
         @verified_data[vms[0].id] ||= {}
-        @verified_data[vms[0].id][line["category"]] ||= []
+        @verified_data[vms[0].id][line['category']] ||= []
         entry = nil
         cat.entries.each do|e|
-          if e.description == line["entry"]
-            @verified_data[vms[0].id][line["category"]].push(line["entry"])
+          if e.description == line['entry']
+            @verified_data[vms[0].id][line['category']].push(line['entry'])
             entry = e
             break
           end

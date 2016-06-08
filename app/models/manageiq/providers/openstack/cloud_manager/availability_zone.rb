@@ -10,6 +10,6 @@ class ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone < ::Availab
   end
 
   def block_storage_disk_usage
-    cloud_volumes.where.not(:status => "error").sum(:size).to_f
+    cloud_volumes.where.not(:status => 'error').sum(:size).to_f
   end
 end

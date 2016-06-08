@@ -53,7 +53,7 @@ GETCHECKPOINT_EOL
   end
 
   def vm_create_evm_checkpoint(vm_name, snapshot = nil)
-    snapshot = vm_name + "__EVM_SNAPSHOT" if snapshot.nil?
+    snapshot = vm_name + '__EVM_SNAPSHOT' if snapshot.nil?
     raise "Checkpoint for VM #{vm_name} Already Exists" unless vm_get_checkpoint(vm_name, snapshot).nil?
 
     checkpoint_script = <<-CHECKPOINT_EOL
@@ -70,7 +70,7 @@ CHECKPOINT_EOL
   end
 
   def vm_remove_evm_checkpoint(vm_name, snapshot = nil)
-    snapshot = vm_name + "__EVM_SNAPSHOT" if snapshot.nil?
+    snapshot = vm_name + '__EVM_SNAPSHOT' if snapshot.nil?
     rm_checkpt_script = <<-RM_CHECKPOINT_EOL
 Remove-VMSnapshot -ComputerName localhost -VMName "#{vm_name}" -Name "#{snapshot}"
 RM_CHECKPOINT_EOL
@@ -84,8 +84,8 @@ RM_CHECKPOINT_EOL
   end
 
   def get_drivetype(vhd_path)
-    return "Network" if vhd_path[0, 2] == '\\\\'
-    raise "Invalid Drive Letter for Hard Drive #{vhd_path}" unless vhd_path[1, 1] == ":"
+    return 'Network' if vhd_path[0, 2] == '\\\\'
+    raise "Invalid Drive Letter for Hard Drive #{vhd_path}" unless vhd_path[1, 1] == ':'
     drive_letter = vhd_path[0, 1]
 
     drivetype_script = <<-DRIVETYPE_EOL
@@ -116,7 +116,7 @@ Get-VMHardDiskDrive -VMName "#{vm_name}" | \
   Format-Table -Property Path | out-string -Width 200
 VHD_EOL
     else
-      snapshot = vm_name + "__EVM_SNAPSHOT" if snapshot.nil?
+      snapshot = vm_name + '__EVM_SNAPSHOT' if snapshot.nil?
       raise "Checkpoint #{snapshot} for VM #{vm_name} missing" if vm_get_checkpoint(vm_name, snapshot).nil?
       vhd_script = <<-SNAP_EOL
 Get-VMSnapShot -VMName "#{vm_name}" -Name "#{snapshot}" |  Get-VMHardDiskDrive | \

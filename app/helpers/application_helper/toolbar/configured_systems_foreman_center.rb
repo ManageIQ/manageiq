@@ -12,10 +12,10 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsForemanCenter < ApplicationHe
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Provision Configured Systems'),
           t,
-          :url       => "provision",
-          :url_parms => "main_div",
+          :url       => 'provision',
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])
@@ -31,10 +31,10 @@ class ApplicationHelper::Toolbar::ConfiguredSystemsForemanCenter < ApplicationHe
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Configured System'),
           N_('Edit Tags'),
-          :url       => "tagging",
-          :url_parms => "main_div",
+          :url       => 'tagging',
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])

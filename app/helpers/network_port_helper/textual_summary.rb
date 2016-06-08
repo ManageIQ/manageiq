@@ -35,11 +35,11 @@ module NetworkPortHelper::TextualSummary
   end
 
   def textual_fixed_ip_addresses
-    @record.fixed_ip_addresses.join(", ") if @record.fixed_ip_addresses
+    @record.fixed_ip_addresses.join(', ') if @record.fixed_ip_addresses
   end
 
   def textual_floating_ip_addresses
-    @record.floating_ip_addresses.join(", ") if @record.floating_ip_addresses
+    @record.floating_ip_addresses.join(', ') if @record.floating_ip_addresses
   end
 
   def textual_parent_ems_cloud
@@ -51,14 +51,14 @@ module NetworkPortHelper::TextualSummary
   end
 
   def textual_instance
-    label    = ui_lookup(:table => "vm_cloud")
+    label    = ui_lookup(:table => 'vm_cloud')
     instance = @record.device
     h        = nil
-    if instance && role_allows(:feature => "vm_show")
-      h = {:label => label, :image => "vm"}
+    if instance && role_allows(:feature => 'vm_show')
+      h = {:label => label, :image => 'vm'}
       h[:value] = instance.name
       h[:link]  = url_for(:controller => 'vm_cloud', :action => 'show', :id => instance.id)
-      h[:title] = _("Show %{label}") % {:label => label}
+      h[:title] = _('Show %{label}') % {:label => label}
     end
     h
   end

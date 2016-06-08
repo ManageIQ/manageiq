@@ -11,18 +11,18 @@ class AlertController < ApplicationController
   def show_list
     #   @tabs = [ ["show_list", ""], ["show_list", "RSS Feeds"], ["","E-mail"] ]
     # Removed inactive "E-mail" tab - Sprint 34
-    @lastaction = "show_list"
-    @listtype = "rss_list"
+    @lastaction = 'show_list'
+    @listtype = 'rss_list'
     get_rss_feeds
-    @rss_roles = ["<All>"]
+    @rss_roles = ['<All>']
     RssFeed.roles.sort.each { |r| @rss_roles.push(r.titleize) }
     @breadcrumbs = []
     if params[:role].nil?
-      @rss_role = "<All>"
-      drop_breadcrumb(:name => _("All RSS Feeds"), :url => "/alert/show_list")
+      @rss_role = '<All>'
+      drop_breadcrumb(:name => _('All RSS Feeds'), :url => '/alert/show_list')
     else
       @rss_role = params[:role]
-      drop_breadcrumb(:name => _("%{name} RSS Feeds") % {:name => @rss_role}, :url => "/alert/show_list")
+      drop_breadcrumb(:name => _('%{name} RSS Feeds') % {:name => @rss_role}, :url => '/alert/show_list')
     end
   end
 
@@ -39,10 +39,10 @@ class AlertController < ApplicationController
     feed = params[:feed] if params[:feed]
     feed_record = RssFeed.find_by_name(feed)
     if feed_record.nil?
-      raise _("Requested feed is invalid")
+      raise _('Requested feed is invalid')
     end
-    proto = request.referer && request.referer.split("://")[0]   # Get protocol from the request
-    proto = nil unless [nil, "http", "https"].include?(proto)    # Make sure it's http or https
+    proto = request.referer && request.referer.split('://')[0]   # Get protocol from the request
+    proto = nil unless [nil, 'http', 'https'].include?(proto)    # Make sure it's http or https
     proto ||= session[:req_protocol]                             # If nil, use previously discovered value
     session[:req_protocol] ||= proto                             # Save protocol in session
     feed_data = feed_record.generate(request.host_with_port, local, proto)
@@ -55,16 +55,16 @@ class AlertController < ApplicationController
 
   # fetch rss feed records
   def get_rss_feeds
-    if params[:role].nil? || params[:role] == "<All>"
-      @rss_feeds = RssFeed.order("title")
+    if params[:role].nil? || params[:role] == '<All>'
+      @rss_feeds = RssFeed.order('title')
     else
-      @rss_feeds = RssFeed.find_tagged_with(:any => [params[:role].split.join("_").downcase], :ns => "/managed", :cat => "roles").order("title")
+      @rss_feeds = RssFeed.find_tagged_with(:any => [params[:role].split.join('_').downcase], :ns => '/managed', :cat => 'roles').order('title')
     end
   end
 
   def get_session_data
-    @title      = _("RSS")
-    @layout     = "rss"
+    @title      = _('RSS')
+    @layout     = 'rss'
     @lastaction = session[:alert_lastaction]
   end
 

@@ -6,16 +6,16 @@ class ApplicationHelper::Toolbar::MiddlewareDatasourcesCenter < ApplicationHelpe
       t = N_('Policy'),
       t,
       :enabled => false,
-      :onwhen  => "1+",
+      :onwhen  => '1+',
       :items   => [
         button(
           :middleware_datasource_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for these #{ui_lookup(:table=>"middleware_datasources")}'),
           N_('Edit Tags'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])

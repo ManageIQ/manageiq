@@ -1,4 +1,4 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'util/xml')
 
 require 'xml_utils'
 
@@ -6,8 +6,8 @@ class XmlData < ActiveRecord::Base
   def self.emsinventory(emsId, data)
     doc = REXML::Document.new(data)
     _log.info "request received from ems id: #{emsId}"
-    Storage.save_emsinventory(emsId, Xml2Array.getNodeDetails(doc, "Datastores"))
-    Host.save_ems_inventory(emsId, Xml2Array.getNodeDetails(doc, "HostSystems"))
+    Storage.save_emsinventory(emsId, Xml2Array.getNodeDetails(doc, 'Datastores'))
+    Host.save_ems_inventory(emsId, Xml2Array.getNodeDetails(doc, 'HostSystems'))
   end
 
   def self.emsevents(emsId, data)
@@ -46,14 +46,14 @@ class EventXmlHandler
     @tags.pop
 
     case name
-    when "emsEvents"
-    when "event"
+    when 'emsEvents'
+    when 'event'
       @result.push(@event)
       @event = {}
-    when "host", "srcHost", "destHost"
+    when 'host', 'srcHost', "destHost"
       @event[name.to_sym] = @host
       @host = {}
-    when "vm", "srcVm", "destVm"
+    when 'vm', 'srcVm', "destVm"
       @event[name.to_sym] = @vm
       @vm = {}
     end
@@ -63,11 +63,11 @@ class EventXmlHandler
     return if value.strip.blank?
     obj, name = @tags.last(2)
     case obj
-    when "event"
+    when 'event'
       @event[name.to_sym] = value
-    when "host", "srcHost", "destHost"
+    when 'host', 'srcHost', "destHost"
       @host[name.to_sym] = value
-    when "vm", "srcVm", "destVm"
+    when 'vm', 'srcVm', "destVm"
       @vm[name.to_sym] = value
     end
   end

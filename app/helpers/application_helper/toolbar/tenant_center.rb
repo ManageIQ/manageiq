@@ -11,13 +11,13 @@ class ApplicationHelper::Toolbar::TenantCenter < ApplicationHelper::Toolbar::Bas
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add child Tenant to this Tenant'),
           t,
-          :url_parms => "?tenant_type=tenant"),
+          :url_parms => '?tenant_type=tenant'),
         button(
           :rbac_project_add,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add Project to this Tenant'),
           t,
-          :url_parms => "?tenant_type=project"),
+          :url_parms => '?tenant_type=project'),
         button(
           :rbac_tenant_edit,
           'pficon pficon-edit fa-lg',
@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::TenantCenter < ApplicationHelper::Toolbar::Bas
           'pficon pficon-delete fa-lg',
           t = N_('Delete this item'),
           t,
-          :url_parms => "&refresh=y",
+          :url_parms => '&refresh=y',
           :confirm   => N_("Are you sure you want to delete this item and all of it's children?")),
       ]
     ),

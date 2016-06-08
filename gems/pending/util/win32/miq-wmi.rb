@@ -1,7 +1,7 @@
 require 'sys-uname'
 
 class WMIHelper
-  WMI_ROOT_NAMESPACE = "root\\cimv2" unless defined?(WMI_ROOT_NAMESPACE)
+  WMI_ROOT_NAMESPACE = 'root\\cimv2' unless defined?(WMI_ROOT_NAMESPACE)
 
   platform = Sys::Platform::IMPL
   unless platform == :macosx

@@ -26,7 +26,7 @@ module PersistentVolumeHelper::TextualSummary
   end
 
   def textual_group_capacity
-    labels = [_("Resource"), _("Quantity")]
+    labels = [_('Resource'), _('Quantity')]
     {:labels => labels, :values => @record.capacity}
   end
 
@@ -56,85 +56,85 @@ module PersistentVolumeHelper::TextualSummary
 
   def textual_storage_medium_type
     type = @record.empty_dir_medium_type
-    {:label => _("Storage Medium Type"),
+    {:label => _('Storage Medium Type'),
      :value => type} if type
   end
 
   def textual_gce_pd_resource
     name = @record.gce_pd_name
-    {:label => _("GCE PD Resource"),
+    {:label => _('GCE PD Resource'),
      :value => name} if name
   end
 
   def textual_git_repository
     git_repository = @record.git_repository
-    {:label => _("Git Repository"),
+    {:label => _('Git Repository'),
      :value => git_repository} if git_repository
   end
 
   def textual_git_revision
     git_revision = @record.git_revision
-    {:label => _("Git Revision"),
+    {:label => _('Git Revision'),
      :value => git_revision} if git_revision
   end
 
   def textual_nfs_server
     nfs_server = @record.nfs_server
-    {:label => _("NFS Server"),
+    {:label => _('NFS Server'),
      :value => nfs_server} if nfs_server
   end
 
   def textual_iscsi_target_portal
     target_portal = @record.iscsi_target_portal
-    {:label => _("ISCSI Target Portal"),
+    {:label => _('ISCSI Target Portal'),
      :value => target_portal} if target_portal
   end
 
   def textual_iscsi_target_qualified_name
     iscsi_iqn = @record.iscsi_iqn
-    {:label => _("ISCSI Target Qualified Name"),
+    {:label => _('ISCSI Target Qualified Name'),
      :value => iscsi_iqn} if iscsi_iqn
   end
 
   def textual_iscsi_target_lun_number
     iscsi_lun = @record.iscsi_lun
-    {:label => _("ISCSI Target Lun Number"),
+    {:label => _('ISCSI Target Lun Number'),
      :value => iscsi_lun} if iscsi_lun
   end
 
   def textual_glusterfs_endpoint_name
     name = @record.glusterfs_endpoint_name
-    {:label => _("Glusterfs Endpoint Name"),
+    {:label => _('Glusterfs Endpoint Name'),
      :value => name} if name
   end
 
   def textual_rados_ceph_monitors
     ceph_monitors = @record.rbd_ceph_monitors
-    {:label => _("Rados Ceph Monitors"),
+    {:label => _('Rados Ceph Monitors'),
      :value => ceph_monitors} unless ceph_monitors.empty?
   end
 
   def textual_rados_image_name
     rbd_image = @record.rbd_image
-    {:label => _("Rados Image Name"),
+    {:label => _('Rados Image Name'),
      :value => rbd_image} if rbd_image
   end
 
   def textual_rados_pool_name
     rbd_pool = @record.rbd_pool
-    {:label => _("Rados Pool Name"),
+    {:label => _('Rados Pool Name'),
      :value => rbd_pool} if rbd_pool
   end
 
   def textual_rados_user_name
     rados_user = @record.rbd_rados_user
-    {:label => _("Rados User Name"),
+    {:label => _('Rados User Name'),
      :value => rados_user} if rados_user
   end
 
   def textual_rados_keyring
     rbd_keyring = @record.rbd_keyring
-    {:label => _("Rados Keyring"),
+    {:label => _('Rados Keyring'),
      :value => rbd_keyring} if rbd_keyring
   end
 
@@ -144,19 +144,19 @@ module PersistentVolumeHelper::TextualSummary
 
   def textual_fs_type
     fs_type = @record.common_fs_type
-    {:label => _("FS Type"),
+    {:label => _('FS Type'),
      :value => fs_type} if fs_type
   end
 
   def textual_read_only
     read_only = @record.common_read_only
-    {:label => _("Read-Only"),
+    {:label => _('Read-Only'),
      :value => read_only} if read_only
   end
 
   def textual_volume_id
     volume_id = @record.common_volume_id
-    {:label => _("Volume ID"),
+    {:label => _('Volume ID'),
      :value => volume_id} if volume_id
   end
 
@@ -169,12 +169,12 @@ module PersistentVolumeHelper::TextualSummary
   end
 
   def textual_claim_name
-    {:label => _("Name"),
+    {:label => _('Name'),
      :value => @claim.name}
   end
 
   def textual_claim_creation_timestamp
-    {:label => _("Creation timestamp"),
+    {:label => _('Creation timestamp'),
      :value => format_timezone(@claim.ems_created_on)}
   end
 

@@ -23,10 +23,10 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
   end
 
   def perf_init_openstack
-    raise "No EMS defined" if target.ext_management_system.nil?
+    raise 'No EMS defined' if target.ext_management_system.nil?
 
     metering_service, = Benchmark.realtime_block(:connect) do
-      target.ext_management_system.connect(:service => "Metering")
+      target.ext_management_system.connect(:service => 'Metering')
     end
     metering_service
   end
@@ -57,7 +57,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
 
     metrics_by_counter_name = {}
     counters.each do |c|
-      metrics_by_counter_name[c["name"]] = collect_metrics_by_counter(c, start_time, end_time)
+      metrics_by_counter_name[c['name']] = collect_metrics_by_counter(c, start_time, end_time)
     end
 
     counter_values_by_ts = process_statistics(metric_capture_module, metrics_by_counter_name, data_collecting_period,
@@ -87,7 +87,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
   def find_meter_counters(metric_capture_module, resource_filter, metadata_filter, log_header)
     counters = list_resource_meters(resource_filter, log_header) + list_metadata_meters(metadata_filter, log_header)
     # Select only allowed counters, with unique names
-    counters.select { |c| meter_names(metric_capture_module).include?(c["name"]) }.uniq { |x| x['name'] }
+    counters.select { |c| meter_names(metric_capture_module).include?(c['name']) }.uniq { |x| x['name'] }
   end
 
   def list_resource_meters(resource_filter, log_header)
@@ -117,23 +117,23 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
     # For now, this logic just mirrors how we capture Amazon CloudWatch data
     # (see amazon.rb)
     (start_time..end_time).step_value(1.day).each_cons(2) do |st, et|
-      filter = [{"field" => "timestamp", "op" => "lt", "value" => et.iso8601},
-                {"field" => "timestamp", "op" => "gt", "value" => st.iso8601},
+      filter = [{'field' => 'timestamp', 'op' => 'lt', 'value' => et.iso8601},
+                {'field' => 'timestamp', 'op' => 'gt', 'value' => st.iso8601},
                 counter[:instance_filter]]
       statistics, = Benchmark.realtime_block(:capture_counter_values) do
         # try to capture for every 20s over the timeframe ... however, the
         # server can be configured for any arbitrary capture interval
         # we'll deal with that below
         options = {'period' => 20, 'q' => filter}
-        @perf_ems.get_statistics(counter["name"], options).body
+        @perf_ems.get_statistics(counter['name'], options).body
       end
 
       statistics.each do |s|
         # Period end has always aligned 20s interval, we just have to make sure the start_time is aligned to 20s.
         # We are enforcing this by removing seconds from start_time, so it always start at 00s.
-        timestamp = parse_datetime(s["period_end"])
-        duration_end = parse_datetime(s["duration_end"])
-        metrics[timestamp] = {:avg => s["avg"], :duration_end => duration_end}
+        timestamp = parse_datetime(s['period_end'])
+        duration_end = parse_datetime(s['duration_end'])
+        metrics[timestamp] = {:avg => s['avg'], :duration_end => duration_end}
       end
     end
     metrics
@@ -347,7 +347,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
     $log.warn("#{log_header} name:[#{target.name}] Distance of the multiple streams of data is invalid. It "\
               "exceeded half of the Ceilometer collection period in (#{period_start}, #{period_end}> for counters"\
               "#{i[:openstack_counters]}. It can be caused by a different pipeline configuration period for "\
-              "each related sample, or Ceilometer needs to be scaled because the samples collection is overloaded. ")
+              'each related sample, or Ceilometer needs to be scaled because the samples collection is overloaded. ')
   end
 
   def process_multi_counter_metrics(i, metrics, multi_counter_metrics)
@@ -378,7 +378,7 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
     #   force a UTC timezone in order to keep the value consistent with what
     #   was intended--but not indicated--by ceilometer.
     # http://lists.openstack.org/pipermail/openstack-dev/2012-November/002235.html
-    datetime << "Z" if datetime.size == 19
+    datetime << 'Z' if datetime.size == 19
     Time.parse(datetime)
   end
 end

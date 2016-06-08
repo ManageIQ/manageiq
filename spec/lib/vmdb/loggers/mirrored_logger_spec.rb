@@ -2,7 +2,7 @@ describe Vmdb::Loggers::MirroredLogger do
   before(:each) do
     @mirror_stream = StringIO.new
     @log_stream = StringIO.new
-    @log = Vmdb::Loggers::MirroredLogger.new(@log_stream, "<MirrorPrefix> ")
+    @log = Vmdb::Loggers::MirroredLogger.new(@log_stream, '<MirrorPrefix> ')
     @log.mirror_logger = VMDBLogger.new(@mirror_stream)
   end
 
@@ -23,14 +23,14 @@ describe Vmdb::Loggers::MirroredLogger do
 
       cases.each do |level, mirrored|
         it "##{level}" do
-          @log.send(level, "Testing!")
+          @log.send(level, 'Testing!')
 
           @log_stream.rewind
           lines = @log_stream.each_line.to_a
           expect(lines.length).to eq(1)
           line = lines.first.chomp
           expect(line[7, 1]).to eq(level.to_s[0, 1].upcase)
-          expect(line[-13..-1]).to eq("-- : Testing!")
+          expect(line[-13..-1]).to eq('-- : Testing!')
 
           @mirror_stream.rewind
           lines = @mirror_stream.each_line.to_a
@@ -38,7 +38,7 @@ describe Vmdb::Loggers::MirroredLogger do
             expect(lines.length).to eq(1)
             line = lines.first.chomp
             expect(line[7, 1]).to eq(level.to_s[0, 1].upcase)
-            expect(line[-28..-1]).to eq("-- : <MirrorPrefix> Testing!")
+            expect(line[-28..-1]).to eq('-- : <MirrorPrefix> Testing!')
           else
             expect(lines.length).to eq(0)
           end

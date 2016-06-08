@@ -13,7 +13,7 @@ module Metric::CiMixin::Capture
           elsif self.respond_to?(:ext_management_system)
             ext_management_system
           else
-            raise _("Unsupported type %{name} (id: %{number})") % {:name => self.class.name, :number => id}
+            raise _('Unsupported type %{name} (id: %{number})') % {:name => self.class.name, :number => id}
           end
 
     ems.metrics_collector_queue_name
@@ -28,7 +28,7 @@ module Metric::CiMixin::Capture
     zone       = options[:zone] || my_zone
     zone = zone.name if zone.respond_to?(:name)
     raise ArgumentError, "invalid interval_name '#{interval_name}'" unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
-    raise ArgumentError, "end_time cannot be specified if start_time is nil" if start_time.nil? && !end_time.nil?
+    raise ArgumentError, 'end_time cannot be specified if start_time is nil' if start_time.nil? && !end_time.nil?
 
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
@@ -81,7 +81,7 @@ module Metric::CiMixin::Capture
           qi.delete(:state)
           qi[:miq_callback] = cb if cb
           qi
-        elsif msg.state == "ready" && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
+        elsif msg.state == 'ready' && (task_id || MiqQueue.higher_priority?(priority, msg.priority))
           qi[:priority] = priority
           # rerun the job (either with new task or higher priority)
           qi.delete(:state)
@@ -91,7 +91,7 @@ module Metric::CiMixin::Capture
           end
           qi
         else
-          interval = qi[:method_name].sub("perf_capture_", "")
+          interval = qi[:method_name].sub('perf_capture_', '')
           _log.debug "Skipping capture of #{log_target} - Performance capture for interval #{interval} is still running"
           # NOTE: do not update the message queue
           nil
@@ -116,7 +116,7 @@ module Metric::CiMixin::Capture
     unless Metric::Capture::VALID_CAPTURE_INTERVALS.include?(interval_name)
       raise ArgumentError, _("invalid interval_name '%{name}'") % {:name => interval_name}
     end
-    raise ArgumentError, _("end_time cannot be specified if start_time is nil") if start_time.nil? && !end_time.nil?
+    raise ArgumentError, _('end_time cannot be specified if start_time is nil') if start_time.nil? && !end_time.nil?
 
     start_time = start_time.utc unless start_time.nil?
     end_time = end_time.utc unless end_time.nil?
@@ -183,7 +183,7 @@ module Metric::CiMixin::Capture
         _log.warn "#{log_header} For #{log_target}, expected to get data as of [#{expected_start_range}], but got data as of [#{start_range}]."
 
         # Raise ems_performance_gap_detected alert event to enable notification.
-        MiqEvent.raise_evm_alert_event_queue(ext_management_system, "ems_performance_gap_detected",
+        MiqEvent.raise_evm_alert_event_queue(ext_management_system, 'ems_performance_gap_detected',
                                              :resource_class       => self.class.name,
                                              :resource_id          => id,
                                              :expected_start_range => expected_start_range,
@@ -207,7 +207,7 @@ module Metric::CiMixin::Capture
           task.state, task.status, task.message = [MiqTask::STATE_FINISHED, MiqTask::STATUS_OK, "Performance collection complete, #{task.context_data[:complete].length} out of #{task.context_data[:targets].length} collections completed"]
 
           # Splitting e.g. "ManageIQ::Providers::Openstack::InfraManager::EmsCluster:8" to class and id
-          pclass, _, pid = task.context_data[:parent].rpartition(":")
+          pclass, _, pid = task.context_data[:parent].rpartition(':')
           parent = pclass.constantize.find(pid)
           msg = "Queueing [#{task.context_data[:interval]}] rollup to #{parent.class.name} id: [#{parent.id}] for time range: [#{task.context_data[:start]} - #{task.context_data[:end]}]"
           _log.info "#{msg}..."

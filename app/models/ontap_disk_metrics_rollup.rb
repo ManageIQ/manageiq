@@ -6,7 +6,7 @@ class OntapDiskMetricsRollup < ApplicationRecord
   serialize   :base_counters
 
   def self.additional_counters
-    ["base_for_disk_busy"]
+    ['base_for_disk_busy']
   end
 
   include OntapMetricsRollupMixin

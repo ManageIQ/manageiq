@@ -11,20 +11,20 @@ class ApplicationHelper::Toolbar::MiqAlertProfileCenter < ApplicationHelper::Too
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Alert Profile'),
           t,
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
         button(
           :alert_profile_assign,
           'pficon pficon-edit fa-lg-assign',
           t = N_('Edit assignments for this Alert Profile'),
           t,
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
         button(
           :alert_profile_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Alert Profile'),
           t,
-          :url_parms => "main_div",
-          :confirm   => N_("Are you sure you want to delete this Alert Profile?")),
+          :url_parms => 'main_div',
+          :confirm   => N_('Are you sure you want to delete this Alert Profile?')),
       ]
     ),
   ])

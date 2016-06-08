@@ -14,13 +14,13 @@ class PgLogicalRaw
   #
   # @return [Boolean]
   def enabled?
-    installed? && connection.extension_enabled?("pglogical") && connection.extension_enabled?("pglogical_origin")
+    installed? && connection.extension_enabled?('pglogical') && connection.extension_enabled?('pglogical_origin')
   end
 
   # Enables pglogical postgres extensions
   def enable
-    connection.enable_extension("pglogical")
-    connection.enable_extension("pglogical_origin")
+    connection.enable_extension('pglogical')
+    connection.enable_extension('pglogical_origin')
   end
 
   # Monitoring
@@ -63,7 +63,7 @@ class PgLogicalRaw
   # @param name [String]
   # @param dsn [String] external connection string to the node
   def node_create(name, dsn)
-    typed_exec("SELECT pglogical.create_node($1, $2)", name, dsn)
+    typed_exec('SELECT pglogical.create_node($1, $2)', name, dsn)
   end
 
   # Updates a node connection string
@@ -96,7 +96,7 @@ class PgLogicalRaw
   # @param name [String]
   # @param ifexists [Boolean]
   def node_drop(name, ifexists = false)
-    typed_exec("SELECT pglogical.drop_node($1, $2)", name, ifexists)
+    typed_exec('SELECT pglogical.drop_node($1, $2)', name, ifexists)
   end
 
   def nodes
@@ -119,8 +119,8 @@ class PgLogicalRaw
   # @param sync_data [Boolean] sync the data when subscribing
   # @param forward_origins [Array<String>] names of non-provider nodes to replicate changes from (cascading replication)
   def subscription_create(name, dsn, replication_sets = %w(default default_insert_only),
-                          sync_structure = true, sync_data = true, forward_origins = ["all"])
-    command = "SELECT pglogical.create_subscription($1, $2, $3, $4, $5, $6)"
+                          sync_structure = true, sync_data = true, forward_origins = ['all'])
+    command = 'SELECT pglogical.create_subscription($1, $2, $3, $4, $5, $6)'
     typed_exec(command, name, dsn, replication_sets, sync_structure, sync_data, forward_origins)
   end
 
@@ -129,7 +129,7 @@ class PgLogicalRaw
   # @param name [String] subscription name
   # @param ifexists [Boolean] if true an error is not thrown when the subscription does not exist
   def subscription_drop(name, ifexists = false)
-    typed_exec("SELECT pglogical.drop_subscription($1, $2)", name, ifexists)
+    typed_exec('SELECT pglogical.drop_subscription($1, $2)', name, ifexists)
   end
 
   # Disables a subscription and disconnects it from the provider
@@ -137,7 +137,7 @@ class PgLogicalRaw
   # @param name [String] subscription name
   # @param immediate [Boolean] do not wait for the current transaction before stopping
   def subscription_disable(name, immediate = false)
-    typed_exec("SELECT pglogical.alter_subscription_disable($1, $2)", name, immediate)
+    typed_exec('SELECT pglogical.alter_subscription_disable($1, $2)', name, immediate)
   end
 
   # Enables a previously disabled subscription
@@ -145,7 +145,7 @@ class PgLogicalRaw
   # @param name [String] subscription name
   # @param immediate [Boolean] do not wait for the current transaction before starting
   def subscription_enable(name, immediate = false)
-    typed_exec("SELECT pglogical.alter_subscription_enable($1, $2)", name, immediate)
+    typed_exec('SELECT pglogical.alter_subscription_enable($1, $2)', name, immediate)
   end
 
   # Syncs all unsynchronized tables in all sets in a single operation.
@@ -154,7 +154,7 @@ class PgLogicalRaw
   # @param name [String] subscription name
   # @param truncate [Boolean] truncate the tables before syncing
   def subscription_sync(name, truncate = false)
-    typed_exec("SELECT pglogical.alter_subscription_synchronize($1, $2)", name, truncate)
+    typed_exec('SELECT pglogical.alter_subscription_synchronize($1, $2)', name, truncate)
   end
 
   # Resyncs one existing table
@@ -163,7 +163,7 @@ class PgLogicalRaw
   # @param name [String] subscription name
   # @param table [String] name of the table to resync
   def subscription_resync_table(name, table)
-    typed_exec("SELECT pglogical.alter_subscription_resynchronize_table($1, $2)", name, table)
+    typed_exec('SELECT pglogical.alter_subscription_resynchronize_table($1, $2)', name, table)
   end
 
   # Adds a replication set to a subscription
@@ -172,7 +172,7 @@ class PgLogicalRaw
   # @param name [String] subscription name
   # @param set_name [String] replication set name
   def subscription_add_replication_set(name, set_name)
-    typed_exec("SELECT pglogical.alter_subscription_add_replication_set($1, $2)", name, set_name)
+    typed_exec('SELECT pglogical.alter_subscription_add_replication_set($1, $2)', name, set_name)
   end
 
   # Removes a replication set from a subscription
@@ -180,7 +180,7 @@ class PgLogicalRaw
   # @param name [String] subscription name
   # @param set_name [String] replication set name
   def subscription_remove_replication_set(name, set_name)
-    typed_exec("SELECT pglogical.alter_subscription_remove_replication_set($1, $2)", name, set_name)
+    typed_exec('SELECT pglogical.alter_subscription_remove_replication_set($1, $2)', name, set_name)
   end
 
   # Shows status and basic information about a subscription
@@ -196,9 +196,9 @@ class PgLogicalRaw
   #     replication_sets
   #     forward_origins
   def subscription_show_status(name)
-    res = typed_exec("SELECT * FROM pglogical.show_subscription_status($1)", name).first
-    res["replication_sets"] = res["replication_sets"][1..-2].split(",")
-    res["forward_origins"] = res["forward_origins"][1..-2].split(",")
+    res = typed_exec('SELECT * FROM pglogical.show_subscription_status($1)', name).first
+    res['replication_sets'] = res['replication_sets'][1..-2].split(',')
+    res['forward_origins'] = res['forward_origins'][1..-2].split(',')
     res
   end
 
@@ -207,7 +207,7 @@ class PgLogicalRaw
   # @return Array<Hash> list of results from #subscription_show_status
   def subscriptions
     ret = []
-    connection.select_values("SELECT sub_name FROM pglogical.subscription").each do |s|
+    connection.select_values('SELECT sub_name FROM pglogical.subscription').each do |s|
       ret << subscription_show_status(s)
     end
     ret
@@ -220,7 +220,7 @@ class PgLogicalRaw
   #
   # @return [Array<String>] the replication sets
   def replication_sets
-    typed_exec("SELECT set_name FROM pglogical.replication_set").values.flatten
+    typed_exec('SELECT set_name FROM pglogical.replication_set').values.flatten
   end
 
   # Creates a new replication set
@@ -231,7 +231,7 @@ class PgLogicalRaw
   # @param delete [Boolean] replicate DELETE events
   # @param truncate [Boolean] replicate TRUNCATE events
   def replication_set_create(set_name, insert = true, update = true, delete = true, truncate = true)
-    typed_exec("SELECT pglogical.create_replication_set($1, $2, $3, $4, $5)",
+    typed_exec('SELECT pglogical.create_replication_set($1, $2, $3, $4, $5)',
                set_name, insert, update, delete, truncate)
   end
 
@@ -243,7 +243,7 @@ class PgLogicalRaw
   # @param delete [Boolean] replicate DELETE events
   # @param truncate [Boolean] replicate TRUNCATE events
   def replication_set_alter(set_name, insert = true, update = true, delete = true, truncate = true)
-    typed_exec("SELECT pglogical.alter_replication_set($1, $2, $3, $4, $5)",
+    typed_exec('SELECT pglogical.alter_replication_set($1, $2, $3, $4, $5)',
                set_name, insert, update, delete, truncate)
   end
 
@@ -251,7 +251,7 @@ class PgLogicalRaw
   #
   # @param set_name [string] replication set name
   def replication_set_drop(set_name)
-    typed_exec("SELECT pglogical.drop_replication_set($1)", set_name)
+    typed_exec('SELECT pglogical.drop_replication_set($1)', set_name)
   end
 
   # Adds a table to a replication set
@@ -260,7 +260,7 @@ class PgLogicalRaw
   # @param table_name [String] table name to add
   # @param sync [Boolean] sync the table on all subscribers to the given replication set
   def replication_set_add_table(set_name, table_name, sync = false)
-    typed_exec("SELECT pglogical.replication_set_add_table($1, $2, $3)", set_name, table_name, sync)
+    typed_exec('SELECT pglogical.replication_set_add_table($1, $2, $3)', set_name, table_name, sync)
   end
 
   # Adds all tables in the given schemas to the replication set
@@ -269,7 +269,7 @@ class PgLogicalRaw
   # @param schema_names [Array<String>] list of schema names
   # @param sync [Boolean] sync table data to all the subscribers to the replication set
   def replication_set_add_all_tables(set_name, schema_names, sync = false)
-    typed_exec("SELECT pglogical.replication_set_add_all_tables($1, $2, $3)",
+    typed_exec('SELECT pglogical.replication_set_add_all_tables($1, $2, $3)',
                set_name, schema_names, sync)
   end
 
@@ -278,7 +278,7 @@ class PgLogicalRaw
   # @param set_name [String] replication set name
   # @param table_name [String] table to remove
   def replication_set_remove_table(set_name, table_name)
-    typed_exec("SELECT pglogical.replication_set_remove_table($1, $2)", set_name, table_name)
+    typed_exec('SELECT pglogical.replication_set_remove_table($1, $2)', set_name, table_name)
   end
 
   # Lists the tables currently in the replication set

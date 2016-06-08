@@ -1,10 +1,10 @@
-describe "Service Retirement Management" do
+describe 'Service Retirement Management' do
   before(:each) do
     @server = EvmSpecHelper.local_miq_server
     @service = FactoryGirl.create(:service)
   end
 
-  it "#retirement_check" do
+  it '#retirement_check' do
     expect(MiqEvent).to receive(:raise_evm_event)
     @service.update_attributes(:retires_on => 90.days.ago, :retirement_warn => 60, :retirement_last_warn => nil)
     expect(@service.retirement_last_warn).to be_nil
@@ -15,25 +15,25 @@ describe "Service Retirement Management" do
     expect(Time.now.utc - @service.retirement_last_warn).to be < 30
   end
 
-  it "#start_retirement" do
+  it '#start_retirement' do
     expect(@service.retirement_state).to be_nil
     @service.start_retirement
     @service.reload
-    expect(@service.retirement_state).to eq("retiring")
+    expect(@service.retirement_state).to eq('retiring')
   end
 
-  it "#retire_now" do
+  it '#retire_now' do
     expect(@service.retirement_state).to be_nil
     expect(MiqEvent).to receive(:raise_evm_event).once
     @service.retire_now
     @service.reload
   end
 
-  it "#retire_now with userid" do
+  it '#retire_now with userid' do
     expect(@service.retirement_state).to be_nil
     event_name = 'request_service_retire'
-    event_hash = {:service => @service, :type => "Service",
-                  :retirement_initiator => "user", :userid => "freddy"}
+    event_hash = {:service => @service, :type => 'Service',
+                  :retirement_initiator => 'user', :userid => 'freddy'}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash).once
 
@@ -41,11 +41,11 @@ describe "Service Retirement Management" do
     @service.reload
   end
 
-  it "#retire_now without userid" do
+  it '#retire_now without userid' do
     expect(@service.retirement_state).to be_nil
     event_name = 'request_service_retire'
-    event_hash = {:service => @service, :type => "Service",
-                  :retirement_initiator => "system"}
+    event_hash = {:service => @service, :type => 'Service',
+                  :retirement_initiator => 'system'}
 
     expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash).once
 
@@ -53,7 +53,7 @@ describe "Service Retirement Management" do
     @service.reload
   end
 
-  it "#retire warn" do
+  it '#retire warn' do
     expect(AuditEvent).to receive(:success).once
     options = {}
     options[:warn] = 2.days.to_i
@@ -62,7 +62,7 @@ describe "Service Retirement Management" do
     expect(@service.retirement_warn).to eq(options[:warn])
   end
 
-  it "#retire date" do
+  it '#retire date' do
     expect(AuditEvent).to receive(:success).once
     options = {}
     options[:date] = Date.today
@@ -71,7 +71,7 @@ describe "Service Retirement Management" do
     expect(@service.retires_on).to eq(options[:date])
   end
 
-  it "#retire_service_resources" do
+  it '#retire_service_resources' do
     ems = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
     vm  = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
     @service << vm
@@ -100,42 +100,42 @@ describe "Service Retirement Management" do
     @service.retire_service_resources
   end
 
-  it "#finish_retirement" do
+  it '#finish_retirement' do
     expect(@service.retirement_state).to be_nil
     @service.finish_retirement
     @service.reload
     expect(@service.retired).to be_truthy
     expect(@service.retires_on).to eq(Date.today)
-    expect(@service.retirement_state).to eq("retired")
+    expect(@service.retirement_state).to eq('retired')
   end
 
-  it "#retiring - false" do
+  it '#retiring - false' do
     expect(@service.retirement_state).to be_nil
     expect(@service.retiring?).to be_falsey
   end
 
-  it "#retiring - true" do
+  it '#retiring - true' do
     @service.update_attributes(:retirement_state => 'retiring')
     expect(@service.retiring?).to be_truthy
   end
 
-  it "#error_retiring - false" do
+  it '#error_retiring - false' do
     expect(@service.retirement_state).to be_nil
     expect(@service.error_retiring?).to be_falsey
   end
 
-  it "#error_retiring - true" do
+  it '#error_retiring - true' do
     @service.update_attributes(:retirement_state => 'error')
     expect(@service.error_retiring?).to be_truthy
   end
 
-  it "#retires_on - today" do
+  it '#retires_on - today' do
     expect(@service.retirement_due?).to be_falsey
     @service.retires_on = Date.today
     expect(@service.retirement_due?).to be_truthy
   end
 
-  it "#retires_on - tomorrow" do
+  it '#retires_on - tomorrow' do
     expect(@service.retirement_due?).to be_falsey
     @service.retires_on = Date.today + 1
     expect(@service.retirement_due?).to be_falsey
@@ -149,7 +149,7 @@ describe "Service Retirement Management" do
   #  expect(@service.retirement_last_warn).to be_nil
   # end
 
-  it "#retirement_due?" do
+  it '#retirement_due?' do
     expect(@service.retirement_due?).to be_falsey
 
     @service.update_attributes(:retires_on => Date.today + 1.day)
@@ -162,17 +162,17 @@ describe "Service Retirement Management" do
     expect(@service.retirement_due?).to be_truthy
   end
 
-  it "#raise_retirement_event" do
+  it '#raise_retirement_event' do
     event_name = 'foo'
-    event_hash = {:service => @service, :type => "Service", :retirement_initiator => "system"}
+    event_hash = {:service => @service, :type => 'Service', :retirement_initiator => 'system'}
     expect(MiqEvent).to receive(:raise_evm_event).with(@service, event_name, event_hash)
     @service.raise_retirement_event(event_name)
   end
 
-  it "#raise_audit_event" do
+  it '#raise_audit_event' do
     event_name = 'foo'
     message = 'bar'
-    event_hash = {:target_class => "Service", :target_id => @service.id.to_s, :event => event_name, :message => message}
+    event_hash = {:target_class => 'Service', :target_id => @service.id.to_s, :event => event_name, :message => message}
     expect(AuditEvent).to receive(:success).with(event_hash)
     @service.raise_audit_event(event_name, message)
   end

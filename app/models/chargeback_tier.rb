@@ -9,7 +9,7 @@ class ChargebackTier < ApplicationRecord
   FORM_ATTRIBUTES = %i(fixed_rate variable_rate start finish).freeze
 
   def self.to_float(s)
-    if s.to_s.include?("Infinity")
+    if s.to_s.include?('Infinity')
       Float::INFINITY
     else
       s

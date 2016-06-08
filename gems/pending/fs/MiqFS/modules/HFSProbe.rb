@@ -10,7 +10,7 @@ module HFSProbe
     # Check for HFS signature in first int.
     dobj.seek(HFS_SUPER_OFFSET + HFS_MAGIC_OFFSET)
     magic = dobj.read(HFS_MAGIC_SIZE).unpack('S')[0]
-    raise "HFS is Not Supported" if magic == HFS_SUPER_MAGIC
+    raise 'HFS is Not Supported' if magic == HFS_SUPER_MAGIC
 
     # No HFS.
     false

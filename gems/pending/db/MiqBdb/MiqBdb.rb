@@ -147,25 +147,25 @@ module MiqBerkeleyDB
       @read_buf = nil
 
       # Check header version - simple warning if less than 8.
-      if @header["version"] < 8
-        msg = "MiqBerkeleyDB: Database header version is less than 8."
+      if @header['version'] < 8
+        msg = 'MiqBerkeleyDB: Database header version is less than 8.'
         if $log
           $log.warn(msg)
         else
-          puts "WARNING: " + msg
+          puts 'WARNING: ' + msg
         end
       end
 
       # We don't support encryption.
-      raise "MiqBerkeleyDB: This database uses encryption." if @header["encrypt_alg"] != 0
+      raise 'MiqBerkeleyDB: This database uses encryption.' if @header['encrypt_alg'] != 0
 
       # Open db type (only hash for now, may expand to plugins in the future).
-      @db = case @header["magic"]
+      @db = case @header['magic']
             when DB_HASHMAGIC then   MiqBdbHashDatabase.new(self)
             when DB_BTREEMAGIC then  MiqBdbBtreeDatabase.new(self)
-            when DB_QAMMAGIC then    raise "MiqBerkeleyDB: Database type is Queue"
-            when DB_LOGMAGIC then    raise "MiqBerkeleyDB: Database type is Log"
-            when DB_RENAMEMAGIC then raise "MiqBerkeleyDB: Database type is Rename"
+            when DB_QAMMAGIC then    raise 'MiqBerkeleyDB: Database type is Queue'
+            when DB_LOGMAGIC then    raise 'MiqBerkeleyDB: Database type is Log'
+            when DB_RENAMEMAGIC then raise 'MiqBerkeleyDB: Database type is Rename'
             else                     raise "MiqBerkeleyDB: Database type #{@header['magic']} is not supported"
             end
     end
@@ -178,7 +178,7 @@ module MiqBerkeleyDB
     end
 
     def read(len)
-      raise "File not open" if @file.nil?
+      raise 'File not open' if @file.nil?
       @file.read(len)
     end
 
@@ -187,19 +187,19 @@ module MiqBerkeleyDB
     end
 
     def nkeys
-      @header["key_count"]
+      @header['key_count']
     end
 
     def nrecs
-      @header["record_count"]
+      @header['record_count']
     end
 
     def npages
-      @header["last_pgno"] + 1
+      @header['last_pgno'] + 1
     end
 
     def pagesize
-      @header["pagesize"]
+      @header['pagesize']
     end
 
     def pages
@@ -294,15 +294,15 @@ module MiqBerkeleyDB
     def fileOpen(fileName)
       # Return a file object using MiqFS or File as the case may be.
       if @fs.nil?
-        File.open(fileName, "rb")
+        File.open(fileName, 'rb')
       else
-        @fs.fileOpen(fileName, "r")
+        @fs.fileOpen(fileName, 'r')
       end
     end
 
     def uid_format
-      out = ""
-      @header['uid'].each_byte { |b| out += sprintf("%02x ", b) }
+      out = ''
+      @header['uid'].each_byte { |b| out += sprintf('%02x ', b) }
       out
     end
   end

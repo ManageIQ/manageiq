@@ -36,9 +36,9 @@ class MiqAeYamlImport
   def log_stats
     _log.info("Import statistics: <#{@import_stats.inspect}>")
     if @preview
-      $log.warn("Your database has NOT been updated. Set PREVIEW=false to apply the above changes.")
+      $log.warn('Your database has NOT been updated. Set PREVIEW=false to apply the above changes.')
     else
-      $log.info("Your database has been updated.")
+      $log.info('Your database has been updated.')
     end
   end
 
@@ -52,7 +52,7 @@ class MiqAeYamlImport
     @single_domain = false
     domains = sorted_domain_files.collect do |file|
       directory = File.dirname(file)
-      @domain_name = directory.split("/").last
+      @domain_name = directory.split('/').last
       import_domain(directory, @domain_name)
     end
     MiqAeDatastore.reset_default_namespace if @restore && !@preview
@@ -63,7 +63,7 @@ class MiqAeYamlImport
     domains = {}
     domain_files(ALL_DOMAINS).sort.each do |file|
       directory = File.dirname(file)
-      domain_name = directory.split("/").last
+      domain_name = directory.split('/').last
       domain_yaml = read_domain_yaml(directory, domain_name)
       domains[file] = domain_yaml.fetch_path('object', 'attributes', 'priority')
     end

@@ -9,7 +9,7 @@ module MigrationStubHelper
     # Fixes issues where reflections in stubs will use the class name in the
     #   query, which is unexpectedly namespaced.
     def self.name
-      super.split("::")[1..-1].join("::")
+      super.split('::')[1..-1].join('::')
     end
   end
 end

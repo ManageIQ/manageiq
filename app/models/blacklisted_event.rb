@@ -1,5 +1,5 @@
 class BlacklistedEvent < ApplicationRecord
-  belongs_to        :ext_management_system, :foreign_key => "ems_id"
+  belongs_to        :ext_management_system, :foreign_key => 'ems_id'
 
   default_value_for :enabled, true
   after_save        :queue_sync_blacklisted_event_names
@@ -40,9 +40,9 @@ class BlacklistedEvent < ApplicationRecord
 
     servers.each do |s|
       MiqQueue.put(
-        :class_name  => "MiqServer",
+        :class_name  => 'MiqServer',
         :instance_id => s.id,
-        :method_name => "sync_blacklisted_event_names",
+        :method_name => 'sync_blacklisted_event_names',
         :server_guid => s.guid,
         :priority    => MiqQueue::HIGH_PRIORITY,
         :queue_name  => 'miq_server'

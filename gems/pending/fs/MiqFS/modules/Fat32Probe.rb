@@ -12,7 +12,7 @@ module Fat32Probe
 
     # Check byte 66 for 0x29 (extended signature).
     if bs[66] != 0x29
-      $log.debug("Fat32Probe << FALSE because there is no extended signature") if $log
+      $log.debug('Fat32Probe << FALSE because there is no extended signature') if $log
       return false
     end
 
@@ -21,7 +21,7 @@ module Fat32Probe
     fslabel = bs[82, 8].unpack('a8')[0].strip
     fat32 = fslabel == 'FAT32'
     if $log
-      $log.debug("Fat32Probe << TRUE") if fat32
+      $log.debug('Fat32Probe << TRUE') if fat32
       $log.debug("Fat32Probe << FALSE because FS label is NOT FAT32, but is '#{fslabel}'") unless fat32
     end
 

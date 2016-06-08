@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 require_migration
 
 describe AddServiceAncestry do
@@ -12,7 +12,7 @@ describe AddServiceAncestry do
     #     s112
     # s2
     #   s21 (created before parent)
-    it "updates tree" do
+    it 'updates tree' do
       s21  = service_stub.create!
       s1   = service_stub.create!
       s2   = service_stub.create!
@@ -34,7 +34,7 @@ describe AddServiceAncestry do
   end
 
   migration_context :down do
-    it "updates tree" do
+    it 'updates tree' do
       s21  = service_stub.create!
       s1   = service_stub.create!
       s2   = service_stub.create!

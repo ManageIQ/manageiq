@@ -35,7 +35,7 @@ module MiqLargeFile
       require 'win32/file'
       File.size(file_name)
     else
-      f = open(file_name, "r")
+      f = open(file_name, 'r')
       s = f.size
       f.close
       return s

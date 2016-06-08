@@ -5,7 +5,7 @@ describe VmCloudController do
     EvmSpecHelper.create_guid_miq_server_zone
   end
 
-  context "#tree_select" do
+  context '#tree_select' do
     [
       %w(Instances instances_tree),
       %w(Images images_tree),

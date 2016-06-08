@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Openstack::CloudManager::Vm do
-  describe "vm actions" do
+  describe 'vm actions' do
     let(:ems) { FactoryGirl.create(:ems_openstack) }
     let(:tenant) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems) }
     let(:vm) do
@@ -20,118 +20,118 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       handle
     end
 
-    context "#live_migrate" do
-      it "live migrates with default options" do
+    context '#live_migrate' do
+      it 'live migrates with default options' do
         expect(handle).to receive(:live_migrate_server).with(vm.ems_ref, nil, false, false)
         vm.live_migrate
         expect(vm.power_state).to eq 'migrating'
       end
 
-      it "live migrates with special options" do
+      it 'live migrates with special options' do
         expect(handle).to receive(:live_migrate_server).with(vm.ems_ref, 'host_1.localdomain', true, true)
         vm.live_migrate(:hostname => 'host_1.localdomain', :disk_over_commit => true, :block_migration => true)
         expect(vm.power_state).to eq 'migrating'
       end
 
-      it "checks live migration is_available?" do
+      it 'checks live migration is_available?' do
         expect(vm.is_available?(:live_migrate)).to eq true
       end
     end
 
-    context "evacuate" do
-      it "evacuates with default options" do
+    context 'evacuate' do
+      it 'evacuates with default options' do
         expect(handle).to receive(:evacuate_server).with(vm.ems_ref, nil, true, nil)
         vm.evacuate
         expect(vm.power_state).to eq 'migrating'
       end
 
-      it "evacuates with special options" do
+      it 'evacuates with special options' do
         expect(handle).to receive(:evacuate_server).with(vm.ems_ref, 'host_1.localdomain', false, 'blah')
         vm.evacuate(:hostname => 'host_1.localdomain', :on_shared_storage => false, :admin_password => 'blah')
         expect(vm.power_state).to eq 'migrating'
       end
 
-      it "evacuates with special options" do
+      it 'evacuates with special options' do
         expect(handle).to receive(:evacuate_server).with(vm.ems_ref, 'host_1.localdomain', true, nil)
         vm.evacuate(:hostname => 'host_1.localdomain', :on_shared_storage => true)
         expect(vm.power_state).to eq 'migrating'
       end
 
-      it "checks evacuation is_available?" do
+      it 'checks evacuation is_available?' do
         expect(vm.is_available?(:evacuate)).to eq true
       end
     end
   end
 
-  context "#is_available?" do
+  context '#is_available?' do
     let(:ems) { FactoryGirl.create(:ems_openstack) }
     let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
-    let(:power_state_on)        { "ACTIVE" }
-    let(:power_state_suspended) { "SUSPENDED" }
+    let(:power_state_on)        { 'ACTIVE' }
+    let(:power_state_suspended) { 'SUSPENDED' }
 
-    context("with :start") do
+    context('with :start') do
       let(:state) { :start }
-      include_examples "Vm operation is available when not powered on"
+      include_examples 'Vm operation is available when not powered on'
     end
 
-    context("with :stop") do
+    context('with :stop') do
       let(:state) { :stop }
-      include_examples "Vm operation is available when powered on"
+      include_examples 'Vm operation is available when powered on'
     end
 
-    context("with :suspend") do
+    context('with :suspend') do
       let(:state) { :suspend }
-      include_examples "Vm operation is available when powered on"
+      include_examples 'Vm operation is available when powered on'
     end
 
-    context("with :pause") do
+    context('with :pause') do
       let(:state) { :pause }
-      include_examples "Vm operation is available when powered on"
+      include_examples 'Vm operation is available when powered on'
     end
 
-    context("with :shutdown_guest") do
+    context('with :shutdown_guest') do
       let(:state) { :shutdown_guest }
-      include_examples "Vm operation is not available"
+      include_examples 'Vm operation is not available'
     end
 
-    context("with :standby_guest") do
+    context('with :standby_guest') do
       let(:state) { :standby_guest }
-      include_examples "Vm operation is not available"
+      include_examples 'Vm operation is not available'
     end
 
-    context("with :reboot_guest") do
+    context('with :reboot_guest') do
       let(:state) { :reboot_guest }
-      include_examples "Vm operation is available when powered on"
+      include_examples 'Vm operation is available when powered on'
     end
 
-    context("with :reset") do
+    context('with :reset') do
       let(:state) { :reset }
-      include_examples "Vm operation is available when powered on"
+      include_examples 'Vm operation is available when powered on'
     end
   end
 
-  context "when detroyed" do
+  context 'when detroyed' do
     let(:ems) { FactoryGirl.create(:ems_openstack) }
     let(:provider_object) do
-      double("vm_openstack_provider_object", :destroy => nil).as_null_object
+      double('vm_openstack_provider_object', :destroy => nil).as_null_object
     end
     let(:vm)  { FactoryGirl.create(:vm_openstack, :ext_management_system => ems) }
 
-    it "sets the raw_power_state and not state" do
+    it 'sets the raw_power_state and not state' do
       expect(vm).to receive(:with_provider_object).and_yield(provider_object)
       vm.raw_destroy
-      expect(vm.raw_power_state).to eq("DELETED")
-      expect(vm.state).to eq("archived")
+      expect(vm.raw_power_state).to eq('DELETED')
+      expect(vm.state).to eq('archived')
     end
   end
 
-  context "when resized" do
+  context 'when resized' do
     let(:ems) { FactoryGirl.create(:ems_openstack) }
     let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant) }
     let(:vm) { FactoryGirl.create(:vm_openstack, :ext_management_system => ems, :cloud_tenant => cloud_tenant) }
     let(:flavor) { FactoryGirl.create(:flavor_openstack, :ems_ref => '2') }
 
-    it "initiate resize process" do
+    it 'initiate resize process' do
       service = double
       allow(ems).to receive(:connect).and_return(service)
       expect(vm.validate_resize[:available]).to be_truthy

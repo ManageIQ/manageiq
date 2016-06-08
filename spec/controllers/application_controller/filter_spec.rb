@@ -1,10 +1,10 @@
-describe ApplicationController, "::Filter" do
+describe ApplicationController, '::Filter' do
   before :each do
     controller.instance_variable_set(:@sb, {})
   end
 
-  describe "#load_default_search" do
-    it "calls load_default_search when filter is ALL(id=0)" do
+  describe '#load_default_search' do
+    it 'calls load_default_search when filter is ALL(id=0)' do
       expect(controller).to receive(:clear_default_search)
       expect do
         controller.load_default_search(0) # id = 0
@@ -12,36 +12,36 @@ describe ApplicationController, "::Filter" do
     end
   end
 
-  context "Verify removal of tokens from expressions" do
-    it "removes tokens if present" do
-      e = MiqExpression.new({"=" => {:field => "Vm.name", :value => "Test"}, :token => 1})
+  context 'Verify removal of tokens from expressions' do
+    it 'removes tokens if present' do
+      e = MiqExpression.new({'=' => {:field => 'Vm.name', :value => 'Test'}, :token => 1})
       exp = e.exp
       controller.send(:exp_remove_tokens, exp)
-      expect(exp.inspect.include?(":token")).to be_falsey
+      expect(exp.inspect.include?(':token')).to be_falsey
     end
 
-    it "removes tokens if present in complex expression" do
-      e = MiqExpression.new("or" => [{"=" => {:field => "Vm.name", :value => "Test"}, :token => 1},
-                                     {"=" => {:field => "Vm.name", :value => "Test2"}, :token => 2}])
+    it 'removes tokens if present in complex expression' do
+      e = MiqExpression.new('or' => [{'=' => {:field => 'Vm.name', :value => 'Test'}, :token => 1},
+                                     {'=' => {:field => 'Vm.name', :value => 'Test2'}, :token => 2}])
       exp = e.exp
       controller.send(:exp_remove_tokens, exp)
-      expect(exp.inspect.include?(":token")).to be_falsey
+      expect(exp.inspect.include?(':token')).to be_falsey
     end
 
-    it "leaves expression untouched if no tokens present" do
-      e = MiqExpression.new("=" => {:field => "Vm.name", :value => "Test"})
+    it 'leaves expression untouched if no tokens present' do
+      e = MiqExpression.new('=' => {:field => 'Vm.name', :value => 'Test'})
       exp = e.exp
       exp2 = copy_hash(exp)
       controller.send(:exp_remove_tokens, exp2)
       expect(exp.inspect).to eq(exp2.inspect)
     end
 
-    it "removes tokens if present" do
+    it 'removes tokens if present' do
       exp = {'???' => '???'}
       edit = {:expression => {:val1 => {}, :val2 => {}, :expression => exp}, :edit_exp => exp}
-      edit[:new] = {:expression => {:test => "foo", :token => 1}}
+      edit[:new] = {:expression => {:test => 'foo', :token => 1}}
       session[:edit] = edit
-      controller.instance_variable_set(:@_params, :pressed => "discard")
+      controller.instance_variable_set(:@_params, :pressed => 'discard')
       controller.instance_variable_set(:@expkey, :expression)
       expect(controller).to receive(:render)
       controller.send(:exp_button)
@@ -52,9 +52,9 @@ describe ApplicationController, "::Filter" do
     end
   end
 
-  describe "#save_default_search" do
+  describe '#save_default_search' do
     let(:user) { FactoryGirl.create(:user_with_group, :settings => {:default_search => {}}) }
-    it "saves settings" do
+    it 'saves settings' do
       search = FactoryGirl.create(:miq_search, :name => 'sds')
 
       login_as user
@@ -70,7 +70,7 @@ describe ApplicationController, "::Filter" do
     end
   end
 
-  describe "#adv_search_build_lists (private)" do
+  describe '#adv_search_build_lists (private)' do
     let(:user)           { FactoryGirl.create(:user) }
     let(:user_search)    { FactoryGirl.create(:miq_search_user, :search_key => user.userid) }
     let(:user_search2)   { FactoryGirl.create(:miq_search_user, :search_key => user.userid) }
@@ -83,10 +83,10 @@ describe ApplicationController, "::Filter" do
 
       session[:userid] = user.userid
       controller.instance_variable_set(:@expkey, :expression)
-      controller.instance_variable_set(:@edit, :expression => {:exp_model => "Vm"})
+      controller.instance_variable_set(:@edit, :expression => {:exp_model => 'Vm'})
     end
 
-    it "with global searches" do
+    it 'with global searches' do
       global_search  # Create the searches
       global_search2
 
@@ -101,7 +101,7 @@ describe ApplicationController, "::Filter" do
       ]
     end
 
-    it "without global searches" do
+    it 'without global searches' do
       controller.send(:adv_search_build_lists)
       actual = controller.instance_variable_get(:@edit)[:expression][:exp_search_expressions]
 
@@ -111,7 +111,7 @@ describe ApplicationController, "::Filter" do
       ]
     end
 
-    it "does not include searches from other users" do
+    it 'does not include searches from other users' do
       FactoryGirl.create(:miq_search_user, :search_key => -1) # A search from another "user"
 
       controller.send(:adv_search_build_lists)

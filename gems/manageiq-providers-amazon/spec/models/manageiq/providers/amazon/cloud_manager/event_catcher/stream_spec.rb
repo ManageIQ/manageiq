@@ -1,18 +1,18 @@
-require_relative "../../aws_helper"
+require_relative '../../aws_helper'
 
 describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
   subject do
     ems = FactoryGirl.create(:ems_amazon_with_authentication)
     described_class.new(ems)
   end
-  let(:queue_url) { "https://sqs.eu-central-1.amazonaws.com/995412904407/the_queue_name" }
+  let(:queue_url) { 'https://sqs.eu-central-1.amazonaws.com/995412904407/the_queue_name' }
   let(:get_queue_attributes) do
     Aws::SQS::Client.new(:stub_responses => true).stub_data(:get_queue_attributes, :attributes => {'QueueArn' => 'arn'})
   end
 
-  describe "#find_or_create_queue" do
-    context "with queue present on amazon" do
-      it "finds the queue" do
+  describe '#find_or_create_queue' do
+    context 'with queue present on amazon' do
+      it 'finds the queue' do
         stubbed_responses = {
           :sqs => {
             :get_queue_url        => {:queue_url => queue_url},
@@ -32,9 +32,9 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
       end
     end
 
-    context "with no queue present on aws" do
-      context "and topic present on aws" do
-        it "creates the queue" do
+    context 'with no queue present on aws' do
+      context 'and topic present on aws' do
+        it 'creates the queue' do
           stubbed_responses = {
             :sqs => {
               :get_queue_url        => 'NonExistentQueue',
@@ -56,15 +56,15 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
         end
       end
 
-      context "and no topic present on aws" do
-        it "raises ProviderUnreachable" do
+      context 'and no topic present on aws' do
+        it 'raises ProviderUnreachable' do
           stubbed_responses = {
             :sqs => {
               :get_queue_url => 'NonExistentQueue'
             },
             :sns => {
               :list_topics => {
-                :topics => [{:topic_arn => "arn:aws:sns:region:account-id:not-the-right-topic"}]
+                :topics => [{:topic_arn => 'arn:aws:sns:region:account-id:not-the-right-topic'}]
               }
             }
           }
@@ -76,22 +76,22 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
     end
   end
 
-  context "#parse_event" do
+  context '#parse_event' do
     let(:message) do
-      body = File.read(File.join(File.dirname(__FILE__), "sqs_message.json"))
+      body = File.read(File.join(File.dirname(__FILE__), 'sqs_message.json'))
       Aws::SQS::Types::Message.new(:body => body, :message_id => 1)
     end
 
-    it "parses a SNS Message" do
+    it 'parses a SNS Message' do
       expect(subject.send(:parse_event, message)).to include('messageId'   => 1,
-                                                             "messageType" => "ConfigurationItemChangeNotification",
-                                                             "eventType"   => "AWS_EC2_Instance_UPDATE")
+                                                             'messageType' => 'ConfigurationItemChangeNotification',
+                                                             'eventType'   => 'AWS_EC2_Instance_UPDATE')
     end
   end
 
-  context "#poll" do
-    it "yields an event" do
-      message_body = File.read(File.join(File.dirname(__FILE__), "sqs_message.json"))
+  context '#poll' do
+    it 'yields an event' do
+      message_body = File.read(File.join(File.dirname(__FILE__), 'sqs_message.json'))
       stubbed_responses = {
         :sqs => {
           :receive_message => [
@@ -105,7 +105,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::EventCatcher::Stream do
               ]
             },
             # second message raises an exception
-            "ServiceError"
+            'ServiceError'
           ]
         }
       }

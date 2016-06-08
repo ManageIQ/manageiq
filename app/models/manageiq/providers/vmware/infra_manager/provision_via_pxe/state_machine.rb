@@ -9,7 +9,7 @@ module ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe::StateMachine
   end
 
   def create_pxe_configuration_file
-    message = "Generating PXE and Customization Files on PXE Server"
+    message = 'Generating PXE and Customization Files on PXE Server'
     _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
     create_pxe_files
@@ -18,7 +18,7 @@ module ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe::StateMachine
   end
 
   def boot_from_network
-    message = "Booting from Network"
+    message = 'Booting from Network'
     _log.info("#{message} #{for_destination}")
     update_and_notify_parent(:message => message)
 
@@ -35,13 +35,13 @@ module ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe::StateMachine
   end
 
   def post_provision
-    update_and_notify_parent(:message => "Post Provisioning")
+    update_and_notify_parent(:message => 'Post Provisioning')
 
     if get_option(:stateless)
-      message = "Stateless, NOT deleting PXE and Customization Files on PXE Server"
+      message = 'Stateless, NOT deleting PXE and Customization Files on PXE Server'
       _log.info("#{message} #{for_destination}")
     else
-      message = "Deleting PXE and Customization Files on PXE Server"
+      message = 'Deleting PXE and Customization Files on PXE Server'
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       delete_pxe_files

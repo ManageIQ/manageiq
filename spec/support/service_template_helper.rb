@@ -6,7 +6,7 @@ module ServiceTemplateHelper
 
   def build_all_atomics(hash)
     hash.each do |name, value|
-      next unless value[:type] == "atomic"
+      next unless value[:type] == 'atomic'
       item = FactoryGirl.create(:service_template, :name         => name,
                                                    :service_type => 'atomic')
       item.update_attributes(:prov_type => value[:prov_type]) if value[:prov_type].present?
@@ -22,7 +22,7 @@ module ServiceTemplateHelper
 
   def build_all_composites(hash)
     hash.each do |name, value|
-      next unless value[:type] == "composite"
+      next unless value[:type] == 'composite'
       next if ServiceTemplate.find_by_name(name)
       build_a_composite(name, hash)
     end
@@ -53,7 +53,7 @@ module ServiceTemplateHelper
   def build_service_template_request(root_st_name, user, dialog_options = {})
     root = ServiceTemplate.find_by_name(root_st_name)
     return nil unless root
-    options = {:src_id => root.id, :target_name => "barney"}.merge(dialog_options)
+    options = {:src_id => root.id, :target_name => 'barney'}.merge(dialog_options)
     FactoryGirl.create(:service_template_provision_request,
                        :description    => 'Service Request',
                        :source_type    => 'ServiceTemplate',
@@ -68,7 +68,7 @@ module ServiceTemplateHelper
   def request_stubs
     allow(@request).to receive(:approved?).and_return(true)
     allow_any_instance_of(MiqRequestTask).to receive(:approved?).and_return(true)
-    allow_any_instance_of(MiqProvision).to receive(:get_next_vm_name).and_return("fred")
+    allow_any_instance_of(MiqProvision).to receive(:get_next_vm_name).and_return('fred')
     allow(@request).to receive(:automate_event_failed?).and_return(false)
   end
 
@@ -78,7 +78,7 @@ module ServiceTemplateHelper
     @host1 =  FactoryGirl.create(:host_vmware, :ems_id => @ems.id)
     @src_vm = FactoryGirl.create(:vm_vmware, :host   => @host1,
                                              :ems_id => @ems.id,
-                                             :name   => "barney")
+                                             :name   => 'barney')
   end
 
   def service_template_stubs
@@ -88,7 +88,7 @@ module ServiceTemplateHelper
   end
 
   def user_helper
-    allow_any_instance_of(User).to receive(:role).and_return("admin")
+    allow_any_instance_of(User).to receive(:role).and_return('admin')
     @user = FactoryGirl.create(:user_with_group, :name => 'Wilma', :userid => 'wilma')
   end
 end

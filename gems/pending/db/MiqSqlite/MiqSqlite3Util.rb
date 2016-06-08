@@ -5,7 +5,7 @@ module MiqSqlite3DB
 
   # convert a var[1-9] to an integer
   def self.variableInteger(buf)
-    raise "Empty Buffer" if buf.nil? || buf.size == 0
+    raise 'Empty Buffer' if buf.nil? || buf.size == 0
     bytes = []
     loop do
       byte = buf[bytes.size].ord
@@ -25,8 +25,8 @@ module MiqSqlite3DB
   end
 
   def self.dumpHex(buf)
-    out = ""
-    buf.each_byte { |b| out += sprintf("%02x ", b) }
+    out = ''
+    buf.each_byte { |b| out += sprintf('%02x ', b) }
     out
   end
 end

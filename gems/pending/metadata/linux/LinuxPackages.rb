@@ -19,12 +19,12 @@ module MiqLinux
     #
     # RPM DB directory.
     #
-    RPM_DB = "/var/lib/rpm"
+    RPM_DB = '/var/lib/rpm'
 
     #
     # Conary DB file
     #
-    CONARY_FILE = "/var/lib/conarydb/conarydb"
+    CONARY_FILE = '/var/lib/conarydb/conarydb'
 
     def initialize(fs = nil)
       @fs = fs
@@ -45,8 +45,8 @@ module MiqLinux
     end
 
     def procDpkg(pf)
-      $log.debug "Processing Dpkg package database"
-      pfls = ""
+      $log.debug 'Processing Dpkg package database'
+      pfls = ''
       @fs.fileOpen(pf) { |fo| pfls = fo.read }
       desc = false
 
@@ -108,14 +108,14 @@ module MiqLinux
           desc = false
 
         else
-          @pkg.description ||= ""
+          @pkg.description ||= ''
           @pkg.description += "\n" + pfl if desc
         end
       end
     end
 
     def procPortage(pd)
-      $log.debug "Processing Portage package database"
+      $log.debug 'Processing Portage package database'
       @fs.chdir(pd)
 
       @fs.dirForeach do |cat|
@@ -137,7 +137,7 @@ module MiqLinux
           @pkg.name = p
           @pkg.version = v
           @pkg.category = cat
-          @pkg.status = "installed"
+          @pkg.status = 'installed'
           @pkg.installed = true
           @fs.fileOpen('DEPEND') { |fo| @pkg.depends = fo.read.chomp } if @fs.fileFile?('DEPEND')
           @fs.fileOpen('DESCRIPTION') { |fo| @pkg.description = fo.read.chomp } if @fs.fileFile?('DESCRIPTION')
@@ -153,8 +153,8 @@ module MiqLinux
     # Client-side RPM DB processing.
     #
     def procRPM(dbDir)
-      $log.debug "Processing RPM package database"
-      rpmp = MiqRpmPackages.new(@fs, File.join(dbDir, "Packages"))
+      $log.debug 'Processing RPM package database'
+      rpmp = MiqRpmPackages.new(@fs, File.join(dbDir, 'Packages'))
       rpmp.each { |p| @packages << p }
       rpmp.close
     end
@@ -163,7 +163,7 @@ module MiqLinux
     # Conary DB processing
     #
     def procConary(dbFile)
-      $log.debug "Processing Conary package database"
+      $log.debug 'Processing Conary package database'
       rpmp = MiqConaryPackages.new(@fs, dbFile)
       rpmp.each { |p| @packages << p }
       rpmp.close
@@ -175,7 +175,7 @@ module MiqLinux
       pkgs = doc.add_element 'applications'
       @packages.each do |p|
         next unless p.installed
-        pkgs.add_element('application', {"name" => p.name, "version" => p.version, "description" => p.description, "typename" => p.category, "arch" => p.arch, "release" => p.release, "install_time" => p.installtime})
+        pkgs.add_element('application', {'name' => p.name, 'version' => p.version, 'description' => p.description, 'typename' => p.category, 'arch' => p.arch, 'release' => p.release, 'install_time' => p.installtime})
         # "status" => p.status, "depends" => p.depends
       end
       doc
@@ -187,14 +187,14 @@ module MiqLinux
         next unless p.installed
         pkgs += "  <application name='#{encodeStrings(p.name)}' version='#{p.version}' description='#{p.description}' typename='#{p.category}' />\n"
       end
-      pkgs += "</applications>"
+      pkgs += '</applications>'
     end
 
     def encodeStrings(data)
-      data.gsub!(/>/, "&gt;")
-      data.gsub!(/</, "&lt;")
-      data.gsub!(/'/, "&apos;")
-      data.gsub!(/"/, "&quot;")
+      data.gsub!(/>/, '&gt;')
+      data.gsub!(/</, '&lt;')
+      data.gsub!(/'/, '&apos;')
+      data.gsub!(/"/, '&quot;')
       data
     end
   end # class Packages

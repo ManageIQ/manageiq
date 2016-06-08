@@ -42,7 +42,7 @@ class ManageIQ::Providers::CloudManager::RefreshParser
     if size >= 0
       disk = {
         :device_name     => name,
-        :device_type     => "disk",
+        :device_type     => 'disk',
         :controller_type => controller_type,
         :location        => location,
         :size            => size

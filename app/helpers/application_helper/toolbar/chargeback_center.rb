@@ -12,20 +12,20 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
           'fa fa-file-text-o fa-lg',
           N_('Download this report in text format'),
           N_('Download as Text'),
-          :url => "/render_txt"),
+          :url => '/render_txt'),
         button(
           :chargeback_download_csv,
           'fa fa-file-text-o fa-lg',
           N_('Download this report in CSV format'),
           N_('Download as CSV'),
-          :url => "/render_csv"),
+          :url => '/render_csv'),
         button(
           :chargeback_download_pdf,
           'fa fa-file-pdf-o fa-lg',
           N_('Download this report in PDF format'),
           N_('Download as PDF'),
           :klass => ApplicationHelper::Button::Pdf,
-          :url => "/render_pdf"),
+          :url => '/render_pdf'),
       ]
     ),
     button(
@@ -34,9 +34,9 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
       N_('Show full screen report'),
       nil,
       :klass   => ApplicationHelper::Button::ChargebackReportOnly,
-      :url     => "/report_only",
+      :url     => '/report_only',
       :popup   => true,
-      :confirm => N_("This will show the entire report (all rows) in your browser.  Do you want to proceed?")),
+      :confirm => N_('This will show the entire report (all rows) in your browser.  Do you want to proceed?')),
   ])
   button_group('chargeback_vmdb', [
     select(
@@ -50,21 +50,21 @@ class ApplicationHelper::Toolbar::ChargebackCenter < ApplicationHelper::Toolbar:
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Chargeback Rate'),
           t,
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :klass     => ApplicationHelper::Button::ChargebackRateEdit),
         button(
           :chargeback_rates_copy,
           'fa fa-files-o fa-lg',
           t = N_('Copy this Chargeback Rate'),
           t,
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
         button(
           :chargeback_rates_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove this Chargeback Rate from the VMDB'),
           N_('Remove from the VMDB'),
-          :url_parms => "main_div",
-          :confirm   => N_("Warning: This Chargeback Rate will be permanently removed from the Virtual Management Database. Are you sure you want to remove this Chargeback Rate?"),
+          :url_parms => 'main_div',
+          :confirm   => N_('Warning: This Chargeback Rate will be permanently removed from the Virtual Management Database. Are you sure you want to remove this Chargeback Rate?'),
           :klass     => ApplicationHelper::Button::ChargebackRateRemove),
       ]
     ),

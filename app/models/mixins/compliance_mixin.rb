@@ -4,7 +4,7 @@ module ComplianceMixin
   included do
     has_many :compliances, :as => :resource, :dependent => :destroy
 
-    virtual_has_one :last_compliance, :class_name => "Compliance"
+    virtual_has_one :last_compliance, :class_name => 'Compliance'
 
     virtual_column  :last_compliance_status,    :type => :boolean,  :uses => :last_compliance
     virtual_column  :last_compliance_timestamp, :type => :datetime, :uses => :last_compliance
@@ -15,7 +15,7 @@ module ComplianceMixin
     @last_compliance = if @association_cache.include?(:compliances)
                          compliances.max_by(&:timestamp)
                        else
-                         compliances.order("timestamp DESC").first
+                         compliances.order('timestamp DESC').first
                        end
   end
 

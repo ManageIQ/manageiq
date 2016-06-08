@@ -7,6 +7,6 @@ class ManageIQ::Providers::CloudManager::Provision < MiqProvision
   include_concern 'VolumeAttachment'
 
   def destination_type
-    "Vm"
+    'Vm'
   end
 end

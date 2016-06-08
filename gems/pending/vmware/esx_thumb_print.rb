@@ -22,9 +22,9 @@ class ESXThumbPrint < ThumbPrint
   end
 
   def to_cert
-    raise "Invalid Request" if @request.nil?
+    raise 'Invalid Request' if @request.nil?
     response = @http.request(@request)
-    unless response.message == "OK" && response.code == "200"
+    unless response.message == 'OK' && response.code == '200'
       raise "Unable to get ESX Host SSL Certificate: Invalid HTTP Response #{response.message} code #{response.code}"
     end
     response.body

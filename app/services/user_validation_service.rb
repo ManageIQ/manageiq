@@ -22,14 +22,14 @@ class UserValidationService
 
     unless user[:name]
       clear_current_user
-      return ValidateResult.new(:fail, @flash_msg ||= "Error: Authentication failed")
+      return ValidateResult.new(:fail, @flash_msg ||= 'Error: Authentication failed')
     end
 
     if user[:new_password].present?
       begin
         User.find_by_userid(user[:name]).change_password(user[:password], user[:new_password])
       rescue StandardError => bang
-        return ValidateResult.new(:fail, "Error: " + bang.message)
+        return ValidateResult.new(:fail, 'Error: ' + bang.message)
       end
     end
 
@@ -61,11 +61,11 @@ class UserValidationService
 
   def missing_user_features(db_user)
     if !db_user || !db_user.userid
-      "User"
+      'User'
     elsif !db_user.current_group
-      "Group"
+      'Group'
     elsif !db_user.current_group.miq_user_role
-      "Role"
+      'Role'
     end
   end
 
@@ -73,22 +73,22 @@ class UserValidationService
 
   def validate_user_handle_no_records
     ValidateResult.new(:pass, nil, url_for(
-                                     :controller    => "ems_infra",
+                                     :controller    => 'ems_infra',
                                      :action        => 'show_list'))
   end
 
   def validate_user_handle_not_ready(db_user)
     if db_user.super_admin_user?
       ValidateResult.new(:pass, nil, url_for(
-                                       :controller    => "ops",
+                                       :controller    => 'ops',
                                        :action        => 'explorer',
                                        :flash_warning => true,
                                        :no_refresh    => true,
-                                       :flash_msg     => _("The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination"),
+                                       :flash_msg     => _('The CFME Server is still starting, you have been redirected to the diagnostics page for problem determination'),
                                        :escape        => false)
                         )
     else
-      ValidateResult.new(:fail, _("The CFME Server is still starting. If this message persists, please contact your CFME administrator."))
+      ValidateResult.new(:fail, _('The CFME Server is still starting. If this message persists, please contact your CFME administrator.'))
     end
   end
 
@@ -103,7 +103,7 @@ class UserValidationService
       err_message = if err.message.present? && authenticate_options[:require_user]
                       err.message
                     else
-                      _("Sorry, the username or password you entered is incorrect.")
+                      _('Sorry, the username or password you entered is incorrect.')
                     end
       return ValidateResult.new(:fail, err_message)
     end
@@ -119,8 +119,8 @@ class UserValidationService
 
   def validate_user_collect_task(user, task_id)
     task = MiqTask.find_by_id(task_id)
-    if task.status.downcase != "ok"
-      validate = ValidateResult.new(:fail, "Error: " + task.message)
+    if task.status.downcase != 'ok'
+      validate = ValidateResult.new(:fail, 'Error: ' + task.message)
       task.destroy
       return validate
     end
@@ -131,15 +131,15 @@ class UserValidationService
 
   def validate_user_pre_auth_checks(user)
     # Pre_authenticate checks
-    return ValidateResult.new(:fail, "Error: Name is required") if user.blank? || user[:name].blank?
+    return ValidateResult.new(:fail, 'Error: Name is required') if user.blank? || user[:name].blank?
 
-    return ValidateResult.new(:fail, "Error: New password and verify password must be the same") if
+    return ValidateResult.new(:fail, 'Error: New password and verify password must be the same') if
       user[:new_password].present? && user[:new_password] != user[:verify_password]
 
-    return ValidateResult.new(:fail, "Error: New password can not be blank") if
+    return ValidateResult.new(:fail, 'Error: New password can not be blank') if
       user[:new_password] && user[:new_password].blank?
 
-    return ValidateResult.new(:fail, "Error: New password is the same as existing password") if
+    return ValidateResult.new(:fail, 'Error: New password is the same as existing password') if
       user[:new_password].present? && user[:password] == user[:new_password]
     nil
   end

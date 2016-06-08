@@ -1,4 +1,4 @@
-require "routing/shared_examples"
+require 'routing/shared_examples'
 
 describe MiqAeCustomizationController do
   let(:controller_name) { 'miq_ae_customization' }
@@ -9,7 +9,7 @@ describe MiqAeCustomizationController do
     export_service_dialogs
   ).each do |path|
     describe "##{path}" do
-      it "routes with GET" do
+      it 'routes with GET' do
         expect(get("/#{controller_name}/#{path}")).to route_to("#{controller_name}##{path}")
       end
     end
@@ -52,7 +52,7 @@ describe MiqAeCustomizationController do
     x_show
   ).each do |path|
     describe "##{path}" do
-      it "routes with POST" do
+      it 'routes with POST' do
         expect(post("/#{controller_name}/#{path}")).to route_to("#{controller_name}##{path}")
       end
     end

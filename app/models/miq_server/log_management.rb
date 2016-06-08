@@ -4,12 +4,12 @@ module MiqServer::LogManagement
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :log_file_depot, :class_name => "FileDepot"
+    belongs_to :log_file_depot, :class_name => 'FileDepot'
     has_many   :log_files, :dependent => :destroy, :as => :resource
   end
 
   def format_log_time(time)
-    time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
+    time.respond_to?(:strftime) ? time.strftime('%Y%m%d_%H%M%S') : 'unknown'
   end
 
   def post_historical_logs(taskid, log_depot)
@@ -22,7 +22,7 @@ module MiqServer::LogManagement
       next if evm.nil?
 
       log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
-      date = File.basename(pattern).gsub!(/\*|\.gz/, "")
+      date = File.basename(pattern).gsub!(/\*|\.gz/, '')
 
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
       date_string ||= date
@@ -41,21 +41,21 @@ module MiqServer::LogManagement
       end
 
       msg = "Creating historical Logfile for [#{resource}] dated: [#{date}] from: [#{log_start}] to [#{log_end}]"
-      task.update_status("Active", "Ok", msg)
+      task.update_status('Active', 'Ok', msg)
       _log.info(msg)
 
       begin
         log_files << logfile
         save
         msg = "Zipping and posting historical logs and configs on #{resource}"
-        task.update_status("Active", "Ok", msg)
+        task.update_status('Active', 'Ok', msg)
         _log.info(msg)
 
         patterns = [pattern]
-        cfg_pattern = get_config("vmdb").config.fetch_path(:log, :collection, :archive, :pattern)
+        cfg_pattern = get_config('vmdb').config.fetch_path(:log, :collection, :archive, :pattern)
         patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
 
-        local_file = VMDB::Util.zip_logs("evm_server_daily.zip", patterns, "admin")
+        local_file = VMDB::Util.zip_logs('evm_server_daily.zip', patterns, 'admin')
 
         logfile.update_attributes(
           :file_depot         => log_depot,
@@ -69,13 +69,13 @@ module MiqServer::LogManagement
 
         logfile.upload
       rescue StandardError, Timeout::Error => err
-        logfile.update_attributes(:state => "error")
+        logfile.update_attributes(:state => 'error')
         _log.error("Posting of historical logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
         raise
       end
 
       msg = "Historical log files from #{resource} for #{date} are posted"
-      task.update_status("Active", "Ok", msg)
+      task.update_status('Active', 'Ok', msg)
       _log.info(msg)
 
       # TODO: If the gz has been posted and the gz is more than X days old, delete it
@@ -87,7 +87,7 @@ module MiqServer::LogManagement
     MiqQueue.put_or_update(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "post_logs",
+      :method_name => 'post_logs',
       :server_guid => guid,
       :zone        => my_zone,
     ) do |msg, item|
@@ -121,16 +121,16 @@ module MiqServer::LogManagement
     context_log_depot = log_depot(options[:context])
 
     # the current queue item and task must be errored out on exceptions so re-raise any caught errors
-    raise _("Log depot settings not configured") unless context_log_depot
+    raise _('Log depot settings not configured') unless context_log_depot
     context_log_depot.update_attributes(:support_case => options[:support_case].presence)
 
     post_historical_logs(taskid, context_log_depot) unless options[:only_current]
     post_current_logs(taskid, context_log_depot)
-    task.update_status("Finished", "Ok", "Log files were successfully collected")
+    task.update_status('Finished', 'Ok', 'Log files were successfully collected')
   end
 
   def current_log_pattern_configuration
-    get_config("vmdb").config.fetch_path(:log, :collection, :current, :pattern) || []
+    get_config('vmdb').config.fetch_path(:log, :collection, :current, :pattern) || []
   end
 
   def current_log_patterns
@@ -147,7 +147,7 @@ module MiqServer::LogManagement
     return [] unless pg_data
 
     pg_data = Pathname.new(pg_data)
-    [pg_data.join("*.conf"), pg_data.join("pg_log/*")]
+    [pg_data.join('*.conf'), pg_data.join('pg_log/*')]
   end
 
   def post_current_logs(taskid, log_depot)
@@ -164,15 +164,15 @@ module MiqServer::LogManagement
       log_prefix = "Task: [#{task.id}]"
       msg = "Posting logs for: #{resource}"
       _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
+      task.update_status('Active', 'Ok', msg)
 
       msg = "Zipping and posting current logs and configs on #{resource}"
       _log.info("#{log_prefix} #{msg}")
-      task.update_status("Active", "Ok", msg)
+      task.update_status('Active', 'Ok', msg)
 
-      local_file = VMDB::Util.zip_logs("evm.zip", current_log_patterns, "system")
+      local_file = VMDB::Util.zip_logs('evm.zip', current_log_patterns, 'system')
 
-      evm = VMDB::Util.get_evm_log_for_date("log/*.log")
+      evm = VMDB::Util.get_evm_log_for_date('log/*.log')
       log_start, log_end = VMDB::Util.get_log_start_end_times(evm)
 
       date_string = "#{format_log_time(log_start)} #{format_log_time(log_end)}" unless log_start.nil? && log_end.nil?
@@ -191,12 +191,12 @@ module MiqServer::LogManagement
       logfile.upload
     rescue StandardError, Timeout::Error => err
       _log.error("#{log_prefix} Posting of current logs failed for #{resource} due to error: [#{err.class.name}] [#{err}]")
-      logfile.update_attributes(:state => "error")
+      logfile.update_attributes(:state => 'error')
       raise
     end
     msg = "Current log files from #{resource} are posted"
     _log.info("#{log_prefix} #{msg}")
-    task.update_status("Active", "Ok", msg)
+    task.update_status('Active', 'Ok', msg)
   end
 
   def delete_old_requested_logs
@@ -207,10 +207,10 @@ module MiqServer::LogManagement
     MiqQueue.put_or_update(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "delete_active_log_collections",
+      :method_name => 'delete_active_log_collections',
       :server_guid => guid
     ) do |msg, item|
-      _log.info("Previous cleanup is still running, skipping...") unless msg.nil?
+      _log.info('Previous cleanup is still running, skipping...') unless msg.nil?
       item.merge(:priority => MiqQueue::HIGH_PRIORITY)
     end
   end
@@ -225,24 +225,24 @@ module MiqServer::LogManagement
     end
 
     # Since a task is created before a logfile, there's a chance we have a task without a logfile
-    MiqTask.where(:miq_server_id => id).where("name like ?", "Zipped log retrieval for %").where("state != ?", "Finished").each do |task|
+    MiqTask.where(:miq_server_id => id).where('name like ?', 'Zipped log retrieval for %').where('state != ?', 'Finished').each do |task|
       task.update_attributes(:state => 'Finished', :status => 'Error', :message => 'Log Collection Incomplete during Server Startup')
     end
   end
 
   def log_collection_active_recently?(since = nil)
     since ||= 15.minutes.ago.utc
-    return true if log_files.exists?(["created_on > ? AND state = ?", since, "collecting"])
-    MiqTask.exists?(["miq_server_id = ? and name like ? and state != ? and created_on > ?", id, "Zipped log retrieval for %", "Finished", since])
+    return true if log_files.exists?(['created_on > ? AND state = ?', since, 'collecting'])
+    MiqTask.exists?(['miq_server_id = ? and name like ? and state != ? and created_on > ?', id, 'Zipped log retrieval for %', 'Finished', since])
   end
 
   def log_collection_active?
-    return true if log_files.exists?(:state => "collecting")
-    MiqTask.exists?(["miq_server_id = ? and name like ? and state != ?", id, "Zipped log retrieval for %", "Finished"])
+    return true if log_files.exists?(:state => 'collecting')
+    MiqTask.exists?(['miq_server_id = ? and name like ? and state != ?', id, 'Zipped log retrieval for %', 'Finished'])
   end
 
   def log_depot(context)
-    context == "Zone" ? zone.log_file_depot : log_file_depot
+    context == 'Zone' ? zone.log_file_depot : log_file_depot
   end
 
   def base_zip_log_name

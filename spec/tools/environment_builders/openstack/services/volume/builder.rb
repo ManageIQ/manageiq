@@ -11,7 +11,7 @@ module Openstack
         end
 
         def initialize(ems, project, environment, image)
-          @service         = ems.connect(:tenant_name => project.name, :service => "Volume")
+          @service         = ems.connect(:tenant_name => project.name, :service => 'Volume')
           @compute_service = ems.connect(:tenant_name => project.name)
           @data            = Data.new
           @project         = project
@@ -97,26 +97,26 @@ module Openstack
 
           print "Waiting for volume #{name} to get in a desired state..."
 
-          valid_states = ["available", "in-use"]
+          valid_states = ['available', 'in-use']
           # Seems like icehouse has not fixed bug, volume goes to error state after attaching
           # https://bugs.launchpad.net/cinder/+bug/1365234
           # TODO(lsmola) I don't think icehouse will be getting fixed, figure out we can ignore that
           # version
-          valid_states << "error" if @environment == :icehouse
+          valid_states << 'error' if @environment == :icehouse
 
           loop do
             case volume.reload.status
             when *valid_states
               break
-            when "error"
-              puts "Error creating volume"
+            when 'error'
+              puts 'Error creating volume'
               exit 1
             else
-              print "."
+              print '.'
               sleep 1
             end
           end
-          puts "Finished"
+          puts 'Finished'
         end
       end
     end

@@ -4,14 +4,14 @@ module DriftState::Purging
 
   module ClassMethods
     def purge_mode_and_value
-      value = VMDB::Config.new("vmdb").config.fetch_path(:drift_states, :history, :keep_drift_states)
+      value = VMDB::Config.new('vmdb').config.fetch_path(:drift_states, :history, :keep_drift_states)
       mode  = (value.nil? || value.number_with_method?) ? :date : :remaining
       value = (value || 6.months).to_i_with_method.seconds.ago.utc if mode == :date
       return mode, value
     end
 
     def purge_window_size
-      VMDB::Config.new("vmdb").config.fetch_path(:drift_states, :history, :purge_window_size) || 10000
+      VMDB::Config.new('vmdb').config.fetch_path(:drift_states, :history, :purge_window_size) || 10000
     end
 
     def purge_timer
@@ -21,7 +21,7 @@ module DriftState::Purging
     def purge_queue(mode, value)
       MiqQueue.put_or_update(
         :class_name  => name,
-        :method_name => "purge",
+        :method_name => 'purge',
       ) { |_msg, item| item.merge(:args => [mode, value]) }
     end
 
@@ -67,8 +67,8 @@ module DriftState::Purging
 
     def purge_ids_for_remaining(remaining)
       # TODO: This can probably be done in a single query using group-bys or subqueries
-      select("DISTINCT resource_type, resource_id").each_with_object({}) do |s, h|
-        results = select(:id).where(:resource_type => s.resource_type, :resource_id => s.resource_id).order("id DESC").limit(remaining + 1)
+      select('DISTINCT resource_type, resource_id').each_with_object({}) do |s, h|
+        results = select(:id).where(:resource_type => s.resource_type, :resource_id => s.resource_id).order('id DESC').limit(remaining + 1)
         h[[s.resource_type, s.resource_id]] = results[-2].id if results.length == remaining + 1
       end
     end

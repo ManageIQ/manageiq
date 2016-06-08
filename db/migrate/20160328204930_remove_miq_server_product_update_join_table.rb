@@ -3,14 +3,14 @@ class RemoveMiqServerProductUpdateJoinTable < ActiveRecord::Migration[5.0]
     serialize :value
   end
 
-  EXCLUDES_KEY = "/workers/worker_base/replication_worker/replication/exclude_tables".freeze
+  EXCLUDES_KEY = '/workers/worker_base/replication_worker/replication/exclude_tables'.freeze
 
   def up
     drop_join_table(:miq_servers, :product_updates)
 
-    say_with_time("Removing miq_servers_product_updates from replication excludes") do
+    say_with_time('Removing miq_servers_product_updates from replication excludes') do
       SettingsChange.where(:key => EXCLUDES_KEY).each do |s|
-        s.value.delete("miq_servers_product_updates")
+        s.value.delete('miq_servers_product_updates')
         s.save!
       end
     end
@@ -22,13 +22,13 @@ class RemoveMiqServerProductUpdateJoinTable < ActiveRecord::Migration[5.0]
       t.bigint :product_update_id, :null => false
     end
 
-    say_with_time("Adding composite primary key for miq_servers_product_updates") do
-      execute("ALTER TABLE miq_servers_product_updates ADD PRIMARY KEY (product_update_id, miq_server_id)")
+    say_with_time('Adding composite primary key for miq_servers_product_updates') do
+      execute('ALTER TABLE miq_servers_product_updates ADD PRIMARY KEY (product_update_id, miq_server_id)')
     end
 
-    say_with_time("Adding miq_servers_product_updates to replication excludes") do
+    say_with_time('Adding miq_servers_product_updates to replication excludes') do
       SettingsChange.where(:key => EXCLUDES_KEY).each do |s|
-        s.value << "miq_servers_product_updates"
+        s.value << 'miq_servers_product_updates'
         s.save!
       end
     end

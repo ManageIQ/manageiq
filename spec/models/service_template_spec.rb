@@ -1,27 +1,27 @@
 describe ServiceTemplate do
-  describe "#custom_actions" do
+  describe '#custom_actions' do
     let(:service_template) do
-      described_class.create(:name => "test", :description => "test", :custom_button_sets => [assigned_group_set])
+      described_class.create(:name => 'test', :description => 'test', :custom_button_sets => [assigned_group_set])
     end
-    let(:generic_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
-    let(:assigned_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
-    let(:generic_group) { FactoryGirl.create(:custom_button, :applies_to_class => "Service") }
-    let(:assigned_group) { FactoryGirl.create(:custom_button, :applies_to_class => "ServiceTemplate") }
+    let(:generic_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => 'Service') }
+    let(:assigned_no_group) { FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate') }
+    let(:generic_group) { FactoryGirl.create(:custom_button, :applies_to_class => 'Service') }
+    let(:assigned_group) { FactoryGirl.create(:custom_button, :applies_to_class => 'ServiceTemplate') }
     let(:assigned_group_set) do
-      FactoryGirl.create(:custom_button_set, :name => "assigned_group", :description => "assigned_group")
+      FactoryGirl.create(:custom_button_set, :name => 'assigned_group', :description => 'assigned_group')
     end
     let(:generic_group_set) do
-      FactoryGirl.create(:custom_button_set, :name => "generic_group", :description => "generic_group")
+      FactoryGirl.create(:custom_button_set, :name => 'generic_group', :description => 'generic_group')
     end
 
     before do
-      allow(generic_no_group).to receive(:expanded_serializable_hash).and_return("generic_no_group")
-      allow(assigned_no_group).to receive(:expanded_serializable_hash).and_return("assigned_no_group")
+      allow(generic_no_group).to receive(:expanded_serializable_hash).and_return('generic_no_group')
+      allow(assigned_no_group).to receive(:expanded_serializable_hash).and_return('assigned_no_group')
 
       generic_group_set.add_member(generic_group)
       assigned_group_set.add_member(assigned_group)
 
-      allow(CustomButton).to receive(:buttons_for).with("Service").and_return(
+      allow(CustomButton).to receive(:buttons_for).with('Service').and_return(
         [generic_no_group, generic_group]
       )
       allow(CustomButton).to receive(:buttons_for).with(service_template).and_return(
@@ -29,7 +29,7 @@ describe ServiceTemplate do
       )
     end
 
-    it "returns the custom actions in a hash grouped by buttons and button groups" do
+    it 'returns the custom actions in a hash grouped by buttons and button groups' do
       assigned_group_buttons = assigned_group.expanded_serializable_hash.reject do |key, _|
         %w(created_on updated_on).include?(key)
       end
@@ -61,57 +61,57 @@ describe ServiceTemplate do
     end
   end
 
-  context "#type_display" do
+  context '#type_display' do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
     end
 
-    it "with service_type of unknown" do
+    it 'with service_type of unknown' do
       expect(@st1.type_display).to eq('Unknown')
     end
 
-    it "with service_type of atomic" do
+    it 'with service_type of atomic' do
       @st1.update_attributes(:service_type => 'atomic')
       expect(@st1.type_display).to eq('Item')
     end
 
-    it "with service_type of composite" do
+    it 'with service_type of composite' do
       @st1.update_attributes(:service_type => 'composite')
       expect(@st1.type_display).to eq('Bundle')
     end
   end
 
-  context "#atomic?" do
+  context '#atomic?' do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template)
     end
 
-    it "with service_type of unknown" do
+    it 'with service_type of unknown' do
       expect(@st1.atomic?).to be_falsey
     end
 
-    it "with service_type of atomic" do
+    it 'with service_type of atomic' do
       @st1.update_attributes(:service_type => 'atomic')
       expect(@st1.atomic?).to be_truthy
     end
   end
 
-  context "#composite?" do
+  context '#composite?' do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template)
     end
 
-    it "with service_type of unknown" do
+    it 'with service_type of unknown' do
       expect(@st1.composite?).to be_falsey
     end
 
-    it "with service_type of composite" do
+    it 'with service_type of composite' do
       @st1.update_attributes(:service_type => 'composite')
       expect(@st1.composite?).to be_truthy
     end
   end
 
-  context "with multiple services" do
+  context 'with multiple services' do
     before(:each) do
       @svc_a = FactoryGirl.create(:service_template, :name => 'Svc A')
       @svc_b = FactoryGirl.create(:service_template, :name => 'Svc B')
@@ -120,7 +120,7 @@ describe ServiceTemplate do
       @svc_e = FactoryGirl.create(:service_template, :name => 'Svc E')
     end
 
-    it "should return level 1 sub-services" do
+    it 'should return level 1 sub-services' do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_b, @svc_c)
       add_and_save_service(@svc_a, @svc_c)
@@ -134,7 +134,7 @@ describe ServiceTemplate do
       expect(sub_svc).not_to include(@svc_d)
     end
 
-    it "should return all sub-services" do
+    it 'should return all sub-services' do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_b, @svc_c)
       add_and_save_service(@svc_a, @svc_c)
@@ -155,7 +155,7 @@ describe ServiceTemplate do
       expect(sub_svc).to include(@svc_d)
     end
 
-    it "should return all parent services for a service" do
+    it 'should return all parent services for a service' do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_a, @svc_c)
       add_and_save_service(@svc_a, @svc_d)
@@ -174,11 +174,11 @@ describe ServiceTemplate do
       expect(parent_names).to include(@svc_b.name)
     end
 
-    it "should not allow service templates to be connected to itself" do
+    it 'should not allow service templates to be connected to itself' do
       expect { add_and_save_service(@svc_a, @svc_a) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
-    it "should not allow service templates to be connected in a circular reference" do
+    it 'should not allow service templates to be connected in a circular reference' do
       expect { add_and_save_service(@svc_a, @svc_b) }.not_to raise_error
       expect { add_and_save_service(@svc_b, @svc_c) }.not_to raise_error
       expect { add_and_save_service(@svc_a, @svc_c) }.not_to raise_error
@@ -194,7 +194,7 @@ describe ServiceTemplate do
       # print_svc(svc_a, "  ")
     end
 
-    it "should not allow deeply nested service templates to be connected in a circular reference" do
+    it 'should not allow deeply nested service templates to be connected in a circular reference' do
       expect { add_and_save_service(@svc_a, @svc_b) }.not_to raise_error
       expect { add_and_save_service(@svc_b, @svc_c) }.not_to raise_error
 
@@ -204,17 +204,17 @@ describe ServiceTemplate do
       expect { add_and_save_service(@svc_c, @svc_d) }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
-    it "should not allow service template to connect to self" do
+    it 'should not allow service template to connect to self' do
       expect { @svc_a << @svc_a }.to raise_error(MiqException::MiqServiceCircularReferenceError)
     end
 
-    it "should allow service template to connect to a service with the same id" do
+    it 'should allow service template to connect to a service with the same id' do
       svc = FactoryGirl.create(:service)
       svc.id = @svc_a.id
       expect { svc << @svc_a }.to_not raise_error
     end
 
-    it "should not delete a service that has a parent service" do
+    it 'should not delete a service that has a parent service' do
       add_and_save_service(@svc_a, @svc_b)
       add_and_save_service(@svc_b, @svc_c)
 
@@ -227,19 +227,19 @@ describe ServiceTemplate do
     end
   end
 
-  context "with a small env" do
+  context 'with a small env' do
     before(:each) do
       @zone1 = FactoryGirl.create(:small_environment)
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
       @st1 = FactoryGirl.create(:service_template, :name => 'Service Template 1')
     end
 
-    it "should create a valid service template" do
+    it 'should create a valid service template' do
       expect(@st1.guid).not_to be_empty
       expect(@st1.service_resources.size).to eq(0)
     end
 
-    it "should not set the owner for the service template" do
+    it 'should not set the owner for the service template' do
       @user         = nil
       @test_service = FactoryGirl.create(:service, :name => 'test service')
       expect(@test_service.evm_owner).to be_nil
@@ -247,7 +247,7 @@ describe ServiceTemplate do
       expect(@test_service.evm_owner).to be_nil
     end
 
-    it "should set the owner and group for the service template" do
+    it 'should set the owner and group for the service template' do
       @user         = FactoryGirl.create(:user_with_group)
       @test_service = FactoryGirl.create(:service, :name => 'test service')
       expect(@test_service.evm_owner).to be_nil
@@ -258,13 +258,13 @@ describe ServiceTemplate do
       expect(@test_service.evm_owner.current_group.description).to eq(@user.current_group.description)
     end
 
-    it "should create an empty service template without a type" do
+    it 'should create an empty service template without a type' do
       expect(@st1.service_type).to eq('unknown')
       expect(@st1.composite?).to be_falsey
       expect(@st1.atomic?).to be_falsey
     end
 
-    it "should create a composite service template" do
+    it 'should create a composite service template' do
       st2 = FactoryGirl.create(:service_template, :name => 'Service Template 2')
       @st1.add_resource(st2)
       expect(@st1.service_resources.size).to eq(1)
@@ -272,7 +272,7 @@ describe ServiceTemplate do
       expect(@st1.atomic?).to be_falsey
     end
 
-    it "should create an atomic service template" do
+    it 'should create an atomic service template' do
       vm = Vm.first
       @st1.add_resource(vm)
       expect(@st1.service_resources.size).to eq(1)
@@ -280,7 +280,7 @@ describe ServiceTemplate do
       expect(@st1.composite?).to be_falsey
     end
 
-    context "with a VM Provision Request Template" do
+    context 'with a VM Provision Request Template' do
       before(:each) do
         admin = FactoryGirl.create(:user_admin)
 
@@ -289,13 +289,13 @@ describe ServiceTemplate do
         @st1.add_resource(ptr)
       end
 
-      it "should allow VM Provision Request Template as a resource" do
+      it 'should allow VM Provision Request Template as a resource' do
         expect(@st1.service_resources.size).to eq(1)
         expect(@st1.atomic?).to be_truthy
         expect(@st1.composite?).to be_falsey
       end
 
-      it "should delete the VM Provision Request Template when the service template is deleted" do
+      it 'should delete the VM Provision Request Template when the service template is deleted' do
         expect(ServiceTemplate.count).to eq(1)
         expect(MiqProvisionRequestTemplate.count).to eq(1)
         @st1.destroy
@@ -315,7 +315,7 @@ describe ServiceTemplate do
     end
 
     it 'unknown' do
-      expect(@st1.service_type).to eq "unknown"
+      expect(@st1.service_type).to eq 'unknown'
       expect(@st1.template_valid?).to be_truthy
       expect(@st1.template_valid_error_message).to be_nil
     end
@@ -343,7 +343,7 @@ describe ServiceTemplate do
       it 'not existing template' do
         @ptr.update_attributes(:src_vm_id => 999)
         expect(@st1.template_valid?).to be_falsey
-        expect(@st1.template_valid_error_message).to include("Unable to find VM with Id [999]")
+        expect(@st1.template_valid_error_message).to include('Unable to find VM with Id [999]')
       end
 
       it 'generic' do
@@ -380,7 +380,7 @@ describe ServiceTemplate do
       it 'not existing template' do
         @ptr.update_attributes(:src_vm_id => 999)
         expect(@st2.template_valid?).to be_falsey
-        expect(@st2.template_valid_error_message).to include("Unable to find VM with Id [999]")
+        expect(@st2.template_valid_error_message).to include('Unable to find VM with Id [999]')
       end
     end
   end
@@ -391,10 +391,10 @@ def add_and_save_service(p, c)
   p.service_resources.each(&:save)
 end
 
-def print_svc(svc, indent = "")
+def print_svc(svc, indent = '')
   return if indent.length > 10
   svc.service_resources.each do |s|
     puts indent + s.resource.name
-    print_svc(s.resource, indent + "  ")
+    print_svc(s.resource, indent + '  ')
   end
 end

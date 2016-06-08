@@ -1,8 +1,8 @@
 describe TreeBuilderNetwork do
   context 'TreeBuilderNetwork' do
     before do
-      role = MiqUserRole.find_by_name("EvmRole-operator")
-      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Network Group")
+      role = MiqUserRole.find_by_name('EvmRole-operator')
+      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => 'Network Group')
       login_as FactoryGirl.create(:user, :userid => 'network_wilma', :miq_groups => [@group])
       vm = FactoryGirl.create(:vm)
       hardware = FactoryGirl.create(:hardware, :vm_or_template => vm)
@@ -16,7 +16,7 @@ describe TreeBuilderNetwork do
     it 'returns Host as root' do
       root = @network_tree.send(:root_options)
       expect(root[0]).to eq(@network_tree.instance_variable_get(:@root).name)
-      expect(root[1]).to eq(_("Host: %{name}") % {:name => @network_tree.instance_variable_get(:@root).name})
+      expect(root[1]).to eq(_('Host: %{name}') % {:name => @network_tree.instance_variable_get(:@root).name})
       expect(root[2]).to eq('host')
     end
     it 'returns Switch as root child' do

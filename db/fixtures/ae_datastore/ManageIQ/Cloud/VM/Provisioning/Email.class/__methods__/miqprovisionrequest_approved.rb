@@ -21,7 +21,7 @@
 #
 ###################################
 def emailrequester(miq_request, appliance)
-  $evm.log('info', "Requester email logic starting")
+  $evm.log('info', 'Requester email logic starting')
 
   # Get requester object
   requester = miq_request.requester
@@ -52,15 +52,15 @@ def emailrequester(miq_request, appliance)
   subject = "Request ID #{miq_request.id} - Your Virtual Machine configuration was Approved, pending Quota Validation"
 
   # Build email body
-  body = "Hello, "
-  body += "<br>Your Virtual Machine Request was approved. If Quota validation is successful you will be notified via email when the VM is available."
+  body = 'Hello, '
+  body += '<br>Your Virtual Machine Request was approved. If Quota validation is successful you will be notified via email when the VM is available.'
   body += "<br><br>Approvers notes: #{miq_request.reason}"
   body += "<br><br>To view this Request go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 
   # Send email
-  $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+  $evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
   $evm.execute(:send_email, to, from, subject, body)
 end
 
@@ -72,7 +72,7 @@ end
 #
 ###################################
 def emailapprover(miq_request, appliance)
-  $evm.log('info', "Requester email logic starting")
+  $evm.log('info', 'Requester email logic starting')
 
   # Get requester object
   requester = miq_request.requester
@@ -96,22 +96,22 @@ def emailapprover(miq_request, appliance)
   subject = "Request ID #{miq_request.id} - Your Virtual Machine configuration was Approved, pending Quota Validation"
 
   # Build email body
-  body = "Approver, "
+  body = 'Approver, '
   body += "<br>Virtual Machine request received from #{requester_email} was approved."
   body += "<br><br>Approvers reason: #{miq_request.reason}"
   body += "<br><br>To view this Request go to: <a href='https://#{appliance}/miq_request/show/#{miq_request.id}'>https://#{appliance}/miq_request/show/#{miq_request.id}</a>"
-  body += "<br><br> Thank you,"
+  body += '<br><br> Thank you,'
   body += "<br> #{signature}"
 
   # Send email
-  $evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+  $evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
   $evm.execute(:send_email, to, from, subject, body)
 end
 
 # Get miq_request from root
 miq_request = $evm.root['miq_request']
-raise "miq_request missing" if miq_request.nil?
-$evm.log("info", "Detected Request:<#{miq_request.id}> with Approval State:<#{miq_request.approval_state}>")
+raise 'miq_request missing' if miq_request.nil?
+$evm.log('info', "Detected Request:<#{miq_request.id}> with Approval State:<#{miq_request.approval_state}>")
 
 # Override the default appliance IP Address below
 appliance = nil

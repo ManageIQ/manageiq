@@ -1,6 +1,6 @@
-describe "layouts/_list_grid.html.haml" do
+describe 'layouts/_list_grid.html.haml' do
   context "when showtype is 'performance'" do
-    it "renders" do
+    it 'renders' do
       allow(view).to receive(:options).and_return({:grid_hash => {:head => [], :rows => []}})
       allow(view).to receive(:js_options).and_return({:row_url => '_none_'})
       record = EmsInfra.new(:id => 1)
@@ -9,7 +9,7 @@ describe "layouts/_list_grid.html.haml" do
     end
   end
 
-  it "has valid links for row clicks" do
+  it 'has valid links for row clicks' do
     options = {:grid_id => 'list_grid', :grid_name => 'gtl_list_grid',
 
                 :grid_hash => {:head => [{:is_narrow => true}, {:is_narrow => true},
@@ -35,7 +35,7 @@ describe "layouts/_list_grid.html.haml" do
                                          }]},
                 :button_div => 'center_tb', :action_url => 'explorer'}
     js_options = {:sortcol => 0, :sortdir => 'ASC', :row_url => '/catalog/x_show/', :row_url_ajax => true}
-    render :partial => "layouts/list_grid", :locals => {:options => options, :js_options => js_options}
+    render :partial => 'layouts/list_grid', :locals => {:options => options, :js_options => js_options}
     expect(response).to include("<tr onclick='miqRowClick(&#39;10r96&#39;, &#39;/catalog/x_show/&#39;, true); return false;'>")
   end
 end

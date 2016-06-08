@@ -1,4 +1,4 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/linux")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'metadata/linux')
 require 'LinuxUtils'
 
 class Filesystem < ApplicationRecord
@@ -84,11 +84,11 @@ class Filesystem < ApplicationRecord
   def image_name
     ext = base_name.nil? ? nil : File.extname(base_name)
     unless ext.nil?
-      ext.sub!(".", "")
+      ext.sub!('.', '')
       ext.downcase!
       return ext if %w(dll exe log txt xml ini doc pdf zip).include?(ext)
     end
-    "unknown"
+    'unknown'
   end
 
   def contents
@@ -99,7 +99,7 @@ class Filesystem < ApplicationRecord
     if val.nil?
       self.binary_blob = nil
     else
-      self.binary_blob ||= BinaryBlob.new(:name => "contents")
+      self.binary_blob ||= BinaryBlob.new(:name => 'contents')
       self.binary_blob.binary = val
     end
   end
@@ -114,7 +114,7 @@ class Filesystem < ApplicationRecord
     # We will display max 20k characters in the UI textarea
     return false if size > 20_000
     mime_type = MIME::Types.of(name).first
-    return has_contents? && contents.force_encoding("UTF-8").ascii_only? if mime_type.nil?
+    return has_contents? && contents.force_encoding('UTF-8').ascii_only? if mime_type.nil?
     !mime_type.binary?
   end
 

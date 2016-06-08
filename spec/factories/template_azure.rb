@@ -1,6 +1,6 @@
 FactoryGirl.define do
-  factory :template_azure, :class => "ManageIQ::Providers::Azure::CloudManager::Template", :parent => :template_cloud do
+  factory :template_azure, :class => 'ManageIQ::Providers::Azure::CloudManager::Template', :parent => :template_cloud do
     location { |x| "#{x.name}/#{x.name}.img.manifest.xml" }
-    vendor   "azure"
+    vendor   'azure'
   end
 end

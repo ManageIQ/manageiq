@@ -12,8 +12,8 @@ module Ext3
 
     # Initialization
     def initialize(inodeObj, superblock)
-      raise "Ext3::FileData.initialize: Nil inode object" if inodeObj.nil?
-      raise "Ext3::FileData.initialize: Nil superblock"   if superblock.nil?
+      raise 'Ext3::FileData.initialize: Nil inode object' if inodeObj.nil?
+      raise 'Ext3::FileData.initialize: Nil superblock'   if superblock.nil?
 
       @sb         = superblock
       @inodeObj   = inodeObj
@@ -58,7 +58,7 @@ module Ext3
     end
 
     def write(buf, _len = buf.length)
-      raise "Ext3::FileData.write: Write functionality is not yet supported on Ext3."
+      raise 'Ext3::FileData.write: Write functionality is not yet supported on Ext3.'
       @dirty = true
     end
 

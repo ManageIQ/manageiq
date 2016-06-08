@@ -5,10 +5,10 @@ class SplitWidgetSetNameToThreeColumns < ActiveRecord::Migration
     add_column :miq_sets, :userid,  :string
     add_column :miq_sets, :group_id, :bigint
 
-    say_with_time("Splitting name column for MiqWidgetSet") do
+    say_with_time('Splitting name column for MiqWidgetSet') do
       MiqSet.where(:set_type => 'MiqWidgetSet').each do |ws|
-        next unless ws.name.include?("|")
-        items = ws.name.split("|")
+        next unless ws.name.include?('|')
+        items = ws.name.split('|')
         if items.size == 3
           userid, group_id, name = items
           ws.update_attributes(:name => name, :userid => userid, :group_id => group_id)

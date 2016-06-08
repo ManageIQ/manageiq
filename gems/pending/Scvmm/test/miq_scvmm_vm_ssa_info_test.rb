@@ -1,6 +1,6 @@
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/..")
 
-require_relative "../../bundler_setup"
+require_relative '../../bundler_setup'
 require 'rubygems'
 require 'log4r'
 require 'miq_scvmm_vm_ssa_info'
@@ -18,11 +18,11 @@ $log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::DEBUG, :formatter => ConsoleFormatter)
 $log.add 'err_console'
 
-HOST = raise "Please define SERVERNAME"
-PORT = raise "Please define PORT"
-USER = raise "Please define USER"
-PASS = raise "Please define PASS"
-VM   = raise "Please define VM"
+HOST = raise 'Please define SERVERNAME'
+PORT = raise 'Please define PORT'
+USER = raise 'Please define USER'
+PASS = raise 'Please define PASS'
+VM   = raise 'Please define VM'
 
 vm_info_handle = MiqScvmmVmSSAInfo.new(HOST, USER, PASS, PORT)
 $log.debug "Getting Hyper-V Host for VM #{VM}"

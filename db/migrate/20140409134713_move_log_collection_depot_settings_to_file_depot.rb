@@ -19,14 +19,14 @@ class MoveLogCollectionDepotSettingsToFileDepot < ActiveRecord::Migration
     add_column :miq_servers, :log_file_depot_id, :bigint
     add_column :zones,       :log_file_depot_id, :bigint
 
-    say_with_time("Moving log_depot configuration from settings to FileDepots") do
+    say_with_time('Moving log_depot configuration from settings to FileDepots') do
       Zone.all.each do |zone|
-        move_log_settings_to_file_depot("Zone", zone.id, zone.settings)
+        move_log_settings_to_file_depot('Zone', zone.id, zone.settings)
         zone.save
       end
 
-      Configuration.where(:typ => "vmdb").each do |config|
-        move_log_settings_to_file_depot("MiqServer", config.miq_server_id, config.settings)
+      Configuration.where(:typ => 'vmdb').each do |config|
+        move_log_settings_to_file_depot('MiqServer', config.miq_server_id, config.settings)
         config.save
       end
     end
@@ -43,13 +43,13 @@ class MoveLogCollectionDepotSettingsToFileDepot < ActiveRecord::Migration
 
   def create_authentication(depot, settings)
     Authentication.create!(
-      :authtype      => "default",
-      :name          => "FileDepot",
+      :authtype      => 'default',
+      :name          => 'FileDepot',
       :userid        => settings[:username],
       :password      => MiqPassword.try_encrypt(settings[:password]),
       :resource_id   => depot.id,
-      :resource_type => "FileDepot",
-      :type          => "AuthUseridPassword"
+      :resource_type => 'FileDepot',
+      :type          => 'AuthUseridPassword'
     )
   end
 
@@ -66,7 +66,7 @@ class MoveLogCollectionDepotSettingsToFileDepot < ActiveRecord::Migration
   end
 
   def move_log_settings_to_file_depot(resource_type, resource_id, config)
-    settings = config.delete("log_depot") || config.delete(:log_depot)
+    settings = config.delete('log_depot') || config.delete(:log_depot)
     return if settings.blank?
 
     settings.symbolize_keys!

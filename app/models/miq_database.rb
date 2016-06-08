@@ -2,8 +2,8 @@ require 'util/postgres_admin'
 
 class MiqDatabase < ApplicationRecord
   REGISTRATION_DEFAULT_VALUES = {
-    :registration_type   => "sm_hosted",
-    :registration_server => "subscription.rhn.redhat.com"
+    :registration_type   => 'sm_hosted',
+    :registration_server => 'subscription.rhn.redhat.com'
   }.freeze
 
   include AuthenticationMixin
@@ -20,7 +20,7 @@ class MiqDatabase < ApplicationRecord
 
   # TODO: move hard-coded update information
   def self.cfme_package_name
-    "cfme-appliance"
+    'cfme-appliance'
   end
 
   def self.postgres_package_name
@@ -32,7 +32,7 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.registration_default_value_for_update_repo_name
-    "cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms"
+    'cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms'
   end
 
   def update_repo_names
@@ -60,7 +60,7 @@ class MiqDatabase < ApplicationRecord
   end
 
   def self.adapter
-    @adapter ||= ActiveRecord::Base.connection.instance_variable_get("@config")[:adapter]
+    @adapter ||= ActiveRecord::Base.connection.instance_variable_get('@config')[:adapter]
   end
 
   # virtual has_many

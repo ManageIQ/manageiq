@@ -5,6 +5,6 @@ class ApplicationHelper::Toolbar::MiqRequestsCenter < ApplicationHelper::Toolbar
       'fa fa-repeat fa-lg',
       N_('Reload the current display'),
       N_('Reload'),
-      :url_parms => "main_div"),
+      :url_parms => 'main_div'),
   ])
 end

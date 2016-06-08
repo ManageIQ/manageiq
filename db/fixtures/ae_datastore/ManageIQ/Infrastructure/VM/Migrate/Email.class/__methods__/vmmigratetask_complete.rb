@@ -15,16 +15,16 @@
 miq_task = $evm.root['vm_migrate_task']
 miq_server = $evm.root['miq_server']
 
-$evm.log("info", "Inspecting miq_task: #{miq_task.inspect}")
+$evm.log('info', "Inspecting miq_task: #{miq_task.inspect}")
 
 vm = miq_task.source
-raise "VM not found" if vm.nil?
+raise 'VM not found' if vm.nil?
 
 # Get VM Owner Name and Email
 evm_owner_id = vm.attributes['evm_owner_id']
 owner = nil
 owner = $evm.vmdb('user', evm_owner_id) unless evm_owner_id.nil?
-$evm.log("info", "VM Owner: #{owner.inspect}")
+$evm.log('info', "VM Owner: #{owner.inspect}")
 
 # to_email_address from owner.email then from model if nil
 to = owner.email || $evm.object['to_email_address']
@@ -39,13 +39,13 @@ signature ||= $evm.object['signature']
 
 subject = "Your virtual machine request has Completed - VM: #{vm['name']}"
 
-body = "Hello, "
+body = 'Hello, '
 
 # VM Migration Email Body
 body += "<br><br>Your request to migrate virtual machine #{vm.name} was approved and completed on #{Time.now.strftime('%A, %B %d, %Y at %I:%M%p')}. "
 body += "<br><br>If you are not already logged in, you can access and manage your virtual machine here <a href='https://#{miq_server.ipaddress}/vm/show/#{vm['id']}'>https://#{miq_server.ipaddress}/vm/show/#{vm['id']}</a>"
-body += "<br><br> Thank you,"
+body += '<br><br> Thank you,'
 body += "<br> #{signature}"
 
-$evm.log("info", "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
+$evm.log('info', "Sending email to <#{to}> from <#{from}> subject: <#{subject}>")
 $evm.execute('send_email', to, from, subject, body)

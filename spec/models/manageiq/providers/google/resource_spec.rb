@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Google::Resource do
-  context "created with disk uri" do
+  context 'created with disk uri' do
     let(:resource) do
       uri = 'https://content.googleapis.com/compute/v1/projects/manageiq-dev/zones/us-central1-a/disks/foobar'
       described_class.new(uri)
@@ -41,7 +41,7 @@ describe ManageIQ::Providers::Google::Resource do
   end
 
   context 'created with empty uri' do
-    let(:resource) { described_class.new("") }
+    let(:resource) { described_class.new('') }
 
     it 'unknown? is true' do
       expect(resource.unknown?).to be(true)
@@ -49,7 +49,7 @@ describe ManageIQ::Providers::Google::Resource do
   end
 
   context 'created with path of no depth' do
-    let(:resource) { described_class.new("somepath") }
+    let(:resource) { described_class.new('somepath') }
 
     it 'unknown? is true' do
       expect(resource.unknown?).to be(true)
@@ -57,7 +57,7 @@ describe ManageIQ::Providers::Google::Resource do
   end
 
   context 'created with partial resource path' do
-    let(:resource) { described_class.new("compute/v1/projects/manageiq-dev/zones/us-central1-a/disks/foobar") }
+    let(:resource) { described_class.new('compute/v1/projects/manageiq-dev/zones/us-central1-a/disks/foobar') }
 
     it 'has correct type' do
       expect(resource.disk?).to be(true)
@@ -65,7 +65,7 @@ describe ManageIQ::Providers::Google::Resource do
   end
 
   context 'created with even more partial resource path' do
-    let(:resource) { described_class.new("projects/manageiq-dev/zones/us-central1-a/disks/foobar") }
+    let(:resource) { described_class.new('projects/manageiq-dev/zones/us-central1-a/disks/foobar') }
 
     it 'has correct type' do
       expect(resource.disk?).to be(true)

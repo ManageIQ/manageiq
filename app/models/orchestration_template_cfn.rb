@@ -3,13 +3,13 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
     # CFN format does not have the concept of parameter group
     # Place all parameters in one group
     [OrchestrationTemplate::OrchestrationParameterGroup.new(
-      :label      => "Parameters",
+      :label      => 'Parameters',
       :parameters => parameters
     )]
   end
 
   def parameters
-    raw_parameters = JSON.load(content)["Parameters"]
+    raw_parameters = JSON.load(content)['Parameters']
     (raw_parameters || {}).collect do |key, val|
       parameter = OrchestrationTemplate::OrchestrationParameter.new(
         :name          => key,

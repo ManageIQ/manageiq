@@ -16,7 +16,7 @@ module Ext4
     attr_reader :block, :length, :start
 
     def initialize(buf)
-      raise "Ext4::Extent.initialize: Nil buffer" if buf.nil?
+      raise 'Ext4::Extent.initialize: Nil buffer' if buf.nil?
       @extent = EXTENT.decode(buf)
 
       @block      = @extent['block']

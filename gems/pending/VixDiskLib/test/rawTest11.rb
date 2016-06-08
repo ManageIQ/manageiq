@@ -1,5 +1,5 @@
 $:.push("#{File.dirname(__FILE__)}/..")
-require "VixDiskLib_raw"
+require 'VixDiskLib_raw'
 require 'log4r'
 
 #
@@ -14,7 +14,7 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-vmdk = "/vmfs/volumes/47dade33-4f4a4875-3951-00188b404015/rpo-test2/rpo-test2.vmdk"
+vmdk = '/vmfs/volumes/47dade33-4f4a4875-3951-00188b404015/rpo-test2/rpo-test2.vmdk'
 
 VixDiskLib_raw.verbose = true
 
@@ -26,11 +26,11 @@ tmodes = VixDiskLib_raw.listTransportModes
 puts "Transport Modes = [#{tmodes}]"
 
 conParms = {
-  :serverName => "",
+  :serverName => '',
   :port       => 902,
   :credType   => VixDiskLib_raw::VIXDISKLIB_CRED_UID,
-  :userName   => "",
-  :password   => "",
+  :userName   => '',
+  :password   => '',
 }
 
 # connection = VixDiskLib_raw.connect(conParms)
@@ -39,7 +39,7 @@ connection = VixDiskLib_raw.connectEx(conParms, true, nil, nil)
 dHandle = VixDiskLib_raw.open(connection, vmdk, VixDiskLib_raw::VIXDISKLIB_FLAG_OPEN_READ_ONLY)
 dinfo = VixDiskLib_raw.getInfo(dHandle)
 puts
-puts "Disk info:"
+puts 'Disk info:'
 dinfo.each { |k, v| puts "\t#{k} => #{v}" }
 puts
 
@@ -47,7 +47,7 @@ mode = VixDiskLib_raw.getTransportMode(dHandle)
 puts "Transport Mode: #{mode}"
 
 mkeys = VixDiskLib_raw.getMetadataKeys(dHandle)
-puts "Metadata:"
+puts 'Metadata:'
 mkeys.each { |k|
   v = VixDiskLib_raw.readMetadata(dHandle, k)
   puts "\t#{k} => #{v}"

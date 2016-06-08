@@ -23,20 +23,20 @@ class MiqIPMI
   end
 
   def power_state
-    result = run_command("chassis power status")
-    result.split(" ").last
+    result = run_command('chassis power status')
+    result.split(' ').last
   end
 
   def power_on
-    run_command("chassis power on")
+    run_command('chassis power on')
   end
 
   def power_off
-    run_command("chassis power off")
+    run_command('chassis power off')
   end
 
   def power_reset
-    if power_state == "off"
+    if power_state == 'off'
       power_on
     else
       power_state_change('reset')
@@ -49,15 +49,15 @@ class MiqIPMI
   end
 
   def chassis_status
-    parse_key_value("chassis status")
+    parse_key_value('chassis status')
   end
 
   def lan_info
-    parse_key_value("lan print")
+    parse_key_value('lan print')
   end
 
   def mc_info
-    parse_key_value("mc info")
+    parse_key_value('mc info')
   end
 
   def manufacturer
@@ -68,7 +68,7 @@ class MiqIPMI
     # This method tries to return the model of the device, but depending on what inforamtion
     # comes back from the RFU (Field Replaceable Unit) this may not be accurate.
     fru = fru_info.first
-    return fru["Board Product"] unless fru.blank?
+    return fru['Board Product'] unless fru.blank?
     nil
   end
 
@@ -79,7 +79,7 @@ class MiqIPMI
     dev_id = nil
     dev_descript = nil
     dev_lines = nil
-    cmd_output = run_command("fru print", true)
+    cmd_output = run_command('fru print', true)
     cmd_output.each_line do |line|
       if line =~ /^FRU Device Description : (.*) \(ID (\d+)\)/i
         @devices << fru_process_info(dev_id, dev_descript, dev_lines) unless dev_lines.nil?
@@ -97,8 +97,8 @@ class MiqIPMI
     dh = nil
     unless lines.blank?
       dh = parse_output(lines)
-      dh.merge!("output" => lines) if dh.blank?
-      dh.merge!("ID" => id, "Description" => description)
+      dh.merge!('output' => lines) if dh.blank?
+      dh.merge!('ID' => id, 'Description' => description)
     end
     dh
   end
@@ -128,7 +128,7 @@ class MiqIPMI
   #
   def dell_mac_addresses
     macs = []
-    result = run_command("delloem mac")
+    result = run_command('delloem mac')
     result.each_line do |line|
       data = line.split(' ')
       if data[0].to_i.to_s == data[0].to_s
@@ -151,7 +151,7 @@ class MiqIPMI
     last_key = nil
     lines = cmd_text.kind_of?(Array) ? cmd_text : cmd_text.split("\n")
     lines.inject({}) do |a, line|
-      idx = line.index(": ")
+      idx = line.index(': ')
       if idx.nil?
         key = nil
         value = line.strip
@@ -201,17 +201,17 @@ class MiqIPMI
   end
 
   def interface_mode
-    @if_mode ||= self.class.is_2_0_available?(@server) ? "lanplus" : "lan"
+    @if_mode ||= self.class.is_2_0_available?(@server) ? 'lanplus' : 'lan'
   end
 
   def self.is_2_0_available?(ip_address)
     # One ping reply if machine supports IPMI V2.0
-    is_available_check(ip_address, "2.0")
+    is_available_check(ip_address, '2.0')
   end
 
   def self.is_1_5_available?(ip_address)
     # One ping reply if machine supports IPMI V1.5
-    is_available_check(ip_address, "1.5")
+    is_available_check(ip_address, '1.5')
   end
 
   def self.is_available_check(ip_address, version = nil)

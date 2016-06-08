@@ -7,7 +7,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
       connection.live_migrate_server(ems_ref, hostname, block_migration, disk_over_commit)
     end
     # Temporarily update state for quick UI response until refresh comes along
-    self.update_attributes!(:raw_power_state => "MIGRATING")
+    self.update_attributes!(:raw_power_state => 'MIGRATING')
   end
 
   def raw_evacuate(options = {})
@@ -20,7 +20,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
       connection.evacuate_server(ems_ref, hostname, on_shared_storage, admin_password)
     end
     # Temporarily update state for quick UI response until refresh comes along
-    self.update_attributes!(:raw_power_state => "MIGRATING")
+    self.update_attributes!(:raw_power_state => 'MIGRATING')
   end
 
   def validate_live_migrate
@@ -36,6 +36,6 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Relocation
   end
 
   def validate_migrate
-    validate_unsupported("Migrate")
+    validate_unsupported('Migrate')
   end
 end

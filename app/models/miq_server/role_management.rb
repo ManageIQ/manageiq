@@ -43,18 +43,18 @@ module MiqServer::RoleManagement
   end
 
   def set_active_role_flags
-    self.has_active_userinterface = self.has_active_role?("user_interface")
-    self.has_active_websocket     = self.has_active_role?("websocket")
-    self.has_active_webservices   = self.has_active_role?("web_services")
+    self.has_active_userinterface = self.has_active_role?('user_interface')
+    self.has_active_websocket     = self.has_active_role?('websocket')
+    self.has_active_webservices   = self.has_active_role?('web_services')
     save
   end
 
   def set_assigned_roles
-    self.role = VMDB::Config.new("vmdb").config[:server][:role]
+    self.role = VMDB::Config.new('vmdb').config[:server][:role]
   end
 
   def deactivate_all_roles
-    deactivate_roles("*")
+    deactivate_roles('*')
   end
 
   def activate_roles(*roles)
@@ -62,7 +62,7 @@ module MiqServer::RoleManagement
   end
 
   def activate_all_roles
-    activate_roles("*")
+    activate_roles('*')
   end
 
   def deactivate_roles(*roles)
@@ -73,7 +73,7 @@ module MiqServer::RoleManagement
     roles = roles.first if roles.length == 1 && roles[0].kind_of?(Array)
     return if roles.empty?
 
-    ids = roles == ["*"] ? server_roles.pluck(:id) : ServerRole.where(:name => roles).pluck(:id)
+    ids = roles == ['*'] ? server_roles.pluck(:id) : ServerRole.where(:name => roles).pluck(:id)
     assigned_server_roles.where(:server_role_id => ids).each do |a|
       next if a.database_owner?
       next if a.active == active
@@ -134,7 +134,7 @@ module MiqServer::RoleManagement
       if val.blank?
         server_roles.delete_all
       else
-        desired = (val == "*" ? ServerRole.all_names : val.split(",").collect { |v| v.strip.downcase }.sort)
+        desired = (val == '*' ? ServerRole.all_names : val.split(',').collect { |v| v.strip.downcase }.sort)
         current = server_role_names
 
         # MiqServer#server_role_names may include database scoped roles, which are managed elsewhere,
@@ -176,12 +176,12 @@ module MiqServer::RoleManagement
   end
 
   def active_role
-    active_role_names.join(",")
+    active_role_names.join(',')
   end
 
   def licensed_roles
     roles = ServerRole.all.to_a
-    unless VMDB::Config.new("vmdb").config[:product][:storage]
+    unless VMDB::Config.new('vmdb').config[:product][:storage]
       roles.delete_if { |r| r.name.starts_with?('storage_') }
       roles.delete_if { |r| r.name == 'vmdb_storage_bridge' }
     end
@@ -193,7 +193,7 @@ module MiqServer::RoleManagement
   end
 
   def licensed_role
-    licensed_role_names.join(",")
+    licensed_role_names.join(',')
   end
 
   def has_assigned_role?(role)

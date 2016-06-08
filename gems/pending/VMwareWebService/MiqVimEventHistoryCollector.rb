@@ -6,7 +6,7 @@ class MiqVimEventHistoryCollector
     @sic                    = invObj.sic
     @pgSize                 = pgSize
 
-    @eventFilterSpec = eventFilterSpec || VimHash.new("EventFilterSpec")
+    @eventFilterSpec = eventFilterSpec || VimHash.new('EventFilterSpec')
 
     @eventHistoryCollector = @invObj.createCollectorForEvents(@sic.eventManager, @eventFilterSpec)
     @invObj.setCollectorPageSize(@eventHistoryCollector, @pgSize)
@@ -20,22 +20,22 @@ class MiqVimEventHistoryCollector
   end
 
   def readNext(maxCount = @pgSize)
-    raise "MiqVimEventHistoryCollector.readNext: collector instance has been released" unless @eventHistoryCollector
+    raise 'MiqVimEventHistoryCollector.readNext: collector instance has been released' unless @eventHistoryCollector
     @invObj.readNextEvents(@eventHistoryCollector, maxCount)
   end
 
   def readPrevious(maxCount = @pgSize)
-    raise "MiqVimEventHistoryCollector.readPrevious: collector instance has been released" unless @eventHistoryCollector
+    raise 'MiqVimEventHistoryCollector.readPrevious: collector instance has been released' unless @eventHistoryCollector
     @invObj.readPreviousEvents(@eventHistoryCollector, maxCount)
   end
 
   def reset
-    raise "MiqVimEventHistoryCollector.reset: collector instance has been released" unless @eventHistoryCollector
+    raise 'MiqVimEventHistoryCollector.reset: collector instance has been released' unless @eventHistoryCollector
     @invObj.resetCollector(@eventHistoryCollector)
   end
 
   def rewind
-    raise "MiqVimEventHistoryCollector.rewind: collector instance has been released" unless @eventHistoryCollector
+    raise 'MiqVimEventHistoryCollector.rewind: collector instance has been released' unless @eventHistoryCollector
     @invObj.rewindCollector(@eventHistoryCollector)
   end
 
@@ -44,7 +44,7 @@ class MiqVimEventHistoryCollector
   end
 
   def pageSize=(val)
-    raise "MiqVimEventHistoryCollector.pageSize=: collector instance has been released" unless @eventHistoryCollector
+    raise 'MiqVimEventHistoryCollector.pageSize=: collector instance has been released' unless @eventHistoryCollector
     @invObj.setCollectorPageSize(@eventHistoryCollector, val)
     @pgSize = val
   end

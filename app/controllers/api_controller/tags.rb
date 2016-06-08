@@ -36,7 +36,7 @@ class ApiController
 
     def tags_delete_resource(_parent, _type, id, data)
       id ||= parse_id(data, :tags) || parse_by_attr(data, :tags, %w(name))
-      raise BadRequestError, "Tag id, href or name needs to be specified for deleting a tag resource" unless id
+      raise BadRequestError, 'Tag id, href or name needs to be specified for deleting a tag resource' unless id
       destroy_tag_and_classification(id)
       action_result(true, "tags id: #{id} deleting")
     rescue => err
@@ -44,11 +44,11 @@ class ApiController
     end
 
     def create_resource_tags(_type, _id, data)
-      if data.key?("id") || data.key?("href")
+      if data.key?('id') || data.key?('href')
         raise BadRequestError,
-              "Resource id or href should not be specified for creating a new tag resource"
+              'Resource id or href should not be specified for creating a new tag resource'
       end
-      category_data = data.delete("category") { {} }
+      category_data = data.delete('category') { {} }
       category = fetch_category(category_data)
       unless category
         category_rep = category_data.map { |k, v| "#{k} = #{v}" }.join(', ')
@@ -69,8 +69,8 @@ class ApiController
       entry = Classification.find_by_tag_id(tag.id)
       raise BadRequestError, "Failed to find tag/#{id} resource" unless entry
 
-      if data["name"].present?
-        tag.update_attribute(:name, Classification.name2tag(data["name"], entry.parent_id, TAG_NAMESPACE))
+      if data['name'].present?
+        tag.update_attribute(:name, Classification.name2tag(data['name'], entry.parent_id, TAG_NAMESPACE))
       end
       entry.update_attributes(data.except(*ID_ATTRS))
       entry.tag
@@ -90,7 +90,7 @@ class ApiController
     def fetch_category(data)
       category_id = parse_id(data, :categories) || parse_by_attr(data, :categories, %w(name))
       unless category_id
-        raise BadRequestError, "Category id, href or name needs to be specified for creating a new tag resource"
+        raise BadRequestError, 'Category id, href or name needs to be specified for creating a new tag resource'
       end
       Category.find_by_id(category_id)
     end
@@ -108,7 +108,7 @@ class ApiController
       if tag_spec[:category] && tag_spec[:name]
         result = yield if block_given?
       else
-        result = action_result(false, "Missing tag category or name")
+        result = action_result(false, 'Missing tag category or name')
       end
 
       add_parent_href_to_result(result)
@@ -130,8 +130,8 @@ class ApiController
     def parse_tag(data)
       return {} if data.blank?
 
-      category = data["category"]
-      name     = data["name"]
+      category = data['category']
+      name     = data['name']
       return {:category => category, :name => name} if category && name
       return tag_path_to_spec(name) if name && name[0] == '/'
 
@@ -139,7 +139,7 @@ class ApiController
     end
 
     def parse_tag_from_href(data)
-      href = data["href"]
+      href = data['href']
       tag  = if href && href.match(%r{^.*/tags/[0-9]+$})
                klass = collection_class(:tags)
                klass.find(href.split('/').last)

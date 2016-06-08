@@ -18,13 +18,13 @@ module ContainerBuildHelper::TextualSummary
 
   def textual_group_build_instances
     {
-      :additional_table_class => "table-fixed",
-      :labels                 => [_("Name"), _("Phase"),
-                                  _("Message"), _("Reason"),
-                                  _("Pod"), _("Output Image"),
-                                  _("Start Timestamp"),
-                                  {:value => _("Completion Timestamp"), :sortable => :desc},
-                                  _("Duration"),
+      :additional_table_class => 'table-fixed',
+      :labels                 => [_('Name'), _('Phase'),
+                                  _('Message'), _('Reason'),
+                                  _('Pod'), _('Output Image'),
+                                  _('Start Timestamp'),
+                                  {:value => _('Completion Timestamp'), :sortable => :desc},
+                                  _('Duration'),
                                  ],
       :values                 => collect_build_pods,
     }
@@ -89,7 +89,7 @@ module ContainerBuildHelper::TextualSummary
               :controller => 'container_group',
               :id         => container_group.id)
     else
-      _("No Pod")
+      _('No Pod')
     end
   end
 end

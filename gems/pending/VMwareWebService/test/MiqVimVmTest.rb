@@ -16,8 +16,8 @@ Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => C
 $vim_log.add 'err_console'
 
 # TARGET_VM = "rpo-test2"
-TARGET_VM = "NetappDsTest2"
-ISO_PATH  = "[] /vmimages/tools-isoimages/linux.iso"
+TARGET_VM = 'NetappDsTest2'
+ISO_PATH  = '[] /vmimages/tools-isoimages/linux.iso'
 vmMor = nil
 miqVm = nil
 
@@ -29,7 +29,7 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  miqVm = vim.getVimVmByFilter("summary.config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('summary.config.name' => TARGET_VM)
 
   # puts miqVm.acquireMksTicket
   # puts vim.acquireCloneTicket.inspect
@@ -39,12 +39,12 @@ begin
   puts "Power State:      #{miqVm.powerState}"
 
   puts
-  puts "extraConfig:"
+  puts 'extraConfig:'
   vim.dumpObj(miqVm.extraConfig)
 
   exit
 
-  nic = miqVm.devicesByFilter("deviceInfo.label" => "Network adapter 1")
+  nic = miqVm.devicesByFilter('deviceInfo.label' => 'Network adapter 1')
   puts "NIC 1: #{nic.first.backing.deviceName}"
   vim.dumpObj(nic)
 
@@ -82,8 +82,8 @@ begin
   # vim.dumpObj(cd[0])
   # puts
 
-  cd = miqVm.devicesByFilter("deviceInfo.label" => "CD/DVD Drive 1")
-  raise "VM has no CD/DVD drive" if cd.empty?
+  cd = miqVm.devicesByFilter('deviceInfo.label' => 'CD/DVD Drive 1')
+  raise 'VM has no CD/DVD drive' if cd.empty?
   cd = cd.first
   puts "*** Before attaching ISO image <#{cd.xsiType}>:"
   vim.dumpObj(cd)
@@ -91,12 +91,12 @@ begin
 
   puts "Attaching #{ISO_PATH} to CD..."
   miqVm.attachIsoToCd(ISO_PATH, cd)
-  puts "done."
+  puts 'done.'
   puts
 
   miqVm.refresh
-  cd = miqVm.devicesByFilter("deviceInfo.label" => "CD/DVD Drive 1")
-  raise "VM has no CD/DVD drive" if cd.empty?
+  cd = miqVm.devicesByFilter('deviceInfo.label' => 'CD/DVD Drive 1')
+  raise 'VM has no CD/DVD drive' if cd.empty?
   cd = cd.first
   puts "*** After attaching ISO image <#{cd.xsiType}>:"
   vim.dumpObj(cd)
@@ -104,12 +104,12 @@ begin
 
   puts "Detaching #{ISO_PATH} from CD..."
   miqVm.resetCd
-  puts "done."
+  puts 'done.'
   puts
 
   miqVm.refresh
-  cd = miqVm.devicesByFilter("deviceInfo.label" => "CD/DVD Drive 1")
-  raise "VM has no CD/DVD drive" if cd.empty?
+  cd = miqVm.devicesByFilter('deviceInfo.label' => 'CD/DVD Drive 1')
+  raise 'VM has no CD/DVD drive' if cd.empty?
   cd = cd.first
   puts "*** After detaching ISO image <#{cd.xsiType}>:"
   vim.dumpObj(cd)
@@ -131,7 +131,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vim.disconnect if vim
 end

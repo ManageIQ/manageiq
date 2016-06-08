@@ -1,6 +1,6 @@
 describe MiqGroup do
-  context "as a Super Administrator" do
-    subject { FactoryGirl.create(:miq_group, :group_type => "system", :role => "super_administrator") }
+  context 'as a Super Administrator' do
+    subject { FactoryGirl.create(:miq_group, :group_type => 'system', :role => 'super_administrator') }
 
     before do
       subject.entitlement.set_managed_filters([['some managed filter']])
@@ -8,74 +8,74 @@ describe MiqGroup do
       subject.entitlement.save!
     end
 
-    describe "#get_filters" do
+    describe '#get_filters' do
       it "takes the filters from the group's entitlement" do
         expect(subject.get_filters).to eq(subject.entitlement.filters)
       end
     end
 
-    describe "#get_managed_filters" do
+    describe '#get_managed_filters' do
       it "takes managed filters from the group's entitlement" do
         expect(subject.get_managed_filters).to eq([['some managed filter']])
       end
     end
 
-    describe "#get_belongsto_filters" do
+    describe '#get_belongsto_filters' do
       it "takes belongsto filters from the group's entitlement" do
         expect(subject.get_belongsto_filters).to eq([['some belongsto filter']])
       end
     end
 
-    describe "#has_filters?" do
-      it "is true when the entitlement has filters" do
+    describe '#has_filters?' do
+      it 'is true when the entitlement has filters' do
         expect(subject.has_filters?).to be_truthy
       end
 
-      it "is false when the entitlement has no filters" do
+      it 'is false when the entitlement has no filters' do
         subject.entitlement.filters = nil
         subject.entitlement.save!
         expect(subject.has_filters?).to be_falsey
       end
     end
 
-    describe "#miq_user_role_name" do
-      it "should return user role name" do
-        expect(subject.miq_user_role_name).to eq("EvmRole-super_administrator")
+    describe '#miq_user_role_name' do
+      it 'should return user role name' do
+        expect(subject.miq_user_role_name).to eq('EvmRole-super_administrator')
       end
     end
 
 
     it "should set group type to 'system' " do
-      expect(subject.group_type).to eq("system")
+      expect(subject.group_type).to eq('system')
     end
 
-    it "should return user count" do
+    it 'should return user count' do
       # TODO: - add more users to check for proper user count...
       expect(subject.user_count).to eq(0)
     end
 
-    it "should strip group description of leading and trailing spaces" do
-      subject.description = "      leading and trailing white spaces     "
-      expect(subject.description).to eq("leading and trailing white spaces")
+    it 'should strip group description of leading and trailing spaces' do
+      subject.description = '      leading and trailing white spaces     '
+      expect(subject.description).to eq('leading and trailing white spaces')
     end
   end
 
-  describe "#get_ldap_groups_by_user_with_ext_auth" do
+  describe '#get_ldap_groups_by_user_with_ext_auth' do
     before do
-      require "dbus"
+      require 'dbus'
       sysbus = double('sysbus')
       ifp_service = double('ifp_service')
       ifp_object  = double('ifp_object')
       @ifp_interface = double('ifp_interface')
 
       allow(DBus).to receive(:system_bus).and_return(sysbus)
-      allow(sysbus).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_service)
-      allow(ifp_service).to receive(:object).with("/org/freedesktop/sssd/infopipe").and_return(ifp_object)
+      allow(sysbus).to receive(:[]).with('org.freedesktop.sssd.infopipe').and_return(ifp_service)
+      allow(ifp_service).to receive(:object).with('/org/freedesktop/sssd/infopipe').and_return(ifp_object)
       allow(ifp_object).to receive(:introspect)
-      allow(ifp_object).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(@ifp_interface)
+      allow(ifp_object).to receive(:[]).with('org.freedesktop.sssd.infopipe').and_return(@ifp_interface)
     end
 
-    it "should return groups by user name with external authentication" do
+    it 'should return groups by user name with external authentication' do
       memberships = [%w(foo bar)]
 
       allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(memberships)
@@ -84,7 +84,7 @@ describe MiqGroup do
     end
   end
 
-  describe "#get_ldap_groups_by_user" do
+  describe '#get_ldap_groups_by_user' do
     before do
       stub_server_configuration(:authentication => {:group_memberships_max_depth => 1})
 
@@ -97,86 +97,86 @@ describe MiqGroup do
       allow(MiqLdap).to receive(:new).and_return(miq_ldap)
     end
 
-    it "should return LDAP groups by user name" do
+    it 'should return LDAP groups by user name' do
       expect(MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')).to eq(%w(foo bar))
     end
 
-    it "should issue an error message when user name could not be bound to LDAP" do
+    it 'should issue an error message when user name could not be bound to LDAP' do
       allow(MiqLdap.new).to receive_messages(:bind => false)
       # darn, wanted a MiqException::MiqEVMLoginError
       expect do
         MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-      end.to raise_error(RuntimeError, "Bind failed for user bind_dn")
+      end.to raise_error(RuntimeError, 'Bind failed for user bind_dn')
     end
 
-    it "should issue an error message when user name does not exist in LDAP directory" do
+    it 'should issue an error message when user name does not exist in LDAP directory' do
       allow(MiqLdap.new).to receive_messages(:get_user_object => nil)
 
       # darn, wanted a MiqException::MiqEVMLoginError
       expect do
         MiqGroup.get_ldap_groups_by_user('fred', 'bind_dn', 'password')
-      end.to raise_error(RuntimeError, "Unable to find user fred in directory")
+      end.to raise_error(RuntimeError, 'Unable to find user fred in directory')
     end
   end
 
-  context "Testing active VM aggregation" do
+  context 'Testing active VM aggregation' do
     before :each do
       @ram_size = 1024
       @disk_size = 1000000
       @num_cpu = 2
 
-      @miq_group = FactoryGirl.create(:miq_group, :description => "test group")
-      @ems = FactoryGirl.create(:ems_vmware, :name => "test_vcenter")
-      @storage  = FactoryGirl.create(:storage, :name => "test_storage_nfs", :store_type => "NFS")
+      @miq_group = FactoryGirl.create(:miq_group, :description => 'test group')
+      @ems = FactoryGirl.create(:ems_vmware, :name => 'test_vcenter')
+      @storage  = FactoryGirl.create(:storage, :name => 'test_storage_nfs', :store_type => 'NFS')
 
       @hw1 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
       @hw2 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
       @hw3 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
       @hw4 = FactoryGirl.create(:hardware, :cpu_total_cores => @num_cpu, :memory_mb => @ram_size)
-      @disk1 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw1.id)
-      @disk2 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw2.id)
-      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw3.id)
-      @disk3 = FactoryGirl.create(:disk, :device_type => "disk", :size => @disk_size, :hardware_id => @hw4.id)
+      @disk1 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw1.id)
+      @disk2 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw2.id)
+      @disk3 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw3.id)
+      @disk3 = FactoryGirl.create(:disk, :device_type => 'disk', :size => @disk_size, :hardware_id => @hw4.id)
 
       @active_vm = FactoryGirl.create(:vm_vmware,
-                                      :name         => "Active VM",
+                                      :name         => 'Active VM',
                                       :miq_group_id => @miq_group.id,
                                       :ems_id       => @ems.id,
                                       :storage_id   => @storage.id,
                                       :hardware     => @hw1)
       @archived_vm = FactoryGirl.create(:vm_vmware,
-                                        :name         => "Archived VM",
+                                        :name         => 'Archived VM',
                                         :miq_group_id => @miq_group.id,
                                         :hardware     => @hw2)
       @orphaned_vm = FactoryGirl.create(:vm_vmware,
-                                        :name         => "Orphaned VM",
+                                        :name         => 'Orphaned VM',
                                         :miq_group_id => @miq_group.id,
                                         :storage_id   => @storage.id,
                                         :hardware     => @hw3)
       @retired_vm = FactoryGirl.create(:vm_vmware,
-                                       :name         => "Retired VM",
+                                       :name         => 'Retired VM',
                                        :miq_group_id => @miq_group.id,
                                        :retired      => true,
                                        :hardware     => @hw4)
     end
 
-    it "#active_vms" do
+    it '#active_vms' do
       expect(@miq_group.active_vms).to match_array([@active_vm])
     end
 
-    it "#allocated_memory" do
+    it '#allocated_memory' do
       expect(@miq_group.allocated_memory).to eq(@ram_size.megabyte)
     end
 
-    it "#allocated_vcpu" do
+    it '#allocated_vcpu' do
       expect(@miq_group.allocated_vcpu).to eq(@num_cpu)
     end
 
-    it "#allocated_storage" do
+    it '#allocated_storage' do
       expect(@miq_group.allocated_storage).to eq(@disk_size)
     end
 
-    it "#provisioned_storage" do
+    it '#provisioned_storage' do
       expect(@miq_group.provisioned_storage).to eq(@ram_size.megabyte + @disk_size)
     end
 
@@ -186,10 +186,10 @@ describe MiqGroup do
       end
     end
 
-    it "when the virtual column is nil" do
+    it 'when the virtual column is nil' do
       hw = FactoryGirl.create(:hardware, :cpu_sockets => @num_cpu, :memory_mb => @ram_size)
       FactoryGirl.create(:vm_vmware,
-                         :name         => "VM with no disk",
+                         :name         => 'VM with no disk',
                          :miq_group_id => @miq_group.id,
                          :ems_id       => @ems.id,
                          :storage_id   => @storage.id,
@@ -198,14 +198,14 @@ describe MiqGroup do
     end
   end
 
-  describe "#destroy" do
+  describe '#destroy' do
     let(:group) { FactoryGirl.create(:miq_group) }
 
-    it "can succeed" do
+    it 'can succeed' do
       expect { group.destroy }.not_to raise_error
     end
 
-    it "fails if referenced by user#current_group" do
+    it 'fails if referenced by user#current_group' do
       FactoryGirl.create(:user, :miq_groups => [group])
 
       expect {
@@ -213,7 +213,7 @@ describe MiqGroup do
       }.to_not change { MiqGroup.count }
     end
 
-    it "fails if referenced by user#miq_groups" do
+    it 'fails if referenced by user#miq_groups' do
       group2 = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:user, :miq_groups => [group, group2], :current_group => group2)
 
@@ -222,20 +222,20 @@ describe MiqGroup do
       }.to_not change { MiqGroup.count }
     end
 
-    it "fails if referenced by a tenant#default_miq_group" do
+    it 'fails if referenced by a tenant#default_miq_group' do
       expect { FactoryGirl.create(:tenant).default_miq_group.reload.destroy }
         .to raise_error(RuntimeError, /A tenant default group can not be deleted/)
     end
   end
 
-  context "#seed" do
-    it "adds new groups after initial seed" do
+  context '#seed' do
+    it 'adds new groups after initial seed' do
       [Tenant, MiqUserRole, MiqGroup].each(&:seed)
 
-      role_map_path = ApplicationRecord::FIXTURE_DIR.join("role_map.yaml")
+      role_map_path = ApplicationRecord::FIXTURE_DIR.join('role_map.yaml')
       role_map = YAML.load_file(role_map_path)
       role_map = {'EvmRole-test_role' => 'tenant_quota_administrator'}.merge(role_map)
-      filter_map_path = ApplicationRecord::FIXTURE_DIR.join("filter_map.yaml")
+      filter_map_path = ApplicationRecord::FIXTURE_DIR.join('filter_map.yaml')
 
       allow(YAML).to receive(:load_file).with(role_map_path).and_return(role_map)
       allow(YAML).to receive(:load_file).with(filter_map_path).and_call_original
@@ -247,7 +247,7 @@ describe MiqGroup do
       expect(MiqGroup.last.sequence).to eql(1)
     end
 
-    it "assigns roles to tenant_groups" do
+    it 'assigns roles to tenant_groups' do
       tenant = Tenant.seed
       expect(tenant.reload.default_miq_group.miq_user_role).not_to be
       MiqUserRole.seed
@@ -256,9 +256,9 @@ describe MiqGroup do
     end
   end
 
-  context "#ordered_widget_sets" do
+  context '#ordered_widget_sets' do
     let(:group) { FactoryGirl.create(:miq_group) }
-    it "uses dashboard_order if present" do
+    it 'uses dashboard_order if present' do
       ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
       ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
@@ -267,7 +267,7 @@ describe MiqGroup do
       expect(group.ordered_widget_sets).to eq([ws3, ws1])
     end
 
-    it "uses all owned widgets" do
+    it 'uses all owned widgets' do
       ws1 = FactoryGirl.create(:miq_widget_set, :name => 'A1', :owner => group)
       ws2 = FactoryGirl.create(:miq_widget_set, :name => 'C3', :owner => group)
       ws3 = FactoryGirl.create(:miq_widget_set, :name => 'B2', :owner => group)
@@ -275,8 +275,8 @@ describe MiqGroup do
     end
   end
 
-  context ".sort_by_desc" do
-    it "sorts by description" do
+  context '.sort_by_desc' do
+    it 'sorts by description' do
       tenant = FactoryGirl.create(:tenant)
       gc = FactoryGirl.create(:miq_group, :description => 'C', :tenant => tenant)
       ga = FactoryGirl.create(:miq_group, :description => 'a', :tenant => tenant)
@@ -286,69 +286,69 @@ describe MiqGroup do
     end
   end
 
-  describe "#read_only" do
-    it "is not read_only for regular groups" do
+  describe '#read_only' do
+    it 'is not read_only for regular groups' do
       expect(FactoryGirl.create(:miq_group)).not_to be_read_only
     end
 
-    it "is read_only for system groups" do
+    it 'is read_only for system groups' do
       expect(FactoryGirl.create(:system_group)).to be_read_only
     end
 
-    it "is read_only for tenant groups" do
+    it 'is read_only for tenant groups' do
       expect(FactoryGirl.create(:tenant).default_miq_group).to be_read_only
     end
   end
 
-  describe "#self_service" do
-    it "detects role" do
+  describe '#self_service' do
+    it 'detects role' do
       role = FactoryGirl.create(
         :miq_user_role,
-        :role     => "self_service",
+        :role     => 'self_service',
         :settings => {:restrictions => {:vms => :user_or_group}}
       )
       group = FactoryGirl.create(:miq_group,
-                                 :description   => "MiqGroup-self_service",
+                                 :description   => 'MiqGroup-self_service',
                                  :miq_user_role => role
                                 )
       expect(group).to be_self_service
     end
 
-    it "detects non-role" do
-      group = FactoryGirl.create(:miq_group, :role => "abc")
+    it 'detects non-role' do
+      group = FactoryGirl.create(:miq_group, :role => 'abc')
       expect(group).not_to be_self_service
     end
   end
 
-  describe "#system_group?" do
-    it "is not system_group for regular groups" do
+  describe '#system_group?' do
+    it 'is not system_group for regular groups' do
       expect(FactoryGirl.create(:miq_group)).not_to be_system_group
     end
 
-    it "is system_group for system groups" do
+    it 'is system_group for system groups' do
       expect(FactoryGirl.create(:system_group)).to be_system_group
     end
   end
 
-  describe "#tenant_group" do
-    it "is not tenant_group for regular groups" do
+  describe '#tenant_group' do
+    it 'is not tenant_group for regular groups' do
       expect(FactoryGirl.create(:miq_group)).not_to be_tenant_group
     end
 
-    it "is tenant_group for tenant groups" do
+    it 'is tenant_group for tenant groups' do
       expect(FactoryGirl.create(:tenant).default_miq_group).to be_tenant_group
     end
   end
 
-  describe "#tenant=" do
-    it "changes for non default groups" do
+  describe '#tenant=' do
+    it 'changes for non default groups' do
       tenant = FactoryGirl.create(:tenant)
       g = FactoryGirl.create(:miq_group)
       g.update_attributes(:tenant => tenant)
       expect(g.tenant).to eq(tenant)
     end
 
-    it "fails for default groups" do
+    it 'fails for default groups' do
       tenant = FactoryGirl.create(:tenant)
       g = FactoryGirl.create(:tenant).default_miq_group
       expect { g.update_attributes!(:tenant => tenant) }
@@ -357,7 +357,7 @@ describe MiqGroup do
   end
 
   describe '.tenant_groups' do
-    it "brings back only tenant_groups" do
+    it 'brings back only tenant_groups' do
       tg = FactoryGirl.create(:tenant).default_miq_group
       g  = FactoryGirl.create(:miq_group)
 
@@ -367,7 +367,7 @@ describe MiqGroup do
   end
 
   describe '.non_tenant_groups' do
-    it "brings back only non_tenant_groups" do
+    it 'brings back only non_tenant_groups' do
       tg = FactoryGirl.create(:tenant).default_miq_group
       g  = FactoryGirl.create(:miq_group)
 
@@ -376,19 +376,19 @@ describe MiqGroup do
     end
   end
 
-  describe ".next_sequence" do
-    it "creates the first group" do
+  describe '.next_sequence' do
+    it 'creates the first group' do
       MiqGroup.delete_all
       expect(MiqGroup.next_sequence).to eq(1)
     end
 
-    it "detects existing groups" do
+    it 'detects existing groups' do
       expect(MiqGroup.next_sequence).to be < 999 # sanity check
       FactoryGirl.create(:miq_group, :sequence => 999)
       expect(MiqGroup.next_sequence).to eq(1000)
     end
 
-    it "handles nil sequences" do
+    it 'handles nil sequences' do
       MiqGroup.delete_all
       g = FactoryGirl.create(:miq_group)
       g.update_attribute(:sequence, nil)
@@ -396,21 +396,21 @@ describe MiqGroup do
       expect(MiqGroup.next_sequence).to eq(1)
     end
 
-    it "auto assigns a sequences" do
+    it 'auto assigns a sequences' do
       # don't want to get behavior from factory girl
-      g1 = MiqGroup.create(:description => "one")
-      g2 = MiqGroup.create(:description => "two")
+      g1 = MiqGroup.create(:description => 'one')
+      g2 = MiqGroup.create(:description => 'two')
 
       expect(g1.sequence).to be_truthy
       expect(g2.sequence).to eq(g1.sequence + 1)
     end
 
-    it "builds a sequence based upon select criteria" do
+    it 'builds a sequence based upon select criteria' do
       expect(MiqGroup.next_sequence).to be < 999 # sanity check
 
-      FactoryGirl.create(:miq_group, :description => "want 1", :sequence => 999)
-      FactoryGirl.create(:miq_group, :description => "want 2", :sequence => 1000)
-      FactoryGirl.create(:miq_group, :description => "dont want", :sequence => 1009)
+      FactoryGirl.create(:miq_group, :description => 'want 1', :sequence => 999)
+      FactoryGirl.create(:miq_group, :description => 'want 2', :sequence => 1000)
+      FactoryGirl.create(:miq_group, :description => 'dont want', :sequence => 1009)
 
       expect(MiqGroup.where("description like 'want%'").next_sequence).to eq(1001)
     end

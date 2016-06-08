@@ -6,8 +6,8 @@ class MiqVimFolder
     @sic    = invObj.sic
 
     @fh     = fh
-    @name   = @fh["name"]
-    @fMor   = @fh["MOR"]
+    @name   = @fh['name']
+    @fMor   = @fh['MOR']
   end
 
   #

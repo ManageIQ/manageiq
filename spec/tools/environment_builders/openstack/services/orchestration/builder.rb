@@ -11,7 +11,7 @@ module Openstack
         end
 
         def initialize(ems, project, network)
-          @service = ems.connect(:tenant_name => project.name, :service => "Orchestration")
+          @service = ems.connect(:tenant_name => project.name, :service => 'Orchestration')
           @data    = Data.new
           @project = project
 
@@ -32,7 +32,7 @@ module Openstack
         def find_or_create_stacks(networks)
           @data.stacks.each do |stack|
             if (network_name = stack[:parameters].delete(:__network_name))
-              stack[:parameters]["network_id"] = networks.detect { |x| x.name == network_name }.try(:id)
+              stack[:parameters]['network_id'] = networks.detect { |x| x.name == network_name }.try(:id)
             end
 
             @stacks << find_or_create(@service.stacks, stack)
@@ -54,17 +54,17 @@ module Openstack
             # Stack model needs to be fixed. Then uncomment this:
             # case server.reload.stack_status
             case @service.stacks.detect { |x| x.id == stack_id }.try(:stack_status)
-            when "CREATE_COMPLETE", "UPDATE_COMPLETE"
+            when 'CREATE_COMPLETE', 'UPDATE_COMPLETE'
               break
-            when "CREATE_FAILED", "UPDATE_FAILED"
+            when 'CREATE_FAILED', 'UPDATE_FAILED'
               puts "Error creating stack"
               exit 1
             else
-              print "."
+              print '.'
               sleep 1
             end
           end
-          puts "Finished"
+          puts 'Finished'
         end
       end
     end

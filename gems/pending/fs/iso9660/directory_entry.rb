@@ -44,7 +44,7 @@ module Iso9660
     attr_reader :date, :length, :myEnt
 
     def initialize(data, suff, flags = EXT_NONE)
-      raise "Data is nil." if data.nil?
+      raise 'Data is nil.' if data.nil?
 
       @suff = suff
       # Get data.
@@ -58,8 +58,8 @@ module Iso9660
         name = data[offset...(offset + len)]
         # Convert 00 to dot and 01 to dotdot.
         if len == 1 && (name[0] == 0 || name[0] == 1)
-          name = "." if name[0] == 0
-          name = ".." if name[0] == 1
+          name = '.' if name[0] == 0
+          name = '..' if name[0] == 1
         else
           name.Ucs2ToAscii! if flags & EXT_JOLIET == EXT_JOLIET
         end
@@ -85,7 +85,7 @@ module Iso9660
 
     def fileSize
       return @de["size#{@suff}"] if @rr.nil?
-      size = checkExt("linkData")
+      size = checkExt('linkData')
       return size.size unless size.nil?
       @de["size#{@suff}"]
     end
@@ -100,7 +100,7 @@ module Iso9660
 
     def isSymLink?
       return false if @rr.nil?
-      isLink = checkExt("linkData")
+      isLink = checkExt('linkData')
       return true unless isLink.nil?
       false
     end
@@ -123,12 +123,12 @@ module Iso9660
       return if length == 0
       @rr = RockRidge.new(self)
       # Check for alternate name.
-      new_name = checkExt("name")
+      new_name = checkExt('name')
       @de['name'] = new_name unless new_name.nil?
     end
 
     def dump
-      out = ""
+      out = ''
       out << "Length  : #{@de['length']}\n"
       out << "Attr len: #{@de['ext_attr_length']} (sectors)\n"
       out << "Data sec: #{@de["extent#{@suff}"]}\n"

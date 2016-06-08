@@ -1,5 +1,5 @@
 class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtWorkflow
-  include_concern "DialogFieldValidation"
+  include_concern 'DialogFieldValidation'
   include CloudInitTemplateMixin
 
   def allowed_availability_zones(_options = {})
@@ -69,7 +69,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def update_field_visibility
-    show_dialog(:customize, :show, "disabled")
+    show_dialog(:customize, :show, 'disabled')
     super(:force_platform => 'linux')
   end
 

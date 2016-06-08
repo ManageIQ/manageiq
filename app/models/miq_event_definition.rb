@@ -4,7 +4,7 @@ class MiqEventDefinition < ApplicationRecord
   validates_presence_of     :name
   validates_uniqueness_of   :name
   validates_format_of       :name, :with => /\A[a-z0-9_\-]+\z/i,
-    :allow_nil => true, :message => "must only contain alpha-numeric, underscore and hyphen characters without spaces"
+    :allow_nil => true, :message => 'must only contain alpha-numeric, underscore and hyphen characters without spaces'
   validates_presence_of     :description
 
   acts_as_miq_set_member
@@ -18,7 +18,7 @@ class MiqEventDefinition < ApplicationRecord
   attr_accessor :reserved
 
   def self.all_events
-    where(:event_type => "Default")
+    where(:event_type => 'Default')
   end
 
   def miq_policies
@@ -28,13 +28,13 @@ class MiqEventDefinition < ApplicationRecord
 
   def export_to_array
     h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
+    ['id', 'created_on', 'updated_on'].each { |k| h.delete(k) }
     [self.class.to_s => h]
   end
 
   def self.import_from_hash(event, options = {})
-    status = {:class => name, :description => event["description"]}
-    e = MiqEventDefinition.find_by_name(event["name"])
+    status = {:class => name, :description => event['description']}
+    e = MiqEventDefinition.find_by_name(event['name'])
     msg_pfx = "Importing Event: name=[#{event["name"]}]"
 
     if e.nil?
@@ -74,13 +74,13 @@ class MiqEventDefinition < ApplicationRecord
 
   def self.add_elements(_vm, xmlNode)
     # Record vm operational and configuration events
-    if xmlNode.root.name == "vmevents"
-      xmlNode.find_each("//vmevents/view/rows/row") do |row|
+    if xmlNode.root.name == 'vmevents'
+      xmlNode.find_each('//vmevents/view/rows/row') do |row|
         # Get the record's parts
-        eventType = row.attributes["event_type"]
-        timestamp = Time.at(row.attributes["timestamp"].to_i)
-        eventData = YAML.load(row.attributes["event_data"])
-        eventData.delete("id")
+        eventType = row.attributes['event_type']
+        timestamp = Time.at(row.attributes['timestamp'].to_i)
+        eventData = YAML.load(row.attributes['event_data'])
+        eventData.delete('id')
 
         # Remove elements that do not belong in the event table
         %w( src_vm_guid dest_vm_guid vm_guid ).each do |field|
@@ -100,7 +100,7 @@ class MiqEventDefinition < ApplicationRecord
 
     # _log.warn "[#{xmlNode}]"
     # add_missing_elements(vm, xmlNode, "Applications/Products/Products", "win32_product", WIN32_APPLICATION_MAPPING)
-    File.open("./xfer_#{xmlNode.root.name}.xml", "w") { |f| xmlNode.write(f, 0) }
+    File.open("./xfer_#{xmlNode.root.name}.xml", 'w') { |f| xmlNode.write(f, 0) }
   rescue
   end
 
@@ -137,7 +137,7 @@ class MiqEventDefinition < ApplicationRecord
   def self.seed_default_definitions
     stats = {:a => 0, :u => 0}
 
-    fname = File.join(FIXTURE_DIR, "miq_event_definitions.yml")
+    fname = File.join(FIXTURE_DIR, 'miq_event_definitions.yml')
     defns = YAML.load_file(fname)
     defns.each do |event_type, events|
       events[:events].each do |e|

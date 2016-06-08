@@ -5,9 +5,9 @@ describe UpdateMiqDatabaseDefaultUpdateRepoName do
 
   migration_context :up do
     [
-      ["Satellite 5 without scl repo", "rhel-x86_64-server-6-cf-me-3",                                "rhel-x86_64-server-6-cf-me-3.2 rhel-x86_64-server-6-rhscl-1"],
-      ["Satellite 5 with scl repo",    "rhel-x86_64-server-6-cf-me-3.1 rhel-x86_64-server-6-rhscl-1", "rhel-x86_64-server-6-cf-me-3.2 rhel-x86_64-server-6-rhscl-1"],
-      ["Satellite 6",                  "cf-me-5.3-for-rhel-6-rpms rhel-server-rhscl-6-rpms",          "cf-me-5.4-for-rhel-6-rpms rhel-server-rhscl-6-rpms"],
+      ['Satellite 5 without scl repo', 'rhel-x86_64-server-6-cf-me-3',                                'rhel-x86_64-server-6-cf-me-3.2 rhel-x86_64-server-6-rhscl-1'],
+      ['Satellite 5 with scl repo',    'rhel-x86_64-server-6-cf-me-3.1 rhel-x86_64-server-6-rhscl-1', 'rhel-x86_64-server-6-cf-me-3.2 rhel-x86_64-server-6-rhscl-1'],
+      ['Satellite 6',                  'cf-me-5.3-for-rhel-6-rpms rhel-server-rhscl-6-rpms',          'cf-me-5.4-for-rhel-6-rpms rhel-server-rhscl-6-rpms'],
     ].each do |name, existing_repo, desired_repo|
       it name do
         db = db_stub.create!(:update_repo_name => existing_repo)
@@ -21,8 +21,8 @@ describe UpdateMiqDatabaseDefaultUpdateRepoName do
 
   migration_context :down do
     [
-      ["Satellite 5", "rhel-x86_64-server-6-cf-me-3.2 rhel-x86_64-server-6-rhscl-1", "rhel-x86_64-server-6-cf-me-3.1 rhel-x86_64-server-6-rhscl-1"],
-      ["Satellite 6", "cf-me-5.4-for-rhel-6-rpms rhel-server-rhscl-6-rpms",          "cf-me-5.3-for-rhel-6-rpms rhel-server-rhscl-6-rpms"],
+      ['Satellite 5', 'rhel-x86_64-server-6-cf-me-3.2 rhel-x86_64-server-6-rhscl-1', 'rhel-x86_64-server-6-cf-me-3.1 rhel-x86_64-server-6-rhscl-1'],
+      ['Satellite 6', 'cf-me-5.4-for-rhel-6-rpms rhel-server-rhscl-6-rpms',          'cf-me-5.3-for-rhel-6-rpms rhel-server-rhscl-6-rpms'],
     ].each do |name, existing_repo, desired_repo|
       it name do
         db = db_stub.create!(:update_repo_name => existing_repo)

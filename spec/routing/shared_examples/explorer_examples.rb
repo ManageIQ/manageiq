@@ -1,4 +1,4 @@
-shared_examples_for "A controller that has explorer routes" do
+shared_examples_for 'A controller that has explorer routes' do
   describe '#accordion_select' do
     it 'routes with POST' do
       expect(post("/#{controller_name}/accordion_select")).to route_to("#{controller_name}#accordion_select")

@@ -2,7 +2,7 @@ require 'miq-process'
 require 'pid_file'
 
 class EvmServer
-  SOFT_INTERRUPT_SIGNALS = ["SIGTERM", "SIGUSR1", "SIGUSR2"]
+  SOFT_INTERRUPT_SIGNALS = ['SIGTERM', 'SIGUSR1', 'SIGUSR2']
 
   OPTIONS_PARSER_SETTINGS = [
     [:mode, 'EVM Server Mode', String],
@@ -43,8 +43,8 @@ class EvmServer
   def safe_log(message = nil, exit_code = 0)
     meth = (exit_code == 0) ? :info : :error
 
-    prefix = "MIQ(EvmServer) "
-    pid    = "PID [#{Process.pid}] " rescue ""
+    prefix = 'MIQ(EvmServer) '
+    pid    = "PID [#{Process.pid}] " rescue ''
     logmsg = "#{prefix}#{pid}#{message}"
 
     begin

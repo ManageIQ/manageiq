@@ -30,18 +30,18 @@ module Metakit
     def to_xml
       xml = MiqXml.createDoc("<view name='#{table_name}'><attributes/><rows/></view>")
 
-      xmlNode = xml.find_first("//view/attributes")
+      xmlNode = xml.find_first('//view/attributes')
       props = attribute_names
-      props.each { |prop| xmlNode.add_element("attribute", "name" => prop) }
+      props.each { |prop| xmlNode.add_element('attribute', 'name' => prop) }
 
-      xmlNode = xml.find_first("//view/rows")
+      xmlNode = xml.find_first('//view/rows')
       each do |row|
         row_attributes = props.inject({}) do |row_attributes, prop|
           row_attributes[prop] = row[prop]
           row_attributes
         end
 
-        xmlNode.add_element("row", row_attributes)
+        xmlNode.add_element('row', row_attributes)
       end
 
       xml
@@ -99,13 +99,13 @@ module Metakit
           # The one big difference is "Binary" data which should be passed in as a string and
           # converted into the "Metakit::Bytes" object.
           v = case y.class.to_s
-              when "Metakit::StringProp"
+              when 'Metakit::StringProp'
                 v.to_s
-              when "Metakit::LongProp", "Metakit::IntProp"
+              when 'Metakit::LongProp', 'Metakit::IntProp'
                 v.to_i
-              when "Metakit::FloatProp", "Metakit::DoubleProp"
+              when 'Metakit::FloatProp', 'Metakit::DoubleProp'
                 v.to_f
-              when "Metakit::BytesProp"
+              when 'Metakit::BytesProp'
                 Metakit::Bytes.new(v, v.length)
               else
                 v

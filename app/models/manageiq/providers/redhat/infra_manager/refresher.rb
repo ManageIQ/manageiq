@@ -4,7 +4,7 @@ class ManageIQ::Providers::Redhat::InfraManager
 
     def collect_inventory_for_targets(ems, targets)
       inventory = ems.rhevm_inventory
-      raise "Invalid RHEV server ip address." if inventory.api.nil?
+      raise 'Invalid RHEV server ip address.' if inventory.api.nil?
 
       # TODO before iterating over targets it would be good to check whether ExtMgmntSystem is part of it
       # TODO optimize not to fetch the same objects like clusters for multiple targets
@@ -49,7 +49,7 @@ class ManageIQ::Providers::Redhat::InfraManager
 
         end
 
-        _log.info "Filtering inventory...Complete"
+        _log.info 'Filtering inventory...Complete'
         [target, data]
       end
 

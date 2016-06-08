@@ -16,10 +16,10 @@ Log4r::StderrOutputter.new('err_console', :level=>Log4r::OFF, :formatter=>Consol
 $vim_log.add 'err_console'
 
 # $miq_wiredump = true
-TARGET_HOST   = raise "please define"
-HOST_USERNAME = ""
-HOST_PASSWORD = ""
-CLUSTER_NAME  = ""
+TARGET_HOST   = raise 'please define'
+HOST_USERNAME = ''
+HOST_PASSWORD = ''
+CLUSTER_NAME  = ''
 
 miqCluster  = nil
 miqHost   = nil
@@ -38,14 +38,14 @@ begin
     puts "Got object for host: #{miqHost.name}"
   
     unless miqHost.rebootSupported?
-      puts "Host does not support reboot"
+      puts 'Host does not support reboot'
       exit
     end
   
     puts
-    puts "Rebooting host..."
+    puts 'Rebooting host...'
     miqHost.rebootHost
-    puts "done."
+    puts 'done.'
   
 
 rescue => err

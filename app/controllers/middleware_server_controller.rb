@@ -21,9 +21,9 @@ class MiddlewareServerController < ApplicationController
 
   def show
     clear_topology_breadcrumb
-    @display = params[:display] || "main" unless control_selected?
-    @lastaction = "show"
-    @showtype = "main"
+    @display = params[:display] || 'main' unless control_selected?
+    @lastaction = 'show'
+    @showtype = 'main'
     @record = identify_record(params[:id], ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer)
 
     if @display == 'middleware_datasources'
@@ -50,7 +50,7 @@ class MiddlewareServerController < ApplicationController
 
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     else
       super
@@ -71,7 +71,7 @@ class MiddlewareServerController < ApplicationController
 
   def run_server_operation(operation_info, items)
     if items.nil?
-      add_flash(_("No servers selected"))
+      add_flash(_('No servers selected'))
       return
     end
 

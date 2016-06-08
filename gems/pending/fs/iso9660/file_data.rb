@@ -6,8 +6,8 @@ module Iso9660
 
     # Initialization
     def initialize(dirEntry, bootSector)
-      raise "Nil directory entry" if dirEntry.nil?
-      raise "Nil boot sector" if bootSector.nil?
+      raise 'Nil directory entry' if dirEntry.nil?
+      raise 'Nil boot sector' if bootSector.nil?
 
       @bs = bootSector
       @de = dirEntry

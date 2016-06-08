@@ -27,7 +27,7 @@ module ManageIQ::Providers
           @orchestration_service.handled_list(:stacks, :show_nested => true).collect(&:details)
         rescue Excon::Errors::Forbidden
           # Orchestration service is detected but not open to the user
-          $log.warn("Skip refreshing stacks because the user cannot access the orchestration service")
+          $log.warn('Skip refreshing stacks because the user cannot access the orchestration service')
           []
         end
 
@@ -37,11 +37,11 @@ module ManageIQ::Providers
 
           orchestration_stack_type = case @ems
                                      when ManageIQ::Providers::Openstack::CloudManager
-                                       "ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack"
+                                       'ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack'
                                      when ManageIQ::Providers::Openstack::InfraManager
-                                       "ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack"
+                                       'ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack'
                                      else
-                                       "OrchestrationStack"
+                                       'OrchestrationStack'
                                      end
 
           new_result = {
@@ -56,7 +56,7 @@ module ManageIQ::Providers
             :outputs                => find_stack_outputs(stack),
             :parameters             => find_stack_parameters(stack),
             :orchestration_template => find_stack_template(stack),
-            :cloud_tenant           => @data_index.fetch_path(:cloud_tenants, stack.service.current_tenant["id"])
+            :cloud_tenant           => @data_index.fetch_path(:cloud_tenants, stack.service.current_tenant['id'])
           }
           return uid, new_result
         end
@@ -65,7 +65,7 @@ module ManageIQ::Providers
           # Only need a temporary unique identifier for the template. Using the stack id is the cheapest way.
           uid = stack.id
           template = stack.template
-          template_type = template.format == "HOT" ? "OrchestrationTemplateHot" : "OrchestrationTemplateCfn"
+          template_type = template.format == 'HOT' ? 'OrchestrationTemplateHot' : 'OrchestrationTemplateCfn'
 
           new_result = {
             :type        => template_type,

@@ -9,7 +9,7 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Migrating configuration changes") do
+    say_with_time('Migrating configuration changes') do
       deltas = Configuration.where(:typ => TEMPLATES.keys).all.flat_map { |f| full_to_deltas(f) }
       deltas.each { |d| SettingsChange.create!(d) }
     end
@@ -26,18 +26,18 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
     deltas = Vmdb::Settings::HashDiffer.changes(TEMPLATES[config_type], config)
     deltas.each do |d|
       d.merge!(
-        :resource_type => "MiqServer",
+        :resource_type => 'MiqServer',
         :resource_id   => full_config.miq_server_id,
         :created_at    => full_config.created_on,
         :updated_at    => full_config.updated_on,
       )
-      d[:key] = "/#{config_type}#{d[:key]}" unless config_type == "vmdb"
+      d[:key] = "/#{config_type}#{d[:key]}" unless config_type == 'vmdb'
     end
   end
 
   def adjust_config!(type, config)
     case type
-    when "broker_notify_properties"
+    when 'broker_notify_properties'
       # Convert the various exclude sections from a Hash like
       #   {:key1 => nil, :key2 => nil} to an Array like ["key1", "key2"]
       excludes = config[:exclude]
@@ -45,8 +45,8 @@ class ConvertConfigurationsToSettingsChanges < ActiveRecord::Migration
     end
   end
 
-  DATA_DIR = Pathname.new(__dir__).join("data", File.basename(__FILE__, ".rb"))
-  TEMPLATES = Dir.glob(DATA_DIR.join("*.tmpl.yml")).sort.each_with_object({}) do |f, h|
-    h[File.basename(f, ".tmpl.yml")] = YAML.load_file(f).deep_symbolize_keys
+  DATA_DIR = Pathname.new(__dir__).join('data', File.basename(__FILE__, '.rb'))
+  TEMPLATES = Dir.glob(DATA_DIR.join('*.tmpl.yml')).sort.each_with_object({}) do |f, h|
+    h[File.basename(f, '.tmpl.yml')] = YAML.load_file(f).deep_symbolize_keys
   end
 end

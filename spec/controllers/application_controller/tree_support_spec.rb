@@ -1,23 +1,23 @@
 describe ApplicationController do
-  context "#tree_autoload_dynatree" do
-    describe "verify @edit object" do
+  context '#tree_autoload_dynatree' do
+    describe 'verify @edit object' do
       before :each do
         expect(controller).to receive(:tree_add_child_nodes)
         expect(controller).to receive(:render)
         controller.instance_variable_set(:@sb,
-                                         :trees       => {:foo_tree => {:active_node => "root"}},
+                                         :trees       => {:foo_tree => {:active_node => 'root'}},
                                          :active_tree => :foo_tree
                                         )
       end
 
-      it "reloads from session" do
-        edit = {:current => "test", :new => "test2"}
+      it 'reloads from session' do
+        edit = {:current => 'test', :new => 'test2'}
         session[:edit] = edit
         controller.tree_autoload_dynatree
         expect(assigns(:edit)).to eq(edit)
       end
 
-      it "stays nil" do
+      it 'stays nil' do
         controller.tree_autoload_dynatree
         expect(assigns(:edit)).to be_nil
       end

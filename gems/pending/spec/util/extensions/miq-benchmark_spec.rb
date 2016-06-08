@@ -14,9 +14,9 @@ describe Benchmark do
           Timecop.travel(500)
         end
       end
-      "test"
+      'test'
     end
-    expect(result).to eq("test")
+    expect(result).to eq('test')
     expect(timings[:test1]).to be_within(0.5).of(1500)
     expect(timings[:test2]).to be_within(0.5).of(1000)
     expect(timings[:test3]).to be_within(0.5).of(500)
@@ -43,9 +43,9 @@ describe Benchmark do
           Timecop.travel(500)
         end
       end
-      "test"
+      'test'
     end
-    expect(result).to eq("test")
+    expect(result).to eq('test')
     expect(timings[:test1]).to be_within(0.5).of(1500)
     expect(timings[:test2]).to be_within(0.5).of(1000)
     expect(timings[:test3]).to be_within(0.5).of(500)

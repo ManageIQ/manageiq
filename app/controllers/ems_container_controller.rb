@@ -13,7 +13,7 @@ class EmsContainerController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "ems_container"
+    @table_name ||= 'ems_container'
   end
 
   def show_list

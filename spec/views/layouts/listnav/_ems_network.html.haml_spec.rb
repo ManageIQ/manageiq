@@ -1,14 +1,14 @@
 include QuadiconHelper
 
-describe "layouts/listnav/_ems_network.html.haml" do
+describe 'layouts/listnav/_ems_network.html.haml' do
   before :each do
-    set_controller_for_view("ems_network")
-    assign(:panels, "ems_prop" => true, "ems_rel" => true)
+    set_controller_for_view('ems_network')
+    assign(:panels, 'ems_prop' => true, 'ems_rel' => true)
     allow(view).to receive(:truncate_length).and_return(15)
     allow(view).to receive(:role_allows).and_return(true)
   end
 
-  ["openstack", "amazon"].each do |t|
+  ['openstack', 'amazon'].each do |t|
     before :each do
       allow_any_instance_of(User).to receive(:get_timezone).and_return(Time.zone)
       @provider      = FactoryGirl.create("ems_#{t}".to_sym)

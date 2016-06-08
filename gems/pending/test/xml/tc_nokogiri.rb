@@ -112,19 +112,19 @@ class NokogiriXmlMethods < Minitest::Test
     assert_nil(xml_new.root)
     xml_new.add_element('root')
     refute_nil(xml_new.root)
-    assert_equal("root", xml_new.root.name.to_s)
+    assert_equal('root', xml_new.root.name.to_s)
 
-    new_node = xml_new.root.add_element("node1", "enabled" => true, "disabled" => false, "nothing" => nil)
+    new_node = xml_new.root.add_element('node1', 'enabled' => true, 'disabled' => false, 'nothing' => nil)
 
     assert_equal(true, MiqXml.isXmlElement?(new_node))
     assert_equal(false, MiqXml.isXmlElement?(nil))
 
     attrs = new_node.attributes
-    assert_equal("true", attrs["enabled"].to_s)
-    assert_equal("false", attrs["disabled"].to_s)
-    assert_nil(attrs["nothing"])
-    new_node.add_attributes("nothing" => "something")
-    assert_equal("something", new_node.attributes["nothing"].to_s)
+    assert_equal('true', attrs['enabled'].to_s)
+    assert_equal('false', attrs['disabled'].to_s)
+    assert_nil(attrs['nothing'])
+    new_node.add_attributes('nothing' => 'something')
+    assert_equal('something', new_node.attributes['nothing'].to_s)
 
     assert_kind_of(@xml_klass::Document, xml_new.document)
     assert_kind_of(@xml_klass::Document, xml_new.doc)
@@ -137,7 +137,7 @@ class NokogiriXmlMethods < Minitest::Test
     # Create an empty document with the utf-8 encoding
     # During assert allow for single quotes and new line char.
     xml_new = MiqXml.createDoc(nil, nil, nil, @xml_klass)
-    assert_equal("<?xml version='1.0' encoding='UTF-8'?>", xml_new.to_xml.to_s.tr("\"", "'").chomp)
+    assert_equal("<?xml version='1.0' encoding='UTF-8'?>", xml_new.to_xml.to_s.tr('"', "'").chomp)
   end
 
   def test_xml_encoding
@@ -151,33 +151,33 @@ class NokogiriXmlMethods < Minitest::Test
   def test_find_each
     xml = @xml
     row_order = %w(8 7 6 4 5)
-    xml.find_each("//row") do |e|
-      assert_equal(e.attributes["id"].to_s, row_order.delete_at(0))
+    xml.find_each('//row') do |e|
+      assert_equal(e.attributes['id'].to_s, row_order.delete_at(0))
     end
     assert_equal(0, row_order.length)
   end
 
   def test_find_first
     xml = @xml
-    x = xml.find_first("//row")
+    x = xml.find_first('//row')
     refute_nil(x)
-    assert_equal("8", x.attributes["id"].to_s)
+    assert_equal('8', x.attributes['id'].to_s)
   end
 
   def test_find_match
     xml = @xml
-    x = xml.find_match("//row")
+    x = xml.find_match('//row')
     refute_nil(x)
     assert_equal(5, x.length)
-    assert_equal("8", x[0].attributes["id"].to_s)
-    assert_equal("4", x[3].attributes["id"].to_s)
+    assert_equal('8', x[0].attributes['id'].to_s)
+    assert_equal('4', x[3].attributes['id'].to_s)
   end
 
   def test_add_frozen_text
     xml = @xml
     assert_kind_of(@xml_klass::Document, xml)
 
-    frozen_text = "A&P".freeze
+    frozen_text = 'A&P'.freeze
     # assert_nothing_raised {xml.root.text = frozen_text}
     # TODO: Fix decoding of special characters
     # assert_equal("A&P", xml.root.text)
@@ -185,9 +185,9 @@ class NokogiriXmlMethods < Minitest::Test
 
   def test_root_text
     node = @xml.root
-    assert_equal("", node.node_text.to_s.rstrip)
-    node.text = "Hello World"
-    assert_equal("Hello World", node.node_text.to_s.rstrip)
+    assert_equal('', node.node_text.to_s.rstrip)
+    node.text = 'Hello World'
+    assert_equal('Hello World', node.node_text.to_s.rstrip)
 
     # Make sure adding text does not destroy child elements
     assert_equal(true, node.has_elements?)
@@ -202,7 +202,7 @@ class NokogiriXmlMethods < Minitest::Test
 
     time = Time.now
     html_text = "<b>#{time}</b>"
-    xml.root.add_cdata(html_text.gsub(",", "\\,"))
+    xml.root.add_cdata(html_text.gsub(',', '\\,'))
 
     assert(xml.to_s.include?("![CDATA[<b>#{time}</b>]]"))
     assert_equal("<b>#{time}</b>", xml.root.text)

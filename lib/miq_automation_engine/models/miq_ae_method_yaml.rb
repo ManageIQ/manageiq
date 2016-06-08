@@ -18,9 +18,9 @@ class MiqAeMethodYaml
   def load_method_file
     define_instance_variables
     file_name = method_file_name
-    contents  = ""
+    contents  = ''
     contents = File.open(file_name, &:read) if file_name
-    instance_variable_set("@data", contents)
+    instance_variable_set('@data', contents)
   end
 
   def method_file_name
@@ -30,13 +30,13 @@ class MiqAeMethodYaml
   end
 
   def field_names
-    raise "ae_method_obj has not been set" unless @ae_method_obj
+    raise 'ae_method_obj has not been set' unless @ae_method_obj
     define_instance_variables
     @ae_method_obj['object']['inputs'].collect { |item| item['field']['name'] }.flatten
   end
 
   def field_value_hash(name)
-    raise "ae_method_obj has not been set" unless @ae_method_obj
+    raise 'ae_method_obj has not been set' unless @ae_method_obj
     define_instance_variables
     value = @ae_method_obj['object']['inputs'].detect { |item| item['field']['name'].casecmp(name) == 0 }
     raise "field name #{name} not found in instance #{@filename}" if value.nil?

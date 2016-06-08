@@ -16,8 +16,8 @@ describe MiqProductFeature do
     )
   end
 
-  context ".seed" do
-    it "creates feature identifiers once on first seed, changes nothing on second seed" do
+  context '.seed' do
+    it 'creates feature identifiers once on first seed, changes nothing on second seed' do
       status_seed1 = MiqProductFeature.seed
       expect(MiqProductFeature.count).to eq(expected_feature_count)
       expect(status_seed1[:created]).to match_array status_seed1[:created].uniq
@@ -32,17 +32,17 @@ describe MiqProductFeature do
     end
   end
 
-  context ".seed_features" do
+  context '.seed_features' do
     let(:feature_path) { Pathname.new(@tempfile.path.sub(/\.yml/, '')) }
     let(:base) do
       {
-        :feature_type => "node",
-        :identifier   => "everything",
+        :feature_type => 'node',
+        :identifier   => 'everything',
         :children     => [
           {
-            :feature_type => "node",
-            :identifier   => "one",
-            :name         => "One",
+            :feature_type => 'node',
+            :identifier   => 'one',
+            :name         => 'One',
             :children     => []
           }
         ]
@@ -61,22 +61,22 @@ describe MiqProductFeature do
       Dir.rmdir(@tempdir)
     end
 
-    it "existing records" do
-      deleted   = FactoryGirl.create(:miq_product_feature, :identifier => "xxx")
-      changed   = FactoryGirl.create(:miq_product_feature, :identifier => "one", :name => "XXX")
+    it 'existing records' do
+      deleted   = FactoryGirl.create(:miq_product_feature, :identifier => 'xxx')
+      changed   = FactoryGirl.create(:miq_product_feature, :identifier => 'one', :name => 'XXX')
       unchanged = FactoryGirl.create(:miq_product_feature_everything)
       unchanged_orig_updated_at = unchanged.updated_at
 
       MiqProductFeature.seed_features(feature_path)
       expect { deleted.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      expect(changed.reload.name).to eq("One")
+      expect(changed.reload.name).to eq('One')
       expect(unchanged.reload.updated_at).to be_same_time_as unchanged_orig_updated_at
     end
 
-    it "additional yaml feature" do
+    it 'additional yaml feature' do
       additional = {
-        :feature_type => "node",
-        :identifier   => "two",
+        :feature_type => 'node',
+        :identifier   => 'two',
         :children     => []
       }
 
@@ -95,63 +95,63 @@ describe MiqProductFeature do
   end
 
   describe '#feature_children' do
-    it "returns only visible features" do
+    it 'returns only visible features' do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin", false)).to match_array(
+      expect(MiqProductFeature.feature_children('miq_report_widget_admin', false)).to match_array(
         %w(widget_copy widget_edit))
     end
 
-    it "returns direct children only" do
+    it 'returns direct children only' do
       hierarchical_features
-      expect(MiqProductFeature.feature_children("miq_report_widget_editor")).to eq(
+      expect(MiqProductFeature.feature_children('miq_report_widget_editor')).to eq(
         %w(miq_report_widget_admin))
     end
 
-    it "sorts features" do
+    it 'sorts features' do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
-      expect(MiqProductFeature.feature_children("miq_report_widget_admin")).to eq(%w(widget_copy widget_edit))
+      expect(MiqProductFeature.feature_children('miq_report_widget_admin')).to eq(%w(widget_copy widget_edit))
     end
   end
 
   describe '#feature_all_children' do
-    it "returns all visible children" do
+    it 'returns all visible children' do
       hierarchical_features
       expect(MiqProductFeature).not_to receive(:sort_children)
-      expect(MiqProductFeature.feature_all_children("miq_report_widget_editor", false)).to match_array(
+      expect(MiqProductFeature.feature_all_children('miq_report_widget_editor', false)).to match_array(
         %w(widget_copy widget_edit miq_report_widget_admin))
     end
 
-    it "returns all visible children sorted" do
+    it 'returns all visible children sorted' do
       hierarchical_features
       expect(MiqProductFeature).to receive(:sort_children).and_call_original
-      expect(MiqProductFeature.feature_all_children("miq_report_widget_editor")).to eq(
+      expect(MiqProductFeature.feature_all_children('miq_report_widget_editor')).to eq(
         %w(widget_copy widget_edit miq_report_widget_admin))
     end
   end
 
-  describe "#feature_details" do
-    it "returns data for visible features" do
-      EvmSpecHelper.seed_specific_product_features("container_dashboard")
-      expect(MiqProductFeature.feature_details("container_dashboard")).to be_truthy
+  describe '#feature_details' do
+    it 'returns data for visible features' do
+      EvmSpecHelper.seed_specific_product_features('container_dashboard')
+      expect(MiqProductFeature.feature_details('container_dashboard')).to be_truthy
     end
 
-    it "eats hidden features" do
-      EvmSpecHelper.seed_specific_product_features("widget_refresh")
-      expect(MiqProductFeature.feature_details("widget_refresh")).not_to be
+    it 'eats hidden features' do
+      EvmSpecHelper.seed_specific_product_features('widget_refresh')
+      expect(MiqProductFeature.feature_details('widget_refresh')).not_to be
     end
   end
 
-  describe "#feature_hidden" do
-    it "detects visible features" do
-      EvmSpecHelper.seed_specific_product_features("container_dashboard")
-      expect(MiqProductFeature.feature_hidden("container_dashboard")).not_to be
+  describe '#feature_hidden' do
+    it 'detects visible features' do
+      EvmSpecHelper.seed_specific_product_features('container_dashboard')
+      expect(MiqProductFeature.feature_hidden('container_dashboard')).not_to be
     end
 
-    it "detects hidden features" do
-      EvmSpecHelper.seed_specific_product_features("widget_refresh")
-      expect(MiqProductFeature.feature_hidden("widget_refresh")).to be_truthy
+    it 'detects hidden features' do
+      EvmSpecHelper.seed_specific_product_features('widget_refresh')
+      expect(MiqProductFeature.feature_hidden('widget_refresh')).to be_truthy
     end
   end
 end

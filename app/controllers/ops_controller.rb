@@ -112,11 +112,11 @@ class OpsController < ApplicationController
 
     @sb[:active_tab] = 'settings_rhn' if @sb[:active_tab] == 'settings_rhn_edit' # cannot return to the edit state
     @timeline = @timeline_filter = true # Load timeline JS modules
-    return unless load_edit(params[:edit_key], "explorer") if params[:edit_key]
+    return unless load_edit(params[:edit_key], 'explorer') if params[:edit_key]
     @breadcrumbs = []
     build_accordions_and_trees
 
-    @sb[:rails_log] = $rails_log.filename.to_s.include?("production.log") ? "Production" : "Development"
+    @sb[:rails_log] = $rails_log.filename.to_s.include?('production.log') ? 'Production' : 'Development'
 
     if !params[:no_refresh]
       @sb[:good] = nil
@@ -130,12 +130,12 @@ class OpsController < ApplicationController
                                                %w(settings_import settings_import_tags).include?(@sb[:active_tab]) # show apply button enabled if this is set
     end
     # setting active record object here again, since they are no longer there due to redirect
-    @ldap_group = @edit[:ldap_group] if params[:cls_id] && params[:cls_id].split('_')[0] == "lg"
+    @ldap_group = @edit[:ldap_group] if params[:cls_id] && params[:cls_id].split('_')[0] == 'lg'
     @x_edit_buttons_locals = set_form_locals if @in_a_form
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename
     edit_changed? if @edit
-    render :layout => "application"
+    render :layout => 'application'
   end
 
   def accordion_select
@@ -166,14 +166,14 @@ class OpsController < ApplicationController
     if params[:tab]
       @edit = session[:edit]
       @scan = @edit[:scan]
-      case params[:tab].split("_")[0]
-      when "new"
-        redirect_to(:action => "ap_new", :tab => params[:tab], :id => "#{@scan.id || "new"}")
-      when "edit"
-        redirect_to(:action => "ap_edit", :tab => params[:tab], :id => "#{@scan.id || "new"}")
+      case params[:tab].split('_')[0]
+      when 'new'
+        redirect_to(:action => 'ap_new', :tab => params[:tab], :id => "#{@scan.id || "new"}")
+      when 'edit'
+        redirect_to(:action => 'ap_edit', :tab => params[:tab], :id => "#{@scan.id || "new"}")
       else
         @sb[:miq_tab] = "new#{params[:tab]}"
-        redirect_to(:action => "ap_edit", :tab => "edit#{params[:tab]}", :id => "#{@scan.id || "new"}")
+        redirect_to(:action => 'ap_edit', :tab => "edit#{params[:tab]}", :id => "#{@scan.id || "new"}")
       end
     else
       @sb[:active_tab] = params[:tab_id] || new_tab_id
@@ -182,21 +182,21 @@ class OpsController < ApplicationController
       @flash_array = nil if MiqServer.my_server(true).logon_status == :ready  # don't reset if flash array
       if x_active_tree == :settings_tree
         settings_get_info
-        replace_right_cell("root")
+        replace_right_cell('root')
       elsif x_active_tree == :vmdb_tree
         db_get_info
-        replace_right_cell("root")
+        replace_right_cell('root')
       elsif x_active_tree == :diagnostics_tree
         case @sb[:active_tab]
-        when "diagnostics_roles_servers"
-          @sb[:diag_tree_type] = "roles"
+        when 'diagnostics_roles_servers'
+          @sb[:diag_tree_type] = 'roles'
           @sb[:diag_selected_id] = nil
-        when "diagnostics_servers_roles"
-          @sb[:diag_tree_type] = "servers"
+        when 'diagnostics_servers_roles'
+          @sb[:diag_tree_type] = 'servers'
           @sb[:diag_selected_id] = nil
         end
         diagnostics_set_form_vars
-        replace_right_cell("root")
+        replace_right_cell('root')
       end
     end
   end
@@ -204,22 +204,22 @@ class OpsController < ApplicationController
   private ############################
 
   def features
-    [{:role     => "ops_settings",
+    [{:role     => 'ops_settings',
       :name     => :settings,
-      :title    => _("Settings")},
+      :title    => _('Settings')},
 
-     {:role     => "ops_rbac",
+     {:role     => 'ops_rbac',
       :role_any => true,
       :name     => :rbac,
-      :title    => _("Access Control")},
+      :title    => _('Access Control')},
 
-     {:role     => "ops_diagnostics",
+     {:role     => 'ops_diagnostics',
       :name     => :diagnostics,
-      :title    => _("Diagnostics")},
+      :title    => _('Diagnostics')},
 
-     {:role     => "ops_db",
+     {:role     => 'ops_db',
       :name     => :vmdb,
-      :title    => _("Database")},
+      :title    => _('Database')},
     ].map do |hsh|
       ApplicationController::Feature.new_with_hash(hsh)
     end
@@ -236,32 +236,32 @@ class OpsController < ApplicationController
 
   def set_active_tab_and_node
     if x_active_tree == :settings_tree
-      @sb[:active_tab] ||= "settings_server"
+      @sb[:active_tab] ||= 'settings_server'
     end
 
     if x_active_tree == :rbac_tree
-      x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
-      @sb[:active_tab] ||= "rbac_details"
+      x_node_set('root', :rbac_tree) unless x_node(:rbac_tree)
+      @sb[:active_tab] ||= 'rbac_details'
     end
 
     if x_active_tree == :diagnostics_tree
       x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
-      @sb[:active_tab] ||= "diagnostics_summary"
+      @sb[:active_tab] ||= 'diagnostics_summary'
     end
 
     if x_active_tree == :vmdb_tree
-      x_node_set("root", :vmdb_tree) unless x_node(:vmdb_tree)
-      @sb[:active_tab] ||= "db_summary"
+      x_node_set('root', :vmdb_tree) unless x_node(:vmdb_tree)
+      @sb[:active_tab] ||= 'db_summary'
     end
 
-    @sb[:tab_label] ||= ui_lookup(:models => "Zone")
+    @sb[:tab_label] ||= ui_lookup(:models => 'Zone')
     @sb[:active_node] ||= {}
 
     if MiqServer.my_server(true).logon_status != :ready
-      @sb[:active_tab]   = "diagnostics_audit_log"
+      @sb[:active_tab]   = 'diagnostics_audit_log'
       self.x_active_tree = 'diagnostics_tree'
     else
-      @sb[:active_tab] ||= "settings_server"
+      @sb[:active_tab] ||= 'settings_server'
     end
   end
 
@@ -280,7 +280,7 @@ class OpsController < ApplicationController
       i = 0
       temp_field = []
       while i < temp_categories.length
-        a = temp_categories[i].rindex("/")
+        a = temp_categories[i].rindex('/')
         current = temp_categories[i].slice(0..a)
         previous = current if previous.nil?
 
@@ -302,119 +302,119 @@ class OpsController < ApplicationController
   end
 
   def set_active_tab(nodetype)
-    node = nodetype.downcase.split("-")
+    node = nodetype.downcase.split('-')
     case x_active_tree
     when :settings_tree
       case node[0]
-      when "root"
-        @sb[:active_tab] = "settings_details"
-      when "z"
-        @sb[:active_tab] = "settings_evm_servers"
-      when "xx", "sis", "msc", "l", "lr", "ld"
+      when 'root'
+        @sb[:active_tab] = 'settings_details'
+      when 'z'
+        @sb[:active_tab] = 'settings_evm_servers'
+      when 'xx', 'sis', "msc", "l", "lr", "ld"
         @sb[:active_tab] = "settings_list"
-      when "svr"
-        @sb[:active_tab] = "settings_server"
+      when 'svr'
+        @sb[:active_tab] = 'settings_server'
       end
     when :rbac_tree
-      @sb[:active_tab] = "rbac_details"
+      @sb[:active_tab] = 'rbac_details'
     when :diagnostics_tree
       case node[0]
-      when "root"
-        @sb[:active_tab] = "diagnostics_zones"
-      when "z"
-        @sb[:active_tab] = "diagnostics_roles_servers"
-        @sb[:diag_tree_type] = "roles"
+      when 'root'
+        @sb[:active_tab] = 'diagnostics_zones'
+      when 'z'
+        @sb[:active_tab] = 'diagnostics_roles_servers'
+        @sb[:diag_tree_type] = 'roles'
         @sb[:diag_selected_id] = nil
-      when "svr"
-        @sb[:active_tab] = "diagnostics_summary"
+      when 'svr'
+        @sb[:active_tab] = 'diagnostics_summary'
         svr = MiqServer.find(from_cid(node[1]))
       end
     when :vmdb_tree
       nodes = x_node.split('-')
-      @sb[:active_tab] = %w(ti xx).include?(nodes[0]) ? "db_indexes" : "db_summary"
+      @sb[:active_tab] = %w(ti xx).include?(nodes[0]) ? 'db_indexes' : 'db_summary'
     end
   end
 
   def set_form_locals
     locals = {}
     if x_active_tree == :diagnostics_tree
-      if @sb[:active_tab] == "diagnostics_cu_repair"
-        action_url = "cu_repair"
+      if @sb[:active_tab] == 'diagnostics_cu_repair'
+        action_url = 'cu_repair'
         locals[:submit_button] = true
-        locals[:submit_text] = _("Select Start date and End date to Collect C & U Data")
+        locals[:submit_text] = _('Select Start date and End date to Collect C & U Data')
         locals[:no_reset] = true
         locals[:no_cancel] = true
-      elsif @sb[:active_tab] == "diagnostics_collect_logs"
-        action_url = "log_depot_edit"
-        record_id = @record && @record.id ? @record.id : "new"
+      elsif @sb[:active_tab] == 'diagnostics_collect_logs'
+        action_url = 'log_depot_edit'
+        record_id = @record && @record.id ? @record.id : 'new'
       else
-        action_url = "old_dialogs_update"
+        action_url = 'old_dialogs_update'
         record_id = my_server_id
       end
     elsif x_active_tree == :settings_tree
       if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
-        action_url = "apply_imports"
-        record_id = @sb[:active_tab].split("settings_").last
+        action_url = 'apply_imports'
+        record_id = @sb[:active_tab].split('settings_').last
         locals[:no_reset] = true
         locals[:apply_button] = true
         locals[:no_cancel] = true
         locals[:apply_method] = :post
-        if @sb[:active_tab] == "settings_import"
-          locals[:apply_text] = _("Apply the good VM custom variable value records")
-        elsif @sb[:active_tab] == "settings_import_tags"
-          locals[:apply_text] = _("Apply the good import records")
+        if @sb[:active_tab] == 'settings_import'
+          locals[:apply_text] = _('Apply the good VM custom variable value records')
+        elsif @sb[:active_tab] == 'settings_import_tags'
+          locals[:apply_text] = _('Apply the good import records')
         end
-      elsif @sb[:active_tab] == "settings_cu_collection"
-        action_url = "cu_collection_update"
-        record_id = @sb[:active_tab].split("settings_").last
+      elsif @sb[:active_tab] == 'settings_cu_collection'
+        action_url = 'cu_collection_update'
+        record_id = @sb[:active_tab].split('settings_').last
         locals[:no_cancel] = true
       elsif %w(settings_evm_servers settings_list).include?(@sb[:active_tab]) && @in_a_form
         if %w(ap_copy ap_edit ap_host_edit ap_vm_edit).include?(@sb[:action])
-          action_url = "ap_edit"
+          action_url = 'ap_edit'
           record_id = @edit[:scan_id] ? @edit[:scan_id] : nil
         elsif %w(ldap_region_add ldap_region_edit).include?(@sb[:action])
-          action_url = "ldap_region_edit"
+          action_url = 'ldap_region_edit'
           record_id = @edit[:ldap_region_id] ? @edit[:ldap_region_id] : nil
         elsif %w(ldap_domain_add ldap_domain_edit).include?(@sb[:action])
-          action_url = "ldap_domain_edit"
+          action_url = 'ldap_domain_edit'
           record_id = @edit[:ldap_domain_id] ? @edit[:ldap_domain_id] : nil
         elsif %w(schedule_add schedule_edit).include?(@sb[:action])
-          action_url = "schedule_edit"
+          action_url = 'schedule_edit'
           record_id = @edit[:sched_id] ? @edit[:sched_id] : nil
         elsif %w(zone_edit zone_new).include?(@sb[:action])
           locals[:serialize] = true
-          action_url = "zone_edit"
+          action_url = 'zone_edit'
           record_id = @edit[:zone_id] ? @edit[:zone_id] : nil
         end
-      elsif @sb[:active_tab] == "settings_co_categories" && @in_a_form
-        action_url = "category_edit"
+      elsif @sb[:active_tab] == 'settings_co_categories' && @in_a_form
+        action_url = 'category_edit'
         record_id = @category && @category.id ? @category.id : nil
       elsif @sb[:active_tab] == 'settings_rhn_edit'
         locals[:no_cancel] = false
-        action_url = "settings_update"
-        record_id  = @sb[:active_tab].split("settings_").last
+        action_url = 'settings_update'
+        record_id  = @sb[:active_tab].split('settings_').last
       else
-        action_url = "settings_update"
-        record_id = @sb[:active_tab].split("settings_").last
+        action_url = 'settings_update'
+        record_id = @sb[:active_tab].split('settings_').last
         locals[:no_cancel] = true
-        locals[:serialize] = true if @sb[:active_tab] == "settings_advanced"
+        locals[:serialize] = true if @sb[:active_tab] == 'settings_advanced'
       end
     elsif x_active_tree == :rbac_tree
       if %w(rbac_user_add rbac_user_copy rbac_user_edit).include?(@sb[:action])
-        action_url = "rbac_user_edit"
+        action_url = 'rbac_user_edit'
         record_id = @edit[:user_id] ? @edit[:user_id] : nil
       elsif %w(rbac_role_add rbac_role_copy rbac_role_edit).include?(@sb[:action])
-        action_url = "rbac_role_edit"
+        action_url = 'rbac_role_edit'
         record_id = @edit[:role_id] ? @edit[:role_id] : nil
       elsif %w(rbac_group_add rbac_group_edit).include?(@sb[:action])
-        action_url = "rbac_group_edit"
+        action_url = 'rbac_group_edit'
         record_id = @edit[:group_id] ? @edit[:group_id] : nil
       elsif %(rbac_group_tags_edit rbac_user_tags_edit rbac_tenant_tags_edit).include?(@sb[:action])
-        action_url = "rbac_tags_edit"
+        action_url = 'rbac_tags_edit'
         locals[:multi_record] = true    # need save/cancel buttons on edit screen even tho @record.id is not there
         record_id = @edit[:object_ids][0]
-      elsif @sb[:action] == "rbac_group_seq_edit"
-        action_url = "rbac_group_seq_edit"
+      elsif @sb[:action] == 'rbac_group_seq_edit'
+        action_url = 'rbac_group_seq_edit'
         locals[:multi_record] = true
       end
     end
@@ -426,7 +426,7 @@ class OpsController < ApplicationController
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
     return if params[:cls_id] # no need to do get_node_info if redirected from show_product_update
-    @nodetype = valid_active_node(treenodeid).split("-").first
+    @nodetype = valid_active_node(treenodeid).split('-').first
     if @replace_trees
       @sb[:active_tab] = case x_active_tree
                          when :diagnostics_tree then 'diagnostics_zones'
@@ -435,7 +435,7 @@ class OpsController < ApplicationController
     end
 
     @explorer = true
-    @nodetype = x_node.split("-").first
+    @nodetype = x_node.split('-').first
     case x_active_tree
     when :diagnostics_tree then diagnostics_get_info
     when :rbac_tree        then rbac_get_info
@@ -443,13 +443,13 @@ class OpsController < ApplicationController
     when :vmdb_tree        then db_get_info
     end
 
-    region_text = _("[Region: %{description} [%{region}]]") % {:description => MiqRegion.my_region.description,
+    region_text = _('[Region: %{description} [%{region}]]') % {:description => MiqRegion.my_region.description,
                                                                :region      => MiqRegion.my_region.region}
     @right_cell_text ||= case x_active_tree
-                         when :diagnostics_tree then _("Diagnostics %{text}") % {:text => region_text}
-                         when :settings_tree    then _("Settings %{text}") % {:text => region_text}
-                         when :rbac_tree        then _("Access Control %{text}") % {:text => region_text}
-                         when :vmdb_tree        then _("Database []")
+                         when :diagnostics_tree then _('Diagnostics %{text}') % {:text => region_text}
+                         when :settings_tree    then _('Settings %{text}') % {:text => region_text}
+                         when :rbac_tree        then _('Access Control %{text}') % {:text => region_text}
+                         when :vmdb_tree        then _('Database []')
                          end
   end
 
@@ -480,7 +480,7 @@ class OpsController < ApplicationController
     # Clicked on right cell record, open the tree enough to show the node,
     # if not already showing a record
     # Not in a form
-    add_nodes = open_parent_nodes if params[:action] == "x_show" && @record && !@in_a_form
+    add_nodes = open_parent_nodes if params[:action] == 'x_show' && @record && !@in_a_form
     locals = set_form_locals if @in_a_form
     build_supported_depots_for_select
 
@@ -511,7 +511,7 @@ class OpsController < ApplicationController
       diagnostics_replace_right_cell(nodetype, presenter, r)
     when :vmdb_tree # "root","tb", "ti","xx" # Check if vmdb root or table is selected
       # Need to replace all_tabs to show table name as tab label
-      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
+      presenter.replace(:ops_tabs, r[:partial => 'all_tabs'])
     end
   end
 
@@ -520,103 +520,103 @@ class OpsController < ApplicationController
     # to show correct buttons on screen when tree node is selected
     if %w(accordion_select change_tab explorer tree_select).include?(params[:action]) ||
        %w(diagnostics_roles_servers diagnostics_servers_roles).include?(@sb[:active_tab])
-      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
-    elsif nodetype == "log_depot_edit"
-      @right_cell_text = _("Editing Log Depot settings")
-      presenter.update(:diagnostics_collect_logs, r[:partial => "ops/log_collection"])
+      presenter.replace(:ops_tabs, r[:partial => 'all_tabs'])
+    elsif nodetype == 'log_depot_edit'
+      @right_cell_text = _('Editing Log Depot settings')
+      presenter.update(:diagnostics_collect_logs, r[:partial => 'ops/log_collection'])
     else
       presenter.update(@sb[:active_tab], r[:partial => "#{@sb[:active_tab]}_tab"])
     end
     # zone level
-    presenter[:build_calendar] = {} if x_node.split("-").first == "z"
+    presenter[:build_calendar] = {} if x_node.split('-').first == 'z'
   end
 
   def settings_replace_right_cell(nodetype, presenter, r)
     case nodetype
-    when "ze"     # zone edit
+    when 'ze'     # zone edit
       # when editing zone in settings tree
       if @zone.id.blank?
         partial_div = :settings_list
-        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "Zone")}
+        @right_cell_text = _('Adding a new %{model}') % {:model => ui_lookup(:model => 'Zone')}
       else
         partial_div = :settings_evm_servers
         @right_cell_text = @edit ?
-          _("Editing %{model} \"%{name}\"") % {:name => @zone.description, :model => ui_lookup(:model => "Zone")} :
-          _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "Zone"), :name => @zone.description}
+          _('Editing %{model} "%{name}"') % {:name => @zone.description, :model => ui_lookup(:model => 'Zone')} :
+          _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'Zone'), :name => @zone.description}
       end
-      presenter[:update_partials][partial_div] = r[:partial => "zone_form"]
-    when "ce"     # category edit
+      presenter[:update_partials][partial_div] = r[:partial => 'zone_form']
+    when 'ce'     # category edit
       # when editing/adding category in settings tree
-      presenter.update(:settings_co_categories, r[:partial => "category_form"])
+      presenter.update(:settings_co_categories, r[:partial => 'category_form'])
       if !@category
-        @right_cell_text = _("Adding a new Category")
+        @right_cell_text = _('Adding a new Category')
       else
-        @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @category.description, :model => "Category"}
+        @right_cell_text = _('Editing %{model} "%{name}"') % {:name => @category.description, :model => 'Category'}
       end
-    when "sie"        # scanitemset edit
+    when 'sie'        # scanitemset edit
       #  editing/adding scanitem in settings tree
-      presenter.update(:settings_list, r[:partial => "ap_form"])
+      presenter.update(:settings_list, r[:partial => 'ap_form'])
       if !@scan.id
-        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "ScanItemSet")}
+        @right_cell_text = _('Adding a new %{model}') % {:model => ui_lookup(:model => 'ScanItemSet')}
       else
         @right_cell_text = @edit ?
-          _("Editing %{model} \"%{name}\"") % {:name => @scan.name, :model => ui_lookup(:model => "ScanItemSet")} :
-          _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "ScanItemSet"), :name => @scan.name}
+          _('Editing %{model} "%{name}"') % {:name => @scan.name, :model => ui_lookup(:model => 'ScanItemSet')} :
+          _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'ScanItemSet'), :name => @scan.name}
       end
-    when "se"         # schedule edit
+    when 'se'         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter.update(:settings_list, r[:partial => "schedule_form"])
+      presenter.update(:settings_list, r[:partial => 'schedule_form'])
       presenter[:build_calendar] = {
         :date_from => (Time.zone.now - 1.month).in_time_zone(@edit[:tz]),
       }
       if !@schedule.id
-        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "MiqSchedule")}
+        @right_cell_text = _('Adding a new %{model}') % {:model => ui_lookup(:model => 'MiqSchedule')}
       else
-        model = ui_lookup(:model => "MiqSchedule")
+        model = ui_lookup(:model => 'MiqSchedule')
         @right_cell_text = @edit ?
-          _("Editing %{model} \"%{name}\"") % {:name => @schedule.name, :model => model} :
-          _("%{model} \"%{name}\"") % {:model => model, :name => @schedule.name}
+          _('Editing %{model} "%{name}"') % {:name => @schedule.name, :model => model} :
+          _('%{model} "%{name}"') % {:model => model, :name => @schedule.name}
       end
-    when "lde"          # ldap_region edit
+    when 'lde'          # ldap_region edit
       # when editing/adding ldap domain in settings tree
-      presenter.update(:settings_list, r[:partial => "ldap_domain_form"])
+      presenter.update(:settings_list, r[:partial => 'ldap_domain_form'])
       if !@ldap_domain.id
-        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "LdapDomain")}
+        @right_cell_text = _('Adding a new %{model}') % {:model => ui_lookup(:model => 'LdapDomain')}
       else
-        model = ui_lookup(:model => "LdapDomain")
+        model = ui_lookup(:model => 'LdapDomain')
         @right_cell_text = @edit ?
-          _("Editing %{model} \"%{name}\"") % {:name => @ldap_domain.name, :model => model} :
-          _("%{model} \"%{name}\"") % {:model => model, :name => @ldap_domain.name}
+          _('Editing %{model} "%{name}"') % {:name => @ldap_domain.name, :model => model} :
+          _('%{model} "%{name}"') % {:model => model, :name => @ldap_domain.name}
       end
-    when "lre"          # ldap_region edit
+    when 'lre'          # ldap_region edit
       # when edi ting/adding ldap region in settings tree
-      presenter.update(:settings_list, r[:partial => "ldap_region_form"])
+      presenter.update(:settings_list, r[:partial => 'ldap_region_form'])
       if !@ldap_region.id
-        @right_cell_text = _("Adding a new %{model}") % {:model => ui_lookup(:model => "LdapRegion")}
+        @right_cell_text = _('Adding a new %{model}') % {:model => ui_lookup(:model => 'LdapRegion')}
       else
-        model = ui_lookup(:model => "LdapRegion")
+        model = ui_lookup(:model => 'LdapRegion')
         @right_cell_text = @edit ?
-          _("Editing %{model} \"%{name}\"") % {:name => @ldap_region.name, :model => model} :
-          _("%{model} \"%{name}\"") % {:model => model, :name => @ldap_region.name}
+          _('Editing %{model} "%{name}"') % {:name => @ldap_region.name, :model => model} :
+          _('%{model} "%{name}"') % {:model => model, :name => @ldap_region.name}
       end
     when 'rhn'          # rhn subscription edit
       presenter[:update_partials][:settings_rhn] = r[:partial => "#{@sb[:active_tab]}_tab"]
     else
       if %w(accordion_select change_tab tree_select).include?(params[:action]) &&
-         params[:tab_id] != "settings_advanced"
-        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
+         params[:tab_id] != 'settings_advanced'
+        presenter.replace(:ops_tabs, r[:partial => 'all_tabs'])
       elsif %w(zone_delete).include?(params[:pressed])
-        presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
+        presenter.replace(:ops_tabs, r[:partial => 'all_tabs'])
       else
         presenter[:update_partials][@sb[:active_tab.to_sym]] = r[:partial => "#{@sb[:active_tab]}_tab"]
       end
-      active_id = from_cid(x_node.split("-").last)
+      active_id = from_cid(x_node.split('-').last)
       # server node
-      if x_node.split("-").first == "svr" && my_server_id == active_id.to_i
+      if x_node.split('-').first == 'svr' && my_server_id == active_id.to_i
         # show all the tabs if on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
         presenter.one_trans_ie if %w(save reset).include?(params[:button]) && is_browser_ie?
-      elsif x_node.split("-").first == "svr" && my_server_id != active_id.to_i
+      elsif x_node.split('-').first == 'svr' && my_server_id != active_id.to_i
         # show only 4 tabs if not on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       end
@@ -624,65 +624,65 @@ class OpsController < ApplicationController
   end
 
   def rbac_replace_right_cell(nodetype, presenter, r)
-    @sb[:tab_label] = @tagging ? _("Tagging") : rbac_set_tab_label
+    @sb[:tab_label] = @tagging ? _('Tagging') : rbac_set_tab_label
     if %w(accordion_select change_tab tree_select).include?(params[:action])
-      presenter.replace(:ops_tabs, r[:partial => "all_tabs"])
-    elsif nodetype == "group_seq"
-      presenter.replace(:flash_msg_div, r[:partial => "layouts/flash_msg"])
-      presenter.update(:rbac_details, r[:partial => "ldap_seq_form"])
-    elsif nodetype == "tenant_edit"         # schedule edit
+      presenter.replace(:ops_tabs, r[:partial => 'all_tabs'])
+    elsif nodetype == 'group_seq'
+      presenter.replace(:flash_msg_div, r[:partial => 'layouts/flash_msg'])
+      presenter.update(:rbac_details, r[:partial => 'ldap_seq_form'])
+    elsif nodetype == 'tenant_edit'         # schedule edit
       # when editing/adding schedule in settings tree
-      presenter.update(:rbac_details, r[:partial => "tenant_form"])
+      presenter.update(:rbac_details, r[:partial => 'tenant_form'])
       if !@tenant.id
-        @right_cell_text = _("Adding a new %s") % tenant_type_title_string(params[:tenant_type] == "tenant")
+        @right_cell_text = _('Adding a new %s') % tenant_type_title_string(params[:tenant_type] == 'tenant')
       else
         model = tenant_type_title_string(@tenant.divisible)
         @right_cell_text = @edit ?
-          _("Editing %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
-          _("%{model} \"%{name}\"") % {:model => model, :name => @tenant.name}
+          _('Editing %{model} "%{name}"') % {:name => @tenant.name, :model => model} :
+          _('%{model} "%{name}"') % {:model => model, :name => @tenant.name}
       end
-    elsif nodetype == "tenant_manage_quotas"         # manage quotas
+    elsif nodetype == 'tenant_manage_quotas'         # manage quotas
       # when managing quotas for a tenant
-      presenter.update(:rbac_details, r[:partial => "tenant_quota_form"])
+      presenter.update(:rbac_details, r[:partial => 'tenant_quota_form'])
       model = tenant_type_title_string(@tenant.divisible)
       @right_cell_text = @edit ?
-          _("Manage quotas for %{model} \"%{name}\"") % {:name => @tenant.name, :model => model} :
-          _("%{model} \"%{name}\"") % {:model => model, :name => @tenant.name}
+          _('Manage quotas for %{model} "%{name}"') % {:name => @tenant.name, :model => model} :
+          _('%{model} "%{name}"') % {:model => model, :name => @tenant.name}
     else
       presenter[:update_partials][@sb[:active_tab].to_sym] = r[:partial => "#{@sb[:active_tab]}_tab"]
     end
   end
 
   def rbac_set_tab_label
-    nodes = x_node.split("-")
+    nodes = x_node.split('-')
     case nodes.first
-    when "xx"
+    when 'xx'
       case nodes.last
-      when "u"
-        _("Users")
-      when "g"
-        _("Groups")
-      when "ur"
-        _("Roles")
-      when "tn"
-        _("Tenants")
+      when 'u'
+        _('Users')
+      when 'g'
+        _('Groups')
+      when 'ur'
+        _('Roles')
+      when 'tn'
+        _('Tenants')
       end
-    when "u"
-      @user.name || _("Users")
-    when "g"
+    when 'u'
+      @user.name || _('Users')
+    when 'g'
       if @record && @record.id
         @record.description
       elsif @group && @group.id
         @group.description
       else
-        _("Groups")
+        _('Groups')
       end
-    when "ur"
-      @role.name || _("Roles")
-    when "tn"
-      @tenant.name || _("Tenants")
+    when 'ur'
+      @role.name || _('Roles')
+    when 'tn'
+      @tenant.name || _('Tenants')
     else
-      _("Details")
+      _('Details')
     end
   end
 
@@ -705,7 +705,7 @@ class OpsController < ApplicationController
     end
     # Rebuild the toolbars
     presenter.reload_toolbars(:center => c_tb)
-    presenter.set_visibility(c_tb.present? && @sb[:center_tb_filename] != "blank_view_tb", :toolbar)
+    presenter.set_visibility(c_tb.present? && @sb[:center_tb_filename] != 'blank_view_tb', :toolbar)
     presenter[:record_id] = determine_record_id_for_presenter
   end
 
@@ -714,12 +714,12 @@ class OpsController < ApplicationController
     if @pages || @in_a_form
       if @pages
         presenter.hide(:form_buttons_div).show(:pc_div_1)
-        presenter.update(:paging_div, r[:partial => "layouts/x_pagingcontrols"])
+        presenter.update(:paging_div, r[:partial => 'layouts/x_pagingcontrols'])
       elsif @in_a_form
-        if nodetype == "log_depot_edit"
-          presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
+        if nodetype == 'log_depot_edit'
+          presenter.update(:form_buttons_div, r[:partial => 'layouts/angular/paging_div_buttons'])
         else
-          presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
+          presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
         end
         presenter.show(:form_buttons_div).hide(:pc_div_1)
       end
@@ -745,28 +745,28 @@ class OpsController < ApplicationController
   def build_saved_audit(record, add = false)
     name = record.respond_to?(:name) ? record.name : record.description
     msg = if add
-            _("[%{name}] Record added (") % {:name => name}
+            _('[%{name}] Record added (') % {:name => name}
           else
-            _("[%{name}] Record updated (") % {:name => name}
+            _('[%{name}] Record updated (') % {:name => name}
           end
     event = "#{record.class.to_s.downcase}_record_#{add ? "add" : "update"}"
     i = 0
     @edit[:new].each_key do |k|
       if @edit[:new][k] != @edit[:current][k]
-        if k.to_s.ends_with?("password2", "verify")      # do nothing
-        elsif k.to_s.ends_with?("password", "_pwd")  # Asterisk out password fields
-          msg = _("%{message} %{key}:[*] to [*]") % {:message => msg, :key => k.to_s}
+        if k.to_s.ends_with?('password2', 'verify')      # do nothing
+        elsif k.to_s.ends_with?('password', '_pwd')  # Asterisk out password fields
+          msg = _('%{message} %{key}:[*] to [*]') % {:message => msg, :key => k.to_s}
         else
-          msg += ", " if i > 0
+          msg += ', ' if i > 0
           i += 1
           if k == :members
-            msg = _("%{message} %{key}:[%{old_value}] to [new_value]") %
+            msg = _('%{message} %{key}:[%{old_value}] to [new_value]') %
                   {:message   => msg,
                    :key       => k.to_s,
-                   :old_value => @edit[:current][k].keys.join(","),
-                   :new_value => @edit[:new][k].keys.join(",")}
+                   :old_value => @edit[:current][k].keys.join(','),
+                   :new_value => @edit[:new][k].keys.join(',')}
           else
-            msg = _("%{message} %{key}:[%{old_value}] to [new_value]") % {:message   => msg,
+            msg = _('%{message} %{key}:[%{old_value}] to [new_value]') % {:message   => msg,
                                                                           :key       => k.to_s,
                                                                           :old_value => @edit[:current][k].to_s,
                                                                           :new_value => @edit[:new][k].to_s}
@@ -774,7 +774,7 @@ class OpsController < ApplicationController
         end
       end
     end
-    msg += ")"
+    msg += ')'
     audit = {:event => event, :target_id => record.id, :target_class => record.class.base_class.name, :userid => session[:userid], :message => msg}
   end
 
@@ -783,9 +783,9 @@ class OpsController < ApplicationController
   end
 
   def get_session_data
-    @title         = _("Configuration")
-    @layout        = "ops"
-    @tasks_options = session[:tasks_options] || ""
+    @title         = _('Configuration')
+    @layout        = 'ops'
+    @tasks_options = session[:tasks_options] || ''
   end
 
   def set_session_data

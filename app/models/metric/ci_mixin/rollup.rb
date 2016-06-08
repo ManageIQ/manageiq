@@ -4,7 +4,7 @@ module Metric::CiMixin::Rollup
                                            when 'realtime'             then [perf_rollup_parents(interval_name), 'hourly']
                                            when 'hourly', 'historical' then [perf_rollup_parents('hourly'), 'daily']
                                            when 'daily'                then [nil, nil]
-                                           else raise ArgumentError, _("invalid interval name %{name}") %
+                                           else raise ArgumentError, _('invalid interval name %{name}') %
                                                                        {:name => interval_name}
                                            end
 
@@ -35,7 +35,7 @@ module Metric::CiMixin::Rollup
   end
 
   def perf_rollup_parents(_interval_name = nil)
-    raise NotImplementedError, _("perf_rollup_parents must be overridden in the mixed-in class")
+    raise NotImplementedError, _('perf_rollup_parents must be overridden in the mixed-in class')
   end
 
   def perf_rollup_queue(time, interval_name, time_profile = nil)
@@ -123,13 +123,13 @@ module Metric::CiMixin::Rollup
     times.reverse_each { |t| perf_rollup(t, interval_name, time_profile) }
 
     # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
-    MiqEvent.raise_evm_alert_event_queue(self, MiqEvent.event_name_for_target(self, "perf_complete")) if interval_name == "realtime"
+    MiqEvent.raise_evm_alert_event_queue(self, MiqEvent.event_name_for_target(self, 'perf_complete')) if interval_name == 'realtime'
   end
 
   def perf_rollup_range_queue(start_time, end_time, interval_name, time_profile_id = nil, priority = MiqQueue::NORMAL_PRIORITY)
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
-      :method_name => "perf_rollup_range",
+      :method_name => 'perf_rollup_range',
       :instance_id => id,
       :zone        => my_zone,
       :role        => 'ems_metrics_processor',

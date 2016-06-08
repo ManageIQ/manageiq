@@ -157,7 +157,7 @@ class MiqCimVirtualMachine < MiqCimInstance
   def local_file_systems_long
     dh = {}
     getLeafNodes(VirtualMachineToLfs, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?("SNIA_LocalFileSystem") }
+    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?('SNIA_LocalFileSystem') }
   end
 
   def local_file_systems
@@ -180,7 +180,7 @@ class MiqCimVirtualMachine < MiqCimInstance
   def base_storage_extents_long
     dh = {}
     getLeafNodes(VirtualMachineToBaseSe, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?("CIM_StorageExtent") }
+    dh.values.compact.uniq.delete_if { |ae| !ae.kinda?('CIM_StorageExtent') }
   end
 
   def base_storage_extents

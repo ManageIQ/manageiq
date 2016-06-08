@@ -5,9 +5,9 @@ require 'fs/MiqFsUtil'
 require 'fs/MetakitFS/MetakitFS'
 require 'fs/MiqFS/modules/LocalFS'
 
-SRC_DIR = "../../../.."
-DST_DIR = "copy_dst"
-MK_FILE = "mkfs"
+SRC_DIR = '../../../..'
+DST_DIR = 'copy_dst'
+MK_FILE = 'mkfs'
 
 #
 # Formatter to output log messages to the console.
@@ -45,7 +45,7 @@ toFs.dirMkdir(DST_DIR)
 #
 puts "Copying #{SRC_DIR} to #{DST_DIR}"
 cf.copy(SRC_DIR, DST_DIR, true)
-puts "copy complete"
+puts 'copy complete'
 
 #
 # Compare the contents of the original directory to that of its copy.
@@ -53,12 +53,12 @@ puts "copy complete"
 #
 dd = File.join(DST_DIR, File.basename(SRC_DIR))
 puts "Comparing #{SRC_DIR} to #{dd}"
-system("diff", "-qr", SRC_DIR, dd)
+system('diff', '-qr', SRC_DIR, dd)
 if $?.exitstatus != 0
-  puts "FAIL: Directory contents are not the same"
+  puts 'FAIL: Directory contents are not the same'
   exit($?.exitstatus)
 else
-  puts "SUCCESS: Directory contents match"
+  puts 'SUCCESS: Directory contents match'
 end
 
 #
@@ -83,8 +83,8 @@ cf.toFs = toFs
 # Recursively copy the directory contents.
 #
 puts "Copying #{SRC_DIR} to / (on mkfs)"
-cf.copy(SRC_DIR, "/", true)
-puts "copy complete"
+cf.copy(SRC_DIR, '/', true)
+puts 'copy complete'
 
 #
 # Now, reverse the copy.
@@ -102,8 +102,8 @@ toFs.dirMkdir(DST_DIR)
 
 puts
 puts "Copying /vmdb (on mkfs) to #{DST_DIR}"
-cf.copy("/vmdb", DST_DIR, true)
-puts "copy complete"
+cf.copy('/vmdb', DST_DIR, true)
+puts 'copy complete'
 
 #
 # Compare the contents of the original directory to that of its copy.
@@ -111,12 +111,12 @@ puts "copy complete"
 #
 puts
 puts "Comparing #{SRC_DIR} to #{dd}"
-system("diff", "-qr", SRC_DIR, dd)
+system('diff', '-qr', SRC_DIR, dd)
 if $?.exitstatus != 0
-  puts "FAIL: Directory contents are not the same"
+  puts 'FAIL: Directory contents are not the same'
   exit($?.exitstatus)
 else
-  puts "SUCCESS: Directory contents match"
+  puts 'SUCCESS: Directory contents match'
 end
 
 #

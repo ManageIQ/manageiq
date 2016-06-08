@@ -91,7 +91,7 @@ class CimStorageVolume < CimStorageExtent
   def cim_virtual_disks_long
     dh = {}
     getLeafNodes(StorageVolumeToVirtualDisk, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimVirtualDisk" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimVirtualDisk' }
   end
 
   def cim_virtual_disks
@@ -109,7 +109,7 @@ class CimStorageVolume < CimStorageExtent
   def cim_vms_long
     dh = {}
     getLeafNodes(StorageVolumeToVm, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimVirtualMachine" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimVirtualMachine' }
   end
 
   def cim_vms
@@ -135,7 +135,7 @@ class CimStorageVolume < CimStorageExtent
   def cim_hosts_long
     dh = {}
     getLeafNodes(StorageVolumeToHost, self, dh)
-    dh.values.compact.uniq.delete_if { |ae| ae.class_name != "MIQ_CimHostSystem" }
+    dh.values.compact.uniq.delete_if { |ae| ae.class_name != 'MIQ_CimHostSystem' }
   end
 
   def cim_hosts
@@ -174,7 +174,7 @@ class CimStorageVolume < CimStorageExtent
       if storage_system.nil?
         device_id
       else
-        storage_system.evm_display_name + ":" + device_id
+        storage_system.evm_display_name + ':' + device_id
       end
     end
   end

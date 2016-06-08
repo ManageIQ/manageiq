@@ -28,7 +28,7 @@ class TreeBuilderDatacenter < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix                   => "dc_",
+    locals.merge!(:id_prefix                   => 'dc_',
                   :autoload                    => true,
                   :url                         => '/vm/show/',
                   :open_close_all_on_dbl_click => true,
@@ -37,9 +37,9 @@ class TreeBuilderDatacenter < TreeBuilder
 
   def root_options
     if @root.kind_of?(EmsCluster)
-      [@root.name, _("Cluster: %{name}") % {:name => @root.name}, "cluster"]
+      [@root.name, _('Cluster: %{name}') % {:name => @root.name}, 'cluster']
     elsif @root.kind_of?(ResourcePool)
-      [@root.name, _("Resource Pool: %{name}") % {:name => @root.name}, @root.vapp ? "vapp" : "resource_pool"]
+      [@root.name, _('Resource Pool: %{name}') % {:name => @root.name}, @root.vapp ? 'vapp' : 'resource_pool']
     end
   end
 
@@ -65,18 +65,18 @@ class TreeBuilderDatacenter < TreeBuilder
   def x_get_tree_folder_kids(parent, count_only, _type)
     objects = count_only ? 0 : []
 
-    if parent.name == "Datacenters"
+    if parent.name == 'Datacenters'
       folders = count_only_or_objects(count_only, parent.folders_only)
       datacenters = count_only_or_objects(count_only, parent.datacenters_only)
       objects = folders + datacenters
-    elsif parent.name == "host" && parent.parent.kind_of?(Datacenter)
+    elsif parent.name == 'host' && parent.parent.kind_of?(Datacenter)
       folders = count_only_or_objects(count_only, parent.folders_only)
       clusters = count_only_or_objects(count_only, parent.clusters)
       hosts = count_only_or_objects(count_only, parent.hosts)
       objects = folders + clusters + hosts
-    elsif parent.name == "datastore" && parent.parent.kind_of?(Datacenter)
+    elsif parent.name == 'datastore' && parent.parent.kind_of?(Datacenter)
       # Skip showing the datastore folder and sub-folders
-    elsif parent.name == "vm" && parent.parent.kind_of?(Datacenter)
+    elsif parent.name == 'vm' && parent.parent.kind_of?(Datacenter)
       #
     else
       folders = count_only_or_objects(count_only, parent.folders_only)

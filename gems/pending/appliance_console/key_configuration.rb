@@ -3,7 +3,7 @@ require 'fileutils'
 require 'net/scp'
 require 'active_support/all'
 
-RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
+RAILS_ROOT ||= Pathname.new(__dir__).join('../../..')
 require 'util/miq-password'
 
 module ApplianceConsole
@@ -16,24 +16,24 @@ module ApplianceConsole
     def initialize(options = {})
       options.each { |k, v| public_send("#{k}=", v) }
       @action ||= :create
-      @login ||= "root"
+      @login ||= 'root'
       @key_path ||= KEY_FILE
     end
 
     def ask_questions
       if key_exist?
-        @force = agree("Overwrite existing encryption key (v2_key)? (Y/N): ")
+        @force = agree('Overwrite existing encryption key (v2_key)? (Y/N): ')
         return false unless @force
       end
 
       @action = ask_for_action(@action)
 
       if fetch_key?
-        say("")
-        @host      = ask_for_ip_or_hostname("hostname for appliance with encryption key", @host)
-        @login     = ask_for_string("appliance SSH login", @login)
-        @password  = ask_for_password("appliance SSH password", @password)
-        @key_path  = ask_for_string("path of remote encryption key", @key_path)
+        say('')
+        @host      = ask_for_ip_or_hostname('hostname for appliance with encryption key', @host)
+        @login     = ask_for_string('appliance SSH login', @login)
+        @password  = ask_for_password('appliance SSH password', @password)
+        @key_path  = ask_for_string('path of remote encryption key', @key_path)
       end
       @action
     end
@@ -42,7 +42,7 @@ module ApplianceConsole
       loop do
         return false unless ask_questions
         return true if activate
-        return false unless agree("Try again? (Y/N) ")
+        return false unless agree('Try again? (Y/N) ')
       end
     end
 
@@ -56,10 +56,10 @@ module ApplianceConsole
       else
         # probably only got here via the cli
         $stderr.puts
-        $stderr.puts "Only generate one encryption key (v2_key) per installation."
-        $stderr.puts "Chances are you did not want to overwrite this file."
-        $stderr.puts "If you do this all encrypted secrets in the database will not be readable."
-        $stderr.puts "Please backup your key and run this command again with --force-key."
+        $stderr.puts 'Only generate one encryption key (v2_key) per installation.'
+        $stderr.puts 'Chances are you did not want to overwrite this file.'
+        $stderr.puts 'If you do this all encrypted secrets in the database will not be readable.'
+        $stderr.puts 'Please backup your key and run this command again with --force-key.'
         $stderr.puts
         false
       end
@@ -92,7 +92,7 @@ module ApplianceConsole
 
     def ask_for_action(default_action)
       options = {'Create key' => :create, 'Fetch key from remote machine' => :fetch}
-      ask_with_menu("Encryption Key", options, default_action, false)
+      ask_with_menu('Encryption Key', options, default_action, false)
     end
 
     # return true if key is gone, otherwise false (and we should probably abort)

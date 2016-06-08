@@ -3,19 +3,19 @@ module MiqPolicyController::PolicyProfiles
 
   def profile_edit
     case params[:button]
-    when "cancel"
+    when 'cancel'
       @edit = nil
       @profile = MiqPolicySet.find_by_id(session[:edit][:profile_id]) if session[:edit] && session[:edit][:profile_id]
       if !@profile || (@profile && @profile.id.blank?)
-        add_flash(_("Add of new %{models} was cancelled by the user") %
-          {:models => ui_lookup(:model => "MiqPolicySet")})
+        add_flash(_('Add of new %{models} was cancelled by the user') %
+          {:models => ui_lookup(:model => 'MiqPolicySet')})
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description})
+        add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'MiqPolicySet'), :name => @profile.description})
       end
       get_node_info(x_node)
       replace_right_cell(@nodetype)
       return
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       profile_build_edit_screen
       @sb[:action] = "profile_edit"
       if params[:button] == "reset"
@@ -26,12 +26,12 @@ module MiqPolicyController::PolicyProfiles
     end
 
     # Load @edit/vars for other buttons
-    id = params[:id] ? params[:id] : "new"
-    return unless load_edit("profile_edit__#{id}", "replace_cell__explorer")
+    id = params[:id] ? params[:id] : 'new'
+    return unless load_edit("profile_edit__#{id}", 'replace_cell__explorer')
     @profile = @edit[:profile_id] ? MiqPolicySet.find_by_id(@edit[:profile_id]) : MiqPolicySet.new
 
     case params[:button]
-    when "save", "add"
+    when 'save', 'add'
       assert_privileges("profile_#{@profile.id ? "edit" : "new"}")
       add_flash(_("%{model} must contain at least one %{field}") % {:model => ui_lookup(:model => "MiqPolicySet"), :field => ui_lookup(:model => "MiqPolicy")}, :error) if @edit[:new][:policies].length == 0 # At least one member is required
       profile = @profile.id.blank? ? MiqPolicySet.new : MiqPolicySet.find(@profile.id)  # Get new or existing record
@@ -64,7 +64,7 @@ module MiqPolicyController::PolicyProfiles
         end
         replace_right_cell("pp")
       end
-    when "move_right", "move_left", "move_allleft"
+    when 'move_right', 'move_left', "move_allleft"
       handle_selection_buttons(:policies)
       session[:changed] = (@edit[:new] != @edit[:current])
       replace_right_cell("pp")
@@ -72,25 +72,25 @@ module MiqPolicyController::PolicyProfiles
   end
 
   def profile_delete
-    assert_privileges("profile_delete")
+    assert_privileges('profile_delete')
     profiles = []
     # showing 1 policy set, delete it
     if params[:id].nil? || MiqPolicySet.find_by_id(params[:id]).nil?
-      add_flash(_("%{models} no longer exists") % {:models => ui_lookup(:model => "MiqPolicySet")},
+      add_flash(_('%{models} no longer exists') % {:models => ui_lookup(:model => 'MiqPolicySet')},
                 :error)
     else
       profiles.push(params[:id])
     end
-    process_profiles(profiles, "destroy") unless profiles.empty?
-    add_flash(_("The selected %{models} was deleted") %
-      {:models => ui_lookup(:models => "MiqPolicySet")}) if @flash_array.nil?
+    process_profiles(profiles, 'destroy') unless profiles.empty?
+    add_flash(_('The selected %{models} was deleted') %
+      {:models => ui_lookup(:models => 'MiqPolicySet')}) if @flash_array.nil?
     self.x_node = @new_profile_node = 'root'
     get_node_info('root')
     replace_right_cell('root', [:policy_profile])
   end
 
   def profile_field_changed
-    return unless load_edit("profile_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("profile_edit__#{params[:id]}", 'replace_cell__explorer')
     @profile = @edit[:profile_id] ? MiqPolicySet.find_by_id(@edit[:profile_id]) : MiqPolicySet.new
 
     @edit[:new][:description] = params[:description].blank? ? nil : params[:description] if params[:description]
@@ -143,15 +143,15 @@ module MiqPolicyController::PolicyProfiles
     @profiles = MiqPolicySet.all.sort_by { |ps| ps.description.downcase }
     set_search_text
     @profiles = apply_search_filter(@search_text, @profiles) unless @search_text.blank?
-    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "MiqPolicySet")}
-    @right_cell_div = "profile_list"
+    @right_cell_text = _('All %{models}') % {:models => ui_lookup(:models => 'MiqPolicySet')}
+    @right_cell_div = 'profile_list'
   end
 
   # Get information for a profile
   def profile_get_info(profile)
     @record = @profile = profile
     @profile_policies = @profile.miq_policies.sort_by { |p| [p.towhat, p.mode, p.description.downcase] }
-    @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description}
-    @right_cell_div = "profile_details"
+    @right_cell_text = _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'MiqPolicySet'), :name => @profile.description}
+    @right_cell_div = 'profile_details'
   end
 end

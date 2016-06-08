@@ -4,7 +4,7 @@
 
 service = $evm.root['service']
 if service.nil?
-  $evm.log('info', "Service Object not found")
+  $evm.log('info', 'Service Object not found')
   exit MIQ_ABORT
 end
 

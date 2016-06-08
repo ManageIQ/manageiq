@@ -17,14 +17,14 @@ class ApplicationHelper::Toolbar::MiqDialogCenter < ApplicationHelper::Toolbar::
           'fa fa-files-o fa-lg',
           t = N_('Copy this Dialog'),
           t,
-          :url_parms => "main_div"),
+          :url_parms => 'main_div'),
         button(
           :old_dialogs_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove this Dialog from the VMDB'),
           N_('Remove from the VMDB'),
-          :url_parms => "main_div",
-          :confirm   => N_("Warning: This Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Dialog?"),
+          :url_parms => 'main_div',
+          :confirm   => N_('Warning: This Dialog will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Dialog?'),
           :klass     => ApplicationHelper::Button::OldDialogsEditDelete),
       ]
     ),

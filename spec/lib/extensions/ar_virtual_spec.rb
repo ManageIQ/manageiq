@@ -1,5 +1,5 @@
 describe VirtualFields do
-  context "TestClass" do
+  context 'TestClass' do
     before(:each) do
       class TestClassBase < ActiveRecord::Base
         self.abstract_class = true
@@ -33,116 +33,116 @@ describe VirtualFields do
       Object.send(:remove_const, :TestClassBase)
     end
 
-    it "should not have any virtual columns" do
+    it 'should not have any virtual columns' do
       expect(TestClass.virtual_attribute_names).to be_empty
 
       expect(TestClass.attribute_names).to eq(TestClass.column_names)
     end
 
-    context ".virtual_column" do
-      it "with invalid parameters" do
+    context '.virtual_column' do
+      it 'with invalid parameters' do
         expect { TestClass.virtual_column :vcol1 }.to raise_error(ArgumentError)
       end
 
-      it "with symbol name" do
+      it 'with symbol name' do
         TestClass.virtual_column :vcol1, :type => :string
-        expect(TestClass.attribute_names).to include("vcol1")
+        expect(TestClass.attribute_names).to include('vcol1')
       end
 
-      it "with string name" do
-        TestClass.virtual_column "vcol1", :type => :string
-        expect(TestClass.attribute_names).to include("vcol1")
+      it 'with string name' do
+        TestClass.virtual_column 'vcol1', :type => :string
+        expect(TestClass.attribute_names).to include('vcol1')
       end
 
-      it "with string type" do
+      it 'with string type' do
         TestClass.virtual_column :vcol1, :type => :string
-        expect(TestClass.type_for_attribute("vcol1")).to be_kind_of(ActiveModel::Type::String)
-        expect(TestClass.type_for_attribute("vcol1").type).to eq(:string)
+        expect(TestClass.type_for_attribute('vcol1')).to be_kind_of(ActiveModel::Type::String)
+        expect(TestClass.type_for_attribute('vcol1').type).to eq(:string)
       end
 
-      it "with symbol type" do
+      it 'with symbol type' do
         TestClass.virtual_column :vcol1, :type => :symbol
-        expect(TestClass.type_for_attribute("vcol1")).to be_kind_of(VirtualAttributes::Type::Symbol)
-        expect(TestClass.type_for_attribute("vcol1").type).to eq(:symbol)
+        expect(TestClass.type_for_attribute('vcol1')).to be_kind_of(VirtualAttributes::Type::Symbol)
+        expect(TestClass.type_for_attribute('vcol1').type).to eq(:symbol)
       end
 
-      it "with string_set type" do
+      it 'with string_set type' do
         TestClass.virtual_column :vcol1, :type => :string_set
-        expect(TestClass.type_for_attribute("vcol1")).to be_kind_of(VirtualAttributes::Type::StringSet)
-        expect(TestClass.type_for_attribute("vcol1").type).to eq(:string_set)
+        expect(TestClass.type_for_attribute('vcol1')).to be_kind_of(VirtualAttributes::Type::StringSet)
+        expect(TestClass.type_for_attribute('vcol1').type).to eq(:string_set)
       end
 
-      it "with numeric_set type" do
+      it 'with numeric_set type' do
         TestClass.virtual_column :vcol1, :type => :numeric_set
-        expect(TestClass.type_for_attribute("vcol1")).to be_kind_of(VirtualAttributes::Type::NumericSet)
-        expect(TestClass.type_for_attribute("vcol1").type).to eq(:numeric_set)
+        expect(TestClass.type_for_attribute('vcol1')).to be_kind_of(VirtualAttributes::Type::NumericSet)
+        expect(TestClass.type_for_attribute('vcol1').type).to eq(:numeric_set)
       end
 
-      it "without uses" do
+      it 'without uses' do
         TestClass.virtual_column :vcol1, :type => :string
         expect(TestClass.virtual_includes(:vcol1)).to be_blank
       end
 
-      it "with uses" do
+      it 'with uses' do
         TestClass.virtual_column :vcol1, :type => :string, :uses => :col1
         expect(TestClass.virtual_includes(:vcol1)).to eq(:col1)
       end
 
-      it "with arel" do
+      it 'with arel' do
         TestClass.virtual_column :vcol1, :type => :boolean, :arel => -> (t) { t[:vcol].lower }
-        expect(TestClass.arel_attribute("vcol1").to_sql).to eq(%{LOWER("test_classes"."vcol")})
+        expect(TestClass.arel_attribute('vcol1').to_sql).to eq(%{LOWER("test_classes"."vcol")})
       end
     end
 
-    context ".virtual_columns=" do
-      it "" do
+    context '.virtual_columns=' do
+      it '' do
         {
           :vcol1  => {:type => :string},
-          "vcol2" => {:type => :string},
+          'vcol2' => {:type => :string},
         }.each do |name, options|
           TestClass.virtual_column name, options
         end
 
-        expect(TestClass.virtual_attribute_names).to match_array(["vcol1", "vcol2"])
+        expect(TestClass.virtual_attribute_names).to match_array(['vcol1', 'vcol2'])
       end
 
-      it "with existing virtual columns" do
+      it 'with existing virtual columns' do
         TestClass.virtual_column :existing_vcol, :type => :string
 
         {
           :vcol1  => {:type => :string},
-          "vcol2" => {:type => :string},
+          'vcol2' => {:type => :string},
         }.each do |name, options|
           TestClass.virtual_column name, options
         end
 
-        expect(TestClass.virtual_attribute_names).to match_array(["existing_vcol", "vcol1", "vcol2"])
+        expect(TestClass.virtual_attribute_names).to match_array(['existing_vcol', 'vcol1', 'vcol2'])
       end
     end
 
-    shared_examples_for "TestClass with virtual columns" do
-      context "TestClass" do
-        it ".virtual_attribute_names" do
+    shared_examples_for 'TestClass with virtual columns' do
+      context 'TestClass' do
+        it '.virtual_attribute_names' do
           expect(TestClass.virtual_attribute_names).to match_array(@vcols_strs)
         end
 
-        it ".attribute_names" do
+        it '.attribute_names' do
           expect(TestClass.attribute_names).to match_array(@cols_strs)
         end
 
-        context ".virtual_attribute?" do
-          context "with virtual column" do
-            it("as string") { expect(TestClass.virtual_attribute?("vcol1")).to be_truthy }
-            it("as symbol") { expect(TestClass.virtual_attribute?(:vcol1)).to  be_truthy }
+        context '.virtual_attribute?' do
+          context 'with virtual column' do
+            it('as string') { expect(TestClass.virtual_attribute?('vcol1')).to be_truthy }
+            it('as symbol') { expect(TestClass.virtual_attribute?(:vcol1)).to  be_truthy }
           end
 
-          context "with column" do
-            it("as string") { expect(TestClass.virtual_attribute?("col1")).not_to be_truthy }
-            it("as symbol") { expect(TestClass.virtual_attribute?(:col1)).not_to  be_truthy }
+          context 'with column' do
+            it('as string') { expect(TestClass.virtual_attribute?('col1')).not_to be_truthy }
+            it('as symbol') { expect(TestClass.virtual_attribute?(:col1)).not_to  be_truthy }
           end
         end
 
-        it ".remove_virtual_fields" do
+        it '.remove_virtual_fields' do
           expect(TestClass.remove_virtual_fields(:vcol1)).to          be_nil
           expect(TestClass.remove_virtual_fields(:ref1)).to eq(:ref1)
           expect(TestClass.remove_virtual_fields([:vcol1])).to eq([])
@@ -153,29 +153,29 @@ describe VirtualFields do
       end
     end
 
-    shared_examples_for "TestSubclass with virtual columns" do
-      context "TestSubclass" do
-        it ".virtual_attribute_names" do
+    shared_examples_for 'TestSubclass with virtual columns' do
+      context 'TestSubclass' do
+        it '.virtual_attribute_names' do
           expect(TestSubclass.virtual_attribute_names).to match_array(@vcols_sub_strs)
         end
 
-        it ".attribute_names" do
+        it '.attribute_names' do
           expect(TestSubclass.attribute_names).to match_array(@cols_sub_strs)
         end
 
-        context ".virtual_attribute?" do
-          context "with virtual column" do
-            it("as string") { expect(TestSubclass.virtual_attribute?("vcolsub1")).to be_truthy }
-            it("as symbol") { expect(TestSubclass.virtual_attribute?(:vcolsub1)).to  be_truthy }
+        context '.virtual_attribute?' do
+          context 'with virtual column' do
+            it('as string') { expect(TestSubclass.virtual_attribute?('vcolsub1')).to be_truthy }
+            it('as symbol') { expect(TestSubclass.virtual_attribute?(:vcolsub1)).to  be_truthy }
           end
 
-          context "with column" do
-            it("as string") { expect(TestSubclass.virtual_attribute?("col1")).not_to be_truthy }
-            it("as symbol") { expect(TestSubclass.virtual_attribute?(:col1)).not_to  be_truthy }
+          context 'with column' do
+            it('as string') { expect(TestSubclass.virtual_attribute?('col1')).not_to be_truthy }
+            it('as symbol') { expect(TestSubclass.virtual_attribute?(:col1)).not_to  be_truthy }
           end
         end
 
-        it ".remove_virtual_fields" do
+        it '.remove_virtual_fields' do
           expect(TestSubclass.remove_virtual_fields(:vcol1)).to             be_nil
           expect(TestSubclass.remove_virtual_fields(:vcolsub1)).to          be_nil
           expect(TestSubclass.remove_virtual_fields(:ref1)).to eq(:ref1)
@@ -189,28 +189,28 @@ describe VirtualFields do
       end
     end
 
-    context "with virtual columns" do
+    context 'with virtual columns' do
       before(:each) do
         TestClass.virtual_column :vcol1, :type => :string
         TestClass.virtual_column :vcol2, :type => :string
 
-        @vcols_strs = ["vcol1", "vcol2"]
+        @vcols_strs = ['vcol1', 'vcol2']
         @vcols_syms = [:vcol1, :vcol2]
-        @cols_strs  = @vcols_strs + ["id", "col1"]
+        @cols_strs  = @vcols_strs + ['id', 'col1']
         @cols_syms  = @vcols_syms + [:id, :col1]
       end
 
-      it_should_behave_like "TestClass with virtual columns"
+      it_should_behave_like 'TestClass with virtual columns'
 
-      context "and TestSubclass with virtual columns" do
+      context 'and TestSubclass with virtual columns' do
         before(:each) do
           class TestSubclass < TestClass
             virtual_column :vcolsub1, :type => :string
           end
 
-          @vcols_sub_strs = @vcols_strs + ["vcolsub1"]
+          @vcols_sub_strs = @vcols_strs + ['vcolsub1']
           @vcols_sub_syms = @vcols_syms + [:vcolsub1]
-          @cols_sub_strs  = @vcols_sub_strs + ["id", "col1"]
+          @cols_sub_strs  = @vcols_sub_strs + ['id', 'col1']
           @cols_sub_syms  = @vcols_sub_syms + [:id, :col1]
         end
 
@@ -218,45 +218,45 @@ describe VirtualFields do
           Object.send(:remove_const, :TestSubclass)
         end
 
-        it_should_behave_like "TestClass with virtual columns" # Shows inheritance doesn't pollute base class
-        it_should_behave_like "TestSubclass with virtual columns"
+        it_should_behave_like 'TestClass with virtual columns' # Shows inheritance doesn't pollute base class
+        it_should_behave_like 'TestSubclass with virtual columns'
       end
     end
 
-    it "should not have any virtual reflections" do
+    it 'should not have any virtual reflections' do
       expect(TestClass.virtual_reflections).to      be_empty
       expect(TestClass.reflections_with_virtual.stringify_keys).to eq(TestClass.reflections)
       expect(TestClass.reflections_with_virtual).to eq(TestClass.reflections.symbolize_keys)
     end
 
-    context "add_virtual_reflection integration" do
-      it "with invalid parameters" do
+    context 'add_virtual_reflection integration' do
+      it 'with invalid parameters' do
         expect { TestClass.virtual_has_one }.to raise_error(ArgumentError)
       end
 
-      it "with symbol name" do
+      it 'with symbol name' do
         TestClass.virtual_has_one :vref1
         expect(TestClass.virtual_reflection?(:vref1)).to be_truthy
         expect(TestClass.virtual_reflection(:vref1).name).to eq(:vref1)
       end
 
-      it("with has_one macro")    { TestClass.virtual_has_one(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_one) }
-      it("with has_many macro")   { TestClass.virtual_has_many(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_many) }
-      it("with belongs_to macro") { TestClass.virtual_belongs_to(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:belongs_to) }
+      it('with has_one macro')    { TestClass.virtual_has_one(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_one) }
+      it('with has_many macro')   { TestClass.virtual_has_many(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:has_many) }
+      it('with belongs_to macro') { TestClass.virtual_belongs_to(:vref1); expect(TestClass.virtual_reflection(:vref1).macro).to eq(:belongs_to) }
 
-      it "without uses" do
+      it 'without uses' do
         TestClass.virtual_has_one :vref1
         expect(TestClass.virtual_includes(:vref1)).to be_nil
       end
 
-      it "with uses" do
+      it 'with uses' do
         TestClass.virtual_has_one :vref1, :uses => :ref1
         expect(TestClass.virtual_includes(:vref1)).to eq(:ref1)
       end
     end
 
-    describe "#virtual_has_many" do
-      it "use collect for virtual_ids column" do
+    describe '#virtual_has_many' do
+      it 'use collect for virtual_ids column' do
         c = Class.new(TestClassBase) do
           self.table_name = 'test_classes'
           virtual_has_many(:hosts)
@@ -268,7 +268,7 @@ describe VirtualFields do
         expect(c.host_ids).to eq([5, 6])
       end
 
-      it "use Relation#ids for virtual_ids column" do
+      it 'use Relation#ids for virtual_ids column' do
         c = Class.new(TestClassBase) do
           self.table_name = 'test_classes'
           virtual_has_many(:hosts)
@@ -285,26 +285,26 @@ describe VirtualFields do
       virtual_method = "virtual_#{macro}"
 
       context ".#{virtual_method}" do
-        it "with symbol name" do
+        it 'with symbol name' do
           TestClass.send(virtual_method, :vref1)
           expect(TestClass.virtual_reflection?(:vref1)).to be_truthy
           expect(TestClass.virtual_reflection(:vref1).name).to eq(:vref1)
         end
 
-        it "without uses" do
+        it 'without uses' do
           TestClass.send(virtual_method, :vref1)
           expect(TestClass.virtual_includes(:vref1)).to be_nil
         end
 
-        it "with uses" do
+        it 'with uses' do
           TestClass.send(virtual_method, :vref1, :uses => :ref1)
           expect(TestClass.virtual_includes(:vref1)).to eq(:ref1)
         end
       end
     end
 
-    context "virtual_reflection assignment" do
-      it "" do
+    context 'virtual_reflection assignment' do
+      it '' do
         TestClass.virtual_has_one :vref1
         TestClass.virtual_has_many :vref2
 
@@ -312,7 +312,7 @@ describe VirtualFields do
         expect(TestClass.virtual_reflections.keys).to match_array([:vref1, :vref2])
       end
 
-      it "with existing virtual reflections" do
+      it 'with existing virtual reflections' do
         TestClass.virtual_has_one :existing_vref
 
         TestClass.virtual_has_one :vref1
@@ -323,31 +323,31 @@ describe VirtualFields do
       end
     end
 
-    shared_examples_for "TestClass with virtual reflections" do
-      context "TestClass" do
-        it ".virtual_reflections" do
+    shared_examples_for 'TestClass with virtual reflections' do
+      context 'TestClass' do
+        it '.virtual_reflections' do
           expect(TestClass.virtual_reflections.keys).to match_array(@vrefs_syms)
           expect(TestClass.virtual_reflections.values.collect(&:name)).to match_array(@vrefs_syms)
         end
 
-        it ".reflections_with_virtual" do
+        it '.reflections_with_virtual' do
           expect(TestClass.reflections_with_virtual.keys).to match_array(@refs_syms)
           expect(TestClass.reflections_with_virtual.values.collect(&:name)).to match_array(@refs_syms)
         end
 
-        context ".virtual_reflection?" do
-          context "with virtual reflection" do
-            it("as string") { expect(TestClass.virtual_reflection?("vref1")).to be_truthy }
-            it("as symbol") { expect(TestClass.virtual_reflection?(:vref1)).to  be_truthy }
+        context '.virtual_reflection?' do
+          context 'with virtual reflection' do
+            it('as string') { expect(TestClass.virtual_reflection?('vref1')).to be_truthy }
+            it('as symbol') { expect(TestClass.virtual_reflection?(:vref1)).to  be_truthy }
           end
 
-          context "with reflection" do
-            it("as string") { expect(TestClass.virtual_reflection?("ref1")).not_to be_truthy }
-            it("as symbol") { expect(TestClass.virtual_reflection?(:ref1)).not_to  be_truthy }
+          context 'with reflection' do
+            it('as string') { expect(TestClass.virtual_reflection?('ref1')).not_to be_truthy }
+            it('as symbol') { expect(TestClass.virtual_reflection?(:ref1)).not_to  be_truthy }
           end
         end
 
-        it ".remove_virtual_fields" do
+        it '.remove_virtual_fields' do
           expect(TestClass.remove_virtual_fields(:vref1)).to          be_nil
           expect(TestClass.remove_virtual_fields(:ref1)).to eq(:ref1)
           expect(TestClass.remove_virtual_fields([:vref1])).to eq([])
@@ -358,31 +358,31 @@ describe VirtualFields do
       end
     end
 
-    shared_examples_for "TestSubclass with virtual reflections" do
-      context "TestSubclass" do
-        it ".virtual_reflections" do
+    shared_examples_for 'TestSubclass with virtual reflections' do
+      context 'TestSubclass' do
+        it '.virtual_reflections' do
           expect(TestSubclass.virtual_reflections.keys).to match_array(@vrefs_sub_syms)
           expect(TestSubclass.virtual_reflections.values.collect(&:name)).to match_array(@vrefs_sub_syms)
         end
 
-        it ".reflections_with_virtual" do
+        it '.reflections_with_virtual' do
           expect(TestSubclass.reflections_with_virtual.keys).to match_array(@refs_sub_syms)
           expect(TestSubclass.reflections_with_virtual.values.collect(&:name)).to match_array(@refs_sub_syms)
         end
 
-        context ".virtual_reflection?" do
-          context "with virtual reflection" do
-            it("as string") { expect(TestClass.virtual_reflection?("vref1")).to be_truthy }
-            it("as symbol") { expect(TestClass.virtual_reflection?(:vref1)).to  be_truthy }
+        context '.virtual_reflection?' do
+          context 'with virtual reflection' do
+            it('as string') { expect(TestClass.virtual_reflection?('vref1')).to be_truthy }
+            it('as symbol') { expect(TestClass.virtual_reflection?(:vref1)).to  be_truthy }
           end
 
-          context "with reflection" do
-            it("as string") { expect(TestClass.virtual_reflection?("ref1")).not_to be_truthy }
-            it("as symbol") { expect(TestClass.virtual_reflection?(:ref1)).not_to  be_truthy }
+          context 'with reflection' do
+            it('as string') { expect(TestClass.virtual_reflection?('ref1')).not_to be_truthy }
+            it('as symbol') { expect(TestClass.virtual_reflection?(:ref1)).not_to  be_truthy }
           end
         end
 
-        it ".remove_virtual_fields" do
+        it '.remove_virtual_fields' do
           expect(TestSubclass.remove_virtual_fields(:vref1)).to             be_nil
           expect(TestSubclass.remove_virtual_fields(:vrefsub1)).to          be_nil
           expect(TestSubclass.remove_virtual_fields(:ref1)).to eq(:ref1)
@@ -396,7 +396,7 @@ describe VirtualFields do
       end
     end
 
-    context "with virtual reflections" do
+    context 'with virtual reflections' do
       before(:each) do
         TestClass.virtual_has_one :vref1
         TestClass.virtual_has_one :vref2
@@ -405,9 +405,9 @@ describe VirtualFields do
         @refs_syms  = @vrefs_syms + [:ref1]
       end
 
-      it_should_behave_like "TestClass with virtual reflections"
+      it_should_behave_like 'TestClass with virtual reflections'
 
-      context "and TestSubclass with virtual reflections" do
+      context 'and TestSubclass with virtual reflections' do
         before(:each) do
           class TestSubclass < TestClass
             def self.reflections; super.merge(:ref2 => OpenStruct.new(:name => :ref2, :options => {}, :klass => TestClass)); end
@@ -423,87 +423,87 @@ describe VirtualFields do
           Object.send(:remove_const, :TestSubclass)
         end
 
-        it_should_behave_like "TestClass with virtual reflections" # Shows inheritance doesn't pollute base class
-        it_should_behave_like "TestSubclass with virtual reflections"
+        it_should_behave_like 'TestClass with virtual reflections' # Shows inheritance doesn't pollute base class
+        it_should_behave_like 'TestSubclass with virtual reflections'
       end
     end
 
-    context "with both virtual columns and reflections" do
+    context 'with both virtual columns and reflections' do
       before(:each) do
         TestClass.virtual_column  :vcol1, :type => :string
         TestClass.virtual_has_one :vref1
       end
 
-      context ".virtual_field?" do
-        context "with virtual reflection" do
-          it("as string") { expect(TestClass.virtual_reflection?("vref1")).to be_truthy }
-          it("as symbol") { expect(TestClass.virtual_reflection?(:vref1)).to  be_truthy }
+      context '.virtual_field?' do
+        context 'with virtual reflection' do
+          it('as string') { expect(TestClass.virtual_reflection?('vref1')).to be_truthy }
+          it('as symbol') { expect(TestClass.virtual_reflection?(:vref1)).to  be_truthy }
         end
 
-        context "with reflection" do
-          it("as string") { expect(TestClass.virtual_reflection?("ref1")).not_to be_truthy }
-          it("as symbol") { expect(TestClass.virtual_reflection?(:ref1)).not_to  be_truthy }
+        context 'with reflection' do
+          it('as string') { expect(TestClass.virtual_reflection?('ref1')).not_to be_truthy }
+          it('as symbol') { expect(TestClass.virtual_reflection?(:ref1)).not_to  be_truthy }
         end
 
-        context "with virtual column" do
-          it("as string") { expect(TestClass.virtual_attribute?("vcol1")).to be_truthy }
-          it("as symbol") { expect(TestClass.virtual_attribute?(:vcol1)).to  be_truthy }
+        context 'with virtual column' do
+          it('as string') { expect(TestClass.virtual_attribute?('vcol1')).to be_truthy }
+          it('as symbol') { expect(TestClass.virtual_attribute?(:vcol1)).to  be_truthy }
         end
 
-        context "with column" do
-          it("as string") { expect(TestClass.virtual_attribute?("col1")).not_to be_truthy }
-          it("as symbol") { expect(TestClass.virtual_attribute?(:col1)).not_to  be_truthy }
+        context 'with column' do
+          it('as string') { expect(TestClass.virtual_attribute?('col1')).not_to be_truthy }
+          it('as symbol') { expect(TestClass.virtual_attribute?(:col1)).not_to  be_truthy }
         end
       end
     end
   end
 
-  describe "#follow_associations" do
-    it "returns base class" do
+  describe '#follow_associations' do
+    it 'returns base class' do
       expect(ExtManagementSystem.follow_associations([])).to eq(ExtManagementSystem)
     end
 
     # Ems.has_many :vms
     # Vms.belongs_to :host
-    it "follows reflections" do
+    it 'follows reflections' do
       expect(ExtManagementSystem.follow_associations(%w(vms host))).to eq(Host)
     end
 
     # Ems.has_many :vms
     # Vms.belongs_to :host
     # Vms.virtual_has_many :processes
-    it "stops at virtual reflections" do
+    it 'stops at virtual reflections' do
       expect(ExtManagementSystem.follow_associations(%w(vms processes))).to be_nil
     end
   end
 
-  describe "#follow_associations_with_virtual" do
-    it "returns base class" do
+  describe '#follow_associations_with_virtual' do
+    it 'returns base class' do
       expect(ExtManagementSystem.follow_associations_with_virtual([])).to eq(ExtManagementSystem)
     end
 
     # Ems.has_many :vms
     # Vms.belongs_to :host
-    it "follows reflections" do
+    it 'follows reflections' do
       expect(ExtManagementSystem.follow_associations_with_virtual(%w(vms host))).to eq(Host)
     end
 
     # Ems.has_many :vms
     # Vms.belongs_to :host
     # Vms.virtual_has_many :processes
-    it "follows virtual reflections" do
+    it 'follows virtual reflections' do
       expect(ExtManagementSystem.follow_associations_with_virtual(%w(vms processes))).to eq(OsProcess)
     end
   end
 
-  describe "collect_reflections" do
-    it "returns base class" do
+  describe 'collect_reflections' do
+    it 'returns base class' do
       expect(ExtManagementSystem.collect_reflections([])).to eq([])
     end
 
     # Ems.has_many :vms
     # Vms.belongs_to :host
-    it "follows reflections" do
+    it 'follows reflections' do
       expect(ExtManagementSystem.collect_reflections(%w(vms host))).to eq([
         ExtManagementSystem.reflect_on_association(:vms), Vm.reflect_on_association(:host)
       ])
@@ -512,19 +512,19 @@ describe VirtualFields do
     # Ems.has_many :vms
     # Vms.belongs_to :host
     # Vms.virtual_has_many :processes
-    it "stops at virtual reflections" do
+    it 'stops at virtual reflections' do
       expect(ExtManagementSystem.collect_reflections(%w(vms processes))).to be_nil
     end
   end
 
-  describe "collect_reflections_with_virtual" do
-    it "returns base class" do
+  describe 'collect_reflections_with_virtual' do
+    it 'returns base class' do
       expect(ExtManagementSystem.collect_reflections_with_virtual([])).to eq([])
     end
 
     # Ems.has_many :vms
     # Vms.belongs_to :host
-    it "follows reflections" do
+    it 'follows reflections' do
       expect(ExtManagementSystem.collect_reflections_with_virtual(%w(vms host))).to eq([
         ExtManagementSystem.reflect_on_association(:vms), Vm.reflect_on_association(:host)
       ])
@@ -533,14 +533,14 @@ describe VirtualFields do
     # Ems.has_many :vms
     # Vms.belongs_to :host
     # Vms.virtual_has_many :processes
-    it "stops at virtual reflections" do
+    it 'stops at virtual reflections' do
       expect(ExtManagementSystem.collect_reflections_with_virtual(%w(vms processes))).to eq([
         ExtManagementSystem.reflect_on_association(:vms), Vm.reflection_with_virtual(:processes)
       ])
     end
   end
 
-  context "preloading" do
+  context 'preloading' do
     before(:each) do
       FactoryGirl.create(:vm_vmware,
                          :hardware         => FactoryGirl.create(:hardware),
@@ -552,79 +552,79 @@ describe VirtualFields do
                         )
     end
 
-    context "virtual column" do
-      it "as Symbol" do
+    context 'virtual column' do
+      it 'as Symbol' do
         expect { Vm.includes(:platform).load }.not_to raise_error
       end
 
-      it "as Array" do
+      it 'as Array' do
         expect { Vm.includes([:platform]).load }.not_to raise_error
         expect { Vm.includes([:platform, :host]).load }.not_to raise_error
       end
 
-      it "as Hash" do
+      it 'as Hash' do
         expect { Vm.includes(:platform => {}).load }.not_to raise_error
         expect { Vm.includes(:platform => {}, :host => :hardware).load }.not_to raise_error
       end
     end
 
-    context "virtual reflection" do
-      it "as Symbol" do
+    context 'virtual reflection' do
+      it 'as Symbol' do
         expect { Vm.includes(:lans).load }.not_to raise_error
       end
 
-      it "as Array" do
+      it 'as Array' do
         expect { Vm.includes([:lans]).load }.not_to raise_error
         expect { Vm.includes([:lans, :host]).load }.not_to raise_error
       end
 
-      it "as Hash" do
+      it 'as Hash' do
         expect { Vm.includes(:lans => :switch).load }.not_to raise_error
         expect { Vm.includes(:lans => :switch, :host => :hardware).load }.not_to raise_error
       end
     end
 
-    it "nested virtual fields" do
+    it 'nested virtual fields' do
       expect { Vm.includes(:host => :ems_cluster).load }.not_to raise_error
     end
 
-    it "virtual field that has nested virtual fields in its :uses clause" do
+    it 'virtual field that has nested virtual fields in its :uses clause' do
       expect { Vm.includes(:ems_cluster).load }.not_to raise_error
     end
 
-    it "should handle virtual fields in :include when :conditions are also present in calculations" do
+    it 'should handle virtual fields in :include when :conditions are also present in calculations' do
       expect { Vm.includes([:platform, :host]).references(:host).where("hosts.name = 'test'").count }.not_to raise_error
-      expect { Vm.includes([:platform, :host]).references(:host).where("hosts.id IS NOT NULL").count }.not_to raise_error
+      expect { Vm.includes([:platform, :host]).references(:host).where('hosts.id IS NOT NULL').count }.not_to raise_error
     end
   end
 end
 
-describe "ApplicationRecord class" do
-  describe ".virtual_attribute_names" do
-    it "class immediately under ApplicationRecord" do
+describe 'ApplicationRecord class' do
+  describe '.virtual_attribute_names' do
+    it 'class immediately under ApplicationRecord' do
       result = Host.virtual_attribute_names
-      expect(result).to include("region_number")
-      expect(result.count("region_number")).to eq(1)
+      expect(result).to include('region_number')
+      expect(result.count('region_number')).to eq(1)
     end
 
-    it "class not immediately under ApplicationRecord" do
+    it 'class not immediately under ApplicationRecord' do
       result = MiqTemplate.virtual_attribute_names
-      expect(result).to include("region_number")
-      expect(result.count("region_number")).to eq(1)
+      expect(result).to include('region_number')
+      expect(result.count('region_number')).to eq(1)
     end
   end
 
-  describe ".attribute_names" do
-    it "class immediately under ApplicationRecord" do
+  describe '.attribute_names' do
+    it 'class immediately under ApplicationRecord' do
       result = ExtManagementSystem.attribute_names
-      expect(result).to include("region_number")
-      expect(result.count("region_number")).to eq(1)
+      expect(result).to include('region_number')
+      expect(result.count('region_number')).to eq(1)
     end
 
-    it "class not immediately under ApplicationRecord" do
+    it 'class not immediately under ApplicationRecord' do
       result = EmsCloud.attribute_names
-      expect(result).to include("region_number")
-      expect(result.count("region_number")).to eq(1)
+      expect(result).to include('region_number')
+      expect(result.count('region_number')).to eq(1)
     end
   end
 end

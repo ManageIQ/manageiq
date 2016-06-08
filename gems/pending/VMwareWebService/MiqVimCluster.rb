@@ -6,8 +6,8 @@ class MiqVimCluster
     @sic    = invObj.sic
 
     @ch     = ch
-    @name   = @ch["name"]
-    @cMor   = @ch["MOR"]
+    @name   = @ch['name']
+    @cMor   = @ch['MOR']
   end
 
   def release

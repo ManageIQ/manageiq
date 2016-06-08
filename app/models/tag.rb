@@ -1,8 +1,8 @@
 class Tag < ApplicationRecord
   has_many :taggings, :dependent => :destroy
   has_one :classification
-  virtual_has_one :category,       :class_name => "Classification"
-  virtual_has_one :categorization, :class_name => "Hash"
+  virtual_has_one :category,       :class_name => 'Classification'
+  virtual_has_one :categorization, :class_name => 'Hash'
 
   has_many :container_label_tag_mappings
 
@@ -33,7 +33,7 @@ class Tag < ApplicationRecord
 
     if olist.kind_of?(MIQ_Report) # support for ruport
       klass        = olist.db
-      taggable_ids = olist.table.data.collect { |o| o.data["id"].to_i }
+      taggable_ids = olist.table.data.collect { |o| o.data['id'].to_i }
     else
       klass        = olist[0].class # assumes all objects in list are of the same class
       taggable_ids = olist.collect { |o| o.id.to_i }
@@ -52,10 +52,10 @@ class Tag < ApplicationRecord
       list = list.dup
 
       # first, pull out the quoted tags
-      list.gsub!(/\"(.*?)\"\s*/) { tag_names << $1; "" }
+      list.gsub!(/\"(.*?)\"\s*/) { tag_names << $1; '' }
 
       # then, replace all commas with a space
-      list.tr!(',', " ")
+      list.tr!(',', ' ')
 
       # then, get whatever's left
       tag_names.concat list.split(/\s/)
@@ -78,8 +78,8 @@ class Tag < ApplicationRecord
   # @return [String] downcases namespace or category
   def self.get_namespace(options)
     ns = options.fetch(:ns, '/user')
-    ns = "" if [:none, "none", "*", nil].include?(ns)
-    ns += "/" + options[:cat] if options[:cat]
+    ns = '' if [:none, 'none', '*', nil].include?(ns)
+    ns += '/' + options[:cat] if options[:cat]
     ns.downcase
   end
 
@@ -93,7 +93,7 @@ class Tag < ApplicationRecord
     list = []
     tags.collect do |tag|
       next unless tag.name =~ %r{^#{ns}/(.*)$}i
-      name = $1.include?(" ") ? "'#{$1}'" : $1
+      name = $1.include?(' ') ? "'#{$1}'" : $1
       list.push(name) unless name.blank?
     end
     list
@@ -134,10 +134,10 @@ class Tag < ApplicationRecord
         {}
       else
         {
-          "name"         => classification.name,
-          "description"  => classification.description,
-          "category"     => {"name" => category.name, "description" => category.description},
-          "display_name" => "#{category.description}: #{classification.description}"
+          'name'         => classification.name,
+          'description'  => classification.description,
+          'category'     => {'name' => category.name, 'description' => category.description},
+          'display_name' => "#{category.description}: #{classification.description}"
         }
       end
   end
@@ -149,6 +149,6 @@ class Tag < ApplicationRecord
   end
 
   def name_path
-    @name_path ||= name.sub(%r{^/[^/]*/}, "")
+    @name_path ||= name.sub(%r{^/[^/]*/}, '')
   end
 end

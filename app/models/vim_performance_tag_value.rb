@@ -3,42 +3,42 @@ class VimPerformanceTagValue < ApplicationRecord
 
   serialize :assoc_ids
 
-  TAG_SEP = "|"
+  TAG_SEP = '|'
   TAG_COLS = {
     :Storage => [
-      "derived_storage_vm_count_managed",
-      "derived_storage_used_managed",
-      "derived_storage_disk_managed",
-      "derived_storage_snapshot_managed",
-      "derived_storage_mem_managed",
-      "assoc_ids"
+      'derived_storage_vm_count_managed',
+      'derived_storage_used_managed',
+      'derived_storage_disk_managed',
+      'derived_storage_snapshot_managed',
+      'derived_storage_mem_managed',
+      'assoc_ids'
     ],
     :default => [
-      "cpu_usagemhz_rate_average",
-      "cpu_usage_rate_average",
-      "v_pct_cpu_ready_delta_summation",
-      "derived_memory_used",
-      "disk_usage_rate_average",
-      "net_usage_rate_average",
-      "assoc_ids"
+      'cpu_usagemhz_rate_average',
+      'cpu_usage_rate_average',
+      'v_pct_cpu_ready_delta_summation',
+      'derived_memory_used',
+      'disk_usage_rate_average',
+      'net_usage_rate_average',
+      'assoc_ids'
     ]
   }
 
   RESOURCE_TYPE_TO_ASSOCIATIONS = {
-    "MiqEnterprise"       => [:miq_regions],
-    "MiqRegion"           => [:ext_management_systems],
-    "ExtManagementSystem" => [:vms, :hosts, :ems_clusters],
-    "Storage"             => [:vms, :hosts],
-    "EmsCluster"          => [:vms, :hosts],
-    "Host"                => [:vms],
-    "AvailabilityZone"    => [:vms],
-    "VmOrTemplate"        => [],
-    "ContainerNode"       => [],
-    "Container"           => [],
-    "ContainerGroup"      => [],
-    "ContainerProject"    => [],
-    "ContainerService"    => [],
-    "ContainerReplicator" => []
+    'MiqEnterprise'       => [:miq_regions],
+    'MiqRegion'           => [:ext_management_systems],
+    'ExtManagementSystem' => [:vms, :hosts, :ems_clusters],
+    'Storage'             => [:vms, :hosts],
+    'EmsCluster'          => [:vms, :hosts],
+    'Host'                => [:vms],
+    'AvailabilityZone'    => [:vms],
+    'VmOrTemplate'        => [],
+    'ContainerNode'       => [],
+    'Container'           => [],
+    'ContainerGroup'      => [],
+    'ContainerProject'    => [],
+    'ContainerService'    => [],
+    'ContainerReplicator' => []
   }
 
   def self.build_from_performance_record(parent_perf, options = {:save => true})
@@ -62,8 +62,8 @@ class VimPerformanceTagValue < ApplicationRecord
     tag_cols = TAG_COLS.key?(parent_perf.resource_type.to_sym) ? TAG_COLS[parent_perf.resource_type.to_sym] : TAG_COLS[:default]
 
     if parent_perf.kind_of?(VimPerformanceDaily)
-      recs = MetricRollup.with_interval_and_time_range("hourly", (ts)..(ts+1.day)).where(:resource => children)
-                         .for_tag_names(options[:category], "") # append trailing slash
+      recs = MetricRollup.with_interval_and_time_range('hourly', (ts)..(ts+1.day)).where(:resource => children)
+                         .for_tag_names(options[:category], '') # append trailing slash
     else
       recs = Metric::Helper.class_for_interval_name(parent_perf.capture_interval_name).where(:resource => children)
                            .with_interval_and_time_range(parent_perf.capture_interval_name, parent_perf.timestamp)
@@ -71,7 +71,7 @@ class VimPerformanceTagValue < ApplicationRecord
     perf_data = {}
     perf_data[:perf_recs] = recs
     perf_data[:categories] = perf_data[:perf_recs].collect do |perf|
-      perf.tag_names.split(TAG_SEP).collect { |t| t.split("/").first } unless perf.tag_names.nil?
+      perf.tag_names.split(TAG_SEP).collect { |t| t.split('/').first } unless perf.tag_names.nil?
     end.flatten.compact.uniq
 
     cats_to_process = (eligible_cats & perf_data[:categories]) # Process subset of perf_data[:categories] that are eligible for tag grouping
@@ -87,13 +87,13 @@ class VimPerformanceTagValue < ApplicationRecord
           tag_names = ["#{category}/_none_"]
         end
         tag_names.each do |tag|
-          next if tag.starts_with?("power_state")
-          next if tag.starts_with?("folder_path")
+          next if tag.starts_with?('power_state')
+          next if tag.starts_with?('folder_path')
           tag_cols.each do |c|
             value = perf.send(c)
             c = [c.to_s, tag].join(TAG_SEP).to_sym
 
-            unless c.to_s.starts_with?("assoc_ids")
+            unless c.to_s.starts_with?('assoc_ids')
               result[c] ||= 0
               counts[c] ||= 0
               value *= 1.0 unless value.nil?
@@ -115,9 +115,9 @@ class VimPerformanceTagValue < ApplicationRecord
 
     result.keys.inject([]) do |a, key|
       col, tag = key.to_s.split(TAG_SEP)
-      category = tag.split("/").first
-      tag_name = tag.split("/").last
-      Metric::Aggregation::Process.average(key, nil, result, counts) unless col.to_s.starts_with?("assoc_ids", "derived_storage_vm_count")
+      category = tag.split('/').first
+      tag_name = tag.split('/').last
+      Metric::Aggregation::Process.average(key, nil, result, counts) unless col.to_s.starts_with?('assoc_ids', 'derived_storage_vm_count')
       new_rec = {
         :association_type => association_type,
         :category         => category,

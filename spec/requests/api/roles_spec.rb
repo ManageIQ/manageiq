@@ -23,32 +23,32 @@ describe ApiController do
   let(:expected_attributes) { %w(id name read_only settings) }
   let(:sample_role1) do
     {
-      "name"     => "sample_role_1",
-      "settings" => {"restrictions" => {"vms" => "user"}},
-      "features" => [
-        {:identifier => "vm_explorer"},
-        {:identifier => "ems_infra_tag"},
-        {:identifier => "my_settings_time_profiles"}
+      'name'     => 'sample_role_1',
+      'settings' => {'restrictions' => {'vms' => 'user'}},
+      'features' => [
+        {:identifier => 'vm_explorer'},
+        {:identifier => 'ems_infra_tag'},
+        {:identifier => 'my_settings_time_profiles'}
       ]
     }
   end
   let(:sample_role2) do
     {
-      "name"     => "sample_role_2",
-      "settings" => {"restrictions" => {"vms" => "user_or_group"}},
-      "features" => [
-        {:identifier => "miq_request_view"},
-        {:identifier => "miq_report_run"},
-        {:identifier => "storage_manager_show_list"}
+      'name'     => 'sample_role_2',
+      'settings' => {'restrictions' => {'vms' => 'user_or_group'}},
+      'features' => [
+        {:identifier => 'miq_request_view'},
+        {:identifier => 'miq_report_run'},
+        {:identifier => 'storage_manager_show_list'}
       ]
     }
   end
   let(:features_list) do
     {
-      "features"  => [
-        {:identifier => "miq_request_view"},
-        {:identifier => "miq_report_run"},
-        {:identifier => "storage_manager_show_list"}
+      'features'  => [
+        {:identifier => 'miq_request_view'},
+        {:identifier => 'miq_report_run'},
+        {:identifier => 'storage_manager_show_list'}
       ]
     }
   end
@@ -62,28 +62,28 @@ describe ApiController do
   def test_features_query(role, role_url, klass, attr = :id)
     api_basic_authorize action_identifier(:roles, :read, :resource_actions, :get)
 
-    run_get role_url, :expand => "features"
+    run_get role_url, :expand => 'features'
     expect_request_success
 
-    expect(response_hash).to have_key("name")
-    expect(response_hash["name"]).to eq(role.name)
-    expect(response_hash).to have_key("features")
-    expect(response_hash["features"].size).to eq(fetch_value(role.miq_product_features.count))
+    expect(response_hash).to have_key('name')
+    expect(response_hash['name']).to eq(role.name)
+    expect(response_hash).to have_key('features')
+    expect(response_hash['features'].size).to eq(fetch_value(role.miq_product_features.count))
 
-    expect_result_resources_to_include_data("features", attr.to_s => klass.pluck(attr))
+    expect_result_resources_to_include_data('features', attr.to_s => klass.pluck(attr))
   end
 
-  describe "Features" do
-    it "query available features" do
+  describe 'Features' do
+    it 'query available features' do
       role = FactoryGirl.create(:miq_user_role,
-                                :name                 => "Test Role",
+                                :name                 => 'Test Role',
                                 :miq_product_features => @product_features)
       test_features_query(role, roles_url(role.id), MiqProductFeature, :identifier)
     end
   end
 
-  describe "Roles create" do
-    it "rejects creation without appropriate role" do
+  describe 'Roles create' do
+    it 'rejects creation without appropriate role' do
       api_basic_authorize
 
       run_post(roles_url, sample_role1)
@@ -91,25 +91,25 @@ describe ApiController do
       expect_request_forbidden
     end
 
-    it "rejects role creation with id specified" do
+    it 'rejects role creation with id specified' do
       api_basic_authorize collection_action_identifier(:roles, :create)
 
-      run_post(roles_url, "name" => "sample role", "id" => 100)
+      run_post(roles_url, 'name' => 'sample role', 'id' => 100)
 
       expect_bad_request(/id or href should not be specified/i)
     end
 
-    it "supports single role creation" do
+    it 'supports single role creation' do
       api_basic_authorize collection_action_identifier(:roles, :create)
 
       run_post(roles_url, sample_role1)
 
       expect_request_success
-      expect_result_resources_to_include_keys("results", expected_attributes)
+      expect_result_resources_to_include_keys('results', expected_attributes)
 
-      role_id = response_hash["results"].first["id"]
+      role_id = response_hash['results'].first['id']
 
-      run_get "#{roles_url}/#{role_id}/", :expand => "features"
+      run_get "#{roles_url}/#{role_id}/", :expand => 'features'
 
       expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
@@ -119,15 +119,15 @@ describe ApiController do
       end
     end
 
-    it "supports single role creation via action" do
+    it 'supports single role creation via action' do
       api_basic_authorize collection_action_identifier(:roles, :create)
 
       run_post(roles_url, gen_request(:create, sample_role1))
 
       expect_request_success
-      expect_result_resources_to_include_keys("results", expected_attributes)
+      expect_result_resources_to_include_keys('results', expected_attributes)
 
-      role_id = response_hash["results"].first["id"]
+      role_id = response_hash['results'].first['id']
       expect(MiqUserRole.exists?(role_id)).to be_truthy
       role = MiqUserRole.find(role_id)
       sample_role1['features'].each do |feature|
@@ -135,17 +135,17 @@ describe ApiController do
       end
     end
 
-    it "supports multiple role creation" do
+    it 'supports multiple role creation' do
       api_basic_authorize collection_action_identifier(:roles, :create)
 
       run_post(roles_url, gen_request(:create, [sample_role1, sample_role2]))
 
       expect_request_success
-      expect_result_resources_to_include_keys("results", expected_attributes)
+      expect_result_resources_to_include_keys('results', expected_attributes)
 
-      results = response_hash["results"]
-      r1_id = results.first["id"]
-      r2_id = results.second["id"]
+      results = response_hash['results']
+      r1_id = results.first['id']
+      r2_id = results.second['id']
       expect(MiqUserRole.exists?(r1_id)).to be_truthy
       expect(MiqUserRole.exists?(r2_id)).to be_truthy
 
@@ -161,68 +161,68 @@ describe ApiController do
     end
   end
 
-  describe "Roles edit" do
-    it "rejects role edits without appropriate role" do
+  describe 'Roles edit' do
+    it 'rejects role edits without appropriate role' do
       role = FactoryGirl.create(:miq_user_role)
       api_basic_authorize
-      run_post(roles_url, gen_request(:edit, "name" => "role name", "href" => roles_url(role.id)))
+      run_post(roles_url, gen_request(:edit, 'name' => 'role name', 'href' => roles_url(role.id)))
 
       expect_request_forbidden
     end
 
-    it "rejects role edits for invalid resources" do
+    it 'rejects role edits for invalid resources' do
       api_basic_authorize collection_action_identifier(:roles, :edit)
 
-      run_post(roles_url(999_999), gen_request(:edit, "name" => "updated role name"))
+      run_post(roles_url(999_999), gen_request(:edit, 'name' => 'updated role name'))
 
       expect_resource_not_found
     end
 
-    it "supports single role edit" do
+    it 'supports single role edit' do
       api_basic_authorize collection_action_identifier(:roles, :edit)
 
       role = FactoryGirl.create(:miq_user_role)
 
-      run_post(roles_url(role.id), gen_request(:edit, "name"     => "updated role",
-                                                      "settings" => {"restrictions"  => {"vms" => "user_or_group"}}))
+      run_post(roles_url(role.id), gen_request(:edit, 'name'     => 'updated role',
+                                                      'settings' => {'restrictions'  => {'vms' => 'user_or_group'}}))
 
-      expect_single_resource_query("id"       => role.id,
-                                   "name"     => "updated role",
-                                   "settings" => {"restrictions" => {"vms" => "user_or_group"}})
-      expect(role.reload.name).to eq("updated role")
+      expect_single_resource_query('id'       => role.id,
+                                   'name'     => 'updated role',
+                                   'settings' => {'restrictions' => {'vms' => 'user_or_group'}})
+      expect(role.reload.name).to eq('updated role')
       expect(role.settings[:restrictions][:vms]).to eq(:user_or_group)
     end
 
-    it "supports multiple role edits" do
+    it 'supports multiple role edits' do
       api_basic_authorize collection_action_identifier(:roles, :edit)
 
-      r1 = FactoryGirl.create(:miq_user_role, :name => "role1")
-      r2 = FactoryGirl.create(:miq_user_role, :name => "role2")
+      r1 = FactoryGirl.create(:miq_user_role, :name => 'role1')
+      r2 = FactoryGirl.create(:miq_user_role, :name => 'role2')
 
       run_post(roles_url, gen_request(:edit,
-                                      [{"href" => roles_url(r1.id), "name" => "updated role1"},
-                                       {"href" => roles_url(r2.id), "name" => "updated role2"}]))
+                                      [{'href' => roles_url(r1.id), 'name' => 'updated role1'},
+                                       {'href' => roles_url(r2.id), 'name' => 'updated role2'}]))
 
-      expect_results_to_match_hash("results",
-                                   [{"id" => r1.id, "name" => "updated role1"},
-                                    {"id" => r2.id, "name" => "updated role2"}])
+      expect_results_to_match_hash('results',
+                                   [{'id' => r1.id, 'name' => 'updated role1'},
+                                    {'id' => r2.id, 'name' => 'updated role2'}])
 
-      expect(r1.reload.name).to eq("updated role1")
-      expect(r2.reload.name).to eq("updated role2")
+      expect(r1.reload.name).to eq('updated role1')
+      expect(r2.reload.name).to eq('updated role2')
     end
   end
 
-  describe "Role Feature Assignments" do
-    it "supports assigning just a single product feature" do
+  describe 'Role Feature Assignments' do
+    it 'supports assigning just a single product feature' do
       api_basic_authorize collection_action_identifier(:roles, :edit)
-      role = FactoryGirl.create(:miq_user_role, :features => "miq_request_approval")
+      role = FactoryGirl.create(:miq_user_role, :features => 'miq_request_approval')
 
-      new_feature = {:identifier => "miq_request_view"}
+      new_feature = {:identifier => 'miq_request_view'}
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:assign, new_feature))
 
       expect_request_success
-      expect_result_resources_to_include_keys("results", %w(id name read_only))
+      expect_result_resources_to_include_keys('results', %w(id name read_only))
 
       # Refresh the role object
       role = MiqUserRole.find(role.id)
@@ -234,15 +234,15 @@ describe ApiController do
       expect(role.allows?(new_feature)).to be_truthy
     end
 
-    it "supports assigning multiple product features" do
+    it 'supports assigning multiple product features' do
       api_basic_authorize collection_action_identifier(:roles, :edit)
-      role = FactoryGirl.create(:miq_user_role, :features => "miq_request_approval")
+      role = FactoryGirl.create(:miq_user_role, :features => 'miq_request_approval')
 
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:assign, features_list))
 
       expect_request_success
-      expect_result_resources_to_include_keys("results", %w(id name read_only))
+      expect_result_resources_to_include_keys('results', %w(id name read_only))
 
       # Refresh the role object
       role = MiqUserRole.find(role.id)
@@ -256,17 +256,17 @@ describe ApiController do
       end
     end
 
-    it "supports un-assigning just a single product feature" do
+    it 'supports un-assigning just a single product feature' do
       api_basic_authorize collection_action_identifier(:roles, :edit)
       role = FactoryGirl.create(:miq_user_role, :miq_product_features => @product_features)
 
-      removed_feature = {:identifier => "ems_infra_tag"}
+      removed_feature = {:identifier => 'ems_infra_tag'}
       url = "#{roles_url}/#{role.id}/features"
       run_post(url, gen_request(:unassign, removed_feature))
 
       expect_request_success
       # Confirm that we've only removed ems_infra_tag
-      expect_result_resources_to_include_keys("results", %w(id name read_only))
+      expect_result_resources_to_include_keys('results', %w(id name read_only))
 
       # Refresh the role object
       role = MiqUserRole.find(role.id)
@@ -277,7 +277,7 @@ describe ApiController do
       end
     end
 
-    it "supports un-assigning multiple product features" do
+    it 'supports un-assigning multiple product features' do
       api_basic_authorize collection_action_identifier(:roles, :edit)
       role = FactoryGirl.create(:miq_user_role, :miq_product_features => @product_features)
 
@@ -285,7 +285,7 @@ describe ApiController do
       run_post(url, gen_request(:unassign, features_list))
 
       expect_request_success
-      expect_result_resources_to_include_keys("results", %w(id name read_only))
+      expect_result_resources_to_include_keys('results', %w(id name read_only))
 
       # Refresh the role object
       role = MiqUserRole.find(role.id)
@@ -302,16 +302,16 @@ describe ApiController do
     end
   end
 
-  describe "Roles delete" do
-    it "rejects role deletion, by post action, without appropriate role" do
+  describe 'Roles delete' do
+    it 'rejects role deletion, by post action, without appropriate role' do
       api_basic_authorize
 
-      run_post(roles_url, gen_request(:delete, "name" => "role name", "href" => roles_url(100)))
+      run_post(roles_url, gen_request(:delete, 'name' => 'role name', 'href' => roles_url(100)))
 
       expect_request_forbidden
     end
 
-    it "rejects role deletion without appropriate role" do
+    it 'rejects role deletion without appropriate role' do
       api_basic_authorize
 
       run_delete(roles_url(100))
@@ -319,7 +319,7 @@ describe ApiController do
       expect_request_forbidden
     end
 
-    it "rejects role deletes for invalid roles" do
+    it 'rejects role deletes for invalid roles' do
       api_basic_authorize collection_action_identifier(:roles, :delete)
 
       run_delete(roles_url(999_999))
@@ -327,10 +327,10 @@ describe ApiController do
       expect_resource_not_found
     end
 
-    it "supports single role delete" do
+    it 'supports single role delete' do
       api_basic_authorize collection_action_identifier(:roles, :delete)
 
-      role = FactoryGirl.create(:miq_user_role, :name => "role1")
+      role = FactoryGirl.create(:miq_user_role, :name => 'role1')
 
       run_delete(roles_url(role.id))
 
@@ -338,10 +338,10 @@ describe ApiController do
       expect(MiqUserRole.exists?(role.id)).to be_falsey
     end
 
-    it "supports single role delete action" do
+    it 'supports single role delete action' do
       api_basic_authorize collection_action_identifier(:roles, :delete)
 
-      role = FactoryGirl.create(:miq_user_role, :name => "role1")
+      role = FactoryGirl.create(:miq_user_role, :name => 'role1')
 
       run_post(roles_url(role.id), gen_request(:delete))
 
@@ -349,15 +349,15 @@ describe ApiController do
       expect(MiqUserRole.exists?(role.id)).to be_falsey
     end
 
-    it "supports multiple role deletes" do
+    it 'supports multiple role deletes' do
       api_basic_authorize collection_action_identifier(:roles, :delete)
 
-      r1 = FactoryGirl.create(:miq_user_role, :name => "role name 1")
-      r2 = FactoryGirl.create(:miq_user_role, :name => "role name 2")
+      r1 = FactoryGirl.create(:miq_user_role, :name => 'role name 1')
+      r2 = FactoryGirl.create(:miq_user_role, :name => 'role name 2')
 
       run_post(roles_url, gen_request(:delete,
-                                      [{"href" => roles_url(r1.id)},
-                                       {"href" => roles_url(r2.id)}]))
+                                      [{'href' => roles_url(r1.id)},
+                                       {'href' => roles_url(r2.id)}]))
 
       expect_request_success
       expect(MiqUserRole.exists?(r1.id)).to be_falsey

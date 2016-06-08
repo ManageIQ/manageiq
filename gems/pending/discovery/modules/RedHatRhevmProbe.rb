@@ -2,7 +2,7 @@ require 'discovery/PortScan'
 
 class RedHatRhevmProbe
   def self.probe(ost)
-    log_header = "RedHatRhevmProbe"
+    log_header = 'RedHatRhevmProbe'
     unless ost.discover_types.include?(:rhevm)
       $log.debug "Skipping #{log_header}" if $log
       return

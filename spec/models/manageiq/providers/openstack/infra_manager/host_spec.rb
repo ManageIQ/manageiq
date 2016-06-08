@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::Openstack::InfraManager::Host do
-  describe "#refresh_openstack_services" do
+  describe '#refresh_openstack_services' do
     let(:openstack_status_text) do
       <<-EOT
 == Nova services ==
@@ -20,7 +20,7 @@ openstack-keystone:                     active
 
     let(:ssu) do
       double('ssu').tap do |ssu|
-        expect(ssu).to receive(:shell_exec).with("openstack-status").and_return(openstack_status_text)
+        expect(ssu).to receive(:shell_exec).with('openstack-status').and_return(openstack_status_text)
       end
     end
 
@@ -67,8 +67,8 @@ openstack-keystone:                     active
       FactoryGirl.create(:host_service_group_openstack, :host => host, :name =>  'Keystone service')
     end
 
-    context "with stubbed MiqLinux::Utils" do
-      it "makes proper utils calls" do
+    context 'with stubbed MiqLinux::Utils' do
+      it 'makes proper utils calls' do
         miq_linux_utils_double = double('MiqLinux::Utils')
         expect(miq_linux_utils_double).to receive(:parse_openstack_status).with(openstack_status_text).and_return([])
         stub_const('MiqLinux::Utils', miq_linux_utils_double)
@@ -76,7 +76,7 @@ openstack-keystone:                     active
       end
     end
 
-    describe "host_service_group_openstacks names" do
+    describe 'host_service_group_openstacks names' do
       subject do
         host.refresh_openstack_services(ssu)
         host.host_service_group_openstacks.map(&:name)
@@ -100,7 +100,7 @@ openstack-keystone:                     active
       it { is_expected.not_to include(*unexpected) }
     end
 
-    describe "system_services names" do
+    describe 'system_services names' do
       subject do
         host.refresh_openstack_services(ssu)
         host.system_services.map(&:name)
@@ -125,7 +125,7 @@ openstack-keystone:                     active
       it { is_expected.not_to include(*unexpected) }
     end
 
-    describe "filesystems names" do
+    describe 'filesystems names' do
       subject do
         host.refresh_openstack_services(ssu)
         host.filesystems.map(&:name)
@@ -143,13 +143,13 @@ openstack-keystone:                     active
       it { is_expected.to include(*expected) }
     end
 
-    describe "existing HostServiceGroupOpenstack gets updated" do
+    describe 'existing HostServiceGroupOpenstack gets updated' do
       let(:glance_host_service_group) do
         host.refresh_openstack_services(ssu)
         host.host_service_group_openstacks.where(:name => 'Glance services').first
       end
 
-      describe "system_service names" do
+      describe 'system_service names' do
         subject do
           glance_host_service_group.system_services.map(&:name)
         end
@@ -173,7 +173,7 @@ openstack-keystone:                     active
         it { is_expected.not_to include(*unexpected) }
       end
 
-      describe "filesystem names" do
+      describe 'filesystem names' do
         subject do
           glance_host_service_group.filesystems.map(&:name)
         end
@@ -197,14 +197,14 @@ openstack-keystone:                     active
       end
     end
 
-    it "creates association with existing SystemServices" do
+    it 'creates association with existing SystemServices' do
       host.refresh_openstack_services(ssu)
       # we test if SystemServices with associated HostServiceGroupOpenstacks from current Host
       # are included among all SystemServices of that host
       expect(host.system_services).to include(*(host.host_service_group_openstacks.flat_map(&:system_services)))
     end
 
-    it "creates association with existing Filesystems" do
+    it 'creates association with existing Filesystems' do
       host.refresh_openstack_services(ssu)
       # we test if Filesystems with associated HostServiceGroupOpenstacks from current Host
       # are included among all Filesystems of that host
@@ -212,7 +212,7 @@ openstack-keystone:                     active
     end
   end
 
-  describe "Overriden auth methods for ssh fleecing," do
+  describe 'Overriden auth methods for ssh fleecing,' do
     let(:ext_management_system) do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       FactoryGirl.create(:ems_openstack_infra, :zone => zone).tap do |ems|
@@ -233,17 +233,17 @@ openstack-keystone:                     active
       allow_any_instance_of(Authentication).to receive(:raise_event)
     end
 
-    it "#get_parent_keypair returns parent provider auth" do
+    it '#get_parent_keypair returns parent provider auth' do
       expected_auth = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
       expect(host.get_parent_keypair(:ssh_keypair)).to eq expected_auth
     end
 
-    context "#authentication_status" do
+    context '#authentication_status' do
       it "returns host's auth status if auth is there" do
         expect(host.authentication_status).to eq 'SomeMockedStatus'
       end
 
-      it "returns status of ssh_keypair auth when credentials are defined" do
+      it 'returns status of ssh_keypair auth when credentials are defined' do
         host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
         host_ssh_keypair_auth.auth_key = 'auth_key'
         host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
@@ -251,7 +251,7 @@ openstack-keystone:                     active
         expect(host.authentication_status).to eq host_ssh_keypair_auth.status
       end
 
-      it "returns status of default auth when credentials are defined" do
+      it 'returns status of default auth when credentials are defined' do
         host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
         host_ssh_keypair_auth.auth_key = ''
         host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
@@ -268,7 +268,7 @@ openstack-keystone:                     active
         expect(host.authentication_status).to eq host_default_auth.status
       end
 
-      it "returns status of ssh_keypair auth when both default and ssh_keypair credentials are defined" do
+      it 'returns status of ssh_keypair auth when both default and ssh_keypair credentials are defined' do
         host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
         host_ssh_keypair_auth.auth_key = 'auth_key'
         host_ssh_keypair_auth.status = 'host_ssh_keypair_auth_status'
@@ -310,8 +310,8 @@ openstack-keystone:                     active
       end
     end
 
-    context "#ssh_users_and_passwords" do
-      it "returns authentication_best_fit" do
+    context '#ssh_users_and_passwords' do
+      it 'returns authentication_best_fit' do
         auth        = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
         expected_ret = auth.userid, nil, nil, nil, {:key_data => auth.auth_key, :passwordless_sudo => true}
 
@@ -332,8 +332,8 @@ openstack-keystone:                     active
       end
     end
 
-    context "#authentication_best_fit" do
-      it "defaults to parent provider ssh_keypair auth" do
+    context '#authentication_best_fit' do
+      it 'defaults to parent provider ssh_keypair auth' do
         ems_auth  = ext_management_system.authentications.where(:authtype => :ssh_keypair).first
 
         expect(host.authentication_best_fit).to eq ems_auth
@@ -367,7 +367,7 @@ openstack-keystone:                     active
         expect(host.authentication_best_fit).to eq host_default_auth
       end
 
-      it "checks that ssh keypair_takes precedence over default auth" do
+      it 'checks that ssh keypair_takes precedence over default auth' do
         host_ssh_keypair_auth = host.authentications.where(:authtype => :ssh_keypair).first
         host_ssh_keypair_auth.auth_key = 'host_private_key_content'
         host_ssh_keypair_auth.save
@@ -409,19 +409,19 @@ openstack-keystone:                     active
       end
     end
 
-    context "#update_ssh_auth_status!" do
-      context "when ssh connection causes exception," do
+    context '#update_ssh_auth_status!' do
+      context 'when ssh connection causes exception,' do
         before :each do
-          allow(host).to receive(:verify_credentials_with_ssh) { raise "some error" }
+          allow(host).to receive(:verify_credentials_with_ssh) { raise 'some error' }
         end
 
         it "sets auth to 'Error' state if credentials exists" do
           host_auth = host.authentications.where(:authtype => :ssh_keypair).first
-          expect(host_auth.status).to eq("SomeMockedStatus")
+          expect(host_auth.status).to eq('SomeMockedStatus')
           # Update status and observe it changes to error
           host.update_ssh_auth_status!
           host_auth.reload
-          expect(host_auth.status).to eq("Error")
+          expect(host_auth.status).to eq('Error')
         end
 
         it "sets auth to 'Incomplete' state when hostname or credentials are missing" do
@@ -430,22 +430,22 @@ openstack-keystone:                     active
           host.reload
           # Update status and observe it changes to none
           host.update_ssh_auth_status!
-          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Incomplete")
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq('Incomplete')
         end
       end
 
-      context "when ssh connection succeeds and verification returns true," do
+      context 'when ssh connection succeeds and verification returns true,' do
         before :each do
           allow(host).to receive(:verify_credentials_with_ssh).and_return(true)
         end
 
-        it "sets auth to valid, when credentials verification succeeds" do
+        it 'sets auth to valid, when credentials verification succeeds' do
           # Update status and observe it changes to Valid
           host.update_ssh_auth_status!
-          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Valid")
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq('Valid')
         end
 
-        it "creates new auth record for storing state if there is not any" do
+        it 'creates new auth record for storing state if there is not any' do
           host.authentications.where(:authtype => :ssh_keypair).first.destroy
           # Check we have removed host's auth
           expect(host.authentications.where(:authtype => :ssh_keypair)).to eq([])
@@ -453,7 +453,7 @@ openstack-keystone:                     active
           host.reload
           host.update_ssh_auth_status!
           host.reload
-          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq("Valid")
+          expect(host.authentications.where(:authtype => :ssh_keypair).first.status).to eq('Valid')
         end
       end
     end

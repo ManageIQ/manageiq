@@ -46,8 +46,8 @@ class MiqReport < ApplicationRecord
 
   attr_accessor_that_yamls :reserved # For legacy imports
 
-  GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
-  PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
+  GROUPINGS = [[:min, 'Minimum'], [:avg, 'Average'], [:max, 'Maximum'], [:total, 'Total']]
+  PIVOTS    = [[:min, 'Minimum'], [:avg, 'Average'], [:max, 'Maximum'], [:total, 'Total']]
 
   def self.filter_with_report_results_by(miq_group_ids)
     miq_group_condition = {:miq_report_results => {:miq_group_id => miq_group_ids}}
@@ -92,7 +92,7 @@ class MiqReport < ApplicationRecord
   end
 
   def self.get_expressions_by_model(db)
-    reports = where(:db => db.to_s, :template_type => "report")
+    reports = where(:db => db.to_s, :template_type => 'report')
               .where.not(:conditions => nil)
               .select(:id, :name, :conditions)
               .to_a
@@ -124,10 +124,10 @@ class MiqReport < ApplicationRecord
     return [] if cols.nil?
     cols.inject([]) do |r, c|
       # eg. c = ["Host.Hardware.Disks : File Name", "Host.hardware.disks-filename"]
-      parts = c.last.split(".")
-      parts[-1] = parts.last.split("-").first # Strip off field name from last element
+      parts = c.last.split('.')
+      parts[-1] = parts.last.split('-').first # Strip off field name from last element
 
-      if parts.last == "managed"
+      if parts.last == 'managed'
         next(r) unless mode == :tag
         parts.pop # Remove "managed" from tail andjust just evaluate relationship
       else
@@ -159,11 +159,11 @@ class MiqReport < ApplicationRecord
   end
 
   def ascending=(val)
-    self.order = val ? "Ascending" : "Descending"
+    self.order = val ? 'Ascending' : 'Descending'
   end
 
   def ascending?
-    order != "Descending"
+    order != 'Descending'
   end
 
   def sort_col
@@ -175,6 +175,6 @@ class MiqReport < ApplicationRecord
   end
 
   def page_size
-    rpt_options.try(:fetch_path, :pdf, :page_size) || "a4"
+    rpt_options.try(:fetch_path, :pdf, :page_size) || 'a4'
   end
 end

@@ -104,7 +104,7 @@ module Ext3
     attr_reader :sngIndBlockPointer, :dblIndBlockPointer, :tplIndBlockPointer
 
     def initialize(buf)
-      raise "Ext3::Inode.initialize: Nil buffer" if buf.nil?
+      raise 'Ext3::Inode.initialize: Nil buffer' if buf.nil?
       @in = INODE.decode(buf)
 
       @mode    = @in['file_mode']

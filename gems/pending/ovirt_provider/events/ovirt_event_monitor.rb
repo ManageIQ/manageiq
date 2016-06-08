@@ -11,7 +11,7 @@ class OvirtEventMonitor
   end
 
   def start
-    trap(:TERM) { $rhevm_log.info "EventMonitor#start: ignoring SIGTERM" }
+    trap(:TERM) { $rhevm_log.info 'EventMonitor#start: ignoring SIGTERM' }
     @since          = nil
     @inventory      = nil
     @monitor_events = true

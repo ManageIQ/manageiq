@@ -1,23 +1,23 @@
 require 'awesome_spawn'
 require 'pathname'
 
-RAILS_ROOT ||= Pathname.new(__dir__).join("../../../")
+RAILS_ROOT ||= Pathname.new(__dir__).join('../../../')
 
 class PostgresAdmin
   def self.pg_ctl
-    Pathname.new(ENV.fetch("APPLIANCE_PG_CTL"))
+    Pathname.new(ENV.fetch('APPLIANCE_PG_CTL'))
   end
 
   def self.data_directory
-    Pathname.new(ENV.fetch("APPLIANCE_PG_DATA"))
+    Pathname.new(ENV.fetch('APPLIANCE_PG_DATA'))
   end
 
   def self.template_directory
-    Pathname.new(ENV.fetch("APPLIANCE_TEMPLATE_DIRECTORY"))
+    Pathname.new(ENV.fetch('APPLIANCE_TEMPLATE_DIRECTORY'))
   end
 
   def self.service_name
-    ENV.fetch("APPLIANCE_PG_SERVICE")
+    ENV.fetch('APPLIANCE_PG_SERVICE')
   end
 
   def self.scl_name
@@ -34,31 +34,31 @@ class PostgresAdmin
 
   # Unprivileged user to run postgresql
   def self.user
-    "postgres".freeze
+    'postgres'.freeze
   end
 
   def self.certificate_location
-    RAILS_ROOT.join("certs")
+    RAILS_ROOT.join('certs')
   end
 
   def self.logical_volume_name
-    "lv_pg".freeze
+    'lv_pg'.freeze
   end
 
   def self.volume_group_name
-    "vg_data".freeze
+    'vg_data'.freeze
   end
 
   def self.database_disk_filesystem
-    "xfs".freeze
+    'xfs'.freeze
   end
 
   def self.logical_volume_path
-    Pathname.new("/dev").join(volume_group_name, logical_volume_name)
+    Pathname.new('/dev').join(volume_group_name, logical_volume_name)
   end
 
   def self.database_size(opts)
-    result = runcmd("psql", opts, :command => "SELECT pg_database_size('#{opts[:dbname]}');")
+    result = runcmd('psql', opts, :command => "SELECT pg_database_size('#{opts[:dbname]}');")
     result.match(/^\s+([0-9]+)\n/)[1].to_i
   end
 
@@ -117,15 +117,15 @@ class PostgresAdmin
 
     opts = opts.dup
     dbname = opts.delete(:dbname)
-    runcmd("pg_dump", opts, :format => "c", :file => opts[:local_file], nil => dbname)
+    runcmd('pg_dump', opts, :format => 'c', :file => opts[:local_file], nil => dbname)
     opts[:local_file]
   end
 
   def self.recreate_db(opts)
     dbname = opts[:dbname]
     opts = opts.merge(:dbname => 'postgres')
-    runcmd("psql", opts, :command => "DROP DATABASE IF EXISTS #{dbname}")
-    runcmd("psql", opts,
+    runcmd('psql', opts, :command => "DROP DATABASE IF EXISTS #{dbname}")
+    runcmd('psql', opts,
            :command => "CREATE DATABASE #{dbname} WITH OWNER = #{opts[:username] || 'root'} ENCODING = 'UTF8'")
   end
 
@@ -164,7 +164,7 @@ class PostgresAdmin
     # An alternative is to use the -a option to only restore the data if there is not a migration/schema change
     recreate_db(opts)
 
-    runcmd("pg_restore", opts, :verbose => nil, :exit_on_error => nil, nil => opts[:local_file])
+    runcmd('pg_restore', opts, :verbose => nil, :exit_on_error => nil, nil => opts[:local_file])
     opts[:local_file]
   end
 
@@ -202,20 +202,20 @@ class PostgresAdmin
 
   def self.vacuum(opts)
     # TODO: Add a real exception here
-    raise "Vacuum requires database" unless opts[:dbname]
+    raise 'Vacuum requires database' unless opts[:dbname]
 
     args = {}
     args[:analyze] = nil if opts[:analyze]
     args[:full]    = nil if opts[:full]
     args[:verbose] = nil if opts[:verbose]
     args[:table]   = opts[:table] if opts[:table]
-    runcmd("vacuumdb", opts, args)
+    runcmd('vacuumdb', opts, args)
   end
 
   def self.reindex(opts)
     args = {}
     args[:table] = opts[:table] if opts[:table]
-    runcmd("reindexdb", opts, args)
+    runcmd('reindexdb', opts, args)
   end
 
   # TODO: overlaps with appliance_console/service_group.rb
@@ -267,7 +267,7 @@ class PostgresAdmin
 *:*:#{opts[:dbname]}:#{opts[:username]}:#{opts[:password]}
 *:*:postgres:#{opts[:username]}:#{opts[:password]}
     PGPASS
-    File.open(PGPASS_FILE, 0600, "w") { |f| f.write pass } if opts[:password]
+    File.open(PGPASS_FILE, 0600, 'w') { |f| f.write pass } if opts[:password]
     yield
   ensure
     File.delete(PGPASS_FILE) if opts[:password]

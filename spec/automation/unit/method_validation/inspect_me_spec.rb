@@ -1,4 +1,4 @@
-describe "InspectMe Automate Method" do
+describe 'InspectMe Automate Method' do
   before do
     @miq_server = EvmSpecHelper.local_miq_server
     @user = FactoryGirl.create(:user_with_group)
@@ -8,14 +8,14 @@ describe "InspectMe Automate Method" do
     attrs = []
     attrs << "MiqServer::miq_server=#{@miq_server.id}"
 
-    MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
-                            "namespace=System&class=Request" \
-                            "&instance=InspectMe&" \
+    MiqAeEngine.instantiate('/System/Request/Call_Instance_With_Message?' \
+                            'namespace=System&class=Request' \
+                            '&instance=InspectMe&' \
                             "#{attrs.join('&')}", @user)
   end
 
-  context "InspectMe" do
-    it "with miq_server" do
+  context 'InspectMe' do
+    it 'with miq_server' do
       run_automate_method
     end
   end

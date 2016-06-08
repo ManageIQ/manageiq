@@ -23,7 +23,7 @@ class ContainerDashboardController < ApplicationController
   private
 
   def get_session_data
-    @layout = "container_dashboard"
+    @layout = 'container_dashboard'
   end
 
   def collect_data(provider_id)

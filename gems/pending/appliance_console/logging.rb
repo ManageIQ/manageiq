@@ -1,11 +1,11 @@
 require 'awesome_spawn'
 require 'active_support/all'
 
-RAILS_ROOT ||= Pathname.new(__dir__).join("../../..")
+RAILS_ROOT ||= Pathname.new(__dir__).join('../../..')
 
 module ApplianceConsole
   module Logging
-    LOGFILE = File.join(RAILS_ROOT, "log", "appliance_console.log")
+    LOGFILE = File.join(RAILS_ROOT, 'log', 'appliance_console.log')
 
     def self.logger
       @logger ||= default_logger
@@ -69,9 +69,9 @@ module ApplianceConsole
     end
 
     def log_and_feedback(method)
-      raise ArgumentError, "No block given" unless block_given?
+      raise ArgumentError, 'No block given' unless block_given?
 
-      log_and_feedback_info(method, "starting")
+      log_and_feedback_info(method, 'starting')
 
       result = nil
       begin
@@ -79,7 +79,7 @@ module ApplianceConsole
       rescue => err
         log_and_feedback_exception(err, method)
       else
-        log_and_feedback_info(method, "complete")
+        log_and_feedback_info(method, 'complete')
       end
       result
     end

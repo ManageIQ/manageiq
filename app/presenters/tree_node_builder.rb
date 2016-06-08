@@ -47,114 +47,114 @@ class TreeNodeBuilder
   def build
     case object
     when AvailabilityZone     then generic_node(object.name,
-                                                "availability_zone.png",
-                                                _("Availability Zone: %{name}") % {:name => object.name})
+                                                'availability_zone.png',
+                                                _('Availability Zone: %{name}') % {:name => object.name})
     when ConfigurationScript then generic_node(object.name,
-                                               "configuration_script.png",
+                                               'configuration_script.png',
                                                "Ansible Tower Job Template: #{object.name}")
     when ExtManagementSystem  then
       # TODO: This should really leverage .base_model on an EMS
       prefix_model =
         case object
-        when EmsCloud then "EmsCloud"
-        when EmsInfra then "EmsInfra"
-        else               "ExtManagementSystem"
+        when EmsCloud then 'EmsCloud'
+        when EmsInfra then 'EmsInfra'
+        else               'ExtManagementSystem'
         end
 
       generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
-    when ChargebackRate       then generic_node(object.description, "chargeback_rate.png")
+    when ChargebackRate       then generic_node(object.description, 'chargeback_rate.png')
     when Compliance
-      name = "<b>" + _("Compliance Check on: ") + "</b>" + format_timezone(object.timestamp, Time.zone, 'gtl')
+      name = '<b>' + _('Compliance Check on: ') + '</b>' + format_timezone(object.timestamp, Time.zone, 'gtl')
       generic_node(name.html_safe, "#{object.compliant ? "check" : "x"}.png")
     when ComplianceDetail
-      name = "<b>" + _("Policy: ") + "</b>" + object.miq_policy_desc
+      name = '<b>' + _('Policy: ') + '</b>' + object.miq_policy_desc
       generic_node(name.html_safe, "#{object.miq_policy_result ? "check" : "x"}.png")
-    when Condition            then generic_node(object.description, "miq_condition.png")
-    when ConfigurationProfile then configuration_profile_node(object.name, "configuration_profile.png",
-                                                              _("Configuration Profile: %{name}") % {:name => object.name})
+    when Condition            then generic_node(object.description, 'miq_condition.png')
+    when ConfigurationProfile then configuration_profile_node(object.name, 'configuration_profile.png',
+                                                              _('Configuration Profile: %{name}') % {:name => object.name})
     when ConfiguredSystem     then generic_node(object.hostname,
-                                                "configured_system.png",
-                                                _("Configured System: %{hostname}") % {:hostname => object.hostname})
-    when Container            then generic_node(object.name, "container.png")
+                                                'configured_system.png',
+                                                _('Configured System: %{hostname}') % {:hostname => object.hostname})
+    when Container            then generic_node(object.name, 'container.png')
     when CustomButton         then generic_node(object.name,
-                                                object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : "leaf.gif",
-                                                _("Button: %{button_description}") % {:button_description => object.description})
+                                                object.options && object.options[:button_image] ? "custom-#{object.options[:button_image]}.png" : 'leaf.gif',
+                                                _('Button: %{button_description}') % {:button_description => object.description})
     when CustomButtonSet      then custom_button_set_node
-    when CustomizationTemplate then generic_node(object.name, "customizationtemplate.png")
-    when Dialog               then generic_node(object.label, "dialog.png")
-    when DialogTab            then generic_node(object.label, "dialog_tab.png")
-    when DialogGroup          then generic_node(object.label, "dialog_group.png")
-    when DialogField          then generic_node(object.label, "dialog_field.png")
+    when CustomizationTemplate then generic_node(object.name, 'customizationtemplate.png')
+    when Dialog               then generic_node(object.label, 'dialog.png')
+    when DialogTab            then generic_node(object.label, 'dialog_tab.png')
+    when DialogGroup          then generic_node(object.label, 'dialog_group.png')
+    when DialogField          then generic_node(object.label, 'dialog_field.png')
     when EmsFolder            then ems_folder_node
-    when EmsCluster           then generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
+    when EmsCluster           then generic_node(object.name, 'cluster.png', "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
     when GuestDevice          then guest_node(object)
     when Host                 then generic_node(object.name,
-                                                "host.png",
+                                                'host.png',
                                                 "#{ui_lookup(:table => "host")}: #{object.name}")
-    when IsoDatastore         then generic_node(object.name, "isodatastore.png")
-    when IsoImage             then generic_node(object.name, "isoimage.png")
-    when ResourcePool         then generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
+    when IsoDatastore         then generic_node(object.name, 'isodatastore.png')
+    when IsoImage             then generic_node(object.name, 'isoimage.png')
+    when ResourcePool         then generic_node(object.name, object.vapp ? 'vapp.png' : 'resource_pool.png')
 
     when Vm                   then vm_node(object)
     when Lan                  then generic_node(object.name,
-                                                "lan.png",
-                                                _("Port Group: %{name}") % {:name => object.name})
-    when LdapDomain           then generic_node(_("Domain: %{domain_name}") % {:domain_name => object.name},
-                                                "ldap_domain.png",
-                                                _("LDAP Domain: %{ldap_domain_name}") % {:ldap_domain_name => object.name})
-    when LdapRegion           then generic_node(_("Region: %{region_name}") % {:region_name => object.name},
-                                                "ldap_region.png",
-                                                _("LDAP Region: %{ldap_region_name}") % {:ldap_region_name => object.name})
-    when MiqAeClass           then node_with_display_name("ae_class.png")
-    when MiqAeInstance        then node_with_display_name("ae_instance.png")
-    when MiqAeMethod          then node_with_display_name("ae_method.png")
-    when MiqAeNamespace       then node_with_display_name("ae_namespace.png")
-    when MiqAlertSet          then generic_node(object.description, "miq_alert_profile.png")
-    when MiqReport            then generic_node(object.name, "report.png")
+                                                'lan.png',
+                                                _('Port Group: %{name}') % {:name => object.name})
+    when LdapDomain           then generic_node(_('Domain: %{domain_name}') % {:domain_name => object.name},
+                                                'ldap_domain.png',
+                                                _('LDAP Domain: %{ldap_domain_name}') % {:ldap_domain_name => object.name})
+    when LdapRegion           then generic_node(_('Region: %{region_name}') % {:region_name => object.name},
+                                                'ldap_region.png',
+                                                _('LDAP Region: %{ldap_region_name}') % {:ldap_region_name => object.name})
+    when MiqAeClass           then node_with_display_name('ae_class.png')
+    when MiqAeInstance        then node_with_display_name('ae_instance.png')
+    when MiqAeMethod          then node_with_display_name('ae_method.png')
+    when MiqAeNamespace       then node_with_display_name('ae_namespace.png')
+    when MiqAlertSet          then generic_node(object.description, 'miq_alert_profile.png')
+    when MiqReport            then generic_node(object.name, 'report.png')
     when MiqReportResult      then miq_report_node(format_timezone(object.last_run_on, Time.zone, 'gtl'),
                                                    get_rr_status_image(object), object.name, object.status.downcase)
-    when MiqSchedule          then generic_node(object.name, "miq_schedule.png")
+    when MiqSchedule          then generic_node(object.name, 'miq_schedule.png')
     when MiqScsiLun           then generic_node(object.canonical_name,
-                                                "lun.png",
-                                                _("LUN: %{name}") % {:name => object.canonical_name})
+                                                'lun.png',
+                                                _('LUN: %{name}') % {:name => object.canonical_name})
     when MiqScsiTarget        then miq_scsi_target(object.iscsi_name, object.target)
     when MiqServer            then miq_server_node
     when MiqTemplate          then generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png")
-    when MiqAlert             then generic_node(object.description, "miq_alert.png")
+    when MiqAlert             then generic_node(object.description, 'miq_alert.png')
     when MiqAction            then miq_action_node
     when MiqEventDefinition   then generic_node(object.description, "event-#{object.name}.png")
-    when MiqGroup             then generic_node(object.name, "group.png")
+    when MiqGroup             then generic_node(object.name, 'group.png')
     # Following line has dynatree workaround, add class to allow clicking on bold portion of title.
     when MiqPolicy            then miq_policy_node
     when MiqPolicySet         then generic_node(object.description, "policy_profile#{object.active? ? "" : "_inactive"}.png")
-    when MiqUserRole          then generic_node(object.name, "miq_user_role.png")
-    when OrchestrationTemplateCfn then generic_node(object.name, "orchestration_template_cfn.png")
-    when OrchestrationTemplateHot then generic_node(object.name, "orchestration_template_hot.png")
-    when OrchestrationTemplateAzure then generic_node(object.name, "orchestration_template_azure.png")
-    when PxeImage             then generic_node(object.name, object.default_for_windows ? "win32service.png" : "pxeimage.png")
-    when WindowsImage         then generic_node(object.name, "os-windows_generic.png")
-    when PxeImageType         then generic_node(object.name, "pxeimagetype.png")
-    when PxeServer            then generic_node(object.name, "pxeserver.png")
-    when ScanItemSet          then generic_node(object.name, "scan_item_set.png")
-    when Service              then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service.png")
-    when ServiceResource      then generic_node(object.resource_name, object.resource_type == "VmOrTemplate" ? "vm.png" : "service_template.png")
+    when MiqUserRole          then generic_node(object.name, 'miq_user_role.png')
+    when OrchestrationTemplateCfn then generic_node(object.name, 'orchestration_template_cfn.png')
+    when OrchestrationTemplateHot then generic_node(object.name, 'orchestration_template_hot.png')
+    when OrchestrationTemplateAzure then generic_node(object.name, 'orchestration_template_azure.png')
+    when PxeImage             then generic_node(object.name, object.default_for_windows ? 'win32service.png' : 'pxeimage.png')
+    when WindowsImage         then generic_node(object.name, 'os-windows_generic.png')
+    when PxeImageType         then generic_node(object.name, 'pxeimagetype.png')
+    when PxeServer            then generic_node(object.name, 'pxeserver.png')
+    when ScanItemSet          then generic_node(object.name, 'scan_item_set.png')
+    when Service              then generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : 'service.png')
+    when ServiceResource      then generic_node(object.resource_name, object.resource_type == 'VmOrTemplate' ? 'vm.png' : 'service_template.png')
     when ServiceTemplate      then service_template_node
     when ServiceTemplateCatalog then service_template_catalog_node
-    when Storage              then generic_node(object.name, "storage.png")
+    when Storage              then generic_node(object.name, 'storage.png')
     when Switch               then generic_node(object.name,
-                                                "switch.png",
-                                                _("Switch: %{name}") % {:name => object.name})
-    when User                 then generic_node(object.name, "user.png")
+                                                'switch.png',
+                                                _('Switch: %{name}') % {:name => object.name})
+    when User                 then generic_node(object.name, 'user.png')
     when MiqSearch            then generic_node(object.description,
-                                                "filter.png",
-                                                _("Filter: %{filter_description}") % {:filter_description => object.description})
-    when MiqDialog            then generic_node(object.description, "miqdialog.png", object[0])
+                                                'filter.png',
+                                                _('Filter: %{filter_description}') % {:filter_description => object.description})
+    when MiqDialog            then generic_node(object.description, 'miqdialog.png', object[0])
     when MiqRegion            then miq_region_node
     when MiqWidget            then generic_node(object.title, "#{object.content_type}_widget.png", object.title)
-    when MiqWidgetSet         then generic_node(object.name, "dashboard.png", object.name)
+    when MiqWidgetSet         then generic_node(object.name, 'dashboard.png', object.name)
     when Tenant               then generic_node(object.name,  "#{object.tenant? ? "tenant" : "project"}.png")
-    when VmdbTableEvm         then generic_node(object.name, "vmdbtableevm.png")
-    when VmdbIndex            then generic_node(object.name, "vmdbindex.png")
+    when VmdbTableEvm         then generic_node(object.name, 'vmdbtableevm.png')
+    when VmdbIndex            then generic_node(object.name, 'vmdbindex.png')
     when Zone                 then zone_node
     when Hash                 then hash_node
     end
@@ -198,17 +198,17 @@ class TreeNodeBuilder
   end
 
   def normal_folder_node
-    icon = options[:type] == :vandt ? "blue_folder.png" : "folder.png"
-    generic_node(object.name, icon, _("Folder: %{folder_name}") % {:folder_name => object.name})
+    icon = options[:type] == :vandt ? 'blue_folder.png' : 'folder.png'
+    generic_node(object.name, icon, _('Folder: %{folder_name}') % {:folder_name => object.name})
   end
 
   def guest_node(object)
-    if object.device_type == "ethernet"
-      generic_node(object.device_name, "pnic.png", _("Physical NIC: %{name}") % {:name => object.device_name})
+    if object.device_type == 'ethernet'
+      generic_node(object.device_name, 'pnic.png', _('Physical NIC: %{name}') % {:name => object.device_name})
     else
       generic_node(object.device_name,
                    "sa_#{object.controller_type.downcase}.png",
-                   _("%{type} Storage Adapter: %{name}") % {:type => object.controller_type,
+                   _('%{type} Storage Adapter: %{name}') % {:type => object.controller_type,
                                                             :name => object.device_name})
     end
   end
@@ -258,7 +258,7 @@ class TreeNodeBuilder
       :title => text,
       :icon  => node_icon(image)
     }
-    @node[:addClass] = "product-strikethru-node" unless enabled
+    @node[:addClass] = 'product-strikethru-node' unless enabled
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)
   end
@@ -269,7 +269,7 @@ class TreeNodeBuilder
     @node = {
       :key   => build_object_id,
       :title => title,
-      :icon  => node_icon(title == _("Unassigned Profiles Group") ? "folder.png" : image)
+      :icon  => node_icon(title == _('Unassigned Profiles Group') ? 'folder.png' : image)
     }
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)
@@ -278,15 +278,15 @@ class TreeNodeBuilder
   def vm_node(object)
     image = "currentstate-#{object.normalized_state.downcase}.png"
     if object.template?
-      image = object.host ? "template.png" : "template-no-host.png"
+      image = object.host ? 'template.png' : 'template-no-host.png'
     end
-    generic_node(object.name, image, _("VM: %{name} (Click to view)") % {:name => object.name})
+    generic_node(object.name, image, _('VM: %{name} (Click to view)') % {:name => object.name})
   end
 
   def image_for_node(object, image)
     case object
     when MiqAeNamespace
-      object.domain? ? "ae_domain.png" : "ae_namespace.png"
+      object.domain? ? 'ae_domain.png' : 'ae_namespace.png'
     else
       image
     end
@@ -295,7 +295,7 @@ class TreeNodeBuilder
   def tooltip_prefix_for_node(object)
     case object
     when MiqAeNamespace
-      object.domain? ? ui_lookup(:model => "MiqAeDomain") : ui_lookup(:model => object.class.to_s)
+      object.domain? ? ui_lookup(:model => 'MiqAeDomain') : ui_lookup(:model => object.class.to_s)
     else
       ui_lookup(:model => object.class.to_s)
     end
@@ -303,15 +303,15 @@ class TreeNodeBuilder
 
   def custom_button_set_node
     text = if options[:type] == :sandt
-             _("%{button_group_name} (Group)") % {:button_group_name => object.name.split("|").first}
+             _('%{button_group_name} (Group)') % {:button_group_name => object.name.split('|').first}
            else
-             object.name.split("|").first
+             object.name.split('|').first
            end
-    image = object.set_data && object.set_data[:button_image] ? "custom-#{object.set_data[:button_image]}.png" : "folder.png"
+    image = object.set_data && object.set_data[:button_image] ? "custom-#{object.set_data[:button_image]}.png" : 'folder.png'
     tip = if object.description
-            _("Button Group: %{button_group_description}") % {:button_group_description => object.description}
+            _('Button Group: %{button_group_description}') % {:button_group_description => object.description}
           else
-            object.name.split("|").first
+            object.name.split('|').first
           end
     generic_node(text, image, tip)
   end
@@ -319,8 +319,8 @@ class TreeNodeBuilder
   def ems_folder_node
     if object.kind_of?(Datacenter)
       generic_node(object.name,
-                   "datacenter.png",
-                   _("Datacenter: %{datacenter_name}") % {:datacenter_name => object.name})
+                   'datacenter.png',
+                   _('Datacenter: %{datacenter_name}') % {:datacenter_name => object.name})
     else # normal Folders
       normal_folder_node
     end
@@ -328,16 +328,16 @@ class TreeNodeBuilder
 
   def miq_scsi_target(iscsi_name, target)
     name = if iscsi_name.blank?
-             _("SCSI Target %{target}") % {:target => target}
+             _('SCSI Target %{target}') % {:target => target}
            else
-             _("SCSI Target %{target} (%{name})") % {:target => target, :name => iscsi_name}
+             _('SCSI Target %{target} (%{name})') % {:target => target, :name => iscsi_name}
            end
-    generic_node(name, "target_scsi.png", _("Target: %{text}") % {:text => name})
+    generic_node(name, 'target_scsi.png', _('Target: %{text}') % {:text => name})
   end
 
   def miq_server_node
     if options[:is_current]
-      tip  = _("%{server}: %{server_name} [%{server_id}] (current)") %
+      tip  = _('%{server}: %{server_name} [%{server_id}] (current)') %
              {:server => ui_lookup(:model => object.class.to_s), :server_name => object.name, :server_id => object.id}
       text = "<b class='dynatree-title'>#{ERB::Util.html_escape(tip)}</b>".html_safe
     else
@@ -358,44 +358,44 @@ class TreeNodeBuilder
       end
       p  = MiqPolicy.find_by_id(ApplicationRecord.uncompress_id(policy_id))
       ev = MiqEventDefinition.find_by_id(ApplicationRecord.uncompress_id(event_id))
-      image = p.action_result_for_event(object, ev) ? "check" : "x"
+      image = p.action_result_for_event(object, ev) ? 'check' : 'x'
     else
-      image = object.action_type == "default" ? "miq_action" : "miq_action_#{object.action_type}"
+      image = object.action_type == 'default' ? 'miq_action' : "miq_action_#{object.action_type}"
     end
     generic_node(object.description, "#{image}.png")
   end
 
   def miq_region_node
-    generic_node(object.name, "miq_region.png", object[0])
+    generic_node(object.name, 'miq_region.png', object[0])
     @node[:expand] = true
     @node
   end
 
   def service_template_node
-    generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : "service_template.png")
-    @node[:title] += " (%s)" % object.tenant.name unless object.tenant.ancestors.empty?
+    generic_node(object.name, object.picture ? "../../../pictures/#{object.picture.basename}" : 'service_template.png')
+    @node[:title] += ' (%s)' % object.tenant.name unless object.tenant.ancestors.empty?
   end
 
   def service_template_catalog_node
-    generic_node(object.name, "service_template_catalog.png")
-    @node[:title] += " (%s)" % object.tenant.name if object.tenant.present? && object.tenant.ancestors.present?
+    generic_node(object.name, 'service_template_catalog.png')
+    @node[:title] += ' (%s)' % object.tenant.name if object.tenant.present? && object.tenant.ancestors.present?
   end
 
   def zone_node
     if options[:is_current]
-      tip  = _("%{zone}: %{zone_description} (current)") %
+      tip  = _('%{zone}: %{zone_description} (current)') %
              {:zone => ui_lookup(:model => object.class.to_s), :zone_description => object.description}
       text = "<b class='dynatree-title'>#{ERB::Util.html_escape(tip)}</b>".html_safe
     else
       tip  = "#{ui_lookup(:model => object.class.to_s)}: #{object.description}"
       text = tip
     end
-    generic_node(text, "zone.png", tip)
+    generic_node(text, 'zone.png', tip)
   end
 
   def policy_profile_text
     ["<b class='dynatree-title'>", ui_lookup(:model => object.towhat),
-     " ", object.mode.titleize, ":</b> ",
+     ' ', object.mode.titleize, ':</b> ',
      ERB::Util.html_escape(object.description)].join('').html_safe
   end
 
@@ -410,10 +410,10 @@ class TreeNodeBuilder
   end
 
   def build_hash_id
-    if object[:id] == "-Unassigned"
-      "-Unassigned"
+    if object[:id] == '-Unassigned'
+      '-Unassigned'
     else
-      prefix = TreeBuilder.get_prefix_for_model("Hash")
+      prefix = TreeBuilder.get_prefix_for_model('Hash')
       "#{format_parent_id}#{prefix}-#{object[:id]}"
     end
   end
@@ -425,9 +425,9 @@ class TreeNodeBuilder
       "-#{object.name.split('|').last}"
     else
       base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
-      base_class = "Datacenter" if base_class == "EmsFolder" && object.kind_of?(Datacenter)
-      base_class = "ManageIQ::Providers::Foreman::ConfigurationManager" if object.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager)
-      base_class = "ManageIQ::Providers::AnsibleTower::ConfigurationManager" if object.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
+      base_class = 'Datacenter' if base_class == 'EmsFolder' && object.kind_of?(Datacenter)
+      base_class = 'ManageIQ::Providers::Foreman::ConfigurationManager' if object.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager)
+      base_class = 'ManageIQ::Providers::AnsibleTower::ConfigurationManager' if object.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
       prefix = TreeBuilder.get_prefix_for_model(base_class)
       cid = ApplicationRecord.compress_id(object.id)
       "#{format_parent_id}#{prefix}-#{cid}"
@@ -435,15 +435,15 @@ class TreeNodeBuilder
   end
 
   def miq_report_node(text, image, name, status)
-    if text == "" && (status == "queued" || status == "running")
+    if text == '' && (status == 'queued' || status == 'running')
       expand = false
       expand = true if options[:open_all]
 
       @node = TreeNodeBuilder.generic_tree_node(
         build_object_id,
-        _("Generating Report"),
+        _('Generating Report'),
         image,
-        _("Generating Report for - %{report_name}") % {:report_name => name},
+        _('Generating Report for - %{report_name}') % {:report_name => name},
         :expand => expand
       )
     else

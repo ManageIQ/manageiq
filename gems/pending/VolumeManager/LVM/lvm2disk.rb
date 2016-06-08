@@ -4,7 +4,7 @@
 module Lvm2DiskIO
   def d_init
     @lvObj = dInfo.lvObj
-    raise "Logical volume object not present in disk info." unless @lvObj
+    raise 'Logical volume object not present in disk info.' unless @lvObj
     @vgObj = @lvObj.vgObj
     self.diskType = "#{@vgObj.lvmType} Logical Volume"
     self.blockSize = 512
@@ -75,7 +75,7 @@ module Lvm2DiskIO
   end # def d_read
 
   def d_write(_pos, _buf, _len)
-    raise "Write operation not yet supported for logical volumes"
+    raise 'Write operation not yet supported for logical volumes'
   end # def d_write
 
   def d_close
@@ -102,7 +102,7 @@ module Lvm2DiskIO
     segments.each_with_index do |seg, i|
       startSeg = i if seg.byteRange === startPos
       if seg.byteRange === endPos
-        raise "Segment sequence error" unless startSeg
+        raise 'Segment sequence error' unless startSeg
         endSeg = i
         break
       end

@@ -72,6 +72,6 @@ class ConfigurationProfile < ApplicationRecord
   end
 
   def image_name
-    "configuration_profile"
+    'configuration_profile'
   end
 end

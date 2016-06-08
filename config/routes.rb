@@ -2656,7 +2656,7 @@ Vmdb::Application.routes.draw do
   resources :ems_cloud, :as => :ems_clouds
   resources :ems_infra, :as => :ems_infras
   resources :ems_container, :as => :ems_containers
-  match "/auth/:provider/callback" => "sessions#create", :via => :get
+  match '/auth/:provider/callback' => 'sessions#create', :via => :get
 
   if Rails.env.development? && defined?(Rails::Server)
     mount WebsocketServer.new(:logger => Logger.new(STDOUT)) => '/ws'

@@ -21,7 +21,7 @@ module ResourceFeeder
         klass      = options[:class] || resources.first.class
         new_record = klass.new
       else
-        options[:feed] = {:title => "Empty", :link => "http://example.com"}
+        options[:feed] = {:title => 'Empty', :link => 'http://example.com'}
       end
 
       options[:feed][:title] ||= klass.name.pluralize
@@ -36,7 +36,7 @@ module ResourceFeeder
       resource_link = ->(r) { SimplyHelpful::PolymorphicRoutes.polymorphic_url(r, options[:url_writer]) }
 
       xml.instruct!
-      xml.feed "xml:lang" => "en-US", "xmlns" => 'http://www.w3.org/2005/Atom' do
+      xml.feed 'xml:lang' => 'en-US', 'xmlns' => 'http://www.w3.org/2005/Atom' do
         xml.title(options[:feed][:title])
         xml.id(options[:feed][:id])
         xml.link(:rel => 'alternate', :type => 'text/html', :href => options[:feed][:link])

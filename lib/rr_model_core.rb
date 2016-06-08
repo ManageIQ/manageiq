@@ -11,7 +11,7 @@ module RrModelCore
     end
 
     def for_region_number(region_number)
-      raise "no block given" unless block_given?
+      raise 'no block given' unless block_given?
       orig_table_name = table_name
 
       begin

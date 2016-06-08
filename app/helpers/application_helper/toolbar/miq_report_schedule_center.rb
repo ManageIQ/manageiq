@@ -16,8 +16,8 @@ class ApplicationHelper::Toolbar::MiqReportScheduleCenter < ApplicationHelper::T
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Schedule from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Schedule and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Schedule?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This Schedule and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Schedule?')),
         separator,
         button(
           :miq_report_schedule_run_now,

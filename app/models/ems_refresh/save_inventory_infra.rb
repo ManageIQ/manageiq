@@ -176,7 +176,7 @@ module EmsRefresh::SaveInventoryInfra
           found.save!
         rescue ActiveRecord::RecordInvalid
           raise if found.errors[:name].blank?
-          old_name = Host.where("name LIKE ?", "#{found.name.sub(/ - \d+$/, "")}%").order("LENGTH(name) DESC").order("name DESC").first.name
+          old_name = Host.where('name LIKE ?', "#{found.name.sub(/ - \d+$/, "")}%").order('LENGTH(name) DESC').order('name DESC').first.name
           found.name = old_name =~ / - \d+$/ ? old_name.succ : "#{old_name} - 2"
           retry
         end
@@ -348,7 +348,7 @@ module EmsRefresh::SaveInventoryInfra
       if h[:hostname].nil? && h[:ipaddress].nil?
         _log.debug "EMS ID: #{ems_id} Host database lookup - name [#{h[:name]}]"
         found = Host.where(:ems_id => ems_id).detect { |e| e.name.downcase == h[:name].downcase }
-      elsif ["localhost", "localhost.localdomain", "127.0.0.1"].include_none?(h[:hostname], h[:ipaddress])
+      elsif ['localhost', 'localhost.localdomain', '127.0.0.1'].include_none?(h[:hostname], h[:ipaddress])
         # host = Host.find_by_hostname(hostname) has a risk of creating duplicate hosts
         # allow a deleted EMS to be re-added an pick up old orphaned hosts
         _log.debug "EMS ID: #{ems_id} Host database lookup - hostname: [#{h[:hostname]}] IP: [#{h[:ipaddress]}] ems_ref: [#{h[:ems_ref]}]"
@@ -360,10 +360,10 @@ module EmsRefresh::SaveInventoryInfra
   end
 
   def look_up_host(hostname, ipaddr, opts = {})
-    h   = Host.where("lower(hostname) = ?", hostname.downcase).find_by(:ipaddress => ipaddr) if hostname && ipaddr
-    h ||= Host.find_by("lower(hostname) = ?", hostname.downcase)                             if hostname
+    h   = Host.where('lower(hostname) = ?', hostname.downcase).find_by(:ipaddress => ipaddr) if hostname && ipaddr
+    h ||= Host.find_by('lower(hostname) = ?', hostname.downcase)                             if hostname
     h ||= Host.find_by(:ipaddress => ipaddr)                                                 if ipaddr
-    h ||= Host.find_by("lower(hostname) LIKE ?", "#{hostname.downcase}.%")                   if hostname
+    h ||= Host.find_by('lower(hostname) LIKE ?', "#{hostname.downcase}.%")                   if hostname
 
     # If we're given an ems_ref or ems_id then ensure that the host
     # we looked-up does not have a different ems_ref and is not

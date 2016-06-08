@@ -8,7 +8,7 @@ require 'VMwareWebService/MiqVimBroker'
 #
 class ConsoleFormatter < Log4r::Formatter
   def format(event)
-    "**** " + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
+    '**** ' + (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
   end
 end
 $vim_log = Log4r::Logger.new 'toplog'
@@ -18,9 +18,9 @@ $vim_log.add 'err_console'
 $stdout.sync = true
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 
-DS_NAME   = "nas-ds-add-test"
+DS_NAME   = 'nas-ds-add-test'
 
 begin
 
@@ -30,8 +30,8 @@ begin
   puts "API version: #{vim.apiVersion}"
   puts
 
-  nasDsa = vim.dataStoresByFilter("summary.type" => "NFS")
-  puts "NAS Datastores:"
+  nasDsa = vim.dataStoresByFilter('summary.type' => 'NFS')
+  puts 'NAS Datastores:'
   nasDsa.each { |ds| puts "\t#{ds.summary.name} (#{ds.summary.url})" }
   puts
   puts "Target datastore: #{DS_NAME}"
@@ -45,7 +45,7 @@ begin
   puts
   puts "Adding datastore: #{DS_NAME}..."
   miqDss.addNasDatastoreByName(DS_NAME)
-  puts "done."
+  puts 'done.'
 
 rescue => err
   puts err.to_s

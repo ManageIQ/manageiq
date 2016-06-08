@@ -7,11 +7,11 @@ describe MigrateProvisioningManagerToEms do
   let(:ems_stub)          { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do
-    it "migrates provisioning_managers to ext_management_systems" do
+    it 'migrates provisioning_managers to ext_management_systems' do
       manager = prov_manager_stub.create!(
-        :type               => "ProvisioningManagerForeman",
+        :type               => 'ProvisioningManagerForeman',
         :provider_id        => 99,
-        :last_refresh_error => "xxx",
+        :last_refresh_error => 'xxx',
         :last_refresh_date  => Time.now.utc
       )
       os_flavors = 2.times.collect do
@@ -27,7 +27,7 @@ describe MigrateProvisioningManagerToEms do
       ems = ems_stub.first
       expect(ems).to have_attributes(
         manager.attributes.slice(
-          "type", "provider_id", "last_refresh_error", "last_refresh_date"
+          'type', 'provider_id', 'last_refresh_error', 'last_refresh_date'
         )
       )
       expect(ems.guid).to_not be_nil
@@ -43,11 +43,11 @@ describe MigrateProvisioningManagerToEms do
   end
 
   migration_context :down do
-    it "migrates ext_management_systems to provisioning_managers" do
+    it 'migrates ext_management_systems to provisioning_managers' do
       ems = ems_stub.create!(
-        :type               => "ProvisioningManagerForeman",
+        :type               => 'ProvisioningManagerForeman',
         :provider_id        => 99,
-        :last_refresh_error => "xxx",
+        :last_refresh_error => 'xxx',
         :last_refresh_date  => Time.now.utc
       )
       os_flavors = 2.times.collect do
@@ -63,7 +63,7 @@ describe MigrateProvisioningManagerToEms do
       manager = prov_manager_stub.first
       expect(manager).to have_attributes(
         ems.attributes.slice(
-          "type", "provider_id", "last_refresh_error", "last_refresh_date"
+          'type', 'provider_id', 'last_refresh_error', 'last_refresh_date'
         )
       )
 

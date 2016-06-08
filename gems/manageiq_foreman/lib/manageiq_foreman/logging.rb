@@ -1,4 +1,4 @@
-require "manageiq_foreman/null_logger"
+require 'manageiq_foreman/null_logger'
 
 module ManageiqForeman
   extend self
@@ -14,9 +14,9 @@ module ManageiqForeman
     end
 
     def dump_hash(hash)
-      filtered_keys = ["root_pass"]
+      filtered_keys = ['root_pass']
       new_hash = hash.dup
-      filtered_keys.each { |k| new_hash[k] = "<FILTERED>" }
+      filtered_keys.each { |k| new_hash[k] = '<FILTERED>' }
       new_hash.inspect
     end
   end

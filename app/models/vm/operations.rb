@@ -18,7 +18,7 @@ module Vm::Operations
 
     # From here on out collection is possible, but may not be currently available.
     s[:available] = true
-    unless state == "on"
+    unless state == 'on'
       s[:message] = 'VM Process collection is only available while the VM is powered on.'
       return s
     end

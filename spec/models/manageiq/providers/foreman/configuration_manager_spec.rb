@@ -4,8 +4,8 @@ describe ManageIQ::Providers::Foreman::ConfigurationManager do
     FactoryGirl.build(:configuration_manager_foreman, :provider => provider)
   end
 
-  describe "#connect" do
-    it "delegates to the provider" do
+  describe '#connect' do
+    it 'delegates to the provider' do
       expect(provider).to receive(:connect)
       configuration_manager.connect
     end

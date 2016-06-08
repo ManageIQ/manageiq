@@ -5,7 +5,7 @@ class CloudObjectStoreObjectController < ApplicationController
   after_action :set_session_data
 
   def breadcrumb_name(_model)
-    ui_lookup(:tables => "cloud_object_store_object")
+    ui_lookup(:tables => 'cloud_object_store_object')
   end
 
   def index
@@ -15,26 +15,26 @@ class CloudObjectStoreObjectController < ApplicationController
   def button
     @edit = session[:edit]
     params[:page] = @current_page unless @current_page.nil?
-    return tag("CloudObjectStoreObject") if params[:pressed] == 'cloud_object_store_object_tag'
+    return tag('CloudObjectStoreObject') if params[:pressed] == 'cloud_object_store_object_tag'
   end
 
   def show
-    @display = params[:display] || "main" unless control_selected?
+    @display = params[:display] || 'main' unless control_selected?
     @showtype = @display
-    @lastaction = "show"
+    @lastaction = 'show'
     @object_store_object = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@object_store_object)
 
-    @gtl_url = "/show"
+    @gtl_url = '/show'
     drop_breadcrumb(
       {
-        :name => ui_lookup(:tables => "cloud_objects"),
+        :name => ui_lookup(:tables => 'cloud_objects'),
         :url  => "/cloud_object_store_object/show_list?page=#{@current_page}&refresh=y"
       },
       true
     )
     case @display
-    when "download_pdf", "main", "summary_only"
+    when 'download_pdf', 'main', "summary_only"
       get_tagdata(@object_store_object)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @object_store_object.key.to_s},
@@ -54,8 +54,8 @@ class CloudObjectStoreObjectController < ApplicationController
   end
 
   def get_session_data
-    @title      = _("Cloud Objects")
-    @layout     = "cloud_object_store_object"
+    @title      = _('Cloud Objects')
+    @layout     = 'cloud_object_store_object'
     @lastaction = session[:cloud_object_store_object_lastaction]
     @display    = session[:cloud_object_store_object_display]
     @filters    = session[:cloud_object_store_object_filters]

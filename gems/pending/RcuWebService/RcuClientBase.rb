@@ -13,7 +13,7 @@ class RcuClientBase < RcuService
 
     @receiveTimeout = @@receiveTimeout
 
-    @requestSpec = RcuHash.new("RequestSpec") do |rs|
+    @requestSpec = RcuHash.new('RequestSpec') do |rs|
       rs.serviceUrl = "https://#{server}/sdk"
       rs.vcPassword = password
       rs.vcUser   = username
@@ -36,7 +36,7 @@ class RcuClientBase < RcuService
   end
 
   def createClones(cloneSpec)
-    requestSpec = RcuHash.new("RequestSpec") do |rs|
+    requestSpec = RcuHash.new('RequestSpec') do |rs|
       rs.cloneSpec  = cloneSpec
       rs.serviceUrl = @requestSpec.serviceUrl
       rs.vcPassword = @requestSpec.vcPassword

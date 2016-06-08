@@ -53,8 +53,8 @@ begin
   ##
   # Dump all the available events of type 'VmCreatedEvent' or 'VmRemovedEvent'
   ##
-  eventSpec = VimHash.new("EventFilterSpec") do |efs|
-    efs.time = VimHash.new("EventFilterSpecByTime") do |eft|
+  eventSpec = VimHash.new('EventFilterSpec') do |efs|
+    efs.time = VimHash.new('EventFilterSpecByTime') do |eft|
       eft.endTime = endTime
     end
     efs.disableFullMessage = 'false'
@@ -92,7 +92,7 @@ begin
       #
       vm = vim.virtualMachinesByFilter('summary.vm' => event.vm.vm, 'config.name' => event.vm.name).first
       if !vm
-        puts "****** VM no longer exists"
+        puts '****** VM no longer exists'
       else
         puts "****** VM path: #{vm.summary.config.vmPathName}"
       end
@@ -127,7 +127,7 @@ begin
       #
       vm = vim.virtualMachinesByFilter('summary.vm' => event.vm.vm, 'config.name' => event.vm.name).first
       if !vm
-        puts "****** VM no longer exists"
+        puts '****** VM no longer exists'
       else
         puts "****** VM path: #{vm.summary.config.vmPathName}"
       end

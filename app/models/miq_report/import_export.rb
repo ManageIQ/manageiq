@@ -2,20 +2,20 @@ module MiqReport::ImportExport
   extend ActiveSupport::Concern
 
   module ClassMethods
-    VIEWS_FOLDER = File.join(Rails.root, "product/views")
+    VIEWS_FOLDER = File.join(Rails.root, 'product/views')
     def import_from_hash(report, options = nil)
-      raise _("No Report to Import") if report.nil?
+      raise _('No Report to Import') if report.nil?
 
-      report = report["MiqReport"] if report.keys.first == "MiqReport"
-      if !report["menu_name"] || !report["col_order"] || !report["cols"] || report["rpt_type"] != "Custom"
-        raise _("Incorrect format, only policy records can be imported.")
+      report = report['MiqReport'] if report.keys.first == 'MiqReport'
+      if !report['menu_name'] || !report['col_order'] || !report['cols'] || report['rpt_type'] != 'Custom'
+        raise _('Incorrect format, only policy records can be imported.')
       end
 
       user = options[:user] || User.find_by_userid(options[:userid])
-      report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
+      report.merge!('miq_group_id' => user.current_group_id, 'user_id' => user.id)
 
-      report["name"] = report.delete("menu_name")
-      rep = MiqReport.find_by_name(report["name"])
+      report['name'] = report.delete('menu_name')
+      rep = MiqReport.find_by_name(report['name'])
       if rep
         # if report exists
         if options[:overwrite]
@@ -44,7 +44,7 @@ module MiqReport::ImportExport
 
       if options[:save] && result[:status].in?([:add, :update])
         rep.save!
-        _log.info("- Completed.")
+        _log.info('- Completed.')
       end
 
       return rep, result
@@ -60,7 +60,7 @@ module MiqReport::ImportExport
       filename = MiqReport.view_yaml_filename(db, current_user, options)
       yaml     = cache[filename] ||= YAML.load_file(filename)
       view     = MiqReport.new(yaml)
-      view.db  = db if filename.ends_with?("Vm__restricted.yaml")
+      view.db  = db if filename.ends_with?('Vm__restricted.yaml')
       view.extras ||= {}                        # Always add in the extras hash
       view
     end
@@ -80,7 +80,7 @@ module MiqReport::ImportExport
 
       db = db.gsub(/::/, '_')
 
-      role = role.name.split("-").last if role.try(:read_only?)
+      role = role.name.split('-').last if role.try(:read_only?)
 
       # Build the view file name
       if suffix
@@ -103,8 +103,8 @@ module MiqReport::ImportExport
 
   def export_to_array
     h = attributes
-    ["id", "created_on", "updated_on"].each { |k| h.delete(k) }
-    h["menu_name"] = h.delete("name")
+    ['id', 'created_on', 'updated_on'].each { |k| h.delete(k) }
+    h['menu_name'] = h.delete('name')
     [{self.class.to_s => h}]
   end
 end

@@ -10,7 +10,7 @@ class ChangeCapacityToHashFromPersistentVolume < ActiveRecord::Migration[5.0]
 
   def up
     change_column :container_volumes, :capacity, :text
-    say_with_time("Changing string to hash") do
+    say_with_time('Changing string to hash') do
       PersistentVolume.find_each do |vol|
         result_hash = {}
         unless vol.capacity.nil?
@@ -30,10 +30,10 @@ class ChangeCapacityToHashFromPersistentVolume < ActiveRecord::Migration[5.0]
   end
 
   def down
-    say_with_time("Changing hash to string") do
+    say_with_time('Changing hash to string') do
       PersistentVolume.find_each do |vol|
         next if vol.capacity.nil?
-        capacity = vol.capacity.collect { |key, val| "#{key}=#{val}" }.join(",")
+        capacity = vol.capacity.collect { |key, val| "#{key}=#{val}" }.join(',')
         capacity = nil if capacity.blank?
         vol.update_attributes!(:capacity => capacity)
       end

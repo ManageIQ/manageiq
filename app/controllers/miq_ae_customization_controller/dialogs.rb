@@ -2,12 +2,12 @@ module MiqAeCustomizationController::Dialogs
   extend ActiveSupport::Concern
 
   def dialog_sort_values
-    if @edit[:field_data_typ] == "integer"
-      val = @edit[:field_values].sort_by { |d| @edit[:field_sort_by] == "value" ? d.first.to_i : d.last.to_i }
-      val = val.reverse if @edit[:field_sort_order] == "descending"
+    if @edit[:field_data_typ] == 'integer'
+      val = @edit[:field_values].sort_by { |d| @edit[:field_sort_by] == 'value' ? d.first.to_i : d.last.to_i }
+      val = val.reverse if @edit[:field_sort_order] == 'descending'
     else
-      val = @edit[:field_values].sort_by { |d| @edit[:field_sort_by] == "value" ? d.first : d.last }
-      val = val.reverse if @edit[:field_sort_order] == "descending"
+      val = @edit[:field_values].sort_by { |d| @edit[:field_sort_by] == 'value' ? d.first : d.last }
+      val = val.reverse if @edit[:field_sort_order] == 'descending'
     end
 
     @edit[:field_values] = copy_array(val)
@@ -15,33 +15,33 @@ module MiqAeCustomizationController::Dialogs
 
   # AJAX driven routine to check for changes in ANY field on the form
   def dialog_form_field_changed
-    return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
     @record = @edit[:dialog]
     dialog_get_form_vars
 
     # dialog_edit_set_form_vars
     dialog_edit_build_tree
     dialog_sort_values if (params[:field_data_typ] || params[:field_sort_by] ||
-        params[:field_sort_order]) && @edit[:field_sort_by].to_s != "none"
-    @_params[:typ] = ""
+        params[:field_sort_order]) && @edit[:field_sort_by].to_s != 'none'
+    @_params[:typ] = ''
     get_field_types
 
     # Use JS to update the display
     render :update do |page|
       page << javascript_prologue
       if @flash_array
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       else
         page.replace_html(@refresh_div, :partial => @refresh_partial, :locals => {:entry => nil}) if @refresh_div
         changed = (@edit[:new] != @edit[:current])
-        page.replace_html("custom_left_cell", :partial => "dialog_edit_tree")
+        page.replace_html('custom_left_cell', :partial => 'dialog_edit_tree')
         page << javascript_for_miq_button_visibility(changed)
 
         if params[:field_past_dates]
-          if params[:field_past_dates] == "1"
-            page << "ManageIQ.calendar.calDateFrom = undefined ;"
+          if params[:field_past_dates] == '1'
+            page << 'ManageIQ.calendar.calDateFrom = undefined ;'
           else
-            date_tz = Time.zone.now.strftime("%Y,%m,%d")
+            date_tz = Time.zone.now.strftime('%Y,%m,%d')
             page << "ManageIQ.calendar.calDateFrom = new Date('#{date_tz}');"
           end
         end
@@ -50,29 +50,29 @@ module MiqAeCustomizationController::Dialogs
         page << "ManageIQ.widget.dashboardUrl = 'miq_ae_customization/dialog_res_reorder'"
 
         # refresh fields div incase select type was DialogFieldDropDownList/DialogFieldRadionButton or
-        page.replace("dialog_field_div", :partial => "dialog_field_form") if params[:field_typ] ||
+        page.replace('dialog_field_div', :partial => 'dialog_field_form') if params[:field_typ] ||
                                                                              params[:field_sort_by] || params[:field_protected] || params[:field_category] ||
                                                                              params[:field_show_refresh_button] || params[:field_validator_type] || params[:field_dynamic]
 
-        unless @edit[:field_typ] && @edit[:field_typ].include?("TagControl")
-          page.replace("field_values_div", :partial => "field_values", :locals => {:entry => nil}) if params[:field_data_typ] ||
+        unless @edit[:field_typ] && @edit[:field_typ].include?('TagControl')
+          page.replace('field_values_div', :partial => 'field_values', :locals => {:entry => nil}) if params[:field_data_typ] ||
                                                                                                       params[:field_sort_by] || params[:field_sort_order] || params[:field_dynamic]
         end
-        page << "miqInitDashboardCols();"
+        page << 'miqInitDashboardCols();'
       end
-      page << "miqSparkle(false);"
+      page << 'miqSparkle(false);'
     end
   end
 
   def dialog_delete
-    assert_privileges("dialog_delete")
+    assert_privileges('dialog_delete')
     dialog_button_operation('destroy', 'Delete')
   end
 
   def dialog_list
-    @lastaction = "dialog_list"
+    @lastaction = 'dialog_list'
     # @force_no_grid_xml   = true
-    @gtl_type            = "list"
+    @gtl_type            = 'list'
     @ajax_paging_buttons = true
     @explorer            = true
 
@@ -82,7 +82,7 @@ module MiqAeCustomizationController::Dialogs
     end
 
     @sortcol = session[:dialog_sortcol].nil? ? 0 : session[:dialog_sortcol].to_i
-    @sortdir = session[:dialog_sortdir].nil? ? "ASC" : session[:dialog_sortdir]
+    @sortdir = session[:dialog_sortdir].nil? ? 'ASC' : session[:dialog_sortdir]
 
     # Get the records (into a view) and the paginator
     @view, @pages = get_view(Dialog)
@@ -95,18 +95,18 @@ module MiqAeCustomizationController::Dialogs
       # Use RJS to update the display
       render :update do |page|
         page << javascript_prologue
-        page.replace("gtl_div",
-                     :partial => "layouts/x_gtl",
-                     :locals  => {:action_url => "dialog_list"})
-        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
-        page << "miqSparkle(false)"
+        page.replace('gtl_div',
+                     :partial => 'layouts/x_gtl',
+                     :locals  => {:action_url => 'dialog_list'})
+        page.replace_html('paging_div', :partial => 'layouts/x_pagingcontrols')
+        page << 'miqSparkle(false)'
       end
     end
   end
 
   # Add new dialog
   def dialog_new
-    assert_privileges("dialog_new")
+    assert_privileges('dialog_new')
     @record = Dialog.new
     dialog_set_form_vars
     @in_a_form = true
@@ -116,7 +116,7 @@ module MiqAeCustomizationController::Dialogs
 
   # Add new dialog
   def dialog_copy
-    assert_privileges("dialog_copy")
+    assert_privileges('dialog_copy')
     unless params[:id]
       obj = find_checked_items
       @_params[:id] = obj[0] unless obj.empty?
@@ -124,7 +124,7 @@ module MiqAeCustomizationController::Dialogs
 
     @record = identify_record(params[:id], Dialog) if params[:id]
     dialog_set_form_vars
-    @edit[:new][:label] = _("Copy of %{label}") % {:label => @record.label}
+    @edit[:new][:label] = _('Copy of %{label}') % {:label => @record.label}
     @edit[:dialog] = @record = Dialog.new
     @edit[:rec_id] = @record.id ? @record.id : nil
     @edit[:key] = "dialog_edit__#{@record.id || "new"}"
@@ -140,63 +140,63 @@ module MiqAeCustomizationController::Dialogs
 
   # add resource to a dialog
   def dialog_res_add
-    id = params[:id].strip == "" ? "new" : params[:id]
-    return unless load_edit("dialog_edit__#{id}", "replace_cell__explorer")
+    id = params[:id].strip == '' ? 'new' : params[:id]
+    return unless load_edit("dialog_edit__#{id}", 'replace_cell__explorer')
     @record = @edit[:dialog]
     @in_a_form = true
     valid = dialog_validate
 
     if valid
       @sb[:node_typ] = params[:typ]
-      @sb[:edit_typ] = "add"
+      @sb[:edit_typ] = 'add'
       # dialog_edit_build_tree(:dialog_edit,:dialog_edit_tree)
       nodes = x_node.split('_')
 
       case params[:typ]
-      when "tab"
+      when 'tab'
         @edit[:new][:tabs] ||= []
         @edit[:new][:tabs].push(:label => nil, :description => nil)
         @edit[:tab_label] = @edit[:tab_description] = nil
-        @sb[:node_typ] = "tab"
+        @sb[:node_typ] = 'tab'
 
-      when "box"
+      when 'box'
         @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups] ||= []
         key = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups]
         key ||= []
         key.push(:label => nil, :description => nil)
         @edit[:group_label] = @edit[:group_description] = nil
-        @sb[:node_typ] = "box"
+        @sb[:node_typ] = 'box'
 
-      when "element"
+      when 'element'
         get_field_types
         @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields] ||= []
         key = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields]
-        key.push(:label => nil, :description => nil, :typ => "DialogFieldButton")
+        key.push(:label => nil, :description => nil, :typ => 'DialogFieldButton')
         @edit[:field_label] = @edit[:field_name] = @edit[:field_description] =
             @edit[:field_required] = @edit[:field_typ] = @edit[:field_values] =
             @edit[:field_default_value] = @edit[:field_sort_by] = @edit[:field_sort_order] = @edit[:field_data_typ] = nil
-        @sb[:node_typ] = "element"
+        @sb[:node_typ] = 'element'
       end
 
       replace_right_cell(x_node, [:dialog_edit])
 
     else
       render_flash do |page|
-        page << "miqSparkle(false);"
+        page << 'miqSparkle(false);'
       end
     end
   end
 
   # edit dialog
   def dialog_edit
-    assert_privileges("dialog_edit")
+    assert_privileges('dialog_edit')
     case params[:button]
     when 'cancel'
       if params[:id]
         dialog_label = session[:edit][:current][:label]
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "Dialog"), :name => dialog_label})
+        add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'Dialog'), :name => dialog_label})
       else
-        add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "Dialog")})
+        add_flash(_('Add of new %{model} was cancelled by the user') % {:model => ui_lookup(:model => 'Dialog')})
       end
       @edit = session[:edit] = nil # clean out the saved info
       self.x_active_tree = :dialogs_tree
@@ -262,16 +262,16 @@ module MiqAeCustomizationController::Dialogs
 
   # AJAX driven routine to discard new added resource that is not saved yet
   def dialog_res_discard
-    assert_privileges("dialog_res_discard")
-    id = params[:id].strip == "" ? "new" : params[:id]
-    return unless load_edit("dialog_edit__#{id}", "replace_cell__explorer")
+    assert_privileges('dialog_res_discard')
+    id = params[:id].strip == '' ? 'new' : params[:id]
+    return unless load_edit("dialog_edit__#{id}", 'replace_cell__explorer')
     @record = @edit[:dialog]
     @in_a_form = true
 
     nodes = x_node.split('_')
     case nodes.length
     when 2
-      if @sb[:edit_typ] == "add"
+      if @sb[:edit_typ] == 'add'
         @sb[:node_typ] = nil
         @edit[:new][:tabs].pop
         @edit[:new].delete(:tab_name)
@@ -279,16 +279,16 @@ module MiqAeCustomizationController::Dialogs
         self.x_node = nodes[0]
       end
     when 3
-      if @sb[:edit_typ] == "add"
-        @sb[:node_typ] = "tab"
+      if @sb[:edit_typ] == 'add'
+        @sb[:node_typ] = 'tab'
         @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups].pop
         @edit[:new].delete(:group_name)
         @edit[:new].delete(:group_description)
         self.x_node = "#{nodes[0]}_#{nodes[1]}"
       end
     else
-      if nodes.length == 4 || nodes.length != 1 && @sb[:edit_typ] == "add"
-        @sb[:node_typ] = "box"
+      if nodes.length == 4 || nodes.length != 1 && @sb[:edit_typ] == 'add'
+        @sb[:node_typ] = 'box'
         @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields].pop
         @edit[:new].delete(:field_name)
         @edit[:new].delete(:field_description)
@@ -301,29 +301,29 @@ module MiqAeCustomizationController::Dialogs
   end
 
   def dialog_resource_remove
-    assert_privileges("dialog_resource_remove")
+    assert_privileges('dialog_resource_remove')
     # need to set widget_id using curr_pos and id of the element in @edit[:new]
     nodes = x_node.split('_')
     selected_node = nodes.last.split('-')
     @_params[:widget_id] = "#{selected_node.last}_#{selected_node.first}"
     case nodes.length
     when 2
-      @_params[:typ] = "tab"
+      @_params[:typ] = 'tab'
     when 3
-      @_params[:typ] = "box"
+      @_params[:typ] = 'box'
     when 4
-      @_params[:typ] = "element"
+      @_params[:typ] = 'element'
     end
     dialog_res_remove
   end
 
   # remove a resource from dialog
   def dialog_res_remove
-    id = params[:id].strip == "" ? "new" : params[:id]
-    return unless load_edit("dialog_edit__#{id}", "replace_cell__explorer")
+    id = params[:id].strip == '' ? 'new' : params[:id]
+    return unless load_edit("dialog_edit__#{id}", 'replace_cell__explorer')
     @record = @edit[:dialog]
     nodes = x_node.split('_')
-    if nodes.length == 1 || params[:typ] == "tab"     # Remove tab was pressed
+    if nodes.length == 1 || params[:typ] == 'tab'     # Remove tab was pressed
       # need to delete tab and it's groups/fields
       idx = nil
       @edit[:new][:tabs].each_with_index do |tab, i|
@@ -334,7 +334,7 @@ module MiqAeCustomizationController::Dialogs
       # saving in sandbox before deleting, to be used if discard button is pressed
       @sb[:tabs] = copy_array(@edit[:new][:tabs])
       @edit[:new][:tabs].delete_at(idx) if idx
-    elsif nodes.length == 2 || params[:typ] == "box"    # Remove group was pressed
+    elsif nodes.length == 2 || params[:typ] == 'box'    # Remove group was pressed
       # need to delete group and it's fields
       idx = nil
       groups = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups]
@@ -346,7 +346,7 @@ module MiqAeCustomizationController::Dialogs
       # saving in sandbox before deleting, to be used if discard button is pressed
       @sb[:groups] = groups
       groups.delete_at(idx) if idx
-    elsif nodes.length == 3 || params[:typ] == "element"    # Remove field was pressed
+    elsif nodes.length == 3 || params[:typ] == 'element'    # Remove field was pressed
       # need to delete field
       idx = nil
       fields = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups][nodes[2].split('-').last.to_i][:fields]
@@ -362,7 +362,7 @@ module MiqAeCustomizationController::Dialogs
     if params[:typ]
       nodes = x_node.split('_')
       nodes.pop
-      self.x_node = nodes.join("_")
+      self.x_node = nodes.join('_')
       @sb[:node_typ] = nil
     end
     dialog_edit_set_form_vars
@@ -372,7 +372,7 @@ module MiqAeCustomizationController::Dialogs
 
   # Reorder dialog resources
   def dialog_res_reorder
-    return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
     @record = @edit[:dialog]
 
     nodes = x_node.split('_')
@@ -422,27 +422,27 @@ module MiqAeCustomizationController::Dialogs
       page << javascript_prologue
       session[:changed] = changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
-      page.replace_html("custom_left_cell", :partial => "dialog_edit_tree")
+      page.replace_html('custom_left_cell', :partial => 'dialog_edit_tree')
       # url to be used in miqDropComplete method
       page << "ManageIQ.widget.dashboardUrl = 'miq_ae_customization/dialog_res_reorder';"
-      page << "miqInitDashboardCols();"
-      page << "miqSparkle(false);"
+      page << 'miqInitDashboardCols();'
+      page << 'miqSparkle(false);'
     end
   end
 
   # AJAX driven routine to select a field value entry
   def field_value_select
-    return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
     @record = @edit[:dialog]
-    if params[:entry_id] == "new"
+    if params[:entry_id] == 'new'
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page.replace("field_values_div", :partial => "field_values", :locals => {:entry => "new", :edit => true})
-        page << javascript_focus("entry_value")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+        page.replace('field_values_div', :partial => 'field_values', :locals => {:entry => 'new', :edit => true})
+        page << javascript_focus('entry_value')
         page << "$('#entry_#{j_str(params[:field])}').select();"
       end
-      session[:entry] = "new"
+      session[:entry] = 'new'
     else
       entry = 0
       # dialog_sort_values
@@ -452,8 +452,8 @@ module MiqAeCustomizationController::Dialogs
       entry = params[:entry_id]
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        page.replace("field_values_div", :partial => "field_values", :locals => {:entry => entry, :edit => true})
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+        page.replace('field_values_div', :partial => 'field_values', :locals => {:entry => entry, :edit => true})
         page << javascript_focus("entry_#{j_str(params[:field])}")
         page << "$('#entry_#{j_str(params[:field])}').select();"
       end
@@ -463,7 +463,7 @@ module MiqAeCustomizationController::Dialogs
 
   # AJAX driven routine to add/update a field value entry
   def field_value_accept
-    return unless load_edit("dialog_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("dialog_edit__#{params[:id]}", 'replace_cell__explorer')
     @record = @edit[:dialog]
     field_value_get_form_vars
     nodes = x_node.split('_')
@@ -473,23 +473,23 @@ module MiqAeCustomizationController::Dialogs
     # one of the fields is being edited
     key = fields[id]
 
-    if session[:entry] == "new"
-      entry_value       = params["entry"]["value"].strip
-      entry_description = params["entry"]["description"].strip
-      if entry_value != "" && entry_description != ""
-        if key[:values].include?([params["entry"]["value"], params["entry"]["description"]])
-          add_flash(_("%{field} '%{value}' is already in use") % {:field => params["entry"]["description"], :value => params["entry"]["value"]}, :error)
+    if session[:entry] == 'new'
+      entry_value       = params['entry']['value'].strip
+      entry_description = params['entry']['description'].strip
+      if entry_value != '' && entry_description != ''
+        if key[:values].include?([params['entry']['value'], params['entry']['description']])
+          add_flash(_("%{field} '%{value}' is already in use") % {:field => params['entry']['description'], :value => params['entry']['value']}, :error)
           render_flash do |page|
             page << "$('#entry_value').focus();"
           end
           return
         else
-          key[:values].push([params["entry"]["value"], params["entry"]["description"]])
+          key[:values].push([params['entry']['value'], params['entry']['description']])
           @edit[:field_values] = copy_array(key[:values])
         end
       else
         add_flash(_("Value and Description fields can't be blank"), :error)
-        focus_field = entry_value == "" ? "entry_value" : "entry_description"
+        focus_field = entry_value == '' ? 'entry_value' : 'entry_description'
         render_flash do |page|
           page << "$('##{focus_field}').focus();"
         end
@@ -497,19 +497,19 @@ module MiqAeCustomizationController::Dialogs
       end
     else
       key[:values].each_with_index do |entry, i|
-        if entry[0] == params["entry"]["value"] &&
-           entry[1] == params["entry"]["description"]
-          add_flash(_("%{field} '%{value}' is already in use") % {:field => params["entry"]["description"], :value => params["entry"]["value"]}, :error)
+        if entry[0] == params['entry']['value'] &&
+           entry[1] == params['entry']['description']
+          add_flash(_("%{field} '%{value}' is already in use") % {:field => params['entry']['description'], :value => params['entry']['value']}, :error)
 
           render_flash do |page|
             page << "$('#entry_value').focus();"
           end
           return
         else
-          if i == params["entry"]["id"].to_i
-            entry[0] = params["entry"]["value"]
-            entry[1] = params["entry"]["description"]
-            @edit[:field_values][i] = [params["entry"]["value"], params["entry"]["description"]]
+          if i == params['entry']['id'].to_i
+            entry[0] = params['entry']['value']
+            entry[1] = params['entry']['description']
+            @edit[:field_values][i] = [params['entry']['value'], params['entry']['description']]
           end
         end
       end
@@ -520,7 +520,7 @@ module MiqAeCustomizationController::Dialogs
     # Use JS to update the display
     render :update do |page|
       page << javascript_prologue
-      page.replace("field_values_div", :partial => "field_values", :locals => {:entry => nil})
+      page.replace('field_values_div', :partial => 'field_values', :locals => {:entry => nil})
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
 
@@ -530,7 +530,7 @@ module MiqAeCustomizationController::Dialogs
       values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
       page << "$('#field_default_value').next('.bootstrap-select').remove();"
-      page.replace("field_default_value",
+      page.replace('field_default_value',
                    :text => "#{select_tag('field_default_value', options_for_select(values, selected), 'data-miq_observe' => {:interval => '.5', :url => url}.to_json)}")
       page << "$('#field_default_value').selectpicker();"
     end
@@ -560,7 +560,7 @@ module MiqAeCustomizationController::Dialogs
     # Use JS to update the display
     render :update do |page|
       page << javascript_prologue
-      page.replace("field_values_div", :partial => "field_values", :locals => {:entry => nil})
+      page.replace('field_values_div', :partial => 'field_values', :locals => {:entry => nil})
       changed = (@edit[:new] != @edit[:current])
       page << javascript_for_miq_button_visibility(changed)
 
@@ -570,7 +570,7 @@ module MiqAeCustomizationController::Dialogs
       values = key[:values].empty? ? none : none + key[:values].collect(&:reverse)
       selected = @edit[:field_default_value]
       page << "$('#field_default_value').next('.bootstrap-select').remove();"
-      page.replace("field_default_value",
+      page.replace('field_default_value',
                    :text => select_tag('field_default_value',
                                        options_for_select(values, selected),
                                        'data-miq_observe' => {:interval => '.5', :url => url}.to_json))
@@ -615,11 +615,11 @@ module MiqAeCustomizationController::Dialogs
   def field_value_new_cat
     field_value_get_form_vars
     if params[:classification_name]
-      @cat = Classification.find_by_name(params["classification_name"])
+      @cat = Classification.find_by_name(params['classification_name'])
       field_value_build_screen                                          # Build the Classification Edit screen
       render :update do |page|
         page << javascript_prologue
-        page.replace(:tab_div, :partial => "settings_co_tags_tab")
+        page.replace(:tab_div, :partial => 'settings_co_tags_tab')
       end
     end
   end
@@ -629,24 +629,24 @@ module MiqAeCustomizationController::Dialogs
   end
 
   def dialog_add_box
-    assert_privileges("dialog_add_box")
+    assert_privileges('dialog_add_box')
     dialog_res_add
   end
 
   def dialog_add_tab
-    assert_privileges("dialog_add_tab")
+    assert_privileges('dialog_add_tab')
     dialog_res_add
   end
 
   def dialog_add_element
-    assert_privileges("dialog_add_element")
+    assert_privileges('dialog_add_element')
     dialog_res_add
   end
 
   def prepare_move_field_value
     @values = @edit[:field_values]
-    @refresh_div = "field_values_div"
-    @refresh_partial = "field_values"
+    @refresh_div = 'field_values_div'
+    @refresh_partial = 'field_values'
 
     if @values.count > 1
       @idx = params[:entry_id].to_i
@@ -661,7 +661,7 @@ module MiqAeCustomizationController::Dialogs
 
   def move_field_value_up
     if no_items_selected?(:entry_id)
-      add_flash(_("No fields were selected to move up"), :error)
+      add_flash(_('No fields were selected to move up'), :error)
       return
     end
     prepare_move_field_value
@@ -670,7 +670,7 @@ module MiqAeCustomizationController::Dialogs
 
   def move_field_value_down
     if no_items_selected?(:entry_id)
-      add_flash(_("No fields were selected to move down"), :error)
+      add_flash(_('No fields were selected to move down'), :error)
       return
     end
     prepare_move_field_value
@@ -683,43 +683,43 @@ module MiqAeCustomizationController::Dialogs
     res = true
     nodes = x_node.split('_')
     if nodes.length == 1 && @sb[:node_typ].blank? # dialog is being edited
-      if @edit[:new][:label].nil? || @edit[:new][:label].strip == ""
-        add_flash(_("Dialog Label is required"), :error)
+      if @edit[:new][:label].nil? || @edit[:new][:label].strip == ''
+        add_flash(_('Dialog Label is required'), :error)
         res = false
       end
-    elsif (nodes.length == 2 && @sb[:node_typ] != "box") || (nodes.length == 1 && @sb[:node_typ] == "tab")  # tab is being added or edited
-      if @edit[:tab_label].nil? || @edit[:tab_label].strip == ""
-        add_flash(_("Tab Label is required"), :error)
+    elsif (nodes.length == 2 && @sb[:node_typ] != 'box') || (nodes.length == 1 && @sb[:node_typ] == 'tab')  # tab is being added or edited
+      if @edit[:tab_label].nil? || @edit[:tab_label].strip == ''
+        add_flash(_('Tab Label is required'), :error)
         res = false
       end
-    elsif (nodes.length == 3 && @sb[:node_typ] != "element") || (nodes.length == 2 && @sb[:node_typ] == "box")         # #group is being added or edited
-      if @edit[:group_label].nil? || @edit[:group_label].strip == ""
-        add_flash(_("Box Label is required"), :error)
+    elsif (nodes.length == 3 && @sb[:node_typ] != 'element') || (nodes.length == 2 && @sb[:node_typ] == 'box')         # #group is being added or edited
+      if @edit[:group_label].nil? || @edit[:group_label].strip == ''
+        add_flash(_('Box Label is required'), :error)
         res = false
       end
-    elsif @sb[:node_typ] == "element"         # #field is being added or edited
-      if @edit[:field_label].nil? || @edit[:field_label].strip == ""
-        add_flash(_("Element Label is required"), :error)
+    elsif @sb[:node_typ] == 'element'         # #field is being added or edited
+      if @edit[:field_label].nil? || @edit[:field_label].strip == ''
+        add_flash(_('Element Label is required'), :error)
         res = false
       end
       if needs_entry_point?
-        add_flash(_("Entry Point must be given."), :error)
+        add_flash(_('Entry Point must be given.'), :error)
         res = false
       end
       if @edit[:field_name].to_s !~ /^[a-z0-9_]+$/i
-        add_flash(_("Element Name must be alphanumeric characters and underscores without spaces"), :error)
+        add_flash(_('Element Name must be alphanumeric characters and underscores without spaces'), :error)
         res = false
       end
-      if ["action", "controller"].include?(@edit[:field_name].to_s)
+      if ['action', 'controller'].include?(@edit[:field_name].to_s)
         add_flash(_("Element Name must not be 'action' or 'controller'"), :error)
         res = false
       end
-      if @edit[:field_typ].nil? || @edit[:field_typ].strip == ""
-        add_flash(_("Element Type is required"), :error)
+      if @edit[:field_typ].nil? || @edit[:field_typ].strip == ''
+        add_flash(_('Element Type is required'), :error)
         res = false
       end
       if needs_dropdown_values?
-        add_flash(_("Dropdown elements require some entries"), :error)
+        add_flash(_('Dropdown elements require some entries'), :error)
         res = false
       end
     end
@@ -735,7 +735,7 @@ module MiqAeCustomizationController::Dialogs
       tab_node = TreeNodeBuilder.generic_tree_node(
         "root_#{tab[:id]}-#{i}",
         tab[:label] || _('[New Tab]'),
-        "dialog_tab.png",
+        'dialog_tab.png',
         tab[:label] || _('[New Tab]'),
         :expand => true
       )
@@ -748,7 +748,7 @@ module MiqAeCustomizationController::Dialogs
           group_node = TreeNodeBuilder.generic_tree_node(
             "#{tab_node[:key]}_#{group[:id]}-#{j}",
             group[:label] || _('[New Box]'),
-            "dialog_group.png",
+            'dialog_group.png',
             group[:description] || group[:label],
             :expand => true
           )
@@ -767,7 +767,7 @@ module MiqAeCustomizationController::Dialogs
               field_node = TreeNodeBuilder.generic_tree_node(
                 "#{group_node[:key]}_#{field[:id]}-#{k}",
                 field[:label] || _('[New Element]'),
-                "dialog_field.png",
+                'dialog_field.png',
                 field_tooltip
               )
               self.x_node = "#{group_node[:key]}_#{field[:id]}-#{k}" unless field[:label]
@@ -784,9 +784,9 @@ module MiqAeCustomizationController::Dialogs
     end
 
     base_node = TreeNodeBuilder.generic_tree_node(
-      "root",
+      'root',
       "#{@edit[:new][:label] || _('[New Dialog]')}",
-      "dialog.png",
+      'dialog.png',
       @edit[:new][:description] || @edit[:new][:label],
       :expand => true
     )
@@ -795,7 +795,7 @@ module MiqAeCustomizationController::Dialogs
 
     @dialog_edit_tree = base_node.to_json # JSON object for tree loading
 
-    x_node_set("root", :dialog_edit_tree) unless x_node(:dialog_edit_tree)
+    x_node_set('root', :dialog_edit_tree) unless x_node(:dialog_edit_tree)
   end
 
   # Get variables from edit form
@@ -803,9 +803,9 @@ module MiqAeCustomizationController::Dialogs
     @record = @edit[:dialog]
     nodes = x_node.split('_')
 
-    if ["up", "down"].include?(params[:button])
-      move_field_value_up   if params[:button] == "up"
-      move_field_value_down if params[:button] == "down"
+    if ['up', 'down'].include?(params[:button])
+      move_field_value_up   if params[:button] == 'up'
+      move_field_value_down if params[:button] == 'down'
       # update values for selected field in @edit[:new]
       nodes = x_node.split('_')
       ids = nodes[3].split('-')
@@ -830,7 +830,7 @@ module MiqAeCustomizationController::Dialogs
       end
 
     # tab is being added or edited
-    elsif (nodes.length == 2 && @sb[:node_typ] != "box") || (nodes.length == 1 && @sb[:node_typ] == "tab")
+    elsif (nodes.length == 2 && @sb[:node_typ] != 'box') || (nodes.length == 1 && @sb[:node_typ] == 'tab')
       tabs = @edit[:new][:tabs]
       # if tab is being added then use last array element of tabs as index
       id = nodes.length == 2 ? nodes[1].split('-').last.to_i : (tabs.length == 0 ? 0 : tabs.length - 1) # set id to 0 if nothing has been added yet to array
@@ -840,7 +840,7 @@ module MiqAeCustomizationController::Dialogs
       @edit[:tab_description] = key[:description] = params[:tab_description] if params[:tab_description]
 
     # group is being added or edited
-    elsif (nodes.length == 3 && @sb[:node_typ] != "element") || (nodes.length == 2 && @sb[:node_typ] == "box")
+    elsif (nodes.length == 3 && @sb[:node_typ] != 'element') || (nodes.length == 2 && @sb[:node_typ] == 'box')
       groups = @edit[:new][:tabs][nodes[1].split('-').last.to_i][:groups]
       # if group is being added then use last array element of groups as index
       id = nodes.length == 3 ? nodes[2].split('-').last.to_i : (groups.length == 0 ? 0 : groups.length - 1) # set id to 0 if nothing has been added yet to array
@@ -850,7 +850,7 @@ module MiqAeCustomizationController::Dialogs
       @edit[:group_description] = key[:description] = params[:group_description] if params[:group_description]
 
     # field is being added or edited
-    elsif @sb[:node_typ] == "element"
+    elsif @sb[:node_typ] == 'element'
       dialog_get_form_vars_field
     end
   end
@@ -883,9 +883,9 @@ module MiqAeCustomizationController::Dialogs
         !%w(DialogFieldDropDownList DialogFieldRadioButton).include?(@edit[:field_typ]))
 
       @edit[:field_required]      = key[:required]      = true
-      @edit[:field_sort_by]       = key[:sort_by]       = "description"
-      @edit[:field_sort_order]    = key[:sort_order]    = "ascending"
-      @edit[:field_data_typ]      = key[:data_typ]      = "string"
+      @edit[:field_sort_by]       = key[:sort_by]       = 'description'
+      @edit[:field_sort_order]    = key[:sort_order]    = 'ascending'
+      @edit[:field_data_typ]      = key[:data_typ]      = 'string'
       @edit[:field_values]        = key[:values]        = []
       @edit[:field_default_value] = key[:default_value] = nil
     end
@@ -908,7 +908,7 @@ module MiqAeCustomizationController::Dialogs
     if params[:field_typ]
 
       # added TagControl - initialize values
-      if params[:field_typ].include?("Tag")
+      if params[:field_typ].include?('Tag')
         @edit[:field_category]     = key[:category]     = nil
         @edit[:field_single_value] = key[:single_value] = true
         @edit[:field_required]     = key[:required]     = false
@@ -958,18 +958,18 @@ module MiqAeCustomizationController::Dialogs
         if params[:field_default_value]
           @edit[:field_default_value] = key[:default_value] = params[:field_default_value]
         else
-          @edit[:field_default_value] ||= ""
-          key[:default_value] ||= ""
+          @edit[:field_default_value] ||= ''
+          key[:default_value] ||= ''
         end
 
         if params[:field_required]
-          @edit[:field_required] = key[:required] = (params[:field_required] == "true")
+          @edit[:field_required] = key[:required] = (params[:field_required] == 'true')
         end
       end
 
       if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(@edit[:field_typ])
         if params[:field_protected]
-          @edit[:field_protected] = key[:protected] = (params[:field_protected] == "true")
+          @edit[:field_protected] = key[:protected] = (params[:field_protected] == 'true')
         else
           @edit[:field_protected] ||= false
           key[:protected] ||= false
@@ -984,24 +984,24 @@ module MiqAeCustomizationController::Dialogs
       if @edit[:field_typ] =~ /Drop|Radio/
         if params[:field_default_value]
           @edit[:field_default_value] = key[:default_value] =
-            params[:field_default_value] == "" ? nil : params[:field_default_value]
+            params[:field_default_value] == '' ? nil : params[:field_default_value]
         else
           @edit[:field_default_value] ||= nil
           key[:default_value] ||= nil
         end
       end
 
-      if @edit[:field_typ].include?("TagControl")
+      if @edit[:field_typ].include?('TagControl')
         if params[:field_category]
           @edit[:field_category] = key[:category] = params[:field_category]
         end
 
         if params[:field_single_value]
-          @edit[:field_single_value] = key[:single_value] = (params[:field_single_value] == "true")
+          @edit[:field_single_value] = key[:single_value] = (params[:field_single_value] == 'true')
         end
 
         if params[:field_required]
-          @edit[:field_required] = key[:required] = (params[:field_required] == "true")
+          @edit[:field_required] = key[:required] = (params[:field_required] == 'true')
         end
 
         @edit[:field_sort_by]    = key[:sort_by]    = params[:field_sort_by]  if params[:field_sort_by]
@@ -1023,7 +1023,7 @@ module MiqAeCustomizationController::Dialogs
     if nodes.length == 1
       # @edit[:new][:label] = @record.label
       # @edit[:new][:description] = @record.description
-      @sb[:node_typ] = nil if params[:action] != "dialog_form_field_changed"
+      @sb[:node_typ] = nil if params[:action] != 'dialog_form_field_changed'
 
     elsif nodes.length == 2
       # set name/description for selected tab
@@ -1031,7 +1031,7 @@ module MiqAeCustomizationController::Dialogs
       tab = @edit[:new][:tabs][ids.last.to_i]
       @edit[:tab_label]       = tab[:label]
       @edit[:tab_description] = tab[:description]
-      @sb[:node_typ] = "tab" if params[:action] != "dialog_form_field_changed"
+      @sb[:node_typ] = 'tab' if params[:action] != 'dialog_form_field_changed'
 
     elsif nodes.length == 3
       ids = nodes[2].split('-')
@@ -1039,7 +1039,7 @@ module MiqAeCustomizationController::Dialogs
       # set name/description for selected group
       @edit[:group_label]       = group[:label]
       @edit[:group_description] = group[:description]
-      @sb[:node_typ] = "box" if params[:action] != "dialog_form_field_changed"
+      @sb[:node_typ] = 'box' if params[:action] != 'dialog_form_field_changed'
 
     elsif nodes.length == 4
       # set name/description for selected field
@@ -1070,7 +1070,7 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_required]             = field[:required]
       end
 
-      if field[:typ].include?("TagControl")
+      if field[:typ].include?('TagControl')
         @edit[:field_single_value] = field[:single_value]
         @edit[:field_category]     = field[:category]
       end
@@ -1087,8 +1087,8 @@ module MiqAeCustomizationController::Dialogs
       if %w(DialogFieldTagControl DialogFieldDropDownList DialogFieldRadioButton).include?(field[:typ])
         @edit.update(
           :field_required   => field[:required],
-          :field_sort_by    => field[:sort_by] ? field[:sort_by].to_s : "description",
-          :field_sort_order => field[:sort_order] ? field[:sort_order].to_s : "ascending",
+          :field_sort_by    => field[:sort_by] ? field[:sort_by].to_s : 'description',
+          :field_sort_order => field[:sort_order] ? field[:sort_order].to_s : 'ascending',
           :field_data_typ   => field[:data_typ],
           :field_values     => field[:values] ? copy_array(field[:values]) : []
         )
@@ -1096,7 +1096,7 @@ module MiqAeCustomizationController::Dialogs
         @edit[:field_past_dates] = field[:past_dates]
       end
 
-      @sb[:node_typ] = "element" if params[:action] != "dialog_form_field_changed"
+      @sb[:node_typ] = 'element' if params[:action] != 'dialog_form_field_changed'
     end
     dialog_edit_build_tree
     session[:changed] = (@edit[:new] != @edit[:current])
@@ -1113,11 +1113,11 @@ module MiqAeCustomizationController::Dialogs
               # if field being edited/displayed is date/time no need to delete it from array
               # incase user wants to change the type
               # don't remove from array if field being added in Date/time field
-              if !["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(@edit[:field_typ]) &&
-                 ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field[:typ]) &&
-                 !["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(params[:field_typ])
-                @edit[:field_types].delete("DialogFieldDateControl")
-                @edit[:field_types].delete("DialogFieldDateTimeControl")
+              if !['DialogFieldDateControl', 'DialogFieldDateTimeControl'].include?(@edit[:field_typ]) &&
+                 ['DialogFieldDateControl', 'DialogFieldDateTimeControl'].include?(field[:typ]) &&
+                 !['DialogFieldDateControl', 'DialogFieldDateTimeControl'].include?(params[:field_typ])
+                @edit[:field_types].delete('DialogFieldDateControl')
+                @edit[:field_types].delete('DialogFieldDateTimeControl')
                 break
               end
             end
@@ -1146,7 +1146,7 @@ module MiqAeCustomizationController::Dialogs
 
     # want support the others buttons in future
     # @edit[:dialog_buttons] = ["save","submit","continue","reset","cancel"]
-    @edit[:dialog_buttons] = ["submit", "cancel"]
+    @edit[:dialog_buttons] = ['submit', 'cancel']
 
     # setting tabs
     @edit[:new][:tabs] = []
@@ -1191,19 +1191,19 @@ module MiqAeCustomizationController::Dialogs
             if %w(DialogFieldDropDownList DialogFieldRadioButton).include?(f.type)
               fld.update(
                 :required      => f.required.nil? ? true : f.required,
-                :sort_by       => f.sort_by ? f.sort_by.to_s : "description",
-                :sort_order    => f.sort_order ? f.sort_order.to_s : "ascending",
-                :data_typ      => f.data_type ? f.data_type : "string",
+                :sort_by       => f.sort_by ? f.sort_by.to_s : 'description',
+                :sort_order    => f.sort_order ? f.sort_order.to_s : 'ascending',
+                :data_typ      => f.data_type ? f.data_type : 'string',
                 :values        => f.values ? copy_array(f.values) : [],
                 :default_value => f.default_value
               )
             end
 
-            if f.type == "DialogFieldCheckBox"
-              fld[:default_value] = f.default_value.to_s != "f"
+            if f.type == 'DialogFieldCheckBox'
+              fld[:default_value] = f.default_value.to_s != 'f'
               fld[:required] = !!f.required
 
-            elsif f.type.include?("Text")
+            elsif f.type.include?('Text')
               if %w(DialogFieldTextBox DialogFieldTextAreaBox).include?(f.type)
                 fld[:protected]      = f.protected?
                 fld[:validator_type] = f.validator_type
@@ -1211,16 +1211,16 @@ module MiqAeCustomizationController::Dialogs
                 fld[:data_typ]       = f.data_type
               end
               fld[:required]             = f.required
-              fld[:default_value]        = f.default_value.nil? ? "" : f.default_value
+              fld[:default_value]        = f.default_value.nil? ? '' : f.default_value
 
-            elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(f.type)
+            elsif ['DialogFieldDateControl', 'DialogFieldDateTimeControl'].include?(f.type)
               fld[:past_dates] = f.show_past_dates.nil? ? false : f.show_past_dates
 
-            elsif f.type.include?("TagControl")
+            elsif f.type.include?('TagControl')
               fld[:single_value] = f.single_value?
               fld[:required]     = f.required
-              fld[:sort_by]      = f.sort_by ? f.sort_by.to_s : "description"
-              fld[:sort_order]   = f.sort_order ? f.sort_order.to_s : "ascending"
+              fld[:sort_by]      = f.sort_by ? f.sort_by.to_s : 'description'
+              fld[:sort_order]   = f.sort_order ? f.sort_order.to_s : 'ascending'
               fld[:data_typ]     = f.data_type
               fld[:category]     = f.category
             end
@@ -1241,7 +1241,7 @@ module MiqAeCustomizationController::Dialogs
 
     @edit[:current] = copy_hash(@edit[:new])
     dialog_edit_build_tree
-    x_node_set("root", :dialog_edit_tree)     # always set it to root for edit tree
+    x_node_set('root', :dialog_edit_tree)     # always set it to root for edit tree
 
     session[:edit] = @edit
   end
@@ -1299,7 +1299,7 @@ module MiqAeCustomizationController::Dialogs
                     fld[:auto_refresh]        = field[:auto_refresh]
                   end
 
-                  if field[:typ] == "DialogFieldCheckBox"
+                  if field[:typ] == 'DialogFieldCheckBox'
                     fld[:default_value] = field[:default_value]
                     fld[:required] = field[:required]
 
@@ -1313,10 +1313,10 @@ module MiqAeCustomizationController::Dialogs
                     fld[:required]             = field[:required]  if field[:typ].include?('Text')
                     fld[:default_value]        = field[:default_value].to_s
 
-                  elsif ["DialogFieldDateControl", "DialogFieldDateTimeControl"].include?(field[:typ])
+                  elsif ['DialogFieldDateControl', 'DialogFieldDateTimeControl'].include?(field[:typ])
                     fld[:show_past_dates] = field[:past_dates]
 
-                  elsif field[:typ].include?("TagControl")
+                  elsif field[:typ].include?('TagControl')
                     fld.update(
                       :category           => field[:category],
                       :required           => field[:required],
@@ -1357,7 +1357,7 @@ module MiqAeCustomizationController::Dialogs
     if !params[:id]
       dialogs = find_checked_items
       if dialogs.empty?
-        add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:model => "Dialog"), :task => display_name}, :error)
+        add_flash(_('No %{model} were selected for %{task}') % {:model => ui_lookup(:model => 'Dialog'), :task => display_name}, :error)
       else
         process_dialogs(dialogs, method)
       end
@@ -1365,16 +1365,16 @@ module MiqAeCustomizationController::Dialogs
       replace_right_cell(x_node, [:dialogs])
     else # showing 1 dialog
       if params[:id].nil? || Dialog.find_by_id(params[:id]).nil?
-        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "Dialog")}, :error)
+        add_flash(_('%{record} no longer exists') % {:record => ui_lookup(:model => 'Dialog')}, :error)
         dialog_list
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       else
         dialogs.push(params[:id])
         process_dialogs(dialogs, method)  unless dialogs.empty?
         # TODO: tells callers to go back to show_list because this SMIS Agent may be gone
         # Should be refactored into calling show_list right here
         if method == 'destroy'
-          self.x_node = "root"
+          self.x_node = 'root'
         end
         get_node_info
         replace_right_cell(x_node, [:dialogs])
@@ -1384,18 +1384,18 @@ module MiqAeCustomizationController::Dialogs
   end
 
   def dialog_get_node_info(treenodeid)
-    if treenodeid == "root"
+    if treenodeid == 'root'
       dialog_list
-      @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "Dialog")}
+      @right_cell_text = _('All %{models}') % {:models => ui_lookup(:models => 'Dialog')}
     else
-      @sb[:active_tab] = "sample_tab" unless params[:tab_id]     # reset active tab if not coming in from change_tab
+      @sb[:active_tab] = 'sample_tab' unless params[:tab_id]     # reset active tab if not coming in from change_tab
       @record = Dialog.find_by_id(from_cid(treenodeid.split('-').last))
       if @record.nil?
         @replace_tree = true      # refresh tree and go back to root node if previously selected dialog record is deleted outside UI from vmdb
-        self.x_node = "root"
+        self.x_node = 'root'
         dialog_get_node_info(x_node)
       else
-        @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "Dialog"), :name => @record.label}
+        @right_cell_text = _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'Dialog'), :name => @record.label}
       end
     end
   end
@@ -1409,6 +1409,6 @@ module MiqAeCustomizationController::Dialogs
   end
 
   def needs_dropdown_values?
-    @edit[:field_typ] == "DialogFieldDropDownList" && @edit[:field_values].empty? && !@edit[:field_dynamic]
+    @edit[:field_typ] == 'DialogFieldDropDownList' && @edit[:field_values].empty? && !@edit[:field_dynamic]
   end
 end

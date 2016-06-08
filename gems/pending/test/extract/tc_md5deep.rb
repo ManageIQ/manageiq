@@ -23,7 +23,7 @@ module Extract
       assert_in_delta(32, xml.root.elements[1].attributes['md5'].strip.length, 0)
 
       # Base element should have the default name value
-      assert_equal("/", xml.root.elements[1].attributes['name'])
+      assert_equal('/', xml.root.elements[1].attributes['name'])
     end
   end
 end

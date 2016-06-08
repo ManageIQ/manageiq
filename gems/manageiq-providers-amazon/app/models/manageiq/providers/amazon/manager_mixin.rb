@@ -18,7 +18,7 @@ module ManageIQ::Providers::Amazon::ManagerMixin
   end
 
   def connect(options = {})
-    raise "no credentials defined" if missing_credentials?(options[:auth_type])
+    raise 'no credentials defined' if missing_credentials?(options[:auth_type])
 
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
@@ -30,18 +30,18 @@ module ManageIQ::Providers::Amazon::ManagerMixin
   def translate_exception(err)
     case err
     when Aws::EC2::Errors::SignatureDoesNotMatch
-      MiqException::MiqHostError.new "SignatureMismatch - check your AWS Secret Access Key and signing method"
+      MiqException::MiqHostError.new 'SignatureMismatch - check your AWS Secret Access Key and signing method'
     when Aws::EC2::Errors::AuthFailure
-      MiqException::MiqHostError.new "Login failed due to a bad username or password."
+      MiqException::MiqHostError.new 'Login failed due to a bad username or password.'
     when Aws::Errors::MissingCredentialsError
-      MiqException::MiqHostError.new "Missing credentials"
+      MiqException::MiqHostError.new 'Missing credentials'
     else
       MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
     end
   end
 
   def verify_credentials(auth_type = nil, options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
+    raise MiqException::MiqHostError, 'No credentials defined' if missing_credentials?(auth_type)
 
     begin
       # EC2 does Lazy Connections, so call a cheap function
@@ -61,7 +61,7 @@ module ManageIQ::Providers::Amazon::ManagerMixin
 
   def validate_timeline
     {:available => false,
-     :message   => _("Timeline is not available for %{model}") % {:model => ui_lookup(:model => self.class.to_s)}}
+     :message   => _('Timeline is not available for %{model}') % {:model => ui_lookup(:model => self.class.to_s)}}
   end
 
   module ClassMethods
@@ -98,7 +98,7 @@ module ManageIQ::Providers::Amazon::ManagerMixin
       all_ems_names     = all_emses.map(&:name).to_set
       known_ems_regions = all_emses.select { |e| e.authentication_userid == access_key_id }.map(&:provider_region)
 
-      ec2 = raw_connect(access_key_id, secret_access_key, :EC2, "us-east-1")
+      ec2 = raw_connect(access_key_id, secret_access_key, :EC2, 'us-east-1')
       region_names_to_discover = ec2.client.describe_regions.regions.map(&:region_name)
 
       (region_names_to_discover - known_ems_regions).each do |region_name|
@@ -111,7 +111,7 @@ module ManageIQ::Providers::Amazon::ManagerMixin
 
       # If greenfield Amazon, at least create the us-east-1 region.
       if new_emses.blank? && known_ems_regions.blank?
-        new_emses << create_discovered_region("us-east-1", access_key_id, secret_access_key, all_ems_names)
+        new_emses << create_discovered_region('us-east-1', access_key_id, secret_access_key, all_ems_names)
       end
 
       EmsRefresh.queue_refresh(new_emses) unless new_emses.blank?
@@ -122,7 +122,7 @@ module ManageIQ::Providers::Amazon::ManagerMixin
     def discover_queue(access_key_id, secret_access_key)
       MiqQueue.put(
         :class_name  => name,
-        :method_name => "discover_from_queue",
+        :method_name => 'discover_from_queue',
         :args        => [access_key_id, MiqPassword.encrypt(secret_access_key)]
       )
     end

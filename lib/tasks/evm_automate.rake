@@ -11,7 +11,7 @@ module EvmAutomate
 
   def self.simulate(domain, namespace, class_name, instance_name)
     user = User.super_admin
-    raise "Need a admin user to run simulation" unless user
+    raise 'Need a admin user to run simulation' unless user
     MiqAeEngine.resolve_automation_object(instance_name,
                                           user,
                                           {},
@@ -27,7 +27,7 @@ module EvmAutomate
     if ns.nil?
       MiqAeClass.all.sort_by(&:fqname).each { |c| puts "#{c.fqname}," }
     else
-      class_list = MiqAeNamespace.find_by_fqname(ns).ae_classes.collect(&:fqname).join(", ")
+      class_list = MiqAeNamespace.find_by_fqname(ns).ae_classes.collect(&:fqname).join(', ')
       puts class_list
     end
   end
@@ -46,7 +46,7 @@ namespace :evm do
     desc 'Backup all automate domains to a zip file or backup folder.'
     task :backup => :environment do
       raise 'Must specify a backup zip file' if ENV['BACKUP_ZIP_FILE'].blank?
-      puts "Datastore backup starting"
+      puts 'Datastore backup starting'
       zip_file       = ENV['BACKUP_ZIP_FILE']
       begin
         MiqAeDatastore.backup('zip_file'  => zip_file,
@@ -59,39 +59,39 @@ namespace :evm do
 
     desc 'Reset the default automate domain(s) (ManageIQ and others)'
     task :reset => :environment do
-      puts "Resetting the default domains in the automation model"
+      puts 'Resetting the default domains in the automation model'
       MiqAeDatastore.reset_to_defaults
-      puts "The default domains in the automation model have been reset."
+      puts 'The default domains in the automation model have been reset.'
     end
 
     desc 'Usage information regarding available tasks'
     task :usage => :environment do
-      puts "The following automate tasks are available"
-      puts " Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name " \
-                                "IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename " \
-                                "SYSTEM=true|false ENABLED=true|false"
-      puts " Export          - Usage: rake evm:automate:export DOMAIN=domain_name "  \
-                               "EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
-      puts " Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false"
-      puts " Restore         - Usage: rake evm:automate:restore BACKUP_ZIP_FILE=filename"
-      puts " Clear           - Usage: rake evm:automate:clear"
-      puts " Convert         - Usage: rake evm:automate:convert DOMAIN=domain_name FILE=db/fixtures/automation_base.xml EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename"
-      puts " Reset           - Usage: rake evm:automate:reset"
-      puts " Simulate        - Usage: rake evm:automate:simulate DOMAIN=domain_name NAMESPACE=sample CLASS=Methods INSTANCE=Inspectme"
-      puts " Extract Methods - Usage: rake evm:automate:extract_methods FOLDER=automate_methods"
-      puts " List Class      - Usage: rake evm:automate:list_class NAMESPACE=sample"
+      puts 'The following automate tasks are available'
+      puts ' Import          - Usage: rake evm:automate:import PREVIEW=true DOMAIN=domain_name ' \
+                                'IMPORT_AS=new_domain_name IMPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename ' \
+                                'SYSTEM=true|false ENABLED=true|false'
+      puts ' Export          - Usage: rake evm:automate:export DOMAIN=domain_name '  \
+                               'EXPORT_AS=new_domain_name NAMESPACE=sample CLASS=methods EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename'
+      puts ' Backup          - Usage: rake evm:automate:backup BACKUP_ZIP_FILE=filename OVERWRITE=false'
+      puts ' Restore         - Usage: rake evm:automate:restore BACKUP_ZIP_FILE=filename'
+      puts ' Clear           - Usage: rake evm:automate:clear'
+      puts ' Convert         - Usage: rake evm:automate:convert DOMAIN=domain_name FILE=db/fixtures/automation_base.xml EXPORT_DIR=./model_export|ZIP_FILE=filename|YAML_FILE=filename'
+      puts ' Reset           - Usage: rake evm:automate:reset'
+      puts ' Simulate        - Usage: rake evm:automate:simulate DOMAIN=domain_name NAMESPACE=sample CLASS=Methods INSTANCE=Inspectme'
+      puts ' Extract Methods - Usage: rake evm:automate:extract_methods FOLDER=automate_methods'
+      puts ' List Class      - Usage: rake evm:automate:list_class NAMESPACE=sample'
     end
 
     desc 'Deletes ALL automate model information for ALL domains.'
     task :clear => :environment do
-      puts "Clearing the automation model"
+      puts 'Clearing the automation model'
       EvmAutomate.reset_tables
-      puts "The automate model has been cleared."
+      puts 'The automate model has been cleared.'
     end
 
     desc 'Lists automate classes'
     task :list_class => :environment do
-      namespace      = ENV["NAMESPACE"]
+      namespace      = ENV['NAMESPACE']
       puts "Listing automate classes#{" in #{namespace}" if namespace}"
       EvmAutomate.list_class(namespace)
     end
@@ -100,7 +100,7 @@ namespace :evm do
     task :export => :environment do
       begin
         domain         = ENV['DOMAIN']
-        raise "Must specify domain for export:" if domain.nil?
+        raise 'Must specify domain for export:' if domain.nil?
         zip_file       = ENV['ZIP_FILE']
         export_dir     = ENV['EXPORT_DIR']
         yaml_file      = ENV['YAML_FILE']
@@ -126,7 +126,7 @@ namespace :evm do
     desc 'Import automate model information from an export folder or zip file. '
     task :import => :environment do
       begin
-        raise "Must specify domain for import:" if ENV['DOMAIN'].blank?
+        raise 'Must specify domain for import:' if ENV['DOMAIN'].blank?
         if ENV['YAML_FILE'].blank? && ENV['IMPORT_DIR'].blank? && ENV['ZIP_FILE'].blank?
           raise 'Must specify either a directory with exported automate model or a zip file'
         end
@@ -165,21 +165,21 @@ namespace :evm do
 
     desc 'Extract automate methods'
     task :extract_methods => :environment do
-      method_folder  = ENV["FOLDER"] ||= './automate_methods'
+      method_folder  = ENV['FOLDER'] ||= './automate_methods'
       puts "Extracting automate methods from database to folder: #{method_folder} ..."
       EvmAutomate.extract_methods(method_folder)
-      puts "The automate methods have been extracted."
+      puts 'The automate methods have been extracted.'
     end
 
     desc 'Method simulation'
     task :simulate => :environment do
       begin
-        puts "Automate simulation starting"
-        domain         = ENV["DOMAIN"]
-        namespace      = ENV["NAMESPACE"]
-        class_name     = ENV["CLASS"]
-        instance_name  = ENV["INSTANCE"]
-        err_msg = ""
+        puts 'Automate simulation starting'
+        domain         = ENV['DOMAIN']
+        namespace      = ENV['NAMESPACE']
+        class_name     = ENV['CLASS']
+        instance_name  = ENV['INSTANCE']
+        err_msg = ''
         err_msg << "Must specify automate model domain\n"    if domain.nil?
         err_msg << "Must specify automate model namespace\n" if namespace.nil?
         err_msg << "Must specify automate model class\n"     if class_name.nil?
@@ -189,7 +189,7 @@ namespace :evm do
           raise err_msg
         end
         EvmAutomate.simulate(domain, namespace, class_name, instance_name)
-        puts "Automate simulation ending"
+        puts 'Automate simulation ending'
       rescue => err
         STDERR.puts err.message
         exit(1)
@@ -210,9 +210,9 @@ namespace :evm do
 
     desc 'Convert the legacy automation model to new format  ENV options FILE,DOMAIN,EXPORT_DIR|ZIP_FILE|YAML_FILE'
     task :convert => :environment do
-      puts "Convert automation model from the legacy xml file"
-      domain_name    = ENV["DOMAIN"]
-      raise "Must specify the DOMAIN name to convert as" if domain_name.nil?
+      puts 'Convert automation model from the legacy xml file'
+      domain_name    = ENV['DOMAIN']
+      raise 'Must specify the DOMAIN name to convert as' if domain_name.nil?
       export_options = {}
       zip_file    = ENV['ZIP_FILE']
       export_dir  = ENV['EXPORT_DIR']
@@ -224,12 +224,12 @@ namespace :evm do
       export_options['yaml_file'] = yaml_file if yaml_file
       export_options['overwrite'] = overwrite
 
-      raise "Must specify the ZIP_FILE or EXPORT_DIR or YAML_FILE to store converted model" if zip_file.nil? && export_dir.nil? && yaml_file.nil?
+      raise 'Must specify the ZIP_FILE or EXPORT_DIR or YAML_FILE to store converted model' if zip_file.nil? && export_dir.nil? && yaml_file.nil?
 
-      model_filename = ENV["FILE"]
-      raise "Must specify legacy automation backup file xml to " + \
+      model_filename = ENV['FILE']
+      raise 'Must specify legacy automation backup file xml to ' + \
         "convert to the new automate model:  - Usage FILE='xml_filename'" if model_filename.nil?
-      raise "Automation file to use for conversion does not " + \
+      raise 'Automation file to use for conversion does not ' + \
         "exist: #{model_filename}"  unless File.exist?(model_filename)
       puts "Converting the automation model from the xml file: #{model_filename}"
       MiqAeDatastore.convert(model_filename, domain_name, export_options)

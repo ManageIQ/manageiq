@@ -19,11 +19,11 @@ $log.add 'err_console'
 $stdout.sync = true
 $stderr.sync = true
 
-MKFILE  = "payload"
-SERVER    = raise "please define SERVER"
-USERNAME  = raise "please define USERNAME"
-PASSWORD  = raise "please define PASSWORD"
-TARGET_VM = raise "please define"
+MKFILE  = 'payload'
+SERVER    = raise 'please define SERVER'
+USERNAME  = raise 'please define USERNAME'
+PASSWORD  = raise 'please define PASSWORD'
+TARGET_VM = raise 'please define'
 LOG_SIZE = 4096
 
 MB = 1024 * 1024
@@ -44,7 +44,7 @@ begin
   #
   # Get the target VM
   #
-  tvm = vim.virtualMachinesByFilter("config.name" => TARGET_VM)
+  tvm = vim.virtualMachinesByFilter('config.name' => TARGET_VM)
   if tvm.empty?
     puts "VM: #{TARGET_VM} not found"
     exit
@@ -67,12 +67,12 @@ begin
   #
   # Snapshot the VM before we change it.
   #
-  miqVm.createSnapshot("MiqAutomateSnapshot", "Pre-automate snapshot of VM - #{Time.now.utc}", "false", "false")
+  miqVm.createSnapshot('MiqAutomateSnapshot', "Pre-automate snapshot of VM - #{Time.now.utc}", 'false', 'false')
 
   #
   # Construct the path to the new payload vmdk file.
   #
-  payloadVmdk = File.join(File.dirname(miqVm.dsPath), "miqPayload.vmdk")
+  payloadVmdk = File.join(File.dirname(miqVm.dsPath), 'miqPayload.vmdk')
   puts "payloadVmdk = #{payloadVmdk}"
 
   #
@@ -97,11 +97,11 @@ begin
   #
   vixDiskInfo = {:connection => vdlConnection, :fileName   => payloadVmdk}
   dInfo = OpenStruct.new
-  dInfo.mountMode = "rw"
+  dInfo.mountMode = 'rw'
   dInfo.vixDiskInfo = vixDiskInfo
   disk = MiqDisk.getDisk(dInfo)
   unless disk
-    puts "Failed to open disk for writing"
+    puts 'Failed to open disk for writing'
     exit(1)
   end
 
@@ -121,13 +121,13 @@ begin
   # Write the mkfs data to the disk.
   #
   mkf = File.open(MKFILE)
-  print "Writing mkfs"
+  print 'Writing mkfs'
   disk.seek(diskOffset)
   while (buf = mkf.read(8192))
-    print "."
+    print '.'
     disk.write(buf, buf.length)
   end
-  puts "done."
+  puts 'done.'
   mkf.close
 
   logHeader = Log4r::MiqPayloadOutputter.genHeader(LOG_SIZE)
@@ -135,14 +135,14 @@ begin
   wb = disk.write(logHeader, logHeader.length)
   disk.close
   if wb != Log4r::MiqPayloadOutputter::HEADER_SIZE
-    puts "Failed to write log header"
+    puts 'Failed to write log header'
     exit 1
   end
 
   #
   # Attach the automate ISO CD image to the VM's CDROM drive.
   #
-  miqVm.attachIsoToCd("[DEVOpen-E0] MIQ-FILES/miqknoppix.iso")
+  miqVm.attachIsoToCd('[DEVOpen-E0] MIQ-FILES/miqknoppix.iso')
 
   #
   # Stert the VM, booting to the CD.
@@ -167,15 +167,15 @@ begin
   #
   # Open the payload disk and retrieve the log.
   #
-  dInfo.mountMode = "r"
+  dInfo.mountMode = 'r'
   disk = MiqDisk.getDisk(dInfo)
   unless disk
-    puts "Failed to open payload disk for reading"
+    puts 'Failed to open payload disk for reading'
     exit(1)
   end
 
   disk.seek(0)
-  magic, size, pos = disk.read(Log4r::MiqPayloadOutputter::HEADER_SIZE).unpack("a8LL")
+  magic, size, pos = disk.read(Log4r::MiqPayloadOutputter::HEADER_SIZE).unpack('a8LL')
 
   puts
   puts "MAGIC: #{magic}"
@@ -184,9 +184,9 @@ begin
   puts
 
   puts
-  puts "*** LOG START"
+  puts '*** LOG START'
   puts disk.read(pos)
-  puts "*** LOG END"
+  puts '*** LOG END'
 
   disk.close
 
@@ -199,7 +199,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vdlConnection.disconnect if vdlConnection
   vim.disconnect if vim

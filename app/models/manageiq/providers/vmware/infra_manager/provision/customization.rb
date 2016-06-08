@@ -18,7 +18,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
       return spec
     end
 
-    spec = VimHash.new("CustomizationSpec") if spec.nil?
+    spec = VimHash.new('CustomizationSpec') if spec.nil?
 
     # Create customization spec based on platform
     case source.platform
@@ -33,12 +33,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
 
     globalIPSettings = find_build_spec_path(spec, 'CustomizationGlobalIPSettings', 'globalIPSettings')
     # In Linux, DNS server settings are global.  In Windows, these settings are adapter-specific
-    set_spec_array_option(globalIPSettings, :dnsServerList, :dns_servers)  if source.platform == "linux"
+    set_spec_array_option(globalIPSettings, :dnsServerList, :dns_servers)  if source.platform == 'linux'
     set_spec_array_option(globalIPSettings, :dnsSuffixList, :dns_suffixes)
 
     customization_nicSettingMap(source.platform, spec)
 
-    if source.platform == "windows"
+    if source.platform == 'windows'
       options = find_build_spec_path(spec, 'CustomizationWinOptions', 'options')
       set_spec_option(options, :changeSID, :sysprep_change_sid)
       # From: What's New in the VI SDK 2.5?
@@ -55,8 +55,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
 
     identity = nil
     if sysprep_option == 'file'
-      identity = VimHash.new("CustomizationSysprepText") do |sysprep|
-        _log.info "Sysprep Text being set from file"
+      identity = VimHash.new('CustomizationSysprepText') do |sysprep|
+        _log.info 'Sysprep Text being set from file'
         sysprep.value = get_option(:sysprep_upload_text)
       end
     else
@@ -69,7 +69,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
       # From: What's New in the VI SDK 2.5?
       # To change the administrator password, set the administrator password to blank in the master VM.
       # Sysprep will then be able to change the password to the one specified by the password.
-      set_spec_password_option(guiUnattended, :password, :sysprep_password, "new administrator")
+      set_spec_password_option(guiUnattended, :password, :sysprep_password, 'new administrator')
 
       identification = find_build_spec_path(identity, 'CustomizationIdentification', 'identification')
       if get_option(:sysprep_identification) == 'workgroup'
@@ -80,12 +80,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
         identification.delete('joinWorkgroup')
         set_spec_option(identification, :joinDomain, :sysprep_domain_name)
         set_spec_option(identification, :domainAdmin, :sysprep_domain_admin)
-        set_spec_password_option(identification, :domainAdminPassword, :sysprep_domain_password, "domain administrator")
+        set_spec_password_option(identification, :domainAdminPassword, :sysprep_domain_password, 'domain administrator')
       end
 
       licenseFilePrintData = find_build_spec_path(identity, 'CustomizationLicenseFilePrintData', 'licenseFilePrintData')
       svr_license = get_option(:sysprep_server_license_mode)
-      licenseFilePrintData.autoMode = VimString.new(svr_license, "CustomizationLicenseDataMode")
+      licenseFilePrintData.autoMode = VimString.new(svr_license, 'CustomizationLicenseDataMode')
       set_spec_option(licenseFilePrintData, :autoUsers, :sysprep_per_server_max_connections, nil, :to_i)
 
       userData = find_build_spec_path(identity, 'CustomizationUserData', 'userData')
@@ -120,39 +120,39 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
   def customization_nicSettingMap(source_platform, spec)
     nic_settings = collect_nic_settings
 
-    spec.nicSettingMap ||= VimArray.new("ArrayOfCustomizationAdapterMapping")
+    spec.nicSettingMap ||= VimArray.new('ArrayOfCustomizationAdapterMapping')
 
     requested_network_adapter_count = options[:requested_network_adapter_count].to_i
 
     nic_settings.each_with_index do |nic, idx|
       break if idx >= requested_network_adapter_count
       _log.warn "Nic index:<#{idx}> -- settings:<#{nic.inspect}>"
-      spec.nicSettingMap[idx] = VimHash.new("CustomizationAdapterMapping") if spec.nicSettingMap[idx].blank?
+      spec.nicSettingMap[idx] = VimHash.new('CustomizationAdapterMapping') if spec.nicSettingMap[idx].blank?
       adap_map = spec.nicSettingMap[idx]
       adapter = find_build_spec_path(adap_map, 'CustomizationIPSettings', 'adapter')
 
       set_spec_option(adapter, :dnsDomain, nil, nil, nil, nic[:dns_domain])
       # In Windows, the DNS Server list is adapter-specific, whereas in Linux, it is global.
-      if source_platform == "windows"
+      if source_platform == 'windows'
         set_spec_array_option(adapter, :dnsServerList, nil, nic[:dns_servers])
 
         netbios = get_option(nil, nic[:sysprep_netbios_mode])
-        adapter.netBIOS = VimString.new(netbios, "CustomizationNetBIOSMode") unless netbios.blank?
+        adapter.netBIOS = VimString.new(netbios, 'CustomizationNetBIOSMode') unless netbios.blank?
       end
 
       wins_server = get_option(nil, nic[:wins_servers]).to_s.split(',')
       set_spec_option(adapter, :primaryWINS,   nil, nil, nil, wins_server[0])
       set_spec_option(adapter, :secondaryWINS, nil, nil, nil, wins_server[1])
 
-      if get_option(nil, nic[:addr_mode]) == "dhcp"
-        _log.info "Using DHCP IP settings"
-        adapter.ip = VimHash.new("CustomizationDhcpIpGenerator")
+      if get_option(nil, nic[:addr_mode]) == 'dhcp'
+        _log.info 'Using DHCP IP settings'
+        adapter.ip = VimHash.new('CustomizationDhcpIpGenerator')
         adapter.delete('gateway')
         adapter.delete('subnetMask')
       else
         set_spec_array_option(adapter, :gateway, nil, nic[:gateway])
         set_spec_option(adapter, :subnetMask, nil, nil, nil, nic[:subnet_mask])
-        adapter.ip = VimHash.new("CustomizationFixedIp") do |fixed_ip|
+        adapter.ip = VimHash.new('CustomizationFixedIp') do |fixed_ip|
           ip_address = get_option(nil, nic[:ip_addr])
           _log.info "Using Fixed IP address [#{ip_address}]"
           fixed_ip.ipAddress = ip_address
@@ -175,11 +175,11 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
       nic_count.downto(requested_network_adapter_count + 1) { spec.nicSettingMap.pop }
     elsif requested_network_adapter_count > nic_count
       # Add DHCP nicSettings to match network adapter count
-      spec.nicSettingMap ||= VimArray.new("ArrayOfCustomizationAdapterMapping")
+      spec.nicSettingMap ||= VimArray.new('ArrayOfCustomizationAdapterMapping')
       nic_count.upto(requested_network_adapter_count - 1) do
-        adapter_map = VimHash.new("CustomizationAdapterMapping")
+        adapter_map = VimHash.new('CustomizationAdapterMapping')
         adapter = find_build_spec_path(adapter_map, 'CustomizationIPSettings', 'adapter')
-        adapter.ip = VimHash.new("CustomizationDhcpIpGenerator")
+        adapter.ip = VimHash.new('CustomizationDhcpIpGenerator')
         spec.nicSettingMap << adapter_map
       end
     end
@@ -192,12 +192,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
     custom_spec['nicSettingMap'].each do |nic|
       # From VI API: CustomizationUnknownIpGenerator - "The IP address is left unspecified. The user must be prompted to supply an IP address."
       ip_data_type = nic['adapter']['ip'].xsiType rescue nil
-      raise MiqException::MiqProvisionError, "Unsupported Customization Spec option detected: Prompt the user for an IP address" if ip_data_type == 'CustomizationUnknownIpGenerator'
+      raise MiqException::MiqProvisionError, 'Unsupported Customization Spec option detected: Prompt the user for an IP address' if ip_data_type == 'CustomizationUnknownIpGenerator'
     end
   end
 
   def load_customization_spec(custom_spec_name)
-    custom_spec_name = nil if custom_spec_name == "__VC__NONE__"
+    custom_spec_name = nil if custom_spec_name == '__VC__NONE__'
     unless custom_spec_name.blank?
       _log.info "Using customization spec [#{custom_spec_name}]"
       cs = source.ext_management_system.customization_specs.find_by_id(custom_spec_name)
@@ -207,7 +207,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
       _log.info "Using customization spec [#{cs.name}]"
       return cs
     else
-      _log.info "Customization spec name is empty, no spec will be loaded."
+      _log.info 'Customization spec name is empty, no spec will be loaded.'
       return nil
     end
   end
@@ -223,7 +223,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
   end
 
   def customization_hostname
-    VimHash.new("CustomizationFixedName") do |mach_name|
+    VimHash.new('CustomizationFixedName') do |mach_name|
       computer_name = get_option(:vm_target_hostname)
       computer_name = hostname_cleanup(computer_name)
       _log.info "CustomizationFixedName was set to #{computer_name}(#{computer_name.class})"
@@ -235,8 +235,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
     value = get_option(key).to_s.strip
     value = MiqPassword.try_decrypt(value)
     unless value.blank?
-      pwd_hash = VimHash.new("CustomizationPassword") do |cust_pass|
-        cust_pass.plainText = "true"
+      pwd_hash = VimHash.new('CustomizationPassword') do |cust_pass|
+        cust_pass.plainText = 'true'
         cust_pass.value     = value
         _log.info "#{pwd_type} password was set [#{"*" * value.length}]"
       end
@@ -257,7 +257,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
     else
       value = override_value.nil? ? get_option(key) : override_value
     end
-    values = value.to_s.split(",")
+    values = value.to_s.split(',')
     unless values.blank?
       value = VimArray.new { |l| values.each { |i| l << i.strip } }
       _log.info "#{property} was set to #{value.inspect} (#{value.class})"

@@ -60,7 +60,7 @@ module NTFS
     attr_accessor :version, :volumeInfo
 
     def initialize(stream)
-      raise "MIQ(NTFS::BootSect.initialize) Nil stream" if stream.nil?
+      raise 'MIQ(NTFS::BootSect.initialize) Nil stream' if stream.nil?
 
       # Buffer stream & get enough data to fill BPB.
       @stream = stream
@@ -121,7 +121,7 @@ module NTFS
 
       # MFT Entry 3 ==> Volume Information
       @volumeInfo = getVolumeInfo
-      @version    = @volumeInfo["version"].to_i
+      @version    = @volumeInfo['version'].to_i
     end
 
     ################################################################################
@@ -142,16 +142,16 @@ module NTFS
 
       c = data.unpack("b#{data.length * 8}")[0]
       nclusters = c.length
-      on = c.count("1")
+      on = c.count('1')
       uclusters = on
       fclusters = c.length - on
 
-      @clusterInfo = {"total" => nclusters, "free" => fclusters, "used" => uclusters}
+      @clusterInfo = {'total' => nclusters, 'free' => fclusters, 'used' => uclusters}
     end
 
     # Returns free space on file system in bytes.
     def freeBytes
-      clusterInfo["free"] * @bytesPerCluster
+      clusterInfo['free'] * @bytesPerCluster
     end
 
     def getVolumeInfo
@@ -159,19 +159,19 @@ module NTFS
       vi  = {}
 
       if nameAttrib = mft.getFirstAttribute(AT_VOLUME_NAME)
-        vi["name"] = nameAttrib.name
+        vi['name'] = nameAttrib.name
       end
 
       if objectidAttrib = mft.getFirstAttribute(AT_OBJECT_ID)
-        vi["objectId"]      = objectidAttrib.objectId.to_s
-        vi["birthVolumeId"] = objectidAttrib.birthVolumeId.to_s
-        vi["birthObjectId"] = objectidAttrib.birthObjectId.to_s
-        vi["domainId"]      = objectidAttrib.domainId.to_s
+        vi['objectId']      = objectidAttrib.objectId.to_s
+        vi['birthVolumeId'] = objectidAttrib.birthVolumeId.to_s
+        vi['birthObjectId'] = objectidAttrib.birthObjectId.to_s
+        vi['domainId']      = objectidAttrib.domainId.to_s
       end
 
       if infoAttrib = mft.getFirstAttribute(AT_VOLUME_INFORMATION)
-        vi["version"] = infoAttrib.version
-        vi["flags"]   = infoAttrib.flags
+        vi['version'] = infoAttrib.version
+        vi['flags']   = infoAttrib.flags
       end
 
       vi

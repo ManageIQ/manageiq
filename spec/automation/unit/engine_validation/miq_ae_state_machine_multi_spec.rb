@@ -1,7 +1,7 @@
-require "timecop"
+require 'timecop'
 include AutomationSpecHelper
 
-describe "MultipleStateMachineSteps" do
+describe 'MultipleStateMachineSteps' do
   before do
     MiqAeDatastore.reset_default_namespace
     @instance1           = 'instance1'
@@ -120,12 +120,12 @@ describe "MultipleStateMachineSteps" do
     create_state_class(:namespace => @ns_fqname, :name => @state_class1, :connect => connect)
     connect = "/#{@domain}/#{@namespace}/#{@state_class3}/#{@state_instance}"
     create_state_class(:namespace => @ns_fqname, :name => @state_class2, :connect => connect)
-    create_state_class(:namespace => @ns_fqname, :name => @state_class3, :connect => "#")
+    create_state_class(:namespace => @ns_fqname, :name => @state_class3, :connect => '#')
   end
 
   def create_method_class(attrs = {})
     ae_fields = {'ae_result'     => {:aetype => 'attribute', :datatype => 'string',
-                                     :default_value => "ok", :priority => 1},
+                                     :default_value => 'ok', :priority => 1},
                  'ae_next_state' => {:aetype => 'attribute', :datatype => 'string',
                                      :priority => 2},
                  'raise'         => {:aetype => 'attribute', :datatype => 'string',
@@ -134,8 +134,8 @@ describe "MultipleStateMachineSteps" do
                                      :priority => 4}}
     inst_values = {'execute'       => {:value => @common_method_name},
                    'ae_result'     => {:value => 'ok'},
-                   'ae_next_state' => {:value => ""},
-                   'raise'         => {:value => ""}}
+                   'ae_next_state' => {:value => ''},
+                   'raise'         => {:value => ''}}
     ae_instances = {@instance1 => inst_values, @instance2 => inst_values,
                     @instance3 => inst_values}
     ae_methods = {@common_method_name  => {:scope => 'instance', :location => 'inline',
@@ -152,9 +152,9 @@ describe "MultipleStateMachineSteps" do
   def create_state_class(attrs = {})
     connect = attrs.delete(:connect)
     stem    = attrs[:name]
-    all_steps = {'on_entry' => "common_state_method",
-                 'on_exit'  => "common_state_method",
-                 'on_error' => "common_state_method"}
+    all_steps = {'on_entry' => 'common_state_method',
+                 'on_exit'  => 'common_state_method',
+                 'on_error' => 'common_state_method'}
     ae_fields = {"#{stem}_1" => {:aetype => 'state', :datatype => 'string', :priority => 1},
                  "#{stem}_2" => {:aetype => 'state', :datatype => 'string', :priority => 2,
                                  :max_retries => @max_retries, :message  => 'create'},
@@ -195,7 +195,7 @@ describe "MultipleStateMachineSteps" do
     instance.save
   end
 
-  it "process all states" do
+  it 'process all states' do
     all_states = %w(SM1_1 SM1_3 SM1_4 SM2_1 SM2_3 SM2_4 SM3_1 SM3_3 SM3_4)
     guard_states = all_states + %w(SM1_2 SM2_2 SM3_2)
     send_ae_request_via_queue(@automate_args)
@@ -207,7 +207,7 @@ describe "MultipleStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to be_nil
   end
 
-  it "one of the lower state machine raises an exception" do
+  it 'one of the lower state machine raises an exception' do
     # The on_error method will get executed in the bottom most state
     # machine and as well as all the states from the parents that
     # connect to the child state machine.
@@ -228,7 +228,7 @@ describe "MultipleStateMachineSteps" do
     expect(ws.root.attributes['step_on_entry']).to match_array(on_entry_states)
   end
 
-  it "one of the lower state machine raises an exception but continues" do
+  it 'one of the lower state machine raises an exception but continues' do
     # The on_error method will get executed in the bottom most state
     # machine which will reset it to continue
     tweak_instance("/#{@domain}/#{@namespace}/#{@state_class3}", @state_instance,
@@ -249,7 +249,7 @@ describe "MultipleStateMachineSteps" do
     expect(ws.root.attributes['step_on_error']).to match_array(%w(SM3_1))
   end
 
-  it "one of the lower state machine causes a retry" do
+  it 'one of the lower state machine causes a retry' do
     # The on_error method will get executed in the bottom most state
     # machine and as well as all the states from the parents that
     # connect to the child state machine.

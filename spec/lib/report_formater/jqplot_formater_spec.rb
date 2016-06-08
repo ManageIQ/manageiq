@@ -27,12 +27,12 @@ describe ReportFormatter::JqplotFormatter do
         expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
         render_report(report)
         expect(report.chart[:data][0][0]).to eq(15)
-        expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq("bar")
+        expect(report.chart[:options][:axes][:yaxis][:ticks][0]).to eq('bar')
         expect(report.chart[:data][0][-1]).to eq(1) if other
       end
     end
 
-    it "handles null data in chart column" do
+    it 'handles null data in chart column' do
       report = null_data_chart
 
       expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
@@ -66,15 +66,15 @@ describe ReportFormatter::JqplotFormatter do
   context '#build_numeric_chart_simple' do
     let(:report) { numeric_chart_simple }
 
-    it "uses correct formating function for axis with given column format" do
+    it 'uses correct formating function for axis with given column format' do
       report.col_formats = [nil, :general_number_precision_0]
       render_report(report)
-      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.number_with_delimiter.jqplot({})")
+      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq('ManageIQ.charts.formatters.number_with_delimiter.jqplot({})')
     end
 
-    it "uses correct formating function for axis with implicit column format" do
+    it 'uses correct formating function for axis with implicit column format' do
       render_report(report)
-      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.mbytes_to_human_size.jqplot({})")
+      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq('ManageIQ.charts.formatters.mbytes_to_human_size.jqplot({})')
     end
   end
 end

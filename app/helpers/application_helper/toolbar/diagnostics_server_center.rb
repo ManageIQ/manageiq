@@ -20,7 +20,7 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
       'fa fa-download fa-lg',
       N_('Download the Entire Audit Log File'),
       nil,
-      :url => "/fetch_audit_log"),
+      :url => '/fetch_audit_log'),
     button(
       :refresh_log,
       'fa fa-repeat fa-lg',
@@ -31,7 +31,7 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
       'fa fa-download fa-lg',
       N_('Download the Entire EVM Log File'),
       nil,
-      :url => "/fetch_log"),
+      :url => '/fetch_log'),
     button(
       :refresh_production_log,
       'fa fa-repeat fa-lg',
@@ -42,7 +42,7 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
       'fa fa-download fa-lg',
       N_('Download the Entire #{@sb[:rails_log]} Log File'),
       nil,
-      :url => "/fetch_production_log"),
+      :url => '/fetch_production_log'),
   ])
   button_group('ldap_domain_vmdb', [
     select(
@@ -83,13 +83,13 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
           'pficon pficon-restart',
           t = N_('Restart server'),
           t,
-          :confirm => N_("Warning: Server will be restarted, do you want to continue?")),
+          :confirm => N_('Warning: Server will be restarted, do you want to continue?')),
         button(
           :restart_workers,
           'pficon pficon-restart',
           N_('Select a worker to restart'),
           N_('Restart selected worker'),
-          :confirm => N_("Warning: Selected node will be restarted, do you want to continue?")),
+          :confirm => N_('Warning: Selected node will be restarted, do you want to continue?')),
       ]
     ),
   ])

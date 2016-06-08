@@ -11,6 +11,6 @@ class OntapLunDerivedMetric < ApplicationRecord
   include OntapDerivedMetricMixin
 
   def self.derive_metrics(prevMetric, curMetric, counterInfo)
-    derive_metrics_common(prevMetric, curMetric, counterInfo, "LUN")
+    derive_metrics_common(prevMetric, curMetric, counterInfo, 'LUN')
   end
 end

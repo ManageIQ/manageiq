@@ -2,8 +2,8 @@ class MiqAeInstance < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
-  belongs_to :ae_class,  -> { includes(:ae_fields) }, :class_name => "MiqAeClass", :foreign_key => :class_id
-  has_many   :ae_values, -> { includes(:ae_field) }, :class_name => "MiqAeValue", :foreign_key => :instance_id,
+  belongs_to :ae_class,  -> { includes(:ae_fields) }, :class_name => 'MiqAeClass', :foreign_key => :class_id
+  has_many   :ae_values, -> { includes(:ae_field) }, :class_name => 'MiqAeValue', :foreign_key => :instance_id,
                          :dependent => :destroy, :autosave => true
 
   validates_uniqueness_of :name, :case_sensitive => false, :scope => :class_id
@@ -11,7 +11,7 @@ class MiqAeInstance < ApplicationRecord
   validates_format_of     :name, :with => /\A[A-Za-z0-9_.-]+\z/i
 
   def self.find_by_name(name)
-    where("lower(name) = ?", name.downcase).first
+    where('lower(name) = ?', name.downcase).first
   end
 
   def get_field_attribute(field, validate, attribute)
@@ -70,8 +70,8 @@ class MiqAeInstance < ApplicationRecord
 
   # TODO: Limit search to within the context of a class id?
   def self.search(str)
-    str[-1, 1] = "%" if str[-1, 1] == "*"
-    where("lower(name) LIKE ?", str.downcase).pluck(:name)
+    str[-1, 1] = '%' if str[-1, 1] == '*'
+    where('lower(name) LIKE ?', str.downcase).pluck(:name)
   end
 
   def to_export_xml(options = {})
@@ -81,7 +81,7 @@ class MiqAeInstance < ApplicationRecord
 
     self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?('_id')
 
       # Skip any columns that we process explicitly
       next if %w(name).include?(cname)

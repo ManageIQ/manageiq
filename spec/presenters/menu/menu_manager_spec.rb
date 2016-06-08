@@ -1,4 +1,4 @@
-require_relative "menu_spec_helper"
+require_relative 'menu_spec_helper'
 
 include MenuSpecHelper
 
@@ -8,21 +8,21 @@ describe Menu::Manager do
     Singleton.__init__(Menu::Manager)
   end
 
-  context "initialize" do
-    it "loads default menu items" do
+  context 'initialize' do
+    it 'loads default menu items' do
       section = Menu::Manager.section(:vi)
       expect(section).to be_truthy
       expect(section.items[0].id).to eq('dashboard')
     end
 
-    it "loads custom menu items" do
+    it 'loads custom menu items' do
       expect(Menu::CustomLoader).to receive(:load).and_call_original
       Menu::Manager.menu {}
     end
   end
 
-  context "menu" do
-    it "knows about custom section with items" do
+  context 'menu' do
+    it 'knows about custom section with items' do
       temp_file  = section_file
       temp_file2 = item_file
       begin

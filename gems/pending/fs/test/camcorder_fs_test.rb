@@ -23,7 +23,7 @@ $log.add 'err_console'
 #
 # Path to RAW disk image.
 #
-VIRTUAL_DISK_FILE = "path to raw disk image file"
+VIRTUAL_DISK_FILE = 'path to raw disk image file'
 
 commit = true
 
@@ -70,7 +70,7 @@ begin
   target_partition = parts.first || disk
   puts "\nTarget partition: #{target_partition.partNum}"
 
-  raise "No filesystem detected" unless (mfs = MiqFS.getFS(target_partition))
+  raise 'No filesystem detected' unless (mfs = MiqFS.getFS(target_partition))
 
   puts "FS type: #{mfs.fsType}"
   puts "pwd = #{mfs.pwd}"
@@ -90,7 +90,7 @@ begin
 
   unless unclassified.empty?
     puts
-    puts "unclassified files:"
+    puts 'unclassified files:'
     unclassified.each { |p| puts "\t#{p}" }
   end
 rescue => err
@@ -101,8 +101,8 @@ ensure
   disk.close if disk
   if recorder && commit
     puts
-    puts "camcorder: committing recording..."
+    puts 'camcorder: committing recording...'
     recorder.commit
-    puts "done."
+    puts 'done.'
   end
 end

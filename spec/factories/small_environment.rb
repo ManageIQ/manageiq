@@ -18,7 +18,7 @@ FactoryGirl.define do
   end
 
   factory :host_small_environment, :parent => :host_with_ref do
-    vmm_product  "Workstation"
-    vms          { [FactoryGirl.create(:vm_with_ref, :name => "vmtest1"), FactoryGirl.create(:vm_with_ref, :name => "vmtest2")] }
+    vmm_product  'Workstation'
+    vms          { [FactoryGirl.create(:vm_with_ref, :name => 'vmtest1'), FactoryGirl.create(:vm_with_ref, :name => 'vmtest2')] }
   end
 end

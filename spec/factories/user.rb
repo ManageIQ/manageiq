@@ -11,7 +11,7 @@ FactoryGirl.define do
     sequence(:name)   { |s| "Test User #{s}" }
 
     # encrypted password for "dummy"
-    password_digest "$2a$10$FTbGT/y/PQ1HvoOoc1FcyuuTtHzfop/uG/mcEAJLYpzmsUIJcGT7W"
+    password_digest '$2a$10$FTbGT/y/PQ1HvoOoc1FcyuuTtHzfop/uG/mcEAJLYpzmsUIJcGT7W'
 
     after :build do |u, e|
       if e.miq_groups.blank? && (e.role || e.features)
@@ -40,10 +40,10 @@ FactoryGirl.define do
   end
 
   factory :user_admin, :parent => :user do
-    role            "super_administrator"
+    role            'super_administrator'
   end
 
   factory :user_miq_request_approver, :parent => :user do
-    features "miq_request_approval"
+    features 'miq_request_approval'
   end
 end

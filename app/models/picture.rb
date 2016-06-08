@@ -1,15 +1,15 @@
 class Picture < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
 
-  virtual_has_one :image_href, :class_name => "String"
+  virtual_has_one :image_href, :class_name => 'String'
 
-  URL_ROOT          = Rails.root.join("public").to_s
-  DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures")
+  URL_ROOT          = Rails.root.join('public').to_s
+  DEFAULT_DIRECTORY = File.join(URL_ROOT, 'pictures')
   Dir.mkdir(DEFAULT_DIRECTORY) unless File.directory?(DEFAULT_DIRECTORY)
 
   def self.atStartup
     require 'fileutils'
-    pattern = File.join(directory, "*")
+    pattern = File.join(directory, '*')
     FileUtils.rm Dir.glob(pattern)
   end
 
@@ -62,7 +62,7 @@ class Picture < ApplicationRecord
 
   def basename
     @basename ||= begin
-      raise _("must have a numeric id") unless id.kind_of?(Numeric)
+      raise _('must have a numeric id') unless id.kind_of?(Numeric)
       "#{compressed_id}.#{extension}"
     end
   end

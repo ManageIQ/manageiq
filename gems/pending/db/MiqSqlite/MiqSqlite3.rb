@@ -323,8 +323,8 @@ module MiqSqlite3DB
 
     def fileOpen(_fileName)
       # Return a file object using MiqFS or File as the case may be.
-      return File.open(@filename, "rb") if @fs.nil?
-      @fs.fileOpen(@filename, "r")
+      return File.open(@filename, 'rb') if @fs.nil?
+      @fs.fileOpen(@filename, 'r')
     end
   end
 end

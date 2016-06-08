@@ -1,8 +1,8 @@
 class MiqExpression::Tag
   def self.parse(tag)
-    klass, ns = tag.split(".")
-    ns = "/" + ns.split("-").join("/")
-    ns = ns.sub(/(\/user_tag\/)/, "/user/") # replace with correct namespace for user tags
+    klass, ns = tag.split('.')
+    ns = '/' + ns.split('-').join('/')
+    ns = ns.sub(/(\/user_tag\/)/, '/user/') # replace with correct namespace for user tags
     new(klass.constantize, ns)
   end
 

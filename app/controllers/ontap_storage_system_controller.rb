@@ -27,9 +27,9 @@ class OntapStorageSystemController < CimInstanceController
   # Create a datastore on a storage system
   def create_ld
     case params[:button]
-    when "cancel"
+    when 'cancel'
       create_ld_cancel
-    when "submit"
+    when 'submit'
       create_ld_submit
     else  # First time in
       create_ld_init
@@ -51,31 +51,31 @@ class OntapStorageSystemController < CimInstanceController
 
   # Handle the create_logical_disk button
   def create_logical_disk
-    return unless request.parameters[:controller] == "ontap_storage_system"
+    return unless request.parameters[:controller] == 'ontap_storage_system'
     @sb[:ccs_id] = params[:id]
     @record = OntapStorageSystem.find(params[:id])
     render :update do |page|
       page << javascript_prologue
-      area = request.parameters["controller"]
+      area = request.parameters['controller']
       if role_allows(:feature => "#{area}_tag")
         page.redirect_to :action => 'create_ld'
       else
-        add_flash(_("The user is not authorized for this task or item."), :error)
-        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
+        add_flash(_('The user is not authorized for this task or item.'), :error)
+        page.replace(:flash_msg_div, :partial => 'layouts/flash_msg')
       end
     end
   end
 
   def create_ld_init
     @ccs = OntapStorageSystem.find(@sb[:ccs_id])
-    drop_breadcrumb(:name => "Create Logical Disk", :url => "/#{session[:controller]}/create_ds")
+    drop_breadcrumb(:name => 'Create Logical Disk', :url => "/#{session[:controller]}/create_ds")
 
-    @gtl_type = "list"
+    @gtl_type = 'list'
     create_ld_set_form_vars
     @in_a_form = true
     session[:changed] = false
     @create_ld = true
-    render :action => "show"
+    render :action => 'show'
   end
 
   def create_ld_submit
@@ -85,8 +85,8 @@ class OntapStorageSystemController < CimInstanceController
        ccs.create_logical_disk(@edit[:new][:ld_name],
                                @edit[:new][:aggregate_name],
                                @edit[:new][:ld_size].to_i)
-      add_flash(_("%{model} \"%{name}\": Create Logical Disk successfully initiated") %
-                  {:model => ui_lookup(:model => "OntapStorageSystem"), :name => ccs.name})
+      add_flash(_('%{model} "%{name}": Create Logical Disk successfully initiated') %
+                  {:model => ui_lookup(:model => 'OntapStorageSystem'), :name => ccs.name})
       @edit = nil # clean out the saved info
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
       render :update do |page|
@@ -99,14 +99,14 @@ class OntapStorageSystemController < CimInstanceController
       end
       render :update do |page|
         page << javascript_prologue
-        page.replace(:flash_msg_div, :partial => "layouts/flash_msg")
+        page.replace(:flash_msg_div, :partial => 'layouts/flash_msg')
       end
     end
   end
 
   def create_ld_cancel
     return unless load_edit("ontap_storage_system_create_ld__#{params[:id]}")
-    add_flash(_("Create Logical Disk was cancelled by the user"))
+    add_flash(_('Create Logical Disk was cancelled by the user'))
     @edit = nil # clean out the saved info
     session[:flash_msgs] = @flash_array.dup                   # Put msgs in session for next transaction
     render :update do |page|
@@ -126,11 +126,11 @@ class OntapStorageSystemController < CimInstanceController
   end
 
   def create_ld_valid?
-    add_flash(_("Name is required"), :error) if @edit[:new][:ld_name].blank?
-    add_flash(_("Aggregate is required"), :error) if @edit[:new][:aggregate_name].blank?
-    add_flash(_("Size is required"), :error) if @edit[:new][:ld_size].blank?
+    add_flash(_('Name is required'), :error) if @edit[:new][:ld_name].blank?
+    add_flash(_('Aggregate is required'), :error) if @edit[:new][:aggregate_name].blank?
+    add_flash(_('Size is required'), :error) if @edit[:new][:ld_size].blank?
     if @edit[:new][:ld_size] && (@edit[:new][:ld_size] =~ /^[-+]?[0-9]*[0-9]+$/).nil?
-      add_flash(_("Size must be an integer"), :error)
+      add_flash(_('Size must be an integer'), :error)
     end
     @flash_array.nil?
   end

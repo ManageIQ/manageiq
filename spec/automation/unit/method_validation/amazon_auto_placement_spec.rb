@@ -1,10 +1,10 @@
-describe "AMAZON best fit" do
+describe 'AMAZON best fit' do
 
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:ws) do
-    MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
-                            "namespace=Cloud/VM/Provisioning&class=Placement" \
-                            "&instance=default&message=amazon&" \
+    MiqAeEngine.instantiate('/System/Request/Call_Instance_With_Message?' \
+                            'namespace=Cloud/VM/Provisioning&class=Placement' \
+                            '&instance=default&message=amazon&' \
                             "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
 
@@ -14,7 +14,7 @@ describe "AMAZON best fit" do
 
   let(:vm_template) do
     FactoryGirl.create(:template_amazon,
-                       :name                  => "template1",
+                       :name                  => 'template1',
                        :ext_management_system => ems)
   end
   let(:miq_provision) do
@@ -45,10 +45,10 @@ describe "AMAZON best fit" do
     FactoryGirl.create(:cloud_subnet_amazon, :ems_id => ems.network_manager.id, :cloud_network_id => cloud_network1.id)
   end
 
-  context "provision task object" do
-    it "auto placement of t2 instances" do
+  context 'provision task object' do
+    it 'auto placement of t2 instances' do
       attrs = {:placement_auto => [true, 1],
-               :instance_type  => [t2_small_flavor.id, "t2.small: T2 Small"]}
+               :instance_type  => [t2_small_flavor.id, 't2.small: T2 Small']}
       cloud_subnet1
       miq_provision.update_attribute(:options, miq_provision.options.merge(attrs))
       ws.root
@@ -59,9 +59,9 @@ describe "AMAZON best fit" do
       expect(miq_provision.options[:cloud_subnet].first).to eql(cloud_subnet1.id)
     end
 
-    it "auto placement of m2 instances" do
+    it 'auto placement of m2 instances' do
       attrs = {:placement_auto => [true, 1],
-               :instance_type  => [m2_small_flavor.id, "m2.small: M2 Small"]}
+               :instance_type  => [m2_small_flavor.id, 'm2.small: M2 Small']}
       cloud_subnet1
       miq_provision.update_attribute(:options, miq_provision.options.merge(attrs))
       ws.root
@@ -69,7 +69,7 @@ describe "AMAZON best fit" do
       check_attributes_not_set
     end
 
-    it "manual placement" do
+    it 'manual placement' do
       attrs = {:placement_auto => [false, 0]}
       cloud_subnet1
       miq_provision.update_attribute(:options, miq_provision.options.merge(attrs))

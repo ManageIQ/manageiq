@@ -10,13 +10,13 @@ class MiqVm
 
   def initialize(vmCfg, ost = nil)
     @ost = ost || OpenStruct.new
-    $log.debug "MiqVm::initialize: @ost = nil" if $log && !@ost
+    $log.debug 'MiqVm::initialize: @ost = nil' if $log && !@ost
     @vmDisks = nil
     @wholeDisks = []
     @rootTrees = nil
     @volumeManager = nil
     @applianceVolumeManager = nil
-    @vmConfigFile = ""
+    @vmConfigFile = ''
     @diskInitErrors = {}
     unless vmCfg.kind_of?(Hash)
       @vmConfigFile = vmCfg
@@ -40,7 +40,7 @@ class MiqVm
       @vmConfig = VmConfig.new(@vimVm.getCfg(@ost.snapId))
     # TODO: move this to MiqRhevmVm.
     elsif (@rhevm = @ost.miqRhevm)
-      $log.debug "MiqVm::initialize: accessing VM through RHEVM server" if $log.debug?
+      $log.debug 'MiqVm::initialize: accessing VM through RHEVM server' if $log.debug?
       $log.debug "MiqVm::initialize: vmCfg = #{vmCfg}"
       @rhevmVm = @rhevm.get_vm(vmCfg)
       $log.debug "MiqVm::initialize: setting @ost.miqRhevmVm = #{@rhevmVm.class}" if $log.debug?
@@ -50,7 +50,7 @@ class MiqVm
       $log.debug "MiqVm::initialize: @vmConfig.getDiskFileHash = #{@vmConfig.getDiskFileHash.inspect}"
     # TODO: move this to miq_scvmm_vm
     elsif (@scvmm = @ost.miq_scvmm)
-      $log.debug "MiqVm::initialize: accessing VM through HyperV server" if $log.debug?
+      $log.debug 'MiqVm::initialize: accessing VM through HyperV server' if $log.debug?
       @vmConfig = VmConfig.new(getCfg(@ost.snapId))
       $log.debug "MiqVm::initialize: setting @ost.miq_scvmm_vm = #{@scvmm_vm.class}" if $log.debug?
     else
@@ -71,7 +71,7 @@ class MiqVm
   def openDisks(diskFiles)
     pVolumes = []
 
-    $log.debug "openDisks: no disk files supplied." unless diskFiles
+    $log.debug 'openDisks: no disk files supplied.' unless diskFiles
 
     #
     # Build a list of the VM's physical volumes.
@@ -109,7 +109,7 @@ class MiqVm
       mode = @vmConfig.getHash["#{dtag}.mode"]
 
       dInfo.hardwareId = dtag
-      dInfo.baseOnly = @ost.openParent unless mode && mode["independent"]
+      dInfo.baseOnly = @ost.openParent unless mode && mode['independent']
       dInfo.rawDisk = @ost.rawDisk
       $log.debug "MiqVm::openDisks: dInfo.baseOnly = #{dInfo.baseOnly}"
 
@@ -184,7 +184,7 @@ class MiqVm
   end
 
   def unmount
-    $log.info "MiqVm.unmount called."
+    $log.info 'MiqVm.unmount called.'
     @wholeDisks.each(&:close)
     @wholeDisks.clear
     if @volumeManager
@@ -219,11 +219,11 @@ if __FILE__ == $0
   require 'metadata/util/win32/boot_info_win'
 
   # vmDir = File.join(ENV.fetch("HOME", '.'), 'VMs')
-  vmDir = "/volumes/WDpassport/Virtual Machines"
+  vmDir = '/volumes/WDpassport/Virtual Machines'
   puts "vmDir = #{vmDir}"
 
-  targetLv = "rpolv2"
-  rootLv = "LogVol00"
+  targetLv = 'rpolv2'
+  rootLv = 'LogVol00'
 
   class ConsoleFormatter < Log4r::Formatter
     def format(event)
@@ -244,7 +244,7 @@ if __FILE__ == $0
   # vmCfg = File.join(vmDir, "Red Hat Linux.vmwarevm/Red Hat Linux.vmx")
   # vmCfg = File.join(vmDir, "MIQ Server Appliance - Ubuntu MD - small/MIQ Server Appliance - Ubuntu.vmx")
   # vmCfg = File.join(vmDir, "winxpDev.vmwarevm/winxpDev.vmx")
-  vmCfg = File.join(vmDir, "Win2K_persistent/Windows 2000 Professional.vmx")
+  vmCfg = File.join(vmDir, 'Win2K_persistent/Windows 2000 Professional.vmx')
   # vmCfg = File.join(vmDir, "Win2K_non_persistent/Windows 2000 Professional.vmx")
   puts "VM config file: #{vmCfg}"
 
@@ -301,12 +301,12 @@ if __FILE__ == $0
   # rfs.dirForeach("/") { |de| puts "\t\t#{de}" }
 
   puts "\n***** Detected Guest OSs:"
-  raise "No OSs detected" if vm.rootTrees.length == 0
+  raise 'No OSs detected' if vm.rootTrees.length == 0
   vm.rootTrees.each do |rt|
     puts "\t#{rt.guestOS}"
-    if rt.guestOS == "Linux"
+    if rt.guestOS == 'Linux'
       puts "\n\t\t*** /etc/fstab contents:"
-      rt.fileOpen("/etc/fstab", &:read).each_line do |fstl|
+      rt.fileOpen('/etc/fstab', &:read).each_line do |fstl|
         next if fstl =~ /^#.*$/
         puts "\t\t\t#{fstl}"
       end
@@ -314,20 +314,20 @@ if __FILE__ == $0
   end
 
   vm.rootTrees.each do |rt|
-    if rt.guestOS == "Linux"
+    if rt.guestOS == 'Linux'
       # tdirArr = [ "/", "/boot", "/var/www/miq", "/var/www/miq/vmdb/log", "/var/lib/mysql" ]
-      tdirArr = ["/", "/boot", "/etc/init.d", "/etc/rc.d/init.d", "/etc/rc.d/rc0.d"]
+      tdirArr = ['/', '/boot', '/etc/init.d', '/etc/rc.d/init.d', '/etc/rc.d/rc0.d']
 
       tdirArr.each do |tdir|
         begin
           puts "\n*** Listing #{tdir} directory (1):"
           rt.dirForeach(tdir) { |de| puts "\t\t#{de}" }
-          puts "*** end"
+          puts '*** end'
 
           puts "\n*** Listing #{tdir} directory (2):"
           rt.chdir(tdir)
           rt.dirForeach { |de| puts "\t\t#{de}" }
-          puts "*** end"
+          puts '*** end'
         rescue => err
           puts "*** #{err}"
         end
@@ -343,21 +343,21 @@ if __FILE__ == $0
       # puts "Is #{lfn} a symbolic link? #{rt.fileSymLink?(lfn)}"
       # puts "#{lfn} => #{rt.getLinkPath(lfn)}"
     else  # Windows
-      tdirArr = ["c:/", "e:/", "e:/testE2", "f:/"]
+      tdirArr = ['c:/', 'e:/', 'e:/testE2', 'f:/']
 
       tdirArr.each do |tdir|
         puts "\n*** Listing #{tdir} directory (1):"
         rt.dirForeach(tdir) { |de| puts "\t\t#{de}" }
-        puts "*** end"
+        puts '*** end'
 
         puts "\n*** Listing #{tdir} directory (2):"
         rt.chdir(tdir)
         rt.dirForeach { |de| puts "\t\t#{de}" }
-        puts "*** end"
+        puts '*** end'
       end
     end
   end
 
   vm.unmount
-  puts "...done"
+  puts '...done'
 end

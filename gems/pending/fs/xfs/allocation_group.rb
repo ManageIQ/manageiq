@@ -103,7 +103,7 @@ module XFS
     attr_reader :stream, :agf, :agi, :agfl, :allocation_group_block
 
     def initialize(stream, _agno, sb)
-      raise "XFS::AllocationGroup.initialize: Nil stream" if stream.nil?
+      raise 'XFS::AllocationGroup.initialize: Nil stream' if stream.nil?
       #
       # The stream should be pointing at the Allocation Group to be built on the disk.
       #

@@ -4,7 +4,7 @@ describe FixEventClassForEvmAlertEvent do
   let(:event_stream_stub) { migration_stub(:EventStream) }
 
   migration_context :up do
-    it "converts EmsCluster alert events from EmsEvent to MiqEvent" do
+    it 'converts EmsCluster alert events from EmsEvent to MiqEvent' do
       cluster_id = 123
       event = event_stream_stub.create!(
         :type             => 'EmsEvent',
@@ -27,7 +27,7 @@ describe FixEventClassForEvmAlertEvent do
       )
     end
 
-    it "converts Host alert events from EmsEvent to MiqEvent" do
+    it 'converts Host alert events from EmsEvent to MiqEvent' do
       host_id = 233
       event = event_stream_stub.create!(
         :type       => 'EmsEvent',
@@ -48,7 +48,7 @@ describe FixEventClassForEvmAlertEvent do
       )
     end
 
-    it "converts VmOrTemplate alert events from EmsEvent to MiqEvent" do
+    it 'converts VmOrTemplate alert events from EmsEvent to MiqEvent' do
       vm_id = 335
       event = event_stream_stub.create!(
         :type              => 'EmsEvent',
@@ -77,7 +77,7 @@ describe FixEventClassForEvmAlertEvent do
     let(:host_stub)    { migration_stub(:Host) }
     let(:vm_stub)      { migration_stub(:Vm) }
 
-    it "converts EmsCluster alert events from MiqEvent to EmsEvent" do
+    it 'converts EmsCluster alert events from MiqEvent to EmsEvent' do
       cluster = cluster_stub.create!(:name => 'test_cluster', :uid_ems => 'domain-c12')
       event = event_stream_stub.create!(
         :type             => 'MiqEvent',
@@ -102,7 +102,7 @@ describe FixEventClassForEvmAlertEvent do
       )
     end
 
-    it "converts Host alert events from MiqEvent to EmsEvent" do
+    it 'converts Host alert events from MiqEvent to EmsEvent' do
       host = host_stub.create!(:name => 'test_host')
       event = event_stream_stub.create!(
         :type        => 'MiqEvent',
@@ -125,7 +125,7 @@ describe FixEventClassForEvmAlertEvent do
       )
     end
 
-    it "converts VmOrTemplate alert events from MiqEvent to EmsEvent" do
+    it 'converts VmOrTemplate alert events from MiqEvent to EmsEvent' do
       vm = vm_stub.create!(:name => 'test_vm', :location => 'test_vm/test_vm.vmx')
       event = event_stream_stub.create!(
         :type              => 'MiqEvent',

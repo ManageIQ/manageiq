@@ -5,9 +5,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_shutdown",
+          :method_name => 'vim_shutdown',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [force]
         ) if @object.is_vmware?
         true
@@ -19,9 +19,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_reboot",
+          :method_name => 'vim_reboot',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [force]
         ) if @object.is_vmware?
         true
@@ -33,9 +33,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_enter_maintenance_mode",
+          :method_name => 'vim_enter_maintenance_mode',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [timeout, evacuate]
         ) if @object.is_vmware?
         true
@@ -47,9 +47,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_exit_maintenance_mode",
+          :method_name => 'vim_exit_maintenance_mode',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [timeout]
         ) if @object.is_vmware?
         true
@@ -65,9 +65,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_power_down_to_standby",
+          :method_name => 'vim_power_down_to_standby',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [timeout, evacuate]
         ) if @object.is_vmware?
         true
@@ -79,9 +79,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_power_up_from_standby",
+          :method_name => 'vim_power_up_from_standby',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [timeout]
         ) if @object.is_vmware?
         true
@@ -93,9 +93,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_enable_vmotion",
+          :method_name => 'vim_enable_vmotion',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [device]
         ) if @object.is_vmware?
         true
@@ -107,9 +107,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "vim_disable_vmotion",
+          :method_name => 'vim_disable_vmotion',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [device]
         ) if @object.is_vmware?
         true

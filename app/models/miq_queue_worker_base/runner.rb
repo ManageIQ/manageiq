@@ -64,7 +64,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
         _log.debug("#{log_prefix} #{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
         next
       rescue => err
-        raise _("%{log} \"%{error}\" attempting to get next message") % {:log => log_prefix, :error => err}
+        raise _('%{log} "%{error}" attempting to get next message') % {:log => log_prefix, :error => err}
       end
     end
   end
@@ -115,7 +115,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
       end
 
       msg.delivered(status, message, result) unless status == MiqQueue::STATUS_RETRY
-      do_exit("Exiting worker due to timeout error", 1) if status == MiqQueue::STATUS_TIMEOUT
+      do_exit('Exiting worker due to timeout error', 1) if status == MiqQueue::STATUS_TIMEOUT
     rescue MiqException::MiqVimBrokerUnavailable
       _log.error("#{log_prefix} VimBrokerWorker is not available.  Requeueing message...")
       msg.unget
@@ -135,7 +135,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
     return process_message(msg)       if msg.kind_of?(String)
 
     _log.error("#{log_prefix} Message <#{msg.inspect}> is of unknown type <#{msg.class}>")
-    raise _("%{log} Message <%{message}> is of unknown type <%{type}>") % {:log     => log_prefix,
+    raise _('%{log} Message <%{message}> is of unknown type <%{type}>') % {:log     => log_prefix,
                                                                            :message => msg.inspect,
                                                                            :type    => msg.class}
   end

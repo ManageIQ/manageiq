@@ -1,7 +1,7 @@
 class SetCorrectStiTypeOnCloudSubnet < ActiveRecord::Migration
-  CLOUD_SUBNET         = "ManageIQ::Providers::Openstack::CloudManager::CloudSubnet".freeze
-  CLOUD_PUBLIC_CLASS   = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public".freeze
-  CLOUD_PRIVATE_CLASS  = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private".freeze
+  CLOUD_SUBNET         = 'ManageIQ::Providers::Openstack::CloudManager::CloudSubnet'.freeze
+  CLOUD_PUBLIC_CLASS   = 'ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public'.freeze
+  CLOUD_PRIVATE_CLASS  = 'ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private'.freeze
 
   class CloudNetwork < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
@@ -14,7 +14,7 @@ class SetCorrectStiTypeOnCloudSubnet < ActiveRecord::Migration
   end
 
   def up
-    CloudSubnet.update_all(:type => "CloudSubnet")
+    CloudSubnet.update_all(:type => 'CloudSubnet')
 
     CloudSubnet.joins(:cloud_network).where(:cloud_networks => {:type => [CLOUD_PUBLIC_CLASS, CLOUD_PRIVATE_CLASS]})
                .update_all(:type => CLOUD_SUBNET)

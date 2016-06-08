@@ -14,15 +14,15 @@ class File
       f2 = File.getShortFileName(f2).downcase
     end
 
-    File.expand_path(f1).tr("\\", "/") == File.expand_path(f2).tr("\\", "/")
+    File.expand_path(f1).tr('\\', '/') == File.expand_path(f2).tr('\\', '/')
   end
 
   def self.getShortFileName(longName)
     if Sys::Platform::OS == :windows
       size = 255
-      buffer = " " * 255
-      returnSize = Win32API.new("kernel32", "GetShortPathNameA", 'ppl', 'L').Call(longName,  buffer, size)
-      a = ""
+      buffer = ' ' * 255
+      returnSize = Win32API.new('kernel32', 'GetShortPathNameA', 'ppl', 'L').Call(longName,  buffer, size)
+      a = ''
       a += buffer[0...returnSize]
       return a
     else
@@ -31,7 +31,7 @@ class File
   end
 
   def self.normalize(path)
-    File.expand_path(path.gsub(/\\/, "/"))
+    File.expand_path(path.gsub(/\\/, '/'))
   end
 
   def self.splitpath(path)
@@ -43,7 +43,7 @@ class File
   def self.sizeEx(path)
     case Sys::Platform::IMPL
     when :linux
-      MiqUtil.runcmd("ls -lQ \"#{path}\"").split(" ")[4].to_i
+      MiqUtil.runcmd("ls -lQ \"#{path}\"").split(' ')[4].to_i
     when :mswin, :mingw
       MiqLargeFile.size(path)
     else

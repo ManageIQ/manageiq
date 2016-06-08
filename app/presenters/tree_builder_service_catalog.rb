@@ -17,7 +17,7 @@ class TreeBuilderServiceCatalog < TreeBuilderCatalogsClass
   end
 
   def root_options
-    [t = _("All Services"), t]
+    [t = _('All Services'), t]
   end
 
   def x_get_tree_roots(count_only, _options)

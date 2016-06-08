@@ -31,7 +31,7 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
       sleep_poll_normal
     end
   rescue Handsoap::Fault => err
-    if  @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.")
+    if  @exit_requested && (err.code == 'ServerFaultCode') && (err.reason == 'The task was canceled by a user.')
       _log.info("#{log_prefix} Event Monitor Thread terminated normally")
     else
       _log.error("#{log_prefix} Event Monitor Thread aborted because [#{err.message}]")
@@ -48,10 +48,10 @@ class ManageIQ::Providers::Vmware::InfraManager::EventCatcher::Runner < ManageIQ
     return if event_type.nil?
 
     case event_type
-    when "TaskEvent"
+    when 'TaskEvent'
       sub_event_type = event.fetch_path('info', 'name')
       display_name   = "#{event_type}]-[#{sub_event_type}"
-    when "EventEx"
+    when 'EventEx'
       sub_event_type = event['eventTypeId']
       display_name   = "#{event_type}]-[#{sub_event_type}"
     else

@@ -11,7 +11,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   has_many :cloud_networks, :through => :cloud_subnets
   alias_method :private_networks, :cloud_networks
   has_many :cloud_subnets, :through    => :network_ports,
-                           :class_name => "ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet"
+                           :class_name => 'ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet'
   has_many :public_networks, :through => :cloud_subnets
 
   has_many :floating_ips
@@ -67,12 +67,12 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       authentication_type(:default).status
     else
       # If credentials are not on host's auth, we use host's ssh_keypair as a placeholder for status
-      authentication_type(:ssh_keypair).try(:status) || "None"
+      authentication_type(:ssh_keypair).try(:status) || 'None'
     end
   end
 
   def verify_credentials(auth_type = nil, options = {})
-    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
+    raise MiqException::MiqHostError, 'No credentials defined' if missing_credentials?(auth_type)
     raise MiqException::MiqHostError, "Logon to platform [#{os_image_name}] not supported" if auth_type.to_s != 'ipmi' && os_image_name !~ /linux_*/
 
     case auth_type.to_s
@@ -105,7 +105,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def missing_credentials?(type = nil)
-    if type.to_s == "ssh_keypair"
+    if type.to_s == 'ssh_keypair'
       if !authentication_type(:ssh_keypair).try(:auth_key).blank?
         # Credential are defined on host
         !has_credentials?(type)
@@ -124,7 +124,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   end
 
   def refresh_openstack_services(ssu)
-    openstack_status = ssu.shell_exec("openstack-status")
+    openstack_status = ssu.shell_exec('openstack-status')
     services = MiqLinux::Utils.parse_openstack_status(openstack_status)
     self.host_service_group_openstacks = services.map do |service|
       # find OpenstackHostServiceGroup records by host and name and initialize if not found
@@ -166,8 +166,8 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   def add_unique_names(file, hashes)
     hashes.each do |x|
       # Adding unique ID for all custom attributes of a host, otherwise drift filters out the non unique ones
-      section = x[:section] || ""
-      name    = x[:name]    || ""
+      section = x[:section] || ''
+      name    = x[:name]    || ''
       x[:unique_name] = "#{file.name}:#{section}:#{name}"
     end
     hashes

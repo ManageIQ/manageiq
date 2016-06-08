@@ -1,4 +1,4 @@
-require "concurrent/atomic/event"
+require 'concurrent/atomic/event'
 
 describe VmdbDatabaseConnection do
   before :each do
@@ -64,7 +64,7 @@ describe VmdbDatabaseConnection do
 
     locked_latch.wait # wait until `get_lock` has the lock
     # spin until `wait_for_lock` is waiting to acquire the lock
-    loop { break if wait_for_lock.status == "sleep" }
+    loop { break if wait_for_lock.status == 'sleep' }
 
     connections = VmdbDatabaseConnection.all
 
@@ -74,7 +74,7 @@ describe VmdbDatabaseConnection do
         continue_latch.set
         get_lock.join
         wait_for_lock.join
-        raise "Lock is not blocking"
+        raise 'Lock is not blocking'
       end
       sleep 1
     end
@@ -121,7 +121,7 @@ describe VmdbDatabaseConnection do
     end
   end
 
-  describe ".log_statistics" do
+  describe '.log_statistics' do
     before do
       @buffer = StringIO.new
       class << @buffer
@@ -130,11 +130,11 @@ describe VmdbDatabaseConnection do
       end
     end
 
-    it "normal" do
+    it 'normal' do
       described_class.log_statistics(@buffer)
       lines = @buffer.string.lines
       expect(lines.shift).to eq "MIQ(VmdbDatabaseConnection.log_statistics) <<-ACTIVITY_STATS_CSV\n"
-      expect(lines.pop).to eq "ACTIVITY_STATS_CSV"
+      expect(lines.pop).to eq 'ACTIVITY_STATS_CSV'
 
       header, *rows = CSV.parse lines.join
       expect(header).to eq %w(
@@ -159,8 +159,8 @@ describe VmdbDatabaseConnection do
       end
     end
 
-    it "exception" do
-      allow(described_class).to receive(:all).and_raise("FAILURE")
+    it 'exception' do
+      allow(described_class).to receive(:all).and_raise('FAILURE')
       described_class.log_statistics(@buffer)
       expect(@buffer.string.lines.first).to eq("MIQ(VmdbDatabaseConnection.log_statistics) Unable to log stats, 'FAILURE'")
     end

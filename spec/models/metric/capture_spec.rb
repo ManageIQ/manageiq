@@ -1,5 +1,5 @@
 describe Metric::Capture do
-  shared_examples "captures a threshold" do |capture_fixnum, capture|
+  shared_examples 'captures a threshold' do |capture_fixnum, capture|
     let(:threshold_default) { 10 }
     let(:capture_rt) { 2 }
     let(:time) { Time.utc(2013, 4, 22, 8, 31) }
@@ -13,7 +13,7 @@ describe Metric::Capture do
       stub_server_configuration(settings)
     end
 
-    it "realtime vm uses capture_threshold_with_alerts minutes ago" do
+    it 'realtime vm uses capture_threshold_with_alerts minutes ago' do
       target = FactoryGirl.build(:vm_vmware)
       allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
 
@@ -22,7 +22,7 @@ describe Metric::Capture do
       end
     end
 
-    it "realtime host uses capture_threshold_with_alerts minutes ago" do
+    it 'realtime host uses capture_threshold_with_alerts minutes ago' do
       target = FactoryGirl.build(:host_vmware)
       allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(true)
 
@@ -31,7 +31,7 @@ describe Metric::Capture do
       end
     end
 
-    it "non-realtime vm uses capture_threshold minutes ago" do
+    it 'non-realtime vm uses capture_threshold minutes ago' do
       target = FactoryGirl.build(:vm_vmware)
       allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(false)
 
@@ -42,7 +42,7 @@ describe Metric::Capture do
       end
     end
 
-    it "non-realtime host uses capture_threshold minutes ago" do
+    it 'non-realtime host uses capture_threshold minutes ago' do
       target = FactoryGirl.build(:host_vmware)
       allow(MiqAlert).to receive(:target_needs_realtime_capture?).with(target).and_return(false)
 
@@ -54,25 +54,25 @@ describe Metric::Capture do
     end
   end
 
-  context ".capture_threshold with Fixnum" do
-    include_examples "captures a threshold", 20, 20
+  context '.capture_threshold with Fixnum' do
+    include_examples 'captures a threshold', 20, 20
   end
 
-  context ".capture_threshold with String" do
-    include_examples "captures a threshold", 50, "50.minutes"
+  context '.capture_threshold with String' do
+    include_examples 'captures a threshold', 50, '50.minutes'
   end
 
-  context ".capture_threshold handles nil" do
-    include_examples "captures a threshold", nil, nil
+  context '.capture_threshold handles nil' do
+    include_examples 'captures a threshold', nil, nil
   end
 
-  context ".perf_capture_health_check" do
+  context '.perf_capture_health_check' do
     let(:miq_server) { EvmSpecHelper.local_miq_server }
     let(:ems) { FactoryGirl.create(:ems_vmware, :zone => miq_server.zone) }
     let(:vm) { FactoryGirl.create(:vm_perf, :ext_management_system => ems) }
     let(:vm2) { FactoryGirl.create(:vm_perf, :ext_management_system => ems) }
 
-    it "should queue up realtime capture for vm" do
+    it 'should queue up realtime capture for vm' do
       vm.perf_capture_realtime_now
       vm2.perf_capture_realtime_now
       expect(MiqQueue.count).to eq(2)

@@ -15,9 +15,9 @@ class PolicyEvent < ApplicationRecord
       def purge_queue
         MiqQueue.put_unless_exists(
           :class_name  => name,
-          :method_name => "purge",
-          :role        => "event",
-          :queue_name  => "ems"
+          :method_name => 'purge',
+          :role        => 'event',
+          :queue_name  => 'ems'
         )
       end
       alias_method :purge_timer, :purge_queue
@@ -33,7 +33,7 @@ class PolicyEvent < ApplicationRecord
       private
 
       def purge_config(key)
-        VMDB::Config.new("vmdb").config.fetch_path(:policy_events, :history, key)
+        VMDB::Config.new('vmdb').config.fetch_path(:policy_events, :history, key)
       end
     end
   end

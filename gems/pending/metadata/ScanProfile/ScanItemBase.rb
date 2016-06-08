@@ -1,5 +1,5 @@
 class ScanItemBase
-  SCAN_TYPE_PROP = "item_type"
+  SCAN_TYPE_PROP = 'item_type'
 
   attr_accessor :scan_definition, :scan_item_type
 
@@ -21,7 +21,7 @@ class ScanItemBase
   end
 
   def extend_scan_module(type)
-    raise "Already set scan module" if @extend_scan_module
+    raise 'Already set scan module' if @extend_scan_module
     begin
       m = "#{self.class.name}#{type.capitalize}"
       require_relative "modules/#{m}"
@@ -37,19 +37,19 @@ class ScanItemBase
 
   # THESE METHODS SHOULD BE OVER-RIDDEN BY THE REQUIRES IN THE INITIALIZER
   def to_xml
-    xml = @xml_class.newNode("scan_item")
+    xml = @xml_class.newNode('scan_item')
     xml.add_attributes(
-      "guid"      => @params["guid"],
-      "name"      => @params["name"],
-      "item_type" => @params["item_type"])
+      'guid'      => @params['guid'],
+      'name'      => @params['name'],
+      'item_type' => @params['item_type'])
     xml
   end
 
   def to_hash
     {
-      :guid      => @params["guid"],
-      :name      => @params["name"],
-      :item_type => @params["item_type"]
+      :guid      => @params['guid'],
+      :name      => @params['name'],
+      :item_type => @params['item_type']
     }
   end
 

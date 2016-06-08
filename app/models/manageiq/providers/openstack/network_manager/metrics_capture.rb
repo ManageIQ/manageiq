@@ -17,8 +17,8 @@ class ManageIQ::Providers::Openstack::NetworkManager::MetricsCapture < ManageIQ:
   VIM_STYLE_COUNTERS = {}.freeze
 
   def perf_capture_data(start_time, end_time)
-    resource_filter = {"field" => "resource_id", "value" => target.ems_ref}
-    metadata_filter = {"field" => "metadata.instance_id", "value" => target.ems_ref}
+    resource_filter = {'field' => 'resource_id', 'value' => target.ems_ref}
+    metadata_filter = {'field' => 'metadata.instance_id', 'value' => target.ems_ref}
 
     perf_capture_data_openstack_base(self.class, start_time, end_time, resource_filter,
                                      metadata_filter)

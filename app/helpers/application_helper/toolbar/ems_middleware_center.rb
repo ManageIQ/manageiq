@@ -18,13 +18,13 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
           'pficon pficon-edit fa-lg',
           t = N_('Edit this #{ui_lookup(:table=>"ems_middleware")}'),
           t,
-          :url => "/edit"),
+          :url => '/edit'),
         button(
           :ems_middleware_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this #{ui_lookup(:table=>"ems_middleware")} from the VMDB'),
           t,
-          :url_parms => "&refresh=y",
+          :url_parms => '&refresh=y',
           :confirm   => N_("Warning: This \#{ui_lookup(:table=>\"ems_middleware\")} and ALL of its components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this \#{ui_lookup(:table=>\"ems_middleware\")}?")),
       ]
     ),
@@ -41,8 +41,8 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
           'product product-timeline fa-lg',
           N_('Show Timelines for this #{ui_lookup(:table=>"ems_middleware")}'),
           N_('Timelines'),
-          :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url       => '/show',
+          :url_parms => '?display=timeline'),
       ]
     ),
   ])

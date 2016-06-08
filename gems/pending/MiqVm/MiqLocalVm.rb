@@ -8,8 +8,8 @@ class MiqLocalVm < MiqVm
     @ost = OpenStruct.new
     @rootTrees = [MiqFS.new(RealFS, OpenStruct.new)]
     @volumeManager = OpenStruct.new
-    @vmConfigFile = "Local VM"
-    @vmDir = ""
+    @vmConfigFile = 'Local VM'
+    @vmDir = ''
     @vmConfig = OpenStruct.new
   end # def initialize
 
@@ -18,7 +18,7 @@ class MiqLocalVm < MiqVm
   attr_reader :volumeManager
 
   def unmount
-    $log.info "MiqLocalVm.unmount called."
+    $log.info 'MiqLocalVm.unmount called.'
   end
 end # class MiqVm
 
@@ -40,11 +40,11 @@ if __FILE__ == $0
 
   vm = MiqLocalVm.new
 
-  ["accounts", "services", "software", "system"].each do |cat|
+  ['accounts', 'services', 'software', 'system'].each do |cat|
     xml = vm.extract(cat)
     xml.write($stdout, 4)
   end
 
   vm.unmount
-  puts "...done"
+  puts '...done'
 end

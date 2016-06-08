@@ -12,15 +12,15 @@ class VmController < ApplicationController
 
   def show_list
     options = {:association => session[:vm_type]}
-    options[:model] = "ManageIQ::Providers::CloudManager::Vm" if params['sb_controller'] == 'availability_zone'
+    options[:model] = 'ManageIQ::Providers::CloudManager::Vm' if params['sb_controller'] == 'availability_zone'
     process_show_list(options)
   end
 
   private ####
 
   def get_session_data
-    @title          = _("Virtual Machines")
-    @layout         = "vm"
+    @title          = _('Virtual Machines')
+    @layout         = 'vm'
     @lastaction     = session[:vm_lastaction]
     @showtype       = session[:vm_showtype]
     @base           = session[:vm_compare_base]
@@ -28,8 +28,8 @@ class VmController < ApplicationController
     @catinfo        = session[:vm_catinfo]
     @cats           = session[:vm_cats]
     @display        = session[:vm_display]
-    @polArr         = session[:polArr] || ""           # current tags in effect
-    @policy_options = session[:policy_options] || ""
+    @polArr         = session[:polArr] || ''           # current tags in effect
+    @policy_options = session[:policy_options] || ''
   end
 
   def set_session_data

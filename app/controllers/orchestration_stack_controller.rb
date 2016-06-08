@@ -11,39 +11,39 @@ class OrchestrationStackController < ApplicationController
 
   def show
     return if perfmenu_click?
-    @display = params[:display] || "main" unless control_selected?
+    @display = params[:display] || 'main' unless control_selected?
 
-    @lastaction = "show"
+    @lastaction = 'show'
     @orchestration_stack = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@orchestration_stack)
 
-    @gtl_url = "/show"
-    drop_breadcrumb({:name => _("Orchestration Stacks"),
+    @gtl_url = '/show'
+    drop_breadcrumb({:name => _('Orchestration Stacks'),
                      :url  => "/orchestration_stack/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
-    when "download_pdf", "main", "summary_only"
+    when 'download_pdf', 'main', "summary_only"
       get_tagdata(@orchestration_stack)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @orchestration_stack.name},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}")
       @showtype = "main"
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
-    when "instances"
-      title = ui_lookup(:tables => "vm_cloud")
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @orchestration_stack.name, :title => title},
+    when 'instances'
+      title = ui_lookup(:tables => 'vm_cloud')
+      drop_breadcrumb(:name => _('%{name} (All %{title})') % {:name => @orchestration_stack.name, :title => title},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @orchestration_stack)
       @showtype = @display
       notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
-    when "security_groups"
-      title = ui_lookup(:tables => "security_group")
+    when 'security_groups'
+      title = ui_lookup(:tables => 'security_group')
       kls   = SecurityGroup
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @orchestration_stack.name, :title => title},
+      drop_breadcrumb(:name => _('%{name} (All %{title})') % {:name => @orchestration_stack.name, :title => title},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @orchestration_stack)  # Get the records (into a view) and the paginator
       @showtype = @display
       notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
-    when "stack_orchestration_template"
-      drop_breadcrumb(:name => "%{name} (Orchestration Template)" % {:name => @orchestration_stack.name},
+    when 'stack_orchestration_template'
+      drop_breadcrumb(:name => '%{name} (Orchestration Template)' % {:name => @orchestration_stack.name},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
     end
 
@@ -77,10 +77,10 @@ class OrchestrationStackController < ApplicationController
   def button
     @edit = session[:edit]                          # Restore @edit for adv search box
 
-    params[:display] = @display if ["instances"].include?(@display)  # Were we displaying vms/hosts/storages
+    params[:display] = @display if ['instances'].include?(@display)  # Were we displaying vms/hosts/storages
     params[:page] = @current_page if @current_page.nil?   # Save current page for list refresh
 
-    if params[:pressed].starts_with?("instance_")        # Handle buttons from sub-items screen
+    if params[:pressed].starts_with?('instance_')        # Handle buttons from sub-items screen
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       process_vm_buttons(pfx)
 
@@ -93,30 +93,30 @@ class OrchestrationStackController < ApplicationController
 
       unless ["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
               "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-        @refresh_div = "main_div"
-        @refresh_partial = "layouts/gtl"
+        @refresh_div = 'main_div'
+        @refresh_partial = 'layouts/gtl'
         show                                                        # Handle VMs buttons
       end
-    elsif params[:pressed] == "make_ot_orderable"
+    elsif params[:pressed] == 'make_ot_orderable'
       make_ot_orderable
       return
-    elsif params[:pressed] == "orchestration_template_copy"
+    elsif params[:pressed] == 'orchestration_template_copy'
       orchestration_template_copy
       return
-    elsif params[:pressed] == "orchestration_templates_view"
+    elsif params[:pressed] == 'orchestration_templates_view'
       orchestration_templates_view
       return
     else
       params[:page] = @current_page if @current_page.nil?                     # Save current page for list refresh
-      @refresh_div = "main_div" # Default div for button.rjs to refresh
+      @refresh_div = 'main_div' # Default div for button.rjs to refresh
       case params[:pressed]
-      when "orchestration_stack_delete"
+      when 'orchestration_stack_delete'
         orchestration_stack_delete
-      when "orchestration_stack_retire"
+      when 'orchestration_stack_retire'
         orchestration_stack_retire
-      when "orchestration_stack_retire_now"
+      when 'orchestration_stack_retire_now'
         orchestration_stack_retire_now
-      when "orchestration_stack_tag"
+      when 'orchestration_stack_tag'
         tag(OrchestrationStack)
       end
       return if %w(orchestration_stack_retire orchestration_stack_tag).include?(params[:pressed]) &&
@@ -124,25 +124,25 @@ class OrchestrationStackController < ApplicationController
     end
 
     if @flash_array.nil? && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(_("Button not yet implemented"), :error)
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    elsif @flash_array && @lastaction == "show"
+      add_flash(_('Button not yet implemented'), :error)
+      @refresh_partial = 'layouts/flash_msg'
+      @refresh_div = 'flash_msg_div'
+    elsif @flash_array && @lastaction == 'show'
       @orchestration_stack = @record = identify_record(params[:id])
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
+      @refresh_partial = 'layouts/flash_msg'
+      @refresh_div = 'flash_msg_div'
     end
 
-    if !@flash_array.nil? && params[:pressed] == "orchestration_stack_delete" && @single_delete
+    if !@flash_array.nil? && params[:pressed] == 'orchestration_stack_delete' && @single_delete
       render :update do |page|
         page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
       end
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+    elsif params[:pressed].ends_with?('_edit') || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
+      if @refresh_div == 'main_div' && @lastaction == 'show_list'
         replace_gtl_main_div
       else
         render_flash
@@ -163,9 +163,9 @@ class OrchestrationStackController < ApplicationController
 
   def stacks_ot_copy
     case params[:button]
-    when "cancel"
+    when 'cancel'
       stacks_ot_copy_cancel
-    when "add"
+    when 'add'
       stacks_ot_copy_submit
     end
   end
@@ -176,21 +176,21 @@ class OrchestrationStackController < ApplicationController
     stack = find_by_id_filtered(OrchestrationStack, params[:id])
     template = stack.orchestration_template
     if template.orderable?
-      add_flash(_("Orchestration template \"%{name}\" is already orderable") % {:name => template.name}, :error)
+      add_flash(_('Orchestration template "%{name}" is already orderable') % {:name => template.name}, :error)
       render_flash
     else
       begin
         template.save_as_orderable!
       rescue StandardError => bang
-        add_flash(_("An error occured when changing orchestration template \"%{name}\" to orderable: %{err_msg}") %
+        add_flash(_('An error occured when changing orchestration template "%{name}" to orderable: %{err_msg}') %
           {:name => template.name, :err_msg => bang.message}, :error)
         render_flash
       else
         @record = stack
-        add_flash(_("Orchestration template \"%{name}\" is now orderable") % {:name => template.name})
+        add_flash(_('Orchestration template "%{name}" is now orderable') % {:name => template.name})
         render :update do |page|
           page << javascript_prologue
-          page.replace(:form_div, :partial => "stack_orchestration_template")
+          page.replace(:form_div, :partial => 'stack_orchestration_template')
           page << javascript_pf_toolbar_reload('center_tb', build_toolbar(center_toolbar_filename))
           page << javascript_show_if_exists(:toolbar)
         end
@@ -201,13 +201,13 @@ class OrchestrationStackController < ApplicationController
   def orchestration_template_copy
     @record = find_by_id_filtered(OrchestrationStack, params[:id])
     if @record.orchestration_template.orderable?
-      add_flash(_("Orchestration template \"%{name}\" is already orderable") %
+      add_flash(_('Orchestration template "%{name}" is already orderable') %
         {:name => @record.orchestration_template.name}, :error)
       render_flash
     else
       render :update do |page|
         page << javascript_prologue
-        page.replace(:form_div, :partial => "copy_orchestration_template")
+        page.replace(:form_div, :partial => 'copy_orchestration_template')
         page << javascript_hide_if_exists(:toolbar)
       end
     end
@@ -215,10 +215,10 @@ class OrchestrationStackController < ApplicationController
 
   def stacks_ot_copy_cancel
     @record = find_by_id_filtered(OrchestrationStack, params[:id])
-    add_flash(_("Copy of Orchestration Template was cancelled by the user"))
+    add_flash(_('Copy of Orchestration Template was cancelled by the user'))
     render :update do |page|
       page << javascript_prologue
-      page.replace(:form_div, :partial => "stack_orchestration_template")
+      page.replace(:form_div, :partial => 'stack_orchestration_template')
       page << javascript_show_if_exists(:toolbar)
     end
   end
@@ -227,11 +227,11 @@ class OrchestrationStackController < ApplicationController
     assert_privileges('orchestration_template_copy')
     original_template = find_by_id_filtered(OrchestrationTemplate, params[:templateId])
     if params[:templateContent] == original_template.content
-      add_flash(_("Unable to create a new template copy \"%{name}\": old and new template content have to differ.") %
+      add_flash(_('Unable to create a new template copy "%{name}": old and new template content have to differ.') %
         {:name => params[:templateName]})
       render_flash
-    elsif params[:templateContent].nil? || params[:templateContent] == ""
-      add_flash(_("Unable to create a new template copy \"%{name}\": new template content cannot be empty.") %
+    elsif params[:templateContent].nil? || params[:templateContent] == ''
+      add_flash(_('Unable to create a new template copy "%{name}": new template content cannot be empty.') %
         {:name => params[:templateName]})
       render_flash
     else
@@ -240,7 +240,7 @@ class OrchestrationStackController < ApplicationController
         :description => params[:templateDescription],
         :type        => original_template.type,
         :content     => params[:templateContent],
-        :draft       => params[:templateDraft] == "true",
+        :draft       => params[:templateDraft] == 'true',
       )
       begin
         ot.save_as_orderable!
@@ -249,7 +249,7 @@ class OrchestrationStackController < ApplicationController
           {:error_message => bang.message}, :error)
         render_flash
       else
-        flash_message = _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => 'OrchestrationTemplate'),
+        flash_message = _('%{model} "%{name}" was saved') % {:model => ui_lookup(:model => 'OrchestrationTemplate'),
                                                                :name  => ot.name}
         render :update do |page|
           page << javascript_prologue
@@ -271,8 +271,8 @@ class OrchestrationStackController < ApplicationController
   end
 
   def get_session_data
-    @title      = _("Stack")
-    @layout     = "orchestration_stack"
+    @title      = _('Stack')
+    @layout     = 'orchestration_stack'
     @lastaction = session[:orchestration_stack_lastaction]
     @display    = session[:orchestration_stack_display]
   end

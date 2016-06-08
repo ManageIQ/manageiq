@@ -67,7 +67,7 @@ class MiqTask < ApplicationRecord
   def self.trim_message(message)
     # Trim the message to the first 255 bytes
     msg = message.dup.to_s
-    msg = msg[0..251] + "..." if msg.length > 255
+    msg = msg[0..251] + '...' if msg.length > 255
     msg
   end
 
@@ -140,18 +140,18 @@ class MiqTask < ApplicationRecord
 
   def human_status
     case state
-    when STATE_INITIALIZED then "Initialized"
-    when STATE_QUEUED      then "Queued"
-    when STATE_ACTIVE      then "Running"
+    when STATE_INITIALIZED then 'Initialized'
+    when STATE_QUEUED      then 'Queued'
+    when STATE_ACTIVE      then 'Running'
     when STATE_FINISHED
       case status
-      when STATUS_OK      then "Complete"
-      when STATUS_WARNING then "Finished with Warnings"
-      when STATUS_ERROR   then "Error"
-      when STATUS_TIMEOUT then "Timed Out"
-      else raise _("Unknown status of: %{task_status}") % {:task_status => status.inspect}
+      when STATUS_OK      then 'Complete'
+      when STATUS_WARNING then 'Finished with Warnings'
+      when STATUS_ERROR   then 'Error'
+      when STATUS_TIMEOUT then 'Timed Out'
+      else raise _('Unknown status of: %{task_status}') % {:task_status => status.inspect}
       end
-    else raise _("Unknown state of: %{task_status}") % {:task_status => state.inspect}
+    else raise _('Unknown state of: %{task_status}') % {:task_status => state.inspect}
     end
   end
 
@@ -180,7 +180,7 @@ class MiqTask < ApplicationRecord
     return miq_report_result.report_results unless miq_report_result.nil?
     unless binary_blob.nil?
       serializer_name = binary_blob.data_type
-      serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
+      serializer_name = 'Marshal' unless serializer_name == 'YAML'  # YAML or Marshal, for now
       serializer = serializer_name.constantize
       return serializer.load(binary_blob.binary)
     end
@@ -188,7 +188,7 @@ class MiqTask < ApplicationRecord
   end
 
   def task_results=(value)
-    self.binary_blob        = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
+    self.binary_blob        = BinaryBlob.new(:name => 'task_results', :data_type => 'YAML')
     binary_blob.binary = YAML.dump(value)
   end
 
@@ -245,7 +245,7 @@ class MiqTask < ApplicationRecord
         end
       end
     rescue Timeout::Error
-      update_status(task_id, STATE_FINISHED, STATUS_TIMEOUT, "Timed out stalled task.")
+      update_status(task_id, STATE_FINISHED, STATUS_TIMEOUT, 'Timed out stalled task.')
       task.reload
     end
     task
@@ -253,7 +253,7 @@ class MiqTask < ApplicationRecord
 
   def self.delete_older(ts, condition)
     _log.info("Queuing deletion of tasks older than: #{ts}")
-    ids = where("updated_on < ?", ts).where(condition).pluck("id")
+    ids = where('updated_on < ?', ts).where(condition).pluck('id')
     delete_by_id(ids)
   end
 
@@ -261,7 +261,7 @@ class MiqTask < ApplicationRecord
     _log.info("Queuing deletion of tasks with the following ids: #{ids.inspect}")
     MiqQueue.put(
       :class_name  => name,
-      :method_name => "destroy",
+      :method_name => 'destroy',
       :args        => [ids],
       :zone        => MiqServer.my_zone
     )

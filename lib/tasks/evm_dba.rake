@@ -54,7 +54,7 @@ module EvmDba
   # Returns:
   #   ["evm:db:region", "--region", "1"]
   def self.extract_command_options
-    i = ARGV.index("--")
+    i = ARGV.index('--')
     i ? ARGV.slice((i + 1)..-1) : ARGV.dup
   end
 end
@@ -101,26 +101,26 @@ namespace :evm do
       end
     end
 
-    desc "Seed the ManageIQ EVM Database (VMDB) with defaults"
+    desc 'Seed the ManageIQ EVM Database (VMDB) with defaults'
     task :seed do
       Rake::Task['db:seed'].invoke
     end
 
-    desc "clean up database"
+    desc 'clean up database'
     task :gc do
       require 'trollop'
       opts = Trollop.options(EvmDba.extract_command_options) do
-        opt :username,   "Username",         :type => :string
-        opt :hostname,   "Hostname",         :type => :string
-        opt :dbname,     "Database name",    :type => :string
-        opt :aggressive, "Aggressive gc: vaccume with all options and reindexing"
-        opt :vacuum,     "Vacuum database"
-        opt :reindex,    "Reindex database (or table if --table specified)"
-        opt :analyze,    "Vacuum with analyze"
-        opt :full,       "Vacuum full"
-        opt :verbose,    "Vacuum with verbose information printed"
+        opt :username,   'Username',         :type => :string
+        opt :hostname,   'Hostname',         :type => :string
+        opt :dbname,     'Database name',    :type => :string
+        opt :aggressive, 'Aggressive gc: vaccume with all options and reindexing'
+        opt :vacuum,     'Vacuum database'
+        opt :reindex,    'Reindex database (or table if --table specified)'
+        opt :analyze,    'Vacuum with analyze'
+        opt :full,       'Vacuum full'
+        opt :verbose,    'Vacuum with verbose information printed'
 
-        opt :table,      "Tablename to reindex (if only perorm on one)", :type => :string
+        opt :table,      'Tablename to reindex (if only perorm on one)', :type => :string
       end
 
       opts = opts.delete_if { |_k, v| v.nil? || v == false }
@@ -129,7 +129,7 @@ namespace :evm do
       exit # exit so that parameters to the first rake task are not run as rake tasks
     end
 
-    desc "Destroys the ManageIQ EVM Database (VMDB) of all tables, views and indices"
+    desc 'Destroys the ManageIQ EVM Database (VMDB) of all tables, views and indices'
     task :destroy do
       begin
         Rake::Task['environment'].invoke
@@ -148,7 +148,7 @@ namespace :evm do
       ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations[Rails.env])
     end
 
-    desc "Resets the ManageIQ EVM Database (VMDB) of all tables, views and indices"
+    desc 'Resets the ManageIQ EVM Database (VMDB) of all tables, views and indices'
     task :reset => [:destroy, 'db:migrate']
 
     # Example usage:
@@ -158,7 +158,7 @@ namespace :evm do
     task :region do
       require 'trollop'
       opts = Trollop.options(EvmDba.extract_command_options) do
-        opt :region, "Region number", :type => :integer, :required => true
+        opt :region, 'Region number', :type => :integer, :required => true
       end
 
       Dir.chdir(Rails.root)
@@ -166,7 +166,7 @@ namespace :evm do
         #TODO: Raise an error if region is not valid
         region = opts[:region]
 
-        region_file = Rails.root.join("REGION")
+        region_file = Rails.root.join('REGION')
         puts "Writing region: #{region} in #{region_file}..."
 
         old_region = File.exist?(region_file) ? File.read(region_file) : 0
@@ -176,9 +176,9 @@ namespace :evm do
         ENV['VERBOSE'] = 'false' # Do not flood the output with migration details
         Rake::Task['evm:db:reset'].invoke
 
-        puts "Initializing region and database..."
+        puts 'Initializing region and database...'
         # Create the region from our REGION file, initialize a new miq_database row for this region
-        AwesomeSpawn.run!("bin/rails runner", :params => ["MiqDatabase.seed; MiqRegion.seed"])
+        AwesomeSpawn.run!('bin/rails runner', :params => ['MiqDatabase.seed; MiqRegion.seed'])
       rescue => err
         message = err.kind_of?(AwesomeSpawn::CommandResultError) ? err.result.error : err.message
         STDERR.puts "Encountered issue setting up Database using region #{region}: #{message}\n"
@@ -193,13 +193,13 @@ namespace :evm do
     task :check_schema => :environment do
       message = EvmDatabase.check_schema
       raise message if message
-      puts "The local schema is consistent with schema.yml"
+      puts 'The local schema is consistent with schema.yml'
     end
 
     desc 'Write the current schema to the schema.yml file'
     task :write_schema => :environment do
       EvmDatabase.write_expected_schema
-      puts "Wrote configured schema to schema.yml"
+      puts 'Wrote configured schema to schema.yml'
     end
 
     # Example usage:
@@ -209,15 +209,15 @@ namespace :evm do
     #   bin/rake evm:db:restore:remote -- --uri smb://dev005.manageiq.com/share1/db_backup/region1 --uri-username samba_one --uri-password "abc"
 
     namespace :backup do
-      require File.expand_path(File.join(Rails.root, "lib", "evm_database_ops"))
+      require File.expand_path(File.join(Rails.root, 'lib', 'evm_database_ops'))
       desc 'Backup the local ManageIQ EVM Database (VMDB) to a local file'
       task :local do
         require 'trollop'
         opts = Trollop.options(EvmDba.extract_command_options) do
-          opt :local_file, "Destination file", :type => :string, :required => true
-          opt :username,   "Username",         :type => :string
-          opt :hostname,   "Hostname",         :type => :string
-          opt :dbname,     "Database name",    :type => :string
+          opt :local_file, 'Destination file', :type => :string, :required => true
+          opt :username,   'Username',         :type => :string
+          opt :hostname,   'Hostname',         :type => :string
+          opt :dbname,     'Database name',    :type => :string
         end
 
         opts.delete_if { |k,v| v.nil? }
@@ -230,13 +230,13 @@ namespace :evm do
       task :remote do
         require 'trollop'
         opts = Trollop.options(EvmDba.extract_command_options) do
-          opt :uri,              "Destination depot URI",       :type => :string, :required => true
-          opt :uri_username,     "Destination depot username",  :type => :string
-          opt :uri_password,     "Destination depot password",  :type => :string
-          opt :remote_file_name, "Destination depot filename",  :type => :string
-          opt :username,         "Username",                    :type => :string
-          opt :hostname,         "Hostname",                    :type => :string
-          opt :dbname,           "Database name",               :type => :string
+          opt :uri,              'Destination depot URI',       :type => :string, :required => true
+          opt :uri_username,     'Destination depot username',  :type => :string
+          opt :uri_password,     'Destination depot password',  :type => :string
+          opt :remote_file_name, 'Destination depot filename',  :type => :string
+          opt :username,         'Username',                    :type => :string
+          opt :hostname,         'Hostname',                    :type => :string
+          opt :dbname,           'Database name',               :type => :string
         end
 
         db_opts = {}
@@ -258,10 +258,10 @@ namespace :evm do
       task :local do
         require 'trollop'
         opts = Trollop.options(EvmDba.extract_command_options) do
-          opt :local_file, "Destination file", :type => :string, :required => true
-          opt :username,   "Username",         :type => :string
-          opt :hostname,   "Hostname",         :type => :string
-          opt :dbname,     "Database name",    :type => :string
+          opt :local_file, 'Destination file', :type => :string, :required => true
+          opt :username,   'Username',         :type => :string
+          opt :hostname,   'Hostname',         :type => :string
+          opt :dbname,     'Database name',    :type => :string
         end
 
         opts.delete_if { |k,v| v.nil? }
@@ -278,12 +278,12 @@ namespace :evm do
       task :remote do
         require 'trollop'
         opts = Trollop.options(EvmDba.extract_command_options) do
-          opt :uri,              "Destination depot URI",       :type => :string, :required => true
-          opt :uri_username,     "Destination depot username",  :type => :string
-          opt :uri_password,     "Destination depot password",  :type => :string
-          opt :username,         "Username",                    :type => :string
-          opt :hostname,         "Hostname",                    :type => :string
-          opt :dbname,           "Database name",               :type => :string
+          opt :uri,              'Destination depot URI',       :type => :string, :required => true
+          opt :uri_username,     'Destination depot username',  :type => :string
+          opt :uri_password,     'Destination depot password',  :type => :string
+          opt :username,         'Username',                    :type => :string
+          opt :hostname,         'Hostname',                    :type => :string
+          opt :dbname,           'Database name',               :type => :string
         end
 
         db_opts = {}
@@ -311,4 +311,4 @@ namespace :evm do
   end
 end
 
-Rake::Task["db:migrate"].enhance(["evm:db:environmentlegacykey"])
+Rake::Task['db:migrate'].enhance(['evm:db:environmentlegacykey'])

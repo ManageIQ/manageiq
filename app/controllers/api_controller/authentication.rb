@@ -139,22 +139,22 @@ class ApiController
     def add_product_feature_details(pf_result, ident, details, children)
       ident_str = ident.to_s
       res = {
-        "name"        => details[:name],
-        "description" => details[:description]
+        'name'        => details[:name],
+        'description' => details[:description]
       }
       collection, method, action = referenced_identifiers[ident_str]
       hrefs = get_hrefs_for_identifier(ident_str)
-      res["href"] = hrefs.first if hrefs.one?
-      res["action"] = api_action_details(collection, method, action) if collection.present?
-      res["children"] = children if children.present?
+      res['href'] = hrefs.first if hrefs.one?
+      res['action'] = api_action_details(collection, method, action) if collection.present?
+      res['children'] = children if children.present?
       pf_result[ident_str] = res
     end
 
     def api_action_details(collection, method, action)
       {
-        "name"   => action[:name],
-        "method" => method,
-        "href"   => "#{@req[:api_prefix]}/#{collection}"
+        'name'   => action[:name],
+        'method' => method,
+        'href'   => "#{@req[:api_prefix]}/#{collection}"
       }
     end
 

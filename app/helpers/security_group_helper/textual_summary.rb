@@ -20,7 +20,7 @@ module SecurityGroupHelper::TextualSummary
         rule.direction,
         rule.port,
         rule.end_port,
-        (rule.source_ip_range || rule.source_security_group.try(:name) || "<None>")
+        (rule.source_ip_range || rule.source_security_group.try(:name) || '<None>')
       ]
     end.sort
   end
@@ -50,12 +50,12 @@ module SecurityGroupHelper::TextualSummary
   end
 
   def textual_instances
-    label = ui_lookup(:tables => "vm_cloud")
+    label = ui_lookup(:tables => 'vm_cloud')
     num   = @record.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
-    if num > 0 && role_allows(:feature => "vm_show_list")
+    h     = {:label => label, :image => 'vm', :value => num}
+    if num > 0 && role_allows(:feature => 'vm_show_list')
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
-      h[:title] = _("Show all %{label}") % {:label => label}
+      h[:title] = _('Show all %{label}') % {:label => label}
     end
     h
   end

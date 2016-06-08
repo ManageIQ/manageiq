@@ -6,7 +6,7 @@ require 'util/miq-unicode'
 module Iso9660
   class BootSector
     # Universal Volume Descriptor ID.
-    DESCRIPTOR_ID = "CD001"
+    DESCRIPTOR_ID = 'CD001'
 
     # Volume descriptor types.
     TYPE_BOOT       = 0 # The descriptor is a boot record.
@@ -68,7 +68,7 @@ module Iso9660
     attr_reader :rootEntry, :recId, :suff
 
     def initialize(stream, joliet = false)
-      raise "Nil stream" if stream.nil?
+      raise 'Nil stream' if stream.nil?
       @stream = stream
       @isJoliet = joliet
       @jolietVerified = false
@@ -81,9 +81,9 @@ module Iso9660
       @descType = @bs['desc_type']
       raise "Descriptor type mismatch (type is #{@descType})" if @descType != (@isJoliet ? TYPE_SUPP_DESC : TYPE_PRIM_DESC)
       @recId = @bs['id']
-      raise "Descriptor ID mismatch" if @recId != "CD001"
-      raise "Descriptor version mismatch" if @bs['version'] != 1
-      raise "File structure version mismatch" if @bs['file_structure_version'] != 1
+      raise 'Descriptor ID mismatch' if @recId != 'CD001'
+      raise 'Descriptor version mismatch' if @bs['version'] != 1
+      raise 'File structure version mismatch' if @bs['file_structure_version'] != 1
 
       # If this is supposed to be Joliet then try to verify.
       if @isJoliet

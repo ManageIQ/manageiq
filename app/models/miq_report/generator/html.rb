@@ -15,14 +15,14 @@ module MiqReport::Generator::Html
       # Following line commented for now - for not showing repeating column values
       #       prev_data = String.new                # Initialize the prev_data variable
 
-      cfg = VMDB::Config.new("vmdb").config[:reporting]       # Read in the reporting column precisions
+      cfg = VMDB::Config.new('vmdb').config[:reporting]       # Read in the reporting column precisions
       default_precision = cfg[:precision][:default]           # Set the default
       precision_by_column = cfg[:precision_by_column]         # get the column overrides
       precisions = {}                                         # Hash to store columns we hit
       hide_detail_rows = self.rpt_options.fetch_path(:summary, :hide_detail_rows) || false
 
       # derive a default precision by looking at the suffixes of the column hearers
-      zero_precision_suffixes = ["(ms)", "(mb)", "(seconds)", "(b)"]
+      zero_precision_suffixes = ['(ms)', '(mb)', '(seconds)', '(b)']
       headers.each_with_index do |header, i|
         next unless header.respond_to?(:downcase)
         header = header.downcase
@@ -41,8 +41,8 @@ module MiqReport::Generator::Html
       use_table = sub_table ? sub_table : table
       use_table.data.each_with_index do |d, d_idx|
         break if row_limit != 0 && d_idx > row_limit - 1
-        output = ""
-        if ["y", "c"].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
+        output = ''
+        if ['y', 'c'].include?(group) && !sortby.nil? && save_val != d.data[sortby[0]].to_s
           unless d_idx == 0                       # If not the first row, we are at a group break
             unless group_limit && group_counter >= group_limit  # If not past the limit
               html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
@@ -51,7 +51,7 @@ module MiqReport::Generator::Html
           end
           save_val = d.data[sortby[0]].to_s
           # Chargeback, sort by date, but show range
-          group_text = d.data["display_range"] if Chargeback.db_is_chargeback?(db) && sortby[0] == "start_date"
+          group_text = d.data['display_range'] if Chargeback.db_is_chargeback?(db) && sortby[0] == 'start_date'
         end
 
         # Build click thru if string can be created
@@ -65,13 +65,13 @@ module MiqReport::Generator::Html
         col_order.each_with_index do |c, c_idx|
           style = get_style_class(c, d.data, tz)
           style_class = !style.nil? ? " class='#{style}'" : nil
-          if c == "resource_type"                     # Lookup models in resource_type col
+          if c == 'resource_type'                     # Lookup models in resource_type col
             output << "<td#{style_class}>"
             output << ui_lookup(:model => d.data[c])
-          elsif db == "Tenant" && TenantQuota.can_format_field?(c, d.data["tenant_quotas.name"])
+          elsif db == 'Tenant' && TenantQuota.can_format_field?(c, d.data['tenant_quotas.name'])
             output << "<td#{style_class} " + 'style="text-align:right">'
-            output << CGI.escapeHTML(TenantQuota.format_quota_value(c, d.data[c], d.data["tenant_quotas.name"]))
-          elsif ["<compare>", "<drift>"].include?(db.to_s)
+            output << CGI.escapeHTML(TenantQuota.format_quota_value(c, d.data[c], d.data['tenant_quotas.name']))
+          elsif ['<compare>', '<drift>'].include?(db.to_s)
             output << "<td#{style_class}>"
             output << CGI.escapeHTML(d.data[c].to_s)
           else
@@ -82,20 +82,20 @@ module MiqReport::Generator::Html
             else
               output << "<td#{style_class}>"
             end
-            output << CGI.escapeHTML(format(c.split("__").first,
+            output << CGI.escapeHTML(format(c.split('__').first,
                                             d.data[c],
                                             :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_,
                                             :tz     => tz))
           end
-          output << "</td>"
+          output << '</td>'
         end
 
-        output << "</tr>"
+        output << '</tr>'
 
         html_rows << output unless hide_detail_rows
       end
 
-      if ["y", "c"].include?(group) && !sortby.nil?
+      if ['y', 'c'].include?(group) && !sortby.nil?
         unless group_limit && group_counter >= group_limit
           html_rows += build_group_html_rows(save_val, col_order.length, break_label, group_text)
           html_rows += build_group_html_rows(:_total_, col_order.length)
@@ -112,7 +112,7 @@ module MiqReport::Generator::Html
 
     # Handle CI based report rows
     if ['EmsCluster', 'ExtManagementSystem', 'Host', 'Storage', 'Vm', 'Service'].include?(db) && data_row['id']
-      controller = db == "ExtManagementSystem" ? "management_system" : db.underscore
+      controller = db == 'ExtManagementSystem' ? 'management_system' : db.underscore
       donav = "DoNav('/#{controller}/show/#{data_row['id']}');"
       title = data_row['name'] ?
         "View #{ui_lookup(:model => db)} \"#{data_row['name']}\"" :
@@ -121,7 +121,7 @@ module MiqReport::Generator::Html
     end
 
     # Handle CI performance report rows
-    if db.ends_with?("Performance")
+    if db.ends_with?('Performance')
       if data_row['resource_id'] && data_row['resource_type'] # Base click thru on the related resource
         donav = "DoNav('/#{data_row['resource_type'].underscore}/show/#{data_row['resource_id']}');"
         onclick = "onclick=\"#{donav}\" style='cursor:hand' title='View #{ui_lookup(:model => data_row['resource_type'])} \"#{data_row['resource_name']}\"'"
@@ -139,15 +139,15 @@ module MiqReport::Generator::Html
 
     content =
       if group == :_total_
-        "All Rows"
+        'All Rows'
       else
         group_label = group_text || group
-        group_label = "<Empty>" if group_label.blank?
+        group_label = '<Empty>' if group_label.blank?
         "#{label}#{group_label}"
       end
 
     if (self.group == 'c') && extras && extras[:grouping] && extras[:grouping][group]
-      display_count = _("Count: %{number}") % {:number => extras[:grouping][group][:count]}
+      display_count = _('Count: %{number}') % {:number => extras[:grouping][group][:count]}
     end
     content << " | #{display_count}" unless display_count.blank?
     html_rows << "<tr><td class='group' colspan='#{col_count}'>#{CGI.escapeHTML(content)}</td></tr>"
@@ -155,21 +155,21 @@ module MiqReport::Generator::Html
     if extras && extras[:grouping] && extras[:grouping][group] # See if group key exists
       MiqReport::GROUPINGS.each do |calc|                     # Add an output row for each group calculation
         if extras[:grouping][group].key?(calc.first) # Only add a row if there are calcs of this type for this group value
-          grp_output = ""
-          grp_output << "<tr>"
+          grp_output = ''
+          grp_output << '<tr>'
           grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>#{calc.last.pluralize}:</td>"
           col_order.each_with_index do |c, c_idx|        # Go through the columns
             next if c_idx == 0                                # Skip first column
             grp_output << "<td#{in_a_widget ? "" : " class='group'"} style='text-align:right'>"
             grp_output << CGI.escapeHTML(
               format(
-                c.split("__").first, extras[:grouping][group][calc.first][c],
+                c.split('__').first, extras[:grouping][group][calc.first][c],
                 :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_
               )
             ) if extras[:grouping][group].key?(calc.first)
-            grp_output << "</td>"
+            grp_output << '</td>'
           end
-          grp_output << "</tr>"
+          grp_output << '</tr>'
           html_rows << grp_output
         end
       end
@@ -182,11 +182,11 @@ module MiqReport::Generator::Html
     atoms = col_options.fetch_path(col, :style) unless col_options.nil?
     return if atoms.nil?
 
-    nh = {}; row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, ".")] = v } # Convert keys to match expression fields
+    nh = {}; row.each { |k, v| nh[col_to_expression_col(k).sub(/-/, '.')] = v } # Convert keys to match expression fields
     field = col_to_expression_col(col)
 
     atoms.each do |atom|
-      return atom[:class] if atom[:operator].downcase == "default"
+      return atom[:class] if atom[:operator].downcase == 'default'
 
       exp = expression_for_style_class(field, atom)
       return atom[:class] if exp.evaluate(nh, tz)
@@ -199,7 +199,7 @@ module MiqReport::Generator::Html
     @expression_for_style_class[field] ||= {}
 
     value = atom[:value]
-    value = [value, atom[:value_suffix]].join(".").to_f_with_method if atom[:value_suffix] && value.to_f.respond_to?(atom[:value_suffix])
-    @expression_for_style_class[field][atom] ||= MiqExpression.new({atom[:operator] => {"field" => field, "value" => value}}, "hash")
+    value = [value, atom[:value_suffix]].join('.').to_f_with_method if atom[:value_suffix] && value.to_f.respond_to?(atom[:value_suffix])
+    @expression_for_style_class[field][atom] ||= MiqExpression.new({atom[:operator] => {'field' => field, 'value' => value}}, 'hash')
   end
 end

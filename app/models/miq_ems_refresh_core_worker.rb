@@ -3,7 +3,7 @@ class MiqEmsRefreshCoreWorker < MiqWorker
 
   include PerEmsWorkerMixin
 
-  self.required_roles = ["ems_inventory"]
+  self.required_roles = ['ems_inventory']
 
   def self.ems_class
     ManageIQ::Providers::Vmware::InfraManager

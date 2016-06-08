@@ -8,7 +8,7 @@ describe MigrateUrlFromProviderToEndpoints do
   migration_context :up do
     it 'migrates Provider URL to Endpoints' do
       provider = provider_stub.create!(
-        :url => "example.com"
+        :url => 'example.com'
       )
       ems_stub.create!(
         :provider_id => provider.id
@@ -18,7 +18,7 @@ describe MigrateUrlFromProviderToEndpoints do
 
       expect(endpoint_stub.count).to eq(1)
       expect(endpoint_stub.first).to have_attributes(
-        :url => "example.com"
+        :url => 'example.com'
       )
     end
 
@@ -45,17 +45,17 @@ describe MigrateUrlFromProviderToEndpoints do
         :provider_id => provider.id
       )
       endpoint_stub.create!(
-        :resource_type => "Provider",
+        :resource_type => 'Provider',
         :resource_id   => ems.id,
-        :role          => "default",
-        :url           => "example.com"
+        :role          => 'default',
+        :url           => 'example.com'
       )
 
       migrate
 
       expect(endpoint_stub.count).to eq(0)
       expect(provider.reload).to have_attributes(
-        :url => "example.com"
+        :url => 'example.com'
       )
     end
 

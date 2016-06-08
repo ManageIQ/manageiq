@@ -362,7 +362,7 @@ class MiqVimBroker
 
   def lockHash(key)
     @connectionLock.synchronize(:EX) do
-      raise "MiqVimBroker is shutting down" if @shuttingDown
+      raise 'MiqVimBroker is shutting down' if @shuttingDown
       #
       # Once set, @lockHash[key] doesn't change.
       #
@@ -440,9 +440,9 @@ class MiqVimBroker
           $vim_log.error "MiqVimBroker.getMiqVim: failed to create new connection for #{key}"
           $vim_log.error "#{err.class}: #{err}"
           if $vim_log.debug?
-            $vim_log.debug "Stack trace START"
+            $vim_log.debug 'Stack trace START'
             $vim_log.debug err.backtrace.join("\n")
-            $vim_log.debug "Stack trace END"
+            $vim_log.debug 'Stack trace END'
           end
           raise err
         end
@@ -457,7 +457,7 @@ class MiqVimBroker
     end
 
     # server
-    log_prefix = "MiqVimBroker.removeMiqVim"
+    log_prefix = 'MiqVimBroker.removeMiqVim'
     $vim_log.info "#{log_prefix}: client request to remove connection (#{server}, #{username})...Starting"
     connSync(:EX, server, username) do |key, vim|
       removeMiqVimSS(key, vim)
@@ -470,7 +470,7 @@ class MiqVimBroker
   # Must be called within a connSync(:EX, server, username) context.
   #
   def removeMiqVimSS(key, vim)
-    log_prefix = "MiqVimBroker.removeMiqVimSS"
+    log_prefix = 'MiqVimBroker.removeMiqVimSS'
     $vim_log.info "#{log_prefix}: removing connection for #{key}...Starting"
 
     if @shuttingDown
@@ -495,8 +495,8 @@ class MiqVimBroker
   end
 
   def shutdown
-    raise "MiqVimBroker: shutdown cannot be called from client" if @mode == :client
-    log_prefix = "MiqVimBroker.shutdown"
+    raise 'MiqVimBroker: shutdown cannot be called from client' if @mode == :client
+    log_prefix = 'MiqVimBroker.shutdown'
     $vim_log.info "#{log_prefix}...Starting"
     @connectionLock.synchronize(:EX) do
       @shuttingDown = true
@@ -547,7 +547,7 @@ class MiqVimBroker
     return unless $vim_log.info?
 
     # server
-    $vim_log.info "MiqVimBroker status start"
+    $vim_log.info 'MiqVimBroker status start'
     $vim_log.info "\tMiqVimBroker: Threads = #{Thread.list.length}"
 
     $vim_log.info "\tMiqVimBroker client object counts by type:"
@@ -576,7 +576,7 @@ class MiqVimBroker
       return
     end
 
-    log_prefix = "MiqVimBroker.forceGC"
+    log_prefix = 'MiqVimBroker.forceGC'
     $vim_log.info "#{log_prefix}: GC.start...Starting"
     GC.start
     $vim_log.info "#{log_prefix}: GC.start...Complete"

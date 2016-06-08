@@ -53,7 +53,7 @@ module MiqAeMethodService
 
     def find_ldap_user
       ldap = MiqLdap.new
-      raise "Cannot bind to LDAP with system defaults (see evm.log for details)" if ldap.bind_with_default == false
+      raise 'Cannot bind to LDAP with system defaults (see evm.log for details)' if ldap.bind_with_default == false
       ldap_user = ldap.get_user_object(@object.email, 'mail') || ldap.get_user_object(@object.userid, 'userprincipalname')
       raise "No information returned for email=<#{@object.email}> userid=<#{@object.userid}>" if ldap_user.nil?
       ldap_user

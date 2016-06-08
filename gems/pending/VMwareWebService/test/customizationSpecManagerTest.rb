@@ -19,7 +19,7 @@ $miq_wiredump = true
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 
-CSI_XML_FILE = File.join(File.dirname(__FILE__), "CustomizationSpec", "sles10-x64-vanilla-cust-spec.xml")
+CSI_XML_FILE = File.join(File.dirname(__FILE__), 'CustomizationSpec', 'sles10-x64-vanilla-cust-spec.xml')
 
 begin
 
@@ -32,7 +32,7 @@ begin
   # puts "***** encryptionKey:"
   # vim.dumpObj(miqCsm.encryptionKey)
   # puts
-  puts "***** info:"
+  puts '***** info:'
   vim.dumpObj(miqCsm.info)
 
   puts
@@ -49,7 +49,7 @@ begin
   vim.dumpObj(csi)
 
   puts
-  puts "***** customizationSpecItemToXml:"
+  puts '***** customizationSpecItemToXml:'
   csiXml = miqCsm.customizationSpecItemToXml(csi)
   vim.dumpObj(csiXml)
 
@@ -57,7 +57,7 @@ begin
   File.open(CSI_XML_FILE) { |f| csiXml = f.read }
 
   puts
-  puts "***** xmlToCustomizationSpecItem:"
+  puts '***** xmlToCustomizationSpecItem:'
   csi = miqCsm.xmlToCustomizationSpecItem(csiXml)
   vim.dumpObj(csi)
 
@@ -67,7 +67,7 @@ begin
   end
 
   puts
-  puts "***** createCustomizationSpec:"
+  puts '***** createCustomizationSpec:'
   vim.dumpObj(miqCsm.createCustomizationSpec(csi))
 
 rescue => err

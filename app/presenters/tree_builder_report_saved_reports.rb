@@ -17,7 +17,7 @@ class TreeBuilderReportSavedReports < TreeBuilderReportReportsClass
   end
 
   def root_options
-    [t = _("All Saved Reports"), t]
+    [t = _('All Saved Reports'), t]
   end
 
   # Get root nodes count/array for explorer tree

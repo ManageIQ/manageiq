@@ -16,8 +16,8 @@ class ApplicationHelper::Toolbar::MiqGroupCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Group'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to delete this Group?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to delete this Group?')),
       ]
     ),
   ])

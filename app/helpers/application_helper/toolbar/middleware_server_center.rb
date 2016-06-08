@@ -12,8 +12,8 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Server'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance")
+          :url       => '/show',
+          :url_parms => '?display=performance')
       ]
     ),
   ])
@@ -23,7 +23,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
       'fa fa-shield fa-lg',
       t = N_('Policy'),
       t,
-      :enabled => "false",
+      :enabled => 'false',
       :items => [
         button(
           :middleware_server_tag,
@@ -45,14 +45,14 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           'pficon pficon-restart fa-lg',
           N_('Reload this #{ui_lookup(:table=>"middleware_server")}'),
           N_('Reload Server'),
-          :confirm => N_("Do you want to trigger a reload of this server?")),
+          :confirm => N_('Do you want to trigger a reload of this server?')),
         button(
           :middleware_server_stop,
           nil,
           N_('Stop this #{ui_lookup(:table=>"middleware_server")}'),
           N_('Stop Server'),
-          :image   => "guest_shutdown",
-          :confirm => N_("Do you want to stop this server?")),
+          :image   => 'guest_shutdown',
+          :confirm => N_('Do you want to stop this server?')),
       ]
     ),
   ])

@@ -8,7 +8,7 @@ module MiqHostProvision::Ipmi
     ipmi_command = 'chassis bootdev pxe'
     _log.info("Invoking [#{ipmi_command}]")
     ipmi.run_command(ipmi_command)
-    _log.info("Invoking [power_reset]")
+    _log.info('Invoking [power_reset]')
     ipmi.power_reset
   end
 end

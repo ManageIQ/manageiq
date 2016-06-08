@@ -6,7 +6,7 @@ module MiqXmlPatch
   end
 
   def xmlPatch(patch_xml, direction = 1)
-    raise "Invalid XML Diff document [#{patch_xml.root.name}].  Expected root name [xmlDiff]" unless patch_xml.root.name.to_s == "xmlDiff"
+    raise "Invalid XML Diff document [#{patch_xml.root.name}].  Expected root name [xmlDiff]" unless patch_xml.root.name.to_s == 'xmlDiff'
 
     st = Time.now
     stats = {:deletes => 0, :adds => 0, :updates => 0, :errors => 0}
@@ -47,7 +47,7 @@ module MiqXmlPatch
 
       parent_node = nil
 
-      compare_roots = true if path.nil? && e.elements['path'].attributes['root'] == "true"
+      compare_roots = true if path.nil? && e.elements['path'].attributes['root'] == 'true'
       unless compare_roots
         # If the data should already exist add the first data element we are
         # searching for to the search path.
@@ -81,7 +81,7 @@ module MiqXmlPatch
 
         if ele.nil?
           stats[:errors] += 1
-          miq_patch_logging("XML node not found", :warn)
+          miq_patch_logging('XML node not found', :warn)
         end
       end
 
@@ -170,8 +170,8 @@ module MiqXmlPatch
   end
 
   def miq_patch_element_logging(node, direction)
-    patch_mode = direction >= XML_DIFF_ADD ? "adds" : "deletes"
-    patch_mode = "udpates" if node == :updates
+    patch_mode = direction >= XML_DIFF_ADD ? 'adds' : 'deletes'
+    patch_mode = 'udpates' if node == :updates
     miq_patch_logging("Processing xml patches for [#{patch_mode}] from node [#{node}].  Direction flag:[#{direction}]")
   end
 

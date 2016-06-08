@@ -1,16 +1,16 @@
-require "routing/shared_examples"
+require 'routing/shared_examples'
 
 describe EmsInfraController do
-  let(:controller_name) { "ems_infra" }
+  let(:controller_name) { 'ems_infra' }
 
-  it_behaves_like "A controller that has advanced search routes", true
-  it_behaves_like "A controller that has compare routes"
-  it_behaves_like "A controller that has dialog runner routes"
-  it_behaves_like "A controller that has discovery routes"
-  it_behaves_like "A controller that has download_data routes"
-  it_behaves_like "A controller that has policy protect routes"
-  it_behaves_like "A controller that has tagging routes"
-  it_behaves_like "A controller that has timeline routes"
+  it_behaves_like 'A controller that has advanced search routes', true
+  it_behaves_like 'A controller that has compare routes'
+  it_behaves_like 'A controller that has dialog runner routes'
+  it_behaves_like 'A controller that has discovery routes'
+  it_behaves_like 'A controller that has download_data routes'
+  it_behaves_like 'A controller that has policy protect routes'
+  it_behaves_like 'A controller that has tagging routes'
+  it_behaves_like 'A controller that has timeline routes'
 
   %w(
     dialog_load

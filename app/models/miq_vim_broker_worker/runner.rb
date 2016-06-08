@@ -40,7 +40,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     waitForUpdates_sleep = nil unless waitForUpdates_sleep.kind_of?(Numeric)
     waitForUpdates_sleep = nil if     waitForUpdates_sleep == 0
     if @waitForUpdates_sleep != waitForUpdates_sleep
-      pretty = waitForUpdates_sleep.nil? ? "NONE" : "#{waitForUpdates_sleep} seconds"
+      pretty = waitForUpdates_sleep.nil? ? 'NONE' : "#{waitForUpdates_sleep} seconds"
       _log.info("#{log_prefix} Setting Broker's Update Manager's Sleep Interval to [#{pretty}]")
       @vim_broker_server.updateDelay = waitForUpdates_sleep
       @waitForUpdates_sleep = waitForUpdates_sleep
@@ -48,7 +48,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def reset_broker_update_notification
-    @active_roles.include?("ems_inventory") ? enable_broker_update_notification : disable_broker_update_notification
+    @active_roles.include?('ems_inventory') ? enable_broker_update_notification : disable_broker_update_notification
   end
 
   def enable_broker_update_notification
@@ -89,11 +89,11 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def check_broker_cache_scope
-    do_exit("Exiting due to change in broker cache scope.") if MiqVimBroker.cacheScope != expected_broker_cache_scope
+    do_exit('Exiting due to change in broker cache scope.') if MiqVimBroker.cacheScope != expected_broker_cache_scope
   end
 
   def expected_broker_cache_scope
-    @active_roles.include?("ems_inventory") ? :cache_scope_ems_refresh : :cache_scope_core
+    @active_roles.include?('ems_inventory') ? :cache_scope_ems_refresh : :cache_scope_core
   end
 
   def ems_ids_for_notify(address, userid)
@@ -114,7 +114,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def do_before_work_loop
-    if @active_roles.include?("ems_inventory") && @initial_emses_to_monitor.length > 0
+    if @active_roles.include?('ems_inventory') && @initial_emses_to_monitor.length > 0
       _log.info("#{log_prefix} Queueing initial refresh for EMS.")
       EmsRefresh.queue_refresh(@initial_emses_to_monitor)
     end
@@ -168,12 +168,12 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     type, = EmsRefresh::VcUpdates::OBJ_TYPE_TO_TYPE_AND_CLASS[obj_type]
 
     changed_props.reject! { |p| !EmsRefresh::VcUpdates.selected_property?(type, p) }
-    change_set.reject!    { |c| !EmsRefresh::VcUpdates.selected_property?(type, c["name"]) }
+    change_set.reject!    { |c| !EmsRefresh::VcUpdates.selected_property?(type, c['name']) }
 
     exclude_props = @exclude_props[obj_type]
     if exclude_props
       changed_props.reject! { |p| exclude_props.include?(p) }
-      change_set.reject!    { |c| exclude_props.include?(c["name"]) }
+      change_set.reject!    { |c| exclude_props.include?(c['name']) }
     end
 
     return if changed_props.empty?
@@ -287,7 +287,7 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def check_broker_server
-    do_exit("Broker Server is no longer alive, restarting...", 1) unless DRb.thread && DRb.thread.alive?
+    do_exit('Broker Server is no longer alive, restarting...', 1) unless DRb.thread && DRb.thread.alive?
   end
 
   def message_broker_unavailable(*_args)

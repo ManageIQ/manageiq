@@ -8,14 +8,14 @@ require 'fs/fat32/boot_sect'
 require_relative '../FSTestUtil'
 
 class Fat32TestWrite < Minitest::Test
-  TEST_SHORT_DIR = "/test"
-  TEST_LONG_DIR  = "/Test Directory"
-  TEST_SHORT_FILE = "test.txt"
-  TEST_LONG_FILE  = "TestFileName.txt"
-  TEST_FIRST = "This is first."
-  TEST_SECOND = "This is second."
-  TEST_GRAY_DIR = "/123456789"
-  TEST_GRAY_FILE = "123456789"
+  TEST_SHORT_DIR = '/test'
+  TEST_LONG_DIR  = '/Test Directory'
+  TEST_SHORT_FILE = 'test.txt'
+  TEST_LONG_FILE  = 'TestFileName.txt'
+  TEST_FIRST = 'This is first.'
+  TEST_SECOND = 'This is second.'
+  TEST_GRAY_DIR = '/123456789'
+  TEST_GRAY_FILE = '123456789'
 
   CONDITIONS = ['fs_type', 'fat32']
   TEST_DB = "#{File.dirname(__FILE__)}/../../vms.yml"
@@ -72,8 +72,8 @@ class Fat32TestWrite < Minitest::Test
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileCtime(TEST_SHORT_DIR) }
           disk.fs.chdir(TEST_SHORT_DIR)
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirRmdir(TEST_SHORT_DIR) }
-          assert_raises(RuntimeError) { disk.fs.dirEntries("*.*") }
-          disk.fs.chdir("/")
+          assert_raises(RuntimeError) { disk.fs.dirEntries('*.*') }
+          disk.fs.chdir('/')
 
           # Test long name.
           assert_raises(RuntimeError) { disk.fs.dirRmdir(TEST_LONG_DIR) }
@@ -81,8 +81,8 @@ class Fat32TestWrite < Minitest::Test
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileCtime(TEST_LONG_DIR) }
           disk.fs.chdir(TEST_LONG_DIR)
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirRmdir(TEST_LONG_DIR) }
-          assert_raises(RuntimeError) { disk.fs.dirEntries("*.*") }
-          disk.fs.chdir("/")
+          assert_raises(RuntimeError) { disk.fs.dirEntries('*.*') }
+          disk.fs.chdir('/')
 
           # Test gray name.
           assert_raises(RuntimeError) { disk.fs.dirRmdir(TEST_GRAY_DIR) }
@@ -90,8 +90,8 @@ class Fat32TestWrite < Minitest::Test
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileCtime(TEST_GRAY_DIR) }
           disk.fs.chdir(TEST_GRAY_DIR)
           assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirRmdir(TEST_GRAY_DIR) }
-          assert_raises(RuntimeError) { disk.fs.dirEntries("*.*") }
-          disk.fs.chdir("/")
+          assert_raises(RuntimeError) { disk.fs.dirEntries('*.*') }
+          disk.fs.chdir('/')
         else
           puts "\ntc_fat32_write: FS is nil at line #{__LINE__} on #{disk.info.fileName}"
         end
@@ -106,29 +106,29 @@ class Fat32TestWrite < Minitest::Test
       if disk.fs
         # puts "\nFat32: Testing dir create/delete on #{disk.info.fileName}"
         # Test short name.
-        disk.fs.chdir("/")
+        disk.fs.chdir('/')
         f = nil
         assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileCtime(TEST_SHORT_FILE) }
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileDelete(TEST_SHORT_FILE) }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "r") }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'r') }
 
         # Test long name.
         f = nil
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "w") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileCtime(TEST_LONG_FILE) }
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileDelete(TEST_LONG_FILE) }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_LONG_FILE, "r") }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'r') }
 
         # Test gray name.
         f = nil
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_GRAY_FILE, "w") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_GRAY_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileCtime(TEST_GRAY_FILE) }
         assert_nothing_raised { disk.fs.fileDelete(TEST_GRAY_FILE) }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_GRAY_FILE, "r") }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_GRAY_FILE, 'r') }
       else
         puts "\ntc_fat32_write: FS is nil at line #{__LINE__} on #{disk.info.fileName}"
       end
@@ -143,66 +143,66 @@ class Fat32TestWrite < Minitest::Test
         # puts "\nFat32: Testing write file modes on #{disk.info.fileName}"
         # Open directory should always raise error.
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirMkdir(TEST_SHORT_DIR) }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_DIR, "r") }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_DIR, "w") }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_DIR, "a") }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_DIR, 'r') }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_DIR, 'w') }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_DIR, 'a') }
 
         disk.fs.chdir(TEST_SHORT_DIR)
         f = nil; buf = nil
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileDelete(TEST_SHORT_FILE) }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "r") }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "w") }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'r') }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_FIRST) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "r") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'r') }
         assert_nothing_raised(id(__LINE__, disk)) { buf = f.read }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_equal(TEST_FIRST, buf, id(__LINE__, disk))
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "w") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_SECOND) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "r") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'r') }
         assert_nothing_raised(id(__LINE__, disk)) { buf = f.read }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_equal(TEST_SECOND, buf, id(__LINE__, disk))
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "w") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_FIRST) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "a") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'a') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_SECOND) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, "r") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_SHORT_FILE, 'r') }
         assert_nothing_raised(id(__LINE__, disk)) { f.seek(TEST_FIRST.length) }
         assert_nothing_raised(id(__LINE__, disk)) { buf = f.read }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_equal(TEST_SECOND, buf, id(__LINE__, disk))
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileDelete(TEST_SHORT_FILE) }
-        disk.fs.chdir("/")
+        disk.fs.chdir('/')
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirRmdir(TEST_SHORT_DIR) }
 
         assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileDelete(TEST_LONG_FILE) }
-        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_LONG_FILE, "r") }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "w") }
+        assert_raises(RuntimeError) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'r') }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_FIRST) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "r") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'r') }
         assert_nothing_raised(id(__LINE__, disk)) { buf = f.read }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_equal(TEST_FIRST, buf, id(__LINE__, disk))
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "w") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_SECOND) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "r") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'r') }
         assert_nothing_raised(id(__LINE__, disk)) { buf = f.read }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
         assert_equal(TEST_SECOND, buf, id(__LINE__, disk))
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "w") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'w') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_FIRST) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "a") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'a') }
         assert_nothing_raised(id(__LINE__, disk)) { f.write(TEST_SECOND) }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
-        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, "r") }
+        assert_nothing_raised(id(__LINE__, disk)) { f = disk.fs.fileOpen(TEST_LONG_FILE, 'r') }
         assert_nothing_raised(id(__LINE__, disk)) { f.seek(TEST_FIRST.length) }
         assert_nothing_raised(id(__LINE__, disk)) { buf = f.read }
         assert_nothing_raised(id(__LINE__, disk)) { f.close }
@@ -225,18 +225,18 @@ class Fat32TestWrite < Minitest::Test
 
         # Create that many dirs & files then remove them.
         num_ents.times do |idx|
-          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirMkdir("dir" + idx.to_s) }
+          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirMkdir('dir' + idx.to_s) }
         end
         num_ents.times do |idx|
           f = nil
-          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileOpen("file" + idx.to_s) }
+          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileOpen('file' + idx.to_s) }
           f.close
         end
         num_ents_times do |idx|
-          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirRmdir("dir" + idx.to_s) }
+          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.dirRmdir('dir' + idx.to_s) }
         end
         num_ents_times do |idx|
-          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileDelete("file" + idx.to_s) }
+          assert_nothing_raised(id(__LINE__, disk)) { disk.fs.fileDelete('file' + idx.to_s) }
         end
       end
     end

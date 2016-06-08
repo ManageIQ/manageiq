@@ -15,10 +15,10 @@ class EventLog < ApplicationRecord
     return nil unless MiqXml.isXmlElement?(xmlNode)
 
     result = []
-    name = ""
+    name = ''
     xmlNode.each_element('event_log') do |el|
       el.each_recursive do |e|
-        if e.name == "log"
+        if e.name == 'log'
           name = e.attributes[:name]
         else
           nh = e.attributes.to_h

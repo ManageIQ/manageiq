@@ -34,15 +34,15 @@ module ApplicationHelper::PageLayouts
 
     return false if dashboard_no_listnav?
 
-    return false if @layout.starts_with?("miq_request")
+    return false if @layout.starts_with?('miq_request')
 
-    return false if @showtype == "dialog_provision"
+    return false if @showtype == 'dialog_provision'
 
-    return false if @showtype == "dashboard"
+    return false if @showtype == 'dashboard'
 
-    return false if @showtype == "consumption"
+    return false if @showtype == 'consumption'
 
-    return false if controller.action_name.end_with?("tagging_edit")
+    return false if controller.action_name.end_with?('tagging_edit')
 
     true
   end
@@ -58,32 +58,32 @@ module ApplicationHelper::PageLayouts
   end
 
   def layout_uses_tabs?
-    if (["timeline"].include?(@layout) && ! @in_a_form) ||
-       ["login", "authenticate", "auth_error"].include?(controller.action_name) ||
-       @layout == "exception" ||
+    if (['timeline'].include?(@layout) && ! @in_a_form) ||
+       ['login', 'authenticate', 'auth_error'].include?(controller.action_name) ||
+       @layout == 'exception' ||
        (@layout == 'vm' && controller.action_name == 'edit') ||
-       (@layout == "report" && ["new", "create", "edit", "copy", "update", "explorer"].include?(controller.action_name))
+       (@layout == 'report' && ['new', 'create', 'edit', 'copy', 'update', 'explorer'].include?(controller.action_name))
       return false
-    elsif @layout == "dashboard" || @layout == "container_dashboard" || @showtype == 'dashboard' # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
+    elsif @layout == 'dashboard' || @layout == 'container_dashboard' || @showtype == 'dashboard' # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index -->
       return false
     end
     true
   end
 
   def layout_uses_breadcrumbs?
-    !["dashboard",
-      "exception",
-      "support",
-      "configuration",
-      "rss",
-      "my_tasks",
-      "my_ui_tasks",
-      "all_tasks",
-      "all_ui_tasks"].include?(@layout)
+    !['dashboard',
+      'exception',
+      'support',
+      'configuration',
+      'rss',
+      'my_tasks',
+      'my_ui_tasks',
+      'all_tasks',
+      'all_ui_tasks'].include?(@layout)
   end
 
   def dashboard_no_listnav?
-    @layout == "dashboard" && %w(
+    @layout == 'dashboard' && %w(
       auth_error
       change_tab
       show

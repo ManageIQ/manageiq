@@ -72,13 +72,13 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
   end
 
   def allowed_ws_hosts(_options = {})
-    Host.where("mac_address is not NULL").select(&:ipmi_enabled)
+    Host.where('mac_address is not NULL').select(&:ipmi_enabled)
   end
 
   def allowed_ems(_options = {})
     result = {}
 
-    ManageIQ::Providers::Vmware::InfraManager.select("id, name").each do |e|
+    ManageIQ::Providers::Vmware::InfraManager.select('id, name').each do |e|
       result[e.id] = e.name
     end
     result
@@ -97,7 +97,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     ems = ExtManagementSystem.find_by_id(get_value(@values[:placement_ems_name]))
     return result if ems.nil?
     ems.storages.each do |s|
-      next unless s.store_type == "NFS"
+      next unless s.store_type == 'NFS'
       result << build_ci_hash_struct(s, [:name, :free_space, :total_space])
     end
     result
@@ -117,7 +117,7 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
     ipmi_address =     data[:ipmi_address].blank? ? nil : data[:ipmi_address].downcase
 
     if name.nil? && mac_address.nil? && ipmi_address.nil?
-      raise _("No host search criteria values were passed.  input data:<%{data}>") % {:data => data.inspect}
+      raise _('No host search criteria values were passed.  input data:<%{data}>') % {:data => data.inspect}
     end
 
     _log.info "Host Passed  : <#{name}> <#{mac_address}> <#{ipmi_address}>"
@@ -126,11 +126,11 @@ class MiqHostProvisionWorkflow < MiqRequestWorkflow
       (name.nil? || name == v.name.downcase) && (mac_address.nil? || mac_address == v.mac_address.to_s.downcase) && (ipmi_address.nil? || ipmi_address == v.ipmi_address.to_s)
     end
     if srcs.length > 1
-      raise _("Multiple source template were found from input data:<%{data}>") % {:data => data.inspect}
+      raise _('Multiple source template were found from input data:<%{data}>') % {:data => data.inspect}
     end
     src = srcs.first
 
-    raise _("No target host was found from input data:<%{data}>") % {:data => data.inspect} if src.nil?
+    raise _('No target host was found from input data:<%{data}>') % {:data => data.inspect} if src.nil?
     _log.info "Host Found: <#{src.name}> MAC:<#{src.mac_address}> IPMI:<#{src.ipmi_address}>"
     src
   end

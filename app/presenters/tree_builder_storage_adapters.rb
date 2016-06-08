@@ -18,13 +18,13 @@ class TreeBuilderStorageAdapters < TreeBuilder
     locals = super
     locals.merge!(:id_prefix                   => 'h_',
                   :autoload                    => true,
-                  :click_url                   => "/vm/show/",
-                  :onclick                     => "miqOnClickHostNet",
+                  :click_url                   => '/vm/show/',
+                  :onclick                     => 'miqOnClickHostNet',
                   :open_close_all_on_dbl_click => true)
   end
 
   def root_options
-    [@root.name, _("Host: %{name}") % {:name => @root.name}, "host"]
+    [@root.name, _('Host: %{name}') % {:name => @root.name}, 'host']
   end
 
   def x_get_tree_roots(count_only = false, _options)

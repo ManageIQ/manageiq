@@ -6,7 +6,7 @@ module ReportFormatter
     # create the graph object and add titles, fonts, and colors
     def build_document_header
       mri = options.mri
-      raise "No settings configured for Timeline" if mri.timeline.nil?
+      raise 'No settings configured for Timeline' if mri.timeline.nil?
     end
 
     # Generates the body of the timeline
@@ -22,14 +22,14 @@ module ReportFormatter
 
       mri.extras ||= {} # Create hash to store :tl_position setting
 
-      if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
-        tl_xml = MiqXml.load("<data/>")
+      if mri.extras[:browser_name] == 'explorer' || mri.extras[:tl_preview]
+        tl_xml = MiqXml.load('<data/>')
       else
         @events = []
       end
-      tlfield = mri.timeline[:field].split("-") # Split the table and field
-      if tlfield.first.include?(".")                    # If table has a period (from a sub table)
-        col = tlfield.first.split(".").last + "." + tlfield.last  # use subtable.field
+      tlfield = mri.timeline[:field].split('-') # Split the table and field
+      if tlfield.first.include?('.')                    # If table has a period (from a sub table)
+        col = tlfield.first.split('.').last + '.' + tlfield.last  # use subtable.field
       else
         col = tlfield.last                             # Not a subtable, just grab the field name
       end
@@ -39,7 +39,7 @@ module ReportFormatter
       #     START of TIMELINE TIMEZONE Code
       mri.extras[:tl_position] ||= format_timezone(Time.now, tz, 'raw') # If position not set, default to now
       #     END of TIMELINE TIMEZONE Code
-      if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
+      if mri.extras[:browser_name] == 'explorer' || mri.extras[:tl_preview]
         output << tl_xml.to_s
       else
         output << {:events => @events}.to_json
@@ -60,9 +60,9 @@ module ReportFormatter
       return if !@start_time.nil? && etime < @start_time # Skip if before start time limit
       #     START of TIMELINE TIMEZONE Code
       mri.extras[:tl_position] ||= format_timezone(etime.to_time, tz, 'raw')
-      if mri.timeline[:position] && mri.timeline[:position] == "First"
+      if mri.timeline[:position] && mri.timeline[:position] == 'First'
         mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw') if format_timezone(etime.to_time, tz, 'raw') < format_timezone(mri.extras[:tl_position], tz, 'raw')
-      elsif mri.timeline[:position] && mri.timeline[:position] == "Current"
+      elsif mri.timeline[:position] && mri.timeline[:position] == 'Current'
         # if there is item with current time or greater then use that else, use right most one.
         if format_timezone(etime.to_time, tz, 'raw') >= format_timezone(Time.now, tz, 'raw') && format_timezone(etime.to_time, tz, 'raw') <= format_timezone(mri.extras[:tl_position], tz, 'raw')
           mri.extras[:tl_position] = format_timezone(etime.to_time, tz, 'raw')
@@ -79,28 +79,28 @@ module ReportFormatter
       #       mri.extras[:tl_position] = etime.to_time if etime.to_time > mri.extras[:tl_position]
       #     end
       #     END of TIMELINE TIMEZONE Code
-      if row["id"]  # Make sure id column is present
+      if row['id']  # Make sure id column is present
         rec = mri.db.constantize.find_by_id(row['id'])
       end
       unless rec.nil?
         case mri.db
-        when "BottleneckEvent"
+        when 'BottleneckEvent'
           #         e_title = "#{ui_lookup(:model=>rec[:resource_type])}: #{rec[:resource_name]}"
           e_title = rec[:resource_name]
           e_image = ActionController::Base.helpers.image_path("100/#{bubble_icon(rec)}.png")
           e_icon = ActionController::Base.helpers.image_path("timeline/#{rec.event_type.downcase}_#{rec[:severity]}.png")
         #         e_text = e_title # Commented out since name is showing in the columns anyway
-        when "Vm"
+        when 'Vm'
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vendor.downcase}.png")
           e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
           e_text = "&lt;a href='/vm/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
-        when "Host"
+        when 'Host'
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vmm_vendor_display.downcase}.png")
           e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
           e_text = "&lt;a href='/host/show/#{rec.id}'&gt;#{e_title}&lt;/a&gt;"
-        when "EventStream"
+        when 'EventStream'
           ems_cloud = false
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
             ems = ExtManagementSystem.find(rec[:ems_id])
@@ -129,27 +129,27 @@ module ReportFormatter
             title_col = mw_name_cols.find { |c| rec[c] }
             e_title = rec[title_col] unless title_col.nil?
           end
-          e_title ||= ems ? ems.name : "No VM, Host, or MS"
+          e_title ||= ems ? ems.name : 'No VM, Host, or MS'
           e_icon = ActionController::Base.helpers.image_path("timeline/#{timeline_icon("vm_event", rec.event_type.downcase)}.png")
           # See if this is EVM's special event
-          if rec.event_type == "GeneralUserEvent"
-            if rec.message.include?("EVM SmartState Analysis")
-              e_icon =  ActionController::Base.helpers.image_path("timeline/evm_analysis.png")
+          if rec.event_type == 'GeneralUserEvent'
+            if rec.message.include?('EVM SmartState Analysis')
+              e_icon =  ActionController::Base.helpers.image_path('timeline/evm_analysis.png')
             end
           end
           if rec[:vm_or_template_id] && Vm.exists?(rec[:vm_or_template_id])
             e_image = ActionController::Base.helpers.image_path("100/os-#{Vm.find(rec[:vm_or_template_id]).os_image_name.downcase}.png")
           end
           e_text = e_title
-        when "PolicyEvent"
+        when 'PolicyEvent'
           if rec[:target_name]              # Create the title using Policy description
             e_title = rec[:target_name]
           elsif rec[:miq_policy_id] && MiqPolicy.exists?(rec[:miq_policy_id])   #   or Policy name
             e_title = MiqPolicy.find(rec[:miq_policy_id]).name
           else
-            e_title = "Policy no longer exists"
+            e_title = 'Policy no longer exists'
           end
-          e_title ||= "No Policy"
+          e_title ||= 'No Policy'
           e_icon = ActionController::Base.helpers.image_path("100/event-#{rec.event_type.downcase}.png")
           # e_icon = "/images/100/vendor-ec2.png"
           e_text = e_title
@@ -165,11 +165,11 @@ module ReportFormatter
           end
 
           unless rec.event_type.nil?
-            e_text += "<br/><b>Assigned Profiles:</b> "
+            e_text += '<br/><b>Assigned Profiles:</b> '
             assigned_profiles.each_with_index do |p, i|
               e_text += "&lt;a href='/miq_policy/explorer?profile=#{p[0]}'&gt;<b> #{p[1]}&lt;/a&gt;"
               if assigned_profiles.length > 1 && i < assigned_profiles.length
-                e_text += ", "
+                e_text += ', '
               end
             end
           end
@@ -181,20 +181,20 @@ module ReportFormatter
       end
 
       # manipulating column order to display timestamp at the end of the bubble.
-      field = mri.timeline[:field].split("-")
+      field = mri.timeline[:field].split('-')
       if ems && ems_cloud
         # Change labels to be cloud specific
-        vm_name_idx = mri.col_order.index("vm_name")
-        mri.headers[vm_name_idx] = "Source Instance"
-        vm_location_idx = mri.col_order.index("vm_location")
-        mri.headers[vm_location_idx] = "Source Instance Location"
-        dest_vm_name_idx = mri.col_order.index("dest_vm_name")
-        mri.headers[dest_vm_name_idx] = "Destination Instance"
-        dest_vm_location_idx = mri.col_order.index("dest_vm_location")
-        mri.headers[dest_vm_location_idx] = "Destination Instance Location"
+        vm_name_idx = mri.col_order.index('vm_name')
+        mri.headers[vm_name_idx] = 'Source Instance'
+        vm_location_idx = mri.col_order.index('vm_location')
+        mri.headers[vm_location_idx] = 'Source Instance Location'
+        dest_vm_name_idx = mri.col_order.index('dest_vm_name')
+        mri.headers[dest_vm_name_idx] = 'Destination Instance'
+        dest_vm_location_idx = mri.col_order.index('dest_vm_location')
+        mri.headers[dest_vm_location_idx] = 'Destination Instance Location'
       else
-        mri.col_order.delete("availability_zone.name")
-        mri.headers.delete("Availability Zone")
+        mri.col_order.delete('availability_zone.name')
+        mri.headers.delete('Availability Zone')
       end
       col_order = copy_array(mri.col_order)
       headers = copy_array(mri.headers)
@@ -221,40 +221,40 @@ module ReportFormatter
       e_text = ''
       col_order.each_with_index do |co, co_idx|
         val = tl_message.message_html(co)
-        e_text += "<b>#{headers[co_idx]}:</b> #{val}<br/>" unless val.to_s.empty? || co == "id"
+        e_text += "<b>#{headers[co_idx]}:</b> #{val}<br/>" unless val.to_s.empty? || co == 'id'
       end
       e_text = e_text.chomp('<br/>')
 
       # Add the event to the timeline
-      if mri.extras[:browser_name] == "explorer" || mri.extras[:tl_preview]
-        event = tl_xml.root.add_element("event",           "start" => format_timezone(row[col], "UTC", nil),
+      if mri.extras[:browser_name] == 'explorer' || mri.extras[:tl_preview]
+        event = tl_xml.root.add_element('event',           'start' => format_timezone(row[col], 'UTC', nil),
                                                            #         "end" => Time.now,
                                                            #         "isDuration" => "true",
-                                                           "title" => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
-                                                           "icon"  => e_icon,
+                                                           'title' => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + '...'),
+                                                           'icon'  => e_icon,
                                                            #         "color"=>tl_color
-                                                           "image" => e_image)
+                                                           'image' => e_image)
         event.text = e_text
       else
-        @events.push("start"       => format_timezone(row[col], tz, 'view').to_time,
-                     "title"       => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + "..."),
-                     "icon"        => e_icon,
-                     "image"       => e_image,
-                     "description" => e_text)
+        @events.push('start'       => format_timezone(row[col], tz, 'view').to_time,
+                     'title'       => CGI.escapeHTML(e_title.length < 20 ? e_title : e_title[0...17] + '...'),
+                     'icon'        => e_icon,
+                     'image'       => e_image,
+                     'description' => e_text)
       end
     end
 
     def bubble_icon(rec)
       case rec.resource_type.downcase
-      when "emscluster"
-        return "cluster"
-      when "miqenterprise"
-        return "enterprise"
-      when "extmanagementsystem"
-        if rec.resource.kind_of?(ExtManagementSystem) && rec.resource.emstype == "rhevm"
-          return "vendor-redhat"
+      when 'emscluster'
+        return 'cluster'
+      when 'miqenterprise'
+        return 'enterprise'
+      when 'extmanagementsystem'
+        if rec.resource.kind_of?(ExtManagementSystem) && rec.resource.emstype == 'rhevm'
+          return 'vendor-redhat'
         else
-          return "ems"
+          return 'ems'
         end
       else
         return rec.resource_type.downcase
@@ -273,7 +273,7 @@ module ReportFormatter
         end
         @icon_hash = {}
         data.each do |rec|
-          evt, txt = rec.split(",")
+          evt, txt = rec.split(',')
           @icon_hash[evt] = txt
         end
       end

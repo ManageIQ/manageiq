@@ -18,12 +18,12 @@ class MiqVmFsUtil
 
     @fs.chdir(fromDir)
     @fs.dirForeach do |ff|
-      next if ff == "." || ff == ".."
+      next if ff == '.' || ff == '..'
       next unless @fs.fileFile?(ff)
 
       @fs.fileOpen(ff) do |ffo|
         tf = File.join(toDir, ff)
-        tfo = File.new(tf, "wb")
+        tfo = File.new(tf, 'wb')
         buf = ffo.read
         while (buf = ffo.read(1024))
           tfo.write(buf)
@@ -66,7 +66,7 @@ if __FILE__ == $0
   #
   # *** Change this to point to the VM directory.
   #
-  vmDir = File.join(ENV.fetch("HOME", '.'), 'VMs')
+  vmDir = File.join(ENV.fetch('HOME', '.'), 'VMs')
   puts "vmDir = #{vmDir}"
 
   class ConsoleFormatter < Log4r::Formatter
@@ -85,7 +85,7 @@ if __FILE__ == $0
   #
 
   # vmdk = File.join(vmDir, "redhat-v3.vmwarevm/redhat-v3.vmdk")
-  vmCfg = File.join(vmDir, "redhat-v3.vmwarevm/redhat-v3.vmx")
+  vmCfg = File.join(vmDir, 'redhat-v3.vmwarevm/redhat-v3.vmx')
   # vmCfg = File.join(vmDir, "UbuntuDev.vmwarevm/UbuntuDev.vmx")
   # vmCfg = File.join(vmDir, "Red Hat Linux.vmwarevm/Red Hat Linux.vmx")
   # vmCfg = File.join(vmDir, "MIQ Server Appliance - Ubuntu MD - small/MIQ Server Appliance - Ubuntu.vmx")
@@ -105,12 +105,12 @@ if __FILE__ == $0
   # vmfsu = MiqVmFsUtil.new(fs)
 
   vm = MiqVm.new(vmCfg)
-  raise "No OSs detected" if vm.rootTrees.length == 0
+  raise 'No OSs detected' if vm.rootTrees.length == 0
 
   vmfsu = MiqVmFsUtil.new(vm.rootTrees[0])
   # vmfsu.flatDirCopyOut("/var/lib/rpm", "rpm_test_dir")
-  vmfsu.fs.chdir("/var/lib")
-  vmfsu.findEach(".") { |f| puts f }
+  vmfsu.fs.chdir('/var/lib')
+  vmfsu.findEach('.') { |f| puts f }
 
   vm.unmount
 end

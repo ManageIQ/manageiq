@@ -15,7 +15,7 @@ module MiqStorageDefs
   STORAGE_UPDATE_ASSOCIATION_SHORTCUTS  = 9
   STORAGE_UPDATE_ASSOCIATION_CLEANUP    = 10
 
-  CIM_CLASS_HIER_FILE = File.join(File.dirname(__FILE__), "cim_class_hier.yml")
+  CIM_CLASS_HIER_FILE = File.join(File.dirname(__FILE__), 'cim_class_hier.yml')
   CIM_CLASS_HIER = YAML.load_file(CIM_CLASS_HIER_FILE)
 
   module ClassMethods

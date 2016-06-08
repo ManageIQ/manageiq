@@ -36,19 +36,19 @@ module ManageIQ
 
       def validate_required_services
         unless @identity_service
-          raise MiqException::MiqOpenstackKeystoneServiceMissing, "Required service Keystone is missing in the catalog."
+          raise MiqException::MiqOpenstackKeystoneServiceMissing, 'Required service Keystone is missing in the catalog.'
         end
 
         unless @compute_service
-          raise MiqException::MiqOpenstackNovaServiceMissing, "Required service Nova is missing in the catalog."
+          raise MiqException::MiqOpenstackNovaServiceMissing, 'Required service Nova is missing in the catalog.'
         end
 
         unless @image_service
-          raise MiqException::MiqOpenstackGlanceServiceMissing, "Required service Glance is missing in the catalog."
+          raise MiqException::MiqOpenstackGlanceServiceMissing, 'Required service Glance is missing in the catalog.'
         end
 
         unless @baremetal_service
-          raise MiqException::MiqOpenstackIronicServiceMissing, "Required service Ironic is missing in the catalog."
+          raise MiqException::MiqOpenstackIronicServiceMissing, 'Required service Ironic is missing in the catalog.'
         end
       end
 
@@ -85,7 +85,7 @@ module ManageIQ
         stacks.each do |stack|
           # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
           # (compute, controller, etc.).
-          resources += all_stack_server_resources(stack).select { |x| x["resource_type"] == 'OS::Nova::Server' }
+          resources += all_stack_server_resources(stack).select { |x| x['resource_type'] == 'OS::Nova::Server' }
         end
         @all_server_resources = resources
       end
@@ -117,7 +117,7 @@ module ManageIQ
           compute_hosts = nil
           begin
             cloud_ems.with_provider_connection do |connection|
-              compute_hosts = connection.hosts.select { |x| x.service_name == "compute" }
+              compute_hosts = connection.hosts.select { |x| x.service_name == 'compute' }
             end
           rescue StandardError => err
             _log.error "Error Class=#{err.class.name}, Message=#{err.message}"
@@ -157,8 +157,8 @@ module ManageIQ
       end
 
       def get_extra_attributes(introspection_details)
-        return {} if introspection_details.blank? || introspection_details["extra"].nil?
-        introspection_details["extra"]
+        return {} if introspection_details.blank? || introspection_details['extra'].nil?
+        introspection_details['extra']
       end
 
       def parse_host(host, indexed_servers, indexed_resources, cloud_hosts_attributes)
@@ -295,7 +295,7 @@ module ManageIQ
       end
 
       def identify_ipmi_address(host)
-        host.driver_info["ipmi_address"]
+        host.driver_info['ipmi_address']
       end
 
       def identify_hypervisor_hostname(host, indexed_servers)
@@ -304,17 +304,17 @@ module ManageIQ
 
       def lookup_power_state(power_state_input)
         case power_state_input
-        when "power on"               then "on"
-        when "power off", "rebooting" then "off"
-        else                               "unknown"
+        when 'power on'               then 'on'
+        when 'power off', 'rebooting' then "off"
+        else                               'unknown'
         end
       end
 
       def lookup_connection_state(power_state_input)
         case power_state_input
-        when "power on"               then "connected"
-        when "power off", "rebooting" then "disconnected"
-        else                               "disconnected"
+        when 'power on'               then 'connected'
+        when 'power off', 'rebooting' then "disconnected"
+        else                               'disconnected'
         end
       end
 
@@ -368,7 +368,7 @@ module ManageIQ
       end
 
       def self.miq_template_type
-        "ManageIQ::Providers::Openstack::InfraManager::Template"
+        'ManageIQ::Providers::Openstack::InfraManager::Template'
       end
 
       #

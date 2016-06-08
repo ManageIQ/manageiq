@@ -17,7 +17,7 @@ module FixAuth
     end
 
     def cert_dir
-      options[:root] ? options[:root] + "/certs" : nil
+      options[:root] ? options[:root] + '/certs' : nil
     end
 
     def db_attributes(database)
@@ -42,10 +42,10 @@ module FixAuth
       MiqPassword.generate_symmetric("#{cert_dir}/v2_key")
     rescue Errno::EEXIST => e
       $stderr.puts
-      $stderr.puts "Only generate one encryption_key (v2_key) per installation."
-      $stderr.puts "Chances are you did not want to overwrite this file."
-      $stderr.puts "If you do this all encrypted secrets in the database will not be readable."
-      $stderr.puts "Please backup your key and run again."
+      $stderr.puts 'Only generate one encryption_key (v2_key) per installation.'
+      $stderr.puts 'Chances are you did not want to overwrite this file.'
+      $stderr.puts 'If you do this all encrypted secrets in the database will not be readable.'
+      $stderr.puts 'Please backup your key and run again.'
       $stderr.puts
       raise Errno::EEXIST, e.message
     end
@@ -77,8 +77,8 @@ module FixAuth
 
     def set_passwords
       MiqPassword.key_root = cert_dir if cert_dir
-      MiqPassword.add_legacy_key("v0_key", :v0)
-      MiqPassword.add_legacy_key("v1_key", :v1)
+      MiqPassword.add_legacy_key('v0_key', :v0)
+      MiqPassword.add_legacy_key('v1_key', :v1)
       if options[:legacy_key] && !MiqPassword.add_legacy_key(options[:legacy_key])
         puts "WARNING: key #{k} not found"
       end

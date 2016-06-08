@@ -1,9 +1,9 @@
 module MiqAeYamlImportExportMixin
-  DOMAIN_YAML_FILENAME    = "__domain__.yaml"
-  NAMESPACE_YAML_FILENAME = "__namespace__.yaml"
-  CLASS_YAML_FILENAME     = "__class__.yaml"
-  METHOD_FOLDER_NAME      = "__methods__"
-  CLASS_DIR_SUFFIX        = ".class"
+  DOMAIN_YAML_FILENAME    = '__domain__.yaml'
+  NAMESPACE_YAML_FILENAME = '__namespace__.yaml'
+  CLASS_YAML_FILENAME     = '__class__.yaml'
+  METHOD_FOLDER_NAME      = '__methods__'
+  CLASS_DIR_SUFFIX        = '.class'
   DOMAIN_OBJ_TYPE         = 'domain'
   NAMESPACE_OBJ_TYPE      = 'namespace'
   CLASS_OBJ_TYPE          = 'class'

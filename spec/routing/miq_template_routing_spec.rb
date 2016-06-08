@@ -1,7 +1,7 @@
-require "routing/shared_examples"
+require 'routing/shared_examples'
 
-describe "routes for MiqTemplateController" do
-  let(:controller_name) { "miq_template" }
+describe 'routes for MiqTemplateController' do
+  let(:controller_name) { 'miq_template' }
 
   %w(
     edit

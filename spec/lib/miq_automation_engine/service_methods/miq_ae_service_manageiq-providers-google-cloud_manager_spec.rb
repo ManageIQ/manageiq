@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 module MiqAeServiceManageIQ_Providers_Google_CloudManagerSpec
   include MiqAeEngine
@@ -12,12 +12,12 @@ module MiqAeServiceManageIQ_Providers_Google_CloudManagerSpec
       @ems_google = MiqAeMethodService::MiqAeServiceManageIQ_Providers_Google_CloudManager.find(@ems.id)
     end
 
-    it "#flavors" do
+    it '#flavors' do
       flavor = @ems_google.flavors.first
       expect(flavor).to be_kind_of(MiqAeMethodService::MiqAeServiceFlavor)
     end
 
-    it "#availability_zones" do
+    it '#availability_zones' do
       availability_zone = @ems_google.availability_zones.first
       expect(availability_zone).to be_kind_of(MiqAeMethodService::MiqAeServiceAvailabilityZone)
     end

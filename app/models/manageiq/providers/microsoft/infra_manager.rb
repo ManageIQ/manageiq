@@ -8,14 +8,14 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   require_nested :Template
   require_nested :Vm
 
-  include_concern "Powershell"
+  include_concern 'Powershell'
 
   def self.ems_type
-    @ems_type ||= "scvmm".freeze
+    @ems_type ||= 'scvmm'.freeze
   end
 
   def self.description
-    @description ||= "Microsoft System Center VMM".freeze
+    @description ||= 'Microsoft System Center VMM'.freeze
   end
 
   def self.raw_connect(auth_url, security_protocol, connect_params)
@@ -27,11 +27,11 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   end
 
   def self.auth_url(hostname, port = nil)
-    URI::HTTP.build(:host => hostname, :port => port || 5985, :path => "/wsman").to_s
+    URI::HTTP.build(:host => hostname, :port => port || 5985, :path => '/wsman').to_s
   end
 
   def connect(options = {})
-    raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise 'no credentials defined' if self.missing_credentials?(options[:auth_type])
 
     hostname       = options[:hostname] || self.hostname
     auth_url       = self.class.auth_url(hostname, port)
@@ -44,12 +44,12 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
     require 'winrm'
     require 'gssapi' # A winrm dependency
 
-    raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(options[:auth_type])
+    raise MiqException::MiqHostError, 'No credentials defined' if self.missing_credentials?(options[:auth_type])
 
     begin
-      run_dos_command("hostname")
+      run_dos_command('hostname')
     rescue WinRM::WinRMHTTPTransportError => e # Error 401
-      raise MiqException::MiqHostError, "Check credentials and WinRM configuration settings. " \
+      raise MiqException::MiqHostError, 'Check credentials and WinRM configuration settings. ' \
       "Remote error message: #{e.message}"
     rescue GSSAPI::GssApiError
       raise MiqException::MiqHostError, "Unable to reach any KDC in realm #{realm}"
@@ -62,39 +62,39 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
 
   def vm_start(vm, _options = {})
     case vm.power_state
-    when "suspended" then execute_power_operation("Resume", vm.uid_ems)
-    when "off"       then execute_power_operation("Start", vm.uid_ems)
+    when 'suspended' then execute_power_operation('Resume', vm.uid_ems)
+    when 'off'       then execute_power_operation('Start', vm.uid_ems)
     end
   end
 
   def vm_stop(vm, _options = {})
-    execute_power_operation("Stop", vm.uid_ems, "-Force")
+    execute_power_operation('Stop', vm.uid_ems, '-Force')
   end
 
   def vm_shutdown_guest(vm, _options = {})
-    execute_power_operation("Stop", vm.uid_ems, "-Shutdown")
+    execute_power_operation('Stop', vm.uid_ems, '-Shutdown')
   end
 
   def vm_reset(vm, _options = {})
-    execute_power_operation("Reset", vm.uid_ems)
+    execute_power_operation('Reset', vm.uid_ems)
   end
 
   def vm_reboot_guest(vm, _options = {})
-    execute_power_operation("Stop", vm.uid_ems, "-Shutdown")
-    execute_power_operation("Start", vm.uid_ems)
+    execute_power_operation('Stop', vm.uid_ems, '-Shutdown')
+    execute_power_operation('Start', vm.uid_ems)
   end
 
   def vm_suspend(vm, _options = {})
-    execute_power_operation("Suspend", vm.uid_ems)
+    execute_power_operation('Suspend', vm.uid_ems)
   end
 
   def vm_resume(vm, _options = {})
-    execute_power_operation("Resume", vm.uid_ems)
+    execute_power_operation('Resume', vm.uid_ems)
   end
 
   def vm_destroy(vm, _options = {})
     vm_stop(vm)
-    execute_power_operation("Remove", vm.uid_ems)
+    execute_power_operation('Remove', vm.uid_ems)
   end
 
   def vm_create_evm_snapshot(vm, _options)
@@ -124,7 +124,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
   def execute_power_operation(cmdlet, vm_uid_ems, *parameters)
     return unless vm_uid_ems.guid?
 
-    params  = parameters.join(" ")
+    params  = parameters.join(' ')
 
     # TODO: If localhost could feasibly be changed to an IPv6 address such as "::1", we need to
     # wrap the IPv6 address in square brackets,  similar to the a URIs's host field, "[::1]".
@@ -140,7 +140,7 @@ class ManageIQ::Providers::Microsoft::InfraManager < ManageIQ::Providers::InfraM
       :disable_sspi => true
     }
 
-    if security_protocol == "kerberos"
+    if security_protocol == 'kerberos'
       connect_params.merge!(
         :realm           => realm,
         :basic_auth_only => false,

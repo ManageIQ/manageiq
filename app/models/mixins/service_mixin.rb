@@ -3,7 +3,7 @@ module ServiceMixin
 
   included do
     # These relationships are used for resources that are processed as part of the service
-    has_many   :service_resources, -> { order "group_idx ASC" }, :dependent => :destroy
+    has_many   :service_resources, -> { order 'group_idx ASC' }, :dependent => :destroy
     has_many   :resource_actions, :as => :resource, :dependent => :destroy
 
     serialize  :options, Hash
@@ -15,7 +15,7 @@ module ServiceMixin
 
   def add_resource(rsc, options = {})
     rsc_type = rsc.class.base_class.name.tableize
-    raise _("Cannot connect service with nil ID.") if rsc.id.nil? && rsc_type == "service_templates"
+    raise _('Cannot connect service with nil ID.') if rsc.id.nil? && rsc_type == 'service_templates'
 
     # fetch the corresponding service resource
     # may want to use a query for this
@@ -30,7 +30,7 @@ module ServiceMixin
 
       if circular_reference?(rsc)
         raise MiqException::MiqServiceCircularReferenceError,
-              _("Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference") %
+              _('Adding resource <%{resource_name}> to Service <%{name}> will create a circular reference') %
                 {:resource_name => rsc.name, :name => name}
       else
         sr = service_resources.new(nh.merge(:resource => rsc))

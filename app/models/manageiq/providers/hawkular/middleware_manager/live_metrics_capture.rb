@@ -6,7 +6,7 @@ module ManageIQ::Providers
     def initialize(target)
       @target = target
       unless @target.kind_of?(MiddlewareServer)
-        raise TargetValidationError, "Validation error: unknown target"
+        raise TargetValidationError, 'Validation error: unknown target'
       end
       @ems = @target.ext_management_system
       @gauges = @ems.metrics_connect.gauges
@@ -41,9 +41,9 @@ module ManageIQ::Providers
     def first_and_last_capture(metric)
       validate_metric(metric)
       case metric[:type]
-      when "GAUGE"        then min_max_timestamps(@gauges, metric[:id])
-      when "COUNTER"      then min_max_timestamps(@counters, metric[:id])
-      when "AVAILABILITY" then min_max_timestamps(@avail, metric[:id])
+      when 'GAUGE'        then min_max_timestamps(@gauges, metric[:id])
+      when 'COUNTER'      then min_max_timestamps(@counters, metric[:id])
+      when 'AVAILABILITY' then min_max_timestamps(@avail, metric[:id])
       else raise MetricValidationError, "Validation error: unknown type #{metric_type}"
       end
     end
@@ -62,9 +62,9 @@ module ManageIQ::Providers
 
     def fetch_metrics(metric_id, metric_type, starts, ends, bucket_duration)
       case metric_type
-      when "GAUGE"        then gauges(metric_id, starts, ends, bucket_duration)
-      when "COUNTER"      then counters(metric_id, starts, ends, bucket_duration)
-      when "AVAILABILITY" then availabilities(metric_id, starts, ends, bucket_duration)
+      when 'GAUGE'        then gauges(metric_id, starts, ends, bucket_duration)
+      when 'COUNTER'      then counters(metric_id, starts, ends, bucket_duration)
+      when 'AVAILABILITY' then availabilities(metric_id, starts, ends, bucket_duration)
       else raise MetricValidationError, "Validation error: unknown type #{metric_type}"
       end
     end

@@ -6,7 +6,7 @@ class GuestApplication < ApplicationRecord
   virtual_column :v_unique_name, :type => :string
 
   def self.add_elements(parent, xmlNode)
-    add_missing_elements(parent, xmlNode, "software/applications")
+    add_missing_elements(parent, xmlNode, 'software/applications')
   end
 
   def self.add_missing_elements(parent, xmlNode, findPath)
@@ -24,7 +24,7 @@ class GuestApplication < ApplicationRecord
   end
 
   def v_unique_name
-    return name if arch.blank? || arch == "noarch"
+    return name if arch.blank? || arch == 'noarch'
     "#{name} (#{arch})"
   end
 end

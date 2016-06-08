@@ -8,7 +8,7 @@ module ControllerSpecHelper
   end
 
   def set_user_privileges(user = FactoryGirl.create(:user_with_group))
-    allow(User).to receive(:server_timezone).and_return("UTC")
+    allow(User).to receive(:server_timezone).and_return('UTC')
     allow_any_instance_of(described_class).to receive(:set_user_time_zone)
 
     # TODO: remove these stubs
@@ -21,8 +21,8 @@ module ControllerSpecHelper
     EvmSpecHelper.create_guid_miq_server_zone
   end
 
-  shared_context "valid session" do
-    let(:privilege_checker_service) { double("PrivilegeCheckerService", :valid_session?  => true) }
+  shared_context 'valid session' do
+    let(:privilege_checker_service) { double('PrivilegeCheckerService', :valid_session?  => true) }
 
     before do
       allow(controller).to receive(:set_user_time_zone)

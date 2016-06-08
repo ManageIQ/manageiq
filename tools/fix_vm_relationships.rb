@@ -10,7 +10,7 @@ Vm.includes(:all_relationships).each do |v|
     v.parent_resource_pool
   rescue ActiveRecord::RecordNotFound => err
     puts "FIXING - #{v.name} - #{err}"
-    rels_to_delete += v.all_relationships.to_a.select { |r| r.relationship == "ems_metadata" }
+    rels_to_delete += v.all_relationships.to_a.select { |r| r.relationship == 'ems_metadata' }
     fixed_vms << v.reload
   else
     puts "OK     - #{v.name}"
@@ -19,9 +19,9 @@ end
 Relationship.delete(rels_to_delete)
 
 if fixed_vms.empty?
-  puts "No VM relationships to fix."
+  puts 'No VM relationships to fix.'
 else
-  puts "Fixed relationships for:"
+  puts 'Fixed relationships for:'
   puts fixed_vms.collect(&:name)
   puts "Queueing refresh of relationships for VM's."
   EmsRefresh.queue_refresh(fixed_vms)

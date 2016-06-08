@@ -1,6 +1,6 @@
 describe 'YAML reports' do
   let(:report_dirs) { [REPORTS_FOLDER, "#{TIMELINES_FOLDER}/miq_reports"] }
-  let(:report_yamls) { report_dirs.collect { |dir| Dir.glob(File.join(dir, "**", "*.yaml")) }.flatten }
+  let(:report_yamls) { report_dirs.collect { |dir| Dir.glob(File.join(dir, '**', '*.yaml')) }.flatten }
   let!(:user) { FactoryGirl.create(:user_with_group) }
 
   # TODO: CHARTS_REPORTS_FOLDER
@@ -53,12 +53,12 @@ describe 'YAML reports' do
                   else
                     table_name.to_s
                   end
-      cols += data["columns"].collect { |col_name| "#{full_path}.#{col_name}" } if data['columns']
+      cols += data['columns'].collect { |col_name| "#{full_path}.#{col_name}" } if data['columns']
       cols + collect_columns(data['include'], full_path)
     end
   end
 
-  it "defines fields for reporting by fully qualified name" do
+  it 'defines fields for reporting by fully qualified name' do
     report_yamls.each do |yaml|
       report_yaml = YAML.load(File.open(yaml))
       report_yaml.delete('menu_name')

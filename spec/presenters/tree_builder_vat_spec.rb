@@ -1,8 +1,8 @@
 describe TreeBuilderVat do
   context 'TreeBuilderVat' do
     before(:each) do
-      role = MiqUserRole.find_by_name("EvmRole-operator")
-      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Vat Group")
+      role = MiqUserRole.find_by_name('EvmRole-operator')
+      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => 'Vat Group')
       login_as FactoryGirl.create(:user, :userid => 'datacenter_wilma', :miq_groups => [@group])
       cluster = FactoryGirl.create(:ems_cluster)
       class << cluster

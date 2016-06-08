@@ -64,7 +64,7 @@ class ChargebackVm < Chargeback
       end
       vms = user.vms
     elsif options[:tag]
-      vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
+      vms = Vm.find_tagged_with(:all => options[:tag], :ns => '*')
       vms &= @report_user.accessible_vms if @report_user && @report_user.self_service?
     elsif options[:tenant_id]
       tenant = Tenant.find(options[:tenant_id])
@@ -74,7 +74,7 @@ class ChargebackVm < Chargeback
       end
       vms = tenant.vms
     else
-      raise _("must provide options :owner or :tag")
+      raise _('must provide options :owner or :tag')
     end
     return [[]] if vms.empty?
 
@@ -87,57 +87,57 @@ class ChargebackVm < Chargeback
     key = "#{perf.resource_id}_#{ts_key}"
     @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
 
-    [key, {"vm_name" => perf.resource_name, "owner_name" => @vm_owners[perf.resource_id]}]
+    [key, {'vm_name' => perf.resource_name, 'owner_name' => @vm_owners[perf.resource_id]}]
   end
 
   def self.where_clause(records, options)
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
-      records.where(:resource_type => "VmOrTemplate")
+      records.where(:resource_type => 'VmOrTemplate')
           .where.not(:resource_id => nil)
-          .for_tag_names(options[:tag].split("/")[2..-1])
+          .for_tag_names(options[:tag].split('/')[2..-1])
     else
-      records.where(:resource_type => "VmOrTemplate", :resource_id => @vm_owners.keys)
+      records.where(:resource_type => 'VmOrTemplate', :resource_id => @vm_owners.keys)
     end
   end
 
   def self.report_name_field
-    "vm_name"
+    'vm_name'
   end
 
   def self.report_col_options
     {
-      "cpu_allocated_cost"       => {:grouping => [:total]},
-      "cpu_allocated_metric"     => {:grouping => [:total]},
-      "cpu_cost"                 => {:grouping => [:total]},
-      "cpu_metric"               => {:grouping => [:total]},
-      "cpu_used_cost"            => {:grouping => [:total]},
-      "cpu_used_metric"          => {:grouping => [:total]},
-      "disk_io_cost"             => {:grouping => [:total]},
-      "disk_io_metric"           => {:grouping => [:total]},
-      "disk_io_used_cost"        => {:grouping => [:total]},
-      "disk_io_used_metric"      => {:grouping => [:total]},
-      "fixed_compute_1_cost"     => {:grouping => [:total]},
-      "fixed_compute_2_cost"     => {:grouping => [:total]},
-      "fixed_cost"               => {:grouping => [:total]},
-      "fixed_storage_1_cost"     => {:grouping => [:total]},
-      "fixed_storage_2_cost"     => {:grouping => [:total]},
-      "memory_allocated_cost"    => {:grouping => [:total]},
-      "memory_allocated_metric"  => {:grouping => [:total]},
-      "memory_cost"              => {:grouping => [:total]},
-      "memory_metric"            => {:grouping => [:total]},
-      "memory_used_cost"         => {:grouping => [:total]},
-      "memory_used_metric"       => {:grouping => [:total]},
-      "net_io_cost"              => {:grouping => [:total]},
-      "net_io_metric"            => {:grouping => [:total]},
-      "net_io_used_cost"         => {:grouping => [:total]},
-      "net_io_used_metric"       => {:grouping => [:total]},
-      "storage_allocated_cost"   => {:grouping => [:total]},
-      "storage_allocated_metric" => {:grouping => [:total]},
-      "storage_cost"             => {:grouping => [:total]},
-      "storage_metric"           => {:grouping => [:total]},
-      "storage_used_cost"        => {:grouping => [:total]},
-      "storage_used_metric"      => {:grouping => [:total]},
-      "total_cost"               => {:grouping => [:total]}
+      'cpu_allocated_cost'       => {:grouping => [:total]},
+      'cpu_allocated_metric'     => {:grouping => [:total]},
+      'cpu_cost'                 => {:grouping => [:total]},
+      'cpu_metric'               => {:grouping => [:total]},
+      'cpu_used_cost'            => {:grouping => [:total]},
+      'cpu_used_metric'          => {:grouping => [:total]},
+      'disk_io_cost'             => {:grouping => [:total]},
+      'disk_io_metric'           => {:grouping => [:total]},
+      'disk_io_used_cost'        => {:grouping => [:total]},
+      'disk_io_used_metric'      => {:grouping => [:total]},
+      'fixed_compute_1_cost'     => {:grouping => [:total]},
+      'fixed_compute_2_cost'     => {:grouping => [:total]},
+      'fixed_cost'               => {:grouping => [:total]},
+      'fixed_storage_1_cost'     => {:grouping => [:total]},
+      'fixed_storage_2_cost'     => {:grouping => [:total]},
+      'memory_allocated_cost'    => {:grouping => [:total]},
+      'memory_allocated_metric'  => {:grouping => [:total]},
+      'memory_cost'              => {:grouping => [:total]},
+      'memory_metric'            => {:grouping => [:total]},
+      'memory_used_cost'         => {:grouping => [:total]},
+      'memory_used_metric'       => {:grouping => [:total]},
+      'net_io_cost'              => {:grouping => [:total]},
+      'net_io_metric'            => {:grouping => [:total]},
+      'net_io_used_cost'         => {:grouping => [:total]},
+      'net_io_used_metric'       => {:grouping => [:total]},
+      'storage_allocated_cost'   => {:grouping => [:total]},
+      'storage_allocated_metric' => {:grouping => [:total]},
+      'storage_cost'             => {:grouping => [:total]},
+      'storage_metric'           => {:grouping => [:total]},
+      'storage_used_cost'        => {:grouping => [:total]},
+      'storage_used_metric'      => {:grouping => [:total]},
+      'total_cost'               => {:grouping => [:total]}
     }
   end
 end # class Chargeback

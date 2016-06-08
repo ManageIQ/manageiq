@@ -10,29 +10,29 @@ class OperatingSystem < ApplicationRecord
   has_many   :firewall_rules, :as => :resource, :dependent => :destroy
 
   @@os_map = [
-    ["windows_generic", %w(winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt)],
-    ["windows_generic", %w(winxppro winxp xp)],
-    ["windows_generic", %w(vista longhorn)],
-    ["windows_generic", %w(win2k win2000)],
-    ["windows_generic", %w(microsoft windows winnt)],
-    ["linux_ubuntu",    %w(ubuntu)],
-    ["linux_chrome",    %w(chromeos)],
-    ["linux_chromium",  %w(chromiumos)],
-    ["linux_suse",      %w(suse sles)],
-    ["linux_redhat",    %w(redhat rhel)],
-    ["linux_fedora",    %w(fedora)],
-    ["linux_gentoo",    %w(gentoo)],
-    ["linux_centos",    %w(centos)],
-    ["linux_debian",    %w(debian)],
-    ["linux_coreos",    %w(coreos)],
-    ["linux_esx",       %w(vmnixx86 vmnix-x86 vmwareesxserver esxserver)],
-    ["linux_solaris",   %w(solaris)],
-    ["linux_generic",   %w(linux)]
+    ['windows_generic', %w(winnetenterprise w2k3 win2k3 server2003 winnetstandard servernt)],
+    ['windows_generic', %w(winxppro winxp xp)],
+    ['windows_generic', %w(vista longhorn)],
+    ['windows_generic', %w(win2k win2000)],
+    ['windows_generic', %w(microsoft windows winnt)],
+    ['linux_ubuntu',    %w(ubuntu)],
+    ['linux_chrome',    %w(chromeos)],
+    ['linux_chromium',  %w(chromiumos)],
+    ['linux_suse',      %w(suse sles)],
+    ['linux_redhat',    %w(redhat rhel)],
+    ['linux_fedora',    %w(fedora)],
+    ['linux_gentoo',    %w(gentoo)],
+    ['linux_centos',    %w(centos)],
+    ['linux_debian',    %w(debian)],
+    ['linux_coreos',    %w(coreos)],
+    ['linux_esx',       %w(vmnixx86 vmnix-x86 vmwareesxserver esxserver)],
+    ['linux_solaris',   %w(solaris)],
+    ['linux_generic',   %w(linux)]
   ]
 
   def self.add_elements(vm, xmlNode)
-    add_missing_elements(vm, xmlNode, "system/os")
-    add_missing_elements(vm, xmlNode, "system/account_policy")
+    add_missing_elements(vm, xmlNode, 'system/os')
+    add_missing_elements(vm, xmlNode, 'system/account_policy')
   end
 
   def self.add_missing_elements(vm, xmlNode, findPath)
@@ -52,7 +52,7 @@ class OperatingSystem < ApplicationRecord
     return nil unless MiqXml.isXmlElement?(el)
 
     nh = el.attributes.to_h
-    if findPath == "system/os"
+    if findPath == 'system/os'
       nh[:name] = nh.delete(:machine_name)
       nh[:bitness] = nh.delete(:architecture)
       nh[:build_number] = nh.delete(:build)
@@ -63,20 +63,20 @@ class OperatingSystem < ApplicationRecord
 
   def self.system_type(value)
     case value.to_s.downcase
-    when "servernt" then "server"
-    when "winnt" then "desktop"
-    else "unknown"
+    when 'servernt' then 'server'
+    when 'winnt' then 'desktop'
+    else 'unknown'
     end
   end
 
   def self.normalize_os_name(osName)
-    findStr = osName.downcase.gsub(/[^a-z0-9]/, "")
+    findStr = osName.downcase.gsub(/[^a-z0-9]/, '')
     @@os_map.each do |a|
       a[1].each do |n|
         return a[0] unless findStr.index(n).nil?
       end
     end
-    "unknown"
+    'unknown'
   end
 
   def self.image_name(obj)
@@ -88,12 +88,12 @@ class OperatingSystem < ApplicationRecord
       # check the given field names for possible matching value
       osName = [:distribution, :product_type, :product_name].each do |field|
         os_field = os.send(field)
-        break(os_field) if os_field && OperatingSystem.normalize_os_name(os_field) != "unknown"
+        break(os_field) if os_field && OperatingSystem.normalize_os_name(os_field) != 'unknown'
       end
 
       # If the normalized name comes back as unknown, nil out the value so we can get it from another field
       if osName.kind_of?(String)
-        osName = nil if OperatingSystem.normalize_os_name(osName) == "unknown"
+        osName = nil if OperatingSystem.normalize_os_name(osName) == 'unknown'
       else
         osName = nil
       end
@@ -109,9 +109,9 @@ class OperatingSystem < ApplicationRecord
       osName = obj.hardware.guest_os
       # if we get generic linux or unknown back see if the vm name is better
       norm_os = OperatingSystem.normalize_os_name(osName)
-      if norm_os == "linux_generic" || norm_os == "unknown"
+      if norm_os == 'linux_generic' || norm_os == 'unknown'
         vm_name = OperatingSystem.normalize_os_name(obj.name)
-        return vm_name unless vm_name == "unknown"
+        return vm_name unless vm_name == 'unknown'
       end
     end
 
@@ -123,6 +123,6 @@ class OperatingSystem < ApplicationRecord
   end
 
   def self.platform(obj)
-    image_name(obj).split("_").first
+    image_name(obj).split('_').first
   end
 end

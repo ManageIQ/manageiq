@@ -103,12 +103,12 @@ class ApiController
 
     def refresh_dialog_fields_service_template(_object, st, data)
       data ||= {}
-      dialog_fields = Hash(data["dialog_fields"])
-      refresh_fields = data["fields"]
-      return action_result(false, "Must specify fields to refresh") if refresh_fields.blank?
+      dialog_fields = Hash(data['dialog_fields'])
+      refresh_fields = data['fields']
+      return action_result(false, 'Must specify fields to refresh') if refresh_fields.blank?
 
       dialog = define_service_template_dialog(st, dialog_fields)
-      return action_result(false, "Service Template has no provision dialog defined") unless dialog
+      return action_result(false, 'Service Template has no provision dialog defined') unless dialog
 
       refresh_dialog_fields_action(dialog, refresh_fields, service_template_ident(st))
     rescue => err
@@ -116,7 +116,7 @@ class ApiController
     end
 
     def define_service_template_dialog(st, dialog_fields)
-      resource_action = st.resource_actions.find_by_action("Provision")
+      resource_action = st.resource_actions.find_by_action('Provision')
       workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => st)
       dialog_fields.each { |key, value| workflow.set_value(key, value) }
       workflow.dialog

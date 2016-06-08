@@ -7,7 +7,7 @@ module OpenURI
     end
 
     if target.userinfo
-      raise ArgumentError, "userinfo not supported.  [RFC3986]"
+      raise ArgumentError, 'userinfo not supported.  [RFC3986]'
     end
 
     require 'net/http'

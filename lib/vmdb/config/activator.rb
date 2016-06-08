@@ -15,7 +15,7 @@ module VMDB
       end
 
       def activate
-        raise "configuration invalid, see errors for details" unless Validator.new(@config).valid?
+        raise 'configuration invalid, see errors for details' unless Validator.new(@config).valid?
 
         @config.each_key do|k|
           if respond_to?(k.to_s, true)

@@ -21,7 +21,7 @@ module MiqAeServiceVmVmwareSpec
       $_miq_worker_current_msg = nil
     end
 
-    it "#attach_volume" do
+    it '#attach_volume' do
       service_vm.attach_volume('volume1', '/device/path')
 
       expect(MiqQueue.first).to have_attributes(
@@ -31,7 +31,7 @@ module MiqAeServiceVmVmwareSpec
       )
     end
 
-    it "#detach_volume" do
+    it '#detach_volume' do
       service_vm.detach_volume('volume1')
 
       expect(MiqQueue.first).to have_attributes(

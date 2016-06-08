@@ -4,7 +4,7 @@ class FloatingIp < ApplicationRecord
 
   # TODO(lsmola) NetworkManager, once all providers use network manager rename this to
   # "ManageIQ::Providers::NetworkManager"
-  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::BaseManager"
+  belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => 'ManageIQ::Providers::BaseManager'
   # Not going through network_port because of Amazon, old EC2 way allows to associate public Ip to instance, without
   # any network_port used
   belongs_to :vm

@@ -78,7 +78,7 @@ class AtomFeedTest < MiniTest::Unit::TestCase
       assert_select 'link' do
         assert_select "[rel='alternate']"
         assert_select "[type='text/html']"
-        assert_select "[href=?]", /^\/\d+$/
+        assert_select '[href=?]', /^\/\d+$/
       end
     end
   end

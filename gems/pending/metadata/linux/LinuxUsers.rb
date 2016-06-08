@@ -13,7 +13,7 @@ module MiqLinux
 
       wtmp = FileWTMP.new(fs)
 
-      fname = "/etc/passwd"
+      fname = '/etc/passwd'
       if fs.fileExists?(fname)
         pfes = nil
         fs.fileOpen(fname) { |fo| pfes = fo.read }
@@ -27,7 +27,7 @@ module MiqLinux
             u.gid        = fields[3]
             u.gecos      = fields[4]
             u.dir        = fields[5]
-            u.shell      = fields[6] || "NONE"
+            u.shell      = fields[6] || 'NONE'
             u.last_logon = wtmp.last_logon(u.name) unless wtmp.nil?
             u.groups     = []
             @userHash[u.name] = u
@@ -36,7 +36,7 @@ module MiqLinux
         end
       end
 
-      fname = "/etc/group"
+      fname = '/etc/group'
       if fs.fileExists?(fname)
         pfes = nil
         fs.fileOpen(fname) { |fo| pfes = fo.read }
@@ -63,7 +63,7 @@ module MiqLinux
       str = ''
 
       @userHash.each_value do |u|
-        str += "Login: " + u.name
+        str += 'Login: ' + u.name
         str += "\n\tUid: " + u.uid.to_s
         str += "\n\tGid: " + u.gid.to_s
         str += "\n\tHome: " + u.dir
@@ -75,7 +75,7 @@ module MiqLinux
       end
 
       @groups.each do |g|
-        str += "Group Name: " + g.name
+        str += 'Group Name: ' + g.name
         str += "\n\tGid: " + g.gid
         str += "\n\tUsers:"
         g.ulist.each { |un| str += "\n\t\t#{un}" }
@@ -176,19 +176,19 @@ module MiqLinux
     WTMP_TYPE_ACCOUNTING    = 9
 
     WTMP_TYPES = {
-      WTMP_TYPE_UT_UNKNOWN    => "Unknown",
-      WTMP_TYPE_RUN_LVL       => "Run Level",
-      WTMP_TYPE_BOOT_TIME     => "Boot Time",
-      WTMP_TYPE_NEW_TIME      => "New Time",
-      WTMP_TYPE_OLD_TIME      => "Old Time",
-      WTMP_TYPE_INIT_PROCESS  => "Init Process",
-      WTMP_TYPE_LOGIN_PROCESS => "Login Process",
-      WTMP_TYPE_USER_PROCESS  => "User Process",
-      WTMP_TYPE_DEAD_PROCESS  => "Dead Process",
-      WTMP_TYPE_ACCOUNTING    => "Accounting"
+      WTMP_TYPE_UT_UNKNOWN    => 'Unknown',
+      WTMP_TYPE_RUN_LVL       => 'Run Level',
+      WTMP_TYPE_BOOT_TIME     => 'Boot Time',
+      WTMP_TYPE_NEW_TIME      => 'New Time',
+      WTMP_TYPE_OLD_TIME      => 'Old Time',
+      WTMP_TYPE_INIT_PROCESS  => 'Init Process',
+      WTMP_TYPE_LOGIN_PROCESS => 'Login Process',
+      WTMP_TYPE_USER_PROCESS  => 'User Process',
+      WTMP_TYPE_DEAD_PROCESS  => 'Dead Process',
+      WTMP_TYPE_ACCOUNTING    => 'Accounting'
     }
 
-    def initialize(fs, path = "/var/log/wtmp")
+    def initialize(fs, path = '/var/log/wtmp')
       @contents = nil
       @records  = nil
       begin
@@ -211,7 +211,7 @@ module MiqLinux
     end
 
     def dump(rec)
-      puts "WTMP Record:"
+      puts 'WTMP Record:'
       #      puts "WTMP Record: #{rec.inspect}"
       puts "\ttype: #{WTMP_TYPES[rec["type"]]}"
       puts "\tuser: #{rec["user"]}"
@@ -235,11 +235,11 @@ module MiqLinux
         break unless buf.length == WTMP_RECORD_LEN
         rec = WTMP_RECORD.decode(buf)
         ['host', 'user', 'line'].each { |k| rec[k].strip! if rec[k] }
-        next if rec["user"].blank?
-        next unless rec["type"] == WTMP_TYPE_USER_PROCESS
+        next if rec['user'].blank?
+        next unless rec['type'] == WTMP_TYPE_USER_PROCESS
 
-        current = rec["seconds"]
-        user    = rec["user"]
+        current = rec['seconds']
+        user    = rec['user']
         # Get the latest logon timestamp for each user
         @records[user] = current if @records[user].blank? || current > @records[user]
       end
@@ -252,7 +252,7 @@ if __FILE__ == $0
   require 'log4r'
   require 'MiqVm/MiqVm'
 
-  vmDir = File.join(ENV.fetch("HOME", '.'), 'VMs')
+  vmDir = File.join(ENV.fetch('HOME', '.'), 'VMs')
   puts "vmDir = #{vmDir}"
 
   class ConsoleFormatter < Log4r::Formatter
@@ -270,20 +270,20 @@ if __FILE__ == $0
   # *** Test start
   #
 
-  vmCfg = File.join(vmDir, "Red Hat Linux.vmwarevm/Red Hat Linux.vmx")
+  vmCfg = File.join(vmDir, 'Red Hat Linux.vmwarevm/Red Hat Linux.vmx')
   # vmCfg = File.join(vmDir, "MIQ Server Appliance - Ubuntu MD - small/MIQ Server Appliance - Ubuntu.vmx")
   # vmCfg = File.join(vmDir, "winxpDev.vmwarevm/winxpDev.vmx")
-  vmCfg = "/Volumes/OB VMs/vms/Ubuntu Subversion/Ubuntu.vmx"
+  vmCfg = '/Volumes/OB VMs/vms/Ubuntu Subversion/Ubuntu.vmx'
   puts "VM config file: #{vmCfg}"
 
   vm = MiqVm.new(vmCfg)
-  raise "No OSs detected" if vm.rootTrees.length == 0
+  raise 'No OSs detected' if vm.rootTrees.length == 0
   rt = vm.rootTrees[0]
   u = MiqLinux::Users.new(rt)
-  puts "**** USERS:"
+  puts '**** USERS:'
   u.usersToXml.write($stdout, 4)
   puts
-  puts "**** GROUPS:"
+  puts '**** GROUPS:'
   u.groupsToXml.write($stdout, 4)
   puts
 end

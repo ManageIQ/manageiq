@@ -19,14 +19,14 @@ require 'faraday'
 require 'faraday_middleware'
 
 api_cmd   = File.basename($PROGRAM_NAME)
-api_ver   = "2.3.0-pre"
-cmd_title = "ManageIQ REST API Access Script"
+api_ver   = '2.3.0-pre'
+cmd_title = 'ManageIQ REST API Access Script'
 
-sep       = "_" * 60
-prefix    = "/api"
-ctype     = "application/json"
-scriptdir = ENV['API_SCRIPTDIR'] ? ENV['API_SCRIPTDIR'] : ENV['HOME'] + "/bin"
-data      = ""
+sep       = '_' * 60
+prefix    = '/api'
+ctype     = 'application/json'
+scriptdir = ENV['API_SCRIPTDIR'] ? ENV['API_SCRIPTDIR'] : ENV['HOME'] + '/bin'
+data      = ''
 
 def msg_exit(msg, exit_code = 1)
   puts msg
@@ -40,32 +40,32 @@ rescue
 end
 
 def prompt_get_data
-  data = ""
-  puts "Enter data to send with request:"
-  puts "Terminate with \"\" or \".\""
+  data = ''
+  puts 'Enter data to send with request:'
+  puts 'Terminate with "" or "."'
   s = gets
   loop do
     break if s.nil?
     s = s.strip
-    break if s == "." || s == ""
+    break if s == '.' || s == ''
     data << s.strip
     s = gets
   end
   data
 end
 
-path      = ""
+path      = ''
 params    = {}
 
 methods   = {
-  "get"    => "get",
-  "put"    => "put",
-  "post"   => "post",
-  "patch"  => "patch",
-  "edit"   => "post",
-  "create" => "post",
-  "update" => "post",
-  "delete" => "delete",
+  'get'    => 'get',
+  'put'    => 'put',
+  'post'   => 'post',
+  'patch'  => 'patch',
+  'edit'   => 'post',
+  'create' => 'post',
+  'update' => 'post',
+  'delete' => 'delete',
 }
 
 actions              = methods.keys
@@ -107,25 +107,25 @@ Usage: #{api_cmd} [options] <action> [parameters] [resource]
 
 #{api_cmd} options are:
 EOS
-  opt :verbose,    "Verbose mode, show details of the communication",
+  opt :verbose,    'Verbose mode, show details of the communication',
       :default => false,                    :short => '-v'
-  opt :apiversion, "Version of the API to access",
-      :default => "",                       :short => '-V'
-  opt :url,        "Base URL of Appliance to access",
-      :default => "http://localhost:3000",  :short => '-l'
-  opt :user,       "User to authenticate as",
-      :default => "admin",                  :short => '-u'
-  opt :group,      "User group to authorize as",
-      :default => "",                       :short => '-g'
-  opt :password,   "Password for user specified to authenticate as",
-      :default => "smartvm",                :short => '-p'
-  opt :token,      "Token to use for authentication instead of user/password",
-      :default => "",                       :short => '-t'
-  opt :format,     "How to format Json, pretty|none",
-      :default => "pretty",                 :short => '-f'
-  opt :inputfile,  "File to use as input to the POST/PUT/PATCH methods",
-      :default => "",                       :short => '-i'
-  opt :scriptdir,  "Directory where optional api_* scripts live",
+  opt :apiversion, 'Version of the API to access',
+      :default => '',                       :short => '-V'
+  opt :url,        'Base URL of Appliance to access',
+      :default => 'http://localhost:3000',  :short => '-l'
+  opt :user,       'User to authenticate as',
+      :default => 'admin',                  :short => '-u'
+  opt :group,      'User group to authorize as',
+      :default => '',                       :short => '-g'
+  opt :password,   'Password for user specified to authenticate as',
+      :default => 'smartvm',                :short => '-p'
+  opt :token,      'Token to use for authentication instead of user/password',
+      :default => '',                       :short => '-t'
+  opt :format,     'How to format Json, pretty|none',
+      :default => 'pretty',                 :short => '-f'
+  opt :inputfile,  'File to use as input to the POST/PUT/PATCH methods',
+      :default => '',                       :short => '-i'
+  opt :scriptdir,  'Directory where optional api_* scripts live',
       :default => scriptdir,                :short => '-s'
   stop_on sub_commands
 end
@@ -141,13 +141,13 @@ rescue
 end
 
 action = ARGV.shift
-Trollop.die "Must specify an action" if action.nil?
+Trollop.die 'Must specify an action' if action.nil?
 
 if scriptdir_actions.include?(action)
   msg_exit("Script directory #{opts[:scriptdir]} does not exist") unless File.directory?(opts[:scriptdir])
 end
 
-if action == "ls"
+if action == 'ls'
   d = Dir.open(opts[:scriptdir])
   d.each do |file|
     p = file.scan(/^api_(.*)\.rb/)
@@ -157,39 +157,39 @@ if action == "ls"
   exit 0
 end
 
-if action == "vi" || action == "edit"
+if action == 'vi' || action == 'edit'
   api_script = ARGV.shift
-  api_script_file = if api_script.nil? || api_script == ""
+  api_script_file = if api_script.nil? || api_script == ''
                       File.expand_path($PROGRAM_NAME)
                     else
                       File.join(opts[:scriptdir], "api_#{api_script}.rb")
                     end
-  ed_cmd = "vi"
-  ed_cmd = ENV["EDITOR"] if action == "edit" && ENV["EDITOR"]
+  ed_cmd = 'vi'
+  ed_cmd = ENV['EDITOR'] if action == 'edit' && ENV['EDITOR']
   cmd = "#{ed_cmd} #{api_script_file}"
   system(cmd)
   exit 0
 end
 
-if action == "run"
+if action == 'run'
   script = ARGV.shift
   method = ARGV.shift
-  msg_exit("Must specify a script to run.") if script.nil?
+  msg_exit('Must specify a script to run.') if script.nil?
   api_script = "#{opts[:scriptdir]}/api_#{script}.rb"
   msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
 else
   api_params = Trollop.options do
-    norm_options  = {:default => ""}
-    multi_options = {:default => "", :multi => true}
+    norm_options  = {:default => ''}
+    multi_options = {:default => '', :multi => true}
     api_parameters.each { |p| opt p.intern, p, (multi_params.include?(p) ? multi_options.dup : norm_options.dup) }
   end
   api_parameters.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
 end
 
-if action != "run"
+if action != 'run'
   resource = ARGV.shift
 
-  resource = "/" + resource             if resource && resource[0] != "/"
+  resource = '/' + resource             if resource && resource[0] != '/'
   resource = resource.gsub(prefix, '')  unless resource.nil?
 
   method = methods[action]
@@ -210,7 +210,7 @@ conn = Faraday.new(:url => opts[:url], :ssl => {:verify => false}) do |faraday|
   faraday.basic_auth(opts[:user], opts[:password]) if opts[:token].empty?
 end
 
-if action == "run"
+if action == 'run'
   puts "Loading #{api_script}"
   require api_script
   as = ApiScript.new(ctype, conn)
@@ -222,8 +222,8 @@ end
 path = prefix
 path << "/v#{opts[:apiversion]}" unless opts[:apiversion].empty?
 
-collection = ""
-item = ""
+collection = ''
+item = ''
 unless resource.nil?
   path << resource
   rscan = resource.scan(%r{[^/]+})
@@ -238,7 +238,7 @@ if opts[:verbose]
   puts "Resource:            #{resource}"
   puts "Collection:          #{collection}"
   puts "Item:                #{item}"
-  puts "Parameters:"
+  puts 'Parameters:'
   params.keys.each { |k| puts "#{' ' * 21}#{k} = #{params[k]}" }
   puts "Path:                #{path}"
   puts "Data:                #{data}"
@@ -260,16 +260,16 @@ end
 
 if opts[:verbose]
   puts sep
-  puts "Response Headers:"
+  puts 'Response Headers:'
   puts response.headers
 
   puts sep
-  puts "Response Body:"
+  puts 'Response Body:'
 end
 
 if response.body
   body = response.body.strip
-  if opts[:format] == "pretty"
+  if opts[:format] == 'pretty'
     puts json_pretty(body) unless body.empty?
   else
     puts body

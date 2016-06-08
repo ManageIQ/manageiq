@@ -22,9 +22,9 @@ describe PxeController do
       expect(response).to render_template('layouts/exception')
     end
 
-    it "Pressing Refresh button should show display name in the flash message" do
+    it 'Pressing Refresh button should show display name in the flash message' do
       pxe = FactoryGirl.create(:pxe_server)
-      allow(MiqServer).to receive(:my_zone).and_return("default")
+      allow(MiqServer).to receive(:my_zone).and_return('default')
       controller.instance_variable_set(:@_params, :id => pxe.id)
       controller.instance_variable_set(:@sb,
                                        :trees       => {
@@ -35,21 +35,21 @@ describe PxeController do
       allow(controller).to receive(:get_node_info)
       allow(controller).to receive(:replace_right_cell)
       controller.send(:pxe_server_refresh)
-      expect(assigns(:flash_array).first[:message]).to include("Refresh Relationships successfully initiated")
+      expect(assigns(:flash_array).first[:message]).to include('Refresh Relationships successfully initiated')
     end
   end
 
-  context "#restore_password" do
-    it "populates the password from the pxe record if params[:restore_password] exists" do
+  context '#restore_password' do
+    it 'populates the password from the pxe record if params[:restore_password] exists' do
       ps = PxeServer.create
-      allow(ps).to receive(:authentication_password).with(:default).and_return("default_password")
+      allow(ps).to receive(:authentication_password).with(:default).and_return('default_password')
       edit = {:pxe_id => ps.id, :new => {}}
       controller.instance_variable_set(:@edit, edit)
       controller.instance_variable_set(:@ps, ps)
       controller.instance_variable_set(:@_params,
-                                       :restore_password => "true",
-                                       :log_password     => "[FILTERED]",
-                                       :log_verify       => "[FILTERED]")
+                                       :restore_password => 'true',
+                                       :log_password     => '[FILTERED]',
+                                       :log_verify       => '[FILTERED]')
       controller.send(:restore_password)
       expect(assigns(:edit)[:new][:log_password]).to eq(ps.authentication_password(:default))
     end

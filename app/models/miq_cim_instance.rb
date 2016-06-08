@@ -9,26 +9,26 @@ class MiqCimInstance < ApplicationRecord
             :dependent    => :destroy
 
   has_many  :associations_we_are_result_of,
-            :class_name  => "MiqCimAssociation",
-            :foreign_key => "result_instance_id",
+            :class_name  => 'MiqCimAssociation',
+            :foreign_key => 'result_instance_id',
             :dependent   => :destroy
 
   has_many  :elements_with_metrics,
-            :class_name  => "MiqCimInstance",
-            :foreign_key => "metric_top_id"
+            :class_name  => 'MiqCimInstance',
+            :foreign_key => 'metric_top_id'
 
   belongs_to  :metrics,
-              :class_name  => "MiqStorageMetric",
-              :foreign_key => "metric_id",
+              :class_name  => 'MiqStorageMetric',
+              :foreign_key => 'metric_id',
               :dependent   => :destroy
 
   belongs_to  :agent,
-              :class_name  => "StorageManager",
-              :foreign_key => "agent_id"
+              :class_name  => 'StorageManager',
+              :foreign_key => 'agent_id'
 
   belongs_to  :top_managed_element,
-              :class_name  => "MiqCimInstance",
-              :foreign_key => "top_managed_element_id"
+              :class_name  => 'MiqCimInstance',
+              :foreign_key => 'top_managed_element_id'
 
   belongs_to  :vmdb_obj,
               :polymorphic  => true
@@ -67,7 +67,7 @@ class MiqCimInstance < ApplicationRecord
   end
 
   def self.find_kinda(cimClass, zoneId)
-    where("class_hier LIKE ? AND zone_id = ?", "%/#{cimClass}/%", zoneId).to_a
+    where('class_hier LIKE ? AND zone_id = ?', "%/#{cimClass}/%", zoneId).to_a
   end
 
   def evm_display_name
@@ -75,7 +75,7 @@ class MiqCimInstance < ApplicationRecord
   end
 
   def last_update_status_str
-    return "OK"         if last_update_status == STORAGE_UPDATE_OK
+    return 'OK'         if last_update_status == STORAGE_UPDATE_OK
     #
     # If any agent in this zone is STORAGE_UPDATE_IN_PROGRESS or STORAGE_UPDATE_PENDING, then "In Progress"
     # should be returned, because the true status of the instance can only be determined when the full
@@ -83,24 +83,24 @@ class MiqCimInstance < ApplicationRecord
     #
     aa = MiqSmisAgent.where(:zone_id            => zone_id,
                             :last_update_status => [STORAGE_UPDATE_IN_PROGRESS, STORAGE_UPDATE_PENDING])
-    return "In Progress"    unless aa.exists?
-    return "Agent Inaccessible" if last_update_status == STORAGE_UPDATE_AGENT_INACCESSIBLE
+    return 'In Progress'    unless aa.exists?
+    return 'Agent Inaccessible' if last_update_status == STORAGE_UPDATE_AGENT_INACCESSIBLE
 
     if last_update_status == STORAGE_UPDATE_NO_AGENT
-      return "No Agent"   unless agent
-      return "Failed"     if agent.last_update_status == STORAGE_UPDATE_FAILED
+      return 'No Agent'   unless agent
+      return 'Failed'     if agent.last_update_status == STORAGE_UPDATE_FAILED
     elsif last_update_status == STORAGE_UPDATE_AGENT_OK_NO_INSTANCE
-      return "Failed"     if agent.last_update_status == STORAGE_UPDATE_FAILED
-      return "No Instance"
+      return 'Failed'     if agent.last_update_status == STORAGE_UPDATE_FAILED
+      return 'No Instance'
     end
-    "Unknown"
+    'Unknown'
   end
 
   #
   # Are metrics for the given interval available?
   # interval_name: "hourly" || "daily" || "realtime"
   #
-  def has_perf_data?(interval_name = "hourly")
+  def has_perf_data?(interval_name = 'hourly')
     @has_perf_data ||= {}
     unless (rv = @has_perf_data[interval_name]).nil?
       return rv
@@ -108,31 +108,31 @@ class MiqCimInstance < ApplicationRecord
 
     return @has_perf_data[interval_name] = false if metrics.nil?
 
-    if interval_name == "realtime"
+    if interval_name == 'realtime'
       return @has_perf_data[interval_name] = metrics.miq_derived_metrics.exists?
     end
     @has_perf_data[interval_name] = metrics.miq_metrics_rollups.exists?(:rollup_type => interval_name)
   end
 
-  def last_capture(interval_name = "hourly")
+  def last_capture(interval_name = 'hourly')
     return nil unless has_metrics?
-    if interval_name == "realtime"
-      metrics.miq_derived_metrics.maximum("statistic_time")
+    if interval_name == 'realtime'
+      metrics.miq_derived_metrics.maximum('statistic_time')
     else
-      metrics.miq_metrics_rollups.where(:rollup_type => interval_name).maximum("statistic_time")
+      metrics.miq_metrics_rollups.where(:rollup_type => interval_name).maximum('statistic_time')
     end
   end
 
-  def first_capture(interval_name = "hourly")
+  def first_capture(interval_name = 'hourly')
     return nil unless has_metrics?
-    if interval_name == "realtime"
-      metrics.miq_derived_metrics.minimum("statistic_time")
+    if interval_name == 'realtime'
+      metrics.miq_derived_metrics.minimum('statistic_time')
     else
-      metrics.miq_metrics_rollups.where(:rollup_type => interval_name).minimum("statistic_time")
+      metrics.miq_metrics_rollups.where(:rollup_type => interval_name).minimum('statistic_time')
     end
   end
 
-  def first_and_last_capture(interval_name = "hourly")
+  def first_and_last_capture(interval_name = 'hourly')
     [first_capture(interval_name), last_capture(interval_name)].compact
   end
 
@@ -179,8 +179,8 @@ class MiqCimInstance < ApplicationRecord
   end
 
   def vendor
-    return "NetApp" if class_name =~ /^ONTAP_/
-    "Unknown"
+    return 'NetApp' if class_name =~ /^ONTAP_/
+    'Unknown'
   end
 
   def class_hier
@@ -263,37 +263,37 @@ class MiqCimInstance < ApplicationRecord
   end
 
   def operational_status_to_str(val)
-    return "Not Available" if val.nil?
+    return 'Not Available' if val.nil?
     case val[0]
     when 2
-      return "OK"
+      return 'OK'
     when 3
-      return "Degraded"
+      return 'Degraded'
     when 6
-      return "Error"
+      return 'Error'
     when 8
-      return "Starting"
+      return 'Starting'
     when 9
-      return "Stopping"
+      return 'Stopping'
     when 10
-      return "Stopped"
+      return 'Stopped'
     when 12
-      return "No contact"
+      return 'No contact'
     when 13
-      return "Lost communication"
+      return 'Lost communication'
     when 15
-      return "Dormant"
+      return 'Dormant'
     else
       return "Unknown (#{val[0]})"
     end
   end
 
   def health_state_to_str(val)
-    return "Not Available"    if val.nil?
-    return "OK"         if val == 5
-    return "Issue Detected"   if val > 5 && val <= 10
-    return "Attention Required" if val > 10 && val < 30
-    return "Major Failure"    if val >= 30
+    return 'Not Available'    if val.nil?
+    return 'OK'         if val == 5
+    return 'Issue Detected'   if val > 5 && val <= 10
+    return 'Attention Required' if val > 10 && val < 30
+    return 'Major Failure'    if val >= 30
     "Unknown (#{val})"
   end
 
@@ -347,7 +347,7 @@ class MiqCimInstance < ApplicationRecord
     end
   end
 
-  def dumpInstance(globalIndent = "", level = 0, io = $stdout)
+  def dumpInstance(globalIndent = '', level = 0, io = $stdout)
     obj.properties.each do |k, v|
       unless v.value.kind_of?(Array)
         indentedPrint("  #{k} => #{v.value} (#{v.value.class})", globalIndent, level, io)
@@ -359,7 +359,7 @@ class MiqCimInstance < ApplicationRecord
   end
 
   def indentedPrint(s, globalIndent, i, io = $stdout)
-    io.print globalIndent + "  " * i
+    io.print globalIndent + '  ' * i
     io.puts s
   end
 

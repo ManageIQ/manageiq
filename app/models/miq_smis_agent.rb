@@ -3,19 +3,19 @@ require 'vmdb_storage_bridge'
 
 class MiqSmisAgent < StorageManager
   AGENT_TYPES = {
-    "VMDB"  => "VMDB",
-    "Agent" => "Agent"
+    'VMDB'  => 'VMDB',
+    'Agent' => 'Agent'
   }
 
   include MiqSmisClient
 
   has_many  :top_managed_elements,
-            :class_name  => "MiqCimInstance",
-            :foreign_key => "agent_top_id"
+            :class_name  => 'MiqCimInstance',
+            :foreign_key => 'agent_top_id'
 
   has_many  :managed_elements,
-            :class_name  => "MiqCimInstance",
-            :foreign_key => "agent_id"
+            :class_name  => 'MiqCimInstance',
+            :foreign_key => 'agent_id'
 
   virtual_column  :last_update_status_str,  :type => :string
 
@@ -39,7 +39,7 @@ class MiqSmisAgent < StorageManager
 
   def self.update_smis(extProf)
     zoneId = MiqServer.my_server.zone.id
-    agents = where(:agent_type => "SMIS", :zone_id => zoneId)
+    agents = where(:agent_type => 'SMIS', :zone_id => zoneId)
 
     agents.each do |agent|
       agent.last_update_status = STORAGE_UPDATE_PENDING
@@ -112,8 +112,8 @@ class MiqSmisAgent < StorageManager
 
   def verify_credentials(auth_type = nil)
     # Verification of creds for other SMA types is handled though mixinx.
-    raise _("Credential validation requires the SMIS Agent type be set.") if agent_type.blank?
-    raise _("no credentials defined") if missing_credentials?(auth_type)
+    raise _('Credential validation requires the SMIS Agent type be set.') if agent_type.blank?
+    raise _('no credentials defined') if missing_credentials?(auth_type)
 
     begin
       connect
@@ -130,8 +130,8 @@ class MiqSmisAgent < StorageManager
     rescue Exception
       _log.warn("#{$!.inspect}")
       # $log.info $!.backtrace.join("\n")
-      raise _("Unexpected response returned from %{table}, see log for details") %
-              {:table => ui_lookup(:table => "ext_management_systems")}
+      raise _('Unexpected response returned from %{table}, see log for details') %
+              {:table => ui_lookup(:table => 'ext_management_systems')}
     else
       true
     end
@@ -229,26 +229,26 @@ class MiqSmisAgent < StorageManager
         next
       end
       _log.info "requesting update for zone #{zid}"
-      rw.send_message_to_worker_monitor("request_smis_update")
+      rw.send_message_to_worker_monitor('request_smis_update')
     end
   end
 
   def request_smis_update
     rw = MiqSmisRefreshWorker.find_current_in_zone(zone_id).first
     if rw.nil?
-      raise _("%{name}.request_smis_update: no active SmisRefreshWorker found for zone %{zone}") % {:name => name,
+      raise _('%{name}.request_smis_update: no active SmisRefreshWorker found for zone %{zone}') % {:name => name,
                                                                                                     :zone => zone_id}
     end
-    rw.send_message_to_worker_monitor("request_smis_update")
+    rw.send_message_to_worker_monitor('request_smis_update')
   end
 
   def request_status_update
     rw = MiqSmisRefreshWorker.find_current_in_zone(zone_id).first
     if rw.nil?
-      raise _("%{name}.request_status_update: no active SmisRefreshWorker found for zone %{zone}") % {:name => name,
+      raise _('%{name}.request_status_update: no active SmisRefreshWorker found for zone %{zone}') % {:name => name,
                                                                                                       :zone => zone_id}
     end
-    rw.send_message_to_worker_monitor("request_status_update")
+    rw.send_message_to_worker_monitor('request_status_update')
   end
 
   #
@@ -260,7 +260,7 @@ class MiqSmisAgent < StorageManager
 
     MiqCimInstance.where(
       :zone_id            => zoneId,
-      :source             => "SMIS",
+      :source             => 'SMIS',
       :last_update_status => [STORAGE_UPDATE_NO_AGENT, STORAGE_UPDATE_AGENT_OK_NO_INSTANCE]).each do |inst|
       if inst.last_update_status == STORAGE_UPDATE_AGENT_OK_NO_INSTANCE
         alus = inst.agent.last_update_status

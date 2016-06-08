@@ -3,5 +3,5 @@
 #
 
 # Auto-Approve request
-$evm.log("info", "AUTO-APPROVING")
-$evm.root["miq_request"].approve("admin", "Auto-Approved")
+$evm.log('info', 'AUTO-APPROVING')
+$evm.root['miq_request'].approve('admin', 'Auto-Approved')

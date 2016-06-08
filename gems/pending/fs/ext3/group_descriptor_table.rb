@@ -5,7 +5,7 @@ require 'binary_struct'
 module Ext3
   class GroupDescriptorTable
     def initialize(sb)
-      raise "Ext3::GroupDescriptorTable.initialize: Nil Superblock" if sb.nil?
+      raise 'Ext3::GroupDescriptorTable.initialize: Nil Superblock' if sb.nil?
 
       # Read all the group descriptor entries.
       @gdt = []

@@ -148,7 +148,7 @@ module Ext4
     @@track_inodes = false
 
     def initialize(stream)
-      raise "Ext4::Superblock.initialize: Nil stream" if stream.nil?
+      raise 'Ext4::Superblock.initialize: Nil stream' if stream.nil?
       @stream = stream
 
       # Seek, read & decode the superblock structure
@@ -158,10 +158,10 @@ module Ext4
       # Grab some quick facts & make sure there's nothing wrong. Tight qualification.
       raise "Ext4::Superblock.initialize: Invalid signature=[#{@sb['signature']}]" if @sb['signature'] != SUPERBLOCK_SIG
       state = @sb['fs_state']
-      raise "Ext4::Superblock.initialize: Invalid file system state" if state > FSS_END
+      raise 'Ext4::Superblock.initialize: Invalid file system state' if state > FSS_END
       if state != FSS_CLEAN
-        $log.warn("Ext4 file system has errors")        if $log && gotBit?(state, FSS_ERR)
-        $log.warn("Ext4 orphan inodes being recovered") if $log && gotBit?(state, FSS_ORPHAN_REC)
+        $log.warn('Ext4 file system has errors')        if $log && gotBit?(state, FSS_ERR)
+        $log.warn('Ext4 orphan inodes being recovered') if $log && gotBit?(state, FSS_ORPHAN_REC)
       end
       raise "Ext4::Superblock.initialize: Invalid error handling method=[#{@sb['err_method']}]" if @sb['err_method'] > EHM_PANIC
 
@@ -287,7 +287,7 @@ module Ext4
 
     # Ignore allocation is for testing only.
     def getBlock(block, _ignore_alloc = false)
-      raise "Ext4::Superblock.getBlock: block is nil" if block.nil?
+      raise 'Ext4::Superblock.getBlock: block is nil' if block.nil?
 
       unless @block_cache.key?(block)
         if block == 0

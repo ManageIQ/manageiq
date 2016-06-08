@@ -2,13 +2,13 @@ class ManageIQ::Providers::Vmware::InfraManager::Host < ::Host
   include VimConnectMixin
 
   def provider_object(connection)
-    api_type = connection.about["apiType"]
+    api_type = connection.about['apiType']
     mor =
       case api_type
-      when "VirtualCenter"
+      when 'VirtualCenter'
         # The ems_ref in the VMDB is from the vCenter perspective
         ems_ref
-      when "HostAgent"
+      when 'HostAgent'
         # Since we are going directly to the host, it acts like a VC
         # Thus, there is only a single host in it
         # It has a MOR for itself, which is different from the vCenter MOR

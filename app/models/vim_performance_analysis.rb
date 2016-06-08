@@ -78,7 +78,7 @@ module VimPerformanceAnalysis
                    end
           search_options[:filter] = search.filter
         elsif topts[:compute_tags]
-          search_options[:tag_filters] = {"managed" => topts[:compute_tags]}
+          search_options[:tag_filters] = {'managed' => topts[:compute_tags]}
         end
         @compute = Rbac.filtered(nil, search_options)
 
@@ -94,7 +94,7 @@ module VimPerformanceAnalysis
                    end
           filter_options[:filter] = search.filter
         elsif topts[:storage_tags]
-          filter_options[:tag_filters] = {"managed" => topts[:storage_tags]}
+          filter_options[:tag_filters] = {'managed' => topts[:storage_tags]}
         end
         @storage = Rbac.filtered(stores, filter_options)
       end
@@ -107,7 +107,7 @@ module VimPerformanceAnalysis
       if target.kind_of?(EmsCluster)
         return target.hosts.collect(&:storages).flatten.compact
       else
-        raise _("unable to get storages for %{name}") % {:name => target.class}
+        raise _('unable to get storages for %{name}') % {:name => target.class}
       end
     end
 
@@ -392,7 +392,7 @@ module VimPerformanceAnalysis
       when :perf_trend
         VimPerformanceAnalysis.calc_trend_value_at_timestamp(perf, col, ts)
       else
-        raise _("Unsupported Mode (%{mode}) for %{class} %{type} options") % {:mode  => mode,
+        raise _('Unsupported Mode (%{mode}) for %{class} %{type} options') % {:mode  => mode,
                                                                               :class => obj.class,
                                                                               :type  => type}
       end
@@ -436,7 +436,7 @@ module VimPerformanceAnalysis
     Metric::Helper.find_for_interval_name(interval_name, ext_options[:time_profile] || ext_options[:tz],
                                           ext_options[:class])
                   .where(:timestamp => Metric::Helper.time_range_from_hash(options), :resource => obj)
-                  .where(options[:conditions]).order("timestamp")
+                  .where(options[:conditions]).order('timestamp')
                   .select(options[:select])
                   .to_a
   end
@@ -466,7 +466,7 @@ module VimPerformanceAnalysis
     when ExtManagementSystem then
       rel = rel.where(:parent_ems_id => obj.id).where(:resource_type => %w(Host EmsCluster))
     else
-      raise _("unknown object type: %{class}") % {:class => obj.class}
+      raise _('unknown object type: %{class}') % {:class => obj.class}
     end
 
     rel.where(options[:conditions]).select(options[:select])
@@ -484,13 +484,13 @@ module VimPerformanceAnalysis
   def self.child_tags_over_time_period(obj, interval_name, options = {})
     classifications = Classification.hash_all_by_type_and_name
 
-    find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => "resource_type, tag_names")).inject({}) do |h, p|
-      p.tag_names.split("|").each do |t|
-        next if t.starts_with?("power_state")
+    find_child_perf_for_time_period(obj, interval_name, options.merge(:conditions => "resource_type != 'VmOrTemplate' AND tag_names IS NOT NULL", :select => 'resource_type, tag_names')).inject({}) do |h, p|
+      p.tag_names.split('|').each do |t|
+        next if t.starts_with?('power_state')
         tag = "#{p.resource_type}/#{t}"
         next if h.key?(tag)
 
-        c, e = t.split("/")
+        c, e = t.split('/')
         cat = classifications.fetch_path(c, :category)
         cat_desc = cat.nil? ? c.titleize : cat.description
         ent = cat.nil? ? nil : classifications.fetch_path(c, :entry, e)
@@ -532,7 +532,7 @@ module VimPerformanceAnalysis
     end
 
     result.each do |_k, h|
-      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?("min", "max") }.inject({}) do |mm, k|
+      h[:min_max] = h.keys.find_all { |k| k.to_s.starts_with?('min', 'max') }.inject({}) do |mm, k|
         val = h.delete(k)
         mm[k] = val unless val.nil?
         mm
@@ -588,8 +588,8 @@ module VimPerformanceAnalysis
     return unless perf_cols
 
     ext_options ||= {}
-    Metric::Helper.find_for_interval_name("daily", ext_options[:time_profile] || ext_options[:tz], ext_options[:class])
-                  .order("timestamp") #.select(perf_cols) - Currently passing perf_cols to select is broken because it includes virtual cols. This is actively being worked on.
+    Metric::Helper.find_for_interval_name('daily', ext_options[:time_profile] || ext_options[:tz], ext_options[:class])
+                  .order('timestamp') #.select(perf_cols) - Currently passing perf_cols to select is broken because it includes virtual cols. This is actively being worked on.
                   .where(:resource => obj, :timestamp => Metric::Helper.time_range_from_hash(range))
   end
 

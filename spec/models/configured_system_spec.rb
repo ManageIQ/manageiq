@@ -1,5 +1,5 @@
 describe ConfiguredSystem do
-  it "#counterparts" do
+  it '#counterparts' do
     vm  = FactoryGirl.create(:vm)
     cs1 = FactoryGirl.create(:configured_system, :counterpart => vm)
     cs2 = FactoryGirl.create(:configured_system, :counterpart => vm)

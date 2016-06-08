@@ -1,15 +1,15 @@
-RAILS_ROOT = ENV["RAILS_ENV"] ? Rails.root : File.expand_path(File.join(__dir__, %w(.. ..)))
-$:.push File.join(RAILS_ROOT, "gems/pending/util") unless ENV["RAILS_ENV"]
+RAILS_ROOT = ENV['RAILS_ENV'] ? Rails.root : File.expand_path(File.join(__dir__, %w(.. ..)))
+$:.push File.join(RAILS_ROOT, 'gems/pending/util') unless ENV['RAILS_ENV']
 require 'miq_logger_processor'
 
 logfile = ARGV.shift if ARGV[0] && File.file?(ARGV[0])
-logfile ||= File.join(RAILS_ROOT, "log/evm.log")
+logfile ||= File.join(RAILS_ROOT, 'log/evm.log')
 logfile = File.expand_path(logfile)
 
 $outdir = ARGV.shift if ARGV[0] && File.directory?(ARGV[0])
 $outdir ||= File.dirname(logfile)
-$outdir.chomp!("/")
-$outdir.chomp!("\\")
+$outdir.chomp!('/')
+$outdir.chomp!('\\')
 $outdir = File.expand_path($outdir)
 
 require 'csv'
@@ -29,7 +29,7 @@ def dump_csv(type, hashes)
     keys += [:unaccounted, :total_time]
 
     graph_data = []
-    CSV.open(output, "w") do |csv|
+    CSV.open(output, 'w') do |csv|
       graph_data << keys[0...-1].collect(&:to_s)
       csv << keys
       hashes.each do |h|
@@ -48,7 +48,7 @@ def dump_csv(type, hashes)
 end
 
 t = Time.now
-puts "Processing file..."
+puts 'Processing file...'
 
 all_timings = Hash.new { |k, v| k[v] = [] }
 vim_collect_timings = {}
@@ -63,12 +63,12 @@ MiqLoggerProcessor.new(logfile).each do |line|
 
   # Handle capture timings which are split over two nearly subsequent lines.
   case method
-  when "vim_collect_perf_data"
+  when 'vim_collect_perf_data'
     timings.delete(:total_time)
     vim_collect_timings[line.pid] = timings
     next
-  when "perf_capture"
-    unless target == "storage"
+  when 'perf_capture'
+    unless target == 'storage'
       prev_timings = vim_collect_timings.delete(line.pid)
       next if prev_timings.nil?
       timings = prev_timings.merge(timings)
@@ -83,6 +83,6 @@ end
 
 puts "Processing file...Complete (#{Time.now - t}s)"
 
-puts "Dumping CSVs..."
+puts 'Dumping CSVs...'
 all_timings.each { |type, hashes| dump_csv(type, hashes) }
-puts "Dumping CSVs...Complete"
+puts 'Dumping CSVs...Complete'

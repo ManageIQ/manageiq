@@ -11,6 +11,6 @@ class OntapAggregateDerivedMetric < ApplicationRecord
   include OntapDerivedMetricMixin
 
   def self.derive_metrics(prevMetric, curMetric, counterInfo)
-    derive_metrics_common(prevMetric, curMetric, counterInfo, "aggregate")
+    derive_metrics_common(prevMetric, curMetric, counterInfo, 'aggregate')
   end
 end

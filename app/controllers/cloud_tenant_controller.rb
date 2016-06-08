@@ -15,12 +15,12 @@ class CloudTenantController < ApplicationController
     @edit = session[:edit]                                  # Restore @edit for adv search box
     params[:display] = @display if %w(vms instances images).include?(@display)
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
-    return tag("CloudTenant") if params[:pressed] == 'cloud_tenant_tag'
-    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
-                                     "miq_template_",
-                                     "guest_",
-                                     "image_",
-                                     "instance_")
+    return tag('CloudTenant') if params[:pressed] == 'cloud_tenant_tag'
+    if params[:pressed].starts_with?('vm_', # Handle buttons from sub-items screen
+                                     'miq_template_',
+                                     'guest_',
+                                     'image_',
+                                     'instance_')
 
       pfx = pfx_for_vm_button_pressed(params[:pressed])
       process_vm_buttons(pfx)
@@ -31,8 +31,8 @@ class CloudTenantController < ApplicationController
 
       unless ["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
               "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-        @refresh_div = "main_div"
-        @refresh_partial = "layouts/gtl"
+        @refresh_div = 'main_div'
+        @refresh_partial = 'layouts/gtl'
         show
       end
     end
@@ -56,11 +56,11 @@ class CloudTenantController < ApplicationController
         page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]
       end
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+    elsif params[:pressed].ends_with?('_edit') || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
     else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
+      if @refresh_div == 'main_div' && @lastaction == 'show_list'
         replace_gtl_main_div
       else
         render_flash
@@ -69,8 +69,8 @@ class CloudTenantController < ApplicationController
   end
 
   def get_session_data
-    @title      = _("Cloud Tenant")
-    @layout     = "cloud_tenant"
+    @title      = _('Cloud Tenant')
+    @layout     = 'cloud_tenant'
     @lastaction = session[:cloud_tenant_lastaction]
     @display    = session[:cloud_tenant_display]
     @filters    = session[:cloud_tenant_filters]

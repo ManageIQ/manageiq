@@ -6,60 +6,60 @@ describe StorageController do
   let(:storage_cluster) { FactoryGirl.create(:storage_cluster, :name => 'test_storage_cluster1') }
   before { set_user_privileges }
 
-  context "#button" do
-    it "when VM Right Size Recommendations is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_right_size")
+  context '#button' do
+    it 'when VM Right Size Recommendations is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_right_size')
       expect(controller).to receive(:vm_right_size)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Migrate is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_migrate")
-      controller.instance_variable_set(:@refresh_partial, "layouts/gtl")
-      expect(controller).to receive(:prov_redirect).with("migrate")
+    it 'when VM Migrate is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_migrate')
+      controller.instance_variable_set(:@refresh_partial, 'layouts/gtl')
+      expect(controller).to receive(:prov_redirect).with('migrate')
       expect(controller).to receive(:render)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Retire is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_retire")
+    it 'when VM Retire is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_retire')
       expect(controller).to receive(:retirevms).once
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Manage Policies is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_protect")
+    it 'when VM Manage Policies is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_protect')
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when MiqTemplate Manage Policies is pressed" do
-      controller.instance_variable_set(:@_params, {:pressed => "miq_template_protect"})
+    it 'when MiqTemplate Manage Policies is pressed' do
+      controller.instance_variable_set(:@_params, {:pressed => 'miq_template_protect'})
       expect(controller).to receive(:assign_policies).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when VM Tag is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "vm_tag")
+    it 'when VM Tag is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'vm_tag')
       expect(controller).to receive(:tag).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when MiqTemplate Tag is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "miq_template_tag")
+    it 'when MiqTemplate Tag is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'miq_template_tag')
       expect(controller).to receive(:tag).with(VmOrTemplate)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    it "when Host Analyze then Check Compliance is pressed" do
-      controller.instance_variable_set(:@_params, :pressed => "host_analyze_check_compliance")
+    it 'when Host Analyze then Check Compliance is pressed' do
+      controller.instance_variable_set(:@_params, :pressed => 'host_analyze_check_compliance')
       allow(controller).to receive(:show)
       expect(controller).to receive(:analyze_check_compliance_hosts)
       expect(controller).to receive(:render)
@@ -67,12 +67,12 @@ describe StorageController do
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
 
-    {"host_standby"  => "Enter Standby Mode",
-     "host_shutdown" => "Shut Down",
-     "host_reboot"   => "Restart",
-     "host_start"    => "Power On",
-     "host_stop"     => "Power Off",
-     "host_reset"    => "Reset"
+    {'host_standby'  => 'Enter Standby Mode',
+     'host_shutdown' => 'Shut Down',
+     'host_reboot'   => 'Restart',
+     'host_start'    => 'Power On',
+     'host_stop'     => 'Power Off',
+     'host_reset'    => 'Reset'
     }.each do |button, description|
       it "when Host #{description} button is pressed" do
         login_as FactoryGirl.create(:user, :features => button)
@@ -82,12 +82,12 @@ describe StorageController do
         allow_any_instance_of(Host).to receive(:is_available?).with(command).and_return(true)
 
         controller.instance_variable_set(:@_params, :pressed => button, :miq_grid_checks => "#{host.id}")
-        controller.instance_variable_set(:@lastaction, "show_list")
+        controller.instance_variable_set(:@lastaction, 'show_list')
         allow(controller).to receive(:show_list)
         expect(controller).to receive(:render)
         controller.button
         flash_messages = assigns(:flash_array)
-        expect(flash_messages.first[:message]).to include("successfully initiated")
+        expect(flash_messages.first[:message]).to include('successfully initiated')
         expect(flash_messages.first[:level]).to eq(:success)
       end
     end
@@ -120,7 +120,7 @@ describe StorageController do
       end
 
       it 'show a datastore cluster in the datastore clusters list' do
-        allow(controller).to receive(:x_node).and_return("root")
+        allow(controller).to receive(:x_node).and_return('root')
         storage
         storage_cluster
         session[:sb] = {:active_accord => :storage_pod_accord}
@@ -141,21 +141,21 @@ describe StorageController do
         expect(response.body).to include("<li>\n<span>\nShowing 6-7 of 7 items\n<input name='limitstart' type='hidden' value='0'>\n</span>\n</li>")
       end
 
-      it "it handles x_button tagging" do
+      it 'it handles x_button tagging' do
         ems = FactoryGirl.create(:ems_vmware)
         datastore = FactoryGirl.create(:storage, :name => 'storage_name')
         datastore.parent = ems
-        classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
+        classification = FactoryGirl.create(:classification, :name => 'department', :description => 'Department')
         @tag1 = FactoryGirl.create(:classification_tag,
-                                   :name   => "tag1",
+                                   :name   => 'tag1',
                                    :parent => classification
         )
         @tag2 = FactoryGirl.create(:classification_tag,
-                                   :name   => "tag2",
+                                   :name   => 'tag2',
                                    :parent => classification
         )
         allow(Classification).to receive(:find_assigned_entries).and_return([@tag1, @tag2])
-        post :x_button, :params => {:miq_grid_checks => to_cid(datastore.id), :pressed => "storage_tag", :format => :js}
+        post :x_button, :params => {:miq_grid_checks => to_cid(datastore.id), :pressed => 'storage_tag', :format => :js}
         expect(response.status).to eq(200)
         expect(response.body).to include('<h3>\n1 Datastore Being Tagged\n<\/h3>')
         expect(response.body).to include("Name: #{datastore.name} | Datastores Type: ")
@@ -166,11 +166,11 @@ describe StorageController do
         post :x_button, :params => {:pressed => 'storage_scan', :id => storage.id}
         expect(response.status).to eq(200)
         flash_messages = assigns(:flash_array)
-        expect(flash_messages.first[:message]).to_not include("Datastores no longer exists")
+        expect(flash_messages.first[:message]).to_not include('Datastores no longer exists')
       end
 
       it 'can Perform a datastore Smart State Analysis from the datastore list' do
-        allow(controller).to receive(:x_node).and_return("root")
+        allow(controller).to receive(:x_node).and_return('root')
         allow(controller).to receive(:x_active_tree).and_return(:storage_tree)
         allow(controller).to receive(:x_active_accord).and_return(:storage_accord)
         storage
@@ -180,7 +180,7 @@ describe StorageController do
         post :x_button, :params => {:pressed => 'storage_scan', :miq_grid_checks => to_cid(storage.id), :format => :js}
         expect(response.status).to eq(200)
         flash_messages = assigns(:flash_array)
-        expect(flash_messages.first[:message]).to_not include("Datastores no longer exists")
+        expect(flash_messages.first[:message]).to_not include('Datastores no longer exists')
       end
 
       it 'can Perform a datastore Smart State Analysis from the datastore cluster list' do
@@ -196,7 +196,7 @@ describe StorageController do
         post :x_button, :params => {:pressed => 'storage_scan', :miq_grid_checks => to_cid(storage.id), :format => :js}
         expect(response.status).to eq(200)
         flash_messages = assigns(:flash_array)
-        expect(flash_messages.first[:message]).to_not include("Datastores no longer exists")
+        expect(flash_messages.first[:message]).to_not include('Datastores no longer exists')
       end
 
       it 'can Perform a remove datastore from the datastore cluster list' do
@@ -214,11 +214,11 @@ describe StorageController do
                                     :format          => :js}
         expect(response.status).to eq(200)
         flash_messages = assigns(:flash_array)
-        expect(flash_messages.first[:message]).to_not include("Datastores no longer exists")
+        expect(flash_messages.first[:message]).to_not include('Datastores no longer exists')
       end
     end
 
-    context "#tree_select" do
+    context '#tree_select' do
       before do
         storage
         storage_cluster
@@ -238,25 +238,25 @@ describe StorageController do
     end
   end
 
-  context "#tags_edit" do
+  context '#tags_edit' do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      @ds = FactoryGirl.create(:storage, :name => "Datastore-01")
+      @ds = FactoryGirl.create(:storage, :name => 'Datastore-01')
       user = FactoryGirl.create(:user, :userid => 'testuser')
       set_user_privileges user
-      allow(@ds).to receive(:tagged_with).with(:cat => user.userid).and_return("my tags")
-      classification = FactoryGirl.create(:classification, :name => "department", :description => "Department")
+      allow(@ds).to receive(:tagged_with).with(:cat => user.userid).and_return('my tags')
+      classification = FactoryGirl.create(:classification, :name => 'department', :description => 'Department')
       @tag1 = FactoryGirl.create(:classification_tag,
-                                 :name   => "tag1",
+                                 :name   => 'tag1',
                                  :parent => classification)
       @tag2 = FactoryGirl.create(:classification_tag,
-                                 :name   => "tag2",
+                                 :name   => 'tag2',
                                  :parent => classification)
       allow(Classification).to receive(:find_assigned_entries).with(@ds).and_return([@tag1, @tag2])
-      session[:tag_db] = "Storage"
+      session[:tag_db] = 'Storage'
       edit = {
         :key        => "Storage_edit_tags__#{@ds.id}",
-        :tagging    => "Storage",
+        :tagging    => 'Storage',
         :object_ids => [@ds.id],
         :current    => {:assignments => []},
         :new        => {:assignments => [@tag1.id, @tag2.id]}
@@ -268,30 +268,30 @@ describe StorageController do
       expect(response.status).to eq(200)
     end
 
-    it "builds tagging screen" do
-      post :button, :params => {:pressed => "storage_tag", :format => :js, :id => @ds.id}
+    it 'builds tagging screen' do
+      post :button, :params => {:pressed => 'storage_tag', :format => :js, :id => @ds.id}
       expect(assigns(:flash_array)).to be_nil
     end
 
-    it "cancels tags edit" do
+    it 'cancels tags edit' do
       session[:breadcrumbs] = [{:url => "storage/x_show/#{@ds.id}"}, 'placeholder']
-      post :tagging_edit, :params => {:button => "cancel", :format => :js, :id => @ds.id}
-      expect(assigns(:flash_array).first[:message]).to include("was cancelled by the user")
+      post :tagging_edit, :params => {:button => 'cancel', :format => :js, :id => @ds.id}
+      expect(assigns(:flash_array).first[:message]).to include('was cancelled by the user')
       expect(assigns(:edit)).to be_nil
     end
 
-    it "save tags" do
+    it 'save tags' do
       session[:breadcrumbs] = [{:url => "storage/x_show/#{@ds.id}"}, 'placeholder']
-      post :tagging_edit, :params => {:button => "save", :format => :js, :id => @ds.id}
-      expect(assigns(:flash_array).first[:message]).to include("Tag edits were successfully saved")
+      post :tagging_edit, :params => {:button => 'save', :format => :js, :id => @ds.id}
+      expect(assigns(:flash_array).first[:message]).to include('Tag edits were successfully saved')
       expect(assigns(:edit)).to be_nil
     end
 
-    it "resets tags" do
+    it 'resets tags' do
       session[:breadcrumbs] = [{:url => "storage/x_show/#{@ds.id}"}, 'placeholder']
       session[:assigned_filters] = []
-      post :tagging_edit, :params => {:button => "reset", :format => :js, :id => @ds.id}
-      expect(assigns(:flash_array).first[:message]).to include("All changes have been reset")
+      post :tagging_edit, :params => {:button => 'reset', :format => :js, :id => @ds.id}
+      expect(assigns(:flash_array).first[:message]).to include('All changes have been reset')
     end
   end
 end

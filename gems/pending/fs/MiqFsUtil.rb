@@ -24,7 +24,7 @@ class MiqFsUtil
       @csa = us
       @csa = YAML.load_file(us) if @csa.kind_of? String
       @csa = [@csa] if @csa.kind_of? Hash
-      raise "Invalid collection spec" unless @csa.kind_of? Array
+      raise 'Invalid collection spec' unless @csa.kind_of? Array
     else
       @csa = nil
     end
@@ -38,13 +38,13 @@ class MiqFsUtil
   end
 
   def update
-    raise "MiqFsUpdate.update: no current update spec" unless @csa
+    raise 'MiqFsUpdate.update: no current update spec' unless @csa
     @csa.each { |cs| doUpdate(OpenStruct.new(cs)) }
   end
 
   def dumpSpec(specFile)
-    raise "MiqFsUpdate.dumpSpec: no current update spec" unless @csa
-    YAML.dump(@csa, File.open(specFile, "w"))
+    raise 'MiqFsUpdate.dumpSpec: no current update spec' unless @csa
+    YAML.dump(@csa, File.open(specFile, 'w'))
   end
 
   #
@@ -59,10 +59,10 @@ class MiqFsUtil
     from = [from] unless from.kind_of?(Array)
     from.each { |t| allTargets.concat(dirGlob(t)) }
 
-    raise "copy: no source files matched" if allTargets.length == 0
+    raise 'copy: no source files matched' if allTargets.length == 0
     if allTargets.length > 1 || recursive
-      raise "copy: destination directory does not exist" unless @toFs.fileExists?(to)
-      raise "copy: destination must be a directory for multi-file copy" unless @toFs.fileDirectory?(to)
+      raise 'copy: destination directory does not exist' unless @toFs.fileExists?(to)
+      raise 'copy: destination must be a directory for multi-file copy' unless @toFs.fileDirectory?(to)
     end
 
     allTargets.each do |f|
@@ -108,7 +108,7 @@ class MiqFsUtil
 
   private
 
-  def log_puts(str = "")
+  def log_puts(str = '')
     if $log
       $log.info str
     else
@@ -170,7 +170,7 @@ class MiqFsUtil
       log_puts "     to: #{tf}"
     end
     @fromFs.fileOpen(ff) do |ffo|
-      tfo = @toFs.fileOpen(tf, "wb")
+      tfo = @toFs.fileOpen(tf, 'wb')
       while (buf = ffo.read(1024))
         tfo.write(buf)
       end
@@ -287,7 +287,7 @@ class MiqFsUtil
           # If the entry is a RE, then remove all files and directories in
           # the destination directory that match the RE>
           #
-          @toFs.findEach(".") do |p|
+          @toFs.findEach('.') do |p|
             next unless r.match(p)
 
             log_puts "\tRemoving: #{p}" if @verbose
@@ -330,7 +330,7 @@ class MiqFsUtil
   end
 
   def copyFile(src, dest)
-    if @fromFs.respond_to?(:hasTag?) && @fromFs.hasTag?(src, "compressed")
+    if @fromFs.respond_to?(:hasTag?) && @fromFs.hasTag?(src, 'compressed')
       decompressFile(src, dest)
       return
     end
@@ -340,7 +340,7 @@ class MiqFsUtil
       log_puts "\t      TO: #{dest}"
     end
     @fromFs.fileOpen(src) do |ffo|
-      tfo = @toFs.fileOpen(dest, "wb")
+      tfo = @toFs.fileOpen(dest, 'wb')
       while (buf = ffo.read(4096))
         tfo.write(buf, buf.length)
       end
@@ -354,13 +354,13 @@ class MiqFsUtil
       log_puts "\t      TO: #{dest}"
     end
     @fromFs.fileOpen(src) do |ffo|
-      tfo = @toFs.fileOpen(dest, "wb")
+      tfo = @toFs.fileOpen(dest, 'wb')
       zipper = Zlib::Deflate.new
       while (buf = ffo.read(4096))
         zipper << buf
       end
       tfo.write(zipper.deflate(nil, Zlib::FINISH))
-      tfo.addTag("compressed") if tfo.respond_to?(:addTag)
+      tfo.addTag('compressed') if tfo.respond_to?(:addTag)
       tfo.close
     end
   end
@@ -371,7 +371,7 @@ class MiqFsUtil
       log_puts "\t      TO: #{dest}"
     end
     @fromFs.fileOpen(src) do |ffo|
-      tfo = @toFs.fileOpen(dest, "wb")
+      tfo = @toFs.fileOpen(dest, 'wb')
       unzipper = Zlib::Inflate.new
       while (buf = ffo.read(4096))
         unzipper << buf

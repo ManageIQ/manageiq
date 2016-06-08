@@ -5,7 +5,7 @@ class MiqVimEventMonitor < MiqVimInventory
   def initialize(server, username, password, eventFilterSpec = nil, pgSize = 100, maxWait = 60)
     super(server, username, password, :cache_scope_event_monitor)
 
-    @eventFilterSpec = eventFilterSpec || VimHash.new("EventFilterSpec")
+    @eventFilterSpec = eventFilterSpec || VimHash.new('EventFilterSpec')
     @pgSize = pgSize
     @maxWait = maxWait
     @_monitorEvents = true
@@ -18,23 +18,23 @@ class MiqVimEventMonitor < MiqVimInventory
   end # def initialize
 
   def monitorEvents
-    raise "monitorEvents: no block given" unless block_given?
+    raise 'monitorEvents: no block given' unless block_given?
 
-    trap(:TERM) { $vim_log.info "monitorEvents: ignoring SIGTERM" }
+    trap(:TERM) { $vim_log.info 'monitorEvents: ignoring SIGTERM' }
 
     eventHistoryCollector = createCollectorForEvents(@sic.eventManager, @eventFilterSpec)
     setCollectorPageSize(eventHistoryCollector, @pgSize)
 
-    pfSpec = VimHash.new("PropertyFilterSpec") do |pfs|
-      pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
-        psa << VimHash.new("PropertySpec") do |ps|
+    pfSpec = VimHash.new('PropertyFilterSpec') do |pfs|
+      pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
+        psa << VimHash.new('PropertySpec') do |ps|
           ps.type = eventHistoryCollector.vimType
-          ps.all = "false"
-          ps.pathSet = "latestPage"
+          ps.all = 'false'
+          ps.pathSet = 'latestPage'
         end
       end
-      pfs.objectSet = VimArray.new("ArrayOfObjectSpec") do |osa|
-        osa << VimHash.new("ObjectSpec") do |os|
+      pfs.objectSet = VimArray.new('ArrayOfObjectSpec') do |osa|
+        osa << VimHash.new('ObjectSpec') do |os|
           os.obj = eventHistoryCollector
         end
       end
@@ -44,7 +44,7 @@ class MiqVimEventMonitor < MiqVimInventory
 
     begin
         @emPropCol = @sic.propertyCollector
-        filterSpecRef = createFilter(@emPropCol, pfSpec, "true")
+        filterSpecRef = createFilter(@emPropCol, pfSpec, 'true')
 
         version = nil
         begin
@@ -75,25 +75,25 @@ class MiqVimEventMonitor < MiqVimInventory
             end
           rescue HTTPClient::ReceiveTimeoutError => terr
             retry if isAlive?
-            $vim_log.debug "MiqVimEventMonitor.monitorEvents: connection lost"
+            $vim_log.debug 'MiqVimEventMonitor.monitorEvents: connection lost'
             raise
           end
       rescue SignalException => err
       ensure
-        $vim_log.info "MiqVimEventMonitor: calling destroyPropertyFilter"
+        $vim_log.info 'MiqVimEventMonitor: calling destroyPropertyFilter'
         destroyPropertyFilter(filterSpecRef) if filterSpecRef
-        $vim_log.info "MiqVimEventMonitor: returned from destroyPropertyFilter"
+        $vim_log.info 'MiqVimEventMonitor: returned from destroyPropertyFilter'
         disconnect
       end
   end # def monitorEvents
 
   def stop
-    $vim_log.info "MiqVimEventMonitor stopping..."
+    $vim_log.info 'MiqVimEventMonitor stopping...'
     @_monitorEvents = false
     if @emPropCol
-      $vim_log.info "MiqVimEventMonitor: calling cancelWaitForUpdates"
+      $vim_log.info 'MiqVimEventMonitor: calling cancelWaitForUpdates'
       cancelWaitForUpdates(@emPropCol)
-      $vim_log.info "MiqVimEventMonitor: returned from cancelWaitForUpdates"
+      $vim_log.info 'MiqVimEventMonitor: returned from cancelWaitForUpdates'
     end
   end
 
@@ -114,7 +114,7 @@ class MiqVimEventMonitor < MiqVimInventory
       raise "MiqVimEventMonitor.fixupEvent: Expecting Hash, got #{event.class}"
     end
 
-    event['eventType'] = event.xsiType.split("::").last
+    event['eventType'] = event.xsiType.split('::').last
     @cacheLock.synchronize(:SH) do
       ['vm', 'sourceVm', 'srcTemplate'].each do |vmStr|
         next unless (eventVmObj = event[vmStr])
@@ -157,9 +157,9 @@ class MiqVimEventMonitor < MiqVimInventory
   # Test: prevent clone of VM: rpo-clone-src
   #
   def doEvent(e)
-    return if e['eventType'] != "TaskEvent"
-    return if e['info']['name'] != "CloneVM_Task"
-    return if e['vm']['name'] != "rpo-clone-src"
+    return if e['eventType'] != 'TaskEvent'
+    return if e['info']['name'] != 'CloneVM_Task'
+    return if e['vm']['name'] != 'rpo-clone-src'
     begin
       cancelTask(String.new(e['info']['task'].to_str))
     rescue => err

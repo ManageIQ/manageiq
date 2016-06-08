@@ -3,117 +3,117 @@ require 'recursive-open-struct'
 describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
   let(:parser)  { described_class.new }
 
-  describe "parse_namespace" do
-    it "handles simple data" do
+  describe 'parse_namespace' do
+    it 'handles simple data' do
       expect(parser.send(:parse_namespace,
                          RecursiveOpenStruct.new(
                            :metadata => {
-                             :name              => "proj2",
-                             :selfLink          => "/api/v1/namespaces/proj2",
-                             :uid               => "554c1eaa-f4f6-11e5-b943-525400c7c086",
-                             :resourceVersion   => "150569",
-                             :creationTimestamp => "2016-03-28T15:04:13Z",
-                             :labels            => {:department => "Warp-drive"},
-                             :annotations       => {:"openshift.io/description"  => "",
-                                                    :"openshift.io/display-name" => "Project 2"}
+                             :name              => 'proj2',
+                             :selfLink          => '/api/v1/namespaces/proj2',
+                             :uid               => '554c1eaa-f4f6-11e5-b943-525400c7c086',
+                             :resourceVersion   => '150569',
+                             :creationTimestamp => '2016-03-28T15:04:13Z',
+                             :labels            => {:department => 'Warp-drive'},
+                             :annotations       => {:"openshift.io/description"  => '',
+                                                    :"openshift.io/display-name" => 'Project 2'}
                            },
-                           :spec     => {:finalizers => ["openshift.io/origin", "kubernetes"]},
-                           :status   => {:phase => "Active"}
+                           :spec     => {:finalizers => ['openshift.io/origin', 'kubernetes']},
+                           :status   => {:phase => 'Active'}
                          )
-                        )).to eq(:ems_ref          => "554c1eaa-f4f6-11e5-b943-525400c7c086",
-                                 :name             => "proj2",
-                                 :ems_created_on   => "2016-03-28T15:04:13Z",
-                                 :resource_version => "150569",
+                        )).to eq(:ems_ref          => '554c1eaa-f4f6-11e5-b943-525400c7c086',
+                                 :name             => 'proj2',
+                                 :ems_created_on   => '2016-03-28T15:04:13Z',
+                                 :resource_version => '150569',
                                  :labels_and_tags  => [
                                    {
-                                     :section => "labels",
-                                     :name    => "department",
-                                     :value   => "Warp-drive",
-                                     :source  => "kubernetes"
+                                     :section => 'labels',
+                                     :name    => 'department',
+                                     :value   => 'Warp-drive',
+                                     :source  => 'kubernetes'
                                    }
                                  ])
     end
   end
 
-  describe "parse_image_name" do
-    example_ref = "docker://abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    example_images = [{:image_name => "example",
-                       :image      => {:name => "example", :tag => nil, :digest => nil,
+  describe 'parse_image_name' do
+    example_ref = 'docker://abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    example_images = [{:image_name => 'example',
+                       :image      => {:name => 'example', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
                        :registry   => nil},
 
-                      {:image_name => "example:tag",
-                       :image      => {:name => "example", :tag => "tag", :digest => nil,
+                      {:image_name => 'example:tag',
+                       :image      => {:name => 'example', :tag => 'tag', :digest => nil,
                                        :image_ref => example_ref},
                        :registry   => nil},
 
-                      {:image_name => "user/example",
-                       :image      => {:name => "user/example", :tag => nil, :digest => nil,
+                      {:image_name => 'user/example',
+                       :image      => {:name => 'user/example', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
                        :registry   => nil},
 
-                      {:image_name => "user/example:tag",
-                       :image      => {:name => "user/example", :tag => "tag", :digest => nil,
+                      {:image_name => 'user/example:tag',
+                       :image      => {:name => 'user/example', :tag => 'tag', :digest => nil,
                                        :image_ref => example_ref},
                        :registry   => nil},
 
-                      {:image_name => "example/subname/example",
-                       :image      => {:name => "example/subname/example", :tag => nil, :digest => nil,
+                      {:image_name => 'example/subname/example',
+                       :image      => {:name => 'example/subname/example', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
                        :registry   => nil},
 
-                      {:image_name => "example/subname/example:tag",
-                       :image      => {:name => "example/subname/example", :tag => "tag", :digest => nil,
+                      {:image_name => 'example/subname/example:tag',
+                       :image      => {:name => 'example/subname/example', :tag => 'tag', :digest => nil,
                                        :image_ref => example_ref},
                        :registry   => nil},
 
-                      {:image_name => "host:1234/subname/example",
-                       :image      => {:name => "subname/example", :tag => nil, :digest => nil,
+                      {:image_name => 'host:1234/subname/example',
+                       :image      => {:name => 'subname/example', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "host", :host => "host", :port => "1234"}},
+                       :registry   => {:name => 'host', :host => 'host', :port => '1234'}},
 
-                      {:image_name => "host:1234/subname/example:tag",
-                       :image      => {:name => "subname/example", :tag => "tag", :digest => nil,
+                      {:image_name => 'host:1234/subname/example:tag',
+                       :image      => {:name => 'subname/example', :tag => 'tag', :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "host", :host => "host", :port => "1234"}},
+                       :registry   => {:name => 'host', :host => 'host', :port => '1234'}},
 
-                      {:image_name => "host.com:1234/subname/example",
-                       :image      => {:name => "subname/example", :tag => nil, :digest => nil,
+                      {:image_name => 'host.com:1234/subname/example',
+                       :image      => {:name => 'subname/example', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "host.com", :host => "host.com", :port => "1234"}},
+                       :registry   => {:name => 'host.com', :host => 'host.com', :port => '1234'}},
 
-                      {:image_name => "host.com:1234/subname/example:tag",
-                       :image      => {:name => "subname/example", :tag => "tag", :digest => nil,
+                      {:image_name => 'host.com:1234/subname/example:tag',
+                       :image      => {:name => 'subname/example', :tag => 'tag', :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "host.com", :host => "host.com", :port => "1234"}},
+                       :registry   => {:name => 'host.com', :host => 'host.com', :port => '1234'}},
 
-                      {:image_name => "host.com/subname/example",
-                       :image      => {:name => "subname/example", :tag => nil, :digest => nil,
+                      {:image_name => 'host.com/subname/example',
+                       :image      => {:name => 'subname/example', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "host.com", :host => "host.com", :port => nil}},
+                       :registry   => {:name => 'host.com', :host => 'host.com', :port => nil}},
 
-                      {:image_name => "host.com/example",
-                       :image      => {:name => "example", :tag => nil, :digest => nil,
+                      {:image_name => 'host.com/example',
+                       :image      => {:name => 'example', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "host.com", :host => "host.com", :port => nil}},
+                       :registry   => {:name => 'host.com', :host => 'host.com', :port => nil}},
 
-                      {:image_name => "host.com:1234/subname/more/names/example:tag",
-                       :image      => {:name => "subname/more/names/example", :tag => "tag", :digest => nil,
+                      {:image_name => 'host.com:1234/subname/more/names/example:tag',
+                       :image      => {:name => 'subname/more/names/example', :tag => 'tag', :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "host.com", :host => "host.com", :port => "1234"}},
+                       :registry   => {:name => 'host.com', :host => 'host.com', :port => '1234'}},
 
-                      {:image_name => "localhost:1234/name",
-                       :image      => {:name => "name", :tag => nil, :digest => nil,
+                      {:image_name => 'localhost:1234/name',
+                       :image      => {:name => 'name', :tag => nil, :digest => nil,
                                        :image_ref => example_ref},
-                       :registry   => {:name => "localhost", :host => "localhost", :port => "1234"}},
+                       :registry   => {:name => 'localhost', :host => 'localhost', :port => '1234'}},
 
-                      {:image_name => "localhost:1234/name@sha256:1234567abcdefg",
-                       :image      => {:name => "name", :tag => nil, :digest => "sha256:1234567abcdefg",
+                      {:image_name => 'localhost:1234/name@sha256:1234567abcdefg',
+                       :image      => {:name => 'name', :tag => nil, :digest => 'sha256:1234567abcdefg',
                                        :image_ref => example_ref},
-                       :registry   => {:name => "localhost", :host => "localhost", :port => "1234"}},
+                       :registry   => {:name => 'localhost', :host => 'localhost', :port => '1234'}},
 
-                      {:image_name => "example@sha256:1234567abcdefg",
-                       :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
+                      {:image_name => 'example@sha256:1234567abcdefg',
+                       :image      => {:name => 'example', :tag => nil, :digest => 'sha256:1234567abcdefg',
                                        :image_ref => example_ref},
                        :registry   => nil}]
 
@@ -127,13 +127,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_volumes" do
+  describe 'parse_volumes' do
     example_volumes = [
       {
-        :volume                => RecursiveOpenStruct.new(:name    => "example-volume1",
-                                                          :gitRepo => {:repository => "default-git-repository"}),
-        :name                  => "example-volume1",
-        :git_repository        => "default-git-repository",
+        :volume                => RecursiveOpenStruct.new(:name    => 'example-volume1',
+                                                          :gitRepo => {:repository => 'default-git-repository'}),
+        :name                  => 'example-volume1',
+        :git_repository        => 'default-git-repository',
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
         :common_fs_type        => nil,
@@ -144,11 +144,11 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name     => "example-volume2",
-                                                          :emptyDir => {:medium => "default-medium"}),
-        :name                  => "example-volume2",
+        :volume                => RecursiveOpenStruct.new(:name     => 'example-volume2',
+                                                          :emptyDir => {:medium => 'default-medium'}),
+        :name                  => 'example-volume2',
         :git_repository        => nil,
-        :empty_dir_medium_type => "default-medium",
+        :empty_dir_medium_type => 'default-medium',
         :gce_pd_name           => nil,
         :common_fs_type        => nil,
         :common_path           => nil,
@@ -158,14 +158,14 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name              => "example-volume3",
-                                                          :gcePersistentDisk => {:pdName => "example-pd-name",
-                                                                                 :fsType => "default-fs-type"}),
-        :name                  => "example-volume3",
+        :volume                => RecursiveOpenStruct.new(:name              => 'example-volume3',
+                                                          :gcePersistentDisk => {:pdName => 'example-pd-name',
+                                                                                 :fsType => 'default-fs-type'}),
+        :name                  => 'example-volume3',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
-        :gce_pd_name           => "example-pd-name",
-        :common_fs_type        => "default-fs-type",
+        :gce_pd_name           => 'example-pd-name',
+        :common_fs_type        => 'default-fs-type',
         :common_path           => nil,
         :common_read_only      => nil,
         :common_secret         => nil,
@@ -173,13 +173,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name                 => "example-volume4",
-                                                          :awsElasticBlockStore => {:fsType => "example-fs-type"}),
-        :name                  => "example-volume4",
+        :volume                => RecursiveOpenStruct.new(:name                 => 'example-volume4',
+                                                          :awsElasticBlockStore => {:fsType => 'example-fs-type'}),
+        :name                  => 'example-volume4',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
-        :common_fs_type        => "example-fs-type",
+        :common_fs_type        => 'example-fs-type',
         :common_path           => nil,
         :common_read_only      => nil,
         :common_secret         => nil,
@@ -187,43 +187,43 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name => "example-volume5",
-                                                          :nfs  => {:path     => "example-path",
+        :volume                => RecursiveOpenStruct.new(:name => 'example-volume5',
+                                                          :nfs  => {:path     => 'example-path',
                                                                     :readOnly => true}),
-        :name                  => "example-volume5",
+        :name                  => 'example-volume5',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
         :common_fs_type        => nil,
-        :common_path           => "example-path",
+        :common_path           => 'example-path',
         :common_read_only      => true,
         :common_secret         => nil,
         :common_volume_id      => nil,
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name     => "example-volume6",
-                                                          :hostPath => {:path => "default-path"}),
-        :name                  => "example-volume6",
+        :volume                => RecursiveOpenStruct.new(:name     => 'example-volume6',
+                                                          :hostPath => {:path => 'default-path'}),
+        :name                  => 'example-volume6',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
         :common_fs_type        => nil,
-        :common_path           => "default-path",
+        :common_path           => 'default-path',
         :common_read_only      => nil,
         :common_secret         => nil,
         :common_volume_id      => nil,
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name => "example-volume7",
-                                                          :rbd  => {:fsType   => "user-fs-type",
+        :volume                => RecursiveOpenStruct.new(:name => 'example-volume7',
+                                                          :rbd  => {:fsType   => 'user-fs-type',
                                                                     :readOnly => false}),
-        :name                  => "example-volume7",
+        :name                  => 'example-volume7',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
-        :common_fs_type        => "user-fs-type",
+        :common_fs_type        => 'user-fs-type',
         :common_path           => nil,
         :common_read_only      => false,
         :common_secret         => nil,
@@ -231,23 +231,23 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name   => "example-volume8",
-                                                          :secret => {:secretName => "example-secret"}),
-        :name                  => "example-volume8",
+        :volume                => RecursiveOpenStruct.new(:name   => 'example-volume8',
+                                                          :secret => {:secretName => 'example-secret'}),
+        :name                  => 'example-volume8',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
         :common_fs_type        => nil,
         :common_path           => nil,
         :common_read_only      => nil,
-        :common_secret         => "example-secret",
+        :common_secret         => 'example-secret',
         :common_volume_id      => nil,
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name   => "example-volume9",
-                                                          :cinder => {:volumeId => "example-id"}),
-        :name                  => "example-volume9",
+        :volume                => RecursiveOpenStruct.new(:name   => 'example-volume9',
+                                                          :cinder => {:volumeId => 'example-id'}),
+        :name                  => 'example-volume9',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
@@ -255,13 +255,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :common_path           => nil,
         :common_read_only      => nil,
         :common_secret         => nil,
-        :common_volume_id      => "example-id",
+        :common_volume_id      => 'example-id',
         :common_partition      => nil
       },
       {
-        :volume                => RecursiveOpenStruct.new(:name              => "example-volume10",
-                                                          :gcePersistentDisk => {:partition => "default-partition"}),
-        :name                  => "example-volume10",
+        :volume                => RecursiveOpenStruct.new(:name              => 'example-volume10',
+                                                          :gcePersistentDisk => {:partition => 'default-partition'}),
+        :name                  => 'example-volume10',
         :git_repository        => nil,
         :empty_dir_medium_type => nil,
         :gce_pd_name           => nil,
@@ -270,7 +270,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :common_read_only      => nil,
         :common_secret         => nil,
         :common_volume_id      => nil,
-        :common_partition      => "default-partition"
+        :common_partition      => 'default-partition'
       }
     ]
 
@@ -287,7 +287,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       }
     )
 
-    it "tests example volumes" do
+    it 'tests example volumes' do
       parsed_volumes = parser.send(:parse_volumes, pod)
 
       example_volumes.zip(parsed_volumes).each do |example, parsed|
@@ -307,39 +307,39 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_component_statuses" do
+  describe 'parse_component_statuses' do
     example_component_statuses = [
       {
         :component_status => RecursiveOpenStruct.new(
-          :metadata   => {:name => "example-component-status1"},
+          :metadata   => {:name => 'example-component-status1'},
           :conditions => [
             RecursiveOpenStruct.new(
-              :type    => "Healthy",
-              :status  => "True",
+              :type    => 'Healthy',
+              :status  => 'True',
               :message => "{'health': 'true'}"
             )
           ]),
-        :name             => "example-component-status1",
-        :condition        => "Healthy",
-        :status           => "True",
+        :name             => 'example-component-status1',
+        :condition        => 'Healthy',
+        :status           => 'True',
         :message          => "{'health': 'true'}",
         :error            => nil
       },
       {
         :component_status => RecursiveOpenStruct.new(
-          :metadata   => {:name => "example-component-status2"},
+          :metadata   => {:name => 'example-component-status2'},
           :conditions => [
             RecursiveOpenStruct.new(
-              :type   => "Healthy",
-              :status => "Unknown",
-              :error  => "Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"
+              :type   => 'Healthy',
+              :status => 'Unknown',
+              :error  => 'Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused'
             )
           ]),
-        :name             => "example-component-status2",
-        :condition        => "Healthy",
-        :status           => "Unknown",
+        :name             => 'example-component-status2',
+        :condition        => 'Healthy',
+        :status           => 'Unknown',
         :message          => nil,
-        :error            => "Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused"
+        :error            => 'Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connection refused'
       }
     ]
 
@@ -358,38 +358,38 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_iec_number" do
-    it "converts IEC bytes size to integer value" do
+  describe 'parse_iec_number' do
+    it 'converts IEC bytes size to integer value' do
       [
-        ["0",    0],
-        ["1",    1],
-        ["10",   10],
-        ["1Ki",  1_024],
-        ["7Ki",  7_168],
-        ["10Ki", 10_240],
-        ["1Mi",  1_048_576],
-        ["3Mi",  3_145_728],
-        ["10Mi", 10_485_760],
-        ["1Gi",  1_073_741_824],
-        ["1Ti",  1_099_511_627_776]
+        ['0',    0],
+        ['1',    1],
+        ['10',   10],
+        ['1Ki',  1_024],
+        ['7Ki',  7_168],
+        ['10Ki', 10_240],
+        ['1Mi',  1_048_576],
+        ['3Mi',  3_145_728],
+        ['10Mi', 10_485_760],
+        ['1Gi',  1_073_741_824],
+        ['1Ti',  1_099_511_627_776]
       ].each do |iec, bytes|
         expect(iec.to_iec_integer).to eq(bytes)
       end
     end
 
-    it "parse capacity hash correctly" do
-      hash = {:storage => "10Gi", :foo => "10"}
+    it 'parse capacity hash correctly' do
+      hash = {:storage => '10Gi', :foo => '10'}
       expect(parser.send(:parse_resource_list, hash)).to eq({:storage => 10.gigabytes, :foo => 10})
     end
 
-    it "parse capacity hash with bad value correctly" do
-      hash = {:storage => "10Gi", :foo => "10wrong"}
+    it 'parse capacity hash with bad value correctly' do
+      hash = {:storage => '10Gi', :foo => '10wrong'}
       expect(parser.send(:parse_resource_list, hash)).to eq({:storage => 10.gigabytes})
     end
   end
 
-  describe "quota parsing" do
-    it "handles simple data" do
+  describe 'quota parsing' do
+    it 'handles simple data' do
       expect(parser.send(
         :parse_quota,
         RecursiveOpenStruct.new(
@@ -421,16 +421,16 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                :project               => nil,
                :container_quota_items => [
                  {
-                   :resource       => "cpu",
-                   :quota_desired  => "30",
-                   :quota_enforced => "30",
-                   :quota_observed => "100m"
+                   :resource       => 'cpu',
+                   :quota_desired  => '30',
+                   :quota_enforced => '30',
+                   :quota_observed => '100m'
                  }
                ]
               )
     end
 
-    it "handles quotas with no specification" do
+    it 'handles quotas with no specification' do
       expect(parser.send(:parse_quota,
                          RecursiveOpenStruct.new(
                            :metadata => {
@@ -450,7 +450,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                :container_quota_items => [])
     end
 
-    it "handles quotas with no status" do
+    it 'handles quotas with no status' do
       expect(parser.send(:parse_quota,
                          RecursiveOpenStruct.new(
                            :metadata => {
@@ -471,8 +471,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                :project               => nil,
                :container_quota_items => [
                  {
-                   :resource       => "cpu",
-                   :quota_desired  => "30",
+                   :resource       => 'cpu',
+                   :quota_desired  => '30',
                    :quota_enforced => nil,
                    :quota_observed => nil
                  }
@@ -480,8 +480,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "limit range parsing" do
-    it "handles all limit types" do
+  describe 'limit range parsing' do
+    it 'handles all limit types' do
       from_k8s = {
         :metadata => {
           :name              => 'test-range',
@@ -506,8 +506,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :project               => nil,
         :container_limit_items => [
           {
-            :item_type               => "Container",
-            :resource                => "cpu",
+            :item_type               => 'Container',
+            :resource                => 'cpu',
             :max                     => nil,
             :min                     => nil,
             :default                 => nil,
@@ -524,7 +524,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       end
     end
 
-    it "handles missing limits specification" do
+    it 'handles missing limits specification' do
       metadata = {
         :name              => 'test-range',
         :namespace         => 'test-namespace',
@@ -554,13 +554,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_container_image" do
-    shared_image_without_host = "shared/image"
-    shared_image_with_host = "host:1234/shared/image"
-    shared_ref = "shared:ref"
-    unique_ref = "unique:ref"
+  describe 'parse_container_image' do
+    shared_image_without_host = 'shared/image'
+    shared_image_with_host = 'host:1234/shared/image'
+    shared_ref = 'shared:ref'
+    unique_ref = 'unique:ref'
 
-    it "returns unique object *identity* for same image but different ref/id" do
+    it 'returns unique object *identity* for same image but different ref/id' do
       [shared_image_with_host, shared_image_without_host].each do |shared_image|
         first_obj  = parser.parse_container_image(shared_image, shared_ref)
         second_obj = parser.parse_container_image(shared_image, unique_ref)
@@ -569,7 +569,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       end
     end
 
-    it "returns unique object *content* for same image but different ref/id" do
+    it 'returns unique object *content* for same image but different ref/id' do
       [shared_image_with_host, shared_image_without_host].each do |shared_image|
         first_obj  = parser.parse_container_image(shared_image, shared_ref)
         second_obj = parser.parse_container_image(shared_image, unique_ref)
@@ -578,7 +578,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       end
     end
 
-    it "returns same object *identity* for same image and ref/id" do
+    it 'returns same object *identity* for same image and ref/id' do
       [shared_image_with_host, shared_image_without_host].each do |shared_image|
         first_obj  = parser.parse_container_image(shared_image, shared_ref)
         second_obj = parser.parse_container_image(shared_image, shared_ref)
@@ -588,11 +588,11 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "cross_link_node" do
-    context "expected failures" do
+  describe 'cross_link_node' do
+    context 'expected failures' do
       before :each do
         @node = OpenStruct.new(
-          :identity_system => "f0c1fe7e-9c09-11e5-bb22-28d2447dcefe",
+          :identity_system => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
         )
       end
 
@@ -602,21 +602,21 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         expect(@node[:lives_on_type]).to eq(nil)
       end
 
-      it "fails when provider type is wrong" do
-        @node[:identity_infra] = "aws://aws_project/europe-west1/instance_id/"
+      it 'fails when provider type is wrong' do
+        @node[:identity_infra] = 'aws://aws_project/europe-west1/instance_id/'
         @ems = FactoryGirl.create(:ems_google,
-                                  :provider_region => "europe-west1",
-                                  :project         => "aws_project")
+                                  :provider_region => 'europe-west1',
+                                  :project         => 'aws_project')
         @vm = FactoryGirl.create(:vm_google,
                                  :ext_management_system => @ems,
-                                 :name                  => "instance_id")
+                                 :name                  => 'instance_id')
       end
     end
 
-    context "succesful attempts" do
+    context 'succesful attempts' do
       before :each do
         @node = OpenStruct.new(
-          :identity_system => "f0c1fe7e-9c09-11e5-bb22-28d2447dcefe",
+          :identity_system => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
         )
       end
 
@@ -626,46 +626,46 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         expect(@node[:lives_on_type]).to eq(@vm.type)
       end
 
-      it "cross links google" do
-        @node[:identity_infra] = "gce://gce_project/europe-west1/instance_id/"
+      it 'cross links google' do
+        @node[:identity_infra] = 'gce://gce_project/europe-west1/instance_id/'
         @ems = FactoryGirl.create(:ems_google,
-                                  :provider_region => "europe-west1",
-                                  :project         => "gce_project")
+                                  :provider_region => 'europe-west1',
+                                  :project         => 'gce_project')
         @vm = FactoryGirl.create(:vm_google,
                                  :ext_management_system => @ems,
-                                 :name                  => "instance_id")
+                                 :name                  => 'instance_id')
       end
 
-      it "cross links amazon" do
-        @node[:identity_infra] = "aws:///us-west-1/aws-id"
+      it 'cross links amazon' do
+        @node[:identity_infra] = 'aws:///us-west-1/aws-id'
         @ems = FactoryGirl.create(:ems_amazon,
-                                  :provider_region => "us-west-1")
+                                  :provider_region => 'us-west-1')
         @vm = FactoryGirl.create(:vm_amazon,
-                                 :uid_ems               => "aws-id",
+                                 :uid_ems               => 'aws-id',
                                  :ext_management_system => @ems)
       end
 
       it 'cross links with missing data in ProviderID' do
-        @node[:identity_infra] = "gce:////instance_id/"
+        @node[:identity_infra] = 'gce:////instance_id/'
         @ems = FactoryGirl.create(:ems_google,
-                                  :provider_region => "europe-west1",
-                                  :project         => "gce_project")
+                                  :provider_region => 'europe-west1',
+                                  :project         => 'gce_project')
         @vm = FactoryGirl.create(:vm_google,
                                  :ext_management_system => @ems,
-                                 :name                  => "instance_id")
+                                 :name                  => 'instance_id')
       end
 
       it 'cross links with malformed provider id' do
-        @node[:identity_infra] = "gce://instance_id"
+        @node[:identity_infra] = 'gce://instance_id'
         @ems = FactoryGirl.create(:ems_google,
-                                  :provider_region => "europe-west1",
-                                  :project         => "gce_project")
+                                  :provider_region => 'europe-west1',
+                                  :project         => 'gce_project')
         @vm = FactoryGirl.create(:vm_google,
                                  :ext_management_system => @ems,
-                                 :name                  => "instance_id")
+                                 :name                  => 'instance_id')
       end
 
-      it "cross links by uuid" do
+      it 'cross links by uuid' do
         @node[:identity_infra] = nil
         @ems = FactoryGirl.create(:ems_openstack)
         @vm = FactoryGirl.create(:vm_openstack,
@@ -675,8 +675,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_node" do
-    it "handles node without capacity" do
+  describe 'parse_node' do
+    it 'handles node without capacity' do
       expect(parser.send(
         :parse_node,
         RecursiveOpenStruct.new(
@@ -727,7 +727,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       })
     end
 
-    it "handles node without providerID, memory, cpu and pods" do
+    it 'handles node without providerID, memory, cpu and pods' do
       expect(parser.send(
         :parse_node,
         RecursiveOpenStruct.new(
@@ -779,7 +779,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       })
     end
 
-    it "handles node without nodeInfo" do
+    it 'handles node without nodeInfo' do
       expect(parser.send(
         :parse_node,
         RecursiveOpenStruct.new(
@@ -824,8 +824,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_persistent_volume" do
-    it "tests parent type" do
+  describe 'parse_persistent_volume' do
+    it 'tests parent type' do
       expect(parser.send(
         :parse_persistent_volume,
         RecursiveOpenStruct.new(
@@ -889,8 +889,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
-  describe "parse_persistent_volume_claim" do
-    it "tests pending persistent volume claim" do
+  describe 'parse_persistent_volume_claim' do
+    it 'tests pending persistent volume claim' do
       expect(parser.send(
         :parse_persistent_volume_claim,
         RecursiveOpenStruct.new(
@@ -926,7 +926,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         })
     end
 
-    it "tests bounded persistent volume claim" do
+    it 'tests bounded persistent volume claim' do
       expect(parser.send(
         :parse_persistent_volume_claim,
         RecursiveOpenStruct.new(

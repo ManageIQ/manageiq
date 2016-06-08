@@ -30,7 +30,7 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
   def prune_non_vandt_folders(tree, parent = nil)
     tree.reject! do |object, children|
       prune_non_vandt_folders(children, object)
-      parent.kind_of?(Datacenter) && object.kind_of?(EmsFolder) && object.name != "vm"
+      parent.kind_of?(Datacenter) && object.kind_of?(EmsFolder) && object.name != 'vm'
     end
   end
 

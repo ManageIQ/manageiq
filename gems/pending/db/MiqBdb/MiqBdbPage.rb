@@ -27,19 +27,19 @@ module MiqBerkeleyDB
 
     def self.type2string(t)
       case t
-      when P_INVALID then   "invalid"
-      when P_DUPLICATE then "duplicate (deprecated)"
-      when P_HASH then      "hash"
-      when P_IBTREE then    "btree internal"
-      when P_IRECNO then    "recno internal"
-      when P_LBTREE then    "btree leaf"
-      when P_LRECNO then    "recno leaf"
-      when P_OVERFLOW then  "overflow"
-      when P_HASHMETA then  "hash metadata"
-      when P_BTREEMETA then "btree metadata"
-      when P_QAMMETA then   "queue metadata"
-      when P_QAMDATA then   "queue data"
-      when P_LDUP then      "offpage duplicate leaf"
+      when P_INVALID then   'invalid'
+      when P_DUPLICATE then 'duplicate (deprecated)'
+      when P_HASH then      'hash'
+      when P_IBTREE then    'btree internal'
+      when P_IRECNO then    'recno internal'
+      when P_LBTREE then    'btree leaf'
+      when P_LRECNO then    'recno leaf'
+      when P_OVERFLOW then  'overflow'
+      when P_HASHMETA then  'hash metadata'
+      when P_BTREEMETA then 'btree metadata'
+      when P_QAMMETA then   'queue metadata'
+      when P_QAMDATA then   'queue data'
+      when P_LDUP then      'offpage duplicate leaf'
       else                  "unknown value of #{t}"
       end
     end
@@ -80,7 +80,7 @@ module MiqBerkeleyDB
     end
 
     def initialize(buf, db)
-      raise "Nil buffer." if buf.nil?
+      raise 'Nil buffer.' if buf.nil?
       @db         = db
       @buf        = buf
       @pagesize   = buf.size
@@ -130,7 +130,7 @@ module MiqBerkeleyDB
 
     # Dump page statistics like db_dump.
     def dump
-      out  = ""
+      out  = ''
       out << "Page #{current}\n"
       out << "  type:            #{MiqBdbPage.type2string(ptype)}\n"
       out << "  prev:            #{prev}\n"
@@ -146,12 +146,12 @@ module MiqBerkeleyDB
         out << "  offset:          #{offset}\n"
       end
       out << "  data size:       #{@data.size}\n"
-      out << "  data:            "
+      out << '  data:            '
 
       @data.bytes.take(20).each do |c|
-        out << sprintf("%.2x ", c)
+        out << sprintf('%.2x ', c)
       end
-      out << "..." if @data.size > 20
+      out << '...' if @data.size > 20
 
       out << "\n\n"
       out

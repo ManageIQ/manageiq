@@ -7,7 +7,7 @@ class ScanProfileBase
 
   include Enumerable
 
-  DEFINITION = "definition"
+  DEFINITION = 'definition'
 
   attr_accessor :scan_items
 
@@ -31,16 +31,16 @@ class ScanProfileBase
   end
 
   def to_xml
-    xml = @xml_class.newNode("scan_profile")
-    xml.add_attributes("guid" => @params["guid"], "name" => @params["name"])
+    xml = @xml_class.newNode('scan_profile')
+    xml.add_attributes('guid' => @params['guid'], 'name' => @params['name'])
     each { |si| xml << si.to_xml }
     xml
   end
 
   def to_hash
     {
-      :guid       => @params["guid"],
-      :name       => @params["name"],
+      :guid       => @params['guid'],
+      :name       => @params['name'],
       :scan_items => collect(&:to_hash)
     }
   end

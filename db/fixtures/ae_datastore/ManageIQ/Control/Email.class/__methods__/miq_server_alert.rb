@@ -20,11 +20,11 @@ def buildDetails(miq_server)
   options[:subject] = subject
 
   # Build Email Body
-  body = "Attention,"
+  body = 'Attention,'
   body += "<br>EVM Appliance: #{$evm.root['miq_server'].hostname}"
   body += "<br>EVM Region: #{$evm.root['miq_server'].region_number}"
   body += "<br>Alert: #{options[:alert]}"
-  body += "<br><br>"
+  body += '<br><br>'
 
   body += "<br>EVM Server <b>#{miq_server.name}</b> Properties:"
   body += "<br>EVM Server URL: <a href='https://#{miq_server.ipaddress}'>https://#{miq_server.ipaddress}</a>"
@@ -39,18 +39,18 @@ def buildDetails(miq_server)
   body += "<br>Version: #{miq_server.version}"
   body += "<br>Zone: #{miq_server.zone}"
   body += "<br>Id: #{miq_server.id}"
-  body += "<br><br>"
+  body += '<br><br>'
 
-  body += "<br>Details:"
+  body += '<br>Details:'
   body += "<br>Memory Percentage: #{miq_server.percent_memory}"
   body += "<br>Memory Usage: #{miq_server.memory_usage}"
   body += "<br>Memory Size: #{miq_server.memory_size}"
   body += "<br>CPU Percent: #{miq_server.percent_cpu}"
   body += "<br>CPU Time: #{miq_server.cpu_time}"
   body += "<br>Capabilities: #{miq_server.capabilities.inspect}"
-  body += "<br><br>"
+  body += '<br><br>'
 
-  body += "<br>Regards,"
+  body += '<br>Regards,'
   body += "<br>#{signature}"
   options[:body] = body
 
@@ -79,13 +79,13 @@ def emailAlert(options)
   # Get body from options Hash
   body = options[:body]
 
-  $evm.log("info", "Sending email To:<#{to}> From:<#{from}> subject:<#{subject}>")
+  $evm.log('info', "Sending email To:<#{to}> From:<#{from}> subject:<#{subject}>")
   $evm.execute(:send_email, to, from, subject, body)
 end
 
 miq_server = $evm.root['miq_server']
 unless miq_server.nil?
-  $evm.log("info", "Detected EVM Server:<#{miq_server.name}>")
+  $evm.log('info', "Detected EVM Server:<#{miq_server.name}>")
 
   # If email is set to true in the model
   options = buildDetails(miq_server)

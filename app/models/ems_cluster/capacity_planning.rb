@@ -58,9 +58,9 @@ module EmsCluster::CapacityPlanning
     return value unless value.nil?
 
     algorithm = capacity_profile_settings(profile)[:"#{resource}_method"].to_s
-    algorithm_resource, _, algorithm_method = algorithm.partition("_")
-    algorithm_resource = "vcpu"   if algorithm_resource == "cpu"
-    algorithm_resource = "memory" if algorithm_resource == "mem"
+    algorithm_resource, _, algorithm_method = algorithm.partition('_')
+    algorithm_resource = 'vcpu'   if algorithm_resource == 'cpu'
+    algorithm_resource = 'memory' if algorithm_resource == 'mem'
     raise "Invalid #{resource}_method specified: #{algorithm.inspect}" if algorithm_resource.blank? || algorithm_method.blank? || algorithm_resource.to_sym != resource || !CAPACITY_ALGORITHMS.include?(algorithm_method.to_sym)
 
     @capacity_profile_method.store_path(profile, resource, :"#{algorithm_resource}_#{algorithm_method}")

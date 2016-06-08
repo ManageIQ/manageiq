@@ -26,14 +26,14 @@ class ApplicationHelper::Toolbar::OntapLogicalDiskCenter < ApplicationHelper::To
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Logical Disk'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          :url       => '/show',
+          :url_parms => '?display=performance'),
         button(
           :ontap_logical_disk_statistics,
           'product product-monitoring fa-lg',
           N_('Show Utilization Statistics for this Logical Disk'),
           N_('Statistics'),
-          :url => "/show_statistics"),
+          :url => '/show_statistics'),
       ]
     ),
   ])

@@ -1,8 +1,8 @@
 describe MiqPolicyController do
-  context "::Alerts" do
+  context '::Alerts' do
     describe '#alert_delete' do
       before do
-        login_as FactoryGirl.create(:user, :features => "alert_delete")
+        login_as FactoryGirl.create(:user, :features => 'alert_delete')
       end
 
       let(:alert) { FactoryGirl.create(:miq_alert, :read_only => readonly) }
@@ -22,9 +22,9 @@ describe MiqPolicyController do
       end
     end
 
-    context "#alert_build_edit_screen" do
+    context '#alert_build_edit_screen' do
       before do
-        login_as FactoryGirl.create(:user, :features => "alert_admin")
+        login_as FactoryGirl.create(:user, :features => 'alert_admin')
       end
 
       before :each do
@@ -35,13 +35,13 @@ describe MiqPolicyController do
         )
       end
 
-      it "it should skip id when copying all attributes of an existing alert" do
-        controller.instance_variable_set(:@_params, :id => @miq_alert.id, :copy => "copy")
+      it 'it should skip id when copying all attributes of an existing alert' do
+        controller.instance_variable_set(:@_params, :id => @miq_alert.id, :copy => 'copy')
         controller.send(:alert_build_edit_screen)
         expect(assigns(:alert).id).to eq(nil)
       end
 
-      it "it should select correct record when editing an existing alert" do
+      it 'it should select correct record when editing an existing alert' do
         controller.instance_variable_set(:@_params, :id => @miq_alert.id)
         controller.send(:alert_build_edit_screen)
         expect(assigns(:alert).id).to eq(@miq_alert.id)

@@ -4,29 +4,29 @@ describe YAMLImportExportMixin do
       include YAMLImportExportMixin
     end
 
-    @report1 = FactoryGirl.create(:miq_report, :name => "test_report_1")
+    @report1 = FactoryGirl.create(:miq_report, :name => 'test_report_1')
   end
 
   after do
-    Object.send(:remove_const, "TestClass")
+    Object.send(:remove_const, 'TestClass')
   end
 
-  context ".export_to_array" do
+  context '.export_to_array' do
     before  { @klass = MiqReport }
     subject { TestClass.export_to_array(@list, @klass) }
 
-    it "invalid class" do
-      @list, @klass = [12345], "xxx"
+    it 'invalid class' do
+      @list, @klass = [12345], 'xxx'
       expect(subject).to eq([])
     end
 
-    it "invalid instance" do
+    it 'invalid instance' do
       @list = [12345]
       expect(subject).to eq([])
     end
 
-    it "single valid instance" do
-      policy = FactoryGirl.create(:miq_policy, :name => "test_policy")
+    it 'single valid instance' do
+      policy = FactoryGirl.create(:miq_policy, :name => 'test_policy')
       @list = [@report1.id, policy.id]
 
       expect_any_instance_of(MiqPolicy).to receive(:export_to_array).never
@@ -34,32 +34,32 @@ describe YAMLImportExportMixin do
       subject
     end
 
-    it "multiple valid instances" do
-      @report2 = FactoryGirl.create(:miq_report, :name => "test_report_2")
+    it 'multiple valid instances' do
+      @report2 = FactoryGirl.create(:miq_report, :name => 'test_report_2')
       @list = [@report1.id, @report2.id]
 
       expect(subject.size).to eq(2)
     end
   end
 
-  it ".export_to_yaml" do
+  it '.export_to_yaml' do
     expect(TestClass).to receive(:export_to_array).once.with([@report1.id], MiqReport)
     TestClass.export_to_yaml([@report1.id], MiqReport)
   end
 
-  context ".import" do
+  context '.import' do
     subject { TestClass }
 
-    it "valid YAML file" do
+    it 'valid YAML file' do
       @fd = StringIO.new("---\na:")
       # if it gets to import_from_array, then it did not choke on yml
       expect(subject).to receive(:import_from_array)
       subject.import(@fd)
     end
 
-    it "invalid YAML file" do
+    it 'invalid YAML file' do
       @fd = StringIO.new("---\na:\nb")
-      expect { subject.import(@fd) }.to raise_error("Invalid YAML file")
+      expect { subject.import(@fd) }.to raise_error('Invalid YAML file')
     end
   end
 end

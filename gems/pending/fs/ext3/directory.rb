@@ -6,8 +6,8 @@ module Ext3
     ROOT_DIRECTORY = 2
 
     def initialize(sb, inodeNum = ROOT_DIRECTORY)
-      raise "Ext3::Directory.initialize: Nil superblock"   if sb.nil?
-      raise "Ext3::Directory.initialize: Nil inode number" if inodeNum.nil?
+      raise 'Ext3::Directory.initialize: Nil superblock'   if sb.nil?
+      raise 'Ext3::Directory.initialize: Nil inode number' if inodeNum.nil?
       @sb = sb; @inodeNum = inodeNum
       @inodeObj = sb.getInode(inodeNum)
       @data = FileData.new(@inodeObj, @sb).read
@@ -40,7 +40,7 @@ module Ext3
         break if p > @data.length - 4
         break if @data[p, 4].nil?
         de = DirectoryEntry.new(@data[p..-1], newEnt)
-        raise "Ext3::Directory.globEntries: DirectoryEntry length cannot be 0" if de.len == 0
+        raise 'Ext3::Directory.globEntries: DirectoryEntry length cannot be 0' if de.len == 0
         @ents_by_name[de.name] ||= []
         @ents_by_name[de.name] << de
         p += de.len

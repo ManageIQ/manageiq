@@ -6,7 +6,7 @@ describe RemoveConfigurationsFromReplicationExcludes do
   let(:server_two)           { FactoryGirl.create(:miq_server) }
 
   migration_context :up do
-    it "removes configurations from the replication excludes" do
+    it 'removes configurations from the replication excludes' do
       server_one.settings_changes
                 .create!(:key   => described_class::EXCLUDES_KEY,
                          :value => %w(configurations schema_migrations))
@@ -17,12 +17,12 @@ describe RemoveConfigurationsFromReplicationExcludes do
       migrate
 
       changes = settings_change_stub.where(:key => described_class::EXCLUDES_KEY)
-      changes.each { |c| expect(c.value).not_to include("configurations") }
+      changes.each { |c| expect(c.value).not_to include('configurations') }
     end
   end
 
   migration_context :down do
-    it "adds configurations to the replication excludes" do
+    it 'adds configurations to the replication excludes' do
       server_one.settings_changes
                 .create!(:key   => described_class::EXCLUDES_KEY,
                          :value => %w(schema_migrations))
@@ -33,7 +33,7 @@ describe RemoveConfigurationsFromReplicationExcludes do
       migrate
 
       changes = settings_change_stub.where(:key => described_class::EXCLUDES_KEY)
-      changes.each { |c| expect(c.value).to include("configurations") }
+      changes.each { |c| expect(c.value).to include('configurations') }
     end
   end
 end

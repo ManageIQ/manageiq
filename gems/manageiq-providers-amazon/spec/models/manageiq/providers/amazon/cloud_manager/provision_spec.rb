@@ -8,20 +8,20 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
     subject.source = template
   end
 
-  context "Cloning" do
-    describe "#find_destination_in_vmdb" do
-      it "finds VM in same sub-class" do
-        vm = FactoryGirl.create(:vm_amazon, :ext_management_system => provider, :ems_ref => "vm_1")
-        expect(subject.find_destination_in_vmdb("vm_1")).to eq(vm)
+  context 'Cloning' do
+    describe '#find_destination_in_vmdb' do
+      it 'finds VM in same sub-class' do
+        vm = FactoryGirl.create(:vm_amazon, :ext_management_system => provider, :ems_ref => 'vm_1')
+        expect(subject.find_destination_in_vmdb('vm_1')).to eq(vm)
       end
 
-      it "does not find VM in different sub-class" do
-        FactoryGirl.create(:vm_openstack, :ext_management_system => provider, :ems_ref => "vm_1")
-        expect(subject.find_destination_in_vmdb("vm_1")).to be_nil
+      it 'does not find VM in different sub-class' do
+        FactoryGirl.create(:vm_openstack, :ext_management_system => provider, :ems_ref => 'vm_1')
+        expect(subject.find_destination_in_vmdb('vm_1')).to be_nil
       end
     end
 
-    describe "#prepare_for_clone_task" do
+    describe '#prepare_for_clone_task' do
       before do
         flavor            = FactoryGirl.create(:flavor_amazon)
         availability_zone = FactoryGirl.create(:availability_zone_amazon)
@@ -31,45 +31,45 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
         allow(subject).to receive(:validate_dest_name)
       end
 
-      it "calls super" do
+      it 'calls super' do
         # can't test call to super, but we know :validate_dest_name is called in super
         expect(subject).to receive(:validate_dest_name)
         subject.prepare_for_clone_task
       end
 
-      context "with security_groups" do
-        it "with no security groups" do
+      context 'with security_groups' do
+        it 'with no security groups' do
           expect(subject.prepare_for_clone_task[:security_group_ids]).to be_nil
         end
 
-        it "with one security group" do
-          security_group = FactoryGirl.create(:security_group_amazon, :name => "group_1")
+        it 'with one security group' do
+          security_group = FactoryGirl.create(:security_group_amazon, :name => 'group_1')
           subject.options[:security_groups] = [security_group.id]
           expect(subject.prepare_for_clone_task[:security_group_ids]).to eq([security_group.ems_ref])
         end
 
-        it "with two security group" do
-          security_group_1 = FactoryGirl.create(:security_group_amazon, :name => "group_1")
-          security_group_2 = FactoryGirl.create(:security_group_amazon, :name => "group_2")
+        it 'with two security group' do
+          security_group_1 = FactoryGirl.create(:security_group_amazon, :name => 'group_1')
+          security_group_2 = FactoryGirl.create(:security_group_amazon, :name => 'group_2')
           subject.options[:security_groups] = [security_group_1.id, security_group_2.id]
           expect(subject.prepare_for_clone_task[:security_group_ids])
             .to match_array([security_group_1.ems_ref, security_group_2.ems_ref])
         end
 
-        it "with a missing security group" do
-          security_group = FactoryGirl.create(:security_group_amazon, :name => "group_1")
+        it 'with a missing security group' do
+          security_group = FactoryGirl.create(:security_group_amazon, :name => 'group_1')
           bad_security_group_id = security_group.id + 1
           subject.options[:security_groups] = [security_group.id, bad_security_group_id]
           expect(subject.prepare_for_clone_task[:security_group_ids]).to eq([security_group.ems_ref])
         end
       end
 
-      context "cloud_subnet" do
-        it "without a subnet" do
+      context 'cloud_subnet' do
+        it 'without a subnet' do
           expect(subject.prepare_for_clone_task[:subnet]).to be_nil
         end
 
-        it "with a subnet" do
+        it 'with a subnet' do
           cloud_subnet = FactoryGirl.create(:cloud_subnet)
           subject.options[:cloud_subnet] = [cloud_subnet.id, cloud_subnet.name]
           expect(subject.prepare_for_clone_task[:subnet_id]).to eq(cloud_subnet.ems_ref)
@@ -77,8 +77,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
       end
     end
 
-    describe "#workflow_class" do
-      it "returns the correct class" do
+    describe '#workflow_class' do
+      it 'returns the correct class' do
         user    = FactoryGirl.create(:user)
         options = {:src_vm_id => [template.id, template.name]}
         vm_prov = FactoryGirl.create(:miq_provision_amazon,
@@ -96,8 +96,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
       end
     end
 
-    describe "#start_clone" do
-      it "starts an instance" do
+    describe '#start_clone' do
+      it 'starts an instance' do
         flavor = FactoryGirl.create(:flavor_amazon)
         allow(subject).to receive(:source).and_return(template)
         allow(subject).to receive(:instance_type).and_return(flavor)

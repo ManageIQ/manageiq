@@ -6,7 +6,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   validate               :must_have_user
 
   def host_name
-    options[:src_configured_system_ids].length == 1 ? src_configured_systems.pluck(:hostname).first : "Multiple Hosts"
+    options[:src_configured_system_ids].length == 1 ? src_configured_systems.pluck(:hostname).first : 'Multiple Hosts'
   end
 
   def src_configured_systems
@@ -34,7 +34,7 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   end
 
   def originating_controller
-    "configured_system"
+    'configured_system'
   end
 
   def event_name(mode)
@@ -44,6 +44,6 @@ class MiqProvisionConfiguredSystemRequest < MiqRequest
   private
 
   def default_description
-    _("%{table} install on [%{name}]") % {:table => ui_lookup(:ui_title => 'foreman'), :name => host_name}
+    _('%{table} install on [%{name}]') % {:table => ui_lookup(:ui_title => 'foreman'), :name => host_name}
   end
 end

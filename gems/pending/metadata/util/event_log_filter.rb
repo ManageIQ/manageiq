@@ -1,6 +1,6 @@
 module EventLogFilter
   def self.prepare_filter!(filter)
-    raise ArgumentError, "filter must be a Hash" unless filter.kind_of?(Hash)
+    raise ArgumentError, 'filter must be a Hash' unless filter.kind_of?(Hash)
 
     filter[:rec_count] = 0 if filter[:rec_count].nil?
 

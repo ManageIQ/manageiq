@@ -21,8 +21,8 @@ class ApplicationHelper::Toolbar::MiqAeMethodCenter < ApplicationHelper::Toolbar
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Method'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Are you sure you want to remove this Method?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Are you sure you want to remove this Method?')),
       ]
     ),
   ])

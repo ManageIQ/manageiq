@@ -4,17 +4,17 @@ class MiqSnmp
   include Vmdb::Logging
 
   AVAILABLE_TYPES_HASH = {
-    "Null"        => SNMP::Null,
-    "Integer"     => SNMP::Integer,
-    "Unsigned32"  => SNMP::Unsigned32,
-    "OctetString" => SNMP::OctetString,
-    "ObjectId"    => SNMP::ObjectId,
-    "ObjectName"  => SNMP::ObjectName,
-    "IpAddress"   => SNMP::IpAddress,
-    "Counter32"   => SNMP::Counter32,
-    "Counter64"   => SNMP::Counter64,
-    "Gauge32"     => SNMP::Gauge32,
-    "TimeTicks"   => SNMP::TimeTicks
+    'Null'        => SNMP::Null,
+    'Integer'     => SNMP::Integer,
+    'Unsigned32'  => SNMP::Unsigned32,
+    'OctetString' => SNMP::OctetString,
+    'ObjectId'    => SNMP::ObjectId,
+    'ObjectName'  => SNMP::ObjectName,
+    'IpAddress'   => SNMP::IpAddress,
+    'Counter32'   => SNMP::Counter32,
+    'Counter64'   => SNMP::Counter64,
+    'Gauge32'     => SNMP::Gauge32,
+    'TimeTicks'   => SNMP::TimeTicks
   }
 
   def self.trap_v1(inputs)
@@ -25,13 +25,13 @@ class MiqSnmp
 
     # The enterprise OID from the IANA assigned numbers (www.iana.org/assignments/enterprise-numbers) as a String or an ObjectId.
     enterprise = inputs[:enterprise] || inputs['enterprise'] || enterprise_oid_string
-    raise MiqException::Error, _("MiqSnmp.trap_v1: Ensure that enterprise OID is provided") if enterprise.nil?
+    raise MiqException::Error, _('MiqSnmp.trap_v1: Ensure that enterprise OID is provided') if enterprise.nil?
 
     # The IP address of the SNMP agent as a String or IpAddress.
     agent_address = inputs[:agent_address] || inputs['agent_address'] || self.agent_address
     if agent_address.nil?
       raise MiqException::Error,
-            _("MiqSnmp.trap_v1: Ensure that server.host is configured properly in your vmdb.yml file")
+            _('MiqSnmp.trap_v1: Ensure that server.host is configured properly in your vmdb.yml file')
     end
 
     # An integer respresenting the number of hundredths of a second that this system has been up.
@@ -45,7 +45,7 @@ class MiqSnmp
     # An integer representing the specific trap type for an enterprise-specific trap.
     specific_trap = inputs[:specific_trap] || inputs['specific_trap']
     if specific_trap.nil? && generic_trap == :enterpriseSpecific
-      raise MiqException::Error, _("MiqSnmp.trap_v1: Ensure that specific trap is provided")
+      raise MiqException::Error, _('MiqSnmp.trap_v1: Ensure that specific trap is provided')
     end
 
     # A list of additional varbinds to send with the trap.
@@ -71,7 +71,7 @@ class MiqSnmp
 
     # trap_oid: An ObjectId or String with the OID identifier for this trap.
     trap_oid = inputs[:trap_oid] || inputs['trap_oid']
-    raise MiqException::Error, _("MiqSnmp.trap_v2: Ensure that a trap object id is provided") if trap_oid.nil?
+    raise MiqException::Error, _('MiqSnmp.trap_v2: Ensure that a trap object id is provided') if trap_oid.nil?
     trap_oid = MiqSnmp.subst_oid(trap_oid)
 
     # A list of additional varbinds to send with the trap.
@@ -89,7 +89,7 @@ class MiqSnmp
 
   # IANA assigned Private Enterprise Number 33482 to ManageIQ
   def self.enterprise_oid_string
-    @@enterprise_oid_string ||= "1.3.6.1.4.1.33482"
+    @@enterprise_oid_string ||= '1.3.6.1.4.1.33482'
   end
 
   def self.enterprise_oid
@@ -122,23 +122,23 @@ class MiqSnmp
     base = MiqSnmp.enterprise_oid_string if base.nil?
 
     # If it begins with a dot, append it to the base
-    return "#{base}#{oid}" if oid[0, 1] == "."
+    return "#{base}#{oid}" if oid[0, 1] == '.'
 
     # Need to move these to ManageIQ MIB
     oid = case oid.downcase
-          when "info"                         then "#{MiqSnmp.enterprise_oid_string}.1"
-          when "warn", "warning"              then "#{MiqSnmp.enterprise_oid_string}.2"
-          when "crit", "critical", "error"    then "#{MiqSnmp.enterprise_oid_string}.3"
-          when "description"                  then "#{base}.1"
-          when "category"                     then "#{base}.2"
-          when "message"                      then "#{base}.3"
-          when "object"                       then "#{base}.4"
-          when "location"                     then "#{base}.5"
-          when "platform"                     then "#{base}.6"
-          when "url"                          then "#{base}.7"
-          when "source"                       then "#{base}.8"
-          when "custom1"                      then "#{base}.9"
-          when "custom2"                      then "#{base}.10"
+          when 'info'                         then "#{MiqSnmp.enterprise_oid_string}.1"
+          when 'warn', 'warning'              then "#{MiqSnmp.enterprise_oid_string}.2"
+          when 'crit', 'critical', "error"    then "#{MiqSnmp.enterprise_oid_string}.3"
+          when 'description'                  then "#{base}.1"
+          when 'category'                     then "#{base}.2"
+          when 'message'                      then "#{base}.3"
+          when 'object'                       then "#{base}.4"
+          when 'location'                     then "#{base}.5"
+          when 'platform'                     then "#{base}.6"
+          when 'url'                          then "#{base}.7"
+          when 'source'                       then "#{base}.8"
+          when 'custom1'                      then "#{base}.9"
+          when 'custom2'                      then "#{base}.10"
           else                                     oid
           end
 
@@ -150,6 +150,6 @@ class MiqSnmp
   end
 
   def self.agent_address
-    VMDB::Config.new("vmdb").get(:server, :host)
+    VMDB::Config.new('vmdb').get(:server, :host)
   end
 end

@@ -4,12 +4,12 @@ FactoryGirl.define do
   end
 
   factory :metric_vm_rt, :parent => :metric, :class => :Metric do
-    capture_interval_name "realtime"
-    resource_type         "VmOrTemplate"
+    capture_interval_name 'realtime'
+    resource_type         'VmOrTemplate'
   end
 
   factory :metric_host_rt, :parent => :metric, :class => :Metric do
-    capture_interval_name "realtime"
-    resource_type         "Host"
+    capture_interval_name 'realtime'
+    resource_type         'Host'
   end
 end

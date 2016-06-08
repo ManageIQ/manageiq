@@ -4,7 +4,7 @@ class AutomationTask < MiqRequestTask
   AUTOMATE_DRIVES = false
 
   def self.get_description(_request_obj)
-    "Automation Task"
+    'Automation Task'
   end
 
   def self.base_model
@@ -32,9 +32,9 @@ class AutomationTask < MiqRequestTask
     return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state => "finished", :status => "Ok",    :message => "#{request_class::TASK_DESCRIPTION} completed")
+      update_and_notify_parent(:state => 'finished', :status => 'Ok',    :message => "#{request_class::TASK_DESCRIPTION} completed")
     else
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => "#{request_class::TASK_DESCRIPTION} failed")
+      update_and_notify_parent(:state => 'finished', :status => 'Error', :message => "#{request_class::TASK_DESCRIPTION} failed")
     end
   end
 end

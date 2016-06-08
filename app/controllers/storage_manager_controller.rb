@@ -12,29 +12,29 @@ class StorageManagerController < ApplicationController
   def button
     @edit = session[:edit]                                  # Restore @edit for adv search box
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
-    @refresh_div = "main_div" # Default div for button.rjs to refresh
-    redirect_to :action => "new" if params[:pressed] == "storage_manager_new"
-    deletesms if params[:pressed] == "storage_manager_delete"
-    edit_record if params[:pressed] == "storage_manager_edit"
-    refresh_inventory if params[:pressed] == "storage_manager_refresh_inventory"
-    refresh_status_sm if params[:pressed] == "storage_manager_refresh_status"
+    @refresh_div = 'main_div' # Default div for button.rjs to refresh
+    redirect_to :action => 'new' if params[:pressed] == 'storage_manager_new'
+    deletesms if params[:pressed] == 'storage_manager_delete'
+    edit_record if params[:pressed] == 'storage_manager_edit'
+    refresh_inventory if params[:pressed] == 'storage_manager_refresh_inventory'
+    refresh_status_sm if params[:pressed] == 'storage_manager_refresh_status'
 
     if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(_("Button not yet implemented"), :error)
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    elsif @flash_array && @lastaction == "show"
+      add_flash(_('Button not yet implemented'), :error)
+      @refresh_partial = 'layouts/flash_msg'
+      @refresh_div = 'flash_msg_div'
+    elsif @flash_array && @lastaction == 'show'
       @sm = @record = identify_record(params[:id])
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
+      @refresh_partial = 'layouts/flash_msg'
+      @refresh_div = 'flash_msg_div'
     end
 
-    if !@flash_array.nil? && params[:pressed] == "storage_manager_delete" && @single_delete
+    if !@flash_array.nil? && params[:pressed] == 'storage_manager_delete' && @single_delete
       render :update do |page|
         page << javascript_prologue
         page.redirect_to :action => 'show_list', :flash_msg => @flash_array[0][:message]  # redirect to build the retire screen
       end
-    elsif params[:pressed].ends_with?("_edit")
+    elsif params[:pressed].ends_with?('_edit')
       if @redirect_controller
         render :update do |page|
           page << javascript_prologue
@@ -47,13 +47,13 @@ class StorageManagerController < ApplicationController
         end
       end
     else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
+      if @refresh_div == 'main_div' && @lastaction == 'show_list'
         replace_gtl_main_div
       else
         render :update do |page|
           page << javascript_prologue
           unless @refresh_partial.nil?
-            if @refresh_div == "flash_msg_div"
+            if @refresh_div == 'flash_msg_div'
               page.replace(@refresh_div, :partial => @refresh_partial)
             else
               page.replace_html(@refresh_div, :partial => @refresh_partial)
@@ -65,36 +65,36 @@ class StorageManagerController < ApplicationController
   end
 
   def new
-    assert_privileges("storage_manager_new")
+    assert_privileges('storage_manager_new')
     @sm = StorageManager.new
     set_form_vars
     @in_a_form = true
     session[:changed] = nil
-    drop_breadcrumb(:name => _("Add New Storage Manager"), :url => "/storage_manager/new")
+    drop_breadcrumb(:name => _('Add New Storage Manager'), :url => '/storage_manager/new')
   end
 
   def create
-    assert_privileges("storage_manager_new")
-    return unless load_edit("sm_edit__new")
+    assert_privileges('storage_manager_new')
+    return unless load_edit('sm_edit__new')
     get_form_vars
     case params[:button]
-    when "cancel"
+    when 'cancel'
       render :update do |page|
         page << javascript_prologue
-        page.redirect_to :action => 'show_list', :flash_msg => _("Add of new %{model} was cancelled by the user") %
-          {:model => ui_lookup(:table => "StorageManager")}
+        page.redirect_to :action => 'show_list', :flash_msg => _('Add of new %{model} was cancelled by the user') %
+          {:model => ui_lookup(:table => 'StorageManager')}
       end
-    when "add"
+    when 'add'
       if @edit[:new][:sm_type].nil?
-        add_flash(_("Type is required"), :error)
+        add_flash(_('Type is required'), :error)
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
-      if @edit[:new][:sm_type].nil? || @edit[:new][:sm_type] == ""
-        add_flash(_("Type is required"), :error)
+      if @edit[:new][:sm_type].nil? || @edit[:new][:sm_type] == ''
+        add_flash(_('Type is required'), :error)
       end
       unless @flash_array
         add_sm = StorageManager.new_of_type(@edit[:new][:sm_type])
@@ -106,7 +106,7 @@ class StorageManagerController < ApplicationController
         session[:edit] = nil  # Clear the edit object from the session object
         render :update do |page|
           page << javascript_prologue
-          page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "StorageManager"), :name => add_sm.name}
+          page.redirect_to :action => 'show_list', :flash_msg => _('%{model} "%{name}" was added') % {:model => ui_lookup(:model => 'StorageManager'), :name => add_sm.name}
         end
       else
         @in_a_form = true
@@ -116,19 +116,19 @@ class StorageManagerController < ApplicationController
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
           end
         end
-        drop_breadcrumb(:name => _("Add New Storage Manager"), :url => "/storage_manager/new")
+        drop_breadcrumb(:name => _('Add New Storage Manager'), :url => '/storage_manager/new')
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
       end
-    when "validate"
+    when 'validate'
       # Need to pass in smtype so the proper mixins are loaded.
       if @edit[:new][:sm_type].blank?
-        add_flash(_("Type is required"), :error)
+        add_flash(_('Type is required'), :error)
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
@@ -140,17 +140,17 @@ class StorageManagerController < ApplicationController
       rescue StandardError => bang
         add_flash("#{bang}", :error)
       else
-        add_flash(_("Credential validation was successful"))
+        add_flash(_('Credential validation was successful'))
       end
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     end
   end
 
   def edit
-    assert_privileges("storage_manager_edit")
+    assert_privileges('storage_manager_edit')
     @sm = find_by_id_filtered(StorageManager, params[:id])
     set_form_vars
     @in_a_form = true
@@ -183,19 +183,19 @@ class StorageManagerController < ApplicationController
   end
 
   def update
-    assert_privileges("storage_manager_edit")
+    assert_privileges('storage_manager_edit')
     return unless load_edit("sm_edit__#{params[:id]}")
     get_form_vars
     changed = (@edit[:new] != @edit[:current])
     case params[:button]
-    when "cancel"
+    when 'cancel'
       session[:edit] = nil  # clean out the saved info
-      flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "StorageManager"), :name => @sm.name}
+      flash = _('Edit of %{model} "%{name}" was cancelled by the user') % {:model => ui_lookup(:model => 'StorageManager'), :name => @sm.name}
       render :update do |page|
         page << javascript_prologue
         page.redirect_to :action => @lastaction, :id => @sm.id, :display => session[:sm_display], :flash_msg => flash
       end
-    when "save"
+    when 'save'
       update_sm = find_by_id_filtered(StorageManager, params[:id])
       set_record_vars(update_sm)
       if valid_record?(update_sm) && update_sm.save
@@ -204,7 +204,7 @@ class StorageManagerController < ApplicationController
         session[:edit] = nil  # clean out the saved info
         render :update do |page|
           page << javascript_prologue
-          page.redirect_to :action => 'show', :id => @sm.id.to_s, :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "StorageManager"), :name => update_sm.name}
+          page.redirect_to :action => 'show', :id => @sm.id.to_s, :flash_msg => _('%{model} "%{name}" was saved') % {:model => ui_lookup(:model => 'StorageManager'), :name => update_sm.name}
         end
         return
       else
@@ -219,12 +219,12 @@ class StorageManagerController < ApplicationController
         @changed = true
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
       end
-    when "reset"
+    when 'reset'
       params[:edittype] = @edit[:edittype]    # remember the edit type
-      add_flash(_("All changes have been reset"), :warning)
+      add_flash(_('All changes have been reset'), :warning)
       @in_a_form = true
       set_verify_status
       session[:flash_msgs] = @flash_array.dup                 # Put msgs in session for next transaction
@@ -232,7 +232,7 @@ class StorageManagerController < ApplicationController
         page << javascript_prologue
         page.redirect_to :action => 'edit', :id => @sm.id.to_s
       end
-    when "validate"
+    when 'validate'
       verify_sm = find_by_id_filtered(StorageManager, params[:id])
       set_record_vars(verify_sm, :validate)
       @in_a_form = true
@@ -242,34 +242,34 @@ class StorageManagerController < ApplicationController
       rescue StandardError => bang
         add_flash("#{bang}", :error)
       else
-        add_flash(_("Credential validation was successful"))
+        add_flash(_('Credential validation was successful'))
       end
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     end
   end
 
   def show
-    @display = params[:display] || "main" unless control_selected?
+    @display = params[:display] || 'main' unless control_selected?
 
-    session[:sm_summary_cool] = (@settings[:views][:sm_summary_cool] == "summary")
+    session[:sm_summary_cool] = (@settings[:views][:sm_summary_cool] == 'summary')
     @summary_view = session[:sm_summary_cool]
     @sm = @record = identify_record(params[:id])
     return if record_no_longer_exists?(@sm)
 
-    @gtl_url = "/show"
-    @showtype = "config"
-    drop_breadcrumb({:name => ui_lookup(:tables => "storage_managers"), :url => "/storage_manager/show_list?page=#{@current_page}&refresh=y"}, true)
+    @gtl_url = '/show'
+    @showtype = 'config'
+    drop_breadcrumb({:name => ui_lookup(:tables => 'storage_managers'), :url => "/storage_manager/show_list?page=#{@current_page}&refresh=y"}, true)
 
-    if ["download_pdf", "main", "summary_only"].include?(@display)
+    if ['download_pdf', 'main', 'summary_only'].include?(@display)
       # get_tagdata(StorageManager)
-      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @sm.name}, :url => "/storage_manager/show/#{@sm.id}")
-      @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
+      drop_breadcrumb(:name => _('%{name} (Summary)') % {:name => @sm.name}, :url => "/storage_manager/show/#{@sm.id}")
+      @showtype = 'main'
+      set_summary_pdf_data if ['download_pdf', 'summary_only'].include?(@display)
     end
-    @lastaction = "show"
+    @lastaction = 'show'
     session[:tl_record_id] = @record.id
 
     # Came in from outside show_list partial
@@ -280,7 +280,7 @@ class StorageManagerController < ApplicationController
 
   # Show the main MS list view
   def show_list
-    process_show_list(:conditions => ["agent_type<>?", "VMDB"])
+    process_show_list(:conditions => ['agent_type<>?', 'VMDB'])
   end
 
   private ############################
@@ -290,11 +290,11 @@ class StorageManagerController < ApplicationController
     valid = true
     @edit[:errors] = []
     if !sm.authentication_password.blank? && sm.authentication_userid.blank?
-      @edit[:errors].push(_("Username must be entered if Password is entered"))
+      @edit[:errors].push(_('Username must be entered if Password is entered'))
       valid = false
     end
     if @edit[:new][:password] != @edit[:new][:verify]
-      @edit[:errors].push(_("Password and Verify Password fields do not match"))
+      @edit[:errors].push(_('Password and Verify Password fields do not match'))
       valid = false
     end
     valid
@@ -303,7 +303,7 @@ class StorageManagerController < ApplicationController
   # Set form variables for new Storage Manager
   def set_new_form_vars
     @edit = {}
-    @edit[:key] = "sm_edit__new"
+    @edit[:key] = 'sm_edit__new'
     @edit[:new] = {}
     @edit[:current] = {}
 
@@ -314,7 +314,7 @@ class StorageManagerController < ApplicationController
     @edit[:new][:port] = nil
     @edit[:new][:sm_type] = nil
     # @edit[:new][:agent_type] = nil
-    @edit[:new][:zone] = "default"
+    @edit[:new][:zone] = 'default'
     @edit[:server_zones] = []
     zones = Zone.all
     zones.each do |zone|
@@ -347,8 +347,8 @@ class StorageManagerController < ApplicationController
     @edit[:new][:port] = @sm.port
     @edit[:new][:sm_type] = @sm.type_description
     # @edit[:new][:agent_type] = @sm.agent_type
-    if @sm.zone.nil? || @sm.my_zone == ""
-      @edit[:new][:zone] = "default"
+    if @sm.zone.nil? || @sm.my_zone == ''
+      @edit[:new][:zone] = 'default'
     else
       @edit[:new][:zone] = @sm.my_zone
     end
@@ -411,13 +411,13 @@ class StorageManagerController < ApplicationController
 
   # Refresh inventory for selected or single Storage Manager
   def refresh_inventory
-    assert_privileges("storage_manager_refresh_inventory")
+    assert_privileges('storage_manager_refresh_inventory')
     sm_button_operation('refresh_inventory', _('Refresh Inventory'))
   end
 
   # Refresh status for selected or single Storage Manager
   def refresh_status_sm
-    assert_privileges("storage_manager_refresh_status")
+    assert_privileges('storage_manager_refresh_status')
     sm_button_operation('request_status_update', _('Refresh Status'))
   end
 
@@ -426,24 +426,24 @@ class StorageManagerController < ApplicationController
     sms = []
 
     # List of Storage Managers
-    if @lastaction == "show_list"
+    if @lastaction == 'show_list'
       sms = find_checked_items
       if sms.empty?
-        add_flash(_("No %{model} were selected to %{button}") % {:model => ui_lookup(:model => "StorageManager"), :button => display_name}, :error)
+        add_flash(_('No %{model} were selected to %{button}') % {:model => ui_lookup(:model => 'StorageManager'), :button => display_name}, :error)
       else
         process_sms(sms, method)
       end
 
-      if @lastaction == "show_list" # In vm controller, refresh show_list, else let the other controller handle it
+      if @lastaction == 'show_list' # In vm controller, refresh show_list, else let the other controller handle it
         show_list
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       end
 
     else # showing 1 Storage Manager
       if params[:id].nil? || StorageManager.find_by_id(params[:id]).nil?
-        add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "StorageManager")}, :error)
+        add_flash(_('%{model} no longer exists') % {:model => ui_lookup(:model => 'StorageManager')}, :error)
         show_list
-        @refresh_partial = "layouts/gtl"
+        @refresh_partial = 'layouts/gtl'
       else
         sms.push(params[:id])
         process_sms(sms, method)  unless sms.empty?
@@ -460,7 +460,7 @@ class StorageManagerController < ApplicationController
   end
 
   def process_sms(sms, task)
-    if task == "refresh_inventory"
+    if task == 'refresh_inventory'
       begin
         StorageManager.refresh_inventory(sms, true)
       rescue StandardError => bang
@@ -468,31 +468,31 @@ class StorageManagerController < ApplicationController
                   :error)
         AuditEvent.failure(:userid => session[:userid], :event => "storage_manager_#{task}",
           :message => _("Error during '%{task} ': %{message}") % {:task => task, :message => bang.message},
-          :target_class => "StorageManager", :target_id => id)
+          :target_class => 'StorageManager', :target_id => id)
       else
-        add_flash(_("%{task} initiated for %{count_model} from the CFME Database") % \
-          {:task => task_name(task), :count_model => pluralize(sms.length, "Storage Manager")})
+        add_flash(_('%{task} initiated for %{count_model} from the CFME Database') % \
+          {:task => task_name(task), :count_model => pluralize(sms.length, 'Storage Manager')})
         AuditEvent.success(:userid => session[:userid], :event => "storage_manager_#{task}",
             :message => _("'%{task}' successfully initiated for %{items}") %
-              {:task => task, :items => pluralize(sms.length, "Storage Manager")},
-            :target_class => "StorageManager")
+              {:task => task, :items => pluralize(sms.length, 'Storage Manager')},
+            :target_class => 'StorageManager')
       end
     else
-      StorageManager.where(:id => sms).order("lower(name)").each do |sm|
+      StorageManager.where(:id => sms).order('lower(name)').each do |sm|
         id = sm.id
         sm_name = sm.name
-        if task == "destroy"
-          audit = {:event        => "sm_record_delete",
-                   :message      => _("[%{name}] Record deleted") % {:name => sm_name},
+        if task == 'destroy'
+          audit = {:event        => 'sm_record_delete',
+                   :message      => _('[%{name}] Record deleted') % {:name => sm_name},
                    :target_id    => id,
-                   :target_class => "StorageManager",
+                   :target_class => 'StorageManager',
                    :userid       => session[:userid]}
         end
         begin
           sm.send(task.to_sym) if sm.respond_to?(task)    # Run the task
         rescue StandardError => bang
           add_flash(_("%{model} \"%{name}\": Error during '%{task}': %{message}") %
-                      {:model   => ui_lookup(:model => "StorageManager"),
+                      {:model   => ui_lookup(:model => 'StorageManager'),
                        :name    => sm_name, :task => task,
                        :message => bang.message},
                     :error)
@@ -500,19 +500,19 @@ class StorageManagerController < ApplicationController
             :message => _("%{name}: Error during '%{task}': %{message}") % {:name    => sm_name,
                                                                             :task    => task,
                                                                             :message => bang.message},
-            :target_class => "StorageManager", :target_id => id)
+            :target_class => 'StorageManager', :target_id => id)
         else
-          if task == "destroy"
+          if task == 'destroy'
             AuditEvent.success(audit)
-            add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => "StorageManager"), :name => sm_name})
+            add_flash(_('%{model} "%{name}": Delete successful') % {:model => ui_lookup(:model => 'StorageManager'), :name => sm_name})
             AuditEvent.success(:userid => session[:userid], :event => "storage_manager_#{task}",
-              :message => _("%{name}: Delete successful") % {:name => sm_name},
-              :target_class => "StorageManager", :target_id => id)
+              :message => _('%{name}: Delete successful') % {:name => sm_name},
+              :target_class => 'StorageManager', :target_id => id)
           else
-            add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => ui_lookup(:model => "StorageManager"), :name => sm_name, :task => task})
+            add_flash(_('%{model} "%{name}": %{task} successfully initiated') % {:model => ui_lookup(:model => 'StorageManager'), :name => sm_name, :task => task})
             AuditEvent.success(:userid => session[:userid], :event => "storage_manager_#{task}",
                :message => _("%{name}: '%{task}' successfully initiated") % {:name => sm_name, :task => task},
-               :target_class => "StorageManager", :target_id => id)
+               :target_class => 'StorageManager', :target_id => id)
           end
         end
       end
@@ -527,13 +527,13 @@ class StorageManagerController < ApplicationController
 
   # Delete all selected or single displayed sm(s)
   def deletesms
-    assert_privileges("storage_manager_delete")
+    assert_privileges('storage_manager_delete')
     sm_button_operation('destroy', 'deletion')
   end
 
   def get_session_data
-    @title      = _("Storage Managers")
-    @layout     = "storage_manager"
+    @title      = _('Storage Managers')
+    @layout     = 'storage_manager'
     @lastaction = session[:sm_lastaction]
     @display    = session[:sm_display]
     @filters    = session[:sm_filters]

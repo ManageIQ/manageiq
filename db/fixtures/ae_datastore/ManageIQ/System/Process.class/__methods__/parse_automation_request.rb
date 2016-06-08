@@ -14,4 +14,4 @@ cur['target_component'], cur['target_class'], cur['target_instance'] =
     %w(Configured_System Lifecycle Provisioning)
   end
 
-$evm.log("info", "Request:<#{cur['request']}> Target Component:<#{cur['target_component']}> Target Class:<#{cur['target_class']}> Target Instance:<#{cur['target_instance']}>")
+$evm.log('info', "Request:<#{cur['request']}> Target Component:<#{cur['target_component']}> Target Class:<#{cur['target_class']}> Target Instance:<#{cur['target_instance']}>")

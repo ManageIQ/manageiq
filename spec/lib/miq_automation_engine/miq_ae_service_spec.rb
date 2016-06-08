@@ -8,7 +8,7 @@ module MiqAeServiceSpec
       @service_object = MiqAeServiceObject.new(@object, @service)
     end
 
-    context "#attributes" do
+    context '#attributes' do
       before do
         allow(@object).to receive(:attributes).and_return('true'     => true,
                                              'false'    => false,
@@ -21,7 +21,7 @@ module MiqAeServiceSpec
                                              'password' => MiqAePassword.new('test'))
       end
 
-      it "obscures passwords" do
+      it 'obscures passwords' do
         original_attributes = @object.attributes.dup
         attributes = @service_object.attributes
         expect(attributes['password']).to eq('********')
@@ -29,8 +29,8 @@ module MiqAeServiceSpec
       end
     end
 
-    context "#inspect" do
-      it "returns the class, id and name" do
+    context '#inspect' do
+      it 'returns the class, id and name' do
         allow(@object).to receive(:object_name).and_return('fred')
         regex = /#<MiqAeMethodService::MiqAeServiceObject:0x(\w+) name:.\"(?<name>\w+)\">/
         match = regex.match(@service_object.inspect)
@@ -40,25 +40,25 @@ module MiqAeServiceSpec
   end
 
   describe MiqAeService do
-    context "#service_model" do
+    context '#service_model' do
       let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
-      let(:prefix) { "MiqAeMethodService::MiqAeService" }
+      let(:prefix) { 'MiqAeMethodService::MiqAeService' }
 
-      it "loads base model" do
+      it 'loads base model' do
         expect(miq_ae_service.service_model(:VmOrTemplate)).to   be(MiqAeMethodService::MiqAeServiceVmOrTemplate)
         expect(miq_ae_service.service_model(:vm_or_template)).to be(MiqAeMethodService::MiqAeServiceVmOrTemplate)
       end
 
-      it "loads sub-classed model" do
+      it 'loads sub-classed model' do
         expect(miq_ae_service.service_model(:Vm)).to be(MiqAeMethodService::MiqAeServiceVm)
         expect(miq_ae_service.service_model(:vm)).to be(MiqAeMethodService::MiqAeServiceVm)
       end
 
-      it "loads model with mapped name" do
+      it 'loads model with mapped name' do
         expect(miq_ae_service.service_model(:ems)).to be(MiqAeMethodService::MiqAeServiceExtManagementSystem)
       end
 
-      it "loads name-spaced model by mapped name" do
+      it 'loads name-spaced model by mapped name' do
         MiqAeMethodService::Deprecation.silence do
           expect(miq_ae_service.service_model(:ems_openstack)).to be(
             MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager)
@@ -67,24 +67,24 @@ module MiqAeServiceSpec
         end
       end
 
-      it "loads name-spaced model by fully-qualified name" do
+      it 'loads name-spaced model by fully-qualified name' do
         expect(miq_ae_service.service_model(:ManageIQ_Providers_Openstack_CloudManager)).to    be(
           MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager)
         expect(miq_ae_service.service_model(:ManageIQ_Providers_Openstack_CloudManager_Vm)).to be(
           MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_Vm)
       end
 
-      it "raises error on invalid service_model name" do
+      it 'raises error on invalid service_model name' do
         expect { miq_ae_service.service_model(:invalid_model) }.to raise_error(NameError)
       end
 
-      it "loads all mapped models" do
+      it 'loads all mapped models' do
         MiqAeMethodService::MiqAeService::LEGACY_MODEL_NAMES.values.each do |model_name|
           expect { "MiqAeMethodService::MiqAeService#{model_name}".constantize }.to_not raise_error
         end
       end
 
-      it "loads cloud networks" do
+      it 'loads cloud networks' do
         items = %w(
           ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork
           ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork_Private
@@ -98,8 +98,8 @@ module MiqAeServiceSpec
   end
 
   describe MiqAeService do
-    context "service models" do
-      it "expose all expected active_record models as service_models" do
+    context 'service models' do
+      it 'expose all expected active_record models as service_models' do
         excluded_model_names = %w(
           AuthToken
           AuthUseridPassword

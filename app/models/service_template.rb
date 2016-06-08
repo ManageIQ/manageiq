@@ -30,8 +30,8 @@ class ServiceTemplate < ApplicationRecord
 
   default_value_for :service_type,  'unknown'
 
-  virtual_has_one :custom_actions, :class_name => "Hash"
-  virtual_has_one :custom_action_buttons, :class_name => "Array"
+  virtual_has_one :custom_actions, :class_name => 'Hash'
+  virtual_has_one :custom_action_buttons, :class_name => 'Array'
 
   def children
     service_templates
@@ -46,7 +46,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def custom_actions
-    generic_button_group = CustomButton.buttons_for("Service").select { |button| !button.parent.nil? }
+    generic_button_group = CustomButton.buttons_for('Service').select { |button| !button.parent.nil? }
     custom_button_sets_with_generics = custom_button_sets + generic_button_group.map(&:parent).uniq.flatten
     {
       :buttons       => custom_buttons.collect(&:expanded_serializable_hash),
@@ -61,7 +61,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def custom_buttons
-    service_buttons = CustomButton.buttons_for("Service").select { |button| button.parent.nil? }
+    service_buttons = CustomButton.buttons_for('Service').select { |button| button.parent.nil? }
     service_buttons + CustomButton.buttons_for(self).select { |b| b.parent.nil? }
   end
 
@@ -72,7 +72,7 @@ class ServiceTemplate < ApplicationRecord
   def destroy
     parent_svcs = parent_services
     unless parent_svcs.blank?
-      raise MiqException::MiqServiceError, _("Cannot delete a service that is the child of another service.")
+      raise MiqException::MiqServiceError, _('Cannot delete a service that is the child of another service.')
     end
 
     service_resources.each do |sr|
@@ -87,7 +87,7 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def request_type
-    "clone_to_service"
+    'clone_to_service'
   end
 
   def create_service(service_task, parent_svc = nil)
@@ -148,9 +148,9 @@ class ServiceTemplate < ApplicationRecord
 
   def type_display
     case service_type
-    when "atomic"    then "Item"
-    when "composite" then "Bundle"
-    when nil         then "Unknown"
+    when 'atomic'    then 'Item'
+    when 'composite' then 'Bundle'
+    when nil         then 'Unknown'
     else
       service_type.to_s.capitalize
     end
@@ -181,7 +181,7 @@ class ServiceTemplate < ApplicationRecord
         nh['options'].delete(:child_tasks)
         # Initial Options[:dialog] to an empty hash so we do not pass down dialog values to child services tasks
         nh['options'][:dialog] = {}
-        next if child_svc_rsc.resource_type == "ServiceTemplate" &&
+        next if child_svc_rsc.resource_type == 'ServiceTemplate' &&
                 !self.class.include_service_template?(parent_service_task,
                                                       child_svc_rsc.resource.id,
                                                       parent_service)

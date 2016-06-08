@@ -4,9 +4,9 @@ module ToModelHash
   module ClassMethods
     def to_model_hash_options
       fname = "#{table_name}.yaml"
-      r = MiqReport.find_by(:filename => fname, :template_type => "compare").try(:attributes)
+      r = MiqReport.find_by(:filename => fname, :template_type => 'compare').try(:attributes)
       if r.nil?
-        fname = Rails.root.join("product", "compare", fname)
+        fname = Rails.root.join('product', 'compare', fname)
         r = YAML.load_file(fname) if File.exist?(fname)
       end
       r ||= {}
@@ -21,14 +21,14 @@ module ToModelHash
 
       ret = {}
 
-      cols  = (options["cols"] || options["columns"] || [])
-      cols += (options["key"] || []).compact
+      cols  = (options['cols'] || options['columns'] || [])
+      cols += (options['key'] || []).compact
       ret[:columns] = cols.uniq.sort.collect(&:to_sym) unless cols.blank?
 
-      includes = options["include"]
+      includes = options['include']
       if includes
-        if includes.key?("categories")
-          includes.delete("categories")
+        if includes.key?('categories')
+          includes.delete('categories')
           includes[:tags] = nil
         end
 

@@ -80,13 +80,13 @@ module MiqAeEngine
 
     def varget(uri)
       obj = current_object
-      raise MiqAeException::ObjectNotFound, "Current Object Not Found" if obj.nil?
+      raise MiqAeException::ObjectNotFound, 'Current Object Not Found' if obj.nil?
       obj.uri2value(uri)
     end
 
     def varset(uri, value)
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri)
-      if scheme == "miqaews"
+      if scheme == 'miqaews'
         o = get_obj_from_path(path)
         raise MiqAeException::ObjectNotFound, "Object Not Found for path=[#{path}]"  if o.nil?
         o[fragment] = value
@@ -99,12 +99,12 @@ module MiqAeEngine
       $miq_ae_logger.info("Instantiating [#{uri}]") if root.nil?
       @ae_user = user
       @dom_search.ae_user = user
-      scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri, "miqaedb")
+      scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri, 'miqaedb')
 
       raise MiqAeException::InvalidPathFormat, "Unsupported Scheme [#{scheme}]" unless MiqAeUri.scheme_supported?(scheme)
       raise MiqAeException::InvalidPathFormat, "Invalid URI <#{uri}>" if path.nil?
 
-      message = fragment.blank? ? "create" : fragment.downcase
+      message = fragment.blank? ? 'create' : fragment.downcase
       args = MiqAeUri.query2hash(query)
       if (ae_state_data = args.delete('ae_state_data'))
         @persist_state_hash.merge!(YAML.load(ae_state_data))
@@ -124,7 +124,7 @@ module MiqAeEngine
       raise MiqAeException::CyclicalRelationship, "cyclical reference: [#{MiqAeObject.fqname(ns, klass, instance)} with message=#{message}]" if cyclical?(ns, klass, instance, message)
 
       begin
-        if scheme == "miqaedb"
+        if scheme == 'miqaedb'
           obj = MiqAeObject.new(self, ns, klass, instance)
 
           @current.push({:ns => ns, :klass => klass, :instance => instance, :object => obj, :message => message})
@@ -141,11 +141,11 @@ module MiqAeEngine
           obj.process_assertions(message)
           obj.process_args_as_attributes(args)
           obj.user_info_attributes(@ae_user) unless root
-        elsif scheme == "miqaews"
+        elsif scheme == 'miqaews'
           obj = get_obj_from_path(path)
           raise MiqAeException::ObjectNotFound, "Object [#{path}] not found" if obj.nil?
-        elsif ["miqaemethod", "method"].include?(scheme)
-          raise MiqAeException::MethodNotFound, "No Current Object" if current[:object].nil?
+        elsif ['miqaemethod', 'method'].include?(scheme)
+          raise MiqAeException::MethodNotFound, 'No Current Object' if current[:object].nil?
           return current[:object].process_method_via_uri(uri)
         end
         obj.process_fields(message)
@@ -196,20 +196,20 @@ module MiqAeEngine
     def to_xml(path = nil)
       objs = path.nil? ? roots : get_obj_from_path(path)
       result = objs.collect { |obj| to_hash(obj) }.compact
-      s = ""
-      XmlHash.from_hash({"MiqAeObject" => result}, :rootname => "MiqAeWorkspace").to_xml.write(s, 2)
+      s = ''
+      XmlHash.from_hash({'MiqAeObject' => result}, :rootname => 'MiqAeWorkspace').to_xml.write(s, 2)
       s
     end
 
     def to_dot(path = nil)
-      require "rubygems"
-      require "graphviz"
+      require 'rubygems'
+      require 'graphviz'
 
       objs = path.nil? ? roots : get_obj_from_path(path)
 
-      g = GraphViz.new("MiqAeWorkspace", :type => "digraph", :output => "dot")
+      g = GraphViz.new('MiqAeWorkspace', :type => 'digraph', :output => 'dot')
       objs.each { |obj| obj_to_dot(g, obj) }
-      s = g.output(:output => "none")
+      s = g.output(:output => 'none')
     end
 
     def obj_to_dot(g, obj)
@@ -228,11 +228,11 @@ module MiqAeEngine
 
     def to_hash(obj)
       result = {
-        "namespace"   => obj.namespace,
-        "class"       => obj.klass,
-        "instance"    => obj.instance,
-        "attributes"  => obj.attributes.delete_if { |_k, v| v.nil? }.inspect,
-        "MiqAeObject" => obj.children.collect { |c| to_hash(c) }
+        'namespace'   => obj.namespace,
+        'class'       => obj.klass,
+        'instance'    => obj.instance,
+        'attributes'  => obj.attributes.delete_if { |_k, v| v.nil? }.inspect,
+        'MiqAeObject' => obj.children.collect { |c| to_hash(c) }
       }
       result.delete_if { |_k, v| v.nil? }
     end
@@ -301,21 +301,21 @@ module MiqAeEngine
 
       return obj if path.nil? || path.blank?
 
-      path = path[1..-1] if path[0, 2] == "/."
+      path = path[1..-1] if path[0, 2] == '/.'
 
-      if path == "/"
+      if path == '/'
         return roots[0] if obj.nil?
         loop do
           parent = obj.node_parent
           return obj if parent.nil?
           obj = parent
         end
-      elsif path[0, 1] == "."
-        plist = path.split("/")
+      elsif path[0, 1] == '.'
+        plist = path.split('/')
         until plist.empty?
           part = plist.shift
-          next if part.blank? || part == "."
-          raise MiqAeException::InvalidPathFormat, "bad part [#{part}] in path [#{path}]" if (part != "..")
+          next if part.blank? || part == '.'
+          raise MiqAeException::InvalidPathFormat, "bad part [#{part}] in path [#{path}]" if (part != '..')
           obj = obj.node_parent
         end
       else
@@ -325,15 +325,15 @@ module MiqAeEngine
     end
 
     def find_named_ancestor(path)
-      plist = path.split("/")
+      plist = path.split('/')
       raise MiqAeException::InvalidPathFormat, "Unsupported Path [#{path}]" if plist[0].blank?
       klass = plist.pop
-      ns    = (plist.length == 0) ? "*" : plist.join('/')
+      ns    = (plist.length == 0) ? '*' : plist.join('/')
 
       obj = current_object
       while (obj = obj.node_parent)
         next unless klass.casecmp(obj.klass).zero?
-        break if ns == "*"
+        break if ns == '*'
         ns_split = obj.namespace.split('/')
         ns_split.shift # sans domain
         break if ns.casecmp(ns_split.join('/')).zero?

@@ -12,14 +12,14 @@ class TreeBuilderPolicyProfile < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "pp_",
+      :id_prefix => 'pp_',
       :autoload  => true,
     )
   end
 
   # level 0 - root
   def root_options
-    [t = N_("All Policy Profiles"), t]
+    [t = N_('All Policy Profiles'), t]
   end
 
   # level 1 - policy profiles

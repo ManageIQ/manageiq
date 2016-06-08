@@ -58,7 +58,7 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ManageIQ::P
   rescue => err
     if err.to_s =~ /[D|d]eployment.+ could not be found/
       raise MiqException::MiqOrchestrationStackNotExistError,
-            _("%{name} does not exist on %{management}") % {:name => name, :management => ext_management_system.name}
+            _('%{name} does not exist on %{management}') % {:name => name, :management => ext_management_system.name}
     end
 
     _log.error "stack=[#{name}], error: #{err}"

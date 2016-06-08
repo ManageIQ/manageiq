@@ -5,12 +5,12 @@
 def dumpObjects
   return unless @debug
   # List all of the objects in the root object
-  $evm.log("info", "===========================================")
-  $evm.log("info", "In-storage ROOT Objects:")
+  $evm.log('info', '===========================================')
+  $evm.log('info', 'In-storage ROOT Objects:')
   $evm.root.attributes.sort.each do |k, v|
-    $evm.log("info", " -- \t#{k}: #{v}")
+    $evm.log('info', " -- \t#{k}: #{v}")
   end
-  $evm.log("info", "===========================================")
+  $evm.log('info', '===========================================')
 end
 
 dumpObjects
@@ -26,5 +26,5 @@ else
   rootobj = 'miq_server'
 end
 
-$evm.log("info", "Root Object:<#{rootobj}> Detected")
+$evm.log('info', "Root Object:<#{rootobj}> Detected")
 $evm.root['object_type'] = rootobj

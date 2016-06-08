@@ -5,6 +5,6 @@ class ManageIQ::Providers::Google::CloudManager::Template < ManageIQ::Providers:
   end
 
   def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
+    validate_unsupported('Smartstate Analysis')
   end
 end

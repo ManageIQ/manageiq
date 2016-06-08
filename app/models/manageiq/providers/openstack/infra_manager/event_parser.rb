@@ -6,20 +6,20 @@ module ManageIQ::Providers::Openstack::InfraManager::EventParser
 
     # attributes that are common to all notifications
     event_hash = {
-      :event_type => event[:content]["event_type"],
-      :source     => "OPENSTACK",
+      :event_type => event[:content]['event_type'],
+      :source     => 'OPENSTACK',
       :message    => event[:payload],
-      :timestamp  => event[:content]["timestamp"],
-      :username   => event[:content]["_context_user_name"],
+      :timestamp  => event[:content]['timestamp'],
+      :username   => event[:content]['_context_user_name'],
       :full_data  => event,
       :ems_id     => ems_id
     }
 
-    payload = event[:content]["payload"]
-    event_hash[:message]                   = payload["message"]           if payload.key? "message"
-    event_hash[:host_ems_ref]              = payload["node"]              if payload.key? "node"
-    event_hash[:availability_zone_ems_ref] = payload["availability_zone"] if payload.key? "availability_zone"
-    event_hash[:chain_id]                  = payload["reservation_id"]    if payload.key? "reservation_id"
+    payload = event[:content]['payload']
+    event_hash[:message]                   = payload['message']           if payload.key? 'message'
+    event_hash[:host_ems_ref]              = payload['node']              if payload.key? 'node'
+    event_hash[:availability_zone_ems_ref] = payload['availability_zone'] if payload.key? 'availability_zone'
+    event_hash[:chain_id]                  = payload['reservation_id']    if payload.key? 'reservation_id'
     event_hash
   end
 end

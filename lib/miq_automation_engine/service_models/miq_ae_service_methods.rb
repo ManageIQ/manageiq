@@ -1,5 +1,5 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "ServiceNowWebService")
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "RcuWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'ServiceNowWebService')
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'RcuWebService')
 
 #####################################################
 # This is for $evm.execute from an Automate method
@@ -31,10 +31,10 @@ module MiqAeMethodService
           MiqSnmp.trap_v1(inputs)
         else
           MiqQueue.put(
-            :class_name  => "MiqSnmp",
-            :method_name => "trap_v1",
+            :class_name  => 'MiqSnmp',
+            :method_name => 'trap_v1',
             :args        => [inputs],
-            :role        => "notifier",
+            :role        => 'notifier',
             :zone        => nil
           )
         end
@@ -48,10 +48,10 @@ module MiqAeMethodService
           MiqSnmp.trap_v2(inputs)
         else
           MiqQueue.put(
-            :class_name  => "MiqSnmp",
-            :method_name => "trap_v2",
+            :class_name  => 'MiqSnmp',
+            :method_name => 'trap_v2',
             :args        => [inputs],
-            :role        => "notifier",
+            :role        => 'notifier',
             :zone        => nil
           )
         end
@@ -138,11 +138,11 @@ module MiqAeMethodService
       # Need to add the username into the array of params
       # TODO: This code should pass a real username, similar to how the web-service
       #      passes the name of the user that logged into the web-service.
-      args.insert(1, User.find_by_userid("admin")) if args.kind_of?(Array)
+      args.insert(1, User.find_by_userid('admin')) if args.kind_of?(Array)
       MiqAeServiceModelBase.wrap_results(MiqProvisionVirtWorkflow.from_ws(*args))
     end
 
-    def self.create_automation_request(options, userid = "admin", auto_approve = false)
+    def self.create_automation_request(options, userid = 'admin', auto_approve = false)
       user = User.find_by_userid!(userid)
       MiqAeServiceModelBase.wrap_results(AutomationRequest.create_request(options, user, auto_approve))
     end
@@ -150,7 +150,7 @@ module MiqAeMethodService
     private
 
     def self.service_now_drb_undumped
-      _log.info "Entered"
+      _log.info 'Entered'
       [SnsHash, SnsArray].each { |klass| drb_undumped(klass) }
     end
 

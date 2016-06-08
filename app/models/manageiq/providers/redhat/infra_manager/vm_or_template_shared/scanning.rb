@@ -29,7 +29,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
   end
 
   def proxies4job(job = nil)
-    _log.debug "Enter (RHEVM)"
+    _log.debug 'Enter (RHEVM)'
     msg = 'Perform SmartState Analysis on this VM'
 
     # If we do not get passed an model object assume it is a job guid
@@ -51,11 +51,11 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
   end
 
   def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
+    validate_supported_check('Smartstate Analysis')
   end
 
   def miq_server_proxies
-    _log.debug "Enter (RHEVM)"
+    _log.debug 'Enter (RHEVM)'
 
     _log.debug "RedHat: storage_id.blank? = #{storage_id.blank?}"
     return [] if storage_id.blank?
@@ -75,7 +75,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     _log.debug "miq_servers1.length = #{miq_servers.length}"
 
     miq_servers.select! do |svr|
-      result = svr.status == "started" && svr.has_zone?(my_zone)
+      result = svr.status == 'started' && svr.has_zone?(my_zone)
       # RedHat VMs must be scanned from an EVM server who's host is attached to the same
       # storage as the VM unless overridden via SmartProxy affinity
       unless svr.vm_scan_storage_affinity?
@@ -96,7 +96,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
   private
 
   def storage2active_proxies(all_proxy_list = nil)
-    _log.debug "Enter (RHEVM)"
+    _log.debug 'Enter (RHEVM)'
 
     all_proxy_list ||= storage2proxies
     _log.debug "all_proxy_list.length = #{all_proxy_list.length}"
@@ -113,7 +113,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
 
     # Check if we've been told explicitly not to connect to the ems
     # TODO: See vm_scan.rb: config_ems_list() - is this always false for RedHat?
-    if ost.scanData.fetch_path("ems", 'connect') == false
+    if ost.scanData.fetch_path('ems', 'connect') == false
       $log.debug "#{log_header}: returning, ems/connect == false"
       return
     end

@@ -1,5 +1,5 @@
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
-  include_concern "DialogFieldValidation"
+  include_concern 'DialogFieldValidation'
 
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
@@ -40,8 +40,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     update_field_visibility
 
     if get_value(values[:service_template_request])
-      show_dialog(:requester, :hide, "disabled")
-      show_dialog(:purpose,   :hide, "disabled")
+      show_dialog(:requester, :hide, 'disabled')
+      show_dialog(:purpose,   :hide, 'disabled')
     end
   end
 
@@ -100,7 +100,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def custom_sysprep_timezone(field, data_value)
-    set_value_from_list(:sysprep_timezone, field, "%03d" % data_value, @timezones)
+    set_value_from_list(:sysprep_timezone, field, '%03d' % data_value, @timezones)
     @values[:sysprep_timezone].reverse!
   end
 
@@ -118,11 +118,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       clear_field_values([:number_of_cpus, :number_of_sockets, :cores_per_socket, :vm_memory, :cpu_limit, :memory_limit, :cpu_reserve, :memory_reserve])
       vm_description = nil
       vlan = nil
-      show_dialog(:customize, :show, "disabled")
+      show_dialog(:customize, :show, 'disabled')
     else
       if vm.ext_management_system.nil?
-        raise _("Source VM [%{name}] does not belong to a %{table}") %
-                {:name => vm.name, :table => ui_lookup(:table => "ext_management_systems")}
+        raise _('Source VM [%{name}] does not belong to a %{table}') %
+                {:name => vm.name, :table => ui_lookup(:table => 'ext_management_systems')}
       end
       set_or_default_hardware_field_values(vm)
 
@@ -133,7 +133,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       vm_description = vm.description
       case vm.platform
       when 'linux', 'windows' then show_dialog(:customize, :show, "enabled")
-      else                         show_dialog(:customize, :hide, "disabled")
+      else                         show_dialog(:customize, :hide, 'disabled')
       end
 
       # If the selected template switches EMS, update the value and invalidate the @ems_metadata_tree handle.
@@ -215,7 +215,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if [:clone_to_vm, :clone_to_template].include?(request_type)
       f[:hide] += [:vm_filter]
       if request_type == :clone_to_template
-        show_dialog(:customize, :hide, "disabled")
+        show_dialog(:customize, :hide, 'disabled')
         f[:hide] += [:vm_auto_start]
       end
     end
@@ -387,7 +387,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     filters.each do |f|
       result.delete_if do |key, name|
         test_str = f[:key] == :key ? key : name
-        f[:modifier] == "!" ? test_str =~ f[:filter] : test_str !~ f[:filter]
+        f[:modifier] == '!' ? test_str =~ f[:filter] : test_str !~ f[:filter]
       end
     end
 
@@ -444,7 +444,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       unless tag_conditions.blank?
         _log.info "Filtering VM templates with the following tag_filters: <#{tag_conditions.inspect}>"
-        vms = MiqTemplate.where(condition).find_tags_by_grouping(tag_conditions, :ns => "/managed")
+        vms = MiqTemplate.where(condition).find_tags_by_grouping(tag_conditions, :ns => '/managed')
       end
     end
 
@@ -453,7 +453,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @allowed_templates_tag_filters = @values[:vm_tags]
     rails_logger('allowed_templates', 1)
     if allowed_templates_list.blank?
-      _log.warn "Allowed Templates is returning an empty list"
+      _log.warn 'Allowed Templates is returning an empty list'
     else
       _log.warn "Allowed Templates is returning <#{allowed_templates_list.length}> template(s)"
       allowed_templates_list.each do |vm|
@@ -470,9 +470,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def allowed_template_condition
-    return ["vms.template = ? AND vms.ems_id IS NOT NULL", true] unless self.class.respond_to?(:provider_model)
+    return ['vms.template = ? AND vms.ems_id IS NOT NULL', true] unless self.class.respond_to?(:provider_model)
 
-    ["vms.template = ? AND vms.ems_id in (?)", true, self.class.provider_model.pluck(:id)]
+    ['vms.template = ? AND vms.ems_id in (?)', true, self.class.provider_model.pluck(:id)]
   end
 
   def source_vm_rbac_filter(vms, condition = nil)
@@ -488,7 +488,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result = {}
     return result if (vm = get_source_vm).blank?
     vm.snapshots.each { |ss| result[ss.id.to_s] = ss.current? ? "#{ss.name} (Active)" : ss.name }
-    result["__CURRENT__"] = _(" Use the snapshot that is active at time of provisioning") unless result.blank?
+    result['__CURRENT__'] = _(' Use the snapshot that is active at time of provisioning') unless result.blank?
     result
   end
 
@@ -557,13 +557,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_customization(_options = {})
     src = get_source_and_targets
     return {} if src.blank?
-    return {"fields" => "Specification"} if @values[:forced_sysprep_enabled] == 'fields'
+    return {'fields' => 'Specification'} if @values[:forced_sysprep_enabled] == 'fields'
 
-    result = {"disabled" => "<None>"}
+    result = {'disabled' => '<None>'}
 
     case src[:vm].platform
-    when 'windows' then result.merge!("fields" => "Specification", "file"  => "Sysprep Answer File")
-    when 'linux'   then result.merge!("fields" => "Specification")
+    when 'windows' then result.merge!('fields' => 'Specification', 'file'  => 'Sysprep Answer File')
+    when 'linux'   then result.merge!('fields' => 'Specification')
     end
 
     result
@@ -579,7 +579,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def load_test_ous_data
     return @ldap_ous unless @ldap_ous.nil?
-    ous = YAML.load_file("ous.yaml")
+    ous = YAML.load_file('ous.yaml')
     @ldap_ous = {}
     ous.each { |ou| @ldap_ous[ou[0].dup] = ou[1].dup }
     @ldap_ous
@@ -594,7 +594,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     ous = allowed_organizational_units
     return ous if ous.blank?
 
-    dc_path = ous.keys.first.split(',').collect { |i| i.split("DC=")[1] }.compact.join(".")
+    dc_path = ous.keys.first.split(',').collect { |i| i.split('DC=')[1] }.compact.join('.')
     ous.each { |ou| create_ou_tree(ou, hous[dc_path] ||= {}, ou[0].split(',')) }
 
     # Re-adjust path for remove levels without OUs.
@@ -637,7 +637,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def create_ou_tree(ou, h, path)
     idx = path.pop
     type, pathname = idx.split('=')
-    if type == "DC"
+    if type == 'DC'
       create_ou_tree(ou, h, path)
     else
       if path.blank?
@@ -805,7 +805,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       send(cust_method, field_hash, data_value)
     else
       value = case data_type
-              when :boolean then data_value == "true"
+              when :boolean then data_value == 'true'
               when :integer then data_value.to_i_with_method
               when :string  then data_value.to_s
               else               data_value
@@ -853,7 +853,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     p = new(values, user, :use_pre_dialog => false)
     src_name_down = src_name.downcase
     src = p.allowed_templates.detect { |v| v.name.downcase == src_name_down }
-    raise _("Source template [%{name}] was not found") % {:name => src_name} if src.nil?
+    raise _('Source template [%{name}] was not found') % {:name => src_name} if src.nil?
     p = class_for_source(src.id).new(values, user, :use_pre_dialog => false)
 
     # Populate required fields
@@ -886,7 +886,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     unless placement_cluster_name.blank?
       data[:placement_cluster_name] = placement_cluster_name.to_s.downcase
       _log.info "placement_cluster_name:<#{data[:placement_cluster_name].inspect}>"
-      data[:data_centers] = EmsCluster.where("lower(name) = ?", data[:placement_cluster_name]).collect(&:v_parent_datacenter)
+      data[:data_centers] = EmsCluster.where('lower(name) = ?', data[:placement_cluster_name]).collect(&:v_parent_datacenter)
     end
     _log.info "data:<#{data.inspect}>"
 
@@ -904,12 +904,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
         (src_name.nil? || src_name == v.name.downcase) && (src_guid.nil? || src_guid == v.guid) && (ems_guid.nil? || ems_guid == v.uid_ems) && (data_centers.nil? || data_centers.include?(v.datacenter_name))
       end
       if srcs.length > 1
-        raise _("Multiple source template were found from input data:<%{data}>") % {:data => data.inspect}
+        raise _('Multiple source template were found from input data:<%{data}>') % {:data => data.inspect}
       end
       src = srcs.first
     end
     if src.nil?
-      raise _("No source template was found from input data:<%{data}>") % {:data => data.inspect}
+      raise _('No source template was found from input data:<%{data}>') % {:data => data.inspect}
     end
     _log.info "VM Found: <#{src.name}> <#{src.guid}> <#{src.uid_ems}>  Datacenter:<#{src.datacenter_name}>"
     src
@@ -938,7 +938,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def ws_environment_fields(values, data)
     # do not parse environment data unless :placement_auto is false
-    return unless data[:placement_auto].to_s == "false"
+    return unless data[:placement_auto].to_s == 'false'
 
     values[:placement_auto] = [false, 0]
     return if (dlg_fields = get_ws_dialog_fields(dialog_name = :environment)).nil?
@@ -956,10 +956,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
       dlg_field = :pxe_image_id
       get_field(dlg_field, dialog_name)
-      set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, nil, "PxeImage")
+      set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, nil, 'PxeImage')
 
       # Windows images are also stored with the pxe_image values
-      set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, :windows_image_id, "WindowsImage")
+      set_ws_field_value_by_id_or_name(values, dlg_field, data, dialog_name, dlg_fields, :windows_image_id, 'WindowsImage')
     end
 
     data.keys.each { |key| set_ws_field_value(values, key, data, dialog_name, dlg_fields) if dlg_fields.key?(key) }
@@ -1058,7 +1058,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     p = new(values = {}, user, init_options)
     src = p.ws_template_fields(values, template_fields, options.values)
-    raise _("Source template [%{name}] was not found") % {:name => src_name} if src.nil?
+    raise _('Source template [%{name}] was not found') % {:name => src_name} if src.nil?
     # Allow new workflow class to determine dialog name instead of using the stored value from the first call.
     values.delete(:miq_request_dialog_name)
     values[:placement_auto] = [true, 1]
@@ -1140,7 +1140,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def selected_host(src)
-    raise _("Unable to find Host with Id: [%{id}]") % {:id => src[:host_id]} if src[:host].nil?
+    raise _('Unable to find Host with Id: [%{id}]') % {:id => src[:host_id]} if src[:host].nil?
     [load_ar_obj(src[:host])]
   end
 end

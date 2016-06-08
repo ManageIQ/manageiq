@@ -1,11 +1,11 @@
 describe ApplicationRecord do
-  context "calling apply_legacy_finder_options" do
+  context 'calling apply_legacy_finder_options' do
     before(:each) do
       @vm = FactoryGirl.create(:vm_vmware)
       @perf = FactoryGirl.create(
         :metric_rollup_vm_daily,
         :resource_id  => @vm.id,
-        :timestamp    => "2010-04-14T00:00:00Z",
+        :timestamp    => '2010-04-14T00:00:00Z',
         :time_profile => @time_profile
       )
 
@@ -33,7 +33,7 @@ describe ApplicationRecord do
 
       }
     end
-    it "should not raise an error when a polymorphic reflection is included" do
+    it 'should not raise an error when a polymorphic reflection is included' do
       result = nil
       expect do
         result = MetricRollup.apply_legacy_finder_options(:include => @include).to_a

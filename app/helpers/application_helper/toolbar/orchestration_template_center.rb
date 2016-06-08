@@ -30,7 +30,7 @@ class ApplicationHelper::Toolbar::OrchestrationTemplateCenter < ApplicationHelpe
           t = N_('Remove this Orchestration Template'),
           t,
           :klass => ApplicationHelper::Button::OrchestrationTemplateEditRemove,
-          :confirm => N_("Remove this Orchestration Template?")),
+          :confirm => N_('Remove this Orchestration Template?')),
       ]
     ),
   ])

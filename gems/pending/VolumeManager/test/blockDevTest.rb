@@ -21,13 +21,13 @@ begin
   volMgr = MiqVolumeManager.fromNativePvs
 
   puts
-  puts "Volume Groups:"
+  puts 'Volume Groups:'
   volMgr.vgHash.each do |vgName, vgObj|
     puts "\t#{vgName}: seq# = #{vgObj.seqNo}"
   end
 
   puts
-  puts "Logical Volumes:"
+  puts 'Logical Volumes:'
   volMgr.lvHash.each do |key, lv|
     puts "\t#{key}\t#{lv.dInfo.lvObj.lvName}"
   end

@@ -5,11 +5,11 @@ class TreeBuilderServiceDialogs < TreeBuilderAeCustomization
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "Dialog", :open_all => true}
+    {:leaf => 'Dialog', :open_all => true}
   end
 
   def root_options
-    [t = _("All Dialogs"), t]
+    [t = _('All Dialogs'), t]
   end
 
   # Get root nodes count/array for explorer tree

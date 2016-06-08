@@ -24,11 +24,11 @@ def buildDetails(vm)
   options[:subject] = subject
 
   # Build Email Body
-  body = "Attention,"
+  body = 'Attention,'
   body += "<br>EVM Appliance: #{$evm.root['miq_server'].hostname}"
   body += "<br>EVM Region: #{$evm.root['miq_server'].region_number}"
   body += "<br>Alert: #{options[:alert]}"
-  body += "<br><br>"
+  body += '<br><br>'
 
   body += "<br>VM <b>#{vm.name}</b> Properties:"
   body += "<br>VM URL: <a href='https://#{appliance}/VM/show/#{vm.id}'>https://#{appliance}/VM/show/#{vm.id}</a>"
@@ -39,31 +39,31 @@ def buildDetails(vm)
   body += "<br>Tools Status: #{vm.tools_status}"
   body += "<br>Operating System: #{vm.operating_system['product_name']}"
   body += "<br>Disk Alignment: #{vm.disks_aligned}"
-  body += "<br><br>"
+  body += '<br><br>'
 
-  body += "<br>Power Maangement:"
+  body += '<br>Power Maangement:'
   body += "<br>Power State: #{vm.power_state}"
   body += "<br>Last Boot: #{vm.boot_time}"
-  body += "<br><br>"
+  body += '<br><br>'
 
-  body += "<br>Snapshot Information:"
+  body += '<br>Snapshot Information:'
   body += "<br>Total Snapshots: #{vm.v_total_snapshots}"
   body += "<br>Total Snapshots: #{vm.v_total_snapshots}"
-  body += "<br><br>"
+  body += '<br><br>'
 
-  body += "<br>Relationships:"
+  body += '<br>Relationships:'
   body += "<br>Datacenter: #{vm.v_owning_datacenter}"
   body += "<br>Cluster: #{vm.ems_cluster_name}"
   body += "<br>Host: #{vm.host_name}"
   body += "<br>Datastore Path: #{vm.v_datastore_path}"
   body += "<br>Resource Pool: #{vm.v_owning_resource_pool}"
-  body += "<br><br>"
+  body += '<br><br>'
 
-  body += "<br>VM Tags:"
+  body += '<br>VM Tags:'
   body += "<br>#{vm.tags.inspect}"
-  body += "<br><br>"
+  body += '<br><br>'
 
-  body += "<br>Regards,"
+  body += '<br>Regards,'
   body += "<br>#{signature}"
   options[:body] = body
 
@@ -92,13 +92,13 @@ def emailAlert(options)
   # Get body from options Hash
   body = options[:body]
 
-  $evm.log("info", "Sending email To:<#{to}> From:<#{from}> subject:<#{subject}>")
+  $evm.log('info', "Sending email To:<#{to}> From:<#{from}> subject:<#{subject}>")
   $evm.execute(:send_email, to, from, subject, body)
 end
 
 vm = $evm.root['vm']
 unless vm.nil?
-  $evm.log("info", "Detected VM:<#{vm.name}>")
+  $evm.log('info', "Detected VM:<#{vm.name}>")
 
   # If email is set to true in the model
   options = buildDetails(vm)

@@ -1,20 +1,20 @@
 require 'trollop'
-ARGV.shift if ARGV.first == "--" # Handle when called through script/runner
+ARGV.shift if ARGV.first == '--' # Handle when called through script/runner
 opts = Trollop.options do
-  opt :ip,     "IP address", :type => :string, :required => true
-  opt :user,   "User Name",  :type => :string, :required => true
-  opt :pass,   "Password",   :type => :string, :required => true
+  opt :ip,     'IP address', :type => :string, :required => true
+  opt :user,   'User Name',  :type => :string, :required => true
+  opt :pass,   'Password',   :type => :string, :required => true
 
-  opt :bypass, "Bypass broker usage", :type => :boolean
-  opt :dir,    "Output directory",    :default => "."
+  opt :bypass, 'Bypass broker usage', :type => :boolean
+  opt :dir,    'Output directory',    :default => '.'
 end
-Trollop.die :ip, "is an invalid format" unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
+Trollop.die :ip, 'is an invalid format' unless opts[:ip] =~ /^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$/
 
 def process(accessor, dir)
   puts "Reading #{accessor}..."
   data = yield
   puts "Writing #{accessor}..."
-  File.open(File.join(dir, "#{accessor}.yml"), "w") { |f| f.write(data.to_yaml(:SortKeys => true)) }
+  File.open(File.join(dir, "#{accessor}.yml"), 'w') { |f| f.write(data.to_yaml(:SortKeys => true)) }
   data
 end
 
@@ -29,7 +29,7 @@ VC_ACCESSORS = [
   [:resourcePoolsByMor,           :rp],
 ]
 
-dir = File.expand_path(File.join(opts[:dir], "miq_vim_inventory"))
+dir = File.expand_path(File.join(opts[:dir], 'miq_vim_inventory'))
 Dir.mkdir(dir) unless File.directory?(dir)
 puts "Output in #{dir}"
 
@@ -69,7 +69,7 @@ begin
       vim_csm = vim.getVimCustomizationSpecManager
       vim_csm.getAllCustomizationSpecs
     rescue RuntimeError => err
-      raise unless err.message.include?("not supported on this system")
+      raise unless err.message.include?('not supported on this system')
       []
     ensure
       vim_csm.release if vim_csm rescue nil

@@ -6,20 +6,20 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
     @ems = FactoryGirl.create(
       :ems_openstack,
       :zone      => zone,
-      :hostname  => "1.2.3.4",
-      :ipaddress => "1.2.3.4",
+      :hostname  => '1.2.3.4',
+      :ipaddress => '1.2.3.4',
       :port      => 5000)
-    @ems.update_authentication(:default => {:userid => "admin", :password => "password"})
+    @ems.update_authentication(:default => {:userid => 'admin', :password => 'password'})
   end
 
-  it "will record an error when trying to perform a full refresh against RHOS Havana" do
-    error = "Bad Request"
+  it 'will record an error when trying to perform a full refresh against RHOS Havana' do
+    error = 'Bad Request'
     refresh_ems(@ems, error)
     assert_failed_refresh(error)
   end
 
   def assert_failed_refresh(error)
-    expect(@ems.last_refresh_status).to eq("error")
+    expect(@ems.last_refresh_status).to eq('error')
     expect(@ems.last_refresh_error).to eq(error)
   end
 

@@ -11,11 +11,11 @@ module MiqAeMethodService
     expose :validate_resize_revert
 
     def attach_volume(volume_id, device = nil, options = {})
-      sync_or_async_ems_operation(options[:sync], "attach_volume", [volume_id, device])
+      sync_or_async_ems_operation(options[:sync], 'attach_volume', [volume_id, device])
     end
 
     def detach_volume(volume_id, options = {})
-      sync_or_async_ems_operation(options[:sync], "detach_volume", [volume_id])
+      sync_or_async_ems_operation(options[:sync], 'detach_volume', [volume_id])
     end
 
   end

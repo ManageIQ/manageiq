@@ -1,7 +1,7 @@
 class MiqReplicationWorker < MiqWorker
   require_nested :Runner
 
-  self.required_roles = ["database_synchronization"]
+  self.required_roles = ['database_synchronization']
   self.include_stopping_workers_on_synchronize = true
 
   def self.replication_destination_connection_parameters
@@ -19,7 +19,7 @@ class MiqReplicationWorker < MiqWorker
   end
 
   def friendly_name
-    @friendly_name ||= _("Database Replication Worker")
+    @friendly_name ||= _('Database Replication Worker')
   end
 
   #

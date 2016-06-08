@@ -24,15 +24,15 @@ module MiqAeServiceServiceReconfigureTaskSpec
       MiqAeEngine.instantiate("/EVM/AUTOMATE/test1?ServiceReconfigureTask::service_reconfigure_task=#{task.id}", user)
     end
 
-    context "#status" do
+    context '#status' do
       it "returns 'ok' when state is finished" do
-        task.update_attributes(:state => "finished")
+        task.update_attributes(:state => 'finished')
 
         expect(invoke_ae.root('result')).to eq('ok')
       end
 
       it "returns 'retry' when state is pending" do
-        task.update_attributes(:state => "pending")
+        task.update_attributes(:state => 'pending')
 
         expect(invoke_ae.root('result')).to eq('retry')
       end

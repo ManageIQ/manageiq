@@ -16,7 +16,7 @@ module MiqWin32
       # @debug_str = ''
 
       regHnd = RemoteRegistry.new(fs, true)
-      reg_doc = regHnd.loadHive("sam", nil)
+      reg_doc = regHnd.loadHive('sam', nil)
       regHnd.close
 
       # Collect a mapping of user SIDs to user names for user-group relationships
@@ -25,7 +25,7 @@ module MiqWin32
       # Extract the users data from the registry
       @debug_str += "Users:\n" if @debug_str
       sections = [
-        "HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Account\\Users",
+        'HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Account\\Users',
         # "SAM/SAM/Domains/Builtin/Users"
       ]
       sections.each do |section|
@@ -44,7 +44,7 @@ module MiqWin32
               if reg_node2
                 reg_node2.each_element(:value) do |e3|
                   @debug_str += "      %s - %s - %s\n" % [e3.attributes[:name], e3.attributes[:type], e3.text] if @debug_str
-                  if e3.attributes[:name] == "F"
+                  if e3.attributes[:name] == 'F'
                     users_f = process_users_f(e3.text)
 
                     # Do a sanity check on the return data
@@ -54,7 +54,7 @@ module MiqWin32
                     elsif !user_data.nil?
                       user_data.merge!(users_f)
                     end
-                  elsif e3.attributes[:name] == "V"
+                  elsif e3.attributes[:name] == 'V'
                     users_v = process_users_v(e3.text)
 
                     # Do a sanity check on the return data
@@ -71,17 +71,17 @@ module MiqWin32
             end
 
             # Get the pertinent data from out of that
-            nh = {"name" => username}
+            nh = {'name' => username}
             unless user_data.nil? || user_data.length == 0
               nh.merge!(
-                "userid"       => user_data['user_num'],
-                "display_name" => user_data['fullname'],
-                "comment"      => user_data['comment'],
-                "homedir"      => user_data['homedir'],
-                "enabled"      => user_data['account_active'],
-                "expires"      => user_data['account_expires'].nil? ? "never" : user_data['account_expires'],
-                "last_logon"   => user_data['last_logon'],
-                "groups"       => []
+                'userid'       => user_data['user_num'],
+                'display_name' => user_data['fullname'],
+                'comment'      => user_data['comment'],
+                'homedir'      => user_data['homedir'],
+                'enabled'      => user_data['account_active'],
+                'expires'      => user_data['account_expires'].nil? ? 'never' : user_data['account_expires'],
+                'last_logon'   => user_data['last_logon'],
+                'groups'       => []
               )
 
               # Check for the SID in the permissions block by looking for a certain set of permissions.
@@ -102,9 +102,9 @@ module MiqWin32
       # Extract the groups data from the registry
       @debug_str += "Groups:\n" if @debug_str
       sections = [
-        "HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Builtin\\Aliases",
+        'HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Builtin\\Aliases',
         # "SAM/SAM/Domains/Builtin/Groups",
-        "HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Account\\Aliases",
+        'HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Account\\Aliases',
         # "SAM/SAM/Domains/Account/Groups"
       ]
       sections.each do |section|
@@ -123,7 +123,7 @@ module MiqWin32
               if reg_node2
                 reg_node2.each_element(:value) do |e3|
                   @debug_str += "      %s - %s - %s\n" % [e3.attributes[:name], e3.attributes[:type], e3.text] if @debug_str
-                  if e3.attributes[:name] == "C"
+                  if e3.attributes[:name] == 'C'
                     groups_c = process_groups_c(e3.text)
 
                     # Do a sanity check on the return data
@@ -139,11 +139,11 @@ module MiqWin32
             end
 
             # Get the pertinent data from out of that
-            nh = {"name" => groupname}
+            nh = {'name' => groupname}
             unless group_data.nil? || group_data.length == 0
               nh.merge!(
-                "groupid" => group_data['group_num'],
-                "comment" => group_data['group_desc']
+                'groupid' => group_data['group_num'],
+                'comment' => group_data['group_desc']
               )
 
               nh['users'] = []
@@ -181,10 +181,10 @@ module MiqWin32
     def usersToXml(doc = nil)
       doc = MiqXml.createDoc(nil) unless doc
       unless @users.empty?
-        node = doc.add_element("users")
+        node = doc.add_element('users')
         @users.each do |u|
           u_groups = u.delete('groups')
-          user = node.add_element("user", u)
+          user = node.add_element('user', u)
 
           u_groups.each do |g|
             user.add_element('member_of_group', 'name' => g)
@@ -197,10 +197,10 @@ module MiqWin32
     def groupsToXml(doc = nil)
       doc = MiqXml.createDoc(nil) unless doc
       unless @groups.empty?
-        node = doc.add_element("groups")
+        node = doc.add_element('groups')
         @groups.each do |g|
           g_users = g.delete('users')
-          group = node.add_element("group", g)
+          group = node.add_element('group', g)
 
           g_users.each do |u|
             group.add_element('member_users', 'name' => u)
@@ -383,28 +383,28 @@ module MiqWin32
 
     def self.rawBinaryToRegBinary(a)
       b = ''
-      a.each_byte { |c| b += "%02x," % c } unless a.nil?
+      a.each_byte { |c| b += '%02x,' % c } unless a.nil?
       b.chop
     end
 
     def process_users_f(data)
       f = BinaryStruct.decode(MSRegHive.regBinaryToRawBinary(data), SAM_STRUCT_USERS_F)
 
-      @debug_str += "        last_logon              - %s - " % f['last_logon'].to_s if @debug_str
+      @debug_str += '        last_logon              - %s - ' % f['last_logon'].to_s if @debug_str
       f['last_logon'] = process_users_f_date(f['last_logon'])
-      @debug_str += "%s\n" % (f['last_logon'].nil? ? "Never" : f['last_logon']) if @debug_str
+      @debug_str += "%s\n" % (f['last_logon'].nil? ? 'Never' : f['last_logon']) if @debug_str
 
-      @debug_str += "        last_pw_set             - %s - " % f['last_pw_set'].to_s if @debug_str
+      @debug_str += '        last_pw_set             - %s - ' % f['last_pw_set'].to_s if @debug_str
       f['last_pw_set'] = process_users_f_date(f['last_pw_set'])
-      @debug_str += "%s\n" % (f['last_pw_set'].nil? ? "Not Change" : f['last_pw_set']) if @debug_str
+      @debug_str += "%s\n" % (f['last_pw_set'].nil? ? 'Not Change' : f['last_pw_set']) if @debug_str
 
-      @debug_str += "        account_expires         - %s - " % f['account_expires'].to_s if @debug_str
+      @debug_str += '        account_expires         - %s - ' % f['account_expires'].to_s if @debug_str
       f['account_expires'] = process_users_f_date(f['account_expires'])
-      @debug_str += "%s\n" % (f['account_expires'].nil? ? "Not set to expire" : f['account_expires']) if @debug_str
+      @debug_str += "%s\n" % (f['account_expires'].nil? ? 'Not set to expire' : f['account_expires']) if @debug_str
 
-      @debug_str += "        last_wrong_pw           - %s - " % f['last_wrong_pw'].to_s if @debug_str
+      @debug_str += '        last_wrong_pw           - %s - ' % f['last_wrong_pw'].to_s if @debug_str
       f['last_wrong_pw'] = process_users_f_date(f['last_wrong_pw'])
-      @debug_str += "%s\n" % (f['last_wrong_pw'].nil? ? "Not Wrong" : f['last_wrong_pw']) if @debug_str
+      @debug_str += "%s\n" % (f['last_wrong_pw'].nil? ? 'Not Wrong' : f['last_wrong_pw']) if @debug_str
 
       @debug_str += "        user_num                - %s\n" % f['user_num'].to_s if @debug_str
 
@@ -417,9 +417,9 @@ module MiqWin32
       f['pw_never_expire'] = process_users_f_pw_never_expire(f['pw_never_expire'])
       @debug_str += "          pw_never_expire       - %s\n" % f['pw_never_expire'].to_s if @debug_str
 
-      @debug_str += "        country_code            - %s - " % f['country_code'] if @debug_str
+      @debug_str += '        country_code            - %s - ' % f['country_code'] if @debug_str
       f['country_code'] = process_users_f_country_code(f['country_code'])
-      @debug_str += "%s\n" % (f['country_code'].nil? ? "Unknown" : f['country_code']) if @debug_str
+      @debug_str += "%s\n" % (f['country_code'].nil? ? 'Unknown' : f['country_code']) if @debug_str
 
       @debug_str += "        invalid_pw_count        - %s\n" % f['invalid_pw_count'].to_s if @debug_str
       @debug_str += "        num_logons              - %s\n" % f['num_logons'].to_s if @debug_str
@@ -626,23 +626,23 @@ module MiqWin32
       end
 
       # Clean up Unicode string fields
-      v['username'].UnicodeToUtf8!.tr!("\0", "")
+      v['username'].UnicodeToUtf8!.tr!("\0", '')
       v['username'] = nil if v['username'].length == 0
-      v['fullname'].UnicodeToUtf8!.tr!("\0", "")
+      v['fullname'].UnicodeToUtf8!.tr!("\0", '')
       v['fullname'] = nil if v['fullname'].length == 0
-      v['comment'].UnicodeToUtf8!.tr!("\0", "")
+      v['comment'].UnicodeToUtf8!.tr!("\0", '')
       v['comment'] = nil if v['comment'].length == 0
-      v['user_comment'].UnicodeToUtf8!.tr!("\0", "")
+      v['user_comment'].UnicodeToUtf8!.tr!("\0", '')
       v['user_comment'] = nil if v['user_comment'].length == 0
-      v['homedir'].UnicodeToUtf8!.tr!("\0", "")
+      v['homedir'].UnicodeToUtf8!.tr!("\0", '')
       v['homedir'] = nil if v['homedir'].length == 0
-      v['homedir_conn'].UnicodeToUtf8!.tr!("\0", "")
+      v['homedir_conn'].UnicodeToUtf8!.tr!("\0", '')
       v['homedir_conn'] = nil if v['homedir_conn'].length == 0
-      v['script_path'].UnicodeToUtf8!.tr!("\0", "")
+      v['script_path'].UnicodeToUtf8!.tr!("\0", '')
       v['script_path'] = nil if v['script_path'].length == 0
-      v['profile_path'].UnicodeToUtf8!.tr!("\0", "")
+      v['profile_path'].UnicodeToUtf8!.tr!("\0", '')
       v['profile_path'] = nil if v['profile_path'].length == 0
-      v['workstations'].UnicodeToUtf8!.tr!("\0", "")
+      v['workstations'].UnicodeToUtf8!.tr!("\0", '')
       v['workstations'] = nil if v['workstations'].length == 0
 
       if @debug_str
@@ -742,9 +742,9 @@ module MiqWin32
       end
 
       # Clean up Unicode string fields
-      c['group_name'].UnicodeToUtf8!.tr!("\0", "")
+      c['group_name'].UnicodeToUtf8!.tr!("\0", '')
       c['group_name'] = nil if c['group_name'].length == 0
-      c['group_desc'].UnicodeToUtf8!.tr!("\0", "")
+      c['group_desc'].UnicodeToUtf8!.tr!("\0", '')
       c['group_desc'] = nil if c['group_desc'].length == 0
 
       # Clean up SID values

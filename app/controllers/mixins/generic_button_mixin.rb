@@ -6,8 +6,8 @@ module Mixins
       params[:display] = @display if %w(images instances).include?(@display) # Were we displaying vms/hosts/storages
       params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
 
-      if params[:pressed].starts_with?("image_", # Handle buttons from sub-items screen
-                                       "instance_")
+      if params[:pressed].starts_with?('image_', # Handle buttons from sub-items screen
+                                       'instance_')
 
         pfx = pfx_for_vm_button_pressed(params[:pressed])
         process_vm_buttons(pfx)
@@ -21,8 +21,8 @@ module Mixins
 
         unless ["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
                 "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-          @refresh_div = "main_div"
-          @refresh_partial = "layouts/gtl"
+          @refresh_div = 'main_div'
+          @refresh_partial = 'layouts/gtl'
           show # Handle VMs buttons
         end
       else
@@ -33,10 +33,10 @@ module Mixins
 
       check_if_button_is_implemented
 
-      if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
+      if params[:pressed].ends_with?('_edit') || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
         render_or_redirect_partial(pfx)
-      elsif @refresh_div == "main_div" && @lastaction == "show_list"
+      elsif @refresh_div == 'main_div' && @lastaction == 'show_list'
         replace_gtl_main_div
       else
         render_flash

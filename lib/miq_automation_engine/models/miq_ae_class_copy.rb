@@ -87,7 +87,7 @@ class MiqAeClassCopy
 
   def check_duplicity(domain, ns, classname)
     if domain.downcase == @src_domain.downcase && classname.downcase == @ae_class.downcase
-      raise "Cannot copy class onto itself" if ns.nil? || ns.downcase == @partial_ns.downcase
+      raise 'Cannot copy class onto itself' if ns.nil? || ns.downcase == @partial_ns.downcase
     end
   end
 end

@@ -44,22 +44,22 @@ if __FILE__ == $0
   # root_user     = nil
   # root_password = nil
 
-  local_file    = "/Users/myuser/.bash_profile"
-  remote_file   = "/tmp/.bash_profile"
+  local_file    = '/Users/myuser/.bash_profile'
+  remote_file   = '/tmp/.bash_profile'
 
   s = MiqSshUtil.new(host, userid, password, :su_user => root_user, :su_password => root_password)
-  puts s.exec("ls -l /")
-  puts s.suexec("id") if userid && root_user && userid != root_user
-  puts s.suexec("ls -l /") if userid && root_user && userid != root_user
+  puts s.exec('ls -l /')
+  puts s.suexec('id') if userid && root_user && userid != root_user
+  puts s.suexec('ls -l /') if userid && root_user && userid != root_user
   s.cp(local_file, remote_file)
   s.get_file(remote_file, "#{local_file}.via_sftp")
 
   MiqSshUtil.shell_with_su(host, userid, password, root_user, root_password) do |ssu, _shell|
-    puts ssu.suexec("id") if userid && root_user && userid != root_user
-    puts ssu.shell_exec("id")
-    puts ssu.shell_exec("esxupdate query")
-    puts ssu.shell_exec("chkconfig --list")
+    puts ssu.suexec('id') if userid && root_user && userid != root_user
+    puts ssu.shell_exec('id')
+    puts ssu.shell_exec('esxupdate query')
+    puts ssu.shell_exec('chkconfig --list')
     puts ssu.shell_exec("rpm -qa --queryformat '%{NAME}|%{VERSION}|%{ARCH}|%{GROUP}|%{RELEASE}|%{SUMMARY}\n'")
-    puts ssu.shell_exec("grep PermitRootLogin /etc/ssh/sshd_config")
+    puts ssu.shell_exec('grep PermitRootLogin /etc/ssh/sshd_config')
   end
 end

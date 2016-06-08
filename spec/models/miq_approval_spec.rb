@@ -1,5 +1,5 @@
 describe MiqApproval do
-  it "#approver= also sets approver_name" do
+  it '#approver= also sets approver_name' do
     approval = FactoryGirl.build(:miq_approval)
     user     = FactoryGirl.create(:user)
 
@@ -12,16 +12,16 @@ describe MiqApproval do
     expect(approval.approver_name).to be_nil
   end
 
-  context "#approve" do
-    it "works" do
+  context '#approve' do
+    it 'works' do
       user     = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
       approver = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
 
       approval = FactoryGirl.create(:miq_approval)
-      reason   = "Why Not?"
+      reason   = 'Why Not?'
 
       allow(approval).to receive(:authorized?).and_return(false)
-      expect { approval.approve(approver, reason) }.to raise_error("not authorized")
+      expect { approval.approve(approver, reason) }.to raise_error('not authorized')
 
       miq_request = FactoryGirl.create(:vm_migrate_request, :requester => user)
       approval.miq_request = miq_request
@@ -56,15 +56,15 @@ describe MiqApproval do
     end
   end
 
-  it "#deny" do
+  it '#deny' do
     user     = FactoryGirl.create(:user, :name => 'Fred Flintstone',  :userid => 'fred')
     approver = FactoryGirl.create(:user, :name => 'Wilma Flintstone', :userid => 'approver')
 
     approval = FactoryGirl.create(:miq_approval)
-    reason   = "Why Not?"
+    reason   = 'Why Not?'
 
     allow(approval).to receive(:authorized?).and_return(false)
-    expect { approval.deny(approver, reason) }.to raise_error("not authorized")
+    expect { approval.deny(approver, reason) }.to raise_error('not authorized')
 
     miq_request = FactoryGirl.create(:vm_migrate_request, :requester => user)
     approval.miq_request = miq_request
@@ -80,44 +80,44 @@ describe MiqApproval do
     end
   end
 
-  context "#authorized?" do
+  context '#authorized?' do
     let(:approval) { FactoryGirl.create(:miq_approval) }
-    let(:user)     { FactoryGirl.create(:user, :userid => "user1") }
-    let(:user2)    { FactoryGirl.create(:user, :userid => "user2") }
+    let(:user)     { FactoryGirl.create(:user, :userid => 'user1') }
+    let(:user2)    { FactoryGirl.create(:user, :userid => 'user2') }
     let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
 
-    it "with nil" do
+    it 'with nil' do
       expect(approval.authorized?(nil)).to be_falsey
     end
 
-    it "with a user object without approval rights" do
+    it 'with a user object without approval rights' do
       expect(approval.authorized?(user)).to be_falsey
     end
 
-    it "with a user object with approval rights" do
+    it 'with a user object with approval rights' do
       expect(approval.authorized?(approver)).to be_truthy
     end
 
-    it "with a userid without approval rights" do
+    it 'with a userid without approval rights' do
       expect(approval.authorized?(user.userid)).to be_falsey
     end
 
-    it "with a userid with approval rights" do
+    it 'with a userid with approval rights' do
       expect(approval.authorized?(approver.userid)).to be_truthy
     end
 
-    context "with the approver property set to a specific user" do
+    context 'with the approver property set to a specific user' do
       before { approval.approver = user }
 
-      it "and passing the same user" do
+      it 'and passing the same user' do
         expect(approval.authorized?(user)).to be_truthy
       end
 
-      it "and passing a different user with approval rights" do
+      it 'and passing a different user with approval rights' do
         expect(approval.authorized?(approver)).to be_truthy
       end
 
-      it "and passing a different user without approval rights" do
+      it 'and passing a different user without approval rights' do
         expect(approval.authorized?(user2)).to be_falsey
       end
     end

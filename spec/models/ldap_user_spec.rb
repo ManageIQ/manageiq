@@ -1,12 +1,12 @@
 describe LdapUser do
-  context "with a small envs" do
+  context 'with a small envs' do
     before(:each) do
       @task = FactoryGirl.create(:miq_task)
     end
 
-    it "Assignment" do
-      lm = FactoryGirl.create(:ldap_user, :dn => "manager")
-      lu = FactoryGirl.create(:ldap_user, :dn => "employee")
+    it 'Assignment' do
+      lm = FactoryGirl.create(:ldap_user, :dn => 'manager')
+      lu = FactoryGirl.create(:ldap_user, :dn => 'employee')
 
       lm.direct_reports << lu
 

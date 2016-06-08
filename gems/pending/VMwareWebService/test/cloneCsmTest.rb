@@ -21,19 +21,19 @@ $miq_wiredump = false
 $stderr.sync = true
 $stdout.sync = true
 
-SRC_VM        = "Suse"
-TARGET_VM     = "rpo-Suse"
+SRC_VM        = 'Suse'
+TARGET_VM     = 'rpo-Suse'
 
-VNIC_LABEL    = "Network adapter 1"
-NEW_PORTGROUP = "VCB"
+VNIC_LABEL    = 'Network adapter 1'
+NEW_PORTGROUP = 'VCB'
 
-CUST_SPEC_NAME  = "sles10-vanilla-template-vcloud"
+CUST_SPEC_NAME  = 'sles10-vanilla-template-vcloud'
 
 sVmMor = nil
 miqVm = nil
 
 vimDs = nil
-dsName = "DEVOpen-E0"
+dsName = 'DEVOpen-E0'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -46,7 +46,7 @@ begin
   #
   # Get the source VM.
   #
-  miqVm = vim.getVimVmByFilter("config.name" => SRC_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => SRC_VM)
 
   puts "#{SRC_VM} vmPathName:      #{miqVm.dsPath}"
   puts "#{SRC_VM} vmLocalPathName: #{miqVm.localPath}"
@@ -58,12 +58,12 @@ begin
   # See if the target VM already exists.
   #
   begin
-      dMiqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+      dMiqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
       puts "Target VM: #{TARGET_VM} already exists"
       puts "\tDeleting #{TARGET_VM}..."
       dMiqVm.destroy
-      puts "done."
+      puts 'done.'
       exit
     rescue
       # Ignore expectd error
@@ -71,8 +71,8 @@ begin
 
   puts "Preparing to clone: #{SRC_VM} to #{TARGET_VM}"
 
-  memoryMB  = "1024"
-  numCPUs   = "1"
+  memoryMB  = '1024'
+  numCPUs   = '1'
   vnicDev   = miqVm.devicesByFilter('deviceInfo.label' => VNIC_LABEL).first
 
   configSpec = nil
@@ -103,7 +103,7 @@ begin
           end
         end
       else
-        puts "Not changing port group."
+        puts 'Not changing port group.'
       end
     end
   end
@@ -117,8 +117,8 @@ begin
   #
   # Find a VIM inventory folder to put the VM in.
   #
-  vmfa = vim.foldersByFilter("name" => "vm")
-  raise "VM inventory folder not found" if vmfa.empty?
+  vmfa = vim.foldersByFilter('name' => 'vm')
+  raise 'VM inventory folder not found' if vmfa.empty?
   vmf = vmfa[0]
 
   #
@@ -129,16 +129,16 @@ begin
   puts "*** Found custonization spec: #{csi.info.name}"
 
   puts
-  puts "Cloning..."
+  puts 'Cloning...'
   miqVm.cloneVM(TARGET_VM, vmf, rp, nil, nil, false, false, nil, configSpec, csi.spec)
-  puts "done."
+  puts 'done.'
 
   exit
 
   #
   # Get the target VM.
   #
-  tvm = vim.virtualMachinesByFilter("config.name" => TARGET_VM)
+  tvm = vim.virtualMachinesByFilter('config.name' => TARGET_VM)
   if tvm.empty?
     puts "VM: #{TARGET_VM} not found"
     exit
@@ -166,7 +166,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vim.disconnect if vim
 end

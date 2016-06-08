@@ -5,11 +5,11 @@ module JobProxyDispatcherHelper
     proxies = []
     storages = []
     options[:storages].times do |i|
-      storage = FactoryGirl.create(:storage, :name => "test_storage_#{i}", :store_type => "VMFS")
+      storage = FactoryGirl.create(:storage, :name => "test_storage_#{i}", :store_type => 'VMFS')
       storages << storage
     end
 
-    ems = FactoryGirl.create(:ems_vmware, :name => "ems1")
+    ems = FactoryGirl.create(:ems_vmware, :name => 'ems1')
     hosts = []
     options[:hosts].times do |i|
       host = FactoryGirl.create(:host, :name => "test_host_#{i}", :hostname => "test_host_#{i}")
@@ -22,7 +22,7 @@ module JobProxyDispatcherHelper
 
     vms = []
     options[:vms].times do |i|
-      vm = FactoryGirl.create(:vm_vmware, :name => "test_vm_#{i}", :location => "abc/abc.vmx")
+      vm = FactoryGirl.create(:vm_vmware, :name => "test_vm_#{i}", :location => 'abc/abc.vmx')
       vm.storage = storages[(i % options[:storages])]
       vm.host = hosts[(i % options[:hosts])]
       vm.ext_management_system = ems
@@ -32,12 +32,12 @@ module JobProxyDispatcherHelper
 
     repo_vms = []
 
-    repo_storage = FactoryGirl.create(:storage, :name => "test_repo_storage", :store_type => "VMFS")
+    repo_storage = FactoryGirl.create(:storage, :name => 'test_repo_storage', :store_type => 'VMFS')
     repo_storage.hosts = []
     repo_storage.save
 
     options[:repo_vms].times do |i|
-      vm = FactoryGirl.create(:vm_vmware, :name => "test_repo_vm_#{i}", :location => "abc/abc.vmx")
+      vm = FactoryGirl.create(:vm_vmware, :name => "test_repo_vm_#{i}", :location => 'abc/abc.vmx')
       vm.storage = repo_storage
       vm.host = nil
       vm.save

@@ -1,13 +1,13 @@
 describe MiqAeInstance do
-  context "legacy tests" do
+  context 'legacy tests' do
     before(:each) do
-      @c1 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test")
-      @fname1 = "field1"
+      @c1 = MiqAeClass.create(:namespace => 'TEST', :name => 'instance_test')
+      @fname1 = 'field1'
       @f1 = @c1.ae_fields.create(:name => @fname1)
     end
 
-    it "should create instance" do
-      iname1 = "instance1"
+    it 'should create instance' do
+      iname1 = 'instance1'
       i1 = @c1.ae_instances.build(:name => iname1)
       expect(i1).not_to be_nil
       expect(i1.save!).to be_truthy
@@ -18,34 +18,34 @@ describe MiqAeInstance do
       i1.destroy
     end
 
-    it "should set the updated_by field on save" do
-      i1 = @c1.ae_instances.create(:name => "instance1")
+    it 'should set the updated_by field on save' do
+      i1 = @c1.ae_instances.create(:name => 'instance1')
       expect(i1.updated_by).to eq('system')
     end
 
-    it "should not create instances with invalid names" do
-      ["insta nce1", "insta:nce1"].each do |iname|
+    it 'should not create instances with invalid names' do
+      ['insta nce1', 'insta:nce1'].each do |iname|
         i1 = @c1.ae_instances.build(:name => iname)
         expect(i1).not_to be_nil
         expect { i1.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
-    it "should create instances with valid names" do
-      ["insta-nce1", "insta.nce1"].each do |iname|
+    it 'should create instances with valid names' do
+      ['insta-nce1', 'insta.nce1'].each do |iname|
         i1 = @c1.ae_instances.build(:name => iname)
         expect(i1).not_to be_nil
         expect { i1.save! }.to_not raise_error
       end
     end
 
-    it "should properly get and set instance fields" do
-      iname1 = "instance1"
+    it 'should properly get and set instance fields' do
+      iname1 = 'instance1'
       i1 = @c1.ae_instances.create(:name => iname1)
 
-      value1 = "value1"
-      value2 = "value2"
-      fname_bad = "fieldX"
+      value1 = 'value1'
+      value2 = 'value2'
+      fname_bad = 'fieldX'
 
       # Set/Get a value that doesn't yet exist, by field name
       expect(i1.get_field_value(@fname1)).to be_nil
@@ -72,8 +72,8 @@ describe MiqAeInstance do
       expect(i1.get_field_value(@f1)).to eq(value2)
 
       # Set/Get a value of a field from a different class
-      c2 = MiqAeClass.create(:namespace => "TEST", :name => "instance_test2")
-      fname2 = "field2"
+      c2 = MiqAeClass.create(:namespace => 'TEST', :name => 'instance_test2')
+      fname2 = 'field2'
       f2 = c2.ae_fields.create(:name => fname2)
 
       #   by field name
@@ -89,16 +89,16 @@ describe MiqAeInstance do
       i1.destroy
     end
 
-    it "should properly get and set password fields" do
-      fname1        = "password"
-      default_value = "secret"
-      f1 = @c1.ae_fields.create(:name => fname1, :datatype => "password", :default_value => default_value)
+    it 'should properly get and set password fields' do
+      fname1        = 'password'
+      default_value = 'secret'
+      f1 = @c1.ae_fields.create(:name => fname1, :datatype => 'password', :default_value => default_value)
 
-      iname1 = "instance1"
+      iname1 = 'instance1'
       i1 = @c1.ae_instances.create(:name => iname1)
 
-      value1 = "value1"
-      value2 = "value2"
+      value1 = 'value1'
+      value2 = 'value2'
 
       # Set/Get a value that doesn't yet exist, by field name
       expect(MiqAePassword.decrypt(f1.default_value)).to eq(default_value)
@@ -120,10 +120,10 @@ describe MiqAeInstance do
       f1.destroy
     end
 
-    it "should destroy field and be reflected in instance" do
-      fname2 = "field2"
-      iname1 = "instance1"
-      value1 = "value1"
+    it 'should destroy field and be reflected in instance' do
+      fname2 = 'field2'
+      iname1 = 'instance1'
+      value1 = 'value1'
       f2 = @c1.ae_fields.create(:name => fname2)
       i1 = @c1.ae_instances.create(:name => iname1)
 
@@ -139,29 +139,29 @@ describe MiqAeInstance do
       expect { i1.get_field_value(fname2)         }.to raise_error(MiqAeException::FieldNotFound)
     end
 
-    it "should return editable as false if the parent namespace/class is not editable" do
+    it 'should return editable as false if the parent namespace/class is not editable' do
       n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
-      c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-      i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+      c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
+      i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => 'foo_instance')
       expect(i1).not_to be_editable
     end
 
-    it "should return editable as true if the parent namespace/class is editable" do
+    it 'should return editable as true if the parent namespace/class is editable' do
       n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
-      c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-      i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+      c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
+      i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => 'foo_instance')
       expect(i1).to be_editable
     end
   end
 
-  describe "#to_export_xml" do
+  describe '#to_export_xml' do
     let(:miq_ae_instance) do
       described_class.new(
         :ae_class           => ae_class,
         :ae_values          => ae_values,
         :created_on         => Time.zone.now,
         :id                 => 123,
-        :updated_by         => "me",
+        :updated_by         => 'me',
         :updated_by_user_id => 321,
         :updated_on         => Time.zone.now
       )
@@ -182,7 +182,7 @@ describe MiqAeInstance do
       end
     end
 
-    it "produces the expected xml" do
+    it 'produces the expected xml' do
       expected_xml = <<-XML
 <MiqAeInstance name=""><ae_value/></MiqAeInstance>
       XML
@@ -191,23 +191,23 @@ describe MiqAeInstance do
     end
   end
 
-  context "#copy" do
+  context '#copy' do
     before do
-      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
-      @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
-      @i1 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance1")
-      @i2 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => "foo_instance2")
+      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => 'domain1', :parent_id => nil, :priority => 1)
+      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => @d1.id)
+      @cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => @ns1.id)
+      @i1 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => 'foo_instance1')
+      @i2 = FactoryGirl.create(:miq_ae_instance, :class_id => @cls1.id, :name => 'foo_instance2')
 
       @d2 = FactoryGirl.create(:miq_ae_namespace,
-                               :name      => "domain2",
+                               :name      => 'domain2',
                                :parent_id => nil,
                                :priority  => 2,
                                :system    => false)
-      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => @d2.id)
     end
 
-    it "copies instances under specified namespace" do
+    it 'copies instances under specified namespace' do
       options = {
         :domain             => @d2.name,
         :namespace          => @ns2.name,
@@ -219,7 +219,7 @@ describe MiqAeInstance do
       expect(res.count).to eq(2)
     end
 
-    it "copy instances under same namespace raise error when class exists" do
+    it 'copy instances under same namespace raise error when class exists' do
       options = {
         :domain             => @d1.name,
         :namespace          => @ns1.name,
@@ -230,7 +230,7 @@ describe MiqAeInstance do
       expect { MiqAeInstance.copy(options) }.to raise_error(RuntimeError)
     end
 
-    it "replaces instances under same namespace when class exists" do
+    it 'replaces instances under same namespace when class exists' do
       options = {
         :domain             => @d2.name,
         :namespace          => @ns2.name,
@@ -243,10 +243,10 @@ describe MiqAeInstance do
     end
   end
 
-  it "#domain" do
+  it '#domain' do
     n1 = FactoryGirl.create(:miq_ae_domain, :name => 'dom1', :priority => 10, :system => true)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
-    i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => "foo_instance")
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
+    i1 = FactoryGirl.create(:miq_ae_instance, :class_id => c1.id, :name => 'foo_instance')
     expect(i1.domain.name).to eql('dom1')
   end
 end

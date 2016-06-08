@@ -1,7 +1,7 @@
 # TODO: Nothing appears to be using xml_utils in this file???
 # Perhaps, it's being required here because lower level code requires xml_utils to be loaded
 # but wrongly doesn't require it itself.
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'util/xml')
 require 'xml_utils'
 require 'blackbox/VmBlackBox'
 
@@ -9,7 +9,7 @@ module VmOrTemplate::Scanning
   extend ActiveSupport::Concern
 
   # Call the VmScan Job and raise a "request" event
-  def scan(userid = "system", options = {})
+  def scan(userid = 'system', options = {})
     # Check if there are any current scan jobs already waiting to run
     j = VmScan.where(:state => 'waiting_to_start')
         .where(:sync_key => guid)
@@ -34,7 +34,7 @@ module VmOrTemplate::Scanning
 
     begin
       inputs = {:vm => self, :host => host}
-      MiqEvent.raise_evm_job_event(self, {:type => "scan", :prefix => "request"}, inputs)
+      MiqEvent.raise_evm_job_event(self, {:type => 'scan', :prefix => 'request'}, inputs)
     rescue => err
       _log.warn("NAME [#{options[:name]}] #{err.message}")
       return
@@ -43,7 +43,7 @@ module VmOrTemplate::Scanning
     begin
       self.last_scan_attempt_on = Time.now.utc
       save
-      job = Job.create_job("VmScan", options)
+      job = Job.create_job('VmScan', options)
       return job
     rescue => err
       _log.log_backtrace(err)
@@ -56,7 +56,7 @@ module VmOrTemplate::Scanning
   # Subclasses need to override this method if they support SSA.
   #
   def validate_smartstate_analysis
-    validate_unsupported("Smartstate Analysis")
+    validate_unsupported('Smartstate Analysis')
   end
 
   #
@@ -71,7 +71,7 @@ module VmOrTemplate::Scanning
   def require_snapshot_for_scan?
     return false unless self.runnable?
     return false if ['redhat'].include?(vendor.downcase)
-    return false if host && host.platform == "windows"
+    return false if host && host.platform == 'windows'
     true
   end
 end

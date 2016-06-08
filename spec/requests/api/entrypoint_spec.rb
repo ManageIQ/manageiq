@@ -1,5 +1,5 @@
-RSpec.describe "API entrypoint" do
-  it "returns a :settings hash" do
+RSpec.describe 'API entrypoint' do
+  it 'returns a :settings hash' do
     api_basic_authorize
 
     run_get entrypoint_url
@@ -9,7 +9,7 @@ RSpec.describe "API entrypoint" do
     expect(response_hash['settings']).to be_kind_of(Hash)
   end
 
-  it "returns a locale" do
+  it 'returns a locale' do
     api_basic_authorize
 
     run_get entrypoint_url
@@ -17,7 +17,7 @@ RSpec.describe "API entrypoint" do
     expect(%w(en en_US)).to include(response_hash['settings']['locale'])
   end
 
-  it "collection query is sorted" do
+  it 'collection query is sorted' do
     api_basic_authorize
 
     run_get entrypoint_url

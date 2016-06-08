@@ -26,7 +26,7 @@ module RelationshipMixin
 
     cattr_accessor :default_relationship_type
 
-    has_many :all_relationships, :class_name => "Relationship", :dependent => :destroy, :as => :resource
+    has_many :all_relationships, :class_name => 'Relationship', :dependent => :destroy, :as => :resource
 
     memoize(*MEMOIZED_METHODS)
   end
@@ -74,7 +74,7 @@ module RelationshipMixin
   end
 
   def with_relationship_type(rel)
-    raise _("no block given") unless block_given?
+    raise _('no block given') unless block_given?
 
     rel_changed = rel && (relationship_type != rel)
     self.relationship_type = rel unless rel.nil?
@@ -135,21 +135,21 @@ module RelationshipMixin
   # Returns the relationship of the parent of the record, nil for a root node
   def parent_rel(*args)
     rels = parent_rels(*args).take(2)
-    raise _("Multiple parents found.") if rels.length > 1
+    raise _('Multiple parents found.') if rels.length > 1
     rels.first
   end
 
   # Returns the parent of the record, nil for a root node
   def parent(*args)
     rels = parents(*args).take(2)
-    raise _("Multiple parents found.") if rels.length > 1
+    raise _('Multiple parents found.') if rels.length > 1
     rels.first
   end
 
   # Returns the class/id pair of the parent of the record, nil for a root node
   def parent_id(*args)
     rels = parent_ids(*args).take(2)
-    raise _("Multiple parents found.") if rels.length > 1
+    raise _('Multiple parents found.') if rels.length > 1
     rels.first
   end
 
@@ -406,7 +406,7 @@ module RelationshipMixin
     options = args.extract_options!
     if options[:raise_on_multiple]
       rels = relationships.take(2)
-      raise _("Multiple relationships found") if rels.length > 1
+      raise _('Multiple relationships found') if rels.length > 1
       rels.first
     else
       relationships.first
@@ -449,7 +449,7 @@ module RelationshipMixin
     meth = :"#{meth.to_s.singularize}_ids" if field_method == :id
     rels = send(meth, options)
 
-    rels_meth = :"stringify_#{field_method == :id ? "resource_pairs" : "rels"}"
+    rels_meth = :"stringify_#{field_method == :id ? 'resource_pairs' : 'rels'}"
     Relationship.send(rels_meth, rels, stringify_options)
   end
 
@@ -675,7 +675,7 @@ module RelationshipMixin
   def self.deprecate_of_type_parameter(*args)
     return args if args.empty? || args.first.kind_of?(Hash)
 
-    Vmdb::Deprecation.deprecation_warning("of_type parameter without hash symbol", "use :of_type => 'Type' style instead", caller(2)) unless Rails.env.production?
+    Vmdb::Deprecation.deprecation_warning('of_type parameter without hash symbol', "use :of_type => 'Type' style instead", caller(2)) unless Rails.env.production?
 
     options = args.extract_options!
     [options.merge(:of_type => args.first)]
@@ -684,12 +684,12 @@ module RelationshipMixin
   def self.deprecate_of_type_and_rel_type_parameter(*args)
     return args if args.empty? || args.first.kind_of?(Hash)
 
-    Vmdb::Deprecation.deprecation_warning("of_type parameter without hash symbol", "use :of_type => 'Type' style instead", caller(2)) unless Rails.env.production?
+    Vmdb::Deprecation.deprecation_warning('of_type parameter without hash symbol', "use :of_type => 'Type' style instead", caller(2)) unless Rails.env.production?
 
     options = args.extract_options!
 
     if args.length > 1
-      Vmdb::Deprecation.deprecation_warning("relationship_type parameter", "use with_relationship_type method before calling instead", caller(2)) unless Rails.env.production?
+      Vmdb::Deprecation.deprecation_warning('relationship_type parameter', 'use with_relationship_type method before calling instead', caller(2)) unless Rails.env.production?
     end
 
     [options.merge(:of_type => args.first)]
@@ -698,7 +698,7 @@ module RelationshipMixin
   def self.deprecate_start_parameter(*args)
     return args if args.empty? || args.first.kind_of?(Hash)
 
-    Vmdb::Deprecation.deprecation_warning("start parameter", nil, caller(2)) unless Rails.env.production?
+    Vmdb::Deprecation.deprecation_warning('start parameter', nil, caller(2)) unless Rails.env.production?
 
     [args.extract_options!]
   end

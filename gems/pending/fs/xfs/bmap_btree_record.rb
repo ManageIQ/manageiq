@@ -43,7 +43,7 @@ module XFS
     end
 
     def initialize(data, sb)
-      raise "XFS::BmapBTreeRec: Nil buffer" if data.nil?
+      raise 'XFS::BmapBTreeRec: Nil buffer' if data.nil?
       @record          = BMAP_BTREE_REC.decode(data)
       @start_offset    = bmbt_get_start_offset(@record['l0'])
       start_block     = bmbt_get_start_block(@record['l1'])

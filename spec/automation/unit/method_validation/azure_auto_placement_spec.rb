@@ -1,4 +1,4 @@
-describe "azure best fit" do
+describe 'azure best fit' do
   let(:cloud_network)     { FactoryGirl.create(:cloud_network, :ems_id => ems.network_manager.id, :enabled => true) }
   let(:cloud_subnet)      { FactoryGirl.create(:cloud_subnet, :ems_id => ems.network_manager.id, :cloud_network_id => cloud_network.id) }
   let(:ems)               { FactoryGirl.create(:ems_azure_with_authentication) }
@@ -19,13 +19,13 @@ describe "azure best fit" do
   let(:user)              { FactoryGirl.create(:user_with_group) }
   let(:vm_template)       { FactoryGirl.create(:template_azure, :ext_management_system => ems) }
   let(:ws) do
-    MiqAeEngine.instantiate("/System/Request/Call_Instance_With_Message?" \
-                            "namespace=Cloud/VM/Provisioning&class=Placement" \
-                            "&instance=default&message=azure&" \
+    MiqAeEngine.instantiate('/System/Request/Call_Instance_With_Message?' \
+                            'namespace=Cloud/VM/Provisioning&class=Placement' \
+                            '&instance=default&message=azure&' \
                             "MiqProvision::miq_provision=#{miq_provision.id}", user)
   end
 
-  it "provision task object auto placement for cloud network" do
+  it 'provision task object auto placement for cloud network' do
     MiqServer.seed
     cloud_subnet
     resource_group

@@ -33,13 +33,13 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   def initializing
     # exactly like job.dispatch_start except for storage bits
     _log.info "Dispatch Status is 'pending'"
-    update(:dispatch_status => "pending")
+    update(:dispatch_status => 'pending')
   end
 
   def start
     image = target_entity
-    return queue_signal(:abort_job, "no image found", "error") unless image
-    return queue_signal(:abort_job, "cannot analyze non docker images", "error") unless image.docker_id
+    return queue_signal(:abort_job, 'no image found', 'error') unless image
+    return queue_signal(:abort_job, 'cannot analyze non docker images', 'error') unless image.docker_id
 
     ems_configs = VMDB::Config.new('vmdb').config[:ems]
 
@@ -63,7 +63,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     rescue SocketError, KubeException => e
       msg = "pod creation for #{pod_full_name} failed: #{e}"
       _log.info(msg)
-      return queue_signal(:abort_job, msg, "error")
+      return queue_signal(:abort_job, msg, 'error')
     end
 
     queue_signal(:pod_wait)
@@ -93,7 +93,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       else
         msg = "unknown access error to pod #{pod_full_name}: #{response}"
         _log.info(msg)
-        return queue_signal(:abort_job, msg, "error")
+        return queue_signal(:abort_job, msg, 'error')
       end
 
       # TODO: for recovery purposes it would be better if this
@@ -108,7 +108,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def analyze
     image = target_entity
-    return queue_signal(:abort_job, "no image found", "error") unless image
+    return queue_signal(:abort_job, 'no image found', 'error') unless image
 
     _log.info("scanning image #{options[:docker_image_id]}")
 
@@ -121,7 +121,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
     actual = image_inspector_client.fetch_metadata.Id
     if actual != options[:docker_image_id]
-      msg = "cannot analyze image %s with id %s: detected id was %s"
+      msg = 'cannot analyze image %s with id %s: detected id was %s'
       _log.error(msg % [options[:image_full_name], options[:docker_image_id], actual])
       return queue_signal(:abort_job,
                           msg % [options[:image_full_name], options[:docker_image_id][0..11], actual[0..11]],
@@ -131,9 +131,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     collect_compliance_data(image)
 
     image.scan_metadata(SCAN_CATEGORIES,
-                        "taskid" => jobid,
-                        "host"   => MiqServer.my_server,
-                        "args"   => [YAML.dump(scan_args)])
+                        'taskid' => jobid,
+                        'host'   => MiqServer.my_server,
+                        'args'   => [YAML.dump(scan_args)])
   end
 
   def collect_compliance_data(image)
@@ -147,20 +147,20 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def synchronize
     image = target_entity
-    return queue_signal(:abort_job, "no image found", "error") unless image
+    return queue_signal(:abort_job, 'no image found', 'error') unless image
 
     image.sync_metadata(SCAN_CATEGORIES,
-                        "taskid" => jobid,
-                        "host"   => MiqServer.my_server)
+                        'taskid' => jobid,
+                        'host'   => MiqServer.my_server)
   end
 
   def data(payload)
     payload_document = MiqXml.load(payload)
 
-    if payload_document.root.name.downcase == "summary"
+    if payload_document.root.name.downcase == 'summary'
       case operation = payload_document.root.first.name.downcase
-      when "scanmetadata" then synchronize
-      when "syncmetadata" then queue_signal(:cleanup)
+      when 'scanmetadata' then synchronize
+      when 'syncmetadata' then queue_signal(:cleanup)
       else raise "Unknown operation #{operation}"
       end
     end
@@ -170,7 +170,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     image = target_entity
     if image
       # TODO: check job success / failure
-      MiqEvent.raise_evm_job_event(image, :type => "scan", :suffix => "complete")
+      MiqEvent.raise_evm_job_event(image, :type => 'scan', :suffix => 'complete')
     end
     client = kubernetes_client
 
@@ -210,7 +210,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   def finish(*_args)
     # exactly like job.dispatch_finish except for storage bits
     _log.info "Dispatch Status is 'finished'"
-    update(:dispatch_status => "finished")
+    update(:dispatch_status => 'finished')
   end
 
   alias_method :abort_job, :cleanup
@@ -243,11 +243,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   def queue_signal(*args)
     MiqQueue.put_unless_exists(
       :args        => args,
-      :class_name  => "Job",
+      :class_name  => 'Job',
       :instance_id => id,
-      :method_name => "signal",
+      :method_name => 'signal',
       :priority    => MiqQueue::HIGH_PRIORITY,
-      :role        => "smartstate",
+      :role        => 'smartstate',
       :task_id     => guid,
       :zone        => zone
     )
@@ -261,7 +261,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
   end
 
-  def pod_proxy_url(client, path = "")
+  def pod_proxy_url(client, path = '')
     # TODO: change proxy_url in kubeclient to return URI
     pod_proxy = client.proxy_url(:pod,
                                  options[:pod_name],
@@ -289,14 +289,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
 
   def pod_definition
     pod_def = {
-      :apiVersion => "v1",
-      :kind       => "Pod",
+      :apiVersion => 'v1',
+      :kind       => 'Pod',
       :metadata   => {
         :name        => options[:pod_name],
         :namespace   => options[:pod_namespace],
         :labels      => {
           'name'         => options[:pod_name],
-          'manageiq.org' => "true"
+          'manageiq.org' => 'true'
         },
         :annotations => {
           'manageiq.org/hostname' => options[:miq_server_host],
@@ -309,14 +309,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         :restartPolicy => 'Never',
         :containers    => [
           {
-            :name            => "image-inspector",
+            :name            => 'image-inspector',
             :image           => inspector_image,
-            :imagePullPolicy => "Always",
+            :imagePullPolicy => 'Always',
             :command         => [
-              "/usr/bin/image-inspector",
-              "--chroot",
+              '/usr/bin/image-inspector',
+              '--chroot',
               "--image=#{options[:image_full_name]}",
-              "--scan-type=openscap",
+              '--scan-type=openscap',
               "--serve=0.0.0.0:#{options[:pod_port]}"
             ],
             :ports           => [{:containerPort => options[:pod_port]}],
@@ -324,14 +324,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
             :volumeMounts    => [
               {
                 :mountPath => DOCKER_SOCKET,
-                :name      => "docker-socket"
+                :name      => 'docker-socket'
               }
             ]
           }
         ],
         :volumes       => [
           {
-            :name     => "docker-socket",
+            :name     => 'docker-socket',
             :hostPath => {:path => DOCKER_SOCKET}
           }
         ]
@@ -345,14 +345,14 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def add_secret_to_pod_def(pod_def, inspector_admin_secret_name)
-    pod_def[:spec][:containers][0][:command].append("--dockercfg=" + INSPECTOR_ADMIN_SECRET_PATH +
-                                                    inspector_admin_secret_name + "/.dockercfg")
+    pod_def[:spec][:containers][0][:command].append('--dockercfg=' + INSPECTOR_ADMIN_SECRET_PATH +
+                                                    inspector_admin_secret_name + '/.dockercfg')
     pod_def[:spec][:containers][0][:volumeMounts].append(
-      :name      => "inspector-admin-secret",
+      :name      => 'inspector-admin-secret',
       :mountPath => INSPECTOR_ADMIN_SECRET_PATH + inspector_admin_secret_name,
       :readOnly  => true)
     pod_def[:spec][:volumes].append(
-      :name   => "inspector-admin-secret",
+      :name   => 'inspector-admin-secret',
       :secret => {:secretName => inspector_admin_secret_name})
   end
 

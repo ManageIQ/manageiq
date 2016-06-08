@@ -16,7 +16,7 @@ vmNames = []
 # vmNames << "//miq-websvr1/scratch2/vmimages/VirtualPC/WS03R2EE_EXCH_LCS/WS03R2EE_EXCH_LCS.vmc"
 # vmNames << "C:/Virtual Machines/MiqSprint25/MIQ Server Appliance - Ubuntu.vmx"
 # vmNames << "C:/Virtual Machines/Clone of SQL Svr 1/Clone of SQL Svr 1.vmx"
-vmNames << "C:/Virtual Machines/10425-2008-10-05.023502/Ubuntu.vmx"
+vmNames << 'C:/Virtual Machines/10425-2008-10-05.023502/Ubuntu.vmx'
 
 vmNames.each do |vmName|
   begin
@@ -37,4 +37,4 @@ vmNames.each do |vmName|
   end
 end
 
-$log.info "done"
+$log.info 'done'

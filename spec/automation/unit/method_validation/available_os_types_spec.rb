@@ -1,8 +1,8 @@
-describe "Available_Os_Types Method Validation" do
+describe 'Available_Os_Types Method Validation' do
   let(:user) { FactoryGirl.create(:user_with_group) }
   os_list = {'unknown' => '<Unknown>', 'linux' => 'Linux', 'windows' => 'Windows'}
   before do
-    @ins = "/Cloud/Orchestration/Operations/Methods/Available_Os_Types"
+    @ins = '/Cloud/Orchestration/Operations/Methods/Available_Os_Types'
   end
 
   let(:service_template) do
@@ -16,15 +16,15 @@ describe "Available_Os_Types Method Validation" do
     FactoryGirl.create(:service_template_orchestration, :orchestration_manager => ems)
   end
 
-  it "provides all os types and default to unknown" do
+  it 'provides all os types and default to unknown' do
     ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}", user)
-    expect(ws.root["values"]).to include(os_list)
-    expect(ws.root["default_value"]).to eq('unknown')
+    expect(ws.root['values']).to include(os_list)
+    expect(ws.root['default_value']).to eq('unknown')
   end
 
-  it "provides all os types and auto selects the type based on the user selection of an image" do
+  it 'provides all os types and auto selects the type based on the user selection of an image' do
     ws = MiqAeEngine.instantiate("#{@ins}?ServiceTemplate::service_template=#{service_template.id}&dialog_param_userImageName=uid1", user)
-    expect(ws.root["values"]).to include(os_list)
-    expect(ws.root["default_value"]).to eq('windows')
+    expect(ws.root['values']).to include(os_list)
+    expect(ws.root['default_value']).to eq('windows')
   end
 end

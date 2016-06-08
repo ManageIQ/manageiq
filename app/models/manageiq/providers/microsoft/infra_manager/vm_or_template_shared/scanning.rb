@@ -23,7 +23,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
   end
 
   def validate_smartstate_analysis
-    validate_supported_check("Smartstate Analysis")
+    validate_supported_check('Smartstate Analysis')
   end
 
   def requires_storage_for_scan?
@@ -42,14 +42,14 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
     log_header = "MIQ(#{self.class.name}.#{__method__})"
 
     # Check if we've been told explicitly not to connect to the ems
-    if ost.scanData.fetch_path("ems", 'connect') == false
+    if ost.scanData.fetch_path('ems', 'connect') == false
       $log.debug "#{log_header}: returning, ems/connect == false"
       return
     end
 
     # Make sure we were given a ems/host to connect to
     ems_connect_type = ost.scanData.fetch_path('ems', 'connect_to') || 'host'
-    miq_vm_host = ost.scanData.fetch_path("ems", ems_connect_type)
+    miq_vm_host = ost.scanData.fetch_path('ems', ems_connect_type)
     if miq_vm_host
       st = Time.now.getlocal
       use_broker = false
@@ -58,7 +58,7 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
       log_text = "#{log_header}: Connection to [#{ems_text}]"
       $log.info "#{log_header}: Connecting to [#{ems_text}] for VM:[#{vm_name}]"
       password = MiqPassword.decrypt(miq_vm_host[:password])
-      miq_vm_host[:username] = miq_vm_host[:domain] + "\\" + miq_vm_host[:username] unless miq_vm_host[:domain].nil?
+      miq_vm_host[:username] = miq_vm_host[:domain] + '\\' + miq_vm_host[:username] unless miq_vm_host[:domain].nil?
 
       begin
         hyperv_config = {:host     => miq_vm_host[:address],

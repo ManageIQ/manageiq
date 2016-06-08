@@ -125,7 +125,7 @@ class MiqDisk
   private
 
   MBR_SIZE = 512
-  DOS_SIG  = "55aa"
+  DOS_SIG  = '55aa'
   DISK_SIG_OFFSET = 0x1B8
   DISK_SIG_SIZE = 4
 
@@ -187,7 +187,7 @@ class MiqDisk
       # If this os an LDM (dynamic) disk, then ignore any partitions.
       #
       if ptype == PTYPE_LDM
-        $log.debug "MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk"
+        $log.debug 'MiqDisk::discoverDosPriPartitions: detected LDM (dynamic) disk'
         @partType = PTYPE_LDM
         return([])
       end
@@ -256,7 +256,7 @@ class MiqPartition < MiqDisk
   end
 
   def d_size
-    raise "MiqPartition: d_size should not be called for partition"
+    raise 'MiqPartition: d_size should not be called for partition'
   end
 
   def d_close

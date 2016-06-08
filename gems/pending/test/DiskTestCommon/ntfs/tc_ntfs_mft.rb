@@ -13,7 +13,7 @@ require 'fs/ntfs/mft_entry'
 #   If this is not an extended entry or deleted, THEN go ahead and process attributes.
 class MftEntry
   def initialize(bs, recordNumber = 0, baseMFT = nil, full_rec = true)
-    raise "Nil boot sector" if bs.nil?
+    raise 'Nil boot sector' if bs.nil?
 
     @indexRoot  = @dataRoot = @attribData = nil
     @baseMFT    = baseMFT || self

@@ -2,7 +2,7 @@ class CloudTenant < ApplicationRecord
   include NewWithTypeStiMixin
   include VirtualTotalMixin
 
-  belongs_to :ext_management_system, :foreign_key => "ems_id", :class_name => "ManageIQ::Providers::CloudManager"
+  belongs_to :ext_management_system, :foreign_key => 'ems_id', :class_name => 'ManageIQ::Providers::CloudManager'
   has_many   :security_groups
   has_many   :cloud_networks
   has_many   :cloud_subnets

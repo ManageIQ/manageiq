@@ -30,7 +30,7 @@ describe MiqReport do
   end
 
   context 'to_chart' do
-    it "raises an exception for missing sortby or type" do
+    it 'raises an exception for missing sortby or type' do
       rpt = FactoryGirl.create(:miq_report)
 
       # Can't create a graph without a sortby column
@@ -42,8 +42,8 @@ describe MiqReport do
         .to raise_error(RuntimeError, /Can't create a graph without a sortby column/)
     end
 
-    it "returns an empty chart for a report with empty results" do
-      rpt = MiqReport.new(:db => "Vm", :sortby => "name", :order => "Descending",
+    it 'returns an empty chart for a report with empty results' do
+      rpt = MiqReport.new(:db => 'Vm', :sortby => 'name', :order => 'Descending',
                           :graph => {:type => 'Pie'})
       rpt.to_chart(@report_theme, @show_title, @options)
       chart = rpt.chart
@@ -53,8 +53,8 @@ describe MiqReport do
       expect(chart[:options][:title]).to eq('No records found for this chart')
     end
 
-    it "returns a valid chart for a report with data" do
-      MiqReport.seed_report(name = "Vendor and Guest OS")
+    it 'returns a valid chart for a report with data' do
+      MiqReport.seed_report(name = 'Vendor and Guest OS')
       rpt = MiqReport.find_by_name(name)
 
       rpt.generate_table(:userid => 'test')

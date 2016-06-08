@@ -42,7 +42,7 @@ class NamespaceEmsOpenstack < ActiveRecord::Migration
   )]
 
   def change
-    say_with_time "Rename class references for Openstack and OpenstackInfra" do
+    say_with_time 'Rename class references for Openstack and OpenstackInfra' do
       rename_class_references(NAME_MAP)
     end
   end

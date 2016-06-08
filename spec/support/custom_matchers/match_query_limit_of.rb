@@ -14,7 +14,7 @@ RSpec::Matchers.define :match_query_limit_of do |expected|
   end
 
   description do
-    "expect the block to execute certain number of queries"
+    'expect the block to execute certain number of queries'
   end
 
   supports_block_expectations

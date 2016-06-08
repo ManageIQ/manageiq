@@ -1,6 +1,6 @@
 describe VmOrTemplateController do
   let(:template_vmware) { FactoryGirl.create(:template_vmware, :name => 'template_vmware Name') }
-  let(:vm_vmware)       { FactoryGirl.create(:vm_vmware, :name => "vm_vmware Name") }
+  let(:vm_vmware)       { FactoryGirl.create(:vm_vmware, :name => 'vm_vmware Name') }
   before { set_user_privileges }
 
   # All of the x_button is a suplement for Rails routes that is written in
@@ -33,26 +33,26 @@ describe VmOrTemplateController do
       expect(response).to render_template('layouts/exception')
     end
 
-    context "x_button method check" do
-      before { controller.instance_variable_set(:@_orig_action, "x_history") }
+    context 'x_button method check' do
+      before { controller.instance_variable_set(:@_orig_action, 'x_history') }
 
-      it "should set correct VM for right-sizing when on vm list view" do
+      it 'should set correct VM for right-sizing when on vm list view' do
         expect(controller).to receive(:replace_right_cell)
-        post :x_button, :params => { :pressed => "vm_right_size", :id => vm_vmware.id, :check_10r839 => '1' }
+        post :x_button, :params => { :pressed => 'vm_right_size', :id => vm_vmware.id, :check_10r839 => '1' }
         expect(controller.send(:flash_errors?)).not_to be_truthy
         assigns(:record).id == vm_vmware.id
       end
 
-      it "should set correct VM for right-sizing when from vm summary screen" do
+      it 'should set correct VM for right-sizing when from vm summary screen' do
         expect(controller).to receive(:replace_right_cell)
-        post :x_button, :params => { :pressed => "vm_right_size", :id => vm_vmware.id }
+        post :x_button, :params => { :pressed => 'vm_right_size', :id => vm_vmware.id }
         expect(controller.send(:flash_errors?)).not_to be_truthy
         assigns(:record).id == vm_vmware.id
       end
     end
   end
 
-  context "skip or drop breadcrumb" do
+  context 'skip or drop breadcrumb' do
     before do
       session[:settings] = {:views => {}, :perpage => {:list => 10}}
       EvmSpecHelper.create_guid_miq_server_zone
@@ -64,13 +64,13 @@ describe VmOrTemplateController do
 
       post :x_button, :params => { :id => nil, :pressed => 'miq_template_ownership' }
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs).to eq([{:name => "VMs and Instances", :url => "/vm_or_template/explorer"}])
+      expect(breadcrumbs).to eq([{:name => 'VMs and Instances', :url => '/vm_or_template/explorer'}])
     end
 
     it 'drops a breadcrumb when an action allowing breadcrumbs is executed' do
-      post :accordion_select, :params => { :id => "templates_images_filter" }
+      post :accordion_select, :params => { :id => 'templates_images_filter' }
       breadcrumbs = controller.instance_variable_get(:@breadcrumbs)
-      expect(breadcrumbs).to eq([{:name => "VM Templates and Images", :url => "/vm_or_template/explorer"}])
+      expect(breadcrumbs).to eq([{:name => 'VM Templates and Images', :url => '/vm_or_template/explorer'}])
     end
   end
 
@@ -105,7 +105,7 @@ describe VmOrTemplateController do
       end
     end
 
-    context "#tree_select" do
+    context '#tree_select' do
       before do
         template_vmware
         vm_vmware

@@ -1,3 +1,3 @@
 class OrchestrationStackResource < ApplicationRecord
-  belongs_to :stack, :class_name => "OrchestrationStack"
+  belongs_to :stack, :class_name => 'OrchestrationStack'
 end

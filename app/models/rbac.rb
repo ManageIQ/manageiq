@@ -47,13 +47,13 @@ module Rbac
   )
 
   MATCH_VIA_DESCENDANT_RELATIONSHIPS = {
-    "VmOrTemplate::ExtManagementSystem"      => :ext_management_system,
-    "VmOrTemplate::Host"                     => :host,
-    "VmOrTemplate::EmsCluster"               => :ems_cluster,
-    "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
-    "VmOrTemplate::ResourcePool"             => :resource_pool,
-    "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
-    "ConfiguredSystem::ConfigurationProfile" => :configuration_profile
+    'VmOrTemplate::ExtManagementSystem'      => :ext_management_system,
+    'VmOrTemplate::Host'                     => :host,
+    'VmOrTemplate::EmsCluster'               => :ems_cluster,
+    'VmOrTemplate::EmsFolder'                => :parent_blue_folders,
+    'VmOrTemplate::ResourcePool'             => :resource_pool,
+    'ConfiguredSystem::ExtManagementSystem'  => :ext_management_system,
+    'ConfiguredSystem::ConfigurationProfile' => :configuration_profile
   }
 
   # These classes should accept any of the relationship_mixin methods including:
@@ -313,8 +313,8 @@ module Rbac
     # for reports, user is currently nil, so use the group filter
     user_filters = user.try(:get_filters) || miq_group.try(:get_filters) || {}
     user_filters = user_filters.dup
-    user_filters["managed"] ||= []
-    user_filters["belongsto"] ||= []
+    user_filters['managed'] ||= []
+    user_filters['belongsto'] ||= []
 
     [user, miq_group, user_filters]
   end
@@ -444,7 +444,7 @@ module Rbac
     exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
     conditions, include_for_find = MiqExpression.merge_where_clauses_and_includes([conditions, sub_filter, where_clause, exp_sql, ids_clause], [include_for_find, exp_includes])
 
-    attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
+    attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters['belongsto'].blank?
 
     find_options = {:conditions => conditions, :include => include_for_find, :order => options[:order]}
     find_options.merge!(:limit => options[:limit], :offset => options[:offset]) if attrs[:apply_limit_in_sql]
@@ -499,7 +499,7 @@ module Rbac
     if scope_name.nil?
       klass
     elsif klass.nil? || !klass.respond_to?(scope_name)
-      class_name = klass.nil? ? "Object" : klass.name
+      class_name = klass.nil? ? 'Object' : klass.name
       raise _("Named scope '%{scope_name}' is not defined for class '%{class_name}'") % {:scope_name => scope_name,
                                                                                          :class_name => class_name}
     else

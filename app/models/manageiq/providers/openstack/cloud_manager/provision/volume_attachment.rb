@@ -1,7 +1,7 @@
 module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
   def create_requested_volumes(requested_volumes)
     volumes_attrs_list = [default_volume_attributes]
-    source.ext_management_system.with_provider_connection(:service => "volume") do |service|
+    source.ext_management_system.with_provider_connection(:service => 'volume') do |service|
       requested_volumes.each do |volume_attrs|
         new_volume_id = service.volumes.create(volume_attrs).id
         new_volume_attrs = volume_attrs.clone
@@ -19,11 +19,11 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
   end
 
   def do_volume_creation_check(volumes_refs)
-    source.ext_management_system.with_provider_connection(:service => "volume") do |service|
+    source.ext_management_system.with_provider_connection(:service => 'volume') do |service|
       volumes_refs.each do |volume_attrs|
-        next unless volume_attrs[:source_type] == "volume"
+        next unless volume_attrs[:source_type] == 'volume'
         status = service.volumes.get(volume_attrs[:uuid]).status
-        return false, status unless status == "available"
+        return false, status unless status == 'available'
       end
     end
     true
@@ -31,10 +31,10 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
 
   def default_volume_attributes
     {
-      :name                  => "root",
+      :name                  => 'root',
       :size                  => instance_type.root_disk_size / 1.gigabyte,
-      :source_type           => "image",
-      :destination_type      => "local",
+      :source_type           => 'image',
+      :destination_type      => 'local',
       :boot_index            => 0,
       :delete_on_termination => true,
       :uuid                  => source.ems_ref

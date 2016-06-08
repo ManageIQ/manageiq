@@ -9,7 +9,7 @@ module Ext4
     attr_reader :inodeNum
 
     def initialize(sb, inodeNum = ROOT_DIRECTORY)
-      log_prefix = "Ext4::Directory.initialize"
+      log_prefix = 'Ext4::Directory.initialize'
       raise "#{log_prefix}: Nil superblock"   if sb.nil?
       raise "#{log_prefix}: Nil inode number" if inodeNum.nil?
       @sb       = sb
@@ -52,7 +52,7 @@ module Ext4
         break if p > @data.length - 4
         break if @data[p, 4].nil?
         de = DirectoryEntry.new(@data[p..-1], newEnt)
-        raise "Ext4::Directory.globEntriesByLinkedList: DirectoryEntry length cannot be 0" if de.len == 0
+        raise 'Ext4::Directory.globEntriesByLinkedList: DirectoryEntry length cannot be 0' if de.len == 0
         ents_by_name[de.name] ||= []
         ents_by_name[de.name] << de
         p += de.len

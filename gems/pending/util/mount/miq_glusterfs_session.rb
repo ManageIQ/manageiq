@@ -20,8 +20,8 @@ class MiqGlusterfsSession < MiqGenericMountSession
     logger.info(
       "#{log_header} Connecting to host: [#{@host}], share: [#{@mount_path}] using mount point: [#{@mnt_point}]...")
 
-    mount = "mount"
-    mount << " -r" if settings_read_only?
+    mount = 'mount'
+    mount << ' -r' if settings_read_only?
 
     # Quote the host:exported directory since the directory can have spaces in it
     case Sys::Platform::IMPL
@@ -30,7 +30,7 @@ class MiqGlusterfsSession < MiqGenericMountSession
     when :linux
       runcmd("#{mount} -t glusterfs '#{@host}:#{@mount_path}' #{@mnt_point}")
     else
-      raise "platform not supported"
+      raise 'platform not supported'
     end
     logger.info("#{log_header} Connecting to host: [#{@host}], share: [#{@mount_path}]...Complete")
   end

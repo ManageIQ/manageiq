@@ -31,6 +31,6 @@ class SetCorrectStiTypeAndEmsIdOnAmazonCloudSubnet < ActiveRecord::Migration[5.0
       .joins('left join ext_management_systems as cloud_manager on ext_management_systems.parent_ems_id = cloud_manager.id')
       .where(:cloud_subnets => {:type => 'ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet'},
              :cloud_manager => {:type => 'ManageIQ::Providers::Amazon::CloudManager'})
-      .update_all("type = NULL")
+      .update_all('type = NULL')
   end
 end

@@ -1,4 +1,4 @@
-require "dialog_import_service"
+require 'dialog_import_service'
 
 module TaskHelpers
   class DialogImportHelper

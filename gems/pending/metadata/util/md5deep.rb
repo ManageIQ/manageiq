@@ -18,11 +18,11 @@ class MD5deep
 
     # Read optional parameters if they exist in the options hash
     @opts = {'versioninfo' => true, 'imports' => true, 'contents' => false,
-      'exclude' => ["pagefile.sys", "hiberfil.sys", ".", ".."],
-      'digest' => ["md5"], "winVerList" => %w(.exe .dll .ocx .scr)
+      'exclude' => ['pagefile.sys', 'hiberfil.sys', '.', '..'],
+      'digest' => ['md5'], 'winVerList' => %w(.exe .dll .ocx .scr)
     }.merge(options)
     # Make sure md5 is part of our digest array
-    @opts['digest'].push("md5") unless @opts['digest'].include?("md5")
+    @opts['digest'].push('md5') unless @opts['digest'].include?('md5')
     # Convert hash to an OpenStruct for cleaner referencing
     @opts = OpenStruct.new(@opts)
 
@@ -38,10 +38,10 @@ class MD5deep
     end
   end
 
-  def scan(path, rootID = "/")
+  def scan(path, rootID = '/')
     path = File.expand_path(path)
-    rootID = rootID[2..-1] if rootID.length > 2 && rootID[1..1] == ":"
-    xmlNode = @xml.root.add_element("dir", "name" => rootID)
+    rootID = rootID[2..-1] if rootID.length > 2 && rootID[1..1] == ':'
+    xmlNode = @xml.root.add_element('dir', 'name' => rootID)
     read_fs(path, xmlNode)
     @xml
   end
@@ -52,10 +52,10 @@ class MD5deep
   end
 
   def scan_glob(filename)
-    filename.tr!("\\", "/")
+    filename.tr!('\\', '/')
     startDir = File.dirname(filename)
     globPattern = File.basename(filename)
-    @xml.root.add_attribute("base_path", startDir)
+    @xml.root.add_attribute('base_path', startDir)
     @fs.chdir(startDir)
 
     # First check if we are passed a fully qualifed file name
@@ -92,15 +92,15 @@ class MD5deep
   end
 
   def processDir(path, x, xmlNode)
-    if x != "." && x != ".."
+    if x != '.' && x != '..'
       currFile = File.join(path, x)
 
       begin
         if File.directory?(currFile)
           @fullDirCount += 1
           # $log.debug "DIR : #{currFile}"
-          xmlSubNode = xmlNode.add_element("dir", "name" => x, "fqname" => currFile)
-          xmlSubNode.add_attributes({"atime" => File.atime(currFile).getutc.iso8601, "ctime" => File.ctime(currFile).getutc.iso8601, "mtime" => File.mtime(currFile).getutc.iso8601})
+          xmlSubNode = xmlNode.add_element('dir', 'name' => x, 'fqname' => currFile)
+          xmlSubNode.add_attributes({'atime' => File.atime(currFile).getutc.iso8601, 'ctime' => File.ctime(currFile).getutc.iso8601, 'mtime' => File.mtime(currFile).getutc.iso8601})
           read_fs(currFile, xmlSubNode)
         end
       rescue Errno::EACCES, RuntimeError
@@ -111,7 +111,7 @@ class MD5deep
   end
 
   def processFile(path, x, xmlNode)
-    if (@opts.exclude.include?(x) == false) && x[0..0] != "$"
+    if (@opts.exclude.include?(x) == false) && x[0..0] != '$'
       currFile = File.join(path, x)
 
       begin
@@ -121,7 +121,7 @@ class MD5deep
           @fullFileCount += 1
           fh = fileOpen(currFile)
 
-          xmlFileNode = xmlNode.add_element("file", "name" => x, "fqname" => currFile)
+          xmlFileNode = xmlNode.add_element('file', 'name' => x, 'fqname' => currFile)
           statHash = {}
           statHash.merge!(getFileStats(fh))
           statHash.merge!(calculate_digest(fh))
@@ -132,8 +132,8 @@ class MD5deep
             if @opts.versioninfo || @opts.imports
               peHdr = PEheader.new(fh) rescue nil
               unless peHdr.nil?
-                xmlFileNode.add_element("versioninfo", peHdr.versioninfo) if @opts.versioninfo && !peHdr.versioninfo.blank?
-                xmlFileNode.add_element("libraries", "imports" => peHdr.getImportList) if @opts.imports && !peHdr.imports.blank?
+                xmlFileNode.add_element('versioninfo', peHdr.versioninfo) if @opts.versioninfo && !peHdr.versioninfo.blank?
+                xmlFileNode.add_element('libraries', 'imports' => peHdr.getImportList) if @opts.imports && !peHdr.imports.blank?
               end
             end
           end
@@ -166,7 +166,7 @@ class MD5deep
   def getFileStats(fh)
     # If we are processing a member of the File class, use the File::Stat object to get data
     fh = fh.stat if fh.class == File
-    {"size" => fh.size, "atime" => fh.atime.getutc.iso8601, "ctime" => fh.ctime.getutc.iso8601, "mtime" => fh.mtime.getutc.iso8601}
+    {'size' => fh.size, 'atime' => fh.atime.getutc.iso8601, 'ctime' => fh.ctime.getutc.iso8601, 'mtime' => fh.mtime.getutc.iso8601}
   end
 
   def calculate_sums(xmlNode)
@@ -176,7 +176,7 @@ class MD5deep
 
     xmlNode.each_element do |e|
       rollup.each_pair do |k, _v|
-        if k == "size"
+        if k == 'size'
           rollup[k] += e.attributes[k].to_i if e.attributes[k]
         else
           rollup[k] << e.attributes[k] if e.attributes[k]
@@ -222,8 +222,8 @@ class MD5deep
 
   def getFileContents(fh, xml_node)
     fh.seek(0, IO::SEEK_SET)
-    buf = fh.read(1024000) || "" # read will return nil when at EOF.
-    xml_node.add_element("contents", "compressed" => "true", "encoded" => "true").text = (MIQEncode.encode(buf))
+    buf = fh.read(1024000) || '' # read will return nil when at EOF.
+    xml_node.add_element('contents', 'compressed' => 'true', 'encoded' => 'true').text = (MIQEncode.encode(buf))
   end
 
   def to_xml
@@ -244,8 +244,8 @@ if __FILE__ == $0
 
   # Mount VM Image to a real drive letter
   #  mountNative, startPath = false, "M:/WINDOWS/system32/mui"
-  startPath = "c:/windows/system32"
-  vmHDImage = "D:\\Virtual Machines\\VC20\\Windows Server 2003 Standard Edition.vmx"
+  startPath = 'c:/windows/system32'
+  vmHDImage = 'D:\\Virtual Machines\\VC20\\Windows Server 2003 Standard Edition.vmx'
 
   begin
     @vm = MiqVm.new(vmHDImage, nil)
@@ -256,13 +256,13 @@ if __FILE__ == $0
       # md5 = MD5deep.new(@systemFs, {"digest"=>%w(SHA1)}) #, %w(MD5 RMD160 SHA1 SHA256 SHA384 SHA512 SHA22))
       md5 = MD5deep.new(@systemFs) # , %w(MD5 RMD160 SHA1 SHA256 SHA384 SHA512 SHA22))
       # xml = md5.scan("C:/Program Files/VMware/VMware VirtualCenter 2.0")
-      xml = md5.scan_glob("c:/windows/system32/*.sc?")
+      xml = md5.scan_glob('c:/windows/system32/*.sc?')
       #      xml = md5.scan_glob("C:/Program Files/vmware/VMware VirtualCenter 2.0/vmprep.exe")
 
-      $log.info "writing XML..."
+      $log.info 'writing XML...'
       xml.write(STDOUT, 0)
-      puts ""
-      File.open("d:/temp/md5out.xml", "w") { |f| xml.write(f, 0); f.close }
+      puts ''
+      File.open('d:/temp/md5out.xml', 'w') { |f| xml.write(f, 0); f.close }
       stopTime = Time.now
     end
 
@@ -272,7 +272,7 @@ if __FILE__ == $0
     $log.info "File count: #{md5.fullFileCount}"
     $log.info "Dir  count: #{md5.fullDirCount}"
   rescue NameError => err
-    unless err.to_s.include?("MiqVm")
+    unless err.to_s.include?('MiqVm')
       $log.warn err
       $log.fatal err.backtrace.join("\n")
     end

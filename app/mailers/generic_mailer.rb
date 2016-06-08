@@ -59,7 +59,7 @@ class GenericMailer < ActionMailer::Base
     )
   end
 
-  def self.attachment_to_blob(attachment, attachment_filename = "evm_attachment")
+  def self.attachment_to_blob(attachment, attachment_filename = 'evm_attachment')
     return nil if attachment.nil?
 
     case attachment
@@ -73,7 +73,7 @@ class GenericMailer < ActionMailer::Base
     when Hash
       attachment[:filename] ||= attachment_filename
       attachment[:attachment_id] ||= begin
-        blob = BinaryBlob.new(:name => "GenericMailer", :data_type => "text")
+        blob = BinaryBlob.new(:name => 'GenericMailer', :data_type => 'text')
         blob.binary = attachment.delete(:body)
         blob.save
         blob.id
@@ -101,7 +101,7 @@ class GenericMailer < ActionMailer::Base
         blob.destroy unless blob.nil?
         body
       end if attachment[:attachment_id].kind_of?(Numeric)
-      attachment[:filename] ||= "evm_attachment"
+      attachment[:filename] ||= 'evm_attachment'
       attachment
     else
       raise "Unexpected Attachment Class: <#{attachment.class.name}>"
@@ -130,7 +130,7 @@ class GenericMailer < ActionMailer::Base
       :to      => to,
       :from    => settings[:from],
       :subject => "#{I18n.t("product.name")} Test Email",
-      :body    => "If you have received this email, your SMTP settings are correct."
+      :body    => 'If you have received this email, your SMTP settings are correct.'
     }
     prepare_generic_email(options)
   end
@@ -151,7 +151,7 @@ class GenericMailer < ActionMailer::Base
 
   def prepare_generic_email(options)
     _log.info("options: #{options.inspect}")
-    options[:from] = VMDB::Config.new("vmdb").config.fetch_path(:smtp, :from) if options[:from].blank?
+    options[:from] = VMDB::Config.new('vmdb').config.fetch_path(:smtp, :from) if options[:from].blank?
     @content = options[:body]
     options[:attachment] ||= []
     options[:attachment].each do |a|
@@ -166,7 +166,7 @@ class GenericMailer < ActionMailer::Base
   AUTHENTICATION_SMTP_KEYS = [:authentication, :user_name, :password]
   OPTIONAL_SMTP_KEYS = [:enable_starttls_auto, :openssl_verify_mode]
   def set_mailer_smtp(evm_settings = nil)
-    evm_settings ||= VMDB::Config.new("vmdb").config[:smtp]
+    evm_settings ||= VMDB::Config.new('vmdb').config[:smtp]
     am_settings =  {}
 
     DESTINATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }

@@ -7,18 +7,18 @@ describe Metric::Common do
                       )
   end
 
-  describe "#v_month" do
-    it "returns the timestamp in YYYY/MM format" do
-      m = Metric.new(:timestamp => Time.zone.parse("2015-01-01"))
-      expect(m.v_month).to eq("2015/01")
+  describe '#v_month' do
+    it 'returns the timestamp in YYYY/MM format' do
+      m = Metric.new(:timestamp => Time.zone.parse('2015-01-01'))
+      expect(m.v_month).to eq('2015/01')
     end
   end
 
-  context "#apply_time_profile" do
-    it "with all days and hours selected it should return true" do
+  context '#apply_time_profile' do
+    it 'with all days and hours selected it should return true' do
       profile = FactoryGirl.create(:time_profile,
-                                   :description => "foo",
-                                   :profile     => {:tz    => "New Delhi",
+                                   :description => 'foo',
+                                   :profile     => {:tz    => 'New Delhi',
                                                     :days  => TimeProfile::ALL_DAYS,
                                                     :hours => TimeProfile::ALL_HOURS}
                                   )
@@ -26,10 +26,10 @@ describe Metric::Common do
       expect(res).to be_truthy
     end
 
-    it "with specific days and hours selected it should return false" do
+    it 'with specific days and hours selected it should return false' do
       profile = FactoryGirl.create(:time_profile,
-                                   :description => "foo",
-                                   :profile     => {:tz    => "New Delhi",
+                                   :description => 'foo',
+                                   :profile     => {:tz    => 'New Delhi',
                                                     :days  => [1],
                                                     :hours => [1]}
                                   )
@@ -38,7 +38,7 @@ describe Metric::Common do
     end
   end
 
-  it ".v_derived_cpu_total_cores_used" do
+  it '.v_derived_cpu_total_cores_used' do
     m = Metric.new
 
     # cpu_rate, num_vcpus, cpu_total_cores_used
@@ -57,8 +57,8 @@ describe Metric::Common do
     end
   end
 
-  describe ".for_time_range" do
-    it "returns nothing for nil dates" do
+  describe '.for_time_range' do
+    it 'returns nothing for nil dates' do
       FactoryGirl.create(:metric, :timestamp => 5.days.ago)
       expect(Metric.for_time_range(nil, nil)).to be_empty
     end
@@ -71,13 +71,13 @@ describe Metric::Common do
       expect(Metric.for_time_range(timestamp, timestamp)).to eq([good])
     end
 
-    it "returns open ended date" do
+    it 'returns open ended date' do
       FactoryGirl.create(:metric, :timestamp => 30.days.ago)
       good = FactoryGirl.create(:metric, :timestamp => 5.days.ago)
       expect(Metric.for_time_range(10.days.ago, nil)).to eq([good])
     end
 
-    it "returns range" do
+    it 'returns range' do
       FactoryGirl.create(:metric, :timestamp => 30.days.ago)
       good = FactoryGirl.create(:metric, :timestamp => 5.days.ago)
       FactoryGirl.create(:metric, :timestamp => 1.day.ago)

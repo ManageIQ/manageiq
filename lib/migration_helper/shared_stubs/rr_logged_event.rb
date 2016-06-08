@@ -1,11 +1,11 @@
-require Rails.root.join("lib/rr_model_core")
-require_relative "../stub_cache_mixin"
+require Rails.root.join('lib/rr_model_core')
+require_relative '../stub_cache_mixin'
 
 module MigrationHelper::SharedStubs
   class RrLoggedEvent < ApplicationRecord
     extend MigrationHelper::StubCacheMixin
 
-    RR_TABLE_NAME_SUFFIX = "logged_events"
+    RR_TABLE_NAME_SUFFIX = 'logged_events'
     include RrModelCore
 
     def self.create_table

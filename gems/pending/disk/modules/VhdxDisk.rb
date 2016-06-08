@@ -173,7 +173,7 @@ module VhdxDisk
 
   attr_reader :file_identifier_signature, :vhdx_header_signature, :dInfo
   def d_init
-    @diskType             = "Vhdx"
+    @diskType             = 'Vhdx'
     @blockSize            = 0
     @virtual_disk_size    = 0
     @logical_sector_size  = 0
@@ -184,16 +184,16 @@ module VhdxDisk
     @file_name            = dInfo.fileName
     @hyperv_connection    = nil
     @vhdx_file            = connection_to_file(dInfo)
-    @converter            = Encoding::Converter.new("UTF-16LE", "UTF-8")
+    @converter            = Encoding::Converter.new('UTF-16LE', 'UTF-8')
     header_section
   end
 
   def connection_to_file(dInfo)
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode     = "r"
-      file_mode           = "r"
-    elsif dInfo.mountMode == "rw"
-      file_mode           = "r+"
+    if dInfo.mountMode.nil? || dInfo.mountMode == 'r'
+      dInfo.mountMode     = 'r'
+      file_mode           = 'r'
+    elsif dInfo.mountMode == 'rw'
+      file_mode           = 'r+'
     else
       raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
@@ -208,7 +208,7 @@ module VhdxDisk
   def d_read(pos, len)
     raise "VhdxDisk.d_read Invalid len #{len} #{@has_parent ? "Checkpoint Disk" : "Parent Disk"}\n #{caller}" if len < 0
     $log.debug "VhdxDisk.d_read(#{pos}, #{len})"
-    buf = ""
+    buf = ''
     return buf if len == 0
     block_start, sector_start, byte_offset_start = block_pos(pos)
     block_end,   sector_end,   _byte_offset_end  = block_pos(pos + len - 1)
@@ -404,7 +404,7 @@ module VhdxDisk
     (1..count).each do |i|
       process_metadata_table_entry(i)
     end
-    raise "Invalid or Missing Metadata Table Entries" unless valid_metadata_table?
+    raise 'Invalid or Missing Metadata Table Entries' unless valid_metadata_table?
     post_process_metadata
   end
 
@@ -434,7 +434,7 @@ module VhdxDisk
     @is_required     = bits[2].to_i(2)
     if length == 0
       raise "Invalid Metadata Table Entry - Length Zero and Offset is #{offset}" if offset != 0
-      $log.debug "Metadata Table Entry Present but Empty"
+      $log.debug 'Metadata Table Entry Present but Empty'
       return
     end
     @vhdx_file.seek(offset, IO::SEEK_SET)
@@ -497,20 +497,20 @@ module VhdxDisk
       process_parent_locator_entry(offset)
     end
     keys = @parent_locator_entries.keys
-    $log.warn "Missing \"parent_linkage\" Parent Locator Entry" if keys.index("parent_linkage").nil?
+    $log.warn 'Missing "parent_linkage" Parent Locator Entry' if keys.index('parent_linkage').nil?
     parent_locators_to_path(keys)
   end
 
   def parent_locators_to_path(keys)
-    if keys.index("absolute_win32_path")
-      parent_path = strip_path_prefix(@parent_locator_entries["absolute_win32_path"])
-    elsif keys.index("relative_path")
-      parent_path = File.dirname(@file_name) + '/' + @parent_locator_entries["relative_path"]
-    elsif keys.index("volume_path")
+    if keys.index('absolute_win32_path')
+      parent_path = strip_path_prefix(@parent_locator_entries['absolute_win32_path'])
+    elsif keys.index('relative_path')
+      parent_path = File.dirname(@file_name) + '/' + @parent_locator_entries['relative_path']
+    elsif keys.index('volume_path')
       # TODO: Test Volume Path Parent Locator
-      parent_path = strip_path_prefix(@parent_locator_entries["volume_path"])
+      parent_path = strip_path_prefix(@parent_locator_entries['volume_path'])
     else
-      raise "Missing Parent Locator entries \"relative_path\", \"volume_path\", and \"absolute_win32_path\""
+      raise 'Missing Parent Locator entries "relative_path", "volume_path", and "absolute_win32_path"'
     end
     @parent = parent_disk(parent_path)
   end
@@ -527,7 +527,7 @@ module VhdxDisk
   end
 
   def strip_path_prefix(path)
-    path[0, 4] == "\\\\?\\" ? path[4..-1] : path
+    path[0, 4] == '\\\\?\\' ? path[4..-1] : path
   end
 
   def process_parent_locator_entry(offset)
@@ -551,8 +551,8 @@ module VhdxDisk
   end
 
   def guid_match?(input, guid)
-    new_guid = ""
-    input.unpack("I<S<S<C8").each do |x|
+    new_guid = ''
+    input.unpack('I<S<S<C8').each do |x|
       if x < 16
         new_guid += "0#{x.to_s(16)}"
       else
@@ -583,7 +583,7 @@ module VhdxDisk
     sector_byte, bit_offset = sector_number.divmod(8)
     @vhdx_file.seek(sector_bitmap_offset + sector_byte, IO::SEEK_SET)
     sector_mask   = 0x80 >> bit_offset
-    sector_bitmap = @vhdx_file.read(1).unpack("C")[0]
+    sector_bitmap = @vhdx_file.read(1).unpack('C')[0]
     sector_bitmap & sector_mask == sector_mask
   end
 
@@ -617,7 +617,7 @@ module VhdxDisk
 
   def connect_to_hyperv(disk_info)
     connection  = @hyperv_connection = disk_info.hyperv_connection
-    @network    = disk_info.driveType == "Network"
+    @network    = disk_info.driveType == 'Network'
     hyperv_disk = MiqHyperVDisk.new(connection[:host],
                                     connection[:user],
                                     connection[:password],

@@ -29,7 +29,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
   end
 
   def quiesce_workers_loop
-    _log.info("Stopping all active workers")
+    _log.info('Stopping all active workers')
 
     @quiesce_started_on = Time.now.utc
     @worker_monitor_settings ||= {}
@@ -48,7 +48,7 @@ module MiqServer::WorkerManagement::Monitor::Quiesce
     quiesce_workers_loop
 
     # Mark all messages currently being worked on by the not responding server's workers as error
-    _log.info("Cleaning all active messages being processed by MiqServer")
+    _log.info('Cleaning all active messages being processed by MiqServer')
     miq_workers.each(&:clean_active_messages)
   end
 

@@ -6,7 +6,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     return if pid_numeric == 0
     return if pid_numeric == @spid
 
-    data = select(<<-SQL, "Client Connections")
+    data = select(<<-SQL, 'Client Connections')
                       SELECT pid                                     AS spid,
                              current_query                           AS query,
                              age(now(),pg_stat_activity.query_start) AS age
@@ -20,7 +20,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
       _log.info "SPID=[#{pid_numeric}] not found"
     else
       _log.info "Sending CANCEL Request for SPID=[#{pid_numeric}], age=[#{item['age']}], query=[#{item['query']}]"
-      result = select(<<-SQL, "Cancel SPID")
+      result = select(<<-SQL, 'Cancel SPID')
                             SELECT pg_cancel_backend(#{pid_numeric})
                             FROM   pg_stat_activity
                             WHERE  datname = #{quote(current_database)}

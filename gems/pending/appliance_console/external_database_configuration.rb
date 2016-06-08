@@ -8,8 +8,8 @@ module ApplianceConsole
     end
 
     def set_defaults
-      self.username = "root"
-      self.database = "vmdb_production"
+      self.username = 'root'
+      self.database = 'vmdb_production'
     end
 
     def activate

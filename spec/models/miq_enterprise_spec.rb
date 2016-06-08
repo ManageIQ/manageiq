@@ -1,40 +1,40 @@
 describe MiqEnterprise do
-  include_examples ".seed called multiple times"
+  include_examples '.seed called multiple times'
 
   let(:enterprise) { FactoryGirl.create(:miq_enterprise) }
 
-  context "with all existing records" do
-    it "#miq_regions" do
+  context 'with all existing records' do
+    it '#miq_regions' do
       MiqRegion.seed
 
       expect(enterprise.miq_regions.size).to eq(1)
     end
 
-    it "#ext_management_systems" do
+    it '#ext_management_systems' do
       ems = [FactoryGirl.create(:ems_vmware), FactoryGirl.create(:ems_vmware)]
 
       expect(enterprise.ext_management_systems).to match_array(ems)
     end
 
-    it "#storages" do
+    it '#storages' do
       storage = FactoryGirl.create(:storage)
 
       expect(enterprise.storages).to eq([storage])
     end
 
-    it "#policy_events" do
+    it '#policy_events' do
       policy_events = [FactoryGirl.create(:policy_event), FactoryGirl.create(:policy_event)]
 
       expect(enterprise.policy_events).to match_array(policy_events)
     end
   end
 
-  context "with some existing records" do
+  context 'with some existing records' do
     before(:each) do
       @ems  = FactoryGirl.create(:ems_vmware)
     end
 
-    it "#vms_and_templates" do
+    it '#vms_and_templates' do
       vm_1 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
       FactoryGirl.create(:vm_vmware)
 
@@ -44,7 +44,7 @@ describe MiqEnterprise do
       expect(enterprise.vms_and_templates).to match_array([vm_1, template_1])
     end
 
-    it "#vms" do
+    it '#vms' do
       vm   = [FactoryGirl.create(:vm_vmware, :ext_management_system => @ems),
               FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)]
 
@@ -53,7 +53,7 @@ describe MiqEnterprise do
       expect(enterprise.vms).to match_array(vm)
     end
 
-    it "#miq_templates" do
+    it '#miq_templates' do
       template = FactoryGirl.create(:template_redhat, :ext_management_system => @ems)
 
       FactoryGirl.create(:template_redhat)
@@ -61,7 +61,7 @@ describe MiqEnterprise do
       expect(enterprise.miq_templates).to eq([template])
     end
 
-    it "#hosts" do
+    it '#hosts' do
       hosts = [FactoryGirl.create(:host_vmware, :ext_management_system => @ems),
                FactoryGirl.create(:host_vmware, :ext_management_system => @ems)]
 

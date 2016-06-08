@@ -25,7 +25,7 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
 
   has_one :network_manager,
           :foreign_key => :parent_ems_id,
-          :class_name  => "ManageIQ::Providers::Amazon::NetworkManager",
+          :class_name  => 'ManageIQ::Providers::Amazon::NetworkManager',
           :autosave    => true,
           :dependent   => :destroy
 
@@ -51,11 +51,11 @@ class ManageIQ::Providers::Amazon::CloudManager < ManageIQ::Providers::CloudMana
   end
 
   def self.ems_type
-    @ems_type ||= "ec2".freeze
+    @ems_type ||= 'ec2'.freeze
   end
 
   def self.description
-    @description ||= "Amazon EC2".freeze
+    @description ||= 'Amazon EC2'.freeze
   end
 
   def self.hostname_required?

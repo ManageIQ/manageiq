@@ -25,13 +25,13 @@ module Ext4
       @miqfs = miqfs
     end
 
-    def open(mode = "r")
+    def open(mode = 'r')
       # Ext4 module methods use miqfs instance accessors to touch @boot_sector.
       @mode = mode.downcase
       @de = ifs_getFile(@path, @miqfs)
       raise "File is directory: '#{@path}'" if  @de && @de.isDir?
 
-      if mode.include?("r")
+      if mode.include?('r')
         raise "File not found: '#{@path}'" if @de.nil?
         @inode = @miqfs.superblock.getInode(@de.inode)
       end
@@ -41,7 +41,7 @@ module Ext4
   # File system interface.
   def fs_init
     # puts "Ext4::fs_init(#{@dobj.dInfo.fileName})"
-    self.fsType = "Ext4"
+    self.fsType = 'Ext4'
 
     # Initialize bs & read root dir.
     @dobj.seek(0, IO::SEEK_SET)
@@ -73,12 +73,12 @@ module Ext4
 
   # Make a directory. Parent must exist.
   def fs_dirMkdir(_p)
-    raise "Write functionality is not yet supported on Ext4."
+    raise 'Write functionality is not yet supported on Ext4.'
   end
 
   # Remove a directory.
   def fs_dirRmdir(_p)
-    raise "Write functionality is not yet supported on Ext4."
+    raise 'Write functionality is not yet supported on Ext4.'
   end
 
   #
@@ -115,7 +115,7 @@ module Ext4
 
   # Delete file.
   def fs_fileDelete(_p)
-    raise "Write functionality is not yet supported on Ext4."
+    raise 'Write functionality is not yet supported on Ext4.'
   end
 
   # Returns Ruby Time object.
@@ -170,7 +170,7 @@ module Ext4
   # NOTE: FileObject must have access to Ext4 members.
   # This is kind of like a 'skip this' thing. Ext4 methods
   # use stuff owned by MiqFS, so this is necessary.
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     fobj = FileObject.new(p, self)
     fobj.open(mode)
     fobj
@@ -187,7 +187,7 @@ module Ext4
   end
 
   def fs_fileWrite(_fobj, _buf, _len)
-    raise "Write functionality is not yet supported on Ext4."
+    raise 'Write functionality is not yet supported on Ext4.'
     # fobj.inode.write(buf, len)
   end
 
@@ -211,7 +211,7 @@ module Ext4
     p = unnormalizePath(p)
     dir, fname = File.split(p)
     # Fix for FB#835: if fil == root then fil needs to be "."
-    fname = "." if fname == "/" || fname == "\\"
+    fname = '.' if fname == '/' || fname == '\\'
 
     # Check for this file in the cache.
     cache_name = "#{dir == '/' ? '' : dir}/#{fname}"
@@ -235,7 +235,7 @@ module Ext4
 
   # Create a directory entry.
   def ifs_putFile(p, miqfs = nil)
-    raise "Write functionality is not yet supported on Ext4."
+    raise 'Write functionality is not yet supported on Ext4.'
     # If this is being called from a FileObject instance, then MiqFS owns contained instance members.
     # If this is being called from an Ext4 module method, then self owns contained instance members.
     miqfs = self if miqfs.nil?

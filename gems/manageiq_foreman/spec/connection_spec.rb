@@ -1,29 +1,29 @@
 describe ManageiqForeman::Connection do
   before do
     unless connection.api_cached?
-      with_vcr("_json_info") do
+      with_vcr('_json_info') do
         connection.ensure_api_cached
       end
     end
   end
 
   let(:connection) do
-    described_class.new(:base_url => "example.com", :username => "admin", :password => "smartvm", :verify_ssl => nil)
+    described_class.new(:base_url => 'example.com', :username => 'admin', :password => 'smartvm', :verify_ssl => nil)
   end
 
-  describe "#fetch" do
-    context "with 2 hosts" do
-      let(:results) { connection.fetch(:hosts, "per_page" => 2) }
+  describe '#fetch' do
+    context 'with 2 hosts' do
+      let(:results) { connection.fetch(:hosts, 'per_page' => 2) }
 
-      it "fetches 2 hosts" do
-        with_vcr("_2_hosts") do
+      it 'fetches 2 hosts' do
+        with_vcr('_2_hosts') do
           expect(results.size).to eq(2)
           expect(results.total).to eq(39)
         end
       end
 
-      it "has keys we need" do
-        with_vcr("_2_hosts") do
+      it 'has keys we need' do
+        with_vcr('_2_hosts') do
           expect(results.first.keys).to include(*%w(id name ip mac hostgroup_id uuid build
                                                     enabled operatingsystem_id domain_id ptable_id medium_id))
         end
@@ -31,21 +31,21 @@ describe ManageiqForeman::Connection do
     end
   end
 
-  describe "#operating_system_detail" do
-    context "with 2 operating_system details" do
-      let(:results) { connection.all_with_details(:operatingsystems, "per_page" => 2) }
+  describe '#operating_system_detail' do
+    context 'with 2 operating_system details' do
+      let(:results) { connection.all_with_details(:operatingsystems, 'per_page' => 2) }
 
-      it "fetches 2 operating_system details" do
-        with_vcr("_2_operating_systems") do
+      it 'fetches 2 operating_system details' do
+        with_vcr('_2_operating_systems') do
           expect(results.size).to eq(2)
         end
       end
     end
   end
 
-  describe "simple accessor methods" do
-    it "works" do
-      with_vcr("_all_methods") do
+  describe 'simple accessor methods' do
+    it 'works' do
+      with_vcr('_all_methods') do
         expect(connection.fetch(:hosts, :per_page => 2).size).to eq(2)
         expect(connection.fetch(:hostgroups, :per_page => 2).size).to eq(2)
         expect(connection.fetch(:operatingsystems, :per_page => 2).size).to eq(2)
@@ -57,19 +57,19 @@ describe ManageiqForeman::Connection do
     end
   end
 
-  describe "#all" do
-    context "with hosts" do
+  describe '#all' do
+    context 'with hosts' do
       let(:results) { connection.all(:hosts, :per_page => 10) }
 
-      it "paginates" do
-        with_vcr("_all") do
+      it 'paginates' do
+        with_vcr('_all') do
           expect(results.size).to eq(39)
         end
       end
     end
   end
 
-  it "#inventory" do
+  it '#inventory' do
     inventory = connection.inventory
     expect(inventory).to            be_instance_of(ManageiqForeman::Inventory)
     expect(inventory.connection).to eq(connection)

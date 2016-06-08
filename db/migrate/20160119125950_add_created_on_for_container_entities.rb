@@ -37,7 +37,7 @@ class AddCreatedOnForContainerEntities < ActiveRecord::Migration
       rename_column model.table_name, :creation_timestamp, :ems_created_on
 
       say_with_time("adding created_on datetime to all existing #{model}") do
-        model.update_all("created_on=ems_created_on")
+        model.update_all('created_on=ems_created_on')
       end
     end
   end

@@ -1,7 +1,7 @@
 class ServiceTemplateProvisionTask < MiqRequestTask
   validate :validate_request_type, :validate_state
 
-  virtual_belongs_to :service_resource, :class_name => "ServiceResource"
+  virtual_belongs_to :service_resource, :class_name => 'ServiceResource'
 
   AUTOMATE_DRIVES = true
 
@@ -16,7 +16,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def sibling_sequence_run_now?
     return true  if miq_request_task.nil? || miq_request_task.miq_request_tasks.count == 1
-    return false if miq_request_task.miq_request_tasks.detect { |t| t.provision_priority < provision_priority && t.state != "finished" }
+    return false if miq_request_task.miq_request_tasks.detect { |t| t.provision_priority < provision_priority && t.state != 'finished' }
     true
   end
 
@@ -80,12 +80,12 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def do_request
     if miq_request_tasks.size.zero?
-      message = "Service does not have children processes"
+      message = 'Service does not have children processes'
       _log.info("#{message}")
       update_and_notify_parent(:state => 'provisioned', :message => message)
     else
       miq_request_tasks.each(&:deliver_to_automate)
-      message = "Service Provision started"
+      message = 'Service Provision started'
       _log.info("#{message}")
       update_and_notify_parent(:message => message)
       queue_post_provision
@@ -96,7 +96,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     MiqQueue.put(
       :class_name   => self.class.name,
       :instance_id  => id,
-      :method_name  => "do_post_provision",
+      :method_name  => 'do_post_provision',
       :deliver_on   => 1.minutes.from_now.utc,
       :task_id      => "#{self.class.name.underscore}_#{id}",
       :miq_callback => {:class_name => self.class.name, :instance_id => id, :method_name => :execute_callback}
@@ -105,7 +105,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def do_post_provision
     update_request_status
-    queue_post_provision unless state == "finished"
+    queue_post_provision unless state == 'finished'
   end
 
   def deliver_to_automate(req_type = request_type, _zone = nil)
@@ -119,11 +119,11 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       args = {
         :object_type      => self.class.name,
         :object_id        => id,
-        :namespace        => "Service/Provisioning/StateMachines",
-        :class_name       => "ServiceProvision_Template",
+        :namespace        => 'Service/Provisioning/StateMachines',
+        :class_name       => 'ServiceProvision_Template',
         :instance_name    => req_type,
-        :automate_message => "create",
-        :attrs            => dialog_values.merge!("request" => req_type)
+        :automate_message => 'create',
+        :attrs            => dialog_values.merge!('request' => req_type)
       }
 
       # Automate entry point overrides from the resource_action
@@ -148,7 +148,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         :zone        => nil,
         :task_id     => "#{self.class.name.underscore}_#{id}"
       )
-      update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
+      update_and_notify_parent(:state => 'pending', :status => 'Ok',  :message => 'Automation Starting')
     else
       execute_queue
     end
@@ -162,7 +162,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   def mark_pending_items_as_finished
     miq_request.miq_request_tasks.each do |s|
       if s.state == 'pending'
-        s.update_and_notify_parent(:state => "finished", :status => "Warn", :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.")   unless id == s.id
+        s.update_and_notify_parent(:state => 'finished', :status => 'Warn', :message => "Error in Request: #{miq_request.id}. Setting pending Task: #{id} to finished.")   unless id == s.id
       end
     end
   end
@@ -171,7 +171,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     reload
     if state.to_s.downcase.in? %w(pending queued)
       _log.info("Executing #{request_class::TASK_DESCRIPTION} request: [#{description}]")
-      update_and_notify_parent(:state => "active", :status => "Ok", :message => "In Process")
+      update_and_notify_parent(:state => 'active', :status => 'Ok', :message => 'In Process')
     end
   end
 
@@ -183,17 +183,17 @@ class ServiceTemplateProvisionTask < MiqRequestTask
     return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state => "finished", :status => "Ok", :message => display_message("#{request_class::TASK_DESCRIPTION} completed"))
+      update_and_notify_parent(:state => 'finished', :status => 'Ok', :message => display_message("#{request_class::TASK_DESCRIPTION} completed"))
     else
       mark_pending_items_as_finished
-      update_and_notify_parent(:state => "finished", :status => "Error", :message => display_message("#{request_class::TASK_DESCRIPTION} failed"))
+      update_and_notify_parent(:state => 'finished', :status => 'Error', :message => display_message("#{request_class::TASK_DESCRIPTION} failed"))
     end
   end
 
   def update_and_notify_parent(*args)
     prev_state = state
     super
-    task_finished if state == "finished" && prev_state != "finished"
+    task_finished if state == 'finished' && prev_state != 'finished'
   end
 
   def task_finished
@@ -204,6 +204,6 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   private
 
   def valid_states
-    super + ["provisioned"]
+    super + ['provisioned']
   end
 end

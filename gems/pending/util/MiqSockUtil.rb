@@ -12,8 +12,8 @@ class MiqSockUtil
 
   def self.getIpAddr
     # Skip 127.0.x.x addresses on first pass
-    x = Socket.getaddrinfo(Socket.gethostname, Socket::AF_INET).detect { |af, _port, _name, addr| af == "AF_INET" && addr !~ /^127\.0/ }
-    x = Socket.getaddrinfo(Socket.gethostname, Socket::AF_INET).detect { |af, _port, _name, _addr| af == "AF_INET" } if x.nil?
+    x = Socket.getaddrinfo(Socket.gethostname, Socket::AF_INET).detect { |af, _port, _name, addr| af == 'AF_INET' && addr !~ /^127\.0/ }
+    x = Socket.getaddrinfo(Socket.gethostname, Socket::AF_INET).detect { |af, _port, _name, _addr| af == 'AF_INET' } if x.nil?
     return x[3] unless x.nil?
     nil
   end

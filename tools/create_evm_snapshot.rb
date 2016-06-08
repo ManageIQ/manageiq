@@ -1,9 +1,9 @@
 def usage
-  puts "Error: Must pass only one of the following:"
-  puts "  --vm=<vm id>"
-  puts "  --job=<job id>"
+  puts 'Error: Must pass only one of the following:'
+  puts '  --vm=<vm id>'
+  puts '  --job=<job id>'
   puts
-  puts "  ID values may be a comma separated list."
+  puts '  ID values may be a comma separated list.'
   exit 1
 end
 

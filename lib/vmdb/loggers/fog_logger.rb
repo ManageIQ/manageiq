@@ -3,7 +3,7 @@ require 'vmdb/loggers/mirrored_logger'
 module Vmdb::Loggers
   class FogLogger < MirroredLogger
     def initialize(path)
-      super(path, "<Fog> ")
+      super(path, '<Fog> ')
     end
 
     # To be used as Excon's request logger, the logger must respond to
@@ -12,9 +12,9 @@ module Vmdb::Loggers
     def instrument(name, params = {})
       method, message =
         case name
-        when "excon.request" then  [:debug, message_for_excon_request(params)]
-        when "excon.response" then [:debug, message_for_excon_response(params)]
-        when "excon.error" then    [:error, message_for_excon_error(params)]
+        when 'excon.request' then  [:debug, message_for_excon_request(params)]
+        when 'excon.response' then [:debug, message_for_excon_response(params)]
+        when 'excon.error' then    [:error, message_for_excon_error(params)]
         else                   [:debug, message_for_other(params)]
         end
 
@@ -58,10 +58,10 @@ module Vmdb::Loggers
     def sanitize_params(params)
       if params.key?(:headers) && params[:headers].key?('Authorization')
         params[:headers] = params[:headers].dup
-        params[:headers]['Authorization'] = "********"
+        params[:headers]['Authorization'] = '********'
       end
       if params.key?(:password)
-        params[:password] = "********"
+        params[:password] = '********'
       end
       if params.key?(:body)
         params[:body] = params[:body].to_s.gsub(/"password":".+?"\}/, '"password":"********"}')

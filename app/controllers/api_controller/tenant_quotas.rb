@@ -8,8 +8,8 @@ class ApiController
 
     def quotas_create_resource(object, type, _id, data)
       bad_attrs = data.keys & INVALID_QUOTA_ATTRS
-      errmsg = "Attributes %s should not be specified for creating a new tenant quota resource"
-      raise(BadRequestError, errmsg % bad_attrs.join(", ")) if bad_attrs.any?
+      errmsg = 'Attributes %s should not be specified for creating a new tenant quota resource'
+      raise(BadRequestError, errmsg % bad_attrs.join(', ')) if bad_attrs.any?
 
       data['tenant_id'] = object.id
       quota = collection_class(type).create(data)
@@ -26,8 +26,8 @@ class ApiController
 
     def quotas_edit_resource(_object, type, id, data)
       bad_attrs = data.keys & INVALID_QUOTA_ATTRS
-      errmsg = "Attributes %s should not be specified for updating a quota resource"
-      raise(BadRequestError, errmsg % bad_attrs.join(", ")) if bad_attrs.any?
+      errmsg = 'Attributes %s should not be specified for updating a quota resource'
+      raise(BadRequestError, errmsg % bad_attrs.join(', ')) if bad_attrs.any?
 
       edit_resource(type, id, data)
     end

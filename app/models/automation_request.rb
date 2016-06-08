@@ -2,9 +2,9 @@ class AutomationRequest < MiqRequest
   alias_attribute :automation_tasks, :miq_request_tasks
 
   TASK_DESCRIPTION  = 'Automation Request'
-  DEFAULT_NAMESPACE = "SYSTEM"
-  DEFAULT_CLASS     = "PROCESS"
-  DEFAULT_INSTANCE  = "AUTOMATION_REQUEST"
+  DEFAULT_NAMESPACE = 'SYSTEM'
+  DEFAULT_CLASS     = 'PROCESS'
+  DEFAULT_INSTANCE  = 'AUTOMATION_REQUEST'
   SOURCE_CLASS_NAME = nil
 
   ##############################################
@@ -23,8 +23,8 @@ class AutomationRequest < MiqRequest
     uri_options = MiqRequestWorkflow.parse_ws_string(uri_parts)
     [:namespace, :class, :instance, :message].each { |key| options[key] = uri_options.delete(key) if uri_options.key?(key) }
     uri_options.keys.each { |key| _log.warn "invalid keyword <#{key}> specified in uri_parts" }
-    options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, "")  # Strip blanks and slashes from beginning and end of string
-    options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
+    options[:namespace]     = (options.delete(:namespace) || DEFAULT_NAMESPACE).strip.gsub(/(^\/|\/$)/, '')  # Strip blanks and slashes from beginning and end of string
+    options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, '')
     options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip
 
     attrs = MiqRequestWorkflow.parse_ws_string(parameters)
@@ -41,7 +41,7 @@ class AutomationRequest < MiqRequest
     zone_name = options[:attrs][:miq_zone]
     return nil if zone_name.blank?
     unless Zone.where(:name => zone_name).exists?
-      raise ArgumentError, _("unknown zone %{zone_name}") % {:zone_name => zone_name}
+      raise ArgumentError, _('unknown zone %{zone_name}') % {:zone_name => zone_name}
     end
     zone_name
   end

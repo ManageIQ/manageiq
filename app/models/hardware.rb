@@ -8,9 +8,9 @@ class Hardware < ApplicationRecord
   has_many    :networks, :dependent => :destroy
 
   has_many    :disks, -> { order :location }, :dependent => :destroy
-  has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
-  has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
-  has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => "Disk", :foreign_key => :hardware_id
+  has_many    :hard_disks, -> { where("device_type != 'floppy' AND device_type NOT LIKE '%cdrom%'").order(:location) }, :class_name => 'Disk', :foreign_key => :hardware_id
+  has_many    :floppies, -> { where("device_type = 'floppy'").order(:location) }, :class_name => 'Disk', :foreign_key => :hardware_id
+  has_many    :cdroms, -> { where("device_type LIKE '%cdrom%'").order(:location) }, :class_name => 'Disk', :foreign_key => :hardware_id
 
   has_many    :hard_disk_storages, -> { distinct }, :through => :hard_disks, :source => :storage
 
@@ -18,9 +18,9 @@ class Hardware < ApplicationRecord
   has_many    :volumes, :dependent => :destroy
 
   has_many    :guest_devices, :dependent => :destroy
-  has_many    :storage_adapters, -> { where "device_type = 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :nics, -> { where "device_type = 'ethernet'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
-  has_many    :ports, -> { where "device_type != 'storage'" }, :class_name => "GuestDevice", :foreign_key => :hardware_id
+  has_many    :storage_adapters, -> { where "device_type = 'storage'" }, :class_name => 'GuestDevice', :foreign_key => :hardware_id
+  has_many    :nics, -> { where "device_type = 'ethernet'" }, :class_name => 'GuestDevice', :foreign_key => :hardware_id
+  has_many    :ports, -> { where "device_type != 'storage'" }, :class_name => 'GuestDevice', :foreign_key => :hardware_id
 
   virtual_column :ipaddresses,   :type => :string_set, :uses => :networks
   virtual_column :hostnames,     :type => :string_set, :uses => :networks
@@ -44,10 +44,10 @@ class Hardware < ApplicationRecord
     @mac_addresses ||= nics.collect(&:address).compact.uniq
   end
 
-  @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
-    "filename" => "filename", "startconnected" => "start_connected", "autodetect" => "auto_detect", "mode" => "mode",
-    "connectiontype" => "mode", "size" => "size", "free_space" => "free_space", "size_on_disk" => "size_on_disk",
-    "generatedaddress" => "address", "disk_type" => "disk_type"}
+  @@dh = {'type' => 'device_name', 'devicetype' => 'device_type', 'id' => 'location', 'present' => 'present',
+    'filename' => 'filename', 'startconnected' => 'start_connected', 'autodetect' => 'auto_detect', 'mode' => 'mode',
+    'connectiontype' => 'mode', 'size' => 'size', 'free_space' => 'free_space', 'size_on_disk' => 'size_on_disk',
+    'generatedaddress' => 'address', 'disk_type' => 'disk_type'}
 
   def self.add_elements(parent, xmlNode)
     _log.info("Adding Hardware XML elements for VM[id]=[#{parent.id}] from XML doc [#{xmlNode.root.name}]")
@@ -57,7 +57,7 @@ class Hardware < ApplicationRecord
 
     # Excluding ethernet devices from deletes because the refresh is the master of the data and it will handle the deletes.
     deletes[:gd] = parent.hardware.guest_devices
-                   .where.not(:device_type => "ethernet")
+                   .where.not(:device_type => 'ethernet')
                    .select(:id, :device_type, :location, :address)
                    .collect { |rec| [rec.id, [rec.device_type, rec.location, rec.address]] }
 
@@ -93,7 +93,7 @@ class Hardware < ApplicationRecord
   # resulting sql: "(cast(disk_free_space as float) / (disk_capacity * 100))"
   virtual_attribute :v_pct_free_disk_space, :float, :arel => (lambda do |t|
     Arel::Nodes::Grouping.new(Arel::Nodes::Division.new(
-      Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
+      Arel::Nodes::NamedFunction.new('CAST', [t[:disk_free_space].as('float')]),
       t[:disk_capacity]) * 100)
   end)
 
@@ -105,7 +105,7 @@ class Hardware < ApplicationRecord
   # to work with arel better, put the 100 at the end
   virtual_attribute :v_pct_used_disk_space, :float, :arel => (lambda do |t|
     Arel::Nodes::Grouping.new(Arel::Nodes::Division.new(
-      Arel::Nodes::NamedFunction.new("CAST", [t[:disk_free_space].as("float")]),
+      Arel::Nodes::NamedFunction.new('CAST', [t[:disk_free_space].as('float')]),
       t[:disk_capacity]) * -100 + 100)
   end)
 
@@ -128,12 +128,12 @@ class Hardware < ApplicationRecord
   def m_controller(_parent, xmlNode, deletes)
     # $log.info("Adding controller XML elements for [#{xmlNode.attributes["type"]}]")
     xmlNode.each_element do |e|
-      next if e.attributes['present'].to_s.downcase == "false"
-      da = {"device_type" => xmlNode.attributes["type"].to_s.downcase, "controller_type" => xmlNode.attributes["type"]}
+      next if e.attributes['present'].to_s.downcase == 'false'
+      da = {'device_type' => xmlNode.attributes['type'].to_s.downcase, 'controller_type' => xmlNode.attributes['type']}
       # Loop over the device mapping table and add attributes
       @@dh.each_pair { |k, v|  da.merge!(v => e.attributes[k]) if e.attributes[k] }
 
-      if da["device_name"] == 'disk'
+      if da['device_name'] == 'disk'
         target = disks
         target_type = :disk
       else
@@ -142,8 +142,8 @@ class Hardware < ApplicationRecord
       end
 
       # Try to find the existing row
-      found = target.find_by(:device_type => da["device_type"], :location => da["location"])
-      found ||= da["address"] && target.find_by(:device_type => da["device_type"], :address => da["address"])
+      found = target.find_by(:device_type => da['device_type'], :location => da['location'])
+      found ||= da['address'] && target.find_by(:device_type => da['device_type'], :address => da['address'])
       # Add or update the device
       if found.nil?
         target.create(da)
@@ -153,40 +153,40 @@ class Hardware < ApplicationRecord
       end
 
       # Remove the devices from the delete list if it matches on device_type and either location or address
-      deletes[target_type].delete_if { |ele| (ele[1][0] == da["device_type"]) && (ele[1][1] == da["location"] || (!da["address"].nil? && ele[1][2] == da["address"])) }
+      deletes[target_type].delete_if { |ele| (ele[1][0] == da['device_type']) && (ele[1][1] == da['location'] || (!da['address'].nil? && ele[1][2] == da['address'])) }
     end
   end
 
   def m_memory(_parent, xmlNode, _deletes)
-    self.memory_mb = xmlNode.attributes["memsize"]
+    self.memory_mb = xmlNode.attributes['memsize']
   end
 
   def m_bios(_parent, xmlNode, _deletes)
-    new_bios = MiqUUID.clean_guid(xmlNode.attributes["bios"])
-    self.bios = new_bios.nil? ? xmlNode.attributes["bios"] : new_bios
+    new_bios = MiqUUID.clean_guid(xmlNode.attributes['bios'])
+    self.bios = new_bios.nil? ? xmlNode.attributes['bios'] : new_bios
 
-    new_bios = MiqUUID.clean_guid(xmlNode.attributes["location"])
-    self.bios_location = new_bios.nil? ? xmlNode.attributes["location"] : new_bios
+    new_bios = MiqUUID.clean_guid(xmlNode.attributes['location'])
+    self.bios_location = new_bios.nil? ? xmlNode.attributes['location'] : new_bios
   end
 
   def m_vm(parent, xmlNode, _deletes)
     xmlNode.each_element do |e|
-      self.guest_os = e.attributes["guestos"] if e.name == "guestos"
-      self.config_version = e.attributes["version"] if e.name == "config"
-      self.virtual_hw_version = e.attributes["version"] if e.name == "virtualhw"
-      self.time_sync = e.attributes["synctime"] if e.name == "tools"
-      self.annotation = e.attributes["annotation"] if e.name == "annotation"
-      self.cpu_speed = e.attributes["cpuspeed"] if e.name == "cpuspeed"
-      self.cpu_type = e.attributes["cputype"] if e.name == "cputype"
-      parent.autostart = e.attributes["autostart"] if e.name == "autostart"
-      self.cpu_sockets = e.attributes["numvcpus"] if e.name == "numvcpus"
+      self.guest_os = e.attributes['guestos'] if e.name == 'guestos'
+      self.config_version = e.attributes['version'] if e.name == 'config'
+      self.virtual_hw_version = e.attributes['version'] if e.name == 'virtualhw'
+      self.time_sync = e.attributes['synctime'] if e.name == 'tools'
+      self.annotation = e.attributes['annotation'] if e.name == 'annotation'
+      self.cpu_speed = e.attributes['cpuspeed'] if e.name == 'cpuspeed'
+      self.cpu_type = e.attributes['cputype'] if e.name == 'cputype'
+      parent.autostart = e.attributes['autostart'] if e.name == 'autostart'
+      self.cpu_sockets = e.attributes['numvcpus'] if e.name == 'numvcpus'
     end
   end
 
   def m_files(_parent, xmlNode, _deletes)
-    self.size_on_disk = xmlNode.attributes["size_on_disk"]
-    self.disk_free_space = xmlNode.attributes["disk_free_space"]
-    self.disk_capacity = xmlNode.attributes["disk_capacity"]
+    self.size_on_disk = xmlNode.attributes['size_on_disk']
+    self.disk_free_space = xmlNode.attributes['disk_free_space']
+    self.disk_capacity = xmlNode.attributes['disk_capacity']
   end
 
   def m_snapshots(parent, xmlNode, _deletes)

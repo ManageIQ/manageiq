@@ -1,16 +1,16 @@
 describe MiqAeCustomizationController do
-  context "::Dialogs" do
-    context "#dialog_delete" do
+  context '::Dialogs' do
+    context '#dialog_delete' do
       before do
         EvmSpecHelper.local_miq_server
-        login_as FactoryGirl.create(:user, :features => "dialog_delete")
+        login_as FactoryGirl.create(:user, :features => 'dialog_delete')
         allow(controller).to receive(:check_privileges).and_return(true)
       end
 
-      it "flash message displays Dialog Label being deleted" do
-        dialog = FactoryGirl.create(:dialog, :label       => "Test Label",
-                                             :description => "Test Description",
-                                             :buttons     => "submit,reset,cancel"
+      it 'flash message displays Dialog Label being deleted' do
+        dialog = FactoryGirl.create(:dialog, :label       => 'Test Label',
+                                             :description => 'Test Description',
+                                             :buttons     => 'submit,reset,cancel'
                                    )
 
         controller.instance_variable_set(:@sb,
@@ -29,14 +29,14 @@ describe MiqAeCustomizationController do
 
         # Check for Dialog Label to be part of flash message displayed
         flash_messages = assigns(:flash_array)
-        expect(flash_messages.first[:message]).to include("Dialog \"Test Label\": Delete successful")
+        expect(flash_messages.first[:message]).to include('Dialog "Test Label": Delete successful')
 
         expect(controller.send(:flash_errors?)).to be_falsey
       end
     end
 
-    context "#prepare_move_field_value" do
-      it "Find ID of a button" do
+    context '#prepare_move_field_value' do
+      it 'Find ID of a button' do
         controller.instance_variable_set(:@_params, :entry_id => 1)
         controller.instance_variable_set(:@edit, {:field_values => [['test', 100], ['test1', 101], ['test2', 102]]})
         controller.send(:prepare_move_field_value)
@@ -44,24 +44,24 @@ describe MiqAeCustomizationController do
       end
     end
 
-    context "#dialog_edit" do
+    context '#dialog_edit' do
       before do
-        login_as FactoryGirl.create(:user, :features => "dialog_edit")
+        login_as FactoryGirl.create(:user, :features => 'dialog_edit')
         @dialog = FactoryGirl.create(:dialog,
-                                     :label       => "Test Label",
-                                     :description => "Test Description"
+                                     :label       => 'Test Label',
+                                     :description => 'Test Description'
                                     )
         tree_hash = {
           :active_tree => :dialog_edit_tree,
           :trees       => {
             :dialog_edit_tree => {
-              :active_node => "root"
+              :active_node => 'root'
             }
           }
         }
-        controller.instance_variable_set(:@_params, :button => "add")
+        controller.instance_variable_set(:@_params, :button => 'add')
         controller.instance_variable_set(:@sb, tree_hash)
-        new = {:label => "a1", :description => "a1", :buttons => ["submit"], :tabs => []}
+        new = {:label => 'a1', :description => 'a1', :buttons => ['submit'], :tabs => []}
         edit = {
           :dialog         => @dialog,
           :key            => 'dialog_edit__new',
@@ -73,40 +73,40 @@ describe MiqAeCustomizationController do
         session[:edit] = edit
       end
 
-      it "Dialog with out Dialog fields should not be saved" do
+      it 'Dialog with out Dialog fields should not be saved' do
         allow(controller).to receive(:render_flash)
         controller.send(:dialog_edit)
-        expect(assigns(:flash_array).first[:message]).to include("Dialog a1 must have at least one Tab")
+        expect(assigns(:flash_array).first[:message]).to include('Dialog a1 must have at least one Tab')
       end
 
-      it "Adds a Dialog with Tab/Groups/Fields & adds data_type for textbox field" do
+      it 'Adds a Dialog with Tab/Groups/Fields & adds data_type for textbox field' do
         new_hash = {
-          :label       => "Dialog 1",
-          :description => "Dialog 1",
-          :buttons     => ["submit"],
+          :label       => 'Dialog 1',
+          :description => 'Dialog 1',
+          :buttons     => ['submit'],
           :tabs        => [
             {
-              :label       => "Tab 1",
-              :description => "Tab 1",
+              :label       => 'Tab 1',
+              :description => 'Tab 1',
               :groups      => [
                 {
-                  :label       => "Box 1",
-                  :description => "Box 1",
+                  :label       => 'Box 1',
+                  :description => 'Box 1',
                   :fields      => [
                     {
-                      :label         => "Field 1",
-                      :description   => "Field 1",
-                      :typ           => "DialogFieldCheckBox",
-                      :name          => "Field1",
+                      :label         => 'Field 1',
+                      :description   => 'Field 1',
+                      :typ           => 'DialogFieldCheckBox',
+                      :name          => 'Field1',
                       :default_value => false
                     },
                     {
-                      :label         => "Field 2",
-                      :description   => "Field 2",
-                      :typ           => "DialogFieldTextBox",
-                      :name          => "Field2",
-                      :default_value => "Foo",
-                      :data_typ      => "integer"
+                      :label         => 'Field 2',
+                      :description   => 'Field 2',
+                      :typ           => 'DialogFieldTextBox',
+                      :name          => 'Field2',
+                      :default_value => 'Foo',
+                      :data_typ      => 'integer'
                     }
                   ]
                 }
@@ -119,35 +119,35 @@ describe MiqAeCustomizationController do
         allow(controller).to receive(:replace_right_cell)
         allow(controller).to receive(:render_flash)
         controller.send(:dialog_edit)
-        expect(assigns(:flash_array).first[:message]).to include("Dialog \"Dialog 1\" was added")
+        expect(assigns(:flash_array).first[:message]).to include('Dialog "Dialog 1" was added')
         expect(@dialog.dialog_fields.count).to eq(2)
-        expect(@dialog.dialog_fields.last[:data_type]).to eq("integer")
+        expect(@dialog.dialog_fields.last[:data_type]).to eq('integer')
       end
     end
 
-    it "Empty dropdown element has to be invalid" do
+    it 'Empty dropdown element has to be invalid' do
       allow(controller).to receive(:x_node) { 'root_-0_-0_-0' }
       controller.instance_variable_set(:@sb, :node_typ => 'element')
       session[:edit] = {
-        :field_typ    => "DialogFieldDropDownList",
+        :field_typ    => 'DialogFieldDropDownList',
         :field_values => [],
         :field_label  => 'Dropdown 1',
         :field_name   => 'Dropdown1'
       }
       controller.send(:dialog_validate)
-      expect(assigns(:flash_array).first[:message]).to include("Dropdown elements require some entries")
+      expect(assigns(:flash_array).first[:message]).to include('Dropdown elements require some entries')
     end
 
-    it "does not require values for a dynamic drop down" do
+    it 'does not require values for a dynamic drop down' do
       allow(controller).to receive(:x_node) { 'root_-0_-0_-0' }
       controller.instance_variable_set(:@sb, :node_typ => 'element')
       session[:edit] = {
-        :field_typ         => "DialogFieldDropDownList",
+        :field_typ         => 'DialogFieldDropDownList',
         :field_values      => [],
         :field_label       => 'Dropdown 1',
         :field_name        => 'Dropdown1',
         :field_dynamic     => true,
-        :field_entry_point => "entry point"
+        :field_entry_point => 'entry point'
       }
       controller.send(:dialog_validate)
       expect(assigns(:flash_array)).to eq(nil)

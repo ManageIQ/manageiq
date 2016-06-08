@@ -3,84 +3,84 @@ describe VimPerformanceTag do
     @server = EvmSpecHelper.local_miq_server
     @ems    = FactoryGirl.create(:ems_vmware, :zone => @server.zone)
 
-    allow(Classification).to receive(:category_names_for_perf_by_tag).and_return(["environment"])
-    @classification_entries = ["prod", "dev", "test"]
+    allow(Classification).to receive(:category_names_for_perf_by_tag).and_return(['environment'])
+    @classification_entries = ['prod', 'dev', 'test']
   end
 
-  context "with a small environment and tagged VMs" do
+  context 'with a small environment and tagged VMs' do
     before(:each) do
-      @prod = "environment/prod"
-      @dev  = "environment/dev"
-      @test = "environment/test"
+      @prod = 'environment/prod'
+      @dev  = 'environment/dev'
+      @test = 'environment/test'
 
       @vms  = []
-      @vms << FactoryGirl.create(:vm_vmware, :name => "prod")
-      @vms << FactoryGirl.create(:vm_vmware, :name => "dev")
-      @vms << FactoryGirl.create(:vm_vmware, :name => "test")
-      @vms << FactoryGirl.create(:vm_vmware, :name => "none")
+      @vms << FactoryGirl.create(:vm_vmware, :name => 'prod')
+      @vms << FactoryGirl.create(:vm_vmware, :name => 'dev')
+      @vms << FactoryGirl.create(:vm_vmware, :name => 'test')
+      @vms << FactoryGirl.create(:vm_vmware, :name => 'none')
 
-      @host = FactoryGirl.create(:host, :vms => @vms, :vmm_vendor => 'vmware', :vmm_product => "ESX", :type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx")
+      @host = FactoryGirl.create(:host, :vms => @vms, :vmm_vendor => 'vmware', :vmm_product => 'ESX', :type => 'ManageIQ::Providers::Vmware::InfraManager::HostEsx')
       @host = Host.find_by_id(@host.id)
     end
 
-    context "with Vm hourly performances" do
+    context 'with Vm hourly performances' do
       before(:each) do
         case_sets = {
           :host => {
-            "2010-04-13T21:00:00Z" => 1100.0,
-            "2010-04-14T18:00:00Z" => 1111.0,
-            "2010-04-14T19:00:00Z" => 1211.0,
-            "2010-04-14T20:00:00Z" => 1411.0,
-            "2010-04-14T21:00:00Z" => 1811.0,
-            "2010-04-14T22:00:00Z" => 1151.0,
-            "2010-04-15T21:00:00Z" => 1100.0,
+            '2010-04-13T21:00:00Z' => 1100.0,
+            '2010-04-14T18:00:00Z' => 1111.0,
+            '2010-04-14T19:00:00Z' => 1211.0,
+            '2010-04-14T20:00:00Z' => 1411.0,
+            '2010-04-14T21:00:00Z' => 1811.0,
+            '2010-04-14T22:00:00Z' => 1151.0,
+            '2010-04-15T21:00:00Z' => 1100.0,
           },
           :prod => {
-            "2010-04-13T21:00:00Z" => 2100.0,
-            "2010-04-14T18:00:00Z" => 2122.0,
-            "2010-04-14T19:00:00Z" => 2222.0,
-            "2010-04-14T20:00:00Z" => 2422.0,
-            "2010-04-14T21:00:00Z" => 2822.0,
-            "2010-04-14T22:00:00Z" => 2152.0,
-            "2010-04-15T21:00:00Z" => 2100.0,
+            '2010-04-13T21:00:00Z' => 2100.0,
+            '2010-04-14T18:00:00Z' => 2122.0,
+            '2010-04-14T19:00:00Z' => 2222.0,
+            '2010-04-14T20:00:00Z' => 2422.0,
+            '2010-04-14T21:00:00Z' => 2822.0,
+            '2010-04-14T22:00:00Z' => 2152.0,
+            '2010-04-15T21:00:00Z' => 2100.0,
           },
           :dev  => {
-            "2010-04-13T21:00:00Z" => 3100.0,
-            "2010-04-14T18:00:00Z" => 3133.0,
-            "2010-04-14T19:00:00Z" => 3233.0,
-            "2010-04-14T20:00:00Z" => 3433.0,
-            "2010-04-14T21:00:00Z" => 3833.0,
-            "2010-04-14T22:00:00Z" => 3153.0,
-            "2010-04-15T21:00:00Z" => 3100.0,
+            '2010-04-13T21:00:00Z' => 3100.0,
+            '2010-04-14T18:00:00Z' => 3133.0,
+            '2010-04-14T19:00:00Z' => 3233.0,
+            '2010-04-14T20:00:00Z' => 3433.0,
+            '2010-04-14T21:00:00Z' => 3833.0,
+            '2010-04-14T22:00:00Z' => 3153.0,
+            '2010-04-15T21:00:00Z' => 3100.0,
           },
           :test => {
-            "2010-04-13T21:00:00Z" => 4100.0,
-            "2010-04-14T18:00:00Z" => 4144.0,
-            "2010-04-14T19:00:00Z" => 4244.0,
-            "2010-04-14T20:00:00Z" => 4444.0,
-            "2010-04-14T21:00:00Z" => 4844.0,
-            "2010-04-14T22:00:00Z" => 4154.0,
-            "2010-04-15T21:00:00Z" => 4100.0,
+            '2010-04-13T21:00:00Z' => 4100.0,
+            '2010-04-14T18:00:00Z' => 4144.0,
+            '2010-04-14T19:00:00Z' => 4244.0,
+            '2010-04-14T20:00:00Z' => 4444.0,
+            '2010-04-14T21:00:00Z' => 4844.0,
+            '2010-04-14T22:00:00Z' => 4154.0,
+            '2010-04-15T21:00:00Z' => 4100.0,
           },
           :none => {
-            "2010-04-13T21:00:00Z" => 5100.0,
-            "2010-04-14T18:00:00Z" => 5155.0,
-            "2010-04-14T19:00:00Z" => 5255.0,
-            "2010-04-14T20:00:00Z" => 5455.0,
-            "2010-04-14T21:00:00Z" => 5855.0,
-            "2010-04-14T22:00:00Z" => 5155.0,
-            "2010-04-15T21:00:00Z" => 5100.0,
+            '2010-04-13T21:00:00Z' => 5100.0,
+            '2010-04-14T18:00:00Z' => 5155.0,
+            '2010-04-14T19:00:00Z' => 5255.0,
+            '2010-04-14T20:00:00Z' => 5455.0,
+            '2010-04-14T21:00:00Z' => 5855.0,
+            '2010-04-14T22:00:00Z' => 5155.0,
+            '2010-04-15T21:00:00Z' => 5100.0,
           }
         }
 
         @timestamps = [
-          "2010-04-13T21:00:00Z",
-          "2010-04-14T18:00:00Z",
-          "2010-04-14T19:00:00Z",
-          "2010-04-14T20:00:00Z",
-          "2010-04-14T21:00:00Z",
-          "2010-04-14T22:00:00Z",
-          "2010-04-15T21:00:00Z",
+          '2010-04-13T21:00:00Z',
+          '2010-04-14T18:00:00Z',
+          '2010-04-14T19:00:00Z',
+          '2010-04-14T20:00:00Z',
+          '2010-04-14T21:00:00Z',
+          '2010-04-14T22:00:00Z',
+          '2010-04-15T21:00:00Z',
         ]
         @precomputed = {}
         @timestamps.each do |ts|
@@ -91,7 +91,7 @@ describe VimPerformanceTag do
 
         @vms.each do |vm|
           case_sets[vm.name.to_sym].each do |timestamp, value|
-            if vm.name == "none"
+            if vm.name == 'none'
               perf = FactoryGirl.create(:metric_rollup_vm_hr,
                                         :timestamp                 => timestamp,
                                         :cpu_usagemhz_rate_average => value
@@ -121,14 +121,14 @@ describe VimPerformanceTag do
         @host.save!
       end
 
-      it "#find_and_group_by_tags" do
-        where_clause = ["resource_type = ? and resource_id = ?", @host.class.base_class.name, @host.id]
+      it '#find_and_group_by_tags' do
+        where_clause = ['resource_type = ? and resource_id = ?', @host.class.base_class.name, @host.id]
         results, group_by_tag_cols, group_by_tags =
-          VimPerformanceTag.find_and_group_by_tags(:cat_model    => "Vm",
-                                                   :category     => "environment",
+          VimPerformanceTag.find_and_group_by_tags(:cat_model    => 'Vm',
+                                                   :category     => 'environment',
                                                    :where_clause => where_clause)
 
-        classification_entries_with_none = @classification_entries + ["_none_"]
+        classification_entries_with_none = @classification_entries + ['_none_']
 
         classification_entries_with_none.each do |entry|
           expect(group_by_tags).to include(entry)
@@ -144,7 +144,7 @@ describe VimPerformanceTag do
           @classification_entries.each do |entry|
             expect(@precomputed[ts][entry.to_sym]).to eq(t.send("cpu_usagemhz_rate_average_#{entry}"))
           end
-          expect(@precomputed[ts][:none]).to eq(t.send("cpu_usagemhz_rate_average__none_"))
+          expect(@precomputed[ts][:none]).to eq(t.send('cpu_usagemhz_rate_average__none_'))
         end
       end
     end

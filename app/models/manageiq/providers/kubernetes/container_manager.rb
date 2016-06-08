@@ -34,11 +34,11 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
   end
 
   def self.ems_type
-    @ems_type ||= "kubernetes".freeze
+    @ems_type ||= 'kubernetes'.freeze
   end
 
   def self.description
-    @description ||= "Kubernetes".freeze
+    @description ||= 'Kubernetes'.freeze
   end
 
   def self.raw_connect(hostname, port, options)

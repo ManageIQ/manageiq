@@ -1,7 +1,7 @@
-root = $evm.object("/")
+root = $evm.object('/')
 result = $evm.inputs['result']
 
-$evm.log("info", "ProvisionCheck returned <#{result}>")
+$evm.log('info', "ProvisionCheck returned <#{result}>")
 
 case result
 when 'exception'

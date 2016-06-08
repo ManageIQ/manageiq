@@ -3,12 +3,12 @@ class ScanItem < ApplicationRecord
   acts_as_miq_set_member
   include UuidMixin
 
-  YAML_DIR = File.expand_path(File.join(Rails.root, "product/scan_items"))
+  YAML_DIR = File.expand_path(File.join(Rails.root, 'product/scan_items'))
   Dir.mkdir YAML_DIR unless File.exist?(YAML_DIR)
 
-  SAMPLE_VM_PROFILE    = {:name => "sample",       :description => "VM Sample",    :mode => 'Vm',   :read_only => true}.freeze
-  SAMPLE_HOST_PROFILE  = {:name => "host sample",  :description => "Host Sample",  :mode => 'Host', :read_only => true}.freeze
-  DEFAULT_HOST_PROFILE = {:name => "host default", :description => "Host Default", :mode => 'Host'}.freeze
+  SAMPLE_VM_PROFILE    = {:name => 'sample',       :description => 'VM Sample',    :mode => 'Vm',   :read_only => true}.freeze
+  SAMPLE_HOST_PROFILE  = {:name => 'host sample',  :description => 'Host Sample',  :mode => 'Host', :read_only => true}.freeze
+  DEFAULT_HOST_PROFILE = {:name => 'host default', :description => 'Host Default', :mode => 'Host'}.freeze
 
   def self.sync_from_dir
     where(:prod_default => 'Default').where.not(:filename => nil).each do|f|
@@ -19,7 +19,7 @@ class ScanItem < ApplicationRecord
       end
     end
 
-    Dir.glob(File.join(YAML_DIR, "*.yaml")).sort.each do|f|
+    Dir.glob(File.join(YAML_DIR, '*.yaml')).sort.each do|f|
       sync_from_file(f)
     end
   end
@@ -29,9 +29,9 @@ class ScanItem < ApplicationRecord
     item = YAML.load(fd.read)
     fd.close
 
-    item[:filename] = filename.sub(YAML_DIR + "/", "")
+    item[:filename] = filename.sub(YAML_DIR + '/', '')
     item[:file_mtime] = File.mtime(filename).utc
-    item[:prod_default] = "Default"
+    item[:prod_default] = 'Default'
 
     rec = find_by(:name => item[:name], :filename => item[:filename])
 
@@ -68,10 +68,10 @@ class ScanItem < ApplicationRecord
 
     where(:prod_default => 'Default').each do |s|
       case s.mode
-      when "Host"
+      when 'Host'
         host_profile.add_member(s) unless host_profile.members.include?(s)
         host_default.add_member(s) if load_host_default && !host_default.members.include?(s)
-      when "Vm"
+      when 'Vm'
         vm_profile.add_member(s) unless vm_profile.members.include?(s)
       end
     end
@@ -86,9 +86,9 @@ class ScanItem < ApplicationRecord
     si = ScanItemSet.find_by_name(set_name)
     if si
       y = si.attributes
-      y["definition"] = []
+      y['definition'] = []
       si.members.each do |m|
-        y["definition"] << m.attributes
+        y['definition'] << m.attributes
       end
       profiles << y
     end

@@ -4,7 +4,7 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:leaf => "ConfiguredSystem"}
+    {:leaf => 'ConfiguredSystem'}
   end
 
   def set_locals_for_render
@@ -13,31 +13,31 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   end
 
   def root_options
-    [t = _("All Configured Systems"), t]
+    [t = _('All Configured Systems'), t]
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects.push(:id            => "csf",
-                 :text          => _("%{name} Configured Systems") % {:name => ui_lookup(:ui_title => 'foreman')},
-                 :image         => "folder",
-                 :tip           => _("%{name} Configured Systems") % {:name => ui_lookup(:ui_title => 'foreman')},
+    objects.push(:id            => 'csf',
+                 :text          => _('%{name} Configured Systems') % {:name => ui_lookup(:ui_title => 'foreman')},
+                 :image         => 'folder',
+                 :tip           => _('%{name} Configured Systems') % {:name => ui_lookup(:ui_title => 'foreman')},
                  :load_children => true)
-    objects.push(:id            => "csa",
-                 :text          => _("Ansible Tower Configured Systems"),
-                 :image         => "folder",
-                 :tip           => _("Ansible Tower Configured Systems"),
+    objects.push(:id            => 'csa',
+                 :text          => _('Ansible Tower Configured Systems'),
+                 :image         => 'folder',
+                 :tip           => _('Ansible Tower Configured Systems'),
                  :load_children => true)
-    objects.push(:id          => "global",
-                 :text        => _("Global Filters"),
-                 :image       => "folder",
-                 :tip         => _("Global Shared Filters"),
+    objects.push(:id          => 'global',
+                 :text        => _('Global Filters'),
+                 :image       => 'folder',
+                 :tip         => _('Global Shared Filters'),
                  :cfmeNoClick => true)
-    objects.push(:id          => "my",
-                 :text        => _("My Filters"),
-                 :image       => "folder",
-                 :tip         => _("My Personal Filters"),
+    objects.push(:id          => 'my',
+                 :text        => _('My Filters'),
+                 :image       => 'folder',
+                 :tip         => _('My Personal Filters'),
                  :cfmeNoClick => true)
     count_only_or_objects(count_only, objects, nil)
   end
@@ -49,9 +49,9 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
 
   def x_get_search_results(object, leaf)
     case object[:id]
-    when "global" # Global filters
+    when 'global' # Global filters
       x_get_global_filter_search_results(leaf)
-    when "my"     # My filters
+    when 'my'     # My filters
       x_get_my_filter_search_results(leaf)
     end
   end
@@ -61,7 +61,7 @@ class TreeBuilderConfigurationManagerConfiguredSystems < TreeBuilder
   end
 
   def x_get_my_filter_search_results(leaf)
-    MiqSearch.where(:db => leaf, :search_type => "user", :search_key => User.current_user.userid)
+    MiqSearch.where(:db => leaf, :search_type => 'user', :search_key => User.current_user.userid)
       .sort_by { |a| a.description.downcase }
   end
 end

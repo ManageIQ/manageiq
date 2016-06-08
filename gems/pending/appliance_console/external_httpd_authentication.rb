@@ -1,5 +1,5 @@
-require "appliance_console/external_httpd_configuration"
-require "appliance_console/principal"
+require 'appliance_console/external_httpd_configuration'
+require 'appliance_console/principal'
 
 module ApplianceConsole
   class ExternalHttpdAuthentication
@@ -11,7 +11,7 @@ module ApplianceConsole
       @domain    = options[:domain] || domain_from_host(host)
       @realm     = options[:realm]
       @ipaserver = options[:ipaserver]
-      @principal = options[:principal] || "admin"
+      @principal = options[:principal] || 'admin'
       @password  = options[:password]
       @timestamp = Time.now.strftime(TIMESTAMP_FORMAT)
 
@@ -20,11 +20,11 @@ module ApplianceConsole
 
     def ask_for_parameters
       say("\nIPA Server Parameters:\n\n")
-      @ipaserver = ask_for_hostname("IPA Server Hostname", @ipaserver)
-      @domain    = ask_for_domain("IPA Server Domain", @domain)
-      @realm     = ask_for_string("IPA Server Realm", realm)
-      @principal = ask_for_string("IPA Server Principal", @principal)
-      @password  = ask_for_password("IPA Server Principal Password", @password)
+      @ipaserver = ask_for_hostname('IPA Server Hostname', @ipaserver)
+      @domain    = ask_for_domain('IPA Server Domain', @domain)
+      @realm     = ask_for_string('IPA Server Realm', realm)
+      @principal = ask_for_string('IPA Server Principal', @principal)
+      @password  = ask_for_password('IPA Server Principal Password', @password)
 
       @ipaserver = fqdn(@ipaserver, @domain)
     end
@@ -68,7 +68,7 @@ module ApplianceConsole
       rescue AwesomeSpawn::CommandResultError => e
         say e.result.output
         say e.result.error
-        say ""
+        say ''
         say("Failed to Configure External Authentication - #{e}")
         return false
       rescue => e
@@ -82,14 +82,14 @@ module ApplianceConsole
       say("\nRestarting sssd and httpd ...")
       %w(sssd httpd).each { |service| LinuxAdmin::Service.new(service).restart }
 
-      say("Configuring sssd to start upon reboots ...")
-      LinuxAdmin::Service.new("sssd").enable
+      say('Configuring sssd to start upon reboots ...')
+      LinuxAdmin::Service.new('sssd').enable
     end
 
     private
 
     def domain_naming_context
-      @domain.split(".").collect { |s| "dc=#{s}" }.join(",")
+      @domain.split('.').collect { |s| "dc=#{s}" }.join(',')
     end
 
     def domain_from_host(host)
@@ -97,7 +97,7 @@ module ApplianceConsole
     end
 
     def fqdn(host, domain)
-      (host && domain && !host.include?(".")) ? "#{host}.#{domain}" : host
+      (host && domain && !host.include?('.')) ? "#{host}.#{domain}" : host
     end
 
     def realm
@@ -111,12 +111,12 @@ module ApplianceConsole
     end
 
     def configure_pam
-      say("Configuring pam ...")
+      say('Configuring pam ...')
       cp_template(PAM_CONFIG, template_directory)
     end
 
     def configure_sssd
-      say("Configuring sssd ...")
+      say('Configuring sssd ...')
       config = config_file_read(SSSD_CONFIG)
       configure_sssd_domain(config, @domain)
       configure_sssd_service(config)
@@ -125,25 +125,25 @@ module ApplianceConsole
     end
 
     def configure_ipa_http_service
-      say("Configuring IPA HTTP Service and Keytab ...")
+      say('Configuring IPA HTTP Service and Keytab ...')
       AwesomeSpawn.run!("/bin/echo \"#{@password}\" | /usr/bin/kinit #{@principal}")
-      service = Principal.new(:hostname => @host, :realm => realm, :service => "HTTP", :ca_name => "ipa")
+      service = Principal.new(:hostname => @host, :realm => realm, :service => 'HTTP', :ca_name => 'ipa')
       service.register
-      AwesomeSpawn.run!(IPA_GETKEYTAB, :params => {"-s" => @ipaserver, "-k" => HTTP_KEYTAB, "-p" => service.name})
+      AwesomeSpawn.run!(IPA_GETKEYTAB, :params => {'-s' => @ipaserver, '-k' => HTTP_KEYTAB, '-p' => service.name})
       FileUtils.chown(APACHE_USER, nil, HTTP_KEYTAB)
       FileUtils.chmod(0600, HTTP_KEYTAB)
     end
 
     def configure_httpd
-      say("Configuring httpd ...")
+      say('Configuring httpd ...')
       configure_httpd_application
     end
 
     def configure_selinux
-      say("Configuring SELinux ...")
+      say('Configuring SELinux ...')
       get_enforce = AwesomeSpawn.run!(GETENFORCE_COMMAND)
-      if get_enforce.output.downcase.include?("disabled")
-        say("SELinux is Disabled")
+      if get_enforce.output.downcase.include?('disabled')
+        say('SELinux is Disabled')
       else
         AwesomeSpawn.run!("#{SETSEBOOL_COMMAND} -P allow_httpd_mod_auth_pam on")
         result = AwesomeSpawn.run("#{GETSEBOOL_COMMAND} httpd_dbus_sssd")

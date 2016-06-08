@@ -6,7 +6,7 @@ module MiqProvision::Pxe
     if image_id.kind_of?(String)
       # "new" style of choosing either a pxe image or a windows image, and
       #   storing the pxe_image_id field as "ClassName::id"
-      klass, id = image_id.split("::")
+      klass, id = image_id.split('::')
       image = klass.constantize.find_by_id(id)
 
       if image.kind_of?(WindowsImage)
@@ -59,7 +59,7 @@ module MiqProvision::Pxe
     pxe_image, windows_image = pxe_and_windows_image
 
     mac_address = get_mac_address_of_nic_on_requested_vlan
-    raise _("MAC Address is nil") if mac_address.nil?
+    raise _('MAC Address is nil') if mac_address.nil?
 
     substitution_options = prepare_customization_template_substitution_options(mac_address)
     pxe_server.create_provisioning_files(pxe_image, mac_address, windows_image, customization_template, substitution_options)
@@ -69,7 +69,7 @@ module MiqProvision::Pxe
     pxe_image, windows_image = pxe_and_windows_image
 
     mac_address = get_mac_address_of_nic_on_requested_vlan
-    raise _("MAC Address is nil") if mac_address.nil?
+    raise _('MAC Address is nil') if mac_address.nil?
 
     pxe_server.delete_provisioning_files(pxe_image, mac_address, windows_image, customization_template)
   end

@@ -58,7 +58,7 @@ module NTFS
     attr_reader :type, :nodeHeader, :index, :indexAlloc
 
     def initialize(buf, boot_sector)
-      log_prefix = "MIQ(NTFS::IndexRoot.initialize)"
+      log_prefix = 'MIQ(NTFS::IndexRoot.initialize)'
 
       raise "#{log_prefix} Nil buffer"        if buf.nil?
       raise "#{log_prefix} Nil boot sector"   if boot_sector.nil?
@@ -104,7 +104,7 @@ module NTFS
 
     # Find a name in this index.
     def find(name)
-      log_prefix = "MIQ(NTFS::IndexRoot.find)"
+      log_prefix = 'MIQ(NTFS::IndexRoot.find)'
 
       name = name.downcase
       $log.debug "#{log_prefix} Searching for [#{name}]" if DEBUG_TRACE_FIND
@@ -130,7 +130,7 @@ module NTFS
     end
 
     def findInEntries(name, entries)
-      log_prefix = "MIQ(NTFS::IndexRoot.findInEntries)"
+      log_prefix = 'MIQ(NTFS::IndexRoot.findInEntries)'
 
       if @foundEntries.key?(name)
         $log.debug "#{log_prefix} Found [#{name}] in #{entries.collect { |e| e.isLast? ? "**last**" : e.name.downcase }.inspect}" if DEBUG_TRACE_FIND
@@ -156,19 +156,19 @@ module NTFS
 
     def getIndexAllocEntries(vcn)
       unless @indexAlloc.key?(vcn)
-        log_prefix = "MIQ(NTFS::IndexRoot.getIndexAllocEntries)"
+        log_prefix = 'MIQ(NTFS::IndexRoot.getIndexAllocEntries)'
 
         begin
-          raise "not allocated"    if @bitmap[vcn, 1] == "0"
+          raise 'not allocated'    if @bitmap[vcn, 1] == '0'
           header, run = @indexAllocRuns.detect { |h, _r| vcn >= h.specific['first_vcn'] && vcn <= h.specific['last_vcn'] }
-          raise "header not found" if header.nil?
-          raise "run not found"    if run.nil?
+          raise 'header not found' if header.nil?
+          raise 'run not found'    if run.nil?
 
           run.seekToVcn(vcn - header.specific['first_vcn'])
           buf = run.read(@byteSize)
 
-          raise "buffer not found" if buf.nil?
-          raise "buffer signature is expected to be INDX, but is [#{buf[0, 4].inspect}]" if buf[0, 4] != "INDX"
+          raise 'buffer not found' if buf.nil?
+          raise "buffer signature is expected to be INDX, but is [#{buf[0, 4].inspect}]" if buf[0, 4] != 'INDX'
           irh = IndexRecordHeader.new(buf, @boot_sector.bytesPerSector)
           buf = irh.data[IndexRecordHeader.size..-1]
           inh = IndexNodeHeader.new(buf)
@@ -185,7 +185,7 @@ module NTFS
     def cleanAllocEntries(entries)
       cleanEntries = []
       entries.each do |e|
-        if e.isLast? || !(e.contentLen == 0 || (e.refMft[1] < 12 && e.name[0, 1] == "$"))
+        if e.isLast? || !(e.contentLen == 0 || (e.refMft[1] < 12 && e.name[0, 1] == '$'))
           cleanEntries << e
           # Since we are already looping through all entries to clean
           #   them we can store them in a lookup for optimization
@@ -208,7 +208,7 @@ module NTFS
     end
 
     def globEntriesByName
-      log_prefix = "MIQ(NTFS::IndexRoot.globEntriesByName)"
+      log_prefix = 'MIQ(NTFS::IndexRoot.globEntriesByName)'
 
       if @globbedEntriesByName
         $log.debug "#{log_prefix} Using cached globEntries." if DEBUG_TRACE_FIND

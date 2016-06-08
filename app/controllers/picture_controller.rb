@@ -12,9 +12,9 @@ class PictureController < ApplicationController
   private
 
   def render_picture_content(picture)
-    response.headers['Cache-Control'] = "public"
+    response.headers['Cache-Control'] = 'public'
     response.headers['Content-Type'] = "image/#{picture.extension}"
-    response.headers['Content-Disposition'] = "inline"
+    response.headers['Content-Disposition'] = 'inline'
     render :body => picture.content
   end
 end

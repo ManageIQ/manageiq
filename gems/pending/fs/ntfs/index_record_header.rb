@@ -35,7 +35,7 @@ module NTFS
     end
 
     def initialize(buf, bps)
-      log_prefix = "MIQ(NTFS::IndexRecordHeader.initialize)"
+      log_prefix = 'MIQ(NTFS::IndexRecordHeader.initialize)'
       raise "#{log_prefix} Nil buffer"           if buf.nil?
       raise "#{log_prefix} Nil bytes per sector" if bps.nil?
 

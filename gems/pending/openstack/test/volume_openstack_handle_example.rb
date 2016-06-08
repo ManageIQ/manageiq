@@ -1,6 +1,6 @@
-EMS_IP       = ""
-EMS_USERNAME = ""
-EMS_PASSWORD = ""
+EMS_IP       = ''
+EMS_USERNAME = ''
+EMS_PASSWORD = ''
 
 require_relative '../../bundler_setup'
 require 'openstack/openstack_handle'
@@ -8,21 +8,21 @@ require 'openstack/openstack_handle'
 begin
   os_handle = OpenstackHandle::Handle.new(EMS_USERNAME, EMS_PASSWORD, EMS_IP)
 
-  puts "**** Tenants:"
+  puts '**** Tenants:'
   os_handle.tenants.each do |t|
     puts "\t#{t.name}\t(#{t.id})"
   end
 
   unless os_handle.volume_service.name == :cinder
-    puts "Volume service cinder is not available, exiting."
+    puts 'Volume service cinder is not available, exiting.'
     exit
   end
 
   puts
-  puts "**** Volumes/Snapshots by tenant:"
+  puts '**** Volumes/Snapshots by tenant:'
 
   os_handle.tenant_names.each do |tn|
-    next if tn == "services"
+    next if tn == 'services'
 
     puts
     puts "\tVolumes for tenant: #{tn}"

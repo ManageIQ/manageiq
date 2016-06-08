@@ -33,7 +33,7 @@ module Fat32
 
     # Initialization
     def initialize(bs, cluster = nil)
-      raise "Nil boot sector" if bs.nil?
+      raise 'Nil boot sector' if bs.nil?
       cluster = bs.rootCluster if cluster.nil?
 
       @bs = bs
@@ -122,7 +122,7 @@ module Fat32
 
       # Write dot and double dot directories.
       dot = DirectoryEntry.new; dotdot = DirectoryEntry.new
-      dot.name = "."; dotdot.name = ".."
+      dot.name = '.'; dotdot.name = '..'
       dot.setAttribute(DirectoryEntry::FA_ARCHIVE, false)
       dot.setAttribute(DirectoryEntry::FA_DIRECTORY)
       dotdot.setAttribute(DirectoryEntry::FA_ARCHIVE, false)
@@ -143,7 +143,7 @@ module Fat32
     def createFile(name)
       de = DirectoryEntry.new; de.name = name
       until findEntry(de.shortName).nil?
-        raise "Duplicate file name: #{de.shortName}" unless de.shortName.include?("~")
+        raise "Duplicate file name: #{de.shortName}" unless de.shortName.include?('~')
         de.incShortName
       end
       de.parentOffset, de.parentCluster = getFirstFreeEntry(de.numEnts)

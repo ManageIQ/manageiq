@@ -5,7 +5,7 @@ describe ChargebackRateDetailCurrencyNotNil do
   let(:chargeback_rate_detail_currency_stub) { migration_stub(:ChargebackRateDetailCurrency) }
 
   migration_context :up do
-    it "changes existing rate detail without currency to the default currency" do
+    it 'changes existing rate detail without currency to the default currency' do
       chargeback_rate_detail = chargeback_rate_detail_stub.create(:chargeback_rate_detail_currency_id => nil)
       migrate
 
@@ -19,7 +19,7 @@ describe ChargebackRateDetailCurrencyNotNil do
       expect(chargeback_rate_detail.reload.chargeback_rate_detail_currency_id).to eq(5)
     end
 
-    it "does nothing if no chargeback_rate_details exist" do
+    it 'does nothing if no chargeback_rate_details exist' do
       migrate
 
       expect(chargeback_rate_detail_currency_stub.count).to eq(0)

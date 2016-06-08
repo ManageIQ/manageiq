@@ -11,18 +11,18 @@ module MiqServer::EnvironmentManagement
     #               worker, via underscore separation, e.g. minimal_schedule to start
     #               1 schedule worker.
     def spartan_mode
-      @spartan_mode ||= ENV["MIQ_SPARTAN"].to_s.strip
+      @spartan_mode ||= ENV['MIQ_SPARTAN'].to_s.strip
     end
 
     def minimal_env?
-      spartan_mode.start_with?("minimal")
+      spartan_mode.start_with?('minimal')
     end
 
     def normal_env?
       !self.minimal_env?
     end
 
-    MIQ_SPARTAN_ROLE_SEPARATOR = ":"
+    MIQ_SPARTAN_ROLE_SEPARATOR = ':'
     def minimal_env_options
       @minimal_env_options ||= begin
         minimal_env? ? spartan_mode.split(MIQ_SPARTAN_ROLE_SEPARATOR)[1..-1] : []
@@ -30,13 +30,13 @@ module MiqServer::EnvironmentManagement
     end
 
     def startup_mode
-      mode = ""
+      mode = ''
       # Find out startup mode
       if self.minimal_env?
-        mode = "Minimal"
+        mode = 'Minimal'
         mode << " [#{minimal_env_options.join(', ')}]" unless minimal_env_options.empty?
       else
-        mode = "Normal"
+        mode = 'Normal'
       end
 
       mode
@@ -46,7 +46,7 @@ module MiqServer::EnvironmentManagement
       ipaddr = hostname = mac_address = nil
       begin
         if MiqEnvironment::Command.is_appliance?
-          eth0 = LinuxAdmin::NetworkInterface.new("eth0")
+          eth0 = LinuxAdmin::NetworkInterface.new('eth0')
 
           ipaddr      = eth0.address
           hostname    = LinuxAdmin::Hosts.new.hostname
@@ -76,7 +76,7 @@ module MiqServer::EnvironmentManagement
       return unless cfg.config.fetch_path(:server, :session_store).to_s == 'cache'
       return unless MiqEnvironment::Command.supports_memcached?
       require "#{Rails.root}/lib/miq_memcached" unless Object.const_defined?(:MiqMemcached)
-      svr, port = cfg.config.fetch_path(:session, :memcache_server).to_s.split(":")
+      svr, port = cfg.config.fetch_path(:session, :memcache_server).to_s.split(':')
       opts = cfg.config.fetch_path(:session, :memcache_server_opts).to_s
       MiqMemcached::Control.restart!(:port => port, :options => opts)
       _log.info("Status: #{MiqMemcached::Control.status[1]}")

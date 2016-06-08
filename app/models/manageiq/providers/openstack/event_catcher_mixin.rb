@@ -57,11 +57,11 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
       event_hash = {}
       # copy content
       content = event.payload
-      event_hash[:content] = content.reject { |k, _v| k.start_with? "_context_" }
+      event_hash[:content] = content.reject { |k, _v| k.start_with? '_context_' }
 
       # copy context
       event_hash[:context] = {}
-      content.select { |k, _v| k.start_with? "_context_" }.each_pair do |k, v|
+      content.select { |k, _v| k.start_with? '_context_' }.each_pair do |k, v|
         event_hash[:context][k] = v
       end
 

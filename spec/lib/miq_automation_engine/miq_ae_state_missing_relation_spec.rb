@@ -1,4 +1,4 @@
-describe "MiqAeStateMachine" do
+describe 'MiqAeStateMachine' do
   before do
     MiqAeDatastore.reset_default_namespace
     @user             = FactoryGirl.create(:user_with_group)
@@ -25,8 +25,8 @@ describe "MiqAeStateMachine" do
 
   def create_other_class(attrs = {})
     ae_fields = {'var1' => {:aetype => 'attribute', :datatype => 'string'}}
-    ae_instances = {@other1 => {'var1' => {:value => "1"}},
-                    @other3 => {'var1' => {:value => "3"}}}
+    ae_instances = {@other1 => {'var1' => {:value => '1'}},
+                    @other3 => {'var1' => {:value => '3'}}}
     FactoryGirl.create(:miq_ae_class, :with_instances_and_methods,
                        attrs.merge('ae_fields'    => ae_fields,
                                    'ae_instances' => ae_instances,
@@ -44,8 +44,8 @@ describe "MiqAeStateMachine" do
     missing_fq = "/#{@domain}/#{@namespace}/#{@other_class}/#{@other2}"
     fqname3    = "/#{@domain}/#{@namespace}/#{@other_class}/#{@other3}"
     ae_instances = {@state_instance1 => {'state1' => {:value => missing_fq},
-                                         'state2' => {:value => ""},
-                                         'state3' => {:value => ""}},
+                                         'state2' => {:value => ''},
+                                         'state3' => {:value => ''}},
                     @state_instance2 => {'state1' => {:value => fqname1},
                                          'state2' => {:value => missing_fq},
                                          'state3' => {:value => fqname3}},
@@ -60,20 +60,20 @@ describe "MiqAeStateMachine" do
                                    'ae_instances' => ae_instances))
   end
 
-  it "missing instance in first slot" do
+  it 'missing instance in first slot' do
     fqname = "#{@domain}/#{@namespace}/#{@state_class}/#{@state_instance1}"
     ws = MiqAeEngine.instantiate(fqname, @user)
     expect(ws.root['ae_result']).to eql('error')
   end
 
-  it "missing instance in middle slot" do
+  it 'missing instance in middle slot' do
     fqname = "#{@domain}/#{@namespace}/#{@state_class}/#{@state_instance2}"
     ws = MiqAeEngine.instantiate(fqname, @user)
     expect(ws.root['ae_result']).to eql('error')
     expect(ws.root['var1']).to eq('1')
   end
 
-  it "missing instance in last slot" do
+  it 'missing instance in last slot' do
     fqname = "#{@domain}/#{@namespace}/#{@state_class}/#{@state_instance3}"
     ws = MiqAeEngine.instantiate(fqname, @user)
     expect(ws.root['ae_result']).to eql('error')

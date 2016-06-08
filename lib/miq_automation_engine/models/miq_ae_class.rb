@@ -2,12 +2,12 @@ class MiqAeClass < ApplicationRecord
   include MiqAeSetUserInfoMixin
   include MiqAeYamlImportExportMixin
 
-  belongs_to :ae_namespace, :class_name => "MiqAeNamespace", :foreign_key => :namespace_id
-  has_many   :ae_fields,    -> { order(:priority) }, :class_name => "MiqAeField",     :foreign_key => :class_id,
+  belongs_to :ae_namespace, :class_name => 'MiqAeNamespace', :foreign_key => :namespace_id
+  has_many   :ae_fields,    -> { order(:priority) }, :class_name => 'MiqAeField',     :foreign_key => :class_id,
                             :dependent => :destroy, :autosave => true
-  has_many   :ae_instances, -> { preload(:ae_values) }, :class_name => "MiqAeInstance",  :foreign_key => :class_id,
+  has_many   :ae_instances, -> { preload(:ae_values) }, :class_name => 'MiqAeInstance',  :foreign_key => :class_id,
                             :dependent => :destroy
-  has_many   :ae_methods,   :class_name => "MiqAeMethod",    :foreign_key => :class_id,
+  has_many   :ae_methods,   :class_name => 'MiqAeMethod',    :foreign_key => :class_id,
                             :dependent => :destroy
 
   validates_presence_of   :name, :namespace_id
@@ -26,11 +26,11 @@ class MiqAeClass < ApplicationRecord
   end
 
   def self.find_by_namespace_id_and_name(ns_id, name)
-    where(:namespace_id => ns_id).where(["lower(name) = ?", name.downcase]).first
+    where(:namespace_id => ns_id).where(['lower(name) = ?', name.downcase]).first
   end
 
   def self.find_by_name(name)
-    where(["lower(name) = ?", name.downcase]).includes([:ae_methods, :ae_fields]).first
+    where(['lower(name) = ?', name.downcase]).includes([:ae_methods, :ae_fields]).first
   end
 
   def self.fqname(ns, name)
@@ -55,7 +55,7 @@ class MiqAeClass < ApplicationRecord
 
     self.class.column_names.each do |cname|
       # Remove any columns that we do not want to export
-      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?("_id")
+      next if %w(id created_on updated_on updated_by).include?(cname) || cname.ends_with?('_id')
 
       # Skip any columns that we process explicitly
       next if %w(name namespace).include?(cname)
@@ -85,16 +85,16 @@ class MiqAeClass < ApplicationRecord
   end
 
   def namespace=(ns)
-    raise ArgumentError, "ns cannot be blank" if ns.blank?
+    raise ArgumentError, 'ns cannot be blank' if ns.blank?
     self.ae_namespace = MiqAeNamespace.find_or_create_by_fqname(ns)
   end
 
   def instance_methods
-    @instance_methods ||= scoped_methods("instance")
+    @instance_methods ||= scoped_methods('instance')
   end
 
   def class_methods
-    @class_methods ||= scoped_methods("class")
+    @class_methods ||= scoped_methods('class')
   end
 
   def state_machine?
@@ -107,7 +107,7 @@ class MiqAeClass < ApplicationRecord
 
   def self.find_homonymic_instances_across_domains(user, fqname)
     return [] if fqname.blank?
-    path = MiqAeEngine::MiqAeUri.path(fqname, "miqaedb")
+    path = MiqAeEngine::MiqAeUri.path(fqname, 'miqaedb')
     ns, klass, inst = MiqAeEngine::MiqAePath.split(path)
     return [] if ns.blank? || klass.blank? || inst.blank?
     get_same_instance_from_classes(get_sorted_homonym_class_across_domains(user, ns, klass), inst)
@@ -174,7 +174,7 @@ class MiqAeClass < ApplicationRecord
     ns_obj = MiqAeNamespace.find_by_fqname(ns) unless ns.nil?
     partial_ns = ns_obj.nil? ? ns : remove_domain_from_fqns(ns)
     class_array = user.current_tenant.visible_domains.pluck(:name).collect do |domain|
-      fq_ns = domain + "/" + partial_ns
+      fq_ns = domain + '/' + partial_ns
       ae_ns = MiqAeNamespace.find_by_fqname(fq_ns)
       next if ae_ns.nil?
       ae_ns.ae_classes.select { |c| File.fnmatch(klass, c.name, File::FNM_CASEFOLD) }

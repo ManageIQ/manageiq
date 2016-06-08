@@ -247,84 +247,84 @@ class MiqExpression
     'ManageIQ::Providers::InfraManager::Vm'       => 'vm',
   }
   EXCLUDE_FROM_RELATS = {
-    "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]
+    'ManageIQ::Providers::CloudManager' => ['hosts', 'ems_clusters', 'resource_pools']
   }
 
   FORMAT_SUB_TYPES = {
     :boolean     => {
-      :short_name => _("Boolean"),
-      :title      => _("Enter true or false")
+      :short_name => _('Boolean'),
+      :title      => _('Enter true or false')
     },
     :bytes       => {
-      :short_name => _("Bytes"),
-      :title      => _("Enter the number of Bytes"),
+      :short_name => _('Bytes'),
+      :title      => _('Enter the number of Bytes'),
       :units      => [
-        [_("Bytes"), :bytes],
-        [_("KB"), :kilobytes],
-        [_("MB"), :megabytes],
-        [_("GB"), :gigabytes],
-        [_("TB"), :terabytes]
+        [_('Bytes'), :bytes],
+        [_('KB'), :kilobytes],
+        [_('MB'), :megabytes],
+        [_('GB'), :gigabytes],
+        [_('TB'), :terabytes]
       ]
     },
     :date        => {
-      :short_name => _("Date"),
-      :title      => _("Click to Choose a Date")
+      :short_name => _('Date'),
+      :title      => _('Click to Choose a Date')
     },
     :datetime    => {
-      :short_name => _("Date / Time"),
-      :title      => _("Click to Choose a Date / Time")
+      :short_name => _('Date / Time'),
+      :title      => _('Click to Choose a Date / Time')
     },
     :float       => {
-      :short_name => _("Number"),
-      :title      => _("Enter a Number (like 12.56)")
+      :short_name => _('Number'),
+      :title      => _('Enter a Number (like 12.56)')
     },
     :gigabytes   => {
-      :short_name => _("Gigabytes"),
-      :title      => _("Enter the number of Gigabytes")
+      :short_name => _('Gigabytes'),
+      :title      => _('Enter the number of Gigabytes')
     },
     :integer     => {
-      :short_name => _("Integer"),
-      :title      => _("Enter an Integer")
+      :short_name => _('Integer'),
+      :title      => _('Enter an Integer')
     },
     :kbps        => {
-      :short_name => _("KBps"),
-      :title      => _("Enter the Kilobytes per second")
+      :short_name => _('KBps'),
+      :title      => _('Enter the Kilobytes per second')
     },
     :kilobytes   => {
-      :short_name => _("Kilobytes"),
-      :title      => _("Enter the number of Kilobytes")
+      :short_name => _('Kilobytes'),
+      :title      => _('Enter the number of Kilobytes')
     },
     :megabytes   => {
-      :short_name => _("Megabytes"),
-      :title      => _("Enter the number of Megabytes")
+      :short_name => _('Megabytes'),
+      :title      => _('Enter the number of Megabytes')
     },
     :mhz         => {
-      :short_name => _("Mhz"),
-      :title      => _("Enter the number of Megahertz")
+      :short_name => _('Mhz'),
+      :title      => _('Enter the number of Megahertz')
     },
     :numeric_set => {
-      :short_name => _("Number List"),
-      :title      => _("Enter a list of numbers separated by commas")
+      :short_name => _('Number List'),
+      :title      => _('Enter a list of numbers separated by commas')
     },
     :percent     => {
-      :short_name => _("Percent"),
-      :title      => _("Enter a Percent (like 12.5)"),
+      :short_name => _('Percent'),
+      :title      => _('Enter a Percent (like 12.5)'),
     },
     :regex       => {
-      :short_name => _("Regular Expression"),
-      :title      => _("Enter a Regular Expression")
+      :short_name => _('Regular Expression'),
+      :title      => _('Enter a Regular Expression')
     },
     :ruby        => {
-      :short_name => _("Ruby Script"),
-      :title      => _("Enter one or more lines of Ruby Script")
+      :short_name => _('Ruby Script'),
+      :title      => _('Enter one or more lines of Ruby Script')
     },
     :string      => {
-      :short_name => _("Text String"),
-      :title      => _("Enter a Text String")
+      :short_name => _('Text String'),
+      :title      => _('Enter a Text String')
     },
     :string_set  => {
-      :short_name => _("String List"),
-      :title      => _("Enter a list of text strings separated by commas")
+      :short_name => _('String List'),
+      :title      => _('Enter a list of text strings separated by commas')
     }
   }
   FORMAT_SUB_TYPES[:fixnum] = FORMAT_SUB_TYPES[:decimal] = FORMAT_SUB_TYPES[:integer]
@@ -340,7 +340,7 @@ class MiqExpression
 
   def self.proto?
     return @proto if defined?(@proto)
-    @proto = VMDB::Config.new("vmdb").config.fetch_path(:product, :proto)
+    @proto = VMDB::Config.new('vmdb').config.fetch_path(:product, :proto)
   end
 
   def self.to_human(exp)
@@ -348,21 +348,21 @@ class MiqExpression
       exp.to_human
     else
       if exp.kind_of?(Hash)
-        case exp["mode"]
-        when "tag_expr"
-          return exp["expr"]
-        when "tag"
-          tag = [exp["ns"], exp["tag"]].join("/")
-          if exp["include"] == "none"
+        case exp['mode']
+        when 'tag_expr'
+          return exp['expr']
+        when 'tag'
+          tag = [exp['ns'], exp['tag']].join('/')
+          if exp['include'] == 'none'
             return "Not Tagged With #{tag}"
           else
             return "Tagged With #{tag}"
           end
-        when "script"
-          if exp["expr"] == "true"
-            return "Always True"
+        when 'script'
+          if exp['expr'] == 'true'
+            return 'Always True'
           else
-            return exp["expr"]
+            return exp['expr']
           end
         else
           return new(exp).to_human
@@ -384,49 +384,49 @@ class MiqExpression
     keys.delete(:token)
     operator = keys.first
     case operator.downcase
-    when "like", "not like", "starts with", "ends with", "includes", "includes any", "includes all", "includes only", "limited to", "regular expression", "regular expression matches", "regular expression does not match", "equal", "=", "<", ">", ">=", "<=", "!=", "before", "after"
+    when 'like', 'not like', "starts with", "ends with", "includes", "includes any", "includes all", "includes only", "limited to", "regular expression", "regular expression matches", "regular expression does not match", "equal", "=", "<", ">", ">=", "<=", "!=", "before", "after"
       operands = operands2humanvalue(exp[operator], options)
       clause = operands.join(" #{normalize_operator(operator)} ")
-    when "and", "or"
+    when 'and', 'or'
       clause = "( " + exp[operator].collect { |operand| _to_human(operand) }.join(" #{normalize_operator(operator)} ") + " )"
-    when "not", "!"
+    when 'not', '!'
       clause = normalize_operator(operator) + " ( " + _to_human(exp[operator]) + " )"
-    when "is null", "is not null", "is empty", "is not empty"
+    when 'is null', 'is not null', "is empty", "is not empty"
       clause = operands2humanvalue(exp[operator], options).first + " " + operator
-    when "contains"
+    when 'contains'
       operands = operands2humanvalue(exp[operator], options)
       clause = operands.join(" #{normalize_operator(operator)} ")
-    when "find"
+    when 'find'
       # FIND Vm.users-name = 'Administrator' CHECKALL Vm.users-enabled = 1
       check = nil
-      check = "checkall" if exp[operator].include?("checkall")
-      check = "checkany" if exp[operator].include?("checkany")
-      check = "checkcount" if exp[operator].include?("checkcount")
+      check = 'checkall' if exp[operator].include?('checkall')
+      check = 'checkany' if exp[operator].include?('checkany')
+      check = 'checkcount' if exp[operator].include?('checkcount')
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
       check =~ /^check(.*)$/; mode = $1.upcase
-      clause = "FIND" + " " + _to_human(exp[operator]["search"]) + " CHECK " + mode + " " + _to_human(exp[operator][check], :include_table => false).strip
-    when "key exists"
+      clause = 'FIND' + ' ' + _to_human(exp[operator]['search']) + ' CHECK ' + mode + ' ' + _to_human(exp[operator][check], :include_table => false).strip
+    when 'key exists'
       clause = "KEY EXISTS #{exp[operator]['regkey']}"
-    when "value exists"
+    when 'value exists'
       clause = "VALUE EXISTS #{exp[operator]['regkey']} : #{exp[operator]['regval']}"
-    when "ruby"
+    when 'ruby'
       operands = operands2humanvalue(exp[operator], options)
-      operands[1] = "<RUBY Expression>"
+      operands[1] = '<RUBY Expression>'
       clause = operands.join(" #{normalize_operator(operator)} \n")
-    when "is"
+    when 'is'
       operands = operands2humanvalue(exp[operator], options)
       clause = "#{operands.first} #{operator} #{operands.last}"
-    when "between dates", "between times"
+    when 'between dates', 'between times'
       col_name = exp[operator]["field"]
       col_type = get_col_type(col_name)
       col_human, dumy = operands2humanvalue(exp[operator], options)
       vals_human = exp[operator]["value"].collect { |v| quote_human(v, col_type) }
       clause = "#{col_human} #{operator} #{vals_human.first} AND #{vals_human.last}"
-    when "from"
-      col_name = exp[operator]["field"]
+    when 'from'
+      col_name = exp[operator]['field']
       col_type = get_col_type(col_name)
       col_human, dumy = operands2humanvalue(exp[operator], options)
-      vals_human = exp[operator]["value"].collect { |v| quote_human(v, col_type) }
+      vals_human = exp[operator]['value'].collect { |v| quote_human(v, col_type) }
       clause = "#{col_human} #{operator} #{vals_human.first} THROUGH #{vals_human.last}"
     end
 
@@ -435,7 +435,7 @@ class MiqExpression
   end
 
   def to_ruby(tz = nil)
-    tz ||= "UTC"
+    tz ||= 'UTC'
     @ruby ||= self.class._to_ruby(@exp.deep_clone, @context_type, tz)
     @ruby.dup
   end
@@ -445,22 +445,22 @@ class MiqExpression
 
     operator = exp.keys.first
     case operator.downcase
-    when "equal", "=", "<", ">", ">=", "<=", "!=", "before", "after"
+    when 'equal', '=', "<", ">", ">=", "<=", "!=", "before", "after"
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       return _to_ruby({"date_time_with_logical_operator" => exp}, context_type, tz) if col_type == :date || col_type == :datetime
 
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
-    when "includes all"
+    when 'includes all'
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = "(#{operands[0]} & #{operands[1]}) == #{operands[1]}"
-    when "includes any"
+    when 'includes any'
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = "(#{operands[1]} - #{operands[0]}) != #{operands[1]}"
-    when "includes only", "limited to"
+    when 'includes only', 'limited to'
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = "(#{operands[0]} - #{operands[1]}) == []"
-    when "like", "not like", "starts with", "ends with", "includes"
+    when 'like', 'not like', "starts with", "ends with", "includes"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       case operator.downcase
       when "starts with"
@@ -472,95 +472,95 @@ class MiqExpression
       end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
       clause = "!(" + clause + ")" if operator.downcase == "not like"
-    when "regular expression matches", "regular expression does not match"
+    when 'regular expression matches', 'regular expression does not match'
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       operands[1] = "/" + operands[1].to_s + "/" unless operands[1].starts_with?("/") && (operands[1].ends_with?("/") || operands[1][-2..-2] == "/")
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
-    when "and", "or"
+    when 'and', 'or'
       clause = "(" + exp[operator].collect { |operand| _to_ruby(operand, context_type, tz) }.join(" #{normalize_ruby_operator(operator)} ") + ")"
-    when "not", "!"
+    when 'not', '!'
       clause = normalize_ruby_operator(operator) + "(" + _to_ruby(exp[operator], context_type, tz) + ")"
-    when "is null", "is not null", "is empty", "is not empty"
+    when 'is null', 'is not null', "is empty", "is not empty"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
-    when "contains"
+    when 'contains'
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_operator(operator)} ")
-    when "find"
+    when 'find'
       # FIND Vm.users-name = 'Administrator' CHECKALL Vm.users-enabled = 1
       check = nil
-      check = "checkall" if exp[operator].include?("checkall")
-      check = "checkany" if exp[operator].include?("checkany")
-      if exp[operator].include?("checkcount")
-        check = "checkcount"
+      check = 'checkall' if exp[operator].include?('checkall')
+      check = 'checkany' if exp[operator].include?('checkany')
+      if exp[operator].include?('checkcount')
+        check = 'checkcount'
         op = exp[operator][check].keys.first
-        exp[operator][check][op]["field"] = "<count>"
+        exp[operator][check][op]['field'] = '<count>'
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
       check =~ /^check(.*)$/; mode = $1.downcase
-      clause = "<find><search>" + _to_ruby(exp[operator]["search"], context_type, tz) + "</search><check mode=#{mode}>" + _to_ruby(exp[operator][check], context_type, tz) + "</check></find>"
-    when "key exists"
+      clause = '<find><search>' + _to_ruby(exp[operator]['search'], context_type, tz) + "</search><check mode=#{mode}>" + _to_ruby(exp[operator][check], context_type, tz) + '</check></find>'
+    when 'key exists'
       clause = operands2rubyvalue(operator, exp[operator], context_type)
-    when "value exists"
+    when 'value exists'
       clause = operands2rubyvalue(operator, exp[operator], context_type)
-    when "ruby"
-      raise _("Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead.")
-    when "is"
-      col_name = exp[operator]["field"]
-      col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+    when 'ruby'
+      raise _('Ruby scripts in expressions are no longer supported. Please use the regular expression feature of conditions instead.')
+    when 'is'
+      col_name = exp[operator]['field']
+      col_ruby, dummy = operands2rubyvalue(operator, {'field' => col_name}, context_type)
       col_type = get_col_type(col_name)
-      value = exp[operator]["value"]
+      value = exp[operator]['value']
       if col_type == :date
         if RelativeDatetime.relative?(value)
-          start_val = quote(RelativeDatetime.normalize(value, "UTC", "beginning").to_date, :date)
-          end_val   = quote(RelativeDatetime.normalize(value, "UTC", "end").to_date, :date)
+          start_val = quote(RelativeDatetime.normalize(value, 'UTC', 'beginning').to_date, :date)
+          end_val   = quote(RelativeDatetime.normalize(value, 'UTC', 'end').to_date, :date)
           clause    = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
         else
-          value  = quote(RelativeDatetime.normalize(value, "UTC", "beginning").to_date, :date)
+          value  = quote(RelativeDatetime.normalize(value, 'UTC', 'beginning').to_date, :date)
           clause = "val=#{col_ruby}; !val.nil? && val.to_date == #{value}"
         end
       else
-        start_val = quote(RelativeDatetime.normalize(value, tz, "beginning").utc, :datetime)
-        end_val   = quote(RelativeDatetime.normalize(value, tz, "end").utc, :datetime)
+        start_val = quote(RelativeDatetime.normalize(value, tz, 'beginning').utc, :datetime)
+        end_val   = quote(RelativeDatetime.normalize(value, tz, 'end').utc, :datetime)
         clause    = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
-    when "from"
-      col_name = exp[operator]["field"]
-      col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+    when 'from'
+      col_name = exp[operator]['field']
+      col_ruby, dummy = operands2rubyvalue(operator, {'field' => col_name}, context_type)
       col_type = get_col_type(col_name)
 
-      start_val, end_val = exp[operator]["value"]
+      start_val, end_val = exp[operator]['value']
       if col_type == :date
-        start_val = quote(RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date, :date)
-        end_val   = quote(RelativeDatetime.normalize(end_val, "UTC", "end").to_date, :date)
+        start_val = quote(RelativeDatetime.normalize(start_val, 'UTC', 'beginning').to_date, :date)
+        end_val   = quote(RelativeDatetime.normalize(end_val, 'UTC', 'end').to_date, :date)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date >= #{start_val} && val.to_date <= #{end_val}"
       else
-        start_val = quote(RelativeDatetime.normalize(start_val, tz, "beginning").utc, :datetime)
-        end_val   = quote(RelativeDatetime.normalize(end_val, tz, "end").utc, :datetime)
+        start_val = quote(RelativeDatetime.normalize(start_val, tz, 'beginning').utc, :datetime)
+        end_val   = quote(RelativeDatetime.normalize(end_val, tz, 'end').utc, :datetime)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_time >= #{start_val} && val.to_time <= #{end_val}"
       end
-    when "date_time_with_logical_operator"
+    when 'date_time_with_logical_operator'
       exp = exp[operator]
       operator = exp.keys.first
 
-      col_name = exp[operator]["field"]
+      col_name = exp[operator]['field']
       col_type = get_col_type(col_name)
-      col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
+      col_ruby, dummy = operands2rubyvalue(operator, {'field' => col_name}, context_type)
 
       normalized_operator = normalize_ruby_operator(operator)
       mode = case normalized_operator
-             when ">", "<="  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
-             when "<", ">="  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
+             when '>', '<='  then "end"        # (>  <date> 23::59:59), (<= <date> 23::59:59)
+             when '<', '>='  then "beginning"  # (<  <date> 00::00:00), (>= <date> 00::00:00)
              end
 
       if col_type == :date
-        val = RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode)
+        val = RelativeDatetime.normalize(exp[operator]['value'], 'UTC', mode)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_date #{normalized_operator} #{quote(val.to_date, :date)}"
       else
-        val = RelativeDatetime.normalize(exp[operator]["value"], tz, mode)
+        val = RelativeDatetime.normalize(exp[operator]['value'], tz, mode)
 
         clause = "val=#{col_ruby}; !val.nil? && val.to_time #{normalized_operator} #{quote(val.utc, :datetime)}"
       end
@@ -573,7 +573,7 @@ class MiqExpression
   end
 
   def to_sql(tz = nil)
-    tz ||= "UTC"
+    tz ||= 'UTC'
     @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
     sql = to_arel(@pexp, tz).to_sql if @pexp.present?
     incl = includes_for_sql unless sql.blank?
@@ -584,11 +584,11 @@ class MiqExpression
     attrs ||= {:supported_by_sql => true}
     operator = exp.keys.first
     case operator.downcase
-    when "and"
+    when 'and'
       exp[operator].dup.each { |atom| preprocess_for_sql(atom, attrs) }
       exp[operator] = exp[operator].collect { |o| o.blank? ? nil : o }.compact # Clean out empty operands
       exp.delete(operator) if exp[operator].empty?
-    when "or"
+    when 'or'
       or_attrs = {:supported_by_sql => true}
       exp[operator].each_with_index do |atom, i|
         preprocess_for_sql(atom, or_attrs)
@@ -597,7 +597,7 @@ class MiqExpression
       exp[operator].compact!
       attrs.merge!(or_attrs)
       exp.delete(operator) if !or_attrs[:supported_by_sql] || exp[operator].empty? # Clean out unsupported or empty operands
-    when "not", "!"
+    when 'not', '!'
       preprocess_for_sql(exp[operator], attrs)
       exp.delete(operator) if exp[operator].empty? # Clean out empty operands
     else
@@ -614,38 +614,38 @@ class MiqExpression
   def sql_supports_atom?(exp)
     operator = exp.keys.first
     case operator.downcase
-    when "contains"
-      if exp[operator].keys.include?("tag") && exp[operator]["tag"].split(".").length == 2 # Only support for tags of the main model
+    when 'contains'
+      if exp[operator].keys.include?('tag') && exp[operator]['tag'].split('.').length == 2 # Only support for tags of the main model
         return true
-      elsif exp[operator].keys.include?("field") && exp[operator]["field"].split(".").length == 2
-        db, field = exp[operator]["field"].split(".")
-        assoc, field = field.split("-")
+      elsif exp[operator].keys.include?('field') && exp[operator]['field'].split('.').length == 2
+        db, field = exp[operator]['field'].split('.')
+        assoc, field = field.split('-')
         ref = db.constantize.reflect_on_association(assoc.to_sym)
         return false unless ref
         return false unless ref.macro == :has_many || ref.macro == :has_one
         return false if ref.options && ref.options.key?(:as)
-        return field_in_sql?(exp[operator]["field"])
+        return field_in_sql?(exp[operator]['field'])
       else
         return false
       end
-    when "includes"
+    when 'includes'
       # Support includes operator using "LIKE" only if first operand is in main table
-      if exp[operator].key?("field") && (!exp[operator]["field"].include?(".") || (exp[operator]["field"].include?(".") && exp[operator]["field"].split(".").length == 2))
-        return field_in_sql?(exp[operator]["field"])
+      if exp[operator].key?('field') && (!exp[operator]['field'].include?('.') || (exp[operator]['field'].include?('.') && exp[operator]['field'].split('.').length == 2))
+        return field_in_sql?(exp[operator]['field'])
       else
         # TODO: Support includes operator for sub-sub-tables
         return false
       end
-    when "find", "regular expression matches", "regular expression does not match", "key exists", "value exists", "ruby"
+    when 'find', 'regular expression matches', "regular expression does not match", "key exists", "value exists", "ruby"
       return false
     else
       # => false if operand is a tag
-      return false if exp[operator].keys.include?("tag")
+      return false if exp[operator].keys.include?('tag')
 
       # => TODO: support count of child relationship
-      return false if exp[operator].key?("count")
+      return false if exp[operator].key?('count')
 
-      return field_in_sql?(exp[operator]["field"])
+      return field_in_sql?(exp[operator]['field'])
     end
   end
 
@@ -690,15 +690,15 @@ class MiqExpression
     return result unless exp.kind_of?(Hash)
 
     operator = exp.keys.first
-    if exp[operator].kind_of?(Hash) && exp[operator].key?("field")
-      if exp[operator]["field"] != "<count>" &&
-         !field_from_virtual_reflection?(exp[operator]["field"]) && !field_has_arel?(exp[operator]["field"])
-        col = exp[operator]["field"]
-        if col.include?(".")
-          col = col.split(".").last
-          col = col.sub("-", ".")
+    if exp[operator].kind_of?(Hash) && exp[operator].key?('field')
+      if exp[operator]['field'] != '<count>' &&
+         !field_from_virtual_reflection?(exp[operator]['field']) && !field_has_arel?(exp[operator]['field'])
+        col = exp[operator]['field']
+        if col.include?('.')
+          col = col.split('.').last
+          col = col.sub('-', '.')
         else
-          col = col.split("-").last
+          col = col.split('-').last
         end
         result << col
       end
@@ -746,11 +746,11 @@ class MiqExpression
   def self.get_cols_from_expression(exp, options = {})
     result = {}
     if exp.kind_of?(Hash)
-      if exp.key?("field")
-        result[exp["field"]] = get_col_info(exp["field"], options) unless exp["field"] == "<count>"
-      elsif exp.key?("count")
-        result[exp["count"]] = get_col_info(exp["count"], options)
-      elsif exp.key?("tag")
+      if exp.key?('field')
+        result[exp['field']] = get_col_info(exp['field'], options) unless exp['field'] == '<count>'
+      elsif exp.key?('count')
+        result[exp['count']] = get_col_info(exp['count'], options)
+      elsif exp.key?('tag')
         # ignore
       else
         exp.each_value { |v| result.merge!(get_cols_from_expression(v, options)) }
@@ -763,11 +763,11 @@ class MiqExpression
 
   def self.get_col_info(field, options = {})
     result ||= {:data_type => nil, :virtual_reflection => false, :virtual_column => false, :sql_support => true, :excluded_by_preprocess_options => false, :tag => false, :include => {}}
-    col = field.split("-").last if field.include?("-")
-    parts = field.split("-").first.split(".")
+    col = field.split('-').last if field.include?('-')
+    parts = field.split('-').first.split('.')
     model = parts.shift
 
-    if model.downcase == "managed" || parts.last == "managed"
+    if model.downcase == 'managed' || parts.last == 'managed'
       result[:data_type] = :string
       result[:tag] = true
       return result
@@ -827,15 +827,15 @@ class MiqExpression
 
   def self.evaluate_atoms(exp, obj)
     exp = exp.kind_of?(self) ? copy_hash(exp.exp) : exp
-    exp["result"] = new(exp).evaluate(obj)
+    exp['result'] = new(exp).evaluate(obj)
 
     operators = exp.keys
     operators.each do|k|
-      if ["and", "or"].include?(k.to_s.downcase)      # and/or atom is an array of atoms
+      if ['and', 'or'].include?(k.to_s.downcase)      # and/or atom is an array of atoms
         exp[k].each do|atom|
           evaluate_atoms(atom, obj)
         end
-      elsif ["not", "!"].include?(k.to_s.downcase)    # not atom is a hash expression
+      elsif ['not', '!'].include?(k.to_s.downcase)    # not atom is a hash expression
         evaluate_atoms(exp[k], obj)
       else
         next
@@ -847,46 +847,46 @@ class MiqExpression
   def self.operands2humanvalue(ops, options = {})
     # puts "Enter: operands2humanvalue: ops: #{ops.inspect}"
     ret = []
-    if ops["tag"]
+    if ops['tag']
       v = nil
-      ret.push(ops["alias"] || value2human(ops["tag"], options))
-      MiqExpression.get_entry_details(ops["tag"]).each do|t|
-        v = "'" + t.first + "'" if t.last == ops["value"]
+      ret.push(ops['alias'] || value2human(ops['tag'], options))
+      MiqExpression.get_entry_details(ops['tag']).each do|t|
+        v = "'" + t.first + "'" if t.last == ops['value']
       end
-      if ops["value"] == :user_input
-        v = "<user input>"
+      if ops['value'] == :user_input
+        v = '<user input>'
       else
-        v ||= ops["value"].kind_of?(String) ? "'" + ops["value"] + "'" : ops["value"]
+        v ||= ops['value'].kind_of?(String) ? "'" + ops['value'] + "'" : ops['value']
       end
       ret.push(v)
-    elsif ops["field"]
-      ops["value"] ||= ''
-      if ops["field"] == "<count>"
+    elsif ops['field']
+      ops['value'] ||= ''
+      if ops['field'] == '<count>'
         ret.push(nil)
-        ret.push(ops["value"])
+        ret.push(ops['value'])
       else
-        ret.push(ops["alias"] || value2human(ops["field"], options))
-        if ops["value"] == :user_input
-          ret.push("<user input>")
+        ret.push(ops['alias'] || value2human(ops['field'], options))
+        if ops['value'] == :user_input
+          ret.push('<user input>')
         else
-          col_type = get_col_type(ops["field"]) || "string"
-          ret.push(quote_human(ops["value"], col_type.to_s))
+          col_type = get_col_type(ops['field']) || 'string'
+          ret.push(quote_human(ops['value'], col_type.to_s))
         end
       end
-    elsif ops["count"]
-      ret.push("COUNT OF " + (ops["alias"] || value2human(ops["count"], options)).strip)
-      if ops["value"] == :user_input
-        ret.push("<user input>")
+    elsif ops['count']
+      ret.push('COUNT OF ' + (ops['alias'] || value2human(ops['count'], options)).strip)
+      if ops['value'] == :user_input
+        ret.push('<user input>')
       else
-        ret.push(ops["value"])
+        ret.push(ops['value'])
       end
-    elsif ops["regkey"]
-      ops["value"] ||= ''
-      ret.push(ops["regkey"] + " : " + ops["regval"])
-      ret.push(ops["value"].kind_of?(String) ? "'" + ops["value"] + "'" : ops["value"])
-    elsif ops["value"]
+    elsif ops['regkey']
+      ops['value'] ||= ''
+      ret.push(ops['regkey'] + ' : ' + ops['regval'])
+      ret.push(ops['value'].kind_of?(String) ? "'" + ops['value'] + "'" : ops['value'])
+    elsif ops['value']
       ret.push(nil)
-      ret.push(ops["value"])
+      ret.push(ops['value'])
     end
     ret
   end
@@ -896,17 +896,17 @@ class MiqExpression
       :include_model => true,
       :include_table => true
     }.merge(options)
-    tables, col = val.split("-")
+    tables, col = val.split('-')
     first = true
     val_is_a_tag = false
-    ret = ""
+    ret = ''
     if options[:include_table] == true
-      friendly = tables.split(".").collect do|t|
-        if t.downcase == "managed"
+      friendly = tables.split('.').collect do|t|
+        if t.downcase == 'managed'
           val_is_a_tag = true
           "#{Tenant.root_tenant.name} Tags"
-        elsif t.downcase == "user_tag"
-          "My Tags"
+        elsif t.downcase == 'user_tag'
+          'My Tags'
         else
           if first
             first = nil
@@ -917,8 +917,8 @@ class MiqExpression
           end
         end
       end.compact
-      ret = friendly.join(".")
-      ret << " : " unless ret.blank? || col.blank?
+      ret = friendly.join('.')
+      ret << ' : ' unless ret.blank? || col.blank?
     end
     if val_is_a_tag
       if col
@@ -926,74 +926,74 @@ class MiqExpression
         ret << (classification ? classification.description : col)
       end
     else
-      model = tables.blank? ? nil : tables.split(".").last.singularize.camelize
-      dict_col = model.nil? ? col : [model, col].join(".")
+      model = tables.blank? ? nil : tables.split('.').last.singularize.camelize
+      dict_col = model.nil? ? col : [model, col].join('.')
       ret << Dictionary.gettext(dict_col, :type => :column, :notfound => :titleize) if col
     end
-    ret = " #{ret}" unless ret.include?(":")
+    ret = " #{ret}" unless ret.include?(':')
     ret
   end
 
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
     operator = operator.downcase
-    ops["tag"] = ops["field"] if operator == "contains" && !ops["tag"] # process values in contains as tags
+    ops['tag'] = ops['field'] if operator == 'contains' && !ops['tag'] # process values in contains as tags
 
     ret = []
-    if ops["tag"] && context_type != "hash"
-      ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
+    if ops['tag'] && context_type != 'hash'
+      ref, val = value2tag(preprocess_managed_tag(ops['tag']), ops['value'])
       fld = val
       ret.push(ref ? "<exist ref=#{ref}>#{val}</exist>" : "<exist>#{val}</exist>")
-    elsif ops["tag"] && context_type == "hash"
+    elsif ops['tag'] && context_type == 'hash'
       # This is only for supporting reporting "display filters"
       # In the report object the tag value is actually the description and not the raw tag name.
       # So we have to trick it by replacing the value with the description.
-      description = MiqExpression.get_entry_details(ops["tag"]).inject("") do|s, t|
-        break(t.first) if t.last == ops["value"]
+      description = MiqExpression.get_entry_details(ops['tag']).inject('') do|s, t|
+        break(t.first) if t.last == ops['value']
         s
       end
 
-      val = ops["tag"].split(".").last.split("-").join(".")
+      val = ops['tag'].split('.').last.split('-').join('.')
       fld = "<value type=string>#{val}</value>"
       ret.push(fld)
-      ret.push(quote(description, "string"))
-    elsif ops["field"]
-      if ops["field"] == "<count>"
-        ret.push("<count>")
-        ret.push(ops["value"])
+      ret.push(quote(description, 'string'))
+    elsif ops['field']
+      if ops['field'] == '<count>'
+        ret.push('<count>')
+        ret.push(ops['value'])
       else
         case context_type
-        when "hash"
+        when 'hash'
           ref = nil
-          val = ops["field"].split(".").last.split("-").join(".")
+          val = ops['field'].split('.').last.split('-').join('.')
         else
-          ref, val = value2tag(ops["field"])
+          ref, val = value2tag(ops['field'])
         end
-        col_type = get_col_type(ops["field"]) || "string"
-        col_type = "raw" if operator == "ruby"
+        col_type = get_col_type(ops['field']) || 'string'
+        col_type = 'raw' if operator == 'ruby'
         fld = val
         fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         ret.push(fld)
-        if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match", "ruby"].include?(operator)
-          ret.push(ops["value"])
+        if ['like', 'not like', 'starts with', 'ends with', 'includes', 'regular expression matches', 'regular expression does not match', 'ruby'].include?(operator)
+          ret.push(ops['value'])
         else
-          ret.push(quote(ops["value"], col_type.to_s))
+          ret.push(quote(ops['value'], col_type.to_s))
         end
       end
-    elsif ops["count"]
-      ref, count = value2tag(ops["count"])
+    elsif ops['count']
+      ref, count = value2tag(ops['count'])
       ret.push(ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>")
-      ret.push(ops["value"])
-    elsif ops["regkey"]
+      ret.push(ops['value'])
+    elsif ops['regkey']
       ret.push("<registry>#{ops["regkey"].strip} : #{ops["regval"]}</registry>")
-      if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
-        ret.push(ops["value"])
-      elsif operator == "key exists"
+      if ['like', 'not like', 'starts with', 'ends with', 'includes', 'regular expression matches', 'regular expression does not match'].include?(operator)
+        ret.push(ops['value'])
+      elsif operator == 'key exists'
         ret = "<registry key_exists=1, type=boolean>#{ops["regkey"].strip}</registry>  == 'true'"
-      elsif operator == "value exists"
+      elsif operator == 'value exists'
         ret = "<registry value_exists=1, type=boolean>#{ops["regkey"].strip} : #{ops["regval"]}</registry>  == 'true'"
       else
-        ret.push(quote(ops["value"], "string"))
+        ret.push(quote(ops['value'], 'string'))
       end
     end
     ret
@@ -1001,32 +1001,32 @@ class MiqExpression
 
   def self.quote(val, typ, mode = :ruby)
     case typ.to_s
-    when "string", "text", "boolean", nil
+    when 'string', 'text', "boolean", nil
       val = "" if val.nil? # treat nil value as empty string
       # escape any embedded single quotes, etc. - needs to be able to handle even values with trailing backslash
       return mode == :sql ? ActiveRecord::Base.connection.quote(val) : val.to_s.inspect
-    when "date"
-      return "nil" if val.blank? # treat nil value as empty string
+    when 'date'
+      return 'nil' if val.blank? # treat nil value as empty string
       return mode == :sql ? ActiveRecord::Base.connection.quote(val) : "\'#{val}\'.to_date"
-    when "datetime"
-      return "nil" if val.blank? # treat nil value as empty string
+    when 'datetime'
+      return 'nil' if val.blank? # treat nil value as empty string
       return mode == :sql ? ActiveRecord::Base.connection.quote(val.iso8601) : "\'#{val.iso8601}\'.to_time(:utc)"
-    when "integer", "decimal", "fixnum"
+    when 'integer', 'decimal', "fixnum"
       return val.to_s.to_i_with_method
-    when "float"
+    when 'float'
       return val.to_s.to_f_with_method
-    when "numeric_set"
-      val = val.split(",") if val.kind_of?(String)
+    when 'numeric_set'
+      val = val.split(',') if val.kind_of?(String)
       v_arr = val.to_miq_a.collect do |v|
         v = eval(v) rescue nil if v.kind_of?(String)
         v.kind_of?(Range) ? v.to_a : v
       end.flatten.compact.uniq.sort
       return "[#{v_arr.join(",")}]"
-    when "string_set"
-      val = val.split(",") if val.kind_of?(String)
+    when 'string_set'
+      val = val.split(',') if val.kind_of?(String)
       v_arr = val.to_miq_a.collect { |v| "'#{v.to_s.strip}'" }.flatten.uniq.sort
       return "[#{v_arr.join(",")}]"
-    when "raw"
+    when 'raw'
       return val
     else
       return val
@@ -1035,7 +1035,7 @@ class MiqExpression
 
   def self.quote_human(val, typ)
     case typ.to_s
-    when "integer", "decimal", "fixnum", "float"
+    when 'integer', 'decimal', "fixnum", "float"
       return val.to_i unless val.to_s.number_with_method? || typ.to_s == "float"
       if val =~ /^([0-9\.,]+)\.([a-z]+)$/
         val = $1; sfx = $2
@@ -1047,7 +1047,7 @@ class MiqExpression
       else
         return val
       end
-    when "string", "date", "datetime"
+    when 'string', 'date', "datetime"
       return "\"#{val}\""
     else
       return quote(val, typ)
@@ -1059,32 +1059,32 @@ class MiqExpression
   end
 
   def self.preprocess_managed_tag(tag)
-    path, val = tag.split("-")
-    path_arr = path.split(".")
-    if path_arr.include?("managed") || path_arr.include?("user_tag")
+    path, val = tag.split('-')
+    path_arr = path.split('.')
+    if path_arr.include?('managed') || path_arr.include?('user_tag')
       name = nil
-      while path_arr.first != "managed" && path_arr.first != "user_tag"
+      while path_arr.first != 'managed' && path_arr.first != 'user_tag'
         name = path_arr.shift
       end
-      return [name].concat(path_arr).join(".") + "-" + val
+      return [name].concat(path_arr).join('.') + '-' + val
     end
     tag
   end
 
   def self.value2tag(tag, val = nil)
-    model, *values = tag.to_s.gsub(/[\.-]/, "/").split("/") # replace model path ".", column name "-" with "/"
+    model, *values = tag.to_s.gsub(/[\.-]/, '/').split('/') # replace model path ".", column name "-" with "/"
 
     case values.first
-    when "user_tag"
-      values[0] = "user"
-    when "managed", "user"
+    when 'user_tag'
+      values[0] = 'user'
+    when 'managed', 'user'
       # Keep as-is
     else
-      values.unshift("virtual") # add in tag designation
+      values.unshift('virtual') # add in tag designation
     end
 
     unless val.nil?
-      values << val.to_s.gsub(/\//, "%2f") # encode embedded / characters in values since / is used as a tag seperator
+      values << val.to_s.gsub(/\//, '%2f') # encode embedded / characters in values since / is used as a tag seperator
     end
 
     [model.downcase, "/#{values.join('/')}"]
@@ -1093,22 +1093,22 @@ class MiqExpression
   def self.normalize_ruby_operator(str)
     str = str.upcase
     case str
-    when "EQUAL", "="
+    when 'EQUAL', '='
       "=="
-    when "NOT"
-      "!"
-    when "LIKE", "NOT LIKE", "STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION MATCHES"
+    when 'NOT'
+      '!'
+    when 'LIKE', 'NOT LIKE', "STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION MATCHES"
       "=~"
-    when "REGULAR EXPRESSION DOES NOT MATCH"
-      "!~"
-    when "IS NULL", "IS EMPTY"
+    when 'REGULAR EXPRESSION DOES NOT MATCH'
+      '!~'
+    when 'IS NULL', 'IS EMPTY'
       "=="
-    when "IS NOT NULL", "IS NOT EMPTY"
+    when 'IS NOT NULL', 'IS NOT EMPTY'
       "!="
-    when "BEFORE"
-      "<"
-    when "AFTER"
-      ">"
+    when 'BEFORE'
+      '<'
+    when 'AFTER'
+      '>'
     else
       str.downcase
     end
@@ -1117,12 +1117,12 @@ class MiqExpression
   def self.normalize_operator(str)
     str = str.upcase
     case str
-    when "EQUAL"
-      "="
-    when "!"
-      "NOT"
-    when "EXIST"
-      "CONTAINS"
+    when 'EQUAL'
+      '='
+    when '!'
+      'NOT'
+    when 'EXIST'
+      'CONTAINS'
     else
       str
     end
@@ -1132,17 +1132,17 @@ class MiqExpression
     BASE_TABLES
   end
 
-  def self.model_details(model, opts = {:typ => "all", :include_model => true, :include_tags => false, :include_my_tags => false})
+  def self.model_details(model, opts = {:typ => 'all', :include_model => true, :include_tags => false, :include_my_tags => false})
     @classifications = nil
     model = model.to_s
 
-    opts = {:typ => "all", :include_model => true}.merge(opts)
-    if opts[:typ] == "tag"
+    opts = {:typ => 'all', :include_model => true}.merge(opts)
+    if opts[:typ] == 'tag'
       tags_for_model = tag_details(model, model, opts)
       result = []
       TAG_CLASSES.invert.each do |name, tc|
         next if tc.constantize.base_class == model.constantize.base_class
-        path = [model, name].join(".")
+        path = [model, name].join('.')
         result.concat(tag_details(tc, path, opts))
       end
       @classifications = nil
@@ -1152,7 +1152,7 @@ class MiqExpression
     relats = get_relats(model)
 
     result = []
-    unless opts[:typ] == "count" || opts[:typ] == "find"
+    unless opts[:typ] == 'count' || opts[:typ] == 'find'
       result = get_column_details(relats[:columns], model, model, opts).sort! { |a, b| a.to_s <=> b.to_s }
       result.concat(tag_details(model, model, opts)) if opts[:include_tags] == true
     end
@@ -1166,9 +1166,9 @@ class MiqExpression
     relats[:reflections].each do|_assoc, ref|
       parent = ref[:parent]
       case opts[:typ]
-      when "count"
+      when 'count'
         result.push(get_table_details(parent[:class_path], parent[:assoc_path])) if parent[:multivalue]
-      when "find"
+      when 'find'
         result.concat(get_column_details(ref[:columns], parent[:class_path], parent[:assoc_path], opts)) if parent[:multivalue]
       else
         result.concat(get_column_details(ref[:columns], parent[:class_path], parent[:assoc_path], opts))
@@ -1185,13 +1185,13 @@ class MiqExpression
     result = []
     @classifications ||= get_categories
     @classifications.each do|name, cat|
-      prefix = path.nil? ? "managed" : [path, "managed"].join(".")
-      field = [prefix, name].join("-")
+      prefix = path.nil? ? 'managed' : [path, 'managed'].join('.')
+      field = [prefix, name].join('-')
       result.push([value2human(field, opts.merge(:classification => cat)), field])
     end
-    if opts[:include_my_tags] && opts[:userid] && ::Tag.exists?(["name like ?", "/user/#{opts[:userid]}/%"])
-      prefix = path.nil? ? "user_tag" : [path, "user_tag"].join(".")
-      field = [prefix, opts[:userid]].join("_")
+    if opts[:include_my_tags] && opts[:userid] && ::Tag.exists?(['name like ?', "/user/#{opts[:userid]}/%"])
+      prefix = path.nil? ? 'user_tag' : [path, 'user_tag'].join('.')
+      field = [prefix, opts[:userid]].join('_')
       result.push([value2human(field, opts), field])
     end
     result.sort! { |a, b| a.to_s <=> b.to_s }
@@ -1207,21 +1207,21 @@ class MiqExpression
     @miq_adv_search_lists[model.to_s] ||= {}
 
     case what.to_sym
-    when :exp_available_fields then @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, :typ => "field", :include_model => true)
-    when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, :typ => "count", :include_model => true)
-    when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, :typ => "find",  :include_model => true)
+    when :exp_available_fields then @miq_adv_search_lists[model.to_s][:exp_available_fields] ||= MiqExpression.model_details(model, :typ => 'field', :include_model => true)
+    when :exp_available_counts then @miq_adv_search_lists[model.to_s][:exp_available_counts] ||= MiqExpression.model_details(model, :typ => 'count', :include_model => true)
+    when :exp_available_finds  then @miq_adv_search_lists[model.to_s][:exp_available_finds]  ||= MiqExpression.model_details(model, :typ => 'find',  :include_model => true)
     end
   end
 
   def self.reporting_available_fields(model, interval = nil)
     @reporting_available_fields ||= {}
-    if model.to_s == "VimPerformanceTrend"
+    if model.to_s == 'VimPerformanceTrend'
       @reporting_available_fields[model.to_s] ||= {}
       @reporting_available_fields[model.to_s][interval.to_s] ||= VimPerformanceTrend.trend_model_details(interval.to_s)
-    elsif model.ends_with?("Performance")
+    elsif model.ends_with?('Performance')
       @reporting_available_fields[model.to_s] ||= {}
       @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
-    elsif model.to_s.start_with?("Chargeback")
+    elsif model.to_s.start_with?('Chargeback')
       @reporting_available_fields[model.to_s] ||=
         MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) }
     else
@@ -1247,8 +1247,8 @@ class MiqExpression
 
     refs.each do |assoc, ref|
       next unless INCLUDE_TABLES.include?(assoc.to_s.pluralize)
-      next if     assoc.to_s.pluralize == "event_logs" && parent[:root] == "Host" && !proto?
-      next if     assoc.to_s.pluralize == "processes" && parent[:root] == "Host" # Process data not available yet for Host
+      next if     assoc.to_s.pluralize == 'event_logs' && parent[:root] == 'Host' && !proto?
+      next if     assoc.to_s.pluralize == 'processes' && parent[:root] == 'Host' # Process data not available yet for Host
 
       next if ref.macro == :belongs_to && model.name != parent[:root]
 
@@ -1260,8 +1260,8 @@ class MiqExpression
 
       new_parent = {
         :macro       => ref.macro,
-        :class_path  => [parent[:class_path], determine_relat_path(ref)].join("."),
-        :assoc_path  => [parent[:assoc_path], assoc.to_s].join("."),
+        :class_path  => [parent[:class_path], determine_relat_path(ref)].join('.'),
+        :assoc_path  => [parent[:assoc_path], assoc.to_s].join('.'),
         :assoc       => assoc,
         :assoc_class => assoc_class,
         :root        => parent[:root]
@@ -1269,7 +1269,7 @@ class MiqExpression
       new_parent[:direction] = new_parent[:macro] == :belongs_to ? :up : :down
       new_parent[:multivalue] = [:has_many, :has_and_belongs_to_many].include?(new_parent[:macro])
 
-      seen_key = [model.name, assoc].join("_")
+      seen_key = [model.name, assoc].join('_')
       unless seen.include?(seen_key) ||
              assoc_class == parent[:root] ||
              parent[:assoc_path].include?(assoc.to_s) ||
@@ -1289,27 +1289,27 @@ class MiqExpression
 
   def self.get_column_details(column_names, class_path, assoc_path, opts)
     include_model = opts[:include_model]
-    base_model = class_path.split(".").first
+    base_model = class_path.split('.').first
 
     excludes =  EXCLUDE_COLUMNS
     # special case for C&U ad-hoc reporting
-    if opts[:interval] && opts[:interval] != "daily" && base_model.ends_with?("Performance") && !class_path.include?(".")
-      excludes += ["^min_.*$", "^max_.*$", "^.*derived_storage_.*$", "created_on"]
-    elsif opts[:interval] && base_model.ends_with?("Performance") && !class_path.include?(".")
-      excludes += ["created_on"]
+    if opts[:interval] && opts[:interval] != 'daily' && base_model.ends_with?('Performance') && !class_path.include?('.')
+      excludes += ['^min_.*$', '^max_.*$', '^.*derived_storage_.*$', 'created_on']
+    elsif opts[:interval] && base_model.ends_with?('Performance') && !class_path.include?('.')
+      excludes += ['created_on']
     end
 
-    excludes += ["logical_cpus"] if class_path == "Vm.hardware"
+    excludes += ['logical_cpus'] if class_path == 'Vm.hardware'
 
     case base_model
-    when "VmPerformance"
-      excludes += ["^.*derived_host_count_off$", "^.*derived_host_count_on$", "^.*derived_vm_count_off$", "^.*derived_vm_count_on$", "^.*derived_storage.*$"]
-    when "HostPerformance"
-      excludes += ["^.*derived_host_count_off$", "^.*derived_host_count_on$", "^.*derived_storage.*$", "^abs_.*$"]
-    when "EmsClusterPerformance"
-      excludes += ["^.*derived_storage.*$", "sys_uptime_absolute_latest", "^abs_.*$"]
-    when "StoragePerformance"
-      includes = ["^.*derived_storage.*$", "^timestamp$", "v_date", "v_time", "resource_name"]
+    when 'VmPerformance'
+      excludes += ['^.*derived_host_count_off$', '^.*derived_host_count_on$', '^.*derived_vm_count_off$', '^.*derived_vm_count_on$', '^.*derived_storage.*$']
+    when 'HostPerformance'
+      excludes += ['^.*derived_host_count_off$', '^.*derived_host_count_on$', '^.*derived_storage.*$', '^abs_.*$']
+    when 'EmsClusterPerformance'
+      excludes += ['^.*derived_storage.*$', 'sys_uptime_absolute_latest', '^abs_.*$']
+    when 'StoragePerformance'
+      includes = ['^.*derived_storage.*$', '^timestamp$', 'v_date', 'v_time', 'resource_name']
       column_names = column_names.collect do |c|
         next(c) if includes.include?(c)
         c if includes.detect { |incl| c.match(incl) }
@@ -1339,8 +1339,8 @@ class MiqExpression
   def self.get_col_type(field)
     model, parts, col = parse_field(field)
 
-    return :string if model.downcase == "managed" || parts.last == "managed"
-    return nil unless field.include?("-")
+    return :string if model.downcase == 'managed' || parts.last == 'managed'
+    return nil unless field.include?('-')
 
     model = determine_model(model, parts)
     return nil if model.nil?
@@ -1354,35 +1354,35 @@ class MiqExpression
   end
 
   def self.parse_field(field)
-    col = field.split("-").last
-    col = col.split("__").first unless col.nil? # throw away pivot table suffix if it exists before looking up type
+    col = field.split('-').last
+    col = col.split('__').first unless col.nil? # throw away pivot table suffix if it exists before looking up type
 
-    parts = field.split("-").first.split(".")
+    parts = field.split('-').first.split('.')
     model = parts.shift
 
     return model, parts, col
   end
 
-  NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">", "RUBY"]
-  STRING_OPERATORS  = ["=",
-                       "STARTS WITH",
-                       "ENDS WITH",
-                       "INCLUDES",
-                       "IS NULL",
-                       "IS NOT NULL",
-                       "IS EMPTY",
-                       "IS NOT EMPTY",
-                       "REGULAR EXPRESSION MATCHES",
-                       "REGULAR EXPRESSION DOES NOT MATCH"]
-  SET_OPERATORS     = ["INCLUDES ALL",
-                       "INCLUDES ANY",
-                       "LIMITED TO"]
-  REGKEY_OPERATORS  = ["KEY EXISTS",
-                       "VALUE EXISTS"]
-  BOOLEAN_OPERATORS = ["=",
-                       "IS NULL",
-                       "IS NOT NULL"]
-  DATE_TIME_OPERATORS       = ["IS", "BEFORE", "AFTER", "FROM", "IS EMPTY", "IS NOT EMPTY"]
+  NUM_OPERATORS     = ['=', '!=', '<', '<=', '>=', '>', 'RUBY']
+  STRING_OPERATORS  = ['=',
+                       'STARTS WITH',
+                       'ENDS WITH',
+                       'INCLUDES',
+                       'IS NULL',
+                       'IS NOT NULL',
+                       'IS EMPTY',
+                       'IS NOT EMPTY',
+                       'REGULAR EXPRESSION MATCHES',
+                       'REGULAR EXPRESSION DOES NOT MATCH']
+  SET_OPERATORS     = ['INCLUDES ALL',
+                       'INCLUDES ANY',
+                       'LIMITED TO']
+  REGKEY_OPERATORS  = ['KEY EXISTS',
+                       'VALUE EXISTS']
+  BOOLEAN_OPERATORS = ['=',
+                       'IS NULL',
+                       'IS NOT NULL']
+  DATE_TIME_OPERATORS       = ['IS', 'BEFORE', 'AFTER', 'FROM', 'IS EMPTY', 'IS NOT EMPTY']
 
   def self.get_col_operators(field)
     if field == :count || field == :regkey
@@ -1397,7 +1397,7 @@ class MiqExpression
     when :integer, :float, :fixnum
       return NUM_OPERATORS
     when :count
-      return NUM_OPERATORS - ["RUBY"]
+      return NUM_OPERATORS - ['RUBY']
     when :numeric_set, :string_set
       return SET_OPERATORS
     when :regkey
@@ -1411,22 +1411,22 @@ class MiqExpression
     end
   end
 
-  STYLE_OPERATORS_EXCLUDES = ["RUBY", "REGULAR EXPRESSION MATCHES", "REGULAR EXPRESSION DOES NOT MATCH", "FROM"]
+  STYLE_OPERATORS_EXCLUDES = ['RUBY', 'REGULAR EXPRESSION MATCHES', 'REGULAR EXPRESSION DOES NOT MATCH', 'FROM']
   def self.get_col_style_operators(field)
     result = get_col_operators(field) - STYLE_OPERATORS_EXCLUDES
   end
 
   def self.get_entry_details(field)
-    ns = field.split("-").first.split(".").last
+    ns = field.split('-').first.split('.').last
 
-    if ns == "managed"
-      cat = field.split("-").last
+    if ns == 'managed'
+      cat = field.split('-').last
       catobj = Classification.find_by_name(cat)
       return catobj ? catobj.entries.collect { |e| [e.description, e.name] } : []
-    elsif ns == "user_tag" || ns == "user"
-      cat = field.split("-").last
-      return ::Tag.where("name like ?", "/user/#{cat}%").select(:name).collect do |t|
-        tag_name = t.name.split("/").last
+    elsif ns == 'user_tag' || ns == 'user'
+      cat = field.split('-').last
+      return ::Tag.where('name like ?', "/user/#{cat}%").select(:name).collect do |t|
+        tag_name = t.name.split('/').last
         [tag_name, tag_name]
       end
     else
@@ -1435,7 +1435,7 @@ class MiqExpression
   end
 
   def self.is_plural?(field)
-    parts = field.split("-").first.split(".")
+    parts = field.split('-').first.split('.')
     macro = nil
     model = model_class(parts.shift)
     parts.each do |assoc|
@@ -1449,14 +1449,14 @@ class MiqExpression
   end
 
   def self.atom_error(field, operator, value)
-    return false if operator == "DEFAULT" # No validation needed for style DEFAULT operator
+    return false if operator == 'DEFAULT' # No validation needed for style DEFAULT operator
 
     value = value.to_s unless value.kind_of?(Array)
 
     dt = case operator.to_s.downcase
-         when "ruby" # TODO
+         when 'ruby' # TODO
            :ruby
-         when "regular expression matches", "regular expression does not match" # TODO
+         when 'regular expression matches', 'regular expression does not match' # TODO
            :regexp
          else
            if field == :count
@@ -1502,20 +1502,20 @@ class MiqExpression
       end
       return false
     when :boolean
-      unless operator.downcase.include?("null") || %w(true false).include?(value)
-        return _("Value must be true or false")
+      unless operator.downcase.include?('null') || %w(true false).include?(value)
+        return _('Value must be true or false')
       end
       return false
     when :regexp
       begin
-        Regexp.new(value).match("foo")
+        Regexp.new(value).match('foo')
       rescue => err
         return _("Regular expression '%{value}' is invalid, '%{error_message}'") % {:value         => value,
                                                                                     :error_message => err.message}
       end
       return false
     when :ruby
-      return _("Ruby Script must not be blank") if value.blank?
+      return _('Ruby Script must not be blank') if value.blank?
       return false
     else
       return false
@@ -1588,7 +1588,7 @@ class MiqExpression
     if e.kind_of?(Array)
       e.each { |e_exp| return true if self._quick_search?(e_exp) }
     elsif e.kind_of?(Hash)
-      return true if e["value"] == :user_input
+      return true if e['value'] == :user_input
       e.each_value { |e_exp| return true if self._quick_search?(e_exp) }
     end
     false
@@ -1600,7 +1600,7 @@ class MiqExpression
     operator = exp.keys.first
 
     case operator.downcase
-    when "equal", "="
+    when 'equal', '='
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
@@ -1611,7 +1611,7 @@ class MiqExpression
                 exp[operator]["value"]
               end
       field.eq(value)
-    when ">", "after"
+    when '>', 'after'
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
@@ -1622,18 +1622,18 @@ class MiqExpression
                 exp[operator]["value"]
               end
       field.gt(value)
-    when ">="
-      field = Field.parse(exp[operator]["field"])
+    when '>='
+      field = Field.parse(exp[operator]['field'])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "beginning")
+                RelativeDatetime.normalize(exp[operator]['value'], 'UTC', mode = 'beginning')
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "beginning")
+                RelativeDatetime.normalize(exp[operator]['value'], tz, mode = 'beginning')
               else
-                exp[operator]["value"]
+                exp[operator]['value']
               end
       field.gteq(value)
-    when "<", "before"
+    when '<', 'before'
       field = Field.parse(exp[operator]["field"])
       value = case
               when field.date?
@@ -1644,41 +1644,41 @@ class MiqExpression
                 exp[operator]["value"]
               end
       field.lt(value)
-    when "<="
-      field = Field.parse(exp[operator]["field"])
+    when '<='
+      field = Field.parse(exp[operator]['field'])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = "end")
+                RelativeDatetime.normalize(exp[operator]['value'], 'UTC', mode = 'end')
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = "end")
+                RelativeDatetime.normalize(exp[operator]['value'], tz, mode = 'end')
               else
-                exp[operator]["value"]
+                exp[operator]['value']
               end
       field.lteq(value)
-    when "!="
-      field = Field.parse(exp[operator]["field"])
+    when '!='
+      field = Field.parse(exp[operator]['field'])
       value = case
               when field.date?
-                RelativeDatetime.normalize(exp[operator]["value"], "UTC", mode = nil)
+                RelativeDatetime.normalize(exp[operator]['value'], 'UTC', mode = nil)
               when field.datetime?
-                RelativeDatetime.normalize(exp[operator]["value"], tz, mode = nil)
+                RelativeDatetime.normalize(exp[operator]['value'], tz, mode = nil)
               else
-                exp[operator]["value"]
+                exp[operator]['value']
               end
       field.not_eq(value)
-    when "like", "includes"
+    when 'like', 'includes'
       field = Field.parse(exp[operator]["field"])
       field.matches("%#{exp[operator]["value"]}%")
-    when "starts with"
-      field = Field.parse(exp[operator]["field"])
+    when 'starts with'
+      field = Field.parse(exp[operator]['field'])
       field.matches("#{exp[operator]["value"]}%")
-    when "ends with"
-      field = Field.parse(exp[operator]["field"])
+    when 'ends with'
+      field = Field.parse(exp[operator]['field'])
       field.matches("%#{exp[operator]["value"]}")
-    when "not like"
-      field = Field.parse(exp[operator]["field"])
+    when 'not like'
+      field = Field.parse(exp[operator]['field'])
       field.does_not_match("%#{exp[operator]["value"]}%")
-    when "and"
+    when 'and'
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
         arel = to_arel(operand, tz)
@@ -1686,7 +1686,7 @@ class MiqExpression
         result << arel
       end
       Arel::Nodes::And.new(operands)
-    when "or"
+    when 'or'
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
         arel = to_arel(operand, tz)
@@ -1695,59 +1695,59 @@ class MiqExpression
       end
       first, *rest = operands
       rest.inject(first) { |lhs, rhs| Arel::Nodes::Or.new(lhs, rhs) }
-    when "not", "!"
+    when 'not', '!'
       Arel::Nodes::Not.new(to_arel(exp[operator], tz))
-    when "is null"
-      field = Field.parse(exp[operator]["field"])
+    when 'is null'
+      field = Field.parse(exp[operator]['field'])
       field.eq(nil)
-    when "is not null"
-      field = Field.parse(exp[operator]["field"])
+    when 'is not null'
+      field = Field.parse(exp[operator]['field'])
       field.not_eq(nil)
-    when "is empty"
-      field = Field.parse(exp[operator]["field"])
+    when 'is empty'
+      field = Field.parse(exp[operator]['field'])
       arel = field.eq(nil)
-      arel = arel.or(field.eq("")) if field.string?
+      arel = arel.or(field.eq('')) if field.string?
       arel
-    when "is not empty"
-      field = Field.parse(exp[operator]["field"])
+    when 'is not empty'
+      field = Field.parse(exp[operator]['field'])
       arel = field.not_eq(nil)
-      arel = arel.and(field.not_eq("")) if field.string?
+      arel = arel.and(field.not_eq('')) if field.string?
       arel
-    when "contains"
+    when 'contains'
       # Only support for tags of the main model
-      if exp[operator].key?("tag")
-        tag = Tag.parse(exp[operator]["tag"])
-        tag.contains(exp[operator]["value"])
+      if exp[operator].key?('tag')
+        tag = Tag.parse(exp[operator]['tag'])
+        tag.contains(exp[operator]['value'])
       else
-        field = Field.parse(exp[operator]["field"])
-        field.contains(exp[operator]["value"])
+        field = Field.parse(exp[operator]['field'])
+        field.contains(exp[operator]['value'])
       end
-    when "is"
-      field = Field.parse(exp[operator]["field"])
-      value = exp[operator]["value"]
+    when 'is'
+      field = Field.parse(exp[operator]['field'])
+      value = exp[operator]['value']
       if field.date?
         if RelativeDatetime.relative?(value)
-          start_val = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
-          end_val = RelativeDatetime.normalize(value, "UTC", "end").to_date
+          start_val = RelativeDatetime.normalize(value, 'UTC', 'beginning').to_date
+          end_val = RelativeDatetime.normalize(value, 'UTC', 'end').to_date
           field.between(start_val..end_val)
         else
-          value  = RelativeDatetime.normalize(value, "UTC", "beginning").to_date
+          value  = RelativeDatetime.normalize(value, 'UTC', 'beginning').to_date
           field.eq(value)
         end
       else
-        start_val = RelativeDatetime.normalize(value, tz, "beginning").utc
-        end_val   = RelativeDatetime.normalize(value, tz, "end").utc
+        start_val = RelativeDatetime.normalize(value, tz, 'beginning').utc
+        end_val   = RelativeDatetime.normalize(value, tz, 'end').utc
         field.between(start_val..end_val)
       end
-    when "from"
-      field = Field.parse(exp[operator]["field"])
-      start_val, end_val = exp[operator]["value"]
+    when 'from'
+      field = Field.parse(exp[operator]['field'])
+      start_val, end_val = exp[operator]['value']
       if field.date?
-        start_val = RelativeDatetime.normalize(start_val, "UTC", "beginning").to_date
-        end_val   = RelativeDatetime.normalize(end_val, "UTC", "end").to_date
+        start_val = RelativeDatetime.normalize(start_val, 'UTC', 'beginning').to_date
+        end_val   = RelativeDatetime.normalize(end_val, 'UTC', 'end').to_date
       else
-        start_val = RelativeDatetime.normalize(start_val, tz, "beginning").utc
-        end_val   = RelativeDatetime.normalize(end_val, tz, "end").utc
+        start_val = RelativeDatetime.normalize(start_val, tz, 'beginning').utc
+        end_val   = RelativeDatetime.normalize(end_val, tz, 'end').utc
       end
       field.between(start_val..end_val)
     else

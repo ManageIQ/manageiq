@@ -16,9 +16,9 @@ http_client.set_auth nil, 'itil', 'itil'
 http_client.debug_dev = $stdout
 
 headers = {
-  "Content-Type" => "text/xml;charset=UTF-8",
-  "SOAPAction"   => 'insert',
-  'User-Agent'   => "ManageIQ/EVM"
+  'Content-Type' => 'text/xml;charset=UTF-8',
+  'SOAPAction'   => 'insert',
+  'User-Agent'   => 'ManageIQ/EVM'
 }
 
 uri = 'https://manageiqdev.service-now.com/ecc_queue.do?SOAP'

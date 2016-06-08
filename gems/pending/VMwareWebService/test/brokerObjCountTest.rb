@@ -35,13 +35,13 @@ begin
     vim.inventoryHash['Datastore'].each     { |mor| objs << vim.getVimDataStoreByMor(mor) }
   
     puts
-    puts "Object counts:"
+    puts 'Object counts:'
     broker.objectCounts.each { |k, v| puts "\t#{k}: #{v}"}
   
     objs.each(&:release)
   
     puts
-    puts "Object counts:"
+    puts 'Object counts:'
     broker.objectCounts.each { |k, v| puts "\t#{k}: #{v}"}
   
 rescue => err

@@ -6,11 +6,11 @@ module ApplicationController::Tags
     assert_privileges("#{controller_for_common_methods}_tag") if assert
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
     case params[:button]
-    when "cancel"
+    when 'cancel'
       tagging_edit_tags_cancel
-    when "save", "add"
+    when 'save', 'add'
       tagging_edit_tags_save
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       @tagging = session[:tag_db] = params[:db] ? params[:db] : db if params[:db] || db
       tagging_edit_tags_reset
     end
@@ -25,19 +25,19 @@ module ApplicationController::Tags
 
   # New classification category chosen on the classify screen
   def classify_new_cat
-    session[:cat] = Classification.find_by_name(params["classification"]["name"])
+    session[:cat] = Classification.find_by_name(params['classification']['name'])
     classify_build_entries_pulldown
 
     render :update do |page|
       page << javascript_prologue
-      page.replace("value_div", :partial => "layouts/classify_value")
+      page.replace('value_div', :partial => 'layouts/classify_value')
     end
   end
 
   # Handle tag edit field changes
   def tag_edit_form_field_changed
     id = params[:id]
-    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
+    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", 'replace_cell__explorer')
 
     if params[:tag_cat]
       @edit[:cat] = Classification.find_by_id(params[:tag_cat])
@@ -68,8 +68,8 @@ module ApplicationController::Tags
         session[:changed] = changed
         page << javascript_for_miq_button_visibility(changed)
       end
-      page.replace("cat_tags_div", :partial => "layouts/tag_edit_cat_tags")
-      page.replace("assignments_div", :partial => "layouts/tag_edit_assignments") unless params[:tag_cat]
+      page.replace('cat_tags_div', :partial => 'layouts/tag_edit_cat_tags')
+      page.replace('assignments_div', :partial => 'layouts/tag_edit_assignments') unless params[:tag_cat]
       if params[:tag_add]
         page << jquery_pulsate_element("#{j_str(params[:tag_add])}_tr")
       end
@@ -78,30 +78,30 @@ module ApplicationController::Tags
 
   # Assign a classification entry to a set of objects
   def classify_assign
-    entry = Classification.find_by_id(params["entry"]["id"])
+    entry = Classification.find_by_id(params['entry']['id'])
     session[:tag_items].each do |item|
       entry.assign_entry_to(session[:tag_db].find(item))
     end
     classify_build_screen
     render :update do |page|
       page << javascript_prologue
-      page.replace("value_div", :partial => "layouts/classify_value")
-      page.replace("table_div", :partial => "layouts/classify_table")
+      page.replace('value_div', :partial => 'layouts/classify_value')
+      page.replace('table_div', :partial => 'layouts/classify_table')
       page << jquery_pulsate_element("#{entry.id}_tr")
     end
   end
 
   # Remove a classification entry from a set of objects
   def classify_remove
-    entry = Classification.find_by_id(params["id"])
+    entry = Classification.find_by_id(params['id'])
     session[:tag_items].each do |item|
       entry.remove_entry_from(session[:tag_db].find(item))
     end
     classify_build_screen
     render :update do |page|
       page << javascript_prologue
-      page.replace("value_div", :partial => "layouts/classify_value")
-      page.replace("table_div", :partial => "layouts/classify_table")
+      page.replace('value_div', :partial => 'layouts/classify_value')
+      page.replace('table_div', :partial => 'layouts/classify_table')
     end
   end
 
@@ -116,7 +116,7 @@ module ApplicationController::Tags
 
   def get_tag_items
     recs = []
-    if !session[:checked_items].nil? && @lastaction == "set_checked_items"
+    if !session[:checked_items].nil? && @lastaction == 'set_checked_items'
       recs = session[:checked_items]
     else
       recs = find_checked_items
@@ -125,10 +125,10 @@ module ApplicationController::Tags
       recs = [params[:id]]
     end
     if recs.length < 1
-      add_flash(_("One or more %{model} must be selected to Smart Tagging") %
+      add_flash(_('One or more %{model} must be selected to Smart Tagging') %
         {:model => Dictionary.gettext(db.to_s, :type => :model, :notfound => :titleize, :plural => true)}, :error)
-      @refresh_div = "flash_msg_div"
-      @refresh_partial = "layouts/flash_msg"
+      @refresh_div = 'flash_msg_div'
+      @refresh_partial = 'layouts/flash_msg'
       return
     else
       session[:tag_items] = recs    # Set the array of tag items
@@ -140,7 +140,7 @@ module ApplicationController::Tags
     get_tag_items if @explorer
     @object_ids = session[:tag_items]
     @sb[:rec_id] = params[:id] ? params[:id] : session[:tag_items][0]
-    if params[:button] == "reset"
+    if params[:button] == 'reset'
       @tagging = session[:tag_db].to_s
       id = params[:id] if params[:id]
       return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}")
@@ -153,12 +153,12 @@ module ApplicationController::Tags
     @display   = nil
     @in_a_form = true
     session[:changed] = false
-    add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
+    add_flash(_('All changes have been reset'), :warning) if params[:button] == 'reset'
     if tagging_explorer_controller?
-      @refresh_partial = "layouts/tagging"
+      @refresh_partial = 'layouts/tagging'
       replace_right_cell(@sb[:action]) if params[:button]
     else
-      render "shared/views/tagging_edit"
+      render 'shared/views/tagging_edit'
     end
   end
 
@@ -178,7 +178,7 @@ module ApplicationController::Tags
   def tagging_edit_tags_cancel
     id = params[:id]
     return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}")
-    add_flash(_("Tag Edit was cancelled by the user"))
+    add_flash(_('Tag Edit was cancelled by the user'))
     session[:tag_items] = nil                                 # reset tag_items in session
     if tagging_explorer_controller?
       @edit = nil # clean out the saved info
@@ -216,7 +216,7 @@ module ApplicationController::Tags
 
   def tagging_edit_tags_save_and_replace_right_cell
     id = params[:id]
-    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
+    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", 'replace_cell__explorer')
 
     tagging_save_tags
 
@@ -235,7 +235,7 @@ module ApplicationController::Tags
   rescue StandardError => bang
     add_flash(_("Error during 'Save Tags': %{error_message}") % {:error_message => bang.message}, :error)
   else
-    add_flash(_("Tag edits were successfully saved"))
+    add_flash(_('Tag edits were successfully saved'))
   end
 
   # Build the tagging assignment screen
@@ -259,7 +259,7 @@ module ApplicationController::Tags
     @mytags = Tag.all_tags(:cat => session[:userid]).sort     # Get all of the users tags
     unless session[:mytags].blank?
       session[:mytags].each do |t|                                    # Look thru the common tags
-        @mytags.delete(t.name.split("/")[-1])                     # Remove any tags from the pulldown that are in the common tags
+        @mytags.delete(t.name.split('/')[-1])                     # Remove any tags from the pulldown that are in the common tags
       end
     end
   end
@@ -271,7 +271,7 @@ module ApplicationController::Tags
     cats.delete_if { |c| c.read_only? || c.entries.length == 0 }  # Remove categories that are read only or have no entries
     cats.each do |c|
       if c.single_value?
-        @categories[c.description + " *"] = c.name
+        @categories[c.description + ' *'] = c.name
       else
         @categories[c.description] = c.name
       end
@@ -315,9 +315,9 @@ module ApplicationController::Tags
     end
 
     if @entries.length == 0                             # No entries left to choose from
-      @entries[_("<All values are assigned>")] = "select"
+      @entries[_('<All values are assigned>')] = 'select'
     else
-      @entries[_("<Select a value to assign>")] = "select"
+      @entries[_('<Select a value to assign>')] = 'select'
     end
   end
 
@@ -328,13 +328,13 @@ module ApplicationController::Tags
     cats.delete_if { |c| c.read_only? || c.entries.length == 0 }  # Remove categories that are read only or have no entries
     cats.each do |c|
       if c.single_value?
-        @categories[c.description + " *"] = c.id
+        @categories[c.description + ' *'] = c.id
       else
         @categories[c.description] = c.id
       end
     end
 
-    if ["User", "MiqGroup", "Tenant"].include?(@tagging)
+    if ['User', 'MiqGroup', 'Tenant'].include?(@tagging)
       session[:assigned_filters] = []  # No view filters used for user/groups/tenants, set as empty for later methods
     else
       cats.each do |cat_key|  # not needed for user/group tags since they are not filtered for viewing
@@ -382,9 +382,9 @@ module ApplicationController::Tags
     end
 
     if @entries.length == 0                             # No entries left to choose from
-      @entries[_("<All values are assigned>")] = "select"
+      @entries[_('<All values are assigned>')] = 'select'
     else
-      @entries[_("<Select a value to assign>")] = "select"
+      @entries[_('<Select a value to assign>')] = 'select'
     end
   end
 
@@ -393,7 +393,7 @@ module ApplicationController::Tags
     assert_privileges(params[:pressed])
     @tagging = session[:tag_db] = db        # Remember the DB
     get_tag_items
-    drop_breadcrumb(:name => _("Tag Assignment"), :url => "/#{session[:controller]}/tagging_edit")
+    drop_breadcrumb(:name => _('Tag Assignment'), :url => "/#{session[:controller]}/tagging_edit")
     render :update do |page|
       page << javascript_prologue
       page.redirect_to :action => 'tagging_edit',

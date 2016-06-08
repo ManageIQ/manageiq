@@ -11,10 +11,10 @@ class ApplicationHelper::Toolbar::ContainerBuildsCenter < ApplicationHelper::Too
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on the selected items'),
           N_('Perform SmartState Analysis'),
-          :url_parms => "main_div",
-          :confirm   => N_("Perform SmartState Analysis on the selected items?"),
+          :url_parms => 'main_div',
+          :confirm   => N_('Perform SmartState Analysis on the selected items?'),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])
@@ -25,16 +25,16 @@ class ApplicationHelper::Toolbar::ContainerBuildsCenter < ApplicationHelper::Too
       t = N_('Policy'),
       t,
       :enabled => false,
-      :onwhen  => "1+",
+      :onwhen  => '1+',
       :items   => [
         button(
           :container_build_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"container_builds")}'),
           N_('Edit Tags'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])

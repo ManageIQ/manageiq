@@ -38,14 +38,14 @@ class MiqQueue < ApplicationRecord
   def self.priority(which, dir = nil, by = 0)
     unless which.kind_of?(Integer) || PRIORITY_WHICH.include?(which)
       raise ArgumentError,
-            _("which must be an Integer or one of %{priority}") % {:priority => PRIORITY_WHICH.join(", ")}
+            _('which must be an Integer or one of %{priority}') % {:priority => PRIORITY_WHICH.join(', ')}
     end
     unless dir.nil? || PRIORITY_DIR.include?(dir)
-      raise ArgumentError, _("dir must be one of %{directory}") % {:directory => PRIORITY_DIR.join(", ")}
+      raise ArgumentError, _('dir must be one of %{directory}') % {:directory => PRIORITY_DIR.join(', ')}
     end
 
     which = const_get("#{which.to_s.upcase}_PRIORITY") unless which.kind_of?(Integer)
-    priority = which.send(dir == :higher ? "-" : "+", by)
+    priority = which.send(dir == :higher ? '-' : '+', by)
     priority = MIN_PRIORITY if priority > MIN_PRIORITY
     priority = MAX_PRIORITY if priority < MAX_PRIORITY
     priority
@@ -77,7 +77,7 @@ class MiqQueue < ApplicationRecord
   STATE_WARN    = 'warn'.freeze
   STATE_ERROR   = 'error'.freeze
   STATE_TIMEOUT = 'timeout'.freeze
-  STATE_EXPIRED = "expired".freeze
+  STATE_EXPIRED = 'expired'.freeze
   validates_inclusion_of :state,  :in => [STATE_READY, STATE_DEQUEUE, STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED]
   FINISHED_STATES = [STATE_WARN, STATE_ERROR, STATE_TIMEOUT, STATE_EXPIRED].freeze
 
@@ -87,9 +87,9 @@ class MiqQueue < ApplicationRecord
   STATUS_ERROR   = STATE_ERROR
   STATUS_TIMEOUT = STATE_TIMEOUT
   STATUS_EXPIRED = STATE_EXPIRED
-  DEFAULT_QUEUE  = "generic"
+  DEFAULT_QUEUE  = 'generic'
 
-  @@delete_command_file = File.join(File.expand_path(Rails.root), "miq_queue_delete_cmd_file")
+  @@delete_command_file = File.join(File.expand_path(Rails.root), 'miq_queue_delete_cmd_file')
 
   def data
     msg_data && Marshal.load(msg_data)
@@ -102,7 +102,7 @@ class MiqQueue < ApplicationRecord
   def self.put(options)
     options = options.reverse_merge(
       :priority     => NORMAL_PRIORITY,
-      :queue_name   => "generic",
+      :queue_name   => 'generic',
       :role         => nil,
       :server_guid  => nil,
       :msg_timeout  => TIMEOUT,
@@ -145,7 +145,7 @@ class MiqQueue < ApplicationRecord
       MIQ_QUEUE_GET,
       options[:zone] || MiqServer.my_server.zone.name,
       options[:zone] || MiqServer.my_server.zone.name,
-      options[:queue_name] || "generic",
+      options[:queue_name] || 'generic',
       options[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
@@ -153,7 +153,7 @@ class MiqQueue < ApplicationRecord
     ]
 
     prefetch_max_per_worker = Settings.server.prefetch_max_per_worker || 10
-    msgs = MiqQueue.where(cond).order("priority, id").limit(prefetch_max_per_worker)
+    msgs = MiqQueue.where(cond).order('priority, id').limit(prefetch_max_per_worker)
     return nil if msgs.empty? # Nothing available in the queue
 
     result = nil
@@ -171,7 +171,7 @@ class MiqQueue < ApplicationRecord
       rescue ActiveRecord::StaleObjectError
         result = :stale
       rescue => err
-        raise _("%{log_message} \"%{error}\" attempting to get next message") % {:log_message => _log.prefix, :error => err}
+        raise _('%{log_message} "%{error}" attempting to get next message') % {:log_message => _log.prefix, :error => err}
       end
     end
     if result == :stale
@@ -204,7 +204,7 @@ class MiqQueue < ApplicationRecord
     cond = [
       MIQ_QUEUE_PEEK,
       conditions[:zone] || MiqServer.my_server.zone.name,
-      conditions[:queue_name] || "generic",
+      conditions[:queue_name] || 'generic',
       conditions[:role] || MiqServer.my_server.active_role_names,
       MiqServer.my_guid,
       Time.now.utc,
@@ -242,9 +242,9 @@ class MiqQueue < ApplicationRecord
     msg = nil
     loop do
       msg = if args_selector
-              where_scope.order("priority, id").detect { |m| args_selector.call(m.args) }
+              where_scope.order('priority, id').detect { |m| args_selector.call(m.args) }
             else
-              where_scope.order("priority, id").first
+              where_scope.order('priority, id').first
             end
 
       save_options = block_given? ? yield(msg, find_options) : nil
@@ -279,7 +279,7 @@ class MiqQueue < ApplicationRecord
         _log.debug("#{MiqQueue.format_short_log_msg(msg)} stale, retrying...")
       rescue => err
         raise RuntimeError,
-              _("%{log_message} \"%{error}\" attempting merge next message") % {:log_message => _log.prefix,
+              _('%{log_message} "%{error}" attempting merge next message') % {:log_message => _log.prefix,
                                                                                 :error       => err},
               err.backtrace
       end
@@ -311,7 +311,7 @@ class MiqQueue < ApplicationRecord
     begin
       raise MiqException::MiqQueueExpired if expires_on && (Time.now.utc > expires_on)
 
-      raise _("class_name cannot be nil") if class_name.nil?
+      raise _('class_name cannot be nil') if class_name.nil?
 
       obj = class_name.constantize
 
@@ -336,7 +336,7 @@ class MiqQueue < ApplicationRecord
 
       begin
         status = STATUS_OK
-        message = "Message delivered successfully"
+        message = 'Message delivered successfully'
         Timeout.timeout(msg_timeout) do
           if obj.kind_of?(Class) && !target_id.nil?
             result = obj.send(method_name, target_id, *args)
@@ -428,7 +428,7 @@ class MiqQueue < ApplicationRecord
     MiqQueue.put(options.slice(*MiqQueue.columns_for_requeue))
   end
 
-  def check_for_timeout(log_prefix = "MIQ(MiqQueue.check_for_timeout)", grace = 10.seconds, timeout = msg_timeout.seconds)
+  def check_for_timeout(log_prefix = 'MIQ(MiqQueue.check_for_timeout)', grace = 10.seconds, timeout = msg_timeout.seconds)
     if state == 'dequeue' && Time.now.utc > (updated_on + timeout.seconds + grace.seconds).utc
       msg = " processed by #{handler.format_full_log_msg}" unless handler.nil?
       $log.warn("#{log_prefix} Timed Out Active #{MiqQueue.format_short_log_msg(self)}#{msg} after #{Time.now.utc - updated_on} seconds")
@@ -455,7 +455,7 @@ class MiqQueue < ApplicationRecord
       File.delete(@@delete_command_file)
     end
 
-    _log.info("Cleaning up queue messages...")
+    _log.info('Cleaning up queue messages...')
     MiqQueue.where(:state => STATE_DEQUEUE).each do |message|
       if message.handler.nil?
         _log.warn("Cleaning message in dequeue state without worker: #{format_full_log_msg(message)}")
@@ -468,7 +468,7 @@ class MiqQueue < ApplicationRecord
       end
       message.update_attributes(:state => STATE_ERROR) rescue nil
     end
-    _log.info("Cleaning up queue messages... Complete")
+    _log.info('Cleaning up queue messages... Complete')
   end
 
   def self.format_full_log_msg(msg)

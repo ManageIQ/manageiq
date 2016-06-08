@@ -22,7 +22,7 @@ module MiqPowerShell
       end
 
       command = '-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned '
-      command += File.join(File.expand_path(File.dirname(__FILE__)), "miq-psd.ps1")
+      command += File.join(File.expand_path(File.dirname(__FILE__)), 'miq-psd.ps1')
       command += " #{uri}"
       ps_log_dir = get_log_dir
       command += " #{ps_log_dir}" unless ps_log_dir.blank?
@@ -57,7 +57,7 @@ module MiqPowerShell
 
     def disconnect
       return if @pid.nil?
-      run_script("quit") rescue nil
+      run_script('quit') rescue nil
       @pid = nil
     end
 
@@ -80,7 +80,7 @@ module MiqPowerShell
     end
 
     def run_script_string(command)
-      uri_command = File.join(@uri, "?cmd=") + MIQEncode.base64Encode(MIQEncode.encode(pre_process_script(command), false).chomp)
+      uri_command = File.join(@uri, '?cmd=') + MIQEncode.base64Encode(MIQEncode.encode(pre_process_script(command), false).chomp)
       # puts "Sending command: [#{uri_command}]"
       meta = {}; data = nil
 
@@ -140,7 +140,7 @@ module MiqPowerShell
         end
       else
         if data.blank?
-          raise "Powershell Daemon returned no data"
+          raise 'Powershell Daemon returned no data'
         else
           $log.info "Powershell_daemon: Processing results data <#{data[0, 255].inspect}>}" if $log
           # If the script errors out we will get the error back instead of a file name so process it as data
@@ -190,7 +190,7 @@ module MiqPowerShell
 
     def isAlive?
       begin
-        run_script("$true")
+        run_script('$true')
       rescue => err
         return false
       end
@@ -201,7 +201,7 @@ module MiqPowerShell
       return nil unless Sys::Platform::OS == :windows
       ps_log_dir = $miqHostCfg ? $miqHostCfg.miqLogs : nil
       unless ps_log_dir.blank?
-        ps_log_dir = File.join(ps_log_dir, "ps_log")
+        ps_log_dir = File.join(ps_log_dir, 'ps_log')
         Dir.mkdir(ps_log_dir, 0755) unless File.directory?(ps_log_dir)
       end
       return nil if ps_log_dir.blank?

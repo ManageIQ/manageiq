@@ -6,7 +6,7 @@ module Openstack
     module Orchestration
       class Data < ::Openstack::Services::BaseData
         def template
-          File.open(File.join(File.dirname(File.expand_path(__FILE__)), 'test_template.yml'), "r").read
+          File.open(File.join(File.dirname(File.expand_path(__FILE__)), 'test_template.yml'), 'r').read
         end
 
         def template_loaded
@@ -21,45 +21,45 @@ module Openstack
 
         def stacks
           [{
-            :stack_name => "stack1",
+            :stack_name => 'stack1',
             :template   => template,
             :parameters => {
-              "key_name"      => "EmsRefreshSpec-KeyPair",
-              "instance_type" => "m1.tiny",
-              "image_id"      => "EmsRefreshSpec-Image",
-              :__network_name => "EmsRefreshSpec-NetworkPrivate",
+              'key_name'      => 'EmsRefreshSpec-KeyPair',
+              'instance_type' => 'm1.tiny',
+              'image_id'      => 'EmsRefreshSpec-Image',
+              :__network_name => 'EmsRefreshSpec-NetworkPrivate',
             }
           }, {
-            :stack_name => "stack2",
+            :stack_name => 'stack2',
             :template   => template,
             :parameters => {
-              "key_name"      => "EmsRefreshSpec-KeyPair",
-              "instance_type" => "m1.tiny",
-              "image_id"      => "EmsRefreshSpec-Image",
-              :__network_name => "EmsRefreshSpec-NetworkPrivate",
+              'key_name'      => 'EmsRefreshSpec-KeyPair',
+              'instance_type' => 'm1.tiny',
+              'image_id'      => 'EmsRefreshSpec-Image',
+              :__network_name => 'EmsRefreshSpec-NetworkPrivate',
             }
           }, {
-            :stack_name => "stack3",
+            :stack_name => 'stack3',
             :template   => template,
             :parameters => {
-              "key_name"      => "EmsRefreshSpec-KeyPair",
-              "instance_type" => "m1.tiny",
-              "image_id"      => "EmsRefreshSpec-Image",
-              :__network_name => "EmsRefreshSpec-NetworkPrivate",
+              'key_name'      => 'EmsRefreshSpec-KeyPair',
+              'instance_type' => 'm1.tiny',
+              'image_id'      => 'EmsRefreshSpec-Image',
+              :__network_name => 'EmsRefreshSpec-NetworkPrivate',
             }
           }]
         end
 
         def template_parameters
-          template_loaded["parameters"]
+          template_loaded['parameters']
         end
 
         def template_resources
-          template_loaded["resources"]
+          template_loaded['resources']
         end
 
         def template_outputs
-          template_loaded["outputs"]
+          template_loaded['outputs']
         end
       end
     end

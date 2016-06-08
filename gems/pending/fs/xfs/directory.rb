@@ -20,7 +20,7 @@ module XFS
     attr_reader :inode_number, :inode_object
 
     def initialize(sb, inode_number = ROOT_DIRECTORY)
-      raise "XFS::Directory: Nil superblock"   if sb.nil?
+      raise 'XFS::Directory: Nil superblock'   if sb.nil?
       @sb           = sb
       @inode_number = inode_number
       @inode_object = sb.get_inode(inode_number)

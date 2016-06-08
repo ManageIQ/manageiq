@@ -1,23 +1,23 @@
 module DiskProbe
-  MODDIR = File.expand_path(File.join(File.dirname(__FILE__), "modules"))
+  MODDIR = File.expand_path(File.join(File.dirname(__FILE__), 'modules'))
 
-  PROBE_FILES = Dir.glob(File.join(MODDIR, "*Probe.rb*"))
+  PROBE_FILES = Dir.glob(File.join(MODDIR, '*Probe.rb*'))
   PROBE_FILES.each do |p|
     p.slice!(0..MODDIR.length)
-    p.chomp!(".enc")
-    p.chomp!(".rb")
+    p.chomp!('.enc')
+    p.chomp!('.rb')
   end
   # Reorder known probes for optimization
   %w(VixDiskProbe VMWareDiskProbe RhevmDiskProbe VhdxDiskProbe).reverse_each do |probe|
     PROBE_FILES.unshift(probe) if PROBE_FILES.delete(probe)
   end
-  PROBE_FILES.push("LocalDevProbe") if PROBE_FILES.delete("LocalDevProbe")
+  PROBE_FILES.push('LocalDevProbe') if PROBE_FILES.delete('LocalDevProbe')
 
   def self.getDiskMod(dobj, probes = nil)
     probes = PROBE_FILES if probes.nil?
     probes = [probes] unless probes.kind_of?(Array)
 
-    fname = dobj.fileName rescue ""
+    fname = dobj.fileName rescue ''
 
     mod = nil
     probes.each do |pmod|
@@ -41,7 +41,7 @@ module DiskProbe
     probes ||= PROBE_FILES
     probes = [probes] unless probes.kind_of?(Array)
 
-    fname = disk.dInfo.fileName rescue ""
+    fname = disk.dInfo.fileName rescue ''
 
     mod = nil
     probes.each do |pmodstr|

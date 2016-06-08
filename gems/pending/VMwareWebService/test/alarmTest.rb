@@ -14,11 +14,11 @@ $vim_log = Log4r::Logger.new 'toplog'
 Log4r::StderrOutputter.new('err_console', :level => Log4r::INFO, :formatter => ConsoleFormatter)
 $vim_log.add 'err_console'
 
-TARGET_VM = raise "please define"
+TARGET_VM = raise 'please define'
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
 
 begin
-  miqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
   aMor = miqVm.addMiqAlarm
   puts "aMor = #{aMor} <#{aMor.vimType}>"
   miqVm.removeMiqAlarm

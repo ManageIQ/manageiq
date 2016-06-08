@@ -21,7 +21,7 @@ class DialogSerializer < Serializer
     dialogs.map do |dialog|
       serialized_dialog_tabs = serialize_dialog_tabs(dialog.dialog_tabs)
 
-      included_attributes(dialog.attributes).merge("dialog_tabs" => serialized_dialog_tabs)
+      included_attributes(dialog.attributes).merge('dialog_tabs' => serialized_dialog_tabs)
     end
   end
 end

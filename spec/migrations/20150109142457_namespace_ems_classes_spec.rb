@@ -7,22 +7,22 @@ describe NamespaceEmsClasses do
   let(:ems_stub) { migration_stub(:ExtManagementSystem) }
 
   migration_context :up do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "EmsInfra")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'EmsInfra')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "ManageIQ::Providers::InfraManager")
+      expect(ems.reload).to have_attributes(:type => 'ManageIQ::Providers::InfraManager')
     end
   end
 
   migration_context :down do
-    it "migrates a representative row" do
-      ems = ems_stub.create!(:type => "ManageIQ::Providers::InfraManager")
+    it 'migrates a representative row' do
+      ems = ems_stub.create!(:type => 'ManageIQ::Providers::InfraManager')
 
       migrate
 
-      expect(ems.reload).to have_attributes(:type => "EmsInfra")
+      expect(ems.reload).to have_attributes(:type => 'EmsInfra')
     end
   end
 end

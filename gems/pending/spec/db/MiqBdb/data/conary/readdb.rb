@@ -18,37 +18,37 @@ def BinToInt(str)
   num = 0
   hnum[0].each_byte do |digit|
     value = case digit.chr
-            when "0"
+            when '0'
               0
-            when "1"
+            when '1'
               1
-            when "2"
+            when '2'
               2
-            when "3"
+            when '3'
               3
-            when "4"
+            when '4'
               4
-            when "5"
+            when '5'
               5
-            when "6"
+            when '6'
               6
-            when "7"
+            when '7'
               7
-            when "8"
+            when '8'
               8
-            when "9"
+            when '9'
               9
-            when "a"
+            when 'a'
               10
-            when "b"
+            when 'b'
               11
-            when "c"
+            when 'c'
               12
-            when "d"
+            when 'd'
               13
-            when "e"
+            when 'e'
               14
-            when "f"
+            when 'f'
               15
             end
     num = (num * 16) + value
@@ -62,40 +62,40 @@ def VarToInt(buffer, ptr)
   varvalue = 0
   cont = 1
   cnt = 0
-  puts "ptr: " + ptr.to_s
+  puts 'ptr: ' + ptr.to_s
   while cont > 0
 
     var = buffer[ptr + cnt]
-    puts "var: " + var.to_s
+    puts 'var: ' + var.to_s
     if var[7] == 1
-      puts "Bit 8 set"
+      puts 'Bit 8 set'
       var &= 127
       cnt += 1
     else
-      puts "Bit 8 not set"
+      puts 'Bit 8 not set'
       cont = 0
     end
     varvalue = varvalue << 7
     varvalue |= var
-    puts "varvalue: " + varvalue.to_s
-    if cnt > 8 then puts "variable greater than 9 bytes" end
+    puts 'varvalue: ' + varvalue.to_s
+    if cnt > 8 then puts 'variable greater than 9 bytes' end
   end
   # adjust byte count
   cnt += 1
-  puts "varcnt: " + cnt.to_s
+  puts 'varcnt: ' + cnt.to_s
   return varvalue, cnt
 end
 
 if ARGV.length == 0
-  puts "No database name given"
+  puts 'No database name given'
   exit
 end
 
 begin
   fn = ARGV[0]
-  fh = File.open(fn, "rb")
+  fh = File.open(fn, 'rb')
 rescue
-  puts fn + " cannot be opened"
+  puts fn + ' cannot be opened'
   exit
 end
 
@@ -134,11 +134,11 @@ leftchildsz = 4
 
 begin
   page = fh.read(pagesize)
-  puts "File Header Data"
-  puts "File header string: " + page[0..hdrstrsz - 1]
+  puts 'File Header Data'
+  puts 'File header string: ' + page[0..hdrstrsz - 1]
   spgsz = page[hdrstrsz, 2]
   hpgsz =  BinToInt(spgsz)
-  puts "Page size: " + hpgsz.to_s
+  puts 'Page size: ' + hpgsz.to_s
   # check page size
   if hpgsz != pagesize
     # page size is different from default - reread first page
@@ -147,8 +147,8 @@ begin
     fhdr = fh.read(pagesize)
   end
 rescue => err
-  puts "Page 1 read failed for database: " + fn
-  puts "error: " + err
+  puts 'Page 1 read failed for database: ' + fn
+  puts 'error: ' + err
   exit
 end
 
@@ -159,58 +159,58 @@ phdrptr = filehdrsz
 testcnt = 10
 offset = 0
 testcnt.times do |testctr|
-  puts "Block: " + testctr.to_s
+  puts 'Block: ' + testctr.to_s
   printf "Offset: 0x%08x\n", offset.to_s
   # file header only in Block 0
   if testctr > 0 then phdrptr = 0 end
   flags = page[phdrptr]
-  puts "Flags: " + flags.to_s
+  puts 'Flags: ' + flags.to_s
 
   if flags[intkey] == 1
-    puts "intkey is set"
+    puts 'intkey is set'
     intkeyfg = 1
   else
     intkeyfg = 0
   end
 
   if flags[zerodata] == 1
-    puts "zerodata is set"
+    puts 'zerodata is set'
     zerodatafg = 1
   else
     zerodatafg = 0
   end
 
   if flags[leafdata] == 1
-    puts "leafdata is set"
+    puts 'leafdata is set'
     leafdatafg = 1
   else
     leafdatafg = 0
   end
 
   if flags[leaf] == 1
-    puts "leaf is set"
+    puts 'leaf is set'
     leaffg = 1
   else
     leaffg = 0
   end
 
   cellcnt = BinToInt(page[phdrptr + nbrcellsoffset, nbrcellssz])
-  puts "Cell count: " + cellcnt.to_s
+  puts 'Cell count: ' + cellcnt.to_s
 
   celloffset = BinToInt(page[phdrptr + firstcelloffset, firstcellsz])
-  puts "First cell offset: " + celloffset.to_s
+  puts 'First cell offset: ' + celloffset.to_s
   printf "Offset: 0x%04x\n", celloffset.to_s
 
   # Page header is 12 bytes when leaf is not set
 
   if leaffg == 0
     rightchild = BinToInt(page[phdrptr + rightchildoffset, rightchildsz])
-    puts "Right Child: " + rightchild.to_s
+    puts 'Right Child: ' + rightchild.to_s
     firstdataptr = pghdrsz
   else
     firstdataptr = pghdrsz - rightchildsz
   end
-  puts "First data offset: " + firstdataptr.to_s
+  puts 'First data offset: ' + firstdataptr.to_s
 
   # Get the cell pointers
 
@@ -220,7 +220,7 @@ testcnt.times do |testctr|
     cellp = page[(phdrptr + firstdataptr + (cellptrsz * i)), cellptrsz]
     puts cellp.unpack('H*')
     cellptr[i] = BinToInt(cellp)
-    puts "Cell pointer: " + cellptr[i].to_s
+    puts 'Cell pointer: ' + cellptr[i].to_s
   end
 
   # look at each cell
@@ -228,7 +228,7 @@ testcnt.times do |testctr|
   cellptr.each do |ptr|
     if leaffg == 0
       leftchild = BinToInt(page[ptr, leftchildsz])
-      puts "Left Child: " + leftchild.to_s
+      puts 'Left Child: ' + leftchild.to_s
       datainfo = VarToInt(page, (ptr + leftchildsz))
       dataoffset = ptr + leftchildsz
     else
@@ -236,15 +236,15 @@ testcnt.times do |testctr|
       dataoffset = ptr
     end
     databytecnt = datainfo[0]
-    puts "databytecnt: " + databytecnt.to_s
-    puts "datainfo 1 : " + datainfo[1].to_s
+    puts 'databytecnt: ' + databytecnt.to_s
+    puts 'datainfo 1 : ' + datainfo[1].to_s
     dataoffset += datainfo[1]
 
     if intkeyfg > 0
       printf "Key: 0x%02x\n", databytecnt.to_s
     else
       printf "Data size: 0x%02x\n", databytecnt.to_s
-      puts "data: " + page[dataoffset, databytecnt]
+      puts 'data: ' + page[dataoffset, databytecnt]
     end
   end
   page = fh.read(pagesize)

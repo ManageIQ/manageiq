@@ -103,7 +103,7 @@ module MiqVimUpdate
 
     begin
       @umPropCol     = @sic.propertyCollector
-      @filterSpecRef = createFilter(@umPropCol, @updateSpec, "true")
+      @filterSpecRef = createFilter(@umPropCol, @updateSpec, 'true')
 
       version = monitorUpdatesInitial(preLoad)
       @updateMonitorReady = true
@@ -148,7 +148,7 @@ module MiqVimUpdate
         $vim_log.info "#{log_prefix}: calling cancelWaitForUpdates...Complete"
       end
       @umPropCol = nil
-      @updateThread.run if @updateThread.status == "sleep"
+      @updateThread.run if @updateThread.status == 'sleep'
     end
     $vim_log.info "#{log_prefix}: for address=<#{@server}>, username=<#{@username}>...Complete"
   end
@@ -161,7 +161,7 @@ module MiqVimUpdate
   def updateObject(objUpdate, initialUpdate = false)
     unless @inventoryHash # no cache to update
       return unless initialUpdate
-      $vim_log.info "MiqVimUpdate.updateObject: setting @inventoryHash to empty hash"
+      $vim_log.info 'MiqVimUpdate.updateObject: setting @inventoryHash to empty hash'
       @inventoryHash = {}
     end
 

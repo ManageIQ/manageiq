@@ -17,7 +17,7 @@ $log.add 'err_console'
 
 # $miq_wiredump = true
 
-TARGET_HOST = raise "please define"
+TARGET_HOST = raise 'please define'
 hMor = nil
 
 vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -47,9 +47,9 @@ begin
     vim.dumpObj(miqHost.configManager)
     exit
 
-    puts "**** hostConfigSpec:"
+    puts '**** hostConfigSpec:'
     vim.dumpObj(miqHost.hostConfigSpec)
-    puts "****************************************************************"
+    puts '****************************************************************'
     puts
   
 rescue => err

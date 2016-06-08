@@ -54,26 +54,26 @@ class MockImageInspectorClient
 end
 
 describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
-  context "SmartState Analysis Methods" do
+  context 'SmartState Analysis Methods' do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_kubernetes, :hostname => 'hostname')
     end
 
-    it "#initialize" do
+    it '#initialize' do
       image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
       job = @ems.scan_job_create(image.class.name, image.id)
       expect(job).to have_attributes(
-        :dispatch_status => "pending",
-        :state           => "waiting_to_start",
-        :status          => "ok",
-        :message         => "process initiated",
-        :target_class    => "ContainerImage"
+        :dispatch_status => 'pending',
+        :state           => 'waiting_to_start',
+        :status          => 'ok',
+        :message         => 'process initiated',
+        :target_class    => 'ContainerImage'
       )
     end
   end
 
-  context "A single Container Scan Job," do
+  context 'A single Container Scan Job,' do
     IMAGE_ID = '3629a651e6c11d7435937bdf41da11cf87863c03f2587fa788cf5cbfe8a11b9a'.freeze
     IMAGE_NAME = 'test'.freeze
     before(:each) do
@@ -84,8 +84,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         :image_inspector_client => MockImageInspectorClient.new(IMAGE_ID))
 
       @ems = FactoryGirl.create(
-        :ems_kubernetes, :hostname => "test.com", :zone => @server.zone, :port => 8443,
-        :authentications => [AuthToken.new(:name => "test", :type => 'AuthToken', :auth_key => "a secret")]
+        :ems_kubernetes, :hostname => 'test.com', :zone => @server.zone, :port => 8443,
+        :authentications => [AuthToken.new(:name => 'test', :type => 'AuthToken', :auth_key => 'a secret')]
       )
 
       @image = FactoryGirl.create(
@@ -107,13 +107,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       end
     end
 
-    context "completes successfully" do
+    context 'completes successfully' do
       before(:each) do
         if OpenscapResult.openscap_available?
           allow_any_instance_of(MockImageInspectorClient).to receive(:fetch_oscap_arf) do
             File.read(
-              File.expand_path(File.join(File.dirname(__FILE__), "ssg-fedora-ds-arf.xml"))
-            ).encode("UTF-8")
+              File.expand_path(File.join(File.dirname(__FILE__), 'ssg-fedora-ds-arf.xml'))
+            ).encode('UTF-8')
           end
         else
           allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data)
@@ -134,8 +134,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         skip unless OpenscapResult.openscap_available?
         allow_any_instance_of(MockImageInspectorClient).to receive(:fetch_oscap_arf) do
           File.read(
-            File.expand_path(File.join(File.dirname(__FILE__), "ssg-fedora-ds-arf.xml"))
-          ).encode("UTF-8")
+            File.expand_path(File.join(File.dirname(__FILE__), 'ssg-fedora-ds-arf.xml'))
+          ).encode('UTF-8')
         end
 
         expect(@image.openscap_result).to be
@@ -150,15 +150,15 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
       secret_name = kc.get_service_account[:imagePullSecrets][0][:name]
       pod = @job.send(:pod_definition)
       expect(pod[:spec][:containers][0][:command]).to include(
-        "--dockercfg=" + described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name + "/.dockercfg")
+        '--dockercfg=' + described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name + '/.dockercfg')
       expect(pod[:spec][:containers][0][:volumeMounts]).to include(
         Kubeclient::Pod.new(
-          :name      => "inspector-admin-secret",
+          :name      => 'inspector-admin-secret',
           :mountPath => described_class::INSPECTOR_ADMIN_SECRET_PATH + secret_name,
           :readOnly  => true))
       expect(pod[:spec][:volumes]).to include(
         Kubeclient::Pod.new(
-          :name   => "inspector-admin-secret",
+          :name   => 'inspector-admin-secret',
           :secret => {:secretName => secret_name}))
     end
 
@@ -171,7 +171,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         @job.signal(:start)
         expect(@job.state).to eq 'finished'
         expect(@job.status).to eq 'error'
-        expect(@job.message).to eq "no image found"
+        expect(@job.message).to eq 'no image found'
       end
     end
 
@@ -204,7 +204,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         @job.signal(:start)
         expect(@job.state).to eq 'finished'
         expect(@job.status).to eq 'error'
-        expect(@job.message).to eq "cannot analyze non docker images"
+        expect(@job.message).to eq 'cannot analyze non docker images'
       end
     end
 

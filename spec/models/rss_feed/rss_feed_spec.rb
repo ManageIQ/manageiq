@@ -1,17 +1,17 @@
 describe RssFeed do
-  Y_DIR = File.expand_path(File.join(File.dirname(__FILE__), "data"))
+  Y_DIR = File.expand_path(File.join(File.dirname(__FILE__), 'data'))
 
   before(:each) { Kernel.silence_warnings { RssFeed.const_set(:YML_DIR, Y_DIR) } }
 
-  context "with 2 hosts" do
+  context 'with 2 hosts' do
     before(:each) do
       @host1 = FactoryGirl.create(:host,           :created_on => Time.utc(2013, 1, 1, 0, 0, 0))
       @host2 = FactoryGirl.create(:host_microsoft, :created_on => @host1.created_on + 1.second)
     end
 
-    it "#generate 2 hosts in newest_hosts rss" do
-      RssFeed.sync_from_yml_file("newest_hosts")
-      feed_container = RssFeed.where(:name => "newest_hosts").first.generate
+    it '#generate 2 hosts in newest_hosts rss' do
+      RssFeed.sync_from_yml_file('newest_hosts')
+      feed_container = RssFeed.where(:name => 'newest_hosts').first.generate
       expect(feed_container[:text]).to eq <<-EOXML
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <rss version=\"2.0\">
@@ -42,24 +42,24 @@ EOXML
     end
   end
 
-  context ".sync_from_yml_dir" do
+  context '.sync_from_yml_dir' do
     before(:each) do
       RssFeed.seed
     end
 
-    it "loads the files from the yaml directory" do
-      expect(RssFeed.count).to eq(Dir.glob(File.join(Y_DIR, "*.yml")).count)
+    it 'loads the files from the yaml directory' do
+      expect(RssFeed.count).to eq(Dir.glob(File.join(Y_DIR, '*.yml')).count)
     end
 
-    it "when new yaml file is added" do
-      all_files = Dir.glob(File.join(Y_DIR, "*.yml")) + [File.join(Y_DIR, "test.yml")]
+    it 'when new yaml file is added' do
+      all_files = Dir.glob(File.join(Y_DIR, '*.yml')) + [File.join(Y_DIR, 'test.yml')]
       allow(Dir).to receive(:glob).and_return(all_files)
 
       expect(described_class).to receive(:sync_from_yml_file).exactly(all_files.length).times
       described_class.sync_from_yml_dir
     end
 
-    it "when a yaml file is deleted" do
+    it 'when a yaml file is deleted' do
       expect(RssFeed.count).to be > 0
 
       allow(File).to receive(:exist?).and_return(false)
@@ -68,17 +68,17 @@ EOXML
     end
   end
 
-  include_examples(".seed called multiple times", 2)
+  include_examples('.seed called multiple times', 2)
 
-  context ".sync_from_yml_file" do
-    before(:each) { @name = "newest_hosts" }
+  context '.sync_from_yml_file' do
+    before(:each) { @name = 'newest_hosts' }
 
-    it "when the model does not exist" do
+    it 'when the model does not exist' do
       described_class.sync_from_yml_file(@name)
       expect(RssFeed.count).to eq(1)
     end
 
-    it "when the yaml file is updated" do
+    it 'when the yaml file is updated' do
       RssFeed.seed
       original_time = RssFeed.find_by(:name => @name).yml_file_mtime
       old_count = RssFeed.count
@@ -97,8 +97,8 @@ EOXML
       expect(RssFeed.count).to eq(old_count)
 
       feed = RssFeed.find_by_name(@name)
-      expect(feed.title).to eq("new_title")
-      expect(feed.description).to eq("new_description")
+      expect(feed.title).to eq('new_title')
+      expect(feed.description).to eq('new_description')
     end
   end
 end

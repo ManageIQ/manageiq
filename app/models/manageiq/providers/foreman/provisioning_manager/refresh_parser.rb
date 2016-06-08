@@ -42,49 +42,49 @@ module ManageIQ::Providers
       end
 
       def media_inv_to_hashes(media)
-        basic_hash(media, "CustomizationScriptMedium")
+        basic_hash(media, 'CustomizationScriptMedium')
       end
 
       def ptables_inv_to_hashes(ptables)
-        basic_hash(ptables, "CustomizationScriptPtable")
+        basic_hash(ptables, 'CustomizationScriptPtable')
       end
 
       def location_inv_to_hashes(locations)
-        backfill_parent_ref(basic_hash(locations || tax_refs, "ConfigurationLocation", "title"))
+        backfill_parent_ref(basic_hash(locations || tax_refs, 'ConfigurationLocation', 'title'))
       end
 
       def organization_inv_to_hashes(organizations)
-        backfill_parent_ref(basic_hash(organizations || tax_refs, "ConfigurationOrganization", "title"))
+        backfill_parent_ref(basic_hash(organizations || tax_refs, 'ConfigurationOrganization', 'title'))
       end
 
       def architectures_inv_to_hashes(architectures)
-        basic_hash(architectures, "ConfigurationArchitecture")
+        basic_hash(architectures, 'ConfigurationArchitecture')
       end
 
       def compute_profiles_inv_to_hashes(compute_profiles)
-        basic_hash(compute_profiles, "ConfigurationComputeProfile")
+        basic_hash(compute_profiles, 'ConfigurationComputeProfile')
       end
 
       def domains_inv_to_hashes(domains)
-        basic_hash(domains, "ConfigurationDomain")
+        basic_hash(domains, 'ConfigurationDomain')
       end
 
       def environments_inv_to_hashes(environments)
-        basic_hash(environments, "ConfigurationEnvironment")
+        basic_hash(environments, 'ConfigurationEnvironment')
       end
 
       def realms_inv_to_hashes(realms)
-        basic_hash(realms, "ConfigurationRealm")
+        basic_hash(realms, 'ConfigurationRealm')
       end
 
       def operating_system_flavors_inv_to_hashes(flavors_inv, indexes)
         flavors_inv.collect do |os|
           {
-            :manager_ref           => os["id"].to_s,
-            :name                  => os["fullname"],
-            :description           => os["description"],
-            :customization_scripts => ids_lookup(indexes[:media], os["media"]) +
-              ids_lookup(indexes[:ptables], os["ptables"])
+            :manager_ref           => os['id'].to_s,
+            :name                  => os['fullname'],
+            :description           => os['description'],
+            :customization_scripts => ids_lookup(indexes[:media], os['media']) +
+              ids_lookup(indexes[:ptables], os['ptables'])
           }
         end
       end
@@ -100,23 +100,23 @@ module ManageIQ::Providers
         ids[key.to_s]
       end
 
-      def ids_lookup(ids, records, id_key = "id")
+      def ids_lookup(ids, records, id_key = 'id')
         (records || []).collect { |record| id_lookup(ids, record[id_key]) }.compact
       end
 
       # default taxonomy reference (locations and organizations)
       def tax_refs
-        [{"id" => 0, "name" => "Default", "title" => "Default"}]
+        [{'id' => 0, 'name' => 'Default', 'title' => 'Default'}]
       end
 
       def basic_hash(collection, type, extra_field = nil)
         collection.collect do |m|
           {
-            :manager_ref => m["id"].to_s,
+            :manager_ref => m['id'].to_s,
             :type        => type,
-            :name        => m["name"],
+            :name        => m['name'],
           }.tap do |h|
-            h[:parent_ref] = (m["ancestry"] || "").split("/").last.presence if m.key?("ancestry")
+            h[:parent_ref] = (m['ancestry'] || '').split('/').last.presence if m.key?('ancestry')
             h[extra_field.to_sym] = m[extra_field] if extra_field
           end
         end
@@ -130,7 +130,7 @@ module ManageIQ::Providers
 
       # title = parent_title/name. we do this in reverse
       def derive_parent_ref(rec, collection)
-        parent_title = (rec[:title] || "").sub(/\/?#{rec[:name]}/, "").presence
+        parent_title = (rec[:title] || '').sub(/\/?#{rec[:name]}/, '').presence
         collection.detect { |c| c[:title].to_s == parent_title }.try(:[], :manager_ref) if parent_title
       end
     end

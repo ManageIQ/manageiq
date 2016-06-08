@@ -7,9 +7,9 @@ module ReiserFSProbe
   REISERFS_MAGIC_OFFSET = 52
   REISERFS_MAGIC_SIZE   = 10
 
-  REISERFS_MAGIC1 = "ReIsErFs"
-  REISERFS_MAGIC2 = "ReIsEr2Fs"
-  REISERFS_MAGIC3 = "ReIsEr3Fs"
+  REISERFS_MAGIC1 = 'ReIsErFs'
+  REISERFS_MAGIC2 = 'ReIsEr2Fs'
+  REISERFS_MAGIC3 = 'ReIsEr3Fs'
 
   def self.probe(dobj)
     return false unless dobj.kind_of?(MiqDisk)

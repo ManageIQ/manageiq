@@ -16,7 +16,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
   let(:raw_stacks) do
     double.tap do |stacks|
       fog_template = double
-      allow(fog_template).to receive(:body).and_return("test_template")
+      allow(fog_template).to receive(:body).and_return('test_template')
       allow(handle).to receive(:stacks).and_return(stacks)
       allow(handle).to receive(:get_stack_template).and_return(fog_template)
       allow(ems).to receive(:connect).and_return(handle)
@@ -29,11 +29,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
   end
 
   describe 'stack operations' do
-    context ".create_stack" do
+    context '.create_stack' do
       # TBD we don't allow it now
     end
 
-    context "#update_stack" do
+    context '#update_stack' do
       it 'updates the stack' do
         expect(handle).to receive(:patch_stack)
         orchestration_stack.update_stack(nil, {})
@@ -45,7 +45,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
       end
     end
 
-    context "#delete_stack" do
+    context '#delete_stack' do
       it 'updates the stack' do
         expect(the_raw_stack).to receive(:delete)
         orchestration_stack.delete_stack
@@ -80,7 +80,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        allow(raw_stacks).to receive(:get).with(orchestration_stack.name, orchestration_stack.ems_ref).and_raise("bad request")
+        allow(raw_stacks).to receive(:get).with(orchestration_stack.name, orchestration_stack.ems_ref).and_raise('bad request')
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStatusError)
 
         expect { orchestration_stack.raw_exists? }.to raise_error(MiqException::MiqOrchestrationStatusError)

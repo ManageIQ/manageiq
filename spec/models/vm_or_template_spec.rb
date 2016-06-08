@@ -5,15 +5,15 @@ describe VmOrTemplate do
   let(:ems)     { FactoryGirl.create(:ext_management_system) }
   let(:storage) { FactoryGirl.create(:storage) }
 
-  context ".event_by_property" do
-    context "should add an EMS event" do
+  context '.event_by_property' do
+    context 'should add an EMS event' do
       before(:each) do
         Timecop.freeze(Time.now)
 
-        @host            = FactoryGirl.create(:host,      :name  => "host")
-        @vm              = FactoryGirl.create(:vm_vmware, :host  => @host, :name => "vm", :uid_ems => "1", :ems_id => 101)
+        @host            = FactoryGirl.create(:host,      :name  => 'host')
+        @vm              = FactoryGirl.create(:vm_vmware, :host  => @host, :name => 'vm', :uid_ems => '1', :ems_id => 101)
 
-        @event_type      = "foo"
+        @event_type      = 'foo'
         @event_timestamp = Time.now.utc
       end
 
@@ -21,36 +21,36 @@ describe VmOrTemplate do
         Timecop.return
       end
 
-      it "by IP Address" do
-        ipaddress       = "192.268.20.1"
+      it 'by IP Address' do
+        ipaddress       = '192.268.20.1'
         hardware        = FactoryGirl.create(:hardware,  :vm_or_template_id => @vm.id,       :host     => @host)
         network         = FactoryGirl.create(:network,   :hardware_id       => hardware.id, :ipaddress => ipaddress)
-        event_msg       = "Add EMS Event by IP address"
+        event_msg       = 'Add EMS Event by IP address'
 
         expect_any_instance_of(VmOrTemplate).to receive(:add_ems_event).with(@event_type, event_msg, @event_timestamp)
-        VmOrTemplate.event_by_property("ipaddress", ipaddress, @event_type, event_msg)
+        VmOrTemplate.event_by_property('ipaddress', ipaddress, @event_type, event_msg)
       end
 
-      it "by UID EMS" do
-        event_msg = "Add EMS Event by UID EMS"
+      it 'by UID EMS' do
+        event_msg = 'Add EMS Event by UID EMS'
 
         expect_any_instance_of(VmOrTemplate).to receive(:add_ems_event).with(@event_type, event_msg, @event_timestamp)
-        VmOrTemplate.event_by_property("uid_ems", "1", @event_type, event_msg)
+        VmOrTemplate.event_by_property('uid_ems', '1', @event_type, event_msg)
       end
     end
 
-    it "should raise an error" do
-      err = "Unsupported property type [foo]"
+    it 'should raise an error' do
+      err = 'Unsupported property type [foo]'
       expect { VmOrTemplate.event_by_property('foo', '', '', '') }.to raise_error(err)
     end
   end
 
-  context "#add_ems_event" do
+  context '#add_ems_event' do
     before(:each) do
-      @host            = FactoryGirl.create(:host, :name => "host 1")
-      @vm              = FactoryGirl.create(:vm_vmware, :name => "vm 1", :location => "/local/path", :host => @host, :uid_ems => "1", :ems_id => 101)
-      @event_type      = "foo"
-      @source          = "EVM"
+      @host            = FactoryGirl.create(:host, :name => 'host 1')
+      @vm              = FactoryGirl.create(:vm_vmware, :name => 'vm 1', :location => '/local/path', :host => @host, :uid_ems => '1', :ems_id => 101)
+      @event_type      = 'foo'
+      @source          = 'EVM'
       @event_timestamp = Time.now.utc.iso8601
       @event_hash = {
         :event_type => @event_type,
@@ -60,15 +60,15 @@ describe VmOrTemplate do
       }
     end
 
-    context "should add an EMS Event" do
+    context 'should add an EMS Event' do
       before(:each) do
-        @ipaddress       = "192.268.20.1"
+        @ipaddress       = '192.268.20.1'
         @hardware        = FactoryGirl.create(:hardware, :vm_or_template_id => @vm.id)
         @network         = FactoryGirl.create(:network,  :hardware_id       => @hardware.id, :ipaddress => @ipaddress)
       end
 
-      it "with host and ems id" do
-        event_msg = "by IP address"
+      it 'with host and ems id' do
+        event_msg = 'by IP address'
         @event_hash[:message]           = event_msg
         @event_hash[:vm_or_template_id] = @vm.id
         @event_hash[:vm_name]           = @vm.name
@@ -81,13 +81,13 @@ describe VmOrTemplate do
         @vm.add_ems_event(@event_type, event_msg, @event_timestamp)
       end
 
-      it "with no host" do
-        vm_no_host       = FactoryGirl.create(:vm_vmware, :name => "vm 2", :location => "/local/path", :uid_ems => "2", :ems_id => 102)
-        ipaddress        = "192.268.20.2"
+      it 'with no host' do
+        vm_no_host       = FactoryGirl.create(:vm_vmware, :name => 'vm 2', :location => '/local/path', :uid_ems => '2', :ems_id => 102)
+        ipaddress        = '192.268.20.2'
         hardware_no_host = FactoryGirl.create(:hardware, :vm_or_template_id => vm_no_host.id)
         network_no_host  = FactoryGirl.create(:network,  :hardware_id       => hardware_no_host.id, :ipaddress => ipaddress)
 
-        event_msg = "Add EMS Event by IP address with no host"
+        event_msg = 'Add EMS Event by IP address with no host'
         @event_hash[:message]           = event_msg
         @event_hash[:vm_or_template_id] = vm_no_host.id
         @event_hash[:vm_name]           = vm_no_host.name
@@ -98,13 +98,13 @@ describe VmOrTemplate do
         vm_no_host.add_ems_event(@event_type, event_msg, @event_timestamp)
       end
 
-      it "with no ems id" do
-        vm_no_ems       = FactoryGirl.create(:vm_vmware, :name => "vm 3", :location => "/local/path", :host => @host)
-        ipaddress       = "192.268.20.3"
+      it 'with no ems id' do
+        vm_no_ems       = FactoryGirl.create(:vm_vmware, :name => 'vm 3', :location => '/local/path', :host => @host)
+        ipaddress       = '192.268.20.3'
         hardware_no_ems = FactoryGirl.create(:hardware, :vm_or_template_id => vm_no_ems.id)
         network_no_ems  = FactoryGirl.create(:network,  :hardware_id       => hardware_no_ems.id, :ipaddress => ipaddress)
 
-        event_msg = "Add EMS Event by IP address with no ems id"
+        event_msg = 'Add EMS Event by IP address with no ems id'
         @event_hash[:message]           = event_msg
         @event_hash[:vm_or_template_id] = vm_no_ems.id
         @event_hash[:vm_name]           = vm_no_ems.name
@@ -116,13 +116,13 @@ describe VmOrTemplate do
         vm_no_ems.add_ems_event(@event_type, event_msg, @event_timestamp)
       end
 
-      it "with no host and no ems id" do
-        vm_no_host_no_ems       = FactoryGirl.create(:vm_vmware, :name => "vm 4", :location => "/local/path")
-        ipaddress               = "192.268.20.4"
+      it 'with no host and no ems id' do
+        vm_no_host_no_ems       = FactoryGirl.create(:vm_vmware, :name => 'vm 4', :location => '/local/path')
+        ipaddress               = '192.268.20.4'
         hardware_no_host_no_ems = FactoryGirl.create(:hardware, :vm_or_template_id => vm_no_host_no_ems.id)
         network_no_host_no_ems  = FactoryGirl.create(:network,  :hardware_id       => hardware_no_host_no_ems.id, :ipaddress => ipaddress)
 
-        event_msg = "Add EMS Event by IP address with no host and no ems id"
+        event_msg = 'Add EMS Event by IP address with no host and no ems id'
         @event_hash[:message]           = event_msg
         @event_hash[:vm_or_template_id] = vm_no_host_no_ems.id
         @event_hash[:vm_name]           = vm_no_host_no_ems.name
@@ -134,37 +134,37 @@ describe VmOrTemplate do
     end
   end
 
-  context "#reconfigured_hardware_value?" do
+  context '#reconfigured_hardware_value?' do
     before do
       @vm       =  FactoryGirl.create(:vm_vmware)
       FactoryGirl.create(:hardware, :vm_or_template_id => @vm.id, :memory_mb => 1024)
       @options = {:hdw_attr => :memory_mb}
     end
 
-    it "with no drift states" do
+    it 'with no drift states' do
       expect(@vm.reconfigured_hardware_value?(@options)).to be_falsey
     end
 
-    context "with a drift state" do
+    context 'with a drift state' do
       before { @vm.save_drift_state }
 
-      context "with increased operator" do
-        before { @options[:operator] = "increased" }
+      context 'with increased operator' do
+        before { @options[:operator] = 'increased' }
 
-        it "with the same memory value" do
+        it 'with the same memory value' do
           @vm.save_drift_state
 
           expect(@vm.reconfigured_hardware_value?(@options)).to be_falsey
         end
 
-        it "with a lower memory value" do
+        it 'with a lower memory value' do
           @vm.hardware.memory_mb = 512
           @vm.save_drift_state
 
           expect(@vm.reconfigured_hardware_value?(@options)).to be_falsey
         end
 
-        it "with a higher memory value" do
+        it 'with a higher memory value' do
           @vm.hardware.memory_mb = 2048
           @vm.save_drift_state
 
@@ -172,23 +172,23 @@ describe VmOrTemplate do
         end
       end
 
-      context "with decreased operator" do
-        before { @options[:operator] = "decreased" }
+      context 'with decreased operator' do
+        before { @options[:operator] = 'decreased' }
 
-        it "with the same memory value" do
+        it 'with the same memory value' do
           @vm.save_drift_state
 
           expect(@vm.reconfigured_hardware_value?(@options)).to be_falsey
         end
 
-        it "with a lower memory value" do
+        it 'with a lower memory value' do
           @vm.hardware.memory_mb = 512
           @vm.save_drift_state
 
           expect(@vm.reconfigured_hardware_value?(@options)).to be_truthy
         end
 
-        it "with a higher memory value" do
+        it 'with a higher memory value' do
           @vm.hardware.memory_mb = 2048
           @vm.save_drift_state
 
@@ -198,8 +198,8 @@ describe VmOrTemplate do
     end
   end
 
-  context "#miq_server_proxies" do
-    context "SmartProxy Affinity" do
+  context '#miq_server_proxies' do
+    context 'SmartProxy Affinity' do
       before do
         @storage1 = FactoryGirl.create(:storage)
         @storage2 = FactoryGirl.create(:storage)
@@ -226,38 +226,38 @@ describe VmOrTemplate do
         @svr3_vm = FactoryGirl.create(:vm_vmware, :host => @host3, :name => 'svr3_vm', :miq_server => @svr3)
       end
 
-      it "should select SmartProxies with matching VM host affinity" do
+      it 'should select SmartProxies with matching VM host affinity' do
         @svr1.vm_scan_host_affinity = [@host1]
         @svr2.vm_scan_host_affinity = [@host2]
         expect(@vm.miq_server_proxies).to eq([@svr1])
       end
 
-      it "should select SmartProxies without host affinity when the VM host has no affinity" do
+      it 'should select SmartProxies without host affinity when the VM host has no affinity' do
         @svr1.vm_scan_host_affinity = [@host2]
         @svr2.vm_scan_host_affinity = [@host2]
         expect(@vm.miq_server_proxies).to eq([@svr3])
       end
 
-      it "should select SmartProxies with matching VM storage affinity" do
+      it 'should select SmartProxies with matching VM storage affinity' do
         @svr1.vm_scan_storage_affinity = [@storage1, @storage2]
         @svr2.vm_scan_storage_affinity = [@storage2]
         expect(@vm.miq_server_proxies).to eq([@svr1])
       end
 
-      it "should select SmartProxies without storage affinity when the VM storage has no affinity" do
+      it 'should select SmartProxies without storage affinity when the VM storage has no affinity' do
         @svr1.vm_scan_storage_affinity = [@storage3]
         @svr2.vm_scan_storage_affinity = [@storage3]
         expect(@vm.miq_server_proxies).to eq([@svr3])
       end
 
-      it "should not select SmartProxies without matching VM storage affinity for all disks" do
+      it 'should not select SmartProxies without matching VM storage affinity for all disks' do
         @svr1.vm_scan_storage_affinity = [@storage1]
         @svr2.vm_scan_storage_affinity = [@storage2]
         expect(@vm.miq_server_proxies).to eq([])
       end
     end
 
-    context "RHEV" do
+    context 'RHEV' do
       before do
         @storage1 = FactoryGirl.create(:storage)
         @storage2 = FactoryGirl.create(:storage)
@@ -279,13 +279,13 @@ describe VmOrTemplate do
         @svr1_vm = FactoryGirl.create(:vm_redhat, :host => @host2, :name => 'svr2_vm', :miq_server => @svr2)
       end
 
-      it "should select SmartProxies with access to the same NFS storage" do
+      it 'should select SmartProxies with access to the same NFS storage' do
         @storage1.store_type = 'NFS'
         expect(Vm).to receive(:miq_servers_for_scan).and_return([@svr1, @svr2])
         expect(@vm.miq_server_proxies).to eq([@svr1])
       end
 
-      it "should select SmartProxies for a powered-off VM" do
+      it 'should select SmartProxies for a powered-off VM' do
         expect(Vm).to receive(:miq_servers_for_scan).and_return([@svr1, @svr2])
         # RHEV VMs do not have an associated host when powered off
         @vm.host = nil
@@ -294,94 +294,94 @@ describe VmOrTemplate do
     end
   end
 
-  context "#users" do
+  context '#users' do
     before do
       @vm    = FactoryGirl.create(:vm_vmware)
-      @user  = FactoryGirl.create(:account_user,  :vm_or_template => @vm, :name => "test")
-      @group = FactoryGirl.create(:account_group, :vm_or_template => @vm, :name => "dev")
+      @user  = FactoryGirl.create(:account_user,  :vm_or_template => @vm, :name => 'test')
+      @group = FactoryGirl.create(:account_group, :vm_or_template => @vm, :name => 'dev')
     end
 
-    it "association" do
+    it 'association' do
       expect(@vm.users).to     include(@user)
       expect(@vm.users).not_to include(@group)
     end
 
-    it "with includes" do
+    it 'with includes' do
       expect(Vm.includes(:users, :groups).where(:accounts => {:name => 'test'}).count).to eq(1)
     end
   end
 
-  context "#groups" do
+  context '#groups' do
     before do
       @vm    = FactoryGirl.create(:vm_vmware)
-      @user  = FactoryGirl.create(:account_user,  :vm_or_template => @vm, :name => "test")
-      @group = FactoryGirl.create(:account_group, :vm_or_template => @vm, :name => "dev")
+      @user  = FactoryGirl.create(:account_user,  :vm_or_template => @vm, :name => 'test')
+      @group = FactoryGirl.create(:account_group, :vm_or_template => @vm, :name => 'dev')
     end
 
-    it "association" do
+    it 'association' do
       expect(@vm.groups).to     include(@group)
       expect(@vm.groups).not_to include(@user)
     end
 
-    it "with includes" do
+    it 'with includes' do
       expect(Vm.includes(:groups, :users).where(:accounts => {:name => 'dev'}).count).to eq(1)
     end
   end
 
-  describe ".cloneable?" do
-    context "when the vm_or_template does not exist" do
-      it "returns false" do
+  describe '.cloneable?' do
+    context 'when the vm_or_template does not exist' do
+      it 'returns false' do
         expect(VmOrTemplate.cloneable?(111)).to eq(false)
       end
     end
 
-    context "when the vm_or_template does exist but is not cloneable" do
-      let(:vm_or_template) { VmOrTemplate.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Template", :name => "aaa", :location => "bbb", :vendor => "redhat") }
+    context 'when the vm_or_template does exist but is not cloneable' do
+      let(:vm_or_template) { VmOrTemplate.create(:type => 'ManageIQ::Providers::Redhat::InfraManager::Template', :name => 'aaa', :location => 'bbb', :vendor => 'redhat') }
 
-      it "returns false" do
+      it 'returns false' do
         expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(false)
       end
     end
 
-    context "when the vm_or_template exists and is cloneable" do
-      let(:vm_or_template) { ManageIQ::Providers::Redhat::InfraManager::Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "aaa", :location => "bbb", :vendor   => "redhat") }
+    context 'when the vm_or_template exists and is cloneable' do
+      let(:vm_or_template) { ManageIQ::Providers::Redhat::InfraManager::Vm.create(:type => 'ManageIQ::Providers::Redhat::InfraManager::Vm', :name => 'aaa', :location => 'bbb', :vendor   => 'redhat') }
 
-      it "returns true" do
+      it 'returns true' do
         expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(true)
       end
     end
   end
 
-  context "#scan_profile_categories" do
+  context '#scan_profile_categories' do
     before do
       @vm = FactoryGirl.create(:vm_vmware)
     end
 
-    it "should produce profile categories without a default or customer profile" do
+    it 'should produce profile categories without a default or customer profile' do
       categories = @vm.scan_profile_categories(@vm.scan_profile_list)
       expect(categories).to eq VmOrTemplate.default_scan_categories_no_profile
     end
 
-    it "should produce profile categories from the default profile" do
+    it 'should produce profile categories from the default profile' do
       item_set = ScanItemSet.new
       allow(item_set).to receive(:members) { [FactoryGirl.build(:scan_item_category_default), FactoryGirl.build(:scan_item_file)] }
-      allow(ScanItemSet).to receive(:find_by_name).with("default") { item_set }
+      allow(ScanItemSet).to receive(:find_by_name).with('default') { item_set }
 
       categories = @vm.scan_profile_categories(@vm.scan_profile_list)
-      expect(categories).to match_array ["default", "profiles"]
+      expect(categories).to match_array ['default', 'profiles']
     end
 
-    it "should produce profile categories from the customer profile" do
+    it 'should produce profile categories from the customer profile' do
       item_set = ScanItemSet.new
       allow(item_set).to receive(:members) { [FactoryGirl.build(:scan_item_category_test), FactoryGirl.build(:scan_item_file)] }
-      allow(ScanItemSet).to receive(:find_by_name).with("test") { item_set }
+      allow(ScanItemSet).to receive(:find_by_name).with('test') { item_set }
 
-      categories = @vm.scan_profile_categories(ScanItem.get_profile("test"))
-      expect(categories).to match_array ["test", "profiles"]
+      categories = @vm.scan_profile_categories(ScanItem.get_profile('test'))
+      expect(categories).to match_array ['test', 'profiles']
     end
   end
 
-  context ".refresh_ems queues refresh for proper class" do
+  context '.refresh_ems queues refresh for proper class' do
     [:template_vmware, :vm_vmware].each do |vm_or_template|
       let(:instance) { FactoryGirl.create(vm_or_template) }
 
@@ -393,120 +393,120 @@ describe VmOrTemplate do
     end
   end
 
-  context "#tenant" do
+  context '#tenant' do
     let(:tenant) { FactoryGirl.create(:tenant) }
-    it "has a tenant" do
+    it 'has a tenant' do
       vm = FactoryGirl.create(:vm_vmware, :tenant => tenant, :miq_group => nil)
       expect(vm.reload.tenant).to eq(tenant)
       expect(tenant.vm_or_templates).to include(vm)
     end
   end
 
-  context "#is_available? for migrate" do
-    it "returns true for vmware VM" do
+  context '#is_available? for migrate' do
+    it 'returns true for vmware VM' do
       vm = FactoryGirl.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
       expect(vm.is_available?(:migrate)).to eq(true)
     end
 
-    it "returns true for SCVMM VM" do
+    it 'returns true for SCVMM VM' do
       vm = FactoryGirl.create(:vm_microsoft)
       expect(vm.is_available?(:migrate)).to_not eq(true)
     end
 
-    it "returns false for openstack VM" do
+    it 'returns false for openstack VM' do
       vm = FactoryGirl.create(:vm_openstack)
       expect(vm.is_available?(:migrate)).to eq(false)
     end
   end
 
-  context "#is_available? for live_migrate" do
-    it "returns false for vmware VM" do
+  context '#is_available? for live_migrate' do
+    it 'returns false for vmware VM' do
       vm = FactoryGirl.create(:vm_vmware)
       expect(vm.is_available?(:live_migrate)).to eq(false)
     end
 
-    it "returns false for SCVMM VM" do
+    it 'returns false for SCVMM VM' do
       vm = FactoryGirl.create(:vm_microsoft)
       expect(vm.is_available?(:live_migrate)).to eq(false)
     end
   end
 
-  context "#is_available? for evacuate" do
-    it "returns false for vmware VM" do
+  context '#is_available? for evacuate' do
+    it 'returns false for vmware VM' do
       vm =  FactoryGirl.create(:vm_vmware)
       expect(vm.is_available?(:evacuate)).to eq(false)
     end
 
-    it "returns false for SCVMM VM" do
+    it 'returns false for SCVMM VM' do
       vm =  FactoryGirl.create(:vm_microsoft)
       expect(vm.is_available?(:evacuate)).to eq(false)
     end
   end
 
-  context "#is_available? for Smartstate Analysis" do
-    it "returns true for VMware VM" do
+  context '#is_available? for Smartstate Analysis' do
+    it 'returns true for VMware VM' do
       vm =  FactoryGirl.create(:vm_vmware)
       allow(vm).to receive_messages(:archived? => false)
       allow(vm).to receive_messages(:orphaned? => false)
       expect(vm.is_available?(:smartstate_analysis)).to eq(true)
     end
 
-    it "returns false for Amazon VM" do
+    it 'returns false for Amazon VM' do
       vm =  FactoryGirl.create(:vm_amazon)
       expect(vm.is_available?(:smartstate_analysis)).to_not eq(true)
     end
   end
 
-  context "#self.batch_operation_supported?" do
+  context '#self.batch_operation_supported?' do
     let(:ems)     { FactoryGirl.create(:ext_management_system) }
     let(:storage) { FactoryGirl.create(:storage) }
 
-    it "when the vm_or_template supports migrate,  returns false" do
+    it 'when the vm_or_template supports migrate,  returns false' do
       vm1 =  FactoryGirl.create(:vm_microsoft)
       vm2 =  FactoryGirl.create(:vm_vmware)
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(false)
     end
 
-    it "when the vm_or_template exists and can be migrated, returns true" do
+    it 'when the vm_or_template exists and can be migrated, returns true' do
       vm1 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       vm2 =  FactoryGirl.create(:vm_vmware, :storage => storage, :ext_management_system => ems)
       expect(VmOrTemplate.batch_operation_supported?(:migrate, [vm1.id, vm2.id])).to eq(true)
     end
   end
 
-  context ".set_tenant_from_group" do
+  context '.set_tenant_from_group' do
     before { Tenant.seed }
     let(:tenant1) { FactoryGirl.create(:tenant) }
     let(:tenant2) { FactoryGirl.create(:tenant) }
     let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }
     let(:group2) { FactoryGirl.create(:miq_group, :tenant => tenant2) }
 
-    it "assigns the tenant from the group" do
+    it 'assigns the tenant from the group' do
       expect(FactoryGirl.create(:vm_vmware, :miq_group => group1).tenant).to eq(tenant1)
     end
 
-    it "assigns the tenant from the group_id" do
+    it 'assigns the tenant from the group_id' do
       expect(FactoryGirl.create(:vm_vmware, :miq_group_id => group1.id).tenant).to eq(tenant1)
     end
 
-    it "assigns the tenant from the group over the tenant" do
+    it 'assigns the tenant from the group over the tenant' do
       expect(FactoryGirl.create(:vm_vmware, :miq_group => group1, :tenant => tenant2).tenant).to eq(tenant1)
     end
 
-    it "uses default tenant via tenancy_mixin" do
+    it 'uses default tenant via tenancy_mixin' do
       expect(FactoryGirl.create(:vm_vmware).tenant).to eq(Tenant.root_tenant)
     end
 
-    it "changes the tenant after changing the group" do
+    it 'changes the tenant after changing the group' do
       vm = FactoryGirl.create(:vm_vmware, :miq_group => group1)
       vm.update_attributes(:miq_group_id => group2.id)
       expect(vm.tenant).to eq(tenant2)
     end
   end
 
-  it "with ems_events" do
+  it 'with ems_events' do
     ems       = FactoryGirl.create(:ems_vmware_with_authentication)
     vm        = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
     ems_event = FactoryGirl.create(:ems_event)
@@ -515,7 +515,7 @@ describe VmOrTemplate do
     expect(vm.ems_events.first.id).to eq(ems_event.id)
   end
 
-  it "#miq_provision_vms" do
+  it '#miq_provision_vms' do
     ems       = FactoryGirl.create(:ems_vmware_with_authentication)
     template  = FactoryGirl.create(:template_vmware, :ext_management_system => ems)
     vm        = FactoryGirl.create(:vm_vmware, :ext_management_system => ems)
@@ -541,170 +541,170 @@ describe VmOrTemplate do
     expect(template.miq_provision_vms.collect(&:id)).to eq([vm.id])
   end
 
-  describe ".v_pct_free_disk_space (delegated to hardware)" do
+  describe '.v_pct_free_disk_space (delegated to hardware)' do
     let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
     let(:hardware) { FactoryGirl.create(:hardware, :disk_free_space => 20, :disk_capacity => 100) }
 
-    it "calculates in ruby" do
+    it 'calculates in ruby' do
       expect(vm.v_pct_free_disk_space).to eq(20.0)
       expect(vm.v_pct_used_disk_space).to eq(80.0)
     end
 
-    it "calculates in the database" do
+    it 'calculates in the database' do
       vm.save
-      expect(virtual_column_sql_value(VmOrTemplate, "v_pct_free_disk_space")).to eq(20.0)
-      expect(virtual_column_sql_value(VmOrTemplate, "v_pct_used_disk_space")).to eq(80.0)
+      expect(virtual_column_sql_value(VmOrTemplate, 'v_pct_free_disk_space')).to eq(20.0)
+      expect(virtual_column_sql_value(VmOrTemplate, 'v_pct_used_disk_space')).to eq(80.0)
     end
 
-    context "with null disk capacity" do
+    context 'with null disk capacity' do
       let(:hardware) { FactoryGirl.build(:hardware, :disk_free_space => 20, :disk_capacity => nil) }
 
-      it "calculates in ruby" do
+      it 'calculates in ruby' do
         expect(vm.v_pct_free_disk_space).to be_nil
         expect(vm.v_pct_used_disk_space).to be_nil
       end
 
-      it "calculates in the database" do
+      it 'calculates in the database' do
         vm.save
-        expect(virtual_column_sql_value(VmOrTemplate, "v_pct_free_disk_space")).to be_nil
-        expect(virtual_column_sql_value(VmOrTemplate, "v_pct_used_disk_space")).to be_nil
+        expect(virtual_column_sql_value(VmOrTemplate, 'v_pct_free_disk_space')).to be_nil
+        expect(virtual_column_sql_value(VmOrTemplate, 'v_pct_used_disk_space')).to be_nil
       end
     end
   end
 
-  describe ".host_name" do
+  describe '.host_name' do
     let(:vm) { FactoryGirl.create(:vm_vmware, :host => host) }
-    let(:host) { FactoryGirl.create(:host_vmware, :name => "our host") }
+    let(:host) { FactoryGirl.create(:host_vmware, :name => 'our host') }
 
-    it "calculates in ruby" do
-      expect(vm.host_name).to eq("our host")
+    it 'calculates in ruby' do
+      expect(vm.host_name).to eq('our host')
     end
 
-    it "calculates in the database" do
+    it 'calculates in the database' do
       vm.save
-      expect(virtual_column_sql_value(VmOrTemplate, "host_name")).to eq("our host")
+      expect(virtual_column_sql_value(VmOrTemplate, 'host_name')).to eq('our host')
     end
   end
 
-  describe ".v_host_vmm_product" do
-    it "delegates to host" do
-      host = FactoryGirl.build(:host, :vmm_product => "Hyper-V")
+  describe '.v_host_vmm_product' do
+    it 'delegates to host' do
+      host = FactoryGirl.build(:host, :vmm_product => 'Hyper-V')
       vm = FactoryGirl.build(:vm_vmware, :host => host)
 
-      expect(vm.v_host_vmm_product).to eq("Hyper-V")
+      expect(vm.v_host_vmm_product).to eq('Hyper-V')
     end
   end
 
-  describe ".active" do
-    it "detects active" do
+  describe '.active' do
+    it 'detects active' do
       vm.update_attributes(:ext_management_system => ems)
       expect(vm).to be_active
-      expect(virtual_column_sql_value(VmOrTemplate, "active")).to be true
+      expect(virtual_column_sql_value(VmOrTemplate, 'active')).to be true
     end
 
-    it "detects non-active" do
+    it 'detects non-active' do
       vm.update_attributes(:ext_management_system => nil)
       expect(vm).not_to be_active
-      expect(virtual_column_sql_value(VmOrTemplate, "active")).to be false
+      expect(virtual_column_sql_value(VmOrTemplate, 'active')).to be false
     end
   end
 
-  describe ".archived" do
-    it "detects archived" do
+  describe '.archived' do
+    it 'detects archived' do
       vm.update_attributes(:ext_management_system => nil, :storage => nil)
       expect(vm).to be_archived
-      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be true
+      expect(virtual_column_sql_value(VmOrTemplate, 'archived')).to be true
     end
 
-    it "detects non-archived (has ems and storage)" do
+    it 'detects non-archived (has ems and storage)' do
       vm.update_attributes(:ext_management_system => ems, :storage => storage)
       expect(vm).not_to be_archived
-      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
+      expect(virtual_column_sql_value(VmOrTemplate, 'archived')).to be false
     end
 
-    it "detects non-archived (has ems)" do
+    it 'detects non-archived (has ems)' do
       vm.update_attributes(:ext_management_system => ems, :storage => nil)
       expect(vm).not_to be_archived
-      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
+      expect(virtual_column_sql_value(VmOrTemplate, 'archived')).to be false
     end
 
-    it "detects non-archived (has storage)" do
+    it 'detects non-archived (has storage)' do
       vm.update_attributes(:ext_management_system => nil, :storage => storage)
-      expect(virtual_column_sql_value(VmOrTemplate, "archived")).to be false
+      expect(virtual_column_sql_value(VmOrTemplate, 'archived')).to be false
       expect(vm).not_to be_archived
       vm.ext_management_system = nil
     end
   end
 
-  describe ".orphaned" do
-    it "detects orphaned" do
+  describe '.orphaned' do
+    it 'detects orphaned' do
       vm.update_attributes(:ext_management_system => nil, :storage => storage)
       expect(vm).to be_orphaned
-      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be true
+      expect(virtual_column_sql_value(VmOrTemplate, 'orphaned')).to be true
     end
 
-    it "detects non-orphaned (ems and no storage)" do
+    it 'detects non-orphaned (ems and no storage)' do
       vm.update_attributes(:ext_management_system => ems, :storage => nil)
       expect(vm).not_to be_orphaned
-      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
+      expect(virtual_column_sql_value(VmOrTemplate, 'orphaned')).to be false
     end
 
-    it "detects non-orphaned (no storage)" do
+    it 'detects non-orphaned (no storage)' do
       vm.update_attributes(:ext_management_system => nil, :storage => nil)
       expect(vm).not_to be_orphaned
-      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
+      expect(virtual_column_sql_value(VmOrTemplate, 'orphaned')).to be false
     end
 
-    it "detects non-orphaned (has ems)" do
+    it 'detects non-orphaned (has ems)' do
       vm.update_attributes(:ext_management_system => ems, :storage => storage)
       expect(vm).not_to be_orphaned
-      expect(virtual_column_sql_value(VmOrTemplate, "orphaned")).to be false
+      expect(virtual_column_sql_value(VmOrTemplate, 'orphaned')).to be false
     end
   end
 
-  describe ".disconnected" do
-    let(:vm) { FactoryGirl.create(:vm_vmware, :connection_state => "connected") }
-    let(:vm2) { FactoryGirl.create(:vm_vmware, :connection_state => "disconnected") }
+  describe '.disconnected' do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :connection_state => 'connected') }
+    let(:vm2) { FactoryGirl.create(:vm_vmware, :connection_state => 'disconnected') }
 
-    it "detects nil" do
+    it 'detects nil' do
       vm.update_attributes(:connection_state => nil)
       expect(vm.disconnected).to be_truthy
-      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_truthy
+      expect(virtual_column_sql_value(VmOrTemplate, 'disconnected')).to be_truthy
     end
 
-    it "detects connected" do
+    it 'detects connected' do
       expect(vm.disconnected).to be_falsey
-      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_falsey
+      expect(virtual_column_sql_value(VmOrTemplate, 'disconnected')).to be_falsey
     end
 
-    it "detects disconnected" do
+    it 'detects disconnected' do
       vm2.save
       expect(vm2.disconnected).to be_truthy
-      expect(virtual_column_sql_value(VmOrTemplate, "disconnected")).to be_truthy
+      expect(virtual_column_sql_value(VmOrTemplate, 'disconnected')).to be_truthy
     end
   end
 
-  describe ".v_is_a_template" do
-    it "detects nil" do
+  describe '.v_is_a_template' do
+    it 'detects nil' do
       vm.update_attribute(:template, nil) # sorry, but wanted a nil in there
-      expect(vm.v_is_a_template).to eq("False")
-      expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(false)
+      expect(vm.v_is_a_template).to eq('False')
+      expect(virtual_column_sql_value(VmOrTemplate, 'v_is_a_template')).to eq(false)
     end
 
-    it "detects false" do
+    it 'detects false' do
       vm.update_attributes(:template => false)
-      expect(vm.v_is_a_template).to eq("False")
-      expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(false)
+      expect(vm.v_is_a_template).to eq('False')
+      expect(virtual_column_sql_value(VmOrTemplate, 'v_is_a_template')).to eq(false)
     end
 
-    it "detects true" do
+    it 'detects true' do
       vm.update_attributes(:template => true)
-      expect(vm.v_is_a_template).to eq("True")
-      expect(virtual_column_sql_value(VmOrTemplate, "v_is_a_template")).to eq(true)
+      expect(vm.v_is_a_template).to eq('True')
+      expect(virtual_column_sql_value(VmOrTemplate, 'v_is_a_template')).to eq(true)
     end
   end
 
-  describe "#disconnect_ems" do
+  describe '#disconnect_ems' do
     let(:ems) { FactoryGirl.build(:ext_management_system) }
     let(:vm) do
       FactoryGirl.build(:vm_or_template,
@@ -712,13 +712,13 @@ describe VmOrTemplate do
                         :ems_cluster           => FactoryGirl.build(:ems_cluster))
     end
 
-    it "clears ems and cluster" do
+    it 'clears ems and cluster' do
       vm.disconnect_ems(ems)
       expect(vm.ext_management_system).to be_nil
       expect(vm.ems_cluster).to be_nil
     end
 
-    it "doesnt clear the wrong ems" do
+    it 'doesnt clear the wrong ems' do
       vm.disconnect_ems(FactoryGirl.build(:ext_management_system))
       expect(vm.ext_management_system).not_to be_nil
       expect(vm.ems_cluster).not_to be_nil

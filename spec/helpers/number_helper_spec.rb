@@ -1,11 +1,11 @@
 describe NumberHelper do
-  context "#number_to_human_size" do
+  context '#number_to_human_size' do
     # Positive cases taken from Rails helper tests for number_to_human_size to
     #   verify that original method's intent was not changed
     #   https://github.com/rails/rails/blob/v2.3.8/actionpack/test/template/number_helper_test.rb
     # Negative cases added from positive cases.
 
-    it "without options hash" do
+    it 'without options hash' do
       expect(helper.number_to_human_size(0)).to eq('0 Bytes')
       expect(helper.number_to_human_size(1)).to eq('1 Byte')
       expect(helper.number_to_human_size(3.14159265)).to eq('3 Bytes')
@@ -22,7 +22,7 @@ describe NumberHelper do
       expect(helper.number_to_human_size(444.kilobytes)).to eq('444 KB')
       expect(helper.number_to_human_size(1023.megabytes)).to eq('1023 MB')
       expect(helper.number_to_human_size(3.terabytes)).to eq('3 TB')
-      expect(helper.number_to_human_size("123")).to eq('123 Bytes')
+      expect(helper.number_to_human_size('123')).to eq('123 Bytes')
       expect(helper.number_to_human_size(1.1)).to eq('1 Byte')
       expect(helper.number_to_human_size(10)).to eq('10 Bytes')
       expect(helper.number_to_human_size(nil)).to be_nil
@@ -42,12 +42,12 @@ describe NumberHelper do
       expect(helper.number_to_human_size(-444.kilobytes)).to eq('-444 KB')
       expect(helper.number_to_human_size(-1023.megabytes)).to eq('-1023 MB')
       expect(helper.number_to_human_size(-3.terabytes)).to eq('-3 TB')
-      expect(helper.number_to_human_size("-123")).to eq('-123 Bytes')
+      expect(helper.number_to_human_size('-123')).to eq('-123 Bytes')
       expect(helper.number_to_human_size(-1.1)).to eq('-1 Byte')
       expect(helper.number_to_human_size(-10)).to eq('-10 Bytes')
     end
 
-    it "with options hash" do
+    it 'with options hash' do
       expect(helper.number_to_human_size(1_234_567,         :precision => 2)).to eq('1.18 MB')
       expect(helper.number_to_human_size(3.14159265,        :precision => 4)).to eq('3 Bytes')
       expect(helper.number_to_human_size(1.0123.kilobytes,  :precision => 2)).to eq('1.01 KB')
@@ -69,7 +69,7 @@ describe NumberHelper do
       expect(helper.number_to_human_size(-41_100,             :precision => 0)).to eq('-40 KB')
     end
 
-    it "with custom delimiter and separator" do
+    it 'with custom delimiter and separator' do
       expect(helper.number_to_human_size(1.0123.kilobytes,  :precision => 2,   :separator => ',')).to eq('1,01 KB')
       expect(helper.number_to_human_size(1.0100.kilobytes,  :precision => 4,   :separator => ',')).to eq('1,01 KB')
       expect(helper.number_to_human_size(1000.1.terabytes,  :delimiter => '.', :separator => ',')).to eq('1.000,1 TB')
@@ -80,7 +80,7 @@ describe NumberHelper do
     end
   end
 
-  it "#human_size_to_rails_method" do
+  it '#human_size_to_rails_method' do
     expect(helper.human_size_to_rails_method('0 Bytes')).to eq('0')
     expect(helper.human_size_to_rails_method('1 Byte')).to eq('1')
     expect(helper.human_size_to_rails_method('123 Bytes')).to eq('123')
@@ -109,7 +109,7 @@ describe NumberHelper do
     expect(helper.human_size_to_rails_method('-1.1 TB')).to eq('-1.1.terabytes')
   end
 
-  it "#number_to_rails_method" do
+  it '#number_to_rails_method' do
     expect(helper.number_to_rails_method(0)).to eq('0')
     expect(helper.number_to_rails_method(1)).to eq('1')
     expect(helper.number_to_rails_method(3.14159265)).to eq('3')
@@ -126,7 +126,7 @@ describe NumberHelper do
     expect(helper.number_to_rails_method(444.kilobytes)).to eq('444.kilobytes')
     expect(helper.number_to_rails_method(1023.megabytes)).to eq('1023.megabytes')
     expect(helper.number_to_rails_method(3.terabytes)).to eq('3.terabytes')
-    expect(helper.number_to_rails_method("123")).to eq('123')
+    expect(helper.number_to_rails_method('123')).to eq('123')
     expect(helper.number_to_rails_method(1.1)).to eq('1')
     expect(helper.number_to_rails_method(10)).to eq('10')
     expect(helper.number_to_rails_method(nil)).to be_nil
@@ -146,12 +146,12 @@ describe NumberHelper do
     expect(helper.number_to_rails_method(-444.kilobytes)).to eq('-444.kilobytes')
     expect(helper.number_to_rails_method(-1023.megabytes)).to eq('-1023.megabytes')
     expect(helper.number_to_rails_method(-3.terabytes)).to eq('-3.terabytes')
-    expect(helper.number_to_rails_method("-123")).to eq('-123')
+    expect(helper.number_to_rails_method('-123')).to eq('-123')
     expect(helper.number_to_rails_method(-1.1)).to eq('-1')
     expect(helper.number_to_rails_method(-10)).to eq('-10')
   end
 
-  it "#human_size_to_number" do
+  it '#human_size_to_number' do
     expect(helper.human_size_to_number('0 Bytes')).to eq(0)
     expect(helper.human_size_to_number('1 Byte')).to eq(1)
     expect(helper.human_size_to_number('123 Bytes')).to eq(123)
@@ -180,7 +180,7 @@ describe NumberHelper do
     expect(helper.human_size_to_number('-1.1 TB')).to eq(-1.1.terabytes)
   end
 
-  it "#rails_method_to_human_size" do
+  it '#rails_method_to_human_size' do
     expect(helper.rails_method_to_human_size('0')).to eq('0 Bytes')
     expect(helper.rails_method_to_human_size('1')).to eq('1 Byte')
     expect(helper.rails_method_to_human_size('123')).to eq('123 Bytes')
@@ -216,8 +216,8 @@ describe NumberHelper do
     expect(helper.rails_method_to_human_size('-1.1.terabytes')).to eq('-1.1 TB')
   end
 
-  context "#mhz_to_human_size" do
-    it "without options hash" do
+  context '#mhz_to_human_size' do
+    it 'without options hash' do
       expect(helper.mhz_to_human_size(0)).to eq('0 MHz')
       expect(helper.mhz_to_human_size(1)).to eq('1 MHz')
       expect(helper.mhz_to_human_size(3.14159265)).to eq('3.1 MHz')
@@ -228,7 +228,7 @@ describe NumberHelper do
       expect(helper.mhz_to_human_size(1_234_567)).to eq('1.2 THz')
       expect(helper.mhz_to_human_size(1_234_567_890)).to eq('1234.6 THz')
       expect(helper.mhz_to_human_size(1_234_567_890_123)).to eq('1234567.9 THz')
-      expect(helper.mhz_to_human_size("123")).to eq('123 MHz')
+      expect(helper.mhz_to_human_size('123')).to eq('123 MHz')
       expect(helper.mhz_to_human_size(nil)).to be_nil
 
       expect(helper.mhz_to_human_size(-1)).to eq('-1 MHz')
@@ -240,10 +240,10 @@ describe NumberHelper do
       expect(helper.mhz_to_human_size(-1_234_567)).to eq('-1.2 THz')
       expect(helper.mhz_to_human_size(-1_234_567_890)).to eq('-1234.6 THz')
       expect(helper.mhz_to_human_size(-1_234_567_890_123)).to eq('-1234567.9 THz')
-      expect(helper.mhz_to_human_size("-123")).to eq('-123 MHz')
+      expect(helper.mhz_to_human_size('-123')).to eq('-123 MHz')
     end
 
-    it "with options hash" do
+    it 'with options hash' do
       expect(helper.mhz_to_human_size(1_234_567,         :precision => 2)).to eq('1.23 THz')
       expect(helper.mhz_to_human_size(3.14159265,        :precision => 4)).to eq('3.1416 MHz')
       expect(helper.mhz_to_human_size(1_234_567_890_123, :precision => 0)).to eq('1234568 THz')
@@ -259,7 +259,7 @@ describe NumberHelper do
       expect(helper.mhz_to_human_size(-41_100,            :precision => 0)).to eq('-41 GHz')
     end
 
-    it "with old precision argument" do
+    it 'with old precision argument' do
       expect(helper.mhz_to_human_size(1_234_567, 2)).to eq('1.23 THz')
       expect(helper.mhz_to_human_size(3.14159265, 4)).to eq('3.1416 MHz')
       expect(helper.mhz_to_human_size(1_234_567_890_123, 0)).to eq('1234568 THz')

@@ -4,6 +4,6 @@ RSpec::Matchers.define :match_string_array_ignorecase do |expected|
   end
 
   description do
-    "a case insensitive string array matcher"
+    'a case insensitive string array matcher'
   end
 end

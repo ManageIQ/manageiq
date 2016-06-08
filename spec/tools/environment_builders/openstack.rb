@@ -19,17 +19,17 @@ require_relative 'openstack/services/storage/builder'
 
 def usage(s)
   $stderr.puts(s)
-  $stderr.puts("Run on a VM with at least 8GB of RAM!!!")
-  $stderr.puts("Usage: bundle exec rails r spec/tools/environment_builders/openstack.rb")
-  $stderr.puts("Will run env. builder for environments specified in environments.yaml, unless you specify only one of")
-  $stderr.puts("them with  --only-environment")
-  $stderr.puts("Options:")
+  $stderr.puts('Run on a VM with at least 8GB of RAM!!!')
+  $stderr.puts('Usage: bundle exec rails r spec/tools/environment_builders/openstack.rb')
+  $stderr.puts('Will run env. builder for environments specified in environments.yaml, unless you specify only one of')
+  $stderr.puts('them with  --only-environment')
+  $stderr.puts('Options:')
   $stderr.puts("         [--only-envinronment <name>]  - allowed values #{allowed_enviroments}")
   exit(2)
 end
 
-unless File.exist?("openstack_environments.yml")
-  raise ArgumentError, usage("expecting openstack_environments.yml in ManageIQ root dir")
+unless File.exist?('openstack_environments.yml')
+  raise ArgumentError, usage('expecting openstack_environments.yml in ManageIQ root dir')
 end
 
 @only_environment = nil
@@ -55,22 +55,22 @@ openstack_environments.each do |env|
 
   @environment = env_name.to_sym
   # TODO(lsmola) make it possible to not to store the ems in db
-  create_or_update_ems(env_name, env["ip"], env["password"], 5000, env["user"], identity_service.to_s)
+  create_or_update_ems(env_name, env['ip'], env['password'], 5000, env['user'], identity_service.to_s)
 
   unless @only_environment.blank?
     next unless @environment == @only_environment
   end
 
   $fog_log.level = 0
-  puts "---------------------------------------------------------------------------------------------------------------"
+  puts '---------------------------------------------------------------------------------------------------------------'
   puts "Building VCR  Environment for environment '#{@environment}'. Used services are, networking: "\
        "'#{networking_service}' and identity: '#{identity_service}'..."
-  puts "---------------------------------------------------------------------------------------------------------------"
+  puts '---------------------------------------------------------------------------------------------------------------'
 
   # TODO: Create a domain to contain refresh-related objects (Havana and above)
   identity = Openstack::Services::Identity::Builder.build_all(@ems, identity_service)
   # TODO(lsmola) cycle through many projects, so we test also multitenancy
-  project = identity.projects.detect { |x| x.name == "EmsRefreshSpec-Project" }
+  project = identity.projects.detect { |x| x.name == 'EmsRefreshSpec-Project' }
 
   network = Openstack::Services::Network::Builder.build_all(@ems, project, networking_service)
   compute = Openstack::Services::Compute::Builder.build_all(@ems, project)
@@ -92,9 +92,9 @@ openstack_environments.each do |env|
   #
   # Set states of the servers
   #
-  compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Paused" }, :pause)
-  compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Suspended" }, :suspend)
-  compute.do_action(compute.servers.detect { |x| x.name == "EmsRefreshSpec-Shelved" }, :shelve)
+  compute.do_action(compute.servers.detect { |x| x.name == 'EmsRefreshSpec-Paused' }, :pause)
+  compute.do_action(compute.servers.detect { |x| x.name == 'EmsRefreshSpec-Suspended' }, :suspend)
+  compute.do_action(compute.servers.detect { |x| x.name == 'EmsRefreshSpec-Shelved' }, :shelve)
 
-  puts "Finished"
+  puts 'Finished'
 end

@@ -10,7 +10,7 @@ module VMPlatformMountLinux
     @snapSsId = nil
 
     unless @ost.force
-      $log.debug "Initializing VMPlatformMountLinux: force flag = false" if $log
+      $log.debug 'Initializing VMPlatformMountLinux: force flag = false' if $log
       return
     end
 
@@ -18,7 +18,7 @@ module VMPlatformMountLinux
     return unless $miqHostCfg.emsLocal
     return unless File.exist? VCBNAME
     return unless File.exist? VCBSNAPSHOT
-    return unless File.extname(@dInfo.fileName) == ".vmdk"
+    return unless File.extname(@dInfo.fileName) == '.vmdk'
 
     $log.debug "VMPlatformMountLinux::init: emsLocal = #{$miqHostCfg.emsLocal}" if $log
     @ems = $miqHostCfg.ems[$miqHostCfg.emsLocal]
@@ -27,7 +27,7 @@ module VMPlatformMountLinux
     #       While it works most of the time, we need to find a better way to do this.
     #
     @vmName  = File.basename(File.dirname(@dInfo.fileName))
-    $log.debug "VMPlatformMountLinux::init: vmName = \"" # {@vmName}\"" if $log
+    $log.debug 'VMPlatformMountLinux::init: vmName = "' # {@vmName}\"" if $log
     #
     # TODO: passing the user name and password on the command line is BAD.
     #       Change this to use web-services.

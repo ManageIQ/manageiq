@@ -1,7 +1,7 @@
 describe MiqProvisionVirtWorkflow do
   let(:workflow) { FactoryGirl.create(:miq_provision_virt_workflow) }
 
-  context "#new" do
+  context '#new' do
     let(:sdn)  { 'SysprepDomainName' }
     let(:host) { double('Host', :id => 1, :name => 'my_host') }
     let(:user) { FactoryGirl.create(:user_with_email) }
@@ -13,13 +13,13 @@ describe MiqProvisionVirtWorkflow do
                                      :sysprep_domain_name => sdn)
     end
 
-    it "calls password_helper once when a block is not passed in" do
+    it 'calls password_helper once when a block is not passed in' do
       expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:password_helper).with({:allowed_hosts => [host], :skip_dialog_load => true}, false).once
       MiqProvisionVirtWorkflow.new({:allowed_hosts => [host]}, user, {:skip_dialog_load => true})
     end
   end
 
-  context "#continue_request" do
+  context '#continue_request' do
     let(:sdn) { 'SysprepDomainName' }
 
     before do
@@ -29,14 +29,14 @@ describe MiqProvisionVirtWorkflow do
                                      :sysprep_domain_name => sdn)
     end
 
-    context "exit_pre_dialog" do
+    context 'exit_pre_dialog' do
       it "doesn't exit when not running" do
         expect(workflow).not_to receive(:exit_pre_dialog)
 
         expect(workflow.continue_request({})).to be_truthy
       end
 
-      it "exits when running" do
+      it 'exits when running' do
         workflow.instance_variable_set(:@running_pre_dialog, true)
         new_values = workflow.instance_variable_get(:@values)
 
@@ -70,13 +70,13 @@ describe MiqProvisionVirtWorkflow do
 
     context 'vlans' do
       before do
-        s11 = FactoryGirl.create(:switch, :name => "A")
-        s12 = FactoryGirl.create(:switch, :name => "B")
-        s13 = FactoryGirl.create(:switch, :name => "C")
+        s11 = FactoryGirl.create(:switch, :name => 'A')
+        s12 = FactoryGirl.create(:switch, :name => 'B')
+        s13 = FactoryGirl.create(:switch, :name => 'C')
         @src_vm.host.switches = [s11, s12, s13]
-        @lan11 = FactoryGirl.create(:lan, :name => "lan_A", :switch_id => s11.id)
-        @lan12 = FactoryGirl.create(:lan, :name => "lan_B", :switch_id => s12.id)
-        @lan13 = FactoryGirl.create(:lan, :name => "lan_C", :switch_id => s13.id)
+        @lan11 = FactoryGirl.create(:lan, :name => 'lan_A', :switch_id => s11.id)
+        @lan12 = FactoryGirl.create(:lan, :name => 'lan_B', :switch_id => s12.id)
+        @lan13 = FactoryGirl.create(:lan, :name => 'lan_C', :switch_id => s13.id)
       end
 
       it '#allowed_vlans' do
@@ -89,75 +89,75 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
-  context "#update_requester_from_parameters" do
+  context '#update_requester_from_parameters' do
     let(:user_new) { FactoryGirl.create(:user_with_email) }
     let(:data_new_user) { {:user_name => user_new.name} }
     let(:current_user) { FactoryGirl.create(:user_with_email) }
 
-    it "finds and sets a new user if one is passed in" do
+    it 'finds and sets a new user if one is passed in' do
       expect(User).to receive(:lookup_by_identity).and_return(user_new).once
       expect(MiqProvisionVirtWorkflow.update_requester_from_parameters(data_new_user, current_user)).to eq user_new
     end
 
-    it "returns the original user if a new one is not passed in" do
+    it 'returns the original user if a new one is not passed in' do
       data_no_user = {}
       expect(User).to_not receive(:lookup_by_identity)
       expect(MiqProvisionVirtWorkflow.update_requester_from_parameters(data_no_user, current_user)).to eq current_user
     end
 
-    it "raises an error if the lookup fails" do
+    it 'raises an error if the lookup fails' do
       expect(User).to receive(:lookup_by_identity).and_return(nil).once
       expect { MiqProvisionVirtWorkflow.update_requester_from_parameters(data_new_user, current_user) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
-  context "#validate email formatting" do
-    context "with specific format regex" do
+  context '#validate email formatting' do
+    context 'with specific format regex' do
       let(:regex) { {:required_regex => %r{\A[\w!#$\%&'*+/=?`\{|\}~^-]+(?:\.[\w!#$\%&'*+/=?`\{|\}~^-]+)*@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\Z}i} }
       let(:value_email) { 'n@test.com' }
       let(:value_no_email) { 'n' }
 
-      it "matches a valid email address" do
+      it 'matches a valid email address' do
         expect(workflow.validate_regex(nil, {}, {}, regex, value_email)).to be_nil
       end
 
-      it "returns a formatting error message with a bad email address" do
+      it 'returns a formatting error message with a bad email address' do
         expect(workflow.validate_regex(nil, {}, {}, regex, value_no_email)).to eq "'/' must be correctly formatted"
       end
 
-      it "returns an email required error with a blank email address" do
+      it 'returns an email required error with a blank email address' do
         expect(workflow.validate_regex(nil, {}, {}, regex, '')).to eq "'/' is required"
       end
     end
 
-    context "with a match anything regex" do
+    context 'with a match anything regex' do
       let(:regex) { {:required_regex => '.'} }
       let(:value_email) { 'n@test.com' }
       let(:value_no_email) { 'n' }
 
-      it "matches a valid email address" do
+      it 'matches a valid email address' do
         expect(workflow.validate_regex(nil, {}, {}, regex, value_email)).to be_nil
       end
 
-      it "matches a bad email address" do
+      it 'matches a bad email address' do
         expect(workflow.validate_regex(nil, {}, {}, regex, value_no_email)).to be_nil
       end
 
-      it "returns an email required error with a blank email address" do
+      it 'returns an email required error with a blank email address' do
         expect(workflow.validate_regex(nil, {}, {}, regex, '')).to eq "'/' is required"
       end
     end
   end
 
-  context "#update_field_visibility_pxe_iso" do
+  context '#update_field_visibility_pxe_iso' do
     let(:show_hide_iso_pxe) { {:hide => [], :edit => []} }
-    describe "supports iso" do
+    describe 'supports iso' do
       before do
         allow(workflow).to receive(:supports_iso?).and_return(true)
         allow(workflow).to receive(:supports_pxe?).and_return(false)
       end
 
-      it "sets iso_image_id as a validated key" do
+      it 'sets iso_image_id as a validated key' do
         workflow.update_field_visibility_pxe_iso(show_hide_iso_pxe)
         expect(show_hide_iso_pxe[:edit]).to eq [:iso_image_id]
         expect(show_hide_iso_pxe[:edit]).to_not eq [:pxe_image_id, :pxe_server_id]
@@ -166,13 +166,13 @@ describe MiqProvisionVirtWorkflow do
       end
     end
 
-    describe "supports pxe" do
+    describe 'supports pxe' do
       before do
         allow(workflow).to receive(:supports_iso?).and_return(false)
         allow(workflow).to receive(:supports_pxe?).and_return(true)
       end
 
-      it "sets pxe_server_id and pxe_image_id as validated keys" do
+      it 'sets pxe_server_id and pxe_image_id as validated keys' do
         workflow.update_field_visibility_pxe_iso(show_hide_iso_pxe)
         expect(show_hide_iso_pxe[:edit]).to_not eq [:iso_image_id]
         expect(show_hide_iso_pxe[:edit]).to eq [:pxe_image_id, :pxe_server_id]
@@ -182,35 +182,35 @@ describe MiqProvisionVirtWorkflow do
     end
   end
 
-  context "#validate_memory_reservation" do
+  context '#validate_memory_reservation' do
     let(:values) { {:vm_memory => %w(1024 1024)} }
 
-    it "no size" do
+    it 'no size' do
       expect(workflow.validate_memory_reservation(nil, values, {}, {}, nil)).to be_nil
     end
 
-    it "valid size" do
+    it 'valid size' do
       expect(workflow.validate_memory_reservation(nil, values.merge(:memory_reserve => 1024), {}, {}, nil)).to be_nil
     end
 
-    it "invalid size" do
-      error = "Memory Reservation is larger than VM Memory"
+    it 'invalid size' do
+      error = 'Memory Reservation is larger than VM Memory'
 
-      expect(workflow).to receive(:required_description).and_return("Memory")
+      expect(workflow).to receive(:required_description).and_return('Memory')
       expect(workflow.validate_memory_reservation(nil, values.merge(:memory_reserve => 2048), {}, {}, nil)).to eq(error)
     end
   end
 
-  context "#allowed_template_condition" do
-    it "without a provider model defined" do
-      expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id IS NOT NULL", true])
+  context '#allowed_template_condition' do
+    it 'without a provider model defined' do
+      expect(workflow.allowed_template_condition).to eq(['vms.template = ? AND vms.ems_id IS NOT NULL', true])
     end
 
-    it "with a provider model defined" do
+    it 'with a provider model defined' do
       ems = FactoryGirl.create(:ems_vmware)
       expect(workflow.class).to receive(:provider_model).once.and_return(ems.class)
 
-      expect(workflow.allowed_template_condition).to eq(["vms.template = ? AND vms.ems_id in (?)", true, [ems.id]])
+      expect(workflow.allowed_template_condition).to eq(['vms.template = ? AND vms.ems_id in (?)', true, [ems.id]])
     end
   end
 end

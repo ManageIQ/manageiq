@@ -23,8 +23,8 @@ class ServiceResource < ApplicationRecord
   private
 
   def virtual_column_resource_value(key)
-    return "" if resource.nil?
-    return "" unless resource.respond_to?(key)
+    return '' if resource.nil?
+    return '' unless resource.respond_to?(key)
     resource.send(key)
   end
 end

@@ -6,7 +6,7 @@ class AddDraftToOrchestrationTemplates < ActiveRecord::Migration
   def self.up
     add_column :orchestration_templates, :draft, :boolean
 
-    say_with_time("Update OrchestrationTemplate draft") do
+    say_with_time('Update OrchestrationTemplate draft') do
       OrchestrationTemplate.update_all(:draft => false)
     end
   end

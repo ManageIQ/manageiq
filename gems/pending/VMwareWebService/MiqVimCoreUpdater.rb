@@ -12,7 +12,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
     @propMap    = propMap || VimCoreUpdaterPropMap
     if @v4
       @propMap = dupProps(@propMap)
-      addProperty(:VirtualMachine, "runtime.memoryOverhead")
+      addProperty(:VirtualMachine, 'runtime.memoryOverhead')
     end
 
     @propCol    = @sic.propertyCollector
@@ -41,95 +41,95 @@ class MiqVimCoreUpdater < MiqVimClientBase
     #
     # Traverse VirtualApp to Vm.
     #
-    virtualAppTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name     = "virtualAppTraversalSpec"
-      ts.type     = "VirtualApp"
-      ts.path     = "vm"
-      ts.skip     = "false"
+    virtualAppTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name     = 'virtualAppTraversalSpec'
+      ts.type     = 'VirtualApp'
+      ts.path     = 'vm'
+      ts.skip     = 'false'
     end unless @v2
 
     #
     # Traverse ResourcePool to ResourcePool and VirtualApp.
     #
-    resourcePoolTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name     = "resourcePoolTraversalSpec"
-      ts.type     = "ResourcePool"
-      ts.path     = "resourcePool"
-      ts.skip     = "false"
-      ts.selectSet  = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "resourcePoolTraversalSpec" }
+    resourcePoolTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name     = 'resourcePoolTraversalSpec'
+      ts.type     = 'ResourcePool'
+      ts.path     = 'resourcePool'
+      ts.skip     = 'false'
+      ts.selectSet  = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'resourcePoolTraversalSpec' }
       end
     end
 
     #
     # Traverse ComputeResource to ResourcePool.
     #
-    computeResourceRpTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name        = "computeResourceRpTraversalSpec"
-      ts.type        = "ComputeResource"
-      ts.path        = "resourcePool"
-      ts.skip        = "false"
-      ts.selectSet   = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "resourcePoolTraversalSpec" }
+    computeResourceRpTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name        = 'computeResourceRpTraversalSpec'
+      ts.type        = 'ComputeResource'
+      ts.path        = 'resourcePool'
+      ts.skip        = 'false'
+      ts.selectSet   = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'resourcePoolTraversalSpec' }
       end
     end
 
     #
     # Traverse ComputeResource to host.
     #
-    computeResourceHostTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name     = "computeResourceHostTraversalSpec"
-      ts.type     = "ComputeResource"
-      ts.path     = "host"
-      ts.skip     = "false"
+    computeResourceHostTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name     = 'computeResourceHostTraversalSpec'
+      ts.type     = 'ComputeResource'
+      ts.path     = 'host'
+      ts.skip     = 'false'
     end
 
     #
     # Traverse Datacenter to host folder.
     #
-    datacenterHostTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name     = "datacenterHostTraversalSpec"
-      ts.type     = "Datacenter"
-      ts.path     = "hostFolder"
-      ts.skip     = "false"
-      ts.selectSet  = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    datacenterHostTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name     = 'datacenterHostTraversalSpec'
+      ts.type     = 'Datacenter'
+      ts.path     = 'hostFolder'
+      ts.skip     = 'false'
+      ts.selectSet  = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
       end
     end
 
     #
     # Traverse Datacenter to VM folder.
     #
-    datacenterVmTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name     = "datacenterVmTraversalSpec"
-      ts.type     = "Datacenter"
-      ts.path     = "vmFolder"
-      ts.skip     = "false"
-      ts.selectSet  = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    datacenterVmTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name     = 'datacenterVmTraversalSpec'
+      ts.type     = 'Datacenter'
+      ts.path     = 'vmFolder'
+      ts.skip     = 'false'
+      ts.selectSet  = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
       end
     end
 
     #
     # Traverse Datacenter to Datastore.
     #
-    datacenterDsTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name     = "datacenterDsTraversalSpec"
-      ts.type     = "Datacenter"
-      ts.path     = "datastore"
-      ts.skip     = "false"
+    datacenterDsTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name     = 'datacenterDsTraversalSpec'
+      ts.type     = 'Datacenter'
+      ts.path     = 'datastore'
+      ts.skip     = 'false'
     end
 
     #
     # Traverse Folder to children.
     #
-    folderTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name     = "folderTraversalSpec"
-      ts.type     = "Folder"
-      ts.path     = "childEntity"
-      ts.skip     = "false"
-      ts.selectSet  = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    folderTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name     = 'folderTraversalSpec'
+      ts.type     = 'Folder'
+      ts.path     = 'childEntity'
+      ts.skip     = 'false'
+      ts.selectSet  = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
         ssa << datacenterHostTs
         ssa << datacenterVmTs
         ssa << datacenterDsTs
@@ -140,11 +140,11 @@ class MiqVimCoreUpdater < MiqVimClientBase
       end
     end
 
-    aOobjSpec = VimArray.new("ArrayOfObjectSpec") do |osa|
-      osa << VimHash.new("ObjectSpec") do |os|
+    aOobjSpec = VimArray.new('ArrayOfObjectSpec') do |osa|
+      osa << VimHash.new('ObjectSpec') do |os|
         os.obj      = @sic.rootFolder
-        os.skip     = "false"
-        os.selectSet  = VimArray.new("ArrayOfSelectionSpec") { |ssa| ssa << folderTs }
+        os.skip     = 'false'
+        os.selectSet  = VimArray.new('ArrayOfSelectionSpec') { |ssa| ssa << folderTs }
       end
     end
 
@@ -152,10 +152,10 @@ class MiqVimCoreUpdater < MiqVimClientBase
   end # def objectSet
 
   def updateSpec
-    VimHash.new("PropertyFilterSpec") do |pfs|
-      pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
+    VimHash.new('PropertyFilterSpec') do |pfs|
+      pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
         @propMap.each do |type, h|
-          psa << VimHash.new("PropertySpec") do |ps|
+          psa << VimHash.new('PropertySpec') do |ps|
             ps.type   = type
             ps.all    = h[:props].nil?.to_s
             ps.pathSet  = h[:props] if h[:props]
@@ -180,7 +180,7 @@ class MiqVimCoreUpdater < MiqVimClientBase
 
     begin
       @umPropCol     = @sic.propertyCollector
-      @filterSpecRef = createFilter(@umPropCol, @updateSpec, "true")
+      @filterSpecRef = createFilter(@umPropCol, @updateSpec, 'true')
 
       version = nil
 
@@ -310,24 +310,24 @@ class MiqVimCoreUpdater < MiqVimClientBase
   end
 
   def currentSession
-    getMoProp(@sic.sessionManager, "currentSession")
+    getMoProp(@sic.sessionManager, 'currentSession')
   end
 
   def getMoProp(mo, path = nil)
-    pfSpec = VimHash.new("PropertyFilterSpec") do |pfs|
-      pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
-        psa << VimHash.new("PropertySpec") do |ps|
+    pfSpec = VimHash.new('PropertyFilterSpec') do |pfs|
+      pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
+        psa << VimHash.new('PropertySpec') do |ps|
           ps.type = mo.vimType
           if !path
-            ps.all = "true"
+            ps.all = 'true'
           else
-            ps.all = "false"
+            ps.all = 'false'
             ps.pathSet = path
           end
         end
       end
-      pfs.objectSet = VimArray.new("ArrayOfObjectSpec") do |osa|
-        osa << VimHash.new("ObjectSpec") do |os|
+      pfs.objectSet = VimArray.new('ArrayOfObjectSpec') do |osa|
+        osa << VimHash.new('ObjectSpec') do |os|
           os.obj = mo
         end
       end

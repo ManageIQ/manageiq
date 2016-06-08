@@ -8,7 +8,7 @@ require 'VMwareWebService/MiqVimBroker'
 # Formatter to output log messages to the console.
 #
 class ConsoleFormatter < Log4r::Formatter
-  @@prog = File.basename(__FILE__, ".*")
+  @@prog = File.basename(__FILE__, '.*')
   def format(event)
     "#{Log4r::LNAMES[event.level]} [#{datetime}] -- #{@@prog}: " +
       (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
@@ -18,7 +18,7 @@ class ConsoleFormatter < Log4r::Formatter
 
   def datetime
     time = Time.now.utc
-    time.strftime("%Y-%m-%dT%H:%M:%S.") << "%06d" % time.usec
+    time.strftime('%Y-%m-%dT%H:%M:%S.') << '%06d' % time.usec
   end
 end
 $vim_log = Log4r::Logger.new 'toplog'
@@ -40,10 +40,10 @@ begin
 
   miqPh = vim.getVimPerfHistory
 
-  vm    = "MIQ-ITUNES"
+  vm    = 'MIQ-ITUNES'
   # vm    = "rpo-test2"
-  host  = raise "please define"
-  host2 = raise "please define"
+  host  = raise 'please define'
+  host2 = raise 'please define'
 
   hostMor = vim.hostSystems[host]['MOR']
   raise "Host #{host} not found" unless hostMor
@@ -55,7 +55,7 @@ begin
   puts "\trefreshRate       = #{psum['refreshRate']}"
   puts
 
-  puts "*** Calling: availMetricsForEntity"
+  puts '*** Calling: availMetricsForEntity'
   pmids = miqPh.availMetricsForEntity(hostMor, :intervalId => psum['refreshRate'])
   # puts "*** Available Counters for: #{host}"
   # pmids.each do |pmid|
@@ -66,7 +66,7 @@ begin
   # end
   puts
 
-  vmo = vim.virtualMachinesByFilter("config.name" => vm)
+  vmo = vim.virtualMachinesByFilter('config.name' => vm)
   if vmo.empty?
     puts "VM: #{vm} not found"
     exit
@@ -79,7 +79,7 @@ begin
   # vim.dumpObj(psum)
   puts
 
-  puts "Calling: availMetricsForEntity"
+  puts 'Calling: availMetricsForEntity'
   pmids = miqPh.availMetricsForEntity(vmMor, :intervalId => psum['refreshRate'])
   puts "*** Available Counters for: #{vm}"
   pmids.each do |pmid|
@@ -100,9 +100,9 @@ begin
   # ma.each_slice(2) { |t, v| puts ":\tValue: #{v}\t\tTIme: #{t.to_s}" }
   # puts
 
-  vma = vim.virtualMachinesByFilter("summary.runtime.hostName" => host2)
+  vma = vim.virtualMachinesByFilter('summary.runtime.hostName' => host2)
 
-  metricId = [{:counterId => cpurdyi['key'], :instance => "0"}]
+  metricId = [{:counterId => cpurdyi['key'], :instance => '0'}]
   ea = []
 
   puts "VMs on: #{host2}"
@@ -128,7 +128,7 @@ begin
   end
   puts
 
-  puts "*** Average VM CPU ready time by time-slice:"
+  puts '*** Average VM CPU ready time by time-slice:'
   tsHash.keys.sort.each do |ts|
     va = tsHash[ts]
     sum = 0
@@ -148,7 +148,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqPh.release if miqPh
   vim.disconnect if vim
 end

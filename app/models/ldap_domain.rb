@@ -51,11 +51,11 @@ class LdapDomain < ApplicationRecord
   end
 
   def domain_prefix
-    ""
+    ''
   end
 
   def domain_prefix=(_arg)
-    ""
+    ''
   end
 
   def verify_credentials(server = nil)
@@ -64,7 +64,7 @@ class LdapDomain < ApplicationRecord
     rescue Exception => err
       raise MiqException::Error, err.message
     else
-      raise MiqException::Error, _("Authentication failed") unless result
+      raise MiqException::Error, _('Authentication failed') unless result
     end
 
     result
@@ -149,12 +149,12 @@ class LdapDomain < ApplicationRecord
 
   def collect_property_names(entry, attr_sym)
     values = MiqLdap.get_attr(entry, attr_sym)
-    values.to_miq_a.collect { |dn| dn.split(",").first.split("=").last }.join(", ")
+    values.to_miq_a.collect { |dn| dn.split(',').first.split('=').last }.join(', ')
   end
 
   def collect_property_dns(entry, attr_sym)
     values = MiqLdap.get_attr(entry, attr_sym)
-    values.to_miq_a.join("; ")
+    values.to_miq_a.join('; ')
   end
 
   def build_user_search_filter(options)

@@ -1,15 +1,15 @@
 class Dialog < ApplicationRecord
-  DIALOG_DIR = Rails.root.join("product/dialogs/service_dialogs")
+  DIALOG_DIR = Rails.root.join('product/dialogs/service_dialogs')
 
   # The following gets around a glob symbolic link issue
-  ALL_YAML_FILES = DIALOG_DIR.join("{,*/**/}*.{yaml,yml}")
+  ALL_YAML_FILES = DIALOG_DIR.join('{,*/**/}*.{yaml,yml}')
 
   has_many :dialog_tabs, -> { order :position }, :dependent => :destroy
   validate :validate_children
 
   include DialogMixin
   has_many   :resource_actions
-  virtual_has_one :content, :class_name => "Hash"
+  virtual_has_one :content, :class_name => 'Hash'
 
   before_destroy          :reject_if_has_resource_actions
   validates_uniqueness_of :label
@@ -48,15 +48,15 @@ class Dialog < ApplicationRecord
 
   def validate_children
     # To remove the meaningless error message like "Dialog tabs is invalid" when child's validation fails
-    errors[:dialog_tabs].delete("is invalid")
+    errors[:dialog_tabs].delete('is invalid')
     if dialog_tabs.blank?
-      errors.add(:base, _("Dialog %{dialog_label} must have at least one Tab") % {:dialog_label => label})
+      errors.add(:base, _('Dialog %{dialog_label} must have at least one Tab') % {:dialog_label => label})
     end
 
     dialog_tabs.each do |dt|
       next if dt.valid?
       dt.errors.full_messages.each do |err_msg|
-        errors.add(:base, _("Dialog %{dialog_label} / %{error_message}") %
+        errors.add(:base, _('Dialog %{dialog_label} / %{error_message}') %
           {:dialog_label => label, :error_message => err_msg})
       end
     end
@@ -108,7 +108,7 @@ class Dialog < ApplicationRecord
 
   def reject_if_has_resource_actions
     if resource_actions.length > 0
-      raise _("Dialog cannot be deleted because it is connected to other components.")
+      raise _('Dialog cannot be deleted because it is connected to other components.')
     end
   end
 end

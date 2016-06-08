@@ -11,10 +11,10 @@ class ApplicationHelper::Toolbar::ContainerImagesCenter < ApplicationHelper::Too
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on the selected items'),
           N_('Perform SmartState Analysis'),
-          :url_parms => "main_div",
-          :confirm   => N_("Perform SmartState Analysis on the selected items?"),
+          :url_parms => 'main_div',
+          :confirm   => N_('Perform SmartState Analysis on the selected items?'),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])
@@ -25,33 +25,33 @@ class ApplicationHelper::Toolbar::ContainerImagesCenter < ApplicationHelper::Too
       t = N_('Policy'),
       t,
       :enabled => false,
-      :onwhen  => "1+",
+      :onwhen  => '1+',
       :items   => [
         button(
           :container_image_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for the selected items'),
           N_('Edit Tags'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
         button(
           :container_image_protect,
           'pficon pficon-edit fa-lg',
           N_('Manage Policies for this #{ui_lookup(:table=>"container_images")}'),
           N_('Manage Policies'),
-          :url_parms => "main_div",
-          :enabled   => "false",
-          :onwhen    => "1+"),
+          :url_parms => 'main_div',
+          :enabled   => 'false',
+          :onwhen    => '1+'),
         button(
           :container_image_check_compliance,
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for the selected items'),
           N_('Check Compliance of Last Known Configuration'),
-          :url_parms => "main_div",
-          :confirm   => N_("Initiate Check Compliance of the last known configuration for the selected items?"),
-          :enabled   => "false",
-          :onwhen    => "1+")
+          :url_parms => 'main_div',
+          :confirm   => N_('Initiate Check Compliance of the last known configuration for the selected items?'),
+          :enabled   => 'false',
+          :onwhen    => '1+')
       ]
     ),
   ])

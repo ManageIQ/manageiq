@@ -12,9 +12,9 @@ class IsoDatastore < ApplicationRecord
     MiqQueue.put_unless_exists(
       :class_name  => self.class.name,
       :instance_id => id,
-      :method_name => "synchronize_advertised_images",
+      :method_name => 'synchronize_advertised_images',
       :zone        => ext_management_system.try(:my_zone),
-      :role        => "ems_operations"
+      :role        => 'ems_operations'
     )
   end
 

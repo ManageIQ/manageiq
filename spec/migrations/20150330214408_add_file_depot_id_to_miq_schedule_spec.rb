@@ -5,9 +5,9 @@ describe AddFileDepotIdToMiqSchedule do
   let(:schedule_stub) { migration_stub(:MiqSchedule) }
 
   migration_context :up do
-    it "up" do
+    it 'up' do
       schedule = schedule_stub.create!
-      depot    = depot_stub.create!(:resource_type => "MiqSchedule", :resource_id => schedule.id)
+      depot    = depot_stub.create!(:resource_type => 'MiqSchedule', :resource_id => schedule.id)
 
       migrate
 
@@ -16,14 +16,14 @@ describe AddFileDepotIdToMiqSchedule do
   end
 
   migration_context :down do
-    it "down" do
+    it 'down' do
       depot    = depot_stub.create!
       schedule = schedule_stub.create!(:file_depot_id => depot.id)
 
       migrate
 
       expect(depot.reload.resource_id).to   eq(schedule.id)
-      expect(depot.reload.resource_type).to eq("MiqSchedule")
+      expect(depot.reload.resource_type).to eq('MiqSchedule')
     end
   end
 end

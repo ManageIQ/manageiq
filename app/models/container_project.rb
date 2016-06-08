@@ -1,6 +1,6 @@
 class ContainerProject < ApplicationRecord
   include CustomAttributeMixin
-  belongs_to :ext_management_system, :foreign_key => "ems_id"
+  belongs_to :ext_management_system, :foreign_key => 'ems_id'
   has_many :container_groups
   has_many :container_routes
   has_many :container_replicators
@@ -19,7 +19,7 @@ class ContainerProject < ApplicationRecord
   has_many :vim_performance_states, :as => :resource
   delegate :my_zone,                :to => :ext_management_system
 
-  has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
+  has_many :labels, -> { where(:section => 'labels') }, :class_name => 'CustomAttribute', :as => :resource, :dependent => :destroy
 
   virtual_column :groups_count,      :type => :integer
   virtual_column :services_count,    :type => :integer
@@ -61,7 +61,7 @@ class ContainerProject < ApplicationRecord
       ["container_namespace = ? AND #{events_table_name(assoc)}.ems_id = ?", name, ems_id]
     when :policy_events
       # TODO: implement policy events and its relationship
-      ["ems_id = ?", ems_id]
+      ['ems_id = ?', ems_id]
     end
   end
 

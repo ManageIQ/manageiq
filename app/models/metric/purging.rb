@@ -1,6 +1,6 @@
 module Metric::Purging
   def self.purge_date(type)
-    value = VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, type.to_sym)
+    value = VMDB::Config.new('vmdb').config.fetch_path(:performance, :history, type.to_sym)
 
     case value
     when Numeric
@@ -22,26 +22,26 @@ module Metric::Purging
 
   def self.purge_daily_timer(ts = nil)
     ts ||= purge_date(:keep_daily_performances) || 6.months.ago.utc
-    purge_timer(ts, "daily")
+    purge_timer(ts, 'daily')
   end
 
   def self.purge_hourly_timer(ts = nil)
     ts ||= purge_date(:keep_hourly_performances) || 6.months.ago.utc
-    purge_timer(ts, "hourly")
+    purge_timer(ts, 'hourly')
   end
 
   def self.purge_realtime_timer(ts = nil)
     ts ||= purge_date(:keep_realtime_performances) || 4.hours.ago.utc
-    purge_timer(ts, "realtime")
+    purge_timer(ts, 'realtime')
   end
 
   def self.purge_timer(ts, interval)
     MiqQueue.put_unless_exists(
       :class_name    => name,
-      :method_name   => "purge",
-      :role          => "ems_metrics_processor",
-      :queue_name    => "ems_metrics_processor",
-      :state         => ["ready", "dequeue"],
+      :method_name   => 'purge',
+      :role          => 'ems_metrics_processor',
+      :queue_name    => 'ems_metrics_processor',
+      :state         => ['ready', 'dequeue'],
       :args_selector => ->(args) { args.kind_of?(Array) && args.last == interval }
     ) do |_msg, find_options|
       find_options.merge(:args => [ts, interval])
@@ -49,7 +49,7 @@ module Metric::Purging
   end
 
   def self.purge_window_size
-    VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :purge_window_size) || 1000
+    VMDB::Config.new('vmdb').config.fetch_path(:performance, :history, :purge_window_size) || 1000
   end
 
   def self.purge_scope(older_than, interval)
@@ -65,7 +65,7 @@ module Metric::Purging
     # Since VimPerformanceTagValues are 6 * number of tags per performance
     # record, we need to batch in smaller trips.
     count_tag_values = 0
-    _log.info("Purging associated tag values.")
+    _log.info('Purging associated tag values.')
     ids.each_slice(50) do |vp_ids|
       tv_count, = Benchmark.realtime_block(:purge_vim_performance_tag_values) do
         VimPerformanceTagValue.where(:metric_id => vp_ids, :metric_type => metric_type).delete_all

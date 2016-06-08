@@ -40,7 +40,7 @@ module OpenstackHandle
 
       raise MiqException::MiqOpenstackApiRequestError,
             "Unable to obtain a collection: '#{collection_type}' in a service: '#{openstack_service_name}' through "\
-            " API. Please, fix your OpenStack installation and run refresh again."
+            ' API. Please, fix your OpenStack installation and run refresh again.'
     end
 
     def pagination_handle(collection_type, options = {}, method = :all)

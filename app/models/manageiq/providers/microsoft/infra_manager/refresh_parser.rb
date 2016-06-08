@@ -191,7 +191,7 @@ module ManageIQ::Providers::Microsoft
         :ems_ref          => uid,
         :uid_ems          => uid,
         :type             => 'ManageIQ::Providers::Microsoft::InfraManager::Vm',
-        :vendor           => "microsoft",
+        :vendor           => 'microsoft',
         :raw_power_state  => p[:VirtualMachineState][:ToString],
         :operating_system => process_vm_os(p[:OperatingSystem]),
         :connection_state => lookup_connected_state(connection_state),
@@ -203,7 +203,7 @@ module ManageIQ::Providers::Microsoft
         :storage          => process_vm_storage(p[:VMCPath], host),
         :storages         => process_vm_storages(p),
       }
-      new_result[:location] = p[:VMCPath].nil? ? "unknown" : p[:VMCPath].sub(DRIVE_LETTER, "").strip
+      new_result[:location] = p[:VMCPath].nil? ? 'unknown' : p[:VMCPath].sub(DRIVE_LETTER, '').strip
       return uid, new_result
     end
 
@@ -212,13 +212,13 @@ module ManageIQ::Providers::Microsoft
       uid             = p[:ID]
 
       new_result = {
-        :type             => "ManageIQ::Providers::Microsoft::InfraManager::Template",
+        :type             => 'ManageIQ::Providers::Microsoft::InfraManager::Template',
         :uid_ems          => uid,
         :ems_ref          => uid,
-        :vendor           => "microsoft",
+        :vendor           => 'microsoft',
         :operating_system => process_vm_os(p[:OperatingSystem]),
         :name             => p[:Name],
-        :raw_power_state  => "never",
+        :raw_power_state  => 'never',
         :template         => true,
         :storages         => process_vm_storages(p),
         :hardware         => {
@@ -368,9 +368,9 @@ module ManageIQ::Providers::Microsoft
       return if computername.nil?
       log_header = "MIQ(#{self.class.name}.#{__method__})"
 
-      if computername.start_with?("getaddrinfo failed_")
+      if computername.start_with?('getaddrinfo failed_')
         $scvmm_log.warn("#{log_header} Invalid hostname value returned from SCVMM: #{computername}")
-        "Unavailable"
+        'Unavailable'
       else
         computername
       end
@@ -386,7 +386,7 @@ module ManageIQ::Providers::Microsoft
           :size            => disk[:MaximumSize],
           :size_on_disk    => disk[:Size],
           :disk_type       => lookup_disk_type(disk),
-          :device_type     => "disk",
+          :device_type     => 'disk',
           :present         => true,
           :filename        => disk[:SharePath],
           :location        => disk[:Location],
@@ -405,8 +405,8 @@ module ManageIQ::Providers::Microsoft
       devices    = []
 
       devices << case connection
-                 when "HostDrive" then process_vm_physical_dvd_drive(dvdprops)
-                 when "ISOImage"  then process_iso_image(vm)
+                 when 'HostDrive' then process_vm_physical_dvd_drive(dvdprops)
+                 when 'ISOImage'  then process_iso_image(vm)
                  end
 
       devices.compact
@@ -470,7 +470,7 @@ module ManageIQ::Providers::Microsoft
       {
         :product_name => property_hash[:OperatingSystem][:ToString],
         :version      => property_hash[:OperatingSystemVersion],
-        :product_type => "microsoft"
+        :product_type => 'microsoft'
       }
     end
 
@@ -484,14 +484,14 @@ module ManageIQ::Providers::Microsoft
 
     def process_tools_status(property_hash)
       tools = {
-        "OS shutdown"          => property_hash[:OperatingSystemShutdownEnabled],
-        "Time synchronization" => property_hash[:TimeSynchronizationEnabled],
-        "Data exchange"        => property_hash[:DataExchangeEnabled],
-        "Heartbeat"            => property_hash[:HeartbeatEnabled],
-        "Backup"               => property_hash[:BackupEnabled],
+        'OS shutdown'          => property_hash[:OperatingSystemShutdownEnabled],
+        'Time synchronization' => property_hash[:TimeSynchronizationEnabled],
+        'Data exchange'        => property_hash[:DataExchangeEnabled],
+        'Heartbeat'            => property_hash[:HeartbeatEnabled],
+        'Backup'               => property_hash[:BackupEnabled],
       }
 
-      tools.collect { |kv| kv.join(": ") }.join(", ").truncate(255).chomp(", ")
+      tools.collect { |kv| kv.join(': ') }.join(', ').truncate(255).chomp(', ')
     end
 
     def set_relationship_on_hosts(cluster, nodes)
@@ -508,8 +508,8 @@ module ManageIQ::Providers::Microsoft
       host_folder = {
         :name         => 'host',
         :type         => 'EmsFolder',
-        :uid_ems      => "host_folder",
-        :ems_ref      => "host_folder",
+        :uid_ems      => 'host_folder',
+        :ems_ref      => 'host_folder',
         :hidden       => true,
         :ems_children => set_host_folder_children
 
@@ -517,16 +517,16 @@ module ManageIQ::Providers::Microsoft
       vm_folder = {
         :name         => 'vm',
         :type         => 'EmsFolder',
-        :uid_ems      => "vm_folder",
-        :ems_ref      => "vm_folder",
+        :uid_ems      => 'vm_folder',
+        :ems_ref      => 'vm_folder',
         :hidden       => true,
         :ems_children => {:vms => @data[:vms]}
       }
       scvmm_folder = {
         :name         => 'SCVMM',
         :type         => 'Datacenter',
-        :uid_ems      => "scvmm",
-        :ems_ref      => "scvmm",
+        :uid_ems      => 'scvmm',
+        :ems_ref      => 'scvmm',
         :hidden       => false,
         :ems_children => {:folders => [host_folder, vm_folder]}
       }
@@ -568,32 +568,32 @@ module ManageIQ::Providers::Microsoft
 
     def lookup_power_state(power_state_input)
       case power_state_input
-      when "Running"  then "on"
-      when "Paused", "Saved"   then "suspended"
-      when "PowerOff" then "off"
-      else                 "unknown"
+      when 'Running'  then 'on'
+      when 'Paused', 'Saved'   then "suspended"
+      when 'PowerOff' then 'off'
+      else                 'unknown'
       end
     end
 
     def lookup_connected_state(connected_state_input)
       case connected_state_input
-      when "true", "Responding"
+      when 'true', 'Responding'
         "connected"
-      when "false", "NotResponding", "AccessDenied", "NoConnection"
+      when 'false', 'NotResponding', "AccessDenied", "NoConnection"
         "disconnected"
       else
-        "unknown"
+        'unknown'
       end
     end
 
     def lookup_disk_type(disk)
       case disk[:VHDType]
-      when "DynamicallyExpanding", "Expandable", "Differencing" # TODO: Add A New Type In Database For Differencing
+      when 'DynamicallyExpanding', 'Expandable', "Differencing" # TODO: Add A New Type In Database For Differencing
         "thin"
-      when "Fixed"
-        "thick"
+      when 'Fixed'
+        'thick'
       else
-        "unknown"
+        'unknown'
       end
     end
 

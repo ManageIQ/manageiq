@@ -16,8 +16,8 @@ module ManageiqForeman
       host = hosts.first
       hostgroup = hostgroups.first
       if (host && hostgroup && (
-          (host.key?("location_id") && !hostgroup.key?("locations")) ||
-          (host.key?("organization_id") && !hostgroup.key?("organizations"))))
+          (host.key?('location_id') && !hostgroup.key?('locations')) ||
+          (host.key?('organization_id') && !hostgroup.key?('organizations'))))
         hostgroups = connection.load_details(hostgroups, :hostgroups)
       end
       {

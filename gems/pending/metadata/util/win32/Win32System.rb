@@ -32,33 +32,33 @@ module MiqWin32
     ]
 
     TCPIP_MAPPING = [
-      "Hostname", :hostname,
+      'Hostname', :hostname,
     ]
 
     NETWORK_CARDS_MAPPING = [
-      "ServiceName", :guid,
-      "Description", :description,
+      'ServiceName', :guid,
+      'Description', :description,
     ]
 
     DHCP_MAPPING = [
-      "EnableDHCP", :dhcp_enabled,
-      "DhcpIPAddress", :ipaddress,
-      "DhcpSubnetMask", :subnet_mask,
-      "LeaseObtainedTime", :lease_obtained,
-      "LeaseTerminatesTime", :lease_expires,
-      "DhcpDefaultGateway", :default_gateway,
-      "DhcpServer", :dhcp_server,
-      "DhcpNameServer", :dns_server,
-      "DhcpDomain", :domain,
+      'EnableDHCP', :dhcp_enabled,
+      'DhcpIPAddress', :ipaddress,
+      'DhcpSubnetMask', :subnet_mask,
+      'LeaseObtainedTime', :lease_obtained,
+      'LeaseTerminatesTime', :lease_expires,
+      'DhcpDefaultGateway', :default_gateway,
+      'DhcpServer', :dhcp_server,
+      'DhcpNameServer', :dns_server,
+      'DhcpDomain', :domain,
     ]
 
     STATIC_MAPPING = [
-      "EnableDHCP", :dhcp_enabled,
-      "IPAddress", :ipaddress,
-      "SubnetMask", :subnet_mask,
-      "DefaultGateway", :default_gateway,
-      "NameServer", :dns_server,
-      "Domain", :domain,
+      'EnableDHCP', :dhcp_enabled,
+      'IPAddress', :ipaddress,
+      'SubnetMask', :subnet_mask,
+      'DefaultGateway', :default_gateway,
+      'NameServer', :dns_server,
+      'Domain', :domain,
     ]
 
     # Software registry value filters
@@ -79,15 +79,15 @@ module MiqWin32
       @networks = []
 
       regHnd = RemoteRegistry.new(fs, true)
-      software_doc = regHnd.loadHive("software", [
-        {:key => "Microsoft/Windows NT/CurrentVersion", :depth => 1, :value => OS_MAPPING_VALUES},
-        {:key => "Microsoft/Windows NT/CurrentVersion/NetworkCards", :depth => 0, :value => NETWORK_CARDS_VALUES}
+      software_doc = regHnd.loadHive('software', [
+        {:key => 'Microsoft/Windows NT/CurrentVersion', :depth => 1, :value => OS_MAPPING_VALUES},
+        {:key => 'Microsoft/Windows NT/CurrentVersion/NetworkCards', :depth => 0, :value => NETWORK_CARDS_VALUES}
       ])
 
       regHnd.close
 
       regHnd = RemoteRegistry.new(fs, true)
-      sys_doc = regHnd.loadHive("system", [
+      sys_doc = regHnd.loadHive('system', [
         {:key => 'CurrentControlSet/Control/ComputerName/ComputerName', :value => COMPUTER_NAME_VALUES},
         {:key => 'CurrentControlSet/Control/Session Manager/Environment', :value => ENVIRONMENT_VALUES},
         {:key => 'CurrentControlSet/Control/ProductOptions', :value => PRODUCT_OPTIONS_VALUES},
@@ -96,18 +96,18 @@ module MiqWin32
       regHnd.close
 
       # Get the OS information
-      attrs = {:type => "windows"}
+      attrs = {:type => 'windows'}
 
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", software_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion', software_doc.root)
       attrs.merge!(XmlFind.decode(reg_node, OS_MAPPING)) if reg_node
 
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\ComputerName", sys_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\ComputerName', sys_doc.root)
       attrs.merge!(XmlFind.decode(reg_node, COMPUTER_NAME_MAPPING)) if reg_node
 
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\ProductOptions", sys_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\ProductOptions', sys_doc.root)
       attrs.merge!(XmlFind.decode(reg_node, PRODUCT_OPTIONS_MAPPING)) if reg_node
 
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment", sys_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment', sys_doc.root)
       attrs.merge!(XmlFind.decode(reg_node, ENVIRONMENT_MAPPING)) if reg_node
 
       attrs[:product_key] = MiqWin32::Software.DecodeProductKey(attrs[:product_key]) if attrs[:product_key]
@@ -122,15 +122,15 @@ module MiqWin32
       # Get the network card information
 
       # Hold onto the parameters common to all network cards
-      reg_tcpip = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters", sys_doc.root)
+      reg_tcpip = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters', sys_doc.root)
       if reg_tcpip
         tcpip_params = XmlFind.decode(reg_tcpip, TCPIP_MAPPING)
-        tcpip_params[:domain] = XmlFind.findNamedElement_hash("Domain", reg_tcpip)
-        tcpip_params[:domain] = XmlFind.findNamedElement_hash("DhcpDomain", reg_tcpip) if tcpip_params[:domain].blank?
+        tcpip_params[:domain] = XmlFind.findNamedElement_hash('Domain', reg_tcpip)
+        tcpip_params[:domain] = XmlFind.findNamedElement_hash('DhcpDomain', reg_tcpip) if tcpip_params[:domain].blank?
         tcpip_params[:domain] = nil if tcpip_params[:domain].blank?
 
         # Find each netword card, and get it's individual parameters
-        reg_networkCards = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\NetworkCards", software_doc.root)
+        reg_networkCards = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\NetworkCards', software_doc.root)
         if reg_networkCards.kind_of?(Hash)
           reg_networkCards.each_element do |networkCard|
             attrs = XmlFind.decode(networkCard, NETWORK_CARDS_MAPPING)
@@ -145,7 +145,7 @@ module MiqWin32
             attrs[:lease_obtained] = attrs[:lease_expires] = attrs[:dhcp_server] = nil
 
             # Get the rest of the parameters based on whether this network is DHCP enabled
-            dhcp = XmlFind.findNamedElement_hash("EnableDHCP", params)
+            dhcp = XmlFind.findNamedElement_hash('EnableDHCP', params)
             attrs.merge!(XmlFind.decode(params, dhcp.to_i == 1 ? DHCP_MAPPING : STATIC_MAPPING))
 
             # Remove the extra curly braces from the guid
@@ -167,15 +167,15 @@ module MiqWin32
       software_doc = nil; sys_doc = nil; GC.start
 
       regHnd = RemoteRegistry.new(fs, true)
-      sam_doc = regHnd.loadHive("sam", [{:key => "SAM/Domains/Account", :depth => 1, :value => ['F']}])
+      sam_doc = regHnd.loadHive('sam', [{:key => 'SAM/Domains/Account', :depth => 1, :value => ['F']}])
       regHnd.close
 
       # Extract the local account policy from the registry
       @debug_str += "Account Policy:\n" if @debug_str
-      reg_node = MIQRexml.findRegElement("HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Account", sam_doc.root)
+      reg_node = MIQRexml.findRegElement('HKEY_LOCAL_MACHINE\\SAM\\SAM\\Domains\\Account', sam_doc.root)
       if reg_node
         reg_node.each_element(:value) do |e|
-          acct_policy_f = process_acct_policy_f(e.text) if e.attributes[:name] == "F"
+          acct_policy_f = process_acct_policy_f(e.text) if e.attributes[:name] == 'F'
 
           unless acct_policy_f.nil?
             # Remove unused elements
@@ -229,8 +229,8 @@ module MiqWin32
 
     def architecture_to_string(architecture)
       case architecture
-      when "x86" then 32
-      when "AMD64" then 64
+      when 'x86' then 32
+      when 'AMD64' then 64
       end
     end
 
@@ -281,19 +281,19 @@ module MiqWin32
 
       @debug_str += "  auto_increment        - %s\n" % f[:auto_increment] if @debug_str
 
-      @debug_str += "  max_pw_age            - %s - " % f[:max_pw_age] if @debug_str
+      @debug_str += '  max_pw_age            - %s - ' % f[:max_pw_age] if @debug_str
       f[:max_pw_age] = process_acct_policy_f_date(f[:max_pw_age]) / 86400
       @debug_str += "%s days\n" % f[:max_pw_age] if @debug_str
 
-      @debug_str += "  min_pw_age            - %s - " % f[:min_pw_age] if @debug_str
+      @debug_str += '  min_pw_age            - %s - ' % f[:min_pw_age] if @debug_str
       f[:min_pw_age] = process_acct_policy_f_date(f[:min_pw_age]) / 86400
       @debug_str += "%s days\n" % f[:min_pw_age] if @debug_str
 
-      @debug_str += "  lockout_duration      - %s - " % f[:lockout_duration] if @debug_str
+      @debug_str += '  lockout_duration      - %s - ' % f[:lockout_duration] if @debug_str
       f[:lockout_duration] = process_acct_policy_f_date(f[:lockout_duration]) / 60
       @debug_str += "%s minutes\n" % f[:lockout_duration] if @debug_str
 
-      @debug_str += "  reset_lockout_counter - %s - " % f[:reset_lockout_counter] if @debug_str
+      @debug_str += '  reset_lockout_counter - %s - ' % f[:reset_lockout_counter] if @debug_str
       f[:reset_lockout_counter] = process_acct_policy_f_date(f[:reset_lockout_counter]) / 60
       @debug_str += "%s minutes\n" % f[:reset_lockout_counter] if @debug_str
 

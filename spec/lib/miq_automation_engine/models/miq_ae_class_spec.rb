@@ -1,77 +1,77 @@
 include AutomationSpecHelper
 describe MiqAeClass do
-  describe "name attribute validation" do
+  describe 'name attribute validation' do
     subject { described_class.new }
 
-    example "with no name" do
+    example 'with no name' do
       subject.name = nil
       subject.valid?
       expect(subject.errors[:name]).to be_present
     end
 
-    example "with no namespace_id" do
+    example 'with no namespace_id' do
       subject.namespace_id = nil
       subject.valid?
       expect(subject.errors[:namespace_id]).to be_present
     end
 
-    example "with a valid name" do
-      subject.name = "cla.ss1"
+    example 'with a valid name' do
+      subject.name = 'cla.ss1'
       subject.valid?
       expect(subject.errors[:name]).to be_blank
 
-      subject.name = "cla-ss1"
+      subject.name = 'cla-ss1'
       subject.valid?
       expect(subject.errors[:name]).to be_blank
     end
 
-    example "with an invalid name" do
-      subject.name = "cla ss1"
+    example 'with an invalid name' do
+      subject.name = 'cla ss1'
       subject.valid?
       expect(subject.errors[:name]).to be_present
 
-      subject.name = "cla:ss1"
+      subject.name = 'cla:ss1'
       subject.valid?
       expect(subject.errors[:name]).to be_present
     end
   end
 
-  it "should not create class without namespace" do
-    expect { MiqAeClass.new(:name => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
+  it 'should not create class without namespace' do
+    expect { MiqAeClass.new(:name => 'TEST').save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  it "should not create class without name" do
-    expect { MiqAeClass.new(:namespace => "TEST").save! }.to raise_error(ActiveRecord::RecordInvalid)
+  it 'should not create class without name' do
+    expect { MiqAeClass.new(:namespace => 'TEST').save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
-  it "should set the updated_by field on save" do
-    c1 = MiqAeClass.create(:namespace => "TEST", :name => "oleg")
+  it 'should set the updated_by field on save' do
+    c1 = MiqAeClass.create(:namespace => 'TEST', :name => 'oleg')
     expect(c1.updated_by).to eq('system')
   end
 
-  it "should not create classes with the same name in the same namespace" do
-    c1 = MiqAeClass.new(:namespace => "TEST", :name => "oleg")
+  it 'should not create classes with the same name in the same namespace' do
+    c1 = MiqAeClass.new(:namespace => 'TEST', :name => 'oleg')
     expect(c1).not_to be_nil
     expect(c1.save!).to be_truthy
-    expect { MiqAeClass.new(:namespace => "TEST", :name => "OLEG").save! }.to raise_error(ActiveRecord::RecordInvalid)
-    c2 = MiqAeClass.new(:namespace => "PROD", :name => "oleg")
+    expect { MiqAeClass.new(:namespace => 'TEST', :name => 'OLEG').save! }.to raise_error(ActiveRecord::RecordInvalid)
+    c2 = MiqAeClass.new(:namespace => 'PROD', :name => 'oleg')
     expect(c2).not_to be_nil
     expect(c2.save!).to be_truthy
   end
 
-  it "should return editable as false if the parent namespace is not editable" do
+  it 'should return editable as false if the parent namespace is not editable' do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
     expect(c1).not_to be_editable
   end
 
-  it "should return editable as true if the parent namespace is editable" do
+  it 'should return editable as true if the parent namespace is editable' do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
     expect(c1).to be_editable
   end
 
-  context "cross domain instances" do
+  context 'cross domain instances' do
     def set_priority(name, value)
       ns = MiqAeNamespace.find_by_fqname(name)
       ns.update_attributes!(:priority => value)
@@ -80,9 +80,9 @@ describe MiqAeClass do
     before(:each) do
       @user = FactoryGirl.create(:user_with_group, 'name' => 'Fred')
       model_data_dir = File.join(File.dirname(__FILE__), 'miq_ae_classes')
-      EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain1'), "DOMAIN1")
-      EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain2'), "DOMAIN2")
-      EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain3'), "DOMAIN3")
+      EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain1'), 'DOMAIN1')
+      EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain2'), 'DOMAIN2')
+      EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain3'), 'DOMAIN3')
       set_priority('domain1', 10)
       set_priority('domain2', 20)
       set_priority('domain3', 50)
@@ -170,22 +170,22 @@ describe MiqAeClass do
     end
   end
 
-  context "#copy" do
+  context '#copy' do
     before do
-      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
-      @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
-      @cls2 = FactoryGirl.create(:miq_ae_class, :name => "cls2", :namespace_id => @ns1.id)
+      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => 'domain1', :parent_id => nil, :priority => 1)
+      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => @d1.id)
+      @cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => @ns1.id)
+      @cls2 = FactoryGirl.create(:miq_ae_class, :name => 'cls2', :namespace_id => @ns1.id)
 
       @d2 = FactoryGirl.create(:miq_ae_namespace,
-                               :name      => "domain2",
+                               :name      => 'domain2',
                                :parent_id => nil,
                                :priority  => 2,
                                :system    => false)
-      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => @d2.id)
     end
 
-    it "copies classes under specified namespace" do
+    it 'copies classes under specified namespace' do
       options = {
         :domain             => @d2.name,
         :namespace          => @ns2.name,
@@ -197,7 +197,7 @@ describe MiqAeClass do
       expect(res.count).to eq(2)
     end
 
-    it "copy classes under same namespace raise error when class exists" do
+    it 'copy classes under same namespace raise error when class exists' do
       options = {
         :domain             => @d1.name,
         :namespace          => @ns1.name,
@@ -208,7 +208,7 @@ describe MiqAeClass do
       expect { MiqAeClass.copy(options) }.to raise_error(RuntimeError)
     end
 
-    it "replaces classes under same namespace when class exists" do
+    it 'replaces classes under same namespace when class exists' do
       options = {
         :domain             => @d2.name,
         :namespace          => @ns2.name,
@@ -221,7 +221,7 @@ describe MiqAeClass do
     end
   end
 
-  describe "#to_export_xml" do
+  describe '#to_export_xml' do
     let(:miq_ae_class) do
       described_class.new(
         :ae_fields    => ae_fields,
@@ -230,7 +230,7 @@ describe MiqAeClass do
         :created_on   => Time.zone.now,
         :id           => 123,
         :namespace_id => 321,
-        :updated_by   => "me",
+        :updated_by   => 'me',
         :updated_on   => Time.zone.now
       )
     end
@@ -242,18 +242,18 @@ describe MiqAeClass do
     let(:ae_instance2) { MiqAeInstance.new }
 
     before do
-      allow(ae_method1).to receive(:fqname).and_return("z")
-      allow(ae_method2).to receive(:fqname).and_return("a")
+      allow(ae_method1).to receive(:fqname).and_return('z')
+      allow(ae_method2).to receive(:fqname).and_return('a')
       allow(ae_method1).to receive(:to_export_xml) { |options| options[:builder].ae_method1 }
       allow(ae_method2).to receive(:to_export_xml) { |options| options[:builder].ae_method2 }
 
-      allow(ae_instance1).to receive(:fqname).and_return("z")
-      allow(ae_instance2).to receive(:fqname).and_return("a")
+      allow(ae_instance1).to receive(:fqname).and_return('z')
+      allow(ae_instance2).to receive(:fqname).and_return('a')
       allow(ae_instance1).to receive(:to_export_xml) { |options| options[:builder].ae_instance1 }
       allow(ae_instance2).to receive(:to_export_xml) { |options| options[:builder].ae_instance2 }
     end
 
-    context "when the class has ae_fields" do
+    context 'when the class has ae_fields' do
       let(:ae_fields) { [ae_field1, ae_field2] }
       let(:ae_field1) { MiqAeField.new(:priority => 100) }
       let(:ae_field2) { MiqAeField.new(:priority => 1) }
@@ -263,7 +263,7 @@ describe MiqAeClass do
         allow(ae_field2).to receive(:to_export_xml) { |options| options[:builder].ae_field2 }
       end
 
-      it "produces the expected xml" do
+      it 'produces the expected xml' do
         expected_xml = <<-XML
 <MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><MiqAeSchema><ae_field2/><ae_field1/></MiqAeSchema><ae_instance2/><ae_instance1/></MiqAeClass>
         XML
@@ -272,10 +272,10 @@ describe MiqAeClass do
       end
     end
 
-    context "when the class does not have ae_fields" do
+    context 'when the class does not have ae_fields' do
       let(:ae_fields) { [] }
 
-      it "produces the expected xml" do
+      it 'produces the expected xml' do
         expected_xml = <<-XML
 <MiqAeClass name="" namespace=""><ae_method2/><ae_method1/><ae_instance2/><ae_instance1/></MiqAeClass>
         XML
@@ -285,31 +285,31 @@ describe MiqAeClass do
     end
   end
 
-  it "#domain" do
-    c1 = MiqAeClass.create(:namespace => "TEST/ABC", :name => "oleg")
+  it '#domain' do
+    c1 = MiqAeClass.create(:namespace => 'TEST/ABC', :name => 'oleg')
     expect(c1.domain.name).to eql('TEST')
   end
 
-  context "state_machine_class tests" do
+  context 'state_machine_class tests' do
     before(:each) do
       n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
-      @c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+      @c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
     end
 
-    it "class with only state field" do
-      @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'state')
+    it 'class with only state field' do
+      @c1.ae_fields.create(:name => 'test_field', :substitute => false, :aetype => 'state')
       @c1.reload
       expect(@c1.state_machine?).to be_truthy
     end
 
-    it "class with only attribute field" do
-      @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
+    it 'class with only attribute field' do
+      @c1.ae_fields.create(:name => 'test_field', :substitute => false, :aetype => 'attribute')
       @c1.reload
       expect(@c1.state_machine?).to be_falsey
     end
 
-    it "update the field from attribute to state" do
-      field1 = @c1.ae_fields.create(:name => "test_field", :substitute => false, :aetype => 'attribute')
+    it 'update the field from attribute to state' do
+      field1 = @c1.ae_fields.create(:name => 'test_field', :substitute => false, :aetype => 'attribute')
       @c1.reload
       expect(@c1.state_machine?).to be_falsey
       field1.update_attributes(:aetype => 'state')
@@ -317,8 +317,8 @@ describe MiqAeClass do
       expect(@c1.state_machine?).to be_truthy
     end
 
-    it "remove the state field" do
-      field1 = @c1.ae_fields.create(:name => "test_field1", :substitute => false, :aetype => 'state')
+    it 'remove the state field' do
+      field1 = @c1.ae_fields.create(:name => 'test_field1', :substitute => false, :aetype => 'state')
       @c1.reload
       expect(@c1.state_machine?).to be_truthy
       field1.destroy
@@ -327,8 +327,8 @@ describe MiqAeClass do
     end
   end
 
-  context "waypoint_ids_for_state_machine" do
-    it "check ids" do
+  context 'waypoint_ids_for_state_machine' do
+    it 'check ids' do
       create_state_ae_model(:name => 'FRED', :ae_class => 'CLASS1', :ae_namespace  => 'A/B/C')
       create_state_ae_model(:name => 'FREDDY', :ae_class => 'CLASS2', :ae_namespace  => 'C/D/E')
       create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
@@ -339,7 +339,7 @@ describe MiqAeClass do
       expect(MiqAeClass.waypoint_ids_for_state_machines).to match_array(ids)
     end
 
-    it "no state machine classes" do
+    it 'no state machine classes' do
       create_ae_model(:name => 'MARIO', :ae_class => 'CLASS3', :ae_namespace  => 'C/D/E')
       expect(MiqAeClass.waypoint_ids_for_state_machines).to be_empty
     end

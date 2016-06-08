@@ -17,14 +17,14 @@ class MigrateConfigurationManagerToEms < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Migrating configuration_managers to ext_management_systems") do
+    say_with_time('Migrating configuration_managers to ext_management_systems') do
       systems  = ConfiguredSystem.all.group_by(&:configuration_manager_id)
       profiles = ConfigurationProfile.all.group_by(&:configuration_manager_id)
 
       ConfigurationManager.all.each do |manager|
-        attrs = manager.attributes.except("id")
-        attrs["created_on"] = attrs.delete("created_at")
-        attrs["updated_on"] = attrs.delete("updated_at")
+        attrs = manager.attributes.except('id')
+        attrs['created_on'] = attrs.delete('created_at')
+        attrs['updated_on'] = attrs.delete('updated_at')
         ems = ExtManagementSystem.create!(attrs)
 
         Array(systems.delete(manager.id)).each do |s|
@@ -41,15 +41,15 @@ class MigrateConfigurationManagerToEms < ActiveRecord::Migration
   end
 
   def down
-    say_with_time("Migrating ext_management_systems to configuration_managers") do
+    say_with_time('Migrating ext_management_systems to configuration_managers') do
       systems  = ConfiguredSystem.all.group_by(&:configuration_manager_id)
       profiles = ConfigurationProfile.all.group_by(&:configuration_manager_id)
 
-      ExtManagementSystem.where(:type => "ConfigurationManagerForeman").each do |ems|
+      ExtManagementSystem.where(:type => 'ConfigurationManagerForeman').each do |ems|
         attrs = ems.attributes
-        attrs["created_at"] = attrs.delete("created_on")
-        attrs["updated_at"] = attrs.delete("updated_on")
-        attrs = attrs.slice(*ConfigurationManager.column_names).except("id")
+        attrs['created_at'] = attrs.delete('created_on')
+        attrs['updated_at'] = attrs.delete('updated_on')
+        attrs = attrs.slice(*ConfigurationManager.column_names).except('id')
         manager = ConfigurationManager.create!(attrs)
 
         Array(systems.delete(ems.id)).each do |s|

@@ -11,22 +11,22 @@ class ApplicationHelper::Toolbar::ContainerRoutesCenter < ApplicationHelper::Too
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New #{ui_lookup(:table=>"container_project")}'),
           t,
-          :url => "/new"),
+          :url => '/new'),
         button(
           :container_service_edit,
           'pficon pficon-edit fa-lg',
           N_('Select a single #{ui_lookup(:table=>"container_project")} to edit'),
           N_('Edit Selected #{ui_lookup(:table=>"container_project")}'),
-          :url_parms => "main_div",
-          :onwhen    => "1"),
+          :url_parms => 'main_div',
+          :onwhen    => '1'),
         button(
           :container_service_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove selected #{ui_lookup(:tables=>"container_projects")} from the VMDB'),
           N_('Remove #{ui_lookup(:tables=>"container_project")} from the VMDB'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :confirm   => N_("Warning: The selected \#{ui_lookup(:tables=>\"container_projects\")} and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove the selected \#{ui_lookup(:tables=>\"container_projects\")}?"),
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])
@@ -37,16 +37,16 @@ class ApplicationHelper::Toolbar::ContainerRoutesCenter < ApplicationHelper::Too
       t = N_('Policy'),
       t,
       :enabled => false,
-      :onwhen  => "1+",
+      :onwhen  => '1+',
       :items   => [
         button(
           :container_route_tag,
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this #{ui_lookup(:table=>"container_routes")}'),
           N_('Edit Tags'),
-          :url_parms => "main_div",
+          :url_parms => 'main_div',
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])

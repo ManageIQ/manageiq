@@ -51,18 +51,18 @@ class FakeMiqVimHandleBase
 end
 
 class FakeMiqVimHandle < FakeMiqVimHandleBase
-  DATA_DIR = "miq_vim_inventory"
+  DATA_DIR = 'miq_vim_inventory'
 
   def about
     {
-      "apiVersion"   => "4.1",
-      "instanceUuid" => "EF53782F-6F1A-4471-B338-72B27774AFDD"
+      'apiVersion'   => '4.1',
+      'instanceUuid' => 'EF53782F-6F1A-4471-B338-72B27774AFDD'
     }
   end
 
   def method_missing(m, *args)
     m = m.to_s
-    byMor = (m[-5..-1] == "ByMor" && m[-6, 1] != "s")
+    byMor = (m[-5..-1] == 'ByMor' && m[-6, 1] != 's')
     data = _load_data(byMor ? m.insert(-6, 's') : m)
     _dup_data(byMor ? data[args.first] : data)
   end
@@ -81,11 +81,11 @@ class FakeMiqVimHandle < FakeMiqVimHandleBase
 end
 
 class FakeMiqVimCustomizationSpecManager < FakeMiqVimHandleBase
-  DATA_DIR = "miq_vim_inventory"
+  DATA_DIR = 'miq_vim_inventory'
 end
 
 class FakeMiqVimHost < FakeMiqVimHandleBase
-  DATA_DIR = "miq_vim_inventory"
+  DATA_DIR = 'miq_vim_inventory'
 
   def initialize(mor)
     @mor = mor
@@ -97,7 +97,7 @@ class FakeMiqVimHost < FakeMiqVimHandleBase
 end
 
 class FakeMiqVimPerfHistory < FakeMiqVimHandleBase
-  DATA_DIR = "miq_vim_perf_history"
+  DATA_DIR = 'miq_vim_perf_history'
 
   def queryProviderSummary(mor)
     _dup_data(_load_data(:queryProviderSummary)[mor])
@@ -108,7 +108,7 @@ class FakeMiqVimPerfHistory < FakeMiqVimHandleBase
   end
 
   def queryPerfMulti(query)
-    raise "unexpected query" if query.length != 1
+    raise 'unexpected query' if query.length != 1
     _dup_data(_load_data(:queryPerfMulti).fetch_path(query[0].values_at(:entity, :intervalId, :startTime, :endTime)))
   end
 end

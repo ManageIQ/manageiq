@@ -21,19 +21,19 @@ $miq_wiredump = false
 $stderr.sync = true
 $stdout.sync = true
 
-SRC_VM      = "nondeploy"
-TARGET_VM       = "rpo-nondeploy"
+SRC_VM      = 'nondeploy'
+TARGET_VM       = 'rpo-nondeploy'
 
-HOST_NAME   = raise "please define"
+HOST_NAME   = raise 'please define'
 
-VNIC_LABEL    = "Network adapter 1"
+VNIC_LABEL    = 'Network adapter 1'
 NEW_PORTGROUP = 'portgroup2'
 
 sVmMor = nil
 miqVm = nil
 
 vimDs = nil
-dsName = "DEVOpen-E0"
+dsName = 'DEVOpen-E0'
 
 begin
   vim = MiqVim.new(SERVER, USERNAME, PASSWORD)
@@ -46,7 +46,7 @@ begin
   #
   # Get the source VM.
   #
-  miqVm = vim.getVimVmByFilter("config.name" => SRC_VM)
+  miqVm = vim.getVimVmByFilter('config.name' => SRC_VM)
 
   puts "#{SRC_VM} vmPathName:      #{miqVm.dsPath}"
   puts "#{SRC_VM} vmLocalPathName: #{miqVm.localPath}"
@@ -65,7 +65,7 @@ begin
   # List the names of the non-uplink portgroups.
   #
   nupga = vim.applyFilter(dvs.distributedVirtualPortgroup, 'uplinkPortgroup' => 'false')
-  puts "Available DVS portgroups:"
+  puts 'Available DVS portgroups:'
   nupga.each { |nupg| puts "\t" + nupg.portgroupName }
   puts
 
@@ -81,12 +81,12 @@ begin
   # See if the target VM already exists.
   #
   begin
-      dMiqVm = vim.getVimVmByFilter("config.name" => TARGET_VM)
+      dMiqVm = vim.getVimVmByFilter('config.name' => TARGET_VM)
 
       puts "Target VM: #{TARGET_VM} already exists"
       puts "\tDeleting #{TARGET_VM}..."
       dMiqVm.destroy
-      puts "done."
+      puts 'done.'
       exit
     rescue
       # Ignore expectd error
@@ -94,9 +94,9 @@ begin
 
   puts "Preparing to clone: #{SRC_VM} to #{TARGET_VM}"
 
-  memoryMB  = "1024"
+  memoryMB  = '1024'
   memoryMB  = nil
-  numCPUs   = "1"
+  numCPUs   = '1'
   numCPUs   = nil
   vnicDev   = miqVm.devicesByFilter('deviceInfo.label' => VNIC_LABEL).first
   # vim.dumpObj(vnicDev)
@@ -136,7 +136,7 @@ begin
           end
         end
       else
-        puts "Not changing port group."
+        puts 'Not changing port group.'
       end
     end
   end
@@ -146,24 +146,24 @@ begin
   #
   # vim.dumpObj(vim.foldersByMor)
   # vmfa = vim.foldersByFilter("childType" => "VirtualMachine", "name" => "vm")
-  vmfa = vim.foldersByFilter("name" => "vm")
-  raise "VM inventory folder not found" if vmfa.empty?
+  vmfa = vim.foldersByFilter('name' => 'vm')
+  raise 'VM inventory folder not found' if vmfa.empty?
   vmf = vmfa[0]
 
-  miqVmf = vim.getVimFolderByMor(vmf["MOR"])
+  miqVmf = vim.getVimFolderByMor(vmf['MOR'])
   puts "\tFound inventory folder: #{miqVmf.name} (#{miqVmf.fMor})"
 
   puts
-  puts "Cloning..."
+  puts 'Cloning...'
   miqVm.cloneVM(TARGET_VM, vmf, nil, nil, nil, false, false, nil, configSpec)
-  puts "done."
+  puts 'done.'
 
   exit
 
   #
   # Get the target VM.
   #
-  tvm = vim.virtualMachinesByFilter("config.name" => TARGET_VM)
+  tvm = vim.virtualMachinesByFilter('config.name' => TARGET_VM)
   if tvm.empty?
     puts "VM: #{TARGET_VM} not found"
     exit
@@ -191,7 +191,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   miqVm.release if miqVm
   vim.disconnect if vim
 end

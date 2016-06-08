@@ -11,12 +11,12 @@ module MiqAeServiceEmsOpenstackSpec
       @ems_openstack          = MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager.find(@ems.id)
     end
 
-    it "#flavors" do
+    it '#flavors' do
       flavor = @ems_openstack.flavors.first
       expect(flavor).to be_kind_of(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_Flavor)
     end
 
-    it "#availability_zones" do
+    it '#availability_zones' do
       availability_zone = @ems_openstack.availability_zones.first
       expect(availability_zone).to be_kind_of(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_AvailabilityZone)
     end

@@ -6,24 +6,24 @@ require 'VolumeManager/MiqNativeVolumeManager'
 require 'fs/MiqMountManager'
 
 module MiqNativeMountManager
-  LSHW = "lshw"
+  LSHW = 'lshw'
 
   def self.mountVolumes
     lshwXml = MiqUtil.runcmd("#{LSHW} -xml")
     nodeHash = Hash.new { |h, k| h[k] = [] }
     doc = MiqXml.load(lshwXml)
-    doc.find_match("//node").each { |n| nodeHash[n.attributes["id"].split(':', 2)[0]] << n }
+    doc.find_match('//node').each { |n| nodeHash[n.attributes['id'].split(':', 2)[0]] << n }
 
-    hardware = ""
+    hardware = ''
 
-    nodeHash["disk"].each do |d|
+    nodeHash['disk'].each do |d|
       diskid = d.find_first('businfo').get_text.to_s
       next unless diskid
       sn = d.find_first('size')
       # If there's no size node, assume it's a removable drive.
       next unless sn
       busType, busAddr = diskid.split('@', 2)
-      if busType == "scsi"
+      if busType == 'scsi'
         f1, f2 = busAddr.split(':', 2)
         f2 = f2.split('.')[1]
         busAddr = "#{f1}:#{f2}"
@@ -62,7 +62,7 @@ if __FILE__ == $0
   rootTrees = MiqNativeMountManager.mountVolumes
 
   if rootTrees.nil? || rootTrees.empty?
-    puts "No root filesystems detected"
+    puts 'No root filesystems detected'
     exit
   end
 
@@ -73,20 +73,20 @@ if __FILE__ == $0
 
   rootTree = rootTrees[0]
 
-  if rootTree.guestOS == "Linux"
+  if rootTree.guestOS == 'Linux'
     puts
-    puts "Files in /:"
-    rootTree.dirForeach("/") { |f| puts "\t#{f}" }
+    puts 'Files in /:'
+    rootTree.dirForeach('/') { |f| puts "\t#{f}" }
 
     puts
-    puts "All files in /test_mount:"
-    rootTree.findEach("/test_mount") { |f| puts "\t#{f}" }
-  elsif rootTree.guestOS == "Windows"
+    puts 'All files in /test_mount:'
+    rootTree.findEach('/test_mount') { |f| puts "\t#{f}" }
+  elsif rootTree.guestOS == 'Windows'
     puts
-    puts "Files in C:/"
-    rootTree.dirForeach("C:/") { |f| puts "\t#{f}" }
+    puts 'Files in C:/'
+    rootTree.dirForeach('C:/') { |f| puts "\t#{f}" }
 
-    ["E:/", "F:/"].each do |drive|
+    ['E:/', 'F:/'].each do |drive|
       puts
       puts "All files in #{drive}"
       rootTree.findEach(drive) { |f| puts "\t#{f}" }

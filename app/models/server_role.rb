@@ -33,7 +33,7 @@ class ServerRole < ApplicationRecord
     unless server_role.kind_of?(ServerRole)
       role_name   = server_role.to_s.strip.downcase
       server_role = ServerRole.find_by(:name => role_name)
-      raise _("Role <%{name}> not defined in server_roles table") % {:name => role_name} if server_role.nil?
+      raise _('Role <%{name}> not defined in server_roles table') % {:name => role_name} if server_role.nil?
     end
 
     server_role
@@ -72,15 +72,15 @@ class ServerRole < ApplicationRecord
   end
 
   def database_role?
-    current_role_scope == "database"
+    current_role_scope == 'database'
   end
 
   def regional_role?
-    current_role_scope == "region"
+    current_role_scope == 'region'
   end
 
   def zonal_role?
-    current_role_scope == "zone"
+    current_role_scope == 'zone'
   end
 
   def current_role_scope

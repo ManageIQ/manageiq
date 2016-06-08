@@ -6,7 +6,7 @@ module MiqProvision::StateMachine
 
   def create_destination
     raise NotImplementedError,
-          _("Must be implemented in subclass and signal :post_create_destination when self.destination is set")
+          _('Must be implemented in subclass and signal :post_create_destination when self.destination is set')
   end
 
   def prepare_provision
@@ -30,7 +30,7 @@ module MiqProvision::StateMachine
 
   def poll_destination_powered_on_in_provider
     update_and_notify_parent(:message => "Waiting for provider PowerOn of #{for_destination}")
-    raise MiqException::MiqProvisionError, _("VM Failed to start") if phase_context[:power_on_wait_count].to_i > 120
+    raise MiqException::MiqProvisionError, _('VM Failed to start') if phase_context[:power_on_wait_count].to_i > 120
 
     if powered_on_in_provider?
       signal :poll_destination_powered_off_in_provider
@@ -72,7 +72,7 @@ module MiqProvision::StateMachine
 
   def autostart_destination
     if get_option(:vm_auto_start)
-      message = "Starting"
+      message = 'Starting'
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       destination.start
@@ -112,7 +112,7 @@ module MiqProvision::StateMachine
     end
 
     if MiqProvision::AUTOMATE_DRIVES
-      update_and_notify_parent(:state => 'provisioned', :message => "Finished New VM Customization")
+      update_and_notify_parent(:state => 'provisioned', :message => 'Finished New VM Customization')
     else
       update_and_notify_parent(:state => 'finished', :message => "Request #{pass} of #{number_of_vms} is complete")
       call_automate_event('vm_provision_postprocessing')

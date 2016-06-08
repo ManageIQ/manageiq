@@ -1,10 +1,10 @@
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner do
   subject do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    auth                 = AuthToken.new(:name     => "test",
-                                         :auth_key => "valid-token",
-                                         :userid   => "jdoe",
-                                         :password => "password")
+    auth                 = AuthToken.new(:name     => 'test',
+                                         :auth_key => 'valid-token',
+                                         :userid   => 'jdoe',
+                                         :password => 'password')
     ems                  = FactoryGirl.create(:ems_hawkular,
                                               :hostname        => 'localhost',
                                               :port            => 8080,
@@ -15,35 +15,35 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner 
 
   before do
     allow_any_instance_of(ManageIQ::Providers::Hawkular::MiddlewareManager)
-      .to receive_messages(:authentication_check => [true, ""])
+      .to receive_messages(:authentication_check => [true, ''])
     allow_any_instance_of(MiqWorker::Runner).to receive(:worker_initialization)
   end
 
-  context "#whitelist" do
+  context '#whitelist' do
     require 'hawkular_all'
 
-    it "accepts event tagged with known event_type" do
+    it 'accepts event tagged with known event_type' do
       event      = ::Hawkular::Alerts::Event.new({})
       event.tags = {'miq.event_type' => 'hawkular_event.critical'}
       expect(subject.send(:whitelist?, event)).to be true
     end
 
-    it "rejects event tagged with unknown event_type" do
+    it 'rejects event tagged with unknown event_type' do
       event      = ::Hawkular::Alerts::Event.new({})
       event.tags = {'miq.event_type' => 'hawkular_event.unknown'}
       expect(subject.send(:whitelist?, event)).to be false
     end
 
-    it "rejects event without event_type tag" do
+    it 'rejects event without event_type tag' do
       event = ::Hawkular::Alerts::Event.new({})
       expect(subject.send(:whitelist?, event)).to be false
     end
   end
 
-  context "#event_hash" do
+  context '#event_hash' do
     require 'hawkular_all'
 
-    it "properly converts event supplying only required fields" do
+    it 'properly converts event supplying only required fields' do
       event = ::Hawkular::Alerts::Event.new({})
       event.ctime = Time.now.to_i
       event.text = 'text message'
@@ -61,7 +61,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner 
       expect(hash[:full_data]).to be_an String
     end
 
-    it "properly converts event supplying optional fields" do
+    it 'properly converts event supplying optional fields' do
       event = ::Hawkular::Alerts::Event.new({})
       event.ctime = Time.now.to_i
       event.text    = 'text message'

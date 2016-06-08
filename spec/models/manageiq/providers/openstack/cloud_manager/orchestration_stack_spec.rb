@@ -27,7 +27,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
   end
 
   describe 'stack operations' do
-    context ".create_stack" do
+    context '.create_stack' do
       let(:the_new_stack) { double }
       let(:stack_option) { {:tenant_name => tenant.name} }
 
@@ -36,7 +36,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
       end
 
       it 'creates a stack' do
-        allow(the_new_stack).to receive(:[]).with("id").and_return('new_id')
+        allow(the_new_stack).to receive(:[]).with('id').and_return('new_id')
         expect(the_new_stack).to receive(:save).and_return(the_new_stack)
 
         stack = ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, 'mystack', template, stack_option)
@@ -55,7 +55,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
       end
     end
 
-    context "#update_stack" do
+    context '#update_stack' do
       it 'updates the stack' do
         expect(the_raw_stack).to receive(:save)
         orchestration_stack.update_stack(template, {})
@@ -67,7 +67,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
       end
     end
 
-    context "#delete_stack" do
+    context '#delete_stack' do
       it 'updates the stack' do
         expect(the_raw_stack).to receive(:delete)
         orchestration_stack.delete_stack
@@ -100,7 +100,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack do
       end
 
       it 'catches errors from provider' do
-        allow(raw_stacks).to receive(:get).with(orchestration_stack.name, orchestration_stack.ems_ref).and_raise("bad request")
+        allow(raw_stacks).to receive(:get).with(orchestration_stack.name, orchestration_stack.ems_ref).and_raise('bad request')
         expect { orchestration_stack.raw_status }.to raise_error(MiqException::MiqOrchestrationStatusError)
 
         expect { orchestration_stack.raw_exists? }.to raise_error(MiqException::MiqOrchestrationStatusError)

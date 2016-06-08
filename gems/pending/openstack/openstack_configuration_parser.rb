@@ -106,7 +106,7 @@ class OpenstackConfigurationParser
       elsif (match = line.match(DESCRIPTION_REGEXP))
         # If line starts with comment and it's not attribute, it's description of the attribute
         next if line.match(HEADER_REGEXP) # don't put headers into description
-        attribute[:description] ||= ""
+        attribute[:description] ||= ''
         attribute[:description] += "\n" unless attribute[:description].blank?
         attribute[:description] += match[1]
       else

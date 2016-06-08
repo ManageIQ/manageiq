@@ -51,7 +51,7 @@ class MiqProvision < MiqProvisionTask
   end
 
   def deliver_to_automate
-    super("vm_provision", my_zone)
+    super('vm_provision', my_zone)
   end
 
   def execute_queue
@@ -78,21 +78,21 @@ class MiqProvision < MiqProvisionTask
     return if miq_request.state == 'finished'
 
     if ae_result == 'ok'
-      update_and_notify_parent(:state => "finished", :status => "Ok", :message => "#{request_class::TASK_DESCRIPTION} completed")
+      update_and_notify_parent(:state => 'finished', :status => 'Ok', :message => "#{request_class::TASK_DESCRIPTION} completed")
     else
-      update_and_notify_parent(:state => "finished", :status => "Error")
+      update_and_notify_parent(:state => 'finished', :status => 'Error')
     end
   end
 
   def self.get_description(prov_obj, vm_name)
     request_type = prov_obj.options[:request_type]
     title = case request_type
-            when :clone_to_vm       then _("Clone")
-            when :clone_to_template then _("Publish")
-            else _("Provision")
+            when :clone_to_vm       then _('Clone')
+            when :clone_to_template then _('Publish')
+            else _('Provision')
             end
 
-    _("%{title} from [%{name}] to [%{vm_name}]") % {:title   => title,
+    _('%{title} from [%{name}] to [%{vm_name}]') % {:title   => title,
                                                     :name    => prov_obj.vm_template.name,
                                                     :vm_name => vm_name}
   end

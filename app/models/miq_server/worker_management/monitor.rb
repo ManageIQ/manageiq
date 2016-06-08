@@ -40,7 +40,7 @@ module MiqServer::WorkerManagement::Monitor
   def worker_not_responding(w)
     msg = "#{w.format_full_log_msg} being killed because it is not responding"
     _log.warn(msg)
-    MiqEvent.raise_evm_event_queue(w.miq_server, "evm_worker_killed", :event_details => msg, :type => w.class.name)
+    MiqEvent.raise_evm_event_queue(w.miq_server, 'evm_worker_killed', :event_details => msg, :type => w.class.name)
     w.kill
     MiqVimBrokerWorker.cleanup_for_pid(w.pid)
   end
@@ -108,7 +108,7 @@ module MiqServer::WorkerManagement::Monitor
 
       msg = "#{w.format_full_log_msg} is being stopped because system resources exceeded threshold, it will be restarted once memory has freed up"
       _log.warn(msg)
-      MiqEvent.raise_evm_event_queue_in_region(w.miq_server, "evm_server_memory_exceeded", :event_details => msg, :type => w.class.name)
+      MiqEvent.raise_evm_event_queue_in_region(w.miq_server, 'evm_server_memory_exceeded', :event_details => msg, :type => w.class.name)
       restart_worker(w, :memory_exceeded)
       break
     end
@@ -126,11 +126,11 @@ module MiqServer::WorkerManagement::Monitor
     if resync_needed
       @last_sync = Time.now.utc
       if (config_changed && roles_changed) || sync_interval_reached
-        sync_message = "sync_active_roles_and_config"
+        sync_message = 'sync_active_roles_and_config'
       elsif config_changed
-        sync_message = "sync_config"
+        sync_message = 'sync_config'
       else
-        sync_message = "sync_active_roles"
+        sync_message = 'sync_active_roles'
       end
 
       sync_config                if config_changed

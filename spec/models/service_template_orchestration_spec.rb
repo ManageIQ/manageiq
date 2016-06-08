@@ -7,20 +7,20 @@ describe ServiceTemplateOrchestration do
     end
   end
 
-  context "#orchestration_template" do
+  context '#orchestration_template' do
     let(:first_orch_template) { FactoryGirl.create(:orchestration_template) }
     let(:second_orch_template) { FactoryGirl.create(:orchestration_template) }
 
-    it "initially reads a nil orchestration template" do
+    it 'initially reads a nil orchestration template' do
       expect(service_template.orchestration_template).to be_nil
     end
 
-    it "adds an orchestration template" do
+    it 'adds an orchestration template' do
       service_template.orchestration_template = first_orch_template
       expect(service_template.orchestration_template).to eq(first_orch_template)
     end
 
-    it "replaces the existing orchestration template" do
+    it 'replaces the existing orchestration template' do
       service_template.orchestration_template = first_orch_template
       service_template.orchestration_template = second_orch_template
 
@@ -28,14 +28,14 @@ describe ServiceTemplateOrchestration do
       expect(service_template.orchestration_template).not_to eq(first_orch_template)
     end
 
-    it "clears the existing orchestration template" do
+    it 'clears the existing orchestration template' do
       service_template.orchestration_template = first_orch_template
       service_template.orchestration_template = nil
 
       expect(service_template.orchestration_template).to be_nil
     end
 
-    it "clears invalid orchestration template" do
+    it 'clears invalid orchestration template' do
       service_template.orchestration_template = first_orch_template
       first_orch_template.delete
 
@@ -45,20 +45,20 @@ describe ServiceTemplateOrchestration do
     end
   end
 
-  context "#orchestration_manager" do
+  context '#orchestration_manager' do
     let(:ems_amazon) { FactoryGirl.create(:ems_amazon) }
     let(:ems_openstack) { FactoryGirl.create(:ems_openstack) }
 
-    it "initially reads a nil orchestration manager" do
+    it 'initially reads a nil orchestration manager' do
       expect(service_template.orchestration_manager).to be_nil
     end
 
-    it "adds an orchestration manager" do
+    it 'adds an orchestration manager' do
       service_template.orchestration_manager = ems_openstack
       expect(service_template.orchestration_manager).to eq(ems_openstack)
     end
 
-    it "replaces the existing orchestration manager" do
+    it 'replaces the existing orchestration manager' do
       service_template.orchestration_manager = ems_openstack
       service_template.orchestration_manager = ems_amazon
 
@@ -66,14 +66,14 @@ describe ServiceTemplateOrchestration do
       expect(service_template.orchestration_manager).not_to eq(ems_openstack)
     end
 
-    it "clears the existing orchestration manager" do
+    it 'clears the existing orchestration manager' do
       service_template.orchestration_manager = ems_openstack
       service_template.orchestration_manager = nil
 
       expect(service_template.orchestration_manager).to be_nil
     end
 
-    it "clears invalid orchestration manager" do
+    it 'clears invalid orchestration manager' do
       service_template.orchestration_manager = ems_amazon
       ems_amazon.delete
 

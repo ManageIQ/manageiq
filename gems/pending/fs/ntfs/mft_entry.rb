@@ -98,7 +98,7 @@ module NTFS
     EXPECTED_SIGNATURE       = 'FILE'
 
     def initialize(bs, recordNumber)
-      log_prefix = "MIQ(NTFS::MftEntry.initialize)"
+      log_prefix = 'MIQ(NTFS::MftEntry.initialize)'
       raise "#{log_prefix} Nil boot sector" if bs.nil?
 
       @attribs         = []
@@ -192,7 +192,7 @@ module NTFS
       while h = AttribHeader.new(@buf[offset..-1])
         break if h.type.nil? || h.type == AT_END
         $log.debug "NtfsMftEntry.loadAttributeHeaders - MFT(#{@recNum}) adding  Attr: #{h.typeName}" if DEBUG_TRACE_MFT
-        attrib = {"type" => h.type, "offset" => offset, "header" => h}
+        attrib = {'type' => h.type, 'offset' => offset, 'header' => h}
         @attribs << attrib
         @attribs_by_type[h.type] << attrib
         offset += h.length
@@ -219,8 +219,8 @@ module NTFS
         $log.debug "NtfsMftEntry.loadAttributes       - MFT(#{@recNum}) loading Attr: #{TypeName[attribType]}" if DEBUG_TRACE_MFT
 
         @attribs_by_type[attribType].each do |attrib|
-          attrib["attr"] = createAttribute(attrib["offset"], attrib["header"]) unless attrib.key?('attr')
-          result << attrib["attr"]
+          attrib['attr'] = createAttribute(attrib['offset'], attrib['header']) unless attrib.key?('attr')
+          result << attrib['attr']
         end
       end
       result
@@ -273,10 +273,10 @@ module NTFS
       out << "  Fixup seq num   : 0x#{'%04x' % @mft_entry['fixup_seq_num']}\n"
       @attribs.each do |hash|
         begin
-          header = hash["header"]
+          header = hash['header']
           out << header.dump
 
-          attrib = hash["attr"]
+          attrib = hash['attr']
           out << attrib.dump unless attrib.nil?
         rescue NoMethodError
         end

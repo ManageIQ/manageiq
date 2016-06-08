@@ -3,8 +3,8 @@
 require 'mk4rb'
 
 module MetakitFS
-  MK_FENTRY   = "fentry[fpath:S,ftype:I,fsize:I,ftags:B,fdata:B]"
-  MK_HASHVW   = "sec[_H:I,_R:I]"
+  MK_FENTRY   = 'fentry[fpath:S,ftype:I,fsize:I,ftags:B,fdata:B]'
+  MK_HASHVW   = 'sec[_H:I,_R:I]'
 
   TYPE_FILE       = 1
   TYPE_DIR        = 2
@@ -18,7 +18,7 @@ module MetakitFS
   end
 
   def fs_init
-    raise "No metakit file has been specified" unless @dobj.mkfile
+    raise 'No metakit file has been specified' unless @dobj.mkfile
     @storage = Metakit::Storage.open(@dobj.mkfile, 1)
 
     newFs = false
@@ -27,17 +27,17 @@ module MetakitFS
       newFs = true
     end
 
-    self.fsType = "MetakitFS"
+    self.fsType = 'MetakitFS'
 
     vData       = @storage.get_as MK_FENTRY
     vSec        = @storage.get_as MK_HASHVW
     @vFentry    = vData.hash(vSec, 1)
 
-    @pPath = Metakit::StringProp.new "fpath"
-    @pType = Metakit::IntProp.new    "ftype"
-    @pSize = Metakit::IntProp.new    "fsize"
-    @pTags = Metakit::BytesProp.new  "ftags"
-    @pData = Metakit::BytesProp.new  "fdata"
+    @pPath = Metakit::StringProp.new 'fpath'
+    @pType = Metakit::IntProp.new    'ftype'
+    @pSize = Metakit::IntProp.new    'fsize'
+    @pTags = Metakit::BytesProp.new  'ftags'
+    @pData = Metakit::BytesProp.new  'fdata'
 
     @findRow = Metakit::Row.new
 
@@ -45,11 +45,11 @@ module MetakitFS
     # If we're creating a new file system, create the root directory.
     #
     if newFs
-      create("/", TYPE_DIR) if newFs
+      create('/', TYPE_DIR) if newFs
       @storage.commit
     end
 
-    labels = fs_tagValues("/", "LABEL")
+    labels = fs_tagValues('/', 'LABEL')
     @fsId = labels[0] unless labels.empty?
   end
 
@@ -145,24 +145,24 @@ module MetakitFS
     fobj.mtime
   end
 
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     fread = fwrite = fcreate = ftruncate = fappend = false
-    mode.delete!("b")
+    mode.delete!('b')
 
     case mode[0, 1]
-    when "r"
+    when 'r'
       fread     = true
-      fwrite    = true if mode[-1, 1] == "+"
-    when "w"
+      fwrite    = true if mode[-1, 1] == '+'
+    when 'w'
       fwrite    = true
       fcreate   = true
       ftruncate = true
-      fread     = true if mode[-1, 1] == "+"
-    when "a"
+      fread     = true if mode[-1, 1] == '+'
+    when 'a'
       fwrite    = true
       fcreate   = true
       fappend   = true
-      fread     = true if mode[-1, 1] == "+"
+      fread     = true if mode[-1, 1] == '+'
     else
       raise "Unrecognized open mode: #{mode}"
     end
@@ -189,7 +189,7 @@ module MetakitFS
     fsize = @pSize.get(fileRow)
     if ftruncate && fsize != 0
       @pSize.set fileRow, 0
-      @pData.set fileRow, Metakit::Bytes.new("", 0)
+      @pData.set fileRow, Metakit::Bytes.new('', 0)
       @storage.commit
     elsif fappend
       fpos = fsize
@@ -224,7 +224,7 @@ module MetakitFS
   end
 
   def fs_fileWrite(fobj, buf, len)
-    raise "fs_fileWrite: write length is larger than buffer" if len > buf.length
+    raise 'fs_fileWrite: write length is larger than buffer' if len > buf.length
     size = fs_fileSize_obj(fobj)
 
     if fobj.filePos == size
@@ -449,7 +449,7 @@ module MetakitFS
     # Fail if the parent component of the path doesn't exist,
     # or if it is not a directory.
     #
-    if p != "/"
+    if p != '/'
       parent = File.dirname(p)
       raise "#{parent}: no such directory" if (i = getFileIndex(parent)) < 0
       parentRow = @vFentry[i]
@@ -463,11 +463,11 @@ module MetakitFS
     @pPath.set newRow, p
     @pType.set newRow, type
     @pSize.set newRow, 0
-    @pTags.set newRow, Metakit::Bytes.new("", 0)
-    @pData.set newRow, Metakit::Bytes.new("", 0)
+    @pTags.set newRow, Metakit::Bytes.new('', 0)
+    @pData.set newRow, Metakit::Bytes.new('', 0)
     @vFentry.add newRow
 
-    if p != "/"
+    if p != '/'
       #
       # Then, add an entry for the new file or directory in its parent.
       #

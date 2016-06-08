@@ -57,13 +57,13 @@ class ApiController
       param = params['provider_class']
       return unless param.present?
 
-      raise BadRequestError, "Unsupported provider_class #{param} specified" if param != "provider"
+      raise BadRequestError, "Unsupported provider_class #{param} specified" if param != 'provider'
       %w(tags policies policy_profiles).each do |cname|
         if @req[:subcollection] == cname || expand?(cname)
           raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
         end
       end
-      @collection_klasses[:providers] = "Provider"
+      @collection_klasses[:providers] = 'Provider'
     end
 
     def validate_api_action
@@ -74,7 +74,7 @@ class ApiController
     def validate_api_parameters
       return unless params['sqlfilter']
 
-      raise BadRequestError, "The sqlfilter parameter is no longer supported, please use the filter parameter instead"
+      raise BadRequestError, 'The sqlfilter parameter is no longer supported, please use the filter parameter instead'
     end
 
     #
@@ -112,10 +112,10 @@ class ApiController
     def parse_id(resource, collection)
       return nil if resource.blank?
 
-      href_id = href_id(resource["href"], collection)
+      href_id = href_id(resource['href'], collection)
       return href_id if href_id.present?
 
-      resource["id"].kind_of?(Integer) ? resource["id"] : nil
+      resource['id'].kind_of?(Integer) ? resource['id'] : nil
     end
 
     def href_id(href, collection)
@@ -157,8 +157,8 @@ class ApiController
 
     def parse_ownership(data)
       {
-        :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
-        :group => collection_class(:groups).find_by_id(parse_group(data["group"]))
+        :owner => collection_class(:users).find_by_id(parse_owner(data['owner'])),
+        :group => collection_class(:groups).find_by_id(parse_group(data['group']))
       }.compact if data.present?
     end
 
@@ -167,7 +167,7 @@ class ApiController
     def parse_fetch_group(data)
       if data
         group_id = parse_group(data)
-        raise BadRequestError, "Missing Group identifier href, id or description" if group_id.nil?
+        raise BadRequestError, 'Missing Group identifier href, id or description' if group_id.nil?
         resource_search(group_id, :groups, collection_class(:groups))
       end
     end
@@ -175,7 +175,7 @@ class ApiController
     def parse_fetch_role(data)
       if data
         role_id = parse_role(data)
-        raise BadRequestError, "Missing Role identifier href, id or name" if role_id.nil?
+        raise BadRequestError, 'Missing Role identifier href, id or name' if role_id.nil?
         resource_search(role_id, :roles, collection_class(:roles))
       end
     end
@@ -183,7 +183,7 @@ class ApiController
     def parse_fetch_tenant(data)
       if data
         tenant_id = parse_tenant(data)
-        raise BadRequestError, "Missing Tenant identifier href or id" if tenant_id.nil?
+        raise BadRequestError, 'Missing Tenant identifier href or id' if tenant_id.nil?
         resource_search(tenant_id, :tenants, collection_class(:tenants))
       end
     end
@@ -204,19 +204,19 @@ class ApiController
     # For Get, Delete, Patch and Put, we need to make sure we're entitled for them.
     #
     def validate_get_method
-      validate_method_action(:get, "read")
+      validate_method_action(:get, 'read')
     end
 
     def validate_patch_method
-      validate_method_action(:post, "edit")
+      validate_method_action(:post, 'edit')
     end
 
     def validate_put_method
-      validate_method_action(:post, "edit")
+      validate_method_action(:post, 'edit')
     end
 
     def validate_delete_method
-      validate_method_action(:delete, "delete")
+      validate_method_action(:delete, 'delete')
     end
 
     def validate_method_action(method_name, action_name)
@@ -242,7 +242,7 @@ class ApiController
 
     def parse_action_name
       # for basic HTTP POST, default action is "create" with data being the POST body
-      @req[:action] = @req[:method] == :put ? "edit" : (json_body["action"] || "create")
+      @req[:action] = @req[:method] == :put ? 'edit' : (json_body['action'] || 'create')
     end
 
     def validate_post_api_action(cname, mname, cspec, type, target)
@@ -271,7 +271,7 @@ class ApiController
       # Collection Validation
       if @req[:collection]
         cname = @req[:collection]
-        ctype = "Collection"
+        ctype = 'Collection'
         raise BadRequestError, "Unsupported #{ctype} #{cname} specified" unless collection_config.key?(cname.to_sym)
         cspec = collection_config[cname.to_sym]
         if cspec[:options].include?(:primary)
@@ -290,7 +290,7 @@ class ApiController
       if cname && @req[:subcollection]
         cent  = collection_config[cname.to_sym]  # For Collection
         cname = @req[:subcollection]
-        ctype = "Sub-Collection"
+        ctype = 'Sub-Collection'
         unless Array(cent[:subcollections]).include?(cname.to_sym)
           raise BadRequestError, "Unsupported #{ctype} #{cname} specified"
         end

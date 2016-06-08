@@ -59,8 +59,8 @@ class WebDAVFile
   def self.file_size(connection, uri, headers)
     response = head_response(connection, uri, headers)
     raise Errno::ENOENT unless response.kind_of?(Net::HTTPOK)
-    raise Errno::EINVAL if response["content-length"].nil?
-    response["content-length"].to_i
+    raise Errno::EINVAL if response['content-length'].nil?
+    response['content-length'].to_i
   end
 
   def close

@@ -26,14 +26,14 @@ module Ext3
       @miqfs = miqfs
     end
 
-    def open(mode = "r")
+    def open(mode = 'r')
       # Ext3 module methods use miqfs instance accessors to touch @boot_sector.
       @mode = mode.downcase
       @de = ifs_getFile(@path, @miqfs)
       unless @de.nil?
         raise "File is directory: '#{@path}'" if @de.isDir?
       end
-      if mode.include?("r")
+      if mode.include?('r')
         raise "File not found: '#{@path}'" if @de.nil?
         @inode = @miqfs.superblock.getInode(@de.inode)
         @data = FileData.new(@inode, @miqfs.superblock)
@@ -44,7 +44,7 @@ module Ext3
   # File system interface.
   def fs_init
     # puts "Ext3::fs_init(#{@dobj.dInfo.fileName})"
-    self.fsType = "Ext3"
+    self.fsType = 'Ext3'
 
     # Initialize bs & read root dir.
     @dobj.seek(0, IO::SEEK_SET)
@@ -76,12 +76,12 @@ module Ext3
 
   # Make a directory. Parent must exist.
   def fs_dirMkdir(_p)
-    raise "Write functionality is not yet supported on Ext3."
+    raise 'Write functionality is not yet supported on Ext3.'
   end
 
   # Remove a directory.
   def fs_dirRmdir(_p)
-    raise "Write functionality is not yet supported on Ext3."
+    raise 'Write functionality is not yet supported on Ext3.'
   end
 
   #
@@ -118,7 +118,7 @@ module Ext3
 
   # Delete file.
   def fs_fileDelete(_p)
-    raise "Write functionality is not yet supported on Ext3."
+    raise 'Write functionality is not yet supported on Ext3.'
   end
 
   # Returns Ruby Time object.
@@ -173,7 +173,7 @@ module Ext3
   # NOTE: FileObject must have access to Ext3 members.
   # This is kind of like a 'skip this' thing. Ext3 methods
   # use stuff owned by MiqFS, so this is necessary.
-  def fs_fileOpen(p, mode = "r")
+  def fs_fileOpen(p, mode = 'r')
     fobj = FileObject.new(p, self)
     fobj.open(mode)
     fobj
@@ -190,7 +190,7 @@ module Ext3
   end
 
   def fs_fileWrite(_fobj, _buf, _len)
-    raise "Write functionality is not yet supported on Ext3."
+    raise 'Write functionality is not yet supported on Ext3.'
     # fobj.data.write(buf, len)
   end
 
@@ -213,7 +213,7 @@ module Ext3
     p = unnormalizePath(p)
     dir, fname = File.split(p)
     # Fix for FB#835: if fil == root then fil needs to be "."
-    fname = "." if fname == "/" || fname == "\\"
+    fname = '.' if fname == '/' || fname == '\\'
 
     # Check for this file in the cache.
     cache_name = "#{dir == '/' ? '' : dir}/#{fname}"
@@ -236,7 +236,7 @@ module Ext3
 
   # Create a directory entry.
   def ifs_putFile(p, miqfs = nil)
-    raise "Write functionality is not yet supported on Ext3."
+    raise 'Write functionality is not yet supported on Ext3.'
     # If this is being called from a FileObject instance, then MiqFS owns contained instance members.
     # If this is being called from an Ext3 module method, then self owns contained instance members.
     miqfs = self if miqfs.nil?

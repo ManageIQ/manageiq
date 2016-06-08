@@ -49,11 +49,11 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   end
 
   def self.ems_type
-    @ems_type ||= "openstack_infra".freeze
+    @ems_type ||= 'openstack_infra'.freeze
   end
 
   def self.description
-    @description ||= "OpenStack Platform Director".freeze
+    @description ||= 'OpenStack Platform Director'.freeze
   end
 
   def supports_port?
@@ -87,7 +87,7 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   def verify_credentials(auth_type = nil, options = {})
     auth_type ||= 'default'
 
-    raise MiqException::MiqHostError, "No credentials defined" if missing_credentials?(auth_type)
+    raise MiqException::MiqHostError, 'No credentials defined' if missing_credentials?(auth_type)
 
     options[:auth_type] = auth_type
     case auth_type.to_s

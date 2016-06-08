@@ -41,7 +41,7 @@ module ReiserFS
     attr_reader :rootBlock, :blockSize, :treeHeight, :bitmapNumber, :nblocksInBitmap
 
     def initialize(stream)
-      raise "Nil stream" if stream.nil?
+      raise 'Nil stream' if stream.nil?
       @stream = stream
 
       # Seek, read & decode the superblock structure
@@ -79,7 +79,7 @@ module ReiserFS
 
     def blockUsed?(blockNum)
       bitmapNum = blockNum / @nblocksInBitmap
-      raise "Block out of Range" if bitmapNum >= @bitmapNumber
+      raise 'Block out of Range' if bitmapNum >= @bitmapNumber
 
       bitmapBlock      = getBitmapBlock(bitmapNum)
       bitmapOffset     = blockNum % @nblocksInBitmap
@@ -87,11 +87,11 @@ module ReiserFS
       bitmapByteOffset = bitmapOffset % 8
       bits = bitmapBlock[bitmapByte, 1].unpack('B8')[0]
 
-      (bits[bitmapByteOffset, 1] == "1")
+      (bits[bitmapByteOffset, 1] == '1')
     end
 
     def readBlockRaw(blockNum)
-      raise "ReiserFS::SuperBlock >> blockNum is nil" if blockNum.nil?
+      raise 'ReiserFS::SuperBlock >> blockNum is nil' if blockNum.nil?
 
       @stream.seek(blockNum * @blockSize)
       @stream.read(@blockSize)
@@ -134,7 +134,7 @@ module ReiserFS
     private
 
     def isMagic?(magic)
-      ["ReIsErFs", "ReIsEr2Fs", "ReIsEr3Fs"].include?(magic.strip)
+      ['ReIsErFs', 'ReIsEr2Fs', 'ReIsEr3Fs'].include?(magic.strip)
     end
   end
 end

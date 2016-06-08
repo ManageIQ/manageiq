@@ -15,7 +15,7 @@ require 'miq-exception'
 require 'miq-system'
 require 'miq-xml'
 
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VMwareWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'VMwareWebService')
 
 require 'vmdb_extensions'
 require 'active_record_query_parts'
@@ -24,8 +24,8 @@ require 'active_record_query_parts'
 $:.push("#{File.dirname(__FILE__)}/patches")
 require 'ruport_patch'
 
-APPLIANCE_DATA_VOL = File.directory?("/var/www/miq/vmdb") ? "/var/lib/data" : Rails.root.join("tmp")
-MIQ_TEMP           = File.join(APPLIANCE_DATA_VOL, "miq_temp")
+APPLIANCE_DATA_VOL = File.directory?('/var/www/miq/vmdb') ? '/var/lib/data' : Rails.root.join('tmp')
+MIQ_TEMP           = File.join(APPLIANCE_DATA_VOL, 'miq_temp')
 FileUtils.mkdir_p(MIQ_TEMP)
 
 module VMDB

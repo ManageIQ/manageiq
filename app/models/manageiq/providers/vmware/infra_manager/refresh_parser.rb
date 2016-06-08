@@ -38,22 +38,22 @@ module ManageIQ::Providers
         inv.each do |mor, storage_inv|
           mor = storage_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-          summary = storage_inv["summary"]
+          summary = storage_inv['summary']
           next if summary.nil?
 
-          capability = storage_inv["capability"]
+          capability = storage_inv['capability']
 
           loc = uid = normalize_storage_uid(storage_inv)
 
           new_result = {
             :ems_ref            => mor,
             :ems_ref_obj        => mor,
-            :name               => summary["name"],
-            :store_type         => summary["type"].to_s.upcase,
-            :total_space        => summary["capacity"],
-            :free_space         => summary["freeSpace"],
-            :uncommitted        => summary["uncommitted"],
-            :multiplehostaccess => summary["multipleHostAccess"].to_s.downcase == "true",
+            :name               => summary['name'],
+            :store_type         => summary['type'].to_s.upcase,
+            :total_space        => summary['capacity'],
+            :free_space         => summary['freeSpace'],
+            :uncommitted        => summary['uncommitted'],
+            :multiplehostaccess => summary['multipleHostAccess'].to_s.downcase == 'true',
             :location           => loc,
           }
 
@@ -121,30 +121,30 @@ module ManageIQ::Providers
         inv.each do |mor, host_inv|
           mor = host_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-          config = host_inv["config"]
+          config = host_inv['config']
           dns_config = config.fetch_path('network', 'dnsConfig') unless config.nil?
-          hostname = dns_config["hostName"] unless dns_config.nil?
-          domain_name = dns_config["domainName"] unless dns_config.nil?
+          hostname = dns_config['hostName'] unless dns_config.nil?
+          domain_name = dns_config['domainName'] unless dns_config.nil?
 
-          summary = host_inv["summary"]
+          summary = host_inv['summary']
           product = summary.fetch_path('config', 'product') unless summary.nil?
 
           # Check connection state and log potential issues
-          connection_state = summary.fetch_path("runtime", "connectionState") unless summary.nil?
-          maintenance_mode = summary.fetch_path("runtime", "inMaintenanceMode") unless summary.nil?
+          connection_state = summary.fetch_path('runtime', 'connectionState') unless summary.nil?
+          maintenance_mode = summary.fetch_path('runtime', 'inMaintenanceMode') unless summary.nil?
           if ['disconnected', 'notResponding', nil, ''].include?(connection_state)
             _log.warn "Host [#{mor}] connection state is [#{connection_state.inspect}].  Inventory data may be missing."
           end
 
           # Determine if the data from VC is valid.
           invalid, err = if config.nil? || product.nil? || summary.nil?
-                           type = ['config', 'product', 'summary'].find_all { |t| eval(t).nil? }.join(", ")
+                           type = ['config', 'product', 'summary'].find_all { |t| eval(t).nil? }.join(', ')
                            [true, "Missing configuration for Host [#{mor}]: [#{type}]."]
                          elsif hostname.blank?
                            [true, "Missing hostname information for Host [#{mor}]: dnsConfig: #{dns_config.inspect}."]
                          elsif domain_name.blank?
                            # Use the name or the summary-config-name as the hostname if either appears to be a FQDN
-                           fqdn = host_inv["name"]
+                           fqdn = host_inv['name']
                            fqdn = summary.fetch_path('config', 'name') unless fqdn =~ /^#{hostname}\./
                            hostname = fqdn if fqdn =~ /^#{hostname}\./
                            false
@@ -171,10 +171,10 @@ module ManageIQ::Providers
           # Get the IP address
           ipaddress = host_inv_to_ip(host_inv, hostname) || hostname
 
-          vendor = product["vendor"].split(",").first.to_s.downcase
-          vendor = "unknown" unless Host::VENDOR_TYPES.include?(vendor)
+          vendor = product['vendor'].split(',').first.to_s.downcase
+          vendor = 'unknown' unless Host::VENDOR_TYPES.include?(vendor)
 
-          product_name = product["name"].nil? ? nil : product["name"].to_s.gsub(/^VMware\s*/i, "")
+          product_name = product['name'].nil? ? nil : product['name'].to_s.gsub(/^VMware\s*/i, '')
 
           # Collect the hardware, networking, and scsi inventories
           switches, switch_uids[mor] = host_inv_to_switch_hashes(host_inv, dvswitch_by_host[mor], dvswitch_uid_ems)
@@ -195,7 +195,7 @@ module ManageIQ::Providers
           # Collect the resource pools inventory
           parent_type, parent_mor, parent_data = host_parent_resource(mor, ems_inv)
           if parent_type == :host_res
-            rp_uids = get_mors(parent_data, "resourcePool")
+            rp_uids = get_mors(parent_data, 'resourcePool')
             cluster_uids_by_host[mor] = nil
           else
             rp_uids = []
@@ -205,7 +205,7 @@ module ManageIQ::Providers
           # Collect failover host information if in a cluster
           failover = nil
           if parent_type == :cluster
-            failover_hosts = parent_data.fetch_path("configuration", "dasConfig", "admissionControlPolicy", "failoverHosts")
+            failover_hosts = parent_data.fetch_path('configuration', 'dasConfig', 'admissionControlPolicy', 'failoverHosts')
             failover = failover_hosts && failover_hosts.include?(mor)
           end
 
@@ -220,20 +220,20 @@ module ManageIQ::Providers
 
           # Get other information
           asset_tag = service_tag = nil
-          host_inv.fetch_path("hardware", "systemInfo", "otherIdentifyingInfo").to_miq_a.each do |info|
+          host_inv.fetch_path('hardware', 'systemInfo', 'otherIdentifyingInfo').to_miq_a.each do |info|
             next unless info.kind_of?(Hash)
 
-            value = info["identifierValue"].to_s.strip
+            value = info['identifierValue'].to_s.strip
             value = nil if value.blank?
 
-            case info.fetch_path("identifierType", "key")
-            when "AssetTag"   then asset_tag   = value
-            when "ServiceTag" then service_tag = value
+            case info.fetch_path('identifierType', 'key')
+            when 'AssetTag'   then asset_tag   = value
+            when 'ServiceTag' then service_tag = value
             end
           end
 
           new_result = {
-            :type             => %w(esx esxi).include?(product_name.to_s.downcase) ? "ManageIQ::Providers::Vmware::InfraManager::HostEsx" : "ManageIQ::Providers::Vmware::InfraManager::Host",
+            :type             => %w(esx esxi).include?(product_name.to_s.downcase) ? 'ManageIQ::Providers::Vmware::InfraManager::HostEsx' : 'ManageIQ::Providers::Vmware::InfraManager::Host',
             :ems_ref          => mor,
             :ems_ref_obj      => mor,
             :name             => hostname,
@@ -241,17 +241,17 @@ module ManageIQ::Providers
             :ipaddress        => ipaddress,
             :uid_ems          => uid_ems,
             :vmm_vendor       => vendor,
-            :vmm_version      => product["version"],
+            :vmm_version      => product['version'],
             :vmm_product      => product_name,
-            :vmm_buildnumber  => product["build"],
+            :vmm_buildnumber  => product['build'],
             :connection_state => connection_state,
-            :power_state      => connection_state != "connected" ? "off" : (maintenance_mode.to_s.downcase == "true" ? "maintenance" : "on"),
-            :admin_disabled   => config["adminDisabled"].to_s.downcase == "true",
-            :maintenance      => maintenance_mode.to_s.downcase == "true",
+            :power_state      => connection_state != 'connected' ? 'off' : (maintenance_mode.to_s.downcase == 'true' ? 'maintenance' : 'on'),
+            :admin_disabled   => config['adminDisabled'].to_s.downcase == 'true',
+            :maintenance      => maintenance_mode.to_s.downcase == 'true',
             :asset_tag        => asset_tag,
             :service_tag      => service_tag,
             :failover         => failover,
-            :hyperthreading   => config.fetch_path("hyperThread", "active").to_s.downcase == "true",
+            :hyperthreading   => config.fetch_path('hyperThread', 'active').to_s.downcase == 'true',
 
             :ems_cluster      => cluster_uids_by_host[mor],
             :operating_system => host_inv_to_os_hash(host_inv, hostname),
@@ -271,20 +271,20 @@ module ManageIQ::Providers
       end
 
       def self.host_inv_to_ip(inv, hostname = nil)
-        _log.debug("IP lookup for host in VIM inventory data...")
+        _log.debug('IP lookup for host in VIM inventory data...')
         ipaddress = nil
 
-        default_gw = inv.fetch_path("config", "network", "ipRouteConfig", "defaultGateway")
+        default_gw = inv.fetch_path('config', 'network', 'ipRouteConfig', 'defaultGateway')
         unless default_gw.blank?
           require 'ipaddr'
           default_gw = IPAddr.new(default_gw)
 
-          network = inv.fetch_path("config", "network")
+          network = inv.fetch_path('config', 'network')
           vnics   = network['consoleVnic'].to_miq_a + network['vnic'].to_miq_a
 
           vnics.each do |vnic|
-            ip = vnic.fetch_path("spec", "ip", "ipAddress")
-            subnet_mask = vnic.fetch_path("spec", "ip", "subnetMask")
+            ip = vnic.fetch_path('spec', 'ip', 'ipAddress')
+            subnet_mask = vnic.fetch_path('spec', 'ip', 'subnetMask')
             next if ip.blank? || subnet_mask.blank?
 
             if default_gw.mask(subnet_mask).include?(ip)
@@ -296,8 +296,8 @@ module ManageIQ::Providers
         end
 
         if ipaddress.nil?
-          warn_msg = "IP lookup for host in VIM inventory data...Failed."
-          if [nil, "localhost", "localhost.localdomain", "127.0.0.1"].include?(hostname)
+          warn_msg = 'IP lookup for host in VIM inventory data...Failed.'
+          if [nil, 'localhost', 'localhost.localdomain', '127.0.0.1'].include?(hostname)
             _log.warn warn_msg
           else
             _log.warn "#{warn_msg} Falling back to reverse lookup."
@@ -324,10 +324,10 @@ module ManageIQ::Providers
         return nil if inv.nil?
 
         result = {:name => hostname}
-        result[:product_name] = inv["name"].gsub(/^VMware\s*/i, "") unless inv["name"].blank?
-        result[:version] = inv["version"] unless inv["version"].blank?
-        result[:build_number] = inv["build"] unless inv["build"].blank?
-        result[:product_type] = inv["osType"] unless inv["osType"].blank?
+        result[:product_name] = inv['name'].gsub(/^VMware\s*/i, '') unless inv['name'].blank?
+        result[:version] = inv['version'] unless inv['version'].blank?
+        result[:build_number] = inv['build'] unless inv['build'].blank?
+        result[:product_type] = inv['osType'] unless inv['osType'].blank?
         result
       end
 
@@ -338,42 +338,42 @@ module ManageIQ::Providers
 
         result = {}
 
-        hdw = inv["hardware"]
+        hdw = inv['hardware']
         unless hdw.blank?
-          result[:cpu_speed] = hdw["cpuMhz"] unless hdw["cpuMhz"].blank?
-          result[:cpu_type] = hdw["cpuModel"] unless hdw["cpuModel"].blank?
-          result[:manufacturer] = hdw["vendor"] unless hdw["vendor"].blank?
-          result[:model] = hdw["model"] unless hdw["model"].blank?
-          result[:number_of_nics] = hdw["numNics"] unless hdw["numNics"].blank?
+          result[:cpu_speed] = hdw['cpuMhz'] unless hdw['cpuMhz'].blank?
+          result[:cpu_type] = hdw['cpuModel'] unless hdw['cpuModel'].blank?
+          result[:manufacturer] = hdw['vendor'] unless hdw['vendor'].blank?
+          result[:model] = hdw['model'] unless hdw['model'].blank?
+          result[:number_of_nics] = hdw['numNics'] unless hdw['numNics'].blank?
 
           # Value provided by VC is in bytes, need to convert to MB
-          result[:memory_mb] = is_numeric?(hdw["memorySize"]) ? (hdw["memorySize"].to_f / 1.megabyte).round : nil
+          result[:memory_mb] = is_numeric?(hdw['memorySize']) ? (hdw['memorySize'].to_f / 1.megabyte).round : nil
           unless console.nil?
-            result[:memory_console] = is_numeric?(console["serviceConsoleReserved"]) ? (console["serviceConsoleReserved"].to_f / 1048576).round : nil
+            result[:memory_console] = is_numeric?(console['serviceConsoleReserved']) ? (console['serviceConsoleReserved'].to_f / 1048576).round : nil
           end
 
-          result[:cpu_sockets]     = hdw["numCpuPkgs"] unless hdw["numCpuPkgs"].blank?
-          result[:cpu_total_cores] = hdw["numCpuCores"] unless hdw["numCpuCores"].blank?
+          result[:cpu_sockets]     = hdw['numCpuPkgs'] unless hdw['numCpuPkgs'].blank?
+          result[:cpu_total_cores] = hdw['numCpuCores'] unless hdw['numCpuCores'].blank?
           # Calculate the number of cores per socket by dividing total numCpuCores by numCpuPkgs
-          result[:cpu_cores_per_socket] = (result[:cpu_total_cores].to_f / result[:cpu_sockets].to_f).to_i unless hdw["numCpuCores"].blank? || hdw["numCpuPkgs"].blank?
+          result[:cpu_cores_per_socket] = (result[:cpu_total_cores].to_f / result[:cpu_sockets].to_f).to_i unless hdw['numCpuCores'].blank? || hdw['numCpuPkgs'].blank?
         end
 
-        config = inv["config"]
+        config = inv['config']
         unless config.blank?
-          value = config.fetch_path("product", "name")
+          value = config.fetch_path('product', 'name')
           unless value.blank?
-            value = value.to_s.gsub(/^VMware\s*/i, "")
+            value = value.to_s.gsub(/^VMware\s*/i, '')
             result[:guest_os] = value
             result[:guest_os_full_name] = value
           end
 
-          result[:vmotion_enabled] = config["vmotionEnabled"].to_s.downcase == "true" unless config["vmotionEnabled"].blank?
+          result[:vmotion_enabled] = config['vmotionEnabled'].to_s.downcase == 'true' unless config['vmotionEnabled'].blank?
         end
 
-        quickStats = inv["quickStats"]
+        quickStats = inv['quickStats']
         unless quickStats.blank?
-          result[:cpu_usage] = quickStats["overallCpuUsage"] unless quickStats["overallCpuUsage"].blank?
-          result[:memory_usage] = quickStats["overallMemoryUsage"] unless quickStats["overallMemoryUsage"].blank?
+          result[:cpu_usage] = quickStats['overallCpuUsage'] unless quickStats['overallCpuUsage'].blank?
+          result[:memory_usage] = quickStats['overallMemoryUsage'] unless quickStats['overallMemoryUsage'].blank?
         end
 
         result
@@ -513,8 +513,8 @@ module ManageIQ::Providers
         result_uids = {}
         return result, result_uids if inv.nil?
 
-        network = inv["network"]
-        storage = inv["storageDevice"]
+        network = inv['network']
+        storage = inv['storageDevice']
         return result, result_uids if network.nil? && storage.nil?
 
         result_uids[:pnic] = {}
@@ -559,10 +559,10 @@ module ManageIQ::Providers
               :location          => data['pci'].blank? ? nil : data['pci'],
               :model             => data['model'].blank? ? nil : data['model'],
 
-              :chap_auth_enabled => chap_auth_enabled.blank? ? nil : chap_auth_enabled.to_s.downcase == "true"
+              :chap_auth_enabled => chap_auth_enabled.blank? ? nil : chap_auth_enabled.to_s.downcase == 'true'
             }
 
-            new_result[:controller_type] = case data.xsiType.to_s.split("::").last
+            new_result[:controller_type] = case data.xsiType.to_s.split('::').last
                                            when 'HostBlockHba'        then 'Block'
                                            when 'HostFibreChannelHba' then 'Fibre'
                                            when 'HostInternetScsiHba' then 'iSCSI'
@@ -729,10 +729,10 @@ module ManageIQ::Providers
 
         storage_inv.each do |s_mor, s_inv|
           # Find the DatastoreHostMount object for this host
-          host_mount = Array.wrap(s_inv["host"]).detect { |host| host["key"] == inv["MOR"] }
+          host_mount = Array.wrap(s_inv['host']).detect { |host| host['key'] == inv['MOR'] }
           next if host_mount.nil?
 
-          read_only = host_mount.fetch_path("mountInfo", "accessMode") == "readOnly"
+          read_only = host_mount.fetch_path('mountInfo', 'accessMode') == 'readOnly'
 
           result << {
             :storage   => storage_uids[s_mor],
@@ -752,17 +752,17 @@ module ManageIQ::Providers
         inv.each do |mor, vm_inv|
           mor = vm_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-          summary = vm_inv["summary"]
-          summary_config = summary["config"] unless summary.nil?
-          pathname = summary_config["vmPathName"] unless summary_config.nil?
+          summary = vm_inv['summary']
+          summary_config = summary['config'] unless summary.nil?
+          pathname = summary_config['vmPathName'] unless summary_config.nil?
 
-          config = vm_inv["config"]
+          config = vm_inv['config']
 
           # Determine if the data from VC is valid.
           invalid, err = if summary_config.nil? || config.nil?
-                           type = ['summary_config', 'config'].find_all { |t| eval(t).nil? }.join(", ")
+                           type = ['summary_config', 'config'].find_all { |t| eval(t).nil? }.join(', ')
                            [true, "Missing configuration for VM [#{mor}]: #{type}."]
-                         elsif summary_config["uuid"].blank?
+                         elsif summary_config['uuid'].blank?
                            [true, "Missing UUID for VM [#{mor}]."]
                          elsif pathname.blank?
                            _log.debug "vmPathname class: [#{pathname.class}] inspect: [#{pathname.inspect}]"
@@ -785,8 +785,8 @@ module ManageIQ::Providers
           end
 
           runtime         = summary['runtime']
-          template        = summary_config["template"].to_s.downcase == "true"
-          raw_power_state = template ? "never" : runtime['powerState']
+          template        = summary_config['template'].to_s.downcase == 'true'
+          raw_power_state = template ? 'never' : runtime['powerState']
 
           begin
             storage_name, location = VmOrTemplate.repository_parse_path(pathname)
@@ -799,7 +799,7 @@ module ManageIQ::Providers
           affinity_set = config.fetch_path('cpuAffinity', 'affinitySet')
           # The affinity_set will be an array of integers if set
           cpu_affinity = nil
-          cpu_affinity = affinity_set.kind_of?(Array) ? affinity_set.join(",") : affinity_set.to_s if affinity_set
+          cpu_affinity = affinity_set.kind_of?(Array) ? affinity_set.join(',') : affinity_set.to_s if affinity_set
 
           tools_status = summary.fetch_path('guest', 'toolsStatus')
           tools_status = nil if tools_status.blank?
@@ -813,9 +813,9 @@ module ManageIQ::Providers
           boot_time = runtime['bootTime'].blank? ? nil : runtime['bootTime']
 
           standby_act = nil
-          power_options = config["defaultPowerOps"]
+          power_options = config['defaultPowerOps']
           unless power_options.blank?
-            standby_act = power_options["standbyAction"] if power_options["standbyAction"]
+            standby_act = power_options['standbyAction'] if power_options['standbyAction']
             # Other possible keys to look at:
             #   defaultPowerOffType, defaultResetType, defaultSuspendType
             #   powerOffType, resetType, suspendType
@@ -826,9 +826,9 @@ module ManageIQ::Providers
           #   virtual_mmu_usage = config.fetch_path("flags", "virtualMmuUsage")
 
           # Collect the reservation information
-          resource_config = vm_inv["resourceConfig"]
-          memory = resource_config && resource_config["memoryAllocation"]
-          cpu    = resource_config && resource_config["cpuAllocation"]
+          resource_config = vm_inv['resourceConfig']
+          memory = resource_config && resource_config['memoryAllocation']
+          cpu    = resource_config && resource_config['cpuAllocation']
 
           # Collect the storages and hardware inventory
           storages = get_mors(vm_inv, 'datastore').collect { |s| storage_uids[s] }.compact
@@ -846,8 +846,8 @@ module ManageIQ::Providers
             :ems_ref               => mor,
             :ems_ref_obj           => mor,
             :uid_ems               => uid,
-            :name                  => URI.decode(summary_config["name"]),
-            :vendor                => "vmware",
+            :name                  => URI.decode(summary_config['name']),
+            :vendor                => 'vmware',
             :raw_power_state       => raw_power_state,
             :location              => location,
             :tools_status          => tools_status,
@@ -859,17 +859,17 @@ module ManageIQ::Providers
             :linked_clone          => vm_inv_to_linked_clone(vm_inv),
             :fault_tolerance       => vm_inv_to_fault_tolerance(vm_inv),
 
-            :memory_reserve        => memory && memory["reservation"],
-            :memory_reserve_expand => memory && memory["expandableReservation"].to_s.downcase == "true",
-            :memory_limit          => memory && memory["limit"],
-            :memory_shares         => memory && memory.fetch_path("shares", "shares"),
-            :memory_shares_level   => memory && memory.fetch_path("shares", "level"),
+            :memory_reserve        => memory && memory['reservation'],
+            :memory_reserve_expand => memory && memory['expandableReservation'].to_s.downcase == 'true',
+            :memory_limit          => memory && memory['limit'],
+            :memory_shares         => memory && memory.fetch_path('shares', 'shares'),
+            :memory_shares_level   => memory && memory.fetch_path('shares', 'level'),
 
-            :cpu_reserve           => cpu && cpu["reservation"],
-            :cpu_reserve_expand    => cpu && cpu["expandableReservation"].to_s.downcase == "true",
-            :cpu_limit             => cpu && cpu["limit"],
-            :cpu_shares            => cpu && cpu.fetch_path("shares", "shares"),
-            :cpu_shares_level      => cpu && cpu.fetch_path("shares", "level"),
+            :cpu_reserve           => cpu && cpu['reservation'],
+            :cpu_reserve_expand    => cpu && cpu['expandableReservation'].to_s.downcase == 'true',
+            :cpu_limit             => cpu && cpu['limit'],
+            :cpu_shares            => cpu && cpu.fetch_path('shares', 'shares'),
+            :cpu_shares_level      => cpu && cpu.fetch_path('shares', 'level'),
 
             :host                  => host_uids[host_mor],
             :ems_cluster           => cluster_uids_by_host[host_mor],
@@ -890,17 +890,17 @@ module ManageIQ::Providers
       # The next 3 methods determine shared VMs (linked clones or fault tolerance).
       # Information found at http://www.vmdev.info/?p=546
       def self.vm_inv_to_shared(inv)
-        unshared  = inv.fetch_path("summary", "storage", "unshared")
-        committed = inv.fetch_path("summary", "storage", "committed")
+        unshared  = inv.fetch_path('summary', 'storage', 'unshared')
+        committed = inv.fetch_path('summary', 'storage', 'committed')
         unshared.nil? || committed.nil? ? nil : unshared.to_i != committed.to_i
       end
 
       def self.vm_inv_to_linked_clone(inv)
-        vm_inv_to_shared(inv) && inv.fetch_path("summary", "config", "ftInfo", "instanceUuids").to_miq_a.length <= 1
+        vm_inv_to_shared(inv) && inv.fetch_path('summary', 'config', 'ftInfo', 'instanceUuids').to_miq_a.length <= 1
       end
 
       def self.vm_inv_to_fault_tolerance(inv)
-        vm_inv_to_shared(inv) && inv.fetch_path("summary", "config", "ftInfo", "instanceUuids").to_miq_a.length > 1
+        vm_inv_to_shared(inv) && inv.fetch_path('summary', 'config', 'ftInfo', 'instanceUuids').to_miq_a.length > 1
       end
 
       def self.vm_inv_to_os_hash(inv)
@@ -909,7 +909,7 @@ module ManageIQ::Providers
 
         result = {
           # If the data from VC is empty, default to "Other"
-          :product_name => inv["guestFullName"].blank? ? "Other" : inv["guestFullName"]
+          :product_name => inv['guestFullName'].blank? ? 'Other' : inv['guestFullName']
         }
         result
       end
@@ -921,26 +921,26 @@ module ManageIQ::Providers
 
         result = {
           # Downcase and strip off the word "guest" to match the value stored in the .vmx config file.
-          :guest_os           => inv["guestId"].blank? ? "Other" : inv["guestId"].to_s.downcase.chomp("guest"),
+          :guest_os           => inv['guestId'].blank? ? 'Other' : inv['guestId'].to_s.downcase.chomp('guest'),
 
           # If the data from VC is empty, default to "Other"
-          :guest_os_full_name => inv["guestFullName"].blank? ? "Other" : inv["guestFullName"]
+          :guest_os_full_name => inv['guestFullName'].blank? ? 'Other' : inv['guestFullName']
         }
 
-        bios = MiqUUID.clean_guid(inv["uuid"]) || inv["uuid"]
+        bios = MiqUUID.clean_guid(inv['uuid']) || inv['uuid']
         result[:bios] = bios unless bios.blank?
 
-        if inv["numCpu"].present?
-          result[:cpu_total_cores]      = inv["numCpu"].to_i
+        if inv['numCpu'].present?
+          result[:cpu_total_cores]      = inv['numCpu'].to_i
 
           # cast numCoresPerSocket to an integer so that we can check for nil and 0
-          cpu_cores_per_socket          = config.try(:fetch_path, "hardware", "numCoresPerSocket").to_i
+          cpu_cores_per_socket          = config.try(:fetch_path, 'hardware', 'numCoresPerSocket').to_i
           result[:cpu_cores_per_socket] = (cpu_cores_per_socket.zero?) ? 1 : cpu_cores_per_socket
           result[:cpu_sockets]          = result[:cpu_total_cores] / result[:cpu_cores_per_socket]
         end
 
-        result[:annotation] = inv["annotation"].present? ? inv["annotation"] : nil
-        result[:memory_mb] = inv["memorySizeMB"] unless inv["memorySizeMB"].blank?
+        result[:annotation] = inv['annotation'].present? ? inv['annotation'] : nil
+        result[:memory_mb] = inv['memorySizeMB'] unless inv['memorySizeMB'].blank?
         result[:virtual_hw_version] = config['version'].to_s.split('-').last if config && config['version']
 
         result
@@ -959,7 +959,7 @@ module ManageIQ::Providers
 
           backing = data['backing']
           lan_uid = case backing.xsiType
-                    when "VirtualEthernetCardDistributedVirtualPortBackingInfo"
+                    when 'VirtualEthernetCardDistributedVirtualPortBackingInfo'
                       backing.fetch_path('port', 'portgroupKey')
                     else
                       backing['deviceName']
@@ -1000,7 +1000,7 @@ module ManageIQ::Providers
           end
 
           backing = device['backing']
-          device_type << (backing['fileName'].nil? ? "-raw" : "-image") if device_type == 'cdrom'
+          device_type << (backing['fileName'].nil? ? '-raw' : '-image') if device_type == 'cdrom'
 
           controller = inv.detect { |d| d['key'] == device['controllerKey'] }
           controller_type = case controller.xsiType
@@ -1089,7 +1089,7 @@ module ManageIQ::Providers
             :section => 'custom_field',
             :name    => key_to_name[cv['key']],
             :value   => cv['value'],
-            :source  => "VC",
+            :source  => 'VC',
           }
           result << new_result
         end
@@ -1164,7 +1164,7 @@ module ManageIQ::Providers
             :ems_ref     => mor,
             :ems_ref_obj => mor,
             :uid_ems     => mor,
-            :name        => data["name"],
+            :name        => data['name'],
             :child_uids  => child_mors,
             :hidden      => false
           }
@@ -1187,7 +1187,7 @@ module ManageIQ::Providers
             :ems_ref     => mor,
             :ems_ref_obj => mor,
             :uid_ems     => mor,
-            :name        => data["name"],
+            :name        => data['name'],
             :child_uids  => child_mors,
             :hidden      => false
           }
@@ -1230,30 +1230,30 @@ module ManageIQ::Providers
         inv.each do |mor, data|
           mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-          config = data["configuration"]
-          das_config = config["dasConfig"]
-          drs_config = config["drsConfig"]
+          config = data['configuration']
+          das_config = config['dasConfig']
+          drs_config = config['drsConfig']
 
-          effective_cpu = data.fetch_path("summary", "effectiveCpu")
+          effective_cpu = data.fetch_path('summary', 'effectiveCpu')
           effective_cpu = effective_cpu.blank? ? nil : effective_cpu.to_i
-          effective_memory = data.fetch_path("summary", "effectiveMemory")
+          effective_memory = data.fetch_path('summary', 'effectiveMemory')
           effective_memory = effective_memory.blank? ? nil : effective_memory.to_i.megabytes
 
           new_result = {
             :ems_ref                 => mor,
             :ems_ref_obj             => mor,
             :uid_ems                 => mor,
-            :name                    => data["name"],
+            :name                    => data['name'],
             :effective_cpu           => effective_cpu,
             :effective_memory        => effective_memory,
 
-            :ha_enabled              => das_config["enabled"].to_s.downcase == "true",
-            :ha_admit_control        => das_config["admissionControlEnabled"].to_s.downcase == "true",
-            :ha_max_failures         => das_config["failoverLevel"],
+            :ha_enabled              => das_config['enabled'].to_s.downcase == 'true',
+            :ha_admit_control        => das_config['admissionControlEnabled'].to_s.downcase == 'true',
+            :ha_max_failures         => das_config['failoverLevel'],
 
-            :drs_enabled             => drs_config["enabled"].to_s.downcase == "true",
-            :drs_automation_level    => drs_config["defaultVmBehavior"],
-            :drs_migration_threshold => drs_config["vmotionRate"],
+            :drs_enabled             => drs_config['enabled'].to_s.downcase == 'true',
+            :drs_automation_level    => drs_config['defaultVmBehavior'],
+            :drs_migration_threshold => drs_config['vmotionRate'],
 
             :child_uids              => get_mors(data, 'resourcePool')
           }
@@ -1271,9 +1271,9 @@ module ManageIQ::Providers
         inv.each do |mor, data|
           mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-          config = data.fetch_path("summary", "config")
-          memory = config["memoryAllocation"]
-          cpu = config["cpuAllocation"]
+          config = data.fetch_path('summary', 'config')
+          memory = config['memoryAllocation']
+          cpu = config['cpuAllocation']
 
           # :is_default will be set later as we don't know until we find out who the parent is.
 
@@ -1281,20 +1281,20 @@ module ManageIQ::Providers
             :ems_ref               => mor,
             :ems_ref_obj           => mor,
             :uid_ems               => mor,
-            :name                  => URI.decode(data["name"].to_s),
-            :vapp                  => mor.vimType == "VirtualApp",
+            :name                  => URI.decode(data['name'].to_s),
+            :vapp                  => mor.vimType == 'VirtualApp',
 
-            :memory_reserve        => memory["reservation"],
-            :memory_reserve_expand => memory["expandableReservation"].to_s.downcase == "true",
-            :memory_limit          => memory["limit"],
-            :memory_shares         => memory.fetch_path("shares", "shares"),
-            :memory_shares_level   => memory.fetch_path("shares", "level"),
+            :memory_reserve        => memory['reservation'],
+            :memory_reserve_expand => memory['expandableReservation'].to_s.downcase == 'true',
+            :memory_limit          => memory['limit'],
+            :memory_shares         => memory.fetch_path('shares', 'shares'),
+            :memory_shares_level   => memory.fetch_path('shares', 'level'),
 
-            :cpu_reserve           => cpu["reservation"],
-            :cpu_reserve_expand    => cpu["expandableReservation"].to_s.downcase == "true",
-            :cpu_limit             => cpu["limit"],
-            :cpu_shares            => cpu.fetch_path("shares", "shares"),
-            :cpu_shares_level      => cpu.fetch_path("shares", "level"),
+            :cpu_reserve           => cpu['reservation'],
+            :cpu_reserve_expand    => cpu['expandableReservation'].to_s.downcase == 'true',
+            :cpu_limit             => cpu['limit'],
+            :cpu_shares            => cpu.fetch_path('shares', 'shares'),
+            :cpu_shares_level      => cpu.fetch_path('shares', 'level'),
 
             :child_uids            => get_mors(data, 'resourcePool') + get_mors(data, 'vm')
           }
@@ -1310,11 +1310,11 @@ module ManageIQ::Providers
 
         inv.each do |spec_inv|
           result << {
-            :name             => spec_inv["name"].to_s,
-            :typ              => spec_inv["type"].to_s,
-            :description      => spec_inv["description"].to_s,
-            :last_update_time => spec_inv["lastUpdateTime"].to_s,
-            :spec             => spec_inv["spec"]
+            :name             => spec_inv['name'].to_s,
+            :typ              => spec_inv['type'].to_s,
+            :description      => spec_inv['description'].to_s,
+            :last_update_time => spec_inv['lastUpdateTime'].to_s,
+            :spec             => spec_inv['spec']
           }
         end
         result
@@ -1363,7 +1363,7 @@ module ManageIQ::Providers
 
         # Since the root folder is almost always called "Datacenters", move that
         #   folder to the head of the list as an optimization
-        dcs, folders = data[:folders].partition { |f| f[:name] == "Datacenters" }
+        dcs, folders = data[:folders].partition { |f| f[:name] == 'Datacenters' }
         dcs.each { |dc| folders.unshift(dc) }
         data[:folders] = folders
 
@@ -1377,7 +1377,7 @@ module ManageIQ::Providers
         unless found.nil?
           data[:ems_root] = found
         else
-          _log.warn "Unable to find a root folder."
+          _log.warn 'Unable to find a root folder.'
         end
       end
 
@@ -1389,7 +1389,7 @@ module ManageIQ::Providers
 
         # Mark all child folders of each Datacenter as hidden
         # e.g.: "vm", "host", "datastore"
-        data[:folders].select { |f| f[:type] == "Datacenter" }.each do |dc|
+        data[:folders].select { |f| f[:type] == 'Datacenter' }.each do |dc|
           dc_children = dc.fetch_path(:ems_children, :folders)
           dc_children.to_miq_a.each do |f|
             f[:hidden] = true
@@ -1439,11 +1439,11 @@ module ManageIQ::Providers
 
         # NFS on VC5 has the "half GUID" in the url:
         #   ds:///vmfs/volumes/18f2f698-aae589d5/
-        return $1 if url[0, 5] == "ds://" && url =~ /([0-9a-f]{8}-[0-9a-f]{8})/
+        return $1 if url[0, 5] == 'ds://' && url =~ /([0-9a-f]{8}-[0-9a-f]{8})/
 
         # NFS on VC has a path in the url:
         #   netfs://192.168.254.80//shares/public/
-        return url[8..-1].gsub('//', '/').chomp('/') if url[0, 8] == "netfs://"
+        return url[8..-1].gsub('//', '/').chomp('/') if url[0, 8] == 'netfs://'
 
         # NFS on ESX has the path in the datastore instead:
         #   192.168.254.80:/shares/public
@@ -1632,7 +1632,7 @@ module ManageIQ::Providers
         inv.each do |mor, storage_inv|
           mor = storage_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-          summary = storage_inv["summary"]
+          summary = storage_inv['summary']
           next if summary.nil?
 
           loc = normalize_storage_uid(storage_inv)
@@ -1640,7 +1640,7 @@ module ManageIQ::Providers
           new_result = {
             :ems_ref     => mor,
             :ems_ref_obj => mor,
-            :name        => summary["name"],
+            :name        => summary['name'],
             :location    => loc,
           }
 
@@ -1678,17 +1678,17 @@ module ManageIQ::Providers
         inv.each do |mor, vm_inv|
           mor = vm_inv['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-          summary = vm_inv["summary"]
-          summary_config = summary["config"] unless summary.nil?
-          pathname = summary_config["vmPathName"] unless summary_config.nil?
+          summary = vm_inv['summary']
+          summary_config = summary['config'] unless summary.nil?
+          pathname = summary_config['vmPathName'] unless summary_config.nil?
 
-          config = vm_inv["config"]
+          config = vm_inv['config']
 
           # Determine if the data from VC is valid.
           invalid, err = if summary_config.nil? || config.nil?
-                           type = ['summary_config', 'config'].find_all { |t| eval(t).nil? }.join(", ")
+                           type = ['summary_config', 'config'].find_all { |t| eval(t).nil? }.join(', ')
                            [true, "Missing configuration for VM [#{mor}]: #{type}."]
-                         elsif summary_config["uuid"].blank?
+                         elsif summary_config['uuid'].blank?
                            [true, "Missing UUID for VM [#{mor}]."]
                          elsif pathname.blank?
                            _log.debug "vmPathname class: [#{pathname.class}] inspect: [#{pathname.inspect}]"
@@ -1711,21 +1711,21 @@ module ManageIQ::Providers
           affinity_set = config.fetch_path('cpuAffinity', 'affinitySet')
           # The affinity_set will be an array of integers if set
           cpu_affinity = nil
-          cpu_affinity = affinity_set.kind_of?(Array) ? affinity_set.join(",") : affinity_set.to_s if affinity_set
+          cpu_affinity = affinity_set.kind_of?(Array) ? affinity_set.join(',') : affinity_set.to_s if affinity_set
 
           tools_status = summary.fetch_path('guest', 'toolsStatus')
           tools_status = nil if tools_status.blank?
 
           standby_act = nil
-          power_options = config["defaultPowerOps"]
+          power_options = config['defaultPowerOps']
           unless power_options.blank?
-            standby_act = power_options["standbyAction"] if power_options["standbyAction"]
+            standby_act = power_options['standbyAction'] if power_options['standbyAction']
           end
 
           # Collect the reservation information
-          resource_config = vm_inv["resourceConfig"]
-          memory = resource_config && resource_config["memoryAllocation"]
-          cpu    = resource_config && resource_config["cpuAllocation"]
+          resource_config = vm_inv['resourceConfig']
+          memory = resource_config && resource_config['memoryAllocation']
+          cpu    = resource_config && resource_config['cpuAllocation']
 
           hardware = vm_inv_to_hardware_hash(vm_inv)
           hardware[:disks] = vm_inv_to_disk_hashes(vm_inv, storage_uids)
@@ -1736,22 +1736,22 @@ module ManageIQ::Providers
             :ems_ref               => mor,
             :ems_ref_obj           => mor,
             :uid_ems               => uid,
-            :name                  => URI.decode(summary_config["name"]),
+            :name                  => URI.decode(summary_config['name']),
             :tools_status          => tools_status,
             :standby_action        => standby_act,
             :cpu_affinity          => cpu_affinity,
 
-            :memory_reserve        => memory && memory["reservation"],
-            :memory_reserve_expand => memory && memory["expandableReservation"].to_s.downcase == "true",
-            :memory_limit          => memory && memory["limit"],
-            :memory_shares         => memory && memory.fetch_path("shares", "shares"),
-            :memory_shares_level   => memory && memory.fetch_path("shares", "level"),
+            :memory_reserve        => memory && memory['reservation'],
+            :memory_reserve_expand => memory && memory['expandableReservation'].to_s.downcase == 'true',
+            :memory_limit          => memory && memory['limit'],
+            :memory_shares         => memory && memory.fetch_path('shares', 'shares'),
+            :memory_shares_level   => memory && memory.fetch_path('shares', 'level'),
 
-            :cpu_reserve           => cpu && cpu["reservation"],
-            :cpu_reserve_expand    => cpu && cpu["expandableReservation"].to_s.downcase == "true",
-            :cpu_limit             => cpu && cpu["limit"],
-            :cpu_shares            => cpu && cpu.fetch_path("shares", "shares"),
-            :cpu_shares_level      => cpu && cpu.fetch_path("shares", "level"),
+            :cpu_reserve           => cpu && cpu['reservation'],
+            :cpu_reserve_expand    => cpu && cpu['expandableReservation'].to_s.downcase == 'true',
+            :cpu_limit             => cpu && cpu['limit'],
+            :cpu_shares            => cpu && cpu.fetch_path('shares', 'shares'),
+            :cpu_shares_level      => cpu && cpu.fetch_path('shares', 'level'),
 
             :operating_system      => vm_inv_to_os_hash(vm_inv),
             :hardware              => hardware,

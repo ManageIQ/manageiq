@@ -50,7 +50,7 @@ module NTFS
     UNNAMED = '[unnamed]'.AsciiToUtf8.freeze
 
     def initialize(buf)
-      raise "MIQ(NTFS::FileName.initialize) Nil buffer" if buf.nil?
+      raise 'MIQ(NTFS::FileName.initialize) Nil buffer' if buf.nil?
       buf          = buf.read(buf.length) if buf.kind_of?(DataRun)
       @afn         = ATTRIB_FILE_NAME.decode(buf)
       buf          = buf[SIZEOF_ATTRIB_FILE_NAME, buf.size]

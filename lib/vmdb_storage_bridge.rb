@@ -27,7 +27,7 @@ class VmdbStorageBridge
     vim       = nil
     last_conn_error = nil
 
-    _log.info "entered"
+    _log.info 'entered'
 
     ManageIQ::Providers::Vmware::InfraManager.where(:zone_id => @zone).find_each do |ems|
       _log.info "found EmsVmware #{ems.hostname}"
@@ -50,7 +50,7 @@ class VmdbStorageBridge
           # Hash device UUIDs by canonical name.
           #
           cnToDurableNames = {}
-          scsiLuns = vim.getMoProp(host.ems_ref_obj, "config.storageDevice.scsiLun").config.storageDevice.scsiLun
+          scsiLuns = vim.getMoProp(host.ems_ref_obj, 'config.storageDevice.scsiLun').config.storageDevice.scsiLun
           scsiLuns.each { |sn| cnToDurableNames[sn.canonicalName] = LunDurableNames.new(sn.alternateName) }
 
           host.storages.find_each do |storage|
@@ -165,7 +165,7 @@ class VmdbStorageBridge
       node.class_hier       = [cimClassName]
       node.obj_name       = objName
       node.obj_name_str     = objNameStr
-      node.source         = "VMDB"
+      node.source         = 'VMDB'
       node.agent          = @agent
       node.zone_id        = @zone
       t = node.typeFromClassHier
@@ -258,9 +258,9 @@ class VmdbStorageBridge
 
     CimComputerSystem.find_each do |ccs|
       ccsIds = []
-      ipEndpoints = ccs.protocol_endpoints("CIM_IPProtocolEndpoint")
+      ipEndpoints = ccs.protocol_endpoints('CIM_IPProtocolEndpoint')
       ipEndpoints.each do |ipNode|
-        next if (ip = ipNode.obj['IPv4Address']) == "127.0.0.1"
+        next if (ip = ipNode.obj['IPv4Address']) == '127.0.0.1'
         next if ip.nil? || ip.empty?
         ccsIds << ip
         ai = Socket.getaddrinfo(ip, 0, Socket::AF_UNSPEC, Socket::SOCK_STREAM, nil, Socket::AI_CANONNAME)

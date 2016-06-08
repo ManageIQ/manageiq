@@ -29,17 +29,17 @@ class MiqScvmmParsePowershell
     attributes      = []
     attribute_names = []
     lines.each do |line|
-      next if line.nil? || line == ""
+      next if line.nil? || line == ''
       if line =~ /^-+/
         dashes = true
         next
       end
       if dashes.nil?
-        attribute_names = line.split(" ")
+        attribute_names = line.split(' ')
         next
       end
-      line_parts = multiple.nil? ? [line.rstrip] : line.split(" ")
-      raise "Incorrect number of PowerShell Output Attributes Found" if line_parts.size != attribute_names.size
+      line_parts = multiple.nil? ? [line.rstrip] : line.split(' ')
+      raise 'Incorrect number of PowerShell Output Attributes Found' if line_parts.size != attribute_names.size
       i = 0
       line_hash = {}
       attribute_names.each do |attribute|
@@ -66,8 +66,8 @@ class MiqScvmmParsePowershell
   private
 
   def stdout_stderr(output)
-    stdout = ""
-    stderr = ""
+    stdout = ''
+    stderr = ''
     output[:data].each do |d|
       stdout << d[:stdout] unless d[:stdout].nil?
       stderr << d[:stderr] unless d[:stderr].nil?

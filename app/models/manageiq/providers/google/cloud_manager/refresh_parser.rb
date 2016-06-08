@@ -165,7 +165,7 @@ module ManageIQ::Providers
           :ems_ref => uid,
           :name    => network.name,
           :cidr    => network.ipv4_range,
-          :status  => "active",
+          :status  => 'active',
           :enabled => true,
         }
 
@@ -195,14 +195,14 @@ module ManageIQ::Providers
         ret = []
 
         name            = fw.name
-        source_ip_range = fw.source_ranges.nil? ? "0.0.0.0/0" : fw.source_ranges.first
+        source_ip_range = fw.source_ranges.nil? ? '0.0.0.0/0' : fw.source_ranges.first
 
         fw.allowed.each do |fw_allowed|
-          protocol      = fw_allowed["IPProtocol"].upcase
-          allowed_ports = fw_allowed["ports"].to_a.first
+          protocol      = fw_allowed['IPProtocol'].upcase
+          allowed_ports = fw_allowed['ports'].to_a.first
 
           unless allowed_ports.nil?
-            from_port, to_port = allowed_ports.split("-", 2)
+            from_port, to_port = allowed_ports.split('-', 2)
           else
             # The ICMP protocol doesn't have ports so set to -1
             from_port = to_port = -1
@@ -210,7 +210,7 @@ module ManageIQ::Providers
 
           new_result = {
             :name            => name,
-            :direction       => "inbound",
+            :direction       => 'inbound',
             :host_protocol   => protocol,
             :port            => from_port,
             :end_port        => to_port,
@@ -249,7 +249,7 @@ module ManageIQ::Providers
       def parse_snapshot(snapshot)
         new_result = {
           :ems_ref       => snapshot.id,
-          :type          => "ManageIQ::Providers::Google::CloudManager::CloudVolumeSnapshot",
+          :type          => 'ManageIQ::Providers::Google::CloudManager::CloudVolumeSnapshot',
           :name          => snapshot.name,
           :status        => snapshot.status,
           :creation_time => snapshot.creation_timestamp,
@@ -267,7 +267,7 @@ module ManageIQ::Providers
         name ||= uid
         type   = ManageIQ::Providers::Google::CloudManager::Template.name
 
-        deprecated = (storage.kind == "compute#image") ? !storage.deprecated.nil? : false
+        deprecated = (storage.kind == 'compute#image') ? !storage.deprecated.nil? : false
 
         new_result = {
           :type               => type,
@@ -275,8 +275,8 @@ module ManageIQ::Providers
           :ems_ref            => uid,
           :location           => storage.self_link,
           :name               => name,
-          :vendor             => "google",
-          :raw_power_state    => "never",
+          :vendor             => 'google',
+          :raw_power_state    => 'never',
           :operating_system   => process_os(storage),
           :template           => true,
           :publicly_available => true,
@@ -336,7 +336,7 @@ module ManageIQ::Providers
           :ems_ref           => uid,
           :name              => name,
           :description       => instance.description,
-          :vendor            => "google",
+          :vendor            => 'google',
           :raw_power_state   => instance.state,
           :flavor            => flavor,
           :availability_zone => zone,
@@ -365,13 +365,13 @@ module ManageIQ::Providers
       def populate_hardware_hash_with_disks(hardware_disks_array, instance)
         instance.disks.each do |attached_disk|
           # lookup the full disk information from the data_index by source link
-          d = @data_index.fetch_path(:cloud_volumes, attached_disk["source"])
+          d = @data_index.fetch_path(:cloud_volumes, attached_disk['source'])
 
           next if d.nil?
 
           disk_size     = d[:size]
-          disk_name     = attached_disk["deviceName"]
-          disk_location = attached_disk["index"]
+          disk_name     = attached_disk['deviceName']
+          disk_location = attached_disk['index']
 
           disk = add_instance_disk(hardware_disks_array, disk_size, disk_name, disk_location)
           # Link the disk and the instance together
@@ -382,29 +382,29 @@ module ManageIQ::Providers
 
       def populate_hardware_hash_with_networks(hardware_networks_array, instance)
         instance.network_interfaces.each do |nic|
-          network_uid = parse_uid_from_url(nic["network"])
+          network_uid = parse_uid_from_url(nic['network'])
 
           hardware_networks_array << {
             :description => "#{network_uid} private",
-            :ipaddress   => nic["networkIP"]
+            :ipaddress   => nic['networkIP']
           }
 
-          nic["accessConfigs"].to_a.each do |nic_access|
+          nic['accessConfigs'].to_a.each do |nic_access|
             hardware_networks_array << {
               :description => "#{network_uid} #{nic_access["name"]}",
-              :ipaddress   => nic_access["natIP"]
+              :ipaddress   => nic_access['natIP']
             }
           end
         end
       end
 
       def add_instance_disk(disks, size, name, location)
-        super(disks, size, location, name, "google")
+        super(disks, size, location, name, 'google')
       end
 
       def parse_instance_networks(instance)
         instance.network_interfaces.to_a.collect do |nic|
-          parse_uid_from_url(nic["network"])
+          parse_uid_from_url(nic['network'])
         end
       end
 
@@ -426,7 +426,7 @@ module ManageIQ::Providers
         parent_image_uid = nil
 
         instance.disks.each do |disk|
-          parent_image_uid = @disk_to_source_image_id[disk["source"]]
+          parent_image_uid = @disk_to_source_image_id[disk['source']]
           next if parent_image_uid.nil?
           break
         end
@@ -446,8 +446,8 @@ module ManageIQ::Providers
       end
 
       def parse_compute_metadata(metadata, key)
-        metadata_item = metadata["items"].to_a.detect { |x| x["key"] == key }
-        metadata_item.to_h["value"]
+        metadata_item = metadata['items'].to_a.detect { |x| x['key'] == key }
+        metadata_item.to_h['value']
       end
 
       def parse_compute_metadata_ssh_keys(metadata)
@@ -456,11 +456,11 @@ module ManageIQ::Providers
         ssh_keys = []
 
         # Find the sshKeys property in the instance metadata
-        metadata_ssh_keys = parse_compute_metadata(metadata, "sshKeys")
+        metadata_ssh_keys = parse_compute_metadata(metadata, 'sshKeys')
 
         metadata_ssh_keys.to_s.split("\n").each do |ssh_key|
           # Google returns the key in the form username:public_key
-          name, public_key = ssh_key.split(":", 2)
+          name, public_key = ssh_key.split(':', 2)
           begin
             fingerprint = SSHKey.sha1_fingerprint(public_key)
 

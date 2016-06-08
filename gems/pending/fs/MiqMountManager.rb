@@ -12,7 +12,7 @@ class MiqMountManager < MiqFS
       $log.debug("MiqMountManager.mountVolumes >> fileName=#{dobj.dInfo.fileName}, partition=#{dobj.partNum}") if $log
       fs = MiqFS.getFS(dobj)
       if fs.nil?
-        $log.debug "MiqMountManager.mountVolumes << SKIPPING because no file system" if $log
+        $log.debug 'MiqMountManager.mountVolumes << SKIPPING because no file system' if $log
         noFsVolumes << dobj
         next
       end
@@ -42,7 +42,7 @@ class MiqMountManager < MiqFS
   end # def initialize
 
   def findPayload(noFsVolumes)
-    $log.debug "MiqMountManager.findPayload: searching for payloads:" if $log
+    $log.debug 'MiqMountManager.findPayload: searching for payloads:' if $log
     noFsVolumes.each do |v|
       next unless v.respond_to?(:devFile)
       if v.devFile
@@ -54,7 +54,7 @@ class MiqMountManager < MiqFS
           next
         end
         mkFs = MiqFS.new(MetakitFS, v)
-        if mkFs.fsId == "MIQPAYLOAD"
+        if mkFs.fsId == 'MIQPAYLOAD'
           $log.debug "\tMiqMountManager.findPayload: payload found devFile = #{v.devFile}" if $log
           @payloads << mkFs
         else
@@ -136,7 +136,7 @@ class MiqMountManager < MiqFS
     fs.fileSymLink?(p)
   end
 
-  def fileOpen(f, mode = "r", &block)
+  def fileOpen(f, mode = 'r', &block)
     fs, p = getFsPath(f)
     fs.fileOpen(p, mode, &block)
   end

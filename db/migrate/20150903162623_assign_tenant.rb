@@ -3,8 +3,8 @@ class AssignTenant < ActiveRecord::Migration
     # seed and return the current root_tenant
     def self.root_tenant
       create_with(
-        :name                      => "My Company",
-        :description               => "Tenant for My Company",
+        :name                      => 'My Company',
+        :description               => 'Tenant for My Company',
         :divisible                 => true,
         :use_config_for_attributes => true,
       ).find_or_create_by(:ancestry => nil)
@@ -36,7 +36,7 @@ class AssignTenant < ActiveRecord::Migration
     # only create a root tenant if there are records in the db
     return unless MiqGroup.exists?
 
-    say_with_time "assigning tenant to models" do
+    say_with_time 'assigning tenant to models' do
       root_tenant = Tenant.root_tenant
       models.each do |model|
         model.where(:tenant_id => nil).update_all(:tenant_id => root_tenant.id)

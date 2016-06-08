@@ -1,4 +1,4 @@
-require_relative "../aws_helper"
+require_relative '../aws_helper'
 
 describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
   let(:ems) { FactoryGirl.create(:ems_amazon_with_authentication) }
@@ -9,62 +9,62 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
   let(:describe_stacks_repsonse) do
     {
       :stacks => [
-        :stack_name          => "StackName",
+        :stack_name          => 'StackName',
         :creation_time       => 10.minutes.ago,
         :stack_status        => 'CREATE_COMPLETE',
         :stack_status_reason => 'complete',
-        :stack_id            => "stack_id"
+        :stack_id            => 'stack_id'
       ]
     }
   end
 
   describe 'stack operations' do
-    context ".raw_create_stack" do
-      it "creates a stack" do
+    context '.raw_create_stack' do
+      it 'creates a stack' do
         stubbed_responses = {
           :cloudformation => {
-            :create_stack    => [:stack_id => "stack_id"],
+            :create_stack    => [:stack_id => 'stack_id'],
             :describe_stacks => describe_stacks_repsonse
           }
         }
         with_aws_stubbed(stubbed_responses) do
-          stack = described_class.create_stack(ems, "mystack", template)
+          stack = described_class.create_stack(ems, 'mystack', template)
           expect(stack.class).to eq(described_class)
-          expect(stack.name).to eq("mystack")
-          expect(stack.ems_ref).to eq("stack_id")
+          expect(stack.name).to eq('mystack')
+          expect(stack.ems_ref).to eq('stack_id')
         end
       end
 
       it 'catches errors from provider' do
         stubbed_responses = {
           :cloudformation => {
-            :create_stack => "AlreadyExistsException"
+            :create_stack => 'AlreadyExistsException'
           }
         }
         with_aws_stubbed(stubbed_responses) do
           expect do
-            ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, "mystack", template)
+            ManageIQ::Providers::CloudManager::OrchestrationStack.create_stack(ems, 'mystack', template)
           end.to raise_error(MiqException::MiqOrchestrationProvisionError)
         end
       end
     end
 
-    context "#update_stack" do
+    context '#update_stack' do
       it 'updates the stack' do
         stubbed_responses = {
           :cloudformation => {
-            :update_stack => {:stack_id => "stack_id"}
+            :update_stack => {:stack_id => 'stack_id'}
           }
         }
         with_aws_stubbed(stubbed_responses) do
-          expect(orchestration_stack.update_stack(template, {}).stack_id).to eq("stack_id")
+          expect(orchestration_stack.update_stack(template, {}).stack_id).to eq('stack_id')
         end
       end
 
-      it "catches errors from provider" do
+      it 'catches errors from provider' do
         stubbed_responses = {
           :cloudformation => {
-            :update_stack => "ServiceError"
+            :update_stack => 'ServiceError'
           }
         }
         with_aws_stubbed(stubbed_responses) do
@@ -75,8 +75,8 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
       end
     end
 
-    context "#delete_stack" do
-      it "deletes the stack" do
+    context '#delete_stack' do
+      it 'deletes the stack' do
         stubbed_responses = {
           :cloudformation => {
             :delete_stack => {}
@@ -90,7 +90,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
       it 'catches errors from provider' do
         stubbed_responses = {
           :cloudformation => {
-            :delete_stack => "InsufficientCapabilitiesException"
+            :delete_stack => 'InsufficientCapabilitiesException'
           }
         }
         with_aws_stubbed(stubbed_responses) do
@@ -142,7 +142,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
       end
 
       it 'parses error message to determine stack not exist' do
-        message = "Stack with id stack_id does not exist"
+        message = 'Stack with id stack_id does not exist'
         stubbed_responses = {
           :cloudformation => {
             :describe_stacks => Aws::CloudFormation::Errors::ValidationError.new(:no_context, message)
@@ -157,7 +157,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
       it 'catches errors from provider' do
         stubbed_responses = {
           :cloudformation => {
-            :describe_stacks => "ServiceError"
+            :describe_stacks => 'ServiceError'
           }
         }
         with_aws_stubbed(stubbed_responses) do
@@ -169,13 +169,13 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
   end
 
   context '#tenant_identity' do
-    let(:admin)  { FactoryGirl.create(:user_with_group, :userid => "admin") }
+    let(:admin)  { FactoryGirl.create(:user_with_group, :userid => 'admin') }
     let(:tenant) { FactoryGirl.create(:tenant) }
     before       { admin }
 
     subject      { @stack.tenant_identity }
 
-    it "has tenant from provider" do
+    it 'has tenant from provider' do
       @stack = FactoryGirl.create(:orchestration_stack_amazon, :ems_id => ems.id)
 
       expect(subject).to                eq(admin)
@@ -183,7 +183,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack do
       expect(subject.current_tenant).to eq(ems.tenant)
     end
 
-    it "without a provider, has tenant from root tenant" do
+    it 'without a provider, has tenant from root tenant' do
       @stack = FactoryGirl.create(:orchestration_stack_amazon)
 
       expect(subject).to                eq(admin)

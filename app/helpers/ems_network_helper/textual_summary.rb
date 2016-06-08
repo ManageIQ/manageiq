@@ -30,7 +30,7 @@ module EmsNetworkHelper::TextualSummary
   #
   def textual_provider_region
     return nil if @ems.provider_region.nil?
-    {:label => _("Region"), :value => @ems.description}
+    {:label => _('Region'), :value => @ems.description}
   end
 
   def textual_hostname
@@ -39,7 +39,7 @@ module EmsNetworkHelper::TextualSummary
 
   def textual_ipaddress
     return nil if @ems.ipaddress.blank?
-    {:label => _("Discovered IP Address"), :value => @ems.ipaddress}
+    {:label => _('Discovered IP Address'), :value => @ems.ipaddress}
   end
 
   def textual_type
@@ -47,11 +47,11 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_port
-    @ems.supports_port? ? {:label => _("API Port"), :value => @ems.port} : nil
+    @ems.supports_port? ? {:label => _('API Port'), :value => @ems.port} : nil
   end
 
   def textual_guid
-    {:label => _("Management Engine GUID"), :value => @ems.guid}
+    {:label => _('Management Engine GUID'), :value => @ems.guid}
   end
 
   def textual_parent_ems_cloud
@@ -93,10 +93,10 @@ module EmsNetworkHelper::TextualSummary
     last_refresh_status = @ems.last_refresh_status.titleize
     if @ems.last_refresh_date
       last_refresh_date = time_ago_in_words(@ems.last_refresh_date.in_time_zone(Time.zone)).titleize
-      last_refresh_status << _(" -%{last_refresh_date} Ago") % {:last_refresh_date => last_refresh_date}
+      last_refresh_status << _(' -%{last_refresh_date} Ago') % {:last_refresh_date => last_refresh_date}
     end
     {
-      :label => _("Last Refresh"),
+      :label => _('Last Refresh'),
       :value => [{:value => last_refresh_status},
                  {:value => @ems.last_refresh_error.try(:truncate, 120)}],
       :title => @ems.last_refresh_error
@@ -107,10 +107,10 @@ module EmsNetworkHelper::TextualSummary
     {:label => _('Topology'),
      :image => 'topology',
      :link  => url_for(:controller => 'network_topology', :action => 'show', :id => @ems.id),
-     :title => _("Show topology")}
+     :title => _('Show topology')}
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.try(:name)}
+    {:label => _('Managed by Zone'), :image => 'zone', :value => @ems.zone.try(:name)}
   end
 end

@@ -1,4 +1,4 @@
 module VmtxConfig
-  require "vmxConfig"
+  require 'vmxConfig'
   include VmxConfig
 end

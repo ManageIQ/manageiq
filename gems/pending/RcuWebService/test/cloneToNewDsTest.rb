@@ -5,33 +5,33 @@ require 'RcuWebService/RcuClientBase'
 # Create 2 clones on newly created NFS datastore.
 #
 
-VC        = raise "please define"
-VC_USER     = raise "please define"
-VC_PASSWORD   = raise "please define"
+VC        = raise 'please define'
+VC_USER     = raise 'please define'
+VC_PASSWORD   = raise 'please define'
 
-FILER     = raise "please define"
-FILER_USER    = raise "please define"
-FILER_PASSWORD  = raise "please define"
+FILER     = raise 'please define'
+FILER_USER    = raise 'please define'
+FILER_PASSWORD  = raise 'please define'
 
-TARGET_HOST   = raise "please define"
-SOURCE_VM   = raise "please define"
+TARGET_HOST   = raise 'please define'
+SOURCE_VM   = raise 'please define'
 
 begin
 
   rcu = RcuClientBase.new(VC, VC_USER, VC_PASSWORD)
 
-  controller = RcuHash.new("ControllerSpec") do |cs|
+  controller = RcuHash.new('ControllerSpec') do |cs|
     cs.ipAddress  = FILER
     cs.password   = FILER_PASSWORD
     cs.ssl      = false
     cs.username   = FILER_USER
   end
 
-  srcVmtMor = rcu.getMoref(SOURCE_VM, "VirtualMachine")
+  srcVmtMor = rcu.getMoref(SOURCE_VM, 'VirtualMachine')
   raise "Source VM: #{SOURCE_VM} not found" unless srcVmtMor
   puts "Source VM: #{SOURCE_VM} (#{srcVmtMor})"
 
-  targetHostMor = rcu.getMoref(TARGET_HOST, "HostSystem")
+  targetHostMor = rcu.getMoref(TARGET_HOST, 'HostSystem')
   raise "Source VM: #{TARGET_HOST} not found" unless targetHostMor
   puts "Target host MOR: #{targetHostMor}"
 
@@ -39,11 +39,11 @@ begin
   files = RcuArray.new
 
   vmFiles.each do |f|
-    files << RcuHash.new("Files") do |nf|
-      nf.destDatastoreSpec = RcuHash.new("DestDatastoreSpec") do |dds|
-        dds.aggrOrVolName = "rcu_aggr0"
+    files << RcuHash.new('Files') do |nf|
+      nf.destDatastoreSpec = RcuHash.new('DestDatastoreSpec') do |dds|
+        dds.aggrOrVolName = 'rcu_aggr0'
         dds.controller    = controller
-        dds.datastoreNames  = "RichRcuTestTmp"
+        dds.datastoreNames  = 'RichRcuTestTmp'
         dds.numDatastores = 1
         dds.protocol    = 'NFS'
         dds.sizeInMB    = 1024 * 3
@@ -64,20 +64,20 @@ begin
     end
   end
 
-  clones = RcuHash.new("Clones") do |cl|
+  clones = RcuHash.new('Clones') do |cl|
     cl.entry = RcuArray.new do |ea|
-      ea << RcuHash.new("Entry") do |e|
-        e.key = "RcuCloneTestNewDs1"
-        e.value = ""
+      ea << RcuHash.new('Entry') do |e|
+        e.key = 'RcuCloneTestNewDs1'
+        e.value = ''
       end
-      ea << RcuHash.new("Entry") do |e|
-        e.key = "RcuCloneTestNewDs2"
-        e.value = ""
+      ea << RcuHash.new('Entry') do |e|
+        e.key = 'RcuCloneTestNewDs2'
+        e.value = ''
       end
     end
   end
 
-  cloneSpec = RcuHash.new("CloneSpec") do |cs|
+  cloneSpec = RcuHash.new('CloneSpec') do |cs|
     cs.clones     = clones
     cs.containerMoref = targetHostMor
     cs.files      = files
@@ -85,7 +85,7 @@ begin
   end
 
   puts
-  puts "Calling createClones..."
+  puts 'Calling createClones...'
   rv = rcu.createClones(cloneSpec)
 
   puts

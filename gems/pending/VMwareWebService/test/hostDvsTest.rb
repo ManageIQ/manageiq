@@ -21,7 +21,7 @@ $miq_wiredump = false
 $stderr.sync = true
 $stdout.sync = true
 
-HOST_NAME   = raise "please define"
+HOST_NAME   = raise 'please define'
 NEW_PORTGROUP = 'portgroup2'
 
 begin
@@ -49,7 +49,7 @@ begin
   # List the names of the non-uplink portgroups.
   #
   nupga = vimHost.dvsPortGroupByFilter('uplinkPortgroup' => 'false')
-  puts "Available DVS portgroups:"
+  puts 'Available DVS portgroups:'
   nupga.each { |nupg| puts "\t" + nupg.portgroupName }
   puts
 
@@ -64,7 +64,7 @@ rescue => err
   puts err.backtrace.join("\n")
 ensure
   puts
-  puts "Exiting..."
+  puts 'Exiting...'
   vimHost.release if vimHost
   vim.disconnect if vim
 end

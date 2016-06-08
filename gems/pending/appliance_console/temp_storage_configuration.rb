@@ -1,10 +1,10 @@
-require "appliance_console/logging"
+require 'appliance_console/logging'
 
 module ApplianceConsole
   class TempStorageConfiguration
-    TEMP_DISK_FILESYSTEM_TYPE = "xfs".freeze
-    TEMP_DISK_MOUNT_POINT     = Pathname.new("/var/www/miq_tmp").freeze
-    TEMP_DISK_MOUNT_OPTS      = "rw,noatime,nobarrier".freeze
+    TEMP_DISK_FILESYSTEM_TYPE = 'xfs'.freeze
+    TEMP_DISK_MOUNT_POINT     = Pathname.new('/var/www/miq_tmp').freeze
+    TEMP_DISK_MOUNT_OPTS      = 'rw,noatime,nobarrier'.freeze
 
     attr_reader :disk
 
@@ -20,7 +20,7 @@ module ApplianceConsole
     end
 
     def ask_questions
-      @disk = ask_for_disk("temp storage disk", false)
+      @disk = ask_for_disk('temp storage disk', false)
       disk && are_you_sure?("configure #{disk.path} as temp storage")
     end
 
@@ -41,9 +41,9 @@ module ApplianceConsole
       # TODO: should this be moved into LinuxAdmin?
       FileUtils.rm_rf(TEMP_DISK_MOUNT_POINT)
       FileUtils.mkdir_p(TEMP_DISK_MOUNT_POINT)
-      AwesomeSpawn.run!("mount", :params => {
-                        "-t" => TEMP_DISK_FILESYSTEM_TYPE,
-                        "-o" => TEMP_DISK_MOUNT_OPTS,
+      AwesomeSpawn.run!('mount', :params => {
+                        '-t' => TEMP_DISK_FILESYSTEM_TYPE,
+                        '-o' => TEMP_DISK_MOUNT_OPTS,
                         nil  => [partition.path, TEMP_DISK_MOUNT_POINT]
                       })
     end

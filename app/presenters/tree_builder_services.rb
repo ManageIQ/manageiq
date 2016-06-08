@@ -5,7 +5,7 @@ class TreeBuilderServices < TreeBuilder
 
   def tree_init_options(_tree_name)
     {
-      :leaf     => "Service",
+      :leaf     => 'Service',
       :full_ids => true
     }
   end
@@ -13,18 +13,18 @@ class TreeBuilderServices < TreeBuilder
   def set_locals_for_render
     locals = super
     locals.merge!(
-      :id_prefix => "svc_",
+      :id_prefix => 'svc_',
       :autoload  => true
     )
   end
 
   def root_options
-    [t = _("All Services"), t]
+    [t = _('All Services'), t]
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    count_only_or_objects(count_only, rbac_filtered_objects(Service.roots), "name")
+    count_only_or_objects(count_only, rbac_filtered_objects(Service.roots), 'name')
   end
 
   def x_get_tree_service_kids(object, count_only)

@@ -3,8 +3,8 @@ class ApiController
     def vms_query_resource(object)
       vms = object.try(:vms) || []
 
-      vm_attrs = attribute_selection_for("vms")
-      vm_decorators = decorator_selection_for("vms")
+      vm_attrs = attribute_selection_for('vms')
+      vm_decorators = decorator_selection_for('vms')
 
       return vms if vm_attrs.blank? && vm_decorators.blank?
 
@@ -34,7 +34,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Starting #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "start")
+        result = validate_vm_for_action(vm, 'start')
         result = start_vm(vm) if result[:success]
         result
       end
@@ -47,7 +47,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Stopping #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "stop")
+        result = validate_vm_for_action(vm, 'stop')
         result = stop_vm(vm) if result[:success]
         result
       end
@@ -60,7 +60,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Suspending #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "suspend")
+        result = validate_vm_for_action(vm, 'suspend')
         result = suspend_vm(vm) if result[:success]
         result
       end
@@ -73,7 +73,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Pausing #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "pause")
+        result = validate_vm_for_action(vm, 'pause')
         result = pause_vm(vm) if result[:success]
         result
       end
@@ -86,7 +86,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Shelving #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "shelve")
+        result = validate_vm_for_action(vm, 'shelve')
         result = shelve_vm(vm) if result[:success]
         result
       end
@@ -99,7 +99,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Shelve-offloading #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "shelve_offload")
+        result = validate_vm_for_action(vm, 'shelve_offload')
         result = shelve_offload_vm(vm) if result[:success]
         result
       end
@@ -119,8 +119,8 @@ class ApiController
     def set_owner_resource_vms(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for setting the owner of a #{type} resource" unless id
 
-      owner = data.blank? ? "" : data["owner"].strip
-      raise BadRequestError, "Must specify an owner" if owner.blank?
+      owner = data.blank? ? '' : data['owner'].strip
+      raise BadRequestError, 'Must specify an owner' if owner.blank?
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
@@ -148,7 +148,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Scanning #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "scan")
+        result = validate_vm_for_action(vm, 'scan')
         result = scan_vm(vm) if result[:success]
         result
       end
@@ -163,7 +163,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Adding Event to #{vm_ident(vm)}")
 
-        vm_event(vm, data["event_type"].to_s, data["event_message"].to_s, data["event_time"].to_s)
+        vm_event(vm, data['event_type'].to_s, data['event_message'].to_s, data['event_time'].to_s)
       end
     end
 
@@ -184,7 +184,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Resetting #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "reset")
+        result = validate_vm_for_action(vm, 'reset')
         result = reset_vm(vm) if result[:success]
         result
       end
@@ -197,7 +197,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Rebooting #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "reboot_guest")
+        result = validate_vm_for_action(vm, 'reboot_guest')
         result = reboot_guest_vm(vm) if result[:success]
         result
       end
@@ -210,7 +210,7 @@ class ApiController
         vm = resource_search(id, type, klass)
         api_log_info("Shutting down #{vm_ident(vm)}")
 
-        result = validate_vm_for_action(vm, "shutdown_guest")
+        result = validate_vm_for_action(vm, 'shutdown_guest')
         result = shutdown_guest_vm(vm) if result[:success]
         result
       end
@@ -236,7 +236,7 @@ class ApiController
       # However, there are different entitlements for the different protocol as per miq_product_feature,
       # so we may go for different action, i.e. request_console_vnc
       #protocol = "mks"
-      protocol = data["protocol"] || "vnc"
+      protocol = data['protocol'] || 'vnc'
 
       api_action(type, id) do |klass|
         vm = resource_search(id, type, klass)
@@ -260,16 +260,16 @@ class ApiController
     end
 
     def validate_vm_for_remote_console(vm, protocol = nil)
-      protocol ||= "mks"
+      protocol ||= 'mks'
       vm.validate_remote_console_acquire_ticket(protocol)
-      action_result(true, "")
+      action_result(true, '')
     rescue MiqException::RemoteConsoleNotSupportedError => err
       action_result(false, err.message)
     end
 
     def start_vm(vm)
       desc = "#{vm_ident(vm)} starting"
-      task_id = queue_object_action(vm, desc, :method_name => "start", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'start', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -277,7 +277,7 @@ class ApiController
 
     def stop_vm(vm)
       desc = "#{vm_ident(vm)} stopping"
-      task_id = queue_object_action(vm, desc, :method_name => "stop", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'stop', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -285,7 +285,7 @@ class ApiController
 
     def suspend_vm(vm)
       desc = "#{vm_ident(vm)} suspending"
-      task_id = queue_object_action(vm, desc, :method_name => "suspend", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'suspend', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -293,7 +293,7 @@ class ApiController
 
     def pause_vm(vm)
       desc = "#{vm_ident(vm)} pausing"
-      task_id = queue_object_action(vm, desc, :method_name => "pause", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'pause', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -301,7 +301,7 @@ class ApiController
 
     def shelve_vm(vm)
       desc = "#{vm_ident(vm)} shelving"
-      task_id = queue_object_action(vm, desc, :method_name => "shelve", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'shelve', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -309,7 +309,7 @@ class ApiController
 
     def shelve_offload_vm(vm)
       desc = "#{vm_ident(vm)} shelve-offloading"
-      task_id = queue_object_action(vm, desc, :method_name => "shelve_offload", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'shelve_offload', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -317,7 +317,7 @@ class ApiController
 
     def destroy_vm(vm)
       desc = "#{vm_ident(vm)} deleting"
-      task_id = queue_object_action(vm, desc, :method_name => "destroy")
+      task_id = queue_object_action(vm, desc, :method_name => 'destroy')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -345,14 +345,14 @@ class ApiController
 
     def lifecycle_event_from_data(data)
       data ||= {}
-      data = data.slice("event", "status", "message", "created_by")
+      data = data.slice('event', 'status', 'message', 'created_by')
       data.keys.each { |k| data[k] = data[k].to_s }
       data
     end
 
     def scan_vm(vm)
       desc = "#{vm_ident(vm)} scanning"
-      task_id = queue_object_action(vm, desc, :method_name => "scan", :role => "smartstate")
+      task_id = queue_object_action(vm, desc, :method_name => 'scan', :role => 'smartstate')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -379,7 +379,7 @@ class ApiController
 
     def reset_vm(vm)
       desc = "#{vm_ident(vm)} resetting"
-      task_id = queue_object_action(vm, desc, :method_name => "reset", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'reset', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -387,7 +387,7 @@ class ApiController
 
     def refresh_vm(vm)
       desc = "#{vm_ident(vm)} refreshing"
-      task_id = queue_object_action(vm, desc, :method_name => "refresh_ems", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'refresh_ems', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -395,7 +395,7 @@ class ApiController
 
     def shutdown_guest_vm(vm)
       desc = "#{vm_ident(vm)} shutting down"
-      task_id = queue_object_action(vm, desc, :method_name => "shutdown_guest", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'shutdown_guest', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -403,7 +403,7 @@ class ApiController
 
     def reboot_guest_vm(vm)
       desc = "#{vm_ident(vm)} rebooting"
-      task_id = queue_object_action(vm, desc, :method_name => "reboot_guest", :role => "ems_operations")
+      task_id = queue_object_action(vm, desc, :method_name => 'reboot_guest', :role => 'ems_operations')
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)
@@ -412,8 +412,8 @@ class ApiController
     def request_console_vm(vm, protocol)
       desc = "#{vm_ident(vm)} requesting console"
       task_id = queue_object_action(vm, desc,
-                                    :method_name => "remote_console_acquire_ticket",
-                                    :role        => "ems_operations",
+                                    :method_name => 'remote_console_acquire_ticket',
+                                    :role        => 'ems_operations',
                                     :args => [@auth_user, protocol])
       # NOTE:
       # we are queuing the :remote_console_acquire_ticket and returning the task id and href.

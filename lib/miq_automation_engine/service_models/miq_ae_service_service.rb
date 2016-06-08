@@ -1,6 +1,6 @@
 module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
-    require_relative "mixins/miq_ae_service_retirement_mixin"
+    require_relative 'mixins/miq_ae_service_retirement_mixin'
     include MiqAeServiceRetirementMixin
 
     expose :retire_service_resources
@@ -29,7 +29,7 @@ module MiqAeMethodService
     def self.create(options = {})
       attributes = options.symbolize_keys.slice(*CREATE_ATTRIBUTES)
       if attributes[:service_template]
-        raise ArgumentError, "service_template must be a MiqAeServiceServiceTemplate" unless
+        raise ArgumentError, 'service_template must be a MiqAeServiceServiceTemplate' unless
           attributes[:service_template].kind_of?(MiqAeMethodService::MiqAeServiceServiceTemplate)
         attributes[:service_template] = ServiceTemplate.find(attributes[:service_template].id)
       end
@@ -73,7 +73,7 @@ module MiqAeMethodService
     def parent_service=(service)
       ar_method do
         if service
-          raise ArgumentError, "service must be a MiqAeServiceService" unless service.kind_of?(
+          raise ArgumentError, 'service must be a MiqAeServiceService' unless service.kind_of?(
             MiqAeMethodService::MiqAeServiceService)
           @object.service = Service.find(service.id)
         else

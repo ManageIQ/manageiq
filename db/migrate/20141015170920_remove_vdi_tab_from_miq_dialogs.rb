@@ -4,7 +4,7 @@ class RemoveVdiTabFromMiqDialogs < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Removing VDI tab from MiqDialog") do
+    say_with_time('Removing VDI tab from MiqDialog') do
       MiqDialog.where(:dialog_type => 'MiqProvisionWorkflow').each do |dialog|
         if dialog.content[:dialogs].present? && dialog.content[:dialogs].keys.include?(:vdi)
           dialog.content[:dialogs].delete(:vdi)

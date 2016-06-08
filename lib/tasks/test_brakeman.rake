@@ -5,14 +5,14 @@ namespace :test do
     task :teardown # NOOP - Stub for consistent CI testing
   end
 
-  desc "Run Brakeman"
+  desc 'Run Brakeman'
   task :brakeman do
-    require "brakeman"
+    require 'brakeman'
 
     # See all possible options here:
     #   http://www.rubydoc.info/gems/brakeman/Brakeman#run-class_method
     tracker = Brakeman.run(
-      :app_path     => ".",
+      :app_path     => '.',
       :quiet        => false,
       :print_report => true
     )

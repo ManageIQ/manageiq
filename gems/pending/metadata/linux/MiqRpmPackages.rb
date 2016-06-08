@@ -29,16 +29,16 @@ class MiqRpmPackages
   REQUIRES    = 1049
 
   TAGIDS = {
-    1000 => "name",
-    1001 => "version",
-    1002 => "release",
-    1004 => "summary",
-    1005 => "description",
-    1008 => "installtime",
-    1011 => "vendor",
-    1016 => "category",  # group
-    1022 => "arch",
-    1049 => "depends",   # requires
+    1000 => 'name',
+    1001 => 'version',
+    1002 => 'release',
+    1004 => 'summary',
+    1005 => 'description',
+    1008 => 'installtime',
+    1011 => 'vendor',
+    1016 => 'category',  # group
+    1022 => 'arch',
+    1049 => 'depends',   # requires
   }
 
   #
@@ -46,7 +46,7 @@ class MiqRpmPackages
   #
   RPML_HEADER = BinaryStruct.new([
     'N',        'num_index',
-    "N",        'num_data'
+    'N',        'num_data'
   ])
   RPML_HEADER_LEN = RPML_HEADER.size
 
@@ -75,7 +75,7 @@ class MiqRpmPackages
         $log.debug "record length = #{v.length}"
         $log.debug "num_index = #{hdr['num_index']}"
         $log.debug "num_data = #{hdr['num_data']}"
-        $log.error "Invalid or corrupt RPM database record"
+        $log.error 'Invalid or corrupt RPM database record'
         next
       end
 
@@ -101,7 +101,7 @@ class MiqRpmPackages
   private
 
   def time_tag?(tag)
-    tag == "installtime"
+    tag == 'installtime'
   end
 
   def convert(tag, val)
@@ -116,12 +116,12 @@ class MiqRpmPackages
     when RPM_I18NSTRING_TYPE    then return(getStringArray(data, ei['offset'], ei['count']).join("\n").AsciiToUtf8)
     else
       $log.warn "MiqRpmPackages.getVal: unsupported data type: #{ei['ttype']}"
-      return("")
+      return('')
     end
   end
 
   def getInt32Val(data, offset)
-    (data[offset, 4].unpack("N").first)
+    (data[offset, 4].unpack('N').first)
   end
 
   def getStringVal(data, offset)
@@ -144,7 +144,7 @@ class MiqRpmPackages
 end # class MiqRPM
 
 if __FILE__ == $0
-  rpmPkgs = MiqRpmPackages.new(nil, "/var/lib/rpm/Packages")
+  rpmPkgs = MiqRpmPackages.new(nil, '/var/lib/rpm/Packages')
   rpmPkgs.each do |pkg|
     puts "Package: #{pkg.name}"
     puts "\tInstall Time: #{pkg.installtime}"

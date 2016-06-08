@@ -15,7 +15,7 @@ class PostponedTranslation
 
   # meant to catch cases where PostponedTranslation is not supported
   def to_s
-    $log.warn("PostponedTranslation#to_s should not be called - leaving untranslated")
+    $log.warn('PostponedTranslation#to_s should not be called - leaving untranslated')
     @string % @args
   end
 

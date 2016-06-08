@@ -8,9 +8,9 @@ module MiqAeMethodService
         MiqQueue.put(
           :class_name  => @object.class.name,
           :instance_id => @object.id,
-          :method_name => "register_host",
+          :method_name => 'register_host',
           :zone        => @object.my_zone,
-          :role        => "ems_operations",
+          :role        => 'ems_operations',
           :args        => [host.id]
         )
         true

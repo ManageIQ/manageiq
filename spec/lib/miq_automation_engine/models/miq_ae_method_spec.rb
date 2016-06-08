@@ -1,52 +1,52 @@
 describe MiqAeMethod do
-  it "should return editable as false if the parent namespace/class is not editable" do
+  it 'should return editable as false if the parent namespace/class is not editable' do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :priority => 10, :system => true)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
     f1 = FactoryGirl.create(:miq_ae_method,
                             :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                            :name     => 'foo_method',
+                            :scope    => 'instance',
+                            :language => 'ruby',
+                            :location => 'inline')
     expect(f1).not_to be_editable
   end
 
-  it "should return editable as true if the parent namespace/class is editable" do
+  it 'should return editable as true if the parent namespace/class is editable' do
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1')
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
     f1 = FactoryGirl.create(:miq_ae_method,
                             :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                            :name     => 'foo_method',
+                            :scope    => 'instance',
+                            :language => 'ruby',
+                            :location => 'inline')
     expect(f1).to be_editable
   end
 
-  context "#copy" do
+  context '#copy' do
     before do
-      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => "domain1", :parent_id => nil, :priority => 1)
-      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => "ns1", :parent_id => @d1.id)
-      @cls1 = FactoryGirl.create(:miq_ae_class, :name => "cls1", :namespace_id => @ns1.id)
+      @d1 = FactoryGirl.create(:miq_ae_namespace, :name => 'domain1', :parent_id => nil, :priority => 1)
+      @ns1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => @d1.id)
+      @cls1 = FactoryGirl.create(:miq_ae_class, :name => 'cls1', :namespace_id => @ns1.id)
       @m1 = FactoryGirl.create(:miq_ae_method,
                                :class_id => @cls1.id,
-                               :name     => "foo_method1",
-                               :scope    => "instance",
-                               :language => "ruby",
-                               :location => "inline")
+                               :name     => 'foo_method1',
+                               :scope    => 'instance',
+                               :language => 'ruby',
+                               :location => 'inline')
       @m2 = FactoryGirl.create(:miq_ae_method,
                                :class_id => @cls1.id,
-                               :name     => "foo_method2",
-                               :scope    => "instance",
-                               :language => "ruby",
-                               :location => "inline")
+                               :name     => 'foo_method2',
+                               :scope    => 'instance',
+                               :language => 'ruby',
+                               :location => 'inline')
 
       @d2 = FactoryGirl.create(:miq_ae_namespace,
-                               :name => "domain2", :parent_id => nil, :priority => 2, :system => false)
-      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => "ns2", :parent_id => @d2.id)
+                               :name => 'domain2', :parent_id => nil, :priority => 2, :system => false)
+      @ns2 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => @d2.id)
     end
 
-    it "copies instances under specified namespace" do
+    it 'copies instances under specified namespace' do
       options = {
         :domain             => @d2.name,
         :namespace          => nil,
@@ -58,7 +58,7 @@ describe MiqAeMethod do
       expect(res.count).to eq(2)
     end
 
-    it "copy instances under same namespace raise error when class exists" do
+    it 'copy instances under same namespace raise error when class exists' do
       options = {
         :domain             => @d1.name,
         :namespace          => @ns1.fqname,
@@ -68,7 +68,7 @@ describe MiqAeMethod do
       expect { MiqAeMethod.copy(options) }.to raise_error(RuntimeError)
     end
 
-    it "replaces instances under same namespace when class exists" do
+    it 'replaces instances under same namespace when class exists' do
       options = {
         :domain             => @d2.name,
         :namespace          => @ns2.name,
@@ -81,15 +81,15 @@ describe MiqAeMethod do
     end
   end
 
-  describe "#to_export_xml" do
+  describe '#to_export_xml' do
     let(:miq_ae_method) do
       described_class.new(
         :class_id   => 321,
         :created_on => Time.now,
-        :data       => "the data",
+        :data       => 'the data',
         :id         => 123,
         :inputs     => inputs,
-        :updated_by => "me",
+        :updated_by => 'me',
         :updated_on => Time.now
       )
     end
@@ -103,7 +103,7 @@ describe MiqAeMethod do
       end
     end
 
-    it "produces the expected xml" do
+    it 'produces the expected xml' do
       expected_xml = <<-XML
 <MiqAeMethod name="" language="" scope="" location=""><![CDATA[the data]]><inputs/></MiqAeMethod>
       XML
@@ -112,16 +112,16 @@ describe MiqAeMethod do
     end
   end
 
-  it "#domain" do
+  it '#domain' do
     d1 = FactoryGirl.create(:miq_ae_domain, :name => 'dom1', :priority => 10, :system => true)
     n1 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => d1.id)
-    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => "foo")
+    c1 = FactoryGirl.create(:miq_ae_class, :namespace_id => n1.id, :name => 'foo')
     m1 = FactoryGirl.create(:miq_ae_method,
                             :class_id => c1.id,
-                            :name     => "foo_method",
-                            :scope    => "instance",
-                            :language => "ruby",
-                            :location => "inline")
+                            :name     => 'foo_method',
+                            :scope    => 'instance',
+                            :language => 'ruby',
+                            :location => 'inline')
     expect(m1.domain.name).to eql('dom1')
   end
 end

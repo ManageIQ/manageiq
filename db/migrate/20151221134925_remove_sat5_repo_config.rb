@@ -6,12 +6,12 @@ class RemoveSat5RepoConfig < ActiveRecord::Migration
   end
 
   def up
-    say_with_time("Removing Sat5 update configuration") do
+    say_with_time('Removing Sat5 update configuration') do
       return unless (db = MiqDatabase.first)
 
-      new_repos = "cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms"
+      new_repos = 'cf-me-5.5-for-rhel-7-rpms rhel-server-rhscl-7-rpms'
 
-      if db.registration_type == "rhn_satellite"
+      if db.registration_type == 'rhn_satellite'
         db.update_attributes(
           :registration_type                      => nil,
           :registration_organization              => nil,

@@ -6,10 +6,10 @@ module ManageIQ::Providers::Amazon::CloudManager::EventParser
                "#{event["configurationItem"]["resourceId"]}]")
 
     event_hash = {
-      :event_type => event["eventType"],
-      :source     => "AMAZON",
-      :message    => event["configurationItemDiff"],
-      :timestamp  => event["notificationCreationTime"],
+      :event_type => event['eventType'],
+      :source     => 'AMAZON',
+      :message    => event['configurationItemDiff'],
+      :timestamp  => event['notificationCreationTime'],
       :full_data  => event,
       :ems_id     => ems_id
     }
@@ -20,12 +20,12 @@ module ManageIQ::Providers::Amazon::CloudManager::EventParser
   end
 
   def self.parse_vm_ref(event)
-    resource_type = event["configurationItem"]["resourceType"]
+    resource_type = event['configurationItem']['resourceType']
     # other ways to find the VM?
-    event.fetch_path("configurationItem", "resourceId") if resource_type == "Aws::EC2::Instance"
+    event.fetch_path('configurationItem', 'resourceId') if resource_type == 'Aws::EC2::Instance'
   end
 
   def self.parse_availability_zone_ref(event)
-    event.fetch_path("configurationItem", "availabilityZone")
+    event.fetch_path('configurationItem', 'availabilityZone')
   end
 end

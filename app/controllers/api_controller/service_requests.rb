@@ -52,16 +52,16 @@ class ApiController
 
     def add_service_request(target, data)
       if target.state != ServiceOrder::STATE_CART
-        raise BadRequestError, "Must specify a cart to add a service request to"
+        raise BadRequestError, 'Must specify a cart to add a service request to'
       end
       workflow = service_request_workflow(data)
       validation = add_request_to_cart(workflow)
       if validation[:errors].present?
-        action_result(false, validation[:errors].join(", "))
+        action_result(false, validation[:errors].join(', '))
       elsif validation[:request].nil?
-        action_result(false, "Unable to add service request")
+        action_result(false, 'Unable to add service request')
       else
-        result = action_result(true, "Adding service_request")
+        result = action_result(true, 'Adding service_request')
         add_subcollection_resource_to_result(result, :service_requests, validation[:request])
         result
       end

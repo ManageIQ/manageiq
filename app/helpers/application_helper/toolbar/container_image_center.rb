@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::ContainerImageCenter < ApplicationHelper::Tool
           'fa fa-search fa-lg',
           N_('Perform SmartState Analysis on this item'),
           N_('Perform SmartState Analysis'),
-          :confirm => N_("Perform SmartState Analysis on this item?")),
+          :confirm => N_('Perform SmartState Analysis on this item?')),
       ]
     ),
   ])
@@ -37,7 +37,7 @@ class ApplicationHelper::Toolbar::ContainerImageCenter < ApplicationHelper::Tool
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for this item'),
           N_('Check Compliance of Last Known Configuration'),
-          :confirm => N_("Initiate Check Compliance of the last known configuration for this item?"))
+          :confirm => N_('Initiate Check Compliance of the last known configuration for this item?'))
       ]
     ),
   ])

@@ -3,7 +3,7 @@
 #
 
 platform  = $evm.root['platform']
-$evm.log("info", "Detected Platform:<#{platform}>")
+$evm.log('info', "Detected Platform:<#{platform}>")
 
 if platform.nil?
   source_id = $evm.root['dialog_input_src_vm_id']
@@ -11,10 +11,10 @@ if platform.nil?
   if source
     platform = source.model_suffix.downcase
   else
-    platform = "vmware"
+    platform = 'vmware'
   end
 end
 
 dialog_name_prefix = "miq_provision_#{platform}_dialogs"
 $evm.object['dialog_name_prefix'] = dialog_name_prefix
-$evm.log("info", "Platform:<#{platform}> dialog_name_prefix:<#{dialog_name_prefix}>")
+$evm.log('info', "Platform:<#{platform}> dialog_name_prefix:<#{dialog_name_prefix}>")

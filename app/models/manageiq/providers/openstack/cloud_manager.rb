@@ -25,11 +25,11 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   include HasManyCloudNetworksMixin
 
   def self.ems_type
-    @ems_type ||= "openstack".freeze
+    @ems_type ||= 'openstack'.freeze
   end
 
   def self.description
-    @description ||= "OpenStack".freeze
+    @description ||= 'OpenStack'.freeze
   end
 
   def self.default_blacklisted_event_names
@@ -125,7 +125,7 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   # TODO: Should this be in a VM-specific subclass or mixin?
   #       This is a general EMS question.
   def vm_create_evm_snapshot(vm, options = {})
-    require "OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance"
+    require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance'
 
     log_prefix = "vm=[#{vm.name}]"
 
@@ -134,13 +134,13 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
 
     # Add new snapshot image to the vms table. Type is TemplateOpenstack.
     miq_templates.create!(
-      :type     => "ManageIQ::Providers::Openstack::CloudManager::Template",
-      :vendor   => "openstack",
+      :type     => 'ManageIQ::Providers::Openstack::CloudManager::Template',
+      :vendor   => 'openstack',
       :name     => miq_snapshot.name,
       :uid_ems  => miq_snapshot.id,
       :ems_ref  => miq_snapshot.id,
       :template => true,
-      :location => "unknown"
+      :location => 'unknown'
     )
 
     # Add new snapshot to the snapshots table.
@@ -159,7 +159,7 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   end
 
   def vm_delete_evm_snapshot(vm, image_id)
-    require "OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance"
+    require 'OpenStackExtract/MiqOpenStackVm/MiqOpenStackInstance'
 
     log_prefix = "snapshot=[#{image_id}]"
 
@@ -200,8 +200,8 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
   #
 
   def block_storage_disk_usage
-    cloud_volumes.where.not(:status => "error").sum(:size).to_f +
-      cloud_volume_snapshots.where.not(:status => "error").sum(:size).to_f
+    cloud_volumes.where.not(:status => 'error').sum(:size).to_f +
+      cloud_volume_snapshots.where.not(:status => 'error').sum(:size).to_f
   end
 
   def object_storage_disk_usage(swift_replicas = 1)

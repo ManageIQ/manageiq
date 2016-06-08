@@ -12,22 +12,22 @@ class ApplicationHelper::Toolbar::ConfigurationProfileForemanCenter < Applicatio
           'fa fa-refresh fa-lg',
           N_('Refresh relationships for all items related to this Provider'),
           N_('Refresh Relationships and Power states'),
-          :url     => "refresh",
-          :confirm => N_("Refresh relationships for all items related to this Provider?")),
+          :url     => 'refresh',
+          :confirm => N_('Refresh relationships for all items related to this Provider?')),
         separator,
         button(
           :provider_foreman_edit_provider,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Provider'),
           t,
-          :url => "edit"),
+          :url => 'edit'),
         button(
           :provider_foreman_delete_provider,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Provider from the VMDB'),
           t,
-          :url     => "delete",
-          :confirm => N_("Warning: The selected Provider and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Provider?")),
+          :url     => 'delete',
+          :confirm => N_('Warning: The selected Provider and ALL of their components will be permanently removed from the Virtual Management Database.  Are you sure you want to remove this Provider?')),
       ]
     ),
   ])

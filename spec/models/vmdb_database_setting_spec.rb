@@ -54,7 +54,7 @@ describe VmdbDatabaseSetting do
 
   it 'defaults unit to a blank string' do
     setting = VmdbDatabaseSetting.where(:unit => nil).first
-    expect(setting.unit).to eq("")
+    expect(setting.unit).to eq('')
   end
 
   [

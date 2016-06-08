@@ -4,11 +4,11 @@ module MiqServer::ServerMonitor
   def mark_as_not_responding(seconds = miq_server_time_threshold)
     msg = "#{format_full_log_msg} has not responded in #{seconds} seconds."
     _log.info(msg)
-    update_attributes(:status => "not responding")
+    update_attributes(:status => 'not responding')
     deactivate_all_roles
 
     # TODO: need to add event for this
-    MiqEvent.raise_evm_event_queue_in_region(self, "evm_server_not_responding", :event_details => msg)
+    MiqEvent.raise_evm_event_queue_in_region(self, 'evm_server_not_responding', :event_details => msg)
 
     # Mark all messages currently being worked on by the not responding server's workers as error
     _log.info("Cleaning all active messages being processed by #{format_full_log_msg}")
@@ -21,20 +21,20 @@ module MiqServer::ServerMonitor
     parent.lock do
       all_servers = parent.miq_servers
 
-      _log.debug "Double checking that nothing has changed"
+      _log.debug 'Double checking that nothing has changed'
       master = all_servers.detect(&:is_master?)
       if (last_master.nil? && !master.nil?) || (!last_master.nil? && !master.nil? && last_master.id != master.id)
-        _log.info "Aborting master server takeover as another server has taken control first."
+        _log.info 'Aborting master server takeover as another server has taken control first.'
         return nil
       end
 
-      _log.debug "Setting this server as master server"
+      _log.debug 'Setting this server as master server'
       all_servers.each do |s|
         s.is_master = (id == s.id)
         s.save!
       end
     end
-    _log.info "This server is now set as the master server"
+    _log.info 'This server is now set as the master server'
     self
   end
 
@@ -43,7 +43,7 @@ module MiqServer::ServerMonitor
   end
 
   def monitor_servers_as_master
-    _log.debug("Checking other servers as master server")
+    _log.debug('Checking other servers as master server')
     @last_master = nil
     @last_servers ||= {}
 
@@ -100,8 +100,8 @@ module MiqServer::ServerMonitor
     parent = MiqRegion.my_region
     master = parent.find_master_server
 
-    msg = "Checking master MiqServer."
-    msg << " There is no master server." if master.nil?
+    msg = 'Checking master MiqServer.'
+    msg << ' There is no master server.' if master.nil?
     msg << " time_threshold [#{miq_server_time_threshold.seconds.ago.utc}] last_heartbeat changed [#{@last_master[:last_hb_change]}] last_heartbeat [#{rec.last_heartbeat}]" unless master.nil? || rec.nil?
     _log.debug(msg)
 
@@ -126,7 +126,7 @@ module MiqServer::ServerMonitor
         # Raise miq_server_is_master event
         master_msg = master.nil? ? nil : " from #{master.format_short_log_msg}"
         msg = "#{format_short_log_msg} has taken over master#{master_msg}"
-        MiqEvent.raise_evm_event_queue_in_region(self, "evm_server_is_master", :event_details => msg)
+        MiqEvent.raise_evm_event_queue_in_region(self, 'evm_server_is_master', :event_details => msg)
 
         monitor_servers_as_master
       else

@@ -14,7 +14,7 @@ class MiqHostDatastoreSystem
     @invObj.getMoProp(@dssMor, 'datastore')['datastore']
   end
 
-  def createNasDatastore(remoteHost, remotePath, localPath, accessMode = "readWrite", type = "nfs", userName = nil, password = nil)
+  def createNasDatastore(remoteHost, remotePath, localPath, accessMode = 'readWrite', type = 'nfs', userName = nil, password = nil)
     spec = VimHash.new('HostNasVolumeSpec') do |s|
       s.remoteHost  = remoteHost
       s.remotePath  = remotePath
@@ -30,8 +30,8 @@ class MiqHostDatastoreSystem
   #
   # Utility method to add an existing NAS datastore to the host in question.
   #
-  def addNasDatastoreByName(dsName, accessMode = "readWrite")
-    if (dsh = @invObj.dataStoresByFilter_local("summary.name" => dsName).first).nil?
+  def addNasDatastoreByName(dsName, accessMode = 'readWrite')
+    if (dsh = @invObj.dataStoresByFilter_local('summary.name' => dsName).first).nil?
       raise "MiqHostDatastoreSystem.addNasDatastoreByName: datastore #{sdName} not found"
     end
 

@@ -2,8 +2,8 @@
 
 require 'Scvmm/miq_hyperv_disk'
 
-VHDX_DISK      = "VhdxDisk"
-VHDX_SIGNATURE = "vhdxfile"
+VHDX_DISK      = 'VhdxDisk'
+VHDX_SIGNATURE = 'vhdxfile'
 
 module VhdxDiskProbe
   def self.probe(ostruct)
@@ -12,13 +12,13 @@ module VhdxDiskProbe
     # Allow ".miq" also.
     extended = false
     ext = File.extname(ostruct.fileName).downcase
-    extended = true if ext == ".vhdx" || ext == ".avhdx"
+    extended = true if ext == '.vhdx' || ext == '.avhdx'
     return nil unless extended
 
     if ostruct.hyperv_connection
       vhdx_disk_file = connect_to_hyperv(ostruct)
     else
-      vhdx_disk_file = File.new(ostruct.fileName, "rb")
+      vhdx_disk_file = File.new(ostruct.fileName, 'rb')
     end
     rv = do_probe(vhdx_disk_file)
     vhdx_disk_file.close
@@ -34,7 +34,7 @@ module VhdxDiskProbe
 
   def self.connect_to_hyperv(ostruct)
     connection  = ostruct.hyperv_connection
-    network     = ostruct.driveType == "Network"
+    network     = ostruct.driveType == 'Network'
     hyperv_disk = MiqHyperVDisk.new(connection[:host],
                                     connection[:user],
                                     connection[:password],

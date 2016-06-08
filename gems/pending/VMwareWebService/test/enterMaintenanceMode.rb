@@ -16,10 +16,10 @@ Log4r::StderrOutputter.new('err_console', :level => Log4r::OFF, :formatter => Co
 $vim_log.add 'err_console'
 
 # $miq_wiredump = true
-TARGET_HOST   = raise "please define"
-HOST_USERNAME = ""
-HOST_PASSWORD = ""
-CLUSTER_NAME  = ""
+TARGET_HOST   = raise 'please define'
+HOST_USERNAME = ''
+HOST_PASSWORD = ''
+CLUSTER_NAME  = ''
 
 miqCluster  = nil
 miqHost   = nil
@@ -37,12 +37,12 @@ begin
   puts "Got object for host: #{miqHost.name}"
 
   unless miqHost.maintenanceModeSupported?
-    puts "Host does not support maintenance mode"
+    puts 'Host does not support maintenance mode'
     exit
   end
 
   if miqHost.inMaintenanceMode?
-    puts "New host is in Maintenance Mode"
+    puts 'New host is in Maintenance Mode'
     puts "\texiting Maintenance Mode..."
     miqHost.exitMaintenanceMode
     puts "\tdone."
@@ -50,9 +50,9 @@ begin
   end
 
   puts
-  puts "Putting host in Maintenance Mode..."
+  puts 'Putting host in Maintenance Mode...'
   miqHost.enterMaintenanceMode
-  puts "done."
+  puts 'done.'
   puts
   puts "inMaintenanceMode? = #{miqHost.inMaintenanceMode?}"
 # vim.dumpObj(miqHost.hh)

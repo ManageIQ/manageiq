@@ -33,7 +33,7 @@ class MiqProcess
     result = {:pid => pid}
     raw_stats = MiqSystem.readfile_async(filename)
     unless raw_stats.nil?
-      stats = raw_stats.split(" ")
+      stats = raw_stats.split(' ')
       if pid.to_s == stats.shift
         result[:name]                  = stats.shift.gsub(/(^\(|\)$)/, '')
         result[:state]                 = stats.shift
@@ -129,7 +129,7 @@ class MiqProcess
   def self.command_line(pid)
     # Already exited pids, or permission errors cause ps or ps.cmdline to be nil,
     # so the best we can do is return an empty string.
-    Sys::ProcTable.ps(pid).try(:cmdline) || ""
+    Sys::ProcTable.ps(pid).try(:cmdline) || ''
   end
 
   def self.alive?(pid)
@@ -186,14 +186,14 @@ class MiqProcess
       Dir['/proc/[0-9]*/cmdline'].each do |filename|
         cmdline = MiqSystem.readfile_async(filename)
         next if cmdline.nil?
-        if cmd == cmdline.tr("\000", " ").strip
+        if cmd == cmdline.tr("\000", ' ').strip
           pid = filename.split('/')[2]
           pids << pid.to_i
         end
       end
     when :macosx
       Sys::ProcTable.ps.select do |p|
-        if p.cmdline && cmd.match(p.cmdline.tr("\000", " ").strip)
+        if p.cmdline && cmd.match(p.cmdline.tr("\000", ' ').strip)
           pids << p.pid
         end
       end
@@ -222,7 +222,7 @@ class MiqProcess
         result.push(line.split[3].to_i)
       end
     when :macosx
-      output = MiqUtil.runcmd("ps -ea -o pid,ppid ")
+      output = MiqUtil.runcmd('ps -ea -o pid,ppid ')
       rows = output.split("\n")
 
       # We always get the header back on Mac, so make sure to throw away the header
@@ -250,9 +250,9 @@ class MiqProcess
     when :mswin, :mingw
       pl = process_list_wmi(wmi)
     when :linux
-      pl = process_list_linux("ps -e -o pid,rss,vsize,%mem,%cpu,time,priority,ucomm --no-headers")
+      pl = process_list_linux('ps -e -o pid,rss,vsize,%mem,%cpu,time,priority,ucomm --no-headers')
     when :macosx
-      pl = process_list_linux("ps -e -o pid,rss,vsize,%mem,%cpu,time,pri,ucomm", true)
+      pl = process_list_linux('ps -e -o pid,rss,vsize,%mem,%cpu,time,pri,ucomm', true)
     end
     pl
   end
@@ -306,7 +306,7 @@ class MiqProcess
       nh[:memory_size]    = pinfo.WorkingSetSize.to_i
       nh[:memory_usage]   = nh[:memory_size] - pinfo.PageFileUsage.to_i * 1024
       # Keep the percent format to 2 decimal places
-      nh[:percent_memory] = sprintf("%.2f", pinfo.WorkingSetSize.to_f / (os.TotalVisibleMemorySize.to_i * 1024) * 100)
+      nh[:percent_memory] = sprintf('%.2f', pinfo.WorkingSetSize.to_f / (os.TotalVisibleMemorySize.to_i * 1024) * 100)
       nh[:cpu_time]       = (pinfo.UserModeTime.to_i + pinfo.KernelModeTime.to_i) / 10000000    # in seconds
       nh[:priority]       = pinfo.Priority.to_i
       nh[:percent_cpu]    = perf[nh[:pid]]

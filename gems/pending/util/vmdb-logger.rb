@@ -37,15 +37,15 @@ class VMDBLogger < Logger
   alias_method :filename=, :logdev=
 
   def self.contents(log, width = nil, last = 1000)
-    return "" unless File.file?(log)
+    return '' unless File.file?(log)
 
     if last.nil?
-      contents = File.open(log, "rb", &:read).split("\n")
+      contents = File.open(log, 'rb', &:read).split("\n")
     else
       require 'util/miq-system'
       contents = MiqSystem.tail(log, last)
     end
-    return "" if contents.nil? || contents.empty?
+    return '' if contents.nil? || contents.empty?
 
     results = []
 
@@ -53,16 +53,16 @@ class VMDBLogger < Logger
     contents.each do |line|
       while !width.nil? && line.length > width
         # Don't return lines containing invalid UTF8 byte sequences - see vmdb_logger_test.rb
-        results.push(line[0...width]) if (line[0...width].unpack("U*") rescue nil)
+        results.push(line[0...width]) if (line[0...width].unpack('U*') rescue nil)
         line = line[width..line.length]
       end
       # Don't return lines containing invalid UTF8 byte sequences - see vmdb_logger_test.rb
-      results.push(line) if line.length && (line.unpack("U*") rescue nil)
+      results.push(line) if line.length && (line.unpack('U*') rescue nil)
     end
 
     # Put back the utf-8 encoding which is the default for most rails libraries
     # after opening it as binary and getting rid of the invalid UTF8 byte sequences
-    results.join("\n").force_encoding("utf-8")
+    results.join("\n").force_encoding('utf-8')
   end
 
   def contents(width = nil, last = 1000)
@@ -83,13 +83,13 @@ class VMDBLogger < Logger
     # Log the stack trace except for some specific exceptions
     unless (Object.const_defined?(:MiqException) && err.kind_of?(MiqException::Error)) ||
            (Object.const_defined?(:MiqAeException) && err.kind_of?(MiqAeException::Error))
-      send(level, err.backtrace.nil? || err.backtrace.empty? ? "Backtrace is not available" : err.backtrace.join("\n"))
+      send(level, err.backtrace.nil? || err.backtrace.empty? ? 'Backtrace is not available' : err.backtrace.join("\n"))
     end
   end
 
   def self.log_hashes(logger, h, options = {})
     level  = options[:log_level] || :info
-    filter = Array(options[:filter]).flatten.compact.map(&:to_s) << "password"
+    filter = Array(options[:filter]).flatten.compact.map(&:to_s) << 'password'
     filter.uniq!
 
     YAML.dump(h).split("\n").each do |l|

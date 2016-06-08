@@ -5,6 +5,6 @@ FactoryGirl.define do
     variables :instance_ids => ['i-3434']
   end
 
-  factory :ansible_configuration_script, :class => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript", :parent => :configuration_script do
+  factory :ansible_configuration_script, :class => 'ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript', :parent => :configuration_script do
   end
 end

@@ -38,7 +38,7 @@ module Metric::CiMixin::Processing
           col_vals.each do |col, values_by_instance|
             # If there are multiple instances for a column, use the aggregate
             #   instance, if available, otherwise roll it up ourselves.
-            value, counter = values_by_instance[""]
+            value, counter = values_by_instance['']
             if value.nil?
               value = 0
               counter = nil
@@ -77,7 +77,7 @@ module Metric::CiMixin::Processing
           perf.new_record? ? a += 1 : u += 1
 
           v.reverse_merge!(perf.attributes.symbolize_keys)
-          v.delete("id") # Remove protected attributes
+          v.delete('id') # Remove protected attributes
           v.merge!(Metric::Processing.process_derived_columns(self, v, interval_name == 'realtime' ? Metric::Helper.nearest_hourly_timestamp(ts) : nil))
         end
 
@@ -94,12 +94,12 @@ module Metric::CiMixin::Processing
 
       if interval_name == 'hourly'
         _log.info("#{log_header} Adding missing timestamp intervals...")
-        Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(self, "hourly", start_time, end_time) }
+        Benchmark.realtime_block(:add_missing_intervals) { Metric::Processing.add_missing_intervals(self, 'hourly', start_time, end_time) }
         _log.info("#{log_header} Adding missing timestamp intervals...Complete")
       end
 
       # Raise <class>_perf_complete alert event if realtime so alerts can be evaluated.
-      MiqEvent.raise_evm_alert_event_queue(self, MiqEvent.event_name_for_target(self, "perf_complete"))
+      MiqEvent.raise_evm_alert_event_queue(self, MiqEvent.event_name_for_target(self, 'perf_complete'))
 
       perf_rollup_to_parents(interval_orig, start_time, end_time)
     end

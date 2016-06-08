@@ -2,13 +2,13 @@ require_relative '../../bundler_setup'
 require 'VcoWebService/MiqVcoClientBase'
 
 begin
-  work_flow_name  = "Power off VM and wait"
+  work_flow_name  = 'Power off VM and wait'
   target_vm   = 'Fedora7'
 
   vco = MiqVcoClientBase.new(SOURCE_HOST, USERNAME, PASSWORD)
 
   wf = vco.getWorkflowsWithName(work_flow_name)
-  vms = vco.findByFilter("VC:VirtualMachine", 'name' => target_vm)[0]
+  vms = vco.findByFilter('VC:VirtualMachine', 'name' => target_vm)[0]
 
   inputs = VcoArray.new('ArrayOfWorkflowTokenAttribute') do |ia|
     ia << VcoHash.new('WorkflowTokenAttribute') do |i|

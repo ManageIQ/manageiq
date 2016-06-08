@@ -8,39 +8,39 @@ module OpenstackHandle
     attr_writer   :default_tenant_name
 
     SERVICE_FALL_BACK = {
-      "Network"  => "Compute",
-      "Image"    => "Compute",
-      "Volume"   => "Compute",
-      "Storage"  => nil,
-      "Metering" => nil
+      'Network'  => 'Compute',
+      'Image'    => 'Compute',
+      'Volume'   => 'Compute',
+      'Storage'  => nil,
+      'Metering' => nil
     }
 
     SERVICE_NAME_MAP = {
-      "Compute"       => :nova,
-      "Network"       => :neutron,
-      "Image"         => :glance,
-      "Volume"        => :cinder,
-      "Storage"       => :swift,
-      "Metering"      => :ceilometer,
-      "Baremetal"     => :baremetal,
-      "Orchestration" => :orchestration,
-      "Planning"      => :planning,
-      "Introspection" => :introspection
+      'Compute'       => :nova,
+      'Network'       => :neutron,
+      'Image'         => :glance,
+      'Volume'        => :cinder,
+      'Storage'       => :swift,
+      'Metering'      => :ceilometer,
+      'Baremetal'     => :baremetal,
+      'Orchestration' => :orchestration,
+      'Planning'      => :planning,
+      'Introspection' => :introspection
     }
 
     def self.try_connection(security_protocol, ssl_options = {})
       if security_protocol.blank? || security_protocol == 'ssl'
         # For backwards compatibility take blank security_protocol as SSL
-        yield "https", {:ssl_verify_peer => false}
+        yield 'https', {:ssl_verify_peer => false}
       elsif security_protocol == 'ssl-with-validation'
         excon_options = {:ssl_verify_peer => true}.merge(ssl_options)
-        yield "https", excon_options
+        yield 'https', excon_options
       else
-        yield "http", {}
+        yield 'http', {}
       end
     end
 
-    def self.raw_connect_try_ssl(username, password, address, port, service = "Compute", opts = nil, api_version = nil,
+    def self.raw_connect_try_ssl(username, password, address, port, service = 'Compute', opts = nil, api_version = nil,
                                  security_protocol = nil)
       ssl_options = opts.delete(:ssl_options)
       try_connection(security_protocol, ssl_options) do |scheme, connection_options|
@@ -50,7 +50,7 @@ module OpenstackHandle
       end
     end
 
-    def self.raw_connect(username, password, auth_url, service = "Compute", extra_opts = nil)
+    def self.raw_connect(username, password, auth_url, service = 'Compute', extra_opts = nil)
       opts = {
         :provider                => 'OpenStack',
         :openstack_auth_url      => auth_url,
@@ -64,9 +64,9 @@ module OpenstackHandle
       # https://github.com/fog/fog/issues/3112
       # Ensure the that if the Storage service is not available, it will not
       # throw an error trying to build an connection error message.
-      opts[:openstack_service_type] = ["object-store"] if service == "Storage"
+      opts[:openstack_service_type] = ['object-store'] if service == 'Storage'
 
-      if service == "Planning"
+      if service == 'Planning'
         # Special behaviour for Planning service Tuskar, since it is OpenStack specific service, there is no
         # Fog::Planning module, only Fog::OpenStack::Planning
         Fog::Openstack.const_get(service).new(opts)
@@ -74,7 +74,7 @@ module OpenstackHandle
         Fog.const_get(service).new(opts)
       end
     rescue Fog::Errors::NotFound => err
-      raise MiqException::ServiceNotAvailable if err.message.include?("Could not find service")
+      raise MiqException::ServiceNotAvailable if err.message.include?('Could not find service')
       raise
     end
 
@@ -87,11 +87,11 @@ module OpenstackHandle
       end
     end
 
-    def self.auth_url(address, port = 5000, scheme = "http", api_version = 'v2')
+    def self.auth_url(address, port = 5000, scheme = 'http', api_version = 'v2')
       url(address, port, scheme, path_for_api_version(api_version))
     end
 
-    def self.url(address, port = 5000, scheme = "http", path = "")
+    def self.url(address, port = 5000, scheme = 'http', path = '')
       URI::Generic.build(:scheme => scheme, :host => address, :port => port.to_i, :path => path).to_s
     end
 
@@ -138,7 +138,7 @@ module OpenstackHandle
 
     def connect(options = {})
       opts     = options.dup
-      service  = (opts.delete(:service) || "Compute").to_s.camelize
+      service  = (opts.delete(:service) || 'Compute').to_s.camelize
       tenant   = opts.delete(:tenant_name)
       domain   = domain_id
 
@@ -146,11 +146,11 @@ module OpenstackHandle
       opts.delete(:auth_type)
 
       unless tenant
-        tenant = "any_tenant" if service == "Identity"
+        tenant = 'any_tenant' if service == 'Identity'
         tenant ||= default_tenant_name
       end
 
-      unless service == "Identity"
+      unless service == 'Identity'
         opts[:openstack_tenant] = tenant
         # For identity ,there is only domain scope, with project_name nil
         opts[:openstack_project_name] = @project_name = tenant
@@ -177,91 +177,91 @@ module OpenstackHandle
     end
 
     def baremetal_service(tenant_name = nil)
-      connect(:service => "Baremetal", :tenant_name => tenant_name)
+      connect(:service => 'Baremetal', :tenant_name => tenant_name)
     end
 
     def detect_baremetal_service(tenant_name = nil)
-      detect_service("Baremetal", tenant_name)
+      detect_service('Baremetal', tenant_name)
     end
 
     def orchestration_service(tenant_name = nil)
-      connect(:service => "Orchestration", :tenant_name => tenant_name)
+      connect(:service => 'Orchestration', :tenant_name => tenant_name)
     end
 
     def detect_orchestration_service(tenant_name = nil)
-      detect_service("Orchestration", tenant_name)
+      detect_service('Orchestration', tenant_name)
     end
 
     def planning_service(tenant_name = nil)
-      connect(:service => "Planning", :tenant_name => tenant_name)
+      connect(:service => 'Planning', :tenant_name => tenant_name)
     end
 
     def detect_planning_service(tenant_name = nil)
-      detect_service("Planning", tenant_name)
+      detect_service('Planning', tenant_name)
     end
 
     def compute_service(tenant_name = nil)
-      connect(:service => "Compute", :tenant_name => tenant_name)
+      connect(:service => 'Compute', :tenant_name => tenant_name)
     end
     alias_method :connect_compute, :compute_service
 
     def identity_service
-      connect(:service => "Identity")
+      connect(:service => 'Identity')
     end
     alias_method :connect_identity, :identity_service
 
     def network_service(tenant_name = nil)
-      connect(:service => "Network", :tenant_name => tenant_name)
+      connect(:service => 'Network', :tenant_name => tenant_name)
     end
     alias_method :connect_network, :network_service
 
     def detect_network_service(tenant_name = nil)
-      detect_service("Network", tenant_name)
+      detect_service('Network', tenant_name)
     end
 
     def image_service(tenant_name = nil)
-      connect(:service => "Image", :tenant_name => tenant_name)
+      connect(:service => 'Image', :tenant_name => tenant_name)
     end
     alias_method :connect_image, :image_service
 
     def detect_image_service(tenant_name = nil)
-      detect_service("Image", tenant_name)
+      detect_service('Image', tenant_name)
     end
 
     def volume_service(tenant_name = nil)
-      connect(:service => "Volume", :tenant_name => tenant_name)
+      connect(:service => 'Volume', :tenant_name => tenant_name)
     end
     alias_method :connect_volume, :volume_service
 
     def detect_volume_service(tenant_name = nil)
-      detect_service("Volume", tenant_name)
+      detect_service('Volume', tenant_name)
     end
 
     def storage_service(tenant_name = nil)
-      connect(:service => "Storage", :tenant_name => tenant_name)
+      connect(:service => 'Storage', :tenant_name => tenant_name)
     end
     alias_method :connect_storage, :storage_service
 
     def detect_storage_service(tenant_name = nil)
-      detect_service("Storage", tenant_name)
+      detect_service('Storage', tenant_name)
     end
 
     def metering_service(tenant_name = nil)
-      connect(:service => "Metering", :tenant_name => tenant_name)
+      connect(:service => 'Metering', :tenant_name => tenant_name)
     end
     alias_method :connect_metering, :metering_service
 
     def detect_metering_service(tenant_name = nil)
-      detect_service("Metering", tenant_name)
+      detect_service('Metering', tenant_name)
     end
 
     def introspection_service(tenant_name = nil)
-      connect(:service => "Introspection", :tenant_name => tenant_name)
+      connect(:service => 'Introspection', :tenant_name => tenant_name)
     end
     alias_method :connect_introspection, :metering_service
 
     def detect_introspection_service(tenant_name = nil)
-      detect_service("Introspection", tenant_name)
+      detect_service('Introspection', tenant_name)
     end
 
     def detect_service(service, tenant_name = nil)
@@ -286,7 +286,7 @@ module OpenstackHandle
         # avoid 401 Unauth errors when checking for accessible tenants
         # the "services" tenant is a special tenant in openstack reserved
         # specifically for the various services
-        next if t.name == "services"
+        next if t.name == 'services'
         begin
           compute_service(t.name)
           true
@@ -301,8 +301,8 @@ module OpenstackHandle
     end
 
     def default_tenant_name
-      return @default_tenant_name ||= "admin" if accessible_tenant_names.include?("admin")
-      @default_tenant_name ||= accessible_tenant_names.detect { |tn| tn != "services" }
+      return @default_tenant_name ||= 'admin' if accessible_tenant_names.include?('admin')
+      @default_tenant_name ||= accessible_tenant_names.detect { |tn| tn != 'services' }
     end
 
     def service_for_each_accessible_tenant(service_name, &block)
@@ -353,7 +353,7 @@ module OpenstackHandle
         # Take uniq ID from Fog::Model definition
         last_object = ra.last
         # TODO(lsmola) change to last_object.identity_name once the new fog-core is released
-        uniq_id = last_object.class.instance_variable_get("@identity") if last_object.kind_of?(Fog::Model)
+        uniq_id = last_object.class.instance_variable_get('@identity') if last_object.kind_of?(Fog::Model)
       end
 
       return ra unless uniq_id

@@ -15,6 +15,6 @@ RSpec::Matchers.define :be_decrypted do |expected|
   end
 
   description do
-    "expect to be decrypted from a string (fixing utf8 encoding issues)"
+    'expect to be decrypted from a string (fixing utf8 encoding issues)'
   end
 end

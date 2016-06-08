@@ -40,11 +40,11 @@ class ChargebackContainerProject < Chargeback
     # Find Project by id or get all projects
     provider_id = options[:provider_id]
     id = options[:entity_id]
-    raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
+    raise 'must provide option :entity_id and provider_id' if id.nil? && provider_id.nil?
 
-    @groups = if provider_id == "all"
+    @groups = if provider_id == 'all'
                 ContainerGroup.all
-              elsif id == "all"
+              elsif id == 'all'
                 ContainerGroup.where('ems_id = ? or old_ems_id = ?', provider_id, provider_id)
               else
                 ContainerGroup.where('container_project_id = ? or old_container_project_id = ?', id, id)
@@ -65,11 +65,11 @@ class ChargebackContainerProject < Chargeback
     project = @data_index.fetch_path(:container_project, :by_group_id, perf.resource_id)
     key = "#{project.id}_#{ts_key}"
     extra_fields = {
-      "project_name"  => project.name,
-      "project_uid"   => project.ems_ref,
-      "provider_name" => perf.parent_ems.name,
-      "provider_uid"  => perf.parent_ems.guid,
-      "archived"      => project.archived? ? _("Yes") : _("No")
+      'project_name'  => project.name,
+      'project_uid'   => project.ems_ref,
+      'provider_name' => perf.parent_ems.name,
+      'provider_uid'  => perf.parent_ems.guid,
+      'archived'      => project.archived? ? _('Yes') : _('No')
     }
 
     [key, extra_fields]
@@ -80,23 +80,23 @@ class ChargebackContainerProject < Chargeback
   end
 
   def self.report_name_field
-    "project_name"
+    'project_name'
   end
 
   def self.report_col_options
     {
-      "cpu_cores_used_cost"   => {:grouping => [:total]},
-      "cpu_cores_used_metric" => {:grouping => [:total]},
-      "fixed_compute_1_cost"  => {:grouping => [:total]},
-      "fixed_compute_2_cost"  => {:grouping => [:total]},
-      "fixed_cost"            => {:grouping => [:total]},
-      "memory_used_cost"      => {:grouping => [:total]},
-      "memory_used_metric"    => {:grouping => [:total]},
-      "net_io_cost"           => {:grouping => [:total]},
-      "net_io_metric"         => {:grouping => [:total]},
-      "net_io_used_cost"      => {:grouping => [:total]},
-      "net_io_used_metric"    => {:grouping => [:total]},
-      "total_cost"            => {:grouping => [:total]}
+      'cpu_cores_used_cost'   => {:grouping => [:total]},
+      'cpu_cores_used_metric' => {:grouping => [:total]},
+      'fixed_compute_1_cost'  => {:grouping => [:total]},
+      'fixed_compute_2_cost'  => {:grouping => [:total]},
+      'fixed_cost'            => {:grouping => [:total]},
+      'memory_used_cost'      => {:grouping => [:total]},
+      'memory_used_metric'    => {:grouping => [:total]},
+      'net_io_cost'           => {:grouping => [:total]},
+      'net_io_metric'         => {:grouping => [:total]},
+      'net_io_used_cost'      => {:grouping => [:total]},
+      'net_io_used_metric'    => {:grouping => [:total]},
+      'total_cost'            => {:grouping => [:total]}
     }
   end
 end # class Chargeback

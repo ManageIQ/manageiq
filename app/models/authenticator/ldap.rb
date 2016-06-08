@@ -30,7 +30,7 @@ module Authenticator
       user = userprincipal_for(username)
       return user unless user.nil?
 
-      raise _("Unable to auto-create user because LDAP bind credentials are not configured") unless authorize?
+      raise _('Unable to auto-create user because LDAP bind credentials are not configured') unless authorize?
 
       create_user_from_ldap(username) do |lobj|
         groups = match_groups(groups_for(lobj))
@@ -52,7 +52,7 @@ module Authenticator
     def create_user_from_ldap(username)
       lobj = ldap.get_user_object(username)
       if lobj.nil?
-        raise _("Unable to auto-create user because LDAP search returned no data for user: [%{name}]") %
+        raise _('Unable to auto-create user because LDAP search returned no data for user: [%{name}]') %
                 {:name => username}
       end
 
@@ -102,7 +102,7 @@ module Authenticator
       authentication[:group_memberships_max_depth] ||= DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
 
       if authentication.key?(:user_proxies) && !authentication[:user_proxies].blank? && authentication.key?(:get_direct_groups) && authentication[:get_direct_groups] == false
-        _log.info("Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration")
+        _log.info('Skipping getting group memberships directly assigned to user bacause it has been disabled in the configuration')
         groups = []
       else
         groups = ldap.get_memberships(obj, authentication[:group_memberships_max_depth])
@@ -118,7 +118,7 @@ module Authenticator
             end
           end
         else
-          _log.warn("User Object has no objectSID")
+          _log.warn('User Object has no objectSID')
         end
       end
 
@@ -145,7 +145,7 @@ module Authenticator
 
       REQUIRED_LDAP_USER_PROXY_KEYS.each do |key|
         unless auth.key?(key)
-          raise _("Required key not specified: [%{key}]") % {:key => key}
+          raise _('Required key not specified: [%{key}]') % {:key => key}
         end
       end
 
@@ -154,10 +154,10 @@ module Authenticator
       ldap_up = MiqLdap.new(:auth => {:ldaphost => auth[:ldaphost], :ldapport => auth[:ldapport], :mode => auth[:mode], :basedn => auth[:basedn]})
 
       _log.info("Bind DN: [#{auth[:bind_dn]}], Host: [#{auth[:ldaphost]}], Port: [#{auth[:ldapport]}], Mode: [#{auth[:mode]}]")
-      raise "Cannot Bind" unless ldap_up.bind(auth[:bind_dn], auth[:bind_pwd]) # now bind with bind_dn so that we can do our searches.
+      raise 'Cannot Bind' unless ldap_up.bind(auth[:bind_dn], auth[:bind_pwd]) # now bind with bind_dn so that we can do our searches.
       _log.info("User SID: [#{sid}], FSP DN: [#{fsp_dn}]")
       user_proxy_object = ldap_up.search(:base => fsp_dn, :scope => :base).first
-      raise "Unable to find user proxy object in LDAP" if user_proxy_object.nil?
+      raise 'Unable to find user proxy object in LDAP' if user_proxy_object.nil?
       _log.debug("UserProxy obj from LDAP: #{user_proxy_object.inspect}")
       ldap_up.get_memberships(user_proxy_object, auth[:group_memberships_max_depth])
     end

@@ -37,7 +37,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def provision_dialog
-    request_dialog("Provision")
+    request_dialog('Provision')
   end
 
   def requested_task_idx

@@ -3,7 +3,7 @@ module OpenstackHandle
     include OpenstackHandle::HandledList
     include Vmdb::Logging
 
-    SERVICE_NAME = "Baremetal"
+    SERVICE_NAME = 'Baremetal'
 
     attr_reader :name
 

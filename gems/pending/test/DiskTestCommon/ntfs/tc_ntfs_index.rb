@@ -56,7 +56,7 @@ class NtfsTestIndex < Minitest::Test
       assert_nothing_raised(id(__LINE__, disk)) { root = root.getAttrib(NTFS::AT_INDEX_ROOT) }
       assert_equal(true, root.class == Array)
       assert_equal(true, root[0].class == NTFS::AttribHeader)
-      assert_equal("$I30", root[0].name)
+      assert_equal('$I30', root[0].name)
       assert_equal(true, root[1].class == NTFS::IndexRoot)
       assert_equal(4096, root[1].byteSize)
 

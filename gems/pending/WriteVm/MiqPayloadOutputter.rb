@@ -1,6 +1,6 @@
 require 'log4r'
 require 'log4r/outputter/iooutputter'
-require "log4r/staticlogger"
+require 'log4r/staticlogger'
 
 require 'metadata/VmConfig/GetNativeCfg'
 
@@ -9,10 +9,10 @@ module Log4r
     attr_reader :filename, :partialLog
 
     HEADER_SIZE   = 16
-    HEADER_MAGIC  = "MIQ_LOG_"
+    HEADER_MAGIC  = 'MIQ_LOG_'
 
     def self.genHeader(size, pos = 0)
-      [HEADER_MAGIC, size, pos].pack("a8LL")
+      [HEADER_MAGIC, size, pos].pack('a8LL')
     end
 
     def initialize(_name, hash = {})
@@ -41,25 +41,25 @@ module Log4r
         end
 
         @filename = _filename
-        @out = File.new(@filename, "r+")
+        @out = File.new(@filename, 'r+')
         Logger.log_internal {
           "MiqPayloadOutputter '#{@name}' writing to #{@filename}"
         }
       else
         cfg = GetNativeCfg.new
         cfg.getDiskFileHash.each_value do |df|
-          _out = File.new(df, "r")
-          _magic, _size, _pos = _out.read(HEADER_SIZE).unpack("a8LL")
+          _out = File.new(df, 'r')
+          _magic, _size, _pos = _out.read(HEADER_SIZE).unpack('a8LL')
           _out.close
           next if _magic != HEADER_MAGIC
-          @out = File.new(df, "r+")
+          @out = File.new(df, 'r+')
           @filename = df
         end
-        raise StandardError, "Could not find log device", caller unless @out
+        raise StandardError, 'Could not find log device', caller unless @out
       end
 
       @out.seek(0, IO::SEEK_SET)
-      magic, @size, @pos = @out.read(HEADER_SIZE).unpack("a8LL")
+      magic, @size, @pos = @out.read(HEADER_SIZE).unpack('a8LL')
 
       raise StandardError, "'#{@filename}' bad magic number #{magic}", caller if magic != HEADER_MAGIC
     end
@@ -84,7 +84,7 @@ end # module Log4r
 if __FILE__ == $0
 
   class ConsoleFormatter < Log4r::Formatter
-    @@prog = File.basename(__FILE__, ".*")
+    @@prog = File.basename(__FILE__, '.*')
     def format(event)
       "#{Log4r::LNAMES[event.level]} [#{datetime}] -- #{@@prog}: " +
         (event.data.kind_of?(String) ? event.data : event.data.inspect) + "\n"
@@ -94,25 +94,25 @@ if __FILE__ == $0
 
     def datetime
       time = Time.now.utc
-      time.strftime("%Y-%m-%dT%H:%M:%S.") << "%06d " % time.usec
+      time.strftime('%Y-%m-%dT%H:%M:%S.') << '%06d ' % time.usec
     end
   end
   $log = Log4r::Logger.new 'toplog'
   $log.level = Log4r::DEBUG
-  lo = Log4r::MiqPayloadOutputter.new('payload', :formatter => ConsoleFormatter, :filename => "test/test.log")
+  lo = Log4r::MiqPayloadOutputter.new('payload', :formatter => ConsoleFormatter, :filename => 'test/test.log')
   # lo = Log4r::MiqPayloadOutputter.new('payload', :formatter=>ConsoleFormatter)
   $log.add 'payload'
 
   puts "Log file: #{lo.filename}"
   puts
 
-  $log.debug "test line 1"
-  $log.debug "test line 2"
-  $log.debug "test line 3"
+  $log.debug 'test line 1'
+  $log.debug 'test line 2'
+  $log.debug 'test line 3'
 
   # tf = File.open("test/test.log", "r")
-  tf = File.open(lo.filename, "r")
-  magic, size, pos = tf.read(Log4r::MiqPayloadOutputter::HEADER_SIZE).unpack("a8LL")
+  tf = File.open(lo.filename, 'r')
+  magic, size, pos = tf.read(Log4r::MiqPayloadOutputter::HEADER_SIZE).unpack('a8LL')
 
   puts "MAGIC: #{magic}"
   puts "SIZE: #{size}"

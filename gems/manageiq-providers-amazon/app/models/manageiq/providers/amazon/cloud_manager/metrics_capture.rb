@@ -3,60 +3,60 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
 
   COUNTER_INFO = [
     {
-      :amazon_counters       => ["CPUUtilization"],
+      :amazon_counters       => ['CPUUtilization'],
       :calculation           => ->(stat, _) { stat },
-      :vim_style_counter_key => "cpu_usage_rate_average"
+      :vim_style_counter_key => 'cpu_usage_rate_average'
     },
 
     {
-      :amazon_counters       => ["DiskReadBytes", "DiskWriteBytes"],
+      :amazon_counters       => ['DiskReadBytes', 'DiskWriteBytes'],
       :calculation           => ->(*stats, interval) { stats.compact.sum / 1024.0 / interval },
-      :vim_style_counter_key => "disk_usage_rate_average"
+      :vim_style_counter_key => 'disk_usage_rate_average'
     },
 
     {
-      :amazon_counters       => ["NetworkIn", "NetworkOut"],
+      :amazon_counters       => ['NetworkIn', 'NetworkOut'],
       :calculation           => ->(*stats, interval) { stats.compact.sum / 1024.0 / interval },
-      :vim_style_counter_key => "net_usage_rate_average"
+      :vim_style_counter_key => 'net_usage_rate_average'
     },
   ]
 
   COUNTER_NAMES = COUNTER_INFO.collect { |i| i[:amazon_counters] }.flatten.uniq
 
   VIM_STYLE_COUNTERS = {
-    "cpu_usage_rate_average"  => {
-      :counter_key           => "cpu_usage_rate_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'cpu_usage_rate_average'  => {
+      :counter_key           => 'cpu_usage_rate_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 1,
-      :rollup                => "average",
-      :unit_key              => "percent",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'percent',
+      :capture_interval_name => 'realtime'
     },
 
-    "disk_usage_rate_average" => {
-      :counter_key           => "disk_usage_rate_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'disk_usage_rate_average' => {
+      :counter_key           => 'disk_usage_rate_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 2,
-      :rollup                => "average",
-      :unit_key              => "kilobytespersecond",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'kilobytespersecond',
+      :capture_interval_name => 'realtime'
     },
 
-    "net_usage_rate_average"  => {
-      :counter_key           => "net_usage_rate_average",
-      :instance              => "",
-      :capture_interval      => "20",
+    'net_usage_rate_average'  => {
+      :counter_key           => 'net_usage_rate_average',
+      :instance              => '',
+      :capture_interval      => '20',
       :precision             => 2,
-      :rollup                => "average",
-      :unit_key              => "kilobytespersecond",
-      :capture_interval_name => "realtime"
+      :rollup                => 'average',
+      :unit_key              => 'kilobytespersecond',
+      :capture_interval_name => 'realtime'
     }
   }
 
   def perf_collect_metrics(interval_name, start_time = nil, end_time = nil)
-    raise "No EMS defined" if target.ext_management_system.nil?
+    raise 'No EMS defined' if target.ext_management_system.nil?
 
     log_header = "[#{interval_name}] for: [#{target.class.name}], [#{target.id}], [#{target.name}]"
 
@@ -133,7 +133,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
       #   http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_GetMetricStatistics.html
       (start_time..end_time).step_value(1.day).each_cons(2) do |st, et|
         statistics, = Benchmark.realtime_block(:capture_counter_values) do
-          options = {:start_time => st, :end_time => et, :statistics => ["Average"], :period => 60}
+          options = {:start_time => st, :end_time => et, :statistics => ['Average'], :period => 60}
           cloud_watch.client.get_metric_statistics(c.to_hash.merge(options)).datapoints
         end
 
@@ -145,7 +145,7 @@ class ManageIQ::Providers::Amazon::CloudManager::MetricsCapture < ManageIQ::Prov
 
   def get_counters(cloud_watch)
     counters, = Benchmark.realtime_block(:capture_counters) do
-      filter = [{:name => "InstanceId", :value => target.ems_ref}]
+      filter = [{:name => 'InstanceId', :value => target.ems_ref}]
       cloud_watch.client.list_metrics(:dimensions => filter).metrics.select { |m| m.metric_name.in?(COUNTER_NAMES) }
     end
     counters

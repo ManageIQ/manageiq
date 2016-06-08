@@ -21,15 +21,15 @@ class ApplicationHelper::Toolbar::MiqWidgetCenter < ApplicationHelper::Toolbar::
           'pficon pficon-delete fa-lg',
           t = N_('Delete this Widget from the Database'),
           t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Widget and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Widget?")),
+          :url_parms => '&refresh=y',
+          :confirm   => N_('Warning: This Widget and ALL of its components will be permanently removed from the VMDB.  Are you sure you want to delete this Widget?')),
         separator,
         button(
           :widget_generate_content,
           'fa fa-cog fa-lg',
           t = N_('Generate Widget content now'),
           t,
-          :confirm => N_("Are you sure you want initiate content generation for this Widget now?")),
+          :confirm => N_('Are you sure you want initiate content generation for this Widget now?')),
       ]
     ),
   ])

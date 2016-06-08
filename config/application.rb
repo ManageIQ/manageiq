@@ -38,7 +38,7 @@ module Vmdb
     config.i18n.enforce_available_locales = true
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :verify, :data, :_pwd, :__protected]
@@ -55,13 +55,13 @@ module Vmdb
     config.assets.enabled = true
 
     # TODO: Move to asset pipeline enabled by moving assets from public to app/assets
-    config.asset_path = "%s"
+    config.asset_path = '%s'
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
     # Set the manifest file name so that we are sure it gets overwritten on updates
-    config.assets.manifest = Rails.root.join("public/assets/.sprockets-manifest.json").to_s
+    config.assets.manifest = Rails.root.join('public/assets/.sprockets-manifest.json').to_s
 
     # Customize any additional options below...
 
@@ -73,12 +73,12 @@ module Vmdb
     # ActiveSupport::Dependencies.autoload_paths empty, thus breaking autoloading.  Thus, in
     # order to prevent eager loading, but still populate autoload_paths, we copy them.
     config.autoload_paths += config.eager_load_paths
-    config.autoload_paths << Rails.root.join("app", "models", "aliases")
-    config.autoload_paths << Rails.root.join("app", "models", "mixins")
-    config.autoload_paths << Rails.root.join("lib", "miq_automation_engine", "models")
-    config.autoload_paths << Rails.root.join("lib", "miq_automation_engine", "models", "mixins")
-    config.autoload_paths << Rails.root.join("app", "controllers", "mixins")
-    config.autoload_paths << Rails.root.join("lib")
+    config.autoload_paths << Rails.root.join('app', 'models', 'aliases')
+    config.autoload_paths << Rails.root.join('app', 'models', 'mixins')
+    config.autoload_paths << Rails.root.join('lib', 'miq_automation_engine', 'models')
+    config.autoload_paths << Rails.root.join('lib', 'miq_automation_engine', 'models', 'mixins')
+    config.autoload_paths << Rails.root.join('app', 'controllers', 'mixins')
+    config.autoload_paths << Rails.root.join('lib')
 
     # config.eager_load_paths accepts an array of paths from which Rails will eager load on boot if cache classes is enabled.
     # Defaults to every folder in the app directory of the application.
@@ -100,7 +100,7 @@ module Vmdb
 
       # To evaluate settings or database.yml with encrypted passwords
       require 'miq-password'
-      MiqPassword.key_root = Rails.root.join("certs")
+      MiqPassword.key_root = Rails.root.join('certs')
 
       require 'vmdb_helper'
     end

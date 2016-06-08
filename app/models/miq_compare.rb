@@ -24,13 +24,13 @@ class MiqCompare
 
     case @mode
     when :compare
-      raise "Must pass at least 2 ids to MiqCompare" if options[:ids].nil? || options[:ids].length < 2
+      raise 'Must pass at least 2 ids to MiqCompare' if options[:ids].nil? || options[:ids].length < 2
 
       @ids_orig = options[:ids]
       @ids = Array.new(@ids_orig)
     when :drift
-      raise "Must pass at least 2 timestamps to MiqCompare" if options[:timestamps].nil? || options[:timestamps].length < 2
-      raise "Must pass an id to MiqCompare" if options[:id].nil?
+      raise 'Must pass at least 2 timestamps to MiqCompare' if options[:timestamps].nil? || options[:timestamps].length < 2
+      raise 'Must pass an id to MiqCompare' if options[:id].nil?
 
       @model_record_id = options[:id]
       @ids_orig = options[:timestamps].collect(&:utc)
@@ -131,7 +131,7 @@ class MiqCompare
     build_sections({'include' => report.include}, ret)
 
     # Also add the default section as checked and to be fetched
-    build_section(ret, :_model_, nil, "Properties")
+    build_section(ret, :_model_, nil, 'Properties')
     ret[:_model_][:fetch] = ret[:_model_][:checked] = true
 
     ret
@@ -175,12 +175,12 @@ class MiqCompare
 
   def section_header_text(model)
     case model
-    when "Host"
-      _("Host Properties")
-    when "Vm"
-      _("VM Properties")
-    when "VmOrTemplate"
-      _("Workload")
+    when 'Host'
+      _('Host Properties')
+    when 'Vm'
+      _('VM Properties')
+    when 'VmOrTemplate'
+      _('Workload')
     else
       model.titleize
     end
@@ -299,7 +299,7 @@ class MiqCompare
       # Get the tag entry name and description from the source
       new_columns = case @mode
                     when :compare
-                      Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => "*") }
+                      Classification.find_by_name(tag_name).entries.collect { |e| [e.name, e.description] if rec.is_tagged_with?(e.tag.name, :ns => '*') }
                     when :drift
                       rec.tags.to_miq_a.collect { |tag| [tag.entry_name, tag.entry_description] if tag.category_name == tag_name }
                     end

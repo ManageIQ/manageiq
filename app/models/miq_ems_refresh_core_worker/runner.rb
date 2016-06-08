@@ -1,6 +1,6 @@
 require 'thread'
 
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VMwareWebService")
+$LOAD_PATH << File.join(GEMS_PENDING_ROOT, 'VMwareWebService')
 
 class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
   self.wait_for_worker_monitor = false
@@ -65,7 +65,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
         @vim = MiqVimCoreUpdater.new(@ems.hostname, @ems.authentication_userid, @ems.authentication_password)
         @vim.monitorUpdates { |*u| @queue.enq(u) }
       rescue Handsoap::Fault => err
-        if  @exit_requested && (err.code == "ServerFaultCode") && (err.reason == "The task was canceled by a user.")
+        if  @exit_requested && (err.code == 'ServerFaultCode') && (err.reason == 'The task was canceled by a user.')
           _log.info("#{log_prefix} Thread terminated normally")
         else
           _log.error("#{log_prefix} Thread aborted because [#{err.message}]")
@@ -108,14 +108,14 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
 
   def process_update(update)
     mor, props = update
-    return if mor.vimType != "VirtualMachine" # Ignore non-VMs for now
+    return if mor.vimType != 'VirtualMachine' # Ignore non-VMs for now
     return if props.nil?                      # Ignore deleted/created VMs for now
 
     # HACK: MiqVimCoreUpdater needs to have this property added in order to
     #       deal with issues where VC4 will give periodic full updates unless
     #       there is a property that returns frequently.  We deal with this by
     #       ignoring it.  See FB15506.
-    props.delete("runtime.memoryOverhead")
+    props.delete('runtime.memoryOverhead')
     return if props.empty?
 
     vm = VmOrTemplate.find_by(:ems_ref => mor, :ems_id => @ems.id)
@@ -124,11 +124,11 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
     new_attrs = {}
     props.each do |k, v|
       case k
-      when "runtime.powerState"
+      when 'runtime.powerState'
         new_attrs[:raw_power_state] = v
-      when "config.template"
-        new_attrs[:template] = (v.to_s.downcase == "true")
-      when "guest.net"
+      when 'config.template'
+        new_attrs[:template] = (v.to_s.downcase == 'true')
+      when 'guest.net'
         process_vm_guest_net(vm, v)
       end
     end

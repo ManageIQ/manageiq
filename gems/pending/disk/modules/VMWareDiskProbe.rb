@@ -1,28 +1,28 @@
 # encoding: US-ASCII
 
 module VMWareDiskProbe
-  SPARSE_MAGIC = "KDMV"
-  SPARSE_MOD   = "VMWareSparseDisk"
-  COWD_MAGIC   = "COWD"
-  COWD_MOD     = "VMWareCowdDisk"
-  DESC_MOD     = "VMWareDescriptor"
+  SPARSE_MAGIC = 'KDMV'
+  SPARSE_MOD   = 'VMWareSparseDisk'
+  COWD_MAGIC   = 'COWD'
+  COWD_MOD     = 'VMWareCowdDisk'
+  DESC_MOD     = 'VMWareDescriptor'
 
   def self.probe(ostruct)
     return nil unless ostruct.fileName
     # If not .vmdk then not VMWare.
     # Allow .miq also.
     ext = File.extname(ostruct.fileName).downcase
-    return nil if ext != ".vmdk" && ext != ".miq"
+    return nil if ext != '.vmdk' && ext != '.miq'
 
     size  = File.size(ostruct.fileName)
-    f     = File.new(ostruct.fileName, "rb")
+    f     = File.new(ostruct.fileName, 'rb')
     magic = f.read(4)
 
     if magic == SPARSE_MAGIC
       # get descriptor offset & size.
       f.seek(24, IO::SEEK_CUR)
-      ofs = f.read(8).unpack("Q")[0]
-      siz = f.read(8).unpack("Q")[0]
+      ofs = f.read(8).unpack('Q')[0]
+      siz = f.read(8).unpack('Q')[0]
     end
 
     binary = false
@@ -57,7 +57,7 @@ module VMWareDiskProbe
   end
 
   def self.getDescriptor(ofs, siz, ostruct)
-    f = File.open(ostruct.fileName, "rb")
+    f = File.open(ostruct.fileName, 'rb')
     f.seek(ofs * 512, IO::SEEK_SET)
     desc = f.read(siz * 512)
     f.close
@@ -69,6 +69,6 @@ module VMWareDiskProbe
 
   def self.binary_data?(str)
     return false if str.nil? || str.empty?
-    return (str.count("^ -~", "^\r\n") / str.size > 0.3 || str.count("\x00") > 0) unless str.empty?
+    return (str.count('^ -~', "^\r\n") / str.size > 0.3 || str.count("\x00") > 0) unless str.empty?
   end
 end # module VMWareDiskProbe

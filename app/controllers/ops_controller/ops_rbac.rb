@@ -10,12 +10,12 @@ module OpsController::OpsRbac
   # Edit user or group tags
   def rbac_tags_edit
     case params[:button]
-    when "cancel"
+    when 'cancel'
       rbac_edit_tags_cancel
-    when "save", "add"
+    when 'save', 'add'
       assert_privileges("rbac_#{TAG_DB_TO_NAME[session[:tag_db]]}_tags_edit")
       rbac_edit_tags_save
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       nodes = x_node.split('-')
       if nodes.first == "g" || nodes.last == "g"
         @_params[:tagging] = "MiqGroup"
@@ -29,24 +29,24 @@ module OpsController::OpsRbac
   def rbac_change_tab
     render :update do |page|
       page << javascript_prologue
-      page << "miqSparkle(false);"
+      page << 'miqSparkle(false);'
     end
   end
 
   def rbac_user_add
-    assert_privileges("rbac_user_add")
-    @_params[:typ] = "new"
+    assert_privileges('rbac_user_add')
+    @_params[:typ] = 'new'
     rbac_edit_reset('user', User)
   end
 
   def rbac_user_copy
-    assert_privileges("rbac_user_copy")
-    @_params[:typ] = "copy"
+    assert_privileges('rbac_user_copy')
+    @_params[:typ] = 'copy'
     rbac_edit_reset('user', User)
   end
 
   def rbac_user_edit
-    assert_privileges("rbac_user_edit")
+    assert_privileges('rbac_user_edit')
     case params[:button]
     when 'cancel'      then rbac_edit_cancel('user')
     when 'save', 'add' then rbac_edit_save_or_add('user')
@@ -55,13 +55,13 @@ module OpsController::OpsRbac
   end
 
   def rbac_group_add
-    assert_privileges("rbac_group_add")
-    @_params[:typ] = "new"
+    assert_privileges('rbac_group_add')
+    @_params[:typ] = 'new'
     rbac_edit_reset('group', MiqGroup)
   end
 
   def rbac_group_edit
-    assert_privileges("rbac_group_edit")
+    assert_privileges('rbac_group_edit')
     case params[:button]
     when 'cancel'      then rbac_edit_cancel('group')
     when 'save', 'add' then rbac_edit_save_or_add('group')
@@ -70,19 +70,19 @@ module OpsController::OpsRbac
   end
 
   def rbac_role_add
-    assert_privileges("rbac_role_add")
-    @_params[:typ] = "new"
+    assert_privileges('rbac_role_add')
+    @_params[:typ] = 'new'
     rbac_edit_reset('role', MiqUserRole)
   end
 
   def rbac_role_copy
-    assert_privileges("rbac_role_copy")
-    @_params[:typ] = "copy"
+    assert_privileges('rbac_role_copy')
+    @_params[:typ] = 'copy'
     rbac_edit_reset('role', MiqUserRole)
   end
 
   def rbac_role_edit
-    assert_privileges("rbac_role_edit")
+    assert_privileges('rbac_role_edit')
     case params[:button]
     when 'cancel'      then rbac_edit_cancel('role')
     when 'save', 'add' then rbac_edit_save_or_add('role', 'miq_user_role')
@@ -91,28 +91,28 @@ module OpsController::OpsRbac
   end
 
   def rbac_tenant_add
-    assert_privileges("rbac_tenant_add")
-    @_params[:typ] = "new"
-    @tenant_type = params[:tenant_type] == "tenant" ? true : false
+    assert_privileges('rbac_tenant_add')
+    @_params[:typ] = 'new'
+    @tenant_type = params[:tenant_type] == 'tenant' ? true : false
     rbac_tenant_edit
   end
   alias_method :rbac_project_add, :rbac_tenant_add
 
   def rbac_tenant_edit
-    assert_privileges("rbac_tenant_edit")
+    assert_privileges('rbac_tenant_edit')
     case params[:button]
-    when "cancel"
+    when 'cancel'
       @tenant = Tenant.find_by_id(params[:id])
       if @tenant.try(:id).nil?
-        add_flash(_("Add of new %{model} was cancelled by the user") %
-                    {:model => tenant_type_title_string(params[:divisible] == "true")})
+        add_flash(_('Add of new %{model} was cancelled by the user') %
+                    {:model => tenant_type_title_string(params[:divisible] == 'true')})
       else
-        add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") %
-                    {:model => tenant_type_title_string(params[:divisible] == "true"), :name => @tenant.name})
+        add_flash(_('Edit of %{model} "%{name}" was cancelled by the user') %
+                    {:model => tenant_type_title_string(params[:divisible] == 'true'), :name => @tenant.name})
       end
       get_node_info(x_node)
       replace_right_cell(x_node)
-    when "save", "add"
+    when 'save', 'add'
       tenant = params[:id] != "new" ? Tenant.find_by_id(params[:id]) : Tenant.new
 
       # This should be changed to something like tenant.changed? and tenant.changes
@@ -141,7 +141,7 @@ module OpsController::OpsRbac
         end
         replace_right_cell("root", [:rbac])
       end
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
       @tenant = params[:typ] == "new" ? Tenant.new : Tenant.find(obj[0])          # Get existing or new record
@@ -176,23 +176,23 @@ module OpsController::OpsRbac
     # there is no params[:name] when use_config_attributes is checked
     tenant.name        = params[:name] if params[:name]
     tenant.description = params[:description]
-    tenant.use_config_for_attributes = tenant.root? && (params[:use_config_for_attributes] == "on")
+    tenant.use_config_for_attributes = tenant.root? && (params[:use_config_for_attributes] == 'on')
     unless tenant.id # only set for new records
       tenant.parent    = Tenant.find_by_id(from_cid(x_node.split('-').last))
-      tenant.divisible = params[:divisible] == "true"
+      tenant.divisible = params[:divisible] == 'true'
     end
   end
 
   def rbac_tenant_manage_quotas
-    assert_privileges("rbac_tenant_manage_quotas")
+    assert_privileges('rbac_tenant_manage_quotas')
     case params[:button]
-    when "cancel"
+    when 'cancel'
       @tenant = Tenant.find_by_id(params[:id])
-      add_flash(_("Manage quotas for %{model}\ \"%{name}\" was cancelled by the user") %
+      add_flash(_('Manage quotas for %{model} "%{name}" was cancelled by the user') %
                     {:model => tenant_type_title_string(@tenant.divisible), :name => @tenant.name})
       get_node_info(x_node)
       replace_right_cell(x_node)
-    when "save", "add"
+    when 'save', 'add'
       tenant = Tenant.find_by_id(params[:id])
       begin
         if !params[:quotas]
@@ -213,7 +213,7 @@ module OpsController::OpsRbac
         get_node_info(x_node)
         replace_right_cell("root", [:rbac])
       end
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       obj = find_checked_items
       obj[0] = params[:id] if obj.blank? && params[:id]
       @tenant = Tenant.find(obj[0])          # Get existing or new record
@@ -240,12 +240,12 @@ module OpsController::OpsRbac
   # Edit user or group tags
   def rbac_tenant_tags_edit
     case params[:button]
-    when "cancel"
+    when 'cancel'
       rbac_edit_tags_cancel
-    when "save", "add"
+    when 'save', 'add'
       assert_privileges("rbac_tenant_tags_edit")
       rbac_edit_tags_save
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       @_params[:tagging] = "Tenant"
       rbac_edit_tags_reset
     end
@@ -253,28 +253,28 @@ module OpsController::OpsRbac
 
   # AJAX driven routines to check for changes in ANY field on the form
   def rbac_user_field_changed
-    rbac_field_changed("user")
+    rbac_field_changed('user')
   end
 
   def rbac_group_field_changed
-    rbac_field_changed("group")
+    rbac_field_changed('group')
   end
 
   def rbac_role_field_changed
-    rbac_field_changed("role")
+    rbac_field_changed('role')
   end
 
   def rbac_user_delete
-    assert_privileges("rbac_user_delete")
+    assert_privileges('rbac_user_delete')
     users = []
     unless params[:id] # showing a list
-      ids = find_checked_items.collect { |r| from_cid(r.to_s.split("-").last) }
+      ids = find_checked_items.collect { |r| from_cid(r.to_s.split('-').last) }
       users = User.where(:id => ids).compact
       if users.empty?
-        add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => "Administrator"}, :error)
+        add_flash(_('Default %{model} "%{name}" cannot be deleted') % {:model => ui_lookup(:model => 'User'), :name => 'Administrator'}, :error)
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       else
@@ -289,10 +289,10 @@ module OpsController::OpsRbac
           users.delete(u)
         end
       end
-      process_users(users, "destroy") unless users.empty?
+      process_users(users, 'destroy') unless users.empty?
     else # showing 1 user, delete it
       if params[:id].nil? || User.find_by_id(params[:id]).nil?
-        add_flash(_("User no longer exists"), :error)
+        add_flash(_('User no longer exists'), :error)
       else
         user = User.find_by_id(params[:id])
         if rbac_user_delete_restriction?(user)
@@ -304,32 +304,32 @@ module OpsController::OpsRbac
       if @flash_array
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
         end
         return
       end
-      process_users(users, "destroy") unless users.empty?
-      self.x_node  = "xx-u"  # reset node to show list
+      process_users(users, 'destroy') unless users.empty?
+      self.x_node  = 'xx-u'  # reset node to show list
     end
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
   end
 
   def rbac_role_delete
-    assert_privileges("rbac_role_delete")
+    assert_privileges('rbac_role_delete')
     roles = []
     if !params[:id] # showing a role list
-      ids = find_checked_items.collect { |r| from_cid(r.to_s.split("-").last) }
+      ids = find_checked_items.collect { |r| from_cid(r.to_s.split('-').last) }
       roles = MiqUserRole.where(:id => ids)
-      process_roles(roles, "destroy") unless roles.empty?
+      process_roles(roles, 'destroy') unless roles.empty?
     else # showing 1 role, delete it
       if params[:id].nil? || MiqUserRole.find_by_id(params[:id]).nil?
-        add_flash(_("Role no longer exists"), :error)
+        add_flash(_('Role no longer exists'), :error)
       else
         roles.push(params[:id])
       end
-      process_roles(roles, "destroy") unless roles.empty?
-      self.x_node  = "xx-ur" if MiqUserRole.find_by_id(params[:id]).nil? # reset node to show list
+      process_roles(roles, 'destroy') unless roles.empty?
+      self.x_node  = 'xx-ur' if MiqUserRole.find_by_id(params[:id]).nil? # reset node to show list
     end
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
@@ -337,33 +337,33 @@ module OpsController::OpsRbac
 
   # Show the main Users/Groups/Roles list view
   def rbac_users_list
-    rbac_list("user")
+    rbac_list('user')
   end
 
   def rbac_groups_list
-    rbac_list("group")
+    rbac_list('group')
   end
 
   def rbac_roles_list
-    rbac_list("role")
+    rbac_list('role')
   end
 
   def rbac_tenants_list
-    rbac_list("tenant")
+    rbac_list('tenant')
   end
 
   def rbac_tenant_delete
-    assert_privileges("rbac_tenant_delete")
+    assert_privileges('rbac_tenant_delete')
     tenants = []
     if !params[:id] # showing a tenants list
       tenants = Tenant.where(:id => find_checked_items).reject do |t|
-        add_flash(_("Default %{model} \"%{name}\" can not be deleted") % {:model => ui_lookup(:model => "Tenant"),
+        add_flash(_('Default %{model} "%{name}" can not be deleted') % {:model => ui_lookup(:model => 'Tenant'),
                                                                           :name  => t.name}, :error) if t.parent.nil?
         t.parent.nil?
       end
     else # showing 1 tenant, delete it
       if params[:id].nil? || Tenant.find_by_id(params[:id]).nil?
-        add_flash(_("Tenant no longer exists"), :error)
+        add_flash(_('Tenant no longer exists'), :error)
       else
         tenants.push(params[:id])
       end
@@ -371,48 +371,48 @@ module OpsController::OpsRbac
       self.x_node = "tn-#{to_cid(parent_id)}"
     end
 
-    process_tenants(tenants, "destroy") unless tenants.empty?
+    process_tenants(tenants, 'destroy') unless tenants.empty?
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
   end
 
   def rbac_group_delete
-    assert_privileges("rbac_group_delete")
+    assert_privileges('rbac_group_delete')
     groups = []
     if !params[:id] # showing a list
-      ids = find_checked_items.collect { |r| from_cid(r.to_s.split("-").last) }
+      ids = find_checked_items.collect { |r| from_cid(r.to_s.split('-').last) }
       groups = MiqGroup.where(:id => ids)
-      process_groups(groups, "destroy") unless groups.empty?
-      self.x_node  = "xx-g"  # reset node to show list
+      process_groups(groups, 'destroy') unless groups.empty?
+      self.x_node  = 'xx-g'  # reset node to show list
     else # showing 1 group, delete it
       if params[:id].nil? || MiqGroup.find_by_id(params[:id]).nil?
-        add_flash(_("MiqGroup no longer exists"), :error)
+        add_flash(_('MiqGroup no longer exists'), :error)
       else
         groups.push(params[:id])
       end
-      process_groups(groups, "destroy") unless groups.empty?
-      self.x_node  = "xx-g" if MiqGroup.find_by_id(params[:id]).nil? # reset node to show list
+      process_groups(groups, 'destroy') unless groups.empty?
+      self.x_node  = 'xx-g' if MiqGroup.find_by_id(params[:id]).nil? # reset node to show list
     end
     get_node_info(x_node)
     replace_right_cell(x_node, [:rbac])
   end
 
   def rbac_group_seq_edit
-    assert_privileges("rbac_group_seq_edit")
+    assert_privileges('rbac_group_seq_edit')
     case params[:button]
-    when "cancel"
+    when 'cancel'
       @edit = nil
-      add_flash(_("Edit Sequence of User Groups was cancelled by the user"))
+      add_flash(_('Edit Sequence of User Groups was cancelled by the user'))
       get_node_info(x_node)
       replace_right_cell(x_node)
-    when "save"
-      return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
+    when 'save'
+      return unless load_edit('rbac_group_edit__seq', 'replace_cell__explorer')
       err = false
       @edit[:new][:ldap_groups_list].each_with_index do |grp, i|
         group = MiqGroup.find_by_description(grp)
         group.sequence = i + 1
         if group.save
-          AuditEvent.success(build_saved_audit(group, params[:button] == "add"))
+          AuditEvent.success(build_saved_audit(group, params[:button] == 'add'))
         else
           group.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -421,17 +421,17 @@ module OpsController::OpsRbac
         end
       end
       if !err
-        add_flash(_("User Group Sequence was saved"))
+        add_flash(_('User Group Sequence was saved'))
         @_in_a_form = false
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
         replace_right_cell(x_node)
       else
-        drop_breadcrumb(:name => _("Edit User Group Sequence"), :url => "/configuration/ldap_seq_edit")
+        drop_breadcrumb(:name => _('Edit User Group Sequence'), :url => '/configuration/ldap_seq_edit')
         @in_a_form = true
-        replace_right_cell("group_seq")
+        replace_right_cell('group_seq')
       end
-    when "reset", nil # Reset or first time in
+    when 'reset', nil # Reset or first time in
       rbac_group_seq_edit_screen
       @in_a_form = true
       if params[:button] == "reset"
@@ -450,23 +450,23 @@ module OpsController::OpsRbac
     @edit[:new][:ldap_groups].each do |g|
       @edit[:new][:ldap_groups_list].push(g.description)
     end
-    @edit[:key] = "rbac_group_edit__seq"
+    @edit[:key] = 'rbac_group_edit__seq'
     @edit[:current] = copy_hash(@edit[:new])
-    @right_cell_text = _("Editing Sequence of User Groups")
-    @tabs = [["ldap_seq_edit", "Edit Sequence of User Groups"], ["ldap_seq_edit", "Edit Sequence of User Groups"]]
+    @right_cell_text = _('Editing Sequence of User Groups')
+    @tabs = [['ldap_seq_edit', 'Edit Sequence of User Groups'], ['ldap_seq_edit', 'Edit Sequence of User Groups']]
     session[:edit] = @edit
     session[:changed] = false
   end
 
   def move_cols_up
-    return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
-    if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(_("No fields were selected to move up"), :error)
+    return unless load_edit('rbac_group_edit__seq', 'replace_cell__explorer')
+    if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ''
+      add_flash(_('No fields were selected to move up'), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive fields to move up"), :error)
+      add_flash(_('Select only one or consecutive fields to move up'), :error)
     else
       if first_idx > 0
         @edit[:new][:ldap_groups_list][first_idx..last_idx].reverse_each do |field|
@@ -474,21 +474,21 @@ module OpsController::OpsRbac
           @edit[:new][:ldap_groups_list].insert(first_idx - 1, pulled)
         end
       end
-      @refresh_div = "column_lists"
-      @refresh_partial = "ldap_seq_form"
+      @refresh_div = 'column_lists'
+      @refresh_partial = 'ldap_seq_form'
     end
     @selected = params[:seq_fields]
   end
 
   def move_cols_down
-    return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
-    if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ""
-      add_flash(_("No fields were selected to move down"), :error)
+    return unless load_edit('rbac_group_edit__seq', 'replace_cell__explorer')
+    if !params[:seq_fields] || params[:seq_fields].length == 0 || params[:seq_fields][0] == ''
+      add_flash(_('No fields were selected to move down'), :error)
       return
     end
     consecutive, first_idx, last_idx = selected_consecutive?
     if !consecutive
-      add_flash(_("Select only one or consecutive fields to move down"), :error)
+      add_flash(_('Select only one or consecutive fields to move down'), :error)
     else
       if last_idx < @edit[:new][:ldap_groups_list].length - 1
         insert_idx = last_idx + 1   # Insert before the element after the last one
@@ -498,8 +498,8 @@ module OpsController::OpsRbac
           @edit[:new][:ldap_groups_list].insert(insert_idx, pulled)
         end
       end
-      @refresh_div = "column_lists"
-      @refresh_partial = "ldap_seq_form"
+      @refresh_div = 'column_lists'
+      @refresh_partial = 'ldap_seq_form'
     end
     @selected = params[:seq_fields]
   end
@@ -521,7 +521,7 @@ module OpsController::OpsRbac
   end
 
   def rbac_group_user_lookup_field_changed
-    return unless load_edit("rbac_group_edit__#{params[:id]}", "replace_cell__explorer")
+    return unless load_edit("rbac_group_edit__#{params[:id]}", 'replace_cell__explorer')
     @edit[:new][:user]     = params[:user]     if params[:user]
     @edit[:new][:user_id]  = params[:user_id]  if params[:user_id]
     @edit[:new][:user_pwd] = params[:password] if params[:password]
@@ -530,27 +530,27 @@ module OpsController::OpsRbac
   def rbac_group_user_lookup
     rbac_group_user_lookup_field_changed
     auth = get_vmdb_config[:authentication]
-    if @edit[:new][:user].nil? || @edit[:new][:user] == ""
-      add_flash(_("User must be entered to perform LDAP Group Look Up"), :error)
+    if @edit[:new][:user].nil? || @edit[:new][:user] == ''
+      add_flash(_('User must be entered to perform LDAP Group Look Up'), :error)
     end
-    if auth[:mode] != "httpd"
-      if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ""
-        add_flash(_("Username must be entered to perform LDAP Group Look Up"), :error)
+    if auth[:mode] != 'httpd'
+      if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ''
+        add_flash(_('Username must be entered to perform LDAP Group Look Up'), :error)
       end
-      if @edit[:new][:user_pwd].nil? || @edit[:new][:user_pwd] == ""
-        add_flash(_("User Password must be entered to perform LDAP Group Look Up"), :error)
+      if @edit[:new][:user_pwd].nil? || @edit[:new][:user_pwd] == ''
+        add_flash(_('User Password must be entered to perform LDAP Group Look Up'), :error)
       end
     end
     if !@flash_array.nil?
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
     else
       @record = MiqGroup.find_by_id(@edit[:group_id])
       @sb[:roles] = @edit[:roles]
       begin
-        if auth[:mode] == "httpd"
+        if auth[:mode] == 'httpd'
           @edit[:ldap_groups_by_user] = MiqGroup.get_httpd_groups_by_user(@edit[:new][:user])
         else
           @edit[:ldap_groups_by_user] = MiqGroup.get_ldap_groups_by_user(@edit[:new][:user],
@@ -562,13 +562,13 @@ module OpsController::OpsRbac
         add_flash(_("Error during 'LDAP Group Look Up': %{message}") % {:message => bang.message}, :error)
         render :update do |page|
           page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-          page.replace("ldap_user_div", :partial => "ldap_auth_users")
+          page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
+          page.replace('ldap_user_div', :partial => 'ldap_auth_users')
         end
       else
         render :update do |page|
           page << javascript_prologue
-          page.replace("ldap_user_div", :partial => "ldap_auth_users")
+          page.replace('ldap_user_div', :partial => 'ldap_auth_users')
         end
       end
     end
@@ -577,26 +577,26 @@ module OpsController::OpsRbac
   private ############################
 
   def tenant_type_title_string(divisible)
-    divisible ? ui_lookup(:model => "Tenant") : _("Project")
+    divisible ? ui_lookup(:model => 'Tenant') : _('Project')
   end
 
   def rbac_user_delete_restriction?(user)
-    ["admin", session[:userid]].include?(user.userid)
+    ['admin', session[:userid]].include?(user.userid)
   end
 
   def rbac_restricted_user_delete_flash(user)
-    if user.userid == "admin"
-      add_flash(_("Default %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => user.name}, :error)
+    if user.userid == 'admin'
+      add_flash(_('Default %{model} "%{name}" cannot be deleted') % {:model => ui_lookup(:model => 'User'), :name => user.name}, :error)
     elsif user.userid == session[:userid]
-      add_flash(_("Current %{model} \"%{name}\" cannot be deleted") % {:model => ui_lookup(:model => "User"), :name => user.name}, :error)
+      add_flash(_('Current %{model} "%{name}" cannot be deleted') % {:model => ui_lookup(:model => 'User'), :name => user.name}, :error)
     end
   end
 
   def rbac_edit_tags_reset
     @object_ids = find_checked_items
-    if params[:button] == "reset"
+    if params[:button] == 'reset'
       id = params[:id] if params[:id]
-      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
+      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", 'replace_cell__explorer')
       @object_ids = @edit[:object_ids]
       session[:tag_db] = @tagging = @edit[:tagging]
     else
@@ -604,14 +604,14 @@ module OpsController::OpsRbac
       session[:tag_db] = @tagging = params[:tagging]
     end
 
-    @gtl_type = "list"  # No quad icons for user/group list views
+    @gtl_type = 'list'  # No quad icons for user/group list views
     rbac_tags_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
+    add_flash(_('All changes have been reset'), :warning)  if params[:button] == 'reset'
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
-    @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name => ui_lookup(:models => @tagging), :model => "#{current_tenant.name} Tags"}
-    replace_right_cell("root")
+    @right_cell_text = _('Editing %{model} for "%{name}"') % {:name => ui_lookup(:models => @tagging), :model => "#{current_tenant.name} Tags"}
+    replace_right_cell('root')
   end
 
   # Set form vars for tag editor
@@ -630,8 +630,8 @@ module OpsController::OpsRbac
 
   def rbac_edit_tags_cancel
     id = params[:id]
-    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
-    add_flash(_("Tag Edit was cancelled by the user"))
+    return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", 'replace_cell__explorer')
+    add_flash(_('Tag Edit was cancelled by the user'))
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
     @edit = nil # clean out the saved info
@@ -644,8 +644,8 @@ module OpsController::OpsRbac
 
   def rbac_edit_cancel(what)
     key = what.to_sym
-    id = params[:id] ? params[:id] : "new"
-    return unless load_edit("rbac_#{what}_edit__#{id}", "replace_cell__explorer")
+    id = params[:id] ? params[:id] : 'new'
+    return unless load_edit("rbac_#{what}_edit__#{id}", 'replace_cell__explorer')
     case key
     when :role
       record_id = @edit[:role_id]
@@ -657,9 +657,9 @@ module OpsController::OpsRbac
       record_id = id
     end
     add_flash(if record_id
-                _("Edit of %{name} was cancelled by the user") % {:name => what.titleize}
+                _('Edit of %{name} was cancelled by the user') % {:name => what.titleize}
               else
-                _("Add of new %{name} was cancelled by the user") % {:name => what.titleize}
+                _('Add of new %{name} was cancelled by the user') % {:name => what.titleize}
               end)
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
@@ -673,22 +673,22 @@ module OpsController::OpsRbac
     obj[0] = params[:id] if obj.blank? && params[:id]
     record = klass.find_by_id(from_cid(obj[0])) if obj[0]
 
-    if [:group, :role].include?(key) && record && record.read_only && params[:typ] != "copy"
-      add_flash(_("Read Only %{model} \"%{name}\" can not be edited") % {:model => key == :role ? ui_lookup(:model => "MiqUserRole") : ui_lookup(:model => "MiqGroup"), :name => key == :role ? record.name : record.description}, :warning)
+    if [:group, :role].include?(key) && record && record.read_only && params[:typ] != 'copy'
+      add_flash(_('Read Only %{model} "%{name}" can not be edited') % {:model => key == :role ? ui_lookup(:model => 'MiqUserRole') : ui_lookup(:model => 'MiqGroup'), :name => key == :role ? record.name : record.description}, :warning)
       render :update do |page|
         page << javascript_prologue
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg')
       end
       return
     end
 
     case params[:typ]
-    when "new"
+    when 'new'
       @record = klass.new                 # New record
       if key == :role
         @record.miq_product_features = [MiqProductFeature.find_by_identifier(MiqProductFeature.feature_root)]
       end
-    when "copy"
+    when 'copy'
       @record = record.clone                # Copy existing record
       case key
       when :user
@@ -706,23 +706,23 @@ module OpsController::OpsRbac
     send("rbac_#{what}_set_form_vars")
     @in_a_form = true
     session[:changed] = false
-    add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
+    add_flash(_('All changes have been reset'), :warning)  if params[:button] == 'reset'
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
     if @edit["#{key}_id".to_sym]
       caption = (key == :group) ? @record.description : @record.name
-      @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => caption, :model => what.titleize}
+      @right_cell_text = _('Editing %{model} "%{name}"') % {:name => caption, :model => what.titleize}
     else
-      @right_cell_text = _("Adding a new %{name}") % {:name => what.titleize}
+      @right_cell_text = _('Adding a new %{name}') % {:name => what.titleize}
     end
     replace_right_cell(x_node)
   end
 
   def rbac_edit_save_or_add(what, rbac_suffix = what)
     key         = what.to_sym
-    id          = params[:id] || "new"
-    add_pressed = params[:button] == "add"
+    id          = params[:id] || 'new'
+    add_pressed = params[:button] == 'add'
 
-    return unless load_edit("rbac_#{what}_edit__#{id}", "replace_cell__explorer")
+    return unless load_edit("rbac_#{what}_edit__#{id}", 'replace_cell__explorer')
 
     record = case key
              when :role  then @edit[:role_id] ? MiqUserRole.find_by_id(@edit[:role_id]) : MiqUserRole.new
@@ -734,16 +734,16 @@ module OpsController::OpsRbac
     send("rbac_#{what}_set_record_vars", record)
 
     if record.valid? && !flash_errors? && record.save
-      set_role_features(record) if what == "role"
+      set_role_features(record) if what == 'role'
       AuditEvent.success(build_saved_audit(record, add_pressed))
       subkey = (key == :group) ? :description : :name
-      add_flash(_("%{model} \"%{name}\" was saved") % {:model => what.titleize, :name => @edit[:new][subkey]})
+      add_flash(_('%{model} "%{name}" was saved') % {:model => what.titleize, :name => @edit[:new][subkey]})
       @edit = session[:edit] = nil  # clean out the saved info
       if add_pressed
         suffix = case rbac_suffix
-                 when "group"         then "g"
-                 when "miq_user_role" then "ur"
-                 when "user"          then "u"
+                 when 'group'         then 'g'
+                 when 'miq_user_role' then 'ur'
+                 when 'user'          then 'u'
                  end
         self.x_node = "xx-#{suffix}" # reset node to show list
         send("rbac_#{what.pluralize}_list")
@@ -764,9 +764,9 @@ module OpsController::OpsRbac
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice] || params[:page]
       render :update do |page|
         page << javascript_prologue
-        page.replace("gtl_div", :partial => "layouts/x_gtl", :locals => {:action_url => "rbac_#{rec_type.pluralize}_list"})
-        page.replace_html("paging_div", :partial => "layouts/x_pagingcontrols")
-        page << "miqSparkle(false);"
+        page.replace('gtl_div', :partial => 'layouts/x_gtl', :locals => {:action_url => "rbac_#{rec_type.pluralize}_list"})
+        page.replace_html('paging_div', :partial => 'layouts/x_pagingcontrols')
+        page << 'miqSparkle(false);'
       end
     end
   end
@@ -775,24 +775,24 @@ module OpsController::OpsRbac
   def rbac_build_list(rec_type)
     @lastaction = "rbac_#{rec_type}s_list"
     @force_no_grid_xml = true
-    @gtl_type = "list"
+    @gtl_type = 'list'
     @ajax_paging_buttons = true
     if params[:ppsetting]                                             # User selected new per page value
       @items_per_page = params[:ppsetting].to_i                       # Set the new per page value
       @settings[:perpage][@gtl_type.to_sym] = @items_per_page         # Set the per page setting for this gtl type
     end
     @sortcol = session["rbac_#{rec_type}_sortcol"].nil? ? 0 : @sb["rbac_#{rec_type}_sortcol"].to_i
-    @sortdir = session["rbac_#{rec_type}_sortdir"].nil? ? "ASC" : @sb["rbac_#{rec_type}_sortdir"]
+    @sortdir = session["rbac_#{rec_type}_sortdir"].nil? ? 'ASC' : @sb["rbac_#{rec_type}_sortdir"]
 
     # Get the records (into a view) and the paginator
     @view, @pages = case rec_type
-                    when "user"
+                    when 'user'
                       get_view(User, :named_scope => :in_my_region)
-                    when "group"
+                    when 'group'
                       get_view(MiqGroup, :named_scope => :non_tenant_groups)
-                    when "role"
+                    when 'role'
                       get_view(MiqUserRole)
-                    when "tenant"
+                    when 'tenant'
                       get_view(Tenant)
                     end
 
@@ -804,18 +804,18 @@ module OpsController::OpsRbac
   # AJAX driven routine to check for changes in ANY field on the form
   def rbac_field_changed(rec_type)
     id = params[:id].split('__').first    # Get the record id
-    id = from_cid(id) unless id == "new" || id == "seq" # Decompress id if not "new"
-    return unless load_edit("rbac_#{rec_type}_edit__#{id}", "replace_cell__explorer")
+    id = from_cid(id) unless id == 'new' || id == 'seq' # Decompress id if not "new"
+    return unless load_edit("rbac_#{rec_type}_edit__#{id}", 'replace_cell__explorer')
 
     case rec_type
-    when "user"  then rbac_user_get_form_vars
-    when "group" then tree_name = rbac_group_get_form_vars
-    when "role"  then rbac_role_get_form_vars
+    when 'user'  then rbac_user_get_form_vars
+    when 'group' then tree_name = rbac_group_get_form_vars
+    when 'role'  then rbac_role_get_form_vars
     end
 
     changed = (@edit[:new] != @edit[:current])
     bad = false
-    if rec_type == "group"
+    if rec_type == 'group'
       bad ||= @edit[:new][:role].blank?
       bad ||= @edit[:new][:group_tenant].blank?
     end
@@ -823,15 +823,15 @@ module OpsController::OpsRbac
     render :update do |page|
       page << javascript_prologue
       if %w(up down).include?(params[:button])
-        page.replace("flash_msg_div", :partial => "layouts/flash_msg") unless @refresh_div && @refresh_div != "column_lists"
+        page.replace('flash_msg_div', :partial => 'layouts/flash_msg') unless @refresh_div && @refresh_div != 'column_lists'
         page.replace(@refresh_div, :partial => @refresh_partial) if @refresh_div
         bad = false
       else
         # only do following for groups
-        if x_node.split("-").first == "g" || x_node == "xx-g"
+        if x_node.split('-').first == 'g' || x_node == 'xx-g'
           page.replace(@refresh_div,
                        :partial => @refresh_partial,
-                       :locals  => {:type => "classifications", :action_url => 'rbac_group_field_changed'}) if @refresh_div
+                       :locals  => {:type => 'classifications', :action_url => 'rbac_group_field_changed'}) if @refresh_div
 
           # Only update description field value if ldap group user field was selected
           page << "$('#description').val('#{j_str(@edit[:new][:description])}');" if params[:ldap_groups_user]
@@ -861,50 +861,50 @@ module OpsController::OpsRbac
   end
 
   def process_tenants(tenants, task)
-    process_elements(tenants, Tenant, task, _("Tenant"), "name")
+    process_elements(tenants, Tenant, task, _('Tenant'), 'name')
   end
 
   # Build the main Access Control tree
   def rbac_build_tree
-    TreeBuilderOpsRbac.new("rbac_tree", "rbac", @sb)
+    TreeBuilderOpsRbac.new('rbac_tree', 'rbac', @sb)
   end
 
   # Get information for an access control node
   def rbac_get_info
-    node, id = x_node.split("-")
+    node, id = x_node.split('-')
     case node
-    when "xx"
+    when 'xx'
       case id
-      when "u"
-        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "User")}
+      when 'u'
+        @right_cell_text = _('Access Control %{model}') % {:model => ui_lookup(:models => 'User')}
         rbac_users_list
-      when "g"
-        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "MiqGroup")}
+      when 'g'
+        @right_cell_text = _('Access Control %{model}') % {:model => ui_lookup(:models => 'MiqGroup')}
         rbac_groups_list
-      when "ur"
-        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "MiqUserRole")}
+      when 'ur'
+        @right_cell_text = _('Access Control %{model}') % {:model => ui_lookup(:models => 'MiqUserRole')}
         rbac_roles_list
-      when "tn"
-        @right_cell_text = _("Access Control %{model}") % {:model => ui_lookup(:models => "Tenant")}
+      when 'tn'
+        @right_cell_text = _('Access Control %{model}') % {:model => ui_lookup(:models => 'Tenant')}
         rbac_tenants_list
       end
-    when "u"
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "User"), :name => User.find_by_id(from_cid(id)).name}
+    when 'u'
+      @right_cell_text = _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'User'), :name => User.find_by_id(from_cid(id)).name}
       rbac_user_get_details(id)
-    when "g"
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqGroup"), :name => MiqGroup.find_by_id(from_cid(id)).description}
+    when 'g'
+      @right_cell_text = _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'MiqGroup'), :name => MiqGroup.find_by_id(from_cid(id)).description}
       rbac_group_get_details(id)
-    when "ur"
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqUserRole"), :name => MiqUserRole.find_by_id(from_cid(id)).name}
+    when 'ur'
+      @right_cell_text = _('%{model} "%{name}"') % {:model => ui_lookup(:model => 'MiqUserRole'), :name => MiqUserRole.find_by_id(from_cid(id)).name}
       rbac_role_get_details(id)
-    when "tn"
+    when 'tn'
       rbac_tenant_get_details(id)
-      @right_cell_text = _("%{model} \"%{name}\"") % {:model => tenant_type_title_string(@tenant.divisible),
+      @right_cell_text = _('%{model} "%{name}"') % {:model => tenant_type_title_string(@tenant.divisible),
                                                       :name  => @tenant.name}
     else  # Root node
-      @right_cell_text = _("Access Control %{model} \"%{name}\"") %
+      @right_cell_text = _('Access Control %{model} "%{name}"') %
                          {:name  => "#{MiqRegion.my_region.description} [#{MiqRegion.my_region.region}]",
-                          :model => ui_lookup(:model => "MiqRegion")}
+                          :model => ui_lookup(:model => 'MiqRegion')}
       @users_count   = User.in_my_region.count
       @groups_count  = MiqGroup.non_tenant_groups.count
       @roles_count   = MiqUserRole.count
@@ -932,12 +932,12 @@ module OpsController::OpsRbac
     @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
       bobj = MiqFilter.belongsto2object(b)            # Convert to an object
       next unless bobj
-      @belongsto[bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
+      @belongsto[bobj.class.to_s + '_' + bobj.id.to_s] = b # Store in hash as <class>_<id> string
     end
     @filters = {}
     # Build the managed filters hash
     [@group.get_managed_filters].flatten.each do |f|
-      @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
+      @filters[f.split('/')[-2] + '-' + f.split('/')[-1]] = f
     end
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
     build_belongsto_tree(@belongsto.keys)  # Build the Hosts & Clusters tree for this user
@@ -952,15 +952,15 @@ module OpsController::OpsRbac
   end
 
   def rbac_build_features_tree
-    @role = @sb[:typ] == "copy" ? @record.dup : @record if @role.nil?     # if on edit screen use @record
+    @role = @sb[:typ] == 'copy' ? @record.dup : @record if @role.nil?     # if on edit screen use @record
     OpsController::RbacTree.build(@role, @role_features).to_json
   end
 
   # Set form variables for role edit
   def rbac_user_set_form_vars
     @edit = {}
-    @edit[:user_id] = @record.id if @sb[:typ] != "copy"
-    @user = @sb[:typ] == "copy" ? @record.dup : @record # Save a shadow copy of the record if record is being copied
+    @edit[:user_id] = @record.id if @sb[:typ] != 'copy'
+    @user = @sb[:typ] == 'copy' ? @record.dup : @record # Save a shadow copy of the record if record is being copied
     @edit[:new] = {}
     @edit[:current] = {}
     @edit[:key] = "rbac_user_edit__#{@edit[:user_id] || "new"}"
@@ -1001,11 +1001,11 @@ module OpsController::OpsRbac
   def rbac_user_validate?
     valid = true
     if @edit[:new][:password] != @edit[:new][:verify]
-      add_flash(_("Password/Verify Password do not match"), :error)
+      add_flash(_('Password/Verify Password do not match'), :error)
       valid = false
     end
     if @edit[:new][:group].blank?
-      add_flash(_("A User must be assigned to a Group"), :error)
+      add_flash(_('A User must be assigned to a Group'), :error)
       valid = false
     end
     valid
@@ -1014,39 +1014,39 @@ module OpsController::OpsRbac
   # Get variables from group edit form
   def rbac_group_get_form_vars
     if %w(up down).include?(params[:button])
-      move_cols_up   if params[:button] == "up"
-      move_cols_down if params[:button] == "down"
+      move_cols_up   if params[:button] == 'up'
+      move_cols_down if params[:button] == 'down'
     else
       @edit[:new][:description]  = params[:ldap_groups_user]  if params[:ldap_groups_user]
       @edit[:new][:description]  = params[:description]       if params[:description]
       @edit[:new][:role]         = params[:group_role]        if params[:group_role]
       @edit[:new][:group_tenant] = params[:group_tenant].to_i if params[:group_tenant]
-      @edit[:new][:lookup]       = (params[:lookup] == "1")   if params[:lookup]
+      @edit[:new][:lookup]       = (params[:lookup] == '1')   if params[:lookup]
       @edit[:new][:user]         = params[:user]              if params[:user]
       @edit[:new][:user_id]      = params[:user_id]           if params[:user_id]
       @edit[:new][:user_pwd]     = params[:password]          if params[:password]
     end
 
     if params[:check]                               # User checked/unchecked a tree node
-      if params[:tree_typ] == "myco"                # MyCompany tag checked
-        if params[:check] == "0"                    #   unchecked
+      if params[:tree_typ] == 'myco'                # MyCompany tag checked
+        if params[:check] == '0'                    #   unchecked
           @edit[:new][:filters].delete(params[:id].split('___').last)   #     Remove the tag from the filters array
         else                                        #   checked
-          cat, tag = params[:id].split('___').last.split("-")         #     Get the category and tag
+          cat, tag = params[:id].split('___').last.split('-')         #     Get the category and tag
           @edit[:new][:filters][params[:id].split('___').last] = "/managed/#{cat}/#{tag}" # Put them in the hash
         end
       else                                          # Belongsto tag checked
-        if params[:check] == "0"                    #   unchecked
+        if params[:check] == '0'                    #   unchecked
           @edit[:new][:belongsto].delete(params[:id].split('___').last) #     Remove the tag from the belongsto hash
         else                                        #   checked
-          objc, objid = params[:id].split('___').last.split("_")      #     Get the object class and id
+          objc, objid = params[:id].split('___').last.split('_')      #     Get the object class and id
           tobj = objc.constantize.find(objid)       #     Get the record
           @edit[:new][:belongsto][params[:id].split('___').last] = MiqFilter.object2belongsto(tobj) # Put the tag into the belongsto hash
         end
       end
     end
 
-    params[:tree_typ] ? params[:tree_typ] + "_tree" : nil
+    params[:tree_typ] ? params[:tree_typ] + '_tree' : nil
   end
 
   # Set form variables for user add/edit
@@ -1066,14 +1066,14 @@ module OpsController::OpsRbac
 
     # Build the managed filters hash
     [@group.get_managed_filters].flatten.each do |f|
-      @edit[:new][:filters][f.split("/")[-2] + "-" + f.split("/")[-1]] = f
+      @edit[:new][:filters][f.split('/')[-2] + '-' + f.split('/')[-1]] = f
     end
 
     # Build the belongsto filters hash
     @group.get_belongsto_filters.each do |b|            # Go thru the belongsto tags
       bobj = MiqFilter.belongsto2object(b)            # Convert to an object
       next unless bobj
-      @edit[:new][:belongsto][bobj.class.to_s + "_" + bobj.id.to_s] = b # Store in hash as <class>_<id> string
+      @edit[:new][:belongsto][bobj.class.to_s + '_' + bobj.id.to_s] = b # Store in hash as <class>_<id> string
     end
 
     #   user_build_myco_tree                              # Build the MyCompanyTags tree for this user
@@ -1082,7 +1082,7 @@ module OpsController::OpsRbac
 
     all_roles = MiqUserRole.all
     @edit[:roles] = {}
-    @edit[:roles]["<Choose a Role>"] = nil if @record.id.nil?
+    @edit[:roles]['<Choose a Role>'] = nil if @record.id.nil?
     all_roles.each do |r|
       @edit[:roles][r.name] = r.id
     end
@@ -1095,12 +1095,12 @@ module OpsController::OpsRbac
 
     @edit[:projects_tenants] = []
     all_tenants, all_projects = Tenant.tenant_and_project_names
-    @edit[:projects_tenants].push(["", [[_("<Choose a Project/Tenant>"),
-                                         :selected => _("<Choose a Project/Tenant>"),
-                                         :disabled => _("<Choose a Project/Tenant>"),
+    @edit[:projects_tenants].push(['', [[_('<Choose a Project/Tenant>'),
+                                         :selected => _('<Choose a Project/Tenant>'),
+                                         :disabled => _('<Choose a Project/Tenant>'),
                                          :style    => 'display:none']]])
-    @edit[:projects_tenants].push(["Projects", all_projects]) unless all_projects.blank?
-    @edit[:projects_tenants].push(["Tenants", all_tenants]) unless all_tenants.blank?
+    @edit[:projects_tenants].push(['Projects', all_projects]) unless all_projects.blank?
+    @edit[:projects_tenants].push(['Tenants', all_tenants]) unless all_tenants.blank?
     @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
@@ -1112,26 +1112,26 @@ module OpsController::OpsRbac
   # Build the MyCompany Tags tree
   def rbac_build_myco_tree
     cats = []                            # Array of categories
-    categories = Classification.categories.collect { |c| c unless !c.show || ["folder_path_blue", "folder_path_yellow"].include?(c.name) }.compact
+    categories = Classification.categories.collect { |c| c unless !c.show || ['folder_path_blue', 'folder_path_yellow'].include?(c.name) }.compact
     categories.sort_by { |c| c.description.downcase }.each do |category|
       kids_checked = false
       cat_node = {}
       cat_node[:key] = category.name
       cat_node[:title] = category.description
-      cat_node[:tooltip] =  _("Category: %{description}") % {:description => category.description}
-      cat_node[:addClass] = "cfme-no-cursor-node"      # No cursor pointer
+      cat_node[:tooltip] =  _('Category: %{description}') % {:description => category.description}
+      cat_node[:addClass] = 'cfme-no-cursor-node'      # No cursor pointer
       cat_node[:icon] = ActionController::Base.helpers.image_path('100/folder.png')
       cat_node[:hideCheckbox] = true
       cat_kids = []
       category.entries.sort_by { |e| e.description.downcase }.each do |tag|
         tag_node = {}
-        tag_node[:key] = [category.name, tag.name].join("-")
+        tag_node[:key] = [category.name, tag.name].join('-')
         tag_node[:title] = tag.description
-        tag_node[:tooltip] =  _("Tag: %{description}") % {:description => tag.description}
+        tag_node[:tooltip] =  _('Tag: %{description}') % {:description => tag.description}
         if (@edit && @edit[:new][:filters][tag_node[:key]] == @edit[:current][:filters][tag_node[:key]]) || ![tag_node[:key]].include?(@filters) # Check new vs current
-          tag_node[:addClass] = "cfme-no-cursor-node"       # No cursor pointer
+          tag_node[:addClass] = 'cfme-no-cursor-node'       # No cursor pointer
         else
-          tag_node[:addClass] = "cfme-blue-node"            # Show node as different
+          tag_node[:addClass] = 'cfme-blue-node'            # Show node as different
         end
         tag_node[:icon] = ActionController::Base.helpers.image_path('100/tag.png')
         tag_node[:select] = true if (@edit && @edit[:new][:filters].key?(tag_node[:key])) || (@filters && @filters.key?(tag_node[:key])) # Check if tag is assigned
@@ -1143,7 +1143,7 @@ module OpsController::OpsRbac
       cats.push(cat_node) unless cat_kids.empty?
     end
     session[:myco_tree] = cats.to_json.html_safe # Add cats node array to root of tree
-    session[:tree] = "myco"
+    session[:tree] = 'myco'
   end
 
   # Set group record variables to new values
@@ -1177,7 +1177,7 @@ module OpsController::OpsRbac
   # Set form variables for role edit
   def rbac_role_set_form_vars
     @edit = {}
-    @edit[:role_id] = @record.id if @sb[:typ] != "copy"
+    @edit[:role_id] = @record.id if @sb[:typ] != 'copy'
     @edit[:new] = {}
     @edit[:current] = {}
     @edit[:key] = "rbac_role_edit__#{@edit[:role_id] || "new"}"
@@ -1246,8 +1246,8 @@ module OpsController::OpsRbac
 
     # Add/removed features based on the node that was checked
     if params[:check]
-      node = params[:id].split("__").last # Get the feature of the checked node
-      if params[:check] == "0"  # Unchecked
+      node = params[:id].split('__').last # Get the feature of the checked node
+      if params[:check] == '0'  # Unchecked
         recurse_sections_and_features(node) do |feature, all|
           @edit[:new][:features] -= all # remove the feature + children
           rbac_role_remove_parent(feature) # remove all parents above the unchecked tab feature
@@ -1300,7 +1300,7 @@ module OpsController::OpsRbac
   def rbac_role_validate?
     valid = true
     if @edit[:new][:features].empty?
-      add_flash(_("At least one Product Feature must be selected"), :error)
+      add_flash(_('At least one Product Feature must be selected'), :error)
       valid = false
     end
     valid
@@ -1312,8 +1312,8 @@ module OpsController::OpsRbac
     if @edit[:new][:filters].empty?
       @assigned_filters = []
     end
-    if @edit[:new][:role].nil? || @edit[:new][:role] == ""
-      add_flash(_("A User Group must be assigned a Role"), :error)
+    if @edit[:new][:role].nil? || @edit[:new][:role] == ''
+      add_flash(_('A User Group must be assigned a Role'), :error)
       valid = false
     end
     valid

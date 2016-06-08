@@ -2,12 +2,12 @@ class TreeNodeBuilderDatacenter < TreeNodeBuilder
   # Get correct prefix
   def prefix_type(object)
     case object
-    when Host         then "Host"
-    when EmsCluster   then "Cluster"
-    when ResourcePool then "Resource Pool"
-    when Datacenter   then "Datacenter"
-    when Vm           then "VM"
-    else                   ""
+    when Host         then 'Host'
+    when EmsCluster   then 'Cluster'
+    when ResourcePool then 'Resource Pool'
+    when Datacenter   then 'Datacenter'
+    when Vm           then 'VM'
+    else                   ''
     end
   end
 
@@ -20,21 +20,21 @@ class TreeNodeBuilderDatacenter < TreeNodeBuilder
     elsif tip.present?
       tip = tip.kind_of?(Proc) ? tip.call : _(tip)
     end
-    tip += _(" (Click to view)")
+    tip += _(' (Click to view)')
     tip = ERB::Util.html_escape(URI.unescape(tip)) unless tip.nil? || tip.html_safe?
     @node[:tooltip] = tip
   end
 
   def normal_folder_node
-    icon = options[:type] == :vat ? "blue_folder.png" : "folder.png"
+    icon = options[:type] == :vat ? 'blue_folder.png' : 'folder.png'
     generic_node(object.name, icon, "Folder: #{object.name}")
   end
 
   def vm_node(object)
     image = "currentstate-#{object.normalized_state.downcase}.png"
     if object.template?
-      image = object.host ? "template.png" : "template-no-host.png"
+      image = object.host ? 'template.png' : 'template-no-host.png'
     end
-    generic_node(object.name, image, _("VM: %{name}") % {:name => object.name})
+    generic_node(object.name, image, _('VM: %{name}') % {:name => object.name})
   end
 end

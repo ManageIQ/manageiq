@@ -25,16 +25,16 @@ class MiqVimInventory < MiqVimClientBase
     case cacheScope
     when :cache_scope_full
       @propMap = FullPropMap
-      $vim_log.info "MiqVimInventory: using property map FullPropMap"
+      $vim_log.info 'MiqVimInventory: using property map FullPropMap'
     when :cache_scope_ems_refresh
       @propMap = EmsRefreshPropMap
-      $vim_log.info "MiqVimInventory: using property map EmsRefreshPropMap"
+      $vim_log.info 'MiqVimInventory: using property map EmsRefreshPropMap'
     when :cache_scope_core
       @propMap = CorePropMap
-      $vim_log.info "MiqVimInventory: using property map CorePropMap"
+      $vim_log.info 'MiqVimInventory: using property map CorePropMap'
     when :cache_scope_event_monitor
       @propMap = EventMonitorPropMap
-      $vim_log.info "MiqVimInventory: using property map EventMonitorPropMap"
+      $vim_log.info 'MiqVimInventory: using property map EventMonitorPropMap'
     else
       @propMap = FullPropMap
       $vim_log.info "MiqVimInventory: unrecognized cache scope #{cacheScope}, using FullPropMap"
@@ -43,26 +43,26 @@ class MiqVimInventory < MiqVimClientBase
     if @v2
       @propMap = dupProps(@propMap)
 
-      deleteProperty(:HostSystem, "capability.storageVMotionSupported")
-      deleteProperty(:HostSystem, "capability.vmotionWithStorageVMotionSupported")
+      deleteProperty(:HostSystem, 'capability.storageVMotionSupported')
+      deleteProperty(:HostSystem, 'capability.vmotionWithStorageVMotionSupported')
 
-      deleteProperty(:Datastore, "summary.uncommitted")
+      deleteProperty(:Datastore, 'summary.uncommitted')
 
-      deleteProperty(:VirtualMachine, "config.hardware.numCoresPerSocket")
-      deleteProperty(:VirtualMachine, "summary.config.ftInfo.instanceUuids")
-      deleteProperty(:VirtualMachine, "summary.storage.unshared")
-      deleteProperty(:VirtualMachine, "summary.storage.committed")
+      deleteProperty(:VirtualMachine, 'config.hardware.numCoresPerSocket')
+      deleteProperty(:VirtualMachine, 'summary.config.ftInfo.instanceUuids')
+      deleteProperty(:VirtualMachine, 'summary.storage.unshared')
+      deleteProperty(:VirtualMachine, 'summary.storage.committed')
 
-      deleteProperty(:ClusterComputeResource, "configuration.dasConfig.admissionControlPolicy")
+      deleteProperty(:ClusterComputeResource, 'configuration.dasConfig.admissionControlPolicy')
       if @v20
-        deleteProperty(:VirtualMachine, "availableField")
-        deleteProperty(:HostSystem, "config.dateTimeInfo")
+        deleteProperty(:VirtualMachine, 'availableField')
+        deleteProperty(:HostSystem, 'config.dateTimeInfo')
       end
     else
       if @v4 && cacheScope != :cache_scope_event_monitor
         @propMap = dupProps(@propMap)
-        addProperty(:VirtualMachine, "runtime.memoryOverhead")
-        deleteProperty(:VirtualMachine, "config.hardware.numCoresPerSocket")
+        addProperty(:VirtualMachine, 'runtime.memoryOverhead')
+        deleteProperty(:VirtualMachine, 'config.hardware.numCoresPerSocket')
       end
       @propMap = @propMap.merge(PropMap4)
     end
@@ -73,7 +73,7 @@ class MiqVimInventory < MiqVimClientBase
     @spec       = spec
     @updateSpec = updateSpec
 
-    @globalIndent         = ""
+    @globalIndent         = ''
     @selectorHash         = @@selectorHash
     @selectorPropPathHash = {}
 
@@ -110,7 +110,7 @@ class MiqVimInventory < MiqVimClientBase
     @cacheLock.synchronize(:SH) do
       @propMap.each_value do |pm|
         hn  = pm[:baseName]
-        hnm = pm[:baseName] + "ByMor"
+        hnm = pm[:baseName] + 'ByMor'
 
         unless instance_variable_get(hnm).nil?
           hnmc = instance_variable_get(hnm).keys.length
@@ -129,7 +129,7 @@ class MiqVimInventory < MiqVimClientBase
     @cacheLock.synchronize(:SH) do
       @propMap.each_value do |pm|
         hn        = pm[:baseName]
-        hnm       = pm[:baseName] + "ByMor"
+        hnm       = pm[:baseName] + 'ByMor'
         hashByMor = instance_variable_get(hnm)
         hashByKey = pm[:keyPath] ? instance_variable_get(hn) : nil
 
@@ -176,121 +176,121 @@ class MiqVimInventory < MiqVimClientBase
     #
     # Traverse VirtualApp to Vm.
     #
-    virtualAppTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name = "virtualAppTraversalSpec"
-      ts.type = "VirtualApp"
-      ts.path = "vm"
-      ts.skip = "false"
+    virtualAppTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name = 'virtualAppTraversalSpec'
+      ts.type = 'VirtualApp'
+      ts.path = 'vm'
+      ts.skip = 'false'
     end unless @v2
 
     #
     # Traverse ResourcePool to ResourcePool and VirtualApp.
     #
-    resourcePoolTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name      = "resourcePoolTraversalSpec"
-      ts.type      = "ResourcePool"
-      ts.path      = "resourcePool"
-      ts.skip      = "false"
-      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "resourcePoolTraversalSpec" }
+    resourcePoolTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name      = 'resourcePoolTraversalSpec'
+      ts.type      = 'ResourcePool'
+      ts.path      = 'resourcePool'
+      ts.skip      = 'false'
+      ts.selectSet = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'resourcePoolTraversalSpec' }
       end
     end
 
     #
     # Traverse ComputeResource to ResourcePool.
     #
-    computeResourceRpTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name      = "computeResourceRpTraversalSpec"
-      ts.type      = "ComputeResource"
-      ts.path      = "resourcePool"
-      ts.skip      = "false"
-      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "resourcePoolTraversalSpec" }
+    computeResourceRpTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name      = 'computeResourceRpTraversalSpec'
+      ts.type      = 'ComputeResource'
+      ts.path      = 'resourcePool'
+      ts.skip      = 'false'
+      ts.selectSet = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'resourcePoolTraversalSpec' }
       end
     end
 
     #
     # Traverse ComputeResource to host.
     #
-    computeResourceHostTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name = "computeResourceHostTraversalSpec"
-      ts.type = "ComputeResource"
-      ts.path = "host"
-      ts.skip = "false"
+    computeResourceHostTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name = 'computeResourceHostTraversalSpec'
+      ts.type = 'ComputeResource'
+      ts.path = 'host'
+      ts.skip = 'false'
     end
 
     #
     # Traverse Datacenter to host folder.
     #
-    datacenterHostTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name      = "datacenterHostTraversalSpec"
-      ts.type      = "Datacenter"
-      ts.path      = "hostFolder"
-      ts.skip      = "false"
-      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    datacenterHostTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name      = 'datacenterHostTraversalSpec'
+      ts.type      = 'Datacenter'
+      ts.path      = 'hostFolder'
+      ts.skip      = 'false'
+      ts.selectSet = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
       end
     end
 
     #
     # Traverse Datacenter to VM folder.
     #
-    datacenterVmTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name      = "datacenterVmTraversalSpec"
-      ts.type      = "Datacenter"
-      ts.path      = "vmFolder"
-      ts.skip      = "false"
-      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    datacenterVmTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name      = 'datacenterVmTraversalSpec'
+      ts.type      = 'Datacenter'
+      ts.path      = 'vmFolder'
+      ts.skip      = 'false'
+      ts.selectSet = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
       end
     end
 
     #
     # Traverse Datacenter to Datastore folder.
     #
-    datacenterDsFolderTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name      = "dcTodf"
-      ts.type      = "Datacenter"
-      ts.path      = "datastoreFolder"
-      ts.skip      = "false"
-      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    datacenterDsFolderTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name      = 'dcTodf'
+      ts.type      = 'Datacenter'
+      ts.path      = 'datastoreFolder'
+      ts.skip      = 'false'
+      ts.selectSet = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
       end
     end
 
     #
     # Traverse Datacenter to Datastore.
     #
-    datacenterDsTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name = "datacenterDsTraversalSpec"
-      ts.type = "Datacenter"
-      ts.path = "datastore"
-      ts.skip = "false"
+    datacenterDsTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name = 'datacenterDsTraversalSpec'
+      ts.type = 'Datacenter'
+      ts.path = 'datastore'
+      ts.skip = 'false'
     end
 
     #
     # Traverse Datacenter to Network folder
     #
-    datacenterNetworkFolderTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name = "dcTonf"
-      ts.type = "Datacenter"
-      ts.path = "networkFolder"
-      ts.skip = "false"
-      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    datacenterNetworkFolderTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name = 'dcTonf'
+      ts.type = 'Datacenter'
+      ts.path = 'networkFolder'
+      ts.skip = 'false'
+      ts.selectSet = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
       end
     end
 
     #
     # Traverse Folder to children.
     #
-    folderTs = VimHash.new("TraversalSpec") do |ts|
-      ts.name      = "folderTraversalSpec"
-      ts.type      = "Folder"
-      ts.path      = "childEntity"
-      ts.skip      = "false"
-      ts.selectSet = VimArray.new("ArrayOfSelectionSpec") do |ssa|
-        ssa << VimHash.new("SelectionSpec") { |ss| ss.name = "folderTraversalSpec" }
+    folderTs = VimHash.new('TraversalSpec') do |ts|
+      ts.name      = 'folderTraversalSpec'
+      ts.type      = 'Folder'
+      ts.path      = 'childEntity'
+      ts.skip      = 'false'
+      ts.selectSet = VimArray.new('ArrayOfSelectionSpec') do |ssa|
+        ssa << VimHash.new('SelectionSpec') { |ss| ss.name = 'folderTraversalSpec' }
         ssa << datacenterHostTs
         ssa << datacenterVmTs
         ssa << datacenterDsTs
@@ -303,11 +303,11 @@ class MiqVimInventory < MiqVimClientBase
       end
     end
 
-    aOobjSpec = VimArray.new("ArrayOfObjectSpec") do |osa|
-      osa << VimHash.new("ObjectSpec") do |os|
+    aOobjSpec = VimArray.new('ArrayOfObjectSpec') do |osa|
+      osa << VimHash.new('ObjectSpec') do |os|
         os.obj       = @sic.rootFolder
-        os.skip      = "false"
-        os.selectSet = VimArray.new("ArrayOfSelectionSpec") { |ssa| ssa << folderTs }
+        os.skip      = 'false'
+        os.selectSet = VimArray.new('ArrayOfSelectionSpec') { |ssa| ssa << folderTs }
       end
     end
 
@@ -323,18 +323,18 @@ class MiqVimInventory < MiqVimClientBase
   # own entry.
   #
   def spec
-    propSpecAry = VimArray.new("ArrayOfPropertySpec") do |psa|
-      psa << VimHash.new("PropertySpec") do |ps|
-        ps.type = "ManagedEntity"
-        ps.all  = "false"
+    propSpecAry = VimArray.new('ArrayOfPropertySpec') do |psa|
+      psa << VimHash.new('PropertySpec') do |ps|
+        ps.type = 'ManagedEntity'
+        ps.all  = 'false'
       end
-      psa << VimHash.new("PropertySpec") do |ps|
-        ps.type = "Datastore"
-        ps.all  = "false"
+      psa << VimHash.new('PropertySpec') do |ps|
+        ps.type = 'Datastore'
+        ps.all  = 'false'
       end
     end
-    VimArray.new("ArrayOfPropertyFilterSpec") do |pfsa|
-      pfsa << VimHash.new("PropertyFilterSpec") do |pfs|
+    VimArray.new('ArrayOfPropertyFilterSpec') do |pfsa|
+      pfsa << VimHash.new('PropertyFilterSpec') do |pfs|
         pfs.propSet   = propSpecAry
         pfs.objectSet = @objectSet
       end
@@ -342,10 +342,10 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def updateSpecByPropMap(propMap)
-    VimHash.new("PropertyFilterSpec") do |pfs|
-      pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
+    VimHash.new('PropertyFilterSpec') do |pfs|
+      pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
         propMap.each do |type, h|
-          psa << VimHash.new("PropertySpec") do |ps|
+          psa << VimHash.new('PropertySpec') do |ps|
             ps.type    = type
             ps.all     = h[:props].nil?.to_s
             ps.pathSet = h[:props] if h[:props]
@@ -363,7 +363,7 @@ class MiqVimInventory < MiqVimClientBase
   def assert_no_locks
     return unless @lock_debug
     return unless @cacheLock.sync_locked?
-    msg = ""
+    msg = ''
     msg += "Exclusive cache lock held\n" if @cacheLock.sync_exclusive?
     msg += "Shared cache lock held\n" if @cacheLock.sync_shared?
     msg += Kernel.caller.join("\n")
@@ -392,14 +392,14 @@ class MiqVimInventory < MiqVimClientBase
   end # def resetCache
 
   def currentSession
-    getMoProp(@sic.sessionManager, "currentSession")
+    getMoProp(@sic.sessionManager, 'currentSession')
   end
 
   def isAlive?
     return false unless @alive
     begin
         unless currentSession
-          $vim_log.info "MiqVimInventory.isAlive?: Current session no longer exists."
+          $vim_log.info 'MiqVimInventory.isAlive?: Current session no longer exists.'
           @alive = false
         end
       rescue Exception => err
@@ -426,7 +426,7 @@ class MiqVimInventory < MiqVimClientBase
 
   def hashObj(type, props)
     type = type.to_sym if type.kind_of?(String)
-    raise "hashObj: exclusive cache lock not held" unless @cacheLock.sync_exclusive?
+    raise 'hashObj: exclusive cache lock not held' unless @cacheLock.sync_exclusive?
     raise "Unknown VIM object type: #{type}" unless (pmap = @propMap[type])
 
     return nil unless props
@@ -464,7 +464,7 @@ class MiqVimInventory < MiqVimClientBase
   # Add the property hash for the VIM object to the appropriate inventory hashes.
   #
   def addObjHash(objType, objHash)
-    raise "addObjHash: exclusive cache lock not held" unless @cacheLock.sync_exclusive?
+    raise 'addObjHash: exclusive cache lock not held' unless @cacheLock.sync_exclusive?
 
     objHash = hashObj(objType, objHash)
     objFixUp(objType, objHash)
@@ -492,7 +492,7 @@ class MiqVimInventory < MiqVimClientBase
         end
       end
 
-      if (ssObj = objHash["snapshot"])
+      if (ssObj = objHash['snapshot'])
         ssMorHash = VimHash.new
         rsl = ssObj['rootSnapshotList']
         rsl = [rsl] unless rsl.kind_of?(Array)
@@ -503,7 +503,7 @@ class MiqVimInventory < MiqVimClientBase
       if (hostMor = objHash.fetch_path('summary', 'runtime', 'host'))
         hostObj = hostSystemsByMor_locked[hostMor]
         return unless hostObj
-        objHash['summary']["runtime"]["hostName"] = hostObj.fetch_path("summary", "config", "name")
+        objHash['summary']['runtime']['hostName'] = hostObj.fetch_path('summary', 'config', 'name')
       end
 
     when :ResourcePool
@@ -547,7 +547,7 @@ class MiqVimInventory < MiqVimClientBase
   # Add the resulting property hash to the appropriate inventory hashes.
   #
   def addObjByMor(objMor)
-    raise "addObjByMor: exclusive cache lock not held"      unless @cacheLock.sync_exclusive?
+    raise 'addObjByMor: exclusive cache lock not held'      unless @cacheLock.sync_exclusive?
     objType = objMor.vimBaseType.to_sym
     raise "addObjByMor: Unknown VIM object type: #{objType}"  unless (pmap = @propMap[objType])
 
@@ -559,7 +559,7 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def removeObjByMor(objMor)
-    raise "removeObjByMor: exclusive cache lock not held"   unless @cacheLock.sync_exclusive?
+    raise 'removeObjByMor: exclusive cache lock not held'   unless @cacheLock.sync_exclusive?
     objType = objMor.vimBaseType.to_sym
     raise "removeObjByMor: Unknown VIM object type: #{objType}" unless (pmap = @propMap[objType])
 
@@ -582,7 +582,7 @@ class MiqVimInventory < MiqVimClientBase
   def propFromCache(hashName, key, props)
     props = [props] if props.kind_of?(String)
     @cacheLock.synchronize(:SH) do
-      cv = send((hashName + "_locked").to_sym)[key]
+      cv = send((hashName + '_locked').to_sym)[key]
       raise "propFromCache: key \"#{key}\" not found in hash #{hashName}" unless cv
       ppn = key
       props.each do |pn|
@@ -598,7 +598,7 @@ class MiqVimInventory < MiqVimClientBase
     props = [props] if props.kind_of?(String)
     @cacheLock.synchronize(:SH) do
       ret = {}
-      send((hashName + "_locked").to_sym).each do |key, cv|
+      send((hashName + '_locked').to_sym).each do |key, cv|
         props.each do |pn|
           cv = cv[pn]
           break unless cv
@@ -610,12 +610,12 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def keyFromCache(hashName, props, value = nil)
-    raise "no block given" if value.nil? && !block_given?
-    raise "block given with value" if !value.nil? && block_given?
+    raise 'no block given' if value.nil? && !block_given?
+    raise 'block given with value' if !value.nil? && block_given?
 
     props = [props] if props.kind_of?(String)
     @cacheLock.synchronize(:SH) do
-      ck, = send((hashName + "_locked").to_sym).detect do |_k, v|
+      ck, = send((hashName + '_locked').to_sym).detect do |_k, v|
         cv = v
         props.each do |pn|
           cv = cv[pn]
@@ -629,7 +629,7 @@ class MiqVimInventory < MiqVimClientBase
 
   def keyExistsInCache?(hashName, key)
     @cacheLock.synchronize(:SH) do
-      return send((hashName + "_locked").to_sym).key?(key)
+      return send((hashName + '_locked').to_sym).key?(key)
     end
   end
 
@@ -643,7 +643,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def virtualMachines_locked
-    raise "virtualMachines_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'virtualMachines_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@virtualMachines) if @virtualMachines
 
     $vim_log.info "MiqVimInventory.virtualMachines_locked: loading VirtualMachine cache for #{@connId}"
@@ -672,7 +672,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def virtualMachinesByMor_locked
-    raise "virtualMachinesByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'virtualMachinesByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@virtualMachinesByMor) if @virtualMachinesByMor
     virtualMachines_locked
     @virtualMachinesByMor
@@ -769,7 +769,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def computeResources_locked
-    raise "computeResources_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'computeResources_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@computeResources) if @computeResources
 
     $vim_log.info "MiqVimInventory.computeResources_locked: loading ComputeResource cache for #{@connId}"
@@ -798,7 +798,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def computeResourcesByMor_locked
-    raise "computeResourcesByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'computeResourcesByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@computeResourcesByMor) if @computeResourcesByMor
     computeResources_locked
     @computeResourcesByMor
@@ -872,7 +872,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def clusterComputeResources_locked
-    raise "clusterComputeResources_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'clusterComputeResources_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@clusterComputeResources) if @clusterComputeResources
 
     $vim_log.info "MiqVimInventory.clusterComputeResources_locked: loading ClusterComputeResource cache for #{@connId}"
@@ -901,7 +901,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def clusterComputeResourcesByMor_locked
-    raise "clusterComputeResourcesByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'clusterComputeResourcesByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@clusterComputeResourcesByMor) if @clusterComputeResourcesByMor
     clusterComputeResources_locked
     @clusterComputeResourcesByMor
@@ -975,7 +975,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def resourcePools_locked
-    raise "resourcePools_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'resourcePools_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@resourcePools) if @resourcePools
 
     $vim_log.info "MiqVimInventory.resourcePools_locked: loading ResourcePool cache for #{@connId}"
@@ -1004,7 +1004,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def resourcePoolsByMor_locked
-    raise "resourcePoolsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'resourcePoolsByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@resourcePoolsByMor) if @resourcePoolsByMor
     resourcePools_locked
     @resourcePoolsByMor
@@ -1078,7 +1078,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def virtualApps_locked
-    raise "virtualApps_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'virtualApps_locked: cache lock not held' unless @cacheLock.sync_locked?
 
     #
     # Not supported in v2.0 or v2.5
@@ -1116,7 +1116,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def virtualAppsByMor_locked
-    raise "virtualAppsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'virtualAppsByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@virtualAppsByMor) if @virtualAppsByMor
     virtualApps_locked
     @virtualAppsByMor
@@ -1190,7 +1190,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def folders_locked
-    raise "folders_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'folders_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@folders) if @folders
 
     $vim_log.info "MiqVimInventory.folders_locked: loading Folder cache for #{@connId}"
@@ -1219,7 +1219,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def foldersByMor_locked
-    raise "foldersByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'foldersByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@foldersByMor) if @foldersByMor
     folders_locked
     @foldersByMor
@@ -1293,7 +1293,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def datacenters_locked
-    raise "datacenters_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'datacenters_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@datacenters) if @datacenters
 
     $vim_log.info "MiqVimInventory.datacenters_locked: loading Datacenter cache for #{@connId}"
@@ -1322,7 +1322,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def datacentersByMor_locked
-    raise "datacentersByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'datacentersByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@datacentersByMor) if @datacentersByMor
     datacenters_locked
     (@datacentersByMor)
@@ -1396,7 +1396,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def hostSystems_locked
-    raise "hostSystems_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'hostSystems_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@hostSystems) if @hostSystems
 
     $vim_log.info "MiqVimInventory.hostSystems_locked: loading HostSystem cache for #{@connId}"
@@ -1425,7 +1425,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def hostSystemsByMor_locked
-    raise "hostSystemsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'hostSystemsByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@hostSystemsByMor) if @hostSystemsByMor
     hostSystems_locked
     @hostSystemsByMor
@@ -1509,7 +1509,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def dataStores_locked
-    raise "dataStores_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'dataStores_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@dataStores) if @dataStores
 
     $vim_log.info "MiqVimInventory.dataStores_locked: loading Datastore cache for #{@connId}"
@@ -1538,7 +1538,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def dataStoresByMor_locked
-    raise "dataStoresByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'dataStoresByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@dataStoresByMor) if @dataStoresByMor
     dataStores_locked
     @dataStoresByMor
@@ -1628,7 +1628,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def dvPortgroups_locked
-    raise "dvPortgroups_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'dvPortgroups_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@dvPortgroups) if @dvPortgroups
 
     $vim_log.info "MiqVimInventory.dvPortgroups_locked: loading DV Portgroup cache for #{@connId}"
@@ -1657,7 +1657,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def dvPortgroupsByMor_locked
-    raise "dvPortgroupsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'dvPortgroupsByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@dvPortgroupsByMor) if @dvPortgroupsByMor
     dvPortgroups_locked
     @dvPortgroupsByMor
@@ -1716,7 +1716,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def dvSwitches_locked
-    raise "dvSwitches_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'dvSwitches_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@dvSwithces) if @dvSwitches
 
     $vim_log.info "MiqVimInventory.dvSwitches_locked: loading DV Switch cache for #{@connId}"
@@ -1751,7 +1751,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def dvSwitchesByMor_locked
-    raise "dvSwitchesByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'dvSwitchesByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@dvSwitchesByMor) if @dvSwitchesByMor
     dvSwitches_locked
     @dvSwitchesByMor
@@ -1809,7 +1809,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def storagePods_locked
-    raise "storagePods_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'storagePods_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@storagePods) if @storagePods
 
     $vim_log.info "MiqVimInventory.storagePods_locked: loading Datastore cache for #{@connId}"
@@ -1838,7 +1838,7 @@ class MiqVimInventory < MiqVimClientBase
   # Returns with the cache lock held - must be unlocked by caller.
   #
   def storagePodsByMor_locked
-    raise "storagePodsByMor_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'storagePodsByMor_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@storagePodsByMor) if @storagePodsByMor
     storagePods_locked
     @storagePodsByMor
@@ -1897,7 +1897,7 @@ class MiqVimInventory < MiqVimClientBase
   # For internal use. Locking handled by caller
   #
   def inventoryHash_locked
-    raise "inventoryHash_locked: cache lock not held" unless @cacheLock.sync_locked?
+    raise 'inventoryHash_locked: cache lock not held' unless @cacheLock.sync_locked?
     return(@inventoryHash) if @inventoryHash
 
     $vim_log.info "MiqVimInventory.inventoryHash_locked: loading inventoryHash for #{@connId}"
@@ -1959,7 +1959,7 @@ class MiqVimInventory < MiqVimClientBase
   def dsName2path(dsn)
     ret = nil
     @cacheLock.synchronize(:SH) do
-      ret = dataStores_locked[dsn]['summary']["url"]
+      ret = dataStores_locked[dsn]['summary']['url']
     end
     ret
   end
@@ -1967,7 +1967,7 @@ class MiqVimInventory < MiqVimClientBase
   def dsName2mo(dsn)
     ret = nil
     @cacheLock.synchronize(:SH) do
-      ret = dupObj(dataStores_locked[dsn]['summary']["datastore"])
+      ret = dupObj(dataStores_locked[dsn]['summary']['datastore'])
     end
     assert_no_locks
     ret
@@ -1976,7 +1976,7 @@ class MiqVimInventory < MiqVimClientBase
   def dsName2mo_local(dsn)
     ret = nil
     @cacheLock.synchronize(:SH) do
-      ret = dataStores_locked[dsn]['summary']["datastore"]
+      ret = dataStores_locked[dsn]['summary']['datastore']
     end
     assert_no_locks
     ret
@@ -2003,7 +2003,7 @@ class MiqVimInventory < MiqVimClientBase
       return nil
     end
 
-    return dsPath if !path || path == "/"
+    return dsPath if !path || path == '/'
     File.join(dsPath, path)
   end # def localVmPath
 
@@ -2093,7 +2093,7 @@ class MiqVimInventory < MiqVimClientBase
   ########################
 
   def getTasks
-    getMoProp_local(@sic.taskManager, "recentTask")['recentTask']
+    getMoProp_local(@sic.taskManager, 'recentTask')['recentTask']
   end
   # private :getTasks
 
@@ -2126,17 +2126,17 @@ class MiqVimInventory < MiqVimClientBase
     className ||= self.class.to_s
 
     $vim_log.info "#{className}(#{@server}, #{@username})::waitForTask(#{tmor})" if $vim_log
-    args = VimArray.new("ArrayOfPropertyFilterSpec") do |pfsa|
-      pfsa << VimHash.new("PropertyFilterSpec") do |pfs|
-        pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
-          psa << VimHash.new("PropertySpec") do |ps|
+    args = VimArray.new('ArrayOfPropertyFilterSpec') do |pfsa|
+      pfsa << VimHash.new('PropertyFilterSpec') do |pfs|
+        pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
+          psa << VimHash.new('PropertySpec') do |ps|
             ps.type    = tmor.vimType
-            ps.all     = "false"
-            ps.pathSet = ["info.state", "info.error", "info.result"]
+            ps.all     = 'false'
+            ps.pathSet = ['info.state', 'info.error', 'info.result']
           end
         end
-        pfs.objectSet = VimArray.new("ArrayOfObjectSpec") do |osa|
-          VimHash.new("ObjectSpec") do |os|
+        pfs.objectSet = VimArray.new('ArrayOfObjectSpec') do |osa|
+          VimHash.new('ObjectSpec') do |os|
             os.obj = tmor
             osa << os
           end
@@ -2151,11 +2151,11 @@ class MiqVimInventory < MiqVimClientBase
       raise "waitForTask: task not found #{tmor}" if !oca || !oca[0] || !oca[0].propSet
 
       oca[0].propSet.each do |ps|
-        if ps.name == "info.state"
+        if ps.name == 'info.state'
           state = ps.val if ps.val == TaskInfoState::Success || ps.val == TaskInfoState::Error
         end
-        error  = ps.val if ps.name == "info.error"
-        result = ps.val if ps.name == "info.result"
+        error  = ps.val if ps.name == 'info.error'
+        result = ps.val if ps.name == 'info.result'
       end
       sleep 1 unless state
     end
@@ -2169,17 +2169,17 @@ class MiqVimInventory < MiqVimClientBase
     className ||= self.class.to_s
 
     $vim_log.info "#{className}(#{@server}, #{@username})::pollTask(#{tmor})" if $vim_log
-    args = VimArray.new("ArrayOfPropertyFilterSpec") do |pfsa|
-      pfsa << VimHash.new("PropertyFilterSpec") do |pfs|
-        pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
-          psa << VimHash.new("PropertySpec") do |ps|
+    args = VimArray.new('ArrayOfPropertyFilterSpec') do |pfsa|
+      pfsa << VimHash.new('PropertyFilterSpec') do |pfs|
+        pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
+          psa << VimHash.new('PropertySpec') do |ps|
             ps.type    = tmor.vimType
-            ps.all     = "false"
-            ps.pathSet = ["info.state", "info.error", "info.result", "info.progress"]
+            ps.all     = 'false'
+            ps.pathSet = ['info.state', 'info.error', 'info.result', 'info.progress']
           end
         end
-        pfs.objectSet = VimArray.new("ArrayOfObjectSpec") do |osa|
-          VimHash.new("ObjectSpec") do |os|
+        pfs.objectSet = VimArray.new('ArrayOfObjectSpec') do |osa|
+          VimHash.new('ObjectSpec') do |os|
             os.obj = tmor
             osa << os
           end
@@ -2194,13 +2194,13 @@ class MiqVimInventory < MiqVimClientBase
 
     oca[0].propSet.each do |ps|
       case ps.name
-      when "info.state"
+      when 'info.state'
         state = ps.val
-      when "info.error"
+      when 'info.error'
         error = ps.val
-      when "info.result"
+      when 'info.result'
         result = ps.val
-      when "info.progress"
+      when 'info.progress'
         progress = ps.val
       end
     end
@@ -2225,20 +2225,20 @@ class MiqVimInventory < MiqVimClientBase
   # Retrieve the properties for a single object, given its managed object reference.
   #
   def getMoProp_local(mo, path = nil)
-    pfSpec = VimHash.new("PropertyFilterSpec") do |pfs|
-      pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
-        psa << VimHash.new("PropertySpec") do |ps|
+    pfSpec = VimHash.new('PropertyFilterSpec') do |pfs|
+      pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
+        psa << VimHash.new('PropertySpec') do |ps|
           ps.type = mo.vimType
           if !path
-            ps.all = "true"
+            ps.all = 'true'
           else
-            ps.all = "false"
+            ps.all = 'false'
             ps.pathSet = path
           end
         end
       end
-      pfs.objectSet = VimArray.new("ArrayOfObjectSpec") do |osa|
-        osa << VimHash.new("ObjectSpec") do |os|
+      pfs.objectSet = VimArray.new('ArrayOfObjectSpec') do |osa|
+        osa << VimHash.new('ObjectSpec') do |os|
           os.obj = mo
         end
       end
@@ -2292,25 +2292,25 @@ class MiqVimInventory < MiqVimClientBase
   def getMoPropMulti(moa, path = nil)
     return [] if !moa || moa.empty?
     tmor = moa.first
-    raise "getMoPropMulti: item is not a managed object reference" unless tmor.respond_to? :vimType
+    raise 'getMoPropMulti: item is not a managed object reference' unless tmor.respond_to? :vimType
 
-    args = VimArray.new("ArrayOfPropertyFilterSpec") do |pfsa|
-      pfsa << VimHash.new("PropertyFilterSpec") do |pfs|
-        pfs.propSet = VimArray.new("ArrayOfPropertySpec") do |psa|
-          psa << VimHash.new("PropertySpec") do |ps|
+    args = VimArray.new('ArrayOfPropertyFilterSpec') do |pfsa|
+      pfsa << VimHash.new('PropertyFilterSpec') do |pfs|
+        pfs.propSet = VimArray.new('ArrayOfPropertySpec') do |psa|
+          psa << VimHash.new('PropertySpec') do |ps|
             ps.type = tmor.vimType
             if !path
-              ps.all = "true"
+              ps.all = 'true'
             else
-              ps.all = "false"
+              ps.all = 'false'
               ps.pathSet = path
             end
           end
         end
 
-        pfs.objectSet = VimArray.new("ArrayOfObjectSpec") do |osa|
+        pfs.objectSet = VimArray.new('ArrayOfObjectSpec') do |osa|
           moa.each do |mor|
-            VimHash.new("ObjectSpec") do |os|
+            VimHash.new('ObjectSpec') do |os|
               os.obj = mor
               osa << os
             end
@@ -2490,7 +2490,7 @@ class MiqVimInventory < MiqVimClientBase
   end
 
   def ss2pp(ss)
-    getSelSpec(ss).collect { |s| s.split("[")[0] }.uniq
+    getSelSpec(ss).collect { |s| s.split('[')[0] }.uniq
   end
   private :ss2pp
 
@@ -2536,7 +2536,7 @@ class MiqVimInventory < MiqVimClientBase
 
     nextpa = pa[1..-1]
 
-    if arrayKey == "*"
+    if arrayKey == '*'
       raise "applySelSpec: #{pa.first} is not an array." unless nextTopObj.kind_of?(Array)
       retObj[prop] = VimArray.new(nextTopObj.xsiType, nextTopObj.vimType) if retObj[prop].nil?
       nextRetObj   = retObj[prop]

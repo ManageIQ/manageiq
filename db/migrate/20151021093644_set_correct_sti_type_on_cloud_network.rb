@@ -1,7 +1,7 @@
 class SetCorrectStiTypeOnCloudNetwork < ActiveRecord::Migration
-  CLOUD_TEMPLATE_CLASS = "ManageIQ::Providers::Openstack::CloudManager::Template".freeze
-  CLOUD_PUBLIC_CLASS   = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public".freeze
-  CLOUD_PRIVATE_CLASS  = "ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private".freeze
+  CLOUD_TEMPLATE_CLASS = 'ManageIQ::Providers::Openstack::CloudManager::Template'.freeze
+  CLOUD_PUBLIC_CLASS   = 'ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Public'.freeze
+  CLOUD_PRIVATE_CLASS  = 'ManageIQ::Providers::Openstack::CloudManager::CloudNetwork::Private'.freeze
 
   class ExtManagementSystem < ActiveRecord::Base
     self.inheritance_column = :_type_disabled
