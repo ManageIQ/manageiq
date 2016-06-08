@@ -4,6 +4,12 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'Reconfigure'
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
+  POWER_STATES = {
+    'up'        => 'on',
+    'down'      => 'off',
+    'suspended' => 'suspended',
+  }.freeze
+
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.get_resource_by_ems_ref(ems_ref)
@@ -33,12 +39,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   end
 
   def self.calculate_power_state(raw_power_state)
-    case raw_power_state
-    when 'up'        then 'on'
-    when 'down'      then 'off'
-    when 'suspended' then 'suspended'
-    else                  super
-    end
+    POWER_STATES[raw_power_state] || super
   end
 
   def validate_migrate

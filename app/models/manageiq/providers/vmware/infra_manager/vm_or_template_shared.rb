@@ -3,14 +3,15 @@ module ManageIQ::Providers::Vmware::InfraManager::VmOrTemplateShared
   include_concern 'RefreshOnScan'
   include_concern 'Scanning'
 
+  POWER_STATES = {
+    "poweredOn"  => "on",
+    "poweredOff" => "off",
+    "suspended"  => "suspended",
+  }.freeze
+
   module ClassMethods
     def calculate_power_state(raw_power_state)
-      case raw_power_state
-      when "poweredOn"  then "on"
-      when "poweredOff" then "off"
-      when "suspended"  then "suspended"
-      else                   super
-      end
+      POWER_STATES[raw_power_state] || super
     end
   end
 
