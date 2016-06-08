@@ -65,7 +65,7 @@ class EmsInfraController < ApplicationController
         end
       end
 
-      update_stack(@stack, scale_parameters_formatted, params[:id], return_message)
+      update_stack(@stack, scale_parameters_formatted, params[:id], return_message, 'scaleup')
     end
   end
 
@@ -95,6 +95,7 @@ class EmsInfraController < ApplicationController
       log_and_flash_message(_("No compute hosts were selected for scale down."))
     else
       hosts = host_ids.map { |host_id| find_by_id_filtered(Host, host_id) }
+      services = hosts.collect(&:cloud_services).flatten
 
       # verify selected nodes can be removed
       has_invalid_nodes, error_return_message = verify_hosts_for_scaledown(hosts)
@@ -106,7 +107,7 @@ class EmsInfraController < ApplicationController
       # figure out scaledown parameters and update stack
       stack_parameters = get_scaledown_parameters(hosts, @infra, @compute_hosts)
       return_message = _(" Scaling down to %{a} compute nodes") % {:a => stack_parameters['ComputeCount']}
-      update_stack(@stack, stack_parameters, params[:id], return_message)
+      update_stack(@stack, stack_parameters, params[:id], return_message, 'scaledown', {:services => services})
     end
   end
 
@@ -127,7 +128,7 @@ class EmsInfraController < ApplicationController
     $log.error(message)
   end
 
-  def update_stack(stack, stack_parameters, provider_id, return_message)
+  def update_stack(stack, stack_parameters, provider_id, return_message, operation, additional_args = {})
     begin
       # Check if stack is ready to be updated
       update_ready = stack.update_ready?
@@ -143,6 +144,9 @@ class EmsInfraController < ApplicationController
       # A value was changed
       begin
         stack.raw_update_stack(nil, stack_parameters)
+        if operation == 'scaledown'
+          @stack.queue_post_scaledown_task(additional_args[:services])
+        end
         redirect_to ems_infra_path(provider_id, :flash_msg => return_message)
       rescue => ex
         log_and_flash_message(_("Unable to initiate scaling: %{message}") % {:message => ex})
