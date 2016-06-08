@@ -33,4 +33,11 @@ class CloudService < ApplicationRecord
   def scheduling_enabled?
     !scheduling_disabled?
   end
+
+  def delete_service
+    connection_options = {:service => source}
+    ext_management_system.with_provider_connection(connection_options) do |service|
+      service.delete_service(ems_ref)
+    end
+  end
 end

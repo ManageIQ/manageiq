@@ -59,4 +59,17 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
     _log.error "stack=[#{name}], error: #{err}"
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
+
+  def queue_post_scaledown_task(services)
+    MiqQueue.put(:class_name  => self.class.name,
+                 :expires_on  => Time.now.utc + 2.hours,
+                 :args        => [services],
+                 :instance_id => id,
+                 :method_name => "post_scaledown_task")
+  end
+
+  def post_scaledown_task(services)
+    raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) unless raw_status.first == 'UPDATE_COMPLETE'
+    services.each(&:delete_service)
+  end
 end
