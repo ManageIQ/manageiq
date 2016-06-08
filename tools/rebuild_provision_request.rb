@@ -150,14 +150,17 @@ class Tab
     end
   end
 
-  def environment(_tab, _dialog_tab)
+  def environment(_tab, dialog_tab)
     request = @output["vm_fields"]
     if @provision_options[:placement_auto].first == true
       request["placement_auto"] = true
       return
     end
-
     request["placement_auto"] = false
+
+    dialog_field_values(dialog_tab) do |field, value|
+      request[field] = value
+    end
   end
 
   def general_tab(_tab, dialog_tab)
