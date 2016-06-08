@@ -3,6 +3,22 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   include_concern 'RemoteConsole'
   include_concern 'Resize'
 
+  POWER_STATES = {
+    "ACTIVE"            => "on",
+    "SHUTOFF"           => "off",
+    "SUSPENDED"         => "suspended",
+    "PAUSED"            => "paused",
+    "SHELVED"           => "shelved",
+    "SHELVED_OFFLOADED" => "shelved_offloaded",
+    "HARD_REBOOT"       => "reboot_in_progress",
+    "REBOOT"            => "reboot_in_progress",
+    "ERROR"             => "non_operational",
+    "BUILD"             => "wait_for_launch",
+    "REBUILD"           => "wait_for_launch",
+    "DELETED"           => "archived",
+    "MIGRATING"         => "migrating",
+  }.freeze
+
   belongs_to :cloud_tenant
 
   has_many :cloud_networks, :through => :cloud_subnets
@@ -35,20 +51,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   end
 
   def self.calculate_power_state(raw_power_state)
-    case raw_power_state
-    when "ACTIVE"                then "on"
-    when "SHUTOFF"               then "off"
-    when "SUSPENDED"             then "suspended"
-    when "PAUSED"                then "paused"
-    when "SHELVED"               then "shelved"
-    when "SHELVED_OFFLOADED"     then "shelved_offloaded"
-    when "REBOOT", "HARD_REBOOT" then "reboot_in_progress"
-    when "ERROR"                 then "non_operational"
-    when "BUILD", "REBUILD"      then "wait_for_launch"
-    when "DELETED"               then "archived"
-    when "MIGRATING"             then "migrating"
-    else                              "unknown"
-    end
+    POWER_STATES[raw_power_state] || "unknown"
   end
 
   def perform_metadata_scan(ost)

@@ -1,6 +1,20 @@
 class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::CloudManager::Vm
   include_concern 'Operations'
 
+  POWER_STATES = {
+    "running"       => "on",
+    "powering_up"   => "powering_up",
+    "shutting_down" => "powering_down",
+    "shutting-down" => "powering_down",
+    "stopping"      => "powering_down",
+    "pending"       => "suspended",
+    "terminated"    => "terminated",
+    "stopped"       => "off",
+    "off"           => "off",
+    # 'unknown' will be set by #disconnect_ems - which means 'terminated' in our case
+    "unknown"       => "terminated",
+  }.freeze
+
   has_many :cloud_networks, :through => :cloud_subnets
 
   def cloud_network
@@ -67,20 +81,7 @@ class ManageIQ::Providers::Amazon::CloudManager::Vm < ManageIQ::Providers::Cloud
 
   def self.calculate_power_state(raw_power_state)
     # http://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_InstanceState.html
-    case raw_power_state.to_s
-    when "running"       then "on"
-    when "powering_up"   then "powering_up"
-    when "shutting_down" then "powering_down"
-    when "shutting-down" then "powering_down"
-    when "stopping"      then "powering_down"
-    when "pending"       then "suspended"
-    when "terminated"    then "terminated"
-    when "stopped"       then "off"
-    when "off"           then "off"
-    # 'unknown' will be set by #disconnect_ems - which means 'terminated' in our case
-    when "unknown"       then "terminated"
-    else                      "terminated"
-    end
+    POWER_STATES[raw_power_state.to_s] || "terminated"
   end
 
   def validate_migrate
