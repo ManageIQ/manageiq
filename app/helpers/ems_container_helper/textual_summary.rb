@@ -131,9 +131,9 @@ module EmsContainerHelper::TextualSummary
   def textual_endpoints
     return unless @ems.connection_configurations.hawkular
 
-    [{:label => N_('Hawkular Host Name'),
+    [{:label => _('Hawkular Host Name'),
       :value => @ems.connection_configurations.hawkular.endpoint.hostname},
-     {:label => N_('Hawkular API Port'),
+     {:label => _('Hawkular API Port'),
       :value => @ems.connection_configurations.hawkular.endpoint.port}]
   end
 end

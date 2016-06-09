@@ -61,9 +61,9 @@ module EmsMiddlewareHelper::TextualSummary
   end
 
   def textual_topology
-    {:label => N_('Topology'),
+    {:label => _('Topology'),
      :image => 'topology',
      :link  => url_for(:controller => 'middleware_topology', :action => 'show', :id => @ems.id),
-     :title => N_('Show topology')}
+     :title => _('Show topology')}
   end
 end
