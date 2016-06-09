@@ -22,22 +22,6 @@ class ApplicationHelper::Toolbar::ContainerCenter < ApplicationHelper::Toolbar::
       ]
     ),
   ])
-  button_group('container_policy', [
-    select(
-      :container_policy_choice,
-      'fa fa-shield fa-lg',
-      t = N_('Policy'),
-      t,
-      :items => [
-        button(
-          :container_tag,
-          'pficon pficon-edit fa-lg',
-          N_('Edit Tags for this #{ui_lookup(:table=>"container")}'),
-          N_('Edit Tags'),
-          :url_parms => "main_div"),
-      ]
-    ),
-  ])
   button_group('container_monitoring', [
     select(
       :container_monitoring_choice,
@@ -57,6 +41,22 @@ class ApplicationHelper::Toolbar::ContainerCenter < ApplicationHelper::Toolbar::
           N_('Show Capacity & Utilization data for this Container'),
           N_('Utilization'),
           :url_parms => "?display=performance"),
+      ]
+    ),
+  ])
+  button_group('container_policy', [
+    select(
+      :container_policy_choice,
+      'fa fa-shield fa-lg',
+      t = N_('Policy'),
+      t,
+      :items => [
+        button(
+          :container_tag,
+          'pficon pficon-edit fa-lg',
+          N_('Edit Tags for this #{ui_lookup(:table=>"container")}'),
+          N_('Edit Tags'),
+          :url_parms => "main_div"),
       ]
     ),
   ])
