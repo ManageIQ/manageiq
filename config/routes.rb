@@ -2335,6 +2335,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         resize
         migrate
+        live_migrate
         live_migrate_form_fields
         attach
         detach

@@ -29,6 +29,8 @@ class CloudVolumeController < ApplicationController
     return tag("CloudVolume") if params[:pressed] == "cloud_volume_tag"
     delete_volumes if params[:pressed] == 'cloud_volume_delete'
 
+    live_migrate if params[:pressed] == 'instance_live_migrate'
+
     if @flash_array
       show_list
       replace_gtl_main_div
@@ -52,6 +54,12 @@ class CloudVolumeController < ApplicationController
           page << javascript_prologue
           page.redirect_to :action => "detach", :id => checked_volume_id
         end
+      end
+    elsif params[:pressed] == "instance_live_migrate"
+      checked_vm_id = find_checked_items[0]
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to :controller => "vm_cloud", :action => "live_migrate", :id => checked_vm_id
       end
     elsif params[:pressed] == "cloud_volume_edit"
       checked_volume_id = get_checked_volume_id(params)
