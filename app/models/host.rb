@@ -51,6 +51,7 @@ class Host < ApplicationRecord
   has_many                  :storages, :through => :host_storages
   has_many                  :host_switches, :dependent => :destroy
   has_many                  :switches, :through => :host_switches
+  has_many                  :lans,     :through => :switches
   has_many                  :patches, :dependent => :destroy
   has_many                  :system_services, :dependent => :destroy
   has_many                  :host_services, :class_name => "SystemService", :foreign_key => "host_id", :inverse_of => :host
@@ -143,7 +144,6 @@ class Host < ApplicationRecord
   virtual_column :ipmi_enabled,                 :type => :boolean
 
   virtual_has_many   :resource_pools,                               :uses => :all_relationships
-  virtual_has_many   :lans,                                         :uses => {:switches => :lans}
   virtual_has_many   :miq_scsi_luns,                                :uses => {:hardware => {:storage_adapters => {:miq_scsi_targets => :miq_scsi_luns}}}
   virtual_has_many   :processes,       :class_name => "OsProcess",  :uses => {:operating_system => :processes}
   virtual_has_many   :event_logs,                                   :uses => {:operating_system => :event_logs}
@@ -737,12 +737,6 @@ class Host < ApplicationRecord
     detect_ancestor(:of_type => "EmsFolder") { |a| a.kind_of?(Datacenter) }
   end
   alias_method :owning_datacenter, :parent_datacenter
-
-  def lans
-    all_lans = []
-    switches.each { |s| all_lans += s.lans unless s.lans.nil? } unless switches.nil?
-    all_lans
-  end
 
   def self.save_metadata(id, dataArray)
     _log.info "for host [#{id}]"
