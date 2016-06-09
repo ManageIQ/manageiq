@@ -54,7 +54,7 @@ Usage: #{PROGRAM_STRING} [--options]\n\nOptions:\n\t
   opt :api_host, "The hostname to run the api call against", :default => 'localhost', :type => :string
   opt :console,  "Show the output needed to run the POST in a Rails console", :default => false, :type => :bool
   opt :count, "Adjust the number of request ids (requires the last-requests option)",  :type => :int, :default => 5
-  opt :last_requests, "Show a list of the last 5 request ids",  :type => :bool
+  opt :last_requests, "Show a list of the last 5 request ids", :type => :bool
   opt :output,   "The output format (hash, json)", :default => 'hash', :type => :string, :short => '-t'
   opt :password, "The password required for the API request", :default => 'smartvm', :type => :string
   opt :port, "The port listening for the request", :default => 3000, :type => :int, :short => '-n'
@@ -152,14 +152,17 @@ class Tab
     end
   end
 
-  def environment(_tab, _dialog_tab)
+  def environment(_tab, dialog_tab)
     request = @output["vm_fields"]
     if @provision_options[:placement_auto].first == true
       request["placement_auto"] = true
       return
     end
-
     request["placement_auto"] = false
+
+    dialog_field_values(dialog_tab) do |field, value|
+      request[field] = value
+    end
   end
 
   def general_tab(_tab, dialog_tab)
