@@ -29,38 +29,12 @@ module MSVSDiffDisk
       @locators << MSCommon::PARENT_LOCATOR.decode(MSCommon.header["parent_loc#{idx}"])
       next if @locators[idx - 1]['platform_code'] == "\000\000\000\000"
       locator = @locators[idx - 1]
-      case locator['platform_code']
-      when "Wi2r"
-      # Deprecated (no information on format)
-
-      when "Wi2k"
-      # Deprecated (no information on format)
-
-      when "W2ru"
-      # Relative path. Would much rather have absolute path.
-      # NOTE: Absolute path always accompanies relative path.
-      # getParentPathWin(locator)
-
-      when "W2ku"
-        # Absolute path - this is the one.
+      if locator['platform_code'] == "W2ku"
         getParentPathWin(locator)
         getParent(locator)
-
-      when "Mac "
-      #
-      # TODO: need details on Mac Alias Blob.
-      #
-      # getParentPathMac(locator)
-
-      when "MacX"
-        # Is platform spanning even something we should do?
-        # NOTE: Oleg says don't worry about it for the present (03/14/2007).
-        getParentPathMacX(locator)
-        getParent(locator)
-
       end
-      # raise "No compatible parent locator found" if @parent == nil
     end
+    raise "No compatible parent locator found" if @parent == nil
   end
 
   def getBase
@@ -108,17 +82,6 @@ module MSVSDiffDisk
   def getParentPathWin(locator)
     buf = getPathData(locator)
     locator['fileName'] = buf.UnicodeToUtf8!
-  end
-
-  def getParentPathMac(locator)
-    buf = getPathData(locator)
-    # how do I decode a Mac alias blob?
-  end
-
-  def getParentPathMacX(locator)
-    buf = getPathData(locator)
-    # this is a standard UTF-8 URL.
-    locator['fileName'] = buf
   end
 
   def getPathData(locator)
