@@ -3,6 +3,7 @@ class EmsMiddlewareController < ApplicationController
 
   before_action :check_privileges
   before_action :get_session_data
+  before_action :set_angular_apps
   after_action :cleanup_action
   after_action :set_session_data
 
@@ -21,5 +22,10 @@ class EmsMiddlewareController < ApplicationController
   def listicon_image(item, _view)
     icon = item.decorate.try(:listicon_image)
     "svg/#{icon}.svg"
+  end
+
+  private
+  def set_angular_apps
+    @show_timeline_ng_app = "miq.timeline"
   end
 end

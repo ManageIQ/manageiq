@@ -1,0 +1,4 @@
+%div{"data-ng-app" => "#{@show_timeline_ng_app.to_s}", "ng-controller" => "miqTimlineController as timelineCtrl"}
+  %hk-timeline-chart{"events" => "timelineCtrl.timelineData",
+    "start-timestamp" => "{{timelineCtrl.timelineSettings.startTimestamp}}",
+    "end-timestamp" => "{{timelineCtrl.timelineSettings.endTimestamp}}"}
