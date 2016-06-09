@@ -481,8 +481,8 @@ class ProviderForemanController < ApplicationController
       get_node_info("root")
     else
       show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") %
-      {:name => @record.name, :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
+      model_string = ui_lookup(:model => (model || TreeBuilder.get_model_for_prefix(@nodetype))).to_s
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => model_string}
     end
   end
 
