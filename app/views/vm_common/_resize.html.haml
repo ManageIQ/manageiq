@@ -16,7 +16,7 @@
         = _('Choose Flavor')
       .col-md-8
         = select_tag('flavor',
-            options_for_select(@flavors.sort),
+            options_for_select(@flavors.sort_by),
             :class             => "selectpicker",
             "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true,
             :multiple          => false,
