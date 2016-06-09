@@ -206,7 +206,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       ($scope.emsCommonModel.emstype) &&
       ($scope.emsCommonModel.hawkular_hostname != '' && $scope.emsCommonModel.hawkular_api_port)) {
       return true;
-    }else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
+    } else if($scope.emsCommonModel.emstype == "gce" && $scope.emsCommonModel.project != '' &&
       ($scope.currentTab == "default" ||
       ($scope.currentTab == "service_account" && $scope.emsCommonModel.service_account != ''))) {
       return true;
