@@ -23,18 +23,7 @@ module MSVSDiffDisk
     end
     MSCommon.d_init_common(dInfo, @ms_disk_file) unless dInfo.baseOnly
 
-    # Get parent locators.
-    @locators = []
-    1.upto(8) do|idx|
-      @locators << MSCommon::PARENT_LOCATOR.decode(MSCommon.header["parent_loc#{idx}"])
-      next if @locators[idx - 1]['platform_code'] == "\000\000\000\000"
-      locator = @locators[idx - 1]
-      if locator['platform_code'] == "W2ku"
-        getParentPathWin(locator)
-        getParent(locator)
-      end
-    end
-    raise "No compatible parent locator found" if @parent == nil
+    parent_locators
   end
 
   def getBase
@@ -68,6 +57,21 @@ module MSVSDiffDisk
   # // Helpers.
 
   private
+
+  def parent_locators
+    # Get parent locators.
+    @locators = []
+    1.upto(8) do|idx|
+      @locators << MSCommon::PARENT_LOCATOR.decode(MSCommon.header["parent_loc#{idx}"])
+      next if @locators[idx - 1]['platform_code'] == "\000\000\000\000"
+      locator = @locators[idx - 1]
+      if locator['platform_code'] == "W2ku"
+        getParentPathWin(locator)
+        getParent(locator)
+      end
+    end
+    raise "No compatible parent locator found" if @parent == nil
+  end
 
   def getParent(locator)
     if locator.key?('fileName')
