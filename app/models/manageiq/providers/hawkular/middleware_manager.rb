@@ -111,6 +111,10 @@ module ManageIQ::Providers
       run_generic_operation(:Undeploy, ems_ref)
     end
 
+    def redeploy_middleware_deployment(ems_ref)
+      run_generic_operation(:Redeploy, ems_ref)
+    end
+
     # UI methods for determining availability of fields
     def supports_port?
       true

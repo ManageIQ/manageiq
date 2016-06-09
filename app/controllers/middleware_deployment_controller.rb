@@ -9,6 +9,10 @@ class MiddlewareDeploymentController < ApplicationController
   after_action :set_session_data
 
   OPERATIONS = {
+    :middleware_deployment_redeploy => {:op   => :redeploy_middleware_deployment,
+                                        :hawk => N_('Not redeploying deployment'),
+                                        :msg  => N_('Redeployment initiated for selected deployment(s)')
+    },
     :middleware_deployment_undeploy => {:op   => :undeploy_middleware_deployment,
                                         :hawk => N_('Not undeploying deployment'),
                                         :msg  => N_('Undeployment initiated for selected deployment(s)')

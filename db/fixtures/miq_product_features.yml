@@ -3411,6 +3411,10 @@
       :description: Undeploy Middleware deployment
       :feature_type: admin
       :identifier: middleware_deployment_undeploy
+    - :name: Redeploy middleware deployment
+      :description: Redeploy Middleware deployment
+      :feature_type: admin
+      :identifier: middleware_deployment_redeploy
 
 # Middleware Datasource
 - :name: Middleware Datasource

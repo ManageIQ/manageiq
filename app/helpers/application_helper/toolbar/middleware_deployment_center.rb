@@ -24,6 +24,12 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentCenter < ApplicationHelper
       t,
       :items => [
         button(
+          :middleware_deployment_redeploy,
+          'pficon pficon-restart fa-lg',
+          N_('Redeploy this #{ui_lookup(:table=>"middleware_deployment")}'),
+          N_('Redeploy'),
+          :confirm => N_("Do you want to redeploy this deployment ?")),
+        button(
           :middleware_deployment_undeploy,
           'fa fa-eject fa-lg',
           N_('Undeploy this #{ui_lookup(:table=>"middleware_deployment")}'),
