@@ -5,16 +5,29 @@
       this.onNewData(event);
     }.bind(this),
     function (err) {
-      console.log('Error: ' + err);
+      console.error('Angular RxJs Error: ', err);
     },
     function () {
-      console.log('Completed');
+      console.debug('Angular RxJs subject completed, no more events to catch.');
     });
   }
 
   var TimelineController = function($scope) {
     this.$scope = $scope;
     subscribeToSubject.bind(this)();
+    this.$scope.$on(Charts.EventNames.TIMELINE_CHART_TIMERANGE_CHANGED, function (event, data) {
+      this.filterData(data[0].getTime(), data[1].getTime());
+    }.bind(this));
+  }
+
+  TimelineController.prototype.filterData = function(startTime, endTime) {
+    this.timelineSettings.startTimestamp = startTime;
+    this.timelineSettings.endTimestamp = endTime;
+    this.timelineData.filter(function (value) {
+        return new Date(value.timestamp) >= this.timelineSettings.startTimestamp
+          && new Date(value.timestamp) <= this.timelineSettings.endTimestamp;
+      }.bind(this));
+    this.$scope.$digest();
   }
 
   TimelineController.prototype.onNewData = function(event) {
