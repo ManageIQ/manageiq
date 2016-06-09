@@ -30,19 +30,19 @@ class ApplicationHelper::Toolbar::ContainerNodeCenter < ApplicationHelper::Toolb
       t,
       :items => [
         button(
-          :container_node_perf,
-          'product product-monitoring fa-lg',
-          N_('Show Capacity & Utilization data for this Node'),
-          N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
-        button(
           :container_node_timeline,
           'product product-timeline fa-lg',
           N_('Show Timelines for this Node'),
           N_('Timelines'),
           :url       => "/show",
           :url_parms => "?display=timeline"),
+        button(
+          :container_node_perf,
+          'product product-monitoring fa-lg',
+          N_('Show Capacity & Utilization data for this Node'),
+          N_('Utilization'),
+          :url       => "/show",
+          :url_parms => "?display=performance"),
       ]
     ),
   ])
