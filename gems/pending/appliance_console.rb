@@ -28,7 +28,8 @@ require 'awesome_spawn'
 include HighLine::SystemExtensions
 
 require 'i18n'
-LOCALES = File.join(File.expand_path(File.dirname(__FILE__)), "appliance_console/locales/*.yml")
+locales_dir = ENV['CONTAINER'] ? "container" : "appliance"
+LOCALES = File.expand_path(File.join("appliance_console/locales", locales_dir, "*.yml"), __dir__)
 I18n.load_path = Dir[LOCALES].sort
 I18n.enforce_available_locales = true
 I18n.backend.load_translations

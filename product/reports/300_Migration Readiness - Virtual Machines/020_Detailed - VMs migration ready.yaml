@@ -38,8 +38,8 @@ col_order:
 - host.name
 - storage.name
 - v_datastore_path
-- disks.start_connected
-- disks.device_type
+- hardware.disks.start_connected
+- hardware.disks.device_type
 timeline: 
 id: 145
 file_mtime: 

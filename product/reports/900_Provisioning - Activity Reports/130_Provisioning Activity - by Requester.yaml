@@ -18,16 +18,16 @@ menu_name: "Provisioning Activity - by Requester"
 rpt_group: Custom
 priority: 
 col_order: 
-- miq_request.requester_name
-- miq_request.created_on
+- miq_provision.miq_request.requester_name
+- miq_provision.miq_request.created_on
 - name
 - v_annotation
 - miq_provision_template.name
 - evm_owner.name
 - evm_owner.email
-- miq_request.v_approved_by
-- miq_request.v_approved_by_email
-- miq_request.fulfilled_on
+- miq_provision.miq_request.v_approved_by
+- miq_provision.miq_request.v_approved_by_email
+- miq_provision.miq_request.fulfilled_on
 - miq_provision.description
 - miq_provision.message
 - retires_on
@@ -130,8 +130,8 @@ cols:
 template_type: report
 group: c
 sortby: 
-- miq_request.requester_name
-- miq_request.created_on
+- miq_provision.miq_request.requester_name
+- miq_provision.miq_request.created_on
 rpt_options: {}
 
 headers: 

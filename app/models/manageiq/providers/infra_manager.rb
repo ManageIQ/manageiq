@@ -46,5 +46,9 @@ module ManageIQ::Providers
     def validate_timeline
       {:available => true, :message => nil}
     end
+
+    def validate_authentication_status
+      {:available => true, :message => nil}
+    end
   end
 end

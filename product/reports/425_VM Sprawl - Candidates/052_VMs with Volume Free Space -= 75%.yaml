@@ -29,13 +29,13 @@ col_order:
 - name
 - storage.name
 - v_owning_cluster
-- volumes.name
-- volumes.free_space_percent
-- volumes.used_space_percent
-- volumes.free_space
-- volumes.used_space
-- volumes.size
-- volumes.filesystem
+- hardware.volumes.name
+- hardware.volumes.free_space_percent
+- hardware.volumes.used_space_percent
+- hardware.volumes.free_space
+- hardware.volumes.used_space
+- hardware.volumes.size
+- hardware.volumes.filesystem
 timeline: 
 id: 180
 file_mtime: 
@@ -68,7 +68,7 @@ template_type: report
 group: c
 sortby: 
 - storage.name
-- volumes.free_space_percent
+- hardware.volumes.free_space_percent
 headers: 
 - VM
 - Datastore

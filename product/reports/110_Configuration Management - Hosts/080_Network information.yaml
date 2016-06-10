@@ -11,16 +11,16 @@ rpt_group: Custom
 priority: 
 col_order: 
 - name
-- networks.ipaddress
-- networks.subnet_mask
-- networks.dhcp_enabled
-- networks.dhcp_server
-- networks.dns_server
-- networks.default_gateway
-- networks.description
-- networks.domain
-- networks.lease_expires
-- networks.lease_obtained
+- hardware.networks.ipaddress
+- hardware.networks.subnet_mask
+- hardware.networks.dhcp_enabled
+- hardware.networks.dhcp_server
+- hardware.networks.dns_server
+- hardware.networks.default_gateway
+- hardware.networks.description
+- hardware.networks.domain
+- hardware.networks.lease_expires
+- hardware.networks.lease_obtained
 timeline: 
 id: 111
 file_mtime: 
@@ -49,7 +49,7 @@ template_type: report
 group: 
 sortby: 
 - name
-- networks.ipaddress
+- hardware.networks.ipaddress
 headers: 
 - Name
 - Network IP Address

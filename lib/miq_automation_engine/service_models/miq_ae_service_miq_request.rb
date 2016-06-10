@@ -26,7 +26,7 @@ module MiqAeMethodService
     association :approvers
 
     def set_message(value)
-      object_send(:update_attributes, :message => value)
+      object_send(:update_attributes, :message => value.try!(:truncate, 255))
     end
 
     def description=(new_description)

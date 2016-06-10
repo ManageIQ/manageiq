@@ -10,8 +10,8 @@ menu_name: "VMs by MAC Address"
 rpt_group: Custom
 priority: 10
 col_order: 
-- nics.address
-- nics.location
+- hardware.nics.address
+- hardware.nics.location
 - name
 - host.name
 - storage.name
@@ -42,7 +42,7 @@ cols:
 template_type: report
 group: 
 sortby: 
-- nics.address
+- hardware.nics.address
 - name
 headers: 
 - MAC Address

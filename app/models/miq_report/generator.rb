@@ -370,7 +370,7 @@ module MiqReport::Generator
 
     data = build_includes(objs)
     result = data.collect do|entry|
-      build_reportable_data(entry, :only => only_cols, "include" => include)
+      build_reportable_data(entry, {:only => only_cols, "include" => include}, nil)
     end.flatten
 
     if rpt_options && rpt_options[:pivot]
@@ -603,11 +603,12 @@ module MiqReport::Generator
     end
   end
 
-  def build_cols_from_include(hash)
+  def build_cols_from_include(hash, parent_association = nil)
     return [] if hash.blank?
     hash.inject([]) do |a, (k, v)|
-      v["columns"].each { |c| a << "#{k}.#{c}" }              if v.key?("columns")
-      a += (build_cols_from_include(v["include"]) || []) if v.key?("include")
+      full_path = get_full_path(parent_association, k)
+      v["columns"].each { |c| a << get_full_path(full_path, c) } if v.key?("columns")
+      a += (build_cols_from_include(v["include"], full_path) || []) if v.key?("include")
       a
     end
   end
@@ -638,10 +639,10 @@ module MiqReport::Generator
     end
   end
 
-  def build_reportable_data(entry, options = {})
+  def build_reportable_data(entry, options, parent_association)
     rec = entry[:obj]
     data_records = [build_get_attributes_with_options(rec, options)]
-    data_records = build_add_includes(data_records, entry, options["include"]) if options["include"]
+    data_records = build_add_includes(data_records, entry, options["include"], parent_association) if options["include"]
     data_records
   end
 
@@ -665,18 +666,19 @@ module MiqReport::Generator
     attrs
   end
 
-  def build_add_includes(data_records, entry, includes)
+  def build_add_includes(data_records, entry, includes, parent_association)
     include_has_options = includes.kind_of?(Hash)
     associations = include_has_options ? includes.keys : Array(includes)
 
     associations.each do |association|
       existing_records = data_records.dup
       data_records = []
-
+      full_path = get_full_path(parent_association, association)
       if include_has_options
-        assoc_options = includes[association].merge(:qualify_attribute_names => association, :only =>  includes[association]["columns"])
+        assoc_options = includes[association].merge(:qualify_attribute_names => full_path,
+                                                    :only                    => includes[association]["columns"])
       else
-        assoc_options = {:qualify_attribute_names => association, :only =>  includes[association]["columns"]}
+        assoc_options = {:qualify_attribute_names => full_path, :only => includes[association]["columns"]}
       end
 
       if association == "categories" || association == "managed"
@@ -693,7 +695,7 @@ module MiqReport::Generator
             next unless @descriptions_by_tag_id.key?(t.id)
             entarr << @descriptions_by_tag_id[t.id]
           end
-          assochash[association + "." + c] = entarr unless entarr.empty?
+          assochash[full_path + "." + c] = entarr unless entarr.empty?
         end
         # join the the category data together
         longest = 0
@@ -715,7 +717,7 @@ module MiqReport::Generator
         else
           association_objects.each do |obj|
             unless association == "categories" || association == "managed"
-              association_records = build_reportable_data(obj, assoc_options)
+              association_records = build_reportable_data(obj, assoc_options, full_path)
             else
               association_records = [obj]
             end
@@ -820,5 +822,15 @@ module MiqReport::Generator
 
   def get_time_zone(default_tz = nil)
     time_profile ? time_profile.tz || tz || default_tz : tz || default_tz
+  end
+
+  private
+
+  def get_full_path(parent, child)
+    if parent
+      "#{parent}.#{child}"
+    else
+      child.to_s
+    end
   end
 end

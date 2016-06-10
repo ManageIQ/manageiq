@@ -187,22 +187,107 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
   context '#add_disks' do
     let(:vim)  { double("vim object") }
     let(:vmcs) { double("VirtualMachineConfigSpec").as_null_object }
-    let(:disk) { {:disk_size_in_mb => 1024} }
 
-    it 'with valid controller key' do
-      allow(vim).to receive(:getScsiCandU).and_return([200, 1])
+    context 'add 1 disk' do
+      let(:disk) { {:disk_size_in_mb => 1024} }
 
-      expect(vm).not_to receive(:add_scsi_controller)
-      expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
-      vm.add_disks(vim, vmcs, [disk])
+      it 'with valid controller key' do
+        allow(vim).to receive(:available_scsi_units).and_return([[1000, 1]])
+        allow(vim).to receive(:available_scsi_buses).and_return([1, 2, 3])
+
+        expect(vm).not_to receive(:add_scsi_controller)
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
+        vm.add_disks(vim, vmcs, [disk])
+      end
+
+      it 'with no controller key' do
+        allow(vim).to receive(:available_scsi_units).and_return([])
+        allow(vim).to receive(:available_scsi_buses).and_return([1, 2, 3])
+
+        expect(vm).to receive(:add_scsi_controller).with(vmcs, 1, -99).once
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
+        vm.add_disks(vim, vmcs, [disk])
+      end
     end
 
-    it 'with no controller key' do
-      allow(vim).to receive(:getScsiCandU).and_return({})
+    context 'add 2 disks' do
+      let(:disks) { [{:disk_size_in_mb => 1024}, {:disk_size_in_mb => 2048}] }
 
-      expect(vm).to receive(:add_scsi_controller).with(vmcs, 0, -99).once
-      expect(vm).to receive(:add_disk_config_spec).with(vmcs, disk).once
-      vm.add_disks(vim, vmcs, [disk])
+      it 'with 2 free controller units' do
+        allow(vim).to receive(:available_scsi_units).and_return([[1000, 14], [1000, 15]])
+        allow(vim).to receive(:available_scsi_buses).and_return([1, 2, 3])
+
+        expected_disks = [
+          disks[0].merge(:controller_key => 1000, :unit_number => 14),
+          disks[1].merge(:controller_key => 1000, :unit_number => 15)
+        ]
+
+        expect(vm).not_to receive(:add_scsi_controllers)
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
+
+        vm.add_disks(vim, vmcs, disks)
+      end
+
+      it 'with 2 non-consecutive controller units' do
+        allow(vim).to receive(:available_scsi_units).and_return([[1000, 1], [1000, 3]])
+        allow(vim).to receive(:available_scsi_buses).and_return([1, 2, 3])
+
+        expected_disks = [
+          disks[0].merge(:controller_key => 1000, :unit_number => 1),
+          disks[1].merge(:controller_key => 1000, :unit_number => 3)
+        ]
+
+        expect(vm).not_to receive(:add_scsi_controllers)
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
+
+        vm.add_disks(vim, vmcs, disks)
+      end
+
+      it 'with 1 free controller unit' do
+        allow(vim).to receive(:available_scsi_units).and_return([[1000, 15]])
+        allow(vim).to receive(:available_scsi_buses).and_return([1, 2, 3])
+
+        expected_disks = [
+          disks[0].merge(:controller_key => 1000, :unit_number => 15),
+          disks[1].merge(:controller_key => -99,  :unit_number => 0)
+        ]
+
+        expect(vm).to receive(:add_scsi_controller).with(vmcs, 1, -99).once
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
+
+        vm.add_disks(vim, vmcs, disks)
+      end
+
+      it 'with 1 free unit on second controller' do
+        allow(vim).to receive(:available_scsi_units).and_return([[1001, 15]])
+        allow(vim).to receive(:available_scsi_buses).and_return([2, 3])
+
+        expected_disks = [
+          disks[0].merge(:controller_key => 1001, :unit_number => 15),
+          disks[1].merge(:controller_key => -99,  :unit_number => 0)
+        ]
+
+        expect(vm).to receive(:add_scsi_controller).with(vmcs, 2, -99).once
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[0]).once
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disks[1]).once
+
+        vm.add_disks(vim, vmcs, disks)
+      end
+
+      it 'with 1 free unit on the last scsi controller' do
+        allow(vim).to receive(:available_scsi_units).and_return([[1003, 15]])
+        allow(vim).to receive(:available_scsi_buses).and_return([])
+
+        expected_disk = disks[0].merge(:controller_key => 1003, :unit_number => 15)
+
+        expect(vm).not_to receive(:add_scsi_controller)
+        expect(vm).to receive(:add_disk_config_spec).with(vmcs, expected_disk).once
+
+        vm.add_disks(vim, vmcs, disks)
+      end
     end
   end
 end

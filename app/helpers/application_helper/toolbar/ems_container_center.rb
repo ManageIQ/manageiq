@@ -41,19 +41,19 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
       t,
       :items => [
         button(
+          :ems_container_timeline,
+          'product product-timeline fa-lg',
+          N_('Show Timelines for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Timelines'),
+          :klass     => ApplicationHelper::Button::EmsContainerTimeline,
+          :url_parms => "?display=timeline"),
+        button(
           :ems_container_perf,
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Provider'),
           N_('Utilization'),
           :klass     => ApplicationHelper::Button::EmsContainerPerformance,
           :url_parms => "?display=performance"),
-        button(
-          :ems_container_timeline,
-          'product product-timeline fa-lg',
-          N_('Show Timelines for this #{ui_lookup(:table=>"ems_container")}'),
-          N_('Timelines'),
-          :klass     => ApplicationHelper::Button::EmsContainerTimeline,
-          :url_parms => "?display=timeline")
       ]
     ),
   ])
@@ -74,6 +74,22 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           'pficon pficon-edit fa-lg',
           N_('Manage Policies for this #{ui_lookup(:table=>"ems_container")}'),
           N_('Manage Policies')),
+      ]
+    ),
+  ])
+  button_group('ems_container_authentication', [
+    select(
+      :ems_container_authentication_choice,
+      'fa fa-lock fa-lg',
+      t = N_('Authentication'),
+      t,
+      :items => [
+        button(
+          :ems_container_recheck_auth_status,
+          'fa fa-search fa-lg',
+          N_('Re-check Authentication Status for this #{ui_lookup(:table=>"ems_container")}'),
+          N_('Re-check Authentication Status'),
+          :klass => ApplicationHelper::Button::EmsContainerRecheckAuthStatus),
       ]
     ),
   ])

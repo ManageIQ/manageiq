@@ -14,14 +14,14 @@ include:
         - cpu_total_cores
 col_order:
 - name
-- hardware.cpu_total_cores
+- computer_system.hardware.cpu_total_cores
 headers:
 - Number of Nodes per CPU Cores
 - Hardware Number of CPU Cores
 conditions:
 order: Descending
 sortby:
-- hardware.cpu_total_cores
+- computer_system.hardware.cpu_total_cores
 group:
 graph:
   :type: ColumnThreed

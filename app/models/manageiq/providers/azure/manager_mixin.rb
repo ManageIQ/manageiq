@@ -22,6 +22,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
     def raw_connect(client_id, client_key, azure_tenant_id, subscription = nil, proxy_uri = nil)
       proxy_uri ||= VMDB::Util.http_proxy_uri
 
+      require 'azure-armrest'
       ::Azure::Armrest::ArmrestService.configure(
         :client_id       => client_id,
         :client_key      => client_key,
