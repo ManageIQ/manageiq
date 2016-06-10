@@ -22,6 +22,7 @@ module ManageIQ::Providers
 
       $log.info("#{log_header}...")
       get_enterprises
+      #get_policy_groups
       $log.info(@data)
       @data
     end
@@ -67,6 +68,27 @@ module ManageIQ::Providers
       end
     end
 
+    def get_policy_groups
+      policy_group = @vsd_client.get_policy_groups
+      process_collection(policy_group, :security_groups) { |pg| parse_policy_group(pg) }
+      
+     # @data[:security_groups] = []
+     # @data[:network_groups].each do |net|
+      #filtering out policy groups based on the enterprise they are mapped to
+      # net[:security_groups] = @vsd_client.get_policy_groups.select { |filter| 
+      #   domain_id  = filter['parentID']
+      #   enterprise_name = @domains[domain_id][0]
+      #   enterprise_name == net[:name] 
+       #  }.collect {  |pg| parse_policy_group(pg) }
+
+       # Lets store also security_groups into indexed data, so we can reference them elsewhere
+      # net[:security_groups].each do |x|
+      #   @data_index.store_path(:security_groups, x[:ems_ref], x)
+       #  @data[:security_groups] << x
+      # end
+      #end
+    end
+
     def to_cidr(netmask)
       '/' + netmask.split(".").map { |e| e.to_i.to_s(2).rjust(8, "0") }.join.count("1").to_s
     end
@@ -100,6 +122,20 @@ module ManageIQ::Providers
       }
     end
 
+    def parse_network_group(network_group)
+     # uid     = network_group['ID']
+      uid = '34567'
+      status  = "active"
+
+      new_result = {
+        :type                      => self.class.network_group_type,
+        :name                      => 'Trester',
+        :ems_ref                   => uid,
+        :status                    => status,
+      }
+      return uid, new_result
+    end
+
     def map_extra_attributes(subnet_parent_id)
       zone_id              = subnet_parent_id
       zone                 = @zones[subnet_parent_id]
@@ -118,6 +154,10 @@ module ManageIQ::Providers
 
       def network_group_type
         "ManageIQ::Providers::Nuage::NetworkManager::NetworkGroup"
+      end
+
+      def security_group_type
+        'ManageIQ::Providers::Nuage::NetworkManager::SecurityGroup'
       end
     end
   end

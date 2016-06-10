@@ -29,18 +29,6 @@ module ManageIQ::Providers
       _log.error('Error in connection for server ' + @server.to_s + ' ' + response.code.to_s)
     end
 
-    def get_enterprises
-      response = @rest_call.get(@server + '/enterprises')
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No enterprises present')
-          return
-        end
-        return JSON.parse(response.body)
-      end
-      $log.error('Error in connection ' + response.code.to_s)
-    end
-   
     def get_domains 
       response = @rest_call.get(@server + '/domains')
       if response.code == 200
@@ -54,6 +42,8 @@ module ManageIQ::Providers
     end
 
     def get_zones
+      @rest_call.append_headers("X-Nuage-FilterType" , "predicate")
+      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulZone'")
       response = @rest_call.get(@server + '/zones')
       if response.code == 200
         if response.body == ''
@@ -65,23 +55,10 @@ module ManageIQ::Providers
       _log.error('Error in connection ' + response.code.to_s)
     end
 
-    def get_zones
-      @rest_call.append_headers("X-Nuage-FilterType" , "predicate")
-      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulZone'")
-      response = @rest_call.get(@server + '/zones')
-      if response.code == 200
-        if response.body == ''
-          $log.warn('No zones present')
-          return
-        end
-        return JSON.parse(response.body)
-      end
-      $log.error('Error in connection ' + response.code.to_s)
-    end
-    
     def get_subnets
       @rest_call.append_headers("X-Nuage-FilterType" , "predicate")
-      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulSubnet' AND externalID IS null")
+      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulSubnet'")
+#      @rest_call.append_headers("X-Nuage-Filter" , "name ISNOT 'BackHaulSubnet' AND externalID IS null")
       response = @rest_call.get(@server + '/subnets')
       if response.code == 200
         if response.body == ''
@@ -111,6 +88,18 @@ module ManageIQ::Providers
       if response.code == 200
         if response.body == ''
           _log.warn('No VM present')
+          return
+        end
+        return JSON.parse(response.body)
+      end
+      _log.error('Error in connection ' + response.code.to_s)
+    end
+
+    def get_policy_groups
+      response = @rest_call.get(@server + '/policygroups')
+      if response.code == 200
+        if response.body == ''
+          _log.warn('No policy Group present')
           return
         end
         return JSON.parse(response.body)
