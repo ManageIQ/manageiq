@@ -32,9 +32,6 @@ describe FixHostStorageReplicationOnUpgrade do
       it "reinstalls replication for the new table name" do
         pending_change_stub.create!(:change_table => "hosts_storages")
         sync_state_stub.create!(:table_name => "hosts_storages")
-        task = double
-        expect(Rake::Task).to receive(:[]).with("evm:dbsync:prepare_replication_without_sync").and_return(task)
-        expect(task).to receive(:invoke)
 
         migrate
 
