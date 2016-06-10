@@ -7,12 +7,6 @@ class Picture < ApplicationRecord
   DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures")
   Dir.mkdir(DEFAULT_DIRECTORY) unless File.directory?(DEFAULT_DIRECTORY)
 
-  def self.atStartup
-    require 'fileutils'
-    pattern = File.join(directory, "*")
-    FileUtils.rm Dir.glob(pattern)
-  end
-
   def self.directory
     @directory || DEFAULT_DIRECTORY
   end
