@@ -40,7 +40,5 @@ class FixHostStorageReplicationOnUpgrade < ActiveRecord::Migration
     say_with_time("Deleting sync state for #{old_name}") do
       RrSyncState.where(:table_name => old_name).delete_all
     end
-
-    Rake::Task['evm:dbsync:prepare_replication_without_sync'].invoke
   end
 end
