@@ -1,5 +1,18 @@
 (function(){
 
+  function createItem(timestamp, value, empty) {
+    return {
+      timestamp: timestamp,
+      value: value,
+      avg: value,
+      min: value,
+      max: value,
+      percentile95th: value,
+      median: value,
+      empty: empty
+    };
+  }
+
   function subscribeToSubject() {
     ManageIQ.angular.rxSubject.subscribe(function(event) {
       this.onNewData(event);
@@ -18,6 +31,9 @@
     this.$scope.$on(Charts.EventNames.TIMELINE_CHART_TIMERANGE_CHANGED, function (event, data) {
       this.filterData(data[0].getTime(), data[1].getTime());
     }.bind(this));
+    this.$scope.$on(Charts.EventNames.CONTEXT_CHART_TIMERANGE_CHANGED, function (event, data) {
+      this.filterData(data[0].getTime(), data[1].getTime());
+    }.bind(this));
   }
 
   TimelineController.prototype.filterData = function(startTime, endTime) {
@@ -27,7 +43,7 @@
         return new Date(value.timestamp) >= this.timelineSettings.startTimestamp
           && new Date(value.timestamp) <= this.timelineSettings.endTimestamp;
       }.bind(this));
-    this.$scope.$digest();
+    this.$scope.$apply();
   }
 
   TimelineController.prototype.onNewData = function(event) {
@@ -40,8 +56,27 @@
         item.html = item.description;
         item.timestamp = new Date(item.start).getTime();
       }.bind(this))
-      this.$scope.$apply();
+      this.initOverviewData(event.settings[0].unit);
+      this.$scope.$digest();
     }
+  }
+
+  TimelineController.prototype.initOverviewData = function(unit) {
+    this.overviewData = [];
+    this.overviewData
+      .push(createItem(this.timelineSettings.startTimestamp, null, true));
+    var diffTime = this.timelineSettings.endTimestamp - this.timelineSettings.startTimestamp;
+    var separTime = diffTime / 200;
+    _.each(this.timelineData, function(item) {
+      this.overviewData
+        .push(createItem(item.timestamp, 1, false));
+      this.overviewData
+        .push(createItem(item.timestamp + separTime, 1, false));
+      this.overviewData
+        .push(createItem(item.timestamp + separTime + 1, 1, false));
+    }.bind(this));
+    this.overviewData
+      .push(createItem(this.timelineSettings.endTimestamp, null, true));
   }
 
   TimelineController.$inject = ['$scope'];

@@ -25,6 +25,7 @@ class EmsMiddlewareController < ApplicationController
   end
 
   private
+  
   def set_angular_apps
     @show_timeline_ng_app = "miq.timeline"
   end
