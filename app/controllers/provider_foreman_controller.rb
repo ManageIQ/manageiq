@@ -475,6 +475,17 @@ class ProviderForemanController < ApplicationController
 
   private ###########
 
+  def display_node(id, model)
+    if @record.nil?
+      self.x_node = "root"
+      get_node_info("root")
+    else
+      show_record(from_cid(id))
+      model_string = ui_lookup(:model => (model || TreeBuilder.get_model_for_prefix(@nodetype))).to_s
+      @right_cell_text = _("%{model} \"%{name}\"") % {:name => @record.name, :model => model_string}
+    end
+  end
+
   def find_or_build_provider
     @provider_cfgmgmt   = provider_class_from_provtype.new if params[:id] == "new"
     @provider_cfgmgmt ||= find_record(ManageIQ::Providers::ConfigurationManager, params[:id]).provider # TODO: Why is params[:id] an ExtManagementSystem ID instead of Provider ID?
@@ -670,15 +681,7 @@ class ProviderForemanController < ApplicationController
 
   def configured_system_node(id, model)
     @record = @configured_system_record = find_record(ConfiguredSystem, id)
-    if @record.nil?
-      self.x_node = "root"
-      get_node_info("root")
-    else
-      show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") %
-      {:name => @record.name,
-       :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
-    end
+    display_node(id, model)
   end
 
   def miq_search_node
@@ -699,14 +702,7 @@ class ProviderForemanController < ApplicationController
 
   def configuration_script_node(id, model)
     @record = @configuration_script_record = find_record(ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript, id)
-    if @record.nil?
-      self.x_node = "root"
-      get_node_info("root")
-    else
-      show_record(from_cid(id))
-      @right_cell_text = _("%{model} \"%{name}\"") %
-      {:name => @record.name, :model => ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype)).to_s}
-    end
+    display_node(id, model)
   end
 
   def default_node
