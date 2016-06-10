@@ -12,9 +12,10 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
   let(:the_raw_job) do
     AnsibleTowerClient::Job.new(
       mock_api,
-      'id'     => '1',
-      'name'   => template.name,
-      'status' => 'Successful'
+      'id'         => '1',
+      'name'       => template.name,
+      'status'     => 'Successful',
+      'extra_vars' => {'param1' => 'val1'}.to_json
     )
   end
 
@@ -53,6 +54,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
         subject.refresh_ems
         expect(subject.ems_ref).to eq(the_raw_job.id)
         expect(subject.status).to  eq(the_raw_job.status)
+        expect(subject.parameters.first).to have_attributes(:name => 'param1', :value => 'val1')
       end
 
       it 'catches errors from provider' do

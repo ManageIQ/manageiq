@@ -42,6 +42,10 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
   def update_with_provider_object(raw_job)
     self.ems_ref = raw_job.id
     self.status = raw_job.status
+    self.parameters =
+      raw_job.extra_vars_hash.collect do |para_key, para_val|
+        OrchestrationStackParameter.new(:name => para_key, :value => para_val, :ems_ref => "#{raw_job.id}_#{para_key}")
+      end if parameters.empty?
     save!
   end
   private :update_with_provider_object
