@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_AnsibleTower_AutomationManager_Satellite6Credential < MiqAeServiceManageIQ_Providers_AnsibleTower_AutomationManager_CloudCredential
-  end
-end
