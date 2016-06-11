@@ -107,7 +107,7 @@ end
 begin
   require 'date'
   require 'rubygems'
-  $:.unshift("#{Gem.loaded_specs['activesupport'].full_gem_path}/lib")
+  require 'bundler/setup'
   require 'active_support/all'
   require 'socket'
   Socket.do_not_reverse_lookup = true  # turn off reverse DNS resolution
