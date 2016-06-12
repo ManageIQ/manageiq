@@ -50,12 +50,12 @@ module MiqReport::Generator::Trend
     # Build and filter trend data from performance data
     build_apply_time_profile(results)
     results = klass.build(results, db_options)
-    results = Rbac.filtered(results, :class        => db,
-                                     :filter       => conditions,
-                                     :limit        => options[:limit],
-                                     :userid       => options[:userid],
-                                     :miq_group_id => options[:miq_group_id])
 
+     if conditions
+      tz = User.find_by_userid(options[:userid]).get_timezone if options[:userid]
+      results = results.reject { |obj| conditions.lenient_evaluate(obj, tz) }
+    end
+    results = results[0...options[:limit]] if options[:limit]
     [results]
   end
 
