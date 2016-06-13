@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     display_name: Deployment Success
-    name: hawkular_deployment.success 
+    name: hawkular_deployment.ok
     inherits: 
     description: 
   fields:
