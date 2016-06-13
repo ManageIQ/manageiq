@@ -5,3 +5,9 @@
     = render :partial => "vm_common/right_size"
   - elsif @reconfigure
     = render :partial => "vm_common/reconfigure"
+  - elsif @resize
+    = render :partial => "vm_common/resize"
+  - elsif @live_migrate
+    = render :partial => "vm_common/live_migrate"
+  - elsif @evacuate
+    = render :partial => "vm_common/evacuate"

@@ -326,6 +326,352 @@ module ApplicationController::CiProcessing
     @refresh_partial = "shared/views/retire" if @explorer || @layout == "orchestration_stack"
   end
 
+  def resize
+    @record ||= VmOrTemplate.find_by_id(params[:rec_id])
+    drop_breadcrumb(
+      :name => _("Reconfigure Instance '%{name}'") % {:name => @record.name},
+      :url  => "/vm/resize"
+    ) unless @explorer
+    @flavors = {}
+    unless @record.ext_management_system.nil?
+      @record.ext_management_system.flavors.each do |ems_flavor|
+        # include only flavors with root disks at least as big as the instance's current root disk.
+        if (ems_flavor != @record.flavor) && (ems_flavor.root_disk_size >= @record.flavor.root_disk_size)
+          @flavors[ems_flavor.name_with_details] = ems_flavor.id
+        end
+      end
+    end
+    @edit = {}
+    @edit[:new] ||= {}
+    unless @record.flavor.nil?
+      @edit[:new][:flavor] = @record.flavor.id
+    end
+    @edit[:key] = "vm_resize__#{@record.id}"
+    @edit[:vm_id] = @record.id
+    @edit[:explorer] = true if params[:action] == "x_button" || session.fetch_path(:edit, :explorer)
+    session[:edit] = @edit
+    @in_a_form = true
+    @resize = true
+    render :action => "show" unless @explorer
+  end
+
+  def resizevms
+    assert_privileges("instance_resize")
+    recs = find_checked_items
+    recs = [params[:id].to_i] if recs.blank?
+    @record = find_by_id_filtered(VmOrTemplate, recs.first) # Set the VM object
+    if @record.is_available?(:resize)
+      if @explorer
+        resize
+        @refresh_partial = "vm_common/resize"
+      else
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :controller => 'vm', :action => 'resize', :rec_id => @record.id, :escape => false     # redirect to build the retire screen
+        end
+      end
+    else
+      add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
+        :instance => ui_lookup(:table => 'vm_cloud'),
+        :name     => @record.name,
+        :details  => @record.is_available_now_error_message(:resize)}, :error)
+    end
+  end
+  alias instance_resize resizevms
+
+  def resize_vm
+    assert_privileges("instance_resize")
+    load_edit("vm_resize__#{params[:id]}")
+    flavor_id = @edit[:new][:flavor]
+    flavor = find_by_id_filtered(Flavor, flavor_id)
+    @record = VmOrTemplate.find_by_id(params[:id])
+
+    case params[:button]
+    when "cancel"
+      add_flash(_("Reconfigure of %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+      @record = @sb[:action] = nil
+    when "submit"
+      if @record.is_available?(:resize)
+        begin
+          old_flavor = @record.flavor
+          @record.resize(flavor)
+          add_flash(_("Reconfiguring %{instance} \"%{name}\" from %{old_flavor} to %{new_flavor}") % {
+            :instance   => ui_lookup(:table => 'vm_cloud'),
+            :name       => @record.name,
+            :old_flavor => old_flavor.name,
+            :new_flavor => flavor.name})
+        rescue => ex
+          add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name,
+            :details  => ex}, :error)
+        end
+      else
+        add_flash(_("Unable to reconfigure %{instance} \"%{name}\": %{details}") % {
+          :instance => ui_lookup(:table => 'vm_cloud'),
+          :name     => @record.name,
+          :details  => @record.is_avaiable_now_error_message(:resize)}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+    end
+    if @sb[:explorer]
+      replace_right_cell
+    else
+      session[:flash_msgs] = @flash_array.dup
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to previous_breadcrumb_url
+      end
+    end
+    return
+  end
+
+  def resize_field_changed
+    return unless load_edit("vm_resize__#{params[:id]}")
+    @edit ||= {}
+    @edit[:new] ||= {}
+    @edit[:new][:flavor] = params[:flavor]
+    render :update do |page|
+      page << javascript_prologue
+      page.replace_html("main_div",
+                        :partial => "vm_common/resize") if %w(allright left right).include?(params[:button])
+      page << javascript_for_miq_button_visibility(true)
+      page << "miqSparkle(false);"
+    end
+  end
+
+  def livemigratevms
+    assert_privileges("instance_live_migrate")
+    recs = find_checked_items
+    recs = [params[:id].to_i] if recs.blank?
+    @record = find_by_id_filtered(VmOrTemplate, recs.first)
+    if @record.is_available?(:live_migrate) && !@record.ext_management_system.nil?
+      if @explorer
+        live_migrate
+        @refresh_partial = "vm_common/live_migrate"
+      else
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :controller => 'vm', :action => 'live_migrate', :rec_id => @record.id, :escape => false
+        end
+      end
+    else
+      add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
+        :instance => ui_lookup(:table => 'vm_cloud'),
+        :name     => @record.name,
+        :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
+    end
+  end
+  alias instance_live_migrate livemigratevms
+
+  def live_migrate
+    assert_privileges("instance_live_migrate")
+    @record ||= VmOrTemplate.find_by_id(params[:rec_id])
+    drop_breadcrumb(
+      :name => _("Live Migrate Instance '%{name}'") % {:name => @record.name},
+      :url  => "/vm_cloud/live_migrate"
+    ) unless @explorer
+    @sb[:explorer] = @explorer
+    @in_a_form = true
+    @live_migrate = true
+    render :action => "show" unless @explorer
+  end
+
+  def live_migrate_form_fields
+    assert_privileges("instance_live_migrate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    hosts = []
+    unless @record.ext_management_system.nil?
+      # wrap in a rescue block in the event the connection to the provider fails
+      begin
+        connection = @record.ext_management_system.connect
+        current_hostname = connection.handled_list(:servers).find do |s|
+          s.name == @record.name
+        end.os_ext_srv_attr_hypervisor_hostname
+        # OS requires its own name for the host be used in the migrate API, so get the
+        # provider hostname from fog.
+        hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
+          {:name => h.host_name, :id => h.host_name}
+        end
+      rescue
+        hosts = []
+      end
+    end
+    render :json => {
+      :hosts => hosts
+    }
+  end
+
+  def live_migrate_vm
+    assert_privileges("instance_live_migrate")
+    @record = VmOrTemplate.find_by_id(params[:id])
+    case params[:button]
+    when "cancel"
+      add_flash(_("Live Migration of %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+      @record = @sb[:action] = nil
+    when "submit"
+      if @record.is_available?(:live_migrate)
+        if params['auto_select_host'] == 'on'
+          hostname = nil
+        else
+          hostname = params[:destination_host]
+        end
+        block_migration = params[:block_migration]
+        disk_over_commit = params[:disk_over_commit]
+        begin
+          @record.live_migrate(
+            :hostname         => hostname,
+            :block_migration  => block_migration == 'on',
+            :disk_over_commit => disk_over_commit == 'on'
+          )
+          add_flash(_("Live Migrating %{instance} \"%{name}\"") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name})
+        rescue => ex
+          add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name,
+            :details  => get_error_message_from_fog(ex.to_s)}, :error)
+        end
+      else
+        add_flash(_("Unable to live migrate %{instance} \"%{name}\": %{details}") % {
+          :instance => ui_lookup(:table => 'vm_cloud'),
+          :name     => @record.name,
+          :details  => @record.is_available_now_error_message(:live_migrate)}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+    end
+    if @sb[:explorer]
+      replace_right_cell
+    else
+      session[:flash_msgs] = @flash_array.dup
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to previous_breadcrumb_url
+      end
+    end
+    return
+  end
+
+  def evacuate
+    assert_privileges("instance_evacuate")
+    @record ||= VmOrTemplate.find_by_id(params[:rec_id])
+    drop_breadcrumb(
+      :name => _("Evacuate Instance '%{name}'") % {:name => @record.name},
+      :url  => "/vm_cloud/evacuate"
+    ) unless @explorer
+    @sb[:explorer] = @explorer
+    @in_a_form = true
+    @evacuate = true
+    render :action => "show" unless @explorer
+  end
+
+  def evacuatevms
+    assert_privileges("instance_evacuate")
+    recs = find_checked_items
+    recs = [params[:id].to_i] if recs.blank?
+    @record = find_by_id_filtered(VmOrTemplate, recs.first)
+    if @record.is_available?(:evacuate) && !@record.ext_management_system.nil?
+      if @explorer
+        evacuate
+        @refresh_partial = "vm_common/evacuate"
+      else
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :controller => 'vm', :action => 'evacuate', :rec_id => @record.id, :escape => false
+        end
+      end
+    else
+      add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
+        :instance => ui_lookup(:table => 'vm_cloud'),
+        :name     => @record.name,
+        :details  => @record.is_available_now_error_message(:evacuate)}, :error)
+    end
+  end
+  alias instance_evacuate evacuatevms
+
+  def evacuate_vm
+    assert_privileges("instance_evacuate")
+    @record = VmOrTemplate.find_by_id(params[:id])
+
+    case params[:button]
+    when "cancel"
+      add_flash(_("Evacuation of %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => "vm_cloud"), :name => @record.name})
+      @record = @sb[:action] = nil
+    when "submit"
+      if @record.is_available?(:evacuate)
+        if params['auto_select_host'] == 'on'
+          hostname = nil
+        else
+          hostname = params[:destination_host]
+        end
+        on_shared_storage = params[:on_shared_storage] == 'on'
+        admin_password = on_shared_storage ? nil : params[:admin_password]
+        begin
+          @record.evacuate(
+            :hostname          => hostname,
+            :on_shared_storage => on_shared_storage,
+            :admin_password    => admin_password
+          )
+          add_flash(_("Evacuating %{instance} \"%{name}\"") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name})
+        rescue => ex
+          add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
+            :instance => ui_lookup(:table => 'vm_cloud'),
+            :name     => @record.name,
+            :details  => get_error_message_from_fog(ex.to_s)}, :error)
+        end
+      else
+        add_flash(_("Unable to evacuate %{instance} \"%{name}\": %{details}") % {
+          :instance => ui_lookup(:table => 'vm_cloud'),
+          :name     => @record.name,
+          :details  => @record.is_available_now_error_message(:evacuate)}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+    end
+    if @sb[:explorer]
+      replace_right_cell
+    else
+      session[:flash_msgs] = @flash_array.dup
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to previous_breadcrumb_url
+      end
+    end
+  end
+
+  def evacuate_form_fields
+    assert_privileges("instance_evacuate")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    hosts = []
+    unless @record.ext_management_system.nil?
+      begin
+        connection = @record.ext_management_system.connect
+        current_hostname = connection.handled_list(:servers).find do |s|
+          s.name == @record.name
+        end.os_ext_srv_attr_hypervisor_hostname
+        hosts = connection.hosts.select { |h| h.service_name == "compute" && h.host_name != current_hostname }.map do |h|
+          {:name => h.host_name, :id => h.host_name}
+        end
+      rescue
+        hosts = []
+      end
+    end
+    render :json => {
+      :hosts => hosts
+    }
+  end
+
   def vm_right_size
     assert_privileges(params[:pressed])
     # check to see if coming from show_list or drilled into vms from another CI
@@ -989,6 +1335,11 @@ module ApplicationController::CiProcessing
         end
       end
     end
+  end
+
+  def get_error_message_from_fog(ex)
+    matched_message = ex.match(/message\\\": \\\"(.*)\\\", /)
+    matched_message ? matched_message[1] : ex
   end
 
   private ############################
@@ -2143,6 +2494,9 @@ module ApplicationController::CiProcessing
     when "#{pfx}_reset"                     then resetvms
     when "#{pfx}_check_compliance"          then check_compliance_vms
     when "#{pfx}_reconfigure"               then reconfigurevms
+    when "#{pfx}_resize"                    then resizevms
+    when "#{pfx}_evacuate"                  then evacuatevms
+    when "#{pfx}_live_migrate"              then livemigratevms
     when "#{pfx}_retire"                    then retirevms
     when "#{pfx}_retire_now"                then retirevms_now
     when "#{pfx}_right_size"                then vm_right_size
