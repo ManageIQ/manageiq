@@ -386,7 +386,7 @@ module EmsCommon
                    "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_refresh", "#{pfx}_right_size",
                    "#{pfx}_reconfigure", "storage_tag", "ems_cluster_compare",
                    "ems_cluster_protect", "ems_cluster_tag", "#{pfx}_resize", "#{pfx}_live_migrate",
-                   "#{pfx}_evacuate", "#{pfx}_attach", "#{pfx}_detach"].include?(params[:pressed]) &&
+                   "#{pfx}_evacuate"].include?(params[:pressed]) &&
                   @flash_array.nil?
 
         unless ["host_edit", "#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
