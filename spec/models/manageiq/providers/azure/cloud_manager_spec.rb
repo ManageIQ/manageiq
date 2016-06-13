@@ -1,3 +1,4 @@
+require 'azure-armrest'
 describe ManageIQ::Providers::Azure::CloudManager do
   it ".ems_type" do
     expect(described_class.ems_type).to eq('azure')
