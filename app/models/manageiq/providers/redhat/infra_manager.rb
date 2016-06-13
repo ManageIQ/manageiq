@@ -73,7 +73,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     path = default_endpoint.path
     _log.info("Using stored API path '#{path}'.") unless path.blank?
 
-    server   = options[:ip] || address
+    server   = options[:ip] || hostname
     port     = options[:port] || self.port
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])

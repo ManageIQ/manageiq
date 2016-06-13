@@ -61,7 +61,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   end
 
   def connect(options = {})
-    options[:hostname] ||= address
+    options[:hostname] ||= hostname
     options[:port] ||= port
     options[:user] ||= authentication_userid(options[:auth_type])
     options[:pass] ||= authentication_password(options[:auth_type])

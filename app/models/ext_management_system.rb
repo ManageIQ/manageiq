@@ -108,8 +108,6 @@ class ExtManagementSystem < ApplicationRecord
            :to => :default_endpoint,
            :allow_nil => true
 
-  alias_method :address, :hostname # TODO: Remove all callers of address
-
   virtual_column :ipaddress,               :type => :string,  :uses => :endpoints
   virtual_column :hostname,                :type => :string,  :uses => :endpoints
   virtual_column :port,                    :type => :integer, :uses => :endpoints

@@ -846,7 +846,8 @@ class VmOrTemplate < ApplicationRecord
     [ext_management_system, "ems", host, "host"].each_slice(2) do |ems, type|
       if ems
         params[type] = {
-          :address    => ems.address,
+          # TODO: (Julian) Removing instances of address. Hopfully this won't be missed.
+          # :address    => ems.address,
           :hostname   => ems.hostname,
           :ipaddress  => ems.ipaddress,
           :username   => ems.authentication_userid,

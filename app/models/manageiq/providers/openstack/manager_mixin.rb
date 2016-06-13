@@ -46,7 +46,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
       }
       extra_options[:domain_id] = keystone_v3_domain_id
 
-      osh = OpenstackHandle::Handle.new(username, password, address, port, api_version, security_protocol, extra_options)
+      osh = OpenstackHandle::Handle.new(username, password, hostname, port, api_version, security_protocol, extra_options)
       osh.connection_options = {:instrumentor => $fog_log}
       osh
     end
