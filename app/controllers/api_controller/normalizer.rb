@@ -45,26 +45,18 @@ class ApiController
     end
 
     #
-    # Attribute Normalizer
-    #
-    def normalize_attr(type, attrtype, value)
-      attr_normalizer = "normalize_#{attrtype}"
-      respond_to?(attr_normalizer) ? send(attr_normalizer, type, value) : value
-    end
-
-    #
     # Let's normalize the attribute based on its name
     #
     def normalize_attr_byname(type, attr, value)
       return if value.nil?
       if self.class.attr_type_hash(:time).key?(attr.to_s)
-        normalize_attr(type, :time, value)
+        normalize_time(type, value)
       elsif self.class.attr_type_hash(:url).key?(attr.to_s)
-        normalize_attr(type, :url,  value)
+        normalize_url(type,  value)
       elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s) || attr.to_s.include?("password")
-        normalize_attr(type, :encrypted,  value)
+        normalize_encrypted(type, value)
       elsif self.class.attr_type_hash(:resource).key?(attr.to_s)
-        normalize_attr(type, :resource, value)
+        normalize_resource(type, value)
       else
         value
       end
