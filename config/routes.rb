@@ -2297,8 +2297,6 @@ Vmdb::Application.routes.draw do
         evacuate_form_fields
         live_migrate
         live_migrate_form_fields
-        attach
-        detach
         retire
         right_size
         show
@@ -2318,8 +2316,6 @@ Vmdb::Application.routes.draw do
         resize_vm
         evacuate_vm
         live_migrate_vm
-        attach_volume
-        detach_volume
         retire
         right_size
         set_checked_items
