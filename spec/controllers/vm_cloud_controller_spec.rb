@@ -1,7 +1,10 @@
 include CompressedIds
 
 describe VmCloudController do
-  let(:vm_openstack) { FactoryGirl.create(:vm_openstack) }
+  let(:vm_openstack) do
+    FactoryGirl.create(:vm_openstack,
+                       :ext_management_system => FactoryGirl.create(:ems_openstack))
+  end
   before(:each) do
     set_user_privileges
     session[:settings] = {:views => {:treesize => 20}}
@@ -64,7 +67,6 @@ describe VmCloudController do
     it 'can open instance resize tab' do
       post :explorer
       expect(response.status).to eq(200)
-
       allow(controller).to receive(:x_node).and_return("v-#{vm_openstack.compressed_id}")
 
       post :x_button, :params => {:pressed => 'instance_resize', :id => vm_openstack.id}
@@ -81,6 +83,54 @@ describe VmCloudController do
                                        :explorer => false)
       expect_any_instance_of(VmCloud).to receive(:resize).with(flavor)
       post :resize_vm, :params => {
+        :button => 'submit',
+        :id     => vm_openstack.id
+      }
+      expect(response.status).to eq(200)
+    end
+
+    it 'can open instance live migrate tab' do
+      post :explorer
+      expect(response.status).to eq(200)
+      allow(controller).to receive(:x_node).and_return("v-#{vm_openstack.compressed_id}")
+
+      post :x_button, :params => {:pressed => 'instance_live_migrate', :id => vm_openstack.id}
+      expect(response.status).to eq(200)
+      expect(response).to render_template(:partial => 'vm_common/_live_migrate')
+    end
+
+    it 'can live migrate an instance' do
+      allow(controller).to receive(:load_edit).and_return(true)
+      allow(controller).to receive(:previous_breadcrumb_url).and_return("/vm_cloud/explorer")
+      controller.instance_variable_set(:@edit,
+                                       :new      => {},
+                                       :explorer => false)
+      expect_any_instance_of(VmCloud).to receive(:live_migrate)
+      post :live_migrate_vm, :params => {
+        :button => 'submit',
+        :id     => vm_openstack.id
+      }
+      expect(response.status).to eq(200)
+    end
+
+    it 'can open instance evacuate tab' do
+      post :explorer
+      expect(response.status).to eq(200)
+      allow(controller).to receive(:x_node).and_return("v-#{vm_openstack.compressed_id}")
+
+      post :x_button, :params => {:pressed => 'instance_evacuate', :id => vm_openstack.id}
+      expect(response.status).to eq(200)
+      expect(response).to render_template(:partial => 'vm_common/_evacuate')
+    end
+
+    it 'can evacuate an instance' do
+      allow(controller).to receive(:load_edit).and_return(true)
+      allow(controller).to receive(:previous_breadcrumb_url).and_return("/vm_cloud/explorer")
+      controller.instance_variable_set(:@edit,
+                                       :new      => {},
+                                       :explorer => false)
+      expect_any_instance_of(VmCloud).to receive(:evacuate)
+      post :evacuate_vm, :params => {
         :button => 'submit',
         :id     => vm_openstack.id
       }
