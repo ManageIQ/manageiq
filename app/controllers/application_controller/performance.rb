@@ -1146,8 +1146,15 @@ module ApplicationController::Performance
 
     if params[:task_id]                             # Came in after async report generation
       miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
-      rpt = miq_task.miq_report_result.report_results # Grab the report object from the blob
-      miq_task.destroy                              # Get rid of the task and results
+      begin
+        if miq_task.status == 'Error' || miq_task.miq_report_result.nil?
+          add_flash(_("Error while generating report: #{miq_task.message}"), :error)
+          return
+        end
+        rpt = miq_task.miq_report_result.report_results # Grab the report object from the blob
+      ensure
+        miq_task.destroy # Get rid of the task and results
+      end
     end
     unless @sb[:util][:options][:index]
       chart_layouts[@sb[:util][:options][:model].to_sym].each_with_index do |chart, _idx|
