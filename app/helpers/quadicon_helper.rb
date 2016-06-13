@@ -14,14 +14,12 @@ module QuadiconHelper
     options[:db] ||= db_from_item(item)
 
     id = "quadicon_#{item.id}"
-    if options[:typ] == :listnav
-      options[:height] ||= 80
-      style = "margin-left: auto; margin-right: auto; width: 75px; height: #{options[:height]}px; z-index: 0;"
-      cls   = ""
-    else
-      style = ""
-      cls   = "quadicon"
-    end
+    style, cls = if options[:typ] == :listnav
+                   options[:height] ||= 80
+                   ["margin-left: auto; margin-right: auto; width: 75px; height: #{options[:height]}px; z-index: 0;", '']
+                 else
+                   ['', 'quadicon']
+                 end
 
     content_tag(:div, :style => style, :id => id, :class => cls) do
       partial_name = partial_name_from_item(item)
@@ -29,38 +27,26 @@ module QuadiconHelper
       case partial_name
       when 'cim_base_storage_extent', 'cim_storage_extent', 'ontap_file_share',
            'ontap_logical_disk', 'ontap_storage_system', 'ontap_storage_volume',
-           'snia_local_file_system'
-        flobj_img_simple(options[:size], "#{options[:size]}/#{partial_name}.png")
-      when 'service'
-        render_service_quadicon(item, options, 'service.png')
-      when 'service_template'
-        render_service_quadicon(item, options, 'service_template.png')
-      when 'resource_pool'
-        render_resource_pool_quadicon(item, options)
-      when 'host'
-        render_host_quadicon(item, options)
-      when 'ext_management_system'
-        render_ext_management_system_quadicon(item, options)
-      when 'ems_cluster'
-        render_ems_cluster_quadicon(item, options)
-      when 'single_quad'
-        render_single_quad_quadicon(item, options)
-      when 'storage'
-        render_storage_quadicon(item, options)
-      when 'vm_or_template'
-        render_vm_or_template_quadicon(item, options)
+           'snia_local_file_system' then
+                                        flobj_img_simple(options[:size], "#{options[:size]}/#{partial_name}.png")
+      when 'service'               then render_service_quadicon(item, options, 'service.png')
+      when 'service_template'      then render_service_quadicon(item, options, 'service_template.png')
+      when 'resource_pool'         then render_resource_pool_quadicon(item, options)
+      when 'host'                  then render_host_quadicon(item, options)
+      when 'ext_management_system' then render_ext_management_system_quadicon(item, options)
+      when 'ems_cluster'           then render_ems_cluster_quadicon(item, options)
+      when 'single_quad'           then render_single_quad_quadicon(item, options)
+      when 'storage'               then render_storage_quadicon(item, options)
+      when 'vm_or_template'        then render_vm_or_template_quadicon(item, options)
       end
     end
   end
 
   def img_for_compliance(item)
-    result = item.passes_profiles?(session[:policies].keys)
-    if result == true
-      '100/check.png'
-    elsif result == "N/A"
-      '100/na.png'
-    else
-      '100/x.png'
+    case item.passes_profiles?(session[:policies].keys)
+    when true  then '100/check.png'
+    when 'N/A' then '100/na.png'
+    else            '100/x.png'
     end
   end
 
@@ -191,9 +177,7 @@ module QuadiconHelper
                      "single_quad"
                    end
 
-    # VMs and miq_templates use the same partial
     partial_name = 'vm_or_template' if %w(miq_template vm).include?(partial_name)
-
     partial_name
   end
 
@@ -203,13 +187,9 @@ module QuadiconHelper
   def truncate_for_quad(value)
     return value if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
-    when "b"  # Old version, used first x chars followed by ...
-      value.first(TRUNC_TO) + "..."
-    when "f"  # Chop off front
-      "..." + value.last(TRUNC_TO)
-    else      # Chop out the middle
-      numchars = TRUNC_TO / 2
-      value.first(numchars) + "..." + value.last(numchars)
+    when "b" then value.first(TRUNC_TO) + "..."
+    when "f" then "..." + value.last(TRUNC_TO)
+    else          value.first(TRUNC_TO / 2) + "..." + value.last(TRUNC_TO / 2)
     end
   end
 
@@ -222,9 +202,8 @@ module QuadiconHelper
 
   def flobj_img_simple(size, image = nil, cls = '')
     image ||= "#{size}/base-single.png"
-    cls = "flobj #{cls}"
 
-    content_tag(:div, :class => cls) do
+    content_tag(:div, :class => "flobj #{cls}") do
       tag(:img, :border => 0, :src => ActionController::Base.helpers.image_path(image),
           :width => size, :height => size)
     end
@@ -485,27 +464,25 @@ module QuadiconHelper
       # Listnav, no clear image needed
       output << flobj_img_simple(size, "#{size}/reflection.png")
     else
-      if @explorer
-        if !@embedded || @showlinks
-          output << content_tag(:div, :class => 'flobj') do
-            link_to(
-              image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
-                        :width => size, :height => size, :title => h(item.name)),
-              {:action => 'x_show', :id => to_cid(item.id)},
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              "data-method"          => :post,
-              :remote                => true)
-          end
-        else
-          href = nil
-          output << content_tag(:div, :class => 'flobj') do
-            link_to(
-              image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
-                        :border => 0, :width => size, :height => size),
-              href, :title => _("Name: %s | %s Type: %s") % [h(item.name), ui_lookup(:table => "storages"), h(item.store_type)]
-            )
-          end
+      if @explorer && (!@embedded || @showlinks)
+        output << content_tag(:div, :class => 'flobj') do
+          link_to(
+            image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
+                      :width => size, :height => size, :title => h(item.name)),
+            {:action => 'x_show', :id => to_cid(item.id)},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            "data-method"          => :post,
+            :remote                => true)
+        end
+      elsif @explorer && @embedded && !@showlinks
+        href = nil
+        output << content_tag(:div, :class => 'flobj') do
+          link_to(
+            image_tag(ActionController::Base.helpers.image_path("#{size}/reflection.png"),
+                      :border => 0, :width => size, :height => size),
+            href, :title => _("Name: %s | %s Type: %s") % [h(item.name), ui_lookup(:table => "storages"), h(item.store_type)]
+          )
         end
       else
         href = !@embedded || @showlinks ? url_for_record(item) : nil
@@ -541,12 +518,10 @@ module QuadiconHelper
     else
       width = options[:size] == 150 ? 54 : 35
       output << flobj_img_simple(size, "#{size}/base-single.png")
-      if @policy_sim == true
-        if @policy_sim && !session[:policies].empty?
-          output << flobj_img_simple(width * 1.8, img_for_compliance(item), "e#{size}")
-        else
-          output << flobj_img_simple(width * 1.8, img_for_vendor(item), "e#{size}")
-        end
+      if @policy_sim && !session[:policies].empty?
+        output << flobj_img_simple(width * 1.8, img_for_compliance(item), "e#{size}")
+      elsif @policy_sim
+        output << flobj_img_simple(width * 1.8, img_for_vendor(item), "e#{size}")
       else
         output << flobj_img_simple(size, "#{size}/base-single.png")
         output << flobj_img_simple(width * 1.8, img_for_vendor(item), "e#{size}")
