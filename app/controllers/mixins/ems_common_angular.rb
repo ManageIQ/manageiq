@@ -223,7 +223,7 @@ module Mixins
                        :hostname                        => @ems.hostname,
                        :default_hostname                => default_hostname,
                        :amqp_hostname                   => amqp_hostname,
-                       :default_api_port                => default_api_port,
+                       :default_api_port                => default_api_port ? default_api_port : "",
                        :amqp_api_port                   => amqp_port ? amqp_port : "",
                        :api_version                     => @ems.api_version ? @ems.api_version : "v2",
                        :default_security_protocol       => default_security_protocol,
