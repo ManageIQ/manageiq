@@ -15,6 +15,8 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     locals = super
     locals.merge!(:id_prefix                   => "rsop_",
                   :autoload                    => true,
+                  :cfme_no_click               => true,
+                  :onclick                     => false,
                   :open_close_all_on_dbl_click => true,)
   end
 

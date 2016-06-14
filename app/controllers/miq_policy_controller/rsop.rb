@@ -32,7 +32,6 @@ module MiqPolicyController::Rsop
           add_flash(_("Policy Simulation generation returned: %{error_message}") % {:error_message => miq_task.message}, :error)
         else
           @sb[:rsop][:results] = miq_task.task_results
-          session[:rsop_tree] = rsop_build_tree
           @rsop_tree = TreeBuilderPolicySimulationResults.new(:rsop_tree, :rsop, @sb, true, @sb[:rsop])
         end
       end
@@ -45,7 +44,7 @@ module MiqPolicyController::Rsop
       end
     elsif params[:button] == "reset"
       @sb[:rsop] = {}     # Reset all RSOP stored values
-      session[:changed] = session[:rsop_tree] = nil
+      session[:changed] = nil
       javascript_redirect :action => 'rsop'
     else  # No params, first time in
       @breadcrumbs = []
@@ -122,7 +121,6 @@ module MiqPolicyController::Rsop
       @sb[:rsop][:out_of_scope] = (params[:out_of_scope] == "1")
     end
     @sb[:rsop][:open] = false           # reset the open state to select correct button in toolbar, need to replace partial to update checkboxes in form
-    session[:rsop_tree] = rsop_build_tree
     @rsop_tree = TreeBuilderPolicySimulationResults.new(:rsop_tree, :rsop, @sb, true, @sb[:rsop])
     rsop_button_pressed
   end
@@ -156,108 +154,5 @@ module MiqPolicyController::Rsop
       end
       page << javascript_pf_toolbar_reload('center_tb', c_tb)
     end
-  end
-
-  def rsop_build_tree
-    event = MiqEventDefinition.find(@sb[:rsop][:event_value])
-    root_node = TreeNodeBuilder.generic_tree_node(
-      "rsoproot",
-      _("Policy Simulation Results for Event [%{description}]") % {:description => event.description},
-      "event-#{event.name}.png",
-      "",
-      :style_class => "cfme-no-cursor-node",
-      :expand      => true
-    )
-
-    top_nodes = []
-    @sb[:rsop][:results].sort_by { |a| a[:name].downcase }.each do |r|
-      top_nodes.push(rsop_tree_add_node(r, root_node[:key]))
-    end
-    root_node[:children] = top_nodes unless top_nodes.empty?
-    root_node.to_json
-  end
-
-  # Build add tree node
-  def rsop_tree_add_node(node, pid, nodetype = "v")
-    unless ["v", "s", "e"].include?(nodetype) # Always show VMs, scopes, and expressions
-      return nil if @sb[:rsop][:out_of_scope] == false && node['result'] == "N/A"  # Skip out of scope item
-      if nodetype == "p"  # Skip unchecked policies
-        return nil if @sb[:rsop][:passed] == false && node['result'] != "deny"
-        return nil if @sb[:rsop][:failed] == false && node['result'] == "deny"
-      end
-    end
-    key     = "#{pid}-#{nodetype}_#{(node[:id] ? node[:id].to_s : '0')}"  # If no id, use 0
-    icon    = "x.png"
-    icon    = "checkmark.png" if node[:result] == "allow"
-    icon    = "na.png" if node[:result] == "N/A"
-    expand  = false
-    tooltip = ""
-    style   = "cfme-no-cursor-node"
-
-    t_kids = []                          # Array to hold node children
-    case nodetype
-    when "v"
-      title = "<strong>VM:</strong> #{node[:name]}"
-      icon = "vm.png"
-      expand = true
-      node[:profiles].each do |pp|
-        nn = rsop_tree_add_node(pp, key, "pp")
-        t_kids.push(nn) unless nn.nil?
-      end
-    when "pp"
-      title = "<strong>#{_('Profile:')}</strong> #{node[:description]}"
-      expand = false
-      node[:policies].sort_by { |a| a[:description].downcase }.each do |p|
-        nn = rsop_tree_add_node(p, key, "p")
-        t_kids.push(nn) unless nn.nil?
-      end
-    when "p"
-      active_caption = node[:active] ? "" : "(Inactive)"
-      title = "<strong>Policy#{active_caption}:</strong> #{node[:description]}"
-      expand = false
-      t_kids.push(rsop_tree_add_node(node[:scope], key, "s")) if node[:scope]
-      node[:conditions].sort_by { |a| a[:description].downcase }.each_with_index do |c, _i|
-        nn = rsop_tree_add_node(c, key, "c")
-        t_kids.push(nn) unless nn.nil?
-      end
-      node[:actions].each_with_index do |a, _i|
-        nn = rsop_tree_add_node(a, key, "a")
-        t_kids.push(nn) unless nn.nil?
-      end
-    when "c"
-      title = "<strong>#{_('Condition:')}</strong> #{node[:description]}"
-      expand = false
-      t_kids.push(rsop_tree_add_node(node[:scope], key, "s")) if node[:scope]
-      t_kids.push(rsop_tree_add_node(node[:expression], key, "e")) if node[:expression]
-    when "a"
-      title = "<strong>#{_('Action:')}</strong> #{node[:description]}"
-      expand = false
-    when "s"
-      icon = node[:result] == true ? "checkmark.png" : "na.png"
-      s_text, s_tip = exp_build_string(node)
-      title = "<style>span.ws-wrap { white-space: normal; }</style>
-        <strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{s_text}"
-      tooltip = s_tip
-      expand = false
-    when "e"
-      icon = "na.png"
-      icon = "checkmark.png" if node["result"] == true
-      icon = "x.png" if node["result"] == false
-      e_text, e_tip = exp_build_string(node)
-      title = "<style>span.ws-wrap { white-space: normal; }</style>
-        <strong>#{_('Expression')}:</strong> <span class='ws-wrap'>#{e_text}"
-      tooltip = e_tip
-      expand = false
-    end
-    t_node = TreeNodeBuilder.generic_tree_node(
-      key,
-      title.html_safe,
-      icon,
-      tooltip,
-      :expand      => expand,
-      :style_class => style
-    )
-    t_node[:children] = t_kids unless t_kids.empty?              # Add in the node's children, if any
-    t_node
   end
 end
