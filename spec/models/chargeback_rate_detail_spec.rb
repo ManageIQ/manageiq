@@ -9,6 +9,16 @@ describe ChargebackRateDetail do
     end
   end
 
+  it "#find_rate" do
+    cvalue   = 50.0
+    cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 10, :fixed_rate => 3.0, :variable_rate => 0.3)
+    cbt2 = FactoryGirl.build(:chargeback_tier, :start => 10, :finish => 50, :fixed_rate => 2.0, :variable_rate => 0.2)
+    cbt3 = FactoryGirl.build(:chargeback_tier, :start => 50, :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 0.1)
+    cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt3, cbt2, cbt1])
+
+    expect(cbd.find_rate(cvalue)).to eq([cbt2.fixed_rate, cbt2.variable_rate])
+  end
+
   it "#cost" do
     cvalue   = 42.0
     fixed_rate = 5.0
