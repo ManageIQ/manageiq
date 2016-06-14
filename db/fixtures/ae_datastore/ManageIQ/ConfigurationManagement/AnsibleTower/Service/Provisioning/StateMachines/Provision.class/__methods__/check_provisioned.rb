@@ -9,7 +9,7 @@ class AnsibleTowerCheckProvisioned
   end
 
   def main
-    @handle.log("info", "Starting Ansible Tower Provisioning")
+    @handle.log("info", "Checking status of Ansible Tower Provisioning")
     check_provisioned(task, service)
   end
 
@@ -43,6 +43,7 @@ class AnsibleTowerCheckProvisioned
     when /failed$/, /canceled$/
       @handle.root['ae_result'] = 'error'
       @handle.root['ae_reason'] = reason
+      @handle.log('error', "Ansible Tower Job #{job.name} standard output: #{job.raw_stdout}")
     else
       # job not done yet in provider
       @handle.root['ae_result']         = 'retry'

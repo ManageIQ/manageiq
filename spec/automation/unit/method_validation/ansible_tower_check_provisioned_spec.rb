@@ -37,6 +37,7 @@ describe AnsibleTowerCheckProvisioned do
       before { allow_any_instance_of(job_class).to receive(:normalized_live_status).and_return(['create_failed', 'bad']) }
       it "signals error" do
         expect(job).to receive(:refresh_ems)
+        expect(job).to receive(:raw_stdout)
         described_class.new(ae_service).main
         expect(ae_service.root['ae_result']).to eq('error')
         expect(ae_service.root['ae_reason']).to eq('bad')
