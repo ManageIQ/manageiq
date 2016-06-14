@@ -4,7 +4,7 @@ describe MiqProvisionRequestTemplate do
     FactoryGirl.create(:template_vmware,
                        :ext_management_system => FactoryGirl.create(:ems_vmware_with_authentication))
   end
-  let(:parent_svc)       { FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}}) }
+  let(:parent_svc) { FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}}) }
   let(:bundle_parent_svc) do
     FactoryGirl.create(:service, :guid => MiqUUID.new_guid, :options => {:dialog => {}})
   end

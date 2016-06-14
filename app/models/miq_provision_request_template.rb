@@ -73,7 +73,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
     value = root_svc.options[:dialog]["dialog_option_0_number_of_vms"]
     if parent_task.service_resource
       index = parent_task.service_resource.provision_index
-      value ||= root_svc.options[:dialog]["dialog_option_#{index+1}_number_of_vms"]
+      value ||= root_svc.options[:dialog]["dialog_option_#{index + 1}_number_of_vms"]
     end
     value ||= root_svc.options[:dialog]["dialog_option_number_of_vms"]
     value ||= root_svc.options[:dialog]["dialog_number_of_vms"]

@@ -95,10 +95,10 @@ def set_vm_name(dialog_options_hash, prov)
 end
 
 def set_all_vm_name_attrs(prov, new_vm_name)
-    prov.set_option(:vm_target_name, new_vm_name)
-    prov.set_option(:vm_target_hostname, new_vm_name)
-    prov.set_option(:vm_name, new_vm_name)
-    prov.set_option(:linux_host_name, new_vm_name)
+  prov.set_option(:vm_target_name, new_vm_name)
+  prov.set_option(:vm_target_hostname, new_vm_name)
+  prov.set_option(:vm_name, new_vm_name)
+  prov.set_option(:linux_host_name, new_vm_name)
 end
 
 def service_item_dialog_values(dialogs_options_hash)
