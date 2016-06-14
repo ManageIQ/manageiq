@@ -1,6 +1,7 @@
 module MiqAeMethodService
   class MiqAeServiceServiceTemplateProvisionTask < MiqAeServiceMiqRequestTask
     expose :service_resource, :association => true
+    expose :provision_priority
 
     def dialog_options
       options[:dialog] || {}
