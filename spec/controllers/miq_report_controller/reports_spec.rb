@@ -50,6 +50,18 @@ describe ReportController, "::Reports" do
         expect(assigns(:flash_array)).to be_nil
       end
     end
+
+    it "check existence of flash message when tab is changed to preview without selecting filters(chargeback report)" do
+      controller.instance_variable_set(:@sb, {})
+      controller.instance_variable_set(:@edit, :new => {:fields => [["Date Created"]], :model => "ChargebackVm"})
+      controller.instance_variable_set(:@_params, :tab => "new_7") # preview
+      controller.send(:check_tabs)
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages).not_to be_nil
+      flash_str = "Preview tab is not available until Chargeback Filters has been configured"
+      expect(flash_messages.first[:message]).to eq(flash_str)
+      expect(flash_messages.first[:level]).to eq(:error)
+    end
   end
 
   describe "#miq_report_delete" do
