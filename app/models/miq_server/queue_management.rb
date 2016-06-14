@@ -57,15 +57,14 @@ module MiqServer::QueueManagement
   def ntp_reload_queue
     return unless MiqEnvironment::Command.is_appliance? # matches ntp_reload's guard clause
 
-    MiqQueue.put_or_update(
+    MiqQueue.put(
       :class_name  => "MiqServer",
       :instance_id => id,
       :method_name => "ntp_reload",
       :server_guid => guid,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :args => [server_ntp_settings],
       :zone        => my_zone
-    ) do |msg, item|
-      _log.info("Previous ntp_reload is still running, skipping...Resource: [#{self.class.name}], id: [#{id}]") unless msg.nil?
-      item.merge(:priority => MiqQueue::HIGH_PRIORITY, :args => [server_ntp_settings])
-    end
+    )
   end
 end
