@@ -220,7 +220,7 @@ module QuadiconHelper
     output << flobj_img_simple(size)
 
     fname = item.picture ? item.picture.url_path : ActionController::Base.helpers.image_path("100/#{picture}")
-    output << content_tag(:div, :class => "flowobj e#{size}") do
+    output << content_tag(:div, :class => "flobj e#{size}") do
       if !@embedded || @showlinks
         link_to(image_tag(fname, :width => size, :height => size, :title => h(item.name)),
           {:action => 'x_show', :id => to_cid(item.id)},
@@ -247,7 +247,7 @@ module QuadiconHelper
 
     unless options[:typ] == :listnav
       # listnav, no clear image needed
-      output << content_tag(:div, :class => "flowobj") do
+      output << content_tag(:div, :class => "flobj") do
         fname = ActionController::Base.helpers.image_path('clearpix.gif')
         if !@embedded || @showlinks
           link_to(image_tag(fname, :width => size, :height => size),
@@ -384,7 +384,7 @@ module QuadiconHelper
 
       unless options[:typ] == :listnav
         # Listnav, no clear image needed
-        output << content_tag(:div, :class => "flowobj") do
+        output << content_tag(:div, :class => "flobj") do
           name = item.kind_of?(MiqCimInstance) ? item.evm_display_name : item.name
 
           if !@embedded || @showlinks

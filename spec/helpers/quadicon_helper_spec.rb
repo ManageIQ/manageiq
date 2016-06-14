@@ -94,4 +94,15 @@ describe QuadiconHelper do
       expect(rendered).to match(/Hostname/)
     end
   end
+
+  describe "render_service_quadicon" do
+    let(:service) { FactoryGirl.build(:service, :id => 100) }
+    let(:options) { {:size => 72, :typ => 'grid'} }
+    it "display service quadicon" do
+      allow(helper).to receive(:url_for).and_return("/path")
+
+      rendered = helper.send(:render_service_quadicon, service, options, 'service.png')
+      expect(rendered).to have_selector('div.flobj', :count => 2)
+    end
+  end
 end
