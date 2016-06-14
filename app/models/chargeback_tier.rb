@@ -3,6 +3,7 @@ class ChargebackTier < ApplicationRecord
   validates :fixed_rate, :variable_rate, :numericality => true
   validates :start,  :numericality => {:greater_than_or_equal_to => 0, :less_than => Float::INFINITY}
   validates :finish, :numericality => {:greater_than_or_equal_to => 0}
+  validate :continuity?
 
   default_scope { order(:start => :asc) }
 
@@ -22,5 +23,11 @@ class ChargebackTier < ApplicationRecord
 
   def ends_with_infinity?
     finish == Float::INFINITY
+  end
+
+  def continuity?
+    is_continuous = start < finish
+    errors.add(:finish, "value must be greater than start value.") unless is_continuous
+    is_continuous
   end
 end
