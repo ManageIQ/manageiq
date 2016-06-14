@@ -16,7 +16,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job::Status do
     expect(status.failed?).to      be_truthy
     expect(status.deleted?).to     be_falsey
     expect(status.rolled_back?).to be_falsey
-    expect(status.normalized_status).to eq(['failed', 'Stack creation failed'])
+    expect(status.normalized_status).to eq(['failed', 'Job launching failed'])
   end
 
   it 'parses Canceled' do
@@ -26,7 +26,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job::Status do
     expect(status.canceled?).to    be_truthy
     expect(status.deleted?).to     be_falsey
     expect(status.rolled_back?).to be_falsey
-    expect(status.normalized_status).to eq(['create_canceled', 'Stack creation was canceled'])
+    expect(status.normalized_status).to eq(['create_canceled', 'Job launching was canceled'])
   end
 
   it 'parses transient status' do

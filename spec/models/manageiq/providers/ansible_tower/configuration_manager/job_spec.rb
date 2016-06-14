@@ -3,12 +3,12 @@ require 'faraday'
 describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
   let(:faraday_connection) { instance_double("Faraday::Connection", :post => post, :get => get) }
   let(:post) { instance_double("Faraday::Result", :body => {}.to_json) }
-  let(:get) { instance_double("Faraday::Result", :body => {'id' => 1}.to_json) }
+  let(:get)  { instance_double("Faraday::Result", :body => {'id' => 1}.to_json) }
 
   let(:connection) { double(:connection, :api => double(:api, :jobs => double(:jobs, :find => the_raw_job))) }
 
-  let(:manager)      { FactoryGirl.create(:configuration_manager_ansible_tower, :provider) }
-  let(:mock_api)     { AnsibleTowerClient::Api.new(faraday_connection) }
+  let(:manager)  { FactoryGirl.create(:configuration_manager_ansible_tower, :provider) }
+  let(:mock_api) { AnsibleTowerClient::Api.new(faraday_connection) }
   let(:the_raw_job) do
     AnsibleTowerClient::Job.new(
       mock_api,
@@ -16,7 +16,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
       'name'       => template.name,
       'status'     => 'Successful',
       'extra_vars' => {'param1' => 'val1'}.to_json
-    )
+    ).tap { |rjob| allow(rjob).to receive(:stdout).and_return('job stdout') }
   end
 
   let(:template) { FactoryGirl.create(:configuration_script, :manager => manager) }
@@ -90,6 +90,21 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job do
 
         expect { subject.raw_exists? }.to raise_error(MiqException::MiqOrchestrationStatusError)
       end
+    end
+  end
+
+  describe '#raw_stdout' do
+    before do
+      allow_any_instance_of(Provider).to receive_messages(:connect => connection)
+    end
+
+    it 'gets the standard output of the job' do
+      expect(subject.raw_stdout).to eq('job stdout')
+    end
+
+    it 'catches errors from provider' do
+      expect(connection.api.jobs).to receive(:find).and_raise("bad happened")
+      expect { subject.raw_stdout }.to raise_error(MiqException::MiqOrchestrationStatusError)
     end
   end
 end
