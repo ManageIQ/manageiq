@@ -135,12 +135,6 @@
                   = _('Key Pairs')
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:authkeypaircloud, @edit[:new][:views][:authkeypaircloud])
-            - if role_allows(:feature => "cloud_volume_snapshot_show_list")
-              .form-group
-                %label.col-md-3.control-label
-                  = _('Snapshots')
-                .col-md-8
-                  %ul.list-inline= render_view_buttons(:cloudvolumesnapshot, @edit[:new][:views][:cloudvolumesnapshot])
             - if role_allows(:feature => "cloud_object_store_container_show_list")
               .form-group
                 %label.col-md-3.control-label
@@ -193,12 +187,6 @@
                   = ui_lookup(:tables => "storages")
                 .col-md-8
                   %ul.list-inline= render_view_buttons(:storage, @edit[:new][:views][:storage])
-            - if role_allows(:feature => "storage_pod")
-              .form-group
-                %label.col-md-3.control-label
-                  = ui_lookup(:tables => "container_group")
-                .col-md-8
-                  %ul.list-inline= render_view_buttons(:storage_pod, @edit[:new][:views][:storage_pod])
             - if role_allows(:feature => "providers_accord")
               .form-group
                 %label.col-md-3.control-label
