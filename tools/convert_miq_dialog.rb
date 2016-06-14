@@ -22,6 +22,9 @@ if blueprint
     f[1][:fields].each do |g|
       dialog_field = DialogField.new(:label => g[1][:description], :name => "name of field",
                                      :data_type => g[1][:data_type], :display => g[1][:display])
+      if g[1][:display] == "hide"
+        dialog_field.visible = false
+      end
       dialog_group.dialog_fields << dialog_field
     end
   end
