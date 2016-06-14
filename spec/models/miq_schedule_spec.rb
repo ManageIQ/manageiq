@@ -498,7 +498,7 @@ describe MiqSchedule do
       context "deliver DatabaseBackup.gc message" do
         before(:each) do
           # stub out the actual backup behavior
-          allow(DatabaseBackup).to receive(:_gc)
+          allow(PostgresAdmin).to receive(:gc)
 
           @status, message, result = @gc_message.deliver
           @gc_message.delivered(@status, message, result)
