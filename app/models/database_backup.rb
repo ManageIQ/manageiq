@@ -61,13 +61,9 @@ class DatabaseBackup < ApplicationRecord
 
     options[:userid] ||= "system"
 
-    _gc(options)
+    EvmDatabaseOps.gc(current_db_opts.merge(options))
     task.update_status("Finished", "Ok", "Completed DB GC for Region: #{region_name}.")
     task.id
-  end
-
-  def _gc(options)
-    EvmDatabaseOps.gc(current_db_opts.merge(options))
   end
 
   def restore(_options)
