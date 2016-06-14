@@ -25,6 +25,11 @@ if blueprint
       if g[1][:display] == "hide"
         dialog_field.visible = false
       end
+
+      if dialog_field.label == "Cores per Socket"
+        # do stuff here
+      end
+
       dialog_group.dialog_fields << dialog_field
     end
   end
