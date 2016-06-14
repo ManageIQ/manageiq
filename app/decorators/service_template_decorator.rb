@@ -6,6 +6,6 @@ class ServiceTemplateDecorator < Draper::Decorator
   end
 
   def listicon_image
-    "/pictures/#{picture.basename}" if try(:picture)
+    try(:picture) ? "/pictures/#{picture.basename}" : "100/service_template"
   end
 end
