@@ -7,9 +7,9 @@ module ServiceTemplateHelper
   def build_all_atomics(hash)
     hash.each do |name, value|
       next unless value[:type] == "atomic"
-      item  = FactoryGirl.create(:service_template, :name         => name,
-                                                    :options      => {:dialog => {}},
-                                                    :service_type => 'atomic')
+      item = FactoryGirl.create(:service_template, :name         => name,
+                                                   :options      => {:dialog => {}},
+                                                   :service_type => 'atomic')
       item.update_attributes(:prov_type => value[:prov_type]) if value[:prov_type].present?
       options = value[:request]
       options ||= {}
