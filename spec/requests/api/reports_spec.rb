@@ -103,9 +103,8 @@ RSpec.describe "reports API" do
   it "can fetch all the schedule" do
     report = FactoryGirl.create(:miq_report)
 
-    exp = {}
-    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
-    exp = MiqExpression.new(exp)
+    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                    "value" => report.id})
 
     schedule_1 = FactoryGirl.create(:miq_schedule, :filter => exp)
     schedule_2 = FactoryGirl.create(:miq_schedule, :filter => exp)
@@ -126,9 +125,8 @@ RSpec.describe "reports API" do
   it "can show a single schedule" do
     report = FactoryGirl.create(:miq_report)
 
-    exp = {}
-    exp["="] = {"field" => "MiqReport.id", "value" => report.id}
-    exp = MiqExpression.new(exp)
+    exp = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                    "value" => report.id})
 
     schedule = FactoryGirl.create(:miq_schedule, :name => 'unit_test', :filter => exp)
 

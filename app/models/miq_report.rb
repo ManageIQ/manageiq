@@ -151,15 +151,16 @@ class MiqReport < ApplicationRecord
   end
 
   def add_schedule(data)
-    data['name'] ||= name
-    data['description'] ||= title
+    params = data
+    params['name'] ||= name
+    params['description'] ||= title
 
-    data['filter'] = MiqExpression.new("=" => {"field" => "MiqReport.id",
-                                               "value" => id})
-    data['towhat'] = "MiqReport"
-    data['prod_default'] = "system"
+    params['filter'] = MiqExpression.new("=" => {"field" => "MiqReport.id",
+                                                 "value" => id})
+    params['towhat'] = "MiqReport"
+    params['prod_default'] = "system"
 
-    MiqSchedule.create! data
+    MiqSchedule.create! params
   end
 
   def db_class
