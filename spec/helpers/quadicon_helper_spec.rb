@@ -16,7 +16,7 @@ describe QuadiconHelper do
 
   describe "#render_quadicon_text" do
     before(:each) do
-      @settings = {:display => {:quad_truncate => "front"}}
+      @settings = {:display => {:quad_truncate => "m"}}
     end
 
     subject { helper.render_quadicon_text(item, row) }
