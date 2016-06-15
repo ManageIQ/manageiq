@@ -187,9 +187,9 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       return true;
     } else if(($scope.currentTab == "amqp") &&
       ($scope.emsCommonModel.amqp_hostname) &&
-      ($scope.emsCommonModel.amqp_userid != '' && $scope.angularForm.amqp_userid.$valid &&
-       $scope.emsCommonModel.amqp_password != '' && $scope.angularForm.amqp_password.$valid &&
-       $scope.emsCommonModel.amqp_verify != '' && $scope.angularForm.amqp_verify.$valid)) {
+      ($scope.emsCommonModel.amqp_userid != '' && angular.isDefined($scope.angularForm.amqp_userid) && $scope.angularForm.amqp_userid.$valid &&
+       $scope.emsCommonModel.amqp_password != '' && angular.isDefined($scope.angularForm.amqp_password) && $scope.angularForm.amqp_password.$valid &&
+       $scope.emsCommonModel.amqp_verify != '' && angular.isDefined($scope.angularForm.amqp_verify) && $scope.angularForm.amqp_verify.$valid)) {
       return true;
     } else if(($scope.currentTab == "default" && $scope.emsCommonModel.emstype == "azure") &&
       ($scope.emsCommonModel.azure_tenant_id != '' && $scope.angularForm.azure_tenant_id.$valid) &&
@@ -253,6 +253,10 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     $scope.emsCommonModel = angular.copy( $scope.modelCopy );
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", __("All changes have been reset"));
+
+    if ($scope.emsCommonModel.event_stream_selection === "ceilometer") {
+      $scope.$broadcast('clearErrorOnTab', {tab: "amqp"});
+    }
   };
 
   $scope.saveClicked = function($event, formSubmit) {
@@ -404,6 +408,20 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
           miqSparkleOff();
         });
       });
+  };
+
+  $scope.radioSelectionChanged = function() {
+    if ($scope.emsCommonModel.event_stream_selection === "ceilometer") {
+      if (angular.isDefined($scope.postValidationModel)) {
+        $scope.emsCommonModel.amqp_hostname = $scope.postValidationModel.amqp.amqp_hostname;
+        $scope.emsCommonModel.amqp_api_port = $scope.postValidationModel.amqp.amqp_api_port;
+        $scope.emsCommonModel.amqp_security_protocol = $scope.postValidationModel.amqp.amqp_security_protocol;
+        $scope.emsCommonModel.amqp_userid = $scope.postValidationModel.amqp.amqp_userid;
+        $scope.emsCommonModel.amqp_password = $scope.postValidationModel.amqp.amqp_password;
+        $scope.emsCommonModel.amqp_verify = $scope.postValidationModel.amqp.amqp_verify;
+      }
+      $scope.$broadcast('clearErrorOnTab', {tab: "amqp"});
+    }
   };
 
   init();
