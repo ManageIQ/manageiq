@@ -1,4 +1,4 @@
-namespace :gettext do
+namespace :locale do
   task :store_dictionary_strings do
     output_strings = ["# Strings extracted from en.yml for gettext to find"]
     no_plurals = %w(NFS OS) # strings which we don't want to create automatic plurals for
