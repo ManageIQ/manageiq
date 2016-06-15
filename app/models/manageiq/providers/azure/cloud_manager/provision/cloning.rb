@@ -61,7 +61,7 @@ module ManageIQ::Providers::Azure::CloudManager::Provision::Cloning
         :osProfile       => {
           :adminUserName => options[:root_username],
           :adminPassword => root_password,
-          :computerName  => dest_name
+          :computerName  => dest_hostname
         },
         :storageProfile  => {
           :osDisk        => {
