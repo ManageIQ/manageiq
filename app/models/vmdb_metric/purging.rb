@@ -18,28 +18,26 @@ module VmdbMetric::Purging
 
     def purge_daily_timer(ts = nil)
       interval = "daily"
-      mode = :date  # Only support :date mode, not :remaining mode
       ts ||= purge_date(interval) || 6.months.ago.utc
-      purge_timer(mode, ts, interval)
+      purge_timer(ts, interval)
     end
 
     def purge_hourly_timer(ts = nil)
       interval = "hourly"
-      mode = :date  # Only support :date mode, not :remaining mode
       ts ||= purge_date(interval) || 6.months.ago.utc
-      purge_timer(mode, ts, interval)
+      purge_timer(ts, interval)
     end
 
-    def purge_timer(mode, value, interval)
+    def purge_timer(value, interval)
       MiqQueue.put_unless_exists(
         :class_name    => name,
-        :method_name   => "purge",
+        :method_name   => "purge_by_date",
         :role          => "database_operations",
         :queue_name    => "generic",
         :state         => ["ready", "dequeue"],
         :args_selector => ->(args) { args.kind_of?(Array) && args.last == interval }
       ) do |_msg, find_options|
-        find_options.merge(:args => [mode, value, interval])
+        find_options.merge(:args => [value, interval])
       end
     end
 
@@ -51,6 +49,7 @@ module VmdbMetric::Purging
       send("purge_count_by_#{mode}", value, interval)
     end
 
+    # deprecated, calling purge_by_date directly
     def purge(mode, value, interval, window = nil, &block)
       send("purge_by_#{mode}", value, interval, window, &block)
     end
