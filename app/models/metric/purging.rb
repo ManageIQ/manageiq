@@ -37,14 +37,12 @@ module Metric::Purging
 
   def self.purge_timer(ts, interval)
     MiqQueue.put_unless_exists(
-      :class_name    => name,
-      :method_name   => "purge",
-      :role          => "ems_metrics_processor",
-      :queue_name    => "ems_metrics_processor",
-      :state         => ["ready", "dequeue"],
-      :args_selector => ->(args) { args.kind_of?(Array) && args.last == interval }
+      :class_name  => name,
+      :method_name => "purge_#{interval}",
+      :role        => "ems_metrics_processor",
+      :queue_name  => "ems_metrics_processor"
     ) do |_msg, find_options|
-      find_options.merge(:args => [ts, interval])
+      find_options.merge(:args => [ts])
     end
   end
 
@@ -74,6 +72,18 @@ module Metric::Purging
     end
     _log.info("Purged #{count_tag_values} associated tag values.")
     count_tag_values
+  end
+
+  def self.purge_daily(older_than, window = nil, total_limit = nil, &block)
+    purge(older_than, "daily", window, total_limit, &block)
+  end
+
+  def self.purge_hourly(older_than, window = nil, total_limit = nil, &block)
+    purge(older_than, "hourly", window, total_limit, &block)
+  end
+
+  def self.purge_realtime(older_than, window = nil, total_limit = nil, &block)
+    purge(older_than, "realtime", window, total_limit, &block)
   end
 
   def self.purge(older_than, interval, window = nil, total_limit = nil, &block)

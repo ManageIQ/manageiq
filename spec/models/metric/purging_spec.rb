@@ -12,12 +12,11 @@ describe Metric::Purging do
         q.each do |qi|
           expect(qi).to have_attributes(
             :class_name  => described_class.name,
-            :method_name => "purge"
           )
         end
 
-        modes = q.collect { |qi| qi.args.last }
-        expect(modes).to match_array %w(daily hourly realtime)
+        modes = q.collect { |qi| qi[:method_name] }
+        expect(modes).to match_array %w(purge_daily purge_hourly purge_realtime)
       end
     end
 
