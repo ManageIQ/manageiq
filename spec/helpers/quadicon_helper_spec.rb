@@ -22,7 +22,7 @@ describe QuadiconHelper do
     subject { helper.render_quadicon_text(item, row) }
 
     let(:row) do
-      Ruport::Data::Record.new(:id => 10000000000534, "name" => name)
+      Ruport::Data::Record.new(:id => 10_000_000_000_534, "name" => name)
     end
 
     context "text for a VM" do
@@ -48,7 +48,6 @@ describe QuadiconHelper do
         expect(subject).to have_link(item.address)
       end
     end
-
   end
 
   describe "truncate text for quad icons" do
