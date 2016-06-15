@@ -117,6 +117,24 @@
     :klass: ChargebackRate
     :subcollections:
     - :rates
+  :container_deployments:
+    :description: Container Provider Deployment
+    :identifier: container_deployment
+    :klass: ContainerDeployment
+    :methods: *70174834084700
+    :options:
+    - :collection
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: container_deployment_show
+      :post:
+      - :name: create
+        :identifier: container_deployment_create
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: container_deployment_show
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
