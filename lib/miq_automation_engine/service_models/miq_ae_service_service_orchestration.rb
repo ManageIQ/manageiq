@@ -17,7 +17,7 @@ module MiqAeMethodService
     expose :build_stack_options_from_dialog
     expose :post_provision_configure
 
-    CREATE_ATTRIBUTES = [:name, :description]
+    CREATE_ATTRIBUTES = [:name, :description].freeze
 
     def self.create(options = {})
       attributes = options.symbolize_keys.slice(*CREATE_ATTRIBUTES)

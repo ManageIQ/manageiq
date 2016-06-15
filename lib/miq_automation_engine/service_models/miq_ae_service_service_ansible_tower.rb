@@ -7,5 +7,13 @@ module MiqAeMethodService
     expose :job
     expose :job_options
     expose :job_options=
+
+    CREATE_ATTRIBUTES = [:name, :description].freeze
+
+    def self.create(options = {})
+      attributes = options.symbolize_keys.slice(*CREATE_ATTRIBUTES)
+
+      ar_method { MiqAeServiceModelBase.wrap_results(ServiceAnsibleTower.create!(attributes)) }
+    end
   end
 end
