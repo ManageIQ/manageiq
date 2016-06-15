@@ -3,6 +3,10 @@ module MiqProvision::OptionsHelper
     get_option(:vm_target_name)
   end
 
+  def dest_hostname
+    get_option(:vm_target_hostname)
+  end
+
   def dest_cluster
     @dest_cluster ||= EmsCluster.find_by_id(get_option(:dest_cluster))
   end
