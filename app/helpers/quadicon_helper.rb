@@ -110,6 +110,9 @@ module QuadiconHelper
       elsif db == "StorageManager"
         link_to(truncate_for_quad(row['name']),
                 url_for_db("storage_manager", "show"), :title => h(row['name']))
+      elsif db == "FloatingIp"
+        link_to(truncate_for_quad(item.address),
+                url_for_db(db, "show"), :title => h(item.address))
       else
         if @explorer
           column = case db
