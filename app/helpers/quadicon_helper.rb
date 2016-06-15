@@ -185,7 +185,7 @@ module QuadiconHelper
   TRUNC_AT = 13
   TRUNC_TO = 10
   def truncate_for_quad(value)
-    return value if value.to_s.length < TRUNC_AT
+    return value.to_s if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
     when "b" then value.first(TRUNC_TO) + "..."
     when "f" then "..." + value.last(TRUNC_TO)

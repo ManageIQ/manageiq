@@ -39,7 +39,7 @@ describe QuadiconHelper do
 
         it "when value is nil" do
           text = helper.send(:truncate_for_quad, nil)
-          expect(text).to be_nil
+          expect(text).to be_empty
         end
 
         it "when value is < 13 long" do
