@@ -232,5 +232,10 @@ describe ApiController do
       FactoryGirl.create(:zone, :name => "api zone")
       test_collection_query(:zones, zones_url, Zone)
     end
+
+    it "query ContainerDeployments" do
+      FactoryGirl.create(:container_deployment)
+      test_collection_query(:container_deployments, container_deployments_url, ContainerDeployment)
+    end
   end
 end
