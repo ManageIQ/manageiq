@@ -18,7 +18,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(catalog_item parent_service orchestration_stack)
+    %i(catalog_item parent_service orchestration_stack job)
   end
 
   def textual_group_tags
@@ -106,6 +106,10 @@ module ServiceHelper::TextualSummary
 
   def textual_orchestration_stack
     @record.try(:orchestration_stack)
+  end
+
+  def textual_job
+    @record.try(:job)
   end
 
   def textual_owner
