@@ -172,7 +172,7 @@ module OpsController::Settings::RHN
   def rhn_fire_available_organizations
     if params[:task_id] # wait_for_task is done --> read the task record
       miq_task = MiqTask.find(params[:task_id])
-      if miq_task.status != 'Ok'
+      if !miq_task.results_ready?
         add_flash(_("Credential validation returned: %{message}") % {:message => miq_task.message}, :error)
       else
         # task succeeded, we have the hash of org names to org keys in miq_task.task_results

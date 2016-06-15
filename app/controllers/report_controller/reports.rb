@@ -46,7 +46,7 @@ module ReportController::Reports
     end
     miq_task = MiqTask.find(params[:task_id])     # Not first time, read the task record
     rpt = miq_task.task_results
-    if miq_task.task_results.blank? || miq_task.status != "Ok"  # Check to see if any results came back or status not Ok
+    if !miq_task.results_ready?
       add_flash(_("Report preview generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message},
                 :error)
     else

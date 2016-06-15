@@ -60,7 +60,7 @@ module ApplicationController::ReportDownloads
     end
 
     miq_task = MiqTask.find(params[:task_id])
-    if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
+    if !miq_task.results_ready?
       add_flash(_("Report generation returned: Status [%{status}] Message [%{message}]") % {:status => miq_task.status, :message => miq_task.message}, :error)
       render :update do |page|
         page << javascript_prologue

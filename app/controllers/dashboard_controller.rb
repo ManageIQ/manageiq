@@ -745,7 +745,7 @@ class DashboardController < ApplicationController
     miq_task = MiqTask.find(params[:task_id]) # Not first time, read the task record
     @report  = miq_task.task_results
     session[:rpt_task_id] = miq_task.id
-    if miq_task.task_results.blank? || miq_task.status != "Ok" # Check to see if any results came back or status not Ok
+    unless miq_task.results_ready?
       add_flash(_("Error building timeline  %{error_message}") % {:error_message => miq_task.message}, :error)
       return
     end
