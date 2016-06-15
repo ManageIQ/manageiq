@@ -4,18 +4,10 @@ module MSVSDynamicDisk
   def d_init
     self.diskType = "MSVS Dynamic"
     self.blockSize = MSCommon::SECTOR_LENGTH
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
     @ms_disk_file = if dInfo.hyperv_connection
                       MSCommon.connect_to_hyperv(dInfo)
                     else
-                      MiqLargeFile.open(dInfo.fileName, fileMode)
+                      MiqLargeFile.open(dInfo.fileName, dInfo.fileMode)
                     end
     MSCommon.d_init_common(dInfo, @ms_disk_file)
   end

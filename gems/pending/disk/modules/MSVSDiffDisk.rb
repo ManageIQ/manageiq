@@ -6,20 +6,12 @@ module MSVSDiffDisk
   def d_init
     self.diskType = "MSVS Differencing"
     self.blockSize = MSCommon::SECTOR_LENGTH
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
     if dInfo.hyperv_connection
       @hyperv_connection = dInfo.hyperv_connection
       @ms_disk_file      = MSCommon.connect_to_hyperv(dInfo)
     else
       @hyperv_connection = nil
-      @ms_disk_file      = MiqLargeFile.open(dInfo.fileName, fileMode) unless dInfo.baseOnly
+      @ms_disk_file      = MiqLargeFile.open(dInfo.fileName, dInfo.fileMode) unless dInfo.baseOnly
     end
     MSCommon.d_init_common(dInfo, @ms_disk_file) unless dInfo.baseOnly
 
@@ -61,7 +53,7 @@ module MSVSDiffDisk
   def parent_locators
     # Get parent locators.
     @locators = []
-    1.upto(8) do|idx|
+    1.upto(8) do |idx|
       @locators << MSCommon::PARENT_LOCATOR.decode(MSCommon.header["parent_loc#{idx}"])
       next if @locators[idx - 1]['platform_code'] == "\000\000\000\000"
       locator = @locators[idx - 1]
@@ -70,7 +62,7 @@ module MSVSDiffDisk
         getParent(locator)
       end
     end
-    raise "No compatible parent locator found" if @parent == nil
+    raise "No compatible parent locator found" if @parent.nil?
   end
 
   def getParent(locator)

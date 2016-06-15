@@ -5,19 +5,10 @@ module MSVSFixedDisk
     @diskType = "MSVSFixed"
     @blockSize = 512
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
-
     if dInfo.hyperv_connection
       @ms_flat_disk_file = MSCommon.connect_to_hyperv(dInfo)
     else
-      @ms_flat_disk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
+      @ms_flat_disk_file = MiqLargeFile.open(dInfo.fileName, dInfo.fileMode)
     end
   end
 
