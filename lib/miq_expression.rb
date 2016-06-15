@@ -566,8 +566,8 @@ class MiqExpression
 
   def to_sql(tz = nil)
     tz ||= "UTC"
-    @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
-    sql = Component.build(@pexp, tz).to_sql(tz) if @pexp.present?
+    sqlable_expression_data, attrs = preprocess_for_sql(@exp.deep_clone)
+    sql = Component.build(sqlable_expression_data).to_sql(tz) if sqlable_expression_data.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
   end
