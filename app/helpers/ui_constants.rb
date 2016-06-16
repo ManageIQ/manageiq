@@ -541,56 +541,85 @@ module UiConstants
 
   # FROM Date/Time expression atom selectors
   FROM_HOURS = [
-    _("This Hour"),
-    _("Last Hour"),
-  ] + Array.new(22) { |i| _("%{number} Hours Ago") % {:number => i + 2} }
+    N_('This Hour'),
+    N_('Last Hour'),
+    N_('2 Hours Ago'),
+    N_('3 Hours Ago'),
+    N_('4 Hours Ago'),
+    N_('5 Hours Ago'),
+    N_('6 Hours Ago'),
+    N_('7 Hours Ago'),
+    N_('8 Hours Ago'),
+    N_('9 Hours Ago'),
+    N_('10 Hours Ago'),
+    N_('11 Hours Ago'),
+    N_('12 Hours Ago'),
+    N_('13 Hours Ago'),
+    N_('14 Hours Ago'),
+    N_('15 Hours Ago'),
+    N_('16 Hours Ago'),
+    N_('17 Hours Ago'),
+    N_('18 Hours Ago'),
+    N_('19 Hours Ago'),
+    N_('20 Hours Ago'),
+    N_('21 Hours Ago'),
+    N_('22 Hours Ago'),
+    N_('23 Hours Ago')
+  ]
   FROM_DAYS = [
-    _("Today"),
-    _("Yesterday"),
-    _("2 Days Ago"),
-    _("3 Days Ago"),
-    _("4 Days Ago"),
-    _("5 Days Ago"),
-    _("6 Days Ago"),
-    _("7 Days Ago"),
-    _("14 Days Ago")
+    N_('Today'),
+    N_('Yesterday'),
+    N_('2 Days Ago'),
+    N_('3 Days Ago'),
+    N_('4 Days Ago'),
+    N_('5 Days Ago'),
+    N_('6 Days Ago'),
+    N_('7 Days Ago'),
+    N_('14 Days Ago')
   ]
   FROM_WEEKS = [
-    _("This Week"),
-    _("Last Week"),
-    _("2 Weeks Ago"),
-    _("3 Weeks Ago"),
-    _("4 Weeks Ago")
+    N_('This Week'),
+    N_('Last Week'),
+    N_('2 Weeks Ago'),
+    N_('3 Weeks Ago'),
+    N_('4 Weeks Ago')
   ]
   FROM_MONTHS = [
-    _("This Month"),
-    _("Last Month"),
-    _("2 Months Ago"),
-    _("3 Months Ago"),
-    _("4 Months Ago"),
-    _("6 Months Ago")
+    N_('This Month'),
+    N_('Last Month'),
+    N_('2 Months Ago'),
+    N_('3 Months Ago'),
+    N_('4 Months Ago'),
+    N_('6 Months Ago')
   ]
   FROM_QUARTERS = [
-    _("This Quarter"),
-    _("Last Quarter"),
-    _("2 Quarters Ago"),
-    _("3 Quarters Ago"),
-    _("4 Quarters Ago")
+    N_('This Quarter'),
+    N_('Last Quarter'),
+    N_('2 Quarters Ago'),
+    N_('3 Quarters Ago'),
+    N_('4 Quarters Ago')
   ]
   FROM_YEARS = [
-    _("This Year"),
-    _("Last Year"),
-    _("2 Years Ago"),
-    _("3 Years Ago"),
-    _("4 Years Ago")
+    N_('This Year'),
+    N_('Last Year'),
+    N_('2 Years Ago'),
+    N_('3 Years Ago'),
+    N_('4 Years Ago')
   ]
 
   # Need this for display purpose to map with id
   WIDGET_TYPES = {
-    "r"  => _("Reports"),
-    "c"  => _("Charts"),
-    "rf" => _("RSS Feeds"),
-    "m"  => _("Menus")
+    "r"  => N_('Reports'),
+    "c"  => N_('Charts'),
+    "rf" => N_('RSS Feeds'),
+    "m"  => N_('Menus')
+  }
+
+  SINGULAR_WIDGET_TYPES = {
+    "r"  => N_('Report'),
+    "c"  => N_('Chart'),
+    "rf" => N_('RSS Feed'),
+    "m"  => N_('Menu')
   }
   # Need this for mapping with MiqWidget record content_type field
   WIDGET_CONTENT_TYPE = {
