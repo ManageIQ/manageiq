@@ -31,17 +31,18 @@
             :maxlength         => MAX_NAME_LEN,
             :class => "form-control",
             "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %tr
-    %td
-      %span#pwd_note{:style => "color: red;"}
-    %td
-      = render(:partial => "/layouts/form_buttons_verify",
-        :locals         => {:validate_url => "validate_method_data",
-          :valtype                        => "default",
-          :record                         => @ae_method,
-          :verify_title_off               => "Enter data to Validate",
-          :verify_title_on                => "Validate method data",
-          :serialize                      => true})
+  - unless @edit[:new][:location] == 'builtin'
+    %tr
+      %td
+        %span#pwd_note{:style => "color: red;"}
+      %td
+        = render(:partial => "/layouts/form_buttons_verify",
+          :locals         => {:validate_url => "validate_method_data",
+            :valtype                        => "default",
+            :record                         => @ae_method,
+            :verify_title_off               => "Enter data to Validate",
+            :verify_title_on                => "Validate method data",
+            :serialize                      => true})
 
 :javascript
   ManageIQ.oneTransition.oneTrans = 0;
