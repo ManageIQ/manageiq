@@ -1,6 +1,29 @@
 module ApplicationController::Timelines
-  # We need the Open struct until we get rid of :"pol_filter#{i}" and :"pol_fltr#{i}"
-  class Options < OpenStruct
+  Options = Struct.new(
+    :applied_filters,
+    :daily_date,
+    :days,
+    :edate,
+    :events,
+    :filter1,
+    :filter2,
+    :filter3,
+    :fltr1,
+    :fltr2,
+    :fltr3,
+    :fl_typ,
+    :groups,
+    :hourly_date,
+    :model,
+    :pol_filter,
+    :pol_fltr,
+    :sdate,
+    :tl_filter_all,
+    :tl_result,
+    :tl_show,
+    :tl_show_options,
+    :typ
+  ) do
     def all_results
       {_('Both') => 'both', _('True') => 'success', _('False') => 'failure'}
     end
