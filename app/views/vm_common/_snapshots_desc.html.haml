@@ -2,7 +2,7 @@
   - selected_id = @record.snapshots.first
 - else
   - unless session[:snap_selected].nil?
-    - selected_id = @snap_selected
+    - selected_id = Snapshot.find(session[:snap_selected])
 
 #desc_content.desc_content
   - if session[:snap_selected].present? || @record.snapshots.count > 0

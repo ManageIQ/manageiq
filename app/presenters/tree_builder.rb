@@ -279,13 +279,12 @@ class TreeBuilder
     end
 
     # Process the node's children
-    if Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) ||
-       options[:open_all] ||
+    node[:expand] = true if Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
+    if options[:open_all] ||
        object[:load_children] ||
        node[:expand] ||
        @options[:lazy] == false
-      node[:expand] = true if options[:type] == :automate &&
-                              Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
+
       kids = x_get_tree_objects(object, options, false, parents).map do |o|
         x_build_node(o, node[:key], options)
       end
