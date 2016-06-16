@@ -64,7 +64,7 @@
             = _("Result")
           .col-md-8
             = select_tag("tl_result",
-              options_for_select(@tl_options[:all_results], @tl_options[:tl_result]),
+              options_for_select(@tl_options.all_results, @tl_options[:tl_result]),
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();

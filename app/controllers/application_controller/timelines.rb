@@ -296,10 +296,6 @@ module ApplicationController::Timelines
     @tl_options[:days] ||= "7"
 
     if @tl_options[:tl_show] == "policy_timeline"
-      @tl_options[:all_results] = {}
-      @tl_options[:all_results][_("Both")] = "both"
-      @tl_options[:all_results][_("True")] = "success"
-      @tl_options[:all_results][_("False")] = "failure"
       @tl_options[:tl_result] ||= "both"
 
       @tl_options[:events] = {}
