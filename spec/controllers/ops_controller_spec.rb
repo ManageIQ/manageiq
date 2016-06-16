@@ -319,11 +319,13 @@ describe OpsController do
         allow(controller).to receive(:x_node).and_return("root")
         controller.x_active_tree = 'settings_tree'
         expect(controller).to receive(:render_to_string).with(any_args).twice
-        post :change_tab, :params => { :tab_id => tab }
+        post :change_tab, :params => {:tab_id => tab}
       end
 
       it "Apply button remains disabled with flash errors" do
-        post :explorer, :params => { :flash_error => 'true', :flash_msg => 'Error during upload', :no_refresh => 'true' }
+        post :explorer, :params => {:flash_error => 'true',
+                                    :flash_msg   => 'Error during upload',
+                                    :no_refresh  => 'true'}
         expect(response.status).to eq(200)
         expect(response.body).to_not be_empty
         expect(response.body).to include("<div id='buttons_on' style='display: none;'>")
@@ -332,7 +334,7 @@ describe OpsController do
 
       it "Apply button enabled when there are no flash errors" do
         controller.instance_variable_set(:@flash_array, [])
-        post :explorer, :params => {:no_refresh => 'true' }
+        post :explorer, :params => {:no_refresh => 'true'}
         expect(response.status).to eq(200)
         expect(response.body).to_not be_empty
         expect(response.body).to include("<div id='buttons_on' style=''>")
