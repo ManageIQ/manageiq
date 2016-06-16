@@ -447,7 +447,7 @@ module VmCommon
       @display = "snapshot_info"
       add_flash(_("Last selected Snapshot no longer exists"), :error)
     end
-    @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, @record)
+    @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, @record, session[:snap_selected])
     @active = @snap_selected.current.to_i == 1 if @snap_selected
     @button_group = "snapshot"
     @explorer = true
