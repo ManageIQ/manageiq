@@ -34,7 +34,8 @@ class Authentication < ApplicationRecord
     "invalid"     => 3,
   ).freeze
 
-  # To address problem with url resolution when displayed as a quadicon
+  # FIXME: To address problem with url resolution when displayed as a quadicon,
+  # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
   def self.db_name
     "auth_key_pair_cloud"
   end
