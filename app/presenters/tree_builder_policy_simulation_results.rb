@@ -1,5 +1,9 @@
 class TreeBuilderPolicySimulationResults < TreeBuilder
+  # exp_build_string method needed
+  include ApplicationController::ExpressionHtml
+
   has_kids_for Hash, [:x_get_tree_hash_kids]
+
   def initialize(name, type, sandbox, build = true, root = nil)
     @root = root
     super(name, type, sandbox, build)
@@ -28,17 +32,6 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
      {:cfmeNoClick => true}]
   end
 
-  def vm_nodes(data)
-    nodes =[]
-    data.sort_by { |a| a[:name].downcase }.each do |node|
-      nodes.push(:id => node[:id],
-                 :text => "<strong>VM:</strong> #{node[:name]}".html_safe,
-                 :image => 'vm',
-                 :profiles => node[:profiles])
-    end
-    nodes
-  end
-
   def node_icon(result)
     case result
     when 'allow' then 'checkmark'
@@ -47,50 +40,71 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     end
   end
 
-  def pofile_nodes(data)
-    nodes = []
-    data.sort_by { |a| a[:name].downcase }.each do |node|
-      nodes.push(:id => node[:id],
-                 :text => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
-                 :image => node_icon(node[:result]),
-                 :policies => node[:policies])
+  def vm_nodes(data)
+    data.sort_by! { |a| a[:name].downcase }.map do |node|
+      {:id => node[:id],
+       :text => "<strong>VM:</strong> #{node[:name]}".html_safe,
+       :image => 'vm',
+       :profiles => node[:profiles]}
     end
-    nodes
+  end
+
+
+
+  def pofile_nodes(data)
+    data.sort_by { |a| a[:name].downcase }.map do |node|
+      {:id => node[:id],
+       :text => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
+       :image => node_icon(node[:result]),
+       :policies => node[:policies]}
+    end
   end
 
   def policy_nodes(data)
-    nodes = []
-    data.sort_by { |a| a[:name].downcase }.each do |node|
+    #TODO remove node
+    data.sort_by { |a| a[:name].downcase }.map do |node|
       active_caption = node[:active] ? "" : "(Inactive)"
-      nodes.push(:id => node[:id],
-                 :text => "<strong>Policy#{active_caption}:</strong> #{node[:description]}".html_safe,
-                 :image => node_icon(node[:result]))
-      nodes.last[:conditions] = node[:conditions] if node[:conditions].present?
-      nodes.last[:actions] = node[:actions] if node[:actions].present?
+       {:id => node['id'],
+           :text => "<strong>Policy#{active_caption}:</strong> #{node[:description]}".html_safe,
+           :image => node_icon(node[:result]),
+      :conditions => node[:conditions],
+      :actions => node[:actions],
+      :scope => node[:scope]}
     end
-    nodes
   end
 
   def action_nodes(data)
-    nodes = []
-    data.each do |node|
-      nodes.push(:id => node[:id],
-                 :text => "<strong>#{_('Action:')}</strong> #{node[:description]}".html_safe,
-                 :image => node_icon(node[:result]))
+    data.map do |node|
+      {:id => node[:id],
+       :text => "<strong>#{_('Action:')}</strong> #{node[:description]}".html_safe,
+       :image => node_icon(node[:result])}
     end
-    nodes
   end
 
   def condition_nodes(data)
-    nodes = []
-    data.each do |node|
-      nodes.push(:id => node[:id],
+    data.map do |node|
+      {:id => node[:id],
                  :text => "<strong>#{_('Condition:')}</strong> #{node[:description]}".html_safe,
-                 :image => node_icon(node[:result]))
-      nodes.last[:scope] = node[:scope] if node[:scope].present?
-      nodes.last[:expression] = node[:expression] if node[:expression].present?
+                 :image => node_icon(node[:result]),
+           :expression => node[:expression]}
     end
-    nodes
+  end
+
+  def scope_node(data)
+    name, tip = exp_build_string(data)
+    {:id => nil,
+     :text => "<style>span.ws-wrap { white-space: normal; }</style><strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+     :tip   => tip.html_safe,
+     :image => node_icon(data[:result])}
+  end
+
+  def expression_node(data)
+    name, tip = exp_build_string(data)
+    {:id    => nil,
+     :text  => "<style>span.ws-wrap { white-space: normal; }</style><strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+     :tip   => tip.html_safe,
+     :image => 'na'}
+
   end
 
   def x_get_tree_roots(count_only = false, _options)
@@ -102,8 +116,8 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     kids.concat(pofile_nodes(parent[:profiles])) if parent[:profiles].present?
     kids.concat(policy_nodes(parent[:policies])) if parent[:policies].present?
     kids.concat(condition_nodes(parent[:conditions])) if parent[:conditions].present?
-    #kids.push(parent[:scope]) if parent[:scope].present?
-    #kids.push(parent[:expression]) if parent[:expression].present?
+    kids.push(scope_node(parent[:scope])) if parent[:scope].present?
+    kids.push(expression_node(parent[:expression])) if parent[:expression].present?
     kids.concat(action_nodes(parent[:actions])) if parent[:actions].present?
     count_only_or_objects(count_only, kids)
   end
