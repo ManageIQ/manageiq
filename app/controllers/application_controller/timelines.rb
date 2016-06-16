@@ -283,8 +283,7 @@ module ApplicationController::Timelines
       @tl_options[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       @tl_options[:tl_show] = "timeline"
     end
-    evt_type = @tl_options[:tl_show] == "timeline" ? "event_streams" : "policy_events"
-    sdate, edate = @tl_record.first_and_last_event(evt_type.to_sym)
+    sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     if !sdate.nil? && !edate.nil?
       @tl_options[:sdate] = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
       @tl_options[:edate] = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
@@ -332,8 +331,7 @@ module ApplicationController::Timelines
   end
 
   def tl_build_timeline_report_options
-    evt_type = @tl_options[:tl_show] == "timeline" ? "event_streams" : "policy_events"
-    sdate, edate = @tl_record.first_and_last_event(evt_type.to_sym)
+    sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     if !@tl_options[:sdate].nil? && !@tl_options[:edate].nil?
       case @tl_options[:typ]
       when "Hourly"
@@ -381,7 +379,7 @@ module ApplicationController::Timelines
         @report.timeline[:bands][0][:pixels] = 1000 / 6
       end
 
-      temp_clause = @tl_record.event_where_clause(evt_type.to_sym)
+      temp_clause = @tl_record.event_where_clause(@tl_options.evt_type)
 
       cond = "( "
       cond = cond << temp_clause[0]

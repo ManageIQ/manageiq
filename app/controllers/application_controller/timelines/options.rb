@@ -5,6 +5,10 @@ module ApplicationController::Timelines
       {_('Both') => 'both', _('True') => 'success', _('False') => 'failure'}
     end
 
+    def evt_type
+      tl_show == 'timeline' ? :event_streams : :policy_events
+    end
+
     def tl_colors
       ['#CD051C', '#005C25', '#035CB1', '#FF3106', '#FF00FF', '#000000']
     end
