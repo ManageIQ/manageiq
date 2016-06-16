@@ -14,7 +14,7 @@
         = _('Assign To')
       .col-md-8
         = select_tag('chosen_assign_to',
-          options_for_select([["<#{_('Nothing')}>", nil]] + ASSIGN_TOS[@alert_profile.mode].invert.sort, @assign[:new][:assign_to]),
+          options_for_select([["<#{_('Nothing')}>", nil]] + ASSIGN_TOS[@alert_profile.mode].map { |k, v| [v.kind_of?(PostponedTranslation) ? v.translate : _(v), k] }.sort, @assign[:new][:assign_to]),
           :class => "selectpicker")
         :javascript
           miqInitSelectPicker();

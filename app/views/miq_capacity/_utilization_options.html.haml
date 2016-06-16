@@ -9,7 +9,7 @@
         = _('Trends for past')
       .col-md-10
         = select_tag("#{cap_type}_days",
-          options_for_select(WEEK_CHOICES.invert.sort_by(&:last), @sb[:util][:options][:days].to_i),
+          options_for_select(WEEK_CHOICES.map {|k, v| [_(v), k]}.sort, @sb[:util][:options][:days].to_i),
           "class"               => "selectpicker")
         :javascript
           miqInitSelectPicker();

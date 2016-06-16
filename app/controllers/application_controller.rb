@@ -923,7 +923,7 @@ class ApplicationController < ActionController::Base
         when 'db'
           celltext = Dictionary.gettext(row[col], :type => :model, :notfound => :titleize)
         when 'approval_state'
-          celltext = PROV_STATES[row[col]]
+          celltext = _(PROV_STATES[row[col]])
         when 'state'
           celltext = row[col].titleize
         when 'hardware.bitness'
