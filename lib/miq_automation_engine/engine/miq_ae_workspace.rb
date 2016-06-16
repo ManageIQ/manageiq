@@ -99,6 +99,7 @@ module MiqAeEngine
       $miq_ae_logger.info("Instantiating [#{uri}]") if root.nil?
       @ae_user = user
       @dom_search.ae_user = user
+      @dom_search.prepend_namespace  = root['prepend_namespace'] if root && root['prepend_namespace']
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = MiqAeUri.split(uri, "miqaedb")
 
       raise MiqAeException::InvalidPathFormat, "Unsupported Scheme [#{scheme}]" unless MiqAeUri.scheme_supported?(scheme)
