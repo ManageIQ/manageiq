@@ -509,7 +509,7 @@ class MiqRequestController < ApplicationController
   def prov_set_default_options
     resource_type = get_request_tab_type
     opts = @sb[:prov_options][resource_type.to_sym] = {}
-    opts[:states] = PROV_STATES
+    opts[:states] = PROV_STATES.map { |k, v| [k, _(v)] }.to_h
     opts[:reason_text] = nil
     opts[:types] = request_types_for_dropdown
 

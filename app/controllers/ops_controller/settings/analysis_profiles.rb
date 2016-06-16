@@ -31,7 +31,7 @@ module OpsController::Settings::AnalysisProfiles
       when "category"
         @category = [] if @category.nil?
         for i in 0...a[:definition]["content"].length
-          @category.push(CATEGORY_CHOICES[a[:definition]["content"][i]["target"]]) if a[:definition]["content"][i]["target"] != "vmevents"
+          @category.push(_(CATEGORY_CHOICES[a[:definition]["content"][i]["target"]])) if a[:definition]["content"][i]["target"] != "vmevents"
         end
       when "file"
         @file = [] if @file.nil?
