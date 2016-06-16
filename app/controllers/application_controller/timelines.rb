@@ -35,20 +35,18 @@ module ApplicationController::Timelines
       elsif params[:tl_fl_grp_all] == "null"
         @tl_options[:tl_filter_all] = false
         @tl_options[:applied_filters] = []
-        @tl_options[:events].sort.each_with_index do |_e, i|
-          @tl_options["pol_filter#{i + 1}".to_sym] = ""
-          @tl_options["pol_fltr#{i + 1}".to_sym] = ""
-        end
+        @tl_options[:pol_filter] = Array.new(@tl_options[:events].length) { "" }
+        @tl_options[:pol_fltr] = @tl_options[:pol_filter].dup
       end
       # Look through the event type checkbox keys
       @tl_options[:events].keys.sort.each_with_index do |e, i|
         ekey = "tl_fl_grp#{i + 1}__#{e.tr(" ", "_")}".to_sym
         if params[ekey] == "1" || (@tl_options[:tl_filter_all] && params[ekey] != "null")
-          @tl_options["pol_filter#{i + 1}".to_sym] = e
+          @tl_options[:pol_filter][i] = e
           @tl_options[:applied_filters].push(e) unless @tl_options[:applied_filters].include?(e) || @tl_options[:tl_filter_all] = false
         elsif params[ekey] == "null"
           @tl_options[:tl_filter_all] = false
-          @tl_options["pol_filter#{i + 1}".to_sym] = nil
+          @tl_options[:pol_filter][i] = nil
           @tl_options[:applied_filters].delete(e)
         end
       end
@@ -63,7 +61,7 @@ module ApplicationController::Timelines
     elsif @tl_options[:tl_show] == "policy_timeline"
       flg = true
       @tl_options[:events].sort.each_with_index do |_e, i|
-        if !@tl_options["pol_filter#{i + 1}".to_sym].nil? && @tl_options["pol_filter#{i + 1}".to_sym] != ""
+        if !@tl_options[:pol_filter][i].nil? && @tl_options[:pol_filter][i] != ""
           flg = false
           tl_build_timeline(refresh = "n")
           break
@@ -93,14 +91,11 @@ module ApplicationController::Timelines
       end
     else
       @tl_options[:events].sort.each_with_index do |_e, i|
-        fltr = "pol_filter#{i + 1}".to_sym
-        pol_fltr = "pol_fltr#{i + 1}".to_sym
-        if !@tl_options[fltr].nil? && @tl_options[fltr] != ""
-          f = tl_build_policy_filter(@tl_options[fltr])
-          @tl_options[pol_fltr] = f == "" ? "" : f
-        else
-          @tl_options[pol_fltr] = ""
-        end
+        @tl_options[:pol_fltr][i] = if !@tl_options[:pol_filter][i].nil? && @tl_options[:pol_filter][i] != ""
+                                      tl_build_policy_filter(@tl_options[:pol_filter][i])
+                                    else
+                                      ""
+                                    end
       end
     end
     @timeline = true
@@ -119,8 +114,7 @@ module ApplicationController::Timelines
         page << "$('#filter3').val('#{@tl_options[:fltr3]}');"
       else
         @tl_options[:events].sort.each_with_index do |_e, i|
-          fltr = "pol_fltr#{i + 1}".to_sym
-          page << "$('#filter#{i + 1}').val('#{@tl_options[fltr]}');"
+          page << "$('#filter#{i}').val('#{@tl_options[:pol_fltr][i]}');"
         end
       end
       page << "miqSparkle(false);"
@@ -282,6 +276,8 @@ module ApplicationController::Timelines
       @tl_options[:tl_show_options].push([_("Management Events"), "timeline"])
       @tl_options[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       @tl_options[:tl_show] = "timeline"
+      @tl_options[:pol_filter] = []
+      @tl_options[:pol_fltr] = []
     end
     sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     if !sdate.nil? && !edate.nil?
@@ -310,8 +306,8 @@ module ApplicationController::Timelines
         # had to set this here because if it this is preselected in cboxes, it doesnt send the params back for this cb to tl_chooser
         @tl_options[:events].keys.sort.each_with_index do |e, i|
           if e == "VM Operation"
-            @tl_options["pol_filter#{i + 1}".to_sym] = e
-            @tl_options["pol_fltr#{i + 1}".to_sym] = tl_build_policy_filter(@tl_options["pol_filter#{i + 1}".to_sym])
+            @tl_options[:pol_filter][i] = e
+            @tl_options[:pol_fltr][i] = tl_build_policy_filter(e)
           end
         end
       end

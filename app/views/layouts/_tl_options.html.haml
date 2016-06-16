@@ -94,7 +94,7 @@
           .col-md-8
       %form#hiddenForm
         - @tl_options[:events].length.times do |i|
-          %input{:type => "hidden", :name => "filter#{i + 1}", :id => "filter#{i + 1}", :value => @tl_options["pol_fltr#{i + 1}".to_sym]}
+          %input{:type => "hidden", :name => "filter#{i}", :id => "filter#{i}", :value => @tl_options[:pol_fltr][i]}
 
     - else
       .form-horizontal
