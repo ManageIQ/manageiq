@@ -242,4 +242,9 @@ class ServiceTemplate < ApplicationRecord
       r.respond_to?(:template_valid?) && !r.template_valid?
     end.try(:resource).try(:validate_template) || {:valid => true, :message => nil}
   end
+
+  def validate_order
+    service_template_catalog && display
+  end
+  alias orderable? validate_order
 end
