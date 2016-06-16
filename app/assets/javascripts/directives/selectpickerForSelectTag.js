@@ -14,6 +14,9 @@ ManageIQ.angular.app.directive('selectpickerForSelectTag', function() {
           $(scope['form_' + ctrl.$name]).addClass('span12').selectpicker('setStyle');
         }
       });
+      scope.$watch('loaded.bs.select', function() {
+        $('.bootstrap-select button').removeAttr('title');
+      });
     }
   }
 });
