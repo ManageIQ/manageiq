@@ -12,7 +12,7 @@
             - if session[:assigned_filters].include?(cat_key.downcase)
               - @categories.delete(cat_key)
           = select_tag("tag_cat",
-            options_for_select(@categories.sort, @edit[:cat].name),
+            options_for_select(@categories.sort_by{|key, _| key.downcase}, @edit[:cat].name),
             "data-miq_observe"     => {:url => url}.to_json,
             "class"                => "selectpicker")
           :javascript
