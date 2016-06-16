@@ -313,12 +313,6 @@ module ApplicationController::Tags
         @entries.delete(a.description)                          # Remove them from the selection list
       end
     end
-
-    if @entries.length == 0                             # No entries left to choose from
-      @entries[_("<All values are assigned>")] = "select"
-    else
-      @entries[_("<Select a value to assign>")] = "select"
-    end
   end
 
   # Build the @edit elements for the tag edit screen
@@ -379,12 +373,6 @@ module ApplicationController::Tags
       if a.parent.description == @edit[:cat].description  # If they match the category
         @entries.delete(a.description)                    # Remove them from the selection list
       end
-    end
-
-    if @entries.length == 0                             # No entries left to choose from
-      @entries[_("<All values are assigned>")] = "select"
-    else
-      @entries[_("<Select a value to assign>")] = "select"
     end
   end
 
