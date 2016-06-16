@@ -7,13 +7,30 @@
     = text_area_tag("#{field_name}_data",
       @edit[:new][:data],
       :style => "display:none;")
-  - else
-    = text_field_tag("#{field_name}_data",
-      @edit[:new][:data],
-      :maxlength         => MAX_NAME_LEN,
-      "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  - if @edit[:new][:location] == 'builtin'
-    %em= _('Optional, if not specified, method name is used.')
+  - elsif @edit[:new][:location] == 'builtin'
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Builtin to call')
+        .col-md-8
+          = select_tag("#{field_name}_data",
+                       options_for_select(@edit[:new][:available_builtins].sort, @edit[:new][:data]),
+                       :class    => "selectpicker",
+                       "data-miq_observe" => {:url => url}.to_json)
+    :javascript
+      miqInitSelectPicker();
+      miqSelectPickerEvent("#{field_name}_data", "#{url}")
+  - elsif @edit[:new][:location] == 'uri'
+    .form-horizontal
+      .form-group
+        %label.col-md-2.control-label
+          = _('Method URI')
+        .col-md-8
+          = text_field_tag("#{field_name}_data",
+            @edit[:new][:data],
+            :maxlength         => MAX_NAME_LEN,
+            :class => "form-control",
+            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %tr
     %td
       %span#pwd_note{:style => "color: red;"}
