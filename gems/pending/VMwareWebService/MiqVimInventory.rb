@@ -4,6 +4,7 @@ require 'enumerator'
 require 'VMwareWebService/MiqVimClientBase'
 require 'VMwareWebService/MiqVimDump'
 require 'VMwareWebService/VimPropMaps'
+require 'VMwareWebService/PbmService'
 
 class MiqVimInventory < MiqVimClientBase
   attr_reader :cacheLock, :configLock
@@ -65,6 +66,13 @@ class MiqVimInventory < MiqVimClientBase
         deleteProperty(:VirtualMachine, "config.hardware.numCoresPerSocket")
       end
       @propMap = @propMap.merge(PropMap4)
+    end
+
+    if @apiVersion >= '5.5'
+      begin
+        @pbm = PbmService.new(server, username, password)
+      rescue
+      end
     end
 
     @propCol    = @sic.propertyCollector
@@ -1889,6 +1897,10 @@ class MiqVimInventory < MiqVimClientBase
 
   def addStoragePodObj(spObj)
     addObjHash(:StoragePod, spObj)
+  end
+
+  def pbmProfile
+    @pbm.queryProfile
   end
 
   #

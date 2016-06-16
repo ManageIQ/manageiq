@@ -41,6 +41,7 @@ gem "openscap",                "~>0.4.3",           :require => false
 gem "ovirt",                   "~>0.11.0",          :require => false
 gem "pg",                      "~>0.18.2",          :require => false
 gem "psych",                   "~>2.0.12"
+gem "rbvmomi",                 "~>1.8.0",           :require => false
 gem "rest-client",             "=2.0.0.rc1",        :require => false
 gem "rubyzip",                 "~>1.2.0",           :require => false
 gem "zip-zip",                 "~>0.3.0",           :require => false
