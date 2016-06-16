@@ -1,5 +1,5 @@
 describe VirtualTotalMixin do
-  describe ".virtual_total (with real relation ems#total_vms)" do
+  describe ".virtual_total (with real has_many relation ems#total_vms)" do
     let(:base_model) { ExtManagementSystem }
     it "sorts by total" do
       ems0 = model_with_children(0)
@@ -31,6 +31,10 @@ describe VirtualTotalMixin do
       expect(model_with_children(2).total_vms).to eq(2)
     end
 
+    it "is not defined in sql" do
+      expect(base_model.attribute_supported_by_sql?(:total_vms)).to be(true)
+    end
+
     def model_with_children(count)
       FactoryGirl.create(:resource_pool).tap do |pool|
         count.times do |_i|
@@ -38,6 +42,25 @@ describe VirtualTotalMixin do
           vm.with_relationship_type("ems_metadata") { vm.set_parent pool }
         end
       end
+    end
+  end
+
+  describe ".virtual_total (with through relation (host#v_total_storages)" do
+    let(:base_model) { Host }
+
+    it "calculates totals locally" do
+      expect(model_with_children(0).v_total_storages).to eq(0)
+      expect(model_with_children(2).v_total_storages).to eq(2)
+    end
+
+    it "is not defined in sql" do
+      expect(base_model.attribute_supported_by_sql?(:v_total_storages)).to be(false)
+    end
+
+    def model_with_children(count)
+      FactoryGirl.create(:host).tap do |host|
+        count.times { host.storages.create(FactoryGirl.attributes_for(:storage)) }
+      end.reload
     end
   end
 end
