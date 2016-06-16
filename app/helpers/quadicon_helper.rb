@@ -125,7 +125,7 @@ module QuadiconHelper
 
           if request.parameters[:controller] == "service" && @view.db == "Vm"
             attributes = vm_quad_link_attributes(item)
-            if attributes[:link]
+            if attributes && attributes[:link]
               link_to(
                 truncate_for_quad(name),
                 {:controller => attributes[:controller], :action => attributes[:action], :id => attributes[:id]},
@@ -134,7 +134,7 @@ module QuadiconHelper
                 "data-miq_sparkle_off" => true
               )
             else
-              link_to(truncate_for_quad(name), nil, h(name))
+              link_to(truncate_for_quad(name), '#', :title => h(name))
             end
           else
             link_to(
