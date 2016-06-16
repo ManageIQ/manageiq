@@ -85,7 +85,7 @@ module MiqServer::EnvironmentManagement
     def prep_apache_proxying
       return unless MiqEnvironment::Command.supports_apache?
 
-      MiqApache::Control.kill_all
+      MiqApache::Control.stop
       MiqUiWorker.install_apache_proxy_config
       MiqWebServiceWorker.install_apache_proxy_config
       MiqWebsocketWorker.install_apache_proxy_config
