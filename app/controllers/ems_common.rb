@@ -140,52 +140,6 @@ module EmsCommon
                     :url  => "/#{@table_name}/new")
   end
 
-  def create
-    assert_privileges("#{permission_prefix}_new")
-    return unless load_edit("ems_edit__new")
-    get_form_vars
-    case params[:button]
-    when "add"
-      if @edit[:new][:emstype].blank?
-        add_flash(_("Type is required"), :error)
-      end
-
-      if @edit[:new][:emstype] == "scvmm" && @edit[:new][:default_security_protocol] == "kerberos" && @edit[:new][:realm].blank?
-        add_flash(_("Realm is required"), :error)
-      end
-
-      unless @flash_array
-        add_ems = model.model_from_emstype(@edit[:new][:emstype]).new
-        set_record_vars(add_ems)
-      end
-      if !@flash_array && valid_record?(add_ems) && add_ems.save
-        AuditEvent.success(build_created_audit(add_ems, @edit))
-        session[:edit] = nil  # Clear the edit object from the session object
-        render :update do |page|
-          page << javascript_prologue
-          page.redirect_to :action => 'show_list', :flash_msg => _("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:tables => @table_name), :name => add_ems.name}
-        end
-      else
-        @in_a_form = true
-        unless @flash_array
-          @edit[:errors].each { |msg| add_flash(msg, :error) }
-          add_ems.errors.each do |field, msg|
-            add_flash("#{add_ems.class.human_attribute_name(field)} #{msg}", :error)
-          end
-        end
-        drop_breadcrumb(:name => _("Add New %{table}") % {:table => ui_lookup(:table => @table_name)},
-                        :url  => "/#{@table_name}/new")
-        render :update do |page|
-          page << javascript_prologue
-          page.replace("flash_msg_div", :partial => "layouts/flash_msg")
-        end
-      end
-    when "validate"
-      verify_ems = model.model_from_emstype(@edit[:new][:emstype]).new
-      validate_credentials verify_ems
-    end
-  end
-
   def edit
     @doc_url = provider_documentation_url
     assert_privileges("#{permission_prefix}_edit")
@@ -238,32 +192,6 @@ module EmsCommon
       end
     end
   end
-
-  def update
-    assert_privileges("#{permission_prefix}_edit")
-    return unless load_edit("ems_edit__#{params[:id]}")
-    get_form_vars
-    case params[:button]
-    when "cancel"   then update_button_cancel
-    when "save"     then update_button_save
-    when "reset"    then update_button_reset
-    when "validate" then
-      @changed = session[:changed]
-      update_button_validate
-    end
-  end
-
-  def update_button_cancel
-    session[:edit] = nil  # clean out the saved info
-    _model = model
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to(:action => @lastaction, :id => @ems.id, :display => session[:ems_display],
-                       :flash_msg => _("Edit of %{model} \"%{name}\" was cancelled by the user") %
-                       {:model => ui_lookup(:model => _model.to_s), :name => @ems.name})
-    end
-  end
-  private :update_button_cancel
 
   def edit_changed?
     @edit[:new] != @edit[:current]
