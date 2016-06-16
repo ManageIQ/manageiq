@@ -274,7 +274,7 @@ module ApplicationController::Timelines
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
     if @tl_options.nil? ||
        (refresh != "n" && params[:refresh] != "n" && @tl_options[:model] != @tl_record.class.base_class.to_s)
-      @tl_options = {}
+      @tl_options = Options.new
       @tl_options[:typ] = "Daily"
       @tl_options[:days] = "7"
       @tl_options[:model] = @tl_record.class.base_class.to_s

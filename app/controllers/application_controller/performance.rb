@@ -313,7 +313,7 @@ module ApplicationController::Performance
       @record = identify_tl_or_perf_record
       @perf_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
       @perf_record = VmOrTemplate.find_by_id(@perf_options[:compare_vm]) unless @perf_options[:compare_vm].nil?
-      new_opts = tl_session_data(request.parameters["controller"]) || {}
+      new_opts = tl_session_data(request.parameters["controller"]) || ApplicationController::Timelines::Options.new
       new_opts[:typ] = typ
       new_opts[:model] = @perf_record.class.base_class.to_s
       dt = typ == "Hourly" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
@@ -356,7 +356,7 @@ module ApplicationController::Performance
     elsif cmd == "Timeline" && model == "Selected"  # Display timeline for the selected CI
       return unless @record = perf_menu_record_valid(data_row["resource_type"], data_row["resource_id"], data_row["resource_name"])
       controller = data_row["resource_type"].underscore
-      new_opts = tl_session_data(controller) || {}
+      new_opts = tl_session_data(controller) || ApplicationController::Timelines::Options.new
       new_opts[:typ] = typ
       new_opts[:model] = data_row["resource_type"]
       dt = typ == "Hourly" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
