@@ -7,7 +7,7 @@ module TextualMixins::TextualPatches
     if num > 0
       h[:title] = n_("Show the Patch defined on this VM", "Show the Patches defined on this VM", num)
       h[:explorer] = true
-      h[:link]  = url_for(:action => 'patches', :id => @record, :db => controller.controller_name)
+      h[:link] = url_for(:action => 'patches', :id => @record, :db => controller.controller_name)
     end
     h
   end
