@@ -15,42 +15,6 @@ describe QuadiconHelper do
     end
   end
 
-  # describe "#render_quadicon_text" do
-  #   before(:each) do
-  #     @settings = {:display => {:quad_truncate => "front"}}
-  #   end
-  #
-  #   subject { helper.render_quadicon_text(item, row) }
-  #
-  #   let(:row) do
-  #     Ruport::Data::Record.new(:id => 10_000_000_000_534, "name" => name)
-  #   end
-  #
-  #   context "text for a VM" do
-  #     let(:item) do
-  #       FactoryGirl.create(:vm_vmware, :name => "vm_0000000000001")
-  #     end
-  #
-  #     let(:name) { item.name }
-  #
-  #     it "renders text for a vmware vm" do
-  #       expect(subject).to have_link("vm_00...00001")
-  #     end
-  #   end
-  #
-  #   context "text for Floating IP" do
-  #     let(:item) do
-  #       FactoryGirl.create(:floating_ip_openstack)
-  #     end
-  #
-  #     let(:name) { nil }
-  #
-  #     it "renders a label for Floating IPs" do
-  #       expect(subject).to have_link(item.address)
-  #     end
-  #   end
-  # end
-
   #FIXME: this complex describe block mirrors the complex method
 
   describe "#render_quadicon_text" do
@@ -132,7 +96,7 @@ describe QuadiconHelper do
 
     context "when item is a StorageManager" do
       let(:item) do
-        FactoryGirl.create(:storage_manager, :name => "My StorageManager")
+        FactoryGirl.create(:storage_manager, :name => "Store Man")
       end
 
       let(:row) do
@@ -164,7 +128,60 @@ describe QuadiconHelper do
     end
 
     context "when @explorer is defined" do
+      before(:each) do
+        @explorer = true
+      end
 
+      let(:serv_res) do
+        FactoryGirl.create(:service_resource)
+      end
+
+      let(:conf_sys) do
+        FactoryGirl.create(:configured_system)
+      end
+
+      let(:conf_profile) do
+        FactoryGirl.create(:configuration_profile)
+      end
+
+      let(:vm) do
+        FactoryGirl.create(:vm_vmware)
+      end
+
+      let(:row) do
+        Ruport::Data::Record.new(
+          :id => rand(999),
+          "name" => "Fred",
+          "resource_name" => "Service Res",
+          "hostname" => "Conf System",
+          "description" => "Conf Profile"
+        )
+      end
+
+      context "when controller is service and view.db is Vm" do
+        before(:each) do
+          # assigning @view here conflicts with rspec, so we set it inside helper:
+          helper.instance_variable_set(:@view, FactoryGirl.create(:miq_report))
+          helper.request.parameters[:controller] = "service"
+        end
+
+        it "renders a link sans href for ServiceResources" do
+          expect( helper.render_quadicon_text(serv_res, row) ).to include("Service Res")
+        end
+
+        it "renders a sparkle link for Vms, role permitting" do
+          allow(helper).to receive(:role_allows) { true }
+
+          expect( helper.render_quadicon_text(vm, row) ).to include("Fred")
+          expect( helper.render_quadicon_text(vm, row) ).to have_selector("[data-miq_sparkle_on]")
+        end
+
+        it "renders a link sans href for Vms, with insufficent permissions" do
+          expect( helper.render_quadicon_text(vm, row) ).to include("Fred")
+          expect( helper.render_quadicon_text(vm, row) ).not_to have_selector("[data-miq_sparkle_on]")
+        end
+
+      end
     end
 
     context "default case" do
