@@ -29,7 +29,7 @@ module ApplicationController::Timelines
       @tl_options[:tl_result] = params[:tl_result] if params[:tl_result]
       if params[:tl_fl_grp_all] == "1"
         @tl_options[:tl_filter_all] = true
-        @tl_options[:etypes].sort.each do |e|
+        @tl_options[:events].keys.sort.each do |e|
           @tl_options[:applied_filters].push(e)
         end
       elsif params[:tl_fl_grp_all] == "null"
@@ -41,7 +41,7 @@ module ApplicationController::Timelines
         end
       end
       # Look through the event type checkbox keys
-      @tl_options[:etypes].sort.each_with_index do |e, i|
+      @tl_options[:events].keys.sort.each_with_index do |e, i|
         ekey = "tl_fl_grp#{i + 1}__#{e.tr(" ", "_")}".to_sym
         if params[ekey] == "1" || (@tl_options[:tl_filter_all] && params[ekey] != "null")
           @tl_options["pol_filter#{i + 1}".to_sym] = e
@@ -299,9 +299,7 @@ module ApplicationController::Timelines
       @tl_options[:tl_result] ||= "both"
 
       @tl_options[:events] = {}
-      @tl_options[:etypes] = []
       MiqEventDefinitionSet.all.each do |e|
-        @tl_options[:etypes].push(e.description)  unless @tl_options[:etypes].include?(e.description)
         @tl_options[:events][e.description] ||= []
         e.members.each do |mem|
           @tl_options[:events][e.description].push(mem.id) unless @tl_options[:events][e.description].include?(mem.id)
@@ -311,7 +309,7 @@ module ApplicationController::Timelines
       if @tl_options[:applied_filters].blank?
         @tl_options[:applied_filters].push("VM Operation")
         # had to set this here because if it this is preselected in cboxes, it doesnt send the params back for this cb to tl_chooser
-        @tl_options[:etypes].sort.each_with_index do |e, i|
+        @tl_options[:events].keys.sort.each_with_index do |e, i|
           if e == "VM Operation"
             @tl_options["pol_filter#{i + 1}".to_sym] = e
             @tl_options["pol_fltr#{i + 1}".to_sym] = tl_build_policy_filter(@tl_options["pol_filter#{i + 1}".to_sym])
