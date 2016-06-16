@@ -18,13 +18,13 @@ module Menu
 
       def cloud_inteligence_menu_section
         Menu::Section.new(:vi, N_("Cloud Intel"), 'fa fa-dashboard fa-2x', [
-          Menu::Item.new('dashboard',  N_('Dashboard'),  'dashboard',  {:feature => 'dashboard_view'},           '/dashboard/'),
+          Menu::Item.new('dashboard',  N_('Dashboard'),  'dashboard',  {:feature => 'dashboard_view'},           '/dashboard/show'),
           Menu::Item.new('report',     N_('Reports'),    'miq_report', {:feature => 'miq_report', :any => true}, '/report/explorer'),
           # Menu::Item.new('usage',    N_('Usage'),      'usage',      {:feature => 'usage'},                    '/report/usage/'), #  / Hiding usage for now - release 5.2
           Settings.product.consumption ? consumption_menu_section : nil,
           Menu::Item.new('chargeback', N_('Chargeback'), 'chargeback', {:feature => 'chargeback', :any => true}, '/chargeback/explorer'),
           Menu::Item.new('timeline',   N_('Timelines'),  'timeline',   {:feature => 'timeline'},                 '/dashboard/timeline/'),
-          Menu::Item.new('rss',        N_('RSS'),        'rss',        {:feature => 'rss'},                      '/alert/')
+          Menu::Item.new('rss',        N_('RSS'),        'rss',        {:feature => 'rss'},                      '/alert/show_list')
         ].compact)
       end
 

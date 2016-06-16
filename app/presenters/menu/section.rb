@@ -41,6 +41,19 @@ module Menu
      end.present?
     end
 
+    def default_redirect_url
+      items.each do |item|
+        next unless item.visible?
+        if item.kind_of?(Item)
+          return item.url
+        else
+          section_result = item.default_redirect_url
+          return section_result if section_result
+        end
+      end
+      false
+    end
+
     def preprocess_sections(section_hash)
       items.each do |el|
         if el.kind_of?(Section)

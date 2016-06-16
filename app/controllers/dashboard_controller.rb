@@ -60,105 +60,33 @@ class DashboardController < ApplicationController
     head :ok # No response required
   end
 
-  EXPLORER_FEATURE_LINKS = {
-    "catalog"             => "catalog",
-    "containers"          => "containers",
-    "pxe"                 => "pxe",
-    "service"             => "service",
-    "vm_cloud_explorer"   => "vm_cloud",
-    "vm_explorer_accords" => "vm_or_template",
-    "vm_infra_explorer"   => "vm_infra"
-  }
+  # Redirect to remembered last item clicked under this menu section.
+  def redirect_to_remembered(section_id)
+    return false unless session[:tab_url].key?(section_id)
 
-  # A main tab was pressed
+    if restful_routed_action?(session[:tab_url][section_id][:controller],
+                              session[:tab_url][section_id][:action])
+      session[:tab_url][section_id].delete(:action)
+      redirect_to(polymorphic_path(session[:tab_url][section_id][:controller],
+                                   session[:tab_url][section_id]))
+    else
+      redirect_to(session[:tab_url][section_id].merge(:only_path => true))
+    end
+    true
+  end
+
+  # Main menu section was clicked
   def maintab
     @breadcrumbs.clear
-    tab = Menu::Manager.section_id_string_to_symbol(params[:tab])
 
-    unless tab.present? # no tab name or invalid tab name was passed in
+    section = Menu::Manager.section(params[:tab])
+    if section.nil?
       render :action => "login"
       return
     end
 
-    if session[:tab_url].key?(tab) # we remember url for this tab
-      if restful_routed_action?(session[:tab_url][tab][:controller], session[:tab_url][tab][:action])
-        session[:tab_url][tab].delete(:action)
-        redirect_to(polymorphic_path(session[:tab_url][tab][:controller],
-                                     session[:tab_url][tab]))
-      else
-        redirect_to(session[:tab_url][tab].merge(:only_path => true))
-      end
-      return
-    end
-
-    tab_features = Menu::Manager.section(tab).features_recursive
-    case tab
-    when :vi
-      tab_features.detect do |f|
-        if f == "dashboard" && role_allows(:feature => "dashboard_view")
-          redirect_to :action => "show"
-        elsif role_allows(:feature => f)
-          case f
-          when "miq_report" then redirect_to(:controller => "report",    :action => "explorer")
-          when "chargeback" then redirect_to(:controller => f,           :action => f)
-          when "timeline"   then redirect_to(:controller => "dashboard", :action => f)
-          when "rss"        then redirect_to(:controller => "alert",     :action => "show_list")
-          end
-        end
-      end
-    when :conf
-      redirect_to(:controller => "provider_foreman", :action => "show_list") if role_allows(:feature => 'provider_foreman_explorer')
-    when :compute, :clo, :inf, :cnt, :svc, :mdl, :net
-      tab_features.detect do |f|
-        if EXPLORER_FEATURE_LINKS.include?(f) && role_allows(:feature => f, :any => true)
-          redirect_to :controller => EXPLORER_FEATURE_LINKS[f], :action => "explorer"
-        elsif role_allows(:feature => "#{f}_show_list")
-          redirect_to :controller => f, :action => "show_list"
-        end
-      end
-    when :con
-      tab_features.detect do |f|
-        if f == "control_explorer" && role_allows(:feature => "control_explorer_view")
-          redirect_to :controller => "miq_policy", :action => "explorer"
-        elsif role_allows(:feature => f)
-          case f
-          when "policy_simulation"    then redirect_to(:controller => "miq_policy", :action => "rsop")
-          when "policy_import_export" then redirect_to(:controller => "miq_policy", :action => "export")
-          when "policy_log"           then redirect_to(:controller => "miq_policy", :action => "log")
-          end
-        end
-      end
-    when :aut
-      tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
-        case f
-        when "miq_ae_class_explorer"      then redirect_to(:controller => "miq_ae_class", :action => "explorer")
-        when "miq_ae_class_simulation"    then redirect_to(:controller => "miq_ae_tools", :action => "resolve")
-        when "miq_ae_class_import_export" then redirect_to(:controller => "miq_ae_tools", :action => "import_export")
-        when "miq_ae_class_log"           then redirect_to(:controller => "miq_ae_tools", :action => "log")
-        end
-      end
-    when :opt
-      tab_features.detect { |f| role_allows(:feature => f) }.tap do |f|
-        redirect_to(:controller => "miq_capacity", :action => f) if f
-      end
-    when :set
-      tab_features.detect do |f|
-        if f == "my_settings" && role_allows(:feature => f, :any => true)
-          redirect_to :controller => "configuration", :action => "index", :config_tab => "ui"
-        elsif role_allows(:feature => f, :any => true)
-          case f
-          when "tasks"        then redirect_to(:controller => "configuration", :action => "index")
-          when "ops_explorer" then redirect_to(:controller => "ops",       :action => "explorer")
-          when "about"        then redirect_to(:controller => "support",   :action => "index", :support_tab => "about")
-          end
-        end
-      end
-    when :sto
-      tab_features.detect { |f| role_allows(:feature => "#{f}_show_list") }.tap do |f|
-        redirect_to(:controller => f) if f
-      end
-    # FIXME: there should be some default
-    end
+    return if redirect_to_remembered(section.id)
+    redirect_to(section.default_redirect_url)
   end
 
   # New tab was pressed
