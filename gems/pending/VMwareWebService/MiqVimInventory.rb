@@ -1899,8 +1899,20 @@ class MiqVimInventory < MiqVimClientBase
     addObjHash(:StoragePod, spObj)
   end
 
-  def pbmProfile
+  def pbmProfiles
     @pbm.queryProfile
+  end
+
+  def pbmProfilesByMor(_unused = nil)
+    @pbmProfilesByMor = {}
+
+    pbmProfiles.each do |pbm_profile|
+      uid = pbm_profile.profileId.uniqueId
+
+      @pbmProfilesByMor[uid] = pbm_profile
+    end
+
+    @pbmProfilesByMor
   end
 
   #
