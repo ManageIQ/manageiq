@@ -369,4 +369,31 @@ describe Host do
       expect(host.ems_cluster).not_to be_nil
     end
   end
+
+  describe "#v_total_storages" do
+    it "counts" do
+      host = FactoryGirl.create(:host)
+      host.storages.create(FactoryGirl.attributes_for(:storage))
+      expect(host.v_total_storages).to eq(1)
+      expect(Host.attribute_supported_by_sql?(:v_total_storages)).to be false
+    end
+  end
+
+  describe "#v_total_vms" do
+    it "counts" do
+      host = FactoryGirl.create(:host)
+      FactoryGirl.create(:vm, :host => host)
+      expect(host.v_total_vms).to eq(1)
+      expect(Host.attribute_supported_by_sql?(:v_total_vms)).to be true
+    end
+  end
+
+  describe "#v_total_miq_templates" do
+    it "counts" do
+      host = FactoryGirl.create(:host)
+      FactoryGirl.create(:template, :host => host)
+      expect(host.v_total_miq_templates).to eq(1)
+      expect(Host.attribute_supported_by_sql?(:v_total_miq_templates)).to be true
+    end
+  end
 end
