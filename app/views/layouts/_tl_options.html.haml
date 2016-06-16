@@ -81,7 +81,7 @@
           %label.control-label.col-md-2
           .col-md-8
             - @tl_options[:etypes].sort.each_with_index do |e, i|
-              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{@tl_options[:tl_colors][i]}"}
+              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{@tl_options.tl_colors[i]}"}
                 = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options[:applied_filters].include?(e),
                   "data-miq_sparkle_on"       => true,
                   "data-miq_observe_checkbox" => {:url => url}.to_json)

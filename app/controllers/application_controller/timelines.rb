@@ -335,8 +335,6 @@ module ApplicationController::Timelines
         @tl_options[:fltr1] = tl_build_filter(@tl_groups_hash[@tl_options[:filter1]])
       end
     end
-
-    @tl_options[:tl_colors] = ["#CD051C", "#005C25", "#035CB1", "#FF3106", "#FF00FF", "#000000"]
   end
 
   def tl_build_timeline_report_options
