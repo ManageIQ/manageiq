@@ -1349,21 +1349,6 @@
         :identifier: rbac_tenant_manage_quotas
       - :name: delete
         :identifier: rbac_tenant_manage_quotas
-    :quotas_subresource_actions:
-      :get:
-      - :name: read
-        :identifier: rbac_tenant_manage_quotas
-      :post:
-      - :name: edit
-        :identifier: rbac_tenant_manage_quotas
-      - :name: delete
-        :identifier: rbac_tenant_manage_quotas
-      :put:
-      - :name: edit
-        :identifier: rbac_tenant_manage_quotas
-      :delete:
-      - :name: delete
-        :identifier: rbac_tenant_manage_quotas
   :quotas:
     :description: TenantQuotas
     :options:
