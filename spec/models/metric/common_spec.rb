@@ -36,6 +36,23 @@ describe Metric::Common do
       res = metric.apply_time_profile(profile)
       expect(res).to be_falsey
     end
+    
+    it "returns true if time profile were used for aggregation (and rollup record reffer to it)" do
+      profile = FactoryGirl.create(:time_profile,
+                                   :description => "foo",
+                                   :profile     => {:tz    => "New Delhi",
+                                                    :days  => [1],
+                                                    :hours => [1]})
+      profile_aggr = FactoryGirl.create(:time_profile,
+                                        :description => "used_for_daily_aggregation",
+                                        :profile     => {:tz    => "UTC",
+                                                         :days  => (2..4),
+                                                         :hours => TimeProfile::ALL_HOURS})
+
+      metric.time_profile_id = profile_aggr.id
+      res = metric.apply_time_profile(profile)
+      expect(res).to be_truthy
+    end
   end
 
   it ".v_derived_cpu_total_cores_used" do
