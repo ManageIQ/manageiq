@@ -8,6 +8,7 @@ describe DialogFieldVisibilityService do
         number_of_vms_visibility_service,
         service_template_fields_visibility_service,
         network_visibility_service,
+        sysprep_auto_logon_visibility_service
       )
     end
 
@@ -20,6 +21,7 @@ describe DialogFieldVisibilityService do
         :service_template_request        => service_template_request,
         :supports_iso                    => supports_iso,
         :supports_pxe                    => supports_pxe,
+        :sysprep_auto_logon              => sysprep_auto_logon,
         :sysprep_enabled                 => sysprep_enabled
       }
     end
@@ -40,6 +42,9 @@ describe DialogFieldVisibilityService do
     let(:supports_iso) { "supports_iso" }
     let(:addr_mode) { "addr_mode" }
 
+    let(:sysprep_auto_logon_visibility_service) { double("SysprepAutoLogonVisibilityService") }
+    let(:sysprep_auto_logon) { "sysprep_auto_logon" }
+
     before do
       allow(service_template_fields_visibility_service).
         to receive(:determine_visibility).with(service_template_request).and_return(
@@ -56,6 +61,10 @@ describe DialogFieldVisibilityService do
       allow(network_visibility_service).
         to receive(:determine_visibility).with(sysprep_enabled, supports_pxe, supports_iso, addr_mode).and_return(
           {:hide => [:network_hide], :show => [:network_show]}
+        )
+      allow(sysprep_auto_logon_visibility_service).
+        to receive(:determine_visibility).with(sysprep_auto_logon).and_return(
+          {:hide => [:sysprep_auto_logon_hide], :show => [:sysprep_auto_logon_show]}
         )
     end
 
