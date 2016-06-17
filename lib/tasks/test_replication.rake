@@ -5,7 +5,9 @@ namespace :test do
   namespace :replication do
     desc "Setup environment for replication specs"
     task :setup => :initialize do
-      EvmTestSetupReplication.new.execute_setup
+      replication_setup = EvmTestSetupReplication.new
+      replication_setup.write_released_migrations
+      replication_setup.execute_setup
     end
 
     desc "Teardown environment for replication specs"
@@ -46,7 +48,24 @@ class EvmTestSetupReplication
     db_reset
   end
 
+  def write_released_migrations
+    file_contents = released_migrations.sort.join("\n")
+    File.write(Rails.root.join("spec/replication/util/data/darga_migrations"), file_contents)
+  end
+
   private
+
+  def released_migrations
+    json = Net::HTTP.get(URI('https://api.github.com/repos/ManageIQ/manageiq/contents/db/migrate?ref=darga'))
+
+    migrations = JSON.parse(json).map do |h|
+      filename = h["path"].split("/")[-1]
+      filename.split('_')[0]
+    end
+
+    # eliminate any non-timestamp entries
+    migrations.keep_if { |timestamp| timestamp =~ /\d+/ }
+  end
 
   def prepare_slave_database
     puts "** Preparing slave database"
