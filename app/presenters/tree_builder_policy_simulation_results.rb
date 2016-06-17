@@ -61,7 +61,6 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   end
 
   def policy_nodes(data)
-    #TODO remove node
     data.sort_by { |a| a[:name].downcase }.map do |node|
       active_caption = node[:active] ? "" : "(Inactive)"
        {:id => node['id'],
@@ -91,6 +90,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   end
 
   def scope_node(data)
+    binding.pry
     name, tip = exp_build_string(data)
     {:id => nil,
      :text => "<style>span.ws-wrap { white-space: normal; }</style><strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
@@ -99,6 +99,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   end
 
   def expression_node(data)
+    binding.pry
     name, tip = exp_build_string(data)
     {:id    => nil,
      :text  => "<style>span.ws-wrap { white-space: normal; }</style><strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
