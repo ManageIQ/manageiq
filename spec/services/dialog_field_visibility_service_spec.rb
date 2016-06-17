@@ -7,15 +7,20 @@ describe DialogFieldVisibilityService do
         auto_placement_visibility_service,
         number_of_vms_visibility_service,
         service_template_fields_visibility_service,
+        network_visibility_service,
       )
     end
 
     let(:options) do
       {
+        :addr_mode                       => addr_mode,
         :auto_placement_enabled          => auto_placement_enabled,
         :number_of_vms                   => number_of_vms,
         :platform                        => platform,
         :service_template_request        => service_template_request,
+        :supports_iso                    => supports_iso,
+        :supports_pxe                    => supports_pxe,
+        :sysprep_enabled                 => sysprep_enabled
       }
     end
 
@@ -29,6 +34,12 @@ describe DialogFieldVisibilityService do
     let(:number_of_vms) { "number_of_vms" }
     let(:platform) { "platform" }
 
+    let(:network_visibility_service) { double("NetworkVisibilityService") }
+    let(:sysprep_enabled) { "sysprep_enabled" }
+    let(:supports_pxe) { "supports_pxe" }
+    let(:supports_iso) { "supports_iso" }
+    let(:addr_mode) { "addr_mode" }
+
     before do
       allow(service_template_fields_visibility_service).
         to receive(:determine_visibility).with(service_template_request).and_return(
@@ -41,6 +52,10 @@ describe DialogFieldVisibilityService do
       allow(number_of_vms_visibility_service).
         to receive(:determine_visibility).with(number_of_vms, platform).and_return(
           {:hide => [:number_hide], :show => [:number_show]}
+        )
+      allow(network_visibility_service).
+        to receive(:determine_visibility).with(sysprep_enabled, supports_pxe, supports_iso, addr_mode).and_return(
+          {:hide => [:network_hide], :show => [:network_show]}
         )
     end
 
