@@ -235,41 +235,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
   end
 
-  def show_customize_fields_pxe(fields)
-    pxe_customization_fields = [
-      :root_password,
-      :addr_mode,
-      :hostname,
-      :ip_addr,
-      :subnet_mask,
-      :gateway,
-      :dns_servers,
-      :dns_suffixes,
-      :customization_template_id,
-      :customization_template_script,
-    ]
-
-    pxe_customization_fields.each do |f|
-      fields[:edit].push(f) unless fields[:edit].include?(f)
-      fields[:hide].delete(f)
-    end
-  end
-
-  def show_customize_fields(fields, platform)
-    # ISO and cloud-init prov. needs to show same fields on customize tab as Pxe prov.
-    return show_customize_fields_pxe(fields) if self.supports_customization_template?
-
-    exclude_list = [:sysprep_spec_override, :sysprep_custom_spec, :sysprep_enabled, :sysprep_upload_file, :sysprep_upload_text,
-                    :linux_host_name, :sysprep_computer_name, :ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes]
-    linux_fields = [:linux_domain_name]
-    show_options = [:edit, :hide]
-    show_options.reverse! if platform == 'linux'
-    self.fields(:customize) do |fn, _f, _dn, _d|
-      next if exclude_list.include?(fn)
-      linux_fields.include?(fn) ? fields[show_options[1]] += [fn] : fields[show_options[0]] += [fn]
-    end
-  end
-
   def update_field_read_only(options = {})
     read_only = get_value(@values[:sysprep_custom_spec]).blank? ? false : !(get_value(@values[:sysprep_spec_override]) == true)
     exclude_list = [:sysprep_spec_override, :sysprep_custom_spec, :sysprep_enabled, :sysprep_upload_file, :sysprep_upload_text]
