@@ -13,7 +13,8 @@ describe DialogFieldVisibilityService do
         customize_fields_visibility_service,
         sysprep_custom_spec_visibility_service,
         request_type_visibility_service,
-        pxe_iso_visibility_service
+        pxe_iso_visibility_service,
+        linked_clone_visibility_service
       )
     end
 
@@ -22,8 +23,10 @@ describe DialogFieldVisibilityService do
         :addr_mode                       => addr_mode,
         :auto_placement_enabled          => auto_placement_enabled,
         :customize_fields_list           => customize_fields_list,
+        :linked_clone                    => linked_clone,
         :number_of_vms                   => number_of_vms,
         :platform                        => platform,
+        :provision_type                  => provision_type,
         :request_type                    => request_type,
         :retirement                      => retirement,
         :service_template_request        => service_template_request,
@@ -69,6 +72,10 @@ describe DialogFieldVisibilityService do
     let(:request_type) { "request_type" }
 
     let(:pxe_iso_visibility_service) { double("PxeIsoVisibilityService") }
+
+    let(:linked_clone_visibility_service) { double("LinkedCloneVisibilityService") }
+    let(:provision_type) { "provision_type" }
+    let(:linked_clone) { "linked_clone" }
 
     before do
       allow(service_template_fields_visibility_service).
@@ -123,6 +130,12 @@ describe DialogFieldVisibilityService do
           :hide => [:pxe_iso_hide],
           :show => [:pxe_iso_show]
       })
+
+      allow(linked_clone_visibility_service).
+        to receive(:determine_visibility).with(provision_type, linked_clone).and_return({
+          :hide => [:linked_clone_hide],
+          :show => [:linked_clone_show]
+      })
     end
 
     it "adds the values to the field names to hide and show without duplicates or intersections" do
@@ -136,7 +149,8 @@ describe DialogFieldVisibilityService do
           :customize_fields_hide,
           :sysprep_custom_spec_hide,
           :request_type_hide,
-          :pxe_iso_hide
+          :pxe_iso_hide,
+          :linked_clone_hide
         ],
         :edit => [
           :auto_show,
@@ -147,7 +161,8 @@ describe DialogFieldVisibilityService do
           :customize_fields_show,
           :retirement_hide,
           :sysprep_custom_spec_show,
-          :pxe_iso_show
+          :pxe_iso_show,
+          :linked_clone_show
         ]
       })
     end

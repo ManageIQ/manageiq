@@ -166,8 +166,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     options_hash = setup_parameters_for_visibility_sevice(options)
     visibility_hash = dialog_field_visibility_service.determine_visibility(options_hash)
 
-    update_field_visibility_linked_clone(options, visibility_hash)
-
     update_field_display_values(visibility_hash)
 
     # Show/Hide Notes
@@ -183,18 +181,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     f.each { |k, v| show_fields(k, v, :notes_display) }
 
     update_field_read_only(options)
-  end
-
-  def update_field_visibility_linked_clone(_options = {}, f)
-    if get_value(@values[:provision_type]).to_s == 'vmware'
-      show_flag = @vm_snapshot_count.zero? ? :show : :edit
-      f[show_flag] += [:linked_clone]
-
-      show_flag = get_value(@values[:linked_clone]) == true ? :edit : :hide
-      f[show_flag] += [:snapshot]
-    else
-      f[:hide] += [:linked_clone, :snapshot]
-    end
   end
 
   def update_field_read_only(options = {})

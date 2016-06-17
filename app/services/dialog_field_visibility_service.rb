@@ -9,7 +9,8 @@ class DialogFieldVisibilityService
     customize_fields_visibility_service = CustomizeFieldsVisibilityService.new,
     sysprep_custom_spec_visibility_service = SysprepCustomSpecVisibilityService.new,
     request_type_visibility_service = RequestTypeVisibilityService.new,
-    pxe_iso_visibility_service = PxeIsoVisibilityService.new
+    pxe_iso_visibility_service = PxeIsoVisibilityService.new,
+    linked_clone_visibility_service = LinkedCloneVisibilityService.new
   )
     @auto_placement_visibility_service = auto_placement_visibility_service
     @number_of_vms_visibility_service = number_of_vms_visibility_service
@@ -21,6 +22,7 @@ class DialogFieldVisibilityService
     @sysprep_custom_spec_visibility_service = sysprep_custom_spec_visibility_service
     @request_type_visibility_service = request_type_visibility_service
     @pxe_iso_visibility_service = pxe_iso_visibility_service
+    @linked_clone_visibility_service = linked_clone_visibility_service
   end
 
   def set_hidden_fields(field_names_to_hide, fields)
@@ -35,18 +37,28 @@ class DialogFieldVisibilityService
     field_names_to_hide = []
     field_names_to_show = []
 
-    visibility_hash = @service_template_fields_visibility_service.determine_visibility(options[:service_template_request])
+    visibility_hash = @service_template_fields_visibility_service.determine_visibility(
+      options[:service_template_request]
+    )
     field_names_to_hide += visibility_hash[:hide]
 
     visibility_hash = @auto_placement_visibility_service.determine_visibility(options[:auto_placement_enabled])
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
 
-    visibility_hash = @number_of_vms_visibility_service.determine_visibility(options[:number_of_vms], options[:platform])
+    visibility_hash = @number_of_vms_visibility_service.determine_visibility(
+      options[:number_of_vms],
+      options[:platform]
+    )
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
 
-    visibility_hash = @network_visibility_service.determine_visibility(options[:sysprep_enabled], options[:supports_pxe], options[:supports_iso], options[:addr_mode])
+    visibility_hash = @network_visibility_service.determine_visibility(
+      options[:sysprep_enabled],
+      options[:supports_pxe],
+      options[:supports_iso],
+      options[:addr_mode]
+    )
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
 
@@ -58,7 +70,11 @@ class DialogFieldVisibilityService
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
 
-    visibility_hash = @customize_fields_visibility_service.determine_visibility(options[:platform], options[:supports_customization_template], options[:customize_fields_list])
+    visibility_hash = @customize_fields_visibility_service.determine_visibility(
+      options[:platform],
+      options[:supports_customization_template],
+      options[:customize_fields_list]
+    )
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
 
@@ -70,6 +86,13 @@ class DialogFieldVisibilityService
     field_names_to_hide += visibility_hash[:hide]
 
     visibility_hash = @pxe_iso_visibility_service.determine_visibility(options[:supports_iso], options[:supports_pxe])
+    field_names_to_hide += visibility_hash[:hide]
+    field_names_to_show += visibility_hash[:show]
+
+    visibility_hash = @linked_clone_visibility_service.determine_visibility(
+      options[:provision_type],
+      options[:linked_clone]
+    )
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
 
