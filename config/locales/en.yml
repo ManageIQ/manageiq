@@ -733,7 +733,7 @@ en:
       ManageIQ::Providers::CloudManager::Vm:                                Instance
       ManageIQ::Providers::Google::CloudManager::Vm:                        Instance (Google)
       ManageIQ::Providers::Openstack::CloudManager::Vm:                     Instance (OpenStack)
-      ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Azure)
+      ManageIQ::Providers::Azure::CloudManager::Vm:                         Instance (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::Vm:                        Instance (Amazon)
       ManageIQ::Providers::CloudManager::Template:                          Image
       ManageIQ::Providers::ContainerManager:                                Containers Provider
@@ -742,41 +742,41 @@ en:
       ManageIQ::Providers::InfraManager::Template:                          Template
       ManageIQ::Providers::MiddlewareManager:                               Middleware Provider
       ManageIQ::Providers::NetworkManager:                                  Network Manager
-      ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (Openstack)
+      ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (OpenStack)
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
-      ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Redhat)
-      ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (Vmware)
+      ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Red Hat)
+      ManageIQ::Providers::Vmware::InfraManager:                            Infrastructure Provider (VMware)
       ManageIQ::Providers::Vmware::InfraManager::Vm:                        Virtual Machine (VMware)
       ManageIQ::Providers::Microsoft::InfraManager::Vm:                     Virtual Machine (Microsoft)
       ManageIQ::Providers::Redhat::InfraManager::Vm:                        Virtual Machine (Red Hat)
-      ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (Openstack)
-      ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (Openstack)
+      ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (OpenStack)
       ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
       ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
-      ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Azure)
+      ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
       ManageIQ::Providers::Atomic::ContainerManager:                        Container Provider (Atomic)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
-      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (Openshift)
-      ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (Openshift Enterprise)
+      ManageIQ::Providers::Openshift::ContainerManager:                     Container Provider (OpenShift)
+      ManageIQ::Providers::OpenshiftEnterprise::ContainerManager:           Container Provider (OpenShift Enterprise)
       ManageIQ::Providers::Amazon::NetworkManager::CloudNetwork:            Cloud Network (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::CloudSubnet:             Cloud Subnet (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup:           Security Group (Amazon)
       ManageIQ::Providers::Google::CloudManager::SecurityGroup:             Security Group (Google)
       ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:        Security Group (OpenStack)
       ManageIQ::Providers::Azure::NetworkManager::CloudSubnet:              Cloud Subnet (Microsoft Azure)
-      ManageIQ::Providers::Azure::CloudManager::SecurityGroup:              Security Group (Azure)
+      ManageIQ::Providers::Azure::CloudManager::SecurityGroup:              Security Group (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:           Floating IP (OpenStack)
       ManageIQ::Providers::Amazon::NetworkManager::FloatingIp:              Floating IP (Amazon)
       ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet:          Cloud Subnet (OpenStack)
       ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter:        Network Router (OpenStack)
       ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack:     Orchestration Stack (OpenStack)
       ManageIQ::Providers::Openstack::CloudManager::OrchestrationStack:     Orchestration Stack (OpenStack)
-      ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Azure)
+      ManageIQ::Providers::Azure::CloudManager::OrchestrationStack:         Orchestration Stack (Microsoft Azure)
       ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack:        Orchestration Stack (Amazon)
       ManageIQ::Providers::Amazon::NetworkManager::NetworkPort:             Network Port (Amazon)
-      ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Azure)
+      ManageIQ::Providers::Azure::NetworkManager::NetworkPort:              Network Port (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::NetworkPort:          Network Port (OpenStack)
       MiddlewareDatasource:     Middleware Datasource
       MiddlewareDeployment:     Middleware Deployment
@@ -951,8 +951,8 @@ en:
       miq_custom_attributes:       EVM Custom Attributes
       miq_event_definition:        Event
       manageiq_providers_foreman_configuration_manager_configuration_profile: Configuration Profile (Foreman)
-      manageiq_providers_openstack_infra_manager_cloud_networks: Cloud Networks (Openstack)
-      manageiq_providers_openstack_cloud_manager_cloud_tenant: Cloud Tenants (Openstack)
+      manageiq_providers_openstack_infra_manager_cloud_networks: Cloud Networks (OpenStack)
+      manageiq_providers_openstack_cloud_manager_cloud_tenant: Cloud Tenants (OpenStack)
       miq_provision:               Provision
       miq_provision_template:      Provisioned From Template
       miq_provision_vms:           Provisioned VMs
