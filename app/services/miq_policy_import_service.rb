@@ -44,7 +44,7 @@ class MiqPolicyImportService
   end
 
   def queue_deletion(import_file_upload_id)
-    MiqQueue.put_or_update(
+    MiqQueue.put(
       :class_name  => "ImportFileUpload",
       :instance_id => import_file_upload_id,
       :deliver_on  => 1.day.from_now,
