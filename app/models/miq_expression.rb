@@ -686,31 +686,6 @@ class MiqExpression
     col_details.values.each_with_object({}) { |v, result| result.deep_merge!(v[:include]) }
   end
 
-  def columns_for_sql(exp = nil, result = nil)
-    exp ||= self.exp
-    result ||= []
-    return result unless exp.kind_of?(Hash)
-
-    operator = exp.keys.first
-    if exp[operator].kind_of?(Hash) && exp[operator].key?("field")
-      if exp[operator]["field"] != "<count>" &&
-         !field_from_virtual_reflection?(exp[operator]["field"]) && !field_has_arel?(exp[operator]["field"])
-        col = exp[operator]["field"]
-        if col.include?(".")
-          col = col.split(".").last
-          col = col.sub("-", ".")
-        else
-          col = col.split("-").last
-        end
-        result << col
-      end
-    else
-      exp[operator].dup.to_miq_a.each { |atom| columns_for_sql(atom, result) }
-    end
-
-    result.compact.uniq
-  end
-
   def self.expand_conditional_clause(klass, cond)
     return klass.send(:sanitize_sql_for_conditions, cond) unless cond.is_a?(Hash)
 
