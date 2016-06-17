@@ -190,42 +190,6 @@ module ApplicationController::Timelines
     @tag_node
   end
 
-  def build_timeline(timeline_typ = "Operation")
-    @tl_options[:typ] = timeline_typ
-    if timeline_typ == "Configuration"
-      timeline_name = "Configurations All Events"
-    else
-      timeline_name = "Operations All Events"
-    end
-    @report = MiqReport.find_by_name(timeline_name)
-    @report.where_clause = @record.event_where_clause
-    @title = @report.title
-
-    begin
-      @report.generate_table(:userid => session[:userid])
-    rescue StandardError => bang
-      add_flash(_("Error building timeline %{error_message}") % {:error_message => bang.message}, :error)
-    else
-      if @report.table.data.length == 0
-        add_flash(_("No records found for this timeline"), :warning)
-      else
-        @timeline = true
-        @report.extras[:browser_name] = browser_info(:name)
-        if is_browser_ie?
-          blob = BinaryBlob.new(:name => "timeline_results")
-          blob.binary = (@report.to_timeline)
-          session[:tl_xml_blob_id] = blob.id
-        else
-          @tl_json = @report.to_timeline
-        end
-        #       START of TIMELINE TIMEZONE Code
-        #       session[:tl_position] = format_timezone(@report.extras[:tl_position],Time.zone,"tl")
-        session[:tl_position] = @report.extras[:tl_position]
-        #       END of TIMELINE TIMEZONE Code
-      end
-    end
-  end
-
   def tl_get_rpt(timeline)
     MiqReport.new(YAML.load(File.open("#{TIMELINES_FOLDER}/miq_reports/#{timeline}.yaml")))
   end
