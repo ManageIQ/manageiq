@@ -17,6 +17,14 @@ class DialogFieldVisibilityService
     @customize_fields_visibility_service = customize_fields_visibility_service
   end
 
+  def set_hidden_fields(field_names_to_hide, fields)
+    set_fields_display_status(fields, field_names_to_hide, :hide)
+  end
+
+  def set_shown_fields(field_names_to_show, fields)
+    set_fields_display_status(fields, field_names_to_show, :edit)
+  end
+
   def determine_visibility(options)
     field_names_to_hide = []
     field_names_to_show = []
@@ -52,5 +60,15 @@ class DialogFieldVisibilityService
     field_names_to_hide.uniq!
     field_names_to_show.uniq!
     {:hide => field_names_to_hide.flatten, :edit => field_names_to_show.flatten}
+  end
+
+  private
+
+  def set_fields_display_status(fields, field_name_list, status)
+    fields.each do |field|
+      if field_name_list.include?(field[:name])
+        field[:display] = field[:display_override].presence || status
+      end
+    end
   end
 end
