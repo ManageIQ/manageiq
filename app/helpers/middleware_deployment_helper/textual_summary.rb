@@ -5,7 +5,7 @@ module MiddlewareDeploymentHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name nativeid)
+    %i(name status nativeid)
   end
 
   def textual_group_relationships
@@ -19,5 +19,9 @@ module MiddlewareDeploymentHelper::TextualSummary
 
   def textual_nativeid
     @record.nativeid
+  end
+
+  def textual_status
+    @record.status
   end
 end

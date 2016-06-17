@@ -198,6 +198,10 @@ module ManageIQ::Providers
       )
     end
 
+    def build_metric_id(type, resource, metric_id)
+      "#{type}I~R~[#{resource[:middleware_server][:feed]}/#{resource[:nativeid]}]~#{type}T~#{metric_id}"
+    end
+
     private
 
     # Trigger running a (Hawkular) operation on the

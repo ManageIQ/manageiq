@@ -20,6 +20,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     expect(@ems_hawkular.middleware_servers.count).to be > 0
     expect(@ems_hawkular.middleware_deployments.count).to be > 0
     expect(@ems_hawkular.middleware_datasources.count).to be > 0
+    expect(@ems_hawkular.middleware_deployments.first).to have_attributes(:status => 'Enabled')
     assert_specific_datasource
   end
 
