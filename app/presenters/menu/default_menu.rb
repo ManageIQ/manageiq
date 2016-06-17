@@ -38,7 +38,7 @@ module Menu
         Menu::Section.new(:svc, N_("Services"), 'fa pficon-service fa-2x', [
           Menu::Item.new('services',       N_('My Services'), 'service',             {:feature => 'service', :any => true},             '/service/explorer'),
           Menu::Item.new('catalogs',       N_('Catalogs'),    'catalog',             {:feature => 'catalog', :any => true},             '/catalog/explorer'),
-          Menu::Item.new('vm_or_template', N_('Workloads'),   'vm_explorer_accords', {:feature => 'vm_explorer_accords', :any => true}, '/vm_or_template/explorer'),
+          Menu::Item.new('vm_or_template', N_('Workloads'),   'vm_explorer',         {:feature => 'vm_explorer', :any => true},         '/vm_or_template/explorer'),
           Menu::Item.new('miq_request_vm', N_('Requests'),    'miq_request',         {:feature => 'miq_request_show_list'},             '/miq_request?typ=vm')
         ])
       end
@@ -50,7 +50,7 @@ module Menu
           Menu::Item.new('cloud_tenant',        N_('Tenants'),             'cloud_tenant',              {:feature => 'cloud_tenant_show_list'},                  '/cloud_tenant'),
           Menu::Item.new('cloud_volume',        N_('Volumes'),             'cloud_volume',              {:feature => 'cloud_volume_show_list'},                  '/cloud_volume'),
           Menu::Item.new('flavor',              N_('Flavors'),             'flavor',                    {:feature => 'flavor_show_list'},                        '/flavor'),
-          Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer',         {:feature => 'vm_cloud_explorer_accords', :any => true}, '/vm_cloud/explorer'),
+          Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer',         {:feature => 'vm_cloud_explorer', :any => true}, '/vm_cloud/explorer'),
           Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack'),
           Menu::Item.new('auth_key_pair_cloud', N_('Key Pairs'),           'auth_key_pair_cloud',       {:feature => 'auth_key_pair_cloud_show_list'},           '/auth_key_pair_cloud'),
           Menu::Item.new('cloud_object_store_container',
@@ -70,7 +70,7 @@ module Menu
           Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',   {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
           Menu::Item.new('host',             hosts_name,             'host',          {:feature => 'host_show_list'},          '/host'),
           Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer',
-                         {:feature => 'vm_infra_explorer_accords', :any => true},
+                         {:feature => 'vm_infra_explorer', :any => true},
                          '/vm_infra/explorer'),
           Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool', {:feature => 'resource_pool_show_list'}, '/resource_pool'),
           Menu::Item.new('storage',          deferred_ui_lookup(:tables => 'storages'),
