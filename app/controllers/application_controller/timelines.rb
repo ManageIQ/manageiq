@@ -327,7 +327,6 @@ module ApplicationController::Timelines
   end
 
   def tl_build_timeline_report_options
-    sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     if !@tl_options[:sdate].nil? && !@tl_options[:edate].nil?
       case @tl_options[:typ]
       when "Hourly"
@@ -379,8 +378,6 @@ module ApplicationController::Timelines
 
       cond = "( "
       cond = cond << temp_clause[0]
-      params = []
-      params2 = []
       params = temp_clause.slice(1, temp_clause.length)
 
       event_set = []
