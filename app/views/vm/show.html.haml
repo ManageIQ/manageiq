@@ -11,5 +11,9 @@
     = render :partial => "vm_common/live_migrate"
   - elsif @evacuate
     = render :partial => "vm_common/evacuate"
+  - elsif @associate_floating_ip
+    = render :partial => "vm_common/associate_floating_ip"
+  - elsif @disassociate_floating_ip
+    = render :partial => "vm_common/disassociate_floating_ip"
   - else
     = render :partial => "vm_common/#{@showtype}", :locals => {:controller => "vm"}

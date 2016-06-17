@@ -91,7 +91,7 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_associate_floating_ip must be implemented in a subclass")
   end
 
-  def associate_address(ip_address)
+  def associate_floating_ip(ip_address)
     raw_associate_floating_ip(ip_address)
   end
 

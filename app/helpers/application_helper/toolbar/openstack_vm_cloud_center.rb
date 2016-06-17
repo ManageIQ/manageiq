@@ -53,17 +53,17 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           t,
           :klass => ApplicationHelper::Button::InstanceDetach),
         button(
-          :instance_associate_address,
+          :instance_associate_floating_ip,
           'pficon fa-map-marker fa-lg',
           t = N_('Associate a Floating IP with this Instance'),
           t,
-          :klass => ApplicationHelper::Button::InstanceAssociateAddress),
+          :klass => ApplicationHelper::Button::InstanceAssociateFloatingIp),
         button(
-          :instance_disassociate_address,
+          :instance_disassociate_floating_ip,
           'pficon fa-map-marker fa-lg',
           t = N_('Disassociate a Floating IP from this Instance'),
           t,
-          :klass => ApplicationHelper::Button::InstanceDisassociateAddress),
+          :klass => ApplicationHelper::Button::InstanceDisassociateFloatingIp),
         separator,
         button(
           :instance_resize,

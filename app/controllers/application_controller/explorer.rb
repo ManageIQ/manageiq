@@ -51,6 +51,8 @@ module ApplicationController::Explorer
     'tag'          => :s2, 'timeline'         => :s2, 'resize'          => :s2,
     'live_migrate' => :s2, 'attach'           => :s2, 'detach'          => :s2,
     'evacuate'     => :s2, 'service_dialog'   => :s2,
+    'associate_floating_ip'    => :s2,
+    'disassociate_floating_ip' => :s2,
 
     # specials
     'perf'         => :show,
@@ -80,7 +82,8 @@ module ApplicationController::Explorer
     elsif X_BUTTON_ALLOWED_ACTIONS[action] == :s2
       # don't need to set params[:id] and do find_checked_items for methods
       # like ownership, the code in those methods handle it
-      if %w(edit right_size resize attach detach live_migrate evacuate).include?(action)
+      if %w(edit right_size resize attach detach live_migrate evacuate
+            associate_floating_ip disassociate_floating_ip).include?(action)
         @_params[:id] = (params[:id] ? [params[:id]] : find_checked_items)[0]
       end
       if ['protect', 'tag'].include?(action)

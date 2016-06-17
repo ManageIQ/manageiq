@@ -1626,7 +1626,8 @@ module VmCommon
 
       locals = {:action_url => action, :record_id => @record ? @record.id : nil}
       if %w(clone migrate miq_request_new pre_prov publish
-            reconfigure resize live_migrate attach detach evacuate).include?(@sb[:action])
+            reconfigure resize live_migrate attach detach evacuate
+            associate_floating_ip disassociate_floating_ip).include?(@sb[:action])
         locals[:no_reset]        = true                              # don't need reset button on the screen
         locals[:submit_button]   = @sb[:action] != 'miq_request_new' # need submit button on the screen
         locals[:continue_button] = @sb[:action] == 'miq_request_new' # need continue button on the screen
@@ -1728,7 +1729,8 @@ module VmCommon
           ])
         # these subviews use angular, so they need to use a special partial
         # so the form buttons on the outer frame can be updated.
-        elsif %w(attach detach live_migrate evacuate).include?(@sb[:action])
+      elsif %w(attach detach live_migrate evacuate
+               associate_floating_ip disassociate_floating_ip).include?(@sb[:action])
           presenter.update(:form_buttons_div, r[:partial => "layouts/angular/paging_div_buttons"])
         elsif action != "retire" && action != "reconfigure_update"
           presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons', :locals => locals])
