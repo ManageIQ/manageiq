@@ -1,13 +1,13 @@
 module ManageIQ::Providers::Openstack::CloudManager::Vm::AssociateIp
-  def validate_associate_address
+  def validate_associate_floating_ip
     {:available => true, :message => nil}
   end
 
-  def validate_disassociate_address
+  def validate_disassociate_floating_ip
     {:available => true, :message => nil}
   end
 
-  def raw_associate_address(floating_ip)
+  def raw_associate_floating_ip(floating_ip)
     ext_management_system.with_provider_connection(compute_connection_options) do |connection|
       connection.associate_address(ems_ref, floating_ip)
     end
@@ -16,7 +16,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::AssociateIp
     raise MiqException::MiqOpenstackApiRequestError, err.to_s, err.backtrace
   end
 
-  def raw_disassociate_address(floating_ip)
+  def raw_disassociate_floating_ip(floating_ip)
     ext_management_system.with_provider_connection(compute_connection_options) do |connection|
       connection.disassociate_address(ems_ref, floating_ip)
     end

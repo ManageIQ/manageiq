@@ -673,6 +673,112 @@ module ApplicationController::CiProcessing
     }
   end
 
+  def associate_floating_ip_vms
+    assert_privileges("instance_associate_floating_ip")
+    recs = find_checked_items
+    recs = [params[:id].to_i] if recs.blank?
+    @record = find_by_id_filtered(VmOrTemplate, recs.first)
+    if @record.is_available?(:associate_floating_ip) && !@record.ext_management_system.nil?
+      if @explorer
+        associate_floating_ip
+        @refresh_partial = "vm_common/associate_floating_ip"
+      else
+        render :update do |page|
+          page << javascript_prologue
+          page.redirect_to :controller => 'vm',
+                           :action     => 'associate_floating_ip',
+                           :rec_id     => @record.id,
+                           :escape => false
+        end
+      end
+    else
+      add_flash(_("Unable to associate %{floating_ip} with %{instance} \"%{name}\": %{details}") % {
+        :floating_ip => ui_lookup(:table => 'floating_ip'),
+        :instance    => ui_lookup(:table => 'vm_cloud'),
+        :name        => @record.name,
+        :details     => @record.is_available_now_error_message(:associate_floating_ip)}, :error)
+    end
+  end
+  alias instance_associate_floating_ip associate_floating_ip_vms
+
+  def associate_floating_ip
+    assert_privileges("instance_associate_floating_ip")
+    @record ||= VmOrTemplate.find_by_id(params[:rec_id])
+    drop_breadcrumb(
+      :name => _("Associate Floating IP with Instance '%{name}'") % {:name => @record.name},
+      :url  => "/vm_cloud/associate_floating_ip"
+    ) unless @explorer
+    @sb[:explorer] = @explorer
+    @in_a_form = true
+    @associate_floating_ip = true
+    render :action => "show" unless @explorer
+  end
+
+  def associate_floating_ip_form_fields
+    assert_privileges("instance_associate_floating_ip")
+    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    floating_ips = []
+    unless @record.ext_management_system.nil?
+      @record.ext_management_system.floating_ips.each do |floating_ip|
+        floating_ips << floating_ip.address
+      end
+    end
+    render :json => {
+      :floating_ips => floating_ips
+    }
+  end
+
+  def associate_floating_ip_vm
+    assert_privileges("instance_associate_floating_ip")
+    @record = VmOrTemplate.find_by_id(params[:id])
+    case params[:button]
+    when "cancel"
+      add_flash(_("Association of %{floating_ip} with %{model} \"%{name}\" was cancelled by the user") % {
+        :floating_ip => ui_lookup(:table => "floating_ip"),
+        :instance    => ui_lookup(:table => "vm_cloud"),
+        :name        => @record.name})
+      @record = @sb[:action] = nil
+    when "submit"
+      if @record.is_available?(:associate_floating_ip)
+        floating_ip = params[:floating_ip]
+        begin
+          @record.associate_floating_ip(floating_ip)
+          add_flash(_("Associating %{floating_ip} %{address} with %{instance} \"%{name}\"") % {
+            :floating_ip => ui_lookup(:table => "floating_ip"),
+            :address     => floating_ip,
+            :instance    => ui_lookup(:table => 'vm_cloud'),
+            :name        => @record.name})
+        rescue => ex
+          add_flash(_("Unable to associate %{floating_ip} %{address} with %{instance} \"%{name}\": %{details}") % {
+            :floating_ip => ui_lookup(:table => "floating_ip"),
+            :address     => floating_ip,
+            :instance    => ui_lookup(:table => 'vm_cloud'),
+            :name        => @record.name,
+            :details     => get_error_message_from_fog(ex.to_s)}, :error)
+        end
+      else
+        add_flash(_("Unable to associate %{floating_ip} with %{instance} \"%{name}\": %{details}") % {
+          :floating_ip => ui_lookup(:table => "floating_ip"),
+          :instance    => ui_lookup(:table => 'vm_cloud'),
+          :name        => @record.name,
+          :details     => @record.is_available_now_error_message(:live_migrate)}, :error)
+      end
+      params[:id] = @record.id.to_s # reset id in params for show
+      @record = nil
+      @sb[:action] = nil
+    end
+    if @sb[:explorer]
+      replace_right_cell
+    else
+      session[:flash_msgs] = @flash_array.dup
+      render :update do |page|
+        page << javascript_prologue
+        page.redirect_to previous_breadcrumb_url
+      end
+    end
+    return
+  end
+
   def vm_right_size
     assert_privileges(params[:pressed])
     # check to see if coming from show_list or drilled into vms from another CI

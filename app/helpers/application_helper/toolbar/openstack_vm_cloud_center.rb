@@ -52,6 +52,18 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           t = N_('Detach a Cloud Volume from this Instance'),
           t,
           :klass => ApplicationHelper::Button::InstanceDetach),
+        button(
+          :instance_associate_address,
+          'pficon fa-map-marker fa-lg',
+          t = N_('Associate a Floating IP with this Instance'),
+          t,
+          :klass => ApplicationHelper::Button::InstanceAssociateAddress),
+        button(
+          :instance_disassociate_address,
+          'pficon fa-map-marker fa-lg',
+          t = N_('Disassociate a Floating IP from this Instance'),
+          t,
+          :klass => ApplicationHelper::Button::InstanceDisassociateAddress),
         separator,
         button(
           :instance_resize,
