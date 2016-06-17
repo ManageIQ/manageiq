@@ -5,6 +5,16 @@
 :identifier: everything
 :children:
 
+# Container Deployment Create
+- :name: Container Deployment
+  :description: Container Deployment
+  :feature_type: node
+  :identifier: create
+  :children:
+  - :name: Container Deployment Data
+    :description:  Container Deployment Data
+    :feature_type: node
+    :identifier: collect_data
 # Workloads Explorer
 - :name: Workloads
   :description: Workloads Views
@@ -3251,6 +3261,10 @@
       :description: Add a Containers Provider
       :feature_type: admin
       :identifier: ems_container_new
+    - :name: deploy
+      :description: Deploy a New Containers Provider
+      :feature_type: admin
+      :identifier: ems_container_deployment
 
 # EmsMiddleware
 - :name: Providers

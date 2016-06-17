@@ -1,3 +1,4 @@
+gem "net-ssh", "=3.2.0.rc2"
 require 'net/ssh'
 
 INVENTORY_FILE = 'inventory.yaml'.freeze
@@ -5,11 +6,11 @@ RHEL_SUBSCRIBE_INVENTORY = 'rhel_subscribe_inventory.yaml'.freeze
 
 def create_ansible_inventory_file(subscribe = false)
   if subscribe
-    template = $evm.root['automation_task'].automation_request.options[:attrs][:rhel_subscribe_inventory]
+    template = $evm.root['rhel_subscribe_inventory']
     inv_file_path = RHEL_SUBSCRIBE_INVENTORY
   else
     $evm.log(:info, "********************** #{$evm.root['ae_state']} ***************************")
-    template = $evm.root['masters'] = $evm.root['automation_task'].automation_request.options[:attrs][:inventory]
+    template = $evm.root['inventory']
     inv_file_path = INVENTORY_FILE
   end
   begin
@@ -28,8 +29,7 @@ end
 create_ansible_inventory_file
 # check if an additional inventory file is needed for handling rhel subscriptions
 begin
-  Net::SSH.start($evm.root['deployment_master'], $evm.root['user'], :paranoid => false, :forward_agent => true,
-                 :key_data => $evm.root['private_key']) do |ssh|
+  Net::SSH.start($evm.root['deployment_master'], $evm.root['ssh_username'], :paranoid => false, :forward_agent => true, :agent_socket_factory => ->{ UNIXSocket.open($evm.root['agent_socket']) }) do |ssh|
     create_ansible_inventory_file(true) if ssh.exec!("cat /etc/redhat-release").include?("Red Hat Enterprise Linux")
   end
 rescue

@@ -22,7 +22,7 @@ class Authentication < ApplicationRecord
   ERRORS = {
     :incomplete => "Incomplete credentials",
     :invalid    => "Invalid credentials",
-  }
+  }.freeze
 
   STATUS_SEVERITY = Hash.new(-1).merge(
     ""            => -1,
@@ -75,6 +75,17 @@ class Authentication < ApplicationRecord
     MiqEvent.raise_evm_event_queue(ci, "#{prefix}_auth_#{status}")
   end
 
+  def assign_values(options)
+    options.each do |key, value|
+      next unless Authentication.column_names.include?(key) && value
+      if self[key].kind_of? Array
+        self[key] << value
+      else
+        self[key] = (!value.kind_of?(Array) && value.to_json.json?) ? value.to_json : value
+      end
+    end
+  end
+
   private
 
   def set_credentials_changed_on
@@ -98,5 +109,19 @@ class Authentication < ApplicationRecord
     when "Host"                then "host"
     when "ExtManagementSystem" then "ems"
     end
+  end
+
+  # will be removed once moving to yaml format, no need to review method
+  def ansible_format(options = {})
+    options.merge!('name' => "example_name", 'login' => "true", 'challenge' => "true", 'kind' => authtype)
+    res = "openshift_master_identity_providers=[" + options.to_json + "]"
+    if type.instance_of?(AuthenticationHtpasswd) && !htpassd_users.empty?
+      res += "\nopenshift_master_htpasswd_users=#{htpassd_users.first.to_json}"
+    end
+    res
+  end
+
+  def ansible_config(options = {})
+    {'name' => "example_name", 'login' => "true", 'challenge' => "true", 'kind' => authtype}.merge! options
   end
 end
