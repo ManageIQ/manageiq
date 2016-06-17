@@ -305,4 +305,41 @@ describe OpsController do
       expect(response.body).to include("if (miqDomElementExists('toolbar')) $('#toolbar').show();")
     end
   end
+
+  context "Import Tags and Import forms" do
+    %w(settings_import settings_import_tags).each do |tab|
+      render_views
+
+      before do
+        _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+        allow(controller).to receive(:check_privileges).and_return(true)
+        allow(controller).to receive(:assert_privileges).and_return(true)
+        controller.instance_variable_set(:@sb, {})
+        allow(controller).to receive(:x_active_tree).and_return(:settings_tree)
+        allow(controller).to receive(:x_node).and_return("root")
+        controller.x_active_tree = 'settings_tree'
+        expect(controller).to receive(:render_to_string).with(any_args).twice
+        post :change_tab, :params => {:tab_id => tab}
+      end
+
+      it "Apply button remains disabled with flash errors" do
+        post :explorer, :params => {:flash_error => 'true',
+                                    :flash_msg   => 'Error during upload',
+                                    :no_refresh  => 'true'}
+        expect(response.status).to eq(200)
+        expect(response.body).to_not be_empty
+        expect(response.body).to include("<div id='buttons_on' style='display: none;'>")
+        expect(response.body).to include("<div id='buttons_off' style=''>\n<button name=\"button\" type=\"submit\" class=\"btn btn-primary btn-disabled\">Apply</button>")
+      end
+
+      it "Apply button enabled when there are no flash errors" do
+        controller.instance_variable_set(:@flash_array, [])
+        post :explorer, :params => {:no_refresh => 'true'}
+        expect(response.status).to eq(200)
+        expect(response.body).to_not be_empty
+        expect(response.body).to include("<div id='buttons_on' style=''>")
+        expect(response.body).to include("<div id='buttons_off' style='display: none;'>\n<button name=\"button\" type=\"submit\" class=\"btn btn-primary btn-disabled\">Apply</button>")
+      end
+    end
+  end
 end
