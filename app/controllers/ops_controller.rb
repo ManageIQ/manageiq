@@ -125,16 +125,15 @@ class OpsController < ApplicationController
       @build = nil
       @sb[:user] = nil
       @ldap_group = nil
-    else
-      enable_apply_button = !flash_errors? if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
+    elsif %w(settings_import settings_import_tags).include?(@sb[:active_tab])
+      session[:changed] = !flash_errors?
     end
     # setting active record object here again, since they are no longer there due to redirect
     @ldap_group = @edit[:ldap_group] if params[:cls_id] && params[:cls_id].split('_')[0] == "lg"
     @x_edit_buttons_locals = set_form_locals if @in_a_form
     @collapse_c_cell = @in_a_form || @pages ? false : true
     @sb[:center_tb_filename] = center_toolbar_filename
-    enable_apply_button ||= false
-    edit_changed? if @edit && enable_apply_button
+    edit_changed? if @edit && !%w(settings_import settings_import_tags).include?(@sb[:active_tab])
     render :layout => "application"
   end
 
