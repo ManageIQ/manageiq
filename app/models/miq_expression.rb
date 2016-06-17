@@ -709,10 +709,6 @@ class MiqExpression
     result.compact.uniq
   end
 
-  def self.merge_where_clauses_and_includes(where_clauses, includes)
-    [merge_where_clauses(*where_clauses), merge_includes(*includes)]
-  end
-
   def self.expand_conditional_clause(klass, cond)
     return klass.send(:sanitize_sql_for_conditions, cond) unless cond.is_a?(Hash)
 
