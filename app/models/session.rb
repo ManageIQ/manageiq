@@ -14,32 +14,36 @@ class Session < ApplicationRecord
   def self.purge(ttl, batch_size = 100)
     deleted = 0
     loop do
-      sessions = where("updated_at <= ?", ttl.seconds.ago.utc).limit(batch_size)
-      break if sessions.size.zero?
+      cnt = purge_one_batch(ttl, batch_size)
+      deleted += cnt
 
-      # Log off the users associated with the sessions that are eligible for deletion
-      begin
-        userids = sessions.each_with_object([]) {|s, a|
-          a << Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]
-        }
-
-        User.where(:userid => userids).each do |user|
-          if user && ((user.lastlogoff && user.lastlogon && user.lastlogoff < user.lastlogon) || (user.lastlogon && user.lastlogoff.nil?))
-            user.logoff
-          end
-        end
-      rescue => err
-        _log.warn("Error '#{err.message}', attempting to delete session with id [#{sessions.id}]")
-      end
-
-      deleted += delete_batched(sessions).size
+      break if cnt.zero?
     end
 
     _log.info("purged stale session data, #{deleted} entries deleted") unless deleted == 0
   end
 
-  def self.delete_batched(sessions)
-    where(:id => sessions.collect(&:id)).destroy_all
+  def self.purge_one_batch(ttl, batch_size)
+    sessions = where("updated_at <= ?", ttl.seconds.ago.utc).limit(batch_size)
+    return 0 if sessions.size.zero?
+
+    log_off_user_sessions(sessions)
+    where(:id => sessions.collect(&:id)).destroy_all.size
+  end
+
+  def self.log_off_user_sessions(sessions)
+    # Log off the users associated with the sessions that are eligible for deletion
+    userids = sessions.each_with_object([]) do |s, a|
+      a << Marshal.load(Base64.decode64(s.data.split("\n").join))[:userid]
+    end
+
+    User.where(:userid => userids).each do |user|
+      if ((user.lastlogoff && user.lastlogon && user.lastlogoff < user.lastlogon) || (user.lastlogon && user.lastlogoff.nil?))
+        user.logoff
+      end
+    end
+  rescue => err
+    _log.warn("Error '#{err.message}', attempting to delete session with id [#{sessions.id}]")
   end
 
   def self.timeout(ttl = nil)
