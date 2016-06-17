@@ -877,7 +877,7 @@
         :identifier: rbac_role_delete
   :security_groups:
     :description: Security Groups
-    identifier: security_group
+    :identifier: security_group
     :options:
     - :collection
     :methods: *70174834086080
