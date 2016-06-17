@@ -159,59 +159,21 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def update_field_visibility(options = {})
-    # Determine the visibility of fields based on current values and collect the fields
-    # together so we can update the dialog in one pass
-
-    # Show/Hide Fields
-    f = Hash.new { |h, k| h[k] = [] }
-
-    vm = get_source_vm
-    platform = options[:force_platform] || vm.try(:platform)
-
-    number_of_vms = get_value(@values[:number_of_vms]).to_i
-
-    customize_fields_list = []
-    self.fields(:customize) do |field_name, _, _, _|
-      customize_fields_list << field_name.to_sym
-    end
-
-    options = {
-      :addr_mode                       => get_value(@values[:addr_mode]),
-      :auto_placement_enabled          => auto_placement_enabled?,
-      :customize_fields_list           => customize_fields_list,
-      :number_of_vms                   => number_of_vms,
-      :platform                        => platform,
-      :request_type                    => request_type,
-      :retirement                      => get_value(@values[:retirement]).to_i,
-      :service_template_request        => get_value(@values[:service_template_request]),
-      :supports_customization_template => self.supports_customization_template?,
-      :supports_iso                    => self.supports_iso?,
-      :supports_pxe                    => self.supports_pxe?,
-      :sysprep_auto_logon              => get_value(@values[:sysprep_auto_logon]),
-      :sysprep_custom_spec             => get_value(@values[:sysprep_custom_spec]),
-      :sysprep_enabled                 => get_value(@values[:sysprep_enabled])
-    }
-
-    f = dialog_field_visibility_service.determine_visibility(options)
-
     if request_type == :clone_to_template
       show_dialog(:customize, :hide, "disabled")
     end
 
-    update_field_visibility_linked_clone(options, f)
+    options_hash = setup_parameters_for_visibility_sevice(options)
+    visibility_hash = dialog_field_visibility_service.determine_visibility(options_hash)
 
-    # Update field :display value
-    all_fields = []
-    fields do |field_name, field, _dialog_name, _dialog|
-      all_fields << field.merge({:name => field_name})
-    end
-    dialog_field_visibility_service.set_shown_fields(f[:edit], all_fields)
-    dialog_field_visibility_service.set_hidden_fields(f[:hide], all_fields)
+    update_field_visibility_linked_clone(options, visibility_hash)
+
+    update_field_display_values(visibility_hash)
 
     # Show/Hide Notes
     f = Hash.new { |h, k| h[k] = [] }
 
-    show_flag = number_of_vms > 1 ? :edit : :hide
+    show_flag = get_value(@values[:number_of_vms]).to_i > 1 ? :edit : :hide
     f[show_flag] += [:ip_addr]
 
     show_flag = @vm_snapshot_count.zero? ? :edit : :hide
@@ -1025,6 +987,44 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def dialog_field_visibility_service
     @dialog_field_visibility_service ||= DialogFieldVisibilityService.new
+  end
+
+  def update_field_display_values(visibility_hash)
+    all_fields = []
+    fields do |field_name, field, _dialog_name, _dialog|
+      all_fields << field.merge({:name => field_name})
+    end
+    dialog_field_visibility_service.set_shown_fields(visibility_hash[:edit], all_fields)
+    dialog_field_visibility_service.set_hidden_fields(visibility_hash[:hide], all_fields)
+  end
+
+  def setup_parameters_for_visibility_sevice(options)
+    vm = get_source_vm
+    platform = options[:force_platform] || vm.try(:platform)
+
+    number_of_vms = get_value(@values[:number_of_vms]).to_i
+
+    customize_fields_list = []
+    self.fields(:customize) do |field_name, _, _, _|
+      customize_fields_list << field_name.to_sym
+    end
+
+    {
+      :addr_mode                       => get_value(@values[:addr_mode]),
+      :auto_placement_enabled          => auto_placement_enabled?,
+      :customize_fields_list           => customize_fields_list,
+      :number_of_vms                   => number_of_vms,
+      :platform                        => platform,
+      :request_type                    => request_type,
+      :retirement                      => get_value(@values[:retirement]).to_i,
+      :service_template_request        => get_value(@values[:service_template_request]),
+      :supports_customization_template => self.supports_customization_template?,
+      :supports_iso                    => self.supports_iso?,
+      :supports_pxe                    => self.supports_pxe?,
+      :sysprep_auto_logon              => get_value(@values[:sysprep_auto_logon]),
+      :sysprep_custom_spec             => get_value(@values[:sysprep_custom_spec]),
+      :sysprep_enabled                 => get_value(@values[:sysprep_enabled])
+    }
   end
 
   def create_hash_struct_from_vm_or_template(vm_or_template, options)
