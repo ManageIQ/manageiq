@@ -11,7 +11,8 @@ describe DialogFieldVisibilityService do
         sysprep_auto_logon_visibility_service,
         retirement_visibility_service,
         customize_fields_visibility_service,
-        sysprep_custom_spec_visibility_service
+        sysprep_custom_spec_visibility_service,
+        request_type_visibility_service
       )
     end
 
@@ -22,6 +23,7 @@ describe DialogFieldVisibilityService do
         :customize_fields_list           => customize_fields_list,
         :number_of_vms                   => number_of_vms,
         :platform                        => platform,
+        :request_type                    => request_type,
         :retirement                      => retirement,
         :service_template_request        => service_template_request,
         :supports_customization_template => supports_customization_template,
@@ -61,6 +63,9 @@ describe DialogFieldVisibilityService do
 
     let(:sysprep_custom_spec_visibility_service) { double("SysprepCustomSpecVisibilityService") }
     let(:sysprep_custom_spec) { "sysprep_custom_spec" }
+
+    let(:request_type_visibility_service) { double("RequestTypeVisibilityService") }
+    let(:request_type) { "request_type" }
 
     before do
       allow(service_template_fields_visibility_service).
@@ -106,6 +111,9 @@ describe DialogFieldVisibilityService do
           :hide => [:sysprep_custom_spec_hide],
           :show => [:sysprep_custom_spec_show]
       })
+
+      allow(request_type_visibility_service).
+        to receive(:determine_visibility).with(request_type).and_return({:hide => [:request_type_hide]})
     end
 
     it "adds the values to the field names to hide and show without duplicates or intersections" do
@@ -117,7 +125,8 @@ describe DialogFieldVisibilityService do
           :network_hide,
           :sysprep_auto_logon_hide,
           :customize_fields_hide,
-          :sysprep_custom_spec_hide
+          :sysprep_custom_spec_hide,
+          :request_type_hide
         ],
         :edit => [
           :auto_show,
@@ -127,7 +136,7 @@ describe DialogFieldVisibilityService do
           :retirement_show,
           :customize_fields_show,
           :retirement_hide,
-          :sysprep_custom_spec_show
+          :sysprep_custom_spec_show,
         ]
       })
     end

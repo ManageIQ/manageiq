@@ -7,7 +7,8 @@ class DialogFieldVisibilityService
     sysprep_auto_logon_visibility_service = SysprepAutoLogonVisibilityService.new,
     retirement_visibility_service = RetirementVisibilityService.new,
     customize_fields_visibility_service = CustomizeFieldsVisibilityService.new,
-    sysprep_custom_spec_visibility_service = SysprepCustomSpecVisibilityService.new
+    sysprep_custom_spec_visibility_service = SysprepCustomSpecVisibilityService.new,
+    request_type_visibility_service = RequestTypeVisibilityService.new
   )
     @auto_placement_visibility_service = auto_placement_visibility_service
     @number_of_vms_visibility_service = number_of_vms_visibility_service
@@ -17,6 +18,7 @@ class DialogFieldVisibilityService
     @retirement_visibility_service = retirement_visibility_service
     @customize_fields_visibility_service = customize_fields_visibility_service
     @sysprep_custom_spec_visibility_service = sysprep_custom_spec_visibility_service
+    @request_type_visibility_service = request_type_visibility_service
   end
 
   def set_hidden_fields(field_names_to_hide, fields)
@@ -61,6 +63,9 @@ class DialogFieldVisibilityService
     visibility_hash = @sysprep_custom_spec_visibility_service.determine_visibility(options[:sysprep_custom_spec])
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
+
+    visibility_hash = @request_type_visibility_service.determine_visibility(options[:request_type])
+    field_names_to_hide += visibility_hash[:hide]
 
     field_names_to_hide -= field_names_to_hide & field_names_to_show
     field_names_to_hide.uniq!

@@ -181,6 +181,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       :customize_fields_list           => customize_fields_list,
       :number_of_vms                   => number_of_vms,
       :platform                        => platform,
+      :request_type                    => request_type,
       :retirement                      => get_value(@values[:retirement]).to_i,
       :service_template_request        => get_value(@values[:service_template_request]),
       :supports_customization_template => self.supports_customization_template?,
@@ -193,13 +194,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     f = dialog_field_visibility_service.determine_visibility(options)
 
-    # Hide VM filter if we are using a pre-selected VM
-    if [:clone_to_vm, :clone_to_template].include?(request_type)
-      f[:hide] += [:vm_filter]
-      if request_type == :clone_to_template
-        show_dialog(:customize, :hide, "disabled")
-        f[:hide] += [:vm_auto_start]
-      end
+    if request_type == :clone_to_template
+      show_dialog(:customize, :hide, "disabled")
     end
 
     update_field_visibility_linked_clone(options, f)
@@ -225,7 +221,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     # Update field :notes_display value
     f.each { |k, v| show_fields(k, v, :notes_display) }
-
 
     update_field_read_only(options)
   end
