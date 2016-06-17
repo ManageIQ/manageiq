@@ -12,7 +12,6 @@ module ApplicationController::Timelines
     :fltr2,
     :fltr3,
     :fl_typ,
-    :groups,
     :hourly_date,
     :model,
     :pol_filter,

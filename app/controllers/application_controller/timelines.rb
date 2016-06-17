@@ -1,6 +1,10 @@
 module ApplicationController::Timelines
   extend ActiveSupport::Concern
 
+  included do
+    helper_method :tl_groups_hash
+  end
+
   # Process changes to timeline selection
   def tl_chooser
     @record = identify_tl_or_perf_record
@@ -298,10 +302,6 @@ module ApplicationController::Timelines
         end
       end
     else
-      @tl_options[:groups] = []
-      EmsEvent.event_groups.each do |gname, list|
-        @tl_options[:groups].push(list[:name].to_s)
-      end
       @tl_options[:fl_typ] = "critical" if @tl_options[:fl_typ].nil?
       if @tl_options[:filter1].nil?
         @tl_options[:filter1] = "Power Activity"
