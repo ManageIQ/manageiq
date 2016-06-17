@@ -297,37 +297,37 @@ describe MiqExpression do
         it "generates the SQL for a > expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new(">" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" > '2011-01-10'))
+          expect(sql).to eq(%q("vms"."retires_on" > '2011-01-11'))
         end
 
         it "generates the SQL for a >= expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new(">=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" >= '2011-01-10'))
+          expect(sql).to eq(%q("vms"."retires_on" >= '2011-01-11'))
         end
 
         it "generates the SQL for a < expression with a value of 'Yesterday' for a date field" do
           exp =  described_class.new("<" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" < '2011-01-10'))
+          expect(sql).to eq(%q("vms"."retires_on" < '2011-01-11'))
         end
 
         it "generates the SQL for a <= expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new("<=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" <= '2011-01-10'))
+          expect(sql).to eq(%q("vms"."retires_on" <= '2011-01-11'))
         end
 
         it "generates the SQL for an IS expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new("IS" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-10' AND '2011-01-10'))
+          expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-11' AND '2011-01-11'))
         end
 
         it "generates the SQL for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
           exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
           sql, * = exp.to_sql("Asia/Jakarta")
-          expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-10' AND '2011-01-11'))
+          expect(sql).to eq(%q("vms"."retires_on" BETWEEN '2011-01-11' AND '2011-01-12'))
         end
       end
 
@@ -1155,37 +1155,37 @@ describe MiqExpression do
         it "generates the SQL for a > expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new(">" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           ruby, * = exp.to_ruby("Asia/Jakarta")
-          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date > '2011-01-10'.to_date")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date > '2011-01-11'.to_date")
         end
 
         it "generates the RUBY for a >= expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new(">=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           ruby, * = exp.to_ruby("Asia/Jakarta")
-          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-10'.to_date")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-11'.to_date")
         end
 
         it "generates the RUBY for a < expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new("<" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           ruby, * = exp.to_ruby("Asia/Jakarta")
-          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date < '2011-01-10'.to_date")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date < '2011-01-11'.to_date")
         end
 
         it "generates the RUBY for a <= expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new("<=" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           ruby, * = exp.to_ruby("Asia/Jakarta")
-          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date <= '2011-01-10'.to_date")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date <= '2011-01-11'.to_date")
         end
 
         it "generates the RUBY for an IS expression with a value of 'Yesterday' for a date field" do
           exp = described_class.new("IS" => {"field" => "Vm-retires_on", "value" => "Yesterday"})
           ruby, * = exp.to_ruby("Asia/Jakarta")
-          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-10'.to_date && val.to_date <= '2011-01-10'.to_date")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-11'.to_date && val.to_date <= '2011-01-11'.to_date")
         end
 
         it "generates the RUBY for a FROM expression with a value of 'Yesterday'/'Today' for a date field" do
           exp = described_class.new("FROM" => {"field" => "Vm-retires_on", "value" => %w(Yesterday Today)})
           ruby, * = exp.to_ruby("Asia/Jakarta")
-          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-10'.to_date && val.to_date <= '2011-01-11'.to_date")
+          expect(ruby).to eq("val=<value ref=vm, type=date>/virtual/retires_on</value>; !val.nil? && val.to_date >= '2011-01-11'.to_date && val.to_date <= '2011-01-12'.to_date")
         end
       end
 
