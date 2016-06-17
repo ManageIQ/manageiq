@@ -9,18 +9,22 @@ describe DialogFieldVisibilityService do
         service_template_fields_visibility_service,
         network_visibility_service,
         sysprep_auto_logon_visibility_service,
-        retirement_visibility_service
+        retirement_visibility_service,
+        customize_fields_visibility_service
       )
     end
 
     let(:options) do
       {
         :addr_mode                       => addr_mode,
+
         :auto_placement_enabled          => auto_placement_enabled,
+        :customize_fields_list           => customize_fields_list,
         :number_of_vms                   => number_of_vms,
         :platform                        => platform,
         :retirement                      => retirement,
         :service_template_request        => service_template_request,
+        :supports_customization_template => supports_customization_template,
         :supports_iso                    => supports_iso,
         :supports_pxe                    => supports_pxe,
         :sysprep_auto_logon              => sysprep_auto_logon,
@@ -50,6 +54,10 @@ describe DialogFieldVisibilityService do
     let(:retirement_visibility_service) { double("RetirementVisibilityService") }
     let(:retirement) { "retirement" }
 
+    let(:customize_fields_visibility_service) { double("CustomizeFieldsVisibilityService") }
+    let(:supports_customization_template) { "supports_customization_template" }
+    let(:customize_fields_list) { "customize_fields_list" }
+
     before do
       allow(service_template_fields_visibility_service).
         to receive(:determine_visibility).with(service_template_request).and_return(
@@ -75,6 +83,13 @@ describe DialogFieldVisibilityService do
         to receive(:determine_visibility).with(retirement).and_return(
           {:hide => [:retirement_hide], :show => [:retirement_show]}
         )
+      allow(customize_fields_visibility_service).
+        to receive(:determine_visibility).with(
+          platform, supports_customization_template, customize_fields_list
+        ).and_return({
+          :hide => [:customize_fields_hide, :number_hide], # Forces uniq
+          :show => [:customize_fields_show, :number_show, :retirement_hide] # Forces uniq and removal of intersection
+        })
     end
 
     it "adds the values to the field names to hide and show without duplicates or intersections" do
@@ -82,11 +97,19 @@ describe DialogFieldVisibilityService do
         :hide => [
           :service_template_request_hide,
           :auto_hide,
-          :number_hide
+          :number_hide,
+          :network_hide,
+          :sysprep_auto_logon_hide,
+          :customize_fields_hide
         ],
         :edit => [
           :auto_show,
-          :number_show
+          :number_show,
+          :network_show,
+          :sysprep_auto_logon_show,
+          :retirement_show,
+          :customize_fields_show,
+          :retirement_hide
         ]
       })
     end

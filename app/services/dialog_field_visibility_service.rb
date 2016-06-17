@@ -5,7 +5,8 @@ class DialogFieldVisibilityService
     service_template_fields_visibility_service = ServiceTemplateFieldsVisibilityService.new,
     network_visibility_service = NetworkVisibilityService.new,
     sysprep_auto_logon_visibility_service = SysprepAutoLogonVisibilityService.new,
-    retirement_visibility_service = RetirementVisibilityService.new
+    retirement_visibility_service = RetirementVisibilityService.new,
+    customize_fields_visibility_service = CustomizeFieldsVisibilityService.new
   )
     @auto_placement_visibility_service = auto_placement_visibility_service
     @number_of_vms_visibility_service = number_of_vms_visibility_service
@@ -13,6 +14,7 @@ class DialogFieldVisibilityService
     @network_visibility_service = network_visibility_service
     @sysprep_auto_logon_visibility_service = sysprep_auto_logon_visibility_service
     @retirement_visibility_service = retirement_visibility_service
+    @customize_fields_visibility_service = customize_fields_visibility_service
   end
 
   def determine_visibility(options)
@@ -42,6 +44,13 @@ class DialogFieldVisibilityService
     field_names_to_hide += visibility_hash[:hide]
     field_names_to_show += visibility_hash[:show]
 
+    visibility_hash = @customize_fields_visibility_service.determine_visibility(options[:platform], options[:supports_customization_template], options[:customize_fields_list])
+    field_names_to_hide += visibility_hash[:hide]
+    field_names_to_show += visibility_hash[:show]
+
+    field_names_to_hide -= field_names_to_hide & field_names_to_show
+    field_names_to_hide.uniq!
+    field_names_to_show.uniq!
     {:hide => field_names_to_hide.flatten, :edit => field_names_to_show.flatten}
   end
 end
