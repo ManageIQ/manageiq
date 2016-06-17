@@ -2708,6 +2708,8 @@ module ApplicationController::CiProcessing
     when "#{pfx}_resize"                    then resizevms
     when "#{pfx}_evacuate"                  then evacuatevms
     when "#{pfx}_live_migrate"              then livemigratevms
+    when "#{pfx}_associate_floating_ip"     then associate_floating_ip_vms
+    when "#{pfx}_disassociate_floating_ip"  then disassociate_floating_ip_vms
     when "#{pfx}_retire"                    then retirevms
     when "#{pfx}_retire_now"                then retirevms_now
     when "#{pfx}_right_size"                then vm_right_size
