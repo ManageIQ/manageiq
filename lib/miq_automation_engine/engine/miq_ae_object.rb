@@ -406,7 +406,7 @@ module MiqAeEngine
         methods        = frags
         value          = o.attributes[attribute_name.downcase]
         begin
-          methods.each { |meth| value = value.send(meth) }
+          methods.each { |meth| value = call_method(value, meth) }
         rescue => err
           $miq_ae_logger.warn "Error during substitution: #{err.message}"
           return nil
@@ -418,6 +418,18 @@ module MiqAeEngine
     end
 
     private
+
+    def call_method(obj, method)
+      result = RE_METHOD_CALL.match(method)
+      raise MiqAeException::InvalidMethod, "invalid method calling syntax: [#{method}]" if result.nil?
+      if result[2]
+        args = result[2]
+        args = result[2][1..-1].to_sym if result[2][0] == ':'
+        obj.send(result[1], args)
+      else
+        obj.send(result[1])
+      end
+    end
 
     def invoke_method(namespace, klass, method_name, args)
       aem = nil
