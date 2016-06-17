@@ -55,6 +55,7 @@ class MiqExpression
     Storage
     StorageFile
     StoragePerformance
+    Switch
     ManageIQ::Providers::CloudManager::Template
     ManageIQ::Providers::InfraManager::Template
     Tenant
@@ -99,6 +100,7 @@ class MiqExpression
     flavors
     groups
     guest_applications
+    guest_devices
     hardwares
     hosts
     host_services
