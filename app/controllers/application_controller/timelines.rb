@@ -72,9 +72,9 @@ module ApplicationController::Timelines
     end
 
     if @tl_options[:tl_show] == "timeline"
-      @tl_options.fltr1 = @tl_options.filter1.blank? ? '' : tl_build_filter(@tl_groups_hash[@tl_options.filter1])
-      @tl_options.fltr2 = @tl_options.filter2.blank? ? '' : tl_build_filter(@tl_groups_hash[@tl_options.filter2])
-      @tl_options.fltr3 = @tl_options.filter3.blank? ? '' : tl_build_filter(@tl_groups_hash[@tl_options.filter3])
+      @tl_options.fltr1 = @tl_options.filter1.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter1])
+      @tl_options.fltr2 = @tl_options.filter2.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter2])
+      @tl_options.fltr3 = @tl_options.filter3.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter3])
     else
       @tl_options[:events].sort.each_with_index do |_e, i|
         @tl_options[:pol_fltr][i] = if !@tl_options.pol_filter[i].blank?
@@ -299,15 +299,13 @@ module ApplicationController::Timelines
       end
     else
       @tl_options[:groups] = []
-      @tl_groups_hash = {}
       EmsEvent.event_groups.each do |gname, list|
         @tl_options[:groups].push(list[:name].to_s)
-        @tl_groups_hash[list[:name].to_s] = gname
       end
       @tl_options[:fl_typ] = "critical" if @tl_options[:fl_typ].nil?
       if @tl_options[:filter1].nil?
         @tl_options[:filter1] = "Power Activity"
-        @tl_options[:fltr1] = tl_build_filter(@tl_groups_hash[@tl_options[:filter1]])
+        @tl_options[:fltr1] = tl_build_filter(tl_groups_hash[@tl_options[:filter1]])
       end
     end
   end
@@ -378,16 +376,16 @@ module ApplicationController::Timelines
         event_groups = EmsEvent.event_groups
         if !@tl_options.filter1.blank? || !@tl_options.filter2.blank? || !@tl_options.filter3.blank?
           if !@tl_options.filter1.blank?
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter1]]
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if tl_groups_hash[@tl_options[:filter1]]
+            event_set.push(event_groups[tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
           if !@tl_options.filter2.blank?
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter2]]
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if tl_groups_hash[@tl_options[:filter2]]
+            event_set.push(event_groups[tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
           if !@tl_options.filter3.blank?
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter3]]
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+            event_set.push(event_groups[tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if tl_groups_hash[@tl_options[:filter3]]
+            event_set.push(event_groups[tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
         else
           event_set.push(event_groups[:power][@tl_options[:fl_typ].to_sym])
@@ -463,6 +461,13 @@ module ApplicationController::Timelines
           #         END of TIMELINE TIMEZONE Code
         end
       end
+    end
+  end
+
+  def tl_groups_hash
+    @tl_groups_hash ||= EmsEvent.event_groups.each_with_object({}) do |egroup, hash|
+      gname, list = egroup
+      hash[list[:name].to_s] = gname
     end
   end
 
