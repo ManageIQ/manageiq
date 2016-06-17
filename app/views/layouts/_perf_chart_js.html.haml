@@ -30,6 +30,7 @@
                           "id"              => "miq_chartmenu_#{chart_set}_#{chart_index}_2",
                           "style"           => "position: fixed;"}
         :javascript
+          $('body').addClass('cards-pf');
           $("#miq_chart_parent_#{chart_set}_#{chart_index}_2").on('hidden.bs.dropdown', function() {
             $("#miq_chartmenu_#{chart_set}_#{chart_index}_2").empty();
             $("#miq_chart_parent_#{chart_set}_#{chart_index}_2 .overlay").hide();
@@ -53,6 +54,7 @@
                         "id"              => "miq_chartmenu_#{chart_set}_#{chart_index}",
                         "style"           => "position: fixed;"}
     :javascript
+      $('body').addClass('cards-pf');
       miqChartBindEvents("#{chart_set}", #{chart_index});
       $("#miq_chart_parent_#{chart_set}_#{chart_index}").on('hidden.bs.dropdown', function() {
         $("#miq_chartmenu_#{chart_set}_#{chart_index}").empty();
