@@ -1077,6 +1077,8 @@
         :identifier: catalogitem_edit
       - :name: order
         :identifier: svc_catalog_provision
+        :options:
+        - :validate_action
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
       - :name: assign
