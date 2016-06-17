@@ -29,17 +29,16 @@ class ApiController
       end
     end
 
-    def service_templates_order_resource(_object, _type, id = nil, data = nil)
+    def service_templates_order_resource(_object, type, id = nil, data = nil)
       klass = collection_class(:service_templates)
-      options = {:dialog => {}, :src_id => id}
-      unless data.nil?
-        data.each do |key, value|
-          dkey = "dialog_#{key}"
-          options[:dialog][dkey] = value unless value.empty?
-        end
+      service_template = resource_search(id, type, klass)
+      workflow = service_template_workflow(service_template, data || {})
+      request_result = workflow.submit_request
+      errors = request_result[:errors]
+      if errors.present?
+        raise BadRequestError, "Failed to order #{service_template_ident(service_template)} - #{errors.join(", ")}"
       end
-
-      klass.new.request_class.make_request(nil, options, @auth_user_obj)
+      request_result[:request]
     end
 
     def service_templates_refresh_dialog_fields_resource(object, type, id = nil, data = nil)

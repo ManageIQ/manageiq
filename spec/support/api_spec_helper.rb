@@ -190,6 +190,10 @@ module ApiSpecHelper
     include("actions" => a_collection_containing_exactly(*names.map { |name| a_hash_including("name" => name) }))
   end
 
+  def include_actions(*names)
+    include("actions" => a_collection_including(*names.map { |name| a_hash_including("name" => name) }))
+  end
+
   # Rest API Expects
 
   def expect_request_success

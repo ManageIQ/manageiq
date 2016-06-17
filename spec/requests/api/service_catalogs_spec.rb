@@ -300,6 +300,52 @@ describe ApiController do
        "status"         => "Ok"}
     end
 
+    let(:dialog1) { FactoryGirl.create(:dialog, :label => "Dialog1") }
+    let(:tab1)    { FactoryGirl.create(:dialog_tab, :label => "Tab1") }
+    let(:group1)  { FactoryGirl.create(:dialog_group, :label => "Group1") }
+    let(:text1)   { FactoryGirl.create(:dialog_field_text_box, :label => "TextBox1", :name => "text1") }
+    let(:ra1)     { FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog1) }
+    let(:st1)     { FactoryGirl.create(:service_template, :name => "service template 1", :display => true) }
+    let(:ra2)     { FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog1) }
+    let(:st2)     { FactoryGirl.create(:service_template, :name => "service template 2", :display => true) }
+    let(:sc)      { FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description") }
+
+    def init_st(service_template, resource_action)
+      service_template.resource_actions = [resource_action]
+      dialog1.dialog_tabs << tab1
+      tab1.dialog_groups << group1
+      group1.dialog_fields << text1
+    end
+
+    it "does not return order action for non-orderable service templates" do
+      api_basic_authorize(subcollection_action_identifier(:service_catalogs, :service_templates, :edit),
+                          subcollection_action_identifier(:service_catalogs, :service_templates, :order))
+
+      init_st(st1, ra1)
+      sc.service_templates = [st1]
+
+      st1.display = false
+      st1.save
+
+      run_get sc_templates_url(sc.id, st1.id)
+
+      expect_request_success
+      expect(response_hash).to_not include_actions("order")
+    end
+
+    it "returns order action for orderable service templates" do
+      api_basic_authorize(subcollection_action_identifier(:service_catalogs, :service_templates, :edit),
+                          subcollection_action_identifier(:service_catalogs, :service_templates, :order))
+
+      init_st(st1, ra1)
+      sc.service_templates = [st1]
+
+      run_get sc_templates_url(sc.id, st1.id)
+
+      expect_request_success
+      expect(response_hash).to include_actions("order")
+    end
+
     it "rejects order requests without appropriate role" do
       api_basic_authorize
 
@@ -311,8 +357,7 @@ describe ApiController do
     it "supports single order request" do
       api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
 
-      sc  = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
-      st1 = FactoryGirl.create(:service_template, :name => "service template 1")
+      init_st(st1, ra1)
       sc.service_templates = [st1]
 
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:order))
@@ -320,12 +365,35 @@ describe ApiController do
       expect_single_resource_query(order_request)
     end
 
+    it "accepts order requests with required fields" do
+      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
+
+      text1.required = true
+      init_st(st1, ra1)
+      sc.service_templates = [st1]
+
+      run_post(sc_templates_url(sc.id, st1.id), gen_request(:order, "text1" => "value1"))
+
+      expect_single_resource_query(order_request)
+    end
+
+    it "rejects order requests without required fields" do
+      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
+
+      text1.required = true
+      init_st(st1, ra1)
+      sc.service_templates = [st1]
+
+      run_post(sc_templates_url(sc.id, st1.id), gen_request(:order))
+
+      expect_bad_request("Failed to order")
+    end
+
     it "supports multiple order requests" do
       api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
 
-      sc  = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
-      st1 = FactoryGirl.create(:service_template, :name => "service template 1")
-      st2 = FactoryGirl.create(:service_template, :name => "service template 1")
+      init_st(st1, ra1)
+      init_st(st2, ra2)
       sc.service_templates = [st1, st2]
 
       run_post(sc_templates_url(sc.id), gen_request(:order, [{"href" => service_templates_url(st1.id)},
