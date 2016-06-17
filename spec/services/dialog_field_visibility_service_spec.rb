@@ -10,14 +10,14 @@ describe DialogFieldVisibilityService do
         network_visibility_service,
         sysprep_auto_logon_visibility_service,
         retirement_visibility_service,
-        customize_fields_visibility_service
+        customize_fields_visibility_service,
+        sysprep_custom_spec_visibility_service
       )
     end
 
     let(:options) do
       {
         :addr_mode                       => addr_mode,
-
         :auto_placement_enabled          => auto_placement_enabled,
         :customize_fields_list           => customize_fields_list,
         :number_of_vms                   => number_of_vms,
@@ -28,6 +28,7 @@ describe DialogFieldVisibilityService do
         :supports_iso                    => supports_iso,
         :supports_pxe                    => supports_pxe,
         :sysprep_auto_logon              => sysprep_auto_logon,
+        :sysprep_custom_spec             => sysprep_custom_spec,
         :sysprep_enabled                 => sysprep_enabled
       }
     end
@@ -58,31 +59,40 @@ describe DialogFieldVisibilityService do
     let(:supports_customization_template) { "supports_customization_template" }
     let(:customize_fields_list) { "customize_fields_list" }
 
+    let(:sysprep_custom_spec_visibility_service) { double("SysprepCustomSpecVisibilityService") }
+    let(:sysprep_custom_spec) { "sysprep_custom_spec" }
+
     before do
       allow(service_template_fields_visibility_service).
         to receive(:determine_visibility).with(service_template_request).and_return(
           {:hide => [:service_template_request_hide]}
         )
+
       allow(auto_placement_visibility_service).
         to receive(:determine_visibility).with(auto_placement_enabled).and_return(
           {:hide => [:auto_hide], :show => [:auto_show]}
         )
+
       allow(number_of_vms_visibility_service).
         to receive(:determine_visibility).with(number_of_vms, platform).and_return(
           {:hide => [:number_hide], :show => [:number_show]}
         )
+
       allow(network_visibility_service).
         to receive(:determine_visibility).with(sysprep_enabled, supports_pxe, supports_iso, addr_mode).and_return(
           {:hide => [:network_hide], :show => [:network_show]}
         )
+
       allow(sysprep_auto_logon_visibility_service).
         to receive(:determine_visibility).with(sysprep_auto_logon).and_return(
           {:hide => [:sysprep_auto_logon_hide], :show => [:sysprep_auto_logon_show]}
         )
+
       allow(retirement_visibility_service).
         to receive(:determine_visibility).with(retirement).and_return(
           {:hide => [:retirement_hide], :show => [:retirement_show]}
         )
+
       allow(customize_fields_visibility_service).
         to receive(:determine_visibility).with(
           platform, supports_customization_template, customize_fields_list
@@ -90,6 +100,12 @@ describe DialogFieldVisibilityService do
           :hide => [:customize_fields_hide, :number_hide], # Forces uniq
           :show => [:customize_fields_show, :number_show, :retirement_hide] # Forces uniq and removal of intersection
         })
+
+      allow(sysprep_custom_spec_visibility_service).
+        to receive(:determine_visibility).with(sysprep_custom_spec).and_return({
+          :hide => [:sysprep_custom_spec_hide],
+          :show => [:sysprep_custom_spec_show]
+      })
     end
 
     it "adds the values to the field names to hide and show without duplicates or intersections" do
@@ -100,7 +116,8 @@ describe DialogFieldVisibilityService do
           :number_hide,
           :network_hide,
           :sysprep_auto_logon_hide,
-          :customize_fields_hide
+          :customize_fields_hide,
+          :sysprep_custom_spec_hide
         ],
         :edit => [
           :auto_show,
@@ -109,7 +126,8 @@ describe DialogFieldVisibilityService do
           :sysprep_auto_logon_show,
           :retirement_show,
           :customize_fields_show,
-          :retirement_hide
+          :retirement_hide,
+          :sysprep_custom_spec_show
         ]
       })
     end

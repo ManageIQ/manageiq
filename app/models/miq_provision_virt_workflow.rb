@@ -187,13 +187,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       :supports_iso                    => self.supports_iso?,
       :supports_pxe                    => self.supports_pxe?,
       :sysprep_auto_logon              => get_value(@values[:sysprep_auto_logon]),
+      :sysprep_custom_spec             => get_value(@values[:sysprep_custom_spec]),
       :sysprep_enabled                 => get_value(@values[:sysprep_enabled])
     }
 
     f = dialog_field_visibility_service.determine_visibility(options)
-
-    show_flag = get_value(@values[:sysprep_custom_spec]).blank? ? :hide : :edit
-    f[show_flag] += [:sysprep_spec_override]
 
     # Hide VM filter if we are using a pre-selected VM
     if [:clone_to_vm, :clone_to_template].include?(request_type)
