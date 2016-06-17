@@ -53,15 +53,13 @@ module ApplicationController::Timelines
     end
 
     @tl_options[:fl_typ] = params[:tl_fl_typ] if params[:tl_fl_typ]
-    if @tl_options[:tl_show] == "timeline" &&
-       (@tl_options[:filter1].nil? || @tl_options[:filter1] == "") &&
-       (@tl_options[:filter2].nil? || @tl_options[:filter2] == "") &&
-       (@tl_options[:filter3].nil? || @tl_options[:filter3] == "")
+    if @tl_options.tl_show == 'timeline' &&
+       (@tl_options.filter1.blank? || @tl_options.filter2.blank? || @tl_options.filter3.blank?)
       add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options[:tl_show] == "policy_timeline"
       flg = true
       @tl_options[:events].sort.each_with_index do |_e, i|
-        if !@tl_options[:pol_filter][i].nil? && @tl_options[:pol_filter][i] != ""
+        unless @tl_options.pol_filter[i].blank?
           flg = false
           tl_build_timeline(refresh = "n")
           break
@@ -74,24 +72,12 @@ module ApplicationController::Timelines
     end
 
     if @tl_options[:tl_show] == "timeline"
-      if !@tl_options[:filter1].nil? && @tl_options[:filter1] != ""
-        @tl_options[:fltr1] = tl_build_filter(@tl_groups_hash[@tl_options[:filter1]])
-      else
-        @tl_options[:fltr1] = ""
-      end
-      if !@tl_options[:filter2].nil? && @tl_options[:filter2] != ""
-        @tl_options[:fltr2] = tl_build_filter(@tl_groups_hash[@tl_options[:filter2]])
-      else
-        @tl_options[:fltr2] = ""
-      end
-      if !@tl_options[:filter3].nil? && @tl_options[:filter3] != ""
-        @tl_options[:fltr3] = tl_build_filter(@tl_groups_hash[@tl_options[:filter3]])
-      else
-        @tl_options[:fltr3] = ""
-      end
+      @tl_options.fltr1 = @tl_options.filter1.blank? ? '' : tl_build_filter(@tl_groups_hash[@tl_options.filter1])
+      @tl_options.fltr2 = @tl_options.filter2.blank? ? '' : tl_build_filter(@tl_groups_hash[@tl_options.filter2])
+      @tl_options.fltr3 = @tl_options.filter3.blank? ? '' : tl_build_filter(@tl_groups_hash[@tl_options.filter3])
     else
       @tl_options[:events].sort.each_with_index do |_e, i|
-        @tl_options[:pol_fltr][i] = if !@tl_options[:pol_filter][i].nil? && @tl_options[:pol_filter][i] != ""
+        @tl_options[:pol_fltr][i] = if !@tl_options.pol_filter[i].blank?
                                       tl_build_policy_filter(@tl_options[:pol_filter][i])
                                     else
                                       ""
@@ -390,18 +376,16 @@ module ApplicationController::Timelines
         end
       else
         event_groups = EmsEvent.event_groups
-        if (!@tl_options[:filter1].nil? && @tl_options[:filter1] != "") ||
-           (!@tl_options[:filter2].nil? && @tl_options[:filter2] != "") ||
-           (!@tl_options[:filter3].nil? && @tl_options[:filter3] != "")
-          if !@tl_options[:filter1].nil? && @tl_options[:filter1] != ""
+        if !@tl_options.filter1.blank? || !@tl_options.filter2.blank? || !@tl_options.filter3.blank?
+          if !@tl_options.filter1.blank?
             event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter1]]
             event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
-          if !@tl_options[:filter2].nil? && @tl_options[:filter2] != ""
+          if !@tl_options.filter2.blank?
             event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter2]]
             event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
-          if !@tl_options[:filter3].nil? && @tl_options[:filter3] != ""
+          if !@tl_options.filter3.blank?
             event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter3]]
             event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
           end
