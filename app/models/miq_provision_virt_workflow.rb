@@ -200,8 +200,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     update_field_visibility_linked_clone(options, f)
 
-    update_field_visibility_pxe_iso(f)
-
     # Update field :display value
     all_fields = []
     fields do |field_name, field, _dialog_name, _dialog|
@@ -235,14 +233,6 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     else
       f[:hide] += [:linked_clone, :snapshot]
     end
-  end
-
-  def update_field_visibility_pxe_iso(f)
-    show_flag = self.supports_pxe? ? :edit : :hide
-    f[show_flag] += [:pxe_image_id, :pxe_server_id]
-
-    show_flag = self.supports_iso? ? :edit : :hide
-    f[show_flag] += [:iso_image_id]
   end
 
   def show_customize_fields_pxe(fields)

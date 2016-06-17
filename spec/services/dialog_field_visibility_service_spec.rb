@@ -12,7 +12,8 @@ describe DialogFieldVisibilityService do
         retirement_visibility_service,
         customize_fields_visibility_service,
         sysprep_custom_spec_visibility_service,
-        request_type_visibility_service
+        request_type_visibility_service,
+        pxe_iso_visibility_service
       )
     end
 
@@ -67,6 +68,8 @@ describe DialogFieldVisibilityService do
     let(:request_type_visibility_service) { double("RequestTypeVisibilityService") }
     let(:request_type) { "request_type" }
 
+    let(:pxe_iso_visibility_service) { double("PxeIsoVisibilityService") }
+
     before do
       allow(service_template_fields_visibility_service).
         to receive(:determine_visibility).with(service_template_request).and_return(
@@ -114,6 +117,12 @@ describe DialogFieldVisibilityService do
 
       allow(request_type_visibility_service).
         to receive(:determine_visibility).with(request_type).and_return({:hide => [:request_type_hide]})
+
+      allow(pxe_iso_visibility_service).
+        to receive(:determine_visibility).with(supports_iso, supports_pxe).and_return({
+          :hide => [:pxe_iso_hide],
+          :show => [:pxe_iso_show]
+      })
     end
 
     it "adds the values to the field names to hide and show without duplicates or intersections" do
@@ -126,7 +135,8 @@ describe DialogFieldVisibilityService do
           :sysprep_auto_logon_hide,
           :customize_fields_hide,
           :sysprep_custom_spec_hide,
-          :request_type_hide
+          :request_type_hide,
+          :pxe_iso_hide
         ],
         :edit => [
           :auto_show,
@@ -137,6 +147,7 @@ describe DialogFieldVisibilityService do
           :customize_fields_show,
           :retirement_hide,
           :sysprep_custom_spec_show,
+          :pxe_iso_show
         ]
       })
     end
