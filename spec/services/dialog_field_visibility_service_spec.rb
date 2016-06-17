@@ -8,7 +8,8 @@ describe DialogFieldVisibilityService do
         number_of_vms_visibility_service,
         service_template_fields_visibility_service,
         network_visibility_service,
-        sysprep_auto_logon_visibility_service
+        sysprep_auto_logon_visibility_service,
+        retirement_visibility_service
       )
     end
 
@@ -18,6 +19,7 @@ describe DialogFieldVisibilityService do
         :auto_placement_enabled          => auto_placement_enabled,
         :number_of_vms                   => number_of_vms,
         :platform                        => platform,
+        :retirement                      => retirement,
         :service_template_request        => service_template_request,
         :supports_iso                    => supports_iso,
         :supports_pxe                    => supports_pxe,
@@ -45,6 +47,9 @@ describe DialogFieldVisibilityService do
     let(:sysprep_auto_logon_visibility_service) { double("SysprepAutoLogonVisibilityService") }
     let(:sysprep_auto_logon) { "sysprep_auto_logon" }
 
+    let(:retirement_visibility_service) { double("RetirementVisibilityService") }
+    let(:retirement) { "retirement" }
+
     before do
       allow(service_template_fields_visibility_service).
         to receive(:determine_visibility).with(service_template_request).and_return(
@@ -65,6 +70,10 @@ describe DialogFieldVisibilityService do
       allow(sysprep_auto_logon_visibility_service).
         to receive(:determine_visibility).with(sysprep_auto_logon).and_return(
           {:hide => [:sysprep_auto_logon_hide], :show => [:sysprep_auto_logon_show]}
+        )
+      allow(retirement_visibility_service).
+        to receive(:determine_visibility).with(retirement).and_return(
+          {:hide => [:retirement_hide], :show => [:retirement_show]}
         )
     end
 
