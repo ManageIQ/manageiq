@@ -149,7 +149,8 @@ class MiqAeYamlExport
     export_file_hash = {'fqname'     => swap_domain_path(ns_fqname),
                         'class_name' => "#{class_obj.name}#{CLASS_DIR_SUFFIX}"}
     class_obj.ae_instances.sort_by(&:fqname).each do |inst|
-      file_name = inst.name.tr('.', '_')
+      file_name = inst.name.dup
+      file_name[0] = '_' if file_name[0] == '.'
       envelope_hash = setup_envelope(inst, INSTANCE_OBJ_TYPE)
       envelope_hash['object']['fields'] = inst.export_ae_fields
       export_file_hash['output_filename'] = "#{file_name}.yaml"
