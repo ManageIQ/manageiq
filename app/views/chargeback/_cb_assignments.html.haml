@@ -10,7 +10,7 @@
         = _('Assign To')
       .col-md-8
         - options = ASSIGN_TOS[x_node.split('-').last == "Compute" ? "chargeback_compute".to_sym : "chargeback_storage".to_sym].map do |k, v|
-          [v.kind_of?(PostponedTranslation) ? v.translate : _(v), k]
+          - [v.kind_of?(PostponedTranslation) ? v.translate : _(v), k]
         = select_tag("cbshow_typ", options_for_select([[nothing, "nil"]] + options, @edit[:new][:cbshow_typ]),
                     "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :class    => "selectpicker")
       :javascript
