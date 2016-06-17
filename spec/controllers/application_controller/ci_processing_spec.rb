@@ -334,3 +334,59 @@ describe HostController do
     end
   end
 end
+
+describe ServiceController do
+  context "#vm_button_operation" do
+    before do
+      _guid, @miq_server, @zone = EvmSpecHelper.remote_guid_miq_server_zone
+      allow(MiqServer).to receive(:my_zone).and_return("default")
+      controller.instance_variable_set(:@lastaction, "show_list")
+    end
+
+    it "should render flash message when trying to retire a template" do
+      controller.request.parameters["controller"] = "vm_or_template"
+      vm = FactoryGirl.create(:vm_vmware,
+                              :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
+                              :storage               => FactoryGirl.create(:storage)
+                             )
+      template = FactoryGirl.create(:template,
+                                    :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
+                                    :storage               => FactoryGirl.create(:storage)
+                                   )
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm.id}, #{template.id}")
+      expect(controller).to receive(:render_flash_and_scroll)
+      controller.send(:vm_button_operation, 'retire_now', "Retirement")
+      expect(response.status).to eq(200)
+    end
+
+    it "should continue to retire a vm" do
+      controller.request.parameters["controller"] = "vm_or_template"
+      vm = FactoryGirl.create(:vm_vmware,
+                              :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
+                              :storage               => FactoryGirl.create(:storage)
+                             )
+
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{vm.id}")
+      expect(controller).to receive(:show_list)
+      controller.send(:vm_button_operation, 'retire_now', "Retirement")
+      expect(response.status).to eq(200)
+      expect(assigns(:flash_array).first[:message]).to include("Retirement initiated for 1 VM and Instance from the CFME Database")
+    end
+
+    it "should continue to retire a service and does not render flash message 'xxx does not apply xxx' " do
+      controller.request.parameters["controller"] = "service"
+      service = FactoryGirl.create(:service)
+      template = FactoryGirl.create(:template,
+                                    :ext_management_system => FactoryGirl.create(:ems_openstack_infra),
+                                    :storage               => FactoryGirl.create(:storage)
+                                   )
+      service.update_attribute(:id, template.id)
+      service.reload
+      controller.instance_variable_set(:@_params, :miq_grid_checks => "#{service.id}")
+      expect(controller).to receive(:show_list)
+      controller.send(:vm_button_operation, 'retire_now', "Retirement")
+      expect(response.status).to eq(200)
+      expect(assigns(:flash_array).first[:message]).to include("Retirement initiated for 1 Service from the CFME Database")
+    end
+  end
+end

@@ -1940,5 +1940,9 @@ class VmOrTemplate < ApplicationRecord
     Arel::Nodes::NamedFunction.new('COALESCE', values)
   end
 
+  def self.supports_operation?(operation, ids)
+    VmOrTemplate.where(:id => ids).all? { |v| v.public_send("supports_#{operation}?") }
+  end
+
   include DeprecatedCpuMethodsMixin
 end

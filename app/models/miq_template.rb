@@ -30,4 +30,8 @@ class MiqTemplate < VmOrTemplate
   end
 
   def active?; false; end
+
+  def supports_retirement?
+    false
+  end
 end
