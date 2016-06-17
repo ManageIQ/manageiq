@@ -11,7 +11,8 @@ class AutoPlacementVisibilityService
       :cluster_filter,
       :placement_cluster_name,
       :rp_filter,
-      :placement_rp_name
+      :placement_rp_name,
+      :placement_dc_name
     ]
 
     if auto_placement_enabled

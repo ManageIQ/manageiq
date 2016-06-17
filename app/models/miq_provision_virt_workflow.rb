@@ -162,51 +162,35 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Determine the visibility of fields based on current values and collect the fields
     # together so we can update the dialog in one pass
 
-    number_of_vms = get_value(@values[:number_of_vms]).to_i
-
     # Show/Hide Fields
     f = Hash.new { |h, k| h[k] = [] }
 
-    if get_value(@values[:service_template_request])
-      f[:hide] = [:number_of_vms, :vm_description, :schedule_type, :schedule_time]
-    end
-
-    auto_placement = show_flag = auto_placement_enabled? ? :hide : :edit
-    f[show_flag] += [:placement_host_name, :placement_ds_name, :host_filter, :ds_filter, :cluster_filter, :placement_cluster_name, :rp_filter, :placement_rp_name, :placement_dc_name]
-
-    show_flag = get_value(@values[:sysprep_enabled]).in?(%w(fields file)) || self.supports_pxe? || self.supports_iso? ? :edit : :hide
-    f[show_flag] += [:addr_mode]
-
-    # If we are hiding the network fields always hide.  If available then the show_flag depends on the addr_mode
-    if show_flag == :edit
-      f[show_flag] += [:dns_suffixes, :dns_servers]
-      show_flag = (get_value(@values[:addr_mode]) == 'static') || self.supports_pxe? || self.supports_iso? ? :edit : :hide
-      f[show_flag] += [:ip_addr, :subnet_mask, :gateway]
-    else
-      # Hide all networking fields if we are not customizing
-      f[show_flag] += [:ip_addr, :subnet_mask, :gateway, :dns_servers, :dns_suffixes]
-    end
-
-    show_flag = get_value(@values[:sysprep_auto_logon]) == false ? :hide : :edit
-    f[show_flag] += [:sysprep_auto_logon_count]
-
-    show_flag = number_of_vms > 1 ? :hide : :edit
-    f[show_flag] += [:sysprep_computer_name]
-
-    show_flag = get_value(@values[:retirement]).to_i > 0 ? :edit : :hide
-    f[show_flag] += [:retirement_warn]
     vm = get_source_vm
     platform = options[:force_platform] || vm.try(:platform)
-    show_customize_fields(f, platform)
 
-    show_flag = number_of_vms > 1 ? :hide : :edit
-    if platform == 'linux'
-      f[show_flag] += [:linux_host_name]
-      f[:hide] += [:sysprep_computer_name]
-    else
-      f[show_flag] += [:sysprep_computer_name]
-      f[:hide] += [:linux_host_name]
+    number_of_vms = get_value(@values[:number_of_vms]).to_i
+
+    customize_fields_list = []
+    self.fields(:customize) do |field_name, _, _, _|
+      customize_fields_list << field_name.to_sym
     end
+
+    options = {
+      :addr_mode                       => get_value(@values[:addr_mode]),
+      :auto_placement_enabled          => auto_placement_enabled?,
+      :customize_fields_list           => customize_fields_list,
+      :number_of_vms                   => number_of_vms,
+      :platform                        => platform,
+      :retirement                      => get_value(@values[:retirement]).to_i,
+      :service_template_request        => get_value(@values[:service_template_request]),
+      :supports_customization_template => self.supports_customization_template?,
+      :supports_iso                    => self.supports_iso?,
+      :supports_pxe                    => self.supports_pxe?,
+      :sysprep_auto_logon              => get_value(@values[:sysprep_auto_logon]),
+      :sysprep_enabled                 => get_value(@values[:sysprep_enabled])
+    }
+
+    f = dialog_field_visibility_service.determine_visibility(options)
 
     show_flag = get_value(@values[:sysprep_custom_spec]).blank? ? :hide : :edit
     f[show_flag] += [:sysprep_spec_override]
@@ -225,7 +209,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     update_field_visibility_pxe_iso(f)
 
     # Update field :display value
-    f.each { |k, v| show_fields(k, v) }
+    all_fields = []
+    fields do |field_name, field, _dialog_name, _dialog|
+      all_fields << field.merge({:name => field_name})
+    end
+    dialog_field_visibility_service.set_shown_fields(f[:edit], all_fields)
+    dialog_field_visibility_service.set_hidden_fields(f[:hide], all_fields)
 
     # Show/Hide Notes
     f = Hash.new { |h, k| h[k] = [] }
@@ -1085,6 +1074,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   private
+
+  def dialog_field_visibility_service
+    @dialog_field_visibility_service ||= DialogFieldVisibilityService.new
+  end
 
   def create_hash_struct_from_vm_or_template(vm_or_template, options)
     hash_struct = MiqHashStruct.new(

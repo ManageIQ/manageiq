@@ -16,7 +16,8 @@ describe AutoPlacementVisibilityService do
               :cluster_filter,
               :placement_cluster_name,
               :rp_filter,
-              :placement_rp_name
+              :placement_rp_name,
+              :placement_dc_name
             ],
             :show => []
           }
@@ -39,7 +40,8 @@ describe AutoPlacementVisibilityService do
               :cluster_filter,
               :placement_cluster_name,
               :rp_filter,
-              :placement_rp_name
+              :placement_rp_name,
+              :placement_dc_name
             ]
           }
         )
