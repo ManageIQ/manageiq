@@ -247,13 +247,6 @@ module ApplicationController::Timelines
     if @tl_options[:tl_show] == "policy_timeline"
       @tl_options[:tl_result] ||= "both"
 
-      @tl_options[:events] = {}
-      MiqEventDefinitionSet.all.each do |e|
-        @tl_options[:events][e.description] ||= []
-        e.members.each do |mem|
-          @tl_options[:events][e.description].push(mem.id) unless @tl_options[:events][e.description].include?(mem.id)
-        end
-      end
       @tl_options[:applied_filters] ||= []
       if @tl_options[:applied_filters].blank?
         @tl_options[:applied_filters].push("VM Operation")

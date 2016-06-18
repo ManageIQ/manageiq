@@ -4,7 +4,6 @@ module ApplicationController::Timelines
     :daily_date,
     :days,
     :edate,
-    :events,
     :filter1,
     :filter2,
     :filter3,
@@ -33,6 +32,12 @@ module ApplicationController::Timelines
 
     def tl_colors
       ['#CD051C', '#005C25', '#035CB1', '#FF3106', '#FF00FF', '#000000']
+    end
+
+    def events
+      MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
+        hash[event.description] = event.members.collect(&:id)
+      end
     end
   end
 end
