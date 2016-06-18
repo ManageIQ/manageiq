@@ -429,7 +429,10 @@ module ApplicationController::Timelines
   end
 
   def set_tl_session_data(options = @tl_options, controller = controller_name)
-    session["#{controller}_tl".to_sym] = options unless options.nil?
+    unless options.nil?
+      options.drop_cache
+      session["#{controller}_tl".to_sym] = options unless options.nil?
+    end
   end
 
   def tl_session_data(controller = controller_name)

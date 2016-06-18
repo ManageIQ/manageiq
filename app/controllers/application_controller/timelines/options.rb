@@ -35,9 +35,13 @@ module ApplicationController::Timelines
     end
 
     def events
-      MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
+      @events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
         hash[event.description] = event.members.collect(&:id)
       end
+    end
+
+    def drop_cache
+      @events = nil
     end
   end
 end
