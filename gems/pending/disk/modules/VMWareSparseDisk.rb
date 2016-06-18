@@ -24,15 +24,7 @@ module VMWareSparseDisk
   def d_init
     self.diskType = "VMWare Sparse"
     self.blockSize = 512
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
-    @vmwareSparseDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
+    @vmwareSparseDisk_file = MiqLargeFile.open(dInfo.fileName, dInfo.fileMode)
     buf = @vmwareSparseDisk_file.read(SIZEOF_SPARSE_EXTENT_HEADER)
     @sparseHeader = OpenStruct.new(SPARSE_EXTENT_HEADER.decode(buf))
     @grainSize = @sparseHeader.grainSize

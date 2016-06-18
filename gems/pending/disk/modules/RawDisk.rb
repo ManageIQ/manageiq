@@ -5,17 +5,8 @@ module RawDisk
     self.diskType = "Raw"
     self.blockSize = 512
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
-
     @dOffset = dInfo.offset
-    @rawDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
+    @rawDisk_file = MiqLargeFile.open(dInfo.fileName, dInfo.fileMode)
   end
 
   def getBase

@@ -189,18 +189,10 @@ module VhdxDisk
   end
 
   def connection_to_file(dInfo)
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode     = "r"
-      file_mode           = "r"
-    elsif dInfo.mountMode == "rw"
-      file_mode           = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
     if dInfo.hyperv_connection
       @vhdx_file = connect_to_hyperv(dInfo)
     else
-      @vhdx_file = MiqLargeFile.open(@file_name, file_mode)
+      @vhdx_file = MiqLargeFile.open(@file_name, dInfo.fileMode)
     end
     @vhdx_file
   end

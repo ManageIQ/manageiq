@@ -8,6 +8,14 @@ class MiqDisk
   def self.getDisk(dInfo, probes = nil)
     $log.debug "MiqDisk::getDisk: baseOnly = #{dInfo.baseOnly}" if $log
     if (dm = DiskProbe.getDiskMod(dInfo, probes))
+      if dInfo.mountMode.nil? || dInfo.mountMode == "r"
+        dInfo.mountMode = "r"
+        dInfo.fileMode = "r"
+      elsif dInfo.mountMode == "rw"
+        dInfo.fileMode = "r+"
+      else
+        raise "Unrecognized mountMode: #{dInfo.mountMode}"
+      end
       d = new(dm, dInfo.clone, 0)
       if dInfo.baseOnly
         $log.debug "MiqDisk::getDisk: baseOnly = true, returning parent: #{d.getBase.dInfo.fileName}" if $log

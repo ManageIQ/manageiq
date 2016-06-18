@@ -102,15 +102,7 @@ module QcowDisk
     self.diskType = "QCOW"
     self.blockSize = SECTOR_SIZE
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      @fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      @fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
-
+    @fileMode = dInfo.fileMode
     @filename = dInfo.fileName
     @dOffset = dInfo.offset
     @downstreamDisk = dInfo.downstreamDisk

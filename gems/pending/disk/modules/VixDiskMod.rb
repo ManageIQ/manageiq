@@ -6,13 +6,10 @@ module VixDiskMod
     @vdi = dInfo.vixDiskInfo
     @connection = @vdi[:connection]
 
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
+    if dInfo.fileMode == "r"
       fileMode = VixDiskLib::VIXDISKLIB_FLAG_OPEN_READ_ONLY
-    elsif dInfo.mountMode == "rw"
+    elsif dInfo.fileMode == "r+"
       fileMode = 0
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
     end
 
     dInfo.fileName = @vdi[:fileName]

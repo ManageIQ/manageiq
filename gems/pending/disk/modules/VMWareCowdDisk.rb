@@ -24,17 +24,9 @@ module VMWareCowdDisk
   def d_init
     self.diskType = "VMWare CopyOnWrite"
     self.blockSize = 512
-    if dInfo.mountMode.nil? || dInfo.mountMode == "r"
-      dInfo.mountMode = "r"
-      fileMode = "r"
-    elsif dInfo.mountMode == "rw"
-      fileMode = "r+"
-    else
-      raise "Unrecognized mountMode: #{dInfo.mountMode}"
-    end
     @dParent = @dInfo.parent
 
-    @vmwareCowDisk_file = MiqLargeFile.open(dInfo.fileName, fileMode)
+    @vmwareCowDisk_file = MiqLargeFile.open(dInfo.fileName, dInfo.fileMode)
     buf = @vmwareCowDisk_file.read(SIZEOF_COWD_EXTENT_HEADER)
     @EsxSparseHeader = OpenStruct.new(COWD_EXTENT_HEADER.decode(buf))
 
