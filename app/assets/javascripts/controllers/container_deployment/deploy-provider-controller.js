@@ -1,6 +1,6 @@
 miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 'patternfly', 'miq.dialogs', 'miq.wizard'])).controller('containers.deployProviderController',
-  ['$rootScope', '$scope', '$timeout', '$http',
-  function($rootScope, $scope, $timeout, $http) {
+  ['$rootScope', '$scope', '$timeout',
+  function($rootScope, $scope, $timeout) {
     'use strict';
 
     $scope.showDeploymentWizard = false;
@@ -173,11 +173,10 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
     };
 
     $scope.ready = false;
-    var url = '/api/container_deployments';
-    $http.post(url, {"action" : "collect_data", "resource" : "none"}).success(function (response) {
+    var url = '/api/container_deployments/container_deployment_data';
+    API.get(url).then(function (response) {
       'use strict';
-
-      $scope.deploymentData = response.results[0].data;
+      $scope.deploymentData = response.data;
       initializeDeploymentWizard();
       $scope.ready = true;
     });
@@ -191,10 +190,9 @@ miqHttpInject(angular.module('miq.containers.providersModule', ['ui.bootstrap', 
       $timeout(function () {
         var url = '/api/container_deployments';
         var resource = create_deployment_resource();
-        $http.post(url, {"action" : "create", "resource" :  resource}).success(function (response) {
+        API.post(url, {"action" : "create", "resource" :  resource}).then(function (response) {
           'use strict';
           $scope.deployInProgress = true;
-          debugger;
           var automationID = response
         });
 
