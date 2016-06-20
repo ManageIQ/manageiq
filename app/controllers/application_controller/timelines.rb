@@ -61,15 +61,11 @@ module ApplicationController::Timelines
        (@tl_options.filter1.blank? || @tl_options.filter2.blank? || @tl_options.filter3.blank?)
       add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options.policy_events?
-      flg = true
-      @tl_options.events.sort.each_with_index do |_e, i|
-        unless @tl_options.pol_filter[i].blank?
-          flg = false
-          tl_build_timeline(refresh = "n")
-          break
-        end
+      if @tl_options.policy_event_filter_any?
+        tl_build_timeline('n')
+      else
+        add_flash(_("At least one filter must be selected"), :warning)
       end
-      add_flash(_("At least one filter must be selected"), :warning) if flg
     else
       tl_gen_timeline_data(refresh = "n")
       return unless @timeline

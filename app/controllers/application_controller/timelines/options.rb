@@ -37,6 +37,10 @@ module ApplicationController::Timelines
       management_events? ? :event_streams : :policy_events
     end
 
+    def policy_event_filter_any?
+      pol_filter.any? { |f| !f.blank? }
+    end
+
     def events
       @events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
         hash[event.description] = event.members.collect(&:id)
