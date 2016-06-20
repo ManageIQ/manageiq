@@ -314,18 +314,14 @@ module ApplicationController::Performance
       @record = identify_tl_or_perf_record
       @perf_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
       @perf_record = VmOrTemplate.find_by_id(@perf_options[:compare_vm]) unless @perf_options[:compare_vm].nil?
-      new_opts = {}
+      new_opts = tl_session_data(request.parameters["controller"]) || ApplicationController::Timelines::Options.new
       new_opts[:typ] = typ
       new_opts[:model] = @perf_record.class.base_class.to_s
       dt = typ == "Hourly" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
       new_opts[:daily_date] = @perf_options[:daily_date] if typ == "Daily"
       new_opts[:hourly_date] = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
-      new_opts[:tl_show_options] = []
-      new_opts[:tl_show_options].push([_("Management Events"), "timeline"])
-      new_opts[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       new_opts[:tl_show] = "timeline"
-      session[(request.parameters["controller"] + "_tl").to_sym] ||= {}
-      session[(request.parameters["controller"] + "_tl").to_sym].merge!(new_opts)
+      set_tl_session_data(new_opts, request.parameters["controller"])
       f = @perf_record.first_event
       if f.nil?
         msg = if new_opts[:model] == "EmsCluster"
@@ -357,19 +353,15 @@ module ApplicationController::Performance
 
     elsif cmd == "Timeline" && model == "Selected"  # Display timeline for the selected CI
       return unless @record = perf_menu_record_valid(data_row["resource_type"], data_row["resource_id"], data_row["resource_name"])
-      new_opts = {}
+      controller = data_row["resource_type"].underscore
+      new_opts = tl_session_data(controller) || ApplicationController::Timelines::Options.new
       new_opts[:typ] = typ
       new_opts[:model] = data_row["resource_type"]
       dt = typ == "Hourly" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
       new_opts[:daily_date] = @perf_options[:daily_date] if typ == "Daily"
       new_opts[:hourly_date] = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
-      new_opts[:tl_show_options] = []
-      new_opts[:tl_show_options].push([_("Management Events"), "timeline"])
-      new_opts[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       new_opts[:tl_show] = "timeline"
-      controller = new_opts[:model].underscore
-      session[(controller + "_tl").to_sym] ||= {}
-      session[(controller + "_tl").to_sym].merge!(new_opts)
+      set_tl_session_data(new_opts, controller)
       f = @record.first_event
       if f.nil?
         msg = if model == "EmsCluster"

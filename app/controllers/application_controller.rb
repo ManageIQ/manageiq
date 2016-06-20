@@ -1980,7 +1980,7 @@ class ApplicationController < ActionController::Base
     @server_options = session[:server_options] if ["configuration", "support"].include?(controller_name)
 
     # Get timelines hash, if it is in the session for the running controller
-    @tl_options = session["#{controller_name}_tl".to_sym]
+    @tl_options = tl_session_data
 
     session[:host_url] = request.host_with_port
     session[:tab_url] ||= {}
@@ -2152,7 +2152,7 @@ class ApplicationController < ActionController::Base
     session[:server_options] = @server_options
 
     # Set timelines hash, if it is in the session for the running controller
-    session["#{controller_name}_tl".to_sym] = @tl_options unless @tl_options.nil?
+    set_tl_session_data
 
     # Capture breadcrumbs by main tab
     session[:tab_bc] ||= {}

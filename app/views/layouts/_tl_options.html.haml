@@ -11,16 +11,12 @@
         %label.control-label.col-md-2
           = _("Show")
         .col-md-8
-          -# only show pulldown if Policy Events are allowed
-          - if @tl_options[:tl_show_options].length > 1
-            = select_tag("tl_show",
-              options_for_select(@tl_options[:tl_show_options], @tl_options[:tl_show]),
-              :class                => "selectpicker")
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
-          - else
-            = h(@tl_options[:tl_show_options].last[0])
+          = select_tag("tl_show",
+            options_for_select(ApplicationController::Timelines::SELECT_EVENT_TYPE, @tl_options[:tl_show]),
+            :class                => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
       %hr
       .form-group
         %label.control-label.col-md-2
@@ -57,14 +53,14 @@
                 miqSelectPickerEvent('tl_days', '#{url}', {beforeSend: true})
               = _("days back")
       %hr
-    - if @tl_options[:tl_show] == "policy_timeline"
+    - if @tl_options.policy_events?
       .form-horizontal
         .form-group
           %label.control-label.col-md-2
             = _("Result")
           .col-md-8
             = select_tag("tl_result",
-              options_for_select(@tl_options[:all_results], @tl_options[:tl_result]),
+              options_for_select(ApplicationController::Timelines::SELECT_RESULT_TYPE, @tl_options[:tl_result]),
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
@@ -80,8 +76,9 @@
         .form-group
           %label.control-label.col-md-2
           .col-md-8
-            - @tl_options[:etypes].sort.each_with_index do |e, i|
-              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{@tl_options[:tl_colors][i]}"}
+            - @tl_options.events.keys.sort.each_with_index do |e, i|
+
+              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{ApplicationController::Timelines::EVENT_COLORS[i]}"}
                 = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options[:applied_filters].include?(e),
                   "data-miq_sparkle_on"       => true,
                   "data-miq_observe_checkbox" => {:url => url}.to_json)
@@ -93,8 +90,8 @@
           .col-md-8
           .col-md-8
       %form#hiddenForm
-        - @tl_options[:etypes].length.times do |i|
-          %input{:type => "hidden", :name => "filter#{i + 1}", :id => "filter#{i + 1}", :value => @tl_options["pol_fltr#{i + 1}".to_sym]}
+        - @tl_options.events.length.times do |i|
+          %input{:type => "hidden", :name => "filter#{i}", :id => "filter#{i}", :value => @tl_options[:pol_fltr][i]}
 
     - else
       .form-horizontal
@@ -113,7 +110,7 @@
             = _("Event Groups")
           .col-md-8
             = select_tag("tl_fl_grp1",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter1]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + tl_groups_hash.keys.sort, @tl_options[:filter1]),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #CD051C;"}
             :javascript
@@ -123,7 +120,7 @@
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp2",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter2]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + tl_groups_hash.keys.sort, @tl_options[:filter2]),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #005C25;"}
             :javascript
@@ -133,7 +130,7 @@
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp3",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter3]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + tl_groups_hash.keys.sort, @tl_options[:filter3]),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #035CB1;"}
             :javascript
