@@ -105,21 +105,40 @@ module ApplicationController::Timelines
     end
   end
 
-  Options = Struct.new(
+  PolicyEventsOptions = Struct.new(
     :applied_filters,
+    :filters,
+    :fltr,
+    :filters_all,
+    :result
+  ) do
+    def event_filter_any?
+      filters.any? { |f| !f.blank? }
+    end
+
+    def events
+      @events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
+        hash[event.description] = event.members.collect(&:id)
+      end
+    end
+
+    def drop_cache
+      @events = nil
+    end
+  end
+
+  Options = Struct.new(
     :date,
     :model,
     :mngt,
-    :pol_filter,
-    :pol_fltr,
-    :tl_filter_all,
-    :tl_result,
+    :policy,
     :tl_show,
   ) do
     def initialize(*args)
       super
       self.date = DateOptions.new
       self.mngt = ManagementEventsOptions.new
+      self.policy = PolicyEventsOptions.new
     end
 
     def management_events?
@@ -134,19 +153,8 @@ module ApplicationController::Timelines
       management_events? ? :event_streams : :policy_events
     end
 
-    def policy_event_filter_any?
-      pol_filter.any? { |f| !f.blank? }
-    end
-
-    def policy_events
-      @policy_events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
-        hash[event.description] = event.members.collect(&:id)
-      end
-    end
-
     def drop_cache
-      @policy_events = nil
-      mngt.drop_cache
+      [policy, mngt].each(&:drop_cache)
     end
   end
 end

@@ -60,7 +60,7 @@
             = _("Result")
           .col-md-8
             = select_tag("tl_result",
-              options_for_select(ApplicationController::Timelines::SELECT_RESULT_TYPE, @tl_options[:tl_result]),
+              options_for_select(ApplicationController::Timelines::SELECT_RESULT_TYPE, @tl_options.policy.result),
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
@@ -69,17 +69,17 @@
           %label.control-label.col-md-2
             = _("Event Type")
           .col-md-8
-            = check_box_tag("tl_fl_grp_all", "1", @tl_options[:tl_filter_all],
+            = check_box_tag("tl_fl_grp_all", "1", @tl_options.policy.filters_all,
               "data-miq_sparkle_on"       => true,
               "data-miq_observe_checkbox" => {:url => url}.to_json)
             = _("(Check All)")
         .form-group
           %label.control-label.col-md-2
           .col-md-8
-            - @tl_options.policy_events.keys.sort.each_with_index do |e, i|
+            - @tl_options.policy.events.keys.sort.each_with_index do |e, i|
 
               %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{ApplicationController::Timelines::EVENT_COLORS[i]}"}
-                = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options[:applied_filters].include?(e),
+                = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options.policy.applied_filters.include?(e),
                   "data-miq_sparkle_on"       => true,
                   "data-miq_observe_checkbox" => {:url => url}.to_json)
                 = h(e)
@@ -90,8 +90,8 @@
           .col-md-8
           .col-md-8
       %form#hiddenForm
-        - @tl_options.policy_events.length.times do |i|
-          %input{:type => "hidden", :name => "filter#{i}", :id => "filter#{i}", :value => @tl_options[:pol_fltr][i]}
+        - @tl_options.policy.events.length.times do |i|
+          %input{:type => "hidden", :name => "filter#{i}", :id => "filter#{i}", :value => @tl_options.policy.fltr[i]}
 
     - else
       .form-horizontal
