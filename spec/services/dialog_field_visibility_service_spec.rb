@@ -139,32 +139,31 @@ describe DialogFieldVisibilityService do
     end
 
     it "adds the values to the field names to hide and show without duplicates or intersections" do
-      expect(subject.determine_visibility(options)).to eq({
-        :hide => [
-          :service_template_request_hide,
-          :auto_hide,
-          :number_hide,
-          :network_hide,
-          :sysprep_auto_logon_hide,
-          :customize_fields_hide,
-          :sysprep_custom_spec_hide,
-          :request_type_hide,
-          :pxe_iso_hide,
-          :linked_clone_hide
-        ],
-        :edit => [
-          :auto_show,
-          :number_show,
-          :network_show,
-          :sysprep_auto_logon_show,
-          :retirement_show,
-          :customize_fields_show,
-          :retirement_hide,
-          :sysprep_custom_spec_show,
-          :pxe_iso_show,
-          :linked_clone_show
-        ]
-      })
+      result = subject.determine_visibility(options)
+      expect(result[:hide]).to match_array([
+        :auto_hide,
+        :customize_fields_hide,
+        :linked_clone_hide,
+        :network_hide,
+        :number_hide,
+        :pxe_iso_hide,
+        :request_type_hide,
+        :service_template_request_hide,
+        :sysprep_auto_logon_hide,
+        :sysprep_custom_spec_hide
+      ])
+      expect(result[:edit]).to match_array([
+        :auto_show,
+        :customize_fields_show,
+        :linked_clone_show,
+        :network_show,
+        :number_show,
+        :pxe_iso_show,
+        :retirement_hide,
+        :retirement_show,
+        :sysprep_auto_logon_show,
+        :sysprep_custom_spec_show
+      ])
     end
   end
 
