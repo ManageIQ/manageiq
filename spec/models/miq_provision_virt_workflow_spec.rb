@@ -201,4 +201,90 @@ describe MiqProvisionVirtWorkflow do
       expect(workflow.ws_find_template_or_vm("", "VMWARE", "asdf-adsf", "asdfadfasdf")).to be_nil
     end
   end
+
+  describe "#update_field_visibility" do
+    let(:workflow) do
+      described_class.new(
+        {
+          :addr_mode => "addr_mode",
+          :number_of_vms => "123",
+          :placement_auto => true,
+          :retirement => "321",
+          :service_template_request => "service_template_request",
+          :sysprep_auto_logon => "sysprep_auto_logon",
+          :sysprep_custom_spec => "sysprep_custom_spec",
+          :sysprep_enabled => "sysprep_enabled"
+        },
+        requester,
+        {:skip_dialog_load => true}
+      )
+    end
+
+    let(:requester) { double("User") }
+
+    let(:dialog_field_visibility_service) { double("DialogFieldVisibilityService") }
+
+    let(:options_hash) do
+      {
+        :addr_mode                       => "addr_mode",
+        :auto_placement_enabled          => true,
+        :customize_fields_list           => [],
+        :number_of_vms                   => 123,
+        :platform                        => nil,
+        :request_type                    => "template",
+        :retirement                      => 321,
+        :service_template_request        => "service_template_request",
+        :supports_customization_template => false,
+        :supports_iso                    => false,
+        :supports_pxe                    => false,
+        :sysprep_auto_logon              => "sysprep_auto_logon",
+        :sysprep_custom_spec             => "sysprep_custom_spec",
+        :sysprep_enabled                 => "sysprep_enabled"
+      }
+    end
+    let(:dialogs) do
+      {
+        :dialogs => {
+          :dialog_name => {
+            :fields => {:field_name => {}}
+          }
+        }
+      }
+    end
+
+    before do
+      allow(requester).to receive(:kind_of?).with(User).and_return(true)
+      allow(DialogFieldVisibilityService).to receive(:new).and_return(dialog_field_visibility_service)
+      allow(dialog_field_visibility_service).to receive(:determine_visibility).with(options_hash).and_return({
+        :edit => "shown_visibility_hash",
+        :hide => "hidden_visibility_hash"
+      })
+      allow(dialog_field_visibility_service).to receive(:set_shown_fields).with(
+        "shown_visibility_hash", [{:name => :field_name}]
+      )
+      allow(dialog_field_visibility_service).to receive(:set_hidden_fields).with(
+        "hidden_visibility_hash", [{:name => :field_name}]
+      )
+      workflow.instance_variable_set(:@dialogs, dialogs)
+    end
+
+    it "delegates to the dialog_field_visibility_service with the correct options" do
+      expect(dialog_field_visibility_service).to receive(:determine_visibility).with(options_hash)
+      workflow.update_field_visibility
+    end
+
+    it "sets the shown fields via the dialog_field_visibility_service" do
+      expect(dialog_field_visibility_service).to receive(:set_shown_fields).with(
+        "shown_visibility_hash", [{:name => :field_name}]
+      )
+      workflow.update_field_visibility
+    end
+
+    it "sets the hidden fields via the dialog_field_visibility_service" do
+      expect(dialog_field_visibility_service).to receive(:set_hidden_fields).with(
+        "hidden_visibility_hash", [{:name => :field_name}]
+      )
+      workflow.update_field_visibility
+    end
+  end
 end
