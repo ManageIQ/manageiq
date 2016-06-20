@@ -52,5 +52,27 @@ describe MiqAeCustomizationController do
         expect(controller.send(:flash_errors?)).to be_truthy
       end
     end
+
+    context 'Adding a new Dialog' do
+      render_views
+
+      it 'will show a flash error without Dialog Type' do
+        allow(controller).to receive(:load_edit).and_return(true)
+        controller.instance_variable_set(:@_params, :button => 'add',
+                                                    :id     => 'new')
+        controller.instance_variable_set(:@edit, {:new    => {:name        => 'name',
+                                                              :description => 'description',
+                                                              :dialog_type => '',
+                                                              :content     => '',},
+                                                  :dialog => MiqDialog.new})
+        allow(controller).to receive(:render)
+        controller.send(:old_dialogs_update)
+
+        flash_messages = assigns(:flash_array)
+        expect(flash_messages.first[:message]).to include('Dialog Type must be selected')
+        expect(controller.send(:flash_errors?)).to be_truthy
+      end
+    end
+
   end
 end

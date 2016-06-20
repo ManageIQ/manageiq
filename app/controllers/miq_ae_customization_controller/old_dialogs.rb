@@ -250,7 +250,7 @@ module MiqAeCustomizationController::OldDialogs
       if @edit[:new][:name].blank?
         add_flash(_("Name is required"), :error)
       end
-      unless @edit[:new][:dialog_type]
+      if @edit[:new][:dialog_type].blank?
         add_flash(_("Dialog Type must be selected"), :error)
       end
       begin
