@@ -112,6 +112,33 @@ module ApplicationController::Timelines
     :filters_all,
     :result
   ) do
+    def update_from_params(params)
+      self.result = params[:tl_result] if params[:tl_result]
+      if params[:tl_fl_grp_all] == '1'
+        self.filters_all = true
+        events.keys.sort.each do |e|
+          applied_filters.push(e)
+        end
+      elsif params[:tl_fl_grp_all] == 'null'
+        self.filters_all = false
+        self.applied_filters = []
+        self.filters = Array.new(events.length) { '' }
+        self.fltr = filters.dup
+      end
+      # Look through the event type checkbox keys
+      events.keys.sort.each_with_index do |e, i|
+        ekey = "tl_fl_grp#{i + 1}__#{e.tr(' ', '_')}".to_sym
+        if params[ekey] == '1' || (filters_all && params[ekey] != 'null')
+          filters[i] = e
+          applied_filters.push(e) unless applied_filters.include?(e) || self.filters_all = false
+        elsif params[ekey] == 'null'
+          self.filters_all = false
+          filters[i] = nil
+          applied_filters.delete(e)
+        end
+      end
+    end
+
     def event_filter_any?
       filters.any? { |f| !f.blank? }
     end

@@ -17,30 +17,7 @@ module ApplicationController::Timelines
     if @tl_options.management_events?
       @tl_options.mngt.update_from_params(params)
     else
-      @tl_options.policy.result = params[:tl_result] if params[:tl_result]
-      if params[:tl_fl_grp_all] == "1"
-        @tl_options.policy.filters_all = true
-        @tl_options.policy.events.keys.sort.each do |e|
-          @tl_options.policy.applied_filters.push(e)
-        end
-      elsif params[:tl_fl_grp_all] == "null"
-        @tl_options.policy.filters_all = false
-        @tl_options.policy.applied_filters = []
-        @tl_options.policy.filters = Array.new(@tl_options.policy.events.length) { "" }
-        @tl_options.policy.fltr = @tl_options.policy.filters.dup
-      end
-      # Look through the event type checkbox keys
-      @tl_options.policy.events.keys.sort.each_with_index do |e, i|
-        ekey = "tl_fl_grp#{i + 1}__#{e.tr(" ", "_")}".to_sym
-        if params[ekey] == "1" || (@tl_options.policy.filters_all && params[ekey] != "null")
-          @tl_options.policy.filters[i] = e
-          @tl_options.policy.applied_filters.push(e) unless @tl_options.policy.applied_filters.include?(e) || @tl_options.policy.filters_all = false
-        elsif params[ekey] == "null"
-          @tl_options.policy.filters_all = false
-          @tl_options.policy.filters[i] = nil
-          @tl_options.policy.applied_filters.delete(e)
-        end
-      end
+      @tl_options.policy.update_from_params(params)
     end
 
     if @tl_options.management_events? &&
