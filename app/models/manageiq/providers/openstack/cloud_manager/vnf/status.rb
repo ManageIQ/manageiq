@@ -4,7 +4,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vnf::Status < ::Orchestratio
   end
 
   def failed?
-    status.downcase =~ /failed$/
+    status.downcase =~ /failed$/ || status.downcase == "error"
   end
 
   def rolled_back?
