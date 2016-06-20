@@ -144,7 +144,16 @@ module REXML
         self.name = first
         # This is the old method that does not handle HTML encoded strings properly
         # @value = second.to_s
-        @value = Text.unnormalize(second.to_s, nil)
+        begin
+          @value = Text.unnormalize(second.to_s, nil)
+        rescue => err
+          if err.class == ::Encoding::CompatibilityError
+            second_utf8 = second.to_s.force_encoding('UTF-8')
+            @value = Text.unnormalize(second_utf8, nil)
+          else
+            $log.error "Encoding error: #{second_utf8}" if $log
+          end
+        end
         # This line is to support REXML shipped with version 1.8.6 patch 111 and above
         @normalized = second.to_s
       else
