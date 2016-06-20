@@ -60,11 +60,11 @@ describe MiqAeCustomizationController do
         allow(controller).to receive(:load_edit).and_return(true)
         controller.instance_variable_set(:@_params, :button => 'add',
                                                     :id     => 'new')
-        controller.instance_variable_set(:@edit, {:new    => {:name        => 'name',
-                                                              :description => 'description',
-                                                              :dialog_type => '',
-                                                              :content     => '',},
-                                                  :dialog => MiqDialog.new})
+        controller.instance_variable_set(:@edit, :new    => {:name        => 'name',
+                                                             :description => 'description',
+                                                             :dialog_type => '',
+                                                             :content     => '',},
+                                                 :dialog => MiqDialog.new)
         allow(controller).to receive(:render)
         controller.send(:old_dialogs_update)
 
@@ -73,6 +73,5 @@ describe MiqAeCustomizationController do
         expect(controller.send(:flash_errors?)).to be_truthy
       end
     end
-
   end
 end
