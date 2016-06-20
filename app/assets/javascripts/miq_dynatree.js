@@ -253,7 +253,7 @@ function miqOnCheckProtect(node, _treename) {
 function miqOnClickSnapshotTree(id) {
   var tree = $("#" + 'snapshot_tree' + "box").dynatree("getTree");
   tree.getRoot().visit(function(node){miqDynatreeNodeRemoveClass('snapshot_tree', node);})
-  miqDynatreeNodeAddClass('snapshot_tree', id, 'dynatree-cfme-active')
+  miqDynatreeNodeAddClass('snapshot_tree', id, 'snapshot-active-suffix')
   var pieces = id.split(/-/);
   var shortId = pieces[pieces.length - 1]
   miqJqueryRequest('/' + ManageIQ.controller + '/snap_pressed/' + shortId, {beforeSend: true, complete: true});

@@ -279,7 +279,7 @@ class TreeBuilder
     end
 
     # Process the node's children
-    node[:expand] = true if Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
+    node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
     if options[:open_all] ||
        object[:load_children] ||
        node[:expand] ||
