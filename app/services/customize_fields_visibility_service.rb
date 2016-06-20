@@ -34,13 +34,12 @@ class CustomizeFieldsVisibilityService
 
       customize_fields_list.each do |field_name|
         next if exclude_list.include?(field_name)
+        next unless platform == "linux"
 
-        if platform == "linux"
-          if field_name == :linux_domain_name
-            field_names_to_show << field_name
-          else
-            field_names_to_hide << field_name
-          end
+        if field_name == :linux_domain_name
+          field_names_to_show << field_name
+        else
+          field_names_to_hide << field_name
         end
       end
     end

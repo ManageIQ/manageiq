@@ -7,20 +7,18 @@ describe AutoPlacementVisibilityService do
 
       it "adds values to the field names to hide" do
         expect(subject.determine_visibility(auto_placement)).to eq(
-          {
-            :hide => [
-              :placement_host_name,
-              :placement_ds_name,
-              :host_filter,
-              :ds_filter,
-              :cluster_filter,
-              :placement_cluster_name,
-              :rp_filter,
-              :placement_rp_name,
-              :placement_dc_name
-            ],
-            :show => []
-          }
+          :hide => [
+            :placement_host_name,
+            :placement_ds_name,
+            :host_filter,
+            :ds_filter,
+            :cluster_filter,
+            :placement_cluster_name,
+            :rp_filter,
+            :placement_rp_name,
+            :placement_dc_name
+          ],
+          :show => []
         )
       end
     end
@@ -30,20 +28,18 @@ describe AutoPlacementVisibilityService do
 
       it "adds values to the field names to show" do
         expect(subject.determine_visibility(auto_placement)).to eq(
-          {
-            :hide => [],
-            :show => [
-              :placement_host_name,
-              :placement_ds_name,
-              :host_filter,
-              :ds_filter,
-              :cluster_filter,
-              :placement_cluster_name,
-              :rp_filter,
-              :placement_rp_name,
-              :placement_dc_name
-            ]
-          }
+          :hide => [],
+          :show => [
+            :placement_host_name,
+            :placement_ds_name,
+            :host_filter,
+            :ds_filter,
+            :cluster_filter,
+            :placement_cluster_name,
+            :rp_filter,
+            :placement_rp_name,
+            :placement_dc_name
+          ]
         )
       end
     end

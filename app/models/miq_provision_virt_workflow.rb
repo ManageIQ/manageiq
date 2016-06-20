@@ -963,12 +963,12 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def update_field_display_values(options = {})
-    options_hash = setup_parameters_for_visibility_sevice(options)
+    options_hash = setup_parameters_for_visibility_service(options)
     visibility_hash = dialog_field_visibility_service.determine_visibility(options_hash)
 
     all_fields = []
     fields do |field_name, field, _dialog_name, _dialog|
-      all_fields << field.merge({:name => field_name})
+      all_fields << field.merge(:name => field_name)
     end
     dialog_field_visibility_service.set_shown_fields(visibility_hash[:edit], all_fields)
     dialog_field_visibility_service.set_hidden_fields(visibility_hash[:hide], all_fields)
@@ -986,14 +986,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     field_note_visibility.each { |display_flag, field_names| show_fields(display_flag, field_names, :notes_display) }
   end
 
-  def setup_parameters_for_visibility_sevice(options)
+  def setup_parameters_for_visibility_service(options)
     vm = get_source_vm
     platform = options[:force_platform] || vm.try(:platform)
 
     number_of_vms = get_value(@values[:number_of_vms]).to_i
 
     customize_fields_list = []
-    self.fields(:customize) do |field_name, _, _, _|
+    fields(:customize) do |field_name, _, _, _|
       customize_fields_list << field_name.to_sym
     end
 
@@ -1006,9 +1006,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       :request_type                    => request_type,
       :retirement                      => get_value(@values[:retirement]).to_i,
       :service_template_request        => get_value(@values[:service_template_request]),
-      :supports_customization_template => self.supports_customization_template?,
-      :supports_iso                    => self.supports_iso?,
-      :supports_pxe                    => self.supports_pxe?,
+      :supports_customization_template => supports_customization_template?,
+      :supports_iso                    => supports_iso?,
+      :supports_pxe                    => supports_pxe?,
       :sysprep_auto_logon              => get_value(@values[:sysprep_auto_logon]),
       :sysprep_custom_spec             => get_value(@values[:sysprep_custom_spec]),
       :sysprep_enabled                 => get_value(@values[:sysprep_enabled])

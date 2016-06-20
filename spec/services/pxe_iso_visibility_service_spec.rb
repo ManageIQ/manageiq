@@ -9,10 +9,10 @@ describe PxeIsoVisibilityService do
         let(:supports_iso) { true }
 
         it "returns the values to be shown and hidden" do
-          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq({
+          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [],
             :show => [:pxe_image_id, :pxe_server_id, :iso_image_id]
-          })
+          )
         end
       end
 
@@ -20,10 +20,10 @@ describe PxeIsoVisibilityService do
         let(:supports_iso) { false }
 
         it "returns the values to be shown and hidden" do
-          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq({
+          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [:iso_image_id],
             :show => [:pxe_image_id, :pxe_server_id]
-          })
+          )
         end
       end
     end
@@ -35,10 +35,10 @@ describe PxeIsoVisibilityService do
         let(:supports_iso) { true }
 
         it "returns the values to be shown and hidden" do
-          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq({
+          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [:pxe_image_id, :pxe_server_id],
             :show => [:iso_image_id]
-          })
+          )
         end
       end
 
@@ -46,10 +46,10 @@ describe PxeIsoVisibilityService do
         let(:supports_iso) { false }
 
         it "returns the values to be shown and hidden" do
-          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq({
+          expect(subject.determine_visibility(supports_iso, supports_pxe)).to eq(
             :hide => [:pxe_image_id, :pxe_server_id, :iso_image_id],
             :show => []
-          })
+          )
         end
       end
     end

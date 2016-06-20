@@ -49,8 +49,8 @@ class DialogFieldVisibilityService
       options[:addr_mode]
     )
 
-    add_to_visiblity_arrays(@sysprep_auto_logon_visibility_service,options[:sysprep_auto_logon])
-    add_to_visiblity_arrays(@retirement_visibility_service,options[:retirement])
+    add_to_visiblity_arrays(@sysprep_auto_logon_visibility_service, options[:sysprep_auto_logon])
+    add_to_visiblity_arrays(@retirement_visibility_service, options[:retirement])
 
     add_to_visiblity_arrays(
       @customize_fields_visibility_service,
@@ -59,9 +59,9 @@ class DialogFieldVisibilityService
       options[:customize_fields_list]
     )
 
-    add_to_visiblity_arrays(@sysprep_custom_spec_visibility_service,options[:sysprep_custom_spec])
-    add_to_visiblity_arrays(@request_type_visibility_service,options[:request_type])
-    add_to_visiblity_arrays(@pxe_iso_visibility_service,options[:supports_iso], options[:supports_pxe])
+    add_to_visiblity_arrays(@sysprep_custom_spec_visibility_service, options[:sysprep_custom_spec])
+    add_to_visiblity_arrays(@request_type_visibility_service, options[:request_type])
+    add_to_visiblity_arrays(@pxe_iso_visibility_service, options[:supports_iso], options[:supports_pxe])
     add_to_visiblity_arrays(@linked_clone_visibility_service, options[:provision_type], options[:linked_clone])
 
     @field_names_to_hide -= @field_names_to_hide & @field_names_to_show

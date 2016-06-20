@@ -7,10 +7,8 @@ describe SysprepCustomSpecVisibilityService do
 
       it "adds values to the field names to hide" do
         expect(subject.determine_visibility(sysprep_custom_spec)).to eq(
-          {
-            :hide => [:sysprep_spec_override],
-            :show => []
-          }
+          :hide => [:sysprep_spec_override],
+          :show => []
         )
       end
     end
@@ -20,10 +18,8 @@ describe SysprepCustomSpecVisibilityService do
 
       it "adds values to the field names to show" do
         expect(subject.determine_visibility(sysprep_custom_spec)).to eq(
-          {
-            :hide => [],
-            :show => [:sysprep_spec_override]
-          }
+          :hide => [],
+          :show => [:sysprep_spec_override]
         )
       end
     end

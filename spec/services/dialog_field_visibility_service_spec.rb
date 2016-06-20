@@ -78,64 +78,64 @@ describe DialogFieldVisibilityService do
     let(:linked_clone) { "linked_clone" }
 
     before do
-      allow(service_template_fields_visibility_service).
-        to receive(:determine_visibility).with(service_template_request).and_return(
-          {:hide => [:service_template_request_hide]}
+      allow(service_template_fields_visibility_service)
+        .to receive(:determine_visibility).with(service_template_request).and_return(
+          :hide => [:service_template_request_hide]
         )
 
-      allow(auto_placement_visibility_service).
-        to receive(:determine_visibility).with(auto_placement_enabled).and_return(
-          {:hide => [:auto_hide], :show => [:auto_show]}
+      allow(auto_placement_visibility_service)
+        .to receive(:determine_visibility).with(auto_placement_enabled).and_return(
+          :hide => [:auto_hide], :show => [:auto_show]
         )
 
-      allow(number_of_vms_visibility_service).
-        to receive(:determine_visibility).with(number_of_vms, platform).and_return(
-          {:hide => [:number_hide], :show => [:number_show]}
+      allow(number_of_vms_visibility_service)
+        .to receive(:determine_visibility).with(number_of_vms, platform).and_return(
+          :hide => [:number_hide], :show => [:number_show]
         )
 
-      allow(network_visibility_service).
-        to receive(:determine_visibility).with(sysprep_enabled, supports_pxe, supports_iso, addr_mode).and_return(
-          {:hide => [:network_hide], :show => [:network_show]}
+      allow(network_visibility_service)
+        .to receive(:determine_visibility).with(sysprep_enabled, supports_pxe, supports_iso, addr_mode).and_return(
+          :hide => [:network_hide], :show => [:network_show]
         )
 
-      allow(sysprep_auto_logon_visibility_service).
-        to receive(:determine_visibility).with(sysprep_auto_logon).and_return(
-          {:hide => [:sysprep_auto_logon_hide], :show => [:sysprep_auto_logon_show]}
+      allow(sysprep_auto_logon_visibility_service)
+        .to receive(:determine_visibility).with(sysprep_auto_logon).and_return(
+          :hide => [:sysprep_auto_logon_hide], :show => [:sysprep_auto_logon_show]
         )
 
-      allow(retirement_visibility_service).
-        to receive(:determine_visibility).with(retirement).and_return(
-          {:hide => [:retirement_hide], :show => [:retirement_show]}
+      allow(retirement_visibility_service)
+        .to receive(:determine_visibility).with(retirement).and_return(
+          :hide => [:retirement_hide], :show => [:retirement_show]
         )
 
-      allow(customize_fields_visibility_service).
-        to receive(:determine_visibility).with(
+      allow(customize_fields_visibility_service)
+        .to receive(:determine_visibility).with(
           platform, supports_customization_template, customize_fields_list
-        ).and_return({
+        ).and_return(
           :hide => [:customize_fields_hide, :number_hide], # Forces uniq
           :show => [:customize_fields_show, :number_show, :retirement_hide] # Forces uniq and removal of intersection
-        })
+        )
 
-      allow(sysprep_custom_spec_visibility_service).
-        to receive(:determine_visibility).with(sysprep_custom_spec).and_return({
+      allow(sysprep_custom_spec_visibility_service)
+        .to receive(:determine_visibility).with(sysprep_custom_spec).and_return(
           :hide => [:sysprep_custom_spec_hide],
           :show => [:sysprep_custom_spec_show]
-      })
+        )
 
-      allow(request_type_visibility_service).
-        to receive(:determine_visibility).with(request_type).and_return({:hide => [:request_type_hide]})
+      allow(request_type_visibility_service)
+        .to receive(:determine_visibility).with(request_type).and_return(:hide => [:request_type_hide])
 
-      allow(pxe_iso_visibility_service).
-        to receive(:determine_visibility).with(supports_iso, supports_pxe).and_return({
+      allow(pxe_iso_visibility_service)
+        .to receive(:determine_visibility).with(supports_iso, supports_pxe).and_return(
           :hide => [:pxe_iso_hide],
           :show => [:pxe_iso_show]
-      })
+        )
 
-      allow(linked_clone_visibility_service).
-        to receive(:determine_visibility).with(provision_type, linked_clone).and_return({
+      allow(linked_clone_visibility_service)
+        .to receive(:determine_visibility).with(provision_type, linked_clone).and_return(
           :hide => [:linked_clone_hide],
           :show => [:linked_clone_show]
-      })
+        )
     end
 
     it "adds the values to the field names to hide and show without duplicates or intersections" do

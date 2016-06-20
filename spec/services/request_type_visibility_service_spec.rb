@@ -6,7 +6,7 @@ describe RequestTypeVisibilityService do
       let(:request_type) { :clone_to_template }
 
       it "returns the values to be hidden" do
-        expect(subject.determine_visibility(request_type)).to eq({:hide => [:vm_filter, :vm_auto_start]})
+        expect(subject.determine_visibility(request_type)).to eq(:hide => [:vm_filter, :vm_auto_start])
       end
     end
 
@@ -14,7 +14,7 @@ describe RequestTypeVisibilityService do
       let(:request_type) { :clone_to_vm }
 
       it "returns the values to be hidden" do
-        expect(subject.determine_visibility(request_type)).to eq({:hide => [:vm_filter]})
+        expect(subject.determine_visibility(request_type)).to eq(:hide => [:vm_filter])
       end
     end
 
@@ -22,7 +22,7 @@ describe RequestTypeVisibilityService do
       let(:request_type) { :potato }
 
       it "returns an empty list of values to be hidden" do
-        expect(subject.determine_visibility(request_type)).to eq({:hide => []})
+        expect(subject.determine_visibility(request_type)).to eq(:hide => [])
       end
     end
   end

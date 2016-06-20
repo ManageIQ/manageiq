@@ -206,17 +206,17 @@ describe MiqProvisionVirtWorkflow do
     let(:workflow) do
       described_class.new(
         {
-          :addr_mode => "addr_mode",
-          :number_of_vms => "123",
-          :placement_auto => true,
-          :retirement => "321",
+          :addr_mode                => "addr_mode",
+          :number_of_vms            => "123",
+          :placement_auto           => true,
+          :retirement               => "321",
           :service_template_request => "service_template_request",
-          :sysprep_auto_logon => "sysprep_auto_logon",
-          :sysprep_custom_spec => "sysprep_custom_spec",
-          :sysprep_enabled => "sysprep_enabled"
+          :sysprep_auto_logon       => "sysprep_auto_logon",
+          :sysprep_custom_spec      => "sysprep_custom_spec",
+          :sysprep_enabled          => "sysprep_enabled"
         },
         requester,
-        {:skip_dialog_load => true}
+        :skip_dialog_load => true
       )
     end
 
@@ -255,10 +255,10 @@ describe MiqProvisionVirtWorkflow do
     before do
       allow(requester).to receive(:kind_of?).with(User).and_return(true)
       allow(DialogFieldVisibilityService).to receive(:new).and_return(dialog_field_visibility_service)
-      allow(dialog_field_visibility_service).to receive(:determine_visibility).with(options_hash).and_return({
+      allow(dialog_field_visibility_service).to receive(:determine_visibility).with(options_hash).and_return(
         :edit => "shown_visibility_hash",
         :hide => "hidden_visibility_hash"
-      })
+      )
       allow(dialog_field_visibility_service).to receive(:set_shown_fields).with(
         "shown_visibility_hash", [{:name => :field_name}]
       )
