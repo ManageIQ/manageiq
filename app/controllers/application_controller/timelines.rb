@@ -33,17 +33,17 @@ module ApplicationController::Timelines
       @tl_options[:tl_result] = params[:tl_result] if params[:tl_result]
       if params[:tl_fl_grp_all] == "1"
         @tl_options[:tl_filter_all] = true
-        @tl_options.events.keys.sort.each do |e|
+        @tl_options.policy_events.keys.sort.each do |e|
           @tl_options[:applied_filters].push(e)
         end
       elsif params[:tl_fl_grp_all] == "null"
         @tl_options[:tl_filter_all] = false
         @tl_options[:applied_filters] = []
-        @tl_options[:pol_filter] = Array.new(@tl_options.events.length) { "" }
+        @tl_options[:pol_filter] = Array.new(@tl_options.policy_events.length) { "" }
         @tl_options[:pol_fltr] = @tl_options[:pol_filter].dup
       end
       # Look through the event type checkbox keys
-      @tl_options.events.keys.sort.each_with_index do |e, i|
+      @tl_options.policy_events.keys.sort.each_with_index do |e, i|
         ekey = "tl_fl_grp#{i + 1}__#{e.tr(" ", "_")}".to_sym
         if params[ekey] == "1" || (@tl_options[:tl_filter_all] && params[ekey] != "null")
           @tl_options[:pol_filter][i] = e
@@ -76,7 +76,7 @@ module ApplicationController::Timelines
       @tl_options.fltr2 = @tl_options.filter2.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter2])
       @tl_options.fltr3 = @tl_options.filter3.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter3])
     else
-      @tl_options.events.sort.each_with_index do |_e, i|
+      @tl_options.policy_events.sort.each_with_index do |_e, i|
         @tl_options[:pol_fltr][i] = if !@tl_options.pol_filter[i].blank?
                                       tl_build_policy_filter(@tl_options[:pol_filter][i])
                                     else
@@ -99,7 +99,7 @@ module ApplicationController::Timelines
         page << "$('#filter2').val('#{@tl_options[:fltr2]}');"
         page << "$('#filter3').val('#{@tl_options[:fltr3]}');"
       else
-        @tl_options.events.sort.each_with_index do |_e, i|
+        @tl_options.policy_events.sort.each_with_index do |_e, i|
           page << "$('#filter#{i}').val('#{@tl_options[:pol_fltr][i]}');"
         end
       end
@@ -200,7 +200,7 @@ module ApplicationController::Timelines
 
   def tl_build_policy_filter(grp_name)      # hidden fields to highlight bands in timeline
     arr = []
-    @tl_options.events[grp_name].each do |a|
+    @tl_options.policy_events[grp_name].each do |a|
       e = PolicyEvent.find_by_miq_event_definition_id(a.to_i)
       unless e.nil?
         arr.push(e.event_type)
@@ -244,7 +244,7 @@ module ApplicationController::Timelines
       if @tl_options[:applied_filters].blank?
         @tl_options[:applied_filters].push("VM Operation")
         # had to set this here because if it this is preselected in cboxes, it doesnt send the params back for this cb to tl_chooser
-        @tl_options.events.keys.sort.each_with_index do |e, i|
+        @tl_options.policy_events.keys.sort.each_with_index do |e, i|
           if e == "VM Operation"
             @tl_options[:pol_filter][i] = e
             @tl_options[:pol_fltr][i] = tl_build_policy_filter(e)
@@ -319,7 +319,7 @@ module ApplicationController::Timelines
       if @tl_options.policy_events?
         unless @tl_options[:applied_filters].blank?
           @tl_options[:applied_filters].each do |e|
-            event_set.push(@tl_options.events[e])
+            event_set.push(@tl_options.policy_events[e])
           end
         end
       else

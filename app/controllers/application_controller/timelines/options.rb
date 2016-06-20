@@ -41,14 +41,14 @@ module ApplicationController::Timelines
       pol_filter.any? { |f| !f.blank? }
     end
 
-    def events
-      @events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
+    def policy_events
+      @policy_events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
         hash[event.description] = event.members.collect(&:id)
       end
     end
 
     def drop_cache
-      @events = nil
+      @policy_events = nil
     end
   end
 end

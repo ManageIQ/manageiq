@@ -76,7 +76,7 @@
         .form-group
           %label.control-label.col-md-2
           .col-md-8
-            - @tl_options.events.keys.sort.each_with_index do |e, i|
+            - @tl_options.policy_events.keys.sort.each_with_index do |e, i|
 
               %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{ApplicationController::Timelines::EVENT_COLORS[i]}"}
                 = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options[:applied_filters].include?(e),
@@ -90,7 +90,7 @@
           .col-md-8
           .col-md-8
       %form#hiddenForm
-        - @tl_options.events.length.times do |i|
+        - @tl_options.policy_events.length.times do |i|
           %input{:type => "hidden", :name => "filter#{i}", :id => "filter#{i}", :value => @tl_options[:pol_fltr][i]}
 
     - else
