@@ -34,15 +34,6 @@ module ApplicationController::Timelines
       return unless @timeline
     end
 
-    unless @tl_options.management_events?
-      @tl_options.policy.events.sort.each_with_index do |_e, i|
-        @tl_options.policy.fltr[i] = if !@tl_options.policy.filters[i].blank?
-                                       tl_build_policy_filter(@tl_options.policy.filters[i])
-                                     else
-                                       ""
-                                     end
-      end
-    end
     @timeline = true
     add_flash(_("No events available for this timeline"), :warning) if @tl_options.date.start.nil? && @tl_options.date.end.nil?
     render :update do |page|
@@ -59,7 +50,7 @@ module ApplicationController::Timelines
         page << "$('#filter3').val('#{@tl_options.mngt.fltr3}');"
       else
         @tl_options.policy.events.sort.each_with_index do |_e, i|
-          page << "$('#filter#{i}').val('#{@tl_options.policy.fltr[i]}');"
+          page << "$('#filter#{i}').val('#{@tl_options.policy.fltr(i)}');"
         end
       end
       page << "miqSparkle(false);"
@@ -149,22 +140,6 @@ module ApplicationController::Timelines
     MiqReport.new(YAML.load(File.open("#{TIMELINES_FOLDER}/miq_reports/#{timeline}.yaml")))
   end
 
-  def tl_build_policy_filter(grp_name)      # hidden fields to highlight bands in timeline
-    arr = []
-    @tl_options.policy.events[grp_name].each do |a|
-      e = PolicyEvent.find_by_miq_event_definition_id(a.to_i)
-      unless e.nil?
-        arr.push(e.event_type)
-      end
-    end
-    if !arr.blank?
-      filter = "(" << arr.join(")|(") << ")"
-    else
-      filter = ""
-    end
-    filter
-  end
-
   def tl_build_init_options(refresh = nil)
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
     if @tl_options.nil? ||
@@ -175,7 +150,6 @@ module ApplicationController::Timelines
       @tl_options[:model] = @tl_record.class.base_class.to_s
       @tl_options[:tl_show] = "timeline"
       @tl_options.policy.filters = []
-      @tl_options.policy.fltr = []
     end
     sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     @tl_options.date.update_start_end(sdate, edate)
@@ -190,7 +164,6 @@ module ApplicationController::Timelines
         @tl_options.policy.events.keys.sort.each_with_index do |e, i|
           if e == "VM Operation"
             @tl_options.policy.filters[i] = e
-            @tl_options.policy.fltr[i] = tl_build_policy_filter(e)
           end
         end
       end

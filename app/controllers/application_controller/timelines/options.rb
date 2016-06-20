@@ -108,7 +108,6 @@ module ApplicationController::Timelines
   PolicyEventsOptions = Struct.new(
     :applied_filters,
     :filters,
-    :fltr,
     :filters_all,
     :result
   ) do
@@ -123,7 +122,6 @@ module ApplicationController::Timelines
         self.filters_all = false
         self.applied_filters = []
         self.filters = Array.new(events.length) { '' }
-        self.fltr = filters.dup
       end
       # Look through the event type checkbox keys
       events.keys.sort.each_with_index do |e, i|
@@ -150,7 +148,24 @@ module ApplicationController::Timelines
     end
 
     def drop_cache
-      @events = nil
+      @events = @fltr_cache = nil
+    end
+
+    def fltr(number)
+      @fltr_cache ||= {}
+      @fltr_cache[number] ||= build_filter(filters[number])
+    end
+
+    private
+
+    def build_filter(grp_name) # hidden fields to highlight bands in timeline
+      return '' if grp_name.blank?
+      arr = []
+      events[grp_name].each do |a|
+        e = PolicyEvent.find_by_miq_event_definition_id(a.to_i)
+        arr.push(e.event_type) unless e.nil?
+      end
+      arr.blank? ? '' : '(' << arr.join(')|(') << ')'
     end
   end
 
