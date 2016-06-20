@@ -60,7 +60,7 @@ module ApplicationController::Timelines
     if @tl_options.management_events? &&
        (@tl_options.filter1.blank? || @tl_options.filter2.blank? || @tl_options.filter3.blank?)
       add_flash(_("At least one filter must be selected"), :warning)
-    elsif @tl_options[:tl_show] == "policy_timeline"
+    elsif @tl_options.policy_events?
       flg = true
       @tl_options.events.sort.each_with_index do |_e, i|
         unless @tl_options.pol_filter[i].blank?
@@ -244,7 +244,7 @@ module ApplicationController::Timelines
     end
     @tl_options[:days] ||= "7"
 
-    if @tl_options[:tl_show] == "policy_timeline"
+    if @tl_options.policy_events?
       @tl_options[:tl_result] ||= "both"
 
       @tl_options[:applied_filters] ||= []
@@ -323,7 +323,7 @@ module ApplicationController::Timelines
 
       event_set = []
 
-      if @tl_options[:tl_show] == "policy_timeline"
+      if @tl_options.policy_events?
         unless @tl_options[:applied_filters].blank?
           @tl_options[:applied_filters].each do |e|
             event_set.push(@tl_options.events[e])
@@ -350,7 +350,7 @@ module ApplicationController::Timelines
       end
 
       if !event_set.empty?
-        if @tl_options[:tl_show] == "policy_timeline" && @tl_options[:tl_result] != "both"
+        if @tl_options.policy_events? && @tl_options[:tl_result] != "both"
           ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?)) and (result = ?)",
                           from_dt,

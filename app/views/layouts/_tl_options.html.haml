@@ -57,7 +57,7 @@
                 miqSelectPickerEvent('tl_days', '#{url}', {beforeSend: true})
               = _("days back")
       %hr
-    - if @tl_options[:tl_show] == "policy_timeline"
+    - if @tl_options.policy_events?
       .form-horizontal
         .form-group
           %label.control-label.col-md-2

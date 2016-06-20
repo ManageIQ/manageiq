@@ -26,6 +26,10 @@ module ApplicationController::Timelines
       tl_show == 'timeline'
     end
 
+    def policy_events?
+      tl_show == 'policy_timeline'
+    end
+
     def all_results
       {_('Both') => 'both', _('True') => 'success', _('False') => 'failure'}
     end
