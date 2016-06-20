@@ -71,16 +71,16 @@ module ApplicationController::Timelines
       event_set = []
       if !filter1.blank? || !filter2.blank? || !filter3.blank?
         unless filter1.blank?
-          event_set.push(event_groups[events[filter1]][level.downcase.to_sym]) if events[filter1]
-          event_set.push(event_groups[events[filter1]][:detail]) if level.downcase == 'detail'
+          event_set.push(event_groups[events[filter1]][level.to_sym]) if events[filter1]
+          event_set.push(event_groups[events[filter1]][:detail]) if level == 'detail'
         end
         unless filter2.blank?
-          event_set.push(event_groups[events[filter2]][level.downcase.to_sym]) if events[filter2]
-          event_set.push(event_groups[events[filter2]][:detail]) if level.downcase == 'detail'
+          event_set.push(event_groups[events[filter2]][level.to_sym]) if events[filter2]
+          event_set.push(event_groups[events[filter2]][:detail]) if level == 'detail'
         end
         unless filter3.blank?
-          event_set.push(event_groups[events[filter3]][level.downcase.to_sym]) if events[filter3]
-          event_set.push(event_groups[events[filter3]][:detail]) if level.downcase == "detail"
+          event_set.push(event_groups[events[filter3]][level.to_sym]) if events[filter3]
+          event_set.push(event_groups[events[filter3]][:detail]) if level == 'detail'
         end
       else
         event_set.push(event_groups[:power][level.to_sym])
@@ -95,8 +95,8 @@ module ApplicationController::Timelines
     private
 
     def build_filter(grp_name) # hidden fields to highlight bands in timeline
-      arr = event_groups[grp_name][level.downcase.to_sym]
-      arr.push(event_groups[grp_name][:critical]) if level.downcase == 'detail'
+      arr = event_groups[grp_name][level.to_sym]
+      arr.push(event_groups[grp_name][:critical]) if level == 'detail'
       "(" << arr.join(")|(") << ")"
     end
 

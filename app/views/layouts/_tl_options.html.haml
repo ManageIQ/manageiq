@@ -100,7 +100,7 @@
             = _("Level")
           .col-md-8
             = select_tag("tl_fl_typ",
-              options_for_select([[_("Summary"), "Critical"], [_("Detail"), "Detail"]], @tl_options.mngt.level),
+              options_for_select([[_("Summary"), "critical"], [_("Detail"), "detail"]], @tl_options.mngt.level),
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
