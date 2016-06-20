@@ -163,22 +163,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       show_dialog(:customize, :hide, "disabled")
     end
 
-    options_hash = setup_parameters_for_visibility_sevice(options)
-    visibility_hash = dialog_field_visibility_service.determine_visibility(options_hash)
+    update_field_display_values(options)
 
-    update_field_display_values(visibility_hash)
-
-    # Show/Hide Notes
-    f = Hash.new { |h, k| h[k] = [] }
-
-    show_flag = get_value(@values[:number_of_vms]).to_i > 1 ? :edit : :hide
-    f[show_flag] += [:ip_addr]
-
-    show_flag = @vm_snapshot_count.zero? ? :edit : :hide
-    f[show_flag] += [:linked_clone]
-
-    # Update field :notes_display value
-    f.each { |k, v| show_fields(k, v, :notes_display) }
+    update_field_display_notes_values
 
     update_field_read_only(options)
   end
@@ -975,13 +962,28 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     @dialog_field_visibility_service ||= DialogFieldVisibilityService.new
   end
 
-  def update_field_display_values(visibility_hash)
+  def update_field_display_values(options = {})
+    options_hash = setup_parameters_for_visibility_sevice(options)
+    visibility_hash = dialog_field_visibility_service.determine_visibility(options_hash)
+
     all_fields = []
     fields do |field_name, field, _dialog_name, _dialog|
       all_fields << field.merge({:name => field_name})
     end
     dialog_field_visibility_service.set_shown_fields(visibility_hash[:edit], all_fields)
     dialog_field_visibility_service.set_hidden_fields(visibility_hash[:hide], all_fields)
+  end
+
+  def update_field_display_notes_values
+    field_note_visibility = Hash.new([])
+
+    edit_or_hide = get_value(@values[:number_of_vms]).to_i > 1 ? :edit : :hide
+    field_note_visibility[edit_or_hide] += [:ip_addr]
+
+    edit_or_hide = @vm_snapshot_count.zero? ? :edit : :hide
+    field_note_visibility[edit_or_hide] += [:linked_clone]
+
+    field_note_visibility.each { |display_flag, field_names| show_fields(display_flag, field_names, :notes_display) }
   end
 
   def setup_parameters_for_visibility_sevice(options)
