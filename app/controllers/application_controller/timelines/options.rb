@@ -11,9 +11,6 @@ module ApplicationController::Timelines
     :filter1,
     :filter2,
     :filter3,
-    :fltr1,
-    :fltr2,
-    :fltr3,
     :fl_typ,
     :hourly_date,
     :model,
@@ -54,10 +51,16 @@ module ApplicationController::Timelines
       end
     end
 
-    def mngmt_build_filters
-      self.fltr1 = filter1.blank? ? '' : mngmt_build_filter(mngmt_events[filter1])
-      self.fltr2 = filter2.blank? ? '' : mngmt_build_filter(mngmt_events[filter2])
-      self.fltr3 = filter3.blank? ? '' : mngmt_build_filter(mngmt_events[filter3])
+    def fltr1
+      filter1.blank? ? '' : mngmt_build_filter(mngmt_events[filter1])
+    end
+
+    def fltr2
+      filter2.blank? ? '' : mngmt_build_filter(mngmt_events[filter2])
+    end
+
+    def fltr3
+      filter3.blank? ? '' : mngmt_build_filter(mngmt_events[filter3])
     end
 
     def drop_cache

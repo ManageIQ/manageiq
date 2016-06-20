@@ -67,9 +67,7 @@ module ApplicationController::Timelines
       return unless @timeline
     end
 
-    if @tl_options.management_events?
-      @tl_options.mngmt_build_filters
-    else
+    unless @tl_options.management_events?
       @tl_options.policy_events.sort.each_with_index do |_e, i|
         @tl_options[:pol_fltr][i] = if !@tl_options.pol_filter[i].blank?
                                       tl_build_policy_filter(@tl_options[:pol_filter][i])
@@ -89,9 +87,9 @@ module ApplicationController::Timelines
       page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
       page << 'miqBuildCalendar();'
       if @tl_options.management_events?
-        page << "$('#filter1').val('#{@tl_options[:fltr1]}');"
-        page << "$('#filter2').val('#{@tl_options[:fltr2]}');"
-        page << "$('#filter3').val('#{@tl_options[:fltr3]}');"
+        page << "$('#filter1').val('#{@tl_options.fltr1}');"
+        page << "$('#filter2').val('#{@tl_options.fltr2}');"
+        page << "$('#filter3').val('#{@tl_options.fltr3}');"
       else
         @tl_options.policy_events.sort.each_with_index do |_e, i|
           page << "$('#filter#{i}').val('#{@tl_options[:pol_fltr][i]}');"
@@ -241,7 +239,6 @@ module ApplicationController::Timelines
       @tl_options[:fl_typ] = "critical" if @tl_options[:fl_typ].nil?
       if @tl_options[:filter1].nil?
         @tl_options[:filter1] = "Power Activity"
-        @tl_options.mngmt_build_filters
       end
     end
   end

@@ -137,7 +137,7 @@
               miqInitSelectPicker();
               miqSelectPickerEvent('tl_fl_grp3', '#{url}', {beforeSend: true})
       %form#hiddenForm
-        %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options[:fltr1]}
-        %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options[:fltr2]}
-        %input#filter3{:type => "hidden", :name => "filter3", :value => @tl_options[:fltr3]}
+        %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options.fltr1}
+        %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options.fltr2}
+        %input#filter3{:type => "hidden", :name => "filter3", :value => @tl_options.fltr3}
     = _("* Dates/Times on this page are based on time zone: %s.") % session[:user_tz]
