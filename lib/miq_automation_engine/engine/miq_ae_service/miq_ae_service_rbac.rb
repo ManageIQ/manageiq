@@ -10,13 +10,13 @@ module MiqAeMethodService
 
       def all
         MiqAeService.set_current_user if MiqAeService.rbac_enabled?
-        objs = MiqAeService.rbac_enabled? ? Rbac.search(:class => model, :results_format => :objects).first : model.send(:all)
+        objs = MiqAeService.rbac_enabled? ? Rbac.filtered(model): model.send(:all)
         wrap_results(objs)
       end
 
       def count
         MiqAeService.set_current_user if MiqAeService.rbac_enabled?
-        MiqAeService.rbac_enabled? ? Rbac.search(:class => model).first.count : model.send(:count)
+        MiqAeService.rbac_enabled? ? Rbac.filtered(model).count : model.send(:count)
       end
 
       def first
@@ -32,7 +32,6 @@ module MiqAeMethodService
         ret = MiqAeService.rbac_enabled? ? Rbac.filtered(array) : array
         (objs.kind_of?(Array) || objs.kind_of?(ActiveRecord::Relation)) ? ret : ret.first
       end
-
     end
   end
 end
