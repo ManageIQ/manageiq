@@ -4,7 +4,7 @@ class ChargebackController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  PER_TIME_TYPES = %w(hourly daily weekly monthly).freeze
+  PER_TIME_TYPES = %w(hourly).freeze
 
   def per_time_types_from
     PER_TIME_TYPES.map { |time_type| {time_type => time_type.capitalize} }.reduce(:merge)
