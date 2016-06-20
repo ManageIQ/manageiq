@@ -3,6 +3,12 @@
     %fieldset
       %h3= _('Available Snapshots')
       = render(:partial => 'shared/tree', :locals => {:tree => @snapshot_tree, :name => @snapshot_tree.name})
+    :scss
+      .snapshot-active-suffix a {
+      background-color: #40a0ce !important;
+      color: white !important; /* @ IE6 */}
+      .snapshot-active-suffix a:after {
+      content: "#{_(' (Active)')}";}
     :javascript
       miqDynatreeActivateNodeSilently("#{j_str @snapshot_tree.name}", "#{j_str @snapshot_tree.selected_node}");
-      miqDynatreeNodeAddClass("#{j_str @snapshot_tree.name}", "#{j_str @snapshot_tree.selected_node}", 'dynatree-cfme-active');
+      miqDynatreeNodeAddClass("#{j_str @snapshot_tree.name}", "#{j_str @snapshot_tree.selected_node}", 'snapshot-active-suffix');
