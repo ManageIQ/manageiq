@@ -112,6 +112,9 @@ public/stylesheets/jmaki-3column-footer.css
 public/stylesheets/jmaki-standard-no-sidebars.css
 public/stylesheets/jmaki-standard-right-sidebar.css
 
+# spec/
+spec/replication/util/data/darga_migrations
+
 # tmp/
 tmp/*
 
