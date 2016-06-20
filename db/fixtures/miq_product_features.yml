@@ -4911,6 +4911,23 @@
         :description: Edit EVM Server Relationship
         :feature_type: admin
         :identifier: miq_template_evm_relationship
+    - :name: Virtual Templates
+      :description: Everything for Virtual Templates
+      :feature_type: admin
+      :identifier: miq_virtual_template
+      :children:
+      - :name: Create Virtual Template
+        :description: Create Virtual Template
+        :feature_type: admin
+        :identifier: create_virtual_template
+      - :name: Edit Virtual Templates
+        :description: Edit Virtual Template
+        :feature_type: admin
+        :identifier: edit_virtual_template
+      - :name: Delete Virtual Template
+        :description: Delete Virtual Template
+        :feature_type: admin
+        :identifier: delete_virtual_template
     - :name: Snapshots
       :description: Everything for Template Snapshots
       :feature_type: node
