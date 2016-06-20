@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/3790a668-eb4d-47ba-be15-bcf658bb88ba/resources/Local~~/metrics
+    uri: http://jdoe:password@localhost:8080/hawkular/inventory/feeds/377fadac-98eb-4a53-bf3b-89c21bccd8ba/resources/Local~~/metrics?sort=id
     body:
       encoding: US-ASCII
       string: ''
@@ -13,6 +13,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -31,7 +33,7 @@ http_interactions:
       Pragma:
       - no-cache
       Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - Mon, 20 Jun 2016 16:18:50 GMT
       X-Total-Count:
       - '14'
       Connection:
@@ -39,187 +41,187 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '10779'
+      - '10061'
       Link:
-      - <http://localhost:8080/hawkular/inventory/feeds/3790a668-eb4d-47ba-be15-bcf658bb88ba/resources/Local~~/metrics>;
+      - <http://localhost:8080/hawkular/inventory/feeds/377fadac-98eb-4a53-bf3b-89c21bccd8ba/resources/Local~~/metrics?sort=id>;
         rel="current"
     body:
       encoding: ASCII-8BIT
       string: |-
         [ {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;AI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability",
+          "name" : "Server Availability~Server Availability",
           "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;Server%20Availability~Server%20Availability",
+            "name" : "Server Availability~Server Availability",
+            "unit" : "NONE",
+            "type" : "AVAILABILITY",
+            "collectionInterval" : 30,
+            "id" : "Server Availability~Server Availability"
+          },
+          "id" : "AI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~AT~Server Availability~Server Availability"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions",
             "unit" : "NONE",
             "type" : "GAUGE",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
           },
-          "name" : "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"
         }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed",
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions",
           "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Memory%20Metrics~NonHeap%20Committed",
-            "name" : "WildFly Memory Metrics~NonHeap Committed",
-            "unit" : "NONE",
-            "type" : "GAUGE",
-            "collectionInterval" : 60,
-            "id" : "WildFly Memory Metrics~NonHeap Committed"
-          },
-          "name" : "WildFly Memory Metrics~NonHeap Committed",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Memory Metrics~NonHeap Committed"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
-            "name" : "WildFly Memory Metrics~Accumulated GC Duration",
-            "unit" : "NONE",
-            "type" : "COUNTER",
-            "collectionInterval" : 60,
-            "id" : "WildFly Memory Metrics~Accumulated GC Duration"
-          },
-          "name" : "WildFly Memory Metrics~Accumulated GC Duration",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Memory Metrics~Accumulated GC Duration"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions",
             "unit" : "NONE",
             "type" : "COUNTER",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
           },
-          "name" : "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"
         }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed",
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions",
           "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Memory%20Metrics~Heap%20Committed",
-            "name" : "WildFly Memory Metrics~Heap Committed",
-            "unit" : "NONE",
-            "type" : "GAUGE",
-            "collectionInterval" : 60,
-            "id" : "WildFly Memory Metrics~Heap Committed"
-          },
-          "name" : "WildFly Memory Metrics~Heap Committed",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Memory Metrics~Heap Committed"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
-            "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
-            "unit" : "NONE",
-            "type" : "COUNTER",
-            "collectionInterval" : 60,
-            "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
-          },
-          "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
-            "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
-            "unit" : "NONE",
-            "type" : "COUNTER",
-            "collectionInterval" : 60,
-            "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
-          },
-          "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
-            "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
-            "unit" : "NONE",
-            "type" : "COUNTER",
-            "collectionInterval" : 60,
-            "id" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
-          },
-          "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Threading%20Metrics~Thread%20Count",
-            "name" : "WildFly Threading Metrics~Thread Count",
-            "unit" : "NONE",
-            "type" : "GAUGE",
-            "collectionInterval" : 120,
-            "id" : "WildFly Threading Metrics~Thread Count"
-          },
-          "name" : "WildFly Threading Metrics~Thread Count",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Threading Metrics~Thread Count"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Memory%20Metrics~NonHeap%20Used",
-            "name" : "WildFly Memory Metrics~NonHeap Used",
-            "unit" : "NONE",
-            "type" : "GAUGE",
-            "collectionInterval" : 30,
-            "id" : "WildFly Memory Metrics~NonHeap Used"
-          },
-          "name" : "WildFly Memory Metrics~NonHeap Used",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Memory Metrics~NonHeap Used"
-        }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
-          "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions",
             "name" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions",
             "unit" : "NONE",
             "type" : "GAUGE",
             "collectionInterval" : 60,
             "id" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
           },
-          "name" : "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions"
         }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used",
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
           "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Memory%20Metrics~Heap%20Used",
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
+          },
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
+          },
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+          "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time",
+            "name" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time",
+            "unit" : "NONE",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
+          },
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+          "name" : "WildFly Memory Metrics~Accumulated GC Duration",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration",
+            "name" : "WildFly Memory Metrics~Accumulated GC Duration",
+            "unit" : "MILLISECONDS",
+            "type" : "COUNTER",
+            "collectionInterval" : 60,
+            "id" : "WildFly Memory Metrics~Accumulated GC Duration"
+          },
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Memory Metrics~Accumulated GC Duration"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed",
+          "name" : "WildFly Memory Metrics~Heap Committed",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Memory%20Metrics~Heap%20Committed",
+            "name" : "WildFly Memory Metrics~Heap Committed",
+            "unit" : "BYTES",
+            "type" : "GAUGE",
+            "collectionInterval" : 60,
+            "id" : "WildFly Memory Metrics~Heap Committed"
+          },
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Memory Metrics~Heap Committed"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max",
+          "name" : "WildFly Memory Metrics~Heap Max",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Memory%20Metrics~Heap%20Max",
+            "name" : "WildFly Memory Metrics~Heap Max",
+            "unit" : "BYTES",
+            "type" : "GAUGE",
+            "collectionInterval" : 60,
+            "id" : "WildFly Memory Metrics~Heap Max"
+          },
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Memory Metrics~Heap Max"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used",
+          "name" : "WildFly Memory Metrics~Heap Used",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Memory%20Metrics~Heap%20Used",
             "name" : "WildFly Memory Metrics~Heap Used",
             "unit" : "BYTES",
             "type" : "GAUGE",
             "collectionInterval" : 30,
             "id" : "WildFly Memory Metrics~Heap Used"
           },
-          "name" : "WildFly Memory Metrics~Heap Used",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Memory Metrics~Heap Used"
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Memory Metrics~Heap Used"
         }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max",
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed",
+          "name" : "WildFly Memory Metrics~NonHeap Committed",
           "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;WildFly%20Memory%20Metrics~Heap%20Max",
-            "name" : "WildFly Memory Metrics~Heap Max",
-            "unit" : "NONE",
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Memory%20Metrics~NonHeap%20Committed",
+            "name" : "WildFly Memory Metrics~NonHeap Committed",
+            "unit" : "BYTES",
             "type" : "GAUGE",
             "collectionInterval" : 60,
-            "id" : "WildFly Memory Metrics~Heap Max"
+            "id" : "WildFly Memory Metrics~NonHeap Committed"
           },
-          "name" : "WildFly Memory Metrics~Heap Max",
-          "id" : "MI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~MT~WildFly Memory Metrics~Heap Max"
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Memory Metrics~NonHeap Committed"
         }, {
-          "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/m;AI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~AT~Server%20Availability~App%20Server",
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used",
+          "name" : "WildFly Memory Metrics~NonHeap Used",
           "type" : {
-            "path" : "/t;28026b36-8fe4-4332-84c8-524e173a68bf/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/mt;Server%20Availability~App%20Server",
-            "name" : "Server Availability~App Server",
-            "unit" : "NONE",
-            "type" : "AVAILABILITY",
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Memory%20Metrics~NonHeap%20Used",
+            "name" : "WildFly Memory Metrics~NonHeap Used",
+            "unit" : "BYTES",
+            "type" : "GAUGE",
             "collectionInterval" : 30,
-            "id" : "Server Availability~App Server"
+            "id" : "WildFly Memory Metrics~NonHeap Used"
           },
-          "name" : "Server Availability~App Server",
-          "id" : "AI~R~[3790a668-eb4d-47ba-be15-bcf658bb88ba/Local~~]~AT~Server Availability~App Server"
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Memory Metrics~NonHeap Used"
+        }, {
+          "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/m;MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count",
+          "name" : "WildFly Threading Metrics~Thread Count",
+          "type" : {
+            "path" : "/t;hawkular/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/mt;WildFly%20Threading%20Metrics~Thread%20Count",
+            "name" : "WildFly Threading Metrics~Thread Count",
+            "unit" : "NONE",
+            "type" : "GAUGE",
+            "collectionInterval" : 120,
+            "id" : "WildFly Threading Metrics~Thread Count"
+          },
+          "id" : "MI~R~[377fadac-98eb-4a53-bf3b-89c21bccd8ba/Local~~]~MT~WildFly Threading Metrics~Thread Count"
         } ]
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:50 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -230,6 +232,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -237,26 +241,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1285'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '322'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":39,"empty":false},{"start":1463504400000,"end":1463508000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1466431200000,"end":1466434800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -267,6 +277,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -274,26 +286,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1588'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '306'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":4.35617792E8,"avg":4.6785646276923084E8,"median":4.7014551553855133E8,"max":4.72973312E8,"samples":39,"empty":false},{"start":1463504400000,"end":1463508000000,"min":4.72973312E8,"avg":4.743462911999999E8,"median":4.74744171401267E8,"max":4.75070464E8,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":4.75070464E8,"avg":4.757061631999999E8,"median":4.7575119054643935E8,"max":4.76250112E8,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":4.76315648E8,"avg":4.7695790079999995E8,"median":4.770323812886554E8,"max":4.77495296E8,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":4.77495296E8,"avg":4.778601130666667E8,"median":4.779441160864559E8,"max":4.78150656E8,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":4.78150656E8,"avg":4.8038560164102566E8,"median":4.789315171200777E8,"max":4.8758784E8,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":60,"empty":false},{"start":1466431200000,"end":1466434800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/rate?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/rate?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -304,6 +322,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -311,26 +331,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1494'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '306'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":19.0,"avg":66.4258913605973,"median":51.530256944662,"max":201.0,"samples":38,"empty":false},{"start":1463504400000,"end":1463508000000,"min":16.00613568534605,"avg":69.41414490700824,"median":29.139007551183372,"max":917.6597872235792,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":0.0,"avg":40.95468095755675,"median":26.284786095078346,"max":127.0,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":0.0,"avg":41.252197786070894,"median":27.055907660856715,"max":153.0,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":0.0,"avg":49.96068621334986,"median":28.46045698210412,"max":558.0,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":0.0,"avg":43.91615042001034,"median":28.102204737108316,"max":130.0,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":59,"empty":false},{"start":1466431200000,"end":1466434800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/rate?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -341,6 +367,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -348,26 +376,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1285'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '320'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":38,"empty":false},{"start":1463504400000,"end":1463508000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":-8.0,"avg":-8.0,"median":-8.0,"max":-8.0,"sum":-480.0,"samples":60,"empty":false},{"start":1466431200000,"end":1466434800000,"min":-8.0,"avg":-8.0,"median":-8.0,"max":-8.0,"sum":-480.0,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/rate?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -378,6 +412,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -385,26 +421,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1600'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '306'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":8.66648064E8,"avg":1.0424727499487181E9,"median":1.036715022139433E9,"max":1.2058624E9,"samples":39,"empty":false},{"start":1463504400000,"end":1463508000000,"min":8.64026624E8,"avg":1.2258115583999999E9,"median":1.2524041505049977E9,"max":1.420296192E9,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":1.450704896E9,"avg":1.4750318591999996E9,"median":1.4778983185583868E9,"max":1.4811136E9,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":1.466433536E9,"avg":1.4781601109333339E9,"median":1.4790972546412108E9,"max":1.481637888E9,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":1.47324928E9,"avg":1.6156983295999997E9,"median":1.6494669492798104E9,"max":1.670381568E9,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":1.647837184E9,"avg":1.6653537805128202E9,"median":1.6660046170033023E9,"max":1.66985728E9,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":59,"empty":false},{"start":1466431200000,"end":1466434800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/rate?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/rate?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -415,6 +457,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -422,26 +466,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1621'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '306'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":12243.0,"avg":28993.31630009903,"median":18720.975246175283,"max":71924.39747991599,"samples":38,"empty":false},{"start":1463504400000,"end":1463508000000,"min":14811.6331683006,"avg":29563.181364039374,"median":18881.36724793011,"max":81345.64423926268,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":11874.385344956912,"avg":28603.66022980716,"median":18456.02773555285,"max":83531.39218986983,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":13987.766870552157,"avg":29312.926147942242,"median":18172.793929965334,"max":83529.17645882294,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":12654.789086848552,"avg":29566.645040749576,"median":18554.653970864692,"max":86036.3994097393,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":14246.086652107957,"avg":30937.92869217333,"median":19411.464343750908,"max":100565.67609460157,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":59,"empty":false},{"start":1466431200000,"end":1466434800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/rate?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/rate?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -452,6 +502,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -459,26 +511,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1597'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '306'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":508.0,"avg":1153.4928399985708,"median":841.3570575929709,"max":2508.0418006966784,"samples":38,"empty":false},{"start":1463504400000,"end":1463508000000,"min":666.8961786258791,"avg":1345.789828258084,"median":861.8223365917745,"max":3774.3774377437744,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":550.05500550055,"avg":1326.836078937542,"median":866.2097407403282,"max":3830.06383439724,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":652.0,"avg":1365.715888993853,"median":842.8778540527198,"max":3880.194009700485,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":565.9905668238863,"avg":1342.289407599783,"median":836.9265676967063,"max":3998.229130798367,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":656.1531023905578,"avg":1388.197508360918,"median":891.6583265383421,"max":3948.065801096685,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":59,"empty":false},{"start":1466431200000,"end":1466434800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/rate?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/rate?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -489,6 +547,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -496,26 +556,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1285'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '397'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":38,"empty":false},{"start":1463504400000,"end":1463508000000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":9.0,"avg":17.64685497642349,"median":11.557991925242128,"max":52.0,"sum":1041.164443608986,"samples":59,"empty":false},{"start":1466431200000,"end":1466434800000,"min":10.0,"avg":17.622883962628613,"median":13.556107716778884,"max":45.0,"sum":1057.3730377577162,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -526,6 +592,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -533,26 +601,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1485'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '426'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":2125.0,"avg":2131.5263157894738,"median":2131.7221470825984,"max":2135.0,"samples":19,"empty":false},{"start":1463504400000,"end":1463508000000,"min":2130.0,"avg":2133.1,"median":2132.429911113411,"max":2139.0,"samples":30,"empty":false},{"start":1463508000000,"end":1463511600000,"min":2131.0,"avg":2133.733333333334,"median":2132.9646117845114,"max":2139.0,"samples":30,"empty":false},{"start":1463511600000,"end":1463515200000,"min":2131.0,"avg":2133.8333333333326,"median":2133.9885539868505,"max":2137.0,"samples":30,"empty":false},{"start":1463515200000,"end":1463518800000,"min":2132.0,"avg":2133.5333333333324,"median":2133.2339475369595,"max":2138.0,"samples":30,"empty":false},{"start":1463518800000,"end":1463522400000,"min":2131.0,"avg":2133.8500000000004,"median":2133.52045579806,"max":2138.0,"samples":20,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":5.11705088E8,"avg":5.1866938026666665E8,"median":5.1876414990294075E8,"max":5.24812288E8,"sum":3.1120162816E10,"samples":60,"empty":false},{"start":1466431200000,"end":1466434800000,"min":5.05413632E8,"avg":5.161353216E8,"median":5.160929791458407E8,"max":5.23239424E8,"sum":3.0968119296E10,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -563,6 +637,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -570,26 +646,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1589'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '432'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":4.02816928E8,"avg":4.45532514835443E8,"median":4.476004609375089E8,"max":4.50849856E8,"samples":79,"empty":false},{"start":1463504400000,"end":1463508000000,"min":4.4913108E8,"avg":4.5048983233613443E8,"median":4.5074570951898694E8,"max":4.51169704E8,"samples":119,"empty":false},{"start":1463508000000,"end":1463511600000,"min":4.51183464E8,"avg":4.517811618823529E8,"median":4.516551124156741E8,"max":4.52443776E8,"samples":119,"empty":false},{"start":1463511600000,"end":1463515200000,"min":4.52430584E8,"avg":4.530448191333334E8,"median":4.530561625951518E8,"max":4.5353032E8,"samples":120,"empty":false},{"start":1463515200000,"end":1463518800000,"min":4.53515464E8,"avg":4.53939495932773E8,"median":4.5396578562977445E8,"max":4.54358968E8,"samples":119,"empty":false},{"start":1463518800000,"end":1463522400000,"min":4.54318448E8,"avg":4.5644109903797454E8,"median":4.544624005802338E8,"max":4.63502488E8,"samples":79,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":5.11705088E8,"avg":5.1866938026666665E8,"median":5.1876414990294075E8,"max":5.24812288E8,"sum":3.1120162816E10,"samples":60,"empty":false},{"start":1466431200000,"end":1466434800000,"min":5.05413632E8,"avg":5.1616153599999994E8,"median":5.165101512767589E8,"max":5.23239424E8,"sum":3.096969216E10,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -600,6 +682,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -607,26 +691,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1333'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '433'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":39,"empty":false},{"start":1463504400000,"end":1463508000000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":-15.0,"avg":-15.0,"median":-15.0,"max":-15.0,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":3.2222804E8,"avg":4.049930767333332E8,"median":4.0979912307032865E8,"max":4.86772744E8,"sum":4.8599169208E10,"samples":120,"empty":false},{"start":1466431200000,"end":1466434800000,"min":3.50925376E8,"avg":4.310672720000001E8,"median":4.3291977333402425E8,"max":5.08875368E8,"sum":5.1297005368E10,"samples":119,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -637,6 +727,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -644,26 +736,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1596'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '431'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":5.34967288E8,"avg":7.627937063291138E8,"median":7.406659308852924E8,"max":1.01324076E9,"samples":79,"empty":false},{"start":1463504400000,"end":1463508000000,"min":4.77597936E8,"avg":7.202097696134453E8,"median":7.021713449417261E8,"max":1.133779112E9,"samples":119,"empty":false},{"start":1463508000000,"end":1463511600000,"min":5.90655304E8,"avg":9.588937607394956E8,"median":9.425466126303875E8,"max":1.279005944E9,"samples":119,"empty":false},{"start":1463511600000,"end":1463515200000,"min":7.17163368E8,"avg":1.0662327836000001E9,"median":1.0650721542552443E9,"max":1.414089968E9,"samples":120,"empty":false},{"start":1463515200000,"end":1463518800000,"min":5.40251736E8,"avg":9.479180718655463E8,"median":9.403897199542146E8,"max":1.450459552E9,"samples":119,"empty":false},{"start":1463518800000,"end":1463522400000,"min":6.04857312E8,"avg":9.654365654683546E8,"median":9.781224692274841E8,"max":1.290746016E9,"samples":79,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":3.54353152E8,"avg":3.545453909333332E8,"median":3.546004221653527E8,"max":3.54680832E8,"sum":2.1272723456E10,"samples":60,"empty":false},{"start":1466431200000,"end":1466434800000,"min":3.54680832E8,"avg":3.5475073706666654E8,"median":3.5477877450324875E8,"max":3.5487744E8,"sum":2.1285044224E10,"samples":60,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -674,6 +772,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -681,26 +781,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1525'
-      Date:
-      - Tue, 17 May 2016 21:39:33 GMT
+      - '431'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463490000000,"end":1463493600000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463493600000,"end":1463497200000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463497200000,"end":1463500800000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true},{"start":1463500800000,"end":1463504400000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":39,"empty":false},{"start":1463504400000,"end":1463508000000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1463508000000,"end":1463511600000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1463511600000,"end":1463515200000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1463515200000,"end":1463518800000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":60,"empty":false},{"start":1463518800000,"end":1463522400000,"min":1.908932608E9,"avg":1.908932608E9,"median":1.908932608E9,"max":1.908932608E9,"samples":39,"empty":false},{"start":1463522400000,"end":1463526000000,"min":"NaN","avg":"NaN","median":"NaN","max":"NaN","samples":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":3.36709896E8,"avg":3.369991993333334E8,"median":3.370526535814712E8,"max":3.37192472E8,"sum":4.043990392E10,"samples":120,"empty":false},{"start":1466431200000,"end":1466434800000,"min":3.37127488E8,"avg":3.372265454789915E8,"median":3.372245928021324E8,"max":3.37373016E8,"sum":4.0129958912E10,"samples":119,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:33 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?bucketDuration=3600s&end=1463522400001&start=1463486400000
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?bucketDuration=3600s&end=1466434800001&start=1466427600000
     body:
       encoding: US-ASCII
       string: ''
@@ -711,6 +817,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -718,26 +826,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '1458'
-      Date:
-      - Tue, 17 May 2016 21:39:34 GMT
+      - '386'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"start":1463486400000,"end":1463490000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":"NaN","downtimeCount":0,"empty":true},{"start":1463490000000,"end":1463493600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":"NaN","downtimeCount":0,"empty":true},{"start":1463493600000,"end":1463497200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":"NaN","downtimeCount":0,"empty":true},{"start":1463497200000,"end":1463500800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":"NaN","downtimeCount":0,"empty":true},{"start":1463500800000,"end":1463504400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1463504400000,"end":1463508000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1463508000000,"end":1463511600000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1463511600000,"end":1463515200000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1463515200000,"end":1463518800000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1463518800000,"end":1463522400000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":1.0,"downtimeCount":0,"empty":false},{"start":1463522400000,"end":1463526000000,"downtimeDuration":0,"lastDowntime":0,"uptimeRatio":"NaN","downtimeCount":0,"empty":true}]'
+      encoding: UTF-8
+      string: '[{"start":1466427600000,"end":1466431200000,"min":1430.0,"avg":1431.8999999999999,"median":1431.7922514675515,"max":1435.0,"sum":42957.0,"samples":30,"empty":false},{"start":1466431200000,"end":1466434800000,"min":1431.0,"avg":1432.5666666666666,"median":1432.1120852083195,"max":1437.0,"sum":42977.0,"samples":30,"empty":false},{"start":1466434800000,"end":1466438400000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:39:34 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -748,6 +862,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -755,174 +871,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
+      Pragma:
+      - no-cache
       Date:
-      - Tue, 17 May 2016 21:43:15 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062008,"value":0.0}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:15 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
+      - Mon, 20 Jun 2016 16:18:51 GMT
       Connection:
       - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Date:
-      - Tue, 17 May 2016 21:43:15 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368002,"value":0.0}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:15 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Date:
-      - Tue, 17 May 2016 21:43:15 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062017,"value":4.35617792E8}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:15 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Date:
-      - Tue, 17 May 2016 21:43:15 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368002,"value":4.87849984E8}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:15 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
       Content-Type:
       - application/json
       Content-Length:
       - '42'
-      Date:
-      - Tue, 17 May 2016 21:43:15 GMT
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062003,"value":4526}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466409667001,"value":"up"}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:15 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~AT~Server%20Availability~Server%20Availability/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -933,6 +907,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -940,26 +916,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '43'
-      Date:
-      - Tue, 17 May 2016 21:43:15 GMT
+      - '42'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368004,"value":21127}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503000,"value":"up"}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:15 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -970,6 +952,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -977,26 +961,122 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697020,"value":0.0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:51 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '41'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503007,"value":0.0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:51 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
       - '39'
-      Date:
-      - Tue, 17 May 2016 21:43:15 GMT
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062051,"value":0}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697025,"value":0}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:15 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Expired%20Web%20Sessions/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1007,6 +1087,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -1014,26 +1096,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
       - '39'
-      Date:
-      - Tue, 17 May 2016 21:43:15 GMT
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368006,"value":0}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503011,"value":0}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1044,6 +1132,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -1051,26 +1141,797 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697016,"value":-8.0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503005,"value":-8.0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697003,"value":0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503001,"value":0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697013,"value":0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503003,"value":0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697023,"value":0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '39'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503009,"value":0}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697004,"value":3962}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Accumulated%20GC%20Duration/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '42'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503002,"value":3723}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697026,"value":5.05413632E8}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503011,"value":4.13663232E8}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697009,"value":5.05413632E8}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503002,"value":4.77626368E8}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409667022,"value":3.68733336E8}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466439510002,"value":3.12969344E8}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=ASC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '50'
+    body:
+      encoding: UTF-8
+      string: '[{"timestamp":1466409697018,"value":3.24599808E8}]'
+    http_version: 
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Committed/data/?limit=1&order=DESC&start=0
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
       - '49'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062026,"value":1.1010048E9}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466439503005,"value":3.2407552E8}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Committed/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1081,6 +1942,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -1088,26 +1951,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '51'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
+      - '50'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368006,"value":1.665138688E9}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466409667023,"value":3.06499216E8}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1118,6 +1987,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -1125,26 +1996,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Mon, 20 Jun 2016 16:18:52 GMT
+      Connection:
+      - keep-alive
       Content-Type:
       - application/json
       Content-Length:
-      - '43'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
+      - '49'
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062012,"value":75430}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466439510003,"value":3.0791556E8}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Time/data/?limit=1&order=DESC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=ASC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1155,6 +2032,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -1162,100 +2041,32 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '45'
+      Pragma:
+      - no-cache
       Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368008,"value":9565667}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
+      - Mon, 20 Jun 2016 16:18:52 GMT
       Connection:
       - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '41'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062021,"value":237}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Servlet%20Request%20Count/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
       Content-Type:
       - application/json
       Content-Length:
       - '44'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368010,"value":428171}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466409757027,"value":1416.0}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
 - request:
     method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=ASC&start=0
+    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B377fadac-98eb-4a53-bf3b-89c21bccd8ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=DESC&start=0
     body:
       encoding: US-ASCII
       string: ''
@@ -1266,6 +2077,8 @@ http_interactions:
       - gzip, deflate
       User-Agent:
       - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
       Content-Type:
       - application/json
   response:
@@ -1273,502 +2086,27 @@ http_interactions:
       code: 200
       message: OK
     headers:
-      Connection:
-      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
       X-Powered-By:
       - Undertow/1
       Server:
       - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
+      Pragma:
+      - no-cache
       Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062024,"value":0}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/counters/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Rejected%20Web%20Sessions/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
+      - Mon, 20 Jun 2016 16:18:52 GMT
       Connection:
       - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '39'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368012,"value":0}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
       Content-Type:
       - application/json
       Content-Length:
       - '44'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
     body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502122031,"value":2125.0}]'
+      encoding: UTF-8
+      string: '[{"timestamp":1466439443013,"value":1408.0}]'
     http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Threading%20Metrics~Thread%20Count/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '44'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521353000,"value":2133.0}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502032031,"value":4.02816928E8}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~NonHeap%20Used/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521379001,"value":4.63347664E8}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '43'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062016,"value":-15.0}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Aggregated%20Web%20Metrics~Aggregated%20Max%20Active%20Web%20Sessions/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '43'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368004,"value":-15.0}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502032065,"value":6.90063112E8}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Used/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '50'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521379002,"value":1.28413972E9}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '51'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502062004,"value":1.908932608E9}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/gauges/MI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~MT~WildFly%20Memory%20Metrics~Heap%20Max/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '51'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521368012,"value":1.908932608E9}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?limit=1&order=ASC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463502032001,"value":"up"}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@localhost:8080/hawkular/metrics/availability/AI~R~%5B3790a668-eb4d-47ba-be15-bcf658bb88ba%2FLocal~~%5D~AT~Server%20Availability~App%20Server/data/?limit=1&order=DESC&start=0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.3p173
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Connection:
-      - keep-alive
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '42'
-      Date:
-      - Tue, 17 May 2016 21:43:16 GMT
-    body:
-      encoding: ASCII-8BIT
-      string: '[{"timestamp":1463521394000,"value":"up"}]'
-    http_version: 
-  recorded_at: Tue, 17 May 2016 21:43:16 GMT
+  recorded_at: Mon, 20 Jun 2016 16:18:52 GMT
 recorded_with: VCR 2.9.3

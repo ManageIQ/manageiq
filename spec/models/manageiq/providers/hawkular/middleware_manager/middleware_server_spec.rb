@@ -13,17 +13,17 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   let(:eap) do
     FactoryGirl.create(:hawkular_middleware_server,
                        :name                  => 'Local',
-                       :feed                  => '3790a668-eb4d-47ba-be15-bcf658bb88ba',
-                       :ems_ref               => '/t;28026b36-8fe4-4332-84c8-524e173a68bf'\
-                                                 '/f;3790a668-eb4d-47ba-be15-bcf658bb88ba/r;Local~~',
+                       :feed                  => '377fadac-98eb-4a53-bf3b-89c21bccd8ba',
+                       :ems_ref               => '/t;hawkular'\
+                                                 '/f;377fadac-98eb-4a53-bf3b-89c21bccd8ba/r;Local~~',
                        :nativeid              => 'Local~~',
                        :ext_management_system => ems_hawkular)
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")
-    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")
-    interval = 3600
+    start_time = Time.new(2016, 6, 20, 16, 0, 0, "+02:00")    # Fixed time for testing
+    end_time = Time.new(2016, 6, 20, 17, 0, 0, "+02:00")      # Fixed time for testing
+    interval = 3600                                           # Interval in seconds
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
@@ -35,9 +35,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")
-    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")
-    interval = 3600
+    start_time = Time.new(2016, 6, 20, 16, 0, 0, "+02:00")    # Fixed time for testing
+    end_time = Time.new(2016, 6, 20, 17, 0, 0, "+02:00")      # Fixed time for testing
+    interval = 3600                                           # Interval in seconds
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
