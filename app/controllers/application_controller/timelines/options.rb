@@ -61,7 +61,7 @@ module ApplicationController::Timelines
     end
 
     def events
-      @events ||= EmsEvent.event_groups.each_with_object({}) do |egroup, hash|
+      @events ||= event_groups.each_with_object({}) do |egroup, hash|
         gname, list = egroup
         hash[list[:name].to_s] = gname
       end
@@ -69,7 +69,6 @@ module ApplicationController::Timelines
 
     def event_set
       event_set = []
-      event_groups = EmsEvent.event_groups
       if !filter1.blank? || !filter2.blank? || !filter3.blank?
         unless filter1.blank?
           event_set.push(event_groups[events[filter1]][level.downcase.to_sym]) if events[filter1]
@@ -90,16 +89,19 @@ module ApplicationController::Timelines
     end
 
     def drop_cache
-      @events = nil
+      @events = @event_groups = nil
     end
 
     private
 
     def build_filter(grp_name) # hidden fields to highlight bands in timeline
-      event_groups = EmsEvent.event_groups
       arr = event_groups[grp_name][level.downcase.to_sym]
       arr.push(event_groups[grp_name][:critical]) if level.downcase == 'detail'
       "(" << arr.join(")|(") << ")"
+    end
+
+    def event_groups
+      @event_groups ||= EmsEvent.event_groups
     end
   end
 
