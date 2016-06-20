@@ -17,6 +17,18 @@ module ApplicationController::Timelines
       self.hourly = params[:miq_date_1] if params[:miq_date_1] && typ == 'Hourly'
       self.daily = params[:miq_date_1] if params[:miq_date_1] && typ == 'Daily'
     end
+
+    def update_start_end(sdate, edate)
+      if !sdate.nil? && !edate.nil?
+        self.start = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
+        self.end = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
+        self.hourly ||= [edate.month, edate.day, edate.year].join("/")
+        self.daily ||= [edate.month, edate.day, edate.year].join("/")
+      else
+        self.start = self.end = nil
+      end
+      self.days ||= "7"
+    end
   end
 
   Options = Struct.new(

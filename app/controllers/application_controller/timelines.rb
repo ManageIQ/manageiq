@@ -208,15 +208,7 @@ module ApplicationController::Timelines
       @tl_options[:pol_fltr] = []
     end
     sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
-    if !sdate.nil? && !edate.nil?
-      @tl_options.date.start = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
-      @tl_options.date.end = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
-      @tl_options.date.hourly ||= [edate.month, edate.day, edate.year].join("/")
-      @tl_options.date.daily ||= [edate.month, edate.day, edate.year].join("/")
-    else
-      @tl_options.date.start = @tl_options.date.end = nil
-    end
-    @tl_options.date.days ||= "7"
+    @tl_options.date.update_start_end(sdate, edate)
 
     if @tl_options.policy_events?
       @tl_options[:tl_result] ||= "both"
