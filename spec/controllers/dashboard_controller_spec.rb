@@ -240,17 +240,16 @@ describe DashboardController do
     end
 
     main_tabs = {
-      :clo => "vm_cloud_explorer",
-      :inf => "vm_infra_explorer",
-      :svc => "vm_explorer_accords"
+      :clo => ["vm_cloud_explorer", 'vm_cloud/explorer'],
+      :inf => ["vm_infra_explorer", 'vm_infra/explorer'],
+      :svc => ["vm_explorer",       'vm_or_template/explorer'],
     }
-    main_tabs.each do |tab, feature|
+    main_tabs.each do |tab, (feature, url)|
       it "for tab ':#{tab}'" do
         login_as FactoryGirl.create(:user, :features => feature)
         session[:tab_url] = {}
         post :maintab, :params => { :tab => tab }
-        url_controller = Menu::Manager.section(:set).features_recursive.find { |f| f.ends_with?("_explorer") }
-        expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
+        expect(response.body).to include(url)
       end
     end
   end
@@ -267,8 +266,7 @@ describe DashboardController do
     it "for Configure maintab" do
       session[:tab_url] = {}
       post :maintab, :params => { :tab => "set" }
-      url_controller = Menu::Manager.section(:set).features_recursive.find { |f| f.ends_with?("_explorer") }
-      expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
+      expect(response.body).to include("ops/explorer")
     end
   end
 
