@@ -37,6 +37,17 @@ module ApplicationController::Timelines
     :filter2,
     :filter3
   ) do
+    def update_from_params(params)
+      self.filter1 = params[:tl_fl_grp1] if params[:tl_fl_grp1]
+      self.filter2 = params[:tl_fl_grp2] if params[:tl_fl_grp2]
+      self.filter3 = params[:tl_fl_grp3] if params[:tl_fl_grp3]
+      # if pull down values have been switched
+      self.filter1 = '' if (filter1 == filter2 || filter1 == filter3) && !params[:tl_fl_grp1]
+      self.filter2 = '' if (filter2 == filter3 || filter2 == filter1) && !params[:tl_fl_grp2]
+      self.filter3 = '' if (filter3 == filter2 || filter3 == filter1) && !params[:tl_fl_grp3]
+      self.level = params[:tl_fl_typ] if params[:tl_fl_typ]
+    end
+
     def fltr1
       filter1.blank? ? '' : build_filter(events[filter1])
     end

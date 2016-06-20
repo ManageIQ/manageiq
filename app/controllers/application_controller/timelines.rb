@@ -15,13 +15,7 @@ module ApplicationController::Timelines
     end
 
     if @tl_options.management_events?
-      @tl_options.mngt.filter1 = params[:tl_fl_grp1] if params[:tl_fl_grp1]
-      @tl_options.mngt.filter2 = params[:tl_fl_grp2] if params[:tl_fl_grp2]
-      @tl_options.mngt.filter3 = params[:tl_fl_grp3] if params[:tl_fl_grp3]
-      # if pull down values have been switched
-      @tl_options.mngt.filter1 = "" if (@tl_options.mngt.filter1 == @tl_options.mngt.filter2 || @tl_options.mngt.filter1 == @tl_options.mngt.filter3) && !params[:tl_fl_grp1]
-      @tl_options.mngt.filter2 = "" if (@tl_options.mngt.filter2 == @tl_options.mngt.filter3 || @tl_options.mngt.filter2 == @tl_options.mngt.filter1) && !params[:tl_fl_grp2]
-      @tl_options.mngt.filter3 = "" if (@tl_options.mngt.filter3 == @tl_options.mngt.filter2 || @tl_options.mngt.filter3 == @tl_options.mngt.filter1) && !params[:tl_fl_grp3]
+      @tl_options.mngt.update_from_params(params)
     else
       @tl_options[:tl_result] = params[:tl_result] if params[:tl_result]
       if params[:tl_fl_grp_all] == "1"
@@ -49,7 +43,6 @@ module ApplicationController::Timelines
       end
     end
 
-    @tl_options.mngt.level = params[:tl_fl_typ] if params[:tl_fl_typ]
     if @tl_options.management_events? &&
        (@tl_options.mngt.filter1.blank? || @tl_options.mngt.filter2.blank? || @tl_options.mngt.filter3.blank?)
       add_flash(_("At least one filter must be selected"), :warning)
