@@ -156,6 +156,10 @@ module ApplicationController::Timelines
       @fltr_cache[number] ||= build_filter(filters[number])
     end
 
+    def event_set
+      applied_filters.blank? ? [] : applied_filters.collect { |e| events[e] }
+    end
+
     private
 
     def build_filter(grp_name) # hidden fields to highlight bands in timeline

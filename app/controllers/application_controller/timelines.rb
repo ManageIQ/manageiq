@@ -229,14 +229,8 @@ module ApplicationController::Timelines
       cond = cond << temp_clause[0]
       params = temp_clause.slice(1, temp_clause.length)
 
-      event_set = []
-
       if @tl_options.policy_events?
-        unless @tl_options.policy.applied_filters.blank?
-          @tl_options.policy.applied_filters.each do |e|
-            event_set.push(@tl_options.policy.events[e])
-          end
-        end
+        event_set = @tl_options.policy.event_set
       else
         event_set = @tl_options.mngt.event_set
       end
