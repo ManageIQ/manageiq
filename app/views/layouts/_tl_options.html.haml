@@ -110,7 +110,7 @@
             = _("Event Groups")
           .col-md-8
             = select_tag("tl_fl_grp1",
-              options_for_select([["<#{_('NONE')}> ", ""]] + tl_groups_hash.keys.sort, @tl_options[:filter1]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngmt_events.keys.sort, @tl_options[:filter1]),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #CD051C;"}
             :javascript
@@ -120,7 +120,7 @@
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp2",
-              options_for_select([["<#{_('NONE')}> ", ""]] + tl_groups_hash.keys.sort, @tl_options[:filter2]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngmt_events.keys.sort, @tl_options[:filter2]),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #005C25;"}
             :javascript
@@ -130,7 +130,7 @@
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp3",
-              options_for_select([["<#{_('NONE')}> ", ""]] + tl_groups_hash.keys.sort, @tl_options[:filter3]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngmt_events.keys.sort, @tl_options[:filter3]),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #035CB1;"}
             :javascript

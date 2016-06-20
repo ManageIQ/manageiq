@@ -47,8 +47,15 @@ module ApplicationController::Timelines
       end
     end
 
+    def mngmt_events
+      @mngmt_events ||= EmsEvent.event_groups.each_with_object({}) do |egroup, hash|
+        gname, list = egroup
+        hash[list[:name].to_s] = gname
+      end
+    end
+
     def drop_cache
-      @policy_events = nil
+      @policy_events = @mngmt_events = nil
     end
   end
 end
