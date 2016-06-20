@@ -29,9 +29,9 @@ class LaunchAnsibleJob
     @handle.root["miq_provision"].try(:destination)
   end
 
-  def ansible_vars(object, ext_vars)
+  def ansible_vars_from_objects(object, ext_vars)
     return ext_vars unless object
-    ansible_vars(object.parent, object_vars(object, ext_vars))
+    ansible_vars_from_objects(object.parent, object_vars(object, ext_vars))
   end
 
   def object_vars(object, ext_vars)
@@ -44,6 +44,16 @@ class LaunchAnsibleJob
         match_data = ANSIBLE_DIALOG_VAR_REGEX.match(key)
         hash[match_data[1]] = object[key] if match_data
       end
+    end
+  end
+
+  def ansible_vars_from_options(ext_vars)
+    options = @handle.root["miq_provision"].try(:options) || {}
+    keys = options.keys.map(&:to_s)
+    key_list = keys.select { |k| k.start_with?('dialog_param') }
+    key_list.each_with_object(ext_vars) do |key, hash|
+      match_data = ANSIBLE_DIALOG_VAR_REGEX.match(key)
+      hash[match_data[1]] = options[key.to_sym] if match_data
     end
   end
 
@@ -74,7 +84,8 @@ class LaunchAnsibleJob
   end
 
   def extra_variables
-    ansible_vars(@handle.object, {})
+    result = ansible_vars_from_objects(@handle.object, {})
+    ansible_vars_from_options(result)
   end
 
   def run(job_template, target)
