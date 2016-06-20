@@ -67,6 +67,28 @@ module ApplicationController::Timelines
       end
     end
 
+    def event_set
+      event_set = []
+      event_groups = EmsEvent.event_groups
+      if !filter1.blank? || !filter2.blank? || !filter3.blank?
+        unless filter1.blank?
+          event_set.push(event_groups[events[filter1]][level.downcase.to_sym]) if events[filter1]
+          event_set.push(event_groups[events[filter1]][:detail]) if level.downcase == 'detail'
+        end
+        unless filter2.blank?
+          event_set.push(event_groups[events[filter2]][level.downcase.to_sym]) if events[filter2]
+          event_set.push(event_groups[events[filter2]][:detail]) if level.downcase == 'detail'
+        end
+        unless filter3.blank?
+          event_set.push(event_groups[events[filter3]][level.downcase.to_sym]) if events[filter3]
+          event_set.push(event_groups[events[filter3]][:detail]) if level.downcase == "detail"
+        end
+      else
+        event_set.push(event_groups[:power][level.to_sym])
+      end
+      event_set
+    end
+
     def drop_cache
       @events = nil
     end

@@ -288,23 +288,7 @@ module ApplicationController::Timelines
           end
         end
       else
-        event_groups = EmsEvent.event_groups
-        if !@tl_options.mngt.filter1.blank? || !@tl_options.mngt.filter2.blank? || !@tl_options.mngt.filter3.blank?
-          if !@tl_options.mngt.filter1.blank?
-            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter1]][@tl_options.mngt.level.downcase.to_sym]) if @tl_options.mngt.events[@tl_options.mngt.filter1]
-            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter1]][:detail]) if @tl_options.mngt.level.downcase == "detail"
-          end
-          if !@tl_options.mngt.filter2.blank?
-            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter2]][@tl_options.mngt.level.downcase.to_sym]) if @tl_options.mngt.events[@tl_options.mngt.filter2]
-            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter2]][:detail]) if @tl_options.mngt.level.downcase == "detail"
-          end
-          if !@tl_options.mngt.filter3.blank?
-            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter3]][@tl_options.mngt.level.downcase.to_sym]) if @tl_options.mngt.events[@tl_options.mngt.filter3]
-            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter3]][:detail]) if @tl_options.mngt.level.downcase == "detail"
-          end
-        else
-          event_set.push(event_groups[:power][@tl_options.mngt.level.to_sym])
-        end
+        event_set = @tl_options.mngt.event_set
       end
 
       if !event_set.empty?
