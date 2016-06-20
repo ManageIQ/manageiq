@@ -1,4 +1,6 @@
 module ApplicationController::Timelines
+  SELECT_EVENT_TYPE = [[_('Management Events'), 'timeline'], [_('Policy Events'), 'policy_timeline']].freeze
+
   Options = Struct.new(
     :applied_filters,
     :daily_date,
@@ -19,7 +21,6 @@ module ApplicationController::Timelines
     :tl_filter_all,
     :tl_result,
     :tl_show,
-    :tl_show_options,
     :typ
   ) do
     def management_events?

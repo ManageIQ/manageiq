@@ -226,9 +226,6 @@ module ApplicationController::Timelines
       @tl_options[:typ] = "Daily"
       @tl_options[:days] = "7"
       @tl_options[:model] = @tl_record.class.base_class.to_s
-      @tl_options[:tl_show_options] = []
-      @tl_options[:tl_show_options].push([_("Management Events"), "timeline"])
-      @tl_options[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       @tl_options[:tl_show] = "timeline"
       @tl_options[:pol_filter] = []
       @tl_options[:pol_fltr] = []
