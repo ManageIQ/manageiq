@@ -10,7 +10,15 @@ module ApplicationController::Timelines
     :hourly,
     :start,
     :typ
-  )
+  ) do
+    def update_from_params(params)
+      self.typ = params[:tl_typ] if params[:tl_typ]
+      self.days = params[:tl_days] if params[:tl_days]
+      self.hourly = params[:miq_date_1] if params[:miq_date_1] && typ == 'Hourly'
+      self.daily = params[:miq_date_1] if params[:miq_date_1] && typ == 'Daily'
+    end
+  end
+
   Options = Struct.new(
     :applied_filters,
     :date,

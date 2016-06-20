@@ -5,10 +5,7 @@ module ApplicationController::Timelines
   def tl_chooser
     @record = identify_tl_or_perf_record
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
-    @tl_options.date.typ = params[:tl_typ] if params[:tl_typ]
-    @tl_options.date.days = params[:tl_days] if params[:tl_days]
-    @tl_options.date.hourly = params[:miq_date_1] if params[:miq_date_1] && @tl_options.date.typ == 'Hourly'
-    @tl_options.date.daily = params[:miq_date_1] if params[:miq_date_1] && @tl_options.date.typ == 'Daily'
+    @tl_options.date.update_from_params(params)
 
     # set variables for type of timeline is selected
     if params[:tl_show]
