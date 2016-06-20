@@ -926,4 +926,21 @@
   :parent_id: 0
   :default: true
   :single_value: "1"
+- :description: LifeCycle
+  :entries: 
+  - :description: Fully retire VM and remove from Provider
+    :read_only: "0"
+    :syntax: string
+    :name: retire_full
+    :example_text: 
+    :default: true
+    :single_value: "1"
+  :read_only: "0"
+  :syntax: string
+  :show: true
+  :name: lifecycle
+  :example_text: LifeCycle Options
+  :parent_id: 0
+  :default: true
+  :single_value: "1"
 
