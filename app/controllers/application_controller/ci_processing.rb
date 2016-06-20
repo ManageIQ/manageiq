@@ -733,7 +733,7 @@ module ApplicationController::CiProcessing
     @record = VmOrTemplate.find_by_id(params[:id])
     case params[:button]
     when "cancel"
-      add_flash(_("Association of %{floating_ip} with %{model} \"%{name}\" was cancelled by the user") % {
+      add_flash(_("Association of %{floating_ip} with %{instance} \"%{name}\" was cancelled by the user") % {
         :floating_ip => ui_lookup(:table => "floating_ip"),
         :instance    => ui_lookup(:table => "vm_cloud"),
         :name        => @record.name})
@@ -839,7 +839,7 @@ module ApplicationController::CiProcessing
     @record = VmOrTemplate.find_by_id(params[:id])
     case params[:button]
     when "cancel"
-      add_flash(_("Disassociation of %{floating_ip} from %{model} \"%{name}\" was cancelled by the user") % {
+      add_flash(_("Disassociation of %{floating_ip} from %{instance} \"%{name}\" was cancelled by the user") % {
         :floating_ip => ui_lookup(:table => "floating_ip"),
         :instance    => ui_lookup(:table => "vm_cloud"),
         :name        => @record.name})
