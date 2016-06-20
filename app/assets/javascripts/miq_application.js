@@ -1356,10 +1356,9 @@ function miqSerializeField(element, field_name) {
 }
 
 function miqInitSelectPicker() {
-  $('.selectpicker').selectpicker();
   $('.selectpicker').selectpicker({
-    style: 'btn-info',
-    size: 10
+    size: 10,
+    dropupAuto: false
   });
   $('.bootstrap-select > button[title]').not('.selectpicker').tooltip({container: 'none'});
 }
