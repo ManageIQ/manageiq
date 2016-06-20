@@ -22,12 +22,16 @@ module ApplicationController::Timelines
     :tl_show_options,
     :typ
   ) do
+    def management_events?
+      tl_show == 'timeline'
+    end
+
     def all_results
       {_('Both') => 'both', _('True') => 'success', _('False') => 'failure'}
     end
 
     def evt_type
-      tl_show == 'timeline' ? :event_streams : :policy_events
+      management_events? ? :event_streams : :policy_events
     end
 
     def tl_colors

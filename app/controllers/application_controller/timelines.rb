@@ -21,7 +21,7 @@ module ApplicationController::Timelines
       return unless @timeline
     end
 
-    if @tl_options[:tl_show] == "timeline"
+    if @tl_options.management_events?
       @tl_options[:filter1] = params[:tl_fl_grp1] if params[:tl_fl_grp1]
       @tl_options[:filter2] = params[:tl_fl_grp2] if params[:tl_fl_grp2]
       @tl_options[:filter3] = params[:tl_fl_grp3] if params[:tl_fl_grp3]
@@ -57,7 +57,7 @@ module ApplicationController::Timelines
     end
 
     @tl_options[:fl_typ] = params[:tl_fl_typ] if params[:tl_fl_typ]
-    if @tl_options.tl_show == 'timeline' &&
+    if @tl_options.management_events? &&
        (@tl_options.filter1.blank? || @tl_options.filter2.blank? || @tl_options.filter3.blank?)
       add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options[:tl_show] == "policy_timeline"
@@ -75,7 +75,7 @@ module ApplicationController::Timelines
       return unless @timeline
     end
 
-    if @tl_options[:tl_show] == "timeline"
+    if @tl_options.management_events?
       @tl_options.fltr1 = @tl_options.filter1.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter1])
       @tl_options.fltr2 = @tl_options.filter2.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter2])
       @tl_options.fltr3 = @tl_options.filter3.blank? ? '' : tl_build_filter(tl_groups_hash[@tl_options.filter3])
@@ -98,7 +98,7 @@ module ApplicationController::Timelines
       page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});" unless @tl_options[:sdate].nil?
       page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
       page << 'miqBuildCalendar();'
-      if @tl_options[:tl_show] == "timeline"
+      if @tl_options.management_events?
         page << "$('#filter1').val('#{@tl_options[:fltr1]}');"
         page << "$('#filter2').val('#{@tl_options[:fltr2]}');"
         page << "$('#filter3').val('#{@tl_options[:fltr3]}');"
@@ -271,7 +271,7 @@ module ApplicationController::Timelines
     if !@tl_options[:sdate].nil? && !@tl_options[:edate].nil?
       case @tl_options[:typ]
       when "Hourly"
-        tl_rpt = @tl_options[:tl_show] == "timeline" ? "tl_events_hourly" : "tl_policy_events_hourly"
+        tl_rpt = @tl_options.management_events? ? "tl_events_hourly" : "tl_policy_events_hourly"
         @report = tl_get_rpt(tl_rpt)
         @report.headers.map! { |header| _(header) }
         mm, dd, yy = @tl_options[:hourly_date].split("/")
@@ -292,7 +292,7 @@ module ApplicationController::Timelines
         @report.timeline[:bands][0][:decorate] = true
         @report.timeline[:bands][0][:hourly] = true
       when "Daily"
-        tl_rpt = @tl_options[:tl_show] == "timeline" ? "tl_events_daily" : "tl_policy_events_daily"
+        tl_rpt = @tl_options.management_events? ? "tl_events_daily" : "tl_policy_events_daily"
         @report = tl_get_rpt(tl_rpt)
         @report.headers.map! { |header| _(header) }
         from = Date.parse(@tl_options[:daily_date]) - @tl_options[:days].to_i
@@ -351,14 +351,14 @@ module ApplicationController::Timelines
 
       if !event_set.empty?
         if @tl_options[:tl_show] == "policy_timeline" && @tl_options[:tl_result] != "both"
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
+          ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?)) and (result = ?)",
                           from_dt,
                           to_dt,
                           event_set.flatten,
                           @tl_options[:tl_result]]
         else
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
+          ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?))",
                           from_dt,
                           to_dt,
