@@ -9,7 +9,6 @@
       %li.disabled
         %a{:href => "#"}
           = _('Server: %s') % appliance_name
-
       - if current_user.miq_groups.length > 1
         %li.dropdown-submenu.pull-left
           %a{:href => "#"}
@@ -32,6 +31,19 @@
         %li.disabled
           %a{:href => "#"}
             = current_group.try(:description)
+      %li.divider
+      %li
+        %a
+          = _('My Settings')
+      %li
+        %a
+          = _('Tasks')
+      %li
+        %a
+          = _('Configuration')
+      %li
+        %a
+          = _('About')
       %li.divider
       %li
         %a{:href => "/dashboard/logout", :onclick => 'return miqCheckForChanges()', :title => _("Click to Logout")}
