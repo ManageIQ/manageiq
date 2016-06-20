@@ -34,75 +34,49 @@ class DialogFieldVisibilityService
   end
 
   def determine_visibility(options)
-    field_names_to_hide = []
-    field_names_to_show = []
+    @field_names_to_hide = []
+    @field_names_to_show = []
 
-    visibility_hash = @service_template_fields_visibility_service.determine_visibility(
-      options[:service_template_request]
-    )
-    field_names_to_hide += visibility_hash[:hide]
+    add_to_visiblity_arrays(@service_template_fields_visibility_service, options[:service_template_request])
+    add_to_visiblity_arrays(@auto_placement_visibility_service, options[:auto_placement_enabled])
+    add_to_visiblity_arrays(@number_of_vms_visibility_service, options[:number_of_vms], options[:platform])
 
-    visibility_hash = @auto_placement_visibility_service.determine_visibility(options[:auto_placement_enabled])
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
-
-    visibility_hash = @number_of_vms_visibility_service.determine_visibility(
-      options[:number_of_vms],
-      options[:platform]
-    )
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
-
-    visibility_hash = @network_visibility_service.determine_visibility(
+    add_to_visiblity_arrays(
+      @network_visibility_service,
       options[:sysprep_enabled],
       options[:supports_pxe],
       options[:supports_iso],
       options[:addr_mode]
     )
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
 
-    visibility_hash = @sysprep_auto_logon_visibility_service.determine_visibility(options[:sysprep_auto_logon])
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
+    add_to_visiblity_arrays(@sysprep_auto_logon_visibility_service,options[:sysprep_auto_logon])
+    add_to_visiblity_arrays(@retirement_visibility_service,options[:retirement])
 
-    visibility_hash = @retirement_visibility_service.determine_visibility(options[:retirement])
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
-
-    visibility_hash = @customize_fields_visibility_service.determine_visibility(
+    add_to_visiblity_arrays(
+      @customize_fields_visibility_service,
       options[:platform],
       options[:supports_customization_template],
       options[:customize_fields_list]
     )
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
 
-    visibility_hash = @sysprep_custom_spec_visibility_service.determine_visibility(options[:sysprep_custom_spec])
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
+    add_to_visiblity_arrays(@sysprep_custom_spec_visibility_service,options[:sysprep_custom_spec])
+    add_to_visiblity_arrays(@request_type_visibility_service,options[:request_type])
+    add_to_visiblity_arrays(@pxe_iso_visibility_service,options[:supports_iso], options[:supports_pxe])
+    add_to_visiblity_arrays(@linked_clone_visibility_service, options[:provision_type], options[:linked_clone])
 
-    visibility_hash = @request_type_visibility_service.determine_visibility(options[:request_type])
-    field_names_to_hide += visibility_hash[:hide]
-
-    visibility_hash = @pxe_iso_visibility_service.determine_visibility(options[:supports_iso], options[:supports_pxe])
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
-
-    visibility_hash = @linked_clone_visibility_service.determine_visibility(
-      options[:provision_type],
-      options[:linked_clone]
-    )
-    field_names_to_hide += visibility_hash[:hide]
-    field_names_to_show += visibility_hash[:show]
-
-    field_names_to_hide -= field_names_to_hide & field_names_to_show
-    field_names_to_hide.uniq!
-    field_names_to_show.uniq!
-    {:hide => field_names_to_hide.flatten, :edit => field_names_to_show.flatten}
+    @field_names_to_hide -= @field_names_to_hide & @field_names_to_show
+    @field_names_to_hide.uniq!
+    @field_names_to_show.uniq!
+    {:hide => @field_names_to_hide.flatten, :edit => @field_names_to_show.flatten}
   end
 
   private
+
+  def add_to_visiblity_arrays(visibility_service, *options)
+    visibility_hash = visibility_service.determine_visibility(*options)
+    @field_names_to_hide += visibility_hash[:hide]
+    @field_names_to_show += visibility_hash[:show] if visibility_hash[:show]
+  end
 
   def set_fields_display_status(fields, field_name_list, status)
     fields.each do |field|
