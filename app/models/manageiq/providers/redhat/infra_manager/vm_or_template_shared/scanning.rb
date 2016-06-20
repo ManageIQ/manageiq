@@ -28,9 +28,15 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     sync_stashed_metadata(ost)
   end
 
+  RHEVM_NO_PROXIES_ERROR_MSG = N_('VMs must be scanned from an EVM server whose host is attached to the same
+  storage as the VM unless overridden via SmartProxy affinity.
+  Please verify that:
+  1) Direct LUNs are attached to ManageIQ appliance
+  2) Management Relationship is set for the ManageIQ appliance')
+
   def proxies4job(job = nil)
     _log.debug "Enter (RHEVM)"
-    msg = 'Perform SmartState Analysis on this VM'
+    msg = N_('Perform SmartState Analysis on this VM')
 
     # If we do not get passed an model object assume it is a job guid
     if job && !job.kind_of?(ActiveRecord::Base)
@@ -43,11 +49,11 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     _log.debug "# proxies = #{proxies.length}"
 
     if proxies.empty?
-      msg = 'No active SmartProxies found to analyze this VM'
+      msg = RHEVM_NO_PROXIES_ERROR_MSG
       log_proxies(proxies, all_proxy_list, msg, job) if job
     end
 
-    {:proxies => proxies.flatten, :message => msg}
+    {:proxies => proxies.flatten, :message => _(msg)}
   end
 
   def validate_smartstate_analysis
