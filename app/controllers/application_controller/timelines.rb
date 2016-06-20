@@ -68,9 +68,7 @@ module ApplicationController::Timelines
     end
 
     if @tl_options.management_events?
-      @tl_options.fltr1 = @tl_options.filter1.blank? ? '' : tl_build_filter(@tl_options.mngmt_events[@tl_options.filter1])
-      @tl_options.fltr2 = @tl_options.filter2.blank? ? '' : tl_build_filter(@tl_options.mngmt_events[@tl_options.filter2])
-      @tl_options.fltr3 = @tl_options.filter3.blank? ? '' : tl_build_filter(@tl_options.mngmt_events[@tl_options.filter3])
+      @tl_options.mngmt_build_filters
     else
       @tl_options.policy_events.sort.each_with_index do |_e, i|
         @tl_options[:pol_fltr][i] = if !@tl_options.pol_filter[i].blank?
@@ -186,14 +184,6 @@ module ApplicationController::Timelines
     MiqReport.new(YAML.load(File.open("#{TIMELINES_FOLDER}/miq_reports/#{timeline}.yaml")))
   end
 
-  def tl_build_filter(grp_name)             # hidden fields to highlight bands in timeline
-    event_groups = EmsEvent.event_groups
-    arr = event_groups[grp_name][@tl_options[:fl_typ].downcase.to_sym]
-    arr.push(event_groups[grp_name][:critical]) if @tl_options[:fl_typ].downcase == "detail"
-    filter = "(" << arr.join(")|(") << ")"
-    filter
-  end
-
   def tl_build_policy_filter(grp_name)      # hidden fields to highlight bands in timeline
     arr = []
     @tl_options.policy_events[grp_name].each do |a|
@@ -251,7 +241,7 @@ module ApplicationController::Timelines
       @tl_options[:fl_typ] = "critical" if @tl_options[:fl_typ].nil?
       if @tl_options[:filter1].nil?
         @tl_options[:filter1] = "Power Activity"
-        @tl_options[:fltr1] = tl_build_filter(@tl_options.mngmt_events[@tl_options[:filter1]])
+        @tl_options.mngmt_build_filters
       end
     end
   end

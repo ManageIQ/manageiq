@@ -54,8 +54,23 @@ module ApplicationController::Timelines
       end
     end
 
+    def mngmt_build_filters
+      self.fltr1 = filter1.blank? ? '' : mngmt_build_filter(mngmt_events[filter1])
+      self.fltr2 = filter2.blank? ? '' : mngmt_build_filter(mngmt_events[filter2])
+      self.fltr3 = filter3.blank? ? '' : mngmt_build_filter(mngmt_events[filter3])
+    end
+
     def drop_cache
       @policy_events = @mngmt_events = nil
+    end
+
+    private
+
+    def mngmt_build_filter(grp_name) # hidden fields to highlight bands in timeline
+      event_groups = EmsEvent.event_groups
+      arr = event_groups[grp_name][fl_typ.downcase.to_sym]
+      arr.push(event_groups[grp_name][:critical]) if fl_typ.downcase == 'detail'
+      "(" << arr.join(")|(") << ")"
     end
   end
 end
