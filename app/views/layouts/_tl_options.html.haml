@@ -11,16 +11,12 @@
         %label.control-label.col-md-2
           = _("Show")
         .col-md-8
-          -# only show pulldown if Policy Events are allowed
-          - if @tl_options[:tl_show_options].length > 1
-            = select_tag("tl_show",
-              options_for_select(@tl_options[:tl_show_options], @tl_options[:tl_show]),
-              :class                => "selectpicker")
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
-          - else
-            = h(@tl_options[:tl_show_options].last[0])
+          = select_tag("tl_show",
+            options_for_select(@tl_options[:tl_show_options], @tl_options[:tl_show]),
+            :class                => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
       %hr
       .form-group
         %label.control-label.col-md-2
