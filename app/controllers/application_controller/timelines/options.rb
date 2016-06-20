@@ -31,14 +31,50 @@ module ApplicationController::Timelines
     end
   end
 
+  ManagementEventsOptions = Struct.new(
+    :level,
+    :filter1,
+    :filter2,
+    :filter3
+  ) do
+    def fltr1
+      filter1.blank? ? '' : build_filter(events[filter1])
+    end
+
+    def fltr2
+      filter2.blank? ? '' : build_filter(events[filter2])
+    end
+
+    def fltr3
+      filter3.blank? ? '' : build_filter(events[filter3])
+    end
+
+    def events
+      @events ||= EmsEvent.event_groups.each_with_object({}) do |egroup, hash|
+        gname, list = egroup
+        hash[list[:name].to_s] = gname
+      end
+    end
+
+    def drop_cache
+      @events = nil
+    end
+
+    private
+
+    def build_filter(grp_name) # hidden fields to highlight bands in timeline
+      event_groups = EmsEvent.event_groups
+      arr = event_groups[grp_name][level.downcase.to_sym]
+      arr.push(event_groups[grp_name][:critical]) if level.downcase == 'detail'
+      "(" << arr.join(")|(") << ")"
+    end
+  end
+
   Options = Struct.new(
     :applied_filters,
     :date,
-    :filter1,
-    :filter2,
-    :filter3,
-    :fl_typ,
     :model,
+    :mngt,
     :pol_filter,
     :pol_fltr,
     :tl_filter_all,
@@ -48,6 +84,7 @@ module ApplicationController::Timelines
     def initialize(*args)
       super
       self.date = DateOptions.new
+      self.mngt = ManagementEventsOptions.new
     end
 
     def management_events?
@@ -72,36 +109,9 @@ module ApplicationController::Timelines
       end
     end
 
-    def mngmt_events
-      @mngmt_events ||= EmsEvent.event_groups.each_with_object({}) do |egroup, hash|
-        gname, list = egroup
-        hash[list[:name].to_s] = gname
-      end
-    end
-
-    def fltr1
-      filter1.blank? ? '' : mngmt_build_filter(mngmt_events[filter1])
-    end
-
-    def fltr2
-      filter2.blank? ? '' : mngmt_build_filter(mngmt_events[filter2])
-    end
-
-    def fltr3
-      filter3.blank? ? '' : mngmt_build_filter(mngmt_events[filter3])
-    end
-
     def drop_cache
-      @policy_events = @mngmt_events = nil
-    end
-
-    private
-
-    def mngmt_build_filter(grp_name) # hidden fields to highlight bands in timeline
-      event_groups = EmsEvent.event_groups
-      arr = event_groups[grp_name][fl_typ.downcase.to_sym]
-      arr.push(event_groups[grp_name][:critical]) if fl_typ.downcase == 'detail'
-      "(" << arr.join(")|(") << ")"
+      @policy_events = nil
+      mngt.drop_cache
     end
   end
 end

@@ -15,13 +15,13 @@ module ApplicationController::Timelines
     end
 
     if @tl_options.management_events?
-      @tl_options[:filter1] = params[:tl_fl_grp1] if params[:tl_fl_grp1]
-      @tl_options[:filter2] = params[:tl_fl_grp2] if params[:tl_fl_grp2]
-      @tl_options[:filter3] = params[:tl_fl_grp3] if params[:tl_fl_grp3]
+      @tl_options.mngt.filter1 = params[:tl_fl_grp1] if params[:tl_fl_grp1]
+      @tl_options.mngt.filter2 = params[:tl_fl_grp2] if params[:tl_fl_grp2]
+      @tl_options.mngt.filter3 = params[:tl_fl_grp3] if params[:tl_fl_grp3]
       # if pull down values have been switched
-      @tl_options[:filter1] = "" if (@tl_options[:filter1] == @tl_options[:filter2] || @tl_options[:filter1] == @tl_options[:filter3]) && !params[:tl_fl_grp1]
-      @tl_options[:filter2] = "" if (@tl_options[:filter2] == @tl_options[:filter3] || @tl_options[:filter2] == @tl_options[:filter1]) && !params[:tl_fl_grp2]
-      @tl_options[:filter3] = "" if (@tl_options[:filter3] == @tl_options[:filter2] || @tl_options[:filter3] == @tl_options[:filter1]) && !params[:tl_fl_grp3]
+      @tl_options.mngt.filter1 = "" if (@tl_options.mngt.filter1 == @tl_options.mngt.filter2 || @tl_options.mngt.filter1 == @tl_options.mngt.filter3) && !params[:tl_fl_grp1]
+      @tl_options.mngt.filter2 = "" if (@tl_options.mngt.filter2 == @tl_options.mngt.filter3 || @tl_options.mngt.filter2 == @tl_options.mngt.filter1) && !params[:tl_fl_grp2]
+      @tl_options.mngt.filter3 = "" if (@tl_options.mngt.filter3 == @tl_options.mngt.filter2 || @tl_options.mngt.filter3 == @tl_options.mngt.filter1) && !params[:tl_fl_grp3]
     else
       @tl_options[:tl_result] = params[:tl_result] if params[:tl_result]
       if params[:tl_fl_grp_all] == "1"
@@ -49,9 +49,9 @@ module ApplicationController::Timelines
       end
     end
 
-    @tl_options[:fl_typ] = params[:tl_fl_typ] if params[:tl_fl_typ]
+    @tl_options.mngt.level = params[:tl_fl_typ] if params[:tl_fl_typ]
     if @tl_options.management_events? &&
-       (@tl_options.filter1.blank? || @tl_options.filter2.blank? || @tl_options.filter3.blank?)
+       (@tl_options.mngt.filter1.blank? || @tl_options.mngt.filter2.blank? || @tl_options.mngt.filter3.blank?)
       add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options.policy_events?
       if @tl_options.policy_event_filter_any?
@@ -84,9 +84,9 @@ module ApplicationController::Timelines
       page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options.date.end});" unless @tl_options.date.end.nil?
       page << 'miqBuildCalendar();'
       if @tl_options.management_events?
-        page << "$('#filter1').val('#{@tl_options.fltr1}');"
-        page << "$('#filter2').val('#{@tl_options.fltr2}');"
-        page << "$('#filter3').val('#{@tl_options.fltr3}');"
+        page << "$('#filter1').val('#{@tl_options.mngt.fltr1}');"
+        page << "$('#filter2').val('#{@tl_options.mngt.fltr2}');"
+        page << "$('#filter3').val('#{@tl_options.mngt.fltr3}');"
       else
         @tl_options.policy_events.sort.each_with_index do |_e, i|
           page << "$('#filter#{i}').val('#{@tl_options[:pol_fltr][i]}');"
@@ -225,9 +225,9 @@ module ApplicationController::Timelines
         end
       end
     else
-      @tl_options[:fl_typ] = "critical" if @tl_options[:fl_typ].nil?
-      if @tl_options[:filter1].nil?
-        @tl_options[:filter1] = "Power Activity"
+      @tl_options.mngt.level = "critical" if @tl_options.mngt.level.nil?
+      if @tl_options.mngt.filter1.nil?
+        @tl_options.mngt.filter1 = "Power Activity"
       end
     end
   end
@@ -296,21 +296,21 @@ module ApplicationController::Timelines
         end
       else
         event_groups = EmsEvent.event_groups
-        if !@tl_options.filter1.blank? || !@tl_options.filter2.blank? || !@tl_options.filter3.blank?
-          if !@tl_options.filter1.blank?
-            event_set.push(event_groups[@tl_options.mngmt_events[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_options.mngmt_events[@tl_options[:filter1]]
-            event_set.push(event_groups[@tl_options.mngmt_events[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+        if !@tl_options.mngt.filter1.blank? || !@tl_options.mngt.filter2.blank? || !@tl_options.mngt.filter3.blank?
+          if !@tl_options.mngt.filter1.blank?
+            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter1]][@tl_options.mngt.level.downcase.to_sym]) if @tl_options.mngt.events[@tl_options.mngt.filter1]
+            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter1]][:detail]) if @tl_options.mngt.level.downcase == "detail"
           end
-          if !@tl_options.filter2.blank?
-            event_set.push(event_groups[@tl_options.mngmt_events[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_options.mngmt_events[@tl_options[:filter2]]
-            event_set.push(event_groups[@tl_options.mngmt_events[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+          if !@tl_options.mngt.filter2.blank?
+            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter2]][@tl_options.mngt.level.downcase.to_sym]) if @tl_options.mngt.events[@tl_options.mngt.filter2]
+            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter2]][:detail]) if @tl_options.mngt.level.downcase == "detail"
           end
-          if !@tl_options.filter3.blank?
-            event_set.push(event_groups[@tl_options.mngmt_events[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_options.mngmt_events[@tl_options[:filter3]]
-            event_set.push(event_groups[@tl_options.mngmt_events[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
+          if !@tl_options.mngt.filter3.blank?
+            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter3]][@tl_options.mngt.level.downcase.to_sym]) if @tl_options.mngt.events[@tl_options.mngt.filter3]
+            event_set.push(event_groups[@tl_options.mngt.events[@tl_options.mngt.filter3]][:detail]) if @tl_options.mngt.level.downcase == "detail"
           end
         else
-          event_set.push(event_groups[:power][@tl_options[:fl_typ].to_sym])
+          event_set.push(event_groups[:power][@tl_options.mngt.level.to_sym])
         end
       end
 
