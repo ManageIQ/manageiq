@@ -320,4 +320,43 @@ describe MiqRequest do
       provision_request.workflow({}, {:allowed_hosts => [host], :skip_dialog_load => true}) { |_x| 'test' }
     end
   end
+
+  context '#create_request_task' do
+    let(:ems)      { FactoryGirl.create(:ems_vmware_with_authentication) }
+    let(:template) { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
+    let(:request)  do
+      FactoryGirl.create(:miq_provision_request, :requester => fred, :options => @options, :source => template)
+    end
+
+    before do
+      allow(MiqRegion).to receive(:my_region).and_return(FactoryGirl.create(:miq_region))
+
+      @options = {
+        :src_vm_id     => template.id,
+        :number_of_vms => 3,
+      }
+    end
+
+    it '1 task' do
+      task = request.create_request_task(1)
+      expect(task.type).to  eq(template.ext_management_system.class.provision_class('_vmware').name)
+      expect(task.state).to eq('pending')
+      expect(request.request_state).to eq('pending')
+    end
+
+    it 'multiple tasks' do
+      task = nil
+      (1..2).each do |idx|
+        task = request.create_request_task(idx)
+        expect(task.state).to eq('pending')
+        request.miq_request_tasks << task
+      end
+
+      task.update_and_notify_parent(:state => 'queued', :message => 'State Machine Initializing')
+      task = request.create_request_task(3)
+
+      expect(task.state).to eq('pending')
+      expect(request.request_state).to eq('active')
+    end
+  end
 end

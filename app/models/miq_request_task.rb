@@ -15,6 +15,7 @@ class MiqRequestTask < ApplicationRecord
 
   default_value_for :phase_context, {}
   default_value_for :options,       {}
+  default_value_for :state,         'pending'
 
   delegate :request_class, :task_description, :to => :class
 

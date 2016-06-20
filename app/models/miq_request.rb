@@ -416,8 +416,7 @@ class MiqRequest < ApplicationRecord
 
   def create_request_task(idx)
     req_task_attribs = attributes.dup
-    req_task_attribs['state'] = req_task_attribs.delete('request_state')
-    (req_task_attribs.keys - MiqRequestTask.column_names + %w(id created_on updated_on type)).each { |key| req_task_attribs.delete(key) }
+    (req_task_attribs.keys - MiqRequestTask.column_names + %w(id state created_on updated_on type)).each { |key| req_task_attribs.delete(key) }
     _log.debug("#{self.class.name} Attributes: [#{req_task_attribs.inspect}]...")
 
     customize_request_task_attributes(req_task_attribs, idx)
