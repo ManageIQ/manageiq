@@ -9,9 +9,9 @@ module ManageIQ::Providers
         raise TargetValidationError, "Validation error: unknown target"
       end
       @ems = @target.ext_management_system
-      @gauges = @ems.metrics_connect.gauges
-      @counters = @ems.metrics_connect.counters
-      @avail = @ems.metrics_connect.avail
+      @gauges = @ems.metrics_client.gauges
+      @counters = @ems.metrics_client.counters
+      @avail = @ems.metrics_client.avail
     end
 
     def metrics_available
@@ -19,7 +19,7 @@ module ManageIQ::Providers
       resource.id = @target.nativeid
       resource.feed = @target.feed
       resource.path = @target.ems_ref
-      @ems.metrics_resource(resource).collect do |metric|
+      @ems.metrics_resource(resource.path).collect do |metric|
         {
           :id   => metric.id,
           :name => @target.class.supported_metrics[metric.name],
