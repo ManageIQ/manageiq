@@ -60,7 +60,7 @@
             = _("Result")
           .col-md-8
             = select_tag("tl_result",
-              options_for_select(@tl_options.all_results, @tl_options[:tl_result]),
+              options_for_select(ApplicationController::Timelines::SELECT_RESULT_TYPE, @tl_options[:tl_result]),
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
@@ -77,7 +77,8 @@
           %label.control-label.col-md-2
           .col-md-8
             - @tl_options.events.keys.sort.each_with_index do |e, i|
-              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{@tl_options.tl_colors[i]}"}
+
+              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{ApplicationController::Timelines::EVENT_COLORS[i]}"}
                 = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options[:applied_filters].include?(e),
                   "data-miq_sparkle_on"       => true,
                   "data-miq_observe_checkbox" => {:url => url}.to_json)
