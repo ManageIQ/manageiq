@@ -23,7 +23,7 @@
           = _("Interval")
         .col-md-8
           = select_tag("tl_typ",
-            options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @tl_options[:typ]),
+            options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @tl_options.date.typ),
             :class                => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -32,12 +32,12 @@
         %label.control-label.col-md-2
           = _("Date")
         .col-md-8
-          - v = h(@tl_options[:typ] == "Hourly" ? @tl_options[:hourly_date] : @tl_options[:daily_date])
+          - v = h(@tl_options.date.typ == 'Hourly' ? @tl_options.date.hourly : @tl_options.date.daily)
           = datepicker_input_tag("miq_date_1", v,
             :readonly               => "true",
             "data-miq_sparkle_on"   => true,
             "data-miq_observe_date" => {:url => url}.to_json)
-      - if @tl_options[:typ] == "Hourly"
+      - if @tl_options.date.typ == 'Hourly'
         %span#day_span{:style => "display: none;"}
       - else
         %span#day_span
@@ -46,7 +46,7 @@
               = _("Show")
             .col-md-8
               = select_tag("tl_days",
-                options_for_select((2..31).to_a, @tl_options[:days].to_i),
+                options_for_select((2..31).to_a, @tl_options.date.days.to_i),
                 :class                => "selectpicker")
               :javascript
                 miqInitSelectPicker();

@@ -3,25 +3,33 @@ module ApplicationController::Timelines
   SELECT_RESULT_TYPE = {_('Both') => 'both', _('True') => 'success', _('False') => 'failure'}.freeze
   EVENT_COLORS = ['#CD051C', '#005C25', '#035CB1', '#FF3106', '#FF00FF', '#000000'].freeze
 
+  DateOptions = Struct.new(
+    :daily,
+    :days,
+    :end,
+    :hourly,
+    :start,
+    :typ
+  )
   Options = Struct.new(
     :applied_filters,
-    :daily_date,
-    :days,
-    :edate,
+    :date,
     :filter1,
     :filter2,
     :filter3,
     :fl_typ,
-    :hourly_date,
     :model,
     :pol_filter,
     :pol_fltr,
-    :sdate,
     :tl_filter_all,
     :tl_result,
     :tl_show,
-    :typ
   ) do
+    def initialize(*args)
+      super
+      self.date = DateOptions.new
+    end
+
     def management_events?
       tl_show == 'timeline'
     end

@@ -5,10 +5,10 @@ module ApplicationController::Timelines
   def tl_chooser
     @record = identify_tl_or_perf_record
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
-    @tl_options[:typ] = params[:tl_typ] if params[:tl_typ]
-    @tl_options[:days] = params[:tl_days] if params[:tl_days]
-    @tl_options[:hourly_date] = params[:miq_date_1] if params[:miq_date_1] && @tl_options[:typ] == "Hourly"
-    @tl_options[:daily_date] = params[:miq_date_1] if params[:miq_date_1] && @tl_options[:typ] == "Daily"
+    @tl_options.date.typ = params[:tl_typ] if params[:tl_typ]
+    @tl_options.date.days = params[:tl_days] if params[:tl_days]
+    @tl_options.date.hourly = params[:miq_date_1] if params[:miq_date_1] && @tl_options.date.typ == 'Hourly'
+    @tl_options.date.daily = params[:miq_date_1] if params[:miq_date_1] && @tl_options.date.typ == 'Daily'
 
     # set variables for type of timeline is selected
     if params[:tl_show]
@@ -77,14 +77,14 @@ module ApplicationController::Timelines
       end
     end
     @timeline = true
-    add_flash(_("No events available for this timeline"), :warning) if @tl_options[:sdate].nil? && @tl_options[:edate].nil?
+    add_flash(_("No events available for this timeline"), :warning) if @tl_options.date.start.nil? && @tl_options.date.end.nil?
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("tl_options_div", :partial => "layouts/tl_options")
       page.replace("tl_div", :partial => "layouts/tl_detail")
-      page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});" unless @tl_options[:sdate].nil?
-      page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
+      page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options.date.start});" unless @tl_options.date.start.nil?
+      page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options.date.end});" unless @tl_options.date.end.nil?
       page << 'miqBuildCalendar();'
       if @tl_options.management_events?
         page << "$('#filter1').val('#{@tl_options.fltr1}');"
@@ -203,8 +203,8 @@ module ApplicationController::Timelines
     if @tl_options.nil? ||
        (refresh != "n" && params[:refresh] != "n" && @tl_options[:model] != @tl_record.class.base_class.to_s)
       @tl_options = Options.new
-      @tl_options[:typ] = "Daily"
-      @tl_options[:days] = "7"
+      @tl_options.date.typ = 'Daily'
+      @tl_options.date.days = '7'
       @tl_options[:model] = @tl_record.class.base_class.to_s
       @tl_options[:tl_show] = "timeline"
       @tl_options[:pol_filter] = []
@@ -212,14 +212,14 @@ module ApplicationController::Timelines
     end
     sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     if !sdate.nil? && !edate.nil?
-      @tl_options[:sdate] = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
-      @tl_options[:edate] = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
-      @tl_options[:hourly_date] ||= [edate.month, edate.day, edate.year].join("/")
-      @tl_options[:daily_date] ||= [edate.month, edate.day, edate.year].join("/")
+      @tl_options.date.start = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
+      @tl_options.date.end = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
+      @tl_options.date.hourly ||= [edate.month, edate.day, edate.year].join("/")
+      @tl_options.date.daily ||= [edate.month, edate.day, edate.year].join("/")
     else
-      @tl_options[:sdate] = @tl_options[:edate] = nil
+      @tl_options.date.start = @tl_options.date.end = nil
     end
-    @tl_options[:days] ||= "7"
+    @tl_options.date.days ||= "7"
 
     if @tl_options.policy_events?
       @tl_options[:tl_result] ||= "both"
@@ -244,13 +244,13 @@ module ApplicationController::Timelines
   end
 
   def tl_build_timeline_report_options
-    if !@tl_options[:sdate].nil? && !@tl_options[:edate].nil?
-      case @tl_options[:typ]
+    if !@tl_options.date.start.nil? && !@tl_options.date.end.nil?
+      case @tl_options.date.typ
       when "Hourly"
         tl_rpt = @tl_options.management_events? ? "tl_events_hourly" : "tl_policy_events_hourly"
         @report = tl_get_rpt(tl_rpt)
         @report.headers.map! { |header| _(header) }
-        mm, dd, yy = @tl_options[:hourly_date].split("/")
+        mm, dd, yy = @tl_options.date.hourly.split("/")
         from_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 00:00:00", session[:user_tz]) # Get tz 12am in user's time zone
         to_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 23:59:59", session[:user_tz])   # Get tz 11pm in user's time zone
         st_time = Time.gm(yy, mm, dd, 00, 00, 00)
@@ -271,9 +271,9 @@ module ApplicationController::Timelines
         tl_rpt = @tl_options.management_events? ? "tl_events_daily" : "tl_policy_events_daily"
         @report = tl_get_rpt(tl_rpt)
         @report.headers.map! { |header| _(header) }
-        from = Date.parse(@tl_options[:daily_date]) - @tl_options[:days].to_i
+        from = Date.parse(@tl_options.date.daily) - @tl_options.date.days.to_i
         from_dt = create_time_in_utc("#{from.year}-#{from.month}-#{from.day} 00:00:00", session[:user_tz])  # Get tz 12am in user's time zone
-        mm, dd, yy = @tl_options[:daily_date].split("/")
+        mm, dd, yy = @tl_options.date.daily.split("/")
         to_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 23:59:59", session[:user_tz]) # Get tz 11pm in user's time zone
         @report.timeline[:bands][0][:decorate] = true
         st_time = Time.gm(from.year, from.month, from.day, 00, 00, 00)
