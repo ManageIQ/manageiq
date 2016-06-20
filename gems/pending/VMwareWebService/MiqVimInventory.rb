@@ -71,6 +71,7 @@ class MiqVimInventory < MiqVimClientBase
     if @apiVersion >= '5.5'
       begin
         @pbm = PbmService.new(server, username, password)
+        @propMap = @propMap.merge(SpbmPropMap)
       rescue
       end
     end
@@ -1899,20 +1900,47 @@ class MiqVimInventory < MiqVimClientBase
     addObjHash(:StoragePod, spObj)
   end
 
-  def pbmProfiles
-    @pbm.queryProfile
-  end
+  def pbmProfiles_locked
+    log_header = "MiqVimInventory.pbmProfiles_locked:"
+    raise "pbmProfiles_locked: cache lock not held" unless @cacheLock.sync_locked?
+    return @pbmProfiles if @pbmProfiles
 
-  def pbmProfilesByMor(_unused = nil)
-    @pbmProfilesByMor = {}
+    $vim_log.info "#{log_header} loading pbmProfile cache for #{@connId}"
+    begin
+      @pbmProfiles = {}
 
-    pbmProfiles.each do |pbm_profile|
-      uid = pbm_profile.profileId.uniqueId
+      @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      @pbmProfilesByMor[uid] = pbm_profile
+      @pbm.queryProfile.to_a.each do |pbm_profile|
+        uid = pbm_profile.profileId.uniqueId
+
+        @pbmProfiles[uid] = pbm_profile
+      end
+    ensure
+      @cacheLock.sync_unlock if unlock
     end
+    $vim_log.info "#{log_header} loaded pbmProfile cache for #{@connId}"
 
-    @pbmProfilesByMor
+    @pbmProfiles
+  end
+  protected :pbmProfiles_locked
+
+  def pbmProfiles(_unused = nil)
+    pbm = nil
+    @cacheLock.synchronize(:SH) do
+      pbm = dupObj(pbmProfiles_locked)
+    end
+    assert_no_locks
+    pbm
+  end
+  alias_method :pbmProfilesByMor, :pbmProfiles
+
+  def pbmProfileByMor(pbmMor, _unused = nil)
+    pbm = nil
+    @cacheLock.synchronize(:SH) do
+      pbm = dupObj(pbmProfiles_locked[pbmMor])
+    end
+    pbm
   end
 
   #
