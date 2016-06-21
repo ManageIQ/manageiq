@@ -124,7 +124,17 @@ class ApiController < ApplicationController
     skip_before_action :verify_authenticity_token, :only => [:show, :update, :destroy, :handle_options_request]
   end
 
-  delegate :base_config, :version_config, :collection_config, :to => self
+  def base_config
+    Api::Settings.base
+  end
+
+  def version_config
+    Api::Settings.version
+  end
+
+  def collection_config
+    Api::Settings.collections
+  end
 
   def initialize
     @config          = Api::Settings.data
