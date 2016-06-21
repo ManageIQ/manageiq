@@ -3,6 +3,8 @@ module ManageIQ::Providers
     class TargetValidationError < RuntimeError; end
     class MetricValidationError < RuntimeError; end
 
+    MetricsResource = Struct.new(:id, :feed, :path)
+
     def initialize(target)
       @target = target
       unless @target.kind_of?(MiddlewareServer)
@@ -15,7 +17,7 @@ module ManageIQ::Providers
     end
 
     def metrics_available
-      resource = Struct.new(:id, :feed, :path).new
+      resource = MetricsResource.new
       resource.id = @target.nativeid
       resource.feed = @target.feed
       resource.path = @target.ems_ref
