@@ -1911,7 +1911,9 @@ class MiqVimInventory < MiqVimClientBase
 
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      @pbm.queryProfile.to_a.each do |pbm_profile|
+      profile_ids = @pbm.queryProfile
+
+      @pbm.retrieveContent(profile_ids).to_a.each do |pbm_profile|
         uid = pbm_profile.profileId.uniqueId
 
         @pbmProfiles[uid] = pbm_profile

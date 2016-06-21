@@ -13,16 +13,32 @@ class PbmService
 
     @pbm = RbVmomi::PBM.connect(vim, :insecure => true)
     @sic = @pbm.serviceContent
+
     @storageResourceType = RbVmomi::PBM::PbmProfileResourceType(
-      :resourceType => "STORAGE")
+      :resourceType => "STORAGE"
+    )
 
     @pbm
   end
 
-  def queryProfile
-    profile_ids = @sic.profileManager.PbmQueryProfile(
-      :resourceType => @storageResourceType)
+  def queryAssociatedEntity(profileId)
+    @sic.profileManager.PbmQueryAssociatedEntity(
+      :profile => profileId)
+  end
 
-    @sic.profileManager.PbmRetrieveContent(:profileIds => profile_ids)
+  def queryMatchingHub(profileId, hubsToSearch = nil)
+    @sic.placementSolver.PbmQueryMatchingHub(
+      :profile      => profileId,
+      :hubsToSearch => hubsToSearch
+    )
+  end
+
+  def queryProfile
+    @sic.profileManager.PbmQueryProfile(
+      :resourceType => @storageResourceType)
+  end
+
+  def retrieveContent(profileIds)
+    @sic.profileManager.PbmRetrieveContent(:profileIds => profileIds)
   end
 end
