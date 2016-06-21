@@ -1,5 +1,5 @@
 module PbmPropMaps
-  PbmFullPropMap = {
+  FullPropMap = {
     :PbmProfile => {
       :baseName => "@pbmProfiles",
       :keyPath  => nil,

@@ -72,7 +72,7 @@ class MiqVimInventory < MiqVimClientBase
     if @apiVersion >= '5.5'
       begin
         @pbm = PbmService.new(server, username, password)
-        @pbmPropMap = PbmFullPropMap
+        @pbmPropMap = PbmPropMaps::FullPropMap
       rescue
         @pbm = nil
       end
@@ -394,7 +394,8 @@ class MiqVimInventory < MiqVimClientBase
     @cacheLock.synchronize(:EX) do
       @inventoryHash = nil
 
-      propMaps = @propMap.merge(@pbmPropMap)
+      propMaps = @propMap
+      propMaps.merge!(@pbmPropMap) if @pbmPropMap
 
       propMaps.each_value do |pm|
         instance_variable_set("#{pm[:baseName]}ByMor", nil)
@@ -1915,13 +1916,17 @@ class MiqVimInventory < MiqVimClientBase
 
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
-      profile_ids = @pbm.queryProfile
+      if @pbm
+        profile_ids = @pbm.queryProfile
 
-      @pbm.retrieveContent(profile_ids).to_a.each do |pbm_profile|
-        uid = pbm_profile.profileId.uniqueId
+        @pbm.retrieveContent(profile_ids).to_a.each do |pbm_profile|
+          uid = pbm_profile.profileId.uniqueId
 
-        @pbmProfiles[uid] = pbm_profile
+          @pbmProfiles[uid] = pbm_profile
+        end
       end
+    rescue RbVmomi::Fault => err
+      $vim_log.info "#{log_header} cannot retrieve pbmProfiles: #{err}"
     ensure
       @cacheLock.sync_unlock if unlock
     end
