@@ -718,10 +718,8 @@ module ApplicationController::CiProcessing
     assert_privileges("instance_associate_floating_ip")
     @record = find_by_id_filtered(VmOrTemplate, params[:id])
     floating_ips = []
-    unless @record.ext_management_system.nil?
-      @record.ext_management_system.floating_ips.each do |floating_ip|
-        floating_ips << {:id => floating_ip.address, :address => floating_ip.address}
-      end
+    unless @record.cloud_tenant.nil?
+      floating_ips = @record.cloud_tenant.floating_ips
     end
     render :json => {
       :floating_ips => floating_ips
@@ -826,7 +824,7 @@ module ApplicationController::CiProcessing
     floating_ips = []
     unless @record.ext_management_system.nil?
       @record.floating_ips.each do |floating_ip|
-        floating_ips << {:id => floating_ip.address, :address => floating_ip.address}
+        floating_ips << floating_ip.address
       end
     end
     render :json => {
