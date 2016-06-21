@@ -1601,8 +1601,8 @@ function miqWidgetToolbarClick(e) {
 function miqInitAccordions() {
   var height = $('#left_div').height() - $('#toolbar').outerHeight();
   var panel = $('.panel-heading').outerHeight();
-  var count = $('#accordion > .panel .panel-body').length;
-  $('#accordion > .panel .panel-body').each(function (k, v) {
+  var count = $('#accordion:visible > .panel .panel-body').length;
+  $('#accordion:visible > .panel .panel-body').each(function (k, v) {
     $(v).css('max-height', (height - count * panel) + 'px');
     $(v).css('overflow-y', 'auto')
     $(v).css('overflow-x', 'hidden')
