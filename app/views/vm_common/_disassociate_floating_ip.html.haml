@@ -15,30 +15,19 @@
                   'paging_div_buttons_state_enabled' => false,
                   'paging_div_buttons_id'            => "angular_paging_div_buttons",
                   'paging_div_buttons_type'          => "Submit"}
+
 - unless @explorer
   %table{:width => '100%'}
     %tr
       %td{:align => 'right'}
-        #buttons_on{:style => "display:#{@changed ? "display" : "none"};"}
-          = button_tag(t = _('Submit'),
-            :class   => "btn btn-primary",
-            :alt     => t,
-            :title   => t,
-            :onclick => "miqAjaxButton('#{url_for(:action => "disassociate_floating_ip_vm", :id => "#{@record.id}", :button => "submit")}');")
-          = button_tag(t = _('Cancel'),
-            :class   => "btn btn-default",
-            :alt     => t,
-            :title   => t,
-            :onclick => "miqAjaxButton('#{url_for(:action => "disassociate_floating_ip_vm", :id => "#{@record.id}", :button => "cancel")}');")
-        #buttons_off{:style => "display:#{@changed ? "none" : "display"};"}
-          = button_tag(_("Submit"), :class => "btn btn-primary btn-disabled")
-          = button_tag(_("Cancel"),
-                           :class   => 'btn btn-default',
-                           :alt     => t = _("Cancel Changes"),
-                           :title   => t,
-                           :onclick => "miqAjaxButton('#{url_for(:action => 'disassociate_floating_ip_vm',
-                                                                 :id => "#{@record.id}",
-                                                                 :button => "cancel")}');")
+          = button_tag("Submit",
+                       :class        => "btn btn-primary",
+                       "ng-click"    => "submitClicked()",
+                       "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
+                       "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+          = button_tag("Cancel",
+                        :class     => "btn btn-default",
+                        "ng-click" => "cancelClicked()")
 
 :javascript
   ManageIQ.angular.app.value('vmCloudDisassociateFloatingIpFormId', '#{@record.id}');

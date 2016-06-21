@@ -3,10 +3,10 @@ class ApplicationHelper::Button::InstanceDisassociateFloatingIp < ApplicationHel
     super
     if !@record.is_available?(:disassociate_floating_ip)
       self[:title] = @record.is_available_now_error_message(:disassociate_floating_ip)
-    else @record.number_of(:floating_ips) == 0
+    elsif @record.number_of(:floating_ips) == 0
       self[:title] = _("%{instance} \"%{name}\" does not have any associated %{floating_ips}") % {
         :instance     => ui_lookup(:table => 'vm_cloud'),
-        :name      => @record.name,
+        :name         => @record.name,
         :floating_ips => ui_lookup(:tables => 'floating_ip')
       }
     end
