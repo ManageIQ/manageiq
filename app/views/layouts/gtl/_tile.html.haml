@@ -5,7 +5,7 @@
       - if @targets_hash
         -# Get the record
         - item = @targets_hash[@id]
-      %table{:style => @gtl_small_tiles ? "height: 120px; float:left; padding-right: 10px" : "margin-top: 20px"}
+      %table{:style => @gtl_small_tiles ? "width: 100%; height: 120px; float:left; padding-right: 10px" : "margin-top: 20px"}
         %tr
           %td{:width => "100", :align => "left"}
             - if @gtl_small_tiles
@@ -41,7 +41,7 @@
             - if @row_button && @gtl_small_tiles
               %div{:align => "right", :style => "width: inherit;"}
                 = button_tag("#{@row_button[:label]}",
-                  :class   => "btn btn-primary",
+                  :class   => "btn btn-primary pull-right",
                   :alt     => @row_button[:title],
                   :title   => @row_button[:title],
                   :onclick => "#{@row_button[:function]}('#{@id}');")
