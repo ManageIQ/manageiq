@@ -193,8 +193,12 @@ module MiqAeCustomizationController::OldDialogs
 
   def old_dialogs_edit
     assert_privileges("old_dialogs_edit")
-    obj = find_checked_items
-    @_params[:id] = obj[0] unless obj.empty?
+
+    # copy called on checkbox-checked item
+    unless params[:id]
+      obj = find_checked_items
+      @_params[:id] = obj[0]
+    end
 
     if params[:typ] == "copy"
       dialog = MiqDialog.find_by_id(from_cid(params[:id]))
