@@ -4920,6 +4920,10 @@
         :description: Create Virtual Template
         :feature_type: admin
         :identifier: create_virtual_template
+      - :name: Show Virtual Templates
+        :description: Show Virtual Templates
+        :feature_type: admin
+        :identifier: virtual_template_show
       - :name: Edit Virtual Templates
         :description: Edit Virtual Template
         :feature_type: admin

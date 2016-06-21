@@ -1627,7 +1627,7 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: virtual_template_read
+        :identifier: virtual_template_show
       :post:
       - :name: create
         :identifier: create_virtual_template

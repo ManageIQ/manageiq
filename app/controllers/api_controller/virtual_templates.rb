@@ -1,8 +1,5 @@
 class ApiController
   module VirtualTemplates
-    def show_virtual_templates
-    end
-
     def create_resource_virtual_templates(_type, _id, data)
       validate_vendor_present(data)
       template_name = 'ManageIQ::Providers::' + data['vendor'].capitalize + '::CloudManager::VirtualTemplate'
