@@ -71,8 +71,8 @@ module ManageIQ::Providers
           :nativeid          => datasource.id,
           :ems_ref           => datasource.path
         }
-        unless config.empty? || config['value'].empty?
-          data[:properties] = config['value'].select { |k, _| k != 'Username' && k != 'Password' }
+        if !config.empty? && !config['value'].empty? && config['value'].respond_to?(:except)
+          data[:properties] = config['value'].except('Username', 'Password')
         end
         data
       end
