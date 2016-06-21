@@ -20,14 +20,14 @@
   %table{:width => '100%'}
     %tr
       %td{:align => 'right'}
-          = button_tag("Submit",
-                       :class        => "btn btn-primary",
-                       "ng-click"    => "submitClicked()",
-                       "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
-                       "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
-          = button_tag("Cancel",
-                        :class     => "btn btn-default",
-                        "ng-click" => "cancelClicked()")
+        = button_tag("Submit",
+                     :class        => "btn btn-primary",
+                     "ng-click"    => "submitClicked()",
+                     "ng-disabled" => "angularForm.$pristine || angularForm.$invalid",
+                     "ng-class"    => "{'btn-disabled': angularForm.$pristine || angularForm.$invalid}")
+        = button_tag("Cancel",
+                      :class     => "btn btn-default",
+                      "ng-click" => "cancelClicked()")
 
 :javascript
   ManageIQ.angular.app.value('vmCloudAssociateFloatingIpFormId', '#{@record.id}');

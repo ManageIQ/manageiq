@@ -87,7 +87,6 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
         expect(vm.is_available?(:disassociate_floating_ip)).to eq true
       end
     end
-
   end
 
   context "#is_available?" do
