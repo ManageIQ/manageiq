@@ -9,7 +9,9 @@ describe ChargebackVm do
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
     @tag = Tag.find_by_name("/managed/environment/prod")
 
-    @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm")
+    @admin = FactoryGirl.create(:user_admin)
+
+    @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => @admin)
     @vm1.tag_with(@tag.name, :ns => '*')
 
     @host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
@@ -18,7 +20,6 @@ describe ChargebackVm do
 
     @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems)
     @ems_cluster.hosts << @host1
-    @admin = FactoryGirl.create(:user_admin)
 
     @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
     temp = {:cb_rate => @cbr, :tag => [c, "vm"]}
@@ -573,6 +574,28 @@ describe ChargebackVm do
     it "return tenant chargeback detail rate" do
       expect(@rate).not_to be_nil
       expect(@rate.id).to eq(@assigned_rate[:cb_rate].id)
+    end
+  end
+
+  describe ".get_keys_and_extra_fields" do
+    let(:timestamp_key) { "2012-08-31T07:00:00Z" }
+    let(:vm_owners)     { {@vm1.id => @vm1.evm_owner_name} }
+    let(:metric_rollup) do
+      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => timestamp_key, :tag_names => "environment/prod",
+                         :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                         :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
+                         :resource => @vm1, :resource_name => @vm1.name)
+    end
+
+    it "returns extra fields" do
+      ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
+
+      extra_fields = ChargebackVm.get_keys_and_extra_fields(metric_rollup, timestamp_key)
+      expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => @ems.name,
+                         "provider_uid" => @ems.guid}
+
+      expect("#{metric_rollup.resource_id}_#{timestamp_key}").to eq(extra_fields.first)
+      expect(extra_fields.second).to eq(expected_fields)
     end
   end
 end
