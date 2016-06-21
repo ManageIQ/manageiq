@@ -253,10 +253,12 @@ module MiqAeCustomizationController::OldDialogs
       if @edit[:new][:dialog_type].blank?
         add_flash(_("Dialog Type must be selected"), :error)
       end
-      begin
-        YAML.parse(@edit[:new][:content])
-      rescue YAML::SyntaxError => ex
-        add_flash(_("Syntax error in YAML file: %{error_message}") % {:error_message => ex.message}, :error)
+      unless @flash_array
+        begin
+          YAML.parse(@edit[:new][:content])
+        rescue YAML::SyntaxError => ex
+          add_flash(_("Syntax error in YAML file: %{error_message}") % {:error_message => ex.message}, :error)
+        end
       end
       if @flash_array
         render :update do |page|
