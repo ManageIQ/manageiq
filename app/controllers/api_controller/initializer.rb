@@ -3,7 +3,6 @@ class ApiController
     extend ActiveSupport::Concern
 
     included do
-      @config = load_config
       init_env
       gen_attr_type_hash
     end
@@ -20,20 +19,16 @@ class ApiController
       # in the :base section which must also exist in the :version
       # definition section.
       #
-      def load_config
-        @config = YAML.load_file(Rails.root.join("config/api.yml"))
-      end
-
       def base_config
-        @config[:base]
+        Api::Settings.base
       end
 
       def version_config
-        @config[:version]
+        Api::Settings.version
       end
 
       def collection_config
-        @config[:collections]
+        Api::Settings.collections
       end
 
       #
@@ -58,7 +53,7 @@ class ApiController
       #
       def init_env
         $api_log.info("Initializing Environment for #{base_config[:name]}")
-        @api_user_token_service ||= ApiUserTokenService.new(@config, :log_init => true)
+        @api_user_token_service ||= ApiUserTokenService.new(Api::Settings.data, :log_init => true)
         log_config
       end
 

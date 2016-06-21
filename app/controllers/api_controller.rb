@@ -127,7 +127,7 @@ class ApiController < ApplicationController
   delegate :base_config, :version_config, :collection_config, :to => self
 
   def initialize
-    @config          = self.class.load_config
+    @config          = Api::Settings.data
     @module          = base_config[:module]
     @name            = base_config[:name]
     @description     = base_config[:description]
