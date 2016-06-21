@@ -386,7 +386,7 @@ module ApplicationController::Compare
             cols = ["#{section[:header]} - Changed:", "", ""]            # Generate % line, first 3 cols
           end
 
-          @compare.ids.each do |r|            # Go thru each of the VMs
+          @compare.results.each do |r|            # Go thru each of the VMs
             if mode == :compare
               next if r[0] == @compare.records[0]["id"] # Skip the base VM
               cols.push(r[1][section[:name]][:_match_].to_s + "%")  # Grab the % value for this attr for this VM
