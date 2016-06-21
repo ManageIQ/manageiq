@@ -183,27 +183,14 @@ module Rbac
     find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
   end
 
-  def self.total_scope(scope, extra_target_ids, conditions, includes)
-    if conditions && extra_target_ids
-      scope = scope.where(conditions).or(scope.where(:id => extra_target_ids))
-    elsif conditions
-      scope = scope.where(conditions)
-    elsif extra_target_ids
-      scope = scope.where(:id => extra_target_ids)
-    end
-
-    scope.includes(includes).references(includes)
-  end
-
   # @param parent_class [Class] Class of parent (e.g. Host)
   # @param klass [Class] Class of child node (e.g. Vm)
   # @param scope [] scope for active records (e.g. Vm.archived)
   # @param find_options [Hash<Symbol,String|Array>] options for active record conditions
   # @option find_options :conditions [String|Hash|Array] active record where conditions for primary records (e.g. { "vms.archived" => true} )
   # @param filtered_ids [nil|Array<Integer>] ids for the parent class (e.g. [1,2,3] for host)
-  # @return [Array<Array<Object>,Integer,Integer] targets, total count, authorized count
+  # @return [Array<Array<Object>,Integer,Integer] targets, authorized count
   def self.find_targets_filtered_by_parent_ids(parent_class, scope, find_options, filtered_ids)
-    total_count = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
     if filtered_ids
       reflection = scope.reflections[parent_class.name.underscore]
       if reflection
@@ -218,11 +205,10 @@ module Rbac
     targets     = method_with_scope(scope, find_options)
     auth_count  = scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count
 
-    return targets, total_count, auth_count
+    return targets, auth_count
   end
 
   def self.find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
-    total_count  = total_scope(scope, u_filtered_ids, find_options[:conditions], find_options[:include]).count
     if filtered_ids
       ids_clause  = ["#{scope.table_name}.id IN (?)", filtered_ids]
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
@@ -231,7 +217,7 @@ module Rbac
     targets     = method_with_scope(scope, find_options)
     auth_count  = targets.except(:offset, :limit, :order).count(:all)
 
-    return targets, total_count, auth_count
+    return targets, auth_count
   end
 
   def self.get_belongsto_filter_object_ids(klass, filter)
@@ -296,10 +282,10 @@ module Rbac
   end
 
   def self.find_targets_without_rbac(scope, find_options)
-    targets     = method_with_scope(scope, find_options)
-    total_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
+    targets    = method_with_scope(scope, find_options)
+    auth_count = find_options[:limit] ? scope.where(find_options[:conditions]).includes(find_options[:include]).references(find_options[:include]).count : targets.length
 
-    return targets, total_count, total_count
+    return targets, auth_count
   end
 
   def self.get_user_info(user, userid, miq_group, miq_group_id)
@@ -373,7 +359,6 @@ module Rbac
   # @option options :ext_options
   # @return [Array<Array<Numeric|Object>,Hash>] list of object and the associated search options
   #   Array<Numeric|Object> list of object in the same order as input targets if possible
-  # @option attrs :total_count [Numeric]
   # @option attrs :auth_count [Numeric]
   # @option attrs :user_filters
   # @option attrs apply_limit_in_sql
@@ -381,7 +366,7 @@ module Rbac
 
   def self.search(options = {})
     if options.key?(:targets) && options[:targets].kind_of?(Array) && options[:targets].empty?
-      return [], {:total_count => 0}
+      return [], {:auth_count => 0}
     end
     # => empty inputs - normal find with optional where_clause
     # => list if ids - :class is required for this format.
@@ -452,7 +437,7 @@ module Rbac
 
     _log.debug("Find options: #{find_options.inspect}")
 
-    targets, total_count, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
+    targets, auth_count = find_targets_with_rbac(klass, scope, user_filters, find_options, user, miq_group)
 
     if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
       rejects     = targets.reject { |obj| self.matches_search_filters?(obj, search_filter, tz) }
@@ -471,7 +456,7 @@ module Rbac
       targets = targets.sort_by { |a| target_ids.index(a.id) }
     end
 
-    attrs.merge!(:total_count => total_count, :auth_count => auth_count)
+    attrs[:auth_count] = auth_count
 
     results_format   = :objects if klass.respond_to?(:instances_are_derived?) && klass.instances_are_derived? # can't return ids if instances are derived from another source
     results_format ||= :ids

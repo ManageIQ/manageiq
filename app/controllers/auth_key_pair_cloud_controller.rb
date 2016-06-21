@@ -1,5 +1,4 @@
 class AuthKeyPairCloudController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -205,7 +204,6 @@ class AuthKeyPairCloudController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @auth_key_pair_cloud) # Get the records (into a view) and the paginator
       @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "auth_key_pair_cloud"))
     end
 
     # Came in from outside show_list partial

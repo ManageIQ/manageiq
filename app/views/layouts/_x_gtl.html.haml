@@ -15,8 +15,6 @@
     - if view.nil? || table.data.length == 0
       = render :partial => "layouts/flash_msg"
     = render :partial => 'layouts/info_msg', :locals => {:message => _("No Records Found.")}
-    - if @bottom_msg
-      = h(@bottom_msg)
   #records_div{:style => rec_display}
     - if table && table.data.length > 0
       - unless @embedded
