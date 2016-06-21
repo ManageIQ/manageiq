@@ -48,10 +48,9 @@ class LaunchAnsibleJob
 
   def ansible_vars_from_options(ext_vars)
     options = @handle.root["miq_provision"].try(:options) || {}
-    options.each_with_object(ext_vars) do |(k, v), hash|
-      key = k.to_s
-      match_data = ANSIBLE_DIALOG_VAR_REGEX.match(key)
-      hash[match_data[1]] = v if match_data
+    options.each_with_object(ext_vars) do |(key, value), hash|
+      match_data = ANSIBLE_DIALOG_VAR_REGEX.match(key.to_s)
+      hash[match_data[1]] = value if match_data
     end
   end
 

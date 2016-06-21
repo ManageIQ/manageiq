@@ -17,7 +17,7 @@ describe LaunchAnsibleJob do
   let(:root_object) { MiqAeMockObject.new('param1' => "x=X", 'param2' => "y=Y") }
   let(:middle_object) { MiqAeMockObject.new('a' => 1, 'b' => 2) }
 
-  let(:ext_vars) { {'x' => 'X', 'y' => 'Y'} }
+  let(:ext_vars) { {} }
   let(:job_args) { {:extra_vars => ext_vars} }
 
   let(:service) { MiqAeMockService.new(root_object) }
@@ -47,6 +47,8 @@ describe LaunchAnsibleJob do
   let(:svc_provision) { MiqAeMethodService::MiqAeServiceMiqProvision.find(miq_provision.id) }
 
   it "run a job using job template name" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = MiqAeMockObject.new(:job_template_name => job_template.name)
     current_object.parent = root_object
@@ -58,6 +60,8 @@ describe LaunchAnsibleJob do
   end
 
   it "run a job using job template id" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = MiqAeMockObject.new(:job_template_id => job_template.id)
     current_object.parent = root_object
@@ -69,6 +73,8 @@ describe LaunchAnsibleJob do
   end
 
   it "run a job using job template object" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = MiqAeMockObject.new(:job_template => svc_job_template)
     current_object.parent = root_object
@@ -121,12 +127,11 @@ describe LaunchAnsibleJob do
 
   it "get dialog parameters" do
     prov_options[:dialog_param_name] = 'fred'
-    root_object[:job_template_name] = job_template.name
-    root_object[:miq_provision] = svc_provision
     ext_vars['name'] = 'fred'
-    current_object = MiqAeMockObject.new('param1' => 'x=X', 'param2' => 'y=Y')
-    current_object.parent = root_object
-    service.object = current_object
+    root = MiqAeMockObject.new(:job_template_name => job_template.name)
+    root[:miq_provision] = svc_provision
+    service = MiqAeMockService.new(root)
+    service.object = root
     expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
     LaunchAnsibleJob.new(service).main
     expect(service.get_state_var(:ansible_job_id)).to eq(job.id)
