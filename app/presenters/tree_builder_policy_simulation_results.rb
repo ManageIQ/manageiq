@@ -42,79 +42,74 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
 
   def vm_nodes(data)
     data.sort_by! { |a| a[:name].downcase }.map do |node|
-      {:id => node[:id],
-       :text => "<strong>VM:</strong> #{node[:name]}".html_safe,
-       :image => 'vm',
+      {:id       => node[:id],
+       :text     => "<strong>VM:</strong> #{node[:name]}".html_safe,
+       :image    => 'vm',
        :profiles => node[:profiles]}
     end
   end
 
-
-
-  def pofile_nodes(data)
+  def profile_nodes(data)
     data.sort_by { |a| a[:name].downcase }.map do |node|
-      {:id => node[:id],
-       :text => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
-       :image => node_icon(node[:result]),
+      {:id       => node[:id],
+       :text     => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
+       :image    => node_icon(node[:result]),
        :policies => node[:policies]}
     end
   end
 
   def policy_nodes(data)
     data.sort_by { |a| a[:name].downcase }.map do |node|
-      active_caption = node[:active] ? "" : "(Inactive)"
-       {:id => node['id'],
-           :text => "<strong>Policy#{active_caption}:</strong> #{node[:description]}".html_safe,
-           :image => node_icon(node[:result]),
-      :conditions => node[:conditions],
-      :actions => node[:actions],
-      :scope => node[:scope]}
+      active_caption = node[:active] ? "" : _(" (Inactive)")
+      {:id         => node['id'],
+       :text       => "<strong>#{_('Policy')}#{active_caption}:</strong> #{node[:description]}".html_safe,
+       :image      => node_icon(node[:result]),
+       :conditions => node[:conditions],
+       :actions    => node[:actions],
+       :scope      => node[:scope]}
     end
   end
 
   def action_nodes(data)
     data.map do |node|
-      {:id => node[:id],
-       :text => "<strong>#{_('Action:')}</strong> #{node[:description]}".html_safe,
+      {:id    => node[:id],
+       :text  => "<strong>#{_('Action:')}</strong> #{node[:description]}".html_safe,
        :image => node_icon(node[:result])}
     end
   end
 
   def condition_nodes(data)
     data.map do |node|
-      {:id => node[:id],
-                 :text => "<strong>#{_('Condition:')}</strong> #{node[:description]}".html_safe,
-                 :image => node_icon(node[:result]),
-           :expression => node[:expression]}
+      {:id         => node[:id],
+       :text       => "<strong>#{_('Condition:')}</strong> #{node[:description]}".html_safe,
+       :image      => node_icon(node[:result]),
+       :expression => node[:expression]}
     end
   end
 
   def scope_node(data)
-    binding.pry
     name, tip = exp_build_string(data)
-    {:id => nil,
-     :text => "<style>span.ws-wrap { white-space: normal; }</style><strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+    {:id    => nil,
+     :text  => "<strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
      :tip   => tip.html_safe,
      :image => node_icon(data[:result])}
   end
 
   def expression_node(data)
-    binding.pry
     name, tip = exp_build_string(data)
     {:id    => nil,
-     :text  => "<style>span.ws-wrap { white-space: normal; }</style><strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+     :text  => "<strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
      :tip   => tip.html_safe,
      :image => 'na'}
-
   end
 
-  def x_get_tree_roots(count_only = false, _options)
+  def x_get_tree_roots(count_only = false, _options = nil)
     count_only_or_objects(count_only, vm_nodes(@root[:results]))
   end
 
   def x_get_tree_hash_kids(parent, count_only)
     kids = []
-    kids.concat(pofile_nodes(parent[:profiles])) if parent[:profiles].present?
+    kids.concat(profile_nodes(parent[:profiles])) if parent[:profiles].present?
     kids.concat(policy_nodes(parent[:policies])) if parent[:policies].present?
     kids.concat(condition_nodes(parent[:conditions])) if parent[:conditions].present?
     kids.push(scope_node(parent[:scope])) if parent[:scope].present?

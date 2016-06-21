@@ -37,7 +37,8 @@
       %strong
         = _("* Items in")
         %font{:color => "red"}
-          = _("red")
+          %i
+            = _("red italics")
         = _("do not change the outcome of the scope or expression")
       %br{:style => "line-height: 2.5em"}
       .btn.btn-default{:id => "squash_button", :onclick => "miqSquashToggle('#{j_str(@rsop_tree.name.to_s)}')", :title => _('Expand All')}
