@@ -1,6 +1,8 @@
 module ManageIQ::Providers
   module Hawkular
     class MiddlewareManager::RefreshParser
+      include ::HawkularUtilsMixin
+
       def self.ems_inv_to_hashes(ems, options = nil)
         new(ems, options).ems_inv_to_hashes
       end
@@ -34,7 +36,7 @@ module ManageIQ::Providers
         @data[:middleware_deployments] = []
         @data[:middleware_datasources] = []
         @eaps.map do |eap|
-          @ems.child_resources(eap).map do |child|
+          @ems.child_resources(eap.path).map do |child|
             next unless child.type_path.end_with?('Deployment', 'Datasource')
             server = @data_index.fetch_path(:middleware_servers, :by_nativeid, eap.id)
             process_server_entity(server, child)
@@ -43,7 +45,11 @@ module ManageIQ::Providers
       end
 
       def process_datasource(server, datasource)
-        config = @ems.get_config_data_for_resource([server[:nativeid], datasource.id], server[:feed])
+        wildfly_res_id = hawk_escape_id server[:nativeid]
+        datasource_res_id = hawk_escape_id datasource.id
+        resource_path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id      => server[:feed],
+                                                                 :resource_ids => [wildfly_res_id, datasource_res_id])
+        config = @ems.inventory_client.get_config_data_for_resource(resource_path.to_s)
         parse_datasource(server, datasource, config)
       end
 
