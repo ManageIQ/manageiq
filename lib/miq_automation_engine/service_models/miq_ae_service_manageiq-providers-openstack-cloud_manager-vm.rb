@@ -10,6 +10,9 @@ module MiqAeMethodService
     expose :validate_resize_confirm
     expose :validate_resize_revert
 
+    expose :associate_floating_ip
+    expose :disassociate_floating_ip
+
     def attach_volume(volume_id, device = nil, options = {})
       sync_or_async_ems_operation(options[:sync], "attach_volume", [volume_id, device])
     end
@@ -17,6 +20,5 @@ module MiqAeMethodService
     def detach_volume(volume_id, options = {})
       sync_or_async_ems_operation(options[:sync], "detach_volume", [volume_id])
     end
-
   end
 end
