@@ -824,7 +824,7 @@ module ApplicationController::CiProcessing
     floating_ips = []
     unless @record.ext_management_system.nil?
       @record.floating_ips.each do |floating_ip|
-        floating_ips << floating_ip.address
+        floating_ips << floating_ip
       end
     end
     render :json => {
