@@ -667,7 +667,7 @@
       - compute.instance.shelve.end
       - compute.instance.unshelve.end
       - compute.instance.shelve_offload.end
-      - NODE_REBOOT
+      - NODE_REBOOTED
       - NODE_NODESCHEDULABLE
       - NODE_NODENOTSCHEDULABLE
       :detail:
