@@ -107,6 +107,12 @@
     :get_private_images: true
     :get_shared_images: true
     :get_public_images: false
+    # configure an array of filters to be added to describe_images
+    # see: http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method
+    :public_images_filters:
+      - :name: image-type
+        :values:
+          - machine
     :ignore_terminated_instances: true
   :ansible_tower_configuration:
     :refresh_interval: 15.minutes
