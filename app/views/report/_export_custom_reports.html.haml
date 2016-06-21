@@ -25,7 +25,18 @@
         :javascript
           $(":file").filestyle({icon: false, placeholder: "No file chosen"});
       .col-md-6
-        = submit_tag(_("Upload"), :class => "btn btn-default", :id => "upload_atags")
+        = submit_tag(_("Upload"), :class => "btn btn-default", :id => "upload_atags", :disabled => true)
+        :javascript
+          $("#upload_file").on("change",
+            function(){
+              if ($(this).val()){
+                $('#upload_atags').prop('disabled', false);
+              }
+              else {
+                $('#upload_atags').prop('disabled', true);
+              }
+            }
+          );
 %hr
 %h3
   = _('Export')
