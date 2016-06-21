@@ -229,12 +229,7 @@ module ApplicationController::Timelines
       cond = cond << temp_clause[0]
       params = temp_clause.slice(1, temp_clause.length)
 
-      if @tl_options.policy_events?
-        event_set = @tl_options.policy.event_set
-      else
-        event_set = @tl_options.mngt.event_set
-      end
-
+      event_set = @tl_options.event_set
       if !event_set.empty?
         if @tl_options.policy_events? && @tl_options.policy.result != "both"
           ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"

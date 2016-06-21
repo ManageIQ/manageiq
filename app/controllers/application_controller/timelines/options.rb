@@ -199,6 +199,10 @@ module ApplicationController::Timelines
       management_events? ? :event_streams : :policy_events
     end
 
+    def event_set
+      (policy_events? ? policy : mngt).event_set
+    end
+
     def drop_cache
       [policy, mngt].each(&:drop_cache)
     end
