@@ -562,14 +562,6 @@ module VimPropMaps
     }
   }
 
-  SpbmPropMap = {
-    :PbmProfile                  => {
-      :baseName => "@pbmProfiles",
-      :keyPath  => nil,
-      :props    => ["name"]
-    }
-  }
-
   def dupProps(pmap)
     raise "#{self.class.name}.dupProps: property map is not a Hash (#{pmap.class.name})" unless pmap.kind_of?(Hash)
     npmap = pmap.dup

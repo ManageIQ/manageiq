@@ -4,6 +4,7 @@ require 'enumerator'
 require 'VMwareWebService/MiqVimClientBase'
 require 'VMwareWebService/MiqVimDump'
 require 'VMwareWebService/VimPropMaps'
+require 'VMwareWebService/PbmPropMaps'
 require 'VMwareWebService/PbmService'
 
 class MiqVimInventory < MiqVimClientBase
@@ -71,8 +72,9 @@ class MiqVimInventory < MiqVimClientBase
     if @apiVersion >= '5.5'
       begin
         @pbm = PbmService.new(server, username, password)
-        @propMap = @propMap.merge(SpbmPropMap)
+        @pbmPropMap = PbmFullPropMap
       rescue
+        @pbm = nil
       end
     end
 
@@ -392,7 +394,9 @@ class MiqVimInventory < MiqVimClientBase
     @cacheLock.synchronize(:EX) do
       @inventoryHash = nil
 
-      @propMap.each_value do |pm|
+      propMaps = @propMap.merge(@pbmPropMap)
+
+      propMaps.each_value do |pm|
         instance_variable_set("#{pm[:baseName]}ByMor", nil)
         instance_variable_set(pm[:baseName], nil)
       end
