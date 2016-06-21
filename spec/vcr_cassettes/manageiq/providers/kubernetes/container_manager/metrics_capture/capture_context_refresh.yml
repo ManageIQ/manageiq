@@ -1,0 +1,564 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/pods
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:32 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"PodList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/pods","resourceVersion":"305393"},"items":[{"metadata":{"name":"router-1-73r9i","generateName":"router-1-","namespace":"default","selfLink":"/api/v1/namespaces/default/pods/router-1-73r9i","uid":"9f704ceb-394c-11e6-b9ad-001a4a2314d5","resourceVersion":"63797","creationTimestamp":"2016-06-23T14:13:13Z","labels":{"deployment":"router-1","deploymentconfig":"router","router":"router"},"annotations":{"kubernetes.io/created-by":"{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"default\",\"name\":\"router-1\",\"uid\":\"38761429-394c-11e6-b9ad-001a4a2314d5\",\"apiVersion\":\"v1\",\"resourceVersion\":\"475\"}}\n","openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"router","openshift.io/deployment.name":"router-1","openshift.io/scc":"privileged"}},"spec":{"volumes":[{"name":"router-token-4lb9l","secret":{"secretName":"router-token-4lb9l"}}],"containers":[{"name":"router","image":"openshift/origin-haproxy-router:v1.2.0","ports":[{"hostPort":80,"containerPort":80,"protocol":"TCP"},{"hostPort":443,"containerPort":443,"protocol":"TCP"},{"name":"stats","hostPort":1936,"containerPort":1936,"protocol":"TCP"}],"env":[{"name":"OPENSHIFT_CA_DATA","value":"-----BEGIN
+        CERTIFICATE-----\nMIIC5jCCAdCgAwIBAgIBATALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDY2NjkwNjE1MB4XDTE2MDYyMzE0MDMzNVoXDTIxMDYyMjE0\nMDMzNlowJjEkMCIGA1UEAwwbb3BlbnNoaWZ0LXNpZ25lckAxNDY2NjkwNjE1MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnoPvehqIzhg5zmFzKiKh91X\nWt+rhAfZFCKcHRoD84O4ZttJOmC3/Mk8dkuTD2+iTLs1AB5W6kjrlNv9xCaasVps\nW+NKwXc0+mlyrmMLH3dcc1lqdWn75Mfe02S1QpotIVHmse8eeTadZBajUpyPnMIG\nf8OBSlnSYjdVDGB4UFwbWQUb31i1kQApbEYOmJFw7Bd9CTdrFSJdtecC7MyQFiMk\nlN7dF3gYDu9lI/jmtAmLDMEOabnA5A0GPlUXWnMzqlrNXaKnhRmSY+FVvR2lpCOi\nITh0xWhoi8bTSvYSHF123Ra+2YUxeDxHilEw1PwC7MD7BEVQb3+VBF16VELoQQID\nAQABoyMwITAOBgNVHQ8BAf8EBAMCAKQwDwYDVR0TAQH/BAUwAwEB/zALBgkqhkiG\n9w0BAQsDggEBAA8SfAI8wNZXRhvKgE3s3OmNPVGfv6MFceuy4Iob39VGAQ9Vpvo6\nb4AckrPzraygVA5ay/dNMwjijc+dx8Tm/yR/Zo0UALPlEuV8vXgmr9O2wixYo6zN\n77++U2dGw5AK+gTZdXfEv+K4lgmQg24DEVNKzfHXcUhon/riTvOXuN9VqzP20qmN\ndAzk2/sV2okEapbKcyw46CSo/8ZCm4rMuZRWNFEgruYeHdqm5xw9R42BsERGF3lG\nMQ+ZsxpBW6SoUQKf6BRq5EaVewq0g0RJPSh1RiFldig5o+0omEEKzJRlDD7//KWV\ndeYquHcKtdJD3Ez7mTXL+l9878jTF+1i5Rk=\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_CERT_DATA","value":"-----BEGIN CERTIFICATE-----\nMIIDDTCCAfegAwIBAgIBCTALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDY2NjkwNjE1MB4XDTE2MDYyMzE0MDM0MVoXDTE4MDYyMzE0\nMDM0MlowOzEXMBUGA1UEChMOc3lzdGVtOnJvdXRlcnMxIDAeBgNVBAMTF3N5c3Rl\nbTpvcGVuc2hpZnQtcm91dGVyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC\nAQEA7IDJetu94jeQdo5ec05JYFsHV5BwB0CsOKXAGt+9v7FUZnTvaEBtDSY+mukm\nR2sBZMB+j8Cs0EdYAYaDm8c27dBsBRYh3mJDbooVWzlmb2migcF4UvFrYzbOK783\nLJHUFzWEqgeGZ99LavoQDocRhWP78TQl4+BQHemO1+nmaTImQUClHdtBgtW0QNkx\nHu2OlZ0KmyCIvUB3SmDnKAW5r8JLGD3OSpkeK/5EsQQdsdFT1J+hmR01wy1FGn9O\nHN5GeeYC4HP/eLzG89agwHO6c3NvpNX4wwRMGrObLL+wPQ0SGqcbRRid9iANRQiN\nRg1rMOyGe+96hDEAB4zn8xjUKQIDAQABozUwMzAOBgNVHQ8BAf8EBAMCAKAwEwYD\nVR0lBAwwCgYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADALBgkqhkiG9w0BAQsDggEB\nAAlWKfPHYAzug9nYGdhg0iZdRPK6ZN727v+PiWqDRswUypaaksS4VXtriRo611/8\nNgBmfWUgURPe14bp8bSOr/XnEeUBsgwEusVPkUJAdvpi4QZUnD3OwU2vmzAbeuwM\npnVaSGodEAIlLtL/LWYU/Lq54XxReO4HChK/I+g/fBvq3RsqowI75Y4OCGzx1LH0\nu4X0+Zhb6F4smAybZA1H2VLaykpr83ydApOuiKm0mmiJ5AEE7EZzHXDK6oExnHvQ\nANP5T2mGU/HweuETQ3D7FQGkrp3agIUQ/FSdThMT5hf2QFQsyH/Dy55sjaLYE8bF\nR9Osg9jg4/SKuAs4o+8pLx0=\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_INSECURE","value":"false"},{"name":"OPENSHIFT_KEY_DATA","value":"-----BEGIN
+        RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA7IDJetu94jeQdo5ec05JYFsHV5BwB0CsOKXAGt+9v7FUZnTv\naEBtDSY+mukmR2sBZMB+j8Cs0EdYAYaDm8c27dBsBRYh3mJDbooVWzlmb2migcF4\nUvFrYzbOK783LJHUFzWEqgeGZ99LavoQDocRhWP78TQl4+BQHemO1+nmaTImQUCl\nHdtBgtW0QNkxHu2OlZ0KmyCIvUB3SmDnKAW5r8JLGD3OSpkeK/5EsQQdsdFT1J+h\nmR01wy1FGn9OHN5GeeYC4HP/eLzG89agwHO6c3NvpNX4wwRMGrObLL+wPQ0SGqcb\nRRid9iANRQiNRg1rMOyGe+96hDEAB4zn8xjUKQIDAQABAoIBAQCOuGVd48+h/UAL\nm3y5/qtfH2+90ucYKVoE0VmtngnG7X9uWPDEq+RjRAoRt9Mm1BdCMrvtiit/gR5F\nxWQUlNK8DsOxChskNY5V3bRnmasMXuX3gcZX32Kbu84NLlZgahxgaSaG6QWeF21O\nwFsCOVZEdgLrGzomWw5eDrzp5TfrkHP09WcNRRGEpFZOcw33zi71WPVBilcasa7w\niT10cGq7bzm4q3rvzE8bOausdhUPpa2BcV37zf+Zu+FXRK8C7d5shJIn21rxBS5e\nvdnzbzsvByG4P5B1aLrk8SVZ5FYvjR6XD1te1tRlyd1uvBQOT3gb2P3qVgkGZ3mi\nbDWTewi1AoGBAPajZXummYR2W5erPk1nqTwqCyLK92RlIbrxKI9BZ3aBxu+LKXWS\nYnrFKxM4gtmU1ZUKxJzvHERdB0OrsQWIYGxUzDrW8cgY+qSCIKO3WStA3Mu0zpm/\njN2k97zyqcfa/cTao4S6LB57Ag1XarKrYJPdHVoX4i75la6BbEfjEuRzAoGBAPV6\n5/jRKMYHVPhS+e37ojAuX/m6JGma256n0FreGBiGDAzpWBUYMx/DfLcAQ69pP+/p\nQ2YWfAl8maHLJjKgTjplSxaVgm5kWM27leqyHLX7Z3rYO3YNEjscoguiduX+yBrA\nzqsruXADUesHjpk0g+Cbis6qmEYveGjO05ccylnzAoGAHD15UT8yNMiYlDU3XQWR\niyIFRGaZDRXHVvBmBIEop5kUfjkg9iVcwVHyLLE7yk4QZpBlEtMOGYXNXyI5kria\n0cyj1djmtlKl4FBGDHjh7OHwZiK9xTz5lCdfdnMSnZ+ljvS55GisxJCxG3X28Z5N\n4KBgzAAQFfDeAq0vCMwnTaECgYEAto2FLwtUeBgBv33tcWZ9UblbFFqyM3q/Mjh4\nAOtDHhGpqnxpTZ6mfkuhVnIy46KwsphUz/mOmnt3wNNTf7ipFFI5yfy7d57WT4Dd\n1yBHq6nfZYKijYLg+OatN1vFcfrMEuEpkC+/AqblZ5RCHnroS8NAMbq57Q/mSoLs\n5Wa6sLMCgYADcL3bhu6OXlyeMRdUYGxxR/jFYA7KDC3EYkKEcQyVOdDSIve66C8e\ntsqXAVjPyRn0SAFnUvGgDY66IvM+THOOoeauOuy5qzeGXSdvZu4SDQTto+KJMzHt\n/JkrG4K3JYrTBrwUapLE+gmQmDIRuLLhacWmIdc4falkglrNkQjQsQ==\n-----END
+        RSA PRIVATE KEY-----\n"},{"name":"OPENSHIFT_MASTER","value":"https://yzamir-centos7-1.example.com:8443"},{"name":"ROUTER_EXTERNAL_HOST_HOSTNAME"},{"name":"ROUTER_EXTERNAL_HOST_HTTPS_VSERVER"},{"name":"ROUTER_EXTERNAL_HOST_HTTP_VSERVER"},{"name":"ROUTER_EXTERNAL_HOST_INSECURE","value":"false"},{"name":"ROUTER_EXTERNAL_HOST_PARTITION_PATH"},{"name":"ROUTER_EXTERNAL_HOST_PASSWORD"},{"name":"ROUTER_EXTERNAL_HOST_PRIVKEY","value":"/etc/secret-volume/router.pem"},{"name":"ROUTER_EXTERNAL_HOST_USERNAME"},{"name":"ROUTER_SERVICE_HTTPS_PORT","value":"443"},{"name":"ROUTER_SERVICE_HTTP_PORT","value":"80"},{"name":"ROUTER_SERVICE_NAME","value":"router"},{"name":"ROUTER_SERVICE_NAMESPACE","value":"default"},{"name":"ROUTER_SUBDOMAIN"},{"name":"STATS_PASSWORD","value":"DVYEDBYBcD"},{"name":"STATS_PORT","value":"1936"},{"name":"STATS_USERNAME","value":"admin"}],"resources":{},"volumeMounts":[{"name":"router-token-4lb9l","readOnly":true,"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount"}],"livenessProbe":{"httpGet":{"path":"/healthz","port":1936,"host":"localhost","scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/healthz","port":1936,"host":"localhost","scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent","securityContext":{"privileged":false}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","nodeSelector":{"region":"infra"},"host":"yzamir-centos7-1.example.com","serviceAccountName":"router","serviceAccount":"router","nodeName":"yzamir-centos7-1.example.com","hostNetwork":true,"securityContext":{},"imagePullSecrets":[{"name":"router-dockercfg-3ez1i"}]},"status":{"phase":"Running","conditions":[{"type":"Ready","status":"True","lastProbeTime":null,"lastTransitionTime":"2016-06-27T06:55:20Z"}],"hostIP":"10.35.19.246","podIP":"10.35.19.246","startTime":"2016-06-23T14:13:13Z","containerStatuses":[{"name":"router","state":{"running":{"startedAt":"2016-06-27T06:55:03Z"}},"lastState":{"terminated":{"exitCode":2,"reason":"Error","startedAt":"2016-06-26T12:35:04Z","finishedAt":"2016-06-27T06:53:06Z","containerID":"docker://5b69cd09d1b1f131f52565d3c5756d40be9c4a0c536d6924345f07d89412e463"}},"ready":true,"restartCount":2,"image":"openshift/origin-haproxy-router:v1.2.0","imageID":"docker://776edb24a754a541db587d902e8fa3b9ed2058d3bb7463dd2965a2f6e5bd0305","containerID":"docker://7f9be8fb8820682e9964f7bc1b92a90bd4e8106588d9a51e011d0d27c285bf62"}]}},{"metadata":{"name":"hawkular-cassandra-1-vfp1j","generateName":"hawkular-cassandra-1-","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/pods/hawkular-cassandra-1-vfp1j","uid":"5f81ed90-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63812","creationTimestamp":"2016-06-23T14:18:35Z","labels":{"metrics-infra":"hawkular-cassandra","name":"hawkular-cassandra-1","type":"hawkular-cassandra"},"annotations":{"kubernetes.io/created-by":"{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"openshift-infra\",\"name\":\"hawkular-cassandra-1\",\"uid\":\"5f7faf21-394d-11e6-b9ad-001a4a2314d5\",\"apiVersion\":\"v1\",\"resourceVersion\":\"620\"}}\n","openshift.io/scc":"restricted"}},"spec":{"volumes":[{"name":"cassandra-data","emptyDir":{}},{"name":"hawkular-cassandra-secrets","secret":{"secretName":"hawkular-cassandra-secrets"}},{"name":"cassandra-token-k5e2z","secret":{"secretName":"cassandra-token-k5e2z"}}],"containers":[{"name":"hawkular-cassandra-1","image":"openshift/origin-metrics-cassandra:latest","command":["/opt/apache-cassandra/bin/cassandra-docker.sh","--cluster_name=hawkular-metrics","--data_volume=/cassandra_data","--internode_encryption=all","--require_node_auth=true","--enable_client_encryption=true","--require_client_auth=true","--keystore_file=/secret/cassandra.keystore","--keystore_password_file=/secret/cassandra.keystore.password","--truststore_file=/secret/cassandra.truststore","--truststore_password_file=/secret/cassandra.truststore.password","--cassandra_pem_file=/secret/cassandra.pem"],"ports":[{"name":"cql-port","containerPort":9042,"protocol":"TCP"},{"name":"thift-port","containerPort":9160,"protocol":"TCP"},{"name":"tcp-port","containerPort":7000,"protocol":"TCP"},{"name":"ssl-port","containerPort":7001,"protocol":"TCP"}],"env":[{"name":"CASSANDRA_MASTER","value":"true"},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.namespace"}}}],"resources":{},"volumeMounts":[{"name":"cassandra-data","mountPath":"/cassandra_data"},{"name":"hawkular-cassandra-secrets","mountPath":"/secret"},{"name":"cassandra-token-k5e2z","readOnly":true,"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount"}],"readinessProbe":{"exec":{"command":["/opt/apache-cassandra/bin/cassandra-docker-ready.sh"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always","securityContext":{"capabilities":{"drop":["KILL","MKNOD","SETGID","SETUID","SYS_CHROOT"]},"privileged":false,"seLinuxOptions":{"level":"s0:c3,c2"},"runAsUser":1000010000}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","host":"yzamir-centos7-1.example.com","serviceAccountName":"cassandra","serviceAccount":"cassandra","nodeName":"yzamir-centos7-1.example.com","securityContext":{"seLinuxOptions":{"level":"s0:c3,c2"},"fsGroup":1000010000},"imagePullSecrets":[{"name":"cassandra-dockercfg-x6a8f"}]},"status":{"phase":"Running","conditions":[{"type":"Ready","status":"True","lastProbeTime":null,"lastTransitionTime":"2016-06-27T06:55:47Z"}],"hostIP":"10.35.19.246","podIP":"10.1.1.2","startTime":"2016-06-23T14:18:35Z","containerStatuses":[{"name":"hawkular-cassandra-1","state":{"running":{"startedAt":"2016-06-27T06:55:07Z"}},"lastState":{"terminated":{"exitCode":143,"reason":"Error","startedAt":"2016-06-26T12:35:09Z","finishedAt":"2016-06-27T06:53:09Z","containerID":"docker://7ec11b3a048ce8655fec36743bb033294bd6467f3fc8f42685a86d8a4a809310"}},"ready":true,"restartCount":2,"image":"openshift/origin-metrics-cassandra:latest","imageID":"docker://6d6dd0e70021029a377d16ade7070a455e9c71726832a53d410cab80f43ed576","containerID":"docker://21679206a84c653fe73c3d20392b705a6a778ff0ab3fe34b39000415c03e1129"}]}},{"metadata":{"name":"hawkular-metrics-69i35","generateName":"hawkular-metrics-","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/pods/hawkular-metrics-69i35","uid":"655fb45f-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63821","creationTimestamp":"2016-06-23T14:18:45Z","labels":{"metrics-infra":"hawkular-metrics","name":"hawkular-metrics"},"annotations":{"kubernetes.io/created-by":"{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"openshift-infra\",\"name\":\"hawkular-metrics\",\"uid\":\"5eb580d5-394d-11e6-b9ad-001a4a2314d5\",\"apiVersion\":\"v1\",\"resourceVersion\":\"597\"}}\n","openshift.io/scc":"restricted"}},"spec":{"volumes":[{"name":"hawkular-metrics-secrets","secret":{"secretName":"hawkular-metrics-secrets"}},{"name":"hawkular-token-zgis9","secret":{"secretName":"hawkular-token-zgis9"}}],"containers":[{"name":"hawkular-metrics","image":"openshift/origin-metrics-hawkular-metrics:latest","command":["/opt/hawkular/scripts/hawkular-metrics-wrapper.sh","-b","0.0.0.0","-Dhawkular-metrics.cassandra-nodes=hawkular-cassandra","-Dhawkular-metrics.cassandra-use-ssl","-Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true","-Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true","-Dhawkular-metrics.openshift.auth-methods=openshift-oauth,htpasswd","-Dhawkular-metrics.openshift.htpasswd-file=/secrets/hawkular-metrics.htpasswd.file","-Dhawkular.metrics.allowed-cors-access-control-allow-headers=authorization","-Dhawkular.metrics.default-ttl=7","-DKUBERNETES_MASTER_URL=https://kubernetes.default.svc:443","--hmw.keystore=/secrets/hawkular-metrics.keystore","--hmw.truststore=/secrets/hawkular-metrics.truststore","--hmw.keystore_password_file=/secrets/hawkular-metrics.keystore.password","--hmw.truststore_password_file=/secrets/hawkular-metrics.truststore.password"],"ports":[{"name":"http-endpoint","containerPort":8080,"protocol":"TCP"},{"name":"https-endpoint","containerPort":8443,"protocol":"TCP"}],"env":[{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.namespace"}}}],"resources":{},"volumeMounts":[{"name":"hawkular-metrics-secrets","mountPath":"/secrets"},{"name":"hawkular-token-zgis9","readOnly":true,"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount"}],"livenessProbe":{"exec":{"command":["/opt/hawkular/scripts/hawkular-metrics-liveness.py"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/opt/hawkular/scripts/hawkular-metrics-readiness.py"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always","securityContext":{"capabilities":{"drop":["KILL","MKNOD","SETGID","SETUID","SYS_CHROOT"]},"privileged":false,"seLinuxOptions":{"level":"s0:c3,c2"},"runAsUser":1000010000}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","host":"yzamir-centos7-1.example.com","serviceAccountName":"hawkular","serviceAccount":"hawkular","nodeName":"yzamir-centos7-1.example.com","securityContext":{"seLinuxOptions":{"level":"s0:c3,c2"},"fsGroup":1000010000},"imagePullSecrets":[{"name":"hawkular-dockercfg-ylrhy"}]},"status":{"phase":"Running","conditions":[{"type":"Ready","status":"True","lastProbeTime":null,"lastTransitionTime":"2016-06-27T06:56:01Z"}],"hostIP":"10.35.19.246","podIP":"10.1.1.4","startTime":"2016-06-23T14:18:45Z","containerStatuses":[{"name":"hawkular-metrics","state":{"running":{"startedAt":"2016-06-27T06:55:08Z"}},"lastState":{"terminated":{"exitCode":137,"reason":"Error","startedAt":"2016-06-26T12:35:11Z","finishedAt":"2016-06-27T06:53:16Z","containerID":"docker://11e4ac80455a137dd65662be5676ce4caf1d2b511cb0462de20f608c69b3f927"}},"ready":true,"restartCount":2,"image":"openshift/origin-metrics-hawkular-metrics:latest","imageID":"docker://e4674f2cf9f66ed72a37bc1ce452d6002a51b0be40a96a8799b638de782af2f5","containerID":"docker://a26a1cefdba9d02b16d4f1d14aed542b4a4b10868c7ca00caaddaf8f6d7cbf2e"}]}},{"metadata":{"name":"heapster-5j7ot","generateName":"heapster-","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/pods/heapster-5j7ot","uid":"60c82bb2-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63825","creationTimestamp":"2016-06-23T14:18:38Z","labels":{"metrics-infra":"heapster","name":"heapster"},"annotations":{"kubernetes.io/created-by":"{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"openshift-infra\",\"name\":\"heapster\",\"uid\":\"60befa8a-394d-11e6-b9ad-001a4a2314d5\",\"apiVersion\":\"v1\",\"resourceVersion\":\"639\"}}\n","openshift.io/scc":"restricted"}},"spec":{"volumes":[{"name":"heapster-secrets","secret":{"secretName":"heapster-secrets"}},{"name":"hawkular-metrics-certificate","secret":{"secretName":"hawkular-metrics-certificate"}},{"name":"hawkular-metrics-account","secret":{"secretName":"hawkular-metrics-account"}},{"name":"heapster-token-eckqx","secret":{"secretName":"heapster-token-eckqx"}}],"containers":[{"name":"heapster","image":"openshift/origin-metrics-heapster:latest","command":["heapster-wrapper.sh","--wrapper.username_file=/hawkular-account/hawkular-metrics.username","--wrapper.password_file=/hawkular-account/hawkular-metrics.password","--wrapper.allowed_users_file=/secrets/heapster.allowed-users","--wrapper.endpoint_check=https://hawkular-metrics:443/hawkular/metrics/status","--source=kubernetes:https://kubernetes.default.svc:443?useServiceAccount=true\u0026kubeletHttps=true\u0026kubeletPort=10250","--sink=hawkular:https://hawkular-metrics:443?tenant=_system\u0026labelToTenant=pod_namespace\u0026labelNodeId=nodename\u0026caCert=/hawkular-cert/hawkular-metrics-ca.certificate\u0026user=%username%\u0026pass=%password%\u0026filter=label(container_name:^system.slice.*|^user.slice)","--tls_cert=/secrets/heapster.cert","--tls_key=/secrets/heapster.key","--tls_client_ca=/secrets/heapster.client-ca","--allowed_users=%allowed_users%","--metric_resolution=10s"],"ports":[{"name":"http-endpoint","containerPort":8082,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"heapster-secrets","mountPath":"/secrets"},{"name":"hawkular-metrics-certificate","mountPath":"/hawkular-cert"},{"name":"hawkular-metrics-account","mountPath":"/hawkular-account"},{"name":"heapster-token-eckqx","readOnly":true,"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount"}],"readinessProbe":{"exec":{"command":["/opt/heapster-readiness.sh"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always","securityContext":{"capabilities":{"drop":["KILL","MKNOD","SETGID","SETUID","SYS_CHROOT"]},"privileged":false,"seLinuxOptions":{"level":"s0:c3,c2"},"runAsUser":1000010000}}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","host":"yzamir-centos7-1.example.com","serviceAccountName":"heapster","serviceAccount":"heapster","nodeName":"yzamir-centos7-1.example.com","securityContext":{"seLinuxOptions":{"level":"s0:c3,c2"},"fsGroup":1000010000},"imagePullSecrets":[{"name":"heapster-dockercfg-2m3b5"}]},"status":{"phase":"Running","conditions":[{"type":"Ready","status":"True","lastProbeTime":null,"lastTransitionTime":"2016-06-27T06:56:10Z"}],"hostIP":"10.35.19.246","podIP":"10.1.1.3","startTime":"2016-06-23T14:18:38Z","containerStatuses":[{"name":"heapster","state":{"running":{"startedAt":"2016-06-27T06:55:11Z"}},"lastState":{"terminated":{"exitCode":2,"reason":"Error","startedAt":"2016-06-26T12:35:09Z","finishedAt":"2016-06-27T06:53:06Z","containerID":"docker://6aad1a523a1a916b79aaed77aea7467c2f66db106cb2602517d854fdf246874d"}},"ready":true,"restartCount":3,"image":"openshift/origin-metrics-heapster:latest","imageID":"docker://a0fa5441a392d5b0c3b0eb282213c0e76307210f32da29c42249eb518ac95e8e","containerID":"docker://89f64871751d715c238323c48cf4cf355e61153397771654b1daf2be14b9517a"}]}},{"metadata":{"name":"metrics-deployer-i30zt","generateName":"metrics-deployer-","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/pods/metrics-deployer-i30zt","uid":"1a8b054f-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"1755","creationTimestamp":"2016-06-23T14:16:40Z","labels":{"component":"deployer","metrics-infra":"deployer","provider":"openshift"},"annotations":{"openshift.io/generated-by":"OpenShiftNewApp","openshift.io/scc":"anyuid"}},"spec":{"volumes":[{"name":"empty","emptyDir":{}},{"name":"secret","secret":{"secretName":"metrics-deployer"}},{"name":"metrics-deployer-token-g5kf8","secret":{"secretName":"metrics-deployer-token-g5kf8"}}],"containers":[{"name":"deployer","image":"openshift/origin-metrics-deployer:latest","env":[{"name":"PROJECT","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.namespace"}}},{"name":"POD_NAME","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.name"}}},{"name":"IMAGE_PREFIX","value":"openshift/origin-"},{"name":"IMAGE_VERSION","value":"latest"},{"name":"MASTER_URL","value":"https://kubernetes.default.svc:443"},{"name":"MODE","value":"deploy"},{"name":"REDEPLOY","value":"false"},{"name":"IGNORE_PREFLIGHT","value":"false"},{"name":"USE_PERSISTENT_STORAGE","value":"false"},{"name":"HAWKULAR_METRICS_HOSTNAME","value":"yzamir-centos7-1.example.com"},{"name":"CASSANDRA_NODES","value":"1"},{"name":"CASSANDRA_PV_SIZE","value":"10Gi"},{"name":"METRIC_DURATION","value":"7"},{"name":"HEAPSTER_NODE_ID","value":"nodename"},{"name":"METRIC_RESOLUTION","value":"10s"}],"resources":{},"volumeMounts":[{"name":"secret","readOnly":true,"mountPath":"/secret"},{"name":"empty","mountPath":"/etc/deploy"},{"name":"metrics-deployer-token-g5kf8","readOnly":true,"mountPath":"/var/run/secrets/kubernetes.io/serviceaccount"}],"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always","securityContext":{"capabilities":{"drop":["KILL","MKNOD","SYS_CHROOT"]},"privileged":false,"seLinuxOptions":{"level":"s0:c3,c2"}}}],"restartPolicy":"Never","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","host":"yzamir-centos7-1.example.com","serviceAccountName":"metrics-deployer","serviceAccount":"metrics-deployer","nodeName":"yzamir-centos7-1.example.com","securityContext":{"seLinuxOptions":{"level":"s0:c3,c2"}},"imagePullSecrets":[{"name":"metrics-deployer-dockercfg-fzj3u"}]},"status":{"phase":"Succeeded","conditions":[{"type":"Ready","status":"False","lastProbeTime":null,"lastTransitionTime":"2016-06-23T15:46:26Z","reason":"PodCompleted"}],"hostIP":"10.35.19.246","podIP":"10.1.1.2","startTime":"2016-06-23T14:16:40Z","containerStatuses":[{"name":"deployer","state":{"terminated":{"exitCode":0,"reason":"Completed","startedAt":"2016-06-23T14:18:23Z","finishedAt":"2016-06-23T15:46:26Z","containerID":"docker://6a351cd5c48cbb21fba330ef27806a520b0b1da6dcf8885358f41a21e634ab4b"}},"lastState":{},"ready":false,"restartCount":0,"image":"openshift/origin-metrics-deployer:latest","imageID":"docker://f36b797c774c94cd442f48adc1015370513462f9099ea430261874ba602e1701","containerID":"docker://6a351cd5c48cbb21fba330ef27806a520b0b1da6dcf8885358f41a21e634ab4b"}]}}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:32 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/services
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"ServiceList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/services","resourceVersion":"305393"},"items":[{"metadata":{"name":"kubernetes","namespace":"default","selfLink":"/api/v1/namespaces/default/services/kubernetes","uid":"8daee302-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"7","creationTimestamp":"2016-06-23T14:05:34Z","labels":{"component":"apiserver","provider":"kubernetes"}},"spec":{"ports":[{"name":"https","protocol":"TCP","port":443,"targetPort":443},{"name":"dns","protocol":"UDP","port":53,"targetPort":8053},{"name":"dns-tcp","protocol":"TCP","port":53,"targetPort":8053}],"portalIP":"172.30.0.1","clusterIP":"172.30.0.1","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"router","namespace":"default","selfLink":"/api/v1/namespaces/default/services/router","uid":"3872f86f-394c-11e6-b9ad-001a4a2314d5","resourceVersion":"425","creationTimestamp":"2016-06-23T14:10:20Z","labels":{"router":"router"}},"spec":{"ports":[{"name":"80-tcp","protocol":"TCP","port":80,"targetPort":80},{"name":"443-tcp","protocol":"TCP","port":443,"targetPort":443},{"name":"1936-tcp","protocol":"TCP","port":1936,"targetPort":1936}],"selector":{"router":"router"},"portalIP":"172.30.118.49","clusterIP":"172.30.118.49","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"hawkular-cassandra","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/services/hawkular-cassandra","uid":"5eed91cf-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"600","creationTimestamp":"2016-06-23T14:18:34Z","labels":{"metrics-infra":"hawkular-cassandra","name":"hawkular-cassandra"}},"spec":{"ports":[{"name":"cql-port","protocol":"TCP","port":9042,"targetPort":"cql-port"},{"name":"thift-port","protocol":"TCP","port":9160,"targetPort":"thift-port"},{"name":"tcp-port","protocol":"TCP","port":7000,"targetPort":"tcp-port"},{"name":"ssl-port","protocol":"TCP","port":7001,"targetPort":"ssl-port"}],"selector":{"type":"hawkular-cassandra"},"portalIP":"172.30.230.216","clusterIP":"172.30.230.216","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"hawkular-cassandra-nodes","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/services/hawkular-cassandra-nodes","uid":"5ef04612-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"602","creationTimestamp":"2016-06-23T14:18:34Z","labels":{"metrics-infra":"hawkular-cassandra","name":"hawkular-cassandra"}},"spec":{"ports":[{"name":"cql-port","protocol":"TCP","port":9042,"targetPort":9042},{"name":"thift-port","protocol":"TCP","port":9160,"targetPort":9160},{"name":"tcp-port","protocol":"TCP","port":7000,"targetPort":7000},{"name":"ssl-port","protocol":"TCP","port":7001,"targetPort":7001}],"selector":{"type":"hawkular-cassandra"},"portalIP":"None","clusterIP":"None","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"hawkular-metrics","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/services/hawkular-metrics","uid":"5eb04705-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"593","creationTimestamp":"2016-06-23T14:18:34Z","labels":{"metrics-infra":"hawkular-metrics","name":"hawkular-metrics"}},"spec":{"ports":[{"name":"https-endpoint","protocol":"TCP","port":443,"targetPort":"https-endpoint"}],"selector":{"name":"hawkular-metrics"},"portalIP":"172.30.88.95","clusterIP":"172.30.88.95","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}},{"metadata":{"name":"heapster","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/services/heapster","uid":"60b8e0f9-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"635","creationTimestamp":"2016-06-23T14:18:37Z","labels":{"metrics-infra":"heapster","name":"heapster"}},"spec":{"ports":[{"protocol":"TCP","port":80,"targetPort":"http-endpoint"}],"selector":{"name":"heapster"},"portalIP":"172.30.139.95","clusterIP":"172.30.139.95","type":"ClusterIP","sessionAffinity":"None"},"status":{"loadBalancer":{}}}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/replicationcontrollers
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"ReplicationControllerList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/replicationcontrollers","resourceVersion":"305393"},"items":[{"metadata":{"name":"router-1","namespace":"default","selfLink":"/api/v1/namespaces/default/replicationcontrollers/router-1","uid":"38761429-394c-11e6-b9ad-001a4a2314d5","resourceVersion":"519","generation":2,"creationTimestamp":"2016-06-23T14:10:20Z","labels":{"openshift.io/deployment-config.name":"router","router":"router"},"annotations":{"openshift.io/deployer-pod.name":"router-1-deploy","openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"router","openshift.io/deployment.phase":"Complete","openshift.io/deployment.replicas":"1","openshift.io/encoded-deployment-config":"{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"router\",\"namespace\":\"default\",\"selfLink\":\"/oapi/v1/namespaces/default/deploymentconfigs/router\",\"uid\":\"386f6487-394c-11e6-b9ad-001a4a2314d5\",\"resourceVersion\":\"424\",\"creationTimestamp\":\"2016-06-23T14:10:20Z\",\"labels\":{\"router\":\"router\"}},\"spec\":{\"strategy\":{\"type\":\"Rolling\",\"rollingParams\":{\"updatePeriodSeconds\":1,\"intervalSeconds\":1,\"timeoutSeconds\":600,\"maxUnavailable\":\"25%\",\"maxSurge\":0,\"updatePercent\":-25},\"resources\":{}},\"triggers\":[{\"type\":\"ConfigChange\"}],\"replicas\":1,\"test\":false,\"selector\":{\"router\":\"router\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"router\":\"router\"}},\"spec\":{\"containers\":[{\"name\":\"router\",\"image\":\"openshift/origin-haproxy-router:v1.2.0\",\"ports\":[{\"hostPort\":80,\"containerPort\":80,\"protocol\":\"TCP\"},{\"hostPort\":443,\"containerPort\":443,\"protocol\":\"TCP\"},{\"name\":\"stats\",\"hostPort\":1936,\"containerPort\":1936,\"protocol\":\"TCP\"}],\"env\":[{\"name\":\"OPENSHIFT_CA_DATA\",\"value\":\"-----BEGIN
+        CERTIFICATE-----\\nMIIC5jCCAdCgAwIBAgIBATALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\\naWZ0LXNpZ25lckAxNDY2NjkwNjE1MB4XDTE2MDYyMzE0MDMzNVoXDTIxMDYyMjE0\\nMDMzNlowJjEkMCIGA1UEAwwbb3BlbnNoaWZ0LXNpZ25lckAxNDY2NjkwNjE1MIIB\\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnoPvehqIzhg5zmFzKiKh91X\\nWt+rhAfZFCKcHRoD84O4ZttJOmC3/Mk8dkuTD2+iTLs1AB5W6kjrlNv9xCaasVps\\nW+NKwXc0+mlyrmMLH3dcc1lqdWn75Mfe02S1QpotIVHmse8eeTadZBajUpyPnMIG\\nf8OBSlnSYjdVDGB4UFwbWQUb31i1kQApbEYOmJFw7Bd9CTdrFSJdtecC7MyQFiMk\\nlN7dF3gYDu9lI/jmtAmLDMEOabnA5A0GPlUXWnMzqlrNXaKnhRmSY+FVvR2lpCOi\\nITh0xWhoi8bTSvYSHF123Ra+2YUxeDxHilEw1PwC7MD7BEVQb3+VBF16VELoQQID\\nAQABoyMwITAOBgNVHQ8BAf8EBAMCAKQwDwYDVR0TAQH/BAUwAwEB/zALBgkqhkiG\\n9w0BAQsDggEBAA8SfAI8wNZXRhvKgE3s3OmNPVGfv6MFceuy4Iob39VGAQ9Vpvo6\\nb4AckrPzraygVA5ay/dNMwjijc+dx8Tm/yR/Zo0UALPlEuV8vXgmr9O2wixYo6zN\\n77++U2dGw5AK+gTZdXfEv+K4lgmQg24DEVNKzfHXcUhon/riTvOXuN9VqzP20qmN\\ndAzk2/sV2okEapbKcyw46CSo/8ZCm4rMuZRWNFEgruYeHdqm5xw9R42BsERGF3lG\\nMQ+ZsxpBW6SoUQKf6BRq5EaVewq0g0RJPSh1RiFldig5o+0omEEKzJRlDD7//KWV\\ndeYquHcKtdJD3Ez7mTXL+l9878jTF+1i5Rk=\\n-----END
+        CERTIFICATE-----\\n\"},{\"name\":\"OPENSHIFT_CERT_DATA\",\"value\":\"-----BEGIN
+        CERTIFICATE-----\\nMIIDDTCCAfegAwIBAgIBCTALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\\naWZ0LXNpZ25lckAxNDY2NjkwNjE1MB4XDTE2MDYyMzE0MDM0MVoXDTE4MDYyMzE0\\nMDM0MlowOzEXMBUGA1UEChMOc3lzdGVtOnJvdXRlcnMxIDAeBgNVBAMTF3N5c3Rl\\nbTpvcGVuc2hpZnQtcm91dGVyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC\\nAQEA7IDJetu94jeQdo5ec05JYFsHV5BwB0CsOKXAGt+9v7FUZnTvaEBtDSY+mukm\\nR2sBZMB+j8Cs0EdYAYaDm8c27dBsBRYh3mJDbooVWzlmb2migcF4UvFrYzbOK783\\nLJHUFzWEqgeGZ99LavoQDocRhWP78TQl4+BQHemO1+nmaTImQUClHdtBgtW0QNkx\\nHu2OlZ0KmyCIvUB3SmDnKAW5r8JLGD3OSpkeK/5EsQQdsdFT1J+hmR01wy1FGn9O\\nHN5GeeYC4HP/eLzG89agwHO6c3NvpNX4wwRMGrObLL+wPQ0SGqcbRRid9iANRQiN\\nRg1rMOyGe+96hDEAB4zn8xjUKQIDAQABozUwMzAOBgNVHQ8BAf8EBAMCAKAwEwYD\\nVR0lBAwwCgYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADALBgkqhkiG9w0BAQsDggEB\\nAAlWKfPHYAzug9nYGdhg0iZdRPK6ZN727v+PiWqDRswUypaaksS4VXtriRo611/8\\nNgBmfWUgURPe14bp8bSOr/XnEeUBsgwEusVPkUJAdvpi4QZUnD3OwU2vmzAbeuwM\\npnVaSGodEAIlLtL/LWYU/Lq54XxReO4HChK/I+g/fBvq3RsqowI75Y4OCGzx1LH0\\nu4X0+Zhb6F4smAybZA1H2VLaykpr83ydApOuiKm0mmiJ5AEE7EZzHXDK6oExnHvQ\\nANP5T2mGU/HweuETQ3D7FQGkrp3agIUQ/FSdThMT5hf2QFQsyH/Dy55sjaLYE8bF\\nR9Osg9jg4/SKuAs4o+8pLx0=\\n-----END
+        CERTIFICATE-----\\n\"},{\"name\":\"OPENSHIFT_INSECURE\",\"value\":\"false\"},{\"name\":\"OPENSHIFT_KEY_DATA\",\"value\":\"-----BEGIN
+        RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEA7IDJetu94jeQdo5ec05JYFsHV5BwB0CsOKXAGt+9v7FUZnTv\\naEBtDSY+mukmR2sBZMB+j8Cs0EdYAYaDm8c27dBsBRYh3mJDbooVWzlmb2migcF4\\nUvFrYzbOK783LJHUFzWEqgeGZ99LavoQDocRhWP78TQl4+BQHemO1+nmaTImQUCl\\nHdtBgtW0QNkxHu2OlZ0KmyCIvUB3SmDnKAW5r8JLGD3OSpkeK/5EsQQdsdFT1J+h\\nmR01wy1FGn9OHN5GeeYC4HP/eLzG89agwHO6c3NvpNX4wwRMGrObLL+wPQ0SGqcb\\nRRid9iANRQiNRg1rMOyGe+96hDEAB4zn8xjUKQIDAQABAoIBAQCOuGVd48+h/UAL\\nm3y5/qtfH2+90ucYKVoE0VmtngnG7X9uWPDEq+RjRAoRt9Mm1BdCMrvtiit/gR5F\\nxWQUlNK8DsOxChskNY5V3bRnmasMXuX3gcZX32Kbu84NLlZgahxgaSaG6QWeF21O\\nwFsCOVZEdgLrGzomWw5eDrzp5TfrkHP09WcNRRGEpFZOcw33zi71WPVBilcasa7w\\niT10cGq7bzm4q3rvzE8bOausdhUPpa2BcV37zf+Zu+FXRK8C7d5shJIn21rxBS5e\\nvdnzbzsvByG4P5B1aLrk8SVZ5FYvjR6XD1te1tRlyd1uvBQOT3gb2P3qVgkGZ3mi\\nbDWTewi1AoGBAPajZXummYR2W5erPk1nqTwqCyLK92RlIbrxKI9BZ3aBxu+LKXWS\\nYnrFKxM4gtmU1ZUKxJzvHERdB0OrsQWIYGxUzDrW8cgY+qSCIKO3WStA3Mu0zpm/\\njN2k97zyqcfa/cTao4S6LB57Ag1XarKrYJPdHVoX4i75la6BbEfjEuRzAoGBAPV6\\n5/jRKMYHVPhS+e37ojAuX/m6JGma256n0FreGBiGDAzpWBUYMx/DfLcAQ69pP+/p\\nQ2YWfAl8maHLJjKgTjplSxaVgm5kWM27leqyHLX7Z3rYO3YNEjscoguiduX+yBrA\\nzqsruXADUesHjpk0g+Cbis6qmEYveGjO05ccylnzAoGAHD15UT8yNMiYlDU3XQWR\\niyIFRGaZDRXHVvBmBIEop5kUfjkg9iVcwVHyLLE7yk4QZpBlEtMOGYXNXyI5kria\\n0cyj1djmtlKl4FBGDHjh7OHwZiK9xTz5lCdfdnMSnZ+ljvS55GisxJCxG3X28Z5N\\n4KBgzAAQFfDeAq0vCMwnTaECgYEAto2FLwtUeBgBv33tcWZ9UblbFFqyM3q/Mjh4\\nAOtDHhGpqnxpTZ6mfkuhVnIy46KwsphUz/mOmnt3wNNTf7ipFFI5yfy7d57WT4Dd\\n1yBHq6nfZYKijYLg+OatN1vFcfrMEuEpkC+/AqblZ5RCHnroS8NAMbq57Q/mSoLs\\n5Wa6sLMCgYADcL3bhu6OXlyeMRdUYGxxR/jFYA7KDC3EYkKEcQyVOdDSIve66C8e\\ntsqXAVjPyRn0SAFnUvGgDY66IvM+THOOoeauOuy5qzeGXSdvZu4SDQTto+KJMzHt\\n/JkrG4K3JYrTBrwUapLE+gmQmDIRuLLhacWmIdc4falkglrNkQjQsQ==\\n-----END
+        RSA PRIVATE KEY-----\\n\"},{\"name\":\"OPENSHIFT_MASTER\",\"value\":\"https://yzamir-centos7-1.example.com:8443\"},{\"name\":\"ROUTER_EXTERNAL_HOST_HOSTNAME\"},{\"name\":\"ROUTER_EXTERNAL_HOST_HTTPS_VSERVER\"},{\"name\":\"ROUTER_EXTERNAL_HOST_HTTP_VSERVER\"},{\"name\":\"ROUTER_EXTERNAL_HOST_INSECURE\",\"value\":\"false\"},{\"name\":\"ROUTER_EXTERNAL_HOST_PARTITION_PATH\"},{\"name\":\"ROUTER_EXTERNAL_HOST_PASSWORD\"},{\"name\":\"ROUTER_EXTERNAL_HOST_PRIVKEY\",\"value\":\"/etc/secret-volume/router.pem\"},{\"name\":\"ROUTER_EXTERNAL_HOST_USERNAME\"},{\"name\":\"ROUTER_SERVICE_HTTPS_PORT\",\"value\":\"443\"},{\"name\":\"ROUTER_SERVICE_HTTP_PORT\",\"value\":\"80\"},{\"name\":\"ROUTER_SERVICE_NAME\",\"value\":\"router\"},{\"name\":\"ROUTER_SERVICE_NAMESPACE\",\"value\":\"default\"},{\"name\":\"ROUTER_SUBDOMAIN\"},{\"name\":\"STATS_PASSWORD\",\"value\":\"DVYEDBYBcD\"},{\"name\":\"STATS_PORT\",\"value\":\"1936\"},{\"name\":\"STATS_USERNAME\",\"value\":\"admin\"}],\"resources\":{},\"livenessProbe\":{\"httpGet\":{\"path\":\"/healthz\",\"port\":1936,\"host\":\"localhost\",\"scheme\":\"HTTP\"},\"initialDelaySeconds\":10,\"timeoutSeconds\":1,\"periodSeconds\":10,\"successThreshold\":1,\"failureThreshold\":3},\"readinessProbe\":{\"httpGet\":{\"path\":\"/healthz\",\"port\":1936,\"host\":\"localhost\",\"scheme\":\"HTTP\"},\"initialDelaySeconds\":10,\"timeoutSeconds\":1,\"periodSeconds\":10,\"successThreshold\":1,\"failureThreshold\":3},\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"IfNotPresent\"}],\"restartPolicy\":\"Always\",\"terminationGracePeriodSeconds\":30,\"dnsPolicy\":\"ClusterFirst\",\"nodeSelector\":{\"region\":\"infra\"},\"serviceAccountName\":\"router\",\"serviceAccount\":\"router\",\"hostNetwork\":true,\"securityContext\":{}}}},\"status\":{\"latestVersion\":1,\"details\":{\"causes\":[{\"type\":\"ConfigChange\"}]}}}\n"}},"spec":{"replicas":1,"selector":{"deployment":"router-1","deploymentconfig":"router","router":"router"},"template":{"metadata":{"creationTimestamp":null,"labels":{"deployment":"router-1","deploymentconfig":"router","router":"router"},"annotations":{"openshift.io/deployment-config.latest-version":"1","openshift.io/deployment-config.name":"router","openshift.io/deployment.name":"router-1"}},"spec":{"containers":[{"name":"router","image":"openshift/origin-haproxy-router:v1.2.0","ports":[{"hostPort":80,"containerPort":80,"protocol":"TCP"},{"hostPort":443,"containerPort":443,"protocol":"TCP"},{"name":"stats","hostPort":1936,"containerPort":1936,"protocol":"TCP"}],"env":[{"name":"OPENSHIFT_CA_DATA","value":"-----BEGIN
+        CERTIFICATE-----\nMIIC5jCCAdCgAwIBAgIBATALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDY2NjkwNjE1MB4XDTE2MDYyMzE0MDMzNVoXDTIxMDYyMjE0\nMDMzNlowJjEkMCIGA1UEAwwbb3BlbnNoaWZ0LXNpZ25lckAxNDY2NjkwNjE1MIIB\nIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxnoPvehqIzhg5zmFzKiKh91X\nWt+rhAfZFCKcHRoD84O4ZttJOmC3/Mk8dkuTD2+iTLs1AB5W6kjrlNv9xCaasVps\nW+NKwXc0+mlyrmMLH3dcc1lqdWn75Mfe02S1QpotIVHmse8eeTadZBajUpyPnMIG\nf8OBSlnSYjdVDGB4UFwbWQUb31i1kQApbEYOmJFw7Bd9CTdrFSJdtecC7MyQFiMk\nlN7dF3gYDu9lI/jmtAmLDMEOabnA5A0GPlUXWnMzqlrNXaKnhRmSY+FVvR2lpCOi\nITh0xWhoi8bTSvYSHF123Ra+2YUxeDxHilEw1PwC7MD7BEVQb3+VBF16VELoQQID\nAQABoyMwITAOBgNVHQ8BAf8EBAMCAKQwDwYDVR0TAQH/BAUwAwEB/zALBgkqhkiG\n9w0BAQsDggEBAA8SfAI8wNZXRhvKgE3s3OmNPVGfv6MFceuy4Iob39VGAQ9Vpvo6\nb4AckrPzraygVA5ay/dNMwjijc+dx8Tm/yR/Zo0UALPlEuV8vXgmr9O2wixYo6zN\n77++U2dGw5AK+gTZdXfEv+K4lgmQg24DEVNKzfHXcUhon/riTvOXuN9VqzP20qmN\ndAzk2/sV2okEapbKcyw46CSo/8ZCm4rMuZRWNFEgruYeHdqm5xw9R42BsERGF3lG\nMQ+ZsxpBW6SoUQKf6BRq5EaVewq0g0RJPSh1RiFldig5o+0omEEKzJRlDD7//KWV\ndeYquHcKtdJD3Ez7mTXL+l9878jTF+1i5Rk=\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_CERT_DATA","value":"-----BEGIN CERTIFICATE-----\nMIIDDTCCAfegAwIBAgIBCTALBgkqhkiG9w0BAQswJjEkMCIGA1UEAwwbb3BlbnNo\naWZ0LXNpZ25lckAxNDY2NjkwNjE1MB4XDTE2MDYyMzE0MDM0MVoXDTE4MDYyMzE0\nMDM0MlowOzEXMBUGA1UEChMOc3lzdGVtOnJvdXRlcnMxIDAeBgNVBAMTF3N5c3Rl\nbTpvcGVuc2hpZnQtcm91dGVyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC\nAQEA7IDJetu94jeQdo5ec05JYFsHV5BwB0CsOKXAGt+9v7FUZnTvaEBtDSY+mukm\nR2sBZMB+j8Cs0EdYAYaDm8c27dBsBRYh3mJDbooVWzlmb2migcF4UvFrYzbOK783\nLJHUFzWEqgeGZ99LavoQDocRhWP78TQl4+BQHemO1+nmaTImQUClHdtBgtW0QNkx\nHu2OlZ0KmyCIvUB3SmDnKAW5r8JLGD3OSpkeK/5EsQQdsdFT1J+hmR01wy1FGn9O\nHN5GeeYC4HP/eLzG89agwHO6c3NvpNX4wwRMGrObLL+wPQ0SGqcbRRid9iANRQiN\nRg1rMOyGe+96hDEAB4zn8xjUKQIDAQABozUwMzAOBgNVHQ8BAf8EBAMCAKAwEwYD\nVR0lBAwwCgYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADALBgkqhkiG9w0BAQsDggEB\nAAlWKfPHYAzug9nYGdhg0iZdRPK6ZN727v+PiWqDRswUypaaksS4VXtriRo611/8\nNgBmfWUgURPe14bp8bSOr/XnEeUBsgwEusVPkUJAdvpi4QZUnD3OwU2vmzAbeuwM\npnVaSGodEAIlLtL/LWYU/Lq54XxReO4HChK/I+g/fBvq3RsqowI75Y4OCGzx1LH0\nu4X0+Zhb6F4smAybZA1H2VLaykpr83ydApOuiKm0mmiJ5AEE7EZzHXDK6oExnHvQ\nANP5T2mGU/HweuETQ3D7FQGkrp3agIUQ/FSdThMT5hf2QFQsyH/Dy55sjaLYE8bF\nR9Osg9jg4/SKuAs4o+8pLx0=\n-----END
+        CERTIFICATE-----\n"},{"name":"OPENSHIFT_INSECURE","value":"false"},{"name":"OPENSHIFT_KEY_DATA","value":"-----BEGIN
+        RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA7IDJetu94jeQdo5ec05JYFsHV5BwB0CsOKXAGt+9v7FUZnTv\naEBtDSY+mukmR2sBZMB+j8Cs0EdYAYaDm8c27dBsBRYh3mJDbooVWzlmb2migcF4\nUvFrYzbOK783LJHUFzWEqgeGZ99LavoQDocRhWP78TQl4+BQHemO1+nmaTImQUCl\nHdtBgtW0QNkxHu2OlZ0KmyCIvUB3SmDnKAW5r8JLGD3OSpkeK/5EsQQdsdFT1J+h\nmR01wy1FGn9OHN5GeeYC4HP/eLzG89agwHO6c3NvpNX4wwRMGrObLL+wPQ0SGqcb\nRRid9iANRQiNRg1rMOyGe+96hDEAB4zn8xjUKQIDAQABAoIBAQCOuGVd48+h/UAL\nm3y5/qtfH2+90ucYKVoE0VmtngnG7X9uWPDEq+RjRAoRt9Mm1BdCMrvtiit/gR5F\nxWQUlNK8DsOxChskNY5V3bRnmasMXuX3gcZX32Kbu84NLlZgahxgaSaG6QWeF21O\nwFsCOVZEdgLrGzomWw5eDrzp5TfrkHP09WcNRRGEpFZOcw33zi71WPVBilcasa7w\niT10cGq7bzm4q3rvzE8bOausdhUPpa2BcV37zf+Zu+FXRK8C7d5shJIn21rxBS5e\nvdnzbzsvByG4P5B1aLrk8SVZ5FYvjR6XD1te1tRlyd1uvBQOT3gb2P3qVgkGZ3mi\nbDWTewi1AoGBAPajZXummYR2W5erPk1nqTwqCyLK92RlIbrxKI9BZ3aBxu+LKXWS\nYnrFKxM4gtmU1ZUKxJzvHERdB0OrsQWIYGxUzDrW8cgY+qSCIKO3WStA3Mu0zpm/\njN2k97zyqcfa/cTao4S6LB57Ag1XarKrYJPdHVoX4i75la6BbEfjEuRzAoGBAPV6\n5/jRKMYHVPhS+e37ojAuX/m6JGma256n0FreGBiGDAzpWBUYMx/DfLcAQ69pP+/p\nQ2YWfAl8maHLJjKgTjplSxaVgm5kWM27leqyHLX7Z3rYO3YNEjscoguiduX+yBrA\nzqsruXADUesHjpk0g+Cbis6qmEYveGjO05ccylnzAoGAHD15UT8yNMiYlDU3XQWR\niyIFRGaZDRXHVvBmBIEop5kUfjkg9iVcwVHyLLE7yk4QZpBlEtMOGYXNXyI5kria\n0cyj1djmtlKl4FBGDHjh7OHwZiK9xTz5lCdfdnMSnZ+ljvS55GisxJCxG3X28Z5N\n4KBgzAAQFfDeAq0vCMwnTaECgYEAto2FLwtUeBgBv33tcWZ9UblbFFqyM3q/Mjh4\nAOtDHhGpqnxpTZ6mfkuhVnIy46KwsphUz/mOmnt3wNNTf7ipFFI5yfy7d57WT4Dd\n1yBHq6nfZYKijYLg+OatN1vFcfrMEuEpkC+/AqblZ5RCHnroS8NAMbq57Q/mSoLs\n5Wa6sLMCgYADcL3bhu6OXlyeMRdUYGxxR/jFYA7KDC3EYkKEcQyVOdDSIve66C8e\ntsqXAVjPyRn0SAFnUvGgDY66IvM+THOOoeauOuy5qzeGXSdvZu4SDQTto+KJMzHt\n/JkrG4K3JYrTBrwUapLE+gmQmDIRuLLhacWmIdc4falkglrNkQjQsQ==\n-----END
+        RSA PRIVATE KEY-----\n"},{"name":"OPENSHIFT_MASTER","value":"https://yzamir-centos7-1.example.com:8443"},{"name":"ROUTER_EXTERNAL_HOST_HOSTNAME"},{"name":"ROUTER_EXTERNAL_HOST_HTTPS_VSERVER"},{"name":"ROUTER_EXTERNAL_HOST_HTTP_VSERVER"},{"name":"ROUTER_EXTERNAL_HOST_INSECURE","value":"false"},{"name":"ROUTER_EXTERNAL_HOST_PARTITION_PATH"},{"name":"ROUTER_EXTERNAL_HOST_PASSWORD"},{"name":"ROUTER_EXTERNAL_HOST_PRIVKEY","value":"/etc/secret-volume/router.pem"},{"name":"ROUTER_EXTERNAL_HOST_USERNAME"},{"name":"ROUTER_SERVICE_HTTPS_PORT","value":"443"},{"name":"ROUTER_SERVICE_HTTP_PORT","value":"80"},{"name":"ROUTER_SERVICE_NAME","value":"router"},{"name":"ROUTER_SERVICE_NAMESPACE","value":"default"},{"name":"ROUTER_SUBDOMAIN"},{"name":"STATS_PASSWORD","value":"DVYEDBYBcD"},{"name":"STATS_PORT","value":"1936"},{"name":"STATS_USERNAME","value":"admin"}],"resources":{},"livenessProbe":{"httpGet":{"path":"/healthz","port":1936,"host":"localhost","scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"httpGet":{"path":"/healthz","port":1936,"host":"localhost","scheme":"HTTP"},"initialDelaySeconds":10,"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"IfNotPresent"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","nodeSelector":{"region":"infra"},"serviceAccountName":"router","serviceAccount":"router","hostNetwork":true,"securityContext":{}}}},"status":{"replicas":1,"fullyLabeledReplicas":1,"observedGeneration":2}},{"metadata":{"name":"hawkular-cassandra-1","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/replicationcontrollers/hawkular-cassandra-1","uid":"5f7faf21-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"627","generation":1,"creationTimestamp":"2016-06-23T14:18:35Z","labels":{"metrics-infra":"hawkular-cassandra","name":"hawkular-cassandra","type":"hawkular-cassandra"}},"spec":{"replicas":1,"selector":{"name":"hawkular-cassandra-1"},"template":{"metadata":{"creationTimestamp":null,"labels":{"metrics-infra":"hawkular-cassandra","name":"hawkular-cassandra-1","type":"hawkular-cassandra"}},"spec":{"volumes":[{"name":"cassandra-data","emptyDir":{}},{"name":"hawkular-cassandra-secrets","secret":{"secretName":"hawkular-cassandra-secrets"}}],"containers":[{"name":"hawkular-cassandra-1","image":"openshift/origin-metrics-cassandra:latest","command":["/opt/apache-cassandra/bin/cassandra-docker.sh","--cluster_name=hawkular-metrics","--data_volume=/cassandra_data","--internode_encryption=all","--require_node_auth=true","--enable_client_encryption=true","--require_client_auth=true","--keystore_file=/secret/cassandra.keystore","--keystore_password_file=/secret/cassandra.keystore.password","--truststore_file=/secret/cassandra.truststore","--truststore_password_file=/secret/cassandra.truststore.password","--cassandra_pem_file=/secret/cassandra.pem"],"ports":[{"name":"cql-port","containerPort":9042,"protocol":"TCP"},{"name":"thift-port","containerPort":9160,"protocol":"TCP"},{"name":"tcp-port","containerPort":7000,"protocol":"TCP"},{"name":"ssl-port","containerPort":7001,"protocol":"TCP"}],"env":[{"name":"CASSANDRA_MASTER","value":"true"},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.namespace"}}}],"resources":{},"volumeMounts":[{"name":"cassandra-data","mountPath":"/cassandra_data"},{"name":"hawkular-cassandra-secrets","mountPath":"/secret"}],"readinessProbe":{"exec":{"command":["/opt/apache-cassandra/bin/cassandra-docker-ready.sh"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","serviceAccountName":"cassandra","serviceAccount":"cassandra","securityContext":{}}}},"status":{"replicas":1,"fullyLabeledReplicas":1,"observedGeneration":1}},{"metadata":{"name":"hawkular-metrics","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/replicationcontrollers/hawkular-metrics","uid":"5eb580d5-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"655","generation":1,"creationTimestamp":"2016-06-23T14:18:34Z","labels":{"metrics-infra":"hawkular-metrics","name":"hawkular-metrics"}},"spec":{"replicas":1,"selector":{"name":"hawkular-metrics"},"template":{"metadata":{"creationTimestamp":null,"labels":{"metrics-infra":"hawkular-metrics","name":"hawkular-metrics"}},"spec":{"volumes":[{"name":"hawkular-metrics-secrets","secret":{"secretName":"hawkular-metrics-secrets"}}],"containers":[{"name":"hawkular-metrics","image":"openshift/origin-metrics-hawkular-metrics:latest","command":["/opt/hawkular/scripts/hawkular-metrics-wrapper.sh","-b","0.0.0.0","-Dhawkular-metrics.cassandra-nodes=hawkular-cassandra","-Dhawkular-metrics.cassandra-use-ssl","-Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true","-Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true","-Dhawkular-metrics.openshift.auth-methods=openshift-oauth,htpasswd","-Dhawkular-metrics.openshift.htpasswd-file=/secrets/hawkular-metrics.htpasswd.file","-Dhawkular.metrics.allowed-cors-access-control-allow-headers=authorization","-Dhawkular.metrics.default-ttl=7","-DKUBERNETES_MASTER_URL=https://kubernetes.default.svc:443","--hmw.keystore=/secrets/hawkular-metrics.keystore","--hmw.truststore=/secrets/hawkular-metrics.truststore","--hmw.keystore_password_file=/secrets/hawkular-metrics.keystore.password","--hmw.truststore_password_file=/secrets/hawkular-metrics.truststore.password"],"ports":[{"name":"http-endpoint","containerPort":8080,"protocol":"TCP"},{"name":"https-endpoint","containerPort":8443,"protocol":"TCP"}],"env":[{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"apiVersion":"v1","fieldPath":"metadata.namespace"}}}],"resources":{},"volumeMounts":[{"name":"hawkular-metrics-secrets","mountPath":"/secrets"}],"livenessProbe":{"exec":{"command":["/opt/hawkular/scripts/hawkular-metrics-liveness.py"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"readinessProbe":{"exec":{"command":["/opt/hawkular/scripts/hawkular-metrics-readiness.py"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","serviceAccountName":"hawkular","serviceAccount":"hawkular","securityContext":{}}}},"status":{"replicas":1,"fullyLabeledReplicas":1,"observedGeneration":1}},{"metadata":{"name":"heapster","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/replicationcontrollers/heapster","uid":"60befa8a-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"648","generation":1,"creationTimestamp":"2016-06-23T14:18:37Z","labels":{"metrics-infra":"heapster","name":"heapster"}},"spec":{"replicas":1,"selector":{"name":"heapster"},"template":{"metadata":{"creationTimestamp":null,"labels":{"metrics-infra":"heapster","name":"heapster"}},"spec":{"volumes":[{"name":"heapster-secrets","secret":{"secretName":"heapster-secrets"}},{"name":"hawkular-metrics-certificate","secret":{"secretName":"hawkular-metrics-certificate"}},{"name":"hawkular-metrics-account","secret":{"secretName":"hawkular-metrics-account"}}],"containers":[{"name":"heapster","image":"openshift/origin-metrics-heapster:latest","command":["heapster-wrapper.sh","--wrapper.username_file=/hawkular-account/hawkular-metrics.username","--wrapper.password_file=/hawkular-account/hawkular-metrics.password","--wrapper.allowed_users_file=/secrets/heapster.allowed-users","--wrapper.endpoint_check=https://hawkular-metrics:443/hawkular/metrics/status","--source=kubernetes:https://kubernetes.default.svc:443?useServiceAccount=true\u0026kubeletHttps=true\u0026kubeletPort=10250","--sink=hawkular:https://hawkular-metrics:443?tenant=_system\u0026labelToTenant=pod_namespace\u0026labelNodeId=nodename\u0026caCert=/hawkular-cert/hawkular-metrics-ca.certificate\u0026user=%username%\u0026pass=%password%\u0026filter=label(container_name:^system.slice.*|^user.slice)","--tls_cert=/secrets/heapster.cert","--tls_key=/secrets/heapster.key","--tls_client_ca=/secrets/heapster.client-ca","--allowed_users=%allowed_users%","--metric_resolution=10s"],"ports":[{"name":"http-endpoint","containerPort":8082,"protocol":"TCP"}],"resources":{},"volumeMounts":[{"name":"heapster-secrets","mountPath":"/secrets"},{"name":"hawkular-metrics-certificate","mountPath":"/hawkular-cert"},{"name":"hawkular-metrics-account","mountPath":"/hawkular-account"}],"readinessProbe":{"exec":{"command":["/opt/heapster-readiness.sh"]},"timeoutSeconds":1,"periodSeconds":10,"successThreshold":1,"failureThreshold":3},"terminationMessagePath":"/dev/termination-log","imagePullPolicy":"Always"}],"restartPolicy":"Always","terminationGracePeriodSeconds":30,"dnsPolicy":"ClusterFirst","serviceAccountName":"heapster","serviceAccount":"heapster","securityContext":{}}}},"status":{"replicas":1,"fullyLabeledReplicas":1,"observedGeneration":1}}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/nodes
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"NodeList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/nodes","resourceVersion":"305393"},"items":[{"metadata":{"name":"yzamir-centos7-1.example.com","selfLink":"/api/v1/nodes/yzamir-centos7-1.example.com","uid":"20cc1f5c-394c-11e6-b9ad-001a4a2314d5","resourceVersion":"305392","creationTimestamp":"2016-06-23T14:09:41Z","labels":{"kubernetes.io/hostname":"yzamir-centos7-1.example.com","region":"infra","zone":"default"}},"spec":{"externalID":"yzamir-centos7-1.example.com"},"status":{"capacity":{"cpu":"2","memory":"3880404Ki","pods":"110"},"allocatable":{"cpu":"2","memory":"3880404Ki","pods":"110"},"conditions":[{"type":"OutOfDisk","status":"False","lastHeartbeatTime":"2016-07-11T11:29:23Z","lastTransitionTime":"2016-06-23T14:09:41Z","reason":"KubeletHasSufficientDisk","message":"kubelet
+        has sufficient disk space available"},{"type":"Ready","status":"True","lastHeartbeatTime":"2016-07-11T11:29:23Z","lastTransitionTime":"2016-06-27T06:54:46Z","reason":"KubeletReady","message":"kubelet
+        is posting ready status"}],"addresses":[{"type":"LegacyHostIP","address":"10.35.19.246"},{"type":"InternalIP","address":"10.35.19.246"}],"daemonEndpoints":{"kubeletEndpoint":{"Port":10250}},"nodeInfo":{"machineID":"9e7597ec7d0be1469f5578a4a84d832b","systemUUID":"9E7597EC-7D0B-E146-9F55-78A4A84D832B","bootID":"cd69a6bd-436c-4b09-b631-9ecb4a09ef24","kernelVersion":"3.10.0-229.1.2.el7.x86_64","osImage":"CentOS
+        Linux 7 (Core)","containerRuntimeVersion":"docker://1.9.1","kubeletVersion":"v1.2.0-36-g4a3f9c5","kubeProxyVersion":"v1.2.0-36-g4a3f9c5"},"images":[{"names":["docker.io/openshift/origin-metrics-cassandra:latest"],"sizeBytes":663795881},{"names":["docker.io/openshift/origin-metrics-hawkular-metrics:latest"],"sizeBytes":770689406},{"names":["docker.io/openshift/origin-metrics-heapster:latest"],"sizeBytes":753226890},{"names":["docker.io/openshift/origin-metrics-deployer:latest"],"sizeBytes":704818474},{"names":["docker.io/openshift/origin-deployer:v1.2.0"],"sizeBytes":541201336},{"names":["docker.io/openshift/origin-haproxy-router:v1.2.0"],"sizeBytes":429105852},{"names":["docker.io/openshift/origin-pod:v1.2.0"],"sizeBytes":1590312}]}},{"metadata":{"name":"yzamir-centos7-2.example.com","selfLink":"/api/v1/nodes/yzamir-centos7-2.example.com","uid":"20aef1ea-394c-11e6-b9ad-001a4a2314d5","resourceVersion":"305393","creationTimestamp":"2016-06-23T14:09:41Z","labels":{"kubernetes.io/hostname":"yzamir-centos7-2.example.com"}},"spec":{"externalID":"yzamir-centos7-2.example.com"},"status":{"capacity":{"cpu":"2","memory":"3881120Ki","pods":"110"},"allocatable":{"cpu":"2","memory":"3881120Ki","pods":"110"},"conditions":[{"type":"OutOfDisk","status":"False","lastHeartbeatTime":"2016-07-11T11:29:27Z","lastTransitionTime":"2016-06-23T14:09:40Z","reason":"KubeletHasSufficientDisk","message":"kubelet
+        has sufficient disk space available"},{"type":"Ready","status":"True","lastHeartbeatTime":"2016-07-11T11:29:27Z","lastTransitionTime":"2016-06-23T14:09:46Z","reason":"KubeletReady","message":"kubelet
+        is posting ready status"}],"addresses":[{"type":"LegacyHostIP","address":"10.35.19.247"},{"type":"InternalIP","address":"10.35.19.247"}],"daemonEndpoints":{"kubeletEndpoint":{"Port":10250}},"nodeInfo":{"machineID":"209914726ea29744a748a9284ae367a9","systemUUID":"20991472-6EA2-9744-A748-A9284AE367A9","bootID":"84a504e7-1d87-453b-8beb-74b382d5493b","kernelVersion":"3.10.0-123.el7.x86_64","osImage":"CentOS
+        Linux 7 (Core)","containerRuntimeVersion":"docker://1.9.1","kubeletVersion":"v1.2.0-36-g4a3f9c5","kubeProxyVersion":"v1.2.0-36-g4a3f9c5"},"images":null}}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/endpoints
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"EndpointsList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/endpoints","resourceVersion":"305393"},"items":[{"metadata":{"name":"kubernetes","namespace":"default","selfLink":"/api/v1/namespaces/default/endpoints/kubernetes","uid":"8db13e27-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"8","creationTimestamp":"2016-06-23T14:05:34Z"},"subsets":[{"addresses":[{"ip":"10.35.19.246"}],"ports":[{"name":"dns-tcp","port":8053,"protocol":"TCP"},{"name":"https","port":8443,"protocol":"TCP"},{"name":"dns","port":8053,"protocol":"UDP"}]}]},{"metadata":{"name":"router","namespace":"default","selfLink":"/api/v1/namespaces/default/endpoints/router","uid":"38788561-394c-11e6-b9ad-001a4a2314d5","resourceVersion":"63798","creationTimestamp":"2016-06-23T14:10:20Z","labels":{"router":"router"}},"subsets":[{"addresses":[{"ip":"10.35.19.246","targetRef":{"kind":"Pod","namespace":"default","name":"router-1-73r9i","uid":"9f704ceb-394c-11e6-b9ad-001a4a2314d5","resourceVersion":"63797"}}],"ports":[{"name":"80-tcp","port":80,"protocol":"TCP"},{"name":"443-tcp","port":443,"protocol":"TCP"},{"name":"1936-tcp","port":1936,"protocol":"TCP"}]}]},{"metadata":{"name":"hawkular-cassandra","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/endpoints/hawkular-cassandra","uid":"5eef3213-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63814","creationTimestamp":"2016-06-23T14:18:34Z","labels":{"metrics-infra":"hawkular-cassandra","name":"hawkular-cassandra"}},"subsets":[{"addresses":[{"ip":"10.1.1.2","targetRef":{"kind":"Pod","namespace":"openshift-infra","name":"hawkular-cassandra-1-vfp1j","uid":"5f81ed90-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63812"}}],"ports":[{"name":"tcp-port","port":7000,"protocol":"TCP"},{"name":"cql-port","port":9042,"protocol":"TCP"},{"name":"ssl-port","port":7001,"protocol":"TCP"},{"name":"thift-port","port":9160,"protocol":"TCP"}]}]},{"metadata":{"name":"hawkular-cassandra-nodes","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/endpoints/hawkular-cassandra-nodes","uid":"5ef61ff4-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63813","creationTimestamp":"2016-06-23T14:18:34Z","labels":{"metrics-infra":"hawkular-cassandra","name":"hawkular-cassandra"}},"subsets":[{"addresses":[{"ip":"10.1.1.2","targetRef":{"kind":"Pod","namespace":"openshift-infra","name":"hawkular-cassandra-1-vfp1j","uid":"5f81ed90-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63812"}}],"ports":[{"name":"tcp-port","port":7000,"protocol":"TCP"},{"name":"cql-port","port":9042,"protocol":"TCP"},{"name":"ssl-port","port":7001,"protocol":"TCP"},{"name":"thift-port","port":9160,"protocol":"TCP"}]}]},{"metadata":{"name":"hawkular-metrics","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/endpoints/hawkular-metrics","uid":"5eb20068-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63822","creationTimestamp":"2016-06-23T14:18:34Z","labels":{"metrics-infra":"hawkular-metrics","name":"hawkular-metrics"}},"subsets":[{"addresses":[{"ip":"10.1.1.4","targetRef":{"kind":"Pod","namespace":"openshift-infra","name":"hawkular-metrics-69i35","uid":"655fb45f-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63821"}}],"ports":[{"name":"https-endpoint","port":8443,"protocol":"TCP"}]}]},{"metadata":{"name":"heapster","namespace":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra/endpoints/heapster","uid":"60bcbbd4-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63826","creationTimestamp":"2016-06-23T14:18:37Z","labels":{"metrics-infra":"heapster","name":"heapster"}},"subsets":[{"addresses":[{"ip":"10.1.1.3","targetRef":{"kind":"Pod","namespace":"openshift-infra","name":"heapster-5j7ot","uid":"60c82bb2-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"63825"}}],"ports":[{"port":8082,"protocol":"TCP"}]}]}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/namespaces
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"NamespaceList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/namespaces","resourceVersion":"305393"},"items":[{"metadata":{"name":"default","selfLink":"/api/v1/namespaces/default","uid":"8dae2481-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"50594","creationTimestamp":"2016-06-23T14:05:34Z","annotations":{"openshift.io/sa.initialized-roles":"true","openshift.io/sa.scc.mcs":"s0:c1,c0","openshift.io/sa.scc.supplemental-groups":"1000000000/10000","openshift.io/sa.scc.uid-range":"1000000000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"management-infra","selfLink":"/api/v1/namespaces/management-infra","uid":"c2beb3b1-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"329","creationTimestamp":"2016-06-23T14:07:03Z","annotations":{"openshift.io/description":"Management
+        Infrastructure","openshift.io/display-name":"","openshift.io/sa.scc.mcs":"s0:c6,c0","openshift.io/sa.scc.supplemental-groups":"1000030000/10000","openshift.io/sa.scc.uid-range":"1000030000/10000"}},"spec":{"finalizers":["openshift.io/origin","kubernetes"]},"status":{"phase":"Active"}},{"metadata":{"name":"openshift","selfLink":"/api/v1/namespaces/openshift","uid":"90df48c4-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"150","creationTimestamp":"2016-06-23T14:05:39Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c5,c0","openshift.io/sa.scc.supplemental-groups":"1000020000/10000","openshift.io/sa.scc.uid-range":"1000020000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"openshift-infra","selfLink":"/api/v1/namespaces/openshift-infra","uid":"8f5dfd3e-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"50609","creationTimestamp":"2016-06-23T14:05:37Z","annotations":{"openshift.io/sa.initialized-roles":"true","openshift.io/sa.scc.mcs":"s0:c3,c2","openshift.io/sa.scc.supplemental-groups":"1000010000/10000","openshift.io/sa.scc.uid-range":"1000010000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/resourcequotas
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '134'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"ResourceQuotaList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/resourcequotas","resourceVersion":"305393"},"items":[]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/limitranges
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '128'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"LimitRangeList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/limitranges","resourceVersion":"305393"},"items":[]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/persistentvolumes
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '140'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"PersistentVolumeList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/persistentvolumes","resourceVersion":"305393"},"items":[]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/persistentvolumeclaims
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '150'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"PersistentVolumeClaimList","apiVersion":"v1","metadata":{"selfLink":"/api/v1/persistentvolumeclaims","resourceVersion":"305393"},"items":[]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/api/v1/componentstatuses
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '308'
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "kind": "Status",
+          "apiVersion": "v1",
+          "metadata": {},
+          "status": "Failure",
+          "message": "User \"system:serviceaccount:management-infra:management-admin\" cannot list all componentstatuses in the cluster",
+          "reason": "Forbidden",
+          "details": {
+            "kind": "componentstatuses"
+          },
+          "code": 403
+        }
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/oapi/v1/routes
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '1932'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"RouteList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/routes","resourceVersion":"305393"},"items":[{"metadata":{"name":"hawkular-metrics","namespace":"openshift-infra","selfLink":"/oapi/v1/namespaces/openshift-infra/routes/hawkular-metrics","uid":"5f59e6ef-394d-11e6-b9ad-001a4a2314d5","resourceVersion":"619","creationTimestamp":"2016-06-23T14:18:35Z","labels":{"metrics-infra":"hawkular-metrics","name":"hawkular-metrics"}},"spec":{"host":"yzamir-centos7-1.example.com","to":{"kind":"Service","name":"hawkular-metrics"},"port":{"targetPort":"https-endpoint"},"tls":{"termination":"reencrypt","destinationCACertificate":"-----BEGIN
+        CERTIFICATE-----\nMIIC5jCCAc6gAwIBAgIBATANBgkqhkiG9w0BAQsFADAkMSIwIAYDVQQDDBltZXRy\naWNzLXNpZ25lckAxNDY2NjkxNTA1MB4XDTE2MDYyMzE0MTgyNFoXDTIxMDYyMjE0\nMTgyNVowJDEiMCAGA1UEAwwZbWV0cmljcy1zaWduZXJAMTQ2NjY5MTUwNTCCASIw\nDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMquopyt2ogATF4ZKxSQE/N57ZpN\n5C2xqA4srH/tYk3MGHjbG+wKH4azBe5ODlIvLIlxm1C/hh2k6k+wOmAR8vJqvdMq\nzBg8WMVLf85bjPlhnr86/ioB6SVoCsTozrKCnsTGZvea1bv+VQ3ygH7NnHo+g4w0\nx8i7EyUuwG1yYAYnVZe4gwd8jwZvP088jBFHyvTnYUxy6rsCgJcTV1FLHr3sBUUm\nY5CO+yqzuIDOS2/BuDTU/RlvTObsk/9IgG9S95BrlgsdaY47pNf49PB6XkOQxXDS\naMzIveaV8TDkHa2BpeRGYnnWpVkua7yfaK7iSnPRR+BqpdrG6Si9+ZCpGw0CAwEA\nAaMjMCEwDgYDVR0PAQH/BAQDAgKkMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcN\nAQELBQADggEBAIETGc7wl5qtS1CyO9Ga/ak5DeXqZiXAdBX6zgncX+rTu1pyY3Oy\nAv8sOPyeyBKZtqZPIYWciwII77LpTjz4Xb0PmZiw3mM7SPjgXkmd2hYQx7P7H+hC\ncdbwZtVxaNqhFWTigPyThDWDimEge4Ta6+CjszMJklzrqHw/BJFk4CJgn4VHKcWp\nbn/tAj3to5W1KFsThtgXWxV7Hp6aqtc4BD3khmlXHz9vtJGwS5b6Mp9rtpZigQr3\nel9F+Uxjiw2IjrHGA/tuuGglezYxKP6xDWvl+DnVwQ0TnY+aa866bhynmPlF5CkC\nnmccBDaLm+cXNKeLY4ycLlxgHKm98jbz79A=\n-----END
+        CERTIFICATE-----\n"}},"status":{"ingress":[{"host":"yzamir-centos7-1.example.com","routerName":"router","conditions":[{"type":"Admitted","status":"True","lastTransitionTime":"2016-06-23T14:18:35Z"}]}]}}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/oapi/v1/projects
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"kind":"ProjectList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/projects"},"items":[{"metadata":{"name":"openshift-infra","selfLink":"/oapi/v1/projects/openshift-infra","uid":"8f5dfd3e-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"50609","creationTimestamp":"2016-06-23T14:05:37Z","annotations":{"openshift.io/sa.initialized-roles":"true","openshift.io/sa.scc.mcs":"s0:c3,c2","openshift.io/sa.scc.supplemental-groups":"1000010000/10000","openshift.io/sa.scc.uid-range":"1000010000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"default","selfLink":"/oapi/v1/projects/default","uid":"8dae2481-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"50594","creationTimestamp":"2016-06-23T14:05:34Z","annotations":{"openshift.io/sa.initialized-roles":"true","openshift.io/sa.scc.mcs":"s0:c1,c0","openshift.io/sa.scc.supplemental-groups":"1000000000/10000","openshift.io/sa.scc.uid-range":"1000000000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}},{"metadata":{"name":"management-infra","selfLink":"/oapi/v1/projects/management-infra","uid":"c2beb3b1-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"329","creationTimestamp":"2016-06-23T14:07:03Z","annotations":{"openshift.io/description":"Management
+        Infrastructure","openshift.io/display-name":"","openshift.io/sa.scc.mcs":"s0:c6,c0","openshift.io/sa.scc.supplemental-groups":"1000030000/10000","openshift.io/sa.scc.uid-range":"1000030000/10000"}},"spec":{"finalizers":["openshift.io/origin","kubernetes"]},"status":{"phase":"Active"}},{"metadata":{"name":"openshift","selfLink":"/oapi/v1/projects/openshift","uid":"90df48c4-394b-11e6-b9ad-001a4a2314d5","resourceVersion":"150","creationTimestamp":"2016-06-23T14:05:39Z","annotations":{"openshift.io/sa.scc.mcs":"s0:c5,c0","openshift.io/sa.scc.supplemental-groups":"1000020000/10000","openshift.io/sa.scc.uid-range":"1000020000/10000"}},"spec":{"finalizers":["kubernetes","openshift.io/origin"]},"status":{"phase":"Active"}}]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/oapi/v1/buildconfigs
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '131'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"BuildConfigList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/buildconfigs","resourceVersion":"305393"},"items":[]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com:8443/oapi/v1/builds
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Authorization:
+      - Bearer TheToken
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 11 Jul 2016 11:29:33 GMT
+      Content-Length:
+      - '119'
+    body:
+      encoding: UTF-8
+      string: '{"kind":"BuildList","apiVersion":"v1","metadata":{"selfLink":"/oapi/v1/builds","resourceVersion":"305393"},"items":[]}
+
+'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:33 GMT
+recorded_with: VCR 2.9.3

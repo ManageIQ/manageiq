@@ -1,0 +1,179 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/counters/machine%2Fyzamir-centos7-1.example.com%2Fcpu%2Fusage/data/?bucketDuration=20s&start=1468235823000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer TheToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '7720'
+      Date:
+      - Mon, 11 Jul 2016 11:29:35 GMT
+      Set-Cookie:
+      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=6d1f3acb19e25d1ab5f5b24a75c0fa5d;
+        path=/; HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235823000,"end":1468235843000,"min":5.75737479006159E14,"avg":5.75737479006159E14,"median":5.75737479006159E14,"max":5.75737479006159E14,"sum":5.75737479006159E14,"samples":1,"empty":false},{"start":1468235843000,"end":1468235863000,"min":5.75747909903167E14,"avg":5.75750332431958E14,"median":5.75747909903167E14,"max":5.75752754960749E14,"sum":1.151500664863916E15,"samples":2,"empty":false},{"start":1468235863000,"end":1468235883000,"min":5.75761990166795E14,"avg":5.75761990166795E14,"median":5.75761990166795E14,"max":5.75761990166795E14,"sum":5.75761990166795E14,"samples":1,"empty":false},{"start":1468235883000,"end":1468235903000,"min":5.75766591643357E14,"avg":5.75766591643357E14,"median":5.75766591643357E14,"max":5.75766591643357E14,"sum":5.75766591643357E14,"samples":1,"empty":false},{"start":1468235903000,"end":1468235923000,"min":5.75775244346767E14,"avg":5.75775244346767E14,"median":5.75775244346767E14,"max":5.75775244346767E14,"sum":5.75775244346767E14,"samples":1,"empty":false},{"start":1468235923000,"end":1468235943000,"min":5.75782356050367E14,"avg":5.75785897775859E14,"median":5.75782356050367E14,"max":5.75789439501351E14,"sum":1.151571795551718E15,"samples":2,"empty":false},{"start":1468235943000,"end":1468235963000,"min":5.75794459734366E14,"avg":5.75796671767499E14,"median":5.75794459734366E14,"max":5.75798883800632E14,"sum":1.151593343534998E15,"samples":2,"empty":false},{"start":1468235963000,"end":1468235983000,"min":5.75804239445753E14,"avg":5.75804239445753E14,"median":5.75804239445753E14,"max":5.75804239445753E14,"sum":5.75804239445753E14,"samples":1,"empty":false},{"start":1468235983000,"end":1468236003000,"min":5.75810747104427E14,"avg":5.75810747104427E14,"median":5.75810747104427E14,"max":5.75810747104427E14,"sum":5.75810747104427E14,"samples":1,"empty":false},{"start":1468236003000,"end":1468236023000,"min":5.75818405333908E14,"avg":5.75822366025157E14,"median":5.75818405333908E14,"max":5.75826326716406E14,"sum":1.151644732050314E15,"samples":2,"empty":false},{"start":1468236023000,"end":1468236043000,"min":5.75831496865986E14,"avg":5.75831496865986E14,"median":5.75831496865986E14,"max":5.75831496865986E14,"sum":5.75831496865986E14,"samples":1,"empty":false},{"start":1468236043000,"end":1468236063000,"min":5.75840450325398E14,"avg":5.75843071125056E14,"median":5.75840450325398E14,"max":5.75845691924714E14,"sum":1.151686142250112E15,"samples":2,"empty":false},{"start":1468236063000,"end":1468236083000,"min":5.75854761590711E14,"avg":5.75854761590711E14,"median":5.75854761590711E14,"max":5.75854761590711E14,"sum":5.75854761590711E14,"samples":1,"empty":false},{"start":1468236083000,"end":1468236103000,"min":5.75859146264246E14,"avg":5.75859146264246E14,"median":5.75859146264246E14,"max":5.75859146264246E14,"sum":5.75859146264246E14,"samples":1,"empty":false},{"start":1468236103000,"end":1468236123000,"min":5.75863497023393E14,"avg":5.75866920741448E14,"median":5.75863497023393E14,"max":5.75870344459503E14,"sum":1.151733841482896E15,"samples":2,"empty":false},{"start":1468236123000,"end":1468236143000,"min":5.7587526928121E14,"avg":5.7587526928121E14,"median":5.7587526928121E14,"max":5.7587526928121E14,"sum":5.7587526928121E14,"samples":1,"empty":false},{"start":1468236143000,"end":1468236163000,"min":5.75882833288187E14,"avg":5.758862487433965E14,"median":5.75882833288187E14,"max":5.75889664198606E14,"sum":1.151772497486793E15,"samples":2,"empty":false},{"start":1468236163000,"end":1468236183000,"min":5.75896656257913E14,"avg":5.759000550264175E14,"median":5.75896656257913E14,"max":5.75903453794922E14,"sum":1.151800110052835E15,"samples":2,"empty":false},{"start":1468236183000,"end":1468236203000,"min":5.75908764043968E14,"avg":5.759118364210855E14,"median":5.75908764043968E14,"max":5.75914908798203E14,"sum":1.151823672842171E15,"samples":2,"empty":false},{"start":1468236203000,"end":1468236223000,"min":5.75920684392498E14,"avg":5.75920684392498E14,"median":5.75920684392498E14,"max":5.75920684392498E14,"sum":5.75920684392498E14,"samples":1,"empty":false},{"start":1468236223000,"end":1468236243000,"min":5.75926775941915E14,"avg":5.759303523769215E14,"median":5.75926775941915E14,"max":5.75933928811928E14,"sum":1.151860704753843E15,"samples":2,"empty":false},{"start":1468236243000,"end":1468236263000,"min":5.75943454792535E14,"avg":5.75943454792535E14,"median":5.75943454792535E14,"max":5.75943454792535E14,"sum":5.75943454792535E14,"samples":1,"empty":false},{"start":1468236263000,"end":1468236283000,"min":5.75947912018916E14,"avg":5.75947912018916E14,"median":5.75947912018916E14,"max":5.75947912018916E14,"sum":5.75947912018916E14,"samples":1,"empty":false},{"start":1468236283000,"end":1468236303000,"min":5.75957625346026E14,"avg":5.75959985617251E14,"median":5.75957625346026E14,"max":5.75962345888476E14,"sum":1.151919971234502E15,"samples":2,"empty":false},{"start":1468236303000,"end":1468236323000,"min":5.75970545351616E14,"avg":5.75970545351616E14,"median":5.75970545351616E14,"max":5.75970545351616E14,"sum":5.75970545351616E14,"samples":1,"empty":false},{"start":1468236323000,"end":1468236343000,"min":5.75979015769889E14,"avg":5.75981765934905E14,"median":5.75979015769889E14,"max":5.75984516099921E14,"sum":1.15196353186981E15,"samples":2,"empty":false},{"start":1468236343000,"end":1468236363000,"min":5.75993962075099E14,"avg":5.75993962075099E14,"median":5.75993962075099E14,"max":5.75993962075099E14,"sum":5.75993962075099E14,"samples":1,"empty":false},{"start":1468236363000,"end":1468236383000,"min":5.76002598648663E14,"avg":5.76002598648663E14,"median":5.76002598648663E14,"max":5.76002598648663E14,"sum":5.76002598648663E14,"samples":1,"empty":false},{"start":1468236383000,"end":1468236403000,"min":5.76007243654835E14,"avg":5.7600986741825E14,"median":5.76007243654835E14,"max":5.76012491181665E14,"sum":1.1520197348365E15,"samples":2,"empty":false},{"start":1468236403000,"end":1468236423000,"min":5.7602270241254E14,"avg":5.7602270241254E14,"median":5.7602270241254E14,"max":5.7602270241254E14,"sum":5.7602270241254E14,"samples":1,"empty":false},{"start":1468236423000,"end":1468236443000,"min":5.76029761262567E14,"avg":5.76029761262567E14,"median":5.76029761262567E14,"max":5.76029761262567E14,"sum":5.76029761262567E14,"samples":1,"empty":false},{"start":1468236443000,"end":1468236463000,"min":5.76036533654548E14,"avg":5.76036533654548E14,"median":5.76036533654548E14,"max":5.76036533654548E14,"sum":5.76036533654548E14,"samples":1,"empty":false},{"start":1468236463000,"end":1468236483000,"min":5.76044731507735E14,"avg":5.76047758352758E14,"median":5.76044731507735E14,"max":5.76050785197781E14,"sum":1.152095516705516E15,"samples":2,"empty":false},{"start":1468236483000,"end":1468236503000,"min":5.76057593928624E14,"avg":5.76057593928624E14,"median":5.76057593928624E14,"max":5.76057593928624E14,"sum":5.76057593928624E14,"samples":1,"empty":false},{"start":1468236503000,"end":1468236523000,"min":5.76065260135732E14,"avg":5.76065260135732E14,"median":5.76065260135732E14,"max":5.76065260135732E14,"sum":5.76065260135732E14,"samples":1,"empty":false},{"start":1468236523000,"end":1468236543000,"min":5.76075625059135E14,"avg":5.76075625059135E14,"median":5.76075625059135E14,"max":5.76075625059135E14,"sum":5.76075625059135E14,"samples":1,"empty":false},{"start":1468236543000,"end":1468236563000,"min":5.76082902124009E14,"avg":5.76085890616373E14,"median":5.76082902124009E14,"max":5.76088879108737E14,"sum":1.152171781232746E15,"samples":2,"empty":false},{"start":1468236563000,"end":1468236583000,"min":5.76093623447574E14,"avg":5.76093623447574E14,"median":5.76093623447574E14,"max":5.76093623447574E14,"sum":5.76093623447574E14,"samples":1,"empty":false}]'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:35 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/gauges/machine%2Fyzamir-centos7-1.example.com%2Fmemory%2Fusage/data/?bucketDuration=20s&start=1468235843000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer TheToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '6351'
+      Date:
+      - Mon, 11 Jul 2016 11:29:36 GMT
+      Set-Cookie:
+      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=6d1f3acb19e25d1ab5f5b24a75c0fa5d;
+        path=/; HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235843000,"end":1468235863000,"min":3.477532672E9,"avg":3.47894784E9,"median":3.477532672E9,"max":3.480363008E9,"sum":6.95789568E9,"samples":2,"empty":false},{"start":1468235863000,"end":1468235883000,"min":3.47860992E9,"avg":3.47860992E9,"median":3.47860992E9,"max":3.47860992E9,"sum":3.47860992E9,"samples":1,"empty":false},{"start":1468235883000,"end":1468235903000,"min":3.478863872E9,"avg":3.478863872E9,"median":3.478863872E9,"max":3.478863872E9,"sum":3.478863872E9,"samples":1,"empty":false},{"start":1468235903000,"end":1468235923000,"min":3.479027712E9,"avg":3.479027712E9,"median":3.479027712E9,"max":3.479027712E9,"sum":3.479027712E9,"samples":1,"empty":false},{"start":1468235923000,"end":1468235943000,"min":3.479257088E9,"avg":3.486040064E9,"median":3.479257088E9,"max":3.49282304E9,"sum":6.972080128E9,"samples":2,"empty":false},{"start":1468235943000,"end":1468235963000,"min":3.477794816E9,"avg":3.478155264E9,"median":3.477794816E9,"max":3.478515712E9,"sum":6.956310528E9,"samples":2,"empty":false},{"start":1468235963000,"end":1468235983000,"min":3.477651456E9,"avg":3.477651456E9,"median":3.477651456E9,"max":3.477651456E9,"sum":3.477651456E9,"samples":1,"empty":false},{"start":1468235983000,"end":1468236003000,"min":3.518701568E9,"avg":3.518701568E9,"median":3.518701568E9,"max":3.518701568E9,"sum":3.518701568E9,"samples":1,"empty":false},{"start":1468236003000,"end":1468236023000,"min":3.477848064E9,"avg":3.477897216E9,"median":3.477848064E9,"max":3.477946368E9,"sum":6.955794432E9,"samples":2,"empty":false},{"start":1468236023000,"end":1468236043000,"min":3.478093824E9,"avg":3.478093824E9,"median":3.478093824E9,"max":3.478093824E9,"sum":3.478093824E9,"samples":1,"empty":false},{"start":1468236043000,"end":1468236063000,"min":3.47559936E9,"avg":3.475668992E9,"median":3.47559936E9,"max":3.475738624E9,"sum":6.951337984E9,"samples":2,"empty":false},{"start":1468236063000,"end":1468236083000,"min":3.47592704E9,"avg":3.47592704E9,"median":3.47592704E9,"max":3.47592704E9,"sum":3.47592704E9,"samples":1,"empty":false},{"start":1468236083000,"end":1468236103000,"min":3.475996672E9,"avg":3.475996672E9,"median":3.475996672E9,"max":3.475996672E9,"sum":3.475996672E9,"samples":1,"empty":false},{"start":1468236103000,"end":1468236123000,"min":3.477397504E9,"avg":3.49886464E9,"median":3.477397504E9,"max":3.520331776E9,"sum":6.99772928E9,"samples":2,"empty":false},{"start":1468236123000,"end":1468236143000,"min":3.525046272E9,"avg":3.525046272E9,"median":3.525046272E9,"max":3.525046272E9,"sum":3.525046272E9,"samples":1,"empty":false},{"start":1468236143000,"end":1468236163000,"min":3.41497856E9,"avg":3.449501696E9,"median":3.41497856E9,"max":3.484024832E9,"sum":6.899003392E9,"samples":2,"empty":false},{"start":1468236163000,"end":1468236183000,"min":3.41460992E9,"avg":3.440142336E9,"median":3.41460992E9,"max":3.465674752E9,"sum":6.880284672E9,"samples":2,"empty":false},{"start":1468236183000,"end":1468236203000,"min":3.41211136E9,"avg":3.412191232E9,"median":3.41211136E9,"max":3.412271104E9,"sum":6.824382464E9,"samples":2,"empty":false},{"start":1468236203000,"end":1468236223000,"min":3.412365312E9,"avg":3.412365312E9,"median":3.412365312E9,"max":3.412365312E9,"sum":3.412365312E9,"samples":1,"empty":false},{"start":1468236223000,"end":1468236243000,"min":3.412590592E9,"avg":3.42872064E9,"median":3.412590592E9,"max":3.444850688E9,"sum":6.85744128E9,"samples":2,"empty":false},{"start":1468236243000,"end":1468236263000,"min":3.41174272E9,"avg":3.41174272E9,"median":3.41174272E9,"max":3.41174272E9,"sum":3.41174272E9,"samples":1,"empty":false},{"start":1468236263000,"end":1468236283000,"min":3.411931136E9,"avg":3.411931136E9,"median":3.411931136E9,"max":3.411931136E9,"sum":3.411931136E9,"samples":1,"empty":false},{"start":1468236283000,"end":1468236303000,"min":3.38960384E9,"avg":3.40082688E9,"median":3.38960384E9,"max":3.41204992E9,"sum":6.80165376E9,"samples":2,"empty":false},{"start":1468236303000,"end":1468236323000,"min":3.389575168E9,"avg":3.389575168E9,"median":3.389575168E9,"max":3.389575168E9,"sum":3.389575168E9,"samples":1,"empty":false},{"start":1468236323000,"end":1468236343000,"min":3.381608448E9,"avg":3.385688064E9,"median":3.381608448E9,"max":3.38976768E9,"sum":6.771376128E9,"samples":2,"empty":false},{"start":1468236343000,"end":1468236363000,"min":3.380998144E9,"avg":3.380998144E9,"median":3.380998144E9,"max":3.380998144E9,"sum":3.380998144E9,"samples":1,"empty":false},{"start":1468236363000,"end":1468236383000,"min":3.381198848E9,"avg":3.381198848E9,"median":3.381198848E9,"max":3.381198848E9,"sum":3.381198848E9,"samples":1,"empty":false},{"start":1468236383000,"end":1468236403000,"min":3.384676352E9,"avg":3.38695168E9,"median":3.384676352E9,"max":3.389227008E9,"sum":6.77390336E9,"samples":2,"empty":false},{"start":1468236403000,"end":1468236423000,"min":3.390685184E9,"avg":3.390685184E9,"median":3.390685184E9,"max":3.390685184E9,"sum":3.390685184E9,"samples":1,"empty":false},{"start":1468236423000,"end":1468236443000,"min":3.428868096E9,"avg":3.428868096E9,"median":3.428868096E9,"max":3.428868096E9,"sum":3.428868096E9,"samples":1,"empty":false},{"start":1468236443000,"end":1468236463000,"min":3.385520128E9,"avg":3.385520128E9,"median":3.385520128E9,"max":3.385520128E9,"sum":3.385520128E9,"samples":1,"empty":false},{"start":1468236463000,"end":1468236483000,"min":3.385643008E9,"avg":3.385780224E9,"median":3.385643008E9,"max":3.38591744E9,"sum":6.771560448E9,"samples":2,"empty":false},{"start":1468236483000,"end":1468236503000,"min":3.419774976E9,"avg":3.419774976E9,"median":3.419774976E9,"max":3.419774976E9,"sum":3.419774976E9,"samples":1,"empty":false},{"start":1468236503000,"end":1468236523000,"min":3.385380864E9,"avg":3.385380864E9,"median":3.385380864E9,"max":3.385380864E9,"sum":3.385380864E9,"samples":1,"empty":false},{"start":1468236523000,"end":1468236543000,"min":3.385520128E9,"avg":3.385520128E9,"median":3.385520128E9,"max":3.385520128E9,"sum":3.385520128E9,"samples":1,"empty":false},{"start":1468236543000,"end":1468236563000,"min":3.38569216E9,"avg":3.415003136E9,"median":3.38569216E9,"max":3.444314112E9,"sum":6.830006272E9,"samples":2,"empty":false},{"start":1468236563000,"end":1468236583000,"min":3.3847296E9,"avg":3.3847296E9,"median":3.3847296E9,"max":3.3847296E9,"sum":3.3847296E9,"samples":1,"empty":false}]'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:36 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/counters/machine%2Fyzamir-centos7-1.example.com%2Fnetwork%2Ftx/data/?bucketDuration=20s&start=1468235823000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer TheToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '6957'
+      Date:
+      - Mon, 11 Jul 2016 11:29:37 GMT
+      Set-Cookie:
+      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=6d1f3acb19e25d1ab5f5b24a75c0fa5d;
+        path=/; HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235823000,"end":1468235843000,"min":3.7166796376E10,"avg":3.7166796376E10,"median":3.7166796376E10,"max":3.7166796376E10,"sum":3.7166796376E10,"samples":1,"empty":false},{"start":1468235843000,"end":1468235863000,"min":3.7167726524E10,"avg":3.7167887354E10,"median":3.7167726524E10,"max":3.7168048184E10,"sum":7.4335774708E10,"samples":2,"empty":false},{"start":1468235863000,"end":1468235883000,"min":3.7168667233E10,"avg":3.7168667233E10,"median":3.7168667233E10,"max":3.7168667233E10,"sum":3.7168667233E10,"samples":1,"empty":false},{"start":1468235883000,"end":1468235903000,"min":3.7168971617E10,"avg":3.7168971617E10,"median":3.7168971617E10,"max":3.7168971617E10,"sum":3.7168971617E10,"samples":1,"empty":false},{"start":1468235903000,"end":1468235923000,"min":3.7169579344E10,"avg":3.7169579344E10,"median":3.7169579344E10,"max":3.7169579344E10,"sum":3.7169579344E10,"samples":1,"empty":false},{"start":1468235923000,"end":1468235943000,"min":3.7169924487E10,"avg":3.71700619105E10,"median":3.7169924487E10,"max":3.7170199334E10,"sum":7.4340123821E10,"samples":2,"empty":false},{"start":1468235943000,"end":1468235963000,"min":3.7170781793E10,"avg":3.71709321145E10,"median":3.7170781793E10,"max":3.7171082436E10,"sum":7.4341864229E10,"samples":2,"empty":false},{"start":1468235963000,"end":1468235983000,"min":3.717138739E10,"avg":3.717138739E10,"median":3.717138739E10,"max":3.717138739E10,"sum":3.717138739E10,"samples":1,"empty":false},{"start":1468235983000,"end":1468236003000,"min":3.7171691545E10,"avg":3.7171691545E10,"median":3.7171691545E10,"max":3.7171691545E10,"sum":3.7171691545E10,"samples":1,"empty":false},{"start":1468236003000,"end":1468236023000,"min":3.7172250845E10,"avg":3.7172412353E10,"median":3.7172250845E10,"max":3.7172573861E10,"sum":7.4344824706E10,"samples":2,"empty":false},{"start":1468236023000,"end":1468236043000,"min":3.7173222327E10,"avg":3.7173222327E10,"median":3.7173222327E10,"max":3.7173222327E10,"sum":3.7173222327E10,"samples":1,"empty":false},{"start":1468236043000,"end":1468236063000,"min":3.7173543063E10,"avg":3.7173843089E10,"median":3.7173543063E10,"max":3.7174143115E10,"sum":7.4347686178E10,"samples":2,"empty":false},{"start":1468236063000,"end":1468236083000,"min":3.7174801708E10,"avg":3.7174801708E10,"median":3.7174801708E10,"max":3.7174801708E10,"sum":3.7174801708E10,"samples":1,"empty":false},{"start":1468236083000,"end":1468236103000,"min":3.7175118704E10,"avg":3.7175118704E10,"median":3.7175118704E10,"max":3.7175118704E10,"sum":3.7175118704E10,"samples":1,"empty":false},{"start":1468236103000,"end":1468236123000,"min":3.7175415847E10,"avg":3.71755570865E10,"median":3.7175415847E10,"max":3.7175698326E10,"sum":7.4351114173E10,"samples":2,"empty":false},{"start":1468236123000,"end":1468236143000,"min":3.7176014909E10,"avg":3.7176014909E10,"median":3.7176014909E10,"max":3.7176014909E10,"sum":3.7176014909E10,"samples":1,"empty":false},{"start":1468236143000,"end":1468236163000,"min":3.7176664646E10,"avg":3.71768047165E10,"median":3.7176664646E10,"max":3.7176944787E10,"sum":7.4353609433E10,"samples":2,"empty":false},{"start":1468236163000,"end":1468236183000,"min":3.7177371415E10,"avg":3.71775734955E10,"median":3.7177371415E10,"max":3.7177775576E10,"sum":7.4355146991E10,"samples":2,"empty":false},{"start":1468236183000,"end":1468236203000,"min":3.7178379021E10,"avg":3.7178533626E10,"median":3.7178379021E10,"max":3.7178688231E10,"sum":7.4357067252E10,"samples":2,"empty":false},{"start":1468236203000,"end":1468236223000,"min":3.7179032236E10,"avg":3.7179032236E10,"median":3.7179032236E10,"max":3.7179032236E10,"sum":3.7179032236E10,"samples":1,"empty":false},{"start":1468236223000,"end":1468236243000,"min":3.7179336309E10,"avg":3.71796540725E10,"median":3.7179336309E10,"max":3.7179971836E10,"sum":7.4359308145E10,"samples":2,"empty":false},{"start":1468236243000,"end":1468236263000,"min":3.7180873568E10,"avg":3.7180873568E10,"median":3.7180873568E10,"max":3.7180873568E10,"sum":3.7180873568E10,"samples":1,"empty":false},{"start":1468236263000,"end":1468236283000,"min":3.7181215531E10,"avg":3.7181215531E10,"median":3.7181215531E10,"max":3.7181215531E10,"sum":3.7181215531E10,"samples":1,"empty":false},{"start":1468236283000,"end":1468236303000,"min":3.7181824162E10,"avg":3.718198661E10,"median":3.7181824162E10,"max":3.7182149058E10,"sum":7.436397322E10,"samples":2,"empty":false},{"start":1468236303000,"end":1468236323000,"min":3.7182479926E10,"avg":3.7182479926E10,"median":3.7182479926E10,"max":3.7182479926E10,"sum":3.7182479926E10,"samples":1,"empty":false},{"start":1468236323000,"end":1468236343000,"min":3.7182896249E10,"avg":3.71832323645E10,"median":3.7182896249E10,"max":3.718356848E10,"sum":7.4366464729E10,"samples":2,"empty":false},{"start":1468236343000,"end":1468236363000,"min":3.7184194499E10,"avg":3.7184194499E10,"median":3.7184194499E10,"max":3.7184194499E10,"sum":3.7184194499E10,"samples":1,"empty":false},{"start":1468236363000,"end":1468236383000,"min":3.7184509692E10,"avg":3.7184509692E10,"median":3.7184509692E10,"max":3.7184509692E10,"sum":3.7184509692E10,"samples":1,"empty":false},{"start":1468236383000,"end":1468236403000,"min":3.7184803929E10,"avg":3.71851100355E10,"median":3.7184803929E10,"max":3.7185416142E10,"sum":7.4370220071E10,"samples":2,"empty":false},{"start":1468236403000,"end":1468236423000,"min":3.7186005745E10,"avg":3.7186005745E10,"median":3.7186005745E10,"max":3.7186005745E10,"sum":3.7186005745E10,"samples":1,"empty":false},{"start":1468236423000,"end":1468236443000,"min":3.7186319786E10,"avg":3.7186319786E10,"median":3.7186319786E10,"max":3.7186319786E10,"sum":3.7186319786E10,"samples":1,"empty":false},{"start":1468236443000,"end":1468236463000,"min":3.7186898224E10,"avg":3.7186898224E10,"median":3.7186898224E10,"max":3.7186898224E10,"sum":3.7186898224E10,"samples":1,"empty":false},{"start":1468236463000,"end":1468236483000,"min":3.7187221758E10,"avg":3.71875229705E10,"median":3.7187221758E10,"max":3.7187824183E10,"sum":7.4375045941E10,"samples":2,"empty":false},{"start":1468236483000,"end":1468236503000,"min":3.7188134579E10,"avg":3.7188134579E10,"median":3.7188134579E10,"max":3.7188134579E10,"sum":3.7188134579E10,"samples":1,"empty":false},{"start":1468236503000,"end":1468236523000,"min":3.7188740794E10,"avg":3.7188740794E10,"median":3.7188740794E10,"max":3.7188740794E10,"sum":3.7188740794E10,"samples":1,"empty":false},{"start":1468236523000,"end":1468236543000,"min":3.7189322505E10,"avg":3.7189322505E10,"median":3.7189322505E10,"max":3.7189322505E10,"sum":3.7189322505E10,"samples":1,"empty":false},{"start":1468236543000,"end":1468236563000,"min":3.7189620689E10,"avg":3.71897928165E10,"median":3.7189620689E10,"max":3.7189964944E10,"sum":7.4379585633E10,"samples":2,"empty":false},{"start":1468236563000,"end":1468236583000,"min":3.7190301249E10,"avg":3.7190301249E10,"median":3.7190301249E10,"max":3.7190301249E10,"sum":3.7190301249E10,"samples":1,"empty":false}]'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:37 GMT
+- request:
+    method: get
+    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/counters/machine%2Fyzamir-centos7-1.example.com%2Fnetwork%2Frx/data/?bucketDuration=20s&start=1468235823000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0.rc1 (linux-gnu x86_64) ruby/2.2.5p319
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer TheToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '6956'
+      Date:
+      - Mon, 11 Jul 2016 11:29:37 GMT
+      Set-Cookie:
+      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=6d1f3acb19e25d1ab5f5b24a75c0fa5d;
+        path=/; HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235823000,"end":1468235843000,"min":1.4794623825E10,"avg":1.4794623825E10,"median":1.4794623825E10,"max":1.4794623825E10,"sum":1.4794623825E10,"samples":1,"empty":false},{"start":1468235843000,"end":1468235863000,"min":1.4796275944E10,"avg":1.4796337831E10,"median":1.4796275944E10,"max":1.4796399718E10,"sum":2.9592675662E10,"samples":2,"empty":false},{"start":1468235863000,"end":1468235883000,"min":1.4796648168E10,"avg":1.4796648168E10,"median":1.4796648168E10,"max":1.4796648168E10,"sum":1.4796648168E10,"samples":1,"empty":false},{"start":1468235883000,"end":1468235903000,"min":1.4796763745E10,"avg":1.4796763745E10,"median":1.4796763745E10,"max":1.4796763745E10,"sum":1.4796763745E10,"samples":1,"empty":false},{"start":1468235903000,"end":1468235923000,"min":1.4796999081E10,"avg":1.4796999081E10,"median":1.4796999081E10,"max":1.4796999081E10,"sum":1.4796999081E10,"samples":1,"empty":false},{"start":1468235923000,"end":1468235943000,"min":1.4797135322E10,"avg":1.4797185328E10,"median":1.4797135322E10,"max":1.4797235334E10,"sum":2.9594370656E10,"samples":2,"empty":false},{"start":1468235943000,"end":1468235963000,"min":1.4797454086E10,"avg":1.4797509164E10,"median":1.4797454086E10,"max":1.4797564242E10,"sum":2.9595018328E10,"samples":2,"empty":false},{"start":1468235963000,"end":1468235983000,"min":1.4797685601E10,"avg":1.4797685601E10,"median":1.4797685601E10,"max":1.4797685601E10,"sum":1.4797685601E10,"samples":1,"empty":false},{"start":1468235983000,"end":1468236003000,"min":1.4797796489E10,"avg":1.4797796489E10,"median":1.4797796489E10,"max":1.4797796489E10,"sum":1.4797796489E10,"samples":1,"empty":false},{"start":1468236003000,"end":1468236023000,"min":1.4797997244E10,"avg":1.47980635275E10,"median":1.4797997244E10,"max":1.4798129811E10,"sum":2.9596127055E10,"samples":2,"empty":false},{"start":1468236023000,"end":1468236043000,"min":1.4798404457E10,"avg":1.4798404457E10,"median":1.4798404457E10,"max":1.4798404457E10,"sum":1.4798404457E10,"samples":1,"empty":false},{"start":1468236043000,"end":1468236063000,"min":1.4798533192E10,"avg":1.47986388675E10,"median":1.4798533192E10,"max":1.4798744543E10,"sum":2.9597277735E10,"samples":2,"empty":false},{"start":1468236063000,"end":1468236083000,"min":1.4799020903E10,"avg":1.4799020903E10,"median":1.4799020903E10,"max":1.4799020903E10,"sum":1.4799020903E10,"samples":1,"empty":false},{"start":1468236083000,"end":1468236103000,"min":1.4799159201E10,"avg":1.4799159201E10,"median":1.4799159201E10,"max":1.4799159201E10,"sum":1.4799159201E10,"samples":1,"empty":false},{"start":1468236103000,"end":1468236123000,"min":1.4799261863E10,"avg":1.4799317837E10,"median":1.4799261863E10,"max":1.4799373811E10,"sum":2.9598635674E10,"samples":2,"empty":false},{"start":1468236123000,"end":1468236143000,"min":1.4799500374E10,"avg":1.4799500374E10,"median":1.4799500374E10,"max":1.4799500374E10,"sum":1.4799500374E10,"samples":1,"empty":false},{"start":1468236143000,"end":1468236163000,"min":1.4799748817E10,"avg":1.47998056135E10,"median":1.4799748817E10,"max":1.479986241E10,"sum":2.9599611227E10,"samples":2,"empty":false},{"start":1468236163000,"end":1468236183000,"min":1.4800090304E10,"avg":1.4800214364E10,"median":1.4800090304E10,"max":1.4800338424E10,"sum":2.9600428728E10,"samples":2,"empty":false},{"start":1468236183000,"end":1468236203000,"min":1.4800576396E10,"avg":1.48006379875E10,"median":1.4800576396E10,"max":1.4800699579E10,"sum":2.9601275975E10,"samples":2,"empty":false},{"start":1468236203000,"end":1468236223000,"min":1.4800838443E10,"avg":1.4800838443E10,"median":1.4800838443E10,"max":1.4800838443E10,"sum":1.4800838443E10,"samples":1,"empty":false},{"start":1468236223000,"end":1468236243000,"min":1.4800959586E10,"avg":1.4801087083E10,"median":1.4800959586E10,"max":1.480121458E10,"sum":2.9602174166E10,"samples":2,"empty":false},{"start":1468236243000,"end":1468236263000,"min":1.4802757763E10,"avg":1.4802757763E10,"median":1.4802757763E10,"max":1.4802757763E10,"sum":1.4802757763E10,"samples":1,"empty":false},{"start":1468236263000,"end":1468236283000,"min":1.4802904662E10,"avg":1.4802904662E10,"median":1.4802904662E10,"max":1.4802904662E10,"sum":1.4802904662E10,"samples":1,"empty":false},{"start":1468236283000,"end":1468236303000,"min":1.480314408E10,"avg":1.4803214977E10,"median":1.480314408E10,"max":1.4803285874E10,"sum":2.9606429954E10,"samples":2,"empty":false},{"start":1468236303000,"end":1468236323000,"min":1.4803419444E10,"avg":1.4803419444E10,"median":1.4803419444E10,"max":1.4803419444E10,"sum":1.4803419444E10,"samples":1,"empty":false},{"start":1468236323000,"end":1468236343000,"min":1.4803685861E10,"avg":1.4803829762E10,"median":1.4803685861E10,"max":1.4803973663E10,"sum":2.9607659524E10,"samples":2,"empty":false},{"start":1468236343000,"end":1468236363000,"min":1.4804227494E10,"avg":1.4804227494E10,"median":1.4804227494E10,"max":1.4804227494E10,"sum":1.4804227494E10,"samples":1,"empty":false},{"start":1468236363000,"end":1468236383000,"min":1.4804353981E10,"avg":1.4804353981E10,"median":1.4804353981E10,"max":1.4804353981E10,"sum":1.4804353981E10,"samples":1,"empty":false},{"start":1468236383000,"end":1468236403000,"min":1.4804469114E10,"avg":1.48045830975E10,"median":1.4804469114E10,"max":1.4804697081E10,"sum":2.9609166195E10,"samples":2,"empty":false},{"start":1468236403000,"end":1468236423000,"min":1.4804923796E10,"avg":1.4804923796E10,"median":1.4804923796E10,"max":1.4804923796E10,"sum":1.4804923796E10,"samples":1,"empty":false},{"start":1468236423000,"end":1468236443000,"min":1.4805045476E10,"avg":1.4805045476E10,"median":1.4805045476E10,"max":1.4805045476E10,"sum":1.4805045476E10,"samples":1,"empty":false},{"start":1468236443000,"end":1468236463000,"min":1.4805261293E10,"avg":1.4805261293E10,"median":1.4805261293E10,"max":1.4805261293E10,"sum":1.4805261293E10,"samples":1,"empty":false},{"start":1468236463000,"end":1468236483000,"min":1.4805389009E10,"avg":1.4805508082E10,"median":1.4805389009E10,"max":1.4805627155E10,"sum":2.9611016164E10,"samples":2,"empty":false},{"start":1468236483000,"end":1468236503000,"min":1.4805757173E10,"avg":1.4805757173E10,"median":1.4805757173E10,"max":1.4805757173E10,"sum":1.4805757173E10,"samples":1,"empty":false},{"start":1468236503000,"end":1468236523000,"min":1.4805988785E10,"avg":1.4805988785E10,"median":1.4805988785E10,"max":1.4805988785E10,"sum":1.4805988785E10,"samples":1,"empty":false},{"start":1468236523000,"end":1468236543000,"min":1.4806199007E10,"avg":1.4806199007E10,"median":1.4806199007E10,"max":1.4806199007E10,"sum":1.4806199007E10,"samples":1,"empty":false},{"start":1468236543000,"end":1468236563000,"min":1.4806319903E10,"avg":1.4806425724E10,"median":1.4806319903E10,"max":1.4806531545E10,"sum":2.9612851448E10,"samples":2,"empty":false},{"start":1468236563000,"end":1468236583000,"min":1.4806693243E10,"avg":1.4806693243E10,"median":1.4806693243E10,"max":1.4806693243E10,"sum":1.4806693243E10,"samples":1,"empty":false}]'
+    http_version:
+  recorded_at: Mon, 11 Jul 2016 11:29:37 GMT
+recorded_with: VCR 2.9.3
