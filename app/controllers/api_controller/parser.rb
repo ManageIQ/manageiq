@@ -247,7 +247,6 @@ class ApiController
 
     def validate_post_api_action(cname, mname, cspec, type, target)
       aname = parse_action_name
-
       aspecnames = "#{target}_actions"
       raise BadRequestError, "No actions are supported for #{cname} #{type}" unless cspec.key?(aspecnames.to_sym)
 

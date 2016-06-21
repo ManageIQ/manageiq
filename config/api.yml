@@ -1635,3 +1635,7 @@
         :identifier: edit_virtual_template
       - :name: delete
         :identifier: delete_virtual_template
+    :resource_actions:
+      :post:
+      - :name: edit
+        :identifier: edit_virtual_template
