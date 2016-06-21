@@ -2,6 +2,17 @@ require 'spec_helper'
 include AutomationSpecHelper
 
 describe "update_serviceprovision_status" do
+  def build_resolve_path
+    instance  = "/System/Request/Call_Method"
+    namespace = "namespace=/ManageIQ/Service/Provisioning/StateMachines"
+    klass     = "class=ServiceProvision_Template"
+    method    = "method=update_serviceprovision_status"
+    "#{instance}?#{namespace}&#{klass}&#{method}"
+  end
+
+  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:ws) { MiqAeEngine.instantiate("#{build_resolve_path}&#{@args}", user) }
+  let(:miq_server) { EvmSpecHelper.local_miq_server }
   let(:miq_request_task) do
     FactoryGirl.create(:miq_request_task, :destination => service_orchestration,
                        :miq_request => request, :state => 'fred')
@@ -12,20 +23,29 @@ describe "update_serviceprovision_status" do
   end
 
   let(:service_orchestration) { FactoryGirl.create(:service_orchestration) }
-  let(:user)                  { FactoryGirl.create(:user_with_group) }
 
   context "with a stp request object" do
-    let(:ws)                    { MiqAeEngine.instantiate("/System/Request/Call_Method?namespace=/ManageIQ/Cloud/Orchestration/Provisioning/StateMachines&status=fred&class=Provision&method=update_serviceprovision_status&ae_result=ok&MiqRequestTask::service_template_provision_task=#{miq_request_task.id}", user) }
     it "method succeeds" do
+      @args = "status=fred&ae_result=ok&MiqRequestTask::service_template_provision_task=#{miq_request_task.id}&" \
+              "MiqServer::miq_server=#{miq_server.id}"
       add_call_method
       ws
       expect(request.reload.status).to eq('Ok')
     end
+
+    it "request message set properly" do
+      @args = "status=fred&ae_result=ok&MiqRequestTask::service_template_provision_task=#{miq_request_task.id}&" \
+              "MiqServer::miq_server=#{miq_server.id}"
+      add_call_method
+      ws
+      msg = "Server [#{miq_server.name}] Service [#{service_orchestration.name}] Step [] Status [fred] Message [] "
+      expect(request.reload.message).to eq(msg)
+    end
   end
 
   context "without a stp request object" do
-    let(:ws) { MiqAeEngine.instantiate("/System/Request/Call_Method?namespace=/ManageIQ/Cloud/Orchestration/Provisioning/StateMachines&status=fred&class=Provision&method=update_serviceprovision_status&ae_result=ok", user) }
     it "method fails" do
+      @args = "status=fred&ae_result=ok&MiqServer::miq_server=#{miq_server.id}"
       add_call_method
       expect(ws.root).to be_nil
     end

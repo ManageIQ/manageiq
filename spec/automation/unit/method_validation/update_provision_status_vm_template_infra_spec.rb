@@ -2,7 +2,17 @@ require 'spec_helper'
 include AutomationSpecHelper
 
 describe "update_provision_status" do
-  let(:user)      { FactoryGirl.create(:user_with_group) }
+  def build_resolve_path
+    instance  = "/System/Request/Call_Method"
+    namespace = "namespace=/ManageIQ/Infrastructure/VM/Provisioning/StateMachines"
+    klass     = "class=VMProvision_Template"
+    method    = "method=update_provision_status"
+    "#{instance}?#{namespace}&#{klass}&#{method}"
+  end
+
+  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:ws) { MiqAeEngine.instantiate("#{build_resolve_path}&#{@args}", user) }
+  let(:miq_server) { EvmSpecHelper.local_miq_server }
 
   context "with a provision request object" do
     let(:ems)   { FactoryGirl.create(:ems_vmware_with_authentication) }
@@ -23,18 +33,30 @@ describe "update_provision_status" do
                          :options => options, :userid => user.userid)
     end
 
-    let(:ws) { MiqAeEngine.instantiate("/System/Request/Call_Method?namespace=/ManageIQ/Infrastructure/VM/Provisioning/StateMachines&status=fred&class=VMProvision_Template&method=update_provision_status&ae_result=ok&MiqProvision::miq_provision=#{provision.id}", user) }
     it "method succeeds" do
+      @args = "status=fred&ae_result=ok&MiqProvision::miq_provision=#{provision.id}&" \
+              "MiqServer::miq_server=#{miq_server.id}"
       add_call_method
       ws
       expect(provision.reload.status).to eq('Ok')
     end
+
+    it "request message set properly" do
+      @args = "status=fred&ae_result=ok&MiqProvision::miq_provision=#{provision.id}&" \
+              "MiqServer::miq_server=#{miq_server.id}"
+      add_call_method
+      ws
+      expect(provision.reload.status).to eq('Ok')
+      msg = "[#{miq_server.name}] VM [] Step [] Status [#{provision.message}] Message [] "
+      expect(miq_provision_request.reload.message).to eq(msg)
+    end
   end
 
   context "without a provision object" do
-    let(:ws) { MiqAeEngine.instantiate("/System/Request/Call_Method?namespace=/ManageIQ/Infrastructure/VM/Provisioning/StateMachines&status=fred&class=VMProvision_Template&method=update_provision_status&ae_result=ok", user) }
     it "method fails" do
+      @args = "status=fred&ae_result=ok&MiqServer::miq_server=#{miq_server.id}"
       add_call_method
+      ws
       expect(ws.root).to be_nil
     end
   end
