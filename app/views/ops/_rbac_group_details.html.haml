@@ -40,8 +40,8 @@
                           :title   => _("View this Role")}
             - else
               - params = {}
-            %span.product.product-role{params}
-              = h(@group.miq_user_role.name)
+            %i.product.product-role{params}
+            = h(@group.miq_user_role.name)
         - else
           = select_tag('group_role',
               options_for_select(@edit[:roles].sort, @edit[:new][:role]),
@@ -61,8 +61,8 @@
               - params[:class] = "#{params[:class]} pointer"
               - params.merge!({:onclick => "miqDynatreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
                                :title   => tenant.divisible ? _("View this Tenant") : _("View this Project")})
-            %span{params}
-              = h(tenant.name)
+            %i{params}
+            = h(tenant.name)
         - else
           = select_tag('group_tenant',
               grouped_options_for_select(@edit[:projects_tenants], @edit[:new][:group_tenant]),
@@ -82,8 +82,8 @@
                           :title   => _("View this User")}
             - else
               - params = {}
-            %span.pficon.pficon-user{params}
-              = h(u.name)
+            %i.pficon.pficon-user{params}
+            = h(u.name)
             %br
     - unless @edit
       = render :partial => "rbac_tag_box"
