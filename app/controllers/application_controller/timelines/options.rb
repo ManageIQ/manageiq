@@ -60,6 +60,10 @@ module ApplicationController::Timelines
       filter3.blank? ? '' : build_filter(events[filter3])
     end
 
+    def event_filter_any?
+      [filter1, filter2, filter3].any? { |f| !f.blank? }
+    end
+
     def events
       @events ||= event_groups.each_with_object({}) do |egroup, hash|
         gname, list = egroup

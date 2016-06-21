@@ -20,8 +20,7 @@ module ApplicationController::Timelines
       @tl_options.policy.update_from_params(params)
     end
 
-    if @tl_options.management_events? &&
-       (@tl_options.mngt.filter1.blank? || @tl_options.mngt.filter2.blank? || @tl_options.mngt.filter3.blank?)
+    if @tl_options.management_events? && !@tl_options.mngt.event_filter_any?
       add_flash(_("At least one filter must be selected"), :warning)
     elsif @tl_options.policy_events?
       if @tl_options.policy.event_filter_any?
