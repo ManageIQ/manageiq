@@ -21,9 +21,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#collect_live_metrics for all metrics available" do
-    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")    # Fixed time for testing
-    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")      # Fixed time for testing
-    interval = 3600                                         # Interval in seconds
+    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")
+    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")
+    interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
@@ -35,9 +35,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
   end
 
   it "#collect_live_metrics for three metrics" do
-    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")    # Fixed time for testing
-    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")      # Fixed time for testing
-    interval = 3600                                         # Interval in seconds
+    start_time = Time.new(2016, 5, 17, 15, 0, 0, "+02:00")
+    end_time = Time.new(2016, 5, 18, 0, 0, 0, "+02:00")
+    interval = 3600
     VCR.use_cassette(described_class.name.underscore.to_s,
                      :allow_unused_http_interactions => true,
                      :decode_compressed_response     => true) do # , :record => :new_episodes) do
@@ -60,5 +60,26 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
       capture = eap.first_and_last_capture
       expect(capture[0]).to be < capture[1]
     end
+  end
+
+  it "#supported_metrics" do
+    expected_metrics = {
+      "WildFly Memory Metrics~Heap Used"                                  => "mw_heap_used",
+      "WildFly Memory Metrics~Heap Max"                                   => "mw_heap_max",
+      "WildFly Memory Metrics~Heap Committed"                             => "mw_heap_committed",
+      "WildFly Memory Metrics~NonHeap Used"                               => "mw_non_heap_used",
+      "WildFly Memory Metrics~NonHeap Committed"                          => "mw_non_heap_committed",
+      "WildFly Memory Metrics~Accumulated GC Duration"                    => "mw_accumulated_gc_duration",
+      "WildFly Aggregated Web Metrics~Aggregated Servlet Request Time"    => "mw_agregated_servlet_time",
+      "WildFly Aggregated Web Metrics~Aggregated Servlet Request Count"   => "mw_aggregated_servlet_request_count",
+      "WildFly Aggregated Web Metrics~Aggregated Expired Web Sessions"    => "mw_aggregated_expired_web_sessions",
+      "WildFly Aggregated Web Metrics~Aggregated Max Active Web Sessions" => "mw_aggregated_max_active_web_sessions",
+      "WildFly Aggregated Web Metrics~Aggregated Active Web Sessions"     => "mw_aggregated_active_web_sessions",
+      "WildFly Aggregated Web Metrics~Aggregated Rejected Web Sessions"   => "mw_aggregated_rejected_web_sessions",
+      "WildFly Threading Metrics~Thread Count"                            => "mw_thread_count",
+      "Server Availability~App Server"                                    => "mw_availability_app_server"
+    }.freeze
+    supported_metrics = MiddlewareServer.supported_metrics
+    expected_metrics.each { |k, v| expect(supported_metrics[k]).to eq(v) }
   end
 end

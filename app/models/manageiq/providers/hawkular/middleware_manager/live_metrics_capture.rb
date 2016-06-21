@@ -22,7 +22,7 @@ module ManageIQ::Providers
       @ems.metrics_resource(resource).collect do |metric|
         {
           :id   => metric.id,
-          :name => @target.class::METRICS_HWK_MIQ[metric.name],
+          :name => @target.class.supported_metrics[metric.name],
           :type => metric.type,
           :unit => metric.unit
         }
