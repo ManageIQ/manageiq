@@ -1,9 +1,14 @@
 class ManageIQ::Providers::CloudManager::VirtualTemplate < ::MiqTemplate
-  # TODO: Some of these might not be generic, and will have to be provider-specific
-  validates :cloud_network_id, :cloud_subnet_id, :availability_zone_id, :ems_ref, presence: true
+  validate :single_template, on: :create
   default_value_for :cloud, true
 
-  def self.eligible_for_provisioning
-    super.where(:type => %w(ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate))
+  TYPES = {
+      amazon: 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
+  }
+
+  def single_template
+    single = type.constantize.where(type: type).size > 0
+    errors.add(:virtual_template, 'may only have one per type') if single
+    single
   end
 end
