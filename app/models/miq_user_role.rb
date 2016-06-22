@@ -2,12 +2,12 @@ class MiqUserRole < ApplicationRecord
   SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
   ADMIN_ROLE_NAME       = "EvmRole-administrator"
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
+  include VirtualTotalMixin
 
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements
   has_and_belongs_to_many :miq_product_features, :join_table => :miq_roles_features
 
-  virtual_column :group_count,                      :type => :integer
   virtual_column :vm_restriction,                   :type => :string
 
   validates_presence_of   :name
@@ -139,9 +139,7 @@ class MiqUserRole < ApplicationRecord
     end
   end
 
-  def group_count
-    miq_groups.count
-  end
+  virtual_total :group_count, :miq_groups
 
   def vm_restriction
     vmr = settings && settings.fetch_path(:restrictions, :vms)
