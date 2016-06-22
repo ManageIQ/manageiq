@@ -1579,6 +1579,7 @@ Vmdb::Application.routes.draw do
         optimize_tree_select
         planning
         planning_option_changed
+        reload
         tree_autoload_dynatree
         util_chart_chooser
         wait_for_task
