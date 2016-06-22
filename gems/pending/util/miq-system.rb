@@ -74,6 +74,34 @@ class MiqSystem
       end
     when :macosx
       # raise "MiqSystem.memory: Mac OSX Not Supported"
+      if ENV['USE_OSX_MEMORY_INFO']
+        sysctl_keys = %w[
+          hw.memsize
+          vm.page_free_count
+          vm.pagesize
+          vm.swapusage
+        ]
+        mem_info = osx_hardware_info sysctl_keys.join(' ')
+
+        result[:MemTotal] = mem_info['hw.memsize'].to_i
+        result[:MemFree]  = mem_info['vm.page_free_count'].to_i * mem_info['vm.pagesize'].to_i
+        result[:MemUsed]  = result[:MemTotal] - result[:MemFree]
+
+        swapusage = mem_info['vm.swapusage']
+                      .split('  ')
+                      .select {|data| data.include? '=' }
+                      .map    {|data| data.split(' = ') }.to_h
+
+
+        result[:SwapTotal] = swapusage['total'].split('.')[0].to_i * 1024**2
+        result[:SwapFree]  = swapusage['free'].split('.')[0].to_i * 1024**2
+
+        # Since OSX doesn't have a swap max, let's stop spawning processes if
+        # our swap total is over our memory total
+        if result[:SwapTotal] > result[:MemTotal]
+          result[:SwapTotal] = result[:SwapFree] = result[:MemTotal]
+        end
+      end
     end
 
     result
@@ -81,6 +109,18 @@ class MiqSystem
 
   def self.total_memory
     @total_memory ||= memory[:MemTotal]
+  end
+
+  def self.osx_hardware_info(keys='-a')
+    keys.gsub(/[^a-z\.\-]/, '')
+    `sysctl #{keys}`.split("\n").inject({}) do |data, line|
+      if line.include? ':'
+        key, val  = line.split(':')
+        val       = val.strip
+        data[key] = val
+      end
+      data
+    end
   end
 
   def self.status
