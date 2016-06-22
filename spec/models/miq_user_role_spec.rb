@@ -261,4 +261,17 @@ describe MiqUserRole do
       end
     end
   end
+
+  describe "#group_count" do
+    it "counts none in ruby" do
+      role = FactoryGirl.create(:miq_user_role)
+      expect(role.group_count).to eq(0)
+    end
+
+    it "counts some in ruby" do
+      role = FactoryGirl.create(:miq_user_role)
+      FactoryGirl.create_list(:miq_group, 2, :miq_user_role => role)
+      expect(role.group_count).to eq(2)
+    end
+  end
 end

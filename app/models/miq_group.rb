@@ -16,7 +16,6 @@ class MiqGroup < ApplicationRecord
 
   virtual_column :miq_user_role_name, :type => :string,  :uses => :miq_user_role
   virtual_column :read_only,          :type => :boolean
-  virtual_column :user_count,         :type => :integer
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
@@ -37,6 +36,7 @@ class MiqGroup < ApplicationRecord
   include ActiveVmAggregationMixin
   include TimezoneMixin
   include TenancyMixin
+  include VirtualTotalMixin
 
   alias_method :current_tenant, :tenant
 
@@ -167,9 +167,7 @@ class MiqGroup < ApplicationRecord
   end
   alias_method :read_only?, :read_only
 
-  def user_count
-    users.count
-  end
+  virtual_total :user_count, :users
 
   def description=(val)
     super(val.to_s.strip)
