@@ -113,6 +113,9 @@ module QuadiconHelper
       elsif db == "FloatingIp"
         link_to(truncate_for_quad(item.address),
                 url_for_db(db, "show"), :title => h(item.address))
+      elsif db == "Authentication"
+        link_to(truncate_for_quad(row['name']),
+                url_for_db("auth_key_pair_cloud", "show"), :title => h(row['name']))
       else
         if @explorer
           column = case db
