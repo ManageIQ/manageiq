@@ -6,7 +6,7 @@
     - if chart_data
       - if !perf_parent? && !perf_compare_vm?
         - if charts && chart_data.length > 0
-          .row
+          .row.cards-pf
             - (0..chart_data.length - 1).each do |c|
               - unless charts[c][:type] == "None" || chart_data[c].nil?
                 - chart_render = render(:partial => '/layouts/perf_chart',
