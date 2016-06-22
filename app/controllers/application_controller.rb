@@ -1968,8 +1968,7 @@ class ApplicationController < ActionController::Base
     # Get performance hash, if it is in the sandbox for the running controller
     @perf_options = @sb[:perf_options] ? copy_hash(@sb[:perf_options]) : {}
 
-    # Set window width/height for views to use
-    @winW = session[:winW] ? session[:winW].to_i : 1330
+    # Set window height for views to use
     @winH = session[:winH] ? session[:winH].to_i : 805
 
     # Set @edit key default for the expression editor to use

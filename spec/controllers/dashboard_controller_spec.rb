@@ -372,20 +372,17 @@ describe DashboardController do
   context "#session_reset" do
     it "verify certain keys are restored after session is cleared" do
       winH               = '600'
-      winW               = '800'
       user_TZO           = '5'
       browser_info       = {:name => 'firefox', :version => '32'}
       session[:browser]  = browser_info
       session[:user_TZO] = user_TZO
       session[:winH]     = winH
-      session[:winW]     = winW
       session[:foo]      = 'foo_bar'
 
       controller.send(:session_reset)
 
       expect(session[:browser]).to eq(browser_info)
       expect(session[:winH]).to eq(winH)
-      expect(session[:winW]).to eq(winW)
       expect(session[:user_TZO]).to eq(user_TZO)
       expect(session[:foo]).to eq(nil)
       expect(browser_info(:version)).to eq(browser_info[:version])
