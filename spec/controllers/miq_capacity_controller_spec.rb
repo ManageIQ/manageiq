@@ -69,6 +69,21 @@ describe MiqCapacityController do
                                         @vm4.id.to_s => @vm4.name)
     end
 
+    it 'displays Vms with the same name' do
+      ems = FactoryGirl.create(:ems_vmware, :name => "ProviderName")
+      vm5 = FactoryGirl.create(:vm_vmware,  :name => 'Name1', :host => @host2, :ext_management_system => ems)
+      allow(controller).to receive(:render)
+      controller.instance_variable_set(:@sb, :planning => {:vms => {}, :options => {}})
+      controller.instance_variable_set(:@_params, :filter_typ => "all")
+      controller.send(:planning_option_changed)
+      sb = controller.instance_variable_get(:@sb)
+      expect(sb[:planning][:vms]).to eq(@vm1.id.to_s => @vm1.name,
+                                        vm5.id.to_s  => "#{vm5.name} under provider #{ems.name}",
+                                        @vm2.id.to_s => @vm2.name,
+                                        @vm3.id.to_s => @vm3.name,
+                                        @vm4.id.to_s => @vm4.name)
+    end
+
     it 'displays Vms filtered by host' do
       allow(controller).to receive(:render)
       controller.instance_variable_set(:@sb, :planning => {:vms => {}, :options => {}})
