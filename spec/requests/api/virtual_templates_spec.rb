@@ -35,23 +35,23 @@ RSpec.describe 'Virtual Template API' do
   context 'virtual templates create' do
     let(:template) do
       {
-          action: 'create',
-          name: 'create_vt',
-          vendor: 'amazon',
-          location: 'us-west-2',
-          cloud_network_id: 0,
-          cloud_subnet_id: 1,
-          availability_zone_id: 2,
-          ems_ref: 'aref',
-          type: 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
+        :action               => 'create',
+        :name                 => 'create_vt',
+        :vendor               => 'amazon',
+        :location             => 'us-west-2',
+        :cloud_network_id     => 0,
+        :cloud_subnet_id      => 1,
+        :availability_zone_id => 2,
+        :ems_ref              => 'aref',
+        :type                 => 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
       }
     end
     let(:template_2) do
       {
-          action: 'create',
-          name: 'create_vt2',
-          vendor: 'google',
-          location: 'us-west-2'
+        :action   => 'create',
+        :name     => 'create_vt2',
+        :vendor   => 'google',
+        :location => 'us-west-2'
       }
     end
     let(:expected_attributes) { %w(name vendor location cloud_network_id cloud_subnet_id ems_ref availability_zone_id) }
@@ -119,11 +119,11 @@ RSpec.describe 'Virtual Template API' do
 
   context 'virtual template edit' do
     let(:template) { FactoryGirl.create(:virtual_template) }
-    let(:template_2) {FactoryGirl.create(:virtual_template, :generic)}
+    let(:template_2) { FactoryGirl.create(:virtual_template, :generic) }
 
     it 'supports single virtual_template edit' do
       api_basic_authorize collection_action_identifier(:virtual_templates, :edit)
-      run_post(virtual_templates_url(template.id), gen_request(:edit, name: 'updatedName'))
+      run_post(virtual_templates_url(template.id), gen_request(:edit, :name => 'updatedName'))
 
       expect(template.reload.name).to eq('updatedName')
     end
@@ -133,12 +133,12 @@ RSpec.describe 'Virtual Template API' do
       template_id_1, template_id_2 = template.id, template_2.id
 
       resource_request = [
-          { href: virtual_templates_url(template_id_1), name: 'firstEdit' },
-          { href: virtual_templates_url(template_id_2), name: 'secondEdit' }
+        {:href => virtual_templates_url(template_id_1), :name => 'firstEdit'},
+        {:href => virtual_templates_url(template_id_2), :name => 'secondEdit'}
       ]
       resource_results = [
-          { 'id' => template_id_1, 'name' => 'firstEdit' },
-          { 'id' => template_id_2, 'name' => 'secondEdit' }
+        {'id' => template_id_1, 'name' => 'firstEdit'},
+        {'id' => template_id_2, 'name' => 'secondEdit'}
       ]
 
       run_post(virtual_templates_url, gen_request(:edit, resource_request))
