@@ -77,6 +77,22 @@ describe VmOrTemplateController do
       expect(response).to redirect_to(:controller => "dashboard", :action => 'show')
       expect(assigns(:flash_array).first[:message]).to include("is not authorized to access")
     end
+
+    it "Redirects user with privileges to vm_infra/explorer" do
+      set_user_privileges
+      get :show, :params => {:id => @vm.id}
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to(:controller => "vm_infra", :action => 'explorer')
+    end
+
+    it "Redirects user to the referrer controller/action" do
+      login_as FactoryGirl.create(:user)
+      request.env["HTTP_REFERER"] = "http://localhost:3000/dashboard/show"
+      allow(controller).to receive(:find_by_id_filtered).and_return(nil)
+      get :show, :params => {:id => @vm.id}
+      expect(response.status).to eq(302)
+      expect(response).to redirect_to(:controller => "dashboard", :action => 'show')
+    end
   end
 
   describe '#console_after_task' do
