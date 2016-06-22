@@ -708,8 +708,16 @@ module VmCommon
     build_policy_tree(@polArr)
     @edit = session[:edit] if session[:edit]
     if @edit && @edit[:explorer]
-      @in_a_form = true
-      replace_right_cell
+      if session[:policies].empty?
+        add_flash(_("No policies were selected for Policy Simulation"), :error)
+        render :update do |page|
+          page << javascript_prologue
+          page.replace_html("flash_msg_div", :partial => "layouts/flash_msg")
+        end
+      else
+        @in_a_form = true
+        replace_right_cell
+      end
     else
       render :template => 'vm/show'
     end
