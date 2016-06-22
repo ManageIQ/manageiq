@@ -90,21 +90,18 @@
                           :ajax_buttons => true})
 
   - unless @timeprofile.miq_reports.empty?
-    %fieldset
-      %h3= _('Reports Currently Using This Time Profile')
-      %table.table.table-striped.table-bordered.table-hover
+    %hr
+    %h3= _('Reports Currently Using This Time Profile')
+    %table.table.table-striped.table-bordered
+      %thead
         %tr
-          %td
-            %table.admintable
-              %thead
-                %tr
-                  %th.icon
-                  %th.nowrap= _('Name')
-                  %th.nowrap= _('Title')
-              %tbody
-                - @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
-                  %tr
-                    %td.icon
-                      %img{:src => image_path('100/report.png'), :valign => "middle", :border => "0", :height => "20", :width => "20"}
-                    %td= r.name
-                    %td= r.title
+          %th.narrow
+          %th= _('Name')
+          %th= _('Title')
+      %tbody
+        - @timeprofile.miq_reports.sort_by { |a| a.name.downcase }.each do |r|
+          %tr
+            %td.narrow
+              %i.product-report.fa-lg
+            %td= r.name
+            %td= r.title
