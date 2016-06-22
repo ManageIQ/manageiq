@@ -4,19 +4,20 @@ module MiqAeMethodService
 
     module ClassMethods
       def find_ar_object_by_id(id)
-        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
-        MiqAeService.rbac_enabled? ? Rbac.search(:class => model, :targets => [id], :results_format => :objects).first.first : model.send(:find, *id)
+        if rbac_enabled?
+          Rbac.filtered(model.where(:id => id), :user => workspace.ae_user).first
+        else
+          model.find(*id)
+        end
       end
 
       def all
-        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
-        objs = MiqAeService.rbac_enabled? ? Rbac.filtered(model): model.send(:all)
+        objs = rbac_enabled? ? Rbac.filtered(model, :user => workspace.ae_user) : model.all
         wrap_results(objs)
       end
 
       def count
-        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
-        MiqAeService.rbac_enabled? ? Rbac.filtered(model).count : model.send(:count)
+        rbac_enabled? ? Rbac.filtered(model, :user => workspace.ae_user).count : model.count
       end
 
       def first
@@ -24,13 +25,27 @@ module MiqAeMethodService
       end
 
       def filter_objects(objs)
-        return objs if objs.nil?
-        array = Array.wrap(objs)
-        return [] if array.empty?
+        if objs.nil?
+          objs
+        elsif objs.kind_of?(Array) || objs.kind_of?(ActiveRecord::Relation)
+          rbac_enabled? ? Rbac.filtered(objs, :user => workspace.ae_user) : objs
+        else
+          rbac_enabled? ? Rbac.filtered([objs], :user => workspace.ae_user).first : objs
+        end
+      end
 
-        MiqAeService.set_current_user if MiqAeService.rbac_enabled?
-        ret = MiqAeService.rbac_enabled? ? Rbac.filtered(array) : array
-        (objs.kind_of?(Array) || objs.kind_of?(ActiveRecord::Relation)) ? ret : ret.first
+      def workspace
+        MiqAeEngine::MiqAeWorkspaceRuntime.current || workspace_from_drb_thread
+      end
+
+      def workspace_from_drb_thread
+        DRb.front.workspace
+      rescue => err
+        $miq_ae_logger.warn("Could not fetch DRb front object #{err}")
+      end
+
+      def rbac_enabled?
+        workspace && workspace.rbac_enabled?
       end
     end
   end

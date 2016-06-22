@@ -1,4 +1,5 @@
 include AutomationSpecHelper
+require 'drb'
 module MiqAeServiceModelSpec
   include MiqAeEngine
   describe MiqAeMethodService::MiqAeServiceVmOrTemplate do
@@ -9,18 +10,12 @@ module MiqAeServiceModelSpec
       user2
     end
 
-    after do
-      Thread.current.thread_variable_set(:miq_rbac, false)
-    end
+    let(:options) { {} }
+    let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
+    let(:workspace_class) { class_double("MiqAeEngine::MiqAeWorkspaceRuntime") }
+    let(:front) { MiqAeMethodService::MiqAeServiceFront.new(workspace) }
 
     let(:default_tenant) { Tenant.seed }
-    let(:enable_rbac) do
-      allow(MiqAeMethodService::MiqAeService).to receive(:rbac_enabled?).with(no_args).and_return(true)
-    end
-
-    let(:disable_rbac) do
-      allow(MiqAeMethodService::MiqAeService).to receive(:rbac_enabled?).with(no_args).and_return(false)
-    end
 
     let(:tenant1) { FactoryGirl.create(:tenant) }
     let(:group1) { FactoryGirl.create(:miq_group, :tenant => tenant1) }
@@ -40,38 +35,33 @@ module MiqAeServiceModelSpec
     let(:vm22) { FactoryGirl.create(:vm_vmware, :tenant => tenant2, :host => host2, :miq_group => group2) }
     let(:vm23) { FactoryGirl.create(:vm_vmware, :tenant => tenant2, :host => host2, :miq_group => group2) }
 
-    let(:set_user1) do
-        allow(MiqAeMethodService::MiqAeService).to receive(:set_current_user) do
-          User.current_user = user1
-        end
-    end
-
     context "enable rbac" do
+      before do
+        allow(workspace).to receive(:rbac_enabled?).and_return(true)
+        allow(workspace).to receive(:rbac=)
+        allow(workspace_class).to receive(:current).and_return(workspace)
+        allow(DRb).to receive(:front).and_return(front)
+        allow(workspace).to receive(:ae_user).and_return(user1)
+        MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
+      end
+
       it 'cannot access other tenants vm by id' do
-        enable_rbac
-        set_user1
         expect do
           MiqAeMethodService::MiqAeServiceVmOrTemplate.new(vm21.id)
         end.to raise_error(MiqAeException::ServiceNotFound)
       end
 
       it 'can access other tenants vm object given the object' do
-        enable_rbac
-        set_user1
         obj = MiqAeMethodService::MiqAeServiceVmOrTemplate.new(vm21)
         expect(obj.id).to eq(vm21.id)
       end
 
       it 'can access current users vm' do
-        enable_rbac
-        set_user1
         svc_vm = MiqAeMethodService::MiqAeServiceVmOrTemplate.new(vm11.id)
         expect(svc_vm.name).to eq(vm11.name)
       end
 
       it 'access a vm by name' do
-        enable_rbac
-        set_user1
         svc_vm = MiqAeMethodService::MiqAeServiceVmOrTemplate.find_by_name(vm11.name)
         expect(svc_vm.id).to eq(vm11.id)
       end
@@ -81,8 +71,6 @@ module MiqAeServiceModelSpec
         vm13
         vm22
         vm23
-        enable_rbac
-        set_user1
         all_vms = MiqAeMethodService::MiqAeServiceVmOrTemplate.all
         ids = [vm11.id, vm12.id, vm13.id]
         expect(all_vms.collect(&:id)).to match_array(ids)
@@ -93,8 +81,6 @@ module MiqAeServiceModelSpec
         vm13
         vm22
         vm23
-        enable_rbac
-        set_user1
         count = MiqAeMethodService::MiqAeServiceVmOrTemplate.count
         expect(count).to eq(3)
       end
@@ -104,8 +90,6 @@ module MiqAeServiceModelSpec
         vm13
         vm22
         vm23
-        enable_rbac
-        set_user1
         first_vm = MiqAeMethodService::MiqAeServiceVmOrTemplate.first
         ids = [vm11.id, vm12.id, vm13.id]
         expect(ids.include?(first_vm.id)).to be_truthy
@@ -116,8 +100,6 @@ module MiqAeServiceModelSpec
         vm13
         vm22
         vm23
-        enable_rbac
-        set_user1
         host = MiqAeMethodService::MiqAeServiceHost.first
         expect(host.id).to eq(host1.id)
         ids = [vm11.id, vm12.id, vm13.id]
@@ -125,15 +107,11 @@ module MiqAeServiceModelSpec
       end
 
       it 'where, to fetch an inaccessible vm' do
-        enable_rbac
-        set_user1
         svc_vm = MiqAeMethodService::MiqAeServiceVmOrTemplate.where("name = ?", vm21.name).first
         expect(svc_vm).to eq(nil)
       end
 
       it 'where to fetch an accessible vm' do
-        enable_rbac
-        set_user1
         svc_vm = MiqAeMethodService::MiqAeServiceVmOrTemplate.where("name = ?", vm11.name).first
         expect(svc_vm.id).to eq(vm11.id)
       end
@@ -147,11 +125,11 @@ module MiqAeServiceModelSpec
       end
 
       it 'find unaccessible objects' do
-        enable_rbac
-        set_user1
         expect(MiqAeMethodService::MiqAeServiceVmOrTemplate.find(vm21.id)).to eq(nil)
       end
+    end
 
+    context "automate methods - enable rbac" do
       def collect_ids_with_rbac
         <<-'RUBY'
           $evm.enable_rbac
@@ -174,12 +152,19 @@ module MiqAeServiceModelSpec
     end
 
     context "disable rbac" do
+      before do
+        allow(workspace).to receive(:rbac_enabled?).and_return(false)
+        allow(workspace).to receive(:rbac=)
+        allow(workspace_class).to receive(:current).and_return(workspace)
+        allow(DRb).to receive(:front).and_return(front)
+        MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
+      end
+
       it 'get count of vms per tenant' do
         vm12
         vm13
         vm22
         vm23
-        disable_rbac
         count = MiqAeMethodService::MiqAeServiceVmOrTemplate.count
         expect(count).to eq(6)
       end
@@ -189,12 +174,14 @@ module MiqAeServiceModelSpec
         vm13
         vm22
         vm23
-        disable_rbac
         all_vms = MiqAeMethodService::MiqAeServiceVmOrTemplate.all
         ids = [vm11.id, vm12.id, vm13.id, vm21.id, vm22.id, vm23.id]
         expect(all_vms.collect(&:id)).to match_array(ids)
       end
 
+    end
+
+    context "disable rbac - automate method" do
       def collect_ids_without_rbac
         <<-'RUBY'
           # RBAC is disabled by default

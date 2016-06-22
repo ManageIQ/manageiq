@@ -52,6 +52,7 @@ module MiqAeEngine
       @current_state_info = {}
       @state_machine_objects = []
       @ae_user = nil
+      @rbac    = false
     end
 
     delegate :prepend_namespace=, :to =>  :@dom_search
@@ -60,8 +61,17 @@ module MiqAeEngine
       @readonly
     end
 
+    def self.current=(ws)
+      Thread.current.thread_variable_set(:current_workspace, ws)
+    end
+
+    def self.current
+      Thread.current.thread_variable_get(:current_workspace)
+    end
+
     def self.instantiate(uri, user, attrs = {})
       workspace = MiqAeWorkspaceRuntime.new(attrs)
+      self.current = workspace
       workspace.instantiate(uri, user, nil)
       workspace
     rescue MiqAeException
@@ -169,6 +179,18 @@ module MiqAeEngine
       end
 
       obj
+    end
+
+    def rbac_enabled?
+      @rbac
+    end
+
+    def enable_rbac
+      @rbac = true
+    end
+
+    def disable_rbac
+      @rbac = false
     end
 
     def pop_state_machine_info

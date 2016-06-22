@@ -10,9 +10,9 @@ module MiqAeMethodService
 
   class MiqAeServiceFront
     include DRbUndumped
-    attr_accessor :user
-    def initialize(user)
-      @user = user
+    attr_accessor :workspace
+    def initialize(workspace)
+      @workspace = workspace
     end
 
     def find(id)
@@ -30,23 +30,6 @@ module MiqAeMethodService
 
     @@id_hash = {}
     @@current = []
-    @@rbac    = false
-
-    def self.rbac_enabled?
-      @@rbac
-    end
-
-    def self.enable_rbac
-      @@rbac = true
-    end
-
-    def self.disable_rbac
-      @@rbac = false
-    end
-
-    def self.set_current_user
-      User.current_user ||= DRb.front.user
-    end
 
     def self.current
       @@current.last
@@ -87,17 +70,7 @@ module MiqAeMethodService
       @stderr ||= Vmdb::Loggers::IoLogger.new(logger, :error, "Method STDERR:")
     end
 
-    def enable_rbac
-      self.class.enable_rbac
-    end
-
-    def disable_rbac
-      self.class.disable_rbac
-    end
-
-    def rbac_enabled?
-      self.class.rbac_enabled?
-    end
+    delegate :enable_rbac, :disable_rbac, :rbac_enabled?, to: :@workspace
 
     def destroy
       self.class.destroy(self)
