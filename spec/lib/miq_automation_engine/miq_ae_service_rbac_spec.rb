@@ -11,9 +11,6 @@ module MiqAeServiceModelSpec
     end
 
     let(:options) { {} }
-    let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
-    let(:workspace_class) { class_double("MiqAeEngine::MiqAeWorkspaceRuntime") }
-    let(:front) { MiqAeMethodService::MiqAeServiceFront.new(workspace) }
 
     let(:default_tenant) { Tenant.seed }
 
@@ -37,11 +34,14 @@ module MiqAeServiceModelSpec
 
     context "enable rbac" do
       before do
-        allow(workspace).to receive(:rbac_enabled?).and_return(true)
-        allow(workspace).to receive(:rbac=)
-        allow(workspace_class).to receive(:current).and_return(workspace)
-        allow(DRb).to receive(:front).and_return(front)
-        allow(workspace).to receive(:ae_user).and_return(user1)
+        @workspace = double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options)
+        @workspace_class =  class_double("MiqAeEngine::MiqAeWorkspaceRuntime")
+        @front  =  MiqAeMethodService::MiqAeServiceFront.new(@workspace)
+        allow(@workspace).to receive(:rbac_enabled?).and_return(true)
+        allow(@workspace).to receive(:rbac=)
+        allow(@workspace_class).to receive(:current).and_return(@workspace)
+        allow(DRb).to receive(:front).and_return(@front)
+        allow(@workspace).to receive(:ae_user).and_return(user1)
         MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
       end
 
@@ -127,6 +127,10 @@ module MiqAeServiceModelSpec
       it 'find unaccessible objects' do
         expect(MiqAeMethodService::MiqAeServiceVmOrTemplate.find(vm21.id)).to eq(nil)
       end
+
+      after do
+        MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
+      end
     end
 
     context "automate methods - enable rbac" do
@@ -149,14 +153,22 @@ module MiqAeServiceModelSpec
         ids = [vm21.id, vm22.id]
         expect(ws.root("vm_ids")).to match_array(ids)
       end
+
+      after do
+        MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
+      end
     end
 
     context "disable rbac" do
       before do
-        allow(workspace).to receive(:rbac_enabled?).and_return(false)
-        allow(workspace).to receive(:rbac=)
-        allow(workspace_class).to receive(:current).and_return(workspace)
-        allow(DRb).to receive(:front).and_return(front)
+        @workspace = double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options)
+        @workspace_class =  class_double("MiqAeEngine::MiqAeWorkspaceRuntime")
+        @front  =  MiqAeMethodService::MiqAeServiceFront.new(@workspace)
+        allow(@workspace).to receive(:rbac_enabled?).and_return(false)
+        allow(@workspace).to receive(:rbac=)
+        allow(@workspace_class).to receive(:current).and_return(@workspace)
+        allow(DRb).to receive(:front).and_return(@front)
+        allow(@workspace).to receive(:ae_user).and_return(user1)
         MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
       end
 
@@ -177,6 +189,10 @@ module MiqAeServiceModelSpec
         all_vms = MiqAeMethodService::MiqAeServiceVmOrTemplate.all
         ids = [vm11.id, vm12.id, vm13.id, vm21.id, vm22.id, vm23.id]
         expect(all_vms.collect(&:id)).to match_array(ids)
+      end
+
+      after do
+        MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
       end
     end
 
@@ -200,6 +216,10 @@ module MiqAeServiceModelSpec
         ws = MiqAeEngine.instantiate("/FRED/WILMA/DOGMATIX", user2)
         ids = [vm11.id, vm21.id, vm22.id, vm12.id, vm13.id]
         expect(ws.root("vm_ids")).to match_array(ids)
+      end
+
+      after do
+        MiqAeEngine::MiqAeWorkspaceRuntime.current = nil
       end
     end
   end
