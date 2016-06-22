@@ -73,26 +73,20 @@ class MiqAlert < ApplicationRecord
 
   def self.assigned_to_target(target, event = nil)
     # Get all assigned, enabled alerts based on target class and event
-    cond = "enabled = ? AND db = ?"
-    args = [true, target.class.base_model.name]
-    key  = "#{target.class.base_model.name}_#{target.id}"
 
-    unless event.nil?
-      cond += " AND responds_to_events LIKE ?"
-      args << "%#{event}%"
-      key += "_#{event}"
-    end
+    # event can be nil, so the compact removes event if it is nil
+    key  = [target.class.base_model.name, target.id, event].compact.join("_")
 
     alert_assignments[key] ||= begin
       profiles  = MiqAlertSet.assigned_to_target(target)
-      alert_ids = profiles.collect { |p| p.members.pluck(:id) }.flatten.uniq
+      alert_ids = profiles.flat_map { |p| p.members.pluck(:id) }.uniq
 
       if alert_ids.empty?
-        []
+        none
       else
-        cond += " AND id IN (?)"
-        args << alert_ids
-        where(cond, *args).to_a
+        scope = where(:id => alert_ids, :enabled => true, :db => target.class.base_model.name)
+        scope = scope.where("responds_to_events like ?", "%#{event}%") if event
+        scope
       end
     end
   end
