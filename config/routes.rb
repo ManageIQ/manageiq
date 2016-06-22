@@ -1138,6 +1138,7 @@ Vmdb::Application.routes.draw do
         edit
         index
         new
+        perf_chart_chooser
         show
         show_list
         tagging_edit
@@ -1153,6 +1154,7 @@ Vmdb::Application.routes.draw do
         panel_control
         quick_search
         sections_field_changed
+        perf_chart_chooser
         show
         show_list
         tl_chooser

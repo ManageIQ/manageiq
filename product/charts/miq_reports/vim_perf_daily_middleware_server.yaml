@@ -28,6 +28,9 @@ cols:
 - mw_non_heap_used
 - mw_non_heap_committed
 - mw_accumulated_gc_duration
+- mw_aggregated_active_web_sessions
+- mw_aggregated_expired_web_sessions
+- mw_aggregated_rejected_web_sessions
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -41,6 +44,9 @@ col_order:
 - mw_non_heap_used
 - mw_non_heap_committed
 - mw_accumulated_gc_duration
+- mw_aggregated_active_web_sessions
+- mw_aggregated_expired_web_sessions
+- mw_aggregated_rejected_web_sessions
 
 # Column titles, in order
 headers:
@@ -51,6 +57,9 @@ headers:
 - Used
 - Committed
 - Duration
+- Active
+- Expired
+- Rejected
 
 # Condition expression for search filtering
 conditions: 
@@ -84,6 +93,9 @@ graph:
     - mw_non_heap_used
     - mw_non_heap_committed
     - mw_accumulated_gc_duration
+    - mw_aggregated_active_web_sessions
+    - mw_aggregated_expired_web_sessions
+    - mw_aggregated_rejected_web_sessions
 
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
