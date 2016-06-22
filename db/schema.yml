@@ -1232,6 +1232,7 @@ generic_objects:
 - generic_object_definition_id
 - created_at
 - updated_at
+- properties
 git_references:
 - id
 - name
