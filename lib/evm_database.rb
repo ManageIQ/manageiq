@@ -96,7 +96,7 @@ class EvmDatabase
   end
 
   # Determines the average time to the database in milliseconds
-  def self.ping(connection)
+  def self.ping(connection = ApplicationRecord.connection)
     query = "SELECT 1"
     Benchmark.realtime { 10.times { connection.select_value(query) } } / 10 * 1000
   end

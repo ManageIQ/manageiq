@@ -7,6 +7,7 @@ describe "remove_from_provider Method Validation" do
     @vm         = FactoryGirl.create(:vm_vmware, :host => @host,
                  :ems_id => @ems.id, :name => "testVM", :raw_power_state => "poweredOn",
                  :registered => true)
+    @vm.tag_with("retire_full", :ns => "/managed", :cat => "lifecycle")
     @ins  = "/Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider"
   end
 

@@ -99,6 +99,7 @@ class MiqSshUtil
         $log.debug "MiqSshUtil::exec - Command: #{cmd} started." if $log
         channel.exec(cmd) { |_channel, success| raise "MiqSshUtil::exec - Could not execute command #{cmd}" unless success }
       end
+      ssh.loop
     end
   end # def exec
 
@@ -196,6 +197,7 @@ class MiqSshUtil
           channel.exec(su_command) { |_channel, success| raise "MiqSshUtil::suexec - Could not execute command #{cmd}" unless success }
         end
       end
+      ssh.loop
     end
   end # suexec
 

@@ -15,18 +15,38 @@ describe QuadiconHelper do
   end
 
   describe "#render_quadicon_text" do
+    before(:each) do
+      @settings = {:display => {:quad_truncate => "m"}}
+    end
+
     subject { helper.render_quadicon_text(item, row) }
 
-    let(:item) do
-      FactoryGirl.create(:vm_vmware)
-    end
-
     let(:row) do
-      Ruport::Data::Record.new(:id => 10000000000534)
+      Ruport::Data::Record.new(:id => 10_000_000_000_534, "name" => name)
     end
 
-    it "render text for a vmware vm" do
-      expect(subject).to have_selector('a')
+    context "text for a VM" do
+      let(:item) do
+        FactoryGirl.create(:vm_vmware, :name => "vm_0000000000001")
+      end
+
+      let(:name) { item.name }
+
+      it "renders text for a vmware vm" do
+        expect(subject).to have_link("vm_00...00001")
+      end
+    end
+
+    context "text for Floating IP" do
+      let(:item) do
+        FactoryGirl.create(:floating_ip_openstack)
+      end
+
+      let(:name) { nil }
+
+      it "renders a label for Floating IPs" do
+        expect(subject).to have_link(item.address)
+      end
     end
   end
 
@@ -39,7 +59,7 @@ describe QuadiconHelper do
 
         it "when value is nil" do
           text = helper.send(:truncate_for_quad, nil)
-          expect(text).to be_nil
+          expect(text).to be_empty
         end
 
         it "when value is < 13 long" do
@@ -96,13 +116,44 @@ describe QuadiconHelper do
   end
 
   describe "render_service_quadicon" do
-    let(:service) { FactoryGirl.build(:service, :id => 100) }
     let(:options) { {:size => 72, :typ => 'grid'} }
-    it "display service quadicon" do
-      allow(helper).to receive(:url_for).and_return("/path")
 
-      rendered = helper.send(:render_service_quadicon, service, options, 'service.png')
-      expect(rendered).to have_selector('div.flobj', :count => 2)
+    context "for service w/o custom picture" do
+      let(:service) { FactoryGirl.build(:service, :id => 100) }
+      it "renders quadicon" do
+        allow(helper).to receive(:url_for).and_return("/path")
+
+        rendered = helper.send(:render_service_quadicon, service, options)
+        expect(rendered).to have_selector('div.flobj', :count => 2)
+        expect(rendered).to match(/service-[\w]*.png/)
+      end
+    end
+
+    context "for service w/ custom picture" do
+      let(:service) do
+        service = FactoryGirl.build(:service, :id => 100)
+        allow(service).to receive(:picture).and_return(Pathname.new('/boo/foobar.png'))
+        service
+      end
+
+      it "renders quadicon" do
+        allow(helper).to receive(:url_for).and_return("/path")
+
+        rendered = helper.send(:render_service_quadicon, service, options)
+        expect(rendered).to have_selector('div.flobj', :count => 2)
+        expect(rendered).to match(/foobar.png/)
+      end
+    end
+
+    context "for Orchestration Template Catalog Item w/o custom picture" do
+      let(:item) { FactoryGirl.build(:service_template_orchestration) }
+
+      it "renders" do
+        allow(helper).to receive(:url_for).and_return("/path")
+        rendered = helper.send(:render_service_quadicon, item, options)
+        expect(rendered).to have_selector('div.flobj', :count => 2)
+        expect(rendered).to match(/service_template-[\w]*.png/)
+      end
     end
   end
 end

@@ -40,15 +40,4 @@ describe MiqWinRM do
       expect(@winrm.port).to eq(5985)
     end
   end
-
-  context "New Elevated Runner" do
-    before(:each) do
-      @connection = @winrm.connect(:user => @user, :pass => @password, :hostname => @host)
-    end
-
-    it "Creates an Elevated Runner successfully" do
-      expect { @winrm.elevate }.to_not raise_error
-      expect(@winrm.elevate).to be_a(WinRM::Elevated::Runner)
-    end
-  end
 end

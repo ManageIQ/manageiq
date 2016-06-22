@@ -57,4 +57,42 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
       expect(parser.send(:parse_datasource, server, datasource, config)).to eq(parsed_datasource)
     end
   end
+
+  describe 'alternate_machine_id' do
+    it 'should transform machine ID to dmidecode BIOS UUID' do
+      # the /etc/machine-id is usually in downcase, and the dmidecode BIOS UUID is usually upcase
+      # the alternate_machine_id should *just* swap digits, it should not handle upcase/downcase.
+      # 33D1682F-BCA4-4B4C-B19E-CB47D344746C is a real BIOS UUID retrieved from a VM
+      # 33d1682f-bca4-4b4c-b19e-cb47d344746c is what other providers store in the DB
+      # 2f68d133a4bc4c4bb19ecb47d344746c is the machine ID for the BIOS UUID above
+      # at the Middleware Provider, we get the second version, while the first is usually used by other providers
+      machine_id = '2f68d133a4bc4c4bb19ecb47d344746c'
+      expected = '33d1682f-bca4-4b4c-b19e-cb47d344746c'
+      expect(parser.alternate_machine_id(machine_id)).to eq(expected)
+
+      # and now we reverse the operation, just as a sanity check
+      machine_id = '33d1682fbca44b4cb19ecb47d344746c'
+      expected = '2f68d133-a4bc-4c4b-b19e-cb47d344746c'
+      expect(parser.alternate_machine_id(machine_id)).to eq(expected)
+    end
+  end
+
+  describe 'swap_part' do
+    it 'should swap and reverse every two bytes of a machine ID part' do
+      # the /etc/machine-id is usually in downcase, and the dmidecode BIOS UUID is usually upcase
+      # the alternate_machine_id should *just* swap digits, it should not handle upcase/downcase.
+      # 33D1682F-BCA4-4B4C-B19E-CB47D344746C is a real BIOS UUID retrieved from a VM
+      # 33d1682f-bca4-4b4c-b19e-cb47d344746c is what other providers store in the DB
+      # 2f68d133a4bc4c4bb19ecb47d344746c is the machine ID for the BIOS UUID above
+      # at the Middleware Provider, we get the second version, while the first is usually used by other providers
+      part = '2f68d133'
+      expected = '33d1682f'
+      expect(parser.swap_part(part)).to eq(expected)
+
+      # and now we reverse the operation, just as a sanity check
+      part = '33d1682f'
+      expected = '2f68d133'
+      expect(parser.swap_part(part)).to eq(expected)
+    end
+  end
 end

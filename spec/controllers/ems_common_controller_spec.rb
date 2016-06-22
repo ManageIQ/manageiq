@@ -169,7 +169,7 @@ describe EmsCloudController do
       end
 
       it "should match proper title of report" do
-        expect(pdf_options[:title]).to eq('Cloud Provider (Openstack) "overcloud"')
+        expect(pdf_options[:title]).to eq('Cloud Provider (OpenStack) "overcloud"')
       end
     end
   end
@@ -314,7 +314,7 @@ describe EmsInfraController do
       end
 
       it "should match proper title of report" do
-        expect(pdf_options[:title]).to eq('Infrastructure Provider (Openstack) "test"')
+        expect(pdf_options[:title]).to eq('Infrastructure Provider (OpenStack) "test"')
       end
     end
   end

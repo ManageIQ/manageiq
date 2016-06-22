@@ -1,6 +1,6 @@
 - url = url_for(:action => 'perf_chart_chooser',
                 :id     => @record.id)
-#perf_options_div.card-pf{:onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
+#perf_options_div{:onclick => "if (typeof miqMenu != 'undefined') miqMenu.hideContextMenu();"}
   - if @charts || @perf_options[:chart_type] != :performance
     %h3= _("Options %s") % (@record != @perf_record ? "(#{ui_lookup(:model => @perf_record.class.to_s)}: #{@perf_record.name})" : "")
     %dl.dl-horizontal
@@ -15,7 +15,7 @@
         - if request.parameters["controller"] == "storage" && @perf_options[:cat]
           = select("perf", "typ", %w(Hourly Daily), {:selected => @perf_options[:typ]},
                                                       :disabled => "")
-        - elsif %(Host VmOrTemplate ContainerNode Container ContainerGroup MiddlewareServer).include?(@perf_options[:model]) && !@rt_hide
+        - elsif %(Host VmOrTemplate ContainerNode Container ContainerGroup MiddlewareServer MiddlewareDatasource).include?(@perf_options[:model]) && !@rt_hide
           = select_tag("perf_typ",
                         options_for_select(["Hourly", "Daily", ["Most Recent Hour", "realtime"]], @perf_options[:typ]),
                         "data-miq_sparkle_on" => true,
@@ -35,7 +35,7 @@
           = _("Show")
         %dd
           = select_tag("perf_minutes",
-                       options_for_select(REALTIME_CHOICES.invert.sort_by { |_name, value| value },
+                       options_for_select(REALTIME_CHOICES.map { |k, v| [_(v), k] }.sort_by(&:last),
                        @perf_options[:rt_minutes]),
                        "data-miq_sparkle_on" => true,
                        :class    => "selectpicker")
@@ -63,7 +63,7 @@
             = _("Show")
           %dd
             = select_tag("perf_days",
-                          options_for_select(WEEK_CHOICES.invert.sort_by { |_name, value| value },
+                          options_for_select(WEEK_CHOICES.map { |k, v| [_(v), k] }.sort,
                             @perf_options[:days].to_i),
                           "data-miq_sparkle_on" => true,
                           :class    => "selectpicker")

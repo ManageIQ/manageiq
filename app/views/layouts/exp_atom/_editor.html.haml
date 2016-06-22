@@ -14,11 +14,11 @@
   -# Get all of the expression types, then remove the count and/or find based ones if model has none
   - unless exp_model == "_display_filter_"
     -# Not valid for secondary display filter
-    - exptypes = EXP_TYPES
+    - exptypes = EXP_TYPES.map { |x| [_(x[0]), x[1]] }
     - unless MiqExpression.miq_adv_search_lists(exp_model, :exp_available_counts).length > 0
-      - exptypes -= [EXP_COUNT_TYPE]
+      - exptypes -= [[_(EXP_COUNT_TYPE[0]), EXP_COUNT_TYPE[1]]]
     - unless MiqExpression.miq_adv_search_lists(exp_model, :exp_available_finds).length > 0
-      - exptypes -= [EXP_FIND_TYPE]
+      - exptypes -= [[_(EXP_FIND_TYPE[0]), EXP_FIND_TYPE[1]]]
   #exp_atom_editor_div
     %fieldset{:style => "width:auto; padding-left: 6px; padding-top: 6px;"}
       %ul.searchtoolbar
@@ -47,7 +47,7 @@
         - else
           - if exp_model == "Vm"
             = select_tag('chosen_typ',
-              options_for_select(["<#{_('Choose')}>"] + exptypes + VM_EXP_TYPES, @edit[@expkey][:exp_typ]),
+              options_for_select(["<#{_('Choose')}>"] + exptypes + VM_EXP_TYPES.map { |x| [_(x[0]), x[1]] }, @edit[@expkey][:exp_typ]),
               :multiple              => false,
               :class                 => "widthed",
               "data-miq_sparkle_on"  => true,

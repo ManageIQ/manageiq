@@ -3,7 +3,7 @@
 %dl.dl-horizontal
   %dt= _('Source')
   %dd
-    = h(PLANNING_VM_MODES[@sb[:planning][:options][:submitted_vm_mode]])
+    = h(_(PLANNING_VM_MODES[@sb[:planning][:options][:submitted_vm_mode]]))
 
   - if @sb[:planning][:vm_opts][:cpu] && @sb[:planning][:options][:trend_cpu] && @sb[:planning][:rpt].extras[:vm_profile][:cpu]
     %dt= _('CPU Speed')
@@ -30,7 +30,7 @@
 %dl.dl-horizontal
   %dt= _('Show')
   %dd
-    = h(TARGET_TYPE_CHOICES[@sb[:planning][:options][:target_typ]])
+    = h(_(TARGET_TYPE_CHOICES[@sb[:planning][:options][:target_typ]]))
 
   - if @sb[:planning][:vm_opts][:cpu] && @sb[:planning][:options][:trend_cpu] && @sb[:planning][:rpt].extras[:vm_profile][:cpu]
     %dt= _('CPU Speed')
@@ -57,7 +57,7 @@
 %dl.dl-horizontal
   %dt= _('Trend for Past')
   %dd
-    = h(WEEK_CHOICES[@sb[:planning][:options][:days].to_i])
+    = h(_(WEEK_CHOICES[@sb[:planning][:options][:days].to_i]))
   %dt= _('Time Profile')
   %dd
     - if @sb[:planning][:options][:time_profile].nil?

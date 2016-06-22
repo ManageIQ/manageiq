@@ -84,7 +84,7 @@
         = _('Source')
       .col-md-8
         = select_tag("vm_mode",
-                      options_for_select(PLANNING_VM_MODES.invert.sort, @sb[:planning][:options][:vm_mode]),
+                      options_for_select(PLANNING_VM_MODES.map { |k, v| [_(v), k] }.sort, @sb[:planning][:options][:vm_mode]),
                       "class"                => "selectpicker",
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true)
@@ -174,7 +174,7 @@
         = _('Show')
       .col-md-8
         = select_tag("target_typ",
-                      options_for_select(TARGET_TYPE_CHOICES.invert.sort_by(&:last), @sb[:planning][:options][:target_typ]),
+                      options_for_select(TARGET_TYPE_CHOICES.map { |k, v| [_(v), k] }.sort_by(&:last), @sb[:planning][:options][:target_typ]),
                       "class"                => "selectpicker",
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true)

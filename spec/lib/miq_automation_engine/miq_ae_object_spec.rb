@@ -124,4 +124,52 @@ module MiqAeObjectSpec
       end
     end
   end
+
+  describe MiqAeObject do
+    context "substitute_value" do
+
+      let(:email_value) { '${/#miq_request.get_option(:email).upcase}' }
+      let(:req_email_value) { '${/#user.email}' }
+      let(:instance_name) { 'FRED' }
+      let(:ae_instances) do
+        {instance_name => {'email'     => {:value => email_value},
+                           'req_email' => {:value => req_email_value}}}
+      end
+
+      let(:ae_fields) do
+        {'email'     => {:aetype => 'attribute', :datatype => 'string'},
+         'req_email' => {:aetype => 'attribute', :datatype => 'string'}}
+      end
+
+      let(:model) do
+        create_ae_model(:name => 'LUIGI', :ae_class => 'BARNEY',
+                        :ae_namespace => 'A/C',
+                        :ae_fields => ae_fields, :ae_instances => ae_instances)
+      end
+
+      let(:user) { FactoryGirl.create(:user_with_group, :email => 'requester@example.com') }
+      let(:ems) { FactoryGirl.create(:ems_vmware_with_authentication) }
+      let(:vm_template) { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
+      let(:options) do
+        {:src_vm_id => [vm_template.id, vm_template.name],
+         :email     => "user@example.com"}
+      end
+
+      let(:request) do
+        FactoryGirl.create(:miq_provision_request,
+                           :provision_type => 'template',
+                           :state => 'pending', :status => 'Ok',
+                           :src_vm_id => vm_template.id,
+                           :requester => user, :options => options)
+      end
+
+      it "email address" do
+        model
+        ae_str = "/A/C/BARNEY/FRED?MiqRequest::miq_request=#{request.id},User::user=#{user.id}"
+        workspace = MiqAeEngine.instantiate(ae_str, user)
+        expect(workspace.root['email']).to eq('USER@EXAMPLE.COM')
+        expect(workspace.root['req_email']).to eq('requester@example.com')
+      end
+    end
+  end
 end

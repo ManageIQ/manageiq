@@ -45,7 +45,7 @@
         = _("Request Date:")
       .col-md-8
         = select_tag("time_period",
-                      options_for_select(Array(PROV_TIME_PERIODS.invert).sort_by(&:last), res_type[:time_period]),
+                      options_for_select(PROV_TIME_PERIODS.map { |k, v| [_(v), k] }.sort_by(&:last), res_type[:time_period]),
                       :class    => "selectpicker")
         :javascript
           miqInitSelectPicker();

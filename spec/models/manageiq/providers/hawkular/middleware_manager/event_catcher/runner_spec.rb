@@ -20,7 +20,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner 
   end
 
   context "#whitelist" do
-    require 'hawkular_all'
+    require 'hawkular/hawkular_client'
 
     it "accepts event tagged with known event_type" do
       event      = ::Hawkular::Alerts::Event.new({})
@@ -41,7 +41,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner 
   end
 
   context "#event_hash" do
-    require 'hawkular_all'
+    require 'hawkular/hawkular_client'
 
     it "properly converts event supplying only required fields" do
       event = ::Hawkular::Alerts::Event.new({})

@@ -255,6 +255,13 @@ describe VmOrTemplate do
         @svr2.vm_scan_storage_affinity = [@storage2]
         expect(@vm.miq_server_proxies).to eq([])
       end
+
+      it "should return empty result when its storage is blank" do
+        @vm.storage_id = nil
+        @svr1.vm_scan_host_affinity = [@host1]
+        @svr2.vm_scan_host_affinity = [@host2]
+        expect(@vm.miq_server_proxies).to be_empty
+      end
     end
 
     context "RHEV" do

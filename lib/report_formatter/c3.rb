@@ -49,7 +49,8 @@ module ReportFormatter
       mri.chart = {
         :miqChart => type,
         :data     => {:columns => [], :names => {}},
-        :axis     => {}
+        :axis     => {},
+        :tooltip  => {}
       }
 
       if chart_is_2d?
@@ -72,6 +73,15 @@ module ReportFormatter
 
       if chart_is_stacked?
         mri.chart[:data][:groups] = [[]]
+      end
+
+      # C&U chart
+      if graph_options[:chart_type] == :performance
+        format, options = javascript_format(mri.graph[:columns][0], nil)
+        return unless format
+
+        axis_formatter = {:function => format, :options => options}
+        mri.chart[:axis][:y] = {:tick => {:format => axis_formatter}}
       end
     end
 

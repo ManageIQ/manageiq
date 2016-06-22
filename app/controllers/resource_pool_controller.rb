@@ -1,5 +1,4 @@
 class ResourcePoolController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -35,7 +34,6 @@ class ResourcePoolController < ApplicationController
                       :url  => "/resource_pool/show/#{@record.id}?display=vms")
       @view, @pages = get_view(Vm, :parent => @record)  # Get the records (into a view) and the paginator
       @showtype = "vms"
-      notify_about_unauthorized_items(_('VM'), _('Resource Pool'))
 
     when "descendant_vms"
       drop_breadcrumb(:name => _("%{name} (All VMs - Tree View)") % {:name => @record.name},
@@ -51,7 +49,6 @@ class ResourcePoolController < ApplicationController
                       :url  => "/resource_pool/show/#{@record.id}?display=all_vms")
       @view, @pages = get_view(Vm, :parent => @record, :association => "all_vms") # Get the records (into a view) and the paginator
       @showtype = "vms"
-      notify_about_unauthorized_items(_('VM'), _('Resource Pool'))
 
     when "clusters"
       drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title_for_clusters},

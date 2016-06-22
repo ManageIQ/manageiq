@@ -26,7 +26,8 @@ class MiqWinRM
   end
 
   def elevate
-    @elevated_runner = WinRM::Elevated::Runner.new(@connection)
+    execute if @executor.nil?
+    @elevated_runner = WinRM::Elevated::Runner.new(@executor)
   end
 
   def run_powershell_script(script)

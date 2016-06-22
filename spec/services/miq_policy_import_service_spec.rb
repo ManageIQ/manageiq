@@ -56,7 +56,7 @@ describe MiqPolicyImportService do
     context "when the import does not raise an error" do
       before do
         allow(MiqPolicy).to receive(:import).with("file contents", :preview => true).and_return(:uploaded => "content")
-        allow(MiqQueue).to receive(:put_or_update)
+        allow(MiqQueue).to receive(:put)
         allow(ImportFileUpload).to receive(:create).and_return(import_file_upload)
       end
 
@@ -71,7 +71,7 @@ describe MiqPolicyImportService do
 
       it "queues deletion of the object" do
         Timecop.freeze(2014, 3, 4) do
-          expect(MiqQueue).to receive(:put_or_update).with(
+          expect(MiqQueue).to receive(:put).with(
             :class_name  => "ImportFileUpload",
             :instance_id => 1,
             :deliver_on  => 1.day.from_now,

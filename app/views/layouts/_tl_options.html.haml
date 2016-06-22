@@ -11,23 +11,19 @@
         %label.control-label.col-md-2
           = _("Show")
         .col-md-8
-          -# only show pulldown if Policy Events are allowed
-          - if @tl_options[:tl_show_options].length > 1
-            = select_tag("tl_show",
-              options_for_select(@tl_options[:tl_show_options], @tl_options[:tl_show]),
-              :class                => "selectpicker")
-            :javascript
-              miqInitSelectPicker();
-              miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
-          - else
-            = h(@tl_options[:tl_show_options].last[0])
+          = select_tag("tl_show",
+            options_for_select(ApplicationController::Timelines::SELECT_EVENT_TYPE, @tl_options[:tl_show]),
+            :class                => "selectpicker")
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent('tl_show', '#{url}', {beforeSend: true})
       %hr
       .form-group
         %label.control-label.col-md-2
           = _("Interval")
         .col-md-8
           = select_tag("tl_typ",
-            options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @tl_options[:typ]),
+            options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @tl_options.date.typ),
             :class                => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -36,12 +32,12 @@
         %label.control-label.col-md-2
           = _("Date")
         .col-md-8
-          - v = h(@tl_options[:typ] == "Hourly" ? @tl_options[:hourly_date] : @tl_options[:daily_date])
+          - v = h(@tl_options.date.typ == 'Hourly' ? @tl_options.date.hourly : @tl_options.date.daily)
           = datepicker_input_tag("miq_date_1", v,
             :readonly               => "true",
             "data-miq_sparkle_on"   => true,
             "data-miq_observe_date" => {:url => url}.to_json)
-      - if @tl_options[:typ] == "Hourly"
+      - if @tl_options.date.typ == 'Hourly'
         %span#day_span{:style => "display: none;"}
       - else
         %span#day_span
@@ -50,21 +46,21 @@
               = _("Show")
             .col-md-8
               = select_tag("tl_days",
-                options_for_select((2..31).to_a, @tl_options[:days].to_i),
+                options_for_select((2..31).to_a, @tl_options.date.days.to_i),
                 :class                => "selectpicker")
               :javascript
                 miqInitSelectPicker();
                 miqSelectPickerEvent('tl_days', '#{url}', {beforeSend: true})
               = _("days back")
       %hr
-    - if @tl_options[:tl_show] == "policy_timeline"
+    - if @tl_options.policy_events?
       .form-horizontal
         .form-group
           %label.control-label.col-md-2
             = _("Result")
           .col-md-8
             = select_tag("tl_result",
-              options_for_select(@tl_options[:all_results], @tl_options[:tl_result]),
+              options_for_select(ApplicationController::Timelines::SELECT_RESULT_TYPE, @tl_options.policy.result),
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
@@ -73,16 +69,17 @@
           %label.control-label.col-md-2
             = _("Event Type")
           .col-md-8
-            = check_box_tag("tl_fl_grp_all", "1", @tl_options[:tl_filter_all],
+            = check_box_tag("tl_fl_grp_all", "1", @tl_options.policy.filters_all,
               "data-miq_sparkle_on"       => true,
               "data-miq_observe_checkbox" => {:url => url}.to_json)
             = _("(Check All)")
         .form-group
           %label.control-label.col-md-2
           .col-md-8
-            - @tl_options[:etypes].sort.each_with_index do |e, i|
-              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{@tl_options[:tl_colors][i]}"}
-                = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options[:applied_filters].include?(e),
+            - @tl_options.policy.events.keys.sort.each_with_index do |e, i|
+
+              %div{:style => "padding: 0px 5px 0px 0px; float: left; color: #{ApplicationController::Timelines::EVENT_COLORS[i]}"}
+                = check_box_tag("tl_fl_grp#{i + 1}__#{e}", "1", @tl_options.policy.applied_filters.include?(e),
                   "data-miq_sparkle_on"       => true,
                   "data-miq_observe_checkbox" => {:url => url}.to_json)
                 = h(e)
@@ -93,8 +90,8 @@
           .col-md-8
           .col-md-8
       %form#hiddenForm
-        - @tl_options[:etypes].length.times do |i|
-          %input{:type => "hidden", :name => "filter#{i + 1}", :id => "filter#{i + 1}", :value => @tl_options["pol_fltr#{i + 1}".to_sym]}
+        - @tl_options.policy.events.length.times do |i|
+          %input{:type => "hidden", :name => "filter#{i}", :id => "filter#{i}", :value => @tl_options.policy.fltr(i)}
 
     - else
       .form-horizontal
@@ -103,7 +100,7 @@
             = _("Level")
           .col-md-8
             = select_tag("tl_fl_typ",
-              options_for_select([[_("Summary"), "Critical"], [_("Detail"), "Detail"]], @tl_options[:fl_typ]),
+              options_for_select([[_("Summary"), "critical"], [_("Detail"), "detail"]], @tl_options.mngt.level),
               :class                => "selectpicker")
             :javascript
               miqInitSelectPicker();
@@ -113,7 +110,7 @@
             = _("Event Groups")
           .col-md-8
             = select_tag("tl_fl_grp1",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter1]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngt.events.keys.sort, @tl_options.mngt.filter1),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #CD051C;"}
             :javascript
@@ -123,7 +120,7 @@
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp2",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter2]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngt.events.keys.sort, @tl_options.mngt.filter2),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #005C25;"}
             :javascript
@@ -133,14 +130,14 @@
           %label.control-label.col-md-2
           .col-md-8
             = select_tag("tl_fl_grp3",
-              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options[:groups].sort, @tl_options[:filter3]),
+              options_for_select([["<#{_('NONE')}> ", ""]] + @tl_options.mngt.events.keys.sort, @tl_options.mngt.filter3),
               :class                => "selectpicker")
             .bootstrap-select{:style => "border-bottom: 6px solid #035CB1;"}
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent('tl_fl_grp3', '#{url}', {beforeSend: true})
       %form#hiddenForm
-        %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options[:fltr1]}
-        %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options[:fltr2]}
-        %input#filter3{:type => "hidden", :name => "filter3", :value => @tl_options[:fltr3]}
+        %input#filter1{:type => "hidden", :name => "filter1", :value => @tl_options.mngt.fltr1}
+        %input#filter2{:type => "hidden", :name => "filter2", :value => @tl_options.mngt.fltr2}
+        %input#filter3{:type => "hidden", :name => "filter3", :value => @tl_options.mngt.fltr3}
     = _("* Dates/Times on this page are based on time zone: %s.") % session[:user_tz]

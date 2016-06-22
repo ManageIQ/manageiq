@@ -1,6 +1,10 @@
-namespace :gettext do
+namespace :locale do
+  desc "Extract strings from en.yml and store them in a ruby file for gettext:find"
   task :store_dictionary_strings do
-    output_strings = ["# Strings extracted from en.yml for gettext to find"]
+    output_strings = [
+      "# This is automatically generated file (rake locale:store_dictionary_strings).",
+      "# The file contains strings extracted from en.yml for gettext to find."
+    ]
     no_plurals = %w(NFS OS) # strings which we don't want to create automatic plurals for
 
     dict = YAML.load(File.open(Rails.root.join("config/locales/en.yml")))["en"]["dictionary"]
@@ -36,6 +40,7 @@ namespace :gettext do
     end
   end
 
+  desc "Extract strings from various yaml files and store them in a ruby file for gettext:find"
   task :extract_yaml_strings do
     def update_output(string, file, output)
       return if string.nil? || string.empty?
@@ -82,6 +87,8 @@ namespace :gettext do
     end
 
     File.open(Rails.root.join("config/yaml_strings.rb"), "w+") do |f|
+      f.puts "# This is automatically generated file (rake locale:extract_yaml_strings)."
+      f.puts "# The file contains strings extracted from various yaml files for gettext to find."
       output.keys.each do |key|
         output[key].sort.uniq.each do |file|
           f.puts "# TRANSLATORS: file: #{file}"

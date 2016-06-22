@@ -1,5 +1,4 @@
 class OrchestrationStackController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -33,7 +32,6 @@ class OrchestrationStackController < ApplicationController
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @orchestration_stack)
       @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
     when "security_groups"
       title = ui_lookup(:tables => "security_group")
       kls   = SecurityGroup
@@ -41,7 +39,6 @@ class OrchestrationStackController < ApplicationController
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @orchestration_stack)  # Get the records (into a view) and the paginator
       @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => 'orchestration_stack'))
     when "stack_orchestration_template"
       drop_breadcrumb(:name => "%{name} (Orchestration Template)" % {:name => @orchestration_stack.name},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}?display=#{@display}")

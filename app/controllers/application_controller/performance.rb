@@ -203,6 +203,7 @@ module ApplicationController::Performance
     edate_daily = edate.hour < 23 ? edate - 1.day : edate
     options[:edate_daily] = edate_daily
 
+    options[:typ] = "Hourly" if options[:typ] == "Daily" && edate_daily < sdate_daily
     if options[:hourly_date] && # Need to clear hourly date if not nil so it will be reset below if
        (options[:hourly_date].to_date < sdate.to_date || options[:hourly_date].to_date > edate.to_date || # it is out of range
          (options[:typ] == "Hourly" && options[:time_profile] && !options[:time_profile_days].include?(options[:hourly_date].to_date.wday))) # or not in profile
@@ -313,18 +314,14 @@ module ApplicationController::Performance
       @record = identify_tl_or_perf_record
       @perf_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
       @perf_record = VmOrTemplate.find_by_id(@perf_options[:compare_vm]) unless @perf_options[:compare_vm].nil?
-      new_opts = {}
-      new_opts[:typ] = typ
+      new_opts = tl_session_data(request.parameters["controller"]) || ApplicationController::Timelines::Options.new
       new_opts[:model] = @perf_record.class.base_class.to_s
       dt = typ == "Hourly" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
-      new_opts[:daily_date] = @perf_options[:daily_date] if typ == "Daily"
-      new_opts[:hourly_date] = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
-      new_opts[:tl_show_options] = []
-      new_opts[:tl_show_options].push([_("Management Events"), "timeline"])
-      new_opts[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
+      new_opts.date.typ = typ
+      new_opts.date.daily = @perf_options[:daily_date] if typ == "Daily"
+      new_opts.date.hourly = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
       new_opts[:tl_show] = "timeline"
-      session[(request.parameters["controller"] + "_tl").to_sym] ||= {}
-      session[(request.parameters["controller"] + "_tl").to_sym].merge!(new_opts)
+      set_tl_session_data(new_opts, request.parameters["controller"])
       f = @perf_record.first_event
       if f.nil?
         msg = if new_opts[:model] == "EmsCluster"
@@ -356,19 +353,15 @@ module ApplicationController::Performance
 
     elsif cmd == "Timeline" && model == "Selected"  # Display timeline for the selected CI
       return unless @record = perf_menu_record_valid(data_row["resource_type"], data_row["resource_id"], data_row["resource_name"])
-      new_opts = {}
-      new_opts[:typ] = typ
+      controller = data_row["resource_type"].underscore
+      new_opts = tl_session_data(controller) || ApplicationController::Timelines::Options.new
       new_opts[:model] = data_row["resource_type"]
       dt = typ == "Hourly" ? "on #{ts.to_date} at #{ts.strftime("%H:%M:%S %Z")}" : "on #{ts.to_date}"
-      new_opts[:daily_date] = @perf_options[:daily_date] if typ == "Daily"
-      new_opts[:hourly_date] = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
-      new_opts[:tl_show_options] = []
-      new_opts[:tl_show_options].push([_("Management Events"), "timeline"])
-      new_opts[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
+      new_opts.date.typ = typ
+      new_opts.date.daily = @perf_options[:daily_date] if typ == "Daily"
+      new_opts.date.hourly = [ts.month, ts.day, ts.year].join("/") if typ == "Hourly"
       new_opts[:tl_show] = "timeline"
-      controller = new_opts[:model].underscore
-      session[(controller + "_tl").to_sym] ||= {}
-      session[(controller + "_tl").to_sym].merge!(new_opts)
+      set_tl_session_data(new_opts, controller)
       f = @record.first_event
       if f.nil?
         msg = if model == "EmsCluster"
@@ -725,8 +718,8 @@ module ApplicationController::Performance
                              from_dt,
                              to_dt,
                              interval_type]
-      elsif @perf_record.kind_of?(MiddlewareServer)
-        rpt = perf_get_chart_rpt("vim_perf_#{interval_type}_middleware")
+      elsif %w(MiddlewareServer MiddlewareDatasource).include?(@perf_record.class.name.demodulize)
+        rpt = perf_get_chart_rpt("vim_perf_#{interval_type}_#{@perf_record.class.name.demodulize.underscore}")
         rpt.where_clause = ["resource_type = ? and resource_id = ? and timestamp >= ? and timestamp <= ? " \
                             "and capture_interval_name = ?",
                             @perf_options[:model],
@@ -750,7 +743,11 @@ module ApplicationController::Performance
     when "realtime"
       f, to_dt = @perf_record.first_and_last_capture("realtime")
       from_dt = to_dt.nil? ? nil : to_dt - @perf_options[:rt_minutes]
-      suffix = @perf_record.kind_of?(MiddlewareServer) ? "_middleware" : ""
+      suffix = if %w(MiddlewareServer MiddlewareDatasource).include?(@perf_record.class.name.demodulize)
+                 "_#{@perf_record.class.name.demodulize.underscore}"
+               else
+                 ""
+               end
       rpt = perf_get_chart_rpt("vim_perf_realtime#{suffix}")
       rpt.tz = @perf_options[:tz]
       rpt.extras = Hash.new

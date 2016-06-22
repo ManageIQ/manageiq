@@ -108,5 +108,12 @@ describe VmdbIndex do
       expect(rollup_record.wasted_bytes).to   be_within(0.01).of(33.83)
       expect(rollup_record.percent_bloat).to  be_within(0.01).of(22.54)
     end
+
+    it "fetches latest metric record" do
+      expect(@evm_index.latest_hourly_metric.rows).to eq(500)
+      expect(@evm_index.latest_hourly_metric.size).to eq(5000)
+      expect(@evm_index.latest_hourly_metric.wasted_bytes).to eq(90)
+      expect(@evm_index.latest_hourly_metric.percent_bloat).to eq(50.7)
+    end
   end
 end

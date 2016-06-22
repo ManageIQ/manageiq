@@ -1,5 +1,4 @@
 class StorageController < ApplicationController
-  include AuthorizationMessagesMixin
   include_concern 'StorageD'
   include_concern 'StoragePod'
 
@@ -73,14 +72,12 @@ class StorageController < ApplicationController
                       :url  => "/storage/x_show/#{@storage.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @storage, :association => @display)  # Get the records (into a view) and the paginator
       @showtype = @display
-      notify_about_unauthorized_items(title, _('Host'))
 
     when "hosts"
       @view, @pages = get_view(Host, :parent => @storage) # Get the records (into a view) and the paginator
       drop_breadcrumb(:name => _("%{name} (All Registered Hosts)") % {:name => @storage.name},
                       :url  => "/storage/x_show/#{@storage.id}?display=hosts")
       @showtype = "hosts"
-      notify_about_unauthorized_items(_('Hosts'), ui_lookup(:table => "storages"))
 
     when "download_pdf", "main", "summary_only"
       get_tagdata(@storage)

@@ -1,32 +1,31 @@
 module ManageIQ::Providers
   class Hawkular::MiddlewareManager::LiveMetricsCapture
-    class TargetValidationError < RuntimeError; end
     class MetricValidationError < RuntimeError; end
+
+    MetricsResource = Struct.new(:id, :feed, :path)
 
     def initialize(target)
       @target = target
-      unless @target.kind_of?(MiddlewareServer)
-        raise TargetValidationError, "Validation error: unknown target"
-      end
       @ems = @target.ext_management_system
-      @gauges = @ems.metrics_connect.gauges
-      @counters = @ems.metrics_connect.counters
-      @avail = @ems.metrics_connect.avail
+      @gauges = @ems.metrics_client.gauges
+      @counters = @ems.metrics_client.counters
+      @avail = @ems.metrics_client.avail
     end
 
     def metrics_available
-      resource = Struct.new(:id, :feed, :path).new
+      resource = MetricsResource.new
       resource.id = @target.nativeid
-      resource.feed = @target.feed
+      resource.feed = extract_feed(@target.ems_ref)
       resource.path = @target.ems_ref
-      @ems.metrics_resource(resource).collect do |metric|
+      @ems.metrics_resource(resource.path).collect do |metric|
+        next unless @target.class.supported_metrics[metric.name]
         {
           :id   => metric.id,
-          :name => @target.class::METRICS_HWK_MIQ[metric.name],
+          :name => @target.class.supported_metrics[metric.name],
           :type => metric.type,
           :unit => metric.unit
         }
-      end
+      end.compact
     end
 
     def collect_live_metric(metric, start_time, end_time, interval)
@@ -97,6 +96,14 @@ module ManageIQ::Providers
         value = metric[:type] == 'AVAILABILITY' ? x['uptimeRatio'] : x['avg']
         processed.store_path(timestamp, metric[:name], value)
       end
+    end
+
+    private
+
+    def extract_feed(ems_ref)
+      s_start = ems_ref.index("/f;") + 3
+      s_end = ems_ref.index("/", s_start) - 1
+      ems_ref[s_start..s_end]
     end
   end
 end

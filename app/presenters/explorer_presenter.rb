@@ -19,6 +19,7 @@ class ExplorerPresenter
   #   delete_node                      -- key of node to be deleted from the active tree
   #   build_calendar                   -- call miqBuildCalendar, true/false or Hash (:date_from, :date_to, :skip_days)
   #   init_dashboard
+  #   init_accords                     -- initialize accordion autoresize
   #   ajax_action                      -- Hash of options for AJAX action to fire
   #   clear_gtl_list_grid              -- Clear ManageIQ.grids.gtl_list_grid
   #   right_cell_text
@@ -239,6 +240,8 @@ class ExplorerPresenter
     # always replace content partial to adjust height of content div
     @out << "miqInitMainContent();"
     @out << "$('#quicksearchbox').modal('hide');" if @options[:hide_modal]
+
+    @out << "miqInitAccordions();" if @options[:init_accords]
 
     # Don't turn off spinner for charts/timelines
     @out << set_spinner_off unless @options[:ajax_action]

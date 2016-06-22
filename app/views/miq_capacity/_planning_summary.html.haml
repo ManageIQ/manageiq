@@ -43,6 +43,6 @@
         = render :partial => "planning_vm_profile"
 
   - if @perf_record
-    %p= _("* Information shown is based on available trend data going back %s.") % WEEK_CHOICES[@sb[:planning][:options][:days]].downcase
+    %p= _("* Information shown is based on available trend data going back %s.") % _(WEEK_CHOICES[@sb[:planning][:options][:days]])
   - else
     = render :partial => "planning_instructions"

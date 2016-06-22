@@ -3,8 +3,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     allow(MiqServer).to receive(:my_zone).and_return("default")
     auth = AuthToken.new(:name => "test", :auth_key => "valid-token", :userid => "jdoe", :password => "password")
     @ems_hawkular = FactoryGirl.create(:ems_hawkular,
-                                       :hostname        => 'localhost',
-                                       :port            => 8080,
+                                       :hostname        => 'hservices.torii.gva.redhat.com',
+                                       :port            => 80,
                                        :authentications => [auth])
   end
 

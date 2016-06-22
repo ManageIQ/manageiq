@@ -1735,6 +1735,21 @@ describe ApplicationHelper do
         expect(result).to be(false)
       end
     end
+
+    context "when record class = ExtManagementSystem" do
+      before do
+        @record = FactoryGirl.create(:ems_amazon)
+      end
+
+      context "and id = ems_cloud_timeline" do
+        before { @id = "ems_cloud_timeline" }
+
+        it "hide timelines button for EC2 provider" do
+          allow(@record).to receive(:has_events?).and_return(false)
+          expect(subject).to be_truthy
+        end
+      end
+    end
   end # end of build_toolbar_hide_button
 
   describe "#build_toolbar_disable_button" do

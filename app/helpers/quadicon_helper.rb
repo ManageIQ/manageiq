@@ -29,8 +29,8 @@ module QuadiconHelper
            'ontap_logical_disk', 'ontap_storage_system', 'ontap_storage_volume',
            'snia_local_file_system' then
                                         flobj_img_simple(options[:size], "#{options[:size]}/#{partial_name}.png")
-      when 'service'               then render_service_quadicon(item, options, 'service.png')
-      when 'service_template'      then render_service_quadicon(item, options, 'service_template.png')
+      when 'service', 'service_template', 'service_ansible_tower', 'service_template_ansible_tower' then
+                                        render_service_quadicon(item, options)
       when 'resource_pool'         then render_resource_pool_quadicon(item, options)
       when 'host'                  then render_host_quadicon(item, options)
       when 'ext_management_system' then render_ext_management_system_quadicon(item, options)
@@ -110,6 +110,9 @@ module QuadiconHelper
       elsif db == "StorageManager"
         link_to(truncate_for_quad(row['name']),
                 url_for_db("storage_manager", "show"), :title => h(row['name']))
+      elsif db == "FloatingIp"
+        link_to(truncate_for_quad(item.address),
+                url_for_db(db, "show"), :title => h(item.address))
       else
         if @explorer
           column = case db
@@ -164,7 +167,8 @@ module QuadiconHelper
   end
 
   def partial_name_from_item(item)
-    partial_name = if %w(EmsCluster ResourcePool Repository Service ServiceTemplate Storage ServiceAnsibleTower ServiceTemplateAnsibleTower).include?(item.class.name)
+    partial_name = if %w(EmsCluster ResourcePool Repository Service ServiceTemplate
+                     Storage ServiceAnsibleTower ServiceTemplateAnsibleTower).include?(item.class.name)
                      item.class.name.underscore
                    elsif item.kind_of?(VmOrTemplate)
                      item.class.base_model.to_s.underscore
@@ -185,7 +189,7 @@ module QuadiconHelper
   TRUNC_AT = 13
   TRUNC_TO = 10
   def truncate_for_quad(value)
-    return value if value.to_s.length < TRUNC_AT
+    return value.to_s if value.to_s.length < TRUNC_AT
     case @settings.fetch_path(:display, :quad_truncate)
     when "b" then value.first(TRUNC_TO) + "..."
     when "f" then "..." + value.last(TRUNC_TO)
@@ -213,13 +217,12 @@ module QuadiconHelper
     link_to(image_tag(image, :border => 0, :width => size, :height => size), '', :title => h(text))
   end
 
-  def render_service_quadicon(item, options, picture)
+  def render_service_quadicon(item, options)
     size = options[:size]
     output = []
-
     output << flobj_img_simple(size)
 
-    fname = item.picture ? item.picture.url_path : ActionController::Base.helpers.image_path("100/#{picture}")
+    fname = ActionController::Base.helpers.image_path(item.decorate.listicon_image)
     output << content_tag(:div, :class => "flobj e#{size}") do
       if !@embedded || @showlinks
         link_to(image_tag(fname, :width => size, :height => size, :title => h(item.name)),

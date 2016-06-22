@@ -17,3 +17,10 @@
   :type: Line
   :columns:
   - mw_accumulated_gc_duration
+
+- :title: Web Sessions
+  :type: Line
+  :columns:
+  - mw_aggregated_active_web_sessions
+  - mw_aggregated_expired_web_sessions
+  - mw_aggregated_rejected_web_sessions

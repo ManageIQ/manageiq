@@ -27,6 +27,7 @@ include:
   middleware_server:
     columns:
     - name
+    - hostname
 
 # Included tables and columns for query performance
 
@@ -35,11 +36,13 @@ include:
 col_order:
 - name
 - middleware_server.name
+- middleware_server.hostname
 
 # Column titles, in order
 headers:
 - Datasource Name
 - Server
+- Host Name
 
 # Condition(s) string for the SQL query
 conditions:
@@ -51,6 +54,7 @@ order: Ascending
 sortby:
 - name
 - middleware_server.name
+- middleware_server.hostname
 
 # Group rows (y=yes,n=no,c=count)
 group: y

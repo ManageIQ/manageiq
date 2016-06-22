@@ -260,12 +260,12 @@ module ReportController::Widgets
       # If a folder node is selected
       get_all_widgets(WIDGET_CONTENT_TYPE[@sb[:nodes][1]])
       @right_cell_div  = "widget_list"
-      @right_cell_text = _("%{typ} %{model}") % {:typ => WIDGET_TYPES[@sb[:nodes][1]].singularize, :model => ui_lookup(:models => "MiqWidget")}
+      @right_cell_text = _("%{typ} %{model}") % {:typ => _(SINGULAR_WIDGET_TYPES[@sb[:nodes][1]]), :model => ui_lookup(:models => "MiqWidget")}
     else
       @record = @widget = MiqWidget.find_by_id(from_cid(@sb[:nodes].last))
       @widget_running = true if ["running", "queued"].include?(@widget.status.downcase)
       typ = WIDGET_CONTENT_TYPE.invert[@widget.content_type]
-      content_type = WIDGET_TYPES[typ].singularize
+      content_type = _(SINGULAR_WIDGET_TYPES[typ])
       @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => content_type, :name => @widget.title, :model => ui_lookup(:model => "MiqWidget")}
       @right_cell_div  = "widget_list"
       @sb[:wtype] = WIDGET_CONTENT_TYPE.invert[@widget.content_type]

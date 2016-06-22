@@ -30,7 +30,7 @@ describe "availability_zone/show.html.haml" do
     let(:showtype) { "timeline" }
 
     before do
-      assign(:tl_options, {})
+      assign(:tl_options, ApplicationController::Timelines::Options.new)
     end
 
     it_behaves_like "miq_before_onload JS is needed"
