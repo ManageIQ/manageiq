@@ -63,6 +63,34 @@ module ManageIQ::Providers
       end
     end
 
+    def machine_id(feed)
+      os_resource_for(feed).properties['Machine Id']
+    end
+
+    def os_resource_for(feed)
+      with_provider_connection do |connection|
+        os = os_for(feed)
+        os_resources = connection.inventory.list_resources_for_type(os.path, true)
+        unless os_resources.nil? || os_resources.empty?
+          return os_resources.first
+        end
+
+        nil
+      end
+    end
+
+    def os_for(feed)
+      with_provider_connection do |connection|
+        resources = connection.inventory.list_resource_types(feed)
+        oses = resources.select { |item| item.id == 'Operating System' }
+        unless oses.nil? || oses.empty?
+          return oses.first
+        end
+
+        nil
+      end
+    end
+
     def eaps(feed)
       with_provider_connection do |connection|
         path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => feed,

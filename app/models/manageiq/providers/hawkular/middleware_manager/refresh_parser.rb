@@ -26,10 +26,58 @@ module ManageIQ::Providers
           @ems.eaps(feed).map do |eap|
             @eaps << eap
             server = parse_middleware_server(eap)
+
+            machine_id = @ems.machine_id(eap.feed)
+            host_instance = find_host_by_bios_uuid(machine_id) ||
+                            find_host_by_bios_uuid(alternate_machine_id(machine_id))
+
+            if host_instance
+              server[:lives_on_id] = host_instance.id
+              server[:lives_on_type] = host_instance.type
+            end
+
             @data[:middleware_servers] << server
             @data_index.store_path(:middleware_servers, :by_nativeid, server[:nativeid], server)
           end
         end.flatten
+      end
+
+      def alternate_machine_id(machine_id)
+        # See the BZ #1294461 [1] for a more complete background.
+        # Here, we'll try to adjust the machine ID to the format from that bug. We expect to get a string like
+        # this: 2f68d133a4bc4c4bb19ecb47d344746c . For such string, we should return
+        # this: 33d1682f-bca4-4b4c-b19e-cb47d344746c .The actual BIOS UUID is probably returned in upcase, but other
+        # providers store it in downcase, so, we let the upcase/downcase logic to other methods with more
+        # business knowledge.
+        # 1 - https://bugzilla.redhat.com/show_bug.cgi?id=1294461
+        alternate = []
+        alternate << swap_part(machine_id[0, 8])
+        alternate << swap_part(machine_id[8, 4])
+        alternate << swap_part(machine_id[12, 4])
+        alternate << machine_id[16, 4]
+        alternate << machine_id[20, 12]
+        alternate.join('-')
+      end
+
+      def swap_part(part)
+        # here, we receive parts of an UUID, split into an array with 2 chars each element, and reverse the invidual
+        # elements, joining and reversing the final outcome
+        # for instance:
+        # 2f68d133 -> ["2f", "68", "d1", "33"] -> ["f2", "86", "1d", "33"] -> f2861d33 -> 33d1682f
+        part.scan(/../).collect(&:reverse).join.reverse
+      end
+
+      def find_host_by_bios_uuid(machine_id)
+        identity_system = machine_id.downcase
+        Vm.find_by(:uid_ems => identity_system,
+                   :type    => uuid_provider_types) if identity_system
+      end
+
+      def uuid_provider_types
+        # after the PoC, we might want to test/support these extra providers:
+        # ManageIQ::Providers::Openstack::CloudManager::Vm
+        # ManageIQ::Providers::Vmware::InfraManager::Vm
+        'ManageIQ::Providers::Redhat::InfraManager::Vm'
       end
 
       def fetch_server_entities
