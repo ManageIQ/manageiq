@@ -178,7 +178,6 @@ module MiqAeServiceModelSpec
         ids = [vm11.id, vm12.id, vm13.id, vm21.id, vm22.id, vm23.id]
         expect(all_vms.collect(&:id)).to match_array(ids)
       end
-
     end
 
     context "disable rbac - automate method" do
