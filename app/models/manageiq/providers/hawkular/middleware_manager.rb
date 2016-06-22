@@ -175,6 +175,29 @@ module ManageIQ::Providers
       run_generic_operation(:Redeploy, ems_ref)
     end
 
+    def add_middleware_deployment(ems_ref, hash)
+      with_provider_connection do |connection|
+        deployment_data = {
+          :destination_file_name => hash[:file].original_filename,
+          :binary_content        => hash[:file].read,
+          :resource_path         => ems_ref.to_s
+        }
+
+        actual_data = {}
+        connection.operations(true).add_deployment(deployment_data) do |on|
+          on.success do |data|
+            _log.debug "Success on websocket-operation #{data}"
+            actual_data[:data] = data
+          end
+          on.failure do |error|
+            actual_data[:data]  = {}
+            actual_data[:error] = error
+            _log.error 'error callback was called, reason: ' + error.to_s
+          end
+        end
+      end
+    end
+
     # UI methods for determining availability of fields
     def supports_port?
       true

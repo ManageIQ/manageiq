@@ -40,8 +40,25 @@ class MiddlewareServerController < ApplicationController
                                     :skip => true,
                                     :hawk => N_('resuming'),
                                     :msg  => N_('Resume')
+    },
+    :middleware_add_deployment  => {:op    => :add_middleware_deployment,
+                                    :skip  => false,
+                                    :hawk  => N_('Not deploying to Hawkular server'),
+                                    :msg   => N_('Deployment initiated for selected server(s)'),
+                                    :param => :file
     }
   }.freeze
+
+  def add_deployment
+    selected_servers = identify_selected_servers
+
+    run_server_operation(OPERATIONS.fetch(:middleware_add_deployment), selected_servers)
+
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("flash_msg_div", :partial => "layouts/flash_msg")
+    end
+  end
 
   def show
     clear_topology_breadcrumb
@@ -68,7 +85,6 @@ class MiddlewareServerController < ApplicationController
 
     if OPERATIONS.key?(selected_operation)
       selected_servers = identify_selected_servers
-
       run_server_operation(OPERATIONS.fetch(selected_operation), selected_servers)
 
       render :update do |page|
@@ -107,7 +123,7 @@ class MiddlewareServerController < ApplicationController
         if operation_info.key? :param
           # Fetch param from UI - > see #9462/#8079
           name = operation_info.fetch(:param)
-          val = 0 # Default until we can really get it from the UI ( #9462/#8079)
+          val = params.fetch name || 0 # Default until we can really get it from the UI ( #9462/#8079)
           trigger_mw_operation operation_info.fetch(:op), mw_server, name => val
         else
           trigger_mw_operation operation_info.fetch(:op), mw_server
