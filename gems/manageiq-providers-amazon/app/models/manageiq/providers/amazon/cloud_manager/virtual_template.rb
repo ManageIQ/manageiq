@@ -1,4 +1,3 @@
 class ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate < ::ManageIQ::Providers::CloudManager::VirtualTemplate
-  # TODO: Additional validation on subnets, networks, etc based off of provider?
-
+  validates :cloud_subnet_id, :availability_zone_id, :ems_ref, presence: true
 end
