@@ -5,6 +5,8 @@ module TopologyMixin
     # any other page in the application.
     @breadcrumbs.clear if params[:id].nil?
     drop_breadcrumb(:name => _('Topology'), :url => '')
+    @lastaction = 'show'
+    @display = @showtype = 'topology'
   end
 
   def index
