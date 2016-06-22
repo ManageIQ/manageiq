@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :virtual_template, class: 'ManageIQ::Providers::CloudManager::VirtualTemplate' do
+  factory :virtual_template, :class => 'ManageIQ::Providers::CloudManager::VirtualTemplate' do
     vendor 'amazon'
     name 'vt'
     location 'us-west-1'

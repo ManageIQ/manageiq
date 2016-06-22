@@ -1,13 +1,13 @@
 class ManageIQ::Providers::CloudManager::VirtualTemplate < ::MiqTemplate
-  validate :single_template, on: :create
+  validate :single_template, :on => :create
   default_value_for :cloud, true
 
   TYPES = {
-      amazon: 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
-  }
+    :amazon => 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
+  }.freeze
 
   def single_template
-    multiple = type.constantize.where(type: type).size > 0
+    multiple = !type.constantize.where(:type => type).empty?
     errors.add(:virtual_template, 'may only have one per type') if multiple
     multiple
   end
