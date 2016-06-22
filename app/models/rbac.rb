@@ -494,8 +494,8 @@ module Rbac
   end
 
   def self.get_belongsto_matches(blist, klass)
-    return get_belongsto_matches_for_host(blist, klass) if klass == Host
-    return get_belongsto_matches_for_storage(blist, klass) if klass == Storage
+    return get_belongsto_matches_for_host(blist) if klass == Host
+    return get_belongsto_matches_for_storage(blist) if klass == Storage
     association_name = klass.base_model.to_s.tableize
 
     blist.flat_map do |bfilter|
@@ -512,7 +512,7 @@ module Rbac
     end.uniq
   end
 
-  def self.get_belongsto_matches_for_host(blist, klass)
+  def self.get_belongsto_matches_for_host(blist)
     clusters = []
     hosts = []
     blist.each do |bfilter|
@@ -526,7 +526,7 @@ module Rbac
     MiqPreloader.preload_and_map(clusters, :hosts) + hosts
   end
 
-  def self.get_belongsto_matches_for_storage(blist, klass)
+  def self.get_belongsto_matches_for_storage(blist)
     sources = blist.map do |bfilter|
       MiqFilter.belongsto2object_list(bfilter).reverse.detect { |v| v.respond_to?(:storages) }
     end.select(&:present?)
