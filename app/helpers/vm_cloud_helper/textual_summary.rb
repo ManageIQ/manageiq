@@ -1,4 +1,5 @@
 module VmCloudHelper::TextualSummary
+  include TextualMixins::TextualPatches
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
 
   #
@@ -189,19 +190,6 @@ module VmCloudHelper::TextualSummary
       h[:title] = n_("Show the Group defined on this VM", "Show the Groups defined on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:action => 'groups', :id => @record, :db => controller.controller_name)
-    end
-    h
-  end
-
-  def textual_patches
-    os = @record.os_image_name.downcase
-    return nil if os == "unknown" || os =~ /linux/
-    num = @record.number_of(:patches)
-    h = {:label => _("Patches"), :image => "patch", :value => num}
-    if num > 0
-      h[:title] = n_("Show the Patch defined on this VM", "Show the Patches defined on this VM", num)
-      h[:explorer] = true
-      h[:link]  = url_for(:action => 'patches', :id => @record, :db => controller.controller_name)
     end
     h
   end
