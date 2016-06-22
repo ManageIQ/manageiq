@@ -331,44 +331,77 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.postValidationModel = {default: {}, amqp: {}}
     }
     if (prefix === "default") {
+      if ($scope.newRecord) {
+        var default_password = $scope.emsCommonModel.default_password;
+        var default_verify = $scope.emsCommonModel.default_verify;
+      } else {
+        var default_password = $scope.emsCommonModel.default_password === "" ? "" : miqService.storedPasswordPlaceholder;
+        var default_verify = $scope.emsCommonModel.default_verify === "" ? "" : miqService.storedPasswordPlaceholder;
+      }
       $scope.postValidationModel.default = {
         default_hostname:          $scope.emsCommonModel.default_hostname,
         default_api_port:          $scope.emsCommonModel.default_api_port,
         default_security_protocol: $scope.emsCommonModel.default_security_protocol,
         default_userid:            $scope.emsCommonModel.default_userid,
-        default_password:          $scope.emsCommonModel.default_password,
-        default_verify:            $scope.emsCommonModel.default_verify,
+        default_password:          default_password,
+        default_verify:            default_verify,
         realm:                     $scope.emsCommonModel.realm,
         azure_tenant_id:           $scope.emsCommonModel.azure_tenant_id
       };
     } else if (prefix === "amqp") {
+      if ($scope.newRecord) {
+        var amqp_password = $scope.emsCommonModel.amqp_password;
+        var amqp_verify = $scope.emsCommonModel.amqp_verify;
+      } else {
+        var amqp_password = $scope.emsCommonModel.amqp_password === "" ? "" : miqService.storedPasswordPlaceholder;
+        var amqp_verify = $scope.emsCommonModel.amqp_verify === "" ? "" : miqService.storedPasswordPlaceholder;
+      }
       $scope.postValidationModel.amqp = {
         amqp_hostname:             $scope.emsCommonModel.amqp_hostname,
         amqp_api_port:             $scope.emsCommonModel.amqp_api_port,
         amqp_security_protocol:    $scope.emsCommonModel.amqp_security_protocol,
         amqp_userid:               $scope.emsCommonModel.amqp_userid,
-        amqp_password:             $scope.emsCommonModel.amqp_password,
-        amqp_verify:               $scope.emsCommonModel.amqp_verify,
+        amqp_password:             amqp_password,
+        amqp_verify:               amqp_verify,
       };
     } else if (prefix === "metrics") {
+      if ($scope.newRecord) {
+        var metrics_password = $scope.emsCommonModel.metrics_password;
+        var metrics_verify = $scope.emsCommonModel.metrics_verify;
+      } else {
+        var metrics_password = $scope.emsCommonModel.metrics_password === "" ? "" : miqService.storedPasswordPlaceholder;
+        var metrics_verify = $scope.emsCommonModel.metrics_verify === "" ? "" : miqService.storedPasswordPlaceholder;
+      }
       var metricsValidationModel = {
         metrics_hostname:          $scope.emsCommonModel.metrics_hostname,
         metrics_port:              $scope.emsCommonModel.metrics_port,
         metrics_userid:            $scope.emsCommonModel.metrics_userid,
-        metrics_password:          $scope.emsCommonModel.metrics_password,
-        metrics_verify:            $scope.emsCommonModel.metrics_verify,
+        metrics_password:          metrics_password,
+        metrics_verify:            metrics_verify,
       };
       $scope.postValidationModel['metrics'] = metricsValidationModel;
     } else if (prefix === "ssh_keypair") {
+      if ($scope.newRecord) {
+        var ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_password;
+      } else {
+        var ssh_keypair_password = $scope.emsCommonModel.ssh_keypair_password === "" ? "" : miqService.storedPasswordPlaceholder;
+      }
       $scope.postValidationModel['ssh_keypair'] = {
         ssh_keypair_userid:        $scope.emsCommonModel.ssh_keypair_userid,
-        ssh_keypair_password:      $scope.emsCommonModel.ssh_keypair_password,
+        ssh_keypair_password:      ssh_keypair_password,
       }
     } else if (prefix === "bearer") {
+      if ($scope.newRecord) {
+        var bearer_password = $scope.emsCommonModel.bearer_password;
+        var bearer_verify = $scope.emsCommonModel.bearer_verify;
+      } else {
+        var bearer_password = $scope.emsCommonModel.bearer_password === "" ? "" : miqService.storedPasswordPlaceholder;
+        var bearer_verify = $scope.emsCommonModel.bearer_verify === "" ? "" : miqService.storedPasswordPlaceholder;
+      }
       $scope.postValidationModel['bearer'] = {
         bearer_userid:             $scope.emsCommonModel.bearer_userid,
-        bearer_password:           $scope.emsCommonModel.bearer_password,
-        bearer_verify:             $scope.emsCommonModel.bearer_verify,
+        bearer_password:           bearer_password,
+        bearer_verify:             bearer_verify,
       }
     } else if (prefix === "service_account") {
       $scope.postValidationModel['service_account'] = {
