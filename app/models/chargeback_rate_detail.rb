@@ -132,18 +132,22 @@ class ChargebackRateDetail < ApplicationRecord
 
   def save_tiers(tiers)
     temp = self.class.new(:chargeback_tiers => tiers)
+    saved = true
     if temp.contiguous_tiers?
       self.chargeback_tiers.replace(tiers)
       chargeback_tiers.each(&:save)
       chargeback_tiers.reorder('start ASC')
     else
       temp.errors.each {|a, e| errors.add(a, e)}
+      saved = false
     end
+    saved
   end
 
   # Check that tiers are complete and disjoint
   def contiguous_tiers?
     error = false
+    error_continuity = false
 
     # Note, we use sort_by vs. order since we need to call this method against
     # the in memory chargeback_tiers association and NOT hit the database.
@@ -161,13 +165,16 @@ class ChargebackRateDetail < ApplicationRecord
         error = true if !consecutive_tiers?(tier, tiers[index - 1])
         error = true if tier.ends_with_infinity?
       end
-
-      break if error
+      unless tier.continuity?
+        error_continuity = true
+      end
+      break if error || error_continuity
     end
 
     errors.add(:chargeback_tiers, _("must start at zero and not contain any gaps between start and prior end value.")) if error
+    errors.add(:finish, _("value must be greater than start value.")) if error_continuity
 
-    !error
+    !error && !error_continuity
   end
 
   def first_tier?(tier,tiers)

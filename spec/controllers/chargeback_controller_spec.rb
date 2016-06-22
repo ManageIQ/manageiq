@@ -431,10 +431,10 @@ describe ChargebackController do
       post :x_button, :params => {:id => "new", :pressed => "chargeback_rates_new"}
       post :cb_rate_form_field_changed, :params => {:id => "new", :description => "chargeback rate 1"}
 
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-0"}
       post :cb_tier_remove, :params => {:button => "remove", :index => "#{index_to_rate_type}-1"}
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
-      post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-0"}
+      post :cb_tier_add, :params => {:button => "add", :index => "#{index_to_rate_type}-0"}
 
       # add values to newly added tiers to be valid
       change_form_value(:finish_0_0, "500.0", "new")
@@ -448,7 +448,7 @@ describe ChargebackController do
 
       expect(flash_messages.count).to eq(1)
       expected_message = "'Allocated CPU Count' finish value must be greater than start value."
-      expect(flash_messages[0][:message]).to eq(expected_message)
+      expect(flash_messages[0][:message]).to include(expected_message)
     end
 
     def convert_chargeback_rate_to_hash(rate)
@@ -550,7 +550,6 @@ describe ChargebackController do
       change_form_value(:start_0_1, "20.0")
       change_form_value(:finish_0_1, "20.0")
       change_form_value(:start_0_2, "20.0")
-
       post :cb_rate_edit, :params => {:button => "save", :id => chargeback_rate.id}
 
       flash_messages = assigns(:flash_array)

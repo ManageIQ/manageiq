@@ -127,12 +127,13 @@ class ChargebackController < ApplicationController
       tiers_valid = @rate_tiers.all? { |tiers| tiers.all?(&:valid?) }
 
       @rate.chargeback_rate_details.replace(@rate_details)
+
       @rate.chargeback_rate_details.each_with_index do |_detail, i|
-        @rate_details[i].save_tiers(@rate_tiers[i])
+        unless @rate_details[i].save_tiers(@rate_tiers[i])
+          break
+        end
       end
-
       tiers_valid &&= @rate_details.all?{ |rate_detail| rate_detail.errors.messages.blank? }
-
       if tiers_valid && @rate.save
         if params[:button] == "add"
           AuditEvent.success(build_created_audit(@rate, @edit))
