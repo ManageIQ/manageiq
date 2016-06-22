@@ -12,6 +12,10 @@ class DatabaseBackup < ApplicationRecord
     create.backup(options)
   end
 
+  def self.gc(options)
+    create.gc(options)
+  end
+
   def backup(options)
     # TODO: Create a real exception out of this
     unless options[:task_id].kind_of?(Integer) && options[:file_depot_id].kind_of?(Integer)
@@ -47,7 +51,7 @@ class DatabaseBackup < ApplicationRecord
     EvmDatabaseOps.backup(current_db_opts, connect_opts)
   end
 
-  def self.gc(options)
+  def gc(options)
     unless options[:task_id].kind_of?(Integer)
       raise _("Missing or Invalid task: %{task_id}") % {:task_id => options[:task_id]}
     end
@@ -57,13 +61,9 @@ class DatabaseBackup < ApplicationRecord
 
     options[:userid] ||= "system"
 
-    _gc(options)
+    EvmDatabaseOps.gc(current_db_opts.merge(options))
     task.update_status("Finished", "Ok", "Completed DB GC for Region: #{region_name}.")
     task.id
-  end
-
-  def self._gc(options)
-    EvmDatabaseOps.gc(current_db_opts.merge(options))
   end
 
   def restore(_options)

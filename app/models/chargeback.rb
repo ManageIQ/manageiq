@@ -183,6 +183,6 @@ class Chargeback < ActsAsArModel
   end
 
   def self.db_is_chargeback?(db)
-    subclasses.collect(&:to_s).include?(db)
+    db && db.safe_constantize < Chargeback
   end
 end # class Chargeback

@@ -5,10 +5,7 @@ module ApplicationController::Timelines
   def tl_chooser
     @record = identify_tl_or_perf_record
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
-    @tl_options[:typ] = params[:tl_typ] if params[:tl_typ]
-    @tl_options[:days] = params[:tl_days] if params[:tl_days]
-    @tl_options[:hourly_date] = params[:miq_date_1] if params[:miq_date_1] && @tl_options[:typ] == "Hourly"
-    @tl_options[:daily_date] = params[:miq_date_1] if params[:miq_date_1] && @tl_options[:typ] == "Daily"
+    @tl_options.date.update_from_params(params)
 
     # set variables for type of timeline is selected
     if params[:tl_show]
@@ -17,110 +14,42 @@ module ApplicationController::Timelines
       return unless @timeline
     end
 
-    if @tl_options[:tl_show] == "timeline"
-      @tl_options[:filter1] = params[:tl_fl_grp1] if params[:tl_fl_grp1]
-      @tl_options[:filter2] = params[:tl_fl_grp2] if params[:tl_fl_grp2]
-      @tl_options[:filter3] = params[:tl_fl_grp3] if params[:tl_fl_grp3]
-      # if pull down values have been switched
-      @tl_options[:filter1] = "" if (@tl_options[:filter1] == @tl_options[:filter2] || @tl_options[:filter1] == @tl_options[:filter3]) && !params[:tl_fl_grp1]
-      @tl_options[:filter2] = "" if (@tl_options[:filter2] == @tl_options[:filter3] || @tl_options[:filter2] == @tl_options[:filter1]) && !params[:tl_fl_grp2]
-      @tl_options[:filter3] = "" if (@tl_options[:filter3] == @tl_options[:filter2] || @tl_options[:filter3] == @tl_options[:filter1]) && !params[:tl_fl_grp3]
+    if @tl_options.management_events?
+      @tl_options.mngt.update_from_params(params)
     else
-      @tl_options[:tl_result] = params[:tl_result] if params[:tl_result]
-      if params[:tl_fl_grp_all] == "1"
-        @tl_options[:tl_filter_all] = true
-        @tl_options[:etypes].sort.each do |e|
-          @tl_options[:applied_filters].push(e)
-        end
-      elsif params[:tl_fl_grp_all] == "null"
-        @tl_options[:tl_filter_all] = false
-        @tl_options[:applied_filters] = []
-        @tl_options[:events].sort.each_with_index do |_e, i|
-          @tl_options["pol_filter#{i + 1}".to_sym] = ""
-          @tl_options["pol_fltr#{i + 1}".to_sym] = ""
-        end
-      end
-      # Look through the event type checkbox keys
-      @tl_options[:etypes].sort.each_with_index do |e, i|
-        ekey = "tl_fl_grp#{i + 1}__#{e.tr(" ", "_")}".to_sym
-        if params[ekey] == "1" || (@tl_options[:tl_filter_all] && params[ekey] != "null")
-          @tl_options["pol_filter#{i + 1}".to_sym] = e
-          @tl_options[:applied_filters].push(e) unless @tl_options[:applied_filters].include?(e) || @tl_options[:tl_filter_all] = false
-        elsif params[ekey] == "null"
-          @tl_options[:tl_filter_all] = false
-          @tl_options["pol_filter#{i + 1}".to_sym] = nil
-          @tl_options[:applied_filters].delete(e)
-        end
-      end
+      @tl_options.policy.update_from_params(params)
     end
 
-    @tl_options[:fl_typ] = params[:tl_fl_typ] if params[:tl_fl_typ]
-    if @tl_options[:tl_show] == "timeline" &&
-       (@tl_options[:filter1].nil? || @tl_options[:filter1] == "") &&
-       (@tl_options[:filter2].nil? || @tl_options[:filter2] == "") &&
-       (@tl_options[:filter3].nil? || @tl_options[:filter3] == "")
+    if @tl_options.management_events? && !@tl_options.mngt.event_filter_any?
       add_flash(_("At least one filter must be selected"), :warning)
-    elsif @tl_options[:tl_show] == "policy_timeline"
-      flg = true
-      @tl_options[:events].sort.each_with_index do |_e, i|
-        if !@tl_options["pol_filter#{i + 1}".to_sym].nil? && @tl_options["pol_filter#{i + 1}".to_sym] != ""
-          flg = false
-          tl_build_timeline(refresh = "n")
-          break
-        end
+    elsif @tl_options.policy_events?
+      if @tl_options.policy.event_filter_any?
+        tl_build_timeline('n')
+      else
+        add_flash(_("At least one filter must be selected"), :warning)
       end
-      add_flash(_("At least one filter must be selected"), :warning) if flg
     else
       tl_gen_timeline_data(refresh = "n")
       return unless @timeline
     end
 
-    if @tl_options[:tl_show] == "timeline"
-      if !@tl_options[:filter1].nil? && @tl_options[:filter1] != ""
-        @tl_options[:fltr1] = tl_build_filter(@tl_groups_hash[@tl_options[:filter1]])
-      else
-        @tl_options[:fltr1] = ""
-      end
-      if !@tl_options[:filter2].nil? && @tl_options[:filter2] != ""
-        @tl_options[:fltr2] = tl_build_filter(@tl_groups_hash[@tl_options[:filter2]])
-      else
-        @tl_options[:fltr2] = ""
-      end
-      if !@tl_options[:filter3].nil? && @tl_options[:filter3] != ""
-        @tl_options[:fltr3] = tl_build_filter(@tl_groups_hash[@tl_options[:filter3]])
-      else
-        @tl_options[:fltr3] = ""
-      end
-    else
-      @tl_options[:events].sort.each_with_index do |_e, i|
-        fltr = "pol_filter#{i + 1}".to_sym
-        pol_fltr = "pol_fltr#{i + 1}".to_sym
-        if !@tl_options[fltr].nil? && @tl_options[fltr] != ""
-          f = tl_build_policy_filter(@tl_options[fltr])
-          @tl_options[pol_fltr] = f == "" ? "" : f
-        else
-          @tl_options[pol_fltr] = ""
-        end
-      end
-    end
     @timeline = true
-    add_flash(_("No events available for this timeline"), :warning) if @tl_options[:sdate].nil? && @tl_options[:edate].nil?
+    add_flash(_("No events available for this timeline"), :warning) if @tl_options.date.start.nil? && @tl_options.date.end.nil?
     render :update do |page|
       page << javascript_prologue
       page.replace("flash_msg_div", :partial => "layouts/flash_msg")
       page.replace("tl_options_div", :partial => "layouts/tl_options")
       page.replace("tl_div", :partial => "layouts/tl_detail")
-      page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});" unless @tl_options[:sdate].nil?
-      page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});" unless @tl_options[:edate].nil?
+      page << "ManageIQ.calendar.calDateFrom = new Date(#{@tl_options.date.start});" unless @tl_options.date.start.nil?
+      page << "ManageIQ.calendar.calDateTo = new Date(#{@tl_options.date.end});" unless @tl_options.date.end.nil?
       page << 'miqBuildCalendar();'
-      if @tl_options[:tl_show] == "timeline"
-        page << "$('#filter1').val('#{@tl_options[:fltr1]}');"
-        page << "$('#filter2').val('#{@tl_options[:fltr2]}');"
-        page << "$('#filter3').val('#{@tl_options[:fltr3]}');"
+      if @tl_options.management_events?
+        page << "$('#filter1').val('#{@tl_options.mngt.fltr1}');"
+        page << "$('#filter2').val('#{@tl_options.mngt.fltr2}');"
+        page << "$('#filter3').val('#{@tl_options.mngt.fltr3}');"
       else
-        @tl_options[:events].sort.each_with_index do |_e, i|
-          fltr = "pol_fltr#{i + 1}".to_sym
-          page << "$('#filter#{i + 1}').val('#{@tl_options[fltr]}');"
+        @tl_options.policy.events.sort.each_with_index do |_e, i|
+          page << "$('#filter#{i}').val('#{@tl_options.policy.fltr(i)}');"
         end
       end
       page << "miqSparkle(false);"
@@ -206,150 +135,53 @@ module ApplicationController::Timelines
     @tag_node
   end
 
-  def build_timeline(timeline_typ = "Operation")
-    @tl_options[:typ] = timeline_typ
-    if timeline_typ == "Configuration"
-      timeline_name = "Configurations All Events"
-    else
-      timeline_name = "Operations All Events"
-    end
-    @report = MiqReport.find_by_name(timeline_name)
-    @report.where_clause = @record.event_where_clause
-    @title = @report.title
-
-    begin
-      @report.generate_table(:userid => session[:userid])
-    rescue StandardError => bang
-      add_flash(_("Error building timeline %{error_message}") % {:error_message => bang.message}, :error)
-    else
-      if @report.table.data.length == 0
-        add_flash(_("No records found for this timeline"), :warning)
-      else
-        @timeline = true
-        @report.extras[:browser_name] = browser_info(:name)
-        if is_browser_ie?
-          blob = BinaryBlob.new(:name => "timeline_results")
-          blob.binary = (@report.to_timeline)
-          session[:tl_xml_blob_id] = blob.id
-        else
-          @tl_json = @report.to_timeline
-        end
-        #       START of TIMELINE TIMEZONE Code
-        #       session[:tl_position] = format_timezone(@report.extras[:tl_position],Time.zone,"tl")
-        session[:tl_position] = @report.extras[:tl_position]
-        #       END of TIMELINE TIMEZONE Code
-      end
-    end
-  end
-
   def tl_get_rpt(timeline)
     MiqReport.new(YAML.load(File.open("#{TIMELINES_FOLDER}/miq_reports/#{timeline}.yaml")))
   end
 
-  def tl_build_filter(grp_name)             # hidden fields to highlight bands in timeline
-    event_groups = EmsEvent.event_groups
-    arr = event_groups[grp_name][@tl_options[:fl_typ].downcase.to_sym]
-    arr.push(event_groups[grp_name][:critical]) if @tl_options[:fl_typ].downcase == "detail"
-    filter = "(" << arr.join(")|(") << ")"
-    filter
-  end
-
-  def tl_build_policy_filter(grp_name)      # hidden fields to highlight bands in timeline
-    arr = []
-    @tl_options[:events][grp_name].each do |a|
-      e = PolicyEvent.find_by_miq_event_definition_id(a.to_i)
-      unless e.nil?
-        arr.push(e.event_type)
-      end
-    end
-    if !arr.blank?
-      filter = "(" << arr.join(")|(") << ")"
-    else
-      filter = ""
-    end
-    filter
-  end
-
   def tl_build_init_options(refresh = nil)
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
-    unless @tl_options &&
-           ((refresh == "n" || params[:refresh] == "n") ||
-               (@tl_options && @tl_options[:model] == @tl_record.class.base_class.to_s))
-      @tl_options = {}
-      @tl_options[:typ] = "Daily"
-      @tl_options[:days] = "7"
+    if @tl_options.nil? ||
+       (refresh != "n" && params[:refresh] != "n" && @tl_options[:model] != @tl_record.class.base_class.to_s)
+      @tl_options = Options.new
+      @tl_options.date.typ = 'Daily'
+      @tl_options.date.days = '7'
       @tl_options[:model] = @tl_record.class.base_class.to_s
-      @tl_options[:tl_show_options] = []
-      @tl_options[:tl_show_options].push([_("Management Events"), "timeline"])
-      @tl_options[:tl_show_options].push([_("Policy Events"), "policy_timeline"])
       @tl_options[:tl_show] = "timeline"
+      @tl_options.policy.filters = []
     end
-    evt_type = @tl_options[:tl_show] == "timeline" ? "event_streams" : "policy_events"
-    sdate, edate = @tl_record.first_and_last_event(evt_type.to_sym)
-    if !sdate.nil? && !edate.nil?
-      @tl_options[:sdate] = [sdate.year.to_s, (sdate.month - 1).to_s, sdate.day.to_s].join(", ")
-      @tl_options[:edate] = [edate.year.to_s, (edate.month - 1).to_s, edate.day.to_s].join(", ")
-      @tl_options[:hourly_date] ||= [edate.month, edate.day, edate.year].join("/")
-      @tl_options[:daily_date] ||= [edate.month, edate.day, edate.year].join("/")
-    else
-      @tl_options[:sdate] = @tl_options[:edate] = nil
-    end
-    @tl_options[:days] ||= "7"
+    sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
+    @tl_options.date.update_start_end(sdate, edate)
 
-    if @tl_options[:tl_show] == "policy_timeline"
-      @tl_options[:all_results] = {}
-      @tl_options[:all_results][_("Both")] = "both"
-      @tl_options[:all_results][_("True")] = "success"
-      @tl_options[:all_results][_("False")] = "failure"
-      @tl_options[:tl_result] ||= "both"
+    if @tl_options.policy_events?
+      @tl_options.policy.result ||= "both"
 
-      @tl_options[:events] = {}
-      @tl_options[:etypes] = []
-      MiqEventDefinitionSet.all.each do |e|
-        @tl_options[:etypes].push(e.description)  unless @tl_options[:etypes].include?(e.description)
-        @tl_options[:events][e.description] ||= []
-        e.members.each do |mem|
-          @tl_options[:events][e.description].push(mem.id) unless @tl_options[:events][e.description].include?(mem.id)
-        end
-      end
-      @tl_options[:applied_filters] ||= []
-      if @tl_options[:applied_filters].blank?
-        @tl_options[:applied_filters].push("VM Operation")
+      @tl_options.policy.applied_filters ||= []
+      if @tl_options.policy.applied_filters.blank?
+        @tl_options.policy.applied_filters.push("VM Operation")
         # had to set this here because if it this is preselected in cboxes, it doesnt send the params back for this cb to tl_chooser
-        @tl_options[:etypes].sort.each_with_index do |e, i|
+        @tl_options.policy.events.keys.sort.each_with_index do |e, i|
           if e == "VM Operation"
-            @tl_options["pol_filter#{i + 1}".to_sym] = e
-            @tl_options["pol_fltr#{i + 1}".to_sym] = tl_build_policy_filter(@tl_options["pol_filter#{i + 1}".to_sym])
+            @tl_options.policy.filters[i] = e
           end
         end
       end
     else
-      @tl_options[:groups] = []
-      @tl_groups_hash = {}
-      EmsEvent.event_groups.each do |gname, list|
-        @tl_options[:groups].push(list[:name].to_s)
-        @tl_groups_hash[list[:name].to_s] = gname
-      end
-      @tl_options[:fl_typ] = "critical" if @tl_options[:fl_typ].nil?
-      if @tl_options[:filter1].nil?
-        @tl_options[:filter1] = "Power Activity"
-        @tl_options[:fltr1] = tl_build_filter(@tl_groups_hash[@tl_options[:filter1]])
+      @tl_options.mngt.level = "critical" if @tl_options.mngt.level.nil?
+      if @tl_options.mngt.filter1.nil?
+        @tl_options.mngt.filter1 = "Power Activity"
       end
     end
-
-    @tl_options[:tl_colors] = ["#CD051C", "#005C25", "#035CB1", "#FF3106", "#FF00FF", "#000000"]
   end
 
   def tl_build_timeline_report_options
-    evt_type = @tl_options[:tl_show] == "timeline" ? "event_streams" : "policy_events"
-    sdate, edate = @tl_record.first_and_last_event(evt_type.to_sym)
-    if !@tl_options[:sdate].nil? && !@tl_options[:edate].nil?
-      case @tl_options[:typ]
+    if !@tl_options.date.start.nil? && !@tl_options.date.end.nil?
+      case @tl_options.date.typ
       when "Hourly"
-        tl_rpt = @tl_options[:tl_show] == "timeline" ? "tl_events_hourly" : "tl_policy_events_hourly"
+        tl_rpt = @tl_options.management_events? ? "tl_events_hourly" : "tl_policy_events_hourly"
         @report = tl_get_rpt(tl_rpt)
         @report.headers.map! { |header| _(header) }
-        mm, dd, yy = @tl_options[:hourly_date].split("/")
+        mm, dd, yy = @tl_options.date.hourly.split("/")
         from_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 00:00:00", session[:user_tz]) # Get tz 12am in user's time zone
         to_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 23:59:59", session[:user_tz])   # Get tz 11pm in user's time zone
         st_time = Time.gm(yy, mm, dd, 00, 00, 00)
@@ -367,12 +199,12 @@ module ApplicationController::Timelines
         @report.timeline[:bands][0][:decorate] = true
         @report.timeline[:bands][0][:hourly] = true
       when "Daily"
-        tl_rpt = @tl_options[:tl_show] == "timeline" ? "tl_events_daily" : "tl_policy_events_daily"
+        tl_rpt = @tl_options.management_events? ? "tl_events_daily" : "tl_policy_events_daily"
         @report = tl_get_rpt(tl_rpt)
         @report.headers.map! { |header| _(header) }
-        from = Date.parse(@tl_options[:daily_date]) - @tl_options[:days].to_i
+        from = Date.parse(@tl_options.date.daily) - @tl_options.date.days.to_i
         from_dt = create_time_in_utc("#{from.year}-#{from.month}-#{from.day} 00:00:00", session[:user_tz])  # Get tz 12am in user's time zone
-        mm, dd, yy = @tl_options[:daily_date].split("/")
+        mm, dd, yy = @tl_options.date.daily.split("/")
         to_dt = create_time_in_utc("#{yy}-#{mm}-#{dd} 23:59:59", session[:user_tz]) # Get tz 11pm in user's time zone
         @report.timeline[:bands][0][:decorate] = true
         st_time = Time.gm(from.year, from.month, from.day, 00, 00, 00)
@@ -390,54 +222,23 @@ module ApplicationController::Timelines
         @report.timeline[:bands][0][:pixels] = 1000 / 6
       end
 
-      temp_clause = @tl_record.event_where_clause(evt_type.to_sym)
+      temp_clause = @tl_record.event_where_clause(@tl_options.evt_type)
 
       cond = "( "
       cond = cond << temp_clause[0]
-      params = []
-      params2 = []
       params = temp_clause.slice(1, temp_clause.length)
 
-      event_set = []
-
-      if @tl_options[:tl_show] == "policy_timeline"
-        unless @tl_options[:applied_filters].blank?
-          @tl_options[:applied_filters].each do |e|
-            event_set.push(@tl_options[:events][e])
-          end
-        end
-      else
-        event_groups = EmsEvent.event_groups
-        if (!@tl_options[:filter1].nil? && @tl_options[:filter1] != "") ||
-           (!@tl_options[:filter2].nil? && @tl_options[:filter2] != "") ||
-           (!@tl_options[:filter3].nil? && @tl_options[:filter3] != "")
-          if !@tl_options[:filter1].nil? && @tl_options[:filter1] != ""
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter1]]
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter1]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
-          end
-          if !@tl_options[:filter2].nil? && @tl_options[:filter2] != ""
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter2]]
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter2]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
-          end
-          if !@tl_options[:filter3].nil? && @tl_options[:filter3] != ""
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][@tl_options[:fl_typ].downcase.to_sym]) if @tl_groups_hash[@tl_options[:filter3]]
-            event_set.push(event_groups[@tl_groups_hash[@tl_options[:filter3]]][:detail]) if @tl_options[:fl_typ].downcase == "detail"
-          end
-        else
-          event_set.push(event_groups[:power][@tl_options[:fl_typ].to_sym])
-        end
-      end
-
+      event_set = @tl_options.event_set
       if !event_set.empty?
-        if @tl_options[:tl_show] == "policy_timeline" && @tl_options[:tl_result] != "both"
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
+        if @tl_options.policy_events? && @tl_options.policy.result != "both"
+          ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?)) and (result = ?)",
                           from_dt,
                           to_dt,
                           event_set.flatten,
-                          @tl_options[:tl_result]]
+                          @tl_options.policy.result]
         else
-          ftype = @tl_options[:tl_show] == "timeline" ? "event_type" : "miq_event_definition_id"
+          ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"
           where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?))",
                           from_dt,
                           to_dt,
@@ -498,5 +299,16 @@ module ApplicationController::Timelines
         end
       end
     end
+  end
+
+  def set_tl_session_data(options = @tl_options, controller = controller_name)
+    unless options.nil?
+      options.drop_cache
+      session["#{controller}_tl".to_sym] = options unless options.nil?
+    end
+  end
+
+  def tl_session_data(controller = controller_name)
+    session["#{controller}_tl".to_sym]
   end
 end

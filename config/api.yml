@@ -877,7 +877,7 @@
         :identifier: rbac_role_delete
   :security_groups:
     :description: Security Groups
-    identifier: security_group
+    :identifier: security_group
     :options:
     - :collection
     :methods: *70174834086080
@@ -1003,10 +1003,20 @@
       :get:
       - :name: read
         :identifier: miq_request_view
+      :post:
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
     :resource_actions:
       :get:
       - :name: read
         :identifier: miq_request_view
+      :post:
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
     :subcollection_actions:
       :get:
       - :name: read
@@ -1077,6 +1087,8 @@
         :identifier: catalogitem_edit
       - :name: order
         :identifier: svc_catalog_provision
+        :options:
+        - :validate_action
       - :name: refresh_dialog_fields
         :identifier: svc_catalog_provision
       - :name: assign
@@ -1347,21 +1359,6 @@
         :identifier: rbac_tenant_manage_quotas
       - :name: edit
         :identifier: rbac_tenant_manage_quotas
-      - :name: delete
-        :identifier: rbac_tenant_manage_quotas
-    :quotas_subresource_actions:
-      :get:
-      - :name: read
-        :identifier: rbac_tenant_manage_quotas
-      :post:
-      - :name: edit
-        :identifier: rbac_tenant_manage_quotas
-      - :name: delete
-        :identifier: rbac_tenant_manage_quotas
-      :put:
-      - :name: edit
-        :identifier: rbac_tenant_manage_quotas
-      :delete:
       - :name: delete
         :identifier: rbac_tenant_manage_quotas
   :quotas:

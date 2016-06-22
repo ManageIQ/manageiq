@@ -27,4 +27,11 @@ describe "Quota Validation" do
     expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceMiqGroup)
     expect(root['quota_source_type']).to eq('group')
   end
+
+  it "user source" do
+    ws = run_automate_method(@miq_provision_request, 'user')
+    root = ws.root
+    expect(root['quota_source']).to be_kind_of(MiqAeMethodService::MiqAeServiceUser)
+    expect(root['quota_source_type']).to eq('user')
+  end
 end

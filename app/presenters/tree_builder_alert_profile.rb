@@ -31,7 +31,9 @@ class TreeBuilderAlertProfile < TreeBuilder
       open_node("xx-#{db}")
 
       # Actual translation should happen in TreeNodeBuilder
-      text = PostponedTranslation.new(N_("%s Alert Profiles"), ui_lookup(:model => db)).to_proc
+      text = PostponedTranslation.new(N_("%{model} Alert Profiles")) do
+        {:model => ui_lookup(:model => db)}
+      end.to_proc
       {:id => db, :text => text, :image => db.underscore.downcase, :tip => text}
     end
 

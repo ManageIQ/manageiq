@@ -8,6 +8,8 @@ object:
     inherits: 
     description: default
   fields:
+  - sequencer:
+      value: "/Service/Provisioning/StateMachines/Methods/GroupSequenceCheck"
   - pre1:
       value: "/Service/Provisioning/StateMachines/Methods/CatalogItemInitialization"
   - pre2:

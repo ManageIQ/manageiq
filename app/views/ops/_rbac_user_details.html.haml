@@ -94,14 +94,11 @@
         = _("Group")
       .col-md-8
         - if !@edit
+          - params = {}
           - if @user.current_group
             - if role_allows(:feature => "rbac_group_show")
               - params = {:class => "pointer", :onclick => "miqDynatreeActivateNode('rbac_tree', 'g-#{to_cid(@user.current_group.id)}');", :title => _("View this Group")}
-            - else
-              - params = {}
-            %span.product.product-group{params}
-              = h(@user.current_group.description)
-          - else
+            %i.product.product-group{params}
             = h(@user.current_group.description)
         - else
           - if disabled
@@ -125,8 +122,8 @@
               - params = {:class => "pointer", :onclick => "miqDynatreeActivateNode('rbac_tree', 'ur-#{to_cid(@user.current_group.miq_user_role.id)}');", :title => _("View this Role")}
             - else
               - params = {}
-            %span.product.product-role{params}
-              = h(@user.miq_user_role_name)
+            %i.product.product-role{params}
+            = h(@user.miq_user_role_name)
           - else
             %p.form-control-static
               = h(@user.miq_user_role_name)

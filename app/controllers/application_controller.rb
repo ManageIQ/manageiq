@@ -923,7 +923,7 @@ class ApplicationController < ActionController::Base
         when 'db'
           celltext = Dictionary.gettext(row[col], :type => :model, :notfound => :titleize)
         when 'approval_state'
-          celltext = PROV_STATES[row[col]]
+          celltext = _(PROV_STATES[row[col]])
         when 'state'
           celltext = row[col].titleize
         when 'hardware.bitness'
@@ -1588,7 +1588,6 @@ class ApplicationController < ActionController::Base
     # adding filters/conditions for download reports
     view.user_categories = attrs[:user_filters]["managed"] if attrs && attrs[:user_filters] && attrs[:user_filters]["managed"]
 
-    view.extras[:total_count] = attrs[:total_count]  if attrs[:total_count]
     view.extras[:auth_count]  = attrs[:auth_count]   if attrs[:auth_count]
     @targets_hash             = attrs[:targets_hash] if attrs[:targets_hash]
 
@@ -1665,7 +1664,7 @@ class ApplicationController < ActionController::Base
     pages = {
       :perpage => get_view_pages_perpage(dbname),
       :current => params[:page].nil? ? 1 : params[:page].to_i,
-      :items   => view.extras[:auth_count] || view.extras[:total_count]
+      :items   => view.extras[:auth_count]
     }
     pages[:total] = (pages[:items] + pages[:perpage] - 1) / pages[:perpage]
     pages
@@ -1980,7 +1979,7 @@ class ApplicationController < ActionController::Base
     @server_options = session[:server_options] if ["configuration", "support"].include?(controller_name)
 
     # Get timelines hash, if it is in the session for the running controller
-    @tl_options = session["#{controller_name}_tl".to_sym]
+    @tl_options = tl_session_data
 
     session[:host_url] = request.host_with_port
     session[:tab_url] ||= {}
@@ -2152,7 +2151,7 @@ class ApplicationController < ActionController::Base
     session[:server_options] = @server_options
 
     # Set timelines hash, if it is in the session for the running controller
-    session["#{controller_name}_tl".to_sym] = @tl_options unless @tl_options.nil?
+    set_tl_session_data
 
     # Capture breadcrumbs by main tab
     session[:tab_bc] ||= {}

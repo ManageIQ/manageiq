@@ -65,9 +65,11 @@ describe ServiceAnsibleTower do
         expect(template).to be_kind_of ConfigurationScript
         expect(opts).to have_key(:limit)
         expect(opts).to have_key(:extra_vars)
-      end.and_return(double(:raw_job, :id => 1, :status => "completed"))
+      end.and_return(double(:raw_job, :id => 1, :status => "completed", :extra_vars_hash => {'var_name' => 'var_val'}))
 
-      expect(service_mix_dialog_setter.launch_job).to have_attributes(:ems_ref => "1", :status => "completed")
+      job_done = service_mix_dialog_setter.launch_job
+      expect(job_done).to have_attributes(:ems_ref => "1", :status => "completed")
+      expect(job_done.parameters[0]).to have_attributes(:name => 'var_name', :value => 'var_val', :ems_ref => '1_var_name')
     end
 
     it 'always saves options even when the manager fails to create a stack' do

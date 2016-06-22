@@ -47,7 +47,7 @@ module MiqReport::Formatting
     function_name = format[:function][:name]
 
     options = format.merge(format[:function]).slice(
-      %i(delimiter separator precision length tz column format prefix suffix description unit))
+      *%i(delimiter separator precision length tz column format prefix suffix description unit))
 
     [function_name, options]
   end
@@ -97,7 +97,7 @@ module MiqReport::Formatting
     options[:column] = col
 
     # Chargeback Reports: Add the selected currency in the assigned rate to options
-    if db.to_s == "ChargebackVm" || db.to_s == "ChargebackContainerProject"
+    if Chargeback.db_is_chargeback?(db)
       compute_selected_rate = ChargebackRate.get_assignments(:compute)[0]
       storage_selected_rate = ChargebackRate.get_assignments(:storage)[0]
       selected_rate = compute_selected_rate.nil? ? storage_selected_rate : compute_selected_rate

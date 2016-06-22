@@ -8,8 +8,8 @@ gem "activemodel-serializers-xml",     :require => false # required by draper: h
 gem "activerecord-session_store",      "~>0.1.2", :require => false
 gem "websocket-driver",                "~>0.6.3"
 
-gem "config",                          "~>1.1.0", :git => "git://github.com/Fryguy/config.git", :branch => "overwrite_arrays"
-gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/Fryguy/deep_merge.git", :branch => "overwrite_arrays"
+gem "config",                          "~>1.1.0", :git => "git://github.com/ManageIQ/config.git", :branch => "overwrite_arrays"
+gem "deep_merge",                      "~>1.0.1", :git => "git://github.com/ManageIQ/deep_merge.git", :branch => "overwrite_arrays"
 
 # Local gems
 path "gems/" do
@@ -86,7 +86,7 @@ gem "inifile",                        "~>3.0",     :require => false
 gem "logging",                        "~>1.8",     :require => false  # Ziya depends on this
 gem "net_app_manageability",          ">=0.1.0",   :require => false
 gem "net-ping",                       "~>1.7.4",   :require => false
-gem "net-ssh",                        "~>3.0.2",   :require => false
+gem "net-ssh",                        "=3.2.0",    :require => false
 gem "omniauth",                       "~>1.3.1",   :require => false
 gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",   :require => false
@@ -107,6 +107,7 @@ gem "sshkey",                         "~>1.8.0",   :require => false
 #
 unless ENV['APPLIANCE']
   group :development do
+    gem "scss_lint",        "~>0.48.0", :require => false
     gem "haml_lint",        "~>0.16.1", :require => false
     gem "rubocop",          "~>0.37.2", :require => false
   end

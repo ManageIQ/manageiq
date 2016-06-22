@@ -18,7 +18,7 @@
         = hidden_span_if(@edit[:new][:timer].typ.downcase != "daily", :id => "daily_span") do
           = _("every")
           = select_tag("timer_days",
-            options_for_select(TIMER_DAYS, @edit[:new][:timer].days),
+            options_for_select(TIMER_DAYS.map { |x, y| [_(x), y] }, @edit[:new][:timer].days),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -26,7 +26,7 @@
         = hidden_span_if(@edit[:new][:timer].typ.downcase != "hourly", :id => "hourly_span") do
           = _("every")
           = select_tag("timer_hours",
-            options_for_select(TIMER_HOURS, @edit[:new][:timer].hours),
+            options_for_select(TIMER_HOURS.map { |x, y| [_(x), y] }, @edit[:new][:timer].hours),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -34,7 +34,7 @@
         = hidden_span_if(@edit[:new][:timer].typ.downcase != "weekly", :id => "weekly_span") do
           = _("every")
           = select_tag("timer_weeks",
-            options_for_select(TIMER_WEEKS, @edit[:new][:timer].weeks),
+            options_for_select(TIMER_WEEKS.map { |x, y| [_(x), y] }, @edit[:new][:timer].weeks),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();
@@ -42,7 +42,7 @@
         = hidden_span_if(@edit[:new][:timer].typ.downcase != "monthly", :id => "monthly_span") do
           = _("every")
           = select_tag("timer_months",
-            options_for_select(TIMER_MONTHS, @edit[:new][:timer].months),
+            options_for_select(TIMER_MONTHS.map { |x, y| [_(x), y] }, @edit[:new][:timer].months),
             :class => "selectpicker")
           :javascript
             miqInitSelectPicker();

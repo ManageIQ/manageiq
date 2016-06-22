@@ -312,12 +312,12 @@ module ReportController::Reports
   def valid_chargeback_fields
     is_valid = false
     # There are valid show typ fields
-    if %w(owner tenant tag).include?(@edit[:new][:cb_show_typ])
+    if %w(owner tenant tag entity).include?(@edit[:new][:cb_show_typ])
       is_valid = case @edit[:new][:cb_show_typ]
                  when "owner" then @edit[:new][:cb_owner_id]
                  when "tenant" then @edit[:new][:cb_tenant_id]
                  when "tag" then @edit[:new][:cb_tag_cat] && @edit[:new][:cb_tag_value]
-                 when "entity" then @edit[:new][:cb_entity_id]
+                 when "entity" then @edit[:new][:cb_entity_id] && @edit[:new][:cb_provider_id]
                  end
     end
     is_valid
@@ -391,7 +391,7 @@ module ReportController::Reports
       else
         if @edit[:new][:fields].length == 0
           add_flash(_("Preview tab is not available until at least 1 field has been selected"), :error)
-        elsif @edit[:new][:model] == "Chargeback" && !valid_chargeback_fields
+        elsif Chargeback.db_is_chargeback?(@edit[:new][:model]) && !valid_chargeback_fields
           add_flash(_("Preview tab is not available until Chargeback Filters has been configured"), :error)
           active_tab = "edit_3"
         end

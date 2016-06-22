@@ -413,6 +413,7 @@ class MiqAeCustomizationController < ApplicationController
     # url to be used in url in miqDropComplete method
     presenter[:miq_widget_dd_url] = 'miq_ae_customization/dialog_res_reorder'
     presenter[:init_dashboard] = true
+    presenter[:init_accords] = true
     presenter.update(:custom_left_cell, render_proc[:partial => "dialog_edit_tree"])
     presenter.show(:custom_left_cell).hide(:default_left_cell)
   end

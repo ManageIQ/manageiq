@@ -332,7 +332,10 @@ class MiqWorker::Runner
       begin
         heartbeat
         do_work
-      rescue TemporaryFailure
+      rescue TemporaryFailure => error
+        msg = "#{log_prefix} Temporary failure (message: '#{error}') caught"\
+            " during #do_work. Sleeping for a while before resuming."
+        _log.warn(msg)
         recover_from_temporary_failure
       rescue SystemExit
         do_exit("SystemExit signal received.  ")

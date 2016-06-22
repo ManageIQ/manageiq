@@ -11,8 +11,8 @@ module MiqAeDatastoreConverter
     end
     def setup_export_dir
       @domain     = 'TEST'
-      @export_dir = File.join(Dir.tmpdir, "rspec_export_tests")
-      @zip_file   = File.join(Dir.tmpdir, "yaml_model.zip")
+      @export_dir = File.join(Dir.mktmpdir, "rspec_export_tests")
+      @zip_file   = File.join(Dir.mktmpdir, "yaml_model.zip")
       FileUtils.rm_rf(@export_dir) if File.exist?(@export_dir)
       FileUtils.rm_rf(@zip_file)   if File.exist?(@zip_file)
     end

@@ -21,10 +21,6 @@ class MiqRegion < ApplicationRecord
   include UuidMixin
   include NamingSequenceMixin
   include AggregationMixin
-  # Since we've overridden the implementation of methods from AggregationMixin,
-  # we must also override the :uses portion of the virtual columns.
-  override_aggregation_mixin_virtual_columns_uses(:all_hosts, :hosts)
-  override_aggregation_mixin_virtual_columns_uses(:all_vms_and_templates, :vms_and_templates)
 
   include MiqPolicyMixin
   include Metric::CiMixin

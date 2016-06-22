@@ -1,5 +1,4 @@
 class AvailabilityZoneController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -48,7 +47,6 @@ class AvailabilityZoneController < ApplicationController
                       :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @availability_zone)  # Get the records (into a view) and the paginator
       @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "availability_zone"))
 
     when "cloud_volumes"
       title = ui_lookup(:tables => "cloud_volume")
@@ -59,7 +57,6 @@ class AvailabilityZoneController < ApplicationController
       # Get the records (into a view) and the paginator
       @view, @pages = get_view(CloudVolume, :parent => @availability_zone)
       @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "availability_zone"))
 
     when "timeline"
       @showtype = "timeline"

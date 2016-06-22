@@ -1,5 +1,4 @@
 require 'logger'
-require 'active_support/core_ext/object/try'
 
 class VMDBLogger < Logger
   def initialize(*args)
@@ -31,7 +30,7 @@ class VMDBLogger < Logger
   end
 
   def filename
-    logdev.try(:filename)
+    logdev.filename unless logdev.nil?
   end
 
   alias_method :filename=, :logdev=

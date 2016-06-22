@@ -45,14 +45,9 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
   end
 
   def autostart_destination
-    if get_option(:vm_auto_start)
-      message = "Starting"
-      _log.info("#{message} #{for_destination}")
-      update_and_notify_parent(:message => message)
-      get_provider_destination.start { |action| action.use_cloud_init(true) if phase_context[:boot_with_cloud_init] }
-    end
+    destination.custom_attributes.create!(:name => "miq_provision_boot_with_cloud_init") if phase_context[:boot_with_cloud_init]
 
-    signal :post_create_destination
+    super
   end
 
   private

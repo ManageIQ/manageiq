@@ -55,6 +55,7 @@ class MiqExpression
     Storage
     StorageFile
     StoragePerformance
+    Switch
     ManageIQ::Providers::CloudManager::Template
     ManageIQ::Providers::InfraManager::Template
     Tenant
@@ -99,6 +100,7 @@ class MiqExpression
     flavors
     groups
     guest_applications
+    guest_devices
     hardwares
     hosts
     host_services
@@ -707,10 +709,6 @@ class MiqExpression
     end
 
     result.compact.uniq
-  end
-
-  def self.merge_where_clauses_and_includes(where_clauses, includes)
-    [merge_where_clauses(*where_clauses), merge_includes(*includes)]
   end
 
   def self.expand_conditional_clause(klass, cond)

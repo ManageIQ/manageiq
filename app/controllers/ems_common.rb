@@ -1,6 +1,5 @@
 module EmsCommon
   extend ActiveSupport::Concern
-  include AuthorizationMessagesMixin
 
   def gtl_url
     restful? ? '/' : '/show'
@@ -121,7 +120,6 @@ module EmsCommon
     opts[:parent_method] = parent_method if parent_method
     @view, @pages = get_view(kls, **opts)
     @showtype = @display
-    notify_about_unauthorized_items(view_item_name, ui_lookup(:tables => @table_name))
   end
 
   # Show the main MS list view
@@ -385,7 +383,8 @@ module EmsCommon
                    "host_compare", "#{pfx}_compare", "#{pfx}_tag", "#{pfx}_retire",
                    "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_refresh", "#{pfx}_right_size",
                    "#{pfx}_reconfigure", "storage_tag", "ems_cluster_compare",
-                   "ems_cluster_protect", "ems_cluster_tag"].include?(params[:pressed]) &&
+                   "ems_cluster_protect", "ems_cluster_tag", "#{pfx}_resize", "#{pfx}_live_migrate",
+                   "#{pfx}_evacuate"].include?(params[:pressed]) &&
                   @flash_array.nil?
 
         unless ["host_edit", "#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",

@@ -34,6 +34,9 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
     ext_management_system.with_provider_connection do |connection|
       update_with_provider_object(connection.api.jobs.find(ems_ref))
     end
+  rescue Faraday::ResourceNotFound
+    msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"
+    raise MiqException::MiqOrchestrationStackNotExistError, msg
   rescue => err
     _log.error "Refreshing job(#{name}, ems_ref=#{ems_ref}), error: #{err}"
     raise MiqException::MiqOrchestrationUpdateError, err.to_s, err.backtrace
@@ -42,6 +45,10 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
   def update_with_provider_object(raw_job)
     self.ems_ref = raw_job.id
     self.status = raw_job.status
+    self.parameters =
+      raw_job.extra_vars_hash.collect do |para_key, para_val|
+        OrchestrationStackParameter.new(:name => para_key, :value => para_val, :ems_ref => "#{raw_job.id}_#{para_key}")
+      end if parameters.empty?
     save!
   end
   private :update_with_provider_object
@@ -56,6 +63,18 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
     raise MiqException::MiqOrchestrationStackNotExistError, msg
   rescue => err
     _log.error "AnsibleTower Job #{name} with id(#{id}) status error: #{err}"
+    raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
+  end
+
+  def raw_stdout
+    ext_management_system.with_provider_connection do |connection|
+      connection.api.jobs.find(ems_ref).stdout
+    end
+  rescue Faraday::ResourceNotFound
+    msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"
+    raise MiqException::MiqOrchestrationStackNotExistError, msg
+  rescue => err
+    _log.error "Reading AnsibleTower Job #{name} with id(#{id}) stdout failed with error: #{err}"
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
 end

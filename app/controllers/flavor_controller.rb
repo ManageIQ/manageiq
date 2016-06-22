@@ -1,5 +1,4 @@
 class FlavorController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -39,7 +38,6 @@ class FlavorController < ApplicationController
                       :url  => "/flavor/show/#{@flavor.id}?display=#{@display}")
       @view, @pages = get_view(ManageIQ::Providers::CloudManager::Vm, :parent => @flavor) # Get the records (into a view) and the paginator
       @showtype   = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "flavor"))
     end
 
     # Came in from outside show_list partial

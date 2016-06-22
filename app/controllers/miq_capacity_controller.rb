@@ -189,7 +189,7 @@ class MiqCapacityController < ApplicationController
 
     @sb[:planning][:options][:chosen_vm] = params[:chosen_vm] == "<Choose>" ? nil : params[:chosen_vm] if params[:chosen_vm]
     @sb[:planning][:options][:days] = params[:trend_days].to_i if params[:trend_days]
-    @sb[:planning][:options][:vm_mode] = VALID_PLANNING_VM_MODES[params[:vm_mode]] if params[:vm_mode]
+    @sb[:planning][:options][:vm_mode] = _(VALID_PLANNING_VM_MODES[params[:vm_mode]]) if params[:vm_mode]
     @sb[:planning][:options][:trend_cpu] = (params[:trend_cpu] == "1") if params[:trend_cpu]
     @sb[:planning][:options][:trend_vcpus] = (params[:trend_vcpus] == "1") if params[:trend_vcpus]
     @sb[:planning][:options][:trend_memory] = (params[:trend_memory] == "1") if params[:trend_memory]

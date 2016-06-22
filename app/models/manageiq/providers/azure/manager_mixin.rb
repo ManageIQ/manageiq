@@ -10,6 +10,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
   end
 
   def verify_credentials(_auth_type = nil, options = {})
+    require 'azure-armrest'
     connect(options)
   rescue Azure::Armrest::UnauthorizedException
     raise MiqException::MiqHostError, _("Incorrect credentials - check your Azure Client ID and Client Key")

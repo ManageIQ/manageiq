@@ -745,7 +745,7 @@ module VmCommon
       profile_node = TreeNodeBuilder.generic_tree_node(
         "policy_profile_#{profile['id']}",
         profile['description'],
-        ActionController::Base.helpers.image_path("100/#{icon}"),
+        icon,
         nil,
         :style_class => "cfme-no-cursor-node"
       )
@@ -786,7 +786,7 @@ module VmCommon
       policy_node = TreeNodeBuilder.generic_tree_node(
         "policy_#{policy["id"]}",
         policy['description'],
-        ActionController::Base.helpers.image_path("100/#{icon}"),
+        icon,
         nil,
         :style_class => "cfme-no-cursor-node"
       )
@@ -827,7 +827,7 @@ module VmCommon
       condition_node = TreeNodeBuilder.generic_tree_node(
         "condition_#{condition["id"]}_#{condition["name"]}_#{policy["name"]}",
         condition["description"],
-        ActionController::Base.helpers.image_path("100/#{icon}"),
+        icon,
         nil,
         :style_class => "cfme-no-cursor-node"
       )
@@ -855,7 +855,7 @@ module VmCommon
     node = TreeNodeBuilder.generic_tree_node(
       node_key,
       exp_string.html_safe,
-      ActionController::Base.helpers.image_path("100/#{icon}"),
+      icon,
       exp_tooltip.html_safe,
       :style_class => "cfme-no-cursor-node"
     )

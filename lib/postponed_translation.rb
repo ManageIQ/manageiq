@@ -3,24 +3,23 @@
 
 # example:
 #
-# PostponedTranslation.new( _N("%s Alert Profiles"), "already translated string" )
-# PostponedTranslation.new( _N("%{foo} Alert Profiles"), { :foo => "already translated string" })
+# PostponedTranslation.new( _N("%s Alert Profiles")) { "already translated string" }
+# PostponedTranslation.new( _N("%{model} Alert Profiles")) do {:model => ui_lookup(:models => variable)} end
 
 class PostponedTranslation
-  def initialize(string, *args)
+  def initialize(string, &block)
     @string = string
-    @args = args
-    @args = args.first if args.length == 1 && args.first.kind_of?(Hash)
+    @block = block
   end
 
   # meant to catch cases where PostponedTranslation is not supported
   def to_s
     $log.warn("PostponedTranslation#to_s should not be called - leaving untranslated")
-    @string % @args
+    @string % @block.call
   end
 
   def translate
-    _(@string) % @args
+    _(@string) % @block.call
   end
 
   # when we have a generic Proc support - TreeBuilder for example

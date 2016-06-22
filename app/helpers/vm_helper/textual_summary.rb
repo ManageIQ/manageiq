@@ -1,4 +1,6 @@
 module VmHelper::TextualSummary
+  include TextualMixins::TextualOsInfo
+  include TextualMixins::TextualPatches
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
 
   #
@@ -163,21 +165,6 @@ module VmHelper::TextualSummary
 
   def textual_tools_status
     {:label => _("Platform Tools"), :value => (@record.tools_status.nil? ? _("N/A") : @record.tools_status)}
-  end
-
-  def textual_osinfo
-    h = {:label => _("Operating System")}
-    os = @record.operating_system.nil? ? nil : @record.operating_system.product_name
-    if os.blank?
-      h[:value] = _("Unknown")
-    else
-      h[:image] = "os-#{@record.os_image_name.downcase}"
-      h[:value] = os
-      h[:title] = _("Show OS container information")
-      h[:explorer] = true
-      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'os_info')
-    end
-    h
   end
 
   def textual_cpu_affinity
@@ -549,19 +536,6 @@ module VmHelper::TextualSummary
       h[:title] = n_("Show the Group defined on this VM", "Show the Groups defined on this VM", num)
       h[:explorer] = true
       h[:link]  = url_for(:action => 'groups', :id => @record, :db => controller.controller_name)
-    end
-    h
-  end
-
-  def textual_patches
-    os = @record.os_image_name.downcase
-    return nil if os == "unknown" || os =~ /linux/
-    num = @record.number_of(:patches)
-    h = {:label => _("Patches"), :image => "patch", :value => num}
-    if num > 0
-      h[:title] = n_("Show the Patch defined on this VM" , "Show the Patches defined on this VM", num)
-      h[:explorer] = true
-      h[:link]  = url_for(:action => 'patches', :id => @record, :db => controller.controller_name)
     end
     h
   end

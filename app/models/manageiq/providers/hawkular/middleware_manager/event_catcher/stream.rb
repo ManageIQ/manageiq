@@ -1,7 +1,7 @@
 class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Stream
   def initialize(ems)
     @ems               = ems
-    @alerts_client     = ems.alerts_connect
+    @alerts_client     = ems.alerts_client
     @collecting_events = false
   end
 

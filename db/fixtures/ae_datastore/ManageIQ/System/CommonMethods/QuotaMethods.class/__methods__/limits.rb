@@ -85,7 +85,7 @@ def set_root_limit_values(quota_max, quota_warn)
 end
 
 def model_and_tag_quota_values
-  $evm.log(:info, "Getting Group and Tag Quota Values.")
+  $evm.log(:info, "Getting #{$evm.root['quota_source_type']} and Tag Quota source Values.")
   quota_max = {}
   quota_warn = {}
   QUOTA_ATTRIBUTES.each do |name|

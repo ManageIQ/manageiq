@@ -149,13 +149,14 @@ module Metric::Common
   Vmdb::Deprecation.deprecate_methods(self, :v_derived_logical_cpus_used => :v_derived_cpu_total_cores_used)
 
   # Applies the given time profile to this metric record
+  # unless record already refer to some time profile (which were used for aggregation)
   def apply_time_profile(profile)
-    unless profile.ts_in_profile?(timestamp)
+    if time_profile_id || profile.ts_in_profile?(timestamp)
+      self.inside_time_profile = true
+    else
       self.inside_time_profile = false
       nil_out_values_for_apply_time_profile
       _log.debug("Hourly Timestamp: [#{timestamp}] is outside of time profile: [#{profile.description}]")
-    else
-      self.inside_time_profile = true
     end
     inside_time_profile
   end

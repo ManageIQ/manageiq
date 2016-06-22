@@ -1,6 +1,4 @@
 class ManageIQ::Providers::Azure::NetworkManager::EventCatcher < ::MiqEventCatcher
-  require_nested :Runner
-
   def self.ems_class
     ManageIQ::Providers::Azure::NetworkManager
   end

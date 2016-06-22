@@ -361,12 +361,13 @@ class EmsEvent < EventStream
   end
 
   def self.purge_queue(ts)
-    MiqQueue.put_or_update(
+    MiqQueue.put(
       :class_name  => name,
       :method_name => "purge",
       :role        => "event",
-      :queue_name  => "ems"
-    ) { |_msg, item| item.merge(:args => [ts]) }
+      :queue_name  => "ems",
+      :args        => [ts],
+    )
   end
 
   def self.purge(older_than, window = nil, limit = nil)

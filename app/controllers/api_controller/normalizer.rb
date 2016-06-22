@@ -28,7 +28,7 @@ class ApiController
     def normalize_virtual(vtype, name, obj, options = {})
       return normalize_virtual_array(vtype, name, obj, options) if obj.kind_of?(Array) || obj.kind_of?(ActiveRecord::Relation)
       return normalize_virtual_hash(vtype, obj, options) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
-      normalize_attr_byname(vtype, name, obj)
+      normalize_attr_byname(name, obj)
     end
 
     def normalize_virtual_array(vtype, name, obj, options)
@@ -45,26 +45,18 @@ class ApiController
     end
 
     #
-    # Attribute Normalizer
-    #
-    def normalize_attr(type, attrtype, value)
-      attr_normalizer = "normalize_#{attrtype}"
-      respond_to?(attr_normalizer) ? send(attr_normalizer, type, value) : value
-    end
-
-    #
     # Let's normalize the attribute based on its name
     #
-    def normalize_attr_byname(type, attr, value)
+    def normalize_attr_byname(attr, value)
       return if value.nil?
       if self.class.attr_type_hash(:time).key?(attr.to_s)
-        normalize_attr(type, :time, value)
+        normalize_time(value)
       elsif self.class.attr_type_hash(:url).key?(attr.to_s)
-        normalize_attr(type, :url,  value)
+        normalize_url(value)
       elsif self.class.attr_type_hash(:encrypted).key?(attr.to_s) || attr.to_s.include?("password")
-        normalize_attr(type, :encrypted,  value)
+        normalize_encrypted
       elsif self.class.attr_type_hash(:resource).key?(attr.to_s)
-        normalize_attr(type, :resource, value)
+        normalize_resource(value)
       else
         value
       end
@@ -76,7 +68,7 @@ class ApiController
     #
     # Function takes either a Time string or Seconds since Epoch
     #
-    def normalize_time(_type, value)
+    def normalize_time(value)
       return Time.at(value).utc.iso8601 if value.kind_of?(Integer)
 
       value.respond_to?(:utc) ? value.utc.iso8601 : value
@@ -87,7 +79,7 @@ class ApiController
     #
     # Note, all URL's are baselined as per the request specifying versioning and such.
     #
-    def normalize_url(_type, value)
+    def normalize_url(value)
       svalue = value.to_s
       pref   = @req[:api_prefix]
       svalue.match(pref) ? svalue : "#{pref}/#{svalue}"
@@ -97,20 +89,20 @@ class ApiController
     # Let's normalize an href based on type and id value
     #
     def normalize_href(type, value)
-      normalize_url(type, "#{type}/#{value}")
+      normalize_url("#{type}/#{value}")
     end
 
     #
     # Let's normalize href accessible resources
     #
-    def normalize_resource(_type, value)
+    def normalize_resource(value)
       value.to_s.starts_with?("/") ? "#{@req[:base]}#{value}" : value
     end
 
     #
     # Let's filter out encrypted attributes, i.e. passwords
     #
-    def normalize_encrypted(_type, _value)
+    def normalize_encrypted
       nil
     end
 
@@ -127,7 +119,7 @@ class ApiController
     def normalize_direct(type, name, obj)
       return normalize_direct_array(type, name, obj) if obj.kind_of?(Array) || obj.kind_of?(ActiveRecord::Relation)
       return normalize_hash(type, obj) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
-      normalize_attr_byname(type, name, obj)
+      normalize_attr_byname(name, obj)
     end
 
     def normalize_direct_array(type, name, obj)

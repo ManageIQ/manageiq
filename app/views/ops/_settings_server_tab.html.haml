@@ -22,12 +22,12 @@
       .col-md-8
         - vm = @selected_server.vm
         - if vm
-          %span.fa.fa-desktop.pointer{:onclick => "DoNav('/vm/show/#{vm.id}')",
+          %i.fa.fa-desktop.pointer{:onclick => "DoNav('/vm/show/#{vm.id}')",
                                       :title   => _("Click to view this VM")}
-            = h(vm.name)
+          = h(vm.name)
         - else
-          %span.fa.fa-desktop
-            = _("Not Available")
+          %i.fa.fa-desktop
+          = _("Not Available")
     .form-group
       %label.col-md-2.control-label
         = _("Company Name")

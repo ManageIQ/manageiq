@@ -67,6 +67,10 @@ class ApiController
         raise BadRequestError, "Must specify a service_template_href for adding a service_request"
       end
       service_template = resource_search(service_template_id, :service_templates, ServiceTemplate)
+      service_template_workflow(service_template, service_request)
+    end
+
+    def service_template_workflow(service_template, service_request)
       resource_action = service_template.resource_actions.find_by_action("Provision")
       workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => service_template)
       service_request.each { |key, value| workflow.set_value(key, value) } if service_request.present?
