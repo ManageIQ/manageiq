@@ -677,8 +677,8 @@ module ApplicationController::CiProcessing
     assert_privileges("instance_associate_floating_ip")
     recs = find_checked_items
     recs = [params[:id].to_i] if recs.blank?
-    @record = find_by_id_filtered(VmOrTemplate, recs.first)
-    if @record.is_available?(:associate_floating_ip) && !@record.ext_management_system.nil?
+    @record = find_by_id_filtered(VmCloud, recs.first)
+    if @record.is_available?(:associate_floating_ip) && @record.ext_management_system.present?
       if @explorer
         associate_floating_ip
         @refresh_partial = "vm_common/associate_floating_ip"
@@ -703,7 +703,7 @@ module ApplicationController::CiProcessing
 
   def associate_floating_ip
     assert_privileges("instance_associate_floating_ip")
-    @record ||= VmOrTemplate.find_by_id(params[:rec_id])
+    @record ||= VmCloud.find_by_id(params[:rec_id])
     drop_breadcrumb(
       :name => _("Associate Floating IP with Instance '%{name}'") % {:name => @record.name},
       :url  => "/vm_cloud/associate_floating_ip"
@@ -716,7 +716,7 @@ module ApplicationController::CiProcessing
 
   def associate_floating_ip_form_fields
     assert_privileges("instance_associate_floating_ip")
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    @record = find_by_id_filtered(VmCloud, params[:id])
     floating_ips = []
     unless @record.cloud_tenant.nil?
       floating_ips = @record.cloud_tenant.floating_ips
@@ -728,7 +728,7 @@ module ApplicationController::CiProcessing
 
   def associate_floating_ip_vm
     assert_privileges("instance_associate_floating_ip")
-    @record = VmOrTemplate.find_by_id(params[:id])
+    @record = VmCloud.find_by_id(params[:id])
     case params[:button]
     when "cancel"
       add_flash(_("Association of %{floating_ip} with %{instance} \"%{name}\" was cancelled by the user") % {
@@ -781,8 +781,8 @@ module ApplicationController::CiProcessing
     assert_privileges("instance_disassociate_floating_ip")
     recs = find_checked_items
     recs = [params[:id].to_i] if recs.blank?
-    @record = find_by_id_filtered(VmOrTemplate, recs.first)
-    if @record.is_available?(:disassociate_floating_ip) && !@record.ext_management_system.nil?
+    @record = find_by_id_filtered(VmCloud, recs.first)
+    if @record.is_available?(:disassociate_floating_ip) && @record.ext_management_system.present?
       if @explorer
         disassociate_floating_ip
         @refresh_partial = "vm_common/disassociate_floating_ip"
@@ -807,7 +807,7 @@ module ApplicationController::CiProcessing
 
   def disassociate_floating_ip
     assert_privileges("instance_disassociate_floating_ip")
-    @record ||= VmOrTemplate.find_by_id(params[:rec_id])
+    @record ||= VmCloud.find_by_id(params[:rec_id])
     drop_breadcrumb(
       :name => _("Disssociate Floating IP from Instance '%{name}'") % {:name => @record.name},
       :url  => "/vm_cloud/disassociate_floating_ip"
@@ -820,7 +820,7 @@ module ApplicationController::CiProcessing
 
   def disassociate_floating_ip_form_fields
     assert_privileges("instance_disassociate_floating_ip")
-    @record = find_by_id_filtered(VmOrTemplate, params[:id])
+    @record = find_by_id_filtered(VmCloud, params[:id])
     floating_ips = []
     unless @record.ext_management_system.nil?
       @record.floating_ips.each do |floating_ip|
@@ -834,7 +834,7 @@ module ApplicationController::CiProcessing
 
   def disassociate_floating_ip_vm
     assert_privileges("instance_disassociate_floating_ip")
-    @record = VmOrTemplate.find_by_id(params[:id])
+    @record = VmCloud.find_by_id(params[:id])
     case params[:button]
     when "cancel"
       add_flash(_("Disassociation of %{floating_ip} from %{instance} \"%{name}\" was cancelled by the user") % {
