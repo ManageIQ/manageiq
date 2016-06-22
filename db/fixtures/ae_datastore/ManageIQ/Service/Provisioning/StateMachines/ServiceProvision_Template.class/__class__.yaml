@@ -13,10 +13,30 @@ object:
   schema:
   - field:
       aetype: state
-      name: pre1
+      name: sequencer
       display_name: 
       datatype: string
       priority: 1
+      owner: 
+      default_value: 
+      substitute: true
+      message: create
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: update_serviceprovision_status(status => 'Processing Sequencer')
+      on_exit: update_serviceprovision_status(status => 'Processed Sequencer')
+      on_error: update_serviceprovision_status(status => 'Error Processing Sequencer')
+      max_retries: '100'
+      max_time: 
+  - field:
+      aetype: state
+      name: pre1
+      display_name: 
+      datatype: string
+      priority: 2
       owner: 
       default_value: 
       substitute: true
@@ -36,7 +56,7 @@ object:
       name: pre2
       display_name: 
       datatype: string
-      priority: 2
+      priority: 3
       owner: 
       default_value: 
       substitute: true
@@ -56,7 +76,7 @@ object:
       name: pre3
       display_name: 
       datatype: string
-      priority: 3
+      priority: 4
       owner: 
       default_value: 
       substitute: true
@@ -76,7 +96,7 @@ object:
       name: pre4
       display_name: 
       datatype: string
-      priority: 4
+      priority: 5
       owner: 
       default_value: 
       substitute: true
@@ -96,7 +116,7 @@ object:
       name: pre5
       display_name: 
       datatype: string
-      priority: 5
+      priority: 6
       owner: 
       default_value: 
       substitute: true
@@ -116,7 +136,7 @@ object:
       name: configurechilddialog
       display_name: 
       datatype: string
-      priority: 6
+      priority: 7
       owner: 
       default_value: 
       substitute: true
@@ -136,7 +156,7 @@ object:
       name: provision
       display_name: 
       datatype: string
-      priority: 7
+      priority: 8
       owner: 
       default_value: "/Service/Provisioning/StateMachines/Methods/Provision"
       substitute: true
@@ -156,7 +176,7 @@ object:
       name: checkprovisioned
       display_name: 
       datatype: string
-      priority: 8
+      priority: 9
       owner: 
       default_value: "/Service/Provisioning/StateMachines/Methods/CheckProvisioned"
       substitute: true
@@ -176,7 +196,7 @@ object:
       name: post1
       display_name: 
       datatype: string
-      priority: 9
+      priority: 10
       owner: 
       default_value: 
       substitute: true
@@ -196,7 +216,7 @@ object:
       name: post2
       display_name: 
       datatype: string
-      priority: 10
+      priority: 11
       owner: 
       default_value: 
       substitute: true
@@ -216,7 +236,7 @@ object:
       name: post3
       display_name: 
       datatype: string
-      priority: 11
+      priority: 12
       owner: 
       default_value: 
       substitute: true
@@ -236,7 +256,7 @@ object:
       name: post4
       display_name: 
       datatype: string
-      priority: 12
+      priority: 13
       owner: 
       default_value: 
       substitute: true
@@ -256,7 +276,7 @@ object:
       name: post5
       display_name: 
       datatype: string
-      priority: 13
+      priority: 14
       owner: 
       default_value: 
       substitute: true
@@ -276,7 +296,7 @@ object:
       name: EmailOwner
       display_name: 
       datatype: string
-      priority: 14
+      priority: 15
       owner: 
       default_value: "/Service/Provisioning/Email/ServiceProvision_complete?event=service_provisioned"
       substitute: true
@@ -296,7 +316,7 @@ object:
       name: Finished
       display_name: 
       datatype: string
-      priority: 15
+      priority: 16
       owner: 
       default_value: "/System/CommonMethods/StateMachineMethods/service_provision_finished"
       substitute: true
