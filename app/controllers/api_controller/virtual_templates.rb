@@ -2,7 +2,7 @@ class ApiController
   module VirtualTemplates
     def create_resource_virtual_templates(_type, _id, data)
       validate_vendor_present(data)
-      template = type_from_vendor(data['vendor']).new(data)
+      template = type_from_vendor(data['vendor']).create(data)
       if template.invalid?
         raise BadRequestError, "Failed to create a new virtual template - #{template.errors.full_messages.join(', ')}"
       end

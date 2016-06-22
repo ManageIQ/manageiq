@@ -4,31 +4,22 @@ describe ManageIQ::Providers::CloudManager::VirtualTemplate do
       vendor: 'amazon',
       name: 'virtualtemplate',
       location: 'here',
-      ems_ref: 'i-12345',
-      availability_zone_id: 1,
-      cloud_network_id: 1,
-      cloud_subnet_id: 1
     }
   end
 
-  describe '#name' do
-    it 'is required' do
-      expect { FactoryGirl.create(:virtual_template, vt_properties.except(:name)) }
-          .to raise_error(ActiveRecord::RecordInvalid, /Name can't be blank/)
+  describe '#type' do
+    it 'may only have one per type' do
+      FactoryGirl.create(:virtual_template, vt_properties)
+      expect { FactoryGirl.create(:virtual_template, vt_properties) }
+          .to raise_error(ActiveRecord::RecordInvalid, /Virtual template may only have one per type/)
     end
   end
 
-  describe '#ems_ref' do
-    it 'is required' do
-      expect { FactoryGirl.create(:virtual_template, vt_properties.except(:ems_ref)) }
-          .to raise_error(ActiveRecord::RecordInvalid, /Ems ref can't be blank/)
-    end
-  end
+  describe '#cloud' do
+    it 'has a default value of true' do
+      vt = FactoryGirl.create(:virtual_template, vt_properties)
 
-  describe '#cloud_network_id' do
-    it 'is required' do
-      expect { FactoryGirl.create(:virtual_template, vt_properties.except(:cloud_network_id)) }
-          .to raise_error(ActiveRecord::RecordInvalid, /Cloud network can't be blank/)
+      expect(vt.cloud).to be_truthy
     end
   end
 end

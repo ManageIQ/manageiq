@@ -7,5 +7,10 @@ FactoryGirl.define do
     availability_zone_id 0
     cloud_subnet_id 1
     cloud_network_id 2
+    type 'ManageIQ::Providers::Amazon::CloudManager::VirtualTemplate'
+
+    trait :generic do
+      type 'ManageIQ::Providers::CloudManager::VirtualTemplate'
+    end
   end
 end
