@@ -1692,13 +1692,13 @@ function chartData(type, data, data2) {
   }
 
   // tooltips have full name even if labels are shortened
-  if (_.isObject(data.axis.x) && _.isObject(data.axis.x.categories)) {
+  if (_.isObject(data.axis) &&_.isObject(data.axis.x) && _.isObject(data.axis.x.categories)) {
     var tooltips = []
     for (var i = 0; i <  data.axis.x.categories.length; i++ ) {
         tooltips.push(data.axis.x.categories[i]);
         data.axis.x.categories[i] = ManageIQ.charts.formatters.string_truncate(data.axis.x.categories[i], {length:7});
     }
-    
+
     if(_.isObject(data.tooltip.format)){
       data.tooltip.format.title =  function (x) { return tooltips[x]; }
     }
