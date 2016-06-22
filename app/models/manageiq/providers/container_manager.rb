@@ -40,12 +40,6 @@ module ManageIQ::Providers
       define_method(:singular_route_key) { "ems_container" }
     end
 
-    def self.supported_subclasses
-      [ManageIQ::Providers::Kubernetes::ContainerManager,
-       ManageIQ::Providers::OpenshiftEnterprise::ContainerManager,
-       ManageIQ::Providers::Openshift::ContainerManager]
-    end
-
     # enables overide of ChartsLayoutService#find_chart_path
     def chart_layout_path
       "ManageIQ_Providers_ContainerManager"
