@@ -42,6 +42,7 @@ module MiqAeMethodService
         DRb.front.workspace
       rescue => err
         $miq_ae_logger.warn("Could not fetch DRb front object #{err}")
+        nil
       end
 
       def rbac_enabled?
