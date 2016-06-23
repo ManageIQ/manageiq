@@ -3,6 +3,7 @@ module VmCloudHelper::TextualSummary
   include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualOsInfo
   include TextualMixins::TextualPatches
+  include TextualMixins::TextualScanHistory
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
 
   #
@@ -129,20 +130,6 @@ module VmCloudHelper::TextualSummary
 
   def textual_guid
     {:label => _("Management Engine GUID"), :value => @record.guid}
-  end
-
-  def textual_scan_history
-    h = {:label => _("Analysis History"), :image => "scan"}
-    num = @record.number_of(:scan_histories)
-    if num == 0
-      h[:value] = _("None")
-    else
-      h[:value] = num
-      h[:title] = _("Show virtual machine analysis history")
-      h[:explorer] = true
-      h[:link]  = url_for(:controller => controller.controller_name, :action => 'scan_histories', :id => @record)
-    end
-    h
   end
 
   def textual_users
