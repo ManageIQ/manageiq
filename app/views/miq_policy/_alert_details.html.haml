@@ -189,7 +189,7 @@
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:snmp].blank?
           %h3
             = _('Send SNMP Trap')
-          %label.control-label.col-md-2
+          .form-horizontal
             .form-group
               %label.control-label.col-md-2
                 = title_for_host
