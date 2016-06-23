@@ -3,6 +3,7 @@ module VmHelper::TextualSummary
   include TextualMixins::TextualInitProcesses
   include TextualMixins::TextualOsInfo
   include TextualMixins::TextualPatches
+  include TextualMixins::TextualRegion
   include TextualMixins::TextualScanHistory
   # TODO: Determine if DoNav + url_for + :title is the right way to do links, or should it be link_to with :title
 
@@ -87,25 +88,6 @@ module VmHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_region
-    return nil if @record.region_number == MiqRegion.my_region_number
-    h = {:label => _("Region")}
-    reg = @record.miq_region
-    url = reg.remote_ui_url
-    h[:value] = if url
-                  # TODO: Why is this link different than the others?
-                  link_to(reg.description, url_for(:host   => url,
-                                                   :action => 'show',
-                                                   :id     => @record),
-                          :title   => _("Connect to this VM in its Region"),
-                          :onclick => "return miqClickAndPop(this);")
-                else
-                  reg.description
-                end
-    h
-  end
-
   def textual_name
     @record.name
   end
