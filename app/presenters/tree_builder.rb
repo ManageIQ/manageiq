@@ -279,9 +279,8 @@ class TreeBuilder
     end
 
     # Process the node's children
-    node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
-    if options[:open_all] ||
-       object[:load_children] ||
+    node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) || !!options[:open_all]
+    if object[:load_children] ||
        node[:expand] ||
        @options[:lazy] == false
 
