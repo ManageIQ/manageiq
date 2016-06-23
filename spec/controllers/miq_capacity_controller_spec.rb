@@ -84,11 +84,10 @@ describe MiqCapacityController do
       EvmSpecHelper.create_guid_miq_server_zone
       set_user_privileges
       FactoryGirl.create(:miq_enterprise)
+      FactoryGirl.create(:miq_region, :description => "My Region")
     end
     it 'it always sets breadcrumb' do
-      controller.instance_variable_set(:@sb, :planning => {:vms => {}, :options => {}}, :util => {:summary => {}})
-      controller.x_active_tree = 'bottlenecks_tree'
-      controller.x_node = 'I am not empty'
+      seed_session_trees('miq_capacity', :bottlenecks_tree, 'foobar')
       expect(controller).to receive(:bottleneck_get_node_info)
       # render fails but it's not needed for this test
       expect(controller).to receive(:render)

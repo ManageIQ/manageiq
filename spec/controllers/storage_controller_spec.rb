@@ -170,11 +170,7 @@ describe StorageController do
       end
 
       it 'can Perform a datastore Smart State Analysis from the datastore list' do
-        allow(controller).to receive(:x_node).and_return("root")
-        allow(controller).to receive(:x_active_tree).and_return(:storage_tree)
-        allow(controller).to receive(:x_active_accord).and_return(:storage_accord)
         storage
-        session[:sb] = {:active_accord => :storage_accord}
         seed_session_trees('storage', :storage_tree, 'root')
         get :explorer
         post :x_button, :params => {:pressed => 'storage_scan', :miq_grid_checks => to_cid(storage.id), :format => :js}
@@ -184,12 +180,8 @@ describe StorageController do
       end
 
       it 'can Perform a datastore Smart State Analysis from the datastore cluster list' do
-        allow(controller).to receive(:x_active_tree).and_return(:storage_pod_tree)
-        allow(controller).to receive(:x_active_accord).and_return(:storage_pod_accord)
-        allow(controller).to receive(:x_node).and_return("xx-#{to_cid(storage_cluster.id)}")
         storage
         storage_cluster
-        session[:sb] = {:active_accord => :storage_pod_accord}
         seed_session_trees('storage', :storage_pod_tree, 'root')
         post :tree_select, :params => {:id => "xx-#{to_cid(storage_cluster.id)}", :format => :js}
         expect(response.status).to eq(200)
@@ -200,12 +192,8 @@ describe StorageController do
       end
 
       it 'can Perform a remove datastore from the datastore cluster list' do
-        allow(controller).to receive(:x_active_tree).and_return(:storage_pod_tree)
-        allow(controller).to receive(:x_active_accord).and_return(:storage_pod_accord)
-        allow(controller).to receive(:x_node).and_return("xx-#{to_cid(storage_cluster.id)}")
         storage
         storage_cluster
-        session[:sb] = {:active_accord => :storage_pod_accord}
         seed_session_trees('storage', :storage_pod_tree, 'root')
         post :tree_select, :params => {:id => "xx-#{to_cid(storage_cluster.id)}", :format => :js}
         expect(response.status).to eq(200)

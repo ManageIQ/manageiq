@@ -1255,8 +1255,7 @@ describe ReportController do
 
         it "is allowed to see report created under Group1 for User 1(with current group Group2)" do
           controller.instance_variable_set(:@_params, :controller => "report", :action => "explorer")
-          controller.instance_variable_set(:@sb, :saved_reports => nil)
-          allow(controller).to receive(:x_active_tree).and_return("savedreports")
+          seed_session_trees('report', :saved_reports)
           allow(controller).to receive(:get_view_calculate_gtl_type).and_return("list")
           allow(controller).to receive(:get_view_pages_perpage).and_return(20)
 
