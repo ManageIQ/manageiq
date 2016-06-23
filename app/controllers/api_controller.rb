@@ -148,7 +148,6 @@ class ApiController < ApplicationController
     @description     = base_config[:description]
     @version         = base_config[:version]
     @prefix          = "/#{@module}"
-    @req             = {}      # To store API request details by parse_api_request
     @api_config      = VMDB::Config.new("vmdb").config[@module.to_sym] || {}
   end
 
