@@ -74,6 +74,10 @@ module OpenstackHandle
         Fog.const_get(service).new(opts)
       end
     rescue Fog::Errors::NotFound => err
+      $fog_log.warn("MIQ(#{self.class.name}##{__method__}) "\
+                    "Service #{service} not available for openstack provider #{auth_url}")
+      $fog_log.warn(err.message)
+      $fog_log.warn(err.backtrace.join("\n"))
       raise MiqException::ServiceNotAvailable if err.message.include?("Could not find service")
       raise
     end
