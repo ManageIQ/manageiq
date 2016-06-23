@@ -112,7 +112,8 @@ describe ReportController do
       expected = [{:key     => "-#{controller.to_cid(widget.id)}",
                    :title   => "Foo",
                    :icon    => ActionController::Base.helpers.image_path('100/report_widget.png'),
-                   :tooltip => "Foo"}]
+                   :tooltip => "Foo",
+                   :expand  => false}]
       expect(nodes).to eq(expected)
     end
   end
