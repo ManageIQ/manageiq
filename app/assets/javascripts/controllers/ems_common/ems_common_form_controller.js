@@ -15,7 +15,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       default_api_port: '',
       amqp_api_port: '',
       hawkular_api_port: '',
-      metrics_port: '',
+      metrics_api_port: '',
       api_version: '',
       default_security_protocol: '',
       realm: '',
@@ -49,7 +49,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       ems_controller: '',
       default_auth_status: '',
       amqp_auth_status: '',
-      service_account_auth_status: ''
+      service_account_auth_status: '',
+      metrics_auth_status: ''
     };
     $scope.realmNote = __("Note: Username must be in the format: name@realm");
     $scope.formId = emsCommonFormId;
@@ -81,6 +82,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
         $scope.emsCommonModel.amqp_auth_status                = data.amqp_auth_status;
         $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
+        $scope.emsCommonModel.metrics_auth_status             = true;
         miqService.sparkleOff();
       });
       $scope.afterGet  = true;
@@ -136,6 +138,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
         $scope.emsCommonModel.default_auth_status             = data.default_auth_status;
         $scope.emsCommonModel.amqp_auth_status                = data.amqp_auth_status;
         $scope.emsCommonModel.service_account_auth_status     = data.service_account_auth_status;
+        $scope.emsCommonModel.metrics_auth_status             = data.metrics_auth_status;
 
         if ($scope.emsCommonModel.default_userid != '') {
           $scope.emsCommonModel.default_password = $scope.emsCommonModel.default_verify = miqService.storedPasswordPlaceholder;
@@ -202,7 +205,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.ssh_keypair_password != '' && $scope.angularForm.ssh_keypair_password.$valid)) {
       return true;
     } else if(($scope.currentTab == "metrics" && $scope.emsCommonModel.emstype == "rhevm") &&
-      ($scope.emsCommonModel.metrics_hostname != '' && $scope.angularForm.metrics_hostname.$valid && $scope.emsCommonModel.metrics_api_port != '') &&
+      ($scope.emsCommonModel.metrics_hostname != '' && $scope.angularForm.metrics_hostname.$valid) &&
       ($scope.emsCommonModel.metrics_userid != '' && $scope.angularForm.metrics_userid.$valid &&
       $scope.emsCommonModel.metrics_password != '' && $scope.angularForm.metrics_password.$valid &&
       $scope.emsCommonModel.metrics_verify != '' && $scope.angularForm.metrics_verify.$valid)) {
@@ -323,12 +326,16 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
     if ($scope.emsCommonModel.service_account_auth_status === true) {
       $scope.postValidationModelRegistry("service_account");
     }
-
+    if ($scope.emsCommonModel.metrics_auth_status === true) {
+      $scope.postValidationModelRegistry("metrics");
+    }
   };
 
   $scope.postValidationModelRegistry = function(prefix) {
     if (!angular.isDefined($scope.postValidationModel)) {
-      $scope.postValidationModel = {default: {}, amqp: {}}
+      $scope.postValidationModel = {default: {},
+                                    amqp: {},
+                                    metrics: {}}
     }
     if (prefix === "default") {
       if ($scope.newRecord) {
@@ -374,7 +381,7 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       }
       var metricsValidationModel = {
         metrics_hostname:          $scope.emsCommonModel.metrics_hostname,
-        metrics_port:              $scope.emsCommonModel.metrics_port,
+        metrics_api_port:          $scope.emsCommonModel.metrics_api_port,
         metrics_userid:            $scope.emsCommonModel.metrics_userid,
         metrics_password:          metrics_password,
         metrics_verify:            metrics_verify,
@@ -427,6 +434,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
               $scope.emsCommonModel.amqp_auth_status = false;
             } else if ($scope.authType === "service_account") {
               $scope.emsCommonModel.service_account_auth_status = false;
+            } else if ($scope.authType === "metrics") {
+              $scope.emsCommonModel.metrics_auth_status = false;
             }
           } else {
             if ($scope.authType === "default") {
@@ -435,6 +444,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
               $scope.emsCommonModel.amqp_auth_status = true;
             } else if ($scope.authType === "service_account") {
               $scope.emsCommonModel.service_account_auth_status = true;
+            } else if ($scope.authType === "metrics") {
+              $scope.emsCommonModel.metrics_auth_status = true;
             }
           }
           miqService.miqFlash(data.level, data.message);
