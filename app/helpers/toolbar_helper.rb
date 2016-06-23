@@ -15,13 +15,17 @@ module ToolbarHelper
       view_buttons = buttons.first.present? &&
                      buttons.first[:name] =~ /^view_/
 
-      cls = view_buttons ? 'toolbar-pf-view-selector ' : ''
-      cls += 'hidden ' unless buttons.find { |button| !button[:hidden] }
-      content_tag(:div, :class => "#{cls} form-group") do # form-group aroung each toolbar section
-        if view_buttons
-          view_mode_buttons(buttons)
-        else
-          normal_toolbar_buttons(buttons)
+      if buttons.first.kind_of?(ApplicationHelper::Toolbar::Custom)
+        buttons.first.content
+      else
+        cls = view_buttons ? 'toolbar-pf-view-selector ' : ''
+        cls += 'hidden ' unless buttons.find { |button| !button[:hidden] }
+        content_tag(:div, :class => "#{cls} form-group") do # form-group aroung each toolbar section
+          if view_buttons
+            view_mode_buttons(buttons)
+          else
+            normal_toolbar_buttons(buttons)
+          end
         end
       end
     end.join('').html_safe
@@ -62,6 +66,7 @@ module ToolbarHelper
   #
   def split_to_groups(buttons)
     buttons.slice_before do |props|
+      props.kind_of?(ApplicationHelper::Toolbar::Custom) ||
       props[:type] == :separator ||
         props[:name] == 'download_choice' # exceptional behavior for view toolbar download drop down
     end.to_a
