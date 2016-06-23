@@ -12,6 +12,7 @@ class Service < ApplicationRecord
 
   has_one :miq_request_task, :dependent => :nullify, :as => :destination
   has_one :miq_request, :through => :miq_request_task
+  has_one :picture, :through => :service_template
 
   virtual_belongs_to :parent_service
   virtual_has_many   :direct_service_children
@@ -19,7 +20,6 @@ class Service < ApplicationRecord
   virtual_has_many   :vms
   virtual_has_many   :all_vms
   virtual_column     :v_total_vms,            :type => :integer,  :uses => :vms
-  virtual_has_one    :picture, :uses => :service_template
 
   virtual_has_one    :custom_actions
   virtual_has_one    :custom_action_buttons
@@ -171,12 +171,6 @@ class Service < ApplicationRecord
     #   rsc = svc_rsc.resource
     #   raise "Unsupported resource type #{rsc.class.name}" if rsc.kind_of?(VmOrTemplate) && rsc.template? == true
     # end
-  end
-
-  def picture
-    st = service_template
-    return nil if st.nil?
-    st.picture
   end
 
   def validate_reconfigure
