@@ -1,8 +1,10 @@
 class ApiController
   module VirtualTemplates
-    def create_resource_virtual_templates(_type, _id, data)
+    def create_resource_virtual_templates(type, _id, data)
       validate_vendor_present(data)
-      template = type_from_vendor(data['vendor']).create(data)
+      klass = collection_class(type)
+      vt_type = type_from_vendor(klass, data['vendor'])
+      template = klass.create(data.merge(:type => vt_type))
       if template.invalid?
         raise BadRequestError, "Failed to create a new virtual template - #{template.errors.full_messages.join(', ')}"
       end
@@ -15,10 +17,10 @@ class ApiController
       raise BadRequestError, 'Must specify a vendor for creating a Virtual Template' unless data['vendor']
     end
 
-    def type_from_vendor(vendor)
-      type = ManageIQ::Providers::CloudManager::VirtualTemplate::TYPES[vendor.to_sym]
+    def type_from_vendor(klass, vendor)
+      type = klass::TYPES[vendor.to_sym]
       raise BadRequestError, 'Must specify a supported type' unless type
-      type.constantize
+      type
     end
   end
 end
