@@ -840,6 +840,14 @@ Vmdb::Application.routes.draw do
         data
       )
     },
+
+    :subnet_topology         => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :container_dashboard      => {
       :get => %w(
         show
