@@ -711,7 +711,6 @@ module VmCommon
       render_flash(_("No policies were selected for Policy Simulation."), :error) if session[:policies].empty?
       @in_a_form = true
       replace_right_cell
-      end
     else
       render :template => 'vm/show'
     end
