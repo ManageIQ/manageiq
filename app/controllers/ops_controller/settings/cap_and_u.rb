@@ -193,7 +193,8 @@ module OpsController::Settings::CapAndU
     end
     @edit[:current][:clusters].sort_by! { |c| c[:name] }
     build_cl_hosts_tree(@edit[:current][:clusters])
-
+    @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, @sb, true, @edit[:current][:clusters])
+    #self.x_active_tree = :cluster_tree
     @edit[:current][:storages] = []
     @st_recs = {}
     Storage.in_my_region.includes(:taggings, :tags, :hosts).select(:id, :name, :store_type, :location)

@@ -41,6 +41,7 @@
                   :three_checks => true,
                   :exp_tree => true,
                   :checkboxes => true})
+              = render(:partial => 'shared/tree', :locals => {:tree => @cluster_tree, :name => @cluster_tree.name})
               %br/
               .note= _("VM data will be collected for VMs under selected %s only. Data is collected for a %s and all of its %s when at least one %s is selected.") % [title_for_hosts, cluster_title, title_for_hosts, title_for_host]
       .col-md-12.col-lg-6
