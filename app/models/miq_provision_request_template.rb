@@ -52,9 +52,9 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   end
 
   def number_of_vms(service_task, parent_svc, template_service_resource)
-    parent_task = MiqRequestTask.find_by_id(service_task.options[:parent_task_id])
     vm_count = nil
     if template_service_resource
+      parent_task = get_parent_task(service_task)
       root_svc = get_root_svc(parent_svc)
       value = number_of_vms_from_dialog(root_svc, parent_task) if root_svc && parent_task
       vm_count = value.to_i unless value.blank?
@@ -67,6 +67,10 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   def get_root_svc(parent_svc)
     return nil unless parent_svc
     parent_svc.parent ? parent_svc.parent : parent_svc
+  end
+
+  def get_parent_task(service_task)
+    MiqRequestTask.find_by_id(service_task.options[:parent_task_id])
   end
 
   def number_of_vms_from_dialog(root_svc, parent_task)
