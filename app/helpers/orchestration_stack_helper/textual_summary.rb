@@ -1,4 +1,5 @@
 module OrchestrationStackHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -22,11 +23,6 @@ module OrchestrationStackHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
   def textual_description
     @record.description
   end

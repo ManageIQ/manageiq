@@ -1,4 +1,5 @@
 module PersistentVolumeHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -33,11 +34,6 @@ module PersistentVolumeHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
   def textual_resource_version
     @record.resource_version
   end

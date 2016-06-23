@@ -1,4 +1,5 @@
 module MiddlewareDatasourceHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -14,10 +15,6 @@ module MiddlewareDatasourceHelper::TextualSummary
 
   def textual_group_smart_management
     %i(tags)
-  end
-
-  def textual_name
-    @record.name
   end
 
   def textual_nativeid

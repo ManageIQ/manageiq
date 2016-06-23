@@ -1,4 +1,5 @@
 module AuthKeyPairCloudHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -17,11 +18,6 @@ module AuthKeyPairCloudHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
   def textual_fingerprint
     @record.fingerprint
   end

@@ -1,4 +1,6 @@
 module ContainerSummaryHelper
+  include TextualMixins::TextualName
+
   def textual_ems
     textual_link(@record.ext_management_system)
   end
@@ -77,10 +79,6 @@ module ContainerSummaryHelper
 
   def textual_container_images
     textual_link(@record.container_images)
-  end
-
-  def textual_name
-    @record.name
   end
 
   def textual_resource_version

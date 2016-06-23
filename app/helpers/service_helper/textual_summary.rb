@@ -1,4 +1,5 @@
 module ServiceHelper::TextualSummary
+  include TextualMixins::TextualName
   #
   # Groups
   #
@@ -32,11 +33,6 @@ module ServiceHelper::TextualSummary
   #
   # Items
   #
-
-  def textual_name
-    @record.name
-  end
-
   def textual_description
     @record.description
   end
