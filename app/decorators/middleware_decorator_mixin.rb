@@ -1,7 +1,5 @@
 module MiddlewareDecoratorMixin
   def listicon_image
-    prefix = "100/"
-    suffix = ".png"
-    prefix + item_image + suffix
+    "100/#{item_image}.png"
   end
 end

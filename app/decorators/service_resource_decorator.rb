@@ -6,6 +6,6 @@ class ServiceResourceDecorator < Draper::Decorator
   end
 
   def listicon_image
-    "100/#{resource_type.to_s == "VmOrTemplate" ? "vm" : "service_template"}.png"
+    "100/#{resource_type.to_s == 'VmOrTemplate' ? 'vm' : 'service_template'}.png"
   end
 end
