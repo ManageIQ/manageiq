@@ -19,6 +19,10 @@ class ApiController
         @encrypted_objects_checked[klass].each { |attr| @attr_encrypted[attr] = true }
       end
 
+      def user_token_service
+        @api_user_token_service
+      end
+
       private
 
       def log_kv(key, val, pref = "")
@@ -41,7 +45,7 @@ class ApiController
 
         $api_log.info("")
         $api_log.info("Dynamic Configuration")
-        @api_user_token_service.api_config.each { |key, val| log_kv(key, val) }
+        user_token_service.api_config.each { |key, val| log_kv(key, val) }
       end
 
       #
