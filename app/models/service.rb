@@ -19,7 +19,7 @@ class Service < ApplicationRecord
   virtual_has_many   :vms
   virtual_has_many   :all_vms
   virtual_column     :v_total_vms,            :type => :integer,  :uses => :vms
-  virtual_has_one    :picture
+  virtual_has_one    :picture, :uses => :service_template
 
   virtual_has_one    :custom_actions
   virtual_has_one    :custom_action_buttons
