@@ -29,8 +29,8 @@ module QuadiconHelper
            'ontap_logical_disk', 'ontap_storage_system', 'ontap_storage_volume',
            'snia_local_file_system' then
                                         flobj_img_simple(options[:size], "#{options[:size]}/#{partial_name}.png")
-      when 'service'               then render_service_quadicon(item, options)
-      when 'service_template'      then render_service_quadicon(item, options)
+      when 'service', 'service_template', 'service_ansible_tower', 'service_template_ansible_tower' then
+                                        render_service_quadicon(item, options)
       when 'resource_pool'         then render_resource_pool_quadicon(item, options)
       when 'host'                  then render_host_quadicon(item, options)
       when 'ext_management_system' then render_ext_management_system_quadicon(item, options)
@@ -167,7 +167,8 @@ module QuadiconHelper
   end
 
   def partial_name_from_item(item)
-    partial_name = if %w(EmsCluster ResourcePool Repository Service ServiceTemplate Storage ServiceAnsibleTower ServiceTemplateAnsibleTower).include?(item.class.name)
+    partial_name = if %w(EmsCluster ResourcePool Repository Service ServiceTemplate
+                     Storage ServiceAnsibleTower ServiceTemplateAnsibleTower).include?(item.class.name)
                      item.class.name.underscore
                    elsif item.kind_of?(VmOrTemplate)
                      item.class.base_model.to_s.underscore

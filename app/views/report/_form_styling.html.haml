@@ -59,7 +59,7 @@
                   - elsif [:datetime, :date].include?(field_type)
                     - opts = (field_type == :datetime ? FROM_HOURS : []) + FROM_DAYS + FROM_WEEKS + FROM_MONTHS + FROM_QUARTERS + FROM_YEARS
                     = select_tag("styleval_#{f_idx}_#{s_idx}",
-                      options_for_select(opts, styles[s_idx][:value]),
+                      options_for_select(Hash[opts.map {|x| [_(x), x]}], styles[s_idx][:value]),
                       :multiple              => false,
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,

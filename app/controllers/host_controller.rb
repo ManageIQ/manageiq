@@ -1,5 +1,4 @@
 class HostController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
 
@@ -102,7 +101,6 @@ class HostController < ApplicationController
                       :url  => "/host/show/#{@host.id}?display=#{@display}")
       @view, @pages = get_view(kls, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = @display
-      notify_about_unauthorized_items(title, _('Host'))
 
     when "cloud_tenants"
       drop_breadcrumb(:name => _("%{name} (All cloud tenants present on this host)") % {:name => @host.name},
@@ -122,7 +120,6 @@ class HostController < ApplicationController
                       :url  => "/host/show/#{@host.id}?display=storages")
       @view, @pages = get_view(Storage, :parent => @host) # Get the records (into a view) and the paginator
       @showtype = "storages"
-      notify_about_unauthorized_items(ui_lookup(:tables => "storages"), _('Host'))
 
     when "ontap_logical_disks"
       drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @host.name,

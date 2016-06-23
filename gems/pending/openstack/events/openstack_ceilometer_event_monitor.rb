@@ -38,23 +38,17 @@ class OpenstackCeilometerEventMonitor < OpenstackEventMonitor
 
   def each_batch
     while @monitor_events
-      begin
-        $log.info("Querying Openstack Ceilometer for events newer than #{latest_event_timestamp}...") if $log
-        events = list_events(query_options).sort_by(&:generated)
-        @since = events.last.generated unless events.empty?
+      $log.info("Querying Openstack Ceilometer for events newer than #{latest_event_timestamp}...") if $log
+      events = list_events(query_options).sort_by(&:generated)
+      @since = events.last.generated unless events.empty?
 
-        amqp_events = filter_unwanted_events(events).map do |event|
-          converted_event = OpenstackCeilometerEventConverter.new(event)
-          $log.debug("Openstack Ceilometer is processing a new event: #{event.inspect}") if $log
-          openstack_event(nil, converted_event.metadata, converted_event.payload)
-        end
-
-        yield amqp_events
-      rescue => ex
-        $log.info("Reseting Openstack Ceilometer connection after #{ex}.") if $log
-        @provider_connection = nil
-        provider_connection
+      amqp_events = filter_unwanted_events(events).map do |event|
+        converted_event = OpenstackCeilometerEventConverter.new(event)
+        $log.debug("Openstack Ceilometer is processing a new event: #{event.inspect}") if $log
+        openstack_event(nil, converted_event.metadata, converted_event.payload)
       end
+
+      yield amqp_events
     end
   end
 

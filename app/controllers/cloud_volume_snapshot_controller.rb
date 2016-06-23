@@ -1,5 +1,4 @@
 class CloudVolumeSnapshotController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -56,7 +55,6 @@ class CloudVolumeSnapshotController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @snapshot, :association => :based_volumes)
       @showtype = "based_volumes"
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_volume_snapshot"))
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

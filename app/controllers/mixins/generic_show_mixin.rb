@@ -67,7 +67,6 @@ module Mixins
                       :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
       @view, @pages = get_view(model, :parent => @record) # Get the records (into a view) and the paginator
       @showtype     = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => self.class.table_name))
     end
   end
 end

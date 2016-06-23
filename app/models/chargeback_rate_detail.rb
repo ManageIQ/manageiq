@@ -15,12 +15,13 @@ class ChargebackRateDetail < ApplicationRecord
   def find_rate(value)
     fixed_rate = 0.0
     variable_rate = 0.0
-    chargeback_tiers.each do |tier|
-      next if value < rate_adjustment(tier.start)
-      next if value >= rate_adjustment(tier.finish)
-      fixed_rate = tier.fixed_rate
-      variable_rate = tier.variable_rate
-      break
+    tier_found, = chargeback_tiers.select do |tier|
+      tier.starts_with_zero? && value.zero? ||
+      value > rate_adjustment(tier.start) && value <= rate_adjustment(tier.finish)
+    end
+    unless tier_found.nil?
+      fixed_rate = tier_found.fixed_rate
+      variable_rate = tier_found.variable_rate
     end
     return fixed_rate, variable_rate
   end

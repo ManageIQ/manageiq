@@ -69,12 +69,12 @@ describe ReportFormatter::JqplotFormatter do
     it "uses correct formating function for axis with given column format" do
       report.col_formats = [nil, :general_number_precision_0]
       render_report(report)
-      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.number_with_delimiter.jqplot({})")
+      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.number_with_delimiter.jqplot({\"delimiter\":\",\",\"precision\":0,\"description\":\"Number (1,234)\"})")
     end
 
     it "uses correct formating function for axis with implicit column format" do
       render_report(report)
-      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.mbytes_to_human_size.jqplot({})")
+      expect(report.chart[:options][:axes][:xaxis][:tickOptions][:formatter]).to eq("ManageIQ.charts.formatters.mbytes_to_human_size.jqplot({\"precision\":1,\"description\":\"Suffixed Megabytes (MB, GB)\"})")
     end
   end
 end

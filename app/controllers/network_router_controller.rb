@@ -4,7 +4,6 @@ class NetworkRouterController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  include AuthorizationMessagesMixin
   include Mixins::GenericButtonMixin
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin

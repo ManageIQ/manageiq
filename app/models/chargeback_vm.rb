@@ -6,6 +6,8 @@ class ChargebackVm < Chargeback
     :display_range            => :string,
     :vm_name                  => :string,
     :owner_name               => :string,
+    :provider_name            => :string,
+    :provider_uid             => :string,
     :cpu_allocated_metric     => :float,
     :cpu_allocated_cost       => :float,
     :cpu_used_cost            => :float,
@@ -87,7 +89,10 @@ class ChargebackVm < Chargeback
     key = "#{perf.resource_id}_#{ts_key}"
     @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
 
-    [key, {"vm_name" => perf.resource_name, "owner_name" => @vm_owners[perf.resource_id]}]
+    extra_fields = {"vm_name" => perf.resource_name, "owner_name" => @vm_owners[perf.resource_id],
+                    "provider_name" => perf.parent_ems.name, "provider_uid" => perf.parent_ems.guid}
+
+    [key, extra_fields]
   end
 
   def self.where_clause(records, options)

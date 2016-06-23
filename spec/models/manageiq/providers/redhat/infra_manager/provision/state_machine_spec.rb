@@ -6,7 +6,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
   let(:rhevm_vm) { double("RHEVM VM") }
   let(:task)     { request.tap(&:create_request_tasks).miq_request_tasks.first }
   let(:template) { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
-  let(:vm)       { FactoryGirl.create(:vm_redhat, :ext_management_system => ems, :raw_power_state => "on").tap { |v| allow(v).to receive(:with_provider_object).and_return(rhevm_vm) } }
+  let(:vm)       { FactoryGirl.create(:vm_redhat, :ext_management_system => ems, :raw_power_state => "on").tap { |v| allow(v).to receive(:with_provider_object).and_yield(rhevm_vm) } }
 
   let(:options) do
     {
@@ -84,6 +84,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
   end
 
   def test_autostart_destination
+    expect(vm).to receive(:start).twice { vm.raw_start }
     test_autostart_destination_with_use_cloud_init
     test_autostart_destination_without_use_cloud_init
   end

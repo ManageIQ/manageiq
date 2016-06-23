@@ -1,7 +1,7 @@
 -# Create from/to date JS vars to limit calendar selection range
 :javascript
-  ManageIQ.calendar.calDateFrom = new Date(#{@tl_options[:sdate]});
-  ManageIQ.calendar.calDateTo = new Date(#{@tl_options[:edate]});
+  ManageIQ.calendar.calDateFrom = new Date(#{@tl_options.date.start});
+  ManageIQ.calendar.calDateTo = new Date(#{@tl_options.date.end});
 
 = render :partial => "layouts/flash_msg"
 = render :partial => "layouts/tl_options"

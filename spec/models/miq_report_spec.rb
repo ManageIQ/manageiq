@@ -236,7 +236,6 @@ describe MiqReport do
       expect(attrs[:apply_limit_in_sql]).to be_truthy
       expect(attrs[:auth_count]).to eq 1
       expect(attrs[:user_filters]["managed"]).to eq [["/managed/environment/prod"]]
-      expect(attrs[:total_count]).to eq 2
     end
 
     it "sortby, order, user filters, where sort column is in a sub-table" do
@@ -269,7 +268,6 @@ describe MiqReport do
       expect(attrs[:apply_limit_in_sql]).to be_truthy
       expect(attrs[:auth_count]).to eq 2
       expect(attrs[:user_filters]["managed"]).to eq [[tag]]
-      expect(attrs[:total_count]).to eq 2
     end
 
     it "sorting on a virtual column" do

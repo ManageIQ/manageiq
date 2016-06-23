@@ -79,4 +79,70 @@ describe ApiController do
       expect_result_to_have_user_email(@user.email)
     end
   end
+
+  context "Service requests approval" do
+    let(:svcreq1) do
+      FactoryGirl.create(:service_template_provision_request,
+                         :requester   => @user,
+                         :source_id   => template.id,
+                         :source_type => template.class.name)
+    end
+    let(:svcreq2) do
+      FactoryGirl.create(:service_template_provision_request,
+                         :requester   => @user,
+                         :source_id   => template.id,
+                         :source_type => template.class.name)
+    end
+    let(:svcreq1_url)  { service_requests_url(svcreq1.id) }
+    let(:svcreq2_url)  { service_requests_url(svcreq2.id) }
+    let(:svcreqs_list) { [svcreq1_url, svcreq2_url] }
+
+    it "supports approving a request" do
+      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+
+      run_post(svcreq1_url, gen_request(:approve, :reason => "approve reason"))
+
+      expected_msg = "Service request #{svcreq1.id} approved"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => :svcreq1_url)
+    end
+
+    it "supports denying a request" do
+      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+
+      run_post(svcreq2_url, gen_request(:deny, :reason => "deny reason"))
+
+      expected_msg = "Service request #{svcreq2.id} denied"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => :svcreq2_url)
+    end
+
+    it "supports approving multiple requests" do
+      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+
+      run_post(service_requests_url, gen_request(:approve, [{"href" => svcreq1_url, "reason" => "approve reason"},
+                                                            {"href" => svcreq2_url, "reason" => "approve reason"}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :svcreqs_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/Service request #{svcreq1.id} approved/i, /Service request #{svcreq2.id} approved/i]
+      )
+    end
+
+    it "supports denying multiple requests" do
+      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+
+      run_post(service_requests_url, gen_request(:deny, [{"href" => svcreq1_url, "reason" => "deny reason"},
+                                                         {"href" => svcreq2_url, "reason" => "deny reason"}]))
+
+      expect_multiple_action_result(2)
+      expect_result_resources_to_include_hrefs("results", :svcreqs_list)
+      expect_result_resources_to_match_key_data(
+        "results",
+        "message",
+        [/Service request #{svcreq1.id} denied/i, /Service request #{svcreq2.id} denied/i]
+      )
+    end
+  end
 end

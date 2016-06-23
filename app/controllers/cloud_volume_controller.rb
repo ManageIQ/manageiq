@@ -1,5 +1,4 @@
 class CloudVolumeController < ApplicationController
-  include AuthorizationMessagesMixin
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
@@ -118,7 +117,6 @@ class CloudVolumeController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @volume, :association => :cloud_volume_snapshots)
       @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_volume"))
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
       kls   = ManageIQ::Providers::CloudManager::Vm
@@ -128,7 +126,6 @@ class CloudVolumeController < ApplicationController
       )
       @view, @pages = get_view(kls, :parent => @volume) # Get the records (into a view) and the paginator
       @showtype = @display
-      notify_about_unauthorized_items(title, ui_lookup(:tables => "cloud_volume"))
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

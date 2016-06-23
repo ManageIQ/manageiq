@@ -17,12 +17,38 @@ describe LaunchAnsibleJob do
   let(:root_object) { MiqAeMockObject.new('param1' => "x=X", 'param2' => "y=Y") }
   let(:middle_object) { MiqAeMockObject.new('a' => 1, 'b' => 2) }
 
-  let(:ext_vars) { {'x' => 'X', 'y' => 'Y'} }
+  let(:ext_vars) { {} }
   let(:job_args) { {:extra_vars => ext_vars} }
 
   let(:service) { MiqAeMockService.new(root_object) }
 
+  let(:ems) do
+    FactoryGirl.create(:ems_amazon_with_authentication)
+  end
+
+  let(:vm_template) do
+    FactoryGirl.create(:template_amazon,
+                       :name                  => "template1",
+                       :ext_management_system => ems)
+  end
+
+  let(:prov_options) do
+    {:src_vm_id => vm_template.id}
+  end
+
+  let(:miq_provision) do
+    FactoryGirl.create(:miq_provision_amazon,
+                       :options => prov_options,
+                       :userid  => user.userid,
+                       :state   => 'active',
+                       :status  => 'Ok')
+  end
+
+  let(:svc_provision) { MiqAeMethodService::MiqAeServiceMiqProvision.find(miq_provision.id) }
+
   it "run a job using job template name" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = MiqAeMockObject.new(:job_template_name => job_template.name)
     current_object.parent = root_object
@@ -34,6 +60,8 @@ describe LaunchAnsibleJob do
   end
 
   it "run a job using job template id" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = MiqAeMockObject.new(:job_template_id => job_template.id)
     current_object.parent = root_object
@@ -45,6 +73,8 @@ describe LaunchAnsibleJob do
   end
 
   it "run a job using job template object" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = MiqAeMockObject.new(:job_template => svc_job_template)
     current_object.parent = root_object
@@ -90,6 +120,18 @@ describe LaunchAnsibleJob do
     current_object = MiqAeMockObject.new('param1' => 'x=1', 'param2' => 'y=2')
     current_object.parent = root_object
     service.object = current_object
+    expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
+    LaunchAnsibleJob.new(service).main
+    expect(service.get_state_var(:ansible_job_id)).to eq(job.id)
+  end
+
+  it "get dialog parameters" do
+    prov_options[:dialog_param_name] = 'fred'
+    ext_vars['name'] = 'fred'
+    root = MiqAeMockObject.new(:job_template_name => job_template.name)
+    root[:miq_provision] = svc_provision
+    service = MiqAeMockService.new(root)
+    service.object = root
     expect(job_class).to receive(:create_job).once.with(anything, job_args).and_return(svc_job)
     LaunchAnsibleJob.new(service).main
     expect(service.get_state_var(:ansible_job_id)).to eq(job.id)

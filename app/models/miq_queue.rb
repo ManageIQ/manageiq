@@ -504,6 +504,10 @@ class MiqQueue < ApplicationRecord
   def destroy_potentially_stale_record
     destroy
   rescue ActiveRecord::StaleObjectError
-    reload.destroy
+    begin
+      reload.destroy
+    rescue ActiveRecord::RecordNotFound
+      # ignore
+    end
   end
 end # Class MiqQueue
