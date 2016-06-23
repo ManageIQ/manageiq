@@ -86,7 +86,7 @@
                 %label.col-md-3.control-label
                   #{ui_lookup(:tables => "ems_clouds")}
                 .col-md-8
-                  %ul.list-inline= render_view_buttons(:emscloud, @edit[:new][:views][:emscloud])
+                  %ul.list-inline= render_view_buttons(:manageiq_providers_cloudmanager, @edit[:new][:views][:manageiq_providers_cloudmanager])
             - if role_allows(:feature => "availability_zone_show_list")
               .form-group
                 %label.col-md-3.control-label
@@ -110,13 +110,13 @@
                 %label.col-md-3.control-label
                   = _('Instances')
                 .col-md-8
-                  %ul.list-inline= render_view_buttons(:vmcloud, @edit[:new][:views][:vmcloud])
+                  %ul.list-inline= render_view_buttons(:manageiq_providers_cloudmanager_vm, @edit[:new][:views][:manageiq_providers_cloudmanager_vm])
             - if has_any_role?(%w(images_accord images_filter_accord))
               .form-group
                 %label.col-md-3.control-label
                   = _('Images')
                 .col-md-8
-                  %ul.list-inline= render_view_buttons(:templatecloud, @edit[:new][:views][:templatecloud])
+                  %ul.list-inline= render_view_buttons(:manageiq_providers_cloudmanager_template, @edit[:new][:views][:manageiq_providers_cloudmanager_template])
             - if role_allows(:feature => "orchestration_stack_show_list")
               .form-group
                 %label.col-md-3.control-label
@@ -150,7 +150,7 @@
                 %label.col-md-3.control-label
                   = ui_lookup(:tables => "ems_infras")
                 .col-md-8
-                  %ul.list-inline= render_view_buttons(:emsinfra, @edit[:new][:views][:emsinfra])
+                  %ul.list-inline= render_view_buttons(:manageiq_providers_inframanager, @edit[:new][:views][:manageiq_providers_inframanager])
             - if role_allows(:feature => "ems_cluster_show_list")
               .form-group
                 %label.col-md-3.control-label
@@ -166,15 +166,21 @@
             - if has_any_role?(%w(vandt_accord vms_filter_accord))
               .form-group
                 %label.col-md-3.control-label
+                  = _('VMs & Templates')
+                .col-md-8
+                  %ul.list-inline= render_view_buttons(:vmortemplate, @edit[:new][:views][:vmortemplate])
+            - if has_any_role?(%w(vandt_accord vms_filter_accord))
+              .form-group
+                %label.col-md-3.control-label
                   = _('VMs')
                 .col-md-8
-                  %ul.list-inline= render_view_buttons(:vminfra, @edit[:new][:views][:vminfra])
+                  %ul.list-inline= render_view_buttons(:manageiq_providers_inframanager_vm, @edit[:new][:views][:manageiq_providers_inframanager_vm])
             - if has_any_role?(%w(vandt_accord templates_filter_accord))
               .form-group
                 %label.col-md-3.control-label
                   = _('Templates')
                 .col-md-8
-                  %ul.list-inline= render_view_buttons(:templateinfra, @edit[:new][:views][:templateinfra])
+                  %ul.list-inline= render_view_buttons(:manageiq_providers_inframanager_template, @edit[:new][:views][:manageiq_providers_inframanager_template])
             - if role_allows(:feature => "resource_pool_show_list")
               .form-group
                 %label.col-md-3.control-label
