@@ -175,6 +175,7 @@ module Mixins
       end
       if @ems.has_authentication_type?(:metrics)
         metrics_userid = @ems.has_authentication_type?(:metrics) ? @ems.authentication_userid(:metrics).to_s : ""
+        metrics_auth_status = @ems.authentication_status_ok?(:metrics)
       end
 
       if @ems.respond_to?(:keystone_v3_domain_id)
@@ -254,7 +255,7 @@ module Mixins
                        :default_hostname            => @ems.connection_configurations.default.endpoint.hostname,
                        :amqp_hostname               => amqp_hostname,
                        :metrics_hostname            => metrics_hostname,
-                       :default_api_port            => @ems.connection_configurations.default.endpoint.port,
+                       :default_api_port            => default_api_port ? default_api_port : "",
                        :amqp_api_port               => amqp_port ? amqp_port : "",
                        :metrics_api_port            => metrics_port ? metrics_port : "",
                        :default_security_protocol   => default_security_protocol,
@@ -270,7 +271,9 @@ module Mixins
                        :host_default_vnc_port_start => host_default_vnc_port_start ? host_default_vnc_port_start : "",
                        :host_default_vnc_port_end   => host_default_vnc_port_end ? host_default_vnc_port_end : "",
                        :event_stream_selection      => retrieve_event_stream_selection,
-                       :ems_controller              => controller_name
+                       :ems_controller              => controller_name,
+                       :default_auth_status         => default_auth_status,
+                       :metrics_auth_status         => metrics_auth_status.nil? ? true : metrics_auth_status
       } if controller_name == "ems_infra"
 
       render :json => {:name                      => @ems.name,
